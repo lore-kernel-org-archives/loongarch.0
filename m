@@ -1,125 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5F9258ECB
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 14:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AA134EF18
+	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 14:36:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763734114; cv=none; b=VHxzm3JEXUZM+OZIwC7cpwFIeAgwS2ZwlPKnR5RLIrBT8ZHSPi+sL4WeL8WaZ7IVNa9AVRitjLtfqu0QxhtHRaB/dUIhwnHe0hyLCnTYx/TjHX6OU6a0DW3Fp8W3kkDglPgBvrNMj8RyuRCtL48CLh/+niOj6k0Jhy7fNG0+4iI=
+	t=1763735811; cv=none; b=akHRZC3T1A738VowHmKihxbHFlR4GrxqxkaYiBm4pZlvrUohSDu54++7+wnJseeo9NDgvHFcUwB3Fs8YYSU2KpEnfYn7joPKNXD0gVzdq+haGd2G5fRZBcnNSUORam3FOO7ol+j1SMH/sDw2UHdhtAFHiOftPhcWVoztGQEzcsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763734114; c=relaxed/simple;
-	bh=wqnctgomW9QlsnpoaSaIOrK9ROL6Od++vjTW5uUShpM=;
+	s=arc-20240116; t=1763735811; c=relaxed/simple;
+	bh=SmBuQ9/3jkzBF6e+X6HfAqHhQQeAfwauHNiCwCHezeU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B2leGrQaF00lO2bYwj7LusmwsEV2/BL2s6F5AVWVBJiTihLNYSb/Ctl0oqxSsASLvJS+a52R/gDDrN7Pk5hJx/WsnT8N8UPuOFjKq9qdObig6Sz+4M+1jOKAun9QUHI8CTtiyNXb/2CnluhQHqG3upMrLWxQBskpwzFYxQyOECs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAhXq2hB; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=hLePws7c84hY4Q+jPBH5/k63ClCot9Xmxvdd6ADNn5nRLq49savQMsJXZktGm9Nb6VOWeKUtN9UBIr/lIbc1uZteJXYSIHzja45kFQ34Jq/yDczqXSMOQabUu8Xy5NJbTgcWYYtWGAQN9cg/G1Mw4L8DYgQPLWGsWTtD8eE2tnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWSFHcys; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAhXq2hB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34354C16AAE
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 14:08:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWSFHcys"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20C34C2BC86
+	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 14:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763734114;
-	bh=wqnctgomW9QlsnpoaSaIOrK9ROL6Od++vjTW5uUShpM=;
+	s=k20201202; t=1763735811;
+	bh=SmBuQ9/3jkzBF6e+X6HfAqHhQQeAfwauHNiCwCHezeU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YAhXq2hB/gHopjYUT003kWNVybMlECkAaW7rgM16uVBzSwS1bHDq8Jz3xMKkao4Wl
-	 xPrUvEe1u8sUY41M6OUjlJLlFTScsofzKJeIhI2Tk0QkMPYnC88yyHA2Y3Nxe+xJyS
-	 Vonim2YLerG9nI0HN6gxFRONV3KGZAS7slY/1kJufk8R34EV2QYq5XjYAr0cBo5z8n
-	 IcP6QrhsblP1jxCqjJYehtyOaN0eOPzvu0mpTvKAOocglPBg+Ie1LEsZFAxI6o+zGY
-	 7Rs4TkmuZ5mJY2QLAKT/TPKb0tEon+/iemadVn+sP70qVrs3ln4z0+ci9D5TChuSG2
-	 p4lMyjfDjriWg==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b72b495aa81so244790266b.2
-        for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 06:08:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXjZTtnNCaaINxZSjK8t3VflveL+STFFoZxeM9rD68ZMFnuEGFU06XePnhtSdqxi+DuUNM2buhKAoI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyecOPwLUe/QdYBVzKqVFeDWWAPIykTXgs6tg4yco7AxHvWjoP4
-	R/9MoG3YxsOzMWg4Gpy64ZO9PcrbxamNVC6MODa06Cxba0oOZBLM1p1Nln1QqVROt5RCGfGTgNg
-	EX6lI2rPqzdrwXL9X886SuN+f87B1wHM=
-X-Google-Smtp-Source: AGHT+IGvcF/0S9kWajQ67XNIlYN3jQx7syPuoJi7dTDSlFM0uSxAUaOOsj7JhAqIVts2wf9lmd26KLWalOr+tDhwq14=
-X-Received: by 2002:a17:907:3cc5:b0:b76:3399:457b with SMTP id
- a640c23a62f3a-b76716d9d5emr240309166b.37.1763734112740; Fri, 21 Nov 2025
- 06:08:32 -0800 (PST)
+	b=hWSFHcysSdwZQUrKk+WqnHZKql8r4fws5zm+ngQOYlYGCd+lEP9qJWgKe+itDkptd
+	 dQykKBD0J6RuNCeyAZBQ9DIuPET5rjB2B31vmzxOf1Fh5/8fkyBGbdNb45kjn6UBZL
+	 9CHkPCiTNfG3GPecygJfoQ1JIS++/JIerWIyKnHuhw6c9oUDxG5dc/zqOBbJNm6t17
+	 T1S+QVYU81Ydq9o2/b38VgYADoJ43W2LSaQQnKcHbcCfLgE2kQzAJ/iwrT1OMXyTX6
+	 GdCeuvzJiqRKWvv3aNDBXImbCSRXGbZf33YBIAckFfEsfBBn/SeSIA2UNJjlB/ClH4
+	 q5oTM34g4RCvg==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b725ead5800so265739866b.1
+        for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 06:36:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXLMTM2zDYZLuwLMX0b2bTa3vJ/RU+KckGZqQoPBBRd+WbFe1Ed/rymoZ+1v4Tgl8vFtyk++/H7kg4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwzgrMoQz7hUEDCr6C9sUs0Q6cNHAMbqzA5lqMgNe37Q+nk7wAq
+	ljLL1BY4cv9Hj72Lro6rtH34/PhUeSQKxehN8gANxJNeJHu/xEvNqr+w5ut6OpNOEPtGb/gTzg0
+	NC9IwxxQolnxO0zlJokbodH8ZHx5EQFc=
+X-Google-Smtp-Source: AGHT+IF99ZcOKZxwHhj61TbMLuNJeoS2wkCa3w0U0FmKNTTd0uxPqztc32MWgNrKH3nOf/+gpJAsTUn3W2sc9TU7vnU=
+X-Received: by 2002:a17:907:7286:b0:b71:ea7c:e509 with SMTP id
+ a640c23a62f3a-b767173189bmr313742466b.41.1763735809607; Fri, 21 Nov 2025
+ 06:36:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251120065758.3064368-1-maobibo@loongson.cn>
-In-Reply-To: <20251120065758.3064368-1-maobibo@loongson.cn>
+References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
+ <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
+ <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+ <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+ <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+ <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
+ <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com> <aRsH7RTpAah4g5Xr@willie-the-truck>
+In-Reply-To: <aRsH7RTpAah4g5Xr@willie-the-truck>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 21 Nov 2025 22:08:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
-X-Gm-Features: AWmQ_bkMdZhbipNdZaxn69sj0nHAjeWrzqrP0Iz85WWC9X3fN1V3trAx8IkqlpY
-Message-ID: <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
-To: Bibo Mao <maobibo@loongson.cn>, "open list:LOONGARCH" <loongarch@lists.linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
+Date: Fri, 21 Nov 2025 22:36:39 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com>
+X-Gm-Features: AWmQ_bmzF-PBbbGb1pyM-7ojfFGXsdzHVd24-gNLEumxbI6shCwp2NX04xLwnRw
+Message-ID: <CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Will Deacon <will@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Ard Biesheuvel <ardb@kernel.org>, loongarch@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
+On Mon, Nov 17, 2025 at 7:33=E2=80=AFPM Will Deacon <will@kernel.org> wrote=
+:
+>
+> On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
+> > On Wed, Nov 12, 2025 at 2:00=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel=
+.org> wrote:
+> > >
+> > > On Mon, Nov 10, 2025 at 03:00:00PM +0800, Huacai Chen wrote:
+> > > > On Mon, Nov 10, 2025 at 9:19=E2=80=AFAM Tiezhu Yang <yangtiezhu@loo=
+ngson.cn> wrote:
+> > > > > If I understand correctly, I should modify this patch to remove t=
+he
+> > > > > changes of arm and riscv for now, do the changes only when there =
+is
+> > > > > a real problem or requirement some day, right? If no more comment=
+s,
+> > > > > I will send v3 later.
+> > > >
+> > > > Now everyone involved agrees that the efistub code is correct, so t=
+he
+> > > > proper solution is to fix the compiler.
+> > >
+> > > Hm?  I don't see how it's a compiler bug.  It's really just an objtoo=
+l
+> > > limitation.
+> > >
+> > > > Changing efistub code and changing objtool (ignore __efistub prefix=
+)
+> > > > are both workarounds, but I think changing objtool is a little more
+> > > > reasonable. Maybe Josh has different ideas?
+> > >
+> > > I thought the conversation had converged on what Tiezhu mentioned abo=
+ve,
+> > > which is to skip objtool on libstub for loongarch, but leave the othe=
+r
+> > > arches alone.  That way objtool behavior is consistent between loonga=
+rch
+> > > and x86, and objtool doesn't need to ignore any prefixes.
+> > >
+> > > So basically, the v2 patch minus the arm64/riscv changes.
+> >
+> > Hi, ARM64 and RISC-V maintainers,
+> >
+> > Would you mind that this patch modifies the three architectures
+> > together (they are exactly the same style now)?
+> >
+> > Madhavan is the author of ARM64's objtool, I think your opinion is
+> > also very important.
+>
+> arm64 doesn't (yet) use objtool.
+>
+> I defer to Ard on anything relating to the arm64 efistub. Reading the
+> start of this thread, it doesn't look like he's convinced and I'm not
+> surprised if it's purely an issue with objtool.
+OK, I know, but I have a concern.
 
-On Thu, Nov 20, 2025 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> This patchset adds timer test case for LoongArch system, it is based
-> on common arch_timer test case. And it includes one-shot and period mode
-> timer interrupt test, software emulated timer function and time counter
-> test.
-I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
-it passes, sometimes I get:
-[root@fedora kvm]# ./arch_timer
-Random seed: 0x6b8b4567
-Guest assert failed,  vcpu 2; stage; 0; iter: 1
-=3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
-  loongarch/arch_timer.c:79: irq_iter =3D=3D 0
-  pid=3D60138 tid=3D60142 errno=3D4 - Interrupted system call
-     1  0x00000001200037cf: test_vcpu_run =E4=BA=8E arch_timer.c:70
-     2  0x00007ffff2449f27: ?? ??:0
-     3  0x00007ffff24c0633: ?? ??:0
-  irq_iter =3D 0x1.
-  Guest period timer interrupt was not triggered within the specified
-  interval, try to increase the error margin by [-e] option.
+Ard said that he is reluctant to make changes to accommodate a flawed
+build time tool and there may be regression risk.
 
-Is this as expected, or something is wrong?
+So, I'm also reluctant and don't want LoongArch to meet regression
+risk. If one day LoongArch has a regression, we probably need another
+workaround to "fix" this workaround. But if these three architectures
+change in the same way, we may have a chance to solve some fundamental
+problems...
 
-Hucai
+Huacai
 
-> ---
-> v2 ... v3:
->   1. Adjust order about patch 2 and patch 3
->   2. Add test case with alphabetical order
->   3. Merge one-shot and period timer interrupt test case into one
->   4. Only add LoongArch specific modification with common file
->      Makefile.kvm
 >
-> v1 ... v2:
->   1. Restore PC and PRMD after exception handler
->   2. Split patch 4 into two small patches with period timer test and
->      time counter test
->   3. With time counter test, set time count with 0 when create VM. And
->      verify time count starts from 0 in guest code
-> ---
-> Bibo Mao (6):
->   KVM: LoongArch: selftests: Add system registers save and restore on
->     exception
->   KVM: LoongArch: selftests: Add basic interfaces
->   KVM: LoongArch: selftests: Add exception handler register interface
->   KVM: LoongArch: selftests: Add timer interrupt test case
->   KVM: LoongArch: selftests: Add SW emulated timer test
->   KVM: LoongArch: selftests: Add time counter test
->
->  tools/testing/selftests/kvm/Makefile.kvm      |   1 +
->  .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
->  .../kvm/include/loongarch/processor.h         |  81 +++++++-
->  .../selftests/kvm/lib/loongarch/exception.S   |   6 +
->  .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
->  .../selftests/kvm/loongarch/arch_timer.c      | 194 ++++++++++++++++++
->  6 files changed, 410 insertions(+), 3 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_ti=
-mer.h
->  create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
->
->
-> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
-> --
-> 2.39.3
->
+> Will
