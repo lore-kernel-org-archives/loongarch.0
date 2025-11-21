@@ -1,91 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D5E351FA8
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 15:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE202D2398
+	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 15:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763738194; cv=none; b=qHtwbDkFEXkXMbLcMZzbj6IyrfVJgU2x6gO9MKAZU2Pma0WWt54A1cyUGvEh61eHv78ooq4JmfvWTqaZUjX3GrI5gNvr6+Fclb7VXphUaWZ23l+F/a6vyOKuwxEFDU1gFO40MI2lmRygZTO0AiIwXhaMvL3lSEVcqNInVI1tpEA=
+	t=1763739513; cv=none; b=ufzR9LQ2GKeozXwEm8JKrzg0SJs8SryiFXj6OGZoFuowMXFx4MP1y101+oyEEZUqxHT++TDmGQFoO4ri4xbq5tGmiqDTkMTIa7BZXmNtW8PcPB21isZwqotjtkOYRvyg30r5jViUgUsJQsL+20Be+7XJjgwB8YlDgJODNUSy6lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763738194; c=relaxed/simple;
-	bh=4Nw5kzDQ9aadF93520L+loYg4Pe3c7ohExj2x9LkHTc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tFG22uAeyG4o/mAsTRWGJ8UIWIg+Gm1ylvvxI4QbtiCN41NJ6wuGYUu30hWQ8HDnj25OXW8GkJx7aCQqDwqcbTme+5xTWn8BGCZsmlJSCpfcK0QBfvycqAOPs9ADRcjlnJpqjFYieHctF9izLgshPls9fAykU5t0yqwXJU3OtTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZZ1uHWX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZZ1uHWX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CBFC116C6
-	for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 15:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763738193;
-	bh=4Nw5kzDQ9aadF93520L+loYg4Pe3c7ohExj2x9LkHTc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YZZ1uHWX8jA8h3KqeGr5dk5BqSVqo2ZxZUdgIweTw8ldAfF2BlKGbx9hcCetumLYF
-	 6Z0Av4erPZ1ceu78hk33NVgzoft53GdBcDHrjLQI208QVTibCUAnQCXJr7dFEKOJzp
-	 vgyagzRm0Pw7hrUcJLqFULp4DiiDbA7fgHa7kGVIyYElH9FO0ZKbsfr0lXWeW/Etan
-	 9UrtWfJtqyHR0CmqDBUR48vIDrb0Baro3f00cbZ9KAHq7CW2noZ8PM+tJ3/z8URu75
-	 6Z9cxuWlBxzHnFoYSYDYrRggRq5Y9axSC4q01vXWPQt8uMMkjzBr553v5fFmpzGmGb
-	 +QnmP3qW8lTuw==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-59577c4c7c1so2963592e87.1
-        for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 07:16:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVU6Z+XVOXw42IWWjXDObQblRFS39Z82Qj36tPkCtBoQ+KXRVjL92xMHyRpxsXQ5aCWKpsBqBCO+g8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxyUg5hT3PjbeXUvuheQavHTEIyyFfRJF+VQ6/qN56UDFSUQIvL
-	5vPArtwU/LaZJuoq3UmhJbs/W0zhk0cA72qlOp9HW2h5Lzyw/UUQRBLDjD6/hyx9oF+Tr7iOrAX
-	0ppu/Mf72APqnRdCTtpJrKvi4RX+hu2A=
-X-Google-Smtp-Source: AGHT+IGPowCSKA7rqmBuuVeVvwKvJAgVwSGnoB8Wq+tDig5gUYW9uVP5SF2rLUXJXBy7GBEfdZMPDjZn9AIuPMCXlv4=
-X-Received: by 2002:a05:6512:15a6:b0:594:5f1d:d60d with SMTP id
- 2adb3069b0e04-596a377e72dmr1012107e87.14.1763738191788; Fri, 21 Nov 2025
- 07:16:31 -0800 (PST)
+	s=arc-20240116; t=1763739513; c=relaxed/simple;
+	bh=ryCRWvv7XdBibWvL4fadsc3qqHedhZ8wvCfbdFXGCIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DOMtnJGcSLkYKQUWIHW0/wHYKKcG+WwceAAZum+0gF1/0bSjIY/VMNlC9wZqpPpMj/zvUIn3NqfwF/apfIn63zmBIJoXsm4EAv7qnvpFiyJiZVQQzhMWWEHZV+2KOhcf+/HbCO1EoaN5bUtKiMVPmRPRQyIYFefFIklEBoNRZak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.219])
+	by gateway (Coremail) with SMTP id _____8CxqdFrhyBpxZ4mAA--.18216S3;
+	Fri, 21 Nov 2025 23:38:19 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.219])
+	by front1 (Coremail) with SMTP id qMiowJAxleRhhyBpzEA7AQ--.6972S2;
+	Fri, 21 Nov 2025 23:38:17 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.18-rc7
+Date: Fri, 21 Nov 2025 23:37:42 +0800
+Message-ID: <20251121153747.3337264-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251121135624.494768-1-tzimmermann@suse.de> <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
-In-Reply-To: <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 21 Nov 2025 16:16:20 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
-X-Gm-Features: AWmQ_bl_zPBWf1NywIhUPQAGEMUCFj4H1ZabIpySRf4mYN0qS7e_KlhM-cPxo4Y
-Message-ID: <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arch,sysfb: Move screen and edid info into single place
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxleRhhyBpzEA7AQ--.6972S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFy7CFy7tF45JFWUZryruFX_yoW8Aryfpr
+	y3urnxGF4rGr1fXwnxt3yUur15Jr1xG342qa13Gry8AFy5Zr1UJr18XryxXFyUJ3yfJryI
+	qF1rJw15KF1UJ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> > Replace screen_info and edid_info with sysfb_primary_device of type
-> > struct sysfb_display_info. Update all users.
-> >
-> > Sysfb DRM drivers currently fetch the global edid_info directly, when
-> > they should get that information together with the screen_info from their
-> > device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> > passing this to drivers enables this.
-> >
-> > Replacing both with sysfb_primary_display has been motivate by the EFI
-> > stub. EFI wants to transfer EDID via config table in a single entry.
-> > Using struct sysfb_display_info this will become easily possible. Hence
-> > accept some churn in architecture code for the long-term improvements.
->
-> This all looks good to me,
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> It should also bring us one step closer to eventually
-> disconnecting the x86 boot ABI from the kernel-internal
-> sysfb_primary_display.
->
+The following changes since commit 6a23ae0a96a600d1d12557add110e0bb6e32730c:
 
-Agreed
+  Linux 6.18-rc6 (2025-11-16 14:25:38 -0800)
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+are available in the Git repository at:
 
-I can take patches 1-2 right away, if that helps during the next cycle.
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.18-2
+
+for you to fetch changes up to 677e6123e3d24adaa252697dc89740f2ac07664e:
+
+  LoongArch: BPF: Disable trampoline for kernel module function trace (2025-11-20 14:42:05 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.18-rc7
+
+Use UAPI types in ptrace UAPI header to fix nolibc ptrace; fix some bugs
+about CPU name display, NUMA node parsing, kexec/kdump, PCI init and BPF
+trampoline.
+----------------------------------------------------------------
+Bibo Mao (1):
+      LoongArch: Fix NUMA node parsing with numa_memblks
+
+Huacai Chen (3):
+      LoongArch: Consolidate CPU names in /proc/cpuinfo
+      LoongArch: Mask all interrupts during kexec/kdump
+      LoongArch: Don't panic if no valid cache info for PCI
+
+Thomas Weißschuh (1):
+      LoongArch: Use UAPI types in ptrace UAPI header
+
+Vincent Li (1):
+      LoongArch: BPF: Disable trampoline for kernel module function trace
+
+ arch/loongarch/include/asm/cpu.h         | 21 +++++++++++
+ arch/loongarch/include/uapi/asm/ptrace.h | 40 ++++++++++-----------
+ arch/loongarch/kernel/cpu-probe.c        | 34 ++++++------------
+ arch/loongarch/kernel/machine_kexec.c    |  2 ++
+ arch/loongarch/kernel/numa.c             | 60 ++++++++++----------------------
+ arch/loongarch/kernel/proc.c             |  2 ++
+ arch/loongarch/net/bpf_jit.c             |  3 ++
+ arch/loongarch/pci/pci.c                 |  8 ++---
+ 8 files changed, 79 insertions(+), 91 deletions(-)
+
