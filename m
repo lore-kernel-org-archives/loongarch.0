@@ -1,155 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C482F28E5
-	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 11:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D932FB09A
+	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 11:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763811792; cv=none; b=GLAV7G/W6gG6GKPenuiRz+LwRpd0EyFTiUQr+I72Q3Lj1KxwskLo1nJTxK5CvR3LPAK7QV2vWz+aGHxyBYKs4lxqEBPJL1si23i64rQGSx2G5+ts951Z+adG7yUOHfjZ8frfk+SuMAY6RX5cESkbJs70uqc0NGxvomplf24gUwo=
+	t=1763812650; cv=none; b=ozNyvS2P5PYEDvxRUZOMW37mmvzY92zWsDSnGay8hHqn3iIM1WvfYY+17WmkZvlmzOAo4nw/vAJ9NA4XUeS2SiRa0afh2r0k3ql714u7tru0XcnxXjdi/O1G01bIKFnshI0hjbPK/LmAQecEOkXp2UvU2Uzp5hrCoXXZLwtqQBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763811792; c=relaxed/simple;
-	bh=p8H88tgM9+gXap9lRijwllIzLZu5llgC1f7xv5nwybk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3yanYYUgOdY5Dl4BDbsiCSNZ0ugrO1pug+/87GfV1YVNBylHObRHVm6jGc+tRQz2TS2CCWzdFN4y6KqioIYfoYmwDzaTehzkzslPe/tjSLiUwjSeuH5o92+4Givei5FLq5mh2Q4gVNzyKlO2KZmaaf1E9zbFJNlKrwJ7dZ5Rc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ipvswz18; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763812650; c=relaxed/simple;
+	bh=mZcm+0V7eo21fakAtLMCCoVtRwTR6UO4b55wipxHxyU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Xp98sCCQOZSaFZMUUFVR3BSi1N6eXsFGnIZhOH0C6qedEfMqQzICq3uk408HEtwh0U5HuIS1HhTgYx1y3/Eer/Rtq9eeMXAg8beDJTlxM6nBFPQzgE3NLX7+T0uKUImnF4qn2L0rjLm77xCfM4quN2PDTDOQDcCjGQzM3A17SZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IX2e92f5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QnVaF7rx; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ipvswz18"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB31C16AAE
-	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 11:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763811791;
-	bh=p8H88tgM9+gXap9lRijwllIzLZu5llgC1f7xv5nwybk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ipvswz18aqd0/TPfyaDV4JwDv6OLD0cZeJIq8CrXbsMPz1VZwsapYJAtdiVIc37YT
-	 P/L0lbDBumBVIGHT+mEZV/7MD9cSmtv3T3DWptmTmc9qxDrBKkyRPXa4Ae8aE0PQUQ
-	 HbDVsMpuUKTcGgV/9mxXWCLrCfILdEio7MaZrfnJFLJTlc/yk47dzUsqNJjonEuNfi
-	 r7fYLuhO8HnGh2sORE0RhoxErJSvva28uDuBOu5ftFkehUDuNOUqLnkO6/lmnaImM7
-	 hcZKmV+aF+35cjIVo76O+EsmfvKSnHRb4a8+jOL/NKN437gxi/5FmsRnI8XRWwG0Y8
-	 yt3iC2HpajEig==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-594516d941cso3356521e87.0
-        for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 03:43:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX0KOSHrzQg/ulxi2isl4yMNS1TOWzFiEYSqTd+mvHmC7j54ro1ayTYtQ0rAlfl7n7Ixki4Vw2M85I=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxdogzFdny6HVwSWyk+ImlZh809TNXWLTdWfSSry3L13Q60zX8h
-	yEj4W7p/imMrG5jXyCrM3Rtolfopwx8gkPbUjGliqXrhbpZcHqxGzUhJd4GdrbA+n+wIryhHquj
-	sm7pidksjGHUuWIrPJJgHEoxvLMzA2g0=
-X-Google-Smtp-Source: AGHT+IGKRFlgwehxRBm62tvmwTXy609E55PZi7OAqnBZ+de0+tT9jGT1vTKQcXSXNqsiURj9qycDJBw3M2X6JvRwZDY=
-X-Received: by 2002:a05:6512:3b27:b0:592:fa8a:810d with SMTP id
- 2adb3069b0e04-596a3ea7847mr1884146e87.16.1763811789974; Sat, 22 Nov 2025
- 03:43:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IX2e92f5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QnVaF7rx"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.stl.internal (Postfix) with ESMTP id 419A61D0014F;
+	Sat, 22 Nov 2025 06:57:26 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Sat, 22 Nov 2025 06:57:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1763812646;
+	 x=1763899046; bh=k9NvlEaBtVcuxazixF9pIt28NlkS+zYWHRHO9Ac5XQA=; b=
+	IX2e92f5+iaQ86D2jXreWxxSWxbBioZMlPGfrxsQabrFtVK/xC8Zz8doXBr8I7eU
+	2HINAkmkukeBbMHObYXxHOgbn1wG6LfFBz7qIW2b0ruor/iBbAc92yawVVBKQF5m
+	v79BFLQO2hWwslq8uiMP1HtuNfgT+kJlfcWRN3SLFW20eT3P1eF+gh8Nd/HpPT3S
+	SKqk4usy7cD5wp0FqTlTkqXiHubeCyXKfc1t3MT+SiuTxgvduKplE4pWM5mdQRFb
+	huzeRgAIvA8jTy4TEucER2K1ML6EmUEpXcFKJzcRIhyDEKUtQ7y6uSfEM5wgAPQQ
+	mYfwLFZQ9dKF1kMAFQXu+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1763812646; x=
+	1763899046; bh=k9NvlEaBtVcuxazixF9pIt28NlkS+zYWHRHO9Ac5XQA=; b=Q
+	nVaF7rxc6PbmPBfAMq2MxEAkQ5kJ0ljrP9ZBxfFBTmB7XfxDj+Dx08pE2/1uybaK
+	jKIRsRGbPENyhnbbdWnWPPnUqu2GkwTbAiCMRnBhzxYgfGyJZgyCWwUed/luSPyA
+	w9Zpm2eSnWlwogcGjzZmAP0hORER50xy7i7Kjk0soocJ49TZUKDEME2MjgVLh1Aj
+	Aw5N9cohxQSvuYBKBqS8ToFtHf3HAI+TQzs+Ez9HyNduhf2k8/c2pQjh9Vsq8F9o
+	GC4py4/tDoaqocfoBfbOCZol/4n8vi1k8HaC+ReOBZcrzfzP7wud+DLgXm5TvO5O
+	6JZs16zL6rTJsnu5Es4Xg==
+X-ME-Sender: <xms:JaUhaYA4D_re064N8xBZx_6CWup3r6PzaewaJKRFZR-1NRHXHh3YpQ>
+    <xme:JaUhaVXizBZGdoSgw_N3Puuypy6SFZh4y5EdKosujDzYA53DSEqKr4eoX0h9lioek
+    m8r2kweNxCYsOke71Z5rJGJm7e_e9wu1Ejj0AlBl11xkNVXi7smBOE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvfedvjeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtg
+    hpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehg
+    uhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslh
+    hishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegthhgvnhhhuhgrtggriheslhho
+    ohhnghhsohhnrdgtnhdprhgtphhtthhopehlihiguhgvfhgvnhhgsehlohhonhhgshhonh
+    drtghnpdhrtghpthhtohepthhhohhmrghssehtqdektghhrdguvgdprhgtphhtthhopehl
+    ihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:JaUhabmA01_oCrg_ln_mfVLcfi9v3yxmUootQDWXBk4PmApGjxMySw>
+    <xmx:JaUhaXAVsq2zvBJjyEpd968TqtUCypSrfCZjJvPifteV4_UD5BOpDA>
+    <xmx:JaUhadOC0GCsl5zwx35Awfjrz7CB3k3V7J4JUapq31bg05QTEVxw8Q>
+    <xmx:JaUhaePLTYV1k-WEoHRxWdGNydDf-m5InXB2JSPnT3qKqsjAF8M8sA>
+    <xmx:JqUhaXvD5NsX9ahRx1UeHmyPoYVRNKamBSgWLWnvvLHiwfMepON79V2o>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0151F700054; Sat, 22 Nov 2025 06:57:24 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251121135624.494768-1-tzimmermann@suse.de> <96a8d591-29d5-4764-94f9-6042252e53ff@app.fastmail.com>
- <CAMj1kXF1Dh0RbuqYc0fhAPf-CM0mdYh8BhenM8-ugKVHfwnhBg@mail.gmail.com>
- <199e7538-5b4a-483b-8976-84e4a8a0f2fd@suse.de> <CAMj1kXE+mS1Sm5GaROU0P97J2w1pew0P_To4sKiw8h1iOMuLcg@mail.gmail.com>
- <d080729c-6586-4b9c-b234-470977849d3d@suse.de> <6dff8e7e-c99b-443d-a1d8-22650ca0b595@suse.de>
- <CAMj1kXGpC_162bFL65kQw=7qVP7ezYw77Q76y217dDs8pqHogw@mail.gmail.com>
- <8d0bc096-e346-462b-a274-f0cc1456eea3@suse.de> <CAMj1kXFdethf2sb1tm1V4wRW1SyPt-OnCmaAXc5cHNKuLJMXWA@mail.gmail.com>
- <4c716fd1-c989-4e48-9878-e7312fefc302@suse.de>
-In-Reply-To: <4c716fd1-c989-4e48-9878-e7312fefc302@suse.de>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sat, 22 Nov 2025 12:42:58 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHO12LritnbMXapGBV8QnQOCVopJbaBi2ejMUgZQFGdSg@mail.gmail.com>
-X-Gm-Features: AWmQ_blTv2LH7aQFylqJjjKyEMR6uIyXZhGHq7nWzAQ8kC07d8tB-75tF0Nly1A
-Message-ID: <CAMj1kXHO12LritnbMXapGBV8QnQOCVopJbaBi2ejMUgZQFGdSg@mail.gmail.com>
-Subject: Re: [PATCH 0/6] arch, sysfb: Move screen and edid info into single place
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javierm@redhat.com>, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: AsIcsmVbKmaR
+Date: Sat, 22 Nov 2025 12:56:53 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ "Huacai Chen" <chenhuacai@loongson.cn>
+Cc: "Huacai Chen" <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org
+Message-Id: <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
+In-Reply-To: <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
+References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
+ <20251122043634.3447854-14-chenhuacai@loongson.cn>
+ <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
+Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 22 Nov 2025 at 11:52, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
+> On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
+>> Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig to
+>> loongson64_defconfig (for 64BIT).
+>>=20
+>> Also adjust graphics drivers, such as FB_EFI is replaced with EFIDRM.
+>>=20
+>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>> ---
+>>  arch/loongarch/Makefile                       |    7 +-
+>>  arch/loongarch/configs/loongson32_defconfig   | 1104 +++++++++++++++=
+++
+>>  ...ongson3_defconfig =3D> loongson64_defconfig} |    6 +-
+>>  3 files changed, 1113 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/loongarch/configs/loongson32_defconfig
+>>  rename arch/loongarch/configs/{loongson3_defconfig =3D> loongson64_d=
+efconfig} (99%)
+>>=20
+>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+>> index 96ca1a688984..cf9373786969 100644
+>> --- a/arch/loongarch/Makefile
+>> +++ b/arch/loongarch/Makefile
+>> @@ -5,7 +5,12 @@
+>> =20
+>>  boot	:=3D arch/loongarch/boot
+>> =20
+>> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
+>> +ifdef CONFIG_32BIT
 >
-> Hi
->
-> Am 21.11.25 um 17:31 schrieb Ard Biesheuvel:
-> > On Fri, 21 Nov 2025 at 17:26, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >> Hi
-> >>
-> >> Am 21.11.25 um 17:19 schrieb Ard Biesheuvel:
-> >>> On Fri, 21 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> >>>>
-> >>>> Am 21.11.25 um 17:08 schrieb Thomas Zimmermann:
-> >>>>> Hi
-> >>>>>
-> >>>>> Am 21.11.25 um 16:56 schrieb Ard Biesheuvel:
-> >>>>>> On Fri, 21 Nov 2025 at 16:53, Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>>> wrote:
-> >>>>>>> Hi
-> >>>>>>>
-> >>>>>>> Am 21.11.25 um 16:16 schrieb Ard Biesheuvel:
-> >>>>>>>> On Fri, 21 Nov 2025 at 16:10, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>>>>>> On Fri, Nov 21, 2025, at 14:36, Thomas Zimmermann wrote:
-> >>>>>>>>>> Replace screen_info and edid_info with sysfb_primary_device of type
-> >>>>>>>>>> struct sysfb_display_info. Update all users.
-> >>>>>>>>>>
-> >>>>>>>>>> Sysfb DRM drivers currently fetch the global edid_info directly,
-> >>>>>>>>>> when
-> >>>>>>>>>> they should get that information together with the screen_info
-> >>>>>>>>>> from their
-> >>>>>>>>>> device. Wrapping screen_info and edid_info in
-> >>>>>>>>>> sysfb_primary_display and
-> >>>>>>>>>> passing this to drivers enables this.
-> >>>>>>>>>>
-> >>>>>>>>>> Replacing both with sysfb_primary_display has been motivate by
-> >>>>>>>>>> the EFI
-> >>>>>>>>>> stub. EFI wants to transfer EDID via config table in a single entry.
-> >>>>>>>>>> Using struct sysfb_display_info this will become easily possible.
-> >>>>>>>>>> Hence
-> >>>>>>>>>> accept some churn in architecture code for the long-term
-> >>>>>>>>>> improvements.
-> >>>>>>>>> This all looks good to me,
-> >>>>>>>>>
-> >>>>>>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >>>>>>> Thanks
-> >>>>>>>
-> >>>>>>>>> It should also bring us one step closer to eventually
-> >>>>>>>>> disconnecting the x86 boot ABI from the kernel-internal
-> >>>>>>>>> sysfb_primary_display.
-> >>>>>>>>>
-> >>>>>>>> Agreed
-> >>>>>>>>
-> >>>>>>>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >>>>>>> Thanks
-> >>>>>>>
-> >>>>>>>> I can take patches 1-2 right away, if that helps during the next
-> >>>>>>>> cycle.
-> >>>>>>>     From my sysfb-focused POV, these patches would ideally all go through
-> >>>>>>> the same tree, say efi or generic arch, or whatever fits best. Most of
-> >>>>>>> the other code is only renames anyway.
-> >>>>>>>
-> >>>>>> I don't mind queueing all of it, but I did get a conflict on
-> >>>>>> drivers/pci/vgaarb.c
-> >>>>> Probably from a78835b86a44 ("PCI/VGA: Select SCREEN_INFO on X86")
-> >>>> https://lore.kernel.org/all/20251013220829.1536292-1-superm1@kernel.org/
-> >>>>
-> >>> Yes, if I merge back -rc2 first, I can apply patches 1-5 onto my
-> >>> efi/next tree. But then I hit
-> >>>
-> >>> Applying: sysfb: Move edid_info into sysfb_primary_display
-> >>> error: sha1 information is lacking or useless (drivers/gpu/drm/sysfb/efidrm.c).
-> >>> error: could not build fake ancestor
-> >>> Patch failed at 0006 sysfb: Move edid_info into sysfb_primary_display
-> >>>
-> >>> If you prefer, you can take the whole lot via the sysfb tree instead,
-> >>> assuming it does not depend on the EDID changes I already queued up?
-> >> Sure, I can also add it to the drm-misc tree. ETA in upstream would be
-> >> v6.20-rc1.
-> >>
-> > But does that mean the EDID firmware on non-x86 will have to wait for
-> > 6.21? I was trying to avoid making this a 6 month effort.
->
-> No problem. Then let me rebase onto linux-next and put the existing EDID
-> patches for EFI on top. It's mostly acked or reviewed already. Once we
-> have it in good shape we can merged it all at once via the linux-efi
-> tree. Does that work for you?
->
+> Testing for CONFIG options here doesn't make sense, as the config is n=
+ot yet
+> created.
 
-Sounds good.
+Right
+
+> Either test for $(ARCH) or uname or just use one unconditionally.
+
+I don't really like the $(ARCH) hacks, nobody is going to build kernels
+natively on loongarch32, and for the rest it's fine to set the option.
+
+> Also as mentioned before, snippets can reduce the duplication.
+>
+>> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
+>> +else
+>> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
+>> +endif
+>> +
+
+This is also not the change I had suggested in my review. I think this
+should be a fragment along the lines of arch/mips/configs/generic/32r2.c=
+onfig
+and arch/powerpc/configs/book3s_32.config.
+
+See arch/powerpc/Makefile for the integration into the build system.
+
+      Arnd
