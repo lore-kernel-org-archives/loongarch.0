@@ -1,75 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F71287269;
-	Sat, 22 Nov 2025 01:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A31200110
+	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 02:39:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763775356; cv=none; b=Q6rnr4gDSTyiPNc5Jgu2FklX/pQJ5xYQopnVdczrnwM4og13cRSE9pc00ZGRmOv9Lr7/GWvnz65WdGt/s43WfnLKGXOnYxoSyfQizPWP4Nwk+uQYmpaUGODzDTdKXWDe9w/vqS6+stTWVNtLiPV82X+LG7L/n4MXyBhbzdwKKos=
+	t=1763779171; cv=none; b=NnSrexSGs/ZOjXZ86yRMRO4mY2B1PdX41FoXIM9jrlWvW69Qzgnrws2Av0SgSoXUq/sVPs4atabriAlCKZ7nN1AHSt35/1d0oRhogte48XQPsUFz1r21mbqsqGZiVYrZJlb0asL/MHt0mGLdQKX6FuZf0CsbtpRehMY0QXdCoxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763775356; c=relaxed/simple;
-	bh=nQkWOwaTw36gMDiYgxDhMlzpOTjcrAM2DF2QmNc8EMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JeAxfEqixSOIZK8Kqf+CMGwjf2o+wSOnMfmebzv87eG8oBvqts4A/GVdW9wTdbEQ5Kc53mZGidrF1K9rNSX2MhEOaJ5tAAoqzgmf1lxvj4lrCrX78ALB9o8//Zm2ujByomA/3w6D7afpMw84HZ9NrFPyIZc5yNqkTbY+87qAy4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l36EEGOj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763779171; c=relaxed/simple;
+	bh=S5MhBjEpkRIXWb7CuzJvS8KPPQXUwQ9+CpcYi40II14=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t2ZsaLshdAUfthnHP0PAPLCXixzlGezi1trgZKQ5jDAMsNLjrELMZ4UEmxdx55zZ3pYTathGUBkPtj9afyjFKfvK6fUJvTU+PXsj4vOla4cteoiazhYNnBs/mnG/Tpv4+ykAQEjYt8xuEjPOKyYH+5mXdxI9iDS4WG9o60xEE6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3bSo81U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l36EEGOj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C965EC4CEF1;
-	Sat, 22 Nov 2025 01:35:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3bSo81U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BF66C116C6
+	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 02:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763775355;
-	bh=nQkWOwaTw36gMDiYgxDhMlzpOTjcrAM2DF2QmNc8EMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l36EEGOjwua6msm41YR6/XW0HneEoFKcD817r2luDLPv4cwsDLsxpy/R7NtNuKVeV
-	 YbZdTcJUSt0oqJPoFWsDo3DXphieyd3wKCultEzKQNX/aaS54ux2b7HFkcEkQ91GTt
-	 Z4TxYiyuAIttgeCCHNCnFjL+M3UugXlvVaUdVcDZVg9AP0m56CqPdQkM1Qo4vDHzOp
-	 vgXgzwEcZwEKliLOK2EMNNqlU9QRnRZafcBLqAuQDi9Ag3SRkBzgWNIuE8geiNWfCa
-	 BH4qnKX2BA8ARE0zRYGiF/cKiU5r33tKYS5IV8B8+0iXr9pekgZ67+vWAvNGJ1b9Gk
-	 m6p1Ii0z+3Euw==
-Date: Fri, 21 Nov 2025 18:35:51 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] kbuild: Add KBUILD_VMLINUX_LIBS_PRELINK
-Message-ID: <20251122013551.GA3928114@ax162>
-References: <20251119042708.27658-1-yangtiezhu@loongson.cn>
+	s=k20201202; t=1763779170;
+	bh=S5MhBjEpkRIXWb7CuzJvS8KPPQXUwQ9+CpcYi40II14=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=C3bSo81Ub9+5AuJDZaiRGeBT0BmHlkRI3tHvV1Z0mO+vGQMiYV5xL5cNva6OwGFNl
+	 K37QJkWt8+RESc6BOxAfSZqXe+uSJPb0xoqvcBlQE9CDOYMtpuLKWpb3NxfBAW2y5d
+	 Ge7LKAKesAzBQKy1CfBjfS9ZyBhl16ZpXuwszO+tYc5ZEIxGFLfrBVJLgf9wILR0Ve
+	 0W4Af4NynLYRrwl8nVPhRxZe9uGET/mD8gXQOhvWcMh2D2IzMgEjbGznW0dxWc+6gV
+	 tPzZGdb96a5x9waxVh2YBIJfVI5Wlg31i3tk3wp9NwUgKqwScbqE8L8HHrDHTMJgu2
+	 /Z9oPRUv8FUtw==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b7355f6ef12so564253666b.3
+        for <loongarch@lists.linux.dev>; Fri, 21 Nov 2025 18:39:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUMB8EeTfXl/3SV3DOtl/h2bFtwJk3ihc7/sp17QZXY1OMEZGOj0tKCNt3UcxOfJImQxTkfxUy47io=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1EeAWPJAH/ok9l8mJUwuSPjooiHMQPY7j55dAAus1SctW0B7L
+	2s+7HeEIusiI04T7ILaCrDJkJoArOvan7yrxKtAqZ0zK6bMu7AiZhIyLX4/03egf7kFr/PJkItb
+	sqcGhR+x4AFRNkHONBIdy8Zzc6gvB2Ik=
+X-Google-Smtp-Source: AGHT+IGXGmEsVMVsrAXCqbyd//DKrhU/3oYYyuF5sSO+PvjuDqpYWQ6ntXSeVDpWj+wtf7kbva8BAM1sr1ZedISBaCc=
+X-Received: by 2002:a17:907:dab:b0:b73:4fbb:37a2 with SMTP id
+ a640c23a62f3a-b7671514106mr450217466b.5.1763779169176; Fri, 21 Nov 2025
+ 18:39:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251119042708.27658-1-yangtiezhu@loongson.cn>
+References: <20250930093741.2734974-1-maobibo@loongson.cn>
+In-Reply-To: <20250930093741.2734974-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 22 Nov 2025 10:39:20 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4AkF3pYN31ADCnMLVirDcEhMjyr+FekBz1pQ+aggh9FQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkSX84detPY8GsFn078-cYShG7j0bc94PploS1gqcktqZ0VBU_MS5srXnI
+Message-ID: <CAAhV-H4AkF3pYN31ADCnMLVirDcEhMjyr+FekBz1pQ+aggh9FQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Get VM PMU capability from HW GCFG register
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 19, 2025 at 12:27:08PM +0800, Tiezhu Yang wrote:
-...
-> index 433849ff7529..e72d3254b93f 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -61,12 +61,11 @@ vmlinux_link()
->  	shift
->  
->  	if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
-> -		# Use vmlinux.o instead of performing the slow LTO link again.
+Applied with some small changes, thanks.
 
-Why is this comment getting removed?
+Huacai
 
->  		objs=vmlinux.o
-> -		libs=
-> +		libs="${KBUILD_VMLINUX_LIBS_PRELINK}"
->  	else
->  		objs=vmlinux.a
-> -		libs="${KBUILD_VMLINUX_LIBS}"
-> +		libs="${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PRELINK}"
->  	fi
->  
->  	if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
-> -- 
-> 2.42.0
-> 
+On Tue, Sep 30, 2025 at 5:37=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> Now VM PMU capability comes from host PMU capability directly, instead
+> bit 23 of HW GCFG CSR register also show PMU capability for VM. It
+> will be better if it comes from HW GCFG CSR register rather than host
+> PMU capability, especially when LVZ function is emulated in TCG mode,
+> however without PMU capability.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_host.h  |  8 +++++++
+>  arch/loongarch/include/asm/loongarch.h |  2 ++
+>  arch/loongarch/kvm/vm.c                | 30 +++++++++++++++++---------
+>  3 files changed, 30 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index 0cecbd038bb3..392480c9b958 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -126,6 +126,8 @@ struct kvm_arch {
+>         struct kvm_phyid_map  *phyid_map;
+>         /* Enabled PV features */
+>         unsigned long pv_features;
+> +       /* Supported features from KVM */
+> +       unsigned long support_features;
+>
+>         s64 time_offset;
+>         struct kvm_context __percpu *vmcs;
+> @@ -293,6 +295,12 @@ static inline int kvm_get_pmu_num(struct kvm_vcpu_ar=
+ch *arch)
+>         return (arch->cpucfg[6] & CPUCFG6_PMNUM) >> CPUCFG6_PMNUM_SHIFT;
+>  }
+>
+> +/* Check whether KVM support this feature, however VMM may disable it */
+> +static inline bool kvm_vm_support(struct kvm_arch *arch, int feature)
+> +{
+> +       return !!(arch->support_features & BIT_ULL(feature));
+> +}
+> +
+>  bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu);
+>
+>  /* Debug: dump vcpu state */
+> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/incl=
+ude/asm/loongarch.h
+> index 09dfd7eb406e..b640f8f6d7bd 100644
+> --- a/arch/loongarch/include/asm/loongarch.h
+> +++ b/arch/loongarch/include/asm/loongarch.h
+> @@ -510,6 +510,8 @@
+>  #define  CSR_GCFG_GPERF_SHIFT          24
+>  #define  CSR_GCFG_GPERF_WIDTH          3
+>  #define  CSR_GCFG_GPERF                        (_ULCAST_(0x7) << CSR_GCF=
+G_GPERF_SHIFT)
+> +#define  CSR_GCFG_GPMP_SHIFT           23
+> +#define  CSR_GCFG_GPMP                 (_ULCAST_(0x1) << CSR_GCFG_GPMP_S=
+HIFT)
+>  #define  CSR_GCFG_GCI_SHIFT            20
+>  #define  CSR_GCFG_GCI_WIDTH            2
+>  #define  CSR_GCFG_GCI                  (_ULCAST_(0x3) << CSR_GCFG_GCI_SH=
+IFT)
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index edccfc8c9cd8..735ad20d9ea9 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/kvm_host.h>
+>  #include <asm/kvm_mmu.h>
+>  #include <asm/kvm_vcpu.h>
+> +#include <asm/kvm_csr.h>
+>  #include <asm/kvm_eiointc.h>
+>  #include <asm/kvm_pch_pic.h>
+>
+> @@ -24,6 +25,23 @@ const struct kvm_stats_header kvm_vm_stats_header =3D =
+{
+>                                         sizeof(kvm_vm_stats_desc),
+>  };
+>
+> +static void kvm_vm_init_features(struct kvm *kvm)
+> +{
+> +       unsigned long val;
+> +
+> +       /* Enable all PV features by default */
+> +       kvm->arch.pv_features =3D BIT(KVM_FEATURE_IPI);
+> +       kvm->arch.support_features =3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
+> +       if (kvm_pvtime_supported()) {
+> +               kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME);
+> +               kvm->arch.support_features |=3D BIT(KVM_LOONGARCH_VM_FEAT=
+_PV_STEALTIME);
+> +       }
+> +
+> +       val =3D read_csr_gcfg();
+> +       if (val & CSR_GCFG_GPMP)
+> +               kvm->arch.support_features |=3D BIT(KVM_LOONGARCH_VM_FEAT=
+_PMU);
+> +}
+> +
+>  int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>  {
+>         int i;
+> @@ -42,11 +60,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long ty=
+pe)
+>         spin_lock_init(&kvm->arch.phyid_map_lock);
+>
+>         kvm_init_vmcs(kvm);
+> -
+> -       /* Enable all PV features by default */
+> -       kvm->arch.pv_features =3D BIT(KVM_FEATURE_IPI);
+> -       if (kvm_pvtime_supported())
+> -               kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME);
+> +       kvm_vm_init_features(kvm);
+>
+>         /*
+>          * cpu_vabits means user address space only (a half of total).
+> @@ -137,13 +151,9 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, =
+struct kvm_device_attr *attr
+>                         return 0;
+>                 return -ENXIO;
+>         case KVM_LOONGARCH_VM_FEAT_PMU:
+> -               if (cpu_has_pmp)
+> -                       return 0;
+> -               return -ENXIO;
+>         case KVM_LOONGARCH_VM_FEAT_PV_IPI:
+> -               return 0;
+>         case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
+> -               if (kvm_pvtime_supported())
+> +               if (kvm_vm_support(&kvm->arch, attr->attr))
+>                         return 0;
+>                 return -ENXIO;
+>         default:
+>
+> base-commit: e5f0a698b34ed76002dc5cff3804a61c80233a7a
+> --
+> 2.39.3
+>
+>
