@@ -1,96 +1,144 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01EF27991E
-	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 12:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8A1D6DB5
+	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 14:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763814295; cv=none; b=RQYE1019KzDj/X+yKZKyWOcZgnoUMyxfH//oi5lMx1svcr2vDAiPrK5aBegy8Vx1IO7lbJT3s1rPITRUqPEtNHeit/0v31qUeH7ZoCLBHe6WfQ4V1FueBE0AvcGmD2DwsE38ADY65yxIpRLJwCUQ2ONl3IzIK8yMhc8Y9Fr+N74=
+	t=1763820822; cv=none; b=BYOaoYkw4HednXr8Bl9kr21cyy8hbk6q9jKdMaDXqH0QHpIPvzl7+2wVnUFklWZjBzijqmUI/VIpVB1aOXdyBuofgq/k/YOmcB9oAgOIft7hKVlluSS961SZEoE3yK/7moVbk5iFBnuFKETn/91gb7jrhyZ4F/A8dalEN7Sa6hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763814295; c=relaxed/simple;
-	bh=SLclUAtH7ageWRrtaU7kW+a95Ka7RjgLaXjSEpWa/K8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRVSDHbYKB4nqhUwhm6QC3HZhipcZkfUO5o/MNzDksY7w/CDTIZozM7bDuuT01pUEGfsqA8BmUz6/ui0j0Np8oahEBZk0LfR2G7TUk0apzHmdoWFkiHDkgm/fJHSj7tc0ap57ECEwCjsRu3TTlJ0KyKPMtaGiuWUCEZZJKflxfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=GA6Lnbxw; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	s=arc-20240116; t=1763820822; c=relaxed/simple;
+	bh=fi+qgkql+85tCdtgHV/9kS3XB1S11HBJH0nssK81tec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nrCSS8rYUaEGQY3ykOwSUxNilyVAkyNueCZohVClyqwutW8S0vVEs9ISS5t8kBC0juJm84Ts8tabA9/aHsffT+6Va6qefdQOGVjoM4fFnRNpMQcG0Ryz0qQiwfjTi55niEJl9nas1Yt1fjg8rZ3C7XbBWwRM3hDXaMim4CMSLeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qp4v3oa3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="GA6Lnbxw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1763814291; bh=SLclUAtH7ageWRrtaU7kW+a95Ka7RjgLaXjSEpWa/K8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GA6LnbxwHYHrTqVgvL2SqLFSJTJBw6si5k9FykadC9O1xk121SCLnCksHfIlJu+Gc
-	 AMTPGesv6fIjg7gMa4eo4HG8+C5YJyRbWf6JKnfals/7S4N5Jg37gQFKYBaaE6xWJU
-	 1Xj4BBt9wx2kH4yVaZMyo9g02R5Pcs4mQQ/CKS5Y=
-Date: Sat, 22 Nov 2025 13:24:50 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, 
-	loongarch@lists.linux.dev, linux-arch@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for
- 32BIT/64BIT
-Message-ID: <2f9f3c8f-d444-42b9-9c2f-66c8676e9565@t-8ch.de>
-References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
- <20251122043634.3447854-14-chenhuacai@loongson.cn>
- <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
- <CAAhV-H4Vemxni8PrMCeubUwWcOFAV-j6AFJg4oPdxs-VNBiUGw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qp4v3oa3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1E4C113D0
+	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 14:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763820822;
+	bh=fi+qgkql+85tCdtgHV/9kS3XB1S11HBJH0nssK81tec=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Qp4v3oa3mS9kXK/Cp2LoLOKio6AfAnAcXtDUVVa1Wtg8rUAFj440ywtY5j7jtWCtu
+	 p1Ad1jtWyxQUOz5kaPhKQ1oAiZIy2vzKk5f2czbY5DyHRZXJvTg8A6x+Yp9heU8lts
+	 tAoQ3fDilRrQGMpuB0aWTbl+bq9sjHJ6o/vw6brYpSUe6igYnt9pRxs4z9HLqrOzcy
+	 mVj2XeDuVMx6KMgUB+DtuDDY5iKiirkn9vNbAUTqygButIV0+5UkPlvOvXQ31ieB3g
+	 AR9VNU3EhcJ7H4zvs3ucIM6g4Nt71BAmix3sBG2EgQO+kAhgrqd4GUuGUBnFr4hj8n
+	 91O7b37JjKeUQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-640aa1445c3so4594889a12.1
+        for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 06:13:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVH8DsMxMkqNJunGYbp+z369L6ZhfLF+o2q+BR09lAC+uyfwb/KqTSGl2Vrr5C8N/a7NUSOwgElZgQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxKwjV63E3njOaPeCzQEwh73u7Mk2LE+AThcHoI2+2t7UK69kuB
+	oTfCIsmrl0ID50u9f1OANReN+RPztY84etB1cIxWSDjte0ImCO3rcsZa33Z3wMbowNSHyK/AXnv
+	eFfSDcxBg7DEqBKDQUxGTDV7/ysIxLZk=
+X-Google-Smtp-Source: AGHT+IHNMnyVw2hQGvatkzLFGPVdNC0NHP7M4lZ4fkcxq/iQEPXZct9/yBhEFcw6jbf88Y+c8hzGSkn48Q8NRK6I/EM=
+X-Received: by 2002:a17:906:b052:b0:b76:8cda:c936 with SMTP id
+ a640c23a62f3a-b768cdad168mr104392066b.36.1763820820877; Sat, 22 Nov 2025
+ 06:13:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H4Vemxni8PrMCeubUwWcOFAV-j6AFJg4oPdxs-VNBiUGw@mail.gmail.com>
+References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
+ <20251122043634.3447854-14-chenhuacai@loongson.cn> <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
+ <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
+In-Reply-To: <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 22 Nov 2025 22:13:29 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
+X-Gm-Features: AWmQ_bnpgUT7klbqgZLBCauIV7bcQe-KvCjFuT_f9yPZM2QSFNxQaNkoFLG_39k
+Message-ID: <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
+Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-11-22 19:58:24+0800, Huacai Chen wrote:
-> On Sat, Nov 22, 2025 at 5:45 PM Thomas Weißschuh <thomas@t-8ch.de> wrote:
-> >
+Hi, Arnd,
+
+On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
 > > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
-> > > Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig to
-> > > loongson64_defconfig (for 64BIT).
-> > >
-> > > Also adjust graphics drivers, such as FB_EFI is replaced with EFIDRM.
-> > >
-> > > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  arch/loongarch/Makefile                       |    7 +-
-> > >  arch/loongarch/configs/loongson32_defconfig   | 1104 +++++++++++++++++
-> > >  ...ongson3_defconfig => loongson64_defconfig} |    6 +-
-> > >  3 files changed, 1113 insertions(+), 4 deletions(-)
-> > >  create mode 100644 arch/loongarch/configs/loongson32_defconfig
-> > >  rename arch/loongarch/configs/{loongson3_defconfig => loongson64_defconfig} (99%)
-> > >
-> > > diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> > > index 96ca1a688984..cf9373786969 100644
-> > > --- a/arch/loongarch/Makefile
-> > > +++ b/arch/loongarch/Makefile
-> > > @@ -5,7 +5,12 @@
-> > >
-> > >  boot := arch/loongarch/boot
-> > >
-> > > -KBUILD_DEFCONFIG := loongson3_defconfig
-> > > +ifdef CONFIG_32BIT
+> >> Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig to
+> >> loongson64_defconfig (for 64BIT).
+> >>
+> >> Also adjust graphics drivers, such as FB_EFI is replaced with EFIDRM.
+> >>
+> >> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> >> ---
+> >>  arch/loongarch/Makefile                       |    7 +-
+> >>  arch/loongarch/configs/loongson32_defconfig   | 1104 ++++++++++++++++=
++
+> >>  ...ongson3_defconfig =3D> loongson64_defconfig} |    6 +-
+> >>  3 files changed, 1113 insertions(+), 4 deletions(-)
+> >>  create mode 100644 arch/loongarch/configs/loongson32_defconfig
+> >>  rename arch/loongarch/configs/{loongson3_defconfig =3D> loongson64_de=
+fconfig} (99%)
+> >>
+> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> >> index 96ca1a688984..cf9373786969 100644
+> >> --- a/arch/loongarch/Makefile
+> >> +++ b/arch/loongarch/Makefile
+> >> @@ -5,7 +5,12 @@
+> >>
+> >>  boot        :=3D arch/loongarch/boot
+> >>
+> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
+> >> +ifdef CONFIG_32BIT
 > >
-> > Testing for CONFIG options here doesn't make sense, as the config is not yet
-> > created. Either test for $(ARCH) or uname or just use one unconditionally.
+> > Testing for CONFIG options here doesn't make sense, as the config is no=
+t yet
+> > created.
+>
+> Right
+>
+> > Either test for $(ARCH) or uname or just use one unconditionally.
+>
+> I don't really like the $(ARCH) hacks, nobody is going to build kernels
+> natively on loongarch32, and for the rest it's fine to set the option.
+OK, I will use 'uname -m' for checking. Though native builds on
+loongarch32 will hardly happen, we can give a small chance to use
+loongson32_defconfig, in all other cases, let's use
+loongson64_defconfig.
+
+>
 > > Also as mentioned before, snippets can reduce the duplication.
-> Thank you for your clarification. But $(ARCH) also doesn't make sense
-> because it is always "loongarch".
-> 
-> 'uname' is an option but I think it doesn't work for cross compile?
+> >
+> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
+> >> +else
+> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
+> >> +endif
+> >> +
+>
+> This is also not the change I had suggested in my review. I think this
+> should be a fragment along the lines of arch/mips/configs/generic/32r2.co=
+nfig
+> and arch/powerpc/configs/book3s_32.config.
+Sorry for that. I know that the default config file is usually
+generated by 'make savedefconfig', and the main purpose is
+significantly reducing file size. I did that, but manually add some
+lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
+CONFIG_EFI, etc. My original goal of doing this is to let users easily
+know those fundamental options without reading Kconfig files (of
+course we should not increase the defconfig too much).
 
-The default is not meant to work for cross compilations. ARCH/SUBARCH
-can take `uname` into account. See Makefile and scripts/subarch.include.
-But as Arnd mentioned, it most probably does not make any sense to cater
-to native LoongArch32 builds. Just use the 64-bit variant unconditionally.
-It is easy enough to override.
+Sorry again for not explaining about this in the previous version.
 
 
-Thomas
+Huacai
+
+>
+> See arch/powerpc/Makefile for the integration into the build system.
+>
+>       Arnd
