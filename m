@@ -1,144 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8A1D6DB5
-	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 14:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3FB1A76D4
+	for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 02:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763820822; cv=none; b=BYOaoYkw4HednXr8Bl9kr21cyy8hbk6q9jKdMaDXqH0QHpIPvzl7+2wVnUFklWZjBzijqmUI/VIpVB1aOXdyBuofgq/k/YOmcB9oAgOIft7hKVlluSS961SZEoE3yK/7moVbk5iFBnuFKETn/91gb7jrhyZ4F/A8dalEN7Sa6hI=
+	t=1763864941; cv=none; b=RayNXol2ij+XTjgnRCYwTAnSLUFi4RLM8UkexGfOFmVcFxUMbfpCbmpn6k7SL4acmUcaRjlA7L09fDH3GAnT1N1JYsSY0P3XQ3JEXemh0gzwSdQmbhRA6MgQPOQFKbNdWz2nuNekzkj+9DYHaVAuAFrwk0nbPBfPD1UwciYpkwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763820822; c=relaxed/simple;
-	bh=fi+qgkql+85tCdtgHV/9kS3XB1S11HBJH0nssK81tec=;
+	s=arc-20240116; t=1763864941; c=relaxed/simple;
+	bh=5/gE9+3vHOoB1f8yml6mnDnZO5OsQRxggIUPttmfMEI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nrCSS8rYUaEGQY3ykOwSUxNilyVAkyNueCZohVClyqwutW8S0vVEs9ISS5t8kBC0juJm84Ts8tabA9/aHsffT+6Va6qefdQOGVjoM4fFnRNpMQcG0Ryz0qQiwfjTi55niEJl9nas1Yt1fjg8rZ3C7XbBWwRM3hDXaMim4CMSLeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qp4v3oa3; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=aRd6kMVIGn3pq18CTbIN4wmXGGQhmZKtFTfats3ypy+sYeBBzzWnWffa/sZGcbWylGH0ZhDNekrjoXDA0ar1c5Vkubw7RLoNM8t15++WoRaOwVxizPJh3dbAS8nVitDJ01zeDx89pgyb715IdiAnCofo56vhFDjxkPge8lRKAFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSkynLBV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qp4v3oa3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1E4C113D0
-	for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 14:13:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSkynLBV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43736C19421
+	for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 02:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763820822;
-	bh=fi+qgkql+85tCdtgHV/9kS3XB1S11HBJH0nssK81tec=;
+	s=k20201202; t=1763864941;
+	bh=5/gE9+3vHOoB1f8yml6mnDnZO5OsQRxggIUPttmfMEI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Qp4v3oa3mS9kXK/Cp2LoLOKio6AfAnAcXtDUVVa1Wtg8rUAFj440ywtY5j7jtWCtu
-	 p1Ad1jtWyxQUOz5kaPhKQ1oAiZIy2vzKk5f2czbY5DyHRZXJvTg8A6x+Yp9heU8lts
-	 tAoQ3fDilRrQGMpuB0aWTbl+bq9sjHJ6o/vw6brYpSUe6igYnt9pRxs4z9HLqrOzcy
-	 mVj2XeDuVMx6KMgUB+DtuDDY5iKiirkn9vNbAUTqygButIV0+5UkPlvOvXQ31ieB3g
-	 AR9VNU3EhcJ7H4zvs3ucIM6g4Nt71BAmix3sBG2EgQO+kAhgrqd4GUuGUBnFr4hj8n
-	 91O7b37JjKeUQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-640aa1445c3so4594889a12.1
-        for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 06:13:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVH8DsMxMkqNJunGYbp+z369L6ZhfLF+o2q+BR09lAC+uyfwb/KqTSGl2Vrr5C8N/a7NUSOwgElZgQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKwjV63E3njOaPeCzQEwh73u7Mk2LE+AThcHoI2+2t7UK69kuB
-	oTfCIsmrl0ID50u9f1OANReN+RPztY84etB1cIxWSDjte0ImCO3rcsZa33Z3wMbowNSHyK/AXnv
-	eFfSDcxBg7DEqBKDQUxGTDV7/ysIxLZk=
-X-Google-Smtp-Source: AGHT+IHNMnyVw2hQGvatkzLFGPVdNC0NHP7M4lZ4fkcxq/iQEPXZct9/yBhEFcw6jbf88Y+c8hzGSkn48Q8NRK6I/EM=
-X-Received: by 2002:a17:906:b052:b0:b76:8cda:c936 with SMTP id
- a640c23a62f3a-b768cdad168mr104392066b.36.1763820820877; Sat, 22 Nov 2025
- 06:13:40 -0800 (PST)
+	b=lSkynLBVL7qbBWmP7VIrRx09zE8Ng0gBmoadl+PInPMq+4lFWJmeMmAgdjGxGV9Q4
+	 nMmQsSLfPGz283G1TBASqmUaA0hSUvc7EuBSpcxU2UzLEW2mvUpAhkP26dcAcwu0C1
+	 bFOYmIVd/0XCG4sQbdwGEywoIYs4WXHc6eHigLBK/MFXyBCSIhfmHU4SKMnb3PW03p
+	 VC1UGiJ7B5n0YlLVsgWG6v3Wf5fSoRR0MvHnIKxmC+rxkO6N6LdLBck0MU0MuNzlJo
+	 y2F0FO4XTTyBGU+G7dFmuiEOrFBgptYD0gG9hMFRjg93a/mlLse1zNSvIY0mYYjpDQ
+	 B3+DHfCj797ww==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b735b89501fso366154466b.0
+        for <loongarch@lists.linux.dev>; Sat, 22 Nov 2025 18:29:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU40SZ25kUEU8Yq6x2+JhXPXEUomSVU/Zk8D231yEFp46rjJuw+JIWVEsJni8WoDwPKh5t8jO09XLU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4LgCuAuiMMSxh9TuenwD5eAr7Iamb1yhr7f/mSEGmLQEcTOLP
+	o3UGVIgfltyiPHFEHKcjOZQlrzXU+uJmZ0PhDk4u0JOhYDdUx9Xn7SYqNrk+k4IDguYKY1hTTcy
+	eFs8B8whB7oaIPvT2NuGaRrzz4vOisaE=
+X-Google-Smtp-Source: AGHT+IF2NG45CGhewRb+YxxwCpQ+Qs09Wv1Cd6UcCR2RSlep4aU6EwJEltWefiEmVuOu3WrO2PpFhIzvWqq/mYqO3k4=
+X-Received: by 2002:a17:907:7f1e:b0:b70:b077:b957 with SMTP id
+ a640c23a62f3a-b767158cd7amr622544566b.15.1763864939736; Sat, 22 Nov 2025
+ 18:28:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
- <20251122043634.3447854-14-chenhuacai@loongson.cn> <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
- <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
-In-Reply-To: <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
+References: <CAAhV-H6m5vszCyiF3qi94cpHBPVuqM2xH93D=gfsQqOSYvC-sA@mail.gmail.com>
+ <33612d85-e70b-26da-8460-ea6b9064ce08@loongson.cn> <CAAhV-H5ZSTFDxvm-W1CrgEoQ5d_jw5yVsfetQ_J_qL5pqLtzgg@mail.gmail.com>
+ <CAMj1kXGk0udgM67wrWqahqK8H0uE8emQj51SmJey+7fE-FTjdA@mail.gmail.com>
+ <CAAhV-H4c=vdNWO0v_mYL2xZ9FYjDyRDvt6f_kV4d8Bh=CRJniQ@mail.gmail.com>
+ <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+ <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
+ <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
+ <aRsH7RTpAah4g5Xr@willie-the-truck> <CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com>
+ <39617a3e-c476-abac-8425-bbcece769cdb@loongson.cn>
+In-Reply-To: <39617a3e-c476-abac-8425-bbcece769cdb@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 22 Nov 2025 22:13:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bnpgUT7klbqgZLBCauIV7bcQe-KvCjFuT_f9yPZM2QSFNxQaNkoFLG_39k
-Message-ID: <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
-Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
+Date: Sun, 23 Nov 2025 10:29:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4fHBuRpDEDQrExApgnREJaT8JWUJ2700bEPFxDqToi2w@mail.gmail.com>
+X-Gm-Features: AWmQ_bmAZrJIPzwBoGQGazI9CFQ9PH-O_LgSCm_k_cIQ90BdG2Wz9hDhqi3Uewg
+Message-ID: <CAAhV-H4fHBuRpDEDQrExApgnREJaT8JWUJ2700bEPFxDqToi2w@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Will Deacon <will@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Arnd,
-
-On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
+On Sat, Nov 22, 2025 at 7:04=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
-> > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
-> >> Add loongson32_defconfig (for 32BIT) and rename loongson3_defconfig to
-> >> loongson64_defconfig (for 64BIT).
+> Cc: Nathan Chancellor <nathan@kernel.org>
+>
+> Hi all,
+>
+> On 11/21/25 22:36, Huacai Chen wrote:
+> > On Mon, Nov 17, 2025 at 7:33=E2=80=AFPM Will Deacon <will@kernel.org> w=
+rote:
 > >>
-> >> Also adjust graphics drivers, such as FB_EFI is replaced with EFIDRM.
+> >> On Sat, Nov 15, 2025 at 11:16:42AM +0800, Huacai Chen wrote:
+> >>> On Wed, Nov 12, 2025 at 2:00=E2=80=AFAM Josh Poimboeuf <jpoimboe@kern=
+el.org> wrote:
+> >>>>
+> >>>> On Mon, Nov 10, 2025 at 03:00:00PM +0800, Huacai Chen wrote:
+> >>>>> On Mon, Nov 10, 2025 at 9:19=E2=80=AFAM Tiezhu Yang <yangtiezhu@loo=
+ngson.cn> wrote:
+> >>>>>> If I understand correctly, I should modify this patch to remove th=
+e
+> >>>>>> changes of arm and riscv for now, do the changes only when there i=
+s
+> >>>>>> a real problem or requirement some day, right? If no more comments=
+,
+> >>>>>> I will send v3 later.
+> >>>>>
+> >>>>> Now everyone involved agrees that the efistub code is correct, so t=
+he
+> >>>>> proper solution is to fix the compiler.
+> >>>>
+> >>>> Hm?  I don't see how it's a compiler bug.  It's really just an objto=
+ol
+> >>>> limitation.
+> >>>>
+> >>>>> Changing efistub code and changing objtool (ignore __efistub prefix=
+)
+> >>>>> are both workarounds, but I think changing objtool is a little more
+> >>>>> reasonable. Maybe Josh has different ideas?
+> >>>>
+> >>>> I thought the conversation had converged on what Tiezhu mentioned ab=
+ove,
+> >>>> which is to skip objtool on libstub for loongarch, but leave the oth=
+er
+> >>>> arches alone.  That way objtool behavior is consistent between loong=
+arch
+> >>>> and x86, and objtool doesn't need to ignore any prefixes.
+> >>>>
+> >>>> So basically, the v2 patch minus the arm64/riscv changes.
+> >>>
+> >>> Hi, ARM64 and RISC-V maintainers,
+> >>>
+> >>> Would you mind that this patch modifies the three architectures
+> >>> together (they are exactly the same style now)?
+> >>>
+> >>> Madhavan is the author of ARM64's objtool, I think your opinion is
+> >>> also very important.
 > >>
-> >> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> >> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> >> ---
-> >>  arch/loongarch/Makefile                       |    7 +-
-> >>  arch/loongarch/configs/loongson32_defconfig   | 1104 ++++++++++++++++=
-+
-> >>  ...ongson3_defconfig =3D> loongson64_defconfig} |    6 +-
-> >>  3 files changed, 1113 insertions(+), 4 deletions(-)
-> >>  create mode 100644 arch/loongarch/configs/loongson32_defconfig
-> >>  rename arch/loongarch/configs/{loongson3_defconfig =3D> loongson64_de=
-fconfig} (99%)
+> >> arm64 doesn't (yet) use objtool.
 > >>
-> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> >> index 96ca1a688984..cf9373786969 100644
-> >> --- a/arch/loongarch/Makefile
-> >> +++ b/arch/loongarch/Makefile
-> >> @@ -5,7 +5,12 @@
-> >>
-> >>  boot        :=3D arch/loongarch/boot
-> >>
-> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
-> >> +ifdef CONFIG_32BIT
+> >> I defer to Ard on anything relating to the arm64 efistub. Reading the
+> >> start of this thread, it doesn't look like he's convinced and I'm not
+> >> surprised if it's purely an issue with objtool.
+> > OK, I know, but I have a concern.
 > >
-> > Testing for CONFIG options here doesn't make sense, as the config is no=
-t yet
-> > created.
->
-> Right
->
-> > Either test for $(ARCH) or uname or just use one unconditionally.
->
-> I don't really like the $(ARCH) hacks, nobody is going to build kernels
-> natively on loongarch32, and for the rest it's fine to set the option.
-OK, I will use 'uname -m' for checking. Though native builds on
-loongarch32 will hardly happen, we can give a small chance to use
-loongson32_defconfig, in all other cases, let's use
-loongson64_defconfig.
-
->
-> > Also as mentioned before, snippets can reduce the duplication.
+> > Ard said that he is reluctant to make changes to accommodate a flawed
+> > build time tool and there may be regression risk.
 > >
-> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
-> >> +else
-> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
-> >> +endif
-> >> +
+> > So, I'm also reluctant and don't want LoongArch to meet regression
+> > risk. If one day LoongArch has a regression, we probably need another
+> > workaround to "fix" this workaround. But if these three architectures
+> > change in the same way, we may have a chance to solve some fundamental
+> > problems...
 >
-> This is also not the change I had suggested in my review. I think this
-> should be a fragment along the lines of arch/mips/configs/generic/32r2.co=
-nfig
-> and arch/powerpc/configs/book3s_32.config.
-Sorry for that. I know that the default config file is usually
-generated by 'make savedefconfig', and the main purpose is
-significantly reducing file size. I did that, but manually add some
-lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
-CONFIG_EFI, etc. My original goal of doing this is to let users easily
-know those fundamental options without reading Kconfig files (of
-course we should not increase the defconfig too much).
-
-Sorry again for not explaining about this in the previous version.
+> IIUC, Josh do not like to ignore these EFISTUB functions in
+> validate_branch() of objtool, Huacai do not like to only link
+> libstub to vmlinux only for LoongArch.
+>
+> It seems that there is only one way to fix or workaround this
+> problem, remove the attribute __noreturn for real_kernel_entry()
+> and then make efi_boot_kernel() ends with a return instruction [1]
+> or an unconditional jump instruction [2] that only touches
+> drivers/firmware/efi/libstub/loongarch.c.
+>
+> Since this is a issue only for LoongArch by now, what do you
+> think of this minimal change only for LoongArch libstub code?
+> Using "return EFI_LOAD_ERROR" [1] or "while (1)" [2]?
+>
+> Maybe this is the simple and direct way for this special issue
+> only on LoongArch so far. If not, any other suggestions?
+>
+> On the other hand, is it possible to add KBUILD_VMLINUX_LIBS_FINAL
+> and then use it only for LoongArch first [3]? Any potential risks?
+>
+> What is the next step?
+Is it possible to improve objtool that can handle indirect __noreturn funct=
+ions?
+Is it possible to improve objtool that can handle
+OBJECT_FILES_NON_STANDARD event LTO is enabled?
+Is it possible to improve objtool that only ignore __efistub prefix
+for LoongArch?
 
 
 Huacai
 
 >
-> See arch/powerpc/Makefile for the integration into the build system.
+> [1]
+> https://lore.kernel.org/loongarch/CAMj1kXH-rK0bRyHXdJ-crAyMyvJHApH0WR7_8Q=
+d8vrSPBLK+yg@mail.gmail.com/
+> [2]
+> https://lore.kernel.org/loongarch/20250826064631.9617-2-yangtiezhu@loongs=
+on.cn/
+> [3] https://lore.kernel.org/loongarch/20251122000101.GA1996391@ax162/
 >
->       Arnd
+> Thanks,
+> Tiezhu
+>
