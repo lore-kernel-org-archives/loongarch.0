@@ -1,129 +1,200 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3245A254864
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 07:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332C12550D4;
+	Mon, 24 Nov 2025 07:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763970540; cv=none; b=sS7g7h54mnMjCg6O07HujaW7YNIekAejoGfCxHAE6zLbvP2n1LQrax6ctoKgjcjYx0fiL7PbhJjVatAFcdB/6x4Fx15n+4DwEFo+OfLYnrvdKp7jNvExLR54dwBCEc95XTYPOP2bCKaWQr7laaqPQNJRQMG27V5NZOS4VaJ6nq8=
+	t=1763970643; cv=none; b=GqgMtMGbD9SwQNfQ2Bg5c0CvQ+msBImGYoMTqSuQ11DzEHn6DL4utwXyoFOW8cyQYEkEugBA90gr0Tx5Z0gbbq3KQiaHd4QxyFnCUR2VcYC2edDQ/lAptTz/MV3zLRhu6w5oNZ1V52pygk67xkPGqbvZh3+H4Mln1DewUkDoWD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763970540; c=relaxed/simple;
-	bh=NTVKp4sZZcVSN9+Ii9Jx5x7ttBhLWv8YEAcioKm+KbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mlrdrYBCgLvUXEdA05htalTQS5RBc71EhlbVwJwHfcXFht8w33BXgOBnsqEocBjpJcnRnDiHOTOJWJJj0DPg8f1NmH5rqhBtyGbV943fNpbmYmbVYHIW0pXdngrgdJ60nh1N83z6URth76MImLo8dyCRkOtLNQg/v9AFvHEGtY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LIsFGMhj; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIsFGMhj"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-45066bee74aso531256b6e.2
-        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 23:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763970538; x=1764575338; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DGgm1PeBf+G3bMMJzir2QM3sEuz1PeMlHk9f8m9ycpU=;
-        b=LIsFGMhj42driqZlukLExqWB3gRYRA0mcSM++K7TINUyA3pH44xcG9NH//IfKw+N9L
-         UmqAyCPG0eGfrXJX/C+nPASMcGVbbqTuO5s4EnaCTYQGIXkKxwK7RM4Rn2yl40WbaveH
-         u4ynr7Ze2BukQNvuDbtNABWcbw2oMXxR9SnjK1cNZFPbb+WijB4Zodjihz/u13yKJuAM
-         dszOnwefW16i4rGDkRO0773tc9VIvatonKu8m28DPu+r+0w/glHoPBgQGVVJeh1nAs4Z
-         96xlTJtBjxy9j9BEQrpqTnmQAmpLIMdKslo1PNLFcCqHr1ZZyTmvx5pWjHBbfLNG/gSb
-         sT/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763970538; x=1764575338;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DGgm1PeBf+G3bMMJzir2QM3sEuz1PeMlHk9f8m9ycpU=;
-        b=lC9Vhw6a8+D4g2Q7Q0+0fbIboAfE1WEBdhVU1uGFxsgIQNgns8aNwxTfTssiRNLltH
-         wStjXG/BRoSKWtJm2h/OuZWeH2e1bXllYwjsvO5CStf1wjj3CvEko1khnIinNerSK4H4
-         ixqFDirve9Fpj2Bf6uPN3C+MZtxAxs0vlnwHfzJp/EKJLNhblATYtb4PrRIIyCl4mRxE
-         BreEfF8brHQB+iZeNmvba95ADzGDnUytIJp6D06DVxRLvdVYAId+7UvqZZyfEm++oYJg
-         Y8KvJfU5Q9Ecihv1jP9DzjBYemWrEU9AAwwFWRKrc10g6lvwMAiwU5m358Up7EdcqaIs
-         REVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzx1J7+uC0c9O02dyKWbbX4gkfl1/pC+3rWNbiILCVL03LSFHIYyLJ1+N3knQtIeQicmy/uhM+4zk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzTiTrd/AuXyHh1PoXUuPV1f72Ohx8GT6y4g+rDgwTPmG7FZ18T
-	9uaghoN3NWLFDZg9fhKbXja20YJp5Wv5O3wNdqIq4q6xhHPQKYOcLpNK6tw0Frasud62yUB9ZXh
-	GIGlpkonvTmmGqEwUrhNQq0hWYacdsYI=
-X-Gm-Gg: ASbGncuLBHONaZVFSAiBzFRoDjjaYcrQIVr+zGyXv5d/0Xz6q5+0LptPPpDW2gnc8fR
-	ET3LrjMnWCi4L8V00/5HxtM+AKhjTumuHIsWYktJn3hg+IbyfO1NSfCDYlxVTNPCVmvKijLUTGM
-	myAYgz9tvNrIZR5DJY8vF6xMnok/mT8RzLaLYbDDzPNVGoYDPKRA7MgpwZE51KjY2O0YMXwH3r+
-	dLtO6iuxfBkfKcZCBCsPWwvy1owxFfYTA24esPCyWcS5ZmpayKGtJ1Es67v4Z4tktQQyz4=
-X-Google-Smtp-Source: AGHT+IHNAj+n6m4VmWFvn+zv0+JiuUEQtAQgydVPI6vC/63tWoMM2kqTU90Z09i6swQYIEBENDNTFULtFd7t1n62tPg=
-X-Received: by 2002:a05:6808:21a0:b0:450:c0c4:3728 with SMTP id
- 5614622812f47-451159929femr3964842b6e.30.1763970538192; Sun, 23 Nov 2025
- 23:48:58 -0800 (PST)
+	s=arc-20240116; t=1763970643; c=relaxed/simple;
+	bh=w41fTTwzx8VuAOb8fbLjiB8IGgG71yXkBEsBxzqQ1SQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ACHHPMRVbLXokVSkNFfaXcXY9uOGcYQFNAbpXzWAyQbgn5JKl88pcKmexaB+iQOtBFrMr8JQrWJs+0KpWvgDLUnFerCYhqSuQuINm1SDTq9SYWPshSkJTyQ4WdkRcu0mqXRouB244TNdVaoSAERiA6BpCzZi8Zbn2XEPtLhzmu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxT_BNDiRpnWsnAA--.18692S3;
+	Mon, 24 Nov 2025 15:50:37 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAxecBLDiRpe309AQ--.13235S3;
+	Mon, 24 Nov 2025 15:50:37 +0800 (CST)
+Subject: Re: [PATCH v2 2/3] LoongArch: Add paravirt support with
+ vcpu_is_preempted() in guest side
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, x86@kernel.org
+References: <20251124035402.3817179-1-maobibo@loongson.cn>
+ <20251124035402.3817179-3-maobibo@loongson.cn>
+ <CAAhV-H5Oag+mDp0CfZ1VDeapeKas354j68JZN9bN42=D4huowA@mail.gmail.com>
+ <5d80c452-bbc3-539a-fb8d-14dbe353f8cb@loongson.cn>
+ <CAAhV-H66M+GZ2kB8BKR82BUeQcNZ8ACeXLxwjh-bsVZcca1cqQ@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <718b5b5d-2bb1-5d59-409e-54f54516a6b7@loongson.cn>
+Date: Mon, 24 Nov 2025 15:48:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124055642.1591-1-hengqi.chen@gmail.com> <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
-In-Reply-To: <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 24 Nov 2025 15:48:46 +0800
-X-Gm-Features: AWmQ_bkuxsapMAChdwwDsS9KO3bYr8YE2qkGyVSmLsjkyRz4g_je5hCNufBektI
-Message-ID: <CAEyhmHSntgSQdAOksd6YUsHh0UXJS7XMmSHAZmRDQ5uEzDU0JQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H66M+GZ2kB8BKR82BUeQcNZ8ACeXLxwjh-bsVZcca1cqQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxecBLDiRpe309AQ--.13235S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZw4fJFWkWw17Jr1rGF1ktFc_yoWrAw4xpF
+	yUCF1vva18GryxA39Fqw1qkrn8tr1kW3WIqa47Ga45Ar1q9FnrJr4v9ryj9Fyvqwn7WF10
+	qr97GF4S9Fyrt3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jOF4_UUUUU=
 
-On Mon, Nov 24, 2025 at 2:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Hengqi,
->
-> I think this is the successor of
-> https://lore.kernel.org/loongarch/20251006053323.193581-1-hengqi.chen@gma=
-il.com/T/#t
->
-> Right?
->
 
-Right, sorry for the long delay.
 
->
+On 2025/11/24 下午3:13, Huacai Chen wrote:
+> On Mon, Nov 24, 2025 at 3:03 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/11/24 下午2:33, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Mon, Nov 24, 2025 at 11:54 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> Function vcpu_is_preempted() is used to check whether vCPU is preempted
+>>>> or not. Here add implementation with vcpu_is_preempted() when option
+>>>> CONFIG_PARAVIRT is enabled.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/qspinlock.h |  5 +++++
+>>>>    arch/loongarch/kernel/paravirt.c       | 16 ++++++++++++++++
+>>>>    2 files changed, 21 insertions(+)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+>>>> index e76d3aa1e1eb..9a5b7ba1f4cb 100644
+>>>> --- a/arch/loongarch/include/asm/qspinlock.h
+>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
+>>>> @@ -34,6 +34,11 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+>>>>           return true;
+>>>>    }
+>>>>
+>>>> +#ifdef CONFIG_SMP
+>>>> +#define vcpu_is_preempted      vcpu_is_preempted
+>>>> +bool vcpu_is_preempted(int cpu);
+>>> In V1 there is a build error because you reference mp_ops, so in V2
+>>> you needn't put it in CONFIG_SMP.
+>> The compile failure problem is that vcpu_is_preempted() is redefined in
+>> both arch/loongarch/kernel/paravirt.c and include/linux/sched.h
+> But other archs don't define vcpu_is_preempted() under CONFIG_SMP, and
+so what is advantage to implement this function if CONFIG_SMP is disabled?
+
+> you can consider to inline the whole vcpu_is_preempted() here.
+Defining the function vcpu_is_preempted() as inlined is not so easy for 
+me, it beyond my ability now :(
+
+With static key method, the static key need be exported, all modules 
+need apply the jump label, that is dangerous and I doubt whether it is 
+deserved.
+
+Regards
+Bibo Mao
+> 
+>>
+>> The problem is that <asm/spinlock.h> is not included by sched.h, if
+>> CONFIG_SMP is disabled. Here is part of file include/linux/spinlock.h
+>> #ifdef CONFIG_SMP
+>> # include <asm/spinlock.h>
+>> #else
+>> # include <linux/spinlock_up.h>
+>> #endif
+>>
+>>> On the other hand, even if you really build a UP guest kernel, when
+>>> multiple guests run together, you probably need vcpu_is_preemtped.
+>> It is not relative with multiple VMs. When vcpu_is_preempted() is
+>> called, it is to detect whether dest CPU is preempted or not, the cpu
+>> from smp_processor_id() should not be preempted. So in generic
+>> vcpu_is_preempted() works on multiple vCPUs.
+> OK, I'm wrong here.
+> 
+> 
 > Huacai
->
-> On Mon, Nov 24, 2025 at 1:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.co=
-m> wrote:
-> >
-> > This small set implement new features with 2 bug fixes for BPF.
-> >
-> > * Patch 1 fixes a bug discovered while testing the BPF Arena feature.
-> >   Without this fix, the arena_htab test case which use the
-> >   bpf_arena_alloc_pages kfunc will trigger a kernel panic.
-> > * Patch 2 fixes a subtle bug for tail call index, this can be verified
-> >   by the verifier_runtime_jit test case.
-> >   See the following two threads for background:
-> >     - https://lore.kernel.org/bpf/CAEyhmHTvj4cDRfu1FXSEXmdCqyWfs3ehw5gt=
-B9qJCrThuUy2Kw@mail.gmail.com/
-> >     - https://lore.kernel.org/bpf/20251005103518.996383-1-luis.gerhorst=
-@fau.de/
-> > * Patch 3 uses pack allocator for BPF programs (BPF trampoline already
-> >   use pack allocator, this make it complete), with this, no regression
-> >   on existing selftests
-> > * Patch 4 & 5 implements basic support for BPF Arena, the following
-> >   test cases passed:
-> >     - arena_htab
-> >     - arena_list
-> >     - verifier_arena
-> >     - verifier_arena_large
-> >
-> > Hengqi Chen (5):
-> >   LoongArch: BPF: Sign extend kfunc call arguments
-> >   LoongArch: BPF: Zero-extend bpf_tail_call() index
-> >   LoongArch: BPF: Use BPF prog pack allocator
-> >   LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
-> >   LoongArch: BPF: Implement bpf_addr_space_cast instruction
-> >
-> >  arch/loongarch/net/bpf_jit.c | 225 ++++++++++++++++++++++++++++-------
-> >  arch/loongarch/net/bpf_jit.h |  30 ++++-
-> >  2 files changed, 213 insertions(+), 42 deletions(-)
-> >
-> > --
-> > 2.43.5
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>> +#endif
+>>>> +
+>>>>    #endif /* CONFIG_PARAVIRT */
+>>>>
+>>>>    #include <asm-generic/qspinlock.h>
+>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>> index b1b51f920b23..d4163679adc4 100644
+>>>> --- a/arch/loongarch/kernel/paravirt.c
+>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>> @@ -246,6 +246,7 @@ static void pv_disable_steal_time(void)
+>>>>    }
+>>>>
+>>>>    #ifdef CONFIG_SMP
+>>>> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>>    static int pv_time_cpu_online(unsigned int cpu)
+>>>>    {
+>>>>           unsigned long flags;
+>>>> @@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
+>>>>
+>>>>           return 0;
+>>>>    }
+>>>> +
+>>>> +bool notrace vcpu_is_preempted(int cpu)
+>>>> +{
+>>>> +       struct kvm_steal_time *src;
+>>>> +
+>>>> +       if (!static_branch_unlikely(&virt_preempt_key))
+>>>> +               return false;
+>>>> +
+>>>> +       src = &per_cpu(steal_time, cpu);
+>>>> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+>>>> +}
+>>>> +EXPORT_SYMBOL(vcpu_is_preempted);
+>>>>    #endif
+>>>>
+>>>>    static void pv_cpu_reboot(void *unused)
+>>>> @@ -308,6 +321,9 @@ int __init pv_time_init(void)
+>>>>                   pr_err("Failed to install cpu hotplug callbacks\n");
+>>>>                   return r;
+>>>>           }
+>>>> +
+>>>> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
+>>>> +               static_branch_enable(&virt_preempt_key);
+>>>>    #endif
+>>>>
+>>>>           static_call_update(pv_steal_clock, paravt_steal_clock);
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
+>>
+
