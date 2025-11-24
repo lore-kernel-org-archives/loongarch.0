@@ -1,72 +1,72 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BDBE571
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 05:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DF3E571
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 05:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763963819; cv=none; b=Ty6VW+hBMMQGcHWAo5yVo3v5LtkSm1Tvilf6XGqSo0L0uuydHa/+FSvsq4ZA7IE+igg+JT3aR+DXnA8O5e3GYOLLzLbcoKv4Boo7GiK3PZSzR2c5ghNjnf98334K1MR5p+hIVLA2o6Pi9eT+WZt2Llbh0d2uDoA+xtPeyT/UZpg=
+	t=1763963822; cv=none; b=S5E4EkvAiK99yDCdjR69i/cOwxuUpLJbbWC/pGd0tAHDHm3Y9yzljKEcUtIovl3MXzHg8Cm804IzEZwy6SBIpDRM6/blaNK+VzxAh/+ARWrzV5XRPcM6fXsb63j+1+2wJdhv0GieRMse4ey4mn9uHv/aZhVpecA0hg2OACQAwzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763963819; c=relaxed/simple;
-	bh=MfYT6JKaUveFbHTtmiXfL7u726jKbxr0eKB5A0vkXHE=;
+	s=arc-20240116; t=1763963822; c=relaxed/simple;
+	bh=X+5SGCJNsgCB4MFlueFjisWbWWsg8XfX90qXEThT3l4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W4h91JyNhVtfKXyDXvAGIJdCH612pUzTKMhEsNLFCkMJShjv4DRcVF4cwo2uNyfmhlgwmw4lKTiaJweE7XtHsjgqcuIad8HjS8NMu87ZtOLqAwSJKbkd4pPCEl52bFpJuZyu99bJgd9hh1mG8zzOzNsE1Pfm1M9l9vnVu4f7dHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVtkemcd; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=DkbjNsYhZiRYEW5s0vx3H+hmeXQX77BU7GVdsnGien3iR2ePda37sNo8RQsIjeDlg25KS2I21LXai3GGmiopuixv3FkEo9h8h19GpIMXix7S5Z8R298AtLpcRk2WyNEI06Bw9CMx8bZ/F2TKn5GTYZuab5+s7UGIwZn2HUgVCyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vqu5gONT; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVtkemcd"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-298287a26c3so44876085ad.0
-        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 21:56:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vqu5gONT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-297e239baecso36996695ad.1
+        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 21:57:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763963817; x=1764568617; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1763963820; x=1764568620; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2KDzoAg7cw0qJNV2sqkz9SrTN1G38qgGqSuNZe9sX1s=;
-        b=HVtkemcdIJJxb9xdHMsB40A3eWUIdBOarxAltjDlbaTHsgTfdR9SnNLYcxEZEpXIx/
-         d6cVPYEcO+Gue1XwRipBnhjeoLvitOXZlshCZwrjDhaM76dxNSEvF8L2hjWPYdldX6HE
-         OsTHFj8pKIhQb3iHhLEPUebKLmbS9yBLtNf+CXPCrr6/AyWQcwN7qmZCbEiW2Yi+1BgF
-         fJnoUXvzMj5ZXY3/e7zfJa3oAE0BB+uNy5Zl8em81sW7hxF9GOMb+yVh4SPwzf6xKPHs
-         yBOfTBIQ7SblXSH8yWymah+RJ5Xa9ZlB9muc/DX/nJ7NoJHUAnFiuXf1yvdpscg/3SKi
-         CrpA==
+        bh=kaVFil5bJDpKlpVPuhYEQv75UBUYaykofpCDl+Dvivc=;
+        b=Vqu5gONTG+U+pqOd6LVZspqt4rCFxLq6IdLi44uj/R2DFsV8dK6tq8b/C5Xk3vKSqj
+         Em77xIh8rhEIEnf2HgGCXhMktcymxkFDi8AgoA7i/9mQNJBn0TSgsgZQZI6bNIKy1KoV
+         8L2hq5s7CoMYEva2sHHOrz/2MnD8RBRGTAVpMCIPfdsCFyhHkifHNGiukQU81Amq8dBr
+         DjwEy2SnnDz03d3hyzSOPJN7ooX7whcjamVpC6w//LcGU+8hdK4RCCLS/vVcoq/mu5i0
+         xw7NS4wiUuTf4o5/lkZ4gZFGh8wi/bS045Tj/47KVJWf6nm/hqE07467XLFhvPc3Fz/T
+         T5tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763963817; x=1764568617;
+        d=1e100.net; s=20230601; t=1763963820; x=1764568620;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=2KDzoAg7cw0qJNV2sqkz9SrTN1G38qgGqSuNZe9sX1s=;
-        b=pA7VV4RbgSe0L2dAuavKMrwa2Uxnq3CWnlgDSuZdSh5r7CYOwui+TFfT/WduAWmAcU
-         h051YD/k5BHnn7T7s6ES8RUOsSs+ct0S6wpGspi4nCyU+n8OWgSy242UYK9rJmqfdxaP
-         Hmpl1jFRy5uaGtCDgD4ZUOpRjFZP6tBS9GrMILRHZpMDXFTByW7lKv1iRC2K9cTFg3cn
-         bCSqcrcc3aLBvvwmfrJbuLRDMJ8KxZML6e227NT652LSAH6s/TqXssS5M6Rt+d6ro6GG
-         3j7DU2xspLsL+P9T9SP8J/EO/4r2E0Wnxy40tLFVbwCDCOdBi0TNPEg/md6wKvX21rrs
-         fqkQ==
-X-Gm-Message-State: AOJu0Yw8d1pGnvHQqaX2OplKuW/DDuB0iVVJLuM9pXzkG80l6ZFctXYb
-	qh0Yr2YlXS4m8G8DjHAYnDG7tLXt1jg7ipkIrV9X8IW3Ij+HjiZ+9GsF
-X-Gm-Gg: ASbGnctotkcgd8u9izYquSoLW3qJQ9MUqYMsL9XZqdyrlkqFra1M4/Qd6Ylghz9hTNu
-	Wi53ikmW+9XGb1BJtj0ipiVgE6s9s53awA80aikYDiKNIhcwcGaDOdEvmtf8VhWBjVB/WjckCT9
-	nyD6gSv+RxKLK+5n5G7fcse5Uri4mO4fGAgUiERn0628j25lbhaqM8s+QOi04Dde+XYW34SC7vF
-	al6MSHHd3ieFq9qGXM5Wlyq96BhK0YbGy5Bfu+JMcuCoRnXfPF26WDzqYgsN2bYTFlF1llnstIU
-	gN4IIhhpjZgk+4ZurII2wkjDxuEJBh6aC+prOXvDbu4vBiAysjx4xSlnQHTvA8H65fdFudGIUnv
-	AQDF2DQ+UMYRtGgdpaRG09I++iJNKrH39GIb96kvpB1gByQnLNdzJ8kDmKkiSrXAdBk0+cw3H0B
-	zDJ/lc8BYn9NBbKYlBMiHq+f4aWepp
-X-Google-Smtp-Source: AGHT+IETvmRJDPqvoGwZfpT9SCakxegbPS/0bbSKIMzPz3PpTxt6aJTD9R83rWDRa/SvRKZvwc2SQg==
-X-Received: by 2002:a17:903:947:b0:290:9332:eebd with SMTP id d9443c01a7336-29b6be8c682mr114103125ad.10.1763963817332;
-        Sun, 23 Nov 2025 21:56:57 -0800 (PST)
+        bh=kaVFil5bJDpKlpVPuhYEQv75UBUYaykofpCDl+Dvivc=;
+        b=QPGtPC/4D50OV6t1K7yjTBbjgqCeZobJauMQZa3P/IPHCkxPHO55sMTchZunn0M6Zb
+         tWa2hLQXX/Pfv5qE24siljWSTbEmebyaTCvCcUH9nTo8ZawltHv0/BPG3PbrN1aSCSGV
+         +aO1Jpk4LZPjDCPx+w5Le/QMYnVPvvL+AtWelJqBsZ1GuDKAVy1B1HMKJ9lwyJPxyfG+
+         Wc1ZkfbQtTxy7ZOiA51isIb7yVy5dt9FH8ZfSEH/0AQe7BiNG4ynihoeNaPg6oR2o3us
+         unIHsikHWIvVMSnDC8a4QI9CASwVrHAHlQo/OqOjOboyBausaIaZq1J3oPBqqYiECkrj
+         +i0w==
+X-Gm-Message-State: AOJu0YxFnW8dzZX0Q1XoFsNCWGyF28VzP0GUZh1Z9STsY29EAAn2h78D
+	x4Q2OJ1GAm26z+cgNAFEulbvPB0y1zEg9xMg30mZC7APE2ku23cmOmoP
+X-Gm-Gg: ASbGncsx0ByqFs5reoIAGG2ChpZxZ8sXZUajpL5AlBHDfu09E7Yzy+KV4hE0DGmkDcr
+	2BSX4AS2UiARMWgOl0WYWHtspm3SNxpmy0RNtnFFec7HG9rnl49DSWRZtWPDB8GTE8dncgouRnx
+	HpWcIdlekTPy/ZBizjD30aQOlULi5mvHsEmsbIxmPCZyfsgZIuf0Zb6Z4pPdzjqXxfM8UattF2a
+	d3pSGCwhpP0CclTjw/2q7oJK4CxQpdFwl2Abm3TTr/ZGdZfQacFDAuf2g1OPbbQt6xKTHRzHAPR
+	Hs3aSdHY+KLlljY2j6DfkXkCisGylmmQcwjNH8c98MlLlu0PHcqnSFFHUkQ7/p1JkWbzqw5b9UL
+	BSz3A+38PYmVuL/tLYqNUZZoiCKxLbUsG8G7Dm7jFNkl2fv+fa4IEgcItTysfVh0WS6t6UfVV/I
+	lY6417vUYGQ5dFUDjtt2wjs3krzCA6
+X-Google-Smtp-Source: AGHT+IHROxIWyPyAajMNR4lLFT4YYLkignmF+W9P6ECBFMC5Bdkh5uKyKJAYuZZ1x4vSgMM9ZMUc/Q==
+X-Received: by 2002:a17:903:1104:b0:267:8b4f:df36 with SMTP id d9443c01a7336-29b5e3d8043mr162311565ad.29.1763963820267;
+        Sun, 23 Nov 2025 21:57:00 -0800 (PST)
 Received: from devbox.. ([43.132.141.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b106094sm124881785ad.10.2025.11.23.21.56.55
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b106094sm124881785ad.10.2025.11.23.21.56.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 21:56:56 -0800 (PST)
+        Sun, 23 Nov 2025 21:56:59 -0800 (PST)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
 	vincent.mc.li@gmail.com
 Cc: loongarch@lists.linux.dev,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH 1/5] LoongArch: BPF: Sign extend kfunc call arguments
-Date: Mon, 24 Nov 2025 05:56:38 +0000
-Message-ID: <20251124055642.1591-2-hengqi.chen@gmail.com>
+Subject: [PATCH 2/5] LoongArch: BPF: Zero-extend bpf_tail_call() index
+Date: Mon, 24 Nov 2025 05:56:39 +0000
+Message-ID: <20251124055642.1591-3-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251124055642.1591-1-hengqi.chen@gmail.com>
 References: <20251124055642.1591-1-hengqi.chen@gmail.com>
@@ -78,84 +78,33 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kfunc calls are native calls so they should follow LoongArch
-calling conventions. Sign extend its arguments properly to avoid
-kernel panic. This is done by adding a new emit_abi_ext() helper.
-The emit_abi_ext() helper performs extension in place meaning a
-value already store in target register (This is different from
-the existing sign_extend() helper and thus we can't reuse it).
+The bpf_tail_call() index should be treated as u32 value.
+Let's zero-extend it to avoid calling wrong BPF progs.
+See similar fixes for x86 ([0]) and arm64 ([1]) for more
+details.
+
+  [0]: https://github.com/torvalds/linux/commit/90caccdd8cc0215705f18b92771b449b01e2474a
+  [1]: https://github.com/torvalds/linux/commit/16338a9b3ac30740d49f5dfed81bac0ffa53b9c7
 
 Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/net/bpf_jit.c | 16 ++++++++++++++++
- arch/loongarch/net/bpf_jit.h | 26 ++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+ arch/loongarch/net/bpf_jit.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index f97dc9936401..c67631303841 100644
+index c67631303841..4be8515197ce 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -950,6 +950,22 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
- 		}
- 
-+		if (insn->src_reg == BPF_PSEUDO_KFUNC_CALL) {
-+			const struct btf_func_model *m;
-+			int i;
+@@ -280,6 +280,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ 	 *	 goto out;
+ 	 */
+ 	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] : ctx->offset[0];
++	emit_zext_32(ctx, a2, true);
 +
-+			m = bpf_jit_find_kfunc_model(ctx->prog, insn);
-+			if (!m)
-+				return -EINVAL;
-+
-+			for (i = 0; i < m->nr_args; i++) {
-+				u8 reg = regmap[BPF_REG_1 + i];
-+				bool sign = m->arg_flags[i] & BTF_FMODEL_SIGNED_ARG;
-+
-+				emit_abi_ext(ctx, reg, m->arg_size[i], sign);
-+			}
-+		}
-+
- 		move_addr(ctx, t1, func_addr);
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
- 
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 5697158fd164..ed0193659cf9 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -88,6 +88,32 @@ static inline void emit_sext_32(struct jit_ctx *ctx, enum loongarch_gpr reg, boo
- 	emit_insn(ctx, addiw, reg, reg, 0);
- }
- 
-+/* Emit proper extension according to ABI requirements.
-+ * Note that this requires a value of size `size` already resides in register `reg`.
-+ */
-+static inline void emit_abi_ext(struct jit_ctx *ctx, int reg, u8 size, bool sign)
-+{
-+	/* The ABI requires unsigned char/short to be zero-extended, leave it intact */
-+	if (!sign && (size == 1 || size == 2))
-+		return;
-+
-+	switch (size) {
-+	case 1:
-+		emit_insn(ctx, extwb, reg, reg);
-+		break;
-+	case 2:
-+		emit_insn(ctx, extwh, reg, reg);
-+		break;
-+	case 4:
-+		emit_insn(ctx, addiw, reg, reg, 0);
-+		break;
-+	case 8:
-+		break;
-+	default:
-+		pr_warn("bpf_jit: invalid size %d for extension\n", size);
-+	}
-+}
-+
- static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr rd, u64 addr)
- {
- 	u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
+ 	off = offsetof(struct bpf_array, map.max_entries);
+ 	emit_insn(ctx, ldwu, t1, a1, off);
+ 	/* bgeu $a2, $t1, jmp_offset */
 -- 
 2.43.5
 
