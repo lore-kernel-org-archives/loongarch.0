@@ -1,96 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAAC1FF1C7;
-	Sun, 23 Nov 2025 21:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE40326B942
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 01:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763932534; cv=none; b=U67h3MSPBdiD4rjXge4RNuy8lOUCGVo1PFb6lnOzfO0wN1W00H97IpKWolGShruCqQFhchQu0x0sY/4GGoXi1ywB3ptk28CvSLQS++sbh7rCI3gm7qhWquzJYrA2iD6maq4vVdiHOFBnAjP25w+NDa9SAu26GduNGLuEXvqY+Hg=
+	t=1763949504; cv=none; b=GYs1WXGAD+Z86KwUUzaCxjK3DualGF3k0rkI5qt+vrTNhaaBXSlhJQw2L8ZewIWxPK04ypGsvLLLJSW/mxk99OWmSLgH7ZiTQ+H62cqYGkCfP3Bnvtf+c+JVZahpFIxikbyKhuJ3JZ7MhCrtAcQD9AjsCE6Vud/VkYTKOgNQI/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763932534; c=relaxed/simple;
-	bh=D+OCR0hsIV5XBu9XitqcJnVl2OG0xT1N8cd+2rxAbx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGV5w/bBz9AjostvrcGpvOvL20/IWiIKvL75eofUlL6XZzf9PRi68EfnQ/pY5rjnwspRHsJYfHo6Ll/4BSnzVLSTrgQqkank/wyfI1WN0ZFz+6pcdS0vmWX6F5+oyYHFAdyAMRMNCXHaY8Bvyyth/i03CP+f6m5mTIfL39DTTWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5OfKYtv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5OfKYtv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BD64C113D0;
-	Sun, 23 Nov 2025 21:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763932532;
-	bh=D+OCR0hsIV5XBu9XitqcJnVl2OG0xT1N8cd+2rxAbx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u5OfKYtv/ujJ053wsKTh+hcRA+Ivna+Bt62V0TjLzF2yiIHx7BpzLiRUDINbCJ8Yx
-	 WzFACAdHIyvvVpE5gvPtCls6LtSWJSY3vyCek4t3xSyLUfxr2z+32kGj+aUrQZuKne
-	 NCJXnlSqTi6KFqidDad5ynXBMp9rn/lXF36IxnSPfTMveQMFvo6d1hiwyjxBQfrDZQ
-	 SDf95KbWuILgD2SkzBxC7jvITxbJlbmH95RuJrQgA1zp+xn0SvcBYl+YDIkR2FI2C1
-	 6zJYFk7EwaHnDkKKcFGvTiDSgVq1zLvAw5Glu2MTwTYBANcdaZUvkXc+U8NI35BSy9
-	 T6oq6SOQ3K1gQ==
-Date: Sun, 23 Nov 2025 14:15:27 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>, linux-kbuild@vger.kernel.org,
-	linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] kbuild: Add KBUILD_VMLINUX_LIBS_PRELINK
-Message-ID: <20251123211527.GB3667167@ax162>
-References: <20251119042708.27658-1-yangtiezhu@loongson.cn>
- <20251122013551.GA3928114@ax162>
- <7f179e5f-610c-6468-cb3f-17d25d096a8f@loongson.cn>
+	s=arc-20240116; t=1763949504; c=relaxed/simple;
+	bh=V1n6PdMoMi4h0w73UdH0Im9Apg3LKQ4F5yoGSC/CY98=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XLapsbb4yihmEywqSTdYwGRC12QRy/5ot0bCRT+JBBx/bDFqHMwhz+x+QqQ1SluQN8wrliJ4IxmglOMu1825cHF6UrGp4ZnkfEEHeMYyx29nXSEmjZg77ahmzfbQY1UGZhdtgmiaA432AXY0xxuzp+IGMebhn3RBuSdKUjozBvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxvtO6uyNpjlMnAA--.14046S3;
+	Mon, 24 Nov 2025 09:58:18 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxTMG4uyNp6E09AQ--.44195S3;
+	Mon, 24 Nov 2025 09:58:18 +0800 (CST)
+Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
+To: Huacai Chen <chenhuacai@kernel.org>,
+ "open list:LOONGARCH" <loongarch@lists.linux.dev>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
+References: <20251120065758.3064368-1-maobibo@loongson.cn>
+ <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <42d93855-50df-a686-85c5-5552ff829977@loongson.cn>
+Date: Mon, 24 Nov 2025 09:55:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f179e5f-610c-6468-cb3f-17d25d096a8f@loongson.cn>
+In-Reply-To: <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxTMG4uyNp6E09AQ--.44195S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJw1DtFy5JFy7Aw13Gw48GrX_yoW5WFyDpa
+	yI9a1fKF48AF1Sy347Aw1vqr90qwnYkF1ak3Wft3yUAr12qryxJa1IqFW7uF43G3ykW34I
+	v34S93W5uF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Sat, Nov 22, 2025 at 07:26:52PM +0800, Tiezhu Yang wrote:
-> On 11/22/25 09:35, Nathan Chancellor wrote:
-> > On Wed, Nov 19, 2025 at 12:27:08PM +0800, Tiezhu Yang wrote:
-> > ...
-> > > index 433849ff7529..e72d3254b93f 100755
-> > > --- a/scripts/link-vmlinux.sh
-> > > +++ b/scripts/link-vmlinux.sh
-> > > @@ -61,12 +61,11 @@ vmlinux_link()
-> > >   	shift
-> > >   	if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
-> > > -		# Use vmlinux.o instead of performing the slow LTO link again.
-> > 
-> > Why is this comment getting removed?
+
+
+On 2025/11/21 下午10:08, Huacai Chen wrote:
+> Hi, Bibo,
 > 
-> When using KBUILD_VMLINUX_LIBS_PRELINK or KBUILD_VMLINUX_LIBS_FINAL,
-> drivers/firmware/efi/libstub/lib.a needs to be linked to the final
-> vmlinux with vmlinux.o, so I thought the above comment is not proper,
-> it I misunderstood it, I will keep the comment as is.
-
-I think this comment is referring to the use of vmlinux.o instead of
-vmlinux.a, nothing to do with libs=, so I think the comment should
-remain.
-
-> > >   		objs=vmlinux.o
-> > > -		libs=
-> > > +		libs="${KBUILD_VMLINUX_LIBS_PRELINK}"
-> > >   	else
-> > >   		objs=vmlinux.a
-> > > -		libs="${KBUILD_VMLINUX_LIBS}"
-> > > +		libs="${KBUILD_VMLINUX_LIBS} ${KBUILD_VMLINUX_LIBS_PRELINK}"
-> > >   	fi
-> > >   	if is_enabled CONFIG_GENERIC_BUILTIN_DTB; then
+> On Thu, Nov 20, 2025 at 2:58 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> This patchset adds timer test case for LoongArch system, it is based
+>> on common arch_timer test case. And it includes one-shot and period mode
+>> timer interrupt test, software emulated timer function and time counter
+>> test.
+> I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
+> it passes, sometimes I get:
+> [root@fedora kvm]# ./arch_timer
+> Random seed: 0x6b8b4567
+> Guest assert failed,  vcpu 2; stage; 0; iter: 1
+> ==== Test Assertion Failure ====
+>    loongarch/arch_timer.c:79: irq_iter == 0
+>    pid=60138 tid=60142 errno=4 - Interrupted system call
+>       1  0x00000001200037cf: test_vcpu_run 于 arch_timer.c:70
+>       2  0x00007ffff2449f27: ?? ??:0
+>       3  0x00007ffff24c0633: ?? ??:0
+>    irq_iter = 0x1.
+>    Guest period timer interrupt was not triggered within the specified
+>    interval, try to increase the error margin by [-e] option.
 > 
-> FYI, the previous patch is still under discussion yesterday [1],
-> I do not know whether this patch is necessary and what is the next
-> step [2].
+> Is this as expected, or something is wrong?
+There is problem with that. In generic the vCPU task is rescheduled on 
+other CPUs or preempted, so period timer interrupt is not handled in 
+specified time.
+
+Regards
+Bibo Mao
 > 
-> [1] https://lore.kernel.org/loongarch/CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com/
-> [2] https://lore.kernel.org/loongarch/39617a3e-c476-abac-8425-bbcece769cdb@loongson.cn/
+> Hucai
+> 
+>> ---
+>> v2 ... v3:
+>>    1. Adjust order about patch 2 and patch 3
+>>    2. Add test case with alphabetical order
+>>    3. Merge one-shot and period timer interrupt test case into one
+>>    4. Only add LoongArch specific modification with common file
+>>       Makefile.kvm
+>>
+>> v1 ... v2:
+>>    1. Restore PC and PRMD after exception handler
+>>    2. Split patch 4 into two small patches with period timer test and
+>>       time counter test
+>>    3. With time counter test, set time count with 0 when create VM. And
+>>       verify time count starts from 0 in guest code
+>> ---
+>> Bibo Mao (6):
+>>    KVM: LoongArch: selftests: Add system registers save and restore on
+>>      exception
+>>    KVM: LoongArch: selftests: Add basic interfaces
+>>    KVM: LoongArch: selftests: Add exception handler register interface
+>>    KVM: LoongArch: selftests: Add timer interrupt test case
+>>    KVM: LoongArch: selftests: Add SW emulated timer test
+>>    KVM: LoongArch: selftests: Add time counter test
+>>
+>>   tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+>>   .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
+>>   .../kvm/include/loongarch/processor.h         |  81 +++++++-
+>>   .../selftests/kvm/lib/loongarch/exception.S   |   6 +
+>>   .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
+>>   .../selftests/kvm/loongarch/arch_timer.c      | 194 ++++++++++++++++++
+>>   6 files changed, 410 insertions(+), 3 deletions(-)
+>>   create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>   create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>
+>>
+>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
+>> --
+>> 2.39.3
+>>
 
-Thanks, we will wait to see the conclusion of those threads before
-applying this.
-
-Cheers,
-Nathan
