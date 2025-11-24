@@ -1,248 +1,111 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A442EAB8D;
-	Mon, 24 Nov 2025 09:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A82F5A30
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 09:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763975312; cv=none; b=EntuoHiB1RGWVGUAxjnYjzYxDOswQwpBEUhwFshtEAdke/VaLlwnM1rOSUuUswQAHlHE6/uRXzLk5vsbkRhy2oSudSIUr3j4E3EzX89/Zt6PEfaXK6NQBUIH2bylrmsaYqDo0moUgm0hVhhowOqvx5UdL6brMcCyZXh7Fn1KPfQ=
+	t=1763976433; cv=none; b=a+u57+FOXYJQicoXDheU2AQRrn28D1Z/IvtpMu3x0Lzg8xnJPcT2xlaE4Gqi8JaJIk5yB3N1RXUKHbeMBAEWdu8lVq2yuKE/CXsDCavXtw+U0dkc0kKWezuJudHz6TPFZzT/Y90irWp+59RfZSVeBQldA5c2WYMCSoaybXEufN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763975312; c=relaxed/simple;
-	bh=kVLTErxN4THTWzbx/ZV5SLay0pE11z7SHZJm/LLeI8g=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RP4xF9VgIOilgHwQ6yBNciLslbyn4fjdagxkgy0xP/oQtG3pkLARO07WN3QFrcdAFcJ/AAmYZ18zUAlVA75QRPGwnrNJoGPZmUyFF1U/urJDY/9KIotHWoY9gWwgozWaKx67Pz4Oar4x46FnLVjEiMAfsYHlfSPsog0m0z0lF2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxLvCJICRpb3EnAA--.19388S3;
-	Mon, 24 Nov 2025 17:08:25 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxVOSFICRpcYY9AQ--.43766S3;
-	Mon, 24 Nov 2025 17:08:23 +0800 (CST)
-Subject: Re: [PATCH v2 2/3] LoongArch: Add paravirt support with
- vcpu_is_preempted() in guest side
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
- Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, x86@kernel.org
-References: <20251124035402.3817179-1-maobibo@loongson.cn>
- <20251124035402.3817179-3-maobibo@loongson.cn>
- <CAAhV-H5Oag+mDp0CfZ1VDeapeKas354j68JZN9bN42=D4huowA@mail.gmail.com>
- <5d80c452-bbc3-539a-fb8d-14dbe353f8cb@loongson.cn>
- <CAAhV-H66M+GZ2kB8BKR82BUeQcNZ8ACeXLxwjh-bsVZcca1cqQ@mail.gmail.com>
- <718b5b5d-2bb1-5d59-409e-54f54516a6b7@loongson.cn>
- <CAAhV-H4X5EAgDTnSGG+1pMWywoLAis5TH_jEWkvaY8p1m8hQMg@mail.gmail.com>
- <611840bb-7f7d-3b13-dc89-b760d8eeda79@loongson.cn>
- <CAAhV-H6TWCs-tFf5HCOt9cAY01J-nirzVmu1GEAYpP=1LWznPA@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <393b2f18-c860-9d71-6d86-5a496983c3fd@loongson.cn>
-Date: Mon, 24 Nov 2025 17:05:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1763976433; c=relaxed/simple;
+	bh=DA50pH/bH7RkpXFI/IVMIlEZTs3ulo+9xZt4InyaF8g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BfOauqXOAHDPS1wH4OpmHzLDl6p5VenYiCZL/rpvwg8V3lUetmmUlf1DU7MKqZPxe+RzYkC8Mk7HB+TCZg33wHV6oG5x20ZTyEK75G1s1flHdu9Fikp2Zzp0gxgqS3pBrZvzDiNB0uZyrJAVyj3qQbMFVYGq1AHGhz7yZMff5XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZQfTV7FJ; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZQfTV7FJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1763976428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=c2MmwLtyNn3QPKov4Wt478LY9eJ7kFXDOMhNB2ZB3vE=;
+	b=ZQfTV7FJ0iCAOcpiaP+ajlMKrMphtDsVC7ggc2WWI/lMhOEmtPjG6lb6ddXtnAZgnpWA4q
+	0V/d4bAkNa19TtcPR7zwgun1PVGDCmOvdAvH5r/MEc04KfsUWkALSOGaqraqyKVnL/I60P
+	FLuhkdOHUp89NKSxD6Zj2xUPilICsyc=
+From: George Guo <dongtai.guo@linux.dev>
+Subject: [PATCH v2 0/2] LoongArch: Add 128-bit atomic cmpxchg support (v2)
+Date: Mon, 24 Nov 2025 17:26:28 +0800
+Message-Id: <20251124-2-v2-0-b38216e25fd9@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H6TWCs-tFf5HCOt9cAY01J-nirzVmu1GEAYpP=1LWznPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxVOSFICRpcYY9AQ--.43766S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtFWDAFW7trW3tw48Jw4DZFc_yoWxXr15pr
-	yUJF1kta1UGr18Aw42qr1q9r15tr1kGr1xXry7Gry5Ar1qvr17Jr1UtryjkFyUtwnrGF10
-	qr1kGr4agFyUJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWrXVW3AwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07j8sqAUUUUU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMQkJGkC/02MQQrCMBBFr1JmbWQyNlVceQ/pwmamdkBSSTRUS
+ u5u7Mrl+/z3VkgSVRKcmxWiZE06hwq0a8BPt3AXo1wZCMlZS2jIMB5OHQ3kx46h/p5RRl22xrW
+ vPGl6zfGzJbP9rf92tgbNEd3Avm3RObw8NLyXPUuGvpTyBcp6t1CSAAAA
+X-Change-ID: 20251120-2-d03862b2cf6d
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1763976426; l=2242;
+ i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
+ bh=DA50pH/bH7RkpXFI/IVMIlEZTs3ulo+9xZt4InyaF8g=;
+ b=zQkTj1f5lawY/7uZKqJbSGUb3tTBFvJsNIbHy9B3asj1ZR0OVurqzq5AYz+WLiiPYvzFHbDaD
+ eRv2hTgHdu6CrHq1GYeKIBSJti+1OZXHEZC8W5n3VpLPainOl2WNtWC
+X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
+ pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
+X-Migadu-Flow: FLOW_OUT
 
+This patch series adds 128-bit atomic compare-and-exchange support for
+LoongArch architecture, which fixes BPF scheduler test failures caused
+by missing 128-bit atomics support.
 
+The series consists of two patches:
 
-On 2025/11/24 下午5:03, Huacai Chen wrote:
-> On Mon, Nov 24, 2025 at 4:35 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/11/24 下午4:03, Huacai Chen wrote:
->>> On Mon, Nov 24, 2025 at 3:50 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2025/11/24 下午3:13, Huacai Chen wrote:
->>>>> On Mon, Nov 24, 2025 at 3:03 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2025/11/24 下午2:33, Huacai Chen wrote:
->>>>>>> Hi, Bibo,
->>>>>>>
->>>>>>> On Mon, Nov 24, 2025 at 11:54 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>>>
->>>>>>>> Function vcpu_is_preempted() is used to check whether vCPU is preempted
->>>>>>>> or not. Here add implementation with vcpu_is_preempted() when option
->>>>>>>> CONFIG_PARAVIRT is enabled.
->>>>>>>>
->>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>steal_time
->>>>>>>> ---
->>>>>>>>      arch/loongarch/include/asm/qspinlock.h |  5 +++++
->>>>>>>>      arch/loongarch/kernel/paravirt.c       | 16 ++++++++++++++++
->>>>>>>>      2 files changed, 21 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
->>>>>>>> index e76d3aa1e1eb..9a5b7ba1f4cb 100644
->>>>>>>> --- a/arch/loongarch/include/asm/qspinlock.h
->>>>>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
->>>>>>>> @@ -34,6 +34,11 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
->>>>>>>>             return true;
->>>>>>>>      }
->>>>>>>>
->>>>>>>> +#ifdef CONFIG_SMP
->>>>>>>> +#define vcpu_is_preempted      vcpu_is_preempted
->>>>>>>> +bool vcpu_is_preempted(int cpu);
->>>>>>> In V1 there is a build error because you reference mp_ops, so in V2
->>>>>>> you needn't put it in CONFIG_SMP.
->>>>>> The compile failure problem is that vcpu_is_preempted() is redefined in
->>>>>> both arch/loongarch/kernel/paravirt.c and include/linux/sched.h
->>>>> But other archs don't define vcpu_is_preempted() under CONFIG_SMP, and
->>>> so what is advantage to implement this function if CONFIG_SMP is disabled?
->>> 1. Keep consistency with other architectures.
->>> 2. Keep it simple to reduce #ifdefs (and !SMP is just for build, not
->>> very useful in practice).
->> It seems that CONFIG_SMP can be removed in header file
->> include/asm/qspinlock.h, since asm/spinlock.h and asm/qspinlock.h is
->> only included when CONFIG_SMP is set, otherwise only linux/spinlock_up.h
->> is included.
->>
->>>
->>>>
->>>>> you can consider to inline the whole vcpu_is_preempted() here.
->>>> Defining the function vcpu_is_preempted() as inlined is not so easy for
->>>> me, it beyond my ability now :(
->>>>
->>>> With static key method, the static key need be exported, all modules
->>>> need apply the jump label, that is dangerous and I doubt whether it is
->>>> deserved.
->>> No, you have already done similar things in virt_spin_lock(), it is an
->>> inline function and uses virt_spin_lock_key.
->> virt_spin_lock is only called qspinlock in function
->> queued_spin_lock_slowpath(). Function vcpu_is_preempted() is defined
->> header file linux/sched.h, kernel module may use it.
-> Yes, if modules want to use it we need to EXPORT_SYMBOL. But don't
-> worry, static key infrastructure can handle this. Please see
-> cpu_feature_keys defined and used in
-> arch/powerpc/include/asm/cpu_has_feature.h, which is exported in
-> arch/powerpc/kernel/cputable.c.
-No, I do not want to do so. export static key and percpu steal_time 
-structure, just in order to implement one inline function.
+1. "LoongArch: Add 128-bit atomic cmpxchg support"
+   - Implements 128-bit atomic compare-and-exchange using LoongArch's
+     LL.D/SC.Q instructions
+   - Fixes BPF scheduler test failures (scx_central scx_qmap) where
+     kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
+     leading to -ENOMEM errors during scheduler initialization
 
-> 
-> Huacai
-> 
->>
->>
->>>
->>> Huacai
->>>
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>>
->>>>>>
->>>>>> The problem is that <asm/spinlock.h> is not included by sched.h, if
->>>>>> CONFIG_SMP is disabled. Here is part of file include/linux/spinlock.h
->>>>>> #ifdef CONFIG_SMP
->>>>>> # include <asm/spinlock.h>
->>>>>> #else
->>>>>> # include <linux/spinlock_up.h>
->>>>>> #endif
->>>>>>
->>>>>>> On the other hand, even if you really build a UP guest kernel, when
->>>>>>> multiple guests run together, you probably need vcpu_is_preemtped.
->>>>>> It is not relative with multiple VMs. When vcpu_is_preempted() is
->>>>>> called, it is to detect whether dest CPU is preempted or not, the cpu
->>>>>> from smp_processor_id() should not be preempted. So in generic
->>>>>> vcpu_is_preempted() works on multiple vCPUs.
->>>>> OK, I'm wrong here.
->>>>>
->>>>>
->>>>> Huacai
->>>>>
->>>>>>
->>>>>> Regards
->>>>>> Bibo Mao
->>>>>>>
->>>>>>>
->>>>>>> Huacai
->>>>>>>
->>>>>>>> +#endif
->>>>>>>> +
->>>>>>>>      #endif /* CONFIG_PARAVIRT */
->>>>>>>>
->>>>>>>>      #include <asm-generic/qspinlock.h>
->>>>>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
->>>>>>>> index b1b51f920b23..d4163679adc4 100644
->>>>>>>> --- a/arch/loongarch/kernel/paravirt.c
->>>>>>>> +++ b/arch/loongarch/kernel/paravirt.c
->>>>>>>> @@ -246,6 +246,7 @@ static void pv_disable_steal_time(void)
->>>>>>>>      }
->>>>>>>>
->>>>>>>>      #ifdef CONFIG_SMP
->>>>>>>> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
->>>>>>>>      static int pv_time_cpu_online(unsigned int cpu)
->>>>>>>>      {
->>>>>>>>             unsigned long flags;
->>>>>>>> @@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
->>>>>>>>
->>>>>>>>             return 0;
->>>>>>>>      }
->>>>>>>> +
->>>>>>>> +bool notrace vcpu_is_preempted(int cpu)
->>>>>>>> +{
->>>>>>>> +       struct kvm_steal_time *src;
->>>>>>>> +
->>>>>>>> +       if (!static_branch_unlikely(&virt_preempt_key))
->>>>>>>> +               return false;
->>>>>>>> +
->>>>>>>> +       src = &per_cpu(steal_time, cpu);
->>>>>>>> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
->>>>>>>> +}
->>>>>>>> +EXPORT_SYMBOL(vcpu_is_preempted);
->>>>>>>>      #endif
->>>>>>>>
->>>>>>>>      static void pv_cpu_reboot(void *unused)
->>>>>>>> @@ -308,6 +321,9 @@ int __init pv_time_init(void)
->>>>>>>>                     pr_err("Failed to install cpu hotplug callbacks\n");
->>>>>>>>                     return r;
->>>>>>>>             }
->>>>>>>> +
->>>>>>>> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
->>>>>>>> +               static_branch_enable(&virt_preempt_key);
->>>>>>>>      #endif
->>>>>>>>
->>>>>>>>             static_call_update(pv_steal_clock, paravt_steal_clock);
->>>>>>>> --
->>>>>>>> 2.39.3
->>>>>>>>
->>>>>>
->>>>>>
->>>>
->>>>
->>
->>
+2. "LoongArch: Enable 128-bit atomics cmpxchg support"
+   - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
+     in Kconfig to enable 128-bit atomic cmpxchg support
+
+The issue was identified through BPF scheduler test failures where
+scx_central and scx_qmap schedulers would fail to initialize. Testing
+was performed using the scx_qmap scheduler from tools/sched_ext/,
+confirming that the patches resolve the initialization failures.
+
+Signed-off-by: George Guo <dongtai.guo@linux.dev>
+---
+Changes in v2:
+- Use a normal ld.d for the high word instead of ll.d to avoid race
+  condition
+- Insert a dbar between ll.d and ld.d to prevent reordering
+- Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(ptr, o, n)
+- Fix address operand constraints after testing different approaches:
+  * ld.d with "m"
+  * ll.d with "ZC",
+  * sc.q with "ZB"(alternative constraints caused issues:
+   - "r"  caused system hang
+   - "ZC" caused compiler error:
+     {standard input}: Assembler messages:
+     {standard input}:10037: Fatal error: Immediate overflow.
+     format: u0:0 )
+- Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linux.dev
+
+---
+George Guo (2):
+      LoongArch: Add 128-bit atomic cmpxchg support
+      LoongArch: Enable 128-bit atomics cmpxchg support
+
+ arch/loongarch/Kconfig               |  2 ++
+ arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+---
+base-commit: d5ae5ac32615e4af729f0610fdc11ff4f4798aef
+change-id: 20251120-2-d03862b2cf6d
+
+Best regards,
+-- 
+George Guo <dongtai.guo@linux.dev>
 
