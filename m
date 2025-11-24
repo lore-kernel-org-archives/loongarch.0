@@ -1,134 +1,189 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4862FBDE9;
-	Mon, 24 Nov 2025 09:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379D12F60B6
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 11:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763978087; cv=none; b=aqTvGuxrBE9Cmo69HDMyexnpaj7iBGZPwIA2DR6gjqXTMcslGQ00KxHhio8r9BD31nfB4r84vgUDg3p06h6LXZlaA6iJ64NddHDnpiA3MM/2qpkGLHY795B0B+R0TvjSh3Dgodv29OlXkU04Q026NbN2erVLC3pwt7FsxG8FiDI=
+	t=1763984273; cv=none; b=T9uCaaQalI2I/AIp6Ol2Y/Oh0MBMNxN0HRC1WmsLl7Ye8b6+OwLManI0MpfHqMH8qPmECJmWvR59z80RHGk2+ivREIngHdWXRWy3vBsud4xT7k6aWMpFJ9Sz4k5TvLBA75kvBNBW03uDbKBiNo/qmrTtxp1uJt/1KBa2OBGzjzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763978087; c=relaxed/simple;
-	bh=a0nRGIDci22MCD2D8c5xMsYYHrIdVNziTzBaqLsw6hI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UsnY2HGT+rsFq7aw4AFNEkoxpPMA+Txlmpfa/1Tb9VQ0+vFTzFNapIZCpGiDc+psf4cqgoZxGvaa4PHJZ/TodK/kBM+xR9Rw0nVkQwmiBajPprdtEbmT2c0cbj6Al8Z3giyESyTlZU/i7B1j/40zO+v+s9b9pAB7TAxkBao+8N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Dx_9NeKyRpt3YnAA--.14223S3;
-	Mon, 24 Nov 2025 17:54:38 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxpeRbKyRps409AQ--.34932S3;
-	Mon, 24 Nov 2025 17:54:37 +0800 (CST)
-Subject: Re: [PATCH v3 09/21] loongarch/paravirt: Use common code for
- paravirt_steal_clock()
-To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, virtualization@lists.linux.dev, x86@kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>
-References: <20251006074606.1266-1-jgross@suse.com>
- <20251006074606.1266-10-jgross@suse.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <e43e9885-68f1-8558-08cd-9d0ef48861f7@loongson.cn>
-Date: Mon, 24 Nov 2025 17:52:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1763984273; c=relaxed/simple;
+	bh=xQkRzR3QAgi21AnK3p+RQ/FUSylUpiS9lWVTSRJzCes=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qviDJsNqi/H4s95UGX3IHOPBjHle21g3zyOeIxFc88V8FQmWQCPHMgqXFoG9a94rVLhpVt4Kp5o2u59+ZJI60/xwKlfl8eZEqX5SADWfoHJ/IUhZJXC8M6By9OMK1KOQzbPuP79OW2EIKcQNqLWVWkEAypwnEk9H9UFUlugeo+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=tIcOvoIO; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="tIcOvoIO"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7881b67da53so40418907b3.1
+        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 03:37:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1763984271; x=1764589071; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=htCKxX8DFS8N2OF9sCBb5Rm54vdwatCJw9jB7U9PXY8=;
+        b=tIcOvoIOv2eqH44XApWvmbzR1nKz14cKGwwCRFNZ4GqcsD4auCJwCTE7alvALxIPTP
+         YkOpf8phS7nK1WCxP18hKheOu/LDNwl43zEP1X0wgqopwn+0FK9ARaPwReXjft1Chez9
+         qJfGhaWxi0VLro+U0nSmMAyJ6H0Uz37bGj7TWOGFA/EMSpsU2mzBix/Hf8KZHm9+bAFN
+         vmCNEn0fr0/wgSBtuyuTI6V25Ir89iyw+RbRqIesKOX2hdE1Vidjda+71lHO9dierqMb
+         PXAyeoPeacGemxwqQaZEPY24FWwhp0IQHaJaA3ovRrvGkvbTOivfW07Mj1LKfrWi1XZo
+         Df/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763984271; x=1764589071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=htCKxX8DFS8N2OF9sCBb5Rm54vdwatCJw9jB7U9PXY8=;
+        b=dEpHcVDY8RVdXLiLQ6lYfU12LCfaYZKIlbyfWOTNWNtGLZK8ddSAyWkcaKZdypMwgX
+         utBPWsf3PkvsJXOYw4sTjjXjEgqiCd74BGJAzRpLivv7V1YXzPJbfiedEselhzs2VIf1
+         5PeleK8XmQb0pUeGGE1jV8TzbgLttEu4VU/R/srH3ELog/SbWwXKODagICX47yIsmgWB
+         SckBNZpNrWQN51FhblzwI8MNT+gbMPlnP3mlB2zEd252Ma1IhKtUoOWevUGd4FLOsg8z
+         2pAcs52XmfDVV9BuujBj5np6Nncodl7yTj/U+ldUDhHiJFEwNycmumzBsZRy40TIb+Pq
+         1wHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGCY4YiplneMPtrBEVLyTgTA6BEAJNzaUfMM47EKFdiAVuHitLtOQMN5A+XFEEXu2Ql5PZX3eBEaM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxpUf8p/erLFPHAFIGmMKzoNh/u3daEB5G8x4CYGOIu379gNj1k
+	iQb4qtW3i9pjxWIieYgf0Fe8G0/N+ukeLHIB6w0TErM+Wu4wcE3+q1EXxh9Aa50kUFg/TrhpRig
+	jNThjRjVdfeXUQxWH5bXw6ET5ZwEBiSPhwh5THgf4hw==
+X-Gm-Gg: ASbGnctO/ggITfS4q8akgoTTd0Jkye/fHOIlQLxti2FdVsPT5Gl27UHekTB18X55MVj
+	4UdSxKnBaFS6ZId/DXo0EGKXSLzWdR7lgrkaHjU5okXUzi+cdoWeLNSJdB0/Jn59zZxiiDMw1sY
+	MymlUqXYAezFhmZ3eH3dOB8k9ywmQs5imP0iLE2KwpLmY+KIjL0dUI6GzbWbB4WLBw6Rnze3hBX
+	QXUBL/8db48sDGD7fP7pGoa8C7/HI8JMFz5Uv0oXJ4gXWuXFLsONgg2Xj/j2TY1Z0uida61S44K
+	JE0S0JcTjtKrjIUcmeKK+hnDVX0=
+X-Google-Smtp-Source: AGHT+IEayvI8VLT3rYWI38UMhn3smgG67kBBujEA8hKxv/BZNj3RvRmd/zFUXsFuvbITLp835TIZxtFvqQgX3r1jN/M=
+X-Received: by 2002:a05:690c:61c1:b0:786:59d3:49c3 with SMTP id
+ 00721157ae682-78a8b556f5emr99275507b3.46.1763984271200; Mon, 24 Nov 2025
+ 03:37:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251006074606.1266-10-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpeRbKyRps409AQ--.34932S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WryfAFy5tw1kCFW8Ar4rCrX_yoW8KF43p3
-	srAr1kWw4UGFn5uFZrK398Wry5Cwn7G3W2vF1aga4rAFZrXr1qgr18J34DXFyqqa97Ja1F
-	qFyrCwn0ga1UJ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
-	SoJUUUUU=
+References: <20251124-2-v2-0-b38216e25fd9@linux.dev> <20251124-2-v2-1-b38216e25fd9@linux.dev>
+In-Reply-To: <20251124-2-v2-1-b38216e25fd9@linux.dev>
+From: hev <r@hev.cc>
+Date: Mon, 24 Nov 2025 19:37:40 +0800
+X-Gm-Features: AWmQ_bksMTYosUdP8crNLrhiIcOSqH1S1QSQ5RBEPndU7-BLmjUcBq8uz-E-zq0
+Message-ID: <CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] LoongArch: Add 128-bit atomic cmpxchg support
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-
-On 2025/10/6 下午3:45, Juergen Gross wrote:
-> Remove the arch specific variant of paravirt_steal_clock() and use
-> the common one instead.
-> 
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Mon, Nov 24, 2025 at 5:28=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
+>
+> From: George Guo <guodongtai@kylinos.cn>
+>
+> Implement 128-bit atomic compare-and-exchange using LoongArch's
+> LL.D/SC.Q instructions.
+>
+> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
+> caused by kmalloc_nolock_noprof returning NULL due to missing
+> 128-bit atomics. The NULL returns led to -ENOMEM errors during
+> scheduler initialization, causing test cases to fail.
+>
+> Verified by testing with the scx_qmap scheduler (located in
+> tools/sched_ext/). Building with `make` and running
+> ./tools/sched_ext/build/bin/scx_qmap.
+>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
 > ---
->   arch/loongarch/Kconfig                |  1 +
->   arch/loongarch/include/asm/paravirt.h | 10 ----------
->   arch/loongarch/kernel/paravirt.c      |  7 -------
->   3 files changed, 1 insertion(+), 17 deletions(-)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index ea683bcea14c..7a9d1d0edc92 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -671,6 +671,7 @@ source "kernel/livepatch/Kconfig"
->   config PARAVIRT
->   	bool "Enable paravirtualization code"
->   	depends on AS_HAS_LVZ_EXTENSION
-> +	select HAVE_PV_STEAL_CLOCK_GEN
->   	help
->   	  This changes the kernel so it can modify itself when it is run
->   	  under a hypervisor, potentially improving performance significantly
-> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-> index d219ea0d98ac..0111f0ad5f73 100644
-> --- a/arch/loongarch/include/asm/paravirt.h
-> +++ b/arch/loongarch/include/asm/paravirt.h
-> @@ -4,16 +4,6 @@
->   
->   #ifdef CONFIG_PARAVIRT
->   
-> -#include <linux/static_call_types.h>
-> -
-> -u64 dummy_steal_clock(int cpu);
-> -DECLARE_STATIC_CALL(pv_steal_clock, dummy_steal_clock);
-> -
-> -static inline u64 paravirt_steal_clock(int cpu)
-> -{
-> -	return static_call(pv_steal_clock)(cpu);
-> -}
-> -
->   int __init pv_ipi_init(void);
->   int __init pv_time_init(void);
->   int __init pv_spinlock_init(void);
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-> index 8caaa94fed1a..c5e526098c0b 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -13,13 +13,6 @@ static int has_steal_clock;
->   static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
->   DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
->   
-> -static u64 native_steal_clock(int cpu)
-> -{
-> -	return 0;
-> -}
-> -
-> -DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
-> -
->   static bool steal_acc = true;
->   
->   static int __init parse_no_stealacc(char *arg)
-> 
+>  arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
+e/asm/cmpxchg.h
+> index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..757f6e82b9880d04f4883dc9a=
+802312111aa4588 100644
+> --- a/arch/loongarch/include/asm/cmpxchg.h
+> +++ b/arch/loongarch/include/asm/cmpxchg.h
+> @@ -111,6 +111,44 @@ __arch_xchg(volatile void *ptr, unsigned long x, int=
+ size)
+>         __ret;                                                          \
+>  })
+>
+> +union __u128_halves {
+> +       u128 full;
+> +       struct {
+> +               u64 low;
+> +               u64 high;
+> +       };
+> +};
+> +
+> +#define __cmpxchg128_asm(ptr, old, new)                                 =
+       \
+> +({                                                                     \
+> +       union __u128_halves __old, __new, __ret;                        \
+> +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);                   =
+ \
+> +                                                                       \
+> +       __old.full =3D (old);                                            =
+ \
+> +       __new.full =3D (new);                                            =
+ \
+> +                                                                       \
+> +       __asm__ __volatile__(                                           \
+> +       "1:   ll.d    %0, %3            # 128-bit cmpxchg low   \n"     \
+> +       "     dbar    0                 # memory barrier        \n"     \
+> +       "     ld.d    %1, %4            # 128-bit cmpxchg high  \n"     \
+> +       "     bne     %0, %z5, 2f                               \n"     \
+> +       "     bne     %1, %z6, 2f                               \n"     \
+> +       "     move    $t0, %z7                                  \n"     \
+> +       "     move    $t1, %z8                                  \n"     \
+> +       "     sc.q    $t0, $t1, %2                              \n"     \
+> +       "     beqz    $t0, 1b                                   \n"     \
+> +       "2:                                                     \n"     \
+> +       __WEAK_LLSC_MB                                                  \
+> +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high),                     =
+   \
+> +         "=3DZB" (__ptr[0])                                             =
+ \
 
+"ZB" isn't a legal constraint for the address operand in sc.q. When
+assembled, it turns into something like sc.q $r,$r,$r,0, which clearly
+doesn't match the instruction format, yet gas happily accepts it wheil
+clang rightfully rejects it. Classic GNU-as leniency biting again. :)
+
+> +       : "ZC" (__ptr[0]), "m" (__ptr[1]),                              \
+> +         "Jr" (__old.low), "Jr" (__old.high),                          \
+> +         "Jr" (__new.low), "Jr" (__new.high)                           \
+> +       : "t0", "t1", "memory");                                        \
+> +                                                                       \
+> +       __ret.full;                                                     \
+> +})
+> +
+>  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned =
+int old,
+>                                            unsigned int new, unsigned int=
+ size)
+>  {
+> @@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, uns=
+igned long new, unsigned int
+>         __res;                                                          \
+>  })
+>
+> +/* cmpxchg128 */
+> +#define system_has_cmpxchg128()                1
+> +
+> +#define arch_cmpxchg128(ptr, o, n)                                     \
+> +({                                                                     \
+> +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
+ \
+> +       __cmpxchg128_asm(ptr, o, n);                    \
+> +})
+> +
+>  #ifdef CONFIG_64BIT
+>  #define arch_cmpxchg64_local(ptr, o, n)                                 =
+       \
+>    ({                                                                   \
+>
+> --
+> 2.48.1
+>
+>
