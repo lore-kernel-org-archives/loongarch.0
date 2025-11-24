@@ -1,148 +1,106 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C03A299AB4
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 05:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555312D8792
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763963831; cv=none; b=e9Y8s7+1mn0+g7pKy2Ec/8vcuEsA5i5dd+Q1whWxLab6FG+ONJbwkjYwkRQM49JkC+eo77wBZN9iYhlVHOXVAbxtYFluBKmJ3ZsS+yJLACMmWoofYdqubNJaCUy2/VUWwqawfxUZrPDsHnYsDgwF4DCxahSa+OUgwK5S0P+NCSA=
+	t=1763965905; cv=none; b=QLjClOiuwPnqf/5dcbBnMDisUWg1CpXFPgCE6eiLHdA2yJoRtVzFlDYvuOCp8PWbk7TdQ9aczyP1GvlYmQqF4rGdzzYLNrXP7/meTLsx0KhN3tMJDlp0hx9hukmkYl+NXH+8DNH9ceb627CCDZH0ckFASdnBclNX0pSpLuPDRvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763963831; c=relaxed/simple;
-	bh=a3FS4lXFVduG2Jdpv14EyGB5mP1sh4xLeovTZaM92/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FSggUCYpk358zrONkqv7lX3qtmVmSBEQ42iX3QJ6KBnBgEiF9AnGt6mcV8/fpZqG8ZpIxmYoqi8Te66H20KWRG2BTwUhztVjuSmA4h0tRQy3fT4mpEheXLhUISn7gQOLto38xWoe0nlzTmjcJT94BfMPkIaCFv5AU/ir9Jax3gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNMbPiAJ; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763965905; c=relaxed/simple;
+	bh=sGyvSEFKuUipVV3r8EtUpTG4/E8t2HegXvfjy1VxjeE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jj3vSlRbNg98UVp20J2FTXlMVbbS+zP3iU+W253AZc077N723zS5oPYOWhY3sQK3sqX1mr56O1j5R5jEGQDec5smjQ8YVEY7KfBXDQDKGuG50LEVdVDM24wSvjA4/2/4lJbJ76BTrXlizKpiOE02o65eHxEWys/Rm7zM3Xmsksg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJCohU3C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNMbPiAJ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-29555415c5fso43223055ad.1
-        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 21:57:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763963828; x=1764568628; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpHaUb8qBqlBZqFVXhT7R9Iw5whC1Uicg7Q6tNoLowY=;
-        b=MNMbPiAJcJ5xcr17IM5x0PxpIztzygAfXld0leXZqilJAaU9zEp1JgGBO/l6siggkG
-         MAxBXhDpIS0ZXQ6WoyP1/NtoH4hCVFKszeISIOf2S/fVqlhh5F9Aqpmawrxxf0nOaJgx
-         I6TewSXLFwfRLvTYyOIfi5Olj2j1w1l1sE/LQUovglRTUiHbWBdLAVyxkMYLEV+Axamx
-         j8EVhainu3DKR36WsQe9dCs9/SDi5+mU8p3NpLuDMzQjd1N6MLFm6qErNb1D8vVLUZQq
-         3KIb3f5iXUkEZxqlGP+h2BcMLfvchBDMV1dG5WI7cbZ/a7K0IC61TmiRDoRzXBI0xYT0
-         Po3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763963828; x=1764568628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bpHaUb8qBqlBZqFVXhT7R9Iw5whC1Uicg7Q6tNoLowY=;
-        b=ooSpOXxo8OzArZKeFZLoDO+/IZmNbpNOsqNLcA5TfJoLn9FOi3veWR5lqWY2tPMTyu
-         6YIDQkjXj+qPp5EmBOzTBv/LwSBl3awbW7iAHCf79ZYex/RA+n8G1u3F0UKXAozDc1+D
-         IHanc4tUMjzRL+cGTW2tCm5dFVzzRKxDQZsZ8tRgTeqyTH3O2BkQzVk640hQ05uPt7NQ
-         aYs1v3IFDVMJgf7dvmvVfq/PUgPNPYgGp0sbgtp2IyhuIzgRh1zug0um3Oa0S61PHNxd
-         9JhlRCCsEDTRIqQkrz8YAcfWFK+S4xS/bqsjzWlKbdWVZUM6LAgsoqgRKhRoH7rBVfVw
-         Xbbw==
-X-Gm-Message-State: AOJu0YweZOP2zPhL3r1rEIpCuGnR9MViXBdMBC5fPvuMcgcSeUyDG4i1
-	J0PtzRR/JTi9UBwL/hQNpV/7GRz8P3UOP8Dm/MlRZ0u23HMDbaISBfXx
-X-Gm-Gg: ASbGncsBvh6/3x2LvwzHVgG7Ed5IXOSJ9lCiL5arWfiDDLepzIpIiW4ZcJ5nMzMNQ66
-	pjN3TW+fpdIT3PEZbLU9gapWBFKu+efGr7twE2O25nNF6q1KzQqvPs6z/iV6YC9FfZiQ3kZIz7g
-	lO5Nj3fuO8cdgQW5g9WFDKrryTTIaC6e+BDI5czzZBL2isD2KDoxObXbIC1VhakjZIDR6OzvX3u
-	mE9BZayAF848hYxSwdK/gZ1c+2qarVuwb6KG4pKzp1VcIzBdC62Rj519w3j3ez+YBKSLxPxhEWL
-	MB9EaVxvBLDQN7LvBBPhuQRLc5cUDry76W3d9CZpURiIamAIgPGqkaXUjH4b/Rtx9MJExy+YiEQ
-	0QiMasz88p+dNFnxRrAPuzYVNuNpPwThZJlV6nYZ/vKzLo+4UGlS5loGw+cvuGLqj6KAT7LHO5h
-	QJ8Tv0oh1txDS3YzXgYuNZhO7Uva07
-X-Google-Smtp-Source: AGHT+IEWKwuJfGzH7IniwZINBdtXQX6FxLxbtPkBvyMvsNt+4ZyLZYWA/rYVFZCCO/00DQRFftbR9A==
-X-Received: by 2002:a17:903:2f82:b0:295:425a:350e with SMTP id d9443c01a7336-29b6c3dc000mr108160595ad.8.1763963828331;
-        Sun, 23 Nov 2025 21:57:08 -0800 (PST)
-Received: from devbox.. ([43.132.141.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b106094sm124881785ad.10.2025.11.23.21.57.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 21:57:08 -0800 (PST)
-From: Hengqi Chen <hengqi.chen@gmail.com>
-To: chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	vincent.mc.li@gmail.com
-Cc: loongarch@lists.linux.dev,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH 5/5] LoongArch: BPF: Implement bpf_addr_space_cast instruction
-Date: Mon, 24 Nov 2025 05:56:42 +0000
-Message-ID: <20251124055642.1591-6-hengqi.chen@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251124055642.1591-1-hengqi.chen@gmail.com>
-References: <20251124055642.1591-1-hengqi.chen@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJCohU3C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6E6C19422
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763965905;
+	bh=sGyvSEFKuUipVV3r8EtUpTG4/E8t2HegXvfjy1VxjeE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fJCohU3Cd2BPjq7RaXdT5Tua3YUCqmQMQAjwbTyyPjqvuafDJcpMUSOOEjytw2qOL
+	 RUgxLoEORNKAYoLqOOqPGW3dzzDtWR7Ab0yR+b6Ym18yVO3Ka7RSZF+L5nJ5UBNOkV
+	 V2UX/pdi4+1nkmzn4bkjiJ95n4OLJpJ+zgu6SUK2+eLH+I37KlkEwxXrBzG37eU+9V
+	 mEaAArb7AJBrkyhS+dY5WpDWKlqs+CRsWVNC+04usGqyxrDbhG2ldY6ifLDCEVgtO+
+	 tJH04O0nuom+mEKIdE/jyfYVAzt0Po1jY8ziKgRYU/ukBND0Ic/Vj3Ym7k6M8DFACJ
+	 BfdcU7rh6li5Q==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-644f90587e5so6019106a12.0
+        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 22:31:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWGnhqmcRqoFlnAsCD7sMI9uu9hWNpdDaoOrzoj71slalTC30bsWWEOsDnzfIpvFv+dBXCCr+RkYtY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxfaQ6f2goWyKLuEcrXvOG2hLa3zM1dP1zsSfb7maQWSuszLNRy
+	s7WdHksTrY34o3MU+lcQaXrOmrT0AevP9oROfeRQl313mj9U49lWijXBXD2fRAgX5aoWducoOp5
+	IT4qNKevGFba8yKzST8QnsOFgDiIbvzw=
+X-Google-Smtp-Source: AGHT+IGLqLdyKiGKQHNqPpUfqYX69byCrZmT4BykpYmcTrIep7VYRAPnySV9z3Xw4anqcwzjFtMjTE+LTjIhIZnG3FU=
+X-Received: by 2002:a17:906:c14a:b0:b6d:3a00:983a with SMTP id
+ a640c23a62f3a-b7671709c17mr1195800566b.38.1763965903418; Sun, 23 Nov 2025
+ 22:31:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251124055642.1591-1-hengqi.chen@gmail.com>
+In-Reply-To: <20251124055642.1591-1-hengqi.chen@gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 24 Nov 2025 14:31:46 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
+X-Gm-Features: AWmQ_blcU2NflMN8w5E7TIrrM_UekKDZkpWwVp9CJi-SmAxxi4qtayTzHlLw64c
+Message-ID: <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-LLVM generates bpf_addr_space_cast instruction while translating
-pointers between native (zero) address space and
-__attribute__((address_space(N))). The addr_space=0 is reserved as
-bpf_arena address space.
+Hi, Hengqi,
 
-rY = addr_space_cast(rX, 0, 1) is processed by the verifier and
-converted to normal 32-bit move: wX = wY
+I think this is the successor of
+https://lore.kernel.org/loongarch/20251006053323.193581-1-hengqi.chen@gmail=
+.com/T/#t
 
-rY = addr_space_cast(rX, 1, 0) has to be converted by JIT.
+Right?
 
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
----
- arch/loongarch/net/bpf_jit.c | 15 +++++++++++++++
- arch/loongarch/net/bpf_jit.h |  1 +
- 2 files changed, 16 insertions(+)
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 14188e8d86bc..12fc7bfe3fe4 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -560,6 +560,15 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	/* dst = src */
- 	case BPF_ALU | BPF_MOV | BPF_X:
- 	case BPF_ALU64 | BPF_MOV | BPF_X:
-+		if (insn_is_cast_user(insn)) {
-+			move_reg(ctx, t1, src);
-+			emit_zext_32(ctx, t1, true);
-+			move_imm(ctx, dst, (ctx->user_vm_start >> 32) << 32, false);
-+			emit_insn(ctx, beq, t1, LOONGARCH_GPR_ZERO, 1);
-+			emit_insn(ctx, or, t1, dst, t1);
-+			move_reg(ctx, dst, t1);
-+			break;
-+		}
- 		switch (off) {
- 		case 0:
- 			move_reg(ctx, dst, src);
-@@ -1936,6 +1945,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	memset(&ctx, 0, sizeof(ctx));
- 	ctx.prog = prog;
- 	ctx.arena_vm_start = bpf_arena_get_kern_vm_start(prog->aux->arena);
-+	ctx.user_vm_start = bpf_arena_get_user_vm_start(prog->aux->arena);
- 
- 	ctx.offset = kvcalloc(prog->len + 1, sizeof(u32), GFP_KERNEL);
- 	if (ctx.offset == NULL) {
-@@ -2097,3 +2107,8 @@ bool bpf_jit_supports_subprog_tailcalls(void)
- {
- 	return true;
- }
-+
-+bool bpf_jit_supports_arena(void)
-+{
-+	return true;
-+}
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index 328ec445a710..93720f5ec8bb 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -21,6 +21,7 @@ struct jit_ctx {
- 	union loongarch_instruction *ro_image;
- 	u32 stack_size;
- 	u64 arena_vm_start;
-+	u64 user_vm_start;
- };
- 
- struct jit_data {
--- 
-2.43.5
+Huacai
 
+On Mon, Nov 24, 2025 at 1:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> This small set implement new features with 2 bug fixes for BPF.
+>
+> * Patch 1 fixes a bug discovered while testing the BPF Arena feature.
+>   Without this fix, the arena_htab test case which use the
+>   bpf_arena_alloc_pages kfunc will trigger a kernel panic.
+> * Patch 2 fixes a subtle bug for tail call index, this can be verified
+>   by the verifier_runtime_jit test case.
+>   See the following two threads for background:
+>     - https://lore.kernel.org/bpf/CAEyhmHTvj4cDRfu1FXSEXmdCqyWfs3ehw5gtB9=
+qJCrThuUy2Kw@mail.gmail.com/
+>     - https://lore.kernel.org/bpf/20251005103518.996383-1-luis.gerhorst@f=
+au.de/
+> * Patch 3 uses pack allocator for BPF programs (BPF trampoline already
+>   use pack allocator, this make it complete), with this, no regression
+>   on existing selftests
+> * Patch 4 & 5 implements basic support for BPF Arena, the following
+>   test cases passed:
+>     - arena_htab
+>     - arena_list
+>     - verifier_arena
+>     - verifier_arena_large
+>
+> Hengqi Chen (5):
+>   LoongArch: BPF: Sign extend kfunc call arguments
+>   LoongArch: BPF: Zero-extend bpf_tail_call() index
+>   LoongArch: BPF: Use BPF prog pack allocator
+>   LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
+>   LoongArch: BPF: Implement bpf_addr_space_cast instruction
+>
+>  arch/loongarch/net/bpf_jit.c | 225 ++++++++++++++++++++++++++++-------
+>  arch/loongarch/net/bpf_jit.h |  30 ++++-
+>  2 files changed, 213 insertions(+), 42 deletions(-)
+>
+> --
+> 2.43.5
