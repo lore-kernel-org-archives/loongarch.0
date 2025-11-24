@@ -1,157 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDE82DF133
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3BD25F7B9
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:33:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763965975; cv=none; b=ejGOqwTTaj/E3B7Dzaxq5UqXmtQmQHvnH6OqNdKhevqWYI3h4xkQIIR5qlhFpyyE/kYUHuFg463vcioYgAeAG3fGsDsHS9VIXza5j1PkZnhKFIObobIXWrRRmVnAUhueSFfQI2YODyCdMlOVKUqJUgc6NAMkzRSeVniCL6wNVzQ=
+	t=1763965989; cv=none; b=auvmrNVHmWFuGAY4MohLz956+pFgnqnHZCRf/ASiMwoQlxLMQRTs+5rQX0OhAW+qCK5qPJyMyffhqOZFO2VruZ5mY3qEy4AEAWUVLiBhC56ZwytzKyqrrbTDTYtDbcdMiu843ipnyQCjRnKpq5j1MMnYdybZAd55tj/7vbWJnLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763965975; c=relaxed/simple;
-	bh=1OF21eK7pMcnIljAHSMHML+l+iQMr2my+nCcfb46MZQ=;
+	s=arc-20240116; t=1763965989; c=relaxed/simple;
+	bh=e2xvuF6Ny+umQar6+Cs9HNZRMtEfj1pW0zsB5mc2W04=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ery6ibx8LqcicaPJE3pgsb1JA0AUyDbKJ7qt/h7BoTTKU4Rh4PPHAVU6ItwgMCLZmIXZHEgsjM3yPKzmJ4o5/DBk3MiBML+gQdHUHdiSQJc01be/5O2AoDJDRdU+WrGVQpqg5kZyWAa4tDto9iUHnrS6xpRSRK23MiFE9wqiCWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4wVs1QO; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=P74vVY/ezN6Hf26a2faL7eGpkXFuoZDy0JrZGU9BIbqR5TlI6Rl7noxethL3MgGU3dHTD/5tu2LgZAfoCIZnG2kc332Lbdtek+g5tQlsVvCtZQ1Kx2PFU5A+poQZFfcg8E/XIp55HeFIr84K1cQ2BJLCYiu5TjvkgBWLJIFoMkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwT91n4k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4wVs1QO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71CFC19423
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:32:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwT91n4k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F3E8C19424
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 06:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763965974;
-	bh=1OF21eK7pMcnIljAHSMHML+l+iQMr2my+nCcfb46MZQ=;
+	s=k20201202; t=1763965989;
+	bh=e2xvuF6Ny+umQar6+Cs9HNZRMtEfj1pW0zsB5mc2W04=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F4wVs1QOGhX2Dt9lSKHoomHxF/7TpMLYQ4wf7dnXJSI6jyvVrPG35nOq74zhQ9SIH
-	 +Wjc9FTfHq8XlklSU2RaF73UI/at6AGqbChTsFGx9Zo/zIYEIrLsZn9tLCryrIF//+
-	 0stvwlVaH9hz73t/gfOkF0893Pe3dR5LGQ5jXTAiHTQlsUkpTXBklmkiv99C+PvevZ
-	 douP+JxEWjFOAnQaPcCiexglakva54fqt3T4d3JiOuBYlVkchZ2vpzKrcjkVfA7JfI
-	 yBdIoieHOgR3IhZMCdd+JRo5EpUSSaMjP/SmTBy/tisDlRV90UEXW336Bl7bUTaY2k
-	 BgO7/v4htmFig==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b737cd03d46so537803966b.0
-        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 22:32:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWa/xQ1mvmDlxZh1VMoR29huxsuNXAENQJcuRty8dciwplSHccKTTEUjNNfiZom2O7P+Tc9vQxxqDw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxRCNvXvCtu/E20tuU/zMi/KoQt8MsWSKuhiZlxy/4haEV/yz5R
-	mBn7BMmpgOg7lfcH6y+lEi8TTYb8caq5rOKMiPmVBGFU3o7cIRWFu1LFCKMfavaMc/jvJaJFmly
-	hf1ktrEVD5fCYwuOOTMB2X4353f7LacE=
-X-Google-Smtp-Source: AGHT+IGcTQgXw80MDWpvB48VIGTFCe3K1cYjb5Jsukvc0XIePkkFucwBFoL9GIss8+Mnax9eknUm4JxemN/cXoU2/uQ=
-X-Received: by 2002:a17:906:4bda:b0:b76:74b6:da75 with SMTP id
- a640c23a62f3a-b7674b6dafamr725385466b.38.1763965973095; Sun, 23 Nov 2025
- 22:32:53 -0800 (PST)
+	b=rwT91n4kQq/apBfBz+CQSQeOYQtG7sehntbFmw+AeihCzV/5I/4R8qFXMUF8XF0z1
+	 x945qlg0yHb4BZq2OMCZYCu9XBoOuoS4P+I0RAdZ2pZm1MXdns5wCtYgE+RmdSoB5f
+	 tySiJNbh6Eqn47mXtDFVmgWBE2a9sLLtiKE3wg6elJSQs8GAIvWhcRvBh3CbulEgWo
+	 AmoDEfEutNqMtEiffLfmFShTMr03dMEWbNS/I436uFLxBZKwfNaeCTwtpFtVswO8YS
+	 lPPo/AiflRjrH93TbfDOngMhFylN57AtbiAeOsVyrRgKJjch7Ib+UdyuZM45oGqaK6
+	 LSHC7J2sNb8pQ==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b736ffc531fso555967366b.1
+        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 22:33:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVBfRJQtBC5PiycZfAGiniMhBVjlWNBSq0Px269+ZwzsESJy+AR1pRCsqCKxotBoWw8Li/vIhIg4SI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxNRsNNBKNEgaplPa2MogHYJxA1kq6U6a1h05Yl7oMSx/wOy/+W
+	zIHCctt+PU3H7UPL5iJjQ7iSKYjmne68aAFe60/zssXJ9aScNtWhjavbg/mnCCfEl4vQpDjGrAc
+	/UShLgYkMeOrQV6JOXtcb+eho9QdXYJE=
+X-Google-Smtp-Source: AGHT+IHeWhCh/2VbXQ9ILylWVVP2Ewf9rploSsqYj8iWGqLLxyXQK4O0jZg1WkatozAflwVlZpvkJPQdPrab7pyl/dg=
+X-Received: by 2002:a17:907:3e0b:b0:b76:60ad:77f8 with SMTP id
+ a640c23a62f3a-b767170aea1mr1147425766b.48.1763965988064; Sun, 23 Nov 2025
+ 22:33:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124055642.1591-1-hengqi.chen@gmail.com> <20251124055642.1591-2-hengqi.chen@gmail.com>
-In-Reply-To: <20251124055642.1591-2-hengqi.chen@gmail.com>
+References: <20251124035402.3817179-1-maobibo@loongson.cn> <20251124035402.3817179-3-maobibo@loongson.cn>
+In-Reply-To: <20251124035402.3817179-3-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Nov 2025 14:32:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5YOknLF-bAtCiZnsVq=56nOetom7iv52LRnuU6Djh6aA@mail.gmail.com>
-X-Gm-Features: AWmQ_blyxVWAeJuhbRjtnLF9tH9M-WlyNSqstzLnp42rqW-UMeV0JmTkKBrxH3Y
-Message-ID: <CAAhV-H5YOknLF-bAtCiZnsVq=56nOetom7iv52LRnuU6Djh6aA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] LoongArch: BPF: Sign extend kfunc call arguments
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
+Date: Mon, 24 Nov 2025 14:33:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Oag+mDp0CfZ1VDeapeKas354j68JZN9bN42=D4huowA@mail.gmail.com>
+X-Gm-Features: AWmQ_bnoFTnvDn1nrFrR_qppyCUACqFqJLqcscmXokW28okKe2T7YA8nUQaA0LM
+Message-ID: <CAAhV-H5Oag+mDp0CfZ1VDeapeKas354j68JZN9bN42=D4huowA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] LoongArch: Add paravirt support with
+ vcpu_is_preempted() in guest side
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>, 
+	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	virtualization@lists.linux.dev, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Hengqi,
+Hi, Bibo,
 
-On Mon, Nov 24, 2025 at 1:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
+On Mon, Nov 24, 2025 at 11:54=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
 >
-> The kfunc calls are native calls so they should follow LoongArch
-> calling conventions. Sign extend its arguments properly to avoid
-> kernel panic. This is done by adding a new emit_abi_ext() helper.
-> The emit_abi_ext() helper performs extension in place meaning a
-> value already store in target register (This is different from
-> the existing sign_extend() helper and thus we can't reuse it).
+> Function vcpu_is_preempted() is used to check whether vCPU is preempted
+> or not. Here add implementation with vcpu_is_preempted() when option
+> CONFIG_PARAVIRT is enabled.
 >
-> Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  arch/loongarch/net/bpf_jit.c | 16 ++++++++++++++++
->  arch/loongarch/net/bpf_jit.h | 26 ++++++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
+>  arch/loongarch/include/asm/qspinlock.h |  5 +++++
+>  arch/loongarch/kernel/paravirt.c       | 16 ++++++++++++++++
+>  2 files changed, 21 insertions(+)
 >
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index f97dc9936401..c67631303841 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -950,6 +950,22 @@ static int build_insn(const struct bpf_insn *insn, s=
-truct jit_ctx *ctx, bool ext
->                         emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tc=
-c_ptr_off);
->                 }
->
-> +               if (insn->src_reg =3D=3D BPF_PSEUDO_KFUNC_CALL) {
-> +                       const struct btf_func_model *m;
-> +                       int i;
-> +
-> +                       m =3D bpf_jit_find_kfunc_model(ctx->prog, insn);
-> +                       if (!m)
-> +                               return -EINVAL;
-> +
-> +                       for (i =3D 0; i < m->nr_args; i++) {
-> +                               u8 reg =3D regmap[BPF_REG_1 + i];
-> +                               bool sign =3D m->arg_flags[i] & BTF_FMODE=
-L_SIGNED_ARG;
-> +
-> +                               emit_abi_ext(ctx, reg, m->arg_size[i], si=
-gn);
-> +                       }
-> +               }
-> +
->                 move_addr(ctx, t1, func_addr);
->                 emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
->
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index 5697158fd164..ed0193659cf9 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -88,6 +88,32 @@ static inline void emit_sext_32(struct jit_ctx *ctx, e=
-num loongarch_gpr reg, boo
->         emit_insn(ctx, addiw, reg, reg, 0);
+> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/incl=
+ude/asm/qspinlock.h
+> index e76d3aa1e1eb..9a5b7ba1f4cb 100644
+> --- a/arch/loongarch/include/asm/qspinlock.h
+> +++ b/arch/loongarch/include/asm/qspinlock.h
+> @@ -34,6 +34,11 @@ static inline bool virt_spin_lock(struct qspinlock *lo=
+ck)
+>         return true;
 >  }
 >
-> +/* Emit proper extension according to ABI requirements.
-> + * Note that this requires a value of size `size` already resides in reg=
-ister `reg`.
-> + */
-> +static inline void emit_abi_ext(struct jit_ctx *ctx, int reg, u8 size, b=
-ool sign)
-> +{
-> +       /* The ABI requires unsigned char/short to be zero-extended, leav=
-e it intact */
-> +       if (!sign && (size =3D=3D 1 || size =3D=3D 2))
-> +               return;
-> +
-> +       switch (size) {
-> +       case 1:
-> +               emit_insn(ctx, extwb, reg, reg);
-> +               break;
-> +       case 2:
-> +               emit_insn(ctx, extwh, reg, reg);
-> +               break;
-> +       case 4:
-> +               emit_insn(ctx, addiw, reg, reg, 0);
-> +               break;
-> +       case 8:
-> +               break;
-> +       default:
-> +               pr_warn("bpf_jit: invalid size %d for extension\n", size)=
-;
-> +       }
-> +}
-Looks very similar to sign_extend(), can we reuse something?
+> +#ifdef CONFIG_SMP
+> +#define vcpu_is_preempted      vcpu_is_preempted
+> +bool vcpu_is_preempted(int cpu);
+In V1 there is a build error because you reference mp_ops, so in V2
+you needn't put it in CONFIG_SMP.
+On the other hand, even if you really build a UP guest kernel, when
+multiple guests run together, you probably need vcpu_is_preemtped.
+
 
 Huacai
 
+> +#endif
 > +
->  static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr rd,=
- u64 addr)
+>  #endif /* CONFIG_PARAVIRT */
+>
+>  #include <asm-generic/qspinlock.h>
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
+avirt.c
+> index b1b51f920b23..d4163679adc4 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -246,6 +246,7 @@ static void pv_disable_steal_time(void)
+>  }
+>
+>  #ifdef CONFIG_SMP
+> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>  static int pv_time_cpu_online(unsigned int cpu)
 >  {
->         u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
+>         unsigned long flags;
+> @@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu=
+)
+>
+>         return 0;
+>  }
+> +
+> +bool notrace vcpu_is_preempted(int cpu)
+> +{
+> +       struct kvm_steal_time *src;
+> +
+> +       if (!static_branch_unlikely(&virt_preempt_key))
+> +               return false;
+> +
+> +       src =3D &per_cpu(steal_time, cpu);
+> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+> +}
+> +EXPORT_SYMBOL(vcpu_is_preempted);
+>  #endif
+>
+>  static void pv_cpu_reboot(void *unused)
+> @@ -308,6 +321,9 @@ int __init pv_time_init(void)
+>                 pr_err("Failed to install cpu hotplug callbacks\n");
+>                 return r;
+>         }
+> +
+> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
+> +               static_branch_enable(&virt_preempt_key);
+>  #endif
+>
+>         static_call_update(pv_steal_clock, paravt_steal_clock);
 > --
-> 2.43.5
+> 2.39.3
 >
