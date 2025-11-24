@@ -1,34 +1,35 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A82F5A30
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 09:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2C12F5A33
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 09:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763976433; cv=none; b=a+u57+FOXYJQicoXDheU2AQRrn28D1Z/IvtpMu3x0Lzg8xnJPcT2xlaE4Gqi8JaJIk5yB3N1RXUKHbeMBAEWdu8lVq2yuKE/CXsDCavXtw+U0dkc0kKWezuJudHz6TPFZzT/Y90irWp+59RfZSVeBQldA5c2WYMCSoaybXEufN8=
+	t=1763976434; cv=none; b=lqFUUidnAE6Y49s4b0Zmrp2X6o2mv+VKDa+BXDS87U6IpdjlKx4A8pyR5PVV6NBIY2ba/vR1tXbsZ9K9mFucB20b2D6DAXziLuNXnvD9sPVDRStsi1YjSZ3skuMRXESYsLNbAkNu3BkinHK1heKECeZx0YP9qM9fCasDyTr2b7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763976433; c=relaxed/simple;
-	bh=DA50pH/bH7RkpXFI/IVMIlEZTs3ulo+9xZt4InyaF8g=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BfOauqXOAHDPS1wH4OpmHzLDl6p5VenYiCZL/rpvwg8V3lUetmmUlf1DU7MKqZPxe+RzYkC8Mk7HB+TCZg33wHV6oG5x20ZTyEK75G1s1flHdu9Fikp2Zzp0gxgqS3pBrZvzDiNB0uZyrJAVyj3qQbMFVYGq1AHGhz7yZMff5XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZQfTV7FJ; arc=none smtp.client-ip=91.218.175.181
+	s=arc-20240116; t=1763976434; c=relaxed/simple;
+	bh=ROs7aVMGd7QSW0w67kNl+MAzQw9HrvqAw/bzV5q6w8E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DANXJpu84d1P95CKGveTYefbbwI3ke0hlbsb6+90SpnYym6AshxTOkukGtJD/FGRQx0yTOt38hH/+B9Rnx4y5sBMd3nFkg4Pw0QynVYDSJKwTFw1G10nEDxGZQJq3FtFfUnIkTzmxt4ZWURY7TLmB7JIHJd3Cc3H9u8oRkvSyLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lUjgZ2dc; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZQfTV7FJ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lUjgZ2dc"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1763976428;
+	t=1763976429;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=c2MmwLtyNn3QPKov4Wt478LY9eJ7kFXDOMhNB2ZB3vE=;
-	b=ZQfTV7FJ0iCAOcpiaP+ajlMKrMphtDsVC7ggc2WWI/lMhOEmtPjG6lb6ddXtnAZgnpWA4q
-	0V/d4bAkNa19TtcPR7zwgun1PVGDCmOvdAvH5r/MEc04KfsUWkALSOGaqraqyKVnL/I60P
-	FLuhkdOHUp89NKSxD6Zj2xUPilICsyc=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I2UCdL5Dtw7FwYWB+KMFiaCubBgbWuiZk6AShXGbGZg=;
+	b=lUjgZ2dcjPegh6bqWl/UbYIEpnu2j0YB4yUlbMeATyZwSgQR7gNEaeGTMY7Bpnukq6+FCa
+	/oPThrGlA/Kf1iBjWcqkglXpdUgtIWCZyH30G5zAo8rdpVU0HtPNdd/bqrSakpI8LhfX2A
+	4s1oh0VZ7agvlF5U7+9v+3Yo7czWPC8=
 From: George Guo <dongtai.guo@linux.dev>
-Subject: [PATCH v2 0/2] LoongArch: Add 128-bit atomic cmpxchg support (v2)
-Date: Mon, 24 Nov 2025 17:26:28 +0800
-Message-Id: <20251124-2-v2-0-b38216e25fd9@linux.dev>
+Date: Mon, 24 Nov 2025 17:26:29 +0800
+Subject: [PATCH v2 1/2] LoongArch: Add 128-bit atomic cmpxchg support
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,75 +38,106 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMQkJGkC/02MQQrCMBBFr1JmbWQyNlVceQ/pwmamdkBSSTRUS
- u5u7Mrl+/z3VkgSVRKcmxWiZE06hwq0a8BPt3AXo1wZCMlZS2jIMB5OHQ3kx46h/p5RRl22xrW
- vPGl6zfGzJbP9rf92tgbNEd3Avm3RObw8NLyXPUuGvpTyBcp6t1CSAAAA
-X-Change-ID: 20251120-2-d03862b2cf6d
+Message-Id: <20251124-2-v2-1-b38216e25fd9@linux.dev>
+References: <20251124-2-v2-0-b38216e25fd9@linux.dev>
+In-Reply-To: <20251124-2-v2-0-b38216e25fd9@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
  George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1763976426; l=2242;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1763976426; l=2753;
  i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=DA50pH/bH7RkpXFI/IVMIlEZTs3ulo+9xZt4InyaF8g=;
- b=zQkTj1f5lawY/7uZKqJbSGUb3tTBFvJsNIbHy9B3asj1ZR0OVurqzq5AYz+WLiiPYvzFHbDaD
- eRv2hTgHdu6CrHq1GYeKIBSJti+1OZXHEZC8W5n3VpLPainOl2WNtWC
+ bh=aVNhmXR2XNaSkwR9saFKIS2IY44sjX8A+tWBndQSsNY=;
+ b=5AN1Xt3V28nWnq4wyjMaofNVra7wiNfynsMnYkOENfEnwRgLGUHJV5sqEqs9fKPpbt0R75nhS
+ SiSGW7l10SaApzj4p53OTHFHvBur23RgB9Hnt++1wEAEIACnh1Pn8cF
 X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
  pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
 X-Migadu-Flow: FLOW_OUT
 
-This patch series adds 128-bit atomic compare-and-exchange support for
-LoongArch architecture, which fixes BPF scheduler test failures caused
-by missing 128-bit atomics support.
+From: George Guo <guodongtai@kylinos.cn>
 
-The series consists of two patches:
+Implement 128-bit atomic compare-and-exchange using LoongArch's
+LL.D/SC.Q instructions.
 
-1. "LoongArch: Add 128-bit atomic cmpxchg support"
-   - Implements 128-bit atomic compare-and-exchange using LoongArch's
-     LL.D/SC.Q instructions
-   - Fixes BPF scheduler test failures (scx_central scx_qmap) where
-     kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
-     leading to -ENOMEM errors during scheduler initialization
+At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
+caused by kmalloc_nolock_noprof returning NULL due to missing
+128-bit atomics. The NULL returns led to -ENOMEM errors during
+scheduler initialization, causing test cases to fail.
 
-2. "LoongArch: Enable 128-bit atomics cmpxchg support"
-   - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
-     in Kconfig to enable 128-bit atomic cmpxchg support
+Verified by testing with the scx_qmap scheduler (located in
+tools/sched_ext/). Building with `make` and running
+./tools/sched_ext/build/bin/scx_qmap.
 
-The issue was identified through BPF scheduler test failures where
-scx_central and scx_qmap schedulers would fail to initialize. Testing
-was performed using the scx_qmap scheduler from tools/sched_ext/,
-confirming that the patches resolve the initialization failures.
-
-Signed-off-by: George Guo <dongtai.guo@linux.dev>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
-Changes in v2:
-- Use a normal ld.d for the high word instead of ll.d to avoid race
-  condition
-- Insert a dbar between ll.d and ld.d to prevent reordering
-- Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(ptr, o, n)
-- Fix address operand constraints after testing different approaches:
-  * ld.d with "m"
-  * ll.d with "ZC",
-  * sc.q with "ZB"(alternative constraints caused issues:
-   - "r"  caused system hang
-   - "ZC" caused compiler error:
-     {standard input}: Assembler messages:
-     {standard input}:10037: Fatal error: Immediate overflow.
-     format: u0:0 )
-- Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linux.dev
-
----
-George Guo (2):
-      LoongArch: Add 128-bit atomic cmpxchg support
-      LoongArch: Enable 128-bit atomics cmpxchg support
-
- arch/loongarch/Kconfig               |  2 ++
  arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
----
-base-commit: d5ae5ac32615e4af729f0610fdc11ff4f4798aef
-change-id: 20251120-2-d03862b2cf6d
+ 1 file changed, 47 insertions(+)
 
-Best regards,
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..757f6e82b9880d04f4883dc9a802312111aa4588 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -111,6 +111,44 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
+ 	__ret;								\
+ })
+ 
++union __u128_halves {
++	u128 full;
++	struct {
++		u64 low;
++		u64 high;
++	};
++};
++
++#define __cmpxchg128_asm(ptr, old, new)					\
++({									\
++	union __u128_halves __old, __new, __ret;			\
++	volatile u64 *__ptr = (volatile u64 *)(ptr);			\
++									\
++	__old.full = (old);                                             \
++	__new.full = (new);						\
++									\
++	__asm__ __volatile__(						\
++	"1:   ll.d    %0, %3		# 128-bit cmpxchg low	\n"	\
++	"     dbar    0			# memory barrier	\n"	\
++	"     ld.d    %1, %4		# 128-bit cmpxchg high	\n"	\
++	"     bne     %0, %z5, 2f				\n"	\
++	"     bne     %1, %z6, 2f				\n"	\
++	"     move    $t0, %z7					\n"	\
++	"     move    $t1, %z8					\n"	\
++	"     sc.q    $t0, $t1, %2				\n"	\
++	"     beqz    $t0, 1b					\n"	\
++	"2:							\n"	\
++	__WEAK_LLSC_MB							\
++	: "=&r" (__ret.low), "=&r" (__ret.high),			\
++	  "=ZB" (__ptr[0])						\
++	: "ZC" (__ptr[0]), "m" (__ptr[1]),				\
++	  "Jr" (__old.low), "Jr" (__old.high),				\
++	  "Jr" (__new.low), "Jr" (__new.high)				\
++	: "t0", "t1", "memory");					\
++									\
++	__ret.full;							\
++})
++
+ static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
+ 					   unsigned int new, unsigned int size)
+ {
+@@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, unsigned int
+ 	__res;								\
+ })
+ 
++/* cmpxchg128 */
++#define system_has_cmpxchg128()		1
++
++#define arch_cmpxchg128(ptr, o, n)					\
++({									\
++	BUILD_BUG_ON(sizeof(*(ptr)) != 16);				\
++	__cmpxchg128_asm(ptr, o, n);			\
++})
++
+ #ifdef CONFIG_64BIT
+ #define arch_cmpxchg64_local(ptr, o, n)					\
+   ({									\
+
 -- 
-George Guo <dongtai.guo@linux.dev>
+2.48.1
 
