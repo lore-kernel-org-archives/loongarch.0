@@ -1,1479 +1,590 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4582BD5BB
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 17:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9128272E42;
+	Mon, 24 Nov 2025 23:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764006680; cv=none; b=bQvc8dwykG4sPXZnPMzYD7H7RjRP7EMTx46mmz8sYHJqoBO/hw/v+9q/XIPNglS1WSpU2Wd5IkrW6BNw+DO4/sqTDjHCJ17ZGQlVwT2+jBCgaFz7dMEafYDdW1FtzO8cAPjb4DEGu91S+bvjY+nTMZGrGyELwaxWquY96O+bj/k=
+	t=1764028602; cv=none; b=lQGUL6Au2BaaAIGaNLi7Jq6mkk5bez5rgPyz6XOA737Y2wm4IFcFSy0uZZ/r2RURCa23XVlmCNajygJSxD8QTjF1cQ1IHBOCnIHq8unDak8qysFIj8mSG5WHsw3+xHSF5a0fhyE3NCnf6AdMqZ1xsnFPcbjXd9xOV9lngJO69P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764006680; c=relaxed/simple;
-	bh=MCHPn0rQhoplV/QYv/ut7zSdvjJ1ZJFogsmM2UlkmS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O3j2Bm+skcSFvv3LnxbbLhfEvy9d1VCBMWYa5nSuQ7oOnNP6Fq+XkLuKirc7ZNmHqPipeEN3Yh7T16O6t+Udwy0SX77ja3jai3SNLwnmdd1SrryJd8TfSYfhyXhuoa62VP+2qAIu9RRLsw2cwEpdg/OVhz1UefXThbs2UUsVGdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B1YAZ+OL; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764028602; c=relaxed/simple;
+	bh=9OI9BzMb+379+qU/6B8MhkXYTc+//SCm5y10SzP6500=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JQtbzjzW6KNxg/r/FO1Ye8Q3lfL7N+mbkshyMw/A/5cZK27Hcw9ftEAQpjyF4hHqpQO4+zXvJPYePEazwcP8bJvTITno66j55Z5T/Dxg1SwHbiULUyiQecweyEy5WLu9u6Nk7OeK+jSAR/l5Qd6NOi3nWxpvtRSujz9PF0cKjds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s07pCpBi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1YAZ+OL"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4edb7c8232aso58591591cf.3
-        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 09:51:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764006677; x=1764611477; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/SWybCBY7kVZcTpWh5WO+xLZTsf66usoaK5JELctdv8=;
-        b=B1YAZ+OL1kujokh7zi7Zsv5YjxUBwXU5nnvcyl8aIxMxUgUkp/WkChe3qK4YjzRY0r
-         00RKKKp681xUU4eCLGcLfQYfpzT8iyUDrLn23xkg0EtUWOQ5oKiUub7mYqEz+yNu88Ko
-         EUHfpm/rjLnNKHHv6Dnqn32iCd2ZfD3SsDyTXPjnB7V8PA/TCfq7hlfxYnxWfwWw+40D
-         suPYSLMee9w5yWy4NdFedBkX8lpi2IPJRoxAj13CDmCb1vX7i4F3DrG5gf7Pou0qqwNc
-         WiQzwOI8SGco4TmqNvtT3BH3ByVNMIqKPjDGUQDPzKbbVEbfWi9y9X4OdHANHnIeEdfE
-         8M+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764006677; x=1764611477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/SWybCBY7kVZcTpWh5WO+xLZTsf66usoaK5JELctdv8=;
-        b=A/9N3r3yLz2fMh/KKzD8pya1OnzNBj7zMFOFCfxevbbPI4xUVzGaw3JEibUfm8pyBG
-         7oF5qyLYEBP6Bvxx5ZH2TF/6l1cP527G9bzDAxfftoUbLxBVMd7lGJvSjJos0pVRCUwr
-         BKIdiwCkaAT4U1WgVq5lZ6XaWieM/8EWXgylSUMS2qgffdUhBwfgKy8NTGmlEpecdf+D
-         PsHR1eoKPuX2wmNKaXrUXhFCugsPjHS1O0KD+jNMJn3ZO+p9D2P+83j1TzvS7K+1Sbne
-         F7Dy2v2f7QRgZ1rPGPdase+S9p1he4Welb+ejPz1iClNetDWXmESNZ/OVvNK+SQawqXt
-         b25g==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rdFgsx+LIz1LvzkMNDptMTTQhRmWurNYGenOKZcBFPLe26bOP3MlsdCEhD8ktcrOkaY6wqQjTxg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwSIQn5rW1qjzQk27SkD+UyC7w4/R9Dh2fEkffG5Sgyw6ycEs6k
-	kcnUsEmo4wOi7kDlJSpXBvg+7iWSuwicwRSCa6FSYVy0bMpa36zCIISMlJD/taXb4bbW7yHooLv
-	w/kd4SeshDjPRVibaib89JqxUFCXw9WPOrL2q
-X-Gm-Gg: ASbGncsNllJCYn/nvdX+7qWvcst3rsy6YQHzPhQC2jlHP0H1mk4XzPDmIa3hGMqvnCK
-	oPdYfrkU+OF5yiAgq5BFZdki6qHvM8c2JTNkeBMCyv07jXwIOdTDsIWGCmWnGdwibdiI9VJqfch
-	k9AJhiGDqYBfsziVfT3sO/su6DfY7aiVmizZGAuIqcOMIYCcGB0eBoWtdhzBKCSMIMmw9ebOBnB
-	OxomC/gkZ0QQ8gHRKLMf3ePTITOb+aVl6U2NRXBbHD6GyrPG891/S+Xexmokw4gsUloEDE=
-X-Google-Smtp-Source: AGHT+IHZQb7ljBnJ+GLycfIk7ywSln4DklXCqSbOqTFIEr2W/r6gYeBe36lJ2viVjxeGBbeuRA2UTh3YOVSTgATDLFY=
-X-Received: by 2002:ac8:5a82:0:b0:4ed:af59:9df0 with SMTP id
- d75a77b69052e-4ee58adf8efmr192764211cf.40.1764006676919; Mon, 24 Nov 2025
- 09:51:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s07pCpBi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1609FC4CEF1;
+	Mon, 24 Nov 2025 23:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764028602;
+	bh=9OI9BzMb+379+qU/6B8MhkXYTc+//SCm5y10SzP6500=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=s07pCpBiCEtwBouTffBc5x2CMXd3A7kQKzgCyytInIBGCTewEyBdbpfqoIJqHjOir
+	 tIw5jbIe0uAYv9afxwVFS4xyU0nkkk4tQZ9nPHCNRtziDkuRT7mxbS/jxRBTIJHF2E
+	 pKPHfvz6GXQgaNF38uHmT3VIpEybzGOYURa0xIBoDf2p/4l/HM83/mQk2+TD7vpXDG
+	 /Ywvo4f5r6Ajf1ri05Q3FA1Ax2QFs6nLlHureHOAfMSFIaUIP4zwbVlHj7jxRKbL2Z
+	 W7U1rvp/cEr1gVM7MCPs5aMc7wq888lyLA/Lmi1jyp3la2b/Ux10YeRr58P/nEGPfc
+	 IJXXhh7llwRNQ==
+Date: Mon, 24 Nov 2025 17:56:40 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: ardb@kernel.org, javierm@redhat.com, arnd@arndb.de,
+	richard.lyu@suse.com, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] sysfb: Replace screen_info with
+ sysfb_primary_display
+Message-ID: <20251124235640.GA2726595@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124055642.1591-1-hengqi.chen@gmail.com>
-In-Reply-To: <20251124055642.1591-1-hengqi.chen@gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Mon, 24 Nov 2025 09:51:06 -0800
-X-Gm-Features: AWmQ_bkMVPRtW4nANU-nGpLFVLFhwu90pr59uEwCiR4vE7bvMOUleEY3x9PU2NE
-Message-ID: <CAK3+h2zJOQ0RAXhQvTKyyGp-nf_HoJxri8nBi44aWC0YN2-d6w@mail.gmail.com>
-Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: chenhuacai@kernel.org, yangtiezhu@loongson.cn, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251124165116.502813-5-tzimmermann@suse.de>
 
-On Sun, Nov 23, 2025 at 9:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
->
-> This small set implement new features with 2 bug fixes for BPF.
->
-> * Patch 1 fixes a bug discovered while testing the BPF Arena feature.
->   Without this fix, the arena_htab test case which use the
->   bpf_arena_alloc_pages kfunc will trigger a kernel panic.
-> * Patch 2 fixes a subtle bug for tail call index, this can be verified
->   by the verifier_runtime_jit test case.
->   See the following two threads for background:
->     - https://lore.kernel.org/bpf/CAEyhmHTvj4cDRfu1FXSEXmdCqyWfs3ehw5gtB9=
-qJCrThuUy2Kw@mail.gmail.com/
->     - https://lore.kernel.org/bpf/20251005103518.996383-1-luis.gerhorst@f=
-au.de/
-> * Patch 3 uses pack allocator for BPF programs (BPF trampoline already
->   use pack allocator, this make it complete), with this, no regression
->   on existing selftests
-> * Patch 4 & 5 implements basic support for BPF Arena, the following
->   test cases passed:
->     - arena_htab
->     - arena_list
->     - verifier_arena
->     - verifier_arena_large
->
-> Hengqi Chen (5):
->   LoongArch: BPF: Sign extend kfunc call arguments
->   LoongArch: BPF: Zero-extend bpf_tail_call() index
->   LoongArch: BPF: Use BPF prog pack allocator
->   LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
->   LoongArch: BPF: Implement bpf_addr_space_cast instruction
->
->  arch/loongarch/net/bpf_jit.c | 225 ++++++++++++++++++++++++++++-------
->  arch/loongarch/net/bpf_jit.h |  30 ++++-
->  2 files changed, 213 insertions(+), 42 deletions(-)
->
+On Mon, Nov 24, 2025 at 05:40:16PM +0100, Thomas Zimmermann wrote:
+> Replace the global screen_info with sysfb_primary_display of type
+> struct sysfb_display_info. Adapt all users of screen_info.
+> 
+> Instances of screen_info are defined for x86, loongarch and EFI,
+> with only one instance compiled into a specific build. Replace all
+> of them with sysfb_primary_display.
+> 
+> All existing users of screen_info are updated by pointing them to
+> sysfb_primary_display.screen instead. This introduces some churn to
+> the code, but has no impact on functionality.
+> 
+> Boot parameters and EFI config tables are unchanged. They transfer
+> screen_info as before. The logic in EFI's alloc_screen_info() changes
+> slightly, as it now returns the screen field of sysfb_primary_display.
+> 
+> v2:
+> - update comment
+> - rename init_screen_info() to init_primary_display()
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-Hi Hengqi,
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>  # drivers/pci/
 
-you can add Tested-by: Vincent Li <vincent.mc.li@gmail.com>
-
-[root@fedora bpf]#./test_progs --deny=3Dtimer_lockup
---json-summary=3D"./bpf_selftests.json"
-
-[root@fedora bpf]#cat bpf_selftests.json | jq . > bpf_selftests.txt
-
-[root@fedora bpf]# grep -B4 '"failed": true' bpf_selftests.txt | grep
--v '"message":'
-    {
-      "name": "arena_atomics",
-      "number": 3,
-      "failed": true,
---
-    {
-      "name": "arena_spin_lock",
-      "number": 6,
-      "failed": true,
---
-        {
-          "name": "arena_spin_lock_1",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "arena_spin_lock_1000",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "arena_spin_lock_50000",
-          "number": 3,
-          "failed": true
---
-    {
-      "name": "bpf_tcp_ca",
-      "number": 31,
-      "failed": true,
---
-        {
-          "name": "tcp_ca_kfunc",
-          "number": 14,
-          "failed": true
---
-    {
-      "name": "build_id",
-      "number": 46,
-      "failed": true,
---
-        {
-          "name": "nofault-paged-out",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "dynptr",
-      "number": 97,
-      "failed": true,
---
-        {
-          "name": "test_probe_read_user_dynptr",
-          "number": 27,
-          "failed": true
---
-        {
-          "name": "test_probe_read_kernel_dynptr",
-          "number": 28,
-          "failed": true
---
-        {
-          "name": "test_probe_read_user_str_dynptr",
-          "number": 29,
-          "failed": true
---
-        {
-          "name": "test_probe_read_kernel_str_dynptr",
-          "number": 30,
-          "failed": true
---
-    {
-      "name": "exceptions",
-      "number": 101,
-      "failed": true,
---
-        {
-          "name": "reject_exception_cb_type_1",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "reject_exception_cb_type_2",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "reject_exception_cb_type_3",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "reject_exception_cb_type_4",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "reject_async_callback_throw",
-          "number": 5,
-          "failed": true
---
-        {
-          "name": "reject_with_rcu_read_lock",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "reject_subprog_with_rcu_read_lock",
-          "number": 9,
-          "failed": true
---
-        {
-          "name": "reject_with_reference",
-          "number": 11,
-          "failed": true
---
-        {
-          "name": "reject_with_cb_reference",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "reject_with_cb",
-          "number": 13,
-          "failed": true
---
-        {
-          "name": "reject_with_subprog_reference",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "reject_throwing_exception_cb",
-          "number": 15,
-          "failed": true
---
-        {
-          "name": "reject_exception_throw_cb",
-          "number": 19,
-          "failed": true
---
-        {
-          "name": "reject_exception_throw_cb_diff",
-          "number": 20,
-          "failed": true
---
-        {
-          "name": "reject_set_exception_cb_bad_ret2",
-          "number": 22,
-          "failed": true
---
-        {
-          "name": "check_assert_eq_int_min",
-          "number": 23,
-          "failed": true
---
-        {
-          "name": "check_assert_eq_int_max",
-          "number": 24,
-          "failed": true
---
-        {
-          "name": "check_assert_eq_zero",
-          "number": 25,
-          "failed": true
---
-        {
-          "name": "check_assert_eq_llong_min",
-          "number": 26,
-          "failed": true
---
-        {
-          "name": "check_assert_eq_llong_max",
-          "number": 27,
-          "failed": true
---
-        {
-          "name": "check_assert_lt_pos",
-          "number": 28,
-          "failed": true
---
-        {
-          "name": "check_assert_lt_zero",
-          "number": 29,
-          "failed": true
---
-        {
-          "name": "check_assert_lt_neg",
-          "number": 30,
-          "failed": true
---
-        {
-          "name": "check_assert_le_pos",
-          "number": 31,
-          "failed": true
---
-        {
-          "name": "check_assert_le_zero",
-          "number": 32,
-          "failed": true
---
-        {
-          "name": "check_assert_le_neg",
-          "number": 33,
-          "failed": true
---
-        {
-          "name": "check_assert_gt_pos",
-          "number": 34,
-          "failed": true
---
-        {
-          "name": "check_assert_gt_zero",
-          "number": 35,
-          "failed": true
---
-        {
-          "name": "check_assert_gt_neg",
-          "number": 36,
-          "failed": true
---
-        {
-          "name": "check_assert_ge_pos",
-          "number": 37,
-          "failed": true
---
-        {
-          "name": "check_assert_ge_zero",
-          "number": 38,
-          "failed": true
---
-        {
-          "name": "check_assert_ge_neg",
-          "number": 39,
-          "failed": true
---
-        {
-          "name": "check_assert_range_s64",
-          "number": 40,
-          "failed": true
---
-        {
-          "name": "check_assert_range_u64",
-          "number": 41,
-          "failed": true
---
-        {
-          "name": "check_assert_single_range_s64",
-          "number": 42,
-          "failed": true
---
-        {
-          "name": "check_assert_single_range_u64",
-          "number": 43,
-          "failed": true
---
-        {
-          "name": "check_assert_generic",
-          "number": 44,
-          "failed": true
---
-        {
-          "name": "check_assert_with_return",
-          "number": 45,
-          "failed": true
---
-    {
-      "name": "fentry_test",
-      "number": 109,
-      "failed": true,
---
-        {
-          "name": "fentry_many_args",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "fexit_test",
-      "number": 113,
-      "failed": true,
---
-        {
-          "name": "fexit_many_args",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "flow_dissector_classification",
-      "number": 117,
-      "failed": true,
---
-        {
-          "name": "ipv4",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ipv4_continue_dissect",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "ipip",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "gre",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "port_range",
-          "number": 5,
-          "failed": true
---
-        {
-          "name": "ipv6",
-          "number": 6,
-          "failed": true
---
-    {
-      "name": "global_map_resize",
-      "number": 136,
-      "failed": true,
---
-        {
-          "name": "global_map_resize_bss",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "global_map_resize_data",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "hash_large_key",
-      "number": 137,
-      "failed": true,
---
-    {
-      "name": "ldsx_insn",
-      "number": 162,
-      "failed": true,
---
-        {
-          "name": "map_val and probed_memory",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "libbpf_probe_prog_types",
-      "number": 167,
-      "failed": true,
---
-        {
-          "name": "BPF_PROG_TYPE_LIRC_MODE2",
-          "number": 20,
-          "failed": true
---
-    {
-      "name": "livepatch_trampoline",
-      "number": 175,
-      "failed": true,
---
-    {
-      "name": "lwt_ip_encap_ipv4",
-      "number": 184,
-      "failed": true,
---
-        {
-          "name": "egress",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ingress",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "lwt_ip_encap_ipv6",
-      "number": 185,
-      "failed": true,
---
-        {
-          "name": "egress",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ingress",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "lwt_ip_encap_vrf_ipv4",
-      "number": 186,
-      "failed": true,
---
-        {
-          "name": "egress",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ingress",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "lwt_ip_encap_vrf_ipv6",
-      "number": 187,
-      "failed": true,
---
-        {
-          "name": "egress",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ingress",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "lwt_redirect",
-      "number": 188,
-      "failed": true,
---
-        {
-          "name": "lwt_redirect_normal",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "lwt_redirect_normal_nomac",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "lwt_redirect_dev_down",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "lwt_redirect_dev_down_nomac",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "lwt_redirect_dev_carrier_down",
-          "number": 5,
-          "failed": true
---
-    {
-      "name": "lwt_reroute",
-      "number": 189,
-      "failed": true,
---
-        {
-          "name": "lwt_reroute_normal_xmit",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "lwt_reroute_qdisc_dropped",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "lwt_seg6local",
-      "number": 190,
-      "failed": true,
---
-    {
-      "name": "module_attach",
-      "number": 207,
-      "failed": true,
---
-    {
-      "name": "module_fentry_shadow",
-      "number": 208,
-      "failed": true,
---
-    {
-      "name": "ns_tc_links_dev_chain0",
-      "number": 224,
-      "failed": true,
---
-    {
-      "name": "perf_skip",
-      "number": 260,
-      "failed": true,
---
-    {
-      "name": "pro_epilogue",
-      "number": 271,
-      "failed": true,
---
-        {
-          "name": "syscall_prologue",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "syscall_epilogue",
-          "number": 5,
-          "failed": true
---
-        {
-          "name": "syscall_pro_epilogue",
-          "number": 6,
-          "failed": true
---
-        {
-          "name": "syscall_prologue_goto_start",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "syscall_epilogue_goto_start",
-          "number": 11,
-          "failed": true
---
-        {
-          "name": "syscall_pro_epilogue_goto_start",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "syscall_epilogue_exit0",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "syscall_epilogue_exit1",
-          "number": 15,
-          "failed": true
---
-        {
-          "name": "syscall_pro_epilogue",
-          "number": 17,
-          "failed": true
---
-        {
-          "name": "tailcall",
-          "number": 18,
-          "failed": true
---
-    {
-      "name": "res_spin_lock_failure",
-      "number": 361,
-      "failed": true,
---
-        {
-          "name": "res_spin_lock_var_off",
-          "number": 12,
-          "failed": true
---
-    {
-      "name": "setget_sockopt",
-      "number": 370,
-      "failed": true,
---
-    {
-      "name": "stream_success",
-      "number": 413,
-      "failed": true,
---
-        {
-          "name": "stream_deadlock",
-          "number": 3,
-          "failed": true
---
-    {
-      "name": "struct_ops_id_ops_mapping",
-      "number": 417,
-      "failed": true,
---
-        {
-          "name": "st_ops_id_ops_mapping",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "struct_ops_module",
-      "number": 420,
-      "failed": true,
---
-        {
-          "name": "struct_ops_load",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "struct_ops_incompatible",
-          "number": 3,
-          "failed": true
---
-    {
-      "name": "struct_ops_multi_pages",
-      "number": 421,
-      "failed": true,
---
-        {
-          "name": "multi_pages",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "subprogs_extable",
-      "number": 426,
-      "failed": true,
---
-    {
-      "name": "task_local_data",
-      "number": 435,
-      "failed": true,
---
-        {
-          "name": "task_local_data_basic",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "task_local_data_race",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "tc_netkit_basic",
-      "number": 443,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_device",
-      "number": 444,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_multi_links",
-      "number": 445,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_multi_opts",
-      "number": 446,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_neigh_links",
-      "number": 447,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_pkt_type",
-      "number": 448,
-      "failed": true,
---
-    {
-      "name": "tc_netkit_scrub",
-      "number": 449,
-      "failed": true,
---
-    {
-      "name": "tc_redirect",
-      "number": 455,
-      "failed": true,
---
-        {
-          "name": "tc_redirect_peer",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "tc_redirect_peer_l3",
-          "number": 4,
-          "failed": true
---
-    {
-      "name": "test_bpffs",
-      "number": 456,
-      "failed": true,
---
-    {
-      "name": "test_ima",
-      "number": 461,
-      "failed": true,
---
-    {
-      "name": "test_lsm",
-      "number": 463,
-      "failed": true,
---
-        {
-          "name": "lsm_basic",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "timer",
-      "number": 468,
-      "failed": true,
---
-    {
-      "name": "timer_mim",
-      "number": 472,
-      "failed": true,
---
-    {
-      "name": "tracing_struct",
-      "number": 481,
-      "failed": true,
---
-        {
-          "name": "struct_args",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "struct_many_args",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "union_args",
-          "number": 3,
-          "failed": true
---
-    {
-      "name": "tunnel",
-      "number": 483,
-      "failed": true,
---
-        {
-          "name": "vxlan_tunnel",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "ip6vxlan_tunnel",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "ipip_tunnel",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "ipip_tunnel",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "ipip_tunnel",
-          "number": 5,
-          "failed": true
---
-        {
-          "name": "xfrm_tunnel",
-          "number": 6,
-          "failed": true
---
-        {
-          "name": "gre_tunnel",
-          "number": 7,
-          "failed": true
---
-        {
-          "name": "gre_tunnel",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "gre_tunnel",
-          "number": 9,
-          "failed": true
---
-        {
-          "name": "gre_tunnel",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "ip6gre_tunnel",
-          "number": 11,
-          "failed": true
---
-        {
-          "name": "ip6gre_tunnel",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "erspan_tunnel",
-          "number": 13,
-          "failed": true
---
-        {
-          "name": "erspan_tunnel",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "ip6erspan_tunnel",
-          "number": 15,
-          "failed": true
---
-        {
-          "name": "ip6erspan_tunnel",
-          "number": 16,
-          "failed": true
---
-        {
-          "name": "geneve_tunnel",
-          "number": 17,
-          "failed": true
---
-        {
-          "name": "ip6geneve_tunnel",
-          "number": 18,
-          "failed": true
---
-        {
-          "name": "ip6tnl_tunnel",
-          "number": 19,
-          "failed": true
---
-        {
-          "name": "ip6tnl_tunnel",
-          "number": 20,
-          "failed": true
---
-    {
-      "name": "usdt",
-      "number": 492,
-      "failed": true,
---
-        {
-          "name": "basic",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "multispec",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "urand_auto_attach",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "urand_pid_attach",
-          "number": 4,
-          "failed": true
---
-    {
-      "name": "verifier_bits_iter",
-      "number": 501,
-      "failed": true,
---
-        {
-          "name": "max words",
-          "number": 12,
-          "failed": true
---
-    {
-      "name": "verifier_bounds",
-      "number": 502,
-      "failed": true,
---
-        {
-          "name": "subtraction bounds (map value) variant 2 @unpriv",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "bounds check map access with off+size signed 32bit
-overflow. test2 @unpriv",
-          "number": 30,
-          "failed": true
---
-        {
-          "name": "bounds check map access with off+size signed 32bit
-overflow. test3 @unpriv",
-          "number": 32,
-          "failed": true
---
-    {
-      "name": "verifier_bounds_deduction",
-      "number": 503,
-      "failed": true,
---
-        {
-          "name": "check deducing bounds from const, 1 @unpriv",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 2 @unpriv",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 3 @unpriv",
-          "number": 6,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 4 @unpriv",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 5 @unpriv",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 6 @unpriv",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 7 @unpriv",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 8 @unpriv",
-          "number": 16,
-          "failed": true
---
-        {
-          "name": "check deducing bounds from const, 9 @unpriv",
-          "number": 18,
-          "failed": true
---
-    {
-      "name": "verifier_direct_stack_access_wraparound",
-      "number": 521,
-      "failed": true,
---
-        {
-          "name": "direct stack access with 32-bit wraparound. test3 @unpri=
-v",
-          "number": 6,
-          "failed": true
---
-    {
-      "name": "verifier_map_ptr",
-      "number": 548,
-      "failed": true,
---
-        {
-          "name": "bpf_map_ptr: r =3D 0, map_ptr =3D map_ptr + r @unpriv",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "bpf_map_ptr: r =3D 0, r =3D r + map_ptr @unpriv",
-          "number": 12,
-          "failed": true
---
-    {
-      "name": "verifier_map_ptr_mixing",
-      "number": 549,
-      "failed": true,
---
-        {
-          "name": "cond: two branches returning different map pointers
-for lookup (tail, tail) @unpriv",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "verifier_runtime_jit",
-      "number": 570,
-      "failed": true,
---
-        {
-          "name": "runtime/jit: tail_call within bounds, different
-maps, first branch @unpriv",
-          "number": 18,
-          "failed": true
---
-        {
-          "name": "runtime/jit: tail_call within bounds, different
-maps, second branch @unpriv",
-          "number": 20,
-          "failed": true
---
-        {
-          "name": "runtime/jit: pass > 32bit index to tail_call @unpriv",
-          "number": 26,
-          "failed": true
---
-    {
-      "name": "verifier_scalar_ids",
-      "number": 571,
-      "failed": true,
---
-        {
-          "name": "linked_regs_and_subreg_def",
-          "number": 18,
-          "failed": true
---
-    {
-      "name": "verifier_stack_ptr",
-      "number": 579,
-      "failed": true,
---
-        {
-          "name": "PTR_TO_STACK store/load - out of bounds low @unpriv",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check high 3 @unpriv",
-          "number": 16,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check high 4 @unpriv",
-          "number": 18,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check high 5 @unpriv",
-          "number": 20,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check high 6 @unpriv",
-          "number": 22,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check high 7 @unpriv",
-          "number": 24,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check low 2 @unpriv",
-          "number": 28,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check low 3 @unpriv",
-          "number": 30,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check low 5 @unpriv",
-          "number": 34,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check low 6 @unpriv",
-          "number": 36,
-          "failed": true
---
-        {
-          "name": "PTR_TO_STACK check low 7 @unpriv",
-          "number": 38,
-          "failed": true
---
-    {
-      "name": "verifier_unpriv",
-      "number": 587,
-      "failed": true,
---
-        {
-          "name": "unpriv: adding of fp, reg @unpriv",
-          "number": 46,
-          "failed": true
---
-        {
-          "name": "unpriv: adding of fp, imm @unpriv",
-          "number": 48,
-          "failed": true
---
-    {
-      "name": "verifier_value_ptr_arith",
-      "number": 593,
-      "failed": true,
---
-        {
-          "name": "map access: known scalar +=3D value_ptr unknown vs
-const @unpriv",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "map access: known scalar +=3D value_ptr const vs
-unknown @unpriv",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "map access: known scalar +=3D value_ptr const vs
-const (ne) @unpriv",
-          "number": 6,
-          "failed": true
---
-        {
-          "name": "map access: known scalar +=3D value_ptr unknown vs
-unknown (lt) @unpriv",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "map access: known scalar +=3D value_ptr unknown vs
-unknown (gt) @unpriv",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "map access: value_ptr -=3D known scalar from
-different maps @unpriv",
-          "number": 18,
-          "failed": true
---
-        {
-          "name": "map access: mixing value pointer and scalar, 1 @unpriv",
-          "number": 22,
-          "failed": true
---
-        {
-          "name": "map access: mixing value pointer and scalar, 2 @unpriv",
-          "number": 24,
-          "failed": true
---
-        {
-          "name": "map access: value_ptr +=3D known scalar, upper oob
-arith, test 1 @unpriv",
-          "number": 32,
-          "failed": true
---
-        {
-          "name": "map access: value_ptr +=3D known scalar, upper oob
-arith, test 2 @unpriv",
-          "number": 34,
-          "failed": true
---
-        {
-          "name": "map access: value_ptr -=3D known scalar, lower oob
-arith, test 1 @unpriv",
-          "number": 38,
-          "failed": true
---
-        {
-          "name": "map access: value_ptr -=3D known scalar, lower oob
-arith, test 2 @unpriv",
-          "number": 40,
-          "failed": true
---
-        {
-          "name": "map access: unknown scalar +=3D value_ptr, 3 @unpriv",
-          "number": 64,
-          "failed": true
---
-        {
-          "name": "map access: unknown scalar +=3D value_ptr, 4 @unpriv",
-          "number": 66,
-          "failed": true
---
-    {
-      "name": "verifier_var_off",
-      "number": 594,
-      "failed": true,
---
-        {
-          "name": "variable-offset stack read, priv vs unpriv @unpriv",
-          "number": 6,
-          "failed": true
---
-        {
-          "name": "variable-offset stack read, uninitialized @unpriv",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "indirect variable-offset stack access, min_off <
-min_initialized @unpriv",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "indirect variable-offset stack access, priv vs
-unpriv @unpriv",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "variable-offset stack write, priv vs unpriv @unpriv",
-          "number": 14,
-          "failed": true
---
-        {
-          "name": "variable-offset stack write followed by read @unpriv",
-          "number": 16,
-          "failed": true
---
-        {
-          "name": "variable-offset stack write clobbers spilled regs @unpri=
-v",
-          "number": 18,
-          "failed": true
---
-    {
-      "name": "verif_scale_pyperf600",
-      "number": 612,
-      "failed": true,
---
-    {
-      "name": "verif_scale_seg6_loop",
-      "number": 618,
-      "failed": true,
---
-    {
-      "name": "vmlinux",
-      "number": 631,
-      "failed": true,
---
-    {
-      "name": "vrf_socket_lookup",
-      "number": 632,
-      "failed": true,
---
-    {
-      "name": "wq",
-      "number": 633,
-      "failed": true,
---
-        {
-          "name": "test_call_array_sleepable",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "test_call_hash_sleepable",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "test_call_hash_malloc_sleepable",
-          "number": 3,
-          "failed": true
---
-        {
-          "name": "test_call_lru_sleepable",
-          "number": 4,
-          "failed": true
---
-        {
-          "name": "test_syscall_array_sleepable",
-          "number": 5,
-          "failed": true
---
-    {
-      "name": "xdp_adjust_tail",
-      "number": 636,
-      "failed": true,
---
-        {
-          "name": "xdp_adjust_tail_grow",
-          "number": 2,
-          "failed": true
---
-        {
-          "name": "xdp_adjust_frags_tail_grow",
-          "number": 5,
-          "failed": true
---
-    {
-      "name": "xdp_context_tuntap",
-      "number": 641,
-      "failed": true,
---
-        {
-          "name": "clone_data_meta_empty_on_data_write",
-          "number": 8,
-          "failed": true
---
-        {
-          "name": "clone_data_meta_empty_on_meta_write",
-          "number": 9,
-          "failed": true
---
-        {
-          "name": "clone_dynptr_empty_on_data_slice_write",
-          "number": 10,
-          "failed": true
---
-        {
-          "name": "clone_dynptr_empty_on_meta_slice_write",
-          "number": 11,
-          "failed": true
---
-        {
-          "name": "clone_dynptr_rdonly_before_data_dynptr_write",
-          "number": 12,
-          "failed": true
---
-        {
-          "name": "clone_dynptr_rdonly_before_meta_dynptr_write",
-          "number": 13,
-          "failed": true
---
-    {
-      "name": "xdp_do_redirect",
-      "number": 646,
-      "failed": true,
---
-    {
-      "name": "xdp_flowtable",
-      "number": 647,
-      "failed": true,
---
-    {
-      "name": "xdp_pull_data",
-      "number": 654,
-      "failed": true,
---
-        {
-          "name": "xdp_pull_data",
-          "number": 1,
-          "failed": true
---
-    {
-      "name": "xdp_synproxy",
-      "number": 655,
-      "failed": true,
---
-        {
-          "name": "xdp",
-          "number": 1,
-          "failed": true
---
-        {
-          "name": "tc",
-          "number": 2,
-          "failed": true
---
-    {
-      "name": "xfrm_info",
-      "number": 662,
-      "failed": true,
-[root@fedora bpf]#
-
-> --
-> 2.43.5
+> ---
+>  arch/arm64/kernel/image-vars.h                |  2 +-
+>  arch/loongarch/kernel/efi.c                   | 15 +++++++------
+>  arch/loongarch/kernel/image-vars.h            |  2 +-
+>  arch/riscv/kernel/image-vars.h                |  2 +-
+>  arch/x86/kernel/kexec-bzimage64.c             |  4 +++-
+>  arch/x86/kernel/setup.c                       | 10 +++++----
+>  arch/x86/video/video-common.c                 |  4 ++--
+>  drivers/firmware/efi/earlycon.c               |  8 +++----
+>  drivers/firmware/efi/efi-init.c               | 22 +++++++++----------
+>  drivers/firmware/efi/libstub/efi-stub-entry.c | 18 ++++++++++-----
+>  drivers/firmware/efi/sysfb_efi.c              |  4 ++--
+>  drivers/firmware/sysfb.c                      |  6 ++---
+>  drivers/hv/vmbus_drv.c                        |  6 ++---
+>  drivers/pci/vgaarb.c                          |  4 ++--
+>  drivers/video/screen_info_pci.c               |  5 +++--
+>  include/linux/screen_info.h                   |  2 --
+>  include/linux/sysfb.h                         |  5 +++--
+>  17 files changed, 66 insertions(+), 53 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+> index 85bc629270bd..d7b0d12b1015 100644
+> --- a/arch/arm64/kernel/image-vars.h
+> +++ b/arch/arm64/kernel/image-vars.h
+> @@ -38,7 +38,7 @@ PROVIDE(__efistub__end			= _end);
+>  PROVIDE(__efistub___inittext_end       	= __inittext_end);
+>  PROVIDE(__efistub__edata		= _edata);
+>  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+> -PROVIDE(__efistub_screen_info		= screen_info);
+> +PROVIDE(__efistub_sysfb_primary_display	= sysfb_primary_display);
+>  #endif
+>  PROVIDE(__efistub__ctype		= _ctype);
+>  
+> diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
+> index 860a3bc030e0..638a392d2cd2 100644
+> --- a/arch/loongarch/kernel/efi.c
+> +++ b/arch/loongarch/kernel/efi.c
+> @@ -18,7 +18,7 @@
+>  #include <linux/kobject.h>
+>  #include <linux/memblock.h>
+>  #include <linux/reboot.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/uaccess.h>
+>  
+>  #include <asm/early_ioremap.h>
+> @@ -75,11 +75,11 @@ bool efi_poweroff_required(void)
+>  unsigned long __initdata screen_info_table = EFI_INVALID_TABLE_ADDR;
+>  
+>  #if defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON)
+> -struct screen_info screen_info __section(".data");
+> -EXPORT_SYMBOL_GPL(screen_info);
+> +struct sysfb_display_info sysfb_primary_display __section(".data");
+> +EXPORT_SYMBOL_GPL(sysfb_primary_display);
+>  #endif
+>  
+> -static void __init init_screen_info(void)
+> +static void __init init_primary_display(void)
+>  {
+>  	struct screen_info *si;
+>  
+> @@ -91,11 +91,12 @@ static void __init init_screen_info(void)
+>  		pr_err("Could not map screen_info config table\n");
+>  		return;
+>  	}
+> -	screen_info = *si;
+> +	sysfb_primary_display.screen = *si;
+>  	memset(si, 0, sizeof(*si));
+>  	early_memunmap(si, sizeof(*si));
+>  
+> -	memblock_reserve(__screen_info_lfb_base(&screen_info), screen_info.lfb_size);
+> +	memblock_reserve(__screen_info_lfb_base(&sysfb_primary_display.screen),
+> +			 sysfb_primary_display.screen.lfb_size);
+>  }
+>  
+>  void __init efi_init(void)
+> @@ -127,7 +128,7 @@ void __init efi_init(void)
+>  	set_bit(EFI_CONFIG_TABLES, &efi.flags);
+>  
+>  	if (IS_ENABLED(CONFIG_EFI_EARLYCON) || IS_ENABLED(CONFIG_SYSFB))
+> -		init_screen_info();
+> +		init_primary_display();
+>  
+>  	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
+>  		return;
+> diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
+> index 41ddcf56d21c..e557ebd46c2b 100644
+> --- a/arch/loongarch/kernel/image-vars.h
+> +++ b/arch/loongarch/kernel/image-vars.h
+> @@ -12,7 +12,7 @@ __efistub_kernel_entry		= kernel_entry;
+>  __efistub_kernel_asize		= kernel_asize;
+>  __efistub_kernel_fsize		= kernel_fsize;
+>  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+> -__efistub_screen_info		= screen_info;
+> +__efistub_sysfb_primary_display	= sysfb_primary_display;
+>  #endif
+>  
+>  #endif
+> diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
+> index 3df30dd1c458..3bd9d06a8b8f 100644
+> --- a/arch/riscv/kernel/image-vars.h
+> +++ b/arch/riscv/kernel/image-vars.h
+> @@ -29,7 +29,7 @@ __efistub__end			= _end;
+>  __efistub__edata		= _edata;
+>  __efistub___init_text_end	= __init_text_end;
+>  #if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
+> -__efistub_screen_info		= screen_info;
+> +__efistub_sysfb_primary_display	= sysfb_primary_display;
+>  #endif
+>  
+>  #endif
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index c3244ac680d1..7508d0ccc740 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/efi.h>
+>  #include <linux/random.h>
+> +#include <linux/sysfb.h>
+>  
+>  #include <asm/bootparam.h>
+>  #include <asm/setup.h>
+> @@ -303,7 +304,8 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+>  	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
+>  
+>  	/* Copying screen_info will do? */
+> -	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info));
+> +	memcpy(&params->screen_info, &sysfb_primary_display.screen,
+> +	       sizeof(sysfb_primary_display.screen));
+>  
+>  	/* Fill in memsize later */
+>  	params->screen_info.ext_mem_k = 0;
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 1b2edd07a3e1..675e4b9deb1f 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/random.h>
+>  #include <linux/root_dev.h>
+>  #include <linux/static_call.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/swiotlb.h>
+>  #include <linux/tboot.h>
+>  #include <linux/usb/xhci-dbgp.h>
+> @@ -211,8 +212,9 @@ arch_initcall(init_x86_sysctl);
+>  /*
+>   * Setup options
+>   */
+> -struct screen_info screen_info;
+> -EXPORT_SYMBOL(screen_info);
+> +
+> +struct sysfb_display_info sysfb_primary_display;
+> +EXPORT_SYMBOL(sysfb_primary_display);
+>  #if defined(CONFIG_FIRMWARE_EDID)
+>  struct edid_info edid_info;
+>  EXPORT_SYMBOL_GPL(edid_info);
+> @@ -526,7 +528,7 @@ static void __init parse_setup_data(void)
+>  static void __init parse_boot_params(void)
+>  {
+>  	ROOT_DEV = old_decode_dev(boot_params.hdr.root_dev);
+> -	screen_info = boot_params.screen_info;
+> +	sysfb_primary_display.screen = boot_params.screen_info;
+>  #if defined(CONFIG_FIRMWARE_EDID)
+>  	edid_info = boot_params.edid_info;
+>  #endif
+> @@ -1254,7 +1256,7 @@ void __init setup_arch(char **cmdline_p)
+>  #ifdef CONFIG_VT
+>  #if defined(CONFIG_VGA_CONSOLE)
+>  	if (!efi_enabled(EFI_BOOT) || (efi_mem_type(0xa0000) != EFI_CONVENTIONAL_MEMORY))
+> -		vgacon_register_screen(&screen_info);
+> +		vgacon_register_screen(&sysfb_primary_display.screen);
+>  #endif
+>  #endif
+>  	x86_init.oem.banner();
+> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
+> index e0aeee99bc99..152789f00fcd 100644
+> --- a/arch/x86/video/video-common.c
+> +++ b/arch/x86/video/video-common.c
+> @@ -9,7 +9,7 @@
+>  
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/vgaarb.h>
+>  
+>  #include <asm/video.h>
+> @@ -29,7 +29,7 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>  bool video_is_primary_device(struct device *dev)
+>  {
+>  #ifdef CONFIG_SCREEN_INFO
+> -	struct screen_info *si = &screen_info;
+> +	struct screen_info *si = &sysfb_primary_display.screen;
+>  	struct resource res[SCREEN_INFO_MAX_RESOURCES];
+>  	ssize_t i, numres;
+>  #endif
+> diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
+> index 42e3a173dac1..3d060d59968c 100644
+> --- a/drivers/firmware/efi/earlycon.c
+> +++ b/drivers/firmware/efi/earlycon.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/serial_core.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/string.h>
+>  
+>  #include <asm/early_ioremap.h>
+> @@ -32,7 +32,7 @@ static void *efi_fb;
+>   */
+>  static int __init efi_earlycon_remap_fb(void)
+>  {
+> -	const struct screen_info *si = &screen_info;
+> +	const struct screen_info *si = &sysfb_primary_display.screen;
+>  
+>  	/* bail if there is no bootconsole or it was unregistered already */
+>  	if (!earlycon_console || !console_is_registered(earlycon_console))
+> @@ -147,7 +147,7 @@ static void efi_earlycon_write_char(u32 *dst, unsigned char c, unsigned int h,
+>  static void
+>  efi_earlycon_write(struct console *con, const char *str, unsigned int num)
+>  {
+> -	const struct screen_info *si = &screen_info;
+> +	const struct screen_info *si = &sysfb_primary_display.screen;
+>  	u32 cur_efi_x = efi_x;
+>  	unsigned int len;
+>  	const char *s;
+> @@ -227,7 +227,7 @@ void __init efi_earlycon_reprobe(void)
+>  static int __init efi_earlycon_setup(struct earlycon_device *device,
+>  				     const char *opt)
+>  {
+> -	const struct screen_info *si = &screen_info;
+> +	const struct screen_info *si = &sysfb_primary_display.screen;
+>  	u16 xres, yres;
+>  	u32 i;
+>  
+> diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+> index a65c2d5b9e7b..d1d418a34407 100644
+> --- a/drivers/firmware/efi/efi-init.c
+> +++ b/drivers/firmware/efi/efi-init.c
+> @@ -19,7 +19,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_fdt.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  
+>  #include <asm/efi.h>
+>  
+> @@ -57,15 +57,15 @@ static phys_addr_t __init efi_to_phys(unsigned long addr)
+>  extern __weak const efi_config_table_type_t efi_arch_tables[];
+>  
+>  /*
+> - * x86 defines its own screen_info and uses it even without EFI,
+> - * everything else can get it from here.
+> + * x86 defines its own instance of sysfb_primary_display and uses
+> + * it even without EFI, everything else can get them from here.
+>   */
+>  #if !defined(CONFIG_X86) && (defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON))
+> -struct screen_info screen_info __section(".data");
+> -EXPORT_SYMBOL_GPL(screen_info);
+> +struct sysfb_display_info sysfb_primary_display __section(".data");
+> +EXPORT_SYMBOL_GPL(sysfb_primary_display);
+>  #endif
+>  
+> -static void __init init_screen_info(void)
+> +static void __init init_primary_display(void)
+>  {
+>  	struct screen_info *si;
+>  
+> @@ -75,13 +75,13 @@ static void __init init_screen_info(void)
+>  			pr_err("Could not map screen_info config table\n");
+>  			return;
+>  		}
+> -		screen_info = *si;
+> +		sysfb_primary_display.screen = *si;
+>  		memset(si, 0, sizeof(*si));
+>  		early_memunmap(si, sizeof(*si));
+>  
+> -		if (memblock_is_map_memory(screen_info.lfb_base))
+> -			memblock_mark_nomap(screen_info.lfb_base,
+> -					    screen_info.lfb_size);
+> +		if (memblock_is_map_memory(sysfb_primary_display.screen.lfb_base))
+> +			memblock_mark_nomap(sysfb_primary_display.screen.lfb_base,
+> +					    sysfb_primary_display.screen.lfb_size);
+>  
+>  		if (IS_ENABLED(CONFIG_EFI_EARLYCON))
+>  			efi_earlycon_reprobe();
+> @@ -274,5 +274,5 @@ void __init efi_init(void)
+>  	if (IS_ENABLED(CONFIG_X86) ||
+>  	    IS_ENABLED(CONFIG_SYSFB) ||
+>  	    IS_ENABLED(CONFIG_EFI_EARLYCON))
+> -		init_screen_info();
+> +		init_primary_display();
+>  }
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> index a6c049835190..401ecbbdf331 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> @@ -1,13 +1,18 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  
+>  #include <linux/efi.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  
+>  #include <asm/efi.h>
+>  
+>  #include "efistub.h"
+>  
+> -static unsigned long screen_info_offset;
+> +static unsigned long kernel_image_offset;
+> +
+> +static void *kernel_image_addr(void *addr)
+> +{
+> +	return addr + kernel_image_offset;
+> +}
+>  
+>  struct screen_info *alloc_screen_info(void)
+>  {
+> @@ -16,8 +21,11 @@ struct screen_info *alloc_screen_info(void)
+>  
+>  	if (IS_ENABLED(CONFIG_X86) ||
+>  	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
+> -	    IS_ENABLED(CONFIG_SYSFB))
+> -		return (void *)&screen_info + screen_info_offset;
+> +	    IS_ENABLED(CONFIG_SYSFB)) {
+> +		struct sysfb_display_info *dpy = kernel_image_addr(&sysfb_primary_display);
+> +
+> +		return &dpy->screen;
+> +	}
+>  
+>  	return NULL;
+>  }
+> @@ -73,7 +81,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>  		return status;
+>  	}
+>  
+> -	screen_info_offset = image_addr - (unsigned long)image->image_base;
+> +	kernel_image_offset = image_addr - (unsigned long)image->image_base;
+>  
+>  	status = efi_stub_common(handle, image, image_addr, cmdline_ptr);
+>  
+> diff --git a/drivers/firmware/efi/sysfb_efi.c b/drivers/firmware/efi/sysfb_efi.c
+> index 8e0f9d08397f..46ad95084b50 100644
+> --- a/drivers/firmware/efi/sysfb_efi.c
+> +++ b/drivers/firmware/efi/sysfb_efi.c
+> @@ -176,7 +176,7 @@ static int __init efifb_set_system(struct screen_info *si, const struct dmi_syst
+>  
+>  static int __init efifb_set_system_callback(const struct dmi_system_id *id)
+>  {
+> -	return efifb_set_system(&screen_info, id);
+> +	return efifb_set_system(&sysfb_primary_display.screen, id);
+>  }
+>  
+>  #define EFIFB_DMI_SYSTEM_ID(vendor, name, enumid)		\
+> @@ -316,7 +316,7 @@ static struct device_node *find_pci_overlap_node(void)
+>  		}
+>  
+>  		for_each_of_pci_range(&parser, &range)
+> -			if (efifb_overlaps_pci_range(&screen_info, &range))
+> +			if (efifb_overlaps_pci_range(&sysfb_primary_display.screen, &range))
+>  				return np;
+>  	}
+>  	return NULL;
+> diff --git a/drivers/firmware/sysfb.c b/drivers/firmware/sysfb.c
+> index 916b28538a29..1f671f9219b0 100644
+> --- a/drivers/firmware/sysfb.c
+> +++ b/drivers/firmware/sysfb.c
+> @@ -66,7 +66,7 @@ static bool sysfb_unregister(void)
+>   */
+>  void sysfb_disable(struct device *dev)
+>  {
+> -	struct screen_info *si = &screen_info;
+> +	struct screen_info *si = &sysfb_primary_display.screen;
+>  	struct device *parent;
+>  
+>  	mutex_lock(&disable_lock);
+> @@ -92,7 +92,7 @@ EXPORT_SYMBOL_GPL(sysfb_disable);
+>   */
+>  bool sysfb_handles_screen_info(void)
+>  {
+> -	const struct screen_info *si = &screen_info;
+> +	const struct screen_info *si = &sysfb_primary_display.screen;
+>  
+>  	return !!screen_info_video_type(si);
+>  }
+> @@ -141,7 +141,7 @@ static struct device *sysfb_parent_dev(const struct screen_info *si)
+>  
+>  static __init int sysfb_init(void)
+>  {
+> -	struct screen_info *si = &screen_info;
+> +	struct screen_info *si = &sysfb_primary_display.screen;
+>  	struct device *parent;
+>  	unsigned int type;
+>  	struct simplefb_platform_data mode;
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index a53af6fe81a6..9c937190be81 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -29,7 +29,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/panic_notifier.h>
+>  #include <linux/ptrace.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/efi.h>
+>  #include <linux/random.h>
+>  #include <linux/kernel.h>
+> @@ -2340,8 +2340,8 @@ static void __maybe_unused vmbus_reserve_fb(void)
+>  	if (efi_enabled(EFI_BOOT)) {
+>  		/* Gen2 VM: get FB base from EFI framebuffer */
+>  		if (IS_ENABLED(CONFIG_SYSFB)) {
+> -			start = screen_info.lfb_base;
+> -			size = max_t(__u32, screen_info.lfb_size, 0x800000);
+> +			start = sysfb_primary_display.screen.lfb_base;
+> +			size = max_t(__u32, sysfb_primary_display.screen.lfb_size, 0x800000);
+>  		}
+>  	} else {
+>  		/* Gen1 VM: get FB base from PCI */
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 436fa7f4c387..805be9ea4a34 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -26,7 +26,7 @@
+>  #include <linux/poll.h>
+>  #include <linux/miscdevice.h>
+>  #include <linux/slab.h>
+> -#include <linux/screen_info.h>
+> +#include <linux/sysfb.h>
+>  #include <linux/vt.h>
+>  #include <linux/console.h>
+>  #include <linux/acpi.h>
+> @@ -557,7 +557,7 @@ EXPORT_SYMBOL(vga_put);
+>  static bool vga_is_firmware_default(struct pci_dev *pdev)
+>  {
+>  #if defined CONFIG_X86
+> -	return pdev == screen_info_pci_dev(&screen_info);
+> +	return pdev == screen_info_pci_dev(&sysfb_primary_display.screen);
+>  #else
+>  	return false;
+>  #endif
+> diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
+> index 66bfc1d0a6dc..8f34d8a74f09 100644
+> --- a/drivers/video/screen_info_pci.c
+> +++ b/drivers/video/screen_info_pci.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/printk.h>
+>  #include <linux/screen_info.h>
+>  #include <linux/string.h>
+> +#include <linux/sysfb.h>
+>  
+>  static struct pci_dev *screen_info_lfb_pdev;
+>  static size_t screen_info_lfb_bar;
+> @@ -26,7 +27,7 @@ static bool __screen_info_relocation_is_valid(const struct screen_info *si, stru
+>  
+>  void screen_info_apply_fixups(void)
+>  {
+> -	struct screen_info *si = &screen_info;
+> +	struct screen_info *si = &sysfb_primary_display.screen;
+>  
+>  	if (screen_info_lfb_pdev) {
+>  		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+> @@ -75,7 +76,7 @@ static void screen_info_fixup_lfb(struct pci_dev *pdev)
+>  		.flags = IORESOURCE_MEM,
+>  	};
+>  	const struct resource *pr;
+> -	const struct screen_info *si = &screen_info;
+> +	const struct screen_info *si = &sysfb_primary_display.screen;
+>  
+>  	if (screen_info_lfb_pdev)
+>  		return; // already found
+> diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
+> index 1690706206e8..c022403c599a 100644
+> --- a/include/linux/screen_info.h
+> +++ b/include/linux/screen_info.h
+> @@ -151,6 +151,4 @@ static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
+>  }
+>  #endif
+>  
+> -extern struct screen_info screen_info;
+> -
+>  #endif /* _SCREEN_INFO_H */
+> diff --git a/include/linux/sysfb.h b/include/linux/sysfb.h
+> index 8b37247528bf..e8bde392c690 100644
+> --- a/include/linux/sysfb.h
+> +++ b/include/linux/sysfb.h
+> @@ -8,11 +8,10 @@
+>   */
+>  
+>  #include <linux/err.h>
+> +#include <linux/platform_data/simplefb.h>
+>  #include <linux/screen_info.h>
+>  #include <linux/types.h>
+>  
+> -#include <linux/platform_data/simplefb.h>
+> -
+>  struct device;
+>  struct platform_device;
+>  struct screen_info;
+> @@ -65,6 +64,8 @@ struct sysfb_display_info {
+>  	struct screen_info screen;
+>  };
+>  
+> +extern struct sysfb_display_info sysfb_primary_display;
+> +
+>  #ifdef CONFIG_SYSFB
+>  
+>  void sysfb_disable(struct device *dev);
+> -- 
+> 2.51.1
+> 
