@@ -1,72 +1,72 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CCE288C2B
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 05:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67BA299AB4
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 05:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763963827; cv=none; b=aEobJr6L21IINEixNH1nIKugs78VtMtwaqjahOGuqXrBYDzCuGDJaZkJADxZgHOWkimoSpHgwJznP2Xk6VY83j1PAxuDlMPEXeiiNHQMP5NsBXpnsAmeqekdFiIsXJaS5sVxok4u4+YY8ZVN2+s8SVHNNkg2ZFHM+kVqULS2AmM=
+	t=1763963827; cv=none; b=OK+yu0setj4/SsicT8Y0hhOQ9pxakVWQ8fur6glwjgVF5FaQyjk+w4IQW5k/sPSbfq1sLOJEa0O5LjxlzJO496jouETehQxtdJgMmyTVe6e26vKkoJEM+5WZkC4zVHm0qlUYoZfQfvq/yGK96DLJVeO4/X2xKpKFzBqK2vi4Y4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1763963827; c=relaxed/simple;
-	bh=wP9KvES0Pyqx93pCFDiuiyhnqX71PIJYxTLISNJ6gBg=;
+	bh=0S9NsCmEuhlYdz5rHVq7OXDlr9vkkRWwF7xWasmPXUI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YgyZqPHhoaEltzqTjUb1+Fi07NmHBe9e+dKdNc7vPLzr14OdraZKK3ZLHIhzYfguXi5gHr9BZ0zKQ4EQKfIDVzuFpu5XRQeObA35tuqG7+uSniacAhiP3lB/ctoHXR3jdQgJDpiHvzXJoYo9mAvneL0j++dTdp0zh7wCPFntv7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RvYYTxoe; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=rE+J93eX5LDUCU7/6Yp0HQ0QMl/acb5RCVsmMx8krovK7M0dsN5EuhQegkRW+kdhS9D/VcHwvV0J4kb4/9p9J0m4T5rtdRBWIYNwLxXRwxpaasAhrYk6GUFLpMZqHRBh2mqs4Gxq0o1Ri1EgRSkmDY22rtqIwivy+a+V1KkMw9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d08mZQzk; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvYYTxoe"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2984dfae0acso61934285ad.0
-        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 21:57:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d08mZQzk"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-295548467c7so46693055ad.2
+        for <loongarch@lists.linux.dev>; Sun, 23 Nov 2025 21:57:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763963823; x=1764568623; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1763963825; x=1764568625; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SQJrrtNIfaN4jqKW1BokOT59wvHty99NFF8JLOzjvec=;
-        b=RvYYTxoebRbn2I/N8h7qzh4IeTM8MNJcnJvwudARRtBtmqhyOERrTmyne3jMovTdyo
-         +I7lWq20vjWjJWgHevzOn9pS/YP7UGPhl1TStUk0Z0u85pFZgkmhaaMztj3qtzSScUiB
-         mZ5Y5F9t15JfYed3AMvBE6GhLZsjYW9iSYHH6UyNCE629HiRAZRsAqn8pQgUwsH6EuLu
-         Khq98F8H/6tEBEjffjhU5KxiTErXmQ0LUhXNl7zemUTsN9mPZY6Mr9rjeSzgbVqh2oDs
-         N2ZDPNIC+I27S85Ct+AoM27gydmsR7/DF2myKoeIY36fMjuaHKNPqWJ/Tl51rrAKBMff
-         2UoA==
+        bh=vPSdX/GnPM9aUZ0LPHDd7XN9g1Vt7t3FVEaQcPQYxVs=;
+        b=d08mZQzkBLdieo56bo85DEE8Zwz1ieo/L69A6wRr2gicgLnYBfIn4AFvi3h67L9FdL
+         cNgfWfOd6bxKjLyF8jyeDLYoHdArPw+8Dht9rZMGmX0L3/U+0bQMAiLrhPR2swVVANPU
+         z7mAExPcMsfbdme6el/I4erHBDmufik/m44YpvAHeQ0LifOQe6HJ6YBxI2LYVBj/DaGo
+         JnewpzisCeVGjHsbSSBiSreVr9QwdpVrP9FD5SGMXvGw+1BIM6QajBO+dUzSg8PkXQT4
+         Azh0DJoH0+4VzcM1mHjcFOA0NvBMKobCBaepnIc+bH+sCeuc4JLZ6x4tWyE7boZmvAnu
+         7OIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763963823; x=1764568623;
+        d=1e100.net; s=20230601; t=1763963825; x=1764568625;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SQJrrtNIfaN4jqKW1BokOT59wvHty99NFF8JLOzjvec=;
-        b=FTA1voOV2ZyKh+gzMusimb6mZhDra8I/y596syahlLXxM1ReCTk+E1tF+Mk31nDbQI
-         eQFhh/jUN+rTjbkvUrJdQE7RzwtQlgKBtb+Qrz7dJ8ZaMSuc7OPnQfeywuE6KYXFHiEc
-         Q5+O1Bakr/cq8ylcN6yp0xXy4jrOXV92XIG4AyWo66ZjMwvTSum2rDr73hPXvIlk0mHl
-         VVFxW3t+7V8jPpwJ/rArhtvGUc0nT8Z1sW34sV4NMjM4O6yCcrEb0AplgRJ2Z4n3sJrb
-         Oe4KNj0Vs/Bbti/zH7vGOmUA5EgB2fPpR93RoJnsRzFq2dUSGACWPagzEdib4GrtOuLI
-         6ydg==
-X-Gm-Message-State: AOJu0YwAvgPbm63bBE2TTjj3KzdlYMEY1DaB2wBE9amLzfcr3u3VKNkK
-	CcFQmTdU9CrpBrLzKe5+fHlZ9AmG8r58XdZhMZquVhV2mu/2LZQpLHIc
-X-Gm-Gg: ASbGncvrdwmF7Zkc71F11/licGdLLc13Ll70h+w4xpKLJjLdfI+eeVNsbUFg6i3f049
-	0zJRTluUaSa7BfXGqdPcWtCHMUWIGExBYiHd0QZi6necLlyKEODneQ+zJb005KmlVyUOVIdhXO8
-	rpMMkRjQKgiAeRX8xtHNBAw5CxllHL7xOhNanz4A1bH2W7qV3E6VuEzlboNP0T7CaRCJf6AD6Oq
-	bfX3L7byn1g1jE70I1nGQkR+CvZilP/UiiK2Y8fBM63KyPSTA4zK7aP2P50FSIidBpwNrcMDEpH
-	6bxCIuS7y/Eo/Z4xY5Rjol9v16xhe6XsABmCA2AeWf5FbeCRMs5olXmT72xpsRVXSh3TbsYRuqL
-	Bs2cGZVQrkOCESpS0TAJ0x2D3+HJR/lxwejMVw6g5m8FqFXi5faxNWO4v+QFvjqtoK10DBrveKy
-	N+0HtlB/w2uWJpz/M3IytgWZ8UN6fG
-X-Google-Smtp-Source: AGHT+IFzzkbbHQt3BegAu0+cY6Ioe2ECRWUChRGq9heN9kUR0Q6uQrkHN5GS+FYtdMHcoMm5YOrCnw==
-X-Received: by 2002:a17:902:e945:b0:295:565b:c691 with SMTP id d9443c01a7336-29b6be9d664mr127924245ad.17.1763963822797;
-        Sun, 23 Nov 2025 21:57:02 -0800 (PST)
+        bh=vPSdX/GnPM9aUZ0LPHDd7XN9g1Vt7t3FVEaQcPQYxVs=;
+        b=w1e6w1HsqKRxXnsRrNLB9/L5CKkH9i02JjEHnNMThRE5qd7gjk3qr6blE8s4xNUWaA
+         U7geWstCIFldcnGUK5mFcFrFC1W4pOvuND1Vgxd0Z1rRQ+k6umlACyM7ikvs5dCbXDhw
+         jfcWQJTgr4PHgegs7YTuc/kmYBrvKDOEYbBWRYIQbBW5fxy2r0Y5qtyCVvxmbPr6FQNG
+         qR/84ns3xaSFkYUaqeZ2ibn6D13YGMNiUrFs3kyjmuO4MvZPfrnxy8A0xDbj3jeqjVGk
+         fXv4NZzYUvB6/fpnqdv3CfeuENuGAQO7HLRsheU3Bz0ueiWSHPMCstzxzdbYtkBbVmjj
+         4tqw==
+X-Gm-Message-State: AOJu0Yz6BA4gxXeka3IfpAzOIMF5uy5/bXIPpamxhqOsrTfFF90YDwqU
+	yfwfuqJ5B0cuj7VbPoeeMeGLc2HJFv/qPCPrDbCfCXh8/hygGiCWnGrU
+X-Gm-Gg: ASbGncuL8AkyjNyPgDdEU/Pzri1abbNRh9i1KP82f15Z1HBKbiMJSKXG4+/53dTdiEY
+	mXoPhQvieBoCq5d+qA328RstiV90o3Oih/BSmoV2cXgboOyyccn8z7lCB2uSrO8F7WiD4Yg+WsD
+	LoVMh4hkMsdbxbzT/izO/NUM8WFImk9rKz4Zvi8C1WjG8ydK5jq0Kc3Ra6hq5O5VMQ/M+84nX3q
+	BvMuwRRdtLXpmBmjNbuJfBmq5Wm14ML5SsJkoc3RwfrdTK6tdzPa5G49F0XgPcb/+NKQRcNMXS+
+	yNDhY4nzBZ2z5nisES2vGQBZ+Ka2ZwhWPtwzqgvi9GjgY4crenxGOEtkBHNdhGWod87X8xsie4K
+	1IyivF5r7a+kVgOv0O9KyYwRuNNBJXDoorH1EZKPIL1698/H7hOcs/DHJSvIvFCpy/2jr9IMAcH
+	ck/c3xfuxP35/AEZanHTTHxZXdFTsj
+X-Google-Smtp-Source: AGHT+IG7WtFTeVkFLig6ADCybE0FMg16uTyvWJXqTr2IQNzecVhCQNyJXIxsj6pYs3eNzWMEcdoaIQ==
+X-Received: by 2002:a17:903:903:b0:295:a1a5:bae9 with SMTP id d9443c01a7336-29b6be86b48mr114117715ad.8.1763963825304;
+        Sun, 23 Nov 2025 21:57:05 -0800 (PST)
 Received: from devbox.. ([43.132.141.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b106094sm124881785ad.10.2025.11.23.21.57.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b106094sm124881785ad.10.2025.11.23.21.57.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 21:57:02 -0800 (PST)
+        Sun, 23 Nov 2025 21:57:04 -0800 (PST)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 To: chenhuacai@kernel.org,
 	yangtiezhu@loongson.cn,
 	vincent.mc.li@gmail.com
 Cc: loongarch@lists.linux.dev,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH 3/5] LoongArch: BPF: Use BPF prog pack allocator
-Date: Mon, 24 Nov 2025 05:56:40 +0000
-Message-ID: <20251124055642.1591-4-hengqi.chen@gmail.com>
+Subject: [PATCH 4/5] LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
+Date: Mon, 24 Nov 2025 05:56:41 +0000
+Message-ID: <20251124055642.1591-5-hengqi.chen@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251124055642.1591-1-hengqi.chen@gmail.com>
 References: <20251124055642.1591-1-hengqi.chen@gmail.com>
@@ -78,268 +78,221 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use bpf_jit_binary_pack_alloc() for JIT binaries. The BPF
-prog pack allocator creates a pair of RW and RX buffers.
-The JIT writes the program into the RW buffer. When the JIT
-is done, the program is copied to the final RX buffer
-with bpf_jit_binary_pack_finalize.
+Add support for `{LDX,STX,ST} | PROBE_MEM32 | {B,H,W,DW}` instructions.
+They are similar to PROBE_MEM instructions with the following differences:
+ * PROBE_MEM32 supports store.
+ * PROBE_MEM32 relies on the verifier to clear upper 32-bit of the
+  src/dst register
+ * PROBE_MEM32 adds 64-bit kern_vm_start address (which is stored in S6
+  in the prologue). Due to bpf_arena constructions such S6 + reg +
+  off16 access is guaranteed to be within arena virtual range, so no
+  address check at run-time.
+ * S6 is a free callee-saved register, so it is used to store arena_vm_start
+ * PROBE_MEM32 allows STX and ST. If they fault the store is a nop. When
+  LDX faults the destination register is zeroed.
+
+To support these on LoongArch, we employ the t2/t3 registers to store
+intermediate results of reg_arena + src/dst reg and use the t2/t3 registers
+as the new src/dst reg. This allows us to reuse most of the existing code.
 
 Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 ---
- arch/loongarch/net/bpf_jit.c | 123 ++++++++++++++++++++++++-----------
- arch/loongarch/net/bpf_jit.h |   2 +-
- 2 files changed, 87 insertions(+), 38 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 69 +++++++++++++++++++++++++++++++++---
+ arch/loongarch/net/bpf_jit.h |  1 +
+ 2 files changed, 66 insertions(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 4be8515197ce..c1c71c2e86f0 100644
+index c1c71c2e86f0..14188e8d86bc 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -459,11 +459,11 @@ static int add_exception_handler(const struct bpf_insn *insn,
- 				 struct jit_ctx *ctx,
- 				 int dst_reg)
- {
--	unsigned long pc;
--	off_t offset;
- 	struct exception_table_entry *ex;
-+	off_t ins_offset, fixup_offset;
-+	unsigned long pc;
+@@ -17,6 +17,7 @@
+ #define LOONGARCH_BPF_FENTRY_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
  
--	if (!ctx->image || !ctx->prog->aux->extable)
-+	if (!ctx->image || !ctx->ro_image || !ctx->prog->aux->extable)
+ #define REG_TCC		LOONGARCH_GPR_A6
++#define REG_ARENA	LOONGARCH_GPR_S6 /* For storing arena_vm_start */
+ #define BPF_TAIL_CALL_CNT_PTR_STACK_OFF(stack) (round_up(stack, 16) - 80)
+ 
+ static const int regmap[] = {
+@@ -136,6 +137,9 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	/* To store tcc and tcc_ptr */
+ 	stack_adjust += sizeof(long) * 2;
+ 
++	if (ctx->arena_vm_start)
++		stack_adjust += 8;
++
+ 	stack_adjust = round_up(stack_adjust, 16);
+ 	stack_adjust += bpf_stack_adjust;
+ 
+@@ -177,6 +181,11 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	store_offset -= sizeof(long);
+ 	emit_insn(ctx, std, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, store_offset);
+ 
++	if (ctx->arena_vm_start) {
++		store_offset -= sizeof(long);
++		emit_insn(ctx, std, REG_ARENA, LOONGARCH_GPR_SP, store_offset);
++	}
++
+ 	prepare_bpf_tail_call_cnt(ctx, &store_offset);
+ 
+ 	emit_insn(ctx, addid, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, stack_adjust);
+@@ -185,6 +194,9 @@ static void build_prologue(struct jit_ctx *ctx)
+ 		emit_insn(ctx, addid, regmap[BPF_REG_FP], LOONGARCH_GPR_SP, bpf_stack_adjust);
+ 
+ 	ctx->stack_size = stack_adjust;
++
++	if (ctx->arena_vm_start)
++		move_imm(ctx, REG_ARENA, ctx->arena_vm_start, false);
+ }
+ 
+ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
+@@ -216,6 +228,11 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
+ 	load_offset -= sizeof(long);
+ 	emit_insn(ctx, ldd, LOONGARCH_GPR_S5, LOONGARCH_GPR_SP, load_offset);
+ 
++	if (ctx->arena_vm_start) {
++		load_offset -= sizeof(long);
++		emit_insn(ctx, ldd, REG_ARENA, LOONGARCH_GPR_SP, load_offset);
++	}
++
+ 	/*
+ 	 * When push into the stack, follow the order of tcc then tcc_ptr.
+ 	 * When pop from the stack, first pop tcc_ptr then followed by tcc.
+@@ -441,6 +458,7 @@ static bool is_signed_bpf_cond(u8 cond)
+ 
+ #define BPF_FIXUP_REG_MASK	GENMASK(31, 27)
+ #define BPF_FIXUP_OFFSET_MASK	GENMASK(26, 0)
++#define REG_DONT_CLEAR_MARKER	0
+ 
+ bool ex_handler_bpf(const struct exception_table_entry *ex,
+ 		    struct pt_regs *regs)
+@@ -448,7 +466,8 @@ bool ex_handler_bpf(const struct exception_table_entry *ex,
+ 	int dst_reg = FIELD_GET(BPF_FIXUP_REG_MASK, ex->fixup);
+ 	off_t offset = FIELD_GET(BPF_FIXUP_OFFSET_MASK, ex->fixup);
+ 
+-	regs->regs[dst_reg] = 0;
++	if (dst_reg != REG_DONT_CLEAR_MARKER)
++		regs->regs[dst_reg] = 0;
+ 	regs->csr_era = (unsigned long)&ex->fixup - offset;
+ 
+ 	return true;
+@@ -467,7 +486,8 @@ static int add_exception_handler(const struct bpf_insn *insn,
  		return 0;
  
  	if (BPF_MODE(insn->code) != BPF_PROBE_MEM &&
-@@ -474,14 +474,18 @@ static int add_exception_handler(const struct bpf_insn *insn,
- 		return -EINVAL;
+-	    BPF_MODE(insn->code) != BPF_PROBE_MEMSX)
++	    BPF_MODE(insn->code) != BPF_PROBE_MEMSX &&
++	    BPF_MODE(insn->code) != BPF_PROBE_MEM32)
+ 		return 0;
  
- 	ex = &ctx->prog->aux->extable[ctx->num_exentries];
--	pc = (unsigned long)&ctx->image[ctx->idx - 1];
-+	pc = (unsigned long)&ctx->ro_image[ctx->idx - 1];
- 
--	offset = pc - (long)&ex->insn;
--	if (WARN_ON_ONCE(offset >= 0 || offset < INT_MIN))
-+	/*
-+	 * This is the relative offset of the instruction that may fault from
-+	 * the exception table itself. This will be written to the exception
-+	 * table and if this instruction faults, the destination register will
-+	 * be set to '0' and the execution will jump to the next instruction.
-+	 */
-+	ins_offset = pc - (long)&ex->insn;
-+	if (WARN_ON_ONCE(ins_offset >= 0 || ins_offset < INT_MIN))
- 		return -ERANGE;
- 
--	ex->insn = offset;
--
- 	/*
- 	 * Since the extable follows the program, the fixup offset is always
- 	 * negative and limited to BPF_JIT_REGION_SIZE. Store a positive value
-@@ -489,13 +493,25 @@ static int add_exception_handler(const struct bpf_insn *insn,
- 	 * bits. We don't need to worry about buildtime or runtime sort
- 	 * modifying the upper bits because the table is already sorted, and
- 	 * isn't part of the main exception table.
-+	 *
-+	 * The fixup_offset is set to the next instruction from the instruction
-+	 * that may fault. The execution will jump to this after handling the
-+	 * fault.
- 	 */
--	offset = (long)&ex->fixup - (pc + LOONGARCH_INSN_SIZE);
--	if (!FIELD_FIT(BPF_FIXUP_OFFSET_MASK, offset))
-+	fixup_offset = (long)&ex->fixup - (pc + LOONGARCH_INSN_SIZE);
-+	if (!FIELD_FIT(BPF_FIXUP_OFFSET_MASK, fixup_offset))
- 		return -ERANGE;
- 
-+	/*
-+	 * The offsets above have been calculated using the RO buffer but we
-+	 * need to use the R/W buffer for writes.
-+	 * switch ex to rw buffer for writing.
-+	 */
-+	ex = (void *)ctx->image + ((void *)ex - (void *)ctx->ro_image);
-+	ex->insn = ins_offset;
-+	ex->fixup = FIELD_PREP(BPF_FIXUP_OFFSET_MASK, fixup_offset) |
-+		    FIELD_PREP(BPF_FIXUP_REG_MASK, dst_reg);
- 	ex->type = EX_TYPE_BPF;
--	ex->fixup = FIELD_PREP(BPF_FIXUP_OFFSET_MASK, offset) | FIELD_PREP(BPF_FIXUP_REG_MASK, dst_reg);
- 
- 	ctx->num_exentries++;
- 
-@@ -1808,11 +1824,12 @@ int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
- struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- {
- 	bool tmp_blinded = false, extra_pass = false;
--	u8 *image_ptr;
-+	u8 *image_ptr, *ro_image_ptr;
- 	int image_size, prog_size, extable_size;
- 	struct jit_ctx ctx;
- 	struct jit_data *jit_data;
- 	struct bpf_binary_header *header;
-+	struct bpf_binary_header *ro_header;
- 	struct bpf_prog *tmp, *orig_prog = prog;
- 
- 	/*
-@@ -1847,8 +1864,10 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	}
- 	if (jit_data->ctx.offset) {
- 		ctx = jit_data->ctx;
--		image_ptr = jit_data->image;
-+		ro_image_ptr = (void *)ctx.ro_image;
-+		ro_header = jit_data->ro_header;
- 		header = jit_data->header;
-+		image_ptr = (void *)header + ((void *)ro_image_ptr - (void *)ro_header);
- 		extra_pass = true;
- 		prog_size = sizeof(u32) * ctx.idx;
- 		goto skip_init_ctx;
-@@ -1882,17 +1901,26 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	prog_size = sizeof(u32) * ctx.idx;
- 	image_size = prog_size + extable_size;
- 	/* Now we know the size of the structure to make */
--	header = bpf_jit_binary_alloc(image_size, &image_ptr,
--				      sizeof(u32), jit_fill_hole);
--	if (header == NULL) {
-+	ro_header = bpf_jit_binary_pack_alloc(image_size, &ro_image_ptr,
-+					      sizeof(u32), &header, &image_ptr,
-+					      jit_fill_hole);
-+	if (!ro_header) {
- 		prog = orig_prog;
- 		goto out_offset;
- 	}
- 
- 	/* 2. Now, the actual pass to generate final JIT code */
-+	/*
-+	 * Use the image(RW) for writing the JITed instructions. But also save
-+	 * the ro_image(RX) for calculating the offsets in the image. The RW
-+	 * image will be later copied to the RX image from where the program
-+	 * will run. The bpf_jit_binary_pack_finalize() will do this copy in the
-+	 * final step.
-+	 */
- 	ctx.image = (union loongarch_instruction *)image_ptr;
-+	ctx.ro_image = (union loongarch_instruction *)ro_image_ptr;
- 	if (extable_size)
--		prog->aux->extable = (void *)image_ptr + prog_size;
-+		prog->aux->extable = (void *)ro_image_ptr + prog_size;
- 
- skip_init_ctx:
- 	ctx.idx = 0;
-@@ -1900,48 +1928,47 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 
- 	build_prologue(&ctx);
- 	if (build_body(&ctx, extra_pass)) {
--		bpf_jit_binary_free(header);
- 		prog = orig_prog;
--		goto out_offset;
-+		goto out_free;
- 	}
- 	build_epilogue(&ctx);
- 
- 	/* 3. Extra pass to validate JITed code */
- 	if (validate_ctx(&ctx)) {
--		bpf_jit_binary_free(header);
- 		prog = orig_prog;
--		goto out_offset;
-+		goto out_free;
- 	}
- 
- 	/* And we're done */
- 	if (bpf_jit_enable > 1)
- 		bpf_jit_dump(prog->len, prog_size, 2, ctx.image);
- 
--	/* Update the icache */
--	flush_icache_range((unsigned long)header, (unsigned long)(ctx.image + ctx.idx));
--
- 	if (!prog->is_func || extra_pass) {
--		int err;
--
- 		if (extra_pass && ctx.idx != jit_data->ctx.idx) {
- 			pr_err_once("multi-func JIT bug %d != %d\n",
- 				    ctx.idx, jit_data->ctx.idx);
- 			goto out_free;
- 		}
--		err = bpf_jit_binary_lock_ro(header);
--		if (err) {
--			pr_err_once("bpf_jit_binary_lock_ro() returned %d\n",
--				    err);
-+		if (WARN_ON(bpf_jit_binary_pack_finalize(ro_header, header))) {
-+			/* ro_header has been freed */
-+			ro_header = NULL;
-+			prog = orig_prog;
- 			goto out_free;
- 		}
-+		/*
-+		 * The instructions have now been copied to the ROX region from
-+		 * where they will execute. Now the data cache has to be cleaned to
-+		 * the PoU and the I-cache has to be invalidated for the VAs.
-+		 */
-+		bpf_flush_icache(ro_header, ctx.ro_image + ctx.idx);
- 	} else {
- 		jit_data->ctx = ctx;
--		jit_data->image = image_ptr;
- 		jit_data->header = header;
-+		jit_data->ro_header = ro_header;
- 	}
- 	prog->jited = 1;
- 	prog->jited_len = prog_size;
--	prog->bpf_func = (void *)ctx.image;
-+	prog->bpf_func = (void *)ctx.ro_image;
- 
- 	if (!prog->is_func || extra_pass) {
- 		int i;
-@@ -1961,17 +1988,39 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	if (tmp_blinded)
- 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
- 
--
- 	return prog;
- 
- out_free:
--	bpf_jit_binary_free(header);
--	prog->bpf_func = NULL;
--	prog->jited = 0;
--	prog->jited_len = 0;
-+	if (header) {
-+		bpf_arch_text_copy(&ro_header->size, &header->size, sizeof(header->size));
-+		bpf_jit_binary_pack_free(ro_header, header);
-+	}
- 	goto out_offset;
- }
- 
-+void bpf_jit_free(struct bpf_prog *prog)
-+{
-+	if (prog->jited) {
-+		struct jit_data *jit_data = prog->aux->jit_data;
-+		struct bpf_binary_header *hdr;
+ 	if (WARN_ON_ONCE(ctx->num_exentries >= ctx->prog->aux->num_exentries))
+@@ -529,8 +549,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	const u8 cond = BPF_OP(code);
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+ 	const u8 t2 = LOONGARCH_GPR_T2;
+-	const u8 src = regmap[insn->src_reg];
+-	const u8 dst = regmap[insn->dst_reg];
++	const u8 t3 = LOONGARCH_GPR_T3;
++	u8 src = regmap[insn->src_reg];
++	u8 dst = regmap[insn->dst_reg];
+ 	const s16 off = insn->off;
+ 	const s32 imm = insn->imm;
+ 	const bool is32 = BPF_CLASS(insn->code) == BPF_ALU || BPF_CLASS(insn->code) == BPF_JMP32;
+@@ -1036,8 +1057,19 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	case BPF_LDX | BPF_PROBE_MEMSX | BPF_B:
+ 	case BPF_LDX | BPF_PROBE_MEMSX | BPF_H:
+ 	case BPF_LDX | BPF_PROBE_MEMSX | BPF_W:
++	/* LDX | PROBE_MEM32: dst = *(unsigned size *)(src + REG_ARENA + off) */
++	case BPF_LDX | BPF_PROBE_MEM32 | BPF_B:
++	case BPF_LDX | BPF_PROBE_MEM32 | BPF_H:
++	case BPF_LDX | BPF_PROBE_MEM32 | BPF_W:
++	case BPF_LDX | BPF_PROBE_MEM32 | BPF_DW:
+ 		sign_extend = BPF_MODE(insn->code) == BPF_MEMSX ||
+ 			      BPF_MODE(insn->code) == BPF_PROBE_MEMSX;
 +
-+		/*
-+		 * If we fail the final pass of JIT (from jit_subprogs),
-+		 * the program may not be finalized yet. Call finalize here
-+		 * before freeing it.
-+		 */
-+		if (jit_data) {
-+			bpf_jit_binary_pack_finalize(jit_data->ro_header, jit_data->header);
-+			kfree(jit_data);
++		if (BPF_MODE(code) == BPF_PROBE_MEM32) {
++			emit_insn(ctx, addd, t2, src, REG_ARENA);
++			src = t2;
 +		}
-+		hdr = bpf_jit_binary_pack_hdr(prog);
-+		bpf_jit_binary_pack_free(hdr, NULL);
-+		WARN_ON_ONCE(!bpf_prog_kallsyms_verify_off(prog));
-+	}
 +
-+	bpf_prog_unlock_free(prog);
-+}
+ 		switch (BPF_SIZE(code)) {
+ 		case BPF_B:
+ 			if (is_signed_imm12(off)) {
+@@ -1097,6 +1129,16 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	case BPF_ST | BPF_MEM | BPF_H:
+ 	case BPF_ST | BPF_MEM | BPF_W:
+ 	case BPF_ST | BPF_MEM | BPF_DW:
++	/* ST | PROBE_MEM32: *(size *)(dst + REG_ARENA + off) = imm */
++	case BPF_ST | BPF_PROBE_MEM32 | BPF_B:
++	case BPF_ST | BPF_PROBE_MEM32 | BPF_H:
++	case BPF_ST | BPF_PROBE_MEM32 | BPF_W:
++	case BPF_ST | BPF_PROBE_MEM32 | BPF_DW:
++		if (BPF_MODE(code) == BPF_PROBE_MEM32) {
++			emit_insn(ctx, addd, t3, dst, REG_ARENA);
++			dst = t3;
++		}
 +
- bool bpf_jit_bypass_spec_v1(void)
- {
- 	return true;
+ 		switch (BPF_SIZE(code)) {
+ 		case BPF_B:
+ 			move_imm(ctx, t1, imm, is32);
+@@ -1139,6 +1181,10 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			}
+ 			break;
+ 		}
++
++		ret = add_exception_handler(insn, ctx, REG_DONT_CLEAR_MARKER);
++		if (ret)
++			return ret;
+ 		break;
+ 
+ 	/* *(size *)(dst + off) = src */
+@@ -1146,6 +1192,16 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	case BPF_STX | BPF_MEM | BPF_H:
+ 	case BPF_STX | BPF_MEM | BPF_W:
+ 	case BPF_STX | BPF_MEM | BPF_DW:
++	/* STX | PROBE_MEM32: *(size *)(dst + REG_ARENA + off) = src */
++	case BPF_STX | BPF_PROBE_MEM32 | BPF_B:
++	case BPF_STX | BPF_PROBE_MEM32 | BPF_H:
++	case BPF_STX | BPF_PROBE_MEM32 | BPF_W:
++	case BPF_STX | BPF_PROBE_MEM32 | BPF_DW:
++		if (BPF_MODE(code) == BPF_PROBE_MEM32) {
++			emit_insn(ctx, addd, t2, dst, REG_ARENA);
++			dst = t2;
++		}
++
+ 		switch (BPF_SIZE(code)) {
+ 		case BPF_B:
+ 			if (is_signed_imm12(off)) {
+@@ -1184,6 +1240,10 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			}
+ 			break;
+ 		}
++
++		ret = add_exception_handler(insn, ctx, REG_DONT_CLEAR_MARKER);
++		if (ret)
++			return ret;
+ 		break;
+ 
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+@@ -1875,6 +1935,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 
+ 	memset(&ctx, 0, sizeof(ctx));
+ 	ctx.prog = prog;
++	ctx.arena_vm_start = bpf_arena_get_kern_vm_start(prog->aux->arena);
+ 
+ 	ctx.offset = kvcalloc(prog->len + 1, sizeof(u32), GFP_KERNEL);
+ 	if (ctx.offset == NULL) {
 diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index ed0193659cf9..7a9d2134f8d1 100644
+index 7a9d2134f8d1..328ec445a710 100644
 --- a/arch/loongarch/net/bpf_jit.h
 +++ b/arch/loongarch/net/bpf_jit.h
-@@ -24,7 +24,7 @@ struct jit_ctx {
- 
- struct jit_data {
- 	struct bpf_binary_header *header;
--	u8 *image;
-+	struct bpf_binary_header *ro_header;
- 	struct jit_ctx ctx;
+@@ -20,6 +20,7 @@ struct jit_ctx {
+ 	union loongarch_instruction *image;
+ 	union loongarch_instruction *ro_image;
+ 	u32 stack_size;
++	u64 arena_vm_start;
  };
  
+ struct jit_data {
 -- 
 2.43.5
 
