@@ -1,187 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C2A25B1D2
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 08:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41600257859;
+	Mon, 24 Nov 2025 08:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763971520; cv=none; b=kAWFy4tpb8vHlX+x66Mf1F/Mhly298a195LKglAxTbw4w/KA0anusH6W2o8C8hVYFoMB85pBrKN9KdexsxqHBpU+iCBjhcRB+ZLyKjxq6diP3Xy1SKbbfutyGCbNCvU9tZy6IrETpzZmwKtOz7f7pGYWqILH39xdGcUENtOE+2A=
+	t=1763973306; cv=none; b=GpbMObW5tEmSmKAOW80OLOT/FNU7NbNKT2xLMbx7uzGhvNePYffROgtRQ2OTwUd70hPZSSyS52mjs27vrGXD6wScDDJiKilLlIkpLJ+zJ6/ue02KYihl4AAMxIrZAhsB4Wwio0DOgYWYctD1HQmFnSxkHtg/Z5l9Ac/mi+dtOx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763971520; c=relaxed/simple;
-	bh=x578kJ8gmslp7q5dEBq8pO4U7q7/5luR08zqPs5F1oY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PjdQAkNPXfAqJxAOcD0mxEYlSUDtO2SonjNsDAqL+gFjX0EfArkFzdZkFgNA4V4MOIyx+ZhxbXVH4kYMPKVgK9k0HL7HXsG5WnRgXe3zHgRXBe/DW32/y0Ha/dySteNk90AOde08ufPfNJesblckBlk1mBoZBoi/gcoOzsfX81k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLGci3eU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLGci3eU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7CF5C4AF0B
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 08:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763971519;
-	bh=x578kJ8gmslp7q5dEBq8pO4U7q7/5luR08zqPs5F1oY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rLGci3eUaQzlI85Vfwu3Wy3uGz+0z75+x7OT8Pi3k4/6hgJ3urVe95rU7HExJ2TaW
-	 PkEaC42llZxvw3OtI8CzLTnwA+nlI3Gkaj5VlauJVJShKS5GAuwQHPKM05t98LGq7/
-	 kezIgW6P47KnucEHQidT6GR7XJT4vFYkMiucKzQS8oEhgvLT17JMbKP58waZXS6oFS
-	 +TNvOMoABsLDiPlClNaReuYaO/G0kh2kizxlmcuxYEvWltZSLsk+dvE+ZvKcUCHivO
-	 9QsRjemMCbZbx3s2w2yMHn+GqNniuN7jPVtjZA+aA95lrJIuBWCnEWHBdUoEhA5F+a
-	 uepUEbtz2YKNQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b72bf7e703fso660161866b.2
-        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 00:05:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUOTzwdhRGo0S9HhflFdY/bIC383Cs4Ta9wLoVY8CXb8r8YooOfhDz5K7JQxAIuhpIENVH8dGxY67g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YypJetDkWJ6DVdF1Ui7V1VbNN5GPZ4oRrsTX417fH2maBCwh6WQ
-	KCav975kZ8/nDhSZuQSM4tefruqe0Sd6H8laepWqm/NLjiscIYdF7Lkn1nXK3K6OMLIr5POk6g/
-	Qs9MuB4KY1ICtdtq881L1jK802TK+6/k=
-X-Google-Smtp-Source: AGHT+IHU2jUqbE+TduT6rA+RqYz8WgKxJ126vxYUcuU2uMMfHBleKu5+0yf8oFO2zbyNner7Jdn4+VIPupufFBTIN+w=
-X-Received: by 2002:a17:907:d94:b0:b6d:9bab:a7ba with SMTP id
- a640c23a62f3a-b7671a7ad6emr1164474266b.42.1763971518391; Mon, 24 Nov 2025
- 00:05:18 -0800 (PST)
+	s=arc-20240116; t=1763973306; c=relaxed/simple;
+	bh=Xb9i516x0AzspO1CRgWjsBZXTYtd4qfzaCz63e7W1U8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Xh2kY1JAap/sB783z8ndeYWhez4gsaDk6Uvb2yNinDWKcKFjqSI4Wkf9IVtkWIZpP8/Ir9SiY/FrLsmgdIwSjXJDrm3P2uxez6yoEeEpLuzp6Jb0eyon7zhS7xPu6y4a6B812DNrPCITEGXG2OcuX3G4HcovJ0D3AVOORpbDh3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Bx37+wGCRpKm8nAA--.17259S3;
+	Mon, 24 Nov 2025 16:34:56 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxrcGmGCRpwII9AQ--.9636S3;
+	Mon, 24 Nov 2025 16:34:51 +0800 (CST)
+Subject: Re: [PATCH v2 2/3] LoongArch: Add paravirt support with
+ vcpu_is_preempted() in guest side
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+ Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, kvm@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, x86@kernel.org
+References: <20251124035402.3817179-1-maobibo@loongson.cn>
+ <20251124035402.3817179-3-maobibo@loongson.cn>
+ <CAAhV-H5Oag+mDp0CfZ1VDeapeKas354j68JZN9bN42=D4huowA@mail.gmail.com>
+ <5d80c452-bbc3-539a-fb8d-14dbe353f8cb@loongson.cn>
+ <CAAhV-H66M+GZ2kB8BKR82BUeQcNZ8ACeXLxwjh-bsVZcca1cqQ@mail.gmail.com>
+ <718b5b5d-2bb1-5d59-409e-54f54516a6b7@loongson.cn>
+ <CAAhV-H4X5EAgDTnSGG+1pMWywoLAis5TH_jEWkvaY8p1m8hQMg@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <611840bb-7f7d-3b13-dc89-b760d8eeda79@loongson.cn>
+Date: Mon, 24 Nov 2025 16:32:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124055642.1591-1-hengqi.chen@gmail.com> <20251124055642.1591-2-hengqi.chen@gmail.com>
- <CAAhV-H5YOknLF-bAtCiZnsVq=56nOetom7iv52LRnuU6Djh6aA@mail.gmail.com> <CAEyhmHTFbmZvLdr2SXSc7EpTQbc5fMGfaKzBcKZwP5tH+2sf5Q@mail.gmail.com>
-In-Reply-To: <CAEyhmHTFbmZvLdr2SXSc7EpTQbc5fMGfaKzBcKZwP5tH+2sf5Q@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 24 Nov 2025 16:05:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4aCHaRJTP89reU9kx6p3caSBGJzbjBjXazntvT+2JePw@mail.gmail.com>
-X-Gm-Features: AWmQ_bk1DWZ960axZX1v_S6BnTjsm3P32bvbVxiAcphzJvwKSRJoBaqO7OY1K_8
-Message-ID: <CAAhV-H4aCHaRJTP89reU9kx6p3caSBGJzbjBjXazntvT+2JePw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] LoongArch: BPF: Sign extend kfunc call arguments
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H4X5EAgDTnSGG+1pMWywoLAis5TH_jEWkvaY8p1m8hQMg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxrcGmGCRpwII9AQ--.9636S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jw45CF18XF13tw17AFyrGrX_yoW7AryDpF
+	yUJF1vqa18Gr1xA39Fqr1qkrn8tr4kG3WxXry7WFy5Ar1qvFnrJr1qqryj9Fyktwn7WF10
+	qrykGF4S9Fy5J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVW8ZVWrXwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
+	daVFxhVjvjDU0xZFpf9x07jOuc_UUUUU=
 
-On Mon, Nov 24, 2025 at 4:01=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
->
-> On Mon, Nov 24, 2025 at 2:32=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Hi, Hengqi,
-> >
-> > On Mon, Nov 24, 2025 at 1:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.=
-com> wrote:
-> > >
-> > > The kfunc calls are native calls so they should follow LoongArch
-> > > calling conventions. Sign extend its arguments properly to avoid
-> > > kernel panic. This is done by adding a new emit_abi_ext() helper.
-> > > The emit_abi_ext() helper performs extension in place meaning a
-> > > value already store in target register (This is different from
-> > > the existing sign_extend() helper and thus we can't reuse it).
-> > >
-> > > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> > > ---
-> > >  arch/loongarch/net/bpf_jit.c | 16 ++++++++++++++++
-> > >  arch/loongarch/net/bpf_jit.h | 26 ++++++++++++++++++++++++++
-> > >  2 files changed, 42 insertions(+)
-> > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_ji=
-t.c
-> > > index f97dc9936401..c67631303841 100644
-> > > --- a/arch/loongarch/net/bpf_jit.c
-> > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > @@ -950,6 +950,22 @@ static int build_insn(const struct bpf_insn *ins=
-n, struct jit_ctx *ctx, bool ext
-> > >                         emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP=
-, tcc_ptr_off);
-> > >                 }
-> > >
-> > > +               if (insn->src_reg =3D=3D BPF_PSEUDO_KFUNC_CALL) {
-> > > +                       const struct btf_func_model *m;
-> > > +                       int i;
-> > > +
-> > > +                       m =3D bpf_jit_find_kfunc_model(ctx->prog, ins=
-n);
-> > > +                       if (!m)
-> > > +                               return -EINVAL;
-> > > +
-> > > +                       for (i =3D 0; i < m->nr_args; i++) {
-> > > +                               u8 reg =3D regmap[BPF_REG_1 + i];
-> > > +                               bool sign =3D m->arg_flags[i] & BTF_F=
-MODEL_SIGNED_ARG;
-> > > +
-> > > +                               emit_abi_ext(ctx, reg, m->arg_size[i]=
-, sign);
-> > > +                       }
-> > > +               }
-> > > +
-> > >                 move_addr(ctx, t1, func_addr);
-> > >                 emit_insn(ctx, jirl, LOONGARCH_GPR_RA, t1, 0);
-> > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_ji=
-t.h
-> > > index 5697158fd164..ed0193659cf9 100644
-> > > --- a/arch/loongarch/net/bpf_jit.h
-> > > +++ b/arch/loongarch/net/bpf_jit.h
-> > > @@ -88,6 +88,32 @@ static inline void emit_sext_32(struct jit_ctx *ct=
-x, enum loongarch_gpr reg, boo
-> > >         emit_insn(ctx, addiw, reg, reg, 0);
-> > >  }
-> > >
-> > > +/* Emit proper extension according to ABI requirements.
-> > > + * Note that this requires a value of size `size` already resides in=
- register `reg`.
-> > > + */
-> > > +static inline void emit_abi_ext(struct jit_ctx *ctx, int reg, u8 siz=
-e, bool sign)
-> > > +{
-> > > +       /* The ABI requires unsigned char/short to be zero-extended, =
-leave it intact */
-> > > +       if (!sign && (size =3D=3D 1 || size =3D=3D 2))
-> > > +               return;
-> > > +
-> > > +       switch (size) {
-> > > +       case 1:
-> > > +               emit_insn(ctx, extwb, reg, reg);
-> > > +               break;
-> > > +       case 2:
-> > > +               emit_insn(ctx, extwh, reg, reg);
-> > > +               break;
-> > > +       case 4:
-> > > +               emit_insn(ctx, addiw, reg, reg, 0);
-> > > +               break;
-> > > +       case 8:
-> > > +               break;
-> > > +       default:
-> > > +               pr_warn("bpf_jit: invalid size %d for extension\n", s=
-ize);
-> > > +       }
-> > > +}
-> > Looks very similar to sign_extend(), can we reuse something?
-> >
->
-> As decribed in the commit message, both helpers have strong implications:
->   - emit_abi_ext() requires values already store in dst reg
->   - sign_extend() assumes values not in dst reg and have to move value
->     to dst reg even extension is not required
->
-> Adding a new helper here is because:
->   - requested by Tiezhu in last cycle
->   - emit_abi_ext() has better naming (I think)
-Emm, but I think this name is strage, though I don't know what is better.
 
-Huacai
 
->   - ease the backport process
->
-> Even if we are going to reuse the code, I would suggest
-> replacing the existing sign_extend() with emit_abi_ext().
-> Note that reuse will require one extra instruction for
-> struct_ops return value.
->
-> > Huacai
-> >
-> > > +
-> > >  static inline void move_addr(struct jit_ctx *ctx, enum loongarch_gpr=
- rd, u64 addr)
-> > >  {
-> > >         u64 imm_11_0, imm_31_12, imm_51_32, imm_63_52;
-> > > --
-> > > 2.43.5
-> > >
+On 2025/11/24 下午4:03, Huacai Chen wrote:
+> On Mon, Nov 24, 2025 at 3:50 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/11/24 下午3:13, Huacai Chen wrote:
+>>> On Mon, Nov 24, 2025 at 3:03 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/11/24 下午2:33, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Mon, Nov 24, 2025 at 11:54 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> Function vcpu_is_preempted() is used to check whether vCPU is preempted
+>>>>>> or not. Here add implementation with vcpu_is_preempted() when option
+>>>>>> CONFIG_PARAVIRT is enabled.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/qspinlock.h |  5 +++++
+>>>>>>     arch/loongarch/kernel/paravirt.c       | 16 ++++++++++++++++
+>>>>>>     2 files changed, 21 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+>>>>>> index e76d3aa1e1eb..9a5b7ba1f4cb 100644
+>>>>>> --- a/arch/loongarch/include/asm/qspinlock.h
+>>>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
+>>>>>> @@ -34,6 +34,11 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+>>>>>>            return true;
+>>>>>>     }
+>>>>>>
+>>>>>> +#ifdef CONFIG_SMP
+>>>>>> +#define vcpu_is_preempted      vcpu_is_preempted
+>>>>>> +bool vcpu_is_preempted(int cpu);
+>>>>> In V1 there is a build error because you reference mp_ops, so in V2
+>>>>> you needn't put it in CONFIG_SMP.
+>>>> The compile failure problem is that vcpu_is_preempted() is redefined in
+>>>> both arch/loongarch/kernel/paravirt.c and include/linux/sched.h
+>>> But other archs don't define vcpu_is_preempted() under CONFIG_SMP, and
+>> so what is advantage to implement this function if CONFIG_SMP is disabled?
+> 1. Keep consistency with other architectures.
+> 2. Keep it simple to reduce #ifdefs (and !SMP is just for build, not
+> very useful in practice).
+It seems that CONFIG_SMP can be removed in header file 
+include/asm/qspinlock.h, since asm/spinlock.h and asm/qspinlock.h is 
+only included when CONFIG_SMP is set, otherwise only linux/spinlock_up.h 
+is included.
+
+> 
+>>
+>>> you can consider to inline the whole vcpu_is_preempted() here.
+>> Defining the function vcpu_is_preempted() as inlined is not so easy for
+>> me, it beyond my ability now :(
+>>
+>> With static key method, the static key need be exported, all modules
+>> need apply the jump label, that is dangerous and I doubt whether it is
+>> deserved.
+> No, you have already done similar things in virt_spin_lock(), it is an
+> inline function and uses virt_spin_lock_key.
+virt_spin_lock is only called qspinlock in function 
+queued_spin_lock_slowpath(). Function vcpu_is_preempted() is defined 
+header file linux/sched.h, kernel module may use it.
+
+
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>>
+>>>> The problem is that <asm/spinlock.h> is not included by sched.h, if
+>>>> CONFIG_SMP is disabled. Here is part of file include/linux/spinlock.h
+>>>> #ifdef CONFIG_SMP
+>>>> # include <asm/spinlock.h>
+>>>> #else
+>>>> # include <linux/spinlock_up.h>
+>>>> #endif
+>>>>
+>>>>> On the other hand, even if you really build a UP guest kernel, when
+>>>>> multiple guests run together, you probably need vcpu_is_preemtped.
+>>>> It is not relative with multiple VMs. When vcpu_is_preempted() is
+>>>> called, it is to detect whether dest CPU is preempted or not, the cpu
+>>>> from smp_processor_id() should not be preempted. So in generic
+>>>> vcpu_is_preempted() works on multiple vCPUs.
+>>> OK, I'm wrong here.
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>> +#endif
+>>>>>> +
+>>>>>>     #endif /* CONFIG_PARAVIRT */
+>>>>>>
+>>>>>>     #include <asm-generic/qspinlock.h>
+>>>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>>>> index b1b51f920b23..d4163679adc4 100644
+>>>>>> --- a/arch/loongarch/kernel/paravirt.c
+>>>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>>>> @@ -246,6 +246,7 @@ static void pv_disable_steal_time(void)
+>>>>>>     }
+>>>>>>
+>>>>>>     #ifdef CONFIG_SMP
+>>>>>> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>>>>     static int pv_time_cpu_online(unsigned int cpu)
+>>>>>>     {
+>>>>>>            unsigned long flags;
+>>>>>> @@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
+>>>>>>
+>>>>>>            return 0;
+>>>>>>     }
+>>>>>> +
+>>>>>> +bool notrace vcpu_is_preempted(int cpu)
+>>>>>> +{
+>>>>>> +       struct kvm_steal_time *src;
+>>>>>> +
+>>>>>> +       if (!static_branch_unlikely(&virt_preempt_key))
+>>>>>> +               return false;
+>>>>>> +
+>>>>>> +       src = &per_cpu(steal_time, cpu);
+>>>>>> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+>>>>>> +}
+>>>>>> +EXPORT_SYMBOL(vcpu_is_preempted);
+>>>>>>     #endif
+>>>>>>
+>>>>>>     static void pv_cpu_reboot(void *unused)
+>>>>>> @@ -308,6 +321,9 @@ int __init pv_time_init(void)
+>>>>>>                    pr_err("Failed to install cpu hotplug callbacks\n");
+>>>>>>                    return r;
+>>>>>>            }
+>>>>>> +
+>>>>>> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
+>>>>>> +               static_branch_enable(&virt_preempt_key);
+>>>>>>     #endif
+>>>>>>
+>>>>>>            static_call_update(pv_steal_clock, paravt_steal_clock);
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>>>
+>>
+>>
+
