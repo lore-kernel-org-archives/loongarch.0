@@ -1,189 +1,226 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379D12F60B6
-	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 11:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD133314B70
+	for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 16:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763984273; cv=none; b=T9uCaaQalI2I/AIp6Ol2Y/Oh0MBMNxN0HRC1WmsLl7Ye8b6+OwLManI0MpfHqMH8qPmECJmWvR59z80RHGk2+ivREIngHdWXRWy3vBsud4xT7k6aWMpFJ9Sz4k5TvLBA75kvBNBW03uDbKBiNo/qmrTtxp1uJt/1KBa2OBGzjzM=
+	t=1764003089; cv=none; b=o8oNy1iqDJAqNa2zw6XwNG9SP/HIaQuyOLOeuC2M6MfGRxdKjCfrdQhkcL4XxG4p2r9+YIqyCUVXaMKEnMYL5PVB59O4Mb+UwDqd5Yj4Syspg2AbYWWjLvYLI2+oQegP9YniXO1zR6HVkHwgYcG07V8DGt2wIO0Q8DE4Zw2zXOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763984273; c=relaxed/simple;
-	bh=xQkRzR3QAgi21AnK3p+RQ/FUSylUpiS9lWVTSRJzCes=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qviDJsNqi/H4s95UGX3IHOPBjHle21g3zyOeIxFc88V8FQmWQCPHMgqXFoG9a94rVLhpVt4Kp5o2u59+ZJI60/xwKlfl8eZEqX5SADWfoHJ/IUhZJXC8M6By9OMK1KOQzbPuP79OW2EIKcQNqLWVWkEAypwnEk9H9UFUlugeo+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=tIcOvoIO; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1764003089; c=relaxed/simple;
+	bh=E37G2IPwLWK4zyo1aU8cmo0JUAfmqoMclnQa721pxjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=itoFoJE+uOTNNzBByKcXnC9xSbnSelU5JHugErOG1K+C0CM8ajQTx3ivS3+XtXXhmkML6yNvHp3rotGdmgnRPAq9T9AEEYdFeZ7q9IcDpuaa88cWrWLFChXVdwmAx0hhmK81qoYLiYpI/tBEBfPW3Sti2Bzywhv6dqoM9q90nAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pcEULTFv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FAkKWU22; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pcEULTFv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FAkKWU22; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="tIcOvoIO"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7881b67da53so40418907b3.1
-        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 03:37:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1763984271; x=1764589071; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=htCKxX8DFS8N2OF9sCBb5Rm54vdwatCJw9jB7U9PXY8=;
-        b=tIcOvoIOv2eqH44XApWvmbzR1nKz14cKGwwCRFNZ4GqcsD4auCJwCTE7alvALxIPTP
-         YkOpf8phS7nK1WCxP18hKheOu/LDNwl43zEP1X0wgqopwn+0FK9ARaPwReXjft1Chez9
-         qJfGhaWxi0VLro+U0nSmMAyJ6H0Uz37bGj7TWOGFA/EMSpsU2mzBix/Hf8KZHm9+bAFN
-         vmCNEn0fr0/wgSBtuyuTI6V25Ir89iyw+RbRqIesKOX2hdE1Vidjda+71lHO9dierqMb
-         PXAyeoPeacGemxwqQaZEPY24FWwhp0IQHaJaA3ovRrvGkvbTOivfW07Mj1LKfrWi1XZo
-         Df/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763984271; x=1764589071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=htCKxX8DFS8N2OF9sCBb5Rm54vdwatCJw9jB7U9PXY8=;
-        b=dEpHcVDY8RVdXLiLQ6lYfU12LCfaYZKIlbyfWOTNWNtGLZK8ddSAyWkcaKZdypMwgX
-         utBPWsf3PkvsJXOYw4sTjjXjEgqiCd74BGJAzRpLivv7V1YXzPJbfiedEselhzs2VIf1
-         5PeleK8XmQb0pUeGGE1jV8TzbgLttEu4VU/R/srH3ELog/SbWwXKODagICX47yIsmgWB
-         SckBNZpNrWQN51FhblzwI8MNT+gbMPlnP3mlB2zEd252Ma1IhKtUoOWevUGd4FLOsg8z
-         2pAcs52XmfDVV9BuujBj5np6Nncodl7yTj/U+ldUDhHiJFEwNycmumzBsZRy40TIb+Pq
-         1wHA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGCY4YiplneMPtrBEVLyTgTA6BEAJNzaUfMM47EKFdiAVuHitLtOQMN5A+XFEEXu2Ql5PZX3eBEaM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxpUf8p/erLFPHAFIGmMKzoNh/u3daEB5G8x4CYGOIu379gNj1k
-	iQb4qtW3i9pjxWIieYgf0Fe8G0/N+ukeLHIB6w0TErM+Wu4wcE3+q1EXxh9Aa50kUFg/TrhpRig
-	jNThjRjVdfeXUQxWH5bXw6ET5ZwEBiSPhwh5THgf4hw==
-X-Gm-Gg: ASbGnctO/ggITfS4q8akgoTTd0Jkye/fHOIlQLxti2FdVsPT5Gl27UHekTB18X55MVj
-	4UdSxKnBaFS6ZId/DXo0EGKXSLzWdR7lgrkaHjU5okXUzi+cdoWeLNSJdB0/Jn59zZxiiDMw1sY
-	MymlUqXYAezFhmZ3eH3dOB8k9ywmQs5imP0iLE2KwpLmY+KIjL0dUI6GzbWbB4WLBw6Rnze3hBX
-	QXUBL/8db48sDGD7fP7pGoa8C7/HI8JMFz5Uv0oXJ4gXWuXFLsONgg2Xj/j2TY1Z0uida61S44K
-	JE0S0JcTjtKrjIUcmeKK+hnDVX0=
-X-Google-Smtp-Source: AGHT+IEayvI8VLT3rYWI38UMhn3smgG67kBBujEA8hKxv/BZNj3RvRmd/zFUXsFuvbITLp835TIZxtFvqQgX3r1jN/M=
-X-Received: by 2002:a05:690c:61c1:b0:786:59d3:49c3 with SMTP id
- 00721157ae682-78a8b556f5emr99275507b3.46.1763984271200; Mon, 24 Nov 2025
- 03:37:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pcEULTFv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FAkKWU22";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pcEULTFv";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FAkKWU22"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9A19D21FE7;
+	Mon, 24 Nov 2025 16:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764003084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=pcEULTFvf9YsJFrVufj1W0iUwwsreYnCfkn2g0j1eZ/l2nbMGiVmNI9ekGYIXluTqRBG1p
+	Qlpv3Glm5Klqq1IaTGamxXu8VbMMJd4yGHEBiEU6MU++rcBO53JYkeSgLovgLHN38Aanso
+	jvtrUDfFyu5SkrPS+IeloYbwofhc5Q0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764003084;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=FAkKWU22NH4zBfsWhA5Z8UEG7Kegt4AjWDxMgB9dfSfSU+5Q5QQAfScMcgKdGzaXpqlmhD
+	lmGcYab+z9V51LBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pcEULTFv;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=FAkKWU22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764003084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=pcEULTFvf9YsJFrVufj1W0iUwwsreYnCfkn2g0j1eZ/l2nbMGiVmNI9ekGYIXluTqRBG1p
+	Qlpv3Glm5Klqq1IaTGamxXu8VbMMJd4yGHEBiEU6MU++rcBO53JYkeSgLovgLHN38Aanso
+	jvtrUDfFyu5SkrPS+IeloYbwofhc5Q0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764003084;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nvlNT7/03lgKc0UqqVACl/eVo2J+fynx71RItOnRGt4=;
+	b=FAkKWU22NH4zBfsWhA5Z8UEG7Kegt4AjWDxMgB9dfSfSU+5Q5QQAfScMcgKdGzaXpqlmhD
+	lmGcYab+z9V51LBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 319EA3EA63;
+	Mon, 24 Nov 2025 16:51:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sH6tCgyNJGm3GgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 24 Nov 2025 16:51:24 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de,
+	richard.lyu@suse.com
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 00/10] arch,sysfb,efi: Support EDID on non-x86 EFI systems
+Date: Mon, 24 Nov 2025 17:40:12 +0100
+Message-ID: <20251124165116.502813-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124-2-v2-0-b38216e25fd9@linux.dev> <20251124-2-v2-1-b38216e25fd9@linux.dev>
-In-Reply-To: <20251124-2-v2-1-b38216e25fd9@linux.dev>
-From: hev <r@hev.cc>
-Date: Mon, 24 Nov 2025 19:37:40 +0800
-X-Gm-Features: AWmQ_bksMTYosUdP8crNLrhiIcOSqH1S1QSQ5RBEPndU7-BLmjUcBq8uz-E-zq0
-Message-ID: <CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 9A19D21FE7
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -3.01
 
-On Mon, Nov 24, 2025 at 5:28=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> Implement 128-bit atomic compare-and-exchange using LoongArch's
-> LL.D/SC.Q instructions.
->
-> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
-> caused by kmalloc_nolock_noprof returning NULL due to missing
-> 128-bit atomics. The NULL returns led to -ENOMEM errors during
-> scheduler initialization, causing test cases to fail.
->
-> Verified by testing with the scx_qmap scheduler (located in
-> tools/sched_ext/). Building with `make` and running
-> ./tools/sched_ext/build/bin/scx_qmap.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..757f6e82b9880d04f4883dc9a=
-802312111aa4588 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -111,6 +111,44 @@ __arch_xchg(volatile void *ptr, unsigned long x, int=
- size)
->         __ret;                                                          \
->  })
->
-> +union __u128_halves {
-> +       u128 full;
-> +       struct {
-> +               u64 low;
-> +               u64 high;
-> +       };
-> +};
-> +
-> +#define __cmpxchg128_asm(ptr, old, new)                                 =
-       \
-> +({                                                                     \
-> +       union __u128_halves __old, __new, __ret;                        \
-> +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);                   =
- \
-> +                                                                       \
-> +       __old.full =3D (old);                                            =
- \
-> +       __new.full =3D (new);                                            =
- \
-> +                                                                       \
-> +       __asm__ __volatile__(                                           \
-> +       "1:   ll.d    %0, %3            # 128-bit cmpxchg low   \n"     \
-> +       "     dbar    0                 # memory barrier        \n"     \
-> +       "     ld.d    %1, %4            # 128-bit cmpxchg high  \n"     \
-> +       "     bne     %0, %z5, 2f                               \n"     \
-> +       "     bne     %1, %z6, 2f                               \n"     \
-> +       "     move    $t0, %z7                                  \n"     \
-> +       "     move    $t1, %z8                                  \n"     \
-> +       "     sc.q    $t0, $t1, %2                              \n"     \
-> +       "     beqz    $t0, 1b                                   \n"     \
-> +       "2:                                                     \n"     \
-> +       __WEAK_LLSC_MB                                                  \
-> +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high),                     =
-   \
-> +         "=3DZB" (__ptr[0])                                             =
- \
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users. Then implement EDID support
+in EFI's libstub.
 
-"ZB" isn't a legal constraint for the address operand in sc.q. When
-assembled, it turns into something like sc.q $r,$r,$r,0, which clearly
-doesn't match the instruction format, yet gas happily accepts it wheil
-clang rightfully rejects it. Classic GNU-as leniency biting again. :)
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
-> +       : "ZC" (__ptr[0]), "m" (__ptr[1]),                              \
-> +         "Jr" (__old.low), "Jr" (__old.high),                          \
-> +         "Jr" (__new.low), "Jr" (__new.high)                           \
-> +       : "t0", "t1", "memory");                                        \
-> +                                                                       \
-> +       __ret.full;                                                     \
-> +})
-> +
->  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned =
-int old,
->                                            unsigned int new, unsigned int=
- size)
->  {
-> @@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, uns=
-igned long new, unsigned int
->         __res;                                                          \
->  })
->
-> +/* cmpxchg128 */
-> +#define system_has_cmpxchg128()                1
-> +
-> +#define arch_cmpxchg128(ptr, o, n)                                     \
-> +({                                                                     \
-> +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
- \
-> +       __cmpxchg128_asm(ptr, o, n);                    \
-> +})
-> +
->  #ifdef CONFIG_64BIT
->  #define arch_cmpxchg64_local(ptr, o, n)                                 =
-       \
->    ({                                                                   \
->
-> --
-> 2.48.1
->
->
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
+
+Add a new UUID to transfer sysfb_primary_display via EFI's config table.
+Then implement support in the kernel and EFI's libstub.
+
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
+
+Patch 3 adds struct sysfb_display_info.
+
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
+
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
+
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
+
+Patches 7 and 8 add kernel-side support for EDID transfers on non-x86
+EFI systems.
+
+Patches 9 implements EDID support in libstub. Patch 10 cleans up the
+config-table allocation to be easier to understand.
+
+This is v2 of the series. It combines v1 of the series at [1] plus
+changes from [2] and [3].
+
+[1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (10):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+  efi: Refactor init_primary_display() helpers
+  efi: Support EDID information
+  efi: libstub: Transfer EDID to kernel
+  efi: libstub: Simplify interfaces for primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 47 +++++++----
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 47 +++++++----
+ drivers/firmware/efi/efi.c                    |  2 +
+ drivers/firmware/efi/libstub/Makefile         |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
+ drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
+ drivers/firmware/efi/libstub/efistub.h        |  7 +-
+ .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
+ drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
+ drivers/firmware/efi/libstub/zboot.c          |  6 +-
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  8 +-
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/efi.h                           |  8 +-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 34 files changed, 337 insertions(+), 245 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/primary_display.c
+ delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
+
+
+base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
+-- 
+2.51.1
+
