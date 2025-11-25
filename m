@@ -1,196 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9506D26FA77
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 14:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B003329C5B
+	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 17:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764080036; cv=none; b=OdJPk5LEstSkiNGEE8kFGnf51h2o37din1Ko1adut9+GW2YOcT7wP/ka9hUP+VpEwQGZgQ6nCLEZOg0FjvhPvJqGPnhGJnnsOSHdyb+bJ//EFU34ToP87kpgCMZ2neBJhX0EJtFQWymo2LDE+TyAF7+lbnKHW/kT+FqqRj3dXFQ=
+	t=1764090500; cv=none; b=ePVITcneRhi9+eI0PgIA4EB1T7Vld+sw55KbYZ0Q2PkvZQAt7IZzsRpeVMimABb8wNWqs9xmGSaXURBOj0SitxQ6FkOm3g6RuGnKUPZpB3DAL0JmaAEbz6G3UFapdZCejf4DEyyNXQgaG97M21ZzMupE7C2uu62u8/FiwpdDgVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764080036; c=relaxed/simple;
-	bh=vmAxAdtBdBPAYy3/MG+wU8uP+oKefkt/UnAeEvBcakg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C9x0hsOrGgNC91Xk/TGyFgu8ICrsK48ARDVTyjhJGahR0xXFlH2xV4EzcuEiUQSujWeRBcnQXXOGfJY5SRxk7Sps8+5lSXNbjOJRpLF2yca5+8S5efigD8ZPGFrHDCQn3tFKwjhDrTzjK8Qe1rkmIILPyD/oMEhrP5Va1G8QXTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WCFs1Enb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1764090500; c=relaxed/simple;
+	bh=Ws/YNKakph/oNkC8T2Z0oK5lQ8Qe0+L4yEIQYy1pOV8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=R3TjgTs1eihXV4LbaYFXTwwM/kylU4GpsxSiQ+g2I1KKq+IWmbNJcH4ucMBC6mk8RabWxdxHlCec61LssMFn+cr9RvfJZC3UTlJqhMO0JZ9+FVnSEz/lclex8GE1iqDze4x+KS+hI5eO+d9HW/vaKbkRUpS+EaZSSLjM+EeVNk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sXDkyVmM; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCFs1Enb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764080033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wOE4pVZbQk3NRzTWk4bK9iK9S5Rl6Cg6Yr2VD/4CLLg=;
-	b=WCFs1EnbW0dICr2gg1LFHJox4vf8fvNZxl+Nzzhd3p2g21y8nyOWvLPzKRwF80u1AXUPxF
-	PoYDGEpi/UyqplM0Qj5XipfP/S2nZ96ws7EuKlzJKxpcA+r2FH/5H40eGBC4R0rvVhoJpI
-	yn2WcRZt+0AnKdKe+FU3Hu0x1ous42M=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-WUyIvrcZNhG4OHAu-Jr64w-1; Tue, 25 Nov 2025 09:13:52 -0500
-X-MC-Unique: WUyIvrcZNhG4OHAu-Jr64w-1
-X-Mimecast-MFC-AGG-ID: WUyIvrcZNhG4OHAu-Jr64w_1764080031
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-47777158a85so73346485e9.3
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 06:13:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sXDkyVmM"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34377900dbcso12698286a91.2
+        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 09:08:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764090498; x=1764695298; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
+        b=sXDkyVmMU8r0kFFns6m95FHmKeidG/MDhOQfEKZ9CnEBka1vPyAO1G3GGSd1XEgFQ3
+         U0XxiU5TMQn4B4c06HCzEbbQnyeDU/bFwOpRANVPjUv2E1npXV3mgvEfNZ+ss9zVAvmY
+         nT8E8cPP3pI2am+ztS9OiMNYYc4TxQHCa1sWyW4AEiUN1SaEkw+5R6Joa4SFUllVbai+
+         i5FyR9b0PLRUCKcLzsM18Zmbh9RhjXyru7wnj+HmvatXCbN04C3X7Gheba9l8aIN1bQe
+         8g7jfyEmDff99mFbybsh01sYRv1M18cBYLDjnnzWQspcudSZ4rhcxyu5jmCmDZYe6tEq
+         +PIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764080031; x=1764684831;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wOE4pVZbQk3NRzTWk4bK9iK9S5Rl6Cg6Yr2VD/4CLLg=;
-        b=G8/rjitUkiDatM3eDA7E6ubaTXYzqDdR4szdsMX7wI/MgsuZaeGDJz9hrvxm3X/chd
-         EGGvBpMau24ZaD8g1l9cwu/M7+Pl2wahbbqUwRgKbQC96hc4jzU6rnHdxdLqdflYFh3o
-         amp4QaVZSx5+6Bv5i6NtjzbEXQPN2PBIxQaZkfmSiQUmNVQWTocsDHShsAU5r0bU+t1h
-         aS6bIMN5aafOwdgDBaZrQKofHW2TBVLSPsPnfSI+xXq1x8BFIjAGUTIlzImT/YER5qmJ
-         RioPPxqbkXxHHCR4ApQDx7No2Bh/gbKA/2RmkXvnjqsdJ76hiyYCF/2AW5nCUzdf3ePj
-         SR0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXIqJsgRMRC91g51yIKt0ytsKJNNQ5fXJvSq6FiuE6zoyqXxiLTVzPoDrlfiVcJ+xxbVIdH8wuannU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxSWRzA4ocU2QkVnyL80c3jYBQRkNQv+u+sKcDSqFKlsXK7qfY3
-	OjK/bBfm/CE5AY1H/b80n/5kATv4rnZSIimoFUaYzRQ2WJV/aTIoklc/+RePcDtDz+qJ20QYQzP
-	z/NSFzXj0bDXAtzuVZMcoJ4qcDJQX8bsnsMXeZxwdc1KS1lXhih72+VznaTZc+g==
-X-Gm-Gg: ASbGncuIEb/Ku29x3/Ta4bFsLpaRcOFMooZwla1eOp/dLT+rrVJMurYWumct6jev5kK
-	c8eGNgOMe2DeHBp9Jh254nVuECe60fDmR2KDZamzqJjSETT+o6yip0vsi5UsHXCWejDROS12rO0
-	SH9+3OImhmDs3s8P2JhHmKU5ndvOneGj9/Y3bmd1eT+HWM1RDWwgSe5BI3kBZ/GdAlqK/25x3ua
-	onc7hR6ACZuIW+wmwFVX/ZNEycHctas5YU5NuG4PaBgpa80iPzhlX6wQEsAn42k721gQhOAZypd
-	95+w2Wv6T+2llUYoFwM3EdU1vq8J/fVggBaq/AJ0P4/5n7sw/zVL3Q7k9DeT1IiKYyo9UdAzrL1
-	SeBz5mzG2QGC740zQqLizyWojn+6m7qx84EkqIQcIzdXBNDzpuol7BcmUVkwFn4NMAaWJF4c=
-X-Received: by 2002:a05:600c:3111:b0:477:b734:8c53 with SMTP id 5b1f17b1804b1-477c10deffamr169342145e9.12.1764080030965;
-        Tue, 25 Nov 2025 06:13:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFtA8JzDWqwpv+zLW5Ygo6VxUlFOBnDYO5W2Qk6szEUT54U+0BafPLKh5CrRqs4rY7IKqQsQw==
-X-Received: by 2002:a05:600c:3111:b0:477:b734:8c53 with SMTP id 5b1f17b1804b1-477c10deffamr169341405e9.12.1764080030289;
-        Tue, 25 Nov 2025 06:13:50 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-477bf1e86b3sm306305045e9.6.2025.11.25.06.13.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Nov 2025 06:13:49 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
- <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
- Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
- Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>,
- "David S. Miller" <davem@davemloft.net>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, Josh
- Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mel Gorman <mgorman@suse.de>, Andrew
- Morton <akpm@linux-foundation.org>, Masahiro Yamada
- <masahiroy@kernel.org>, Han Shen <shenhan@google.com>, Rik van Riel
- <riel@surriel.com>, Jann Horn <jannh@google.com>, Dan Carpenter
- <dan.carpenter@linaro.org>, Oleg Nesterov <oleg@redhat.com>, Juri Lelli
- <juri.lelli@redhat.com>, Clark Williams <williams@redhat.com>, Yair
- Podemsky <ypodemsk@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>,
- Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [RFC PATCH v7 30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush
- IPIs under CONFIG_COALESCE_TLBI=y
-In-Reply-To: <2837ea3e-c0b8-46b0-b8da-bf06906d124d@intel.com>
-References: <20251114150133.1056710-1-vschneid@redhat.com>
- <20251114151428.1064524-10-vschneid@redhat.com>
- <bad9eaaa-561a-498a-90d1-fe3a3ab8ba37@intel.com>
- <xhsmh5xb3thh6.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <2837ea3e-c0b8-46b0-b8da-bf06906d124d@intel.com>
-Date: Tue, 25 Nov 2025 15:13:47 +0100
-Message-ID: <xhsmh3462td2c.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1764090498; x=1764695298;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
+        b=Hqbv/6ck/gG5IVvIPcTmLdyd9TlIHT/gfJOyEkSLo5xD+L2F0U+ezEtjkPFrSfSo3R
+         bxdh+Lp0Gd/Kx/UwvDh4vJiHl3COfkOLLvUvyBzy4zwv71iHCC+Bcg8gdGq+7Qq2khkm
+         RNq+OaPA5iOfRFNAEXkwZgmebUZfQD9cOseoreAP+qliUZG7Jqkd8/tp2k4kW495hB3F
+         FTRS1lyKZC/IOdZH28/HDR6G5tKp6HTljPsgGsC/qLTSPvsSo+u2SuGVtkT2FGjCzXbz
+         X7ljfhZHNcEvkN2HfZIHHdCFsrXQHPlscdQkB3ejDXpehYs5IIIM03oCIRvexzV1rNSZ
+         hLgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhh0+2w2ZcG3dIrwXRWjDdfCMcxHgjYbQp2dPn1tf/s5tEKwxL2NUi8QRS1nTRsvZ6AOwI9p5Ayjs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxX/N1ztdhZi1fkuZBzv/e0lmG1hzAy3UUUxDvXzsIffx7Qr+xF
+	MetCsyEwIVmsG52BCil0q5sLLY1m4T15wn7L4eItQ89AYdKdJEgdho/6yitQfiMO3UwaUKwA+Du
+	IClM7Fg==
+X-Google-Smtp-Source: AGHT+IFzDAUOZTDNFOssfEjC4490DRPTOVZZ7CJwR5gD19Yg3yMCKcUxEwLwt1d5WA+HAajf5nh9jS9CJiQ=
+X-Received: from pjbpw1.prod.google.com ([2002:a17:90b:2781:b0:33b:c211:1fa9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384f:b0:341:8c8e:38b5
+ with SMTP id 98e67ed59e1d1-34733f3e483mr14061440a91.25.1764090498218; Tue, 25
+ Nov 2025 09:08:18 -0800 (PST)
+Date: Tue, 25 Nov 2025 09:08:16 -0800
+In-Reply-To: <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gSwg52Nvffi-OahzjDJleOQmTRWgE4EAe7P5rmTYuac_1764080031
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Mime-Version: 1.0
+References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-29-seanjc@google.com>
+ <aSUK8FuWT4lpMP3F@google.com> <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
+Message-ID: <aSXigAQznhuxZmy7@google.com>
+Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
+ entry/exit fields for mediated PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 21/11/25 09:50, Dave Hansen wrote:
-> On 11/21/25 09:37, Valentin Schneider wrote:
->> On 19/11/25 10:31, Dave Hansen wrote:
->>> On 11/14/25 07:14, Valentin Schneider wrote:
->>>> +static bool flush_tlb_kernel_cond(int cpu, void *info)
->>>> +{
->>>> +	return housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) ||
->>>> +	       per_cpu(kernel_cr3_loaded, cpu);
->>>> +}
->>>
->>> Is it OK that 'kernel_cr3_loaded' can be be stale? Since it's not part
->>> of the instruction that actually sets CR3, there's a window between when
->>> 'kernel_cr3_loaded' is set (or cleared) and CR3 is actually written.
->>>
->>> Is that OK?
->>>
->>> It seems like it could lead to both unnecessary IPIs being sent and for
->>> IPIs to be missed.
->>>
->>
->> So the pattern is
->>
->>   SWITCH_TO_KERNEL_CR3
->>   FLUSH
->>   KERNEL_CR3_LOADED := 1
->>
->>   KERNEL_CR3_LOADED := 0
->>   SWITCH_TO_USER_CR3
->>
->>
->> The 0 -> 1 transition has a window between the unconditional flush and the
->> write to 1 where a remote flush IPI may be omitted. Given that the write is
->> immediately following the unconditional flush, that would really be just
->> two flushes racing with each other,
->
-> Let me fix that for you. When you wrote "a remote flush IPI may be
-> omitted" you meant to write: "there's a bug." ;)
->
+On Tue, Nov 25, 2025, Dapeng Mi wrote:
+> On 11/25/2025 9:48 AM, Sean Christopherson wrote:
+> >> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
+> >> +		return false;
+> >> +
+> >> +	/*
+> >> +	 * All CPUs that support a mediated PMU are expected to support loading
+> >> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+> >> +	 */
+> >> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+> >> +			 !cpu_has_save_perf_global_ctrl()))
+> >> +		return false;
+> > And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
+> > bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
+> > WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
+> > corrected me.
+> >
+> > v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
+> > based on my miguided feedback.
+> >
+> >    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+> >      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+> >      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+> >
+> > Doubly frustrating is that this was discussed in the original RFC, where Jim
+> > pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
+> > enabling the mediated PMU on Skylake+, and I completely forgot that conversation
+> > by the time v3 of the series rolled around :-(
+> 
+> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
+> remember the original requirements includes to support Skylake and Icelake,
+> but I ever thought there were some offline sync and the requirement changed...
 
-Something like that :-)
+Two things:
 
-> In the end, KERNEL_CR3_LOADED==0 means, "you don't need to send this CPU
-> flushing IPIs because it will flush the TLB itself before touching
-> memory that needs a flush".
->
->    SWITCH_TO_KERNEL_CR3
->    FLUSH
->    // On kernel CR3, *AND* not getting IPIs
->    KERNEL_CR3_LOADED := 1
->
->> but I could punt the kernel_cr3_loaded
->> write above the unconditional flush.
->
-> Yes, that would eliminate the window, as long as the memory ordering is
-> right. You not only need to have the KERNEL_CR3_LOADED:=1 CPU set that
-> variable, you need to ensure that it has seen the page table update.
->
+ 1) Upstream's "requirements" are not the same as Google's requirements (or those
+    of any company/individual).  Upstream most definitely is influenced by the
+    needs and desires of end users, but ultimately the decision to do something
+    (or not) is one that needs to be made by the upstream community.
 
-I assumed the page table update would be a self-synchronizing operation,
-but that betrays how little I know about x86; /me goes back to reading
+ 2) Decisions made off-list need to be summarized and communicated on-list,
+    especially in cases like this where it's a relatively minor detail in a
+    large series/feature, and thus easy to overlook.
 
->> The 1 -> 0 transition is less problematic, worst case a remote flush races
->> with the CPU returning to userspace and it'll get interrupted back to
->> kernelspace.
->
-> It's also not just "returning to userspace". It could well be *in*
-> userspace by the point the IPI shows up. It's not the end of the world,
-> and the window isn't infinitely long. But there certainly is still a
-> possibility of getting spurious interrupts for the precious NOHZ_FULL
-> task while it's in userspace.
+I'll follow-up internally to make sure these points are well-understood by Google
+folks as well (at least, those working on KVM).
 
-IME it's okay if the application is just starting as it needs to do some
-initialization anyway (mlockall & friends), i.e. it's not executing actual
-useful payload from the get go.
+> My bad,
 
-If it's resuming from an interference, well we'd be making things worse.
+Eh, this was a group "effort".  I'm as much to blame as anyone else.
 
-I'm thinking the worst case is if this becomes a repeating pattern, but
-then that means even without those deferral hacks the isolated CPUs would
-be bombarded by IPIs in the first place.
+> I should double confirm this at then.
 
+No need, as above, Google's requirements (assuming the requirements you're referring
+to are coming from Google people) are effectively just one data point.  At this
+point, I want to drive the decision to support Sylake+ (or not) purely through
+discussion of upstream patches.
+
+> > As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
+> > later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
+> > requirement.  But losing supporting Skylake+ is a bit much.
+> >
+> > There are a few warts with nVMX's use of the auto-store list that need to be
+> > cleaned up, but on the plus side it's also a good excuse to clean up
+> > {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
+> > bit of duplicate code.  And while I still dislike using the auto-store list, the
+> > code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
+> > controls mandatory without losing support for any CPUs (they predate PMU v4).
+> 
+> Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
+> suppose we can have an independent patch-set to clean up and support
+> global_ctrl with auto-store list for Skylake and Icelake.
+
+I have the code written (I wanted to see how much complexity it would add before
+re-opening this discussion).  My plan is to put the Skylake+ support at the end
+of the series, not a separate series, so that it can be reviewed in one shot.
+E.g. if we can make a change in the "main" series that would simplify Skylake+
+support, then I'd prefer to find and implement any such change right away.
