@@ -1,73 +1,150 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 216581E5B7B
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 01:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B7A1A275
+	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 01:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764033461; cv=none; b=qoc7SEuzvCt+RWhwJBN7yArR6+sWWk7Pg2fMF03UuF3QCsLAA/TFM9R+UNupGTd/Kom11PsiVvStXutMfCvXw9zoyT8fjnV+TA3VrbkuBX7w3wwWfSoi2aCcgCNjwUK7nKzj1XzuFdMvgmaZcsDcn+0JRbicPceGGS+46fgxwkY=
+	t=1764035318; cv=none; b=R/0wHJ3Z4flj83KBUDk5rU1S8+3BdU2SOq0eJN3uVXM+udmg5T+xnfwCev0/yIE2CdswTaLb/jZYHNQHy8LZGdqL4rL+dt7NslxIQwNcix68uAT3TiTZLIQBNSfSnHg8PMT61ZP4PBXHqDr7BE4yQSXyaEbRHTMPrFmJB+S4n8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764033461; c=relaxed/simple;
-	bh=003x4wNHrAmM6Rg1GspBzV0g2AnGWicyvQZmi9zqWiI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=mPrgnB3iDDYucdBPwCI3ZKyAh82IkGJZP6ZaRgo+oV5IL75BJLBSvwVKZdqoqhKeykqC0jc2sLKDhL/8qlaDBNoPkvyeUafG6FK5XTPCtoHPqzuFcBPNhb+07WIKVPlXp49yfKO40F+UlEsNFJQluP1qYi1ii6Ze2xq3bNSb9DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.239])
-	by gateway (Coremail) with SMTP id _____8Dxvr+uAyVpV7knAA--.18042S3;
-	Tue, 25 Nov 2025 09:17:35 +0800 (CST)
-Received: from [10.20.42.239] (unknown [10.20.42.239])
-	by front1 (Coremail) with SMTP id qMiowJAxT+amAyVpkyA+AQ--.32892S3;
-	Tue, 25 Nov 2025 09:17:33 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add AVEC support irqchip in kernel
-To: Bibo Mao <maobibo@loongson.cn>, chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
- linux-kernel@vger.kernel.org
-References: <20251119083946.1864543-1-gaosong@loongson.cn>
- <6cabc0c2-fb96-236f-5cc0-7bdda1c27826@loongson.cn>
-From: gaosong <gaosong@loongson.cn>
-Message-ID: <e9374c59-f54a-0be1-8743-788ae42cc5da@loongson.cn>
-Date: Tue, 25 Nov 2025 09:17:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1764035318; c=relaxed/simple;
+	bh=lFQY39DQ0sZ3/1CBs/5a9Gc/Z7HqjZGV9ub0E6byxfg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=G6S9W0BK+EkDbFYHvC3n+z8Ohf+F25irxMabZBkB4BAPkHsqPMblRhzKGthpgQngiqgXmdVWSw9k5U7BlCZqJzUGe0oOG7e3V8g465k2Adp5uqJ03Cfy+ERRPefI1kgPtGb0lZOV2tKp00ROxZaAkOiIymU2oFSe1oYTmQWSHKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MOD1OBp8; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOD1OBp8"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3436e9e3569so10392865a91.2
+        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 17:48:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1764035314; x=1764640114; darn=lists.linux.dev;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pxECKAH71uYUFlk1OLSRLVGsdtXKfBuiVH3qX5Bq1JE=;
+        b=MOD1OBp8YFRiTwPmct0t7+ofcbTpG3oHmbCtxPg8z0Cmuwuz66JLr31RfHvKUPwrsb
+         XH7GxfTsD21RCefsqFrPr0bttQI4iDGxNju67yuRhTOjATtG+9GxzX9Vfi0IZrvH5iYe
+         neuJ9HhMlanjvG8mdBX09Y0f7tpOdMBVfKFQ1xcIOoeWmY0dzcMz01RlX7op1GsvTSXy
+         98UXSFK2hhJHhNsrRUvC7/CicBYNflYv7sW/CjqVE+U174CZZaf6nrWI7tLgRxHjW/hA
+         +7J90dm5l9zOLRLVwoGA8AGW+mPTWH3Fni0Z3ZwdpzQ2ykpoB0nyFtAnYzrs7QHQj9OY
+         F5xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764035314; x=1764640114;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pxECKAH71uYUFlk1OLSRLVGsdtXKfBuiVH3qX5Bq1JE=;
+        b=VnOxkouq5BqM6x6fU8rYn9nvZwB/D8+RH6uSuQeomx8E0hGBA9L3eIpO4vGasDKtTS
+         oI5b1l9lZ+BOaXbYkbqygzW0uAsoL57p4KQUeiYSMbuh14x88hXOhcUKlQuj03ereQM6
+         t1vuRrW+YhBbdb8wv57GwXQD4aX6+V2NLn0veSTgNpCXGOG6P7oR0xYlTEcF01sJNSI7
+         KpLowAb4MW2+LtNGSymxBn/anbcZq5AepQNLMlokyXD5GcpQsIBCsPZAkgBkr8U3MIlx
+         T+uwHJMdzY9u5HOTWvcNJHR+rnC0hO0t4EaIHbuJlHYjxQdcNtKfZcWqHzZ8eYZxPldz
+         Vxxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz4nxX+EYKdCLeJ6QjIu3z2lZuTh1uRPYJ0Xi3SFya9LEtKFgp9MlqvEMIX4nRYDkToQJM/sABLLw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxgHrz/juQyIIelHdvAiqupAnMqUFItj5JOMmvj/OCl4Blg0IMs
+	wTobuyGdEVdSqIi22Yq9ca7wL+XK+fg/cBE4jyxxcb8dxa1zjiBetGKUOviwRxfmy5vn/lURw5G
+	cVZTBjw==
+X-Google-Smtp-Source: AGHT+IGw7n/WkVQTGzwbQxQ9VV1HAFWO+WUionAVci6QFcq9BhvaMpdHuGTmwsKZi9fkk+aykjevdAFNlrA=
+X-Received: from pjvb14.prod.google.com ([2002:a17:90a:d88e:b0:341:8ac7:27a9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:164a:b0:340:c261:f9db
+ with SMTP id 98e67ed59e1d1-34733e60944mr13320658a91.10.1764035314194; Mon, 24
+ Nov 2025 17:48:34 -0800 (PST)
+Date: Mon, 24 Nov 2025 17:48:32 -0800
+In-Reply-To: <20250806195706.1650976-29-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <6cabc0c2-fb96-236f-5cc0-7bdda1c27826@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJAxT+amAyVpkyA+AQ--.32892S3
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF54CYxVAaw2AFwI0_Jrv_JF1l4I8I3I0E4IkC
-	6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
+Mime-Version: 1.0
+References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-29-seanjc@google.com>
+Message-ID: <aSUK8FuWT4lpMP3F@google.com>
+Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
+ entry/exit fields for mediated PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-在 2025/11/19 下午6:11, Bibo Mao 写道:
-> this patch is big and hard to review :)
-> suggest to split to smaller patch-set, such as avec device create, 
-> intterrupt injection etc.
->
-OK,  I will do . thanks for you suggestions.
+On Wed, Aug 06, 2025, Sean Christopherson wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> 
+> When running a guest with a mediated PMU, context switch PERF_GLOBAL_CTRL
+> via the dedicated VMCS fields for both host and guest.  For the host,
+> always zero GLOBAL_CTRL on exit as the guest's state will still be loaded
+> in hardware (KVM will context switch the bulk of PMU state outside of the
+> inner run loop).  For the guest, use the dedicated fields to atomically
+> load and save PERF_GLOBAL_CTRL on all entry/exits.
+> 
+> Note, VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL was introduced by Sapphire
+> Rapids, and is expected to be supported on all CPUs with PMU v4+.  WARN if
+> that expectation is not met.  Alternatively, KVM could manually save
+> PERF_GLOBAL_CTRL via the MSR save list, but the associated complexity and
+> runtime overhead is unjustified given that the feature should always be
+> available on relevant CPUs.
 
-Thanks.
-Song Gao
-> On 2025/11/19 下午4:39, Song Gao wrote:
->> Add a dintc device to set dintc msg base and msg size.
->> implement deliver the msi to vcpu and inject irq to dest vcpu.
->> add some macros for AVEC. 
+This is wrong, PMU v4 has been supported since Skylake.
 
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 7ab35ef4a3b1..98f7b45ea391 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -787,7 +787,23 @@ static bool intel_pmu_is_mediated_pmu_supported(struct x86_pmu_capability *host_
+>  	 * Require v4+ for MSR_CORE_PERF_GLOBAL_STATUS_SET, and full-width
+>  	 * writes so that KVM can precisely load guest counter values.
+>  	 */
+> -	return host_pmu->version >= 4 && host_perf_cap & PERF_CAP_FW_WRITES;
+> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
+> +		return false;
+> +
+> +	/*
+> +	 * All CPUs that support a mediated PMU are expected to support loading
+> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+> +	 */
+> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+> +			 !cpu_has_save_perf_global_ctrl()))
+> +		return false;
+
+And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
+bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
+WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
+corrected me.
+
+v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
+based on my miguided feedback.
+
+   * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+     save/retore list support for GLOBAL_CTRL, thus the support of mediated
+     vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+
+Doubly frustrating is that this was discussed in the original RFC, where Jim
+pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
+enabling the mediated PMU on Skylake+, and I completely forgot that conversation
+by the time v3 of the series rolled around :-(
+
+As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
+later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
+requirement.  But losing supporting Skylake+ is a bit much.
+
+There are a few warts with nVMX's use of the auto-store list that need to be
+cleaned up, but on the plus side it's also a good excuse to clean up
+{add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
+bit of duplicate code.  And while I still dislike using the auto-store list, the
+code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
+controls mandatory without losing support for any CPUs (they predate PMU v4).
+
+[1] https://lore.kernel.org/all/ZzyWKTMdNi5YjvEM@google.com
+[2] https://lore.kernel.org/all/20250324173121.1275209-1-mizhang@google.com
+[3] https://lore.kernel.org/all/CALMp9eQ+-wcj8QMmFR07zvxFF22-bWwQgV-PZvD04ruQ=0NBBA@mail.gmail.com
