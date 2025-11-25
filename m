@@ -1,160 +1,198 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B003329C5B
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 17:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558AD15ECD7
+	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 17:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764090500; cv=none; b=ePVITcneRhi9+eI0PgIA4EB1T7Vld+sw55KbYZ0Q2PkvZQAt7IZzsRpeVMimABb8wNWqs9xmGSaXURBOj0SitxQ6FkOm3g6RuGnKUPZpB3DAL0JmaAEbz6G3UFapdZCejf4DEyyNXQgaG97M21ZzMupE7C2uu62u8/FiwpdDgVQ=
+	t=1764093315; cv=none; b=BHxlhUBITUNnX3whRa6K9my43fC0NtDjKmomjR7sY+HFulAJJ6lst9cCqdTP5rapbwQFMFS6ZTwCJ5eQ3MyrRYHfHLtWFioiPwy5l4DzTbzYYyaNayxDWrwRpulxG211dXxvf0cUDuvQlDcou57nVa7CACc56L2xFQV+EaspxY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764090500; c=relaxed/simple;
-	bh=Ws/YNKakph/oNkC8T2Z0oK5lQ8Qe0+L4yEIQYy1pOV8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R3TjgTs1eihXV4LbaYFXTwwM/kylU4GpsxSiQ+g2I1KKq+IWmbNJcH4ucMBC6mk8RabWxdxHlCec61LssMFn+cr9RvfJZC3UTlJqhMO0JZ9+FVnSEz/lclex8GE1iqDze4x+KS+hI5eO+d9HW/vaKbkRUpS+EaZSSLjM+EeVNk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sXDkyVmM; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1764093315; c=relaxed/simple;
+	bh=uElAdHpYNr/hV3tK4nsQY3aQszbpy1DIpGa1RTplkDc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ulWxtTH/g4nw/+DdFYW4cGkm+Xhqg09r3LqL6bPFj9Xe+oV/5xexGHhdnV6bUftUpMly8bbem8UHCGRUqW1oMMUC8hm6LpEiL8h0Zllf1LVsAllXWbX6hEj5MKSpF8UX5+AFf5p498g+ej/bAMIMIJKOmh1/4PDLI4VJb2sWwWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PeguaAvB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ehk1v9qH; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sXDkyVmM"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34377900dbcso12698286a91.2
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 09:08:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764090498; x=1764695298; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
-        b=sXDkyVmMU8r0kFFns6m95FHmKeidG/MDhOQfEKZ9CnEBka1vPyAO1G3GGSd1XEgFQ3
-         U0XxiU5TMQn4B4c06HCzEbbQnyeDU/bFwOpRANVPjUv2E1npXV3mgvEfNZ+ss9zVAvmY
-         nT8E8cPP3pI2am+ztS9OiMNYYc4TxQHCa1sWyW4AEiUN1SaEkw+5R6Joa4SFUllVbai+
-         i5FyR9b0PLRUCKcLzsM18Zmbh9RhjXyru7wnj+HmvatXCbN04C3X7Gheba9l8aIN1bQe
-         8g7jfyEmDff99mFbybsh01sYRv1M18cBYLDjnnzWQspcudSZ4rhcxyu5jmCmDZYe6tEq
-         +PIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764090498; x=1764695298;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4ndUQJXblyMVIEo31GQ2aPBJsTj4kLS2trQiSNmxdk=;
-        b=Hqbv/6ck/gG5IVvIPcTmLdyd9TlIHT/gfJOyEkSLo5xD+L2F0U+ezEtjkPFrSfSo3R
-         bxdh+Lp0Gd/Kx/UwvDh4vJiHl3COfkOLLvUvyBzy4zwv71iHCC+Bcg8gdGq+7Qq2khkm
-         RNq+OaPA5iOfRFNAEXkwZgmebUZfQD9cOseoreAP+qliUZG7Jqkd8/tp2k4kW495hB3F
-         FTRS1lyKZC/IOdZH28/HDR6G5tKp6HTljPsgGsC/qLTSPvsSo+u2SuGVtkT2FGjCzXbz
-         X7ljfhZHNcEvkN2HfZIHHdCFsrXQHPlscdQkB3ejDXpehYs5IIIM03oCIRvexzV1rNSZ
-         hLgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhh0+2w2ZcG3dIrwXRWjDdfCMcxHgjYbQp2dPn1tf/s5tEKwxL2NUi8QRS1nTRsvZ6AOwI9p5Ayjs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxX/N1ztdhZi1fkuZBzv/e0lmG1hzAy3UUUxDvXzsIffx7Qr+xF
-	MetCsyEwIVmsG52BCil0q5sLLY1m4T15wn7L4eItQ89AYdKdJEgdho/6yitQfiMO3UwaUKwA+Du
-	IClM7Fg==
-X-Google-Smtp-Source: AGHT+IFzDAUOZTDNFOssfEjC4490DRPTOVZZ7CJwR5gD19Yg3yMCKcUxEwLwt1d5WA+HAajf5nh9jS9CJiQ=
-X-Received: from pjbpw1.prod.google.com ([2002:a17:90b:2781:b0:33b:c211:1fa9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384f:b0:341:8c8e:38b5
- with SMTP id 98e67ed59e1d1-34733f3e483mr14061440a91.25.1764090498218; Tue, 25
- Nov 2025 09:08:18 -0800 (PST)
-Date: Tue, 25 Nov 2025 09:08:16 -0800
-In-Reply-To: <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PeguaAvB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ehk1v9qH"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5EFED7A01B4;
+	Tue, 25 Nov 2025 12:55:11 -0500 (EST)
+Received: from phl-imap-17 ([10.202.2.105])
+  by phl-compute-04.internal (MEProxy); Tue, 25 Nov 2025 12:55:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1764093311;
+	 x=1764179711; bh=wQ+whHpjary1WMEWkNxnrXAcMi90fMe4yNNT0YGx6I0=; b=
+	PeguaAvBE+gcwiXVVslZRin5ugClJ5Yrvr4LK/0W7CZ9l4p3eqgl2eWRvzE4NFsN
+	0JgHoaNqLh8tVX+v29x/9yJ+Q3WffmwtKtha45a/enzuAMwVof2AkjORdTQEsmM/
+	ciEN5rONDTOiVhQJ4A/H9pgttyWqnPXav23619ABBSTYemh361p7/6oFVuZRKrY4
+	RLLaYGRmryr/NrxDEWJD9vxJoT1N/Lr6MlETpkoo7/H3S8qp49oSz65H+54w80gF
+	xSafUoLieHnxxf/8RfBmezfJPSBQJUTH5evuocyMn18LPJyT/+ssEs3smdoM62/E
+	qRVq5Vw5JH3gbcaseB0sGA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1764093311; x=
+	1764179711; bh=wQ+whHpjary1WMEWkNxnrXAcMi90fMe4yNNT0YGx6I0=; b=E
+	hk1v9qHRFumnnELBJaaMX+6zlAoIz7ggwjJhKGKw8s32orak/dI1PrvlmzNQP8X9
+	IswAP8Q6G8VvVOPKxgoVcKGJc1gf5aqeVne/JUyeqd3aIksIMIxk/hPIdaNwJixd
+	/zdMT+F/fpSWWaoFVWZt6mrDCUYFbsyqwnP1lOKp51NCKJDVEFzdNx3GVRgQLXYR
+	UgSawgRco+H72s+pGMeEHb7H4fcLjDeQs+zRONODhafaSStQiMDsTITaaOO0S/4G
+	6QCkQbPZDIyWA/P2VnOA40djrAdBkHHsQpIO/7U7LANPe7f5NnH50HtacqcFx3h9
+	dS4gpH73AXv90SFf7LEsg==
+X-ME-Sender: <xms:fu0lab0YEOSSGchjllASjqJeyJFyRgD1NDCdzeshq6xNw8XxXwl80g>
+    <xme:fu0laU4q3yA036jOcVCFIpdQ7wQ6y4H9iibKao7vv6TBDH3_D7_-3TlWSQPJZh3v9
+    jO3t4-XNtJp7iMbhPYfcvFgFyYrBv6KsZ5OdjNRLlmV2ZraMC78BVOu>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgedvuddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtg
+    hpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehg
+    uhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslh
+    hishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegthhgvnhhhuhgrtggriheslhho
+    ohhnghhsohhnrdgtnhdprhgtphhtthhopehlihiguhgvfhgvnhhgsehlohhonhhgshhonh
+    drtghnpdhrtghpthhtohepthhhohhmrghssehtqdektghhrdguvgdprhgtphhtthhopehl
+    ihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
+    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:fu0lacZcXxet7tgvxvfc9vlKkAZ8VIF05_Wyo_v4n0AwnLnAmuLZWg>
+    <xmx:fu0lafl07p2pWB-gX_uWUzaAYaFgJGC0lfpOlnejaCYXZarZ6ZH_yg>
+    <xmx:fu0laShGpshITJfYC-VDUvZkZhH0fNWm5cwj9wuoqbJMEzvOekNOTA>
+    <xmx:fu0laRRVLJGvzc476OqoZOy43J6VMyfaNYHLcuaJSFxzObpTyl8_-Q>
+    <xmx:f-0laSR8gjctsiyeTiaU1pMpnRhzyrDjD6OPSa4gY0p5l5HL-ZDZAwme>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1C22DC40054; Tue, 25 Nov 2025 12:55:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-29-seanjc@google.com>
- <aSUK8FuWT4lpMP3F@google.com> <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
-Message-ID: <aSXigAQznhuxZmy7@google.com>
-Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
- entry/exit fields for mediated PMU
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-ThreadId: AsIcsmVbKmaR
+Date: Tue, 25 Nov 2025 18:54:47 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Huacai Chen" <chenhuacai@kernel.org>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+ "Huacai Chen" <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
+ linux-kernel@vger.kernel.org
+Message-Id: <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
+In-Reply-To: 
+ <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
+References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
+ <20251122043634.3447854-14-chenhuacai@loongson.cn>
+ <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
+ <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
+ <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
+Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 25, 2025, Dapeng Mi wrote:
-> On 11/25/2025 9:48 AM, Sean Christopherson wrote:
-> >> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
-> >> +		return false;
-> >> +
-> >> +	/*
-> >> +	 * All CPUs that support a mediated PMU are expected to support loading
-> >> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
-> >> +	 */
-> >> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
-> >> +			 !cpu_has_save_perf_global_ctrl()))
-> >> +		return false;
-> > And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
-> > bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
-> > WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
-> > corrected me.
-> >
-> > v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
-> > based on my miguided feedback.
-> >
-> >    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
-> >      save/retore list support for GLOBAL_CTRL, thus the support of mediated
-> >      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
-> >
-> > Doubly frustrating is that this was discussed in the original RFC, where Jim
-> > pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
-> > enabling the mediated PMU on Skylake+, and I completely forgot that conversation
-> > by the time v3 of the series rolled around :-(
-> 
-> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
-> remember the original requirements includes to support Skylake and Icelake,
-> but I ever thought there were some offline sync and the requirement changed...
+On Sat, Nov 22, 2025, at 15:13, Huacai Chen wrote:
+> On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+>> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
+>> > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
+>> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+>> >> index 96ca1a688984..cf9373786969 100644
+>> >> --- a/arch/loongarch/Makefile
+>> >> +++ b/arch/loongarch/Makefile
+>> >> @@ -5,7 +5,12 @@
+>> >>
+>> >>  boot        :=3D arch/loongarch/boot
+>> >>
+>> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
+>> >> +ifdef CONFIG_32BIT
+>> >
+>> > Testing for CONFIG options here doesn't make sense, as the config i=
+s not yet
+>> > created.
+>>
+>> > Either test for $(ARCH) or uname or just use one unconditionally.
+>>
+>> I don't really like the $(ARCH) hacks, nobody is going to build kerne=
+ls
+>> natively on loongarch32, and for the rest it's fine to set the option.
+> OK, I will use 'uname -m' for checking. Though native builds on
+> loongarch32 will hardly happen, we can give a small chance to use
+> loongson32_defconfig, in all other cases, let's use
+> loongson64_defconfig.
 
-Two things:
+What I meant is not to guess the CONFIG_64BIT option from any
+part of the build environment other than the actual .config settings.
 
- 1) Upstream's "requirements" are not the same as Google's requirements (or those
-    of any company/individual).  Upstream most definitely is influenced by the
-    needs and desires of end users, but ultimately the decision to do something
-    (or not) is one that needs to be made by the upstream community.
+$(ARCH) is initialized from 'uname -m' in scripts/subarch.include,
+and I think this should stay unchanged.
 
- 2) Decisions made off-list need to be summarized and communicated on-list,
-    especially in cases like this where it's a relatively minor detail in a
-    large series/feature, and thus easy to overlook.
+>> > Also as mentioned before, snippets can reduce the duplication.
+>> >
+>> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
+>> >> +else
+>> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
+>> >> +endif
+>> >> +
+>>
+>> This is also not the change I had suggested in my review. I think this
+>> should be a fragment along the lines of arch/mips/configs/generic/32r=
+2.config
+>> and arch/powerpc/configs/book3s_32.config.
+>
+> Sorry for that. I know that the default config file is usually
+> generated by 'make savedefconfig', and the main purpose is
+> significantly reducing file size. I did that, but manually add some
+> lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
+> CONFIG_EFI, etc. My original goal of doing this is to let users easily
+> know those fundamental options without reading Kconfig files (of
+> course we should not increase the defconfig too much).
+>
+> Sorry again for not explaining about this in the previous version.
 
-I'll follow-up internally to make sure these points are well-understood by Google
-folks as well (at least, those working on KVM).
+I don't mind having the extra options in the generic defconfig
+file, that is unusual but I see your logic there.
 
-> My bad,
+My point here is that you should absolutely not duplicate the
+contents but only put the differences into the new file, such
+as
 
-Eh, this was a group "effort".  I'm as much to blame as anyone else.
++++ arch/loongarch/configs/loongson32.config
+CONFIG_32BIT=3Dy
+# CONFIG_64BIT is not set
+CONFIG_32BIT_STANDARD=3Dy
+CONFIG_MACH_LOONGSON32=3Dy
+# CONFIG_SMP is not set
+# CONFIG_LOONGSON3_CPUFREQ is not set
+# CONFIG_IPMI_HANDLER is not set
+# CONFIG_TCG_TPM is not set
+# CONFIG_I2C_LS2X is not set=20
+# CONFIG_PINCTRL_LOONGSON2 is not set
+CONFIG_GPIO_LOONGSON1=3Dy
+# CONFIG_GPIO_LOONGSON is not set
+CONFIG_WATCHDOG=3Dy
+CONFIG_LOONGSON1_WDT=3Dm
+# CONFIG_LOONGSON2_THERMAL=3Dm is not set
+ # CONFIG_IOMMU_SUPPORT is not set
+CONFIG_LOONGSON1_APB_DMA=3Dy
+# CONFIG_LOONGSON2_APB_DMA is not set
+# CONFIG_PWM_LOONGSON is not set
 
-> I should double confirm this at then.
+This way, running 'make defconfig; make loongson32.config'=20
+should produce the same output as your current
+'make loongson32_defconfig', but it is much easier to keep
+the two in sync because any future changes only
+have to be done in the shared file.
 
-No need, as above, Google's requirements (assuming the requirements you're referring
-to are coming from Google people) are effectively just one data point.  At this
-point, I want to drive the decision to support Sylake+ (or not) purely through
-discussion of upstream patches.
-
-> > As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
-> > later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
-> > requirement.  But losing supporting Skylake+ is a bit much.
-> >
-> > There are a few warts with nVMX's use of the auto-store list that need to be
-> > cleaned up, but on the plus side it's also a good excuse to clean up
-> > {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
-> > bit of duplicate code.  And while I still dislike using the auto-store list, the
-> > code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
-> > controls mandatory without losing support for any CPUs (they predate PMU v4).
-> 
-> Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
-> suppose we can have an independent patch-set to clean up and support
-> global_ctrl with auto-store list for Skylake and Icelake.
-
-I have the code written (I wanted to see how much complexity it would add before
-re-opening this discussion).  My plan is to put the Skylake+ support at the end
-of the series, not a separate series, so that it can be reviewed in one shot.
-E.g. if we can make a change in the "main" series that would simplify Skylake+
-support, then I'd prefer to find and implement any such change right away.
+     Arnd
