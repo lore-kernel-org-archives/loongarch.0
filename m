@@ -1,228 +1,172 @@
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0BD238176
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 03:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83F21D90DD;
+	Tue, 25 Nov 2025 05:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764041558; cv=none; b=rNZYFzkUInvmMkRjlt7k9WnUWHW8Msz8SQelVLkkJXdVNBc3hd2v1d7om3MDObqePpKpLWI7ydKOvfydLLrpnFhisgvvRV//KruJxrbBHtj8dPtdz78O74e+lJH47gzlJ7Z64+JjYkixWhFPy0nRIYsDZTndwkZdKKOrYRO7xIY=
+	t=1764046978; cv=none; b=J7vOYHIcwynMlz60lrwkrbDz4z5/ur2SWt1AENgXAA+ws1kQC1aygzhQiU/Jz5U6jItGLdztl43fMSZ0ByfaLbffF6K5I2boFg0R81S3tirAsgZMMRRUesRC6gVql784qoZMlAGDVCfeUNsfSGslGbhMMA5EwDDMDqUdTYKzJig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764041558; c=relaxed/simple;
-	bh=ZUciDTS1ToW4r/YvTvB/59kjxpW2ZTNNw7eIj1UG15U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ftetgnU0q3wLavTq17N8rSq8HKPoPayDoLlsibMC/BeLlJzvONZsLjQrG/s6BSKqrYnocQdXkEyJEi6fhpfztSAmrVv3vdMzQJB+NWg9gvYlsQveEATAj5S9dIEFLo1a9I5+ONmziFaQBKBoC3zi8NXmJXoppnbY585yRCUHimc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=quMl8HnK; arc=none smtp.client-ip=74.125.224.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1764046978; c=relaxed/simple;
+	bh=CxuoyWDMjnvPVlANis+bdBxUp4A0mu3YzVIP24vTdmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a8+FFbUZnrC7drRt2Rlbumt0AlQQdgvVXJfPYJOauDkWLIycmY/QNzj5yFMTGYo531Gu+JSZCi3j2UNI6p6oB2ckfJlsfRrHzZoP5VqTb58Qy/E7G5neTUsMfG9X7goq9cMVYvkQngRJMrPrqY/TLJ/aaEuyyzB0i3aZwXRCfeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X1ysJge4; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="quMl8HnK"
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-64107188baeso4462939d50.3
-        for <loongarch@lists.linux.dev>; Mon, 24 Nov 2025 19:32:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1764041554; x=1764646354; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CdraXDdY/sdj6Am5a5IhqHEu0NfKpsF/3w9oKVfcn28=;
-        b=quMl8HnKKZxLqzDegZtjJ6RlW+THJ1NMMLlSzcpLp3f8I/WK7Zxvxvhj7cztg2DLYL
-         3m6jZxETJvg0CpfZgIRTSv3axWLUvGK0M5f9amWFc7fS/5bb9oMoCORr//O5vkF8Xb2/
-         CSElWmpM83uME+6BzK0/uUF6nEqJH7/FukRQIDVGhOkwwfjEU0o/P+3BxIfVRAPIpgtG
-         eRUVapBGJ1eM5TtpoOKA7Fbat0pvuuIkZaWal+NZRu/g5tTA5zk/Kglx2z6n904z0TeA
-         zbrqm3txuXsV/dKoejNChvmj1xUa2ZXHmtbxg9JL5gXE1Wrf00ahP/Gv+Ft7WNlLKW/A
-         TKZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764041555; x=1764646355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CdraXDdY/sdj6Am5a5IhqHEu0NfKpsF/3w9oKVfcn28=;
-        b=k4EKhL16kV8wtU8S8VjYxPNG121MxK1pVJsANAhtnFGGOVexyK6Du8LBBSaK5x4RXi
-         QbAFEz2oa1nXFFgjtehYCWl71rszbkTcUHPm8I3uUQ67qjG4YsBQaxDEidXtBB9y8tGm
-         NMe0Tw7KU8K8OCzN6hoGWoklxojlDcMkN8bZ/1KWxXfhzUbTT5bbAO8ua27ylKdaCP0C
-         4QkkJ7+WAUju5YWWQNABaQ6MAgTWTGAYPDyJC7hc41HANiAujketQe3hd8F/5Z4o2BMX
-         wPXcxjlMwtfG8QOnivPdiLrNzTWz66YAWo9LSetxfVks+6igUch5tpAET+wTfkkOKp8b
-         Yvsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWetQ3Y1CgW6lGr04cnumQ6A0TqRrRef63wTIL9PPACzSYLfSlArc4/MGhgWfYAAZJXFWL4BoOec8Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy/Tijci6WkEj84WBBrX9lQuMGiNXCJkht0xQ+saXkNdYzAJoJv
-	BLNHTlDdBXtaMDT7fGYDY1+oTcUvS+B2kYbqWkZGcCKI75ljfcroX4SJLlVXHTmToHNkztdc1If
-	TaXheJcXqfRw912JF//uWmifJydOUKIH9ecDf+AKYWw==
-X-Gm-Gg: ASbGncsU3jwbZxBfFLdziiPO5Lh5X231KARNElfqm8+/90FskzXO5KrCesuPxuWdDsg
-	coVZ6uSjW7c9N5ifNtuGSJg1Vk6a667DpPreJa5IRc57izTBcACI2a4si41c8uj7aNOJigPdZcz
-	1H9/TmLdfbBcyBREDU5cRSnTqNe6S7BlNL0MT5PnGvG42iBx6sZbIo0FDqEshMBuErvoY5CKr6a
-	Pk6yoB+TPOAcDhpXyCXGKXEetCjZQFKn4a7Upx96dqTUmpsRc+9wy1n89GzNADlxgffcUwhWF2h
-	0UcohQEGr2tVcLnWB5g+DlSnffA=
-X-Google-Smtp-Source: AGHT+IGzdtDBk5mvD8NrlXr4aDEiC0oSmrhc21tCn2MImRrlX4sqmmRmcKyulRjMzSqZruqI/tvKWFQK8tJYXEesAWY=
-X-Received: by 2002:a53:d00a:0:b0:641:f5bc:6966 with SMTP id
- 956f58d0204a3-64302b44d7dmr7550928d50.82.1764041554538; Mon, 24 Nov 2025
- 19:32:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X1ysJge4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764046977; x=1795582977;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=CxuoyWDMjnvPVlANis+bdBxUp4A0mu3YzVIP24vTdmw=;
+  b=X1ysJge4dMvMTTCJ2AFaJurTJ8dkWlpzJC3o9pPRIA04F7kUBEt2pERP
+   Eqx2o2GOAuuUx0hyiudy6uBd7P42bZskEWVPMSo6IwMpUu+fiWRWY3Zmi
+   tvB6BnihANRGqKmsYf0hPlaomieYmW1KfruY8x/sVncF1+jSxDMKRY5gh
+   BFelyKHfSZ2l6qQq5cIzl2pUeI0R2MiRvy36ZO5axmLWIXJaMK+bAgtZ9
+   afLoTPxezVQT88B+Xeg/GNU36BvzKpwmNeQEW3QLXeDURH4l++db5bqsB
+   pyPuwBK6EYeGgoGf7xmQnSRW85dona8dqBUU+quXVQBaN9KvS1hxn8Wmq
+   Q==;
+X-CSE-ConnectionGUID: xf5CHQgmQ3WbPeWK6lveLA==
+X-CSE-MsgGUID: maVcaa7VS2K+ZJab5qbdqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11623"; a="66219501"
+X-IronPort-AV: E=Sophos;i="6.20,224,1758610800"; 
+   d="scan'208";a="66219501"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 21:02:56 -0800
+X-CSE-ConnectionGUID: rs3B5ijhTVGv+kSjCL9fAA==
+X-CSE-MsgGUID: urT/xi6OQOK7RTeKmDyI0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,224,1758610800"; 
+   d="scan'208";a="191669191"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.213]) ([10.124.240.213])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2025 21:02:48 -0800
+Message-ID: <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
+Date: Tue, 25 Nov 2025 13:02:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124-2-v2-0-b38216e25fd9@linux.dev> <20251124-2-v2-1-b38216e25fd9@linux.dev>
- <CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com> <20251125104316.00001294@linux.dev>
-In-Reply-To: <20251125104316.00001294@linux.dev>
-From: hev <r@hev.cc>
-Date: Tue, 25 Nov 2025 11:32:24 +0800
-X-Gm-Features: AWmQ_bk4xAW-JwTmykhJFZ3cQrbR2swSVJUg8nbGALfk03m8iKjUSqZtL_FL0ys
-Message-ID: <CAHirt9hAZtp3m5b4htj9R7P+g4xUtPqaRGHtd68NGC+Ke8OnEg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
+ entry/exit fields for mediated PMU
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
+ Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Sandipan Das <sandipan.das@amd.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-29-seanjc@google.com> <aSUK8FuWT4lpMP3F@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aSUK8FuWT4lpMP3F@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 25, 2025 at 10:43=E2=80=AFAM George Guo <dongtai.guo@linux.dev>=
- wrote:
->
-> On Mon, 24 Nov 2025 19:37:40 +0800
-> hev <r@hev.cc> wrote:
->
-> > On Mon, Nov 24, 2025 at 5:28=E2=80=AFPM George Guo <dongtai.guo@linux.d=
-ev>
-> > wrote:
-> > >
-> > > From: George Guo <guodongtai@kylinos.cn>
-> > >
-> > > Implement 128-bit atomic compare-and-exchange using LoongArch's
-> > > LL.D/SC.Q instructions.
-> > >
-> > > At the same time, fix BPF scheduler test failures (scx_central
-> > > scx_qmap) caused by kmalloc_nolock_noprof returning NULL due to
-> > > missing 128-bit atomics. The NULL returns led to -ENOMEM errors
-> > > during scheduler initialization, causing test cases to fail.
-> > >
-> > > Verified by testing with the scx_qmap scheduler (located in
-> > > tools/sched_ext/). Building with `make` and running
-> > > ./tools/sched_ext/build/bin/scx_qmap.
-> > >
-> > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > > ---
-> > >  arch/loongarch/include/asm/cmpxchg.h | 47
-> > > ++++++++++++++++++++++++++++++++++++ 1 file changed, 47
-> > > insertions(+)
-> > >
-> > > diff --git a/arch/loongarch/include/asm/cmpxchg.h
-> > > b/arch/loongarch/include/asm/cmpxchg.h index
-> > > 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..757f6e82b9880d04f4883dc9a80=
-2312111aa4588
-> > > 100644 --- a/arch/loongarch/include/asm/cmpxchg.h +++
-> > > b/arch/loongarch/include/asm/cmpxchg.h @@ -111,6 +111,44 @@
-> > > __arch_xchg(volatile void *ptr, unsigned long x, int size) __ret;
-> > >                                                        \ })
-> > >
-> > > +union __u128_halves {
-> > > +       u128 full;
-> > > +       struct {
-> > > +               u64 low;
-> > > +               u64 high;
-> > > +       };
-> > > +};
-> > > +
-> > > +#define __cmpxchg128_asm(ptr, old, new)
-> > >             \ +({
-> > >                   \
-> > > +       union __u128_halves __old, __new, __ret;
-> > >     \
-> > > +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);
-> > >     \
-> > > +
-> > >     \
-> > > +       __old.full =3D (old);
-> > >     \
-> > > +       __new.full =3D (new);
-> > >     \
-> > > +
-> > >     \
-> > > +       __asm__ __volatile__(
-> > >     \
-> > > +       "1:   ll.d    %0, %3            # 128-bit cmpxchg low   \n"
-> > >     \
-> > > +       "     dbar    0                 # memory barrier        \n"
-> > >     \
-> > > +       "     ld.d    %1, %4            # 128-bit cmpxchg high  \n"
-> > >     \
-> > > +       "     bne     %0, %z5, 2f                               \n"
-> > >     \
-> > > +       "     bne     %1, %z6, 2f                               \n"
-> > >     \
-> > > +       "     move    $t0, %z7                                  \n"
-> > >     \
-> > > +       "     move    $t1, %z8                                  \n"
-> > >     \
-> > > +       "     sc.q    $t0, $t1, %2                              \n"
-> > >     \
-> > > +       "     beqz    $t0, 1b                                   \n"
-> > >     \
-> > > +       "2:                                                     \n"
-> > >     \
-> > > +       __WEAK_LLSC_MB
-> > >     \
-> > > +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high),
-> > >     \
-> > > +         "=3DZB" (__ptr[0])
-> > >     \
-> >
-> > "ZB" isn't a legal constraint for the address operand in sc.q. When
-> > assembled, it turns into something like sc.q $r,$r,$r,0, which clearly
-> > doesn't match the instruction format, yet gas happily accepts it wheil
-> > clang rightfully rejects it. Classic GNU-as leniency biting again. :)
-> >
-> Hi Hev,
->
-> Thanks for your advice, I tried sc.q with r or ZC. the result as
-> below: (with gcc 14.2.1 in fedora-42)
->    - sc.q with "r"  caused system hang
 
-input operands:
- : "r" (__ptr), ...
+On 11/25/2025 9:48 AM, Sean Christopherson wrote:
+> On Wed, Aug 06, 2025, Sean Christopherson wrote:
+>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>
+>> When running a guest with a mediated PMU, context switch PERF_GLOBAL_CTRL
+>> via the dedicated VMCS fields for both host and guest.  For the host,
+>> always zero GLOBAL_CTRL on exit as the guest's state will still be loaded
+>> in hardware (KVM will context switch the bulk of PMU state outside of the
+>> inner run loop).  For the guest, use the dedicated fields to atomically
+>> load and save PERF_GLOBAL_CTRL on all entry/exits.
+>>
+>> Note, VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL was introduced by Sapphire
+>> Rapids, and is expected to be supported on all CPUs with PMU v4+.  WARN if
+>> that expectation is not met.  Alternatively, KVM could manually save
+>> PERF_GLOBAL_CTRL via the MSR save list, but the associated complexity and
+>> runtime overhead is unjustified given that the feature should always be
+>> available on relevant CPUs.
+> This is wrong, PMU v4 has been supported since Skylake.
 
->    - sc.q with "ZC" caused compiler error:
->      {standard input}: Assembler messages:
->      {standard input}:10037: Fatal error: Immediate overflow.
->      format: u0:0 )
-> > > +       : "ZC" (__ptr[0]), "m" (__ptr[1]),
-> > >     \
-> > > +         "Jr" (__old.low), "Jr" (__old.high),
-> > >     \
-> > > +         "Jr" (__new.low), "Jr" (__new.high)
-> > >     \
-> > > +       : "t0", "t1", "memory");
-> > >     \
-> > > +
-> > >     \
-> > > +       __ret.full;
-> > >     \ +})
-> > > +
-> > >  static inline unsigned int __cmpxchg_small(volatile void *ptr,
-> > > unsigned int old, unsigned int new, unsigned int size)
-> > >  {
-> > > @@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long
-> > > old, unsigned long new, unsigned int __res;
-> > >                                  \ })
-> > >
-> > > +/* cmpxchg128 */
-> > > +#define system_has_cmpxchg128()                1
-> > > +
-> > > +#define arch_cmpxchg128(ptr, o, n)
-> > >     \ +({
-> > >           \
-> > > +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);
-> > >     \
-> > > +       __cmpxchg128_asm(ptr, o, n);                    \
-> > > +})
-> > > +
-> > >  #ifdef CONFIG_64BIT
-> > >  #define arch_cmpxchg64_local(ptr, o, n)
-> > >             \ ({
-> > >                \
-> > >
-> > > --
-> > > 2.48.1
-> > >
-> > >
-> >
+Yes, the v4+ restriction is to meet the requirement of existence of
+IA32_PERF_GLOBAL_STATUS_SET MSR which is needed to restore the guest
+global_ctrl.
+
+
 >
+>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>> index 7ab35ef4a3b1..98f7b45ea391 100644
+>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>> @@ -787,7 +787,23 @@ static bool intel_pmu_is_mediated_pmu_supported(struct x86_pmu_capability *host_
+>>  	 * Require v4+ for MSR_CORE_PERF_GLOBAL_STATUS_SET, and full-width
+>>  	 * writes so that KVM can precisely load guest counter values.
+>>  	 */
+>> -	return host_pmu->version >= 4 && host_perf_cap & PERF_CAP_FW_WRITES;
+>> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * All CPUs that support a mediated PMU are expected to support loading
+>> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+>> +	 */
+>> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+>> +			 !cpu_has_save_perf_global_ctrl()))
+>> +		return false;
+> And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
+> bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
+> WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
+> corrected me.
+>
+> v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
+> based on my miguided feedback.
+>
+>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+>
+> Doubly frustrating is that this was discussed in the original RFC, where Jim
+> pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
+> enabling the mediated PMU on Skylake+, and I completely forgot that conversation
+> by the time v3 of the series rolled around :-(
+
+VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
+remember the original requirements includes to support Skylake and Icelake,
+but I ever thought there were some offline sync and the requirement changed...
+
+My bad, I should double confirm this at then.
+
+
+>
+> As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
+> later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
+> requirement.  But losing supporting Skylake+ is a bit much.
+>
+> There are a few warts with nVMX's use of the auto-store list that need to be
+> cleaned up, but on the plus side it's also a good excuse to clean up
+> {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
+> bit of duplicate code.  And while I still dislike using the auto-store list, the
+> code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
+> controls mandatory without losing support for any CPUs (they predate PMU v4).
+
+Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
+suppose we can have an independent patch-set to clean up and support
+global_ctrl with auto-store list for Skylake and Icelake.
+
+
+>
+> [1] https://lore.kernel.org/all/ZzyWKTMdNi5YjvEM@google.com
+> [2] https://lore.kernel.org/all/20250324173121.1275209-1-mizhang@google.com
+> [3] https://lore.kernel.org/all/CALMp9eQ+-wcj8QMmFR07zvxFF22-bWwQgV-PZvD04ruQ=0NBBA@mail.gmail.com
