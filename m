@@ -1,157 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9476D29DB61
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A7016A395
+	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 09:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764061502; cv=none; b=g2nAY6dIq7DGkPWv5Qpa5Zj26oTX/Qyd8NXwPZd4OGJB/QwQYkR6y4XECtgbNWcQR/HGzWPOIwbCu/n9BOBuUZNwc4iVGd2etYZ/AQyVXconrMJUlYoDi5sZDwLgMGQ5+Clv+qTigfOOwVjb1gEpSM/GGDIYW/KQxycAvEtd1KU=
+	t=1764064707; cv=none; b=p1DH9/pu5AC4zncufcsOClENoY+k8gr9ILYOdj7EBadK/NBonaoS7rbFlW6qso+TNQQScDEMmOWjHCil7lzFUtbfOVval7HGxtMj4S7+ObA4jbTvoZ/Pp/m+M0EaASS1/vKbLGAXC5Ka6+rkCYMSQzZI4jbV5qkRt97UGipqbUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764061502; c=relaxed/simple;
-	bh=LDihYCh1QvlFLK+0AtAjvzyT9+1rK1lmbm0z55jasuQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e2xRIrsH0BA9aXNO/UHe7Z7K8SRWXMY8MK0Yx4w04dbMwnkyTyWerOunUmHivCyD0JrBTqpZ52bFdQoNxK4TPpjx9fTYiY5aGQpk3d4nfqqzSp8fDXoxJ+uSluWuhkkMxQ+axN1rRzV1RBOh+y1+9ohiwnlK6EWliLzNaufgwes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z44Wlbfd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z44Wlbfd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CA7C4AF09
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 09:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764061502;
-	bh=LDihYCh1QvlFLK+0AtAjvzyT9+1rK1lmbm0z55jasuQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Z44WlbfdStXuntpWJ/iAKt8N2C5LHZ7sI8LlVJh8Iezjn396sYplCL6oNngxwHSvk
-	 iBnS7TZd2bobmZ6N2ZzuyRQZN8WZIZt2ZSJITIh310EynSqI961EqHV/NypnMzvsnx
-	 tmBxRwTvgeYFhEwEmWoP0F7FWsM0/JRQbkCg3PLxwSaHWGJjnojo3BDTIdy0tGaa1W
-	 h+MzWuUa8E4tyfjktYXtHLYZlzrnvzAUH3YN5KTc0zlPUg4uSap14lYrNiQGx+whii
-	 Uf/NrgdZSLEITKYJtqQaOmdrqQqa25ue0LOCL6kHS7sKR+RCM8niCcK+rHRuE4ks8s
-	 5mwOKYqKIf7Bg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-64074f01a6eso9299310a12.2
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 01:05:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVOZjU3cw4Jl6S7QlLoiQRtuIpZRlQaVTOpYR8HbnmbsdyT0yWhBBYu55hhHIGkOHjWpUDAnW5HZ6o=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyAPjPJN8ZJGbTEWcb5PfQp3DwrsTV8BIVpQIr1mopoBwaexL8P
-	tY1GKRjPG/rVjCrpsSxyBZKO6KC2fA9HH+MCzA/I1Lnz9zf3CdWUW5VjEmyFh+ndzh8ULhD9+qo
-	KletyjvlBzCARC/bUAbAdmxhhmEefa5M=
-X-Google-Smtp-Source: AGHT+IF3rJkCwWWAEXMsZE24AhfjJ5QqvL4kIJW5j11vU/nFDorLH4lBQ9gypaHZonF4mZeuXoiao7+YhuwriX6+ass=
-X-Received: by 2002:a17:907:f495:b0:b76:372f:78ac with SMTP id
- a640c23a62f3a-b7671a470b4mr1598937466b.28.1764061500929; Tue, 25 Nov 2025
- 01:05:00 -0800 (PST)
+	s=arc-20240116; t=1764064707; c=relaxed/simple;
+	bh=n1kGV6WpmQcZbO0VPSlilB0UhV5iiSEmokXmy5caMNA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UiHQz0xmpktDcqv3jnqRckRtX3ZtlAWy5m6arjeTnOk5JF3zgRjrVb5p6ZnYUNLG6jBQ7YySsyv9tdvYo1zn4PpUBaiSyuZIi4psThuZ9HHOZg24Ptnd2L5sDOgRq7bcBi09r83e74XlkHzrUHXDwVWk6S+A5S+ObjFZWxDaQVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 450bb486c9e511f0a38c85956e01ac42-20251125
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED
+	SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:70d965af-1493-451b-b76d-2405cd05909f,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:70d965af-1493-451b-b76d-2405cd05909f,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:1335b17ab73d1136a2a5b6f76db14da7,BulkI
+	D:251125175820DMKWCLFD,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 450bb486c9e511f0a38c85956e01ac42-20251125
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1144435812; Tue, 25 Nov 2025 17:58:19 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: yangtiezhu@loongson.cn,
+	zhangtianyang@loongson.cn,
+	masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	duanchenghao@kylinos.cn
+Subject: [PATCH] LoongArch: Change the signal return for user-mode ADE exceptions
+Date: Tue, 25 Nov 2025 17:57:58 +0800
+Message-Id: <20251125095758.1345956-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251125063327.31586-1-yangtiezhu@loongson.cn>
- <CAAhV-H5AO38DAqxUyawwKW_f=ZuCaROj+s--vE8ham0sTWMxog@mail.gmail.com> <332975a8-c7f1-76d5-0628-cd7260ad1180@loongson.cn>
-In-Reply-To: <332975a8-c7f1-76d5-0628-cd7260ad1180@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 25 Nov 2025 17:05:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H77duX-WiYsJzkJChmGHdGh5y_k6YEvLQdpDys5iLctgw@mail.gmail.com>
-X-Gm-Features: AWmQ_bmzhlWOTkqs0A5Z97dDxKRI_QQfeDEEpxclv5lUYczpmBkOAuMEUphXygg
-Message-ID: <CAAhV-H77duX-WiYsJzkJChmGHdGh5y_k6YEvLQdpDys5iLctgw@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: Handle special PC in unwind_next_frame()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Xi Zhang <zhangxi@kylinos.cn>, Xianglai Li <lixianglai@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 25, 2025 at 4:54=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 2025/11/25 =E4=B8=8B=E5=8D=884:08, Huacai Chen wrote:
-> > Hi, Tiezhu,
-> >
-> > On Tue, Nov 25, 2025 at 2:34=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> >>
-> >> When running virtual machine before testing the kernel live patching w=
-ith
-> >> "modprobe livepatch-sample", there is a timeout over 15 seconds, the d=
-mesg
-> >> command shows "unreliable stack" for user tasks in debug mode.
-> >>
-> >> The "unreliable stack" is because it can not unwind from kvm_handle_ex=
-it()
-> >> to its previous frame kvm_exc_entry() due to the PC is not a valid ker=
-nel
-> >> address, the root cause is that the code of kvm_exc_entry() was copied=
- to
-> >> the DMW area in kvm_loongarch_env_init(), so it should check the PC ra=
-nge
-> >> and then finish unwinding for this special case.
-> >>
-> >> How to test:
-> >>
-> >> (1) Update kernel with LIVEPATCH
-> >>
-> >>    git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/=
-linux.git
-> >>    cd linux && make mrproper defconfig
-> >>    scripts/config -e FTRACE -e FUNCTION_TRACER \
-> >>    -e LIVEPATCH -e SAMPLES -m SAMPLE_LIVEPATCH
-> >>    make olddefconfig all -j"$(nproc)"
-> >>    sudo make modules_install
-> >>    sudo make install
-> >>    sudo reboot
-> >>
-> >> (2) Set up a VM with "-accel kvm", no need to specify kernel and initr=
-d
-> >>
-> >>    sudo yum -y install edk2-loongarch64 qemu
-> >>    qemu-system-loongarch64 -serial stdio \
-> >>    -machine virt -cpu la464 -smp 8 -m 4G \
-> >>    -bios /usr/share/edk2/loongarch64/QEMU_EFI.fd \
-> >>    -nodefaults -no-reboot -nographic -accel kvm
-> >>
-> >> (3) Test the kernel live patching
-> >>
-> >>    cat /proc/cmdline
-> >>    sudo modprobe livepatch-sample
-> >>    cat /proc/cmdline
-> >>    sudo sh -c "echo 0 > /sys/kernel/livepatch/livepatch_sample/enabled=
-"
-> >>    sudo rmmod livepatch_sample
-> >>    cat /proc/cmdline
-> >>    dmesg -T
-> >>
-> >> Cc: stable@vger.kernel.org # v6.9+
-> >> Fixes: cb8a2ef0848c ("LoongArch: Add ORC stack unwinder support")
-> >> Reported-by: Xi Zhang <zhangxi@kylinos.cn>
-> >> Reported-by: Xianglai Li <lixianglai@loongson.cn>
-> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >> ---
-> >>   arch/loongarch/kernel/unwind_orc.c | 3 +++
-> >>   1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kerne=
-l/unwind_orc.c
-> >> index 0d5fa64a2225..1d60a593479a 100644
-> >> --- a/arch/loongarch/kernel/unwind_orc.c
-> >> +++ b/arch/loongarch/kernel/unwind_orc.c
-> >> @@ -506,6 +506,9 @@ bool unwind_next_frame(struct unwind_state *state)
-> >>                  goto err;
-> >>          }
-> >>
-> >> +       if (pc >=3D (unsigned long)_end && pc < (unsigned long)XKVRANG=
-E)
-> >> +               goto end;
-> > The __kernel_text_address() judgement after bt_address() do the same
-> > thing exactly, so why do we need this?
->
-> They are different code paths, the current path is "goto err", it will
-> set state->error as true, then arch_stack_walk_reliable() will return
-> -EINVAL.
->
-> With this patch, the code path is "goto end" for this case, it will
-> not set state->error as true, then arch_stack_walk_reliable() will
-> return 0.
-Then can we replace "goto err" with "goto end" at  __kernel_text_address()?
+When a user-mode process accesses an invalid address, the SIGSEGV signal
+is returned.
+For example, when user-space accesses a kernel-space virtual address.
 
-Huacai
+Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+---
+ arch/loongarch/kernel/traps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> Thanks,
-> Tiezhu
->
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index da5926fead4a..508d3126cdb2 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -537,7 +537,7 @@ asmlinkage void noinstr do_ade(struct pt_regs *regs)
+ 	irqentry_state_t state = irqentry_enter(regs);
+ 
+ 	die_if_kernel("Kernel ade access", regs);
+-	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)regs->csr_badvaddr);
++	force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)regs->csr_badvaddr);
+ 
+ 	irqentry_exit(regs, state);
+ }
+-- 
+2.25.1
+
