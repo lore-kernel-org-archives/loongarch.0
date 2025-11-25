@@ -1,193 +1,96 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E231D7995
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 02:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9796FEAE7
+	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 03:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764038611; cv=none; b=UgFiapjlSH45AlZmN2JXLaoZPe3rXAx8bykb5RtquLdRCVJk/2HBxZqS+xQbiNGRtxmDEw4ddZEh1sLGxlPuY8sg+q/PNfNhJSjtnFV3VZebNPNJjFqozz1ukiEfvEudibL+gdZ1Pb9c61mcI+A2BL/eQLXWSJcCSqu47U9pxjw=
+	t=1764039859; cv=none; b=bMsOf9G1MjD4rJ6Usa61VAQzLQwmOJur9z9J2OxN1Zba7nMwJSi0iDZywUOuURLsymu1zEuuI3QGeFljw/7UlcvYCBYo/n1XGNYLQJ7h1xcy7DqRVoWlHlHmKj+atinmSrXfuqLfXaqQun6WHmtk0mfwtGI5q2vWdi0CZXXR4rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764038611; c=relaxed/simple;
-	bh=n+pEo3ASw1xCqh2iy2rD4pKCIk3s0VJF9qrZW9sSIQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhnMl/FsSfMSho8gajHOKXyVVaN1Ps2BV3g0Mp0zIkCeRoYuBsfVEm4yf3bgd9qroIlATCQUGQmXL96wHkxdEu99OudBNPSKttvYVJ25j6OP1emO9nfUL+rMpO22g6FOHUMxlSFwtLcoGXfbO1OZi0EOcLLNnzBl55aLGVL0W6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nernluk/; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764039859; c=relaxed/simple;
+	bh=JBl63hWAEK/GRojoZXokHB8Vq1ZBLQAF2hwWMnB/rTs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qk9DCsTiufgJ0Xl3OkmB2KIW2Hr6KnzySCOj3XGvA//L5OKXGpsDc2P3t772RhrObiyIOWCqZuUUcai4tJEJWXZkEkWRUrACa/hibK8QrbAi/o67Ndg/7DH9MUpkqUZiT9ZzeY9t+jyMUTwzl8l2cXBNrwZNu3cDjKKlsN1qU5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=B8rUZ0ID; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nernluk/"
-Date: Tue, 25 Nov 2025 10:43:16 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764038606;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IJrPZBak8rv6upfmCuqvFwnTAD0fxHauwWeiMFCGx6c=;
-	b=nernluk/+sfewOKOshhissrc41GHC4PQQp+WDmWYcYpcVuywsy+oNgrJwvyRCEdG8kQ+wC
-	RgyNWo9MzG/GSYxSY5IH6Kh6zsI1vWUdaatncs/xkXIkARkcEX19OLBkfPWKr+0l93u426
-	ex8IgRYDEfd26UyeQLXycgjWYy2w4wU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: George Guo <dongtai.guo@linux.dev>
-To: hev <r@hev.cc>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, George Guo
- <guodongtai@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="B8rUZ0ID"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1764039850;
+	bh=sKMyWSht7cvWRcQOXOzbe03MhESKEfY7g6L6ISDGDZw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=B8rUZ0IDX3OPRRNuSW3c5iCK9dkP2rgceILhNxJ/qOCpEDVZzXqEnWB5xJrKStiqU
+	 o3O+UHFzvc65dXFK+yzSRkZolOeOL2MmwO2E5wNhkHzvVXE11RJ4AywzX44F8IP4eq
+	 J9FGDpriVuCYWhTUkIWRETG/33Gc/ITG376NkUaE=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 507C566E56;
+	Mon, 24 Nov 2025 22:04:07 -0500 (EST)
+Message-ID: <d35ea927d520569ac8b7482f5fedbe916005ff83.camel@xry111.site>
 Subject: Re: [PATCH v2 1/2] LoongArch: Add 128-bit atomic cmpxchg support
-Message-ID: <20251125104316.00001294@linux.dev>
-In-Reply-To: <CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com>
+From: Xi Ruoyao <xry111@xry111.site>
+To: George Guo <dongtai.guo@linux.dev>, hev <r@hev.cc>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, George Guo
+	 <guodongtai@kylinos.cn>
+Date: Tue, 25 Nov 2025 11:04:03 +0800
+In-Reply-To: <20251125104316.00001294@linux.dev>
 References: <20251124-2-v2-0-b38216e25fd9@linux.dev>
-	<20251124-2-v2-1-b38216e25fd9@linux.dev>
-	<CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com>
+		<20251124-2-v2-1-b38216e25fd9@linux.dev>
+		<CAHirt9gjjULM6CGDR2pHJkQAKMsoZ8kpqtPn79psJQP1uu6FsA@mail.gmail.com>
+	 <20251125104316.00001294@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=GB18030
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On Mon, 24 Nov 2025 19:37:40 +0800
-hev <r@hev.cc> wrote:
+On Tue, 2025-11-25 at 10:43 +0800, George Guo wrote:
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "=3DZB" (__ptr[0])
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 \
+> >=20
+> > "ZB" isn't a legal constraint for the address operand in sc.q. When
+> > assembled, it turns into something like sc.q $r,$r,$r,0, which clearly
+> > doesn't match the instruction format, yet gas happily accepts it wheil
+> > clang rightfully rejects it. Classic GNU-as leniency biting again. :)
 
-> On Mon, Nov 24, 2025 at 5:28 PM George Guo <dongtai.guo@linux.dev>
-> wrote:
-> >
-> > From: George Guo <guodongtai@kylinos.cn>
-> >
-> > Implement 128-bit atomic compare-and-exchange using LoongArch's
-> > LL.D/SC.Q instructions.
-> >
-> > At the same time, fix BPF scheduler test failures (scx_central
-> > scx_qmap) caused by kmalloc_nolock_noprof returning NULL due to
-> > missing 128-bit atomics. The NULL returns led to -ENOMEM errors
-> > during scheduler initialization, causing test cases to fail.
-> >
-> > Verified by testing with the scx_qmap scheduler (located in
-> > tools/sched_ext/). Building with `make` and running
-> > ./tools/sched_ext/build/bin/scx_qmap.
-> >
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > ---
-> >  arch/loongarch/include/asm/cmpxchg.h | 47
-> > ++++++++++++++++++++++++++++++++++++ 1 file changed, 47
-> > insertions(+)
-> >
-> > diff --git a/arch/loongarch/include/asm/cmpxchg.h
-> > b/arch/loongarch/include/asm/cmpxchg.h index
-> > 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..757f6e82b9880d04f4883dc9a802312111aa4588
-> > 100644 --- a/arch/loongarch/include/asm/cmpxchg.h +++
-> > b/arch/loongarch/include/asm/cmpxchg.h @@ -111,6 +111,44 @@
-> > __arch_xchg(volatile void *ptr, unsigned long x, int size) __ret;
-> >                                                        \ })
-> >
-> > +union __u128_halves {
-> > +       u128 full;
-> > +       struct {
-> > +               u64 low;
-> > +               u64 high;
-> > +       };
-> > +};
-> > +
-> > +#define __cmpxchg128_asm(ptr, old, new)
-> >             \ +({
-> >                   \
-> > +       union __u128_halves __old, __new, __ret;
-> >     \
-> > +       volatile u64 *__ptr = (volatile u64 *)(ptr);
-> >     \
-> > +
-> >     \
-> > +       __old.full = (old);
-> >     \
-> > +       __new.full = (new);
-> >     \
-> > +
-> >     \
-> > +       __asm__ __volatile__(
-> >     \
-> > +       "1:   ll.d    %0, %3            # 128-bit cmpxchg low   \n"
-> >     \
-> > +       "     dbar    0                 # memory barrier        \n"
-> >     \
-> > +       "     ld.d    %1, %4            # 128-bit cmpxchg high  \n"
-> >     \
-> > +       "     bne     %0, %z5, 2f                               \n"
-> >     \
-> > +       "     bne     %1, %z6, 2f                               \n"
-> >     \
-> > +       "     move    $t0, %z7                                  \n"
-> >     \
-> > +       "     move    $t1, %z8                                  \n"
-> >     \
-> > +       "     sc.q    $t0, $t1, %2                              \n"
-> >     \
-> > +       "     beqz    $t0, 1b                                   \n"
-> >     \
-> > +       "2:                                                     \n"
-> >     \
-> > +       __WEAK_LLSC_MB
-> >     \
-> > +       : "=&r" (__ret.low), "=&r" (__ret.high),
-> >     \
-> > +         "=ZB" (__ptr[0])
-> >     \
-> 
-> "ZB" isn't a legal constraint for the address operand in sc.q. When
-> assembled, it turns into something like sc.q $r,$r,$r,0, which clearly
-> doesn't match the instruction format, yet gas happily accepts it wheil
-> clang rightfully rejects it. Classic GNU-as leniency biting again. :)
-> 
-Hi Hev,
+I clearly remember when Jiajie submitted the sc.q support to GAS
+Qinggang was really insistent on supporting the additional ",0" here.=20
+But I don't really understand why we must support it...
+>=20
+> Thanks for your advice, I tried sc.q with r or ZC. the result as
+> below: (with gcc 14.2.1 in fedora-42)
+> =C2=A0=C2=A0 - sc.q with "r"=C2=A0 caused system hang
 
-Thanks for your advice, I tried sc.q with r or ZC. the result as
-below: (with gcc 14.2.1 in fedora-42)
-   - sc.q with "r"  caused system hang
-   - sc.q with "ZC" caused compiler error:
-     {standard input}: Assembler messages:
-     {standard input}:10037: Fatal error: Immediate overflow.
-     format: u0:0 )
-> > +       : "ZC" (__ptr[0]), "m" (__ptr[1]),
-> >     \
-> > +         "Jr" (__old.low), "Jr" (__old.high),
-> >     \
-> > +         "Jr" (__new.low), "Jr" (__new.high)
-> >     \
-> > +       : "t0", "t1", "memory");
-> >     \
-> > +
-> >     \
-> > +       __ret.full;
-> >     \ +})
-> > +
-> >  static inline unsigned int __cmpxchg_small(volatile void *ptr,
-> > unsigned int old, unsigned int new, unsigned int size)
-> >  {
-> > @@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long
-> > old, unsigned long new, unsigned int __res;
-> >                                  \ })
-> >
-> > +/* cmpxchg128 */
-> > +#define system_has_cmpxchg128()                1
-> > +
-> > +#define arch_cmpxchg128(ptr, o, n)
-> >     \ +({
-> >           \
-> > +       BUILD_BUG_ON(sizeof(*(ptr)) != 16);
-> >     \
-> > +       __cmpxchg128_asm(ptr, o, n);                    \
-> > +})
-> > +
-> >  #ifdef CONFIG_64BIT
-> >  #define arch_cmpxchg64_local(ptr, o, n)
-> >             \ ({
-> >                \
-> >
-> > --
-> > 2.48.1
-> >
-> >
-> 
+It won't work because it'll pass the value (not address) of __ptr[0].
 
+> =C2=A0=C2=A0 - sc.q with "ZC" caused compiler error:
+> =C2=A0=C2=A0=C2=A0=C2=A0 {standard input}: Assembler messages:
+> =C2=A0=C2=A0=C2=A0=C2=A0 {standard input}:10037: Fatal error: Immediate o=
+verflow.
+
+It won't work because the only accepted immediate of sc.q is 0, but ZC
+would allow any factor of 4 in [-32768, 32768).  I.e. ZC is for
+{ldptr,stptr,ll,sc}.{w,d}.
+
+As ZB is only used for sc.q (yet) in GCC backend maybe we can change ZB
+to print simply $rX instead of $rX,0 and make LLVM do the same.  Would
+someone submit a GCC patch for that?  Or is there already such a
+constraint but I don't know?
+
+BTW for the barrier between ll.d and ld.d, "dbar 0x700" is enough to
+order two loads on the same address, and a Loongson hardware engineer
+just confirmed me privately that "same address" can be read as "in the
+same cacheline" here.  Thus it's enough in our case and it has a lower
+overhead than "dbar 0".
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
