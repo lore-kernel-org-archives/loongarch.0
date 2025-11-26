@@ -1,170 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACC0328263
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 13:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AE833CEB4
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 16:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764164621; cv=none; b=EdRA/+hTsst2tYD2vwC8xSytQX30xuvU3ZyIDHctb+uswsFw5bnfCBxv95QQCQQOSmOK7u7CqWqGxWyu/2T/B/oWpPNOEW5AZUKsk4kCdCOGjHsIkNFaGFUdFbxk8CTmHuSLjtZ9dE/aAr2jq4NfLcZwtW4kShg6b0MXkJsjIzo=
+	t=1764173344; cv=none; b=klfNj6f2z6+1PVdQGSnqBE/7iFSYX3jgUHaB0kS2/Y3xEVb1ElOrXWC41VRTVzDypXjG8CkJgvjC0QKz4tKXlkMXuPw64rZmJYqcNI2wCsOw1tOyRGIWkttaHOSVatEwW/Ew65a95OKHiJkaVVD8VM7TWs9NMWJ+urN1w3Rgzj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764164621; c=relaxed/simple;
-	bh=9UNKSsRzMLg0c1fCALnhi3ADNFNyn5mSSjrIswkosM0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I4PfxmmeomAVFin5VMvAa4DZxOUcJkT+ziInP+zlz+yzSU2KAobok4/DopH+awz7pCMXvcxrApbKihI46G2Q2VfTJjdxOdG6kspSZoy1VJzCLychsWB0E/Irbkyw6AoGNGtxSsmw9+b4BgxsLMmQjfB+pUsCmgJm1E6onsqABp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sNgManwg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764173344; c=relaxed/simple;
+	bh=xb7tPH9H1MBueB0fLpet0KsBSzM+SJdYe4tV78sVjoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YbHRp/rYOMoroGVsxnhdMobd5YW2OBbJiKrV+ep4I+J17OoFB30kSS0M8hxUBWuKLxG5wBxwny8apNcwCYkngxYYPQjM/ae/tYszptYp/UkupfeCd6fQZmKI0Hq/DDD91uMaYuFNa4t6qR5yW4Ny8JHl4Lc4vjkxOXoiX+/SxlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ezr4vDnI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GbyUUUq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ezr4vDnI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4GbyUUUq; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNgManwg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118C4C116B1
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 13:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764164621;
-	bh=9UNKSsRzMLg0c1fCALnhi3ADNFNyn5mSSjrIswkosM0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sNgManwgtmcG0NdejOVXQxRvrkU2J802lgG+Qo2lRzN2EmAzxenf9gzIf0VBN5r1j
-	 vLGE2N932J5e0/4lP+rZoSMbydM/P6w5T6MqVqT9hfE4I0lSWNg3GDOD2RpTVlJ3h9
-	 fO/eGhDbBsJprhmCGevIMcpcS9D9wvV7sal0vIDk8ueifanBkmSnF+kTwp32M/qnZX
-	 +/5HOezQ2iwtUri5un/EPhCD090OGdfImgxOOR4Kb5+qq3Obq3SMYLcrKKSUK2Up8y
-	 7P4vzRlkxbG8cg6ddmTWR3e8pOodPKp22swBgqPaz4vnYjck6tVKmmHu6lAzkyQYm/
-	 o5CWIJygKmsaA==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b7697e8b01aso751683566b.2
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 05:43:41 -0800 (PST)
-X-Gm-Message-State: AOJu0YzDHrEZpadIfCV2l7ppKjRZRwVKKA07WDYi6+VWEeO6iVv4bXVn
-	gLsiPsQDhzvYR6RjZ5gycOXSscJYucxk0WBp0DZFqEW6GufrQltqbi2ePKeENnh5COwWxKjcD1j
-	FPcvJgEnbZbquv1iie7vA8NisDfW0Pbw=
-X-Google-Smtp-Source: AGHT+IEcQw/mglCBvW4Rbh5wU94ZdngI1PEIVZdQO9kpXbcYYpwAzcWeTPtyfu0L/jlgSciqZ6v0DVBiCDOEZz3wi/4=
-X-Received: by 2002:a17:907:7286:b0:b3d:73e1:d809 with SMTP id
- a640c23a62f3a-b767173270emr2521400966b.48.1764164618317; Wed, 26 Nov 2025
- 05:43:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ezr4vDnI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GbyUUUq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ezr4vDnI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4GbyUUUq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 748EC5BE77;
+	Wed, 26 Nov 2025 16:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764173339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=ezr4vDnI9BlOLnc26FkABd8no3L8/SawwvPCTI6IVIlvPOhxdDOyv8d39UuPjMNL8Mmfx5
+	3jkxeMZmGZWaT2voSsFqhEkuiv5g54zsRyY+5P9CG5e4TZNyO8fPgdKuAaBnCuxgXxFgPP
+	jaadOykargHYJDRdfNNzH3GLgzyOzGk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764173339;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=4GbyUUUqAKT4zSGNS8PWVY06FymL7ZhyflSM/4I6eu0Khvd0nJ9Pjkq868uBdTDOPVn0Cb
+	7qh/+SPNAeDd9HDA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ezr4vDnI;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=4GbyUUUq
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1764173339; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=ezr4vDnI9BlOLnc26FkABd8no3L8/SawwvPCTI6IVIlvPOhxdDOyv8d39UuPjMNL8Mmfx5
+	3jkxeMZmGZWaT2voSsFqhEkuiv5g54zsRyY+5P9CG5e4TZNyO8fPgdKuAaBnCuxgXxFgPP
+	jaadOykargHYJDRdfNNzH3GLgzyOzGk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1764173339;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=YbYJIoS8CSkYSEky1xzQmHacWnGGr8CQaD7k/OTeboQ=;
+	b=4GbyUUUqAKT4zSGNS8PWVY06FymL7ZhyflSM/4I6eu0Khvd0nJ9Pjkq868uBdTDOPVn0Cb
+	7qh/+SPNAeDd9HDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05E093EA63;
+	Wed, 26 Nov 2025 16:08:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DH6WOxomJ2lnIgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 26 Nov 2025 16:08:58 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	javierm@redhat.com,
+	arnd@arndb.de,
+	richard.lyu@suse.com,
+	helgaas@kernel.org
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI systems
+Date: Wed, 26 Nov 2025 17:03:17 +0100
+Message-ID: <20251126160854.553077-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251120065758.3064368-1-maobibo@loongson.cn> <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
- <42d93855-50df-a686-85c5-5552ff829977@loongson.cn> <CAAhV-H4xprj-WmMkp86xEmn4NL3wwW3aaDoMj=SUiP3pEa+Q7g@mail.gmail.com>
- <1605b5eb-5f43-62ff-28c5-192f2f0f938d@loongson.cn>
-In-Reply-To: <1605b5eb-5f43-62ff-28c5-192f2f0f938d@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Nov 2025 21:43:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
-X-Gm-Features: AWmQ_bmWQgloRaAKKEtC0HoWffLhRqx5jAm0j4k7vEYn1mIzVylEH6s2V8jeuy0
-Message-ID: <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 748EC5BE77
 
-On Mon, Nov 24, 2025 at 10:17=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
->
->
->
-> On 2025/11/24 =E4=B8=8A=E5=8D=8810:03, Huacai Chen wrote:
-> > On Mon, Nov 24, 2025 at 9:58=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2025/11/21 =E4=B8=8B=E5=8D=8810:08, Huacai Chen wrote:
-> >>> Hi, Bibo,
-> >>>
-> >>> On Thu, Nov 20, 2025 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>> This patchset adds timer test case for LoongArch system, it is based
-> >>>> on common arch_timer test case. And it includes one-shot and period =
-mode
-> >>>> timer interrupt test, software emulated timer function and time coun=
-ter
-> >>>> test.
-> >>> I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
-> >>> it passes, sometimes I get:
-> >>> [root@fedora kvm]# ./arch_timer
-> >>> Random seed: 0x6b8b4567
-> >>> Guest assert failed,  vcpu 2; stage; 0; iter: 1
-> >>> =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
-> >>>     loongarch/arch_timer.c:79: irq_iter =3D=3D 0
-> >>>     pid=3D60138 tid=3D60142 errno=3D4 - Interrupted system call
-> >>>        1  0x00000001200037cf: test_vcpu_run =E4=BA=8E arch_timer.c:70
-> >>>        2  0x00007ffff2449f27: ?? ??:0
-> >>>        3  0x00007ffff24c0633: ?? ??:0
-> >>>     irq_iter =3D 0x1.
-> >>>     Guest period timer interrupt was not triggered within the specifi=
-ed
-> >>>     interval, try to increase the error margin by [-e] option.
-> >>>
-> >>> Is this as expected, or something is wrong?
-> >> There is problem with that. In generic the vCPU task is rescheduled on
-> >> other CPUs or preempted, so period timer interrupt is not handled in
-> >> specified time.
-> > Then this series need to be updated, or problem comes from other places=
-?
-> I think this series need be updated, test success criteria with period
-> timer need consider this situation. Let me check how to handle this.
-Any updates available?
+Replace screen_info and edid_info with sysfb_primary_device of type
+struct sysfb_display_info. Update all users. Then implement EDID support
+in the kernel EFI code.
 
-Huacai
+Sysfb DRM drivers currently fetch the global edid_info directly, when
+they should get that information together with the screen_info from their
+device. Wrapping screen_info and edid_info in sysfb_primary_display and
+passing this to drivers enables this.
 
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>> Hucai
-> >>>
-> >>>> ---
-> >>>> v2 ... v3:
-> >>>>     1. Adjust order about patch 2 and patch 3
-> >>>>     2. Add test case with alphabetical order
-> >>>>     3. Merge one-shot and period timer interrupt test case into one
-> >>>>     4. Only add LoongArch specific modification with common file
-> >>>>        Makefile.kvm
-> >>>>
-> >>>> v1 ... v2:
-> >>>>     1. Restore PC and PRMD after exception handler
-> >>>>     2. Split patch 4 into two small patches with period timer test a=
-nd
-> >>>>        time counter test
-> >>>>     3. With time counter test, set time count with 0 when create VM.=
- And
-> >>>>        verify time count starts from 0 in guest code
-> >>>> ---
-> >>>> Bibo Mao (6):
-> >>>>     KVM: LoongArch: selftests: Add system registers save and restore=
- on
-> >>>>       exception
-> >>>>     KVM: LoongArch: selftests: Add basic interfaces
-> >>>>     KVM: LoongArch: selftests: Add exception handler register interf=
-ace
-> >>>>     KVM: LoongArch: selftests: Add timer interrupt test case
-> >>>>     KVM: LoongArch: selftests: Add SW emulated timer test
-> >>>>     KVM: LoongArch: selftests: Add time counter test
-> >>>>
-> >>>>    tools/testing/selftests/kvm/Makefile.kvm      |   1 +
-> >>>>    .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
-> >>>>    .../kvm/include/loongarch/processor.h         |  81 +++++++-
-> >>>>    .../selftests/kvm/lib/loongarch/exception.S   |   6 +
-> >>>>    .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
-> >>>>    .../selftests/kvm/loongarch/arch_timer.c      | 194 +++++++++++++=
-+++++
-> >>>>    6 files changed, 410 insertions(+), 3 deletions(-)
-> >>>>    create mode 100644 tools/testing/selftests/kvm/include/loongarch/=
-arch_timer.h
-> >>>>    create mode 100644 tools/testing/selftests/kvm/loongarch/arch_tim=
-er.c
-> >>>>
-> >>>>
-> >>>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
-> >>>> --
-> >>>> 2.39.3
-> >>>>
-> >>
->
+Replacing both with sysfb_primary_display has been motivate by the EFI
+stub. EFI wants to transfer EDID via config table in a single entry.
+Using struct sysfb_display_info this will become easily possible. Hence
+accept some churn in architecture code for the long-term improvements.
+
+Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
+
+Patch 3 adds struct sysfb_display_info.
+
+Patch 4 replaces scren_info with sysfb_primary_display. This results in
+several changes throught the kernel, but is really just a refactoring.
+
+Patch 5 updates sysfb to transfer sysfb_primary_display to the related
+drivers.
+
+Patch 6 moves edid_info into sysfb_primary_display. This resolves some
+drivers' reference to the global edid_info, but also makes the EDID data
+available on non-x86 architectures.
+
+Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
+
+Patch 9 cleans up the config-table allocation to be easier to understand.
+
+v3:
+- replace SCREEN_INFO table entry (Ard)
+- merge libstub patch into kernel patch
+v2:
+- combine v1 of the series at [1] plus changes from [2] and [3].
+
+[1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
+[2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
+[3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
+
+Thomas Zimmermann (9):
+  efi: earlycon: Reduce number of references to global screen_info
+  efi: sysfb_efi: Reduce number of references to global screen_info
+  sysfb: Add struct sysfb_display_info
+  sysfb: Replace screen_info with sysfb_primary_display
+  sysfb: Pass sysfb_primary_display to devices
+  sysfb: Move edid_info into sysfb_primary_display
+  efi: Refactor init_primary_display() helpers
+  efi: Support EDID information
+  efi: libstub: Simplify interfaces for primary_display
+
+ arch/arm64/kernel/image-vars.h                |  2 +-
+ arch/loongarch/kernel/efi.c                   | 38 ++++-----
+ arch/loongarch/kernel/image-vars.h            |  2 +-
+ arch/riscv/kernel/image-vars.h                |  2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  4 +-
+ arch/x86/kernel/setup.c                       | 16 ++--
+ arch/x86/video/video-common.c                 |  4 +-
+ drivers/firmware/efi/earlycon.c               | 42 +++++-----
+ drivers/firmware/efi/efi-init.c               | 46 ++++++-----
+ drivers/firmware/efi/efi.c                    |  4 +-
+ drivers/firmware/efi/libstub/Makefile         |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
+ drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
+ drivers/firmware/efi/libstub/efistub.h        |  7 +-
+ .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
+ drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
+ drivers/firmware/efi/libstub/zboot.c          |  6 +-
+ drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
+ drivers/firmware/sysfb.c                      | 13 +--
+ drivers/firmware/sysfb_simplefb.c             |  2 +-
+ drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
+ drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/pci/vgaarb.c                          |  4 +-
+ drivers/video/Kconfig                         |  8 +-
+ drivers/video/fbdev/core/fbmon.c              |  8 +-
+ drivers/video/fbdev/efifb.c                   | 10 ++-
+ drivers/video/fbdev/vesafb.c                  | 10 ++-
+ drivers/video/fbdev/vga16fb.c                 |  8 +-
+ drivers/video/screen_info_pci.c               |  5 +-
+ include/linux/efi.h                           |  9 ++-
+ include/linux/screen_info.h                   |  2 -
+ include/linux/sysfb.h                         | 23 ++++--
+ include/video/edid.h                          |  4 -
+ 34 files changed, 321 insertions(+), 254 deletions(-)
+ create mode 100644 drivers/firmware/efi/libstub/primary_display.c
+ delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
+
+
+base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
+-- 
+2.51.1
+
