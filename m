@@ -1,141 +1,83 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203523126AC
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 05:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11CC14C9D
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 05:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764134850; cv=none; b=ZQDI47RCyzHNU+D3yn4af56XBznsiFIkrV0D5VE2zNdbFk84xOSLngHGa3IUNwdGS7fSNhqmF+rPF93VP+MCZile0qWfqs/okNU0ab/qRtywg8KXwi4LPtLVwZC9m/DqfbJNmswBzfwlVd1BKzEnJx9ecqudgMcTMH7ycE73qkI=
+	t=1764135383; cv=none; b=glIr8PutsCsbevZ1fn4qG6d1ogpcWq7dY/BfPDI9G3PCsVq3yHnC+t+3w2Y0B6JtsRQjs+Es34LWEtys1/4qb0tEjj05T5BerTEdh01SHHEkz4Y5O0uNbZg9As87N96T0pOAt1sZuvNH/INxT3VRLDIk9zY1uDl5fj8JnM/01eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764134850; c=relaxed/simple;
-	bh=u+OEtCVo5fc0/nnKXJd1ZnK5f8x1zXGtkt3vOAYONM0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EX5ccYPTLZSpT6eOSWCmLc0NqaknnAHvMb7NZkk+8ZcNcZYBW9uIFkfu6UkLsvziHrkKQObkq8LotuhHgFMyZLXi2Vhs4jycN6Dwz5PHaGt6ljbs5n+MWiT+rYf319PXdQLuxi/G1aB8X43Be8B5InCjGldgk5jK6fjdNDLrflQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBBtoQbF; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBBtoQbF"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-656b4881f55so2767381eaf.2
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 21:27:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764134848; x=1764739648; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pSMFqWzLWfdGgOTWHTx6nMiUCmlOuWGDKob29IPDfLw=;
-        b=CBBtoQbFT0XoeIau8r4k5rtPgVPMz0fMPex63kWRB7ULZSWblEb8yWoDxjew5U7iuo
-         pRfejw9rF4NbYFJXFewbwatZhB17DAy+pVq/cds5BJsTxi35qVcrCbFNegIW7W0uSS3X
-         9a38AAK1u2wbveTFkIkUEibOg78W/vgf/C6rOPO8SbQT4y2pVGTIRaPjoYkB4P3nqVq7
-         8VfFaN61dpfRITBManJX1UJ0xuhv0vFZHVqEBeahbnDfu1eqHDBuX4CKQzPHOgsc2ndx
-         3WLy8a0B1Bh1HfuAkhp4NdemW+a5EhKJKVyhigyrxwHYoBORi9VLzUAVbFfQhH8Ltwd8
-         hAzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764134848; x=1764739648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pSMFqWzLWfdGgOTWHTx6nMiUCmlOuWGDKob29IPDfLw=;
-        b=R2VKmf5eoseJ/lyj76WRlAajnuT7+Um5oj6xQtOmZe73QmPeB7OEFH3HeFvf6RHXGH
-         KfxiBivbhCsthsfHbNuuC9yhwcNsS9cbC9yDm5tCq6j6wRYVCIcCfSelOpCgWBEuq3oH
-         oBgkaI+XxIsbBnwkaMCfRqK9MLE5bHk6XTldSk7t73gxC4x23HyNVQAEQRzwZUy5FGH+
-         9aMJv2Dfy2K21HuHIXaeia7aqMalLuSNS7s0TCKX86yMVXJtpzQ0yOzgbwBlTgD7wf6U
-         k3p0FVBXqY+RK7nQ2ZlCGOQinSahv8GWujIBg9o9mL+TMz5wvFWtxrdJDnrRVR/PxcHI
-         KvtA==
-X-Forwarded-Encrypted: i=1; AJvYcCULe9bs/9m3W2PrFd0RZfOien9COG5u2KDSbhIvS0O6hnu+QWVZc8kPDlNtXWZafPBxrDr5wVfwoRA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwW7IiiYksM+p4fB0BVrw6stAsHh/1bwqhRHbczX44VcDSWmhuh
-	s64xf6QSlrDu0oyXHS7f7cPxwTEx9Kndc3qQ3NXNf+agKXfTVrjkX2WO7ZL9g+t1prkxKx30USq
-	JB2EUIeWXI1pA+msfLKb/9Az10FhlL+I=
-X-Gm-Gg: ASbGnctlA6f1MOLoC9CArsCOwui32vnc135Fh1Gmj7NO/CrcsrNt3God9L5s0R/QlZK
-	Ja6eIc7xr5ffqegecV51gtPmFrJrBLdUn4aE5Xy+xc+HQXvjxWhyarsuFMyy7coaNOGyUsfhV3c
-	2ZR74vuTWw7Ee1reLETeBdrXPFt7wJd/WupdPLfICfzk0KLRMVAG0degkBUrScZ/ug/CMUluOd/
-	J5mFhU7sJTyACyxdfRgW+J4oDVdxwxE1PRiCSwNLMUOdKB0cQ8ZNnoWTTilphN0Uwzi9g==
-X-Google-Smtp-Source: AGHT+IHKJmnkojyeNe4AUHn94//tsVGX72UvxeyT++3i9ibL6aicyhbda/hlZTHY7k+dmC6TqvcVXS2tnrbt93vsjuk=
-X-Received: by 2002:a05:6808:2111:b0:44f:6dcd:1e52 with SMTP id
- 5614622812f47-4514e658837mr2441324b6e.8.1764134848040; Tue, 25 Nov 2025
- 21:27:28 -0800 (PST)
+	s=arc-20240116; t=1764135383; c=relaxed/simple;
+	bh=3fr7+zisVir+vjWivU1phFdz98ryaS94nElCm29Yjtg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=M3nXi1j5P9gg39uQiseqnOz72erqzlGNuC9X5I0/W6H0bWnystvL45MngfIpsRueCdtBiHJOZ16SsSAU7coJq/Jjt8Xhh3Ufk1zIQ+QZvvwc5iCp7N8QRAc20zMGH5mqsuy+s9caIS202pYxATj5RfB0DxjbHoxDkoL/3/D+qIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cxbb_QkSZpXzEoAA--.19793S3;
+	Wed, 26 Nov 2025 13:36:17 +0800 (CST)
+Received: from [10.130.40.41] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxE+TPkSZplbQ_AQ--.44916S3;
+	Wed, 26 Nov 2025 13:36:16 +0800 (CST)
+Subject: Re: [PATCH v1] LoongArch: Handle special PC in unwind_next_frame()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Xi Zhang <zhangxi@kylinos.cn>, Xianglai Li <lixianglai@loongson.cn>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20251125063327.31586-1-yangtiezhu@loongson.cn>
+ <CAAhV-H5AO38DAqxUyawwKW_f=ZuCaROj+s--vE8ham0sTWMxog@mail.gmail.com>
+ <332975a8-c7f1-76d5-0628-cd7260ad1180@loongson.cn>
+ <CAAhV-H77duX-WiYsJzkJChmGHdGh5y_k6YEvLQdpDys5iLctgw@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <97155bf2-591c-2d5f-b26f-c0532fe2e3d5@loongson.cn>
+Date: Wed, 26 Nov 2025 13:36:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251126023631.3143434-1-maqianga@uniontech.com>
-In-Reply-To: <20251126023631.3143434-1-maqianga@uniontech.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 26 Nov 2025 13:27:17 +0800
-X-Gm-Features: AWmQ_bnjLe1NR3mk-ZOY-J8E0P804F-AczLIg1c-ANabH7IUSILglpz8ICp82bw
-Message-ID: <CAEyhmHTV_AkZ=hFN4aCisBbecTtOahPaMGmC8BtfD7p_9OAEJw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Correct the calculation logic of thread_count
-To: Qiang Ma <maqianga@uniontech.com>
-Cc: chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H77duX-WiYsJzkJChmGHdGh5y_k6YEvLQdpDys5iLctgw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxE+TPkSZplbQ_AQ--.44916S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrXryDZFy3GF4kGw4fWrWUKFX_yoWxXFb_Wa
+	yY93WDZr4UJFnxJw18K34YvF9xWas8GryrtrZrJw4xtasYgFyrGr4Iyrnakr95Kr4ktr47
+	JF4kZFZ3uw1UuosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+	JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU74lkDUUUU
 
-On Wed, Nov 26, 2025 at 10:37=E2=80=AFAM Qiang Ma <maqianga@uniontech.com> =
-wrote:
->
-> For thread_count, the current calculation method has a maximum of 255,
-> which may not be sufficient in the future. Therefore, we are correcting
-> it now.
->
-> Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
->
-> [1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134=
-_3.9.0.pdf
->
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> ---
->  arch/loongarch/kernel/setup.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
-c
-> index 25a87378e48e..760f5ce44384 100644
-> --- a/arch/loongarch/kernel/setup.c
-> +++ b/arch/loongarch/kernel/setup.c
-> @@ -56,6 +56,7 @@
->  #define SMBIOS_FREQLOW_MASK            0xFF
->  #define SMBIOS_CORE_PACKAGE_OFFSET     0x23
->  #define SMBIOS_THREAD_PACKAGE_OFFSET   0x25
-> +#define SMBIOS_THREAD_PACKAGE_2_OFFSET 0x2E
->  #define LOONGSON_EFI_ENABLE            (1 << 3)
->
->  unsigned long fw_arg0, fw_arg1, fw_arg2;
-> @@ -120,13 +121,19 @@ static void __init parse_cpu_table(const struct dmi=
-_header *dm)
->  {
->         long freq_temp =3D 0;
->         char *dmi_data =3D (char *)dm;
-> +       u8 thread_count;
-> +       u16 thread_count2;
->
->         freq_temp =3D ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
->                         ((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & SMBIOS_F=
-REQLOW_MASK));
->         cpu_clock_freq =3D freq_temp * 1000000;
->
->         loongson_sysconf.cpuname =3D (void *)dmi_string_parse(dm, dmi_dat=
-a[16]);
-> -       loongson_sysconf.cores_per_package =3D *(dmi_data + SMBIOS_THREAD=
-_PACKAGE_OFFSET);
-> +       thread_count =3D *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
-> +       thread_count2 =3D *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFF=
-SET);
+On 2025/11/25 下午5:05, Huacai Chen wrote:
+> On Tue, Nov 25, 2025 at 4:54 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-You have `dm->length >=3D 0x30` below but the memory load already done here=
-.
+...
 
-> +       if (thread_count !=3D 0)
-> +               loongson_sysconf.cores_per_package =3D dm->length >=3D 0x=
-30 && thread_count =3D=3D 0xFF ?
-> +                                                    thread_count2 : thre=
-ad_count;
->
->         pr_info("CpuClock =3D %llu\n", cpu_clock_freq);
->  }
-> --
-> 2.20.1
->
->
+>> They are different code paths, the current path is "goto err", it will
+>> set state->error as true, then arch_stack_walk_reliable() will return
+>> -EINVAL.
+>>
+>> With this patch, the code path is "goto end" for this case, it will
+>> not set state->error as true, then arch_stack_walk_reliable() will
+>> return 0.
+> Then can we replace "goto err" with "goto end" at  __kernel_text_address()?
+
+No, this "goto err" path is useful to indicate that there is
+something wrong.
+
+Thanks,
+Tiezhu
+
