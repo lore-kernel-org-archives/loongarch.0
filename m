@@ -1,117 +1,120 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BED430BF7E
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 02:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07FC22A4E8
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 02:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764122776; cv=none; b=qCPcrfnmVqg/l0EEWOXW9LK90feguEV78uhGbMD6g23a2s6QeJQ8AI5dBpjdyDQKo3VGSUFlMaKkx5TVD2umrtZ+4aUtknXKP0h2xWMMhhYWNgZluYeZUscbRAc5rgprCsrSsx/A1+RFCfxDCm6MpThxXYvAyD8rGmdUoSGv/lw=
+	t=1764124640; cv=none; b=MXT69SvSimNA99sTLz244SXpZLn9dgeLBpQZN+Dur5R2TOYqTE5/hQu5S3qoxqtfiI0COgm+737VTL5WbWeAng4oDXUvv4AkECRxA5TMnORD3TypYxZe+fqfbYfN7JsWjVNbBy1V7g5YVVTq4RDMH4QcMkR/ljr+7FZ53uk5AXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764122776; c=relaxed/simple;
-	bh=RyAId0GM4YN0ArTmhHUKslKPznhLpV8Z15TRDwNgIi8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=e4SoZrMTVlt5YINmWP4Jj8uy2j5EkUv6FwqKRoBpKCRyiBaNT6M1y5UxxvVnKZQXcatcep2K194Wvqhv9HaCGlIwr5/Wsrdit86B/tRZAzvzUvFpw8BlORwsqiE0EdRTTEa7BGBxjiZGIML8j62Gv4VFdpO3mQgPas019nK5aaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wh1foxUw; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764124640; c=relaxed/simple;
+	bh=dyyanO4xf46BrgF90hRvJfjaltHLB731vnGFPzKsTBk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s6CUeqqSnkYFEwPL8bFBZlQdtqk+TwgSZZF0X+56NiKORjijXlS6Oz5UmkWdhhLnI8+UrNKZfNLcMfMmaeWUMbmUzqSiqV9w0DcDc9D0NqhswYPJszqUPQMCq/9PA20sJl77rKxWbs1/aBMUmdWGk81XOUrJFsHtsLsFpOR3dnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=MIwL8Wuo; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wh1foxUw"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764122762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EJ/Ue5Qky2MtwQsGNeb6W8oWcDHKfS+NJnISi7Fqbec=;
-	b=wh1foxUwpvUFW06sb6lX2q8JNoYsnZ8Y4AqLkF1tXKThDtjs15debHalFusl8gQfnTSh68
-	per6vLxql+jl9SPUSLdISiyCh5EtMR516sUbcwhNzMX/xNJVYedYk1+pVtstq34KxZxcb+
-	JLGGgs5jqHKZIXDUH9vMY9jZ4+mxDF4=
-From: George Guo <dongtai.guo@linux.dev>
-Subject: [PATCH v3 0/2] LoongArch: Add 128-bit atomic cmpxchg support (v3)
-Date: Wed, 26 Nov 2025 10:05:49 +0800
-Message-Id: <20251126-2-v3-0-851b5a516801@linux.dev>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="MIwL8Wuo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1764124619;
+	bh=snyP4dIJhVEfL1cF1W/gxNri0KGx1YAG3Ccl2YjNfMY=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=MIwL8WuoTxK+RAyiVrNHD1cui5ba0J54TyL4XTZ64P9rgHlpBlaJhMpioA59t/3rn
+	 ImpsHBV2SC3rIUdz2+1AU/XbFZxCfsKBoAlPeYO9T6/d9i2dngJnAwk8LCNe8UVbqr
+	 IkXSd7lsSPwTcATFsWTJfKQRpqKzQFoQq8gaGFrY=
+X-QQ-mid: zesmtpgz8t1764124614t217512b7
+X-QQ-Originating-IP: Q63GKU/1qu4B8wEpnDEqLyCnEcTYnImTKca4hRmrqk8=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 26 Nov 2025 10:36:52 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14159429218752448158
+EX-QQ-RecipientCnt: 5
+From: Qiang Ma <maqianga@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Qiang Ma <maqianga@uniontech.com>
+Subject: [PATCH] LoongArch: Correct the calculation logic of thread_count
+Date: Wed, 26 Nov 2025 10:36:31 +0800
+Message-Id: <20251126023631.3143434-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH1gJmkC/03MwQ6CMAzG8VchPTvTFYboyfcwHhwr0sSA2XTBk
- L27GyeO/6a/b4XAXjjApVrBc5Qg85SjPlTQj4/pyUpcbiAkozWhIuWw7lqy1A+tg/z39jzIsm3
- c7rlHCZ/Z/7bJqMt1r6NWqE5orOubBo3B60um73J0HKHoSHvRFEFZ2Loj3TKZwZ33IqX0B30Zh
- RTEAAAA
-X-Change-ID: 20251120-2-d03862b2cf6d
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764122759; l=2402;
- i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=RyAId0GM4YN0ArTmhHUKslKPznhLpV8Z15TRDwNgIi8=;
- b=dOheip3SDPcVyZXvBgHYRdE4Adfy/snvPf2qQ3yFLrTTkFXBghMMt4ZHi7g/ceSG8K2fVRCnA
- WPi7bnE6fcXBWVwhDheDzsvtlPuQs7NxFoYofikYL87d9A/prcCaKNZ
-X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
- pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: Oe8iwmjPdG65O1tnfD9PUZWdcqz5dY0Dn1ISGyH6fZELtB1I7baZQ1bU
+	aJk8L+rFHTDQAvnFefqDFH5lPhOrSTrJkMhrBLdh7/JND1Jdcitkh3TbQqTa+VhCQQ10W0T
+	iQ0++PrlI/+vJnk1IZsvK5XbHFas2MFayizVAhKOc/LmoiA0Sl4iwQtqdeZxzFM2L6Z5Jgx
+	WMMoAgTVgTqvEEd+Z16iPUSieZHm0/YGT6hJTxxPT2d+HmfdyJNlIZkqveoZ6Z/+2Vz8CoF
+	zZLwqX5hhh8+2YVFrE7PjbEbsVgXDvoDhr9jDMqicKMxI3CR0TS82KxSuLAKPZ+s/k4PaA9
+	vNF/Xw/YjvbFjhaoSqs+VYFXXcZV/ssXUumBaYaeaCYWFSALqY+qWBaHSKdQvQOe/u5DWMA
+	xPAR3vBIkj+4ruSnVTelTCi5UWvOP3jdJjdPEq5w8gtl2yxgqflPkvkjWxWXq9nCFrD4Xs/
+	wDT6EbLWMD9Vj0KK6rKqocd3QLyiyJ93NMHE8r2hGIivg6gMDhDMDSuqeavd5u+ch7N7dQu
+	EcGaArBqeqjd6KpE6PBxZspjdIyciy6TAdrBqDwfiHsUaaT6r/1THteN4YQO8Vv3XjvISd/
+	7iEWx1hQX0gHdlZrQxZ8f7MmUs8p+txoe+tlZ+Q+FMQiiGE2Sv2eMTzqFn5goo/RRH1Xw3d
+	cl2dFJCvsoOgxsez8B2niFPgDZiZcIvomSCtQ7cJOS5bB/r2QG9NQKh8Vv7m1e5vYu5VAh3
+	I4oNzkz5UXIATVmd9GtJLTOnrf1VGNCYeb/ZZb59k8Y34k+wdxFUHxOKNINHqTuAbrj0pJh
+	iXbyeqsgKVI+48R3NTw2GTqLMY23q2LvT3r5mdPhAYOWb2DjbYbL7AWDmTIblIGGzVNZjKi
+	Uq6ANRBsDMV1kGuoAUhpyJ7xQGj24V5xYWW1RyuYNbBZZgT0QWkxD0/Bnr/mhTZjnnG4JeS
+	eYOs1YUAjwr/wx/C2NmWDuFoWV2ZQe02Dq6LpopVvirr9Pp59pOolGNEREwEJYn4dnLYtzG
+	Za63VfNsTXGMclfZRhM16wNk9n++k=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-This patch series adds 128-bit atomic compare-and-exchange support for
-LoongArch architecture, which fixes BPF scheduler test failures caused
-by missing 128-bit atomics support.
+For thread_count, the current calculation method has a maximum of 255,
+which may not be sufficient in the future. Therefore, we are correcting
+it now.
 
-The series consists of two patches:
+Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
 
-1. "LoongArch: Add 128-bit atomic cmpxchg support"
-   - Implements 128-bit atomic compare-and-exchange using LoongArch's
-     LL.D/SC.Q instructions
-   - Fixes BPF scheduler test failures (scx_central scx_qmap) where
-     kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
-     leading to -ENOMEM errors during scheduler initialization
+[1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.9.0.pdf
 
-2. "LoongArch: Enable 128-bit atomics cmpxchg support"
-   - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
-     in Kconfig to enable 128-bit atomic cmpxchg support
-
-The issue was identified through BPF scheduler test failures where
-scx_central and scx_qmap schedulers would fail to initialize. Testing
-was performed using the scx_qmap scheduler from tools/sched_ext/,
-confirming that the patches resolve the initialization failures.
-
-Signed-off-by: George Guo <dongtai.guo@linux.dev>
+Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 ---
-Changes in v3:
-- dbar 0 -> __WEAK_LLSC_MB
-- =ZB" (__ptr[0]) -> "r" (__ptr)
-- Link to v2: https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linux.dev
+ arch/loongarch/kernel/setup.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Use a normal ld.d for the high word instead of ll.d to avoid race
-  condition
-- Insert a dbar between ll.d and ld.d to prevent reordering
-- Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(ptr, o, n)
-- Fix address operand constraints after testing different approaches:
-  * ld.d with "m"
-  * ll.d with "ZC",
-  * sc.q with "ZB"(alternative constraints caused issues:
-   - "r"  caused system hang
-   - "ZC" caused compiler error:
-     {standard input}: Assembler messages:
-     {standard input}:10037: Fatal error: Immediate overflow.
-     format: u0:0 )
-- Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linux.dev
-
----
-George Guo (2):
-      LoongArch: Add 128-bit atomic cmpxchg support
-      LoongArch: Enable 128-bit atomics cmpxchg support
-
- arch/loongarch/Kconfig               |  2 ++
- arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
----
-base-commit: d5ae5ac32615e4af729f0610fdc11ff4f4798aef
-change-id: 20251120-2-d03862b2cf6d
-
-Best regards,
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 25a87378e48e..760f5ce44384 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -56,6 +56,7 @@
+ #define SMBIOS_FREQLOW_MASK		0xFF
+ #define SMBIOS_CORE_PACKAGE_OFFSET	0x23
+ #define SMBIOS_THREAD_PACKAGE_OFFSET	0x25
++#define SMBIOS_THREAD_PACKAGE_2_OFFSET	0x2E
+ #define LOONGSON_EFI_ENABLE		(1 << 3)
+ 
+ unsigned long fw_arg0, fw_arg1, fw_arg2;
+@@ -120,13 +121,19 @@ static void __init parse_cpu_table(const struct dmi_header *dm)
+ {
+ 	long freq_temp = 0;
+ 	char *dmi_data = (char *)dm;
++	u8 thread_count;
++	u16 thread_count2;
+ 
+ 	freq_temp = ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
+ 			((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & SMBIOS_FREQLOW_MASK));
+ 	cpu_clock_freq = freq_temp * 1000000;
+ 
+ 	loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, dmi_data[16]);
+-	loongson_sysconf.cores_per_package = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
++	thread_count = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
++	thread_count2 = *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFFSET);
++	if (thread_count != 0)
++		loongson_sysconf.cores_per_package = dm->length >= 0x30 && thread_count == 0xFF ?
++						     thread_count2 : thread_count;
+ 
+ 	pr_info("CpuClock = %llu\n", cpu_clock_freq);
+ }
 -- 
-George Guo <dongtai.guo@linux.dev>
+2.20.1
 
