@@ -1,132 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EFBF50F
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 04:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAD23B2A0
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 04:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764132284; cv=none; b=amJ5zMMtUZ++mZ4CmiznrtesbgzBtINiftUOzR019uOl/mAa051BGTleT9av8JfeGYjzED5shlvyh9vJsXljwLyXyzt6fgk464V4OEWA+AOsOFlKb5Rw0digZRfrtsOA10U+Zj2apkSTCoLJlMZC3/jEHLGGKqYVp/g5VK4rUPM=
+	t=1764132537; cv=none; b=CANp2we5qIcX1N1JMsL6fHK2dxPXXfL5030iTRCO3nJwGoi64I+j4rJvVJp1HTK1iGGYBiz5gbpguK5iolOu52Ihb1DyZl5GUBoVNqFuum93AUPjuyGMe0D4T3zpd0p4gGaX4WcUTdRuQMZstYpUssW0RACm3Enulwe92ZSX03A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764132284; c=relaxed/simple;
-	bh=a0T1j8pUpXQk1j0e+oZr30MHSr5vmYZysQl3QZL1MAQ=;
+	s=arc-20240116; t=1764132537; c=relaxed/simple;
+	bh=ImLvybmUHkTYp36WFzk33B+8/5eWQeaHdKTdwrZEMNU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DB5VC3+E6Knhey6A6luyvjfr350lsQSo+gDZnafRdL/n6Ya31nQLnCWhIU/lSmcXZ/2V2OgLXNF2JejPpIUf5BVJkvZ2UGpywczThbtWsZod+qhkjfxrMjU6LkgFSHJyfBMF0EziXrkkPyYwx3t33tm4UbLGfI+U95uAvFc8sxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmMX6yBb; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=YTH5djwErvvhvi9/LoEhHWw0MMVRRI4xQU8TPwNjJd23w59am11tvwUOM9xLRvFHv6nGmYpW2YfXfbiCKoP3XLIgUcHhlr/EjSpXRpryoq3RhfcKwsHS3IPzKIVxA6S21frnqtwfdmJIoYgqbvRiMKVbfWRNo6IaLoUFScYFVNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sDDUAHBs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmMX6yBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BD2C113D0
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 04:44:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sDDUAHBs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B8BEC4AF09
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 04:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764132283;
-	bh=a0T1j8pUpXQk1j0e+oZr30MHSr5vmYZysQl3QZL1MAQ=;
+	s=k20201202; t=1764132537;
+	bh=ImLvybmUHkTYp36WFzk33B+8/5eWQeaHdKTdwrZEMNU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cmMX6yBbiYlRCwp1Biwz2FMYfgddmWzTKFueXJ8gRkT4vnNw4D31ijn7LyoS3mg9Y
-	 IMun+nY/KxJPiH/8vHckb4aTsmMTcBmjQMNgLCVeRWpicM2p6Qw/mnhjSAuQA9ql52
-	 RIKx9CQO22AUbTl0ZhlbBkImev6KoVCiiU0AVai/YA1Em6+14HzA9Tt0j73dRA2c1W
-	 Qfs8KIhUgPrDl/nCODIg5de5Jg/6qtPMefBGD/HVf7W26UHx827Vv2i7Gm0uNHZCJ4
-	 MurKAt+rhIy0ImIuXdR33KB6kO9Lj/ZfG0bkUKu7YGa2R/CEDQOS3TQ3qiOLZQR85h
-	 25pCpbVYZfg2A==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b73875aa527so1006279766b.3
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 20:44:43 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXedIcVi9p1GESgssGKpR+v6uAVXlBUQcg2Nuc4JGVWmqT8VeCtqoIWzfa9SIi3ReM7E5HUS422ERs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YykMyJlVEOaU2CMtL94dDTHKb1h59zaEdPTQfOvJ8nGdinoIlbD
-	7MuSqMTGTRmueahKdDC0ApMWpKh80K81kZVBYf7inhuS0BsMDWQvpNneUjV0PaKHaEFbNzQ2IU7
-	QWwYI5VULoH8asYGWD3Mem9JkXlLgrJk=
-X-Google-Smtp-Source: AGHT+IGe11TsP5qPiyggt2mgQLm7CwCcuvS0nJm7twIPi+ghs2D1cysatwE8JJ/zBfV8H5zMGZuRQfVc912QFEFUf2Q=
-X-Received: by 2002:a17:906:40c4:b0:b76:bcf5:a38a with SMTP id
- a640c23a62f3a-b76bcf5a3f0mr482738466b.0.1764132282379; Tue, 25 Nov 2025
- 20:44:42 -0800 (PST)
+	b=sDDUAHBsr2VyGUcKuZBnWwDM1rbpuGjXY6GHu3CznZbr2SS3sqR0vk1kB6oTia1Qj
+	 Dj0fSgZgce2RJHnH+Wl7qEXkJ+nl1yzgAUz5JvAU5/Tfi+l4eU86jdmutYBZkHd7XD
+	 geoYy6LHx5e/0XXpm/fuRx3CE+1u9kZcIVWHQL0sdLHh63lcJLSBWpS2xmlIJ8p84w
+	 992M3oJFu2KH10THXu+CHsglzHjYniMkE9fxkI5HhlG8BexQ8mPD25W0mvHJh1Y3wC
+	 XxpkDXT5cs8NTq8xkLys+P5/wGnwmxp5hyALI3i+Dkv63/2cR3mgMIyBnyb618oQiB
+	 0uyEnuOStk3Pg==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b739ef3f739so562884266b.1
+        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 20:48:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW6Qhpm0mdCdWtoS2sB5mGZb3BGShDPiM24n61idprZkOuYQvIfGLqJrTjkZfTHfyo4q7EpjtP3DfA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRzGDe+fWLI/3Z4MbtSEX0W80PWOZYkIJjFndID0z+NH73//vE
+	L1ratAg/0h+9UJouoOh2MySceg3H6Qw6/YlXvfVMOhRl3K2KLhlDfsBMX4YRJRmKo8O3ueJd60m
+	/QPImtX1pe7QPfZf/XtetXaLEgfwycnk=
+X-Google-Smtp-Source: AGHT+IHISDHqPYK4bDvs85R3rZwhcTlzbHbtZulWaALsMx1T8W8ONvKvbVY+uQS+t375B7vpuH1Iy5Y7KYrGZmF0GOk=
+X-Received: by 2002:a17:907:3e86:b0:b73:74b4:f236 with SMTP id
+ a640c23a62f3a-b76c563c190mr549213266b.46.1764132536028; Tue, 25 Nov 2025
+ 20:48:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251126-2-v3-0-851b5a516801@linux.dev>
-In-Reply-To: <20251126-2-v3-0-851b5a516801@linux.dev>
+References: <20251126023631.3143434-1-maqianga@uniontech.com>
+In-Reply-To: <20251126023631.3143434-1-maqianga@uniontech.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Nov 2025 12:44:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4=C2Fe=O=OWZVPTpSe0P6s2_vtpL7P9os5QGE7_r3s4w@mail.gmail.com>
-X-Gm-Features: AWmQ_bmVbjTUZ5xFGUJNUcWufbs5i3WNAExOfsZ51ePAvuVBJr2G2YxRCSbfCFI
-Message-ID: <CAAhV-H4=C2Fe=O=OWZVPTpSe0P6s2_vtpL7P9os5QGE7_r3s4w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] LoongArch: Add 128-bit atomic cmpxchg support (v3)
-To: George Guo <dongtai.guo@linux.dev>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
+Date: Wed, 26 Nov 2025 12:49:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4EOTwn3fSJHWOkahgO3VHPGN9k9mbY7akpHDny_sBOsQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bn3Wg8SjoZzvesHZRX71Qqy3Oa1C17ticajIMtuabjoo7PpXJKicw1dnz4
+Message-ID: <CAAhV-H4EOTwn3fSJHWOkahgO3VHPGN9k9mbY7akpHDny_sBOsQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Correct the calculation logic of thread_count
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, George,
+Hi, Qiang,
 
-On Wed, Nov 26, 2025 at 10:06=E2=80=AFAM George Guo <dongtai.guo@linux.dev>=
- wrote:
+On Wed, Nov 26, 2025 at 10:37=E2=80=AFAM Qiang Ma <maqianga@uniontech.com> =
+wrote:
 >
-> This patch series adds 128-bit atomic compare-and-exchange support for
-> LoongArch architecture, which fixes BPF scheduler test failures caused
-> by missing 128-bit atomics support.
-Have you tested your code on Loongson-3A5000/3C5000?
+> For thread_count, the current calculation method has a maximum of 255,
+> which may not be sufficient in the future. Therefore, we are correcting
+> it now.
+I think you should contact the Loongson BIOS team to confirm they will do s=
+o.
+
+And we can hardly meet the case that one socket contains more than 256
+cores (this is different from the case MAX_CPUS > 256)
 
 Huacai
 
 >
-> The series consists of two patches:
+> Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
 >
-> 1. "LoongArch: Add 128-bit atomic cmpxchg support"
->    - Implements 128-bit atomic compare-and-exchange using LoongArch's
->      LL.D/SC.Q instructions
->    - Fixes BPF scheduler test failures (scx_central scx_qmap) where
->      kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
->      leading to -ENOMEM errors during scheduler initialization
+> [1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134=
+_3.9.0.pdf
 >
-> 2. "LoongArch: Enable 128-bit atomics cmpxchg support"
->    - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
->      in Kconfig to enable 128-bit atomic cmpxchg support
->
-> The issue was identified through BPF scheduler test failures where
-> scx_central and scx_qmap schedulers would fail to initialize. Testing
-> was performed using the scx_qmap scheduler from tools/sched_ext/,
-> confirming that the patches resolve the initialization failures.
->
-> Signed-off-by: George Guo <dongtai.guo@linux.dev>
+> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 > ---
-> Changes in v3:
-> - dbar 0 -> __WEAK_LLSC_MB
-> - =3DZB" (__ptr[0]) -> "r" (__ptr)
-> - Link to v2: https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linu=
-x.dev
+>  arch/loongarch/kernel/setup.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >
-> Changes in v2:
-> - Use a normal ld.d for the high word instead of ll.d to avoid race
->   condition
-> - Insert a dbar between ll.d and ld.d to prevent reordering
-> - Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(=
-ptr, o, n)
-> - Fix address operand constraints after testing different approaches:
->   * ld.d with "m"
->   * ll.d with "ZC",
->   * sc.q with "ZB"(alternative constraints caused issues:
->    - "r"  caused system hang
->    - "ZC" caused compiler error:
->      {standard input}: Assembler messages:
->      {standard input}:10037: Fatal error: Immediate overflow.
->      format: u0:0 )
-> - Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linu=
-x.dev
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index 25a87378e48e..760f5ce44384 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -56,6 +56,7 @@
+>  #define SMBIOS_FREQLOW_MASK            0xFF
+>  #define SMBIOS_CORE_PACKAGE_OFFSET     0x23
+>  #define SMBIOS_THREAD_PACKAGE_OFFSET   0x25
+> +#define SMBIOS_THREAD_PACKAGE_2_OFFSET 0x2E
+>  #define LOONGSON_EFI_ENABLE            (1 << 3)
 >
-> ---
-> George Guo (2):
->       LoongArch: Add 128-bit atomic cmpxchg support
->       LoongArch: Enable 128-bit atomics cmpxchg support
+>  unsigned long fw_arg0, fw_arg1, fw_arg2;
+> @@ -120,13 +121,19 @@ static void __init parse_cpu_table(const struct dmi=
+_header *dm)
+>  {
+>         long freq_temp =3D 0;
+>         char *dmi_data =3D (char *)dm;
+> +       u8 thread_count;
+> +       u16 thread_count2;
 >
->  arch/loongarch/Kconfig               |  2 ++
->  arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 49 insertions(+)
-> ---
-> base-commit: d5ae5ac32615e4af729f0610fdc11ff4f4798aef
-> change-id: 20251120-2-d03862b2cf6d
+>         freq_temp =3D ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
+>                         ((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & SMBIOS_F=
+REQLOW_MASK));
+>         cpu_clock_freq =3D freq_temp * 1000000;
 >
-> Best regards,
+>         loongson_sysconf.cpuname =3D (void *)dmi_string_parse(dm, dmi_dat=
+a[16]);
+> -       loongson_sysconf.cores_per_package =3D *(dmi_data + SMBIOS_THREAD=
+_PACKAGE_OFFSET);
+> +       thread_count =3D *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+> +       thread_count2 =3D *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFF=
+SET);
+> +       if (thread_count !=3D 0)
+> +               loongson_sysconf.cores_per_package =3D dm->length >=3D 0x=
+30 && thread_count =3D=3D 0xFF ?
+> +                                                    thread_count2 : thre=
+ad_count;
+>
+>         pr_info("CpuClock =3D %llu\n", cpu_clock_freq);
+>  }
 > --
-> George Guo <dongtai.guo@linux.dev>
+> 2.20.1
 >
