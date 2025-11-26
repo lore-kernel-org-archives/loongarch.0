@@ -1,86 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6339221FF46
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 07:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B997262B
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 08:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764140953; cv=none; b=D44khfhp+RaOYXaSLpAum2pgZWvjMy8ZflOTY4C8aVZUfW6o3L9E97KYgeveM/KVeG0DtTQ0b1ljFeE2uQqRSnNsRi610BR3ZBPerCr4MvLyGehHeWyAeD1QXVWkG40VH2vasC14dgHcGJoKIui3LjfUzUiEWxBbuyU1dcrMc4s=
+	t=1764144172; cv=none; b=rJu1xL9Zsb4jTRCYZfiDqvB21te5gjReSH/oz65P6L1YAMGPtZaRcgI1BYXaQ8sbc0+z7H8TwzCH8IxXzNqnfs9axH5N/Y1t6bFV6QW6oRel21NqOWyYc1LQxPHd+TBE7uPOZPwvUCmQQohEmGNH3d+/paEl3maBWGms2bTZKbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764140953; c=relaxed/simple;
-	bh=D81/U/r4ll/aJ46lwh5MjYT3sLwCXZh8GWYMYdx8Iik=;
+	s=arc-20240116; t=1764144172; c=relaxed/simple;
+	bh=VrVVNYgQQe2YqVbBdaNiWgaQnQvw8/RbxdtxMN/zYMg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ig2L1ctbne1Wd8ElePy9eNPmem7OEW25vYFsaT4YG2Gzf+Eff662J1aX++lp5AEMpGfJyfLA9HhlXZ2EPHV4m0F8CQJlEfFFjxU5Q3cbbcgGbduWWEqmVMZza/uVObB31loh6uigrYJ0ToZMgSeUoc9UpHNbQtTfMefylBSo3DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEXTSbGe; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=OWmj6Wv7FuenSy1ey5dn7qhwsYzKabedR8Nk5VDGDGmeF8V9Ob99Y4r3l3HhHZEQ/JiWLHt1SfQlyjU45PXQ/87s5JSNMHQSPV/q+9yxmth61A84SlDZdEBnQL65tkPEObPw9x22R3qIup2FNVDvz6kVr3e2vs1UQC1myok/r1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHoH3Dgo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEXTSbGe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45879C16AAE
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 07:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHoH3Dgo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D4AC16AAE
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 08:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764140953;
-	bh=D81/U/r4ll/aJ46lwh5MjYT3sLwCXZh8GWYMYdx8Iik=;
+	s=k20201202; t=1764144171;
+	bh=VrVVNYgQQe2YqVbBdaNiWgaQnQvw8/RbxdtxMN/zYMg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nEXTSbGeDR/PNHwycuEXDvsQtIzib3DmjE1YTWaFbECGm6T7hbOtTTvN2vdEkHMA7
-	 y5ASpjG+Inutm84t5SsyznW1QsoQGGaIXMgcvDzROkKZJKXQGHxURqGY7AZC8/5E62
-	 xAgQtq94e5a80U9iJi6jucG7+RwMx5fH2eO8CW6U5Zfd0Opt9cB4+geruS5irDG5lA
-	 +xJnuLsJl+1PHntNpF9VzxWJzrBq6UL/6v++1I5fKiDuNjL2ogK759WIdqC+9g81qp
-	 4DbqdWoo7Lim2P5nfFHVh8+lA3gFJtEL+oJxLW0zffKdFnANNPGbunEQSmyLucb+Ux
-	 8k5iL9P3+zedg==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6408f9cb1dcso2958883a12.3
-        for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 23:09:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWBq0HghLxSBVjcteS0yUuAd1tU7MnUtDFAoeDhUEN2Ue2LCjjZIeF/hjXXmZ7Wq6/WHXQn5pu8y80=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw4bEBm8eUbSWU8gA0bAroNdVpdQlb3XpHOceFLwu22EGrgm6qK
-	yjW9V9IkFdz0R3JHIq/71qZUuIkkvPn1lBpFHbYa9lB9miBtrunfxJ+AKD59UYzRgTok4c9dWnO
-	oVYZgEm63PouSZd6ttk/U+e+3tF7hkwA=
-X-Google-Smtp-Source: AGHT+IEntSPkO8+ZDsOZT/nZua3PcaJiN8EYEyx0cfSy5NAMd+3VAXax17CQGCTirCAERp+Sb04uM2EZvGmVHYdfG/A=
-X-Received: by 2002:a17:907:7f1b:b0:b4f:e12e:aa24 with SMTP id
- a640c23a62f3a-b76c53c3547mr535421866b.22.1764140951808; Tue, 25 Nov 2025
- 23:09:11 -0800 (PST)
+	b=tHoH3Dgo4TRSlMkVJrJjE8Q4Az28rNtMCzpoMSZRGEcdwcmtEvbwszIrMm3xL1i2B
+	 XIarIWDn1fK5Q7U6bc5p/SSYEtB2g3vxr4q7QbPA36UBtqlca3lnhqgMJYO8e9OHlw
+	 iIP79LLTYcS/uuouC2gj8q5FnVxAxMkYE3etjzYZVCY0fpAB3gvuika5C4Mrapy1w+
+	 8BX8v9Nztm7MzWwsb+YSmgtTsluPza1RBFlbp6fqFMq2cLBYkxYDeXDYfKbSwmdAeo
+	 pwykR/7M84KPDAJ/hcunAc7at8gPRIyAlW8CrM9SdplMMWK1BhohVK/4m5jKHZr7ep
+	 6FhVhfMECHSjQ==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b735e278fa1so691068766b.0
+        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 00:02:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVTvmIqy1FTFSVsdRzcS+a+bSr86+1z/hv4phRyGVztqTyZtfGQcpCa8SrAZEe+s/hb1aeelNfwgJg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxCoMWJByelgSzX9MaoIaWG7q8h4pGmnf9khcZQVwrqoRTX5QUw
+	koWRnrL5BRxmPawgx4bydbWHo3sKYP9mpUFSteZhXYvFzRBHDOWFr9ltgmhBfAhLEZS7+GfhKbr
+	NJ9DYSFc7ABMp2aqg2cJOJQBPbl6GeSU=
+X-Google-Smtp-Source: AGHT+IFPdB9GrEj8p0VC5xTh31pkH2puuW/Mtnce1zb0KHNsSpM0nLVPXZv02VaFB9C/TQ3cERS6/3GRiMNuGKZ3CjU=
+X-Received: by 2002:a17:907:1ca8:b0:b76:4c16:6b06 with SMTP id
+ a640c23a62f3a-b76c546d9demr642647266b.1.1764144170323; Wed, 26 Nov 2025
+ 00:02:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251125082559.488612-1-chenhuacai@loongson.cn> <9c732952-2ff6-4672-ab9a-76ac8590bf88@app.fastmail.com>
-In-Reply-To: <9c732952-2ff6-4672-ab9a-76ac8590bf88@app.fastmail.com>
+References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
+ <20251122043634.3447854-14-chenhuacai@loongson.cn> <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
+ <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com> <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
+ <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
+In-Reply-To: <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Nov 2025 15:09:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5m=oowvFLwbZKMDvWp3qPKCmKp5uoS4WU1XsAWzwWMmQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bk2gFzHkiCRAud-nVJQutbl2f7pk_UGKmDfKWV0Eqt6hPQydltN7smjh_I
-Message-ID: <CAAhV-H5m=oowvFLwbZKMDvWp3qPKCmKp5uoS4WU1XsAWzwWMmQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Fix build errors for CONFIG_RANDSTRUCT
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, kernel test robot <lkp@intel.com>, Rui Wang <wangrui@loongson.cn>
+Date: Wed, 26 Nov 2025 16:02:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5D=4ZhDLQOupyO0OOkuq2AWOGFBLpR8yAxaJcXb=QmRA@mail.gmail.com>
+X-Gm-Features: AWmQ_bl1vrMInXIOqwtLq2Ibt5NuiLQHamZuZ-w5BxZH3xqyYJowxFarxnY9pHg
+Message-ID: <CAAhV-H5D=4ZhDLQOupyO0OOkuq2AWOGFBLpR8yAxaJcXb=QmRA@mail.gmail.com>
+Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 25, 2025 at 9:49=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.co=
-m> wrote:
+On Wed, Nov 26, 2025 at 1:55=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
+:
 >
+> On Sat, Nov 22, 2025, at 15:13, Huacai Chen wrote:
+> > On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
+rote:
+> >> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
+> >> > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
+> >> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> >> >> index 96ca1a688984..cf9373786969 100644
+> >> >> --- a/arch/loongarch/Makefile
+> >> >> +++ b/arch/loongarch/Makefile
+> >> >> @@ -5,7 +5,12 @@
+> >> >>
+> >> >>  boot        :=3D arch/loongarch/boot
+> >> >>
+> >> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
+> >> >> +ifdef CONFIG_32BIT
+> >> >
+> >> > Testing for CONFIG options here doesn't make sense, as the config is=
+ not yet
+> >> > created.
+> >>
+> >> > Either test for $(ARCH) or uname or just use one unconditionally.
+> >>
+> >> I don't really like the $(ARCH) hacks, nobody is going to build kernel=
+s
+> >> natively on loongarch32, and for the rest it's fine to set the option.
+> > OK, I will use 'uname -m' for checking. Though native builds on
+> > loongarch32 will hardly happen, we can give a small chance to use
+> > loongson32_defconfig, in all other cases, let's use
+> > loongson64_defconfig.
 >
+> What I meant is not to guess the CONFIG_64BIT option from any
+> part of the build environment other than the actual .config settings.
 >
-> On Tue, 25 Nov 2025, at 4:25 PM, Huacai Chen wrote:
-> > When CONFIG_RANDSTRUCT enabled, members of task_struct are randomized.
-> > There is a chance that TASK_STACK_CANARY be out of 12bit immediate's
-> > range and causes build errors. TASK_STACK_CANARY is naturally aligned,
-> > so fix it by replacing ld.d/st.d with ldptr.d/stptr.d which have 14bit
-> > immediates.
+> $(ARCH) is initialized from 'uname -m' in scripts/subarch.include,
+> and I think this should stay unchanged.
 >
-> Hi Huacai,
+> >> > Also as mentioned before, snippets can reduce the duplication.
+> >> >
+> >> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
+> >> >> +else
+> >> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
+> >> >> +endif
+> >> >> +
+> >>
+> >> This is also not the change I had suggested in my review. I think this
+> >> should be a fragment along the lines of arch/mips/configs/generic/32r2=
+.config
+> >> and arch/powerpc/configs/book3s_32.config.
+> >
+> > Sorry for that. I know that the default config file is usually
+> > generated by 'make savedefconfig', and the main purpose is
+> > significantly reducing file size. I did that, but manually add some
+> > lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
+> > CONFIG_EFI, etc. My original goal of doing this is to let users easily
+> > know those fundamental options without reading Kconfig files (of
+> > course we should not increase the defconfig too much).
+> >
+> > Sorry again for not explaining about this in the previous version.
 >
-> What about 32bit build in this case?
-Use the same solution as other registers, please see:
-https://lore.kernel.org/loongarch/20251122043634.3447854-7-chenhuacai@loong=
-son.cn/T/#u
+> I don't mind having the extra options in the generic defconfig
+> file, that is unusual but I see your logic there.
+>
+> My point here is that you should absolutely not duplicate the
+> contents but only put the differences into the new file, such
+> as
+>
+> +++ arch/loongarch/configs/loongson32.config
+> CONFIG_32BIT=3Dy
+> # CONFIG_64BIT is not set
+> CONFIG_32BIT_STANDARD=3Dy
+> CONFIG_MACH_LOONGSON32=3Dy
+> # CONFIG_SMP is not set
+> # CONFIG_LOONGSON3_CPUFREQ is not set
+> # CONFIG_IPMI_HANDLER is not set
+> # CONFIG_TCG_TPM is not set
+> # CONFIG_I2C_LS2X is not set
+> # CONFIG_PINCTRL_LOONGSON2 is not set
+> CONFIG_GPIO_LOONGSON1=3Dy
+> # CONFIG_GPIO_LOONGSON is not set
+> CONFIG_WATCHDOG=3Dy
+> CONFIG_LOONGSON1_WDT=3Dm
+> # CONFIG_LOONGSON2_THERMAL=3Dm is not set
+>  # CONFIG_IOMMU_SUPPORT is not set
+> CONFIG_LOONGSON1_APB_DMA=3Dy
+> # CONFIG_LOONGSON2_APB_DMA is not set
+> # CONFIG_PWM_LOONGSON is not set
+OK,  now I completely understand your point, thank you.
+
+>
+> This way, running 'make defconfig; make loongson32.config'
+> should produce the same output as your current
+> 'make loongson32_defconfig', but it is much easier to keep
+> the two in sync because any future changes only
+> have to be done in the shared file.
+This solution solve the synchronization issue, but break a widely used work=
+flow:
+cp xxxx_defconfig .config
+make menuconfig  # or something similar
+make
+
+If there is a solution similar to dts/dtsi (different dts include the
+same dtsi as a common basis), that will be better.
+
+But for now, I prefer to use two independent config files. Fortunately
+there are only two so synchronization is not a big problem...
 
 Huacai
 
 >
-> Thanks
-> Jiaxun
+>      Arnd
 >
-> >
