@@ -1,198 +1,166 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558AD15ECD7
-	for <loongarch@lists.linux.dev>; Tue, 25 Nov 2025 17:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0111D45C0B;
+	Wed, 26 Nov 2025 00:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764093315; cv=none; b=BHxlhUBITUNnX3whRa6K9my43fC0NtDjKmomjR7sY+HFulAJJ6lst9cCqdTP5rapbwQFMFS6ZTwCJ5eQ3MyrRYHfHLtWFioiPwy5l4DzTbzYYyaNayxDWrwRpulxG211dXxvf0cUDuvQlDcou57nVa7CACc56L2xFQV+EaspxY8=
+	t=1764116599; cv=none; b=c3dy/qiFnB0E6XfC1LZoeTUtVqlg/KmIV40/zNpVG8P0nVJNx2jmMWvWIt5wsMOHFU0pbJSQ+NdbKi0eUYo7TFoZmGP2zKlFnM+zZX67MkbjPBm+nsBjaJmC9TcYsHT7e6R/+sA4FAocfVgT3GOijq5DoSIf+9CVhSWI6DIc6g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764093315; c=relaxed/simple;
-	bh=uElAdHpYNr/hV3tK4nsQY3aQszbpy1DIpGa1RTplkDc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ulWxtTH/g4nw/+DdFYW4cGkm+Xhqg09r3LqL6bPFj9Xe+oV/5xexGHhdnV6bUftUpMly8bbem8UHCGRUqW1oMMUC8hm6LpEiL8h0Zllf1LVsAllXWbX6hEj5MKSpF8UX5+AFf5p498g+ej/bAMIMIJKOmh1/4PDLI4VJb2sWwWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PeguaAvB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ehk1v9qH; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1764116599; c=relaxed/simple;
+	bh=jNSFdQCLhdJyzqyDdBupTSBjX5ORPHs5VM+yw2SDmzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KKcFotz6sshOm50A7jFdHPBWhcMxN06JiOZbQQZFuXVlZlsjYM2EG6PbKRwOfxmB5TnujXjpprp9x6sphs2tNZZVbXqTk26md4T61Sjc3UwYyPpInkMGRk6VqiXTqBXyU4CXng9017C+5RceuOrUslQNATMF+EHEocCn2+6Ng9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XniS5A0m; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PeguaAvB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ehk1v9qH"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5EFED7A01B4;
-	Tue, 25 Nov 2025 12:55:11 -0500 (EST)
-Received: from phl-imap-17 ([10.202.2.105])
-  by phl-compute-04.internal (MEProxy); Tue, 25 Nov 2025 12:55:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1764093311;
-	 x=1764179711; bh=wQ+whHpjary1WMEWkNxnrXAcMi90fMe4yNNT0YGx6I0=; b=
-	PeguaAvBE+gcwiXVVslZRin5ugClJ5Yrvr4LK/0W7CZ9l4p3eqgl2eWRvzE4NFsN
-	0JgHoaNqLh8tVX+v29x/9yJ+Q3WffmwtKtha45a/enzuAMwVof2AkjORdTQEsmM/
-	ciEN5rONDTOiVhQJ4A/H9pgttyWqnPXav23619ABBSTYemh361p7/6oFVuZRKrY4
-	RLLaYGRmryr/NrxDEWJD9vxJoT1N/Lr6MlETpkoo7/H3S8qp49oSz65H+54w80gF
-	xSafUoLieHnxxf/8RfBmezfJPSBQJUTH5evuocyMn18LPJyT/+ssEs3smdoM62/E
-	qRVq5Vw5JH3gbcaseB0sGA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1764093311; x=
-	1764179711; bh=wQ+whHpjary1WMEWkNxnrXAcMi90fMe4yNNT0YGx6I0=; b=E
-	hk1v9qHRFumnnELBJaaMX+6zlAoIz7ggwjJhKGKw8s32orak/dI1PrvlmzNQP8X9
-	IswAP8Q6G8VvVOPKxgoVcKGJc1gf5aqeVne/JUyeqd3aIksIMIxk/hPIdaNwJixd
-	/zdMT+F/fpSWWaoFVWZt6mrDCUYFbsyqwnP1lOKp51NCKJDVEFzdNx3GVRgQLXYR
-	UgSawgRco+H72s+pGMeEHb7H4fcLjDeQs+zRONODhafaSStQiMDsTITaaOO0S/4G
-	6QCkQbPZDIyWA/P2VnOA40djrAdBkHHsQpIO/7U7LANPe7f5NnH50HtacqcFx3h9
-	dS4gpH73AXv90SFf7LEsg==
-X-ME-Sender: <xms:fu0lab0YEOSSGchjllASjqJeyJFyRgD1NDCdzeshq6xNw8XxXwl80g>
-    <xme:fu0laU4q3yA036jOcVCFIpdQ7wQ6y4H9iibKao7vv6TBDH3_D7_-3TlWSQPJZh3v9
-    jO3t4-XNtJp7iMbhPYfcvFgFyYrBv6KsZ5OdjNRLlmV2ZraMC78BVOu>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdeggddvgedvuddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdegjedvfeehtdeggeevheefleej
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtg
-    hpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehg
-    uhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslh
-    hishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopegthhgvnhhhuhgrtggriheslhho
-    ohhnghhsohhnrdgtnhdprhgtphhtthhopehlihiguhgvfhgvnhhgsehlohhonhhgshhonh
-    drtghnpdhrtghpthhtohepthhhohhmrghssehtqdektghhrdguvgdprhgtphhtthhopehl
-    ihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
-    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:fu0lacZcXxet7tgvxvfc9vlKkAZ8VIF05_Wyo_v4n0AwnLnAmuLZWg>
-    <xmx:fu0lafl07p2pWB-gX_uWUzaAYaFgJGC0lfpOlnejaCYXZarZ6ZH_yg>
-    <xmx:fu0laShGpshITJfYC-VDUvZkZhH0fNWm5cwj9wuoqbJMEzvOekNOTA>
-    <xmx:fu0laRRVLJGvzc476OqoZOy43J6VMyfaNYHLcuaJSFxzObpTyl8_-Q>
-    <xmx:f-0laSR8gjctsiyeTiaU1pMpnRhzyrDjD6OPSa4gY0p5l5HL-ZDZAwme>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 1C22DC40054; Tue, 25 Nov 2025 12:55:10 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XniS5A0m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1764116598; x=1795652598;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jNSFdQCLhdJyzqyDdBupTSBjX5ORPHs5VM+yw2SDmzU=;
+  b=XniS5A0m35sAoMkpgcRsVzbaWgJstJyq6FA5G0/CwHZnnjlZP2B9ga5G
+   LEItvKO6gljXG2QX/k+njdhzg+ANLaFx0vD76ur1QIYXFJopUBmNhYjd8
+   TSEYXQc8zD5onNRxgVlwTGH/HPzsKYt2iFEOOW/5mdwZgM984JprLMKO/
+   IMkbdthdzWf2IlGaq7u7YWrLrPk+LGtgYCqaBdYlJQ2LqChzaaqQOnkJH
+   hAFT4zR/2yZF1qEVg2XiF6/bYYqMJTpgp8MDBZoLv5vBvKCBZymMhzX66
+   Gy2zs15YriofLwx0+I98Js8VglDqewmVvh1twG035VwsUTK0ynlOaZaXG
+   g==;
+X-CSE-ConnectionGUID: fj3ApZjkTQqR7FlTV0b/RQ==
+X-CSE-MsgGUID: Rs3CDH9YTI+OPOjYNHLjXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="66306984"
+X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
+   d="scan'208";a="66306984"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 16:23:18 -0800
+X-CSE-ConnectionGUID: W+654JrHR0i0NNZKwcIPrQ==
+X-CSE-MsgGUID: g62AlCY3TmyGnusI1wnrTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
+   d="scan'208";a="197267661"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.213]) ([10.124.240.213])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 16:23:10 -0800
+Message-ID: <f7a84eb0-eb64-4cdf-801d-088bbdbce0b4@linux.intel.com>
+Date: Wed, 26 Nov 2025 08:23:07 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AsIcsmVbKmaR
-Date: Tue, 25 Nov 2025 18:54:47 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
- "Huacai Chen" <chenhuacai@loongson.cn>, loongarch@lists.linux.dev,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, guoren <guoren@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- linux-kernel@vger.kernel.org
-Message-Id: <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
-In-Reply-To: 
- <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
-References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
- <20251122043634.3447854-14-chenhuacai@loongson.cn>
- <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
- <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com>
- <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
-Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
+ entry/exit fields for mediated PMU
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
+ Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Sandipan Das <sandipan.das@amd.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-29-seanjc@google.com> <aSUK8FuWT4lpMP3F@google.com>
+ <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
+ <aSXigAQznhuxZmy7@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aSXigAQznhuxZmy7@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Nov 22, 2025, at 15:13, Huacai Chen wrote:
-> On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
->> > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
->> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
->> >> index 96ca1a688984..cf9373786969 100644
->> >> --- a/arch/loongarch/Makefile
->> >> +++ b/arch/loongarch/Makefile
->> >> @@ -5,7 +5,12 @@
->> >>
->> >>  boot        :=3D arch/loongarch/boot
->> >>
->> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
->> >> +ifdef CONFIG_32BIT
->> >
->> > Testing for CONFIG options here doesn't make sense, as the config i=
-s not yet
->> > created.
->>
->> > Either test for $(ARCH) or uname or just use one unconditionally.
->>
->> I don't really like the $(ARCH) hacks, nobody is going to build kerne=
-ls
->> natively on loongarch32, and for the rest it's fine to set the option.
-> OK, I will use 'uname -m' for checking. Though native builds on
-> loongarch32 will hardly happen, we can give a small chance to use
-> loongson32_defconfig, in all other cases, let's use
-> loongson64_defconfig.
 
-What I meant is not to guess the CONFIG_64BIT option from any
-part of the build environment other than the actual .config settings.
-
-$(ARCH) is initialized from 'uname -m' in scripts/subarch.include,
-and I think this should stay unchanged.
-
->> > Also as mentioned before, snippets can reduce the duplication.
->> >
->> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
->> >> +else
->> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
->> >> +endif
->> >> +
->>
->> This is also not the change I had suggested in my review. I think this
->> should be a fragment along the lines of arch/mips/configs/generic/32r=
-2.config
->> and arch/powerpc/configs/book3s_32.config.
+On 11/26/2025 1:08 AM, Sean Christopherson wrote:
+> On Tue, Nov 25, 2025, Dapeng Mi wrote:
+>> On 11/25/2025 9:48 AM, Sean Christopherson wrote:
+>>>> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
+>>>> +		return false;
+>>>> +
+>>>> +	/*
+>>>> +	 * All CPUs that support a mediated PMU are expected to support loading
+>>>> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+>>>> +	 */
+>>>> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+>>>> +			 !cpu_has_save_perf_global_ctrl()))
+>>>> +		return false;
+>>> And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
+>>> bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
+>>> WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
+>>> corrected me.
+>>>
+>>> v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
+>>> based on my miguided feedback.
+>>>
+>>>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+>>>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+>>>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+>>>
+>>> Doubly frustrating is that this was discussed in the original RFC, where Jim
+>>> pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
+>>> enabling the mediated PMU on Skylake+, and I completely forgot that conversation
+>>> by the time v3 of the series rolled around :-(
+>> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
+>> remember the original requirements includes to support Skylake and Icelake,
+>> but I ever thought there were some offline sync and the requirement changed...
+> Two things:
 >
-> Sorry for that. I know that the default config file is usually
-> generated by 'make savedefconfig', and the main purpose is
-> significantly reducing file size. I did that, but manually add some
-> lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
-> CONFIG_EFI, etc. My original goal of doing this is to let users easily
-> know those fundamental options without reading Kconfig files (of
-> course we should not increase the defconfig too much).
+>  1) Upstream's "requirements" are not the same as Google's requirements (or those
+>     of any company/individual).  Upstream most definitely is influenced by the
+>     needs and desires of end users, but ultimately the decision to do something
+>     (or not) is one that needs to be made by the upstream community.
 >
-> Sorry again for not explaining about this in the previous version.
+>  2) Decisions made off-list need to be summarized and communicated on-list,
+>     especially in cases like this where it's a relatively minor detail in a
+>     large series/feature, and thus easy to overlook.
+>
+> I'll follow-up internally to make sure these points are well-understood by Google
+> folks as well (at least, those working on KVM).
 
-I don't mind having the extra options in the generic defconfig
-file, that is unusual but I see your logic there.
+Understood and would follow.
 
-My point here is that you should absolutely not duplicate the
-contents but only put the differences into the new file, such
-as
 
-+++ arch/loongarch/configs/loongson32.config
-CONFIG_32BIT=3Dy
-# CONFIG_64BIT is not set
-CONFIG_32BIT_STANDARD=3Dy
-CONFIG_MACH_LOONGSON32=3Dy
-# CONFIG_SMP is not set
-# CONFIG_LOONGSON3_CPUFREQ is not set
-# CONFIG_IPMI_HANDLER is not set
-# CONFIG_TCG_TPM is not set
-# CONFIG_I2C_LS2X is not set=20
-# CONFIG_PINCTRL_LOONGSON2 is not set
-CONFIG_GPIO_LOONGSON1=3Dy
-# CONFIG_GPIO_LOONGSON is not set
-CONFIG_WATCHDOG=3Dy
-CONFIG_LOONGSON1_WDT=3Dm
-# CONFIG_LOONGSON2_THERMAL=3Dm is not set
- # CONFIG_IOMMU_SUPPORT is not set
-CONFIG_LOONGSON1_APB_DMA=3Dy
-# CONFIG_LOONGSON2_APB_DMA is not set
-# CONFIG_PWM_LOONGSON is not set
+>
+>> My bad,
+> Eh, this was a group "effort".  I'm as much to blame as anyone else.
+>
+>> I should double confirm this at then.
+> No need, as above, Google's requirements (assuming the requirements you're referring
+> to are coming from Google people) are effectively just one data point.  At this
+> point, I want to drive the decision to support Sylake+ (or not) purely through
+> discussion of upstream patches.
+>
+>>> As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
+>>> later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
+>>> requirement.  But losing supporting Skylake+ is a bit much.
+>>>
+>>> There are a few warts with nVMX's use of the auto-store list that need to be
+>>> cleaned up, but on the plus side it's also a good excuse to clean up
+>>> {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
+>>> bit of duplicate code.  And while I still dislike using the auto-store list, the
+>>> code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
+>>> controls mandatory without losing support for any CPUs (they predate PMU v4).
+>> Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
+>> suppose we can have an independent patch-set to clean up and support
+>> global_ctrl with auto-store list for Skylake and Icelake.
+> I have the code written (I wanted to see how much complexity it would add before
+> re-opening this discussion).  My plan is to put the Skylake+ support at the end
+> of the series, not a separate series, so that it can be reviewed in one shot.
+> E.g. if we can make a change in the "main" series that would simplify Skylake+
+> support, then I'd prefer to find and implement any such change right away.
 
-This way, running 'make defconfig; make loongson32.config'=20
-should produce the same output as your current
-'make loongson32_defconfig', but it is much easier to keep
-the two in sync because any future changes only
-have to be done in the shared file.
+Sure. Thanks.
 
-     Arnd
+
