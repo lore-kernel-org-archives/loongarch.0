@@ -1,178 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B997262B
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 08:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE7D31812F
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 08:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764144172; cv=none; b=rJu1xL9Zsb4jTRCYZfiDqvB21te5gjReSH/oz65P6L1YAMGPtZaRcgI1BYXaQ8sbc0+z7H8TwzCH8IxXzNqnfs9axH5N/Y1t6bFV6QW6oRel21NqOWyYc1LQxPHd+TBE7uPOZPwvUCmQQohEmGNH3d+/paEl3maBWGms2bTZKbE=
+	t=1764146303; cv=none; b=ugyP1LBkL3+wLmG4tlO3qb8Riw58R9y+eVhCtlOuk7fnhR+c08OLMObpgeG+G2BTCKXorKURO7Ur7nNWuh+38kCvxGHWjZbmACfAG3Ne/ALukr1fOk+EVHeUq/SVt14brNR9e0IRknjx8dE2Ltga6tY0I3IfZvmhxF+3SZIZW0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764144172; c=relaxed/simple;
-	bh=VrVVNYgQQe2YqVbBdaNiWgaQnQvw8/RbxdtxMN/zYMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWmj6Wv7FuenSy1ey5dn7qhwsYzKabedR8Nk5VDGDGmeF8V9Ob99Y4r3l3HhHZEQ/JiWLHt1SfQlyjU45PXQ/87s5JSNMHQSPV/q+9yxmth61A84SlDZdEBnQL65tkPEObPw9x22R3qIup2FNVDvz6kVr3e2vs1UQC1myok/r1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tHoH3Dgo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764146303; c=relaxed/simple;
+	bh=cy/NqNzcz7p35zhYC3JLi5nLozirQc7eR2yu+5ZdP2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TANYdg/AiXYRIi7yP5QqqGH1Hw65PkcLoCSt06aN1vpP0zxNF0lXFNMkPvNNXSnxqy+eRrixactLUFLhCZdq9y0Xd2levBc3d6sls7O84REQtY5tFn7gC8XE06Ti6ytnqv5S3CVhrPm0zzRwOs/rFgzNgXjDS+dga4BViFUt2fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=GX46QPhy; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tHoH3Dgo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D4AC16AAE
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 08:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764144171;
-	bh=VrVVNYgQQe2YqVbBdaNiWgaQnQvw8/RbxdtxMN/zYMg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tHoH3Dgo4TRSlMkVJrJjE8Q4Az28rNtMCzpoMSZRGEcdwcmtEvbwszIrMm3xL1i2B
-	 XIarIWDn1fK5Q7U6bc5p/SSYEtB2g3vxr4q7QbPA36UBtqlca3lnhqgMJYO8e9OHlw
-	 iIP79LLTYcS/uuouC2gj8q5FnVxAxMkYE3etjzYZVCY0fpAB3gvuika5C4Mrapy1w+
-	 8BX8v9Nztm7MzWwsb+YSmgtTsluPza1RBFlbp6fqFMq2cLBYkxYDeXDYfKbSwmdAeo
-	 pwykR/7M84KPDAJ/hcunAc7at8gPRIyAlW8CrM9SdplMMWK1BhohVK/4m5jKHZr7ep
-	 6FhVhfMECHSjQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b735e278fa1so691068766b.0
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 00:02:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVTvmIqy1FTFSVsdRzcS+a+bSr86+1z/hv4phRyGVztqTyZtfGQcpCa8SrAZEe+s/hb1aeelNfwgJg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxCoMWJByelgSzX9MaoIaWG7q8h4pGmnf9khcZQVwrqoRTX5QUw
-	koWRnrL5BRxmPawgx4bydbWHo3sKYP9mpUFSteZhXYvFzRBHDOWFr9ltgmhBfAhLEZS7+GfhKbr
-	NJ9DYSFc7ABMp2aqg2cJOJQBPbl6GeSU=
-X-Google-Smtp-Source: AGHT+IFPdB9GrEj8p0VC5xTh31pkH2puuW/Mtnce1zb0KHNsSpM0nLVPXZv02VaFB9C/TQ3cERS6/3GRiMNuGKZ3CjU=
-X-Received: by 2002:a17:907:1ca8:b0:b76:4c16:6b06 with SMTP id
- a640c23a62f3a-b76c546d9demr642647266b.1.1764144170323; Wed, 26 Nov 2025
- 00:02:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="GX46QPhy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1764146283;
+	bh=I8ReBLyI7i9dKKE/Fnkdc0hUDF+f8WfYlQUGCX0OB84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=GX46QPhywRlyB/0jNvQroX6tAnZcEVTPm0gLkZNopAUmQWMlgzhroc+7wb82tn3kt
+	 QoLA4WxuO0GvZINiQc5k1IAKDjuMwLcq9duJ/ZOqVWh4L+2XFfbKxW+vfBiUZ9VZaC
+	 JxWnCvndk+UooJpeZUwqZ5dMkh3z7KfCBGeK+cBw=
+X-QQ-mid: esmtpsz21t1764146277t16b92beb
+X-QQ-Originating-IP: VhAjf8wjhAal6wZ5p27ln0fLY5tQ+Adg/kV/2fDGstQ=
+Received: from [10.10.74.117] ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 26 Nov 2025 16:37:55 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 3668124203375384710
+Message-ID: <0FD06C8FDE07BF59+07c19146-e999-4f09-83dd-4ef1ed7d4b1b@uniontech.com>
+Date: Wed, 26 Nov 2025 16:37:55 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251122043634.3447854-1-chenhuacai@loongson.cn>
- <20251122043634.3447854-14-chenhuacai@loongson.cn> <0b2bf90e-f148-46ad-92e4-b177d412fd11@t-8ch.de>
- <3407d536-a9b5-48e8-a9cf-4bb590941d0a@app.fastmail.com> <CAAhV-H4Df+c47ocBn2SN3iHDbFWGg9-i2+wY27TvtcpBa=pp7Q@mail.gmail.com>
- <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
-In-Reply-To: <4c58592d-224b-481c-a728-3c279f8e55cd@app.fastmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 26 Nov 2025 16:02:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5D=4ZhDLQOupyO0OOkuq2AWOGFBLpR8yAxaJcXb=QmRA@mail.gmail.com>
-X-Gm-Features: AWmQ_bl1vrMInXIOqwtLq2Ibt5NuiLQHamZuZ-w5BxZH3xqyYJowxFarxnY9pHg
-Message-ID: <CAAhV-H5D=4ZhDLQOupyO0OOkuq2AWOGFBLpR8yAxaJcXb=QmRA@mail.gmail.com>
-Subject: Re: [PATCH V3 13/14] LoongArch: Adjust default config files for 32BIT/64BIT
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Linux-Arch <linux-arch@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	guoren <guoren@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Correct the calculation logic of thread_count
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20251126023631.3143434-1-maqianga@uniontech.com>
+ <CAAhV-H4EOTwn3fSJHWOkahgO3VHPGN9k9mbY7akpHDny_sBOsQ@mail.gmail.com>
+Content-Language: en-US
+From: Qiang Ma <maqianga@uniontech.com>
+In-Reply-To: <CAAhV-H4EOTwn3fSJHWOkahgO3VHPGN9k9mbY7akpHDny_sBOsQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: OWAyBQUmjFVPm2eITXkdCA2I3D775xaYHoGrXiVsm19PtC8YxHSi/B/e
+	OK0xoacPzrF6CEvVug7DhkEjx/GqWSkKSJ5dAWw0BMXzbZ21nOQmh0BjJqAaQWzLB/zxAkX
+	RVr8bG1pn4MK3+z2nt1WMoHPkcuWsmZNgs0TWo5rePo47YK/doeO/5H5aZlDfT7ijwSjdkV
+	VjYN3dbwzUwi+ePyjRqf+FcpPti/fb5g7MXIMdTf7KxjQXO9qNbVfNfgYlZ6lUFpHKNGq6p
+	Sxiz21L5cwE+KHcHsynlOw0Dn40IZpQNdY0KpZeWfJk4VoMui80j4qgC7SBCLHcHr7J8rHH
+	mm01K7oIuq9KHYNxRobA/6YXjsM42pIUk/WqlBPN9oPGMDHKQWVo6Ohy+zNHgjwj0XRjFE2
+	r2uGtT504dhKGUGJj/GBp17YfR8OVuEY9Dd755LpGlTkRCXy33tQNmowxg6KiCqZqjmsz3O
+	wbcoFb7ytFen8hwYsT4zLnoGwXsyxwjfRhbHnJp0cXMA+R+6y3I+pehlbVjA1x0GX1/Awmu
+	ZoIgvUduUl++9mA3KY69eVGT6kbl/5qQ+wV99X6UQ8uX8xe9OP0KVEI1+2Zt4UmJaQskcgS
+	8CiBKA2FMBGzxKBpSCT4JsPbL+wg2c+bi1gcgYvsVM/Dyez53rCVTgidSIiP+oplDdH3zWI
+	TX8HlvlkY4DDELoGNpSZYVAt1OHGyh7Ej0ETFuO72tuDuZXY6de8aJOLz1pauWxidprU115
+	s5X//pkjKzAqO9vledmZ76/WchfASsdsP8b4UrbvKzdE1QqteNBRRiVWrEt0rKaneM2Rj9k
+	1h+kb+EJRpONiDrVRHTaJElXcLuTNiKqoZy0nASHyWoPWVE+huzOteXFlMp23rOGy9b2DSh
+	ngaPRZeeuZZnWGYU4YF6kPjCXYe/bg4eqHJEHr1r9AdfeuAZddOYmUKZGCnZd4b4CUyUDj/
+	PGBAROtkLGymwR/nWNTCJGuGIgD+p/HAJTR5thKEGkcijW2ZEy1mzl9+b4dqRGFnrAf3W7X
+	3fRGQHSF7rakxFFXyDJwjZfWPnEefxmPPxifJEF5qBVmnmuO24PKb9t8s5QXlPQzHxWAIDA
+	zOLH438Npi/gAl454QGCdJwt39Ara238Q==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Wed, Nov 26, 2025 at 1:55=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote=
-:
+
+在 2025/11/26 12:49, Huacai Chen 写道:
+> Hi, Qiang,
 >
-> On Sat, Nov 22, 2025, at 15:13, Huacai Chen wrote:
-> > On Sat, Nov 22, 2025 at 7:57=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >> On Sat, Nov 22, 2025, at 10:45, Thomas Wei=C3=9Fschuh wrote:
-> >> > On 2025-11-22 12:36:33+0800, Huacai Chen wrote:
-> >> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-> >> >> index 96ca1a688984..cf9373786969 100644
-> >> >> --- a/arch/loongarch/Makefile
-> >> >> +++ b/arch/loongarch/Makefile
-> >> >> @@ -5,7 +5,12 @@
-> >> >>
-> >> >>  boot        :=3D arch/loongarch/boot
-> >> >>
-> >> >> -KBUILD_DEFCONFIG :=3D loongson3_defconfig
-> >> >> +ifdef CONFIG_32BIT
-> >> >
-> >> > Testing for CONFIG options here doesn't make sense, as the config is=
- not yet
-> >> > created.
-> >>
-> >> > Either test for $(ARCH) or uname or just use one unconditionally.
-> >>
-> >> I don't really like the $(ARCH) hacks, nobody is going to build kernel=
-s
-> >> natively on loongarch32, and for the rest it's fine to set the option.
-> > OK, I will use 'uname -m' for checking. Though native builds on
-> > loongarch32 will hardly happen, we can give a small chance to use
-> > loongson32_defconfig, in all other cases, let's use
-> > loongson64_defconfig.
->
-> What I meant is not to guess the CONFIG_64BIT option from any
-> part of the build environment other than the actual .config settings.
->
-> $(ARCH) is initialized from 'uname -m' in scripts/subarch.include,
-> and I think this should stay unchanged.
->
-> >> > Also as mentioned before, snippets can reduce the duplication.
-> >> >
-> >> >> +KBUILD_DEFCONFIG :=3D loongson32_defconfig
-> >> >> +else
-> >> >> +KBUILD_DEFCONFIG :=3D loongson64_defconfig
-> >> >> +endif
-> >> >> +
-> >>
-> >> This is also not the change I had suggested in my review. I think this
-> >> should be a fragment along the lines of arch/mips/configs/generic/32r2=
-.config
-> >> and arch/powerpc/configs/book3s_32.config.
-> >
-> > Sorry for that. I know that the default config file is usually
-> > generated by 'make savedefconfig', and the main purpose is
-> > significantly reducing file size. I did that, but manually add some
-> > lines such as CONFIG_LOONGARCH, CONFIG_32BIT/64BIT, CONFIG_ACPI,
-> > CONFIG_EFI, etc. My original goal of doing this is to let users easily
-> > know those fundamental options without reading Kconfig files (of
-> > course we should not increase the defconfig too much).
-> >
-> > Sorry again for not explaining about this in the previous version.
->
-> I don't mind having the extra options in the generic defconfig
-> file, that is unusual but I see your logic there.
->
-> My point here is that you should absolutely not duplicate the
-> contents but only put the differences into the new file, such
-> as
->
-> +++ arch/loongarch/configs/loongson32.config
-> CONFIG_32BIT=3Dy
-> # CONFIG_64BIT is not set
-> CONFIG_32BIT_STANDARD=3Dy
-> CONFIG_MACH_LOONGSON32=3Dy
-> # CONFIG_SMP is not set
-> # CONFIG_LOONGSON3_CPUFREQ is not set
-> # CONFIG_IPMI_HANDLER is not set
-> # CONFIG_TCG_TPM is not set
-> # CONFIG_I2C_LS2X is not set
-> # CONFIG_PINCTRL_LOONGSON2 is not set
-> CONFIG_GPIO_LOONGSON1=3Dy
-> # CONFIG_GPIO_LOONGSON is not set
-> CONFIG_WATCHDOG=3Dy
-> CONFIG_LOONGSON1_WDT=3Dm
-> # CONFIG_LOONGSON2_THERMAL=3Dm is not set
->  # CONFIG_IOMMU_SUPPORT is not set
-> CONFIG_LOONGSON1_APB_DMA=3Dy
-> # CONFIG_LOONGSON2_APB_DMA is not set
-> # CONFIG_PWM_LOONGSON is not set
-OK,  now I completely understand your point, thank you.
+> On Wed, Nov 26, 2025 at 10:37 AM Qiang Ma <maqianga@uniontech.com> wrote:
+>> For thread_count, the current calculation method has a maximum of 255,
+>> which may not be sufficient in the future. Therefore, we are correcting
+>> it now.
+> I think you should contact the Loongson BIOS team to confirm they will do so.
+
+I contacted Li Chao from the Loongson BIOS team and had a brief 
+communication.
+
+bios will do this when it exceeds 256.
 
 >
-> This way, running 'make defconfig; make loongson32.config'
-> should produce the same output as your current
-> 'make loongson32_defconfig', but it is much easier to keep
-> the two in sync because any future changes only
-> have to be done in the shared file.
-This solution solve the synchronization issue, but break a widely used work=
-flow:
-cp xxxx_defconfig .config
-make menuconfig  # or something similar
-make
-
-If there is a solution similar to dts/dtsi (different dts include the
-same dtsi as a common basis), that will be better.
-
-But for now, I prefer to use two independent config files. Fortunately
-there are only two so synchronization is not a big problem...
-
-Huacai
-
+> And we can hardly meet the case that one socket contains more than 256
+> cores (this is different from the case MAX_CPUS > 256)
+According to Li Chao, the 256 logic core on a single chip should arrive 
+in the next generation.
+> Huacai
 >
->      Arnd
->
+>> Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
+>>
+>> [1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.9.0.pdf
+>>
+>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+>> ---
+>>   arch/loongarch/kernel/setup.c | 9 ++++++++-
+>>   1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+>> index 25a87378e48e..760f5ce44384 100644
+>> --- a/arch/loongarch/kernel/setup.c
+>> +++ b/arch/loongarch/kernel/setup.c
+>> @@ -56,6 +56,7 @@
+>>   #define SMBIOS_FREQLOW_MASK            0xFF
+>>   #define SMBIOS_CORE_PACKAGE_OFFSET     0x23
+>>   #define SMBIOS_THREAD_PACKAGE_OFFSET   0x25
+>> +#define SMBIOS_THREAD_PACKAGE_2_OFFSET 0x2E
+>>   #define LOONGSON_EFI_ENABLE            (1 << 3)
+>>
+>>   unsigned long fw_arg0, fw_arg1, fw_arg2;
+>> @@ -120,13 +121,19 @@ static void __init parse_cpu_table(const struct dmi_header *dm)
+>>   {
+>>          long freq_temp = 0;
+>>          char *dmi_data = (char *)dm;
+>> +       u8 thread_count;
+>> +       u16 thread_count2;
+>>
+>>          freq_temp = ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
+>>                          ((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & SMBIOS_FREQLOW_MASK));
+>>          cpu_clock_freq = freq_temp * 1000000;
+>>
+>>          loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, dmi_data[16]);
+>> -       loongson_sysconf.cores_per_package = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+>> +       thread_count = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+>> +       thread_count2 = *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFFSET);
+>> +       if (thread_count != 0)
+>> +               loongson_sysconf.cores_per_package = dm->length >= 0x30 && thread_count == 0xFF ?
+>> +                                                    thread_count2 : thread_count;
+>>
+>>          pr_info("CpuClock = %llu\n", cpu_clock_freq);
+>>   }
+>> --
+>> 2.20.1
+>>
+
