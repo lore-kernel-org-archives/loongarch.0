@@ -1,166 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0111D45C0B;
-	Wed, 26 Nov 2025 00:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A28F305E2F
+	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 02:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764116599; cv=none; b=c3dy/qiFnB0E6XfC1LZoeTUtVqlg/KmIV40/zNpVG8P0nVJNx2jmMWvWIt5wsMOHFU0pbJSQ+NdbKi0eUYo7TFoZmGP2zKlFnM+zZX67MkbjPBm+nsBjaJmC9TcYsHT7e6R/+sA4FAocfVgT3GOijq5DoSIf+9CVhSWI6DIc6g8=
+	t=1764122769; cv=none; b=T0qYzU86Lz13+ACXNh6d0TdC0PuHyWyB12CBwb3cmSkILy51pVKo+7RIZCCIWx4xbScw6ozpdOCeecxI45M44CpQKFgs3m8Vh9enps2QvriICytCJjN6lAD4EIesBsb6KdGcCM0lqEV7SW+weMeZlBKM66cIIAmIjGwwryQJ3GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764116599; c=relaxed/simple;
-	bh=jNSFdQCLhdJyzqyDdBupTSBjX5ORPHs5VM+yw2SDmzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KKcFotz6sshOm50A7jFdHPBWhcMxN06JiOZbQQZFuXVlZlsjYM2EG6PbKRwOfxmB5TnujXjpprp9x6sphs2tNZZVbXqTk26md4T61Sjc3UwYyPpInkMGRk6VqiXTqBXyU4CXng9017C+5RceuOrUslQNATMF+EHEocCn2+6Ng9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XniS5A0m; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1764122769; c=relaxed/simple;
+	bh=rEyAIeGKVONa+XHzkCV5F1EaJnH0f6VY3VSLc1lOy2c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H0wyylcI6mTOgG2u3TBiHsShPCX7b4Mx5rwwtSfkdxf7M4O96XNUHFHx6hlinYBVt28rv5Z5oPoqKFToc1MP8cz321qNjB43bSyoXQ0B9ovxLih7qzqJndrjyyiEqIZkxwQim1YPynFufJkrY7uRfeldWz9YYGRefoIwpbfpxKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aw/JY6Xu; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XniS5A0m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764116598; x=1795652598;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jNSFdQCLhdJyzqyDdBupTSBjX5ORPHs5VM+yw2SDmzU=;
-  b=XniS5A0m35sAoMkpgcRsVzbaWgJstJyq6FA5G0/CwHZnnjlZP2B9ga5G
-   LEItvKO6gljXG2QX/k+njdhzg+ANLaFx0vD76ur1QIYXFJopUBmNhYjd8
-   TSEYXQc8zD5onNRxgVlwTGH/HPzsKYt2iFEOOW/5mdwZgM984JprLMKO/
-   IMkbdthdzWf2IlGaq7u7YWrLrPk+LGtgYCqaBdYlJQ2LqChzaaqQOnkJH
-   hAFT4zR/2yZF1qEVg2XiF6/bYYqMJTpgp8MDBZoLv5vBvKCBZymMhzX66
-   Gy2zs15YriofLwx0+I98Js8VglDqewmVvh1twG035VwsUTK0ynlOaZaXG
-   g==;
-X-CSE-ConnectionGUID: fj3ApZjkTQqR7FlTV0b/RQ==
-X-CSE-MsgGUID: Rs3CDH9YTI+OPOjYNHLjXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11624"; a="66306984"
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="66306984"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 16:23:18 -0800
-X-CSE-ConnectionGUID: W+654JrHR0i0NNZKwcIPrQ==
-X-CSE-MsgGUID: g62AlCY3TmyGnusI1wnrTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,227,1758610800"; 
-   d="scan'208";a="197267661"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.213]) ([10.124.240.213])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2025 16:23:10 -0800
-Message-ID: <f7a84eb0-eb64-4cdf-801d-088bbdbce0b4@linux.intel.com>
-Date: Wed, 26 Nov 2025 08:23:07 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aw/JY6Xu"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1764122765;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IJFLj/4Ro5hIBW4b227wdO+x5xyFcMjEZgEKTjn36EA=;
+	b=aw/JY6XuyM96NQznYWKGpdEhO876LnDF9JU+uEO51o0n2/TJTjYwcAOAcFTtbJvyKwwPv/
+	neiPp6T9ZXRa4Ap4ZKPrPNd5iRiW5w+ZQYAxGU1HQc3sWjoS6fjg9NlxCOFncCj0tGZHIt
+	CdaQqElAia/8ijVpB6/49NFpIzpOBRE=
+From: George Guo <dongtai.guo@linux.dev>
+Date: Wed, 26 Nov 2025 10:05:50 +0800
+Subject: [PATCH v3 1/2] LoongArch: Add 128-bit atomic cmpxchg support
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 28/44] KVM: x86/pmu: Load/save GLOBAL_CTRL via
- entry/exit fields for mediated PMU
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
- Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-29-seanjc@google.com> <aSUK8FuWT4lpMP3F@google.com>
- <83067602-325a-4655-a1b7-e6bd6a31eed4@linux.intel.com>
- <aSXigAQznhuxZmy7@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aSXigAQznhuxZmy7@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20251126-2-v3-1-851b5a516801@linux.dev>
+References: <20251126-2-v3-0-851b5a516801@linux.dev>
+In-Reply-To: <20251126-2-v3-0-851b5a516801@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764122759; l=2732;
+ i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
+ bh=rSX+//mu5dp/V6lO1NUdtEvY0gguP3s+oE7pcxBAUaM=;
+ b=BMl69L9PQMW4xCJlyEGUwZn6+W5o/yZb86FeXsXiRpYonPVvNgjRoID2zy6qMu0K9s1ebjCkw
+ Xz9SQOaHfuBBZEgo/lPbuVylNkykrpmwOQ1EU81jkySfS7rfAIXuJR0
+X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
+ pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
+X-Migadu-Flow: FLOW_OUT
 
+From: George Guo <guodongtai@kylinos.cn>
 
-On 11/26/2025 1:08 AM, Sean Christopherson wrote:
-> On Tue, Nov 25, 2025, Dapeng Mi wrote:
->> On 11/25/2025 9:48 AM, Sean Christopherson wrote:
->>>> +	if (host_pmu->version < 4 || !(host_perf_cap & PERF_CAP_FW_WRITES))
->>>> +		return false;
->>>> +
->>>> +	/*
->>>> +	 * All CPUs that support a mediated PMU are expected to support loading
->>>> +	 * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
->>>> +	 */
->>>> +	if (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
->>>> +			 !cpu_has_save_perf_global_ctrl()))
->>>> +		return false;
->>> And so this WARN fires due to cpu_has_save_perf_global_ctrl() being false.  The
->>> bad changelog is mine, but the code isn't entirely my fault.  I did suggest the
->>> WARN in v3[1], probably because I forgot when PMU v4 was introduced and no one
->>> corrected me.
->>>
->>> v4 of the series[2] then made cpu_has_save_perf_global_ctrl() a hard requirement,
->>> based on my miguided feedback.
->>>
->>>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
->>>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
->>>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
->>>
->>> Doubly frustrating is that this was discussed in the original RFC, where Jim
->>> pointed out[3] that requiring VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL would prevent
->>> enabling the mediated PMU on Skylake+, and I completely forgot that conversation
->>> by the time v3 of the series rolled around :-(
->> VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is introduced from SPR and later. I
->> remember the original requirements includes to support Skylake and Icelake,
->> but I ever thought there were some offline sync and the requirement changed...
-> Two things:
->
->  1) Upstream's "requirements" are not the same as Google's requirements (or those
->     of any company/individual).  Upstream most definitely is influenced by the
->     needs and desires of end users, but ultimately the decision to do something
->     (or not) is one that needs to be made by the upstream community.
->
->  2) Decisions made off-list need to be summarized and communicated on-list,
->     especially in cases like this where it's a relatively minor detail in a
->     large series/feature, and thus easy to overlook.
->
-> I'll follow-up internally to make sure these points are well-understood by Google
-> folks as well (at least, those working on KVM).
+Implement 128-bit atomic compare-and-exchange using LoongArch's
+LL.D/SC.Q instructions.
 
-Understood and would follow.
+At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
+caused by kmalloc_nolock_noprof returning NULL due to missing
+128-bit atomics. The NULL returns led to -ENOMEM errors during
+scheduler initialization, causing test cases to fail.
 
+Verified by testing with the scx_qmap scheduler (located in
+tools/sched_ext/). Building with `make` and running
+./tools/sched_ext/build/bin/scx_qmap.
 
->
->> My bad,
-> Eh, this was a group "effort".  I'm as much to blame as anyone else.
->
->> I should double confirm this at then.
-> No need, as above, Google's requirements (assuming the requirements you're referring
-> to are coming from Google people) are effectively just one data point.  At this
-> point, I want to drive the decision to support Sylake+ (or not) purely through
-> discussion of upstream patches.
->
->>> As mentioned in the discussion with Jim, _if_ PMU v4 was introduced with ICX (or
->>> later), then I'd be in favor of making VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL a hard
->>> requirement.  But losing supporting Skylake+ is a bit much.
->>>
->>> There are a few warts with nVMX's use of the auto-store list that need to be
->>> cleaned up, but on the plus side it's also a good excuse to clean up
->>> {add,clear}_atomic_switch_msr(), which have accumulated some cruft and quite a
->>> bit of duplicate code.  And while I still dislike using the auto-store list, the
->>> code isn't as ugly as it was back in v3 because we _can_ make the "load" VMCS
->>> controls mandatory without losing support for any CPUs (they predate PMU v4).
->> Yes, xxx_atomic_switch_msr() helpers need to be cleaned up and optimized. I
->> suppose we can have an independent patch-set to clean up and support
->> global_ctrl with auto-store list for Skylake and Icelake.
-> I have the code written (I wanted to see how much complexity it would add before
-> re-opening this discussion).  My plan is to put the Skylake+ support at the end
-> of the series, not a separate series, so that it can be reviewed in one shot.
-> E.g. if we can make a change in the "main" series that would simplify Skylake+
-> support, then I'd prefer to find and implement any such change right away.
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-Sure. Thanks.
+diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
+index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..88553ae63e178ebff16ebbc2e01b0e23831b0918 100644
+--- a/arch/loongarch/include/asm/cmpxchg.h
++++ b/arch/loongarch/include/asm/cmpxchg.h
+@@ -111,6 +111,44 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
+ 	__ret;								\
+ })
+ 
++union __u128_halves {
++	u128 full;
++	struct {
++		u64 low;
++		u64 high;
++	};
++};
++
++#define __cmpxchg128_asm(ptr, old, new)					\
++({									\
++	union __u128_halves __old, __new, __ret;			\
++	volatile u64 *__ptr = (volatile u64 *)(ptr);			\
++									\
++	__old.full = (old);                                             \
++	__new.full = (new);						\
++									\
++	__asm__ __volatile__(						\
++	"1:   ll.d    %0, %3		# 128-bit cmpxchg low	\n"	\
++	__WEAK_LLSC_MB							\
++	"     ld.d    %1, %4		# 128-bit cmpxchg high	\n"	\
++	"     bne     %0, %z5, 2f				\n"	\
++	"     bne     %1, %z6, 2f				\n"	\
++	"     move    $t0, %z7					\n"	\
++	"     move    $t1, %z8					\n"	\
++	"     sc.q    $t0, $t1, %2				\n"	\
++	"     beqz    $t0, 1b					\n"	\
++	"2:							\n"	\
++	__WEAK_LLSC_MB							\
++	: "=&r" (__ret.low), "=&r" (__ret.high)				\
++	: "r" (__ptr),							\
++	  "ZC" (__ptr[0]), "m" (__ptr[1]),				\
++	  "Jr" (__old.low), "Jr" (__old.high),				\
++	  "Jr" (__new.low), "Jr" (__new.high)				\
++	: "t0", "t1", "memory");					\
++									\
++	__ret.full;							\
++})
++
+ static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
+ 					   unsigned int new, unsigned int size)
+ {
+@@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, unsigned int
+ 	__res;								\
+ })
+ 
++/* cmpxchg128 */
++#define system_has_cmpxchg128()		1
++
++#define arch_cmpxchg128(ptr, o, n)					\
++({									\
++	BUILD_BUG_ON(sizeof(*(ptr)) != 16);				\
++	__cmpxchg128_asm(ptr, o, n);			\
++})
++
+ #ifdef CONFIG_64BIT
+ #define arch_cmpxchg64_local(ptr, o, n)					\
+   ({									\
 
+-- 
+2.48.1
 
