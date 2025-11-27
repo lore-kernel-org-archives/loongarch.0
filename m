@@ -1,326 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBDF1F5EA
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 06:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02182C08C0
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 06:44:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764225769; cv=none; b=sLUQa3brv2JogIApaMLOUU55CNPjDKLmAHb0JY+X7BP8GFCcdfGYHMlzr/W0YMCP6korssxQpE0RkL1sVz4utvKh7SYnWxKczzj4ZlVwRL0Z7oqHRj/mk/OLxC5DozHvXiN7Fk7WwDluH920p4UR0wynkTLxSVOVtkt6dlg3HJc=
+	t=1764225881; cv=none; b=gnfcOmvq3/VZQUQsurnoacBXePMKaOB0MfQv8eCgoY7kfJ68tefYqReGwXMD3UtlN5s568eSkzTHiHrepw+4vUw94w1hAw04wF9Zb/ULecbxHecY46ANoYTPo+Mt/EnSMRlB/uU2y8yasoGpOFOpH9OpaR1kjkuhbut6zYeqtZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764225769; c=relaxed/simple;
-	bh=w/FQ47PYJ5JIXUADfr/cVa0E0sigv784x0koyS2/4Vg=;
+	s=arc-20240116; t=1764225881; c=relaxed/simple;
+	bh=N2bYX4B0YtriDthfcWqGQNnlE77GwhaSIHfETvlOoN4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s4pSjO8BrdF10qAPirl6AQuwgZNV0JwmpVDdQzLIyf0w7JqR+jH9UpajX2GaGA+z/paL3KHaVz5piyW+CnxDbtRSjnYYzLY/+eoV6dkogY+KgPXOzJlPx8yX85vqDw3CKKzolOf/ynsxVlkfeyk8ekZBKOiYwU1BoAxmvO/Mmb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MywFSv9Q; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=FXtfBBvRaIoQIj38ZhFZjkAvL4QUqYemheirR+AY/egIeg5FRWW2JZMWN0yYets9+rhHnq+e5hlauQOUUjK4VoolQx/erRw5vG/vzzAOt/0y2NNUEiGqaPtgoHHCjWaoffp+A3SjLHGdI8Cp3Cp90d3KLSooKaD+Q9X8o+yiopQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpfCdTjO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MywFSv9Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EB9C116C6
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 06:42:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpfCdTjO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252C1C4AF0B
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 06:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764225768;
-	bh=w/FQ47PYJ5JIXUADfr/cVa0E0sigv784x0koyS2/4Vg=;
+	s=k20201202; t=1764225881;
+	bh=N2bYX4B0YtriDthfcWqGQNnlE77GwhaSIHfETvlOoN4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MywFSv9QzntaPDyg1SqaLAR2MxMZjte4bSkxIWhsDdO/ywaNJ8IvSzbrg8pXDOtie
-	 Vxus62piMcrj+mNNYQ+p8Tvsjv3vO8pMowTeDKQxGU1KvrZNNDin5REbyW3uobEDvC
-	 gNynTLnG4akGvkuljC1/I7mfX1iV97qJ9woZ/KV4DxYPDonCd3cWFcRhzvnNxBWwKa
-	 rjfNSGx9y3m8VVw4Jgwe1dSNEAbshe5ksvWSv1D9alfs4yXrfrggGOSr5s7/R5DjS6
-	 2usT7X1P+fmG9odz6nuGG7teSxVVgv0sbSVJAioax6NxEVPCJEBIXdAvJRlVKwPMTZ
-	 ohF5pn9VDTwTA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-640aaa89697so851616a12.3
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 22:42:48 -0800 (PST)
-X-Gm-Message-State: AOJu0YwG7TLFcy3V3ZcDI1tdzGK8JdQlpQemPQjC7oQ+5kGX5aEwgnF3
-	0NV/M3TaYRq6KuxLMJzmA1PU84ZNPqYtXcMFXQgfTPxV8S3jCSaDR1s15TSQQuNV0mBlT7VMBwe
-	RJRwnyUswa2GBgp7fJAh8C+mWUeAkAbU=
-X-Google-Smtp-Source: AGHT+IEVA9JMHHbxY4q6trDbm3JU5eD+nJoL34fmUiZaBmDmkFXlgL9iUYwyBOWQ5bkDo72CYC6UZ27jFjg+LpYWkS8=
-X-Received: by 2002:a17:907:3f14:b0:b71:5079:9702 with SMTP id
- a640c23a62f3a-b76715ab943mr2266011366b.21.1764225767116; Wed, 26 Nov 2025
- 22:42:47 -0800 (PST)
+	b=KpfCdTjOM6l5M3GSYLVBDhBZiujdtHVkWOACHHKcNt3x+OitIayuPbYAnnFdCS+cH
+	 4ofB3EVgkuYKsoMwC8zGlpn4vY6dZ38MwIOWmlHDNI6XfPX5uXtXyWxYHhdoCYhz5q
+	 4Bm95tqk8Yfz0oFF4C2d40wxA02taVAcMlzs+sDxNSd61YWUw7Jen/UUoiHzbL5dYM
+	 fkRLudeSkPIGQ78vFjuz0btK8RTqm8K0M8+ytggNZwP5Knj3KtLX3WsEGAihEmK9B5
+	 3fPVzWAtPOsFk5XPVD7laiQGghx3vGjvGaL/PFnMzJR7By4mql9T3p8ITsXOg1Kv1L
+	 3Tc624RkoZqXA==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b7277324204so91578266b.0
+        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 22:44:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWqGzCwmM8q52LMPDC1Ybzd8vjsmZNrcbPpSa2Pdvua2D0u7Dyd9gLgi598s/fzYsnc4R+T3CiiVE4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4OUuirgb7wtm8v9zmGplx1pH2lIO7YQiuP3Jv0s8f86xSLkTi
+	APnw9SKZk5Txrpj1wCkH1wvEaQYAeOCq00tIqJbGIwSLsOCmez7OrFl/fhJmLCJRr8kp+K2kjCS
+	b3VDn50A0kjVB8SPHMQkXmX9tgvd1M1w=
+X-Google-Smtp-Source: AGHT+IH0w/gnT42ggNU211jxD6r/cO/610aZFhXhsgo/TUGEudF3Za1sGv0p2lCvxyRH1Uc2DFE4GfqK+VpbOzGaCVs=
+X-Received: by 2002:a17:907:1c89:b0:b40:da21:bf38 with SMTP id
+ a640c23a62f3a-b76c5513204mr1064416266b.36.1764225879719; Wed, 26 Nov 2025
+ 22:44:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251120065758.3064368-1-maobibo@loongson.cn> <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
- <42d93855-50df-a686-85c5-5552ff829977@loongson.cn> <CAAhV-H4xprj-WmMkp86xEmn4NL3wwW3aaDoMj=SUiP3pEa+Q7g@mail.gmail.com>
- <1605b5eb-5f43-62ff-28c5-192f2f0f938d@loongson.cn> <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
- <0e125e35-8044-a6ce-998f-1221da0e827d@loongson.cn> <CAAhV-H57Ee-KpmYuRLnhOXGsJtBrzHPTqNTW9uj8EkiDUMp3CA@mail.gmail.com>
- <1a3698c8-f31e-fb32-c00a-7372450e6196@loongson.cn> <CAAhV-H7VMAwcdG3LqKL2sdS==G5=ARWtwBcYq65y15+0aWUMtQ@mail.gmail.com>
- <284da6b1-8703-a9d7-f564-236ade3986a8@loongson.cn> <CAAhV-H4phQ-VK0YSip6+-fLwfkLb052fEcQFOATkmQZB73=J8Q@mail.gmail.com>
- <94724535-94cd-c256-2080-f87f70226502@loongson.cn>
-In-Reply-To: <94724535-94cd-c256-2080-f87f70226502@loongson.cn>
+References: <20251124055642.1591-1-hengqi.chen@gmail.com> <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
+ <CAEyhmHSntgSQdAOksd6YUsHh0UXJS7XMmSHAZmRDQ5uEzDU0JQ@mail.gmail.com>
+In-Reply-To: <CAEyhmHSntgSQdAOksd6YUsHh0UXJS7XMmSHAZmRDQ5uEzDU0JQ@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 27 Nov 2025 14:42:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7WEMTJWROBxm1hYNu2PQWZvBg2xTy5ACeO+E3JaZG1FQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bmskAFLtVEvj__KLWqcT9tBTjs1YGaBFYAo1avWumCw6tTm3q6VoVQKnxw
-Message-ID: <CAAhV-H7WEMTJWROBxm1hYNu2PQWZvBg2xTy5ACeO+E3JaZG1FQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org
+Date: Thu, 27 Nov 2025 14:44:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Vab3bwgT2LdGyNB4ipzhnS+JW7PdcOSmNm4JZ30tWTg@mail.gmail.com>
+X-Gm-Features: AWmQ_bnRvnD0npm0Umwk0duMpO1fThwULs2iLxC6PNdc_GJ1yWPN5YXKLm3zvVc
+Message-ID: <CAAhV-H5Vab3bwgT2LdGyNB4ipzhnS+JW7PdcOSmNm4JZ30tWTg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 27, 2025 at 2:21=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
->
->
-> On 2025/11/27 =E4=B8=8A=E5=8D=8810:51, Huacai Chen wrote:
-> > On Thu, Nov 27, 2025 at 10:48=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >>
-> >>
-> >> On 2025/11/27 =E4=B8=8A=E5=8D=8810:45, Huacai Chen wrote:
-> >>> On Thu, Nov 27, 2025 at 10:37=E2=80=AFAM Bibo Mao <maobibo@loongson.c=
-n> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2025/11/27 =E4=B8=8A=E5=8D=8810:09, Huacai Chen wrote:
-> >>>>> On Thu, Nov 27, 2025 at 9:08=E2=80=AFAM Bibo Mao <maobibo@loongson.=
-cn> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2025/11/26 =E4=B8=8B=E5=8D=889:43, Huacai Chen wrote:
-> >>>>>>> On Mon, Nov 24, 2025 at 10:17=E2=80=AFAM Bibo Mao <maobibo@loongs=
-on.cn> wrote:
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> On 2025/11/24 =E4=B8=8A=E5=8D=8810:03, Huacai Chen wrote:
-> >>>>>>>>> On Mon, Nov 24, 2025 at 9:58=E2=80=AFAM Bibo Mao <maobibo@loong=
-son.cn> wrote:
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> On 2025/11/21 =E4=B8=8B=E5=8D=8810:08, Huacai Chen wrote:
-> >>>>>>>>>>> Hi, Bibo,
-> >>>>>>>>>>>
-> >>>>>>>>>>> On Thu, Nov 20, 2025 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loo=
-ngson.cn> wrote:
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> This patchset adds timer test case for LoongArch system, it =
-is based
-> >>>>>>>>>>>> on common arch_timer test case. And it includes one-shot and=
- period mode
-> >>>>>>>>>>>> timer interrupt test, software emulated timer function and t=
-ime counter
-> >>>>>>>>>>>> test.
-> >>>>>>>>>>> I test this series on top of 6.18-rc6 with Loongson-3A5000, s=
-ometimes
-> >>>>>>>>>>> it passes, sometimes I get:
-> >>>>>>>>>>> [root@fedora kvm]# ./arch_timer
-> >>>>>>>>>>> Random seed: 0x6b8b4567
-> >>>>>>>>>>> Guest assert failed,  vcpu 2; stage; 0; iter: 1
-> >>>>>>>>>>> =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
-> >>>>>>>>>>>         loongarch/arch_timer.c:79: irq_iter =3D=3D 0
-> >>>>>>>>>>>         pid=3D60138 tid=3D60142 errno=3D4 - Interrupted syste=
-m call
-> >>>>>>>>>>>            1  0x00000001200037cf: test_vcpu_run =E4=BA=8E arc=
-h_timer.c:70
-> >>>>>>>>>>>            2  0x00007ffff2449f27: ?? ??:0
-> >>>>>>>>>>>            3  0x00007ffff24c0633: ?? ??:0
-> >>>>>>>>>>>         irq_iter =3D 0x1.
-> >>>>>>>>>>>         Guest period timer interrupt was not triggered within=
- the specified
-> >>>>>>>>>>>         interval, try to increase the error margin by [-e] op=
-tion.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Is this as expected, or something is wrong?
-> >>>>>>>>>> There is problem with that. In generic the vCPU task is resche=
-duled on
-> >>>>>>>>>> other CPUs or preempted, so period timer interrupt is not hand=
-led in
-> >>>>>>>>>> specified time.
-> >>>>>>>>> Then this series need to be updated, or problem comes from othe=
-r places?
-> >>>>>>>> I think this series need be updated, test success criteria with =
-period
-> >>>>>>>> timer need consider this situation. Let me check how to handle t=
-his.
-> >>>>>>> Any updates available?
-> >>>>>> It can be solved by modifying udelay() method with get_cycles() or=
- using
-> >>>>>> cpu loop calculation method.
-> >>>>>>
-> >>>>>> --- a/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
-> >>>>>> +++ b/tools/testing/selftests/kvm/include/loongarch/arch_timer.hYe=
-s, no common part for it, but it can be a common problem. If other
-> >> architectures have problems they should also modify their own
-> >> __delay(), right?
-> >>>>>> @@ -71,10 +71,17 @@ static inline void timer_irq_disable(void)
-> >>>>>>
-> >>>>>>      static inline void __delay(uint64_t cycles)
-> >>>>>>      {
-> >>>>>> -       uint64_t start =3D timer_get_cycles();
-> >>>>>> -
-> >>>>>> -       while ((timer_get_cycles() - start) < cycles)
-> >>>>>> -               cpu_relax();
-> >>>>>> +       uint64_t start, next, loops =3D 0;
-> >>>>>> +
-> >>>>>> +       start =3D timer_get_cycles();
-> >>>>>> +       while (loops < cycles) {
-> >>>>>> +               next =3D timer_get_cycles();
-> >>>>>> +               /* only count one cycle if VM is preempted */
-> >>>>>> +               if (next > start) {
-> >>>>>> +                       loops++;
-> >>>>>> +                       start =3D next;
-> >>>>>> +               }
-> >>>>>> +       }
-> >>>>>>      }
-> >>>>> Looks good. But ARM64 and RISC-V also use a simple implementation o=
-f
-> >>>> there is no period test on them.
-> >>> I think the one-shot test can also have this problem if the CPU is
-> >>> preempted for a very long time.
-> >>>
-> >>>>> __delay(). So should this problem be thought of as a common problem=
-?
-> >>>>> If yes, maybe we can keep __delay() as is and wait for the common
-> >>>>> parts to be fixed.
-> >>>> Also there is no common udelay() API, it is arch specific. Someone m=
-ay
-> >>>> argue that skipping stolen cycles is not generic for __delay(), othe=
-r
-> >>>> test cases want accurate cycles rather than skipping stolen cycles. =
-It
-> >>>> is timer test case specific.
-> >>>>
-> >>>> Or adding another api __delay_loops() or keep it as is and wait for
-> >>>> other architectures, there should be no common part for it.
-> >>> Yes, no common part for it, but it can be a common problem. If other
-> >>> architectures have problems they should also modify their own
-> >>> __delay(), right?
-> >> yes, what to do then?
-> > Merge window is coming, let's keep it as is. And this problem only
-> > exist when the background load is high (so preemption happens easily),
-> > I think this is not the usual case.
-> Another method is to modify period timer test case, calling udelay with
-> loop times rather than one time, something like this:
-> --- a/tools/testing/selftests/kvm/loongarch/arch_timer.c
-> +++ b/tools/testing/selftests/kvm/loongarch/arch_timer.c
-> @@ -75,7 +75,7 @@ static void guest_test_oneshot_timer(uint32_t cpu)
->
->   static void guest_test_period_timer(uint32_t cpu)
->   {
-> -       uint32_t irq_iter;
-> +       uint32_t irq_iter, config_iter;
->          uint64_t us;
->          struct test_vcpu_shared_data *shared_data =3D &vcpu_shared_data[=
-cpu];
->
-> @@ -84,7 +84,8 @@ static void guest_test_period_timer(uint32_t cpu)
->          us =3D msecs_to_usecs(test_args.timer_period_ms) +
-> test_args.timer_err_margin_us;
->          timer_set_next_cmp_ms(test_args.timer_period_ms, true);
->          /* Setup a timeout for the interrupt to arrive */
-> -       udelay(us * test_args.nr_iter);
-> +       for (config_iter =3D 0; config_iter < test_args.nr_iter;
-> config_iter++)
-> +               udelay(us);
-This can reduce the probability but still cause problem if the
-background CPU load is very high. So I suggest keep it as is.
+Hi, Tiezhu,
 
+On Mon, Nov 24, 2025 at 3:49=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Mon, Nov 24, 2025 at 2:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > Hi, Hengqi,
+> >
+> > I think this is the successor of
+> > https://lore.kernel.org/loongarch/20251006053323.193581-1-hengqi.chen@g=
+mail.com/T/#t
+> >
+> > Right?
+> >
+>
+> Right, sorry for the long delay.
+Could you please help to review this series?
 
 Huacai
 
 >
->
-> Regards
-> Bibo Mao
 > >
 > > Huacai
 > >
-> >>
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>>
-> >>>>>> Regards
-> >>>>>> Bibo Mao
-> >>>>>>>
-> >>>>>>> Huacai
-> >>>>>>>
-> >>>>>>>>
-> >>>>>>>> Regards
-> >>>>>>>> Bibo Mao
-> >>>>>>>>>
-> >>>>>>>>> Huacai
-> >>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> Regards
-> >>>>>>>>>> Bibo Mao
-> >>>>>>>>>>>
-> >>>>>>>>>>> Hucai
-> >>>>>>>>>>>
-> >>>>>>>>>>>> ---
-> >>>>>>>>>>>> v2 ... v3:
-> >>>>>>>>>>>>         1. Adjust order about patch 2 and patch 3
-> >>>>>>>>>>>>         2. Add test case with alphabetical order
-> >>>>>>>>>>>>         3. Merge one-shot and period timer interrupt test ca=
-se into one
-> >>>>>>>>>>>>         4. Only add LoongArch specific modification with com=
-mon file
-> >>>>>>>>>>>>            Makefile.kvm
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> v1 ... v2:
-> >>>>>>>>>>>>         1. Restore PC and PRMD after exception handler
-> >>>>>>>>>>>>         2. Split patch 4 into two small patches with period =
-timer test and
-> >>>>>>>>>>>>            time counter test
-> >>>>>>>>>>>>         3. With time counter test, set time count with 0 whe=
-n create VM. And
-> >>>>>>>>>>>>            verify time count starts from 0 in guest code
-> >>>>>>>>>>>> ---
-> >>>>>>>>>>>> Bibo Mao (6):
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add system registers save=
- and restore on
-> >>>>>>>>>>>>           exception
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add basic interfaces
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add exception handler reg=
-ister interface
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add timer interrupt test =
-case
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add SW emulated timer tes=
-t
-> >>>>>>>>>>>>         KVM: LoongArch: selftests: Add time counter test
-> >>>>>>>>>>>>
-> >>>>>>>>>>>>        tools/testing/selftests/kvm/Makefile.kvm      |   1 +
-> >>>>>>>>>>>>        .../kvm/include/loongarch/arch_timer.h        |  84 +=
-+++++++
-> >>>>>>>>>>>>        .../kvm/include/loongarch/processor.h         |  81 +=
-++++++-
-> >>>>>>>>>>>>        .../selftests/kvm/lib/loongarch/exception.S   |   6 +
-> >>>>>>>>>>>>        .../selftests/kvm/lib/loongarch/processor.c   |  47 +=
-+++-
-> >>>>>>>>>>>>        .../selftests/kvm/loongarch/arch_timer.c      | 194 +=
-+++++++++++++++++
-> >>>>>>>>>>>>        6 files changed, 410 insertions(+), 3 deletions(-)
-> >>>>>>>>>>>>        create mode 100644 tools/testing/selftests/kvm/includ=
-e/loongarch/arch_timer.h
-> >>>>>>>>>>>>        create mode 100644 tools/testing/selftests/kvm/loonga=
-rch/arch_timer.c
-> >>>>>>>>>>>>
-> >>>>>>>>>>>>
-> >>>>>>>>>>>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
-> >>>>>>>>>>>> --
-> >>>>>>>>>>>> 2.39.3
-> >>>>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>
-> >>
-> >>
->
->
+> > On Mon, Nov 24, 2025 at 1:56=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.=
+com> wrote:
+> > >
+> > > This small set implement new features with 2 bug fixes for BPF.
+> > >
+> > > * Patch 1 fixes a bug discovered while testing the BPF Arena feature.
+> > >   Without this fix, the arena_htab test case which use the
+> > >   bpf_arena_alloc_pages kfunc will trigger a kernel panic.
+> > > * Patch 2 fixes a subtle bug for tail call index, this can be verifie=
+d
+> > >   by the verifier_runtime_jit test case.
+> > >   See the following two threads for background:
+> > >     - https://lore.kernel.org/bpf/CAEyhmHTvj4cDRfu1FXSEXmdCqyWfs3ehw5=
+gtB9qJCrThuUy2Kw@mail.gmail.com/
+> > >     - https://lore.kernel.org/bpf/20251005103518.996383-1-luis.gerhor=
+st@fau.de/
+> > > * Patch 3 uses pack allocator for BPF programs (BPF trampoline alread=
+y
+> > >   use pack allocator, this make it complete), with this, no regressio=
+n
+> > >   on existing selftests
+> > > * Patch 4 & 5 implements basic support for BPF Arena, the following
+> > >   test cases passed:
+> > >     - arena_htab
+> > >     - arena_list
+> > >     - verifier_arena
+> > >     - verifier_arena_large
+> > >
+> > > Hengqi Chen (5):
+> > >   LoongArch: BPF: Sign extend kfunc call arguments
+> > >   LoongArch: BPF: Zero-extend bpf_tail_call() index
+> > >   LoongArch: BPF: Use BPF prog pack allocator
+> > >   LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
+> > >   LoongArch: BPF: Implement bpf_addr_space_cast instruction
+> > >
+> > >  arch/loongarch/net/bpf_jit.c | 225 ++++++++++++++++++++++++++++-----=
+--
+> > >  arch/loongarch/net/bpf_jit.h |  30 ++++-
+> > >  2 files changed, 213 insertions(+), 42 deletions(-)
+> > >
+> > > --
+> > > 2.43.5
