@@ -1,555 +1,187 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB2930EF69
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 08:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F224523A
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 08:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764230664; cv=none; b=JT7U05ojZIkK7YjsfqLCB5MMiNJ9cIM7Ni/pINxT14Xigyf9xo9uivn4GN82Uuthm9rmwFmIofGtc2yyAXt2U86hIBqfqyilZJWoVYPlVFiOxxjaNFKCtY0JzGWAFHO0VfGmarH2STTo3eVRwD6ZLffu3kCiwYLHyFb8RnwY+B8=
+	t=1764233823; cv=none; b=FStp4/RKs6rAVGSz+BMEq+40vjsMJACwYylrPLXtn52La9Tza58geKq+v6lB5TnIGWWVEyNqOS7YJKMssqvGVKJp3tiNHFpx9ZdG3AUZ88VMT+BJkEJn57HvX4qC1McYJbZGXeNahi67gvVuuam/eZQWXeHiW9uh/zqLr9RF+Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764230664; c=relaxed/simple;
-	bh=KOPFJ17HkWX7E7Ta9vHN/wFasXA7kCCiIMTaL5fwtVU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWjS75IuiE6kQfJtgYMHtWo+srkzWJXyI9FYUVVB39KL48qcGnF2cxE82OWanBYD2NQ1XZ9hN/EBnZMAouQNBM9EXiYJmILSNGk2BZtZ79SlCj9QNkybWFJGZBXmQhb8W1h5R1HRhpBerYtikwrYc4vtRIE0GK9iL9AEeK+46Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.219])
-	by gateway (Coremail) with SMTP id _____8Cx778ABihprqgoAA--.19784S3;
-	Thu, 27 Nov 2025 16:04:16 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.219])
-	by front1 (Coremail) with SMTP id qMiowJDxQ+T7BShpis9AAQ--.48316S2;
-	Thu, 27 Nov 2025 16:04:14 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-input@vger.kernel.org,
-	Xiaotian Wu <wuxiaotian@loongson.cn>,
-	jeffbai@aosc.io,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Jon Xie <jon_xie@pixart.com>,
-	Jay Lee <jay_lee@pixart.com>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [RESEND v5] Input: Add driver for PixArt PS/2 touchpad
-Date: Thu, 27 Nov 2025 16:02:03 +0800
-Message-ID: <20251127080203.3218018-1-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1764233823; c=relaxed/simple;
+	bh=nMEL6CUubWk5NRnZpqpkOMoWqTsFE9KiK/HMwEJVHkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SLZOiAp8LArp7ihnMe8tg+1j39CWYSoqpiToUFqCqh6tSBStxCh/DhLuXJLCh/sPMBvFfjqM3bMpxitbyDSAGLBt5g0zpTaHUMIZjFlpbMbaYqAOPushWXsLnfZgkAzhm2HXlUVLPMUdIalPIvTXMF629YYr3aoIUXEBRfAjQyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OfDbwVj/; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OfDbwVj/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1764233791;
+	bh=yWi1m8vik2+V9cBfNdeYImePDDtCunBGmGDzvbZUJHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=OfDbwVj/T+IeACX7U0Jsxqekadxn1XNtJTe1tNfkOvmxUQlN4uy1Tb+q9X1kfWDNl
+	 I8kYUk51G58f2PP4tga6mBpduNMAIH/KZhvwU5KrNvuM+NchZfMmF/LvVzXrBu/4Co
+	 4hsum3UbT5JDTYIjYtIi1F1FDVBgS+uXZ3y6UwHI=
+X-QQ-mid: esmtpsz20t1764233784t7646cdd5
+X-QQ-Originating-IP: dadl8Xeqpmm9MnwHmvFeOwIif3jaRswsA0h+tKRtJso=
+Received: from [10.10.74.117] ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 27 Nov 2025 16:56:23 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7843095497419515905
+Message-ID: <B2E7E43661ACD241+64a342c7-66c0-4564-92c9-405bc0cd911b@uniontech.com>
+Date: Thu, 27 Nov 2025 16:56:22 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] LoongArch: Correct the calculation logic of
+ thread_count
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, hengqi.chen@gmail.com, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20251127033123.3445519-1-maqianga@uniontech.com>
+ <CAAhV-H6vmQpBhf5qiBg9C1SMSOy3O5hd6RnPc1B0Yg3r3+exSA@mail.gmail.com>
+Content-Language: en-US
+From: Qiang Ma <maqianga@uniontech.com>
+In-Reply-To: <CAAhV-H6vmQpBhf5qiBg9C1SMSOy3O5hd6RnPc1B0Yg3r3+exSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxQ+T7BShpis9AAQ--.48316S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgETCGkn6BYCtAAAse
-X-Coremail-Antispam: 1Uk129KBj9fXoW3uFWDWw4xtw4DWrWkur1fKrX_yoW8Jw4Uuo
-	WfZrZIqw4rtw1xZ3s0k3WxK3W3XanFka93Zw4YkrZ0vry0yw1YgFyUtw1UJa13KrWYqFs3
-	JrnaqF48Xr4furn3l-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
-	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
-	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: NovCFWrsOaVAt4XiRc1EU25vF0QThns5nSVcz/5ZTUsKwrDpHasKmIUn
+	Jytn36KVju0ElrIzytpXOmZGeakpS2vwZXthB2eJJ3rLygyg+sdOGer8l/PPrWscEmQVn61
+	DlZJ3tvN+xbOr3AT2/DPz4+WwUMcITX//wrn7pRDYdJis86zPtuL7uB9FwnO9SuwjiQSWs9
+	mKfWLGpNrA3659UnRk8Mg12Bn0tDccMSfkXUKaPmq+sAQGhF/wgs/iAN1z+tjnesml5a3YS
+	ACb9ybTpDhqXwja6/nfsUULZeeUQFCL7narfEztGJbK3Tke8XMRwFyNYspK520UmyKYnwVk
+	aw3oMjNQg/0KRPkZ1fy3ln0MYoADpEHUDAY9ZSkCAWq+c5lk5/IkZL0K82u1EElegDuu4FR
+	BOfxWCd2YIyV6OhtGZceeQ5bU4w7Pfn43ybHNBTBUh699/4QzMXG1EvUE2eb1WfTFUh0QD7
+	owkbc/UdHfBGWlReT8HU6QL8cVzNA4m5Mujb9W4LSz5Db4oPOKlM++kp+qg44wwytot281Q
+	SnoQLBtQ13KRWv1PHRh/lpRJU1P/ZL5X6bqAztxMX3ICOU1y++/Kbv2bipQtOfphLVjuJJq
+	z9uyKl69RSX8FScV7gSMLcZ74ktOE6St8vyu3TYXH62hiBplqKU52KJv82wuXpKN8qkLkWC
+	SZvDDHevDJ9gexMJa8t/4HXGR4fpyMBTzhdAHnnhqeAw3Ddblo0scPnIRpwRpA4+tshjrxE
+	QTslM0AyhNLlrcaaoZm799b2RMsqRvmw/hNW0iuXczncHi1OzH0sfA1xnQmJnSU4Mhp7yGN
+	TOfBTCAtxpsFZFKl6pZ4fkHZGybj4nSVYiLPR/FcRlNLMIHdc32x6X46u5BPhNNWT57aGCb
+	Ue5EDu/PD17UD9HAmy12OeU7qBGpElYP+wWNOqPrIsYxI4tJc7WYPkn2rOg1TmBfV6dKgUJ
+	/A9/Ka3KsFWkT7LT0rSAmTL3b/tfKJmZk78Z2kGVqmMbjcJkgIWzxkWPjRFKaA2NgxBYx08
+	LFHcyLIN636gQai90kRm1C24eJfGFbRAFfsdKoHYiKHd7AC11OKZmYmHRuRDidZBlQe1uFM
+	vL1xwqtyle9Fn/QdwFNLgv6J41Fj6mG+hmJwsuQOPZd
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-This patch introduces a driver for the PixArt PS/2 touchpad, which
-supports both clickpad and touchpad types.
 
-At the same time, we extended the single data packet length to 16,
-because according to the current PixArt hardware and FW design, we need
-11 bytes/15 bytes to represent the complete three-finger/four-finger data.
+在 2025/11/27 15:36, Huacai Chen 写道:
+> Hi, Qiang,
+>
+> On Thu, Nov 27, 2025 at 11:32 AM Qiang Ma <maqianga@uniontech.com> wrote:
+>> For thread_count, the current calculation method has a maximum of 255,
+>> which may not be sufficient in the future. Therefore, we are correcting
+>> it now.
+>>
+>> Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
+>>
+>> [1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.9.0.pdf
+>>
+>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+>> ---
+>>   arch/loongarch/kernel/setup.c | 9 ++++++++-
+>>   1 file changed, 8 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+>> index 25a87378e48e..8dd25fc4bd13 100644
+>> --- a/arch/loongarch/kernel/setup.c
+>> +++ b/arch/loongarch/kernel/setup.c
+>> @@ -56,6 +56,7 @@
+>>   #define SMBIOS_FREQLOW_MASK            0xFF
+>>   #define SMBIOS_CORE_PACKAGE_OFFSET     0x23
+>>   #define SMBIOS_THREAD_PACKAGE_OFFSET   0x25
+>> +#define SMBIOS_THREAD_PACKAGE_2_OFFSET 0x2E
+>>   #define LOONGSON_EFI_ENABLE            (1 << 3)
+>>
+>>   unsigned long fw_arg0, fw_arg1, fw_arg2;
+>> @@ -120,13 +121,19 @@ static void __init parse_cpu_table(const struct dmi_header *dm)
+>>   {
+>>          long freq_temp = 0;
+>>          char *dmi_data = (char *)dm;
+>> +       u8 thread_count;
+>>
+>>          freq_temp = ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
+>>                          ((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & SMBIOS_FREQLOW_MASK));
+>>          cpu_clock_freq = freq_temp * 1000000;
+>>
+>>          loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, dmi_data[16]);
+>> -       loongson_sysconf.cores_per_package = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+>> +       thread_count = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+Yes, this one should need to be converted:
+thread_count = *(u8 *)(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+>> +       if (thread_count != 0)
+>> +               loongson_sysconf.cores_per_package =
+>> +                               dm->length >= 0x30 && thread_count == 0xFF ?
+>> +                               *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFFSET) :
+>> +                               thread_count;
 
-Co-developed-by: Jon Xie <jon_xie@pixart.com>
-Signed-off-by: Jon Xie <jon_xie@pixart.com>
-Co-developed-by: Jay Lee <jay_lee@pixart.com>
-Signed-off-by: Jay Lee <jay_lee@pixart.com>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Tested-by: Kexy Biscuit <kexybiscuit@aosc.io>
----
-After rewriting the determination conditions for the PixArt touchpad type,
-we tested multiple types of touchpads and no longer get false positives for
-non-PixArt devices.
+This patch method refers to dmidecode, which is the same as it, like this:
 
-So, I am attempting to resend the patch, thanks.
+                         if (data[0x25] != 0)
+                                 pr_attr("Thread Count", "%u",
+                                         h->length >= 0x30 && data[0x25] 
+== 0xFF ?
 
- drivers/input/mouse/Kconfig        |  12 ++
- drivers/input/mouse/Makefile       |   1 +
- drivers/input/mouse/pixart_ps2.c   | 310 +++++++++++++++++++++++++++++
- drivers/input/mouse/pixart_ps2.h   |  36 ++++
- drivers/input/mouse/psmouse-base.c |  17 ++
- drivers/input/mouse/psmouse.h      |   3 +-
- 6 files changed, 378 insertions(+), 1 deletion(-)
- create mode 100644 drivers/input/mouse/pixart_ps2.c
- create mode 100644 drivers/input/mouse/pixart_ps2.h
+                                         WORD(data + 0x2E) : data[0x25]);
 
-diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-index 833b643f0616..8a27a20d04b0 100644
---- a/drivers/input/mouse/Kconfig
-+++ b/drivers/input/mouse/Kconfig
-@@ -69,6 +69,18 @@ config MOUSE_PS2_LOGIPS2PP
- 
- 	  If unsure, say Y.
- 
-+config MOUSE_PS2_PIXART
-+	bool "PixArt PS/2 touchpad protocol extension" if EXPERT
-+	default y
-+	depends on MOUSE_PS2
-+	help
-+	  This driver supports the PixArt PS/2 touchpad found in some
-+	  laptops.
-+	  Say Y here if you have a PixArt PS/2 TouchPad connected to
-+	  your system.
-+
-+	  If unsure, say Y.
-+
- config MOUSE_PS2_SYNAPTICS
- 	bool "Synaptics PS/2 mouse protocol extension" if EXPERT
- 	default y
-diff --git a/drivers/input/mouse/Makefile b/drivers/input/mouse/Makefile
-index a1336d5bee6f..563029551529 100644
---- a/drivers/input/mouse/Makefile
-+++ b/drivers/input/mouse/Makefile
-@@ -32,6 +32,7 @@ psmouse-$(CONFIG_MOUSE_PS2_ELANTECH)	+= elantech.o
- psmouse-$(CONFIG_MOUSE_PS2_OLPC)	+= hgpk.o
- psmouse-$(CONFIG_MOUSE_PS2_LOGIPS2PP)	+= logips2pp.o
- psmouse-$(CONFIG_MOUSE_PS2_LIFEBOOK)	+= lifebook.o
-+psmouse-$(CONFIG_MOUSE_PS2_PIXART)	+= pixart_ps2.o
- psmouse-$(CONFIG_MOUSE_PS2_SENTELIC)	+= sentelic.o
- psmouse-$(CONFIG_MOUSE_PS2_TRACKPOINT)	+= trackpoint.o
- psmouse-$(CONFIG_MOUSE_PS2_TOUCHKIT)	+= touchkit_ps2.o
-diff --git a/drivers/input/mouse/pixart_ps2.c b/drivers/input/mouse/pixart_ps2.c
-new file mode 100644
-index 000000000000..682aa6499e63
---- /dev/null
-+++ b/drivers/input/mouse/pixart_ps2.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Pixart Touchpad Controller 1336U PS2 driver
-+ *
-+ * Author: Jon Xie <jon_xie@pixart.com>
-+ *         Jay Lee <jay_lee@pixart.com>
-+ * Further cleanup and restructuring by:
-+ *         Binbin Zhou <zhoubinbin@loongson.cn>
-+ *
-+ * Copyright (C) 2021-2024 Pixart Imaging.
-+ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
-+ *
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/input.h>
-+#include <linux/input/mt.h>
-+#include <linux/libps2.h>
-+#include <linux/serio.h>
-+#include <linux/slab.h>
-+
-+#include "pixart_ps2.h"
-+
-+static int pixart_read_tp_mode(struct ps2dev *ps2dev, u8 *mode)
-+{
-+	int error;
-+	u8 param[1] = { 0 };
-+
-+	error = ps2_command(ps2dev, param, PIXART_CMD_REPORT_FORMAT);
-+	if (error)
-+		return error;
-+
-+	*mode = param[0] == 1 ? PIXART_MODE_ABS : PIXART_MODE_REL;
-+
-+	return 0;
-+}
-+
-+static int pixart_read_tp_type(struct ps2dev *ps2dev, u8 *type)
-+{
-+	int error;
-+	u8 param[3] = { 0 };
-+
-+	param[0] = 0xa;
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRATE);
-+	if (error)
-+		return error;
-+
-+	param[0] = 0x0;
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
-+	if (error)
-+		return error;
-+
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
-+	if (error)
-+		return error;
-+
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
-+	if (error)
-+		return error;
-+
-+	param[0] = 0x3;
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
-+	if (error)
-+		return error;
-+
-+	error = ps2_command(ps2dev, param, PSMOUSE_CMD_GETINFO);
-+	if (error)
-+		return error;
-+
-+	switch (param[0]) {
-+	case 0xc:
-+		*type = PIXART_TYPE_CLICKPAD;
-+		break;
-+	case 0xe:
-+		*type = PIXART_TYPE_TOUCHPAD;
-+		break;
-+	default:
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static void pixart_reset(struct psmouse *psmouse)
-+{
-+	ps2_command(&psmouse->ps2dev, NULL, PSMOUSE_CMD_RESET_DIS);
-+
-+	/* according to PixArt, 100ms is required for the upcoming reset */
-+	msleep(100);
-+	psmouse_reset(psmouse);
-+}
-+
-+static void pixart_process_packet(struct psmouse *psmouse)
-+{
-+	struct pixart_data *priv = psmouse->private;
-+	struct input_dev *dev = psmouse->dev;
-+	const u8 *pkt = psmouse->packet;
-+	unsigned int contact_cnt = FIELD_GET(CONTACT_CNT_MASK, pkt[0]);
-+	unsigned int i, id, abs_x, abs_y;
-+	bool tip;
-+
-+	for (i = 0; i < contact_cnt; i++) {
-+		const u8 *p = &pkt[i * 3];
-+
-+		id = FIELD_GET(SLOT_ID_MASK, p[3]);
-+		abs_y = FIELD_GET(ABS_Y_MASK, p[3]) << 8 | p[1];
-+		abs_x = FIELD_GET(ABS_X_MASK, p[3]) << 8 | p[2];
-+
-+		if (i == PIXART_MAX_FINGERS - 1)
-+			tip = pkt[14] & BIT(1);
-+		else
-+			tip = pkt[3 * contact_cnt + 1] & BIT(2 * i + 1);
-+
-+		input_mt_slot(dev, id);
-+		if (input_mt_report_slot_state(dev, MT_TOOL_FINGER, tip)) {
-+			input_report_abs(dev, ABS_MT_POSITION_Y, abs_y);
-+			input_report_abs(dev, ABS_MT_POSITION_X, abs_x);
-+		}
-+	}
-+
-+	input_mt_sync_frame(dev);
-+
-+	if (priv->type == PIXART_TYPE_CLICKPAD) {
-+		input_report_key(dev, BTN_LEFT, pkt[0] & 0x03);
-+	} else {
-+		input_report_key(dev, BTN_LEFT, pkt[0] & BIT(0));
-+		input_report_key(dev, BTN_RIGHT, pkt[0] & BIT(1));
-+	}
-+
-+	input_sync(dev);
-+}
-+
-+static psmouse_ret_t pixart_protocol_handler(struct psmouse *psmouse)
-+{
-+	u8 *pkt = psmouse->packet;
-+	u8 contact_cnt;
-+
-+	if ((pkt[0] & 0x8c) != 0x80)
-+		return PSMOUSE_BAD_DATA;
-+
-+	contact_cnt = FIELD_GET(CONTACT_CNT_MASK, pkt[0]);
-+	if (contact_cnt > PIXART_MAX_FINGERS)
-+		return PSMOUSE_BAD_DATA;
-+
-+	if (contact_cnt == PIXART_MAX_FINGERS &&
-+	    psmouse->pktcnt < psmouse->pktsize) {
-+		return PSMOUSE_GOOD_DATA;
-+	}
-+
-+	if (contact_cnt == 0 && psmouse->pktcnt < 5)
-+		return PSMOUSE_GOOD_DATA;
-+
-+	if (psmouse->pktcnt < 3 * contact_cnt + 2)
-+		return PSMOUSE_GOOD_DATA;
-+
-+	pixart_process_packet(psmouse);
-+
-+	return PSMOUSE_FULL_PACKET;
-+}
-+
-+static void pixart_disconnect(struct psmouse *psmouse)
-+{
-+	pixart_reset(psmouse);
-+	kfree(psmouse->private);
-+	psmouse->private = NULL;
-+}
-+
-+static int pixart_reconnect(struct psmouse *psmouse)
-+{
-+	struct ps2dev *ps2dev = &psmouse->ps2dev;
-+	u8 mode;
-+	int error;
-+
-+	pixart_reset(psmouse);
-+
-+	error = pixart_read_tp_mode(ps2dev, &mode);
-+	if (error)
-+		return error;
-+
-+	if (mode != PIXART_MODE_ABS)
-+		return -EIO;
-+
-+	error = ps2_command(ps2dev, NULL, PIXART_CMD_SWITCH_PROTO);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+static int pixart_set_input_params(struct input_dev *dev,
-+				   struct pixart_data *priv)
-+{
-+	/* No relative support */
-+	__clear_bit(EV_REL, dev->evbit);
-+	__clear_bit(REL_X, dev->relbit);
-+	__clear_bit(REL_Y, dev->relbit);
-+	__clear_bit(BTN_MIDDLE, dev->keybit);
-+
-+	/* Buttons */
-+	__set_bit(EV_KEY, dev->evbit);
-+	__set_bit(BTN_LEFT, dev->keybit);
-+	if (priv->type == PIXART_TYPE_CLICKPAD)
-+		__set_bit(INPUT_PROP_BUTTONPAD, dev->propbit);
-+	else
-+		__set_bit(BTN_RIGHT, dev->keybit);
-+
-+	/* Absolute position */
-+	input_set_abs_params(dev, ABS_X, 0, PIXART_PAD_WIDTH, 0, 0);
-+	input_set_abs_params(dev, ABS_Y, 0, PIXART_PAD_HEIGHT, 0, 0);
-+
-+	input_set_abs_params(dev, ABS_MT_POSITION_X,
-+			     0, PIXART_PAD_WIDTH, 0, 0);
-+	input_set_abs_params(dev, ABS_MT_POSITION_Y,
-+			     0, PIXART_PAD_HEIGHT, 0, 0);
-+
-+	return input_mt_init_slots(dev, PIXART_MAX_FINGERS,
-+				   INPUT_MT_POINTER | INPUT_MT_DROP_UNUSED);
-+}
-+
-+static int pixart_query_hardware(struct ps2dev *ps2dev, u8 *mode, u8 *type)
-+{
-+	int error;
-+
-+	error = pixart_read_tp_type(ps2dev, type);
-+	if (error)
-+		return error;
-+
-+	error = pixart_read_tp_mode(ps2dev, mode);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+int pixart_detect(struct psmouse *psmouse, bool set_properties)
-+{
-+	u8 type;
-+	int error;
-+
-+	pixart_reset(psmouse);
-+
-+	error = pixart_read_tp_type(&psmouse->ps2dev, &type);
-+	if (error)
-+		return error;
-+
-+	if (set_properties) {
-+		psmouse->vendor = "PixArt";
-+		psmouse->name = (type == PIXART_TYPE_TOUCHPAD) ?
-+				"touchpad" : "clickpad";
-+	}
-+
-+	return 0;
-+}
-+
-+int pixart_init(struct psmouse *psmouse)
-+{
-+	int error;
-+	struct pixart_data *priv;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	psmouse->private = priv;
-+	pixart_reset(psmouse);
-+
-+	error = pixart_query_hardware(&psmouse->ps2dev,
-+				      &priv->mode, &priv->type);
-+	if (error) {
-+		psmouse_err(psmouse, "init: Unable to query PixArt touchpad hardware.\n");
-+		goto err_exit;
-+	}
-+
-+	/* Relative mode follows standard PS/2 mouse protocol */
-+	if (priv->mode != PIXART_MODE_ABS) {
-+		error = -EIO;
-+		goto err_exit;
-+	}
-+
-+	/* Set absolute mode */
-+	error = ps2_command(&psmouse->ps2dev, NULL, PIXART_CMD_SWITCH_PROTO);
-+	if (error) {
-+		psmouse_err(psmouse, "init: Unable to initialize PixArt absolute mode.\n");
-+		goto err_exit;
-+	}
-+
-+	error = pixart_set_input_params(psmouse->dev, priv);
-+	if (error) {
-+		psmouse_err(psmouse, "init: Unable to set input params.\n");
-+		goto err_exit;
-+	}
-+
-+	psmouse->pktsize = 15;
-+	psmouse->protocol_handler = pixart_protocol_handler;
-+	psmouse->disconnect = pixart_disconnect;
-+	psmouse->reconnect = pixart_reconnect;
-+	psmouse->cleanup = pixart_reset;
-+	/* resync is not supported yet */
-+	psmouse->resync_time = 0;
-+
-+	return 0;
-+
-+err_exit:
-+	pixart_reset(psmouse);
-+	kfree(priv);
-+	psmouse->private = NULL;
-+	return error;
-+}
-diff --git a/drivers/input/mouse/pixart_ps2.h b/drivers/input/mouse/pixart_ps2.h
-new file mode 100644
-index 000000000000..47a1d040f2d1
---- /dev/null
-+++ b/drivers/input/mouse/pixart_ps2.h
-@@ -0,0 +1,36 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _PIXART_PS2_H
-+#define _PIXART_PS2_H
-+
-+#include "psmouse.h"
-+
-+#define PIXART_PAD_WIDTH		1023
-+#define PIXART_PAD_HEIGHT		579
-+#define PIXART_MAX_FINGERS		4
-+
-+#define PIXART_CMD_REPORT_FORMAT	0x01d8
-+#define PIXART_CMD_SWITCH_PROTO		0x00de
-+
-+#define PIXART_MODE_REL			0
-+#define PIXART_MODE_ABS			1
-+
-+#define PIXART_TYPE_CLICKPAD		0
-+#define PIXART_TYPE_TOUCHPAD		1
-+
-+#define CONTACT_CNT_MASK		GENMASK(6, 4)
-+
-+#define SLOT_ID_MASK			GENMASK(2, 0)
-+#define ABS_Y_MASK			GENMASK(5, 4)
-+#define ABS_X_MASK			GENMASK(7, 6)
-+
-+struct pixart_data {
-+	u8 mode;
-+	u8 type;
-+	int x_max;
-+	int y_max;
-+};
-+
-+int pixart_detect(struct psmouse *psmouse, bool set_properties);
-+int pixart_init(struct psmouse *psmouse);
-+
-+#endif  /* _PIXART_PS2_H */
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index 77ea7da3b1c5..f708b75eb91b 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -36,6 +36,7 @@
- #include "focaltech.h"
- #include "vmmouse.h"
- #include "byd.h"
-+#include "pixart_ps2.h"
- 
- #define DRIVER_DESC	"PS/2 mouse driver"
- 
-@@ -905,6 +906,15 @@ static const struct psmouse_protocol psmouse_protocols[] = {
- 		.detect		= byd_detect,
- 		.init		= byd_init,
- 	},
-+#endif
-+#ifdef CONFIG_MOUSE_PS2_PIXART
-+	{
-+		.type		= PSMOUSE_PIXART,
-+		.name		= "PixArtPS/2",
-+		.alias		= "pixart",
-+		.detect		= pixart_detect,
-+		.init		= pixart_init,
-+	},
- #endif
- 	{
- 		.type		= PSMOUSE_AUTO,
-@@ -1172,6 +1182,13 @@ static int psmouse_extensions(struct psmouse *psmouse,
- 			return ret;
- 	}
- 
-+	/* Try PixArt touchpad */
-+	if (max_proto > PSMOUSE_IMEX &&
-+	    psmouse_try_protocol(psmouse, PSMOUSE_PIXART, &max_proto,
-+				 set_properties, true)) {
-+		return PSMOUSE_PIXART;
-+	}
-+
- 	if (max_proto > PSMOUSE_IMEX) {
- 		if (psmouse_try_protocol(psmouse, PSMOUSE_GENPS,
- 					 &max_proto, set_properties, true))
-diff --git a/drivers/input/mouse/psmouse.h b/drivers/input/mouse/psmouse.h
-index 4d8acfe0d82a..23f7fa7243cb 100644
---- a/drivers/input/mouse/psmouse.h
-+++ b/drivers/input/mouse/psmouse.h
-@@ -69,6 +69,7 @@ enum psmouse_type {
- 	PSMOUSE_BYD,
- 	PSMOUSE_SYNAPTICS_SMBUS,
- 	PSMOUSE_ELANTECH_SMBUS,
-+	PSMOUSE_PIXART,
- 	PSMOUSE_AUTO		/* This one should always be last */
- };
- 
-@@ -94,7 +95,7 @@ struct psmouse {
- 	const char *vendor;
- 	const char *name;
- 	const struct psmouse_protocol *protocol;
--	unsigned char packet[8];
-+	unsigned char packet[16];
- 	unsigned char badbyte;
- 	unsigned char pktcnt;
- 	unsigned char pktsize;
 
-base-commit: a311c777f2987e6ddba2d2dd2f82f2135d65f8aa
--- 
-2.47.3
+> According SPEC, it uses THREAD_COUNT_2 only if dm->length >= 30 and
+> thread_count == 0xff, so the correct and simplest way is like this:
+>
+>          cpu_clock_freq = freq_temp * 1000000;
+>
+>          loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, dmi_data[16]);
+> -       loongson_sysconf.cores_per_package = *(dmi_data +
+> SMBIOS_THREAD_PACKAGE_OFFSET);
+> +       if (dm->length < 0x30)
+> +               thread_count = *(u8 *)(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
+> +       else if (thread_count == 0xff)
+> +               thread_count = *(u16 *)(dmi_data +
+> SMBIOS_THREAD_PACKAGE_2_OFFSET);
+> +       loongson_sysconf.cores_per_package = thread_count;
+>
+>          pr_info("CpuClock = %llu\n", cpu_clock_freq);
+I feel there is a problem with this method.
+I saw on the 3C6000/Q machine a few days ago that the dm->lenght is 0x30,
+but only one byte is used, and the thread_count is 128, not 0xFF.
+Is the initialization thread_count = *(u8 *)(dmi_data + 
+SMBIOS_THREAD_PACKAGE_OFFSET) missing?
+Wouldn't it be better to change it this way?
+
++       u8 thread_count;
+
+         freq_temp = ((*(dmi_data + SMBIOS_FREQHIGH_OFFSET) << 8) +
+                         ((*(dmi_data + SMBIOS_FREQLOW_OFFSET)) & 
+SMBIOS_FREQLOW_MASK));
+         cpu_clock_freq = freq_temp * 1000000;
+
+         loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, 
+dmi_data[16]);
+-       loongson_sysconf.cores_per_package = *(dmi_data + 
+SMBIOS_THREAD_PACKAGE_OFFSET);
++       thread_count = *(u8 *)(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
++       if (thread_count == 0xFF && dm->length >= 0x30)
++               thread_count = *(u16 *)(dmi_data + 
+SMBIOS_THREAD_PACKAGE_2_OFFSET);
++       loongson_sysconf.cores_per_package = thread_count;
+
+         pr_info("CpuClock = %llu\n", cpu_clock_freq);
+  }
+> Huacai
+>
+>>          pr_info("CpuClock = %llu\n", cpu_clock_freq);
+>>   }
+>> --
+>> 2.20.1
+>>
 
