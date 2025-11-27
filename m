@@ -1,199 +1,116 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779C832B9A5
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 11:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDD91A9F9D
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 12:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764243565; cv=none; b=doD2UqGXmwuKqMsLtdc4BzM8pLbTVHBemREiuKW7xTJxZKaivVwtFBahuPWtdy4amndzcdIvzDLFbsWlXlKPmTojOzw2eB1Ck29Vam1/WHTdvOnEXQklfIOaWbjelWfBPlljTpEHCBhyq00Yzagw7pF+XKpAKAkLer9vphzzQQg=
+	t=1764245304; cv=none; b=l+7aSL/cAXvfYFxfCxrr2mBxsUSXmvGFY4hG/htqsfLfrO2NQNWxG5IQF+2buLIBgz6YDgqKLTTS3RK7IJbfFetzNk8mFb3iGHd5UlovaIefQGa3Brw9kqyvaotOIQwHkZ8N3oe22FJwBaMBwMWOol29UqaGsP0KMmK7//fxPQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764243565; c=relaxed/simple;
-	bh=VmYFJVGbSNiRXH1yQ3UAeHylPpQU5o+0M5eUQPT/G+Y=;
+	s=arc-20240116; t=1764245304; c=relaxed/simple;
+	bh=uD2RZN4VdknGWWj5uflx8LDr1xab0Vw4SipoOPpXAfI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k/RhjsaL96XdhHCfQvdtn0XqVz4V4zjCW65/s6iaNT1U0RYdB9//eK+5T0xkJiBCGFHPGXwz4Oi0DIKH+16xOKpK0kTBqVfDdI3Sur5GPnvTkvG6FiaToHHNwK5SE8yxoTfBcyAlOVz3inpLMRsGyVGvRL8n9H60fJSlbTsLKoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IgBLpanQ; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=kROUppJq2LJa0kKC1mMxir1qZp/faLZdlAnfXIyeJ0FGd4qFvyD0UuXxymWFQwS7FDyrzLsDrW3J0iCflPpPfDl+idb1TPUHOk6SWOQ43DiFg0slJZ7k6mvnSWuqXppour2G0Y59wvw7LPS3VKRuRV+QwKgYtDrw43djZ2+eYVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXcJtAhL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IgBLpanQ"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b2da83f721so83982785a.1
-        for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 03:39:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764243562; x=1764848362; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lTgQXrnGbp8yRV1ffH5aOGb73MnxpAvx9lMPfkiZ/pE=;
-        b=IgBLpanQ3DLSrOyQCHQUEq2OMWR1NF+22wF18B1sXkZ96GyfM82DNYsb0B2aG2qy29
-         6DHRHB/WNN/Fnr2GMQfJ6Z2t1f9C8dLAj1FGYj0lsEnbG1VWVHfmWGkwSm1WdloAg8JR
-         bmls/ijX2/h0PFtC7GBFXfSqFcIdDjAAmyyysGwC45GgQYk2Fxhl4aGlntmCAuydOUXf
-         RMb/4/rUICZaNQ1oBfWwMM0bnOi3aP2XSyhYQOUD/eSCbvixPg8vvMyDRRxTm8vdqlj8
-         Ba+jb9DpmYrzxA+GdniH1w0S7OhnWo383Z0RF82RTXy17jz8tPKpyApHVlA55XZqh7R4
-         i0ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764243562; x=1764848362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lTgQXrnGbp8yRV1ffH5aOGb73MnxpAvx9lMPfkiZ/pE=;
-        b=JZ/5Q4p8V3WeI/C1qKWHDhPjM7Hu6hfKGV1CFnk9undQtZ3RO6hjecE4U8KqoVUlT2
-         4clfWNq7fyfnFVnkSKt2v7vNpg7Q2bH+j1fv4LkONl3MwcRlyxdR3JVv8GX2JvrNgEGA
-         d82j+AVyD2ApS+XIqtZnvSvHERsKyFjLaY+Biq0adEe1EWrWkDnnyz8bIgXtzN715AK6
-         61CryzHhqfBj3yTfIf7svwG2xGyUy3/GO1lMoEipyGjZqo1O3uoGOG5mtVjkWTSoKDSr
-         qi67rVXWOaXLB08V9PQ1tHpHLwsCXrZhn/I7QLfjo8U9zTUlibK2NLRvZGrh2a+sPOr0
-         RQoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVufWz4VXblc2xnFH8cTj1vKHCGlDIoh0Q2ImCyl5AinuAfvy1p2SbpQE5Gng4FKdUG1VP9zl0fBFA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDrO3CGRXSO6+l5pGI36bJKPVckT3HaaLehoiN17KVRztzCcTx
-	/ysdFkxTgvhPKo8vvnrNEDw67SkxcyY1jGpAtSKMSLzcRS9AkLwLvupWPghq06m2Lq1kB3nj7o1
-	2XMG0bq+LGEZSKkU4EcVTiCjRmtQJ1rc=
-X-Gm-Gg: ASbGncvEWLJI8W5TtYB7niintERon4a7t+wAUgUVsmUuW5TSq7D3hpTbnrVKUWK+NG+
-	5zGnNcWv/xvEW9E4A6WZoRbJEZ4oHBs/PiM+MQ5Sc5pcHfWHfmbtoq1fHH4MF2zjStFXG8NFgky
-	cVgKjDLWzfXgnb3R5wv3DqhUuUo6qPlYYeqSIcNOs0F9LXvKdvWdN1+CDyOg3EYUgs2gSkIe5P7
-	0Ff0sja6HRlVoLk+lcgh5NlGldaCeyVtT8Ivxh/C/U5fLZzytzhKxP2IJI3RSS4Q/E8xg==
-X-Google-Smtp-Source: AGHT+IF8AX3QuwU8PWoyMHubrE0YEf7OwwbSbZImelOgI0KoQ85t34HoENkNaCeescbBRgk60ctOqyrcZAkFR1pI8MI=
-X-Received: by 2002:a05:620a:4094:b0:8b2:3484:8e22 with SMTP id
- af79cd13be357-8b32a8d7accmr3051143885a.0.1764243562227; Thu, 27 Nov 2025
- 03:39:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXcJtAhL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B1CC4CEFB
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 12:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764245303;
+	bh=uD2RZN4VdknGWWj5uflx8LDr1xab0Vw4SipoOPpXAfI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VXcJtAhL/O0DZMv4vtSWIw/VpjhE7h+MkKxiPdnLWRKeIV3fsxUYYNJQNN+hwGCpN
+	 NdRRarUG0Mxc+N7at0Xs4Og6hy2YQ9fvr1SLqOXVJ3qo10CTa/+dNU4Q4indFB6KYE
+	 fGszZspVwPeFwtcqntpCAQ0vxHPMU1YXFvR+zOndBbbERgMrCcXsWsUUpeAThFT+Wo
+	 kfNTvR6OuNexGg+z8sZaiwyl444gpwNPXNxV55iJMjB/zC0uWc44Q0Db9ucCkuiB/A
+	 l2K9mDkGeVvz8WR6Oswok4jVkIDcm86l//RUrfZ9g0O95zkNtf1aTHJA7QyfIqrwnW
+	 KzoXd/gY/y+ew==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b7380f66a8bso126466466b.2
+        for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 04:08:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVRNAAArdoOPQ5tXOYGi3I5QWjRkaKL/wtPnciihEUiXkxGFkP9WlCJgj/iuLjDFPwa5UuyQ2GyOyE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxkIQrqXVUUIrmwxqtYjcUFTyM84zGiIGTLqVx0MPlK0ZC0Zz8a
+	9qW2rtLIbNHt9AL5A9K4oS5B8TvK5SnPhW11hHGVhuMC5T7bGjpEQHa/z8e9NV+/LmNBd50c0WB
+	e05LlLGHtblDTbt+nT/MU1z24aKxo3dc=
+X-Google-Smtp-Source: AGHT+IG+r6fI8NF9L6YLqSp2Shso4lOBTZ0Z/12bLcC1HahjNCOC8UZmwFLoZQ6L1iUEe4Nqmb7j+9fX3WTRXBj2AEA=
+X-Received: by 2002:a17:907:7205:b0:b40:8deb:9cbe with SMTP id
+ a640c23a62f3a-b7671549ca8mr2627708766b.2.1764245302235; Thu, 27 Nov 2025
+ 04:08:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251127011438.6918-1-21cnbao@gmail.com> <20251127011438.6918-2-21cnbao@gmail.com>
- <5by7tko4v3kqvvpu4fdsgpw42yl5ed5qisbaz3la4an52hq4j2@v75fagey6gva>
-In-Reply-To: <5by7tko4v3kqvvpu4fdsgpw42yl5ed5qisbaz3la4an52hq4j2@v75fagey6gva>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 27 Nov 2025 19:39:11 +0800
-X-Gm-Features: AWmQ_bmMHpk-p6E2I_jCY1Xqg4XmWm0x9ikXHEjIDdMSrcjAo4PIsH4k_44adgY
-Message-ID: <CAGsJ_4xQKARuEuhrVuV+WmBC7+NCNd==Zi9nGmze5mfSjF1kdw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] mm/filemap: Retry fault by VMA lock if the lock
- was released for I/O
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	Oven Liyang <liyangouwen1@oppo.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, David Hildenbrand <david@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Matthew Wilcox <willy@infradead.org>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>, Robin Murphy <robin.murphy@arm.com>, 
-	=?UTF-8?Q?Kristina_Mart=C5=A1enko?= <kristina.martsenko@arm.com>, 
-	Kevin Brodsky <kevin.brodsky@arm.com>, Yeoreum Yun <yeoreum.yun@arm.com>, 
-	Wentao Guan <guanwentao@uniontech.com>, Thorsten Blum <thorsten.blum@linux.dev>, 
-	Steven Rostedt <rostedt@goodmis.org>, Yunhui Cui <cuiyunhui@bytedance.com>, 
-	Nam Cao <namcao@linutronix.de>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <bhe@redhat.com>, Barry Song <v-songbaohua@oppo.com>
+References: <20251127101946.3531069-1-maqianga@uniontech.com>
+In-Reply-To: <20251127101946.3531069-1-maqianga@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 27 Nov 2025 20:08:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6=1W9-WSmSVtnOzCNFDYV4=1fKR2pdNnAKOQ=5OXJT1A@mail.gmail.com>
+X-Gm-Features: AWmQ_bkTIJQ04KgU96lSGTEPzW8c0NPr03lgcULYToXsj917tUwOT2dLrIW-RoM
+Message-ID: <CAAhV-H6=1W9-WSmSVtnOzCNFDYV4=1fKR2pdNnAKOQ=5OXJT1A@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: Correct the calculation logic of thread_count
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: kernel@xen0n.name, hengqi.chen@gmail.com, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 27, 2025 at 6:52=E2=80=AFPM Pedro Falcato <pfalcato@suse.de> wr=
-ote:
->
-> On Thu, Nov 27, 2025 at 09:14:37AM +0800, Barry Song wrote:
-> > From: Oven Liyang <liyangouwen1@oppo.com>
-> >
-> > If the current page fault is using the per-VMA lock, and we only releas=
-ed
-> > the lock to wait for I/O completion (e.g., using folio_lock()), then wh=
-en
-> > the fault is retried after the I/O completes, it should still qualify f=
-or
-> > the per-VMA-lock path.
-> >
-> <snip>
-> > Signed-off-by: Oven Liyang <liyangouwen1@oppo.com>
-> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> > ---
-> >  arch/arm/mm/fault.c       | 5 +++++
-> >  arch/arm64/mm/fault.c     | 5 +++++
-> >  arch/loongarch/mm/fault.c | 4 ++++
-> >  arch/powerpc/mm/fault.c   | 5 ++++-
-> >  arch/riscv/mm/fault.c     | 4 ++++
-> >  arch/s390/mm/fault.c      | 4 ++++
-> >  arch/x86/mm/fault.c       | 4 ++++
->
-> If only we could unify all these paths :(
+Applied, thanks.
 
-Right, it=E2=80=99s a pain, but we do have bots for that?
-And it=E2=80=99s basically just copy-and-paste across different architectur=
-es.
+Huacai
 
+On Thu, Nov 27, 2025 at 6:21=E2=80=AFPM Qiang Ma <maqianga@uniontech.com> w=
+rote:
 >
-> >  include/linux/mm_types.h  | 9 +++++----
-> >  mm/filemap.c              | 5 ++++-
-> >  9 files changed, 39 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > index b71625378ce3..12b2d65ef1b9 100644
-> > --- a/include/linux/mm_types.h
-> > +++ b/include/linux/mm_types.h
-> > @@ -1670,10 +1670,11 @@ enum vm_fault_reason {
-> >       VM_FAULT_NOPAGE         =3D (__force vm_fault_t)0x000100,
-> >       VM_FAULT_LOCKED         =3D (__force vm_fault_t)0x000200,
-> >       VM_FAULT_RETRY          =3D (__force vm_fault_t)0x000400,
-> > -     VM_FAULT_FALLBACK       =3D (__force vm_fault_t)0x000800,
-> > -     VM_FAULT_DONE_COW       =3D (__force vm_fault_t)0x001000,
-> > -     VM_FAULT_NEEDDSYNC      =3D (__force vm_fault_t)0x002000,
-> > -     VM_FAULT_COMPLETED      =3D (__force vm_fault_t)0x004000,
-> > +     VM_FAULT_RETRY_VMA      =3D (__force vm_fault_t)0x000800,
+> For thread_count, the current calculation method has a maximum of 255,
+> which may not be sufficient in the future. Therefore, we are correcting
+> it now.
 >
-> So, what I am wondering here is why we need one more fault flag versus
-> just blindly doing this on a plain-old RETRY. Is there any particular
-> reason why? I can't think of one.
-
-Because in some cases we retry simply due to needing to take mmap_lock.
-For example:
-
-/**
- * __vmf_anon_prepare - Prepare to handle an anonymous fault.
- * @vmf: The vm_fault descriptor passed from the fault handler.
- *
- * When preparing to insert an anonymous page into a VMA from a
- * fault handler, call this function rather than anon_vma_prepare().
- * If this vma does not already have an associated anon_vma and we are
- * only protected by the per-VMA lock, the caller must retry with the
- * mmap_lock held.  __anon_vma_prepare() will look at adjacent VMAs to
- * determine if this VMA can share its anon_vma, and that's not safe to
- * do with only the per-VMA lock held for this VMA.
- *
- * Return: 0 if fault handling can proceed.  Any other value should be
- * returned to the caller.
+> Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
+>
+> [1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134=
+_3.9.0.pdf
+>
+> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> ---
+>  arch/loongarch/kernel/setup.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.=
+c
+> index 25a87378e48e..eb6e3ac27436 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -56,6 +56,7 @@
+>  #define SMBIOS_FREQLOW_MASK            0xFF
+>  #define SMBIOS_CORE_PACKAGE_OFFSET     0x23
+>  #define SMBIOS_THREAD_PACKAGE_OFFSET   0x25
+> +#define SMBIOS_THREAD_PACKAGE_2_OFFSET 0x2E
+>  #define LOONGSON_EFI_ENABLE            (1 << 3)
+>
+>  unsigned long fw_arg0, fw_arg1, fw_arg2;
+> @@ -126,7 +127,12 @@ static void __init parse_cpu_table(const struct dmi_=
+header *dm)
+>         cpu_clock_freq =3D freq_temp * 1000000;
+>
+>         loongson_sysconf.cpuname =3D (void *)dmi_string_parse(dm, dmi_dat=
+a[16]);
+> -       loongson_sysconf.cores_per_package =3D *(dmi_data + SMBIOS_THREAD=
+_PACKAGE_OFFSET);
+> +       loongson_sysconf.cores_per_package =3D *(u8 *)(dmi_data + SMBIOS_=
+THREAD_PACKAGE_OFFSET);
+> +       if (dm->length >=3D 0x30 && loongson_sysconf.cores_per_package =
+=3D=3D 0xff) {
+> +               /* SMBIOS 3.0+ has ThreadCount2 for more than 255 threads=
  */
-vm_fault_t __vmf_anon_prepare(struct vm_fault *vmf)
-{
-...
-}
-
-Thus, we have to check each branch one by one, but I/O wait is the most
-frequent path, so we handle it first.
-
+> +               loongson_sysconf.cores_per_package =3D
+> +                               *(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE=
+_2_OFFSET);
+> +       }
 >
-> I would also like to see performance numbers.
-
-Yes. From what I understand, this patchset should improve performance in a
-fairly straightforward way.
-But yes, I can certainly include some data in v2.
-
+>         pr_info("CpuClock =3D %llu\n", cpu_clock_freq);
+>  }
+> --
+> 2.20.1
 >
-> The rest of the patch looks OK to me.
-
-Thanks
-Barry
