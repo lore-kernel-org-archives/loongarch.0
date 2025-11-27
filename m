@@ -1,338 +1,195 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0EB33D6F5
-	for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2048213B284
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 01:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764173376; cv=none; b=TzrvvFzK5gB7/9B1k6z+cwX+P/pBuOXz4Vp4mui+lePDa3Q5B/QDbBsQYZgYByjtKAwH/zNl4nw3sGLoCvKqnr91vDUC7+9pyKbb5ZGxq+cJbGK4UjZ0FWkSWBrgkCTCrWfxQUmBF7X5Z8WVifMOL+aQoNqjzBCn7FArvbLD+Q4=
+	t=1764205716; cv=none; b=aJtfW890NGPB3RftLT9foEuUzOgTX/aPiIUsDUcQ9Rz0dj3mhvh/9LXG5vjA8/txoopgSLs7QZGmXK2WCFkSoWFjs+GOEmMGJKo4iv1B5yAodbUL/bVGxXsCpFjeIIQZ+CpC/cdArDdORB0nVUBkuXIaqE+p6ncXKMAlDAJvlaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764173376; c=relaxed/simple;
-	bh=CIWnpIXy2b0rOBp4vkPsIt5G3iIH1TZkuRslbfuh9wY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F7GeSv2faqpYZngMZa/C/vm/5IcOdK6joYXIPuQXpEIOn49OL1Bp3F4535Jjp0d0oNPZdw/dwsGYtrgNZ+hpwqqrkzDxSXXEMPF/QPFDTQK/CEwSA8g+fYkrVjI5fGu5PLJdn4lF2k/7J2e9h1Rf4jWIO9I4w+xjNlaaSt3uAnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gDVVsqKg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nlR4bgUc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gDVVsqKg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nlR4bgUc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gDVVsqKg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nlR4bgUc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gDVVsqKg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nlR4bgUc"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BEC2A33709;
-	Wed, 26 Nov 2025 16:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764173343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=gDVVsqKgbfh75SmTezs4cw5BsGWBy1HWvPN0lWCIuapXTEVyitUG1XzH/vT6POLV25petk
-	xGMCONZMHgiWh9wnKy0mv1vTu9BTgYmSvyPi+B68bAGfgTJxXd823j/GznUK0g2MVS1e1g
-	V2cTt2DrASho4AhQNabjuOlHbElHZ8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764173343;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=nlR4bgUcRp9vlyOFO1DCiQOXM5k/oJsckEX/Bytc1gRzOs7DOAyZNjoG25oisWzvkPO71s
-	GHyJmNhl2zcRG3BQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gDVVsqKg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=nlR4bgUc
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764173343; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=gDVVsqKgbfh75SmTezs4cw5BsGWBy1HWvPN0lWCIuapXTEVyitUG1XzH/vT6POLV25petk
-	xGMCONZMHgiWh9wnKy0mv1vTu9BTgYmSvyPi+B68bAGfgTJxXd823j/GznUK0g2MVS1e1g
-	V2cTt2DrASho4AhQNabjuOlHbElHZ8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764173343;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrrbJ3alRtzOMTMhYJrDntjaxvd3iXypW6GUIunVDTk=;
-	b=nlR4bgUcRp9vlyOFO1DCiQOXM5k/oJsckEX/Bytc1gRzOs7DOAyZNjoG25oisWzvkPO71s
-	GHyJmNhl2zcRG3BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 463AA3EA65;
-	Wed, 26 Nov 2025 16:09:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IC+6Dx8mJ2lnIgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 26 Nov 2025 16:09:03 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	javierm@redhat.com,
-	arnd@arndb.de,
-	richard.lyu@suse.com,
-	helgaas@kernel.org
-Cc: x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 9/9] efi: libstub: Simplify interfaces for primary_display
-Date: Wed, 26 Nov 2025 17:03:26 +0100
-Message-ID: <20251126160854.553077-10-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1764205716; c=relaxed/simple;
+	bh=yRxHR6HeOQeUTZ6l4I/TQwhv5IvnY2T5t3CLHPT5mlc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=LrgifkhNl0HzkJJ8+LwGXMzGrwqAYMOMhDz+MBvLaqBsRHGSxDQ6khQ+bJezjtDVuqrtAt48bkwRUA7Dz5HQvym6N+Z+vSkXuwc2JgaEaHmhlc9MXPKKDFjyRDC9w1RjpVlAF0rKj2t5Mc9QsdmKgy4KFOLaue8TeQXWORAdrAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxndKMpCdpCY8oAA--.21208S3;
+	Thu, 27 Nov 2025 09:08:28 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxjcGCpCdp7YZAAQ--.54234S3;
+	Thu, 27 Nov 2025 09:08:20 +0800 (CST)
+Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, linux-kernel@vger.kernel.org
+References: <20251120065758.3064368-1-maobibo@loongson.cn>
+ <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
+ <42d93855-50df-a686-85c5-5552ff829977@loongson.cn>
+ <CAAhV-H4xprj-WmMkp86xEmn4NL3wwW3aaDoMj=SUiP3pEa+Q7g@mail.gmail.com>
+ <1605b5eb-5f43-62ff-28c5-192f2f0f938d@loongson.cn>
+ <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <0e125e35-8044-a6ce-998f-1221da0e827d@loongson.cn>
+Date: Thu, 27 Nov 2025 09:05:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtfyjk8sg4x43ngtem9djprcp)];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: BEC2A33709
+X-CM-TRANSID:qMiowJBxjcGCpCdp7YZAAQ--.54234S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJw1fJF17JF1DJry7CFW8KrX_yoWrurWUpF
+	WI9a13KF48Ar1ay34xtr1DXryYqw1ktr1jqr1rtr1UCrnFyrn7Ga1xtryUCFy7Gry8Wr12
+	v34F93W3WF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Jr0_Gr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUU
+	U
 
-Rename alloc_primary_display() and __alloc_primary_display(), clarify
-free semantics to make interfaces easier to understand.
 
-Rename alloc_primary_display() to lookup_primary_display() as it
-does not necessarily allocate. Then rename __alloc_primary_display()
-to the new alloc_primary_display(). The helper belongs to
-free_primary_display), so it should be named without underscores.
 
-The lookup helper does not necessarily allocate, so the output
-parameter needs_free to indicate when free should be called. Pass
-an argument through the calls to track this state. Put the free
-handling into release_primary_display() for simplificy.
+On 2025/11/26 下午9:43, Huacai Chen wrote:
+> On Mon, Nov 24, 2025 at 10:17 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/11/24 上午10:03, Huacai Chen wrote:
+>>> On Mon, Nov 24, 2025 at 9:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/11/21 下午10:08, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Thu, Nov 20, 2025 at 2:58 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> This patchset adds timer test case for LoongArch system, it is based
+>>>>>> on common arch_timer test case. And it includes one-shot and period mode
+>>>>>> timer interrupt test, software emulated timer function and time counter
+>>>>>> test.
+>>>>> I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
+>>>>> it passes, sometimes I get:
+>>>>> [root@fedora kvm]# ./arch_timer
+>>>>> Random seed: 0x6b8b4567
+>>>>> Guest assert failed,  vcpu 2; stage; 0; iter: 1
+>>>>> ==== Test Assertion Failure ====
+>>>>>      loongarch/arch_timer.c:79: irq_iter == 0
+>>>>>      pid=60138 tid=60142 errno=4 - Interrupted system call
+>>>>>         1  0x00000001200037cf: test_vcpu_run 于 arch_timer.c:70
+>>>>>         2  0x00007ffff2449f27: ?? ??:0
+>>>>>         3  0x00007ffff24c0633: ?? ??:0
+>>>>>      irq_iter = 0x1.
+>>>>>      Guest period timer interrupt was not triggered within the specified
+>>>>>      interval, try to increase the error margin by [-e] option.
+>>>>>
+>>>>> Is this as expected, or something is wrong?
+>>>> There is problem with that. In generic the vCPU task is rescheduled on
+>>>> other CPUs or preempted, so period timer interrupt is not handled in
+>>>> specified time.
+>>> Then this series need to be updated, or problem comes from other places?
+>> I think this series need be updated, test success criteria with period
+>> timer need consider this situation. Let me check how to handle this.
+> Any updates available?
+It can be solved by modifying udelay() method with get_cycles() or using 
+cpu loop calculation method.
 
-Also move the comment fro primary_display.c to efi-stub-entry.c,
-where it now describes lookup_primary_display().
+--- a/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
++++ b/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+@@ -71,10 +71,17 @@ static inline void timer_irq_disable(void)
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
- drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
- drivers/firmware/efi/libstub/efistub.h        |  2 +-
- .../firmware/efi/libstub/primary_display.c    | 17 +-------------
- drivers/firmware/efi/libstub/zboot.c          |  6 +++--
- 5 files changed, 42 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index aa85e910fe59..3077b51fe0b2 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
- 	return addr + kernel_image_offset;
- }
- 
--struct sysfb_display_info *alloc_primary_display(void)
-+/*
-+ * There are two ways of populating the core kernel's sysfb_primary_display
-+ * via the stub:
-+ *
-+ *   - using a configuration table, which relies on the EFI init code to
-+ *     locate the table and copy the contents; or
-+ *
-+ *   - by linking directly to the core kernel's copy of the global symbol.
-+ *
-+ * The latter is preferred because it makes the EFIFB earlycon available very
-+ * early, but it only works if the EFI stub is part of the core kernel image
-+ * itself. The zboot decompressor can only use the configuration table
-+ * approach.
-+ */
-+
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free)
- {
-+	*needs_free = true;
-+
- 	if (IS_ENABLED(CONFIG_ARM))
--		return __alloc_primary_display();
-+		return alloc_primary_display();
-+
-+	*needs_free = false;
- 
- 	if (IS_ENABLED(CONFIG_X86) ||
- 	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-index 42d6073bcd06..dc545f62c62b 100644
---- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
- void __weak free_primary_display(struct sysfb_display_info *dpy)
- { }
- 
--static struct sysfb_display_info *setup_primary_display(void)
-+static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
- {
- 	struct sysfb_display_info *dpy;
- 	struct screen_info *screen = NULL;
- 	struct edid_info *edid = NULL;
- 	efi_status_t status;
- 
--	dpy = alloc_primary_display();
-+	dpy = lookup_primary_display(dpy_needs_free);
- 	if (!dpy)
- 		return NULL;
- 	screen = &dpy->screen;
-@@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
- 
- 	status = efi_setup_graphics(screen, edid);
- 	if (status != EFI_SUCCESS)
--		goto err_free_primary_display;
-+		goto err___free_primary_display;
- 
- 	return dpy;
- 
--err_free_primary_display:
--	free_primary_display(dpy);
-+err___free_primary_display:
-+	if (*dpy_needs_free)
-+		free_primary_display(dpy);
- 	return NULL;
- }
- 
-+static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
-+{
-+	if (dpy && dpy_needs_free)
-+		free_primary_display(dpy);
-+}
-+
- static void install_memreserve_table(void)
- {
- 	struct linux_efi_memreserve *rsv;
-@@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
- 			     char *cmdline_ptr)
- {
- 	struct sysfb_display_info *dpy;
-+	bool dpy_needs_free;
- 	efi_status_t status;
- 
- 	status = check_platform_features();
- 	if (status != EFI_SUCCESS)
- 		return status;
- 
--	dpy = setup_primary_display();
-+	dpy = setup_primary_display(&dpy_needs_free);
- 
- 	efi_retrieve_eventlog();
- 
-@@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
- 
- 	status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
- 
--	free_primary_display(dpy);
-+	release_primary_display(dpy, dpy_needs_free);
- 
- 	return status;
- }
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 979a21818cc1..1503ffb82903 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
- 
- void efi_retrieve_eventlog(void);
- 
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free);
- struct sysfb_display_info *alloc_primary_display(void);
--struct sysfb_display_info *__alloc_primary_display(void);
- void free_primary_display(struct sysfb_display_info *dpy);
- 
- void efi_cache_sync_image(unsigned long image_base,
-diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
-index cdaebab26514..34c54ac1e02a 100644
---- a/drivers/firmware/efi/libstub/primary_display.c
-+++ b/drivers/firmware/efi/libstub/primary_display.c
-@@ -7,24 +7,9 @@
- 
- #include "efistub.h"
- 
--/*
-- * There are two ways of populating the core kernel's sysfb_primary_display
-- * via the stub:
-- *
-- *   - using a configuration table, which relies on the EFI init code to
-- *     locate the table and copy the contents; or
-- *
-- *   - by linking directly to the core kernel's copy of the global symbol.
-- *
-- * The latter is preferred because it makes the EFIFB earlycon available very
-- * early, but it only works if the EFI stub is part of the core kernel image
-- * itself. The zboot decompressor can only use the configuration table
-- * approach.
-- */
+  static inline void __delay(uint64_t cycles)
+  {
+-       uint64_t start = timer_get_cycles();
 -
- static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
- 
--struct sysfb_display_info *__alloc_primary_display(void)
-+struct sysfb_display_info *alloc_primary_display(void)
- {
- 	struct sysfb_display_info *dpy;
- 	efi_status_t status;
-diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
-index 4b76f74c56da..c1fd1fdbcb08 100644
---- a/drivers/firmware/efi/libstub/zboot.c
-+++ b/drivers/firmware/efi/libstub/zboot.c
-@@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
- 	// executable code loaded into memory to be safe for execution.
- }
- 
--struct sysfb_display_info *alloc_primary_display(void)
-+struct sysfb_display_info *lookup_primary_display(bool *needs_free)
- {
--	return __alloc_primary_display();
-+	*needs_free = true;
+-       while ((timer_get_cycles() - start) < cycles)
+-               cpu_relax();
++       uint64_t start, next, loops = 0;
 +
-+	return alloc_primary_display();
- }
- 
- asmlinkage efi_status_t __efiapi
--- 
-2.51.1
++       start = timer_get_cycles();
++       while (loops < cycles) {
++               next = timer_get_cycles();
++               /* only count one cycle if VM is preempted */
++               if (next > start) {
++                       loops++;
++                       start = next;
++               }
++       }
+  }
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Hucai
+>>>>>
+>>>>>> ---
+>>>>>> v2 ... v3:
+>>>>>>      1. Adjust order about patch 2 and patch 3
+>>>>>>      2. Add test case with alphabetical order
+>>>>>>      3. Merge one-shot and period timer interrupt test case into one
+>>>>>>      4. Only add LoongArch specific modification with common file
+>>>>>>         Makefile.kvm
+>>>>>>
+>>>>>> v1 ... v2:
+>>>>>>      1. Restore PC and PRMD after exception handler
+>>>>>>      2. Split patch 4 into two small patches with period timer test and
+>>>>>>         time counter test
+>>>>>>      3. With time counter test, set time count with 0 when create VM. And
+>>>>>>         verify time count starts from 0 in guest code
+>>>>>> ---
+>>>>>> Bibo Mao (6):
+>>>>>>      KVM: LoongArch: selftests: Add system registers save and restore on
+>>>>>>        exception
+>>>>>>      KVM: LoongArch: selftests: Add basic interfaces
+>>>>>>      KVM: LoongArch: selftests: Add exception handler register interface
+>>>>>>      KVM: LoongArch: selftests: Add timer interrupt test case
+>>>>>>      KVM: LoongArch: selftests: Add SW emulated timer test
+>>>>>>      KVM: LoongArch: selftests: Add time counter test
+>>>>>>
+>>>>>>     tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+>>>>>>     .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
+>>>>>>     .../kvm/include/loongarch/processor.h         |  81 +++++++-
+>>>>>>     .../selftests/kvm/lib/loongarch/exception.S   |   6 +
+>>>>>>     .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
+>>>>>>     .../selftests/kvm/loongarch/arch_timer.c      | 194 ++++++++++++++++++
+>>>>>>     6 files changed, 410 insertions(+), 3 deletions(-)
+>>>>>>     create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>>>>>     create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>>>>>
+>>>>>>
+>>>>>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>
+>>
 
