@@ -1,307 +1,90 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0B22236E3
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 01:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90E331A9FAB
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 01:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764206612; cv=none; b=OfvwZHdJizENtNszqBEJ6QeVKncdkEdQtdfXUfqWCm3mZRhuQTCYQFa/BACMjTRpRKRxQHcp4+NDyQ8XzLdblMMBVXy6AsbSXIEg0BK3xSu6wX5pdHfNS0cYCXU4ncnNkeuR/BfWS7Gd9Jl4BG7L7QjKGneoNjewRx0YfM/HtSI=
+	t=1764207183; cv=none; b=j22WTJ5iduizurdceFrZSI97eW5Hr8+stwWMHS9rsewJBWYdog9P9i7VcDRjRwAugG3+3pnuc8bbFXyjltETX/HH9T+yi+ybzAtck1mXUAsdSOEnb6JMazoFbPJReHbhpN/RLpZ8CAkYpyz8UAGxgIOrNTyogq3MR6UlJj/wspI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764206612; c=relaxed/simple;
-	bh=x63UrZvzdWbO9vytQh63ZUXavJaWtH1zFiYQrB8deU8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLVA4bIgRQVRAJC5PCHrnlD4Z6SK3eCnhBsVN7vArPoTGeBIgUgoduARzL1pWbMA1fuBbMyQKtSgsGb4WM8OlJweA16CubMs1nAsY72IIpRfjCF/+mnWtGfJk9wrF5IZNCEMGkN+jSeXK+jcbJNO7BjR14JukfWCvDGBo48IZuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eDDdajwZ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eDDdajwZ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-477b198f4bcso1539735e9.3
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 17:23:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764206609; x=1764811409; darn=lists.linux.dev;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tNuNk1yaizw865Qq2SQ1TPwZonHkT+uQRcwOIFsLCps=;
-        b=eDDdajwZqxH8K8LSQOveRMX8I1aUcfsHXSdQY0Yf8iWOBsQQH5Kl7kkOT+pCcb4jqb
-         Scpp7VfMeXWOtRZGTPaH19JeRUhhZxp0lRaarM+erHNiFQl4++ubyNi01f8N2k6A3Jlm
-         5dInVPN2XoleK90nWVjANxfbg7vX54dEN7ViVRKiU6C+FR4uhHX3JoxV8Oi0sRIvk9FD
-         xslO5mRh9KYN7E5Th4AUzffALWTQ4q3sV2nd05gQBi2FXUpVC+IjWYwwm3Ke6wPF/cjS
-         purEZq3S8dqOZtDA7VCT4K9F3XfDxurfJ8N/YBepsKGWyFTGHiyIG2GBfolgfAOzBOs5
-         YK/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764206609; x=1764811409;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=tNuNk1yaizw865Qq2SQ1TPwZonHkT+uQRcwOIFsLCps=;
-        b=LBj5QYmb51fiHHoBvqMKJxzYTbA2BF0vntqVUxU60ODZEn2GrxrLs4GImFyacgeVWd
-         DCwdMuixoYHAlLT5PMl6ANWfs/j1HZfgeOhcmRqFN+Dz6pHeVHUUx+UY4ELgURJuKS/U
-         89lyXLs52BNkOGCPTEn+oPrO3+VSjkrTURM0bhvp/wi0Jrlh+tzPK9CYMQMhPv+zWncI
-         XD2//BYvexu3GB//rFjjhrcVeGrpFLrXnt91t0Mj/byxnnXRyyN1C+UoVSZ/jKcA51F4
-         iYNGV2hvCroBmuLGrinrs/pZH91gHtgS85qWJXgqsy+wyYe9z03N91SSlha+Fl66mhnF
-         IvVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSky8lqq2MyAa+uNVXqnt+OwIMsTWm4A46bOIH0uNCmCh5q2U8aq1knygfljLPcKLr8AEUZ3jOlIc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz0DExYSi+uF06Wbjknh0XgQBYJOMlJK7jX3XUeOgjBrTlKgjQU
-	4vldNm68it/RN/KQ7Sx87qpLeGg8/PfExDSJEZ6mOzKGon1V6TSZi669bW9l0gHPhgI=
-X-Gm-Gg: ASbGnculPiij4uDhde3iURnhwY2VPZXdIeNU6+GTADpQ+NSlJv/cup/GZKG41CAMTIG
-	tm8d7I9SVcwUB8y/Fghc0UKnM7ueDbAdiyfeAR/6hgbiT4icLZbrbDq+icqfmDVFH0kCKI+nx+f
-	3ip7jcBzU4fKsAwNuJNoDQmdK/8AY0GdGtxo88aqdVx6yMrZhFLsnjds/2W0KgBx04sKZ9hQnH0
-	uxdo77CPPPcXWMtd6kjgYPfogRWjJMcJQu6reYYCK+5lljcbBqDSyup7j2tP0dY6dhMO55/6Zai
-	ZiaEMndUJ7seHgCpsgqlDbMtpY1E6Ga6lDdvKMyNByWmBUtZgYUbElKK+q4wWE0IhCWU0pCeUWB
-	WYeBH/K6pA2qTAPD4EEi4eZUNns07yyfTFHGJKa/FZEnZjlWr4/VvCnwt2IYtgSDoTtFZJDDPWK
-	ILDM+IV1N1MW9nj/jmnCWvApHx6cSG1zSa
-X-Google-Smtp-Source: AGHT+IFAI6GQD9lcY1JxdhkE8Lv0II4oKq4ojcJkBaGXT4DCZOTPlduoBmiQE99ST1DmviiNV2jnsw==
-X-Received: by 2002:a05:600c:450f:b0:46d:ba6d:65bb with SMTP id 5b1f17b1804b1-477c01eb9bdmr241739295e9.31.1764206608732;
-        Wed, 26 Nov 2025 17:23:28 -0800 (PST)
-Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7c3f0243b19sm22661544b3a.37.2025.11.26.17.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 17:23:27 -0800 (PST)
-From: Richard Lyu <richard.lyu@suse.com>
-X-Google-Original-From: Richard Lyu <r1chard@r1chard>
-Date: Thu, 27 Nov 2025 09:23:19 +0800
-To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
-	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 5/9] sysfb: Pass sysfb_primary_display to devices
-Message-ID: <aSeoB1xf05i4LhCp@r1chard>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
- <20251126160854.553077-6-tzimmermann@suse.de>
+	s=arc-20240116; t=1764207183; c=relaxed/simple;
+	bh=0rjtHuE2Ikibzw+2icHYM4UhlXJJIgwRgw/nlohhmA0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hWWuEQFRmcnA0ECd6+LlUR63/aXXMT/cS5Hqep3NJ+kmmh9dZezBXt9x295ZgT7T1zXwKZ2MSKgrSeeIcCdymCv3/kGkOrbtRvxsU2ZbxUkDPpGdi8BGTLNwoqK3DNLvSzU5LOu4/BAZJ34hAZ6VD9yef3ar9z+Q1PkFUWg9Moc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxxtBKqidpwJAoAA--.20171S3;
+	Thu, 27 Nov 2025 09:32:59 +0800 (CST)
+Received: from [10.130.40.41] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxecBJqidpkIxAAQ--.19719S3;
+	Thu, 27 Nov 2025 09:32:58 +0800 (CST)
+Subject: Re: [PATCH v1] LoongArch: Handle special PC in unwind_next_frame()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jinyang He <hejinyang@loongson.cn>, Xi Zhang <zhangxi@kylinos.cn>,
+ Xianglai Li <lixianglai@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Bibo Mao <maobibo@loongson.cn>
+References: <20251125063327.31586-1-yangtiezhu@loongson.cn>
+ <658bb477-b3f1-97c1-ab37-5dafcb6215f5@loongson.cn>
+ <6cc59312-7cdc-19a5-4d18-e120ea9c7563@loongson.cn>
+ <3c0602aa-a8bc-25b9-7d7a-467e04dbc519@loongson.cn>
+ <45cf4a09-8895-73fb-c019-1b1f88501eed@loongson.cn>
+ <CAAhV-H6pQytDg_fKE7rpC2OogWYGEsHUxUMKLqsvtfSPWMWvaA@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a4d22c70-4443-f244-f39b-3948fb6aabd0@loongson.cn>
+Date: Thu, 27 Nov 2025 09:32:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126160854.553077-6-tzimmermann@suse.de>
-User-Agent: Mutt/2.2.13 (2024-03-09)
+In-Reply-To: <CAAhV-H6pQytDg_fKE7rpC2OogWYGEsHUxUMKLqsvtfSPWMWvaA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxecBJqidpkIxAAQ--.19719S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jr1kCF1UZr1xCw13JF48Zrc_yoWxtwb_Cw
+	4qqr17Cr1qvrn5Ca1UK342qFyUXa9rXF1kXF1DXw12vw4Ika4fJryxKryUW3yfXa1DAFsI
+	vF9xWr9xCr1j9osvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbf8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU88Ma5UUUUU==
 
+On 2025/11/26 下午5:27, Huacai Chen wrote:
+> On Wed, Nov 26, 2025 at 5:09 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+...
+>> +#if IS_ENABLED(CONFIG_KVM)
+>> +void (*get_kvm_entry_info)(unsigned long *old, unsigned long *new,
+>> unsigned long *size);
+>> +EXPORT_SYMBOL_GPL(get_kvm_entry_info);
+>> +#endif
+> Define in unwind.c then you don't need to duplicate it.
 
-Reviewed-by: Richard Lyu <richard.lyu@suse.com>
+OK, makes sense.
 
-On 2025/11/26 17:03, Thomas Zimmermann wrote:
-> Instead of screen_info, store a copy of sysfb_primary_display as
-> device data. Pick it up in drivers. Later changes will add additional
-> data to the display info, such as EDID information.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  drivers/firmware/sysfb.c        |  5 +++--
->  drivers/gpu/drm/sysfb/efidrm.c  |  9 ++++++---
->  drivers/gpu/drm/sysfb/vesadrm.c |  9 ++++++---
->  drivers/video/fbdev/efifb.c     | 10 ++++++----
->  drivers/video/fbdev/vesafb.c    | 10 ++++++----
->  drivers/video/fbdev/vga16fb.c   |  8 +++++---
->  6 files changed, 32 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/firmware/sysfb.c b/drivers/firmware/sysfb.c
-> index 1f671f9219b0..8833582c1883 100644
-> --- a/drivers/firmware/sysfb.c
-> +++ b/drivers/firmware/sysfb.c
-> @@ -141,7 +141,8 @@ static struct device *sysfb_parent_dev(const struct screen_info *si)
->  
->  static __init int sysfb_init(void)
->  {
-> -	struct screen_info *si = &sysfb_primary_display.screen;
-> +	struct sysfb_display_info *dpy = &sysfb_primary_display;
-> +	struct screen_info *si = &dpy->screen;
->  	struct device *parent;
->  	unsigned int type;
->  	struct simplefb_platform_data mode;
-> @@ -202,7 +203,7 @@ static __init int sysfb_init(void)
->  
->  	sysfb_set_efifb_fwnode(si, pd);
->  
-> -	ret = platform_device_add_data(pd, si, sizeof(*si));
-> +	ret = platform_device_add_data(pd, dpy, sizeof(*dpy));
->  	if (ret)
->  		goto err;
->  
-> diff --git a/drivers/gpu/drm/sysfb/efidrm.c b/drivers/gpu/drm/sysfb/efidrm.c
-> index 1b683d55d6ea..29533ae8fbbf 100644
-> --- a/drivers/gpu/drm/sysfb/efidrm.c
-> +++ b/drivers/gpu/drm/sysfb/efidrm.c
-> @@ -4,7 +4,7 @@
->  #include <linux/efi.h>
->  #include <linux/limits.h>
->  #include <linux/platform_device.h>
-> -#include <linux/screen_info.h>
-> +#include <linux/sysfb.h>
->  
->  #include <drm/clients/drm_client_setup.h>
->  #include <drm/drm_atomic.h>
-> @@ -141,6 +141,7 @@ static const struct drm_mode_config_funcs efidrm_mode_config_funcs = {
->  static struct efidrm_device *efidrm_device_create(struct drm_driver *drv,
->  						  struct platform_device *pdev)
->  {
-> +	const struct sysfb_display_info *dpy;
->  	const struct screen_info *si;
->  	const struct drm_format_info *format;
->  	int width, height, stride;
-> @@ -160,9 +161,11 @@ static struct efidrm_device *efidrm_device_create(struct drm_driver *drv,
->  	size_t nformats;
->  	int ret;
->  
-> -	si = dev_get_platdata(&pdev->dev);
-> -	if (!si)
-> +	dpy = dev_get_platdata(&pdev->dev);
-> +	if (!dpy)
->  		return ERR_PTR(-ENODEV);
-> +	si = &dpy->screen;
-> +
->  	if (screen_info_video_type(si) != VIDEO_TYPE_EFI)
->  		return ERR_PTR(-ENODEV);
->  
-> diff --git a/drivers/gpu/drm/sysfb/vesadrm.c b/drivers/gpu/drm/sysfb/vesadrm.c
-> index 7b7b5ba26317..16fc223f8c5b 100644
-> --- a/drivers/gpu/drm/sysfb/vesadrm.c
-> +++ b/drivers/gpu/drm/sysfb/vesadrm.c
-> @@ -4,7 +4,7 @@
->  #include <linux/ioport.h>
->  #include <linux/limits.h>
->  #include <linux/platform_device.h>
-> -#include <linux/screen_info.h>
-> +#include <linux/sysfb.h>
->  
->  #include <drm/clients/drm_client_setup.h>
->  #include <drm/drm_atomic.h>
-> @@ -391,6 +391,7 @@ static const struct drm_mode_config_funcs vesadrm_mode_config_funcs = {
->  static struct vesadrm_device *vesadrm_device_create(struct drm_driver *drv,
->  						    struct platform_device *pdev)
->  {
-> +	const struct sysfb_display_info *dpy;
->  	const struct screen_info *si;
->  	const struct drm_format_info *format;
->  	int width, height, stride;
-> @@ -410,9 +411,11 @@ static struct vesadrm_device *vesadrm_device_create(struct drm_driver *drv,
->  	size_t nformats;
->  	int ret;
->  
-> -	si = dev_get_platdata(&pdev->dev);
-> -	if (!si)
-> +	dpy = dev_get_platdata(&pdev->dev);
-> +	if (!dpy)
->  		return ERR_PTR(-ENODEV);
-> +	si = &dpy->screen;
-> +
->  	if (screen_info_video_type(si) != VIDEO_TYPE_VLFB)
->  		return ERR_PTR(-ENODEV);
->  
-> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-> index 0e1bd3dba255..47ebc0107209 100644
-> --- a/drivers/video/fbdev/efifb.c
-> +++ b/drivers/video/fbdev/efifb.c
-> @@ -15,7 +15,7 @@
->  #include <linux/fb.h>
->  #include <linux/platform_device.h>
->  #include <linux/printk.h>
-> -#include <linux/screen_info.h>
-> +#include <linux/sysfb.h>
->  #include <video/vga.h>
->  #include <asm/efi.h>
->  #include <drm/drm_utils.h> /* For drm_get_panel_orientation_quirk */
-> @@ -345,6 +345,7 @@ ATTRIBUTE_GROUPS(efifb);
->  
->  static int efifb_probe(struct platform_device *dev)
->  {
-> +	struct sysfb_display_info *dpy;
->  	struct screen_info *si;
->  	struct fb_info *info;
->  	struct efifb_par *par;
-> @@ -360,10 +361,11 @@ static int efifb_probe(struct platform_device *dev)
->  	 * driver. We get a copy of the attached screen_info, so that we can
->  	 * modify its values without affecting later drivers.
->  	 */
-> -	si = dev_get_platdata(&dev->dev);
-> -	if (!si)
-> +	dpy = dev_get_platdata(&dev->dev);
-> +	if (!dpy)
->  		return -ENODEV;
-> -	si = devm_kmemdup(&dev->dev, si, sizeof(*si), GFP_KERNEL);
-> +
-> +	si = devm_kmemdup(&dev->dev, &dpy->screen, sizeof(*si), GFP_KERNEL);
->  	if (!si)
->  		return -ENOMEM;
->  
-> diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
-> index f135033c22fb..f84f4db244bf 100644
-> --- a/drivers/video/fbdev/vesafb.c
-> +++ b/drivers/video/fbdev/vesafb.c
-> @@ -20,7 +20,7 @@
->  #include <linux/ioport.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> -#include <linux/screen_info.h>
-> +#include <linux/sysfb.h>
->  #include <linux/io.h>
->  
->  #include <video/vga.h>
-> @@ -243,6 +243,7 @@ static int vesafb_setup(char *options)
->  
->  static int vesafb_probe(struct platform_device *dev)
->  {
-> +	struct sysfb_display_info *dpy;
->  	struct screen_info *si;
->  	struct fb_info *info;
->  	struct vesafb_par *par;
-> @@ -257,10 +258,11 @@ static int vesafb_probe(struct platform_device *dev)
->  	 * driver. We get a copy of the attached screen_info, so that we can
->  	 * modify its values without affecting later drivers.
->  	 */
-> -	si = dev_get_platdata(&dev->dev);
-> -	if (!si)
-> +	dpy = dev_get_platdata(&dev->dev);
-> +	if (!dpy)
->  		return -ENODEV;
-> -	si = devm_kmemdup(&dev->dev, si, sizeof(*si), GFP_KERNEL);
-> +
-> +	si = devm_kmemdup(&dev->dev, &dpy->screen, sizeof(*si), GFP_KERNEL);
->  	if (!si)
->  		return -ENOMEM;
->  
-> diff --git a/drivers/video/fbdev/vga16fb.c b/drivers/video/fbdev/vga16fb.c
-> index 6b81337a4909..22085d3668e8 100644
-> --- a/drivers/video/fbdev/vga16fb.c
-> +++ b/drivers/video/fbdev/vga16fb.c
-> @@ -21,7 +21,7 @@
->  #include <linux/ioport.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> -#include <linux/screen_info.h>
-> +#include <linux/sysfb.h>
->  
->  #include <asm/io.h>
->  #include <video/vga.h>
-> @@ -1305,15 +1305,17 @@ static const struct fb_ops vga16fb_ops = {
->  
->  static int vga16fb_probe(struct platform_device *dev)
->  {
-> +	struct sysfb_display_info *dpy;
->  	struct screen_info *si;
->  	struct fb_info *info;
->  	struct vga16fb_par *par;
->  	int i;
->  	int ret = 0;
->  
-> -	si = dev_get_platdata(&dev->dev);
-> -	if (!si)
-> +	dpy = dev_get_platdata(&dev->dev);
-> +	if (!dpy)
->  		return -ENODEV;
-> +	si = &dpy->screen;
->  
->  	ret = check_mode_supported(si);
->  	if (ret)
-> -- 
-> 2.51.1
-> 
+>>    unsigned long unwind_get_return_address(struct unwind_state *state)
+...
+>> +#if IS_ENABLED(CONFIG_KVM)
+>> +       unsigned long old, new, size;
+> Define them in the if block, and you can consider removing all "#if
+> IS_ENABLED(CONFIG_KVM)".
+
+OK, will do it in the next version.
+
+Thanks,
+Tiezhu
+
