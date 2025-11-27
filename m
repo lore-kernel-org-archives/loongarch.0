@@ -1,202 +1,157 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDA72D948A
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 04:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ACA2D3EDF
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 04:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764216947; cv=none; b=IRws2foHfCM7KQkTv63xYGSGRawYQtElDJO7jQ3lLjDQO6ltNy9qPexoFbUSTpvWfhgRcC+LlSG4XxuH6wS1Xgsfhq2LSMM+JOaG1QuRh0NwbjNpCgbdiQ62H/2FQC2lXKa9wMI1nkdX3B9GfzDoLJNBQoL1tgrbAlOUm+QfwM4=
+	t=1764217352; cv=none; b=GvvLrbdEqi8cYvZvNt7Iz2uvv25UQ7JAKC8Tbl+1mkSq5NEjBEz8sU/NjQJUw0L4H3PxCOKNkGkeLKF8lqEsSfY9SmdzNIO6CTg4I44MgGKggFFxYFU0Q4NNfdgnIgbIB7fCseubF4NiNPeobknsu+KSs++OBGkTwcTSX6zR57o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764216947; c=relaxed/simple;
-	bh=SEvDCHVf1aeGd5cuVXy+lAhn+GcB8cGT/9EfWUK+RHE=;
+	s=arc-20240116; t=1764217352; c=relaxed/simple;
+	bh=2mT8NkA8n4pI7iGhBuPOIC9L/ZbQrFHsOpjeHsUJ+lg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F2yYZfFPj+RyxJbzIKvA78GTNacSYS4zLPHrb+zcQqF9BxcbhGQcWWq3MQZhqiXHmyBwyLIbwUzfLqCgtXh8VlFXcYNzzGfp2pJhcsjalqhAcsqtAwbDJZIIdZFRLsgdBN4ZqM3NL6xga5GHcsGcjrrhQF8sRbCV8gFdymABWTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebhTEjwz; arc=none smtp.client-ip=209.85.161.41
+	 To:Cc:Content-Type; b=AM2htURF+aozzQjatZyCAW/GhuI2cFHtQPLYmNpTApXOOl41Q4PPKMdg8YeRO3RWSM6j+G3KVr77ZP7O1sMf+ciV3NCLThkJ01saYFMTSKEhvaaXKMt/bQfBf6nsfgxD6NYRvYDrwa1odGlPTlINdn/3qrpBIxuPQij0sd0CD8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N7yQyXt7; arc=none smtp.client-ip=209.85.222.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebhTEjwz"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-65727896f35so255736eaf.2
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 20:15:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7yQyXt7"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b2148ca40eso56144785a.1
+        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 20:22:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764216945; x=1764821745; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1764217349; x=1764822149; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O6j06Msvo5hxmEmA5FBbheJHYIaRPrkdemJSwWbekt4=;
-        b=ebhTEjwz8QUdNCnFNBU7zhpcY1sA0aHPqS+OKeWz4DkuE0I7hCklPJ6CcaILiKd880
-         DcBGvSmtCO4HTQoDvKcZYO0b0bpoQYiAOJpZR5orilRa8czhojpUXflZeg3+ShPxrpLB
-         u5bEkcZlvPxnFMQ1SkUNCtPDXsroJGdrMnuawZpr7biPZZZ0VbHob0KcofiwWMHcUzoZ
-         Qp5Z+UAN5Y1xe1Peu04fE9mjlZ6ebQ3FMHtGeFcd6aGJquZ2UZO7q7fjZifCHqnHQJG+
-         PICbiKmVfCXhFGtGHQiNF5KfKwQ8KBLsQKkN55PsmcXn8T8zkSLPfR7CAcznGy4F0CXx
-         QUBw==
+        bh=WBY2hGlp5xDNa7Ek85Hj92aNDRHVnR99QGNyQtFdIz8=;
+        b=N7yQyXt7MJCwyZC+EOBidc0Ngp53O5fj1FeeY4mozOx0B9EUbnMyN0jA8rnUEvHNvX
+         55TmAoN0CLo7iNDwBB59aUu9YqyFOIX1xMLJOsBbbxU9YTVCryHrBz4hBqKPZTTuobTt
+         70Yft36mQ9Fg3Snv3JK/Xt7ZsxeiZLlxjcG8CmYQPoBdsB5/WFGYW9AStnTzIF6wW1mT
+         s2bTT6K4MaIEAYWi2cPCoTdvPHpVWvlSAOoKmpyXy+p0Y9uNepcqmUtzh4CfYftRJwrF
+         3XPWHbMLfrMeIzvgPtsCNEXLeB9V+LWCszV6+ejlE2MZCDDCSM5Ih/tbIkCz/w8EwQ7b
+         iBvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764216945; x=1764821745;
+        d=1e100.net; s=20230601; t=1764217349; x=1764822149;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=O6j06Msvo5hxmEmA5FBbheJHYIaRPrkdemJSwWbekt4=;
-        b=YRdzUG9cnD1sSP1YU0hfH77Pi/Sv8eKJEf+A4gJYIS+CCEG6vbDLoWP6pr72fQIHTd
-         mVlXElbXuYncBFqelnmZUMr+MO6Z3ymqMSsvlk3hSthxKjpW7HpihT9sKcNPLuRwd31d
-         Wl00V7sSgVsjFT1SW/qKIVWY57qTMJ2CqxnWcKEu4m0Zj4BC5Ze2RFDYZJnSPq+up6wU
-         KAxWWvsbD7OPiL5/3D2yx8pow995miE52e4dc4+lrSElHRGjETmj3xUAO2AkzZdK7lxs
-         3AeiFIkdOLyBIAbxIAvwlp+MdS+8mGCxlVntifbK1vLk7jDRr3sHk0WmfPnxPF0DYmra
-         GFwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+fNNFM7SXR2cKCIRtkwe+S6Ce208ku1rfiTKPTDs+/ctvaZDL5u3O5uDcrgqO1r25ghPAdv1myn8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YySkmVXe2xx9u2VSzdb+qgMjtC3FFqCrWCXIbXiMMH3YXPrzgtg
-	+ZY6sgWDg0GlIil963xP/4zUbmYmMRl/YUo/5A4h3q3IsFubkQ6cxpEAw28YHFic5snr1P2zmhg
-	xNugXbERaiA6Hqmu5IabHjp8PrYsAkDw=
-X-Gm-Gg: ASbGncv2NAbNhxVpNtpdTSFrLACjCIrs4Kek2IKEKPYcVgq1BycJRhQcOO/QPRjg174
-	6h13FC/uLX3VKhdxjm1jqUTMqfLtR9buYryjbtz2JrhbQnW0YnrNTHdhHWgp2Y2cDG0+/Vr74nv
-	EtDMXSqBLwT0y7UM1+WS7V+PNolEi7AtpJDEBqvL/ZBZBWe3s+mgzGYXxhijIKUNI54Bzg1U5h/
-	IJo2UtvzOc/s36LR5+lDFOJw96ZEBsml6jx8Ba/f/weaiYFdmHS4pn9BfQkU6OE8BOnYxE=
-X-Google-Smtp-Source: AGHT+IHviBKXXjGOBdLCHSL36fJp8uOUxWVQoQsOCHDuxhERclFHPjnHTiWr9rAtVFRrGgBVVo2LcQ7X5MG78/OJZGc=
-X-Received: by 2002:a05:6808:2008:b0:43f:606a:c1a with SMTP id
- 5614622812f47-45115a0c66bmr8681340b6e.16.1764216944960; Wed, 26 Nov 2025
- 20:15:44 -0800 (PST)
+        bh=WBY2hGlp5xDNa7Ek85Hj92aNDRHVnR99QGNyQtFdIz8=;
+        b=DmUeqZGm426bSMt3n3Xbk7yuOIamKpLlu0QJ0THcOhdAldeFDTE/sZZLFbU/LfLf/e
+         VQP6wdFcD9zT48uciGk8ynfiFRhm+ma+Pkoiq6ymLbApWfCw2FnSms5r3mfjkc6SQNNb
+         Ziqiu6qgK1PJa6UU8XchMIrn2SuHMcFCiqIk/E7h5QmNtMeloO6j9wORKOF2s8YXuK3X
+         FOTf6gXzng8+sg8k6HUqy3OlOS1SG92qBLlerI4xUFz7yrdlvxx1pi0n1eI8027pynwc
+         dK1MxuRZmtkMpC2zMKia080CShsJJ7Ta7+xWUBuPL3s1D+4pB70b0gsd+Ia1PNw6VtW/
+         GZdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXwTCNLiCUN8HKZDgNxlhFcImEY8qKtkXZoJOFznXAKXxOfS0nCWCquGI7CpYJ//sJOF+GVfADqw8c=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzk2YwDEMibe3kvGcBvAtW15L+eQRz/fYmC5DKn7dY8naelwdyH
+	q7GIOn7Ih16VbRo7o34H+wMKVkZV3K7buA6ogB6AunNwfWURErpaSlrktIvW4r6JcwaBRaEnrho
+	ZxSp9FXKi+0PaUI1yHFWrk5BqiWGINWU=
+X-Gm-Gg: ASbGnctbgblIWUkdsXIAZ6jySkw127dXlC9ukQK0532YmNXsf05Pxupppq1bcluVGd4
+	NobEU0omHvw6lzX+O/hIIpfyTQtW71ATPl9iUNl5kpwx7jCezPfC575Ay0Tvme2J5dH+pqnMRNV
+	LvxZ2Ek4kFqRnpyXxkzhmwqq8ajtRK12Ac2guGMmgB55yyG6fmr7Lr7tWGnjjiwIUilDcmX4ed1
+	b2ZliXoh4Hz+cm1ZqAheEMn2pbDjWK3JGXP+AQCSgnJgKym2Fdv40b5iqiXymppveNbj8yWfWov
+	w220
+X-Google-Smtp-Source: AGHT+IF/2OHEG3LUgPMXOJw4DDaFf/N1kDbkxj4PlQ+jOCs1AfpUOxHzVBEY8oHxETzeiPPKmtGSMi/k9qIz1abldeY=
+X-Received: by 2002:a05:620a:44d4:b0:8b2:f9ac:a893 with SMTP id
+ af79cd13be357-8b33d49a4c6mr3106281485a.66.1764217348492; Wed, 26 Nov 2025
+ 20:22:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251126-2-v3-0-851b5a516801@linux.dev> <CAEyhmHTJU-OUZFA5Sdiv+mBwQpfq5CZp5kN9HVKRqbQzqRS66Q@mail.gmail.com>
- <20251126174016.000067f4@linux.dev> <CAEyhmHSeqWWv_5QZVdqRfSx_+O4nA77PDTLXzUEPMLB7jKmsWg@mail.gmail.com>
-In-Reply-To: <CAEyhmHSeqWWv_5QZVdqRfSx_+O4nA77PDTLXzUEPMLB7jKmsWg@mail.gmail.com>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 27 Nov 2025 12:15:34 +0800
-X-Gm-Features: AWmQ_bnitYnWJI_OJpazaVPp_uR_375k9MdHbhue6UA1QgekibDWY1GbL05j5Ss
-Message-ID: <CAEyhmHTRTFkMpd7svznM9YKmtNpML4Uz9_wnpizQEA=-T_wgJg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] LoongArch: Add 128-bit atomic cmpxchg support (v3)
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
+References: <20251127011438.6918-1-21cnbao@gmail.com> <aSfO7fA-04SBtTug@casper.infradead.org>
+In-Reply-To: <aSfO7fA-04SBtTug@casper.infradead.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Thu, 27 Nov 2025 12:22:16 +0800
+X-Gm-Features: AWmQ_bnJyCR-GwS1_fTaB2mJ8nbB2MiVvoC0dBi_6l0nwDIR-Nl2i2LJsMX4LWo
+Message-ID: <CAGsJ_4zyZeLtxVe56OSYQx0OcjETw2ru1FjZjBOnTszMe_MW2g@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] mm: continue using per-VMA lock when retrying
+ page faults after I/O
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	Barry Song <v-songbaohua@oppo.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Pedro Falcato <pfalcato@suse.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Oven Liyang <liyangouwen1@oppo.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>, Robin Murphy <robin.murphy@arm.com>, 
+	=?UTF-8?Q?Kristina_Mart=C5=A1enko?= <kristina.martsenko@arm.com>, 
+	Kevin Brodsky <kevin.brodsky@arm.com>, Yeoreum Yun <yeoreum.yun@arm.com>, 
+	Wentao Guan <guanwentao@uniontech.com>, Thorsten Blum <thorsten.blum@linux.dev>, 
+	Steven Rostedt <rostedt@goodmis.org>, Yunhui Cui <cuiyunhui@bytedance.com>, 
+	Nam Cao <namcao@linutronix.de>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 26, 2025 at 7:05=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
+On Thu, Nov 27, 2025 at 12:09=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
+g> wrote:
 >
-> On Wed, Nov 26, 2025 at 5:40=E2=80=AFPM George Guo <dongtai.guo@linux.dev=
-> wrote:
-> >
-> > On Wed, 26 Nov 2025 13:23:57 +0800
-> > Hengqi Chen <hengqi.chen@gmail.com> wrote:
-> >
-> > > On Wed, Nov 26, 2025 at 10:06=E2=80=AFAM George Guo <dongtai.guo@linu=
-x.dev>
-> > > wrote:
-> > > >
-> > > > This patch series adds 128-bit atomic compare-and-exchange support
-> > > > for LoongArch architecture, which fixes BPF scheduler test failures
-> > > > caused by missing 128-bit atomics support.
-> > > >
-> > > > The series consists of two patches:
-> > > >
-> > > > 1. "LoongArch: Add 128-bit atomic cmpxchg support"
-> > > >    - Implements 128-bit atomic compare-and-exchange using
-> > > > LoongArch's LL.D/SC.Q instructions
-> > > >    - Fixes BPF scheduler test failures (scx_central scx_qmap) where
-> > > >      kmalloc_nolock_noprof returns NULL due to missing 128-bit
-> > > > atomics, leading to -ENOMEM errors during scheduler initialization
-> > > >
-> > >
-> > > This kmalloc_nolock_noprof() was introduced in v6.18-rc1 and has no
-> > > caller for now.
+> On Thu, Nov 27, 2025 at 09:14:36AM +0800, Barry Song wrote:
+> > There is no need to always fall back to mmap_lock if the per-VMA
+> > lock was released only to wait for pagecache or swapcache to
+> > become ready.
 >
-> OK, it does have a caller in rc-2 [1].
->
->   [1]: https://lore.kernel.org/bpf/20251015000700.28988-1-alexei.starovoi=
-tov@gmail.com/
->
-> > > Why is this related to the sched_ext failure ?
-> > >
-> > Hi Hengqi,
-> >
-> > When running scx_central, function call chain as below:
-> > central_init->bpf_timer_init->__bpf_async_init->bpf_map_kmalloc_nolock-=
->kmalloc_nolock
-> > ->kmalloc_nolock_noprof
-> >
->
-> Thanks, will test this series.
+> Something I've been wondering about is removing all the "drop the MM
+> locks while we wait for I/O" gunk.  It's a nice amount of code removed:
 
-I tried with qemu, but it seems the kernel can't even boot.
+I think the point is that page fault handlers should avoid holding the VMA
+lock or mmap_lock for too long while waiting for I/O. Otherwise, those
+writers and readers will be stuck for a while.
 
 >
-> > The function kmalloc_nolock_noprof returns NULL due to the following
-> > condition:
-> >
-> > if (!(s->flags & __CMPXCHG_DOUBLE) && !kmem_cache_debug(s))
-> >         /*
-> >          * kmalloc_nolock() is not supported on architectures that
-> >          * don't implement cmpxchg16b, but debug caches don't use
-> >          * per-cpu slab and per-cpu partial slabs. They rely on
-> >          * kmem_cache_node->list_lock, so kmalloc_nolock() can
-> >          * attempt to allocate from debug caches by
-> >          * spin_trylock_irqsave(&n->list_lock, ...)
-> >          */
-> >         return NULL;
-> >
-> > The NULL return occurs because kmalloc_nolock is not supported on
-> > Loongarch, which don't implement cmpxchg16b. So I am giving the patch.
-> >
-> > Also I tried with debug caches(CONFIG_SLUB_DEBUG_ON=3Dy), it works,
-> > but not a good idea.
-> >
-> > > > 2. "LoongArch: Enable 128-bit atomics cmpxchg support"
-> > > >    - Adds select HAVE_CMPXCHG_DOUBLE and select
-> > > > HAVE_ALIGNED_STRUCT_PAGE in Kconfig to enable 128-bit atomic
-> > > > cmpxchg support
-> > > >
-> > > > The issue was identified through BPF scheduler test failures where
-> > > > scx_central and scx_qmap schedulers would fail to initialize.
-> > > > Testing was performed using the scx_qmap scheduler from
-> > > > tools/sched_ext/, confirming that the patches resolve the
-> > > > initialization failures.
-> > > >
-> > > > Signed-off-by: George Guo <dongtai.guo@linux.dev>
-> > > > ---
-> > > > Changes in v3:
-> > > > - dbar 0 -> __WEAK_LLSC_MB
-> > > > - =3DZB" (__ptr[0]) -> "r" (__ptr)
-> > > > - Link to v2:
-> > > > https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linux.dev
-> > > >
-> > > > Changes in v2:
-> > > > - Use a normal ld.d for the high word instead of ll.d to avoid race
-> > > >   condition
-> > > > - Insert a dbar between ll.d and ld.d to prevent reordering
-> > > > - Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to
-> > > > __cmpxchg128_asm(ptr, o, n)
-> > > > - Fix address operand constraints after testing different
-> > > > approaches:
-> > > >   * ld.d with "m"
-> > > >   * ll.d with "ZC",
-> > > >   * sc.q with "ZB"(alternative constraints caused issues:
-> > > >    - "r"  caused system hang
-> > > >    - "ZC" caused compiler error:
-> > > >      {standard input}: Assembler messages:
-> > > >      {standard input}:10037: Fatal error: Immediate overflow.
-> > > >      format: u0:0 )
-> > > > - Link to v1:
-> > > > https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linux.dev
-> > > >
-> > > > ---
-> > > > George Guo (2):
-> > > >       LoongArch: Add 128-bit atomic cmpxchg support
-> > > >       LoongArch: Enable 128-bit atomics cmpxchg support
-> > > >
-> > > >  arch/loongarch/Kconfig               |  2 ++
-> > > >  arch/loongarch/include/asm/cmpxchg.h | 47
-> > > > ++++++++++++++++++++++++++++++++++++ 2 files changed, 49
-> > > > insertions(+) ---
-> > > > base-commit: d5ae5ac32615e4af729f0610fdc11ff4f4798aef
-> > > > change-id: 20251120-2-d03862b2cf6d
-> > > >
-> > > > Best regards,
-> > > > --
-> > > > George Guo <dongtai.guo@linux.dev>
-> > > >
-> > > >
-> >
+>  include/linux/pagemap.h |  8 +---
+>  mm/filemap.c            | 98 ++++++++++++-------------------------------=
+------
+>  mm/internal.h           | 21 -----------
+>  mm/memory.c             | 13 +------
+>  mm/shmem.c              |  6 ---
+>  5 files changed, 27 insertions(+), 119 deletions(-)
+>
+> and I'm not sure we still need to do it with per-VMA locks.  What I
+> have here doesn't boot and I ran out of time to debug it.
+
+I agree there=E2=80=99s room for improvement, but merely removing the "drop=
+ the MM
+locks while waiting for I/O" code is unlikely to improve performance.
+
+For example, we could change the flow to:
+1. Release the VMA lock or mmap_lock
+2. Lock the folio
+3. Re-acquire the VMA lock or mmap_lock
+4. Re-check whether we can still map the PTE
+5. Map the PTE
+
+Currently, the flow is always:
+
+1. Release the VMA lock or mmap_lock
+2. Lock the folio
+3. Unlock the folio
+4. Re-enter the page fault handling from the beginning
+
+The change would be much more complex, so I=E2=80=99d prefer to land the cu=
+rrent
+patchset first. At least this way, we avoid falling back to mmap_lock and
+causing contention or priority inversion, with minimal changes.
+
+Thanks
+Barry
