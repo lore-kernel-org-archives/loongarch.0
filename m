@@ -1,288 +1,555 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5103203BC
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 07:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB2930EF69
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 08:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764229407; cv=none; b=dqPvY6thT17kccJ94jr7aapyV4R6sFrGQOA5RApBiyiGuVzA93pB4n0kfc+Qip9B5Ru5O66A9P/Gepw8CgEP4QZIZvfoy/XPpWXnDIZD5Ax3ol3B9TRQ125J00xi3ZDYR8foyxrQ+2kTUm0e7hFBeB8maZXMZskttl5oJhm6ztw=
+	t=1764230664; cv=none; b=JT7U05ojZIkK7YjsfqLCB5MMiNJ9cIM7Ni/pINxT14Xigyf9xo9uivn4GN82Uuthm9rmwFmIofGtc2yyAXt2U86hIBqfqyilZJWoVYPlVFiOxxjaNFKCtY0JzGWAFHO0VfGmarH2STTo3eVRwD6ZLffu3kCiwYLHyFb8RnwY+B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764229407; c=relaxed/simple;
-	bh=2aa7/jpUbDAxAdHmOQT5ki0TSEgpqQs/3fnTyfytNTo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iPg2A25jFbU70W+F1DH9owi3L1yIaAltYqofRuZ/pjNe58OUon2h2ydO5SE36DcGXtHIujZK4/5Ca3S4+xulNc0LAdxrkmoN8Jd9UTsQRZ87wDdy6ATxkAklE3OTnP6zC0h/3bdTmfyvZz8W51L9Axu07oUXzuYYVEfs6O2SKTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tHKYVma4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sSfQgU6T; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tHKYVma4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sSfQgU6T; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tHKYVma4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sSfQgU6T";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tHKYVma4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sSfQgU6T"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7CBC85BCC4;
-	Thu, 27 Nov 2025 07:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764229402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=tHKYVma4XZcx7EoM5DNtmhDH8d9dYIT1zjyPWiuzOKkrRbwdogT20g9OvB1gPa65N29ize
-	4GtRmeOztqDc1JFFXCNPXnbPEn6m/rt5ROFlvRnW8gSriK+vchWuJejUle4Bf0lctpAMe0
-	BsoNiayfk0hMxzZbyHAvwrSNJm15elw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764229402;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=sSfQgU6T/Yx+fCh1hUALVRAufEwp3ATFz5uXMj/P6VqdhPQInFT9HtHsc4EUhWkDPLvvYo
-	oVeaJ0hOAb6l9vDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764229402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=tHKYVma4XZcx7EoM5DNtmhDH8d9dYIT1zjyPWiuzOKkrRbwdogT20g9OvB1gPa65N29ize
-	4GtRmeOztqDc1JFFXCNPXnbPEn6m/rt5ROFlvRnW8gSriK+vchWuJejUle4Bf0lctpAMe0
-	BsoNiayfk0hMxzZbyHAvwrSNJm15elw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764229402;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WyScJv6L7nzXkZtam1LWxY9xGCwufyeEcL9m/K/r7IE=;
-	b=sSfQgU6T/Yx+fCh1hUALVRAufEwp3ATFz5uXMj/P6VqdhPQInFT9HtHsc4EUhWkDPLvvYo
-	oVeaJ0hOAb6l9vDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A0413EA63;
-	Thu, 27 Nov 2025 07:43:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DU/CABoBKGnXfAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 27 Nov 2025 07:43:22 +0000
-Message-ID: <fc4ea259-3389-46e2-b860-972aa8179507@suse.de>
-Date: Thu, 27 Nov 2025 08:43:21 +0100
+	s=arc-20240116; t=1764230664; c=relaxed/simple;
+	bh=KOPFJ17HkWX7E7Ta9vHN/wFasXA7kCCiIMTaL5fwtVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kWjS75IuiE6kQfJtgYMHtWo+srkzWJXyI9FYUVVB39KL48qcGnF2cxE82OWanBYD2NQ1XZ9hN/EBnZMAouQNBM9EXiYJmILSNGk2BZtZ79SlCj9QNkybWFJGZBXmQhb8W1h5R1HRhpBerYtikwrYc4vtRIE0GK9iL9AEeK+46Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.219])
+	by gateway (Coremail) with SMTP id _____8Cx778ABihprqgoAA--.19784S3;
+	Thu, 27 Nov 2025 16:04:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.219])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+T7BShpis9AAQ--.48316S2;
+	Thu, 27 Nov 2025 16:04:14 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-input@vger.kernel.org,
+	Xiaotian Wu <wuxiaotian@loongson.cn>,
+	jeffbai@aosc.io,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Jon Xie <jon_xie@pixart.com>,
+	Jay Lee <jay_lee@pixart.com>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [RESEND v5] Input: Add driver for PixArt PS/2 touchpad
+Date: Thu, 27 Nov 2025 16:02:03 +0800
+Message-ID: <20251127080203.3218018-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
-To: Richard Lyu <richard.lyu@suse.com>, ardb@kernel.org, javierm@redhat.com,
- arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-References: <20251126160854.553077-1-tzimmermann@suse.de>
- <aSe1ZBXa3JBidhem@r1chard>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <aSe1ZBXa3JBidhem@r1chard>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.com:url]
-X-Spam-Level: 
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-CM-TRANSID:qMiowJDxQ+T7BShpis9AAQ--.48316S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgETCGkn6BYCtAAAse
+X-Coremail-Antispam: 1Uk129KBj9fXoW3uFWDWw4xtw4DWrWkur1fKrX_yoW8Jw4Uuo
+	WfZrZIqw4rtw1xZ3s0k3WxK3W3XanFka93Zw4YkrZ0vry0yw1YgFyUtw1UJa13KrWYqFs3
+	JrnaqF48Xr4furn3l-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUUU
 
-Hi
+This patch introduces a driver for the PixArt PS/2 touchpad, which
+supports both clickpad and touchpad types.
 
-Am 27.11.25 um 03:20 schrieb Richard Lyu:
-> Hi Thomas,
->
-> I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-> Could you please clarify the specific base commit (or branch/tag) this series was generated against?
+At the same time, we extended the single data packet length to 16,
+because according to the current PixArt hardware and FW design, we need
+11 bytes/15 bytes to represent the complete three-finger/four-finger data.
 
-Thanks for testing.
+Co-developed-by: Jon Xie <jon_xie@pixart.com>
+Signed-off-by: Jon Xie <jon_xie@pixart.com>
+Co-developed-by: Jay Lee <jay_lee@pixart.com>
+Signed-off-by: Jay Lee <jay_lee@pixart.com>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Tested-by: Kexy Biscuit <kexybiscuit@aosc.io>
+---
+After rewriting the determination conditions for the PixArt touchpad type,
+we tested multiple types of touchpads and no longer get false positives for
+non-PixArt devices.
 
->
-> When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-> patching file drivers/pci/vgaarb.c
-> Hunk #2 FAILED at 557.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
->
-> When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-> patching file drivers/gpu/drm/sysfb/efidrm.c
-> Hunk #1 FAILED at 24.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-> patching file drivers/gpu/drm/sysfb/vesadrm.c
-> Hunk #1 FAILED at 25.
-> 1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
->
-> Please let me know the correct base, and I will retest.
+So, I am attempting to resend the patch, thanks.
 
-It's in the cover letter: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5 The 
-commit is in linux-next. The idea is that the EFI tree can pick up the 
-changes easily in the next cycle. linux-next seemed like the best 
-choice. Best regards Thomas
->
-> Thanks,
-> Richard Lyu
->
-> On 2025/11/26 17:03, Thomas Zimmermann wrote:
->> Replace screen_info and edid_info with sysfb_primary_device of type
->> struct sysfb_display_info. Update all users. Then implement EDID support
->> in the kernel EFI code.
->>
->> Sysfb DRM drivers currently fetch the global edid_info directly, when
->> they should get that information together with the screen_info from their
->> device. Wrapping screen_info and edid_info in sysfb_primary_display and
->> passing this to drivers enables this.
->>
->> Replacing both with sysfb_primary_display has been motivate by the EFI
->> stub. EFI wants to transfer EDID via config table in a single entry.
->> Using struct sysfb_display_info this will become easily possible. Hence
->> accept some churn in architecture code for the long-term improvements.
->>
->> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
->>
->> Patch 3 adds struct sysfb_display_info.
->>
->> Patch 4 replaces scren_info with sysfb_primary_display. This results in
->> several changes throught the kernel, but is really just a refactoring.
->>
->> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
->> drivers.
->>
->> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
->> drivers' reference to the global edid_info, but also makes the EDID data
->> available on non-x86 architectures.
->>
->> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
->>
->> Patch 9 cleans up the config-table allocation to be easier to understand.
->>
->> v3:
->> - replace SCREEN_INFO table entry (Ard)
->> - merge libstub patch into kernel patch
->> v2:
->> - combine v1 of the series at [1] plus changes from [2] and [3].
->>
->> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
->> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
->> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
->>
->> Thomas Zimmermann (9):
->>    efi: earlycon: Reduce number of references to global screen_info
->>    efi: sysfb_efi: Reduce number of references to global screen_info
->>    sysfb: Add struct sysfb_display_info
->>    sysfb: Replace screen_info with sysfb_primary_display
->>    sysfb: Pass sysfb_primary_display to devices
->>    sysfb: Move edid_info into sysfb_primary_display
->>    efi: Refactor init_primary_display() helpers
->>    efi: Support EDID information
->>    efi: libstub: Simplify interfaces for primary_display
->>
->>   arch/arm64/kernel/image-vars.h                |  2 +-
->>   arch/loongarch/kernel/efi.c                   | 38 ++++-----
->>   arch/loongarch/kernel/image-vars.h            |  2 +-
->>   arch/riscv/kernel/image-vars.h                |  2 +-
->>   arch/x86/kernel/kexec-bzimage64.c             |  4 +-
->>   arch/x86/kernel/setup.c                       | 16 ++--
->>   arch/x86/video/video-common.c                 |  4 +-
->>   drivers/firmware/efi/earlycon.c               | 42 +++++-----
->>   drivers/firmware/efi/efi-init.c               | 46 ++++++-----
->>   drivers/firmware/efi/efi.c                    |  4 +-
->>   drivers/firmware/efi/libstub/Makefile         |  2 +-
->>   drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
->>   drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
->>   drivers/firmware/efi/libstub/efistub.h        |  7 +-
->>   .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
->>   drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
->>   drivers/firmware/efi/libstub/zboot.c          |  6 +-
->>   drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
->>   drivers/firmware/sysfb.c                      | 13 +--
->>   drivers/firmware/sysfb_simplefb.c             |  2 +-
->>   drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
->>   drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
->>   drivers/hv/vmbus_drv.c                        |  6 +-
->>   drivers/pci/vgaarb.c                          |  4 +-
->>   drivers/video/Kconfig                         |  8 +-
->>   drivers/video/fbdev/core/fbmon.c              |  8 +-
->>   drivers/video/fbdev/efifb.c                   | 10 ++-
->>   drivers/video/fbdev/vesafb.c                  | 10 ++-
->>   drivers/video/fbdev/vga16fb.c                 |  8 +-
->>   drivers/video/screen_info_pci.c               |  5 +-
->>   include/linux/efi.h                           |  9 ++-
->>   include/linux/screen_info.h                   |  2 -
->>   include/linux/sysfb.h                         | 23 ++++--
->>   include/video/edid.h                          |  4 -
->>   34 files changed, 321 insertions(+), 254 deletions(-)
->>   create mode 100644 drivers/firmware/efi/libstub/primary_display.c
->>   delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
->>
->>
->> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
->> -- 
->> 2.51.1
->>
+ drivers/input/mouse/Kconfig        |  12 ++
+ drivers/input/mouse/Makefile       |   1 +
+ drivers/input/mouse/pixart_ps2.c   | 310 +++++++++++++++++++++++++++++
+ drivers/input/mouse/pixart_ps2.h   |  36 ++++
+ drivers/input/mouse/psmouse-base.c |  17 ++
+ drivers/input/mouse/psmouse.h      |   3 +-
+ 6 files changed, 378 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/input/mouse/pixart_ps2.c
+ create mode 100644 drivers/input/mouse/pixart_ps2.h
 
+diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
+index 833b643f0616..8a27a20d04b0 100644
+--- a/drivers/input/mouse/Kconfig
++++ b/drivers/input/mouse/Kconfig
+@@ -69,6 +69,18 @@ config MOUSE_PS2_LOGIPS2PP
+ 
+ 	  If unsure, say Y.
+ 
++config MOUSE_PS2_PIXART
++	bool "PixArt PS/2 touchpad protocol extension" if EXPERT
++	default y
++	depends on MOUSE_PS2
++	help
++	  This driver supports the PixArt PS/2 touchpad found in some
++	  laptops.
++	  Say Y here if you have a PixArt PS/2 TouchPad connected to
++	  your system.
++
++	  If unsure, say Y.
++
+ config MOUSE_PS2_SYNAPTICS
+ 	bool "Synaptics PS/2 mouse protocol extension" if EXPERT
+ 	default y
+diff --git a/drivers/input/mouse/Makefile b/drivers/input/mouse/Makefile
+index a1336d5bee6f..563029551529 100644
+--- a/drivers/input/mouse/Makefile
++++ b/drivers/input/mouse/Makefile
+@@ -32,6 +32,7 @@ psmouse-$(CONFIG_MOUSE_PS2_ELANTECH)	+= elantech.o
+ psmouse-$(CONFIG_MOUSE_PS2_OLPC)	+= hgpk.o
+ psmouse-$(CONFIG_MOUSE_PS2_LOGIPS2PP)	+= logips2pp.o
+ psmouse-$(CONFIG_MOUSE_PS2_LIFEBOOK)	+= lifebook.o
++psmouse-$(CONFIG_MOUSE_PS2_PIXART)	+= pixart_ps2.o
+ psmouse-$(CONFIG_MOUSE_PS2_SENTELIC)	+= sentelic.o
+ psmouse-$(CONFIG_MOUSE_PS2_TRACKPOINT)	+= trackpoint.o
+ psmouse-$(CONFIG_MOUSE_PS2_TOUCHKIT)	+= touchkit_ps2.o
+diff --git a/drivers/input/mouse/pixart_ps2.c b/drivers/input/mouse/pixart_ps2.c
+new file mode 100644
+index 000000000000..682aa6499e63
+--- /dev/null
++++ b/drivers/input/mouse/pixart_ps2.c
+@@ -0,0 +1,310 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Pixart Touchpad Controller 1336U PS2 driver
++ *
++ * Author: Jon Xie <jon_xie@pixart.com>
++ *         Jay Lee <jay_lee@pixart.com>
++ * Further cleanup and restructuring by:
++ *         Binbin Zhou <zhoubinbin@loongson.cn>
++ *
++ * Copyright (C) 2021-2024 Pixart Imaging.
++ * Copyright (C) 2024-2025 Loongson Technology Corporation Limited.
++ *
++ */
++
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/input/mt.h>
++#include <linux/libps2.h>
++#include <linux/serio.h>
++#include <linux/slab.h>
++
++#include "pixart_ps2.h"
++
++static int pixart_read_tp_mode(struct ps2dev *ps2dev, u8 *mode)
++{
++	int error;
++	u8 param[1] = { 0 };
++
++	error = ps2_command(ps2dev, param, PIXART_CMD_REPORT_FORMAT);
++	if (error)
++		return error;
++
++	*mode = param[0] == 1 ? PIXART_MODE_ABS : PIXART_MODE_REL;
++
++	return 0;
++}
++
++static int pixart_read_tp_type(struct ps2dev *ps2dev, u8 *type)
++{
++	int error;
++	u8 param[3] = { 0 };
++
++	param[0] = 0xa;
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRATE);
++	if (error)
++		return error;
++
++	param[0] = 0x0;
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
++	if (error)
++		return error;
++
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
++	if (error)
++		return error;
++
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
++	if (error)
++		return error;
++
++	param[0] = 0x3;
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_SETRES);
++	if (error)
++		return error;
++
++	error = ps2_command(ps2dev, param, PSMOUSE_CMD_GETINFO);
++	if (error)
++		return error;
++
++	switch (param[0]) {
++	case 0xc:
++		*type = PIXART_TYPE_CLICKPAD;
++		break;
++	case 0xe:
++		*type = PIXART_TYPE_TOUCHPAD;
++		break;
++	default:
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static void pixart_reset(struct psmouse *psmouse)
++{
++	ps2_command(&psmouse->ps2dev, NULL, PSMOUSE_CMD_RESET_DIS);
++
++	/* according to PixArt, 100ms is required for the upcoming reset */
++	msleep(100);
++	psmouse_reset(psmouse);
++}
++
++static void pixart_process_packet(struct psmouse *psmouse)
++{
++	struct pixart_data *priv = psmouse->private;
++	struct input_dev *dev = psmouse->dev;
++	const u8 *pkt = psmouse->packet;
++	unsigned int contact_cnt = FIELD_GET(CONTACT_CNT_MASK, pkt[0]);
++	unsigned int i, id, abs_x, abs_y;
++	bool tip;
++
++	for (i = 0; i < contact_cnt; i++) {
++		const u8 *p = &pkt[i * 3];
++
++		id = FIELD_GET(SLOT_ID_MASK, p[3]);
++		abs_y = FIELD_GET(ABS_Y_MASK, p[3]) << 8 | p[1];
++		abs_x = FIELD_GET(ABS_X_MASK, p[3]) << 8 | p[2];
++
++		if (i == PIXART_MAX_FINGERS - 1)
++			tip = pkt[14] & BIT(1);
++		else
++			tip = pkt[3 * contact_cnt + 1] & BIT(2 * i + 1);
++
++		input_mt_slot(dev, id);
++		if (input_mt_report_slot_state(dev, MT_TOOL_FINGER, tip)) {
++			input_report_abs(dev, ABS_MT_POSITION_Y, abs_y);
++			input_report_abs(dev, ABS_MT_POSITION_X, abs_x);
++		}
++	}
++
++	input_mt_sync_frame(dev);
++
++	if (priv->type == PIXART_TYPE_CLICKPAD) {
++		input_report_key(dev, BTN_LEFT, pkt[0] & 0x03);
++	} else {
++		input_report_key(dev, BTN_LEFT, pkt[0] & BIT(0));
++		input_report_key(dev, BTN_RIGHT, pkt[0] & BIT(1));
++	}
++
++	input_sync(dev);
++}
++
++static psmouse_ret_t pixart_protocol_handler(struct psmouse *psmouse)
++{
++	u8 *pkt = psmouse->packet;
++	u8 contact_cnt;
++
++	if ((pkt[0] & 0x8c) != 0x80)
++		return PSMOUSE_BAD_DATA;
++
++	contact_cnt = FIELD_GET(CONTACT_CNT_MASK, pkt[0]);
++	if (contact_cnt > PIXART_MAX_FINGERS)
++		return PSMOUSE_BAD_DATA;
++
++	if (contact_cnt == PIXART_MAX_FINGERS &&
++	    psmouse->pktcnt < psmouse->pktsize) {
++		return PSMOUSE_GOOD_DATA;
++	}
++
++	if (contact_cnt == 0 && psmouse->pktcnt < 5)
++		return PSMOUSE_GOOD_DATA;
++
++	if (psmouse->pktcnt < 3 * contact_cnt + 2)
++		return PSMOUSE_GOOD_DATA;
++
++	pixart_process_packet(psmouse);
++
++	return PSMOUSE_FULL_PACKET;
++}
++
++static void pixart_disconnect(struct psmouse *psmouse)
++{
++	pixart_reset(psmouse);
++	kfree(psmouse->private);
++	psmouse->private = NULL;
++}
++
++static int pixart_reconnect(struct psmouse *psmouse)
++{
++	struct ps2dev *ps2dev = &psmouse->ps2dev;
++	u8 mode;
++	int error;
++
++	pixart_reset(psmouse);
++
++	error = pixart_read_tp_mode(ps2dev, &mode);
++	if (error)
++		return error;
++
++	if (mode != PIXART_MODE_ABS)
++		return -EIO;
++
++	error = ps2_command(ps2dev, NULL, PIXART_CMD_SWITCH_PROTO);
++	if (error)
++		return error;
++
++	return 0;
++}
++
++static int pixart_set_input_params(struct input_dev *dev,
++				   struct pixart_data *priv)
++{
++	/* No relative support */
++	__clear_bit(EV_REL, dev->evbit);
++	__clear_bit(REL_X, dev->relbit);
++	__clear_bit(REL_Y, dev->relbit);
++	__clear_bit(BTN_MIDDLE, dev->keybit);
++
++	/* Buttons */
++	__set_bit(EV_KEY, dev->evbit);
++	__set_bit(BTN_LEFT, dev->keybit);
++	if (priv->type == PIXART_TYPE_CLICKPAD)
++		__set_bit(INPUT_PROP_BUTTONPAD, dev->propbit);
++	else
++		__set_bit(BTN_RIGHT, dev->keybit);
++
++	/* Absolute position */
++	input_set_abs_params(dev, ABS_X, 0, PIXART_PAD_WIDTH, 0, 0);
++	input_set_abs_params(dev, ABS_Y, 0, PIXART_PAD_HEIGHT, 0, 0);
++
++	input_set_abs_params(dev, ABS_MT_POSITION_X,
++			     0, PIXART_PAD_WIDTH, 0, 0);
++	input_set_abs_params(dev, ABS_MT_POSITION_Y,
++			     0, PIXART_PAD_HEIGHT, 0, 0);
++
++	return input_mt_init_slots(dev, PIXART_MAX_FINGERS,
++				   INPUT_MT_POINTER | INPUT_MT_DROP_UNUSED);
++}
++
++static int pixart_query_hardware(struct ps2dev *ps2dev, u8 *mode, u8 *type)
++{
++	int error;
++
++	error = pixart_read_tp_type(ps2dev, type);
++	if (error)
++		return error;
++
++	error = pixart_read_tp_mode(ps2dev, mode);
++	if (error)
++		return error;
++
++	return 0;
++}
++
++int pixart_detect(struct psmouse *psmouse, bool set_properties)
++{
++	u8 type;
++	int error;
++
++	pixart_reset(psmouse);
++
++	error = pixart_read_tp_type(&psmouse->ps2dev, &type);
++	if (error)
++		return error;
++
++	if (set_properties) {
++		psmouse->vendor = "PixArt";
++		psmouse->name = (type == PIXART_TYPE_TOUCHPAD) ?
++				"touchpad" : "clickpad";
++	}
++
++	return 0;
++}
++
++int pixart_init(struct psmouse *psmouse)
++{
++	int error;
++	struct pixart_data *priv;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	psmouse->private = priv;
++	pixart_reset(psmouse);
++
++	error = pixart_query_hardware(&psmouse->ps2dev,
++				      &priv->mode, &priv->type);
++	if (error) {
++		psmouse_err(psmouse, "init: Unable to query PixArt touchpad hardware.\n");
++		goto err_exit;
++	}
++
++	/* Relative mode follows standard PS/2 mouse protocol */
++	if (priv->mode != PIXART_MODE_ABS) {
++		error = -EIO;
++		goto err_exit;
++	}
++
++	/* Set absolute mode */
++	error = ps2_command(&psmouse->ps2dev, NULL, PIXART_CMD_SWITCH_PROTO);
++	if (error) {
++		psmouse_err(psmouse, "init: Unable to initialize PixArt absolute mode.\n");
++		goto err_exit;
++	}
++
++	error = pixart_set_input_params(psmouse->dev, priv);
++	if (error) {
++		psmouse_err(psmouse, "init: Unable to set input params.\n");
++		goto err_exit;
++	}
++
++	psmouse->pktsize = 15;
++	psmouse->protocol_handler = pixart_protocol_handler;
++	psmouse->disconnect = pixart_disconnect;
++	psmouse->reconnect = pixart_reconnect;
++	psmouse->cleanup = pixart_reset;
++	/* resync is not supported yet */
++	psmouse->resync_time = 0;
++
++	return 0;
++
++err_exit:
++	pixart_reset(psmouse);
++	kfree(priv);
++	psmouse->private = NULL;
++	return error;
++}
+diff --git a/drivers/input/mouse/pixart_ps2.h b/drivers/input/mouse/pixart_ps2.h
+new file mode 100644
+index 000000000000..47a1d040f2d1
+--- /dev/null
++++ b/drivers/input/mouse/pixart_ps2.h
+@@ -0,0 +1,36 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _PIXART_PS2_H
++#define _PIXART_PS2_H
++
++#include "psmouse.h"
++
++#define PIXART_PAD_WIDTH		1023
++#define PIXART_PAD_HEIGHT		579
++#define PIXART_MAX_FINGERS		4
++
++#define PIXART_CMD_REPORT_FORMAT	0x01d8
++#define PIXART_CMD_SWITCH_PROTO		0x00de
++
++#define PIXART_MODE_REL			0
++#define PIXART_MODE_ABS			1
++
++#define PIXART_TYPE_CLICKPAD		0
++#define PIXART_TYPE_TOUCHPAD		1
++
++#define CONTACT_CNT_MASK		GENMASK(6, 4)
++
++#define SLOT_ID_MASK			GENMASK(2, 0)
++#define ABS_Y_MASK			GENMASK(5, 4)
++#define ABS_X_MASK			GENMASK(7, 6)
++
++struct pixart_data {
++	u8 mode;
++	u8 type;
++	int x_max;
++	int y_max;
++};
++
++int pixart_detect(struct psmouse *psmouse, bool set_properties);
++int pixart_init(struct psmouse *psmouse);
++
++#endif  /* _PIXART_PS2_H */
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index 77ea7da3b1c5..f708b75eb91b 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -36,6 +36,7 @@
+ #include "focaltech.h"
+ #include "vmmouse.h"
+ #include "byd.h"
++#include "pixart_ps2.h"
+ 
+ #define DRIVER_DESC	"PS/2 mouse driver"
+ 
+@@ -905,6 +906,15 @@ static const struct psmouse_protocol psmouse_protocols[] = {
+ 		.detect		= byd_detect,
+ 		.init		= byd_init,
+ 	},
++#endif
++#ifdef CONFIG_MOUSE_PS2_PIXART
++	{
++		.type		= PSMOUSE_PIXART,
++		.name		= "PixArtPS/2",
++		.alias		= "pixart",
++		.detect		= pixart_detect,
++		.init		= pixart_init,
++	},
+ #endif
+ 	{
+ 		.type		= PSMOUSE_AUTO,
+@@ -1172,6 +1182,13 @@ static int psmouse_extensions(struct psmouse *psmouse,
+ 			return ret;
+ 	}
+ 
++	/* Try PixArt touchpad */
++	if (max_proto > PSMOUSE_IMEX &&
++	    psmouse_try_protocol(psmouse, PSMOUSE_PIXART, &max_proto,
++				 set_properties, true)) {
++		return PSMOUSE_PIXART;
++	}
++
+ 	if (max_proto > PSMOUSE_IMEX) {
+ 		if (psmouse_try_protocol(psmouse, PSMOUSE_GENPS,
+ 					 &max_proto, set_properties, true))
+diff --git a/drivers/input/mouse/psmouse.h b/drivers/input/mouse/psmouse.h
+index 4d8acfe0d82a..23f7fa7243cb 100644
+--- a/drivers/input/mouse/psmouse.h
++++ b/drivers/input/mouse/psmouse.h
+@@ -69,6 +69,7 @@ enum psmouse_type {
+ 	PSMOUSE_BYD,
+ 	PSMOUSE_SYNAPTICS_SMBUS,
+ 	PSMOUSE_ELANTECH_SMBUS,
++	PSMOUSE_PIXART,
+ 	PSMOUSE_AUTO		/* This one should always be last */
+ };
+ 
+@@ -94,7 +95,7 @@ struct psmouse {
+ 	const char *vendor;
+ 	const char *name;
+ 	const struct psmouse_protocol *protocol;
+-	unsigned char packet[8];
++	unsigned char packet[16];
+ 	unsigned char badbyte;
+ 	unsigned char pktcnt;
+ 	unsigned char pktsize;
+
+base-commit: a311c777f2987e6ddba2d2dd2f82f2135d65f8aa
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
-
+2.47.3
 
