@@ -1,206 +1,222 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79C723D7CD
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 02:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52E0F192590
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 02:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764210033; cv=none; b=IUoxU2vzoSnbuxSjXGp9Ae7Wh5wo4icSwXsJ3nNfDM9ETU/q3BBawl7DqtwuYawySazmZ2xYs3PCpm2Il1TcKRF2250JYbiPpvBY2l9sp63nIDzNVgVbrxTG+Ds9kUPRBCL2/kr8lal2ETkDN1I2qYHsd1A6fPwVczL3uSiir1M=
+	t=1764211069; cv=none; b=NFaj+2J7Ul5OdEDBaz1NL5gTvm24W00FxaXr/FR0aqCOq/fcTSefzTMx907gIjg1tXxeJfpdx1cxd8e9rQagyryHGQ1eGtzz/LIyayIDQPUS2+zLv0XIN9NwV2zYxWhmfW6D97ShGCPLLyeerO/+DjBD49r1aATf7tZ25fQkq9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764210033; c=relaxed/simple;
-	bh=O5+FwqoY/zKpG5o8W+7yvGXAPlP0E+ecret6xMCqLzA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tApxV50iEzEOpdL58ZlNrb6dn8M55X0VJmHtyqVxf3QmqltnlSbTZjwnBIf7WL1lVGhatczTNZHQp8BTrCvKF1o/7Tgs+HL4AfusgaSKImR40sxyWiuoMlWvjtsJl5dofDtquMG7ff94rc0uYfIta/AqabxbQrHg+JdvfT8ySqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OfkpIR8b; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OfkpIR8b"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-477aa218f20so1667145e9.0
-        for <loongarch@lists.linux.dev>; Wed, 26 Nov 2025 18:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1764210029; x=1764814829; darn=lists.linux.dev;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=OfkpIR8bxoHnj0xbTg+UpeMrm9+sJGb1c8W4d4i+Vvgy8JQXpwhpvgpyaJVx50MgYA
-         iUlHgKx7u5hZABabJlFpV+irqhhRJftoYoJglv3L0+KQuuuz333AlW8W8REgU8rf7PZ1
-         4kGAOdTuaI6VnRPXjrsPCJhQP1Wahdcj4d9JwtSyYh6Dab20XZmrlSe67/JeFzMdD3xX
-         8hlVZNOGpUYzhIyUBxpubJRPprTRnrTiU4ozdApS+Eo9lu+ss3/H/vpMthh39ANI5TpY
-         U6PyZHQeqSIj/ThIo3GTZeOiDmFdSnqsO0xDVaPyPz+aQK6s4THpCkT0orxK+Lys/hqK
-         wv7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764210029; x=1764814829;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=K4URCfDbXaJDpqc3Jy/ygM5tnfYeP0a6DjdNrUnYNok=;
-        b=Ev7v2wzcvAF6UbPzFj7YIGk9Lh4ZKOlt/D0TC/ecc5SOYkedp6TVwV+8wgDTaXJpot
-         vf7hI5fTQz+670jIvjdezop46xU/LRZ0qqvqEA8hDwAMYWetHBSnGeX4bX8gGTApNetz
-         OUBuPYojhEQ9CDX+JxXn7IqTSs1g1Nu+P+7ALyu5iJUJ7eXz6aPlUHPR4cnFyy/LwqKA
-         jotovzDT35HmJ4ASn/1NG6iW9TsFgnB/aoDbDXzkuekRyWMrmIzzfq17p3IVbGKxcE6/
-         VcSF7unU70ZqQXWjja0I9T5BAZ9KvhDn6jUNIc+r76qFCBMBqLrXS+lQDuQ9v3koVWrz
-         a/8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU/covt6ZvWxCccLrL5p/u255DHBZjktWGrrcDhnwyk6iD4IIUudUj+gR04vc7PoVHe3mi9Q6ediqc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy8ei2nLl7QSw+NvUVDJAbmd+kQZY0IhPPcvP6lc2ZDhLxn/tvO
-	MIpp8UwPs3ELp48kmgwOF2hQ4JdNVELX34w/5uJ7bs1A/N4Na+wh4DmY95S1GUfNJEo=
-X-Gm-Gg: ASbGncvoAcZTuOvbgAti4Z0zRBqr4iV3W3QOpFkIBEoWj34xTGvYAaDYW8GEGWxzs4a
-	Z28BshdE6tD9ZaZZnTOWnV3lJ/paJCMvCnWMMVkOTy0WsyLpm4f9D4C5giSlH0mHJQwl9SIHXD9
-	vtl2zWDcMbVk6/y8ZEMNKR2mIrl8li4ityBRTWgIU6TfSVdn3+Z/+izIvjf10RfsiZRZOCnEMkk
-	mBYnDewdHFNEG8+OwfWkLvmqyjhdHiO2J2FSIJr9AjGdYz0wVI9d/USnh1Xq4wLS7rjrx4zDWrQ
-	czQhp8bu65l3vzvy2ZQCP2rgeyBFx7DZll0LRIJQ0BkEnG3T+CT1QwTnGDC3zoMq++Ogu9XkZb3
-	9R0EnGThKyj1acAq2mAcRVAVy6LGU4odpZZjc/4IcU3/JmEgCA3YST8n1B0zJFUNDTeMy/cc42W
-	o+Eoc0xB6riCdA4gXKxVsCW6aHoJfMo0jS
-X-Google-Smtp-Source: AGHT+IGspC1YV2yyiMXXnAe8/Td7EsFQhaqJU5qYzu5f0NQl+Us+ioM0vDMgGxEbw6PNx9+MNqPMRQ==
-X-Received: by 2002:a05:600c:474b:b0:477:9dc1:b706 with SMTP id 5b1f17b1804b1-477c01b494fmr204934695e9.19.1764210029052;
-        Wed, 26 Nov 2025 18:20:29 -0800 (PST)
-Received: from r1chard (1-169-246-18.dynamic-ip.hinet.net. [1.169.246.18])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3477b20b5d6sm67743a91.6.2025.11.26.18.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 18:20:28 -0800 (PST)
-From: Richard Lyu <richard.lyu@suse.com>
-X-Google-Original-From: Richard Lyu <r1chard@r1chard>
-Date: Thu, 27 Nov 2025 10:20:20 +0800
-To: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
-	javierm@redhat.com, arnd@arndb.de, helgaas@kernel.org
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 0/9] arch,sysfb,efi: Support EDID on non-x86 EFI
- systems
-Message-ID: <aSe1ZBXa3JBidhem@r1chard>
-References: <20251126160854.553077-1-tzimmermann@suse.de>
+	s=arc-20240116; t=1764211069; c=relaxed/simple;
+	bh=tuh2IHmK5ztqyDlzxMLqmyEstVDeB+SYYyFGw1gogz4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uQ1uez8Ue/mrrKRA6QEoPTJUyf9vF7YjNyBXSFLYH/nMJqv6hfk7oldnoQpSklU/qeN7hphHxbOpyfKAMHf5Su/cuADGnJ8lg/JJVWpq9d6ptGshInkTIYDKEhJc/obv2Z9Zsi4I5cfExYw1RYUh4nivT+WDrKYDYPNz/hWrhYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxL9N0uSdpJJUoAA--.20492S3;
+	Thu, 27 Nov 2025 10:37:41 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxZORxuSdpGZlAAQ--.40066S3;
+	Thu, 27 Nov 2025 10:37:39 +0800 (CST)
+Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, linux-kernel@vger.kernel.org
+References: <20251120065758.3064368-1-maobibo@loongson.cn>
+ <CAAhV-H4FhRHG+Axsb4KEtiyagepJVKyQ80cLN7TNXdCGAzN-KA@mail.gmail.com>
+ <42d93855-50df-a686-85c5-5552ff829977@loongson.cn>
+ <CAAhV-H4xprj-WmMkp86xEmn4NL3wwW3aaDoMj=SUiP3pEa+Q7g@mail.gmail.com>
+ <1605b5eb-5f43-62ff-28c5-192f2f0f938d@loongson.cn>
+ <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
+ <0e125e35-8044-a6ce-998f-1221da0e827d@loongson.cn>
+ <CAAhV-H57Ee-KpmYuRLnhOXGsJtBrzHPTqNTW9uj8EkiDUMp3CA@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <1a3698c8-f31e-fb32-c00a-7372450e6196@loongson.cn>
+Date: Thu, 27 Nov 2025 10:35:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251126160854.553077-1-tzimmermann@suse.de>
-User-Agent: Mutt/2.2.13 (2024-03-09)
+In-Reply-To: <CAAhV-H57Ee-KpmYuRLnhOXGsJtBrzHPTqNTW9uj8EkiDUMp3CA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxZORxuSdpGZlAAQ--.40066S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtFW7tr4rtr13Zw4fCrW8KrX_yoW7ZrW7pF
+	WIk3ZxKF48Ar1ayw1Iqr1qqry5tw1ktr1jqr1rtr1UAr1qyr1kJa17JryUCF17Jry8Wr1j
+	v340vF13WF1UJrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
+	wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjxUcVc_UUUUU
 
-Hi Thomas,
 
-I am attempting to test this patch series but encountered merge conflicts when applying it to various trees.
-Could you please clarify the specific base commit (or branch/tag) this series was generated against?
 
-When testing on the next branch on commits 7a2ff00 and e41ef37, I hit a conflict on PATCH v3 4/9:
-patching file drivers/pci/vgaarb.c
-Hunk #2 FAILED at 557.
-1 out of 2 hunks FAILED -- rejects in file drivers/pci/vgaarb.c
+On 2025/11/27 上午10:09, Huacai Chen wrote:
+> On Thu, Nov 27, 2025 at 9:08 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/11/26 下午9:43, Huacai Chen wrote:
+>>> On Mon, Nov 24, 2025 at 10:17 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/11/24 上午10:03, Huacai Chen wrote:
+>>>>> On Mon, Nov 24, 2025 at 9:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2025/11/21 下午10:08, Huacai Chen wrote:
+>>>>>>> Hi, Bibo,
+>>>>>>>
+>>>>>>> On Thu, Nov 20, 2025 at 2:58 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>
+>>>>>>>> This patchset adds timer test case for LoongArch system, it is based
+>>>>>>>> on common arch_timer test case. And it includes one-shot and period mode
+>>>>>>>> timer interrupt test, software emulated timer function and time counter
+>>>>>>>> test.
+>>>>>>> I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
+>>>>>>> it passes, sometimes I get:
+>>>>>>> [root@fedora kvm]# ./arch_timer
+>>>>>>> Random seed: 0x6b8b4567
+>>>>>>> Guest assert failed,  vcpu 2; stage; 0; iter: 1
+>>>>>>> ==== Test Assertion Failure ====
+>>>>>>>       loongarch/arch_timer.c:79: irq_iter == 0
+>>>>>>>       pid=60138 tid=60142 errno=4 - Interrupted system call
+>>>>>>>          1  0x00000001200037cf: test_vcpu_run 于 arch_timer.c:70
+>>>>>>>          2  0x00007ffff2449f27: ?? ??:0
+>>>>>>>          3  0x00007ffff24c0633: ?? ??:0
+>>>>>>>       irq_iter = 0x1.
+>>>>>>>       Guest period timer interrupt was not triggered within the specified
+>>>>>>>       interval, try to increase the error margin by [-e] option.
+>>>>>>>
+>>>>>>> Is this as expected, or something is wrong?
+>>>>>> There is problem with that. In generic the vCPU task is rescheduled on
+>>>>>> other CPUs or preempted, so period timer interrupt is not handled in
+>>>>>> specified time.
+>>>>> Then this series need to be updated, or problem comes from other places?
+>>>> I think this series need be updated, test success criteria with period
+>>>> timer need consider this situation. Let me check how to handle this.
+>>> Any updates available?
+>> It can be solved by modifying udelay() method with get_cycles() or using
+>> cpu loop calculation method.
+>>
+>> --- a/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>> +++ b/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>> @@ -71,10 +71,17 @@ static inline void timer_irq_disable(void)
+>>
+>>    static inline void __delay(uint64_t cycles)
+>>    {
+>> -       uint64_t start = timer_get_cycles();
+>> -
+>> -       while ((timer_get_cycles() - start) < cycles)
+>> -               cpu_relax();
+>> +       uint64_t start, next, loops = 0;
+>> +
+>> +       start = timer_get_cycles();
+>> +       while (loops < cycles) {
+>> +               next = timer_get_cycles();
+>> +               /* only count one cycle if VM is preempted */
+>> +               if (next > start) {
+>> +                       loops++;
+>> +                       start = next;
+>> +               }
+>> +       }
+>>    }
+> Looks good. But ARM64 and RISC-V also use a simple implementation of
+there is no period test on them.
+> __delay(). So should this problem be thought of as a common problem?
+> If yes, maybe we can keep __delay() as is and wait for the common
+> parts to be fixed.
+Also there is no common udelay() API, it is arch specific. Someone may 
+argue that skipping stolen cycles is not generic for __delay(), other 
+test cases want accurate cycles rather than skipping stolen cycles. It 
+is timer test case specific.
 
-When testing against 3a86608 (Linux 6.18-rc1), the following conflicts occurred:
-patching file drivers/gpu/drm/sysfb/efidrm.c
-Hunk #1 FAILED at 24.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/efidrm.c
-patching file drivers/gpu/drm/sysfb/vesadrm.c
-Hunk #1 FAILED at 25.
-1 out of 2 hunks FAILED -- rejects in file drivers/gpu/drm/sysfb/vesadrm.c
+Or adding another api __delay_loops() or keep it as is and wait for 
+other architectures, there should be no common part for it.
 
-Please let me know the correct base, and I will retest.
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo Mao
+>>>>>>>
+>>>>>>> Hucai
+>>>>>>>
+>>>>>>>> ---
+>>>>>>>> v2 ... v3:
+>>>>>>>>       1. Adjust order about patch 2 and patch 3
+>>>>>>>>       2. Add test case with alphabetical order
+>>>>>>>>       3. Merge one-shot and period timer interrupt test case into one
+>>>>>>>>       4. Only add LoongArch specific modification with common file
+>>>>>>>>          Makefile.kvm
+>>>>>>>>
+>>>>>>>> v1 ... v2:
+>>>>>>>>       1. Restore PC and PRMD after exception handler
+>>>>>>>>       2. Split patch 4 into two small patches with period timer test and
+>>>>>>>>          time counter test
+>>>>>>>>       3. With time counter test, set time count with 0 when create VM. And
+>>>>>>>>          verify time count starts from 0 in guest code
+>>>>>>>> ---
+>>>>>>>> Bibo Mao (6):
+>>>>>>>>       KVM: LoongArch: selftests: Add system registers save and restore on
+>>>>>>>>         exception
+>>>>>>>>       KVM: LoongArch: selftests: Add basic interfaces
+>>>>>>>>       KVM: LoongArch: selftests: Add exception handler register interface
+>>>>>>>>       KVM: LoongArch: selftests: Add timer interrupt test case
+>>>>>>>>       KVM: LoongArch: selftests: Add SW emulated timer test
+>>>>>>>>       KVM: LoongArch: selftests: Add time counter test
+>>>>>>>>
+>>>>>>>>      tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+>>>>>>>>      .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
+>>>>>>>>      .../kvm/include/loongarch/processor.h         |  81 +++++++-
+>>>>>>>>      .../selftests/kvm/lib/loongarch/exception.S   |   6 +
+>>>>>>>>      .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
+>>>>>>>>      .../selftests/kvm/loongarch/arch_timer.c      | 194 ++++++++++++++++++
+>>>>>>>>      6 files changed, 410 insertions(+), 3 deletions(-)
+>>>>>>>>      create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>>>>>>>      create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
+>>>>>>>> --
+>>>>>>>> 2.39.3
+>>>>>>>>
+>>>>>>
+>>>>
+>>
+>>
 
-Thanks,
-Richard Lyu
-
-On 2025/11/26 17:03, Thomas Zimmermann wrote:
-> Replace screen_info and edid_info with sysfb_primary_device of type
-> struct sysfb_display_info. Update all users. Then implement EDID support
-> in the kernel EFI code.
-> 
-> Sysfb DRM drivers currently fetch the global edid_info directly, when
-> they should get that information together with the screen_info from their
-> device. Wrapping screen_info and edid_info in sysfb_primary_display and
-> passing this to drivers enables this.
-> 
-> Replacing both with sysfb_primary_display has been motivate by the EFI
-> stub. EFI wants to transfer EDID via config table in a single entry.
-> Using struct sysfb_display_info this will become easily possible. Hence
-> accept some churn in architecture code for the long-term improvements.
-> 
-> Patches 1 and 2 reduce the exposure of screen_info in EFI-related code.
-> 
-> Patch 3 adds struct sysfb_display_info.
-> 
-> Patch 4 replaces scren_info with sysfb_primary_display. This results in
-> several changes throught the kernel, but is really just a refactoring.
-> 
-> Patch 5 updates sysfb to transfer sysfb_primary_display to the related
-> drivers.
-> 
-> Patch 6 moves edid_info into sysfb_primary_display. This resolves some
-> drivers' reference to the global edid_info, but also makes the EDID data
-> available on non-x86 architectures.
-> 
-> Patches 7 and 8 add support for EDID transfers on non-x86 EFI systems.
-> 
-> Patch 9 cleans up the config-table allocation to be easier to understand.
-> 
-> v3:
-> - replace SCREEN_INFO table entry (Ard)
-> - merge libstub patch into kernel patch
-> v2:
-> - combine v1 of the series at [1] plus changes from [2] and [3].
-> 
-> [1] https://lore.kernel.org/dri-devel/20251121135624.494768-1-tzimmermann@suse.de/
-> [2] https://lore.kernel.org/dri-devel/20251015160816.525825-1-tzimmermann@suse.de/
-> [3] https://lore.kernel.org/linux-efi/20251119123011.1187249-5-ardb+git@google.com/
-> 
-> Thomas Zimmermann (9):
->   efi: earlycon: Reduce number of references to global screen_info
->   efi: sysfb_efi: Reduce number of references to global screen_info
->   sysfb: Add struct sysfb_display_info
->   sysfb: Replace screen_info with sysfb_primary_display
->   sysfb: Pass sysfb_primary_display to devices
->   sysfb: Move edid_info into sysfb_primary_display
->   efi: Refactor init_primary_display() helpers
->   efi: Support EDID information
->   efi: libstub: Simplify interfaces for primary_display
-> 
->  arch/arm64/kernel/image-vars.h                |  2 +-
->  arch/loongarch/kernel/efi.c                   | 38 ++++-----
->  arch/loongarch/kernel/image-vars.h            |  2 +-
->  arch/riscv/kernel/image-vars.h                |  2 +-
->  arch/x86/kernel/kexec-bzimage64.c             |  4 +-
->  arch/x86/kernel/setup.c                       | 16 ++--
->  arch/x86/video/video-common.c                 |  4 +-
->  drivers/firmware/efi/earlycon.c               | 42 +++++-----
->  drivers/firmware/efi/efi-init.c               | 46 ++++++-----
->  drivers/firmware/efi/efi.c                    |  4 +-
->  drivers/firmware/efi/libstub/Makefile         |  2 +-
->  drivers/firmware/efi/libstub/efi-stub-entry.c | 36 +++++++--
->  drivers/firmware/efi/libstub/efi-stub.c       | 49 +++++++----
->  drivers/firmware/efi/libstub/efistub.h        |  7 +-
->  .../firmware/efi/libstub/primary_display.c    | 41 ++++++++++
->  drivers/firmware/efi/libstub/screen_info.c    | 53 ------------
->  drivers/firmware/efi/libstub/zboot.c          |  6 +-
->  drivers/firmware/efi/sysfb_efi.c              | 81 ++++++++++---------
->  drivers/firmware/sysfb.c                      | 13 +--
->  drivers/firmware/sysfb_simplefb.c             |  2 +-
->  drivers/gpu/drm/sysfb/efidrm.c                | 14 ++--
->  drivers/gpu/drm/sysfb/vesadrm.c               | 14 ++--
->  drivers/hv/vmbus_drv.c                        |  6 +-
->  drivers/pci/vgaarb.c                          |  4 +-
->  drivers/video/Kconfig                         |  8 +-
->  drivers/video/fbdev/core/fbmon.c              |  8 +-
->  drivers/video/fbdev/efifb.c                   | 10 ++-
->  drivers/video/fbdev/vesafb.c                  | 10 ++-
->  drivers/video/fbdev/vga16fb.c                 |  8 +-
->  drivers/video/screen_info_pci.c               |  5 +-
->  include/linux/efi.h                           |  9 ++-
->  include/linux/screen_info.h                   |  2 -
->  include/linux/sysfb.h                         | 23 ++++--
->  include/video/edid.h                          |  4 -
->  34 files changed, 321 insertions(+), 254 deletions(-)
->  create mode 100644 drivers/firmware/efi/libstub/primary_display.c
->  delete mode 100644 drivers/firmware/efi/libstub/screen_info.c
-> 
-> 
-> base-commit: d724c6f85e80a23ed46b7ebc6e38b527c09d64f5
-> -- 
-> 2.51.1
-> 
