@@ -1,114 +1,147 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D058231858
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A3E32573B
+	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 10:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764238882; cv=none; b=NZ8ViUqHbySoXhrc+xvi3584QnSjyU7AJ17n5XLw2qyEMl9X/wIA5MYnJ7IWf/SnvWdWtZTvhLvTxwb5YX49Gmk4mRGftFPWTxMNGVW3YRVE1uotmxKAwKdw1b8JymBd8iKbl158vz3QskT21ECazkhVN+4SK8cmxH/3Ibg8Z24=
+	t=1764240777; cv=none; b=HVdVVUZizcPKnKBNZHAI0VCOAFL2qsLPJJx6eh4BgGKiSvsky8JS6v4YeIBtdsP1tGPkO94YJR9mVqC6W4HWoNOFvEzE7G5FOCyWjFMnWWSQo7gPvhOGtyK71JTe5Mz9CAK2edNtItJhCdONhI4R8xDCJK/Sc80OlZVNUlBqWe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764238882; c=relaxed/simple;
-	bh=rTtiVbHcL4TDLSJhQbbgDII7Sg4nmInIRO3vYuuJqQ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ghb4fm4u+qsUYpk9OI+XoQVV3f7o8xqOhbypoDj861Oc6qJeY5OROQ8lM0he3FAGm6RnaFr33vAEIgHBE9uIXKiu6PHaAeU3K1bQZmqTqtvwXHk3b3l+n02SthJV5Yer2p87lu9thpGLC9Lssd+bNp+zmR9gYdkUzThasrR4jn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=AIRrNB/T; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="AIRrNB/T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1764238850;
-	bh=Ym5BSMc8jlSE9Ar0o4L61EHrYe+/qARB2zmvb0gWb0A=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=AIRrNB/T/8wdQYPGPtMKEg7XeomTN82C5fqT9lUkNpIOv2/qOjBYnlqo213xwOmTs
-	 J02C05UhN81W4VTpsnNmViaWN2IqW5jxg28vQoQtJhaKO30/tSaLpQNW7AtucC22T1
-	 ksLDdgB0E0/im9rr//eZ1++PHp3N2PPYnfNfUjKM=
-X-QQ-mid: zesmtpsz3t1764238845tb51712f5
-X-QQ-Originating-IP: T7eLNdh2Gt0MC59GBQs/rQ5F6izB+/yo+5fwcH0+VSU=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 27 Nov 2025 18:20:43 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14232503937551174294
-EX-QQ-RecipientCnt: 6
-From: Qiang Ma <maqianga@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	hengqi.chen@gmail.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH v3] LoongArch: Correct the calculation logic of thread_count
-Date: Thu, 27 Nov 2025 18:19:46 +0800
-Message-Id: <20251127101946.3531069-1-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1764240777; c=relaxed/simple;
+	bh=lmIpG/6wpMPGrn8UHtJLjo9/YEqgWiovYbOwMFrcwDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LxKDyuL7yXQekJG4WU8x7X55Qb6Na4fobjISxL9yttogPWlv5limYMbrTsKFW7xQBPzGBdjbRFNLzWktU/P8QSZ4xYiaVcA3I6RjjBTmCNPVXdGIKpBKO/Q3O6H2xQm5yvDdGUmI/yrLm0HAfXGI2NJOi5/+croxVB7FixFxpfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7B48433693;
+	Thu, 27 Nov 2025 10:52:54 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B0C7F3EA63;
+	Thu, 27 Nov 2025 10:52:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xrDGJ4ItKGlFNgAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 27 Nov 2025 10:52:50 +0000
+Date: Thu, 27 Nov 2025 10:52:49 +0000
+From: Pedro Falcato <pfalcato@suse.de>
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	Oven Liyang <liyangouwen1@oppo.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Oscar Salvador <osalvador@suse.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Ada Couprie Diaz <ada.coupriediaz@arm.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>, 
+	Kevin Brodsky <kevin.brodsky@arm.com>, Yeoreum Yun <yeoreum.yun@arm.com>, 
+	Wentao Guan <guanwentao@uniontech.com>, Thorsten Blum <thorsten.blum@linux.dev>, 
+	Steven Rostedt <rostedt@goodmis.org>, Yunhui Cui <cuiyunhui@bytedance.com>, 
+	Nam Cao <namcao@linutronix.de>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, 
+	Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [RFC PATCH 1/2] mm/filemap: Retry fault by VMA lock if the lock
+ was released for I/O
+Message-ID: <5by7tko4v3kqvvpu4fdsgpw42yl5ed5qisbaz3la4an52hq4j2@v75fagey6gva>
+References: <20251127011438.6918-1-21cnbao@gmail.com>
+ <20251127011438.6918-2-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: MX+1SEN3H+wAu8MF6d4YTwNHDHUfLKf4820ZI0VCNb/AZ9iCw73uAADH
-	CB6UoVz+76zbP6wDgF8A4Asi+pKgsKaLoDSD74zfxOkXYc+8FVGnZTkw27Rhpw8SL0/uyyM
-	vqxqkHsTkCAwEU14xVGOUKFQSyHDSXKjqyeE3ciYDCRcMn718bltdnKSxDP4trSEwHT/xUt
-	Vt+ARWye1EnPsKubiRcLlooGqJh/EmmAOgsJqsM4OBBGwGQJiSk5zQIQT0Xd7wkoxtuMt09
-	a7jX8TKEqoYPXg5HjaL8+XGCCVEpG33szL78716jlRka1hfVPKQRojiim0bdfY2o/2XvHGY
-	h7+xGTUjjU2BbBGVyA55JF/mG/2D6zg9zZuN02pEhrFncez3peD4DP/7fWv22OoVKWWXwSx
-	8olcrGQRG+ESbTYpvpHkV+IvX+OYAKzG+jhY4Mv5t+wwWxit2qbAZ66EnOcbD2qpdDPvlJx
-	W6AqQTFMPc/n/TqZS4fs794Bq5FDuRW7QtyE+Hp+v3jQjbkd2YVVk1AcR4k95c2QCnuvCsp
-	9NXBqKnbVuWgI2pZXE3UZbWEhJWESDfy4Ha9AuPgUCOHl44Cnd1+sdEKnCrdBgROLaTOZz1
-	qOcg+BgGszreLScf+eWz0MQPVejcOzl4XcYSP+Q/wqRR21Z7QxDxX0U86fsTuKwixyXkyHi
-	b4FitOIgxeHls4lw/Ox3Zt0TDDk5Gckf04ocsl87OCfnX0e4NsKC2Mp62k9TQQmfXUzl3GP
-	YNvhWwyyb2wOa9/ySXvHpfffv089hUtunr9clfPo1as9N9I/gSPf1QkuuLM2+gRBl60bKDO
-	kkxvTAkr7jI1O7RoY9PSM1w2OCSDj2oOrQw8Wi6dKafRQqex+rblpGFJpotUJf8oqD4JF5+
-	LB7i0KeK5CpUJ5/CFRgEErb39FxsK7w+da8iUGLAoTi5I3MAS6VlhrDzO2QiGtT0xmHWG0K
-	8GEsqK6p0Ch3yYDVJzhiA2lGSCqCPvMt12Dfgr/n6ztptRMzTHEBVogAYclJ4sp2NPGhylO
-	luINYBJ77RS95WqGGDy0rJxrbufq4ZiwrKuxM85pXqcPpYQDUabekENZwc0Uk=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251127011438.6918-2-21cnbao@gmail.com>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: 7B48433693
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-For thread_count, the current calculation method has a maximum of 255,
-which may not be sufficient in the future. Therefore, we are correcting
-it now.
+On Thu, Nov 27, 2025 at 09:14:37AM +0800, Barry Song wrote:
+> From: Oven Liyang <liyangouwen1@oppo.com>
+> 
+> If the current page fault is using the per-VMA lock, and we only released
+> the lock to wait for I/O completion (e.g., using folio_lock()), then when
+> the fault is retried after the I/O completes, it should still qualify for
+> the per-VMA-lock path.
+> 
+<snip>
+> Signed-off-by: Oven Liyang <liyangouwen1@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  arch/arm/mm/fault.c       | 5 +++++
+>  arch/arm64/mm/fault.c     | 5 +++++
+>  arch/loongarch/mm/fault.c | 4 ++++
+>  arch/powerpc/mm/fault.c   | 5 ++++-
+>  arch/riscv/mm/fault.c     | 4 ++++
+>  arch/s390/mm/fault.c      | 4 ++++
+>  arch/x86/mm/fault.c       | 4 ++++
 
-Reference: SMBIOS Specification, 7.5 Processor Information (Type 4)[1]
+If only we could unify all these paths :(
 
-[1]: https://www.dmtf.org/sites/default/files/standards/documents/DSP0134_3.9.0.pdf
+>  include/linux/mm_types.h  | 9 +++++----
+>  mm/filemap.c              | 5 ++++-
+>  9 files changed, 39 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index b71625378ce3..12b2d65ef1b9 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -1670,10 +1670,11 @@ enum vm_fault_reason {
+>  	VM_FAULT_NOPAGE         = (__force vm_fault_t)0x000100,
+>  	VM_FAULT_LOCKED         = (__force vm_fault_t)0x000200,
+>  	VM_FAULT_RETRY          = (__force vm_fault_t)0x000400,
+> -	VM_FAULT_FALLBACK       = (__force vm_fault_t)0x000800,
+> -	VM_FAULT_DONE_COW       = (__force vm_fault_t)0x001000,
+> -	VM_FAULT_NEEDDSYNC      = (__force vm_fault_t)0x002000,
+> -	VM_FAULT_COMPLETED      = (__force vm_fault_t)0x004000,
+> +	VM_FAULT_RETRY_VMA      = (__force vm_fault_t)0x000800,
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
----
- arch/loongarch/kernel/setup.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+So, what I am wondering here is why we need one more fault flag versus
+just blindly doing this on a plain-old RETRY. Is there any particular
+reason why? I can't think of one. 
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 25a87378e48e..eb6e3ac27436 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -56,6 +56,7 @@
- #define SMBIOS_FREQLOW_MASK		0xFF
- #define SMBIOS_CORE_PACKAGE_OFFSET	0x23
- #define SMBIOS_THREAD_PACKAGE_OFFSET	0x25
-+#define SMBIOS_THREAD_PACKAGE_2_OFFSET	0x2E
- #define LOONGSON_EFI_ENABLE		(1 << 3)
- 
- unsigned long fw_arg0, fw_arg1, fw_arg2;
-@@ -126,7 +127,12 @@ static void __init parse_cpu_table(const struct dmi_header *dm)
- 	cpu_clock_freq = freq_temp * 1000000;
- 
- 	loongson_sysconf.cpuname = (void *)dmi_string_parse(dm, dmi_data[16]);
--	loongson_sysconf.cores_per_package = *(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
-+	loongson_sysconf.cores_per_package = *(u8 *)(dmi_data + SMBIOS_THREAD_PACKAGE_OFFSET);
-+	if (dm->length >= 0x30 && loongson_sysconf.cores_per_package == 0xff) {
-+		/* SMBIOS 3.0+ has ThreadCount2 for more than 255 threads */
-+		loongson_sysconf.cores_per_package =
-+				*(u16 *)(dmi_data + SMBIOS_THREAD_PACKAGE_2_OFFSET);
-+	}
- 
- 	pr_info("CpuClock = %llu\n", cpu_clock_freq);
- }
+I would also like to see performance numbers.
+
+The rest of the patch looks OK to me.
+
 -- 
-2.20.1
-
+Pedro
