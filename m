@@ -1,109 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3C6236A73
-	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 08:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44F4230217B
+	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 09:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764319868; cv=none; b=hY7pVyVU0mQRhuUwGM7GW5rJLpCDEcMaZqUE0UJ0OHLBMnYbvAhntm/fVq4Ed9wI/GvYUvNhchbbyyDfpqENP93O/01YwYNQkxXKeb3jkrVneSFSICrTk2uITTZdriYrGp1pcmIMm28JYiWPkhskTpLwXKyys+TPk25fZVoR3dU=
+	t=1764322551; cv=none; b=c4PA+8woL7q2S7W5bv4M/rGBT6jHB7g9i9i76WtBRdlAzv1IHWZ+n19jbNGBAPIvrqxXmfNUGvlg9a3h6CeWBWRwFxrO7EY8y5hxizp0AXBgzyYC4BIp/rFRBRDbGW0aYCoKjMEbJSW1b7J7R2l8R41gM2ylMOFkRnArEOb5JDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764319868; c=relaxed/simple;
-	bh=cStjCdmu/XjU9UdftT+gFtkZTXeDN1Na3NsnkdbDc08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mrzSccp1P/1sTkdYDKtN5WI4A5/sJ+B9WhdON2FUh8+3iA4ggzII3sb90487uXxL5SMXzG8JqdYf8K2lz88GY1hXPS8/CRD4xlUbDMH7omyn+z7pAbJjjZSZbzK6TSWz9E/Sp2n+tDj/B7mMNQX/PB6HHqyf+YrA0/2Gh0m3KAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzXH5Dw5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzXH5Dw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F574C2BCF6
-	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 08:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764319868;
-	bh=cStjCdmu/XjU9UdftT+gFtkZTXeDN1Na3NsnkdbDc08=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CzXH5Dw5hSHdzGZ2KtAzHDWBKGujRbg5SzD2rN+Cv8ZX86pniZiwy6E74WfkATspT
-	 qb4fRsc+yQkKt9FdOHGYDof5iAREE582srdR6yTyWMhBgFBfdDdIYtmK0RhOibJbiZ
-	 Gf1gDLuVkheIZassIFrSmhnoGxMhEf3bSOCNR4U2mHWkIcfORcp6MBnMsIfWUS4u+R
-	 1r3P3/9JEj2xCltxFBe6jhJ4cPlwOrXvm9m3Q7NIUtxeN/kRZCyi15lKMNFBXzgdLD
-	 +Ge9kt1BKYRoizoFCBqKBAAUdj7JaM45ign6f2Du1VyqSBwNeJRELjXh6clH9lKDWN
-	 JLiUpzNIA6rdA==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-64149f78c0dso2512872a12.3
-        for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 00:51:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXwq/mi672AFf1Azl/w4VM5MK3B9vwYuHWZ5XpNlxp/5MHfoegXKvNxL4DIewwI39ULz6WT4QpjD9w=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyb7hRWXUeD8m2XXaYGUaHaaNdr9Cq/LPv62s5mGz/Wd9f053ch
-	FOglSSo/E12BCAI4YCoEJ3G4d1udC2x6tTjvO4dZlNw6YD/wKrmXKcRaafUQ+RzGyKlYZXSIcRh
-	UC2yzZYcrCVjDJfJf7Zs7UfrnRR6VRz0=
-X-Google-Smtp-Source: AGHT+IGAGHIgD7iYaoiXG/+qhdn4V+4XRkeUjfCaSUCz3qFhqO+0Eq+fKZZEFpacHtC3jd1VFolBOAGdWDW6kBFzCKA=
-X-Received: by 2002:a17:906:fd86:b0:b73:8f33:eee6 with SMTP id
- a640c23a62f3a-b76715ac4a4mr2958545666b.23.1764319866787; Fri, 28 Nov 2025
- 00:51:06 -0800 (PST)
+	s=arc-20240116; t=1764322551; c=relaxed/simple;
+	bh=mHsyXzuWwIQSR7QTAslKBLwI9uUX03W4VLfzvQMcDzk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d571pHrJDyQ6UQ1BoowO9Kp8QgSr6zw/bHmvleAbfzjPHpjMgyZ39gjF3ogMNthHwZdFgqa/km4tQEuTCb9NpX+dYy6+7hVxkQW91B+m0g00cdoVt69+WvpqhaeRC6CFiIpRxjCCpKCLCW+lB8TtSvAoce8wiE4IswlljDPG1pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Cx6tHubClpOg8pAA--.23432S3;
+	Fri, 28 Nov 2025 17:35:42 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJCx2sDtbClpo+xBAQ--.23356S2;
+	Fri, 28 Nov 2025 17:35:41 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] LongArch: KVM: Add AVEC support irqchip in kernel
+Date: Fri, 28 Nov 2025 17:11:21 +0800
+Message-Id: <20251128091125.2720148-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251128075033.255821-1-xry111@xry111.site>
-In-Reply-To: <20251128075033.255821-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 28 Nov 2025 16:51:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4miSOrtuXS7E9Uc8wbB+-_7KwN97_mna8L58_sEBLvng@mail.gmail.com>
-X-Gm-Features: AWmQ_bkvVdTKfZ4tKN5jZ4CcYxS4w6r2VPttqUu2QL8hYPhFhtsstQ4O0ZdxljQ
-Message-ID: <CAAhV-H4miSOrtuXS7E9Uc8wbB+-_7KwN97_mna8L58_sEBLvng@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson: Switch 2K2000/3000 GPIO to BYTE_CTRL_MODE
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: linux-gpio@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, 
-	Mingcong Bai <jeffbai@aosc.io>, loongarch@lists.linux.dev, stable@vger.kernel.org, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx2sDtbClpo+xBAQ--.23356S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi, Ruoyao,
+Hi,
 
-On Fri, Nov 28, 2025 at 3:51=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> The manuals of 2K2000 says both BIT_CTRL_MODE and BYTE_CTRL_MODE are
-> supported but the latter is recommended.  Also on 2K3000, per the ACPI
-> DSDT the GPIO controller is compatible with 2K2000, but it fails to
-> operate GPIOs 62 and 63 (and maybe others) using BIT_CTRL_MODE.
-> Using BYTE_CTRL_MODE also makes those 2K3000 GPIOs work.
-Use LS2K2000/3000 instead of 2K2000/3000 will be better, others LGTM.
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+This series adds AVEC-related macros, implements the DINTC in-kernel irqchip device,
+enables irqfd to deliver MSI to DINTC, and supports injecting MSI interrupts
+to the target vCPU.
 
->
-> Fixes: 3feb70a61740 ("gpio: loongson: add more gpio chip support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  drivers/gpio/gpio-loongson-64bit.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
-son-64bit.c
-> index 02f181cb219e..82d4c3aa4d2f 100644
-> --- a/drivers/gpio/gpio-loongson-64bit.c
-> +++ b/drivers/gpio/gpio-loongson-64bit.c
-> @@ -407,11 +407,11 @@ static const struct loongson_gpio_chip_data loongso=
-n_gpio_ls2k2000_data0 =3D {
->
->  static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1=
- =3D {
->         .label =3D "ls2k2000_gpio",
-> -       .mode =3D BIT_CTRL_MODE,
-> -       .conf_offset =3D 0x0,
-> -       .in_offset =3D 0x20,
-> -       .out_offset =3D 0x10,
-> -       .inten_offset =3D 0x30,
-> +       .mode =3D BYTE_CTRL_MODE,
-> +       .conf_offset =3D 0x800,
-> +       .in_offset =3D 0xa00,
-> +       .out_offset =3D 0x900,
-> +       .inten_offset =3D 0xb00,
->  };
->
->  static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2=
- =3D {
-> --
-> 2.52.0
->
+Thanks.
+Song Gao
+
+Song Gao (4):
+  LongArch: KVM: Add some maccros for AVEC
+  LongArch: KVM: Add DINTC device support
+  LongArch: KVM: Add irqfd set dintc msi
+  LongArch: KVM: Add dintc inject msi to the dest vcpu
+
+ arch/loongarch/include/asm/irq.h       |   8 ++
+ arch/loongarch/include/asm/kvm_dintc.h |  22 +++++
+ arch/loongarch/include/asm/kvm_host.h  |   8 ++
+ arch/loongarch/include/uapi/asm/kvm.h  |   4 +
+ arch/loongarch/kvm/Makefile            |   1 +
+ arch/loongarch/kvm/intc/dintc.c        | 118 +++++++++++++++++++++++++
+ arch/loongarch/kvm/interrupt.c         |   1 +
+ arch/loongarch/kvm/irqfd.c             |  28 +++++-
+ arch/loongarch/kvm/main.c              |   5 ++
+ arch/loongarch/kvm/vcpu.c              |  55 ++++++++++++
+ drivers/irqchip/irq-loongarch-avec.c   |   5 +-
+ include/uapi/linux/kvm.h               |   2 +
+ 12 files changed, 254 insertions(+), 3 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_dintc.h
+ create mode 100644 arch/loongarch/kvm/intc/dintc.c
+
+-- 
+2.39.3
+
