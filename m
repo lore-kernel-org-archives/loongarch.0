@@ -1,126 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCB63093C3
-	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 10:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11A230F541
+	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 11:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764324684; cv=none; b=uvEAsfbo9J8hYQPFvnAjcFrGODASCql47FAeT7LuV9cTRO5RiFaejP1BlSnMZpDqUW+JK3n04jRIIbmGpUUR1A+0U+6k8jcPLIM+FH1gRjFLx/oWF9zKoA/1y4hYtPAQitD8jgh2xDrAktIiEIFtztOOCWbXcOp/yu/+dQsN87U=
+	t=1764331160; cv=none; b=rI3PyQj3vDw32Mp2Q/HBSzFipmlGZM3v8QJa7fOlY4arDp3R21zcQs81eM2xOc53evFJS8xxxLyJTYLKUfgs/09u9/ZknQrE6gO0ai/Ttq0vy57OMvFKR7sqZqid05DbBzZiaHF21XwGRcnd7JyX+eeR7KkTz1AjE3QB3gATdNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764324684; c=relaxed/simple;
-	bh=PWsRhLp6z6n29IRXVTS5+3foE+B/FlguofEGjtrPnAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HlkvyHI13M9KHvKGmGVAffKEB6Q5Wal+vDA2nXwmKwXggN5JEuGm2jGOW5Rv8YAJmsGlOIPap08GNBxx0STLVJzI6i2FH7Kl0gG8mUFnIzRz7qBSFfPyugliiCdztq1UIvD0Jmyg21XO3HDZRn7FGgZODH7zZFtQTKeHukPGCfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJqpK8dB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1764331160; c=relaxed/simple;
+	bh=FlbAgT3Fsp2QFJzt34+r8ldrh8ZXqT2HNPYCtznDzS0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BN3C5vg6p7tkHKwETM4Tam8f8bh9vqbVVhWypWOiEFijPVYjolNSoc5IkXzegCuwlZIrEpV5Yr+FprWn4maxV2COFUToESf5ZOXi2LOnmSWDDjqTwZ96UtGdpzYpKldJ+GmRETrhmNDK+f22g79KOgI64uSg5PPt7aE5E/hLZcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OG/DKkZp; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJqpK8dB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DD8C113D0
-	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 10:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764324683;
-	bh=PWsRhLp6z6n29IRXVTS5+3foE+B/FlguofEGjtrPnAU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sJqpK8dBqFSb4b0m9DQYK2iaCS3+Gd3oWB596cjJhVJJk/Zg2OiNnqagNQSREoTKc
-	 BFwKZDjHcBOAiK604Fkf8TtdXStOcWZ1rY5nJJGfFTmIJHGnYtOTKtpvkLHpg4XAPa
-	 J4vFis/tO92GN+97xn7YNGDC/iLi+aRxZVjGqp2bYJTlE4643EWXts7vMqt3Q1AelD
-	 W3o2FD6IbaBn2cpuX96MEOmH02WBhpbJFHoUpuJEim6cupU3bg3FVLhl0vksZ3ZWwq
-	 0PpEuF61HEL+G5WbZ3LdqHhMKuelrI0kzOEaloaKlgldOsoG6gznCCFq9QTKkwb2Uq
-	 RjRS/eD0HIXrg==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b770f4accc0so58002766b.1
-        for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 02:11:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW6tn9LxGz1hhYlK70aYPjZWZ0u6x6AmUFf4FW/o5pL4cNLny7lZlNUfLYmHdQyFAArgfpAWyTiHcs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy4veV8ui24BIbw+sB7uuTJKGyZ6UXi5qkZYWW0/FXI+k1ik4tP
-	Jmv3xfyCqLMzuTOPjkUhV0riZu5APtSmFNYElKc1iQ8XRGn46TzKDSiw9Nua/DxWOhPFKX9yHuB
-	ddMVRmC8Wm7C+i4UNZmJOexo/HNg+lcY=
-X-Google-Smtp-Source: AGHT+IER+7jriN3w9Pv8lhWqhpVubB2j1VJ3WiM2RJPPedEcwCvbKIiBl12aNjVZ1s4Ed6Fb1u3VbAod9cGN/G90Wrw=
-X-Received: by 2002:a17:907:747:b0:b76:4c16:6afe with SMTP id
- a640c23a62f3a-b76c5515075mr1672433466b.28.1764324682207; Fri, 28 Nov 2025
- 02:11:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OG/DKkZp"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4775895d69cso7741145e9.0
+        for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 03:59:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1764331156; x=1764935956; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4vzfBzGWa4ODlWjmtVQJGXcxzSl0srJUX999pZiDEZM=;
+        b=OG/DKkZpzquwvCT/2ouLiURznQr26HHsLwgdDA/wvbI1YldJNFrd6xfWpl8cqufZuk
+         C0iVkDR9bTT5LhBfZb77ibEHORjmIwc8VG2oyPYmqiXLdPtJHqjiP5tLPwNsnLogl6Mr
+         6IZiyZpAe4B7DYDpNZAvuvk8ojUtDBkdflHhlaTX6PCUfF1dmQ3Q2b3YKmkVbLGgf6Ra
+         ExHkA4cUfP95Vg/3WAtfbb6E835zY0l+ToLcz5v2eYh7NzYTGtGEkEa+SL/1M/X7SlGe
+         E72wDiMXz+biIWmNHTjcAp/Zjg4LpRQGeWyAauof47R7R3CdTckFo+DD2gnmbyRgqhVc
+         vNng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764331156; x=1764935956;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4vzfBzGWa4ODlWjmtVQJGXcxzSl0srJUX999pZiDEZM=;
+        b=q+U5cE2YVPZRi3PPY5T84HMI+IALS+kaCZqEN23/3n1oTdPa+IuuH3IsouFKpIF2eA
+         T6g124cbruyVEtp3t00dvErHpo0SRYO+nc6UNsNOITp6gl3oOJ+gz4eYwliN5EKGcA/m
+         KF4lYe3vPkqw9bIa5grCZ9rT9IMlxYvwWY1QPZweFcj6qcZ+j1DjoCEKvcYolw7CYu/2
+         BWyQYQY43K9Z5vnWdrhfVPihRKqAYo5puU6m7i3tD6MGL+uRqGWlORkWVgpoGr5OhqLZ
+         4XEapgkWIiFQ9s196rhirOheOvdzOF1JxCqNJfv89A6LXFqTaoM6tslEIx0omin16P9t
+         U5Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCXPSTgLSp+Oah8mctkedI3lbfAtSG64V69kxbLQhzjXyluIdiVNxOg42jfPfTrzqJgmharcDtF/bds=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMi3pfVoW1laAZLKHJQBnhQI4qvVzBtGEY0++ZMNQJ5bq5Wk/8
+	TuiMDBfmjQ0wTor6xQ5mT0Qme/38PWPdXMaNsuhhPJ/Y8YAM6mh3uwSzh6PRc/Ag0yI=
+X-Gm-Gg: ASbGncseb9XLSwieBtXqE24R+kz2RpMBn8VcQQTap5AAQwzRy7vhSY82ygFi8PKlMfK
+	kP8guARvihlAim32zwY8NT7DS9OG+3xoOsS7W6W3g4KyXYmXHNzwXk8U0934214qt6QQYA09PoN
+	5XeIaoQHoeZnHvgP4CF8rZb8OOBBQ30wxDTlQcnpfnYDTU0AL9V7uo18a5FPMnBjMVze2IPmqrK
+	uJ4YdYlI3tE+dwiU8nPyQkL5vpSmSrCdK4VDCKOSXKQCzX6xXsRCwXOs1vdxdknVI0LrBNnTrO3
+	RgEV1gi8bqqX7tSF0aFkc7rrZshHo/QtaWW6KlRuYWdp/qK4391QFdOu3R0XVszNRqaNG2sPxck
+	XUJhTbdgPCVGxM/5itsJDVXabCQifvJ9pr4ZZoDG64ckJYQdkaIluN5b4TcbL4r67doFu6ej2vc
+	DPZicI
+X-Google-Smtp-Source: AGHT+IEblarfzojmnW5H0khhj7fcQLRiTfu2IrK6EsUrlrrVoe2bsVmRXDHPwcSd7mEc/1Ggu5xZRg==
+X-Received: by 2002:a05:600c:460a:b0:471:700:f281 with SMTP id 5b1f17b1804b1-47904b1b2dfmr89703405e9.25.1764331155967;
+        Fri, 28 Nov 2025 03:59:15 -0800 (PST)
+Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:f3c6:aa54:79d2:8979])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-479111565a1sm81343515e9.5.2025.11.28.03.59.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Nov 2025 03:59:15 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	loongarch@lists.linux.dev,
+	stable@vger.kernel.org,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: loongson: Switch 2K2000/3000 GPIO to BYTE_CTRL_MODE
+Date: Fri, 28 Nov 2025 12:59:14 +0100
+Message-ID: <176433115039.40295.3243947969244377474.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251128075033.255821-1-xry111@xry111.site>
+References: <20251128075033.255821-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
- <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
- <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
- <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
- <aRsH7RTpAah4g5Xr@willie-the-truck> <CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com>
- <39617a3e-c476-abac-8425-bbcece769cdb@loongson.cn> <CAAhV-H4fHBuRpDEDQrExApgnREJaT8JWUJ2700bEPFxDqToi2w@mail.gmail.com>
- <fc4fa66f-15a0-ebe3-0a27-f3f38b03bbdb@loongson.cn> <pgzg3tdudow4ww3tnqdvmppufbpbf6ws5adjjcwc7g3ou7yoih@mzk7iwh7trbe>
-In-Reply-To: <pgzg3tdudow4ww3tnqdvmppufbpbf6ws5adjjcwc7g3ou7yoih@mzk7iwh7trbe>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 28 Nov 2025 18:11:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4t+zYKmVNdjP53XPbvLFtvik1WRGT0NLtQYBU0m=3GVQ@mail.gmail.com>
-X-Gm-Features: AWmQ_bkX3iCrwW5eCVl7oUJENC1CV_iFBcerr6LqbeRJus8VyU5MC421CDs2fZk
-Message-ID: <CAAhV-H4t+zYKmVNdjP53XPbvLFtvik1WRGT0NLtQYBU0m=3GVQ@mail.gmail.com>
-Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 25, 2025 at 9:49=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Sun, Nov 23, 2025 at 11:37:14AM +0800, Tiezhu Yang wrote:
-> > On 11/23/25 10:29, Huacai Chen wrote:
-> > > Is it possible to improve objtool that can handle indirect __noreturn=
- functions?
->
-> Someday that will be possible via a new compiler feature or plugin.  But
-> today it can't be done.
->
-> > > Is it possible to improve objtool that can handle
-> > > OBJECT_FILES_NON_STANDARD event LTO is enabled?
->
-> No, that is purely a makefile construct which should in general be
-> avoided anyway for a variety of reasons.
->
-> > > Is it possible to improve objtool that only ignore __efistub prefix
-> > > for LoongArch?
-> > [...]
-> > static int validate_branch()
-> > {
-> > ...
-> >                       if (arch_is_efistub(func))
-> >                               return 0;
-> >
-> >                       if (file->ignore_unreachables)
-> >                               return 0;
-> >
-> >                       WARN("%s() falls through to next function %s()",
-> >                            func->name, insn_func(insn)->name);
-> >                       func->warned =3D 1;
-> >
-> >                       return 1;
-> > ...
-> > }
->
-> That only silences the warning, it doesn't prevent objtool from doing
-> the actual stack validation or ORC generation.  Neither of which makes
-> sense for libstub.
->
-> And objtool has many other features beyond just stack validation and
-> ORC.  None of those make sense for libstub either.
->
-> To fully exclude all libstub code from objtool, these arch_is_efistub()
-> checks would need to be sprinkled all over the place.
-If the call sites are less than 5, I think it is acceptable.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Huacai
 
->
-> That would be a lot more fragile than just excluding libstub from
-> vmlinux.o in the first place.
->
-> --
-> Josh
+On Fri, 28 Nov 2025 15:50:32 +0800, Xi Ruoyao wrote:
+> The manuals of 2K2000 says both BIT_CTRL_MODE and BYTE_CTRL_MODE are
+> supported but the latter is recommended.  Also on 2K3000, per the ACPI
+> DSDT the GPIO controller is compatible with 2K2000, but it fails to
+> operate GPIOs 62 and 63 (and maybe others) using BIT_CTRL_MODE.
+> Using BYTE_CTRL_MODE also makes those 2K3000 GPIOs work.
+> 
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] gpio: loongson: Switch 2K2000/3000 GPIO to BYTE_CTRL_MODE
+      https://git.kernel.org/brgl/linux/c/dae9750105cf93ac1e156ef91f4beeb53bd64777
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
