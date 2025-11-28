@@ -1,116 +1,373 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D7231197A
-	for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 21:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1390D221299
+	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 01:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764280375; cv=none; b=fVJ+hTdii3+E/gW15G5RkqTWmUhvyWLKA1bMm0zXhf3XMWrqUvid9mwp6cEckHuWCav4dSx6MU2ihiSxrej8HcOSJavaaZZtFa4W0qzdNINlY/L41ktdEbgHAmYsylur/5+0G6sbstofaM0g8E2C91NAOldi885ZX3NUAvOLNDI=
+	t=1764292281; cv=none; b=PNqN5DaFUSYGOV2WPCy42RAO9UxoBXQrFVILUGX7iC3fKBXlW7eDboNFE1TYIalx8i9F+Qanu46VOmu9PFyTwf0h10hEU36BaXv+5mazCfWTQVIoEYj9ta/Ot3VGQu5rnV2AIOtrgKPWGhgg0mRwiTiyGVsViHsak+UGuQAMRmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764280375; c=relaxed/simple;
-	bh=4Pj66Y3umMwlrabEjE1lX88865iL+KzgEAusgbBYyKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sVXHAl1Fuuiua6BG8xGvy5Dg09YhNtHd4iMq5M+Yn6N9KvQP0m5WhEciIVUahpK9N3Vw3OygVSdMqNxnCFgnfkjYq0+MGobxL3BLSbA2buZghb2amCJNEQ1DzXSnr/g54+9/g9JQp7z9cVxfQX17/bedUqExYuMFClG+lJdWtWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEVThCfx; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEVThCfx"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-8843ebf2facso15684596d6.1
-        for <loongarch@lists.linux.dev>; Thu, 27 Nov 2025 13:52:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764280372; x=1764885172; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jttLJ8TWGePu+ngSo1n4o5hp2pzXFGAv2t0XowsTZMg=;
-        b=HEVThCfxLCvNYcrOOV6fVIiMhiGYqu7n2VhS+qVOlHajz3x3FYKTVMGzTfjGypbXPs
-         +SZz3jb1KMev0t+D0D6XXWoL95mongv8rt8j5fkL7B7+EDVD00lB4/mEJMru7taOd/7l
-         9sFrhJh5tn1r8yyZmSfu9Hrr9FtD5ZPPklQnyh7sGe35lgwUpVA28oLvZOfS7Ro1Ojc0
-         gNz4y8NcVicQdl0/AJv1GPbQ+Z+xhDbi6Wn6/xSnYQ77AUXUx3S0acIklek2c6Gb0dBe
-         WrSQK6OdeiqqOPExD3alanORD2164VKn+ZUOmNkf1ClBEfkN8teJeeCzKkrq7MtSN3sr
-         3HDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764280372; x=1764885172;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jttLJ8TWGePu+ngSo1n4o5hp2pzXFGAv2t0XowsTZMg=;
-        b=EDV63ET01Pq9hAvWUNrrKJIjP82acsLrIIvpsKxZrkrYqJw3m7WgQx7RNK7UFaT+9M
-         V4vSWKtGDMD0IQ8/9oQ5xQpWxmD4zTolI6gP0pac3qgMW4O5F6jH4uKf9cxqIubJvX8s
-         fjzLwuEtF07MZ/t19JpoTvEgEL9cgffP0aNjh1GmFQCiyd6qlyJ2VHGVlK46cEStCeCY
-         1Dq7Rlq91Zx/mCsti64DSE23dJ4o4XAuYjRIjB0UynLhtG1fG6bFaJY/QsXkOlm3hYQz
-         /mu9LOeIBPhX5IFtxG8Mku/oXflf5uh0vNLHVNx92W+yzMvYhCkPMoJcHmRBBVkpp55A
-         ilqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKjmiiNMFIj7zQzVacbf+muXZWqSmUZejZ7qfWBJN2Cv/6E5YyQ5eqsEAPuQj2aWJ1hRQAteEcnQ8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwRdAYkf09e4TSNTYSk+Kvt2e3ss8Mzr6yF1/GShdOOjcMH/LhO
-	yU7DVLmOtca/IStmdmOSG4PAdPcSqiNv89sBrYN/IwYMtcKeVpG1jU7a7nL267J23oUVMz8MyhK
-	6oSse/yRsrkekxVK7/RMQnk8bkWlrQDc=
-X-Gm-Gg: ASbGncu2+NdU2op/sw8WX5kFzyaWDeJXNDmzPpJVlL6UowXF+jIFX1REixagRek18N5
-	MSnjgb/0sqYkXWwPPsv1Mp/XAW0iJ+cP/Yjgsd0tpqiGoxrwj9Y3pwgmt4duSaCLDNY2WiJdU/1
-	lHWHSeVQUcaTLdzJegW8yaAmfzxu/SbQ25IxfBWN7Liv7BcAqqmNftecDQj7zSQ4vMFOWe5MW1Z
-	byE/I4vHcyI+9T/837AwcPqL9pB2DtbjkNIwe2lCys7EXj980TG2X+UkYOm3ju/08TenA==
-X-Google-Smtp-Source: AGHT+IGi53ssJfVFEVeCKpbOH4PM/Uba/gyP2VL/mpIj2xLrn6No0jDJl3wOawm61ht0VMTz1HcUV32B95MPtil1ISg=
-X-Received: by 2002:a05:6214:19c9:b0:880:49bd:e217 with SMTP id
- 6a1803df08f44-8847c486a0bmr364162506d6.10.1764280372486; Thu, 27 Nov 2025
- 13:52:52 -0800 (PST)
+	s=arc-20240116; t=1764292281; c=relaxed/simple;
+	bh=EUp8AjSGMdj/YM09FtrLeBBHO/XYJbgs7aSuJXicHNI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=H4v0xLU//Tiux2QA5ARJ3owSG1BE9YLePTozo2SALO8/3pvIohoognkTrhTdGCP1jWQwuXEgNH5cyIvtEKZLm2I5vIsdu6yk6qlVB0Pa4TFR3akJyov3hKuM8VnRC+yEgNEAA27LhX6JCf36mdzO6XAeyv116bP7Hv9bRb3c5pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxmdGy9ihpoe8oAA--.22874S3;
+	Fri, 28 Nov 2025 09:11:14 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxZOSw9ihpfoxBAQ--.42120S3;
+	Fri, 28 Nov 2025 09:11:14 +0800 (CST)
+Subject: Re: [PATCH v3 0/6] KVM: LoongArch: selftests: Add timer test case
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>,
+ Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+ <seanjc@google.com>, linux-kernel@vger.kernel.org
+References: <20251120065758.3064368-1-maobibo@loongson.cn>
+ <CAAhV-H5+suuN7Qf6qx6hVniy2KCnHf2rVPebR4Gxms-SbTz6Fg@mail.gmail.com>
+ <0e125e35-8044-a6ce-998f-1221da0e827d@loongson.cn>
+ <CAAhV-H57Ee-KpmYuRLnhOXGsJtBrzHPTqNTW9uj8EkiDUMp3CA@mail.gmail.com>
+ <1a3698c8-f31e-fb32-c00a-7372450e6196@loongson.cn>
+ <CAAhV-H7VMAwcdG3LqKL2sdS==G5=ARWtwBcYq65y15+0aWUMtQ@mail.gmail.com>
+ <284da6b1-8703-a9d7-f564-236ade3986a8@loongson.cn>
+ <CAAhV-H4phQ-VK0YSip6+-fLwfkLb052fEcQFOATkmQZB73=J8Q@mail.gmail.com>
+ <94724535-94cd-c256-2080-f87f70226502@loongson.cn>
+ <CAAhV-H7WEMTJWROBxm1hYNu2PQWZvBg2xTy5ACeO+E3JaZG1FQ@mail.gmail.com>
+ <2732fb28-be67-9c7d-9146-e0fd5358f88c@loongson.cn>
+ <CAAhV-H6iyqNU0p0vaWRTNG2iseZUZULgZLAaQ0LNr_HmCL43VQ@mail.gmail.com>
+ <bcea143f-fc8e-d40f-3fec-7dfe64bfa0c4@loongson.cn>
+ <CAAhV-H5PxgfbWQDqLr9apUi40kk_V1OWGoHvwceJbFHPa0FH1g@mail.gmail.com>
+ <8b99f6a4-cbcb-9249-610a-3adffa966fdc@loongson.cn>
+ <CAAhV-H7h1u4DiYMyWqitxhsBogfen81hOBM5UbrqHFn3+rhO2A@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <980d4749-ff0b-e618-8008-6d1d62c0acdd@loongson.cn>
+Date: Fri, 28 Nov 2025 09:08:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251127011438.6918-1-21cnbao@gmail.com> <aSfO7fA-04SBtTug@casper.infradead.org>
- <CAGsJ_4zyZeLtxVe56OSYQx0OcjETw2ru1FjZjBOnTszMe_MW2g@mail.gmail.com>
- <aSip2mWX13sqPW_l@casper.infradead.org> <CAGsJ_4zWGYiu1wv=D7bV5zd0h8TEHTCARhyu_9_gL36PiNvbHQ@mail.gmail.com>
-In-Reply-To: <CAGsJ_4zWGYiu1wv=D7bV5zd0h8TEHTCARhyu_9_gL36PiNvbHQ@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 28 Nov 2025 05:52:40 +0800
-X-Gm-Features: AWmQ_blYpw-GPSWAvHSSwIXD1PKL1aIx4iCUo78DT2gXpdF1CZ018OhwLE5_XJY
-Message-ID: <CAGsJ_4wvaieWtTrK+koM3SFu9rDExkVHX5eUwYiEotVqP-ndEQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] mm: continue using per-VMA lock when retrying
- page faults after I/O
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H7h1u4DiYMyWqitxhsBogfen81hOBM5UbrqHFn3+rhO2A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxZOSw9ihpfoxBAQ--.42120S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9fXoWfJr1kArWUtFyxGw15Gw13Jrc_yoW8JFWrXo
+	WrJr17Jr18Jr1UJF1UJw1UJr1UJw1UJr1UJryUJr1UJF1Utw1UJr1UJr1UJr47Jr1UJr1U
+	JF1UJr1UAry7Jr1Ul-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUY27kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
+	UUUU=
 
-On Fri, Nov 28, 2025 at 4:29=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Fri, Nov 28, 2025 at 3:43=E2=80=AFAM Matthew Wilcox <willy@infradead.o=
-rg> wrote:
-> >
-> > [dropping individuals, leaving only mailing lists.  please don't send
-> > this kind of thing to so many people in future]
 
-Apologies, I missed this one.
 
-The output comes from ./scripts/get_maintainer.pl. If you think the group i=
-s
-too large, I guess we should at least include Suren, Lorenzo, David, and
-a few others in the discussion?
+On 2025/11/27 下午10:38, Huacai Chen wrote:
+> On Thu, Nov 27, 2025 at 9:02 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2025/11/27 下午3:11, Huacai Chen wrote:
+>>> On Thu, Nov 27, 2025 at 3:03 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/11/27 下午2:54, Huacai Chen wrote:
+>>>>> On Thu, Nov 27, 2025 at 2:48 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2025/11/27 下午2:42, Huacai Chen wrote:
+>>>>>>> On Thu, Nov 27, 2025 at 2:21 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2025/11/27 上午10:51, Huacai Chen wrote:
+>>>>>>>>> On Thu, Nov 27, 2025 at 10:48 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> On 2025/11/27 上午10:45, Huacai Chen wrote:
+>>>>>>>>>>> On Thu, Nov 27, 2025 at 10:37 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 2025/11/27 上午10:09, Huacai Chen wrote:
+>>>>>>>>>>>>> On Thu, Nov 27, 2025 at 9:08 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 2025/11/26 下午9:43, Huacai Chen wrote:
+>>>>>>>>>>>>>>> On Mon, Nov 24, 2025 at 10:17 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> On 2025/11/24 上午10:03, Huacai Chen wrote:
+>>>>>>>>>>>>>>>>> On Mon, Nov 24, 2025 at 9:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> On 2025/11/21 下午10:08, Huacai Chen wrote:
+>>>>>>>>>>>>>>>>>>> Hi, Bibo,
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> On Thu, Nov 20, 2025 at 2:58 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> This patchset adds timer test case for LoongArch system, it is based
+>>>>>>>>>>>>>>>>>>>> on common arch_timer test case. And it includes one-shot and period mode
+>>>>>>>>>>>>>>>>>>>> timer interrupt test, software emulated timer function and time counter
+>>>>>>>>>>>>>>>>>>>> test.
+>>>>>>>>>>>>>>>>>>> I test this series on top of 6.18-rc6 with Loongson-3A5000, sometimes
+>>>>>>>>>>>>>>>>>>> it passes, sometimes I get:
+>>>>>>>>>>>>>>>>>>> [root@fedora kvm]# ./arch_timer
+>>>>>>>>>>>>>>>>>>> Random seed: 0x6b8b4567
+>>>>>>>>>>>>>>>>>>> Guest assert failed,  vcpu 2; stage; 0; iter: 1
+>>>>>>>>>>>>>>>>>>> ==== Test Assertion Failure ====
+>>>>>>>>>>>>>>>>>>>             loongarch/arch_timer.c:79: irq_iter == 0
+>>>>>>>>>>>>>>>>>>>             pid=60138 tid=60142 errno=4 - Interrupted system call
+>>>>>>>>>>>>>>>>>>>                1  0x00000001200037cf: test_vcpu_run 于 arch_timer.c:70
+>>>>>>>>>>>>>>>>>>>                2  0x00007ffff2449f27: ?? ??:0
+>>>>>>>>>>>>>>>>>>>                3  0x00007ffff24c0633: ?? ??:0
+>>>>>>>>>>>>>>>>>>>             irq_iter = 0x1.
+>>>>>>>>>>>>>>>>>>>             Guest period timer interrupt was not triggered within the specified
+>>>>>>>>>>>>>>>>>>>             interval, try to increase the error margin by [-e] option.
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> Is this as expected, or something is wrong?
+>>>>>>>>>>>>>>>>>> There is problem with that. In generic the vCPU task is rescheduled on
+>>>>>>>>>>>>>>>>>> other CPUs or preempted, so period timer interrupt is not handled in
+>>>>>>>>>>>>>>>>>> specified time.
+>>>>>>>>>>>>>>>>> Then this series need to be updated, or problem comes from other places?
+>>>>>>>>>>>>>>>> I think this series need be updated, test success criteria with period
+>>>>>>>>>>>>>>>> timer need consider this situation. Let me check how to handle this.
+>>>>>>>>>>>>>>> Any updates available?
+>>>>>>>>>>>>>> It can be solved by modifying udelay() method with get_cycles() or using
+>>>>>>>>>>>>>> cpu loop calculation method.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> --- a/tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>>>>>>>>>>>>> +++ b/tools/testing/selftests/kvm/include/loongarch/arch_timer.hYes, no common part for it, but it can be a common problem. If other
+>>>>>>>>>> architectures have problems they should also modify their own
+>>>>>>>>>> __delay(), right?
+>>>>>>>>>>>>>> @@ -71,10 +71,17 @@ static inline void timer_irq_disable(void)
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>          static inline void __delay(uint64_t cycles)
+>>>>>>>>>>>>>>          {
+>>>>>>>>>>>>>> -       uint64_t start = timer_get_cycles();
+>>>>>>>>>>>>>> -
+>>>>>>>>>>>>>> -       while ((timer_get_cycles() - start) < cycles)
+>>>>>>>>>>>>>> -               cpu_relax();
+>>>>>>>>>>>>>> +       uint64_t start, next, loops = 0;
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +       start = timer_get_cycles();
+>>>>>>>>>>>>>> +       while (loops < cycles) {
+>>>>>>>>>>>>>> +               next = timer_get_cycles();
+>>>>>>>>>>>>>> +               /* only count one cycle if VM is preempted */
+>>>>>>>>>>>>>> +               if (next > start) {
+>>>>>>>>>>>>>> +                       loops++;
+>>>>>>>>>>>>>> +                       start = next;
+>>>>>>>>>>>>>> +               }
+>>>>>>>>>>>>>> +       }
+>>>>>>>>>>>>>>          }
+>>>>>>>>>>>>> Looks good. But ARM64 and RISC-V also use a simple implementation of
+>>>>>>>>>>>> there is no period test on them.
+>>>>>>>>>>> I think the one-shot test can also have this problem if the CPU is
+>>>>>>>>>>> preempted for a very long time.
+>>>>>>>>>>>
+>>>>>>>>>>>>> __delay(). So should this problem be thought of as a common problem?
+>>>>>>>>>>>>> If yes, maybe we can keep __delay() as is and wait for the common
+>>>>>>>>>>>>> parts to be fixed.
+>>>>>>>>>>>> Also there is no common udelay() API, it is arch specific. Someone may
+>>>>>>>>>>>> argue that skipping stolen cycles is not generic for __delay(), other
+>>>>>>>>>>>> test cases want accurate cycles rather than skipping stolen cycles. It
+>>>>>>>>>>>> is timer test case specific.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Or adding another api __delay_loops() or keep it as is and wait for
+>>>>>>>>>>>> other architectures, there should be no common part for it.
+>>>>>>>>>>> Yes, no common part for it, but it can be a common problem. If other
+>>>>>>>>>>> architectures have problems they should also modify their own
+>>>>>>>>>>> __delay(), right?
+>>>>>>>>>> yes, what to do then?
+>>>>>>>>> Merge window is coming, let's keep it as is. And this problem only
+>>>>>>>>> exist when the background load is high (so preemption happens easily),
+>>>>>>>>> I think this is not the usual case.
+>>>>>>>> Another method is to modify period timer test case, calling udelay with
+>>>>>>>> loop times rather than one time, something like this:
+>>>>>>>> --- a/tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>>>>>>> +++ b/tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>>>>>>> @@ -75,7 +75,7 @@ static void guest_test_oneshot_timer(uint32_t cpu)
+>>>>>>>>
+>>>>>>>>       static void guest_test_period_timer(uint32_t cpu)
+>>>>>>>>       {
+>>>>>>>> -       uint32_t irq_iter;
+>>>>>>>> +       uint32_t irq_iter, config_iter;
+>>>>>>>>              uint64_t us;
+>>>>>>>>              struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
+>>>>>>>>
+>>>>>>>> @@ -84,7 +84,8 @@ static void guest_test_period_timer(uint32_t cpu)
+>>>>>>>>              us = msecs_to_usecs(test_args.timer_period_ms) +
+>>>>>>>> test_args.timer_err_margin_us;
+>>>>>>>>              timer_set_next_cmp_ms(test_args.timer_period_ms, true);
+>>>>>>>>              /* Setup a timeout for the interrupt to arrive */
+>>>>>>>> -       udelay(us * test_args.nr_iter);
+>>>>>>>> +       for (config_iter = 0; config_iter < test_args.nr_iter;
+>>>>>>>> config_iter++)
+>>>>>>>> +               udelay(us);
+>>>>>>> This can reduce the probability but still cause problem if the
+>>>>>>> background CPU load is very high. So I suggest keep it as is.
+>>>>>> If merge window is close, one fix can be post in later.
+>>>>>>
+>>>>>> Even if the background CPU load is high, timer interrupt will happen
+>>>>>> every time udelay() is called. So total times of timer interrupt
+>>>>>> triggered will meet the test case requirements.
+>>>>> I said it only "reduce the probability" because the one-shot test case
+>>>>> is also observed errors. If we use "retry method" to fix, then
+>>>>> one-shot test case is also needed.
+>>>> one-shot test case has already used split udelay() method. I observed
+>>>> one-shot test case failure on 3D6000 also, it is KVM timer emulation issue.
+>>> Yes, one-shot test case use udelay() in a loop, but it also calls
+>>> __GUEST_ASSERT() in a loop. So it reports errors even if only one of
+>>> udelay() timeouts.
+>> Sorry, I do not understand what is your meaning. what is the problem
+>> with one-shot test case? Do you mean there is problem with one-shot
+>> testcase also?
+> Sorry for confusing description.
+> Yes, one-shot test has problems and the reason is similar to period
+> test, if I understand correctly.
+> 1. The error report comes from __GUEST_ASSERT(), right?
+> 2. The reason of period test error is interrupt hasn't triggered
+> during udelay(), right?
+> 3. For the one-shot test, there is also a udelay() and a
+> __GUEST_ASSERT() in every iteration, right?
+> 4. In any iteration of the loop, if a interrupt hasn't triggered
+> during udelay(), __GUEST_ASSERT() will report errors, right?
+all are right. only that in one loop why a interrupt is not triggered 
+during udelay()? is the udelay() too short or other reasons?
 
-[...]
+If udelay() take longer time than expected, timer interrupt should 
+happen between udelay() and  __GUEST_ASSERT(), is that right?
 
->
-> >
-> > This use case also manages to get utterly hung-up trying to do reclaim
-> > today with the mmap_lock held.  SO it manifests somewhat similarly to
-> > your problem (everybody ends up blocked on mmap_lock) but it has a
-> > rather different root cause.
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Well, let's keep it as is for the present.
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo Mao
+>>>>>>>
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Regards
+>>>>>>>> Bibo Mao
+>>>>>>>>>
+>>>>>>>>> Huacai
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Huacai
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Regards
+>>>>>>>>>>>> Bibo Mao
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Regards
+>>>>>>>>>>>>>> Bibo Mao
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Regards
+>>>>>>>>>>>>>>>> Bibo Mao
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Huacai
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> Regards
+>>>>>>>>>>>>>>>>>> Bibo Mao
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>> Hucai
+>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>>>>>>>> v2 ... v3:
+>>>>>>>>>>>>>>>>>>>>             1. Adjust order about patch 2 and patch 3
+>>>>>>>>>>>>>>>>>>>>             2. Add test case with alphabetical order
+>>>>>>>>>>>>>>>>>>>>             3. Merge one-shot and period timer interrupt test case into one
+>>>>>>>>>>>>>>>>>>>>             4. Only add LoongArch specific modification with common file
+>>>>>>>>>>>>>>>>>>>>                Makefile.kvm
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> v1 ... v2:
+>>>>>>>>>>>>>>>>>>>>             1. Restore PC and PRMD after exception handler
+>>>>>>>>>>>>>>>>>>>>             2. Split patch 4 into two small patches with period timer test and
+>>>>>>>>>>>>>>>>>>>>                time counter test
+>>>>>>>>>>>>>>>>>>>>             3. With time counter test, set time count with 0 when create VM. And
+>>>>>>>>>>>>>>>>>>>>                verify time count starts from 0 in guest code
+>>>>>>>>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>>>>>>>> Bibo Mao (6):
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add system registers save and restore on
+>>>>>>>>>>>>>>>>>>>>               exception
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add basic interfaces
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add exception handler register interface
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add timer interrupt test case
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add SW emulated timer test
+>>>>>>>>>>>>>>>>>>>>             KVM: LoongArch: selftests: Add time counter test
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>            tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+>>>>>>>>>>>>>>>>>>>>            .../kvm/include/loongarch/arch_timer.h        |  84 ++++++++
+>>>>>>>>>>>>>>>>>>>>            .../kvm/include/loongarch/processor.h         |  81 +++++++-
+>>>>>>>>>>>>>>>>>>>>            .../selftests/kvm/lib/loongarch/exception.S   |   6 +
+>>>>>>>>>>>>>>>>>>>>            .../selftests/kvm/lib/loongarch/processor.c   |  47 ++++-
+>>>>>>>>>>>>>>>>>>>>            .../selftests/kvm/loongarch/arch_timer.c      | 194 ++++++++++++++++++
+>>>>>>>>>>>>>>>>>>>>            6 files changed, 410 insertions(+), 3 deletions(-)
+>>>>>>>>>>>>>>>>>>>>            create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
+>>>>>>>>>>>>>>>>>>>>            create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>> base-commit: 23cb64fb76257309e396ea4cec8396d4a1dbae68
+>>>>>>>>>>>>>>>>>>>> --
+>>>>>>>>>>>>>>>>>>>> 2.39.3
+>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
+>>>>
+>>
+>>
 
-If I understand the use case correctly, I believe retrying with the per-VMA
-lock would also be very helpful. Previously, we always retried using
-mmap_lock, which can be difficult to acquire under heavy contention, leadin=
-g
-to long latency while the pages might be reclaimed. With the per-VMA lock, =
-it
-is much easier to hold and proceed with the work.
-
-Thanks
-Barry
