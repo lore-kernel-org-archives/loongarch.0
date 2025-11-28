@@ -1,113 +1,126 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F5942FFF95
-	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 09:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCB63093C3
+	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 10:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764323064; cv=none; b=bJj2XdXw2Rxmrs76ClDZVL4HdP5A+3SSowHpWjq74HbC0ARumZ3KsOzOs/X9nTJbwAyUa8sUuCTpWTHUriJjwIqUxfeKg+txY+2Y92MS60T/NE45IdpZ63E1yxPe1o+vyqzawvNa9rjxD8ZY31N4BHyqeY0c7e/RHODJaFbl9eQ=
+	t=1764324684; cv=none; b=uvEAsfbo9J8hYQPFvnAjcFrGODASCql47FAeT7LuV9cTRO5RiFaejP1BlSnMZpDqUW+JK3n04jRIIbmGpUUR1A+0U+6k8jcPLIM+FH1gRjFLx/oWF9zKoA/1y4hYtPAQitD8jgh2xDrAktIiEIFtztOOCWbXcOp/yu/+dQsN87U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764323064; c=relaxed/simple;
-	bh=UNzCbSy2W2YDrIIKQDgzM+Oe91LtgyoMwXE5MdAHZ/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aADb+ATmc3lV8MkFDRSlHjnnkdawQSXR8kDSvZz6blmDFySRtvGNhFJNayQiRjmYkPicwQvrkEagimUjv8Z/xTD37p7Ng34WKCDnl06aa4wyl6ar1gomjiNkDHzXRZ2sT1ZevxpXruIJz/21U7R0bJcm3XFDZ3zq1m1kkNW6APc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.219])
-	by gateway (Coremail) with SMTP id _____8Cxf9PibilpJhApAA--.22233S3;
-	Fri, 28 Nov 2025 17:44:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.219])
-	by front1 (Coremail) with SMTP id qMiowJDxK8HXbilpRe5BAQ--.27776S2;
-	Fri, 28 Nov 2025 17:44:01 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch KVM changes for v6.19
-Date: Fri, 28 Nov 2025 17:43:43 +0800
-Message-ID: <20251128094343.621879-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1764324684; c=relaxed/simple;
+	bh=PWsRhLp6z6n29IRXVTS5+3foE+B/FlguofEGjtrPnAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HlkvyHI13M9KHvKGmGVAffKEB6Q5Wal+vDA2nXwmKwXggN5JEuGm2jGOW5Rv8YAJmsGlOIPap08GNBxx0STLVJzI6i2FH7Kl0gG8mUFnIzRz7qBSFfPyugliiCdztq1UIvD0Jmyg21XO3HDZRn7FGgZODH7zZFtQTKeHukPGCfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJqpK8dB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJqpK8dB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DD8C113D0
+	for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 10:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764324683;
+	bh=PWsRhLp6z6n29IRXVTS5+3foE+B/FlguofEGjtrPnAU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sJqpK8dBqFSb4b0m9DQYK2iaCS3+Gd3oWB596cjJhVJJk/Zg2OiNnqagNQSREoTKc
+	 BFwKZDjHcBOAiK604Fkf8TtdXStOcWZ1rY5nJJGfFTmIJHGnYtOTKtpvkLHpg4XAPa
+	 J4vFis/tO92GN+97xn7YNGDC/iLi+aRxZVjGqp2bYJTlE4643EWXts7vMqt3Q1AelD
+	 W3o2FD6IbaBn2cpuX96MEOmH02WBhpbJFHoUpuJEim6cupU3bg3FVLhl0vksZ3ZWwq
+	 0PpEuF61HEL+G5WbZ3LdqHhMKuelrI0kzOEaloaKlgldOsoG6gznCCFq9QTKkwb2Uq
+	 RjRS/eD0HIXrg==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b770f4accc0so58002766b.1
+        for <loongarch@lists.linux.dev>; Fri, 28 Nov 2025 02:11:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW6tn9LxGz1hhYlK70aYPjZWZ0u6x6AmUFf4FW/o5pL4cNLny7lZlNUfLYmHdQyFAArgfpAWyTiHcs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy4veV8ui24BIbw+sB7uuTJKGyZ6UXi5qkZYWW0/FXI+k1ik4tP
+	Jmv3xfyCqLMzuTOPjkUhV0riZu5APtSmFNYElKc1iQ8XRGn46TzKDSiw9Nua/DxWOhPFKX9yHuB
+	ddMVRmC8Wm7C+i4UNZmJOexo/HNg+lcY=
+X-Google-Smtp-Source: AGHT+IER+7jriN3w9Pv8lhWqhpVubB2j1VJ3WiM2RJPPedEcwCvbKIiBl12aNjVZ1s4Ed6Fb1u3VbAod9cGN/G90Wrw=
+X-Received: by 2002:a17:907:747:b0:b76:4c16:6afe with SMTP id
+ a640c23a62f3a-b76c5515075mr1672433466b.28.1764324682207; Fri, 28 Nov 2025
+ 02:11:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxK8HXbilpRe5BAQ--.27776S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WryDAry8try3tFWUXrykCrX_yoW5Jry5pa
-	yfurnxKr4rGFy3Ar9rJ34kXryUtFn7Gr1Iv3W3try8Ar42vry8Jr1xKFykAFy3G3ykJry0
-	vFyfGw15W3WUJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <CAMj1kXEaxxcWTTANWeEMNjYDymdL5Fxy2B=XBF4RGtteEkfinw@mail.gmail.com>
+ <421c08e1-255b-447b-b5e3-ee6544fbefd2@loongson.cn> <CAAhV-H5KsFShDJ_Cxu+1_ces8oojn8+S-7PLmE7aUj8gX5_GEw@mail.gmail.com>
+ <32s3lvzfu6jkyho7qenrqbsm5wkgjnzn2imdp6tfwycmyxpzgu@kg5367uxmxii>
+ <CAAhV-H47fzaKcMhgLWWOTxB+srBsg85-eK0LW1vQXQnvq32-+w@mail.gmail.com>
+ <aRsH7RTpAah4g5Xr@willie-the-truck> <CAAhV-H4AasfFet_Gi_mVyte3RPMH3qBS73dBfF-=Gd7HJ6ZPEw@mail.gmail.com>
+ <39617a3e-c476-abac-8425-bbcece769cdb@loongson.cn> <CAAhV-H4fHBuRpDEDQrExApgnREJaT8JWUJ2700bEPFxDqToi2w@mail.gmail.com>
+ <fc4fa66f-15a0-ebe3-0a27-f3f38b03bbdb@loongson.cn> <pgzg3tdudow4ww3tnqdvmppufbpbf6ws5adjjcwc7g3ou7yoih@mzk7iwh7trbe>
+In-Reply-To: <pgzg3tdudow4ww3tnqdvmppufbpbf6ws5adjjcwc7g3ou7yoih@mzk7iwh7trbe>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 28 Nov 2025 18:11:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4t+zYKmVNdjP53XPbvLFtvik1WRGT0NLtQYBU0m=3GVQ@mail.gmail.com>
+X-Gm-Features: AWmQ_bkX3iCrwW5eCVl7oUJENC1CV_iFBcerr6LqbeRJus8VyU5MC421CDs2fZk
+Message-ID: <CAAhV-H4t+zYKmVNdjP53XPbvLFtvik1WRGT0NLtQYBU0m=3GVQ@mail.gmail.com>
+Subject: Re: [PATCH v2] efistub: Only link libstub to final vmlinux
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	loongarch@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit ac3fd01e4c1efce8f2c054cdeb2ddd2fc0fb150d:
+On Tue, Nov 25, 2025 at 9:49=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+>
+> On Sun, Nov 23, 2025 at 11:37:14AM +0800, Tiezhu Yang wrote:
+> > On 11/23/25 10:29, Huacai Chen wrote:
+> > > Is it possible to improve objtool that can handle indirect __noreturn=
+ functions?
+>
+> Someday that will be possible via a new compiler feature or plugin.  But
+> today it can't be done.
+>
+> > > Is it possible to improve objtool that can handle
+> > > OBJECT_FILES_NON_STANDARD event LTO is enabled?
+>
+> No, that is purely a makefile construct which should in general be
+> avoided anyway for a variety of reasons.
+>
+> > > Is it possible to improve objtool that only ignore __efistub prefix
+> > > for LoongArch?
+> > [...]
+> > static int validate_branch()
+> > {
+> > ...
+> >                       if (arch_is_efistub(func))
+> >                               return 0;
+> >
+> >                       if (file->ignore_unreachables)
+> >                               return 0;
+> >
+> >                       WARN("%s() falls through to next function %s()",
+> >                            func->name, insn_func(insn)->name);
+> >                       func->warned =3D 1;
+> >
+> >                       return 1;
+> > ...
+> > }
+>
+> That only silences the warning, it doesn't prevent objtool from doing
+> the actual stack validation or ORC generation.  Neither of which makes
+> sense for libstub.
+>
+> And objtool has many other features beyond just stack validation and
+> ORC.  None of those make sense for libstub either.
+>
+> To fully exclude all libstub code from objtool, these arch_is_efistub()
+> checks would need to be sprinkled all over the place.
+If the call sites are less than 5, I think it is acceptable.
 
-  Linux 6.18-rc7 (2025-11-23 14:53:16 -0800)
+Huacai
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.19
-
-for you to fetch changes up to 0f90fa6e2e9d98349492d9968c11ceaf2f958c98:
-
-  KVM: LoongArch: selftests: Add time counter test case (2025-11-28 14:49:48 +0800)
-
-----------------------------------------------------------------
-LoongArch KVM changes for v6.19
-
-1. Get VM PMU capability from HW GCFG register.
-2. Add AVEC basic support.
-3. Use 64-bit register definition for EIOINTC.
-4. Add KVM timer test cases for tools/selftests.
-
-----------------------------------------------------------------
-Bibo Mao (8):
-      LoongArch: KVM: Get VM PMU capability from HW GCFG register
-      LoongArch: KVM: Use 64-bit register definition for EIOINTC
-      KVM: LoongArch: selftests: Add system registers save/restore on exception
-      KVM: LoongArch: selftests: Add basic interfaces
-      KVM: LoongArch: selftests: Add exception handler register interface
-      KVM: LoongArch: selftests: Add timer interrupt test case
-      KVM: LoongArch: selftests: Add SW emulated timer test case
-      KVM: LoongArch: selftests: Add time counter test case
-
-Song Gao (1):
-      LoongArch: KVM: Add AVEC basic support
-
- arch/loongarch/include/asm/kvm_eiointc.h           |  55 +-----
- arch/loongarch/include/asm/kvm_host.h              |   8 +
- arch/loongarch/include/asm/kvm_vcpu.h              |   1 +
- arch/loongarch/include/asm/loongarch.h             |   2 +
- arch/loongarch/include/uapi/asm/kvm.h              |   1 +
- arch/loongarch/kvm/intc/eiointc.c                  |  80 ++++-----
- arch/loongarch/kvm/interrupt.c                     |  15 +-
- arch/loongarch/kvm/vcpu.c                          |  19 +-
- arch/loongarch/kvm/vm.c                            |  40 +++--
- tools/testing/selftests/kvm/Makefile.kvm           |   1 +
- .../selftests/kvm/include/loongarch/arch_timer.h   |  85 +++++++++
- .../selftests/kvm/include/loongarch/processor.h    |  81 ++++++++-
- .../selftests/kvm/lib/loongarch/exception.S        |   6 +
- .../selftests/kvm/lib/loongarch/processor.c        |  47 ++++-
- tools/testing/selftests/kvm/loongarch/arch_timer.c | 200 +++++++++++++++++++++
- 15 files changed, 534 insertions(+), 107 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/arch_timer.h
- create mode 100644 tools/testing/selftests/kvm/loongarch/arch_timer.c
-
+>
+> That would be a lot more fragile than just excluding libstub from
+> vmlinux.o in the first place.
+>
+> --
+> Josh
