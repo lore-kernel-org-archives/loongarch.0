@@ -1,122 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDCA2F6579;
-	Mon,  1 Dec 2025 12:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A7D31A7E1
+	for <loongarch@lists.linux.dev>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764591537; cv=none; b=VboCXOCoqhk5zJDwFEYJQP+5iaquicB8W1lNYgQ3aUOBKQaDiL3SXON/A3QZzEBfTBVonMeZ+3Qrco9kn7ISAopIoapd8msjqs8niohdsQ1byAB2HO4Wneb4sQwLCdKolRkrAgtVheDGwb6/1bvwBE1QFbAWPEMCB8iF+nOZklg=
+	t=1764600314; cv=none; b=Vacatvu7wXvROCyZtijOSf2Ku4goV7xATlhn8XHz/OIPAjPLLDVk9xO4uMJXs33js8V8je3LMcr9NArMwvJpwFNy9d0DbYRDis/15I8+3CVUteW37XJk4bmTSmAwS6ozHTJ1F27OG3DSs2aD/j4enuH0WZ8ceSJgFPMkkqAbFhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764591537; c=relaxed/simple;
-	bh=36GWoyOiBWKUseEdU0FZPUtWqcXD22lEp7PWmJNpUQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFGQM9Mu6oupLQ8+829cjtNCot4JefdfJB2kHPu689M3F1muCno7qr3VsIne5+RnBPP93fNX3Whyw63INT+sglefNM5xbfWwFNOk/z2kWERz63dl5HvHvZ9SYLmhUtLvXPGOoasHUwI/v09ugv+fvOsIwARBc8GK7BoULPkjfvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMeJrqfW; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1764600314; c=relaxed/simple;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fK/HST9w1pf2tm+LYspF4/YdA4XBItzp6lvM0I72Tzqf6I7i54pXBNysxL5h3+p54LCIbk47Gup83cfQy72iEVytjjIl578GLccQAJBzdm4wltvCS3hvZDFr7D5MEuYTfAxYouQ1Yu9kZ8cjSUPWSUXUEV7hfgSkwHlmiKkkYM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMtGdgGY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMeJrqfW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764591535; x=1796127535;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=36GWoyOiBWKUseEdU0FZPUtWqcXD22lEp7PWmJNpUQw=;
-  b=OMeJrqfW+OETXdx2pQcEjKAqpmmOmMkYPp8EJPxnL0jeYaE6lDM8jnsI
-   ubWcxUSlVLgsLWue034A5uVjLSHyygFdgEUc/YFV8XPvA/eBEdNA8/mIB
-   SwBnQ+WrVn7MKI3m4lybQqqfUtPPp2G7opIRqLGFbyRryI5Ki4s+yH9AE
-   5hLKs3yGHlJB2GvoLO1xbmrjgsnc+3gaOpSEjjLXMKhH3gVNCogW1Zpyl
-   eqQSrgdWSjO7ZWjqWRel7xyTCi1AhxQJd0J7QrGtaChAKZ3CinPyoNc15
-   //0M3yxo/IpLErooZHV5t5j72GsE408zuf8IsYJFaM1iVDtL8mEqVXV43
-   g==;
-X-CSE-ConnectionGUID: +oguU0ClTHmxlq/UQG7Kcg==
-X-CSE-MsgGUID: JowxnngJTMCTnNKd/NqS5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11629"; a="54082123"
-X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="54082123"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2025 04:18:54 -0800
-X-CSE-ConnectionGUID: UTJe9RRyRDud+yaZrLBE5g==
-X-CSE-MsgGUID: aVH4haoiRmyqIqR0NXHY5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,240,1758610800"; 
-   d="scan'208";a="198265338"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 01 Dec 2025 04:18:52 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vQ2ri-000000008kP-1AbL;
-	Mon, 01 Dec 2025 12:18:50 +0000
-Date: Mon, 1 Dec 2025 20:18:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Song Gao <gaosong@loongson.cn>, maobibo@loongson.cn,
-	chenhuacai@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] LongArch: KVM: Add DINTC device support
-Message-ID: <202512011848.uhe7LBBn-lkp@intel.com>
-References: <20251128091125.2720148-3-gaosong@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMtGdgGY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0152C16AAE
+	for <loongarch@lists.linux.dev>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764600313;
+	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pMtGdgGYwdrVDOSl2W0+qrRlgCLEgaU7IGTTU/12gN3UCsgQdN+opGIHo8pRpP1Kj
+	 4uFFBFd5xWbKWS7tfxvmb1ZVmd57if+tPFmv0fMt9mI5S/RXPQRA6+faMaJR8PyV75
+	 9Ty6CdzF6NvKUyWcctl2LTW416EfLkwkLsr8ga+CuCixVG7ECRTUg+MG/fslgmirAT
+	 B9+3SGVI7IUmKml3EUsja2vs3gmFEfv3WBF3q9rC3ni68WRUZQeYNItrYJSyl10Hw4
+	 o6pGv+GnWtnNOKml9KDYLFmsQnSwSHS36gvhbA5c1otnuNjOTE964RUCKhngh9i2O7
+	 jgoiPJr8yljqw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b7291af7190so675009966b.3
+        for <loongarch@lists.linux.dev>; Mon, 01 Dec 2025 06:45:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVeh5APb7f86ef8EZVZAJHhOi3Aa2bLCgUNT6qzFI5M62Lcqfrmf67Q/A/1rSZKClZTEFt6eFwd80o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwWT1aXwu7YDxfNJiX/uPYE6tBMEo/b4PWGVu+aaRoGaviNwsKS
+	aef4PnVQhbYTOJxgPNTG5oL7mwvtYYs/Y29tOtBGcYaXINBuh7OaYXoG4NS3h6D1W+BeOzZu/F0
+	CWRT/IRRPSIPKsRo0x0ZaKtjzxbj3r1s=
+X-Google-Smtp-Source: AGHT+IFy91U2+uB01Gsp4un0xk6Bx6Yj25pytNj/dKusTxKAoaiBEv1+Gw6wMtj2qwcVruVrp4FxT1g3aKbozzQQv8I=
+X-Received: by 2002:a17:906:c115:b0:b72:b8a9:78f4 with SMTP id
+ a640c23a62f3a-b7671701537mr4016410666b.39.1764600312258; Mon, 01 Dec 2025
+ 06:45:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251128091125.2720148-3-gaosong@loongson.cn>
+References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
+ <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
+ <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
+ <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
+ <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
+ <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
+ <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com> <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+In-Reply-To: <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 1 Dec 2025 22:45:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+X-Gm-Features: AWmQ_blvZ9XPwC0XmqlAg5tMbfsMq-rVhkV9GFeSBfFXHYYgnWYh4mGTV8zI8aE
+Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
+ and SR-IOV
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
+	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Song,
+On Fri, Nov 28, 2025 at 9:30=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
+.com> wrote:
+>
+> On Mon, 2025-11-10 at 14:08 +0100, Niklas Schnelle wrote:
+> > On Fri, 2025-11-07 at 15:19 +0800, Huacai Chen wrote:
+> > > On Wed, Nov 5, 2025 at 5:46=E2=80=AFPM Niklas Schnelle <schnelle@linu=
+x.ibm.com> wrote:
+> > > >
+> > > > On Wed, 2025-11-05 at 09:01 +0800, Huacai Chen wrote:
+> > > > > On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@=
+linux.ibm.com> wrote:
+> > > > > >
+> > > > > > On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
+> > > > > > > Hi, Niklas,
+> > > > > > >
+> > > > > > > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schn=
+elle@linux.ibm.com> wrote:
+> --- snip ---
+> > > > > > > >
+> > > > > > > > Still especially the first issue prevents correct detection=
+ of ARI and
+> > > > > > > > the second might be a problem for other users of isolated f=
+unction
+> > > > > > > > probing. Fix both issues by keeping things as simple as pos=
+sible. If
+> > > > > > > > isolated function probing is enabled simply scan every poss=
+ible devfn.
+> > > > > > > I'm very sorry, but applying this patch on top of commit a02f=
+d05661d7
+> > > > > > > ("PCI: Extend isolated function probing to LoongArch") we fai=
+l to
+> > > > > > > boot.
+> > > > > > >
+> > > > > > > Boot log:
+> > > > > > >
+> --- snip ---
+> > > > > >
+> > > > > >
+> > > > > > This looks like a warning telling us that AHCI enable failed / =
+timed
+> > > > > > out. Do you have Panic on Warn on that this directly causes a b=
+oot
+> > > > > > failure? The only relation I can see with my patch is that mayb=
+e this
+> > > > > > AHCI device wasn't probed before and somehow isn't working?
+> > > > > The rootfs is on the AHCI controller, so AHCI failure causes the =
+boot
+> > > > > failure, without this patch no boot problems.
+> > > > >
+> > > > > Huacai
+> > > > >
+> > > >
+> > > > Ok, I'm going to need more details to make sense of this. Can you t=
+ell
+> > > > me if ARI is enabled for that bus? Did you test with both patches o=
+r
+> > > > just this one? Could you provide lspci -vv from a good boot and can=
+ you
+> > > > tell which AHCI device the root device is on? Also could you clarif=
+y
+> > > > why you set hypervisor_isolated_pci_functions() in particular this
+> > > > seems like a bare metal boot, right? When running in KVM do you pas=
+s-
+> > > > through individual PCI functions with the guest seeing a devfn othe=
+r
+> > > > than 0 alone, i.e. a missing devfn 0? Or do you need this for bare
+> > > > metal for some reason? If you don't need it for bare metal, does th=
+e
+> > > > boot work if you return 0 from hypervisor_isolated_pci_functions() =
+with
+> > > > this patch?
+> > > 1. ARI isn't enabled.
+> > > 2. Only test the first patch.
+> > > 3. This is a bare metal boot.
+> > > 4. If hypervisor_isolated_pci_functions() return 0 then boot is OK
+> > > 5. PCI information please see the attachment.
+> > >
+> > > Huacai
+> >
+> > Thanks for the input. As far as I can see the lspci from a good boot
+> > shows no holes in your devfn space so this particular system doesn't
+> > seem to need the isolated function probing at all. But even then using
+> > it should only try out all devfns and thus never skip one that is found
+> > without isolated function probing.
+> >
+> > To sanity check this, I just booted my personal AMD Ryzen 3900X system
+> > with this series plus a two-liner to unconditionally enable isolated
+> > function probing also on x86_64 and it came up fine including AMD
+> > graphics and my Intel NIC with enabled SR-IOV.
+> >
+> > So I'm really perplexed and coming back to the thought that a device on
+> > your system is misbehaving when probing is attempted and maybe due to a
+> > similar issue as what I saw with SR-IOV it wasn't probed so far but
+> > really should be probed if isolated function probing is enabled. I also
+> > still don't understand your use-case. If it is for VMs then maybe you
+> > could limit it to those? Otherwise it feels like this is just a hack to
+> > probe an odd topology and I wonder if you should rather set
+> > PCI_SCAN_ALL_PCIE_DEVS to find those?
+> >
+> > Thanks,
+> > Niklas
+>
+> Hi LoongArch Maintainers, Hi Bjorn,
+>
+> Sorry for the ping but I'd really like to somehow get this unstuck and
+> I haven't heard back on my previous questions. From my testing on s390
+> this patch fixes a real logic error which prevents the scanning of some
+> devfns which I believe should be scanned if isolated functions are
+> possible. And in all my testing, including on x86 as stated in the
+> previous mail, the code does exactly what I think it is supposed to do.
+> So to me it really looks like something goes wrong with your use of
+> hypervisor_isolated_pci_functions() on your specific hardware.
+>
+> One idea I had is if maybe you need to somehow exclude known empty
+> slots in you config space accessors?
+>
+> And just in general I'd really like to better understand your use-case
+> for the isolated PCI functions. And speaking of that, I'm sorry for
+> having been so blunt in my last mail saying that it felt like a hack.
+> I'm just worried, that we've run into incompatible interpretations or
+> uses of this feature that now prevent us from fixing actual bugs.
+Sorry for the late reply, Let me describe what problem LoongArch has.
 
-kernel test robot noticed the following build warnings:
+You said that "it feels like this is just a hack to probe an odd
+topology". Yes, to some extent you are right.
 
-[auto build test WARNING on next-20251128]
-[also build test WARNING on v6.18]
-[cannot apply to kvm/queue kvm/next tip/irq/core mst-vhost/linux-next linus/master kvm/linux-next v6.18-rc7 v6.18-rc6 v6.18-rc5]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+1, One of our SoC (LS2K3000) has a special device which has func1 but
+without func0. To let the PCI core scan func1 we can only make
+hypervisor_isolated_pci_functions() return true.
+2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
+3, Though we change hypervisor_isolated_pci_functions() to resolve the
+above problem, it also lets us pass isolated PCI functions to a guest
+OS instance.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Song-Gao/LongArch-KVM-Add-some-maccros-for-AVEC/20251128-173944
-base:   next-20251128
-patch link:    https://lore.kernel.org/r/20251128091125.2720148-3-gaosong%40loongson.cn
-patch subject: [PATCH v2 2/4] LongArch: KVM: Add DINTC device support
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20251201/202512011848.uhe7LBBn-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251201/202512011848.uhe7LBBn-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512011848.uhe7LBBn-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/loongarch/kvm/intc/dintc.c:93:14: warning: unused variable 'kvm' [-Wunused-variable]
-      93 |         struct kvm *kvm;
-         |                     ^~~
->> arch/loongarch/kvm/intc/dintc.c:94:26: warning: unused variable 'dintc' [-Wunused-variable]
-      94 |         struct loongarch_dintc *dintc;
-         |                                 ^~~~~
-   2 warnings generated.
+As a summary, for real machines commit a02fd05661d73a850 is a hack to
+probe an odd device, for virtual machines it allows passing isolated
+PCI functions.
 
 
-vim +/kvm +93 arch/loongarch/kvm/intc/dintc.c
 
-    90	
-    91	static void kvm_dintc_destroy(struct kvm_device *dev)
-    92	{
-  > 93		struct kvm *kvm;
-  > 94		struct loongarch_dintc *dintc;
-    95	
-    96		if (!dev || !dev->kvm || !dev->kvm->arch.dintc)
-    97			return;
-    98	
-    99		kfree(dev->kvm->arch.dintc);
-   100	}
-   101	
+Huacai
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Thanks in advance,
+> Niklas Schnelle
