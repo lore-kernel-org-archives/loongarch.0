@@ -1,217 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A7D31A7E1
-	for <loongarch@lists.linux.dev>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3CB1EB5F8
+	for <loongarch@lists.linux.dev>; Tue,  2 Dec 2025 02:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764600314; cv=none; b=Vacatvu7wXvROCyZtijOSf2Ku4goV7xATlhn8XHz/OIPAjPLLDVk9xO4uMJXs33js8V8je3LMcr9NArMwvJpwFNy9d0DbYRDis/15I8+3CVUteW37XJk4bmTSmAwS6ozHTJ1F27OG3DSs2aD/j4enuH0WZ8ceSJgFPMkkqAbFhk=
+	t=1764643727; cv=none; b=i0Cv5PQUIxj8OXN36an7pkkEl+pE9Pb9ciixwGNdm9D8+bXvcp5hBGIbkS8x+rAP8PnaHfNJeatigbZum/UQUbZeZOtHmhsNVNYsts5hKIe+Q1xCpTmbbxTB5frmyEuEOKJFPXlvP2n44N/XG8GweoPOVqhH8c1WkXKM4+WkQUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764600314; c=relaxed/simple;
-	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fK/HST9w1pf2tm+LYspF4/YdA4XBItzp6lvM0I72Tzqf6I7i54pXBNysxL5h3+p54LCIbk47Gup83cfQy72iEVytjjIl578GLccQAJBzdm4wltvCS3hvZDFr7D5MEuYTfAxYouQ1Yu9kZ8cjSUPWSUXUEV7hfgSkwHlmiKkkYM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMtGdgGY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMtGdgGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0152C16AAE
-	for <loongarch@lists.linux.dev>; Mon,  1 Dec 2025 14:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764600313;
-	bh=VrFNoeObgkWMawA3WMEOayqdOmEdgYgazeErRriF79g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pMtGdgGYwdrVDOSl2W0+qrRlgCLEgaU7IGTTU/12gN3UCsgQdN+opGIHo8pRpP1Kj
-	 4uFFBFd5xWbKWS7tfxvmb1ZVmd57if+tPFmv0fMt9mI5S/RXPQRA6+faMaJR8PyV75
-	 9Ty6CdzF6NvKUyWcctl2LTW416EfLkwkLsr8ga+CuCixVG7ECRTUg+MG/fslgmirAT
-	 B9+3SGVI7IUmKml3EUsja2vs3gmFEfv3WBF3q9rC3ni68WRUZQeYNItrYJSyl10Hw4
-	 o6pGv+GnWtnNOKml9KDYLFmsQnSwSHS36gvhbA5c1otnuNjOTE964RUCKhngh9i2O7
-	 jgoiPJr8yljqw==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b7291af7190so675009966b.3
-        for <loongarch@lists.linux.dev>; Mon, 01 Dec 2025 06:45:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVeh5APb7f86ef8EZVZAJHhOi3Aa2bLCgUNT6qzFI5M62Lcqfrmf67Q/A/1rSZKClZTEFt6eFwd80o=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwWT1aXwu7YDxfNJiX/uPYE6tBMEo/b4PWGVu+aaRoGaviNwsKS
-	aef4PnVQhbYTOJxgPNTG5oL7mwvtYYs/Y29tOtBGcYaXINBuh7OaYXoG4NS3h6D1W+BeOzZu/F0
-	CWRT/IRRPSIPKsRo0x0ZaKtjzxbj3r1s=
-X-Google-Smtp-Source: AGHT+IFy91U2+uB01Gsp4un0xk6Bx6Yj25pytNj/dKusTxKAoaiBEv1+Gw6wMtj2qwcVruVrp4FxT1g3aKbozzQQv8I=
-X-Received: by 2002:a17:906:c115:b0:b72:b8a9:78f4 with SMTP id
- a640c23a62f3a-b7671701537mr4016410666b.39.1764600312258; Mon, 01 Dec 2025
- 06:45:12 -0800 (PST)
+	s=arc-20240116; t=1764643727; c=relaxed/simple;
+	bh=nE2t1I20Enc2+HgdbUl7tzfxy3h/haitVvgL2k8h6pc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NGvd3EOaCUW3DMXdUF6PxPTrKxNSg9AlFZ2PAykEsQaEoxE/Q1MXxWpPSin2egP4vkioiQBTgb73iZEhx9DH2PDUfns8gI3iebhN0NRgcCTtMo2gDBrnAVXukneC5fxw3wmdpIKMIYoqlVmDNz/0nwGFTfqfr47V06dHHjo4/h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Bx1tCCUy5piSgqAA--.25369S3;
+	Tue, 02 Dec 2025 10:48:34 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxmcCCUy5p1ExEAQ--.28502S2;
+	Tue, 02 Dec 2025 10:48:34 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] LoongArch: KVM: Add paravirt preempt support
+Date: Tue,  2 Dec 2025 10:48:30 +0800
+Message-Id: <20251202024833.1714363-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
- <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
- <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
- <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
- <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
- <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
- <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com> <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
-In-Reply-To: <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Dec 2025 22:45:07 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
-X-Gm-Features: AWmQ_blvZ9XPwC0XmqlAg5tMbfsMq-rVhkV9GFeSBfFXHYYgnWYh4mGTV8zI8aE
-Message-ID: <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxmcCCUy5p1ExEAQ--.28502S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Fri, Nov 28, 2025 at 9:30=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
-.com> wrote:
->
-> On Mon, 2025-11-10 at 14:08 +0100, Niklas Schnelle wrote:
-> > On Fri, 2025-11-07 at 15:19 +0800, Huacai Chen wrote:
-> > > On Wed, Nov 5, 2025 at 5:46=E2=80=AFPM Niklas Schnelle <schnelle@linu=
-x.ibm.com> wrote:
-> > > >
-> > > > On Wed, 2025-11-05 at 09:01 +0800, Huacai Chen wrote:
-> > > > > On Mon, Nov 3, 2025 at 7:23=E2=80=AFPM Niklas Schnelle <schnelle@=
-linux.ibm.com> wrote:
-> > > > > >
-> > > > > > On Mon, 2025-11-03 at 17:50 +0800, Huacai Chen wrote:
-> > > > > > > Hi, Niklas,
-> > > > > > >
-> > > > > > > On Wed, Oct 29, 2025 at 5:42=E2=80=AFPM Niklas Schnelle <schn=
-elle@linux.ibm.com> wrote:
-> --- snip ---
-> > > > > > > >
-> > > > > > > > Still especially the first issue prevents correct detection=
- of ARI and
-> > > > > > > > the second might be a problem for other users of isolated f=
-unction
-> > > > > > > > probing. Fix both issues by keeping things as simple as pos=
-sible. If
-> > > > > > > > isolated function probing is enabled simply scan every poss=
-ible devfn.
-> > > > > > > I'm very sorry, but applying this patch on top of commit a02f=
-d05661d7
-> > > > > > > ("PCI: Extend isolated function probing to LoongArch") we fai=
-l to
-> > > > > > > boot.
-> > > > > > >
-> > > > > > > Boot log:
-> > > > > > >
-> --- snip ---
-> > > > > >
-> > > > > >
-> > > > > > This looks like a warning telling us that AHCI enable failed / =
-timed
-> > > > > > out. Do you have Panic on Warn on that this directly causes a b=
-oot
-> > > > > > failure? The only relation I can see with my patch is that mayb=
-e this
-> > > > > > AHCI device wasn't probed before and somehow isn't working?
-> > > > > The rootfs is on the AHCI controller, so AHCI failure causes the =
-boot
-> > > > > failure, without this patch no boot problems.
-> > > > >
-> > > > > Huacai
-> > > > >
-> > > >
-> > > > Ok, I'm going to need more details to make sense of this. Can you t=
-ell
-> > > > me if ARI is enabled for that bus? Did you test with both patches o=
-r
-> > > > just this one? Could you provide lspci -vv from a good boot and can=
- you
-> > > > tell which AHCI device the root device is on? Also could you clarif=
-y
-> > > > why you set hypervisor_isolated_pci_functions() in particular this
-> > > > seems like a bare metal boot, right? When running in KVM do you pas=
-s-
-> > > > through individual PCI functions with the guest seeing a devfn othe=
-r
-> > > > than 0 alone, i.e. a missing devfn 0? Or do you need this for bare
-> > > > metal for some reason? If you don't need it for bare metal, does th=
-e
-> > > > boot work if you return 0 from hypervisor_isolated_pci_functions() =
-with
-> > > > this patch?
-> > > 1. ARI isn't enabled.
-> > > 2. Only test the first patch.
-> > > 3. This is a bare metal boot.
-> > > 4. If hypervisor_isolated_pci_functions() return 0 then boot is OK
-> > > 5. PCI information please see the attachment.
-> > >
-> > > Huacai
-> >
-> > Thanks for the input. As far as I can see the lspci from a good boot
-> > shows no holes in your devfn space so this particular system doesn't
-> > seem to need the isolated function probing at all. But even then using
-> > it should only try out all devfns and thus never skip one that is found
-> > without isolated function probing.
-> >
-> > To sanity check this, I just booted my personal AMD Ryzen 3900X system
-> > with this series plus a two-liner to unconditionally enable isolated
-> > function probing also on x86_64 and it came up fine including AMD
-> > graphics and my Intel NIC with enabled SR-IOV.
-> >
-> > So I'm really perplexed and coming back to the thought that a device on
-> > your system is misbehaving when probing is attempted and maybe due to a
-> > similar issue as what I saw with SR-IOV it wasn't probed so far but
-> > really should be probed if isolated function probing is enabled. I also
-> > still don't understand your use-case. If it is for VMs then maybe you
-> > could limit it to those? Otherwise it feels like this is just a hack to
-> > probe an odd topology and I wonder if you should rather set
-> > PCI_SCAN_ALL_PCIE_DEVS to find those?
-> >
-> > Thanks,
-> > Niklas
->
-> Hi LoongArch Maintainers, Hi Bjorn,
->
-> Sorry for the ping but I'd really like to somehow get this unstuck and
-> I haven't heard back on my previous questions. From my testing on s390
-> this patch fixes a real logic error which prevents the scanning of some
-> devfns which I believe should be scanned if isolated functions are
-> possible. And in all my testing, including on x86 as stated in the
-> previous mail, the code does exactly what I think it is supposed to do.
-> So to me it really looks like something goes wrong with your use of
-> hypervisor_isolated_pci_functions() on your specific hardware.
->
-> One idea I had is if maybe you need to somehow exclude known empty
-> slots in you config space accessors?
->
-> And just in general I'd really like to better understand your use-case
-> for the isolated PCI functions. And speaking of that, I'm sorry for
-> having been so blunt in my last mail saying that it felt like a hack.
-> I'm just worried, that we've run into incompatible interpretations or
-> uses of this feature that now prevent us from fixing actual bugs.
-Sorry for the late reply, Let me describe what problem LoongArch has.
+vCPU preempt hint is useful with sched and lock on some platforms, here
+new feature KVM_FEATURE_PREEMPT_HINT is added and VMM can selectively
+enable it.
 
-You said that "it feels like this is just a hack to probe an odd
-topology". Yes, to some extent you are right.
+Test case kcbench is used to compile Linux kernel code, the test result
+shows that it is useful on 3D6000 Dual-way machine with 64 cores and 128
+hyperthreads, however no improvemet on 3C5000 Dual-way machine with 32
+cores. With perf top command when running test case, the main difference
+between over-commited VM and host is osq_lock(). if vcpu_is_preempted()
+is implemented on VM, it can avoid  unnecessary busy-loop waiting and
+enter sleep state quickly if lock-hold vCPU is preempted.
 
-1, One of our SoC (LS2K3000) has a special device which has func1 but
-without func0. To let the PCI core scan func1 we can only make
-hypervisor_isolated_pci_functions() return true.
-2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
-3, Though we change hypervisor_isolated_pci_functions() to resolve the
-above problem, it also lets us pass isolated PCI functions to a guest
-OS instance.
+Here is test result with kcbench on 3D6000 and 3C6000 hardware machines,
+time unit is second to compile kernel with defconfig, performance is
+better with smaller value.
+3D6000 Dual-way 64 Core 128 Threads
+ One VM with 128 vCPUs, no overcommit, NUMA
+             Orginal       With-patch       Improvement
+  VM         91.72         92.4             < -1%
+  Host       89.7          89.75            < -0.1%
+ Two VMs overcommit with 128 vCPUs, UMA
+             Orginal       With-patch       Improvement
+  VM1        306.9         197.5            +36%
+  VM2        303.7         197.8            +35%
+  Host       89.7          89.75             < -0.1%
+ Two VMs overcommit with 128 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM1        317.1         159              +50%
+  VM2        317.5         158              +50%
+  Host       89.7          89.75            < -0.1%
+3C5000  Dual-way 32 Core
+ One VM with 32 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM         208           207              < +0.5%
+  Host       184           185              < -0.5%
+ Two VMs overcommit with 32 vCPUs, UMA
+             Orginal       With-patch       Improvement
+  VM1        439           444              -1%
+  VM2        437           438              < -0.2%
+  Host       184           185              < -0.5%
+ Two VMs overcommit with 32 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM1        422           425              < -1%
+  VM2        418           415              < -1%
+  Host       184           185              < -0.5%
 
-As a summary, for real machines commit a02fd05661d73a850 is a hack to
-probe an odd device, for virtual machines it allows passing isolated
-PCI functions.
+---
+v2 ... v3:
+  1. Remove CONFIG_SMP checking in header file asm/qspinlock.h, since
+     this file is included only if CONFIG_SMP is defined.
+  2. Replace internal variable pv_preempted with static_key_enabled()
+     method.
+  3. Add static type define with variable virt_preempt_key.
+  4. Merge previous patch 2 and patch 3 into one patch.
+
+v1 ... v2:
+  1. Rename feature KVM_FEATURE_PREEMPT_HINT with KVM_FEATURE_PREEMPT,
+     remove HINT in feature name.
+  2. Rename reverve field with __u8 pad[47] rather than combination of
+     __u8  u8_pad[3] and __u32 pad[11]
+  3. Rename internal function _kvm_set_vcpu_preempted() with
+     kvm_vcpu_set_pv_preempted(), remove prefix "_" and also in order to
+     avoid duplication name with common API in future.
+  4. Remove static variable u8 preempted and macro KVM_VCPU_PREEMPTED is
+     used directly.
+  5. Move definition of vcpu_is_preempted() from file spinlock.h to
+     qspinlock.h, since CONFIG_PARAVIRT is used in qspinlock.h already.
+  6. Add CONFIG_SMP checking with vcpu_is_preempted() to solve compile
+     issue reported by LKP if CONFIG_SMP is disabled.
+  7. Add static key virt_preempt_key with vcpu_is_preempted(), remove
+     mp_ops.vcpu_is_preempted method.
+---
+
+Bibo Mao (2):
+  LoongArch: KVM: Add paravirt preempt feature in hypervisor side
+  LoongArch: Add paravirt support with vcpu_is_preempted() in guest side
+
+ arch/loongarch/include/asm/kvm_host.h      |  2 +
+ arch/loongarch/include/asm/kvm_para.h      |  4 +-
+ arch/loongarch/include/asm/qspinlock.h     |  3 ++
+ arch/loongarch/include/uapi/asm/kvm.h      |  1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+ arch/loongarch/kernel/paravirt.c           | 23 +++++++++-
+ arch/loongarch/kvm/vcpu.c                  | 53 +++++++++++++++++++++-
+ arch/loongarch/kvm/vm.c                    |  5 +-
+ 8 files changed, 88 insertions(+), 4 deletions(-)
 
 
+base-commit: 4664fb427c8fd0080f40109f5e2b2090a6fb0c84
+-- 
+2.39.3
 
-Huacai
-
->
-> Thanks in advance,
-> Niklas Schnelle
