@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4589259C94
-	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 04:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43F6265CDD
+	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 04:01:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764734479; cv=none; b=H8w7Hl0Re9/VeTXArGcow5xHpO/zx5BJsMho1BfM4WiCXVqmxuKv4iGwu2uvgtG9i0FgxTrsESLN/CshNUZEkHu7wBsjJLR2FK6I04N3ZwTA0nXUDcOraPMQG68nWzFyKDQmRWNGrMwYlc5N1ou2DS+SeHYC4RQgm6ll35aE2rA=
+	t=1764734481; cv=none; b=PuRDCvhphokM2HijS6N76PhAygy8Zka2fGEkqhVBtYx/ITcAVgxImsFx/AcdarQo5LNAffdl5U5M/euWzZxuOoD1SXK/41Za0fWTYsX9oxbxb/mp01Xivc/UPmQGf/cGaRR/cYDCM+DROWEYv1Tcb8gerw61xkwAFvlzXopVs/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764734479; c=relaxed/simple;
-	bh=XRaMSYPcrFCQBDJFnfNAsbVT2FhJZu7oFrzEv5ZdSeQ=;
+	s=arc-20240116; t=1764734481; c=relaxed/simple;
+	bh=RWnfQ6Y1oVsduJGynYYvmZMZGiwwAqlghmD8ss7NNlM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X7c2Kzj0dMOOsxs/WV48Vj/QSHIam/QQpOuYbiTPgj0tP28FSn71WNN/K5sj+JxpE6pg08lBsoPXGzgLeakNLhde9Rodumx6zoJXF97T3vLvztz4L0mAK2TGmIUMZJYtniHdHVsQeZP1WbPbjfuV4IgOaRDHPabHM41aCXJbV1M=
+	 MIME-Version; b=vGNgzuxoaACP/+NGXj1p3krdWBCeUvO2QRaz9SCwZTk66V+9399GrbbluZGJnYrttYWgF5H1lqkCPe1Zh2O+xpZmM9lsFOfcuBfl2P7nWhzENV8k/mLJrOrpvF1hHUJqAuarQIKlLZow6kYn/VqwX3KWL7id2SlUiM7mjuWW7j4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8AxjdILti9pRJQqAA--.20886S3;
-	Wed, 03 Dec 2025 12:01:15 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJDxbMECti9pitZEAQ--.61845S5;
+	by gateway (Coremail) with SMTP id _____8AxRNAKti9pOpQqAA--.25336S3;
 	Wed, 03 Dec 2025 12:01:14 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.57.136])
+	by front1 (Coremail) with SMTP id qMiowJDxbMECti9pitZEAQ--.61845S4;
+	Wed, 03 Dec 2025 12:01:13 +0800 (CST)
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
 To: corbet@lwn.net,
 	alexs@kernel.org,
@@ -35,9 +35,9 @@ Cc: loongarch@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v7 3/5] irqchip/irq-loongson.h:irq-loongson.h preparation for Redirect irqchip
-Date: Wed,  3 Dec 2025 12:01:00 +0800
-Message-ID: <20251203040105.32490-4-zhangtianyang@loongson.cn>
+Subject: [PATCH v7 2/5] LoongArch: Architectural preparation for Redirect irqchip
+Date: Wed,  3 Dec 2025 12:00:59 +0800
+Message-ID: <20251203040105.32490-3-zhangtianyang@loongson.cn>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20251203040105.32490-1-zhangtianyang@loongson.cn>
 References: <20251203040105.32490-1-zhangtianyang@loongson.cn>
@@ -48,14 +48,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxbMECti9pitZEAQ--.61845S5
+X-CM-TRANSID:qMiowJDxbMECti9pitZEAQ--.61845S4
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8AF1rXrW5WrW3Zw4kKrX_yoW5Jw1rpF
-	W5Aay29r48tF4xXry5Gw1kXFy3ZFyxKrZrtayfGayfXFZ8Gws7WFy2qF95ZFy8Gr48ua4x
-	ur48tF1UuFs8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxWFWUuF4rurWkJF15KrWkKrX_yoWrGw4Upr
+	yDArWkKrW5KF4xKa4qqrn09r4UWa97Cr42qw47urWUAF1UZ348Xr1ktFZxZFZ0qanxXa4I
+	93Z5Cw1jv3WDZwcCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
 	wI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
@@ -66,92 +66,88 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8AF1rXrW5WrW3Zw4kKrX_yoW5Jw1rpF
 	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
 	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
 	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUaTKZDUUUU
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUS_HUUUUUU
 
-Adjusted definitions and macro from loongson-avec.c to irq-loongson.h,
-including:
-1 marco AVEC_MSG_OFFSET
-2 struct avecintc_data
-3 Make avecintc_sync public
+Add architectural preparation for Redirect irqchip, including:
+1. CPUCFG feature bits definition for Redirect irqchip;
+2. Detection of Redirect irqchip in cpu_probe();
+3. New IOCSR register Definition for Redirect irqchop
 
 Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- drivers/irqchip/irq-loongarch-avec.c | 12 +-----------
- drivers/irqchip/irq-loongson.h       | 19 +++++++++++++++++++
- 2 files changed, 20 insertions(+), 11 deletions(-)
+ arch/loongarch/include/asm/cpu-features.h | 1 +
+ arch/loongarch/include/asm/cpu.h          | 2 ++
+ arch/loongarch/include/asm/loongarch.h    | 6 ++++++
+ arch/loongarch/kernel/cpu-probe.c         | 2 ++
+ 4 files changed, 11 insertions(+)
 
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index bf52dc8345f5..514ad8dedc46 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -24,7 +24,6 @@
- #define VECTORS_PER_REG		64
- #define IRR_VECTOR_MASK		0xffUL
- #define IRR_INVALID_MASK	0x80000000UL
--#define AVEC_MSG_OFFSET		0x100000
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index fc83bb32f9f0..03f7e93e81e0 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -68,5 +68,6 @@
+ #define cpu_has_ptw		cpu_opt(LOONGARCH_CPU_PTW)
+ #define cpu_has_lspw		cpu_opt(LOONGARCH_CPU_LSPW)
+ #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
++#define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
  
- #ifdef CONFIG_SMP
- struct pending_list {
-@@ -47,15 +46,6 @@ struct avecintc_chip {
+ #endif /* __ASM_CPU_FEATURES_H */
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index dfb982fe8701..27b9cfbfbaa8 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -102,6 +102,7 @@ enum cpu_type_enum {
+ #define CPU_FEATURE_PTW			27	/* CPU has hardware page table walker */
+ #define CPU_FEATURE_LSPW		28	/* CPU has LSPW (lddir/ldpte instructions) */
+ #define CPU_FEATURE_AVECINT		29	/* CPU has AVEC interrupt */
++#define CPU_FEATURE_REDIRECTINT		30      /* CPU has interrupt remmap */
  
- static struct avecintc_chip loongarch_avec;
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+@@ -133,5 +134,6 @@ enum cpu_type_enum {
+ #define LOONGARCH_CPU_PTW		BIT_ULL(CPU_FEATURE_PTW)
+ #define LOONGARCH_CPU_LSPW		BIT_ULL(CPU_FEATURE_LSPW)
+ #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
++#define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
  
--struct avecintc_data {
--	struct list_head	entry;
--	unsigned int		cpu;
--	unsigned int		vec;
--	unsigned int		prev_cpu;
--	unsigned int		prev_vec;
--	unsigned int		moving;
--};
--
- static inline void avecintc_enable(void)
- {
- 	u64 value;
-@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
- 	INIT_LIST_HEAD(&plist->head);
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 09dfd7eb406e..2cb4b407fbff 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -1137,6 +1137,7 @@
+ #define  IOCSRF_FLATMODE		BIT_ULL(10)
+ #define  IOCSRF_VM			BIT_ULL(11)
+ #define  IOCSRF_AVEC			BIT_ULL(15)
++#define  IOCSRF_REDIRECTINT		BIT_ULL(16)
+ 
+ #define LOONGARCH_IOCSR_VENDOR		0x10
+ 
+@@ -1196,6 +1197,11 @@
+ 
+ #define LOONGARCH_IOCSR_EXTIOI_NODEMAP_BASE	0x14a0
+ #define LOONGARCH_IOCSR_EXTIOI_IPMAP_BASE	0x14c0
++#define LOONGARCH_IOCSR_REDIRECT_CFG		0x15e0
++#define LOONGARCH_IOCSR_REDIRECT_TBR		0x15e8  /* IRT BASE REG*/
++#define LOONGARCH_IOCSR_REDIRECT_CQB		0x15f0  /* IRT CACHE QUEUE BASE */
++#define LOONGARCH_IOCSR_REDIRECT_CQH		0x15f8  /* IRT CACHE QUEUE HEAD, 32bit */
++#define LOONGARCH_IOCSR_REDIRECT_CQT		0x15fc  /* IRT CACHE QUEUE TAIL, 32bit */
+ #define LOONGARCH_IOCSR_EXTIOI_EN_BASE		0x1600
+ #define LOONGARCH_IOCSR_EXTIOI_BOUNCE_BASE	0x1680
+ #define LOONGARCH_IOCSR_EXTIOI_ISR_BASE		0x1800
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index fedaa67cde41..543474fd1399 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -289,6 +289,8 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
+ 		c->options |= LOONGARCH_CPU_EIODECODE;
+ 	if (config & IOCSRF_AVEC)
+ 		c->options |= LOONGARCH_CPU_AVECINT;
++	if (config & IOCSRF_REDIRECTINT)
++		c->options |= LOONGARCH_CPU_REDIRECTINT;
+ 	if (config & IOCSRF_VM)
+ 		c->options |= LOONGARCH_CPU_HYPERVISOR;
  }
- 
--static void avecintc_sync(struct avecintc_data *adata)
-+void avecintc_sync(struct avecintc_data *adata)
- {
- 	struct pending_list *plist;
- 
-diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
-index 11fa138d1f44..1f11d799bf0a 100644
---- a/drivers/irqchip/irq-loongson.h
-+++ b/drivers/irqchip/irq-loongson.h
-@@ -6,6 +6,17 @@
- #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- 
-+#define AVEC_MSG_OFFSET		0x100000
-+
-+struct avecintc_data {
-+	struct list_head        entry;
-+	unsigned int            cpu;
-+	unsigned int            vec;
-+	unsigned int            prev_cpu;
-+	unsigned int            prev_vec;
-+	unsigned int            moving;
-+};
-+
- int find_pch_pic(u32 gsi);
- 
- int liointc_acpi_init(struct irq_domain *parent,
-@@ -24,4 +35,12 @@ int pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
- int pch_msi_acpi_init_avec(struct irq_domain *parent);
- 
-+int redirect_acpi_init(struct irq_domain *parent);
-+
-+#ifdef CONFIG_SMP
-+void avecintc_sync(struct avecintc_data *adata);
-+#else
-+static inline void avecintc_sync(struct avecintc_data *adata) {}
-+#endif
-+
- #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
 -- 
 2.41.0
 
