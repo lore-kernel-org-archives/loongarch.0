@@ -1,48 +1,58 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F415277CA5
-	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 04:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E42826B741
+	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 09:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764737706; cv=none; b=Ot0mit0kxnulzZPaf1yUYq/YiKXmMWTjxio4AwW2mM6PYeB314gNPLwlEf8Disjr6dKL2jGYdzeWJO9IgBq2g6aiMTcnllbxqUHRiPHW5t8JbUOU9fC44cupwZRhtyBRScWVqBhFZWpZpixXg8M2ZTzEFsdi0AvhvEMAG2uSXSE=
+	t=1764753099; cv=none; b=HdZ1iGmRmLAOLV2pI4JGlCnNNuUdIUdK22+kCtP/cBrP+8gbzNU1E7aSYGpdLq36TTQzJpdL3aKR5jSxJ1ab67LthXuoTf4cvDg+uzVq3ZhnOn1H+8+dMQDervEVpz5ujZZhxBGLR+CqeC2S/ro/GguiJxVfwvlXYPJfkUEmfwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764737706; c=relaxed/simple;
-	bh=mkITN/Slq3EcJFZ1zE3bK/3AaDMTU7tSrLm7wg9Z2mI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ES/RxS/vYd7UOudg1JO6K1HXExQez1rVOn1gv+7/Yt+tcbbBi8Ov4ZjRfU5YZqYLiCjfu0HGxaQHDeWWtmJXAqM6+WxVo89nYr+mNYmHoX1P8WxaDx5CJ+GM5nWb5X+oiqZKgXZF4lHxKCquTXQeU7P+35Z6P9FTccUvkqQOv7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8BxndJtwi9pW5cqAA--.25608S3;
-	Wed, 03 Dec 2025 12:54:05 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJCxocJowi9p_dpEAQ--.49201S3;
-	Wed, 03 Dec 2025 12:54:00 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
+	s=arc-20240116; t=1764753099; c=relaxed/simple;
+	bh=UoH7J0oEBDN34+51ceJIwHqRobz1aoc3VNpYnNPpb0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D3rAM2yHhYIkqb9xMavrrxYFNWdXhjUvqiV9xlv+s5XHpEdx/HfjlziENEXKJKerezHlQvVrM/ygidnZ74MJJZ3Ig8W42UhV6BGN2jL9O0YnoVBZP7dxAM4VrLLvRrngvkah7CbglBs5J9abZlnO8sOvjsKCnXZ5aM16sOFfNEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=ZTwah7Sd; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="ZTwah7Sd"
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id B727F260DB
+	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 09:11:29 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay3.mymailcheap.com (Postfix) with ESMTPS id 818793E8D1;
+	Wed,  3 Dec 2025 09:11:22 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id A2C6140086;
+	Wed,  3 Dec 2025 09:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1764753077; bh=UoH7J0oEBDN34+51ceJIwHqRobz1aoc3VNpYnNPpb0c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZTwah7Sdo+Chr6cIeFlzf9ntW5sQLqujdS8TO0I70XdW1BeUOlKe/tdrgQLqXlBWc
+	 aAJhK2iSrHeXmjdDb2lObyDtB3Noq9JL4MgSj1AvcwXQ0LA4+wNnCXMdjCNn+56ArB
+	 Z5A2f1kgfpJ6bn6i12TqLQ8yWego195CqlI5Ge7E=
+Received: from avenger-XINGYAO-Series (unknown [39.144.78.157])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 5A6B0407D7;
+	Wed,  3 Dec 2025 09:11:12 +0000 (UTC)
+From: WangYuli <wangyuli@aosc.io>
+To: jpoimboe@kernel.org,
 	peterz@infradead.org,
-	wangliupu@loongson.cn,
-	lvjianmin@loongson.cn,
-	maobibo@loongson.cn,
-	siyanteng@cqsoftware.com.cn,
-	gaosong@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: yangtiezhu@loongson.cn,
+	pmladek@suse.com,
+	alexandre.chartre@oracle.com,
+	wangyuli@aosc.io,
 	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v7 5/5] irqchip/irq-loongarch-ir:Add Redirect irqchip support
-Date: Wed,  3 Dec 2025 12:53:57 +0800
-Message-ID: <20251203045357.33071-2-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20251203045357.33071-1-zhangtianyang@loongson.cn>
-References: <20251203045357.33071-1-zhangtianyang@loongson.cn>
+	loongarch@lists.linux.dev,
+	guanwentao@uniontech.com,
+	WangYuli <wangyl5933@chinaunicom.cn>
+Subject: [PATCH] LoongArch: Add klp-build support for live patching
+Date: Wed,  3 Dec 2025 17:10:39 +0800
+Message-ID: <20251203091039.125259-1-wangyuli@aosc.io>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,613 +60,80 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxocJowi9p_dpEAQ--.49201S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3Zw17uw15Jr4DXF1fAF1DJwc_yoW8Ww1rJo
-	WfJrs3J34rWr18GrW0ka17tFyxZ3y5Gw4Fyw1fuFWDZ3Wqqr4rtrW7GrW3Za42gF1FqF17
-	JFy0qw1fGFWxtrn3l-sFpf9Il3svdjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUO47kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6Fy26r45twAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2
-	IYc2Ij64vIr41lF7xvrVCFI7AF6II2Y40_Zr0_Gr1UMxkF7I0En4kS14v26r126r1DMxAI
-	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x07bOfHUUUUUU=
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: A2C6140086
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [1.40 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
-The main function of the Redirected interrupt controller is to manage
-the redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+From: WangYuli <wangyl5933@chinaunicom.cn>
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Add klp-build support for the LoongArch architecture, enabling
+automated live patch module generation using objtool.
+
+Signed-off-by: WangYuli <wangyl5933@chinaunicom.cn>
 ---
- drivers/irqchip/Makefile             |   2 +-
- drivers/irqchip/irq-loongarch-avec.c |   6 +-
- drivers/irqchip/irq-loongarch-ir.c   | 524 +++++++++++++++++++++++++++
- 3 files changed, 530 insertions(+), 2 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+ arch/loongarch/Kconfig                | 1 +
+ tools/objtool/Makefile                | 3 ++-
+ tools/objtool/arch/loongarch/decode.c | 5 +++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 93e3ced023bb..a0be18891890 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -118,7 +118,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index ac8c423e411e..de7b6059c1b6 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -111,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
- 	}
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 1a0a5f9def33..7b5f2a329908 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -159,6 +159,7 @@ config LOONGARCH
+ 	select HAVE_KPROBES
+ 	select HAVE_KPROBES_ON_FTRACE
+ 	select HAVE_KRETPROBES
++	select HAVE_KLP_BUILD
+ 	select HAVE_LIVEPATCH
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index ad6e1ec706ce..cead37c25a69 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -8,7 +8,8 @@ ifeq ($(SRCARCH),x86)
+ endif
  
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -402,6 +403,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
+ ifeq ($(SRCARCH),loongarch)
+-	BUILD_ORC	   := y
++	BUILD_ORC    := y
++	ARCH_HAS_KLP := y
+ endif
  
- static inline int __init acpi_cascade_irqdomain_init(void)
- {
-+	if (cpu_has_redirectint)
-+		return redirect_acpi_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+ ifeq ($(ARCH_HAS_KLP),y)
+diff --git a/tools/objtool/arch/loongarch/decode.c b/tools/objtool/arch/loongarch/decode.c
+index 6cd288150f49..674e4efd138f 100644
+--- a/tools/objtool/arch/loongarch/decode.c
++++ b/tools/objtool/arch/loongarch/decode.c
+@@ -34,6 +34,11 @@ s64 arch_insn_adjusted_addend(struct instruction *insn, struct reloc *reloc)
+ 	return reloc_addend(reloc);
  }
  
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..0d61c9890fd6
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,524 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Loongson Technologies, Inc.
-+ */
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/irq-msi-lib.h>
-+#include <linux/irqdomain.h>
-+#include <linux/spinlock.h>
-+#include <linux/msi.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/loongson.h>
-+#include <asm/numa.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+
-+#define GPID_ADDR_MASK			GENMASK(47, 6)
-+#define GPID_ADDR_SHIFT 		6
-+
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_MASK			GENMASK(47, 12)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct redirect_entry {
-+	struct  {
-+		u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	}	lo;
-+	u64	hi;
-+};
-+#define IRD_ENTRY_SIZE			sizeof(struct redirect_entry)
-+#define IRD_ENTRIES			65536
-+#define IRD_TABLE_PAGE_ORDER		get_order(IRD_ENTRIES * IRD_ENTRY_SIZE)
-+
-+struct redirect_gpid {
-+	u64	pir[4];      // Pending interrupt requested
-+	u8	en	: 1, // doorbell
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+};
-+
-+struct irde_inv_cmd {
-+	union {
-+		u64	cmd_info;
-+		struct {
-+			u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		}	index;
-+	};
-+	u64		notice_addr;
-+};
-+#define IRD_CMD_SIZE			sizeof(struct irde_inv_cmd)
-+#define INVALID_QUEUE_SIZE		4096
-+#define INV_QUEUE_PAGE_ORDER		get_order(INVALID_QUEUE_SIZE * IRD_CMD_SIZE)
-+
-+struct redirect_table {
-+	struct redirect_entry	*table;
-+	unsigned long		*bitmap;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct redirect_queue {
-+	struct irde_inv_cmd	*cmd_base;
-+	int			head;
-+	int			tail;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct irde_desc {
-+	struct	redirect_table	ird_table;
-+	struct	redirect_queue	inv_queue;
-+	int			node;
-+};
-+
-+struct redirect_item {
-+	int			index;
-+	struct irde_desc	*irde;
-+	struct redirect_gpid	*gpid;
-+};
-+
-+
-+static struct irq_domain *redirect_domain;
-+static struct irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+static phys_addr_t redirect_reg_base = LOONGSON_REG_BASE;
-+
-+#define REDIRECT_REG(reg, node) \
-+	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
-+
-+static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
++u64 arch_adjusted_addend(struct reloc *reloc)
 +{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return writeq(val, reg_addr);
++	return reloc_addend(reloc);
 +}
 +
-+static inline void redirect_write_reg32(u32 node, u32 val, u32 reg)
-+{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return writel(val, reg_addr);
-+}
-+
-+static inline u32 redirect_read_reg32(u32 node, u32 reg)
-+{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return readl(reg_addr);
-+}
-+
-+static inline struct redirect_entry *item_get_entry(struct redirect_item *item)
-+{
-+	return item->irde->ird_table.table + item->index;
-+}
-+
-+static inline bool invalid_queue_is_full(int node, u32 *tail)
-+{
-+	u32 head = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQH);
-+
-+	*tail = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQT);
-+
-+	return head == ((*tail + 1) % INVALID_QUEUE_SIZE);
-+}
-+
-+static void invalid_enqueue(struct redirect_item *item, struct irde_inv_cmd *cmd)
-+{
-+	struct redirect_queue *inv_queue = &item->irde->inv_queue;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&inv_queue->lock);
-+
-+	while (invalid_queue_is_full(item->irde->node, &tail))
-+		cpu_relax();
-+
-+	memcpy(&inv_queue->cmd_base[tail], cmd, sizeof(*cmd));
-+
-+	redirect_write_reg32(item->irde->node, (tail + 1) % INVALID_QUEUE_SIZE,
-+			     LOONGARCH_IOCSR_REDIRECT_CQT);
-+}
-+
-+static void irde_invalid_entry(struct redirect_item *item)
-+{
-+	struct irde_inv_cmd cmd;
-+	u64 raddr = 0;
-+
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	invalid_enqueue(item, &cmd);
-+
-+	/*
-+	 * CPU needs to wait here for cmd to complete, and it determines this
-+	 * by checking whether invalid queue has already written a valid value
-+	 * to cmd.notice_addr.
-+	 */
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table = &item->irde->ird_table;
-+	int index;
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = find_first_zero_bit(ird_table->bitmap, IRD_ENTRIES);
-+	if (index >= IRD_ENTRIES) {
-+		pr_err("No redirect entry to use\n");
-+		return -ENOMEM;
-+	}
-+
-+	__set_bit(index, ird_table->bitmap);
-+
-+	item->index = index;
-+
-+	return 0;
-+}
-+
-+static void redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table = &item->irde->ird_table;
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	memset(entry, 0, sizeof(*entry));
-+
-+	scoped_guard(raw_spinlock_irq, &ird_table->lock)
-+		clear_bit(item->index, ird_table->bitmap);
-+
-+	kfree(item->gpid);
-+
-+	irde_invalid_entry(item);
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item,
-+						 struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((u64)item->gpid & GPID_ADDR_MASK) >> GPID_ADDR_SHIFT;
-+	entry->lo.vector = 0xff;
-+}
-+
-+static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE) {
-+		return ret;
-+	} else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+	struct avecintc_data *adata = irq_data_get_avec_data(data);
-+
-+	redirect_domain_prepare_entry(item, adata);
-+	irde_invalid_entry(item);
-+	avecintc_sync(adata);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item = irq_data_get_irq_chip_data(d);
-+
-+	msg->address_lo = (msi_base_addr | 1 << 2 | ((item->index & 0xffff) << 4));
-+	msg->address_hi = 0x0;
-+	msg->data = 0x0;
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name			= "REDIRECT",
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_set_affinity	= redirect_set_affinity,
-+	.irq_compose_msi_msg	= redirect_compose_msi_msg,
-+};
-+
-+static void redirect_free_resources(struct irq_domain *domain, unsigned int virq,
-+				    unsigned int nr_irqs)
-+{
-+	for (int i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		if (irq_data && irq_data->chip_data) {
-+			struct redirect_item *item = irq_data->chip_data;
-+
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *arg)
-+{
-+	msi_alloc_info_t *info = arg;
-+	int ret, i, node;
-+
-+	node = dev_to_node(info->desc->dev);
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(*item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+		item->irde = &irde_descs[node];
-+
-+		ret = redirect_table_alloc(item);
-+		if (ret) {
-+			pr_err("Alloc redirect table entry failed\n");
-+			goto out_free_resources;
-+		}
-+		/*
-+		 * Only bits 47:6 of the GPID are passed to the controller,
-+		 * 64-byte alignment must be guarantee and make kzalloc can
-+		 * align to the respective size.
-+		 */
-+		static_assert(sizeof(*item->gpid) == 64);
-+		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+
-+		redirect_domain_prepare_entry(item, irq_data_get_avec_data(irq_data));
-+	}
-+	return 0;
-+
-+out_free_resources:
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -ENOMEM;
-+}
-+
-+static void redirect_domain_free(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs)
-+{
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops redirect_domain_ops = {
-+	.alloc		= redirect_domain_alloc,
-+	.free		= redirect_domain_free,
-+	.select		= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(struct irde_desc *irde)
-+{
-+	struct redirect_queue *inv_queue = &irde->inv_queue;
-+	struct folio *folio;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, INV_QUEUE_PAGE_ORDER, irde->node);
-+	if (!folio) {
-+		pr_err("Node [%d] invalid queue alloc pages failed!\n", irde->node);
-+		return -ENOMEM;
-+	}
-+
-+	inv_queue->cmd_base = folio_address(folio);
-+	inv_queue->head = 0;
-+	inv_queue->tail = 0;
-+	raw_spin_lock_init(&inv_queue->lock);
-+
-+	return 0;
-+}
-+
-+static int redirect_table_init(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde->ird_table;
-+	unsigned long *bitmap;
-+	struct folio *folio;
-+	int node = irde->node;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, node);
-+	if (!folio) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->table = folio_address(folio);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		folio_put(folio);
-+		ird_table->table = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
-+	return 0;
-+}
-+
-+static void redirect_irde_cfg(struct irde_desc *irde)
-+{
-+	redirect_write_reg64(irde->node, CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	redirect_write_reg64(irde->node, __pa(irde->ird_table.table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	redirect_write_reg64(irde->node, ((u64)irde->inv_queue.cmd_base & CQB_ADDR_MASK) |
-+			     CQB_SIZE_MASK, LOONGARCH_IOCSR_REDIRECT_CQB);
-+}
-+
-+static void __redirect_irde_fini(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde_descs->ird_table;
-+	struct redirect_queue *inv_queue = &irde_descs->inv_queue;
-+
-+	if (ird_table->table) {
-+		folio_put(virt_to_folio(ird_table->table));
-+		ird_table->table = NULL;
-+	}
-+
-+	if (ird_table->bitmap) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (inv_queue->cmd_base) {
-+		folio_put(virt_to_folio(inv_queue->cmd_base));
-+		inv_queue->cmd_base = NULL;
-+	}
-+}
-+
-+static inline void redirect_irde_fini(int node)
-+{
-+	__redirect_irde_fini(&irde_descs[node]);
-+}
-+
-+static int redirect_irde_init(int node)
-+{
-+	struct irde_desc *irde = &irde_descs[node];
-+	int ret;
-+
-+	irde->node = node;
-+
-+	ret = redirect_table_init(irde);
-+	if (ret)
-+		return ret;
-+
-+	ret = redirect_queue_init(irde);
-+	if (ret) {
-+		__redirect_irde_fini(irde);
-+		return ret;
-+	}
-+
-+	redirect_irde_cfg(irde);
-+
-+	return 0;
-+}
-+
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header, const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init redirect_acpi_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	int ret = -EINVAL, node;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+						      &redirect_domain_ops, irde_descs);
-+	if (!redirect_domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+
-+	for_each_node_mask(node, node_possible_map) {
-+		ret = redirect_irde_init(node);
-+		if (ret)
-+			goto out_clear_irde;
-+	}
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_clear_irde;
-+	}
-+
-+	pr_info("loongarch irq redirect modules init succeeded\n");
-+	return 0;
-+
-+out_clear_irde:
-+	for_each_node_mask(node, node_possible_map)
-+		redirect_irde_fini(node);
-+
-+	irq_domain_remove(redirect_domain);
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return ret;
-+}
+ bool arch_pc_relative_reloc(struct reloc *reloc)
+ {
+ 	return false;
 -- 
-2.41.0
+2.51.0
 
