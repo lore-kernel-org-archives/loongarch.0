@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97ECF15665C
-	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 04:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4589259C94
+	for <loongarch@lists.linux.dev>; Wed,  3 Dec 2025 04:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764734478; cv=none; b=n2ONkSCc1P5xzw157iux9d6kbfrPLmbqZnhTOYlQMdB+8733g1Ak0/8hfEphFAyasQCoRpJR2lT12Ss+qpJlnLGnW5NF6HsPYQcv7VO4uzFCTW78tP45ywR46TcR+vYwjpxnT4sBnFw23lkV8QgGPYiwQ9ywwTk0LkStUmHwMMk=
+	t=1764734479; cv=none; b=H8w7Hl0Re9/VeTXArGcow5xHpO/zx5BJsMho1BfM4WiCXVqmxuKv4iGwu2uvgtG9i0FgxTrsESLN/CshNUZEkHu7wBsjJLR2FK6I04N3ZwTA0nXUDcOraPMQG68nWzFyKDQmRWNGrMwYlc5N1ou2DS+SeHYC4RQgm6ll35aE2rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764734478; c=relaxed/simple;
-	bh=t3Cd7hg2hGbCtGJ9jeKcQ1i/dz5mbmLQ3jxvFDoyah4=;
+	s=arc-20240116; t=1764734479; c=relaxed/simple;
+	bh=XRaMSYPcrFCQBDJFnfNAsbVT2FhJZu7oFrzEv5ZdSeQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oXQIqqgCsoptbJayIkRj7ODXD2L+SkfXf6ev6Q9RPHTLGFeQUWHHMhLBjzXXoaaTWy8OtREUlM4dOxhMSNWKdsk5jDomyqYoCwkQQ2TiYEBZuGnw28pM5krn8pEjzxmxP3sjnQf8++r8SbFXqHPqvD/VBhUV1+TETB8e3eaUBJ4=
+	 MIME-Version; b=X7c2Kzj0dMOOsxs/WV48Vj/QSHIam/QQpOuYbiTPgj0tP28FSn71WNN/K5sj+JxpE6pg08lBsoPXGzgLeakNLhde9Rodumx6zoJXF97T3vLvztz4L0mAK2TGmIUMZJYtniHdHVsQeZP1WbPbjfuV4IgOaRDHPabHM41aCXJbV1M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8Bx1tAJti9pMJQqAA--.26378S3;
-	Wed, 03 Dec 2025 12:01:13 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxjdILti9pRJQqAA--.20886S3;
+	Wed, 03 Dec 2025 12:01:15 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJDxbMECti9pitZEAQ--.61845S3;
-	Wed, 03 Dec 2025 12:01:11 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxbMECti9pitZEAQ--.61845S5;
+	Wed, 03 Dec 2025 12:01:14 +0800 (CST)
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
 To: corbet@lwn.net,
 	alexs@kernel.org,
@@ -35,9 +35,9 @@ Cc: loongarch@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v7 1/5] Docs/LoongArch: Add Advanced Extended-Redirect IRQ model description
-Date: Wed,  3 Dec 2025 12:00:58 +0800
-Message-ID: <20251203040105.32490-2-zhangtianyang@loongson.cn>
+Subject: [PATCH v7 3/5] irqchip/irq-loongson.h:irq-loongson.h preparation for Redirect irqchip
+Date: Wed,  3 Dec 2025 12:01:00 +0800
+Message-ID: <20251203040105.32490-4-zhangtianyang@loongson.cn>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20251203040105.32490-1-zhangtianyang@loongson.cn>
 References: <20251203040105.32490-1-zhangtianyang@loongson.cn>
@@ -47,136 +47,111 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxbMECti9pitZEAQ--.61845S3
+X-CM-TRANSID:qMiowJDxbMECti9pitZEAQ--.61845S5
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAryfuw1rKw1kKFyUuw45Jwc_yoWrXr4fpr
-	Z3GryxXF18Jry5Xr17Jr4UXr13Gwn3Ja1DtF1xKry8Xr4kAr1ktr1UJrykJFy7G34rAr1U
-	XFWrJw4UJr1UJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8AF1rXrW5WrW3Zw4kKrX_yoW5Jw1rpF
+	W5Aay29r48tF4xXry5Gw1kXFy3ZFyxKrZrtayfGayfXFZ8Gws7WFy2qF95ZFy8Gr48ua4x
+	ur48tF1UuFs8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUBmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
 	wI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
 	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jthL8UUUUU=
+	ZF0_GryDMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48Icx
+	kI7VAKI48JMxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUaTKZDUUUU
 
-Introduce the redirect interrupt controllers.When the redirect interrupt
-controller is enabled, the routing target of MSI interrupts is no longer
-a specific CPU and vector number, but a specific redirect entry. The
-actual CPU and vector number used are described by the redirect entry.
+Adjusted definitions and macro from loongson-avec.c to irq-loongson.h,
+including:
+1 marco AVEC_MSG_OFFSET
+2 struct avecintc_data
+3 Make avecintc_sync public
 
 Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
- .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
- 2 files changed, 75 insertions(+)
+ drivers/irqchip/irq-loongarch-avec.c | 12 +-----------
+ drivers/irqchip/irq-loongson.h       | 19 +++++++++++++++++++
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-index a7ecce11e445..d9a2e8d7f70e 100644
---- a/Documentation/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/arch/loongarch/irq-chip-model.rst
-@@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then go to CPUINTC directly::
-              | Devices |
-              +---------+
+diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+index bf52dc8345f5..514ad8dedc46 100644
+--- a/drivers/irqchip/irq-loongarch-avec.c
++++ b/drivers/irqchip/irq-loongarch-avec.c
+@@ -24,7 +24,6 @@
+ #define VECTORS_PER_REG		64
+ #define IRR_VECTOR_MASK		0xffUL
+ #define IRR_INVALID_MASK	0x80000000UL
+-#define AVEC_MSG_OFFSET		0x100000
  
-+Advanced Extended IRQ model (with redirection)
-+==============================================
-+
-+In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
-+to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, PCH-MSI interrupts go
-+to REDIRECT for remapping it to AVEC, and then go to CPUINTC directly, while all
-+other devices interrupts go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then
-+go to CPUINTC directly::
-+
-+ +-----+     +-----------------------+     +-------+
-+ | IPI | --> |        CPUINTC        | <-- | Timer |
-+ +-----+     +-----------------------+     +-------+
-+              ^          ^          ^
-+              |          |          |
-+       +---------+ +----------+ +---------+     +-------+
-+       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
-+       +---------+ +----------+ +---------+     +-------+
-+            ^            ^
-+            |            |
-+            |      +----------+
-+            |      | REDIRECT |
-+            |      +----------+
-+            |            ^
-+            |            |
-+       +---------+  +---------+
-+       | PCH-PIC |  | PCH-MSI |
-+       +---------+  +---------+
-+         ^     ^           ^
-+         |     |           |
-+ +---------+ +---------+ +---------+
-+ | Devices | | PCH-LPC | | Devices |
-+ +---------+ +---------+ +---------+
-+                  ^
-+                  |
-+             +---------+
-+             | Devices |
-+             +---------+
-+
- ACPI-related definitions
- ========================
+ #ifdef CONFIG_SMP
+ struct pending_list {
+@@ -47,15 +46,6 @@ struct avecintc_chip {
  
-diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-index d4ff80de47b6..7e4e3e55c7ad 100644
---- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-@@ -174,6 +174,43 @@ CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断发送到AVECINTC，
-              | Devices |
-              +---------+
+ static struct avecintc_chip loongarch_avec;
  
-+高级扩展IRQ模型 (带重定向)
-+==========================
-+
-+在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
-+CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断首先发送到REDIRECT模块,完成重定向后发
-+送到AVECINTC，而后通过AVECINTC直接送达CPUINTC，而其他所有设备的中断则分别发送到所连
-+接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直接到达CPUINTC::
-+
-+ +-----+     +-----------------------+     +-------+
-+ | IPI | --> |        CPUINTC        | <-- | Timer |
-+ +-----+     +-----------------------+     +-------+
-+              ^          ^          ^
-+              |          |          |
-+       +---------+ +----------+ +---------+     +-------+
-+       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
-+       +---------+ +----------+ +---------+     +-------+
-+            ^            ^
-+            |            |
-+            |      +----------+
-+            |      | REDIRECT |
-+            |      +----------+
-+            |            ^
-+            |            |
-+       +---------+  +---------+
-+       | PCH-PIC |  | PCH-MSI |
-+       +---------+  +---------+
-+         ^     ^           ^
-+         |     |           |
-+ +---------+ +---------+ +---------+
-+ | Devices | | PCH-LPC | | Devices |
-+ +---------+ +---------+ +---------+
-+                  ^
-+                  |
-+             +---------+
-+             | Devices |
-+             +---------+
-+
- ACPI相关的定义
- ==============
+-struct avecintc_data {
+-	struct list_head	entry;
+-	unsigned int		cpu;
+-	unsigned int		vec;
+-	unsigned int		prev_cpu;
+-	unsigned int		prev_vec;
+-	unsigned int		moving;
+-};
+-
+ static inline void avecintc_enable(void)
+ {
+ 	u64 value;
+@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
+ 	INIT_LIST_HEAD(&plist->head);
+ }
  
+-static void avecintc_sync(struct avecintc_data *adata)
++void avecintc_sync(struct avecintc_data *adata)
+ {
+ 	struct pending_list *plist;
+ 
+diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
+index 11fa138d1f44..1f11d799bf0a 100644
+--- a/drivers/irqchip/irq-loongson.h
++++ b/drivers/irqchip/irq-loongson.h
+@@ -6,6 +6,17 @@
+ #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
+ #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
+ 
++#define AVEC_MSG_OFFSET		0x100000
++
++struct avecintc_data {
++	struct list_head        entry;
++	unsigned int            cpu;
++	unsigned int            vec;
++	unsigned int            prev_cpu;
++	unsigned int            prev_vec;
++	unsigned int            moving;
++};
++
+ int find_pch_pic(u32 gsi);
+ 
+ int liointc_acpi_init(struct irq_domain *parent,
+@@ -24,4 +35,12 @@ int pch_msi_acpi_init(struct irq_domain *parent,
+ 					struct acpi_madt_msi_pic *acpi_pchmsi);
+ int pch_msi_acpi_init_avec(struct irq_domain *parent);
+ 
++int redirect_acpi_init(struct irq_domain *parent);
++
++#ifdef CONFIG_SMP
++void avecintc_sync(struct avecintc_data *adata);
++#else
++static inline void avecintc_sync(struct avecintc_data *adata) {}
++#endif
++
+ #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
 -- 
 2.41.0
 
