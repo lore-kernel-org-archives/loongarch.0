@@ -1,89 +1,128 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4792F49EC
-	for <loongarch@lists.linux.dev>; Fri,  5 Dec 2025 06:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDF1313E2D
+	for <loongarch@lists.linux.dev>; Fri,  5 Dec 2025 07:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764916178; cv=none; b=m2pldiQoTEEoYhx7KqfA72eT4b8QPbcBsXpCdgV1Q7RM4Hl7XXLxQ+G0x4SOBUN8aahbl5CjxU7VdwLqoZtKbDPQicWjrbyZpj8xFBpqX+lGrGKlzEdtnWUsoZUcOWfFJMwZlZ5+O1eW8WsbmJmJ1JProflkGntr0E9eeU0y3+w=
+	t=1764918294; cv=none; b=oZ/f0PWoo4SWXaH7zaVuYWHVLk9XOCcgmn1wEb7mihjLNGSmQdsy2oI4326zAwiUQC9EMHnZXcFjlgBZXwva0FDHM2I7JossO0/x/DBR0WkmvqPO36vgVQKBPHtmTCfub5hlbqWVSJTDIntj+Oubo0v4WkoaKRwBsMN0Rj0ql/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764916178; c=relaxed/simple;
-	bh=jBTSf1NBjHQ0A85ubxl+1PskFCEAy3vCJ4zJY+SfPYU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KocCs0LAghI8xq8GeUa4qlRu1bZwKBejT+DqXkatJYMHZ5r2WuLIgLsuc2EDgfW6qLBxI7vXUv67ETlBWPk+joyvwKULFSm6U1GImi0R9n7DRedujcQbrkjKPooMWGU9VliuvgM64gO2mcDfqp1EAsfS66WmXTFKq4QULAuVZ0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AV31+iMp; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1764918294; c=relaxed/simple;
+	bh=+OrB9AE0d5cBLLPBjUViui646HkkECciNTC6kUMmb/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KjABwlovLr7UzTyKNb/6qNrSCMWYdhFtFNIhvDmOujV9VtLCgb5i+3i+cUaIZ6FSUz3Gd8MPyXkvVS2iuY7nrtG3X81lH/D7wdrPnWJuT6rfNBe9609A3ck8tQ8VQZMjKGjOQtTv7NDzJqatLB3u0hrN0/nWaaVCCK1QlsMfkxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b5zsZiDB; arc=none smtp.client-ip=209.85.160.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AV31+iMp"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764916175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XnHdPbNZY+icNHDhsU00WTTGxUuRI5fAPK2EbH7Tj7Q=;
-	b=AV31+iMpTXKQcElWK/hU5Kcj1Wmv6dXqia85uaEROKfWssCby6m62e6S7kv4dAeKBDh1Bn
-	tsrhIBqL/r5xDroCQUE0JNQTOOFOU4eqNS8ONNvZdgxgEz1NgK6wV2RbOH9BrxFHynDOCG
-	D7BBUiTlwQwNRwFrfUWO2ryTXPJbzQI=
-From: George Guo <dongtai.guo@linux.dev>
-Date: Fri, 05 Dec 2025 14:29:07 +0800
-Subject: [PATCH v4 4/4] LoongArch: Enable 128-bit atomics cmpxchg support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5zsZiDB"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-3f50614f4ccso732812fac.3
+        for <loongarch@lists.linux.dev>; Thu, 04 Dec 2025 23:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764918284; x=1765523084; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+OrB9AE0d5cBLLPBjUViui646HkkECciNTC6kUMmb/U=;
+        b=b5zsZiDBdrJvuJNogVQptGkFtXGxaLKksmAHDIPS72/TDP7KzSXtwDEWaQgYgNypgv
+         ypubaQ8uIunYJhOwZlUPgpHCvONlBtKX3Q+3pKuHa2zkvkohIB8UqMAwZ4zVwgGt6s0t
+         wmqez+3WH46DwWXGBdXVM8s/qj7gOYWslHFW42djVEUw4IIcNzlhfCWsBCBu/KEUSXTN
+         Clm5MCtUFXbP9Enbdd1PEbX0SaZ/WeS7rC9Sqf5gp5q83texWQmNR0rUhmz1pGPw8ORd
+         hLjW9urZyvat18OPhG8wDHPtj47yI7ZXaZA8/Mqr7zDcMEF6860Z5ScyGZcurVYxvSho
+         8mMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764918284; x=1765523084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+OrB9AE0d5cBLLPBjUViui646HkkECciNTC6kUMmb/U=;
+        b=lIwo8eBObzL3oqCpQb8vePgkNe77VGPUbKacN3z/bTJwUo+rNrfQFH/lGWWYxcH8/C
+         3YHbHYRnH0mTKR+s5H0PMXPKMTrDxYSvV3LSu3zTzxq/hx9bt6uCCjgu8ZXqHz0Ip448
+         OvAj75HNONtJQO/LjYBLbCzaRZuAX13UPFjiWkM2Ot4Pqw/hm+GaYnC9w5WNys/K7LNY
+         PJzihKK2kD6h9Z6xngN6xyBhTbih6DWSVVt2xpJiqDpB0P/FBCbnt9qXgL2yCRz1rVCx
+         cfTEM3xD1mx8osFO9v7kXFLkGuv5mABBmUAi1XZNkv40f60STl02rnwB4Pk5R58nDeJ1
+         VQUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXru8GGMs9ovc2Dr/MrzNoqfvApJI/F9AjI8jM35WqSSYj8lESASi4ukaNUuCk5s9HbyU1/jZeEkUE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzeEHYmR6vsFrS46Fvun3QoYFLXdg2qdAxvdsVy+ntswy8g6d8M
+	fWn/yFoWpbPZoewZK+oFq12jb5w0r9LYcZ+yk9JUn1YieyiAff3fKSHwht8w2tGEefUytElZixK
+	fj3R9BxGyVUxaHUzzObUWbR3OV3TL25uB+Vfo
+X-Gm-Gg: ASbGncuvkLNgrQRDy3rYzWHOwQ31IqnGBMf1WY35GucuAH46K0CgtzF1tqlqFxw6pc/
+	6KrZcYpG3kWsbCzJA4lQkLfarMy1EF5uKJpGQVXUdPDll+nsejH3mx5XZq9WYe58v9eKqjQkg/0
+	f7ea+9f5rfCCRc0ba7IBZB7aVl0Gq7B9j9G0cJCk/4AEQ5Wc4KwJsvnmh0oRljmQGJHrm+O2zqA
+	isXBe5pvDooG8ARQPvtrS5FA6jEO2cX/RCs/rWi376FIuKQAB4CAst3YBx0F2rjac4/cFE=
+X-Google-Smtp-Source: AGHT+IGUGG/hLNyZIKDCu/RPV2YtAQNJt6SIPDXE5WIr7W8hGOufrDBoWHHdESV4dnRdEwn9qH4ykZZ+89Xay4FVjzQ=
+X-Received: by 2002:a05:6808:11cf:b0:44d:a69b:d236 with SMTP id
+ 5614622812f47-4536e51ccb0mr4026817b6e.36.1764918283630; Thu, 04 Dec 2025
+ 23:04:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251205-2-v4-4-e5ab932cf219@linux.dev>
-References: <20251205-2-v4-0-e5ab932cf219@linux.dev>
-In-Reply-To: <20251205-2-v4-0-e5ab932cf219@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764916160; l=1046;
- i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=ciDWXt3BQSm1RCVw/2AyrNMAA+62PK+Q6MPycedHCU8=;
- b=BLAmpMY9tnhJlSwlaGTR8TBDvVc4J0Qd0e2os0lEFKVfdi9+KzRrAlXdrHT3q3rt+FxYoCmux
- xQBdiUrePU/CvkEaR5mH0o7Gg45W2JF5pcLvOmBdqBq1NCEJIt15ORQ
-X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
- pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
-X-Migadu-Flow: FLOW_OUT
+References: <20251124055642.1591-1-hengqi.chen@gmail.com> <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
+ <CAEyhmHSntgSQdAOksd6YUsHh0UXJS7XMmSHAZmRDQ5uEzDU0JQ@mail.gmail.com>
+ <CAAhV-H5Vab3bwgT2LdGyNB4ipzhnS+JW7PdcOSmNm4JZ30tWTg@mail.gmail.com>
+ <fc62bac6-b212-3aed-1536-aee8a60d2f0a@loongson.cn> <CAEyhmHQO9bDP7L=cwxLUbQCrkFfcDaSeKMgB5R32sqMgvJk7ng@mail.gmail.com>
+In-Reply-To: <CAEyhmHQO9bDP7L=cwxLUbQCrkFfcDaSeKMgB5R32sqMgvJk7ng@mail.gmail.com>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Fri, 5 Dec 2025 15:04:32 +0800
+X-Gm-Features: AQt7F2p5TKB4u6xSxAgLsJUzfvgLf06Bd7NLnNN9jo7WjdL0sLXJ7mxiJU_MAKU
+Message-ID: <CAEyhmHTUToX3qedYVS7v3LP84f3LiW9NbrH-nzxEqEdWAkhFmw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, vincent.mc.li@gmail.com, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: George Guo <guodongtai@kylinos.cn>
+Hi Huacai,
 
-Add select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE in Kconfig
-to enable 128-bit atomic cmpxchg support on LoongArch.
+Will you pick this series for 6.19 ?
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 5b1116733d881bc2b1b43fb93f20367add4dbc54..6fb2c253969f9ddece5478920423d7326c3ec046 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -114,6 +114,7 @@ config LOONGARCH
- 	select GENERIC_TIME_VSYSCALL
- 	select GPIOLIB
- 	select HAS_IOPORT
-+	select HAVE_ALIGNED_STRUCT_PAGE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
-@@ -140,6 +141,7 @@ config LOONGARCH
- 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	select HAVE_EBPF_JIT
-+	select HAVE_CMPXCHG_DOUBLE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
- 	select HAVE_EXIT_THREAD
- 	select HAVE_GENERIC_TIF_BITS
-
--- 
-2.49.0
-
+On Fri, Nov 28, 2025 at 9:37=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Thu, Nov 27, 2025 at 3:30=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > On 2025/11/27 =E4=B8=8B=E5=8D=882:44, Huacai Chen wrote:
+> > > Hi, Tiezhu,
+> > >
+> > > On Mon, Nov 24, 2025 at 3:49=E2=80=AFPM Hengqi Chen <hengqi.chen@gmai=
+l.com> wrote:
+> > >>
+> > >> On Mon, Nov 24, 2025 at 2:31=E2=80=AFPM Huacai Chen <chenhuacai@kern=
+el.org> wrote:
+> > >>>
+> > >>> Hi, Hengqi,
+> > >>>
+> > >>> I think this is the successor of
+> > >>> https://lore.kernel.org/loongarch/20251006053323.193581-1-hengqi.ch=
+en@gmail.com/T/#t
+> > >>>
+> > >>> Right?
+> > >>>
+> > >>
+> > >> Right, sorry for the long delay.
+> > > Could you please help to review this series?
+> >
+> > I trust Hengqi and I am OK with this series in general with
+> > a quick look.
+> >
+> > For the two functions sign_extend() and emit_abi_ext(), I
+> > have no strong opinion, I do not want to respin the patch
+> > since the merge window is coming soon, it does not affect
+> > the correctness, so we can refine the code later if there
+> > is a better way.
+> >
+> > Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >
+>
+> Thanks.
+>
+> > Thanks,
+> > Tiezhu
+> >
