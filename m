@@ -1,35 +1,35 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3592459C5
-	for <loongarch@lists.linux.dev>; Fri,  5 Dec 2025 06:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363AD2F4A10
+	for <loongarch@lists.linux.dev>; Fri,  5 Dec 2025 06:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764916170; cv=none; b=OlPuKakUFseWgI0zFKJrFxTRL3n5f4tbm0gVNz3Wxax8Kj7Z9xJsnC4EcYKUuPT/ZuU+IqPslY+Bu1iLofgWc/kb1b+Xbf5YlaU2BA0HInmcJOsWAnUqrplL+JcfAWSX36YDUBseR31plM2z9nbYuobDKFbmjTOyI29lLgS3xC8=
+	t=1764916173; cv=none; b=LeFm4MjtwbIEKE06VeGPV1KEaO/CYKDxJftTMskZuwOtZRow8ii8b9WHwKvGVBxB59tlZ4+97RcZgKlolJOUOaWRP9wnlRJjNd0YcEiTfRduModm4UhqP4ZQpdld+Fz+jF7QOSZ+/cQxBIToIzMZd7yX+TlIn51LPVfCqoAAKJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764916170; c=relaxed/simple;
-	bh=CHhZrO+seigQep4EcilCQI+NM2vFrNNb290ys6kF5LI=;
+	s=arc-20240116; t=1764916173; c=relaxed/simple;
+	bh=sSbavY35pohbv0p0NsDDkXc9ND0MsdY6Tj9RlR06H5g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H3h0BBo1bc79SszEe7w+LgBKqmTBct7MCc99YQbe4xSMB7thkymIgXJFHHR4pWC3DTu26zXtAtDgsp4TCCzCFd4y8A8ipSPaQenpFDKwBP4eUk2IH1TPu2BV+RULVlNsZ1IxwvVwXQKTX09NWhnqc3Ea4PmCYHDFEF1ruC5fnr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MBUeISDt; arc=none smtp.client-ip=95.215.58.180
+	 In-Reply-To:To:Cc; b=SFhzyX0OrB9M5lloc+KmqMUa2Gcnlu4VGe0jS2Jh1drPqeCmdcqhSrjgqMx3Y19ftbDrUpDE3IQn0K48CxPLzrUIm68NViwS/8q6tX4QITzWvE5/y2TDjKliIqynQ3+YgxNZk7xPrjjPtgZcYsqyzuB4AakPXQ8Qu4wq3h6LIuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DNCQh2EF; arc=none smtp.client-ip=95.215.58.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MBUeISDt"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DNCQh2EF"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1764916166;
+	t=1764916169;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6KDuNOF7zwOqq4SGBvigFpNcY4PTnIkUpXxey+/fvOw=;
-	b=MBUeISDtkCNLQKQ3KegCfIWXqWWsr3INUUNFKXiAV6d/33DjeOP0l005PdB/8zMSkIj9HO
-	H91HL+h439tF0Y6NwHeo1ksSqKyoGt2uwYBaiHFRORS+YUibepNkbA9xJ/V+wX23c2Wqp2
-	YrKyZuEFHFBRMVdA0emM2yk+ahiQT0A=
+	bh=rbIP4FIfXgyVPybkD2AC4h5SfDq/AjeNenIArga2wk0=;
+	b=DNCQh2EFq1iix0Mzg93W3aSVGvDQiklzlKNaV7broKc7tHU6tgqE9KUjve5D2tpu3BgyHq
+	XzOFfO7V6cQ27+Osy9pj2DuDPMudoNaKlkFKlj19ZWUaAVC0mN9juov/QVWtarrZJIEx7O
+	seWy12CehzbU2aqSu1CLjKgCb8sPYRM=
 From: George Guo <dongtai.guo@linux.dev>
-Date: Fri, 05 Dec 2025 14:29:04 +0800
-Subject: [PATCH v4 1/4] LoongArch: Add 128-bit atomic cmpxchg support
+Date: Fri, 05 Dec 2025 14:29:05 +0800
+Subject: [PATCH v4 2/4] LoongArch: Add SCQ support detection
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,105 +38,94 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251205-2-v4-1-e5ab932cf219@linux.dev>
+Message-Id: <20251205-2-v4-2-e5ab932cf219@linux.dev>
 References: <20251205-2-v4-0-e5ab932cf219@linux.dev>
 In-Reply-To: <20251205-2-v4-0-e5ab932cf219@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- George Guo <dongtai.guo@linux.dev>, George Guo <guodongtai@kylinos.cn>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1764916159; l=2734;
+ George Guo <dongtai.guo@linux.dev>, george <guodongtai@kylinos.cn>, 
+ Yangyang Lian <lianyangyang@kylinos.cn>, George Guo <guodongtai@kylinos.cn>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1764916160; l=3297;
  i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=G9Rok0Fvrnc2B8Tx4x6JiuOW/GjTomdEObq8AwW7z40=;
- b=p6MsxaxhhQBgLsZkCDMOZpfjMMOauwytYCV0P0szR5s/vExh0iCmIv+ktcOeYgkgnloNQ+3Dg
- wE2LJyhSOFxA0cfV3DJ+p1MB3JpB5XP7nu8bih36dIu7AAe/Sxk9GEL
+ bh=asp3zEGHKQM1Bn/cuBBd7v6/IsNBRe16HsbU8xem4UU=;
+ b=/P6G/eCKOSjxgXbKSENqdFeumz02U7FA4KflSyaG0WIeJezJnftCBly8F9n7//ca+GB9ZWuTl
+ 28pcGk98/hYBJ1S4QS57DmeS5F6OHa8QdAwN9tq0jEnyV2sz2HavYZg
 X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
  pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
 X-Migadu-Flow: FLOW_OUT
 
-From: George Guo <guodongtai@kylinos.cn>
+From: george <guodongtai@kylinos.cn>
 
-Implement 128-bit atomic compare-and-exchange using LoongArch's
-LL.D/SC.Q instructions.
+Check CPUCFG2_SCQ bit to determin if the CPU supports
+SCQ instrction.
 
-At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
-caused by kmalloc_nolock_noprof returning NULL due to missing
-128-bit atomics. The NULL returns led to -ENOMEM errors during
-scheduler initialization, causing test cases to fail.
-
-Verified by testing with the scx_qmap scheduler (located in
-tools/sched_ext/). Building with `make` and running
-./tools/sched_ext/build/bin/scx_qmap.
-
+Co-developed-by: Yangyang Lian <lianyangyang@kylinos.cn>
+Signed-off-by: Yangyang Lian <lianyangyang@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/include/asm/cmpxchg.h | 47 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ arch/loongarch/include/asm/cpu-features.h | 1 +
+ arch/loongarch/include/asm/cpu.h          | 2 ++
+ arch/loongarch/include/asm/loongarch.h    | 1 +
+ arch/loongarch/kernel/cpu-probe.c         | 4 ++++
+ 4 files changed, 8 insertions(+)
 
-diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/include/asm/cmpxchg.h
-index 979fde61bba8a42cb4f019f13ded2a3119d4aaf4..f7a0a9a032c513196ef186a5493b500787e0e9b6 100644
---- a/arch/loongarch/include/asm/cmpxchg.h
-+++ b/arch/loongarch/include/asm/cmpxchg.h
-@@ -111,6 +111,44 @@ __arch_xchg(volatile void *ptr, unsigned long x, int size)
- 	__ret;								\
- })
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index bd5f0457ad21d89ab902fb1971cc8b41b1d340ad..860cb58a92ba0c0316a8009d97441043374e7f10 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -70,5 +70,6 @@
+ #define cpu_has_msgint		cpu_opt(LOONGARCH_CPU_MSGINT)
+ #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
+ #define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
++#define cpu_has_scq		cpu_opt(LOONGARCH_CPU_SCQ)
  
-+union __u128_halves {
-+	u128 full;
-+	struct {
-+		u64 low;
-+		u64 high;
-+	};
-+};
-+
-+#define __cmpxchg128_asm(ptr, old, new)					\
-+({									\
-+	union __u128_halves __old, __new, __ret;			\
-+	volatile u64 *__ptr = (volatile u64 *)(ptr);			\
-+									\
-+	__old.full = (old);                                             \
-+	__new.full = (new);						\
-+									\
-+	__asm__ __volatile__(						\
-+	"1:   ll.d    %0, %3		# 128-bit cmpxchg low	\n"	\
-+	__WEAK_LLSC_MB							\
-+	"     ld.d    %1, %4		# 128-bit cmpxchg high	\n"	\
-+	"     bne     %0, %z5, 2f				\n"	\
-+	"     bne     %1, %z6, 2f				\n"	\
-+	"     move    $t0, %z7					\n"	\
-+	"     move    $t1, %z8					\n"	\
-+	"     sc.q    $t0, $t1, %2				\n"	\
-+	"     beqz    $t0, 1b					\n"	\
-+	"2:							\n"	\
-+	__WEAK_LLSC_MB							\
-+	: "=&r" (__ret.low), "=&r" (__ret.high)				\
-+	: "r" (__ptr),							\
-+	  "ZC" (__ptr[0]), "m" (__ptr[1]),				\
-+	  "Jr" (__old.low), "Jr" (__old.high),				\
-+	  "Jr" (__new.low), "Jr" (__new.high)				\
-+	: "t0", "t1", "memory");					\
-+									\
-+	__ret.full;							\
-+})
-+
- static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned int old,
- 					   unsigned int new, unsigned int size)
- {
-@@ -198,6 +236,15 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, unsigned int
- 	__res;								\
- })
+ #endif /* __ASM_CPU_FEATURES_H */
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index f3efb00b61414a9b111ade9fe9beb410b927d937..5531039027ec763f21c7a6a88685ec81fa61d3cc 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -125,6 +125,7 @@ static inline char *id_to_core_name(unsigned int id)
+ #define CPU_FEATURE_MSGINT		29	/* CPU has MSG interrupt */
+ #define CPU_FEATURE_AVECINT		30	/* CPU has AVEC interrupt */
+ #define CPU_FEATURE_REDIRECTINT		31	/* CPU has interrupt remapping */
++#define CPU_FEATURE_SCQ			32	/* CPU has SC.Q instruction */
  
-+/* cmpxchg128 */
-+#define system_has_cmpxchg128()		1
-+
-+#define arch_cmpxchg128(ptr, o, n)					\
-+({									\
-+	BUILD_BUG_ON(sizeof(*(ptr)) != 16);				\
-+	__cmpxchg128_asm(ptr, o, n);					\
-+})
-+
- #ifdef CONFIG_64BIT
- #define arch_cmpxchg64_local(ptr, o, n)					\
-   ({									\
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+@@ -158,5 +159,6 @@ static inline char *id_to_core_name(unsigned int id)
+ #define LOONGARCH_CPU_MSGINT		BIT_ULL(CPU_FEATURE_MSGINT)
+ #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
+ #define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
++#define LOONGARCH_CPU_SCQ		BIT_ULL(CPU_FEATURE_SCQ)
+ 
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 3de03cb864b248cd0fb5de9ec5a86b1436ccbdef..be04b3e6f5b0cd6c5d561efcfd99502bc24e5eee 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -94,6 +94,7 @@
+ #define  CPUCFG2_LSPW			BIT(21)
+ #define  CPUCFG2_LAM			BIT(22)
+ #define  CPUCFG2_PTW			BIT(24)
++#define  CPUCFG2_SCQ			BIT(30)
+ 
+ #define LOONGARCH_CPUCFG3		0x3
+ #define  CPUCFG3_CCDMA			BIT(0)
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index a2060a24b39fd78fa255816fa5518e0ee99b8a8e..47815a55b7b48bbffd4954a9b8bdf7021d7e234d 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -201,6 +201,10 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 		c->options |= LOONGARCH_CPU_PTW;
+ 		elf_hwcap |= HWCAP_LOONGARCH_PTW;
+ 	}
++	if (config & CPUCFG2_SCQ)
++		c->options |= LOONGARCH_CPU_SCQ;
++	else
++		pr_warn_once("CPU does NOT support SCQ\n");
+ 	if (config & CPUCFG2_LSPW) {
+ 		c->options |= LOONGARCH_CPU_LSPW;
+ 		elf_hwcap |= HWCAP_LOONGARCH_LSPW;
 
 -- 
 2.49.0
