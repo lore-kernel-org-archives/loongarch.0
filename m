@@ -1,124 +1,127 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31B222127A
-	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 03:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27062C21DE
+	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 06:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764992334; cv=none; b=VCb04n7S7GuC7HcCxi+ceY7unW0pnelTIYocCUbJuTVFiZ5wd5thWHDLye6bfjT8aDvao9AOSu45omOo/Y85cFqEpH/Bqn1N5iX0NlY925OoGkUmMWAR6zBUpCZE2AwpyahundmF1nyjSrRvSi22YoygYgQaVPTb1IMlgxypCZw=
+	t=1765001265; cv=none; b=uApFfDMRbA2zI3IMDGN75NlbN6DAgIOU+f9Pbk9ObW7iH4XVFCtiXwSo7B2iX+GLK25IhT5fUDRSOJXi4E7JXWz/GuGbbQugXUqxz8ZtcwdcHFmHrTjM/NG0CtJLO0Ysd9rsLlbcuyknP89LfxxeqMVxR8K6vV78xcbqJFP+j5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764992334; c=relaxed/simple;
-	bh=RPIuaxf//AbFhM1/mGaCmgPDo6nxo24jyaZnDA6G0ic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JNAhcwVrHO0BHIPQH8m8GAU+3i0+LfVapay87pPAN7+uRE0hisILpUsGnPYJwwcj6E5UXcrTTd2n3C0cLxXptzu2qA7zsddeO3YyFAKcEeI4TU63JE6h5WgaxDzUi9uQvTUGhWakcTvffAHoEsrOPmzMm9c/oEQS/eJvyzMq+yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=coIeJHot; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1765001265; c=relaxed/simple;
+	bh=tGQglHScmycKEV/k+Nh77clbfHbHgUUhAw7of1k0Icw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j7Ak1bG8xPDuW94OIO2T+Uvivn25Z2EjG/y8KlC5iVVzNFakWIpUgnsfmwtReSR8Cwn9/BOH9tBPS5Jbkn8M36JusmoJEKud8ilAsDAQJq1sM0Usuq4rKssZVZKD13y7edRUmrVki6OAvjkdLY2n8fCLMU8npA/sR4WgsOdU+BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAY3ITup; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="coIeJHot"
-Received: from eig-obgw-5007b.ext.cloudfilter.net ([10.0.29.167])
-	by cmsmtp with ESMTPS
-	id RcuKvbNTvv724Rj8AvxVSb; Sat, 06 Dec 2025 03:38:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Rj89v5M43V6WMRj89vp7mW; Sat, 06 Dec 2025 03:38:46 +0000
-X-Authority-Analysis: v=2.4 cv=E//Npbdl c=1 sm=1 tr=0 ts=6933a546
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=ujWNxKVE5dX343uAl30YYw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=1XWaLZrsAAAA:8 a=_lKBnUPEwlkEFLTacEwA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KoD1NRD0QaV+f74bc5iSUT0wwYVNJpat/RcP0vQRNuI=; b=coIeJHotksEB6dU0JU8LIyi2+L
-	uaDb55h2Mt1UuG3h/KfXxkyCM9kNkUWFXfKhHQ4o8JDSD7EQAoRXlQNhy2MPsqj9G6CEDFz/Atw+9
-	ZgQjnWppwz+a1nyxKyA8oa3XON37XtoLsHEsqBF7NciO4/cTYHyJsaGDdkZ1q96dXAR3vN+Ajgd8E
-	26oVQjWOBLooorvXiIFmWbm5h0W8vYG/Im+2W7ub8NiQ1hVB5GfsOo4OHyrJbTvh1tDzKIt53tiIR
-	QYbVpumaH0gvsFCV4zcXTBdq2yPsnMuu7hmsfqp+jYwJ4mvpvuF9UPJnj4fcmmFTX5nHWOJenYOGa
-	9yhq7lSQ==;
-Received: from i118-18-233-1.s41.a027.ap.plala.or.jp ([118.18.233.1]:61266 helo=[10.83.24.44])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1vRj86-00000002EOT-2JGv;
-	Fri, 05 Dec 2025 21:38:43 -0600
-Message-ID: <0018d1c0-58ec-4b31-b016-472795990923@embeddedor.com>
-Date: Sat, 6 Dec 2025 12:38:14 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAY3ITup"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EBCC19422
+	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 06:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765001265;
+	bh=tGQglHScmycKEV/k+Nh77clbfHbHgUUhAw7of1k0Icw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KAY3ITupq+oQprTH4HibHvP2NtLU36zbf9Zm02Q0l7++sFVuD92KKfAPYJsivNxLg
+	 cxOFDX8JylgrJg/0fUUEluXYg0gYlxTSQCxO0os0Gy/fr6XSuOhuzDHp4htzdILBIW
+	 HA9EuoX6d+mMOEIQjqPvr1TpLWMfy5E5dEr/zmv3znragitN90HOCkEEqpYRLDOT17
+	 N0p+3jfHQrzkLUiiRhuKGcWGrz+e8Q+0pGMS9oHJsGSBJKBPCKdWKBE6VVq8hD+vma
+	 HRqnalZEzEzYmSDtUx1erwBfV7hdBx/PFfomOjqok2a5a5GniMZRgTxCgVJBuPQV/J
+	 T3YxU2T99YxbA==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-640a0812658so4917410a12.0
+        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 22:07:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXycJlLPPWPSzPvOcmmplzTdlBeNHLHYenZ4n/LfBEI4O+tZQIftjHSK5DMnstvXkJOjT2s9dWXfDM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwWZxRJ2+Z7PUpeVs8YbFSxjHSgj5w97nLYm9DjAwjq98h384lY
+	jIkuoam9Gxg+qKqAQvGRFi5i8tR9odiellm90dXuDZK0ndOf3f1sfA1uN0DvCXxjtg7bRGRIw+g
+	GkEFwndTE8ycEMFdAhShqjK5UhJimuik=
+X-Google-Smtp-Source: AGHT+IEucilbikih9FXT+bSBgeTMpSGSJQOynGkw1b2zU0SsUXaiCed8ZgqGkaYIGbD9I/0agUTUxk7lFsG4POZj914=
+X-Received: by 2002:a05:6402:234b:b0:640:cea9:6752 with SMTP id
+ 4fb4d7f45d1cf-6491a8165c7mr1090196a12.25.1765001263854; Fri, 05 Dec 2025
+ 22:07:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: Remove subtle "struct kvm_stats_desc" pseudo-overlay
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Gustavo A . R . Silva" <gustavoars@kernel.org>
-References: <20251205232655.445294-1-seanjc@google.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20251205232655.445294-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 118.18.233.1
-X-Source-L: No
-X-Exim-ID: 1vRj86-00000002EOT-2JGv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: i118-18-233-1.s41.a027.ap.plala.or.jp ([10.83.24.44]) [118.18.233.1]:61266
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPlpC0ZueASrl5lVXu5ml3nIjbQMhrj8D3tKYVPOMxg9kVMKsOGsQr/Vq4cuPd0Q4E5XsmnqVf2m48S5PM0caWCWiwMedMGf3q8oEMOUQMA/z3n7Uvcb
- ZhtrvjZl2Jtik11n2MzlAoRXbuZcJoFS8raYBE6Cuh0db/cIwIyArMxFCf5LuPbYB35XUF4cXC7EC1U9TpR0QdcXyFXoRmnRZ9E=
+References: <20251204024512.104519-1-wangyuli@aosc.io>
+In-Reply-To: <20251204024512.104519-1-wangyuli@aosc.io>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 6 Dec 2025 14:07:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5M_TA1=L1pqZxqb+3Kg0KbDK_hFNXKmUU50+Oi8qwAKg@mail.gmail.com>
+X-Gm-Features: AQt7F2pl5VJSNCUdF7wlu7NKUDoWNYKIOg-LTd-BOEZ1JWX872BoRZQEVS3X-v8
+Message-ID: <CAAhV-H5M_TA1=L1pqZxqb+3Kg0KbDK_hFNXKmUU50+Oi8qwAKg@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Use __pmd()/__pte() helper for swap entry conversions
+To: WangYuli <wangyuli@aosc.io>
+Cc: kernel@xen0n.name, akpm@linux-foundation.org, david@kernel.org, 
+	willy@infradead.org, bjorn@rivosinc.com, agordeev@linux.ibm.com, 
+	zhangtianyang@loongson.cn, apopple@nvidia.com, thuth@redhat.com, 
+	linmag7@gmail.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	WangYuli <wangyl5933@chinaunicom.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Applied, thanks.
 
+Huacai
 
-On 12/6/25 08:26, Sean Christopherson wrote:
-> Remove KVM's internal pseudo-overlay of kvm_stats_desc, which subtly
-> aliases the flexible name[] in the uAPI definition with a fixed-size array
-> of the same name.  The unusual embedded structure results in compiler
-> warnings due to -Wflex-array-member-not-at-end, and also necessitates an
-> extra level of dereferencing in KVM.  To avoid the "overlay", define the
-> uAPI structure to have a fixed-size name when building for the kernel.
-
-Nice. Thanks for this.
-
-> 
-> Opportunistically clean up the indentation for the stats macros, and
-> replace spaces with tabs.
-> 
-> No functional change intended.
-> 
-> Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Closes: https://lore.kernel.org/all/aPfNKRpLfhmhYqfP@kspp
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
--Gustavo
+On Thu, Dec 4, 2025 at 10:45=E2=80=AFAM WangYuli <wangyuli@aosc.io> wrote:
+>
+> From: WangYuli <wangyl5933@chinaunicom.cn>
+>
+> The __pmd() and __pte() helper macros provide the correct initialization
+> syntax and abstraction for the pmd_t and pte_t types.
+>
+> Fix follow warning on gcc-15 under specific configs [1] :
+>
+>   In file included from ./include/linux/pgtable.h:6,
+>                    from ./include/linux/mm.h:31,
+>                    from ./include/linux/pagemap.h:8,
+>                    from arch/loongarch/mm/init.c:14:
+>   ./include/linux/swapops.h: In function =E2=80=98swp_entry_to_pmd=E2=80=
+=99:
+>   ./arch/loongarch/include/asm/pgtable.h:302:34: error: missing braces ar=
+ound initializer [-Werror=3Dmissing-braces]
+>     302 | #define __swp_entry_to_pmd(x)   ((pmd_t) { (x).val | _PAGE_HUGE=
+ })
+>         |                                  ^
+>   ./include/linux/swapops.h:559:16: note: in expansion of macro =E2=80=98=
+__swp_entry_to_pmd=E2=80=99
+>     559 |         return __swp_entry_to_pmd(arch_entry);
+>         |                ^~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+>
+> Also update __swp_entry_to_pte() to use __pte() for consistency.
+>
+> [1]. https://download.01.org/0day-ci/archive/20251119/202511190316.luI90k=
+Ao-lkp@intel.com/config
+>
+> Signed-off-by: WangYuli <wangyl5933@chinaunicom.cn>
+> Signed-off-by: WangYuli <wangyuli@aosc.io>
+> ---
+> Changelog:
+>  *v1 -> v2: Update __swp_entry_to_pte() to use __pte() for consistency.
+> ---
+>  arch/loongarch/include/asm/pgtable.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
+e/asm/pgtable.h
+> index 03fb60432fde..9a7029285fd5 100644
+> --- a/arch/loongarch/include/asm/pgtable.h
+> +++ b/arch/loongarch/include/asm/pgtable.h
+> @@ -297,9 +297,9 @@ static inline pte_t mk_swap_pte(unsigned long type, u=
+nsigned long offset)
+>  #define __swp_offset(x)                ((x).val >> 24)
+>  #define __swp_entry(type, offset) ((swp_entry_t) { pte_val(mk_swap_pte((=
+type), (offset))) })
+>  #define __pte_to_swp_entry(pte) ((swp_entry_t) { pte_val(pte) })
+> -#define __swp_entry_to_pte(x)  ((pte_t) { (x).val })
+> +#define __swp_entry_to_pte(x)  __pte((x).val)
+>  #define __pmd_to_swp_entry(pmd) ((swp_entry_t) { pmd_val(pmd) })
+> -#define __swp_entry_to_pmd(x)  ((pmd_t) { (x).val | _PAGE_HUGE })
+> +#define __swp_entry_to_pmd(x)  __pmd((x).val | _PAGE_HUGE)
+>
+>  static inline bool pte_swp_exclusive(pte_t pte)
+>  {
+> --
+> 2.51.0
+>
