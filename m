@@ -1,127 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27062C21DE
-	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 06:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16C22DE6F9
+	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 07:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765001265; cv=none; b=uApFfDMRbA2zI3IMDGN75NlbN6DAgIOU+f9Pbk9ObW7iH4XVFCtiXwSo7B2iX+GLK25IhT5fUDRSOJXi4E7JXWz/GuGbbQugXUqxz8ZtcwdcHFmHrTjM/NG0CtJLO0Ysd9rsLlbcuyknP89LfxxeqMVxR8K6vV78xcbqJFP+j5Y=
+	t=1765005096; cv=none; b=ibIt2+FRTKRaA9ZvD7tIB8y8iZIqW1dvhAk6eF6uLj4US5IcZAzF9N2jDjZp93YOD5jueYUU2cqZsizL+vowv50Jyou3I7XN9ZVpZ5pQy1OpaFOPR6TgihGJ2p921IVeds+ewwBeEqaOs+5ROaqLYv1iKBwqFsyxvn7vasgJrwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765001265; c=relaxed/simple;
-	bh=tGQglHScmycKEV/k+Nh77clbfHbHgUUhAw7of1k0Icw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j7Ak1bG8xPDuW94OIO2T+Uvivn25Z2EjG/y8KlC5iVVzNFakWIpUgnsfmwtReSR8Cwn9/BOH9tBPS5Jbkn8M36JusmoJEKud8ilAsDAQJq1sM0Usuq4rKssZVZKD13y7edRUmrVki6OAvjkdLY2n8fCLMU8npA/sR4WgsOdU+BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAY3ITup; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAY3ITup"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EBCC19422
-	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 06:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765001265;
-	bh=tGQglHScmycKEV/k+Nh77clbfHbHgUUhAw7of1k0Icw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KAY3ITupq+oQprTH4HibHvP2NtLU36zbf9Zm02Q0l7++sFVuD92KKfAPYJsivNxLg
-	 cxOFDX8JylgrJg/0fUUEluXYg0gYlxTSQCxO0os0Gy/fr6XSuOhuzDHp4htzdILBIW
-	 HA9EuoX6d+mMOEIQjqPvr1TpLWMfy5E5dEr/zmv3znragitN90HOCkEEqpYRLDOT17
-	 N0p+3jfHQrzkLUiiRhuKGcWGrz+e8Q+0pGMS9oHJsGSBJKBPCKdWKBE6VVq8hD+vma
-	 HRqnalZEzEzYmSDtUx1erwBfV7hdBx/PFfomOjqok2a5a5GniMZRgTxCgVJBuPQV/J
-	 T3YxU2T99YxbA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-640a0812658so4917410a12.0
-        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 22:07:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXycJlLPPWPSzPvOcmmplzTdlBeNHLHYenZ4n/LfBEI4O+tZQIftjHSK5DMnstvXkJOjT2s9dWXfDM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwWZxRJ2+Z7PUpeVs8YbFSxjHSgj5w97nLYm9DjAwjq98h384lY
-	jIkuoam9Gxg+qKqAQvGRFi5i8tR9odiellm90dXuDZK0ndOf3f1sfA1uN0DvCXxjtg7bRGRIw+g
-	GkEFwndTE8ycEMFdAhShqjK5UhJimuik=
-X-Google-Smtp-Source: AGHT+IEucilbikih9FXT+bSBgeTMpSGSJQOynGkw1b2zU0SsUXaiCed8ZgqGkaYIGbD9I/0agUTUxk7lFsG4POZj914=
-X-Received: by 2002:a05:6402:234b:b0:640:cea9:6752 with SMTP id
- 4fb4d7f45d1cf-6491a8165c7mr1090196a12.25.1765001263854; Fri, 05 Dec 2025
- 22:07:43 -0800 (PST)
+	s=arc-20240116; t=1765005096; c=relaxed/simple;
+	bh=9V/onz2K/9sX76jTQNWsngnlSPPRu86/S7HcLPUZy88=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fLMP6JA5Ywacb9ZswGWV1yL4DCN+nyRTsyacFPV2A1qd05NegYmKy7xSpfLKEIvtVGPuhDbb7C79iufT4aQ47zOxTERHFA9V4QVD3l0+c/BmNgaI/Iau2fziB3NgubF7AMLqed9NfKgeEmWLpgeUZqDLC3k63riuDCf7BNNdIX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Axz9Ma1zNp6rMrAA--.23437S3;
+	Sat, 06 Dec 2025 15:11:22 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJCx2sAX1zNpmFZGAQ--.33246S2;
+	Sat, 06 Dec 2025 15:11:20 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	kernel@xen0n.name,
+	linux-kernel@vger.kernel.org,
+	lixianglai@loongson.cn
+Subject: [PATCH v3 0/4] LongArch: KVM: Add AVEC support irqchip in kernel 
+Date: Sat,  6 Dec 2025 14:46:54 +0800
+Message-Id: <20251206064658.714100-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251204024512.104519-1-wangyuli@aosc.io>
-In-Reply-To: <20251204024512.104519-1-wangyuli@aosc.io>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 6 Dec 2025 14:07:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5M_TA1=L1pqZxqb+3Kg0KbDK_hFNXKmUU50+Oi8qwAKg@mail.gmail.com>
-X-Gm-Features: AQt7F2pl5VJSNCUdF7wlu7NKUDoWNYKIOg-LTd-BOEZ1JWX872BoRZQEVS3X-v8
-Message-ID: <CAAhV-H5M_TA1=L1pqZxqb+3Kg0KbDK_hFNXKmUU50+Oi8qwAKg@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Use __pmd()/__pte() helper for swap entry conversions
-To: WangYuli <wangyuli@aosc.io>
-Cc: kernel@xen0n.name, akpm@linux-foundation.org, david@kernel.org, 
-	willy@infradead.org, bjorn@rivosinc.com, agordeev@linux.ibm.com, 
-	zhangtianyang@loongson.cn, apopple@nvidia.com, thuth@redhat.com, 
-	linmag7@gmail.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	WangYuli <wangyl5933@chinaunicom.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx2sAX1zNpmFZGAQ--.33246S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Applied, thanks.
+Hi,
 
-Huacai
+This series adds AVEC-related macros, implements the DINTC in-kernel irqchip device,
+enables irqfd to deliver MSI to DINTC, and supports injecting MSI interrupts
+to the target vCPU.
 
-On Thu, Dec 4, 2025 at 10:45=E2=80=AFAM WangYuli <wangyuli@aosc.io> wrote:
->
-> From: WangYuli <wangyl5933@chinaunicom.cn>
->
-> The __pmd() and __pte() helper macros provide the correct initialization
-> syntax and abstraction for the pmd_t and pte_t types.
->
-> Fix follow warning on gcc-15 under specific configs [1] :
->
->   In file included from ./include/linux/pgtable.h:6,
->                    from ./include/linux/mm.h:31,
->                    from ./include/linux/pagemap.h:8,
->                    from arch/loongarch/mm/init.c:14:
->   ./include/linux/swapops.h: In function =E2=80=98swp_entry_to_pmd=E2=80=
-=99:
->   ./arch/loongarch/include/asm/pgtable.h:302:34: error: missing braces ar=
-ound initializer [-Werror=3Dmissing-braces]
->     302 | #define __swp_entry_to_pmd(x)   ((pmd_t) { (x).val | _PAGE_HUGE=
- })
->         |                                  ^
->   ./include/linux/swapops.h:559:16: note: in expansion of macro =E2=80=98=
-__swp_entry_to_pmd=E2=80=99
->     559 |         return __swp_entry_to_pmd(arch_entry);
->         |                ^~~~~~~~~~~~~~~~~~
->   cc1: all warnings being treated as errors
->
-> Also update __swp_entry_to_pte() to use __pte() for consistency.
->
-> [1]. https://download.01.org/0day-ci/archive/20251119/202511190316.luI90k=
-Ao-lkp@intel.com/config
->
-> Signed-off-by: WangYuli <wangyl5933@chinaunicom.cn>
-> Signed-off-by: WangYuli <wangyuli@aosc.io>
-> ---
-> Changelog:
->  *v1 -> v2: Update __swp_entry_to_pte() to use __pte() for consistency.
-> ---
->  arch/loongarch/include/asm/pgtable.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/includ=
-e/asm/pgtable.h
-> index 03fb60432fde..9a7029285fd5 100644
-> --- a/arch/loongarch/include/asm/pgtable.h
-> +++ b/arch/loongarch/include/asm/pgtable.h
-> @@ -297,9 +297,9 @@ static inline pte_t mk_swap_pte(unsigned long type, u=
-nsigned long offset)
->  #define __swp_offset(x)                ((x).val >> 24)
->  #define __swp_entry(type, offset) ((swp_entry_t) { pte_val(mk_swap_pte((=
-type), (offset))) })
->  #define __pte_to_swp_entry(pte) ((swp_entry_t) { pte_val(pte) })
-> -#define __swp_entry_to_pte(x)  ((pte_t) { (x).val })
-> +#define __swp_entry_to_pte(x)  __pte((x).val)
->  #define __pmd_to_swp_entry(pmd) ((swp_entry_t) { pmd_val(pmd) })
-> -#define __swp_entry_to_pmd(x)  ((pmd_t) { (x).val | _PAGE_HUGE })
-> +#define __swp_entry_to_pmd(x)  __pmd((x).val | _PAGE_HUGE)
->
->  static inline bool pte_swp_exclusive(pte_t pte)
->  {
-> --
-> 2.51.0
->
+
+V3: Fix kvm_arch_set_irq_inatomic() missing dintc set msi.(patch3)
+
+V2:
+https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
+
+Thanks.
+Song Gao
+
+Song Gao (4):
+  LongArch: KVM: Add some maccros for AVEC
+  LongArch: KVM: Add DINTC device support
+  LongArch: KVM: Add irqfd set dintc msi
+  LongArch: KVM: Add dintc inject msi to the dest vcpu
+
+ arch/loongarch/include/asm/irq.h       |   8 ++
+ arch/loongarch/include/asm/kvm_dintc.h |  22 +++++
+ arch/loongarch/include/asm/kvm_host.h  |   8 ++
+ arch/loongarch/include/uapi/asm/kvm.h  |   4 +
+ arch/loongarch/kvm/Makefile            |   1 +
+ arch/loongarch/kvm/intc/dintc.c        | 116 +++++++++++++++++++++++++
+ arch/loongarch/kvm/interrupt.c         |   1 +
+ arch/loongarch/kvm/irqfd.c             |  45 ++++++++--
+ arch/loongarch/kvm/main.c              |   5 ++
+ arch/loongarch/kvm/vcpu.c              |  55 ++++++++++++
+ drivers/irqchip/irq-loongarch-avec.c   |   5 +-
+ include/uapi/linux/kvm.h               |   2 +
+ 12 files changed, 263 insertions(+), 9 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_dintc.h
+ create mode 100644 arch/loongarch/kvm/intc/dintc.c
+
+-- 
+2.39.3
+
