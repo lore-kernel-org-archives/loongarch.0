@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D6D29BD87
-	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 00:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB54D2BEC45
+	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 00:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764980284; cv=none; b=uyZWMUgtsoMezy3sw2MQzM5KaSKHF8cejzkpVPIclQnM4BeGW2us09M3Al6YcBh7Fn41ySZNrz7oDibiQQeG3OhBtB46e2eM0gCNO3xX/KTGiHAP7/mHLKDgkWS8T8V/z/GOS3Tn2PteDAx0ADKewgBGIHQFvACJOv8fmL/TeVI=
+	t=1764980288; cv=none; b=CfYApu3+hIBs1ujUByvDkq4iprkpwJBTrNEyKgDS5zgWdO5erJpEpKq3B8r2LqAdihJdjjvC/qka0hxwNsRo4gSJz30r5IZtq1l1SnmyDgUaXY3GBLI/97zqto4hm/veSD5TNH+j2kiTsez8CMkBH7XpTe/6XAg9XDAb4l3CTzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764980284; c=relaxed/simple;
-	bh=GEofwV87pfS9k1X1r08HpHCiDsjoBWg3ivwGBCrzyh4=;
+	s=arc-20240116; t=1764980288; c=relaxed/simple;
+	bh=+5rvOQQEmWi8zXJY9jqrXtHF9NbwN3EkEXKXWn4uwVo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RjZnGl8UYNEvCJADb+tITHierzBWbhdHgBHDtUoSxLFOIDmTDkb1nABs4UvbEP8CNIt2OOtvOx2SBnrCJqvuPLz4vprkCHatZpZ8TmdeXCtf/XhrGa3z09sB2AntmKZB5t8vDZgW/GtIDg0wn6nxF+DMpVvRX/3RvDTiK00sxTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XFXBZunX; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=r5wZk7ePlyIHI8kP2MxWEq4BumAjKfaUuZAmHj0y6K+ZlbiS+kazB3d9GpyUhQdftR6pimocq0ej3SZ7d3XT0vLE+yIEWfcXGOaJBHTOqOMVsGsYz/+fUgfWGjtuyM/IkOeMCdW1Mt1gX8dCh83grzsvD+C1Y7TwSOpMwl5M9a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BzaxTixu; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XFXBZunX"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34378c914b4so4920040a91.1
-        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 16:18:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BzaxTixu"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7c7957d978aso2757186b3a.1
+        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 16:18:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764980282; x=1765585082; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1764980285; x=1765585085; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=m3Z5nHAcUfdxfKrbAwjeK85mE0dJR71iRHLzzuZPmpA=;
-        b=XFXBZunX5GaunUmfHMQgGfGFBlX1Gz3eBJAWcqDK+t94lnFjVerL+qm+xHWGMhVvWz
-         PtfJMRucgH+9YEJSmIArENYTK0ULPxqAvHBRkkQRSe+OY2qducSlYU5ExG5aPX6hi3Mw
-         CLBkvapUfLdMgzqDRVqfy6/4q8lp6P87iS2ch8aBVJfZgVOJlb99+F6jX4nuCtnR6Lsu
-         zS3eVNfrNE0Asu8i0D4SYZwel29IicC6g6NFyU2NLMT60eCdYWJbP7ESruFTjKfcErSO
-         zWkpmjSeJyTli6ctyXXGvUc7HspD+opdm0/r+tpZ2UwANhDbtDl2SjWDiaXibyhI9BGN
-         Z8Og==
+        bh=Updb/Jfn2dAHBrhkdzkPSsR6YWK/TllPUiDQA+O1aSA=;
+        b=BzaxTixu4TDlmF8mkBOqYp0xE3B6bQiH9Tv0xIxJtPfduo7tYOfHAJfx74Y5uMJ7ek
+         cZEy+XTcf/cKbU0/qOyfJAi0sfDK6sBZIg/ZfSP7Sd1Q0gLHQHi7N9dE7+BBxJWTRe86
+         JLEaRKuIvhoTweIWfYvu2a8rV7pj54A4dxgva11YR3Xhnj/HwbCK/qHPFKTy4ziyj6TS
+         GDqVDsBl32wx6Ss234rdWtWdDT3nKRFMmP5Mitp5JUMRDfKQ7ZHhtVMxtJVXsx5ns44t
+         VS4yzoUlxEDDgwNBawFT7F8/RqkedKinCfxoe1QTDs25D1facF08fj2zfZLdaNowLuM5
+         4Fag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764980282; x=1765585082;
+        d=1e100.net; s=20230601; t=1764980285; x=1765585085;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m3Z5nHAcUfdxfKrbAwjeK85mE0dJR71iRHLzzuZPmpA=;
-        b=GV2pFDByywx5bgMtAjyuf2tTSB5i9shGJo8zg6h6KeIR4A9+vP4mOqZU/vmNkgJY7r
-         y4yLuA3HTLxZgtXHQMO8JJaodF4v7Bad6T18yA9X/T6lgAp+ueEYgbHpc9DAinGu0w4z
-         xw86lYnnQkTke1mdnE6eVGOfL+5Un6YVKEGiQN4G73CBPgRQr3skDEqkkLSGWZxP3CyO
-         L00/i47UON2lw/N4KQ2m+KsyBQYF2H2oF6UGFhrh6BPfvju99u/ZNzZE5+DZxq9MJzw3
-         6rxOPK2Eft2EDOS1x+LDEGdl+zDBaJY0jS5vshhyjoLL34pKMaane6GxdQSwD2uR13Za
-         feFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXktW1met+LvKKa5En+avOd3EnmJbSBKvU0AKUhQcfnqKUShwTPmMrHYHAS2uZdD4LEG3ly+iR/EXs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy3L7XC5ycC9mWGjln+uZYuOh3N/JRw3zWBS40ZwVOIFAWMQcwj
-	IkebguaFVrvsGCisfgQvVrRrWSo9qhM4/2Sn1QF5YIVEgHrl3DHdAFUytURNEPh3qdaqJiNdipi
-	xau0zVw==
-X-Google-Smtp-Source: AGHT+IGcOklQOzJ/lNZWJnk8g0uw9rVYfuzrIb6PtX+N9IOeiT702eHEqjavt0HC1DcnaOX9m2isN8tDRpE=
-X-Received: from pjyt22.prod.google.com ([2002:a17:90a:e516:b0:340:92f6:5531])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2cb:b0:33b:b078:d6d3
- with SMTP id 98e67ed59e1d1-349a25bcd68mr661307a91.23.1764980281984; Fri, 05
- Dec 2025 16:18:01 -0800 (PST)
+        bh=Updb/Jfn2dAHBrhkdzkPSsR6YWK/TllPUiDQA+O1aSA=;
+        b=fV0sUjK/7fxKJLpvC/xvqiWlln4TRrCKaisbrjBFf90T2tphCI79qVRmg8hXujykRK
+         gJgJRJOI2tYr50rzd+gULd1aDMyrr8WSPZxbCLRq9NiR5Zg3JqzhgPlq0Yz+9IT+RA1u
+         PGOqzUz3mksDSw70kWs1/y3bBG7Ez2ZTNOr+lD+2f6Akl+azaWvyLmpBSUHYtvQ433PN
+         UtaEHwUxXZwHDcngHkdNA1s0DQ0XgvUIMZj8mqC6uYhEe1giY2Oc1csIeED+7Eksn/cA
+         pKvkesI3Pb6RmlNdl2DV1IRul0aaiFeP4dfb9yd8P319svkj30zvFqeIR9cPDVznHr7g
+         N5cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeIYgEtl6QZNHyh8klYkU9WF+L7sdSjgdRUdRyjd93KlsCh9HEo0bCYzC1bMJJD60jodOhLne+Yz8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw530RjII38Lexe9wtsgZOY7RikcfZ3pZWCZ17y9rOL0Ks+YCsw
+	1KJ06dxVAejnBcH59ImmRSqZFlus3eSriy+4pEvCLBD4t1qGCnjU9u9gL0SWa8dEP7HcaTs8e6t
+	khdTGTg==
+X-Google-Smtp-Source: AGHT+IGmx8a/eJZmORgvkEWVhn/uP5dbhmnIbP0XRDK0XcrnLs6A3LdHJHErdqkr+RZXqUaApvjJvO7ayAk=
+X-Received: from pgbdp3.prod.google.com ([2002:a05:6a02:f03:b0:bc8:5648:d6bf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:8187:b0:366:1a2c:6f91
+ with SMTP id adf61e73a8af0-3661a2c7805mr309067637.4.1764980284548; Fri, 05
+ Dec 2025 16:18:04 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  5 Dec 2025 16:16:54 -0800
+Date: Fri,  5 Dec 2025 16:16:55 -0800
 In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20251206001720.468579-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251206001720.468579-19-seanjc@google.com>
-Subject: [PATCH v6 18/44] KVM: x86/pmu: Implement AMD mediated PMU requirements
+Message-ID: <20251206001720.468579-20-seanjc@google.com>
+Subject: [PATCH v6 19/44] KVM: x86/pmu: Register PMI handler for mediated vPMU
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -81,46 +81,79 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Require host PMU version 2+ for AMD mediated PMU support, as
-PERF_GLOBAL_CTRL and friends are hard requirements for the mediated PMU.
+From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Co-developed-by: Mingwei Zhang <mizhang@google.com>
+Register a dedicated PMI handler with perf's callback when mediated PMU
+support is enabled.  Perf routes PMIs that arrive while guest context is
+loaded to the provided callback, by modifying the CPU's LVTPC to point at
+a dedicated mediated PMI IRQ vector.
+
+WARN upon receipt of a mediated PMI if there is no active vCPU, or if the
+vCPU doesn't have a mediated PMU.  Even if a PMI manages to skid past
+VM-Exit, it should never be delayed all the way beyond unloading the vCPU.
+And while running vCPUs without a mediated PMU, the LVTPC should never be
+wired up to the mediated PMI IRQ vector, i.e. should always be routed
+through perf's NMI handler.
+
+Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
-[sean: extract to separate patch, write changelog]
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
 Tested-by: Xudong Hao <xudong.hao@intel.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/pmu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/pmu.c | 10 ++++++++++
+ arch/x86/kvm/pmu.h |  2 ++
+ arch/x86/kvm/x86.c |  3 ++-
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index bc062285fbf5..16c88b2a2eb8 100644
---- a/arch/x86/kvm/svm/pmu.c
-+++ b/arch/x86/kvm/svm/pmu.c
-@@ -227,6 +227,11 @@ static void amd_pmu_init(struct kvm_vcpu *vcpu)
- 	}
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 0de0af5c6e4f..b3dde9a836ea 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -159,6 +159,16 @@ void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
+ 		perf_get_hw_event_config(PERF_COUNT_HW_BRANCH_INSTRUCTIONS);
  }
  
-+static bool amd_pmu_is_mediated_pmu_supported(struct x86_pmu_capability *host_pmu)
++void kvm_handle_guest_mediated_pmi(void)
 +{
-+	return host_pmu->version >= 2;
++	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
++
++	if (WARN_ON_ONCE(!vcpu || !kvm_vcpu_has_mediated_pmu(vcpu)))
++		return;
++
++	kvm_make_request(KVM_REQ_PMI, vcpu);
 +}
 +
- struct kvm_pmu_ops amd_pmu_ops __initdata = {
- 	.rdpmc_ecx_to_pmc = amd_rdpmc_ecx_to_pmc,
- 	.msr_idx_to_pmc = amd_msr_idx_to_pmc,
-@@ -236,6 +241,9 @@ struct kvm_pmu_ops amd_pmu_ops __initdata = {
- 	.set_msr = amd_pmu_set_msr,
- 	.refresh = amd_pmu_refresh,
- 	.init = amd_pmu_init,
+ static inline void __kvm_perf_overflow(struct kvm_pmc *pmc, bool in_pmi)
+ {
+ 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index a5c7c026b919..9849c2bb720d 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -46,6 +46,8 @@ struct kvm_pmu_ops {
+ 
+ void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops);
+ 
++void kvm_handle_guest_mediated_pmi(void);
 +
-+	.is_mediated_pmu_supported = amd_pmu_is_mediated_pmu_supported,
-+
- 	.EVENTSEL_EVENT = AMD64_EVENTSEL_EVENT,
- 	.MAX_NR_GP_COUNTERS = KVM_MAX_NR_AMD_GP_COUNTERS,
- 	.MIN_NR_GP_COUNTERS = AMD64_NUM_COUNTERS,
+ static inline bool kvm_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
+ {
+ 	/*
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fb3a5e861553..1623afddff3b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10111,7 +10111,8 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 		set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
+ #endif
+ 
+-	__kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
++	__kvm_register_perf_callbacks(ops->handle_intel_pt_intr,
++				      enable_mediated_pmu ? kvm_handle_guest_mediated_pmi : NULL);
+ 
+ 	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
+ 		kvm_caps.supported_vm_types |= BIT(KVM_X86_SW_PROTECTED_VM);
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
