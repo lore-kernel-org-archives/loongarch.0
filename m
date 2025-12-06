@@ -1,57 +1,57 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D0925228C
-	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 00:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC70A25E469
+	for <loongarch@lists.linux.dev>; Sat,  6 Dec 2025 00:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764980266; cv=none; b=kylf3idVSulPkOaM/iuDNgTMX2deuLZt7TXs13iNodrWXdLkYzVn1WUtNJ9BH3nlfOfCzLYrzvADxeKCyScsY84tlGYce50VvhiTyjSJVoC8/bkNlUhnwEnXYXNSK991gws5ka4nJRg0kVhZj7g5Ur/c9QSguOOwJTi97o+xFFI=
+	t=1764980268; cv=none; b=TDOuqRcFHUUqYd2XL6+3qMPjUxv7q6uqFy0Zul6jV7/Sx9zkGFRFXCtM7IhgMZFdk4WEwpbyVB4JJgr0Dzlru/kPgmeA5sSjZmISdcVBDD9aKBFoYsqjghHG0neqM0b2ErLEgSrvTgm0oGi4HiQ9Gn1SCfkhs3+ZMnAHguK99D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764980266; c=relaxed/simple;
-	bh=tgwd5Esq4wpmewehCZ8NiFmYgLVHlgDnHG/ez6ZtIJc=;
+	s=arc-20240116; t=1764980268; c=relaxed/simple;
+	bh=gw4FQTHE8SLlwJArBri42euAjtNSeNQ1byjalYji5b0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ra9XNhYHxohQ9VJ8QLpX173Ti7y53osDoC87ftgkiCKq85GDzpFZXFf2sIV+tUzpk/sFh+1U9YnyaqQ14op/Nq60zkBjDO56iL9edAEHWf0oLbACPtitVFL9rCknUsfogEU2bnS5wSvPg2pPOdxltmwg5xHjQ/k1L78yUWWiGLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kdFNIxSQ; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=OX4e/Vi/YRXcVuWkqSwtkdOlrO5fgtAxoBBJMYoa/GKhoXqE9iuSIkRI3j0wNPcrHb/znvEV/v7Vj9e4rPun1kiOrVTjjGkUYmvxGb9Y3hwqNZhSeIzHuL1iyjh57J1gZDRfiZevQ50Ot9/C/RVr7Hw72KbomJgwkZaLG5Ciyg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0sSCQEts; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdFNIxSQ"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-340c0604e3dso3051646a91.2
-        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 16:17:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0sSCQEts"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34176460924so2633678a91.3
+        for <loongarch@lists.linux.dev>; Fri, 05 Dec 2025 16:17:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764980264; x=1765585064; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1764980266; x=1765585066; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=b3rwpX75fYsvQxObK18NSjc+CmweVuoOUNJF4J3Ucww=;
-        b=kdFNIxSQxfrE9VymP9I3p4H8gtiSkRRVjNunGh/fUNReK00Cv41f90ZV8pqZQrvrS2
-         cNls+Mdd4IffPty/lemVNSS6JcMBkgmYfzRWMCuIOGwrOwr3B2OPfwI/JV8adVoAjVH+
-         62t6RnluxjP/fHqc1palhN8faNjsncs7T3Bm7z/BK4iMgdOeYxylvxqIisLc7kwgLghU
-         Byh+Em3itOSEGWo68Fk3HPxEt+rUaBIqlGsQLww+fUoRPOCZPptLFr1h7Jp2DMNV3wxW
-         PYQS+HHstv9ibZgcwPh70L2Q3Vd8gki6nHmy6hcagKgPi/KvhdIyR80z77p6pDsZ1EzL
-         K8aA==
+        bh=CUuCYzCJ+7mOkcgENgUcVnWD5HNM+Ecxc29Wc5gu0a8=;
+        b=0sSCQEts4ZJgzRlGpWIBp/f8G6gBiPsh7LctroMJUj49PYgwvtHvNdzdA00yO2lwTi
+         6f4/FeRWf05vkFUT+6/4DXrVZ7x8aDHMtg9zgL2u2RYdowCQZNNVEzmV/Tkbgjmgeiok
+         ZfMyTRm+HI2XJJo+FPpk/BRC6ny4lCOlvXen0sgms7+VMO5iZaFtGOESPpQXI5AfEDx/
+         pw3yF85WYKLGA84Fcs3ZlmIEQ7kEbUaXCsTQEealDEVozqYhcegKJ49JC9qXHqb8RBdI
+         2TqSB1xOogxt6UpAT2zhAFgMWo/pijj5lt8EcqSomNQOfFn6w8JEbzgH96cCqGnJ/0Ns
+         UPDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764980264; x=1765585064;
+        d=1e100.net; s=20230601; t=1764980266; x=1765585066;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b3rwpX75fYsvQxObK18NSjc+CmweVuoOUNJF4J3Ucww=;
-        b=aZWCusQwxsCWg5NifZoM8TI4IpZ81ZJLLHeTida8daupwuFmkVNFG9zl+fuCal53F2
-         ieUDtrL+ozx33m7fBvpBsa5SYzAu2KLS9E2vE+ZKxk3Dn1E+j4a3xnFuwtpbOghvN2+V
-         QJUghy3olqHsGqrCPtJWWbUaq9gtR88+05xtTdxd1KSxg1unzla1cKL+D2uTi63e6sD5
-         HRoib+UwE0617NlFxD/PAb+tdEt8AF8gEGGiSlFqRiM2kGsmkBpffhatYTHXnDiBQCmk
-         rY8hHWfoGTd4OrzMJ+CbQVGaGpiLnG0/xyXSMnvBAmBkLCBNK+2/e6GYUi8dcei6VBM3
-         scNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVyKMYMuBfLWs4hhosepWtVR3LpcEgHsc23RsOIFIoL0TSlvxnMF/MMhvxldt5yqD7Sb3/syMvs9Yk=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxlElxzT0zaox9yjJSEfstLcspgzGJdbCb01bjeV2ncanwqjQH7
-	H2dnSZ96AahNryTmsfukiWmWB6S0Dw4WlUQk2HUNMZgF2pWTldKHgvcFDl9C7GVRSL43TF/feUG
-	LNxZGzw==
-X-Google-Smtp-Source: AGHT+IHEsD7fkDDlHKveCIETTAnzxygk5RYBYlDb1QrkU4F4qH52QVESGYT3XJZIm6BuCoPrCdtcsD42SZs=
-X-Received: from pjbbf17.prod.google.com ([2002:a17:90b:b11:b0:33b:dccb:b328])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2750:b0:349:9dc4:fa35
- with SMTP id 98e67ed59e1d1-349a2622069mr652583a91.25.1764980263863; Fri, 05
- Dec 2025 16:17:43 -0800 (PST)
+        bh=CUuCYzCJ+7mOkcgENgUcVnWD5HNM+Ecxc29Wc5gu0a8=;
+        b=N82Hj0N6pEJ6rAG/QVTwdB5ti5T5kk3yx6plgl+dy7gPKOpK0kUrjN98tvF8dVT4IV
+         72Qh8muZxcSzyiOBkbFdO7fGj+dATWnFp2kT+ptsx7prXT1dNGpP+EGSniI5ce19ju0C
+         hd2YlIwLQZbee13K7cthvE6+a7EFVDh7rXlA9wlVGnzNSbWyAMzxdM3js41Uc+ZCj/7g
+         2q5xw3wAAQOFVm+5M1D2dk2QHHzSA8SCFtkn9p9593m2yT46dNBOZPUvj1AJzDo/XDmG
+         vd6kMQn7RoisB9IveAMH3Wp9K3DULYwSweMnjufQyaD+RT8cNNCPOK91ajadc3jcShJU
+         P0rA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQkrVDpUBHp+wdyK0+jCH5jGM6AN4Dnt/0iFpbFgwKPJ4QuDAQDAVyD15GhTB69eIANWTczYiyCfw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzSyFMZt0ztREQFqBtxafqWVlxl83bDw8Re5B5wwLGfKoB5BEMV
+	r5SKlGU0wZilKU3T6NRTiLTevowWYNk7GvHUDwy72SrD7htz67bePrQ3N0UmN9rRT9eV6m3bBkk
+	OmOgdpg==
+X-Google-Smtp-Source: AGHT+IEudAc+RtrsthgQd29i5TzWwClBzh0orawUsXJ6SsndAr08K8DVgHn3KuIiiMIFAwisOcz2YNtd49Q=
+X-Received: from pjqx1.prod.google.com ([2002:a17:90a:b001:b0:33b:5907:81cb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d92:b0:340:b572:3b7d
+ with SMTP id 98e67ed59e1d1-349a25fb840mr628818a91.19.1764980265902; Fri, 05
+ Dec 2025 16:17:45 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  5 Dec 2025 16:16:45 -0800
+Date: Fri,  5 Dec 2025 16:16:46 -0800
 In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
 References: <20251206001720.468579-1-seanjc@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251206001720.468579-10-seanjc@google.com>
-Subject: [PATCH v6 09/44] perf/x86/core: Add APIs to switch to/from mediated
- PMI vector (for KVM)
+Message-ID: <20251206001720.468579-11-seanjc@google.com>
+Subject: [PATCH v6 10/44] perf/x86/core: Do not set bit width for unavailable counters
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -82,95 +81,39 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add APIs (exported only for KVM) to switch PMIs to the dedicated mediated
-PMU IRQ vector when loading guest context, and back to perf's standard NMI
-when the guest context is put.  I.e. route PMIs to
-PERF_GUEST_MEDIATED_PMI_VECTOR when the guest context is active, and to
-NMIs while the host context is active.
+From: Sandipan Das <sandipan.das@amd.com>
 
-While running with guest context loaded, ignore all NMIs (in perf).  Any
-NMI that arrives while the LVTPC points at the mediated PMU IRQ vector
-can't possibly be due to a host perf event.
+Not all x86 processors have fixed counters. It may also be the case that
+a processor has only fixed counters and no general-purpose counters. Set
+the bit widths corresponding to each counter type only if such counters
+are available.
 
+Fixes: b3d9468a8bd2 ("perf, x86: Expose perf capability to other modules")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Tested-by: Xudong Hao <xudong.hao@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/events/core.c            | 32 +++++++++++++++++++++++++++++++
- arch/x86/include/asm/perf_event.h |  5 +++++
- 2 files changed, 37 insertions(+)
+ arch/x86/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index fa6c47b50989..abe6a129a87f 100644
+index abe6a129a87f..bd9abe298469 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -55,6 +55,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
- 	.pmu = &pmu,
- };
- 
-+static DEFINE_PER_CPU(bool, guest_lvtpc_loaded);
-+
- DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
- DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
- DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
-@@ -1749,6 +1751,25 @@ void perf_events_lapic_init(void)
- 	apic_write(APIC_LVTPC, APIC_DM_NMI);
- }
- 
-+#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
-+void perf_load_guest_lvtpc(u32 guest_lvtpc)
-+{
-+	u32 masked = guest_lvtpc & APIC_LVT_MASKED;
-+
-+	apic_write(APIC_LVTPC,
-+		   APIC_DM_FIXED | PERF_GUEST_MEDIATED_PMI_VECTOR | masked);
-+	this_cpu_write(guest_lvtpc_loaded, true);
-+}
-+EXPORT_SYMBOL_FOR_MODULES(perf_load_guest_lvtpc, "kvm");
-+
-+void perf_put_guest_lvtpc(void)
-+{
-+	this_cpu_write(guest_lvtpc_loaded, false);
-+	apic_write(APIC_LVTPC, APIC_DM_NMI);
-+}
-+EXPORT_SYMBOL_FOR_MODULES(perf_put_guest_lvtpc, "kvm");
-+#endif /* CONFIG_PERF_GUEST_MEDIATED_PMU */
-+
- static int
- perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
- {
-@@ -1756,6 +1777,17 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
- 	u64 finish_clock;
- 	int ret;
- 
-+	/*
-+	 * Ignore all NMIs when the CPU's LVTPC is configured to route PMIs to
-+	 * PERF_GUEST_MEDIATED_PMI_VECTOR, i.e. when an NMI time can't be due
-+	 * to a PMI.  Attempting to handle a PMI while the guest's context is
-+	 * loaded will generate false positives and clobber guest state.  Note,
-+	 * the LVTPC is switched to/from the dedicated mediated PMI IRQ vector
-+	 * while host events are quiesced.
-+	 */
-+	if (this_cpu_read(guest_lvtpc_loaded))
-+		return NMI_DONE;
-+
- 	/*
- 	 * All PMUs/events that share this PMI handler should make sure to
- 	 * increment active_events for their events.
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 49a4d442f3fc..4cd38b9da0ba 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -651,6 +651,11 @@ static inline void perf_events_lapic_init(void)	{ }
- static inline void perf_check_microcode(void) { }
- #endif
- 
-+#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
-+extern void perf_load_guest_lvtpc(u32 guest_lvtpc);
-+extern void perf_put_guest_lvtpc(void);
-+#endif
-+
- #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
- extern struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data);
- extern void x86_perf_get_lbr(struct x86_pmu_lbr *lbr);
+@@ -3132,8 +3132,8 @@ void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+ 	cap->version		= x86_pmu.version;
+ 	cap->num_counters_gp	= x86_pmu_num_counters(NULL);
+ 	cap->num_counters_fixed	= x86_pmu_num_counters_fixed(NULL);
+-	cap->bit_width_gp	= x86_pmu.cntval_bits;
+-	cap->bit_width_fixed	= x86_pmu.cntval_bits;
++	cap->bit_width_gp	= cap->num_counters_gp ? x86_pmu.cntval_bits : 0;
++	cap->bit_width_fixed	= cap->num_counters_fixed ? x86_pmu.cntval_bits : 0;
+ 	cap->events_mask	= (unsigned int)x86_pmu.events_maskl;
+ 	cap->events_mask_len	= x86_pmu.events_mask_len;
+ 	cap->pebs_ept		= x86_pmu.pebs_ept;
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
