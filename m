@@ -1,178 +1,182 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DBE17C9E
-	for <loongarch@lists.linux.dev>; Mon,  8 Dec 2025 04:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EE22DF3F2;
+	Mon,  8 Dec 2025 09:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765166823; cv=none; b=CklWmjvm6oEeEJOxt0NbieT325wwicnsHLTtxr79o1ECUaqy0S9W5rnHNF5tndes3+TkNIdxHAFdrc4FFBJq5dCZG8Uj+uQstiwJ58cMYsgXGkMhherh0mAEd/y0kQIGa5nn3P5qBOt6YyXtUvTi3ymGs/TENH0mlC8kYyebUcI=
+	t=1765185313; cv=none; b=Yw0IvUy0c3xVsNI1oSzfoPKdIE8w1RWdCO+lmVu++oVNOsSdAwhaNos7l1A6v2C36dFg+eRUclCizbxh8ZVkYnZZo4TromRYClzqaefEuC7+bPWYl0ZBaon8Mc5atknhhZEtyK/8zzHqlW0MRoCyd+SD6z8FOghRlFQ0t7c625w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765166823; c=relaxed/simple;
-	bh=Ry+Ls0JFPtJcHfFomJRpM7w2s8zc0IvwkNQzTqqW0wc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dWdnnuXzJIbeA7tUddSvE6UDq2McTVDgnutWCmgXNHybrymJ1yXFSjNsQPYZIU82QGaIV6Gy4q5saWdjLVw6Md1fXlAqT3Uhj1gXteEYCZqG1uswDvfZdpRtuPw9JWH6UKtBFwxDFAxSO4/wOyD2ypd0tSKouN71tW1bTGky7OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxndLiTjZp3ygsAA--.29052S3;
-	Mon, 08 Dec 2025 12:06:58 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxVOTgTjZpveZGAQ--.64659S3;
-	Mon, 08 Dec 2025 12:06:58 +0800 (CST)
-Subject: Re: [PATCH v3 4/4] LongArch: KVM: Add dintc inject msi to the dest
- vcpu
-To: Song Gao <gaosong@loongson.cn>, chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
- linux-kernel@vger.kernel.org, lixianglai@loongson.cn
-References: <20251206064658.714100-1-gaosong@loongson.cn>
- <20251206064658.714100-5-gaosong@loongson.cn>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <7e938812-1d02-ec1d-6f3c-dd0db3e74d9a@loongson.cn>
-Date: Mon, 8 Dec 2025 12:04:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1765185313; c=relaxed/simple;
+	bh=Op2nVfSeshtd/97y1F620bAyJ5slemNLwyBYIxH82c8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bvr0mDfLps6ueFG9EUmIS1wts16B9GSm9OqhAX9H40KrqfsQI23+12IVBq6YxVocZYzIUaDFQVy3RRrYhUEvfeR6Jps2UaVOyOXyYBYcCWm/XxWl+wwm25v08f7vWzw2rDJ3GZZL/m+3obJEU4siZn91EHd2Pn6mshldEx27Y8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrhGnBPf; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrhGnBPf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765185311; x=1796721311;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Op2nVfSeshtd/97y1F620bAyJ5slemNLwyBYIxH82c8=;
+  b=QrhGnBPfG9KQgS3kIU+kwvMouIZ0LG9BY0XdCwOd2nj4U046KS3TpK+Y
+   P3bRZrD8xEseRiLyvQNDR4u57GkybSrBR1Tc3or69x8SV8NBaFtdaR8FL
+   ubwpj4MQOd28HJdq70hCLiQ+MVFBO8LCrmLtKco7HS7PuGzg+nkCCszrk
+   iebq8niuiV9/8w3h27jSSqKtNJCGNuX1mlcVvY7X/rBvIxIc3cx06tJGq
+   YDfN5FdDeoZoyEGBz1E+/d8N8ExrJ6DAOzc7n0Dt1+yhHGDYuliHccn1d
+   40BppSKMtDkJzLpAxqqcmYGRimLvEPUjWh6WlVdnA6RAudaZhPYUg+Ms2
+   g==;
+X-CSE-ConnectionGUID: SHZ8tbhCSIewJ4zwRdzXzw==
+X-CSE-MsgGUID: Qt62ahHSScqvO1+byIhynA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="66124378"
+X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
+   d="scan'208";a="66124378"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 01:15:10 -0800
+X-CSE-ConnectionGUID: 4H/pcwrXQVSjY8FUXqPV6w==
+X-CSE-MsgGUID: j7p+D3AjRFu5Wm3XzOa1YQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,258,1758610800"; 
+   d="scan'208";a="195945489"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2025 01:14:59 -0800
+Message-ID: <0237b3eb-87f5-4758-b704-9f8d525f1f15@linux.intel.com>
+Date: Mon, 8 Dec 2025 17:14:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251206064658.714100-5-gaosong@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 35/44] KVM: VMX: Drop intermediate "guest" field from
+ msr_autostore
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-36-seanjc@google.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxVOTgTjZpveZGAQ--.64659S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuF4xKw1kWryfAw1DGFyfAFc_yoW5tF47pF
-	yDuas5WrWrGr17G343Jan09rs8ZrZ2gr12qFyakFy3Kr1qvrn8XFW8Kr9rAFy5G3y0qF1I
-	v3WFk3ZI9a1DtwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU84x
-	RDUUUUU==
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251206001720.468579-36-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-
-On 2025/12/6 下午2:46, Song Gao wrote:
-> Implement irqfd deliver msi to vcpu and
-> vcpu dintc inject irq.
-> 
-> Signed-off-by: Song Gao <gaosong@loongson.cn>
+On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+> Drop the intermediate "guest" field from vcpu_vmx.msr_autostore as the
+> value saved on VM-Exit isn't guaranteed to be the guest's value, it's
+> purely whatever is in hardware at the time of VM-Exit.  E.g. KVM's only
+> use of the store list at the momemnt is to snapshot TSC at VM-Exit, and
+> the value saved is always the raw TSC even if TSC-offseting and/or
+> TSC-scaling is enabled for the guest.
+>
+> And unlike msr_autoload, there is no need differentiate between "on-entry"
+> and "on-exit".
+>
+> No functional change intended.
+>
+> Cc: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 > ---
->   arch/loongarch/include/asm/kvm_host.h |  5 +++
->   arch/loongarch/kvm/interrupt.c        |  1 +
->   arch/loongarch/kvm/vcpu.c             | 55 +++++++++++++++++++++++++++
->   3 files changed, 61 insertions(+)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 26a90f4146ac..8099dd3f71dd 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -258,6 +258,11 @@ struct kvm_vcpu_arch {
->   	} st;
->   };
->   
-> +void loongarch_dintc_inject_irq(struct kvm_vcpu *vcpu);
-> +int kvm_loongarch_deliver_msi_to_vcpu(struct kvm *kvm,
-> +				struct kvm_vcpu *vcpu,
-> +				u32 vector, int level);
-> +
->   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
->   {
->   	return csr->csrs[reg];
-> diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-> index a6d42d399a59..c74e7af3e772 100644
-> --- a/arch/loongarch/kvm/interrupt.c
-> +++ b/arch/loongarch/kvm/interrupt.c
-> @@ -33,6 +33,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
->   		irq = priority_to_irq[priority];
->   
->   	if (cpu_has_msgint && (priority == INT_AVEC)) {
-> +		loongarch_dintc_inject_irq(vcpu);
->   		set_gcsr_estat(irq);
->   		return 1;
->   	}
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 6d833599ef2e..356d288799ac 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -13,6 +13,61 @@
->   #define CREATE_TRACE_POINTS
->   #include "trace.h"
->   
-> +void loongarch_dintc_inject_irq(struct kvm_vcpu *vcpu)
-> +{
-> +	struct dintc_state *ds = &vcpu->arch.dintc_state;
-> +	unsigned int i;
-> +	unsigned long temp[4], old;
-> +
-> +	if (!ds)
-> +		return;
-> +
-> +	for (i = 0; i < 4; i++) {
-> +		old = atomic64_read(&(ds->vector_map[i]));
-> +		if (old)
-> +			temp[i] = atomic64_xchg(&(ds->vector_map[i]), 0);
-> +	}
-> +
-> +	if (temp[0]) {
-> +		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR0);
-> +		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR0, temp[0]|old);
-> +	}
-should there be one extra space line between two if() sentenses?
-> +	if (temp[1]) {
-> +		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR1);
-> +		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR1, temp[1]|old);
-> +	}
-ditto
-> +	if (temp[2]) {
-> +		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR2);
-> +		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR2, temp[2]|old);
-> +	}
-ditto
+>  arch/x86/kvm/vmx/nested.c | 10 +++++-----
+>  arch/x86/kvm/vmx/vmx.c    |  2 +-
+>  arch/x86/kvm/vmx/vmx.h    |  4 +---
+>  3 files changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 729cc1f05ac8..486789dac515 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1076,11 +1076,11 @@ static bool nested_vmx_get_vmexit_msr_value(struct kvm_vcpu *vcpu,
+>  	 * VM-exit in L0, use the more accurate value.
+>  	 */
+>  	if (msr_index == MSR_IA32_TSC) {
+> -		int i = vmx_find_loadstore_msr_slot(&vmx->msr_autostore.guest,
+> +		int i = vmx_find_loadstore_msr_slot(&vmx->msr_autostore,
+>  						    MSR_IA32_TSC);
+>  
+>  		if (i >= 0) {
+> -			u64 val = vmx->msr_autostore.guest.val[i].value;
+> +			u64 val = vmx->msr_autostore.val[i].value;
+>  
+>  			*data = kvm_read_l1_tsc(vcpu, val);
+>  			return true;
+> @@ -1167,7 +1167,7 @@ static void prepare_vmx_msr_autostore_list(struct kvm_vcpu *vcpu,
+>  					   u32 msr_index)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	struct vmx_msrs *autostore = &vmx->msr_autostore.guest;
+> +	struct vmx_msrs *autostore = &vmx->msr_autostore;
+>  	bool in_vmcs12_store_list;
+>  	int msr_autostore_slot;
+>  	bool in_autostore_list;
+> @@ -2366,7 +2366,7 @@ static void prepare_vmcs02_constant_state(struct vcpu_vmx *vmx)
+>  	 * addresses are constant (for vmcs02), the counts can change based
+>  	 * on L2's behavior, e.g. switching to/from long mode.
+>  	 */
+> -	vmcs_write64(VM_EXIT_MSR_STORE_ADDR, __pa(vmx->msr_autostore.guest.val));
+> +	vmcs_write64(VM_EXIT_MSR_STORE_ADDR, __pa(vmx->msr_autostore.val));
+>  	vmcs_write64(VM_EXIT_MSR_LOAD_ADDR, __pa(vmx->msr_autoload.host.val));
+>  	vmcs_write64(VM_ENTRY_MSR_LOAD_ADDR, __pa(vmx->msr_autoload.guest.val));
+>  
+> @@ -2704,7 +2704,7 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+>  	 */
+>  	prepare_vmx_msr_autostore_list(&vmx->vcpu, MSR_IA32_TSC);
+>  
+> -	vmcs_write32(VM_EXIT_MSR_STORE_COUNT, vmx->msr_autostore.guest.nr);
+> +	vmcs_write32(VM_EXIT_MSR_STORE_COUNT, vmx->msr_autostore.nr);
+>  	vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, vmx->msr_autoload.host.nr);
+>  	vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, vmx->msr_autoload.guest.nr);
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 62ba2a2b9e98..23c92c41fd83 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6567,7 +6567,7 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
+>  	if (vmcs_read32(VM_ENTRY_MSR_LOAD_COUNT) > 0)
+>  		vmx_dump_msrs("guest autoload", &vmx->msr_autoload.guest);
+>  	if (vmcs_read32(VM_EXIT_MSR_STORE_COUNT) > 0)
+> -		vmx_dump_msrs("guest autostore", &vmx->msr_autostore.guest);
+> +		vmx_dump_msrs("autostore", &vmx->msr_autostore);
+>  
+>  	if (vmentry_ctl & VM_ENTRY_LOAD_CET_STATE)
+>  		pr_err("S_CET = 0x%016lx, SSP = 0x%016lx, SSP TABLE = 0x%016lx\n",
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index d7a96c84371f..4ce653d729ca 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -245,9 +245,7 @@ struct vcpu_vmx {
+>  		struct vmx_msrs host;
+>  	} msr_autoload;
+>  
+> -	struct msr_autostore {
+> -		struct vmx_msrs guest;
+> -	} msr_autostore;
+> +	struct vmx_msrs msr_autostore;
+>  
+>  	struct {
+>  		int vm86_active;
 
-the other looks good to me.
+LGTM.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> +	if (temp[3]) {
-> +		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR3);
-> +		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR3, temp[3]|old);
-> +	}
-> +}
-> +
-> +int kvm_loongarch_deliver_msi_to_vcpu(struct kvm *kvm,
-> +				struct kvm_vcpu *vcpu,
-> +				u32 vector, int level)
-> +{
-> +	struct kvm_interrupt vcpu_irq;
-> +	struct dintc_state *ds;
-> +
-> +	if (!level)
-> +		return 0;
-> +	if (!vcpu || vector >= 256)
-> +		return -EINVAL;
-> +	ds = &vcpu->arch.dintc_state;
-> +	if (!ds)
-> +		return -ENODEV;
-> +	set_bit(vector, (unsigned long *)&ds->vector_map);
-> +	vcpu_irq.irq = INT_AVEC;
-> +	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-> +	kvm_vcpu_kick(vcpu);
-> +	return 0;
-> +}
-> +
-> +
->   const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
->   	KVM_GENERIC_VCPU_STATS(),
->   	STATS_DESC_COUNTER(VCPU, int_exits),
-> 
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
 
