@@ -1,104 +1,193 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EABB25783A;
-	Mon,  8 Dec 2025 15:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA3E228CA9
+	for <loongarch@lists.linux.dev>; Mon,  8 Dec 2025 18:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765208270; cv=none; b=U43r0aQNADzf7iO2i+o94bY/DNtG8g7tdAVB+SOuYqWkSvfm9ikEJQj4ikAZXvQw9VKUwPAhAqP6B7Mekbevlpgv0GJO6qNS0YOIjLk/IfxLdWo6++C0IEhm5jrVdbeRbOFF33FKf3sT/XG4K8c174v9hx8sh5fsg5CVNrFxO2s=
+	t=1765217281; cv=none; b=Nwc5+VI/7X5gfd/3FvYHLp+F5n+RBxLBxDkpvdaELmNwgFJP7jfQtE+hvrzCB9nXNBu9q6GdQwhheDjLh7LT1NmkEe7f7h0Wmhz3yRwrcATpvcWJnzzij4shFGWnxitgcOb2dqSZLHDJ4iyaPX+2i0H7Tj8c6CcI2aHOZ8zLs8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765208270; c=relaxed/simple;
-	bh=vCpKXfUIiz82eezbrdqJXe2AFXKcg1TqwZvez0QABgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EKwEXRTSePWUUXmevxoM1ZbSgjH+NOTgq7LdIC2dgD78zy9g0Uckzziw0DHUCw7oZLQKQOZS8o1HdEXKfQB2oFX39uhGC+ZDlSmXP7s5UkObgh3455srVJF3PIetjpEP3O9eUZqLdD+1blEiAEY8lti+i22VW9nylWquHpVey+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OoWG4ome; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1765217281; c=relaxed/simple;
+	bh=9iufsu/WFJNy0WogHro7btB7qYSuDu2TmGiNlbbFqhw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Bnv//YdDUKwzNZUuDVLrVE+kVj1Ik+pqotbrxllM2GIFvRskcd1CZm7qvA1C/2GqCv2rOLeYNaA7uGzVJHHD//hOHUpt/utVHxEJW7TK32k0N3rgoXHojsCvBlK6x5O/9vQVD2gDDZdAODVm8BPcncsCEWLwHYAgTNxzfhIvTIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q6UtX9l/; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OoWG4ome"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wLn9Pj1RYBBe/ROihmPM3KswK8Z51Ugeg99R/pQhOhA=; b=OoWG4omeqgaxvUh8FgADNqjaaC
-	juvgaLiAq5Ppq+sfIu8suggncnKgHn/WlW24ff8tjGhqnjjN334+IwwvaC920xcolbeImVxUh9kSO
-	CyUgYV+zi6CeSG3tfhCi8pp5tjZQJ8Wu4pkseeK7UUuoy0SM3kJDM1L2svoJHUY0EdcDpdx+naGGm
-	XrolU+XPp5CzvMG+WRw4XNArwKR6g3xoi8uZ0vGdE28D1RzEXp04ygB8Sd3PimzpthY+PAfkgzS3h
-	eg+s9IvZgwFCOaH3wVz9RVWaw3Hwv4+L3Li68zpDe4K2DrcryVF8Qam+F59SRS5lRRfOsSzf3ifOv
-	M6PIb97w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vScRR-0000000AQUo-1xw8;
-	Mon, 08 Dec 2025 14:42:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 95ACC30301A; Mon, 08 Dec 2025 16:37:38 +0100 (CET)
-Date: Mon, 8 Dec 2025 16:37:38 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Mingwei Zhang <mizhang@google.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v6 00/44] KVM: x86: Add support for mediated vPMUs
-Message-ID: <20251208153738.GC3707837@noisy.programming.kicks-ass.net>
-References: <20251206001720.468579-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q6UtX9l/"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-349a2f509acso4008298a91.1
+        for <loongarch@lists.linux.dev>; Mon, 08 Dec 2025 10:07:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765217279; x=1765822079; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SF6h5hGtRuMyBRglBJmpKQuSrVGlyuxXyhedVebSd6M=;
+        b=q6UtX9l/Yk/bUyXLAATGqRikGquo/zO/sN086Pd8eJNbKHzAkyEb463OgoJZ1dWPby
+         Wyk7K4/EKk7DHagDCCbaXxJ9wguwpdz7QeEnSnW0DoglLNZ2kqiw1/jK9TdCBAuWR4Zb
+         hc+fMiCnn7o8z1M9u/DbnwZRV+kj1Q0ldlIpsyrbQ6rbpSXBIUbPcltXnKI3/leu+kc+
+         NRFmRRvSD2kL/SMqRs3mTW2/BDmBoqhistLav3FLJHVTVh0L2SdLkHozSZmfZtudr4sX
+         ZegkaYRT+VBMx429L/O6DZxcIMnyxZFfi3A+74I4dJmEaWlSBY2NEMqSmyG7GJAHsHyK
+         sIhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765217279; x=1765822079;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SF6h5hGtRuMyBRglBJmpKQuSrVGlyuxXyhedVebSd6M=;
+        b=smtdDJnQNRnV8nDHfJ1Jiwuv8Al1GWjRHfkCUznjLCywE5tAI+IOCdnzh6hx6B7cBP
+         HK3RMO8E54M/gz9RntqQuU5oMk7iT4/3Y20fLgtAeM3KD37BJlG/+icR9wf3FCgFpGXd
+         emc2997w5U/mufKmuXGA3AYUe1G8LZIjpYP1hwvVU7NEo1WD03mkKv/EkDScBBzBZptg
+         MH2YDSlTj1NIxpCuRb55culExjlYSGNeIOPQ9uNoxn9mr97RssYjOl81GsXhZiDfsGCz
+         g0+S/71DZMbdGKcRITw92xhAu9DlqktwYLulIqJ7G8RCBrEwdw8F60f1XoCAQTo1V02+
+         BThg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYRsDt3BWmT11MQBl6Je2kPV9P9Wy7jEU60noC1bi0q3ehxe7d97Hnf+XpGSg1y+6ZtfGngqUvLMI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx4iE5qbv77hRBERPY1eFhsloadmmHp9o0gZiWAmF/CUijzeUnQ
+	pMp58nqDHtCPMxu2WThd/zb2kNdwsjo7c1jheVPIg0xIcfAHWxOFKxEvKJqM0jP4kF7wFKS0zGI
+	xqM5fSw==
+X-Google-Smtp-Source: AGHT+IH3HhOiXlRek80ArMNgo8utGCkumZ6GCHftobZYLKaRSJ46MkO0EFccaQp1M2wj9T7xKajFvZIZ67U=
+X-Received: from pjbfs21.prod.google.com ([2002:a17:90a:f295:b0:343:6849:31ae])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2787:b0:349:8a8b:da5c
+ with SMTP id 98e67ed59e1d1-349a24f2f71mr7253927a91.11.1765217279160; Mon, 08
+ Dec 2025 10:07:59 -0800 (PST)
+Date: Mon, 8 Dec 2025 10:07:57 -0800
+In-Reply-To: <20251208115156.GE3707891@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251206001720.468579-1-seanjc@google.com>
+Mime-Version: 1.0
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-5-seanjc@google.com>
+ <20251208115156.GE3707891@noisy.programming.kicks-ass.net>
+Message-ID: <aTcT_QcQaqyHV_S-@google.com>
+Subject: Re: [PATCH v6 04/44] perf: Add APIs to create/release mediated guest vPMUs
+From: Sean Christopherson <seanjc@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Manali Shukla <manali.shukla@amd.com>, 
+	Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Dec 05, 2025 at 04:16:36PM -0800, Sean Christopherson wrote:
-> My hope/plan is that the perf changes will go through the tip tree with a
-> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
-
-> Kan Liang (7):
->   perf: Skip pmu_ctx based on event_type
->   perf: Add generic exclude_guest support
->   perf: Add APIs to create/release mediated guest vPMUs
->   perf: Clean up perf ctx time
->   perf: Add a EVENT_GUEST flag
->   perf: Add APIs to load/put guest mediated PMU context
->   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+On Mon, Dec 08, 2025, Peter Zijlstra wrote:
+> On Fri, Dec 05, 2025 at 04:16:40PM -0800, Sean Christopherson wrote:
 > 
-> Mingwei Zhang (3):
->   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
->     x86_pmu_cap
->
-> Sandipan Das (3):
->   perf/x86/core: Do not set bit width for unavailable counters
->   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+> > +static atomic_t nr_include_guest_events __read_mostly;
+> > +
+> > +static atomic_t nr_mediated_pmu_vms __read_mostly;
+> > +static DEFINE_MUTEX(perf_mediated_pmu_mutex);
 > 
-> Sean Christopherson (19):
->   perf: Move security_perf_event_free() call to __free_event()
->   perf/x86/core: Register a new vector for handling mediated guest PMIs
->   perf/x86/core: Add APIs to switch to/from mediated PMI vector (for
->     KVM)
+> > +static int mediated_pmu_account_event(struct perf_event *event)
+> > +{
+> > +	if (!is_include_guest_event(event))
+> > +		return 0;
+> > +
+> > +	guard(mutex)(&perf_mediated_pmu_mutex);
+> > +
+> > +	if (atomic_read(&nr_mediated_pmu_vms))
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	atomic_inc(&nr_include_guest_events);
+> > +	return 0;
+> > +}
+> > +
+> > +static void mediated_pmu_unaccount_event(struct perf_event *event)
+> > +{
+> > +	if (!is_include_guest_event(event))
+> > +		return;
+> > +
+> > +	atomic_dec(&nr_include_guest_events);
+> > +}
+> 
+> > +int perf_create_mediated_pmu(void)
+> > +{
+> > +	guard(mutex)(&perf_mediated_pmu_mutex);
+> > +	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
+> > +		return 0;
+> > +
+> > +	if (atomic_read(&nr_include_guest_events))
+> > +		return -EBUSY;
+> > +
+> > +	atomic_inc(&nr_mediated_pmu_vms);
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(perf_create_mediated_pmu);
+> > +
+> > +void perf_release_mediated_pmu(void)
+> > +{
+> > +	if (WARN_ON_ONCE(!atomic_read(&nr_mediated_pmu_vms)))
+> > +		return;
+> > +
+> > +	atomic_dec(&nr_mediated_pmu_vms);
+> > +}
+> > +EXPORT_SYMBOL_GPL(perf_release_mediated_pmu);
+> 
+> These two things are supposed to be symmetric, but are implemented
+> differently; what gives?
+> 
+> That is, should not both have the general shape:
+> 
+> 	if (atomic_inc_not_zero(&A))
+> 		return 0;
+> 
+> 	guard(mutex)(&lock);
+> 
+> 	if (atomic_read(&B))
+> 		return -EBUSY;
+> 
+> 	atomic_inc(&A);
+> 	return 0;
+> 
+> Similarly, I would imagine both release variants to have the underflow
+> warn on like:
+> 
+> 	if (WARN_ON_ONCE(!atomic_read(&A)))
+> 		return;
+> 
+> 	atomic_dec(&A);
+> 
+> Hmm?
 
-That all looks to be in decent shape; lets go get this merged. There is
-the nit on patch 4 and I think a number of the exports want to be
-EXPORT_SYMBOL_FOR_KVM() instead, but we can do that on top.
+IIUC, you're suggesting someting like this?  If so, that makes perfect sense to me.
 
-I'll queue these patches after rc1.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index c6368c64b866..fa2e7b722283 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6356,7 +6356,8 @@ static int mediated_pmu_account_event(struct perf_event *event)
+ 
+ static void mediated_pmu_unaccount_event(struct perf_event *event)
+ {
+-       if (!is_include_guest_event(event))
++       if (!is_include_guest_event(event) ||
++           WARN_ON_ONCE(!atomic_read(&nr_include_guest_events)))
+                return;
+ 
+        atomic_dec(&nr_include_guest_events);
+
+> Also, EXPORT_SYMBOL_FOR_KVM() ?
+
+Ya, for sure.  I posted this against a branch without EXPORT_SYMBOL_FOR_KVM(),
+because there are also hard dependencies on the for-6.19 KVM pull requests, and
+I didn't want to wait to post until 6.19-rc1 because of the impending winter
+break.  Though I also simply forgot about these exports :-(
+
+These could also use EXPORT_SYMBOL_FOR_KVM():
+
+  EXPORT_SYMBOL_FOR_MODULES(perf_load_guest_lvtpc, "kvm");
+  EXPORT_SYMBOL_FOR_MODULES(perf_put_guest_lvtpc, "kvm");
+
+
+> I can make these edits when applying, if/when we get to applying. Let me
+> continue reading.
+> 
