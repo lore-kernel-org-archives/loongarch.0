@@ -1,109 +1,115 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E192DA776
-	for <loongarch@lists.linux.dev>; Sun,  7 Dec 2025 05:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EFE4E56A
+	for <loongarch@lists.linux.dev>; Mon,  8 Dec 2025 03:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765084466; cv=none; b=GtYOnXMxHOuFY/WRcEjllQ0UtgT9kKwP2sv6tobBuBtoTVVJ3NK6Hg5dKrXkwZDlebnbDqdMZQ6qzUA89vs4svbKMHNeZOH4F7sNBxV71IamF9GeE7c/OBgPrVm2K04YUiPKleFh7/qCvEzFtH39B+MUNfKDODtFxkWL2kR90/E=
+	t=1765165715; cv=none; b=igP4AKMWMPkf2k0AjVaDvIEThxujyJ33lfETHLms7Z7ibF80/hBp7485zu1e3/qPtmTPjcBAQ+0Fdsz+zRiL334tmeFRK1WcZQExwtexdpnPXqyW6qm2xT6cne1lUxdFvrSf/3V7xbpWtwFxpGbuLfKrbNj2A7ojYgdTx1KHWy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765084466; c=relaxed/simple;
-	bh=RLy871nN+PF6G/1eKPJpSvOsrDqcrcKVOdz8yZpUqkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sz8lAbEtUpWmNEl1rMqEtRu0mx7mpmLrqk1SpA671axe2wiS4v1Muv71eB1mk2JZwbSaGjIfXFzIGdUoVwgDeMrdoz/6GbIl7Ie+Gep/UZyIi3yCgNZJsjt9nBM5TBN2Y43BSbkRghsLCRyNvtnVDnD8vFiNamkENM3oUjqph1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=VqXlN0OC; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="VqXlN0OC"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6574d7e451dso2129809eaf.0
-        for <loongarch@lists.linux.dev>; Sat, 06 Dec 2025 21:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1765084464; x=1765689264; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIr6vMU+1WXTpE+kuQ5XIOvR7lhOKuME2h0aehuNw7U=;
-        b=VqXlN0OCnI+KA2oE9oTaRfHwAP7JNT9yquQ+kB1Wq/i7VVn508+C/mAO92xnijTHGR
-         /7PY5yIkuViY0R+/nKwrXL5/UGY2tuwamAJgsX4kHV1TKI2Qw22MbFQvv6rozgPBvDOZ
-         l1TNJ1dyVaFfLl6G9xh2jD6Yw1pTDaAhWI84kqhx4HQwXS834Lcckp2mdr7qg2fTu1Xs
-         7GOXh7ZupdBMLxEEGSA71Ioj72rNEqB//q+AbO0d85vXTafoRZZViKWo9MubarOkf18H
-         Klum3Ib97lJOZoxFk9k+VNqxNlYMV7pLZL7VENQDpa4AtB/dnovTpBrD0sI1ZJJuENkD
-         fUHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765084464; x=1765689264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gIr6vMU+1WXTpE+kuQ5XIOvR7lhOKuME2h0aehuNw7U=;
-        b=LEQrLBYD8oxpabv6a9U0kMVqC8/4sVM2wCQQSMJXNa1fyxQGGeeulMSANSu6SyyX3i
-         vz2pmoxfxSkaHMU//rYmKP+0/k5ITxclTOZsjYDhtKN1WXzpaArFrUtOUNJgof7gO3m5
-         qSlD7z1jRHD2ayY/6SekkmziNT1i3dLS2WhtUj3ohC23VhpmLlUuQR1/O5euMZKSWqJD
-         Iwb9PhcY+vi564ZNLEIvr8wtsM72Y8esuf8rEEVQHIr0vTL/4Queh7nbBvi7GsS2SD9G
-         hgoYTWR6MwsjDfvo+2R1Qv+6npMat+/e8x4pedfLZ8mUAc2eW6je+U6OyZfBZrrOXCSM
-         OmsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAGKmH9rn60qK+RaXgWZqLnX8P/+7BSwryQmGaEQbXro9UaLkUxiz3zTERHjLz96kFWaHvJbYlYyU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNmtLlYVxm/5Y6DWPWpyojeEdWKSwsHPF7AqAynQCwxaKkKbnv
-	zrbkgGopvECNsDwa301SQ2LLs91jKBy6KHeCblZKQl01WCFWUCsEKmUCQhyurhTVKXRzS60QqLd
-	EGECblyA/jVoEm9gaBXo+w/Tf7af28efB5/Nd759cGQ==
-X-Gm-Gg: ASbGncs2xCz3gIhcdbTG1uE0Eqqs2IMD74X7g1mueG47mDhWOXx3yRqqjJwXd7c4ckA
-	k7+LnyLnmCbeGjw51HJ04sW9C6vwnl/wL4RgWeUiXJKyL7lyv6bhGkIQ55vzAGXuOoDYBTHXbJA
-	EhGBu0GF6+ytHmsJvwHW9EPzp8VNYx6f9wyGlP4UD7Gyotja+6USAaKFXwiegJEmGozn2A23w7q
-	SsyBSl2LqbvTbkPFMPgODvbGuBGBqJGbWEbm56q+tw5hPBkIsJLit/OBsYf1xduKhRcAVrs
-X-Google-Smtp-Source: AGHT+IH3teezYiglKMW0l9sCwPDXKzHK/uYMVzLl99zBL+8tY4BEmXzPQzc7f6ucWRYnVm2fOg07KrRcgASdUHrgci4=
-X-Received: by 2002:a05:6820:f030:b0:659:9a49:8f73 with SMTP id
- 006d021491bc7-6599a973da4mr2018657eaf.56.1765084463840; Sat, 06 Dec 2025
- 21:14:23 -0800 (PST)
+	s=arc-20240116; t=1765165715; c=relaxed/simple;
+	bh=nCRj2GBnUGFZOywSBOroAQamrdEwQ1IGFW62r5tyLvE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OZWKhX8lURzwcu8htJ8XnhzdQsH0RRFVO6HATXZbDkvUiBIT3OqzHArwUp68zJAfSbX1VaXw/AWsIXNiSwYTqJM0yrnQam7yHalPRI7ph8bqgizywZ6DKqiUOGuEnrkq3UcQWwvs43bCJtdYsA2x/y4JSx3+NaxA9DWttgErW9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Dxb_CFSjZprScsAA--.30612S3;
+	Mon, 08 Dec 2025 11:48:21 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxqcCDSjZpYuVGAQ--.34286S3;
+	Mon, 08 Dec 2025 11:48:21 +0800 (CST)
+Subject: Re: [PATCH v3 1/4] LongArch: KVM: Add some maccros for AVEC
+To: Song Gao <gaosong@loongson.cn>, chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org, lixianglai@loongson.cn
+References: <20251206064658.714100-1-gaosong@loongson.cn>
+ <20251206064658.714100-2-gaosong@loongson.cn>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <894a4c72-af10-2662-1c31-f008a0d7d2f2@loongson.cn>
+Date: Mon, 8 Dec 2025 11:45:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251205232655.445294-1-seanjc@google.com>
-In-Reply-To: <20251205232655.445294-1-seanjc@google.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Sun, 7 Dec 2025 10:44:13 +0530
-X-Gm-Features: AQt7F2qP99gde5P8lRQoinF2DOSDMpaUpigWBx6hvnDvXPL66vGpk9e2egXMZ2I
-Message-ID: <CAAhSdy1cPnxjntaR=cwZqG+oVgFpZKM0rKYAEdkHUCToMvN0Ag@mail.gmail.com>
-Subject: Re: [PATCH] KVM: Remove subtle "struct kvm_stats_desc" pseudo-overlay
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20251206064658.714100-2-gaosong@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxqcCDSjZpYuVGAQ--.34286S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4xZFWDZw1DAw1kKF1kXrc_yoW8uF48pF
+	ZrAFZYgr48KryxJw43tws0vr13Aws7Gr42ga4jgFyavr98Ww1kWr18K3s3ZFy0gan7Gaya
+	qr1FqFy3Wan8twcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24So
+	DUUUU
 
-On Sat, Dec 6, 2025 at 4:57=E2=80=AFAM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> Remove KVM's internal pseudo-overlay of kvm_stats_desc, which subtly
-> aliases the flexible name[] in the uAPI definition with a fixed-size arra=
-y
-> of the same name.  The unusual embedded structure results in compiler
-> warnings due to -Wflex-array-member-not-at-end, and also necessitates an
-> extra level of dereferencing in KVM.  To avoid the "overlay", define the
-> uAPI structure to have a fixed-size name when building for the kernel.
->
-> Opportunistically clean up the indentation for the stats macros, and
-> replace spaces with tabs.
->
-> No functional change intended.
->
-> Reported-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Closes: https://lore.kernel.org/all/aPfNKRpLfhmhYqfP@kspp
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-For KVM RISC-V:
-Acked-by: Anup Patel <anup@brainfault.org>
 
-Thanks,
-Anup
+On 2025/12/6 下午2:46, Song Gao wrote:
+> Add some maccros for AVEC interrupt controller, so the dintc can use
+> those maccros.
+> 
+> Signed-off-by: Song Gao <gaosong@loongson.cn>
+> ---
+>   arch/loongarch/include/asm/irq.h     | 8 ++++++++
+>   drivers/irqchip/irq-loongarch-avec.c | 5 +++--
+>   2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+> index 12bd15578c33..aaa022fcb9e3 100644
+> --- a/arch/loongarch/include/asm/irq.h
+> +++ b/arch/loongarch/include/asm/irq.h
+> @@ -50,6 +50,14 @@ void spurious_interrupt(void);
+>   #define NR_LEGACY_VECTORS	16
+>   #define IRQ_MATRIX_BITS		NR_VECTORS
+>   
+> +#define AVEC_VIRQ_SHIFT		4
+> +#define AVEC_VIRQ_BIT		8
+> +#define AVEC_VIRQ_MASK		GENMASK(AVEC_VIRQ_BIT - 1, 0)
+> +#define AVEC_CPU_SHIFT		12
+(AVEC_VIRQ_SHIFT + AVEC_VIRQ_BIT) compared with hard coded 12 ?
+
+> +#define AVEC_CPU_BIT		16
+> +#define AVEC_CPU_MASK		GENMASK(AVEC_CPU_BIT - 1, 0)
+> +
+> +
+one more unnecessary space line, otherwise it looks good to me.
+
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>   #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
+>   void arch_trigger_cpumask_backtrace(const struct cpumask *mask, int exclude_cpu);
+>   
+> diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
+> index bf52dc8345f5..f0118cfd4363 100644
+> --- a/drivers/irqchip/irq-loongarch-avec.c
+> +++ b/drivers/irqchip/irq-loongarch-avec.c
+> @@ -209,8 +209,9 @@ static void avecintc_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>   	struct avecintc_data *adata = irq_data_get_irq_chip_data(d);
+>   
+>   	msg->address_hi = 0x0;
+> -	msg->address_lo = (loongarch_avec.msi_base_addr | (adata->vec & 0xff) << 4)
+> -			  | ((cpu_logical_map(adata->cpu & 0xffff)) << 12);
+> +	msg->address_lo = (loongarch_avec.msi_base_addr |
+> +			(adata->vec & AVEC_VIRQ_MASK) << AVEC_VIRQ_SHIFT) |
+> +			((cpu_logical_map(adata->cpu & AVEC_CPU_MASK)) << AVEC_CPU_SHIFT);
+>   	msg->data = 0x0;
+>   }
+>   
+> 
+
