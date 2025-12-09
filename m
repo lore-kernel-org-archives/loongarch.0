@@ -1,122 +1,87 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E801B640
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 12:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26731D9346
+	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 12:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765282860; cv=none; b=fKfp3d4IRMTz+fkEu73+4wvyB2oyujbI5LNg6SDbuLXWf8Hw9++dfNKkq/zZ+ftk/cgMONEMJtWQSGttbAKrqP0rn3QutpvvCx2TLF/NXskr5oKWl6oZtjnuOW/0oXSBQyOGggj1Bwyn7ia6eOewCDxZwNZ6a4Wo1nFMYPtGPNw=
+	t=1765284656; cv=none; b=LqvDX+4gigaWhDXH5VYzwINVWXyLZ0zTqwzkiXK7WkGsxo84Gm88ovmw6D4H3x++OAnVLG9GIL2qIXsNZlancKC+sL6Lj2gmbcSsypM6lbC2cqHWtwRSh9ReC1FPudG9RP6XFPCZFhmO4z985ryY2B1wzNiPNyCEnGNIAuhEXV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765282860; c=relaxed/simple;
-	bh=DcVyOJl4N6JdMEGdilhfvPdRdPphDjnHsE6G+MUXMuc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pq0lhS/RhXoZKc8a/aJhU7/wA5j3Y4iVkawOxUtObRvrNTOC77TUocMHUxu67jFWjaigFiK+CMjWdI1Tep3K32miEnxjZH3d/+HQ26UGL4m++aJhKWEruFiyf7Sz2wWPsp8dpam0TjJ+bz9ws4FyvrvqiG0Co7QLA+hDIlL0wrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b=DrWiy2J7; arc=none smtp.client-ip=74.125.224.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1765284656; c=relaxed/simple;
+	bh=ZNpoXNZfR07Erh+2npG2nIk/DKTvhkPzmRuGbN9DOvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=omVv7OfYHIlhJUNQ7ltE1sBzirGuPbcW3i4vce4kY/8e2yliUZWo/OqPqeeweTttPev3wqvw8aDVHLSLsZSilVMIQ8yUX3IX7eGKO2hlz7OmXZWJJECdxBiKW3jSu2so51+FVPuFcTKVEiQ7MCP3RZuYzdInZsGQ57YKwBTZwxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EmZk8OHc; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20230601.gappssmtp.com header.i=@hev-cc.20230601.gappssmtp.com header.b="DrWiy2J7"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-6433f99eb15so4900235d50.3
-        for <loongarch@lists.linux.dev>; Tue, 09 Dec 2025 04:20:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20230601.gappssmtp.com; s=20230601; t=1765282858; x=1765887658; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BtHvUJyJXoAPcA7ybAhgBQ3UgpJaoreQlfcUOq89mJ8=;
-        b=DrWiy2J7CII3/7AO0+M86L+U+JFFz0gQQOh0gvQLlsf9E5/12PXvXqk9QyDFlBd78M
-         u3xB4c1pEshGUk1P0OeR1bXX6oOYEP+oKV6TrES3QVCbMfWOZcab6XdGIEg1CpHg9WRF
-         jmHacuRov/fmdEbSoWVoWlW9n3aP4C9BBPWIGAQ3qVJ4wUpIX/bRUJLVDFgRRiExOSr8
-         PEA2nXqTVicEW9S+s+6nxd+jpJ1IF624i/aHc9p9cgXbES8ixDVWnBvaPfJlUvw8r/Lw
-         pwDn853RbuXMd0JTSiiJaqizKzwV25EAIN7epiqiXXs62nchm7w5olGD/UkEPmMGJEVv
-         4leQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765282858; x=1765887658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BtHvUJyJXoAPcA7ybAhgBQ3UgpJaoreQlfcUOq89mJ8=;
-        b=V2mTKBbnonimTLRrv5ycdsFVUyYoGo0Id9mPxwUSUYBGrjBHfPOcsj5kYsn2AsdbSD
-         p7suEmQ4YyxXXKWdYuZ1v9UsVYqD3fafsKDubP/MHQx/QRUd/epP94+xWdy6LhtwBHkt
-         K+iz6+u/X34MA+AiOEHBQCH+az3pUWQRj3hD0mW4fckkQdrySNw2DXKT+9JX0RZUZxK7
-         L/UNtdgJ78kmDCnOAcRJ7RB5vLkzSssqyLnSmGzv8IVG6My7rasiLX8tcwiTlxFOQcX9
-         osDfHZN78AV6KXZy9no3ZZnI6bfbdm74aDguqXnuKxGSTOliX+wgykrD1cWfWItYcyUR
-         19Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCV67B3dUS2jbIPW2NoWW/cPW5Ga5I6RV6viL+et/6iS5rHDC0LUHureZxhI8l4JefYEYanQL9gK+XY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YymhV1Z32f15S+guGz+GWujBewmQkAAaiSHoKkxhk5RbrYhXk5C
-	lL8e0xzIyv6XWqAUxQZiCo9GeBHH4+PzKzxcc5fGzbGeksJ0Vq1IE1unh4ZuK9+JybvXNbokbuB
-	g32rQ1CR2XvYq0PPOOO50ac3rb5DGkAIzNEMDGTfZXQ==
-X-Gm-Gg: AY/fxX6i92jqLQ8GmbPFhmCFnP7DWVFZ3o7GmZeGQr1fmqxoDsI3rMO8lZb4DbwbMmO
-	0ffXqYee+MvVuKNOnZi4f31RH8UoHAj04cRP3M0lPTTZQR7LGgPXtdKT3fu8Yoo7JPzTrtf/vAb
-	x3k+yLApnnAGjKP6b3HU5qjwLgq6zltZ/5M41P9y99gcTUh2FrhZqiqAOYOA18q4aqOUHlvvJAH
-	2SV8hgacZdnkUfzMifC0TNkAuINRgFWqXdhtehTroipPLeyGZE+153DRhLDM2MREWws3Z8I7Ky4
-	hyVvOZweZTFFGhhleLHT3ZfWRtg=
-X-Google-Smtp-Source: AGHT+IGSi78moVcosHIfBwAfq+G4VFa7OB4Cez2Hw1OSe5QP5qYgyYT8Biof6X5zCF2lqk/czc0BtFWe4bp0TMbUHrQ=
-X-Received: by 2002:a05:690e:e89:b0:644:60d9:867a with SMTP id
- 956f58d0204a3-64460d9885bmr3111728d50.95.1765282858146; Tue, 09 Dec 2025
- 04:20:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EmZk8OHc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1765284652;
+	bh=ZDeVS/pqjoM1+Q0+7286ulFJd5685nZDyK1k3NTk4TI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EmZk8OHckHaIy/KN4cadWBksVXTSOVko3r5AU5aHIL9l/ABkHRNqlCsfuX/MIepyB
+	 q7eKVnpyambei+O9ClxQWL/d4XWWLXvz8sY1XhM4OM2ZkQFeC/mVW8sc4HCuawi3ne
+	 WsMPUuuaZGKJihgqDbLp3wdCJhGKDN3Ga4noaK50=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e27:5840::b3c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 6555E66912;
+	Tue,  9 Dec 2025 07:50:46 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	loongarch@lists.linux.dev,
+	hev <r@hev.cc>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	linux-kernel@vger.kernel.org (open list:ANDROID DRIVERS)
+Subject: [PATCH] rust_binder: Fix build failure if !CONFIG_COMPAT
+Date: Tue,  9 Dec 2025 20:50:19 +0800
+Message-ID: <20251209125029.1117897-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com>
-In-Reply-To: <CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com>
-From: hev <r@hev.cc>
-Date: Tue, 9 Dec 2025 20:20:46 +0800
-X-Gm-Features: AQt7F2ra6QRDCLAUZ7aPEt6QG53BMFnNndcmdPbdE559yaO6Mfa35aKGedA7raE
-Message-ID: <CAHirt9i3q2Ny=m_kjCO=ARnO22Kmf-f2jVSGmYATG61euzh2gQ@mail.gmail.com>
-Subject: Re: Mainline loongarch64 defconfig+Rust build error
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Alice Ryhl <aliceryhl@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Christian Brauner <christian@brauner.io>, 
-	Carlos Llamas <cmllamas@google.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, loongarch@lists.linux.dev, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 9, 2025 at 6:58=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Hi all,
->
-> I am seeing in mainline loongarch64 defconfig+Rust the following build
-> error [1].
->
-> Cheers,
-> Miguel
->
-> [1]
->
->  error[E0425]: cannot find value `compat_ptr_ioctl` in crate `bindings`
->      --> drivers/android/binder/rust_binder_main.rs:317:38
->       |
-> 317   |         compat_ioctl: Some(bindings::compat_ptr_ioctl),
+The bindgen utility cannot handle "#define compat_ptr_ioctl NULL" in the
+C header, so we need to handle this case on our own.
 
-It looks like the rust binder driver also needs to handle
-!CONFIG_COMPAT. Here's a reference for that:
+Simply skip this field in the initializer when !CONFIG_COMPAT as the
+SAFETY comment above this initializer implies this is allowed.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rus=
-t/kernel/miscdevice.rs?h=3Dv6.18#n410
+Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Closes: https://lore.kernel.org/all/CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com/
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ drivers/android/binder/rust_binder_main.rs | 1 +
+ 1 file changed, 1 insertion(+)
 
->       |                                      ^^^^^^^^^^^^^^^^ help: a
-> function with a similar name exists: `compat_sys_ioctl`
->       |
->      ::: /__w/quick/quick/linux/rust/bindings/bindings_generated.rs:78264=
-:5
->       |
-> 78264 |     pub fn compat_sys_ioctl(fd: ffi::c_uint, cmd: ffi::c_uint,
-> arg: compat_ulong_t) -> ffi::c_long;
->       |     -------------------------------------------------------------=
----------------------------------
-> similarly named function `compat_sys_ioctl` defined here
->
+diff --git a/drivers/android/binder/rust_binder_main.rs b/drivers/android/binder/rust_binder_main.rs
+index c79a9e742240..9a527268f5b4 100644
+--- a/drivers/android/binder/rust_binder_main.rs
++++ b/drivers/android/binder/rust_binder_main.rs
+@@ -314,6 +314,7 @@ unsafe impl<T> Sync for AssertSync<T> {}
+         owner: THIS_MODULE.as_ptr(),
+         poll: Some(rust_binder_poll),
+         unlocked_ioctl: Some(rust_binder_ioctl),
++        #[cfg(CONFIG_COMPAT)]
+         compat_ioctl: Some(bindings::compat_ptr_ioctl),
+         mmap: Some(rust_binder_mmap),
+         open: Some(rust_binder_open),
+-- 
+2.52.0
 
---
-hev
