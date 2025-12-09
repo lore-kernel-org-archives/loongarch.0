@@ -1,54 +1,60 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mail70.out.titan.email (mail70.out.titan.email [3.216.99.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26731D9346
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 12:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8D8233D88
+	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 14:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765284656; cv=none; b=LqvDX+4gigaWhDXH5VYzwINVWXyLZ0zTqwzkiXK7WkGsxo84Gm88ovmw6D4H3x++OAnVLG9GIL2qIXsNZlancKC+sL6Lj2gmbcSsypM6lbC2cqHWtwRSh9ReC1FPudG9RP6XFPCZFhmO4z985ryY2B1wzNiPNyCEnGNIAuhEXV0=
+	t=1765289374; cv=none; b=fVsv/owxZqlRASLaid/u+L/T4tnFV+R+w5pMGtStntd47cyjAn+2ipoVsGTDbpjjQM2vitAZCS6EO+Kd/cLLmYYC9HoZB0G0OUt/WxTGgpBQyLAbiqd00hSjfPjBu0LYWQtLDnz3KEJ4Bje3nIw27Gr+OgaAwBexTuiNrUD72/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765284656; c=relaxed/simple;
-	bh=ZNpoXNZfR07Erh+2npG2nIk/DKTvhkPzmRuGbN9DOvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=omVv7OfYHIlhJUNQ7ltE1sBzirGuPbcW3i4vce4kY/8e2yliUZWo/OqPqeeweTttPev3wqvw8aDVHLSLsZSilVMIQ8yUX3IX7eGKO2hlz7OmXZWJJECdxBiKW3jSu2so51+FVPuFcTKVEiQ7MCP3RZuYzdInZsGQ57YKwBTZwxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EmZk8OHc; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1765289374; c=relaxed/simple;
+	bh=vX9kXXrJnR1rHWThBL7xU5N4xiOBbubeqzMIe08FOCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b96hUhx4th40Xp+btyx1X5wGKh5YenVNNNE90QiUDbCIKQAeGUY8WJHmQU5b3UZUKdTmmT4Hpobb8aplY0cFxvuKS+L7hlqgvzpR0D8oXPPob+dGS5SiJVOVvo9QmG3ipxU8zqegC5Ow0nMdH/YwBdUy583g5Mz59bWV1j/QEZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b=L2/Ys5/r; arc=none smtp.client-ip=3.216.99.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EmZk8OHc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1765284652;
-	bh=ZDeVS/pqjoM1+Q0+7286ulFJd5685nZDyK1k3NTk4TI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EmZk8OHckHaIy/KN4cadWBksVXTSOVko3r5AU5aHIL9l/ABkHRNqlCsfuX/MIepyB
-	 q7eKVnpyambei+O9ClxQWL/d4XWWLXvz8sY1XhM4OM2ZkQFeC/mVW8sc4HCuawi3ne
-	 WsMPUuuaZGKJihgqDbLp3wdCJhGKDN3Ga4noaK50=
-Received: from stargazer (unknown [IPv6:2409:8a4c:e27:5840::b3c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6555E66912;
-	Tue,  9 Dec 2025 07:50:46 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b="L2/Ys5/r"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 4dQgVL3jrQz9s0n;
+	Tue,  9 Dec 2025 14:00:42 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=UWQDG7nF1KGYTr9qrLmsnw74AeAFGq39le95Kv6fqh8=;
+	c=relaxed/relaxed; d=ziyao.cc;
+	h=to:cc:date:in-reply-to:subject:mime-version:references:message-id:from:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1765288842; v=1;
+	b=L2/Ys5/rRsHspyPxCmLtjuCLI7JH48PgtoxK5CJxsAgO9dl4uCbgPbEXdvRkNrQYFFRxWgNa
+	Em9R1c9k3kbqsdXo3xIGtqiGGCUdiF+NGJu7U/3dAsfFaa4EMNsgTdki7UyPhNGeV61+DuGXesl
+	tdO+X9nzL/g0u+M+W/A9Rf8c=
+Received: from ketchup (unknown [117.171.66.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp-out.flockmail.com (Postfix) with ESMTPSA id 4dQgVC0wtJz9rxQ;
+	Tue,  9 Dec 2025 14:00:34 +0000 (UTC)
+Feedback-ID: :me@ziyao.cc:ziyao.cc:flockmailId
+From: Yao Zi <me@ziyao.cc>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	Mingcong Bai <jeffbai@aosc.io>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	hev <r@hev.cc>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	linux-kernel@vger.kernel.org (open list:ANDROID DRIVERS)
-Subject: [PATCH] rust_binder: Fix build failure if !CONFIG_COMPAT
-Date: Tue,  9 Dec 2025 20:50:19 +0800
-Message-ID: <20251209125029.1117897-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.52.0
+	Yao Zi <me@ziyao.cc>
+Subject: [PATCH 2/2] dt-bindings: PCI: loongson: Document msi-parent property
+Date: Tue,  9 Dec 2025 14:00:06 +0000
+Message-ID: <20251209140006.54821-3-me@ziyao.cc>
+X-Mailer: git-send-email 2.51.2
+In-Reply-To: <20251209140006.54821-1-me@ziyao.cc>
+References: <20251209140006.54821-1-me@ziyao.cc>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,32 +62,43 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1765288842007571500.21635.6149325618728624297@prod-use1-smtp-out1003.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=a8/K9VSF c=1 sm=1 tr=0 ts=69382b8a
+	a=rBp+3XZz9uO5KTvnfbZ58A==:117 a=rBp+3XZz9uO5KTvnfbZ58A==:17
+	a=MKtGQD3n3ToA:10 a=1oJP67jkp3AA:10 a=CEWIc4RMnpUA:10
+	a=luwqUdSl4_V6MCu2PjAA:9 a=3z85VNIBY5UIEeAh_hcH:22
+	a=NWVoK91CQySWRX1oVYDe:22
 
-The bindgen utility cannot handle "#define compat_ptr_ioctl NULL" in the
-C header, so we need to handle this case on our own.
+Loongson PCI controllers found in LS2K1000/2000 SoCs
+(loongson,ls2k-pci), 7A1000/2000 bridge chips (loongson,ls7a-pci), and
+RS780E bridge chips (loongson,rs780e-pci) all have their paired MSI
+controllers.
 
-Simply skip this field in the initializer when !CONFIG_COMPAT as the
-SAFETY comment above this initializer implies this is allowed.
+Though only the one in LS2K2000 SoC is described in devicetree, we
+should document the property for all variants. For the same reason, it
+isn't marked as required for now.
 
-Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Closes: https://lore.kernel.org/all/CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com/
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Fixes: 83e757ecfd5d ("dt-bindings: Document Loongson PCI Host Controller")
+Signed-off-by: Yao Zi <me@ziyao.cc>
 ---
- drivers/android/binder/rust_binder_main.rs | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pci/loongson.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/android/binder/rust_binder_main.rs b/drivers/android/binder/rust_binder_main.rs
-index c79a9e742240..9a527268f5b4 100644
---- a/drivers/android/binder/rust_binder_main.rs
-+++ b/drivers/android/binder/rust_binder_main.rs
-@@ -314,6 +314,7 @@ unsafe impl<T> Sync for AssertSync<T> {}
-         owner: THIS_MODULE.as_ptr(),
-         poll: Some(rust_binder_poll),
-         unlocked_ioctl: Some(rust_binder_ioctl),
-+        #[cfg(CONFIG_COMPAT)]
-         compat_ioctl: Some(bindings::compat_ptr_ioctl),
-         mmap: Some(rust_binder_mmap),
-         open: Some(rust_binder_open),
+diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
+index e5bba63aa947..26e77218b901 100644
+--- a/Documentation/devicetree/bindings/pci/loongson.yaml
++++ b/Documentation/devicetree/bindings/pci/loongson.yaml
+@@ -32,6 +32,8 @@ properties:
+     minItems: 1
+     maxItems: 3
+ 
++  msi-parent: true
++
+ required:
+   - compatible
+   - reg
 -- 
-2.52.0
+2.51.2
 
