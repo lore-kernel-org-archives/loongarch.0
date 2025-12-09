@@ -1,138 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A991C84D7
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 04:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C8011A76BB
+	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 06:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765253636; cv=none; b=P7+vG4NfER7TxDSyWvoi31W4KOmSmeVhL/NbBGoDtOlxNirmkktKaWsbhm9qf4cajmsieVSfW8heLrA64sJ0pjtvp+s6POX8JbX2+1KVYlcywpa3oY3Em3ejFxSsM7k4Rw7oRlPB+v+ZpnKC6dQsv3RTZ8RqtoAr5stxB/7t6r8=
+	t=1765261118; cv=none; b=a5fX6Y7Npu3lFhxphOb40dE7dPH/JyKovqlmVWRQEKswLQQLS7aJozfsBKcYAfuCft39jJgx/weSeCFS+pad4dpxdE2TUfduBO8YSHYo+rq0IgoH1exUbtiiDgZB72RfLwAXUj1oHho17GgmWBaqGX62VCp/Bv5d5Tf/uESpNEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765253636; c=relaxed/simple;
-	bh=K7Qa1+Vf/bUdx66tRqBc2JjOhwBwoU1qNNdQz7b27WY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mdolljkacXnAMy8rrOWETPs81jA514S//fioOFRS3AyuypS8MpCiwrA6MUzGN92BiTPxq0u+Ldd1pui3k+8Up/p+EnFMODxpf3E0y+w3tX2Tk4POQiU9OpFkz8vJNxk3BKwyKelLmASx7K0xx0qTsFlhCsD1Yvk9MlV0HL+bOBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pd7uz6gl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pd7uz6gl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC3DC4CEF5
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 04:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765253636;
-	bh=K7Qa1+Vf/bUdx66tRqBc2JjOhwBwoU1qNNdQz7b27WY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pd7uz6glfHcS4nnss027AVaebC1GvamPA+/NYbUojcz9/lJ9eOlnJgL5MJX8WpPXW
-	 UGA9N8ZY8qqw2bK+1fNHq/gUjI8DjH1334P1RwuP29T78JURPEx1HlqiS3/KpQHlmg
-	 b0mV1r5PKIoaiPQpcTaUkL6n2k8NhM+dZAtoKLeCrHeIwtuq4T5aF+dGNXCaffuKZU
-	 9jahkRloIOoqXIy4Xue8l6jWACrrNH3tt+5eWAQRjcLgj3ydN0e3ZEcst5FCF+Ec9E
-	 kUDXWD2OlryNdi5zEge60gctdGDJpM2/UgdX+whx8moPmjWfKlA/EDVLjH/2J7//dF
-	 zxjOdT+XaSUIg==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-640a0812658so8853560a12.0
-        for <loongarch@lists.linux.dev>; Mon, 08 Dec 2025 20:13:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVbYaCG1vzXNixx6QUepOoa8o24ybrSoxUQQX3xSiEDgMl3KGWB8KTCfvDcKJuL4daeRZ2sUxGhGqo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzsHY0a9LJOC/eL3E+YrUDyd6INbrDmjTNjGLjQYOaOqyUNummG
-	X+jeesXaXT8pFfPEMdPPDVt5mHSsDsf9FbjzamWoSEWcFme+m+e5hrhLdD6FxIJo47OCpPMWhw3
-	ij5nvESDoRPoy3C/RaWvvba5v2Owjw6g=
-X-Google-Smtp-Source: AGHT+IGzPBoKaZ+C5XgRfa7Zoad0f2dAj/52ful1XM7Soe3sYjRcNuQC/zxkRtDoKKihNDP3th46XXGalbg7cpC8+DE=
-X-Received: by 2002:a05:6402:35d5:b0:640:b99c:de83 with SMTP id
- 4fb4d7f45d1cf-6491a42f8c2mr8647481a12.17.1765253635071; Mon, 08 Dec 2025
- 20:13:55 -0800 (PST)
+	s=arc-20240116; t=1765261118; c=relaxed/simple;
+	bh=ZxV5Lnn6lnKBzOlW162o0eRy0u7f3XrMiH+oBkZlenw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PoQrJkm4fBLm9RcpCqWq6FoZNjM53q5DAWGhxiAG3TOy8oj8FcUwbDejnsMIlHv2ejmXA4eTw+9eOc/sdKXDC4tcrVHkkoL4itt8zmS3l2eT5kfEJHjr1F9GkOdDOB21g+KW1sNSy7Q6AKisG3h1x0A5+aDrDGO0jusI6vz4dfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxL9MxvzdpYo4sAA--.29198S3;
+	Tue, 09 Dec 2025 14:18:26 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxQ+QwvzdpLlNHAQ--.62929S2;
+	Tue, 09 Dec 2025 14:18:25 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
+Date: Tue,  9 Dec 2025 14:18:09 +0800
+Message-ID: <20251209061809.15994-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251124055642.1591-1-hengqi.chen@gmail.com> <CAAhV-H6rrpgBF+bMpEvsJyq0F7sdWisGSwTbuf=ZBhi4XD-5jw@mail.gmail.com>
- <CAEyhmHSntgSQdAOksd6YUsHh0UXJS7XMmSHAZmRDQ5uEzDU0JQ@mail.gmail.com>
- <CAAhV-H5Vab3bwgT2LdGyNB4ipzhnS+JW7PdcOSmNm4JZ30tWTg@mail.gmail.com>
- <fc62bac6-b212-3aed-1536-aee8a60d2f0a@loongson.cn> <CAEyhmHQO9bDP7L=cwxLUbQCrkFfcDaSeKMgB5R32sqMgvJk7ng@mail.gmail.com>
- <CAEyhmHTUToX3qedYVS7v3LP84f3LiW9NbrH-nzxEqEdWAkhFmw@mail.gmail.com>
- <CAAhV-H7+ORpvG-73OaprbH2HiHzF-HUepVxGLsJb9rJXzg3gPA@mail.gmail.com> <CAEyhmHS3Gqomep4GYHMjJqJmd2eFJdcok6_+D4+BQ7WE4Bhnsw@mail.gmail.com>
-In-Reply-To: <CAEyhmHS3Gqomep4GYHMjJqJmd2eFJdcok6_+D4+BQ7WE4Bhnsw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 9 Dec 2025 12:14:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6HJnMy5EidSug8s0KDbzyQKT1-F=y2pwv=DPsAp4FRgA@mail.gmail.com>
-X-Gm-Features: AQt7F2rGgbf4YIhSfQR3dondnNvtSZewtSYRcr4xDdbne_kYhOFdE-v-NT3iZw8
-Message-ID: <CAAhV-H6HJnMy5EidSug8s0KDbzyQKT1-F=y2pwv=DPsAp4FRgA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] LoongArch: BPF features and fixes
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, vincent.mc.li@gmail.com, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxQ+QwvzdpLlNHAQ--.62929S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrW5JFy8Kr1rJrykuFWDKFX_yoW8Wry3pF
+	Z7Gr4UXFWIgrWUGayDJryYgr1jyF9xJ3WIgFsrGFnYk3WDZw17Zr15uw1UK3WDtry8ua18
+	ZrW5ArWYyayjk3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UUUUU==
 
-On Tue, Dec 9, 2025 at 9:38=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com> =
-wrote:
->
-> On Fri, Dec 5, 2025 at 3:16=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
-> >
-> > On Fri, Dec 5, 2025 at 3:04=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.c=
-om> wrote:
-> > >
-> > > Hi Huacai,
-> > >
-> > > Will you pick this series for 6.19 ?
-> > I tend to not pick it, because it is a little hurried.
-> >
->
-> Fine, but deferring does not improve anything if no one else is involved.
-> Maybe the fixes part can go in after rc1 ?
-The first two? No problem, but I still want a name better than emit_abi_ext=
-()...
+According to the following function definitions, __kernel_text_address()
+already checks __module_text_address(), so it should remove the check of
+__module_text_address() in bt_address() at least.
 
-Huacai
+int __kernel_text_address(unsigned long addr)
+{
+	if (kernel_text_address(addr))
+		return 1;
+	...
+	return 0;
+}
 
-> Anyway, no big deal. Thanks.
->
-> Hengqi
->
-> > Huacai
-> >
-> > >
-> > > Thanks.
-> > >
-> > > On Fri, Nov 28, 2025 at 9:37=E2=80=AFAM Hengqi Chen <hengqi.chen@gmai=
-l.com> wrote:
-> > > >
-> > > > On Thu, Nov 27, 2025 at 3:30=E2=80=AFPM Tiezhu Yang <yangtiezhu@loo=
-ngson.cn> wrote:
-> > > > >
-> > > > > On 2025/11/27 =E4=B8=8B=E5=8D=882:44, Huacai Chen wrote:
-> > > > > > Hi, Tiezhu,
-> > > > > >
-> > > > > > On Mon, Nov 24, 2025 at 3:49=E2=80=AFPM Hengqi Chen <hengqi.che=
-n@gmail.com> wrote:
-> > > > > >>
-> > > > > >> On Mon, Nov 24, 2025 at 2:31=E2=80=AFPM Huacai Chen <chenhuaca=
-i@kernel.org> wrote:
-> > > > > >>>
-> > > > > >>> Hi, Hengqi,
-> > > > > >>>
-> > > > > >>> I think this is the successor of
-> > > > > >>> https://lore.kernel.org/loongarch/20251006053323.193581-1-hen=
-gqi.chen@gmail.com/T/#t
-> > > > > >>>
-> > > > > >>> Right?
-> > > > > >>>
-> > > > > >>
-> > > > > >> Right, sorry for the long delay.
-> > > > > > Could you please help to review this series?
-> > > > >
-> > > > > I trust Hengqi and I am OK with this series in general with
-> > > > > a quick look.
-> > > > >
-> > > > > For the two functions sign_extend() and emit_abi_ext(), I
-> > > > > have no strong opinion, I do not want to respin the patch
-> > > > > since the merge window is coming soon, it does not affect
-> > > > > the correctness, so we can refine the code later if there
-> > > > > is a better way.
-> > > > >
-> > > > > Acked-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > > > >
-> > > >
-> > > > Thanks.
-> > > >
-> > > > > Thanks,
-> > > > > Tiezhu
-> > > > >
+int kernel_text_address(unsigned long addr)
+{
+	bool no_rcu;
+	int ret = 1;
+	...
+	if (is_module_text_address(addr))
+		goto out;
+	...
+	return ret;
+}
+
+bool is_module_text_address(unsigned long addr)
+{
+	guard(rcu)();
+	return __module_text_address(addr) != NULL;
+}
+
+Furthermore, since it returns ra at the end of bt_address() and check it
+with __kernel_text_address() after calling bt_address(), so it can remove
+the check of __kernel_text_address() in bt_address() too.
+
+Just remove unnecessary checks, no functional changes intended.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/unwind_orc.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
+index 0d5fa64a2225..3919dbd04c21 100644
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -360,12 +360,6 @@ static inline unsigned long bt_address(unsigned long ra)
+ {
+ 	extern unsigned long eentry;
+ 
+-	if (__kernel_text_address(ra))
+-		return ra;
+-
+-	if (__module_text_address(ra))
+-		return ra;
+-
+ 	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
+ 		unsigned long func;
+ 		unsigned long type = (ra - eentry) / VECSIZE;
+-- 
+2.42.0
+
