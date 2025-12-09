@@ -1,36 +1,35 @@
-Received: from mail70.out.titan.email (mail70.out.titan.email [3.216.99.52])
+Received: from mail78.out.titan.email (mail78.out.titan.email [3.216.99.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9502D979F
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 14:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D2729ACFC
+	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 14:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765289374; cv=none; b=IbxrlHLYkKBHiGNbZqkDd1VtrLuahcaIz7BS3It+ticTaJtveDEyxO/0nVFKo2ElOElxQmQGfiuvgsFV+TTDs35/Zg0UUxpbc570pvlZ1a7zbRjj1Z7KoOol8ajTpAMcxda+hnR9LV+LHOnhwXMjBDVhOKugVvN6q3AietUABb4=
+	t=1765289974; cv=none; b=D0IsyKAJboqAqYlLpeesmXr254Xf6GbkgyB6YAlyOkEiKTFWeC1S2j1bkDSbpj8n2kbhpWlVs02GmSIg5OsNKmjqQ07UECiF8RytW38692UmvbWrrZo8aYBVTBRrMplV4zU/0LwRJV1A/z74A+BIA9+Fbt8RJihtFuMItkICm2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765289374; c=relaxed/simple;
-	bh=mLxHM7v3nc2eSPeHc66Rsm2ca/TBQClwE1qkrXRjbiI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UwWoBbwwasHeYTv5FTwtgainFD+KCng1Whx8JMgowNc0YgaV9LD5x/e7b/EWPBuHE8pnar9y/7Yj1gauxVysvCzvax3HwhHsPMk6nwLYgES17ANY3sPD3+bWRNSU3WoxYLK91xkxWDGGIiKxwzup6xSJR1qytQtLhM1c9dBQq1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b=Rfsr7aE/; arc=none smtp.client-ip=3.216.99.52
+	s=arc-20240116; t=1765289974; c=relaxed/simple;
+	bh=nyTQZgxqbzgEgJc5dsLmfDOLr351cJZa7XNqltO7PjE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WDzKPIdFyrb7YsZfdTe6+pK+rymPdHI+ZPId6/GOYzeQcbWIu7KOLDu3KBNn82YA9vzGtwlUAcPUkE32k2WrrJnntYqQeIrchfFG4NThaKpqK/k38oVnbEngffxGSHu0JGQA/+KO78q5BDzJXCjskJ01x44xV2zh76phRn0UGoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b=epEFCiLb; arc=none smtp.client-ip=3.216.99.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b="Rfsr7aE/"
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b="epEFCiLb"
 Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 4dQgVB3gRZz9s0g;
-	Tue,  9 Dec 2025 14:00:34 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=A7BJ2vjwLN9PGUv41KyJdSJlE9d2VhELFYZ/HdmZbZs=;
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 4dQgV36FPbz9rx4;
+	Tue,  9 Dec 2025 14:00:27 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=R4nibh5JRSMMO3gyGOy//Kvj4/C4x07Pa4snNO8+7VU=;
 	c=relaxed/relaxed; d=ziyao.cc;
-	h=cc:references:mime-version:subject:from:to:in-reply-to:date:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1765288834; v=1;
-	b=Rfsr7aE/YKzbZWePife2RDVHBt4e//dtbnKSd6Lb4fT/Qy7fEss4BCcdM9+ojpku1NH8gpJP
-	c/W8bJYEHI7nBBlTAiKYE1uyDxQ6La+eqoTVjGol04jxbSWIzjI4OLoLmc2Sp7U7kthlqTTz45Y
-	XoQ7HFBrpRudksz8YwBtM7wQ=
+	h=from:cc:date:message-id:to:subject:mime-version:from:to:cc:subject:date:message-id:in-reply-to:reply-to:references;
+	q=dns/txt; s=titan1; t=1765288827; v=1;
+	b=epEFCiLb++LLFhADULTWg7i2/dR+maFgQX+VcAwTe5YWnXX0aoOcHr9B3mlZ8vHDRxpSrrE4
+	ES1RH9+2n4gTPo1aUCEnIcoe5NPFlbGEIO5zezfHCbhp98zrdkrpmptHBzI0LbH3TzYv1Sj+k4u
+	wo+oXwfRN7Fx4BbfrAVP4qwo=
 Received: from ketchup (unknown [117.171.66.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out.flockmail.com (Postfix) with ESMTPSA id 4dQgV40ylDz9rxt;
-	Tue,  9 Dec 2025 14:00:27 +0000 (UTC)
+	by smtp-out.flockmail.com (Postfix) with ESMTPSA id 4dQgTw4Gb9z9rxS;
+	Tue,  9 Dec 2025 14:00:19 +0000 (UTC)
 Feedback-ID: :me@ziyao.cc:ziyao.cc:flockmailId
 From: Yao Zi <me@ziyao.cc>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -49,12 +48,10 @@ Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	Yao Zi <me@ziyao.cc>
-Subject: [PATCH 1/2] LoongArch: dts: Describe PCI sideband IRQ through interrupt-extended
-Date: Tue,  9 Dec 2025 14:00:05 +0000
-Message-ID: <20251209140006.54821-2-me@ziyao.cc>
+Subject: [PATCH 0/2] Fix LoongArch dtbs_check warnings
+Date: Tue,  9 Dec 2025 14:00:04 +0000
+Message-ID: <20251209140006.54821-1-me@ziyao.cc>
 X-Mailer: git-send-email 2.51.2
-In-Reply-To: <20251209140006.54821-1-me@ziyao.cc>
-References: <20251209140006.54821-1-me@ziyao.cc>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -63,182 +60,49 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1765288834073928996.21635.2100463422223919414@prod-use1-smtp-out1003.
+X-Titan-Src-Out: 1765288827551596737.21635.3562549596523812257@prod-use1-smtp-out1003.
 X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=a8/K9VSF c=1 sm=1 tr=0 ts=69382b82
+X-CMAE-Analysis: v=2.4 cv=a8/K9VSF c=1 sm=1 tr=0 ts=69382b7b
 	a=rBp+3XZz9uO5KTvnfbZ58A==:117 a=rBp+3XZz9uO5KTvnfbZ58A==:17
-	a=MKtGQD3n3ToA:10 a=1oJP67jkp3AA:10 a=CEWIc4RMnpUA:10
-	a=W4-7hV26G1j7c2fSSyQA:9 a=3z85VNIBY5UIEeAh_hcH:22
-	a=NWVoK91CQySWRX1oVYDe:22
+	a=MKtGQD3n3ToA:10 a=1oJP67jkp3AA:10 a=CEWIc4RMnpUA:10 a=gEfo2CItAAAA:8
+	a=gG2v9l9OlLWBpoMu9D0A:9 a=sptkURWiP4Gy88Gu7hUp:22
+	a=3z85VNIBY5UIEeAh_hcH:22 a=NWVoK91CQySWRX1oVYDe:22
 
-SoC integrated peripherals on LS2K1000 and LS2K2000 could be discovered
-as PCI devices, but require sideband interrupts to function, which are
-previously described by interrupts and interrupt-parent properties.
+Running dtbs_check with ARCH=loongarch emits a lot of warnings, most
+about describing sideband interrupts for PCI devices through interrupts
+property, and usage of undocumented msi-parent property in pcie
+controller in loongson-2k2000.dtsi.
 
-However, pci/pci-device.yaml allows interrupts property to only specify
-PCI INTx interrupts, not sideband ones. Convert these devices to use
-interrupt-extended property, which describes sideband interrupts used by
-PCI devices since dt-schema commit e6ea659d2baa ("schemas: pci-device:
-Allow interrupts-extended for sideband interrupts"), eliminating
-dtbs_check warnings.
+Patch 1 solves the former problem by using interrupts-extended property
+for these devices. I don't have LS2K1000/2000 devices on hand, so
+helping in testing it will be appreciated. msi-parent property is
+documented in the second patch for Loongson PCI controllers.
 
-Fixes: 30a5532a3206 ("LoongArch: dts: DeviceTree for Loongson-2K1000")
-Signed-off-by: Yao Zi <me@ziyao.cc>
----
- arch/loongarch/boot/dts/loongson-2k1000.dtsi | 25 ++++++---------
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 32 ++++++++------------
- 2 files changed, 21 insertions(+), 36 deletions(-)
+After applying the series, the only two warnings left are about naming
+of I2C controllers,
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-index 60ab425f793f..eee06b84951c 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -437,54 +437,47 @@ pcie@1a000000 {
- 
- 			gmac0: ethernet@3,0 {
- 				reg = <0x1800 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc0>;
--				interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
--					     <13 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc0 12 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&liointc0 13 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "macirq", "eth_lpi";
- 				status = "disabled";
- 			};
- 
- 			gmac1: ethernet@3,1 {
- 				reg = <0x1900 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc0>;
--				interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
--					     <15 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc0 14 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&liointc0 15 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "macirq", "eth_lpi";
- 				status = "disabled";
- 			};
- 
- 			ehci0: usb@4,1 {
- 				reg = <0x2100 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc1>;
--				interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc1 18 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			ohci0: usb@4,2 {
- 				reg = <0x2200 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc1>;
--				interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc1 19 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			display@6,0 {
- 				reg = <0x3000 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc0>;
--				interrupts = <28 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc0 28 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			hda@7,0 {
- 				reg = <0x3800 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc0>;
--				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc0 4 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			sata: sata@8,0 {
- 				reg = <0x4000 0x0 0x0 0x0 0x0>;
--				interrupt-parent = <&liointc0>;
--				interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&liointc0 19 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index 6c77b86ee06c..87c45f1f7cc7 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -291,65 +291,57 @@ pcie@1a000000 {
- 
- 			gmac0: ethernet@3,0 {
- 				reg = <0x1800 0x0 0x0 0x0 0x0>;
--				interrupts = <12 IRQ_TYPE_LEVEL_HIGH>,
--					     <13 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&pic 12 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&pic 13 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "macirq", "eth_lpi";
--				interrupt-parent = <&pic>;
- 				status = "disabled";
- 			};
- 
- 			gmac1: ethernet@3,1 {
- 				reg = <0x1900 0x0 0x0 0x0 0x0>;
--				interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
--					     <15 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&pic 14 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&pic 15 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "macirq", "eth_lpi";
--				interrupt-parent = <&pic>;
- 				status = "disabled";
- 			};
- 
- 			gmac2: ethernet@3,2 {
- 				reg = <0x1a00 0x0 0x0 0x0 0x0>;
--				interrupts = <17 IRQ_TYPE_LEVEL_HIGH>,
--					     <18 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&pic 17 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&pic 18 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "macirq", "eth_lpi";
--				interrupt-parent = <&pic>;
- 				status = "disabled";
- 			};
- 
- 			xhci0: usb@4,0 {
- 				reg = <0x2000 0x0 0x0 0x0 0x0>;
--				interrupts = <48 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-parent = <&pic>;
-+				interrupts-extended = <&pic 48 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			xhci1: usb@19,0 {
- 				reg = <0xc800 0x0 0x0 0x0 0x0>;
--				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-parent = <&pic>;
-+				interrupts-extended = <&pic 22 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			display@6,1 {
- 				reg = <0x3100 0x0 0x0 0x0 0x0>;
--				interrupts = <28 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-parent = <&pic>;
-+				interrupts-extended = <&pic 28 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
- 			i2s@7,0 {
- 				reg = <0x3800 0x0 0x0 0x0 0x0>;
--				interrupts = <78 IRQ_TYPE_LEVEL_HIGH>,
--					     <79 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts-extended = <&pic 78 IRQ_TYPE_LEVEL_HIGH>,
-+						      <&pic 79 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "tx", "rx";
--				interrupt-parent = <&pic>;
- 				status = "disabled";
- 			};
- 
- 			sata: sata@8,0 {
- 				reg = <0x4000 0x0 0x0 0x0 0x0>;
--				interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
--				interrupt-parent = <&pic>;
-+				interrupts-extended = <&pic 16 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
+/builder/repo/linux/arch/loongarch/boot/dts/loongson-2k1000-ref.dtb: i2c-gpio-0 (i2c-gpio): $nodename:0: 'i2c-gpio-0' does not match '^i2c(@.+|-[a-z0-9]+)?$'
+	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
+/builder/repo/linux/arch/loongarch/boot/dts/loongson-2k1000-ref.dtb: i2c-gpio-1 (i2c-gpio): $nodename:0: 'i2c-gpio-1' does not match '^i2c(@.+|-[a-z0-9]+)?$'
+	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
+
+which IMHO is a regression caused by dt-schema commit 57138f5b8c92
+("schemas: i2c: Avoid extra characters in i2c nodename pattern"). Commit
+647181a1f8ff ("schemas: i2c: Allow for 'i2c-.*' node names") fails to
+fix the case, as it doesn't take nodenames with multiple hyphens in
+account. I'll start a separate series for this.
+
+Thanks for your time and review.
+
+Yao Zi (2):
+  LoongArch: dts: Describe PCI sideband IRQ through interrupt-extended
+  dt-bindings: PCI: loongson: Document msi-parent property
+
+ .../devicetree/bindings/pci/loongson.yaml     |  2 ++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 25 ++++++---------
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 32 +++++++------------
+ 3 files changed, 23 insertions(+), 36 deletions(-)
+
 -- 
 2.51.2
 
