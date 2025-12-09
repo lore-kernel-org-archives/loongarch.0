@@ -1,131 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735A32D248D
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 08:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8165C2D8362
+	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 09:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765269009; cv=none; b=MLTKmefdX+cnbslzm5RE+LPvMf17W+misG1phqTdJcfCNBodZSvKsi+m6+VQwRmEk1SX9NDS/nKAYQBnRLVvRFOOkFn5vRsSAS9f/IcT19sw9SnrBxiAkCKEaf7XeK07vnHGxX+UFD+LBfEDl8Zd4k2hEG/YylyJmn6mvzSzRd0=
+	t=1765272859; cv=none; b=CROFWau++CosMU2i+MzkzaYO0bLp2POicdpqu2fjPL1nmPMQ1xIYhBRnjqqbLYtdZ5gS+D7osW9FRPZWinmsEQ6AZ7EQ/lOZa3+hnNQoi2kt3F7D2jDooHLjM9OZjCLjdQntnzICJcSJ+CWDYC6w0BZTZKDoeITszanec7uBDYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765269009; c=relaxed/simple;
-	bh=JWWO5Kfi2AYy6NIxKtUOfJuvBQDcbwm75fD21tb4Ht4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jp+qOqHMhEXwgg7MPD6KiEGNwLwMtyrxtPXrVi4OclZfVSzjxNQd+sJ47vpGlEm6F8njfDLEAx5jvB5eiJYZv6lY7yD4+iL9ivMNR19su5PYvdgF+TpkgZKZtq0v0/hnw4Vj6hGHgOrNEuP7BYEUbif0jhyXFc7xzNuxb8YUM4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXHLis3H; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXHLis3H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08FF4C4CEF5
-	for <loongarch@lists.linux.dev>; Tue,  9 Dec 2025 08:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765269009;
-	bh=JWWO5Kfi2AYy6NIxKtUOfJuvBQDcbwm75fD21tb4Ht4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SXHLis3HLC6PA1n9YxGTQax72hW7YWM9x2yh4QdqMk9YtScyEQujVYSXs8ZXdHiAC
-	 w2tUm3S+v7Dvp0TjzlD2d8n4aDuziNVlyDaXDDX/eoxm8rVGEJ+15IItEFaAYmHyqz
-	 7ntdsl84mt0l1GfnARcWyBx4gr6Z8d5If8QJP367u7aOhV7hWx8dpc/+DSZgov5Sx2
-	 3kU9Jtj5UKs/nLHf2DsuH+dq+cXFLPV74/JjahNRN6nrOV6TG4Dg4yuK713x0l5bvh
-	 ZeNa2TQvq8gZuXSTDhrb6G+ZLdzdxxP7PjEIDZp8vL4tThpYLG4AU5bvvjgx84IG8v
-	 8/fB8Ff47x0oQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6495e5265c9so494354a12.0
-        for <loongarch@lists.linux.dev>; Tue, 09 Dec 2025 00:30:08 -0800 (PST)
-X-Gm-Message-State: AOJu0YyqQj4ejEO2KcjkcEESUEYpPz0/R4XZEUzHc2gyfw2uJBXECgy9
-	N3fQ+V74mDylQXOYyUzvjFXY1QcmDVw3q93Exihpc9m3ZIsEGgI3pex/iJVIYGVHxBIwrlYYRlO
-	fvb9X67acfeVpqmUj0BAE7xl0dYcsMvw=
-X-Google-Smtp-Source: AGHT+IEQi4eiBBwM1gFfbhNOroigtkoQAazp8Ax0lhxUMv8UrKmiZhovhwPXZh+4PZ0scS1vvAGB8WdpS9uOWpcmnmQ=
-X-Received: by 2002:a05:6402:34cf:b0:640:36d9:54fe with SMTP id
- 4fb4d7f45d1cf-6491adfd928mr7616313a12.24.1765269007590; Tue, 09 Dec 2025
- 00:30:07 -0800 (PST)
+	s=arc-20240116; t=1765272859; c=relaxed/simple;
+	bh=fq0kF1EvKP9hjnbJqW2rVL2HP5LSEd+1RK1iaONOv58=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ODg24dj4LonXkDWqvBSNuNxHCLilTjg88fjFty8Q2zjmWTyOA/gRJwobzSgrfOON4MNnvCb8gY5n9Xbt++NCaq/xaY5pzJ7VmGQ3RdmPWHJtCr5qoEJA/nmP4QmTizjl8ZlNb7Pr5/HF2jTqWFFpu03PbJ+RKAlO9zxTWDQ9vT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3758b3a4d4e211f0a38c85956e01ac42-20251209
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:b3b646d4-0e95-4e9a-aa3e-09e7e6863052,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:b3b646d4-0e95-4e9a-aa3e-09e7e6863052,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:ff37c8aa96a1ac8419f908ae314710f9,BulkI
+	D:251209173411YNCWQX09,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
+	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
+	0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 3758b3a4d4e211f0a38c85956e01ac42-20251209
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.160.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1118287210; Tue, 09 Dec 2025 17:34:10 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	zhangtianyang@loongson.cn,
+	masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	guodongtai@kylinos.cn,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com
+Subject: [PATCH v1 0/2] Fix the failure issue of the module_attach test case
+Date: Tue,  9 Dec 2025 17:34:03 +0800
+Message-Id: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20251209061809.15994-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 9 Dec 2025 16:30:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
-X-Gm-Features: AQt7F2ruS5P_cNJ0krP9R-KUwApYqmwrYmEOcYS_bCic5sLlKmcvAc_OTkhdJoo
-Message-ID: <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Tiezhu,
+The following test cases under the tools/testing/selftests/bpf/
+directory have passed the test：
 
-On Tue, Dec 9, 2025 at 2:18=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> According to the following function definitions, __kernel_text_address()
-> already checks __module_text_address(), so it should remove the check of
-> __module_text_address() in bt_address() at least.
->
-> int __kernel_text_address(unsigned long addr)
-> {
->         if (kernel_text_address(addr))
->                 return 1;
->         ...
->         return 0;
-> }
->
-> int kernel_text_address(unsigned long addr)
-> {
->         bool no_rcu;
->         int ret =3D 1;
->         ...
->         if (is_module_text_address(addr))
->                 goto out;
->         ...
->         return ret;
-> }
->
-> bool is_module_text_address(unsigned long addr)
-> {
->         guard(rcu)();
->         return __module_text_address(addr) !=3D NULL;
-> }
->
-> Furthermore, since it returns ra at the end of bt_address() and check it
-> with __kernel_text_address() after calling bt_address(), so it can remove
-> the check of __kernel_text_address() in bt_address() too.
->
-> Just remove unnecessary checks, no functional changes intended.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/unwind_orc.c | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index 0d5fa64a2225..3919dbd04c21 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -360,12 +360,6 @@ static inline unsigned long bt_address(unsigned long=
- ra)
->  {
->         extern unsigned long eentry;
->
-> -       if (__kernel_text_address(ra))
-> -               return ra;
-> -
-> -       if (__module_text_address(ra))
-> -               return ra;
-I think the correct way is to remove the __module_text_address()
-condition but keep the __kernel_text_address() condition. Then return
-0 at the end of this function, and remove the __kernel_text_address()
-condition out of this function.
+./test_progs -t module_attach
+./test_progs -t module_fentry_shadow
+./test_progs -t subprogs
+./test_progs -t subprogs_extable
+./test_progs -t tailcalls
+./test_progs -t struct_ops -d struct_ops_multi_pages
+./test_progs -t fexit_bpf2bpf
+./test_progs -t fexit_stress
+./test_progs -t module_fentry_shadow
+./test_progs -t fentry_test/fentry
+./test_progs -t fexit_test/fexit
+./test_progs -t fentry_fexit
+./test_progs -t modify_return
+./test_progs -t fexit_sleep
+./test_progs -t test_overhead
+./test_progs -t trampoline_count
 
+Chenghao Duan (2):
+  LoongArch: Modify the jump logic of the trampoline
+  LoongArch: BPF: Enable BPF exception fixup for specific ADE subcode
 
-Huacai
+ arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+ arch/loongarch/kernel/traps.c               |  7 +++-
+ arch/loongarch/net/bpf_jit.c                | 37 +++++++++++++++------
+ samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+ samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+ samples/ftrace/ftrace-direct-multi.c        |  4 +--
+ samples/ftrace/ftrace-direct-too.c          |  4 +--
+ samples/ftrace/ftrace-direct.c              |  4 +--
+ 8 files changed, 56 insertions(+), 30 deletions(-)
 
-> -
->         if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
->                 unsigned long func;
->                 unsigned long type =3D (ra - eentry) / VECSIZE;
-> --
-> 2.42.0
->
+-- 
+2.25.1
+
