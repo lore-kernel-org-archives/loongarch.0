@@ -1,185 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A9221765B;
-	Wed, 10 Dec 2025 01:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1950022128B
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 01:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765328945; cv=none; b=nlmKYQeKxXc5oKDRpGXic0LiOm11tqSpgw3qWFR16qAo+GHASQffiGKmTMxrgLTqCEU0WyFcnVxpe4Tkr3/7dF4kuH7gbtD+JTHq1tAEuo2fjekZTq+6iwODjJzg8CNTtpSHQn0WiSDpVwhfT3zXEYVoHpVfKHT2FwXOADe5jxM=
+	t=1765330140; cv=none; b=BvGwiztfoOtuOevTrpVE4SUuQLZbOW+14XpbFd4QlN5D0ZH5XK/IBnvknvNBiQBncPLcDk/HbhvBBe3skZZS+kXcgH0K8pz537kD0JAoius+zeT3VwQ0AwtmCM5xnkCCuME+wuesBilI1D+STki+w0zsoHYJzs023IPg+lnLrb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765328945; c=relaxed/simple;
-	bh=7Sw6PITpzapkD99/tAnwNI3D6Ucw9JU8bsiOsehlJts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pAN3drOj1/1rDrXTLRWa5X9nCpl1dic7/COmEmaIMHIbPDNlNK321uL6D9deIj3wSDAxiy3xMSoEVtufd1Pa2RHAX602T8e4W+U/91ee3jxiQt9cjQOu/JOvLWibIldkCQlwmQyQ2f1QfI1mJRQggrokq7mCcQHpHtj4AGembHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oevo+BJi; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oevo+BJi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765328943; x=1796864943;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7Sw6PITpzapkD99/tAnwNI3D6Ucw9JU8bsiOsehlJts=;
-  b=Oevo+BJiqpvQMUoRJM5hp4O2KdQgYEHYW90HTJ+FUTCqhV+OFrksovyi
-   lPTXxNJgOJI8ahA7H8sq2EnTl7dq6IuBjnY4iEXBRkYUMisgqdsEmqKpK
-   A/uSce8HsUC9I5sDv+3emnId7YMOdXr9HkQ3yrLtbw6cDIZvwpcaF+bJn
-   NkPzpWldT8011xQs7IfyMeD2Dp3SVnAJE1O5WlJttV90Dz5bv+AplzQz/
-   b6t++/7z5miGAz8yZvb2yTJocfB0A1wvfDpRyt/rf6yc2EMxJpFjxqgEB
-   +Pul5NNqydPqjGxWUZ0+t88pY4tvm9L+kcSdZ8w2d/aRRFDeSLbAj8OEP
-   g==;
-X-CSE-ConnectionGUID: nnN5PhDoQ4yeHAz2PK6GKQ==
-X-CSE-MsgGUID: zDGIV1SNQPmsQ0bzSiFGrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11637"; a="67190226"
-X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
-   d="scan'208";a="67190226"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 17:09:03 -0800
-X-CSE-ConnectionGUID: 21iGYDOORw+11NIMlPnpaw==
-X-CSE-MsgGUID: WFDJ3r6bSDGlQ9mRnDj7FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
-   d="scan'208";a="200862410"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 17:08:54 -0800
-Message-ID: <fad66209-6dc1-4067-87df-9aa1105e3017@linux.intel.com>
-Date: Wed, 10 Dec 2025 09:08:52 +0800
+	s=arc-20240116; t=1765330140; c=relaxed/simple;
+	bh=YDORYGUpV2mBuFqR+8Gh7gvtcWY0S2eH8lW6qVNO828=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dpkqHgBIniuK43zlxzB20orsKVcrS4SMfsnac5/lDfUy1FAjRs35ZkA2LrGPlUIxFwlu3EUhoBYj6FJFhskoIKywuv8JEKVzBP+007uJlQU8xy9gzS2iQ1ArO/X9WAroY1wHHL8UHLiW7hXUrMBNmA7ffyizCKRde4gxEi3SZiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxjdLXzDhpN90sAA--.26025S3;
+	Wed, 10 Dec 2025 09:28:55 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxysDWzDhpBqJHAQ--.36238S3;
+	Wed, 10 Dec 2025 09:28:54 +0800 (CST)
+Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
+ <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
+Date: Wed, 10 Dec 2025 09:28:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 37/44] KVM: VMX: Dedup code for removing MSR from
- VMCS's auto-load list
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
- Sandipan Das <sandipan.das@amd.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-References: <20251206001720.468579-1-seanjc@google.com>
- <20251206001720.468579-38-seanjc@google.com>
- <2440b9bf-a2a1-4f66-94b2-71f47d62f3db@linux.intel.com>
- <aTheSQb9fhXmZKw6@google.com>
+In-Reply-To: <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aTheSQb9fhXmZKw6@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxysDWzDhpBqJHAQ--.36238S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JF45Gr1kGF1rXr1DJF1kZwc_yoWfJFXEga
+	1kXr15uw1kWr1fG3WrKrZ5Zr9rJa4jkrZ5KF1UX397t3sxGa9rZrna9r9Yvr4DJw43KrW3
+	KrnrG3Wq93sruosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU82-e7UU
+	UUU==
 
-
-On 12/10/2025 1:37 AM, Sean Christopherson wrote:
-> On Mon, Dec 08, 2025, Dapeng Mi wrote:
->> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
->>> Add a helper to remove an MSR from an auto-{load,store} list to dedup the
->>> msr_autoload code, and in anticipation of adding similar functionality for
->>> msr_autostore.
->>>
->>> No functional change intended.
->>>
->>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>> ---
->>>  arch/x86/kvm/vmx/vmx.c | 31 ++++++++++++++++---------------
->>>  1 file changed, 16 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->>> index 52bcb817cc15..a51f66d1b201 100644
->>> --- a/arch/x86/kvm/vmx/vmx.c
->>> +++ b/arch/x86/kvm/vmx/vmx.c
->>> @@ -1040,9 +1040,22 @@ static int vmx_find_loadstore_msr_slot(struct vmx_msrs *m, u32 msr)
->>>  	return -ENOENT;
->>>  }
->>>  
->>> +static void vmx_remove_auto_msr(struct vmx_msrs *m, u32 msr,
->>> +				unsigned long vmcs_count_field)
->>> +{
->>> +	int i;
->>> +
->>> +	i = vmx_find_loadstore_msr_slot(m, msr);
->>> +	if (i < 0)
->>> +		return;
->>> +
->>> +	--m->nr;
->>> +	m->val[i] = m->val[m->nr];
->> Sometimes the order of MSR writing does matter, e.g., PERF_GLOBAL_CTRL MSR
->> should be written at last after all PMU MSR writing.
-> Hmm, no.  _If_ KVM were writing event selectors using the auto-load lists, then
-> KVM would need to bookend the event selector MSRs with PERF_GLOBAL_CTRL=0 and
-> PERF_GLOBAL_CTRL=<new context (guest vs. host)>.  E.g. so that guest PMC counts
-> aren't polluted with host events, and vice versa.
->
-> As things stand today, the only other MSRs are PEBS and the DS area configuration
-> stuff, and kinda to my earlier point, KVM pre-zeroes MSR_IA32_PEBS_ENABLE as part
-> of add_atomic_switch_msr() to ensure a quiescent period before VM-Enter.
->
-> Heh, and writing PERF_GLOBAL_CTRL last for that sequence might actually be
-> problematic.  E.g. load host PEBS with guest PERF_GLOBAL_CTRL active.
->
-> Anyways, I agree that this might be brittle, but this is all pre-existing behavior
-> so I don't want to tackle that here unless it's absolutely necessary.
-
-Yeah, this won't cause any real issue for current code. 
-
-
->
-> Or wait, by "writing" do you mean "writing MSRs to memory", as opposed to "writing
-> values to MSRs"?  Regardless, I think my answer is the same: this isn't a problem
-> today, so I'd prefer to not shuffle the ordering unless it's absolutely necessary.
-
-Actually both. As SDM suggests, current any manipulation for PMU MSRs, the
-below order should be followed.
-
-- disable all PMU counters by writing PERF_GLOBAL_CTRL to 0.
-
-- manipulate PMU MSRs.
-
-- Enable the needed PMU counters by writing PERF_GLOBAL_CTRL.
-
-So there is a implicit order on the MSR writing in fact. 
-
-For KVM, if MSR auto-load list feature is used to automatically restore the
-host/guest MSRs, KVM needs to follow the above order to fill the MSR
-auto-load list and then expect these MSRs are written by VMX in the
-designed order.
-
-But since it won't cause any real issue now, it's fine for me to handle it
-until there is a real necessity.
-
-
->
->> So directly moving the last MSR entry into cleared one could break the MSR
->> writing sequence and may cause issue in theory.
+On 2025/12/9 下午4:30, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> On Tue, Dec 9, 2025 at 2:18 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >>
->> I know this won't really cause issue since currently vPMU won't use the MSR
->> auto-load feature to save any PMU MSR, but it's still unsafe for future uses. 
+...
+>>          extern unsigned long eentry;
 >>
->> I'm not sure if it's worthy to do the strict MSR entry shift right now.
->>
->> Perhaps we could add a message to warn users at least.
-> Hmm, yeah, but I'm not entirely sure where/how best to document this.  Because
-> it's not just that vmx_remove_auto_msr() arbitrarily maniuplates the order, e.g.
-> multiple calls to vmx_add_auto_msr() aren't guaranteed to provide ordering because
-> one or more MSRs may already be in the list.  And the "special" MSRs that can be
-> switched via dedicated VMCS fields further muddy the waters.
->
-> So I'm tempted to not add a comment to the helpers, or even the struct fields,
-> because unfortunately it's largely a "Here be dragons!" type warning. :-/
+>> -       if (__kernel_text_address(ra))
+>> -               return ra;
+>> -
+>> -       if (__module_text_address(ra))
+>> -               return ra;
+> I think the correct way is to remove the __module_text_address()
+> condition but keep the __kernel_text_address() condition. Then return
+> 0 at the end of this function, and remove the __kernel_text_address()
+> condition out of this function.
 
-I see. Thanks.
+It can not remove the check of __kernel_text_address() after calling
+bt_address() because it needs to validate the calculated address for
+exception, then no need to keep the __kernel_text_address() condition
+in bt_address() because it will check the PC outside bt_address().
 
+Thanks,
+Tiezhu
 
