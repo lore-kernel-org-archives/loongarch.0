@@ -1,357 +1,159 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90581E1E0B
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 02:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9D2DE713
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 03:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765335393; cv=none; b=JN2JEl7V9LCey+wYW84UytCphrelHOVQVPYBeo3yMXUNO6knpcaODKl9yowqtZkIaIeDPhX3BJ4w7fIGAO/vfK2h+BmTxXrt8RKNChLkgfIPqCf+n3L5lqRTaE5WgsG0CvBERnfBHqO7ijaCzJeVTsqix9a8ulPs82bkG0j0ZQ0=
+	t=1765336760; cv=none; b=UlftAgnJziW4j7YPs9eHa/BzbHCs4a8Tkyel9Ay8v2lOMWgdAQqMY9mxwvI58mjFSfvLRoBAjg/JehfYg3LN4SkrguTIwvI8a3YilcnkQoUPE5R7n0dLL5i9aHxAXTRi853wc+e7bSVmXah1R4G5yORb6XsrZiJotk+sXTrY6co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765335393; c=relaxed/simple;
-	bh=XiCc5SLAmYACbqw0SxPq0GIjJC9JsoeYxgqmBlRe+gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RhFpQq/JvwKRtIgcpoi6txHQX6LqGmeI4fFPwm1Drk4tLeU0Cqcrt9zm1C+cL/yvKCqBWsIbmRU/E2G0YWZNp3zE4SaA9f2QF2J2cS/UQo554lMOkTjUD23gf7q/9oz16ofnbzni9XciHlHhNbAyTmzhDRCaimt+mSxY9u0NH9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxVNBa4ThpYuEsAA--.31605S3;
-	Wed, 10 Dec 2025 10:56:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxTMFZ4ThpGalHAQ--.1424S2;
-	Wed, 10 Dec 2025 10:56:25 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH] LoongArch: KVM: Set default return value in kvm IO bus ops
-Date: Wed, 10 Dec 2025 10:56:21 +0800
-Message-Id: <20251210025623.343511-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1765336760; c=relaxed/simple;
+	bh=evoUvJX3mCaBFKhhUFDNjpUyx+VmfYnpIDuiz83BXvo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I3OvRFi+zwIgw5o8lsP5iZ5aT2nBSWV3ATFjCrBUjL6n2kHgh8FtcnXqSunLnxw0iMsA3JyCVeV/a7qKqIkZDBR8A8GoLNATXm7OfRYcEwTbohexLx8CaV9zt+0zO+2Gte+0f3Qhfnnmw9y5NMNYhcJIClzQjrlZdF5Z149Plrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=klNUUdiU; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klNUUdiU"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ed9c19248bso51963911cf.1
+        for <loongarch@lists.linux.dev>; Tue, 09 Dec 2025 19:19:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765336747; x=1765941547; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DvcgHHodDEFd6JoOhmN+IKolu8SaPqo8wA5oF6Yaspk=;
+        b=klNUUdiUt/GxZC1WLbZxsRjaWQZ0CIQIyyA7kXJSmDHe/JpsMWtVvkXnjEDq0eYHmn
+         3DrzYGEhftRn0Bw0nH9O16OSN3pWqtDqgEeUHelDBOZJWkThHe/oayvB8k1NjCEZt2sV
+         ocNyn/k5LYX9QECpJfgWqSQDhKZEkaKqwYrUbLC3BDAtk4yAg1ZZh+g61YGqAsnkpxkW
+         C7HNYixxKqV+hL9yf0v+NaP5qB4T3y9WtjwrUOc/yK1QI5DLnNc5q8cQd4U4mH3uBVM3
+         XdzSu6DD6mIJJJ99hLFEk/TsG61hK/MO+BVJ5iS7Ri/eaBjZA/eOsm5SnTVL1w+U6CfB
+         i1rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765336747; x=1765941547;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DvcgHHodDEFd6JoOhmN+IKolu8SaPqo8wA5oF6Yaspk=;
+        b=CTRkggquvRdbidl5ELRK+xNJEy5v+gbSP2zsagDT08Tj6TjLqB6SulLR3thLXRQnGp
+         ElXjJ4BSAPeC4NTcMiTJGArS3HGRREDMwOz20QAMVwp5sWcqQDOgKI2Sg540zdcfIjaG
+         0hO2WiKu4Bw7eOlcJgyVNhVGCTGlXqUFesSt4D3qPD3qhTta9/iH6B1ylERNFLuftPpE
+         nfY/2uS5n+zUU4yocWe0uWgBplOFyxJRRxO/3ue98/5TWXJo+Sjd+x2ZDMFDwvL8bnu5
+         eN/aPMQIQ1VoygV9qYWqPYLL/dlAml6R2vGsrvjl1IzWA7usll2lSfGbNzMX0SUFNEMz
+         lhOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyzqnW9Oil4Em7Z8RHrTUk/gYibVXXQxNvjcto4jAJk9Rt9ykLQEmlW1vgtvNA5nXcNrkzD/nkZBk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyZUI4OEd6D/T3ICJg39WWpJ8vC1XHXga+gBq/gFgk+zKGMMMZ5
+	Zx5YBMOg1TJwrCshDlx/Fo7POwjlk+jRqHe6M6NSJdTb+ekVrjr/Q674rbrEhpGpYv/b0PAaItE
+	Ax/lKvwDKQw5XOO4rWeiyojCuBnxmgx0=
+X-Gm-Gg: ASbGnculj0187FVFQQVxnO8fRfywqygydT+Yo6krNxu7AedtuPAyUTI8TWTsQyGV9wq
+	jlWjYp+75KDNlA0r7sEmVNpp6zO3PCuHL6XVt4titDSZ1pwdHVBycoj+Z2YS4P6InJaL9sk1wCX
+	aPK5WvRvVCsFxmBPHg1H35K1wbgfr4e7stYx7cfM4EAn7FGEQ1ux57NNyfpWPjk6krEv3D4FM1c
+	cvZGLXlXGOuzBYycFnZ7SrKrLEj60P8Z4mzvU484MzqWHdQ3W3c9TfqFfBcQw5NExZ5cwU=
+X-Google-Smtp-Source: AGHT+IGBnSmzUgYawZmR+V//pPBfELnwqY9lW1v+I/si5q6dRzYyvn2rhIv+AT6zhwiOlcl9i+TimiXcnFd7GV3qYiU=
+X-Received: by 2002:ac8:7d4f:0:b0:4ee:278c:bde7 with SMTP id
+ d75a77b69052e-4f1b1a69a8cmr15106221cf.23.1765336746807; Tue, 09 Dec 2025
+ 19:19:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxTMFZ4ThpGalHAQ--.1424S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
+In-Reply-To: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Tue, 9 Dec 2025 19:18:55 -0800
+X-Gm-Features: AQt7F2oQPRpKIN1N4cR6kx_h0cVRsq7QdpgOk5f88rMTJyv9px4Be-ii8HcE99w
+Message-ID: <CAK3+h2xZEvYdgG=PsmPa+tu-f9zhac+E0s5Um+rPF0cX7uSnuQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Fix the failure issue of the module_attach test case
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, chenhuacai@kernel.org, 
+	kernel@xen0n.name, zhangtianyang@loongson.cn, masahiroy@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	guodongtai@kylinos.cn, youling.tang@linux.dev, jianghaoran@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When irqchip in kernel is enabled, its register area is registered
-in the IO bus list with API kvm_io_bus_register_dev(). In MMIO/IOCSR
-register access emulation, kvm_io_bus_write/kvm_io_bus_read is called
-firstly. If it returns 0, it shows that in kernel irqchip handles
-the emulation already, else it returns to VMM and lets VMM emulate
-the register access.
+On Tue, Dec 9, 2025 at 1:34=E2=80=AFAM Chenghao Duan <duanchenghao@kylinos.=
+cn> wrote:
+>
+> The following test cases under the tools/testing/selftests/bpf/
+> directory have passed the test=EF=BC=9A
+>
+> ./test_progs -t module_attach
+> ./test_progs -t module_fentry_shadow
+> ./test_progs -t subprogs
+> ./test_progs -t subprogs_extable
+> ./test_progs -t tailcalls
+> ./test_progs -t struct_ops -d struct_ops_multi_pages
+> ./test_progs -t fexit_bpf2bpf
+> ./test_progs -t fexit_stress
+> ./test_progs -t module_fentry_shadow
+> ./test_progs -t fentry_test/fentry
+> ./test_progs -t fexit_test/fexit
+> ./test_progs -t fentry_fexit
+> ./test_progs -t modify_return
+> ./test_progs -t fexit_sleep
+> ./test_progs -t test_overhead
+> ./test_progs -t trampoline_count
+>
 
-Once irqchip in kernel is enabled, it should return 0 if the address
-is within range of the registered IO bus. It should not return to VMM
-since VMM does not know how to handle it, and irqchip is handled in
-kernel already.
+Tested-by: Vincent Li <vincent.mc.li@gmail.com>
 
-Here set default return value with 0 in KVM IO bus operations.
+I tested above  and all passed OK, but I could not complete the full
+bpf selftests because test_progs core dumped, don't think it is
+related to your patch series.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/intc/eiointc.c | 28 ++++++++++++----------------
- arch/loongarch/kvm/intc/ipi.c     | 10 ++--------
- arch/loongarch/kvm/intc/pch_pic.c | 31 ++++++++++++++-----------------
- 3 files changed, 28 insertions(+), 41 deletions(-)
+./test_progs --deny=3Dtimer_lockup
+...SNIP...
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+test_task_local_data_basic:PASS:pthread_create 0 nsec
+test_task_local_data_basic_thread:FAIL:tld_get_data unexpected error: -12
+#444/1   task_local_data/task_local_data_basic:FAIL
+test_task_local_data_race:PASS:skel_open_and_load 0 nsec
+test_task_local_data_race:PASS:calloc tld_keys 0 nsec
+test_task_local_data_race:PASS:TLD_DEFINE_KEY 0 nsec
+test_task_local_data_race:FAIL:265
+#444/2   task_local_data/task_local_data_race:FAIL
+#444     task_local_data:FAIL
+Caught signal #11!
+Stack trace:
+./test_progs(crash_handler+0x28)[0x1205b74ac]
+linux-vdso.so.1(__vdso_rt_sigreturn+0x0)[0x7ffffffc1084]
+./test_progs[0x1204eb064]
+./test_progs(test_task_local_data+0x40)[0x1204eb3f8]
+./test_progs[0x1205b7bec]
+./test_progs(main+0x6c0)[0x1205b9c70]
+/lib64/libc.so.6(+0x2882c)[0x7ffff2f6082c]
+/lib64/libc.so.6(__libc_start_main+0xa8)[0x7ffff2f60918]
+./test_progs(_start+0x48)[0x12013a0c0]
+Segmentation fault (core dumped)
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 29886876143f..7ca9dfea7f39 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -119,7 +119,7 @@ void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
- static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
- 				gpa_t addr, unsigned long *val)
- {
--	int index, ret = 0;
-+	int index;
- 	u64 data = 0;
- 	gpa_t offset;
- 
-@@ -150,30 +150,29 @@ static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eioint
- 		data = s->coremap[index];
- 		break;
- 	default:
--		ret = -EINVAL;
- 		break;
- 	}
- 	*val = data;
- 
--	return ret;
-+	return 0;
- }
- 
- static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, void *val)
- {
--	int ret = -EINVAL;
-+	int ret = 0;
- 	unsigned long flags, data, offset;
- 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
- 
- 	if (!eiointc) {
- 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (addr & (len - 1)) {
- 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	offset = addr & 0x7;
-@@ -208,7 +207,7 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
- 				struct loongarch_eiointc *s,
- 				gpa_t addr, u64 value, u64 field_mask)
- {
--	int index, irq, ret = 0;
-+	int index, irq;
- 	u8 cpu;
- 	u64 data, old, mask;
- 	gpa_t offset;
-@@ -287,29 +286,28 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
- 		eiointc_update_sw_coremap(s, index * 8, data, sizeof(data), true);
- 		break;
- 	default:
--		ret = -EINVAL;
- 		break;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, const void *val)
- {
--	int ret = -EINVAL;
-+	int ret = 0;
- 	unsigned long flags, value;
- 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
- 
- 	if (!eiointc) {
- 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (addr & (len - 1)) {
- 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	vcpu->stat.eiointc_write_exits++;
-@@ -352,7 +350,7 @@ static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
- 
- 	if (!eiointc) {
- 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return 0;
- 	}
- 
- 	addr -= EIOINTC_VIRT_BASE;
-@@ -383,21 +381,19 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *vcpu,
- 
- 	if (!eiointc) {
- 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	addr -= EIOINTC_VIRT_BASE;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (addr) {
- 	case EIOINTC_VIRT_FEATURES:
--		ret = -EPERM;
- 		break;
- 	case EIOINTC_VIRT_CONFIG:
- 		/*
- 		 * eiointc features can only be set at disabled status
- 		 */
- 		if ((eiointc->status & BIT(EIOINTC_ENABLE)) && value) {
--			ret = -EPERM;
- 			break;
- 		}
- 		eiointc->status = value & eiointc->features;
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 05cefd29282e..311cbb66821d 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -174,7 +174,7 @@ static int any_send(struct kvm *kvm, uint64_t data)
- 	vcpu = kvm_get_vcpu_by_cpuid(kvm, cpu);
- 	if (unlikely(vcpu == NULL)) {
- 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
--		return -EINVAL;
-+		return 0;
- 	}
- 	offset = data & 0xffff;
- 
-@@ -183,7 +183,6 @@ static int any_send(struct kvm *kvm, uint64_t data)
- 
- static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void *val)
- {
--	int ret = 0;
- 	uint32_t offset;
- 	uint64_t res = 0;
- 
-@@ -211,19 +210,17 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void
- 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
- 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
- 				__func__, offset, len);
--			ret = -EINVAL;
- 			break;
- 		}
- 		res = read_mailbox(vcpu, offset, len);
- 		break;
- 	default:
- 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
--		ret = -EINVAL;
- 		break;
- 	}
- 	*(uint64_t *)val = res;
- 
--	return ret;
-+	return 0;
- }
- 
- static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, const void *val)
-@@ -239,7 +236,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
- 
- 	switch (offset) {
- 	case IOCSR_IPI_STATUS:
--		ret = -EINVAL;
- 		break;
- 	case IOCSR_IPI_EN:
- 		spin_lock(&vcpu->arch.ipi_state.lock);
-@@ -257,7 +253,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
- 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
- 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
- 				__func__, offset, len);
--			ret = -EINVAL;
- 			break;
- 		}
- 		write_mailbox(vcpu, offset, data, len);
-@@ -273,7 +268,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
- 		break;
- 	default:
- 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
--		ret = -EINVAL;
- 		break;
- 	}
- 
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index a698a73de399..773885f8d659 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -74,7 +74,7 @@ void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
- 
- static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
- {
--	int ret = 0, offset;
-+	int offset;
- 	u64 data = 0;
- 	void *ptemp;
- 
-@@ -121,34 +121,32 @@ static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int l
- 		data = s->isr;
- 		break;
- 	default:
--		ret = -EINVAL;
-+		break;
- 	}
- 	spin_unlock(&s->lock);
- 
--	if (ret == 0) {
--		offset = (addr - s->pch_pic_base) & 7;
--		data = data >> (offset * 8);
--		memcpy(val, &data, len);
--	}
-+	offset = (addr - s->pch_pic_base) & 7;
-+	data = data >> (offset * 8);
-+	memcpy(val, &data, len);
- 
--	return ret;
-+	return 0;
- }
- 
- static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, void *val)
- {
--	int ret;
-+	int ret = 0;
- 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
- 
- 	if (!s) {
- 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (addr & (len - 1)) {
- 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	/* statistics of pch pic reading */
-@@ -161,7 +159,7 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
- static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
- 					int len, const void *val)
- {
--	int ret = 0, offset;
-+	int offset;
- 	u64 old, data, mask;
- 	void *ptemp;
- 
-@@ -226,29 +224,28 @@ static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
- 	case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
- 		break;
- 	default:
--		ret = -EINVAL;
- 		break;
- 	}
- 	spin_unlock(&s->lock);
- 
--	return ret;
-+	return 0;
- }
- 
- static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, const void *val)
- {
--	int ret;
-+	int ret = 0;
- 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
- 
- 	if (!s) {
- 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	if (addr & (len - 1)) {
- 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
--		return -EINVAL;
-+		return ret;
- 	}
- 
- 	/* statistics of pch pic writing */
-
-base-commit: c9b47175e9131118e6f221cc8fb81397d62e7c91
--- 
-2.39.3
-
+> Chenghao Duan (2):
+>   LoongArch: Modify the jump logic of the trampoline
+>   LoongArch: BPF: Enable BPF exception fixup for specific ADE subcode
+>
+>  arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+>  arch/loongarch/kernel/traps.c               |  7 +++-
+>  arch/loongarch/net/bpf_jit.c                | 37 +++++++++++++++------
+>  samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+>  samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+>  samples/ftrace/ftrace-direct-multi.c        |  4 +--
+>  samples/ftrace/ftrace-direct-too.c          |  4 +--
+>  samples/ftrace/ftrace-direct.c              |  4 +--
+>  8 files changed, 56 insertions(+), 30 deletions(-)
+>
+> --
+> 2.25.1
+>
