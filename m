@@ -1,342 +1,108 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F73219303
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 06:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792CE3009E5
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 08:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765347430; cv=none; b=QVDje7CKQdso7pWanWsdjXdfAlXYLqlKUWr0RwfDQPrmRO7YbqsJMBicCNAdwGb/sIWVFbpRBA+AZTLZoCCXkbn5nhgjTsqzkt+YfVV5hXEgCFKB/I/5iSq9q3++qWzhG937WkWVHeHQk4/cxoqCKE5/Gaspy+EnRNFTDaSEHyE=
+	t=1765353620; cv=none; b=uClMXr6KEIAXBVXMOF/Brf3z6bme5GZVZ88bJl0vcG/wPLJvnxygBhjgubNBHd/9b0Q1FkUWFh/DL2repdoL+sUEkoAye+nRpOx7Qi2wmJHG4jzRWa7fMsSBzIVeSG4xrk/v10687JLMd5euh4fQqd0IYTwRKAs/7AeSpEK14FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765347430; c=relaxed/simple;
-	bh=9ZRs8Lm/tKnpuiFL+drt2KQF5MqZL5pNE7w7BIsLeuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uxnLu1UHBJPqAtlQ4WPCLrSXiB4KK1WXrR01Zw5byfC460WM6zLj0chY2kStTRUeMliM2czXFn1Z8zlAyswyuElAlbYEcX7SrTA0CRvJa292fZJS6UbAprYwVmRkkGSo9iBDfko+lpv/HRoSFAv7mjIBBqXvTc5WLoNLrM9Q76U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d30f280cd58f11f0a38c85956e01ac42-20251210
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:1891a32a-2673-4345-b8cb-ce06194efe15,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:a6d3704e4094d38e4be376f119ae45c2,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|850|898,TC:nil,Content:0
-	|15|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,O
-	SI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: d30f280cd58f11f0a38c85956e01ac42-20251210
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1862478082; Wed, 10 Dec 2025 14:16:54 +0800
-Date: Wed, 10 Dec 2025 14:16:52 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: yangtiezhu@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name,
-	zhangtianyang@loongson.cn, masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
-	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH v1 1/2] LoongArch: Modify the jump logic of the trampoline
-Message-ID: <20251210061652.GC691118@chenghao-pc>
-References: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
- <20251209093405.1309253-2-duanchenghao@kylinos.cn>
- <CAEyhmHThf_i3xLcm4m7ZYo168tH5j5pCtC26cz4HKbwxh-1vuA@mail.gmail.com>
+	s=arc-20240116; t=1765353620; c=relaxed/simple;
+	bh=pvn0Vc4sY8pJyc2+s5a4nJKl1iCKQ/xtJmAIFkrzS+o=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=NO8j1U1TJtbOysBvnf9nAmut4x6P+K4DjvlcK1Hh5tKlsHJfaiFahThcO3KKgTs3x0xdc9ztTOYFybz4Y/SARy+QYWDwQ7UZx3JzpwaDoDQFhdFKWnXO8T3Af5yKmUTqTvvAJ5seZGrz0HEvg/4ZZzbmm9wcHe2cwaxZwgMLsuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx6tGDKDlpYe0sAA--.32053S3;
+	Wed, 10 Dec 2025 16:00:04 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxH8KCKDlpx7tHAQ--.3707S3;
+	Wed, 10 Dec 2025 16:00:03 +0800 (CST)
+Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
+ <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
+ <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
+ <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a1674623-4c08-1f4d-3e4e-5511b579e9ea@loongson.cn>
+Date: Wed, 10 Dec 2025 16:00:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEyhmHThf_i3xLcm4m7ZYo168tH5j5pCtC26cz4HKbwxh-1vuA@mail.gmail.com>
+X-CM-TRANSID:qMiowJCxH8KCKDlpx7tHAQ--.3707S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Wryruw17Gry8WF4rGF1xWFX_yoW8AFWDpr
+	97KFyUWFyDGr18JrsrKr10qryYyrnxJ3WUWr1UJFn8Gr1qqr12vF1Uuw1jgr1Utr48Xw48
+	Ar18Zr47Zay5JFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jb
+	_-PUUUUU=
 
-On Wed, Dec 10, 2025 at 12:15:28PM +0800, Hengqi Chen wrote:
-> On Tue, Dec 9, 2025 at 5:34 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
-> >
-> > There are two methods to jump into the trampoline code for execution:
-> > 1. ftrace-managed.
-> > 2. Direct call.
-> >
-> > Whether ftrace-managed or direct jump, ensure before trampoline entry:
-> > t0=parent func return addr, ra=traced func return addr.
-> > When managed by ftrace, the trampoline code execution flow utilizes
-> > ftrace direct call, and it is required to ensure that the original
-> > data in registers t0 and ra is not modification.
-> >
-> > samples/ftrace/ftrace-direct_xxxx.c: update test code for ftrace direct
-> > call (modify together).
-> >
-> > Trampoline: adjust jump logic to use t0 (parent func return addr) and
-> > ra (traced func return addr) as jump targets for respective scenarios
-> >
-> > Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+On 2025/12/10 上午10:25, Bibo Mao wrote:
 > 
-> Please add a Fixes tag.
-
-I believe this is an issue introduced by the combination of trampoline and
-ftrace. Prior to this, ftrace direct call had not been used by other
-technologies. If a fix point is to be selected, it would be the initial
-commit of the ftrace direct call technology.
-
-Fixes: 9cdc3b6a299c (LoongArch: ftrace: Add direct call support)
-
 > 
-> > ---
-> >  arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
-> >  arch/loongarch/net/bpf_jit.c                | 37 +++++++++++++++------
-> >  samples/ftrace/ftrace-direct-modify.c       |  8 ++---
-> >  samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
-> >  samples/ftrace/ftrace-direct-multi.c        |  4 +--
-> >  samples/ftrace/ftrace-direct-too.c          |  4 +--
-> >  samples/ftrace/ftrace-direct.c              |  4 +--
-> >  7 files changed, 50 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
-> > index d6b474ad1d5e..5729c20e5b8b 100644
-> > --- a/arch/loongarch/kernel/mcount_dyn.S
-> > +++ b/arch/loongarch/kernel/mcount_dyn.S
-> > @@ -94,7 +94,6 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
-> >   * at the callsite, so there is no need to restore the T series regs.
-> >   */
-> >  ftrace_common_return:
-> > -       PTR_L           ra, sp, PT_R1
-> >         PTR_L           a0, sp, PT_R4
-> >         PTR_L           a1, sp, PT_R5
-> >         PTR_L           a2, sp, PT_R6
-> > @@ -104,12 +103,17 @@ ftrace_common_return:
-> >         PTR_L           a6, sp, PT_R10
-> >         PTR_L           a7, sp, PT_R11
-> >         PTR_L           fp, sp, PT_R22
-> > -       PTR_L           t0, sp, PT_ERA
-> >         PTR_L           t1, sp, PT_R13
-> > -       PTR_ADDI        sp, sp, PT_SIZE
-> >         bnez            t1, .Ldirect
-> > +
-> > +       PTR_L           ra, sp, PT_R1
-> > +       PTR_L           t0, sp, PT_ERA
-> > +       PTR_ADDI        sp, sp, PT_SIZE
-> >         jr              t0
-> >  .Ldirect:
-> > +       PTR_L           t0, sp, PT_R1
-> > +       PTR_L           ra, sp, PT_ERA
-> > +       PTR_ADDI        sp, sp, PT_SIZE
-> >         jr              t1
-> >  SYM_CODE_END(ftrace_common)
-> >
-> > @@ -161,6 +165,8 @@ SYM_CODE_END(return_to_handler)
-> >  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> >  SYM_CODE_START(ftrace_stub_direct_tramp)
-> >         UNWIND_HINT_UNDEFINED
-> > -       jr              t0
-> > +       move            t1, ra
-> > +       move            ra, t0
-> > +       jr              t1
-> >  SYM_CODE_END(ftrace_stub_direct_tramp)
-> >  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> > index 8dc58781b8eb..d1f5fd5ae847 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -139,6 +139,7 @@ static void build_prologue(struct jit_ctx *ctx)
-> >         stack_adjust = round_up(stack_adjust, 16);
-> >         stack_adjust += bpf_stack_adjust;
-> >
-> > +       move_reg(ctx, LOONGARCH_GPR_T0, LOONGARCH_GPR_RA);
-> >         /* Reserve space for the move_imm + jirl instruction */
-> >         for (i = 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
-> >                 emit_insn(ctx, nop);
-> > @@ -238,7 +239,7 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
-> >                  * Call the next bpf prog and skip the first instruction
-> >                  * of TCC initialization.
-> >                  */
-> > -               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 6);
-> > +               emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 7);
-> >         }
-> >  }
-> >
-> > @@ -1265,7 +1266,7 @@ static int emit_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
-> >                 return 0;
-> >         }
-> >
-> > -       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO, (u64)target);
-> > +       return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_RA : LOONGARCH_GPR_ZERO, (u64)target);
-> >  }
-> >
-> >  static int emit_call(struct jit_ctx *ctx, u64 addr)
-> > @@ -1289,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
-> >                        void *new_addr)
-> >  {
-> >         int ret;
-> > +       unsigned long size = 0;
-> > +       unsigned long offset = 0;
-> > +       char namebuf[KSYM_NAME_LEN];
-> > +       void *image = NULL;
-> >         bool is_call;
-> >         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
-> >         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
-> > @@ -1296,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
-> >         /* Only poking bpf text is supported. Since kernel function entry
-> >          * is set up by ftrace, we rely on ftrace to poke kernel functions.
-> >          */
-> > -       if (!is_bpf_text_address((unsigned long)ip))
-> > +       if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
-> >                 return -ENOTSUPP;
-> >
-> > +       image = ip - offset;
-> > +       /* zero offset means we're poking bpf prog entry */
-> > +       if (offset == 0)
-> > +               /* skip to the nop instruction in bpf prog entry:
-> > +                * move t0, ra
-> > +                * nop
-> > +                */
-> > +               ip = image + LOONGARCH_INSN_SIZE;
-> > +
-> >         is_call = old_t == BPF_MOD_CALL;
-> >         ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
-> >         if (ret)
-> > @@ -1622,14 +1636,11 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
-> >
-> >         /* To traced function */
-> >         /* Ftrace jump skips 2 NOP instructions */
-> > -       if (is_kernel_text((unsigned long)orig_call))
-> > +       if (is_kernel_text((unsigned long)orig_call) || is_module_text_address((unsigned long)orig_call))
-> >                 orig_call += LOONGARCH_FENTRY_NBYTES;
-> >         /* Direct jump skips 5 NOP instructions */
-> >         else if (is_bpf_text_address((unsigned long)orig_call))
-> >                 orig_call += LOONGARCH_BPF_FENTRY_NBYTES;
-> > -       /* Module tracing not supported - cause kernel lockups */
-> > -       else if (is_module_text_address((unsigned long)orig_call))
-> > -               return -ENOTSUPP;
-> >
-> >         if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> >                 move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
-> > @@ -1722,12 +1733,16 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
-> >                 emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
-> >                 emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
-> >
-> > -               if (flags & BPF_TRAMP_F_SKIP_FRAME)
-> > +               if (flags & BPF_TRAMP_F_SKIP_FRAME) {
-> >                         /* return to parent function */
-> > -                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
-> > -               else
-> > -                       /* return to traced function */
-> > +                       move_reg(ctx, LOONGARCH_GPR_RA, LOONGARCH_GPR_T0);
-> >                         emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
-> > +               } else {
-> > +                       /* return to traced function */
-> > +                       move_reg(ctx, LOONGARCH_GPR_T1, LOONGARCH_GPR_RA);
-> > +                       move_reg(ctx, LOONGARCH_GPR_RA, LOONGARCH_GPR_T0);
-> > +                       emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T1, 0);
-> > +               }
-> >         }
-> >
-> >         ret = ctx->idx;
-> > diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-> > index da3a9f2091f5..1ba1927b548e 100644
-> > --- a/samples/ftrace/ftrace-direct-modify.c
-> > +++ b/samples/ftrace/ftrace-direct-modify.c
-> > @@ -176,8 +176,8 @@ asm (
-> >  "      st.d    $t0, $sp, 0\n"
-> >  "      st.d    $ra, $sp, 8\n"
-> >  "      bl      my_direct_func1\n"
-> > -"      ld.d    $t0, $sp, 0\n"
-> > -"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $ra, $sp, 0\n"
-> > +"      ld.d    $t0, $sp, 8\n"
-> >  "      addi.d  $sp, $sp, 16\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp1, .-my_tramp1\n"
-> > @@ -189,8 +189,8 @@ asm (
-> >  "      st.d    $t0, $sp, 0\n"
-> >  "      st.d    $ra, $sp, 8\n"
-> >  "      bl      my_direct_func2\n"
-> > -"      ld.d    $t0, $sp, 0\n"
-> > -"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $ra, $sp, 0\n"
-> > +"      ld.d    $t0, $sp, 8\n"
-> >  "      addi.d  $sp, $sp, 16\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp2, .-my_tramp2\n"
-> > diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-> > index 8f7986d698d8..7a7822dfeb50 100644
-> > --- a/samples/ftrace/ftrace-direct-multi-modify.c
-> > +++ b/samples/ftrace/ftrace-direct-multi-modify.c
-> > @@ -199,8 +199,8 @@ asm (
-> >  "      move    $a0, $t0\n"
-> >  "      bl      my_direct_func1\n"
-> >  "      ld.d    $a0, $sp, 0\n"
-> > -"      ld.d    $t0, $sp, 8\n"
-> > -"      ld.d    $ra, $sp, 16\n"
-> > +"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $t0, $sp, 16\n"
-> >  "      addi.d  $sp, $sp, 32\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp1, .-my_tramp1\n"
-> > @@ -215,8 +215,8 @@ asm (
-> >  "      move    $a0, $t0\n"
-> >  "      bl      my_direct_func2\n"
-> >  "      ld.d    $a0, $sp, 0\n"
-> > -"      ld.d    $t0, $sp, 8\n"
-> > -"      ld.d    $ra, $sp, 16\n"
-> > +"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $t0, $sp, 16\n"
-> >  "      addi.d  $sp, $sp, 32\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp2, .-my_tramp2\n"
-> > diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-> > index db326c81a27d..3fe6ddaf0b69 100644
-> > --- a/samples/ftrace/ftrace-direct-multi.c
-> > +++ b/samples/ftrace/ftrace-direct-multi.c
-> > @@ -131,8 +131,8 @@ asm (
-> >  "      move    $a0, $t0\n"
-> >  "      bl      my_direct_func\n"
-> >  "      ld.d    $a0, $sp, 0\n"
-> > -"      ld.d    $t0, $sp, 8\n"
-> > -"      ld.d    $ra, $sp, 16\n"
-> > +"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $t0, $sp, 16\n"
-> >  "      addi.d  $sp, $sp, 32\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp, .-my_tramp\n"
-> > diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-> > index 3d0fa260332d..bf2411aa6fd7 100644
-> > --- a/samples/ftrace/ftrace-direct-too.c
-> > +++ b/samples/ftrace/ftrace-direct-too.c
-> > @@ -143,8 +143,8 @@ asm (
-> >  "      ld.d    $a0, $sp, 0\n"
-> >  "      ld.d    $a1, $sp, 8\n"
-> >  "      ld.d    $a2, $sp, 16\n"
-> > -"      ld.d    $t0, $sp, 24\n"
-> > -"      ld.d    $ra, $sp, 32\n"
-> > +"      ld.d    $ra, $sp, 24\n"
-> > +"      ld.d    $t0, $sp, 32\n"
-> >  "      addi.d  $sp, $sp, 48\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp, .-my_tramp\n"
-> > diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-> > index 956834b0d19a..5368c8c39cbb 100644
-> > --- a/samples/ftrace/ftrace-direct.c
-> > +++ b/samples/ftrace/ftrace-direct.c
-> > @@ -124,8 +124,8 @@ asm (
-> >  "      st.d    $ra, $sp, 16\n"
-> >  "      bl      my_direct_func\n"
-> >  "      ld.d    $a0, $sp, 0\n"
-> > -"      ld.d    $t0, $sp, 8\n"
-> > -"      ld.d    $ra, $sp, 16\n"
-> > +"      ld.d    $ra, $sp, 8\n"
-> > +"      ld.d    $t0, $sp, 16\n"
-> >  "      addi.d  $sp, $sp, 32\n"
-> >  "      jr      $t0\n"
-> >  "      .size           my_tramp, .-my_tramp\n"
-> > --
-> > 2.25.1
-> >
+> On 2025/12/10 上午9:28, Tiezhu Yang wrote:
+>> On 2025/12/9 下午4:30, Huacai Chen wrote:
+>>> Hi, Tiezhu,
+>>>
+>>> On Tue, Dec 9, 2025 at 2:18 PM Tiezhu Yang <yangtiezhu@loongson.cn> 
+>>> wrote:
+>>>>
+>> ...
+>>>>          extern unsigned long eentry;
+>>>>
+>>>> -       if (__kernel_text_address(ra))
+>>>> -               return ra;
+>>>> -
+>>>> -       if (__module_text_address(ra))
+>>>> -               return ra;
+>>> I think the correct way is to remove the __module_text_address()
+>>> condition but keep the __kernel_text_address() condition. Then return
+>>> 0 at the end of this function, and remove the __kernel_text_address()
+>>> condition out of this function.
+>>
+>> It can not remove the check of __kernel_text_address() after calling
+>> bt_address() because it needs to validate the calculated address for
+>> exception, then no need to keep the __kernel_text_address() condition
+>> in bt_address() because it will check the PC outside bt_address().
+>          state->pc = bt_address(pc);
+>          if (!state->pc) {
+>                  pr_err("cannot find unwind pc at %p\n", (void *)pc);
+>                  goto err;
+>          }
+> 
+>          if (!__kernel_text_address(state->pc))
+>                  goto err;
+> I guess that you both comes from different views :) one treats these 
+> piece of code into one, one only views function bt_address().
+> 
+> Especially with if (!state->pc), how could this happen?
+
+IMO, state->pc will be not 0 forever in practice, this check is just an
+error path and can be removed too if possible.
+
+Thanks,
+Tiezhu
+
