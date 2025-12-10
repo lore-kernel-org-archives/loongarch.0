@@ -1,76 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D73F223717F;
-	Tue,  9 Dec 2025 22:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B24541E5205
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 00:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765319995; cv=none; b=NrQc3xD0ZeMkmkFblzqQ8tTji4RsthSbY29B3YKHASy09c9BEQypEncL/dvRVuYQTVbUYx942/nV092WUGRnup9QnKkmt4kw/3QVT9VeFwrHvhI6bBBM48vusqOcSu17xWjaUIoxuXDhUsOHOX3FFPynJZkgzLt9Lq9InRWq98k=
+	t=1765327716; cv=none; b=G3TNg+GFIxGIbE7y0iHhG8qCBHi+Bt4KTbJVTufase4dPLBBPqCaR3cC4Asgj9iWS+yvc0GEf8ISrrURgzSJICYTwg13dFxD6Wijk1Ehrggux+rwzGiGTJb5niI/wLOB+9v9ON5zehX0iC0SwoH5NVPNy8sEhhB0CHVHnvvJ3+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765319995; c=relaxed/simple;
-	bh=ABERVRepkPXCovsg5r9VdsLy2Fz/IAePmzBL1ZJjkG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rb8HqFTXAeq8axTMm6IF709qUv9pjERu4mnbANC6ym/1k9qn8wMH/SafvSlsDoXOna4/SeaYzbXNuj6ZpTOlQ5Y/hV2csb9Yk1XkDmqf+ymrpPnAdY1JAf3b42ad8HWVrU7xv+5Vi0j3MhWpJGF111Ya4pC7WzZjjyEmwinEB6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leHe4lqq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leHe4lqq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCEBC19423;
-	Tue,  9 Dec 2025 22:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765319994;
-	bh=ABERVRepkPXCovsg5r9VdsLy2Fz/IAePmzBL1ZJjkG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=leHe4lqqqj2Hh5PPQ60ZsOUSKwM3XGJlUvIgbmsFN1BCo95ElmsayH8o06hPVsNZe
-	 zW46quX6Y5LiE6iLuhgkqy2RiHPg2MRYuNjPSjlPojS+TacFRqUqcYxf+nlDyje7lE
-	 z3K2C+xe6SJFK839cSWjV8a+tkI3LUYSlkWXdyCRatvk4Kq3PZbNH1kUq+ciw/Zeaq
-	 9Dh7SULyp4/xlnPWaB4xsLV0R6Dqdu69h+glumZH7h6vgmxannp+L8pXPpwV/P3hfZ
-	 86wsHl+kHIs57LT0bEe8gDNDskkmYl8Idttw0GkuDkjVyNbmUL9kAXST2aMI12ZhTD
-	 zfl3Kc1hqAoKQ==
-Date: Tue, 9 Dec 2025 16:39:51 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Yao Zi <me@ziyao.cc>
-Cc: linux-pci@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	devicetree@vger.kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: loongson: Document msi-parent
- property
-Message-ID: <176531999095.1292172.5473670665283409608.robh@kernel.org>
-References: <20251209140006.54821-1-me@ziyao.cc>
- <20251209140006.54821-3-me@ziyao.cc>
+	s=arc-20240116; t=1765327716; c=relaxed/simple;
+	bh=ANCXgiltlhetwp0/3uA6mI/PXMOYcyCs8tAHAV9Ra1c=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Lp7v8BeQmBLhrUJBQwBO7JKRyg4CXE+4Wt2BJMrDjrIr/zxYa6yz7SH5SFaC1cuEX6ej0ot1sT814C4KqadtgeSA2lf+q6IrWmm7X3ahTv4srK1du0JfI1ijWRFKoX9nsAVkQEkLo6v8hgu6Thhmas1tC8LNiv38sx15MJEiDaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxP_BbwzhpeNQsAA--.30631S3;
+	Wed, 10 Dec 2025 08:48:27 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxC8FWwzhphJxHAQ--.19467S3;
+	Wed, 10 Dec 2025 08:48:23 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] LoongArch: Modify the jump logic of the trampoline
+To: Chenghao Duan <duanchenghao@kylinos.cn>, hengqi.chen@gmail.com,
+ chenhuacai@kernel.org
+Cc: kernel@xen0n.name, zhangtianyang@loongson.cn, masahiroy@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
+ jianghaoran@kylinos.cn, vincent.mc.li@gmail.com,
+ Youling Tang <tangyouling@kylinos.cn>
+References: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
+ <20251209093405.1309253-2-duanchenghao@kylinos.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <53889229-333a-7833-d9bf-42bef71d1d68@loongson.cn>
+Date: Wed, 10 Dec 2025 08:48:22 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251209140006.54821-3-me@ziyao.cc>
+In-Reply-To: <20251209093405.1309253-2-duanchenghao@kylinos.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxC8FWwzhphJxHAQ--.19467S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFy5tF4UCw4UZFW3CrykZwc_yoW8AF43p3
+	y7ua9xur4FyFZYkrn7W3W5ZF1av397JrZ8Ga42y34rZ3Z0gry2yrWIyr1Dur97WryfCrW7
+	Xrs5ArWrG3W7Z3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUUUU=
 
+On 2025/12/9 下午5:34, Chenghao Duan wrote:
+> There are two methods to jump into the trampoline code for execution:
+> 1. ftrace-managed.
+> 2. Direct call.
+> 
+> Whether ftrace-managed or direct jump, ensure before trampoline entry:
+> t0=parent func return addr, ra=traced func return addr.
+> When managed by ftrace, the trampoline code execution flow utilizes
+> ftrace direct call, and it is required to ensure that the original
+> data in registers t0 and ra is not modification.
+> 
+> samples/ftrace/ftrace-direct_xxxx.c: update test code for ftrace direct
+> call (modify together).
+> 
+> Trampoline: adjust jump logic to use t0 (parent func return addr) and
+> ra (traced func return addr) as jump targets for respective scenarios
+> 
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
 
-On Tue, 09 Dec 2025 14:00:06 +0000, Yao Zi wrote:
-> Loongson PCI controllers found in LS2K1000/2000 SoCs
-> (loongson,ls2k-pci), 7A1000/2000 bridge chips (loongson,ls7a-pci), and
-> RS780E bridge chips (loongson,rs780e-pci) all have their paired MSI
-> controllers.
-> 
-> Though only the one in LS2K2000 SoC is described in devicetree, we
-> should document the property for all variants. For the same reason, it
-> isn't marked as required for now.
-> 
-> Fixes: 83e757ecfd5d ("dt-bindings: Document Loongson PCI Host Controller")
-> Signed-off-by: Yao Zi <me@ziyao.cc>
+When several people work on a single patch, please use the tag:
+"Co-developed-by", for more info please see:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
 > ---
->  Documentation/devicetree/bindings/pci/loongson.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+>   arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+>   arch/loongarch/net/bpf_jit.c                | 37 +++++++++++++++------
+>   samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+>   samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+>   samples/ftrace/ftrace-direct-multi.c        |  4 +--
+>   samples/ftrace/ftrace-direct-too.c          |  4 +--
+>   samples/ftrace/ftrace-direct.c              |  4 +--
+>   7 files changed, 50 insertions(+), 29 deletions(-)
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Thanks for the patch, it is good news.
+
+Please split this patch into three parts:
+(1) ftrace code
+(2) sample test
+(3) bpf code
+and use proper patch subject and commit message for each patch.
+
+Thanks,
+Tiezhu
 
