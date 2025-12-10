@@ -1,108 +1,357 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DEA025F988
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 02:28:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90581E1E0B
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 02:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765333712; cv=none; b=G9bMA+eIrxUdCpFve7OHfOhavScEh5erb5liTDhOCoyqmE5BkG+DbMA24Dkic1Y0NOsHt42JCUOnswsoJ+e460QdpKvfLtp/3rOGgk6eMU4dCsiLhR7t24k749AFwj31BQP+K8p+RL7C5SeuqUOBlLdIcyjx0kTO9DHUmEBsAfU=
+	t=1765335393; cv=none; b=JN2JEl7V9LCey+wYW84UytCphrelHOVQVPYBeo3yMXUNO6knpcaODKl9yowqtZkIaIeDPhX3BJ4w7fIGAO/vfK2h+BmTxXrt8RKNChLkgfIPqCf+n3L5lqRTaE5WgsG0CvBERnfBHqO7ijaCzJeVTsqix9a8ulPs82bkG0j0ZQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765333712; c=relaxed/simple;
-	bh=VMTnL9x31mHm1fLpRAr/l9LqamICfjGH3A9K0Leuc+4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FcR6kOIXsO4YgMfhtLCblPnThkaEs1xmH51PJAZMe682dsOIbmEQvG3SGxKsJZr91nNgSiMj6QJTRUbuVLjUgzysoNrUDWowsfY3I/Mu34ddXCb4YlX6udGPp2IXzSdmtxLBQUumylwmgay5daGOymPt/AhC7DcFVC5yOdY93KA=
+	s=arc-20240116; t=1765335393; c=relaxed/simple;
+	bh=XiCc5SLAmYACbqw0SxPq0GIjJC9JsoeYxgqmBlRe+gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RhFpQq/JvwKRtIgcpoi6txHQX6LqGmeI4fFPwm1Drk4tLeU0Cqcrt9zm1C+cL/yvKCqBWsIbmRU/E2G0YWZNp3zE4SaA9f2QF2J2cS/UQo554lMOkTjUD23gf7q/9oz16ofnbzni9XciHlHhNbAyTmzhDRCaimt+mSxY9u0NH9c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxqdHK2jhpHOAsAA--.31884S3;
-	Wed, 10 Dec 2025 10:28:26 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxysDH2jhp6qZHAQ--.36271S3;
-	Wed, 10 Dec 2025 10:28:26 +0800 (CST)
-Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
- <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
- <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxVNBa4ThpYuEsAA--.31605S3;
+	Wed, 10 Dec 2025 10:56:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxTMFZ4ThpGalHAQ--.1424S2;
+	Wed, 10 Dec 2025 10:56:25 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
-Date: Wed, 10 Dec 2025 10:25:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: KVM: Set default return value in kvm IO bus ops
+Date: Wed, 10 Dec 2025 10:56:21 +0800
+Message-Id: <20251210025623.343511-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxysDH2jhp6qZHAQ--.36271S3
+X-CM-TRANSID:qMiowJBxTMFZ4ThpGalHAQ--.1424S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WryxKr1kuw13CFWxGF13Jrc_yoW8GFWkpF
-	97GFyUWFyDKr48JrsrWr1Fqr90yrnxJ3Wjgr4UJFn5Cwn0qr1SvF1j9a42g3W8tr48Xw48
-	Zw18ArsF9a98AFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
-	14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
-	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IU8I38UUUUUU==
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+When irqchip in kernel is enabled, its register area is registered
+in the IO bus list with API kvm_io_bus_register_dev(). In MMIO/IOCSR
+register access emulation, kvm_io_bus_write/kvm_io_bus_read is called
+firstly. If it returns 0, it shows that in kernel irqchip handles
+the emulation already, else it returns to VMM and lets VMM emulate
+the register access.
 
+Once irqchip in kernel is enabled, it should return 0 if the address
+is within range of the registered IO bus. It should not return to VMM
+since VMM does not know how to handle it, and irqchip is handled in
+kernel already.
 
-On 2025/12/10 上午9:28, Tiezhu Yang wrote:
-> On 2025/12/9 下午4:30, Huacai Chen wrote:
->> Hi, Tiezhu,
->>
->> On Tue, Dec 9, 2025 at 2:18 PM Tiezhu Yang <yangtiezhu@loongson.cn> 
->> wrote:
->>>
-> ...
->>>          extern unsigned long eentry;
->>>
->>> -       if (__kernel_text_address(ra))
->>> -               return ra;
->>> -
->>> -       if (__module_text_address(ra))
->>> -               return ra;
->> I think the correct way is to remove the __module_text_address()
->> condition but keep the __kernel_text_address() condition. Then return
->> 0 at the end of this function, and remove the __kernel_text_address()
->> condition out of this function.
-> 
-> It can not remove the check of __kernel_text_address() after calling
-> bt_address() because it needs to validate the calculated address for
-> exception, then no need to keep the __kernel_text_address() condition
-> in bt_address() because it will check the PC outside bt_address().
-         state->pc = bt_address(pc);
-         if (!state->pc) {
-                 pr_err("cannot find unwind pc at %p\n", (void *)pc);
-                 goto err;
-         }
+Here set default return value with 0 in KVM IO bus operations.
 
-         if (!__kernel_text_address(state->pc))
-                 goto err;
-I guess that you both comes from different views :) one treats these 
-piece of code into one, one only views function bt_address().
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/intc/eiointc.c | 28 ++++++++++++----------------
+ arch/loongarch/kvm/intc/ipi.c     | 10 ++--------
+ arch/loongarch/kvm/intc/pch_pic.c | 31 ++++++++++++++-----------------
+ 3 files changed, 28 insertions(+), 41 deletions(-)
 
-Especially with if (!state->pc), how could this happen?
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 29886876143f..7ca9dfea7f39 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -119,7 +119,7 @@ void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
+ static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
+ 				gpa_t addr, unsigned long *val)
+ {
+-	int index, ret = 0;
++	int index;
+ 	u64 data = 0;
+ 	gpa_t offset;
+ 
+@@ -150,30 +150,29 @@ static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eioint
+ 		data = s->coremap[index];
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	*val = data;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, void *val)
+ {
+-	int ret = -EINVAL;
++	int ret = 0;
+ 	unsigned long flags, data, offset;
+ 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	offset = addr & 0x7;
+@@ -208,7 +207,7 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
+ 				struct loongarch_eiointc *s,
+ 				gpa_t addr, u64 value, u64 field_mask)
+ {
+-	int index, irq, ret = 0;
++	int index, irq;
+ 	u8 cpu;
+ 	u64 data, old, mask;
+ 	gpa_t offset;
+@@ -287,29 +286,28 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
+ 		eiointc_update_sw_coremap(s, index * 8, data, sizeof(data), true);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, const void *val)
+ {
+-	int ret = -EINVAL;
++	int ret = 0;
+ 	unsigned long flags, value;
+ 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	vcpu->stat.eiointc_write_exits++;
+@@ -352,7 +350,7 @@ static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	addr -= EIOINTC_VIRT_BASE;
+@@ -383,21 +381,19 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *vcpu,
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	addr -= EIOINTC_VIRT_BASE;
+ 	spin_lock_irqsave(&eiointc->lock, flags);
+ 	switch (addr) {
+ 	case EIOINTC_VIRT_FEATURES:
+-		ret = -EPERM;
+ 		break;
+ 	case EIOINTC_VIRT_CONFIG:
+ 		/*
+ 		 * eiointc features can only be set at disabled status
+ 		 */
+ 		if ((eiointc->status & BIT(EIOINTC_ENABLE)) && value) {
+-			ret = -EPERM;
+ 			break;
+ 		}
+ 		eiointc->status = value & eiointc->features;
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index 05cefd29282e..311cbb66821d 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -174,7 +174,7 @@ static int any_send(struct kvm *kvm, uint64_t data)
+ 	vcpu = kvm_get_vcpu_by_cpuid(kvm, cpu);
+ 	if (unlikely(vcpu == NULL)) {
+ 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 	offset = data & 0xffff;
+ 
+@@ -183,7 +183,6 @@ static int any_send(struct kvm *kvm, uint64_t data)
+ 
+ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void *val)
+ {
+-	int ret = 0;
+ 	uint32_t offset;
+ 	uint64_t res = 0;
+ 
+@@ -211,19 +210,17 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void
+ 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+ 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
+ 				__func__, offset, len);
+-			ret = -EINVAL;
+ 			break;
+ 		}
+ 		res = read_mailbox(vcpu, offset, len);
+ 		break;
+ 	default:
+ 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	*(uint64_t *)val = res;
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, const void *val)
+@@ -239,7 +236,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 
+ 	switch (offset) {
+ 	case IOCSR_IPI_STATUS:
+-		ret = -EINVAL;
+ 		break;
+ 	case IOCSR_IPI_EN:
+ 		spin_lock(&vcpu->arch.ipi_state.lock);
+@@ -257,7 +253,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+ 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
+ 				__func__, offset, len);
+-			ret = -EINVAL;
+ 			break;
+ 		}
+ 		write_mailbox(vcpu, offset, data, len);
+@@ -273,7 +268,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 		break;
+ 	default:
+ 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+index a698a73de399..773885f8d659 100644
+--- a/arch/loongarch/kvm/intc/pch_pic.c
++++ b/arch/loongarch/kvm/intc/pch_pic.c
+@@ -74,7 +74,7 @@ void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
+ 
+ static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
+ {
+-	int ret = 0, offset;
++	int offset;
+ 	u64 data = 0;
+ 	void *ptemp;
+ 
+@@ -121,34 +121,32 @@ static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int l
+ 		data = s->isr;
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		break;
+ 	}
+ 	spin_unlock(&s->lock);
+ 
+-	if (ret == 0) {
+-		offset = (addr - s->pch_pic_base) & 7;
+-		data = data >> (offset * 8);
+-		memcpy(val, &data, len);
+-	}
++	offset = (addr - s->pch_pic_base) & 7;
++	data = data >> (offset * 8);
++	memcpy(val, &data, len);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, void *val)
+ {
+-	int ret;
++	int ret = 0;
+ 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
+ 
+ 	if (!s) {
+ 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	/* statistics of pch pic reading */
+@@ -161,7 +159,7 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+ static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
+ 					int len, const void *val)
+ {
+-	int ret = 0, offset;
++	int offset;
+ 	u64 old, data, mask;
+ 	void *ptemp;
+ 
+@@ -226,29 +224,28 @@ static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
+ 	case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	spin_unlock(&s->lock);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, const void *val)
+ {
+-	int ret;
++	int ret = 0;
+ 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
+ 
+ 	if (!s) {
+ 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	/* statistics of pch pic writing */
 
-Regards
-Bibo Mao
-
-> 
-> Thanks,
-> Tiezhu
-> 
+base-commit: c9b47175e9131118e6f221cc8fb81397d62e7c91
+-- 
+2.39.3
 
