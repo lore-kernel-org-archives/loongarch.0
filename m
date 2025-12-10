@@ -1,169 +1,119 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D74261B92
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 04:08:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E51275AE8
+	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 04:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765339717; cv=none; b=i2RWlWI3rQEfiNchRDv6KODe2xz7wUuu3/GT5LTt+kOBPeIWjJ9rGhHjNqkrLxvYvwARSJofcTfOPCox4cwAfOKLwYlDEgk3fn9DvR9u5Lnxytoh0Yr1HTt49X0Tv8nzNf+eICFofUQko5vJwRsePANwGgDxF86BhwgdIsnPhpc=
+	t=1765339859; cv=none; b=Qb+GXDflPz4Lzmcsq8GpVC3XVZoTo0Op17HO0bWfdr4fWN3NoLpGeeD9RZUO/IY5rsKmF4EeSxCLFZJeGnIrdqYYi8XGAK13oE6qVNQDT9AsR1xpXYuXw1ZJZfi3C7DRqQT0OTQzwVnn5QSxSI15TlndF7m2AHP35in8HrFctFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765339717; c=relaxed/simple;
-	bh=tX5z20+Pu7QT1iBU1ERZjpz6acgU74eJVG7M/6qH2zc=;
+	s=arc-20240116; t=1765339859; c=relaxed/simple;
+	bh=6izA038pvJwAGbYN7aai9+uLFOQlBe5zqjx8SpzOhos=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKte4XaKiXNCCDzDo7ZXWxQxCJeP4TYT7YmDqQVQ8FfD6Pj41LJIIiLrqs72oYu5O3a5yBwp/WTXjuUkRJvodP2sMp6j4xurXp3ijsUNjUYVfKEKfIRHfgBRCujPHbaCgtoIfTlFYpperRJP+viWyicY35H8UAU3pb6uviFqY0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gcRQLFtU; arc=none smtp.client-ip=209.85.167.173
+	 To:Cc:Content-Type; b=MvveJ4eYOIpZVoakKj1L8cNuo07Edx3By5YMBgh+T2AxfjWmC4uUMohALB03jWeMP72aMF2akyr3xObHRV/Spd2FVyybKoLeSD6QAFh7xQ2lyHDXrKtO/xSrFmLcLnDSmVWIFGYVkoHlAZpxQHYHNLBtSx1CRGPPlKQqSp2siPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8nHmXV6; arc=none smtp.client-ip=209.85.160.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcRQLFtU"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4511744b411so3791366b6e.3
-        for <loongarch@lists.linux.dev>; Tue, 09 Dec 2025 20:08:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8nHmXV6"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-3f5ba2fc0d1so236314fac.3
+        for <loongarch@lists.linux.dev>; Tue, 09 Dec 2025 20:10:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765339715; x=1765944515; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1765339857; x=1765944657; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=62+5xIePLz8RKkYJPxzO4xIDyBuycZ/EtL2O6QPdtuE=;
-        b=gcRQLFtUqpjyllr5GT9zxM4Vxr6+/QhEa1HNU0YCAf6GSMZK+5j3wC0QabNRoXpe3W
-         cCQY0TBbNn6EW+sMvJ/rQRCqqFsE+oFnyUh3+Fep+y/LDCkoQ/OkOWOFUSTbIVsblcjI
-         NXKjJA2SPw3icRJm7dvEeZH4oTdGJ4wbEDTBkGc3mZh5i+dufceFkpnOcYmGV5EO/fry
-         EtHr9WccKwhkVcnxIe3n3km/Kb4uBv7epMOgZJyJpPGZvvK1YkRxx+CrMk+fgnIqiPIa
-         AF5GiVfzVjY4kXDYtqUH+Q0VMvol/UCHlQBYSFKkYxO0VxhthLFOsSFbksQqiYXw8/mf
-         t19A==
+        bh=05Ohqymv64sYflY2wosqKmDxhcq182Tz+w0uCWFRgjg=;
+        b=m8nHmXV6SOP1Q1rQ8ZSihIhvvGh1+CkzxyRAkECHkzO1NeiU+p07scIIVC/W9NwsZy
+         j4kOzjTHP5rSwTXI+dJnqm0z1M0Gyh6R4c093ir4/++tgN++QuHy8gwigPrJ2f4srg+v
+         +MwP0/UklX/o8uThpkYVuddEGBdz1znnMIrZoIUGOT6MoFOKf2RXwoP+4yPUahoxnX/A
+         nRfivv1167bVyKAxP8i2XLdf4gUtjBL4IQI+k/KrdRpAJntkb0+SVB5BUz7xnj1MsmxV
+         rXzHJ+CGDx1zqmA5kPpSl3pAZAhnC0EUxSgUoouh1ge5n13HtjQLjTHHU1FghzQaQUPg
+         ddFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765339715; x=1765944515;
+        d=1e100.net; s=20230601; t=1765339857; x=1765944657;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=62+5xIePLz8RKkYJPxzO4xIDyBuycZ/EtL2O6QPdtuE=;
-        b=eU2cY6lHvl6Gx7FZX/oU3o60rOOqZNXbdXA1WeJJ4Ggh6DaZOvGrroxRRi/PatSuF4
-         0f9pD6SV1zZLFsXJYU1A2gI5iy/cWW2EvHQijrOhxMODiay9Qb8F1i7X7hMDKdDzgTxN
-         vfR04chv25Vq+leyxZ1tdIxoHhMjsxDUdhggCuJtgOWfxdseoD6GWru8GfvK4j+sMRQs
-         q2hFy3fawl94/mDMJUavuhaz8rRfeoVLk3W7YIzWDVGe/vI3o8QcCsJlF/8yZ0hH49ZM
-         5SD04D2+PNJnm5ZQs3vIv6Le3Ynkj+T7dgiNpC3PrI+7eYsMUJy4Z1cp5mqU1mTpOuDH
-         gc0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXdMIK2mlHOYtIAQst+0E33h8P9ODVROoEdDtx+NMG8qSdSZyOMT8WlTIyBBlxAfY52rAJIYHLM4To=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwaQpyTuAIgGzybtcANR699jt+BqSb52MoevzCIIQeqYGN+X8is
-	436gd9SIWJW+5GrcuFLMQ/CW44au88FyJaWwSl1DUgiNoM/Is3JmAUg/vcSbxBGQMYddgbfBVwU
-	IRIChEPAZybB0EI3bHluEt2O4V17MHpA=
-X-Gm-Gg: ASbGncsrJjQQL9HNnR1tkB49d5KojJsLIWlzfOlGWlrVsMYXrnju8nxb69cFOvbOdwH
-	gcp+1Hs4Wp53PbGIb0hqS0RTmaMkAuQhF3VyuUUs4hdziAyKkRf6OquaSr+aCGYrIdO//zl309O
-	6945FwNfHLtLT3MT05wGvajjnqmgAoDoX/93Sy4IjQULpvbUzD7Wlb7bLMaoZ3R4g7DZn2YuFow
-	fy1Y+/LyveiLp3rFXxKO5l/SO9JDjWb0NCWzJCVouthwt2CtQx1VPVHFyUXWAu82/bcKi8=
-X-Google-Smtp-Source: AGHT+IFFOlecdiJ9JfRMwXuTnpP5utAc4SMsLqEKEuRAjAMeTpYU2OmESh8FjhEehZdmJ4OMcTwliGBCPKlZuMIRKMI=
-X-Received: by 2002:a05:6808:19a1:b0:44f:e471:b52e with SMTP id
- 5614622812f47-45586388377mr890970b6e.11.1765339715290; Tue, 09 Dec 2025
- 20:08:35 -0800 (PST)
+        bh=05Ohqymv64sYflY2wosqKmDxhcq182Tz+w0uCWFRgjg=;
+        b=oEI9Tkxd3NtpSWlI6DgLNWOkfoPmq2uIOyh/pFD66ShTEo2srFEHJ+S0HWlPvnHLp0
+         sKbd8jJDtEpcqDqH2vvXyw2ifsBx/j1TuCwLx1Ha/1LEks3Uqmv3kOd2Snhm29p8LJ/J
+         VZAy1+4ZPRFzQXDFEM87ebWX9N+JHyQZslMjnY2WXJp0RJKxyCs+g3SPhfZiY42JcM3d
+         mZ+y+4Paxj+OC+QutucO3NSTwKMh7oqq1jt93XbxKbhKI7XXQNSyUgIAxYADgrdB0nBh
+         8e9BG/yfjLjicpIht+/2s3q6+wibmnDjntOnLYQ7fOz2OA75YvDv2Aptc5mLigfFOcOA
+         VPaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbOSMd2q4UUN7/8Mi5qHPtFVyVajAdCRJeQzymssPM/72j74Z6FWG96qVa62VbHjWVqC0CGj4swXg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy32EZl5zlGRui1qPsJx/8GhOnCuJXlgls3zVwV+PQLvlYuC8nj
+	rHQ5ZjZiDKr1E8LbQ2GcMxZrIgEz5fygp0AoLhqRfHwcbRScnvMI6RYFMq99/6F8QcXHbAwKEG0
+	mK9BC8bR9gfctyfW4UWwgSNveZcy8jgU=
+X-Gm-Gg: AY/fxX65p5ILhKkp9Ch5YEqQVZfT/OU9uGYtfZKL6ULaQD7kw3OJu0RoQkzeftHGIfI
+	plluMskPXQA4sOpcDCKHUKhAzoBkHaCbkdWxKFqR0+AHet6TuY96hrFrZPGXar9ibzg17qykhob
+	t0Ayq/8ibqXMMIurW3VKBG9N82unXDuGULONc/ZnA2xTJ1Exyi5dMBXc6ad2TlL+iNCseH5SdvA
+	ZSpRAxhuS5epwn/SIO3F06QyoiQ64uH7NM4gaaxEKS3J1XqEYNB77WZZC57qfUM2Vm9Rq0=
+X-Google-Smtp-Source: AGHT+IGvOLDqAi48Ic3hLyhgd6qi1EOL/WncW14U+ZY1gmlw5gMPVtA35JKcJhsvPKHOF5Aj4Aldqg/Qvbp9osvrMbI=
+X-Received: by 2002:a05:6870:4119:b0:3f5:c07b:d966 with SMTP id
+ 586e51a60fabf-3f5c07be927mr399166fac.53.1765339856939; Tue, 09 Dec 2025
+ 20:10:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251205-2-v4-0-e5ab932cf219@linux.dev>
-In-Reply-To: <20251205-2-v4-0-e5ab932cf219@linux.dev>
+References: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
+In-Reply-To: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 10 Dec 2025 12:08:24 +0800
-X-Gm-Features: AQt7F2rHEDGaKdhW8gH9fBGovjggFx01APzY5rk8g4i7SRDXSqipgaokxj5o2hY
-Message-ID: <CAEyhmHS_HudrG57i1Y9vVoyEbmMipYnkKnq+RraS_F5LHAVrJg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] LoongArch: Add 128-bit atomic cmpxchg support (v4)
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
-	Yangyang Lian <lianyangyang@kylinos.cn>
+Date: Wed, 10 Dec 2025 12:10:46 +0800
+X-Gm-Features: AQt7F2qjEPNMQoDRmcyfVJ5v3fPjMhCIxLEuMdBBnWdI885YUD2fmrUaJr90nW8
+Message-ID: <CAEyhmHSPQLd2ivmzcNxDcKJW8143HLi_=syo_8iBPSxWE35pog@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Fix the failure issue of the module_attach test case
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, chenhuacai@kernel.org, kernel@xen0n.name, 
+	zhangtianyang@loongson.cn, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, guodongtai@kylinos.cn, 
+	youling.tang@linux.dev, jianghaoran@kylinos.cn, vincent.mc.li@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 5, 2025 at 2:29=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
-rote:
->
-> This patch series adds 128-bit atomic compare-and-exchange support for
-> LoongArch architecture, which fixes BPF scheduler test failures caused
-> by missing 128-bit atomics support.
->
-> The series consists of four patches:
->
-> 1. "LoongArch: Add 128-bit atomic cmpxchg support"
->    - Implements 128-bit atomic compare-and-exchange using LoongArch's
->      LL.D/SC.Q instructions
->    - Fixes BPF scheduler test failures (scx_central scx_qmap) where
->      kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
->      leading to -ENOMEM errors during scheduler initialization
->
-> 2. "LoongArch: Enable 128-bit atomics cmpxchg support"
->    - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
->      in Kconfig to enable 128-bit atomic cmpxchg support
-> 3. "LoongArch: Add SCQ support detection"
->     - Check CPUCFG2_SCQ bit to determin if the CPU supports
->     SCQ instrction.
+One minor question, I wonder how you debug these issues ?
 
-The scq detection should be the first patch.
-
-> 4. "LoongArch: Use spinlock to emulate 128-bit cmpxchg"
->    - For LoongArch CPUs lacking 128-bit atomic instruction(e.g.,
->      the SCQ instruction on 3A5000), provide a fallback implementation
->      of __cmpxchg128 using a spinlock to emulate the atomic operation.
+On Tue, Dec 9, 2025 at 5:34=E2=80=AFPM Chenghao Duan <duanchenghao@kylinos.=
+cn> wrote:
 >
-> The issue was identified through BPF scheduler test failures where
-> scx_central and scx_qmap schedulers would fail to initialize. Testing
-> was performed using the scx_qmap scheduler from tools/sched_ext/,
-> confirming that the patches resolve the initialization failures.
+> The following test cases under the tools/testing/selftests/bpf/
+> directory have passed the test=EF=BC=9A
 >
-> Signed-off-by: George Guo <dongtai.guo@linux.dev>
-> ---
-> Changes in v4:
-> - Add SCQ support detection
-> - Add spinlock to emulate 128-bit cmpxchg
-> - Link to v3: https://lore.kernel.org/r/20251126-2-v3-0-851b5a516801@linu=
-x.dev
+> ./test_progs -t module_attach
+> ./test_progs -t module_fentry_shadow
+> ./test_progs -t subprogs
+> ./test_progs -t subprogs_extable
+> ./test_progs -t tailcalls
+> ./test_progs -t struct_ops -d struct_ops_multi_pages
+> ./test_progs -t fexit_bpf2bpf
+> ./test_progs -t fexit_stress
+> ./test_progs -t module_fentry_shadow
+> ./test_progs -t fentry_test/fentry
+> ./test_progs -t fexit_test/fexit
+> ./test_progs -t fentry_fexit
+> ./test_progs -t modify_return
+> ./test_progs -t fexit_sleep
+> ./test_progs -t test_overhead
+> ./test_progs -t trampoline_count
 >
-> Changes in v3:
-> - dbar 0 -> __WEAK_LLSC_MB
-> - =3DZB" (__ptr[0]) -> "r" (__ptr)
-> - Link to v2: https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linu=
-x.dev
+> Chenghao Duan (2):
+>   LoongArch: Modify the jump logic of the trampoline
+>   LoongArch: BPF: Enable BPF exception fixup for specific ADE subcode
 >
-> Changes in v2:
-> - Use a normal ld.d for the high word instead of ll.d to avoid race
->   condition
-> - Insert a dbar between ll.d and ld.d to prevent reordering
-> - Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(=
-ptr, o, n)
-> - Fix address operand constraints after testing different approaches:
->   * ld.d with "m"
->   * ll.d with "ZC",
->   * sc.q with "ZB"(alternative constraints caused issues:
->    - "r"  caused system hang
->    - "ZC" caused compiler error:
->      {standard input}: Assembler messages:
->      {standard input}:10037: Fatal error: Immediate overflow.
->      format: u0:0 )
-> - Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linu=
-x.dev
+>  arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+>  arch/loongarch/kernel/traps.c               |  7 +++-
+>  arch/loongarch/net/bpf_jit.c                | 37 +++++++++++++++------
+>  samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+>  samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+>  samples/ftrace/ftrace-direct-multi.c        |  4 +--
+>  samples/ftrace/ftrace-direct-too.c          |  4 +--
+>  samples/ftrace/ftrace-direct.c              |  4 +--
+>  8 files changed, 56 insertions(+), 30 deletions(-)
 >
-> ---
-> George Guo (3):
->       LoongArch: Add 128-bit atomic cmpxchg support
->       LoongArch: Use spinlock to emulate 128-bit cmpxchg
->       LoongArch: Enable 128-bit atomics cmpxchg support
->
-> george (1):
->       LoongArch: Add SCQ support detection
->
->  arch/loongarch/Kconfig                    |  2 +
->  arch/loongarch/include/asm/cmpxchg.h      | 66 +++++++++++++++++++++++++=
-++++++
->  arch/loongarch/include/asm/cpu-features.h |  1 +
->  arch/loongarch/include/asm/cpu.h          |  2 +
->  arch/loongarch/include/asm/loongarch.h    |  1 +
->  arch/loongarch/kernel/cpu-probe.c         |  4 ++
->  6 files changed, 76 insertions(+)
-> ---
-> base-commit: 2061f18ad76ecaddf8ed17df81b8611ea88dbddd
-> change-id: 20251120-2-d03862b2cf6d
->
-> Best regards,
 > --
-> George Guo <dongtai.guo@linux.dev>
->
+> 2.25.1
 >
