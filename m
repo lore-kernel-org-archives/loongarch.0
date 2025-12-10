@@ -1,104 +1,185 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12E46249E5
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 01:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A9221765B;
+	Wed, 10 Dec 2025 01:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765328552; cv=none; b=h3nwhqUKMmwvs8db/e64uT7KM8hqn4szFWpnWNM7S5a7Y82PKBOUdX260dYj/abG81xYbdCaORfaKzcNWKDeDVEvI7krEPH/XIWkmf9JtvUUqnG3LOltJSlbFZUSKIQr+ZdNIPeD+zY5bcs7z4FOZyDKyAuw9wVWrEyk3ggl26k=
+	t=1765328945; cv=none; b=nlmKYQeKxXc5oKDRpGXic0LiOm11tqSpgw3qWFR16qAo+GHASQffiGKmTMxrgLTqCEU0WyFcnVxpe4Tkr3/7dF4kuH7gbtD+JTHq1tAEuo2fjekZTq+6iwODjJzg8CNTtpSHQn0WiSDpVwhfT3zXEYVoHpVfKHT2FwXOADe5jxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765328552; c=relaxed/simple;
-	bh=Tq4APU8HYImbxLZy7t82goL1G2yf8uU8jSCt3R1y4VY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=C3Kg3VT2vzdq5uQHYgDhJuSmTLq9+2S7xPm7wAJTTE/jt6JsCyhnRZ3Sg3uFkYAWnpCR/daUll8Zy/grjUQuqILpkRxgFNZNoUYMVJMzW9p4FLVHlZix5tWa3qA1P+5jV+l57LCnJQYWT+kRSxY+s547hCtoEZVadzKZEE8Py8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx37+fxjhpytUsAA--.29065S3;
-	Wed, 10 Dec 2025 09:02:23 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxG8GZxjhpZJ1HAQ--.22553S3;
-	Wed, 10 Dec 2025 09:02:18 +0800 (CST)
-Subject: Re: [PATCH v1 2/2] LoongArch: Enable BPF exception fixup for specific
- ADE subcode
-To: Chenghao Duan <duanchenghao@kylinos.cn>, hengqi.chen@gmail.com,
- chenhuacai@kernel.org
-Cc: kernel@xen0n.name, zhangtianyang@loongson.cn, masahiroy@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, guodongtai@kylinos.cn, youling.tang@linux.dev,
- jianghaoran@kylinos.cn, vincent.mc.li@gmail.com
-References: <20251209093405.1309253-1-duanchenghao@kylinos.cn>
- <20251209093405.1309253-3-duanchenghao@kylinos.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9ae006cb-5081-20ce-ce29-9ba47dbede40@loongson.cn>
-Date: Wed, 10 Dec 2025 09:02:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1765328945; c=relaxed/simple;
+	bh=7Sw6PITpzapkD99/tAnwNI3D6Ucw9JU8bsiOsehlJts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pAN3drOj1/1rDrXTLRWa5X9nCpl1dic7/COmEmaIMHIbPDNlNK321uL6D9deIj3wSDAxiy3xMSoEVtufd1Pa2RHAX602T8e4W+U/91ee3jxiQt9cjQOu/JOvLWibIldkCQlwmQyQ2f1QfI1mJRQggrokq7mCcQHpHtj4AGembHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oevo+BJi; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oevo+BJi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765328943; x=1796864943;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7Sw6PITpzapkD99/tAnwNI3D6Ucw9JU8bsiOsehlJts=;
+  b=Oevo+BJiqpvQMUoRJM5hp4O2KdQgYEHYW90HTJ+FUTCqhV+OFrksovyi
+   lPTXxNJgOJI8ahA7H8sq2EnTl7dq6IuBjnY4iEXBRkYUMisgqdsEmqKpK
+   A/uSce8HsUC9I5sDv+3emnId7YMOdXr9HkQ3yrLtbw6cDIZvwpcaF+bJn
+   NkPzpWldT8011xQs7IfyMeD2Dp3SVnAJE1O5WlJttV90Dz5bv+AplzQz/
+   b6t++/7z5miGAz8yZvb2yTJocfB0A1wvfDpRyt/rf6yc2EMxJpFjxqgEB
+   +Pul5NNqydPqjGxWUZ0+t88pY4tvm9L+kcSdZ8w2d/aRRFDeSLbAj8OEP
+   g==;
+X-CSE-ConnectionGUID: nnN5PhDoQ4yeHAz2PK6GKQ==
+X-CSE-MsgGUID: zDGIV1SNQPmsQ0bzSiFGrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11637"; a="67190226"
+X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
+   d="scan'208";a="67190226"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 17:09:03 -0800
+X-CSE-ConnectionGUID: 21iGYDOORw+11NIMlPnpaw==
+X-CSE-MsgGUID: WFDJ3r6bSDGlQ9mRnDj7FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,262,1758610800"; 
+   d="scan'208";a="200862410"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.12]) ([10.124.240.12])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2025 17:08:54 -0800
+Message-ID: <fad66209-6dc1-4067-87df-9aa1105e3017@linux.intel.com>
+Date: Wed, 10 Dec 2025 09:08:52 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251209093405.1309253-3-duanchenghao@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 37/44] KVM: VMX: Dedup code for removing MSR from
+ VMCS's auto-load list
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-38-seanjc@google.com>
+ <2440b9bf-a2a1-4f66-94b2-71f47d62f3db@linux.intel.com>
+ <aTheSQb9fhXmZKw6@google.com>
 Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aTheSQb9fhXmZKw6@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxG8GZxjhpZJ1HAQ--.22553S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7try7Zr45Cry3Zr4kAF13trc_yoW8Wr43pF
-	4UCF45KFWrGFn7X3ZrJ3y09ry3Ca95Jw47WrsFkr1rCF129r12gr1vy39rXF1Dt3y29rWI
-	vF1Fvry0gay3CFbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUU
-	UUUU=
 
-On 2025/12/9 下午5:34, Chenghao Duan wrote:
-> This patch allows the LoongArch BPF JIT to handle recoverable memory
-> access errors generated by BPF_PROBE_MEM* instructions.
-> 
-> When a BPF program performs memory access operations, the instructions
-> it executes may trigger ADEM exceptions. The kernel’s built-in BPF
-> exception table mechanism (EX_TYPE_BPF) will generate corresponding
-> exception fixup entries in the JIT compilation phase; however, the
-> architecture-specific trap handling function needs to proactively call
-> the common fixup routine to achieve exception recovery.
-> 
-> do_ade(): fix EX_TYPE_BPF memory access exceptions for BPF programs,
-> ensure safe execution.
-> 
-> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> ---
->   arch/loongarch/kernel/traps.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-> index da5926fead4a..9ca8aacc82b8 100644
-> --- a/arch/loongarch/kernel/traps.c
-> +++ b/arch/loongarch/kernel/traps.c
-> @@ -534,8 +534,13 @@ asmlinkage void noinstr do_fpe(struct pt_regs *regs, unsigned long fcsr)
->   
->   asmlinkage void noinstr do_ade(struct pt_regs *regs)
->   {
-> -	irqentry_state_t state = irqentry_enter(regs);
-> +	irqentry_state_t state;
-> +	unsigned int esubcode = FIELD_GET(CSR_ESTAT_ESUBCODE, regs->csr_estat);
-> +
-> +	if ((esubcode == 1) && fixup_exception(regs))
 
-Please use the existing EXSUBCODE_ADEM macro definition instead of
-the magic value 1.
+On 12/10/2025 1:37 AM, Sean Christopherson wrote:
+> On Mon, Dec 08, 2025, Dapeng Mi wrote:
+>> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+>>> Add a helper to remove an MSR from an auto-{load,store} list to dedup the
+>>> msr_autoload code, and in anticipation of adding similar functionality for
+>>> msr_autostore.
+>>>
+>>> No functional change intended.
+>>>
+>>> Signed-off-by: Sean Christopherson <seanjc@google.com>
+>>> ---
+>>>  arch/x86/kvm/vmx/vmx.c | 31 ++++++++++++++++---------------
+>>>  1 file changed, 16 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index 52bcb817cc15..a51f66d1b201 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -1040,9 +1040,22 @@ static int vmx_find_loadstore_msr_slot(struct vmx_msrs *m, u32 msr)
+>>>  	return -ENOENT;
+>>>  }
+>>>  
+>>> +static void vmx_remove_auto_msr(struct vmx_msrs *m, u32 msr,
+>>> +				unsigned long vmcs_count_field)
+>>> +{
+>>> +	int i;
+>>> +
+>>> +	i = vmx_find_loadstore_msr_slot(m, msr);
+>>> +	if (i < 0)
+>>> +		return;
+>>> +
+>>> +	--m->nr;
+>>> +	m->val[i] = m->val[m->nr];
+>> Sometimes the order of MSR writing does matter, e.g., PERF_GLOBAL_CTRL MSR
+>> should be written at last after all PMU MSR writing.
+> Hmm, no.  _If_ KVM were writing event selectors using the auto-load lists, then
+> KVM would need to bookend the event selector MSRs with PERF_GLOBAL_CTRL=0 and
+> PERF_GLOBAL_CTRL=<new context (guest vs. host)>.  E.g. so that guest PMC counts
+> aren't polluted with host events, and vice versa.
+>
+> As things stand today, the only other MSRs are PEBS and the DS area configuration
+> stuff, and kinda to my earlier point, KVM pre-zeroes MSR_IA32_PEBS_ENABLE as part
+> of add_atomic_switch_msr() to ensure a quiescent period before VM-Enter.
+>
+> Heh, and writing PERF_GLOBAL_CTRL last for that sequence might actually be
+> problematic.  E.g. load host PEBS with guest PERF_GLOBAL_CTRL active.
+>
+> Anyways, I agree that this might be brittle, but this is all pre-existing behavior
+> so I don't want to tackle that here unless it's absolutely necessary.
 
-Thanks,
-Tiezhu
+Yeah, this won't cause any real issue for current code. 
+
+
+>
+> Or wait, by "writing" do you mean "writing MSRs to memory", as opposed to "writing
+> values to MSRs"?  Regardless, I think my answer is the same: this isn't a problem
+> today, so I'd prefer to not shuffle the ordering unless it's absolutely necessary.
+
+Actually both. As SDM suggests, current any manipulation for PMU MSRs, the
+below order should be followed.
+
+- disable all PMU counters by writing PERF_GLOBAL_CTRL to 0.
+
+- manipulate PMU MSRs.
+
+- Enable the needed PMU counters by writing PERF_GLOBAL_CTRL.
+
+So there is a implicit order on the MSR writing in fact. 
+
+For KVM, if MSR auto-load list feature is used to automatically restore the
+host/guest MSRs, KVM needs to follow the above order to fill the MSR
+auto-load list and then expect these MSRs are written by VMX in the
+designed order.
+
+But since it won't cause any real issue now, it's fine for me to handle it
+until there is a real necessity.
+
+
+>
+>> So directly moving the last MSR entry into cleared one could break the MSR
+>> writing sequence and may cause issue in theory.
+>>
+>> I know this won't really cause issue since currently vPMU won't use the MSR
+>> auto-load feature to save any PMU MSR, but it's still unsafe for future uses. 
+>>
+>> I'm not sure if it's worthy to do the strict MSR entry shift right now.
+>>
+>> Perhaps we could add a message to warn users at least.
+> Hmm, yeah, but I'm not entirely sure where/how best to document this.  Because
+> it's not just that vmx_remove_auto_msr() arbitrarily maniuplates the order, e.g.
+> multiple calls to vmx_add_auto_msr() aren't guaranteed to provide ordering because
+> one or more MSRs may already be in the list.  And the "special" MSRs that can be
+> switched via dedicated VMCS fields further muddy the waters.
+>
+> So I'm tempted to not add a comment to the helpers, or even the struct fields,
+> because unfortunately it's largely a "Here be dragons!" type warning. :-/
+
+I see. Thanks.
+
 
