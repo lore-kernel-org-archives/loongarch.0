@@ -1,88 +1,119 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9194283FC9
-	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 01:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4CE287265
+	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 01:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765416370; cv=none; b=P+SaGTfQwQi9vPMy5MNBL0eEVPBD+rlTqYCGBLXFh3Xqc7c6OeBcrK3vqKXkxDmgs+KN8Zw0p7Tn9H2HnCdEpWPY/nAezQTz+2WrsAaekxR/wIOopRc7YwkhOCuT3RCjYJhabMQNokC1vS3lGQDpEdUHcU3jmH+ZvX8gW9u/Ido=
+	t=1765416429; cv=none; b=qmLz7KXr4HplP2uvBY1lbUgdyibuS9He51dW0V0WI5J9KAxjthldvsMV/vq1jddea2QrK/CxkfxfDX2HJMiQQcLcoWMTuqDMilhne7n7NQJeYN2hcrhX2TBmn6nI4gDifkSoExBBQSrirrsSAZvf0+CoELMJlZPihz8F3rmJwDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765416370; c=relaxed/simple;
-	bh=fkIU38+DrR3AdoeQ0P5x44vvFvvxY/Cefi42fu4JTfI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j4eVAIMcWcH17E/BG86TK0l3Lbog7r7XfwD6T2Cv321mkHTLwwgGUqnGxBU3u1lhtSQGVaigPBxttjL9BDXx9HwisTl5L6O35Kp88G136k8Qo91xef8QR2Cmbh5G+2hT/K7D/qmEEFi8p8U9oJPWbzjpwRrkqt7VCCgizEx7ldQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2l6rqx80; arc=none smtp.client-ip=209.85.128.73
+	s=arc-20240116; t=1765416429; c=relaxed/simple;
+	bh=FtvR3TcXmArFBAGCWvI7194TwzmNDHpOH4im/F1ixdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bPyvyInNQxWxjdUWzGXOFGEuR9YCHu9isuq3/aF9iFz5r5b9LacKestNjjoRScD1Aqe5HnCBaop1fqeOdKTNHu5W4Q+Nt2B9zED36HW+oM5Rg6Gn6Do3KXffl5KDrZ7ZOCyo4hillCHlNAkcrpLCF17qv23ya9EDypm3gBUN+kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zHdCyegv; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2l6rqx80"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-477cf2230c8so2536945e9.0
-        for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 17:26:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zHdCyegv"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-42e2d44c727so145804f8f.0
+        for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 17:27:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765416367; x=1766021167; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y4KiDnrQtQVQJ8eu5sE0xs2xE6UVbNpY7d6oBg5X4Nc=;
-        b=2l6rqx803M/5IpLW6R3M/goCatysnmdso78vc7buJ0lBs6CeNRA4zk2PQNSUyxKNdx
-         y8PDGQC97N1TYtmfikQDxJNDoVJaTldFgh3iPKSVM8qq0NTwpRrZY94H0aW/4ZVhFblr
-         GjDPKI9r5EBpSrI5cvGkl2ZTfHB8FtxxjG1mvTaI6EYYTQrzNyL6rci6QqIoBA4BElWT
-         dxJX1Ge+s+x4GyGryLlzU/iO1D2lHfq9LLsTjJn6JA/3DczGs98dnfOVvX4MAjl+uVed
-         NFSnCrkaSR1g+HGbp/CST3vyH1C4aoF7Bjm2d/HC2mSs7+0ZJ00Z33L8aFxaoGs3GdML
-         pJnA==
+        d=google.com; s=20230601; t=1765416426; x=1766021226; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cg1YsISuOnCUtqvnZMML82MlmfwHoeNJCmajJONCOpo=;
+        b=zHdCyegveYm0PlIKwfuNtZL59nVahNJ/Zpd8fuJEHaNLS+DKXevR58r02N9kQQn2zO
+         US6n68edE3DoeleFM1uxLVq0n4XNZy2h9PgHBFG2hGElGYI7cdyL5F7dJIFlZAyhcwSR
+         BC4KJqN9WYop2FB8M6blVyx7iQ3NEO5f9l0DrlQPQhK0rD/HtrH7/x2xoeIlen6SZ4/E
+         x+lttqJfev9do5/KKg4LBb+YFDuRIlRRCpKpneAC/4pc/uacrplvYYQeDLKCPZg2yk87
+         MHYRZdWBUfX//b/ntl4L2zlF73/gC9Q4Zpzw7LQa1tLVksZA8jZzEtnLEkywMy4WNOp9
+         K4Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765416367; x=1766021167;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y4KiDnrQtQVQJ8eu5sE0xs2xE6UVbNpY7d6oBg5X4Nc=;
-        b=uiAt2+xdW/P7yRWMTvLMERN7YK5TAElbhz41J76H/RCuU705cgk/rTXaqPvpJkkv6b
-         S1cwNp4U5c+6/ljZVAD52EmZkjq4fP9RwOaykwoL8Xf9yNcZtrW9d6E9KYchTm2tQ6hX
-         vzLq8vJQVreCvZaxxYB77LfagS1tfwmcXE9OSaoMNUjdbXYD2cg/McPrgiva7VHn4COy
-         BNVcJEwJvRmw1ph7wwbEgcvv+ll5ObLJKMJ4yQJ/SwcvecHH95U/DuOUU7RZ4Sop0MR2
-         hNVXU8E05GyRfhNl7qPKkXzaJvqN1T8E9w09DaViRT7HKS6i2F8gDDiVJ2IY8MoqDvNZ
-         J0Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCWaBbz4CY6xhAPIW9hEX3qk7tYZspoX53sue99PEtmccvT//b5NbY1HGZPi3O/MbgH/iwmdcuMV8TQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz0dWx4Q0jweHvhP7EpYRz8qjj5eiy7KpquRQq8tU12UwKDpYEb
-	cCeiy0Yf1q+G/5D3jTbbThkeRpF9ljVCg1Trps8xY0LXM0LRyDVzuVf6EmyrXZgIC+AXdi+SqDb
-	3siL5auTCnHW8bjhGUg==
-X-Google-Smtp-Source: AGHT+IHBasYlnGxpOIwRHX92I/SAKHIZ5gppj6j0ZTPmxxHS+/VA0qY5cuzl4EMGaGmPCgxYW2i2O5kk3zlaYX4=
-X-Received: from wmbdx18.prod.google.com ([2002:a05:600c:63d2:b0:477:a0e9:dc85])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3106:b0:476:84e9:b571 with SMTP id 5b1f17b1804b1-47a8380c5aemr35666215e9.14.1765416367088;
- Wed, 10 Dec 2025 17:26:07 -0800 (PST)
-Date: Thu, 11 Dec 2025 01:26:06 +0000
-In-Reply-To: <20251209125029.1117897-1-xry111@xry111.site>
+        d=1e100.net; s=20230601; t=1765416426; x=1766021226;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cg1YsISuOnCUtqvnZMML82MlmfwHoeNJCmajJONCOpo=;
+        b=tgLAFxVbnAewxv5iOn0TK6JuABH5E2s64i/aQmtwlJPq0Y99AUCKA2CsIqe0NNC0BD
+         nht59ZeIHuIIfHFDZLlY0W8jK2hIG3GHVcl1KtlqhWHZGUsZS0hDyYsTgzk6/dPOM7pW
+         KNo5XexOpy/j9TZxrNDOpUGj9UyDLL/z0MNJDELAW6mwWb/PZobYmtegHvQRzBEd+xa8
+         bVKRI3fVU0mlb0EJoL7Rg1Jf3rDJmg8mmePCJnf5UJZFRk+xgYwHGc1rUiERbCZ5YVyL
+         ZdWHjxqPcKpwpWOoXTvQHekSbD7LOOTrW5Q2q+l0RE3WH0tFemJBboKP8eAARTxlFK8P
+         bm9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX+lxxkh9tbpilkt2OOlZGONBAohuAzTHNMLIUrtZaBGavOEDQdWAdo2Kn5HdrNIVvenNBQt/gCNs0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjTVsVIovtsbEQPhvB1ZJOtdPQGwTvqc8JB+2MYwWx+jePJ5tS
+	ObzzLLmZRlL5xFE/QSahawc5M3s+K2R+ANVycy614RZRxhhgoaIChTXEQVoIwqiOtsoq/VBVtqM
+	RV0UlDXo6VpoTdoOpVaLfTLp+pGKQAkq2Nzg8xbil
+X-Gm-Gg: AY/fxX61cQ1Gqo5Wf8goqdBcS+2laNkp8TVGN9LKx2GdFNSEONklWbCBOJtX6zVQav8
+	R+4DCTb5Xkx9N6iu9JjhhbmbJ+obCLNhucvPwFL4OzJt3AQ1dWrW4cqCVJL53dT5SbTQ6ZgAWQC
+	aIaPV+VAfGXI+f+QGAGEXcg3EljE+uDbeES0kPGb4o01cPoc1mBFQn3p09Rgzvxp6dYIVK0Dhfw
+	7KwliaSut3BdagAm4FK6CJ0E9Au/T+kaAAYyZtXiuCWiBzqgQTx+mtbIkJJ4hic/q8GIWlD0JET
+	wQIBt1x6AUu3SC9EJUyYPW9zffNQcA==
+X-Google-Smtp-Source: AGHT+IEkPrObU4LOsralZszxoL+/0wR9jmBsyTvSNG+zgAyCHSCocYJceeycj2ERlpWd+v4ydylPnqE5DukdwysBKgo=
+X-Received: by 2002:a05:6000:2002:b0:42b:2dd5:42be with SMTP id
+ ffacd0b85a97d-42fa39d9345mr3567379f8f.8.1765416426005; Wed, 10 Dec 2025
+ 17:27:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251209125029.1117897-1-xry111@xry111.site>
-Message-ID: <aTodrqABDzBQXUXD@google.com>
-Subject: Re: [PATCH] rust_binder: Fix build failure if !CONFIG_COMPAT
+MIME-Version: 1.0
+References: <CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com>
+ <CAHirt9i3q2Ny=m_kjCO=ARnO22Kmf-f2jVSGmYATG61euzh2gQ@mail.gmail.com> <aTodMdEWuXQXuLyy@google.com>
+In-Reply-To: <aTodMdEWuXQXuLyy@google.com>
 From: Alice Ryhl <aliceryhl@google.com>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Mingcong Bai <jeffbai@aosc.io>, loongarch@lists.linux.dev, hev <r@hev.cc>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
-	Christian Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	"open list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Date: Thu, 11 Dec 2025 10:26:52 +0900
+X-Gm-Features: AQt7F2rK7pXCmA7VyJjwGa7eI1ghKkOyj9hqhJdsTRSoN7q4YTUxXw49mbaTXa4
+Message-ID: <CAH5fLggC88btfpe0Z+4+AB2SRWRwejCk9afVSymMDUzKE-7DvA@mail.gmail.com>
+Subject: Re: Mainline loongarch64 defconfig+Rust build error
+To: hev <r@hev.cc>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Christian Brauner <christian@brauner.io>, 
+	Carlos Llamas <cmllamas@google.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, loongarch@lists.linux.dev, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 09, 2025 at 08:50:19PM +0800, Xi Ruoyao wrote:
-> The bindgen utility cannot handle "#define compat_ptr_ioctl NULL" in the
-> C header, so we need to handle this case on our own.
-> 
-> Simply skip this field in the initializer when !CONFIG_COMPAT as the
-> SAFETY comment above this initializer implies this is allowed.
-> 
-> Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Closes: https://lore.kernel.org/all/CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com/
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+On Thu, Dec 11, 2025 at 10:24=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+>
+> On Tue, Dec 09, 2025 at 08:20:46PM +0800, hev wrote:
+> > On Tue, Dec 9, 2025 at 6:58=E2=80=AFPM Miguel Ojeda
+> > <miguel.ojeda.sandonis@gmail.com> wrote:
+> > >
+> > > Hi all,
+> > >
+> > > I am seeing in mainline loongarch64 defconfig+Rust the following buil=
+d
+> > > error [1].
+> > >
+> > > Cheers,
+> > > Miguel
+> > >
+> > > [1]
+> > >
+> > >  error[E0425]: cannot find value `compat_ptr_ioctl` in crate `binding=
+s`
+> > >      --> drivers/android/binder/rust_binder_main.rs:317:38
+> > >       |
+> > > 317   |         compat_ioctl: Some(bindings::compat_ptr_ioctl),
+> >
+> > It looks like the rust binder driver also needs to handle
+> > !CONFIG_COMPAT. Here's a reference for that:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/rust/kernel/miscdevice.rs?h=3Dv6.18#n410
+>
+> Yeah, it just needs a `#[cfg(CONFIG_COMPAT)] like miscdevice. Do you
+> want to add it? Otherwise I'll get to it soon.
+Oh looks like there is already a patch for it.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-
-Thanks!
+Alice
