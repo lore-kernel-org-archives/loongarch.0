@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9236B20C463
-	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 09:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA342E11B0
+	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 09:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765444765; cv=none; b=FzqLBfI7uRN+vPLBjYK2Ap4uHBX77WH07Wr9DxzFPaJBmYvn4ukHRVH8lQ17XSdxvJVwTB0ztpLMfIN+v2AB7484XK5aarTtN6X5+WLOS/B72xPd2sCI9rXQfb88NYuXbkc8DlAydX4Jvpkjm/ylfQD/2B4mJsn3RgjHAgi9sH0=
+	t=1765444768; cv=none; b=Lqq8JpdYMZl+y/9ezUQen94XD697aqDjWoLEn307Ua/DCvu0NEjsCnq6g3Bnk/ZnqgWwxsiMUOzCB1u2z5QWMnVk5ADUK7drFy0YV7LzwnOH/TwoE1fS3XNIWL75TVYhBO6LMYuz+oofoCGTPFZphvZkzwFR9eY8Ri9U49JVjns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765444765; c=relaxed/simple;
-	bh=XRaMSYPcrFCQBDJFnfNAsbVT2FhJZu7oFrzEv5ZdSeQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZlEpya1tQVm49KLD1QhIn92AYiPyy21b0aU1CWf9+DDSR0PlxzenrHNGTRI3/fi6N9rpghHkYj72r9YlFI06dFGN5WXCRwy5PWn5LONp3B4RtxFPac+MOl0kXntTgpzdI/Q15buMDl0By1vBw47j9TJGmxHJqJyZFypILBRV2rg=
+	s=arc-20240116; t=1765444768; c=relaxed/simple;
+	bh=PpHY91uC6qS2wzc2kIKvhJjsJ0LcH5h48gz1zsAHYro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XlCYMHM51kkskQmGFcqTUmo7iTUvLQIL9AG6BLDb6FS66E+mnRlxjOSqBFTO4Hw6Rurb0CWUMCdjCJ2ZCO3MiDX9ERVksKeBl/DJwoGM8V84n1Zarum6bDa+wbJ8atZdsouOs/ShlR+QES1qA7P45NXvFEHQv+I0+K+TdXPSwnM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8AxidGQjDppnUotAA--.32552S3;
-	Thu, 11 Dec 2025 17:19:12 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dxb_CXjDpprEotAA--.33227S3;
+	Thu, 11 Dec 2025 17:19:19 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJCxG8GPjDppSRtIAQ--.23720S2;
-	Thu, 11 Dec 2025 17:19:11 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxG8GPjDppSRtIAQ--.23720S3;
+	Thu, 11 Dec 2025 17:19:18 +0800 (CST)
 From: Tianyang Zhang <zhangtianyang@loongson.cn>
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -36,10 +37,12 @@ Cc: loongarch@lists.linux.dev,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH v8 3/5] irqchip/irq-loongson.h:irq-loongson.h preparation for Redirect irqchip
-Date: Thu, 11 Dec 2025 17:19:08 +0800
-Message-ID: <20251211091910.5140-1-zhangtianyang@loongson.cn>
+Subject: [PATCH v8 4/5] irqchip/loongarch-avec.c:return IRQ_SET_MASK_OK_DONE when keep affinity
+Date: Thu, 11 Dec 2025 17:19:09 +0800
+Message-ID: <20251211091910.5140-2-zhangtianyang@loongson.cn>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20251211091910.5140-1-zhangtianyang@loongson.cn>
+References: <20251211091910.5140-1-zhangtianyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,110 +50,63 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxG8GPjDppSRtIAQ--.23720S2
+X-CM-TRANSID:qMiowJCxG8GPjDppSRtIAQ--.23720S3
 X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFy8AF1rXrW5WrW3Zw4kKrX_yoW5Jw1rpF
-	W5Aay29r48tF4xXry5Gw1kXFy3ZFyxKrZrtayfGayfXFZ8Gws7WFy2qF95ZFy8Gr48ua4x
-	ur48tF1UuFs8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7tF4UCF4rKF4fAryfuryrXwc_yoW8CF4rpF
+	WUCa4qyr4ktFyUWF4DWa18ZFy5Cr95W3y7K3WfC343ZrZ8G3yqgr1Yy34F9FyrCws5C3W2
+	qrsFqrW5ua45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWr
-	XVW3AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0No7tUUUUU==
+	0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF
+	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVWrXDUUUU
 
-Adjusted definitions and macro from loongson-avec.c to irq-loongson.h,
-including:
-1 marco AVEC_MSG_OFFSET
-2 struct avecintc_data
-3 Make avecintc_sync public
+When it is detected in avecintc_set_affinity that the current affinity
+remains valid, the return value is modified to IRQ_SET_MASK_OK_DONE.
+
+After the introduction of redirect-domain, for each interrupt source,
+avecintc-domain only provides the CPU/interrupt vector, while redirect-domain
+provides other operations to synchronize interrupt affinity information
+among multiple cores. The original intention is to notify the cascaded
+redirect_set_affinity that multi-core synchronization is not required.
+
+However, this introduces some compatibility issues, such as the new return
+value causing msi_domain_set_affinity to no longer perform irq_chip_write_msi_msg.
+  1) When redirect exist in the system, the msi msg_address and msg_data no
+longer changes after the allocation phase, so it does not actually require updating
+the MSI message info.
+  2) When only avecintc exists in the system, the irq_domain_activate_irq
+interface will be responsible for the initial configuration of the MSI message,
+which is unconditional. After that, if unnecessary, no modification to the MSI
+message is alse correctly.
 
 Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- drivers/irqchip/irq-loongarch-avec.c | 12 +-----------
- drivers/irqchip/irq-loongson.h       | 19 +++++++++++++++++++
- 2 files changed, 20 insertions(+), 11 deletions(-)
+ drivers/irqchip/irq-loongarch-avec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index bf52dc8345f5..514ad8dedc46 100644
+index 514ad8dedc46..ac8c423e411e 100644
 --- a/drivers/irqchip/irq-loongarch-avec.c
 +++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -24,7 +24,6 @@
- #define VECTORS_PER_REG		64
- #define IRR_VECTOR_MASK		0xffUL
- #define IRR_INVALID_MASK	0x80000000UL
--#define AVEC_MSG_OFFSET		0x100000
+@@ -99,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
+ 			return -EBUSY;
  
- #ifdef CONFIG_SMP
- struct pending_list {
-@@ -47,15 +46,6 @@ struct avecintc_chip {
+ 		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
+-			return 0;
++			return IRQ_SET_MASK_OK_DONE;
  
- static struct avecintc_chip loongarch_avec;
+ 		cpumask_and(&intersect_mask, dest, cpu_online_mask);
  
--struct avecintc_data {
--	struct list_head	entry;
--	unsigned int		cpu;
--	unsigned int		vec;
--	unsigned int		prev_cpu;
--	unsigned int		prev_vec;
--	unsigned int		moving;
--};
--
- static inline void avecintc_enable(void)
- {
- 	u64 value;
-@@ -85,7 +75,7 @@ static inline void pending_list_init(int cpu)
- 	INIT_LIST_HEAD(&plist->head);
- }
- 
--static void avecintc_sync(struct avecintc_data *adata)
-+void avecintc_sync(struct avecintc_data *adata)
- {
- 	struct pending_list *plist;
- 
-diff --git a/drivers/irqchip/irq-loongson.h b/drivers/irqchip/irq-loongson.h
-index 11fa138d1f44..1f11d799bf0a 100644
---- a/drivers/irqchip/irq-loongson.h
-+++ b/drivers/irqchip/irq-loongson.h
-@@ -6,6 +6,17 @@
- #ifndef _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- #define _DRIVERS_IRQCHIP_IRQ_LOONGSON_H
- 
-+#define AVEC_MSG_OFFSET		0x100000
-+
-+struct avecintc_data {
-+	struct list_head        entry;
-+	unsigned int            cpu;
-+	unsigned int            vec;
-+	unsigned int            prev_cpu;
-+	unsigned int            prev_vec;
-+	unsigned int            moving;
-+};
-+
- int find_pch_pic(u32 gsi);
- 
- int liointc_acpi_init(struct irq_domain *parent,
-@@ -24,4 +35,12 @@ int pch_msi_acpi_init(struct irq_domain *parent,
- 					struct acpi_madt_msi_pic *acpi_pchmsi);
- int pch_msi_acpi_init_avec(struct irq_domain *parent);
- 
-+int redirect_acpi_init(struct irq_domain *parent);
-+
-+#ifdef CONFIG_SMP
-+void avecintc_sync(struct avecintc_data *adata);
-+#else
-+static inline void avecintc_sync(struct avecintc_data *adata) {}
-+#endif
-+
- #endif /* _DRIVERS_IRQCHIP_IRQ_LOONGSON_H */
 -- 
 2.41.0
 
