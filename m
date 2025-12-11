@@ -1,206 +1,174 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B141255248
-	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 14:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC68F2DCF47;
+	Thu, 11 Dec 2025 23:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765464179; cv=none; b=drs+mDkebh+nbh573TfMDGNXxGsFX828BkiMe1mxWg4jBUN5yT+rfx0Eb2b8Y5M591L0jHv3VDvTsPQR7V5k/w3ImG2REZvFluSEXVKlwEAhczJvhGy4OPwsgx/eWEHpCc7RCgRYGmBLGgZIFktp7T6+DG0M/mws0KbdLXOPzfg=
+	t=1765495140; cv=none; b=kvd9c9Kc8dIy4t1sVUXNOgSWlyD+7qkQe6S77RvoPXYOmwTAdmt51To+T2PeEAFMp0aLTLJfo4Unl//3Kic5SRBuPAv1fSfna6TzQsCMFE32z9xUA1psA1/wP1qs0OsiKIlPYVZNnjMU/4ceuJWOXI3hv8jmv/gbzzwpzh28e04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765464179; c=relaxed/simple;
-	bh=VY9EjX2PJsbDTAqmYEZVlNCobfg+kabT2DMzb63a5co=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HTSdmvbnMlxD4w5g8Vt6ZFP4bTzmJ0P+Bxz3FP1Aqib81WGjzIjHQiaG4qoJ7WjMD+oYj6ZtQ5QvQvEfBhWGeNIc/7mtU/UD5yLfhO4vw7mQFhOLwfqMWHgtTfWEeloNRoFuARvd+bAb+5B8PA6eNDFXDA5vsU5qYNwU3AIsxfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.219])
-	by gateway (Coremail) with SMTP id _____8AxidFn2DppQFotAA--.32670S3;
-	Thu, 11 Dec 2025 22:42:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.219])
-	by front1 (Coremail) with SMTP id qMiowJBxD8JW2Dppmi1IAQ--.1472S2;
-	Thu, 11 Dec 2025 22:42:41 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
+	s=arc-20240116; t=1765495140; c=relaxed/simple;
+	bh=oGgLwpC58UPbF1rt7SX/cKJaKFq1u2fGauyH2JjWcjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUs763amhIm8+EDHLqoadEVWect/ox2EE3plKlzHowefCGkxll1Szd/r4Cz50mxj6TDYTIkKsmhuddkhvWju4SlMAYd+OsjeWTi/fnWyNOKw4aWQUsfnatQB7RkltENZkMMPJbjE4e5Bmf26qwfOJTGKAtKT58c6wsJUicMsp4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FsNZ0/3b; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FsNZ0/3b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1765495139; x=1797031139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oGgLwpC58UPbF1rt7SX/cKJaKFq1u2fGauyH2JjWcjQ=;
+  b=FsNZ0/3bmdaTEsLOCFXbzF+tCjjKmgSzLABcGfplYEJK3DlEXTIn9+Wh
+   4J/3H6iyAQ/GPULjHlwXdoDcR/muebJQQDBudajx/GqFINRUz2W7nvTvX
+   T3ooqIfstNOdl3Ro90Qb/llQK3l0UszQQ67DBNDsbTREyYo65BoLkXL7Q
+   5aH87myqMEjPZBtTfsE+at+bu9xxbuvAz598GisMx6hgB7JXNbiccNGI+
+   gp0P7j4hCpXlaoLWRcEvHP4bkIkCJKADq4i1QhSwTN1I8h3eAEToRVZxu
+   ThMwEXAUZeA1KaeoNPUlNO9ee6kZY63pM5hl+PfG9VM+DqtFSpqXwXU6u
+   Q==;
+X-CSE-ConnectionGUID: 7VklNka8TtK/Vf26ySZKfg==
+X-CSE-MsgGUID: b3LcxOAnTDy9u2HbpaUCZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11639"; a="71111175"
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="71111175"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2025 15:18:59 -0800
+X-CSE-ConnectionGUID: sFbrYc4HS72LNag77CDiyw==
+X-CSE-MsgGUID: r2haberhT1+ttEY1DTlvJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,141,1763452800"; 
+   d="scan'208";a="201399473"
+Received: from lkp-server01.sh.intel.com (HELO d335e3c6db51) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 11 Dec 2025 15:18:54 -0800
+Received: from kbuild by d335e3c6db51 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vTpvv-000000005Br-2j0f;
+	Thu, 11 Dec 2025 23:18:51 +0000
+Date: Fri, 12 Dec 2025 07:18:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+	kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org,
+	si.yanteng@linux.dev, tglx@linutronix.de, jiaxun.yang@flygoat.com,
+	peterz@infradead.org, wangliupu@loongson.cn, lvjianmin@loongson.cn,
+	maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+	gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v6.19
-Date: Thu, 11 Dec 2025 22:42:19 +0800
-Message-ID: <20251211144219.2282231-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH] irqchip/irq-loongarch-ir:Add Redirect irqchip support
+Message-ID: <202512120915.PyiiMOEa-lkp@intel.com>
+References: <20251211091910.5140-3-zhangtianyang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxD8JW2Dppmi1IAQ--.1472S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtF45ur4DWr17Ar47XFWUAwc_yoWxGw1fpF
-	9xZrnrJF48Grn3Awnrt3s8ur1DAryxGr12q3WayFy8CF47ZryUZr1kJr97XFyUt395JrW0
-	qr1rG34aqF4kJwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251211091910.5140-3-zhangtianyang@loongson.cn>
 
-The following changes since commit 7d0a66e4bb9081d75c82ec4957c50034cb0ea449:
+Hi Tianyang,
 
-  Linux 6.18 (2025-11-30 14:42:10 -0800)
+kernel test robot noticed the following build errors:
 
-are available in the Git repository at:
+[auto build test ERROR on tip/irq/core]
+[also build test ERROR on linus/master v6.18 next-20251211]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.19
+url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/irqchip-irq-loongarch-ir-Add-Redirect-irqchip-support/20251211-172347
+base:   tip/irq/core
+patch link:    https://lore.kernel.org/r/20251211091910.5140-3-zhangtianyang%40loongson.cn
+patch subject: [PATCH] irqchip/irq-loongarch-ir:Add Redirect irqchip support
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20251212/202512120915.PyiiMOEa-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 6ec8c4351cfc1d0627d1633b02ea787bd29c77d8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251212/202512120915.PyiiMOEa-lkp@intel.com/reproduce)
 
-for you to fetch changes up to be77cf43d2fd6eca150594e997e40ca7df90f251:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512120915.PyiiMOEa-lkp@intel.com/
 
-  LoongArch: Adjust default config files for 32BIT/64BIT (2025-12-08 18:09:17 +0800)
+All error/warnings (new ones prefixed by >>):
 
-----------------------------------------------------------------
-LoongArch changes for v6.19
+   drivers/irqchip/irq-loongarch-avec.c:416:6: error: use of undeclared identifier 'cpu_has_redirectint'
+     416 |         if (cpu_has_redirectint)
+         |             ^~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-avec.c:417:10: error: call to undeclared function 'redirect_acpi_init'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     417 |                 return redirect_acpi_init(loongarch_avec.domain);
+         |                        ^
+   2 errors generated.
+--
+>> drivers/irqchip/irq-loongarch-ir.c:141:39: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQH'
+     141 |         u32 head = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQH);
+         |                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:143:36: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQT'
+     143 |         *tail = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQT);
+         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-loongarch-ir.c:161:9: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQT'
+     161 |                              LOONGARCH_IOCSR_REDIRECT_CQT);
+         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:235:28: error: incomplete definition of type 'struct avecintc_data'
+     235 |         item->gpid->irqnum = adata->vec;
+         |                              ~~~~~^
+   drivers/irqchip/irq-loongarch-ir.c:187:22: note: forward declaration of 'struct avecintc_data'
+     187 | static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
+         |                      ^
+   drivers/irqchip/irq-loongarch-ir.c:236:25: error: incomplete definition of type 'struct avecintc_data'
+     236 |         item->gpid->dst = adata->cpu;
+         |                           ~~~~~^
+   drivers/irqchip/irq-loongarch-ir.c:187:22: note: forward declaration of 'struct avecintc_data'
+     187 | static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
+         |                      ^
+>> drivers/irqchip/irq-loongarch-ir.c:259:2: error: call to undeclared function 'avecintc_sync'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     259 |         avecintc_sync(adata);
+         |         ^
+>> drivers/irqchip/irq-loongarch-ir.c:415:53: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CFG'
+     415 |         redirect_write_reg64(irde->node, CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
+         |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:416:64: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_TBR'
+     416 |         redirect_write_reg64(irde->node, __pa(irde->ird_table.table), LOONGARCH_IOCSR_REDIRECT_TBR);
+         |                                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-loongarch-ir.c:417:38: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQH'
+     417 |         redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQH);
+         |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/irqchip/irq-loongarch-ir.c:418:38: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQT'
+     418 |         redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQT);
+         |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:420:24: error: use of undeclared identifier 'LOONGARCH_IOCSR_REDIRECT_CQB'
+     420 |                              CQB_SIZE_MASK, LOONGARCH_IOCSR_REDIRECT_CQB);
+         |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:475:46: error: use of undeclared identifier 'AVEC_MSG_OFFSET'
+     475 |         msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
+         |                                                     ^~~~~~~~~~~~~~~
+>> drivers/irqchip/irq-loongarch-ir.c:485:12: warning: no previous prototype for function 'redirect_acpi_init' [-Wmissing-prototypes]
+     485 | int __init redirect_acpi_init(struct irq_domain *parent)
+         |            ^
+   drivers/irqchip/irq-loongarch-ir.c:485:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+     485 | int __init redirect_acpi_init(struct irq_domain *parent)
+         | ^
+         | static 
+   1 warning and 12 errors generated.
 
-1, Add basic LoongArch32 support;
-2, Select HAVE_ARCH_BITREVERSE in Kconfig;
-3, Fix build and boot for CONFIG_RANDSTRUCT;
-4, Correct the calculation logic of thread_count;
-5, Some bug fixes and other small changes.
 
-Note: Build infrastructures of LoongArch32 are not enabled yet, because
-we need to adjust irqchip drivers and wait for GNU toolchain be upstream
-first.
+vim +/redirect_acpi_init +417 drivers/irqchip/irq-loongarch-avec.c
 
-----------------------------------------------------------------
-Huacai Chen (16):
-      LoongArch: Fix build errors for CONFIG_RANDSTRUCT
-      LoongArch: Fix arch_dup_task_struct() for CONFIG_RANDSTRUCT
-      LoongArch: Add new PCI ID for pci_fixup_vgadev()
-      LoongArch: Add atomic operations for 32BIT/64BIT
-      LoongArch: Add adaptive CSR accessors for 32BIT/64BIT
-      LoongArch: Adjust common macro definitions for 32BIT/64BIT
-      LoongArch: Adjust boot & setup for 32BIT/64BIT
-      LoongArch: Adjust memory management for 32BIT/64BIT
-      LoongArch: Adjust process management for 32BIT/64BIT
-      LoongArch: Adjust time routines for 32BIT/64BIT
-      LoongArch: Adjust module loader for 32BIT/64BIT
-      LoongArch: Adjust system call for 32BIT/64BIT
-      LoongArch: Adjust user accessors for 32BIT/64BIT
-      LoongArch: Adjust misc routines for 32BIT/64BIT
-      LoongArch: Adjust VDSO/VSYSCALL for 32BIT/64BIT
-      LoongArch: Adjust default config files for 32BIT/64BIT
+   413	
+   414	static inline int __init acpi_cascade_irqdomain_init(void)
+   415	{
+   416		if (cpu_has_redirectint)
+ > 417			return redirect_acpi_init(loongarch_avec.domain);
+   418	
+   419		return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+   420	}
+   421	
 
-Qiang Ma (1):
-      LoongArch: Correct the calculation logic of thread_count
-
-Song Gao (1):
-      LoongArch: Add and use some macros for AVEC
-
-Tiezhu Yang (1):
-      LoongArch: Use unsigned long for _end and _text
-
-Xi Ruoyao (2):
-      LoongArch: Select HAVE_ARCH_BITREVERSE in Kconfig
-      LoongArch: Simplify __arch_bitrev32() implementation
-
-Yuli Wang (1):
-      LoongArch: Use __pmd()/__pte() for swap entry conversions
-
- arch/loongarch/Kconfig                             |    5 +
- arch/loongarch/Makefile                            |    7 +-
- arch/loongarch/configs/loongson32_defconfig        | 1105 ++++++++++++++++++++
- .../{loongson3_defconfig => loongson64_defconfig}  |    7 +-
- arch/loongarch/include/asm/Kbuild                  |    1 +
- arch/loongarch/include/asm/addrspace.h             |   15 +-
- arch/loongarch/include/asm/asm.h                   |   77 +-
- arch/loongarch/include/asm/asmmacro.h              |  118 ++-
- arch/loongarch/include/asm/atomic-amo.h            |  206 ++++
- arch/loongarch/include/asm/atomic-llsc.h           |  100 ++
- arch/loongarch/include/asm/atomic.h                |  197 +---
- arch/loongarch/include/asm/bitops.h                |   11 +
- arch/loongarch/include/asm/bitrev.h                |    2 +-
- arch/loongarch/include/asm/checksum.h              |    4 +
- arch/loongarch/include/asm/cmpxchg.h               |   48 +-
- arch/loongarch/include/asm/cpu-features.h          |    3 -
- arch/loongarch/include/asm/dmi.h                   |    2 +-
- arch/loongarch/include/asm/elf.h                   |   31 +
- arch/loongarch/include/asm/inst.h                  |   12 +-
- arch/loongarch/include/asm/irq.h                   |   12 +
- arch/loongarch/include/asm/jump_label.h            |   12 +-
- arch/loongarch/include/asm/local.h                 |   37 +
- arch/loongarch/include/asm/loongarch.h             |  102 +-
- arch/loongarch/include/asm/module.h                |   11 +
- arch/loongarch/include/asm/page.h                  |    2 +-
- arch/loongarch/include/asm/percpu.h                |   44 +-
- arch/loongarch/include/asm/pgtable-bits.h          |   36 +-
- arch/loongarch/include/asm/pgtable.h               |   79 +-
- arch/loongarch/include/asm/stackframe.h            |   34 +-
- arch/loongarch/include/asm/string.h                |    2 +
- arch/loongarch/include/asm/timex.h                 |   33 +-
- arch/loongarch/include/asm/uaccess.h               |   63 +-
- arch/loongarch/include/asm/vdso/gettimeofday.h     |    4 +
- arch/loongarch/include/uapi/asm/Kbuild             |    1 +
- arch/loongarch/include/uapi/asm/ptrace.h           |   10 +
- arch/loongarch/include/uapi/asm/unistd.h           |    6 +
- arch/loongarch/kernel/Makefile.syscalls            |    1 +
- arch/loongarch/kernel/cpu-probe.c                  |   13 +-
- arch/loongarch/kernel/efi-header.S                 |    4 +
- arch/loongarch/kernel/efi.c                        |    4 +-
- arch/loongarch/kernel/entry.S                      |   22 +-
- arch/loongarch/kernel/env.c                        |    5 +-
- arch/loongarch/kernel/fpu.S                        |  111 ++
- arch/loongarch/kernel/head.S                       |   39 +-
- arch/loongarch/kernel/module-sections.c            |    1 +
- arch/loongarch/kernel/module.c                     |  204 +++-
- arch/loongarch/kernel/proc.c                       |   10 +-
- arch/loongarch/kernel/process.c                    |   11 +-
- arch/loongarch/kernel/ptrace.c                     |    5 +
- arch/loongarch/kernel/relocate.c                   |   13 +-
- arch/loongarch/kernel/setup.c                      |    8 +-
- arch/loongarch/kernel/switch.S                     |   28 +-
- arch/loongarch/kernel/syscall.c                    |   15 +-
- arch/loongarch/kernel/time.c                       |   31 +-
- arch/loongarch/kernel/traps.c                      |   15 +-
- arch/loongarch/kernel/unaligned.c                  |   30 +-
- arch/loongarch/kvm/vcpu.c                          |    5 +-
- arch/loongarch/lib/bswapdi.c                       |   13 +
- arch/loongarch/lib/bswapsi.c                       |   13 +
- arch/loongarch/lib/clear_user.S                    |   22 +-
- arch/loongarch/lib/copy_user.S                     |   28 +-
- arch/loongarch/lib/dump_tlb.c                      |   14 +-
- arch/loongarch/lib/unaligned.S                     |   72 +-
- arch/loongarch/mm/init.c                           |    4 +-
- arch/loongarch/mm/page.S                           |  118 +--
- arch/loongarch/mm/tlb.c                            |   12 +-
- arch/loongarch/mm/tlbex.S                          |  322 ++++--
- arch/loongarch/pci/pci.c                           |    2 +
- arch/loongarch/power/hibernate.c                   |    6 +-
- arch/loongarch/power/platform.c                    |    4 +-
- arch/loongarch/power/suspend.c                     |   24 +-
- arch/loongarch/power/suspend_asm.S                 |   72 +-
- arch/loongarch/vdso/Makefile                       |    7 +-
- arch/loongarch/vdso/vdso.lds.S                     |    4 +-
- arch/loongarch/vdso/vgetcpu.c                      |    8 +
- drivers/firmware/efi/libstub/loongarch.c           |    8 +-
- drivers/irqchip/irq-loongarch-avec.c               |    5 +-
- 77 files changed, 3001 insertions(+), 771 deletions(-)
- create mode 100644 arch/loongarch/configs/loongson32_defconfig
- rename arch/loongarch/configs/{loongson3_defconfig => loongson64_defconfig} (99%)
- create mode 100644 arch/loongarch/include/asm/atomic-amo.h
- create mode 100644 arch/loongarch/include/asm/atomic-llsc.h
- create mode 100644 arch/loongarch/lib/bswapdi.c
- create mode 100644 arch/loongarch/lib/bswapsi.c
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
