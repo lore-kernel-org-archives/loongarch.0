@@ -1,108 +1,108 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 792CE3009E5
-	for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 08:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12608244679
+	for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 01:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765353620; cv=none; b=uClMXr6KEIAXBVXMOF/Brf3z6bme5GZVZ88bJl0vcG/wPLJvnxygBhjgubNBHd/9b0Q1FkUWFh/DL2repdoL+sUEkoAye+nRpOx7Qi2wmJHG4jzRWa7fMsSBzIVeSG4xrk/v10687JLMd5euh4fQqd0IYTwRKAs/7AeSpEK14FA=
+	t=1765416245; cv=none; b=MX+A3CDgpvrK05XdcGotGuB5bjTnq4vln7OyUwPBxMd5kXaa5zlJs5aQ9UUx+dqw/hlqvOLvNyYcvAAps00qWDwe5c7JeRuEHdutkqmTImY7TbxL3dpLHmVIoTppgOjJwkfEPdJUZoBtNZV597yHaDw3QvArDq/oaeX6L9VEkVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765353620; c=relaxed/simple;
-	bh=pvn0Vc4sY8pJyc2+s5a4nJKl1iCKQ/xtJmAIFkrzS+o=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=NO8j1U1TJtbOysBvnf9nAmut4x6P+K4DjvlcK1Hh5tKlsHJfaiFahThcO3KKgTs3x0xdc9ztTOYFybz4Y/SARy+QYWDwQ7UZx3JzpwaDoDQFhdFKWnXO8T3Af5yKmUTqTvvAJ5seZGrz0HEvg/4ZZzbmm9wcHe2cwaxZwgMLsuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx6tGDKDlpYe0sAA--.32053S3;
-	Wed, 10 Dec 2025 16:00:04 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxH8KCKDlpx7tHAQ--.3707S3;
-	Wed, 10 Dec 2025 16:00:03 +0800 (CST)
-Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
-To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
- <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
- <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
- <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <a1674623-4c08-1f4d-3e4e-5511b579e9ea@loongson.cn>
-Date: Wed, 10 Dec 2025 16:00:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1765416245; c=relaxed/simple;
+	bh=C2ta94CRs3VICn+bBXXG+PkfIdbhlF4ERT4DpD03fSM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=r81nMZs0qmM3mWKGVBLp6aOoDR7T4aPOtT6eQ8NakJDMaU2r2vrwVMQ0v65dq7UPHs9sDJp+xDuoe6L8PLJPngPhNPwOKDVaw7W4xou5lrMZo/MwTJqn83BWY5ubdK/hEBJjQ0Je0+3C9/ApPa6fZeVfwqyfadJJjYUclohaR60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZX/pN64H; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZX/pN64H"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47918084ac1so2722845e9.2
+        for <loongarch@lists.linux.dev>; Wed, 10 Dec 2025 17:24:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765416242; x=1766021042; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TxxXRwsWEsqRRffHVSb+23LtgwKIm4MJ8u5lYVxmQbI=;
+        b=ZX/pN64HCSNM2xjbT0DvrfGglFHn7C11Av5KposwONeYstbhKar/3q4jCEBVIDJAgK
+         eKFg2h2FHW2a908+Q/pMCy9HK4jgNHjWe4ndyICvPhFBzhtuqtZsNKLQnliKheAqxl8q
+         Clufne/yFNj7rNXGy56DxJL0y0TwymtFddUUjxsLPtW2ogLUmQoL3rR1LvkY5XGEFWf0
+         +s4BeKh4UA/SjUT8U5Zz4hIFd/DlCMsMeM4C56Cge7FC+RCwTCaSRY7londL/+zEKNAn
+         lslX9AUP7MI8rZrPGXOja/e4kjgZ0BDCAShAe/k5ix9KnX2oUr+HRlzKtArBHXOBQ3jZ
+         +rww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765416242; x=1766021042;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=TxxXRwsWEsqRRffHVSb+23LtgwKIm4MJ8u5lYVxmQbI=;
+        b=ciR1wD/4AxXOVuXigNWR7Mm1BEWlST9+jdZnpUn9XMN2UFmtCPUe8zVpax67PxWGPf
+         +h9bY4EsdZPX+eTQ/Kkat+flXC2AIMwQTzmCrdSTeO5ATyrUEEEjixlMSyH0iVkh4UzV
+         BH/gBPATgsxN7DsRfnGl0EDF9i4U3P5NB6WLkKar7RpTeDR1aRpkNMVH1ZYoA3PO8jwF
+         zYTMtWZnz8rz1TFQ1PcgZ9n4ra1vBKp9i+RTNEDFxl/KdJiLWeR6ob54zgP8VSA43JOW
+         7flj/d4+3DqqnYEo7kfRy9e3/fWtREmObk0RuLSzQfqUZ30HiRaYm1dH2tv/No9fu5Mz
+         H9DA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpbabZ5fExTfuMkChNlYNT15OI/7gV9Vw16XAQAqyoZaNFsrfbJ+p157teTrTYdWsih/t5biySaLQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+4ptIFNhm+QlyDoRXfdjIleEU770iq46Yo27JVjGSM1YS6gsl
+	nxVvwU11KyDWszdmEkxc8vPRK7m6f6VP3M7pX8nvJeIxcj16BCM8uoQbUWV5B24C1S8GESTtzSL
+	q+PblfhrMwezsd22coA==
+X-Google-Smtp-Source: AGHT+IHYCR566J9f+32HVBr5wdE3KPxKy1eDzSwAbbJWbbIpgNXaxbqPp8NBIxhDUtDSXRPXvOWZ86SytCdRWms=
+X-Received: from wmbh25.prod.google.com ([2002:a05:600c:a119:b0:477:7ad9:2aa])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:4ed1:b0:477:1bb6:17e5 with SMTP id 5b1f17b1804b1-47a8384d12dmr41973755e9.30.1765416242290;
+ Wed, 10 Dec 2025 17:24:02 -0800 (PST)
+Date: Thu, 11 Dec 2025 01:24:01 +0000
+In-Reply-To: <CAHirt9i3q2Ny=m_kjCO=ARnO22Kmf-f2jVSGmYATG61euzh2gQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxH8KCKDlpx7tHAQ--.3707S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Wryruw17Gry8WF4rGF1xWFX_yoW8AFWDpr
-	97KFyUWFyDGr18JrsrKr10qryYyrnxJ3WUWr1UJFn8Gr1qqr12vF1Uuw1jgr1Utr48Xw48
-	Ar18Zr47Zay5JFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jb
-	_-PUUUUU=
+Mime-Version: 1.0
+References: <CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com>
+ <CAHirt9i3q2Ny=m_kjCO=ARnO22Kmf-f2jVSGmYATG61euzh2gQ@mail.gmail.com>
+Message-ID: <aTodMdEWuXQXuLyy@google.com>
+Subject: Re: Mainline loongarch64 defconfig+Rust build error
+From: Alice Ryhl <aliceryhl@google.com>
+To: hev <r@hev.cc>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, 
+	Christian Brauner <christian@brauner.io>, Carlos Llamas <cmllamas@google.com>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, loongarch@lists.linux.dev, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/12/10 上午10:25, Bibo Mao wrote:
-> 
-> 
-> On 2025/12/10 上午9:28, Tiezhu Yang wrote:
->> On 2025/12/9 下午4:30, Huacai Chen wrote:
->>> Hi, Tiezhu,
->>>
->>> On Tue, Dec 9, 2025 at 2:18 PM Tiezhu Yang <yangtiezhu@loongson.cn> 
->>> wrote:
->>>>
->> ...
->>>>          extern unsigned long eentry;
->>>>
->>>> -       if (__kernel_text_address(ra))
->>>> -               return ra;
->>>> -
->>>> -       if (__module_text_address(ra))
->>>> -               return ra;
->>> I think the correct way is to remove the __module_text_address()
->>> condition but keep the __kernel_text_address() condition. Then return
->>> 0 at the end of this function, and remove the __kernel_text_address()
->>> condition out of this function.
->>
->> It can not remove the check of __kernel_text_address() after calling
->> bt_address() because it needs to validate the calculated address for
->> exception, then no need to keep the __kernel_text_address() condition
->> in bt_address() because it will check the PC outside bt_address().
->          state->pc = bt_address(pc);
->          if (!state->pc) {
->                  pr_err("cannot find unwind pc at %p\n", (void *)pc);
->                  goto err;
->          }
-> 
->          if (!__kernel_text_address(state->pc))
->                  goto err;
-> I guess that you both comes from different views :) one treats these 
-> piece of code into one, one only views function bt_address().
-> 
-> Especially with if (!state->pc), how could this happen?
+On Tue, Dec 09, 2025 at 08:20:46PM +0800, hev wrote:
+> On Tue, Dec 9, 2025 at 6:58=E2=80=AFPM Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+> >
+> > Hi all,
+> >
+> > I am seeing in mainline loongarch64 defconfig+Rust the following build
+> > error [1].
+> >
+> > Cheers,
+> > Miguel
+> >
+> > [1]
+> >
+> >  error[E0425]: cannot find value `compat_ptr_ioctl` in crate `bindings`
+> >      --> drivers/android/binder/rust_binder_main.rs:317:38
+> >       |
+> > 317   |         compat_ioctl: Some(bindings::compat_ptr_ioctl),
+>=20
+> It looks like the rust binder driver also needs to handle
+> !CONFIG_COMPAT. Here's a reference for that:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/r=
+ust/kernel/miscdevice.rs?h=3Dv6.18#n410
 
-IMO, state->pc will be not 0 forever in practice, this check is just an
-error path and can be removed too if possible.
+Yeah, it just needs a `#[cfg(CONFIG_COMPAT)] like miscdevice. Do you
+want to add it? Otherwise I'll get to it soon.
 
-Thanks,
-Tiezhu
-
+Alice
