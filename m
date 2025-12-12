@@ -1,91 +1,80 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C55D29D28B
-	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 03:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45FD1E7660
+	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 04:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765511762; cv=none; b=lZBqVugKS1/OF0iHF7Dtk5Ds/pyFt/lEsRB3J4LmV3OJYiIPwD+OpVF06GgiHaIq2Kp8RKR68qS0yaJ2o+erD28hptfujgHQtsNbbxz99uI9wPJWIwl/8DntZWtSsrFuHq7F7LpGtPYmPTbHthod1cRd+6QeroF9AfEN3BW4i3c=
+	t=1765512777; cv=none; b=gwItS+9oYhpmhOOX4RJ2mdu49QJGtmoy1EIr/GYEa/X/1GelfwIoRr6ED+cPzJc8TQ5Dm5HgoS2iHpcLFiILmznPzU6VSb2FCi9jV1ewo79fTvPGWyYiOHZ7FRVlMaF1y6Ya+tPSa0Om4qqydZCB2EcEZLNe9ifOxHfQOEi4MB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765511762; c=relaxed/simple;
-	bh=jBTSf1NBjHQ0A85ubxl+1PskFCEAy3vCJ4zJY+SfPYU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VsLHZRoNIHlqNeIwMP4XTbqVEQR1Yp/MN/lDW8aIvqQZIsVAgH1WlWrwSGXoM8R9/XZHiaXYNhkSnPamINefswLF/l2C5KFWrUSPC4HvsjsHMMVdCSHKhOSSVFdPx2E0FWVJziXrlL637F8SzJIC9kK1fDXtDHsDGaC9NVhm7+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uYyF8QVs; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1765512777; c=relaxed/simple;
+	bh=XBYQcN7/C0qpBWKKISxo0FEn34Gsp9RL3chPdwdD+aA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CxHP/bbk2816o/lZpU/pc0TjDRsYw+zEYLuzYUehd2JZSzYucL4FPbStbHp8w4x7CR5oy8CG33IFjjiwxHagj8nun1X9Y1ok26eamhYhLD514a4x6njkQCGEOdIs7HOeVW7cT2Ut3zy8oTgxRHZ5q+7fXuVuUcWP2BQ+HpnKGts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=G2OzbtKS; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uYyF8QVs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765511758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XnHdPbNZY+icNHDhsU00WTTGxUuRI5fAPK2EbH7Tj7Q=;
-	b=uYyF8QVs82XmAN/rHGEBYvkLM4FMUsol9d2Vp5MBczXC9tzSNd1ScTSeDVCW3Rn/0SFAC4
-	KP6jbyACbGRfIQEUUqG1GiKdDrd6Irf/31dTSDeM6AoyBS/7kU/Unx0Ewh5fJa2HwXfUwQ
-	/7OG0+oXfBidtBAC078iRNpMJjHo6Ro=
-From: George Guo <dongtai.guo@linux.dev>
-Date: Fri, 12 Dec 2025 11:55:24 +0800
-Subject: [PATCH v5 4/4] LoongArch: Enable 128-bit atomics cmpxchg support
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="G2OzbtKS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1765512766;
+	bh=fOCXV5tK1dwOHv43z7DCfxRdJC/CB67r2cWZxgUH/bM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=G2OzbtKSkJPcB+3inb+K81KfTpR/Dio1hcnMVU+bQLW+S2hKhPdNef1FitT/8uR8B
+	 rO2+Q8ij9dVNl8jBLyYdXiawKwmZDbWEvO02ybX4vGDV2NnAYZreobOes4INL+slWK
+	 RGNxZ5OAPKKJ7YkbP7rHYu5TZmWCtTXzEBV0L6J4=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 5E5F76697B;
+	Thu, 11 Dec 2025 23:12:43 -0500 (EST)
+Message-ID: <d00b641b2b85d5ca8dfd5c52d2a82d456b8a03fe.camel@xry111.site>
+Subject: Re: [PATCH v5 1/4] LoongArch: Add SCQ support detection
+From: Xi Ruoyao <xry111@xry111.site>
+To: George Guo <dongtai.guo@linux.dev>, Huacai Chen <chenhuacai@kernel.org>,
+  WANG Xuerui <kernel@xen0n.name>, hengqi.chen@gmail.com
+Cc: r@hev.cc, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ George Guo	 <guodongtai@kylinos.cn>, Yangyang Lian <lianyangyang@kylinos.cn>
+Date: Fri, 12 Dec 2025 12:12:41 +0800
+In-Reply-To: <20251212-2-v5-1-704b3af55f7d@linux.dev>
+References: <20251212-2-v5-0-704b3af55f7d@linux.dev>
+	 <20251212-2-v5-1-704b3af55f7d@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.0 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251212-2-v5-4-704b3af55f7d@linux.dev>
-References: <20251212-2-v5-0-704b3af55f7d@linux.dev>
-In-Reply-To: <20251212-2-v5-0-704b3af55f7d@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- hengqi.chen@gmail.com
-Cc: r@hev.cc, xry111@xry111.site, loongarch@lists.linux.dev, 
- linux-kernel@vger.kernel.org, George Guo <dongtai.guo@linux.dev>, 
- George Guo <guodongtai@kylinos.cn>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765511741; l=1046;
- i=dongtai.guo@linux.dev; s=20251103; h=from:subject:message-id;
- bh=ciDWXt3BQSm1RCVw/2AyrNMAA+62PK+Q6MPycedHCU8=;
- b=ZW9gZ1juolUW/BLqBECUQQJjWNWj7Efqfny3S2TkznOxTPTO15pU6sOtV1s63P1CiiMkjkvSO
- pYCz4leT7g2B+KvKNfqKUXtxvCXVxA8sxMNNuDOmtnt0okYvw+fq7sh
-X-Developer-Key: i=dongtai.guo@linux.dev; a=ed25519;
- pk=yHUJPGx/kAXutP/NSHpj7hWW0KQNlv3w9H6ju4qUoTM=
-X-Migadu-Flow: FLOW_OUT
 
-From: George Guo <guodongtai@kylinos.cn>
+On Fri, 2025-12-12 at 11:55 +0800, George Guo wrote:
 
-Add select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE in Kconfig
-to enable 128-bit atomic cmpxchg support on LoongArch.
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
+u-probe.c
+> index a2060a24b39fd78fa255816fa5518e0ee99b8a8e..47815a55b7b48bbffd4954a9b=
+8bdf7021d7e234d 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -201,6 +201,10 @@ static void cpu_probe_common(struct cpuinfo_loongarc=
+h *c)
+> =C2=A0		c->options |=3D LOONGARCH_CPU_PTW;
+> =C2=A0		elf_hwcap |=3D HWCAP_LOONGARCH_PTW;
+> =C2=A0	}
+> +	if (config & CPUCFG2_SCQ)
+> +		c->options |=3D LOONGARCH_CPU_SCQ;
+> +	else
+> +		pr_warn_once("CPU does NOT support SCQ\n");
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+IMO this should be a pr_info_once.  CPU lacks SCQ is not anything wrong
+thus this shouldn't be a warning.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 5b1116733d881bc2b1b43fb93f20367add4dbc54..6fb2c253969f9ddece5478920423d7326c3ec046 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -114,6 +114,7 @@ config LOONGARCH
- 	select GENERIC_TIME_VSYSCALL
- 	select GPIOLIB
- 	select HAS_IOPORT
-+	select HAVE_ALIGNED_STRUCT_PAGE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
-@@ -140,6 +141,7 @@ config LOONGARCH
- 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	select HAVE_EBPF_JIT
-+	select HAVE_CMPXCHG_DOUBLE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
- 	select HAVE_EXIT_THREAD
- 	select HAVE_GENERIC_TIF_BITS
+> =C2=A0	if (config & CPUCFG2_LSPW) {
+> =C2=A0		c->options |=3D LOONGARCH_CPU_LSPW;
+> =C2=A0		elf_hwcap |=3D HWCAP_LOONGARCH_LSPW;
 
--- 
-2.49.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
