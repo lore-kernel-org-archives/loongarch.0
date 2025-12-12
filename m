@@ -1,94 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08E272602
-	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 04:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA76248896
+	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 09:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765514829; cv=none; b=gcinqmmDqYfuO/MZuvclFQIlX7IF8Vwz0IUqp1pQDUKjBpgit6ZFzfnThB0/KtLyYymtYkFWZGpyMYYN2iHkrsl1zKINLJF1/jlBzNJRYlbbgXckaj8sZ/3v5vyzAZ3ljhF9W1jo8qoBR1vKLyQEoy82aqB/+HDwwBdHTpmsx5I=
+	t=1765530678; cv=none; b=OWmmZcTXXKlOivJwe1JWZgQAEYuLUG32oE+ChQ0AoMmfR0Ba44KjOGQi6iyvNLJznuCsPvxcWmQfdnPSQ4MMF7S85egneV7Weu8X3XWCKAyTTcnl5mKA4IUwU8UvE/U84u8oPmmgIVe2UDY18K+5JdP+zm5lGMwFjbI9gEI2ljc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765514829; c=relaxed/simple;
-	bh=UqTzKA1JwfMdC7UnRzQSCi01yPLVfY64zBa4FG5OYus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LTSTxfoH88E0MTRcvVSt+qX2lb55cnKj9yLmligPLoDjss3V72x3m0v3RrUzrYqjvTnCmcc43NZyy9rQ1yplQ7aI+IBHhmTtRwKwWHRdMQt1wjZB8yV/YkrYJqAJEBupQcFhMg2qj0m93M+tlh2tY/xL3CETStTRlYVVxBe/o/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUspatve; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUspatve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F045C19421
-	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 04:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765514828;
-	bh=UqTzKA1JwfMdC7UnRzQSCi01yPLVfY64zBa4FG5OYus=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RUspatveFqpLw8qU+q1XoPpZCVODYxRfFPzTzaYu065BNSaQN4BncKowUOzT+Toc9
-	 p3x1KTeG1iyE3OjJoieDqANoAZQcpRKh1xbaqJ+4vbylnNAAILEUUaFRA5KEzAe+Ap
-	 NkQG56hhuo6lasD8LXlFj1ALrOcG+hb/5W7hJKcazRFwKBKxI2LhiwFLehpaJaCzSZ
-	 kuIazQJoCZmz9/lSE7gP85Nj/5w0k7w8TwlKguWK/UdqEEJFGrZ/jAncsy5m2FgjzN
-	 Pj2dFpuNDtA+wGuPaiOrrAhtDqBM4vRVF8+NGvfYSbmV3DxDVwXM/D5YOXVcSksQmb
-	 lHNmADpYT7lBA==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b736d883ac4so140834666b.2
-        for <loongarch@lists.linux.dev>; Thu, 11 Dec 2025 20:47:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWjSkP5mmVOOrugZeyPwzdt4pLvQ+r1tv+WiHNiCtPBpfMbaYVvpasIWJTewgDUrYYzK14QXLU8miE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxv/s357DTQjHJ0+TAnQry27xqr7PLvEQ/9fOuAtq5SqCFSRXqJ
-	nb3gkHW4Lsv1wWxsrda7H8PVFMKxOWglnNNAq37mQmfxnDl6/43WxIWlD0GSVg23tzFZ32zIIZO
-	E4mqYcVndd0krz7FYRAODHr9MkJ2LxCA=
-X-Google-Smtp-Source: AGHT+IGBKaJfZtBa5dg9eG0FtV5vhk21hbAgL84f56hi/ok+CKbpaDDDXMoiot3LLqjNjxa6PTXiIhkBBLndm1tGzn8=
-X-Received: by 2002:a17:907:94c5:b0:b7a:1be3:a582 with SMTP id
- a640c23a62f3a-b7d23abb329mr53641066b.63.1765514827124; Thu, 11 Dec 2025
- 20:47:07 -0800 (PST)
+	s=arc-20240116; t=1765530678; c=relaxed/simple;
+	bh=+478+1MlJJu/eDrwiiRW51x+lhF72Jrguoce3vARQR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ux4iwQGD1jEKwuM8I3/M+4qj07XRq1TR7SDkxijV6Ornajs7E3c1ko8emlTFgjuJ5SEOb9k2C1MGYvr13bxUAUUPCy/Tnw3rVBqglLzTpTDZNBnnG+adNAxod5UMsXtBNTHeXTHxZodUSYdz6VcRPoc/081sRkGGrFbCLLwIVnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7ed61ceed73a11f0a38c85956e01ac42-20251212
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:a56b5fad-0f10-449b-a93c-3d38e8504431,IP:10,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:0
+X-CID-INFO: VERSION:1.3.6,REQID:a56b5fad-0f10-449b-a93c-3d38e8504431,IP:10,URL
+	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:6aa8bc4968dfe35c500828456c5666b7,BulkI
+	D:2512121711087OH12THU,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,Bulk:
+	nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,B
+	RE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 7ed61ceed73a11f0a38c85956e01ac42-20251212
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1334467834; Fri, 12 Dec 2025 17:11:08 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: yangtiezhu@loongson.cn,
+	hengqi.chen@gmail.com,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	zhangtianyang@loongson.cn,
+	masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	duanchenghao@kylinos.cn,
+	youling.tang@linux.dev,
+	jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com
+Subject: [PATCH v2 0/4] Fix the failure issue of the module_attach test case
+Date: Fri, 12 Dec 2025 17:10:59 +0800
+Message-Id: <20251212091103.1247753-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251212-2-v5-0-704b3af55f7d@linux.dev> <20251212-2-v5-1-704b3af55f7d@linux.dev>
- <d00b641b2b85d5ca8dfd5c52d2a82d456b8a03fe.camel@xry111.site>
-In-Reply-To: <d00b641b2b85d5ca8dfd5c52d2a82d456b8a03fe.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 12 Dec 2025 12:47:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4kMVmKj0uXmApr=xGxCZR1h_tT1iMDyKAkyuiEcfy28w@mail.gmail.com>
-X-Gm-Features: AQt7F2oJV37vE6Cwq_yrWv79NpfxWwI7oMSiBb_1aldZXrpfsRuxdwN-XMV1Ygo
-Message-ID: <CAAhV-H4kMVmKj0uXmApr=xGxCZR1h_tT1iMDyKAkyuiEcfy28w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] LoongArch: Add SCQ support detection
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: George Guo <dongtai.guo@linux.dev>, WANG Xuerui <kernel@xen0n.name>, hengqi.chen@gmail.com, 
-	r@hev.cc, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	George Guo <guodongtai@kylinos.cn>, Yangyang Lian <lianyangyang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 12, 2025 at 12:12=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> On Fri, 2025-12-12 at 11:55 +0800, George Guo wrote:
->
-> > diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/=
-cpu-probe.c
-> > index a2060a24b39fd78fa255816fa5518e0ee99b8a8e..47815a55b7b48bbffd4954a=
-9b8bdf7021d7e234d 100644
-> > --- a/arch/loongarch/kernel/cpu-probe.c
-> > +++ b/arch/loongarch/kernel/cpu-probe.c
-> > @@ -201,6 +201,10 @@ static void cpu_probe_common(struct cpuinfo_loonga=
-rch *c)
-> >               c->options |=3D LOONGARCH_CPU_PTW;
-> >               elf_hwcap |=3D HWCAP_LOONGARCH_PTW;
-> >       }
-> > +     if (config & CPUCFG2_SCQ)
-> > +             c->options |=3D LOONGARCH_CPU_SCQ;
-> > +     else
-> > +             pr_warn_once("CPU does NOT support SCQ\n");
->
-> IMO this should be a pr_info_once.  CPU lacks SCQ is not anything wrong
-> thus this shouldn't be a warning.
-IMO we don't need any print, and maybe we can be put in hwcap?
+V2:
+Referring to Tiezhu's suggestion, split the v1 patch titled
+"LoongArch: Modify the jump logic of the trampoline" into three parts:
+ (1) ftrace code
+ (2) sample test
+ (3) bpf code
+The code logic and implementation remain unchanged.
 
-Huacai
+--------------------------Changelog------------------------------------
+v1:
+links: https://lore.kernel.org/all/20251209093405.1309253-1-duanchenghao@kylinos.cn/
+The following test cases under the tools/testing/selftests/bpf/
+directory have passed the test：
 
->
-> >       if (config & CPUCFG2_LSPW) {
-> >               c->options |=3D LOONGARCH_CPU_LSPW;
-> >               elf_hwcap |=3D HWCAP_LOONGARCH_LSPW;
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
+./test_progs -t module_attach
+./test_progs -t module_fentry_shadow
+./test_progs -t subprogs
+./test_progs -t subprogs_extable
+./test_progs -t tailcalls
+./test_progs -t struct_ops -d struct_ops_multi_pages
+./test_progs -t fexit_bpf2bpf
+./test_progs -t fexit_stress
+./test_progs -t module_fentry_shadow
+./test_progs -t fentry_test/fentry
+./test_progs -t fexit_test/fexit
+./test_progs -t fentry_fexit
+./test_progs -t modify_return
+./test_progs -t fexit_sleep
+./test_progs -t test_overhead
+./test_progs -t trampoline_count
+
+Chenghao Duan (4):
+  LoongArch: ftrace: Refactor register restoration in
+    ftrace_common_return
+  ftrace: samples: Adjust register stack restore order in direct call
+    trampolines
+  LoongArch: BPF: Enhance trampoline support for kernel and module
+    tracing
+  LoongArch: BPF: Enable BPF exception fixup for specific ADE subcode
+
+ arch/loongarch/kernel/mcount_dyn.S          | 14 +++++---
+ arch/loongarch/kernel/traps.c               |  8 ++++-
+ arch/loongarch/net/bpf_jit.c                | 38 +++++++++++++++------
+ samples/ftrace/ftrace-direct-modify.c       |  8 ++---
+ samples/ftrace/ftrace-direct-multi-modify.c |  8 ++---
+ samples/ftrace/ftrace-direct-multi.c        |  4 +--
+ samples/ftrace/ftrace-direct-too.c          |  4 +--
+ samples/ftrace/ftrace-direct.c              |  4 +--
+ 8 files changed, 58 insertions(+), 30 deletions(-)
+
+-- 
+2.25.1
+
