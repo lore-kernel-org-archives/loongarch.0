@@ -1,108 +1,118 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2772E92AF
-	for <loongarch@lists.linux.dev>; Sat, 13 Dec 2025 09:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24922F1FD9
+	for <loongarch@lists.linux.dev>; Sat, 13 Dec 2025 12:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765619428; cv=none; b=PCg53Xhe82CSkrxavYlb3hfwPpnWH5mvfbSfrSyc/4WHRJ+GyvyFlWBo70Ab7tJOVv8ZkvfCQoQLEFjctTTLYA/TNZrq10H4WX8bJY1kzeqQ21Bo79vBnPIXp6negpG6oulUmfAMkjEK0XsKq9pFnuj+BXa5aM3Qzaa2X3Mf/IE=
+	t=1765628669; cv=none; b=Hrm4aFFNolv1k6eEqa99hdqd4LoOSIPQfVGSqjFctKomA144lNl5aaSc6V3Ha6XEun9Eh/hke3jX5mlX62qRC4xowZRA7VsB6WWQ1ZtYvUbRwnDH61ga3ALDtm8Yn2nDhLy6E07pNUSWf6l2v0dy15yoyxz3jA0DEf51rLDC/BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765619428; c=relaxed/simple;
-	bh=2ENg29drYfVDRv/MVZsEXdNOKm+KWtiWqP5gZulnKss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dCqaS00L/1BkFOgOETxg/BQgLhssl4Fc674+UVHHqZDkkR+LdFOeTtxJQHr8M1+crBNPwFVGUdpdpFFo2dgm/Ovmw2qQViGVrEXyHktQwDll7of5062jkssHk710trbcW5h1R1l6O5Go7mCSqntdkrxYB+Muf4+IcweOmnDcEtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.219])
-	by gateway (Coremail) with SMTP id _____8AxxtDTNj1p6dctAA--.31958S3;
-	Sat, 13 Dec 2025 17:50:11 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.219])
-	by front1 (Coremail) with SMTP id qMiowJDxscLLNj1pRe5IAQ--.10721S2;
-	Sat, 13 Dec 2025 17:50:10 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
-Date: Sat, 13 Dec 2025 17:49:50 +0800
-Message-ID: <20251213094950.1068951-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1765628669; c=relaxed/simple;
+	bh=0nvWR+tu97JmBkSWSrilHWi/dts+LrLrvVc/wqgWmGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sEiwiYOQO109k8Fql8scCNFoeXjrtY7jqwCFQvtT0Bv5YXCvFs/y79p8WZ3VSPl32LxQFxcLtFgU7iW7IaUsByBclqCQAS7mrOzqTqXpPI/uhd3Zv0iUUZBMgsxeJVgNGUMvA5v99LtKCqWcSRXawzREW7Eqp4qtOWbBzhIJemM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkjbnF6W; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkjbnF6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834A8C4CEFB
+	for <loongarch@lists.linux.dev>; Sat, 13 Dec 2025 12:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765628668;
+	bh=0nvWR+tu97JmBkSWSrilHWi/dts+LrLrvVc/wqgWmGA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RkjbnF6W4wcFF2orBnFucgXPTIlyJRkLpeCeBLR4c2lq7goDK7rOa8qopch+wxD9j
+	 vLzN71dXeTmz6aTmopgzMWX3sD1HVqj7zgYtuMVDOc6Oy2wc5WFoqyvncOm2KtpxPj
+	 mcnucw5jT9f6C8l/wo16KcM0hLI+tpr+xRhJqw0BBzgad6rSbqy0kl8x5qQ82/xWv5
+	 J+aI1Q1DvXdeiy7XqI2/SsCm46WzhF9smoOhd9cWp3tmRU2B3vo97e8aQ9aZymrrNS
+	 tarigVYdBevVTwqfy8j5CdoLlcdoFOYuRyygGFy7m6lOYluzfeBDzB+LUZsyFj18Xc
+	 Iru4AiFgKK94Q==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b7a72874af1so319128466b.3
+        for <loongarch@lists.linux.dev>; Sat, 13 Dec 2025 04:24:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVXTYEdke/qG3CRRN4m8vJvlzTwL0ZzJvUl6UkckYbFFQzhZlU/+qoVAbLfoW6aNKlVFWgu1G1o2d8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxs6J3hIlYhEBe8dY6QbYYd08viZUfsCMXssjaph3+SZYqCMks3
+	GgN+dLMGoOHAkbsAqUpIB8I/GmlmGrqXJXULlP8LXtXXVOIdbuV4Q9buBPsFUtGBw1KmDrxyWpy
+	pBwGz/uWE6GU7h0QeQRP6OQQ4zhbYgjA=
+X-Google-Smtp-Source: AGHT+IHNLRP6UVo9KHjNOndBjUD8SBQQZdHNUGmq+vFhVViP2bJl2+A57gqQDn/rJA+zEdAkA/7U2IaSZWoVVlS/HJM=
+X-Received: by 2002:a17:907:60cf:b0:b79:eaf6:8f5e with SMTP id
+ a640c23a62f3a-b7d236292b0mr540689066b.14.1765628667109; Sat, 13 Dec 2025
+ 04:24:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxscLLNj1pRe5IAQ--.10721S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJr48AF15XrykZr43Aw4xGrX_yoW8Xr13pF
-	WUCF1UGr45Ww4SvFn3J3s3WF15Ja4kG3yIqayfCFyfWr1DKwn0gas7JrnFqFyjkr4Yqryf
-	ZrsYq34IgF15A3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
+ <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
+ <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn> <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
+ <a1674623-4c08-1f4d-3e4e-5511b579e9ea@loongson.cn>
+In-Reply-To: <a1674623-4c08-1f4d-3e4e-5511b579e9ea@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 13 Dec 2025 20:24:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4UpzqUiEi7Qfc2qtU1hm=yR9hYfaUGfrAtQssrk6qWOA@mail.gmail.com>
+X-Gm-Features: AQt7F2r2bD8_MuQvepyvkJNIoCbNqWDHlxeQRsV5l_fBQQ1LQbN6H3Tn-8jtmdM
+Message-ID: <CAAhV-H4UpzqUiEi7Qfc2qtU1hm=yR9hYfaUGfrAtQssrk6qWOA@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Bibo Mao <maobibo@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 863a320dc6fd7c855f47da4b ("LoongArch: Mask all interrupts during
-kexec/kdump") is backported to LTS branches, but they lack a generic
-machine_kexec_mask_interrupts() implementation, so add an arch-specific
-one.
+On Wed, Dec 10, 2025 at 4:00=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2025/12/10 =E4=B8=8A=E5=8D=8810:25, Bibo Mao wrote:
+> >
+> >
+> > On 2025/12/10 =E4=B8=8A=E5=8D=889:28, Tiezhu Yang wrote:
+> >> On 2025/12/9 =E4=B8=8B=E5=8D=884:30, Huacai Chen wrote:
+> >>> Hi, Tiezhu,
+> >>>
+> >>> On Tue, Dec 9, 2025 at 2:18=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongs=
+on.cn>
+> >>> wrote:
+> >>>>
+> >> ...
+> >>>>          extern unsigned long eentry;
+> >>>>
+> >>>> -       if (__kernel_text_address(ra))
+> >>>> -               return ra;
+> >>>> -
+> >>>> -       if (__module_text_address(ra))
+> >>>> -               return ra;
+> >>> I think the correct way is to remove the __module_text_address()
+> >>> condition but keep the __kernel_text_address() condition. Then return
+> >>> 0 at the end of this function, and remove the __kernel_text_address()
+> >>> condition out of this function.
+> >>
+> >> It can not remove the check of __kernel_text_address() after calling
+> >> bt_address() because it needs to validate the calculated address for
+> >> exception, then no need to keep the __kernel_text_address() condition
+> >> in bt_address() because it will check the PC outside bt_address().
+> >          state->pc =3D bt_address(pc);
+> >          if (!state->pc) {
+> >                  pr_err("cannot find unwind pc at %p\n", (void *)pc);
+> >                  goto err;
+> >          }
+> >
+> >          if (!__kernel_text_address(state->pc))
+> >                  goto err;
+> > I guess that you both comes from different views :) one treats these
+> > piece of code into one, one only views function bt_address().
+> >
+> > Especially with if (!state->pc), how could this happen?
+>
+> IMO, state->pc will be not 0 forever in practice, this check is just an
+> error path and can be removed too if possible.
+bt_address() return ra both in "good path" and "bad path" is strange.
+I still suggest using my method, but move __kernel_text_address()
+after the "if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END *
+VECSIZE)" block to verify the modified ra.
 
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-6.6LTS also need it if commit 863a320dc6fd7c855f47da4b is backported.
+Huacai
 
- arch/loongarch/kernel/machine_kexec.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 8ef4e4595d61..19bd763263d3 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -136,6 +136,28 @@ void kexec_reboot(void)
- 	BUG();
- }
- 
-+static void machine_kexec_mask_interrupts(void)
-+{
-+	unsigned int i;
-+	struct irq_desc *desc;
-+
-+	for_each_irq_desc(i, desc) {
-+		struct irq_chip *chip;
-+
-+		chip = irq_desc_get_chip(desc);
-+		if (!chip)
-+			continue;
-+
-+		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
-+			chip->irq_eoi(&desc->irq_data);
-+
-+		if (chip->irq_mask)
-+			chip->irq_mask(&desc->irq_data);
-+
-+		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
-+			chip->irq_disable(&desc->irq_data);
-+	}
-+}
- 
- #ifdef CONFIG_SMP
- static void kexec_shutdown_secondary(void *regs)
--- 
-2.47.3
-
+>
+> Thanks,
+> Tiezhu
+>
