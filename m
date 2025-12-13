@@ -1,63 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475351C84BD;
-	Sat, 13 Dec 2025 04:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B2772E92AF
+	for <loongarch@lists.linux.dev>; Sat, 13 Dec 2025 09:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765598937; cv=none; b=VOofmUtQdR+jMLvHwbh2dhu6XwWCXiecaNU4VDsxbyiOatyXvZ9Ez3+ES0tVP9iYn79YCtyyPz2Glda1FURz57QB4LwJuy9d1pfzz8ZwUWLv1wZwUJ1ybz6gNpkZnizTJ8mQ913hj44Al2pzzTUq7pTqsXImINWmqYhAowMcFX0=
+	t=1765619428; cv=none; b=PCg53Xhe82CSkrxavYlb3hfwPpnWH5mvfbSfrSyc/4WHRJ+GyvyFlWBo70Ab7tJOVv8ZkvfCQoQLEFjctTTLYA/TNZrq10H4WX8bJY1kzeqQ21Bo79vBnPIXp6negpG6oulUmfAMkjEK0XsKq9pFnuj+BXa5aM3Qzaa2X3Mf/IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765598937; c=relaxed/simple;
-	bh=rtDUr8kFiZ+zbBNdupsw1Y4L3Out8UQp7CgkWGoAufU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aCDbpPtdbK8+F2tnMUNToDy0XQhLRI4QZJgVCUEHyrqBvAQNDdLapfiJC+hE1SzDXwsnJDNIIrv+6/rw7YxtT6XJjMi0dFbV0snBSxiuwebi0bhnFv7nlmV3aOF36kuYBrh8mRiVTooSReaMXSgBuub12f0sy5Otet/r3bWGm/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dsA146vL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dsA146vL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80EAC4CEF7;
-	Sat, 13 Dec 2025 04:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765598936;
-	bh=rtDUr8kFiZ+zbBNdupsw1Y4L3Out8UQp7CgkWGoAufU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=dsA146vLYmHgJYxoPQlzl/MeZJGXW7JU+YcVbmPtvl8qyU9A8lXjZdhmibSVrHt6f
-	 thR2i2fnnwky/6CsHH2rbkaqcqZb46oNBGAjeg12YY5n/LZBK9O39k151lxsFH7KCQ
-	 mYvhb/yYythQF/m8Hk+/AhSwIgW9qqtdty6oyREYxpEQEcoAljMPL4jkXLAlhngdsD
-	 cINRjvJxPAYdFtywBsGmSk2n9C2fgiLP0f0yUKLF7dtycD2JW+FLTG7PkGjv+PuPkb
-	 FCSYmriW8bAvN6LlAjBc/xFol85CwDcnOsGS3fr7eCvhagGugwQ2sIBNGxiXDp2CAE
-	 dzI/6Qmz3PCbg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F2A32380A954;
-	Sat, 13 Dec 2025 04:05:50 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v6.19
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20251211144219.2282231-1-chenhuacai@loongson.cn>
-References: <20251211144219.2282231-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20251211144219.2282231-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.19
-X-PR-Tracked-Commit-Id: be77cf43d2fd6eca150594e997e40ca7df90f251
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9551a26f17d9445eed497bd7c639d48dfc3c0af4
-Message-Id: <176559874944.2388135.2320307195215147125.pr-tracker-bot@kernel.org>
-Date: Sat, 13 Dec 2025 04:05:49 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=arc-20240116; t=1765619428; c=relaxed/simple;
+	bh=2ENg29drYfVDRv/MVZsEXdNOKm+KWtiWqP5gZulnKss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dCqaS00L/1BkFOgOETxg/BQgLhssl4Fc674+UVHHqZDkkR+LdFOeTtxJQHr8M1+crBNPwFVGUdpdpFFo2dgm/Ovmw2qQViGVrEXyHktQwDll7of5062jkssHk710trbcW5h1R1l6O5Go7mCSqntdkrxYB+Muf4+IcweOmnDcEtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.219])
+	by gateway (Coremail) with SMTP id _____8AxxtDTNj1p6dctAA--.31958S3;
+	Sat, 13 Dec 2025 17:50:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.219])
+	by front1 (Coremail) with SMTP id qMiowJDxscLLNj1pRe5IAQ--.10721S2;
+	Sat, 13 Dec 2025 17:50:10 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
+Date: Sat, 13 Dec 2025 17:49:50 +0800
+Message-ID: <20251213094950.1068951-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxscLLNj1pRe5IAQ--.10721S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr48AF15XrykZr43Aw4xGrX_yoW8Xr13pF
+	WUCF1UGr45Ww4SvFn3J3s3WF15Ja4kG3yIqayfCFyfWr1DKwn0gas7JrnFqFyjkr4Yqryf
+	ZrsYq34IgF15A3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-The pull request you sent on Thu, 11 Dec 2025 22:42:19 +0800:
+Commit 863a320dc6fd7c855f47da4b ("LoongArch: Mask all interrupts during
+kexec/kdump") is backported to LTS branches, but they lack a generic
+machine_kexec_mask_interrupts() implementation, so add an arch-specific
+one.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.19
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+6.6LTS also need it if commit 863a320dc6fd7c855f47da4b is backported.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9551a26f17d9445eed497bd7c639d48dfc3c0af4
+ arch/loongarch/kernel/machine_kexec.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Thank you!
-
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index 8ef4e4595d61..19bd763263d3 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -136,6 +136,28 @@ void kexec_reboot(void)
+ 	BUG();
+ }
+ 
++static void machine_kexec_mask_interrupts(void)
++{
++	unsigned int i;
++	struct irq_desc *desc;
++
++	for_each_irq_desc(i, desc) {
++		struct irq_chip *chip;
++
++		chip = irq_desc_get_chip(desc);
++		if (!chip)
++			continue;
++
++		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
++			chip->irq_eoi(&desc->irq_data);
++
++		if (chip->irq_mask)
++			chip->irq_mask(&desc->irq_data);
++
++		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
++			chip->irq_disable(&desc->irq_data);
++	}
++}
+ 
+ #ifdef CONFIG_SMP
+ static void kexec_shutdown_secondary(void *regs)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.47.3
+
