@@ -1,115 +1,63 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11433115A5
-	for <loongarch@lists.linux.dev>; Fri, 12 Dec 2025 09:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475351C84BD;
+	Sat, 13 Dec 2025 04:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765530705; cv=none; b=XcXhYaIx+g/h4UGXFTF4iqdfIYZvQzOFMr69lbcYjyuaNwFfON9GXx+vounmjpjZXMEJHi1hJopGmi1ANup/Yhh5DfnAQR8JN9mjekl9Nr1xWzg811WpI62NHAvCZsd6i48wzUZqBU7Oci+7w1Cl/zXENOypAryIisXe99xUcIM=
+	t=1765598937; cv=none; b=VOofmUtQdR+jMLvHwbh2dhu6XwWCXiecaNU4VDsxbyiOatyXvZ9Ez3+ES0tVP9iYn79YCtyyPz2Glda1FURz57QB4LwJuy9d1pfzz8ZwUWLv1wZwUJ1ybz6gNpkZnizTJ8mQ913hj44Al2pzzTUq7pTqsXImINWmqYhAowMcFX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765530705; c=relaxed/simple;
-	bh=YZxv64z8zfjwzPiaNGn9d7vJpexUUc1szKq1qYZqUm4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gF9xEGrIRVMRiHEwUttYRJHBQm+G9ptKu1Ck8gmxhxLNx7cD5PaSWbPYAWi6MBqn0SjMzx7wVVl76MNH6pdEXCCfdzy+U9Z5k8nHRaUfOqQ4wcGOIXl3gJ8URqLlINToVzjTHT9awFg5rsLzaFgYVRLu+RFt+69rKPloSq5Mi9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 8e8df06cd73a11f0a38c85956e01ac42-20251212
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:b5724c42-6bbf-46da-af32-6faa38d1c5d1,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:b5724c42-6bbf-46da-af32-6faa38d1c5d1,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:cf15b60178dee43c82a92e6904d1af61,BulkI
-	D:2512121711352WU4DBTV,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
-	0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 8e8df06cd73a11f0a38c85956e01ac42-20251212
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1394514414; Fri, 12 Dec 2025 17:11:34 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: yangtiezhu@loongson.cn,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	zhangtianyang@loongson.cn,
-	masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn,
-	vincent.mc.li@gmail.com
-Subject: [PATCH v2 4/4] LoongArch: BPF: Enable BPF exception fixup for specific ADE subcode
-Date: Fri, 12 Dec 2025 17:11:03 +0800
-Message-Id: <20251212091103.1247753-5-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251212091103.1247753-1-duanchenghao@kylinos.cn>
-References: <20251212091103.1247753-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1765598937; c=relaxed/simple;
+	bh=rtDUr8kFiZ+zbBNdupsw1Y4L3Out8UQp7CgkWGoAufU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=aCDbpPtdbK8+F2tnMUNToDy0XQhLRI4QZJgVCUEHyrqBvAQNDdLapfiJC+hE1SzDXwsnJDNIIrv+6/rw7YxtT6XJjMi0dFbV0snBSxiuwebi0bhnFv7nlmV3aOF36kuYBrh8mRiVTooSReaMXSgBuub12f0sy5Otet/r3bWGm/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dsA146vL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dsA146vL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80EAC4CEF7;
+	Sat, 13 Dec 2025 04:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765598936;
+	bh=rtDUr8kFiZ+zbBNdupsw1Y4L3Out8UQp7CgkWGoAufU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dsA146vLYmHgJYxoPQlzl/MeZJGXW7JU+YcVbmPtvl8qyU9A8lXjZdhmibSVrHt6f
+	 thR2i2fnnwky/6CsHH2rbkaqcqZb46oNBGAjeg12YY5n/LZBK9O39k151lxsFH7KCQ
+	 mYvhb/yYythQF/m8Hk+/AhSwIgW9qqtdty6oyREYxpEQEcoAljMPL4jkXLAlhngdsD
+	 cINRjvJxPAYdFtywBsGmSk2n9C2fgiLP0f0yUKLF7dtycD2JW+FLTG7PkGjv+PuPkb
+	 FCSYmriW8bAvN6LlAjBc/xFol85CwDcnOsGS3fr7eCvhagGugwQ2sIBNGxiXDp2CAE
+	 dzI/6Qmz3PCbg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F2A32380A954;
+	Sat, 13 Dec 2025 04:05:50 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v6.19
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20251211144219.2282231-1-chenhuacai@loongson.cn>
+References: <20251211144219.2282231-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20251211144219.2282231-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.19
+X-PR-Tracked-Commit-Id: be77cf43d2fd6eca150594e997e40ca7df90f251
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9551a26f17d9445eed497bd7c639d48dfc3c0af4
+Message-Id: <176559874944.2388135.2320307195215147125.pr-tracker-bot@kernel.org>
+Date: Sat, 13 Dec 2025 04:05:49 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-This patch allows the LoongArch BPF JIT to handle recoverable memory
-access errors generated by BPF_PROBE_MEM* instructions.
+The pull request you sent on Thu, 11 Dec 2025 22:42:19 +0800:
 
-When a BPF program performs memory access operations, the instructions
-it executes may trigger ADEM exceptions. The kernel’s built-in BPF
-exception table mechanism (EX_TYPE_BPF) will generate corresponding
-exception fixup entries in the JIT compilation phase; however, the
-architecture-specific trap handling function needs to proactively call
-the common fixup routine to achieve exception recovery.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-6.19
 
-do_ade(): fix EX_TYPE_BPF memory access exceptions for BPF programs,
-ensure safe execution.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9551a26f17d9445eed497bd7c639d48dfc3c0af4
 
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
----
- arch/loongarch/kernel/traps.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Thank you!
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index da5926fead4a..4cf72e0af6a3 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -534,7 +534,13 @@ asmlinkage void noinstr do_fpe(struct pt_regs *regs, unsigned long fcsr)
- 
- asmlinkage void noinstr do_ade(struct pt_regs *regs)
- {
--	irqentry_state_t state = irqentry_enter(regs);
-+	irqentry_state_t state;
-+	unsigned int esubcode = FIELD_GET(CSR_ESTAT_ESUBCODE, regs->csr_estat);
-+
-+	if ((esubcode == EXSUBCODE_ADEM) && fixup_exception(regs))
-+		return;
-+
-+	state = irqentry_enter(regs);
- 
- 	die_if_kernel("Kernel ade access", regs);
- 	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)regs->csr_badvaddr);
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
