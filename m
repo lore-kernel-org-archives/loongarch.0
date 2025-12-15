@@ -1,150 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF371A5BB4
-	for <loongarch@lists.linux.dev>; Sun, 14 Dec 2025 13:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B00621B9D2
+	for <loongarch@lists.linux.dev>; Mon, 15 Dec 2025 02:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765718127; cv=none; b=rX2MxMvx70ZeL1XbD5Y0h9zoThimrxNmgS9L7z3kkp3crFlwdrgmPOAXoIcgwEFbNTFpTk7gEE5+pTSVm92EWZ/GZlvYlt0m/4oLKE+lwfchIEMng2vJgsJQEMy+qOlQolsHdiiwu1/HL8nju5uQcb56yBpVafFpL92H6lhDI/A=
+	t=1765765121; cv=none; b=uAhsmDLNCeCcdUe5PdTAfduWcfE8qODcvuA5pKVlfFshI+9HECjsUk5fi86KICCS4Kx7QLP0v9vT1TZZYRanJAd5KK9v74ikTxOcyY/vMMcWM9xSIqel3im+g1owdkhEpJOHByEPlMxEM7+dhqk9XyN+x0eZ1PkCx3hq1EbIb9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765718127; c=relaxed/simple;
-	bh=wMNQY7wHVtz3KGb1+B1JRbL927bt3/UHSXKPbQq3CuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pcv/szK34d6m8swbj7Wf0Vo+dNVQzciaNCaR8D0gD0jFzh5VQDeu8U5KSPK8PmKcAjwXUVggU1JitN2CDGzow9sO/rIBGRQThYI7koaQDaYl/RuY+4+KkfuVvBXPxakzajHQjPab7kFIWe5B/UBcW2iu+uZw+b4WRtjyaLF2m2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [117.22.160.58])
-	by gateway (Coremail) with SMTP id _____8CxHvBouD5pswsuAA--.33395S3;
-	Sun, 14 Dec 2025 21:15:20 +0800 (CST)
-Received: from [192.168.0.111] (unknown [117.22.160.58])
-	by front1 (Coremail) with SMTP id qMiowJDxqcBkuD5pij9JAQ--.39739S3;
-	Sun, 14 Dec 2025 21:15:20 +0800 (CST)
-Message-ID: <87eac880-d1c0-272c-8a9e-98cb4ac8541e@loongson.cn>
-Date: Sun, 14 Dec 2025 21:15:29 +0800
+	s=arc-20240116; t=1765765121; c=relaxed/simple;
+	bh=MjNWDa1Utb2FSU2vHMGxAZAMxCY2K1N3AimOMWo1kBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSyPaE195VpwuqvpRSyoqlUGxiwKy4RUHIjrVLgRkdkQvUA2p6IW7jvmeOclvl5KNIcUemCJGhdw41xGeBWFAav1PJxzM9n7kY2iC/dqhqWduBzdGo4eRa4ilm8LiqL60qPOPBrTorGmTCS31MX8hM9IWe5tZBQB3pk+OShAhUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 55ef38bed95c11f0a38c85956e01ac42-20251215
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:4d2852ea-23b5-4c94-b72f-79f995771ed7,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:4d2852ea-23b5-4c94-b72f-79f995771ed7,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:308dbeb326b784dc295e1266a7f8be21,BulkI
+	D:251213211600WWYCZSF1,BulkQuantity:2,Recheck:0,SF:17|19|64|66|78|80|81|82
+	|83|102|127|841|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil
+	,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,D
+	KP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 55ef38bed95c11f0a38c85956e01ac42-20251215
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 853044840; Mon, 15 Dec 2025 10:18:25 +0800
+Date: Mon, 15 Dec 2025 10:18:22 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: yangtiezhu@loongson.cn, hengqi.chen@gmail.com, kernel@xen0n.name,
+	zhangtianyang@loongson.cn, masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, youling.tang@linux.dev, jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com
+Subject: Re: [PATCH v2 4/4] LoongArch: BPF: Enable BPF exception fixup for
+ specific ADE subcode
+Message-ID: <20251215021822.GA141785@chenghao-pc>
+References: <20251212091103.1247753-1-duanchenghao@kylinos.cn>
+ <20251212091103.1247753-5-duanchenghao@kylinos.cn>
+ <CAAhV-H5-AaD9SuRWt5gK4ODVA356EO7byqf-AnXvr_0C+FuUPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v1] LoongArch: Remove unnecessary checks in bt_address()
-Content-Language: en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Bibo Mao <maobibo@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20251209061809.15994-1-yangtiezhu@loongson.cn>
- <CAAhV-H6zjWXjjuoOkRov4886E82QRH=3NnkhP2e4hroSJr1UXg@mail.gmail.com>
- <92bf0e88-da14-20ce-137a-3e7777e19af3@loongson.cn>
- <ba1494da-a407-3acb-a5d1-8fbd9498b6c6@loongson.cn>
- <a1674623-4c08-1f4d-3e4e-5511b579e9ea@loongson.cn>
- <CAAhV-H4UpzqUiEi7Qfc2qtU1hm=yR9hYfaUGfrAtQssrk6qWOA@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <CAAhV-H4UpzqUiEi7Qfc2qtU1hm=yR9hYfaUGfrAtQssrk6qWOA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxqcBkuD5pij9JAQ--.39739S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ar15JFyfJFW5uF18Zr1fAFc_yoW5Jry7pF
-	yxGayUWFZrKrWUGrsFgr1Fqryayr9xXF10gr4DGFn5C3Z0vr1fCF4UC3y5ua48tr18Wa18
-	Zw4jyFZxAayYyFgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJU
-	UUUU=
+In-Reply-To: <CAAhV-H5-AaD9SuRWt5gK4ODVA356EO7byqf-AnXvr_0C+FuUPg@mail.gmail.com>
 
-On 12/13/25 20:24, Huacai Chen wrote:
-> On Wed, Dec 10, 2025 at 4:00 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> On 2025/12/10 上午10:25, Bibo Mao wrote:
->>>
->>>
->>> On 2025/12/10 上午9:28, Tiezhu Yang wrote:
->>>> On 2025/12/9 下午4:30, Huacai Chen wrote:
->>>>> Hi, Tiezhu,
->>>>>
->>>>> On Tue, Dec 9, 2025 at 2:18 PM Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>> wrote:
->>>>>>
->>>> ...
->>>>>>           extern unsigned long eentry;
->>>>>>
->>>>>> -       if (__kernel_text_address(ra))
->>>>>> -               return ra;
->>>>>> -
->>>>>> -       if (__module_text_address(ra))
->>>>>> -               return ra;
->>>>> I think the correct way is to remove the __module_text_address()
->>>>> condition but keep the __kernel_text_address() condition. Then return
->>>>> 0 at the end of this function, and remove the __kernel_text_address()
->>>>> condition out of this function.
->>>>
->>>> It can not remove the check of __kernel_text_address() after calling
->>>> bt_address() because it needs to validate the calculated address for
->>>> exception, then no need to keep the __kernel_text_address() condition
->>>> in bt_address() because it will check the PC outside bt_address().
->>>           state->pc = bt_address(pc);
->>>           if (!state->pc) {
->>>                   pr_err("cannot find unwind pc at %p\n", (void *)pc);
->>>                   goto err;
->>>           }
->>>
->>>           if (!__kernel_text_address(state->pc))
->>>                   goto err;
->>> I guess that you both comes from different views :) one treats these
->>> piece of code into one, one only views function bt_address().
->>>
->>> Especially with if (!state->pc), how could this happen?
->>
->> IMO, state->pc will be not 0 forever in practice, this check is just an
->> error path and can be removed too if possible.
-> bt_address() return ra both in "good path" and "bad path" is strange.
-> I still suggest using my method, but move __kernel_text_address()
-> after the "if (ra >= eentry && ra < eentry +  EXCCODE_INT_END *
-> VECSIZE)" block to verify the modified ra.
+On Sat, Dec 13, 2025 at 09:16:00PM +0800, Huacai Chen wrote:
+> Hi, Chenghao,
+> 
+> On Fri, Dec 12, 2025 at 5:11 PM Chenghao Duan <duanchenghao@kylinos.cn> wrote:
+> >
+> > This patch allows the LoongArch BPF JIT to handle recoverable memory
+> > access errors generated by BPF_PROBE_MEM* instructions.
+> >
+> > When a BPF program performs memory access operations, the instructions
+> > it executes may trigger ADEM exceptions. The kernel’s built-in BPF
+> > exception table mechanism (EX_TYPE_BPF) will generate corresponding
+> > exception fixup entries in the JIT compilation phase; however, the
+> > architecture-specific trap handling function needs to proactively call
+> > the common fixup routine to achieve exception recovery.
+> >
+> > do_ade(): fix EX_TYPE_BPF memory access exceptions for BPF programs,
+> > ensure safe execution.
+> >
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  arch/loongarch/kernel/traps.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> > index da5926fead4a..4cf72e0af6a3 100644
+> > --- a/arch/loongarch/kernel/traps.c
+> > +++ b/arch/loongarch/kernel/traps.c
+> > @@ -534,7 +534,13 @@ asmlinkage void noinstr do_fpe(struct pt_regs *regs, unsigned long fcsr)
+> >
+> >  asmlinkage void noinstr do_ade(struct pt_regs *regs)
+> >  {
+> > -       irqentry_state_t state = irqentry_enter(regs);
+> > +       irqentry_state_t state;
+> > +       unsigned int esubcode = FIELD_GET(CSR_ESTAT_ESUBCODE, regs->csr_estat);
+> > +
+> > +       if ((esubcode == EXSUBCODE_ADEM) && fixup_exception(regs))
+> > +               return;
+> No chance for ADEF? And I don't think ixup_exception() can be done out
+> of irqentry_enter().
 
-I am OK if you mean like this:
+At present, exception fixes are only applied to memory-type BPF programs,
+with no handling implemented for ADEF.
 
-static inline unsigned long bt_address(unsigned long ra)
-{
-	extern unsigned long eentry;
+In the next version, fixup_exception will be processed internally within
+irqentry_enter()/irqentry_exit, and the title will be revised with
+reference to your suggestions.
 
-	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
-		...
-		ra = func + offset;
-	}
+Chenghao
 
-	if (__kernel_text_address(ra))
-		return ra;
-
-	return 0;
-}
-
-bool unwind_next_frame(struct unwind_state *state)
-{
-	...
-	state->pc = bt_address(pc);
-	if (!state->pc) {
-		pr_err("cannot find unwind pc at %p\n", (void *)pc);
-		goto err;
-	}
-
-	return true;
-	...
-}
-
-If so, I will send v2 later.
-
-Thanks,
-Tiezhu
-
+> 
+> This patch is needed by BPF but not part of BPF, so I think the
+> subject should be:
+> LoongArch: Enable exception fixup for specific ADE subcode
+> 
+> Huacai
+> 
+> > +
+> > +       state = irqentry_enter(regs);
+> >
+> >         die_if_kernel("Kernel ade access", regs);
+> >         force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)regs->csr_badvaddr);
+> > --
+> > 2.25.1
+> >
