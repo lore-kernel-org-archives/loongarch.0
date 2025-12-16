@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB47A1D63F5;
-	Tue, 16 Dec 2025 16:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2D72BE639;
+	Tue, 16 Dec 2025 16:26:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765902299; cv=none; b=kBA3d/aVpWFE78DhjZibmMg6AZzx5k1lOJenN2o1TlhFxssr26qhNtHQj2Hc/Uyu1zQPYqNpnYjWnCLxLTVp+vZZXss3w3drN/7dOS5blcJ7Toh5odBuOcUH+oQPHyIX5UG6PWYphhCewLTgUsf1flC1Sx5eGIOZPypAiq/vTnE=
+	t=1765902361; cv=none; b=u9kerjA5o8cEeTl+2WZ/aWZ2LLV+x4vCajGoQ/MUC1n+FLy0VPl7Yy/+ZzdiV4GOvfXq1h8Wd0EZs+7C2CfFcEiaP6rEe/Fv+KGIb/utzKxA34clwccmJ8BeKin2lLPPAISwVQeGtPYbgFD3Osr9qah6+AJagT0Vy9iiUtFsxzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765902299; c=relaxed/simple;
-	bh=3E2x6L/4+g16Enm6XkGQqRFCPqZVrvyy88dmf6wJIQ0=;
+	s=arc-20240116; t=1765902361; c=relaxed/simple;
+	bh=lxpBfHrm7DeD64JXpi3PhAhdLR39AZhAi4/P2edxwSk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RJXJYkn3rpRs3SESIqcmjW9jEJ/G/JUk/iv8pZvvR1JbET7GC3EBsICflsCBGu47+/AcSW+SwipvsA0rLWFLCv/YRwywp7AlPyMwBmg5+kd11fbqfML4FEDISDak0zv3WibH8ZzT4LWvZrQhnJm6uMlOyV3rMLBdCubX8eKODpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vi+xRr2i; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HmK/U6FA11e9PmCV3LLz9YFxIL2q9JD7sqH8yxQVbIfTcn2YoCUWfmts0uhrFocM8kzdtrnT/u6+yuIXTi9Ct7vXc0HXNha8YFSi/Iv8QMW8FMs8Ed1sWNkiLYjWrDSl2mkh4TzUecWelT2AyX48NMh0C1/KTajW4OmWFpO4bQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jK7XiMJ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vi+xRr2i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11487C113D0;
-	Tue, 16 Dec 2025 16:24:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jK7XiMJ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A117BC19422;
+	Tue, 16 Dec 2025 16:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765902298;
-	bh=3E2x6L/4+g16Enm6XkGQqRFCPqZVrvyy88dmf6wJIQ0=;
+	s=k20201202; t=1765902361;
+	bh=lxpBfHrm7DeD64JXpi3PhAhdLR39AZhAi4/P2edxwSk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vi+xRr2iKtvzNHIIukg3+3EPfxkx5B8Cq1Zm8B/4tyW8rUvjZofkdcv+XAiFFd9b8
-	 U5GCjJi12pNn/WslRFb8ytybRPz761qQDuE154t6gRdbb78gewnPsmdXbjggbEepoS
-	 tdXrrPIluSdQnQMkALy2vRYZ8eOvIJipErCGKxbYsSo3j+55zRNMltlEQSz4NYrMVC
-	 hvXY27XJ2oTDE983K/kd2ozWdwMWl6tDhbCwqOebGUau/pm/8U2hyzPtyXDYBsqnIx
-	 foCnZUfurmh8GBjG0rbiJj4sQ0nnlq8xWwDkXCWSqaYVyCRtSisHaoLIAL6XYkNwm0
-	 8kbDxdVyTFotw==
-Message-ID: <5a47b072-70e5-42d2-9774-5637abd00c13@kernel.org>
-Date: Tue, 16 Dec 2025 17:24:54 +0100
+	b=jK7XiMJ3HiOr3msyJcP0L+zzbmyBIAH/ShFEdgDiMlZC8/JhWyyX1rMooWpph2pLv
+	 oybbUG3FB5yo3GwuPLzPFkZoe+QivmEjaEfhldWgw98WpPVnkpJuQiClugWGTRH8xJ
+	 goCvuz8PDOK9kPmfUpvMeMaYzBNOC5xb+CwOuD6J0cOPYletai8aGjUF5SCenw9dfJ
+	 YvR/PBbKI2wdtgcZmi+pId40qOtcaIb7g/eKEyJt6OGDgOJ3942fyzzBJ+JUc3x4fH
+	 RkGgidn6IBq+V6itXKCH2SSPfVyVEceDi3KQYb9sIB0Q0d2w2ayTNmkQLdDMpwFven
+	 OOH0pr2xKHKsQ==
+Message-ID: <2589f9de-cb75-445b-b6ed-0773f972e845@kernel.org>
+Date: Tue, 16 Dec 2025 17:25:56 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,7 +37,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 7/7] LoongArch: dts: loongson-2k1000: Fix i2c-gpio node
  names
-To: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubinbin@loongson.cn>,
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>,
  Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
  Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
@@ -45,7 +45,6 @@ Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
  loongarch@lists.linux.dev, devicetree@vger.kernel.org
 References: <cover.1765778124.git.zhoubinbin@loongson.cn>
  <9684ae4e58fd1e9768cccf6e3ae730eff46fb29c.1765778124.git.zhoubinbin@loongson.cn>
- <aUEp-pEwHk0Ls6CD@pie>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,41 +90,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aUEp-pEwHk0Ls6CD@pie>
+In-Reply-To: <9684ae4e58fd1e9768cccf6e3ae730eff46fb29c.1765778124.git.zhoubinbin@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/12/2025 10:44, Yao Zi wrote:
-> On Tue, Dec 16, 2025 at 03:56:59PM +0800, Binbin Zhou wrote:
->> From: Binbin Zhou <zhoubb.aaron@gmail.com>
->>
->> The binding wants the node to be named "i2c-number", alternatively
->> "i2c@address", but those are named "i2c-gpio-number" instead.
->>
->> Rename those to i2c-0, i2c-1 to adhere to the binding and suppress
->> dtbs_check warnings.
+On 16/12/2025 08:56, Binbin Zhou wrote:
+> From: Binbin Zhou <zhoubb.aaron@gmail.com>
 > 
-> I think this is an unintended breakage in dtschema upstream, but not
-> really a violation. As I've mentioned in my original cover-letter,
-> 
->> which IMHO is a regression caused by dt-schema commit 57138f5b8c92
->> ("schemas: i2c: Avoid extra characters in i2c nodename pattern"). Commit
->> 647181a1f8ff ("schemas: i2c: Allow for 'i2c-.*' node names") fails to
->> fix the case, as it doesn't take nodenames with multiple hyphens in
->> account. I'll start a separate series for this.
-> 
-> So I think it should probably be fixed in dt-schema instead. i2c-gpio-X
-> provides more information to me, and I don't think it causes any
-> inconsistency or ambiguity.
-> 
-> By the way, we also have dozens of arm dtb targets shipping nodes named
-> like i2c-gpio-*, mostly microchip and st ones, fixing the regex in
-> dtschema upstream will also eliminate warnings for them.
+> The binding wants the node to be named "i2c-number", alternatively
+> "i2c@address", but those are named "i2c-gpio-number" instead.
 
-No. Wolfram posted patches at some point, some parts got applied or at
-least followed up by maintainers who care. Maybe Wolfram never resubmit
-microchip and stm, but that's not the reason to roll back to discouraged
-name.
+i2c@address is wrong here, don't mention it.
+> 
+> Rename those to i2c-0, i2c-1 to adhere to the binding and suppress
+> dtbs_check warnings.
+
+With fixed commit msg:
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
 Best regards,
 Krzysztof
