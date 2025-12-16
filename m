@@ -1,202 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B407530FF3C;
-	Tue, 16 Dec 2025 16:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80C12D1303
+	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 17:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765902732; cv=none; b=dTbCZUAxdXJ+cCOFHtUE4z9pHmK6f3xyB+D/AcwvN3DoExnSajRFpb2uQQ0Mqn4zu8LguyctN8atnNqm0Tl9lJmnO3ziDCwQalFsS9oxsa4A1z/Wf6FDM9Gu5lniB25+EOImIXtbJZMthBWBB6qb66DVNS47M71zcV7hspZeVcY=
+	t=1765905022; cv=none; b=mUjWhCiEOkCu+PmoaD7Vk8tYEvA1YKlXZkYGmZgtHsBUaAzYyccgD8pz1keQixyNM2xHLxqRL8lvOBYcrxxTEWOEKwR8KCTSDbOt6p1NPzeex1bPyn0GzccTmSeiUmkRxuU5ql4PCDfp5+Qb4kz0qHq+S7JrPuVAORr0zUNWNds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765902732; c=relaxed/simple;
-	bh=BYYyvPXCv/z3Zv/yIQlMx58UIuXYnnZWL+o4/ZYGJM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CU55ho3sEJRIvDwvTNtjpmDDhNKyf4wrA3Kro0kpqJilIWmzXPVejBHdQJnZtUMnEQLSnl0eztDBFO9oiJ0EG1NWRZb415A9fa6DS/GSSjrPIYtUHlRoPIJzdJOUIuOTOTO/mao/eLgvErlUGsGZcYu5Bx7CVe07dtvadBKTIY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ww//Ya2I; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ww//Ya2I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765902729; x=1797438729;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BYYyvPXCv/z3Zv/yIQlMx58UIuXYnnZWL+o4/ZYGJM8=;
-  b=Ww//Ya2IZVJRpwLMfIwJ5jgCThrWjqPhEoxWXeH0Q7zcAiCH3AQhNnnz
-   l41g73hFbnrfLDMjG3thBu05ij8egQPGaO8OfRPf0NmK5ftcBq8Rik6hH
-   Y2gQQt5DsdKNme5DYj8+d+VrEpKrDhhcIZo+mDgzvkEdlxrd9hkSnHGoZ
-   KIuRl1Dyy8WN6O3TxCtyo/9vEfkV+i3okOkJR+voSESeeD5tjLbMfRczV
-   oCOCiY1OdMT2CnPWg5xQXalu3iIMbT8TgVvJUOyNu5/yYebNPhp/x3zBd
-   r5sYnu09RCOzZ1SqGI3/FSJqx1ZYeJ7/R65Gtd9WwkCDPYhKVYzb+20lc
-   Q==;
-X-CSE-ConnectionGUID: tfYUosTGQ0yNuYJy1gp4qQ==
-X-CSE-MsgGUID: lT0/DfoFSGqK1HulqYpaAQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="67868232"
-X-IronPort-AV: E=Sophos;i="6.21,153,1763452800"; 
-   d="scan'208";a="67868232"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 08:32:07 -0800
-X-CSE-ConnectionGUID: hOe0vqPVR7CciV+fTWvORw==
-X-CSE-MsgGUID: v02B96M3SIa8VhPps1uokQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,153,1763452800"; 
-   d="scan'208";a="197808734"
-Received: from lkp-server02.sh.intel.com (HELO 034c7e8e53c3) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 16 Dec 2025 08:32:00 -0800
-Received: from kbuild by 034c7e8e53c3 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vVXxu-000000003YO-0J5B;
-	Tue, 16 Dec 2025 16:31:58 +0000
-Date: Wed, 17 Dec 2025 00:31:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>
-Cc: oe-kbuild-all@lists.linux.dev, Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] randomize_kstack: Unify random source across
- arches
-Message-ID: <202512170038.vJZdUhEN-lkp@intel.com>
-References: <20251215163520.1144179-4-ryan.roberts@arm.com>
+	s=arc-20240116; t=1765905022; c=relaxed/simple;
+	bh=uRUPbCiHXnTghQkPKYQww7L3fIbeCceGFHxUQ+0rygM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NMJwj8msUb43R+OhVdaduAtONMWJMoOL0Az3AbWsm/tu6OLSJzEZj3SE/ARUG535SH/9P2tnmarh6rvWX68N2ILlFDE0Fnk1jjic/Tp1TsQ70AMrMPFS1Xsp5ofGku8+dPH75cC+bB+2KMJSKCGLyZtXw1qxsqJ+3mWg8DB2mRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id DF54D13668A;
+	Tue, 16 Dec 2025 17:10:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 8AD712F;
+	Tue, 16 Dec 2025 17:10:15 +0000 (UTC)
+Date: Tue, 16 Dec 2025 12:11:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: yangtiezhu@loongson.cn, mhiramat@kernel.org, mark.rutland@arm.com,
+ hengqi.chen@gmail.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ zhangtianyang@loongson.cn, masahiroy@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, youling.tang@linux.dev, jianghaoran@kylinos.cn,
+ vincent.mc.li@gmail.com, linux-trace-kernel@vger.kernel.org, Youling Tang
+ <tangyouling@kylinos.cn>
+Subject: Re: [PATCH v3 4/4] LoongArch: ftrace: Adjust register stack restore
+ order in direct call trampolines
+Message-ID: <20251216121149.11ea9031@gandalf.local.home>
+In-Reply-To: <20251216094753.1317231-5-duanchenghao@kylinos.cn>
+References: <20251216094753.1317231-1-duanchenghao@kylinos.cn>
+	<20251216094753.1317231-5-duanchenghao@kylinos.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251215163520.1144179-4-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8AD712F
+X-Stat-Signature: 4xrgt7ecrnjgzky33k9harsocw9xq4wz
+X-Rspamd-Server: rspamout08
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+SyrTxLqUhiKJ9s0JcpuzcjMM6kRirO2A=
+X-HE-Tag: 1765905015-430425
+X-HE-Meta: U2FsdGVkX1+OjztRmIC2PSbvrT1d/RFzeGvdHtT6JAM6B0NObkQEAPEzsxu1SHM6MHBk5s4ZWMOCiqh+8kDQC2AaoYxckOJUxQNfPO27ol5fs4VHCbfHDUuOM0XQ3oqeDDevDvSeSZllMeIlO+X+2kC9je5jccIxZDqJ6AmpCMJ8La+tTksKvMdVZ6n0ylfZBjiAUwA0OBX6g+z0GlXqzgv/ht2Jt9lHuOZSWn3a10gBsVr/Do+4IwXfX4HyxYBo6hcZpDoZPSQoeYOfMfMWnrOz/t7cjq00MpMzJdAPAVDtXkMvr7zUigBmZyfdaCzyekbsF7n4Sk2K+kYljcUtrhcdkyAFOv5Unoc8laUml66qQ1eITGvnFttKD9FPXQc0YUv+GMdY61OPKnGRGCzPfYDXszdRSc2M
 
-Hi Ryan,
+On Tue, 16 Dec 2025 17:47:53 +0800
+Chenghao Duan <duanchenghao@kylinos.cn> wrote:
 
-kernel test robot noticed the following build errors:
+> Ensure that in the ftrace direct call logic, the CPU register state
+> (with ra = parent return address) is restored to the correct state
+> after the execution of the custom trampoline function and before
+> returning to the traced function. Additionally, guarantee the
+> correctness of the jump logic for jr t0 (traced function address).
+> 
+> Reported-by: Youling Tang <tangyouling@kylinos.cn>
+> Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> ---
+>  samples/ftrace/ftrace-direct-modify.c       | 8 ++++----
+>  samples/ftrace/ftrace-direct-multi-modify.c | 8 ++++----
+>  samples/ftrace/ftrace-direct-multi.c        | 4 ++--
+>  samples/ftrace/ftrace-direct-too.c          | 4 ++--
+>  samples/ftrace/ftrace-direct.c              | 4 ++--
+>  5 files changed, 14 insertions(+), 14 deletions(-)
 
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on akpm-mm/mm-everything linus/master v6.19-rc1 next-20251216]
-[cannot apply to kees/for-next/hardening kees/for-next/execve]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This is all LoongArch specific, but in case you need this to go through
+your tree:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/prandom-Convert-prandom_u32_state-to-__always_inline/20251216-013546
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20251215163520.1144179-4-ryan.roberts%40arm.com
-patch subject: [PATCH v2 3/3] randomize_kstack: Unify random source across arches
-config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/reproduce)
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512170038.vJZdUhEN-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
->> arch/x86/boot/startup/sev-startup.o: warning: objtool: section .discard.addressable has absolute relocation at offset 0x0
---
-   In file included from include/linux/device/driver.h:21,
-                    from include/linux/device.h:32,
-                    from include/linux/blk_types.h:11,
-                    from include/linux/writeback.h:13,
-                    from include/linux/memcontrol.h:23,
-                    from include/linux/resume_user_mode.h:8,
-                    from include/linux/entry-virt.h:6,
-                    from include/linux/kvm_host.h:5,
-                    from arch/x86/kvm/svm/svm.c:3:
->> include/linux/module.h:132:49: error: redefinition of '__inittest'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^~~~~~~~~~
-   arch/x86/kvm/svm/svm.c:5509:1: note: in expansion of macro 'module_init'
-    5509 | module_init(svm_init)
-         | ^~~~~~~~~~~
-   include/linux/module.h:132:49: note: previous definition of '__inittest' with type 'int (*(void))(void)'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^~~~~~~~~~
-   include/linux/module.h:125:41: note: in expansion of macro 'module_init'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^~~~~~~~~~~
-   include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
-      86 | late_initcall(random_kstack_init);
-         | ^~~~~~~~~~~~~
->> include/linux/module.h:134:13: error: redefinition of 'init_module'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^~~~~~~~~~~
-   arch/x86/kvm/svm/svm.c:5509:1: note: in expansion of macro 'module_init'
-    5509 | module_init(svm_init)
-         | ^~~~~~~~~~~
-   include/linux/module.h:134:13: note: previous definition of 'init_module' with type 'int(void)'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^~~~~~~~~~~
-   include/linux/module.h:125:41: note: in expansion of macro 'module_init'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^~~~~~~~~~~
-   include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
-      86 | late_initcall(random_kstack_init);
-         | ^~~~~~~~~~~~~
---
-   ld: arch/x86/kvm/vmx/main.o: in function `vt_init':
->> arch/x86/kvm/vmx/main.c:1038: multiple definition of `init_module'; arch/x86/kvm/vmx/vmx.o:include/linux/randomize_kstack.h:81: first defined here
---
-   In file included from drivers/misc/sgi-xp/xpc_main.c:47:
->> include/linux/module.h:132:49: error: redefinition of '__inittest'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^~~~~~~~~~
-   drivers/misc/sgi-xp/xpc_main.c:1285:1: note: in expansion of macro 'module_init'
-    1285 | module_init(xpc_init);
-         | ^~~~~~~~~~~
-   include/linux/module.h:132:49: note: previous definition of '__inittest' with type 'int (*(void))(void)'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^~~~~~~~~~
-   include/linux/module.h:125:41: note: in expansion of macro 'module_init'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^~~~~~~~~~~
-   include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
-      86 | late_initcall(random_kstack_init);
-         | ^~~~~~~~~~~~~
->> include/linux/module.h:134:13: error: redefinition of 'init_module'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^~~~~~~~~~~
-   drivers/misc/sgi-xp/xpc_main.c:1285:1: note: in expansion of macro 'module_init'
-    1285 | module_init(xpc_init);
-         | ^~~~~~~~~~~
-   include/linux/module.h:134:13: note: previous definition of 'init_module' with type 'int(void)'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^~~~~~~~~~~
-   include/linux/module.h:125:41: note: in expansion of macro 'module_init'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^~~~~~~~~~~
-   include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
-      86 | late_initcall(random_kstack_init);
-         | ^~~~~~~~~~~~~
-
-
-vim +1038 arch/x86/kvm/vmx/main.c
-
-d6bee7813752b3 Kai Huang 2025-01-22  1036  
-d6bee7813752b3 Kai Huang 2025-01-22  1037  static int __init vt_init(void)
-d6bee7813752b3 Kai Huang 2025-01-22 @1038  {
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- Steve
