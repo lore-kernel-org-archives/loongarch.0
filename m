@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D67328612;
-	Tue, 16 Dec 2025 10:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBD329B777;
+	Tue, 16 Dec 2025 10:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765880794; cv=none; b=ubt4+Xk3Rkkqx6XL4aQtTW1sFb9jTgD7A/Ttv0si7sPCFGvi2q2AZXTe/UAZUaBwqAznHnm7abHyVsZ2XFXHNOXjgh4Ga28QrLbTK8aD1hsID+Gw+8O31Qbu0gh9tnbJ2NbULI2jgmAYgmF/cUHzuBVgqrc8dkNmtfkt1/lUKuw=
+	t=1765880811; cv=none; b=JYKcXbDz44sbK2LDEZQgikrZI2k/wlP2vaZXe9PSKnqi7o7CNVJD0VCrV8wy2m+jgGlLdxxbgaiiTt/hj6mFfeina2hF8Oxg163KLSxDE1FHpqHyCUOQfkuUIKGa/G0IE7m4rKG/Xw6tcJ8Q87UhV1btrdz3jPbLJ3/y0nOXICI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765880794; c=relaxed/simple;
-	bh=UxYRxWJNC2oRjTrOt/ki1iEtGTpP5CCHvKMOdA8xJbI=;
+	s=arc-20240116; t=1765880811; c=relaxed/simple;
+	bh=DuQliioXK36i2DZPZ2NR7REGWCXnner+B9X1ybReWE4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=V5SFqWE9Q2yF6JeLPKyX6uSeszJk2OnEbZDSfXT36f2/Geobz4prIzakptqosP35dxU13eytQVk5cgLv6+TjuM+CqTNjIV/VZ3FXhZRsINxFLB6qYqjfwul6+wb4iV4BQ6lpEW55hvGsTqpXFNFDOFm0f+DgihASv4/A9rVbfQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G5NfJeFb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=bu4SGOm7mLciZqkmmpfQw5VXnyHGXVc6iHnZXUZcc4TAWghaA29BNFFfCn8AccleR8cZvWH/NYtCn7fhI8lJwZpK2HD+0nTRha2VdfDdyBK+7WoaMvipXs/85H14jO7BsBeMW/fjKc4jVtmH3iMfbqnytPZviLbQ8CS4zxq1tzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BoGascFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G5NfJeFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5523C4CEF1;
-	Tue, 16 Dec 2025 10:26:33 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BoGascFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDDA5C4CEF1;
+	Tue, 16 Dec 2025 10:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1765880794;
-	bh=UxYRxWJNC2oRjTrOt/ki1iEtGTpP5CCHvKMOdA8xJbI=;
+	s=korg; t=1765880811;
+	bh=DuQliioXK36i2DZPZ2NR7REGWCXnner+B9X1ybReWE4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=G5NfJeFb40yMTwIe07mBK+JiNEXJu8lQlN1roAq1admlB/jB2uca86q7xo+QT2Btl
-	 OYHM6xK4Bir3Z6cxPtgmkJ7v6VwqlzEZxs8jTbzm2dOXRwmCNuG+NuDmzZX11K9cGT
-	 HsKwNx296VnLH3dap/L7hb6Jz9nXUHZnY+xrKuF4=
-Subject: Patch "[PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation" has been added to the 6.1-stable tree
+	b=BoGascFdEbdYNfNux8ZvT6ouURr8W8ZxuFyuov8mZc9pxB1n19NmVU9wBzPZm9Mag
+	 nFq4RmFIV1D/sKQ1tPjP3eCisOMC8GLKrcl4rp/XZRwOR4BQjKj6as8MK32RzttzdE
+	 3o0QUAAxfVGXL4pTwcw0Gy2Sp50I0Ilzvcx2HAk8=
+Subject: Patch "[PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation" has been added to the 6.6-stable tree
 To: chenhuacai@kernel.org,chenhuacai@loongson.cn,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,sashal@kernel.org,zhangtianyang@loongson.cn
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Tue, 16 Dec 2025 11:26:31 +0100
+Date: Tue, 16 Dec 2025 11:26:48 +0100
 In-Reply-To: <20251213094950.1068951-1-chenhuacai@loongson.cn>
-Message-ID: <2025121631-congenial-tidings-5192@gregkh>
+Message-ID: <2025121648-liberty-rope-ac42@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -46,12 +46,12 @@ This is a note to let you know that I've just added the patch titled
 
     [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
 
-to the 6.1-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      loongarch-add-machine_kexec_mask_interrupts-implementation.patch
-and it can be found in the queue-6.1 subdirectory.
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -114,5 +114,5 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
 
-queue-6.1/loongarch-mask-all-interrupts-during-kexec-kdump.patch
-queue-6.1/loongarch-add-machine_kexec_mask_interrupts-implementation.patch
+queue-6.6/loongarch-mask-all-interrupts-during-kexec-kdump.patch
+queue-6.6/loongarch-add-machine_kexec_mask_interrupts-implementation.patch
