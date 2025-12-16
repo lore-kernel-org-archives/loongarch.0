@@ -1,82 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053A3366DD5;
-	Tue, 16 Dec 2025 15:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14873286408;
+	Tue, 16 Dec 2025 16:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765898897; cv=none; b=PnyRyhDJKUqmpCitZAOjRcUu8S+nAyuZNJbegngFmY7aB1kHouuc2nMuvkkSCYwWofmd5P9564RbXYa6Lxxg82/wfv784xMBkD05MexJyPhUGMvK2N5nC6TkxnSmvz6/Q+dc/npSeqD4zwziRg00KP+2OJBTCM9Wj4hu1MMiCNc=
+	t=1765901804; cv=none; b=QjFD2bhXH3MbnVZNXCoNah8pGb6poTPg9sbvuzmg3rnRLQoDsy0hJzaf6M4myU47fKnzF6uzITkaaWCFZqsEB79W8qfoMx4YDrDodHJ+c3p9J8ix1eLu53UzuTGAOGzay9EyhlDc0zAKpY8BJ9bKJWfsYP7jRg10q369XVZqCMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765898897; c=relaxed/simple;
-	bh=sD65R5UGhCtay10P/5W+7TM+UmAjlbjVbXwRe2em6yA=;
+	s=arc-20240116; t=1765901804; c=relaxed/simple;
+	bh=KbDL6tVsoLJsdlRyLex4ZD597htAV/WJC7lKOAedOWs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IAdCwvg5BI+HCAJW75v8PVq1ZIWs9EGYu2FQFwn4/EUBL1+5FhmMcN6AgTUuwCMrTJ0DdRFkFQa3b+KNSAUfxxgNUVsX1JqzP/BFWlNmwhTs9AyXiXpLjNnIe2/33hxy4AZANZzb76KDapqkwbCOEM3wWfgIew3sIu2vW9s3jZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mD9XwJ3L; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NlZ+S3CCEoJn+uUaCF9HnTAOMY/nh8K0cDzSz0xNsPWSSQ7yVN8eUpvVHNyi+e015mOJHuehU+U21kjLuE0zzIBQyP40PBQFO7/OwzUvEEWcUcHb7LaoRM8pOj/wGjVLofEa6eIVrYB4FetQiMIO+exMLjPe+S+cSJ8UIovF0dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WjzRiApZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mD9XwJ3L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765898896; x=1797434896;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sD65R5UGhCtay10P/5W+7TM+UmAjlbjVbXwRe2em6yA=;
-  b=mD9XwJ3Lj01xTNoXj9cQpEmoILV6uN5IVsDZ9H8/DuoaYVgrTIO8qVJt
-   ngZUt5SxDHlXR6Rx3LtKPfDqQFZ0+bCLCfRgyZQlOLLyoBQZ0cJuFvpB2
-   t4H9aspp7UnO7b7qTnOQerWA0BVpabnR8s/BhkNowD5AJEGx4LAbdTjY3
-   Y+aaVsRNgc2dbeoj3QUlj9xa7EWzWgIpuMqoxLRUOohl8bfSuyy6cfRZS
-   0cPKPg/pk0g+C2MyHa0Vcu00/zSAGilLdIsVMGpIOY1RWSXZ9HBF7le9O
-   S/6wWbs/BPdJQfNwNPMhhbM9DTK+VTXfohGJSlawz8jMKSOhLVAX1hqnK
-   w==;
-X-CSE-ConnectionGUID: SsmC/G4jSricaLxoixMr8g==
-X-CSE-MsgGUID: kwIh/x5ERgeI/javikPVeQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="79187678"
-X-IronPort-AV: E=Sophos;i="6.21,153,1763452800"; 
-   d="scan'208";a="79187678"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 07:28:15 -0800
-X-CSE-ConnectionGUID: 2xFsI/dBQXKE8DWUTEVNrg==
-X-CSE-MsgGUID: HIgAl8RFQHWXgAdjx3aUnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,153,1763452800"; 
-   d="scan'208";a="202458915"
-Received: from lkp-server02.sh.intel.com (HELO 034c7e8e53c3) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 16 Dec 2025 07:28:08 -0800
-Received: from kbuild by 034c7e8e53c3 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vVWy6-000000003RG-37cv;
-	Tue, 16 Dec 2025 15:28:06 +0000
-Date: Tue, 16 Dec 2025 23:27:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] randomize_kstack: Unify random source across
- arches
-Message-ID: <202512162320.WFgo042e-lkp@intel.com>
-References: <20251215163520.1144179-4-ryan.roberts@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WjzRiApZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62911C4CEF1;
+	Tue, 16 Dec 2025 16:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765901803;
+	bh=KbDL6tVsoLJsdlRyLex4ZD597htAV/WJC7lKOAedOWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WjzRiApZ65tyO2cE99IkhqHl6VcKSmvnzJkLMlLdyXbDD2GQrI8tPJcpoTXNmE8c6
+	 1TfqCWkwJp41NCreBv9JdK4B78PKKumyyx3KM1gf+4ZlZQMrbHfJ9RorS04hEtoG5L
+	 J/JjD4eaWEwKL5cp4dd/bAxeMpkHAUSGAPXFjvjG9GtXnjpzNcH/9QQj7DbkT5kiYR
+	 MioSvC58mchfK39CenVTNfi7Wgjash/3FM65A4cm346PoEjbCi3wXWYxYPlHisOYmc
+	 c9xp7P7TaM3hzwMciU0Psq56rkAKZuSUhMgMqIksNmhzxX85c91ul598YDTAW/uDig
+	 cxtf0M+9r7PuQ==
+Date: Tue, 16 Dec 2025 10:16:41 -0600
+From: Rob Herring <robh@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: interrupt-controller: loongson,pch-pic:
+ Change to unevaluatedProperties
+Message-ID: <20251216161641.GA2573095-robh@kernel.org>
+References: <cover.1765778124.git.zhoubinbin@loongson.cn>
+ <db24b6366bb0d49e9dcc04328ffad7a37f687a89.1765778124.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -85,105 +49,48 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251215163520.1144179-4-ryan.roberts@arm.com>
+In-Reply-To: <db24b6366bb0d49e9dcc04328ffad7a37f687a89.1765778124.git.zhoubinbin@loongson.cn>
 
-Hi Ryan,
+On Tue, Dec 16, 2025 at 03:55:13PM +0800, Binbin Zhou wrote:
+> Change additionalProperties to unevaluatedProperties because it refs to
+> interrupt-controller.yaml.
+> 
+> Fix below CHECK_DTBS warnings:
+> arch/loongarch/boot/dts/loongson-2k2000-ref.dtb: interrupt-controller@10000000 (loongson,pch-pic-1.0): '#address-cells' does not match any of the regexes: '^pinctrl-[0-9]+$'
+>         from schema $id: http://devicetree.org/schemas/interrupt-controller/loongson,pch-pic.yaml
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  .../bindings/interrupt-controller/loongson,pch-pic.yaml      | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+> index b7bc5cb1dff2..1f818316082e 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+> @@ -14,6 +14,9 @@ description:
+>    transforming interrupts from on-chip devices into HyperTransport vectorized
+>    interrupts.
+>  
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
 
-kernel test robot noticed the following build errors:
+Adding this does not define the value(s) #address-cells must be. I'd 
+assume it is 0 in this case.
 
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on akpm-mm/mm-everything linus/master v6.19-rc1 next-20251216]
-[cannot apply to kees/for-next/hardening kees/for-next/execve]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/prandom-Convert-prandom_u32_state-to-__always_inline/20251216-013546
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20251215163520.1144179-4-ryan.roberts%40arm.com
-patch subject: [PATCH v2 3/3] randomize_kstack: Unify random source across arches
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20251216/202512162320.WFgo042e-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-rustc: rustc 1.88.0 (6b00bc388 2025-06-23)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251216/202512162320.WFgo042e-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512162320.WFgo042e-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/x86/kvm/svm/svm.c:5509:1: error: redefinition of '__inittest'
-    5509 | module_init(svm_init)
-         | ^
-   include/linux/module.h:132:42: note: expanded from macro 'module_init'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^
-   include/linux/randomize_kstack.h:86:1: note: previous definition is here
-      86 | late_initcall(random_kstack_init);
-         | ^
-   include/linux/module.h:125:28: note: expanded from macro 'late_initcall'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^
-   include/linux/module.h:132:42: note: expanded from macro 'module_init'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^
->> arch/x86/kvm/svm/svm.c:5509:1: error: redefinition of 'init_module'
-    5509 | module_init(svm_init)
-         | ^
-   include/linux/module.h:134:6: note: expanded from macro 'module_init'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^
-   include/linux/randomize_kstack.h:86:1: note: previous definition is here
-      86 | late_initcall(random_kstack_init);
-         | ^
-   include/linux/module.h:125:28: note: expanded from macro 'late_initcall'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^
-   include/linux/module.h:134:6: note: expanded from macro 'module_init'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^
-   2 errors generated.
---
->> drivers/misc/sgi-xp/xpc_main.c:1285:1: error: redefinition of '__inittest'
-    1285 | module_init(xpc_init);
-         | ^
-   include/linux/module.h:132:42: note: expanded from macro 'module_init'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^
-   include/linux/randomize_kstack.h:86:1: note: previous definition is here
-      86 | late_initcall(random_kstack_init);
-         | ^
-   include/linux/module.h:125:28: note: expanded from macro 'late_initcall'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^
-   include/linux/module.h:132:42: note: expanded from macro 'module_init'
-     132 |         static inline initcall_t __maybe_unused __inittest(void)                \
-         |                                                 ^
->> drivers/misc/sgi-xp/xpc_main.c:1285:1: error: redefinition of 'init_module'
-    1285 | module_init(xpc_init);
-         | ^
-   include/linux/module.h:134:6: note: expanded from macro 'module_init'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^
-   include/linux/randomize_kstack.h:86:1: note: previous definition is here
-      86 | late_initcall(random_kstack_init);
-         | ^
-   include/linux/module.h:125:28: note: expanded from macro 'late_initcall'
-     125 | #define late_initcall(fn)               module_init(fn)
-         |                                         ^
-   include/linux/module.h:134:6: note: expanded from macro 'module_init'
-     134 |         int init_module(void) __copy(initfn)                    \
-         |             ^
-   2 errors generated.
-
-
-vim +/__inittest +5509 arch/x86/kvm/svm/svm.c
-
-6aa8b732ca01c3d drivers/kvm/svm.c Avi Kivity 2006-12-10  5508  
-6aa8b732ca01c3d drivers/kvm/svm.c Avi Kivity 2006-12-10 @5509  module_init(svm_init)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +
+>  properties:
+>    compatible:
+>      const: loongson,pch-pic-1.0
+> @@ -41,7 +44,7 @@ required:
+>    - interrupt-controller
+>    - '#interrupt-cells'
+>  
+> -additionalProperties: false
+> +unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> -- 
+> 2.47.3
+> 
