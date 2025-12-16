@@ -1,197 +1,118 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080EE3370F7
-	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 09:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D67328612;
+	Tue, 16 Dec 2025 10:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765878678; cv=none; b=h1UwKYoM/PjGXhUa2m3eAMKwpNEnSw+20kWCAqjs1qGQM1lsjohuJq6mwljLrrR2TU4HAwz6CQWHqRv38phSwlRtLQzPi/Xz5ryEd5N3Qhq4YinmkeLxTGVRbdksPg5ft3r9bkwC/FqtH5qSmKTvOtsx1CfEhPpqaX/aAzWXdT4=
+	t=1765880794; cv=none; b=ubt4+Xk3Rkkqx6XL4aQtTW1sFb9jTgD7A/Ttv0si7sPCFGvi2q2AZXTe/UAZUaBwqAznHnm7abHyVsZ2XFXHNOXjgh4Ga28QrLbTK8aD1hsID+Gw+8O31Qbu0gh9tnbJ2NbULI2jgmAYgmF/cUHzuBVgqrc8dkNmtfkt1/lUKuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765878678; c=relaxed/simple;
-	bh=vcsI2v6tuVS1NUqaNOyqrqhvoG2fZA6wSDcFkwLFsWs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O104eipcOlfXO0yI3uwND8YcSyC/EAsULI7SabIzlybN1Wflm6R2lfDXNwkbZoXeQC26WJje9w+rOKCd+khRoYu3x7OQj512kUhmy/KeaOzy5H5Q1+Ukqs1MUylWbm9IvHQVnd+VGr0i6iOzPzCUyS0mNqJRbt/SuQJXci0p0RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c0901a5eda6411f0a38c85956e01ac42-20251216
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
-	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:79810aac-3fe4-4b6e-82b6-3519e4f6305c,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:79810aac-3fe4-4b6e-82b6-3519e4f6305c,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:8ca50ba58714037dc20ba792347d2749,BulkI
-	D:251212171126DK7G45J0,BulkQuantity:2,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:41,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0
-	,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c0901a5eda6411f0a38c85956e01ac42-20251216
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(183.242.174.21)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1587119060; Tue, 16 Dec 2025 17:51:11 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: yangtiezhu@loongson.cn,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	hengqi.chen@gmail.com,
-	chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	zhangtianyang@loongson.cn,
-	masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	duanchenghao@kylinos.cn,
-	youling.tang@linux.dev,
-	jianghaoran@kylinos.cn,
-	vincent.mc.li@gmail.com,
-	linux-trace-kernel@vger.kernel.org,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v3 4/4] LoongArch: ftrace: Adjust register stack restore order in direct call trampolines
-Date: Tue, 16 Dec 2025 17:47:53 +0800
-Message-Id: <20251216094753.1317231-5-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251216094753.1317231-1-duanchenghao@kylinos.cn>
-References: <20251216094753.1317231-1-duanchenghao@kylinos.cn>
+	s=arc-20240116; t=1765880794; c=relaxed/simple;
+	bh=UxYRxWJNC2oRjTrOt/ki1iEtGTpP5CCHvKMOdA8xJbI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=V5SFqWE9Q2yF6JeLPKyX6uSeszJk2OnEbZDSfXT36f2/Geobz4prIzakptqosP35dxU13eytQVk5cgLv6+TjuM+CqTNjIV/VZ3FXhZRsINxFLB6qYqjfwul6+wb4iV4BQ6lpEW55hvGsTqpXFNFDOFm0f+DgihASv4/A9rVbfQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G5NfJeFb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G5NfJeFb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5523C4CEF1;
+	Tue, 16 Dec 2025 10:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1765880794;
+	bh=UxYRxWJNC2oRjTrOt/ki1iEtGTpP5CCHvKMOdA8xJbI=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=G5NfJeFb40yMTwIe07mBK+JiNEXJu8lQlN1roAq1admlB/jB2uca86q7xo+QT2Btl
+	 OYHM6xK4Bir3Z6cxPtgmkJ7v6VwqlzEZxs8jTbzm2dOXRwmCNuG+NuDmzZX11K9cGT
+	 HsKwNx296VnLH3dap/L7hb6Jz9nXUHZnY+xrKuF4=
+Subject: Patch "[PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation" has been added to the 6.1-stable tree
+To: chenhuacai@kernel.org,chenhuacai@loongson.cn,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,sashal@kernel.org,zhangtianyang@loongson.cn
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Tue, 16 Dec 2025 11:26:31 +0100
+In-Reply-To: <20251213094950.1068951-1-chenhuacai@loongson.cn>
+Message-ID: <2025121631-congenial-tidings-5192@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-Ensure that in the ftrace direct call logic, the CPU register state
-(with ra = parent return address) is restored to the correct state
-after the execution of the custom trampoline function and before
-returning to the traced function. Additionally, guarantee the
-correctness of the jump logic for jr t0 (traced function address).
 
-Reported-by: Youling Tang <tangyouling@kylinos.cn>
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+This is a note to let you know that I've just added the patch titled
+
+    [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
+
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     loongarch-add-machine_kexec_mask_interrupts-implementation.patch
+and it can be found in the queue-6.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From chenhuacai@loongson.cn  Tue Dec 16 11:19:39 2025
+From: Huacai Chen <chenhuacai@loongson.cn>
+Date: Sat, 13 Dec 2025 17:49:50 +0800
+Subject: [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>, Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <20251213094950.1068951-1-chenhuacai@loongson.cn>
+
+From: Huacai Chen <chenhuacai@loongson.cn>
+
+Commit 863a320dc6fd7c855f47da4b ("LoongArch: Mask all interrupts during
+kexec/kdump") is backported to LTS branches, but they lack a generic
+machine_kexec_mask_interrupts() implementation, so add an arch-specific
+one.
+
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- samples/ftrace/ftrace-direct-modify.c       | 8 ++++----
- samples/ftrace/ftrace-direct-multi-modify.c | 8 ++++----
- samples/ftrace/ftrace-direct-multi.c        | 4 ++--
- samples/ftrace/ftrace-direct-too.c          | 4 ++--
- samples/ftrace/ftrace-direct.c              | 4 ++--
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ arch/loongarch/kernel/machine_kexec.c |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-index da3a9f2091f5..1ba1927b548e 100644
---- a/samples/ftrace/ftrace-direct-modify.c
-+++ b/samples/ftrace/ftrace-direct-modify.c
-@@ -176,8 +176,8 @@ asm (
- "	st.d	$t0, $sp, 0\n"
- "	st.d	$ra, $sp, 8\n"
- "	bl	my_direct_func1\n"
--"	ld.d	$t0, $sp, 0\n"
--"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$ra, $sp, 0\n"
-+"	ld.d	$t0, $sp, 8\n"
- "	addi.d	$sp, $sp, 16\n"
- "	jr	$t0\n"
- "	.size		my_tramp1, .-my_tramp1\n"
-@@ -189,8 +189,8 @@ asm (
- "	st.d	$t0, $sp, 0\n"
- "	st.d	$ra, $sp, 8\n"
- "	bl	my_direct_func2\n"
--"	ld.d	$t0, $sp, 0\n"
--"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$ra, $sp, 0\n"
-+"	ld.d	$t0, $sp, 8\n"
- "	addi.d	$sp, $sp, 16\n"
- "	jr	$t0\n"
- "	.size		my_tramp2, .-my_tramp2\n"
-diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-index 8f7986d698d8..7a7822dfeb50 100644
---- a/samples/ftrace/ftrace-direct-multi-modify.c
-+++ b/samples/ftrace/ftrace-direct-multi-modify.c
-@@ -199,8 +199,8 @@ asm (
- "	move	$a0, $t0\n"
- "	bl	my_direct_func1\n"
- "	ld.d	$a0, $sp, 0\n"
--"	ld.d	$t0, $sp, 8\n"
--"	ld.d	$ra, $sp, 16\n"
-+"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$t0, $sp, 16\n"
- "	addi.d	$sp, $sp, 32\n"
- "	jr	$t0\n"
- "	.size		my_tramp1, .-my_tramp1\n"
-@@ -215,8 +215,8 @@ asm (
- "	move	$a0, $t0\n"
- "	bl	my_direct_func2\n"
- "	ld.d	$a0, $sp, 0\n"
--"	ld.d	$t0, $sp, 8\n"
--"	ld.d	$ra, $sp, 16\n"
-+"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$t0, $sp, 16\n"
- "	addi.d	$sp, $sp, 32\n"
- "	jr	$t0\n"
- "	.size		my_tramp2, .-my_tramp2\n"
-diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-index db326c81a27d..3fe6ddaf0b69 100644
---- a/samples/ftrace/ftrace-direct-multi.c
-+++ b/samples/ftrace/ftrace-direct-multi.c
-@@ -131,8 +131,8 @@ asm (
- "	move	$a0, $t0\n"
- "	bl	my_direct_func\n"
- "	ld.d	$a0, $sp, 0\n"
--"	ld.d	$t0, $sp, 8\n"
--"	ld.d	$ra, $sp, 16\n"
-+"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$t0, $sp, 16\n"
- "	addi.d	$sp, $sp, 32\n"
- "	jr	$t0\n"
- "	.size		my_tramp, .-my_tramp\n"
-diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-index 3d0fa260332d..bf2411aa6fd7 100644
---- a/samples/ftrace/ftrace-direct-too.c
-+++ b/samples/ftrace/ftrace-direct-too.c
-@@ -143,8 +143,8 @@ asm (
- "	ld.d	$a0, $sp, 0\n"
- "	ld.d	$a1, $sp, 8\n"
- "	ld.d	$a2, $sp, 16\n"
--"	ld.d	$t0, $sp, 24\n"
--"	ld.d	$ra, $sp, 32\n"
-+"	ld.d	$ra, $sp, 24\n"
-+"	ld.d	$t0, $sp, 32\n"
- "	addi.d	$sp, $sp, 48\n"
- "	jr	$t0\n"
- "	.size		my_tramp, .-my_tramp\n"
-diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-index 956834b0d19a..5368c8c39cbb 100644
---- a/samples/ftrace/ftrace-direct.c
-+++ b/samples/ftrace/ftrace-direct.c
-@@ -124,8 +124,8 @@ asm (
- "	st.d	$ra, $sp, 16\n"
- "	bl	my_direct_func\n"
- "	ld.d	$a0, $sp, 0\n"
--"	ld.d	$t0, $sp, 8\n"
--"	ld.d	$ra, $sp, 16\n"
-+"	ld.d	$ra, $sp, 8\n"
-+"	ld.d	$t0, $sp, 16\n"
- "	addi.d	$sp, $sp, 32\n"
- "	jr	$t0\n"
- "	.size		my_tramp, .-my_tramp\n"
--- 
-2.25.1
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -136,6 +136,28 @@ void kexec_reboot(void)
+ 	BUG();
+ }
+ 
++static void machine_kexec_mask_interrupts(void)
++{
++	unsigned int i;
++	struct irq_desc *desc;
++
++	for_each_irq_desc(i, desc) {
++		struct irq_chip *chip;
++
++		chip = irq_desc_get_chip(desc);
++		if (!chip)
++			continue;
++
++		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
++			chip->irq_eoi(&desc->irq_data);
++
++		if (chip->irq_mask)
++			chip->irq_mask(&desc->irq_data);
++
++		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
++			chip->irq_disable(&desc->irq_data);
++	}
++}
+ 
+ #ifdef CONFIG_SMP
+ static void kexec_shutdown_secondary(void *regs)
 
+
+Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
+
+queue-6.1/loongarch-mask-all-interrupts-during-kexec-kdump.patch
+queue-6.1/loongarch-add-machine_kexec_mask_interrupts-implementation.patch
