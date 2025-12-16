@@ -1,116 +1,126 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AAA33436A
-	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 07:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B121631AF1E
+	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 07:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765869729; cv=none; b=NBuajTVt+Wz+1KdAsa1aQTkLfSKxLxC123Y7HXMk2KAakr8bfBX6AlbYkIBhyIroIqz6ruxejhis0m0ds6TcDIIfxv1gJxInJCw6fRMsiW27OsBkJW7v7Q/07S9ADkNDWxVt9A6bKLc4Lnn+4qtTR9pau9Ewj9aCU72Gj1RM0PA=
+	t=1765871704; cv=none; b=lXoD+sVIX+RcrE6qlr9Nbns7M/DKd3uR+tv9VtPNLP6uG6EZ9/3WIpAwcoFYo+M6//lGV6kzVFxrkrjoI8+FbZvwXqtcQpqsBwXOy5KbRg4tCQgMUXVR+Lg9ysR6FFTbQoZ1wC1U9Sxtht4DUD17o0WpUmTj10KaqfkBVCIrBvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765869729; c=relaxed/simple;
-	bh=51MWHgkxGI71sisGb/E7f7y8ZYnb9G7XuO+h+vxtYOc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=OFEOPRO2nm2HKbGLcAp4KFU3pxLP1XaheKkWMZcGtnC+99C371Z5kopbOQZ4WUIMFkUkJglfqMls4cUy1IQB+5spRmB3xRheKcwJiZ44HRVUJwwrHp+Dxk2g2jTGWcYLFm5y2621sM3O5kRmW1bUodF0sSKmP0RDgeOhajR00CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GAxUSiNQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=q8mOthEb; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GAxUSiNQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="q8mOthEb"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id C22711D000CB;
-	Tue, 16 Dec 2025 02:22:05 -0500 (EST)
-Received: from phl-imap-17 ([10.202.2.105])
-  by phl-compute-04.internal (MEProxy); Tue, 16 Dec 2025 02:22:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1765869725;
-	 x=1765956125; bh=e1fWM5RLKqaza7Y9Iev0VIoNi7EFuym/SarsmGOAmq8=; b=
-	GAxUSiNQOOTAkd2qNz03eS7LbVVmqnoZbAeZyxvpxuB4H6Fx/oINuqwn/RMlzxH3
-	aiIYgg/FmNeTl6LmXAa/+0d0adITvnnaICC3fGaBOdItSUJRp7szDKASox6jORC/
-	CdjeWeeMJ5GpTSaeMvLoIU8UPKNb22O2I910Q3e6VGDb0MH6ICI27gz8ueJyRR8v
-	Su3QI2/PHHBEStnrO0RddOYx1VYnKjgt/lDPNb1lV62/ogqJ3ZYGqd38IOd7GoUF
-	8b1XHYsRxiFh5eF6fn4A3HIOoRpi6GYqWU87B3qh6uGcCppvKvWRQmWWHUID4Pi2
-	QMN5Y9vX+KTrdUQcLfgrOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1765869725; x=
-	1765956125; bh=e1fWM5RLKqaza7Y9Iev0VIoNi7EFuym/SarsmGOAmq8=; b=q
-	8mOthEbNFtFYrAbDRS/7k2rhzDBCsmkJnbslF2dC0H9rhjgYk3sHXxtIx/saaukt
-	QLGSNXxtjQORTTMxs2b/8qrjb6vltp9CouzpuoTrhsyz0RQhwJb8TIj9qzM0pMdT
-	FgjRNb01KhX4SSDiPxunCGEabMALLsbDgEiqDmiBsPlj9CEjHffiLa3dhgT2fz3t
-	PfC+vHL/hkWWp6lPd+KId+ICvdPlx/aluV0e1sELq9sDDQ6s5MKupCPBk95kXwVD
-	wsyfs24T4HNCaWH/9nxqL7ck+to0ytcbdeNaz1HIqfziRFTCctsZ3fmuQpeR6LWb
-	JiI5o3bDKPdCc08LigPEA==
-X-ME-Sender: <xms:nAhBaftVLQ5H2j1uzDldw141hWuLljq9ly4_xerey4t56MLaUYrxyw>
-    <xme:nAhBabTxf41FnydMus85XeFnQqbODtlc2_Xfwbh8GUcmG0lHXe4j8Jsz2wMVqUKCP
-    2S-RT7qbr2eS0ej-nl7eZ5beidAPlMaiR_9GRRFWLng1LQANPDYJy4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefledtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopehjvghffhgsrghisegrohhstgdrihhopdhrtghpthhtohepjhhirgiguh
-    hnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopegthhgvnhhhuhgrtggr
-    iheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhoohhnghgrrhgthheslhhishhtsh
-    drlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghr
-    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhesgigvnhdtnhdrnhgrmh
-    gvpdhrtghpthhtohepgihrhiduudduseigrhihudduuddrshhithgv
-X-ME-Proxy: <xmx:nAhBaZWGyUHt7Os7ztVM6qR4boc3M6EsYI7UGtcqLm-rO1gfVdH00A>
-    <xmx:nAhBaTqLYaspTdxM8jL--x-6tZK2H0dnDxQmTLs4g-EKT_XDiwlS4A>
-    <xmx:nAhBaVS_8LRL_b7LQEivb8y8CMYudj-u7cnCr2rXNwVFto1nl8Bvkg>
-    <xmx:nAhBad3pPx4w28Ha1CeGWNCM2jmttAdmtiUojs2Csgudrip9hPM0uw>
-    <xmx:nQhBadhHx_liMF1YZwuXepPoIJy7nA0xeL2XEVfaNC1gczcEH0VWYeZm>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 93545C40071; Tue, 16 Dec 2025 02:22:04 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1765871704; c=relaxed/simple;
+	bh=De4e/4GEVtd8jTPHu+PzxSIsNuZBoc1uotoMWCdF+OA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OqQvXyfGKBTs787WXxCO6N3kp0AsR/EgyGUuztCZ7w6RwaYo8bqRrOk1Ggy4Dnos3+ETOX96OYrr1+4otIpnbCostKKtf6/op9/HTfD5lURih7iNFIyAl88Uh5bo/BcgLREu3564aS+mcOnCor8e1+hjGMG/qdhV6o8zGxq0xrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.219])
+	by gateway (Coremail) with SMTP id _____8Dx9tBJEEFpy5cuAA--.30054S3;
+	Tue, 16 Dec 2025 15:54:49 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.219])
+	by front1 (Coremail) with SMTP id qMiowJCxHOFFEEFpS2EAAA--.2410S2;
+	Tue, 16 Dec 2025 15:54:47 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Yao Zi <me@ziyao.cc>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH 0/7] LoongArch: DTS: Fix dtbs_check warnings
+Date: Tue, 16 Dec 2025 15:54:35 +0800
+Message-ID: <cover.1765778124.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AJuGVEOUT2_Z
-Date: Tue, 16 Dec 2025 08:21:43 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Xi Ruoyao" <xry111@xry111.site>, "Huacai Chen" <chenhuacai@kernel.org>,
- "WANG Xuerui" <kernel@xen0n.name>
-Cc: "Mingcong Bai" <jeffbai@aosc.io>, loongarch@lists.linux.dev,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "open list" <linux-kernel@vger.kernel.org>
-Message-Id: <98d93330-844e-493d-8d7e-3455340b78b7@app.fastmail.com>
-In-Reply-To: <20251215033443.196159-2-xry111@xry111.site>
-References: <20251215033443.196159-2-xry111@xry111.site>
-Subject: Re: [PATCH] LoongArch: Don't define __ARCH_WANT_NEW_STAT for LA32
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxHOFFEEFpS2EAAA--.2410S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQESCGlA9LMB3QAAso
+X-Coremail-Antispam: 1Uk129KBj93XoW7AF1UXF1UGF1UZw45KF47ZFc_yoW8Zryfp3
+	9xuwsrKr4xGFWxZr4Dt34UWrn5ZF9rJrnrWanxGrn5CrsxZ34UZr1rtF93tFWUArWfJa40
+	qryrKw1agF1UCabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On Mon, Dec 15, 2025, at 04:34, Xi Ruoyao wrote:
-> While on LA64 we had added __ARCH_WANT_NEW_STAT back for technological
-> aesthetics reason, on LA32 the newstat family suffers Y2038 issue and it
-> should not be used at all, as the commit 82b355d161c9 ("y2038: Remove
-> newstat family from default syscall set") has already pointed out.
->
-> Fixes: 14338e631afd ("LoongArch: Adjust system call for 32BIT/64BIT")
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Hi all:
 
-The patch looks good to me.
+As Krzysztof pointed out in the OSS talk, LoongArch only has three DTS,
+but has a bunch of warnings. The patchset attempts to fix them.
 
-Note that unlike the referenced 82b355d161c9 patch, this is no
-longer needed for correctness, since modern kernels generate
-the asm/unistd.h from the syscall.tbl based on 
-arch/loongarch/kernel/Makefile.syscalls, which leaves out the
-references to newstat.
+Patch-1 and patch-3 are taken from Yao[1],thanks a lot!
 
-The patch is still useful of course, but only to slightly reduce
-the size of the kernel image by eliminating dead code.
+[1]: https://lore.kernel.org/all/20251209140006.54821-1-me@ziyao.cc/
 
-     Arnd
+Test environment and results: 
+
+Package                   Version
+------------------------- -----------
+attrs                     25.4.0
+dtschema                  2025.12
+jsonschema                4.25.1
+jsonschema-specifications 2025.9.1
+pip                       25.3
+pylibfdt                  1.7.2.post1
+referencing               0.37.0
+rfc3987                   1.3.8
+rpds-py                   0.30.0
+ruamel.yaml               0.18.16
+ruamel.yaml.clib          0.2.15
+typing_extensions         4.15.0
+
+---------
+make dtbs_check W=1
+
+  SYNC    include/config/auto.conf
+  UPD     include/config/kernel.release
+  DTC [C] arch/loongarch/boot/dts/loongson-2k0500-ref.dtb
+  DTC [C] arch/loongarch/boot/dts/loongson-2k1000-ref.dtb
+  DTC [C] arch/loongarch/boot/dts/loongson-2k2000-ref.dtb
+
+Thanks.
+Binbin
+
+Binbin Zhou (5):
+  dt-bindings: interrupt-controller: loongson,pch-pic: Change to
+    unevaluatedProperties
+  LoongArch: dts: loongson-2k0500: Add default Extend I/O Interrupt
+    controller address cells
+  LoongArch: dts: loongson-2k1000: Add default Local I/O Interrupt
+    controller address cells
+  LoongArch: dts: loongson-2k2000: Add default PCH PIC controller
+    address cells
+  LoongArch: dts: loongson-2k1000: Fix i2c-gpio node names
+
+Yao Zi (2):
+  dt-bindings: PCI: loongson: Document msi-parent property
+  LoongArch: dts: Describe PCI sideband IRQ through interrupt-extended
+
+ .../loongson,pch-pic.yaml                     |  5 ++-
+ .../devicetree/bindings/pci/loongson.yaml     |  2 ++
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi  |  1 +
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 30 +++++++----------
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 33 ++++++++-----------
+ 5 files changed, 32 insertions(+), 39 deletions(-)
+
+
+base-commit: 4c2aab372d819471df4fec9e3240d80938fcc983
+-- 
+2.47.3
+
