@@ -1,117 +1,279 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F9829B777;
-	Tue, 16 Dec 2025 10:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FC625F7B9
+	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 13:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765880823; cv=none; b=ZA9+jkdmI2bQGYpWqoMyk0wDHJLq4I5ojZ2FV6l5bTXbJEutFJAlk5dxyFkZ5mz05Z6xPgv2Ah8AOL39LM8BzZO1flsl+ysiJ//ZgX8XZTlB/DXRSRjzlhm/JYXAm7qgvUGM5FA5jDDhftlpGMqVZq9IXfL98CgZ//t4798cJWQ=
+	t=1765891420; cv=none; b=Pb97RHGUxwDYOCDlYwgNhotCi6Z3ct1cGUtj/Vn2LmWcWoo3NuRrbfUfUolV8iHAsb9EHH+mKqlxlDzMjHl1A1+BsrDf8beOoC2jaeqY3NLsXYyXoXCuNcXXrDutQ4SMIdb0yZV43WYF5DNA9xJKMr0V9WZ8ZxvTfDxggoRuT4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765880823; c=relaxed/simple;
-	bh=PC8f1RAbSk6nfJLcg52v2VKA29odkPLz1y14R8tIMXw=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=eirNTc2vkOOgYXKGt+2aFaLMVQEByBI9cDEaP1wdEq9BgBMwH2Ic0n8TEuoKzBj9xJZsn1EtMUDSBDnIh7K/LDmFPZAZFGeE9MlHV9PPx5k/XDkmNSUc2uF72XiE6/pra/f/Ekob/j3bR5wCjsfi6qLuuisKbLD1rjv4MKFwDkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fAvjIpE2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765891420; c=relaxed/simple;
+	bh=DPq1jAGc1D2O/ZyUazla2tvm5eNJUgScceBv0fDtLkU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dd5/rVUJduoySTK8AsSeAWCls4etQsBFXJApLnZNgALJWVUh8w0IaTLFUxCE9tvmUaYkD959HhN4PX+IaxF7AePJL2b1hIeIbqmbNtUZpRDLURuA6Td7HESbUTAAoG+m0aB7dPZDZA3U7ebhWruQw4lnbH+zvtSRw6kdqx50Tm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGre6Dbv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fAvjIpE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC766C4CEF1;
-	Tue, 16 Dec 2025 10:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1765880823;
-	bh=PC8f1RAbSk6nfJLcg52v2VKA29odkPLz1y14R8tIMXw=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=fAvjIpE2hAllw5MZvvIVIalkuHiP0rU+48q2SN1kDAnLF6FzBUf13/jKyzd8Oe46y
-	 77MhTuNANSSc9JmarxqN1DZO0TM2KyaElt/hpnS3SNPGKqIjz6BLpsUa4A/ixAdFpx
-	 fLhj52U7hakdV/aRU8EcsGb4uy7RZYtxV5K9lRy8=
-Subject: Patch "[PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation" has been added to the 6.12-stable tree
-To: chenhuacai@kernel.org,chenhuacai@loongson.cn,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,sashal@kernel.org,zhangtianyang@loongson.cn
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Tue, 16 Dec 2025 11:26:59 +0100
-In-Reply-To: <20251213094950.1068951-1-chenhuacai@loongson.cn>
-Message-ID: <2025121659-pantyhose-karate-1504@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGre6Dbv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B972BC19425
+	for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 13:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765891419;
+	bh=DPq1jAGc1D2O/ZyUazla2tvm5eNJUgScceBv0fDtLkU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nGre6DbvGUgnZ+ESxttsrnECY5lWVvqQ1gRq4R08/NWMM6Rb5ayGTuV9K9W/HqR3Q
+	 YGAGrMdKjxCZnF9RFyzdK69F1AQUANMKOGzht2N/FoW3JIeHZRdnF2XsY2K6sgW70V
+	 U+HDhuzRiG/Lo6imIWRSAqVyL/NRr0FvFO4gOUpyGp6IDnfl/qh3D/gj1x5B8ycpG2
+	 gAzN/+9lxsa+fl1T+WbVyRxI/k88S3LHjZRCLCWuBXE6N3osXAj09ZGHK4TAGCckwT
+	 gZZIYQP8g382SyQr6jZi16qKdej6YlbWsF/u8WCmfc+fxrtTHYs0PrlqLhepsiLRQ3
+	 PMZCjx7IxWsOg==
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-34c902f6845so2807314a91.2
+        for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 05:23:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmhubpBpPsit61Qoaqo4krPChL1uoiVEh5V1D/DhwT7cNpHEpS7H2b0zg45OaLYkFAdLXmsD/1edg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YznHkl7CH1E4POAmfuC5MWbDfOgWwl36BiVTdsGxVsE7XpiFJ/H
+	bZC60h19HSiG3AHtETXHJxVvnqxRi4AmpIW5fB9iiEYUiyyau0QFmTL/PZNAg75LhMefz0HtzP7
+	+4XDvWcUDxMULlIMvqSlwVupG9bVc4Gg=
+X-Google-Smtp-Source: AGHT+IHUnDpKNHYUuXbGrQN2jg3vGOrZPyoOq5q+Rmr8AbIh7IbWBUkMTVkTTrw2Wag6CLrhtskPUlwtBJIXFO06Kbc=
+X-Received: by 2002:a17:90b:4cce:b0:34a:b1ea:664e with SMTP id
+ 98e67ed59e1d1-34abd734361mr11835652a91.15.1765891419204; Tue, 16 Dec 2025
+ 05:23:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20251126160854.553077-1-tzimmermann@suse.de> <20251126160854.553077-10-tzimmermann@suse.de>
+In-Reply-To: <20251126160854.553077-10-tzimmermann@suse.de>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 16 Dec 2025 14:23:28 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+X-Gm-Features: AQt7F2oAVMGGFI57G40bXQNZ0WT8L2VZYIDSVOafxb5SZLs3ZzjQIedL6et7Yfs
+Message-ID: <CAMj1kXFeBS7O5A-CPds3UfFnjegGTpVsuF7VznBc-zZ+gjygtw@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] efi: libstub: Simplify interfaces for primary_display
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: javierm@redhat.com, arnd@arndb.de, richard.lyu@suse.com, 
+	helgaas@kernel.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Thomas
+
+On Wed, 26 Nov 2025 at 17:09, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> Rename alloc_primary_display() and __alloc_primary_display(), clarify
+> free semantics to make interfaces easier to understand.
+>
+> Rename alloc_primary_display() to lookup_primary_display() as it
+> does not necessarily allocate. Then rename __alloc_primary_display()
+> to the new alloc_primary_display(). The helper belongs to
+> free_primary_display), so it should be named without underscores.
+>
+> The lookup helper does not necessarily allocate, so the output
+> parameter needs_free to indicate when free should be called.
+
+I don't understand why we need this. Whether or not the helper
+allocates is a compile time decision, and in builds where it doesn't,
+the free helper doesn't do anything.
+
+I'm all for making things simpler, but I don't think this patch
+achieves that tbh.
+
+I've queued up this series now up until this patch - once we converge
+on the simplification, I'm happy to apply it on top.
+
+Thanks,
 
 
-This is a note to let you know that I've just added the patch titled
 
-    [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
-
-to the 6.12-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     loongarch-add-machine_kexec_mask_interrupts-implementation.patch
-and it can be found in the queue-6.12 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From chenhuacai@loongson.cn  Tue Dec 16 11:19:39 2025
-From: Huacai Chen <chenhuacai@loongson.cn>
-Date: Sat, 13 Dec 2025 17:49:50 +0800
-Subject: [PATCH 6.12] LoongArch: Add machine_kexec_mask_interrupts() implementation
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>, Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <20251213094950.1068951-1-chenhuacai@loongson.cn>
-
-From: Huacai Chen <chenhuacai@loongson.cn>
-
-Commit 863a320dc6fd7c855f47da4b ("LoongArch: Mask all interrupts during
-kexec/kdump") is backported to LTS branches, but they lack a generic
-machine_kexec_mask_interrupts() implementation, so add an arch-specific
-one.
-
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/loongarch/kernel/machine_kexec.c |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -136,6 +136,28 @@ void kexec_reboot(void)
- 	BUG();
- }
- 
-+static void machine_kexec_mask_interrupts(void)
-+{
-+	unsigned int i;
-+	struct irq_desc *desc;
-+
-+	for_each_irq_desc(i, desc) {
-+		struct irq_chip *chip;
-+
-+		chip = irq_desc_get_chip(desc);
-+		if (!chip)
-+			continue;
-+
-+		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
-+			chip->irq_eoi(&desc->irq_data);
-+
-+		if (chip->irq_mask)
-+			chip->irq_mask(&desc->irq_data);
-+
-+		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
-+			chip->irq_disable(&desc->irq_data);
-+	}
-+}
- 
- #ifdef CONFIG_SMP
- static void kexec_shutdown_secondary(void *regs)
-
-
-Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
-
-queue-6.12/loongarch-add-machine_kexec_mask_interrupts-implementation.patch
+> Pass
+> an argument through the calls to track this state. Put the free
+> handling into release_primary_display() for simplificy.
+>
+> Also move the comment fro primary_display.c to efi-stub-entry.c,
+> where it now describes lookup_primary_display().
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  drivers/firmware/efi/libstub/efi-stub-entry.c | 23 +++++++++++++++++--
+>  drivers/firmware/efi/libstub/efi-stub.c       | 22 ++++++++++++------
+>  drivers/firmware/efi/libstub/efistub.h        |  2 +-
+>  .../firmware/efi/libstub/primary_display.c    | 17 +-------------
+>  drivers/firmware/efi/libstub/zboot.c          |  6 +++--
+>  5 files changed, 42 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> index aa85e910fe59..3077b51fe0b2 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub-entry.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
+> @@ -14,10 +14,29 @@ static void *kernel_image_addr(void *addr)
+>         return addr + kernel_image_offset;
+>  }
+>
+> -struct sysfb_display_info *alloc_primary_display(void)
+> +/*
+> + * There are two ways of populating the core kernel's sysfb_primary_display
+> + * via the stub:
+> + *
+> + *   - using a configuration table, which relies on the EFI init code to
+> + *     locate the table and copy the contents; or
+> + *
+> + *   - by linking directly to the core kernel's copy of the global symbol.
+> + *
+> + * The latter is preferred because it makes the EFIFB earlycon available very
+> + * early, but it only works if the EFI stub is part of the core kernel image
+> + * itself. The zboot decompressor can only use the configuration table
+> + * approach.
+> + */
+> +
+> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>  {
+> +       *needs_free = true;
+> +
+>         if (IS_ENABLED(CONFIG_ARM))
+> -               return __alloc_primary_display();
+> +               return alloc_primary_display();
+> +
+> +       *needs_free = false;
+>
+>         if (IS_ENABLED(CONFIG_X86) ||
+>             IS_ENABLED(CONFIG_EFI_EARLYCON) ||
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index 42d6073bcd06..dc545f62c62b 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -51,14 +51,14 @@ static bool flat_va_mapping = (EFI_RT_VIRTUAL_OFFSET != 0);
+>  void __weak free_primary_display(struct sysfb_display_info *dpy)
+>  { }
+>
+> -static struct sysfb_display_info *setup_primary_display(void)
+> +static struct sysfb_display_info *setup_primary_display(bool *dpy_needs_free)
+>  {
+>         struct sysfb_display_info *dpy;
+>         struct screen_info *screen = NULL;
+>         struct edid_info *edid = NULL;
+>         efi_status_t status;
+>
+> -       dpy = alloc_primary_display();
+> +       dpy = lookup_primary_display(dpy_needs_free);
+>         if (!dpy)
+>                 return NULL;
+>         screen = &dpy->screen;
+> @@ -68,15 +68,22 @@ static struct sysfb_display_info *setup_primary_display(void)
+>
+>         status = efi_setup_graphics(screen, edid);
+>         if (status != EFI_SUCCESS)
+> -               goto err_free_primary_display;
+> +               goto err___free_primary_display;
+>
+>         return dpy;
+>
+> -err_free_primary_display:
+> -       free_primary_display(dpy);
+> +err___free_primary_display:
+> +       if (*dpy_needs_free)
+> +               free_primary_display(dpy);
+>         return NULL;
+>  }
+>
+> +static void release_primary_display(struct sysfb_display_info *dpy, bool dpy_needs_free)
+> +{
+> +       if (dpy && dpy_needs_free)
+> +               free_primary_display(dpy);
+> +}
+> +
+>  static void install_memreserve_table(void)
+>  {
+>         struct linux_efi_memreserve *rsv;
+> @@ -156,13 +163,14 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>                              char *cmdline_ptr)
+>  {
+>         struct sysfb_display_info *dpy;
+> +       bool dpy_needs_free;
+>         efi_status_t status;
+>
+>         status = check_platform_features();
+>         if (status != EFI_SUCCESS)
+>                 return status;
+>
+> -       dpy = setup_primary_display();
+> +       dpy = setup_primary_display(&dpy_needs_free);
+>
+>         efi_retrieve_eventlog();
+>
+> @@ -182,7 +190,7 @@ efi_status_t efi_stub_common(efi_handle_t handle,
+>
+>         status = efi_boot_kernel(handle, image, image_addr, cmdline_ptr);
+>
+> -       free_primary_display(dpy);
+> +       release_primary_display(dpy, dpy_needs_free);
+>
+>         return status;
+>  }
+> diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+> index 979a21818cc1..1503ffb82903 100644
+> --- a/drivers/firmware/efi/libstub/efistub.h
+> +++ b/drivers/firmware/efi/libstub/efistub.h
+> @@ -1176,8 +1176,8 @@ efi_enable_reset_attack_mitigation(void) { }
+>
+>  void efi_retrieve_eventlog(void);
+>
+> +struct sysfb_display_info *lookup_primary_display(bool *needs_free);
+>  struct sysfb_display_info *alloc_primary_display(void);
+> -struct sysfb_display_info *__alloc_primary_display(void);
+>  void free_primary_display(struct sysfb_display_info *dpy);
+>
+>  void efi_cache_sync_image(unsigned long image_base,
+> diff --git a/drivers/firmware/efi/libstub/primary_display.c b/drivers/firmware/efi/libstub/primary_display.c
+> index cdaebab26514..34c54ac1e02a 100644
+> --- a/drivers/firmware/efi/libstub/primary_display.c
+> +++ b/drivers/firmware/efi/libstub/primary_display.c
+> @@ -7,24 +7,9 @@
+>
+>  #include "efistub.h"
+>
+> -/*
+> - * There are two ways of populating the core kernel's sysfb_primary_display
+> - * via the stub:
+> - *
+> - *   - using a configuration table, which relies on the EFI init code to
+> - *     locate the table and copy the contents; or
+> - *
+> - *   - by linking directly to the core kernel's copy of the global symbol.
+> - *
+> - * The latter is preferred because it makes the EFIFB earlycon available very
+> - * early, but it only works if the EFI stub is part of the core kernel image
+> - * itself. The zboot decompressor can only use the configuration table
+> - * approach.
+> - */
+> -
+>  static efi_guid_t primary_display_guid = LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID;
+>
+> -struct sysfb_display_info *__alloc_primary_display(void)
+> +struct sysfb_display_info *alloc_primary_display(void)
+>  {
+>         struct sysfb_display_info *dpy;
+>         efi_status_t status;
+> diff --git a/drivers/firmware/efi/libstub/zboot.c b/drivers/firmware/efi/libstub/zboot.c
+> index 4b76f74c56da..c1fd1fdbcb08 100644
+> --- a/drivers/firmware/efi/libstub/zboot.c
+> +++ b/drivers/firmware/efi/libstub/zboot.c
+> @@ -26,9 +26,11 @@ void __weak efi_cache_sync_image(unsigned long image_base,
+>         // executable code loaded into memory to be safe for execution.
+>  }
+>
+> -struct sysfb_display_info *alloc_primary_display(void)
+> +struct sysfb_display_info *lookup_primary_display(bool *needs_free)
+>  {
+> -       return __alloc_primary_display();
+> +       *needs_free = true;
+> +
+> +       return alloc_primary_display();
+>  }
+>
+>  asmlinkage efi_status_t __efiapi
+> --
+> 2.51.1
+>
