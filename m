@@ -1,30 +1,32 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E62E06EF
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 09:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E664133D4E0
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 09:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765964819; cv=none; b=eA/prISxkkIBoza4aS30zcSSuEyuivRlkJ5Zz74coXFbfi9j5NZCavGkv1NDRlZlgxvV+hMNh7aQ2PKT2QETAyqnNlF19YLaoygSwi1ADC1TASXQv6flMVfug7MJS9zgvKuDuXkQ8M8rMQfwNS41sVET7Ln5EQ+ndr2izNzFIy4=
+	t=1765964822; cv=none; b=geqFnR9xg7Cu3ECwkMFvjc9ynEEqtFRBOKKsgb79vCaBGmVZA2bNkVrAlxZoTEKODHuUtC4JEADFaS3wOnj82I9FIUD3eITRTi+8sB2mzq1yQSGni3ehE0w5dFWlbN4pmVUDR3UOolpkvarRT5L5HVXIuPtqK8xd3RyQxsSuH3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765964819; c=relaxed/simple;
-	bh=2TdWibhf5ZP3VSAv96FB5mOfcfdZyF1zBRAuRMzN4h4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qAEdTLWfe9rVAMsBasVC6cqgf+Xet6cMKWVTDojUNjM3Wg2OIDpy4rkrGUE8k1Vy6rz5llMbUUL/PBpf2DpO6iCT2ULNxz/h1jWpqObBSvFWKY+uJaSPgiNSChFlL42W/j/Y/7WRuwX62JYIrjKCoMigDg1tzl3gZN8RsCRiq0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MRO4qPIx; arc=none smtp.client-ip=95.215.58.181
+	s=arc-20240116; t=1765964822; c=relaxed/simple;
+	bh=JhxM1xZytB9dQTFt30KTFN8eef9XC2zTXIh3BIBrr74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iXKz1JHColWM+NVSz/QL+XFafhw8i5dCRTfNPODM1c8Ak/mC0bQzdIqzBWiSaGsJXVBhSyZjBYeTp3VjjBdxrNzq4vsffzNL4xOKyFNxvYutIathra7H1yXefXMBRzX/LTtwFH4SoXYX5kMd7lpv6yK+PwwZFr5do5YZOoseFTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ly15AwCg; arc=none smtp.client-ip=95.215.58.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MRO4qPIx"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ly15AwCg"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765964813;
+	t=1765964817;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oN9R7byRGmHEs6T0OtpuwOuRpbJv46Zq9CpZBf5+XJg=;
-	b=MRO4qPIxxsVdDqwXzC7u9PLqRjNXx7wnrDSDf1lYyiYd50PIXjJACLh+SJDhboDde2AFBp
-	xudEn7lhZost3Ms/RAgSJ4rwmF9QHLUnd5iBfmp1YPdZeHPAwkC3Dg4lXkpK8Qt3kXk60G
-	KOm9TW1XYyMer/EiQIPn82zf46FXx9c=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bw+1Lau4jkXgNGH1w/oSy1pnIcM7wv7myPLVDHR+sFs=;
+	b=ly15AwCgeTCvVgfKEAGM4N6+Qr/3bm4QCI+29u9WGu6pcYXwgBs1OKy52f7HilHkjkHMPR
+	sHiouE4YFfRjE5AAkAK/J8ELyx11QzPsbKV6xCapoiF96UFCkEGY/h6yJrWtaXJGp1y3sT
+	pxSpzXa0XWo0t7W7DaurMYa8P4nGSAc=
 From: Qi Zheng <qi.zheng@linux.dev>
 To: will@kernel.org,
 	aneesh.kumar@kernel.org,
@@ -44,9 +46,11 @@ Cc: linux-arch@vger.kernel.org,
 	linux-parisc@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v3 0/7] enable PT_RECLAIM on all 64-bit architectures
-Date: Wed, 17 Dec 2025 17:45:41 +0800
-Message-ID: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 1/7] mm: change mm/pt_reclaim.c to use asm/tlb.h instead of asm-generic/tlb.h
+Date: Wed, 17 Dec 2025 17:45:42 +0800
+Message-ID: <67a0725081c82cdc2debce6cbdb9273412039553.1765963770.git.zhengqi.arch@bytedance.com>
+In-Reply-To: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -58,65 +62,30 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Changes in v3:
- - modify the commit message in [PATCH v3 1/7] (suggested by David Hildenbrand)
- - make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE instead of 64BIT
- - collect Acked-by
- - rebase onto the next-20251217
+Generally, the asm/tlb.h will include asm-generic/tlb.h, so change
+mm/pt_reclaim.c to use asm/tlb.h instead of asm-generic/tlb.h. This is a
+preparation for enabling CONFIG_PT_RECLAIM on other architectures, such as
+alpha.
 
-Changelog in v2:
- - fix compilation errors (reported by Magnus Lindholm and kernel test robot)
- - adjust some code style (suggested by Huacai Chen)
- - make PT_RECLAIM user-unselectable (suggested by David Hildenbrand)
- - rebase onto the next-20251119
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
+---
+ mm/pt_reclaim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi all,
-
-This series aims to enable PT_RECLAIM on all 64-bit architectures.
-
-On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of empty PTE
-page table pages (such as 100GB+). To resolve this problem, we need to enable
-PT_RECLAIM, which depends on MMU_GATHER_RCU_TABLE_FREE.
-
-Therefore, this series first enables MMU_GATHER_RCU_TABLE_FREE on all 64-bit
-architectures, and finally makes PT_RECLAIM depend on MMU_GATHER_RCU_TABLE_FREE.
-This way, PT_RECLAIM can be enabled by default on all 64-bit architectures.
-
-Of course, this will also be enabled on some 32-bit architectures that already
-support MMU_GATHER_RCU_TABLE_FREE. That's fine, PT_RECLAIM works well on all
-32-bit architectures as well. Although the benefit isn't significant, there's
-still memory that can be reclaimed. Perhaps PT_RECLAIM can be enabled on all
-32-bit architectures in the future.
-
-Comments and suggestions are welcome!
-
-Thanks,
-Qi
-
-Qi Zheng (7):
-  mm: change mm/pt_reclaim.c to use asm/tlb.h instead of
-    asm-generic/tlb.h
-  alpha: mm: enable MMU_GATHER_RCU_TABLE_FREE
-  LoongArch: mm: enable MMU_GATHER_RCU_TABLE_FREE
-  mips: mm: enable MMU_GATHER_RCU_TABLE_FREE
-  parisc: mm: enable MMU_GATHER_RCU_TABLE_FREE
-  um: mm: enable MMU_GATHER_RCU_TABLE_FREE
-  mm: make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE
-
- arch/alpha/Kconfig                   | 1 +
- arch/alpha/include/asm/tlb.h         | 6 +++---
- arch/loongarch/Kconfig               | 1 +
- arch/loongarch/include/asm/pgalloc.h | 7 +++----
- arch/mips/Kconfig                    | 1 +
- arch/mips/include/asm/pgalloc.h      | 7 +++----
- arch/parisc/Kconfig                  | 1 +
- arch/parisc/include/asm/tlb.h        | 4 ++--
- arch/um/Kconfig                      | 1 +
- arch/x86/Kconfig                     | 1 -
- mm/Kconfig                           | 9 ++-------
- mm/pt_reclaim.c                      | 2 +-
- 12 files changed, 19 insertions(+), 22 deletions(-)
-
+diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
+index 0d9cfbf4fe5d8..46771cfff8239 100644
+--- a/mm/pt_reclaim.c
++++ b/mm/pt_reclaim.c
+@@ -2,7 +2,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/pgalloc.h>
+ 
+-#include <asm-generic/tlb.h>
++#include <asm/tlb.h>
+ 
+ #include "internal.h"
+ 
 -- 
 2.20.1
 
