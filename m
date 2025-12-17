@@ -1,106 +1,106 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057271EDA2C
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 03:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7791A16A956
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 04:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765943381; cv=none; b=L45eTCGPDSkUUgcRabOOJS+AKNlX8WnbjBDpkNe6IzkIOHDjVXsOOgzNT0WYCeHYimmThJelin5GpQbXGfP/ZUQNQHqDgcz+4yMPED2ZhzOdXfJieCtTPa+ESEC4FlARTrQUGCq3qS438FVE9EVMUaQZoeyv+OVIA8xeOfIWjFk=
+	t=1765946946; cv=none; b=pjV7KVse4iUQJya42VOO1OFHyNzI9njU0zyuOkgBKP00vJDW39HoKna56u6Z+76wG8Iww273mU3wCAqavZNAFxmERCS3VRJpcejP/waSudAe2Osl/Ysrww2W8r7RzEvXOG4wc4S80+lKfW7pxZdTTJVV3G9/xtQ13gdF/MNAX2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765943381; c=relaxed/simple;
-	bh=ULSab/ik4daYyQjyWWBw7TYBPA3oOzNlLNWSmx9HoBs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qnNmUqkLDxSxtGpMPKPbSrT2Dy5dhmuCS12A4TLWfYVNQjhD1GPgjny6O2wUM9IhZVtB8Nv8vOvc55tra/QiB6yAI8vDN88l621aum/vvLdjpjDn/dUNQr2lIuen7KMxvmOMhQ+S7k4Fm6eavMpKXxEZvrgE1Ufs/QKO6a8C1wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8DxAfFHKEJpwAAAAA--.45S3;
-	Wed, 17 Dec 2025 11:49:27 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJCxPMJFKEJpksAAAA--.913S2;
-	Wed, 17 Dec 2025 11:49:26 +0800 (CST)
-From: Xianglai Li <lixianglai@loongson.cn>
-To: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	lixianglai@loongson.cn
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	stable@vger.kernel.org
-Subject: [PATCH 0/2] LoongArch: KVM: fix "unreliable stack" issue
-Date: Wed, 17 Dec 2025 11:24:48 +0800
-Message-Id: <20251217032450.954344-1-lixianglai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	s=arc-20240116; t=1765946946; c=relaxed/simple;
+	bh=DXiwutBlmL9LPij/j31IV4rTeagKy3s9gSqvJ5avzDI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZTXgnUvCdg0s/HBOBuIdPL19BM//AY9fTKw/G2+5AV+0T47Kuc39N8m5KO8945xfYamvN+/R3uAhXeiSGk8vkBwKRc6oI27P1btbVE0FUUBfZsLeRoutTtWKu03yWDm5ZWmDRbFqYPsM+uJrr4KzKKGXkISYkaHDfU+/Qm995RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVdo1Eu3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVdo1Eu3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F5D5C4CEFB
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 04:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765946946;
+	bh=DXiwutBlmL9LPij/j31IV4rTeagKy3s9gSqvJ5avzDI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dVdo1Eu3kyiA1ohXn/6bnqFp0DAaMF8mjrqPnPqexvAQPyjYylzjswt7Ux84ylcp/
+	 nGCWLkWPwnf9uWXZ1OC4Ggis9XGmhQbxjc216CpcL1LAPE7+QdAisLdjIpb9iqnqh5
+	 Xk4PtDuoKHTwLEMYsPjSD0ELrkfsn/QKuApMT66A9x0vMGL2wPknzSTWoMWCjix349
+	 lCtVW8ifOleJhZpXjOTfyPsKw/hkHV8jZDj5S5FVQEuP6lTTcQL+Axna8HVDOiLNNb
+	 DsNEArS5DcoJQ+p/u9gKIaEr7D6w2aHUwBr+OSpMriP0n8Scto+ggSw5wM9RPlwCj4
+	 E5LlQL6eg4nCQ==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b76b5afdf04so890832966b.1
+        for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 20:49:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU2hxal6tdakFT3sx/RktQZm0I4BZv2wlF82yp7ElYccP7iamh9bXGV/PY7vIV9wzyyIZzSzVrZkvI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwRWAk0QxkUXTE3eobDlITpCFOji/i6RV7da19AVAkQkWp6dUmU
+	wdB8Ev9xshRjpRgRejKE73tDm+pEf1hVQIgzPAZBQ9G5h5qQ9z21RAsGXmgST6rsQIkWCTydfQ4
+	SgRPIW/O7n/A+nE9MvtxesMaBPR7FhWg=
+X-Google-Smtp-Source: AGHT+IEtm3jr7IIZEeexP+eQ8VNddB7s2khVWpB3Kl1wLasQQ7s6l+I0zvECeUKVsyCTd6ylyTKQVcyQPOiUF08PVU0=
+X-Received: by 2002:a17:907:3f8a:b0:b7f:f812:d8dc with SMTP id
+ a640c23a62f3a-b7ff812e591mr349300866b.1.1765946944939; Tue, 16 Dec 2025
+ 20:49:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPMJFKEJpksAAAA--.913S2
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <cover.1765778124.git.zhoubinbin@loongson.cn> <a8dd24fe5e2a28c5b5f121be5cc48f6289b0d603.1765778124.git.zhoubinbin@loongson.cn>
+In-Reply-To: <a8dd24fe5e2a28c5b5f121be5cc48f6289b0d603.1765778124.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 17 Dec 2025 12:49:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7XH-F8u1VFYtnULvT7AjL5u7XOB4dpbTxm-J9hvMZbJQ@mail.gmail.com>
+X-Gm-Features: AQt7F2ruO1Ahpt-ei-Zlj8hxWuAjibVPLuN56pHvIWc6Yb9TPu7mTk9jaIOAxFs
+Message-ID: <CAAhV-H7XH-F8u1VFYtnULvT7AjL5u7XOB4dpbTxm-J9hvMZbJQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] LoongArch: dts: loongson-2k1000: Add default Local
+ I/O Interrupt controller address cells
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When starting multi-core loongarch virtualization on loongarch physical
-machine, loading livepatch on the physical machine will cause an error
-similar to the following:
-[  411.686289] livepatch: klp_try_switch_task: CPU 31/KVM:3116 has an
-unreliable stack
+Hi, Binbin,
 
-The specific test steps are as follows:
-1.Start a multi-core virtual machine on a physical machine
+On Tue, Dec 16, 2025 at 3:56=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Add missing address-cells 0 to the local I/O interrupt controller node
+> to silence W=3D1 warning:
+>
+>   loongson-2k1000.dtsi:498.5-55: Warning (interrupt_map): /bus@10000000/p=
+cie@1a000000/pcie@9,0:interrupt-map:
+>     Missing property '#address-cells' in node /bus@10000000/interrupt-con=
+troller@1fe01440, using 0 as fallback
+>
+> Value '0' is correct because:
+> 1. The local I/O interrupt controller does not have children,
+> 2. interrupt-map property (in PCI node) consists of five components and
+>    the fourth component "parent unit address", which size is defined by
+>    '#address-cells' of the node pointed to by the interrupt-parent
+>    component, is not used (=3D0)
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarc=
+h/boot/dts/loongson-2k1000.dtsi
+> index eee06b84951c..fa1c000fd3e0 100644
+> --- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+> +++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+> @@ -131,6 +131,7 @@ liointc1: interrupt-controller@1fe01440 {
+>                               <0x0 0x1fe01148 0x0 0x8>;
+>                         reg-names =3D "main", "isr0", "isr1";
+>                         interrupt-controller;
+> +                       #address-cells =3D <0>;
+I think liointc0 also need address-cells, no?
 
-2.Enter the following command on the physical machine to turn on the debug
-switch:
-  echo "file kernel/livepatch/transition.c +p"  > /sys/kernel/debug/\
-dynamic_debug/control 
+Huacai
 
-
-3.Load livepatch:
- modprobe  livepatch-sample 
-
-Through the above steps, similar prints can be viewed in dmesg.
-
-The reason for this issue is that the code of the kvm_exc_entry function
-was copied in the function kvm_loongarch_env_init. When the cpu needs to
-execute kvm_exc_entry, it will switch to the copied address for execution.
-The new address of the kvm_exc_entry function cannot be recognized in ORC,
-which eventually leads to the arch_stack_walk_reliable function returning
-an error and printing an exception message.
-
-To solve the above problems, we directly compile the switch.S file into
-the kernel instead of the module. In this way, the function kvm_exc_entry
-will no longer need to be copied.
-
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Cc: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Xianglai Li <lixianglai@loongson.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-
-Xianglai Li (2):
-  LoongArch: KVM: Compile the switch.S file directly into the kernel
-  LoongArch: KVM: fix "unreliable stack" issue
-
- arch/loongarch/Kbuild                       |  2 +-
- arch/loongarch/include/asm/asm-prototypes.h | 16 ++++++++++
- arch/loongarch/include/asm/kvm_host.h       |  5 +--
- arch/loongarch/include/asm/kvm_vcpu.h       | 20 ++++++------
- arch/loongarch/kvm/Makefile                 |  2 +-
- arch/loongarch/kvm/main.c                   | 35 ++-------------------
- arch/loongarch/kvm/switch.S                 | 24 +++++++++++---
- 7 files changed, 51 insertions(+), 53 deletions(-)
-
-
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
--- 
-2.39.1
-
+>                         #interrupt-cells =3D <2>;
+>                         interrupt-parent =3D <&cpuintc>;
+>                         interrupts =3D <3>;
+> --
+> 2.47.3
+>
