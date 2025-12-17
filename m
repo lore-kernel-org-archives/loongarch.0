@@ -1,163 +1,122 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9D2194098
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 07:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E62E06EF
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 09:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765955857; cv=none; b=YGu3EtTZiIERYUhbVAB2ZG24tTylKP1uFt3SJS3+m0DLDaNTDHdJqxvRI1b5O/gWZmYZIY6qoSIJI4bnFXgZXozmIJcQeYR4wWqti6rkaj9CpBgaeUGVBScWoZLpdXor21JVKSLoKQXfcPtfQDeMd/frZyz6+1BrMzLKngCGXmc=
+	t=1765964819; cv=none; b=eA/prISxkkIBoza4aS30zcSSuEyuivRlkJ5Zz74coXFbfi9j5NZCavGkv1NDRlZlgxvV+hMNh7aQ2PKT2QETAyqnNlF19YLaoygSwi1ADC1TASXQv6flMVfug7MJS9zgvKuDuXkQ8M8rMQfwNS41sVET7Ln5EQ+ndr2izNzFIy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765955857; c=relaxed/simple;
-	bh=sGSFw6wrWWy3/bnR6CFHivvMHCvhSF4J7Dxsir/YNYM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VvJ+yTX8pCZswuS5RPhWmGHO+awc/FyhbGGP9Avzo+rRTNjcNTKMRmvX75emOAu/w8m/f0sTyafJDJa4BkCp46lHrlh9Pa+BCC5zhBHLfYF7G04If4gy6NxGqISg6GzVYrq61Tv4Zx9C7ehdjCMVx7I3NvWJJkssQVlmkMwbKqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjjSwoqR; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765964819; c=relaxed/simple;
+	bh=2TdWibhf5ZP3VSAv96FB5mOfcfdZyF1zBRAuRMzN4h4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qAEdTLWfe9rVAMsBasVC6cqgf+Xet6cMKWVTDojUNjM3Wg2OIDpy4rkrGUE8k1Vy6rz5llMbUUL/PBpf2DpO6iCT2ULNxz/h1jWpqObBSvFWKY+uJaSPgiNSChFlL42W/j/Y/7WRuwX62JYIrjKCoMigDg1tzl3gZN8RsCRiq0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MRO4qPIx; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjjSwoqR"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b7697e8b01aso980359166b.2
-        for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 23:17:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765955854; x=1766560654; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7pH+BlCZQbXYqO+26tPiDrGWno89MfVLt4htiZPlW28=;
-        b=JjjSwoqRJzeMc+0cBDVxbZMDPWN6beRg//hIzzLZfZ89EsAnhJSnBpyKaVEN5byuf4
-         9vYnwEqqRN/AONc/JQYhck6QS8ZwGP0reyuZ+uwOqN5fME7XFiLk7EdggQcXlnFLVzpt
-         05Jrg8X/DPHeosuTUzR3PHTTxqp5sCzLWp6oJVnJ6F/Nom8dWLDT2Hqw1Fs8Ot0lCHi8
-         qVSJOFa7UxGVnJBxWXcV6iJumHIuwF0RSKcU6+HYJ3dGxgGNRqT9bpKMoEzc6kap/G6q
-         LQSpWBjMyh6X34y+EGvnw9WzSPPhvuM92x8c6u8ftSRB1XzaN8c08Ibk8sYTCQOqgMYE
-         X7Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765955854; x=1766560654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7pH+BlCZQbXYqO+26tPiDrGWno89MfVLt4htiZPlW28=;
-        b=rwqZG/gCKe0x4fqyqAq17Yk0nbFZ9GDsZRY7FS7It5h8Retbxl5p6ClSXGfpGxzN33
-         ldPKHBoceOl7SjYdaIv5vTDonMCzINHfEaYqiwi01dLuYTkmZ0+Pm3lrVjF+ZBxPnYhv
-         TbrqYyOtPqIYdG8oKpi3Q/oahSq8balu8CUIpvCNDRGrmxzTXNPzdg3sfTCDsPrMS1pM
-         Rsk6Hcqen1DfeRJ2ZeEdshHtcuVoEmVTA9Xp1Ol4UQlvsPH9v6xnW2YNcwyIJVTGvZK4
-         LW8OqR+iFCxNUG8nOXkAwUDULvHp39Mb8IQWrYMvGDRwTe5s7pYLgFoNnpGAvarhqB84
-         UqMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4I9GFgQ/k4BTR/ALB6elQGW8mIvXI89QAXk6Aiz9Vi7d5GI/YLa0FPpAZg8SpaafroLTpQlRr3SE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzW6SZlnIBpiy4DD+4GlT5RH8csJRERiW1M9hL7I8GJNEvIK2Lx
-	aoZEPo8oRY032C9BoURMcwkT6KdUlxWD5d4Z9uHX5eu7CG6lg5iaRFp1M9NEeoQLOj+pxbsoz57
-	6C4ghscKgBc6vXGl2svYbvVrgIA3Fa6w=
-X-Gm-Gg: AY/fxX7aiqr+d29fksu+u0e+RgpJGQ62qkPAdMsco+5XcLfeQO17Reno12aIw6PNZM3
-	OKnAGvbOy/JnNljIzOfbgddVAPPdtiqbSXOPfcX0E9QK7281/L8C/vBl46pPt0shdNF8plyPmW6
-	N+QK099sbMYoUtLMlE8MVBMT5tg/UB6jta3qiIlhbrk1zolCkOva+AUpUXjCIuSiwyHXFR620nw
-	UGs0+dHZ7T5JG09GPVfIOd13vKcxS4ohSFBoZYt7sQLkIsGAUEVp6Ws06QM/PrWN+nqSuJ9Lg==
-X-Google-Smtp-Source: AGHT+IHtoWqu9KIpjpAGTsT8eSeVzj6hClh0q487/PK/po+pRqU5dVKydRl7jwtPeUieGqGoWu0p2H4MVgHYuv7iX3g=
-X-Received: by 2002:a17:906:9f88:b0:b76:f090:768c with SMTP id
- a640c23a62f3a-b7d23c19ce3mr1788182266b.30.1765955854222; Tue, 16 Dec 2025
- 23:17:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MRO4qPIx"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1765964813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oN9R7byRGmHEs6T0OtpuwOuRpbJv46Zq9CpZBf5+XJg=;
+	b=MRO4qPIxxsVdDqwXzC7u9PLqRjNXx7wnrDSDf1lYyiYd50PIXjJACLh+SJDhboDde2AFBp
+	xudEn7lhZost3Ms/RAgSJ4rwmF9QHLUnd5iBfmp1YPdZeHPAwkC3Dg4lXkpK8Qt3kXk60G
+	KOm9TW1XYyMer/EiQIPn82zf46FXx9c=
+From: Qi Zheng <qi.zheng@linux.dev>
+To: will@kernel.org,
+	aneesh.kumar@kernel.org,
+	npiggin@gmail.com,
+	peterz@infradead.org,
+	dev.jain@arm.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ioworker0@gmail.com,
+	linmag7@gmail.com
+Cc: linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-alpha@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH v3 0/7] enable PT_RECLAIM on all 64-bit architectures
+Date: Wed, 17 Dec 2025 17:45:41 +0800
+Message-ID: <cover.1765963770.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1765778124.git.zhoubinbin@loongson.cn> <db24b6366bb0d49e9dcc04328ffad7a37f687a89.1765778124.git.zhoubinbin@loongson.cn>
- <20251216161641.GA2573095-robh@kernel.org>
-In-Reply-To: <20251216161641.GA2573095-robh@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 17 Dec 2025 15:17:21 +0800
-X-Gm-Features: AQt7F2qQrdS_pneRFz3w-uSIWdtleZiWhz-8aYHoPaaqOQqdhxOueQMyYHD3klo
-Message-ID: <CAMpQs4KUze8TPXV0Lmk8fP9cc0s4PsJY9bU9YrF-_kWJ8dtBog@mail.gmail.com>
-Subject: Re: [PATCH 2/7] dt-bindings: interrupt-controller: loongson,pch-pic:
- Change to unevaluatedProperties
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Rob:
+From: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Thanks for your review.
+Changes in v3:
+ - modify the commit message in [PATCH v3 1/7] (suggested by David Hildenbrand)
+ - make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE instead of 64BIT
+ - collect Acked-by
+ - rebase onto the next-20251217
 
-On Wed, Dec 17, 2025 at 12:16=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
-e:
->
-> On Tue, Dec 16, 2025 at 03:55:13PM +0800, Binbin Zhou wrote:
-> > Change additionalProperties to unevaluatedProperties because it refs to
-> > interrupt-controller.yaml.
-> >
-> > Fix below CHECK_DTBS warnings:
-> > arch/loongarch/boot/dts/loongson-2k2000-ref.dtb: interrupt-controller@1=
-0000000 (loongson,pch-pic-1.0): '#address-cells' does not match any of the =
-regexes: '^pinctrl-[0-9]+$'
-> >         from schema $id: http://devicetree.org/schemas/interrupt-contro=
-ller/loongson,pch-pic.yaml
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../bindings/interrupt-controller/loongson,pch-pic.yaml      | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/loo=
-ngson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller=
-/loongson,pch-pic.yaml
-> > index b7bc5cb1dff2..1f818316082e 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,p=
-ch-pic.yaml
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,p=
-ch-pic.yaml
-> > @@ -14,6 +14,9 @@ description:
-> >    transforming interrupts from on-chip devices into HyperTransport vec=
-torized
-> >    interrupts.
-> >
-> > +allOf:
-> > +  - $ref: /schemas/interrupt-controller.yaml#
->
-> Adding this does not define the value(s) #address-cells must be. I'd
-> assume it is 0 in this case.
+Changelog in v2:
+ - fix compilation errors (reported by Magnus Lindholm and kernel test robot)
+ - adjust some code style (suggested by Huacai Chen)
+ - make PT_RECLAIM user-unselectable (suggested by David Hildenbrand)
+ - rebase onto the next-20251119
 
-Indeed, interrupt-controller.yaml only defines #address-cells, and
-does not specify values. But the addition of interrupt-controller.yaml
-is still necessary, besides that, I would add the following:
+Hi all,
 
-@@ -37,12 +37,16 @@ properties:
-   '#interrupt-cells':
-     const: 2
+This series aims to enable PT_RECLAIM on all 64-bit architectures.
 
-+  '#address-cells':
-+    const: 0
-+
- required:
-   - compatible
-   - reg
-   - loongson,pic-base-vec
-   - interrupt-controller
-   - '#interrupt-cells'
-+  - '#address-cells'
+On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of empty PTE
+page table pages (such as 100GB+). To resolve this problem, we need to enable
+PT_RECLAIM, which depends on MMU_GATHER_RCU_TABLE_FREE.
 
- unevaluatedProperties: false
+Therefore, this series first enables MMU_GATHER_RCU_TABLE_FREE on all 64-bit
+architectures, and finally makes PT_RECLAIM depend on MMU_GATHER_RCU_TABLE_FREE.
+This way, PT_RECLAIM can be enabled by default on all 64-bit architectures.
 
->
-> > +
-> >  properties:
-> >    compatible:
-> >      const: loongson,pch-pic-1.0
-> > @@ -41,7 +44,7 @@ required:
-> >    - interrupt-controller
-> >    - '#interrupt-cells'
-> >
-> > -additionalProperties: false
-> > +unevaluatedProperties: false
-> >
-> >  examples:
-> >    - |
-> > --
-> > 2.47.3
-> >
+Of course, this will also be enabled on some 32-bit architectures that already
+support MMU_GATHER_RCU_TABLE_FREE. That's fine, PT_RECLAIM works well on all
+32-bit architectures as well. Although the benefit isn't significant, there's
+still memory that can be reclaimed. Perhaps PT_RECLAIM can be enabled on all
+32-bit architectures in the future.
 
---=20
-Thanks.
-Binbin
+Comments and suggestions are welcome!
+
+Thanks,
+Qi
+
+Qi Zheng (7):
+  mm: change mm/pt_reclaim.c to use asm/tlb.h instead of
+    asm-generic/tlb.h
+  alpha: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  LoongArch: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  mips: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  parisc: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  um: mm: enable MMU_GATHER_RCU_TABLE_FREE
+  mm: make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE
+
+ arch/alpha/Kconfig                   | 1 +
+ arch/alpha/include/asm/tlb.h         | 6 +++---
+ arch/loongarch/Kconfig               | 1 +
+ arch/loongarch/include/asm/pgalloc.h | 7 +++----
+ arch/mips/Kconfig                    | 1 +
+ arch/mips/include/asm/pgalloc.h      | 7 +++----
+ arch/parisc/Kconfig                  | 1 +
+ arch/parisc/include/asm/tlb.h        | 4 ++--
+ arch/um/Kconfig                      | 1 +
+ arch/x86/Kconfig                     | 1 -
+ mm/Kconfig                           | 9 ++-------
+ mm/pt_reclaim.c                      | 2 +-
+ 12 files changed, 19 insertions(+), 22 deletions(-)
+
+-- 
+2.20.1
+
