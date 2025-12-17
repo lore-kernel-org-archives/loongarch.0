@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C880E2DAFB9
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E5A2DAFBB
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765952096; cv=none; b=RVwaxsn3Ivm/Ntg6Uq0VbnCjydqILGF3pPhw1RbHFE8Rc450eqniqclo16JN3c+E/abvvKd0W+fGxJFiy8iW6JUWxrj4h6lYc0NJVqXMvk4vdcLBvYXOtB+W2ry5nEHkmN7bjJKFiDu5nM+PJ8S/12ZOioHTEDhD/jYMLxtvwvk=
+	t=1765952097; cv=none; b=I/yJhDGeXEA4GfKEgXjxixZ2M/3yeQJaFOPRl55b6MJWrOtTFGCxHs0pMEa6BlwY0Vo90VJvxtsQC/AXZhJwXivDCDBP+vu6xKZXYB5mgg4UcEVRKwwX+oy14vqVmx68R9Qb24nS2w3oy91hD5kBadF6FIBJ2lBUTk16h+AjTeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765952096; c=relaxed/simple;
-	bh=Zfloy8I/PvvV0GgsACcj4Xioz0vOdmYRRY1dbRe0Cjk=;
+	s=arc-20240116; t=1765952097; c=relaxed/simple;
+	bh=YQruH6xDYid2KbeZCuW/EBXAgV9ICz90owU6l1cryUA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jhxPG9qX3GcFwbQruMlltQfl9kiyqb9LgJ3zPmWAkOMgp2kbp2QAkvsCa9bX8mDV9CzmzTzkhesj3wZOi/iQpHZAyqpvJ+fwoghBWdYg0wpFoOzN2ZwRGahnfZpCxMEccGQKqz4S8eW4tRhsBNqIaiLYbe57IkbijX3UNdK2+IE=
+	 MIME-Version; b=n/JoyaqzwmIDPjx1Xqcb3ntS5dz6QnwF9bWzRBmBfOgrDsRmjTjUJiFBE5UETQbZDlaJfjNKToBQCPDy3MLrlwDQo2tNDOeDKWTBWdXj1FJ/azo4LEab1gI0iiufvqZDmwjrOjw6XMgPM4UZ9rH/Agv+Lq0xCoc3EDBmYq/RGEQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b03d542cdb0f11f0a38c85956e01ac42-20251217
+X-UUID: b135e326db0f11f0a38c85956e01ac42-20251217
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -25,27 +25,27 @@ X-CTIC-Tags:
 	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
 	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:4119027e-0bad-4eb7-bfb1-90a7e9005e4a,IP:10,U
+X-CID-O-INFO: VERSION:1.3.6,REQID:68546b5d-548d-4ec0-961d-bcc2aeb890f4,IP:10,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:4119027e-0bad-4eb7-bfb1-90a7e9005e4a,IP:10,URL
+X-CID-INFO: VERSION:1.3.6,REQID:68546b5d-548d-4ec0-961d-bcc2aeb890f4,IP:10,URL
 	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:df328e767154f61dcf2d98f75131e4e8,BulkI
-	D:251212171111BX2VBL8B,BulkQuantity:4,Recheck:0,SF:17|19|38|66|78|81|82|10
+X-CID-META: VersionHash:a9d874c,CLOUDID:1897838be0a3ac86b89d997081ea7b68,BulkI
+	D:251217141451YB1P9FB7,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
 	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
-	lk:41,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0
-	,BRE:0,ARC:0
+	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
+	0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b03d542cdb0f11f0a38c85956e01ac42-20251217
+X-UUID: b135e326db0f11f0a38c85956e01ac42-20251217
 X-User: duanchenghao@kylinos.cn
 Received: from localhost.localdomain [(183.242.174.20)] by mailgw.kylinos.cn
 	(envelope-from <duanchenghao@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 71023797; Wed, 17 Dec 2025 14:14:47 +0800
+	with ESMTP id 784059731; Wed, 17 Dec 2025 14:14:49 +0800
 From: Chenghao Duan <duanchenghao@kylinos.cn>
 To: yangtiezhu@loongson.cn,
 	rostedt@goodmis.org,
@@ -64,9 +64,9 @@ Cc: kernel@xen0n.name,
 	jianghaoran@kylinos.cn,
 	vincent.mc.li@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 1/7] LoongArch: ftrace: Refactor register restoration in ftrace_common_return
-Date: Wed, 17 Dec 2025 14:14:29 +0800
-Message-Id: <20251217061435.802204-2-duanchenghao@kylinos.cn>
+Subject: [PATCH v4 3/7] LoongArch: BPF: Enable and fix trampoline-based tracing for module functions
+Date: Wed, 17 Dec 2025 14:14:31 +0800
+Message-Id: <20251217061435.802204-4-duanchenghao@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20251217061435.802204-1-duanchenghao@kylinos.cn>
 References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
@@ -78,68 +78,81 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the register restoration sequence in the ftrace_common_return
-function to clearly distinguish between the logic of normal returns and
-direct call returns in function tracing scenarios. The logic is as
-follows:
-1. In the case of a normal return, the execution flow returns to the
-traced function, and ftrace must ensure that the register data is
-consistent with the state when the function was entered.
-ra = parent return address; t0 = traced function return address.
+Remove the previous restrictions that blocked the tracing of kernel
+module functions. Fix the issue that previously caused kernel lockups
+when attempting to trace module functions.
 
-2. In the case of a direct call return, the execution flow jumps to the
-custom trampoline function, and ftrace must ensure that the register
-data is consistent with the state when ftrace was entered.
-ra = traced function return address; t0 = parent return address.
+Before entering the trampoline code, the return address register ra
+shall store the address of the next assembly instruction after the
+'bl trampoline' instruction, which is the traced function address, and
+the register t0 shall store the parent function return address. Refine
+the trampoline return logic to ensure that register data remains
+correct when returning to both the traced function and the parent
+function.
 
-Fixes: 9cdc3b6a299c ("LoongArch: ftrace: Add direct call support")
+Before this patch was applied, the module_attach test in selftests/bpf
+encountered a deadlock issue. This was caused by an incorrect jump
+address after the trampoline execution, which resulted in an infinite
+loop within the module function.
+
+Fixes: 677e6123e3d2 ("LoongArch: BPF: Disable trampoline for kernel module function trace")
+
 Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
 ---
- arch/loongarch/kernel/mcount_dyn.S | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
-index d6b474ad1d5e..5729c20e5b8b 100644
---- a/arch/loongarch/kernel/mcount_dyn.S
-+++ b/arch/loongarch/kernel/mcount_dyn.S
-@@ -94,7 +94,6 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
-  * at the callsite, so there is no need to restore the T series regs.
-  */
- ftrace_common_return:
--	PTR_L		ra, sp, PT_R1
- 	PTR_L		a0, sp, PT_R4
- 	PTR_L		a1, sp, PT_R5
- 	PTR_L		a2, sp, PT_R6
-@@ -104,12 +103,17 @@ ftrace_common_return:
- 	PTR_L		a6, sp, PT_R10
- 	PTR_L		a7, sp, PT_R11
- 	PTR_L		fp, sp, PT_R22
--	PTR_L		t0, sp, PT_ERA
- 	PTR_L		t1, sp, PT_R13
--	PTR_ADDI	sp, sp, PT_SIZE
- 	bnez		t1, .Ldirect
-+
-+	PTR_L		ra, sp, PT_R1
-+	PTR_L		t0, sp, PT_ERA
-+	PTR_ADDI	sp, sp, PT_SIZE
- 	jr		t0
- .Ldirect:
-+	PTR_L		t0, sp, PT_R1
-+	PTR_L		ra, sp, PT_ERA
-+	PTR_ADDI	sp, sp, PT_SIZE
- 	jr		t1
- SYM_CODE_END(ftrace_common)
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 8dc58781b8eb..76cd24646bec 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1265,7 +1265,7 @@ static int emit_jump_or_nops(void *target, void *ip, u32 *insns, bool is_call)
+ 		return 0;
+ 	}
  
-@@ -161,6 +165,8 @@ SYM_CODE_END(return_to_handler)
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- SYM_CODE_START(ftrace_stub_direct_tramp)
- 	UNWIND_HINT_UNDEFINED
--	jr		t0
-+	move		t1, ra
-+	move		ra, t0
-+	jr		t1
- SYM_CODE_END(ftrace_stub_direct_tramp)
- #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+-	return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_T0 : LOONGARCH_GPR_ZERO, (u64)target);
++	return emit_jump_and_link(&ctx, is_call ? LOONGARCH_GPR_RA : LOONGARCH_GPR_ZERO, (u64)target);
+ }
+ 
+ static int emit_call(struct jit_ctx *ctx, u64 addr)
+@@ -1622,14 +1622,12 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 
+ 	/* To traced function */
+ 	/* Ftrace jump skips 2 NOP instructions */
+-	if (is_kernel_text((unsigned long)orig_call))
++	if (is_kernel_text((unsigned long)orig_call) ||
++	    is_module_text_address((unsigned long)orig_call))
+ 		orig_call += LOONGARCH_FENTRY_NBYTES;
+ 	/* Direct jump skips 5 NOP instructions */
+ 	else if (is_bpf_text_address((unsigned long)orig_call))
+ 		orig_call += LOONGARCH_BPF_FENTRY_NBYTES;
+-	/* Module tracing not supported - cause kernel lockups */
+-	else if (is_module_text_address((unsigned long)orig_call))
+-		return -ENOTSUPP;
+ 
+ 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+ 		move_addr(ctx, LOONGARCH_GPR_A0, (const u64)im);
+@@ -1722,12 +1720,16 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 		emit_insn(ctx, ldd, LOONGARCH_GPR_FP, LOONGARCH_GPR_SP, 0);
+ 		emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, 16);
+ 
+-		if (flags & BPF_TRAMP_F_SKIP_FRAME)
++		if (flags & BPF_TRAMP_F_SKIP_FRAME) {
+ 			/* return to parent function */
+-			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
+-		else
+-			/* return to traced function */
++			move_reg(ctx, LOONGARCH_GPR_RA, LOONGARCH_GPR_T0);
+ 			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T0, 0);
++		} else {
++			/* return to traced function */
++			move_reg(ctx, LOONGARCH_GPR_T1, LOONGARCH_GPR_RA);
++			move_reg(ctx, LOONGARCH_GPR_RA, LOONGARCH_GPR_T0);
++			emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T1, 0);
++		}
+ 	}
+ 
+ 	ret = ctx->idx;
 -- 
 2.25.1
 
