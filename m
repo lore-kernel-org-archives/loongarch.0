@@ -1,140 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926102DBF76
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9D2194098
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 07:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765954525; cv=none; b=oEe7NOS/rS9Hg4OTzWaRf8s4PJxsylryhXNJfIhRgqX358VUGWWWsEKagq02gO1bZ83JO/Nckxo2B5L+qisFv64nrSmoQsOfObm3iteG2iD0/BzmWhpJ+pw6nWSbgIUqlFx1mJaGgEQ/DAuGAV9CWYBR1598ViSRkbjtF6NqpdU=
+	t=1765955857; cv=none; b=YGu3EtTZiIERYUhbVAB2ZG24tTylKP1uFt3SJS3+m0DLDaNTDHdJqxvRI1b5O/gWZmYZIY6qoSIJI4bnFXgZXozmIJcQeYR4wWqti6rkaj9CpBgaeUGVBScWoZLpdXor21JVKSLoKQXfcPtfQDeMd/frZyz6+1BrMzLKngCGXmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765954525; c=relaxed/simple;
-	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
+	s=arc-20240116; t=1765955857; c=relaxed/simple;
+	bh=sGSFw6wrWWy3/bnR6CFHivvMHCvhSF4J7Dxsir/YNYM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JkLPhixzAKqVoMmHghnAO8t0JEHQtaDNawsaKD1yiQ1Rzvhw3Xi1Wl2LONw4dKoAtjpnuQxcJF7KB9DUTzqiQ+XUcemegxt+9Nsf1LHnzGMIG2v0O8dHQvAX23QVAKFG+OB3rhO4TLVo4b4futOAFevY4to2THHNhy7Hp0Dg6Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDwPl1Ms; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=VvJ+yTX8pCZswuS5RPhWmGHO+awc/FyhbGGP9Avzo+rRTNjcNTKMRmvX75emOAu/w8m/f0sTyafJDJa4BkCp46lHrlh9Pa+BCC5zhBHLfYF7G04If4gy6NxGqISg6GzVYrq61Tv4Zx9C7ehdjCMVx7I3NvWJJkssQVlmkMwbKqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JjjSwoqR; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDwPl1Ms"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C6EC19422
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765954525;
-	bh=0euWenUD/rLqI7KHSnqNWVT/rtVB0phrpjP0vEqV39M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UDwPl1MsHTxdQV+Ax597mgm/hZr1ynxXPC2wG2Ikizz8bE4smZn5CM21G3u6fFil+
-	 3P0WbseKs3zpK96T+t6cjr5cEfoLL/CFWg8Igu/agDbyFgpu/2kvEWZz/TeOpYsPq8
-	 plqzD6F6U/gBBHgZkYkokZOhXf/lSEnXdmUHQXP/H4EgrafeZifpd4To+86URlAws+
-	 etppb+w6yi86+vxRlWkFmR0EmOyexvovu5nG4t75l7ZLWI1MD7wGkbMqmcSbUBvLwi
-	 XM4FBBvi4KU/jfytUBv+YNkEn2L32UffYaz44FZxX7MYPPAuBTuyNfartVzfwJ3RJx
-	 xrGa9SUPv4fmA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7277324054so875700666b.0
-        for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 22:55:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWWreJzr2B4akjU1ctzXekJbueFuAqpKfu6hczvj+/lhuQnN1W2V4ZG+qkz73z+fPlCLd6YQCgqFa8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4h1Xv0VEUn+qeny43xmf0jAb+n+FY01U3gVuXRCEFZki6eBJm
-	3MSK+7diVrM4eljGOm+k9ExAHtan2Ju9pL65+OSjcnsPurCWdOJJldxD87V+Be32SvZGuXyh512
-	fHsOQr3CkgbLg2nIHvP7Pq0gMQxz2foc=
-X-Google-Smtp-Source: AGHT+IEORLRdPBP/v0qwTwrl9rsa2vM3x1Jalt/3BfBNuYFsSiqui/I50cEEFyEiU5SwgUbYfma1vOsgdfJqpwcGEug=
-X-Received: by 2002:a17:907:1ca1:b0:b76:bfa9:5ae7 with SMTP id
- a640c23a62f3a-b7d236bcc17mr1645242166b.29.1765954523680; Tue, 16 Dec 2025
- 22:55:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JjjSwoqR"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b7697e8b01aso980359166b.2
+        for <loongarch@lists.linux.dev>; Tue, 16 Dec 2025 23:17:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765955854; x=1766560654; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7pH+BlCZQbXYqO+26tPiDrGWno89MfVLt4htiZPlW28=;
+        b=JjjSwoqRJzeMc+0cBDVxbZMDPWN6beRg//hIzzLZfZ89EsAnhJSnBpyKaVEN5byuf4
+         9vYnwEqqRN/AONc/JQYhck6QS8ZwGP0reyuZ+uwOqN5fME7XFiLk7EdggQcXlnFLVzpt
+         05Jrg8X/DPHeosuTUzR3PHTTxqp5sCzLWp6oJVnJ6F/Nom8dWLDT2Hqw1Fs8Ot0lCHi8
+         qVSJOFa7UxGVnJBxWXcV6iJumHIuwF0RSKcU6+HYJ3dGxgGNRqT9bpKMoEzc6kap/G6q
+         LQSpWBjMyh6X34y+EGvnw9WzSPPhvuM92x8c6u8ftSRB1XzaN8c08Ibk8sYTCQOqgMYE
+         X7Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765955854; x=1766560654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7pH+BlCZQbXYqO+26tPiDrGWno89MfVLt4htiZPlW28=;
+        b=rwqZG/gCKe0x4fqyqAq17Yk0nbFZ9GDsZRY7FS7It5h8Retbxl5p6ClSXGfpGxzN33
+         ldPKHBoceOl7SjYdaIv5vTDonMCzINHfEaYqiwi01dLuYTkmZ0+Pm3lrVjF+ZBxPnYhv
+         TbrqYyOtPqIYdG8oKpi3Q/oahSq8balu8CUIpvCNDRGrmxzTXNPzdg3sfTCDsPrMS1pM
+         Rsk6Hcqen1DfeRJ2ZeEdshHtcuVoEmVTA9Xp1Ol4UQlvsPH9v6xnW2YNcwyIJVTGvZK4
+         LW8OqR+iFCxNUG8nOXkAwUDULvHp39Mb8IQWrYMvGDRwTe5s7pYLgFoNnpGAvarhqB84
+         UqMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4I9GFgQ/k4BTR/ALB6elQGW8mIvXI89QAXk6Aiz9Vi7d5GI/YLa0FPpAZg8SpaafroLTpQlRr3SE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzW6SZlnIBpiy4DD+4GlT5RH8csJRERiW1M9hL7I8GJNEvIK2Lx
+	aoZEPo8oRY032C9BoURMcwkT6KdUlxWD5d4Z9uHX5eu7CG6lg5iaRFp1M9NEeoQLOj+pxbsoz57
+	6C4ghscKgBc6vXGl2svYbvVrgIA3Fa6w=
+X-Gm-Gg: AY/fxX7aiqr+d29fksu+u0e+RgpJGQ62qkPAdMsco+5XcLfeQO17Reno12aIw6PNZM3
+	OKnAGvbOy/JnNljIzOfbgddVAPPdtiqbSXOPfcX0E9QK7281/L8C/vBl46pPt0shdNF8plyPmW6
+	N+QK099sbMYoUtLMlE8MVBMT5tg/UB6jta3qiIlhbrk1zolCkOva+AUpUXjCIuSiwyHXFR620nw
+	UGs0+dHZ7T5JG09GPVfIOd13vKcxS4ohSFBoZYt7sQLkIsGAUEVp6Ws06QM/PrWN+nqSuJ9Lg==
+X-Google-Smtp-Source: AGHT+IHtoWqu9KIpjpAGTsT8eSeVzj6hClh0q487/PK/po+pRqU5dVKydRl7jwtPeUieGqGoWu0p2H4MVgHYuv7iX3g=
+X-Received: by 2002:a17:906:9f88:b0:b76:f090:768c with SMTP id
+ a640c23a62f3a-b7d23c19ce3mr1788182266b.30.1765955854222; Tue, 16 Dec 2025
+ 23:17:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
- <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
- <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
- <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
- <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
- <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
- <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com>
- <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
- <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com> <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
-In-Reply-To: <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 17 Dec 2025 14:55:36 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
-X-Gm-Features: AQt7F2qiIW0tFThs3sCWqUchKuIiqrXyQONRE7SXBTuAyRJjZ97vPUQx-OL6RF0
-Message-ID: <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
+References: <cover.1765778124.git.zhoubinbin@loongson.cn> <db24b6366bb0d49e9dcc04328ffad7a37f687a89.1765778124.git.zhoubinbin@loongson.cn>
+ <20251216161641.GA2573095-robh@kernel.org>
+In-Reply-To: <20251216161641.GA2573095-robh@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 17 Dec 2025 15:17:21 +0800
+X-Gm-Features: AQt7F2qQrdS_pneRFz3w-uSIWdtleZiWhz-8aYHoPaaqOQqdhxOueQMyYHD3klo
+Message-ID: <CAMpQs4KUze8TPXV0Lmk8fP9cc0s4PsJY9bU9YrF-_kWJ8dtBog@mail.gmail.com>
+Subject: Re: [PATCH 2/7] dt-bindings: interrupt-controller: loongson,pch-pic:
+ Change to unevaluatedProperties
+To: Rob Herring <robh@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 4, 2025 at 5:45=E2=80=AFAM Niklas Schnelle <schnelle@linux.ibm.=
-com> wrote:
+Hi Rob:
+
+Thanks for your review.
+
+On Wed, Dec 17, 2025 at 12:16=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
 >
-> On Mon, 2025-12-01 at 22:45 +0800, Huacai Chen wrote:
+> On Tue, Dec 16, 2025 at 03:55:13PM +0800, Binbin Zhou wrote:
+> > Change additionalProperties to unevaluatedProperties because it refs to
+> > interrupt-controller.yaml.
 > >
-> --- snip ---
-> > You said that "it feels like this is just a hack to probe an odd
-> > topology". Yes, to some extent you are right.
+> > Fix below CHECK_DTBS warnings:
+> > arch/loongarch/boot/dts/loongson-2k2000-ref.dtb: interrupt-controller@1=
+0000000 (loongson,pch-pic-1.0): '#address-cells' does not match any of the =
+regexes: '^pinctrl-[0-9]+$'
+> >         from schema $id: http://devicetree.org/schemas/interrupt-contro=
+ller/loongson,pch-pic.yaml
 > >
-> > 1, One of our SoC (LS2K3000) has a special device which has func1 but
-> > without func0. To let the PCI core scan func1 we can only make
-> > hypervisor_isolated_pci_functions() return true.
-> > 2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
-> > 3, Though we change hypervisor_isolated_pci_functions() to resolve the
-> > above problem, it also lets us pass isolated PCI functions to a guest
-> > OS instance.
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../bindings/interrupt-controller/loongson,pch-pic.yaml      | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
 > >
-> > As a summary, for real machines commit a02fd05661d73a850 is a hack to
-> > probe an odd device, for virtual machines it allows passing isolated
-> > PCI functions.
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/loo=
+ngson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller=
+/loongson,pch-pic.yaml
+> > index b7bc5cb1dff2..1f818316082e 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,p=
+ch-pic.yaml
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,p=
+ch-pic.yaml
+> > @@ -14,6 +14,9 @@ description:
+> >    transforming interrupts from on-chip devices into HyperTransport vec=
+torized
+> >    interrupts.
+> >
+> > +allOf:
+> > +  - $ref: /schemas/interrupt-controller.yaml#
 >
-> Ok, thanks for the answer. So let's see how we can debug this and get
-> to a solution that works for both of us. Looking around a bit I see
-> that your pci_loongson_map_bus() has some special handling for trying
-> not to access non-existent devices added by your commit 2410e3301fcc
-> ("PCI: loongson: Don't access non-existent devices"). I wonder if with
-> this patch applied we're running into this same issue but with a devfn
-> that was previously not tried and is not covered by your checks? And
-> maybe since your root complex doesn't return 0xff for these non-
-> existent devices we could end up trying to probe AHCI on such an empty
-> slot misinterpreting whatever it returns as matching device/vendor?
-Commit 2410e3301fcc seems to have no relationship with current problems.
+> Adding this does not define the value(s) #address-cells must be. I'd
+> assume it is 0 in this case.
 
-The LS2K3000 problem that commit a02fd05661d73 want to resolve is we
-have such a device:
-bus=3D0, device=3D6,  fun=3D0,  GPU
-bus=3D0, device=3D6,  fun=3D1,  DC
-The GPU part can be disabled and in which case there is a device
-without func0, so need a hack.
+Indeed, interrupt-controller.yaml only defines #address-cells, and
+does not specify values. But the addition of interrupt-controller.yaml
+is still necessary, besides that, I would add the following:
 
->
-> And looking at pdev_may_exist() does the "device <=3D 20" really make
-> sense with 20 in decimal? If I pull in the negation I get "device > 19"
-> But if it was 0x20 I'd get "device > 0x1f" which would match the
-> maximum value of PCI_SLOT(), though then the check would be redundant
-> since the device value already comes out of PCI_SLOT().
-I have confirmed that 20 in decimal is right. Devices between dev-20
-and dev-0x20 are completely sane.
+@@ -37,12 +37,16 @@ properties:
+   '#interrupt-cells':
+     const: 2
 
->
-> Could you try redoing the test with the AHCI hang but add a print of
-> the affected bus/device/function that AHCI thinks it is probing? Then
-> if the above theory applies we should see it trying to probe on a
-> device that is missing in the correctly booted case and got past your
-> existing checks.
-By redoing this test we found there is only one AHCI detected, and the
-BDF is: bus=3D0, device=3D8, fun=3D0.
++  '#address-cells':
++    const: 0
++
+ required:
+   - compatible
+   - reg
+   - loongson,pic-base-vec
+   - interrupt-controller
+   - '#interrupt-cells'
++  - '#address-cells'
 
-With or without this patch, only one AHCI. But without this patch, the
-AHCI initialization doesn't hang.
-
-Huacai
+ unevaluatedProperties: false
 
 >
-> Thanks,
-> Niklas Schnelle
+> > +
+> >  properties:
+> >    compatible:
+> >      const: loongson,pch-pic-1.0
+> > @@ -41,7 +44,7 @@ required:
+> >    - interrupt-controller
+> >    - '#interrupt-cells'
+> >
+> > -additionalProperties: false
+> > +unevaluatedProperties: false
+> >
+> >  examples:
+> >    - |
+> > --
+> > 2.47.3
+> >
+
+--=20
+Thanks.
+Binbin
