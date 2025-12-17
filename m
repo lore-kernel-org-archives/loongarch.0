@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6802ECD32
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B76A2DC792
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765952103; cv=none; b=ovlSWCZtCZ5uspIlxzpVYveygMKEHstN6RACrE6RIabmv2Tz3AkvIDkYuU5++tMZyyATXODeyJY03+jc8L0ONvVnxZRQvczFe+F0rlmJHOUbw5h6SE23jp9Jd75rwXOWkP9dm0z68MVwF0McwggXONRAVn13PFY8BL+s3VUoNIM=
+	t=1765952103; cv=none; b=XL2pc29q+gZUYFC1rrDDFuHW9hq+sJTm5HeOfwJHXqo+0kmIlJ8u1ANPEX0WjkVKjt6d9YEDF4Ma9X/dwSTXDnSdG0LElKNjv7ZPaHL8UQjKnQsndy2oP5m+Gvt2Rf5TJssmBNZFeRZPIBq1M/PmbBm7hcySzxzuOBklPvYRU6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1765952103; c=relaxed/simple;
-	bh=WLDcyUQpfa0qKW1T1Zd8X2+eNMhk9ImYjFtpapGBMWU=;
+	bh=wZLOMETjgoJ2dGINqkm2V8I5bmIvypzJ/UXmJA+ST2I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=trHSZX/4pbIt6mC0JaA605iOVveY5avEWYg4Fp69RDglcPP81MsENo6vcnVL9F42O07Qvqy/R0DBVcpIANb5/20kapiEf5vnWeK9JK4Pl6ymCGoZYxeLCaqcOWdYUOG3Lb7GSbHXw4KdC85FBU4Nc0gpEWNB82930m8LbA2MWEE=
+	 MIME-Version; b=mKYIQeF8fIwAUAJI0O4Totr7yTifFVaipDzARXM3ZEApfss7iEU4UzULfA1GlSNEO3ufN5w3T8vNpnADpNOb8iiwPZ8P9vSo+kSc68R/Ii5cjqMD+hUVOx+pWh1lbmuJjM4cXFF0xEBeS8ITQV+WTmZkmJo0mHIdTOHss4QPiP8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
+X-UUID: b17e2dc0db0f11f0a38c85956e01ac42-20251217
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -25,27 +25,27 @@ X-CTIC-Tags:
 	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
 	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,U
+X-CID-O-INFO: VERSION:1.3.6,REQID:54636725-8111-4a94-bf27-e8707e41cefc,IP:10,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,URL
+X-CID-INFO: VERSION:1.3.6,REQID:54636725-8111-4a94-bf27-e8707e41cefc,IP:10,URL
 	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:9ed4d91d2c7b25ac4dd7b7b3ed3762e8,BulkI
-	D:251217141457MPWBEX6H,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
+X-CID-META: VersionHash:a9d874c,CLOUDID:ba6e0229970adc7d7e96f99048600b0c,BulkI
+	D:2512171414511WY777SV,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
 	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
 	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
 	0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
+X-UUID: b17e2dc0db0f11f0a38c85956e01ac42-20251217
 X-User: duanchenghao@kylinos.cn
 Received: from localhost.localdomain [(183.242.174.20)] by mailgw.kylinos.cn
 	(envelope-from <duanchenghao@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 612073974; Wed, 17 Dec 2025 14:14:54 +0800
+	with ESMTP id 1517111480; Wed, 17 Dec 2025 14:14:49 +0800
 From: Chenghao Duan <duanchenghao@kylinos.cn>
 To: yangtiezhu@loongson.cn,
 	rostedt@goodmis.org,
@@ -64,9 +64,9 @@ Cc: kernel@xen0n.name,
 	jianghaoran@kylinos.cn,
 	vincent.mc.li@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
-Date: Wed, 17 Dec 2025 14:14:34 +0800
-Message-Id: <20251217061435.802204-7-duanchenghao@kylinos.cn>
+Subject: [PATCH v4 4/7] LoongArch: BPF: Save return address register ra to t0 before trampoline
+Date: Wed, 17 Dec 2025 14:14:32 +0800
+Message-Id: <20251217061435.802204-5-duanchenghao@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20251217061435.802204-1-duanchenghao@kylinos.cn>
 References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
@@ -78,52 +78,29 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enhance the bpf_arch_text_poke() function to enable accurate location
-of BPF program entry points.
-
-When modifying the entry point of a BPF program, skip the move t0, ra
-instruction to ensure the correct logic and copy of the jump address.
+Modify the build_prologue function to ensure the return address
+register ra is saved to t0 before entering trampoline operations.
+This change ensures accurate return address handling when a BPF
+program calls another BPF program, preventing errors in the
+BPF-to-BPF call chain.
 
 Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/loongarch/net/bpf_jit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 3dbabacc8856..0c16a1b18e8f 100644
+index 76cd24646bec..c560d1e14b9d 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
- 		       void *new_addr)
- {
- 	int ret;
-+	unsigned long size = 0;
-+	unsigned long offset = 0;
-+	char namebuf[KSYM_NAME_LEN];
-+	void *image = NULL;
- 	bool is_call;
- 	u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
- 	u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
-@@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
- 	/* Only poking bpf text is supported. Since kernel function entry
- 	 * is set up by ftrace, we rely on ftrace to poke kernel functions.
- 	 */
--	if (!is_bpf_text_address((unsigned long)ip))
-+	if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
- 		return -ENOTSUPP;
+@@ -139,6 +139,7 @@ static void build_prologue(struct jit_ctx *ctx)
+ 	stack_adjust = round_up(stack_adjust, 16);
+ 	stack_adjust += bpf_stack_adjust;
  
-+	image = ip - offset;
-+	/* zero offset means we're poking bpf prog entry */
-+	if (offset == 0)
-+		/* skip to the nop instruction in bpf prog entry:
-+		 * move t0, ra
-+		 * nop
-+		 */
-+		ip = image + LOONGARCH_INSN_SIZE;
-+
- 	is_call = old_t == BPF_MOD_CALL;
- 	ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
- 	if (ret)
++	move_reg(ctx, LOONGARCH_GPR_T0, LOONGARCH_GPR_RA);
+ 	/* Reserve space for the move_imm + jirl instruction */
+ 	for (i = 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
+ 		emit_insn(ctx, nop);
 -- 
 2.25.1
 
