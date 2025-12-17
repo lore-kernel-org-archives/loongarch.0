@@ -1,22 +1,22 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECC32DAFAC
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6802ECD32
+	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 06:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765952099; cv=none; b=OI17MGe7Y3QCqTWSKNQ35KRCqzmF1qughM8dA7vSarmpQ9J9+OC2o0yM31izPUvmaJSBySK2TGe8fOWw+bG/La3gokwQ1wcNwcxo4rF3ckMi4cwkpZ0013BphBQj9K50oC3N0XNjyuj4JF1GbMg8t1F+RKZidIHfO4Px8iWqTNo=
+	t=1765952103; cv=none; b=ovlSWCZtCZ5uspIlxzpVYveygMKEHstN6RACrE6RIabmv2Tz3AkvIDkYuU5++tMZyyATXODeyJY03+jc8L0ONvVnxZRQvczFe+F0rlmJHOUbw5h6SE23jp9Jd75rwXOWkP9dm0z68MVwF0McwggXONRAVn13PFY8BL+s3VUoNIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765952099; c=relaxed/simple;
-	bh=r1I+bpErqlh++r/MFQe8qcmP4ACN25MMSukJfXZll64=;
+	s=arc-20240116; t=1765952103; c=relaxed/simple;
+	bh=WLDcyUQpfa0qKW1T1Zd8X2+eNMhk9ImYjFtpapGBMWU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LoJl3n6f7JYHh1odc1Ma1CbL0k3IjBkg0pJTjWX4hqaVT6jMZueRQqacXbU0lATCK6TGtWt4t/JjlONAq4X+ieCjefjqv9oRQySZw0XvsYMflDI6JrTDMVpruC+gJwBKnKs3k3Vjev/KM4TkRe22QFOJ7dR3uSq6Hz0jt0N2VwA=
+	 MIME-Version; b=trHSZX/4pbIt6mC0JaA605iOVveY5avEWYg4Fp69RDglcPP81MsENo6vcnVL9F42O07Qvqy/R0DBVcpIANb5/20kapiEf5vnWeK9JK4Pl6ymCGoZYxeLCaqcOWdYUOG3Lb7GSbHXw4KdC85FBU4Nc0gpEWNB82930m8LbA2MWEE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b0a89976db0f11f0a38c85956e01ac42-20251217
+X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
 X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
 	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
 	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
@@ -25,27 +25,27 @@ X-CTIC-Tags:
 	DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS
 	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:8e401cd1-354d-4394-a7c3-c1672cd8df66,IP:10,U
+X-CID-O-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:8e401cd1-354d-4394-a7c3-c1672cd8df66,IP:10,URL
+X-CID-INFO: VERSION:1.3.6,REQID:66f060b5-49c3-4c94-be10-6e82ec42ed6f,IP:10,URL
 	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:1524952e3b7d2bf701af38f7ac9cb77e,BulkI
-	D:251217141448XN7Y5VUG,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
+X-CID-META: VersionHash:a9d874c,CLOUDID:9ed4d91d2c7b25ac4dd7b7b3ed3762e8,BulkI
+	D:251217141457MPWBEX6H,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
 	2|127|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
 	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
 	0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b0a89976db0f11f0a38c85956e01ac42-20251217
+X-UUID: b45ccc7cdb0f11f0a38c85956e01ac42-20251217
 X-User: duanchenghao@kylinos.cn
 Received: from localhost.localdomain [(183.242.174.20)] by mailgw.kylinos.cn
 	(envelope-from <duanchenghao@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 1826887528; Wed, 17 Dec 2025 14:14:48 +0800
+	with ESMTP id 612073974; Wed, 17 Dec 2025 14:14:54 +0800
 From: Chenghao Duan <duanchenghao@kylinos.cn>
 To: yangtiezhu@loongson.cn,
 	rostedt@goodmis.org,
@@ -64,9 +64,9 @@ Cc: kernel@xen0n.name,
 	jianghaoran@kylinos.cn,
 	vincent.mc.li@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v4 2/7] LoongArch: Enable exception fixup for specific ADE subcode
-Date: Wed, 17 Dec 2025 14:14:30 +0800
-Message-Id: <20251217061435.802204-3-duanchenghao@kylinos.cn>
+Subject: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
+Date: Wed, 17 Dec 2025 14:14:34 +0800
+Message-Id: <20251217061435.802204-7-duanchenghao@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20251217061435.802204-1-duanchenghao@kylinos.cn>
 References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
@@ -76,54 +76,54 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch allows the LoongArch BPF JIT to handle recoverable memory
-access errors generated by BPF_PROBE_MEM* instructions.
+Enhance the bpf_arch_text_poke() function to enable accurate location
+of BPF program entry points.
 
-When a BPF program performs memory access operations, the instructions
-it executes may trigger ADEM exceptions. The kernel’s built-in BPF
-exception table mechanism (EX_TYPE_BPF) will generate corresponding
-exception fixup entries in the JIT compilation phase; however, the
-architecture-specific trap handling function needs to proactively call
-the common fixup routine to achieve exception recovery.
-
-do_ade(): fix EX_TYPE_BPF memory access exceptions for BPF programs,
-ensure safe execution.
-
-Relevant test cases: illegal address access tests in module_attach and
-subprogs_extable of selftests/bpf
+When modifying the entry point of a BPF program, skip the move t0, ra
+instruction to ensure the correct logic and copy of the jump address.
 
 Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
 ---
- arch/loongarch/kernel/traps.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 004b8ebf0051..201c9a5532f4 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -534,11 +534,18 @@ asmlinkage void noinstr do_fpe(struct pt_regs *regs, unsigned long fcsr)
- 
- asmlinkage void noinstr do_ade(struct pt_regs *regs)
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 3dbabacc8856..0c16a1b18e8f 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+ 		       void *new_addr)
  {
--	irqentry_state_t state = irqentry_enter(regs);
-+	irqentry_state_t state;
-+	unsigned int esubcode = FIELD_GET(CSR_ESTAT_ESUBCODE, regs->csr_estat);
+ 	int ret;
++	unsigned long size = 0;
++	unsigned long offset = 0;
++	char namebuf[KSYM_NAME_LEN];
++	void *image = NULL;
+ 	bool is_call;
+ 	u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+ 	u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] = {[0 ... 4] = INSN_NOP};
+@@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+ 	/* Only poking bpf text is supported. Since kernel function entry
+ 	 * is set up by ftrace, we rely on ftrace to poke kernel functions.
+ 	 */
+-	if (!is_bpf_text_address((unsigned long)ip))
++	if (!__bpf_address_lookup((unsigned long)ip, &size, &offset, namebuf))
+ 		return -ENOTSUPP;
+ 
++	image = ip - offset;
++	/* zero offset means we're poking bpf prog entry */
++	if (offset == 0)
++		/* skip to the nop instruction in bpf prog entry:
++		 * move t0, ra
++		 * nop
++		 */
++		ip = image + LOONGARCH_INSN_SIZE;
 +
-+	state = irqentry_enter(regs);
-+
-+	if ((esubcode == EXSUBCODE_ADEM) && fixup_exception(regs))
-+		goto out;
- 
- 	die_if_kernel("Kernel ade access", regs);
- 	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)regs->csr_badvaddr);
- 
-+out:
- 	irqentry_exit(regs, state);
- }
- 
+ 	is_call = old_t == BPF_MOD_CALL;
+ 	ret = emit_jump_or_nops(old_addr, ip, old_insns, is_call);
+ 	if (ret)
 -- 
 2.25.1
 
