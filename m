@@ -1,113 +1,173 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75336341AB1
-	for <loongarch@lists.linux.dev>; Wed, 17 Dec 2025 09:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6FC1FDE01
+	for <loongarch@lists.linux.dev>; Thu, 18 Dec 2025 01:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765964853; cv=none; b=sX59XGeYauxiCRGHdBivTvIpzrUzIRyXhkHvv9Gard5cZGNYznbwXI3gTBF3IC30cxgC8T5nbBA7To2Le5wUCw8ph9tEKFz5Ljwvyofy+4yCHJaIjycyPwAGM83oVCI4RdX6w27F57HGlHVX8JgbOXHn39V52NPnmSMcv3Noubw=
+	t=1766021245; cv=none; b=Pgt3D+7Cv7yO4EXrNFaU4BSfu3iViHdLZoKVJjZTbce5yBvcuIA43FO/c5uykhD/ylB3nvu0roGntfwx9FWd4YL8dIFcPEYEwOCI3kWhHClNB8pRKgx2f6gdrGEKGfwRK6BaU4hxwJUw74Y5VgoCGHsYEA/HE3ZkOuSA0vd33+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765964853; c=relaxed/simple;
-	bh=9RDc6+mY/BOwjSpoEwGFWhPntxw3uW/Hv6MZvdDJ5eo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IZzhkxk68IFgFTdXkohAbcpjrD2Yy2o8YvuyzDMtdQUblNRQMzFj+anxVlmB6xUmxslQSZChWTQeSNlEf3iE02yMznzdxOjHQyaVJfEPaZWLghAe7A+RQ8miB5QmIbYEfrwav63AjB4qDLsR0k7NbYnH29e7ej5GJQXVzLRc2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Pyc1KpvA; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Pyc1KpvA"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765964849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6yDfSie6tI+R/bkHsg8f30F7brlmJ878+dqsdcToXoQ=;
-	b=Pyc1KpvAxk811HYK04xjZpyTzpEkJYxqqJmPoGGAQiXIyGUCHOz7UnqXrw4Idz7ei3/Hvn
-	nKx4SWPSfqUG4f91J+BuNBSg1KCzxG0cBAC6q78EOJ3y5AH8vsj9RdwGKsDwh1k/3OGPBu
-	+BEuL1tluj818rz3TGgaraPxgsFz7Rk=
-From: Qi Zheng <qi.zheng@linux.dev>
-To: will@kernel.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	peterz@infradead.org,
-	dev.jain@arm.com,
-	akpm@linux-foundation.org,
-	david@kernel.org,
-	ioworker0@gmail.com,
-	linmag7@gmail.com
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-alpha@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v3 7/7] mm: make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE
-Date: Wed, 17 Dec 2025 17:45:48 +0800
-Message-ID: <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
-In-Reply-To: <cover.1765963770.git.zhengqi.arch@bytedance.com>
-References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+	s=arc-20240116; t=1766021245; c=relaxed/simple;
+	bh=U5LXjrO7KGM2ptZOPxaLP/Gu/0RCs4prZyeCjReoqVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1/7Wtvm4WlHnIM9KZMtGW0Zk4pfJVUVCf2/EOZo2456ad5PLUAaGtk1jwBEkFL2PflXEi7Lr7jIhfyn5RNE3PnwbzGR8E9ew3sYj6fhdJ+797OQW3EV5uQbnnVusQngD4c5bf102kzf97c0tG801ZMQ3NR00hMFSms+eiGnlFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a70cac44dbb011f0a38c85956e01ac42-20251218
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_MISS, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, UD_TRUSTED
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:b51ade3f-e58b-49b9-939b-9355ac6ebb6d,IP:20,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:10
+X-CID-INFO: VERSION:1.3.6,REQID:b51ade3f-e58b-49b9-939b-9355ac6ebb6d,IP:20,URL
+	:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:10
+X-CID-META: VersionHash:a9d874c,CLOUDID:2590479f08db1a65a2554039a2c7bd8b,BulkI
+	D:251217145516TLVAJ57F,BulkQuantity:2,Recheck:0,SF:17|19|64|66|78|80|81|82
+	|83|102|127|841|850|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:99|1,File:
+	nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:
+	0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: a70cac44dbb011f0a38c85956e01ac42-20251218
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(183.242.174.20)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 996175428; Thu, 18 Dec 2025 09:27:01 +0800
+Date: Thu, 18 Dec 2025 09:26:56 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: bot+bpf-ci@kernel.org
+Cc: yangtiezhu@loongson.cn, rostedt@goodmis.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, hengqi.chen@gmail.com, chenhuacai@kernel.org,
+	kernel@xen0n.name, zhangtianyang@loongson.cn, masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	bpf@vger.kernel.org, youling.tang@linux.dev, jianghaoran@kylinos.cn,
+	vincent.mc.li@gmail.com, linux-trace-kernel@vger.kernel.org,
+	ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
+	martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
+	clm@meta.com, ihor.solodrai@linux.dev
+Subject: Re: [PATCH v4 1/7] LoongArch: ftrace: Refactor register restoration
+ in ftrace_common_return
+Message-ID: <20251218012656.GA75051@chenghao-pc>
+References: <20251217061435.802204-2-duanchenghao@kylinos.cn>
+ <5c7c7239a6f89e685f69093ff84fe686c75cf6b9b051dcbf812841f00ab3bc31@mail.kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5c7c7239a6f89e685f69093ff84fe686c75cf6b9b051dcbf812841f00ab3bc31@mail.kernel.org>
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+On Wed, Dec 17, 2025 at 06:55:00AM +0000, bot+bpf-ci@kernel.org wrote:
+> > diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
+> > index d6b474ad1d5e..5729c20e5b8b 100644
+> > --- a/arch/loongarch/kernel/mcount_dyn.S
+> > +++ b/arch/loongarch/kernel/mcount_dyn.S
+> > @@ -94,7 +94,6 @@ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+> >   * at the callsite, so there is no need to restore the T series regs.
+> >   */
+> >  ftrace_common_return:
+> > -	PTR_L		ra, sp, PT_R1
+> >  	PTR_L		a0, sp, PT_R4
+> >  	PTR_L		a1, sp, PT_R5
+> >  	PTR_L		a2, sp, PT_R6
+> > @@ -104,12 +103,17 @@ ftrace_common_return:
+> >  	PTR_L		a6, sp, PT_R10
+> >  	PTR_L		a7, sp, PT_R11
+> >  	PTR_L		fp, sp, PT_R22
+> > -	PTR_L		t0, sp, PT_ERA
+> >  	PTR_L		t1, sp, PT_R13
+> > -	PTR_ADDI	sp, sp, PT_SIZE
+> >  	bnez		t1, .Ldirect
+> > +
+> > +	PTR_L		ra, sp, PT_R1
+> > +	PTR_L		t0, sp, PT_ERA
+> > +	PTR_ADDI	sp, sp, PT_SIZE
+> >  	jr		t0
+> >  .Ldirect:
+> > +	PTR_L		t0, sp, PT_R1
+> > +	PTR_L		ra, sp, PT_ERA
+>                      ^^^^^^^^^^^^^^^^^^^
+> Does this break existing ftrace direct trampolines?
+> 
+> Before this change, direct trampolines received:
+>   ra = parent return address (from PT_R1)
+>   t0 = traced function address (from PT_ERA)
+> 
+> After this change, direct trampolines receive:
+>   t0 = parent return address (from PT_R1)
+>   ra = traced function address (from PT_ERA)
+> 
+> The sample trampolines in samples/ftrace/ were written for the old
+> convention. For example, samples/ftrace/ftrace-direct.c does:
+> 
+>   my_tramp:
+>     st.d  $t0, $sp, 8    # Save what it thinks is traced func addr
+>     st.d  $ra, $sp, 16   # Save what it thinks is parent addr
+>     bl    my_direct_func
+>     ld.d  $t0, $sp, 8    # Restore
+>     ld.d  $ra, $sp, 16   # Restore
+>     jr    $t0            # Jump to what it thinks is traced function
+> 
+> With the new convention, the sample would save parent address in the
+> t0 slot, restore it to t0, and then jump to the parent instead of the
+> traced function, skipping the traced function entirely.
+> 
+> This was fixed later in commit 055e392f3be7 "LoongArch: ftrace: Adjust
+> register stack restore order in direct call trampolines" which updated
+> all the samples to match the new convention. However, any out-of-tree
+> direct trampolines written before this commit would be broken by this
+> change.
+> 
+> Was this ABI break intentional? The commit message mentions matching
+> "the state when ftrace was entered" but doesn't explain why breaking
+> compatibility was necessary. RISC-V uses the opposite convention
+> (t0 = traced func, ra = parent), which the original LoongArch code
+> matched.
 
-The PT_RECLAIM can work on all architectures that support
-MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
-MMU_GATHER_RCU_TABLE_FREE.
+The patch "LoongArch: ftrace: Refactor register restoration in
+ftrace_common_return" changed the conventions for t0 and ra after
+entering the direct call function, which is exactly the reason forthe
+changes made in this patch.
 
-BTW, change PT_RECLAIM to be enabled by default, since nobody should want
-to turn it off.
+Chenghao
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
----
- arch/x86/Kconfig | 1 -
- mm/Kconfig       | 9 ++-------
- 2 files changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 80527299f859a..0d22da56a71b0 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -331,7 +331,6 @@ config X86
- 	select FUNCTION_ALIGNMENT_4B
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
--	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
- 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
- 	select SCHED_SMT			if SMP
- 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
-diff --git a/mm/Kconfig b/mm/Kconfig
-index bd0ea5454af82..fc00b429b7129 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
- 	  The architecture has hardware support for userspace shadow call
-           stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
- 
--config ARCH_SUPPORTS_PT_RECLAIM
--	def_bool n
--
- config PT_RECLAIM
--	bool "reclaim empty user page table pages"
--	default y
--	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
--	select MMU_GATHER_RCU_TABLE_FREE
-+	def_bool y
-+	depends on MMU_GATHER_RCU_TABLE_FREE
- 	help
- 	  Try to reclaim empty user page table pages in paths other than munmap
- 	  and exit_mmap path.
--- 
-2.20.1
+> 
+> > +	PTR_ADDI	sp, sp, PT_SIZE
+> >  	jr		t1
+> >  SYM_CODE_END(ftrace_common)
+> 
+> [ ... ]
+> 
+> > @@ -161,6 +165,8 @@ SYM_CODE_END(return_to_handler)
+> >  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> >  SYM_CODE_START(ftrace_stub_direct_tramp)
+> >  	UNWIND_HINT_UNDEFINED
+> > -	jr		t0
+> > +	move		t1, ra
+> > +	move		ra, t0
+> > +	jr		t1
+> >  SYM_CODE_END(ftrace_stub_direct_tramp)
+> >  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+> 
+> 
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/20293821855
 
