@@ -1,199 +1,406 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2714D345CD0
-	for <loongarch@lists.linux.dev>; Thu, 18 Dec 2025 10:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B017219E8D
+	for <loongarch@lists.linux.dev>; Thu, 18 Dec 2025 11:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766053452; cv=none; b=bPVsUcZjtvHJBqMLHUb0Bhycev7xVNYhXf0rEwSqqaxLCm8aHYt4scP7AbUQne4j5V6oJvruWDsHgIJl+2Mv3KfUTgEBSJXr9g7n+rKyOlNGB82+c9CI68NJf5nLvhfPT2gEqHZwf0CvyDeu26156eM+5dyYFicmy53PjdAl7pw=
+	t=1766056133; cv=none; b=ZCc3gGwpdiZFHNmhvxkjcZV8n6Z/nx5iOVxaWoPrYdTWmLBp5NEHe0M4dQGGn70AsEGV1ZfiH5/I5va5Iz+8A3SbM5Zl60tdxxGvpPhWRh5rM59U74UTy2iN/dWoHU89aNnKGMqQsrFO6mSo8+nrME1IsItgGIbTEqSM2DQp5ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766053452; c=relaxed/simple;
-	bh=Y5OGiHLQy2WsQqtovudF6yPGd8K9LfOVDKyFStcVPHA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=glfSQ+XrN6ZFFQmWPqPjAAVRL6QGlk5/0NW1drkkjzcgySIe3PKo6nQnw3ih61ZzdOZaXWpd2696F48GZtF2cNvKDsrgfsYld+j5/aCJpM1DkrBOogjA3e1ZFS9zMLBrUFS9l+Rv1lOjbyL9mUTRzxV5h9mfBMppKYWK3CmDOiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8OpKtqo; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8OpKtqo"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0d6f647e2so7342805ad.1
-        for <loongarch@lists.linux.dev>; Thu, 18 Dec 2025 02:24:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1766053450; x=1766658250; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WslnZ1panE0zhxGDe3aCJhXLiwIja75afp2ehy4KLwk=;
-        b=r8OpKtqoBbsRfUzjNTok4/l3UWd8NDV58TsEdn+jMsp9wsqXjUw0A80XuFdY8OOlKN
-         IiVgHSPO0DBWvSMCXF9NwD7Q3pWeJ3bifUUPJ2fS2GlvTttdKLoKlRMSVCmTKIO0LwFp
-         aver5taRRMxkeRb+Jg5z/5AAPbDR/RSnUtkrLcmJFuNHEBRhXmGCMaB0bDpYHszCZkAI
-         pEvHJri8o7GSr9CVyknCjvr2WueT4eS/8K4xbysmRQGf+7GG2bCzjoK1/S/cGT7fES6N
-         IZGrbD6ogG+Lx32Gln//VLWnvlhMKQ8lsEB+FFDZlKzBnWzpRS7Kf62a5yYf1hZ31AAo
-         LrrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766053450; x=1766658250;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WslnZ1panE0zhxGDe3aCJhXLiwIja75afp2ehy4KLwk=;
-        b=el+Tl9lJ9faf86SJjsAYfL4Fl+7z64LtQBKIryIsz3Pxw87ozxl2K/UyqOB1o5PLU3
-         E/9FwNm2nC4OzF+ZDHI1ki2Dsg4as2qtJWJPRz7kiVsedVlEa/Cgp/OovkuWYQFxIc8S
-         iInYO8wVyIgNUawTBfCgJTkguc3VTjgdCPMQaOissuWw3ptxuzFOgd83jSl+KMoqh/jI
-         pIM80nc/J7YS8m6cI9W0EjvtxbfquMXfC8DXi7ciOR6mLbeK6bRqVPVXxiCZnFxce7Ku
-         C54JwuR+MyLgRBX3UVgHC3yMZCAUjlKaGNFjpriGhyWDlZhkZpM/RjZTaENNaJV/E+Ao
-         MMTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPioiR/kuQP8/GjkkWzojvgo0zx7hPF+v56UickHB70uQL2dBWhro+L5ujMHkBWMLtbGXCdzvYwpY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxO5QxFiOHeRPOXRi9MtYG6/TRL25Zo3znQwNATU9gY5T7UOrXN
-	kts1CeLNlL5/t/FuUbkADN3HasF7rSXP7MWQQSteHJQU7Po5prfUxt4In73RWAhxPJ5amCv3lvO
-	uoKfw/Ql+9c4LZWcXQNbVumgKVvTnsAQ6PPpo6Dfe
-X-Gm-Gg: AY/fxX5NyxSS2CFMOalHXXzfPWDItoakRUlXZwyqAQG/EcG6RaKG6aUgRDcMbqHn0U1
-	BBBUA+g1rdfqWJ8O/YU6KAHt2QGSGCPInKvFw/KoD8OXmDIud7IWWurplogyS9G8SzVsWxEHEHT
-	mUZdUr+QIM1ECd64PCJf9Y1wbDJHqliODNRh5jfUeZQqOPptqyo+E2qxG02tJIvZK1SKUmmm28t
-	cwqgnesgonUiFTXIVwRJ267PrIYd4JNqOw8IKmqNNIP0YBB2TBznw8hZhtVu6/+LW1ytAiQzdlR
-	UtZ+nlLposCdeYU35raUyXHv12lk4G8HjIeGBw==
-X-Google-Smtp-Source: AGHT+IE3XdpIoC/X1A6+tWvYnN30WmVoW6ll1XvyGtof86Vu1FcZWimVqNDhIQGXBSpdKroKdRnMo1bxnzQC1Vs4On8=
-X-Received: by 2002:a05:7022:f503:b0:119:e56b:c75b with SMTP id
- a92af1059eb24-11f34c2625amr13304701c88.32.1766053449983; Thu, 18 Dec 2025
- 02:24:09 -0800 (PST)
+	s=arc-20240116; t=1766056133; c=relaxed/simple;
+	bh=+zs0W4acDE88VfDclZYCJ+D9lDnUrKA1kIuOPKwwZhE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=es24XdgG11ZLrlQS0yPjpSAuZw72Q9LKrJRDhOtwhOFRn/rN/cxWJXUX9I0B7zj2xRL//L2Dz9gTDXpKna1Yv6PnBWe3IltCXOSmzSoP0+m8MHw90ABZ0g9NsOwU9tw//xyajNx6VJlLSxfBZgoOBQXYPXXZHOy5fwRZGgzo/zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.126])
+	by gateway (Coremail) with SMTP id _____8AxEvGz4ENpGXIAAA--.2056S3;
+	Thu, 18 Dec 2025 19:08:35 +0800 (CST)
+Received: from [10.20.42.126] (unknown [10.20.42.126])
+	by front1 (Coremail) with SMTP id qMiowJDxysGv4ENpOE4BAA--.2664S3;
+	Thu, 18 Dec 2025 19:08:33 +0800 (CST)
+Subject: Re: [PATCH 1/2] LoongArch: KVM: Compile the switch.S file directly
+ into the kernel
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, stable@vger.kernel.org, WANG Xuerui
+ <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Charlie Jenkins <charlie@rivosinc.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20251217032450.954344-1-lixianglai@loongson.cn>
+ <20251217032450.954344-2-lixianglai@loongson.cn>
+ <CAAhV-H5g7KXK08vqKOR5HTsPKZ7X3CBa9fgfSTavnN7m9D_9AA@mail.gmail.com>
+From: lixianglai <lixianglai@loongson.cn>
+Message-ID: <831f8f7e-1628-42e2-ca2e-7772ad9d3057@loongson.cn>
+Date: Thu, 18 Dec 2025 19:05:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251218063916.1433615-1-yuanlinyu@honor.com> <20251218063916.1433615-3-yuanlinyu@honor.com>
- <aUPB18Xeh1BhF9GS@elver.google.com> <7334df3287534327a3e4a09c5c8d9432@honor.com>
-In-Reply-To: <7334df3287534327a3e4a09c5c8d9432@honor.com>
-From: Marco Elver <elver@google.com>
-Date: Thu, 18 Dec 2025 11:23:33 +0100
-X-Gm-Features: AQt7F2ri_watnVgJFp6cbP7eAfmz1Mi-buK4oLrIxtfdr5TG5N1pjsoHb_vA5KU
-Message-ID: <CANpmjNMmiXjifpc9LdCVi5jzzKU3sgb0iJn7P7TMFMNqDH7TbA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kfence: allow change number of object by early parameter
-To: yuanlinyu <yuanlinyu@honor.com>
-Cc: Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, 
-	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAAhV-H5g7KXK08vqKOR5HTsPKZ7X3CBa9fgfSTavnN7m9D_9AA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxysGv4ENpOE4BAA--.2664S3
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9fXoW3Cw17WFy5JrW5JF1UKF1DXFc_yoW8JrWkJo
+	WayF4Igrs7Gr12qrZ8twnrtFyYqFy0kw4Uuay7A3s3WF17t3yUtryUKw4rtFy3Ja1kCw4x
+	Wa43Wr1jvFy3trnxl-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
+	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
+	UjIYCTnIWjp_UUUYx7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
+	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
+	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
+	aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UR
+	a0PUUUUU=
 
-On Thu, 18 Dec 2025 at 11:18, yuanlinyu <yuanlinyu@honor.com> wrote:
+Hi  Huacai Chen:
+> Hi, Xianglai,
 >
-> > From: Marco Elver <elver@google.com>
-> > Sent: Thursday, December 18, 2025 4:57 PM
-> > To: yuanlinyu <yuanlinyu@honor.com>
-> > Cc: Alexander Potapenko <glider@google.com>; Dmitry Vyukov
-> > <dvyukov@google.com>; Andrew Morton <akpm@linux-foundation.org>;
-> > Huacai Chen <chenhuacai@kernel.org>; WANG Xuerui <kernel@xen0n.name>;
-> > kasan-dev@googlegroups.com; linux-mm@kvack.org; loongarch@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2 2/2] kfence: allow change number of object by early
-> > parameter
-> >
-> > On Thu, Dec 18, 2025 at 02:39PM +0800, yuan linyu wrote:
-> > > when want to change the kfence pool size, currently it is not easy and
-> > > need to compile kernel.
-> > >
-> > > Add an early boot parameter kfence.num_objects to allow change kfence
-> > > objects number and allow increate total pool to provide high failure
-> > > rate.
-> > >
-> > > Signed-off-by: yuan linyu <yuanlinyu@honor.com>
-> > > ---
-> > >  include/linux/kfence.h  |   5 +-
-> > >  mm/kfence/core.c        | 122
-> > +++++++++++++++++++++++++++++-----------
-> > >  mm/kfence/kfence.h      |   4 +-
-> > >  mm/kfence/kfence_test.c |   2 +-
-> > >  4 files changed, 96 insertions(+), 37 deletions(-)
-> > >
-> > > diff --git a/include/linux/kfence.h b/include/linux/kfence.h
-> > > index 0ad1ddbb8b99..920bcd5649fa 100644
-> > > --- a/include/linux/kfence.h
-> > > +++ b/include/linux/kfence.h
-> > > @@ -24,7 +24,10 @@ extern unsigned long kfence_sample_interval;
-> > >   * address to metadata indices; effectively, the very first page serves as an
-> > >   * extended guard page, but otherwise has no special purpose.
-> > >   */
-> > > -#define KFENCE_POOL_SIZE ((CONFIG_KFENCE_NUM_OBJECTS + 1) * 2 *
-> > PAGE_SIZE)
-> > > +extern unsigned int __kfence_pool_size;
-> > > +#define KFENCE_POOL_SIZE (__kfence_pool_size)
-> > > +extern unsigned int __kfence_num_objects;
-> > > +#define KFENCE_NUM_OBJECTS (__kfence_num_objects)
-> > >  extern char *__kfence_pool;
-> > >
-> >
-> > You have ignored the comment below in this file:
-> >
-> >       /**
-> >        * is_kfence_address() - check if an address belongs to KFENCE pool
-> >        * @addr: address to check
-> >        *
-> >       [...]
-> >        * Note: This function may be used in fast-paths, and is performance
-> > critical.
-> >        * Future changes should take this into account; for instance, we want to
-> > avoid
-> >    >>  * introducing another load and therefore need to keep
-> > KFENCE_POOL_SIZE a
-> >    >>  * constant (until immediate patching support is added to the kernel).
-> >        */
-> >       static __always_inline bool is_kfence_address(const void *addr)
-> >       {
-> >               /*
-> >                * The __kfence_pool != NULL check is required to deal with the case
-> >                * where __kfence_pool == NULL && addr < KFENCE_POOL_SIZE.
-> > Keep it in
-> >                * the slow-path after the range-check!
-> >                */
-> >               return unlikely((unsigned long)((char *)addr - __kfence_pool) <
-> > KFENCE_POOL_SIZE && __kfence_pool);
-> >       }
+> On Wed, Dec 17, 2025 at 11:49 AM Xianglai Li <lixianglai@loongson.cn> wrote:
+>> If we directly compile the switch.S file into the kernel, the address of
+>> the kvm_exc_entry function will definitely be within the DMW memory area.
+>> Therefore, we will no longer need to perform a copy relocation of
+>> kvm_exc_entry.
+>>
+>> Based on the above description, compile switch.S directly into the kernel,
+>> and then remove the copy relocation execution logic for the kvm_exc_entry
+>> function.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+>> ---
+>> Cc: Huacai Chen <chenhuacai@kernel.org>
+>> Cc: WANG Xuerui <kernel@xen0n.name>
+>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+>> Cc: Bibo Mao <maobibo@loongson.cn>
+>> Cc: Charlie Jenkins <charlie@rivosinc.com>
+>> Cc: Xianglai Li <lixianglai@loongson.cn>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>
+>>   arch/loongarch/Kbuild                       |  2 +-
+>>   arch/loongarch/include/asm/asm-prototypes.h | 16 ++++++++++
+>>   arch/loongarch/include/asm/kvm_host.h       |  5 +--
+>>   arch/loongarch/include/asm/kvm_vcpu.h       | 20 ++++++------
+>>   arch/loongarch/kvm/Makefile                 |  2 +-
+>>   arch/loongarch/kvm/main.c                   | 35 ++-------------------
+>>   arch/loongarch/kvm/switch.S                 | 22 ++++++++++---
+>>   7 files changed, 49 insertions(+), 53 deletions(-)
+>>
+>> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+>> index beb8499dd8ed..1c7a0dbe5e72 100644
+>> --- a/arch/loongarch/Kbuild
+>> +++ b/arch/loongarch/Kbuild
+>> @@ -3,7 +3,7 @@ obj-y += mm/
+>>   obj-y += net/
+>>   obj-y += vdso/
+>>
+>> -obj-$(CONFIG_KVM) += kvm/
+>> +obj-$(subst m,y,$(CONFIG_KVM)) += kvm/
+>>
+>>   # for cleaning
+>>   subdir- += boot
+>> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
+>> index 704066b4f736..eb591276d191 100644
+>> --- a/arch/loongarch/include/asm/asm-prototypes.h
+>> +++ b/arch/loongarch/include/asm/asm-prototypes.h
+>> @@ -20,3 +20,19 @@ asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct task_
+>>                                                                      struct pt_regs *regs,
+>>                                                                      int (*fn)(void *),
+>>                                                                      void *fn_arg);
+>> +
+>> +void kvm_exc_entry(void);
+>> +int  kvm_enter_guest(void *run, void *vcpu);
+>> +
+>> +#ifdef CONFIG_CPU_HAS_LSX
+>> +void kvm_save_lsx(void *fpu);
+>> +void kvm_restore_lsx(void *fpu);
+>> +#endif
+>> +
+>> +#ifdef CONFIG_CPU_HAS_LASX
+>> +void kvm_save_lasx(void *fpu);
+>> +void kvm_restore_lasx(void *fpu);
+>> +#endif
+>> +
+>> +void kvm_save_fpu(void *fpu);
+>> +void kvm_restore_fpu(void *fpu);
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> index e4fe5b8e8149..0aa7679536cc 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -85,7 +85,6 @@ struct kvm_context {
+>>   struct kvm_world_switch {
+>>          int (*exc_entry)(void);
+>>          int (*enter_guest)(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>> -       unsigned long page_order;
+>>   };
+>>
+>>   #define MAX_PGTABLE_LEVELS     4
+>> @@ -344,11 +343,9 @@ enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer);
+>>   void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm, const struct kvm_memory_slot *memslot);
+>>   void kvm_init_vmcs(struct kvm *kvm);
+>>   void kvm_exc_entry(void);
+>> -int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>> +int  kvm_enter_guest(void *run, void *vcpu);
+>>
+>>   extern unsigned long vpid_mask;
+>> -extern const unsigned long kvm_exception_size;
+>> -extern const unsigned long kvm_enter_guest_size;
+>>   extern struct kvm_world_switch *kvm_loongarch_ops;
+>>
+>>   #define SW_GCSR                (1 << 0)
+>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>> index 3784ab4ccdb5..8af98a3d7b0c 100644
+>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>> @@ -53,28 +53,28 @@ void kvm_deliver_exception(struct kvm_vcpu *vcpu);
+>>
+>>   void kvm_own_fpu(struct kvm_vcpu *vcpu);
+>>   void kvm_lose_fpu(struct kvm_vcpu *vcpu);
+>> -void kvm_save_fpu(struct loongarch_fpu *fpu);
+>> -void kvm_restore_fpu(struct loongarch_fpu *fpu);
+>> +void kvm_save_fpu(void *fpu);
+>> +void kvm_restore_fpu(void *fpu);
+> Why are these modifications needed?
+In the assembly file switch.S, we used the macro definition 
+EXPORT_SYMBOL to export symbols without version information,
+which led to an alarm during the compilation stage. In order to solve 
+this problem we need to put the symbol statement
+in the file "arch/loongarch/include/asm/asm-prototypes.h", And function 
+declarations in the parameter types defined
+in the header file "arch/loongarch/include/asm/kvm_host h", it is very 
+big, in order to reduce the
+"arch/loongarch/include/asm/asm-prototypes.h" the contents of the file, 
+So we change the parameters in the function
+declaration, then the function declaration directly into the file 
+"arch/loongarch/include/asm/asm-prototypes.h".
+
 >
-> Do you mean performance critical by access global data ?
-> It already access __kfence_pool global data.
-> Add one more global data acceptable here ?
+> Huacai
 >
-> Other place may access global data indeed ?
+>>   void kvm_restore_fcsr(struct loongarch_fpu *fpu);
+>>
+>>   #ifdef CONFIG_CPU_HAS_LSX
+>>   int kvm_own_lsx(struct kvm_vcpu *vcpu);
+>> -void kvm_save_lsx(struct loongarch_fpu *fpu);
+>> -void kvm_restore_lsx(struct loongarch_fpu *fpu);
+>> +void kvm_save_lsx(void *fpu);
+>> +void kvm_restore_lsx(void *fpu);
+>>   #else
+>>   static inline int kvm_own_lsx(struct kvm_vcpu *vcpu) { return -EINVAL; }
+>> -static inline void kvm_save_lsx(struct loongarch_fpu *fpu) { }
+>> -static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
+>> +static inline void kvm_save_lsx(void *fpu) { }
+>> +static inline void kvm_restore_lsx(void *fpu) { }
+>>   #endif
+>>
+>>   #ifdef CONFIG_CPU_HAS_LASX
+>>   int kvm_own_lasx(struct kvm_vcpu *vcpu);
+>> -void kvm_save_lasx(struct loongarch_fpu *fpu);
+>> -void kvm_restore_lasx(struct loongarch_fpu *fpu);
+>> +void kvm_save_lasx(void *fpu);
+>> +void kvm_restore_lasx(void *fpu);
+>>   #else
+>>   static inline int kvm_own_lasx(struct kvm_vcpu *vcpu) { return -EINVAL; }
+>> -static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
+>> -static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
+>> +static inline void kvm_save_lasx(void *fpu) { }
+>> +static inline void kvm_restore_lasx(void *fpu) { }
+>>   #endif
+>>
+>>   #ifdef CONFIG_CPU_HAS_LBT
+>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+>> index cb41d9265662..fe665054f824 100644
+>> --- a/arch/loongarch/kvm/Makefile
+>> +++ b/arch/loongarch/kvm/Makefile
+>> @@ -11,7 +11,7 @@ kvm-y += exit.o
+>>   kvm-y += interrupt.o
+>>   kvm-y += main.o
+>>   kvm-y += mmu.o
+>> -kvm-y += switch.o
+>> +obj-y += switch.o
+>>   kvm-y += timer.o
+>>   kvm-y += tlb.o
+>>   kvm-y += vcpu.o
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index 80ea63d465b8..67d234540ed4 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -340,8 +340,7 @@ void kvm_arch_disable_virtualization_cpu(void)
+>>
+>>   static int kvm_loongarch_env_init(void)
+>>   {
+>> -       int cpu, order, ret;
+>> -       void *addr;
+>> +       int cpu, ret;
+>>          struct kvm_context *context;
+>>
+>>          vmcs = alloc_percpu(struct kvm_context);
+>> @@ -357,30 +356,8 @@ static int kvm_loongarch_env_init(void)
+>>                  return -ENOMEM;
+>>          }
+>>
+>> -       /*
+>> -        * PGD register is shared between root kernel and kvm hypervisor.
+>> -        * So world switch entry should be in DMW area rather than TLB area
+>> -        * to avoid page fault reenter.
+>> -        *
+>> -        * In future if hardware pagetable walking is supported, we won't
+>> -        * need to copy world switch code to DMW area.
+>> -        */
+>> -       order = get_order(kvm_exception_size + kvm_enter_guest_size);
+>> -       addr = (void *)__get_free_pages(GFP_KERNEL, order);
+>> -       if (!addr) {
+>> -               free_percpu(vmcs);
+>> -               vmcs = NULL;
+>> -               kfree(kvm_loongarch_ops);
+>> -               kvm_loongarch_ops = NULL;
+>> -               return -ENOMEM;
+>> -       }
+>> -
+>> -       memcpy(addr, kvm_exc_entry, kvm_exception_size);
+>> -       memcpy(addr + kvm_exception_size, kvm_enter_guest, kvm_enter_guest_size);
+>> -       flush_icache_range((unsigned long)addr, (unsigned long)addr + kvm_exception_size + kvm_enter_guest_size);
+>> -       kvm_loongarch_ops->exc_entry = addr;
+>> -       kvm_loongarch_ops->enter_guest = addr + kvm_exception_size;
+>> -       kvm_loongarch_ops->page_order = order;
+>> +       kvm_loongarch_ops->exc_entry = (void *)kvm_exc_entry;
+>> +       kvm_loongarch_ops->enter_guest = (void *)kvm_enter_guest;
+>>
+>>          vpid_mask = read_csr_gstat();
+>>          vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
+>> @@ -414,16 +391,10 @@ static int kvm_loongarch_env_init(void)
+>>
+>>   static void kvm_loongarch_env_exit(void)
+>>   {
+>> -       unsigned long addr;
+>> -
+>>          if (vmcs)
+>>                  free_percpu(vmcs);
+>>
+>>          if (kvm_loongarch_ops) {
+>> -               if (kvm_loongarch_ops->exc_entry) {
+>> -                       addr = (unsigned long)kvm_loongarch_ops->exc_entry;
+>> -                       free_pages(addr, kvm_loongarch_ops->page_order);
+>> -               }
+>>                  kfree(kvm_loongarch_ops);
+>>          }
+>>
+>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+>> index f1768b7a6194..93845ce53651 100644
+>> --- a/arch/loongarch/kvm/switch.S
+>> +++ b/arch/loongarch/kvm/switch.S
+>> @@ -5,6 +5,7 @@
+>>
+>>   #include <linux/linkage.h>
+>>   #include <asm/asm.h>
+>> +#include <asm/page.h>
+>>   #include <asm/asmmacro.h>
+>>   #include <asm/loongarch.h>
+>>   #include <asm/regdef.h>
+>> @@ -100,10 +101,18 @@
+>>           *  -        is still in guest mode, such as pgd table/vmid registers etc,
+>>           *  -        will fix with hw page walk enabled in future
+>>           * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KVM_TEMP_KS
+>> +        *
+>> +        * PGD register is shared between root kernel and kvm hypervisor.
+>> +        * So world switch entry should be in DMW area rather than TLB area
+>> +        * to avoid page fault reenter.
+>> +        *
+>> +        * In future if hardware pagetable walking is supported, we won't
+>> +        * need to copy world switch code to DMW area.
+>>           */
+>>          .text
+>>          .cfi_sections   .debug_frame
+>>   SYM_CODE_START(kvm_exc_entry)
+>> +       .p2align PAGE_SHIFT
+>>          UNWIND_HINT_UNDEFINED
+>>          csrwr   a2,   KVM_TEMP_KS
+>>          csrrd   a2,   KVM_VCPU_KS
+>> @@ -190,8 +199,8 @@ ret_to_host:
+>>          kvm_restore_host_gpr    a2
+>>          jr      ra
+>>
+>> -SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
+>>   SYM_CODE_END(kvm_exc_entry)
+>> +EXPORT_SYMBOL(kvm_exc_entry)
+>>
+>>   /*
+>>    * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+>> @@ -215,8 +224,8 @@ SYM_FUNC_START(kvm_enter_guest)
+>>          /* Save kvm_vcpu to kscratch */
+>>          csrwr   a1, KVM_VCPU_KS
+>>          kvm_switch_to_guest
+>> -SYM_INNER_LABEL(kvm_enter_guest_end, SYM_L_LOCAL)
+>>   SYM_FUNC_END(kvm_enter_guest)
+>> +EXPORT_SYMBOL(kvm_enter_guest)
+>>
+>>   SYM_FUNC_START(kvm_save_fpu)
+>>          fpu_save_csr    a0 t1
+>> @@ -224,6 +233,7 @@ SYM_FUNC_START(kvm_save_fpu)
+>>          fpu_save_cc     a0 t1 t2
+>>          jr              ra
+>>   SYM_FUNC_END(kvm_save_fpu)
+>> +EXPORT_SYMBOL(kvm_save_fpu)
+>>
+>>   SYM_FUNC_START(kvm_restore_fpu)
+>>          fpu_restore_double a0 t1
+>> @@ -231,6 +241,7 @@ SYM_FUNC_START(kvm_restore_fpu)
+>>          fpu_restore_cc     a0 t1 t2
+>>          jr                 ra
+>>   SYM_FUNC_END(kvm_restore_fpu)
+>> +EXPORT_SYMBOL(kvm_restore_fpu)
+>>
+>>   #ifdef CONFIG_CPU_HAS_LSX
+>>   SYM_FUNC_START(kvm_save_lsx)
+>> @@ -239,6 +250,7 @@ SYM_FUNC_START(kvm_save_lsx)
+>>          lsx_save_data   a0 t1
+>>          jr              ra
+>>   SYM_FUNC_END(kvm_save_lsx)
+>> +EXPORT_SYMBOL(kvm_save_lsx)
+>>
+>>   SYM_FUNC_START(kvm_restore_lsx)
+>>          lsx_restore_data a0 t1
+>> @@ -246,6 +258,7 @@ SYM_FUNC_START(kvm_restore_lsx)
+>>          fpu_restore_csr  a0 t1 t2
+>>          jr               ra
+>>   SYM_FUNC_END(kvm_restore_lsx)
+>> +EXPORT_SYMBOL(kvm_restore_lsx)
+>>   #endif
+>>
+>>   #ifdef CONFIG_CPU_HAS_LASX
+>> @@ -255,6 +268,7 @@ SYM_FUNC_START(kvm_save_lasx)
+>>          lasx_save_data  a0 t1
+>>          jr              ra
+>>   SYM_FUNC_END(kvm_save_lasx)
+>> +EXPORT_SYMBOL(kvm_save_lasx)
+>>
+>>   SYM_FUNC_START(kvm_restore_lasx)
+>>          lasx_restore_data a0 t1
+>> @@ -262,10 +276,8 @@ SYM_FUNC_START(kvm_restore_lasx)
+>>          fpu_restore_csr   a0 t1 t2
+>>          jr                ra
+>>   SYM_FUNC_END(kvm_restore_lasx)
+>> +EXPORT_SYMBOL(kvm_restore_lasx)
+>>   #endif
+>> -       .section ".rodata"
+>> -SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+>> -SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+>>
+>>   #ifdef CONFIG_CPU_HAS_LBT
+>>   STACK_FRAME_NON_STANDARD kvm_restore_fpu
+>> --
+>> 2.39.1
+>>
+>>
 
-is_kfence_address() is used in the slub fast path, and another load is
-one more instruction in the fast path. We have avoided this thus far
-for this reason.
-
-> I don't know if all linux release like ubuntu enable kfence or not.
-> I only know it turn on default on android device.
-
-This is irrelevant.
-
-> > While I think the change itself would be useful to have eventually, a
-> > better design might be needed. It's unclear to me what the perf impact
->
-> Could you share the better design idea ?
-
-Hot-patchable constants, similar to static branches/jump labels. This
-had been discussed in the past (can't find the link now), but it's not
-trivial to implement unfortunately.
-
-> > is these days (a lot has changed since that comment was written). Could
-> > you run some benchmarks to analyze if the fast path is affected by the
-> > additional load (please do this for whichever arch you care about, but
-> > also arm64 and x86)?
-> >
-> > If performance is affected, all this could be guarded behind another
-> > Kconfig option, but it's not great either.
->
-> what kind of option ?
-> It already have kconfig option to define the number of objects, here just provide
-> a parameter for the same option which user can change.
-
-An option that would enable/disable the command-line changeable number
-of objects, i.e one version that avoids the load in the fast path and
-one version that enables all the bits that you added here. But I'd
-rather avoid this if possible.
-
-As such, please do benchmark and analyze the generated code in the
-allocator fast path (you should see a load to the new global you
-added). llvm-mca [1] might help you with analysis.
-
-[1] https://llvm.org/docs/CommandGuide/llvm-mca.html
