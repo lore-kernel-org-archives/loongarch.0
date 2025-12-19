@@ -1,337 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta20.hihonor.com (mta20.hihonor.com [81.70.206.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D34822A4D6
-	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 04:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC6F26D4CD
+	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 04:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766117390; cv=none; b=WHykFG4X8L+6NhD24+XIr6co4GL0ofRZr8ncGO6YoXz1nZMRRUzkpB5Od4SPkvdIMl/EZZ3LuT6fXEszz/VoSyW2LovEcM4NRxRSM/K7BsiuGJ1dDkBpynRZhcF00HGf4uc2fnAM/iaTqERQXGA8hDq+J7/0ZVrbaoQ8WtwHjUE=
+	t=1766118973; cv=none; b=Ps71D3Bii2LSERWnxpidjWHuf4lyehfRdKvxk7myZjOextnWtUuifeA+5p+o7fvTsPqtAHju9fCe+wMhzV68sEo/a/F318IIJI+VN7sviBHmqbeveU+JS82IN9D+GYzqzb8qwQJEbv4QiObGvOxHVqQvqmaaiiuJoSwJQXdYU7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766117390; c=relaxed/simple;
-	bh=5F419OooaAPGNrnwG+f16NV+VfXjD3X7glqUbZVghhs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PETA4i+D3Ypvcyi+oaM4ON6AwTcddvBMqptNoxvidO7T6hEOH6Y1XTb+TFD12OfiHHj73lI0g5uaFUkImMZfkXNV86y8ebrdPGcUsLUYzgempPHWJwp9KTuHI5C7SHaSvdYzeVA6fAbyMLcFjIa8BquUwn/pQF8gjbw7tahMMQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lo7pUvA6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lo7pUvA6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE84C116C6
-	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 04:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766117390;
-	bh=5F419OooaAPGNrnwG+f16NV+VfXjD3X7glqUbZVghhs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lo7pUvA67td19OwSmwtTKgmUYMliaSbA5qtayZ0xS/Au/sYN9VJ3/6Oze362fioEM
-	 cswQp+C7PHcV8DNxUJsQq2L0o+rLJMy0olinSw7o2tM08Z8ubhXPjwSPCwaIkjP+LB
-	 AKFTqUnsR5PbjoL+uHaqycc76SV9I4hFYoh1GyAppJmVoRLMxxOcvSVeCD10rW6ObC
-	 kFy088BycS2GAZ7EZQU5pJz+Dg6BVYY8xg4090XIwedN1aCuvRWDp8d1mDrZfGcvj1
-	 VsIX3KN77NOXDMrK9yzb0Phq55oEm3xJ5ZeYonSOxtpbcMd6RZqKg9PcPSQT7lMbfy
-	 THx1CnZsv9KJA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b79ea617f55so106252466b.3
-        for <loongarch@lists.linux.dev>; Thu, 18 Dec 2025 20:09:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVj51N9+rhASiYFFXaVSe1vJPP9Wsyaq7aQciklbRSrm90gurbM3w8YE34/zXaVK91y1qnQrbsRYAY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwIjPxJJBvQVQYUQOoD83qm2p/xZM50v+Cu5P2OGOu/hGMlvLjo
-	29DII33ujIDFwuuMDPfHh++GCxHD+kkq2nUL4iEiekm4Xjydnb80l2zVMkUqcGp1IhojeKPTxRV
-	fuvtQx2DL9mHd52Rg5PO8KClvpe3lCq0=
-X-Google-Smtp-Source: AGHT+IGb87OZjsY4krl70nR2TF3/SasMLPahZnWAiwfwvt9NaUnpJX8DH5hW7pGg06EFJvJtMlXKvAwvfnJKEpial0k=
-X-Received: by 2002:a17:907:868e:b0:b7a:1be1:86e6 with SMTP id
- a640c23a62f3a-b8037224ea0mr154045866b.62.1766117388863; Thu, 18 Dec 2025
- 20:09:48 -0800 (PST)
+	s=arc-20240116; t=1766118973; c=relaxed/simple;
+	bh=TBeoBMXlMEVhwhMkEcXIUeqtkasMEWs5iVpIxMFXugQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EsTcbLBMrsRQ1/05E5pvTVdAb1vhCOP5y+FMrzlCEz5NiPeQvXKb/QbSHuCfFC1a34FAGRNp7D+OkjBruiMUGTkMqE3S4EujlVLMhfxnErh9ybIq/wRRCLBu4URN7qGqzitTwKuGDFkqSY0Lzg9BZy48IgztP9C47YMIADH4E7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w012.hihonor.com (unknown [10.68.27.189])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4dXZRC3cNKzYlLgM;
+	Fri, 19 Dec 2025 12:33:27 +0800 (CST)
+Received: from w022.hihonor.com (10.68.16.247) by w012.hihonor.com
+ (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Fri, 19 Dec
+ 2025 12:36:01 +0800
+Received: from w025.hihonor.com (10.68.28.69) by w022.hihonor.com
+ (10.68.16.247) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Fri, 19 Dec
+ 2025 12:36:01 +0800
+Received: from w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9]) by
+ w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9%14]) with mapi id
+ 15.02.2562.027; Fri, 19 Dec 2025 12:36:01 +0800
+From: yuanlinyu <yuanlinyu@honor.com>
+To: Marco Elver <elver@google.com>
+CC: Alexander Potapenko <glider@google.com>, Dmitry Vyukov
+	<dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] kfence: allow change number of object by early
+ parameter
+Thread-Topic: [PATCH v2 2/2] kfence: allow change number of object by early
+ parameter
+Thread-Index: AQHcb+kJOevioCwokUWRSuHGy2xym7UmkpaAgACVZ/D//4LNgIABtVUA
+Date: Fri, 19 Dec 2025 04:36:01 +0000
+Message-ID: <a5937489d22f450eaecca610d8aef6c9@honor.com>
+References: <20251218063916.1433615-1-yuanlinyu@honor.com>
+ <20251218063916.1433615-3-yuanlinyu@honor.com>
+ <aUPB18Xeh1BhF9GS@elver.google.com>
+ <7334df3287534327a3e4a09c5c8d9432@honor.com>
+ <CANpmjNMmiXjifpc9LdCVi5jzzKU3sgb0iJn7P7TMFMNqDH7TbA@mail.gmail.com>
+In-Reply-To: <CANpmjNMmiXjifpc9LdCVi5jzzKU3sgb0iJn7P7TMFMNqDH7TbA@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251218111822.975455-1-gaosong@loongson.cn> <20251218111822.975455-2-gaosong@loongson.cn>
- <af2d9f9c-1931-484f-ab67-849093c3a760@xen0n.name>
-In-Reply-To: <af2d9f9c-1931-484f-ab67-849093c3a760@xen0n.name>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 19 Dec 2025 12:10:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5L3jP_Rve_3qkQ58CfnCKsWPDJTDDsWRMiFiQDp0pfHQ@mail.gmail.com>
-X-Gm-Features: AQt7F2pAUBaTFamDMNAZ4lF_V3rvSi1nVNIDXWn-hgpZniYCvDIBhtJLGbAqzCU
-Message-ID: <CAAhV-H5L3jP_Rve_3qkQ58CfnCKsWPDJTDDsWRMiFiQDp0pfHQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] LongArch: KVM: Add DMSINTC device support
-To: WANG Xuerui <kernel@xen0n.name>
-Cc: Song Gao <gaosong@loongson.cn>, maobibo@loongson.cn, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 19, 2025 at 11:20=E2=80=AFAM WANG Xuerui <kernel@xen0n.name> wr=
-ote:
->
-> On 12/18/25 19:18, Song Gao wrote:
-> > Add device model for DMSINTC interrupt controller, implement basic
-> > create/destroy/set_attr interfaces, and register device model to kvm
-> > device table.
-> >
-> > Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> > Signed-off-by: Song Gao <gaosong@loongson.cn>
-> > ---
-> >   arch/loongarch/include/asm/kvm_dmsintc.h |  21 +++++
-> >   arch/loongarch/include/asm/kvm_host.h    |   3 +
-> >   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
-> >   arch/loongarch/kvm/Makefile              |   1 +
-> >   arch/loongarch/kvm/intc/dmsintc.c        | 110 ++++++++++++++++++++++=
-+
-> >   arch/loongarch/kvm/main.c                |   5 ++
-> >   include/uapi/linux/kvm.h                 |   2 +
-> >   7 files changed, 146 insertions(+)
-> >   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
-> >   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
-> >
-> > diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/=
-include/asm/kvm_dmsintc.h
-> > new file mode 100644
-> > index 000000000000..1d4f66996f3c
-> > --- /dev/null
-> > +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-> > @@ -0,0 +1,21 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> > + */
-> > +
-> > +#ifndef __ASM_KVM_DMSINTC_H
-> > +#define __ASM_KVM_DMSINTC_H
-> > +
-> > +
-> > +struct loongarch_dmsintc  {
-> > +     struct kvm *kvm;
-> > +     uint64_t msg_addr_base;
-> > +     uint64_t msg_addr_size;
-> > +};
-> > +
-> > +struct dmsintc_state {
-> > +     atomic64_t  vector_map[4];
-> > +};
-> > +
-> > +int kvm_loongarch_register_dmsintc_device(void);
-> > +#endif
-> > diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inc=
-lude/asm/kvm_host.h
-> > index e4fe5b8e8149..5e9e2af7312f 100644
-> > --- a/arch/loongarch/include/asm/kvm_host.h
-> > +++ b/arch/loongarch/include/asm/kvm_host.h
-> > @@ -22,6 +22,7 @@
-> >   #include <asm/kvm_ipi.h>
-> >   #include <asm/kvm_eiointc.h>
-> >   #include <asm/kvm_pch_pic.h>
-> > +#include <asm/kvm_dmsintc.h>
-> >   #include <asm/loongarch.h>
-> >
-> >   #define __KVM_HAVE_ARCH_INTC_INITIALIZED
-> > @@ -134,6 +135,7 @@ struct kvm_arch {
-> >       struct loongarch_ipi *ipi;
-> >       struct loongarch_eiointc *eiointc;
-> >       struct loongarch_pch_pic *pch_pic;
-> > +     struct loongarch_dmsintc *dmsintc;
-> >   };
-> >
-> >   #define CSR_MAX_NUMS                0x800
-> > @@ -244,6 +246,7 @@ struct kvm_vcpu_arch {
-> >       struct kvm_mp_state mp_state;
-> >       /* ipi state */
-> >       struct ipi_state ipi_state;
-> > +     struct dmsintc_state dmsintc_state;
-> >       /* cpucfg */
-> >       u32 cpucfg[KVM_MAX_CPUCFG_REGS];
-> >
-> > diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/inc=
-lude/uapi/asm/kvm.h
-> > index de6c3f18e40a..0a370d018b08 100644
-> > --- a/arch/loongarch/include/uapi/asm/kvm.h
-> > +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> > @@ -154,4 +154,8 @@ struct kvm_iocsr_entry {
-> >   #define KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL          0x40000006
-> >   #define KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT         0
-> >
-> > +#define KVM_DEV_LOONGARCH_DMSINTC_CTRL                       0x4000000=
-7
-> > +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE              0x0
-> > +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE              0x1
-> > +
-> >   #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
-> > diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-> > index cb41d9265662..6e184e24443c 100644
-> > --- a/arch/loongarch/kvm/Makefile
-> > +++ b/arch/loongarch/kvm/Makefile
-> > @@ -19,6 +19,7 @@ kvm-y +=3D vm.o
-> >   kvm-y +=3D intc/ipi.o
-> >   kvm-y +=3D intc/eiointc.o
-> >   kvm-y +=3D intc/pch_pic.o
-> > +kvm-y +=3D intc/dmsintc.o
-> >   kvm-y +=3D irqfd.o
-> >
-> >   CFLAGS_exit.o       +=3D $(call cc-disable-warning, override-init)
-> > diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/int=
-c/dmsintc.c
-> > new file mode 100644
-> > index 000000000000..3fdea81a08c8
-> > --- /dev/null
-> > +++ b/arch/loongarch/kvm/intc/dmsintc.c
-> > @@ -0,0 +1,110 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> > + */
-> > +
-> > +#include <linux/kvm_host.h>
-> > +#include <asm/kvm_dmsintc.h>
-> > +#include <asm/kvm_vcpu.h>
-> > +
-> > +static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
-> > +                             struct kvm_device_attr *attr,
-> > +                             bool is_write)
-> > +{
-> > +     int addr =3D attr->attr;
-> > +     void __user *data;
-> > +     struct loongarch_dmsintc *s =3D dev->kvm->arch.dmsintc;
-> > +     u64 tmp;
-> > +
-> > +     data =3D (void __user *)attr->addr;
-> > +     switch (addr) {
-> > +     case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE:
-> > +             if (is_write) {
-> > +                     if (copy_from_user(&tmp, data, sizeof(s->msg_addr=
-_base)))
-> > +                             return -EFAULT;
-> > +                     if (s->msg_addr_base) {
-> > +                             /* Duplicate setting are not allowed. */
-> > +                             return -EFAULT;
-> > +                     }
-> > +                     if ((tmp & (BIT(AVEC_CPU_SHIFT) - 1)) =3D=3D 0)
-> > +                             s->msg_addr_base =3D tmp;
-> > +                     else
-> > +                             return  -EFAULT;
-> > +             }
-> > +             break;
-> > +     case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE:
-> > +             if (is_write) {
-> > +                     if (copy_from_user(&tmp, data, sizeof(s->msg_addr=
-_size)))
-> > +                             return -EFAULT;
-> > +                     if (s->msg_addr_size) {
-> > +                             /*Duplicate setting are not allowed. */
-> > +                             return -EFAULT;
-> > +                     }
-> > +                     s->msg_addr_size =3D tmp;
-> > +             }
-> > +             break;
-> > +     default:
-> > +             kvm_err("%s: unknown dmsintc register, addr =3D %d\n", __=
-func__, addr);
-> > +             return -ENXIO;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_dmsintc_set_attr(struct kvm_device *dev,
-> > +                     struct kvm_device_attr *attr)
-> > +{
-> > +     switch (attr->group) {
-> > +     case KVM_DEV_LOONGARCH_DMSINTC_CTRL:
-> > +             return kvm_dmsintc_ctrl_access(dev, attr, true);
-> > +     default:
-> > +             kvm_err("%s: unknown group (%d)\n", __func__, attr->group=
-);
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +static int kvm_dmsintc_create(struct kvm_device *dev, u32 type)
-> > +{
-> > +     struct kvm *kvm;
-> > +     struct loongarch_dmsintc *s;
-> > +
-> > +     if (!dev) {
-> > +             kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     kvm =3D dev->kvm;
-> > +     if (kvm->arch.dmsintc) {
-> > +             kvm_err("%s: LoongArch DMSINTC has already been created!\=
-n", __func__);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     s =3D kzalloc(sizeof(struct loongarch_dmsintc), GFP_KERNEL);
-> > +     if (!s)
-> > +             return -ENOMEM;
-> > +
-> > +     s->kvm =3D kvm;
-> > +     kvm->arch.dmsintc =3D s;
-> > +     return 0;
-> > +}
-> > +
-> > +static void kvm_dmsintc_destroy(struct kvm_device *dev)
-> > +{
-> > +
-> > +     if (!dev || !dev->kvm || !dev->kvm->arch.dmsintc)
-> > +             return;
-> > +
-> > +     kfree(dev->kvm->arch.dmsintc);
-> > +}
-> > +
-> > +static struct kvm_device_ops kvm_dmsintc_dev_ops =3D {
-> > +     .name =3D "kvm-loongarch-dmsintc",
-> > +     .create =3D kvm_dmsintc_create,
-> > +     .destroy =3D kvm_dmsintc_destroy,
-> > +     .set_attr =3D kvm_dmsintc_set_attr,
-> > +};
-> > +
-> > +int kvm_loongarch_register_dmsintc_device(void)
-> > +{
-> > +     return kvm_register_device_ops(&kvm_dmsintc_dev_ops, KVM_DEV_TYPE=
-_LOONGARCH_DMSINTC);
-> > +}
-> > diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> > index 80ea63d465b8..2e26d4fd9000 100644
-> > --- a/arch/loongarch/kvm/main.c
-> > +++ b/arch/loongarch/kvm/main.c
-> > @@ -408,6 +408,11 @@ static int kvm_loongarch_env_init(void)
-> >
-> >       /* Register LoongArch PCH-PIC interrupt controller interface. */
-> >       ret =3D kvm_loongarch_register_pch_pic_device();
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Register LoongArch DMSINTC interrupt contrroller interface */
-> > +     ret =3D kvm_loongarch_register_dmsintc_device();
-> >
-> >       return ret;
-> >   }
-> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > index dddb781b0507..7c56e7e36265 100644
-> > --- a/include/uapi/linux/kvm.h
-> > +++ b/include/uapi/linux/kvm.h
-> > @@ -1209,6 +1209,8 @@ enum kvm_device_type {
-> >   #define KVM_DEV_TYPE_LOONGARCH_EIOINTC      KVM_DEV_TYPE_LOONGARCH_EI=
-OINTC
-> >       KVM_DEV_TYPE_LOONGARCH_PCHPIC,
-> >   #define KVM_DEV_TYPE_LOONGARCH_PCHPIC       KVM_DEV_TYPE_LOONGARCH_PC=
-HPIC
-> > +     KVM_DEV_TYPE_LOONGARCH_DMSINTC,
-> > +#define KVM_DEV_TYPE_LOONGARCH_DMSINTC   KVM_DEV_TYPE_LOONGARCH_DMSINT=
-C
-> >
-> >       KVM_DEV_TYPE_MAX,
-> >
->
-> Not a single line explaining what "DMSINTC" is? I checked v1, v2, and
-> v3, no documentation regarding DINTC or DMSINTC at all. We can see (and
-> Huacai explained in v3 review comment) "MSINTC" means "message-signaled
-> interrupt controller", but what does "D" mean? You may want to update
-> Documentation/arch/loongarch/irq-chip-model.rst for that.
-D means Direct, from the Loongson-3C6000 user manual.
-
-Huacai
-
->
-> --
-> Regards,
-> WANG "xen0n" Xuerui
->
-> Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+PiBGcm9tOiBNYXJjbyBFbHZlciA8ZWx2ZXJAZ29vZ2xlLmNvbT4NCj4gU2VudDogVGh1cnNkYXks
+IERlY2VtYmVyIDE4LCAyMDI1IDY6MjQgUE0NCj4gVG86IHl1YW5saW55dSA8eXVhbmxpbnl1QGhv
+bm9yLmNvbT4NCj4gQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPjsg
+RG1pdHJ5IFZ5dWtvdg0KPiA8ZHZ5dWtvdkBnb29nbGUuY29tPjsgQW5kcmV3IE1vcnRvbiA8YWtw
+bUBsaW51eC1mb3VuZGF0aW9uLm9yZz47DQo+IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGtlcm5l
+bC5vcmc+OyBXQU5HIFh1ZXJ1aSA8a2VybmVsQHhlbjBuLm5hbWU+Ow0KPiBrYXNhbi1kZXZAZ29v
+Z2xlZ3JvdXBzLmNvbTsgbGludXgtbW1Aa3ZhY2sub3JnOyBsb29uZ2FyY2hAbGlzdHMubGludXgu
+ZGV2Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjIgMi8yXSBrZmVuY2U6IGFsbG93IGNoYW5nZSBudW1iZXIgb2Ygb2JqZWN0IGJ5IGVhcmx5
+DQo+IHBhcmFtZXRlcg0KPiANCj4gT24gVGh1LCAxOCBEZWMgMjAyNSBhdCAxMToxOCwgeXVhbmxp
+bnl1IDx5dWFubGlueXVAaG9ub3IuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4gRnJvbTogTWFyY28g
+RWx2ZXIgPGVsdmVyQGdvb2dsZS5jb20+DQo+ID4gRG8geW91IG1lYW4gcGVyZm9ybWFuY2UgY3Jp
+dGljYWwgYnkgYWNjZXNzIGdsb2JhbCBkYXRhID8NCj4gPiBJdCBhbHJlYWR5IGFjY2VzcyBfX2tm
+ZW5jZV9wb29sIGdsb2JhbCBkYXRhLg0KPiA+IEFkZCBvbmUgbW9yZSBnbG9iYWwgZGF0YSBhY2Nl
+cHRhYmxlIGhlcmUgPw0KPiA+DQo+ID4gT3RoZXIgcGxhY2UgbWF5IGFjY2VzcyBnbG9iYWwgZGF0
+YSBpbmRlZWQgPw0KPiANCj4gaXNfa2ZlbmNlX2FkZHJlc3MoKSBpcyB1c2VkIGluIHRoZSBzbHVi
+IGZhc3QgcGF0aCwgYW5kIGFub3RoZXIgbG9hZCBpcw0KPiBvbmUgbW9yZSBpbnN0cnVjdGlvbiBp
+biB0aGUgZmFzdCBwYXRoLiBXZSBoYXZlIGF2b2lkZWQgdGhpcyB0aHVzIGZhcg0KPiBmb3IgdGhp
+cyByZWFzb24uDQo+IA0KPiA+IEkgZG9uJ3Qga25vdyBpZiBhbGwgbGludXggcmVsZWFzZSBsaWtl
+IHVidW50dSBlbmFibGUga2ZlbmNlIG9yIG5vdC4NCj4gPiBJIG9ubHkga25vdyBpdCB0dXJuIG9u
+IGRlZmF1bHQgb24gYW5kcm9pZCBkZXZpY2UuDQo+IA0KPiBUaGlzIGlzIGlycmVsZXZhbnQuDQo+
+IA0KPiA+ID4gV2hpbGUgSSB0aGluayB0aGUgY2hhbmdlIGl0c2VsZiB3b3VsZCBiZSB1c2VmdWwg
+dG8gaGF2ZSBldmVudHVhbGx5LCBhDQo+ID4gPiBiZXR0ZXIgZGVzaWduIG1pZ2h0IGJlIG5lZWRl
+ZC4gSXQncyB1bmNsZWFyIHRvIG1lIHdoYXQgdGhlIHBlcmYgaW1wYWN0DQo+ID4NCj4gPiBDb3Vs
+ZCB5b3Ugc2hhcmUgdGhlIGJldHRlciBkZXNpZ24gaWRlYSA/DQo+IA0KPiBIb3QtcGF0Y2hhYmxl
+IGNvbnN0YW50cywgc2ltaWxhciB0byBzdGF0aWMgYnJhbmNoZXMvanVtcCBsYWJlbHMuIFRoaXMN
+Cj4gaGFkIGJlZW4gZGlzY3Vzc2VkIGluIHRoZSBwYXN0IChjYW4ndCBmaW5kIHRoZSBsaW5rIG5v
+dyksIGJ1dCBpdCdzIG5vdA0KPiB0cml2aWFsIHRvIGltcGxlbWVudCB1bmZvcnR1bmF0ZWx5Lg0K
+DQppcyBpdCBwb3NzaWJsZSBhZGQgdGFnIHRvIGtmZW5jZSBhZGRyZXNzIGFuZCBvbmx5IGNoZWNr
+IGFkZHJlc3MgaXRzZWxmID8NCg0KPiANCj4gQW4gb3B0aW9uIHRoYXQgd291bGQgZW5hYmxlL2Rp
+c2FibGUgdGhlIGNvbW1hbmQtbGluZSBjaGFuZ2VhYmxlIG51bWJlcg0KPiBvZiBvYmplY3RzLCBp
+LmUgb25lIHZlcnNpb24gdGhhdCBhdm9pZHMgdGhlIGxvYWQgaW4gdGhlIGZhc3QgcGF0aCBhbmQN
+Cj4gb25lIHZlcnNpb24gdGhhdCBlbmFibGVzIGFsbCB0aGUgYml0cyB0aGF0IHlvdSBhZGRlZCBo
+ZXJlLiBCdXQgSSdkDQo+IHJhdGhlciBhdm9pZCB0aGlzIGlmIHBvc3NpYmxlLg0KDQpZZXMsIGl0
+IHNob3VsZCBhdm9pZCwgdGhlIHB1cnBvc2UgaXMgd2l0aG91dCBjb21waWxlIHRoZSBrZXJuZWwu
+DQoNCj4gDQo+IEFzIHN1Y2gsIHBsZWFzZSBkbyBiZW5jaG1hcmsgYW5kIGFuYWx5emUgdGhlIGdl
+bmVyYXRlZCBjb2RlIGluIHRoZQ0KPiBhbGxvY2F0b3IgZmFzdCBwYXRoICh5b3Ugc2hvdWxkIHNl
+ZSBhIGxvYWQgdG8gdGhlIG5ldyBnbG9iYWwgeW91DQo+IGFkZGVkKS4gbGx2bS1tY2EgWzFdIG1p
+Z2h0IGhlbHAgeW91IHdpdGggYW5hbHlzaXMuDQo+IA0KPiBbMV0gaHR0cHM6Ly9sbHZtLm9yZy9k
+b2NzL0NvbW1hbmRHdWlkZS9sbHZtLW1jYS5odG1sDQoNClRoYW5rcywgd2lsbCBsZWFybiBpdA0K
+DQo=
