@@ -1,35 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8507D2ECD2A;
-	Fri, 19 Dec 2025 08:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A1541F5858
+	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 08:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766132000; cv=none; b=T2usEQbVEkNk7Gs2HflVXlAmyQkSMAWQa0fC2Zybh1BOflClonfH1EXJdBBoYudFrh/yd+IsiqhGZpC917uooOx42RHyRcVpM7sZwlXgQloujavYVj+ArLTZOBlNDizJpSc40+R1QmRDHP26NIEYAE4f2eYWvEYf9IdBP6TzmMk=
+	t=1766134037; cv=none; b=qFZvrjOmChpVaUn6pl/hqJs0XdkRl7O0Rwv3yjmPKD1R1KKoJlH9DlV/W1boaeKGJIWUG0n+wtI3BjyMmPpOSQSl4lyoBxxEpbCnqAzuTlnXOCHUXnEaq2gfq6vZoj77B+7qR9eo2GbVPKdH9z8EegYPHkBNbDZY6msosMOwGO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766132000; c=relaxed/simple;
-	bh=c8UdFBb7F8dmejdnU77Se4Vh0A297D7YwvyeUjSzvGs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GnvKy6UkEc7gJVNe9wJTI2U7d8Wj/RkHX2oweCoF4St5h/IwXw+PusydnnvI6gALE3Iw+ZUJv+e5a3js7wwkau12xH1Litnd/fxiT9+lnU/GytiftCqr8rGTl5zLhoG4PV9ZCFEP8l53jbRzDihnJV+2aAVH6zs0/wGkMnEsReM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvV56RgS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvV56RgS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C38C116B1;
-	Fri, 19 Dec 2025 08:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766131999;
-	bh=c8UdFBb7F8dmejdnU77Se4Vh0A297D7YwvyeUjSzvGs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bvV56RgSwPdWBOuOtUPVcXSmtsttDdT6myfmjpB+QZDRMIVyr7unLn+z+isWBP0Wy
-	 Ny2hKlhPpLoymTC6JQ0DzSc0lTtu4IdOjoxflDk5ls0qr9rZjX4H6YN/PUpzbnQdAP
-	 YpBOlDFBUmVl0ocWFf3MbPKhlUbei8L4bQwXt0Rf0W+fKMNrpn0yKASpPBE+phUtE+
-	 eS0MjQp6QSCCa4q9q8ZjhuUYyTNuM7t+D6ja4QPtH8eUDpUit5SxogEKu15rseJwgW
-	 mLfXoM8WdWG/4ZWUCIaOk3MfOwvaMmfztq3vshIPQCpKqjoQqXVEii+dxxDbG6AI8Q
-	 Q/PUXYGj8Kqgg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B5B5D380AA50;
-	Fri, 19 Dec 2025 08:10:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1766134037; c=relaxed/simple;
+	bh=8tlyAk3If5ic4v2WNa8vSri0pJF85ymGfzG8yRFsH3I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JGFD1bVI5aDv+tjjHXIfIB7HyCd+Wdz9przTonYRQTFGhibFQ/GCLkjqxwQLDLf/4j/ybrprFF5B+I+EX3/dYuPCY+GMWx00upEdP+V3W88mFvftfcwsKb0T2r35qMw/G6Oj7SwXvMNwe5Tdc3FXbPAQ65PHXaUvQMiCUnbvfjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.54])
+	by gateway (Coremail) with SMTP id _____8BxWcINEUVpescAAA--.2504S3;
+	Fri, 19 Dec 2025 16:47:09 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.54])
+	by front1 (Coremail) with SMTP id qMiowJBxSeADEUVpAbQBAA--.6444S3;
+	Fri, 19 Dec 2025 16:47:08 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Yao Zi <me@ziyao.cc>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v2 1/7] dt-bindings: PCI: loongson: Document msi-parent property
+Date: Fri, 19 Dec 2025 16:46:48 +0800
+Message-ID: <7a52034a2f4b677d51c3bcb416506b525946572e.1766037997.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1766037997.git.zhoubinbin@loongson.cn>
+References: <cover.1766037997.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,116 +44,57 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <176613180853.3684357.18339473690014642605.git-patchwork-notify@kernel.org>
-Date: Fri, 19 Dec 2025 08:10:08 +0000
-References: <20251114150133.1056710-1-vschneid@redhat.com>
-In-Reply-To: <20251114150133.1056710-1-vschneid@redhat.com>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
- peterz@infradead.org, acme@kernel.org, jpoimboe@kernel.org,
- pbonzini@redhat.com, arnd@arndb.de, frederic@kernel.org, paulmck@kernel.org,
- jbaron@akamai.com, rostedt@goodmis.org, ardb@kernel.org,
- samitolvanen@google.com, davem@davemloft.net, neeraj.upadhyay@kernel.org,
- joelagnelf@nvidia.com, josh@joshtriplett.org, boqun.feng@gmail.com,
- urezki@gmail.com, mathieu.desnoyers@efficios.com, mgorman@suse.de,
- akpm@linux-foundation.org, masahiroy@kernel.org, shenhan@google.com,
- riel@surriel.com, jannh@google.com, dan.carpenter@linaro.org,
- oleg@redhat.com, juri.lelli@redhat.com, williams@redhat.com,
- ypodemsk@redhat.com, mtosatti@redhat.com, dwagner@suse.de, ptesarik@suse.com,
- sshegde@linux.ibm.com
+X-CM-TRANSID:qMiowJBxSeADEUVpAbQBAA--.6444S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEBCGlE6RgD0wAAsG
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFWkGr48Wry3XF45XF4DWrX_yoWktFXEvF
+	yxCFs5Crs8AF1Igwn0vr4xAFy3Za4Ik3Z8ua1kJ3ZYv3WSv39xtF97J3s8ZF13Gr45ur15
+	uws7GrWkZr1xGosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8niSPUUUUU==
 
-Hello:
+From: Yao Zi <me@ziyao.cc>
 
-This series was applied to riscv/linux.git (fixes)
-by Frederic Weisbecker <frederic@kernel.org>:
+Loongson PCI controllers found in LS2K1000/2000 SoCs
+(loongson,ls2k-pci), 7A1000/2000 bridge chips (loongson,ls7a-pci), and
+RS780E bridge chips (loongson,rs780e-pci) all have their paired MSI
+controllers.
 
-On Fri, 14 Nov 2025 16:01:02 +0100 you wrote:
-> Context
-> =======
-> 
-> We've observed within Red Hat that isolated, NOHZ_FULL CPUs running a
-> pure-userspace application get regularly interrupted by IPIs sent from
-> housekeeping CPUs. Those IPIs are caused by activity on the housekeeping CPUs
-> leading to various on_each_cpu() calls, e.g.:
-> 
-> [...]
+Though only the one in LS2K2000 SoC is described in devicetree, we
+should document the property for all variants. For the same reason, it
+isn't marked as required for now.
 
-Here is the summary with links:
-  - [v7,01/31] objtool: Make validate_call() recognize indirect calls to pv_ops[]
-    (no matching commit)
-  - [v7,02/31] objtool: Flesh out warning related to pv_ops[] calls
-    (no matching commit)
-  - [v7,03/31] rcu: Add a small-width RCU watching counter debug option
-    https://git.kernel.org/riscv/c/d1e6d2773898
-  - [v7,04/31] rcutorture: Make TREE04 use CONFIG_RCU_DYNTICKS_TORTURE
-    https://git.kernel.org/riscv/c/82a224498005
-  - [v7,05/31] jump_label: Add annotations for validating noinstr usage
-    (no matching commit)
-  - [v7,06/31] static_call: Add read-only-after-init static calls
-    (no matching commit)
-  - [v7,07/31] x86/paravirt: Mark pv_sched_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,08/31] x86/idle: Mark x86_idle static call as __ro_after_init
-    (no matching commit)
-  - [v7,09/31] x86/paravirt: Mark pv_steal_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,10/31] riscv/paravirt: Mark pv_steal_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,11/31] loongarch/paravirt: Mark pv_steal_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,12/31] arm64/paravirt: Mark pv_steal_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,13/31] arm/paravirt: Mark pv_steal_clock static call as __ro_after_init
-    (no matching commit)
-  - [v7,14/31] perf/x86/amd: Mark perf_lopwr_cb static call as __ro_after_init
-    (no matching commit)
-  - [v7,15/31] sched/clock: Mark sched_clock_running key as __ro_after_init
-    (no matching commit)
-  - [v7,16/31] KVM: VMX: Mark __kvm_is_using_evmcs static key as __ro_after_init
-    (no matching commit)
-  - [v7,17/31] x86/bugs: Mark cpu_buf_vm_clear key as allowed in .noinstr
-    (no matching commit)
-  - [v7,18/31] x86/speculation/mds: Mark cpu_buf_idle_clear key as allowed in .noinstr
-    (no matching commit)
-  - [v7,19/31] sched/clock, x86: Mark __sched_clock_stable key as allowed in .noinstr
-    (no matching commit)
-  - [v7,20/31] KVM: VMX: Mark vmx_l1d_should flush and vmx_l1d_flush_cond keys as allowed in .noinstr
-    (no matching commit)
-  - [v7,21/31] stackleack: Mark stack_erasing_bypass key as allowed in .noinstr
-    (no matching commit)
-  - [v7,22/31] objtool: Add noinstr validation for static branches/calls
-    (no matching commit)
-  - [v7,23/31] module: Add MOD_NOINSTR_TEXT mem_type
-    (no matching commit)
-  - [v7,24/31] context-tracking: Introduce work deferral infrastructure
-    (no matching commit)
-  - [v7,25/31] context_tracking,x86: Defer kernel text patching IPIs
-    (no matching commit)
-  - [v7,26/31] x86/jump_label: Add ASM support for static_branch_likely()
-    (no matching commit)
-  - [v7,27/31] x86/mm: Make INVPCID type macros available to assembly
-    (no matching commit)
-  - [RFC,v7,28/31] x86/mm/pti: Introduce a kernel/user CR3 software signal
-    (no matching commit)
-  - [RFC,v7,29/31] x86/mm/pti: Implement a TLB flush immediately after a switch to kernel CR3
-    (no matching commit)
-  - [RFC,v7,30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush IPIs under CONFIG_COALESCE_TLBI=y
-    (no matching commit)
-  - [RFC,v7,31/31] x86/entry: Add an option to coalesce TLB flushes
-    (no matching commit)
+Fixes: 83e757ecfd5d ("dt-bindings: Document Loongson PCI Host Controller")
+Signed-off-by: Yao Zi <me@ziyao.cc>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/pci/loongson.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-You are awesome, thank you!
+diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
+index e5bba63aa947..26e77218b901 100644
+--- a/Documentation/devicetree/bindings/pci/loongson.yaml
++++ b/Documentation/devicetree/bindings/pci/loongson.yaml
+@@ -32,6 +32,8 @@ properties:
+     minItems: 1
+     maxItems: 3
+ 
++  msi-parent: true
++
+ required:
+   - compatible
+   - reg
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.3
 
