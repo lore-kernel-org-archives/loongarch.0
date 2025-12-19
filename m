@@ -1,106 +1,141 @@
-Received: from mta20.hihonor.com (mta20.hihonor.com [81.70.206.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC6F26D4CD
-	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 04:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0314188735
+	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 06:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766118973; cv=none; b=Ps71D3Bii2LSERWnxpidjWHuf4lyehfRdKvxk7myZjOextnWtUuifeA+5p+o7fvTsPqtAHju9fCe+wMhzV68sEo/a/F318IIJI+VN7sviBHmqbeveU+JS82IN9D+GYzqzb8qwQJEbv4QiObGvOxHVqQvqmaaiiuJoSwJQXdYU7w=
+	t=1766125832; cv=none; b=SiwhsmgxjsEaIoXLcmOgOxFQNc72ZbmuehENaXVV8eDkReY/+jdlB0ioAp1TwF3wvYUkeT7X5ggfADpBmp0p9P3k7fU+pPH0cG3DYo6fJqCb7Jc51JyYH+wmq0WZ7Yk5IRWJeiaPtTxTpY3TQ02OA2aKjhtujaZLHI8KeKEXhRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766118973; c=relaxed/simple;
-	bh=TBeoBMXlMEVhwhMkEcXIUeqtkasMEWs5iVpIxMFXugQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EsTcbLBMrsRQ1/05E5pvTVdAb1vhCOP5y+FMrzlCEz5NiPeQvXKb/QbSHuCfFC1a34FAGRNp7D+OkjBruiMUGTkMqE3S4EujlVLMhfxnErh9ybIq/wRRCLBu4URN7qGqzitTwKuGDFkqSY0Lzg9BZy48IgztP9C47YMIADH4E7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w012.hihonor.com (unknown [10.68.27.189])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4dXZRC3cNKzYlLgM;
-	Fri, 19 Dec 2025 12:33:27 +0800 (CST)
-Received: from w022.hihonor.com (10.68.16.247) by w012.hihonor.com
- (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Fri, 19 Dec
- 2025 12:36:01 +0800
-Received: from w025.hihonor.com (10.68.28.69) by w022.hihonor.com
- (10.68.16.247) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Fri, 19 Dec
- 2025 12:36:01 +0800
-Received: from w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9]) by
- w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9%14]) with mapi id
- 15.02.2562.027; Fri, 19 Dec 2025 12:36:01 +0800
-From: yuanlinyu <yuanlinyu@honor.com>
-To: Marco Elver <elver@google.com>
-CC: Alexander Potapenko <glider@google.com>, Dmitry Vyukov
-	<dvyukov@google.com>, Andrew Morton <akpm@linux-foundation.org>, Huacai Chen
-	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 2/2] kfence: allow change number of object by early
- parameter
-Thread-Topic: [PATCH v2 2/2] kfence: allow change number of object by early
- parameter
-Thread-Index: AQHcb+kJOevioCwokUWRSuHGy2xym7UmkpaAgACVZ/D//4LNgIABtVUA
-Date: Fri, 19 Dec 2025 04:36:01 +0000
-Message-ID: <a5937489d22f450eaecca610d8aef6c9@honor.com>
-References: <20251218063916.1433615-1-yuanlinyu@honor.com>
- <20251218063916.1433615-3-yuanlinyu@honor.com>
- <aUPB18Xeh1BhF9GS@elver.google.com>
- <7334df3287534327a3e4a09c5c8d9432@honor.com>
- <CANpmjNMmiXjifpc9LdCVi5jzzKU3sgb0iJn7P7TMFMNqDH7TbA@mail.gmail.com>
-In-Reply-To: <CANpmjNMmiXjifpc9LdCVi5jzzKU3sgb0iJn7P7TMFMNqDH7TbA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1766125832; c=relaxed/simple;
+	bh=3cuMPz6ATxGaiqM4JNQ+xrnm7gl4HpleDzVq7J7439Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mGncQX6O0O1UUXr0ZVWhtujhqiWap57GjD8+fs07JJ/y5InQ9sH4NLv6UOO7mQaWtWNURR5iyfrnC+Yqy8eEe9gORF+oKeMf8A7AzFLcqjHplhbtDBluGap6WiAy7zoFDSB71gJNxoH+QJrcLhNYz9BBmBgtTfdh683iXc1Pnwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxacL+8ERpOcEAAA--.2417S3;
+	Fri, 19 Dec 2025 14:30:22 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBx68H+8ERpt6kBAA--.3572S2;
+	Fri, 19 Dec 2025 14:30:22 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] LoongArch: KVM: Add paravirt preempt support
+Date: Fri, 19 Dec 2025 14:30:19 +0800
+Message-Id: <20251219063021.1778659-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBx68H+8ERpt6kBAA--.3572S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-PiBGcm9tOiBNYXJjbyBFbHZlciA8ZWx2ZXJAZ29vZ2xlLmNvbT4NCj4gU2VudDogVGh1cnNkYXks
-IERlY2VtYmVyIDE4LCAyMDI1IDY6MjQgUE0NCj4gVG86IHl1YW5saW55dSA8eXVhbmxpbnl1QGhv
-bm9yLmNvbT4NCj4gQ2M6IEFsZXhhbmRlciBQb3RhcGVua28gPGdsaWRlckBnb29nbGUuY29tPjsg
-RG1pdHJ5IFZ5dWtvdg0KPiA8ZHZ5dWtvdkBnb29nbGUuY29tPjsgQW5kcmV3IE1vcnRvbiA8YWtw
-bUBsaW51eC1mb3VuZGF0aW9uLm9yZz47DQo+IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGtlcm5l
-bC5vcmc+OyBXQU5HIFh1ZXJ1aSA8a2VybmVsQHhlbjBuLm5hbWU+Ow0KPiBrYXNhbi1kZXZAZ29v
-Z2xlZ3JvdXBzLmNvbTsgbGludXgtbW1Aa3ZhY2sub3JnOyBsb29uZ2FyY2hAbGlzdHMubGludXgu
-ZGV2Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjIgMi8yXSBrZmVuY2U6IGFsbG93IGNoYW5nZSBudW1iZXIgb2Ygb2JqZWN0IGJ5IGVhcmx5
-DQo+IHBhcmFtZXRlcg0KPiANCj4gT24gVGh1LCAxOCBEZWMgMjAyNSBhdCAxMToxOCwgeXVhbmxp
-bnl1IDx5dWFubGlueXVAaG9ub3IuY29tPiB3cm90ZToNCj4gPg0KPiA+ID4gRnJvbTogTWFyY28g
-RWx2ZXIgPGVsdmVyQGdvb2dsZS5jb20+DQo+ID4gRG8geW91IG1lYW4gcGVyZm9ybWFuY2UgY3Jp
-dGljYWwgYnkgYWNjZXNzIGdsb2JhbCBkYXRhID8NCj4gPiBJdCBhbHJlYWR5IGFjY2VzcyBfX2tm
-ZW5jZV9wb29sIGdsb2JhbCBkYXRhLg0KPiA+IEFkZCBvbmUgbW9yZSBnbG9iYWwgZGF0YSBhY2Nl
-cHRhYmxlIGhlcmUgPw0KPiA+DQo+ID4gT3RoZXIgcGxhY2UgbWF5IGFjY2VzcyBnbG9iYWwgZGF0
-YSBpbmRlZWQgPw0KPiANCj4gaXNfa2ZlbmNlX2FkZHJlc3MoKSBpcyB1c2VkIGluIHRoZSBzbHVi
-IGZhc3QgcGF0aCwgYW5kIGFub3RoZXIgbG9hZCBpcw0KPiBvbmUgbW9yZSBpbnN0cnVjdGlvbiBp
-biB0aGUgZmFzdCBwYXRoLiBXZSBoYXZlIGF2b2lkZWQgdGhpcyB0aHVzIGZhcg0KPiBmb3IgdGhp
-cyByZWFzb24uDQo+IA0KPiA+IEkgZG9uJ3Qga25vdyBpZiBhbGwgbGludXggcmVsZWFzZSBsaWtl
-IHVidW50dSBlbmFibGUga2ZlbmNlIG9yIG5vdC4NCj4gPiBJIG9ubHkga25vdyBpdCB0dXJuIG9u
-IGRlZmF1bHQgb24gYW5kcm9pZCBkZXZpY2UuDQo+IA0KPiBUaGlzIGlzIGlycmVsZXZhbnQuDQo+
-IA0KPiA+ID4gV2hpbGUgSSB0aGluayB0aGUgY2hhbmdlIGl0c2VsZiB3b3VsZCBiZSB1c2VmdWwg
-dG8gaGF2ZSBldmVudHVhbGx5LCBhDQo+ID4gPiBiZXR0ZXIgZGVzaWduIG1pZ2h0IGJlIG5lZWRl
-ZC4gSXQncyB1bmNsZWFyIHRvIG1lIHdoYXQgdGhlIHBlcmYgaW1wYWN0DQo+ID4NCj4gPiBDb3Vs
-ZCB5b3Ugc2hhcmUgdGhlIGJldHRlciBkZXNpZ24gaWRlYSA/DQo+IA0KPiBIb3QtcGF0Y2hhYmxl
-IGNvbnN0YW50cywgc2ltaWxhciB0byBzdGF0aWMgYnJhbmNoZXMvanVtcCBsYWJlbHMuIFRoaXMN
-Cj4gaGFkIGJlZW4gZGlzY3Vzc2VkIGluIHRoZSBwYXN0IChjYW4ndCBmaW5kIHRoZSBsaW5rIG5v
-dyksIGJ1dCBpdCdzIG5vdA0KPiB0cml2aWFsIHRvIGltcGxlbWVudCB1bmZvcnR1bmF0ZWx5Lg0K
-DQppcyBpdCBwb3NzaWJsZSBhZGQgdGFnIHRvIGtmZW5jZSBhZGRyZXNzIGFuZCBvbmx5IGNoZWNr
-IGFkZHJlc3MgaXRzZWxmID8NCg0KPiANCj4gQW4gb3B0aW9uIHRoYXQgd291bGQgZW5hYmxlL2Rp
-c2FibGUgdGhlIGNvbW1hbmQtbGluZSBjaGFuZ2VhYmxlIG51bWJlcg0KPiBvZiBvYmplY3RzLCBp
-LmUgb25lIHZlcnNpb24gdGhhdCBhdm9pZHMgdGhlIGxvYWQgaW4gdGhlIGZhc3QgcGF0aCBhbmQN
-Cj4gb25lIHZlcnNpb24gdGhhdCBlbmFibGVzIGFsbCB0aGUgYml0cyB0aGF0IHlvdSBhZGRlZCBo
-ZXJlLiBCdXQgSSdkDQo+IHJhdGhlciBhdm9pZCB0aGlzIGlmIHBvc3NpYmxlLg0KDQpZZXMsIGl0
-IHNob3VsZCBhdm9pZCwgdGhlIHB1cnBvc2UgaXMgd2l0aG91dCBjb21waWxlIHRoZSBrZXJuZWwu
-DQoNCj4gDQo+IEFzIHN1Y2gsIHBsZWFzZSBkbyBiZW5jaG1hcmsgYW5kIGFuYWx5emUgdGhlIGdl
-bmVyYXRlZCBjb2RlIGluIHRoZQ0KPiBhbGxvY2F0b3IgZmFzdCBwYXRoICh5b3Ugc2hvdWxkIHNl
-ZSBhIGxvYWQgdG8gdGhlIG5ldyBnbG9iYWwgeW91DQo+IGFkZGVkKS4gbGx2bS1tY2EgWzFdIG1p
-Z2h0IGhlbHAgeW91IHdpdGggYW5hbHlzaXMuDQo+IA0KPiBbMV0gaHR0cHM6Ly9sbHZtLm9yZy9k
-b2NzL0NvbW1hbmRHdWlkZS9sbHZtLW1jYS5odG1sDQoNClRoYW5rcywgd2lsbCBsZWFybiBpdA0K
-DQo=
+vCPU preempt hint is useful with sched and lock on some platforms, here
+new feature KVM_FEATURE_PREEMPT_HINT is added and VMM can selectively
+enable it.
+
+Test case kcbench is used to compile Linux kernel code, the test result
+shows that it is useful on 3D6000 Dual-way machine with 64 cores and 128
+hyperthreads, however no improvemet on 3C5000 Dual-way machine with 32
+cores. With perf top command when running test case, the main difference
+between over-commited VM and host is osq_lock(). if vcpu_is_preempted()
+is implemented on VM, it can avoid  unnecessary busy-loop waiting and
+enter sleep state quickly if lock-hold vCPU is preempted.
+
+Here is test result with kcbench on 3D6000 and 3C6000 hardware machines,
+time unit is second to compile kernel with defconfig, performance is
+better with smaller value.
+3D6000 Dual-way 64 Core 128 Threads
+ One VM with 128 vCPUs, no overcommit, NUMA
+             Orginal       With-patch       Improvement
+  VM         91.72         92.4             < -1%
+  Host       89.7          89.75            < -0.1%
+ Two VMs overcommit with 128 vCPUs, UMA
+             Orginal       With-patch       Improvement
+  VM1        306.9         197.5            +36%
+  VM2        303.7         197.8            +35%
+  Host       89.7          89.75             < -0.1%
+ Two VMs overcommit with 128 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM1        317.1         159              +50%
+  VM2        317.5         158              +50%
+  Host       89.7          89.75            < -0.1%
+3C5000  Dual-way 32 Core
+ One VM with 32 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM         208           207              < +0.5%
+  Host       184           185              < -0.5%
+ Two VMs overcommit with 32 vCPUs, UMA
+             Orginal       With-patch       Improvement
+  VM1        439           444              -1%
+  VM2        437           438              < -0.2%
+  Host       184           185              < -0.5%
+ Two VMs overcommit with 32 vCPUs, NUMA
+             Orginal       With-patch       Improvement
+  VM1        422           425              < -1%
+  VM2        418           415              < -1%
+  Host       184           185              < -0.5%
+
+---
+v3 ... v4:
+  1. Base on the latest version 6.19.0-rc1, and solve some confliction
+     issues.
+  2. Move definition and usage about variable virt_preempt_key outside of
+     CONFIG_SMP.
+
+v2 ... v3:
+  1. Remove CONFIG_SMP checking in header file asm/qspinlock.h, since
+     this file is included only if CONFIG_SMP is defined.
+  2. Replace internal variable pv_preempted with static_key_enabled()
+     method.
+  3. Add static type define with variable virt_preempt_key.
+  4. Merge previous patch 2 and patch 3 into one patch.
+
+v1 ... v2:
+  1. Rename feature KVM_FEATURE_PREEMPT_HINT with KVM_FEATURE_PREEMPT,
+     remove HINT in feature name.
+  2. Rename reverve field with __u8 pad[47] rather than combination of
+     __u8  u8_pad[3] and __u32 pad[11]
+  3. Rename internal function _kvm_set_vcpu_preempted() with
+     kvm_vcpu_set_pv_preempted(), remove prefix "_" and also in order to
+     avoid duplication name with common API in future.
+  4. Remove static variable u8 preempted and macro KVM_VCPU_PREEMPTED is
+     used directly.
+  5. Move definition of vcpu_is_preempted() from file spinlock.h to
+     qspinlock.h, since CONFIG_PARAVIRT is used in qspinlock.h already.
+  6. Add CONFIG_SMP checking with vcpu_is_preempted() to solve compile
+     issue reported by LKP if CONFIG_SMP is disabled.
+  7. Add static key virt_preempt_key with vcpu_is_preempted(), remove
+     mp_ops.vcpu_is_preempted method.
+---
+Bibo Mao (2):
+  LoongArch: KVM: Add paravirt preempt feature in hypervisor side
+  LoongArch: Add paravirt support with vcpu_is_preempted() in guest side
+
+ arch/loongarch/include/asm/kvm_host.h      |  2 +
+ arch/loongarch/include/asm/kvm_para.h      |  4 +-
+ arch/loongarch/include/asm/qspinlock.h     |  3 ++
+ arch/loongarch/include/uapi/asm/kvm.h      |  1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+ arch/loongarch/kernel/paravirt.c           | 21 ++++++++-
+ arch/loongarch/kvm/vcpu.c                  | 53 +++++++++++++++++++++-
+ arch/loongarch/kvm/vm.c                    |  3 ++
+ 8 files changed, 85 insertions(+), 3 deletions(-)
+
+
+base-commit: dd9b004b7ff3289fb7bae35130c0a5c0537266af
+-- 
+2.39.3
+
