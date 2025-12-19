@@ -1,37 +1,35 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2752B22F772
-	for <loongarch@lists.linux.dev>; Fri, 19 Dec 2025 06:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8507D2ECD2A;
+	Fri, 19 Dec 2025 08:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766125836; cv=none; b=HmX7bgGoMwlupokZ5XyrhbePOcDxOVQGSrIGX6tqnXGRwvMcty2dtsapHREm/y9pdtjg/5EmfyTaqjZnxOVx3ZWaPtnNy/uSsGcZp0dqiRFx1BDMiN6eLmbnwJvghIF15M5bIOhh5lagw9PaaI0rCVxqG058RCEsPJF66V/BCxc=
+	t=1766132000; cv=none; b=T2usEQbVEkNk7Gs2HflVXlAmyQkSMAWQa0fC2Zybh1BOflClonfH1EXJdBBoYudFrh/yd+IsiqhGZpC917uooOx42RHyRcVpM7sZwlXgQloujavYVj+ArLTZOBlNDizJpSc40+R1QmRDHP26NIEYAE4f2eYWvEYf9IdBP6TzmMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766125836; c=relaxed/simple;
-	bh=h9z/6qbd/OGEIpaySvsaPfol1flse6Q3YVPb7qNoTs4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UvhyrC6YudfbhcxPXx05H+js9j9Innq72dpLV0tQ3q6Sw7ZGbIo/eqK11z0boajwUoG9iQTS3S+olUS5E4z0pJ10k+RZK4QdaGh3JlTal6ia0t08dDWM70QSyKm86pFCvb332/5KyVsQ/CYZC2w9uB4tfvr+l12nFStV5m+uruM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxEvEB8URpQ8EAAA--.3203S3;
-	Fri, 19 Dec 2025 14:30:25 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBx68H+8ERpt6kBAA--.3572S4;
-	Fri, 19 Dec 2025 14:30:25 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] LoongArch: Add paravirt support with vcpu_is_preempted() in guest side
-Date: Fri, 19 Dec 2025 14:30:21 +0800
-Message-Id: <20251219063021.1778659-3-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20251219063021.1778659-1-maobibo@loongson.cn>
-References: <20251219063021.1778659-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1766132000; c=relaxed/simple;
+	bh=c8UdFBb7F8dmejdnU77Se4Vh0A297D7YwvyeUjSzvGs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=GnvKy6UkEc7gJVNe9wJTI2U7d8Wj/RkHX2oweCoF4St5h/IwXw+PusydnnvI6gALE3Iw+ZUJv+e5a3js7wwkau12xH1Litnd/fxiT9+lnU/GytiftCqr8rGTl5zLhoG4PV9ZCFEP8l53jbRzDihnJV+2aAVH6zs0/wGkMnEsReM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvV56RgS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvV56RgS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C38C116B1;
+	Fri, 19 Dec 2025 08:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766131999;
+	bh=c8UdFBb7F8dmejdnU77Se4Vh0A297D7YwvyeUjSzvGs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=bvV56RgSwPdWBOuOtUPVcXSmtsttDdT6myfmjpB+QZDRMIVyr7unLn+z+isWBP0Wy
+	 Ny2hKlhPpLoymTC6JQ0DzSc0lTtu4IdOjoxflDk5ls0qr9rZjX4H6YN/PUpzbnQdAP
+	 YpBOlDFBUmVl0ocWFf3MbPKhlUbei8L4bQwXt0Rf0W+fKMNrpn0yKASpPBE+phUtE+
+	 eS0MjQp6QSCCa4q9q8ZjhuUYyTNuM7t+D6ja4QPtH8eUDpUit5SxogEKu15rseJwgW
+	 mLfXoM8WdWG/4ZWUCIaOk3MfOwvaMmfztq3vshIPQCpKqjoQqXVEii+dxxDbG6AI8Q
+	 Q/PUXYGj8Kqgg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B5B5D380AA50;
+	Fri, 19 Dec 2025 08:10:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -39,90 +37,116 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx68H+8ERpt6kBAA--.3572S4
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Subject: Re: [PATCH v7 00/31] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <176613180853.3684357.18339473690014642605.git-patchwork-notify@kernel.org>
+Date: Fri, 19 Dec 2025 08:10:08 +0000
+References: <20251114150133.1056710-1-vschneid@redhat.com>
+In-Reply-To: <20251114150133.1056710-1-vschneid@redhat.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, rcu@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
+ peterz@infradead.org, acme@kernel.org, jpoimboe@kernel.org,
+ pbonzini@redhat.com, arnd@arndb.de, frederic@kernel.org, paulmck@kernel.org,
+ jbaron@akamai.com, rostedt@goodmis.org, ardb@kernel.org,
+ samitolvanen@google.com, davem@davemloft.net, neeraj.upadhyay@kernel.org,
+ joelagnelf@nvidia.com, josh@joshtriplett.org, boqun.feng@gmail.com,
+ urezki@gmail.com, mathieu.desnoyers@efficios.com, mgorman@suse.de,
+ akpm@linux-foundation.org, masahiroy@kernel.org, shenhan@google.com,
+ riel@surriel.com, jannh@google.com, dan.carpenter@linaro.org,
+ oleg@redhat.com, juri.lelli@redhat.com, williams@redhat.com,
+ ypodemsk@redhat.com, mtosatti@redhat.com, dwagner@suse.de, ptesarik@suse.com,
+ sshegde@linux.ibm.com
 
-Function vcpu_is_preempted() is used to check whether vCPU is preempted
-or not. Here add implementation with vcpu_is_preempted() when option
-CONFIG_PARAVIRT is enabled.
+Hello:
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Acked-by: Juergen Gross <jgross@suse.com>
----
- arch/loongarch/include/asm/qspinlock.h |  3 +++
- arch/loongarch/kernel/paravirt.c       | 21 ++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+This series was applied to riscv/linux.git (fixes)
+by Frederic Weisbecker <frederic@kernel.org>:
 
-diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
-index e76d3aa1e1eb..fa3eaf7e48f2 100644
---- a/arch/loongarch/include/asm/qspinlock.h
-+++ b/arch/loongarch/include/asm/qspinlock.h
-@@ -34,6 +34,9 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
- 	return true;
- }
- 
-+#define vcpu_is_preempted	vcpu_is_preempted
-+bool vcpu_is_preempted(int cpu);
-+
- #endif /* CONFIG_PARAVIRT */
- 
- #include <asm-generic/qspinlock.h>
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-index b1b51f920b23..a81a3e871dd1 100644
---- a/arch/loongarch/kernel/paravirt.c
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -12,6 +12,7 @@ static int has_steal_clock;
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
- static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-+static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
- DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
- 
- static u64 native_steal_clock(int cpu)
-@@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
- 
- 	return 0;
- }
-+
-+bool notrace vcpu_is_preempted(int cpu)
-+{
-+	struct kvm_steal_time *src;
-+
-+	if (!static_branch_unlikely(&virt_preempt_key))
-+		return false;
-+
-+	src = &per_cpu(steal_time, cpu);
-+	return !!(src->preempted & KVM_VCPU_PREEMPTED);
-+}
-+EXPORT_SYMBOL(vcpu_is_preempted);
- #endif
- 
- static void pv_cpu_reboot(void *unused)
-@@ -308,6 +321,9 @@ int __init pv_time_init(void)
- 		pr_err("Failed to install cpu hotplug callbacks\n");
- 		return r;
- 	}
-+
-+	if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
-+		static_branch_enable(&virt_preempt_key);
- #endif
- 
- 	static_call_update(pv_steal_clock, paravt_steal_clock);
-@@ -318,7 +334,10 @@ int __init pv_time_init(void)
- 		static_key_slow_inc(&paravirt_steal_rq_enabled);
- #endif
- 
--	pr_info("Using paravirt steal-time\n");
-+	if (static_key_enabled(&virt_preempt_key))
-+		pr_info("Using paravirt steal-time with preempt enabled\n");
-+	else
-+		pr_info("Using paravirt steal-time with preempt disabled\n");
- 
- 	return 0;
- }
+On Fri, 14 Nov 2025 16:01:02 +0100 you wrote:
+> Context
+> =======
+> 
+> We've observed within Red Hat that isolated, NOHZ_FULL CPUs running a
+> pure-userspace application get regularly interrupted by IPIs sent from
+> housekeeping CPUs. Those IPIs are caused by activity on the housekeeping CPUs
+> leading to various on_each_cpu() calls, e.g.:
+> 
+> [...]
+
+Here is the summary with links:
+  - [v7,01/31] objtool: Make validate_call() recognize indirect calls to pv_ops[]
+    (no matching commit)
+  - [v7,02/31] objtool: Flesh out warning related to pv_ops[] calls
+    (no matching commit)
+  - [v7,03/31] rcu: Add a small-width RCU watching counter debug option
+    https://git.kernel.org/riscv/c/d1e6d2773898
+  - [v7,04/31] rcutorture: Make TREE04 use CONFIG_RCU_DYNTICKS_TORTURE
+    https://git.kernel.org/riscv/c/82a224498005
+  - [v7,05/31] jump_label: Add annotations for validating noinstr usage
+    (no matching commit)
+  - [v7,06/31] static_call: Add read-only-after-init static calls
+    (no matching commit)
+  - [v7,07/31] x86/paravirt: Mark pv_sched_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,08/31] x86/idle: Mark x86_idle static call as __ro_after_init
+    (no matching commit)
+  - [v7,09/31] x86/paravirt: Mark pv_steal_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,10/31] riscv/paravirt: Mark pv_steal_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,11/31] loongarch/paravirt: Mark pv_steal_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,12/31] arm64/paravirt: Mark pv_steal_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,13/31] arm/paravirt: Mark pv_steal_clock static call as __ro_after_init
+    (no matching commit)
+  - [v7,14/31] perf/x86/amd: Mark perf_lopwr_cb static call as __ro_after_init
+    (no matching commit)
+  - [v7,15/31] sched/clock: Mark sched_clock_running key as __ro_after_init
+    (no matching commit)
+  - [v7,16/31] KVM: VMX: Mark __kvm_is_using_evmcs static key as __ro_after_init
+    (no matching commit)
+  - [v7,17/31] x86/bugs: Mark cpu_buf_vm_clear key as allowed in .noinstr
+    (no matching commit)
+  - [v7,18/31] x86/speculation/mds: Mark cpu_buf_idle_clear key as allowed in .noinstr
+    (no matching commit)
+  - [v7,19/31] sched/clock, x86: Mark __sched_clock_stable key as allowed in .noinstr
+    (no matching commit)
+  - [v7,20/31] KVM: VMX: Mark vmx_l1d_should flush and vmx_l1d_flush_cond keys as allowed in .noinstr
+    (no matching commit)
+  - [v7,21/31] stackleack: Mark stack_erasing_bypass key as allowed in .noinstr
+    (no matching commit)
+  - [v7,22/31] objtool: Add noinstr validation for static branches/calls
+    (no matching commit)
+  - [v7,23/31] module: Add MOD_NOINSTR_TEXT mem_type
+    (no matching commit)
+  - [v7,24/31] context-tracking: Introduce work deferral infrastructure
+    (no matching commit)
+  - [v7,25/31] context_tracking,x86: Defer kernel text patching IPIs
+    (no matching commit)
+  - [v7,26/31] x86/jump_label: Add ASM support for static_branch_likely()
+    (no matching commit)
+  - [v7,27/31] x86/mm: Make INVPCID type macros available to assembly
+    (no matching commit)
+  - [RFC,v7,28/31] x86/mm/pti: Introduce a kernel/user CR3 software signal
+    (no matching commit)
+  - [RFC,v7,29/31] x86/mm/pti: Implement a TLB flush immediately after a switch to kernel CR3
+    (no matching commit)
+  - [RFC,v7,30/31] x86/mm, mm/vmalloc: Defer kernel TLB flush IPIs under CONFIG_COALESCE_TLBI=y
+    (no matching commit)
+  - [RFC,v7,31/31] x86/entry: Add an option to coalesce TLB flushes
+    (no matching commit)
+
+You are awesome, thank you!
 -- 
-2.39.3
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
