@@ -1,60 +1,60 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025DC23EAAE
-	for <loongarch@lists.linux.dev>; Sat, 20 Dec 2025 13:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922F130C62F
+	for <loongarch@lists.linux.dev>; Sat, 20 Dec 2025 13:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766238090; cv=none; b=dHtZkhqsHzA2home9WpmBguLI2rQREFV7x0j8YC4t7TfM0jsymfRFQUXywHOmQQmutK1QAlDX0dXQu7hFEbx/Ad7fv3ey3AcZjoOB+Z2hj5fMRe3MLtopXqsD3Nt9VchziokqKhso+ijbFd/MPQPuHJHmE/ByCTSbWc4DYPHf6A=
+	t=1766238973; cv=none; b=Dx7cSZ+H82A4LIZQ29iG5MAIcnD9Jol5m0xUhzOuvlvbOn6CH2iMnl8QWrBBb3I9laU8eR3qPzvBuqZ0mKLzkL0iBPxjsLGfGDZ8jyRxa8HNjli3YyUntzKKh+CllCfsL14wRHaY5xM1xI5fsghOZceKxreJu//a0+K1jrwOk5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766238090; c=relaxed/simple;
-	bh=9E0fdsBH/jk/gXSHvnWTk3FZqGpwLL5cYfAaniHLdME=;
+	s=arc-20240116; t=1766238973; c=relaxed/simple;
+	bh=zYvFL6LqtudmwcVIj3B156+jlIjbWM1A+nL9BTwsx3s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jWnidy9ZGXfEPbF7QlEihpaagXhJBb+Z5CaLhDzg5AUlSfcYuppSAoqYdFFXNdAncf3Fk3tTez9oreNKWkmSyM72BCm9HG6VKlboXSMDga75mMZSPyytGUmvirrAORChl/pU/h7x41ahdXcNOGWgfvHKy0F2gsvgGw9oSOUx0nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nl5xE8i7; arc=none smtp.client-ip=209.85.167.169
+	 To:Cc:Content-Type; b=Gj58uZQoQmXg+xeO/3bJT+dlqwrPWUxBLpKlSBdEt9hN5ZtftyyZH3thQiqeyacpIJbRL+rVDrHdNqXmDj/2I0uiK7aVDbVtwCOZ0eBhE6p4288/5bSCWY9k+8damTXrWsnF0Okhw3oiqvgYjPMC5Yc/rRo/AuAwDPHOjM5DqwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=btJ++n2o; arc=none smtp.client-ip=209.85.161.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl5xE8i7"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-45330fe6e1bso1703135b6e.2
-        for <loongarch@lists.linux.dev>; Sat, 20 Dec 2025 05:41:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btJ++n2o"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-65d1a094185so514394eaf.1
+        for <loongarch@lists.linux.dev>; Sat, 20 Dec 2025 05:56:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766238088; x=1766842888; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1766238968; x=1766843768; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e0xYR+0fSPrq9kQPLIVZXvhAfzal7hI1v8ze7DDqKX4=;
-        b=nl5xE8i7l0whQ4wUQUjRCq+0AbrJdgMJSfoszot2evgYnZhlnWVsTMep/Q2dVOCLxl
-         8JD5OOCAGLAN3AxYndVfVyjazy5Y2UyOmQOWwyeXm1orD7Fjek7M7JGwx69jKP7X9/8h
-         jSGLA5x68m3Zv17EXZmS63r9gtZ1ZEMtBwuTYRUeDKyv00UBCNynkCnDVrve2vM/NxLF
-         cZwLKKQq08MbVX5qkppuxXzOlpUlwdQrfZyjXDXS+ScCSBBEMW306/N59cJUZw9SNItM
-         cVhHcX3blSRDK8wLbz600xU2G8KSNkxSiJl7vKGMJZs5FKD3OhoEjq71wEQIr8CFsegN
-         zbiQ==
+        bh=ZUGAPPbEZVI/WOqnLeKGl/PLNS6xlNAVWjy9kMt0HwI=;
+        b=btJ++n2oMWQBBNBPMzSyPzOX5uYKCXJRygBrKEN2G65egPW7Q6uOJy6h94tv4fIcoN
+         vQveIMmNnAG4xzGgvqVDbf/+vFeNkEPG03wMzXGQqmHxeOjGc5PDj12Su5z6Xg5gm8+P
+         vyQJ4Nr5LFW4SlHQPur4dKvMHvKtbf6z+fii5xTikxvF3yVwiwkQvj6vhA9+Dhtr/gsx
+         9+hbNyrQ6MIIyg/mnlzba/6utA5A0Kr6ZC9VlMthNOeclL8q3i3cKSmkzB7bkmJIzE2X
+         uy8ogIOcqfQCTnsnf7hkc7L/P5s/mtAVsKAGPU5r6UXRxXIaF8tGTze5fxo0LKvcGmil
+         GzaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766238088; x=1766842888;
+        d=1e100.net; s=20230601; t=1766238968; x=1766843768;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=e0xYR+0fSPrq9kQPLIVZXvhAfzal7hI1v8ze7DDqKX4=;
-        b=Gk+V49+FG5ntxXpN74BkC5qK1lA0S+KCQSE89yw/il3Fo0ig4t/cOk85jgMTsMyIIc
-         wQWi/sPBngXejpQOklatfxLGFwOhUiV/lqs4itXtz1dGEHmfgQmcgHj2pQOMf0niaRVy
-         D3mPKjiLSyAgSSlGsdZ0b1ksadHoqHF366KUPeFniwd+LoOzlZk4ZDBgplgquU0PLCpr
-         IEVbvB59VDBv/mtonVqMygf64RJgnCzsb6RDT6brmYA8Ph5szT5ROmRAm8sqa2sRCigp
-         TaKWnsTPBk2TgNFXmSDyH1s9zjcaZwG0r3Wh0mP85PzMwC2ENBdcqEOmk6XS4h69Isna
-         NdGA==
-X-Forwarded-Encrypted: i=1; AJvYcCULjiXKjRyH/+8OuHkYoa0EfrnOqk1yoU8OGFoev63UlNEV2gTVsj8yc1I+i9SUwMUwDrI/3aiPujw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyEmcKqBaYhjtMvi2rS0WGO5VPqwqqBEqh3nzSKYQIv2pR8vu8p
-	0BX5MvHBE843CF0UqojM0JuwLt3V7BkeNblOlpUHHoUiS2Q/1YYW8GYM/0IAWBBxCXHYw6feekF
-	0xl84hO0pCp2olVCHBUm3B8rzp/XhDm8=
-X-Gm-Gg: AY/fxX71dKXTH73NY1xEU0YdMfH+IlfkpB1uwi9AT+/3iskX7Bs+lm2ZPpWN1wf6wVC
-	nCcuoXyw5GDh5BfpkdzJRQLVCT0iGtoZlDXuF4WggKXnRpYAgFTL9xqHq8/o4sKsBgdfkZB9Ffc
-	Y87Ge2ioBdYYp663xrgzgsi6V/MeeyP5emgLzdXuP9eAhhARVzIdh4FQDYiciCQvdg5JXNTRFw/
-	kNiG+lANSWNMoKmjboczDVBpKQ1Lbf1j2vQxd3jPlMjDNL2uChSGgmgrhliDGVukr4IoZpetA26
-	YKLrqg==
-X-Google-Smtp-Source: AGHT+IHSsZqogUHLn1n1Lybpbm/1iGXs+aT4as4fQDFEOzyXJBRvVuQpRI5qt8alGtCUgdpBrNpJonCgmTuqKLHveAE=
-X-Received: by 2002:a05:6808:5391:b0:455:d5b1:1f94 with SMTP id
- 5614622812f47-457b1eef50dmr2437497b6e.29.1766238087569; Sat, 20 Dec 2025
- 05:41:27 -0800 (PST)
+        bh=ZUGAPPbEZVI/WOqnLeKGl/PLNS6xlNAVWjy9kMt0HwI=;
+        b=d4u5LN7w1EvfEp3uuIR0nufSvJ1DB72qIwtetxRoCfEKYlyHFGgpq8QuUPYh8UffZU
+         TkrCt3UGpG7xMSWY5bisB5JDrk5aM0eT0FFgr91ta12AoIH8olAcwlrxOWFVWpQRsQT7
+         jmWTIJkdyQJJSDx2IwXfskfFHKrVpomCbBWuP9aSi8n1SxFSDQYwnKyNTMpY/KaH8KgM
+         g4LvvzeVbwCY9dL7QA/CTVL/PSg76eOHj4u4BSPvEyFIFOeS5kNoV+vYNx/QaEp0pGhm
+         ExWkBas6Eal+magdi1B0BIww2SZ4kj54e8E6PLn608SNoo3+9SLSXLiWA8Z1zaRIilWt
+         J90w==
+X-Forwarded-Encrypted: i=1; AJvYcCVwNCC+QtmdfhFTBWCUnBd5B/OiCju8usPECYHBZjjaQKb7IhdNI9FNRr5mX8pfHgfETVBPdXyTNDs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxKkOV0hxk3v9V2f1Y/wWkHKRNIKqFwebB2UL0SMs5oU7z3adie
+	4tq8yH650V2QJ6cvILOnFGQ2CGYGNxzdPz/7p7k2m5blnI4th2vMYhw3HXrU2trZGqvLKRkQiOg
+	BtIRvPXI6jgMTOQOsgi/OXRsRJMZ4+fA=
+X-Gm-Gg: AY/fxX4SUXbbHuSGKfUqdHAqionH6OUPsQCDdlZeteRPji7fZ+O6zfooaI1oNLkre32
+	Ctemh76Rbgi7VN8lYdq54psnvYSIG9sRjgy6kZ3Ah5P29QpmaLV8woDSkyc6SsG8hIBrC4TOQ/y
+	/Kr3TNk6Mrb7w72CVL56XaXP6tejytQzRE8BuAXbQIqzpp9OUbajzk+xo/nAJlapTQtSWn8n7Xx
+	W2yx+SJ0fp41INVLTn9VnAXp7f8WlyRWhYUCnt94rgKgtw0qsAF8ClrvuQdAxmB2rBZSIn3WgTC
+	d7AlEQ==
+X-Google-Smtp-Source: AGHT+IG/yo2gmQze8EfniySFGsbwm4bj6Ko/mS2kcgsJLLdQNnzzj5Zlg6OMnxvxp01PABAO61g51epD7RLNRbUvqfg=
+X-Received: by 2002:a05:6820:1c9f:b0:65d:1697:e6cc with SMTP id
+ 006d021491bc7-65d1697e82emr1523715eaf.60.1766238968167; Sat, 20 Dec 2025
+ 05:56:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,9 +64,9 @@ MIME-Version: 1.0
 References: <20251215-2-v6-0-c3ceeb281916@linux.dev>
 In-Reply-To: <20251215-2-v6-0-c3ceeb281916@linux.dev>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Sat, 20 Dec 2025 21:41:16 +0800
-X-Gm-Features: AQt7F2p955VjQ2rV8nGYJkdOdh8ud4vsStQxgGhmkHyKGSDabLc3eS7xGDW4LxQ
-Message-ID: <CAEyhmHQgkgU-c6rmBc0672oNCdQAzz4Ob5kN4p7k6MUo9B4Okw@mail.gmail.com>
+Date: Sat, 20 Dec 2025 21:55:57 +0800
+X-Gm-Features: AQt7F2rtq7NQmwnffZ7KoUbgux1waF2Ne4vfSnObfI3Uv3yjHP0_V2XgsRrV0RI
+Message-ID: <CAEyhmHSaCXqUka+a85eVfWHxuc6ThveQL-tjS5uhB2EvmXmMgg@mail.gmail.com>
 Subject: Re: [PATCH v6 0/4] LoongArch: Add 128-bit atomic cmpxchg support (v5)
 To: George Guo <dongtai.guo@linux.dev>
 Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, r@hev.cc, 
@@ -84,10 +84,6 @@ wrote:
 >
 > The series consists of four patches:
 >
-
-This series can not apply cleanly on top of loongarch-next branch, so
-I haven't tested it.
-
 > 1. "LoongArch: Add SCQ support detection"
 >     - Check CPUCFG2_SCQ bit to determin if the CPU supports
 >     SCQ instrction.
@@ -104,6 +100,9 @@ I haven't tested it.
 >      the SCQ instruction on 3A5000), provide a fallback implementation
 >      of __cmpxchg128 using a spinlock to emulate the atomic operation.
 >
+
+Probably, you can combine patch 2 and patch 3 into a single patch.
+
 > 4. "LoongArch: Enable 128-bit atomics cmpxchg support"
 >    - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
 >      in Kconfig to enable 128-bit atomic cmpxchg support
