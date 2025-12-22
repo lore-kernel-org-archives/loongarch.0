@@ -1,188 +1,235 @@
-Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A4523FC49
-	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 09:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B8620DD48
+	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 09:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766395000; cv=none; b=rKPD/zXyS5Kn+VIEJ01Ypsld9qs6/bnoIAKrmyXqbXfUKLh33n4YoxCkLJrj1tCnwbpdEX33AWxXct4cCVGyX82q1qM0Qwbm0DE6bU6Myi9pibP2YFHNBQFw+WRuSmvd2xG+uSmhxrSpOR1xt1iGCorVeYVONUpnr7vaWKpChWM=
+	t=1766396252; cv=none; b=MT6FpB8DpZmUGrSUfnfMm+4QoqsBSnM7kOaJJ7iJzuqcg4xlpr0y1+yst5Z7DkYVH2fyjl4iFBrxm4jGkUBIVDx0xJ0fnZJdmNzp6t3BUUAKE1HEv7EUky/WUUQhNCckRcIq0f4i3jzRmP+quXFF5iUdrkF1KJQC+1vcImAgrmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766395000; c=relaxed/simple;
-	bh=n8yoF26tQkodqYh0wMoOhivOAO11RUhpUb9ohKB9TwI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZmtKJ2JEv6XF3ul1qIbKX/ulex5enVSajNqa4G4jCA3VrgLm199jHIJrsc0hU1vzIDPZqWMmUcxnQxCPGV9eNJ4Hx4+nTb137bBeg3OpzdNZNPsBKSAC5ViQB1Ps3sywG1xKvdDMNo6dBcT+/jOqJSv0+kLgL1/kvhUvWKFp+f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4dZXWL0TzYzYkyXB;
-	Mon, 22 Dec 2025 17:13:50 +0800 (CST)
-Received: from w020.hihonor.com (10.68.31.183) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Mon, 22 Dec
- 2025 17:16:29 +0800
-Received: from w025.hihonor.com (10.68.28.69) by w020.hihonor.com
- (10.68.31.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Mon, 22 Dec
- 2025 17:16:29 +0800
-Received: from w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9]) by
- w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9%14]) with mapi id
- 15.02.2562.027; Mon, 22 Dec 2025 17:16:29 +0800
-From: yuanlinyu <yuanlinyu@honor.com>
-To: Enze Li <lienze@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
-CC: Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
-	<akpm@linux-foundation.org>, WANG Xuerui <kernel@xen0n.name>,
-	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "enze.li@gmx.com" <enze.li@gmx.com>
-Subject: RE: [PATCH v2 1/2] LoongArch: kfence: avoid use
- CONFIG_KFENCE_NUM_OBJECTS
-Thread-Topic: [PATCH v2 1/2] LoongArch: kfence: avoid use
- CONFIG_KFENCE_NUM_OBJECTS
-Thread-Index: AQHcb+kJ0Mrpi/YLLUuMpTbvJeaADrUntCKAgAHNJgCAA+WFIA==
-Date: Mon, 22 Dec 2025 09:16:29 +0000
-Message-ID: <ab69f5a942824394af6010f75a06c5f7@honor.com>
-References: <20251218063916.1433615-1-yuanlinyu@honor.com>
- <20251218063916.1433615-2-yuanlinyu@honor.com>
- <CAAhV-H5n_3Ndk5yRm=S-9WktD9xivVF8-JLaycV8JB-pVuybbA@mail.gmail.com>
- <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
-In-Reply-To: <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1766396252; c=relaxed/simple;
+	bh=pq0QymWSi/nn1vuRTyHrD7rcnF42YaRBMHZqtdUaKLM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iw1jHp3ro/JVLI3Uamo7J17OC70Nvo2H6crougVhWAp1sL+iLOWz/133fhFF9weXZGwa2BOGEXRXcK9aV6MkcWJJwVd1mdsfgxufoGn4NCbHhXg2v3PyvSjT4jNiwFjWdJG+X1oK30Y40ICbJzcyE6bAQ7XXsUCcVvmX0SzftCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d11e6e98df1911f0a38c85956e01ac42-20251222
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:de4d8268-dc8d-48f1-805e-f682d3a06cd1,IP:10,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:5
+X-CID-INFO: VERSION:1.3.6,REQID:de4d8268-dc8d-48f1-805e-f682d3a06cd1,IP:10,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:5
+X-CID-META: VersionHash:a9d874c,CLOUDID:ccaa6ce40de7d863f75bdf900ecd0ee9,BulkI
+	D:251219101318D8IDDZQS,BulkQuantity:6,Recheck:0,SF:17|19|38|64|66|78|80|81
+	|82|83|102|127|841|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,
+	RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DK
+	P:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: d11e6e98df1911f0a38c85956e01ac42-20251222
+X-User: lienze@kylinos.cn
+Received: from [192.168.31.182] [(183.242.174.20)] by mailgw.kylinos.cn
+	(envelope-from <lienze@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 1610835472; Mon, 22 Dec 2025 17:37:22 +0800
+Message-ID: <44d4cf82-982c-455b-85c1-138e8c37cc8f@kylinos.cn>
+Date: Mon, 22 Dec 2025 17:37:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] LoongArch: kfence: avoid use
+ CONFIG_KFENCE_NUM_OBJECTS
+To: yuanlinyu <yuanlinyu@honor.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, WANG Xuerui <kernel@xen0n.name>,
+ "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "enze.li@gmx.com" <enze.li@gmx.com>
+References: <20251218063916.1433615-1-yuanlinyu@honor.com>
+ <20251218063916.1433615-2-yuanlinyu@honor.com>
+ <CAAhV-H5n_3Ndk5yRm=S-9WktD9xivVF8-JLaycV8JB-pVuybbA@mail.gmail.com>
+ <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
+ <ab69f5a942824394af6010f75a06c5f7@honor.com>
+Content-Language: en-US
+From: Enze Li <lienze@kylinos.cn>
+In-Reply-To: <ab69f5a942824394af6010f75a06c5f7@honor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-PiBGcm9tOiBFbnplIExpIDxsaWVuemVAa3lsaW5vcy5jbj4NCj4gU2VudDogU2F0dXJkYXksIERl
-Y2VtYmVyIDIwLCAyMDI1IDE6NDQgUE0NCj4gVG86IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGtl
-cm5lbC5vcmc+OyB5dWFubGlueXUgPHl1YW5saW55dUBob25vci5jb20+DQo+IENjOiBBbGV4YW5k
-ZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNvbT47IE1hcmNvIEVsdmVyDQo+IDxlbHZlckBn
-b29nbGUuY29tPjsgRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPjsgQW5kcmV3IE1v
-cnRvbg0KPiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz47IFdBTkcgWHVlcnVpIDxrZXJuZWxA
-eGVuMG4ubmFtZT47DQo+IGthc2FuLWRldkBnb29nbGVncm91cHMuY29tOyBsaW51eC1tbUBrdmFj
-ay5vcmc7IGxvb25nYXJjaEBsaXN0cy5saW51eC5kZXY7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGVuemUubGlAZ214LmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0g
-TG9vbmdBcmNoOiBrZmVuY2U6IGF2b2lkIHVzZQ0KPiBDT05GSUdfS0ZFTkNFX05VTV9PQkpFQ1RT
-DQo+IA0KPiBPbiAyMDI1LzEyLzE5IDEwOjEzLCBIdWFjYWkgQ2hlbiB3cm90ZToNCj4gPiBIaSwg
-RW56ZSwNCj4gPg0KPiA+IE9uIFRodSwgRGVjIDE4LCAyMDI1IGF0IDI6MznigK9QTSB5dWFuIGxp
-bnl1IDx5dWFubGlueXVAaG9ub3IuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4gdXNlIGNvbW1vbiBr
-ZmVuY2UgbWFjcm8gS0ZFTkNFX1BPT0xfU0laRSBmb3IgS0ZFTkNFX0FSRUFfU0laRQ0KPiA+PiBk
-ZWZpbml0aW9uDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IHl1YW4gbGlueXUgPHl1YW5saW55
-dUBob25vci5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20v
-cGd0YWJsZS5oIHwgMyArKy0NCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2lu
-Y2x1ZGUvYXNtL3BndGFibGUuaA0KPiA+PiBiL2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3Bn
-dGFibGUuaA0KPiA+PiBpbmRleCBmNDFhNjQ4YTNkOWUuLmU5OTY2YzlmODQ0ZiAxMDA2NDQNCj4g
-Pj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vcGd0YWJsZS5oDQo+ID4+ICsrKyBi
-L2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3BndGFibGUuaA0KPiA+PiBAQCAtMTAsNiArMTAs
-NyBAQA0KPiA+PiAgI2RlZmluZSBfQVNNX1BHVEFCTEVfSA0KPiA+Pg0KPiA+PiAgI2luY2x1ZGUg
-PGxpbnV4L2NvbXBpbGVyLmg+DQo+ID4+ICsjaW5jbHVkZSA8bGludXgva2ZlbmNlLmg+DQo+ID4+
-ICAjaW5jbHVkZSA8YXNtL2FkZHJzcGFjZS5oPg0KPiA+PiAgI2luY2x1ZGUgPGFzbS9hc20uaD4N
-Cj4gPj4gICNpbmNsdWRlIDxhc20vcGFnZS5oPg0KPiA+PiBAQCAtOTYsNyArOTcsNyBAQCBleHRl
-cm4gdW5zaWduZWQgbG9uZyBlbXB0eV96ZXJvX3BhZ2VbUEFHRV9TSVpFIC8NCj4gc2l6ZW9mKHVu
-c2lnbmVkIGxvbmcpXTsNCj4gPj4gICNkZWZpbmUgTU9EVUxFU19FTkQgICAgKE1PRFVMRVNfVkFE
-RFIgKyBTWl8yNTZNKQ0KPiA+Pg0KPiA+PiAgI2lmZGVmIENPTkZJR19LRkVOQ0UNCj4gPj4gLSNk
-ZWZpbmUgS0ZFTkNFX0FSRUFfU0laRSAgICAgICAoKChDT05GSUdfS0ZFTkNFX05VTV9PQkpFQ1RT
-ICsgMSkNCj4gKiAyICsgMikgKiBQQUdFX1NJWkUpDQo+ID4+ICsjZGVmaW5lIEtGRU5DRV9BUkVB
-X1NJWkUgICAgICAgKEtGRU5DRV9QT09MX1NJWkUgKyAoMiAqDQo+IFBBR0VfU0laRSkpDQo+ID4g
-Q2FuIHlvdSByZW1lbWJlciB3aHkgeW91IGRpZG4ndCB1c2UgS0ZFTkNFX1BPT0xfU0laRSBhdCB0
-aGUgZmlyc3QgcGxhY2U/DQo+IA0KPiBJIGRvbid0IHJlY2FsbCB0aGUgZXhhY3QgcmVhc29uIG9m
-ZiB0aGUgdG9wIG9mIG15IGhlYWQsIGJ1dCBJIGJlbGlldmUgaXQgd2FzIGR1ZSB0bw0KPiBjb21w
-bGV4IGRlcGVuZGVuY3kgaXNzdWVzIHdpdGggdGhlIGhlYWRlciBmaWxlcyB3aGVyZSBLRkVOQ0Vf
-UE9PTF9TSVpFIGlzDQo+IGRlZmluZWQuICBUbyBhdm9pZCB0aG9zZSBjb21wbGljYXRpb25zLCB3
-ZSBsaWtlbHkgb3B0ZWQgdG8gdXNlDQo+IEtGRU5DRV9OVU1fT0JKRUNUUyBkaXJlY3RseS4NCj4g
-DQo+IEkgY2hlY2tlZCBvdXQgdGhlIGNvZGUgYXQgY29tbWl0DQo+ICg2YWQzZGY1NmJiMTk5MTM0
-ODAwOTMzZGYyYWZjZDdkZjNiMDNlZjMzICJMb29uZ0FyY2g6IEFkZCBLRkVOQ0UNCj4gKEtlcm5l
-bA0KPiBFbGVjdHJpYy1GZW5jZSkgc3VwcG9ydCIpIGFuZCBlbmNvdW50ZXJlZCB0aGUgZm9sbG93
-aW5nIGVycm9ycyB3aGVuIGNvbXBpbGluZw0KPiB3aXRoIHRoaXMgcGF0Y2ggYXBwbGllZC4NCj4g
-DQo+IDg8LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ICAgQ0MgICAgICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvYXNtLW9mZnNldHMucw0KPiBJ
-biBmaWxlIGluY2x1ZGVkIGZyb20gLi9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9wZ3RhYmxl
-Lmg6MTMsDQo+ICAgICAgICAgICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvcGd0YWJsZS5o
-OjYsDQo+ICAgICAgICAgICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvbW0uaDoyOSwNCj4g
-ICAgICAgICAgICAgICAgICBmcm9tIGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9hc20tb2Zmc2V0cy5j
-Ojk6DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDo5MzozNTogd2FybmluZzogJ3N0cnVjdCBr
-bWVtX2NhY2hlJyBkZWNsYXJlZCBpbnNpZGUNCj4gcGFyYW1ldGVyIGxpc3Qgd2lsbCBuIG90IGJl
-IHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24NCj4gICAg
-OTMgfCB2b2lkIGtmZW5jZV9zaHV0ZG93bl9jYWNoZShzdHJ1Y3Qga21lbV9jYWNoZSAqcyk7DQo+
-ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn4NCj4g
-Li9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOjk5OjI5OiB3YXJuaW5nOiAnc3RydWN0IGttZW1fY2Fj
-aGUnIGRlY2xhcmVkIGluc2lkZQ0KPiBwYXJhbWV0ZXIgbGlzdCB3aWxsIG4gb3QgYmUgdmlzaWJs
-ZSBvdXRzaWRlIG9mIHRoaXMgZGVmaW5pdGlvbiBvciBkZWNsYXJhdGlvbg0KPiAgICA5OSB8IHZv
-aWQgKl9fa2ZlbmNlX2FsbG9jKHN0cnVjdCBrbWVtX2NhY2hlICpzLCBzaXplX3Qgc2l6ZSwgZ2Zw
-X3QgZmxhZ3MpOw0KPiAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+
-fn5+DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDoxMTc6NTA6IHdhcm5pbmc6ICdzdHJ1Y3Qg
-a21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRlDQo+IHBhcmFtZXRlciBsaXN0IHdpbGwgbm90IGJl
-IHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24NCj4gICAx
-MTcgfCBzdGF0aWMgX19hbHdheXNfaW5saW5lIHZvaWQgKmtmZW5jZV9hbGxvYyhzdHJ1Y3Qga21l
-bV9jYWNoZSAqcywgc2l6ZV90DQo+IHNpemUsIGdmcF90IGZsYWdzKQ0KPiAgICAgICB8DQo+IF5+
-fn5+fn5+fn4NCj4gLi9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOiBJbiBmdW5jdGlvbiAna2ZlbmNl
-X2FsbG9jJzoNCj4gLi9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOjEyODozMTogZXJyb3I6IHBhc3Np
-bmcgYXJndW1lbnQgMSBvZiAnX19rZmVuY2VfYWxsb2MnDQo+IGZyb20gaW5jb21wYXRpYmxlIHAg
-b2ludGVyIHR5cGUgWy1XaW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNdDQo+ICAgMTI4IHwgICAg
-ICAgICByZXR1cm4gX19rZmVuY2VfYWxsb2Mocywgc2l6ZSwgZmxhZ3MpOw0KPiAgICAgICB8ICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gICAgICAgfCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8DQo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-c3RydWN0IGttZW1fY2FjaGUgKg0KPiAuL2luY2x1ZGUvbGludXgva2ZlbmNlLmg6OTk6NDE6IG5v
-dGU6IGV4cGVjdGVkICdzdHJ1Y3Qga21lbV9jYWNoZSAqJyBidXQNCj4gYXJndW1lbnQgaXMgb2Yg
-dHlwZSAnc3RydSBjdCBrbWVtX2NhY2hlIConDQo+ICAgIDk5IHwgdm9pZCAqX19rZmVuY2VfYWxs
-b2Moc3RydWN0IGttZW1fY2FjaGUgKnMsIHNpemVfdCBzaXplLCBnZnBfdCBmbGFncyk7DQo+ICAg
-ICAgIHwgICAgICAgICAgICAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fl4NCj4gLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgNCj4gDQo+
-IFNpbWlsYXJseSwgYWZ0ZXIgYXBwbHlpbmcgdGhpcyBwYXRjaCB0byB0aGUgbGF0ZXN0IGNvZGUN
-Cj4gKGRkOWIwMDRiN2ZmMzI4OWZiN2JhZTM1MTMwYzBhNWMwNTM3MjY2YWYgIk1lcmdlIHRhZyAn
-dHJhY2UtdjYuMTktcmMxJyIpDQo+IGZyb20gdGhlIG1hc3RlciBicmFuY2ggb2YgdGhlIExpbnV4
-IHJlcG9zaXRvcnkgYW5kIGVuYWJsaW5nIEtGRU5DRSwgSQ0KPiBlbmNvdW50ZXJlZCB0aGUgZm9s
-bG93aW5nIGNvbXBpbGF0aW9uIGVycm9ycy4NCj4gDQo+IDg8LS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAgQ0MgICAgICBhcmNoL2xvb25n
-YXJjaC9rZXJuZWwvYXNtLW9mZnNldHMucw0KPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gLi9hcmNo
-L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9wZ3RhYmxlLmg6MTMsDQo+ICAgICAgICAgICAgICAgICAg
-ZnJvbSAuL2luY2x1ZGUvbGludXgvcGd0YWJsZS5oOjYsDQo+ICAgICAgICAgICAgICAgICAgZnJv
-bSAuL2luY2x1ZGUvbGludXgvbW0uaDozMSwNCj4gICAgICAgICAgICAgICAgICBmcm9tIGFyY2gv
-bG9vbmdhcmNoL2tlcm5lbC9hc20tb2Zmc2V0cy5jOjExOg0KPiAuL2luY2x1ZGUvbGludXgva2Zl
-bmNlLmg6OTc6MzU6IHdhcm5pbmc6ICdzdHJ1Y3Qga21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRl
-DQo+IHBhcmFtZXRlciBsaXN0IHdpbGwgbiBvdCBiZSB2aXNpYmxlIG91dHNpZGUgb2YgdGhpcyBk
-ZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uDQo+ICAgIDk3IHwgdm9pZCBrZmVuY2Vfc2h1dGRvd25f
-Y2FjaGUoc3RydWN0IGttZW1fY2FjaGUgKnMpOw0KPiAgICAgICB8ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBefn5+fn5+fn5+DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDox
-MDM6Mjk6IHdhcm5pbmc6ICdzdHJ1Y3Qga21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRlDQo+IHBh
-cmFtZXRlciBsaXN0IHdpbGwgbm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRp
-b24gb3IgZGVjbGFyYXRpb24NCj4gICAxMDMgfCB2b2lkICpfX2tmZW5jZV9hbGxvYyhzdHJ1Y3Qg
-a21lbV9jYWNoZSAqcywgc2l6ZV90IHNpemUsIGdmcF90IGZsYWdzKTsNCj4gICAgICAgfCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fg0KPiAuL2luY2x1ZGUvbGludXgva2Zl
-bmNlLmg6MTIxOjUwOiB3YXJuaW5nOiAnc3RydWN0IGttZW1fY2FjaGUnIGRlY2xhcmVkIGluc2lk
-ZQ0KPiBwYXJhbWV0ZXIgbGlzdCB3aWxsIG5vdCBiZSB2aXNpYmxlIG91dHNpZGUgb2YgdGhpcyBk
-ZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uDQo+ICAgMTIxIHwgc3RhdGljIF9fYWx3YXlzX2lubGlu
-ZSB2b2lkICprZmVuY2VfYWxsb2Moc3RydWN0IGttZW1fY2FjaGUgKnMsIHNpemVfdA0KPiBzaXpl
-LCBnZnBfdCBmbGFncykNCj4gICAgICAgfA0KPiBefn5+fn5+fn5+DQo+IC4vaW5jbHVkZS9saW51
-eC9rZmVuY2UuaDogSW4gZnVuY3Rpb24gJ2tmZW5jZV9hbGxvYyc6DQo+IC4vaW5jbHVkZS9saW51
-eC9rZmVuY2UuaDoxMzI6MzE6IGVycm9yOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2YgJ19fa2ZlbmNl
-X2FsbG9jJw0KPiBmcm9tIGluY29tcGF0aWJsZSBwIG9pbnRlciB0eXBlIFstV2luY29tcGF0aWJs
-ZS1wb2ludGVyLXR5cGVzXQ0KPiAgIDEzMiB8ICAgICAgICAgcmV0dXJuIF9fa2ZlbmNlX2FsbG9j
-KHMsIHNpemUsIGZsYWdzKTsNCj4gICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBeDQo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiAgICAgICB8
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBrbWVtX2NhY2hlICoNCj4gLi9p
-bmNsdWRlL2xpbnV4L2tmZW5jZS5oOjEwMzo0MTogbm90ZTogZXhwZWN0ZWQgJ3N0cnVjdCBrbWVt
-X2NhY2hlIConDQo+IGJ1dCBhcmd1bWVudCBpcyBvZiB0eXBlICdzdHINCj4gdWN0IGttZW1fY2Fj
-aGUgKicNCj4gICAxMDMgfCB2b2lkICpfX2tmZW5jZV9hbGxvYyhzdHJ1Y3Qga21lbV9jYWNoZSAq
-cywgc2l6ZV90IHNpemUsIGdmcF90IGZsYWdzKTsNCj4gICAgICAgfCAgICAgICAgICAgICAgICAg
-ICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OA0KPiANCj4gU28sIHRoaXMgcGF0Y2ggY3VycmVu
-dGx5IHJ1bnMgaW50byBjb21waWxhdGlvbiBpc3N1ZXMuICBsaW55dSBwcm9iYWJseSBkaWRuJ3Qg
-aGF2ZQ0KPiBLRkVOQ0UgZW5hYmxlZCB3aGVuIGNvbXBpbGluZyBsb2NhbGx5LCB3aGljaCBpcyB3
-aHkgdGhpcyBlcnJvciB3YXMgbWlzc2VkLg0KPiBZb3UgY2FuIGVuYWJsZSBpdCBhcyBmb2xsb3dz
-Og0KPiANCj4gICBLZXJuZWwgaGFja2luZw0KPiAgICAgTWVtb3J5IERlYnVnZ2luZw0KPiAgICAg
-ICBbKl0gS0ZFTkNFOiBsb3ctb3ZlcmhlYWQgc2FtcGxpbmctYmFzZWQgbWVtb3J5IHNhZmV0eQ0K
-DQpIaSBFbnplLA0KDQpTb3JyeSBvbmx5IHRlc3Qgb24gYXJtNjQuDQoNCkNvdWxkIHlvdSBoZWxw
-IGZpeCB0aGUgY29tcGlsZSBpc3N1ZSBhbmQgcHJvdmlkZSBhIGNvcnJlY3QgY2hhbmdlID8NCg0K
-T3IgSSBuZWVkIHNvbWV0aW1lIHRvIHJlc29sdmUgdGhlIGlzc3VlLg0KDQo+IA0KPiBUaGFua3Ms
-DQo+IEVuemUNCj4gDQo+IDwuLi4+DQo=
+On 12/22/25 5:16 PM, yuanlinyu wrote:
+>> From: Enze Li <lienze@kylinos.cn>
+>> Sent: Saturday, December 20, 2025 1:44 PM
+>> To: Huacai Chen <chenhuacai@kernel.org>; yuanlinyu <yuanlinyu@honor.com>
+>> Cc: Alexander Potapenko <glider@google.com>; Marco Elver
+>> <elver@google.com>; Dmitry Vyukov <dvyukov@google.com>; Andrew Morton
+>> <akpm@linux-foundation.org>; WANG Xuerui <kernel@xen0n.name>;
+>> kasan-dev@googlegroups.com; linux-mm@kvack.org; loongarch@lists.linux.dev;
+>> linux-kernel@vger.kernel.org; enze.li@gmx.com
+>> Subject: Re: [PATCH v2 1/2] LoongArch: kfence: avoid use
+>> CONFIG_KFENCE_NUM_OBJECTS
+>>
+>> On 2025/12/19 10:13, Huacai Chen wrote:
+>>> Hi, Enze,
+>>>
+>>> On Thu, Dec 18, 2025 at 2:39 PM yuan linyu <yuanlinyu@honor.com> wrote:
+>>>>
+>>>> use common kfence macro KFENCE_POOL_SIZE for KFENCE_AREA_SIZE
+>>>> definition
+>>>>
+>>>> Signed-off-by: yuan linyu <yuanlinyu@honor.com>
+>>>> ---
+>>>>  arch/loongarch/include/asm/pgtable.h | 3 ++-
+>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/pgtable.h
+>>>> b/arch/loongarch/include/asm/pgtable.h
+>>>> index f41a648a3d9e..e9966c9f844f 100644
+>>>> --- a/arch/loongarch/include/asm/pgtable.h
+>>>> +++ b/arch/loongarch/include/asm/pgtable.h
+>>>> @@ -10,6 +10,7 @@
+>>>>  #define _ASM_PGTABLE_H
+>>>>
+>>>>  #include <linux/compiler.h>
+>>>> +#include <linux/kfence.h>
+>>>>  #include <asm/addrspace.h>
+>>>>  #include <asm/asm.h>
+>>>>  #include <asm/page.h>
+>>>> @@ -96,7 +97,7 @@ extern unsigned long empty_zero_page[PAGE_SIZE /
+>> sizeof(unsigned long)];
+>>>>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
+>>>>
+>>>>  #ifdef CONFIG_KFENCE
+>>>> -#define KFENCE_AREA_SIZE       (((CONFIG_KFENCE_NUM_OBJECTS + 1)
+>> * 2 + 2) * PAGE_SIZE)
+>>>> +#define KFENCE_AREA_SIZE       (KFENCE_POOL_SIZE + (2 *
+>> PAGE_SIZE))
+>>> Can you remember why you didn't use KFENCE_POOL_SIZE at the first place?
+>>
+>> I don't recall the exact reason off the top of my head, but I believe it was due to
+>> complex dependency issues with the header files where KFENCE_POOL_SIZE is
+>> defined.  To avoid those complications, we likely opted to use
+>> KFENCE_NUM_OBJECTS directly.
+>>
+>> I checked out the code at commit
+>> (6ad3df56bb199134800933df2afcd7df3b03ef33 "LoongArch: Add KFENCE
+>> (Kernel
+>> Electric-Fence) support") and encountered the following errors when compiling
+>> with this patch applied.
+>>
+>> 8<------------------------------------------------------
+>>   CC      arch/loongarch/kernel/asm-offsets.s
+>> In file included from ./arch/loongarch/include/asm/pgtable.h:13,
+>>                  from ./include/linux/pgtable.h:6,
+>>                  from ./include/linux/mm.h:29,
+>>                  from arch/loongarch/kernel/asm-offsets.c:9:
+>> ./include/linux/kfence.h:93:35: warning: 'struct kmem_cache' declared inside
+>> parameter list will n ot be visible outside of this definition or declaration
+>>    93 | void kfence_shutdown_cache(struct kmem_cache *s);
+>>       |                                   ^~~~~~~~~~
+>> ./include/linux/kfence.h:99:29: warning: 'struct kmem_cache' declared inside
+>> parameter list will n ot be visible outside of this definition or declaration
+>>    99 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
+>>       |                             ^~~~~~~~~~
+>> ./include/linux/kfence.h:117:50: warning: 'struct kmem_cache' declared inside
+>> parameter list will not be visible outside of this definition or declaration
+>>   117 | static __always_inline void *kfence_alloc(struct kmem_cache *s, size_t
+>> size, gfp_t flags)
+>>       |
+>> ^~~~~~~~~~
+>> ./include/linux/kfence.h: In function 'kfence_alloc':
+>> ./include/linux/kfence.h:128:31: error: passing argument 1 of '__kfence_alloc'
+>> from incompatible p ointer type [-Wincompatible-pointer-types]
+>>   128 |         return __kfence_alloc(s, size, flags);
+>>       |                               ^
+>>       |                               |
+>>       |                               struct kmem_cache *
+>> ./include/linux/kfence.h:99:41: note: expected 'struct kmem_cache *' but
+>> argument is of type 'stru ct kmem_cache *'
+>>    99 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
+>>       |                      ~~~~~~~~~~~~~~~~~~~^
+>> ------------------------------------------------------>8
+>>
+>> Similarly, after applying this patch to the latest code
+>> (dd9b004b7ff3289fb7bae35130c0a5c0537266af "Merge tag 'trace-v6.19-rc1'")
+>> from the master branch of the Linux repository and enabling KFENCE, I
+>> encountered the following compilation errors.
+>>
+>> 8<------------------------------------------------------
+>>   CC      arch/loongarch/kernel/asm-offsets.s
+>> In file included from ./arch/loongarch/include/asm/pgtable.h:13,
+>>                  from ./include/linux/pgtable.h:6,
+>>                  from ./include/linux/mm.h:31,
+>>                  from arch/loongarch/kernel/asm-offsets.c:11:
+>> ./include/linux/kfence.h:97:35: warning: 'struct kmem_cache' declared inside
+>> parameter list will n ot be visible outside of this definition or declaration
+>>    97 | void kfence_shutdown_cache(struct kmem_cache *s);
+>>       |                                   ^~~~~~~~~~
+>> ./include/linux/kfence.h:103:29: warning: 'struct kmem_cache' declared inside
+>> parameter list will not be visible outside of this definition or declaration
+>>   103 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
+>>       |                             ^~~~~~~~~~
+>> ./include/linux/kfence.h:121:50: warning: 'struct kmem_cache' declared inside
+>> parameter list will not be visible outside of this definition or declaration
+>>   121 | static __always_inline void *kfence_alloc(struct kmem_cache *s, size_t
+>> size, gfp_t flags)
+>>       |
+>> ^~~~~~~~~~
+>> ./include/linux/kfence.h: In function 'kfence_alloc':
+>> ./include/linux/kfence.h:132:31: error: passing argument 1 of '__kfence_alloc'
+>> from incompatible p ointer type [-Wincompatible-pointer-types]
+>>   132 |         return __kfence_alloc(s, size, flags);
+>>       |                               ^
+>>       |                               |
+>>       |                               struct kmem_cache *
+>> ./include/linux/kfence.h:103:41: note: expected 'struct kmem_cache *'
+>> but argument is of type 'str
+>> uct kmem_cache *'
+>>   103 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
+>>       |                      ~~~~~~~~~~~~~~~~~~~^
+>> ------------------------------------------------------>8
+>>
+>> So, this patch currently runs into compilation issues.  linyu probably didn't have
+>> KFENCE enabled when compiling locally, which is why this error was missed.
+>> You can enable it as follows:
+>>
+>>   Kernel hacking
+>>     Memory Debugging
+>>       [*] KFENCE: low-overhead sampling-based memory safety
+> 
+> Hi Enze,
+> 
+> Sorry only test on arm64.
+> 
+> Could you help fix the compile issue and provide a correct change ?
+> 
+> Or I need sometime to resolve the issue.
+> 
+
+Thanks for pointing out this issue.  I've taken a look at the
+compilation problem you mentioned.  Based on my current understanding,
+the header dependencies are quite complex, and I couldn't find a
+straightforward fix without potentially affecting other parts of the
+codebase.
+
+Given the risk of introducing broader compilation errors, I think it
+might be safer to hold off on using the KFENCE_POOL_SIZE macro for now,
+unless there's a clear and safe path forward that I might have missed.
+I'm happy to discuss this further if you have any insights or suggestions.
+
+Thanks,
+Enze
+
+
+
