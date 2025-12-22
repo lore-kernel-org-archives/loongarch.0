@@ -1,416 +1,188 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996137260F
-	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 03:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A4523FC49
+	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 09:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766375216; cv=none; b=Ev7vVgvXYXXPISSplyu/QqBiQEBweaiVNEaW+q68jlkWwh1ZubyGrM+Anw2Y5cjHQ6RAFOoKXQQ0sH/ZLZ2aaUajTEhli60d7RkC1o9F5XGkl7CtprK/YYAdSrOJz2H5W4eRo7OlVEEXgZMqcu7MOk0B40HxnLxMnf6CHj6siF4=
+	t=1766395000; cv=none; b=rKPD/zXyS5Kn+VIEJ01Ypsld9qs6/bnoIAKrmyXqbXfUKLh33n4YoxCkLJrj1tCnwbpdEX33AWxXct4cCVGyX82q1qM0Qwbm0DE6bU6Myi9pibP2YFHNBQFw+WRuSmvd2xG+uSmhxrSpOR1xt1iGCorVeYVONUpnr7vaWKpChWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766375216; c=relaxed/simple;
-	bh=gWeBvtCoa5rc0TlgvyJru0JihucBhIdZ3JvPOtEYuQ8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=iAtTQm8tizikuHefzZ48cmW2AboCO9VCU+SKLwPznhipQZdNh34qnu/sDOgT1cEA9Tuojys94tzGLUeSZYAsyX9xF5vgaCx1Cb0sdKXmCpE0xO+x1Rf34wCPl72ITY3Cxge18qvelJXyOADMPi8OAs73f3PnJo1FLEC7wBp4xGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.126])
-	by gateway (Coremail) with SMTP id _____8DxusIgv0hpzcYBAA--.5463S3;
-	Mon, 22 Dec 2025 11:46:40 +0800 (CST)
-Received: from [10.20.42.126] (unknown [10.20.42.126])
-	by front1 (Coremail) with SMTP id qMiowJCx+8Edv0hpMzEDAA--.7265S3;
-	Mon, 22 Dec 2025 11:46:39 +0800 (CST)
-Subject: Re: [PATCH 1/2] LoongArch: KVM: Compile the switch.S file directly
- into the kernel
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, stable@vger.kernel.org, WANG Xuerui
- <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Charlie Jenkins <charlie@rivosinc.com>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20251217032450.954344-1-lixianglai@loongson.cn>
- <20251217032450.954344-2-lixianglai@loongson.cn>
- <CAAhV-H5g7KXK08vqKOR5HTsPKZ7X3CBa9fgfSTavnN7m9D_9AA@mail.gmail.com>
- <831f8f7e-1628-42e2-ca2e-7772ad9d3057@loongson.cn>
- <CAAhV-H5MnYJ4+e3N7S8GyWV+f63gfdNE-Q-rc7D1oOZFCQ4EoQ@mail.gmail.com>
-From: lixianglai <lixianglai@loongson.cn>
-Message-ID: <6661a394-84e8-20f6-8285-5e047c42248c@loongson.cn>
-Date: Mon, 22 Dec 2025 11:43:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1766395000; c=relaxed/simple;
+	bh=n8yoF26tQkodqYh0wMoOhivOAO11RUhpUb9ohKB9TwI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZmtKJ2JEv6XF3ul1qIbKX/ulex5enVSajNqa4G4jCA3VrgLm199jHIJrsc0hU1vzIDPZqWMmUcxnQxCPGV9eNJ4Hx4+nTb137bBeg3OpzdNZNPsBKSAC5ViQB1Ps3sywG1xKvdDMNo6dBcT+/jOqJSv0+kLgL1/kvhUvWKFp+f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w002.hihonor.com (unknown [10.68.28.120])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4dZXWL0TzYzYkyXB;
+	Mon, 22 Dec 2025 17:13:50 +0800 (CST)
+Received: from w020.hihonor.com (10.68.31.183) by w002.hihonor.com
+ (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Mon, 22 Dec
+ 2025 17:16:29 +0800
+Received: from w025.hihonor.com (10.68.28.69) by w020.hihonor.com
+ (10.68.31.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.27; Mon, 22 Dec
+ 2025 17:16:29 +0800
+Received: from w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9]) by
+ w025.hihonor.com ([fe80::5a3b:9b85:bbde:73b9%14]) with mapi id
+ 15.02.2562.027; Mon, 22 Dec 2025 17:16:29 +0800
+From: yuanlinyu <yuanlinyu@honor.com>
+To: Enze Li <lienze@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
+CC: Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
+	<akpm@linux-foundation.org>, WANG Xuerui <kernel@xen0n.name>,
+	"kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "enze.li@gmx.com" <enze.li@gmx.com>
+Subject: RE: [PATCH v2 1/2] LoongArch: kfence: avoid use
+ CONFIG_KFENCE_NUM_OBJECTS
+Thread-Topic: [PATCH v2 1/2] LoongArch: kfence: avoid use
+ CONFIG_KFENCE_NUM_OBJECTS
+Thread-Index: AQHcb+kJ0Mrpi/YLLUuMpTbvJeaADrUntCKAgAHNJgCAA+WFIA==
+Date: Mon, 22 Dec 2025 09:16:29 +0000
+Message-ID: <ab69f5a942824394af6010f75a06c5f7@honor.com>
+References: <20251218063916.1433615-1-yuanlinyu@honor.com>
+ <20251218063916.1433615-2-yuanlinyu@honor.com>
+ <CAAhV-H5n_3Ndk5yRm=S-9WktD9xivVF8-JLaycV8JB-pVuybbA@mail.gmail.com>
+ <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
+In-Reply-To: <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5MnYJ4+e3N7S8GyWV+f63gfdNE-Q-rc7D1oOZFCQ4EoQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJCx+8Edv0hpMzEDAA--.7265S3
-X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3ZF47urWrGrWDWw4DCFyfAFc_yoW8GrW8Jo
-	WayF4Igrs7Gryjqr15J3srta4Yva4Fkw4UC347Awn3WF17t3yUtry7Kw1rtFW3Ga1kGr47
-	Ga43Xr45ZFy3Jr1Dl-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY47kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
 
-Hi Huacai Chen:
-> On Thu, Dec 18, 2025 at 7:08 PM lixianglai <lixianglai@loongson.cn> wrote:
->> Hi  Huacai Chen:
->>> Hi, Xianglai,
->>>
->>> On Wed, Dec 17, 2025 at 11:49 AM Xianglai Li <lixianglai@loongson.cn> wrote:
->>>> If we directly compile the switch.S file into the kernel, the address of
->>>> the kvm_exc_entry function will definitely be within the DMW memory area.
->>>> Therefore, we will no longer need to perform a copy relocation of
->>>> kvm_exc_entry.
->>>>
->>>> Based on the above description, compile switch.S directly into the kernel,
->>>> and then remove the copy relocation execution logic for the kvm_exc_entry
->>>> function.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
->>>> ---
->>>> Cc: Huacai Chen <chenhuacai@kernel.org>
->>>> Cc: WANG Xuerui <kernel@xen0n.name>
->>>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
->>>> Cc: Bibo Mao <maobibo@loongson.cn>
->>>> Cc: Charlie Jenkins <charlie@rivosinc.com>
->>>> Cc: Xianglai Li <lixianglai@loongson.cn>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>>
->>>>    arch/loongarch/Kbuild                       |  2 +-
->>>>    arch/loongarch/include/asm/asm-prototypes.h | 16 ++++++++++
->>>>    arch/loongarch/include/asm/kvm_host.h       |  5 +--
->>>>    arch/loongarch/include/asm/kvm_vcpu.h       | 20 ++++++------
->>>>    arch/loongarch/kvm/Makefile                 |  2 +-
->>>>    arch/loongarch/kvm/main.c                   | 35 ++-------------------
->>>>    arch/loongarch/kvm/switch.S                 | 22 ++++++++++---
->>>>    7 files changed, 49 insertions(+), 53 deletions(-)
->>>>
->>>> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
->>>> index beb8499dd8ed..1c7a0dbe5e72 100644
->>>> --- a/arch/loongarch/Kbuild
->>>> +++ b/arch/loongarch/Kbuild
->>>> @@ -3,7 +3,7 @@ obj-y += mm/
->>>>    obj-y += net/
->>>>    obj-y += vdso/
->>>>
->>>> -obj-$(CONFIG_KVM) += kvm/
->>>> +obj-$(subst m,y,$(CONFIG_KVM)) += kvm/
->>>>
->>>>    # for cleaning
->>>>    subdir- += boot
->>>> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
->>>> index 704066b4f736..eb591276d191 100644
->>>> --- a/arch/loongarch/include/asm/asm-prototypes.h
->>>> +++ b/arch/loongarch/include/asm/asm-prototypes.h
->>>> @@ -20,3 +20,19 @@ asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct task_
->>>>                                                                       struct pt_regs *regs,
->>>>                                                                       int (*fn)(void *),
->>>>                                                                       void *fn_arg);
->>>> +
->>>> +void kvm_exc_entry(void);
->>>> +int  kvm_enter_guest(void *run, void *vcpu);
->>>> +
->>>> +#ifdef CONFIG_CPU_HAS_LSX
->>>> +void kvm_save_lsx(void *fpu);
->>>> +void kvm_restore_lsx(void *fpu);
->>>> +#endif
->>>> +
->>>> +#ifdef CONFIG_CPU_HAS_LASX
->>>> +void kvm_save_lasx(void *fpu);
->>>> +void kvm_restore_lasx(void *fpu);
->>>> +#endif
->>>> +
->>>> +void kvm_save_fpu(void *fpu);
->>>> +void kvm_restore_fpu(void *fpu);
->>>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->>>> index e4fe5b8e8149..0aa7679536cc 100644
->>>> --- a/arch/loongarch/include/asm/kvm_host.h
->>>> +++ b/arch/loongarch/include/asm/kvm_host.h
->>>> @@ -85,7 +85,6 @@ struct kvm_context {
->>>>    struct kvm_world_switch {
->>>>           int (*exc_entry)(void);
->>>>           int (*enter_guest)(struct kvm_run *run, struct kvm_vcpu *vcpu);
->>>> -       unsigned long page_order;
->>>>    };
->>>>
->>>>    #define MAX_PGTABLE_LEVELS     4
->>>> @@ -344,11 +343,9 @@ enum hrtimer_restart kvm_swtimer_wakeup(struct hrtimer *timer);
->>>>    void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm, const struct kvm_memory_slot *memslot);
->>>>    void kvm_init_vmcs(struct kvm *kvm);
->>>>    void kvm_exc_entry(void);
->>>> -int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
->>>> +int  kvm_enter_guest(void *run, void *vcpu);
->>>>
->>>>    extern unsigned long vpid_mask;
->>>> -extern const unsigned long kvm_exception_size;
->>>> -extern const unsigned long kvm_enter_guest_size;
->>>>    extern struct kvm_world_switch *kvm_loongarch_ops;
->>>>
->>>>    #define SW_GCSR                (1 << 0)
->>>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
->>>> index 3784ab4ccdb5..8af98a3d7b0c 100644
->>>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
->>>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
->>>> @@ -53,28 +53,28 @@ void kvm_deliver_exception(struct kvm_vcpu *vcpu);
->>>>
->>>>    void kvm_own_fpu(struct kvm_vcpu *vcpu);
->>>>    void kvm_lose_fpu(struct kvm_vcpu *vcpu);
->>>> -void kvm_save_fpu(struct loongarch_fpu *fpu);
->>>> -void kvm_restore_fpu(struct loongarch_fpu *fpu);
->>>> +void kvm_save_fpu(void *fpu);
->>>> +void kvm_restore_fpu(void *fpu);
->>> Why are these modifications needed?
->> In the assembly file switch.S, we used the macro definition
->> EXPORT_SYMBOL to export symbols without version information,
->> which led to an alarm during the compilation stage. In order to solve
->> this problem we need to put the symbol statement
->> in the file "arch/loongarch/include/asm/asm-prototypes.h", And function
->> declarations in the parameter types defined
->> in the header file "arch/loongarch/include/asm/kvm_host h", it is very
->> big, in order to reduce the
->> "arch/loongarch/include/asm/asm-prototypes.h" the contents of the file,
->> So we change the parameters in the function
->> declaration, then the function declaration directly into the file
->> "arch/loongarch/include/asm/asm-prototypes.h".
-> I know what you want, but you needn't do this. You can simply add a
-> line "struct loongarch_fpu;" in asm-prototypes.h before use.
-Ok, got it, I'll fix it in the next version.
-Thanks,
-Xianglai.
-
-> Huacai
->
->>> Huacai
->>>
->>>>    void kvm_restore_fcsr(struct loongarch_fpu *fpu);
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LSX
->>>>    int kvm_own_lsx(struct kvm_vcpu *vcpu);
->>>> -void kvm_save_lsx(struct loongarch_fpu *fpu);
->>>> -void kvm_restore_lsx(struct loongarch_fpu *fpu);
->>>> +void kvm_save_lsx(void *fpu);
->>>> +void kvm_restore_lsx(void *fpu);
->>>>    #else
->>>>    static inline int kvm_own_lsx(struct kvm_vcpu *vcpu) { return -EINVAL; }
->>>> -static inline void kvm_save_lsx(struct loongarch_fpu *fpu) { }
->>>> -static inline void kvm_restore_lsx(struct loongarch_fpu *fpu) { }
->>>> +static inline void kvm_save_lsx(void *fpu) { }
->>>> +static inline void kvm_restore_lsx(void *fpu) { }
->>>>    #endif
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LASX
->>>>    int kvm_own_lasx(struct kvm_vcpu *vcpu);
->>>> -void kvm_save_lasx(struct loongarch_fpu *fpu);
->>>> -void kvm_restore_lasx(struct loongarch_fpu *fpu);
->>>> +void kvm_save_lasx(void *fpu);
->>>> +void kvm_restore_lasx(void *fpu);
->>>>    #else
->>>>    static inline int kvm_own_lasx(struct kvm_vcpu *vcpu) { return -EINVAL; }
->>>> -static inline void kvm_save_lasx(struct loongarch_fpu *fpu) { }
->>>> -static inline void kvm_restore_lasx(struct loongarch_fpu *fpu) { }
->>>> +static inline void kvm_save_lasx(void *fpu) { }
->>>> +static inline void kvm_restore_lasx(void *fpu) { }
->>>>    #endif
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LBT
->>>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
->>>> index cb41d9265662..fe665054f824 100644
->>>> --- a/arch/loongarch/kvm/Makefile
->>>> +++ b/arch/loongarch/kvm/Makefile
->>>> @@ -11,7 +11,7 @@ kvm-y += exit.o
->>>>    kvm-y += interrupt.o
->>>>    kvm-y += main.o
->>>>    kvm-y += mmu.o
->>>> -kvm-y += switch.o
->>>> +obj-y += switch.o
->>>>    kvm-y += timer.o
->>>>    kvm-y += tlb.o
->>>>    kvm-y += vcpu.o
->>>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->>>> index 80ea63d465b8..67d234540ed4 100644
->>>> --- a/arch/loongarch/kvm/main.c
->>>> +++ b/arch/loongarch/kvm/main.c
->>>> @@ -340,8 +340,7 @@ void kvm_arch_disable_virtualization_cpu(void)
->>>>
->>>>    static int kvm_loongarch_env_init(void)
->>>>    {
->>>> -       int cpu, order, ret;
->>>> -       void *addr;
->>>> +       int cpu, ret;
->>>>           struct kvm_context *context;
->>>>
->>>>           vmcs = alloc_percpu(struct kvm_context);
->>>> @@ -357,30 +356,8 @@ static int kvm_loongarch_env_init(void)
->>>>                   return -ENOMEM;
->>>>           }
->>>>
->>>> -       /*
->>>> -        * PGD register is shared between root kernel and kvm hypervisor.
->>>> -        * So world switch entry should be in DMW area rather than TLB area
->>>> -        * to avoid page fault reenter.
->>>> -        *
->>>> -        * In future if hardware pagetable walking is supported, we won't
->>>> -        * need to copy world switch code to DMW area.
->>>> -        */
->>>> -       order = get_order(kvm_exception_size + kvm_enter_guest_size);
->>>> -       addr = (void *)__get_free_pages(GFP_KERNEL, order);
->>>> -       if (!addr) {
->>>> -               free_percpu(vmcs);
->>>> -               vmcs = NULL;
->>>> -               kfree(kvm_loongarch_ops);
->>>> -               kvm_loongarch_ops = NULL;
->>>> -               return -ENOMEM;
->>>> -       }
->>>> -
->>>> -       memcpy(addr, kvm_exc_entry, kvm_exception_size);
->>>> -       memcpy(addr + kvm_exception_size, kvm_enter_guest, kvm_enter_guest_size);
->>>> -       flush_icache_range((unsigned long)addr, (unsigned long)addr + kvm_exception_size + kvm_enter_guest_size);
->>>> -       kvm_loongarch_ops->exc_entry = addr;
->>>> -       kvm_loongarch_ops->enter_guest = addr + kvm_exception_size;
->>>> -       kvm_loongarch_ops->page_order = order;
->>>> +       kvm_loongarch_ops->exc_entry = (void *)kvm_exc_entry;
->>>> +       kvm_loongarch_ops->enter_guest = (void *)kvm_enter_guest;
->>>>
->>>>           vpid_mask = read_csr_gstat();
->>>>           vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
->>>> @@ -414,16 +391,10 @@ static int kvm_loongarch_env_init(void)
->>>>
->>>>    static void kvm_loongarch_env_exit(void)
->>>>    {
->>>> -       unsigned long addr;
->>>> -
->>>>           if (vmcs)
->>>>                   free_percpu(vmcs);
->>>>
->>>>           if (kvm_loongarch_ops) {
->>>> -               if (kvm_loongarch_ops->exc_entry) {
->>>> -                       addr = (unsigned long)kvm_loongarch_ops->exc_entry;
->>>> -                       free_pages(addr, kvm_loongarch_ops->page_order);
->>>> -               }
->>>>                   kfree(kvm_loongarch_ops);
->>>>           }
->>>>
->>>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->>>> index f1768b7a6194..93845ce53651 100644
->>>> --- a/arch/loongarch/kvm/switch.S
->>>> +++ b/arch/loongarch/kvm/switch.S
->>>> @@ -5,6 +5,7 @@
->>>>
->>>>    #include <linux/linkage.h>
->>>>    #include <asm/asm.h>
->>>> +#include <asm/page.h>
->>>>    #include <asm/asmmacro.h>
->>>>    #include <asm/loongarch.h>
->>>>    #include <asm/regdef.h>
->>>> @@ -100,10 +101,18 @@
->>>>            *  -        is still in guest mode, such as pgd table/vmid registers etc,
->>>>            *  -        will fix with hw page walk enabled in future
->>>>            * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KVM_TEMP_KS
->>>> +        *
->>>> +        * PGD register is shared between root kernel and kvm hypervisor.
->>>> +        * So world switch entry should be in DMW area rather than TLB area
->>>> +        * to avoid page fault reenter.
->>>> +        *
->>>> +        * In future if hardware pagetable walking is supported, we won't
->>>> +        * need to copy world switch code to DMW area.
->>>>            */
->>>>           .text
->>>>           .cfi_sections   .debug_frame
->>>>    SYM_CODE_START(kvm_exc_entry)
->>>> +       .p2align PAGE_SHIFT
->>>>           UNWIND_HINT_UNDEFINED
->>>>           csrwr   a2,   KVM_TEMP_KS
->>>>           csrrd   a2,   KVM_VCPU_KS
->>>> @@ -190,8 +199,8 @@ ret_to_host:
->>>>           kvm_restore_host_gpr    a2
->>>>           jr      ra
->>>>
->>>> -SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
->>>>    SYM_CODE_END(kvm_exc_entry)
->>>> +EXPORT_SYMBOL(kvm_exc_entry)
->>>>
->>>>    /*
->>>>     * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
->>>> @@ -215,8 +224,8 @@ SYM_FUNC_START(kvm_enter_guest)
->>>>           /* Save kvm_vcpu to kscratch */
->>>>           csrwr   a1, KVM_VCPU_KS
->>>>           kvm_switch_to_guest
->>>> -SYM_INNER_LABEL(kvm_enter_guest_end, SYM_L_LOCAL)
->>>>    SYM_FUNC_END(kvm_enter_guest)
->>>> +EXPORT_SYMBOL(kvm_enter_guest)
->>>>
->>>>    SYM_FUNC_START(kvm_save_fpu)
->>>>           fpu_save_csr    a0 t1
->>>> @@ -224,6 +233,7 @@ SYM_FUNC_START(kvm_save_fpu)
->>>>           fpu_save_cc     a0 t1 t2
->>>>           jr              ra
->>>>    SYM_FUNC_END(kvm_save_fpu)
->>>> +EXPORT_SYMBOL(kvm_save_fpu)
->>>>
->>>>    SYM_FUNC_START(kvm_restore_fpu)
->>>>           fpu_restore_double a0 t1
->>>> @@ -231,6 +241,7 @@ SYM_FUNC_START(kvm_restore_fpu)
->>>>           fpu_restore_cc     a0 t1 t2
->>>>           jr                 ra
->>>>    SYM_FUNC_END(kvm_restore_fpu)
->>>> +EXPORT_SYMBOL(kvm_restore_fpu)
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LSX
->>>>    SYM_FUNC_START(kvm_save_lsx)
->>>> @@ -239,6 +250,7 @@ SYM_FUNC_START(kvm_save_lsx)
->>>>           lsx_save_data   a0 t1
->>>>           jr              ra
->>>>    SYM_FUNC_END(kvm_save_lsx)
->>>> +EXPORT_SYMBOL(kvm_save_lsx)
->>>>
->>>>    SYM_FUNC_START(kvm_restore_lsx)
->>>>           lsx_restore_data a0 t1
->>>> @@ -246,6 +258,7 @@ SYM_FUNC_START(kvm_restore_lsx)
->>>>           fpu_restore_csr  a0 t1 t2
->>>>           jr               ra
->>>>    SYM_FUNC_END(kvm_restore_lsx)
->>>> +EXPORT_SYMBOL(kvm_restore_lsx)
->>>>    #endif
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LASX
->>>> @@ -255,6 +268,7 @@ SYM_FUNC_START(kvm_save_lasx)
->>>>           lasx_save_data  a0 t1
->>>>           jr              ra
->>>>    SYM_FUNC_END(kvm_save_lasx)
->>>> +EXPORT_SYMBOL(kvm_save_lasx)
->>>>
->>>>    SYM_FUNC_START(kvm_restore_lasx)
->>>>           lasx_restore_data a0 t1
->>>> @@ -262,10 +276,8 @@ SYM_FUNC_START(kvm_restore_lasx)
->>>>           fpu_restore_csr   a0 t1 t2
->>>>           jr                ra
->>>>    SYM_FUNC_END(kvm_restore_lasx)
->>>> +EXPORT_SYMBOL(kvm_restore_lasx)
->>>>    #endif
->>>> -       .section ".rodata"
->>>> -SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
->>>> -SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
->>>>
->>>>    #ifdef CONFIG_CPU_HAS_LBT
->>>>    STACK_FRAME_NON_STANDARD kvm_restore_fpu
->>>> --
->>>> 2.39.1
->>>>
->>>>
-
+PiBGcm9tOiBFbnplIExpIDxsaWVuemVAa3lsaW5vcy5jbj4NCj4gU2VudDogU2F0dXJkYXksIERl
+Y2VtYmVyIDIwLCAyMDI1IDE6NDQgUE0NCj4gVG86IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGtl
+cm5lbC5vcmc+OyB5dWFubGlueXUgPHl1YW5saW55dUBob25vci5jb20+DQo+IENjOiBBbGV4YW5k
+ZXIgUG90YXBlbmtvIDxnbGlkZXJAZ29vZ2xlLmNvbT47IE1hcmNvIEVsdmVyDQo+IDxlbHZlckBn
+b29nbGUuY29tPjsgRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPjsgQW5kcmV3IE1v
+cnRvbg0KPiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz47IFdBTkcgWHVlcnVpIDxrZXJuZWxA
+eGVuMG4ubmFtZT47DQo+IGthc2FuLWRldkBnb29nbGVncm91cHMuY29tOyBsaW51eC1tbUBrdmFj
+ay5vcmc7IGxvb25nYXJjaEBsaXN0cy5saW51eC5kZXY7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmc7IGVuemUubGlAZ214LmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvMl0g
+TG9vbmdBcmNoOiBrZmVuY2U6IGF2b2lkIHVzZQ0KPiBDT05GSUdfS0ZFTkNFX05VTV9PQkpFQ1RT
+DQo+IA0KPiBPbiAyMDI1LzEyLzE5IDEwOjEzLCBIdWFjYWkgQ2hlbiB3cm90ZToNCj4gPiBIaSwg
+RW56ZSwNCj4gPg0KPiA+IE9uIFRodSwgRGVjIDE4LCAyMDI1IGF0IDI6MznigK9QTSB5dWFuIGxp
+bnl1IDx5dWFubGlueXVAaG9ub3IuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4gdXNlIGNvbW1vbiBr
+ZmVuY2UgbWFjcm8gS0ZFTkNFX1BPT0xfU0laRSBmb3IgS0ZFTkNFX0FSRUFfU0laRQ0KPiA+PiBk
+ZWZpbml0aW9uDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IHl1YW4gbGlueXUgPHl1YW5saW55
+dUBob25vci5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20v
+cGd0YWJsZS5oIHwgMyArKy0NCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyks
+IDEgZGVsZXRpb24oLSkNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2lu
+Y2x1ZGUvYXNtL3BndGFibGUuaA0KPiA+PiBiL2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3Bn
+dGFibGUuaA0KPiA+PiBpbmRleCBmNDFhNjQ4YTNkOWUuLmU5OTY2YzlmODQ0ZiAxMDA2NDQNCj4g
+Pj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vcGd0YWJsZS5oDQo+ID4+ICsrKyBi
+L2FyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3BndGFibGUuaA0KPiA+PiBAQCAtMTAsNiArMTAs
+NyBAQA0KPiA+PiAgI2RlZmluZSBfQVNNX1BHVEFCTEVfSA0KPiA+Pg0KPiA+PiAgI2luY2x1ZGUg
+PGxpbnV4L2NvbXBpbGVyLmg+DQo+ID4+ICsjaW5jbHVkZSA8bGludXgva2ZlbmNlLmg+DQo+ID4+
+ICAjaW5jbHVkZSA8YXNtL2FkZHJzcGFjZS5oPg0KPiA+PiAgI2luY2x1ZGUgPGFzbS9hc20uaD4N
+Cj4gPj4gICNpbmNsdWRlIDxhc20vcGFnZS5oPg0KPiA+PiBAQCAtOTYsNyArOTcsNyBAQCBleHRl
+cm4gdW5zaWduZWQgbG9uZyBlbXB0eV96ZXJvX3BhZ2VbUEFHRV9TSVpFIC8NCj4gc2l6ZW9mKHVu
+c2lnbmVkIGxvbmcpXTsNCj4gPj4gICNkZWZpbmUgTU9EVUxFU19FTkQgICAgKE1PRFVMRVNfVkFE
+RFIgKyBTWl8yNTZNKQ0KPiA+Pg0KPiA+PiAgI2lmZGVmIENPTkZJR19LRkVOQ0UNCj4gPj4gLSNk
+ZWZpbmUgS0ZFTkNFX0FSRUFfU0laRSAgICAgICAoKChDT05GSUdfS0ZFTkNFX05VTV9PQkpFQ1RT
+ICsgMSkNCj4gKiAyICsgMikgKiBQQUdFX1NJWkUpDQo+ID4+ICsjZGVmaW5lIEtGRU5DRV9BUkVB
+X1NJWkUgICAgICAgKEtGRU5DRV9QT09MX1NJWkUgKyAoMiAqDQo+IFBBR0VfU0laRSkpDQo+ID4g
+Q2FuIHlvdSByZW1lbWJlciB3aHkgeW91IGRpZG4ndCB1c2UgS0ZFTkNFX1BPT0xfU0laRSBhdCB0
+aGUgZmlyc3QgcGxhY2U/DQo+IA0KPiBJIGRvbid0IHJlY2FsbCB0aGUgZXhhY3QgcmVhc29uIG9m
+ZiB0aGUgdG9wIG9mIG15IGhlYWQsIGJ1dCBJIGJlbGlldmUgaXQgd2FzIGR1ZSB0bw0KPiBjb21w
+bGV4IGRlcGVuZGVuY3kgaXNzdWVzIHdpdGggdGhlIGhlYWRlciBmaWxlcyB3aGVyZSBLRkVOQ0Vf
+UE9PTF9TSVpFIGlzDQo+IGRlZmluZWQuICBUbyBhdm9pZCB0aG9zZSBjb21wbGljYXRpb25zLCB3
+ZSBsaWtlbHkgb3B0ZWQgdG8gdXNlDQo+IEtGRU5DRV9OVU1fT0JKRUNUUyBkaXJlY3RseS4NCj4g
+DQo+IEkgY2hlY2tlZCBvdXQgdGhlIGNvZGUgYXQgY29tbWl0DQo+ICg2YWQzZGY1NmJiMTk5MTM0
+ODAwOTMzZGYyYWZjZDdkZjNiMDNlZjMzICJMb29uZ0FyY2g6IEFkZCBLRkVOQ0UNCj4gKEtlcm5l
+bA0KPiBFbGVjdHJpYy1GZW5jZSkgc3VwcG9ydCIpIGFuZCBlbmNvdW50ZXJlZCB0aGUgZm9sbG93
+aW5nIGVycm9ycyB3aGVuIGNvbXBpbGluZw0KPiB3aXRoIHRoaXMgcGF0Y2ggYXBwbGllZC4NCj4g
+DQo+IDg8LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tDQo+ICAgQ0MgICAgICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvYXNtLW9mZnNldHMucw0KPiBJ
+biBmaWxlIGluY2x1ZGVkIGZyb20gLi9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9wZ3RhYmxl
+Lmg6MTMsDQo+ICAgICAgICAgICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvcGd0YWJsZS5o
+OjYsDQo+ICAgICAgICAgICAgICAgICAgZnJvbSAuL2luY2x1ZGUvbGludXgvbW0uaDoyOSwNCj4g
+ICAgICAgICAgICAgICAgICBmcm9tIGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9hc20tb2Zmc2V0cy5j
+Ojk6DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDo5MzozNTogd2FybmluZzogJ3N0cnVjdCBr
+bWVtX2NhY2hlJyBkZWNsYXJlZCBpbnNpZGUNCj4gcGFyYW1ldGVyIGxpc3Qgd2lsbCBuIG90IGJl
+IHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24NCj4gICAg
+OTMgfCB2b2lkIGtmZW5jZV9zaHV0ZG93bl9jYWNoZShzdHJ1Y3Qga21lbV9jYWNoZSAqcyk7DQo+
+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn4NCj4g
+Li9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOjk5OjI5OiB3YXJuaW5nOiAnc3RydWN0IGttZW1fY2Fj
+aGUnIGRlY2xhcmVkIGluc2lkZQ0KPiBwYXJhbWV0ZXIgbGlzdCB3aWxsIG4gb3QgYmUgdmlzaWJs
+ZSBvdXRzaWRlIG9mIHRoaXMgZGVmaW5pdGlvbiBvciBkZWNsYXJhdGlvbg0KPiAgICA5OSB8IHZv
+aWQgKl9fa2ZlbmNlX2FsbG9jKHN0cnVjdCBrbWVtX2NhY2hlICpzLCBzaXplX3Qgc2l6ZSwgZ2Zw
+X3QgZmxhZ3MpOw0KPiAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn5+
+fn5+DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDoxMTc6NTA6IHdhcm5pbmc6ICdzdHJ1Y3Qg
+a21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRlDQo+IHBhcmFtZXRlciBsaXN0IHdpbGwgbm90IGJl
+IHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24NCj4gICAx
+MTcgfCBzdGF0aWMgX19hbHdheXNfaW5saW5lIHZvaWQgKmtmZW5jZV9hbGxvYyhzdHJ1Y3Qga21l
+bV9jYWNoZSAqcywgc2l6ZV90DQo+IHNpemUsIGdmcF90IGZsYWdzKQ0KPiAgICAgICB8DQo+IF5+
+fn5+fn5+fn4NCj4gLi9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOiBJbiBmdW5jdGlvbiAna2ZlbmNl
+X2FsbG9jJzoNCj4gLi9pbmNsdWRlL2xpbnV4L2tmZW5jZS5oOjEyODozMTogZXJyb3I6IHBhc3Np
+bmcgYXJndW1lbnQgMSBvZiAnX19rZmVuY2VfYWxsb2MnDQo+IGZyb20gaW5jb21wYXRpYmxlIHAg
+b2ludGVyIHR5cGUgWy1XaW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNdDQo+ICAgMTI4IHwgICAg
+ICAgICByZXR1cm4gX19rZmVuY2VfYWxsb2Mocywgc2l6ZSwgZmxhZ3MpOw0KPiAgICAgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gICAgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8DQo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+c3RydWN0IGttZW1fY2FjaGUgKg0KPiAuL2luY2x1ZGUvbGludXgva2ZlbmNlLmg6OTk6NDE6IG5v
+dGU6IGV4cGVjdGVkICdzdHJ1Y3Qga21lbV9jYWNoZSAqJyBidXQNCj4gYXJndW1lbnQgaXMgb2Yg
+dHlwZSAnc3RydSBjdCBrbWVtX2NhY2hlIConDQo+ICAgIDk5IHwgdm9pZCAqX19rZmVuY2VfYWxs
+b2Moc3RydWN0IGttZW1fY2FjaGUgKnMsIHNpemVfdCBzaXplLCBnZnBfdCBmbGFncyk7DQo+ICAg
+ICAgIHwgICAgICAgICAgICAgICAgICAgICAgfn5+fn5+fn5+fn5+fn5+fn5+fl4NCj4gLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPjgNCj4gDQo+
+IFNpbWlsYXJseSwgYWZ0ZXIgYXBwbHlpbmcgdGhpcyBwYXRjaCB0byB0aGUgbGF0ZXN0IGNvZGUN
+Cj4gKGRkOWIwMDRiN2ZmMzI4OWZiN2JhZTM1MTMwYzBhNWMwNTM3MjY2YWYgIk1lcmdlIHRhZyAn
+dHJhY2UtdjYuMTktcmMxJyIpDQo+IGZyb20gdGhlIG1hc3RlciBicmFuY2ggb2YgdGhlIExpbnV4
+IHJlcG9zaXRvcnkgYW5kIGVuYWJsaW5nIEtGRU5DRSwgSQ0KPiBlbmNvdW50ZXJlZCB0aGUgZm9s
+bG93aW5nIGNvbXBpbGF0aW9uIGVycm9ycy4NCj4gDQo+IDg8LS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAgQ0MgICAgICBhcmNoL2xvb25n
+YXJjaC9rZXJuZWwvYXNtLW9mZnNldHMucw0KPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gLi9hcmNo
+L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9wZ3RhYmxlLmg6MTMsDQo+ICAgICAgICAgICAgICAgICAg
+ZnJvbSAuL2luY2x1ZGUvbGludXgvcGd0YWJsZS5oOjYsDQo+ICAgICAgICAgICAgICAgICAgZnJv
+bSAuL2luY2x1ZGUvbGludXgvbW0uaDozMSwNCj4gICAgICAgICAgICAgICAgICBmcm9tIGFyY2gv
+bG9vbmdhcmNoL2tlcm5lbC9hc20tb2Zmc2V0cy5jOjExOg0KPiAuL2luY2x1ZGUvbGludXgva2Zl
+bmNlLmg6OTc6MzU6IHdhcm5pbmc6ICdzdHJ1Y3Qga21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRl
+DQo+IHBhcmFtZXRlciBsaXN0IHdpbGwgbiBvdCBiZSB2aXNpYmxlIG91dHNpZGUgb2YgdGhpcyBk
+ZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uDQo+ICAgIDk3IHwgdm9pZCBrZmVuY2Vfc2h1dGRvd25f
+Y2FjaGUoc3RydWN0IGttZW1fY2FjaGUgKnMpOw0KPiAgICAgICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBefn5+fn5+fn5+DQo+IC4vaW5jbHVkZS9saW51eC9rZmVuY2UuaDox
+MDM6Mjk6IHdhcm5pbmc6ICdzdHJ1Y3Qga21lbV9jYWNoZScgZGVjbGFyZWQgaW5zaWRlDQo+IHBh
+cmFtZXRlciBsaXN0IHdpbGwgbm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRp
+b24gb3IgZGVjbGFyYXRpb24NCj4gICAxMDMgfCB2b2lkICpfX2tmZW5jZV9hbGxvYyhzdHJ1Y3Qg
+a21lbV9jYWNoZSAqcywgc2l6ZV90IHNpemUsIGdmcF90IGZsYWdzKTsNCj4gICAgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fg0KPiAuL2luY2x1ZGUvbGludXgva2Zl
+bmNlLmg6MTIxOjUwOiB3YXJuaW5nOiAnc3RydWN0IGttZW1fY2FjaGUnIGRlY2xhcmVkIGluc2lk
+ZQ0KPiBwYXJhbWV0ZXIgbGlzdCB3aWxsIG5vdCBiZSB2aXNpYmxlIG91dHNpZGUgb2YgdGhpcyBk
+ZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uDQo+ICAgMTIxIHwgc3RhdGljIF9fYWx3YXlzX2lubGlu
+ZSB2b2lkICprZmVuY2VfYWxsb2Moc3RydWN0IGttZW1fY2FjaGUgKnMsIHNpemVfdA0KPiBzaXpl
+LCBnZnBfdCBmbGFncykNCj4gICAgICAgfA0KPiBefn5+fn5+fn5+DQo+IC4vaW5jbHVkZS9saW51
+eC9rZmVuY2UuaDogSW4gZnVuY3Rpb24gJ2tmZW5jZV9hbGxvYyc6DQo+IC4vaW5jbHVkZS9saW51
+eC9rZmVuY2UuaDoxMzI6MzE6IGVycm9yOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2YgJ19fa2ZlbmNl
+X2FsbG9jJw0KPiBmcm9tIGluY29tcGF0aWJsZSBwIG9pbnRlciB0eXBlIFstV2luY29tcGF0aWJs
+ZS1wb2ludGVyLXR5cGVzXQ0KPiAgIDEzMiB8ICAgICAgICAgcmV0dXJuIF9fa2ZlbmNlX2FsbG9j
+KHMsIHNpemUsIGZsYWdzKTsNCj4gICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBeDQo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfA0KPiAgICAgICB8
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBrbWVtX2NhY2hlICoNCj4gLi9p
+bmNsdWRlL2xpbnV4L2tmZW5jZS5oOjEwMzo0MTogbm90ZTogZXhwZWN0ZWQgJ3N0cnVjdCBrbWVt
+X2NhY2hlIConDQo+IGJ1dCBhcmd1bWVudCBpcyBvZiB0eXBlICdzdHINCj4gdWN0IGttZW1fY2Fj
+aGUgKicNCj4gICAxMDMgfCB2b2lkICpfX2tmZW5jZV9hbGxvYyhzdHJ1Y3Qga21lbV9jYWNoZSAq
+cywgc2l6ZV90IHNpemUsIGdmcF90IGZsYWdzKTsNCj4gICAgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICB+fn5+fn5+fn5+fn5+fn5+fn5+Xg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OA0KPiANCj4gU28sIHRoaXMgcGF0Y2ggY3VycmVu
+dGx5IHJ1bnMgaW50byBjb21waWxhdGlvbiBpc3N1ZXMuICBsaW55dSBwcm9iYWJseSBkaWRuJ3Qg
+aGF2ZQ0KPiBLRkVOQ0UgZW5hYmxlZCB3aGVuIGNvbXBpbGluZyBsb2NhbGx5LCB3aGljaCBpcyB3
+aHkgdGhpcyBlcnJvciB3YXMgbWlzc2VkLg0KPiBZb3UgY2FuIGVuYWJsZSBpdCBhcyBmb2xsb3dz
+Og0KPiANCj4gICBLZXJuZWwgaGFja2luZw0KPiAgICAgTWVtb3J5IERlYnVnZ2luZw0KPiAgICAg
+ICBbKl0gS0ZFTkNFOiBsb3ctb3ZlcmhlYWQgc2FtcGxpbmctYmFzZWQgbWVtb3J5IHNhZmV0eQ0K
+DQpIaSBFbnplLA0KDQpTb3JyeSBvbmx5IHRlc3Qgb24gYXJtNjQuDQoNCkNvdWxkIHlvdSBoZWxw
+IGZpeCB0aGUgY29tcGlsZSBpc3N1ZSBhbmQgcHJvdmlkZSBhIGNvcnJlY3QgY2hhbmdlID8NCg0K
+T3IgSSBuZWVkIHNvbWV0aW1lIHRvIHJlc29sdmUgdGhlIGlzc3VlLg0KDQo+IA0KPiBUaGFua3Ms
+DQo+IEVuemUNCj4gDQo+IDwuLi4+DQo=
