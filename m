@@ -1,235 +1,325 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B8620DD48
-	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 09:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3AAA30B527
+	for <loongarch@lists.linux.dev>; Mon, 22 Dec 2025 11:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766396252; cv=none; b=MT6FpB8DpZmUGrSUfnfMm+4QoqsBSnM7kOaJJ7iJzuqcg4xlpr0y1+yst5Z7DkYVH2fyjl4iFBrxm4jGkUBIVDx0xJ0fnZJdmNzp6t3BUUAKE1HEv7EUky/WUUQhNCckRcIq0f4i3jzRmP+quXFF5iUdrkF1KJQC+1vcImAgrmY=
+	t=1766404745; cv=none; b=GTvjICzdtojZl/ZYRgjkBy0ZXfoVUrGc7MUG9KzXVixWq5l45Fy4MmAyZ5XZN1M4nWnfEudrQbOETXpVFViENS21AogEhMZM17dm6sQItnlsV4MBasOXX5TwEwR676cVjoM9mW8chlvcYMnAA3vSe50oVz3x+UcpXmffgvzaiSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766396252; c=relaxed/simple;
-	bh=pq0QymWSi/nn1vuRTyHrD7rcnF42YaRBMHZqtdUaKLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iw1jHp3ro/JVLI3Uamo7J17OC70Nvo2H6crougVhWAp1sL+iLOWz/133fhFF9weXZGwa2BOGEXRXcK9aV6MkcWJJwVd1mdsfgxufoGn4NCbHhXg2v3PyvSjT4jNiwFjWdJG+X1oK30Y40ICbJzcyE6bAQ7XXsUCcVvmX0SzftCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d11e6e98df1911f0a38c85956e01ac42-20251222
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:de4d8268-dc8d-48f1-805e-f682d3a06cd1,IP:10,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-INFO: VERSION:1.3.6,REQID:de4d8268-dc8d-48f1-805e-f682d3a06cd1,IP:10,URL
-	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:5
-X-CID-META: VersionHash:a9d874c,CLOUDID:ccaa6ce40de7d863f75bdf900ecd0ee9,BulkI
-	D:251219101318D8IDDZQS,BulkQuantity:6,Recheck:0,SF:17|19|38|64|66|78|80|81
-	|82|83|102|127|841|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,
-	RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DK
-	P:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: d11e6e98df1911f0a38c85956e01ac42-20251222
-X-User: lienze@kylinos.cn
-Received: from [192.168.31.182] [(183.242.174.20)] by mailgw.kylinos.cn
-	(envelope-from <lienze@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1610835472; Mon, 22 Dec 2025 17:37:22 +0800
-Message-ID: <44d4cf82-982c-455b-85c1-138e8c37cc8f@kylinos.cn>
-Date: Mon, 22 Dec 2025 17:37:19 +0800
+	s=arc-20240116; t=1766404745; c=relaxed/simple;
+	bh=fdJPxij8jDIaVPfVDkSyubT82n1sshBMZXGM9mD5mlk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lZAyTNog3WfQQcyFso6YQcvbTcFJPN1xuGbyKYF5+2Bls1NeCufLF4URm3nG7vBK7sJjzKo1zjoJpdkHTT/vkQjG3qokHGikl/6Mh764KqicXiV0rBtUexsPmNQPsfH2Zj3DjdTS4BdRhrb9OXFARnBgAl6FczuuP8q6R5rwh+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8AxEvF+Mklpt_EBAA--.6826S3;
+	Mon, 22 Dec 2025 19:58:54 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJCxGOB6MklpP2IDAA--.10467S3;
+	Mon, 22 Dec 2025 19:58:52 +0800 (CST)
+From: Xianglai Li <lixianglai@loongson.cn>
+To: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	lixianglai@loongson.cn
+Cc: stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH V2 1/2] LoongArch: KVM: Compile the switch.S file directly into the kernel
+Date: Mon, 22 Dec 2025 19:34:08 +0800
+Message-Id: <20251222113409.2343711-2-lixianglai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20251222113409.2343711-1-lixianglai@loongson.cn>
+References: <20251222113409.2343711-1-lixianglai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] LoongArch: kfence: avoid use
- CONFIG_KFENCE_NUM_OBJECTS
-To: yuanlinyu <yuanlinyu@honor.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Dmitry Vyukov <dvyukov@google.com>, Andrew Morton
- <akpm@linux-foundation.org>, WANG Xuerui <kernel@xen0n.name>,
- "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "enze.li@gmx.com" <enze.li@gmx.com>
-References: <20251218063916.1433615-1-yuanlinyu@honor.com>
- <20251218063916.1433615-2-yuanlinyu@honor.com>
- <CAAhV-H5n_3Ndk5yRm=S-9WktD9xivVF8-JLaycV8JB-pVuybbA@mail.gmail.com>
- <b2e84054-bf3b-4a1a-b946-bd024f341512@kylinos.cn>
- <ab69f5a942824394af6010f75a06c5f7@honor.com>
-Content-Language: en-US
-From: Enze Li <lienze@kylinos.cn>
-In-Reply-To: <ab69f5a942824394af6010f75a06c5f7@honor.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxGOB6MklpP2IDAA--.10467S3
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On 12/22/25 5:16 PM, yuanlinyu wrote:
->> From: Enze Li <lienze@kylinos.cn>
->> Sent: Saturday, December 20, 2025 1:44 PM
->> To: Huacai Chen <chenhuacai@kernel.org>; yuanlinyu <yuanlinyu@honor.com>
->> Cc: Alexander Potapenko <glider@google.com>; Marco Elver
->> <elver@google.com>; Dmitry Vyukov <dvyukov@google.com>; Andrew Morton
->> <akpm@linux-foundation.org>; WANG Xuerui <kernel@xen0n.name>;
->> kasan-dev@googlegroups.com; linux-mm@kvack.org; loongarch@lists.linux.dev;
->> linux-kernel@vger.kernel.org; enze.li@gmx.com
->> Subject: Re: [PATCH v2 1/2] LoongArch: kfence: avoid use
->> CONFIG_KFENCE_NUM_OBJECTS
->>
->> On 2025/12/19 10:13, Huacai Chen wrote:
->>> Hi, Enze,
->>>
->>> On Thu, Dec 18, 2025 at 2:39 PM yuan linyu <yuanlinyu@honor.com> wrote:
->>>>
->>>> use common kfence macro KFENCE_POOL_SIZE for KFENCE_AREA_SIZE
->>>> definition
->>>>
->>>> Signed-off-by: yuan linyu <yuanlinyu@honor.com>
->>>> ---
->>>>  arch/loongarch/include/asm/pgtable.h | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/loongarch/include/asm/pgtable.h
->>>> b/arch/loongarch/include/asm/pgtable.h
->>>> index f41a648a3d9e..e9966c9f844f 100644
->>>> --- a/arch/loongarch/include/asm/pgtable.h
->>>> +++ b/arch/loongarch/include/asm/pgtable.h
->>>> @@ -10,6 +10,7 @@
->>>>  #define _ASM_PGTABLE_H
->>>>
->>>>  #include <linux/compiler.h>
->>>> +#include <linux/kfence.h>
->>>>  #include <asm/addrspace.h>
->>>>  #include <asm/asm.h>
->>>>  #include <asm/page.h>
->>>> @@ -96,7 +97,7 @@ extern unsigned long empty_zero_page[PAGE_SIZE /
->> sizeof(unsigned long)];
->>>>  #define MODULES_END    (MODULES_VADDR + SZ_256M)
->>>>
->>>>  #ifdef CONFIG_KFENCE
->>>> -#define KFENCE_AREA_SIZE       (((CONFIG_KFENCE_NUM_OBJECTS + 1)
->> * 2 + 2) * PAGE_SIZE)
->>>> +#define KFENCE_AREA_SIZE       (KFENCE_POOL_SIZE + (2 *
->> PAGE_SIZE))
->>> Can you remember why you didn't use KFENCE_POOL_SIZE at the first place?
->>
->> I don't recall the exact reason off the top of my head, but I believe it was due to
->> complex dependency issues with the header files where KFENCE_POOL_SIZE is
->> defined.  To avoid those complications, we likely opted to use
->> KFENCE_NUM_OBJECTS directly.
->>
->> I checked out the code at commit
->> (6ad3df56bb199134800933df2afcd7df3b03ef33 "LoongArch: Add KFENCE
->> (Kernel
->> Electric-Fence) support") and encountered the following errors when compiling
->> with this patch applied.
->>
->> 8<------------------------------------------------------
->>   CC      arch/loongarch/kernel/asm-offsets.s
->> In file included from ./arch/loongarch/include/asm/pgtable.h:13,
->>                  from ./include/linux/pgtable.h:6,
->>                  from ./include/linux/mm.h:29,
->>                  from arch/loongarch/kernel/asm-offsets.c:9:
->> ./include/linux/kfence.h:93:35: warning: 'struct kmem_cache' declared inside
->> parameter list will n ot be visible outside of this definition or declaration
->>    93 | void kfence_shutdown_cache(struct kmem_cache *s);
->>       |                                   ^~~~~~~~~~
->> ./include/linux/kfence.h:99:29: warning: 'struct kmem_cache' declared inside
->> parameter list will n ot be visible outside of this definition or declaration
->>    99 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
->>       |                             ^~~~~~~~~~
->> ./include/linux/kfence.h:117:50: warning: 'struct kmem_cache' declared inside
->> parameter list will not be visible outside of this definition or declaration
->>   117 | static __always_inline void *kfence_alloc(struct kmem_cache *s, size_t
->> size, gfp_t flags)
->>       |
->> ^~~~~~~~~~
->> ./include/linux/kfence.h: In function 'kfence_alloc':
->> ./include/linux/kfence.h:128:31: error: passing argument 1 of '__kfence_alloc'
->> from incompatible p ointer type [-Wincompatible-pointer-types]
->>   128 |         return __kfence_alloc(s, size, flags);
->>       |                               ^
->>       |                               |
->>       |                               struct kmem_cache *
->> ./include/linux/kfence.h:99:41: note: expected 'struct kmem_cache *' but
->> argument is of type 'stru ct kmem_cache *'
->>    99 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
->>       |                      ~~~~~~~~~~~~~~~~~~~^
->> ------------------------------------------------------>8
->>
->> Similarly, after applying this patch to the latest code
->> (dd9b004b7ff3289fb7bae35130c0a5c0537266af "Merge tag 'trace-v6.19-rc1'")
->> from the master branch of the Linux repository and enabling KFENCE, I
->> encountered the following compilation errors.
->>
->> 8<------------------------------------------------------
->>   CC      arch/loongarch/kernel/asm-offsets.s
->> In file included from ./arch/loongarch/include/asm/pgtable.h:13,
->>                  from ./include/linux/pgtable.h:6,
->>                  from ./include/linux/mm.h:31,
->>                  from arch/loongarch/kernel/asm-offsets.c:11:
->> ./include/linux/kfence.h:97:35: warning: 'struct kmem_cache' declared inside
->> parameter list will n ot be visible outside of this definition or declaration
->>    97 | void kfence_shutdown_cache(struct kmem_cache *s);
->>       |                                   ^~~~~~~~~~
->> ./include/linux/kfence.h:103:29: warning: 'struct kmem_cache' declared inside
->> parameter list will not be visible outside of this definition or declaration
->>   103 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
->>       |                             ^~~~~~~~~~
->> ./include/linux/kfence.h:121:50: warning: 'struct kmem_cache' declared inside
->> parameter list will not be visible outside of this definition or declaration
->>   121 | static __always_inline void *kfence_alloc(struct kmem_cache *s, size_t
->> size, gfp_t flags)
->>       |
->> ^~~~~~~~~~
->> ./include/linux/kfence.h: In function 'kfence_alloc':
->> ./include/linux/kfence.h:132:31: error: passing argument 1 of '__kfence_alloc'
->> from incompatible p ointer type [-Wincompatible-pointer-types]
->>   132 |         return __kfence_alloc(s, size, flags);
->>       |                               ^
->>       |                               |
->>       |                               struct kmem_cache *
->> ./include/linux/kfence.h:103:41: note: expected 'struct kmem_cache *'
->> but argument is of type 'str
->> uct kmem_cache *'
->>   103 | void *__kfence_alloc(struct kmem_cache *s, size_t size, gfp_t flags);
->>       |                      ~~~~~~~~~~~~~~~~~~~^
->> ------------------------------------------------------>8
->>
->> So, this patch currently runs into compilation issues.  linyu probably didn't have
->> KFENCE enabled when compiling locally, which is why this error was missed.
->> You can enable it as follows:
->>
->>   Kernel hacking
->>     Memory Debugging
->>       [*] KFENCE: low-overhead sampling-based memory safety
-> 
-> Hi Enze,
-> 
-> Sorry only test on arm64.
-> 
-> Could you help fix the compile issue and provide a correct change ?
-> 
-> Or I need sometime to resolve the issue.
-> 
+If we directly compile the switch.S file into the kernel, the address of
+the kvm_exc_entry function will definitely be within the DMW memory area.
+Therefore, we will no longer need to perform a copy relocation of
+kvm_exc_entry.
 
-Thanks for pointing out this issue.  I've taken a look at the
-compilation problem you mentioned.  Based on my current understanding,
-the header dependencies are quite complex, and I couldn't find a
-straightforward fix without potentially affecting other parts of the
-codebase.
+Based on the above description, compile switch.S directly into the kernel,
+and then remove the copy relocation execution logic for the kvm_exc_entry
+function.
 
-Given the risk of introducing broader compilation errors, I think it
-might be safer to hold off on using the KFENCE_POOL_SIZE macro for now,
-unless there's a clear and safe path forward that I might have missed.
-I'm happy to discuss this further if you have any insights or suggestions.
+Cc: stable@vger.kernel.org
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+---
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Bibo Mao <maobibo@loongson.cn>
+Cc: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Xianglai Li <lixianglai@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 
-Thanks,
-Enze
+ arch/loongarch/Kbuild                       |  2 +-
+ arch/loongarch/include/asm/asm-prototypes.h | 21 +++++++++++++
+ arch/loongarch/include/asm/kvm_host.h       |  3 --
+ arch/loongarch/kvm/Makefile                 |  2 +-
+ arch/loongarch/kvm/main.c                   | 35 ++-------------------
+ arch/loongarch/kvm/switch.S                 | 22 ++++++++++---
+ 6 files changed, 43 insertions(+), 42 deletions(-)
 
-
+diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+index beb8499dd8ed..1c7a0dbe5e72 100644
+--- a/arch/loongarch/Kbuild
++++ b/arch/loongarch/Kbuild
+@@ -3,7 +3,7 @@ obj-y += mm/
+ obj-y += net/
+ obj-y += vdso/
+ 
+-obj-$(CONFIG_KVM) += kvm/
++obj-$(subst m,y,$(CONFIG_KVM)) += kvm/
+ 
+ # for cleaning
+ subdir- += boot
+diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/include/asm/asm-prototypes.h
+index 704066b4f736..e8ce153691e5 100644
+--- a/arch/loongarch/include/asm/asm-prototypes.h
++++ b/arch/loongarch/include/asm/asm-prototypes.h
+@@ -20,3 +20,24 @@ asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct task_
+ 								    struct pt_regs *regs,
+ 								    int (*fn)(void *),
+ 								    void *fn_arg);
++
++struct kvm_run;
++struct kvm_vcpu;
++
++void kvm_exc_entry(void);
++int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
++
++struct loongarch_fpu;
++
++#ifdef CONFIG_CPU_HAS_LSX
++void kvm_save_lsx(struct loongarch_fpu *fpu);
++void kvm_restore_lsx(struct loongarch_fpu *fpu);
++#endif
++
++#ifdef CONFIG_CPU_HAS_LASX
++void kvm_save_lasx(struct loongarch_fpu *fpu);
++void kvm_restore_lasx(struct loongarch_fpu *fpu);
++#endif
++
++void kvm_save_fpu(struct loongarch_fpu *fpu);
++void kvm_restore_fpu(struct loongarch_fpu *fpu);
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index e4fe5b8e8149..1a1be10e3803 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -85,7 +85,6 @@ struct kvm_context {
+ struct kvm_world_switch {
+ 	int (*exc_entry)(void);
+ 	int (*enter_guest)(struct kvm_run *run, struct kvm_vcpu *vcpu);
+-	unsigned long page_order;
+ };
+ 
+ #define MAX_PGTABLE_LEVELS	4
+@@ -347,8 +346,6 @@ void kvm_exc_entry(void);
+ int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
+ 
+ extern unsigned long vpid_mask;
+-extern const unsigned long kvm_exception_size;
+-extern const unsigned long kvm_enter_guest_size;
+ extern struct kvm_world_switch *kvm_loongarch_ops;
+ 
+ #define SW_GCSR		(1 << 0)
+diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+index cb41d9265662..fe665054f824 100644
+--- a/arch/loongarch/kvm/Makefile
++++ b/arch/loongarch/kvm/Makefile
+@@ -11,7 +11,7 @@ kvm-y += exit.o
+ kvm-y += interrupt.o
+ kvm-y += main.o
+ kvm-y += mmu.o
+-kvm-y += switch.o
++obj-y += switch.o
+ kvm-y += timer.o
+ kvm-y += tlb.o
+ kvm-y += vcpu.o
+diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+index 80ea63d465b8..67d234540ed4 100644
+--- a/arch/loongarch/kvm/main.c
++++ b/arch/loongarch/kvm/main.c
+@@ -340,8 +340,7 @@ void kvm_arch_disable_virtualization_cpu(void)
+ 
+ static int kvm_loongarch_env_init(void)
+ {
+-	int cpu, order, ret;
+-	void *addr;
++	int cpu, ret;
+ 	struct kvm_context *context;
+ 
+ 	vmcs = alloc_percpu(struct kvm_context);
+@@ -357,30 +356,8 @@ static int kvm_loongarch_env_init(void)
+ 		return -ENOMEM;
+ 	}
+ 
+-	/*
+-	 * PGD register is shared between root kernel and kvm hypervisor.
+-	 * So world switch entry should be in DMW area rather than TLB area
+-	 * to avoid page fault reenter.
+-	 *
+-	 * In future if hardware pagetable walking is supported, we won't
+-	 * need to copy world switch code to DMW area.
+-	 */
+-	order = get_order(kvm_exception_size + kvm_enter_guest_size);
+-	addr = (void *)__get_free_pages(GFP_KERNEL, order);
+-	if (!addr) {
+-		free_percpu(vmcs);
+-		vmcs = NULL;
+-		kfree(kvm_loongarch_ops);
+-		kvm_loongarch_ops = NULL;
+-		return -ENOMEM;
+-	}
+-
+-	memcpy(addr, kvm_exc_entry, kvm_exception_size);
+-	memcpy(addr + kvm_exception_size, kvm_enter_guest, kvm_enter_guest_size);
+-	flush_icache_range((unsigned long)addr, (unsigned long)addr + kvm_exception_size + kvm_enter_guest_size);
+-	kvm_loongarch_ops->exc_entry = addr;
+-	kvm_loongarch_ops->enter_guest = addr + kvm_exception_size;
+-	kvm_loongarch_ops->page_order = order;
++	kvm_loongarch_ops->exc_entry = (void *)kvm_exc_entry;
++	kvm_loongarch_ops->enter_guest = (void *)kvm_enter_guest;
+ 
+ 	vpid_mask = read_csr_gstat();
+ 	vpid_mask = (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_SHIFT;
+@@ -414,16 +391,10 @@ static int kvm_loongarch_env_init(void)
+ 
+ static void kvm_loongarch_env_exit(void)
+ {
+-	unsigned long addr;
+-
+ 	if (vmcs)
+ 		free_percpu(vmcs);
+ 
+ 	if (kvm_loongarch_ops) {
+-		if (kvm_loongarch_ops->exc_entry) {
+-			addr = (unsigned long)kvm_loongarch_ops->exc_entry;
+-			free_pages(addr, kvm_loongarch_ops->page_order);
+-		}
+ 		kfree(kvm_loongarch_ops);
+ 	}
+ 
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index f1768b7a6194..93845ce53651 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/linkage.h>
+ #include <asm/asm.h>
++#include <asm/page.h>
+ #include <asm/asmmacro.h>
+ #include <asm/loongarch.h>
+ #include <asm/regdef.h>
+@@ -100,10 +101,18 @@
+ 	 *  -        is still in guest mode, such as pgd table/vmid registers etc,
+ 	 *  -        will fix with hw page walk enabled in future
+ 	 * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KVM_TEMP_KS
++	 *
++	 * PGD register is shared between root kernel and kvm hypervisor.
++	 * So world switch entry should be in DMW area rather than TLB area
++	 * to avoid page fault reenter.
++	 *
++	 * In future if hardware pagetable walking is supported, we won't
++	 * need to copy world switch code to DMW area.
+ 	 */
+ 	.text
+ 	.cfi_sections	.debug_frame
+ SYM_CODE_START(kvm_exc_entry)
++	.p2align PAGE_SHIFT
+ 	UNWIND_HINT_UNDEFINED
+ 	csrwr	a2,   KVM_TEMP_KS
+ 	csrrd	a2,   KVM_VCPU_KS
+@@ -190,8 +199,8 @@ ret_to_host:
+ 	kvm_restore_host_gpr    a2
+ 	jr      ra
+ 
+-SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
+ SYM_CODE_END(kvm_exc_entry)
++EXPORT_SYMBOL(kvm_exc_entry)
+ 
+ /*
+  * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+@@ -215,8 +224,8 @@ SYM_FUNC_START(kvm_enter_guest)
+ 	/* Save kvm_vcpu to kscratch */
+ 	csrwr	a1, KVM_VCPU_KS
+ 	kvm_switch_to_guest
+-SYM_INNER_LABEL(kvm_enter_guest_end, SYM_L_LOCAL)
+ SYM_FUNC_END(kvm_enter_guest)
++EXPORT_SYMBOL(kvm_enter_guest)
+ 
+ SYM_FUNC_START(kvm_save_fpu)
+ 	fpu_save_csr	a0 t1
+@@ -224,6 +233,7 @@ SYM_FUNC_START(kvm_save_fpu)
+ 	fpu_save_cc	a0 t1 t2
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_fpu)
++EXPORT_SYMBOL(kvm_save_fpu)
+ 
+ SYM_FUNC_START(kvm_restore_fpu)
+ 	fpu_restore_double a0 t1
+@@ -231,6 +241,7 @@ SYM_FUNC_START(kvm_restore_fpu)
+ 	fpu_restore_cc	   a0 t1 t2
+ 	jr                 ra
+ SYM_FUNC_END(kvm_restore_fpu)
++EXPORT_SYMBOL(kvm_restore_fpu)
+ 
+ #ifdef CONFIG_CPU_HAS_LSX
+ SYM_FUNC_START(kvm_save_lsx)
+@@ -239,6 +250,7 @@ SYM_FUNC_START(kvm_save_lsx)
+ 	lsx_save_data   a0 t1
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_lsx)
++EXPORT_SYMBOL(kvm_save_lsx)
+ 
+ SYM_FUNC_START(kvm_restore_lsx)
+ 	lsx_restore_data a0 t1
+@@ -246,6 +258,7 @@ SYM_FUNC_START(kvm_restore_lsx)
+ 	fpu_restore_csr  a0 t1 t2
+ 	jr               ra
+ SYM_FUNC_END(kvm_restore_lsx)
++EXPORT_SYMBOL(kvm_restore_lsx)
+ #endif
+ 
+ #ifdef CONFIG_CPU_HAS_LASX
+@@ -255,6 +268,7 @@ SYM_FUNC_START(kvm_save_lasx)
+ 	lasx_save_data  a0 t1
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_lasx)
++EXPORT_SYMBOL(kvm_save_lasx)
+ 
+ SYM_FUNC_START(kvm_restore_lasx)
+ 	lasx_restore_data a0 t1
+@@ -262,10 +276,8 @@ SYM_FUNC_START(kvm_restore_lasx)
+ 	fpu_restore_csr   a0 t1 t2
+ 	jr                ra
+ SYM_FUNC_END(kvm_restore_lasx)
++EXPORT_SYMBOL(kvm_restore_lasx)
+ #endif
+-	.section ".rodata"
+-SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+-SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_guest)
+ 
+ #ifdef CONFIG_CPU_HAS_LBT
+ STACK_FRAME_NON_STANDARD kvm_restore_fpu
+-- 
+2.39.1
 
