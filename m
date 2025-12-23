@@ -1,151 +1,89 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E9F3A1E72
-	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 03:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94902F1FF4
+	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 06:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766459968; cv=none; b=t9XvdrKj3OLAkblkKA2dphkhQZ/hSnwpkJkLS3uzRTbJIRXSVM+1qzeykYSjFih96ty+rWh2Uf3PZbHaHAeXQ06c0eVxoi+iwg4MFqyomzRaNcpKdHATexorRAcx1UyDLHdY5difYggtAim7XX2BqDHQp/9HhDwhmnKSFe+Y5FU=
+	t=1766472158; cv=none; b=QDivojWAe2k2YN6AoqEjcLZDnhrd62GegPDKi3IUiOfm8HpE/41g/p9jO4SWY61ajEecfRrBNq1n3LtVSQaP9y1s1T/qeGzgXyyolxmA8l+swZOXukMUFZ1OTNmwn/lRxKR+8Lp9QYShftEYtXuK1Ve7aBVO2xt9vreMTJtIwf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766459968; c=relaxed/simple;
-	bh=G1WFTYPhwexaOSM/l1xE9HiH8QJR/Nb1UrBT6/bmX9c=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Aa/8gojxn0Vz2xUcgVBYOwT29psGNHyGuczam4cLV5x0NRXC0xC3f/LOOMpMcJz6jDHap1H53mj4Kc0luXyJNGaQAjoChrK6BP8HMdnhgsVaWmTTQy+84z8eGvHdFb5SdgY/ptYUfiRq/7Dcbn/6aoqOknx3T/yj6UQV1zP2WEY=
+	s=arc-20240116; t=1766472158; c=relaxed/simple;
+	bh=72kFgbojzsG+yQ7XBwSHrErdHyU8qVtF5gQW7+ojMCU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e1fFa1Yci16RHwgGzX9mCWuB9K4yoZ9WtIEtCtdJKaS/Zv56IYhI5dzHJPy6+O3lluPGDXy0WdK/LaHEXj6cC6JLK5uIgP/vY8MvlKt0dWDcd5OgTst9caTCU1QZVorFwO05dLsCu1d+AmvU4p6kUD/5LBT+W7TEvjFin9jaU90=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxisI5CkppyEMCAA--.7017S3;
-	Tue, 23 Dec 2025 11:19:21 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxSeA2CkppPrADAA--.11231S3;
-	Tue, 23 Dec 2025 11:19:20 +0800 (CST)
-Subject: Re: [PATCH V2 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Xianglai Li <lixianglai@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, stable@vger.kernel.org,
- WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>
-References: <20251222113409.2343711-1-lixianglai@loongson.cn>
- <20251222113409.2343711-3-lixianglai@loongson.cn>
- <e1f4b85e-0177-91b7-c422-22ed60607260@loongson.cn>
- <CAAhV-H4PehwGm-WwEuu4ZPbQutJR6m62tOSUxLcGQAxR_YX0Eg@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <7b8799d1-a4b2-58dc-187a-19c772612351@loongson.cn>
-Date: Tue, 23 Dec 2025 11:16:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.69.54])
+	by gateway (Coremail) with SMTP id _____8BxXcPSOUppE0wCAA--.7405S3;
+	Tue, 23 Dec 2025 14:42:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.54])
+	by front1 (Coremail) with SMTP id qMiowJBxLMLQOUppTr0DAA--.8929S2;
+	Tue, 23 Dec 2025 14:42:25 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org
+Cc: Xiaochuang Mao <maoxiaochuan@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v1 0/2] RTC: Add Loongson-2K0300 support
+Date: Tue, 23 Dec 2025 14:42:11 +0800
+Message-ID: <cover.1766471839.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4PehwGm-WwEuu4ZPbQutJR6m62tOSUxLcGQAxR_YX0Eg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxSeA2CkppPrADAA--.11231S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZF13WrW8Gry7GFW3Jr4DKFX_yoW5CFyfpa
-	ySyF1q9F4DK340yw4qq34qkrWIq3ykKry3Wrn3try8Ar1vgryrWa4xGw43CFyDXw4xGF4k
-	XFy5KasIqayUAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
-	wI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjxU2DUUUUUUU
+X-CM-TRANSID:qMiowJBxLMLQOUppTr0DAA--.8929S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEECGlI3ZkFGQADs1
+X-Coremail-Antispam: 1Uk129KBj9xXoW5tw15KFW8AF43tr48KFW3urX_yoWxGrXE9a
+	4Ivas7Jwn8ZFn7Ja47Xr1xu34fZrW29w10k3WDtwnYv34jyry5tF9rArZxG3WfWFW3Zr95
+	Xa1xGFy8Ar1SgosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24SoDUUUU
+
+Hi all:
+
+This patch set introduces the Loongson-2K0300 RTC, which has a similar
+hardware design to the Loongson-1B, but without the alarm feature.
+
+To Keguang:
+Would you have time to test the driver on a Loongson-1?
+
+Thanks.
+Binbin
+
+Binbin Zhou (2):
+  dt-binding: rtc: loongson: Document Loongson-2K0300 compatible
+  rtc: loongson: Add Loongson-2K0300 support
+
+ .../devicetree/bindings/rtc/loongson,rtc.yaml | 13 ++++
+ drivers/rtc/rtc-loongson.c                    | 65 +++++++++++++------
+ 2 files changed, 57 insertions(+), 21 deletions(-)
 
 
-
-On 2025/12/23 上午10:46, Huacai Chen wrote:
-> On Tue, Dec 23, 2025 at 9:27 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/12/22 下午7:34, Xianglai Li wrote:
->>> Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
->>> the assembly function to guide the generation of correct ORC table entries,
->>> thereby solving the timeout problem of loading the livepatch-sample module
->>> on a physical machine running multiple vcpus virtual machines.
->>>
->>> While solving the above problems, we have gained an additional benefit,
->>> that is, we can obtain more call stack information
->>>
->>> Stack information that can be obtained before the problem is fixed:
->>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>> [<0>] kvm_exc_entry+0x100/0x1e0
->>>
->>> Stack information that can be obtained after the problem is fixed:
->>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>> [<0>] kvm_exc_entry+0x100/0x1e0
->>> [<0>] kvm_arch_vcpu_ioctl_run+0x260/0x488 [kvm]
->>> [<0>] kvm_vcpu_ioctl+0x200/0xcd8 [kvm]
->>> [<0>] sys_ioctl+0x498/0xf00
->>> [<0>] do_syscall+0x94/0x190
->>> [<0>] handle_syscall+0xb8/0x158
->>>
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
->>> ---
->>> Cc: Huacai Chen <chenhuacai@kernel.org>
->>> Cc: WANG Xuerui <kernel@xen0n.name>
->>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
->>> Cc: Bibo Mao <maobibo@loongson.cn>
->>> Cc: Charlie Jenkins <charlie@rivosinc.com>
->>> Cc: Xianglai Li <lixianglai@loongson.cn>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>
->>>    arch/loongarch/kvm/switch.S | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->>> index 93845ce53651..e3ecb24a3bc5 100644
->>> --- a/arch/loongarch/kvm/switch.S
->>> +++ b/arch/loongarch/kvm/switch.S
->>> @@ -170,6 +170,7 @@ SYM_CODE_START(kvm_exc_entry)
->>>        /* restore per cpu register */
->>>        ld.d    u0, a2, KVM_ARCH_HPERCPU
->>>        addi.d  sp, sp, -PT_SIZE
->>> +     UNWIND_HINT_REGS
->>>
->>>        /* Prepare handle exception */
->>>        or      a0, s0, zero
->>> @@ -214,6 +215,7 @@ SYM_FUNC_START(kvm_enter_guest)
->>>        addi.d  a2, sp, -PT_SIZE
->>>        /* Save host GPRs */
->>>        kvm_save_host_gpr a2
->>> +     st.d    ra, a2, PT_ERA
->> Had better add some comments here to show that it is special for unwind
->> usage since there is "st.d ra, a2, PT_R1" already in macro
->> kvm_save_host_gpr().
-> Then there is a new problem, why can unwinder not recognize the
-> instruction in  kvm_save_host_gpr()?
-maybe it need unwinder owner to answer this question.
-
-> 
-> Huacai
->>
->> Regards
->> Bibo Mao
->>>
->>>        addi.d  a2, a1, KVM_VCPU_ARCH
->>>        st.d    sp, a2, KVM_ARCH_HSP
->>>
->>
+base-commit: 16bd954c93360145bc77cc601e350913fc28182d
+-- 
+2.47.3
 
