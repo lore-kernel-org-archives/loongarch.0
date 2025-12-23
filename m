@@ -1,45 +1,30 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89BC302157
-	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 06:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275BE2F2605;
+	Tue, 23 Dec 2025 08:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766472164; cv=none; b=ttfqk04rCzsAS1rHupbAZR9ADwDviZLm6aGnEHijRP/tCIFtoLzwU3VOiJPTOwyqZp5WTZmLeD5lFG7rQYV2vMUTz/7lDqvK4oK1pXYeDQknHsLewzXjipcY6osO+KXNnNfhdLoHMiQJ/fiCZkBGDlf/Uw3L+hjXZQGnXMC8LSA=
+	t=1766477103; cv=none; b=Getg/s/CezK7sJN4BlSnJ0h0RANSiJTnaiwqwdEA84ttjMALovmSouO4E/brN03K82EjuoyDGvsiDlujv6LUNsxiE+Ke+eet0x7msMAdlj/X3E9Bl5wI4w9ROH7Udez4v/lDcWP1ykBn28cb+GpQf4JdHuMuAtpWsp5nB+V+oWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766472164; c=relaxed/simple;
-	bh=R3rbppYtdPSOyXLsUKSgPuDIJPjq9NhLpTEFmWQlEEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zr6zQOVgmj3hL6hqgVkMdNDAJ2THb0yIWUBFODzwm8SIn+1uyi1PFdgzRa8IaiX99kAXrcndi8wBLVXyniYgO6KSNLgKGdhzLZN67JoOsMGJKWdbdCf7tJAabYTcXQSPhEKQDW66IF+POrWs0SMvCtqQf6lZh+vp82AerjBvscE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.54])
-	by gateway (Coremail) with SMTP id _____8AxScLcOUppIkwCAA--.7243S3;
-	Tue, 23 Dec 2025 14:42:36 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.54])
-	by front1 (Coremail) with SMTP id qMiowJBxLMLQOUppTr0DAA--.8929S4;
-	Tue, 23 Dec 2025 14:42:32 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org
-Cc: Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v1 2/2] rtc: loongson: Add Loongson-2K0300 support
-Date: Tue, 23 Dec 2025 14:42:13 +0800
-Message-ID: <6e10c70653b32f1f79e3f98116924e1aad7154bf.1766471839.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1766477103; c=relaxed/simple;
+	bh=sAfJqKmYU3IZfPQ0kgZrcNYDITv9ZRNxXRfIsuPyeoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tI4rbN37TF1W0jxvzTp9RvfISoikiEXcQug+qTsaAnnCvd/HL/A94Hvmmzu9fNowzt53BGmV+tm+2gemWV6zL5fUoFX+WOVJ1Zku1/1PB0PtXRUhqMjwDAC4WXvmBuybfL02yPm7HmMplzN7gmQFp1URkzhAaFrNGe8DPelk5uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9DEC113D0;
+	Tue, 23 Dec 2025 08:05:00 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 0/7] irqchip: Adjust LoongArch irqchip drivers for 32BIT/64BIT
+Date: Tue, 23 Dec 2025 16:04:30 +0800
+Message-ID: <20251223080437.3367240-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1766471839.git.zhoubinbin@loongson.cn>
-References: <cover.1766471839.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,150 +32,33 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxLMLQOUppTr0DAA--.8929S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEFCGlKLxkAeQAAsi
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr48JF1xKr13WryUKFWDKFX_yoWrZr4Dpa
-	13Ca45Kr4FqF15urZ5JayUGF13CryfXa92qF47K3s7Kr9xA34DZr1kKFy3Z3y3AFZ8ZFW3
-	XFWkGFWfua1UCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-The Loongson-2K0300's rtc hardware design is similar to that of the
-Loongson-1B, but it does not support the alarm feature.
+Linux-6.19 adds basic LoongArch32 support:
+https://git.kernel.org/torvalds/c/9551a26f17d9445eed497bd7c639d48dfc3c0af4
 
-Introduce `LOONGSON_RTC_ALARM_WORKAROUND`, which indicates a chip that
-does not support the alarm function, and rewritethe related logic in
-`loongson_rtc_alarm_setting()`
+On the basis, this series adjust the LoongArch-specific irqchip drivers
+for both 32BIT and 64BIT.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+Jiaxun Yang & Huacai Chen (7):
+ irqchip/loongarch-avec: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-liointc: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-eiointc: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-htvec: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-pch-msi: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-pch-pic: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip: Allow LoongArch irqchip drivers on both 32BIT/64BIT.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/rtc/rtc-loongson.c | 65 ++++++++++++++++++++++++++------------
- 1 file changed, 44 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-index 2ca7ffd5d7a9..6b076bd4e24e 100644
---- a/drivers/rtc/rtc-loongson.c
-+++ b/drivers/rtc/rtc-loongson.c
-@@ -67,6 +67,7 @@
-  * Accessing the relevant registers will cause the system to hang.
-  */
- #define LS1C_RTC_CTRL_WORKAROUND	BIT(0)
-+#define LOONGSON_RTC_ALARM_WORKAROUND	BIT(1)
- 
- struct loongson_rtc_config {
- 	u32 pm_offset;	/* Offset of PM domain, for RTC alarm wakeup */
-@@ -89,7 +90,7 @@ static const struct loongson_rtc_config ls1b_rtc_config = {
- 
- static const struct loongson_rtc_config ls1c_rtc_config = {
- 	.pm_offset = 0,
--	.flags = LS1C_RTC_CTRL_WORKAROUND,
-+	.flags = LS1C_RTC_CTRL_WORKAROUND | LOONGSON_RTC_ALARM_WORKAROUND,
- };
- 
- static const struct loongson_rtc_config generic_rtc_config = {
-@@ -97,6 +98,11 @@ static const struct loongson_rtc_config generic_rtc_config = {
- 	.flags = 0,
- };
- 
-+static const struct loongson_rtc_config ls2k0300_rtc_config = {
-+	.pm_offset = 0x0,
-+	.flags = LOONGSON_RTC_ALARM_WORKAROUND,
-+};
-+
- static const struct loongson_rtc_config ls2k1000_rtc_config = {
- 	.pm_offset = 0x800,
- 	.flags = 0,
-@@ -299,9 +305,41 @@ static const struct rtc_class_ops loongson_rtc_ops = {
- 	.alarm_irq_enable = loongson_rtc_alarm_irq_enable,
- };
- 
-+static int loongson_rtc_alarm_setting(struct platform_device *pdev, void __iomem *regs)
-+{
-+	int ret = 0, alarm_irq;
-+	struct device *dev = &pdev->dev;
-+	struct loongson_rtc_priv *priv = dev_get_drvdata(dev);
-+
-+	if (priv->config->flags & LOONGSON_RTC_ALARM_WORKAROUND) {
-+		/* Loongson-1C/Loongson-2K0300 RTC does not support alarm */
-+		clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
-+		return 0;
-+	}
-+
-+	/* Get RTC alarm irq */
-+	alarm_irq = platform_get_irq(pdev, 0);
-+	if (alarm_irq < 0)
-+		return alarm_irq;
-+
-+	ret = devm_request_irq(dev, alarm_irq, loongson_rtc_isr, 0, "loongson-alarm",
-+			       priv);
-+	if (ret < 0)
-+		return ret;
-+
-+	priv->pm_base = regs - priv->config->pm_offset;
-+	device_init_wakeup(dev, true);
-+
-+	if (has_acpi_companion(dev))
-+		acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
-+						 loongson_rtc_handler, priv);
-+
-+	return ret;
-+}
-+
- static int loongson_rtc_probe(struct platform_device *pdev)
- {
--	int ret, alarm_irq;
-+	int ret;
- 	void __iomem *regs;
- 	struct loongson_rtc_priv *priv;
- 	struct device *dev = &pdev->dev;
-@@ -330,25 +368,9 @@ static int loongson_rtc_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->rtcdev),
- 				     "devm_rtc_allocate_device failed\n");
- 
--	/* Get RTC alarm irq */
--	alarm_irq = platform_get_irq(pdev, 0);
--	if (alarm_irq > 0) {
--		ret = devm_request_irq(dev, alarm_irq, loongson_rtc_isr,
--				       0, "loongson-alarm", priv);
--		if (ret < 0)
--			return dev_err_probe(dev, ret, "Unable to request irq %d\n",
--					     alarm_irq);
--
--		priv->pm_base = regs - priv->config->pm_offset;
--		device_init_wakeup(dev, true);
--
--		if (has_acpi_companion(dev))
--			acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
--							 loongson_rtc_handler, priv);
--	} else {
--		/* Loongson-1C RTC does not support alarm */
--		clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
--	}
-+	ret = loongson_rtc_alarm_setting(pdev, regs);
-+	if (ret)
-+		return ret;
- 
- 	/* Loongson RTC does not support UIE */
- 	clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, priv->rtcdev->features);
-@@ -379,6 +401,7 @@ static const struct of_device_id loongson_rtc_of_match[] = {
- 	{ .compatible = "loongson,ls1b-rtc", .data = &ls1b_rtc_config },
- 	{ .compatible = "loongson,ls1c-rtc", .data = &ls1c_rtc_config },
- 	{ .compatible = "loongson,ls7a-rtc", .data = &generic_rtc_config },
-+	{ .compatible = "loongson,ls2k0300-rtc", .data = &ls2k0300_rtc_config },
- 	{ .compatible = "loongson,ls2k1000-rtc", .data = &ls2k1000_rtc_config },
- 	{ /* sentinel */ }
- };
--- 
-2.47.3
+ drivers/irqchip/Kconfig                | 11 +++++------
+ drivers/irqchip/irq-loongarch-avec.c   | 14 +++++++------
+ drivers/irqchip/irq-loongson-eiointc.c | 36 ++++++++++++++++++++++++++++------
+ drivers/irqchip/irq-loongson-htvec.c   |  6 +++---
+ drivers/irqchip/irq-loongson-liointc.c |  5 +++--
+ drivers/irqchip/irq-loongson-pch-msi.c |  7 ++++---
+ drivers/irqchip/irq-loongson-pch-pic.c |  7 ++++---
+ 7 files changed, 57 insertions(+), 29 deletions(-)
+---
+2.27.0
 
