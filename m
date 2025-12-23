@@ -1,167 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9262D592C
-	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 08:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6085322FAFD
+	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 09:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766479756; cv=none; b=f/0a9UFzoGRyosgKe3NgEtr4rfB8nGqHdO0OecoFNk9mTxc8Gq3SDTAkRrKQ4hRkrJfFTF+nZhpWxLqA0GVnYScJsfTf7W7cENbe11AClZoSunKTe96iHzfZ2S22zXrVv4zg3pbuSWf3PBpOBkW5hfOgWe+qXASpJ+1JQ1X4+gE=
+	t=1766480787; cv=none; b=ta+H4+PfCuROvVthNvBIzXThwq74s2Acj+jTv5B7+pTtON96+T/cWNxKNiEB0Hq3ED3RYNPna96BtWD0TbnzH9GjHc/j/EH3u6vPhJICzyyRS61u6EoIuyuqgnSt4ILPd8zFCRTY6BulfMaYv3OQJwfs/N1iDDt/dLCdK5wSMV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766479756; c=relaxed/simple;
-	bh=uMPdjFR3AUHODA1yruGTL+xnrZMVCFfKoSwes/LbfHE=;
+	s=arc-20240116; t=1766480787; c=relaxed/simple;
+	bh=e4ELUNJG/H1rXoEc7+6tgON/8evFDIf9Rnxvrs/yfmg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aGcyvnQL4VpfFQ3Hm3QR/kaMgwt4a7CGcbM1QKvDdAVkXQu95EE4RGHiQLtPZCw50CxVvOKme6RFoV2IM0/eSy6F8qF5iIcdMWdhwUq6jUG79Vk6inCy+1aU8+NNOg7Yuu/2kPl2eFBhP8VYv42Pfq0vByLvbvMuMfCTNDNUfTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJ483G2+; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=hzbi4oRX6llPbk2ZlWcA/XGoHzo+G/TMhaIvuxlgfGrna/aUzcwZLar/0DhTlB0/455525rzLakZFI8q+hM7fxWloz0vgA8+WTKmD3P987Z10FA/hfL+/T9xgzN7VY+VmKaXt2eWDkLspWWxjP2Omu5hX+/mqH5NcmGrBRtWc24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXQI/yMV; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJ483G2+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A612C2BC9E
-	for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 08:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766479756;
-	bh=uMPdjFR3AUHODA1yruGTL+xnrZMVCFfKoSwes/LbfHE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VJ483G2+ZySmqHB4Q1NPQUS2U+BHMOl0/9HDViAwAcKG33qYpNjrq8ReIYRNvF2tW
-	 y6/DgPrWaYN7wTB+LD7RZGasHewhybUpEvkpOKl74AwGuSLFUf/oCjyf8dLGnHAgHz
-	 D9Dh4uEg/dEbaEfkwns8sJ3QioDUn7el0+Hse+YIoL0rduBsWA1pufRY1RJ1TfOciz
-	 KeNVErkULRHT8hPDK2MWsVnvSPS4QpV4oMap3VZGm69uxUj34Mha9gTq/ePRwffpWZ
-	 1z5p2JOga6mBeml93tqIkVk2FqR3ih6sh8K+uRCgg1kbNcDemtJRA9CLImR0SAMpfX
-	 qtJgPppqoopeQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b7277324054so780844666b.0
-        for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 00:49:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUwsC1YGs9H9XFHNMIhdjv/VNmTWmhMZVzoCzzTNmXZDpeb+vobLtQzgemVb6uclQvpNyxd/H4BrxQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwS1InXlo2/44vEEorLPnzaftDuifDdhWfXV3wypqVbcwWAXyPY
-	2L8YLH+TniEOUUKyl2LgwU2tlDBPQFqEc3/LObDhUnDTcQScyvA4j3azsjgktJ4eJj/fC9qDUjH
-	E53kY6yWLR8x6Qr9dHbOzhABWV5dnV6g=
-X-Google-Smtp-Source: AGHT+IGqICKA6Tt0g8gdCDQ5skcFxPNmflpiNOGftMkEGt7c41HtMhVaOn2SEP7jhGrIAw6lkvDjXUUHiFwAyoNuylk=
-X-Received: by 2002:a17:907:980f:b0:b73:8b79:a322 with SMTP id
- a640c23a62f3a-b8036f1222emr1491784766b.11.1766479754647; Tue, 23 Dec 2025
- 00:49:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXQI/yMV"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b725ead5800so668004466b.1
+        for <loongarch@lists.linux.dev>; Tue, 23 Dec 2025 01:06:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766480784; x=1767085584; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PcO7KM8DSIAXbK4kBHjpNqRrR826iMchYZvaKYP6ExE=;
+        b=YXQI/yMVucvdF6IkDZs+4t/g/aGjPG2SOxeFsPQHrDsX33yZUMKlGolzCpsx3jKubg
+         tJffcRT/DtvsyMe9d3WV8awKEcuIEhRaVaxEssPQn6VayTbPmDwaU6yUe10tOwfzGJ/G
+         /lcRSZhDn6hzgvwn0FH5cQO5DI4QUeEYh13sj75OoXs0C+MorvB2qRYlIN9v1sL18w20
+         7KN8ivmTzuHDgTGuONmI8WxlTqfCxHbAaiCFoe5kxNjEApudXqrhk655QbyH8dNPXafL
+         bSIceoHFzwPdWVYY08aaN9P/QuiYmP6xqNX/RGNeizTsOy3VRgr8DY7OoPbtwsLjYiQO
+         yskg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766480784; x=1767085584;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PcO7KM8DSIAXbK4kBHjpNqRrR826iMchYZvaKYP6ExE=;
+        b=uJPl29SBoxgLuW0OSNganL+qd64CuCbrroVTfFQxjITrmvrS1775l6l6tsRIa8zVJF
+         l4GXUj7O8prsltCaa+CYltaDuD3zWwGGkG32PyGJgt/FGD5CwaX54HXp+Kd3fmcjQ93U
+         Q+AeJ2btVI+nofOKsMrf91FFIMeBTD1qFwAEw03f0rP9mrGA4DHKUqLtMqZ8+8SGz7X9
+         6qJaD3r378PZEBrsfMcwEGRA5HH9kNjbcGISz2ZcRfadwApkfyI/deyXXQrpDVqohSrU
+         ELK+RKs5yN+p3RH8TRlJx8DhmhbhfjmloUv23LZWGWnUspl/wG4KYLmZb4gImSPDZ4tq
+         ZEyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/00GSU3BBAmHgYsWLBJwwBbbq3G6LNVgC+klo0wYLkXsn2G5d2gWnSavtedJONayhy+4Ke1sA/oc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6Tgc37xx80U3LPcjVRY7MHxut4APpjZ10l5prhx5k71DnBEgX
+	yoFGWPaL9qVIJMgSeaDIliABd4ykXxDSWYXLu88mSzmgHy6qmpYdAfCyVTapWmu7oCL0QYxEMa4
+	FJ9+AA5sVYM4sLGm7DQC40Nh0YMrKsO0=
+X-Gm-Gg: AY/fxX6FUYzX6Dh7YhQujBARXSMtfjedHcnYCUuIXRHOG0zBeiCwMt5ZJAyMbyDEmlO
+	bRJWSylMW4CbHxA8l+rHEEO5/gLCHdCkYFzrcQJ1tEVIFAmcak9BqdQePY1EWAFIRsJkuBqcaXJ
+	orFE32Ek7UPesuf/NVCQ9czx5gshe1AzsI3J1a8xCF7objtFYW+RlENkDXVk/e3ydZdQOuKRrAE
+	qe0p6g9x4YZAhRZBH2ARdUVTVaGWVU7mLNuwAOaQWDoJkBvuxQUHKYzMcIRDI/PAUNgB7jgyNii
+	RLQcjw==
+X-Google-Smtp-Source: AGHT+IFMFayOUEkIzcUgPVI7ZQmi3rUPQXYR0C65vtOT/zhUo8HOdbjzsQ82aiENsemJWN33WkI1+O2FNLjs2fJN3JI=
+X-Received: by 2002:a17:907:724a:b0:b80:b7f:aa14 with SMTP id
+ a640c23a62f3a-b80371d9ddemr1545543066b.32.1766480783355; Tue, 23 Dec 2025
+ 01:06:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251217061435.802204-1-duanchenghao@kylinos.cn>
- <20251217061435.802204-7-duanchenghao@kylinos.cn> <CAEyhmHRbacxpfTkPJq4MerBupH0bJkFfx8xGUvHMvGOzDDJUow@mail.gmail.com>
- <20251222015010.GA119291@chenghao-pc> <CAEyhmHRkW67wiz_JX0i+sf2Y5LoYnpmTSt_Dh+asU8EEVTdk=w@mail.gmail.com>
-In-Reply-To: <CAEyhmHRkW67wiz_JX0i+sf2Y5LoYnpmTSt_Dh+asU8EEVTdk=w@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 23 Dec 2025 16:49:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4cutccVGOmvHjMF3NaGEYqdTYa6-eqz39bO+U-HgO1-Q@mail.gmail.com>
-X-Gm-Features: AQt7F2oKz5REz7f5rWcYliHHB6z3xEFCgbSsFXHZ5UfkPwEWshKkES1HPpR325Y
-Message-ID: <CAAhV-H4cutccVGOmvHjMF3NaGEYqdTYa6-eqz39bO+U-HgO1-Q@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] LoongArch: BPF: Enhance the bpf_arch_text_poke() function
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Chenghao Duan <duanchenghao@kylinos.cn>, yangtiezhu@loongson.cn, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mark.rutland@arm.com, kernel@xen0n.name, 
-	zhangtianyang@loongson.cn, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, youling.tang@linux.dev, 
-	jianghaoran@kylinos.cn, vincent.mc.li@gmail.com, 
-	linux-trace-kernel@vger.kernel.org
+References: <cover.1766471839.git.zhoubinbin@loongson.cn> <6e10c70653b32f1f79e3f98116924e1aad7154bf.1766471839.git.zhoubinbin@loongson.cn>
+ <CAAhV-H5WfEhsV4fEzThR-C95cg0nPpJ+OfQ10NXEsFKneJQQ5A@mail.gmail.com>
+In-Reply-To: <CAAhV-H5WfEhsV4fEzThR-C95cg0nPpJ+OfQ10NXEsFKneJQQ5A@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 23 Dec 2025 17:06:09 +0800
+X-Gm-Features: AQt7F2pWNeBlrKeCzwvzHQVPM5ZsHh7pzHwo24RT0fsTOcUxXeUUhfW2YT1QJvI
+Message-ID: <CAMpQs4LMkq6BpsrnS+e+cvh2hJshO4=41vX4ETq+tkJEMZ7zdA@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] rtc: loongson: Add Loongson-2K0300 support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
+	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Keguang Zhang <keguang.zhang@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 23, 2025 at 10:23=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com=
-> wrote:
->
-> On Mon, Dec 22, 2025 at 9:50=E2=80=AFAM Chenghao Duan <duanchenghao@kylin=
-os.cn> wrote:
-> >
-> > On Sat, Dec 20, 2025 at 10:07:25PM +0800, Hengqi Chen wrote:
-> > > On Wed, Dec 17, 2025 at 2:15=E2=80=AFPM Chenghao Duan <duanchenghao@k=
-ylinos.cn> wrote:
-> > > >
-> > > > Enhance the bpf_arch_text_poke() function to enable accurate locati=
-on
-> > > > of BPF program entry points.
-> > > >
-> > > > When modifying the entry point of a BPF program, skip the move t0, =
-ra
-> > > > instruction to ensure the correct logic and copy of the jump addres=
-s.
-> > > >
-> > > > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
-> > > > ---
-> > > >  arch/loongarch/net/bpf_jit.c | 15 ++++++++++++++-
-> > > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_=
-jit.c
-> > > > index 3dbabacc8856..0c16a1b18e8f 100644
-> > > > --- a/arch/loongarch/net/bpf_jit.c
-> > > > +++ b/arch/loongarch/net/bpf_jit.c
-> > > > @@ -1290,6 +1290,10 @@ int bpf_arch_text_poke(void *ip, enum bpf_te=
-xt_poke_type old_t,
-> > > >                        void *new_addr)
-> > >
-> > > The signature of bpf_arch_text_poke() was changed in v6.19 ([1]), ple=
-ase rebase.
-> > >
-> > >   [1]: https://github.com/torvalds/linux/commit/ae4a3160d19cd16b87473=
-7ebc1798c7bc2fe3c9e
-> >
-> > Thank you for your review and for pointing out the API change in v6.19.
-> >
-> > I believe my patch series already accounts for this. It was developed o=
-n
-> > top of commit ae4a3160d19c ("bpf: specify the old and new poke_type for=
- bpf_arch_text_poke"),
-> > so all modifications to bpf_arch_text_poke() call sites within my
-> > patches should already be using the updated signature.
->
-> Fine, it seems like the LoongArch tree is not up-to-date.
-LoongArch tree now updated to 6.19-rc2, hope patches can be applied cleanly=
-.
+Hi:
 
-Huacai
 
+On Tue, Dec 23, 2025 at 4:40=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Binbin,
+>
+> On Tue, Dec 23, 2025 at 2:42=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
+cn> wrote:
+> >
+> > The Loongson-2K0300's rtc hardware design is similar to that of the
+> > Loongson-1B, but it does not support the alarm feature.
+> >
+> > Introduce `LOONGSON_RTC_ALARM_WORKAROUND`, which indicates a chip that
+> > does not support the alarm function, and rewritethe related logic in
+> > `loongson_rtc_alarm_setting()`
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  drivers/rtc/rtc-loongson.c | 65 ++++++++++++++++++++++++++------------
+> >  1 file changed, 44 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
+> > index 2ca7ffd5d7a9..6b076bd4e24e 100644
+> > --- a/drivers/rtc/rtc-loongson.c
+> > +++ b/drivers/rtc/rtc-loongson.c
+> > @@ -67,6 +67,7 @@
+> >   * Accessing the relevant registers will cause the system to hang.
+> >   */
+> >  #define LS1C_RTC_CTRL_WORKAROUND       BIT(0)
+> > +#define LOONGSON_RTC_ALARM_WORKAROUND  BIT(1)
+> Can we reuse existing logic, which means "alarm_irq =3D
+> platform_get_irq(pdev, 0)" return 0 for LS2K0300?
+
+First of all, as I understand it, platform_get_irq() doesn't normally
+return 0 unless interrupt 0 is configured in the DTS, which doesn't
+seem appropriate.
+
+Also, the return value of platform_get_irq() was previously used to
+determine if the alarm feature was supported, which is not
+particularly accurate. It should be an inherent feature of the chip,
+and I think it would be more appropriate to define it in
+loongson_rtc_config.
+>
+> Huacai
 >
 > >
-> > Please let me know if you find any inconsistencies or if further
-> > adjustments are needed.
+> >  struct loongson_rtc_config {
+> >         u32 pm_offset;  /* Offset of PM domain, for RTC alarm wakeup */
+> > @@ -89,7 +90,7 @@ static const struct loongson_rtc_config ls1b_rtc_conf=
+ig =3D {
 > >
-> > Best regards,
-> > Chenghao
+> >  static const struct loongson_rtc_config ls1c_rtc_config =3D {
+> >         .pm_offset =3D 0,
+> > -       .flags =3D LS1C_RTC_CTRL_WORKAROUND,
+> > +       .flags =3D LS1C_RTC_CTRL_WORKAROUND | LOONGSON_RTC_ALARM_WORKAR=
+OUND,
+> >  };
 > >
-> > >
-> > > >  {
-> > > >         int ret;
-> > > > +       unsigned long size =3D 0;
-> > > > +       unsigned long offset =3D 0;
-> > > > +       char namebuf[KSYM_NAME_LEN];
-> > > > +       void *image =3D NULL;
-> > > >         bool is_call;
-> > > >         u32 old_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > >         u32 new_insns[LOONGARCH_LONG_JUMP_NINSNS] =3D {[0 ... 4] =
-=3D INSN_NOP};
-> > > > @@ -1297,9 +1301,18 @@ int bpf_arch_text_poke(void *ip, enum bpf_te=
-xt_poke_type old_t,
-> > > >         /* Only poking bpf text is supported. Since kernel function=
- entry
-> > > >          * is set up by ftrace, we rely on ftrace to poke kernel fu=
-nctions.
-> > > >          */
-> > > > -       if (!is_bpf_text_address((unsigned long)ip))
-> > > > +       if (!__bpf_address_lookup((unsigned long)ip, &size, &offset=
-, namebuf))
-> > > >                 return -ENOTSUPP;
-> > > >
-> > > > +       image =3D ip - offset;
-> > > > +       /* zero offset means we're poking bpf prog entry */
-> > > > +       if (offset =3D=3D 0)
-> > > > +               /* skip to the nop instruction in bpf prog entry:
-> > > > +                * move t0, ra
-> > > > +                * nop
-> > > > +                */
-> > > > +               ip =3D image + LOONGARCH_INSN_SIZE;
-> > > > +
-> > > >         is_call =3D old_t =3D=3D BPF_MOD_CALL;
-> > > >         ret =3D emit_jump_or_nops(old_addr, ip, old_insns, is_call)=
+> >  static const struct loongson_rtc_config generic_rtc_config =3D {
+> > @@ -97,6 +98,11 @@ static const struct loongson_rtc_config generic_rtc_=
+config =3D {
+> >         .flags =3D 0,
+> >  };
+> >
+> > +static const struct loongson_rtc_config ls2k0300_rtc_config =3D {
+> > +       .pm_offset =3D 0x0,
+> > +       .flags =3D LOONGSON_RTC_ALARM_WORKAROUND,
+> > +};
+> > +
+> >  static const struct loongson_rtc_config ls2k1000_rtc_config =3D {
+> >         .pm_offset =3D 0x800,
+> >         .flags =3D 0,
+> > @@ -299,9 +305,41 @@ static const struct rtc_class_ops loongson_rtc_ops=
+ =3D {
+> >         .alarm_irq_enable =3D loongson_rtc_alarm_irq_enable,
+> >  };
+> >
+> > +static int loongson_rtc_alarm_setting(struct platform_device *pdev, vo=
+id __iomem *regs)
+> > +{
+> > +       int ret =3D 0, alarm_irq;
+> > +       struct device *dev =3D &pdev->dev;
+> > +       struct loongson_rtc_priv *priv =3D dev_get_drvdata(dev);
+> > +
+> > +       if (priv->config->flags & LOONGSON_RTC_ALARM_WORKAROUND) {
+> > +               /* Loongson-1C/Loongson-2K0300 RTC does not support ala=
+rm */
+> > +               clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
+> > +               return 0;
+> > +       }
+> > +
+> > +       /* Get RTC alarm irq */
+> > +       alarm_irq =3D platform_get_irq(pdev, 0);
+> > +       if (alarm_irq < 0)
+> > +               return alarm_irq;
+> > +
+> > +       ret =3D devm_request_irq(dev, alarm_irq, loongson_rtc_isr, 0, "=
+loongson-alarm",
+> > +                              priv);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       priv->pm_base =3D regs - priv->config->pm_offset;
+> > +       device_init_wakeup(dev, true);
+> > +
+> > +       if (has_acpi_companion(dev))
+> > +               acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
+> > +                                                loongson_rtc_handler, =
+priv);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  static int loongson_rtc_probe(struct platform_device *pdev)
+> >  {
+> > -       int ret, alarm_irq;
+> > +       int ret;
+> >         void __iomem *regs;
+> >         struct loongson_rtc_priv *priv;
+> >         struct device *dev =3D &pdev->dev;
+> > @@ -330,25 +368,9 @@ static int loongson_rtc_probe(struct platform_devi=
+ce *pdev)
+> >                 return dev_err_probe(dev, PTR_ERR(priv->rtcdev),
+> >                                      "devm_rtc_allocate_device failed\n=
+");
+> >
+> > -       /* Get RTC alarm irq */
+> > -       alarm_irq =3D platform_get_irq(pdev, 0);
+> > -       if (alarm_irq > 0) {
+> > -               ret =3D devm_request_irq(dev, alarm_irq, loongson_rtc_i=
+sr,
+> > -                                      0, "loongson-alarm", priv);
+> > -               if (ret < 0)
+> > -                       return dev_err_probe(dev, ret, "Unable to reque=
+st irq %d\n",
+> > -                                            alarm_irq);
+> > -
+> > -               priv->pm_base =3D regs - priv->config->pm_offset;
+> > -               device_init_wakeup(dev, true);
+> > -
+> > -               if (has_acpi_companion(dev))
+> > -                       acpi_install_fixed_event_handler(ACPI_EVENT_RTC=
+,
+> > -                                                        loongson_rtc_h=
+andler, priv);
+> > -       } else {
+> > -               /* Loongson-1C RTC does not support alarm */
+> > -               clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
+> > -       }
+> > +       ret =3D loongson_rtc_alarm_setting(pdev, regs);
+> > +       if (ret)
+> > +               return ret;
+> >
+> >         /* Loongson RTC does not support UIE */
+> >         clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, priv->rtcdev->features)=
 ;
-> > > >         if (ret)
-> > > > --
-> > > > 2.25.1
-> > > >
->
+> > @@ -379,6 +401,7 @@ static const struct of_device_id loongson_rtc_of_ma=
+tch[] =3D {
+> >         { .compatible =3D "loongson,ls1b-rtc", .data =3D &ls1b_rtc_conf=
+ig },
+> >         { .compatible =3D "loongson,ls1c-rtc", .data =3D &ls1c_rtc_conf=
+ig },
+> >         { .compatible =3D "loongson,ls7a-rtc", .data =3D &generic_rtc_c=
+onfig },
+> > +       { .compatible =3D "loongson,ls2k0300-rtc", .data =3D &ls2k0300_=
+rtc_config },
+> >         { .compatible =3D "loongson,ls2k1000-rtc", .data =3D &ls2k1000_=
+rtc_config },
+> >         { /* sentinel */ }
+> >  };
+> > --
+> > 2.47.3
+> >
+> >
+
+--
+Thanks.
+Binbin
