@@ -1,437 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3754A330314
-	for <loongarch@lists.linux.dev>; Wed, 24 Dec 2025 09:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F934330B34
+	for <loongarch@lists.linux.dev>; Wed, 24 Dec 2025 09:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766567518; cv=none; b=aAY+sLjxIm6WhssuFkVQ+YRgaCE2x6wYPWHRdfafXgcIUcb09CMtqLDl7HDyvKHteD9Ic9mQS4YJfTGNeTviZ+moJ/EkdulBBdQIV2GAqCZaOvCj2tgaZQaAib4YD34vzSnooAyoFXwi0oyf4FzCGsfIBVtvDvsRdi+BVbmeBnU=
+	t=1766567819; cv=none; b=AXhmpkDGsic4350alXo995VdLiqOLFHcPZ/pwHvYdmBMHou/vo6nEsjz8bhFnzWkrOfZx6NKD7xpt+UCa7b5+dASU94W4F+xNgM3bZbvDNJYCTsnpPlBY6v8rjMCBVv1JGAhrcPUJ5COSk+HxeJDr5tbnOba0SUx+0keseidZtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766567518; c=relaxed/simple;
-	bh=TpIMFQwkBjLpN7TAR4OGUaKapxQMZxMvttMX5iboaPY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DDrjttCRg/v0uXC1o9kenFWlHdXAeaveLpqQk+OzKzMCsz5EXgRnlSlhIxW0F4gzTjGCi//72KfrnHmEEJcU4g1tWvq+P6m4L/Dfz046lmQDS+N+nUXfP+a4bROZea4hkvVfC4H02WofTofq4yZgwN4JuUebsCLNw1VHSsdKaiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A61/YqaC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A61/YqaC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F073C2BC86
-	for <loongarch@lists.linux.dev>; Wed, 24 Dec 2025 09:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766567517;
-	bh=TpIMFQwkBjLpN7TAR4OGUaKapxQMZxMvttMX5iboaPY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A61/YqaC8wJIboToHJJBSnuoZwJ+xZFiyMjRhErfG/UO5iHh3+c722aRwZ87HTjcm
-	 7reUvWDzIbY6Q+xzUSS7PIsHbZ4trLKonyNbQpEUMG2uDfjWu1PfYxxdSuBb8ap289
-	 XXKlsDiPxFCqgy8Yj+FHTo7wCC7gcILoFvYIq1jBmfjY1ZkXhilr2O9PosYE09gUqj
-	 73t8iK16WETmSxwVIg3904bqrtSWBpvGinVwJ+L/0bLoOF/7k6uWoujvv2vnTD6Xlo
-	 F2iX99sLN0+8Nffk3QUi9q26V4RJIyEVxIo5mE+omu4tmGm05LxX8HBXCYKhdbFsQi
-	 DK9/suglzsK4A==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b7636c96b9aso1022047466b.2
-        for <loongarch@lists.linux.dev>; Wed, 24 Dec 2025 01:11:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWGjaDp8YG4FSmuR8CjYUUAePki0dd1N7c0gTpm/kFp94Y1s68DlkNK4nSRjsOjYqEOrKgJIj/dg7g=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwbZIxuJTsw/VJsG94wKS7C2wg+FCIV3IsreD1zcSrodcgDiUEM
-	0ylp08eJFE+a/CMcocyoEi8TAPVLUj4tj7JmBeZ9fD5xFpo1h0jR/ObLQtR3weWlrp9uf99Uys8
-	tfrOMrdLgwj9VXjwnM3YmSxW9/np4uqo=
-X-Google-Smtp-Source: AGHT+IHB89cIUvKSxmBt+g49jMK1OxGRtbh4e1aCsc1kMGYWhPRIMlED7E7Jggse9KD0KHnjmwpFcUF4knaH6YlLpjw=
-X-Received: by 2002:a17:907:1b13:b0:b73:8e7d:4f87 with SMTP id
- a640c23a62f3a-b80371f8f3amr1660296066b.45.1766567515940; Wed, 24 Dec 2025
- 01:11:55 -0800 (PST)
+	s=arc-20240116; t=1766567819; c=relaxed/simple;
+	bh=ZtWziJiqrZ0cuml3s+jrt4nWYfRTL4Qwsi5NxHwTfqc=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=rm8kCVXU2SsoGOSZhAwMHpz8E3xXjaMrRgV++ZqFunMmZltNqOA8jjm7u2c8DsJ9e8D6Bn5EAzOtCimjKImk8BxmxL1nbF0CegnoV/ciCb/jGWqB3UhVWk53oqXOc/V8qWDS/HLU1dZDRZ3fV5OwkWftjTGaq/pmdE07u5hURmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.126])
+	by gateway (Coremail) with SMTP id _____8Axy8J_r0tp1LUCAA--.8450S3;
+	Wed, 24 Dec 2025 17:16:47 +0800 (CST)
+Received: from [10.20.42.126] (unknown [10.20.42.126])
+	by front1 (Coremail) with SMTP id qMiowJBxbcJ6r0tpDzUEAA--.9953S3;
+	Wed, 24 Dec 2025 17:16:45 +0800 (CST)
+Subject: Re: [PATCH V2 2/2] LoongArch: KVM: fix "unreliable stack" issue
+From: lixianglai <lixianglai@loongson.cn>
+To: Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, stable@vger.kernel.org, WANG Xuerui
+ <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>
+References: <20251222113409.2343711-1-lixianglai@loongson.cn>
+ <20251222113409.2343711-3-lixianglai@loongson.cn>
+ <e1f4b85e-0177-91b7-c422-22ed60607260@loongson.cn>
+ <CAAhV-H4PehwGm-WwEuu4ZPbQutJR6m62tOSUxLcGQAxR_YX0Eg@mail.gmail.com>
+ <7b8799d1-a4b2-58dc-187a-19c772612351@loongson.cn>
+ <33541c5f-82ca-c86d-fcf9-437c4071c6b8@loongson.cn>
+Message-ID: <9974d03b-bd07-04b0-c1e3-d76123c9cd2f@loongson.cn>
+Date: Wed, 24 Dec 2025 17:13:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251029-ari_no_bus_dev-v5-0-d9a5eab67ed0@linux.ibm.com>
- <20251029-ari_no_bus_dev-v5-1-d9a5eab67ed0@linux.ibm.com> <CAAhV-H6qqppoX_G5KrWmPor16bXfvNTE2x8Xx6yajAYPqxpigw@mail.gmail.com>
- <958ef380be4ea488698fab05245d631998c32a48.camel@linux.ibm.com>
- <CAAhV-H7iMKmLnisD-874D2ZC919sDYeWy3tw=+eUqifK--6-Dg@mail.gmail.com>
- <8dd0f3df4b18a6c9f8b49ede7bc2ab71e40fd8f9.camel@linux.ibm.com>
- <CAAhV-H4MNSiUqYpE919YcCaC-_-Q3GBwxRL13ggjsyLahQ-t1A@mail.gmail.com>
- <7385677843a7790e01158644f63ae4dbb3353bfe.camel@linux.ibm.com>
- <298aaf6b2815e59d1a94efffdd0e3b002c000cea.camel@linux.ibm.com>
- <CAAhV-H7fgaZUuFSpE0VsMtptnrUTzh0TS=B9ZBUZ_=TH-XjKtg@mail.gmail.com>
- <ba63ea826472b4f2d2a318784b710ee91fdca202.camel@linux.ibm.com>
- <CAAhV-H6GE3q4qaPo9OvNkYOzatR-8BMYeGQ8hdmvKVZXbQF2rw@mail.gmail.com> <39e1536d956bfe061a4da7446c41a1b21eac0b37.camel@linux.ibm.com>
-In-Reply-To: <39e1536d956bfe061a4da7446c41a1b21eac0b37.camel@linux.ibm.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 24 Dec 2025 17:12:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5-6t=4fybED5x7bRQWSdrS_578oF3=_OY4cr5yGsxqQA@mail.gmail.com>
-X-Gm-Features: AQt7F2oyeADgMNN07eRhXBb99W5Fr9I_VpXM8w1tyoztbZo7I603nbJ5LCsIb1Q
-Message-ID: <CAAhV-H5-6t=4fybED5x7bRQWSdrS_578oF3=_OY4cr5yGsxqQA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: Fix isolated PCI function probing with ARI
- and SR-IOV
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	linux-s390 <linux-s390@vger.kernel.org>, loongarch@lists.linux.dev, 
-	Farhan Ali <alifm@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Gerd Bayer <gbayer@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <33541c5f-82ca-c86d-fcf9-437c4071c6b8@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJBxbcJ6r0tpDzUEAA--.9953S3
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF13WrW8Gry7WrWfWF15Awc_yoWrtFyfp3
+	WFyF1DtFWDtw18Jw4Dta4DAFyUtrWkG3WDWr1xJFy8Jr1qgr1YgryUXw1q9F1DJw48GF1k
+	XFy5tr9xZayUAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-On Thu, Dec 18, 2025 at 8:03=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
-.com> wrote:
+Hi:
+> Add yangtiezhu@loongson.cn
 >
-> On Wed, 2025-12-17 at 14:55 +0800, Huacai Chen wrote:
-> > On Thu, Dec 4, 2025 at 5:45=E2=80=AFAM Niklas Schnelle <schnelle@linux.=
-ibm.com> wrote:
-> > >
-> > > On Mon, 2025-12-01 at 22:45 +0800, Huacai Chen wrote:
-> > > >
-> > > --- snip ---
-> > > > You said that "it feels like this is just a hack to probe an odd
-> > > > topology". Yes, to some extent you are right.
-> > > >
-> > > > 1, One of our SoC (LS2K3000) has a special device which has func1 b=
-ut
-> > > > without func0. To let the PCI core scan func1 we can only make
-> > > > hypervisor_isolated_pci_functions() return true.
-> > > > 2, In the above case, PCI_SCAN_ALL_PCIE_DEVS has no help.
-> > > > 3, Though we change hypervisor_isolated_pci_functions() to resolve =
-the
-> > > > above problem, it also lets us pass isolated PCI functions to a gue=
-st
-> > > > OS instance.
-> > > >
-> > > > As a summary, for real machines commit a02fd05661d73a850 is a hack =
-to
-> > > > probe an odd device, for virtual machines it allows passing isolate=
-d
-> > > > PCI functions.
-> > >
-> > > Ok, thanks for the answer. So let's see how we can debug this and get
-> > > to a solution that works for both of us. Looking around a bit I see
-> > > that your pci_loongson_map_bus() has some special handling for trying
-> > > not to access non-existent devices added by your commit 2410e3301fcc
-> > > ("PCI: loongson: Don't access non-existent devices"). I wonder if wit=
-h
-> > > this patch applied we're running into this same issue but with a devf=
-n
-> > > that was previously not tried and is not covered by your checks? And
-> > > maybe since your root complex doesn't return 0xff for these non-
-> > > existent devices we could end up trying to probe AHCI on such an empt=
-y
-> > > slot misinterpreting whatever it returns as matching device/vendor?
-> > Commit 2410e3301fcc seems to have no relationship with current problems=
-.
+> Hi :
+>>
+>>
+>> On 2025/12/23 上午10:46, Huacai Chen wrote:
+>>> On Tue, Dec 23, 2025 at 9:27 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/12/22 下午7:34, Xianglai Li wrote:
+>>>>> Insert the appropriate UNWIND macro definition into the 
+>>>>> kvm_exc_entry in
+>>>>> the assembly function to guide the generation of correct ORC table 
+>>>>> entries,
+>>>>> thereby solving the timeout problem of loading the 
+>>>>> livepatch-sample module
+>>>>> on a physical machine running multiple vcpus virtual machines.
+>>>>>
+>>>>> While solving the above problems, we have gained an additional 
+>>>>> benefit,
+>>>>> that is, we can obtain more call stack information
+>>>>>
+>>>>> Stack information that can be obtained before the problem is fixed:
+>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
+>>>>> [<0>] kvm_exc_entry+0x100/0x1e0
+>>>>>
+>>>>> Stack information that can be obtained after the problem is fixed:
+>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
+>>>>> [<0>] kvm_exc_entry+0x100/0x1e0
+>>>>> [<0>] kvm_arch_vcpu_ioctl_run+0x260/0x488 [kvm]
+>>>>> [<0>] kvm_vcpu_ioctl+0x200/0xcd8 [kvm]
+>>>>> [<0>] sys_ioctl+0x498/0xf00
+>>>>> [<0>] do_syscall+0x94/0x190
+>>>>> [<0>] handle_syscall+0xb8/0x158
+>>>>>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+>>>>> ---
+>>>>> Cc: Huacai Chen <chenhuacai@kernel.org>
+>>>>> Cc: WANG Xuerui <kernel@xen0n.name>
+>>>>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+>>>>> Cc: Bibo Mao <maobibo@loongson.cn>
+>>>>> Cc: Charlie Jenkins <charlie@rivosinc.com>
+>>>>> Cc: Xianglai Li <lixianglai@loongson.cn>
+>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>>>
+>>>>>    arch/loongarch/kvm/switch.S | 2 ++
+>>>>>    1 file changed, 2 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/loongarch/kvm/switch.S 
+>>>>> b/arch/loongarch/kvm/switch.S
+>>>>> index 93845ce53651..e3ecb24a3bc5 100644
+>>>>> --- a/arch/loongarch/kvm/switch.S
+>>>>> +++ b/arch/loongarch/kvm/switch.S
+>>>>> @@ -170,6 +170,7 @@ SYM_CODE_START(kvm_exc_entry)
+>>>>>        /* restore per cpu register */
+>>>>>        ld.d    u0, a2, KVM_ARCH_HPERCPU
+>>>>>        addi.d  sp, sp, -PT_SIZE
+>>>>> +     UNWIND_HINT_REGS
+>>>>>
+>>>>>        /* Prepare handle exception */
+>>>>>        or      a0, s0, zero
+>>>>> @@ -214,6 +215,7 @@ SYM_FUNC_START(kvm_enter_guest)
+>>>>>        addi.d  a2, sp, -PT_SIZE
+>>>>>        /* Save host GPRs */
+>>>>>        kvm_save_host_gpr a2
+>>>>> +     st.d    ra, a2, PT_ERA
+>>>> Had better add some comments here to show that it is special for 
+>>>> unwind
+>>>> usage since there is "st.d ra, a2, PT_R1" already in macro
+>>>> kvm_save_host_gpr().
+>>> Then there is a new problem, why can unwinder not recognize the
+>>> instruction in  kvm_save_host_gpr()?
+>> maybe it need unwinder owner to answer this question.
+>>
+> kvm_save_host_gpr() is an assembler macro that has already been 
+> executed and is no longer normal on the stack.
+> Am I explaining correctly? @tiezhu
 >
-> I'm not so sure. The only thing this patch is potentially supposed to
-> change is which devfns get enumerated and thus config space accessed
-> looking for a device. And that commit talks about accessing non
-> existent devices causing a system hang so that does seem fitting in
-> principle.
+> I guess you might be wondering why unwinder didn't recognize 
+> kvm_enter_guest().
 >
-> > >
-> --- snip ---
-> > > Could you try redoing the test with the AHCI hang but add a print of
-> > > the affected bus/device/function that AHCI thinks it is probing? Then
-> > > if the above theory applies we should see it trying to probe on a
-> > > device that is missing in the correctly booted case and got past your
-> > > existing checks.
-> > By redoing this test we found there is only one AHCI detected, and the
-> > BDF is: bus=3D0, device=3D8, fun=3D0.
-> >
-> > With or without this patch, only one AHCI. But without this patch, the
-> > AHCI initialization doesn't hang.
-> >
+> There's something wrong with the logic that we're implementing here 
+> that we should put the current pc in era instead of ra.
+> This will allow unwind to identify the symbol kvm_enter_guest.
 >
+> So I will fix it in the next version like this:
 >
-> This is all very odd. Just so there is no chance of misunderstanding.
-> You did check the BDF that the ahci driver is trying to probe directly?
-> I.e. something like what I added as the top commit here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=3Dl=
-oongarch_debug
-We check the BDF in ahci_init_one().
+> @@ -214,6 +215,7 @@ SYM_FUNC_START(kvm_enter_guest)
+>        addi.d  a2, sp, -PT_SIZE
+>        /* Save host GPRs */
+>        kvm_save_host_gpr a2
+>
+> +    /*
+> +     * The csr_era member variable of the pt_regs structure is required
+> +     * for unwinding orc to perform stack traceback, so we need to put
+> +     * pc into csr_era member variable here.
+> +     */
+> +    pcaddi    t0, 0
+> +    st.d    t0, a2, PT_ERA
+> +
+>
+We discussed it with @tiezhu internally and he was OK with the change!
 
-And with your repo, the boot log is like this:
+Thanks,
+Xianglai.
 
-[   10.454172] ahci 0000:00:08.0: ahci_enable_ahci() hung
-[   10.459292] ------------[ cut here ]------------
-[   10.463876] WARNING: drivers/ata/libahci.c:459 at
-ahci_save_initial_config+0x3d8/0x448, CPU#0: kworker/0:2/253
-[   10.473824] Modules linked in:
-[   10.476856] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Not tainted
-6.19.0-rc1+ #1 PREEMPT(full)
-[   10.485416] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   10.499160] Workqueue: events work_for_cpu_fn
-[   10.503489] pc 900000000104e3f8 ra 900000000104e3f8 tp
-900000010fb74000 sp 900000010fb77c20
-[   10.511788] a0 000000000000002a a1 90000000027223c0 a2
-900000010fb77968 a3 90000000027223c8
-[   10.520089] a4 90000000027223c0 a5 900000010fb77960 a6
-0000000000000001 a7 0000000000000001
-[   10.528390] t0 09c296afbf53694b t1 09c296afbf53694b t2
-ffffffffffffffff t3 0000000000000001
-[   10.536693] t4 fffffffffffffffe t5 0000000000000332 t6
-0000000000000005 t7 00000000000011bd
-[   10.544993] t8 0000000000000000 u0 9000000000232db0 s9
-900000000226a4a8 s0 9000000100e7ea30
-[   10.553293] s1 ffff80003243d800 s2 90000001012af0b8 s3
-900000010fb77cc8 s4 9000000002269fb8
-[   10.561592] s5 0000000000000005 s6 9000000002429000 s7
-90000001012af0b8 s8 900000010fb77d08
-[   10.569890]    ra: 900000000104e3f8 ahci_save_initial_config+0x3d8/0x448
-[   10.576551]   ERA: 900000000104e3f8 ahci_save_initial_config+0x3d8/0x448
-[   10.583212]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
-[   10.589359]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[   10.593687]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[   10.598447]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-[   10.603207] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
-[   10.608744]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
-[   10.614625] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Not tainted
-6.19.0-rc1+ #1 PREEMPT(full)
-[   10.614628] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   10.614630] Workqueue: events work_for_cpu_fn
-[   10.614633] Stack : 900000010fb77858 0000000000000000
-900000000024371c 900000010fb74000
-[   10.614637]         900000010fb77830 900000010fb77838
-0000000000000000 900000010fb77978
-[   10.614639]         900000010fb77970 900000010fb77970
-900000010fb77650 0000000000000001
-[   10.614642]         0000000000000001 900000010fb77838
-09c296afbf53694b 9000000100414300
-[   10.614645]         80000000ffffe349 fffffffffffffffe
-000000000000034b 000000000000002f
-[   10.614648]         0000000000000063 0000000000000001
-000000000672c000 900000000226a4a8
-[   10.614651]         0000000000000000 0000000000000000
-90000000020fd980 9000000002429000
-[   10.614654]         00000000000001cb 0000000000000009
-0000000000000002 90000001012af0b8
-[   10.614657]         900000010fb77d08 0000000000000000
-9000000000243734 0000000000000000
-[   10.614659]         00000000000000b0 0000000000000004
-0000000000000000 0000000000071c1d
-[   10.614662]         ...
-[   10.614664] Call Trace:
-[   10.614665] [<9000000000243734>] show_stack+0x5c/0x180
-[   10.614669] [<900000000023f3c4>] dump_stack_lvl+0x6c/0x9c
-[   10.614674] [<9000000000267168>] __warn+0x90/0x128
-[   10.614679] [<90000000017e983c>] __report_bug+0x84/0x198
-[   10.614683] [<90000000017e9a4c>] report_bug+0x3c/0xc0
-[   10.614686] [<9000000001823910>] do_bp+0x2d0/0x340
-[   10.614690] [<9000000000241e00>] handle_bp+0x120/0x1c0
-[   10.614692] [<900000000104e3f8>] ahci_save_initial_config+0x3d8/0x448
-[   10.614695] [<900000000104b374>] ahci_init_one+0x354/0x1068
-[   10.614699] [<9000000000d2343c>] local_pci_probe+0x44/0xb8
-[   10.614703] [<9000000000286bf8>] work_for_cpu_fn+0x18/0x30
-[   10.614706] [<900000000028a4e0>] process_one_work+0x160/0x330
-[   10.614709] [<900000000028aee8>] worker_thread+0x338/0x468
-[   10.614712] [<9000000000295ef4>] kthread+0x11c/0x138
-[   10.614716] [<9000000001823a58>] ret_from_kernel_thread+0x28/0xd0
-[   10.614717] [<90000000002414e4>] ret_from_kernel_thread_asm+0xc/0x88
-[   10.614720]
-[   10.614720] ---[ end trace 0000000000000000 ]---
-[   10.818394] ahci 0000:00:08.0: forcing PORTS_IMPL to 0x1
-[   10.902172] ahci 0000:00:08.0: ahci_enable_ahci() hung
-[   10.907282] ------------[ cut here ]------------
-[   10.911866] WARNING: drivers/ata/libahci.c:994 at
-ahci_reset_controller+0x88/0x1d8, CPU#0: kworker/0:2/253
-[   10.921466] Modules linked in:
-[   10.924496] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Tainted: G
-   W           6.19.0-rc1+ #1 PREEMPT(full)
-[   10.934611] Tainted: [W]=3DWARN
-[   10.937551] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   10.951294] Workqueue: events work_for_cpu_fn
-[   10.955622] pc 900000000104e4f0 ra 900000000104e4f0 tp
-900000010fb74000 sp 900000010fb77c10
-[   10.963922] a0 000000000000002a a1 90000000027223c0 a2
-900000010fb77958 a3 90000000027223c8
-[   10.972221] a4 90000000027223c0 a5 900000010fb77950 a6
-0000000000000001 a7 0000000000000001
-[   10.980519] t0 09c296afbf53694b t1 09c296afbf53694b t2
-ffffffffffffffff t3 0000000000000001
-[   10.988818] t4 fffffffffffffffe t5 000000000000036b t6
-0000000000000005 t7 000000000000233d
-[   10.997117] t8 0000000000000000 u0 9000000000232db0 s9
-90000001001f0000 s0 900000010000dc80
-[   11.005416] s1 ffff80003243d800 s2 9000000100e7ea30 s3
-9000000100e7ea30 s4 9000000002269fb8
-[   11.013715] s5 90000001012af0b8 s6 9000000002429000 s7
-90000001012af0b8 s8 0000000000000001
-[   11.022014]    ra: 900000000104e4f0 ahci_reset_controller+0x88/0x1d8
-[   11.028328]   ERA: 900000000104e4f0 ahci_reset_controller+0x88/0x1d8
-[   11.034641]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
-[   11.040787]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[   11.045116]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[   11.049877]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-[   11.054636] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
-[   11.060173]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
-[   11.066053] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Tainted: G
-   W           6.19.0-rc1+ #1 PREEMPT(full)
-[   11.066055] Tainted: [W]=3DWARN
-[   11.066056] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   11.066057] Workqueue: events work_for_cpu_fn
-[   11.066060] Stack : 900000010fb77848 0000000000000000
-900000000024371c 900000010fb74000
-[   11.066063]         900000010fb77820 900000010fb77828
-0000000000000000 900000010fb77968
-[   11.066066]         900000010fb77960 900000010fb77960
-900000010fb77640 0000000000000001
-[   11.066068]         0000000000000001 900000010fb77828
-09c296afbf53694b 9000000100414300
-[   11.066071]         80000000ffffe384 fffffffffffffffe
-0000000000000386 000000000000002f
-[   11.066074]         0000000000000063 0000000000000001
-000000000672c000 90000001001f0000
-[   11.066077]         0000000000000000 0000000000000000
-90000000020fd980 9000000002429000
-[   11.066079]         00000000000003e2 0000000000000009
-0000000000000002 90000001012af0b8
-[   11.066082]         0000000000000001 0000000000000000
-9000000000243734 0000000000000000
-[   11.066085]         00000000000000b0 0000000000000004
-0000000000000000 0000000000071c1d
-[   11.066088]         ...
-[   11.066089] Call Trace:
-[   11.066089] [<9000000000243734>] show_stack+0x5c/0x180
-[   11.066091] [<900000000023f3c4>] dump_stack_lvl+0x6c/0x9c
-[   11.066095] [<9000000000267168>] __warn+0x90/0x128
-[   11.066098] [<90000000017e983c>] __report_bug+0x84/0x198
-[   11.066102] [<90000000017e9a4c>] report_bug+0x3c/0xc0
-[   11.066105] [<9000000001823910>] do_bp+0x2d0/0x340
-[   11.066106] [<9000000000241e00>] handle_bp+0x120/0x1c0
-[   11.066108] [<900000000104e4f0>] ahci_reset_controller+0x88/0x1d8
-[   11.066111] [<900000000104a58c>] ahci_pci_reset_controller+0x2c/0xd8
-[   11.066114] [<900000000104bc10>] ahci_init_one+0xbf0/0x1068
-[   11.066116] [<9000000000d2343c>] local_pci_probe+0x44/0xb8
-[   11.066119] [<9000000000286bf8>] work_for_cpu_fn+0x18/0x30
-[   11.066122] [<900000000028a4e0>] process_one_work+0x160/0x330
-[   11.066125] [<900000000028aee8>] worker_thread+0x338/0x468
-[   11.066128] [<9000000000295ef4>] kthread+0x11c/0x138
-[   11.066131] [<9000000001823a58>] ret_from_kernel_thread+0x28/0xd0
-[   11.066132] [<90000000002414e4>] ret_from_kernel_thread_asm+0xc/0x88
-[   11.066134]
-[   11.066135] ---[ end trace 0000000000000000 ]---
-[   11.358172] ahci 0000:00:08.0: ahci_enable_ahci() hung
-[   11.363283] ------------[ cut here ]------------
-[   11.367867] WARNING: drivers/ata/libahci.c:1028 at
-ahci_reset_controller+0x1cc/0x1d8, CPU#0: kworker/0:2/253
-[   11.377638] Modules linked in:
-[   11.380668] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Tainted: G
-   W           6.19.0-rc1+ #1 PREEMPT(full)
-[   11.390783] Tainted: [W]=3DWARN
-[   11.393723] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   11.407466] Workqueue: events work_for_cpu_fn
-[   11.411792] pc 900000000104e634 ra 900000000104e634 tp
-900000010fb74000 sp 900000010fb77c10
-[   11.420092] a0 000000000000002a a1 90000000027223c0 a2
-900000010fb77958 a3 90000000027223c8
-[   11.428391] a4 90000000027223c0 a5 900000010fb77950 a6
-0000000000000001 a7 0000000000000001
-[   11.436691] t0 09c296afbf53694b t1 09c296afbf53694b t2
-ffffffffffffffff t3 0000000000000001
-[   11.444990] t4 fffffffffffffffe t5 00000000000003a6 t6
-0000000000000005 t7 0000000000000dfd
-[   11.453288] t8 0000000000000000 u0 9000000000232db0 s9
-90000001001f0000 s0 900000010000dc80
-[   11.461587] s1 ffff80003243d800 s2 9000000100e7ea30 s3
-9000000100e7ea30 s4 9000000002269fb8
-[   11.469885] s5 90000001012af0b8 s6 9000000002429000 s7
-90000001012af0b8 s8 0000000000000001
-[   11.478185]    ra: 900000000104e634 ahci_reset_controller+0x1cc/0x1d8
-[   11.484586]   ERA: 900000000104e634 ahci_reset_controller+0x1cc/0x1d8
-[   11.490987]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=3DCC DACM=3DCC -WE)
-[   11.497131]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[   11.501458]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[   11.506218]  ECFG: 00071c1d (LIE=3D0,2-4,10-12 VS=3D7)
-[   11.510977] ESTAT: 000c0000 [BRK] (IS=3D ECode=3D12 EsubCode=3D0)
-[   11.516512]  PRID: 0014d010 (Loongson-64bit, Loongson-3C6000/S)
-[   11.522393] CPU: 0 UID: 0 PID: 253 Comm: kworker/0:2 Tainted: G
-   W           6.19.0-rc1+ #1 PREEMPT(full)
-[   11.522395] Tainted: [W]=3DWARN
-[   11.522396] Hardware name: To be filled by O.E.M.To be fill To be
-filled by O.E.M.To be fill/To be filled by O.E.M.To be fill, BIOS
-Loongson-UDK2018-V4.0.
-[   11.522397] Workqueue: events work_for_cpu_fn
-[   11.522400] Stack : 900000010fb77848 0000000000000000
-900000000024371c 900000010fb74000
-[   11.522403]         900000010fb77820 900000010fb77828
-0000000000000000 900000010fb77968
-[   11.522406]         900000010fb77960 900000010fb77960
-900000010fb77640 0000000000000001
-[   11.522409]         0000000000000001 900000010fb77828
-09c296afbf53694b 9000000100414300
-[   11.522412]         80000000ffffe3bf fffffffffffffffe
-00000000000003c1 000000000000002f
-[   11.522415]         0000000000000063 0000000000000001
-000000000672c000 90000001001f0000
-[   11.522418]         0000000000000000 0000000000000000
-90000000020fd980 9000000002429000
-[   11.522420]         0000000000000404 0000000000000009
-0000000000000002 90000001012af0b8
-[   11.522423]         0000000000000001 0000000000000000
-9000000000243734 0000000000000000
-[   11.522426]         00000000000000b0 0000000000000004
-0000000000000000 0000000000071c1d
-[   11.522428]         ...
-[   11.522430] Call Trace:
-[   11.522430] [<9000000000243734>] show_stack+0x5c/0x180
-[   11.522432] [<900000000023f3c4>] dump_stack_lvl+0x6c/0x9c
-[   11.522436] [<9000000000267168>] __warn+0x90/0x128
-[   11.522439] [<90000000017e983c>] __report_bug+0x84/0x198
-[   11.522442] [<90000000017e9a4c>] report_bug+0x3c/0xc0
-[   11.522445] [<9000000001823910>] do_bp+0x2d0/0x340
-[   11.522447] [<9000000000241e00>] handle_bp+0x120/0x1c0
-[   11.522448] [<900000000104e634>] ahci_reset_controller+0x1cc/0x1d8
-[   11.522451] [<900000000104a58c>] ahci_pci_reset_controller+0x2c/0xd8
-[   11.522454] [<900000000104bc10>] ahci_init_one+0xbf0/0x1068
-[   11.522456] [<9000000000d2343c>] local_pci_probe+0x44/0xb8
-[   11.522459] [<9000000000286bf8>] work_for_cpu_fn+0x18/0x30
-[   11.522462] [<900000000028a4e0>] process_one_work+0x160/0x330
-[   11.522465] [<900000000028aee8>] worker_thread+0x338/0x468
-[   11.522467] [<9000000000295ef4>] kthread+0x11c/0x138
-[   11.522470] [<9000000001823a58>] ret_from_kernel_thread+0x28/0xd0
-[   11.522471] [<90000000002414e4>] ret_from_kernel_thread_asm+0xc/0x88
-[   11.522473]
-[   11.522474] ---[ end trace 0000000000000000 ]---
-[   11.736718] ahci 0000:00:08.0: AHCI vers 0000.0000, 1 command
-slots, ? Gbps, unknown mode
-[   11.744847] ahci 0000:00:08.0: 1/1 ports implemented (port mask 0x1)
-[   11.751159] ahci 0000:00:08.0: flags:
-[   11.755115] scsi host0: ahci
-[   11.758048] ata1: SATA max UDMA/133 abar m1024@0xe0030401800 port
-0xe0030401900 irq 44 lpm-pol 1
-[   11.767294] e1000: Intel(R) PRO/1000 Network Driver
-[   11.772145] e1000: Copyright (c) 1999-2006 Intel Corporation.
-[   11.777870] e1000e: Intel(R) PRO/1000 Network Driver
-[   11.782800] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-
-Huacai
-
->
-> This is because with the AHCI controller having a devfn 08.0 devfn and
-> likely dev->multifunction not set this patch would make a difference in
-> that it would try to enumerate 08.1 and so on while without this  patch
-> these would be skipped because of the dev && !dev->multifunction
-> condition even though isolated function probing should look at all
-> functions. And I was thinking maybe this causes us to end up trying to
-> probe an AHCI controller where there is none.
->
-> Another thing I could imagine, especially with commit 2410e3301fcc
-> ("PCI: loongson: Don't access non-existent devices") in mind is that
-> accessing the device/vendor config space for some non existent devices
-> leaves your PCIe controller in some bad state and then the MMIOs for
-> the AHCI enable go lost or something. Maybe you could add debug code in
-> the relevant parts of drivers/pci/controller/pci-loongson.c to check
-> which devices get accessed with this patch vs without it? Would it help
-> if I provided a debug patch for that? Though I really don't know what
-> part is relevant for the system you're seeing the problem with.
->
 > Thanks,
-> Niklas
+> Xianglai.
+>>>
+>>> Huacai
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>>        addi.d  a2, a1, KVM_VCPU_ARCH
+>>>>>        st.d    sp, a2, KVM_ARCH_HSP
+>>>>>
+>>>>
+>
+
