@@ -1,111 +1,122 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2054E315D26
-	for <loongarch@lists.linux.dev>; Wed, 24 Dec 2025 10:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB1A22370A;
+	Thu, 25 Dec 2025 06:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766572544; cv=none; b=HUCSuqmvkJ0UCsmzldDc5TiAMCw55xs/mXK6PoSKgr1OVmdF1KnzbWznpaYAcs1wcFk+XWa2JMPncC7uqGuFNanDcHvCAesCjY2I0vyjbKIS46JnUp0Fj4tuq54o0iVyM/HapntdyJ1p+Vc4AI0HHTSQXY+ir6jvczaS8CvUD4w=
+	t=1766644028; cv=none; b=svJMmRcSkLmIpzsucdTeV0+BHIE7j7LnDVS/FvGkQUJuD64ZaFdZUPJfwGhrV++fqBgYvTHJ5agPkCv4JlZZF6Hb5Rdgy14fWcVYgdqyu3rlh8IwphoOeF5O0blvczoIUv1KsB3fK72gGka9GnkzQw53q5kuQYqBDetFAZuDTJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766572544; c=relaxed/simple;
-	bh=ypFvyZm69/jminGaNJwnlAaaP6Sr0+rLixYiHkjbf/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oiZigbhtvielZDZGZHe+SpHF0rxqpdrBYNuvmB+QviRfIgQky6V2u2K1ghijHAIPjVuDNU4HELRBi/NbR7ucJeuZzCT3Ha6PhRZxc2lQ8VvOMivaSvf+GnzBCm6iBoqf2bA6Qcw07P4c5LLnk7GruqQZMS+qDuqmwqiooe8EXu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxnsP6wUtp37kCAA--.9134S3;
-	Wed, 24 Dec 2025 18:35:38 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCx2+D0wUtpGjsEAA--.13037S4;
-	Wed, 24 Dec 2025 18:35:37 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] LoongArch: Remove is_entry_func() and kernel_entry_end
-Date: Wed, 24 Dec 2025 18:35:16 +0800
-Message-ID: <20251224103516.12654-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20251224103516.12654-1-yangtiezhu@loongson.cn>
-References: <20251224103516.12654-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1766644028; c=relaxed/simple;
+	bh=p1XfubM0YWj6WnMP8u+aCWSf2k0v8QcI9Wgv+fon5Ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bOPpssthunWgKo8FO9F1PkCw6oVFpKzpRrPDNKvEIAUhHh4QwTl0euQNdzFhSoQp8UXaQjfoyplm9SWS4FwsQG0dIBe4iYNOAcZDVOuffDBDQ+pdG6k+1xWDztJQMvj+zQNI1bgTPAaLvEzMjvkn5/S0tPiYfcbidlkX9PQonG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4dzvruN; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4dzvruN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766644027; x=1798180027;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=p1XfubM0YWj6WnMP8u+aCWSf2k0v8QcI9Wgv+fon5Ck=;
+  b=E4dzvruNcXQE5dw9kyc+jRTBrmIE7QvS576jan+va5QuBsyRkHFlktZH
+   vS/jnf6/P0u400jmA2rsbb2BQmmm2qun4SR/Xcsa79iHWj80++5q4vlVY
+   LKhE+gXWjunWXMVTVyp5HlAFlMe6KxxmVMYU42qVkeWNEDxNUeAuPrK/F
+   9/JZZhfCsAIv1FOKpt0qc53RNF+jHSoTLTBLNWwelZh8DMgTQFjje2r+a
+   6cCb3dznAgHmk8riR5vVQZH4dMfne9Dey9KfneJg/RkABA1/qKC6rLnH8
+   5BpiLgNRR4KWcJuxdFqdzXA1+moZ/16Jr51pec23Hvjhg9nbFNbDKoV17
+   g==;
+X-CSE-ConnectionGUID: eSZzOOORR+iR1/AU4yT2Ow==
+X-CSE-MsgGUID: 7kdlGmN1RCKLbjnjUI8A7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="68340497"
+X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
+   d="scan'208";a="68340497"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 22:27:06 -0800
+X-CSE-ConnectionGUID: DUtRii2LTCeg4q7vXPJ1zA==
+X-CSE-MsgGUID: a7dRTs5tS6S+a0BISdFYdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
+   d="scan'208";a="200649863"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 22:26:59 -0800
+Message-ID: <43d1cde6-2277-4f3c-8e7d-59e6edb2228a@linux.intel.com>
+Date: Thu, 25 Dec 2025 14:26:56 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 15/44] KVM: x86/pmu: Snapshot host (i.e. perf's)
+ reported PMU capabilities
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>,
+ Sandipan Das <sandipan.das@amd.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-16-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251206001720.468579-16-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx2+D0wUtpGjsEAA--.13037S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WrWxZF1rtr47Ar4fCw1DXFc_yoW8CF15pF
-	9xAr1DXrWF9F97t34DXw109rWDJrn7Ww1agF9rKFyrGF12qr13Zr1Fvw1DXF90q3yFgFWr
-	XFnY9r90ka1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
 
-For now, the related codes of is_entry_func() are useless, so they can be
-removed. Then the symbol kernel_entry_end is not used any more, so it can
-be removed too.
 
-Link: https://lore.kernel.org/lkml/kjiyla6qj3l7ezspitulrdoc5laj2e6hoecvd254hssnpddczm@g6nkaombh6va/
-Suggested-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/head.S       |  2 --
- arch/loongarch/kernel/unwind_orc.c | 11 -----------
- 2 files changed, 13 deletions(-)
+On 12/6/2025 8:16 AM, Sean Christopherson wrote:
+> Take a snapshot of the unadulterated PMU capabilities provided by perf so
+> that KVM can compare guest vPMU capabilities against hardware capabilities
+> when determining whether or not to intercept PMU MSRs (and RDPMC).
+>
+> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> Tested-by: Xudong Hao <xudong.hao@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/pmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 487ad19a236e..7c219305b61d 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -108,6 +108,8 @@ void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
+>  	bool is_intel = boot_cpu_data.x86_vendor == X86_VENDOR_INTEL;
+>  	int min_nr_gp_ctrs = pmu_ops->MIN_NR_GP_COUNTERS;
+>  
+> +	perf_get_x86_pmu_capability(&kvm_host_pmu);
+> +
+>  	/*
+>  	 * Hybrid PMUs don't play nice with virtualization without careful
+>  	 * configuration by userspace, and KVM's APIs for reporting supported
 
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index ce7f6c04f4ab..7f288e89573b 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -144,5 +144,3 @@ SYM_CODE_START(smpboot_entry)
- SYM_CODE_END(smpboot_entry)
- 
- #endif /* CONFIG_SMP */
--
--SYM_ENTRY(kernel_entry_end, SYM_L_GLOBAL, SYM_A_NONE)
-diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
-index 0d5fa64a2225..710f82d73797 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -348,14 +348,6 @@ void unwind_start(struct unwind_state *state, struct task_struct *task,
- }
- EXPORT_SYMBOL_GPL(unwind_start);
- 
--static bool is_entry_func(unsigned long addr)
--{
--	extern u32 kernel_entry;
--	extern u32 kernel_entry_end;
--
--	return addr >= (unsigned long)&kernel_entry && addr < (unsigned long)&kernel_entry_end;
--}
--
- static inline unsigned long bt_address(unsigned long ra)
- {
- 	extern unsigned long eentry;
-@@ -402,9 +394,6 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/* Don't let modules unload while we're reading their ORC data. */
- 	guard(rcu)();
- 
--	if (is_entry_func(state->pc))
--		goto end;
--
- 	orc = orc_find(state->pc);
- 	if (!orc) {
- 		/*
--- 
-2.42.0
+Hi Sean,
+
+It looks a merging error here. We don't need this patch.
+
+The original patch "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
+reported PMU capabilities")" had been merged into upstream and subsequently
+we submitted a new patch "034417c1439a ("KVM: x86/pmu: Don't try to get
+perf capabilities for hybrid CPUs")" to fix the warning introduced from
+previous patch  "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
+reported PMU capabilities")". Thanks.
+
+-Dapeng Mi
+
 
