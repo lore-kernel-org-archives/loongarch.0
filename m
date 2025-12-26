@@ -1,118 +1,94 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BB9347C6
-	for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 10:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E451A256E
+	for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 15:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766743445; cv=none; b=O6+DA1S7nr1LM56gLMUVrZVdR+lgWWcPwN0GzeXwNk6PIiLGx1vLoPkWnFJ1qcYTYn+NdLEFUyIfcZMEJzy5brF3prtxWlvueWmvm4CLXkSZN6iQkbRR9ioDSJaC89BypuuKlynscFyFxuU0dps/ae0fCWIHq3iU/7VT55gaYN8=
+	t=1766761677; cv=none; b=ISvm9NUYl0scuaJP2lXIiMBPsQMesiET6cdRKJL7W/P+vhx7LmpazTjSLfgn7Bn0Ta8ruMLQyTvc9OnPUFWAQPRWU86crTXO3JVM7YfHVEuASpHyJVG0TVrwGMKJFk2kHuPME2uKuBn9vIxh8VlHCaiD5J6/l7stKtSxCDUWCZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766743445; c=relaxed/simple;
-	bh=bsPlTRK85fjjyDDqOcgY783Uyn44b4lPb1UUHMFZ/co=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XvGR1GYl7NWvY5qod4FJ/7RbR7jn9URYhetqK4uLRX78koaWiXf0Oe1drALWqWd+Ijoek2DYT3d4MgHw+32VXBwoce4nFV2ujaISVq352hx++bApPWkJDwdexDOnGjMYNo3kKrWygvgwzd9xbudA+rD1rVGKWdhmUL0DTbWdNMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mq0KB+YS; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766761677; c=relaxed/simple;
+	bh=XRZOxfsh+3VNOaBYs4rVbbv43RBWgsiCafEkxAr8Sdk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O4M4hfgEy8+ebhoaWHqQ/qoT32lMV++xt/7IaZQX+8ydcSDt8xci+SI1eQ6g+h6+jKw3LTzsKhqyCMPQQFwMrDUM1NJs8iQhapvyo6B4NbW0dsDR1rZJrmswpf9zun16oHgBpo70fOqcmGT3Uw06mqqsE5NTpU32CtVUaI4GGrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=luNscO0d; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mq0KB+YS"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59584301f0cso7759592e87.0
-        for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 02:04:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766743441; x=1767348241; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c56xVey+/P0K5DvPpIeRFr1NM6R9NaOEhrxube/Xe6M=;
-        b=mq0KB+YSOq9/v54lt4HS0Jf1qIeUjWNZQnT81wopFeeggo21Cv+ETPfoxlTwTn002v
-         pBmXpPKAKWAtXoszku3TaG2CyVwb1dIaZETD+34w9YraWdsiMOscuivGGbkbLwfdZu1M
-         31TJSSg9xD4I9I/GAr1mBya2BacwJDDCFc3MBdxEwC8qjmFq8MXYqfaNaTauFpPSRkzT
-         uGF1dmypbOQTApfjk70S5yr1zp7JSakoDWa+3P7LtYXCxTV9aRF73m/56zDoqzR1iCuS
-         sOp4e6WdGWwH8KdXkg2WfRi3hocNPmjpwCr/zQYfXvSLbYFVqJp0xTuTFK+TFCAxJmCR
-         zW/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766743441; x=1767348241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=c56xVey+/P0K5DvPpIeRFr1NM6R9NaOEhrxube/Xe6M=;
-        b=Vns7dfoJIV58GGtDGj053G0O7CSnOs3BfMoz4o3jxG5MSGx+axpbYfmEL1tqBoyYHB
-         HAFQVbxmrLPA9MLnhq3P6AmbLajFY8C5eA1WJuAuAsJTQ3gZEQt8wq9fNP8SyA2BaQ4b
-         cXh2svWlvlSo2HExsX7FawT7+kcp7vfSJLgKZzfaeR+n4xmRTeI7klxSHR7MRPsqADy9
-         p8TX3e9V1yS9sk0A4KhMyK1r9ixrX9sSSQhAR7pGeo7OCeLzWnz3xMC+lXEbMceqMvzy
-         mzo4Xf6BoOXF+8pdjNK7pQ1tzh5FhCrBXoLxuRt7jTVPFqjzbqgFIIDtQtk6A7gzT/L2
-         m1Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnjpxSZLtGl0N2R8ks6hyDvrB4xcADkw3Kqf7KOqfLcsW3nOoN9kMzCW0ln/qbiGuiw5bFLcsXM+Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7J6VP0SjO4m8zdQ4Jlmz1mgJxevAyxabCAGDxty/7LOEQ2+cu
-	BV0jv0T08Fe/EQRSD4//JyHA9DCsLRe/ng/7x82MqytziFOGTA2YU8rzOwEhwMZWGlOHo6axnu7
-	dku5f/VdfvdRPDy7ms3i55AbFx7ECZ1A=
-X-Gm-Gg: AY/fxX4CXArSnpQnfXLEqG6Bp+hVHBCg2CLDJiQme/n1RXTj2zONOMD0i7dIIGPPFox
-	XVkrH+hZcatl31W3sVa7SzcInbBS4dA34YcA+AjpK+iwLJ5z0GQ4PG7haC1s/tXHK54y8Or4Um6
-	o7rYpDoJnbeCbaxdTca4ejwD5uGuEyQYoFaWDD+lpOtpH3tSzTZ9X9LB0IrrA36o8xZRz7da80R
-	dfta0TGVRAsp0nzxWNZD/yo0RkT/Af8jazSIhnVEX3ObMkeApmwb0SLGWmfiX4oPm1aGOIV+6J3
-	6uesSWQ=
-X-Google-Smtp-Source: AGHT+IEeJtzsXB++6IhxWCem8I/iqi6tN+vUyXQQj7sGJYC2SPWAV++ictVP2fCKp10Wj5G66giWAcJxanY8UYAXGPk=
-X-Received: by 2002:a05:6512:e9a:b0:595:81c1:c57 with SMTP id
- 2adb3069b0e04-59a17d1813emr7434587e87.11.1766743441289; Fri, 26 Dec 2025
- 02:04:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="luNscO0d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1766761651;
+	bh=MTRp+rehqQ+7n6On+OJPgTGjoFwEf7Thcm6mg/opK54=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=luNscO0dapumHVqSqIzLYj+zTbuEM1Q32N8zT3sZTj+lor4zbpUJ11I75O3cJ+o4g
+	 Ee9Kfuz11GkcXWOsU5W3mZ3mt0TD/aT/qzReg42U2x99OuvKGPWwaTcqTCTS6ZS9s2
+	 wTsslOrQ+0YZmlzSAJlbVY9A6Gf3uq+DABiHDSao=
+X-QQ-mid: zesmtpgz9t1766761645t97afa3d3
+X-QQ-Originating-IP: NnBNnG/Vv+LjTL8xz8VRh3lPkL/TPL/xqB3zZD35xBE=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 26 Dec 2025 23:07:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 17620591120825404023
+EX-QQ-RecipientCnt: 8
+From: Qiang Ma <maqianga@uniontech.com>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Qiang Ma <maqianga@uniontech.com>
+Subject: [PATCH 0/3] LoongArch: KVM: Fix kvm_device leak in kvm_{pch_pic|ipi|eiointc}_destroy
+Date: Fri, 26 Dec 2025 23:07:03 +0800
+Message-Id: <20251226150706.2511127-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1766471839.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1766471839.git.zhoubinbin@loongson.cn>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Fri, 26 Dec 2025 18:03:24 +0800
-X-Gm-Features: AQt7F2qiUK1mpU25DWjs_X4oGOorQ76rYhxJTsfWZSC-loYSKF2H28Cd9YxqJXs
-Message-ID: <CAJhJPsVMsWmiaghsyvfwGzBOoKR0Tn9gGwaT+tpeW7q+qfZN3A@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] RTC: Add Loongson-2K0300 support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: MQx7mI7eoecOuJ21VhwK810zFtRiCN4DV+77fEbwBY0tXIl+ewOCoENL
+	eGaEVAw3QrjKYzNy54tV9Y5CuBVmHBh5KOdWsoPrIbTra7RbMyXUU0aBMelcgQmpXIduTC1
+	2ddOrcD+/XmpO3NIP1GVP6Z/AFqgEesG2MGIJh8kso60gRgMDeEPBoVWa8NYDXu4JCSMQzf
+	Ax7TZziH+9bQuR1UNJ+DIFURuR3tCZnhG+wVJom2DVSiKrFSUbRKEssOSrR2fhexCJkKxsZ
+	G2HiXZqHVzxhVdLOyY55AoPZBzrHMvJtWlx5owaM6vyiwZjWQFPcTtjOsbxjah02qyuD3gA
+	3/lvEGLxZa9448Wbm8Hf9871m3sxsXcCC573N5BvW8d5QFCIkoAnlbl4o3BmR0Kggeu7aml
+	OXcQm8zd0O3wAUAyhkgfUMtxVPcoLRYjcNo7NUyWgAptd29eWW9PTMFFwV2Z4epPjQ4qe66
+	yJHiJy7hqOsHVkJ3Htk+Hki6RIO2pCCDXZaHnxHyCEHKQ5koVJPjZhyHVDhkGGLKrTayjQF
+	f4TnigmVip6DbNkeFY+Ftc3iFdgHWWA6cMv2GQQE6bHU1VkfiW9OKO3ncma7q50Mvv+CjJF
+	n8OeGHv0+2ilqyXnzekPosLpU9VLmX/W1x9k90OS8E0fwiXM4tBwoVbH5YpHr7NN6d85mPL
+	fr1Bzv6DVU2QkGnqThcdgMhGuh6cbPhmJBQZpTkEWf1yo6ESLKY0W03u/xLrSXLeCzj8p7v
+	j65PXzISKxtusinrblFemSdZN61UDpBp7fE8fSQZF1z/9W6gU6EPswVVQibosbUXEb/jWTN
+	mDWHNJOdeP3HVFlMKRr/kSgy9QidohGe37yaedsroU2ZS1GAY9OPZXhw4sw98tf+6OHB+ti
+	pQANANTvviV7ez96xREV3ZmarAJDTY1ovp8pFVfz73QT168ntNxX5q8ZNscoCmShNGfi5Qf
+	cq7WlIaPHJZv0D4ZSb/oQNScAslfPUib+EVYxsNe6h4liTYPZ9OB3RDO87m/JxQ1NbJZFRM
+	LfZVLhqrAJ2+6rP8OZ
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-QQ-RECHKSPAM: 0
 
-For the whole series:
+In kvm_ioctl_create_device(), kvm_device has allocated memory,
+kvm_device->destroy() seems to be supposed to free its kvm_device
+struct, but kvm_pch_pic_destroy() is not currently doing this,
+that would lead to a memory leak.
 
-Reviewed-by: Keguang Zhang <keguang.zhang@gmail.com>
-Tested-by: Keguang Zhang <keguang.zhang@gmail.com> # on LS1B & LS1C
+So, fix it.
 
-On Tue, Dec 23, 2025 at 2:42=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patch set introduces the Loongson-2K0300 RTC, which has a similar
-> hardware design to the Loongson-1B, but without the alarm feature.
->
-> To Keguang:
-> Would you have time to test the driver on a Loongson-1?
->
-> Thanks.
-> Binbin
->
-> Binbin Zhou (2):
->   dt-binding: rtc: loongson: Document Loongson-2K0300 compatible
->   rtc: loongson: Add Loongson-2K0300 support
->
->  .../devicetree/bindings/rtc/loongson,rtc.yaml | 13 ++++
->  drivers/rtc/rtc-loongson.c                    | 65 +++++++++++++------
->  2 files changed, 57 insertions(+), 21 deletions(-)
->
->
-> base-commit: 16bd954c93360145bc77cc601e350913fc28182d
-> --
-> 2.47.3
->
+Qiang Ma (3):
+  LoongArch: KVM: Fix kvm_device leak in kvm_pch_pic_destroy
+  LoongArch: KVM: Fix kvm_device leak in kvm_ipi_destroy
+  LoongArch: KVM: Fix kvm_device leak in kvm_eiointc_destroy
 
+ arch/loongarch/kvm/intc/eiointc.c | 2 ++
+ arch/loongarch/kvm/intc/ipi.c     | 2 ++
+ arch/loongarch/kvm/intc/pch_pic.c | 2 ++
+ 3 files changed, 6 insertions(+)
 
---=20
-Best regards,
+-- 
+2.20.1
 
-Keguang Zhang
