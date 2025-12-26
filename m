@@ -1,36 +1,36 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54C31D63EF
-	for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 15:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EC8218580
+	for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 15:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766761690; cv=none; b=H/khb6SsX45KHD9X1Jg2hKRveKzwhDazzaSoj1yGNeRSM4Cb9b+gz0tNmF2yi8mQZ4CRJlq0MeKx94I3LRp58HXfR5DPZ7bv29eKrLD1JuTosrEWmq7BXXNpWQQjGvXGOR1locBiOrKnezZEUtytF6KufcPTK5lUWLX/MqwZ324=
+	t=1766761699; cv=none; b=TP54JRE2vCXKjAyZ183KPy1Yyk3A3J2IzJbLWjYG1fgGpITP4FF85VaxlyDh2qZD9E4L+dbjUcvYNRH6uv1QFQne+Yu07n+gQ7SZ52t6s8N9FXxjRmFb9M2oywla3bLB5Tm4YXnbqRaf5c2nGBxxhmozb/m/jphDn3E2dKycxwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766761690; c=relaxed/simple;
-	bh=uXxLR0MGTqOzFrqXX4Ne6S9wWwXR3kK+OXiCgCprU2Y=;
+	s=arc-20240116; t=1766761699; c=relaxed/simple;
+	bh=76qE1+cU/nVx7gkBkJGi1456blDzExtWHQs+4qo0GHM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H6bg0doAo6MVryY2D2D31PRD5K1MG3kehdL60vVS4v6I3dBA/HJ2SBUHQqFyPhF/E/IWv+yTUpP+n00DA7XmQETnhff1GItIsfVSepAWHvEflWylg7rF7G5CvOWsIsrN5PAEay6kzfGiwG1jSF6F9fsv27RdEnwqAjGkdm60um8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=IqAskk4Q; arc=none smtp.client-ip=54.204.34.129
+	 MIME-Version; b=HGuKtvV5beZG4hKwB5uOL6cHhSW1wsmdF4Pau+mjPP7KU4ai7L1lyyLjEMRIhqVEX3ryZ8/KiG2NDI4VzfeBc3zcYWlNowiJCgz+WNDhs19jGKXOQRVgqi3oD/lJK1383RxldN1fagdwUcauFZ6OFCUMC47bXeLJTR8BPHTOHjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=KRrne3jc; arc=none smtp.client-ip=54.254.200.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="IqAskk4Q"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="KRrne3jc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1766761679;
-	bh=H/ljW3XaP6vzoo1T1qMzrSYeqbnkzt5TovpDcS9Twv8=;
+	s=onoh2408; t=1766761685;
+	bh=gAA8ercDf/MBI9jGYZi3I+nHltQEY5W8JCzCFw10xbg=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=IqAskk4QzdiMC3x+SK9SRDXk+W4HQ0efH3LPpqZ6KMheBhBzrmW3fml+2GWbhrhIC
-	 BbMK1R7FkOfTx2W8uXDLK0dyan5zKqGNpUepJ64YhDzkeKIJYzcbgeLZd7PgYUTOZi
-	 l6LoqOtho1CyOO9chSLjULiT5bJK5xsGNLxT61js=
-X-QQ-mid: zesmtpgz9t1766761674t914098cb
-X-QQ-Originating-IP: ENZ2oCc4iZCQyWcVmDUCsDXsw32lUBmpKWAWS3IE+I4=
+	b=KRrne3jchrI+y1qLUhZnvL/o1IFWPF3NOGzUJOk6tBTij3PGtdLNg+NMnm4+ZTINT
+	 aMvGrWSiqLDzUKIKbJO7dw5FVH6eNbJbCsWTUyXNsH0kLxIJLrYd+ph3BikPr3qE9z
+	 xbDBDEwY37FyqZAWKgQYyQatifsmnzSQZm6w1tJo=
+X-QQ-mid: zesmtpgz9t1766761680td78bb22e
+X-QQ-Originating-IP: IAZD2qB3oP1GJHKGhPt5DXJjFbmGIk9+HCgeAASKpdg=
 Received: from localhost.localdomain ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 26 Dec 2025 23:07:47 +0800 (CST)
+	id ; Fri, 26 Dec 2025 23:07:56 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 752817031373649488
+X-BIZMAIL-ID: 9278752954791636414
 EX-QQ-RecipientCnt: 8
 From: Qiang Ma <maqianga@uniontech.com>
 To: zhaotianrui@loongson.cn,
@@ -41,9 +41,9 @@ Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH 2/3] LoongArch: KVM: Fix kvm_device leak in kvm_ipi_destroy
-Date: Fri, 26 Dec 2025 23:07:05 +0800
-Message-Id: <20251226150706.2511127-3-maqianga@uniontech.com>
+Subject: [PATCH 3/3] LoongArch: KVM: Fix kvm_device leak in kvm_eiointc_destroy
+Date: Fri, 26 Dec 2025 23:07:06 +0800
+Message-Id: <20251226150706.2511127-4-maqianga@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20251226150706.2511127-1-maqianga@uniontech.com>
 References: <20251226150706.2511127-1-maqianga@uniontech.com>
@@ -56,51 +56,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: Of5NOHXWTvQUWQM6enTE9jKV5SgmBxm109sJQjaTdSUBluvWWEH47CJJ
-	wL4aYcfJrYUKRY1RiaS5gL8uWcomG4v2Hzupqt+qnSOR7UB8KTIdX4wpxWSuBt9NV/nXAxP
-	H93murCB3N5SuGh+Kh8UaVCYsA4I80VN3nOQvOp2LybM9lUSg3V8+ko7LhFm+bIs+G++hhq
-	7KhudpYiWkKY4CcaF/NetrQHXFDAezRXQRx9BYbIubLqyVb8mnwpygClX7cPiXRNSG0aJC4
-	65uzg9nh1H5GnYf683ZiW1OTIGDI5yZiWneKXuikCDouY6bk+1NsZnzcD6JwPrZhwUW28o2
-	NRqDQTAC1NNCoKlY1UQMs8jpuVnVmkc2+6JYyaEPmu8RT7rN+HYZuHS+GYVcOBFI9Q5UQ5O
-	PC+vxxPgkypsJMTR/tWL2m3EThMSnbFaGXSo5MgyRV3XRuWEAOSebV9GyqmiBQ+p6QvK4RJ
-	MhgKSX/B20kpAvM50p2CwoZdcgZsUWtD0J9mhOlJ4Hq9Jro9iE8MCp2uS0O7HSdOi4jxTfp
-	uPvQlklwZeIovUBs1XSy+OjdgrDUWJnzR4El1DFFKJCt4vYlSD0PjZ34Iy1VCHWiGuQawV5
-	pYNDguBsNZyssit83IaUvenJs5MpKhd7xjJMkDARTYcDAnF9jAlZ44zBl0xWY7T5XJkSB9F
-	xmWz51S6dvBId1ENh5gK/45/cKwufayK5PZUjvjPLNwnnYaZ8kL/Pg73x+qQkwnFGcjLnL1
-	cTSvBtozGCFlXROFSDEyXa2yJ8Li8Djar8wQeDdxXEY5k6WuOkwQPfJhEIZ+NzDhzlvjCIi
-	j8BmqdlR4qlSLBUK5hu4jddg58dmURVWGFDI4AekD+GNm0kiv4A6NoQs8S+gYkYohMu+sU5
-	TLrKkDODLpWCsAMJgh2pEUtkeTFXH4aozc39R6S9iGOCOuUsRmDBLKoTK1GVxZsDQUSjWxD
-	r+J18hA3HwXv9LPC4+jlAYqEp6g+Ul6f/tMVxPvqg6xzYdjGrjOj6MZ+mkhHRgHA0R5QYc6
-	X/p+6x6EXTN97s2WXZYWBRmokpYWu1FmiFxzTTEvxcvBZZlcnXPokeCKcnAqcIT76ZdoUqe
-	4mJqOylhaLQM76OoQmECn0EnM19KnDgwWFxxK/8oaPa
+X-QQ-XMAILINFO: MJGq/3UMnf82C1EgfPv3Cck32TYRKw7Dv4E6iP74ymDimHJiSqWyK7BV
+	O4sKxb/yFmRxod6gFjFpNd0vbQAibw1ev/4xeEURCe1UTCmcYNanbeNs6EWRlBF5L+MipDx
+	IAy3SJoO7ydocLMeJgaiBk26u43IPDSyLCjk00Jt/LUK8UAYOKky5Ui1Hbv5U6eW0Ip9omN
+	TjtZPwzQNziYD7nLB3qRcZAMPxTBvBncDcPCSGD6JqpJoAWWy22iVUMny7bbXRvyNgM6UDl
+	Vn5Aldbb3r+OJF3PcBc+mG/3UC73PxxOcaI3d7kilYcuY1LAe+dfjdZe8jGPyk8zBgZUFQd
+	Q/xtBtakLa1ftHhfklPMW6QE0R9fOqurt52LsAZuuNs+bvF4oMaXMG7QC8J33ZOhPoY1Fak
+	uLRmN3wPS42OjGSWHVOlNqjsn/yMDg8vZ9VUMEZ7YVyICK0FaLWCGu2Vksstsy9nPpNokgq
+	b26GPbm3xQe4nNpTNw5AgjvvYqpC/kKglQuPtdUQ8jJB/9QSo8tmtiYQdVAExkh1gfAnUTU
+	PhxN/jvY+1R5vNTKR23oxn0/R16vEq57RjcqlrLBvc7h5VSL3xvz/EpUeyLeaA+2o/t0gJa
+	/r4KS3Tq7N8/tZGcRJENbcYl3cynBZf4u0CacrMd+eEkcv0fucS8L9Img7dZavx2GqUt3uq
+	AUuImNoVAKCNrrwzolKnbF47qVNiK8WHiVwfY+XlwXgz4aHgOYoYrsKzG/OSAZT2C7V5+ay
+	+G6HjH9c1Od1PKyfyTvgTlzta9hrcDNDTF5d6LmLVEBl7u3PivClTVo5jHS0yF6EMn7ssgP
+	EVsXawAq3PXhgP8WvY1KymbFCSyy3jap1rieSRKefpsKWwjZG608gbItiO58vVCpvQ1H+2O
+	MGtyfT/vhNTEsSmp6Ph3JBieZhtDRnztcuoE4stqsExeKzvlQR8Sz/kXPJOFxPP1po/iVMO
+	9J1FqanpnbDQXaQkMBsAb2fb1voAZbBV2o1uY0p2eoffVqaknNrTPRkSv786o3hIdC8O3XC
+	n6T+v2h7Ymn76wQovn/Z6Mxj5GoALftN5hVSiJVAMafhcjOTXEqDXHJVJA6cmIWQMDKdnYk
+	9Ak7KKmeDrY
 X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 X-QQ-RECHKSPAM: 0
 
 In kvm_ioctl_create_device(), kvm_device has allocated memory,
 kvm_device->destroy() seems to be supposed to free its kvm_device
-struct, but kvm_ipi_destroy() is not currently doing this, that
-would lead to a memory leak.
+struct, but kvm_eiointc_destroy() is not currently doing this,
+that would lead to a memory leak.
 
 So, fix it.
 
 Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 ---
- arch/loongarch/kvm/intc/ipi.c | 2 ++
+ arch/loongarch/kvm/intc/eiointc.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 05cefd29282e..77169bf49f3f 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -459,6 +459,8 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
- 	ipi = kvm->arch.ipi;
- 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
- 	kfree(ipi);
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 29886876143f..cb94c7e8267a 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -679,6 +679,8 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
+ 	kfree(eiointc);
 +	/* alloc by kvm_ioctl_create_device, free by .destroy */
 +	kfree(dev);
  }
  
- static struct kvm_device_ops kvm_ipi_dev_ops = {
+ static struct kvm_device_ops kvm_eiointc_dev_ops = {
 -- 
 2.20.1
 
