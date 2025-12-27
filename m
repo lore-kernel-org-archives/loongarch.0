@@ -1,95 +1,242 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126D12F1FD0
-	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 12:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1BD31281F
+	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 12:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766838919; cv=none; b=OjKKvLSx0RPkOeV9iINJIKEXPT/YBmAy5CvQkP7tOtciCIw1CNFm9ReIzKNyD/Y1JghS/83qE1OtIr5RNVjABKP1mjCH9wmlCOeqa7lgjBOCtpq0YKAp1TVTOTgVNKWDGsd+X4Gzz7A5tps+gygMgxRD8ceo2FHOzapqpZneE4o=
+	t=1766839758; cv=none; b=XPMqqJo0B9ixeXZNyp6XZekSQBte0+mefSEe2sGH8KFRjXYopN131uvLfUFn38iM3nCJnrPGQvydvnThKA8DNKPrSL86UiyeDCB7q3G9WNrBkpcBrz9T282BmjCLhThqF+aUofN2Rj1JtiHmw2oZ9nw50YFL9ejSnsWrqJifeqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766838919; c=relaxed/simple;
-	bh=5rv8ZuRUcwRsB8tSgDo2rGfZTe5zbB/xJ2QT9vObhQE=;
+	s=arc-20240116; t=1766839758; c=relaxed/simple;
+	bh=0kfMRiadnGarHTALRRW411hh4urIGuwlrxzm+obaeeo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CAkUjLbhMIMyh+UJhD10gc44vQTIGgE6c4J4y3k3xF46fBLox3Be1TvPgySDomp5MkMPYSoUynVy9UXW5j6ycO5/D1hUpesGIYVszrpA7uZd2GBa2MGp5gqdEmRS1q+ihu1bw3LIlhdTIja8b2y0BtS6DO3dV2Tbta8Z+HKeO/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DtuJC2hK; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Bi6E00fP6N57E8fYcQOR3cTuhJu+d95qnaRVW8TA6BLZioX7viKnuV2iffGl1W7EvTMlIVk0rJKRGE2TAF7KMf9r7kx90mNizfzsySTfNsQfcPLpkVZWeQXlFImubEJ6F9fBUQATWc0ONZdmL+GSEQUk1QGoo+a/C1TxkfpmxWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOFEWRCs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DtuJC2hK"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4779cc419b2so62021435e9.3
-        for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 04:35:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1766838916; x=1767443716; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5rv8ZuRUcwRsB8tSgDo2rGfZTe5zbB/xJ2QT9vObhQE=;
-        b=DtuJC2hKrDVyN31xDqcg7wZD8F/V/NLLMIKfI6Eu3El2gs86ElPV4FzQ97Yd75pXjT
-         Z0GoX83qt1hkQvc3ITjuvjeE/pIuwgZiyhYjNUX3Kwhm3MfM9dq901M2QjN53nbGmO10
-         OBWN9nsyfzh+CrG+l1vK9vNfUkc5lfWS+urlygKBbhOiQvk1Usa8ljjGnCSI+6wd0RiL
-         YKRPAOj86ESCSnQJMEnOWXcVY0jeamGRfIZWM78zaYf10XAM0Ue4D3GQZVOQZxxFgYW1
-         sxm4M25jJ+zyNoEOmIEe9E+ls5HNA1TjtEqS/0TGt9T4G2NHL9eVD7VU1xMhZXqsMQZ2
-         Y5nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766838916; x=1767443716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5rv8ZuRUcwRsB8tSgDo2rGfZTe5zbB/xJ2QT9vObhQE=;
-        b=cwGtwGkreOP9fQ0L3hNo0Qi3yVygSBMKnw5UBJT/O9KOrciShyoVaimxn43OeCoXDt
-         xbzNqYTt1km1W7wZ9VOImGBkxFLRHoaKZrj839brimutBgi/45ppEv2yNQLdlCQzOR7V
-         tvFi36dcvhAFunILovEUL/7eRd/cYv7txy+QH5f1M8gp4BKpHdfubHPTX6Q9cL0FZx2q
-         CZZtWY+ekpw+Phms3F7aDURCBtxreKi7JdxELjmp0U7snQRibUNwB4rY7Cl7iOlewFFG
-         uSMu4crvdUp3gj++9Jv6Oz08Eun/yFc0SN2bUWa3KRcU5abo68JMebVMM2N4+160AFgD
-         OVRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXC7doWBgW1og8fcv6Yg87EZHYmXfPcZ1MA6ETn89bPuRM5HAOCvjOWdVv0FEcBzYm8kn9fOnIN4jk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yymjhg9yqGsvDGhw1WvjFvtaidIag4ZKmjsskXRDvEev9RE/IfQ
-	YYQjoIFzuwW6NlE1yr9Pg7cqdFm7uS7N5ZjVXxK8jykWNAQLNr3JGPwkbCEPr5+ygObMyVdm9Kn
-	J8JE0sjBIjs3TSbs4tQzamhazBYEP48EKGwAzKV8j
-X-Gm-Gg: AY/fxX4Bn1h1QDlegF/4/9T9cxhlRujvf+y2FZ1ES7B0I5MbRk5bKOMOP1FyQEJDx24
-	/zv+b+0C61dFlTKgZ7o2TaC8hycvT9DLoyZg3lRN7Zbsog3m+oglT10UBgPkDbVLPCKRGvp1hgk
-	cT26m0unLWtxmoXrtzE59X0u8UvJn+UgwQR+ZN6XXTTNQTV8gJ5VjnyK++rVBQnWh0xMxdi6ato
-	WYVV26dVAAYT2CnFDGkBFCDUOInA4ySu4WAsj5WijxYaJ9C5VGUuwXhVocgRI6cnMY35nKFAcKN
-	5RN+HTRgGVtsxPrpFga5bAxL/4WjPIJ72YhI
-X-Google-Smtp-Source: AGHT+IHD+31hirNZG9pghcdmiqkhL3abzhaVNHz0IuIz2/TEZouNajKTxcGNeXuXg5qcUtE86dEfdWdgULiHUZ3yxTQ=
-X-Received: by 2002:a05:600c:4fcf:b0:477:9650:3175 with SMTP id
- 5b1f17b1804b1-47d194d17a8mr276446575e9.0.1766838916256; Sat, 27 Dec 2025
- 04:35:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOFEWRCs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303BCC116D0
+	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 12:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766839758;
+	bh=0kfMRiadnGarHTALRRW411hh4urIGuwlrxzm+obaeeo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UOFEWRCsnKFg9u0eMWOp7mzMvsSYqeNed7NVPxhEBoDSx8nRaCf2SZLym+t0flOTp
+	 8mpXL6oZKeEFgYTjZP9/T24300hr3pTARneiuODz1w6Om79A3ZdRjuASJ5uQDyDN0o
+	 uvALQLeXbYMbXAed4tWZgwHWHJOlxhlk5rKH7FEazqhTknGOpO7d+KA2E4uPgZNQEK
+	 aIM4Yyh04ybCv76jaB4dqLA6NUMqYcNdS8vF9ADMbSIyvXKUi17rk5dapZ09ccdJFe
+	 PzMmEEH0CSXpJu4V3gYBStDjH0ApfbvC25z2fpr1dt7aMK5kTlgRh7AdAqHstd3DYy
+	 52yicC1oi8++w==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b7ffbf4284dso1020997366b.3
+        for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 04:49:18 -0800 (PST)
+X-Gm-Message-State: AOJu0YxUYvG4b4bY+PVyLc7RaDck6B0UW6r5QQao63t8nC91hnVJbEs2
+	ERLXzSa7jWowb0Chzw4pBPDg4f21UqL5RAHlIaiBNhwAsFp2HLNd6d06ZRJCa2EygJ+SyOfJNXB
+	M+XZ50joDjwLTptDK94DArreFXTVtUIE=
+X-Google-Smtp-Source: AGHT+IEsqJc6khAJ2cHADfIJcu27io1v3NCx+cZczeIdVZMpBJsCG/bgaEOBzeDbgzYZiUCK4ID38MWYx4XuE0EW6xs=
+X-Received: by 2002:a17:907:d0c:b0:b73:9280:2e7 with SMTP id
+ a640c23a62f3a-b80371a3eacmr2514207366b.34.1766839756759; Sat, 27 Dec 2025
+ 04:49:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251209125029.1117897-1-xry111@xry111.site> <aTodrqABDzBQXUXD@google.com>
-In-Reply-To: <aTodrqABDzBQXUXD@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Sat, 27 Dec 2025 13:35:04 +0100
-X-Gm-Features: AQt7F2prQGkQbU0mlNCgtuDxrxrcifGVuzMo87i8Q70IXJbsYfi1bCijpyuQMnI
-Message-ID: <CAH5fLgjNz7jep3jrMCRNykrjbPydkOH10O+62HD3Z-8Q=GdqSA@mail.gmail.com>
-Subject: Re: [PATCH] rust_binder: Fix build failure if !CONFIG_COMPAT
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Mingcong Bai <jeffbai@aosc.io>, loongarch@lists.linux.dev, hev <r@hev.cc>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	"open list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
+References: <20251227012712.2921408-1-lixianglai@loongson.cn> <20251227012712.2921408-3-lixianglai@loongson.cn>
+In-Reply-To: <20251227012712.2921408-3-lixianglai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 27 Dec 2025 20:49:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6vxwDkBUQgY=YKnhk+3i_hW06E0UFLHK5F3VnG7tzdwA@mail.gmail.com>
+X-Gm-Features: AQt7F2o4bcq8N1cKAf4bYOyGrQYxTcPXCNmzgRy8noVX91JZSVXC4jPh3i1tjbc
+Message-ID: <CAAhV-H6vxwDkBUQgY=YKnhk+3i_hW06E0UFLHK5F3VnG7tzdwA@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
+To: Xianglai Li <lixianglai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, stable@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 11, 2025 at 2:26=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Tue, Dec 09, 2025 at 08:50:19PM +0800, Xi Ruoyao wrote:
-> > The bindgen utility cannot handle "#define compat_ptr_ioctl NULL" in th=
-e
-> > C header, so we need to handle this case on our own.
-> >
-> > Simply skip this field in the initializer when !CONFIG_COMPAT as the
-> > SAFETY comment above this initializer implies this is allowed.
-> >
-> > Reported-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Hi, Xianglai,
 
-this should use Miguel's kernel.org email address for the Reported-by tag.
+On Sat, Dec 27, 2025 at 9:52=E2=80=AFAM Xianglai Li <lixianglai@loongson.cn=
+> wrote:
+>
+> Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
+> the assembly function to guide the generation of correct ORC table entrie=
+s,
+> thereby solving the timeout problem of loading the livepatch-sample modul=
+e
+> on a physical machine running multiple vcpus virtual machines.
+>
+> While solving the above problems, we have gained an additional benefit,
+> that is, we can obtain more call stack information
+>
+> Stack information that can be obtained before the problem is fixed:
+> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
+> [<0>] kvm_exc_entry+0x100/0x1e0
+>
+> Stack information that can be obtained after the problem is fixed:
+> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
+> [<0>] kvm_exc_entry+0x104/0x1e4
+> [<0>] kvm_enter_guest+0x38/0x11c
+> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
+> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
+> [<0>] sys_ioctl+0x498/0xf00
+> [<0>] do_syscall+0x98/0x1d0
+> [<0>] handle_syscall+0xb8/0x158
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> ---
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+> Cc: Bibo Mao <maobibo@loongson.cn>
+> Cc: Charlie Jenkins <charlie@rivosinc.com>
+> Cc: Xianglai Li <lixianglai@loongson.cn>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+>
+>  arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index 93845ce53651..a3ea9567dbe5 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -10,6 +10,7 @@
+>  #include <asm/loongarch.h>
+>  #include <asm/regdef.h>
+>  #include <asm/unwind_hints.h>
+> +#include <linux/kvm_types.h>
+>
+>  #define HGPR_OFFSET(x)         (PT_R0 + 8*x)
+>  #define GGPR_OFFSET(x)         (KVM_ARCH_GGPR + 8*x)
+> @@ -110,9 +111,9 @@
+>          * need to copy world switch code to DMW area.
+>          */
+>         .text
+> +       .p2align PAGE_SHIFT
+>         .cfi_sections   .debug_frame
+>  SYM_CODE_START(kvm_exc_entry)
+> -       .p2align PAGE_SHIFT
+>         UNWIND_HINT_UNDEFINED
+>         csrwr   a2,   KVM_TEMP_KS
+>         csrrd   a2,   KVM_VCPU_KS
+> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
+>         /* restore per cpu register */
+>         ld.d    u0, a2, KVM_ARCH_HPERCPU
+>         addi.d  sp, sp, -PT_SIZE
+> +       UNWIND_HINT_REGS
+>
+>         /* Prepare handle exception */
+>         or      a0, s0, zero
+> @@ -200,7 +202,7 @@ ret_to_host:
+>         jr      ra
+>
+>  SYM_CODE_END(kvm_exc_entry)
+> -EXPORT_SYMBOL(kvm_exc_entry)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
+Why not use EXPORT_SYMBOL_FOR_KVM in the first patch directly?
+
+>
+>  /*
+>   * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
+>         /* Save host GPRs */
+>         kvm_save_host_gpr a2
+>
+> +       /*
+> +        * The csr_era member variable of the pt_regs structure is requir=
+ed
+> +        * for unwinding orc to perform stack traceback, so we need to pu=
+t
+> +        * pc into csr_era member variable here.
+> +        */
+> +       pcaddi  t0, 0
+> +       st.d    t0, a2, PT_ERA
+I am still confused here, does this overwrite PT_ERA stored by
+kvm_save_host_gpr?
+
+Huacai
+
+> +
+>         addi.d  a2, a1, KVM_VCPU_ARCH
+>         st.d    sp, a2, KVM_ARCH_HSP
+>         st.d    tp, a2, KVM_ARCH_HTP
+> @@ -225,7 +235,7 @@ SYM_FUNC_START(kvm_enter_guest)
+>         csrwr   a1, KVM_VCPU_KS
+>         kvm_switch_to_guest
+>  SYM_FUNC_END(kvm_enter_guest)
+> -EXPORT_SYMBOL(kvm_enter_guest)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
+>
+>  SYM_FUNC_START(kvm_save_fpu)
+>         fpu_save_csr    a0 t1
+> @@ -233,7 +243,7 @@ SYM_FUNC_START(kvm_save_fpu)
+>         fpu_save_cc     a0 t1 t2
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_fpu)
+> -EXPORT_SYMBOL(kvm_save_fpu)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
+>
+>  SYM_FUNC_START(kvm_restore_fpu)
+>         fpu_restore_double a0 t1
+> @@ -241,7 +251,7 @@ SYM_FUNC_START(kvm_restore_fpu)
+>         fpu_restore_cc     a0 t1 t2
+>         jr                 ra
+>  SYM_FUNC_END(kvm_restore_fpu)
+> -EXPORT_SYMBOL(kvm_restore_fpu)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
+>
+>  #ifdef CONFIG_CPU_HAS_LSX
+>  SYM_FUNC_START(kvm_save_lsx)
+> @@ -250,7 +260,7 @@ SYM_FUNC_START(kvm_save_lsx)
+>         lsx_save_data   a0 t1
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_lsx)
+> -EXPORT_SYMBOL(kvm_save_lsx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
+>
+>  SYM_FUNC_START(kvm_restore_lsx)
+>         lsx_restore_data a0 t1
+> @@ -258,7 +268,7 @@ SYM_FUNC_START(kvm_restore_lsx)
+>         fpu_restore_csr  a0 t1 t2
+>         jr               ra
+>  SYM_FUNC_END(kvm_restore_lsx)
+> -EXPORT_SYMBOL(kvm_restore_lsx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
+>  #endif
+>
+>  #ifdef CONFIG_CPU_HAS_LASX
+> @@ -268,7 +278,7 @@ SYM_FUNC_START(kvm_save_lasx)
+>         lasx_save_data  a0 t1
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_lasx)
+> -EXPORT_SYMBOL(kvm_save_lasx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
+>
+>  SYM_FUNC_START(kvm_restore_lasx)
+>         lasx_restore_data a0 t1
+> @@ -276,7 +286,7 @@ SYM_FUNC_START(kvm_restore_lasx)
+>         fpu_restore_csr   a0 t1 t2
+>         jr                ra
+>  SYM_FUNC_END(kvm_restore_lasx)
+> -EXPORT_SYMBOL(kvm_restore_lasx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
+>  #endif
+>
+>  #ifdef CONFIG_CPU_HAS_LBT
+> --
+> 2.39.1
+>
