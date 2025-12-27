@@ -1,39 +1,42 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B27616A956
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B20C1DA55
 	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 01:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766800330; cv=none; b=o7Jdb32CPm/qRKmPoyKNDAMKG3zonzAHP3HLuxGbGjl+us053+xhHjTMLQLBVvIGesKoEF+zEiCzVFBYNrM4vk+Ok6/JkAzhERtMQptHVwbF9ioz9/Rmlo7434gSKi7ceqEJAIWubj7Ljl0MJ9rDBxWabXo9JmO11E1zW/KYtr4=
+	t=1766800331; cv=none; b=p6pGbAlLChX3ZRDAg6fpfU5Mhlg/MpCrR2QdwWQg6sj6H5HQfefYK4l9tyIWVTYKMDeDrpo9wXUtbZKIKvVDmZ537nb2vaE11NvusPWzXNbxHokqUg1K75vL081eiIt+MsIhDeS/TNLlNutnRLBqG1Dma9JI2Wcn97SMW1K9Gls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766800330; c=relaxed/simple;
-	bh=gWUcfv9snK/vO1HKr+k3Zu494RdI/WXNlnQsOTIjTT8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nolEXMqlMxEsU9SIxh9zujuJ5z3TXw90LWx5vyZbJeIwlPwAoBuV8jY0BuwnZbYPTE5cY2iYrgK1lNYkrNyiUdiIZaBvYEDIzqxlQncaba3Hqnss3fHKpQuoot9bGdG9Stje0ekpYuM2Kq7jWDAogInnq7K91RBl0zzZ3E0KYmc=
+	s=arc-20240116; t=1766800331; c=relaxed/simple;
+	bh=zjxDUIblnnYEUf2Z44RpxLUlhrU0yPExQx4aVXDdwAA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=tbEmbpE8DACPbHwtiYE7F7ihXQz9wxDEKnbdfZeY/Agc5hboX/EsFc2re5BeLl3xw13T9sil9X9UFpEpVah6gCc6tSm9yTbly+QmRWgXQLBz34ByBypa42cTRUC9o+7Zb2lygXvRrWE9t3zQyqg0XL87Ai9kx9IbOKvlexI4kis=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Dx+8K8O09pg4oDAA--.10558S3;
-	Sat, 27 Dec 2025 09:51:56 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxecK+O09piYoDAA--.10893S3;
+	Sat, 27 Dec 2025 09:51:58 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJBxbcK6O09pu1oFAA--.12398S2;
-	Sat, 27 Dec 2025 09:51:54 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxbcK6O09pu1oFAA--.12398S4;
+	Sat, 27 Dec 2025 09:51:57 +0800 (CST)
 From: Xianglai Li <lixianglai@loongson.cn>
 To: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
 	lixianglai@loongson.cn
-Cc: Huacai Chen <chenhuacai@kernel.org>,
+Cc: stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	Tianrui Zhao <zhaotianrui@loongson.cn>,
 	Bibo Mao <maobibo@loongson.cn>,
 	Charlie Jenkins <charlie@rivosinc.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	stable@vger.kernel.org,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH V3 0/2] LoongArch: KVM: fix "unreliable stack" issue
-Date: Sat, 27 Dec 2025 09:27:10 +0800
-Message-Id: <20251227012712.2921408-1-lixianglai@loongson.cn>
+Subject: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
+Date: Sat, 27 Dec 2025 09:27:12 +0800
+Message-Id: <20251227012712.2921408-3-lixianglai@loongson.cn>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20251227012712.2921408-1-lixianglai@loongson.cn>
+References: <20251227012712.2921408-1-lixianglai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,59 +44,45 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxbcK6O09pu1oFAA--.12398S2
+X-CM-TRANSID:qMiowJBxbcK6O09pu1oFAA--.12398S4
 X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When starting multi-core loongarch virtualization on loongarch physical
-machine, loading livepatch on the physical machine will cause an error
-similar to the following:
-[  411.686289] livepatch: klp_try_switch_task: CPU 31/KVM:3116 has an
-unreliable stack
+Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
+the assembly function to guide the generation of correct ORC table entries,
+thereby solving the timeout problem of loading the livepatch-sample module
+on a physical machine running multiple vcpus virtual machines.
 
-The specific test steps are as follows:
-1.Start a multi-core virtual machine on a physical machine
+While solving the above problems, we have gained an additional benefit,
+that is, we can obtain more call stack information
 
-2.Enter the following command on the physical machine to turn on the debug
-switch:
-  echo "file kernel/livepatch/transition.c +p"  > /sys/kernel/debug/\
-dynamic_debug/control 
+Stack information that can be obtained before the problem is fixed:
+[<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+[<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+[<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+[<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+[<0>] kvm_handle_exit+0x160/0x270 [kvm]
+[<0>] kvm_exc_entry+0x100/0x1e0
 
+Stack information that can be obtained after the problem is fixed:
+[<0>] kvm_vcpu_block+0x88/0x120 [kvm]
+[<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
+[<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
+[<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
+[<0>] kvm_handle_exit+0x160/0x270 [kvm]
+[<0>] kvm_exc_entry+0x104/0x1e4
+[<0>] kvm_enter_guest+0x38/0x11c
+[<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
+[<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
+[<0>] sys_ioctl+0x498/0xf00
+[<0>] do_syscall+0x98/0x1d0
+[<0>] handle_syscall+0xb8/0x158
 
-3.Load livepatch:
- modprobe  livepatch-sample 
-
-Through the above steps, similar prints can be viewed in dmesg.
-
-The reason for this issue is that the code of the kvm_exc_entry function
-was copied in the function kvm_loongarch_env_init. When the cpu needs to
-execute kvm_exc_entry, it will switch to the copied address for execution.
-The new address of the kvm_exc_entry function cannot be recognized in ORC,
-which eventually leads to the arch_stack_walk_reliable function returning
-an error and printing an exception message.
-
-To solve the above problems, we directly compile the switch.S file into
-the kernel instead of the module. In this way, the function kvm_exc_entry
-will no longer need to be copied.
-
-changlog:
-V3<-V2:
-1.Replace the EXPORT_SYMBOL macro declaration symbol with the
-EXPORT_SYMBOL_FOR_KVM macro
-
-2.Add some comments in kvm_enter_guest
-
-3.Place the correct pc address in era
-
-4.Move .p2align after .text
-
-V2<-V1:
-1.Rollback the modification of function parameter types such as
-kvm_save_fpu. In the asm-prototypes.h header file, only the parameter types
-it depends on are included
-
+Cc: stable@vger.kernel.org
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+---
 Cc: Huacai Chen <chenhuacai@kernel.org>
 Cc: WANG Xuerui <kernel@xen0n.name>
 Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
@@ -101,23 +90,129 @@ Cc: Bibo Mao <maobibo@loongson.cn>
 Cc: Charlie Jenkins <charlie@rivosinc.com>
 Cc: Xianglai Li <lixianglai@loongson.cn>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
 Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Xianglai Li (2):
-  LoongArch: KVM: Compile the switch.S file directly into the kernel
-  LoongArch: KVM: fix "unreliable stack" issue
+ arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
- arch/loongarch/Kbuild                       |  2 +-
- arch/loongarch/include/asm/asm-prototypes.h | 21 +++++++++++++
- arch/loongarch/include/asm/kvm_host.h       |  3 --
- arch/loongarch/kvm/Makefile                 |  2 +-
- arch/loongarch/kvm/main.c                   | 35 ++-------------------
- arch/loongarch/kvm/switch.S                 | 32 ++++++++++++++++---
- 6 files changed, 53 insertions(+), 42 deletions(-)
-
-
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+index 93845ce53651..a3ea9567dbe5 100644
+--- a/arch/loongarch/kvm/switch.S
++++ b/arch/loongarch/kvm/switch.S
+@@ -10,6 +10,7 @@
+ #include <asm/loongarch.h>
+ #include <asm/regdef.h>
+ #include <asm/unwind_hints.h>
++#include <linux/kvm_types.h>
+ 
+ #define HGPR_OFFSET(x)		(PT_R0 + 8*x)
+ #define GGPR_OFFSET(x)		(KVM_ARCH_GGPR + 8*x)
+@@ -110,9 +111,9 @@
+ 	 * need to copy world switch code to DMW area.
+ 	 */
+ 	.text
++	.p2align PAGE_SHIFT
+ 	.cfi_sections	.debug_frame
+ SYM_CODE_START(kvm_exc_entry)
+-	.p2align PAGE_SHIFT
+ 	UNWIND_HINT_UNDEFINED
+ 	csrwr	a2,   KVM_TEMP_KS
+ 	csrrd	a2,   KVM_VCPU_KS
+@@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
+ 	/* restore per cpu register */
+ 	ld.d	u0, a2, KVM_ARCH_HPERCPU
+ 	addi.d	sp, sp, -PT_SIZE
++	UNWIND_HINT_REGS
+ 
+ 	/* Prepare handle exception */
+ 	or	a0, s0, zero
+@@ -200,7 +202,7 @@ ret_to_host:
+ 	jr      ra
+ 
+ SYM_CODE_END(kvm_exc_entry)
+-EXPORT_SYMBOL(kvm_exc_entry)
++EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
+ 
+ /*
+  * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+@@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
+ 	/* Save host GPRs */
+ 	kvm_save_host_gpr a2
+ 
++	/*
++	 * The csr_era member variable of the pt_regs structure is required
++	 * for unwinding orc to perform stack traceback, so we need to put
++	 * pc into csr_era member variable here.
++	 */
++	pcaddi	t0, 0
++	st.d	t0, a2, PT_ERA
++
+ 	addi.d	a2, a1, KVM_VCPU_ARCH
+ 	st.d	sp, a2, KVM_ARCH_HSP
+ 	st.d	tp, a2, KVM_ARCH_HTP
+@@ -225,7 +235,7 @@ SYM_FUNC_START(kvm_enter_guest)
+ 	csrwr	a1, KVM_VCPU_KS
+ 	kvm_switch_to_guest
+ SYM_FUNC_END(kvm_enter_guest)
+-EXPORT_SYMBOL(kvm_enter_guest)
++EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
+ 
+ SYM_FUNC_START(kvm_save_fpu)
+ 	fpu_save_csr	a0 t1
+@@ -233,7 +243,7 @@ SYM_FUNC_START(kvm_save_fpu)
+ 	fpu_save_cc	a0 t1 t2
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_fpu)
+-EXPORT_SYMBOL(kvm_save_fpu)
++EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
+ 
+ SYM_FUNC_START(kvm_restore_fpu)
+ 	fpu_restore_double a0 t1
+@@ -241,7 +251,7 @@ SYM_FUNC_START(kvm_restore_fpu)
+ 	fpu_restore_cc	   a0 t1 t2
+ 	jr                 ra
+ SYM_FUNC_END(kvm_restore_fpu)
+-EXPORT_SYMBOL(kvm_restore_fpu)
++EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
+ 
+ #ifdef CONFIG_CPU_HAS_LSX
+ SYM_FUNC_START(kvm_save_lsx)
+@@ -250,7 +260,7 @@ SYM_FUNC_START(kvm_save_lsx)
+ 	lsx_save_data   a0 t1
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_lsx)
+-EXPORT_SYMBOL(kvm_save_lsx)
++EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
+ 
+ SYM_FUNC_START(kvm_restore_lsx)
+ 	lsx_restore_data a0 t1
+@@ -258,7 +268,7 @@ SYM_FUNC_START(kvm_restore_lsx)
+ 	fpu_restore_csr  a0 t1 t2
+ 	jr               ra
+ SYM_FUNC_END(kvm_restore_lsx)
+-EXPORT_SYMBOL(kvm_restore_lsx)
++EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
+ #endif
+ 
+ #ifdef CONFIG_CPU_HAS_LASX
+@@ -268,7 +278,7 @@ SYM_FUNC_START(kvm_save_lasx)
+ 	lasx_save_data  a0 t1
+ 	jr              ra
+ SYM_FUNC_END(kvm_save_lasx)
+-EXPORT_SYMBOL(kvm_save_lasx)
++EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
+ 
+ SYM_FUNC_START(kvm_restore_lasx)
+ 	lasx_restore_data a0 t1
+@@ -276,7 +286,7 @@ SYM_FUNC_START(kvm_restore_lasx)
+ 	fpu_restore_csr   a0 t1 t2
+ 	jr                ra
+ SYM_FUNC_END(kvm_restore_lasx)
+-EXPORT_SYMBOL(kvm_restore_lasx)
++EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
+ #endif
+ 
+ #ifdef CONFIG_CPU_HAS_LBT
 -- 
 2.39.1
 
