@@ -1,242 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1BD31281F
-	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 12:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1154831E0EB
+	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 13:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766839758; cv=none; b=XPMqqJo0B9ixeXZNyp6XZekSQBte0+mefSEe2sGH8KFRjXYopN131uvLfUFn38iM3nCJnrPGQvydvnThKA8DNKPrSL86UiyeDCB7q3G9WNrBkpcBrz9T282BmjCLhThqF+aUofN2Rj1JtiHmw2oZ9nw50YFL9ejSnsWrqJifeqE=
+	t=1766840762; cv=none; b=OkTSJHGWErAKhjENZq8CpHAZ0TkwjARwgKt/jQapTmxZiyc1euZYsDZju9uniNg+JNk1zy2C9mq0h6qI8iB/mns5NaU6lbP2l/S6CNZa0rdqB9gXDDQ6o2nMrldAfu32IWb9QBCUPrUV5ZPBXnappnsQZ/M5U7Llkp7tvaj09jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766839758; c=relaxed/simple;
-	bh=0kfMRiadnGarHTALRRW411hh4urIGuwlrxzm+obaeeo=;
+	s=arc-20240116; t=1766840762; c=relaxed/simple;
+	bh=bnlqP3WejZcE6JnNqqMMnXH6+vrOTDNv51u7HrBBnmA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bi6E00fP6N57E8fYcQOR3cTuhJu+d95qnaRVW8TA6BLZioX7viKnuV2iffGl1W7EvTMlIVk0rJKRGE2TAF7KMf9r7kx90mNizfzsySTfNsQfcPLpkVZWeQXlFImubEJ6F9fBUQATWc0ONZdmL+GSEQUk1QGoo+a/C1TxkfpmxWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOFEWRCs; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=S+aWpmqJ9NX0NNjcQcmzCEInONpaWjtsxpMGv2metdzqSJiPmKD5z7l0SzbmXU6qLhT6mv+8slOm8Q3BX3fOPHNpiTRYV0QupsfAhamRRJ02aNYgrJKRWkzYRkMf6WqbqYkxJUjknKGLuxqBhXyQKCRpKKyo+FHWAUnlM5XS1+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZWTS3qD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOFEWRCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303BCC116D0
-	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 12:49:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZWTS3qD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1072C19422
+	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 13:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766839758;
-	bh=0kfMRiadnGarHTALRRW411hh4urIGuwlrxzm+obaeeo=;
+	s=k20201202; t=1766840761;
+	bh=bnlqP3WejZcE6JnNqqMMnXH6+vrOTDNv51u7HrBBnmA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UOFEWRCsnKFg9u0eMWOp7mzMvsSYqeNed7NVPxhEBoDSx8nRaCf2SZLym+t0flOTp
-	 8mpXL6oZKeEFgYTjZP9/T24300hr3pTARneiuODz1w6Om79A3ZdRjuASJ5uQDyDN0o
-	 uvALQLeXbYMbXAed4tWZgwHWHJOlxhlk5rKH7FEazqhTknGOpO7d+KA2E4uPgZNQEK
-	 aIM4Yyh04ybCv76jaB4dqLA6NUMqYcNdS8vF9ADMbSIyvXKUi17rk5dapZ09ccdJFe
-	 PzMmEEH0CSXpJu4V3gYBStDjH0ApfbvC25z2fpr1dt7aMK5kTlgRh7AdAqHstd3DYy
-	 52yicC1oi8++w==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b7ffbf4284dso1020997366b.3
-        for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 04:49:18 -0800 (PST)
-X-Gm-Message-State: AOJu0YxUYvG4b4bY+PVyLc7RaDck6B0UW6r5QQao63t8nC91hnVJbEs2
-	ERLXzSa7jWowb0Chzw4pBPDg4f21UqL5RAHlIaiBNhwAsFp2HLNd6d06ZRJCa2EygJ+SyOfJNXB
-	M+XZ50joDjwLTptDK94DArreFXTVtUIE=
-X-Google-Smtp-Source: AGHT+IEsqJc6khAJ2cHADfIJcu27io1v3NCx+cZczeIdVZMpBJsCG/bgaEOBzeDbgzYZiUCK4ID38MWYx4XuE0EW6xs=
-X-Received: by 2002:a17:907:d0c:b0:b73:9280:2e7 with SMTP id
- a640c23a62f3a-b80371a3eacmr2514207366b.34.1766839756759; Sat, 27 Dec 2025
- 04:49:16 -0800 (PST)
+	b=bZWTS3qD0kscPex9A+70GSUxA/0gBLInlj/ZdKsmID72E9pYgeNZOv9t4L/XUQUIg
+	 YSAVV5ZOoxY1TgPOmM+/Q7O8z5q50D3guxwKSnULQ1Mhi063AUh9YD4n8/AiPhy5fE
+	 Hhg2ws28TXXLE/NbDH4v556s4BODZp9z71eEcUAurWAdifataDUZe/bYcxm3ekMJBQ
+	 Wjql+N6ITOevbHdl97OG3HDuwP7RrOQDC35VZU/S0CRrohF51Mck5eg0qPRa4lekhp
+	 vkhHob6WZMBK45Nr1nbPuRlKxQAUwEFbaXWLWvZUgJWvBA0s+zFpcbqiLDmIT1AEAo
+	 awlvNt5caY+DQ==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b7ce5d6627dso1347813566b.2
+        for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 05:06:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUxCOG5YvnDODAAJT7vN4zAMLJD7myqM89fz47gznFaTUTIAaXJZKjs55HLO3ueqpfWaSPnLs98SzU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy1E/fLDIGh0DaFbHG5+b/qmhX9t2V+4FfbgsUw0GRWl8h7/51N
+	jpyswZ/jarKN4mF2+qFUAMr44QISNwEM6SmEyQsyFMsAICGesDPoSFnyszOAcezdLvZofbhKujw
+	jypVS4U7mPgYn0MRAry49HKfQjFJDA/M=
+X-Google-Smtp-Source: AGHT+IESJUVD0Sj7UqDj0ZjPzZA5ArGpUDpGCgH5jqClkFhIx6ezWaGQwsiYVxT8+S+Axq6++0gtGttQ0LThGajnM28=
+X-Received: by 2002:a17:907:1c27:b0:b75:7b39:847a with SMTP id
+ a640c23a62f3a-b80372228e5mr2892786466b.60.1766840760220; Sat, 27 Dec 2025
+ 05:06:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251227012712.2921408-1-lixianglai@loongson.cn> <20251227012712.2921408-3-lixianglai@loongson.cn>
-In-Reply-To: <20251227012712.2921408-3-lixianglai@loongson.cn>
+References: <cover.1766037997.git.zhoubinbin@loongson.cn> <7a0df6f836e0ec7ddfe4d592c10259c87ef96e4f.1766037997.git.zhoubinbin@loongson.cn>
+In-Reply-To: <7a0df6f836e0ec7ddfe4d592c10259c87ef96e4f.1766037997.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 27 Dec 2025 20:49:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6vxwDkBUQgY=YKnhk+3i_hW06E0UFLHK5F3VnG7tzdwA@mail.gmail.com>
-X-Gm-Features: AQt7F2o4bcq8N1cKAf4bYOyGrQYxTcPXCNmzgRy8noVX91JZSVXC4jPh3i1tjbc
-Message-ID: <CAAhV-H6vxwDkBUQgY=YKnhk+3i_hW06E0UFLHK5F3VnG7tzdwA@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Xianglai Li <lixianglai@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, stable@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Sat, 27 Dec 2025 21:06:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6LoF_raks89e+i3K48g0hmnhu3eJbSu2Tkpr9nNzM6iA@mail.gmail.com>
+X-Gm-Features: AQt7F2ohh5YfPyb2UrWwlmfBbouHVPpjxVIci8u--dXlQ9be3QFY15Nc1ufV8S4
+Message-ID: <CAAhV-H6LoF_raks89e+i3K48g0hmnhu3eJbSu2Tkpr9nNzM6iA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] dt-bindings: interrupt-controller:
+ loongson,pch-pic: Change to unevaluatedProperties
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Xianglai,
+Hi, Binbin,
 
-On Sat, Dec 27, 2025 at 9:52=E2=80=AFAM Xianglai Li <lixianglai@loongson.cn=
+On Fri, Dec 19, 2025 at 4:47=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
 > wrote:
 >
-> Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
-> the assembly function to guide the generation of correct ORC table entrie=
-s,
-> thereby solving the timeout problem of loading the livepatch-sample modul=
-e
-> on a physical machine running multiple vcpus virtual machines.
+> Change additionalProperties to unevaluatedProperties because it refs to
+> interrupt-controller.yaml.
 >
-> While solving the above problems, we have gained an additional benefit,
-> that is, we can obtain more call stack information
+> Fix below CHECK_DTBS warnings:
+> arch/loongarch/boot/dts/loongson-2k2000-ref.dtb: interrupt-controller@100=
+00000 (loongson,pch-pic-1.0): '#address-cells' does not match any of the re=
+gexes: '^pinctrl-[0-9]+$'
+>         from schema $id: http://devicetree.org/schemas/interrupt-controll=
+er/loongson,pch-pic.yaml
 >
-> Stack information that can be obtained before the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x100/0x1e0
->
-> Stack information that can be obtained after the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x104/0x1e4
-> [<0>] kvm_enter_guest+0x38/0x11c
-> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
-> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
-> [<0>] sys_ioctl+0x498/0xf00
-> [<0>] do_syscall+0x98/0x1d0
-> [<0>] handle_syscall+0xb8/0x158
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 > ---
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Xianglai Li <lixianglai@loongson.cn>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+>  .../interrupt-controller/loongson,pch-pic.yaml         | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >
->  arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loong=
+son,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/l=
+oongson,pch-pic.yaml
+> index b7bc5cb1dff2..cf235ca57a2f 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch=
+-pic.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch=
+-pic.yaml
+> @@ -14,6 +14,9 @@ description:
+>    transforming interrupts from on-chip devices into HyperTransport vecto=
+rized
+>    interrupts.
 >
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 93845ce53651..a3ea9567dbe5 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -10,6 +10,7 @@
->  #include <asm/loongarch.h>
->  #include <asm/regdef.h>
->  #include <asm/unwind_hints.h>
-> +#include <linux/kvm_types.h>
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +
+>  properties:
+>    compatible:
+>      const: loongson,pch-pic-1.0
+> @@ -34,14 +37,18 @@ properties:
+>    '#interrupt-cells':
+>      const: 2
 >
->  #define HGPR_OFFSET(x)         (PT_R0 + 8*x)
->  #define GGPR_OFFSET(x)         (KVM_ARCH_GGPR + 8*x)
-> @@ -110,9 +111,9 @@
->          * need to copy world switch code to DMW area.
->          */
->         .text
-> +       .p2align PAGE_SHIFT
->         .cfi_sections   .debug_frame
->  SYM_CODE_START(kvm_exc_entry)
-> -       .p2align PAGE_SHIFT
->         UNWIND_HINT_UNDEFINED
->         csrwr   a2,   KVM_TEMP_KS
->         csrrd   a2,   KVM_VCPU_KS
-> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
->         /* restore per cpu register */
->         ld.d    u0, a2, KVM_ARCH_HPERCPU
->         addi.d  sp, sp, -PT_SIZE
-> +       UNWIND_HINT_REGS
->
->         /* Prepare handle exception */
->         or      a0, s0, zero
-> @@ -200,7 +202,7 @@ ret_to_host:
->         jr      ra
->
->  SYM_CODE_END(kvm_exc_entry)
-> -EXPORT_SYMBOL(kvm_exc_entry)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
-Why not use EXPORT_SYMBOL_FOR_KVM in the first patch directly?
+> +  '#address-cells':
+> +    const: 0
+> +
+In the example address-cells is before interrupt-cells, so I think
+here it is better to put it before interrupt -cells.
 
->
->  /*
->   * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
-> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
->         /* Save host GPRs */
->         kvm_save_host_gpr a2
->
-> +       /*
-> +        * The csr_era member variable of the pt_regs structure is requir=
-ed
-> +        * for unwinding orc to perform stack traceback, so we need to pu=
-t
-> +        * pc into csr_era member variable here.
-> +        */
-> +       pcaddi  t0, 0
-> +       st.d    t0, a2, PT_ERA
-I am still confused here, does this overwrite PT_ERA stored by
-kvm_save_host_gpr?
+>  required:
+>    - compatible
+>    - reg
+>    - loongson,pic-base-vec
+>    - interrupt-controller
+>    - '#interrupt-cells'
+> +  - '#address-cells'
+The same.
 
 Huacai
 
-> +
->         addi.d  a2, a1, KVM_VCPU_ARCH
->         st.d    sp, a2, KVM_ARCH_HSP
->         st.d    tp, a2, KVM_ARCH_HTP
-> @@ -225,7 +235,7 @@ SYM_FUNC_START(kvm_enter_guest)
->         csrwr   a1, KVM_VCPU_KS
->         kvm_switch_to_guest
->  SYM_FUNC_END(kvm_enter_guest)
-> -EXPORT_SYMBOL(kvm_enter_guest)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
 >
->  SYM_FUNC_START(kvm_save_fpu)
->         fpu_save_csr    a0 t1
-> @@ -233,7 +243,7 @@ SYM_FUNC_START(kvm_save_fpu)
->         fpu_save_cc     a0 t1 t2
->         jr              ra
->  SYM_FUNC_END(kvm_save_fpu)
-> -EXPORT_SYMBOL(kvm_save_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
+> -additionalProperties: false
+> +unevaluatedProperties: false
 >
->  SYM_FUNC_START(kvm_restore_fpu)
->         fpu_restore_double a0 t1
-> @@ -241,7 +251,7 @@ SYM_FUNC_START(kvm_restore_fpu)
->         fpu_restore_cc     a0 t1 t2
->         jr                 ra
->  SYM_FUNC_END(kvm_restore_fpu)
-> -EXPORT_SYMBOL(kvm_restore_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
->
->  #ifdef CONFIG_CPU_HAS_LSX
->  SYM_FUNC_START(kvm_save_lsx)
-> @@ -250,7 +260,7 @@ SYM_FUNC_START(kvm_save_lsx)
->         lsx_save_data   a0 t1
->         jr              ra
->  SYM_FUNC_END(kvm_save_lsx)
-> -EXPORT_SYMBOL(kvm_save_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
->
->  SYM_FUNC_START(kvm_restore_lsx)
->         lsx_restore_data a0 t1
-> @@ -258,7 +268,7 @@ SYM_FUNC_START(kvm_restore_lsx)
->         fpu_restore_csr  a0 t1 t2
->         jr               ra
->  SYM_FUNC_END(kvm_restore_lsx)
-> -EXPORT_SYMBOL(kvm_restore_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
->  #endif
->
->  #ifdef CONFIG_CPU_HAS_LASX
-> @@ -268,7 +278,7 @@ SYM_FUNC_START(kvm_save_lasx)
->         lasx_save_data  a0 t1
->         jr              ra
->  SYM_FUNC_END(kvm_save_lasx)
-> -EXPORT_SYMBOL(kvm_save_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
->
->  SYM_FUNC_START(kvm_restore_lasx)
->         lasx_restore_data a0 t1
-> @@ -276,7 +286,7 @@ SYM_FUNC_START(kvm_restore_lasx)
->         fpu_restore_csr   a0 t1 t2
->         jr                ra
->  SYM_FUNC_END(kvm_restore_lasx)
-> -EXPORT_SYMBOL(kvm_restore_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
->  #endif
->
->  #ifdef CONFIG_CPU_HAS_LBT
+>  examples:
+>    - |
+> @@ -50,6 +57,7 @@ examples:
+>        compatible =3D "loongson,pch-pic-1.0";
+>        reg =3D <0x10000000 0x400>;
+>        interrupt-controller;
+> +      #address-cells =3D <0>;
+>        #interrupt-cells =3D <2>;
+>        loongson,pic-base-vec =3D <64>;
+>        interrupt-parent =3D <&htvec>;
 > --
-> 2.39.1
+> 2.47.3
 >
