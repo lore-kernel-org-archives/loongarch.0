@@ -1,73 +1,123 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EB24C6D
-	for <loongarch@lists.linux.dev>; Fri, 26 Dec 2025 18:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B27616A956
+	for <loongarch@lists.linux.dev>; Sat, 27 Dec 2025 01:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766773748; cv=none; b=Vfo4g/fwRzlPMfQJDhztVFHpGerMSn4Cle/BuD5cttC33OqKGF/bUxfvIKUD64wV8hV73FiVPaQl3h8iqTOIvY9CrIyLt6PMqBOPdxjYThgv6xloMPwSItNWhAKXNT6+AHXZnBvW4+X+MUELrZ2EEjLI/F5EHsz3QH08pKfRi9U=
+	t=1766800330; cv=none; b=o7Jdb32CPm/qRKmPoyKNDAMKG3zonzAHP3HLuxGbGjl+us053+xhHjTMLQLBVvIGesKoEF+zEiCzVFBYNrM4vk+Ok6/JkAzhERtMQptHVwbF9ioz9/Rmlo7434gSKi7ceqEJAIWubj7Ljl0MJ9rDBxWabXo9JmO11E1zW/KYtr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766773748; c=relaxed/simple;
-	bh=YNjjl4JloQtWYJc8KH6ljjC+Uzv22wnqishxcDOUnqg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eDM1EGNo61N/3ldXllKxs577oIzyxLYRZgx+TssBVbwilcHZPL8uIHrVS+t0mt3L/HTO+rKVJ6Gn7vlKZBywn36bhLfcF5S6thJGVIWJYJCoUiBH+fsn4n5/dn5N7C0CeCjd/w/wzSxSI2oLL1jxfnPDngK5CiJrCnHJ/QdiFSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EfO+ETFj; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EfO+ETFj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1766773143;
-	bh=YNjjl4JloQtWYJc8KH6ljjC+Uzv22wnqishxcDOUnqg=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=EfO+ETFjhBPINCHLM7ZWoVPti3baCUFx6ifapJhmLJZN5jryRMLPdEoodkWnq1LW5
-	 7xZKG6GvUfV/ePFASiayLNn1+ecLaMM6HFqFRj8wnN/Q0I1+zMY19WcsNwF+yBRjZc
-	 adqNEeQzbsryb1lmyWb9xTAPPqiGy0/KzKecZ+os=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 6F4E066985;
-	Fri, 26 Dec 2025 13:19:00 -0500 (EST)
-Message-ID: <6e07d2defb5490ceaa017296c9c24cbba78d7c15.camel@xry111.site>
-Subject: Re: Loongarch BPF JIT support Load-Acquire and Store-Release
- Instructions ?
-From: Xi Ruoyao <xry111@xry111.site>
-To: Vincent Li <vincent.mc.li@gmail.com>, Hengqi Chen
- <hengqi.chen@gmail.com>,  Tiezhu Yang <yangtiezhu@loongson.cn>, Chenghao
- Duan <duanchenghao@kylinos.cn>, Huacai Chen	 <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev
-Date: Sat, 27 Dec 2025 02:18:58 +0800
-In-Reply-To: <CAK3+h2xMF2AtKKHAh_Xt0NEk+dsVg5KRZ3wspLUtktmeU2Z_5A@mail.gmail.com>
-References: 
-	<CAK3+h2xMF2AtKKHAh_Xt0NEk+dsVg5KRZ3wspLUtktmeU2Z_5A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.0 
+	s=arc-20240116; t=1766800330; c=relaxed/simple;
+	bh=gWUcfv9snK/vO1HKr+k3Zu494RdI/WXNlnQsOTIjTT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nolEXMqlMxEsU9SIxh9zujuJ5z3TXw90LWx5vyZbJeIwlPwAoBuV8jY0BuwnZbYPTE5cY2iYrgK1lNYkrNyiUdiIZaBvYEDIzqxlQncaba3Hqnss3fHKpQuoot9bGdG9Stje0ekpYuM2Kq7jWDAogInnq7K91RBl0zzZ3E0KYmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Dx+8K8O09pg4oDAA--.10558S3;
+	Sat, 27 Dec 2025 09:51:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by front1 (Coremail) with SMTP id qMiowJBxbcK6O09pu1oFAA--.12398S2;
+	Sat, 27 Dec 2025 09:51:54 +0800 (CST)
+From: Xianglai Li <lixianglai@loongson.cn>
+To: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	lixianglai@loongson.cn
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	stable@vger.kernel.org,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH V3 0/2] LoongArch: KVM: fix "unreliable stack" issue
+Date: Sat, 27 Dec 2025 09:27:10 +0800
+Message-Id: <20251227012712.2921408-1-lixianglai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxbcK6O09pu1oFAA--.12398S2
+X-CM-SenderInfo: 5ol0xt5qjotxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Thu, 2025-12-25 at 10:04 -0800, Vincent Li wrote:
-> While browsing through the 2025 Linux plumber conference videos and
-> slides. slide Introduction to eBPF Load-Acquire and Store-Release [0]
-> and video [1] caught my attention. Maybe Loongarch could consider
-> supporting it?
->=20
-> [0]:
-> https://lpc.events/event/19/contributions/2163/attachments/1806/3886/Intr=
-oduction%20to%20eBPF%20Load-Acquire%20and%20Store-Release%20Instructions.pd=
-f
+When starting multi-core loongarch virtualization on loongarch physical
+machine, loading livepatch on the physical machine will cause an error
+similar to the following:
+[  411.686289] livepatch: klp_try_switch_task: CPU 31/KVM:3116 has an
+unreliable stack
 
-Load-acquire should just require a dbar 0b10100 before the load, and
-store-release should just require a dbar 0b10010 after the store.
+The specific test steps are as follows:
+1.Start a multi-core virtual machine on a physical machine
 
-Unless BPF has some special definition of acquire/release that I don't
-know.
+2.Enter the following command on the physical machine to turn on the debug
+switch:
+  echo "file kernel/livepatch/transition.c +p"  > /sys/kernel/debug/\
+dynamic_debug/control 
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+
+3.Load livepatch:
+ modprobe  livepatch-sample 
+
+Through the above steps, similar prints can be viewed in dmesg.
+
+The reason for this issue is that the code of the kvm_exc_entry function
+was copied in the function kvm_loongarch_env_init. When the cpu needs to
+execute kvm_exc_entry, it will switch to the copied address for execution.
+The new address of the kvm_exc_entry function cannot be recognized in ORC,
+which eventually leads to the arch_stack_walk_reliable function returning
+an error and printing an exception message.
+
+To solve the above problems, we directly compile the switch.S file into
+the kernel instead of the module. In this way, the function kvm_exc_entry
+will no longer need to be copied.
+
+changlog:
+V3<-V2:
+1.Replace the EXPORT_SYMBOL macro declaration symbol with the
+EXPORT_SYMBOL_FOR_KVM macro
+
+2.Add some comments in kvm_enter_guest
+
+3.Place the correct pc address in era
+
+4.Move .p2align after .text
+
+V2<-V1:
+1.Rollback the modification of function parameter types such as
+kvm_save_fpu. In the asm-prototypes.h header file, only the parameter types
+it depends on are included
+
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: Bibo Mao <maobibo@loongson.cn>
+Cc: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Xianglai Li <lixianglai@loongson.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+Xianglai Li (2):
+  LoongArch: KVM: Compile the switch.S file directly into the kernel
+  LoongArch: KVM: fix "unreliable stack" issue
+
+ arch/loongarch/Kbuild                       |  2 +-
+ arch/loongarch/include/asm/asm-prototypes.h | 21 +++++++++++++
+ arch/loongarch/include/asm/kvm_host.h       |  3 --
+ arch/loongarch/kvm/Makefile                 |  2 +-
+ arch/loongarch/kvm/main.c                   | 35 ++-------------------
+ arch/loongarch/kvm/switch.S                 | 32 ++++++++++++++++---
+ 6 files changed, 53 insertions(+), 42 deletions(-)
+
+
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+-- 
+2.39.1
+
