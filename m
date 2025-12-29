@@ -1,88 +1,111 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3FF2D0C92
-	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 06:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662EA2D12F5
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 07:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766990067; cv=none; b=hboI4F5adzqR2gaOj5PCK+a3Lj5frvUMlfZJoCkQiExIX8ZcUox/PH0UawaFvfVBfkP+O6/0ZFP+0ut+g94fe7amY4MM3KVCUU6hQGs3i3P6DhG1OIdvjGv7BsOHVbU9RiDDGN56Qn2A78cjrVkKmicF2ACJt/c9+WommhC4258=
+	t=1766992000; cv=none; b=aXwkfu45hJgqe03L1KuPVtGPrAG5vJ783ZxoFPGxtX0VL+ykFMFU4Orfv9corTehAJcHAsVmgZP0vE2fK0D20XZBUrDfI2svUM3cQbzs3Gx6oqebtJdeN9p+dhiX/dQHHULukJWU3s1qXI8Ee/suG4fdf/MX4a8Zo53OO+JhOng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766990067; c=relaxed/simple;
-	bh=IxKRFQ2hIDuBInN9BpkikMOrYdxArX340pZEltaRdgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m77TP9L0HAM+XcHBavAS35lRLuZJp5s+rGetkcm07BQgxVZizAZPjEnapPFKpYgkKJtclyx4jEivcKmh/b3eA9VQWEoWZqXZV+vjP7ohPPTlhMyG+a7t/aebiTbvZSWuU3WAbL0lvoA0AuZ0LE3v8/I0sVsLeLlrGV1hCy2w+Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wA+F8b8P; arc=none smtp.client-ip=91.218.175.182
+	s=arc-20240116; t=1766992000; c=relaxed/simple;
+	bh=WI8FHWlGOA0apArL90hv+or5DrLzqtQvm7rbFbZqsg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L60AFJS+CMlbwiJqzIXPKHqqQIUoSRrF1FQv29iv//iHy0zgAZ3Tot3Mb93sKNL5fz7PXOcOPzhQTetePhGCigQSZGecUwsXK6vG26VULeKH+0HWbahli12N5l2VjvrqIGZ7og9tTTRmWHtv+gNyMyLqk+b5t+luq9Bwqw+B9Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rRyX1MbD; arc=none smtp.client-ip=95.215.58.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wA+F8b8P"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rRyX1MbD"
+Date: Mon, 29 Dec 2025 15:06:19 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1766990063;
+	t=1766991995;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0Busr31vYwHCmPhkYpBb+hPfItK01jR0m3O6Awmw6lU=;
-	b=wA+F8b8PEXDDcOwbDBGqjPlLk/43Kdb9MyxsZoPzAj6IPt+s6sR/ALqTlD9Z3WbnSGuujq
-	TxQNcYNYvtwfy/4yYzHSWKhIu5DwjlPNeXCRGDZ0w8SzeieMvtXOMDWpjD6CPDyfwj0nUJ
-	dNQwgNhsGKRzUwRaR4yEMauWmgFSNBM=
+	bh=Z7wYXeRdkMXIDCqoZ8ixYV6t3eQyv/SnG1ouQyq18Sg=;
+	b=rRyX1MbDOz0al40sqpYvj65fYFxMBERpuGtKnyLbb7IRaLp4by+kNCctx1gtLzgkj0/joB
+	LBEkH+UpOVhI5oYjsLdbCcp4KWoxebd1tGFKZtuZyhShV3HXDx7jj1y2qZdnIyvA05qKlG
+	+DZ+7Tg2rYfu4a6tAhh/jT5TOf+zoFQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: George Guo <dongtai.guo@linux.dev>
-To: hengqi.chen@gmail.com
-Cc: chenhuacai@kernel.org,
-	dongtai.guo@linux.dev,
-	guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	lianyangyang@kylinos.cn,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	r@hev.cc,
-	xry111@xry111.site
-Subject: [PATCH loongarch-next 4/4] LoongArch: Enable 128-bit atomics cmpxchg support
-Date: Mon, 29 Dec 2025 14:34:08 +0800
-Message-ID: <20251229063408.34340-5-dongtai.guo@linux.dev>
-In-Reply-To: <20251229063408.34340-1-dongtai.guo@linux.dev>
-References: <CAEyhmHQgkgU-c6rmBc0672oNCdQAzz4Ob5kN4p7k6MUo9B4Okw@mail.gmail.com>
- <20251229063408.34340-1-dongtai.guo@linux.dev>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman	 <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song	 <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh	 <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo	 <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Tiezhu Yang	 <yangtiezhu@loongson.cn>, Hengqi Chen
+ <hengqi.chen@gmail.com>, Huacai Chen	 <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Youling Tang	 <tangyouling@loongson.cn>,
+ bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, Bing
+ Huang	 <huangbing@kylinos.cn>
+Subject: Re: [PATCH] LoongArch: BPF: Fix sign extension for 12-bit
+ immediates
+Message-ID: <20251229150619.0000195f@linux.dev>
+In-Reply-To: <130f896382dc8f56ead371208d9809ec06c7400c.camel@xry111.site>
+References: <20251103-1-v1-1-20e6641a57da@linux.dev>
+	<130f896382dc8f56ead371208d9809ec06c7400c.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=GB18030
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-From: George Guo <guodongtai@kylinos.cn>
+On Fri, 19 Dec 2025 17:33:17 +0800
+Xi Ruoyao <xry111@xry111.site> wrote:
 
-Add select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE in Kconfig
-to enable 128-bit atomic cmpxchg support on LoongArch.
+> On Mon, 2025-11-03 at 16:42 +0800, george wrote:
+> > From: George Guo <guodongtai@kylinos.cn>
+> > 
+> > When loading immediate values that fit within 12-bit signed range,
+> > the move_imm function incorrectly used zero extension instead of
+> > sign extension.
+> > 
+> > The bug was exposed when scx_simple scheduler failed with -EINVAL
+> > in ops.init() after passing node = -1 to scx_bpf_create_dsq().
+> > Due to incorrect sign extension, `node >= (int)nr_node_ids`
+> > evaluated to true instead of false, causing BPF program failure.
+> > 
+> > Verified by testing with the scx_simple scheduler (located in
+> > tools/sched_ext/). After building with `make` and running
+> > ./tools/sched_ext/build/bin/scx_simple, the scheduler now
+> > initializes successfully with this fix.
+> > 
+> > Fix this by using sign extension (sext) instead of zero extension
+> > for signed immediate values in move_imm.
+> > 
+> > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> > Reported-by: Bing Huang <huangbing@kylinos.cn>
+> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > ---
+> > Signed-off-by: george <dongtai.guo@linux.dev>
+> > ---
+> >  arch/loongarch/net/bpf_jit.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/loongarch/net/bpf_jit.h
+> > b/arch/loongarch/net/bpf_jit.h index
+> > 5697158fd1645fdc3d83f598b00a9e20dfaa8f6d..f1398eb135b69ae61a27ed81f80b4bb0788cf0a0
+> > 100644 --- a/arch/loongarch/net/bpf_jit.h +++
+> > b/arch/loongarch/net/bpf_jit.h @@ -122,7 +122,8 @@ static inline
+> > void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
+> > /* addiw rd, $zero, imm_11_0 */ if (is_signed_imm12(imm)) {
+> >  		emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
+> > -		goto zext;
+> > +		emit_sext_32(ctx, rd, is32);  
+> 
+> The addi.w instruction already produces the sign-extended value.  Why
+> do we need to sign-extend it again?
+> 
+Hi Ruoyao,
+I tried, it's not easy to do that. 
+It's better merge this patch, then consider next step.
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 730f34214519..d4de823276d1 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -114,6 +114,7 @@ config LOONGARCH
- 	select GENERIC_TIME_VSYSCALL
- 	select GPIOLIB
- 	select HAS_IOPORT
-+	select HAVE_ALIGNED_STRUCT_PAGE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_BITREVERSE
- 	select HAVE_ARCH_JUMP_LABEL
-@@ -141,6 +142,7 @@ config LOONGARCH
- 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
- 	select HAVE_EBPF_JIT
-+	select HAVE_CMPXCHG_DOUBLE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
- 	select HAVE_EXIT_THREAD
- 	select HAVE_GENERIC_TIF_BITS
--- 
-2.49.0
-
+Thanks!
