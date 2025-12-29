@@ -1,143 +1,180 @@
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141B31AABE
-	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 14:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822F131B818
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 14:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767018036; cv=none; b=EYwLT5UWGknVWA7Ul5OR+kjfSEMXNOv2twQ3vXuPJOGQNCB4OScTx/W1RyO/O0icYk46GMwYPrmCLfGsSET5cJwThh/ReAap1xXrBsLunzk8ERwgjIAYFeoGrzlTxiH7VpUdcCam/At0rfOWvPz8QnZ2p00YXEv9e325+MuO3n4=
+	t=1767018129; cv=none; b=N6bQu+Yz2lFimps75IavUubTqMqjz+dxFHbP0nLLWvS9sETvFhu0EH1KZE+mkWpnhGET3ffstekMrdIlu/4KrZUNwdUTubMl1WYl4A6qcICuPBP9GxuEN4Njw3nnxT2+q4pVH/w8rwZyKzcQB4mHvuXLmS0vTLKv8kkYnjIn8BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767018036; c=relaxed/simple;
-	bh=5QJ++AFvmfogtrUN4a0fBMa5IvH0wJTZNpmYFiqxjs0=;
+	s=arc-20240116; t=1767018129; c=relaxed/simple;
+	bh=E3/F9g7wyff0vQsp3dQcMKJxrxPvGx6oHDQIJPd0ITc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ptjFUjHJJYLnU/mg/YCSAOBupRJlfC16Ko7p7CsJ1Q2jvpaYmhNBIcW1fwnq+qu5+8I+YwjtuAfFNy4qIAgbEq2iuyl2r5q99onSnlwh7U69dRXQsSbkj2S/Oac2TJbsr4+7/dCBK7cJ5uKjCcxvQPNpYCu8PnxsvNACbt58OII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0gvjyjC; arc=none smtp.client-ip=209.85.167.169
+	 To:Cc:Content-Type; b=bx8IRSkv/+SWORz4rnmq7MmmbE9I8KsDUnDlve4a3V1jJVZgYPakPwqgPTg3OVuTEacsqhzzC+sgi5KclAgKsH6u0VEBaXYUeaCiy25c/Q43BUC0A8s5J4kNA0ZHPMk9VVvBXTK5AtAkxtqWcdROfW9IN6zexZQRWBIQtmcejI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J339j2Io; arc=none smtp.client-ip=209.85.167.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0gvjyjC"
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-450ac3ed719so6026595b6e.0
-        for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 06:20:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J339j2Io"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4537407477aso5766081b6e.1
+        for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 06:22:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767018033; x=1767622833; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1767018126; x=1767622926; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e007yG2Skbf3KR5PzHmbwLjVdg3gkGjb1eZAPsdnqA4=;
-        b=m0gvjyjC9FnCytELEC4skdk6TCdGQoaZkYQNayvVVubh7MqMfXo5EHH1v3NCKx81Ws
-         y0kqK5IiHgfxlpnIHpOyYA0nOwxtoOegzDdioORG41topsT1FuM9F+lbZ01o6fa6LZgU
-         WeDAmObCewfINKlfhXwtir66woOLle6dzxLZJKjZ5n79OV0ahvcXMABdJn26+FiO1mhk
-         uwwUE39fE7nMtNVHeKXsyZE5DfiDuVj1W1GlHbJ59qozMlw2Fi2ogvWSa+2ny1zH1aL8
-         U6X0viKrc02FgEMtAIb2k8rh6GNBCG2kLnd1bKivMw+D9/V/dgg/tAYsjXtRbs0nsnhg
-         vioQ==
+        bh=8kSaypy2VO8fSJfHklVkE0bedhediZiR/wlX+EHisHU=;
+        b=J339j2IobNY0hPqUvOEqZZZxIW2KGfoOCfbkFO7y4VsyNDcRMLq8Zt82sUUwj1kyXh
+         TKQaFHauZ5KE8vVEMikpe1+okGWtALQy0A9IPS5sjEdSanj7MBHUivKaaZJ5DkpWmFUH
+         C62UHig+p2mtMx2USF9r5BZHGrodRGTAb0S7DuzS6e7i/FYmx3j9szE4//dAPk/w+QPL
+         54ngq7Apqp50V+6WHcSV2KDOPrNGuIzhJZiqGFO/gnkuH0X32WYklS8qwWlV1gCFazwG
+         PWr1jiBTt6EddyncdL1m5xZsJqJYLdb0N0ZxcaX7MKV9oaEPnyy6MfcM1DYVXjzjC2cL
+         OiwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767018033; x=1767622833;
+        d=1e100.net; s=20230601; t=1767018126; x=1767622926;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=e007yG2Skbf3KR5PzHmbwLjVdg3gkGjb1eZAPsdnqA4=;
-        b=mna6TRTSAnVH/t32hedbeHCMufei5TVmAYNTMwfP8xKqWtJu+bm8ghhRhFdZsansZm
-         uFkJOfkdQFs78wRIcqiqBcWZmBbg5TnXt2EJBsNKnVR0sMDD2CWOktNWMxq8Iw/sokpq
-         8eG21DTXWRh0CHQ6vwWR/uay1/6yLBJ0jXAj9G5RB6n0y/WgKpezkEFXCYAoSlE3Svez
-         tnyYksK3PvDMxhAhPlYoUPqadCB8ePa3ToFVDEYA3gsIi8C5iqJAfVy6dwjzdIgM2BVx
-         Lht/wrqDRf3xTQkhkn9KFPX0Z7g05QQ4kiBe1AXg3sVJvI+gWk7QyqFGZswrJz1isbt3
-         p+xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxIQg/269RC0D1Zxa2AFZT/sBzcmdyIubDbmPVQeZ/c2EO6eZzO7NwQm/2XOYBU5chCca8dJWuXh4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzcugDELas8KrFs6eRW/nwslacVTRbyRXJ1rO9mqJGK12onIN1w
-	Zl50h+6WpgZDRiCjSqBraq/00THCQpr23sNrW4fJ+APRQ2j5U/xz7932j9FsHeVgmucUaURkkP6
-	XRJy6l1FZ1V17R3lQWskq4iUVgDyslNY=
-X-Gm-Gg: AY/fxX7L/mtcEr74hSbuLBj7hQN1NrpvCjWSPsjialxVhjcvb7Eu1QwI9wchSbHvw7a
-	aKMUM/1Zl/eDT+PD675OPtDFCAFoFPoigP/VrhgAg9vzpucN/PwTdOQI7/DNMRO/DIAgfU30jwS
-	x4FNhNAB59nb3IJ5+Mw9Bo/OWGmxowbYQDQvTWoIZxycwH22mKT7jPRrfTBNarE0VRxx6EWvxfh
-	8bItW2TwTfk5ynKcnbfxwSAWUl+GAjugmlTyQRmUHSOecHS4qMAV3fmgqwx0fEbu2FTLQn8WqHR
-	dy3STao=
-X-Google-Smtp-Source: AGHT+IGKy+9wP2on9xI54Zjjmh+IKZvqrskm+aim9BlDVJcgl1KL2yoo/qKbXq+mzLP/C8AuY1vCtfNQkHlPXn30BUA=
-X-Received: by 2002:a05:6820:4d44:10b0:659:9a49:9049 with SMTP id
- 006d021491bc7-65d0e98b91dmr10194949eaf.20.1767018032872; Mon, 29 Dec 2025
- 06:20:32 -0800 (PST)
+        bh=8kSaypy2VO8fSJfHklVkE0bedhediZiR/wlX+EHisHU=;
+        b=l8TYSyZiUZIyjJJAdS8XTMgbNECr9bHdlRzH4jdMcdtDlqGf38FZkO6WFrCKqqoSTh
+         g6jMcFkjLAq2/mIZJNID0lGbO3S8AapuSGy4kh7d99OsIBqgTR48LnhwVZsrSNpbkbwH
+         Xq0GURfrUtSkwwtNo5v/KfPa2SQb6YZOK9Y/ucXl8E5SaDIb9VXeYwNV62avGxZfsaO3
+         w2liywQ8Z6Qy7GNpZudSn+hgeXtx0WFYGuyTTV31rT5rVMWb6r7xyCKEErvAsWjuBoWV
+         HF7NwvIfW/wJfVmj3wJvIt/rd6+ORc8XyCz2gSx7JJFD+iiZiqdvpUJEtV0vPtEmPYT5
+         2YeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQBkrwme86tNXIuAywFySamSOUmVb4CD2T4O0O8JO1x/cDYvlzQL4ayfx4vIA6Twn5a99fwaE3+2Q=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz7084MG56r9fuh7if5jRO1z2b1KQYOT6IKrbW9NW4PPNn37Hnp
+	7eJzpiQ/7aPERAED3LeLK6uIJzKg78wl0bZsT2f2f831jZ1OSKMYjkA82ziq4pEXUDMftT1s+XG
+	5jJ23Mm4DPsi+zqZ5QXfcsXCBY2Vsksc=
+X-Gm-Gg: AY/fxX4I0kzG7yQ/Vft1ACDtXhKMdihaZ/m1lWKzRVN61MaU0240MoQ/e7Y2Pzbbsgc
+	oghKgI0RLayOpnEbvczdpDwB4dLjk82MoQoKAsQ1xbsZtc4DannoMBJGzWdOyih+p4RNgi9n5Ea
+	1dwabRVnBDpDoka8MsJ/lP7mo9raqDx32a60gjKOROCyYEze60rIQPcuIG9XQif5DVsyIKXdcXI
+	6spHj4y2ipaCgQbj8OUz3sRqzdB0mcq08hlScFUfPIUR4QaXyMpxx3JLoxsubmN/oVK0OgE
+X-Google-Smtp-Source: AGHT+IEWccJ+DPX0WlA8rZ4GC1x/eVc8xhUFKwEhNdVEl77BsFeee3NEpe/Mj14XZGlvjGQGKg4QbPb6t8OHhR4QhR8=
+X-Received: by 2002:a05:6808:2186:b0:441:8f74:e8b with SMTP id
+ 5614622812f47-457b218053amr13493961b6e.53.1767018126340; Mon, 29 Dec 2025
+ 06:22:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251103-1-v1-1-20e6641a57da@linux.dev> <130f896382dc8f56ead371208d9809ec06c7400c.camel@xry111.site>
- <20251229150619.0000195f@linux.dev>
-In-Reply-To: <20251229150619.0000195f@linux.dev>
+References: <CAEyhmHQgkgU-c6rmBc0672oNCdQAzz4Ob5kN4p7k6MUo9B4Okw@mail.gmail.com>
+ <20251229063408.34340-1-dongtai.guo@linux.dev>
+In-Reply-To: <20251229063408.34340-1-dongtai.guo@linux.dev>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Mon, 29 Dec 2025 22:20:22 +0800
-X-Gm-Features: AQt7F2pXotyzAFjPqoQjGStWE5-z1P1HK15voye9z6KXgDW0dWQRUKTGXQPLlOY
-Message-ID: <CAEyhmHTRVfDmwwH=_hPFUnFS-_ffALNUEVrSKiO9vEznfrUSSw@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: BPF: Fix sign extension for 12-bit immediates
+Date: Mon, 29 Dec 2025 22:21:55 +0800
+X-Gm-Features: AQt7F2oEPaN2S74ARWbkyPbOevqlM_GQj9VfBNCzP3CIwqBr1AIYMwr2miJxWwQ
+Message-ID: <CAEyhmHT1gRtGCiM7C6QmrF38xxzc2OLKgiNRWd0whpSSJoyrjg@mail.gmail.com>
+Subject: Re: [PATCH loongarch-next 0/4] LoongArch: Add 128-bit atomic cmpxchg support
 To: George Guo <dongtai.guo@linux.dev>
-Cc: Xi Ruoyao <xry111@xry111.site>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Youling Tang <tangyouling@loongson.cn>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
-	Bing Huang <huangbing@kylinos.cn>
+Cc: chenhuacai@kernel.org, guodongtai@kylinos.cn, kernel@xen0n.name, 
+	lianyangyang@kylinos.cn, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, r@hev.cc, xry111@xry111.site
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 29, 2025 at 3:06=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+On Mon, Dec 29, 2025 at 2:34=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
 wrote:
 >
-> On Fri, 19 Dec 2025 17:33:17 +0800
-> Xi Ruoyao <xry111@xry111.site> wrote:
+> This patch series adds 128-bit atomic compare-and-exchange support for
+> LoongArch architecture, which fixes BPF scheduler test failures caused
+> by missing 128-bit atomics support.
 >
-> > On Mon, 2025-11-03 at 16:42 +0800, george wrote:
-> > > From: George Guo <guodongtai@kylinos.cn>
-> > >
-> > > When loading immediate values that fit within 12-bit signed range,
-> > > the move_imm function incorrectly used zero extension instead of
-> > > sign extension.
-> > >
-> > > The bug was exposed when scx_simple scheduler failed with -EINVAL
-> > > in ops.init() after passing node =3D -1 to scx_bpf_create_dsq().
-> > > Due to incorrect sign extension, `node >=3D (int)nr_node_ids`
-> > > evaluated to true instead of false, causing BPF program failure.
-> > >
-> > > Verified by testing with the scx_simple scheduler (located in
-> > > tools/sched_ext/). After building with `make` and running
-> > > ./tools/sched_ext/build/bin/scx_simple, the scheduler now
-> > > initializes successfully with this fix.
-> > >
-> > > Fix this by using sign extension (sext) instead of zero extension
-> > > for signed immediate values in move_imm.
-> > >
-> > > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
-> > > Reported-by: Bing Huang <huangbing@kylinos.cn>
-> > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > > ---
-> > > Signed-off-by: george <dongtai.guo@linux.dev>
-> > > ---
-> > >  arch/loongarch/net/bpf_jit.h | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/loongarch/net/bpf_jit.h
-> > > b/arch/loongarch/net/bpf_jit.h index
-> > > 5697158fd1645fdc3d83f598b00a9e20dfaa8f6d..f1398eb135b69ae61a27ed81f80=
-b4bb0788cf0a0
-> > > 100644 --- a/arch/loongarch/net/bpf_jit.h +++
-> > > b/arch/loongarch/net/bpf_jit.h @@ -122,7 +122,8 @@ static inline
-> > > void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
-> > > /* addiw rd, $zero, imm_11_0 */ if (is_signed_imm12(imm)) {
-> > >             emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
-> > > -           goto zext;
-> > > +           emit_sext_32(ctx, rd, is32);
-> >
-> > The addi.w instruction already produces the sign-extended value.  Why
-> > do we need to sign-extend it again?
-> >
-> Hi Ruoyao,
-> I tried, it's not easy to do that.
-> It's better merge this patch, then consider next step.
+> The series consists of four patches:
+>
+> 1. "LoongArch: Add SCQ support detection"
+>     - Check CPUCFG2_SCQ bit to determin if the CPU supports
+>     SCQ instrction.
+>
+> 2. "LoongArch: Add 128-bit atomic cmpxchg support"
+>    - Implements 128-bit atomic compare-and-exchange using LoongArch's
+>      LL.D/SC.Q instructions
+>    - Fixes BPF scheduler test failures (scx_central scx_qmap) where
+>      kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
+>      leading to -ENOMEM errors during scheduler initialization
+>
+> 3. "LoongArch: Use spinlock to emulate 128-bit cmpxchg"
+>    - For LoongArch CPUs lacking 128-bit atomic instruction(e.g.,
+>      the SCQ instruction on 3A5000), provide a fallback implementation
+>      of __cmpxchg128 using a spinlock to emulate the atomic operation.
+>
+> 4. "LoongArch: Enable 128-bit atomics cmpxchg support"
+>    - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
+>      in Kconfig to enable 128-bit atomic cmpxchg support
+>
+> The issue was identified through BPF scheduler test failures where
+> scx_central and scx_qmap schedulers would fail to initialize. Testing
+> was performed using the scx_qmap scheduler from tools/sched_ext/,
+> confirming that the patches resolve the initialization failures.
+>
+> ---
+> Changes in v7:
+> - Create patches based on loongarch-next branch(previously used master)
+> - Link to v6: https://lore.kernel.org/r/20251215-2-v6-0-09a486e8df99@linu=
+x.dev
 >
 
-The test_bpf.ko test failed, so probably this is the wrong fix.
+Please tag the subject line with v7 and resend, otherwise this
+confuses b4. Thanks.
 
-> Thanks!
+> Changes in v6:
+> - Put SCQ information in hwcap
+> - Link to v5: https://lore.kernel.org/r/20251212-2-v5-0-704b3af55f7d@linu=
+x.dev
+>
+> Changes in v5:
+> - Reordered the patches
+> - Link to v4: https://lore.kernel.org/r/20251205-2-v4-0-e5ab932cf219@linu=
+x.dev
+>
+> Changes in v4:
+> - Add SCQ support detection
+> - Add spinlock to emulate 128-bit cmpxchg
+> - Link to v3: https://lore.kernel.org/r/20251126-2-v3-0-851b5a516801@linu=
+x.dev
+>
+> Changes in v3:
+> - dbar 0 -> __WEAK_LLSC_MB
+> - =3DZB" (__ptr[0]) -> "r" (__ptr)
+> - Link to v2: https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linu=
+x.dev
+>
+> Changes in v2:
+> - Use a normal ld.d for the high word instead of ll.d to avoid race
+>   condition
+> - Insert a dbar between ll.d and ld.d to prevent reordering
+> - Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(=
+ptr, o, n)
+> - Fix address operand constraints after testing different approaches:
+>   * ld.d with "m"
+>   * ll.d with "ZC",
+>   * sc.q with "ZB"(alternative constraints caused issues:
+>    - "r"  caused system hang
+>    - "ZC" caused compiler error:
+>      {standard input}: Assembler messages:
+>      {standard input}:10037: Fatal error: Immediate overflow.
+>      format: u0:0 )
+> - Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linu=
+x.dev
+>
+>
+> George Guo (4):
+>   LoongArch: Add SCQ support detection
+>   LoongArch: Add 128-bit atomic cmpxchg support
+>   LoongArch: Use spinlock to emulate 128-bit cmpxchg
+>   LoongArch: Enable 128-bit atomics cmpxchg support
+>
+>  arch/loongarch/Kconfig                    |  2 +
+>  arch/loongarch/include/asm/cmpxchg.h      | 66 +++++++++++++++++++++++
+>  arch/loongarch/include/asm/cpu-features.h |  1 +
+>  arch/loongarch/include/asm/cpu.h          |  2 +
+>  arch/loongarch/include/asm/loongarch.h    |  1 +
+>  arch/loongarch/kernel/cpu-probe.c         |  2 +
+>  arch/loongarch/kernel/proc.c              |  1 +
+>  7 files changed, 75 insertions(+)
+>
+> --
+> 2.49.0
+>
