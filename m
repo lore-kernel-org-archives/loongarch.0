@@ -1,249 +1,156 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96D23A1E8C
-	for <loongarch@lists.linux.dev>; Sun, 28 Dec 2025 13:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3FD221577
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 01:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766928772; cv=none; b=KR2wEiJu6//45DStpDixktoOdfdn/FppQm8NzOGFKSvENW0JQRIcPJwMo6VbrdCRduFKtjzLsMUywXLaxke5yIej3Iwjh0MntyHSTuqzhS1z8n5YVcv8ZMOiwEu0zdaYTf2C3Jk16Mqpz0WultHO2Hk6bhvY2aGDBCPBvCV0+Kc=
+	t=1766971557; cv=none; b=kA/IaZOAD87c10KqZzksX/UpTGCT9LLPDyI3Us+rURtCJUcno0Ph+TUDOGBHHTQH6oY6wUINpNpL5Oq7ZPlyrhbwjA/Dw4MdkPcjfiDVFM17f7qs/qJNmBSLr14Ek43LcpNUGK9C/1UYY753Vt3vtuPB3agpRwIJKse/EmazR8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766928772; c=relaxed/simple;
-	bh=/Rm/Wu6zNMeWET2xdnZqiYetWTZE3H8Mvvpo/HL6wkY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DGcsWBb4LcYZ2xClADGQse62VyHh9sZ9HCpi5spnfFqya5GAHsCdAUm+NnYnoAgPTl4VjEiAluYeBhRdLURmieUhUNBOnZBOh3QTO6J2F2FqulDca6RP2/ig8wXTR/INdmofd5pFJafNJjUscXbALNfeDHttR6wMVeXNKqACMRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8AxjsN0MVFpstMDAA--.12734S3;
-	Sun, 28 Dec 2025 21:32:36 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowJDxD8NuMVFpc9IFAA--.16475S3;
-	Sun, 28 Dec 2025 21:32:34 +0800 (CST)
-Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Xianglai Li <lixianglai@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Bibo Mao <maobibo@loongson.cn>, Charlie Jenkins <charlie@rivosinc.com>,
- Thomas Gleixner <tglx@linutronix.de>, Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20251227012712.2921408-1-lixianglai@loongson.cn>
- <20251227012712.2921408-3-lixianglai@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <08143343-cb10-9376-e7df-68ad854b9275@loongson.cn>
-Date: Sun, 28 Dec 2025 21:32:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1766971557; c=relaxed/simple;
+	bh=QcHUIuYE7RQs56jGjmqpy2oUOjx983YRYnPBuaD4boU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RvwFvRm6sU8ABb4hVriDwxfFoKVz2PTkKVpSADDbh68JM/E9yU0vfmtGnsyibTfcFnZUntFMDO2mw4utXrsefThf/xgARVsdu0h/2Whdiqi4pJBeDJi+3QI1durHs1+oK9k07jMkdYDCJMaHz9SYvFflAUXf/0zuCEdr5wvI1Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRFWKJxz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRFWKJxz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCF05C2BC86
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 01:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766971556;
+	bh=QcHUIuYE7RQs56jGjmqpy2oUOjx983YRYnPBuaD4boU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JRFWKJxzPMVQR44/fR5nIIhozZE+LgKUESPHybZ8wZno197JiHenXGKVJkNpSqguw
+	 2xLe+veDDWm8kNDY+BiuQ6SvvVwq4Hpcc3W1hwbZp+jfRAR1nDJPVP4EK59344ImkK
+	 wlsii6F/eZYefoyYAw2fXzJjRbRH+kzlnYLQAY1eO5Ubr8qm60ldJqs+pPD1ZsFSsg
+	 NrY0alhp0ugdEFKLyzrY3OxKA1u0ctAhx1QBGvs/z6tbv8fsSbtYftMz3kEpB6/lKF
+	 BZtMwOxmk5Eoyviyb7mYDSTLqm3LFsfpO0X0ux1I+BeIUazvoB3riY6Caw19+VvfnP
+	 zpfyrSVDOV9qA==
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42fb0fc5aa4so6744672f8f.1
+        for <loongarch@lists.linux.dev>; Sun, 28 Dec 2025 17:25:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWv5RvJP99NWwIej/OSSJlnjxfvXkyDgbmbtTfhsOJxOS9k+Q4WKd5bcUQ1DNBUVmDrQ8CR0GsLDrM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzUEqotWZKtK+7wdgRFVj5uPHfqPfsEXR8CKkisYANbFs5e0/P2
+	nHsedMKIEiufTHlBacBMBfG3Gi9jU7z4ygu3vYLCOzVhGb002SzuRDjbicb9v/Oekg8LYVmcux7
+	sVCLEItkzl/4zjC6ECaF89cduKXnu1C8=
+X-Google-Smtp-Source: AGHT+IH0/4lM/7b5Nef4Fb6rn6mJpOxGdWgk9AqK9LZQSl+6Va320QICtWgPPv8KCBU6m5HaJgurTChUGp2fBhZ8S4E=
+X-Received: by 2002:a05:6000:2308:b0:430:ff0c:35f9 with SMTP id
+ ffacd0b85a97d-4324e50d989mr31524498f8f.48.1766971554637; Sun, 28 Dec 2025
+ 17:25:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251227012712.2921408-3-lixianglai@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJDxD8NuMVFpc9IFAA--.16475S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtw4rJw1xKryDKw4UJr1kWFX_yoWxGw1fpw
-	nxAFs8Ka1kJa90vw47Ja4kArWaqrZ2gF1fWrsFvrWrAr1DWry5XF18tw4DZF97K3y8WFn5
-	XFyjgrn5AaykAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUU
-	UUU==
+References: <20251228124001.3624742-1-rppt@kernel.org> <20251228124001.3624742-6-rppt@kernel.org>
+In-Reply-To: <20251228124001.3624742-6-rppt@kernel.org>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 29 Dec 2025 09:25:42 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSMLhnqQeZB=oEwLGzXfJwxPh+vJvTuz-OFGrwJi5uPSA@mail.gmail.com>
+X-Gm-Features: AQt7F2ovPXIqQiKDAgz2Iigjc3UdRKj7ty_Tsln8fN_MKzmJJ5LWRy6ejtLdRVA
+Message-ID: <CAJF2gTSMLhnqQeZB=oEwLGzXfJwxPh+vJvTuz-OFGrwJi5uPSA@mail.gmail.com>
+Subject: Re: [PATCH 05/28] csky: introduce arch_zone_limits_init()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, 
+	Michal Simek <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
+	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-12-27 09:27, Xianglai Li wrote:
-
-> Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
-> the assembly function to guide the generation of correct ORC table entries,
-> thereby solving the timeout problem of loading the livepatch-sample module
-> on a physical machine running multiple vcpus virtual machines.
+On Sun, Dec 28, 2025 at 8:41=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> While solving the above problems, we have gained an additional benefit,
-> that is, we can obtain more call stack information
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 >
-> Stack information that can be obtained before the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x100/0x1e0
+> Move calculations of zone limits to a dedicated arch_zone_limits_init()
+> function.
 >
-> Stack information that can be obtained after the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x104/0x1e4
-> [<0>] kvm_enter_guest+0x38/0x11c
-> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
-> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
-> [<0>] sys_ioctl+0x498/0xf00
-> [<0>] do_syscall+0x98/0x1d0
-> [<0>] handle_syscall+0xb8/0x158
+> Later MM core will use this function as an architecture specific callback
+> during nodes and zones initialization and thus there won't be a need to
+> call free_area_init() from every architecture.
 >
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Xianglai Li <lixianglai@loongson.cn>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+>  arch/csky/kernel/setup.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 >
->   arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
->   1 file changed, 19 insertions(+), 9 deletions(-)
+> diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+> index e0d6ca86ea8c..8968815d93e6 100644
+> --- a/arch/csky/kernel/setup.c
+> +++ b/arch/csky/kernel/setup.c
+> @@ -51,6 +51,14 @@ static void __init setup_initrd(void)
+>  }
+>  #endif
 >
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 93845ce53651..a3ea9567dbe5 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -10,6 +10,7 @@
->   #include <asm/loongarch.h>
->   #include <asm/regdef.h>
->   #include <asm/unwind_hints.h>
-> +#include <linux/kvm_types.h>
->   
->   #define HGPR_OFFSET(x)		(PT_R0 + 8*x)
->   #define GGPR_OFFSET(x)		(KVM_ARCH_GGPR + 8*x)
-> @@ -110,9 +111,9 @@
->   	 * need to copy world switch code to DMW area.
->   	 */
->   	.text
-> +	.p2align PAGE_SHIFT
->   	.cfi_sections	.debug_frame
->   SYM_CODE_START(kvm_exc_entry)
-> -	.p2align PAGE_SHIFT
->   	UNWIND_HINT_UNDEFINED
->   	csrwr	a2,   KVM_TEMP_KS
->   	csrrd	a2,   KVM_VCPU_KS
-> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
->   	/* restore per cpu register */
->   	ld.d	u0, a2, KVM_ARCH_HPERCPU
->   	addi.d	sp, sp, -PT_SIZE
-> +	UNWIND_HINT_REGS
->   
->   	/* Prepare handle exception */
->   	or	a0, s0, zero
-> @@ -200,7 +202,7 @@ ret_to_host:
->   	jr      ra
->   
->   SYM_CODE_END(kvm_exc_entry)
-> -EXPORT_SYMBOL(kvm_exc_entry)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
->   
->   /*
->    * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
-> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
->   	/* Save host GPRs */
->   	kvm_save_host_gpr a2
->   
-> +	/*
-> +	 * The csr_era member variable of the pt_regs structure is required
-> +	 * for unwinding orc to perform stack traceback, so we need to put
-> +	 * pc into csr_era member variable here.
-> +	 */
-> +	pcaddi	t0, 0
-> +	st.d	t0, a2, PT_ERA
-Hi, Xianglai,
-
-It should use `SYM_CODE_START` to mark the `kvm_enter_guest` rather than
-`SYM_FUNC_START`, since the `SYM_FUNC_START` is used to mark "C-likely"
-asm functionw. I guess the kvm_enter_guest is something like exception
-handler becuase the last instruction is "ertn". So usually it should
-mark UNWIND_HINT_REGS where can find last frame info by "$sp".
-However, all info is store to "$a2", this mark should be
-   `UNWIND_HINT sp_reg=ORC_REG_A2(???) type=UNWIND_HINT_TYPE_REGS`.
-I don't konw why save this function internal PC here by `pcaddi t0, 0`,
-and I think it is no meaning(, for exception handler, they save last PC
-by read CSR.ERA). The `kvm_enter_guest` saves registers by
-"$a2"("$sp" - PT_REGS) beyond stack ("$sp"), it is dangerous if IE
-is enable. So I wonder if there is really a stacktrace through this 
-function?
-
-Jinyang
-
-
+> +void __init arch_zone_limits_init(unsigned long *max_zone_pfns)
+> +{
+> +       max_zone_pfns[ZONE_NORMAL] =3D max_low_pfn;
+> +#ifdef CONFIG_HIGHMEM
+> +       max_zone_pfns[ZONE_HIGHMEM] =3D max_pfn;
+> +#endif
+> +}
 > +
->   	addi.d	a2, a1, KVM_VCPU_ARCH
->   	st.d	sp, a2, KVM_ARCH_HSP
->   	st.d	tp, a2, KVM_ARCH_HTP
-> @@ -225,7 +235,7 @@ SYM_FUNC_START(kvm_enter_guest)
->   	csrwr	a1, KVM_VCPU_KS
->   	kvm_switch_to_guest
->   SYM_FUNC_END(kvm_enter_guest)
-> -EXPORT_SYMBOL(kvm_enter_guest)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
->   
->   SYM_FUNC_START(kvm_save_fpu)
->   	fpu_save_csr	a0 t1
-> @@ -233,7 +243,7 @@ SYM_FUNC_START(kvm_save_fpu)
->   	fpu_save_cc	a0 t1 t2
->   	jr              ra
->   SYM_FUNC_END(kvm_save_fpu)
-> -EXPORT_SYMBOL(kvm_save_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
->   
->   SYM_FUNC_START(kvm_restore_fpu)
->   	fpu_restore_double a0 t1
-> @@ -241,7 +251,7 @@ SYM_FUNC_START(kvm_restore_fpu)
->   	fpu_restore_cc	   a0 t1 t2
->   	jr                 ra
->   SYM_FUNC_END(kvm_restore_fpu)
-> -EXPORT_SYMBOL(kvm_restore_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
->   
->   #ifdef CONFIG_CPU_HAS_LSX
->   SYM_FUNC_START(kvm_save_lsx)
-> @@ -250,7 +260,7 @@ SYM_FUNC_START(kvm_save_lsx)
->   	lsx_save_data   a0 t1
->   	jr              ra
->   SYM_FUNC_END(kvm_save_lsx)
-> -EXPORT_SYMBOL(kvm_save_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
->   
->   SYM_FUNC_START(kvm_restore_lsx)
->   	lsx_restore_data a0 t1
-> @@ -258,7 +268,7 @@ SYM_FUNC_START(kvm_restore_lsx)
->   	fpu_restore_csr  a0 t1 t2
->   	jr               ra
->   SYM_FUNC_END(kvm_restore_lsx)
-> -EXPORT_SYMBOL(kvm_restore_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
->   #endif
->   
->   #ifdef CONFIG_CPU_HAS_LASX
-> @@ -268,7 +278,7 @@ SYM_FUNC_START(kvm_save_lasx)
->   	lasx_save_data  a0 t1
->   	jr              ra
->   SYM_FUNC_END(kvm_save_lasx)
-> -EXPORT_SYMBOL(kvm_save_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
->   
->   SYM_FUNC_START(kvm_restore_lasx)
->   	lasx_restore_data a0 t1
-> @@ -276,7 +286,7 @@ SYM_FUNC_START(kvm_restore_lasx)
->   	fpu_restore_csr   a0 t1 t2
->   	jr                ra
->   SYM_FUNC_END(kvm_restore_lasx)
-> -EXPORT_SYMBOL(kvm_restore_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
->   #endif
->   
->   #ifdef CONFIG_CPU_HAS_LBT
+LGTM!
 
+Acked-by: Guo Ren <guoren@kernel.org>
+
+>  static void __init csky_memblock_init(void)
+>  {
+>         unsigned long lowmem_size =3D PFN_DOWN(LOWMEM_LIMIT - PHYS_OFFSET=
+_OFFSET);
+> @@ -83,12 +91,9 @@ static void __init csky_memblock_init(void)
+>         setup_initrd();
+>  #endif
+>
+> -       max_zone_pfn[ZONE_NORMAL] =3D max_low_pfn;
+> -
+>         mmu_init(min_low_pfn, max_low_pfn);
+>
+>  #ifdef CONFIG_HIGHMEM
+> -       max_zone_pfn[ZONE_HIGHMEM] =3D max_pfn;
+>
+>         highstart_pfn =3D max_low_pfn;
+>         highend_pfn   =3D max_pfn;
+> @@ -97,6 +102,7 @@ static void __init csky_memblock_init(void)
+>
+>         dma_contiguous_reserve(0);
+>
+> +       arch_zone_limits_init(max_zone_pfn);
+>         free_area_init(max_zone_pfn);
+>  }
+>
+> --
+> 2.51.0
+>
+
+
+--=20
+Best Regards
+ Guo Ren
