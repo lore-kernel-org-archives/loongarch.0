@@ -1,102 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AC1224AF0;
-	Mon, 29 Dec 2025 13:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1141B31AABE
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 14:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767016527; cv=none; b=iAlBCpKfVTydfbLGw3rfVdAQ/y26jFyI/UXweRc6rdQgCDLotE8uTLR7TsAoV1pOqX/sXJh8DYEr+tC08/Odtw+/+d00VvRNUAubWIGv4KZAb+Y6SDHgzRLgdA9WlZYXZFnXiSBCLxu1ZqK8rXYYhCqelK1IPSbo5ygJlOdoKC0=
+	t=1767018036; cv=none; b=EYwLT5UWGknVWA7Ul5OR+kjfSEMXNOv2twQ3vXuPJOGQNCB4OScTx/W1RyO/O0icYk46GMwYPrmCLfGsSET5cJwThh/ReAap1xXrBsLunzk8ERwgjIAYFeoGrzlTxiH7VpUdcCam/At0rfOWvPz8QnZ2p00YXEv9e325+MuO3n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767016527; c=relaxed/simple;
-	bh=KUzcCQmQKdCc6BXDXkIzmgljIGG78Dm71TrJEBQ0UVk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWhrptlcLvaf+QdrS9gnBNvHdigWdFR7jUoAH+R0XjKieLsNgjOdXzq616Y0IAyVoVEVlCNAwaWoc8O4Q4Xsi/Yf+71e4LSQJKRHu1mrc4oJw23OGkQhXtYS27x7mN4yb3272GVspIhIKZzyU2cNOFyw266DDuvVAJ88cWv4mNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGxdnq2k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767018036; c=relaxed/simple;
+	bh=5QJ++AFvmfogtrUN4a0fBMa5IvH0wJTZNpmYFiqxjs0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ptjFUjHJJYLnU/mg/YCSAOBupRJlfC16Ko7p7CsJ1Q2jvpaYmhNBIcW1fwnq+qu5+8I+YwjtuAfFNy4qIAgbEq2iuyl2r5q99onSnlwh7U69dRXQsSbkj2S/Oac2TJbsr4+7/dCBK7cJ5uKjCcxvQPNpYCu8PnxsvNACbt58OII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0gvjyjC; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGxdnq2k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B958C4CEF7;
-	Mon, 29 Dec 2025 13:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767016527;
-	bh=KUzcCQmQKdCc6BXDXkIzmgljIGG78Dm71TrJEBQ0UVk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YGxdnq2k/1YHQkO+jdKT72GRWIqp9MvmMpClq2GsOdPjlPP0FWxM04kupp5c2Q36H
-	 WhlDnqIsMmUc8EKUXxMVpxOS42QmCYKRBBIDWLcXcg4PUPqipaWdrKH1gKS1FwASa/
-	 hKp6pXPaUfKZpSt6S9+PDmd4sDLYk+k7PB2/GgxYMbTYOOhWXttLamMY9XPRpV3eOG
-	 +7yYHchowcnAlit4edYM+tpviihqUXpxV86rHDGshmddrsiLgHbLG6n6z8+q8V0Y39
-	 wHGA0q9QyXUGWHVXz4L51blEjBjtP/4YARdm22YWyWh7Tr/vFqZHJq9k7MphA7j8SR
-	 mM6Yjtx2b2iDw==
-Message-ID: <d17b3b7e-2d3e-4b0c-aa55-ce82fecc1710@kernel.org>
-Date: Mon, 29 Dec 2025 07:55:22 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0gvjyjC"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-450ac3ed719so6026595b6e.0
+        for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 06:20:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767018033; x=1767622833; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e007yG2Skbf3KR5PzHmbwLjVdg3gkGjb1eZAPsdnqA4=;
+        b=m0gvjyjC9FnCytELEC4skdk6TCdGQoaZkYQNayvVVubh7MqMfXo5EHH1v3NCKx81Ws
+         y0kqK5IiHgfxlpnIHpOyYA0nOwxtoOegzDdioORG41topsT1FuM9F+lbZ01o6fa6LZgU
+         WeDAmObCewfINKlfhXwtir66woOLle6dzxLZJKjZ5n79OV0ahvcXMABdJn26+FiO1mhk
+         uwwUE39fE7nMtNVHeKXsyZE5DfiDuVj1W1GlHbJ59qozMlw2Fi2ogvWSa+2ny1zH1aL8
+         U6X0viKrc02FgEMtAIb2k8rh6GNBCG2kLnd1bKivMw+D9/V/dgg/tAYsjXtRbs0nsnhg
+         vioQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767018033; x=1767622833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=e007yG2Skbf3KR5PzHmbwLjVdg3gkGjb1eZAPsdnqA4=;
+        b=mna6TRTSAnVH/t32hedbeHCMufei5TVmAYNTMwfP8xKqWtJu+bm8ghhRhFdZsansZm
+         uFkJOfkdQFs78wRIcqiqBcWZmBbg5TnXt2EJBsNKnVR0sMDD2CWOktNWMxq8Iw/sokpq
+         8eG21DTXWRh0CHQ6vwWR/uay1/6yLBJ0jXAj9G5RB6n0y/WgKpezkEFXCYAoSlE3Svez
+         tnyYksK3PvDMxhAhPlYoUPqadCB8ePa3ToFVDEYA3gsIi8C5iqJAfVy6dwjzdIgM2BVx
+         Lht/wrqDRf3xTQkhkn9KFPX0Z7g05QQ4kiBe1AXg3sVJvI+gWk7QyqFGZswrJz1isbt3
+         p+xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxIQg/269RC0D1Zxa2AFZT/sBzcmdyIubDbmPVQeZ/c2EO6eZzO7NwQm/2XOYBU5chCca8dJWuXh4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzcugDELas8KrFs6eRW/nwslacVTRbyRXJ1rO9mqJGK12onIN1w
+	Zl50h+6WpgZDRiCjSqBraq/00THCQpr23sNrW4fJ+APRQ2j5U/xz7932j9FsHeVgmucUaURkkP6
+	XRJy6l1FZ1V17R3lQWskq4iUVgDyslNY=
+X-Gm-Gg: AY/fxX7L/mtcEr74hSbuLBj7hQN1NrpvCjWSPsjialxVhjcvb7Eu1QwI9wchSbHvw7a
+	aKMUM/1Zl/eDT+PD675OPtDFCAFoFPoigP/VrhgAg9vzpucN/PwTdOQI7/DNMRO/DIAgfU30jwS
+	x4FNhNAB59nb3IJ5+Mw9Bo/OWGmxowbYQDQvTWoIZxycwH22mKT7jPRrfTBNarE0VRxx6EWvxfh
+	8bItW2TwTfk5ynKcnbfxwSAWUl+GAjugmlTyQRmUHSOecHS4qMAV3fmgqwx0fEbu2FTLQn8WqHR
+	dy3STao=
+X-Google-Smtp-Source: AGHT+IGKy+9wP2on9xI54Zjjmh+IKZvqrskm+aim9BlDVJcgl1KL2yoo/qKbXq+mzLP/C8AuY1vCtfNQkHlPXn30BUA=
+X-Received: by 2002:a05:6820:4d44:10b0:659:9a49:9049 with SMTP id
+ 006d021491bc7-65d0e98b91dmr10194949eaf.20.1767018032872; Mon, 29 Dec 2025
+ 06:20:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/28] nios2: introduce arch_zone_limits_init()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Corbet <corbet@lwn.net>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
-References: <20251228124001.3624742-1-rppt@kernel.org>
- <20251228124001.3624742-12-rppt@kernel.org>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20251228124001.3624742-12-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20251103-1-v1-1-20e6641a57da@linux.dev> <130f896382dc8f56ead371208d9809ec06c7400c.camel@xry111.site>
+ <20251229150619.0000195f@linux.dev>
+In-Reply-To: <20251229150619.0000195f@linux.dev>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Mon, 29 Dec 2025 22:20:22 +0800
+X-Gm-Features: AQt7F2pXotyzAFjPqoQjGStWE5-z1P1HK15voye9z6KXgDW0dWQRUKTGXQPLlOY
+Message-ID: <CAEyhmHTRVfDmwwH=_hPFUnFS-_ffALNUEVrSKiO9vEznfrUSSw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Fix sign extension for 12-bit immediates
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Xi Ruoyao <xry111@xry111.site>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Youling Tang <tangyouling@loongson.cn>, bpf@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>, 
+	Bing Huang <huangbing@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Dec 29, 2025 at 3:06=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
+>
+> On Fri, 19 Dec 2025 17:33:17 +0800
+> Xi Ruoyao <xry111@xry111.site> wrote:
+>
+> > On Mon, 2025-11-03 at 16:42 +0800, george wrote:
+> > > From: George Guo <guodongtai@kylinos.cn>
+> > >
+> > > When loading immediate values that fit within 12-bit signed range,
+> > > the move_imm function incorrectly used zero extension instead of
+> > > sign extension.
+> > >
+> > > The bug was exposed when scx_simple scheduler failed with -EINVAL
+> > > in ops.init() after passing node =3D -1 to scx_bpf_create_dsq().
+> > > Due to incorrect sign extension, `node >=3D (int)nr_node_ids`
+> > > evaluated to true instead of false, causing BPF program failure.
+> > >
+> > > Verified by testing with the scx_simple scheduler (located in
+> > > tools/sched_ext/). After building with `make` and running
+> > > ./tools/sched_ext/build/bin/scx_simple, the scheduler now
+> > > initializes successfully with this fix.
+> > >
+> > > Fix this by using sign extension (sext) instead of zero extension
+> > > for signed immediate values in move_imm.
+> > >
+> > > Fixes: 5dc615520c4d ("LoongArch: Add BPF JIT support")
+> > > Reported-by: Bing Huang <huangbing@kylinos.cn>
+> > > Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> > > ---
+> > > Signed-off-by: george <dongtai.guo@linux.dev>
+> > > ---
+> > >  arch/loongarch/net/bpf_jit.h | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/loongarch/net/bpf_jit.h
+> > > b/arch/loongarch/net/bpf_jit.h index
+> > > 5697158fd1645fdc3d83f598b00a9e20dfaa8f6d..f1398eb135b69ae61a27ed81f80=
+b4bb0788cf0a0
+> > > 100644 --- a/arch/loongarch/net/bpf_jit.h +++
+> > > b/arch/loongarch/net/bpf_jit.h @@ -122,7 +122,8 @@ static inline
+> > > void move_imm(struct jit_ctx *ctx, enum loongarch_gpr rd, long imm
+> > > /* addiw rd, $zero, imm_11_0 */ if (is_signed_imm12(imm)) {
+> > >             emit_insn(ctx, addiw, rd, LOONGARCH_GPR_ZERO, imm);
+> > > -           goto zext;
+> > > +           emit_sext_32(ctx, rd, is32);
+> >
+> > The addi.w instruction already produces the sign-extended value.  Why
+> > do we need to sign-extend it again?
+> >
+> Hi Ruoyao,
+> I tried, it's not easy to do that.
+> It's better merge this patch, then consider next step.
+>
 
+The test_bpf.ko test failed, so probably this is the wrong fix.
 
-On 12/28/25 06:39, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
-> 
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->   arch/nios2/mm/init.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> Thanks!
