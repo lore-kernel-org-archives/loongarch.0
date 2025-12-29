@@ -1,126 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B660325A357;
-	Mon, 29 Dec 2025 23:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9332FBDFF
+	for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 23:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767052172; cv=none; b=KTatUD4fZ0lz8oBfznG4PIFRXWJkVX+2JTOYd3zKf7EFJiBW+1KJwuJAs5nS9YCpDlYDsWpkLKxvr+rjSlE6zZPGTGLGS4mNUG+CyWyTn0TtUZjV1qQeDXitz3Lxb6LmWhaEsyAbGa2Mf5ythiWs74862NzF8xnI+mxdifqktew=
+	t=1767052645; cv=none; b=OBpgES0Ipp8fPe0Up/59jI6hXO2mN2Z8eReYXAAB8VGf9RSlSzegtlbLsmeKtiTiDbz58yYmJWzHDC0L4SriJY46AEa85eAPtvOyMxINdA178M0fR4xT2HyndZo2x7a3jnoxlwYqwC1bopjoAGxoNiIUaI3sWZ4Ih8unEi/bIWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767052172; c=relaxed/simple;
-	bh=x/eR97Y5rrsMQnngS8Osv1jngQ1seqUPrn8OhBjcAk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MZy4y+3MoRK/bzqlHAYAfOqtHjsLri4DlH53C1KZQEAei67vFo2wtknljqonxgdMi85dEPvtzh70mokC4AuQRGmj68uGZwIaQVlDVgN2hTsc6TUHOQ54U4CgzcciKlOvSMh1aijEc7ZD4sxSyQhgZtIb+DpEcwQQxO3LVetjOlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqvzdWwe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767052645; c=relaxed/simple;
+	bh=XsdXtJjKqE4UQSylmLBTu+OUvPU6Hv2It+NLCukC3Fw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MZFfq92WTOKF+0G5t5o34IjObqBMePqLoisyF0W6apIPSqFimUSmsC3RHtqJ7sIz3yZPDPzOUrlgeaGhlT1mRABX5evj7/ed6k7M4utR+bDic3poYO/o4/mok8a2M9Qoajh6aq3OJ0RwP6DvQW6fU0HmFSesu64G/DRBdcFvKz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a8fKTjaQ; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqvzdWwe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D201C4CEF7;
-	Mon, 29 Dec 2025 23:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767052172;
-	bh=x/eR97Y5rrsMQnngS8Osv1jngQ1seqUPrn8OhBjcAk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oqvzdWweCC/auq1WYqiWokzLJ5EPPWf0QQ0Defqs61hrDk3osxmEgp8fnlVLNWdxx
-	 +g81R78dt6tzbBbP70ZCPVq2NpCPC53qgRlZ4ZRaFyEXM+K27w1TgVSyl577L8nJ17
-	 GLvneBVNi0rR4QA+JYOrp69rx9ooUh/Ww0Sf2ChB5UDl3pYDsuZGkg7wbYDT0g2mMg
-	 diEik20Yq/K/jVLpOrLYkTspYACJ2yHjc09qpAWVxMqX8h7ItQ/YvTkeeXJzqIjegg
-	 ZA/5yXJKAPbY+u7ecdwbTPvM9+4pC15SmxTKUMh0nPHJRFvL4qvb37YaHNjaRnJf+j
-	 iqr43CcUG9lFg==
-Date: Mon, 29 Dec 2025 17:49:31 -0600
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] dt-bindings: interrupt-controller:
- loongson,pch-pic: Change to unevaluatedProperties
-Message-ID: <20251229234931.GA2804566-robh@kernel.org>
-References: <cover.1766037997.git.zhoubinbin@loongson.cn>
- <7a0df6f836e0ec7ddfe4d592c10259c87ef96e4f.1766037997.git.zhoubinbin@loongson.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a8fKTjaQ"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7b9208e1976so17888707b3a.1
+        for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 15:57:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767052643; x=1767657443; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vaCAmCD1pI2PB4kVDvq818qZSC88KaBTxMeyOFyVIUw=;
+        b=a8fKTjaQ4XxSs0L7OyJAxgSLPjQ/ThP8tgvRem+Rgy0xPXF0pb26ujUBj+DYyVDGGq
+         Xq5ybnSBiAEcv1QLzO8V2ikNMV8GtOv9ZePmCjUJBWCxn0+VT1r4EuhWmDXBLQeuL4vB
+         434HclW32lOnikzKfkZ0ESo0X69NlUzZpGghGp3H6l2srB9Yash+CSgB5Vsbc7i769x0
+         bh7eLIRl8xXt9s7M/VS5VQhxK4cgHXmNpomE5qJ94bjruxQZv18DLMljcQFQP8CEvzRW
+         hAFSznffOvXR/OQacENCMzeaIZ30UiSC/CXR0cB8U6l5TqKKJB7W5s4OKrYmRH5f3afX
+         bvsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767052643; x=1767657443;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vaCAmCD1pI2PB4kVDvq818qZSC88KaBTxMeyOFyVIUw=;
+        b=uKQ/vEp/+YNIPXP6eqMozpSSEURcIWstjmV7t88apDR/wZ3AYxtPiZILpowCSsSjEA
+         Tox70NYmo7SQ19HXYDhOpYIZt/2juoS1AQIAl9P6a1pB9XKELnup78lFZyW07rv6AcD0
+         0ExoPdtiJVoi78xs4cPVj3oX/Q4YhMUA0d1RAcCvZdtrB+vNgxgOhW+SwnaUaA8Ex6ok
+         eA+uD+affgVwMGnaL3lA91SYOXnLfDinHD1B/dpO+MdQ8BA4gJlsNpBMkbisnM9AotwG
+         e5x8IWCG0AmJ6e3E6LRkwexD6xYpI1I/MVJNVvu+GSDGRyGGDstYe1cQT2kMTkoTxkrc
+         oVKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWh7BVmpNsGwECLGGwonkawv8UgI9fj77e0J01OIh3t8iAv6plMRPidaOk+qWQjXGUCPjQy+Q04K+8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0ac60QgkCa0+y03fHa3MgrRD+3huurLVrdnVROf/JX34EMEm7
+	w42YB9O0FxgoeTmYroPEsK6UVZKLcrsUh/cZ9ktmJSE1p/Ivb7CQJeKgJS4cOhRHXKlzwGmxfXh
+	aF8lWeQ==
+X-Google-Smtp-Source: AGHT+IGWSzvMBdAgSpc1cQ4FNAzud2F9vkcmbgsGWHl/uECW+mXFCBlsNw6jhBxprH27ZWhYhxw4eDFyKfA=
+X-Received: from pjhk89.prod.google.com ([2002:a17:90a:4ce2:b0:34c:1d76:2fe9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9185:b0:343:af1:9a57
+ with SMTP id adf61e73a8af0-376aa8e98d6mr28981483637.56.1767052643109; Mon, 29
+ Dec 2025 15:57:23 -0800 (PST)
+Date: Mon, 29 Dec 2025 15:57:21 -0800
+In-Reply-To: <43d1cde6-2277-4f3c-8e7d-59e6edb2228a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a0df6f836e0ec7ddfe4d592c10259c87ef96e4f.1766037997.git.zhoubinbin@loongson.cn>
+Mime-Version: 1.0
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-16-seanjc@google.com>
+ <43d1cde6-2277-4f3c-8e7d-59e6edb2228a@linux.intel.com>
+Message-ID: <aVMVYY_WkNClfXuj@google.com>
+Subject: Re: [PATCH v6 15/44] KVM: x86/pmu: Snapshot host (i.e. perf's)
+ reported PMU capabilities
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 19, 2025 at 04:46:49PM +0800, Binbin Zhou wrote:
-> Change additionalProperties to unevaluatedProperties because it refs to
-> interrupt-controller.yaml.
-> 
-> Fix below CHECK_DTBS warnings:
-> arch/loongarch/boot/dts/loongson-2k2000-ref.dtb: interrupt-controller@10000000 (loongson,pch-pic-1.0): '#address-cells' does not match any of the regexes: '^pinctrl-[0-9]+$'
->         from schema $id: http://devicetree.org/schemas/interrupt-controller/loongson,pch-pic.yaml
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../interrupt-controller/loongson,pch-pic.yaml         | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
-> index b7bc5cb1dff2..cf235ca57a2f 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
-> @@ -14,6 +14,9 @@ description:
->    transforming interrupts from on-chip devices into HyperTransport vectorized
->    interrupts.
->  
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
+On Thu, Dec 25, 2025, Dapeng Mi wrote:
+>=20
+> On 12/6/2025 8:16 AM, Sean Christopherson wrote:
+> > Take a snapshot of the unadulterated PMU capabilities provided by perf =
+so
+> > that KVM can compare guest vPMU capabilities against hardware capabilit=
+ies
+> > when determining whether or not to intercept PMU MSRs (and RDPMC).
+> >
+> > Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> > Tested-by: Xudong Hao <xudong.hao@intel.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/pmu.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> > index 487ad19a236e..7c219305b61d 100644
+> > --- a/arch/x86/kvm/pmu.c
+> > +++ b/arch/x86/kvm/pmu.c
+> > @@ -108,6 +108,8 @@ void kvm_init_pmu_capability(const struct kvm_pmu_o=
+ps *pmu_ops)
+> >  	bool is_intel =3D boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL;
+> >  	int min_nr_gp_ctrs =3D pmu_ops->MIN_NR_GP_COUNTERS;
+> > =20
+> > +	perf_get_x86_pmu_capability(&kvm_host_pmu);
+> > +
+> >  	/*
+> >  	 * Hybrid PMUs don't play nice with virtualization without careful
+> >  	 * configuration by userspace, and KVM's APIs for reporting supported
+>=20
+> Hi Sean,
+>=20
+> It looks a merging error here. We don't need this patch.
 
-This is not really needed because interrupt-controller.yaml is applied 
-to all nodes named 'interrupt-controller', but fine to add.
+Gah, right you are.  I overlooked it because it didn't conflict on a rebase=
+, and
+I once again forgot to test on a hybrid PMU, grr.
 
-> +
->  properties:
->    compatible:
->      const: loongson,pch-pic-1.0
-> @@ -34,14 +37,18 @@ properties:
->    '#interrupt-cells':
->      const: 2
->  
-> +  '#address-cells':
-> +    const: 0
-> +
+Thanks!
 
-This part is the only change actually needed.
-
->  required:
->    - compatible
->    - reg
->    - loongson,pic-base-vec
->    - interrupt-controller
->    - '#interrupt-cells'
-> +  - '#address-cells'
-
-Unless there's some guarantee that this node is *always* referenced by 
-an interrupt-map property, then it's not really required. After all, 
-presumably things worked without it.
-
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
-
-Also not needed.
-
->  
->  examples:
->    - |
-> @@ -50,6 +57,7 @@ examples:
->        compatible = "loongson,pch-pic-1.0";
->        reg = <0x10000000 0x400>;
->        interrupt-controller;
-> +      #address-cells = <0>;
->        #interrupt-cells = <2>;
->        loongson,pic-base-vec = <64>;
->        interrupt-parent = <&htvec>;
-> -- 
-> 2.47.3
-> 
+> The original patch "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
+> reported PMU capabilities")" had been merged into upstream and subsequent=
+ly
+> we submitted a new patch "034417c1439a ("KVM: x86/pmu: Don't try to get
+> perf capabilities for hybrid CPUs")" to fix the warning introduced from
+> previous patch=C2=A0 "51f34b1 ("KVM: x86/pmu: Snapshot host (i.e. perf's)
+> reported PMU capabilities")". Thanks.
+>=20
+> -Dapeng Mi
+>=20
+>=20
