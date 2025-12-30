@@ -1,238 +1,143 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F3E28CF77
-	for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 07:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F87A2110
+	for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 07:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767079520; cv=none; b=j8D7/GNams8diZVmlkjCirKftWQbQRuv5OBshM/HOJwncYiwsE93xtD7S8PupbdGWD1rG1c0PIv6geD+DDhvdPnxeWO6QuJV6G+KEskDnCoD2HxQUqzi9HP4wvgAd/DXfUKoDxbzgQMsm79ozVUs/sAy6lHBK94bgw+rn2pmrDo=
+	t=1767080343; cv=none; b=kiBdxOop8LwEkDA8FvgI7PeGJZItaKgenLNglpMK5Q0KcDOwxg3IpAPeaDkz9VaprqfxU/emFarYNgZM1UTad8Ui5M2EDXj4QiNkdA6uwfLvEfWUWRdgm28ymQblzwsCIUhBr14gIntQKOIub9IB/WdztNbrhUvf+G169yCHzs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767079520; c=relaxed/simple;
-	bh=XiluMo7bYYEUYi/FWSGXWtMuflQyRKhcD0hlHHoSsDk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Z/4H1q1OadZ7ePmpQWVz1sqtUzImItk/l+oCZPYdWzC05/ZhnFeeDkBKXuJLEMCGi/Tf8B0OedzEIwQoI4kWv94bIhhHlLt3QL96ZM+2TarPb+StFWNoM5Cw074MPugJGe5ck4vFW1Yby3x9w+oUOCoqAb/AsUyz43aHX0X2zus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Cx68JYflNpGFUEAA--.13432S3;
-	Tue, 30 Dec 2025 15:25:13 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxSeBTflNpdZ8GAA--.17647S3;
-	Tue, 30 Dec 2025 15:25:10 +0800 (CST)
-Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Xianglai Li <lixianglai@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner
- <tglx@linutronix.de>, Tiezhu Yang <yangtiezhu@loongson.cn>
-References: <20251227012712.2921408-1-lixianglai@loongson.cn>
- <20251227012712.2921408-3-lixianglai@loongson.cn>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <2ab951d8-f039-af36-bfe5-afc0f2c93a9a@loongson.cn>
-Date: Tue, 30 Dec 2025 15:22:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1767080343; c=relaxed/simple;
+	bh=vgcUnS1052qwCBP6i7dco7h+vzHfUmkg5eMZKbGRNr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BAuAKMQZGHPJkzJUOihtcmLHEy3nBXJZW38mtPoSn6kBp+rTKridhHBoJ0JQXWvht7JPepc4Vkxp88TBUIMvFSwKKSS2kZgzJkQ5kGnIewxN7EQfBVrHToeKUQLy3QkrY7PJfMrtJ7kTkT4EyRmQ1r/+Q6B9Rl4SYBkWkqedbYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEq9fx75; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEq9fx75"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b73a9592fb8so1886862166b.1
+        for <loongarch@lists.linux.dev>; Mon, 29 Dec 2025 23:39:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767080341; x=1767685141; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tmqv51wWnrt3khOKvuVGCkrOT4IpacjAgjWXw79Q7ps=;
+        b=IEq9fx75IeGCuDiRnWDNZCQ+1OmcikhtqsiAzjsXklabdafCifnCUMpGDi5JS3h4/g
+         pETBoFgFGmcsIZIEIbi7Tn1/cAs4HUqhzODfGCiem6yVT+1eM7JNExJyfw127AqjJuUi
+         Oa7cNhccRiwMAtPbFTEdF+hCVpcLumLe42Ox/rQ4IY1x3YtNP8nV/OsAGS+iMDvQhdUl
+         twhCczm3hOgd06AW+eBqw3Cnv2pLEYV1+KyGAE0WnzxPkiHnVd3s/bFXIk/74ybRWJRe
+         wy37Cqqwr6o+dsS4nBLBO8jEbR2/HN5NxY2YRWLPG+TzhBKF4dxdkk4ceHUOyhMYga/t
+         xslw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767080341; x=1767685141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Tmqv51wWnrt3khOKvuVGCkrOT4IpacjAgjWXw79Q7ps=;
+        b=Vz+NWUbTgyI00GbdM3J5iuXYJg0Qkhqltk3J5kq8jkL84Ugo5k3p2Ghm1skb+M2ulb
+         wvpBoz0sD4yC5zBwGif8HmhMUR5lHKbX4hct1CC79lTTTgMHY0QQmsfrzPjbDoF+A6l3
+         HHTnEw8+fZtC5+ry/GjwsuSzDkAhtK/PFbTp4FVPe5P7BbDBiVhw3CZvt2uKmBIFwgoW
+         Bb2ocSHzswmIzRAAU6BieNQ93TBnn0slfVbtG/D81l+ftFL/a81DhLjmczHGC51CPw9G
+         QPv5C1nq9xoJ5h8IYkrxE9uDLs5s1UXFkjV+qWRFWnpDnD9Ny6oAVTMseA8qdnhg8R2e
+         /T7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUxIpzZq684l6QXs5+YyFH4OYmAgr62ZmchJF7wHnpdVEVQ+5uZfF1Zymh5ZBRHU/Kt1TRD1l5h5fM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxE1IBmgoMy8OjopPp455GMheFBSQOBSz7txlu53AFLhp2G2qqE
+	pYqAkKOmNjafkZ4VRvdps89Ag5ijcqUtjwsIc336FlOX5vES3e3eUzPzWozkR3xKenVRzem9RDk
+	zcwIyh7dqOSE1sfb4mt9RKwDQ5rYjba0=
+X-Gm-Gg: AY/fxX5iMxeX9cEGonKbnpQ/TBnc4xO6EqcJCjwF72sXlvfY7IrsCVQ31I6KtfUV2Va
+	Z2kHjNBPkAmkSlb/MG2PchYGkNVXYd1UNb54/Vfq48U4l8PzU67T8vvoQzMraWwhmLnZ/c3UFu+
+	p9EefSxm7WJ7BM4JDWGpR339BewflOYfwuSTwOyi47JrJA3xy98HxSYtfdjWULpsTH9c2DW8Cso
+	oXYz0i5mDfFDTQsFmm1rxctD1mSYz9KJ9NMhX0jaZl36IuLduxe0cAsmmLw3yZNXMGV5CU=
+X-Google-Smtp-Source: AGHT+IHAJA2AOTDuTqR84uN8GaoIGr40SvME92MC06j4BBxWbkvap6/SnuvE+IEmuyMd/yBZ9B48ALV/0MQM5/JfD0Q=
+X-Received: by 2002:a17:907:fdc1:b0:b7d:266a:772c with SMTP id
+ a640c23a62f3a-b803574c34fmr3563319966b.21.1767080340398; Mon, 29 Dec 2025
+ 23:39:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20251227012712.2921408-3-lixianglai@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxSeBTflNpdZ8GAA--.17647S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtw4rJw1xKryDKw4UJr1kWFX_yoW7Cw1kpw
-	nxZFs8Ka1kG3s8Zw47Ja4DArZIqr4vgF1fWrsFyrWrAr1DWry5XF18tw4DZF97Kw48WFn5
-	XFy0grn5AaykJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2L05UUUUU
+References: <cover.1766037997.git.zhoubinbin@loongson.cn> <fa13f6bc32832085fa06ec004ff0e8b6464e7a7d.1766037997.git.zhoubinbin@loongson.cn>
+ <CAAhV-H4KpOGn44jDf09S2NVOnCD2KHbspK9OtZnrQd8Or+-UWg@mail.gmail.com>
+In-Reply-To: <CAAhV-H4KpOGn44jDf09S2NVOnCD2KHbspK9OtZnrQd8Or+-UWg@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 30 Dec 2025 15:38:47 +0800
+X-Gm-Features: AQt7F2qT8fMLe7RqULA_KkU7lSkbg6Oz1huOb4eO1oPpU_v58G5la13G1CATcu4
+Message-ID: <CAMpQs4Lw3OTe53RXtZzCrj2u0O=ytcNpF+_39j7YsFbnLujSvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] LoongArch: dts: loongson-2k0500: Add default
+ Extend I/O Interrupt controller address cells
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi :
 
+Sorry for the late reply.
 
-On 2025/12/27 上午9:27, Xianglai Li wrote:
-> Insert the appropriate UNWIND macro definition into the kvm_exc_entry in
-> the assembly function to guide the generation of correct ORC table entries,
-> thereby solving the timeout problem of loading the livepatch-sample module
-> on a physical machine running multiple vcpus virtual machines.
-> 
-> While solving the above problems, we have gained an additional benefit,
-> that is, we can obtain more call stack information
-> 
-> Stack information that can be obtained before the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x100/0x1e0
-> 
-> Stack information that can be obtained after the problem is fixed:
-> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
-> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
-> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
-> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
-> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
-> [<0>] kvm_exc_entry+0x104/0x1e4
-> [<0>] kvm_enter_guest+0x38/0x11c
-> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
-> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
-> [<0>] sys_ioctl+0x498/0xf00
-> [<0>] do_syscall+0x98/0x1d0
-> [<0>] handle_syscall+0xb8/0x158
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> ---
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
-> Cc: Bibo Mao <maobibo@loongson.cn>
-> Cc: Charlie Jenkins <charlie@rivosinc.com>
-> Cc: Xianglai Li <lixianglai@loongson.cn>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> 
->   arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
->   1 file changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
-> index 93845ce53651..a3ea9567dbe5 100644
-> --- a/arch/loongarch/kvm/switch.S
-> +++ b/arch/loongarch/kvm/switch.S
-> @@ -10,6 +10,7 @@
->   #include <asm/loongarch.h>
->   #include <asm/regdef.h>
->   #include <asm/unwind_hints.h>
-> +#include <linux/kvm_types.h>
->   
->   #define HGPR_OFFSET(x)		(PT_R0 + 8*x)
->   #define GGPR_OFFSET(x)		(KVM_ARCH_GGPR + 8*x)
-> @@ -110,9 +111,9 @@
->   	 * need to copy world switch code to DMW area.
->   	 */
->   	.text
-> +	.p2align PAGE_SHIFT
->   	.cfi_sections	.debug_frame
->   SYM_CODE_START(kvm_exc_entry)
-> -	.p2align PAGE_SHIFT
->   	UNWIND_HINT_UNDEFINED
->   	csrwr	a2,   KVM_TEMP_KS
->   	csrrd	a2,   KVM_VCPU_KS
-> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
->   	/* restore per cpu register */
->   	ld.d	u0, a2, KVM_ARCH_HPERCPU
->   	addi.d	sp, sp, -PT_SIZE
-> +	UNWIND_HINT_REGS
->   
->   	/* Prepare handle exception */
->   	or	a0, s0, zero
-> @@ -200,7 +202,7 @@ ret_to_host:
->   	jr      ra
->   
->   SYM_CODE_END(kvm_exc_entry)
-> -EXPORT_SYMBOL(kvm_exc_entry)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
->   
->   /*
->    * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
-> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
->   	/* Save host GPRs */
->   	kvm_save_host_gpr a2
->   
-> +	/*
-> +	 * The csr_era member variable of the pt_regs structure is required
-> +	 * for unwinding orc to perform stack traceback, so we need to put
-> +	 * pc into csr_era member variable here.
-> +	 */
-> +	pcaddi	t0, 0
-> +	st.d	t0, a2, PT_ERA
-maybe PRMD need be set with fake pt_regs also, something like this:
-         ori     t0, zero, CSR_PRMD_PIE
-         st.d	t0, a2, PT_PRMD
+On Sun, Dec 21, 2025 at 8:13=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> Hi, Binbin,
+>
+> On Fri, Dec 19, 2025 at 4:48=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
+cn> wrote:
+> >
+> > Add missing address-cells 0 to the extend I/O interrupt controller node
+> > to silence W=3D1 warning:
+> >
+> >   loongson-2k0500.dtsi:513.5-51: Warning (interrupt_map): /bus@10000000=
+/pcie@1a000000/pcie@0,0:interrupt-map:
+> >     Missing property '#address-cells' in node /bus@10000000/interrupt-c=
+ontroller@1fe11600, using 0 as fallback
+> >
+> > Value '0' is correct because:
+> > 1. The extend I/O interrupt controller does not have children,
+> > 2. interrupt-map property (in PCI node) consists of five components and
+> >    the fourth component "parent unit address", which size is defined by
+> >    '#address-cells' of the node pointed to by the interrupt-parent
+> >    component, is not used (=3D0)
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  arch/loongarch/boot/dts/loongson-2k0500.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loonga=
+rch/boot/dts/loongson-2k0500.dtsi
+> > index 357de4ca7555..0594da1ea83d 100644
+> > --- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> > +++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> > @@ -164,6 +164,7 @@ eiointc: interrupt-controller@1fe11600 {
+> >                         compatible =3D "loongson,ls2k0500-eiointc";
+> >                         reg =3D <0x0 0x1fe11600 0x0 0xea00>;
+> >                         interrupt-controller;
+> > +                       #address-cells =3D <0>;
+> >                         #interrupt-cells =3D <1>;
+> >                         interrupt-parent =3D <&cpuintc>;
+> >                         interrupts =3D <3>;
+> Like Patch-5, I think liointc also need #address-cells, so does Patch-6.
 
-Regards
-Bibo Mao
-> +
->   	addi.d	a2, a1, KVM_VCPU_ARCH
->   	st.d	sp, a2, KVM_ARCH_HSP
->   	st.d	tp, a2, KVM_ARCH_HTP
-> @@ -225,7 +235,7 @@ SYM_FUNC_START(kvm_enter_guest)
->   	csrwr	a1, KVM_VCPU_KS
->   	kvm_switch_to_guest
->   SYM_FUNC_END(kvm_enter_guest)
-> -EXPORT_SYMBOL(kvm_enter_guest)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
->   
->   SYM_FUNC_START(kvm_save_fpu)
->   	fpu_save_csr	a0 t1
-> @@ -233,7 +243,7 @@ SYM_FUNC_START(kvm_save_fpu)
->   	fpu_save_cc	a0 t1 t2
->   	jr              ra
->   SYM_FUNC_END(kvm_save_fpu)
-> -EXPORT_SYMBOL(kvm_save_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
->   
->   SYM_FUNC_START(kvm_restore_fpu)
->   	fpu_restore_double a0 t1
-> @@ -241,7 +251,7 @@ SYM_FUNC_START(kvm_restore_fpu)
->   	fpu_restore_cc	   a0 t1 t2
->   	jr                 ra
->   SYM_FUNC_END(kvm_restore_fpu)
-> -EXPORT_SYMBOL(kvm_restore_fpu)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
->   
->   #ifdef CONFIG_CPU_HAS_LSX
->   SYM_FUNC_START(kvm_save_lsx)
-> @@ -250,7 +260,7 @@ SYM_FUNC_START(kvm_save_lsx)
->   	lsx_save_data   a0 t1
->   	jr              ra
->   SYM_FUNC_END(kvm_save_lsx)
-> -EXPORT_SYMBOL(kvm_save_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
->   
->   SYM_FUNC_START(kvm_restore_lsx)
->   	lsx_restore_data a0 t1
-> @@ -258,7 +268,7 @@ SYM_FUNC_START(kvm_restore_lsx)
->   	fpu_restore_csr  a0 t1 t2
->   	jr               ra
->   SYM_FUNC_END(kvm_restore_lsx)
-> -EXPORT_SYMBOL(kvm_restore_lsx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
->   #endif
->   
->   #ifdef CONFIG_CPU_HAS_LASX
-> @@ -268,7 +278,7 @@ SYM_FUNC_START(kvm_save_lasx)
->   	lasx_save_data  a0 t1
->   	jr              ra
->   SYM_FUNC_END(kvm_save_lasx)
-> -EXPORT_SYMBOL(kvm_save_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
->   
->   SYM_FUNC_START(kvm_restore_lasx)
->   	lasx_restore_data a0 t1
-> @@ -276,7 +286,7 @@ SYM_FUNC_START(kvm_restore_lasx)
->   	fpu_restore_csr   a0 t1 t2
->   	jr                ra
->   SYM_FUNC_END(kvm_restore_lasx)
-> -EXPORT_SYMBOL(kvm_restore_lasx)
-> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
->   #endif
->   
->   #ifdef CONFIG_CPU_HAS_LBT
-> 
+As Rob said[1], the `#address-cells` attribute isn't required unless
+it's always referenced by the ` interrupt-map` attribute, so I'd like
+to leave the liointc node unchanged.
+Add attributes as needed based on existing DTB warnings, and Patch-6
+will do the same.
 
+[1]: https://lore.kernel.org/all/20251229234931.GA2804566-robh@kernel.org/
+>
+> Huacai
+>
+> > --
+> > 2.47.3
+> >
+
+--
+Thanks.
+Binbin
