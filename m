@@ -1,488 +1,300 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC6462EA749
-	for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 06:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A7625F7A4
+	for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 07:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767075648; cv=none; b=e+XFmC7qaAXqKx8gjPbjC2s28b3Cy1Y/HSD8JUHs5x7n9R3jEJdySR15i6CagRmqL3+4819Ap1AYdtM8Q3gxA0XvKL1dtY9UgNVC5ZyUJXveIfYXBfvT7CmVehtLyM1GkT43Bf5AK+Aok8C25w+WlAaMF87+SbnnHxKcw2FBL8Q=
+	t=1767078529; cv=none; b=kBQ50h8FyxdWwaYAHlBuhARR7WMCAWXLH5HGZvuz/S/rDif+LEaKmE45y4KPn+pNiUgAi7UMr4cn6j94wHCOMQyVTIFdJHarcFpUTdJ0BvuK14zLrwl+SBs3L9Q9SNABe1cJfi5HfTVil4Escd7y18dGbZAE4fPX54Ypb1BhJPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767075648; c=relaxed/simple;
-	bh=IsJ+jbbpRkAKvIODwpHpKk69xECcsVHdjFAV3M6+LAA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RMsspjr93SFhGE3Yg6lBSO/L+rfYIGzQ05aKIDaN5nCYAE6OryRzzUeW2RZpL+Vlko3YtMuU84HplY5UiWJuLJFRFss3GHyT3Yut2fdRjifa/2qFQTq4xBlK4xrsavfj3qns3NaZipBfau2p0eMiOSBCDwIpVzT+R583CsF+5W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxScI1b1NpDVEEAA--.13371S3;
-	Tue, 30 Dec 2025 14:20:37 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx98Axb1NpqpgGAA--.3497S3;
-	Tue, 30 Dec 2025 14:20:35 +0800 (CST)
-Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Jinyang He <hejinyang@loongson.cn>, lixianglai <lixianglai@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, stable@vger.kernel.org,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Tianrui Zhao <zhaotianrui@loongson.cn>,
- Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>
-References: <20251227012712.2921408-1-lixianglai@loongson.cn>
- <20251227012712.2921408-3-lixianglai@loongson.cn>
- <08143343-cb10-9376-e7df-68ad854b9275@loongson.cn>
- <9e1a8d4f-251f-f78e-01a3-5c483249fac8@loongson.cn>
- <dec5cb06-6858-20f2-facb-d5e7f44f5d16@loongson.cn>
- <df8f52e3-fea5-763a-d5fd-629308dc6fcc@loongson.cn>
- <a1009e1e-34de-68b4-7680-d2a99a06a71c@loongson.cn>
- <efa4ef2d-aef7-0f64-07bc-55d0c4d1d6d2@loongson.cn>
- <ebd5a137-1bee-8fab-71bf-5f359dabe5d8@loongson.cn>
- <4ad5180d-cb4d-b916-3872-b24c5a2cd1d8@loongson.cn>
- <aeb75309-61eb-a3fa-fdaa-544978d2534a@loongson.cn>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <8a8d70b6-7239-4149-14c2-98d8049ae681@loongson.cn>
-Date: Tue, 30 Dec 2025 14:18:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1767078529; c=relaxed/simple;
+	bh=psbRv4/BzsjXAHvYF9kNmUhvkyV7GOIlg/7MADMvZOg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rtqK1chgzmCw/rBMpG56pc8MNDxFVHFPk44qdJT4SoKMWdl2u0ne97AC+b1h369/+xcB3QjTp9oSTqLLDifLAKMwzeZmdgikURlhh4e/gcg3rPMvFIxP+ZGoG1XTIsMui2GOyJnLT9Guthri+m0BuLzBEyfSU8na/u766Y09LSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hbSXx+ct; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cpa+StPU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hbSXx+ct";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cpa+StPU"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1767078526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vXA8bfIazvy8HGJCSAI6zsjcs5XRieIDjOVpIGo8jXI=;
+	b=hbSXx+cty+AYz08PzNOpdbthvKGmek2wj+rvU2FPNz0UksNiy16xoOzAPVOhMyQ2eXhl4R
+	7XFL5nkeXQxO6MkObpRF0msNlejUAAsYvSiZ+SxCVUzNwmnzztvSsGMbjs6wKXJc2S9907
+	KmC5VQneO1+BLYztjXAujoToAu1i95KzmbJ33TGn+OyQDrTbbk/+cSco8Ac7WMC0T2QFkk
+	Ahv3Ly9hD8qVtlssPufaDKmjjiXLTfn4mkFsneHPpbRrCT/wZyPv6tW2h62qlCHwF81gNV
+	OpiNpKrfQXqFUsxUdZ9YhTgY5DDFkGTbRPlSe+kKqBDk3cXUqPc0uPLUvOm6fA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1767078526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vXA8bfIazvy8HGJCSAI6zsjcs5XRieIDjOVpIGo8jXI=;
+	b=cpa+StPUh28SS7vTDty5NACA5hWraBr7JfqdWwV+rwHtEON+5p8YgBIy1mxcaCxqQYMr6Q
+	cadVyCAsw43+iUCA==
+Date: Tue, 30 Dec 2025 08:08:44 +0100
+Subject: [PATCH v3] vdso: Remove struct getcpu_cache
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <aeb75309-61eb-a3fa-fdaa-544978d2534a@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx98Axb1NpqpgGAA--.3497S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3uw17ur4kZFWkWF1DCw13Jrc_yoW8Aw4Uto
-	Wj9w12yr1rJr1UKr1UJw4Dtr15Jw18JrnrtryUGr13Gr18t3WUX3y8JryUKay5tr1kGr1U
-	Jry7Xr1jyFyUtr18l-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYB7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-	xVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-	C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_
-	JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-	WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-	CTnIWIevJa73UjIFyTuYvjxU2DUUUUUUU
+Message-Id: <20251230-getcpu_cache-v3-1-fb9c5f880ebe@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAHt6U2kC/13MywqDMBCF4VcpWTclk3gJXfU9SikxTnSgqCQaL
+ OK7Nwot1OV/4HwLC+gJA7ueFuYxUqC+S6HOJ2Zb0zXIqU7NpJC50DLnDY52mJ7W2Ba5MpWtJRZ
+ 5pkqWLoNHR/PO3R+pWwpj79+7HmFbv1DxD0XgwHWZaQXaFZDB7UXdNPq+o/lSI9uwKH8ACFAHQ
+ G6AFq5yRlWltUdgXdcP9BrP5e0AAAA=
+X-Change-ID: 20250825-getcpu_cache-3abcd2e65437
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767078525; l=8287;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=psbRv4/BzsjXAHvYF9kNmUhvkyV7GOIlg/7MADMvZOg=;
+ b=BVKcoXP2BGcToxxDIO9G6B/hNSvzMKXWiDvCE3tm0ubOfZnXnVRbVrmyRdwM1XBNC7X9GBXtV
+ eumqqBww/XbCIWh15mdA3R5StG4o0qU/+ZVcE3b7OxxuqTxHQyiPZo2
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
+The cache parameter of getcpu() is useless nowadays for various reasons.
+* It is never passed by userspace for either the vDSO or syscalls.
+* It is never used by the kernel.
+* It could not be made to work on the current vDSO architecture.
+* The structure definition is not part of the UAPI headers.
+* vdso_getcpu() is superseded by restartable sequences in any case.
 
+Remove the struct and its header.
 
-On 2025/12/30 下午1:53, Jinyang He wrote:
-> On 2025-12-30 12:03, Bibo Mao wrote:
-> 
->>
->>
->> On 2025/12/30 上午11:36, Jinyang He wrote:
->>> On 2025-12-30 10:24, Bibo Mao wrote:
->>>
->>>>
->>>>
->>>> On 2025/12/29 下午6:41, Jinyang He wrote:
->>>>> On 2025-12-29 18:11, lixianglai wrote:
->>>>>
->>>>>> Hi Jinyang:
->>>>>>>
->>>>>>> On 2025-12-29 11:53, lixianglai wrote:
->>>>>>>> Hi Jinyang:
->>>>>>>>> On 2025-12-27 09:27, Xianglai Li wrote:
->>>>>>>>>
->>>>>>>>>> Insert the appropriate UNWIND macro definition into the 
->>>>>>>>>> kvm_exc_entry in
->>>>>>>>>> the assembly function to guide the generation of correct ORC 
->>>>>>>>>> table entries,
->>>>>>>>>> thereby solving the timeout problem of loading the 
->>>>>>>>>> livepatch-sample module
->>>>>>>>>> on a physical machine running multiple vcpus virtual machines.
->>>>>>>>>>
->>>>>>>>>> While solving the above problems, we have gained an additional 
->>>>>>>>>> benefit,
->>>>>>>>>> that is, we can obtain more call stack information
->>>>>>>>>>
->>>>>>>>>> Stack information that can be obtained before the problem is 
->>>>>>>>>> fixed:
->>>>>>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>> [<0>] kvm_exc_entry+0x100/0x1e0
->>>>>>>>>>
->>>>>>>>>> Stack information that can be obtained after the problem is 
->>>>>>>>>> fixed:
->>>>>>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>> [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>>>>> [<0>] kvm_enter_guest+0x38/0x11c
->>>>>>>>>> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
->>>>>>>>>> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
->>>>>>>>>> [<0>] sys_ioctl+0x498/0xf00
->>>>>>>>>> [<0>] do_syscall+0x98/0x1d0
->>>>>>>>>> [<0>] handle_syscall+0xb8/0x158
->>>>>>>>>>
->>>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
->>>>>>>>>> ---
->>>>>>>>>> Cc: Huacai Chen <chenhuacai@kernel.org>
->>>>>>>>>> Cc: WANG Xuerui <kernel@xen0n.name>
->>>>>>>>>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
->>>>>>>>>> Cc: Bibo Mao <maobibo@loongson.cn>
->>>>>>>>>> Cc: Charlie Jenkins <charlie@rivosinc.com>
->>>>>>>>>> Cc: Xianglai Li <lixianglai@loongson.cn>
->>>>>>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>>>>>>>> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>>>>>>>
->>>>>>>>>>   arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
->>>>>>>>>>   1 file changed, 19 insertions(+), 9 deletions(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/loongarch/kvm/switch.S 
->>>>>>>>>> b/arch/loongarch/kvm/switch.S
->>>>>>>>>> index 93845ce53651..a3ea9567dbe5 100644
->>>>>>>>>> --- a/arch/loongarch/kvm/switch.S
->>>>>>>>>> +++ b/arch/loongarch/kvm/switch.S
->>>>>>>>>> @@ -10,6 +10,7 @@
->>>>>>>>>>   #include <asm/loongarch.h>
->>>>>>>>>>   #include <asm/regdef.h>
->>>>>>>>>>   #include <asm/unwind_hints.h>
->>>>>>>>>> +#include <linux/kvm_types.h>
->>>>>>>>>>     #define HGPR_OFFSET(x)        (PT_R0 + 8*x)
->>>>>>>>>>   #define GGPR_OFFSET(x)        (KVM_ARCH_GGPR + 8*x)
->>>>>>>>>> @@ -110,9 +111,9 @@
->>>>>>>>>>        * need to copy world switch code to DMW area.
->>>>>>>>>>        */
->>>>>>>>>>       .text
->>>>>>>>>> +    .p2align PAGE_SHIFT
->>>>>>>>>>       .cfi_sections    .debug_frame
->>>>>>>>>>   SYM_CODE_START(kvm_exc_entry)
->>>>>>>>>> -    .p2align PAGE_SHIFT
->>>>>>>>>>       UNWIND_HINT_UNDEFINED
->>>>>>>>>>       csrwr    a2,   KVM_TEMP_KS
->>>>>>>>>>       csrrd    a2,   KVM_VCPU_KS
->>>>>>>>>> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>>>>>>       /* restore per cpu register */
->>>>>>>>>>       ld.d    u0, a2, KVM_ARCH_HPERCPU
->>>>>>>>>>       addi.d    sp, sp, -PT_SIZE
->>>>>>>>>> +    UNWIND_HINT_REGS
->>>>>>>>>>         /* Prepare handle exception */
->>>>>>>>>>       or    a0, s0, zero
->>>>>>>>>> @@ -200,7 +202,7 @@ ret_to_host:
->>>>>>>>>>       jr      ra
->>>>>>>>>>     SYM_CODE_END(kvm_exc_entry)
->>>>>>>>>> -EXPORT_SYMBOL(kvm_exc_entry)
->>>>>>>>>> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
->>>>>>>>>>     /*
->>>>>>>>>>    * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu 
->>>>>>>>>> *vcpu)
->>>>>>>>>> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
->>>>>>>>>>       /* Save host GPRs */
->>>>>>>>>>       kvm_save_host_gpr a2
->>>>>>>>>>   +    /*
->>>>>>>>>> +     * The csr_era member variable of the pt_regs structure 
->>>>>>>>>> is required
->>>>>>>>>> +     * for unwinding orc to perform stack traceback, so we 
->>>>>>>>>> need to put
->>>>>>>>>> +     * pc into csr_era member variable here.
->>>>>>>>>> +     */
->>>>>>>>>> +    pcaddi    t0, 0
->>>>>>>>>> +    st.d    t0, a2, PT_ERA
->>>>>>>>> Hi, Xianglai,
->>>>>>>>>
->>>>>>>>> It should use `SYM_CODE_START` to mark the `kvm_enter_guest` 
->>>>>>>>> rather than
->>>>>>>>> `SYM_FUNC_START`, since the `SYM_FUNC_START` is used to mark 
->>>>>>>>> "C-likely"
->>>>>>>>> asm functionw. 
->>>>>>>>
->>>>>>>> Ok, I will use SYM_CODE_START to mark kvm_enter_guest in the 
->>>>>>>> next version.
->>>>>>>>
->>>>>>>>> I guess the kvm_enter_guest is something like exception
->>>>>>>>> handler becuase the last instruction is "ertn". So usually it 
->>>>>>>>> should
->>>>>>>>> mark UNWIND_HINT_REGS where can find last frame info by "$sp".
->>>>>>>>> However, all info is store to "$a2", this mark should be
->>>>>>>>>   `UNWIND_HINT sp_reg=ORC_REG_A2(???) type=UNWIND_HINT_TYPE_REGS`.
->>>>>>>>> I don't konw why save this function internal PC here by `pcaddi 
->>>>>>>>> t0, 0`,
->>>>>>>>> and I think it is no meaning(, for exception handler, they save 
->>>>>>>>> last PC
->>>>>>>>> by read CSR.ERA). The `kvm_enter_guest` saves registers by
->>>>>>>>> "$a2"("$sp" - PT_REGS) beyond stack ("$sp"), it is dangerous if IE
->>>>>>>>> is enable. So I wonder if there is really a stacktrace through 
->>>>>>>>> this function?
->>>>>>>>>
->>>>>>>> The stack backtracking issue in switch.S is rather complex 
->>>>>>>> because it involves the switching between cpu root-mode and 
->>>>>>>> guest-mode:
->>>>>>>> Real stack backtracking should be divided into two parts:
->>>>>>>> part 1:
->>>>>>>>     [<0>] kvm_enter_guest+0x38/0x11c
->>>>>>>>     [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
->>>>>>>>     [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
->>>>>>>>     [<0>] sys_ioctl+0x498/0xf00
->>>>>>>>     [<0>] do_syscall+0x98/0x1d0
->>>>>>>>     [<0>] handle_syscall+0xb8/0x158
->>>>>>>>
->>>>>>>> part 2:
->>>>>>>>     [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>     [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>     [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>     [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>     [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>     [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>>>
->>>>>>>>
->>>>>>>> In "part 1", after executing kvm_enter_guest, the cpu switches 
->>>>>>>> from root-mode to guest-mode.
->>>>>>>> In this case, stack backtracking is indeed very rare.
->>>>>>>>
->>>>>>>> In "part 2", the cpu switches from the guest-mode to the root-mode,
->>>>>>>> and most of the stack backtracking occurs during this phase.
->>>>>>>>
->>>>>>>> To obtain the longest call chain, we save pc in kvm_enter_guest 
->>>>>>>> to pt_regs.csr_era,
->>>>>>>> and after restoring the sp of the root-mode cpu in kvm_exc_entry,
->>>>>>>> The ORC entry was re-established using "UNWIND_HINT_REGS",
->>>>>>>>  and then we obtained the following stack backtrace as we wanted:
->>>>>>>>
->>>>>>>>     [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>     [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>     [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>     [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>     [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>     [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>> I found this might be a coincidence—correct behavior due to the 
->>>>>>> incorrect
->>>>>>> UNWIND_HINT_REGS mark and unusual stack adjustment.
->>>>>>>
->>>>>>> First, the kvm_enter_guest contains only a single branch 
->>>>>>> instruction, ertn.
->>>>>>> It hardware-jump to the CSR.ERA address directly, jump into 
->>>>>>> kvm_exc_entry.
->>>>>>>
->>>>>>> At this point, the stack layout looks like this:
->>>>>>> -------------------------------
->>>>>>>   frame from call to `kvm_enter_guest`
->>>>>>> -------------------------------  <- $sp
->>>>>>>   PT_REGS
->>>>>>> -------------------------------  <- $a2
->>>>>>>
->>>>>>> Then kvm_exc_entry adjust stack without save any register (e.g. 
->>>>>>> $ra, $sp)
->>>>>>> but still marked UNWIND_HINT_REGS.
->>>>>>> After the adjustment:
->>>>>>> -------------------------------
->>>>>>>   frame from call to `kvm_enter_guest`
->>>>>>> -------------------------------
->>>>>>>   PT_REGS
->>>>>>> -------------------------------  <- $a2, new $sp
->>>>>>>
->>>>>>> During unwinding, when the unwinder reaches kvm_exc_entry,
->>>>>>> it meets the mark of PT_REGS and correctly recovers
->>>>>>>  pc = regs.csr_era, sp = regs.sp, ra = regs.ra
->>>>>>>
->>>>>> Yes, here unwinder does work as you say.
->>>>>>
->>>>>>> a) Can we avoid "ertn" rather than `jr reg (or jirl ra, reg, 0)`
->>>>>>> instead, like call?
->>>>>> No,  we need to rely on the 'ertn instruction return PIE to CRMD IE,
->>>>>> at the same time to ensure that its atomic,
->>>>>> there should be no other instruction than' ertn 'more appropriate 
->>>>>> here.
->>>>> You are right! I got it.
->>>>>>
->>>>>>> The kvm_exc_entry cannot back to kvm_enter_guest
->>>>>>> if we use "ertn", so should the kvm_enter_guest appear on the 
->>>>>>> stacktrace?
->>>>>>>
->>>>>>
->>>>>> It is flexible. As I mentioned above, the cpu completes the switch 
->>>>>> from host-mode to guest mode through kvm_enter_guest,
->>>>>> and then the switch from guest mode to host-mode through 
->>>>>> kvm_exc_entry. When we ignore the details of the host-mode
->>>>>> and guest-mode switching in the middle, we can understand that the 
->>>>>> host cpu has completed kvm_enter_guest->kvm_exc_entry.
->>>>>> From this perspective, I think it can exist in the call stack, and 
->>>>>> at the same time, we have obtained the maximum call stack 
->>>>>> information.
->>>>>>
->>>>>>
->>>>>>> b) Can we adjust $sp before entering kvm_exc_entry? Then we can mark
->>>>>>> UNWIND_HINT_REGS at the beginning of kvm_exc_entry, which something
->>>>>>> like ret_from_kernel_thread_asm.
->>>>>>>
->>>>>> The following command can be used to dump the orc entries of the 
->>>>>> kernel:
->>>>>> ./tools/objtool/objtool --dump vmlinux
->>>>>>
->>>>>> You can observe that not all orc entries are generated at the 
->>>>>> beginning of the function.
->>>>>> For example:
->>>>>> handle_tlb_protect
->>>>>> ftrace_stub
->>>>>> handle_reserved
->>>>>>
->>>>>> So, is it unnecessary for us to modify UNWIND_HINT_REGS in order 
->>>>>> to place it at the beginning of the function.
->>>>>>
->>>>>> If you have a better solution, could you provide an example of the 
->>>>>> modification?
->>>>>> I can test the feasibility of the solution.
->>>>>>
->>>>> The expression at the beginning of the function is incorrect 
->>>>> (feeling sorry).
->>>>> It should be marked where have all stacktrace info.
->>>>> Thanks for all the explaining, since I'm unfamiliar with kvm, I 
->>>>> need these to help my understanding.
->>>>>
->>>>> Can you try with follows, with save regs by $sp, set more precise 
->>>>> era to pt_regs, and more unwind hint.
->>>>>
->>>>>
->>>>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->>>>> index f1768b7a6194..8ed1d7b72c54 100644
->>>>> --- a/arch/loongarch/kvm/switch.S
->>>>> +++ b/arch/loongarch/kvm/switch.S
->>>>> @@ -14,13 +14,13 @@
->>>>>   #define GGPR_OFFSET(x)        (KVM_ARCH_GGPR + 8*x)
->>>>>
->>>>>   .macro kvm_save_host_gpr base
->>>>> -    .irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
->>>>> +    .irp n,1,2,22,23,24,25,26,27,28,29,30,31
->>>>>       st.d    $r\n, \base, HGPR_OFFSET(\n)
->>>>>       .endr
->>>>>   .endm
->>>>>
->>>>>   .macro kvm_restore_host_gpr base
->>>>> -    .irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
->>>>> +    .irp n,1,2,22,23,24,25,26,27,28,29,30,31
->>>>>       ld.d    $r\n, \base, HGPR_OFFSET(\n)
->>>>>       .endr
->>>>>   .endm
->>>>> @@ -88,6 +88,7 @@
->>>>>       /* Load KVM_ARCH register */
->>>>>       ld.d    a2, a2,    (KVM_ARCH_GGPR + 8 * REG_A2)
->>>>>
->>>>> +111:
->>>>>       ertn /* Switch to guest: GSTAT.PGM = 1, ERRCTL.ISERR = 0, 
->>>>> TLBRPRMD.ISTLBR = 0 */
->>>>>   .endm
->>>>>
->>>>> @@ -158,9 +159,10 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>       csrwr    t0, LOONGARCH_CSR_GTLBC
->>>>>       ld.d    tp, a2, KVM_ARCH_HTP
->>>>>       ld.d    sp, a2, KVM_ARCH_HSP
->>>>> +    UNWIND_HINT_REGS
->>>>> +
->>>>>       /* restore per cpu register */
->>>>>       ld.d    u0, a2, KVM_ARCH_HPERCPU
->>>>> -    addi.d    sp, sp, -PT_SIZE
->>>>>
->>>>>       /* Prepare handle exception */
->>>>>       or    a0, s0, zero
->>>>> @@ -184,10 +186,11 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>       csrwr    s1, KVM_VCPU_KS
->>>>>       kvm_switch_to_guest
->>>>>
->>>>> +    UNWIND_HINT_UNDEFINED
->>>>>   ret_to_host:
->>>>> -    ld.d    a2, a2, KVM_ARCH_HSP
->>>>> -    addi.d  a2, a2, -PT_SIZE
->>>>> -    kvm_restore_host_gpr    a2
->>>>> +    ld.d    sp, a2, KVM_ARCH_HSP
->>>>> +    kvm_restore_host_gpr    sp
->>>>> +    addi.d    sp, sp, PT_SIZE
->>>>>       jr      ra
->>>>>
->>>>>   SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
->>>>> @@ -200,11 +203,15 @@ SYM_CODE_END(kvm_exc_entry)
->>>>>    *  a0: kvm_run* run
->>>>>    *  a1: kvm_vcpu* vcpu
->>>>>    */
->>>>> -SYM_FUNC_START(kvm_enter_guest)
->>>>> +SYM_CODE_START(kvm_enter_guest)
->>>>> +    UNWIND_HINT_UNDEFINED
->>>>>       /* Allocate space in stack bottom */
->>>>> -    addi.d    a2, sp, -PT_SIZE
->>>>> +    addi.d    sp, sp, -PT_SIZE
->>>>>       /* Save host GPRs */
->>>>> -    kvm_save_host_gpr a2
->>>>> +    kvm_save_host_gpr sp
->>>>> +    la.pcrel a2, 111f
->>>>> +    st.d     a2, sp, PT_ERA
->>>>> +    UNWIND_HINT_REGS
->>>>>
->>>> why the label 111f is more accurate?  Supposing there is hw 
->>>> breakpoint here and backtrace is called, what is the call trace 
->>>> stack then? obvious label 111f is not executed instead.
->>> Xianglai said marking it as regs can get more stack infos, so I use
->>> UNWIND_HINT_REGS marked here, though it not called. Remove
->>> UNWIND_HINT_REGS thenforbid unwind from here.
->>> This function is called and should usually be marked as "call",
->>> but it is complex by switching the stack and use `ertn` calls
->>> another function.
->>>
->>>
->>>>
->>>> UNWIND_HINT_REGS is used for nested kernel stack, is that right?
->>>> With nested interrupt and exception handlers on LoongArch kernel, is 
->>>> UNWIND_HINT_REGS used?
->>>>
->>>> SYM_CODE_START(ret_from_fork_asm)
->>>>         UNWIND_HINT_REGS
->>>>         move            a1, sp
->>>>         bl              ret_from_fork
->>>>         STACKLEAK_ERASE
->>>>         RESTORE_STATIC
->>>>         RESTORE_SOME
->>>>         RESTORE_SP_AND_RET
->>>> SYM_CODE_END(ret_from_fork_asm)
->>>> With this piece of code, what is contents of pt_regs? In generic it 
->>>> is called from sys_clone, era is user PC address, is that right? If so,
->>>> what is detailed usage in the beginning of ret_from_fork_asm?
->>> The stacktrace shows the control flow where the PC will go back, so
->>> it is right because when PC is in ret_from_fork_asm, it is already
->>> another thread. The era means it will go back user mode.
->> The problem is that user mode era shows unwind with error, and 
->> user_mode(regs) is not accurate. here is piece of code.
->>                 pc = regs->csr_era;
->>                 if (!__kernel_text_address(pc))
->>                         goto err;
->> will UNWIND_HINT_END_OF_STACK be better than UNWIND_HINT_REGS?
-> 
-> You are right. And the reason why current the unwinder does not cause
-> error is in case ORC_TYPE_REGS we process it by user_mode(regs).
-user_mode(regs) is unreliable with kernel thread at least:), csr_prmd is 
-set for kernel thread with value csr_read32(LOONGARCH_CSR_PRMD), which 
-is per-board rather than per thread in function copy_thread.
+As a side-effect we get rid of an unwanted inclusion of the linux/
+header namespace from vDSO code.
 
-int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
-{
-         childksp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v3:
+- Rebase on v6.19-rc1
+  - Fix conflict with UML vdso_getcpu() removal
+- Flesh out commit message
+- Link to v2: https://lore.kernel.org/r/20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de
 
-         /* set up new TSS. */
-         childregs = (struct pt_regs *) childksp - 1;
-         /*  Put the stack after the struct pt_regs.  */
-         childksp = (unsigned long) childregs;
-         p->thread.csr_prmd = csr_read32(LOONGARCH_CSR_PRMD);
-         if (unlikely(args->fn)) {
-                 /* kernel thread */
-                 childregs->csr_prmd = p->thread.csr_prmd;
-                 goto out;
-         }
+Changes in v2:
+- Rebase on v6.18-rc1
+- Link to v1: https://lore.kernel.org/r/20250826-getcpu_cache-v1-1-8748318f6141@linutronix.de
+---
+We could also completely remove the parameter, but I am not sure if
+that is a good idea for syscalls and vDSO entrypoints.
+---
+ arch/loongarch/vdso/vgetcpu.c                   |  5 ++---
+ arch/s390/kernel/vdso/getcpu.c                  |  3 +--
+ arch/s390/kernel/vdso/vdso.h                    |  4 +---
+ arch/x86/entry/vdso/vgetcpu.c                   |  5 ++---
+ arch/x86/include/asm/vdso/processor.h           |  4 +---
+ include/linux/getcpu.h                          | 19 -------------------
+ include/linux/syscalls.h                        |  3 +--
+ kernel/sys.c                                    |  4 +---
+ tools/testing/selftests/vDSO/vdso_test_getcpu.c |  4 +---
+ 9 files changed, 10 insertions(+), 41 deletions(-)
 
-Regards
-Bibo Mao
+diff --git a/arch/loongarch/vdso/vgetcpu.c b/arch/loongarch/vdso/vgetcpu.c
+index 73af49242ecd..6f054ec898c7 100644
+--- a/arch/loongarch/vdso/vgetcpu.c
++++ b/arch/loongarch/vdso/vgetcpu.c
+@@ -4,7 +4,6 @@
+  */
+ 
+ #include <asm/vdso.h>
+-#include <linux/getcpu.h>
+ 
+ static __always_inline int read_cpu_id(void)
+ {
+@@ -28,8 +27,8 @@ static __always_inline int read_cpu_id(void)
+ }
+ 
+ extern
+-int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused);
+-int __vdso_getcpu(unsigned int *cpu, unsigned int *node, struct getcpu_cache *unused)
++int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused);
++int __vdso_getcpu(unsigned int *cpu, unsigned int *node, void *unused)
+ {
+ 	int cpu_id;
+ 
+diff --git a/arch/s390/kernel/vdso/getcpu.c b/arch/s390/kernel/vdso/getcpu.c
+index 5c5d4a848b76..1e17665616c5 100644
+--- a/arch/s390/kernel/vdso/getcpu.c
++++ b/arch/s390/kernel/vdso/getcpu.c
+@@ -2,11 +2,10 @@
+ /* Copyright IBM Corp. 2020 */
+ 
+ #include <linux/compiler.h>
+-#include <linux/getcpu.h>
+ #include <asm/timex.h>
+ #include "vdso.h"
+ 
+-int __s390_vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
++int __s390_vdso_getcpu(unsigned *cpu, unsigned *node, void *unused)
+ {
+ 	union tod_clock clk;
+ 
+diff --git a/arch/s390/kernel/vdso/vdso.h b/arch/s390/kernel/vdso/vdso.h
+index 8cff033dd854..1fe52a6f5a56 100644
+--- a/arch/s390/kernel/vdso/vdso.h
++++ b/arch/s390/kernel/vdso/vdso.h
+@@ -4,9 +4,7 @@
+ 
+ #include <vdso/datapage.h>
+ 
+-struct getcpu_cache;
+-
+-int __s390_vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused);
++int __s390_vdso_getcpu(unsigned *cpu, unsigned *node, void *unused);
+ int __s390_vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
+ int __s390_vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts);
+ int __s390_vdso_clock_getres(clockid_t clock, struct __kernel_timespec *ts);
+diff --git a/arch/x86/entry/vdso/vgetcpu.c b/arch/x86/entry/vdso/vgetcpu.c
+index e4640306b2e3..6381b472b7c5 100644
+--- a/arch/x86/entry/vdso/vgetcpu.c
++++ b/arch/x86/entry/vdso/vgetcpu.c
+@@ -6,17 +6,16 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/getcpu.h>
+ #include <asm/segment.h>
+ #include <vdso/processor.h>
+ 
+ notrace long
+-__vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused)
++__vdso_getcpu(unsigned *cpu, unsigned *node, void *unused)
+ {
+ 	vdso_read_cpunode(cpu, node);
+ 
+ 	return 0;
+ }
+ 
+-long getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *tcache)
++long getcpu(unsigned *cpu, unsigned *node, void *tcache)
+ 	__attribute__((weak, alias("__vdso_getcpu")));
+diff --git a/arch/x86/include/asm/vdso/processor.h b/arch/x86/include/asm/vdso/processor.h
+index 7000aeb59aa2..93e0e24e5cb4 100644
+--- a/arch/x86/include/asm/vdso/processor.h
++++ b/arch/x86/include/asm/vdso/processor.h
+@@ -18,9 +18,7 @@ static __always_inline void cpu_relax(void)
+ 	native_pause();
+ }
+ 
+-struct getcpu_cache;
+-
+-notrace long __vdso_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *unused);
++notrace long __vdso_getcpu(unsigned *cpu, unsigned *node, void *unused);
+ 
+ #endif /* __ASSEMBLER__ */
+ 
+diff --git a/include/linux/getcpu.h b/include/linux/getcpu.h
+deleted file mode 100644
+index c304dcdb4eac..000000000000
+--- a/include/linux/getcpu.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _LINUX_GETCPU_H
+-#define _LINUX_GETCPU_H 1
+-
+-/* Cache for getcpu() to speed it up. Results might be a short time
+-   out of date, but will be faster.
+-
+-   User programs should not refer to the contents of this structure.
+-   I repeat they should not refer to it. If they do they will break
+-   in future kernels.
+-
+-   It is only a private cache for vgetcpu(). It will change in future kernels.
+-   The user program must store this information per thread (__thread)
+-   If you want 100% accurate information pass NULL instead. */
+-struct getcpu_cache {
+-	unsigned long blob[128 / sizeof(long)];
+-};
+-
+-#endif
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index cf84d98964b2..23704e006afd 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -59,7 +59,6 @@ struct compat_stat;
+ struct old_timeval32;
+ struct robust_list_head;
+ struct futex_waitv;
+-struct getcpu_cache;
+ struct old_linux_dirent;
+ struct perf_event_attr;
+ struct file_handle;
+@@ -718,7 +717,7 @@ asmlinkage long sys_getrusage(int who, struct rusage __user *ru);
+ asmlinkage long sys_umask(int mask);
+ asmlinkage long sys_prctl(int option, unsigned long arg2, unsigned long arg3,
+ 			unsigned long arg4, unsigned long arg5);
+-asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct getcpu_cache __user *cache);
++asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, void __user *cache);
+ asmlinkage long sys_gettimeofday(struct __kernel_old_timeval __user *tv,
+ 				struct timezone __user *tz);
+ asmlinkage long sys_settimeofday(struct __kernel_old_timeval __user *tv,
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 8b58eece4e58..f1780ab132a3 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -31,7 +31,6 @@
+ #include <linux/tty.h>
+ #include <linux/signal.h>
+ #include <linux/cn_proc.h>
+-#include <linux/getcpu.h>
+ #include <linux/task_io_accounting_ops.h>
+ #include <linux/seccomp.h>
+ #include <linux/cpu.h>
+@@ -2876,8 +2875,7 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 	return error;
+ }
+ 
+-SYSCALL_DEFINE3(getcpu, unsigned __user *, cpup, unsigned __user *, nodep,
+-		struct getcpu_cache __user *, unused)
++SYSCALL_DEFINE3(getcpu, unsigned __user *, cpup, unsigned __user *, nodep, void __user *, unused)
+ {
+ 	int err = 0;
+ 	int cpu = raw_smp_processor_id();
+diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+index bea8ad54da11..3fe49cbdae98 100644
+--- a/tools/testing/selftests/vDSO/vdso_test_getcpu.c
++++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
+@@ -16,9 +16,7 @@
+ #include "vdso_config.h"
+ #include "vdso_call.h"
+ 
+-struct getcpu_cache;
+-typedef long (*getcpu_t)(unsigned int *, unsigned int *,
+-			 struct getcpu_cache *);
++typedef long (*getcpu_t)(unsigned int *, unsigned int *, void *);
+ 
+ int main(int argc, char **argv)
+ {
 
-> 
-> Jinyang
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20250825-getcpu_cache-3abcd2e65437
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
