@@ -1,119 +1,132 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0E72BD5BF
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1782DECCC
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767174755; cv=none; b=MK7t0vr3zBoLmMLhvyvKFHxANsctFmkBMvwxQj7Q2gX3w7dteEXZe8i+T2MEtmudixZlpd+JlfeGRH8bFzq/FF39vY3trqNtmcJH8lfijN1r6qR3IgLTfDpxL6M61GBQnkPOaaFxvhgMpVPYLlI/eRr7DsjbJ15KZRzdZFJk92g=
+	t=1767174794; cv=none; b=FVMiRRWQTiBW5GZ0MIkbHFLvMHGXBEu7yp4jcYujDd9Yt5wEcpMONU+yba3CSMskN1VUYLkBavHDlbR50160FDm2AP6J/7ZTQGSLxB9AHhjDwwXBwguGtHAyajVQeToXqMuhmbHC/jR75EOxkxkF2KvNGrua2okrRgmAYLSsn2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767174755; c=relaxed/simple;
-	bh=VdDmjQ4JAxoYuNrsN0+TyUAhdRxSy8F7hB9plr7UWrc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y4cjBKx1qjeBQu/bVaKcLXRK/KHUBhVtti56awwHM+vbxs7jhpdKgfxHf0xVKghGgtxE7QVeEp1gbGFSe2ApV922KiClI64G9nvWSe3rrH79SC7JlOknZNGAd7wkxQ3FzSMZrOkCOGnGW4okB2tJTVmIAxHkb+JEtpvc8wnq0b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/3EfEEZ; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767174794; c=relaxed/simple;
+	bh=bgKG/XkgrbCcQBOUfd1V/7rkB3OG4Wmzv5QaKooC00k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dvynybbb5TyxwVEUZgcm47Z+4Cljnr23O0NAqWzr0e/ZGkFbelhlBpvS9E16FzbF+h9RlqtBeSJC9KLiWUDC/2nC1L7CGigLAE2BhYA/7/69PvYvuRfZKrKJX9FYXhq4GgA8EC4ht9lAcg3inYZpS62lWPVuHdZOmMEaXG3MKtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kA0qCy5s; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/3EfEEZ"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-45330fe6e1bso6381918b6e.2
-        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 01:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767174752; x=1767779552; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bYkBJheeZCz4A/o1R3uoPvR1MpxvgYK6K0B73qt4Egk=;
-        b=P/3EfEEZvuZMY8pcVrsqaWrarYWS32f/vLTJAu41lk0eq1WpNbGyxAfx/nluNsqGh1
-         ZJ6a+SRYt+/HO/r6uzDxf6tnY5DvcAOKz6AL51hqMzC1kt+PSm39ScM/p+9q9D//nzEp
-         ONbYbM5UCKjpHSV0VZNcCzM6HK7g8xigsh2w06ElY72Uw8FvnnRVwcmMsQxg05qdiIHC
-         mdZPIexL3PBNX+XLl9yCnmSM50OMUoLkOwAb1XMKQ6ZeFX+ihAFiXFrTG5dbRL5sWlDy
-         AezKK+ihCXzwWsZqq5LG3XzgUsAdybhTk28fn2J5mrru+b70qpR8kZRVl5UGsa2j5xhV
-         Dzvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767174752; x=1767779552;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bYkBJheeZCz4A/o1R3uoPvR1MpxvgYK6K0B73qt4Egk=;
-        b=BZwpvccjaN77rLhrURaDBsAKh8l/2ff8josOtPjIbgjMoEaqY/pNhu6b7g0mAFrJP7
-         gldAycyAk8Qr9EKZ8sbvyYT36iR0J3BGL09Vwat3C/8gP83QsBzei/ercdpYffz1BVSq
-         rjqVTdSEsgmBzef0OSnia7NwdzFGkt+L4TsxF1zXigZNzyoOVYmL/VjA+d0HaVeEQqdR
-         NKZsN+dGDH2p9Z4q69tw1Y+xFBhdJDKHVx3vBmOZD516Pkv4Etj2OzG6/CXT98UgEjit
-         0qUouMyG24fThETndT1qNvvaqr20KeDI6WByPfE/Fxk1pR7ct3Triuwz4EgzEzYwCXfp
-         tuDA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+V+XGNJJQ+PhJceIkJXIY5ZFCiAP2+ngTjcWoiGDaFM1mZB7aDyrRS1ng+qDWQ/rZq4FyxyFzFTU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yya1LJjCVq7Fj4Q/9jwh32/KTXSiDZI/AeRNPypdAnGkBdN2hiq
-	sx87tsZF5TPz6/YPW09J+dEtw+PtJpq+1dAmJMlh8kApOi/UiZ+zCgdOetXiruh3IcjDwTx088L
-	HDPxdysYXaxlffMe3mN14A8JsK0r3QrU=
-X-Gm-Gg: AY/fxX4iYgt9Nxar1MwoRk9ofD4am0l9yNefF9uhn4vd0L26KfuXiWqq7OY1v+wBrXR
-	FDAS8DbXrrbqt5oAzQLRW8OsYLwdgfB4LW7LWRnovoaJ5ij4TS4fy9rapNpJgmH6dGyllMJS66g
-	On+cCMWsNgfZjJEXajxHF3+BMEVJAt4+rPy3vSAGiTs3wPAwiatjHZ7mFupjZi/62E+3TY205O1
-	1FNwr0y6iA4vuVLimjd0RjgsT7eYKVgY/HoxiB/+JFD5AufhA0Dil0+BK2A6PE2zsFR7bLb
-X-Google-Smtp-Source: AGHT+IEpSiYoU4+fxBrvVnsK2b6+pCIzNeEu7EOnft50+VMESr8CNN11a9rNzKZLxWaS5m6tnQOIgXRkR3DWQC5F20A=
-X-Received: by 2002:a05:6808:19a6:b0:43d:6a69:7752 with SMTP id
- 5614622812f47-457b1e54ebbmr18591948b6e.2.1767174752360; Wed, 31 Dec 2025
- 01:52:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kA0qCy5s"
+Message-ID: <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767174787;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wl7HEoZMUzGsbQepWMVSfO0JV4YjBapS0e5mq4W7b+4=;
+	b=kA0qCy5swxT9/bUHnpErzkaTUIfgXxao85n1AotjzFLMJUomMkCAQjLXpZ4B+KRO9Tbq2L
+	WU+1OAl5FxBAuCo1I3+CkOeCjPhLEPbag/rozOxh+CRn8kHOwBSKIYK4ige8l1o+gK7jtK
+	Vz5BljGIGicYjbCKFeIBggxM5nn/wOQ=
+Date: Wed, 31 Dec 2025 17:52:57 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEyhmHSi1LPW75Ovt=M8-8sv1S2LRmZw_YduJt9OUoy+OMSjKg@mail.gmail.com>
- <20251231034523.47014-1-dongtai.guo@linux.dev> <20251231034523.47014-4-dongtai.guo@linux.dev>
-In-Reply-To: <20251231034523.47014-4-dongtai.guo@linux.dev>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 31 Dec 2025 17:52:21 +0800
-X-Gm-Features: AQt7F2p2lw0Dv9RAghXy4xrSApINc5ktEh2CMRdUCMMWOkRUGLVrae8A6OFbjyk
-Message-ID: <CAEyhmHThJUgJED4FcAB6waVadTNJzSx4bFfsUw-4TZEeRjcF3w@mail.gmail.com>
-Subject: Re: [PATCH v8 loongarch-next 3/3] LoongArch: Enable 128-bit atomics
- cmpxchg support
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, guodongtai@kylinos.cn, kernel@xen0n.name, 
-	lianyangyang@kylinos.cn, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, r@hev.cc, xry111@xry111.site
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
+ MMU_GATHER_RCU_TABLE_FREE
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ peterz@infradead.org, dev.jain@arm.com, akpm@linux-foundation.org,
+ david@kernel.org, ioworker0@gmail.com, linmag7@gmail.com,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
+References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+ <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
+ <20251231094243.zmjs7kgflm7q6k73@master>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Qi Zheng <qi.zheng@linux.dev>
+In-Reply-To: <20251231094243.zmjs7kgflm7q6k73@master>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Dec 31, 2025 at 11:45=E2=80=AFAM George Guo <dongtai.guo@linux.dev>=
- wrote:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> Add select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE in Kco=
-nfig
-> to enable 128-bit atomic cmpxchg support on LoongArch.
->
 
-Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
-Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
 
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 730f34214519..f9845ebec1a4 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -114,6 +114,7 @@ config LOONGARCH
->         select GENERIC_TIME_VSYSCALL
->         select GPIOLIB
->         select HAS_IOPORT
-> +       select HAVE_ALIGNED_STRUCT_PAGE
->         select HAVE_ARCH_AUDITSYSCALL
->         select HAVE_ARCH_BITREVERSE
->         select HAVE_ARCH_JUMP_LABEL
-> @@ -130,6 +131,7 @@ config LOONGARCH
->         select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->         select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
->         select HAVE_ASM_MODVERSIONS
-> +       select HAVE_CMPXCHG_DOUBLE
->         select HAVE_CONTEXT_TRACKING_USER
->         select HAVE_C_RECORDMCOUNT
->         select HAVE_DEBUG_KMEMLEAK
-> --
-> 2.49.0
->
+On 12/31/25 5:42 PM, Wei Yang wrote:
+> On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
+>> From: Qi Zheng <zhengqi.arch@bytedance.com>
+>>
+>> The PT_RECLAIM can work on all architectures that support
+>> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
+>> MMU_GATHER_RCU_TABLE_FREE.
+>>
+>> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
+>> to turn it off.
+>>
+>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>> ---
+>> arch/x86/Kconfig | 1 -
+>> mm/Kconfig       | 9 ++-------
+>> 2 files changed, 2 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 80527299f859a..0d22da56a71b0 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -331,7 +331,6 @@ config X86
+>> 	select FUNCTION_ALIGNMENT_4B
+>> 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>> 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
+>> 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
+>> 	select SCHED_SMT			if SMP
+>> 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index bd0ea5454af82..fc00b429b7129 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
+>> 	  The architecture has hardware support for userspace shadow call
+>>            stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+>>
+>> -config ARCH_SUPPORTS_PT_RECLAIM
+>> -	def_bool n
+>> -
+>> config PT_RECLAIM
+>> -	bool "reclaim empty user page table pages"
+>> -	default y
+>> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
+>> -	select MMU_GATHER_RCU_TABLE_FREE
+>> +	def_bool y
+>> +	depends on MMU_GATHER_RCU_TABLE_FREE
+>> 	help
+>> 	  Try to reclaim empty user page table pages in paths other than munmap
+>> 	  and exit_mmap path.
+> 
+> Hi, Qi
+> 
+> I am new to PT_RECLAIM, when reading related code I got one question.
+> 
+> Before this patch,  we could have this config combination:
+> 
+>      CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
+> 
+> This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
+> is semi rcu version.
+> 
+> I am curious could we use rcu version tlb_remove_table_one() for this case?
+> Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
+> there some limitation here?
+
+I think there's no problem. The rcu version can also ensure that the
+fast GUP works well.
+
+> 
+> Thanks in advance for your explanation.
+> 
+> 
+
