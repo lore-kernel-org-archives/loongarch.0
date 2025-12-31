@@ -1,60 +1,41 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2602E764D
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CB51C84D0
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767174853; cv=none; b=nv8MAJvFlIFtfuZwLfbhsBk5BkvHewghT9WhPFgDB8jYvaPVkas3U9Ic+jT9lAiR6TqdQZP40anB3yAmAgR/d6U8ShpkY/Y8iygG6eZo90yGJusMd94fkMCfbLIURGPngEvYnQY/61QrSyercsta9J6GHVYiFWj0E43ujUss5MA=
+	t=1767174946; cv=none; b=NI/bH31dXtZZnuLPTlDxDprS7Iz+hafUw15aX0vKkt12geaWG3vGpYaNW2a7GaLkvLJjJkm29Qc0RD5lLRgV+HqJfY6B1ysDjZNx51PJvdwwiD5xQMjvSjBl78185W38LNU2JW90jHS8EyLsRBNMctqov/wgtGgyuZlElzfZP1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767174853; c=relaxed/simple;
-	bh=bEi3yA7beP326f7yCZGUawTeRehwZ+7gYSiuGu9JeFY=;
+	s=arc-20240116; t=1767174946; c=relaxed/simple;
+	bh=U8pRaWuDClfDkRPXfSisSfcHdN6dCJ/A41uH5GBl544=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VzARblrYWM8+QVtMKfzGoQZcyDswquPBevVoH7/PjozUpQ0Pz5C4Dykydn45V5DDUzdpnkqYsbkhsA4SpcWyLQx1z7zVrNxukzkXAp87SrlDlaR1oPwtHvcM9A14RCiSEb3kwg4TaEornISw7sF39rdrwAglOy8Ce2saMsVVj8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SyQupURH; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=enReuPdKID6Gw7ImApKMdVrsEjBRa0ztniP/ZAX5xOl3pe7zbT58KmeMgkFHEhy2rgC3pa6OLzI6vZi37R0qeBg/f/AwJny3qQnBmOScwYvUvOTY2Wfmde33j9w7jSwRsT0qLpfETsbShloA5cgBH1abkqwwI00UsugpoovmxnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohB3Ti2T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyQupURH"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-65d0441b6feso5844931eaf.1
-        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 01:54:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767174850; x=1767779650; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t5StrHsTF5tROD1aore/lts+Ly3U26MHaw2cokMpxm4=;
-        b=SyQupURH1cfFRMXlSFXUb7xnKRQPF50kYQ8JTiEKQpOgeWnI2yVajtK5p3tCMcZto0
-         +N79o3vzrNsJDrBgmRMcUdStrNHMCbBeVEViyPh3yKM+VLg72xQyf8b5zDv9A4mWhk5f
-         Co2eHzm0zoAMw6q22WPvMCQ4d5Ypk/qbfXiTUJXOS/NmNBlRW0A9P7a1tDTOq2ZyFquL
-         Xzd6WvyqA6KuskMLmTI/SnBMNf9bAUa5IgrlVb07PAB5is/vyFHNQhkJMKRGzouFDavL
-         EQojr0a1+XeoDPK6L7s6rvRCrY+S+hKUmQkAt3DSkbWGH+qEJYQwECVJf6QEZNqnhCho
-         VU5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767174850; x=1767779650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=t5StrHsTF5tROD1aore/lts+Ly3U26MHaw2cokMpxm4=;
-        b=mTEnkEovP3lU6GiE+blw8u1A79QtiScyc3Ss/eY1t1V5eK41EWdbChRqqEQHPrQ1KP
-         Rqvt42Di/fDztUST0IyHeoEuh8Jbwi9kgYeavs/pUfRCFQwAJkmmJ/N4MWB5D1f3IS4N
-         nV+FnEY4ZjFUARh4+Y6Jt9wwtoGWuhbVfMcGt/2nbV+QY2/EHPo0ECfMR4dRsLjTfef8
-         nwjbDBXzCq5v3II9NwAAVcO4J2oZr/Z7I1qNudABHMO+J5NdpXINw97ke8Ey0aYjUKG4
-         LTZQLi1fkLD9GIT/Mw/inmWxApYi2y6ODK5GobYdeZNH9Db998wp+vY73R4a6p2tsVIK
-         ofqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqS/Jo4+N6opA5o0mfk7dM1RpFAkJyyr3q0lTTN9JPvVpMhzU4GrrUa53o5xAO/yO+WH8fpXfWBo8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyNHnOm1QXkfead1EGSzYPpkBIw0wcXVI4uZNocUsOFT7I78Kxj
-	MOytyGRg4qxNpDHF+frrw1uC+tpclDNSgWAWxo/lU6hIM95AkYMtdvoHI/+Nxz7LvMleoGUl8wd
-	FjkxWPLMfFYjbZzoOJ911ccQFJZzX4Mo=
-X-Gm-Gg: AY/fxX6gJRjkSvPMyti+1tVGwaMgwS2w0gwpNcdwcAQgD170SSLOVD4P2zFqWxP1x3n
-	UHA2OzAntFM8Mhw2cW30h1IlwNex7x5aFC2vAVF72WFtWDq3rVuuwZXV5HMOtXaBVof794A8I4U
-	hPeW2zB7jHcbNde02aEy/6pkSNJdnh5XjVjG5doaeHCvJEIXEkyeN6jFOXc/sRGijdHAJ2vUY5N
-	8Fadn7s2X8xhX+iG51DChFLarC32lY8l9qN0PC5qFyH9Kp0mOOiotaXqCegroVs+lFTR7e4e7V5
-	ryAr4F0=
-X-Google-Smtp-Source: AGHT+IFh75EF02POubq7ezc+kfgHd0IdVkEaSlMiqqM9Lf0eT+WAWUL7AyCtm/PgXm94t1ed4BEKC1uMVav7rBzKAEE=
-X-Received: by 2002:a4a:dc0c:0:b0:65c:a528:bb6d with SMTP id
- 006d021491bc7-65d0e94d6aemr12860001eaf.7.1767174850111; Wed, 31 Dec 2025
- 01:54:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohB3Ti2T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EB2C19425
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767174946;
+	bh=U8pRaWuDClfDkRPXfSisSfcHdN6dCJ/A41uH5GBl544=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ohB3Ti2TO4shDOA7MhbsWoCvDbqQ36gJdNguLRKbR4UvsauN/eY+Wb+9lDR/+o1SG
+	 bfuqoqhd5vFbL53W/fRD8t8GJS4TbeB9TENX6Y4uvwN1z9bfPiDnfNaGIo9tdD4WYd
+	 3ZegbB3vOCJXW4XCmeUTuz6zo4d6ZsCeoESIeyVz+pcLOi/FAN8cQIitE5F1As4LY6
+	 Aq3CJhhptYbKHfrdkTgsXBeXFOh8SZGy9i2njnvy31+yvoYQcwGpwUu4FgJbx9ipVS
+	 WBf2m9JV397Qx3nRYaPFDHa+LtikpCq4nDP5tE6OBS3W6aPN3Ftf2xtAf0r6ABW0u1
+	 RA89mDhuWjFOg==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b7eff205947so1524486666b.1
+        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 01:55:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVwB+HJOIyj45uXHLHcDjI2JmwCwuzRxFQwNtaVCc/yKrxc7qKDYUjSEWTIP/veH7uJvyaPOvfoZXA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJnDygTdo+57PjuJdtYsOpY9GYnJnjPLb812Z+EpLuUgDdJqw4
+	4oBLtEpXPfBzyNbrjfGgErFRdB+co9o8R8I8D2o+S5OPDlkiheytYwS6qOY+HVc1djr2Z4g8j00
+	fEtNaODTJxhR6WFt6+ZHAqYcFELh85Dg=
+X-Google-Smtp-Source: AGHT+IEPAl6cq0a7EB5PFUs/O4xTdBWsWghu79A6GXQ3tPMk+jtbtR4nJaOBN9Fhg17Jh15rofx70eV8HGbZU4L6fYQ=
+X-Received: by 2002:a17:907:6e9f:b0:b73:8cea:62b3 with SMTP id
+ a640c23a62f3a-b803704ffd7mr3609393866b.41.1767174944883; Wed, 31 Dec 2025
+ 01:55:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,159 +43,137 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <CAEyhmHSi1LPW75Ovt=M8-8sv1S2LRmZw_YduJt9OUoy+OMSjKg@mail.gmail.com>
- <20251231034523.47014-1-dongtai.guo@linux.dev> <20251231034523.47014-3-dongtai.guo@linux.dev>
-In-Reply-To: <20251231034523.47014-3-dongtai.guo@linux.dev>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 31 Dec 2025 17:53:57 +0800
-X-Gm-Features: AQt7F2q5hZgZcfhokN-Vgpx-yoFO8h4PGitaskxykvA0kIafmrvsIaCWSBIRDEk
-Message-ID: <CAEyhmHTvh-N4yDiJZUGFHinra0-gys+8RQfh5XhFG3RTGHPn2g@mail.gmail.com>
-Subject: Re: [PATCH v8 loongarch-next 2/3] LoongArch: Add 128-bit atomic
+ <20251231034523.47014-1-dongtai.guo@linux.dev>
+In-Reply-To: <20251231034523.47014-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 31 Dec 2025 17:56:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4UjnewKEo6ZqC5H-kxna8wF2s2vowGzcWZWLiFEu-vZQ@mail.gmail.com>
+X-Gm-Features: AQt7F2odl_kCuENWIQ8xaZEV1q6rGomMVoCDXfndTdXxq3jwtI7uN9LIU9joOM4
+Message-ID: <CAAhV-H4UjnewKEo6ZqC5H-kxna8wF2s2vowGzcWZWLiFEu-vZQ@mail.gmail.com>
+Subject: Re: [PATCH v8 loongarch-next 0/3] LoongArch: Add 128-bit atomic
  cmpxchg support
 To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, guodongtai@kylinos.cn, kernel@xen0n.name, 
+Cc: hengqi.chen@gmail.com, guodongtai@kylinos.cn, kernel@xen0n.name, 
 	lianyangyang@kylinos.cn, linux-kernel@vger.kernel.org, 
 	loongarch@lists.linux.dev, r@hev.cc, xry111@xry111.site
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+Hi, George,
+
 On Wed, Dec 31, 2025 at 11:45=E2=80=AFAM George Guo <dongtai.guo@linux.dev>=
  wrote:
 >
-> From: George Guo <guodongtai@kylinos.cn>
+> This patch series adds 128-bit atomic compare-and-exchange support for
+> LoongArch architecture, which fixes BPF scheduler test failures caused
+> by missing 128-bit atomics support.
 >
-> Implement 128-bit atomic compare-and-exchange using LoongArch's
-> LL.D/SC.Q instructions.
+> The series consists of three patches:
 >
-> For LoongArch CPUs lacking 128-bit atomic instruction(e.g.,
-> the SCQ instruction on 3A5000), use a spinlock to emulate
-> the atomic operation.
+> 1. "LoongArch: Add SCQ support detection"
+>     - Check CPUCFG2_SCQ bit to determin if the CPU supports
+>     SCQ instrction.
 >
-> At the same time, fix BPF scheduler test failures (scx_central scx_qmap)
-> caused by kmalloc_nolock_noprof returning NULL due to missing
-> 128-bit atomics. The NULL returns led to -ENOMEM errors during
-> scheduler initialization, causing test cases to fail.
+> 2. "LoongArch: Add 128-bit atomic cmpxchg support"
+>    - Implements 128-bit atomic compare-and-exchange using LoongArch's
+>      LL.D/SC.Q instructions
+>    - For LoongArch CPUs lacking 128-bit atomic instruction(e.g.,
+>      the SCQ instruction on 3A5000), use a spinlock to emulate
+>      the atomic operation.
+>    - Fixes BPF scheduler test failures (scx_central scx_qmap) where
+>      kmalloc_nolock_noprof returns NULL due to missing 128-bit atomics,
+>      leading to -ENOMEM errors during scheduler initialization
 >
-> Verified by testing with the scx_qmap scheduler (located in
-> tools/sched_ext/). Building with `make` and running
-> ./tools/sched_ext/build/bin/scx_qmap.
+> 3. LoongArch: Enable 128-bit atomics cmpxchg support"
+>    - Adds select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE
+>      in Kconfig to enable 128-bit atomic cmpxchg support
 >
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/=
-?id=3D5fb750e8a9ae
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> The issue was identified through BPF scheduler test failures where
+> scx_central and scx_qmap schedulers would fail to initialize. Testing
+> was performed using the scx_qmap scheduler from tools/sched_ext/,
+> confirming that the patches resolve the initialization failures.
+>
 > ---
+> Changes in v8:
+> - Merge patch 2 and patch 3 into one patch
+> - Put HAVE_CMPXCHG_DOUBLE in order
+> - Link to v7: https://lore.kernel.org/all/20251230013417.37393-1-dongtai.=
+guo@linux.dev/
+I don't know why you make all versions in a single thread, and the
+version numbers of cover letters are always wrong.
 
-Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
-Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
+For the code itself:
+1. You said you have set hwcaps, but you completely ignore
+arch/loongarch/include/uapi/asm/hwcap.h, I don't know why.
+2. You can simply do
+ #define system_has_cmpxchg128()  (cpu_has_scq)
+and don't need to define __cmpxchg128_locked(), which is the same as
+X86 and RISC-V.
 
->  arch/loongarch/include/asm/cmpxchg.h | 66 ++++++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
+
+Huacai
+
 >
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 0494c2ab553e..ef793bcb7b25 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -8,6 +8,7 @@
->  #include <linux/bits.h>
->  #include <linux/build_bug.h>
->  #include <asm/barrier.h>
-> +#include <asm/cpu-features.h>
+> ---
+> Changes in v7:
+> - Create patches based on loongarch-next branch(previously used master)
+> - Link to v6: https://lore.kernel.org/r/20251215-2-v6-0-09a486e8df99@linu=
+x.dev
 >
->  #define __xchg_amo_asm(amswap_db, m, val)      \
->  ({                                             \
-> @@ -137,6 +138,61 @@ __arch_xchg(volatile void *ptr, unsigned long x, int=
- size)
->         __ret;                                                          \
->  })
+> Changes in v6:
+> - Put SCQ information in hwcap
+> - Link to v5: https://lore.kernel.org/r/20251212-2-v5-0-704b3af55f7d@linu=
+x.dev
 >
-> +union __u128_halves {
-> +       u128 full;
-> +       struct {
-> +               u64 low;
-> +               u64 high;
-> +       };
-> +};
-> +
-> +#define __cmpxchg128_asm(ptr, old, new)                                 =
-       \
-> +({                                                                     \
-> +       union __u128_halves __old, __new, __ret;                        \
-> +       volatile u64 *__ptr =3D (volatile u64 *)(ptr);                   =
- \
-> +                                                                       \
-> +       __old.full =3D (old);                                            =
- \
-> +       __new.full =3D (new);                                            =
- \
-> +                                                                       \
-> +       __asm__ __volatile__(                                           \
-> +       "1:   ll.d    %0, %3            # 128-bit cmpxchg low   \n"     \
-> +       __WEAK_LLSC_MB                                                  \
-> +       "     ld.d    %1, %4            # 128-bit cmpxchg high  \n"     \
-> +       "     bne     %0, %z5, 2f                               \n"     \
-> +       "     bne     %1, %z6, 2f                               \n"     \
-> +       "     move    $t0, %z7                                  \n"     \
-> +       "     move    $t1, %z8                                  \n"     \
-> +       "     sc.q    $t0, $t1, %2                              \n"     \
-> +       "     beqz    $t0, 1b                                   \n"     \
-> +       "2:                                                     \n"     \
-> +       __WEAK_LLSC_MB                                                  \
-> +       : "=3D&r" (__ret.low), "=3D&r" (__ret.high)                      =
-   \
-> +       : "r" (__ptr),                                                  \
-> +         "ZC" (__ptr[0]), "m" (__ptr[1]),                              \
-> +         "Jr" (__old.low), "Jr" (__old.high),                          \
-> +         "Jr" (__new.low), "Jr" (__new.high)                           \
-> +       : "t0", "t1", "memory");                                        \
-> +                                                                       \
-> +       __ret.full;                                                     \
-> +})
-> +
-> +#define __cmpxchg128_locked(ptr, old, new)                             \
-> +({                                                                     \
-> +       u128 __ret;                                                     \
-> +       static DEFINE_SPINLOCK(lock);                                   \
-> +       unsigned long flags;                                            \
-> +                                                                       \
-> +       spin_lock_irqsave(&lock, flags);                                \
-> +                                                                       \
-> +       __ret =3D *(volatile u128 *)(ptr);                               =
- \
-> +       if (__ret =3D=3D (old))                                          =
-   \
-> +               *(volatile u128 *)(ptr) =3D (new);                       =
- \
-> +                                                                       \
-> +       spin_unlock_irqrestore(&lock, flags);                           \
-> +                                                                       \
-> +       __ret;                                                          \
-> +})
-> +
->  static inline unsigned int __cmpxchg_small(volatile void *ptr, unsigned =
-int old,
->                                            unsigned int new, unsigned int=
- size)
->  {
-> @@ -224,6 +280,16 @@ __cmpxchg(volatile void *ptr, unsigned long old, uns=
-igned long new, unsigned int
->         __res;                                                          \
->  })
+> Changes in v5:
+> - Reordered the patches
+> - Link to v4: https://lore.kernel.org/r/20251205-2-v4-0-e5ab932cf219@linu=
+x.dev
 >
-> +/* cmpxchg128 */
-> +#define system_has_cmpxchg128()                1
-> +
-> +#define arch_cmpxchg128(ptr, o, n)                                     \
-> +({                                                                     \
-> +       BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
- \
-> +       cpu_has_scq ? __cmpxchg128_asm(ptr, o, n) :                     \
-> +                       __cmpxchg128_locked(ptr, o, n);                 \
-> +})
-> +
->  #ifdef CONFIG_64BIT
->  #define arch_cmpxchg64_local(ptr, o, n)                                 =
-       \
->    ({                                                                   \
+> Changes in v4:
+> - Add SCQ support detection
+> - Add spinlock to emulate 128-bit cmpxchg
+> - Link to v3: https://lore.kernel.org/r/20251126-2-v3-0-851b5a516801@linu=
+x.dev
+>
+> Changes in v3:
+> - dbar 0 -> __WEAK_LLSC_MB
+> - =3DZB" (__ptr[0]) -> "r" (__ptr)
+> - Link to v2: https://lore.kernel.org/r/20251124-2-v2-0-b38216e25fd9@linu=
+x.dev
+>
+> Changes in v2:
+> - Use a normal ld.d for the high word instead of ll.d to avoid race
+>   condition
+> - Insert a dbar between ll.d and ld.d to prevent reordering
+> - Simply __cmpxchg128_asm("ll.d", "sc.q", ptr, o, n) to __cmpxchg128_asm(=
+ptr, o, n)
+> - Fix address operand constraints after testing different approaches:
+>   * ld.d with "m"
+>   * ll.d with "ZC",
+>   * sc.q with "ZB"(alternative constraints caused issues:
+>    - "r"  caused system hang
+>    - "ZC" caused compiler error:
+>      {standard input}: Assembler messages:
+>      {standard input}:10037: Fatal error: Immediate overflow.
+>      format: u0:0 )
+> - Link to v1: https://lore.kernel.org/r/20251120-2-v1-0-705bdc440550@linu=
+x.dev
+>
+> George Guo (3):
+>   LoongArch: Add SCQ support detection
+>   LoongArch: Add 128-bit atomic cmpxchg support
+>   LoongArch: Enable 128-bit atomics cmpxchg support
+>
+>  arch/loongarch/Kconfig                    |  2 +
+>  arch/loongarch/include/asm/cmpxchg.h      | 66 +++++++++++++++++++++++
+>  arch/loongarch/include/asm/cpu-features.h |  1 +
+>  arch/loongarch/include/asm/cpu.h          |  2 +
+>  arch/loongarch/include/asm/loongarch.h    |  1 +
+>  arch/loongarch/kernel/cpu-probe.c         |  2 +
+>  arch/loongarch/kernel/proc.c              |  1 +
+>  7 files changed, 75 insertions(+)
+>
 > --
 > 2.49.0
 >
