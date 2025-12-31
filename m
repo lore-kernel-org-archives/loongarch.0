@@ -1,147 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9269313E37
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 10:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F0A22258C
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 15:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767175741; cv=none; b=FsQa3TIH4un5vviBt9TSmZhVNtYKMnrlSZtnjrLNBZpZsaN0lDlO3oftflo828YR3qrl7cC8kv9EOFAJj3x9bFgSCqP7DvDfwk1XnHPXep7bUmuSZSYAiZpPLw0KK3EyFlVFWdT6dFROBuGQdI3zv/pRcSCuLpR1jVO6g9kc0zM=
+	t=1767196188; cv=none; b=EylcrOkry/7i3eE+xYmemxZ5E8vpi16EFcLRDyulFlHI0se92FIz5CQTxAWtoHI/ieUm0WwVXhpWGDWxcksBIL2SsrnwQQY1cCEqHj2K9MxTDyQKae6VqPbq90dHZwAXAPTiacgFywoSINmZd84BMVWrcU8+HjEXUlPghl/vfOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767175741; c=relaxed/simple;
-	bh=QB666z0WcUC/viohN8xjIcPSHIzzC1N7fVP0HdlRvIs=;
+	s=arc-20240116; t=1767196188; c=relaxed/simple;
+	bh=3O2pKoi3Hwirhh0+J04ChOJnDVUiP3w0hlE8zKMOybs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SZYyiIynXSVMFVmirSiBlyThg3dlPBGqoId8EfY4OvDeKDBxvUQUnJnj5APlxP5l5PbZq+UhQuClrofFGDOW0Pv7nFbX7EcSZ/mbzUsWfYVWaVff1BM+bYqmxK5ZOGH6FtYW4O+hhZVdSl0saNE2xM4Kb/TOJdnmLOapS7VboGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XizlKlDM; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=jPBXIxZhvX1fdwySwbHvHcw2qkFlHI+/g3KkBcJ8sKqJRTgyoZYF1i2MS86tX2lFWNfOZw/LehZUyA9l2fjKobEb+GEZP3V2luomyifhypCKwoHka12WMn+/LPxXkfIUgeFDEjfKNB+Q3C5uP0W80JlKM+BM3lIbDBDVpWuAd74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZgB1sSJE; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XizlKlDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA48C4AF0B
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 10:09:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767175741;
-	bh=QB666z0WcUC/viohN8xjIcPSHIzzC1N7fVP0HdlRvIs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XizlKlDMPw4EWKzueJlEuaQgKavUYoFXHnNGNXZfQ7NHuX4uO1ZkeX6fofuABleZo
-	 mPC391tzdIGG8x34cvMXl+9jv/MkZDaFt3w36lZBj9lJwgZOpGwuhaxN157oK7Y9hf
-	 5+LshpSPyKX3MCfTF1vgzAMY1lvjDfvhn7GMrLbN3KyKtbqcFSLREPJHQqUY9p5pV9
-	 AOvH9Xjgz23JIGdAqyf6tbQxzK+xZCIPLLhGwJLhzPiCp4LNWbg69R0ON1ZwC0WNvP
-	 XTWlSNPQSXo7lL+tceHTz0hkM+Z3SRe6yHlKJLrJQ55Esp/Zd8x8lnNwEzjVgYvfQ8
-	 ixvw3q8Ksu/GQ==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b725ead5800so1506964266b.1
-        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 02:09:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8wLTW2c2b5NhAZG52cHpULGitjcaERXbLYJXuvXQYN6IcRbDdzY6kdX4t1ZznM8MwnTE1kuBm30k=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx63equOzrPHSDxlenoexsM3yDogeZZ7a5SWgD0DYNM20Wpoxxi
-	nZ7vK3mi1yHx+rmCthxwx0ldvx49wvrllwgKiVrdtvM5SqEhvtRPt7snbrHdEJtrx58xoWMUOiJ
-	bq7GwzAk7Maqio5/J1uYWaUHOU5qDT5w=
-X-Google-Smtp-Source: AGHT+IFTUyzn1b3cAIZ/oQN/MhAntxBWi/Ew6QqFWoEvDuEWuQlCiSCn8Zz0270Z9EIfBpri+XHm6zgHVBi+B8B/85M=
-X-Received: by 2002:a17:907:1c17:b0:b76:31e6:2ee1 with SMTP id
- a640c23a62f3a-b8036f65331mr3513451766b.18.1767175739871; Wed, 31 Dec 2025
- 02:08:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgB1sSJE"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-64d0d41404cso13327075a12.0
+        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 07:49:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767196183; x=1767800983; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H6r7yw9l553CBnZ0Oq6/Kvj3e3aIbXAlTRdm8Qc8sow=;
+        b=ZgB1sSJEHJH4D9JedGwPy2j+AxV+ihyNtO+X6p6FxEO0MyHmZzW6FBcBOYvfsn/Dos
+         vb11Pgi8Vpi4buftbk8OsPEbwPGOzs1d9pAgH+5OtWGS48nDmcixq22wdDWWbh5nT5aD
+         HuW9Wv/faRsEtX8Rc6bI0q6IDcCFcHFedQ09+ZUjI5EoqrK1rItyMqQcUWV02ABGdIIw
+         dCf03dmjVNfkUuYTms9p4BCND0hTu2fQ2qxjOJQBUIbsTKYTb++AFLlNsWSV8nE9mkS9
+         rSM3uG0dFSP7I4TblHiLBPHgwFxhhxi0+4Deedw/UrER+DyVLgaKoDYdq9sDAh+Sya6E
+         8dlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767196183; x=1767800983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=H6r7yw9l553CBnZ0Oq6/Kvj3e3aIbXAlTRdm8Qc8sow=;
+        b=ZalpO4JtRYf77iH3izZ2ciETtjL0YokvErnX8nchC0Ejnp7ou4P+bFIKPGYvPAjNsW
+         hkri3i8KGUj+QvB9JBOFbUSbgKYxdOth5DwceYZw+0kjiXMVPI8+PFysURYaj0M0CywN
+         +9GtS03wZn4TmWo+cIJPsCDbXFl1jgDD1I4LtyYD0Gf8b+A9xMCFTzmAMTXIheAnM3Hb
+         2GMxe5cUGOmoej+rPMk/peZiVQxsqzzyfV9mCP76QfsBmI7Zxi/0b3G65xSADzvxpN64
+         k1OFPxS30jmtzRaiR7Fa2MJpD68sb69DkwPJjPDwocLQR6mTzKxEtjTzvOaprGCihrYu
+         tYCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXLhkFRN2EtRzJnLRSLGN50fZAfB5GJbuLghFLHem7euBwtnojBwokIS0a0uPygNCegR72Muzpi5Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwG71uR/ZqjuoZe0jbkDPvNVLkt/MEH7tXnOjyaj9m18d6apJGp
+	Ysy5yO6ktu27YYLzXVTjNFvnVznQTBVnoGJevtPlWKpIu7lOuZBnyQ4FcIVdz2aYAxXqUTZE3DR
+	OWrNX++CJIEE6KnFpkAMs6ZoRRa6G8Ak=
+X-Gm-Gg: AY/fxX6xgiG1+uUNMAQ+vi7bre2CujBkAyevFzr6hHfh8YoycCq5nIWX+Uajek9JkuA
+	Hyh9CCclu86F0HfIEZ4pojvLmbt+ISU7EzBGx4WFoJ3Zs2yRzhMWMbTKTtCIF039wIaoMeTT6Ar
+	9aLwFdEwuhczO0pkyQbL9LnvxhCSn5xVoDk0Kmnjmis1FBRo2XzWpfl90U6sU/V2BinT5img/z9
+	tep1Fsra6tggR69LKiCsZv8BPA1BCO6XfJUjpqP0J/gMokqiPdNyubBf5ifvBgzntKDdYDw
+X-Google-Smtp-Source: AGHT+IFWPXcZKnGq0Krk9SV9S7c2h0pNtpTmEWv1Brc1vDiv5zIRm5JUQPWxix5qBNEZM9fT8eFcchz/mGnlgfTZ7QQ=
+X-Received: by 2002:a05:6402:430d:b0:64d:170:7976 with SMTP id
+ 4fb4d7f45d1cf-64d01707bacmr33060451a12.16.1767196183052; Wed, 31 Dec 2025
+ 07:49:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1766037997.git.zhoubinbin@loongson.cn> <fa13f6bc32832085fa06ec004ff0e8b6464e7a7d.1766037997.git.zhoubinbin@loongson.cn>
- <CAAhV-H4KpOGn44jDf09S2NVOnCD2KHbspK9OtZnrQd8Or+-UWg@mail.gmail.com> <CAMpQs4Lw3OTe53RXtZzCrj2u0O=ytcNpF+_39j7YsFbnLujSvQ@mail.gmail.com>
-In-Reply-To: <CAMpQs4Lw3OTe53RXtZzCrj2u0O=ytcNpF+_39j7YsFbnLujSvQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 31 Dec 2025 18:09:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4Y+-VUHLn=cPYUw8sneS8QNqDUOiNL-5xJvjJ0e7uP7A@mail.gmail.com>
-X-Gm-Features: AQt7F2rEoyJ4aMR2EREhwxbdd2jRSruEINqnfCTTyB6Egs9-AxwUtIczEPTYhks
-Message-ID: <CAAhV-H4Y+-VUHLn=cPYUw8sneS8QNqDUOiNL-5xJvjJ0e7uP7A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] LoongArch: dts: loongson-2k0500: Add default
- Extend I/O Interrupt controller address cells
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
+References: <20251228124001.3624742-1-rppt@kernel.org> <20251228124001.3624742-2-rppt@kernel.org>
+In-Reply-To: <20251228124001.3624742-2-rppt@kernel.org>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Wed, 31 Dec 2025 16:49:31 +0100
+X-Gm-Features: AQt7F2rayRHt2K_8t_heYN2h4Fxse0t-QPEGBzoKWlAlrWu2fr6sWsAyLE9oYEU
+Message-ID: <CA+=Fv5TDfwnu7Qf2y=PLWWN1EvNpNbr8habnTO7R4_caAySDzw@mail.gmail.com>
+Subject: Re: [PATCH 01/28] alpha: introduce arch_zone_limits_init()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	sparclinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 30, 2025 at 3:39=E2=80=AFPM Binbin Zhou <zhoubb.aaron@gmail.com=
-> wrote:
+On Sun, Dec 28, 2025 at 1:40=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> Hi :
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 >
-> Sorry for the late reply.
+> Move calculations of zone limits to a dedicated arch_zone_limits_init()
+> function.
 >
-> On Sun, Dec 21, 2025 at 8:13=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Hi, Binbin,
-> >
-> > On Fri, Dec 19, 2025 at 4:48=E2=80=AFPM Binbin Zhou <zhoubinbin@loongso=
-n.cn> wrote:
-> > >
-> > > Add missing address-cells 0 to the extend I/O interrupt controller no=
-de
-> > > to silence W=3D1 warning:
-> > >
-> > >   loongson-2k0500.dtsi:513.5-51: Warning (interrupt_map): /bus@100000=
-00/pcie@1a000000/pcie@0,0:interrupt-map:
-> > >     Missing property '#address-cells' in node /bus@10000000/interrupt=
--controller@1fe11600, using 0 as fallback
-> > >
-> > > Value '0' is correct because:
-> > > 1. The extend I/O interrupt controller does not have children,
-> > > 2. interrupt-map property (in PCI node) consists of five components a=
-nd
-> > >    the fourth component "parent unit address", which size is defined =
-by
-> > >    '#address-cells' of the node pointed to by the interrupt-parent
-> > >    component, is not used (=3D0)
-> > >
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > ---
-> > >  arch/loongarch/boot/dts/loongson-2k0500.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loon=
-garch/boot/dts/loongson-2k0500.dtsi
-> > > index 357de4ca7555..0594da1ea83d 100644
-> > > --- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-> > > +++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
-> > > @@ -164,6 +164,7 @@ eiointc: interrupt-controller@1fe11600 {
-> > >                         compatible =3D "loongson,ls2k0500-eiointc";
-> > >                         reg =3D <0x0 0x1fe11600 0x0 0xea00>;
-> > >                         interrupt-controller;
-> > > +                       #address-cells =3D <0>;
-> > >                         #interrupt-cells =3D <1>;
-> > >                         interrupt-parent =3D <&cpuintc>;
-> > >                         interrupts =3D <3>;
-> > Like Patch-5, I think liointc also need #address-cells, so does Patch-6=
-.
+> Later MM core will use this function as an architecture specific callback
+> during nodes and zones initialization and thus there won't be a need to
+> call free_area_init() from every architecture.
 >
-> As Rob said[1], the `#address-cells` attribute isn't required unless
-> it's always referenced by the ` interrupt-map` attribute, so I'd like
-> to leave the liointc node unchanged.
-I think "not required" doesn't mean "should not exist"?
-
-In my opinion I don't want to add #address-cells again when we add
-'interrupt-map' for downstream devices in future.
-
-So, I want to add #address-cells for all interrupt controllers, except
-"cpu-interrupt-controller" because it won't have direct downstream
-devices.
-
-
-Huacai
-
-> Add attributes as needed based on existing DTB warnings, and Patch-6
-> will do the same.
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/alpha/mm/init.c | 15 ++++++++++-----
+>  include/linux/mm.h   |  1 +
+>  2 files changed, 11 insertions(+), 5 deletions(-)
 >
-> [1]: https://lore.kernel.org/all/20251229234931.GA2804566-robh@kernel.org=
-/
-> >
-> > Huacai
-> >
-> > > --
-> > > 2.47.3
-> > >
+> diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
+> index 4c5ab9cd8a0a..cd0cb1abde5f 100644
+> --- a/arch/alpha/mm/init.c
+> +++ b/arch/alpha/mm/init.c
+> @@ -208,12 +208,8 @@ callback_init(void * kernel_end)
+>         return kernel_end;
+>  }
 >
+> -/*
+> - * paging_init() sets up the memory map.
+> - */
+> -void __init paging_init(void)
+> +void __init arch_zone_limits_init(unsigned long *max_zone_pfn)
+>  {
+> -       unsigned long max_zone_pfn[MAX_NR_ZONES] =3D {0, };
+>         unsigned long dma_pfn;
+>
+>         dma_pfn =3D virt_to_phys((char *)MAX_DMA_ADDRESS) >> PAGE_SHIFT;
+> @@ -221,8 +217,17 @@ void __init paging_init(void)
+>
+>         max_zone_pfn[ZONE_DMA] =3D dma_pfn;
+>         max_zone_pfn[ZONE_NORMAL] =3D max_pfn;
+> +}
+> +
+> +/*
+> + * paging_init() sets up the memory map.
+> + */
+> +void __init paging_init(void)
+> +{
+> +       unsigned long max_zone_pfn[MAX_NR_ZONES] =3D {0, };
+>
+>         /* Initialize mem_map[].  */
+> +       arch_zone_limits_init(max_zone_pfn);
+>         free_area_init(max_zone_pfn);
+>
+>         /* Initialize the kernel's ZERO_PGE. */
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 15076261d0c2..628c0e0ac313 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3552,6 +3552,7 @@ static inline unsigned long get_num_physpages(void)
+>   * free_area_init(max_zone_pfns);
+>   */
+>  void free_area_init(unsigned long *max_zone_pfn);
+> +void arch_zone_limits_init(unsigned long *max_zone_pfn);
+>  unsigned long node_map_pfn_alignment(void);
+>  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>                                                 unsigned long end_pfn);
 > --
-> Thanks.
-> Binbin
+> 2.51.0
 >
+
+This looks fine to me from the Alpha side.
+
+Acked-by: Magnus Lindholm <linmag7@gmail.com>
