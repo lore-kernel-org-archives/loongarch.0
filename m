@@ -1,347 +1,1024 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722C33043B5
-	for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 23:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703BD4315A
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 00:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767135757; cv=none; b=eK5EGZLR/wEWY8guyrR3YQ4TcpCawhnVtZor4/hMlAArjXgA3w16qEFytGgEkPvFXBnHCu4vf+Ck4P+y29Ndf2FwxzsoDZ5rjX4y5olcv/e4d612Rk78q0oBZfMEgxmvYapfx8XhXyr66bK5MLaIwdfD8kT/iYhlYY7PN3R1nfc=
+	t=1767142136; cv=none; b=kv7cFPaoFy4NGHrlcB/GlJ5nyDe5yaslAcoChSqWkSdlUP7Ur9T7Yu2TElm6RwfHDg37TFwVofkoeUuRQTREVzVYG18xQRIrB0pNB7WiFNZjbtiPGFzLeATz1U97cuLscLRL7E568bTZ0ei4C4In2l9YIQ/5wrQqACSDgZ8eVHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767135757; c=relaxed/simple;
-	bh=/HuCjXMO8BYhY2cJwTr7wd/hfTFZHB16fDr6+9ntWyE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ExzglFWrvQf3zP2MnHmjE5dt8ZFYRdv1hbfa1mATOYXXX7R63mnyvr+EJMqUG8ILQ+mVS57NkPU0kNe9gTS/PDFyHDa/gIpTePyVJRNmiFyhWEI2CofVZd6cD4hvIhqSnBgciVe1oQSg79svmjP+NBLifMrqgVhPvVUPC0fG7SI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x6GscZG5; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1767142136; c=relaxed/simple;
+	bh=Sojhukr7xRFUtlIFniCjotpH34BNry20+EZIzxA3dhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=RrEzgYqtT3s0/RNTkR0OVWngPx3fw3GqSNordTd1sidjWW0RYzY5kX0P7B6VBGt9yWwhvHK6tX0IfPr8B016sWwMYWStlxVMphP8ZobsuWXtOyeD7X1mnw3k80CJ9MzFR0iDwilVotzGAAZk6T7JWS4PCXH5AvgXxJBdlCFZafc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aH9qdHnO; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x6GscZG5"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7b89ee2c1a4so19843812b3a.2
-        for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 15:02:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aH9qdHnO"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4f1aecac2c9so112934211cf.1
+        for <loongarch@lists.linux.dev>; Tue, 30 Dec 2025 16:48:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767135751; x=1767740551; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=lvDGtOJlZOshVNKy7HhFV38ObB7SdC2/7YpvR2O0iOs=;
-        b=x6GscZG5AHXXBq4FD6FFUbJhyClx6v6DqFj7Rz3n0Gv6y1dnxW7xLsLwb7+Dujdzdh
-         eH7W+Fek17pRHGyCongVbY+CJgpwHeNMUdKhUrrvCGpPU0eUeSA2X9yP/AgTctanzZDy
-         uxlthMr4votbDTy9kPefEqcxHtwb0zKZHc0cIdgBbYaoPk7aivyLPEWmNYmrX2h/k4jd
-         dlu84x1B1SO0bFGjO6Msr3b00Fc/NpK/CyNmQCPtg14nW9ufIQZboUTDW/l+F7S1G4pg
-         oFX5LfJKHcwu1MU4D06WHiY6efTOIfu06mru7cMg/vvYN9mqhLUAghsz2FqU/gI5IrWl
-         Dd2g==
+        d=gmail.com; s=20230601; t=1767142133; x=1767746933; darn=lists.linux.dev;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UthY8f7yltrpfYb6PynqJEKG2PTWWId3WoTUlVZuz/8=;
+        b=aH9qdHnOvhk2r9zRHW2fzrJ2OlsmhDaeMPVm2v7pXQXSFt1Tu7j4INGppai7CU4DiM
+         iirA7HIe9tLbMooHe2XTnYRX5Tk1LYGwvJ4s3Qcb4HjwI2rf5u9z97Egl2RfzzO8GREh
+         j+DNHIVnuPSMEGcTaSVk3jD6btl+J2aOW4rpDFMdbcPz2bcsMvgqhp+e9ATpgw/ImuSe
+         H1IU5ljMyDRxjA38wbTVVuzFWQk1FwoS+z4GkdmKEk7i/CULrewT2QH0+lqLP1ckUchk
+         PdjMA1AOP5KAEJtHpcdhu6jGqSPUNN2HH/RNsduP7fnU+h/h8ywtXnWhCy2Vlr85putk
+         2rwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767135751; x=1767740551;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lvDGtOJlZOshVNKy7HhFV38ObB7SdC2/7YpvR2O0iOs=;
-        b=d07iW7s1Yh9f8oPk/ZyeR9uU6BzsrfVN1u9OO5vzWdpIBXm21KEGVH8E/gn1DKgEFK
-         E4Hbs4tPRNvK9K6nzo5sC8gbU2nEY6/CXgddlnyow6tV/9rIadJUtix05fszCdJBeZaJ
-         iOgK6B1trIPaqoOdY9AMS/WVq/Dfm329PFuXUYfJ20dZAEOFQzJmXMDXdxnxNm+MIdXR
-         uU4Cr8RuhmXcuR7JHwoXGlIICFvPh3CPU0342UIfA3x9lifOXA32TsZI6qtHas+fV1Pp
-         bphYn0sjmC18uf154JPY2ygd/A2UbAcFbISx9D1zyfKYe8+ij+gXt4gW/LqEboQTIUVB
-         CLzw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5YNoRvluNG2V6PU8YTwub3RnW+//g4KZf+ddkw4Ta00d35gjBgqSf0DiVLIWDnaVQjguRK8dzyiQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxzClZYPz9sYNgx2pFIQEuIl9W5nsyUdCbHt8aqaYWjETOiINhE
-	Z9oGDChRDH0v4W+cN/NPyp9I8/0gpMik4QAtVovhl+30135K1Dt6PJqQCPr9jJYXnzj2SoH3+Od
-	HqMzv+w==
-X-Google-Smtp-Source: AGHT+IFl+E4iBtLvuy29ZNl15W5f+YM/yuQ6NLYMRsjb6K6O2MuWbmEY/dD/ZgE2AJbg2gFPgmlYtjYuvMQ=
-X-Received: from pfbem48.prod.google.com ([2002:a05:6a00:3770:b0:7f9:3450:d9b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:420b:b0:7e8:4471:ae55
- with SMTP id d2e1a72fcca58-7ff6745678amr28709155b3a.33.1767135750526; Tue, 30
- Dec 2025 15:02:30 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 30 Dec 2025 15:01:50 -0800
-In-Reply-To: <20251230230150.4150236-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1767142133; x=1767746933;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=UthY8f7yltrpfYb6PynqJEKG2PTWWId3WoTUlVZuz/8=;
+        b=oFca91/NLAnB5S7h/JLEjaXZKdiwNQLG+gVaKTnmmi/yLenMMYrkX19OlD/9bpspfp
+         2nf5FxyID6GBsuXWpuPHvlXhZ32WTQr3tKSmaHEW9ccr1EoaasY9eDy3EYRYbQZ4Qoi6
+         +hXyiOJUomC3Drl1H5QURAlRQXV9/4XHPlJzw9f9swpj4Bg7xx4SMyrWKfrvcfKew5vW
+         Hlye8tPr7esrCT0xjhiZE+9i2SyoSHR+p8fSzWmEPMF7NRjzazAAcgfEHm3rS1g2qNsv
+         j9qjCq2ZNVzpG3BXDnpWx7AR7yNNmV6HoTXId4fOvICa5ActsWhk0g4CDXQzbfep+rgz
+         +q8A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZnBmyApbRT3Lgi+G3/ResZqzsmGZuU2J9kQd9FHe5Fx4LndoCbeGv9YZDbM0wK+ZUmSIbRgO4rc4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxaD7aqq0pVcR7/2vhS9wzAfzLEyRaK0TKdKmG7GCf4y2MKA8Ap
+	8P8tWGutinCiHM02nEqoyqG62CAIBHSHu497ClxeWBvyOmsmT08SCZ/0v5Uw99jKDnLqx+gXX5N
+	/33bB8Kl7Vn516FvCvxceuQJNmMRe1U0=
+X-Gm-Gg: AY/fxX6wpZ9GdbveKR2dS7x6FY+1NGfnawzCmwaoO6pd5a+QPxQOot8KECyFjlvdsS1
+	vZMUzJ8rbJxdl5D8KnlcSaVKFmBqUpIDZmacFPticf9COAg5BiumhMtBwSgIl0/iJ7BNFje0d9G
+	eUQ95qKuygpob+8w3PlIYIM6ZDWlArXitXMxVo28D1PE6gK9U5Or1GQoB34yeghXiEZuN0dSRce
+	rYqvVUbqJJfC9d1k1qrbUb4fFHafs5l/4qT53Wj2YkRcKzh82K5JDVcf7Y7hvREtLcjZ7oa5hQY
+	bjW4Bw==
+X-Google-Smtp-Source: AGHT+IGYzVVLLd+5pHx8JQ731WDNOH/LVxnlnboE85sSz/C92mwGgzaqFcRlyZJLtsA8buHNVvJxB8lAxfSIrQmPHQg=
+X-Received: by 2002:a05:622a:87:b0:4f1:8bfd:bdc0 with SMTP id
+ d75a77b69052e-4f35f483307mr565394621cf.39.1767142132893; Tue, 30 Dec 2025
+ 16:48:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251230230150.4150236-1-seanjc@google.com>
-X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
-Message-ID: <20251230230150.4150236-22-seanjc@google.com>
-Subject: [PATCH v4 21/21] KVM: selftests: Test READ=>WRITE dirty logging
- behavior for shadow MMU
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>
+MIME-Version: 1.0
+References: <CAK3+h2xa4imA5hmQnrnfXt3ek1Rag89sL8mO9aGYjZWtZ3ckfw@mail.gmail.com>
+ <CAK3+h2zJk7V-VNA9cG4C1BX02Dphyt_XXN8i_ERLAQbmJn++JQ@mail.gmail.com>
+In-Reply-To: <CAK3+h2zJk7V-VNA9cG4C1BX02Dphyt_XXN8i_ERLAQbmJn++JQ@mail.gmail.com>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Tue, 30 Dec 2025 16:48:41 -0800
+X-Gm-Features: AQt7F2rPNgrLsgghbjI8UAHuwPL6vAm4gobYbRCeXtpzWTnmMmq4ifS4s7pHIoI
+Message-ID: <CAK3+h2x2o7xh-=bB5yPKieZWd6BYmke6QNvB5iG7fM9sqPjE=g@mail.gmail.com>
+Subject: Re: x86 bpf selftests report for reference
+To: Huacai Chen <chenhuacai@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Chenghao Duan <duanchenghao@kylinos.cn>, 
+	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the nested dirty log test to validate KVM's handling of READ faults
-when dirty logging is enabled.  Specifically, set the Dirty bit in the
-guest PTEs used to map L2 GPAs, so that KVM will create writable SPTEs
-when handling L2 read faults.  When handling read faults in the shadow MMU,
-KVM opportunistically creates a writable SPTE if the mapping can be
-writable *and* the gPTE is dirty (or doesn't support the Dirty bit), i.e.
-if KVM doesn't need to intercept writes in order to emulate Dirty-bit
-updates.
+On Tue, Dec 30, 2025 at 2:20=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.com=
+> wrote:
+>
+> On Mon, Dec 29, 2025 at 1:27=E2=80=AFPM Vincent Li <vincent.mc.li@gmail.c=
+om> wrote:
+> >
+> > Hi Huacai,
+> >
+> > I did a manual full bpf selftests on x86 machine, no ns_bpf_qdisc
+> > failure, so indeed like you said, it seems loongarch bpf is
+> > deteriorating. Here is x86 failed bpf test report for reference, there
+> > is no hang up or anything like that during the test.
+> >
+> After testing 6.16, 6.17, 6.18-rc1, I am not sure about the loongarch
+> bpf deteriorating any more :)
+>
+> Test results:
+> 6.16 ns_bpf_qdisc not supported
+> 6.17 some patches enabled ns_bpf_qdisc support, but ns_bpf_qdisc panic
 
-To actually test the L2 READ=>WRITE sequence, e.g. without masking a false
-pass by other test activity, route the READ=>WRITE and WRITE=>WRITE
-sequences to separate L1 pages, and differentiate between "marked dirty
-due to a WRITE access/fault" and "marked dirty due to creating a writable
-SPTE for a READ access/fault".  The updated sequence exposes the bug fixed
-by KVM commit 1f4e5fc83a42 ("KVM: x86: fix nested guest live migration
-with PML") when the guest performs a READ=>WRITE sequence.
+if I guess it right, I think commit 6abf17d6 (LoongArch: BPF: Add
+struct ops support for trampoline) seems to have enabled ns_bpf_qdisc
+support.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- .../selftests/kvm/include/x86/processor.h     |   1 +
- .../testing/selftests/kvm/lib/x86/processor.c |   7 ++
- .../selftests/kvm/x86/nested_dirty_log_test.c | 115 +++++++++++++-----
- 3 files changed, 90 insertions(+), 33 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
-index ab29b1c7ed2d..8945c9eea704 100644
---- a/tools/testing/selftests/kvm/include/x86/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86/processor.h
-@@ -1483,6 +1483,7 @@ bool kvm_cpu_has_tdp(void);
- void tdp_map(struct kvm_vm *vm, uint64_t nested_paddr, uint64_t paddr, uint64_t size);
- void tdp_identity_map_default_memslots(struct kvm_vm *vm);
- void tdp_identity_map_1g(struct kvm_vm *vm,  uint64_t addr, uint64_t size);
-+uint64_t *tdp_get_pte(struct kvm_vm *vm, uint64_t l2_gpa);
- 
- /*
-  * Basic CPU control in CR0
-diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
-index ab869a98bbdc..fab18e9be66c 100644
---- a/tools/testing/selftests/kvm/lib/x86/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86/processor.c
-@@ -390,6 +390,13 @@ static uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm,
- 	return virt_get_pte(vm, mmu, pte, vaddr, PG_LEVEL_4K);
- }
- 
-+uint64_t *tdp_get_pte(struct kvm_vm *vm, uint64_t l2_gpa)
-+{
-+	int level = PG_LEVEL_4K;
-+
-+	return __vm_get_page_table_entry(vm, &vm->stage2_mmu, l2_gpa, &level);
-+}
-+
- uint64_t *vm_get_pte(struct kvm_vm *vm, uint64_t vaddr)
- {
- 	int level = PG_LEVEL_4K;
-diff --git a/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c b/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-index 89d2e86a0db9..1e7c1ed917e1 100644
---- a/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-@@ -17,29 +17,39 @@
- 
- /* The memory slot index to track dirty pages */
- #define TEST_MEM_SLOT_INDEX		1
--#define TEST_MEM_PAGES			3
-+#define TEST_MEM_PAGES			4
- 
- /* L1 guest test virtual memory offset */
--#define GUEST_TEST_MEM			0xc0000000
-+#define GUEST_TEST_MEM1			0xc0000000
-+#define GUEST_TEST_MEM2			0xc0002000
- 
- /* L2 guest test virtual memory offset */
- #define NESTED_TEST_MEM1		0xc0001000
--#define NESTED_TEST_MEM2		0xc0002000
-+#define NESTED_TEST_MEM2		0xc0003000
- 
- #define L2_GUEST_STACK_SIZE 64
- 
-+#define TEST_SYNC_PAGE_MASK	0xfull
-+#define TEST_SYNC_READ_FAULT	BIT(4)
-+#define TEST_SYNC_WRITE_FAULT	BIT(5)
-+#define TEST_SYNC_NO_FAULT	BIT(6)
-+
- static void l2_guest_code(u64 *a, u64 *b)
- {
- 	READ_ONCE(*a);
-+	GUEST_SYNC(0 | TEST_SYNC_READ_FAULT);
- 	WRITE_ONCE(*a, 1);
--	GUEST_SYNC(true);
--	GUEST_SYNC(false);
-+	GUEST_SYNC(0 | TEST_SYNC_WRITE_FAULT);
-+	READ_ONCE(*a);
-+	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
- 
- 	WRITE_ONCE(*b, 1);
--	GUEST_SYNC(true);
-+	GUEST_SYNC(2 | TEST_SYNC_WRITE_FAULT);
- 	WRITE_ONCE(*b, 1);
--	GUEST_SYNC(true);
--	GUEST_SYNC(false);
-+	GUEST_SYNC(2 | TEST_SYNC_WRITE_FAULT);
-+	READ_ONCE(*b);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
- 
- 	/* Exit to L1 and never come back.  */
- 	vmcall();
-@@ -53,7 +63,7 @@ static void l2_guest_code_tdp_enabled(void)
- static void l2_guest_code_tdp_disabled(void)
- {
- 	/* Access the same L1 GPAs as l2_guest_code_tdp_enabled() */
--	l2_guest_code((u64 *)GUEST_TEST_MEM, (u64 *)GUEST_TEST_MEM);
-+	l2_guest_code((u64 *)GUEST_TEST_MEM1, (u64 *)GUEST_TEST_MEM2);
- }
- 
- void l1_vmx_code(struct vmx_pages *vmx)
-@@ -72,9 +82,11 @@ void l1_vmx_code(struct vmx_pages *vmx)
- 
- 	prepare_vmcs(vmx, l2_rip, &l2_guest_stack[L2_GUEST_STACK_SIZE]);
- 
--	GUEST_SYNC(false);
-+	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
- 	GUEST_ASSERT(!vmlaunch());
--	GUEST_SYNC(false);
-+	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
- 	GUEST_ASSERT_EQ(vmreadz(VM_EXIT_REASON), EXIT_REASON_VMCALL);
- 	GUEST_DONE();
- }
-@@ -91,9 +103,11 @@ static void l1_svm_code(struct svm_test_data *svm)
- 
- 	generic_svm_setup(svm, l2_rip, &l2_guest_stack[L2_GUEST_STACK_SIZE]);
- 
--	GUEST_SYNC(false);
-+	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
- 	run_guest(svm->vmcb, svm->vmcb_gpa);
--	GUEST_SYNC(false);
-+	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-+	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
- 	GUEST_ASSERT_EQ(svm->vmcb->control.exit_code, SVM_EXIT_VMMCALL);
- 	GUEST_DONE();
- }
-@@ -106,6 +120,11 @@ static void l1_guest_code(void *data)
- 		l1_svm_code(data);
- }
- 
-+static uint64_t test_read_host_page(uint64_t *host_test_mem, int page_nr)
-+{
-+	return host_test_mem[PAGE_SIZE * page_nr / sizeof(*host_test_mem)];
-+}
-+
- static void test_dirty_log(bool nested_tdp)
- {
- 	vm_vaddr_t nested_gva = 0;
-@@ -133,32 +152,45 @@ static void test_dirty_log(bool nested_tdp)
- 
- 	/* Add an extra memory slot for testing dirty logging */
- 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
--				    GUEST_TEST_MEM,
-+				    GUEST_TEST_MEM1,
- 				    TEST_MEM_SLOT_INDEX,
- 				    TEST_MEM_PAGES,
- 				    KVM_MEM_LOG_DIRTY_PAGES);
- 
- 	/*
--	 * Add an identity map for GVA range [0xc0000000, 0xc0002000).  This
-+	 * Add an identity map for GVA range [0xc0000000, 0xc0004000).  This
- 	 * affects both L1 and L2.  However...
- 	 */
--	virt_map(vm, GUEST_TEST_MEM, GUEST_TEST_MEM, TEST_MEM_PAGES);
-+	virt_map(vm, GUEST_TEST_MEM1, GUEST_TEST_MEM1, TEST_MEM_PAGES);
- 
- 	/*
--	 * ... pages in the L2 GPA range [0xc0001000, 0xc0003000) will map to
--	 * 0xc0000000.
-+	 * ... pages in the L2 GPA ranges [0xc0001000, 0xc0002000) and
-+	 * [0xc0003000, 0xc0004000) will map to 0xc0000000 and 0xc0001000
-+	 * respectively.
- 	 *
- 	 * When TDP is disabled, the L2 guest code will still access the same L1
- 	 * GPAs as the TDP enabled case.
-+	 *
-+	 * Set the Dirty bit in the PTEs used by L2 so that KVM will create
-+	 * writable SPTEs when handling read faults (if the Dirty bit isn't
-+	 * set, KVM must intercept the next write to emulate the Dirty bit
-+	 * update).
- 	 */
- 	if (nested_tdp) {
- 		tdp_identity_map_default_memslots(vm);
--		tdp_map(vm, NESTED_TEST_MEM1, GUEST_TEST_MEM, PAGE_SIZE);
--		tdp_map(vm, NESTED_TEST_MEM2, GUEST_TEST_MEM, PAGE_SIZE);
-+		tdp_map(vm, NESTED_TEST_MEM1, GUEST_TEST_MEM1, PAGE_SIZE);
-+		tdp_map(vm, NESTED_TEST_MEM2, GUEST_TEST_MEM2, PAGE_SIZE);
-+
-+
-+		*tdp_get_pte(vm, NESTED_TEST_MEM1) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-+		*tdp_get_pte(vm, NESTED_TEST_MEM2) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-+	} else {
-+		*vm_get_pte(vm, GUEST_TEST_MEM1) |= PTE_DIRTY_MASK(&vm->mmu);
-+		*vm_get_pte(vm, GUEST_TEST_MEM2) |= PTE_DIRTY_MASK(&vm->mmu);
- 	}
- 
- 	bmap = bitmap_zalloc(TEST_MEM_PAGES);
--	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM);
-+	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM1);
- 
- 	while (!done) {
- 		memset(host_test_mem, 0xaa, TEST_MEM_PAGES * PAGE_SIZE);
-@@ -169,25 +201,42 @@ static void test_dirty_log(bool nested_tdp)
- 		case UCALL_ABORT:
- 			REPORT_GUEST_ASSERT(uc);
- 			/* NOT REACHED */
--		case UCALL_SYNC:
-+		case UCALL_SYNC: {
-+			int page_nr = uc.args[1] & TEST_SYNC_PAGE_MASK;
-+			int i;
-+
- 			/*
- 			 * The nested guest wrote at offset 0x1000 in the memslot, but the
- 			 * dirty bitmap must be filled in according to L1 GPA, not L2.
- 			 */
- 			kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
--			if (uc.args[1]) {
--				TEST_ASSERT(test_bit(0, bmap), "Page 0 incorrectly reported clean");
--				TEST_ASSERT(host_test_mem[0] == 1, "Page 0 not written by guest");
--			} else {
--				TEST_ASSERT(!test_bit(0, bmap), "Page 0 incorrectly reported dirty");
--				TEST_ASSERT(host_test_mem[0] == 0xaaaaaaaaaaaaaaaaULL, "Page 0 written by guest");
-+
-+			/*
-+			 * If a fault is expected, the page should be dirty
-+			 * as the Dirty bit is set in the gPTE.  KVM should
-+			 * create a writable SPTE even on a read fault, *and*
-+			 * KVM must mark the GFN as dirty when doing so.
-+			 */
-+			TEST_ASSERT(test_bit(page_nr, bmap) == !(uc.args[1] & TEST_SYNC_NO_FAULT),
-+				    "Page %u incorrectly reported %s on %s fault", page_nr,
-+				    test_bit(page_nr, bmap) ? "dirty" : "clean",
-+				    uc.args[1] & TEST_SYNC_NO_FAULT ? "no" :
-+				    uc.args[1] & TEST_SYNC_READ_FAULT ? "read" : "write");
-+
-+			for (i = 0; i < TEST_MEM_PAGES; i++) {
-+				if (i == page_nr && uc.args[1] & TEST_SYNC_WRITE_FAULT)
-+					TEST_ASSERT(test_read_host_page(host_test_mem, i) == 1,
-+						    "Page %u not written by guest", i);
-+				else
-+					TEST_ASSERT(test_read_host_page(host_test_mem, i) == 0xaaaaaaaaaaaaaaaaULL,
-+						    "Page %u written by guest", i);
-+
-+				if (i != page_nr)
-+					TEST_ASSERT(!test_bit(i, bmap),
-+						    "Page %u incorrectly reported dirty", i);
- 			}
--
--			TEST_ASSERT(!test_bit(1, bmap), "Page 1 incorrectly reported dirty");
--			TEST_ASSERT(host_test_mem[PAGE_SIZE / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 1 written by guest");
--			TEST_ASSERT(!test_bit(2, bmap), "Page 2 incorrectly reported dirty");
--			TEST_ASSERT(host_test_mem[PAGE_SIZE*2 / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 2 written by guest");
- 			break;
-+		}
- 		case UCALL_DONE:
- 			done = true;
- 			break;
--- 
-2.52.0.351.gbe84eed79e-goog
-
+> 6.18-rc1 ns_bpf_qdisc panic fix commit merged (8b51b11), ns_bpf_qdisc
+> mq test failed with WATCHDOG messaging on the screen.
+>
+> test steps:
+>
+> for x where x is 16, 17, 18-rc1 (new branch may have new bpf config
+> added, if compiling error related to config, run
+> ./scripts/kconfig/merge_config.sh .config
+> tools/testing/selftests/bpf/config)
+> git checkout -b v6.x v6.x
+> make clean; make -j8; make modules_install; make install
+> grub2-mkconfig -o /boot/grub2/grub.cfg,  then manually edit grub.cfg
+> to put v6.x to be the first boot entry
+> reboot
+> Go to branch 6.x tools/testing/selftests/bpf
+> make clean; make -j8
+> ./test_progs -t ns_bpf_qdisc
+>
+> test screen shot:
+>
+> [root@fedora bpf]# uname -a
+>
+> Linux fedora 6.16.0 #6 SMP PREEMPT_DYNAMIC Tue Dec 30 11:42:24 PST
+> 2025 loongarch64 GNU/Linux
+>
+> [root@fedora bpf]#
+>
+> [root@fedora bpf]# ./test_progs -t ns_bpf_qdisc
+>
+> test_fifo:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_fifo:FAIL:bpf_qdisc_fifo__attach unexpected error: -524 (errno 524)
+>
+> #210/1   ns_bpf_qdisc/fifo:FAIL
+>
+> test_fq:PASS:bpf_qdisc_fq__open_and_load 0 nsec
+>
+> libbpf: map 'fq': failed to auto-attach: -ENOTSUPP
+>
+> test_fq:FAIL:bpf_qdisc_fq__attach unexpected error: -524 (errno 524)
+>
+> #210/2   ns_bpf_qdisc/fq:FAIL
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_qdisc_attach_to_mq:FAIL:bpf_qdisc_fifo__attach unexpected error:
+> -524 (errno 524)
+>
+> #210/3   ns_bpf_qdisc/attach to mq:FAIL
+>
+> test_qdisc_attach_to_non_root:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_qdisc_attach_to_non_root:FAIL:bpf_qdisc_fifo__attach unexpected
+> error: -524 (errno 524)
+>
+> #210/4   ns_bpf_qdisc/attach to non root:FAIL
+>
+> #210/5   ns_bpf_qdisc/incompl_ops:OK
+>
+> #210     ns_bpf_qdisc:FAIL
+>
+>
+> All error logs:
+>
+> test_fifo:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_fifo:FAIL:bpf_qdisc_fifo__attach unexpected error: -524 (errno 524)
+>
+> #210/1   ns_bpf_qdisc/fifo:FAIL
+>
+> test_fq:PASS:bpf_qdisc_fq__open_and_load 0 nsec
+>
+> libbpf: map 'fq': failed to auto-attach: -ENOTSUPP
+>
+> test_fq:FAIL:bpf_qdisc_fq__attach unexpected error: -524 (errno 524)
+>
+> #210/2   ns_bpf_qdisc/fq:FAIL
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_qdisc_attach_to_mq:FAIL:bpf_qdisc_fifo__attach unexpected error:
+> -524 (errno 524)
+>
+> #210/3   ns_bpf_qdisc/attach to mq:FAIL
+>
+> test_qdisc_attach_to_non_root:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> libbpf: map 'fifo': failed to auto-attach: -ENOTSUPP
+>
+> test_qdisc_attach_to_non_root:FAIL:bpf_qdisc_fifo__attach unexpected
+> error: -524 (errno 524)
+>
+> #210/4   ns_bpf_qdisc/attach to non root:FAIL
+>
+> #210     ns_bpf_qdisc:FAIL
+>
+> Summary: 0/1 PASSED, 0 SKIPPED, 1 FAILED
+>
+>
+> [[root@fedora bpf]#
+>
+> [root@fedora bpf]# uname -a
+>
+> Linux fedora 6.17.0 #7 SMP PREEMPT_DYNAMIC Tue Dec 30 12:57:55 PST
+> 2025 loongarch64 GNU/Linux
+>
+> [root@fedora bpf]#
+>
+>
+> [root@fedora bpf]# ./test_progs -t ns_bpf_qdisc
+>
+> Read from remote host 10.0.0.15: Operation timed out
+>
+> Connection to 10.0.0.15 closed.
+>
+> client_loop: send disconnect: Broken pipe
+>
+> [root@fedora bpf]# uname -a
+>
+> Linux fedora 6.18.0-rc1 #8 SMP PREEMPT_DYNAMIC Tue Dec 30 13:47:34 PST
+> 2025 loongarch64 GNU/Linux
+>
+>
+>
+> [root@fedora bpf]# ./test_progs -t ns_bpf_qdisc
+>
+>
+> libbpf: loading object 'tc_bpf' from buffer
+>
+> libbpf: elf: section(2) .symtab, size 168, link 1, flags 0, type=3D2
+>
+> libbpf: elf: section(3) tc, size 144, link 0, flags 6, type=3D1
+>
+> libbpf: sec 'tc': found program 'tc_ingress' at insn offset 0 (0
+> bytes), code size 18 insns (144 bytes)
+>
+> libbpf: elf: section(4) .rodata, size 36, link 0, flags 2, type=3D1
+>
+> libbpf: elf: section(5) license, size 4, link 0, flags 3, type=3D1
+>
+> libbpf: license of tc_bpf is GPL
+>
+> libbpf: elf: section(6) .reltc, size 16, link 2, flags 40, type=3D9
+>
+> libbpf: elf: section(7) .BTF, size 2108, link 0, flags 0, type=3D1
+>
+> libbpf: elf: section(8) .BTF.ext, size 284, link 0, flags 0, type=3D1
+>
+> libbpf: looking for externs among 7 symbols...
+>
+> libbpf: collected 0 externs total
+>
+> libbpf: map 'tc_bpf.rodata' (global data): at sec_idx 4, offset 0, flags =
+80.
+>
+> libbpf: map 0 is "tc_bpf.rodata"
+>
+> libbpf: sec '.reltc': collecting relocation for section(3) 'tc'
+>
+> libbpf: sec '.reltc': relo #0: insn #12 against '.rodata'
+>
+> libbpf: prog 'tc_ingress': found data map 0 (tc_bpf.rodata, sec 4, off
+> 0) for insn 12
+>
+> libbpf: object 'tc_bpf': failed (-95) to create BPF token from
+> '/sys/fs/bpf', skipping optional step...
+>
+> libbpf: loaded kernel BTF from '/sys/kernel/btf/vmlinux'
+>
+> libbpf: sec 'tc': found 5 CO-RE relocations
+>
+> libbpf: CO-RE relocating [2] struct __sk_buff: found target candidate
+> [10506] struct __sk_buff in [vmlinux]
+>
+> libbpf: prog 'tc_ingress': relo #0: <byte_off> [2] struct
+> __sk_buff.protocol (0:4 @ offset 16)
+>
+> libbpf: prog 'tc_ingress': relo #0: matching candidate #0 <byte_off>
+> [10506] struct __sk_buff.protocol (0:4 @ offset 16)
+>
+> libbpf: prog 'tc_ingress': relo #0: patched insn #0 (LDX/ST/STX) off 16 -=
+> 16
+>
+> libbpf: prog 'tc_ingress': relo #1: <byte_off> [2] struct
+> __sk_buff.data (0:15 @ offset 76)
+>
+> libbpf: prog 'tc_ingress': relo #1: matching candidate #0 <byte_off>
+> [10506] struct __sk_buff.data (0:15 @ offset 76)
+>
+> libbpf: prog 'tc_ingress': relo #1: patched insn #2 (LDX/ST/STX) off 76 -=
+> 76
+>
+> libbpf: prog 'tc_ingress': relo #2: <byte_off> [2] struct
+> __sk_buff.data_end (0:16 @ offset 80)
+>
+> libbpf: prog 'tc_ingress': relo #2: matching candidate #0 <byte_off>
+> [10506] struct __sk_buff.data_end (0:16 @ offset 80)
+>
+> libbpf: prog 'tc_ingress': relo #2: patched insn #3 (LDX/ST/STX) off 80 -=
+> 80
+>
+> libbpf: CO-RE relocating [19] struct iphdr: found target candidate
+> [28470] struct iphdr in [vmlinux]
+>
+> libbpf: prog 'tc_ingress': relo #3: <byte_off> [19] struct iphdr.ttl
+> (0:6 @ offset 8)
+>
+> libbpf: prog 'tc_ingress': relo #3: matching candidate #0 <byte_off>
+> [28470] struct iphdr.ttl (0:6 @ offset 8)
+>
+> libbpf: prog 'tc_ingress': relo #3: patched insn #9 (LDX/ST/STX) off 8 ->=
+ 8
+>
+> libbpf: prog 'tc_ingress': relo #4: <byte_off> [19] struct
+> iphdr.tot_len (0:3 @ offset 2)
+>
+> libbpf: prog 'tc_ingress': relo #4: matching candidate #0 <byte_off>
+> [28470] struct iphdr.tot_len (0:3 @ offset 2)
+>
+> libbpf: prog 'tc_ingress': relo #4: patched insn #10 (LDX/ST/STX) off 2 -=
+> 2
+>
+> libbpf: map 'tc_bpf.rodata': created successfully, fd=3D5
+>
+> Successfully started! Please run `sudo cat
+> /sys/kernel/debug/tracing/trace_pipe` to see output of the BPF
+> program.
+>
+> ..........WATCHDOG: test case ns_bpf_qdisc/attach to mq executes for
+> 10 seconds...
+>
+> .........................................................................=
+.....................................WATCHDOG:
+> test case ns_bpf_qdisc/attach to mq executes for 120 seconds,
+> terminating with SIGSEGV
+>
+> #214     ns_bpf_qdisc:FAIL
+>
+> Caught signal #11!
+>
+> Stack trace:
+>
+> ./test_progs(crash_handler+0x28)[0x120594cc4]
+>
+> linux-vdso.so.1(__vdso_rt_sigreturn+0x0)[0x7ffffd385084]
+>
+> /lib64/libc.so.6(wait4+0x84)[0x7ffff2e98b98]
+>
+> /lib64/libc.so.6(+0x4da54)[0x7ffff2e09a54]
+>
+> ./test_progs[0x120195024]
+>
+> ./test_progs(test_ns_bpf_qdisc+0x58)[0x120196874]
+>
+> ./test_progs[0x120595404]
+>
+> ./test_progs(main+0x6c0)[0x120597488]
+>
+> /lib64/libc.so.6(+0x2882c)[0x7ffff2de482c]
+>
+> /lib64/libc.so.6(__libc_start_main+0xa8)[0x7ffff2de4918]
+>
+> ./test_progs(_start+0x48)[0x12013a0a0]
+>
+> ..........................
+>
+>
+> .^C#214/1   ns_bpf_qdisc/fifo:OK
+>
+> #214/2   ns_bpf_qdisc/fq:OK
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__attach 0 nsec
+>
+> test_qdisc_attach_to_mq:PASS:ip link add veth0 type veth peer veth1 0 nse=
+c
+>
+> #214/3   ns_bpf_qdisc/attach to mq:FAIL
+>
+> #214/4   ns_bpf_qdisc/attach to non root:OK
+>
+> #214/5   ns_bpf_qdisc/incompl_ops:OK
+>
+> #214     ns_bpf_qdisc:FAIL
+>
+>
+> All error logs:
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__open_and_load 0 nsec
+>
+> test_qdisc_attach_to_mq:PASS:bpf_qdisc_fifo__attach 0 nsec
+>
+> test_qdisc_attach_to_mq:PASS:ip link add veth0 type veth peer veth1 0 nse=
+c
+>
+> #214/3   ns_bpf_qdisc/attach to mq:FAIL
+>
+> #214     ns_bpf_qdisc:FAIL
+>
+> Summary: 0/4 PASSED, 0 SKIPPED, 1 FAILED
+>
+>
+> > root@r210:/mnt/sdb1/linux/tools/testing/selftests/bpf#test_progs
+> > --json-summary=3D"./bpf_selftests.json"
+> >
+> > root@r210:/mnt/sdb1/linux/tools/testing/selftests/bpf#cat
+> > bpf_selftests.json | jq . | grep -B4 '"failed": true'  | grep -v
+> > '"message":'
+> >     {
+> >       "name": "bpf_cookie",
+> >       "number": 19,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "lsm",
+> >           "number": 9,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "cgroup1_hierarchy",
+> >       "number": 52,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "test_cgroup1_hierarchy",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "test_invalid_level",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "test_invalid_cgid",
+> >           "number": 4,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "test_invalid_hid",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "test_invalid_cgrp_name",
+> >           "number": 6,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "test_invalid_cgrp_name2",
+> >           "number": 7,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "cgroup_tcp_skb",
+> >       "number": 69,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "cgroup_xattr",
+> >       "number": 71,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "read_cgroupfs_xattr",
+> >           "number": 8,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "deny_namespace",
+> >       "number": 96,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "userns_create_bpf",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "exceptions",
+> >       "number": 104,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "reject_exception_cb_type_1",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_exception_cb_type_2",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_exception_cb_type_3",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_exception_cb_type_4",
+> >           "number": 4,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_async_callback_throw",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_with_rcu_read_lock",
+> >           "number": 8,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_subprog_with_rcu_read_lock",
+> >           "number": 9,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_with_reference",
+> >           "number": 11,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_with_cb_reference",
+> >           "number": 12,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_with_cb",
+> >           "number": 13,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_with_subprog_reference",
+> >           "number": 14,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_throwing_exception_cb",
+> >           "number": 15,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_exception_throw_cb",
+> >           "number": 19,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_exception_throw_cb_diff",
+> >           "number": 20,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "reject_set_exception_cb_bad_ret2",
+> >           "number": 22,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_eq_int_min",
+> >           "number": 23,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_eq_int_max",
+> >           "number": 24,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_eq_zero",
+> >           "number": 25,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_eq_llong_min",
+> >           "number": 26,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_eq_llong_max",
+> >           "number": 27,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_lt_pos",
+> >           "number": 28,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_lt_zero",
+> >           "number": 29,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_lt_neg",
+> >           "number": 30,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_le_pos",
+> >           "number": 31,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_le_zero",
+> >           "number": 32,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_le_neg",
+> >           "number": 33,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_gt_pos",
+> >           "number": 34,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_gt_zero",
+> >           "number": 35,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_gt_neg",
+> >           "number": 36,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_ge_pos",
+> >           "number": 37,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_ge_zero",
+> >           "number": 38,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_ge_neg",
+> >           "number": 39,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_range_s64",
+> >           "number": 40,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_range_u64",
+> >           "number": 41,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_single_range_s64",
+> >           "number": 42,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_single_range_u64",
+> >           "number": 43,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_generic",
+> >           "number": 44,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "check_assert_with_return",
+> >           "number": 45,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "fexit_stress",
+> >       "number": 115,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "file_reader",
+> >       "number": 118,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "on_open_expect_fault",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "on_open_validate_file_read",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "fs_kfuncs",
+> >       "number": 130,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "user_xattr",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "security_bpf_xattr",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "set_remove_xattr",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "get_branch_snapshot",
+> >       "number": 131,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "iters",
+> >       "number": 148,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "css_task",
+> >           "number": 85,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "kernel_flag",
+> >       "number": 151,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "kfunc_dynptr_param",
+> >       "number": 154,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "dynptr_data_null",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "libbpf_get_fd_by_id_opts",
+> >       "number": 168,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "lookup_key",
+> >       "number": 185,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "lsm_cgroup",
+> >       "number": 187,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "functional",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "migrate_reuseport",
+> >       "number": 206,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "IPv4 TCP_SYN_RECV     inet_csk_listen_stop",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "IPv4 TCP_NEW_SYN_RECV reqsk_timer_handler",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "IPv4 TCP_NEW_SYN_RECV inet_csk_complete_hashdance",
+> >           "number": 4,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "IPv6 TCP_SYN_RECV     inet_csk_listen_stop",
+> >           "number": 6,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "IPv6 TCP_NEW_SYN_RECV reqsk_timer_handler",
+> >           "number": 7,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "IPv6 TCP_NEW_SYN_RECV inet_csk_complete_hashdance",
+> >           "number": 8,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "ptr_untrusted",
+> >       "number": 284,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "res_spin_lock_failure",
+> >       "number": 369,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "res_spin_lock_var_off",
+> >           "number": 12,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "send_signal",
+> >       "number": 376,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "send_signal_perf",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_nmi",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_perf_thread",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_nmi_thread",
+> >           "number": 6,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_perf_remote",
+> >           "number": 8,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_nmi_remote",
+> >           "number": 9,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_perf_thread_remote",
+> >           "number": 11,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "send_signal_nmi_thread_remote",
+> >           "number": 12,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "setget_sockopt",
+> >       "number": 378,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "sk_assign",
+> >       "number": 381,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "sockmap_basic",
+> >       "number": 399,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "sockmap vsock delete on close",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "sockmap skb_verdict vsock poll",
+> >           "number": 29,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "sockmap_listen",
+> >       "number": 401,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "sockmap IPv4 TCP test_reuseport_select_listening",
+> >           "number": 33,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "sockmap IPv6 TCP test_reuseport_select_listening",
+> >           "number": 71,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "sockhash IPv4 TCP test_reuseport_select_listening",
+> >           "number": 109,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "sockhash IPv6 TCP test_reuseport_select_listening",
+> >           "number": 147,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "sockmap_redir",
+> >       "number": 402,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "stream_success",
+> >       "number": 422,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "stream_cond_break",
+> >           "number": 2,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "stream_deadlock",
+> >           "number": 3,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "tcpbpf_user",
+> >       "number": 460,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "test_bpffs",
+> >       "number": 467,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "test_bprm_opts",
+> >       "number": 469,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "test_ima",
+> >       "number": 472,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "test_local_storage",
+> >       "number": 473,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "test_lsm",
+> >       "number": 474,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "lsm_basic",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "token",
+> >       "number": 485,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "obj_priv_prog",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "unpriv_bpf_disabled",
+> >       "number": 498,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "verifier_private_stack",
+> >       "number": 576,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "Private stack, exception in main prog",
+> >           "number": 5,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "Private stack, exception in subprog",
+> >           "number": 6,
+> >           "failed": true
+> > --
+> >     {
+> >       "name": "verif_scale_pyperf600",
+> >       "number": 625,
+> >       "failed": true,
+> > --
+> >     {
+> >       "name": "verify_pkcs7_sig",
+> >       "number": 642,
+> >       "failed": true,
+> > --
+> >         {
+> >           "name": "pkcs7_sig_from_map",
+> >           "number": 1,
+> >           "failed": true
+> > --
+> >         {
+> >           "name": "pkcs7_sig_fsverity",
+> >           "number": 2,
+> >           "failed": true
