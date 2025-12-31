@@ -1,157 +1,147 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4BD2E285C
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 10:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9269313E37
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 10:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767175443; cv=none; b=sj204nPitoruoC8hvqAil0181xAI1ZJAMNZnw56jTF7rGyzOUxCnNHAfuZhsEmJAK0gA+glI8Tzvw25v5BWBbYSEdxm05XiNd/7HNO8bsSQlRBCzk/Bf8ebv9MG09ilLiV9tV/bhZjU52l7KyZ3lSb7TkHIvaAuNzJbjqMueA5s=
+	t=1767175741; cv=none; b=FsQa3TIH4un5vviBt9TSmZhVNtYKMnrlSZtnjrLNBZpZsaN0lDlO3oftflo828YR3qrl7cC8kv9EOFAJj3x9bFgSCqP7DvDfwk1XnHPXep7bUmuSZSYAiZpPLw0KK3EyFlVFWdT6dFROBuGQdI3zv/pRcSCuLpR1jVO6g9kc0zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767175443; c=relaxed/simple;
-	bh=BL5UMvpBM99dQxCTWMRBK9IgaJ0KfoM+mWbJCQ02AQc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZSCth/v/HO3x+k0n4Xru+92QwQP8FAm+YtD7/XYhb7vOJpMm2UR/losrNt6+xDq6fGnJovdljqA1Yw4TewxVfr+dixsciB+esJJj2Y82cHzy20bXikIg0LklS0/qYbwiCEm3EeY9Z3XiOSpOdEoPF2jzLLP3hZhE7+5+ROzrqpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx28IL9VRppaIEAA--.14240S3;
-	Wed, 31 Dec 2025 18:03:55 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxOMEF9VRp988HAA--.5668S3;
-	Wed, 31 Dec 2025 18:03:53 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Add more CPUCFG mask bit
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20251231020227.1526779-1-maobibo@loongson.cn>
- <CAAhV-H4CU1Ct8ZcxpZcMEZy7uL-wPmkxVhJwEWQdy0rpBAo8fg@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <1599cfd8-370b-4dec-5434-4845249c3533@loongson.cn>
-Date: Wed, 31 Dec 2025 18:01:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1767175741; c=relaxed/simple;
+	bh=QB666z0WcUC/viohN8xjIcPSHIzzC1N7fVP0HdlRvIs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SZYyiIynXSVMFVmirSiBlyThg3dlPBGqoId8EfY4OvDeKDBxvUQUnJnj5APlxP5l5PbZq+UhQuClrofFGDOW0Pv7nFbX7EcSZ/mbzUsWfYVWaVff1BM+bYqmxK5ZOGH6FtYW4O+hhZVdSl0saNE2xM4Kb/TOJdnmLOapS7VboGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XizlKlDM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XizlKlDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA48C4AF0B
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 10:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767175741;
+	bh=QB666z0WcUC/viohN8xjIcPSHIzzC1N7fVP0HdlRvIs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XizlKlDMPw4EWKzueJlEuaQgKavUYoFXHnNGNXZfQ7NHuX4uO1ZkeX6fofuABleZo
+	 mPC391tzdIGG8x34cvMXl+9jv/MkZDaFt3w36lZBj9lJwgZOpGwuhaxN157oK7Y9hf
+	 5+LshpSPyKX3MCfTF1vgzAMY1lvjDfvhn7GMrLbN3KyKtbqcFSLREPJHQqUY9p5pV9
+	 AOvH9Xjgz23JIGdAqyf6tbQxzK+xZCIPLLhGwJLhzPiCp4LNWbg69R0ON1ZwC0WNvP
+	 XTWlSNPQSXo7lL+tceHTz0hkM+Z3SRe6yHlKJLrJQ55Esp/Zd8x8lnNwEzjVgYvfQ8
+	 ixvw3q8Ksu/GQ==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b725ead5800so1506964266b.1
+        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 02:09:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU8wLTW2c2b5NhAZG52cHpULGitjcaERXbLYJXuvXQYN6IcRbDdzY6kdX4t1ZznM8MwnTE1kuBm30k=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx63equOzrPHSDxlenoexsM3yDogeZZ7a5SWgD0DYNM20Wpoxxi
+	nZ7vK3mi1yHx+rmCthxwx0ldvx49wvrllwgKiVrdtvM5SqEhvtRPt7snbrHdEJtrx58xoWMUOiJ
+	bq7GwzAk7Maqio5/J1uYWaUHOU5qDT5w=
+X-Google-Smtp-Source: AGHT+IFTUyzn1b3cAIZ/oQN/MhAntxBWi/Ew6QqFWoEvDuEWuQlCiSCn8Zz0270Z9EIfBpri+XHm6zgHVBi+B8B/85M=
+X-Received: by 2002:a17:907:1c17:b0:b76:31e6:2ee1 with SMTP id
+ a640c23a62f3a-b8036f65331mr3513451766b.18.1767175739871; Wed, 31 Dec 2025
+ 02:08:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4CU1Ct8ZcxpZcMEZy7uL-wPmkxVhJwEWQdy0rpBAo8fg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxOMEF9VRp988HAA--.5668S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGr1Dtw1fWw45CFykGry7twc_yoW5ur4fpr
-	yUAF4DWF4UKr4ftw1vqas0gF17XrZ7Gr12vF1Fv34kCFsrt3Wxur18KFZxAFy5X34kCF10
-	9as5W3WYva4Dt3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+References: <cover.1766037997.git.zhoubinbin@loongson.cn> <fa13f6bc32832085fa06ec004ff0e8b6464e7a7d.1766037997.git.zhoubinbin@loongson.cn>
+ <CAAhV-H4KpOGn44jDf09S2NVOnCD2KHbspK9OtZnrQd8Or+-UWg@mail.gmail.com> <CAMpQs4Lw3OTe53RXtZzCrj2u0O=ytcNpF+_39j7YsFbnLujSvQ@mail.gmail.com>
+In-Reply-To: <CAMpQs4Lw3OTe53RXtZzCrj2u0O=ytcNpF+_39j7YsFbnLujSvQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 31 Dec 2025 18:09:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Y+-VUHLn=cPYUw8sneS8QNqDUOiNL-5xJvjJ0e7uP7A@mail.gmail.com>
+X-Gm-Features: AQt7F2rEoyJ4aMR2EREhwxbdd2jRSruEINqnfCTTyB6Egs9-AxwUtIczEPTYhks
+Message-ID: <CAAhV-H4Y+-VUHLn=cPYUw8sneS8QNqDUOiNL-5xJvjJ0e7uP7A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] LoongArch: dts: loongson-2k0500: Add default
+ Extend I/O Interrupt controller address cells
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Yao Zi <me@ziyao.cc>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Dec 30, 2025 at 3:39=E2=80=AFPM Binbin Zhou <zhoubb.aaron@gmail.com=
+> wrote:
+>
+> Hi :
+>
+> Sorry for the late reply.
+>
+> On Sun, Dec 21, 2025 at 8:13=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > Hi, Binbin,
+> >
+> > On Fri, Dec 19, 2025 at 4:48=E2=80=AFPM Binbin Zhou <zhoubinbin@loongso=
+n.cn> wrote:
+> > >
+> > > Add missing address-cells 0 to the extend I/O interrupt controller no=
+de
+> > > to silence W=3D1 warning:
+> > >
+> > >   loongson-2k0500.dtsi:513.5-51: Warning (interrupt_map): /bus@100000=
+00/pcie@1a000000/pcie@0,0:interrupt-map:
+> > >     Missing property '#address-cells' in node /bus@10000000/interrupt=
+-controller@1fe11600, using 0 as fallback
+> > >
+> > > Value '0' is correct because:
+> > > 1. The extend I/O interrupt controller does not have children,
+> > > 2. interrupt-map property (in PCI node) consists of five components a=
+nd
+> > >    the fourth component "parent unit address", which size is defined =
+by
+> > >    '#address-cells' of the node pointed to by the interrupt-parent
+> > >    component, is not used (=3D0)
+> > >
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >  arch/loongarch/boot/dts/loongson-2k0500.dtsi | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/loongarch/boot/dts/loongson-2k0500.dtsi b/arch/loon=
+garch/boot/dts/loongson-2k0500.dtsi
+> > > index 357de4ca7555..0594da1ea83d 100644
+> > > --- a/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> > > +++ b/arch/loongarch/boot/dts/loongson-2k0500.dtsi
+> > > @@ -164,6 +164,7 @@ eiointc: interrupt-controller@1fe11600 {
+> > >                         compatible =3D "loongson,ls2k0500-eiointc";
+> > >                         reg =3D <0x0 0x1fe11600 0x0 0xea00>;
+> > >                         interrupt-controller;
+> > > +                       #address-cells =3D <0>;
+> > >                         #interrupt-cells =3D <1>;
+> > >                         interrupt-parent =3D <&cpuintc>;
+> > >                         interrupts =3D <3>;
+> > Like Patch-5, I think liointc also need #address-cells, so does Patch-6=
+.
+>
+> As Rob said[1], the `#address-cells` attribute isn't required unless
+> it's always referenced by the ` interrupt-map` attribute, so I'd like
+> to leave the liointc node unchanged.
+I think "not required" doesn't mean "should not exist"?
+
+In my opinion I don't want to add #address-cells again when we add
+'interrupt-map' for downstream devices in future.
+
+So, I want to add #address-cells for all interrupt controllers, except
+"cpu-interrupt-controller" because it won't have direct downstream
+devices.
 
 
+Huacai
 
-On 2025/12/31 下午5:57, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Wed, Dec 31, 2025 at 10:02 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> With LA664 CPU there are more features supported which are indicated
->> in CPUCFG2 bit24:30 and CPUCFG3 bit17 and bit 23. These features do
->> not depend on KVM and there is no KVM exception when it is used in
->> VM mode.
->>
->> Here add more CPUCFG mask support with LA664 if VM is configured with
->> host CPU model.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/loongarch.h |  7 +++++++
->>   arch/loongarch/kvm/vcpu.c              | 11 +++++++++++
->>   2 files changed, 18 insertions(+)
->>
->> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
->> index e6b8ff61c8cc..553c4dc7a156 100644
->> --- a/arch/loongarch/include/asm/loongarch.h
->> +++ b/arch/loongarch/include/asm/loongarch.h
->> @@ -94,6 +94,12 @@
->>   #define  CPUCFG2_LSPW                  BIT(21)
->>   #define  CPUCFG2_LAM                   BIT(22)
->>   #define  CPUCFG2_PTW                   BIT(24)
->> +#define  CPUCFG2_FRECIPE               BIT(25)
->> +#define  CPUCFG2_DIV32                 BIT(26)
->> +#define  CPUCFG2_LAM_BH                        BIT(27)
->> +#define  CPUCFG2_LAMCAS                        BIT(28)
->> +#define  CPUCFG2_LLACQ_SCREL           BIT(29)
->> +#define  CPUCFG2_SCQ                   BIT(30)
->>
->>   #define LOONGARCH_CPUCFG3              0x3
->>   #define  CPUCFG3_CCDMA                 BIT(0)
->> @@ -108,6 +114,7 @@
->>   #define  CPUCFG3_SPW_HG_HF             BIT(11)
->>   #define  CPUCFG3_RVA                   BIT(12)
->>   #define  CPUCFG3_RVAMAX                        GENMASK(16, 13)
->> +#define  CPUCFG3_DBAR_HINTS            BIT(17)
->>   #define  CPUCFG3_ALDORDER_CAP          BIT(18) /* All address load ordered, capability */
->>   #define  CPUCFG3_ASTORDER_CAP          BIT(19) /* All address store ordered, capability */
->>   #define  CPUCFG3_ALDORDER_STA          BIT(20) /* All address load ordered, status */
-> I applied the first part because it both needed by KVM and George's patch:
-> https://lore.kernel.org/loongarch/20251231034523.47014-1-dongtai.guo@linux.dev/T/#u
-ok, thanks.
-
-I will rebase patch based on new version once the first part is merged.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 656b954c1134..9d186004670c 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -652,6 +652,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
->>
->>   static int _kvm_get_cpucfg_mask(int id, u64 *v)
->>   {
->> +       unsigned int config;
->> +
->>          if (id < 0 || id >= KVM_MAX_CPUCFG_REGS)
->>                  return -EINVAL;
->>
->> @@ -684,9 +686,18 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
->>                  if (cpu_has_ptw)
->>                          *v |= CPUCFG2_PTW;
->>
->> +               /*
->> +                * Some features depends on host and they are irrelative with
->> +                * KVM hypervisor
->> +                */
->> +               config = read_cpucfg(LOONGARCH_CPUCFG2);
->> +               *v |= config & (CPUCFG2_FRECIPE | CPUCFG2_DIV32 | CPUCFG2_LAM_BH);
->> +               *v |= config & (CPUCFG2_LAMCAS | CPUCFG2_LLACQ_SCREL | CPUCFG2_SCQ);
->>                  return 0;
->>          case LOONGARCH_CPUCFG3:
->>                  *v = GENMASK(16, 0);
->> +               config = read_cpucfg(LOONGARCH_CPUCFG3);
->> +               *v |= config & (CPUCFG3_DBAR_HINTS | CPUCFG3_SLDORDER_STA);
->>                  return 0;
->>          case LOONGARCH_CPUCFG4:
->>          case LOONGARCH_CPUCFG5:
->>
->> base-commit: dbf8fe85a16a33d6b6bd01f2bc606fc017771465
->> --
->> 2.39.3
->>
->>
-
+> Add attributes as needed based on existing DTB warnings, and Patch-6
+> will do the same.
+>
+> [1]: https://lore.kernel.org/all/20251229234931.GA2804566-robh@kernel.org=
+/
+> >
+> > Huacai
+> >
+> > > --
+> > > 2.47.3
+> > >
+>
+> --
+> Thanks.
+> Binbin
+>
