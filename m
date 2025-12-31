@@ -1,192 +1,160 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6B3164AA
-	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76C3318131
+	for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 09:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767172515; cv=none; b=ZuwgFBwxR5hl4qiVnC3lbnuDZnEXqZxFF/ksWFgrVBQzkeZ/R2cHfbh6x5yHrXsRRtfqB9MshMvPgr8QCsckNNBh8yER2tM1a1xBuWKvJgiP8Ih3LSg+ayrD3KuH7MEbiJnOVAZ/i48YJG39FT+Kh8UquJTom8hcqtSHjsuvFco=
+	t=1767174167; cv=none; b=Dwfu/Epq1ZgVGxK7x5umvMeULX6FIVgwrVU2UkxxSBG2zWDrxaT4g3eFOnJskxx7ryWmoHsN1RPVgs2QqxOs9AfNM+da/rmEykHe+57Wnxc/bGwwzD+kpUIZOJBT2DatomMgBeI5/PWHg5ktz6eZcdjNSvCrf4VJ0VDIYYwQ3IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767172515; c=relaxed/simple;
-	bh=z+kguRRaqZHMZx2XZis3aztpcnjb4raCwVyceh6uPlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PF16v6ZzsXO8VXtYkT8Sw26L4Q+wzqNsq4jSivBAWeXKM/aWLLV37t03gSZKawrgDGopbpzWG8KsV0u0BQmi2SUr3NJyo9hrqm8pVXRxhFcwLt+691t40JMpBc71AWOqsUjQXxN1RxzTLULQMcVBJgZN4olRLZ1xM+uSc65sLWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space; spf=pass smtp.mailfrom=bytefly.space; dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b=rz3KX4V6; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytefly.space
+	s=arc-20240116; t=1767174167; c=relaxed/simple;
+	bh=6NyyhcRHSRbBjOQ8whZAS+PjNnfwKSUqmF6OUVwGHdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IDGNaV6cgKN8o+58HWo6eYfmnC6GsrXfJZuvRbO8L2aq7NDrtexRAQYiLg7YtAwvBjs4Kp3clJ+aBnc9swrQs1xxRidPw4Ps1P+6AFUdOz9GnSmcBMnwOZoClUksamJfQBQ3BExtbDTiNmBWRqubKurYjy8C9G9GBWmL7Z/ISM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhIW2eSO; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b="rz3KX4V6"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2a0c20ee83dso136363325ad.2
-        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 01:15:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhIW2eSO"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-64b7b737eddso13412723a12.1
+        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 01:42:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytefly-space.20230601.gappssmtp.com; s=20230601; t=1767172511; x=1767777311; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cqaN5izDEsgH/os+tYDrb4IvKYYnm+SnIE1Vz4Q+hU8=;
-        b=rz3KX4V6DVlCFZGaTRJ5RQbwGGIkSdNZMixWIs2Dj5jLFaLw1kqMEOyGi7E86LmyFF
-         vsQuzjXRBN78/WrrOHmH996ENo7Pl6a5z5B9SKjJhJHbcWpC8DmMwtHMmN2Jf617UpDF
-         a3nKDw9jZnqOmw/br6zxsj0/ZzN+mRzVBHTQc0EZWfjK6ogcenwlUcHLg+NKgFM83HSh
-         bBckxB72WRsw58TPbWzOuz+d9bgLTaN5fj1+NqGH8OXXHHzGrZcC84IcxfppIEKPEZbu
-         swa95+SzZBZ0rnFZ2CCxw5w0w0e/bWEa8511K6pHhOinltO3KO8O8LvCWhRfh8o7x/uZ
-         B/hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767172511; x=1767777311;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1767174164; x=1767778964; darn=lists.linux.dev;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cqaN5izDEsgH/os+tYDrb4IvKYYnm+SnIE1Vz4Q+hU8=;
-        b=G8XuuKaujmR56eUfvB98LdhjFRw7COdPbjGtdgVrhBIHIa6Tvu67Dd7jh5tD7Yb6re
-         Ah5P5v2o8PyhLwspE940V9vyUgjgmdYfsXGMw+2kaOvMmsxubTl5WUNbScxVEDYdul/0
-         zKEhZkTLrpERa/ctPPc0wIPkzGlZth2PDP2IHO6a6DnWFcPGiFqRUmf8tJwcwvzaduF9
-         hZeuPKAG4JO2KfF73McpES7kH+YRDXKdLoIopYS6bRlGVUPRtOiJnuIxZqhC9ZHO48sE
-         lvxaJFf+7v3QW5obAAVU+XPOd+Eacbg+Kk2SZD2/3m4+Tba3qCdTPxbrhmrz54nAAFF7
-         xSyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzIfE4R76jw4PWgmh+DPAwLx/ukJMNffepq7kQRzcERZCCFC9lFgPuAvBRYwxeuayMn6xqzd0cLts=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxr5HGHdOoS65ytb31642RdfN7B7YTPswG1bB9oDzm4wICHH3h8
-	/n6RSmQeVTIqbX/qmwFrXetn7DmEK5L5aXFIyEkIj15O4vhVeY/JMXCF+WXdJipMhsM=
-X-Gm-Gg: AY/fxX7znoE+TV+iNOJOgFcArWeQeLUdOyEcXXBIMy86KGvw7rHaq6P6MjWMvhX9tlf
-	hnx0CC7wk0uZEeb1CRcjCaSoYfxxUSd9wY2h4uYyyxnxWT20zgprX9zfoKti5rKsFVD+DnSnJln
-	ImVQ+Vd1eyEBJCGBPW4I8bqv5snNbpg+uCL7orEY7an+/GI+mcZcQFW6wxxfNdXYBeT2xyc8bGH
-	2caeeZY4iEqkRt/TQQbTtDC7vGO8CrCmCHtGmwElw0i+23D/iAPLlddwUA1e2/eUFFqWtp8rywc
-	IZfrclgKRhO5Fr92qHctlW9EGPsDBnjJDxiPGiJDt4TTjJEgzTbV+MyBabq0eE/wsKkNpMGSant
-	PKuWubfvjPtw7x6p+F6uj0SZizfkB5nbcDBW2XWFfNr6qE6kgeM64srhnBrGMZOwKyMbWBqc=
-X-Google-Smtp-Source: AGHT+IEEHAEmUHoBPsk2VWXa0Bxxl2Wl+1W1VgdLinYqxfVL+B8yrv2/848F+XVxTJyQxSLPq3mDmg==
-X-Received: by 2002:a17:902:ce92:b0:2a2:d066:b668 with SMTP id d9443c01a7336-2a2f222adc2mr292537615ad.12.1767172511271;
-        Wed, 31 Dec 2025 01:15:11 -0800 (PST)
-Received: from xpc ([2400:8902:e002:dec1:95fc:f49b:fe:1151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3c666casm319258255ad.3.2025.12.31.01.15.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Dec 2025 01:15:10 -0800 (PST)
-From: Lisa Robinson <lisa@bytefly.space>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Lisa Robinson <lisa@bytefly.space>
-Subject: [PATCH] LoongArch: Fix PMU counter allocation for mixed-type event groups
-Date: Wed, 31 Dec 2025 17:15:00 +0800
-Message-ID: <20251231091500.530432-1-lisa@bytefly.space>
-X-Mailer: git-send-email 2.52.0
+        bh=RhQC3hnAx6vo8ybVJwyWTzkkYGMOha8q8BXdXCtNSM8=;
+        b=VhIW2eSOp5FBXBy+V9LUe1HNGQ3gOUukWRXzr4BGEeSiRzLvu1nZdB9hno7aI3XDht
+         PvLM6F/LK2VpqeRJ2M3MSrjwL87+YgXJhLDaHnpeTY5fUf9W8U+BhfnklWXWcz09Bgo1
+         j+w+cUL5OSXwdzQQUZJzKJgmDYvxA/cXDZdT1gI5foI/JTXKX+7LaX00MB0edyjFpybk
+         Eyf5dvVPrdYxJxbE1zfhFQ1rbmCPwb8silOckXImwKhost8HrnAQienU7GQuMenFR/A4
+         R9DfZMmog83bg2n3RPCLLCAMGmbAJOa8qp0dSf7XeKfCpMtHyoRflpCIOVreETY8lAuP
+         3X6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767174164; x=1767778964;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RhQC3hnAx6vo8ybVJwyWTzkkYGMOha8q8BXdXCtNSM8=;
+        b=fr9g/SQK6gnTip5DlK2Hwb4oGGNiSjMjTv3LNjxcVUTghplSGHwWZFh5VexJCilgjZ
+         5hYTLxYprDOrhSWbXxvUvTyYIMCvk09Z/EbM8VaBIPfpSj3F6hz4EB0bvXKRyI0rdvs0
+         Ln1PYts6vv9Dl6YW3IzZ4UPB7s8rn0ZfeTVcpOCNR/plhSsf0tfiH3OykVuc5vLQHeAN
+         IidaDgd+n2K84V3YOLkuEh24tNC7xGGuR9r7z8G+qwUvEEw70zVMvy2/Qhy1KaM5wPJI
+         TkxO7p+az/V3FisMn+88n1yboo8ixQLzXtIGYo9sANCZyJggO359Vb7b+zT+95iXJJBH
+         Ii9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXKi/cc8DGm19jXvrQro0LQj0y3vJXPX6h3ufD0Lbhs8ShR+n4KnQU0sa0EzYUVGJLzNnHaAbMYGLo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwPLNj3vvFD5vJhoGGIKV0MqhQICZmnobTI/f0mzR7scN8pd/Nf
+	915pImzQLunLGUz2U9+hBnnfMsTsaCFKigWHddM7/oPfKKnFYdwCa5vi
+X-Gm-Gg: AY/fxX5nxn2vYLK2h5O3lQLZnsRh9eSI1qh4F694lUXAJrkLCc5WNuaFDiTYE6at6lf
+	fJ2fLKQPgCnPQtyXnM44jczBxS47uuJPCNovbZeNqm9T296rulsMt48MfK1KMn04erWin7qEVVV
+	eRxd2kkEAUJ/98A20Mhs6UaapA+wPkX07OU5v2bzjWd7BlhF7ZpcYazmigEGXBJxfclNjKw+AcK
+	uEn1bt3ydYnd+FoHjCb984qW3RjDCROsq5RDkXo537MUUk88l24mo2P4OEbeDYl4q0g10A2RD5a
+	ylVoOw6Sb6XlNs+9jFTLY6kyr/Ke/B0GvNLkj2GJfSL/LSjuBqDO6RTQgL3kB8qtiiDZlddtVXj
+	6LdH3/Sb1iNvHu3tkQlVyZgXW4P+316Ev2YY55r0wXK5QmpLsTdK7AHc2veUmoi8YUASKieXuNZ
+	ElS7Z5d2R5gg==
+X-Google-Smtp-Source: AGHT+IG6BnZXWofbdukBItAk61uwrC2j9z3+nQpSf68E/xI1yNmjywUHcnARSPenSAEDWkU1hfWn1g==
+X-Received: by 2002:a05:6402:2356:b0:64d:4f75:aa28 with SMTP id 4fb4d7f45d1cf-64d4f75adb0mr30963979a12.18.1767174163924;
+        Wed, 31 Dec 2025 01:42:43 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64b9105655asm37568985a12.9.2025.12.31.01.42.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 31 Dec 2025 01:42:43 -0800 (PST)
+Date: Wed, 31 Dec 2025 09:42:43 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Qi Zheng <qi.zheng@linux.dev>
+Cc: will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+	peterz@infradead.org, dev.jain@arm.com, akpm@linux-foundation.org,
+	david@kernel.org, ioworker0@gmail.com, linmag7@gmail.com,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-alpha@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+	Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
+ MMU_GATHER_RCU_TABLE_FREE
+Message-ID: <20251231094243.zmjs7kgflm7q6k73@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+ <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-When validating a perf event group, validate_group() unconditionally
-attempts to allocate hardware PMU counters for the leader, sibling
-events and the new event being added.
+On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
+>From: Qi Zheng <zhengqi.arch@bytedance.com>
+>
+>The PT_RECLAIM can work on all architectures that support
+>MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
+>MMU_GATHER_RCU_TABLE_FREE.
+>
+>BTW, change PT_RECLAIM to be enabled by default, since nobody should want
+>to turn it off.
+>
+>Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>---
+> arch/x86/Kconfig | 1 -
+> mm/Kconfig       | 9 ++-------
+> 2 files changed, 2 insertions(+), 8 deletions(-)
+>
+>diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>index 80527299f859a..0d22da56a71b0 100644
+>--- a/arch/x86/Kconfig
+>+++ b/arch/x86/Kconfig
+>@@ -331,7 +331,6 @@ config X86
+> 	select FUNCTION_ALIGNMENT_4B
+> 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+> 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>-	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
+> 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
+> 	select SCHED_SMT			if SMP
+> 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
+>diff --git a/mm/Kconfig b/mm/Kconfig
+>index bd0ea5454af82..fc00b429b7129 100644
+>--- a/mm/Kconfig
+>+++ b/mm/Kconfig
+>@@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
+> 	  The architecture has hardware support for userspace shadow call
+>           stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+> 
+>-config ARCH_SUPPORTS_PT_RECLAIM
+>-	def_bool n
+>-
+> config PT_RECLAIM
+>-	bool "reclaim empty user page table pages"
+>-	default y
+>-	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
+>-	select MMU_GATHER_RCU_TABLE_FREE
+>+	def_bool y
+>+	depends on MMU_GATHER_RCU_TABLE_FREE
+> 	help
+> 	  Try to reclaim empty user page table pages in paths other than munmap
+> 	  and exit_mmap path.
 
-This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
-ispart of the group, the current code still tries to allocate a hardware
-PMU counter for it, which can wrongly consume hardware PMU resources and
-cause spurious allocation failures.
+Hi, Qi
 
-Fix this by only allocating PMU counters for hardware events during group
-validation, and skipping software events.
+I am new to PT_RECLAIM, when reading related code I got one question.
 
-A trimmed down reproducer is as simple as this:
+Before this patch,  we could have this config combination:
 
-  #include <stdio.h>
-  #include <assert.h>
-  #include <unistd.h>
-  #include <string.h>
-  #include <sys/syscall.h>
-  #include <linux/perf_event.h>
+    CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
 
-  int
-  main (int argc, char *argv[])
-  {
-  	struct perf_event_attr attr = { 0 };
-  	int fds[5];
+This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
+is semi rcu version.
 
-  	attr.disabled = 1;
-  	attr.exclude_kernel = 1;
-  	attr.exclude_hv = 1;
-  	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-  		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
-  	attr.size = sizeof (attr);
+I am curious could we use rcu version tlb_remove_table_one() for this case?
+Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
+there some limitation here?
 
-  	attr.type = PERF_TYPE_SOFTWARE;
-  	attr.config = PERF_COUNT_SW_DUMMY;
-  	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
-  	assert (fds[0] >= 0);
+Thanks in advance for your explanation.
 
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CPU_CYCLES;
-  	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[1] >= 0);
 
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-  	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[2] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
-  	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[3] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
-  	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[4] >= 0);
-
-  	printf ("PASSED\n");
-
-  	return 0;
-  }
-
-Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
-Signed-off-by: Lisa Robinson <lisa@bytefly.space>
----
- arch/loongarch/kernel/perf_event.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 9d257c8519c9..82cc08c2b056 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -633,15 +633,24 @@ static int validate_group(struct perf_event *event)
- 
- 	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
-+	if ((PERF_TYPE_HARDWARE == leader->attr.type ||
-+	     PERF_TYPE_HW_CACHE == leader->attr.type ||
-+	     PERF_TYPE_RAW == leader->attr.type) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
- 		return -EINVAL;
- 
- 	for_each_sibling_event(sibling, leader) {
--		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
-+		if ((PERF_TYPE_HARDWARE == sibling->attr.type ||
-+		     PERF_TYPE_HW_CACHE == sibling->attr.type ||
-+		     PERF_TYPE_RAW == sibling->attr.type) &&
-+		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
- 			return -EINVAL;
- 	}
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
-+	if ((PERF_TYPE_HARDWARE == event->attr.type ||
-+	     PERF_TYPE_HW_CACHE == event->attr.type ||
-+	     PERF_TYPE_RAW == event->attr.type) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
- 		return -EINVAL;
- 
- 	return 0;
 -- 
-2.52.0
-
+Wei Yang
+Help you, Help me
