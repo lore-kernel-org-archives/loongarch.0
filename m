@@ -1,180 +1,237 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B297B2877DC
-	for <loongarch@lists.linux.dev>; Thu,  1 Jan 2026 02:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97812F0C68
+	for <loongarch@lists.linux.dev>; Thu,  1 Jan 2026 18:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767233240; cv=none; b=OLYZEGAVt+FXa64gfhvcQ67NxMOYSqNnS7GhJ/E3QkivY+KvVlk9cHVnzWEO1oAdzS//ThrOFxpHFEjz1WzFjx7eICdyOO0VC7jJW0hqsssoZnmnLi1DxJQpSgKv4TtudXzlpXAP2Zjbfuolen7osoP+z3VqAqsVen7DhaYX72o=
+	t=1767292008; cv=none; b=fqb2y6M1R3kYTI8JzbSwG7x+0dhiSxA+aMSK/PjOI9bqsoZb/DSPBzNj8DH63wB/kHHuVlD8Djo9mIX+e1hJeHrs948Llg3Vd9Qldpc4IYqbEXuK1E+PWyanDme+XiCjTCEuNuNsiGd151/avo0pjOxjg+pBqnjRZPx1u1l9h88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767233240; c=relaxed/simple;
-	bh=NSSdoE7G/g/QaVmDnjP9LfDazgPNO8PlY1pApWlnZBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3krVVW2auEKWFCFM2/wzYrAt/NrMFnUosuPuVjphCyLRSSxy1sO9eOaEyO3H0e5bBvPSGsMyBotj17Br1A8vvCcH4D6OeavnY1NEdp8cZ6SCX5xQbtiXLJKHPktPKaURknyx6RfPKdxZHWQXh2GbbuQjWAlD/QTwup8kIJMiVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+6SNDlL; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1767292008; c=relaxed/simple;
+	bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Hy92YRqXlldUsrFvtPJSxBpiQ1aD8qulXpQbTZmtfOpSH8beNIRbfa0lJJ5/Z8JjVO0XCJGodoxNoCuu867H3jua0joMuahfhTS/4F+SC6c4p2OiB0rXsHL2JAAI3SKpEZckVX0GKcnnnmDSuM2AHisU519CwE10/FLo7oTBaZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJEwca7h; arc=none smtp.client-ip=209.85.160.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+6SNDlL"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b734fcbf1e3so2284855766b.3
-        for <loongarch@lists.linux.dev>; Wed, 31 Dec 2025 18:07:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJEwca7h"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4ee19b1fe5dso133807541cf.0
+        for <loongarch@lists.linux.dev>; Thu, 01 Jan 2026 10:26:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767233237; x=1767838037; darn=lists.linux.dev;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UQBF0g7LGMkaWXJONFj1Zzubf3JQP1KLJgb8Ha1McV4=;
-        b=X+6SNDlL6v6cMHk06K4Oli+gK1GY1/95fGN2KLdhSphDkjfmceMum6u8aJW50X6yGw
-         kEijrvRWjB7Sxq41meDq/MqjNgHG4OUdXd8xpM2yT2RuMyY7o4uyBjbn85hVd4L0Y4lY
-         JKV6dWhbl2LPIT1CBWpTIKxu8ylHI7rvU62s0TsEtzmVzsc3pqP6avBG4iT5hgVcwg9H
-         Au8mO+rQxpn4uTXk/WsHSa5vaicfTR3uc5qgm91lefK5PrEQC+FyUR6H1OtaN7GwpRkY
-         vmZoQKTMjYsSiS9/mlgm6d9wQbJThWvfwlGWKL1VVUveCHIU5ktm0gM7O/3iJCjkcIOK
-         9O8A==
+        d=gmail.com; s=20230601; t=1767292005; x=1767896805; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
+        b=WJEwca7hfgZ9FEPI/ZBCRv+rHDkp5q0JEMPGGzPyqHhusaT12uLr+88+1DHOn20yGN
+         4TEZfzwyEQdFQhv9illGTcgMBDVQJbWMpjO7hNoALP9uJSnVaD3Cbo4zPwmGj22nperk
+         YTGwr0vXEWwwNMnWa9p0yWz907oXHeBHC/TzYInuOWa9ehl3nDPA2SVNNZe5/hWO2ls4
+         3hKybr0o8/3E7l7KiAJMuiJq1cG+8hAhw47boc1pDN7b41bg/f/K2yoxV+OzlE5NdY2j
+         dYJ35s1Lu4l/Gr+y+2bc/RVVI3tNQWUutLp5gPONbQW7WMZFwD3E63gc0RdhEsQI+gdK
+         4ybA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767233237; x=1767838037;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20230601; t=1767292005; x=1767896805;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UQBF0g7LGMkaWXJONFj1Zzubf3JQP1KLJgb8Ha1McV4=;
-        b=nk6llN6IKll8j3ah2l0CSMq4/HdTE0a2j6gI0dbivk9WlHAr4wJO2dlzCgbD9WfG99
-         k4AcbhpOdlE781nwUu+p2AVmqNIzPpSIJ1aks+TiQuzYvcju8ufyb5YcG8gDZwnEGMnT
-         iIJupMb8ZnBO33GqO8WSBAnhz1VNezNNHkFBxoqypW/wbFcDDuOmrAVlGkwvL9Gecbem
-         CfjbV0wO4zDyZLVqjX7J5hhfifhED11DIJsCPANPZMedXh7rbjJ9JYvVwMPYDG99Opfc
-         KZA0Agw+f2qxICpIM70LKoeAjaMMUp2f30Sy76kdB8TTAFnrcX1fXS9Qi+4lFH0yX11I
-         9Wjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMUI+tyRzbKywor/r1OefEB1xhgWqxAtgG6iU1dKYtYch+k55jRHyM2ke/cg/0Iusz4O+KSKjsE9M=@lists.linux.dev
-X-Gm-Message-State: AOJu0YywuIVy3RrCMMAMjvcxFupU70fGftSv0Zj21WHWghUZxxwE5Ls2
-	ekW7jSLiVsgIMn/5AWoAUa6CPhTPtbWHfi2u5gUG+4b3bPEvveufRmeu
-X-Gm-Gg: AY/fxX7qd9NhJAMJhc2KZasGsB+kMqKVdZyYVOP332v6etNAPeafh20B5M0OghqGNPL
-	8LNvQT0K+5Mn6HPnthwi5dhyzCSKV3kS72vrvuq85EhIYNJYcTniI2zhf6DDoiUucFav4BjZZn7
-	kyJ8+br1IsU2N6jwOXMkI3/E8Ve6rgdneNbVOUUDhqY0LbbGstI6VpNor/8sXwG15YCqZdpomzd
-	5YA9MZQvsOtg5YT4fQcg/RgqAxazC+owR9X1IEnt0xCnj0UrA6woCJAMrOn84/mWk9O/7HdrDov
-	r3g8QcdiM07V+v+KaGSz53kzhHclQwrBY/w35FkZqf8at0jAfFr44Cwy37XcHkkGxrZbdJMy3BG
-	HOIa1kCvLm3ghSe0w4H6XTZBEM64trV2OlQyBpIq3WduJiekYwE0+xjkNi9EpX0/hryXCGFl7W5
-	61ZWM2rHhXWg==
-X-Google-Smtp-Source: AGHT+IGkCnh9dqfLUptvpy4PZGXmScqGnHYP3DGjjwJuJ8br2u0RfwesNHaEMQG1tTnLLwW9sFl6GQ==
-X-Received: by 2002:a17:907:7f05:b0:b72:9961:dc04 with SMTP id a640c23a62f3a-b8036f86950mr4237184166b.28.1767233236739;
-        Wed, 31 Dec 2025 18:07:16 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64b910601c7sm39251595a12.14.2025.12.31.18.07.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 31 Dec 2025 18:07:16 -0800 (PST)
-Date: Thu, 1 Jan 2026 02:07:15 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Qi Zheng <qi.zheng@linux.dev>
-Cc: Wei Yang <richard.weiyang@gmail.com>, will@kernel.org,
-	aneesh.kumar@kernel.org, npiggin@gmail.com, peterz@infradead.org,
-	dev.jain@arm.com, akpm@linux-foundation.org, david@kernel.org,
-	ioworker0@gmail.com, linmag7@gmail.com, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
- MMU_GATHER_RCU_TABLE_FREE
-Message-ID: <20260101020715.45wqnjgcklvjcth3@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
- <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
- <20251231094243.zmjs7kgflm7q6k73@master>
- <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
+        bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
+        b=FHeKRqCL2CUlSWiKg3aZcTbKbPlJAOMDXyw/wmgTS4T7PfcPgN4Wz15SI4g/P7CjSa
+         +ICT/HDfVDy2dnREjsmOhTd8FXFpctBeGAz3RTSm2YB6vfPvbRZHx01U2HWyRTQaTZHw
+         C/gPAW3CKpbWbYbJkhkGUxYvvWwnr1G+brltop891Sz6EFiVJYNFDe6X2T2OQTSi1Gpx
+         3MJ+I+NptvljCaYQP1Hnqz87wWJfezgdJnf8dKV7uXJ40TFY/8SSXRzfvWZ5jQbTOMlV
+         llpjXYjjDk8RJbduCGHsJU5QMbACrkpWjae6ZqFAFXMdl8d4OIHHFVoX+9AtLPFEP7J5
+         ucAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPdZoy/PjPD22Ee7YyLbPrd7flR/LCH5t15Tc9g0xFYStLvLE5vC6tUoMTDcA4BOklKG6Jx5Sveyg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxP2BqASY0WFmKe5t5hT9YXsEfcTSKyPYNZ6v0ejTYL7Si17HEW
+	FQerCT0XeOptksw2cutjpZfDLtutrIJOiEIlRLD3Uag7sNtyqIudvF0nkmyM077vWvTxTpB3V5l
+	R3ye1dtz+szwr4gcRW+r30zMou7eRmOA=
+X-Gm-Gg: AY/fxX7s+yjey3AhfwElpaxEgxcDqE4ZoKrVjL+N06I/80YX1htky+X6e1ukDNcTH1q
+	P9J31hNmsYBe2YRp9o9Kwy7mix6LvUpwKluFy2UhqWPQ6sr2bA5MfFKoJ2G9Ye0xLT3tXPg1QQ+
+	ze9kf52HeXvB3BpUwL+BQmgTslubvQ0jo5x+jwFI7zD2XzICJWPhQu+VuIqoez23PjN/TXbC6rL
+	qpbGDf6PIaumKhaD18eukcm29BV0MI5FC5QPMvi5KivzxiUkrvsnbfmnnrllgZG66uNIH0=
+X-Google-Smtp-Source: AGHT+IFHQg0nG0eaEMFYLqFjAh0XJlieab08wMM2OPaHkz2hikpL5OI5rx5DrsbcKn+EMOjGsc0iroENmFKu4ceHvaQ=
+X-Received: by 2002:a05:622a:198b:b0:4ee:1bc7:9d7b with SMTP id
+ d75a77b69052e-4f4abd8cc1fmr533103801cf.39.1767292005551; Thu, 01 Jan 2026
+ 10:26:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Thu, 1 Jan 2026 10:26:34 -0800
+X-Gm-Features: AQt7F2pVzbJ9zAGkBOcdfnBaj7HK-VnOGc1cyoB5TONH_Az28I5f_Ok9niKqqEo
+Message-ID: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
+Subject: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object 'tc_bpf'
+ from buffer
+To: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
+Cc: ast <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Dec 31, 2025 at 05:52:57PM +0800, Qi Zheng wrote:
->
->
->On 12/31/25 5:42 PM, Wei Yang wrote:
->> On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
->> > From: Qi Zheng <zhengqi.arch@bytedance.com>
->> > 
->> > The PT_RECLAIM can work on all architectures that support
->> > MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
->> > MMU_GATHER_RCU_TABLE_FREE.
->> > 
->> > BTW, change PT_RECLAIM to be enabled by default, since nobody should want
->> > to turn it off.
->> > 
->> > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->> > ---
->> > arch/x86/Kconfig | 1 -
->> > mm/Kconfig       | 9 ++-------
->> > 2 files changed, 2 insertions(+), 8 deletions(-)
->> > 
->> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> > index 80527299f859a..0d22da56a71b0 100644
->> > --- a/arch/x86/Kconfig
->> > +++ b/arch/x86/Kconfig
->> > @@ -331,7 +331,6 @@ config X86
->> > 	select FUNCTION_ALIGNMENT_4B
->> > 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->> > 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
->> > -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
->> > 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
->> > 	select SCHED_SMT			if SMP
->> > 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
->> > diff --git a/mm/Kconfig b/mm/Kconfig
->> > index bd0ea5454af82..fc00b429b7129 100644
->> > --- a/mm/Kconfig
->> > +++ b/mm/Kconfig
->> > @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
->> > 	  The architecture has hardware support for userspace shadow call
->> >            stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->> > 
->> > -config ARCH_SUPPORTS_PT_RECLAIM
->> > -	def_bool n
->> > -
->> > config PT_RECLAIM
->> > -	bool "reclaim empty user page table pages"
->> > -	default y
->> > -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
->> > -	select MMU_GATHER_RCU_TABLE_FREE
->> > +	def_bool y
->> > +	depends on MMU_GATHER_RCU_TABLE_FREE
->> > 	help
->> > 	  Try to reclaim empty user page table pages in paths other than munmap
->> > 	  and exit_mmap path.
->> 
->> Hi, Qi
->> 
->> I am new to PT_RECLAIM, when reading related code I got one question.
->> 
->> Before this patch,  we could have this config combination:
->> 
->>      CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
->> 
->> This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
->> is semi rcu version.
->> 
->> I am curious could we use rcu version tlb_remove_table_one() for this case?
->> Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
->> there some limitation here?
->
->I think there's no problem. The rcu version can also ensure that the
->fast GUP works well.
->
+Hi,
 
-Thanks for your quick response :-)
+I used AI to enhance my message, hope it helps :)
 
-And Happy New Year
+I am reporting test failures observed while running BPF selftests on a
+LoongArch machine. Both the ns_bpf_qdisc and xdp_synproxy tests
+exhibit WATCHDOG timeouts and eventual failures. The issue appears
+architecture-specific but I am not sure.
 
-So my little suggestion is move the definition of __tlb_remove_table_one()
-under CONFIG_MMU_GATHER_RCU_TABLE_FREE. Do you thinks this would be more
-clear?
+Issue Summary:
+When building and running 6.19.0-rc3 BPF selftests on a LoongArch machine:
 
->> 
->> Thanks in advance for your explanation.
->> 
->> 
+The "ns_bpf_qdisc/attach to mq" test fails with a WATCHDOG timeout
+after 120 seconds, followed by SIGSEGV.
 
--- 
-Wei Yang
-Help you, Help me
+The xdp_synproxy test shows similar failure symptoms.
+
+During the failing ns_bpf_qdisc test, I see this log message:
+libbpf: loading object 'tc_bpf' from buffer
+This message is NOT present when the same test passes on an x86 build
+machine or on other LoongArch machines. The xdp_synproxy test likely
+has a similar loading message.
+
+Key Observations:
+
+Architecture Dependency Suspected:
+
+Both failures occur only on my LoongArch setup.
+
+The log message "libbpf: loading object 'tc_bpf' from buffer" appears
+only in the failing cases.
+
+Others have successfully run these tests on LoongArch machines without
+seeing this message.
+
+Source of the 'tc_bpf' Object:
+
+From reading libbpf.c, this message indicates loading an object from a
+BPF skeleton. However, I cannot find a skeleton named 'tc_bpf' in the
+bpf selftests skeleton source tree.
+
+A grep search shows skeletons like 'tc_bpf2bpf' and 'test_tc_bpf', but
+no exact 'tc_bpf' match.
+
+Grep results for 'tc_bpf' in skeletons:
+[root@fedora bpf]# grep -r 'tc_bpf' * | grep 's->name'
+cpuv4/tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
+cpuv4/test_tc_bpf.skel.h: s->name = "test_tc_bpf";
+no_alu32/tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
+no_alu32/test_tc_bpf.skel.h: s->name = "test_tc_bpf";
+tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
+test_tc_bpf.skel.h: s->name = "test_tc_bpf";
+
+Test Output:
+
+The test runs until the WATCHDOG triggers, then terminates with a
+segmentation fault.
+
+Relevant output section is included below.
+
+Questions / Next Steps:
+
+Could the 'tc_bpf' object be dynamically generated? If so, why does it
+only appear in the failing LoongArch cases?
+
+How can I debug this further? Should I enable more logging or check
+for missing dependencies?
+
+Are these two test failures (ns_bpf_qdisc and xdp_synproxy) related,
+given they both show similar timeout patterns?
+
+Environment:
+
+Kernel: 6.19.0-rc3
+
+Architecture: LoongArch
+
+Test Command: ./test_progs -t ns_bpf_qdisc
+
+Full Test Output Snippet for ns_bpf_qdisc:
+
+[root@fedora bpf]# ./test_progs -t ns_bpf_qdisc
+libbpf: loading object 'tc_bpf' from buffer
+libbpf: elf: section(2) .symtab, size 168, link 1, flags 0, type=2
+libbpf: elf: section(3) tc, size 144, link 0, flags 6, type=1
+libbpf: sec 'tc': found program 'tc_ingress' at insn offset 0 (0
+bytes), code size 18 insns (144 bytes)
+libbpf: elf: section(4) .rodata, size 36, link 0, flags 2, type=1
+libbpf: elf: section(5) license, size 4, link 0, flags 3, type=1
+libbpf: license of tc_bpf is GPL
+libbpf: elf: section(6) .reltc, size 16, link 2, flags 40, type=9
+libbpf: elf: section(7) .BTF, size 2108, link 0, flags 0, type=1
+libbpf: elf: section(8) .BTF.ext, size 284, link 0, flags 0, type=1
+libbpf: looking for externs among 7 symbols...
+libbpf: collected 0 externs total
+libbpf: map 'tc_bpf.rodata' (global data): at sec_idx 4, offset 0, flags 80.
+libbpf: map 0 is "tc_bpf.rodata"
+libbpf: sec '.reltc': collecting relocation for section(3) 'tc'
+libbpf: sec '.reltc': relo #0: insn #12 against '.rodata'
+libbpf: prog 'tc_ingress': found data map 0 (tc_bpf.rodata, sec 4, off
+0) for insn 12
+libbpf: object 'tc_bpf': failed (-95) to create BPF token from
+'/sys/fs/bpf', skipping optional step...
+libbpf: loaded kernel BTF from '/sys/kernel/btf/vmlinux'
+libbpf: sec 'tc': found 5 CO-RE relocations
+libbpf: CO-RE relocating [2] struct __sk_buff: found target candidate
+[10675] struct __sk_buff in [vmlinux]
+libbpf: prog 'tc_ingress': relo #0: <byte_off> [2] struct
+__sk_buff.protocol (0:4 @ offset 16)
+libbpf: prog 'tc_ingress': relo #0: matching candidate #0 <byte_off>
+[10675] struct __sk_buff.protocol (0:4 @ offset 16)
+libbpf: prog 'tc_ingress': relo #0: patched insn #0 (LDX/ST/STX) off 16 -> 16
+libbpf: prog 'tc_ingress': relo #1: <byte_off> [2] struct
+__sk_buff.data (0:15 @ offset 76)
+libbpf: prog 'tc_ingress': relo #1: matching candidate #0 <byte_off>
+[10675] struct __sk_buff.data (0:15 @ offset 76)
+libbpf: prog 'tc_ingress': relo #1: patched insn #2 (LDX/ST/STX) off 76 -> 76
+libbpf: prog 'tc_ingress': relo #2: <byte_off> [2] struct
+__sk_buff.data_end (0:16 @ offset 80)
+libbpf: prog 'tc_ingress': relo #2: matching candidate #0 <byte_off>
+[10675] struct __sk_buff.data_end (0:16 @ offset 80)
+libbpf: prog 'tc_ingress': relo #2: patched insn #3 (LDX/ST/STX) off 80 -> 80
+libbpf: CO-RE relocating [19] struct iphdr: found target candidate
+[28807] struct iphdr in [vmlinux]
+libbpf: prog 'tc_ingress': relo #3: <byte_off> [19] struct iphdr.ttl
+(0:6 @ offset 8)
+libbpf: prog 'tc_ingress': relo #3: matching candidate #0 <byte_off>
+[28807] struct iphdr.ttl (0:6 @ offset 8)
+libbpf: prog 'tc_ingress': relo #3: patched insn #9 (LDX/ST/STX) off 8 -> 8
+libbpf: prog 'tc_ingress': relo #4: <byte_off> [19] struct
+iphdr.tot_len (0:3 @ offset 2)
+libbpf: prog 'tc_ingress': relo #4: matching candidate #0 <byte_off>
+[28807] struct iphdr.tot_len (0:3 @ offset 2)
+libbpf: prog 'tc_ingress': relo #4: patched insn #10 (LDX/ST/STX) off 2 -> 2
+libbpf: map 'tc_bpf.rodata': created successfully, fd=5
+Successfully started! Please run sudo cat
+/sys/kernel/debug/tracing/trace_pipe to see output of the BPF program.
+..........WATCHDOG: test case ns_bpf_qdisc/attach to mq executes for
+10 seconds...
+..............................................................................................................WATCHDOG:
+test case ns_bpf_qdisc/attach to mq executes for 120 seconds,
+terminating with SIGSEGV
+#219 ns_bpf_qdisc:FAIL
+Caught signal #11!
+Stack trace:
+./test_progs(crash_handler+0x28)[0x1205b7e34]
+linux-vdso.so.1(__vdso_rt_sigreturn+0x0)[0x7ffffd058ac4]
+/lib64/libc.so.6(wait4+0x84)[0x7ffff1f84b98]
+/lib64/libc.so.6(+0x4da54)[0x7ffff1ef5a54]
+./test_progs[0x120197fdc]
+./test_progs(test_ns_bpf_qdisc+0x58)[0x12019982c]
+./test_progs[0x1205b8574]
+./test_progs(main+0x6c0)[0x1205ba5f8]
+/lib64/libc.so.6(+0x2882c)[0x7ffff1ed082c]
+/lib64/libc.so.6(__libc_start_main+0xa8)[0x7ffff1ed0918]
+./test_progs(_start+0x48)[0x12013a0e0]
+
+I would appreciate any insights or guidance on these issues. Please
+let me know if you need more information.
+
+Thanks
+
+Vincent
