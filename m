@@ -1,237 +1,139 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97812F0C68
-	for <loongarch@lists.linux.dev>; Thu,  1 Jan 2026 18:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDB6186E58;
+	Fri,  2 Jan 2026 06:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767292008; cv=none; b=fqb2y6M1R3kYTI8JzbSwG7x+0dhiSxA+aMSK/PjOI9bqsoZb/DSPBzNj8DH63wB/kHHuVlD8Djo9mIX+e1hJeHrs948Llg3Vd9Qldpc4IYqbEXuK1E+PWyanDme+XiCjTCEuNuNsiGd151/avo0pjOxjg+pBqnjRZPx1u1l9h88=
+	t=1767337176; cv=none; b=NyfnD/ybUBVsxCBV0lRVZ/AkY5fJ/uBL0wXiQ4utIXLmHQ3Ws1TAJz94MTSZAc0dEjRqFUp/86PU5U6NL84dGz+Ly8YB+xqriR6qHGP5Xar7ITi+lQkrej0oZaN05HLAK0G+Nd59YN+vcxaxDQLlForVNi0nDY4zPnTCvaKT2aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767292008; c=relaxed/simple;
-	bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Hy92YRqXlldUsrFvtPJSxBpiQ1aD8qulXpQbTZmtfOpSH8beNIRbfa0lJJ5/Z8JjVO0XCJGodoxNoCuu867H3jua0joMuahfhTS/4F+SC6c4p2OiB0rXsHL2JAAI3SKpEZckVX0GKcnnnmDSuM2AHisU519CwE10/FLo7oTBaZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJEwca7h; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767337176; c=relaxed/simple;
+	bh=6UamW9ypeYvnLArvWXDR1zXy9G1XczNWSIs66XcI5UY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JILajEJeZ35MRLyMg7Iw0q+IpK4NlAevAUYR+NtsUQHsxl5tORiTn6hhbxSBkuBqg0qGKIcwyXY9u7IwTHEmL3BzB7mLspJyK+U8mnn4ZyRITrANbJ7LTsH5OKh2cP6mc5dr7G0DnBZkdbDVoTtC1iLJBXqrDAT8Ygd/3FZWYLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JURDexdX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJEwca7h"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4ee19b1fe5dso133807541cf.0
-        for <loongarch@lists.linux.dev>; Thu, 01 Jan 2026 10:26:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767292005; x=1767896805; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
-        b=WJEwca7hfgZ9FEPI/ZBCRv+rHDkp5q0JEMPGGzPyqHhusaT12uLr+88+1DHOn20yGN
-         4TEZfzwyEQdFQhv9illGTcgMBDVQJbWMpjO7hNoALP9uJSnVaD3Cbo4zPwmGj22nperk
-         YTGwr0vXEWwwNMnWa9p0yWz907oXHeBHC/TzYInuOWa9ehl3nDPA2SVNNZe5/hWO2ls4
-         3hKybr0o8/3E7l7KiAJMuiJq1cG+8hAhw47boc1pDN7b41bg/f/K2yoxV+OzlE5NdY2j
-         dYJ35s1Lu4l/Gr+y+2bc/RVVI3tNQWUutLp5gPONbQW7WMZFwD3E63gc0RdhEsQI+gdK
-         4ybA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767292005; x=1767896805;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UoZu2RWFx5RR3ixW8aJGmpht6HfWVlSK9XwYIvRURzw=;
-        b=FHeKRqCL2CUlSWiKg3aZcTbKbPlJAOMDXyw/wmgTS4T7PfcPgN4Wz15SI4g/P7CjSa
-         +ICT/HDfVDy2dnREjsmOhTd8FXFpctBeGAz3RTSm2YB6vfPvbRZHx01U2HWyRTQaTZHw
-         C/gPAW3CKpbWbYbJkhkGUxYvvWwnr1G+brltop891Sz6EFiVJYNFDe6X2T2OQTSi1Gpx
-         3MJ+I+NptvljCaYQP1Hnqz87wWJfezgdJnf8dKV7uXJ40TFY/8SSXRzfvWZ5jQbTOMlV
-         llpjXYjjDk8RJbduCGHsJU5QMbACrkpWjae6ZqFAFXMdl8d4OIHHFVoX+9AtLPFEP7J5
-         ucAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPdZoy/PjPD22Ee7YyLbPrd7flR/LCH5t15Tc9g0xFYStLvLE5vC6tUoMTDcA4BOklKG6Jx5Sveyg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxP2BqASY0WFmKe5t5hT9YXsEfcTSKyPYNZ6v0ejTYL7Si17HEW
-	FQerCT0XeOptksw2cutjpZfDLtutrIJOiEIlRLD3Uag7sNtyqIudvF0nkmyM077vWvTxTpB3V5l
-	R3ye1dtz+szwr4gcRW+r30zMou7eRmOA=
-X-Gm-Gg: AY/fxX7s+yjey3AhfwElpaxEgxcDqE4ZoKrVjL+N06I/80YX1htky+X6e1ukDNcTH1q
-	P9J31hNmsYBe2YRp9o9Kwy7mix6LvUpwKluFy2UhqWPQ6sr2bA5MfFKoJ2G9Ye0xLT3tXPg1QQ+
-	ze9kf52HeXvB3BpUwL+BQmgTslubvQ0jo5x+jwFI7zD2XzICJWPhQu+VuIqoez23PjN/TXbC6rL
-	qpbGDf6PIaumKhaD18eukcm29BV0MI5FC5QPMvi5KivzxiUkrvsnbfmnnrllgZG66uNIH0=
-X-Google-Smtp-Source: AGHT+IFHQg0nG0eaEMFYLqFjAh0XJlieab08wMM2OPaHkz2hikpL5OI5rx5DrsbcKn+EMOjGsc0iroENmFKu4ceHvaQ=
-X-Received: by 2002:a05:622a:198b:b0:4ee:1bc7:9d7b with SMTP id
- d75a77b69052e-4f4abd8cc1fmr533103801cf.39.1767292005551; Thu, 01 Jan 2026
- 10:26:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JURDexdX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B4AC116B1;
+	Fri,  2 Jan 2026 06:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767337175;
+	bh=6UamW9ypeYvnLArvWXDR1zXy9G1XczNWSIs66XcI5UY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JURDexdXezRaYfVCWbUaXW3lzvXlm31RIqEgAxJWeFjD7mvppUL+nB5Q6DW/syoE7
+	 9KCN3XX0+IFrZ6lXHKvj23Zbubf1juMpQoyVR3R5K+W0wTXoTePytdymIvKf7/FuUt
+	 b7F7Op6aP4W0iuoMzjx2QqloKghcV05PUK7YhWlqmCDHRezSFJ5+E+XxOvd9U94KrO
+	 yMpXKhnr9xm6zugptlmyDIWLkIzbYaeb0b/lyAP5EPPZjPoSkHAZCyI/7qGe07Bh3c
+	 ZF/OMYqQXU+WaQeAzqytLFSZafleWXTxSNL1jQdGV6O5YweZiL0UFX3Jm+OycztA8g
+	 kFuOhUi2qJ56g==
+Date: Fri, 2 Jan 2026 08:59:12 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	x86@kernel.org, linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org
+Subject: Re: [PATCH 00/28] arch, mm: consolidate hugetlb early reservation
+Message-ID: <aVdswNM9PUN6Kr8Q@kernel.org>
+References: <20251228124001.3624742-1-rppt@kernel.org>
+ <20251231172714.a7fe44e856c14fdc8fe1cb43@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 1 Jan 2026 10:26:34 -0800
-X-Gm-Features: AQt7F2pVzbJ9zAGkBOcdfnBaj7HK-VnOGc1cyoB5TONH_Az28I5f_Ok9niKqqEo
-Message-ID: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
-Subject: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object 'tc_bpf'
- from buffer
-To: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev
-Cc: ast <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Chenghao Duan <duanchenghao@kylinos.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251231172714.a7fe44e856c14fdc8fe1cb43@linux-foundation.org>
 
-Hi,
+On Wed, Dec 31, 2025 at 05:27:14PM -0800, Andrew Morton wrote:
+> On Sun, 28 Dec 2025 14:39:30 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > Order in which early memory reservation for hugetlb happens depends on
+> > architecture, on configuration options and on command line parameters.
+> > 
+> > Some architectures rely on the core MM to call hugetlb_bootmem_alloc()
+> > while others call it very early to allow pre-allocation of HVO-style
+> > vmemmap.
+> > 
+> > When hugetlb_cma is supported by an architecture it is initialized during
+> > setup_arch() and then later hugetlb_init code needs to understand did it
+> > happen or not.
+> > 
+> > To make everything consistent and unified, both reservation of hugetlb
+> > memory from bootmem and creation of CMA areas for hugetlb must be called
+> > from core MM initialization and it would have been a simple change.
+> > However, HVO-style pre-initialization ordering requirements slightly
+> > complicate things and for HVO pre-init to work sparse and memory map should
+> > be initialized after hugetlb reservations.
+> > 
+> > This required pulling out the call to free_area_init() out of setup_arch()
+> > path and moving it MM initialization and this is what the first 23 patches
+> > do.
+> > 
+> > These changes are deliberately split into per-arch patches that change how
+> > the zone limits are calculated for each architecture and the patches 22 and
+> > 23 just remove the calls to free_area_init() and sprase_init() from arch/*.
+> > 
+> > Patch 24 is a simple cleanup for MIPS.
+> > 
+> > Patches 25 and 26 actually consolidate hugetlb reservations and patches 27
+> > and 28 perform some aftermath cleanups.
+> 
+> Thanks for the diligence - this can't have been the most exciting thing
+> to work on!
+> 
+> > I tried to trim the distribution list and although it's still quite long
+> > if you feel that someone was wrongly excluded please add them back.
+> 
+> I'll add these to mm.git's mm-new branch for some testing.  I'll
+> suppress the usual email storm because 41 * 28 is a lot of emails ;)
 
-I used AI to enhance my message, hope it helps :)
+kbuild reported failures on some configurations so I'm anyway going to send
+a lot of emails for v2 :)
 
-I am reporting test failures observed while running BPF selftests on a
-LoongArch machine. Both the ns_bpf_qdisc and xdp_synproxy tests
-exhibit WATCHDOG timeouts and eventual failures. The issue appears
-architecture-specific but I am not sure.
-
-Issue Summary:
-When building and running 6.19.0-rc3 BPF selftests on a LoongArch machine:
-
-The "ns_bpf_qdisc/attach to mq" test fails with a WATCHDOG timeout
-after 120 seconds, followed by SIGSEGV.
-
-The xdp_synproxy test shows similar failure symptoms.
-
-During the failing ns_bpf_qdisc test, I see this log message:
-libbpf: loading object 'tc_bpf' from buffer
-This message is NOT present when the same test passes on an x86 build
-machine or on other LoongArch machines. The xdp_synproxy test likely
-has a similar loading message.
-
-Key Observations:
-
-Architecture Dependency Suspected:
-
-Both failures occur only on my LoongArch setup.
-
-The log message "libbpf: loading object 'tc_bpf' from buffer" appears
-only in the failing cases.
-
-Others have successfully run these tests on LoongArch machines without
-seeing this message.
-
-Source of the 'tc_bpf' Object:
-
-From reading libbpf.c, this message indicates loading an object from a
-BPF skeleton. However, I cannot find a skeleton named 'tc_bpf' in the
-bpf selftests skeleton source tree.
-
-A grep search shows skeletons like 'tc_bpf2bpf' and 'test_tc_bpf', but
-no exact 'tc_bpf' match.
-
-Grep results for 'tc_bpf' in skeletons:
-[root@fedora bpf]# grep -r 'tc_bpf' * | grep 's->name'
-cpuv4/tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
-cpuv4/test_tc_bpf.skel.h: s->name = "test_tc_bpf";
-no_alu32/tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
-no_alu32/test_tc_bpf.skel.h: s->name = "test_tc_bpf";
-tc_bpf2bpf.skel.h: s->name = "tc_bpf2bpf";
-test_tc_bpf.skel.h: s->name = "test_tc_bpf";
-
-Test Output:
-
-The test runs until the WATCHDOG triggers, then terminates with a
-segmentation fault.
-
-Relevant output section is included below.
-
-Questions / Next Steps:
-
-Could the 'tc_bpf' object be dynamically generated? If so, why does it
-only appear in the failing LoongArch cases?
-
-How can I debug this further? Should I enable more logging or check
-for missing dependencies?
-
-Are these two test failures (ns_bpf_qdisc and xdp_synproxy) related,
-given they both show similar timeout patterns?
-
-Environment:
-
-Kernel: 6.19.0-rc3
-
-Architecture: LoongArch
-
-Test Command: ./test_progs -t ns_bpf_qdisc
-
-Full Test Output Snippet for ns_bpf_qdisc:
-
-[root@fedora bpf]# ./test_progs -t ns_bpf_qdisc
-libbpf: loading object 'tc_bpf' from buffer
-libbpf: elf: section(2) .symtab, size 168, link 1, flags 0, type=2
-libbpf: elf: section(3) tc, size 144, link 0, flags 6, type=1
-libbpf: sec 'tc': found program 'tc_ingress' at insn offset 0 (0
-bytes), code size 18 insns (144 bytes)
-libbpf: elf: section(4) .rodata, size 36, link 0, flags 2, type=1
-libbpf: elf: section(5) license, size 4, link 0, flags 3, type=1
-libbpf: license of tc_bpf is GPL
-libbpf: elf: section(6) .reltc, size 16, link 2, flags 40, type=9
-libbpf: elf: section(7) .BTF, size 2108, link 0, flags 0, type=1
-libbpf: elf: section(8) .BTF.ext, size 284, link 0, flags 0, type=1
-libbpf: looking for externs among 7 symbols...
-libbpf: collected 0 externs total
-libbpf: map 'tc_bpf.rodata' (global data): at sec_idx 4, offset 0, flags 80.
-libbpf: map 0 is "tc_bpf.rodata"
-libbpf: sec '.reltc': collecting relocation for section(3) 'tc'
-libbpf: sec '.reltc': relo #0: insn #12 against '.rodata'
-libbpf: prog 'tc_ingress': found data map 0 (tc_bpf.rodata, sec 4, off
-0) for insn 12
-libbpf: object 'tc_bpf': failed (-95) to create BPF token from
-'/sys/fs/bpf', skipping optional step...
-libbpf: loaded kernel BTF from '/sys/kernel/btf/vmlinux'
-libbpf: sec 'tc': found 5 CO-RE relocations
-libbpf: CO-RE relocating [2] struct __sk_buff: found target candidate
-[10675] struct __sk_buff in [vmlinux]
-libbpf: prog 'tc_ingress': relo #0: <byte_off> [2] struct
-__sk_buff.protocol (0:4 @ offset 16)
-libbpf: prog 'tc_ingress': relo #0: matching candidate #0 <byte_off>
-[10675] struct __sk_buff.protocol (0:4 @ offset 16)
-libbpf: prog 'tc_ingress': relo #0: patched insn #0 (LDX/ST/STX) off 16 -> 16
-libbpf: prog 'tc_ingress': relo #1: <byte_off> [2] struct
-__sk_buff.data (0:15 @ offset 76)
-libbpf: prog 'tc_ingress': relo #1: matching candidate #0 <byte_off>
-[10675] struct __sk_buff.data (0:15 @ offset 76)
-libbpf: prog 'tc_ingress': relo #1: patched insn #2 (LDX/ST/STX) off 76 -> 76
-libbpf: prog 'tc_ingress': relo #2: <byte_off> [2] struct
-__sk_buff.data_end (0:16 @ offset 80)
-libbpf: prog 'tc_ingress': relo #2: matching candidate #0 <byte_off>
-[10675] struct __sk_buff.data_end (0:16 @ offset 80)
-libbpf: prog 'tc_ingress': relo #2: patched insn #3 (LDX/ST/STX) off 80 -> 80
-libbpf: CO-RE relocating [19] struct iphdr: found target candidate
-[28807] struct iphdr in [vmlinux]
-libbpf: prog 'tc_ingress': relo #3: <byte_off> [19] struct iphdr.ttl
-(0:6 @ offset 8)
-libbpf: prog 'tc_ingress': relo #3: matching candidate #0 <byte_off>
-[28807] struct iphdr.ttl (0:6 @ offset 8)
-libbpf: prog 'tc_ingress': relo #3: patched insn #9 (LDX/ST/STX) off 8 -> 8
-libbpf: prog 'tc_ingress': relo #4: <byte_off> [19] struct
-iphdr.tot_len (0:3 @ offset 2)
-libbpf: prog 'tc_ingress': relo #4: matching candidate #0 <byte_off>
-[28807] struct iphdr.tot_len (0:3 @ offset 2)
-libbpf: prog 'tc_ingress': relo #4: patched insn #10 (LDX/ST/STX) off 2 -> 2
-libbpf: map 'tc_bpf.rodata': created successfully, fd=5
-Successfully started! Please run sudo cat
-/sys/kernel/debug/tracing/trace_pipe to see output of the BPF program.
-..........WATCHDOG: test case ns_bpf_qdisc/attach to mq executes for
-10 seconds...
-..............................................................................................................WATCHDOG:
-test case ns_bpf_qdisc/attach to mq executes for 120 seconds,
-terminating with SIGSEGV
-#219 ns_bpf_qdisc:FAIL
-Caught signal #11!
-Stack trace:
-./test_progs(crash_handler+0x28)[0x1205b7e34]
-linux-vdso.so.1(__vdso_rt_sigreturn+0x0)[0x7ffffd058ac4]
-/lib64/libc.so.6(wait4+0x84)[0x7ffff1f84b98]
-/lib64/libc.so.6(+0x4da54)[0x7ffff1ef5a54]
-./test_progs[0x120197fdc]
-./test_progs(test_ns_bpf_qdisc+0x58)[0x12019982c]
-./test_progs[0x1205b8574]
-./test_progs(main+0x6c0)[0x1205ba5f8]
-/lib64/libc.so.6(+0x2882c)[0x7ffff1ed082c]
-/lib64/libc.so.6(__libc_start_main+0xa8)[0x7ffff1ed0918]
-./test_progs(_start+0x48)[0x12013a0e0]
-
-I would appreciate any insights or guidance on these issues. Please
-let me know if you need more information.
-
-Thanks
-
-Vincent
+-- 
+Sincerely yours,
+Mike.
