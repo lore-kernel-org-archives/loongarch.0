@@ -1,367 +1,291 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA102E282B
-	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 17:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767375417; cv=none; b=jgTrof6qJPV5jZ7UtdjvsiLNrq+/2ArI0xbmofUkwUMen+6iUvlp9EEG182YoSsp73naEVqYRt0YCOX1cYBKfWkGERCi0kB8qygDvPfLNGNzEy/2SmtSKe8jMT6cf0K1gYEx5cUpKzKd+qRRKjNj3gheXoED0qIEbuQs1BVnGLU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767375417; c=relaxed/simple;
-	bh=R1oPxqhlUwJUsdeyTbMZoV9a5lWL4nNoEmg2dl5IuTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eFlcwb0oHh7jckQrJRuRE0V1kA42n1/6m+K0kAyuE0wM/xj7lKohUxi7sjWzQtQGfokMFlmjPLN8/YPjXWy3D8+a0Bnm13KybpE4u8sgOnyCKGmSMVlZewlbociXHEa16/3eprYWeMz0vfOsMJ2vTrAiRUDi+4Q8/Lb8a9lwSTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CLe8VWlU; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025C6309DB1
+	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 18:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767377053; cv=pass; b=lFx4ELrc/D7tS+BSsQRcdvPGunbf1ufdYkEl8k9rX8DazEv96VksLaUo0SHwSRjFslXNVE3Xc8HcrGCqv+AWWXB44STO4E2GRkVvBpD0CYE11IPMNHv5Ws0WLvXO4K/CkxoZS8J9QKJWFCrsiWhOScpIrfkGjbSR5Ol1fNftk10=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767377053; c=relaxed/simple;
+	bh=ksPuzDhEsNwwadpdao9ypfLnzBz9TXOr7Qq8wOanBfg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JDJg58qujvCSaLoiwcj3n+9UFeQMJlhZTCacwoQK6ciSaFcL/VL7PWU7wzUuxd3F0Om352KekpTGf6B8uTxN+NWOGm9aaiGgfEy9TC+JiabbjqE+m/KLe2LjwKWqzuRmi68H+VpgsZVfTTH6BmFEC+Q9UZnfqFrtiCDR9pPXBJY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONmiXHd5; arc=pass smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CLe8VWlU"
-Date: Fri, 2 Jan 2026 17:36:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767375412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lQjaSMojAITuhgscLNQOrJ+xFMJFrIIQ7gUaQmcWHkA=;
-	b=CLe8VWlUIpa2d7S3RE2StrhiHqxPQ1LP+pIvYSAuTbK9vTAKtbDDZ2zKn1Qlr9m/FkhFyh
-	Rjdmyyq81WvdXJ8t9HmgYBrHD4VhffOVk2hOi5canR+S07p5G0dnDnBrxObJHIiQ4VMDV7
-	wEF33YORG2nySIQFEOYWa18NcdMoz3o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 21/21] KVM: selftests: Test READ=>WRITE dirty logging
- behavior for shadow MMU
-Message-ID: <t7dcszq3quhqprdcqz7keykxbmqf62pdelqrkeilpbmsrnuji5@a3lplybmlbwf>
-References: <20251230230150.4150236-1-seanjc@google.com>
- <20251230230150.4150236-22-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONmiXHd5"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4ee147baf7bso10801cf.1
+        for <loongarch@lists.linux.dev>; Fri, 02 Jan 2026 10:04:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1767377042; cv=none;
+        d=google.com; s=arc-20240605;
+        b=cEJyqeNS4395pYjhrx6d/Ozqa+fmKZy6IJZQo33G1JT7E6Wr1TszwPw2COd8UQhMz1
+         7x0tiQoH/DeBvLMcKOhIAmg8fjAm3hS3PVhdQELsFcDTZ5qiW8VoWlws4w2AGxM752VC
+         a3YoXq7jteqEckQQS4pHuYpJELuG1wQH60EEc83pEidih6E5Y3VlQeumouqd7ky2ILiP
+         +O2JXiim3odmhMpeBukcMSPo/R9Xe32MoXaEcasjLyAnC+s1C+O22E4Isg41IhaQ2hQm
+         ye+0jzbsMoPd057CqufdtSH9Uv7vu9c7okDAv6AjGaRPAs7iec55olk7s66QpDsKK+3g
+         FJBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        fh=3meyofe9FM6L5pRPequYhesLaaXfuVQxQMAt9WtcBC8=;
+        b=ASA7G0psyCSSpxF17ulliAixcLpGgPwlHDda2YuPv6TSn8kejmgab0gTIjsdNRyex6
+         ujJGLRS2X78ju54oKzrOy86Gtfg31g8gUKRDui9+m4RwYnpxhCdG3Wg7F9AlL6N5DDRc
+         x5+71NB7J9ftttk63xyCe/hOrCLnuBu3QKUXcFRW6XrjiJzyEZwkEZhZPcFz8TRdssyC
+         w9A9Hj4J/dl9AMoANEhmttJOHIDU4077ABODH5eydWSMDgGYhUzDujgkQbUO0rPwDGWr
+         5hX6GOzeV7kLTLML8IoMIuO4ElVQH0FlFcD0WrSU0GcDXXB24+KCkLe2XyLp41NBJtQ7
+         r3bg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767377042; x=1767981842; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        b=ONmiXHd5RlcvkYZicGjZ5sFyNs8v8bKCK7cjFvlcwVX6yRctSIDrzNMYI2I2qDaeP2
+         rX9jABN4gCUn7na2zgBD7b+mFgIjvmAVmpujPczu/VI33U+IvkjDwmSJpwPc9KtxEoGl
+         IsqjY9x5L0GIin5r3fq++Yt6HhID5A689Tu5XVz/rRbW6gOyBHbmKu4SIItpqBXgJCyC
+         77nUYZufNEtsqEn4+1kF7GIeaILzxWrIjhlshvGsR9ojW4lfe5D1UU3QxfyaFMwuPsb+
+         SinACGvOj1+Szil6X5NjFPKXWQMSphcZCeyZ8gLBgvJHrVb71HSWRLcVNvud2xro+zEs
+         3NzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767377042; x=1767981842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VF7Ncw4qUW1QvZXNeYN2PHKmriSnoyG5jmMgiKLYwBI=;
+        b=GSpZxMWgOgykaClEmb98uVp3HLKhb01FbhEi+Nt4vcMlfAXBcNvHDlPHJLNVLIxmIO
+         x08anJCThgSik2ManLvarfecGTRtWg354fHH1IgM48oiEiIzSE6ET+E4pm0K/LcrxlZf
+         MdUxIJlnFcTHTi1MMGxkevnt1OqEZVt0zYpOlWFJkQszMeUVz9nwvY5HZyJffNSfhrk1
+         e1/qpRLGz3M9xSWQoNWkhBPz0BU8a/b9UJi/WPOWBnzzhZmr1abtMHi34uhSAf7cTthI
+         mzzfzdxq4RSkK7yJGrGbufxFCqoSQNx4y5l5A0Q/KhU4G3n32ElJIl3jEMlEIl/5Zri2
+         pobw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUnmgIyVHLHxGjQMvUbFyl/q4H4Td+/RaDUAdkW4Av3GyDJE5lXtuGI1nDRlMWF9aCMK4oyAb4z6c=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz+AS0HnH27z52vcFHAc3sddaU4JK8XLtasZ08etXJzYJvKcU2p
+	ploudf0HBgMsWPjifuTinfRkwhBFQzG9ezXLINAe7TirTWEEv65qTE6c9LKotXFZsSbAvl7eifn
+	pX2vaVCZZCr9hRK3G3tWloRG6R2LVOsZJUzIKZ1WS
+X-Gm-Gg: AY/fxX4fUJWWTis3RVR+bG9BlUaIZC7aKc0+wknCkJQTyqjsMW+KH9dLtNmFNG5/z/C
+	RoONuOA37wF6zP8GBQkRcAEkM37Z6eu3WlqDVwBEf0QCIuHU3V8YvAo6BpE8g4LvyfrqPrabfHe
+	g6vmdKRbT+Tg8mYFv3tSlXJj20jZpWeDv5Fz1XAfvSd7i8jMwLdGjmJ0lFTtHCHjjq4rzx1+IP2
+	8IaOSOyAfWYgmKCrZg7X3A8KMlRMWxMicmstGEBAhHSNIpJFR+F5S7m0fQgIbDA04Kuluc=
+X-Google-Smtp-Source: AGHT+IE626c1niVbXfJuRnnEKb/XVpUT3xgOsgVHvUYmmAhOToE2K50Gpbsa48xtp+jOGlgqExM/NP3EnDee4koBR/0=
+X-Received: by 2002:a05:622a:8016:b0:4fb:e3b0:aae6 with SMTP id
+ d75a77b69052e-4fbe3b0ad54mr14392961cf.1.1767377041692; Fri, 02 Jan 2026
+ 10:04:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251230230150.4150236-22-seanjc@google.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20260102070005.65328-1-rppt@kernel.org>
+In-Reply-To: <20260102070005.65328-1-rppt@kernel.org>
+From: Frank van der Linden <fvdl@google.com>
+Date: Fri, 2 Jan 2026 10:03:49 -0800
+X-Gm-Features: AQt7F2qPng5Y0NvX0my5UG4cpefC6iiH19nIvMPHQLdOtt1JmQ_l0Tjv8FxQEzo
+Message-ID: <CAPTztWaZZt_ygCDNaDdW9A_TtT1FNZW6hFzyiq2b6_xxMw38gQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] arch, mm: consolidate hugetlb early reservation
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, 
+	Michal Simek <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, 
+	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 30, 2025 at 03:01:50PM -0800, Sean Christopherson wrote:
-> Update the nested dirty log test to validate KVM's handling of READ faults
-> when dirty logging is enabled.  Specifically, set the Dirty bit in the
-> guest PTEs used to map L2 GPAs, so that KVM will create writable SPTEs
-> when handling L2 read faults.  When handling read faults in the shadow MMU,
-> KVM opportunistically creates a writable SPTE if the mapping can be
-> writable *and* the gPTE is dirty (or doesn't support the Dirty bit), i.e.
-> if KVM doesn't need to intercept writes in order to emulate Dirty-bit
-> updates.
-> 
-> To actually test the L2 READ=>WRITE sequence, e.g. without masking a false
-> pass by other test activity, route the READ=>WRITE and WRITE=>WRITE
-> sequences to separate L1 pages, and differentiate between "marked dirty
-> due to a WRITE access/fault" and "marked dirty due to creating a writable
-> SPTE for a READ access/fault".  The updated sequence exposes the bug fixed
-> by KVM commit 1f4e5fc83a42 ("KVM: x86: fix nested guest live migration
-> with PML") when the guest performs a READ=>WRITE sequence.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  .../selftests/kvm/include/x86/processor.h     |   1 +
->  .../testing/selftests/kvm/lib/x86/processor.c |   7 ++
->  .../selftests/kvm/x86/nested_dirty_log_test.c | 115 +++++++++++++-----
->  3 files changed, 90 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
-> index ab29b1c7ed2d..8945c9eea704 100644
-> --- a/tools/testing/selftests/kvm/include/x86/processor.h
-> +++ b/tools/testing/selftests/kvm/include/x86/processor.h
-> @@ -1483,6 +1483,7 @@ bool kvm_cpu_has_tdp(void);
->  void tdp_map(struct kvm_vm *vm, uint64_t nested_paddr, uint64_t paddr, uint64_t size);
->  void tdp_identity_map_default_memslots(struct kvm_vm *vm);
->  void tdp_identity_map_1g(struct kvm_vm *vm,  uint64_t addr, uint64_t size);
-> +uint64_t *tdp_get_pte(struct kvm_vm *vm, uint64_t l2_gpa);
->  
->  /*
->   * Basic CPU control in CR0
-> diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
-> index ab869a98bbdc..fab18e9be66c 100644
-> --- a/tools/testing/selftests/kvm/lib/x86/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/x86/processor.c
-> @@ -390,6 +390,13 @@ static uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm,
->  	return virt_get_pte(vm, mmu, pte, vaddr, PG_LEVEL_4K);
->  }
->  
-> +uint64_t *tdp_get_pte(struct kvm_vm *vm, uint64_t l2_gpa)
-> +{
-> +	int level = PG_LEVEL_4K;
-> +
-> +	return __vm_get_page_table_entry(vm, &vm->stage2_mmu, l2_gpa, &level);
-> +}
-> +
->  uint64_t *vm_get_pte(struct kvm_vm *vm, uint64_t vaddr)
->  {
->  	int level = PG_LEVEL_4K;
-> diff --git a/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c b/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-> index 89d2e86a0db9..1e7c1ed917e1 100644
-> --- a/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-> +++ b/tools/testing/selftests/kvm/x86/nested_dirty_log_test.c
-> @@ -17,29 +17,39 @@
->  
->  /* The memory slot index to track dirty pages */
->  #define TEST_MEM_SLOT_INDEX		1
-> -#define TEST_MEM_PAGES			3
-> +#define TEST_MEM_PAGES			4
->  
->  /* L1 guest test virtual memory offset */
-> -#define GUEST_TEST_MEM			0xc0000000
-> +#define GUEST_TEST_MEM1			0xc0000000
-> +#define GUEST_TEST_MEM2			0xc0002000
->  
->  /* L2 guest test virtual memory offset */
->  #define NESTED_TEST_MEM1		0xc0001000
-> -#define NESTED_TEST_MEM2		0xc0002000
-> +#define NESTED_TEST_MEM2		0xc0003000
->  
->  #define L2_GUEST_STACK_SIZE 64
->  
-> +#define TEST_SYNC_PAGE_MASK	0xfull
-> +#define TEST_SYNC_READ_FAULT	BIT(4)
-> +#define TEST_SYNC_WRITE_FAULT	BIT(5)
-> +#define TEST_SYNC_NO_FAULT	BIT(6)
-> +
->  static void l2_guest_code(u64 *a, u64 *b)
->  {
->  	READ_ONCE(*a);
-> +	GUEST_SYNC(0 | TEST_SYNC_READ_FAULT);
->  	WRITE_ONCE(*a, 1);
-> -	GUEST_SYNC(true);
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(0 | TEST_SYNC_WRITE_FAULT);
-> +	READ_ONCE(*a);
-> +	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
->  
->  	WRITE_ONCE(*b, 1);
-> -	GUEST_SYNC(true);
-> +	GUEST_SYNC(2 | TEST_SYNC_WRITE_FAULT);
->  	WRITE_ONCE(*b, 1);
-> -	GUEST_SYNC(true);
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(2 | TEST_SYNC_WRITE_FAULT);
-> +	READ_ONCE(*b);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
+On Thu, Jan 1, 2026 at 11:00=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Hi,
+>
+> Order in which early memory reservation for hugetlb happens depends on
+> architecture, on configuration options and on command line parameters.
+>
+> Some architectures rely on the core MM to call hugetlb_bootmem_alloc()
+> while others call it very early to allow pre-allocation of HVO-style
+> vmemmap.
+>
+> When hugetlb_cma is supported by an architecture it is initialized during
+> setup_arch() and then later hugetlb_init code needs to understand did it
+> happen or not.
+>
+> To make everything consistent and unified, both reservation of hugetlb
+> memory from bootmem and creation of CMA areas for hugetlb must be called
+> from core MM initialization and it would have been a simple change.
+> However, HVO-style pre-initialization ordering requirements slightly
+> complicate things and for HVO pre-init to work sparse and memory map shou=
+ld
+> be initialized after hugetlb reservations.
+>
+> This required pulling out the call to free_area_init() out of setup_arch(=
+)
+> path and moving it MM initialization and this is what the first 23 patche=
+s
+> do.
+>
+> These changes are deliberately split into per-arch patches that change ho=
+w
+> the zone limits are calculated for each architecture and the patches 22 a=
+nd
+> 23 just remove the calls to free_area_init() and sprase_init() from arch/=
+*.
+>
+> Patch 24 is a simple cleanup for MIPS.
+>
+> Patches 25 and 26 actually consolidate hugetlb reservations and patches 2=
+7
+> and 28 perform some aftermath cleanups.
+>
+> I tried to trim the distribution list and although it's still quite long
+> if you feel that someone was wrongly excluded please add them back.
+>
+> The changes also available in git:
+> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=3Dh=
+ugetlb-init/v2
+>
+> v2 changes:
+> * move the hugetlb and memory map initializaion to mm_core_init_early()
+> * add Acks
+>
+> v1: https://lore.kernel.org/all/20251228124001.3624742-1-rppt@kernel.org
+>
+> Mike Rapoport (Microsoft) (28):
+>   alpha: introduce arch_zone_limits_init()
+>   arc: introduce arch_zone_limits_init()
+>   arm: introduce arch_zone_limits_init()
+>   arm64: introduce arch_zone_limits_init()
+>   csky: introduce arch_zone_limits_init()
+>   hexagon: introduce arch_zone_limits_init()
+>   loongarch: introduce arch_zone_limits_init()
+>   m68k: introduce arch_zone_limits_init()
+>   microblaze: introduce arch_zone_limits_init()
+>   mips: introduce arch_zone_limits_init()
+>   nios2: introduce arch_zone_limits_init()
+>   openrisc: introduce arch_zone_limits_init()
+>   parisc: introduce arch_zone_limits_init()
+>   powerpc: introduce arch_zone_limits_init()
+>   riscv: introduce arch_zone_limits_init()
+>   s390: introduce arch_zone_limits_init()
+>   sh: introduce arch_zone_limits_init()
+>   sparc: introduce arch_zone_limits_init()
+>   um: introduce arch_zone_limits_init()
+>   x86: introduce arch_zone_limits_init()
+>   xtensa: introduce arch_zone_limits_init()
+>   arch, mm: consolidate initialization of nodes, zones and memory map
+>   arch, mm: consolidate initialization of SPARSE memory model
+>   mips: drop paging_init()
+>   x86: don't reserve hugetlb memory in setup_arch()
+>   mm, arch: consolidate hugetlb CMA reservation
+>   mm/hugetlb: drop hugetlb_cma_check()
+>   Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
+>
+>  .../driver-api/cxl/linux/early-boot.rst       |  2 +-
+>  Documentation/mm/memory-model.rst             |  3 --
+>  .../translations/zh_CN/mm/memory-model.rst    |  2 -
+>  arch/alpha/kernel/setup.c                     |  1 -
+>  arch/alpha/mm/init.c                          | 16 ++++----
+>  arch/arc/mm/init.c                            | 37 +++++++++---------
+>  arch/arm/mm/init.c                            | 25 ++----------
+>  arch/arm64/include/asm/hugetlb.h              |  2 -
+>  arch/arm64/mm/hugetlbpage.c                   | 10 ++---
+>  arch/arm64/mm/init.c                          | 39 ++++++++-----------
+>  arch/csky/kernel/setup.c                      | 16 ++++----
+>  arch/hexagon/mm/init.c                        | 19 +++------
+>  arch/loongarch/include/asm/pgtable.h          |  2 -
+>  arch/loongarch/kernel/setup.c                 | 10 -----
+>  arch/loongarch/mm/init.c                      |  6 +--
+>  arch/m68k/mm/init.c                           |  8 ++--
+>  arch/m68k/mm/mcfmmu.c                         |  3 --
+>  arch/m68k/mm/motorola.c                       |  6 +--
+>  arch/m68k/mm/sun3mmu.c                        |  9 -----
+>  arch/microblaze/mm/init.c                     | 22 +++++------
+>  arch/mips/include/asm/pgalloc.h               |  2 -
+>  arch/mips/include/asm/pgtable.h               |  2 +-
+>  arch/mips/kernel/setup.c                      | 15 +------
+>  arch/mips/loongson64/numa.c                   | 10 ++---
+>  arch/mips/mm/init.c                           |  8 +---
+>  arch/mips/sgi-ip27/ip27-memory.c              |  8 +---
+>  arch/nios2/mm/init.c                          | 12 +++---
+>  arch/openrisc/mm/init.c                       | 10 +----
+>  arch/parisc/mm/init.c                         | 11 +-----
+>  arch/powerpc/include/asm/hugetlb.h            |  5 ---
+>  arch/powerpc/include/asm/setup.h              |  4 ++
+>  arch/powerpc/kernel/setup-common.c            |  1 -
+>  arch/powerpc/mm/hugetlbpage.c                 | 11 ++----
+>  arch/powerpc/mm/mem.c                         | 27 +++++--------
+>  arch/powerpc/mm/numa.c                        |  2 -
+>  arch/riscv/mm/hugetlbpage.c                   |  8 ++++
+>  arch/riscv/mm/init.c                          | 10 +----
+>  arch/s390/kernel/setup.c                      |  2 -
+>  arch/s390/mm/hugetlbpage.c                    |  8 ++++
+>  arch/s390/mm/init.c                           | 13 +++----
+>  arch/sh/mm/init.c                             | 12 +++---
+>  arch/sparc/mm/init_64.c                       | 17 +++-----
+>  arch/sparc/mm/srmmu.c                         | 17 ++++----
+>  arch/um/kernel/mem.c                          | 10 ++---
+>  arch/x86/kernel/setup.c                       |  5 ---
+>  arch/x86/mm/hugetlbpage.c                     |  8 ++++
+>  arch/x86/mm/init.c                            |  8 +---
+>  arch/x86/mm/init_32.c                         |  2 -
+>  arch/x86/mm/init_64.c                         |  4 --
+>  arch/x86/mm/mm_internal.h                     |  1 -
+>  arch/xtensa/mm/init.c                         | 14 +++----
+>  include/linux/hugetlb.h                       | 12 ++----
+>  include/linux/mm.h                            |  5 ++-
+>  include/linux/mmzone.h                        |  2 -
+>  init/main.c                                   |  1 +
+>  mm/hugetlb.c                                  | 13 -------
+>  mm/hugetlb_cma.c                              | 33 ++++++++--------
+>  mm/hugetlb_cma.h                              |  5 ---
+>  mm/hugetlb_vmemmap.c                          | 11 ------
+>  mm/internal.h                                 |  6 +++
+>  mm/mm_init.c                                  | 20 ++++++----
+>  61 files changed, 219 insertions(+), 394 deletions(-)
+>
+>
+> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> --
+> 2.51.0
+>
 
-Instead of hardcoding 0 and 2 here, which IIUC correspond to the
-physical addresses 0xc0000000 and 0xc0002000, as well as indices in
-host_test_mem, can we make the overall definitions a bit more intuitive?
+Thanks for this series. When I introduced HVO pre-init, I noticed the
+inconsistencies in init order, but shied away from attempting any
+general cleanup, as I had only tested pre-init on x86.
 
-For example:
+With this, it should be possible to enable
+ARCH_WANT_HUGETLB_VMEMMAP_PREINIT on architectures that support HVO. I
+think that's only riscv and loongarch right now. But that's out of
+scope here, though.
 
-#define GUEST_GPA_START		0xc0000000
-#define GUEST_PAGE1_IDX		0
-#define GUEST_PAGE2_IDX		1
-#define GUEST_GPA_PAGE1		(GUEST_GPA_START + GUEST_PAGE1_IDX * PAGE_SIZE)
-#define GUEST_GPA_PAGE2		(GUEST_GPA_START + GUEST_PAGE2_IDX * PAGE_SIZE)
-
-/* Mapped to GUEST_GPA_PAGE1 and GUEST_GPA_PAGE2 */
-#define GUEST_GVA_PAGE1		0xd0000000
-#define GUEST_GVA_PAGE2		0xd0002000
-
-/* Mapped to GUEST_GPA_PAGE1 and GUEST_GPA_PAGE2 using TDP in L1 */
-#define GUEST_GVA_NESTED_PAGE1  0xd0001000
-#define GUEST_GVA_NESTED_PAGE2	0xd0003000
-
-Then in L2 code, we can explicitly take in the GVA of page1 and page2
-and use the definitions above in the GUEST_SYNC() calls, for example:
-
-static void l2_guest_code(u64 *page1_gva, u64 *page2_gva)
-{
-        READ_ONCE(*page1_gva);
-        GUEST_SYNC(GUEST_PAGE1_IDX | TEST_SYNC_READ_FAULT);
-        WRITE_ONCE(*page1_gva, 1);
-        GUEST_SYNC(GUEST_PAGE1_IDX | TEST_SYNC_WRITE_FAULT);
-	...
-}
-
-and we can explicitly read page1 and page2 from the host (instead of
-using host_test_mem).
-
-Alternatively, we can pass in the guest GVA directly into GUEST_SYNC(),
-and use the lower bits for TEST_SYNC_READ_FAULT, TEST_SYNC_WRITE_FAULT,
-and TEST_SYNC_NO_FAULT.
-
-WDYT?
-
-
->  
->  	/* Exit to L1 and never come back.  */
->  	vmcall();
-> @@ -53,7 +63,7 @@ static void l2_guest_code_tdp_enabled(void)
->  static void l2_guest_code_tdp_disabled(void)
->  {
->  	/* Access the same L1 GPAs as l2_guest_code_tdp_enabled() */
-> -	l2_guest_code((u64 *)GUEST_TEST_MEM, (u64 *)GUEST_TEST_MEM);
-> +	l2_guest_code((u64 *)GUEST_TEST_MEM1, (u64 *)GUEST_TEST_MEM2);
->  }
->  
->  void l1_vmx_code(struct vmx_pages *vmx)
-> @@ -72,9 +82,11 @@ void l1_vmx_code(struct vmx_pages *vmx)
->  
->  	prepare_vmcs(vmx, l2_rip, &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->  
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
->  	GUEST_ASSERT(!vmlaunch());
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
->  	GUEST_ASSERT_EQ(vmreadz(VM_EXIT_REASON), EXIT_REASON_VMCALL);
->  	GUEST_DONE();
->  }
-> @@ -91,9 +103,11 @@ static void l1_svm_code(struct svm_test_data *svm)
->  
->  	generic_svm_setup(svm, l2_rip, &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->  
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
->  	run_guest(svm->vmcb, svm->vmcb_gpa);
-> -	GUEST_SYNC(false);
-> +	GUEST_SYNC(0 | TEST_SYNC_NO_FAULT);
-> +	GUEST_SYNC(2 | TEST_SYNC_NO_FAULT);
->  	GUEST_ASSERT_EQ(svm->vmcb->control.exit_code, SVM_EXIT_VMMCALL);
->  	GUEST_DONE();
->  }
-> @@ -106,6 +120,11 @@ static void l1_guest_code(void *data)
->  		l1_svm_code(data);
->  }
->  
-> +static uint64_t test_read_host_page(uint64_t *host_test_mem, int page_nr)
-> +{
-> +	return host_test_mem[PAGE_SIZE * page_nr / sizeof(*host_test_mem)];
-> +}
-> +
->  static void test_dirty_log(bool nested_tdp)
->  {
->  	vm_vaddr_t nested_gva = 0;
-> @@ -133,32 +152,45 @@ static void test_dirty_log(bool nested_tdp)
->  
->  	/* Add an extra memory slot for testing dirty logging */
->  	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> -				    GUEST_TEST_MEM,
-> +				    GUEST_TEST_MEM1,
->  				    TEST_MEM_SLOT_INDEX,
->  				    TEST_MEM_PAGES,
->  				    KVM_MEM_LOG_DIRTY_PAGES);
->  
->  	/*
-> -	 * Add an identity map for GVA range [0xc0000000, 0xc0002000).  This
-> +	 * Add an identity map for GVA range [0xc0000000, 0xc0004000).  This
->  	 * affects both L1 and L2.  However...
->  	 */
-> -	virt_map(vm, GUEST_TEST_MEM, GUEST_TEST_MEM, TEST_MEM_PAGES);
-> +	virt_map(vm, GUEST_TEST_MEM1, GUEST_TEST_MEM1, TEST_MEM_PAGES);
->  
->  	/*
-> -	 * ... pages in the L2 GPA range [0xc0001000, 0xc0003000) will map to
-> -	 * 0xc0000000.
-> +	 * ... pages in the L2 GPA ranges [0xc0001000, 0xc0002000) and
-> +	 * [0xc0003000, 0xc0004000) will map to 0xc0000000 and 0xc0001000
-> +	 * respectively.
->  	 *
->  	 * When TDP is disabled, the L2 guest code will still access the same L1
->  	 * GPAs as the TDP enabled case.
-> +	 *
-> +	 * Set the Dirty bit in the PTEs used by L2 so that KVM will create
-> +	 * writable SPTEs when handling read faults (if the Dirty bit isn't
-> +	 * set, KVM must intercept the next write to emulate the Dirty bit
-> +	 * update).
->  	 */
->  	if (nested_tdp) {
->  		tdp_identity_map_default_memslots(vm);
-> -		tdp_map(vm, NESTED_TEST_MEM1, GUEST_TEST_MEM, PAGE_SIZE);
-> -		tdp_map(vm, NESTED_TEST_MEM2, GUEST_TEST_MEM, PAGE_SIZE);
-> +		tdp_map(vm, NESTED_TEST_MEM1, GUEST_TEST_MEM1, PAGE_SIZE);
-> +		tdp_map(vm, NESTED_TEST_MEM2, GUEST_TEST_MEM2, PAGE_SIZE);
-> +
-> +
-> +		*tdp_get_pte(vm, NESTED_TEST_MEM1) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-> +		*tdp_get_pte(vm, NESTED_TEST_MEM2) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-> +	} else {
-> +		*vm_get_pte(vm, GUEST_TEST_MEM1) |= PTE_DIRTY_MASK(&vm->mmu);
-> +		*vm_get_pte(vm, GUEST_TEST_MEM2) |= PTE_DIRTY_MASK(&vm->mmu);
->  	}
->  
->  	bmap = bitmap_zalloc(TEST_MEM_PAGES);
-> -	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM);
-> +	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM1);
->  
->  	while (!done) {
->  		memset(host_test_mem, 0xaa, TEST_MEM_PAGES * PAGE_SIZE);
-> @@ -169,25 +201,42 @@ static void test_dirty_log(bool nested_tdp)
->  		case UCALL_ABORT:
->  			REPORT_GUEST_ASSERT(uc);
->  			/* NOT REACHED */
-> -		case UCALL_SYNC:
-> +		case UCALL_SYNC: {
-> +			int page_nr = uc.args[1] & TEST_SYNC_PAGE_MASK;
-> +			int i;
-> +
->  			/*
->  			 * The nested guest wrote at offset 0x1000 in the memslot, but the
->  			 * dirty bitmap must be filled in according to L1 GPA, not L2.
->  			 */
->  			kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
-> -			if (uc.args[1]) {
-> -				TEST_ASSERT(test_bit(0, bmap), "Page 0 incorrectly reported clean");
-> -				TEST_ASSERT(host_test_mem[0] == 1, "Page 0 not written by guest");
-> -			} else {
-> -				TEST_ASSERT(!test_bit(0, bmap), "Page 0 incorrectly reported dirty");
-> -				TEST_ASSERT(host_test_mem[0] == 0xaaaaaaaaaaaaaaaaULL, "Page 0 written by guest");
-> +
-> +			/*
-> +			 * If a fault is expected, the page should be dirty
-> +			 * as the Dirty bit is set in the gPTE.  KVM should
-> +			 * create a writable SPTE even on a read fault, *and*
-> +			 * KVM must mark the GFN as dirty when doing so.
-> +			 */
-> +			TEST_ASSERT(test_bit(page_nr, bmap) == !(uc.args[1] & TEST_SYNC_NO_FAULT),
-> +				    "Page %u incorrectly reported %s on %s fault", page_nr,
-> +				    test_bit(page_nr, bmap) ? "dirty" : "clean",
-> +				    uc.args[1] & TEST_SYNC_NO_FAULT ? "no" :
-> +				    uc.args[1] & TEST_SYNC_READ_FAULT ? "read" : "write");
-> +
-> +			for (i = 0; i < TEST_MEM_PAGES; i++) {
-> +				if (i == page_nr && uc.args[1] & TEST_SYNC_WRITE_FAULT)
-> +					TEST_ASSERT(test_read_host_page(host_test_mem, i) == 1,
-> +						    "Page %u not written by guest", i);
-> +				else
-> +					TEST_ASSERT(test_read_host_page(host_test_mem, i) == 0xaaaaaaaaaaaaaaaaULL,
-> +						    "Page %u written by guest", i);
-> +
-> +				if (i != page_nr)
-> +					TEST_ASSERT(!test_bit(i, bmap),
-> +						    "Page %u incorrectly reported dirty", i);
->  			}
-> -
-> -			TEST_ASSERT(!test_bit(1, bmap), "Page 1 incorrectly reported dirty");
-> -			TEST_ASSERT(host_test_mem[PAGE_SIZE / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 1 written by guest");
-> -			TEST_ASSERT(!test_bit(2, bmap), "Page 2 incorrectly reported dirty");
-> -			TEST_ASSERT(host_test_mem[PAGE_SIZE*2 / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 2 written by guest");
->  			break;
-> +		}
->  		case UCALL_DONE:
->  			done = true;
->  			break;
-> -- 
-> 2.52.0.351.gbe84eed79e-goog
-> 
+- Frank
