@@ -1,115 +1,116 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C5B2F49F6
-	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 12:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5B02D879C;
+	Fri,  2 Jan 2026 12:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767357792; cv=none; b=SjSuUN52Rk7TnwY2y9QH2ZVyO82B/PYia8zCrE4BId1VJvWFCXcini9YuYPF5uLq1EsuaFX/acQtYcUGLIE8VkMYh41jS7VhoUDdhlcDBeIpVQdxDABBfDs9Qr2fan9fAdCic/Uh+t2ghG6QX5R07RNP8P+j5Lv6g3xlF0sNmXE=
+	t=1767358721; cv=none; b=dxAJWOqOWCWGuZBEpd73Vq54tJFLTYrHHE4Tnoite3Zu2r0xKj/l8y5H6gf505sVr2wxXuMpIUjA1BGdCLzBQJVn1jzyqfVwDYvRc7ZGDgpkSeHJREQSRm9cjOZ1Rz0vJwVBTCMKvjZwoMC4PaHWNvmaCw3DOtmPngX2rBLHX1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767357792; c=relaxed/simple;
-	bh=8eUq3Pn+KcGsEtUGrZlabILVCNb9lpuwlVpiaLiuTAA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uluCI8S12yfac2dI1f2/ouJP4OzIK0tXiEg+tqjKsvBlCezsJX75xkGFmwvUnhRS91zo54Fn94jZnl3dbTZyY8BAxBOiO/L+uGDNgH7hplq+h0J+G6cYflh1FCVld2uuZ+bKKNGy7kQKh1UZspBeaY21clIQpGmeeO3vr/7lzrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.1])
-	by gateway (Coremail) with SMTP id _____8CxacJQvVdpyf8EAA--.15387S3;
-	Fri, 02 Jan 2026 20:42:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.1])
-	by front1 (Coremail) with SMTP id qMiowJAxIMNEvVdpuaAJAA--.6861S2;
-	Fri, 02 Jan 2026 20:42:53 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v6.19-rc4
-Date: Fri,  2 Jan 2026 20:42:18 +0800
-Message-ID: <20260102124218.2256215-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1767358721; c=relaxed/simple;
+	bh=ditwgOA9BujE7Ln+5ZTlpsZZZAx+WuGc26hWEh8Pa7Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CcjCvdaDfiN/EjxX+HR0iuOrdIfKBcwMt7NDpEZ/TF6jMG1OvSNtlQ5SZWLw0EteFkFVap7wFyZ25HizmjoDkgjmNMmJJlHwybtAjE/s1XsW0pGShUuBuJsnTUugL5iBh7TylcfuXa8DTKJrAqONXCgq83Tu2EB4DuXCJ4JSUkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81774497;
+	Fri,  2 Jan 2026 04:58:31 -0800 (PST)
+Received: from [10.57.94.221] (unknown [10.57.94.221])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9905D3F5A1;
+	Fri,  2 Jan 2026 04:58:33 -0800 (PST)
+Message-ID: <581a0fac-7891-4644-af65-0354e22b9311@arm.com>
+Date: Fri, 2 Jan 2026 12:58:32 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxIMNEvVdpuaAJAA--.6861S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tw4kKw17ZF4UJw4fAF4UJrc_yoW5JFyrpr
-	Wa9FnxGr4rCrsxZwnIga429rnxJF1xGrW3Xa1ay34rCF1DZr1UXw45Ar1kXFZrJ3yfGryI
-	qF18Jw1jgF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcTKZDUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: kernel test robot <lkp@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20251215163520.1144179-4-ryan.roberts@arm.com>
+ <202512170038.vJZdUhEN-lkp@intel.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <202512170038.vJZdUhEN-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit f8f9c1f4d0c7a64600e2ca312dec824a0bc2f1da:
+On 16/12/2025 16:31, kernel test robot wrote:
+> Hi Ryan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on tip/sched/core]
+> [also build test ERROR on akpm-mm/mm-everything linus/master v6.19-rc1 next-20251216]
+> [cannot apply to kees/for-next/hardening kees/for-next/execve]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/prandom-Convert-prandom_u32_state-to-__always_inline/20251216-013546
+> base:   tip/sched/core
+> patch link:    https://lore.kernel.org/r/20251215163520.1144179-4-ryan.roberts%40arm.com
+> patch subject: [PATCH v2 3/3] randomize_kstack: Unify random source across arches
+> config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/config)
+> compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251217/202512170038.vJZdUhEN-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202512170038.vJZdUhEN-lkp@intel.com/
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>>> arch/x86/boot/startup/sev-startup.o: warning: objtool: section .discard.addressable has absolute relocation at offset 0x0
+> --
+>    In file included from include/linux/device/driver.h:21,
+>                     from include/linux/device.h:32,
+>                     from include/linux/blk_types.h:11,
+>                     from include/linux/writeback.h:13,
+>                     from include/linux/memcontrol.h:23,
+>                     from include/linux/resume_user_mode.h:8,
+>                     from include/linux/entry-virt.h:6,
+>                     from include/linux/kvm_host.h:5,
+>                     from arch/x86/kvm/svm/svm.c:3:
+>>> include/linux/module.h:132:49: error: redefinition of '__inittest'
+>      132 |         static inline initcall_t __maybe_unused __inittest(void)                \
+>          |                                                 ^~~~~~~~~~
+>    arch/x86/kvm/svm/svm.c:5509:1: note: in expansion of macro 'module_init'
+>     5509 | module_init(svm_init)
+>          | ^~~~~~~~~~~
+>    include/linux/module.h:132:49: note: previous definition of '__inittest' with type 'int (*(void))(void)'
+>      132 |         static inline initcall_t __maybe_unused __inittest(void)                \
+>          |                                                 ^~~~~~~~~~
+>    include/linux/module.h:125:41: note: in expansion of macro 'module_init'
+>      125 | #define late_initcall(fn)               module_init(fn)
+>          |                                         ^~~~~~~~~~~
+>    include/linux/randomize_kstack.h:86:1: note: in expansion of macro 'late_initcall'
+>       86 | late_initcall(random_kstack_init);
+>          | ^~~~~~~~~~~~~
 
-  Linux 6.19-rc3 (2025-12-28 13:24:26 -0800)
+Oops, this is due to having put late_initcall() in the header file. I'll move
+this to a c file for the next version.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.19-1
-
-for you to fetch changes up to bb85d206be208bbf834883e948125a35ac59993a:
-
-  samples/ftrace: Adjust LoongArch register restore order in direct calls (2025-12-31 15:19:25 +0800)
-
-----------------------------------------------------------------
-LoongArch fixes for v6.19-rc4
-
-Complete CPUCFG registers definition, set correct protection_map[] for
-VM_NONE/VM_SHARED, fix some bugs about orc stack unwinder, ftrace and BPF
-JIT.
-----------------------------------------------------------------
-Chenghao Duan (7):
-      LoongArch: Enable exception fixup for specific ADE subcode
-      LoongArch: Refactor register restoration in ftrace_common_return
-      LoongArch: BPF: Save return address register ra to t0 before trampoline
-      LoongArch: BPF: Adjust the jump offset of tail calls
-      LoongArch: BPF: Enable trampoline-based tracing for module functions
-      LoongArch: BPF: Enhance the bpf_arch_text_poke() function
-      samples/ftrace: Adjust LoongArch register restore order in direct calls
-
-Hengqi Chen (2):
-      LoongArch: BPF: Sign extend kfunc call arguments
-      LoongArch: BPF: Zero-extend bpf_tail_call() index
-
-Huacai Chen (2):
-      LoongArch: Complete CPUCFG registers definition
-      LoongArch: Set correct protection_map[] for VM_NONE/VM_SHARED
-
-Tiezhu Yang (3):
-      LoongArch: Use UNWIND_HINT_END_OF_STACK for entry points
-      LoongArch: Remove is_entry_func() and kernel_entry_end
-      LoongArch: Remove unnecessary checks for ORC unwinder
-
- arch/loongarch/include/asm/loongarch.h      |  7 ++++
- arch/loongarch/kernel/head.S                |  4 +-
- arch/loongarch/kernel/mcount_dyn.S          | 14 +++++--
- arch/loongarch/kernel/traps.c               |  5 +++
- arch/loongarch/kernel/unwind_orc.c          | 27 +++-----------
- arch/loongarch/mm/cache.c                   |  8 ++--
- arch/loongarch/net/bpf_jit.c                | 58 +++++++++++++++++++++++------
- arch/loongarch/net/bpf_jit.h                | 26 +++++++++++++
- samples/ftrace/ftrace-direct-modify.c       |  8 ++--
- samples/ftrace/ftrace-direct-multi-modify.c |  8 ++--
- samples/ftrace/ftrace-direct-multi.c        |  4 +-
- samples/ftrace/ftrace-direct-too.c          |  4 +-
- samples/ftrace/ftrace-direct.c              |  4 +-
- 13 files changed, 120 insertions(+), 57 deletions(-)
+Thanks for the report!
 
