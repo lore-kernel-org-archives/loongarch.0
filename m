@@ -1,124 +1,346 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC2B15E97
-	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 22:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1FD27815E
+	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 23:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767394449; cv=none; b=b0X3ndTYR/HxeJsLXDpbV82zxGDghR7dTFkSZocyuzpJ6DwZy2uAmFFq0OlqvdY7+q77DaZyNR7wJ6SjiWr9ehbaANl+E37Fbf4pCWQGEsUXm92Ewb7Ti90yZ96KlhVWn3aq7e3Q0XOo6p5xTar62/k3HZad3EqUnpr4yguoWZU=
+	t=1767396815; cv=none; b=cdzG3qQJSTAtmnPJZUaO3sgjLQxLN+nyACqklI8X5IDCyTW7spZDcITLeusDPrPcc4FXiL0fFw+1Jyk8lKlZRXaLlxLYPw5a+Y+k8HfJJhDHlx4X4blkOPPv3RekJnuVWn0hPBO37oaAqSK42zhZcp2ZJAnky3UNUFaBtGCd/Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767394449; c=relaxed/simple;
-	bh=kPMxx2R7Gx5ZxYwa7SRt+S3sFaD5KMccJKMZB0MZviE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fA29PwsGDdcsCSHXgzsjlx4bOUJ9BSpEioVNXUKq3exGdWxDKr/BZ0qyo9tA+3IMKFIa5oD2y4hcoAKEQz0KAcus9OOQwYUs3xO8kkU3PSTkL+s6y0ZqNBxduTLjMCgqrjk6mCd7HPl/+s8EhEfyHXj/BsAev5KlwIIgwPQuhpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WdPgox9t; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1767396815; c=relaxed/simple;
+	bh=fPgjbu8KKW+OSKM0Ml+0HRcMf9aJuuECFk5FjJFgyaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7ACPTajlIEeXdJCi3uTgq2jKjGL9ryYc13arx804Sl3AL+MJh2JTO5IqwCp4kKcnyPhL7RhNDwBiqlVgScl8Sv4ndxZPsCViS0X4ACkCopIyb7BzAr2DYkL84nexwKoNsZVOyO1p+zUi70BowXEGmTETgc3ix/ji6PAb7ifhGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRwzHiAv; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdPgox9t"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-430f57cd471so5855745f8f.0
-        for <loongarch@lists.linux.dev>; Fri, 02 Jan 2026 14:54:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRwzHiAv"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-598f8136a24so13878918e87.3
+        for <loongarch@lists.linux.dev>; Fri, 02 Jan 2026 15:33:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767394446; x=1767999246; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=StGZh5UIhFdeUEf/ngmSy2NSY5Z+LAPTFt5BciOr9oI=;
-        b=WdPgox9tJLZW+o9jK4uR0nedHynwyz9dSswfHRqGMAXL8LmNKiROWpPCJJo7USfuoh
-         q7HKxkNuCJ4v10rA83dYGm9guBrvKP0Y7mseh6b8lBvFIwHgckLNWHEBWfabiBNdtdcg
-         YszUZhBFY7k35Dh8HOy7BzHXKZgc9Y0Ddhc1fM8K0VwKpjrIX21tBieukIjPlB+Qjpa7
-         fvihd4NYptM3tGWvyqabWakQ0FHDJdp+hjaxg1mG1oo7Bw3WUyKWWnh8ACKX7IdHCaRF
-         UBCSsp98kFGB20xmJWLfY8G/oa4kd2Y4KVrfHXbPRepK/3K212TuXLPVCFGnJeOP7Tmm
-         7wHg==
+        d=gmail.com; s=20230601; t=1767396811; x=1768001611; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
+        b=XRwzHiAv6tgK+gyXljHPBWDocd8xiqUuF5D8SqYdkmmtvgG42ncPtkKXs7qw1rmVFn
+         McHGraiaVZP4iYq+yUqsqF8on8u8jdVsvrKEEL7zz9Z2sd7fNhzmXroFD1dpdI0q/Zwx
+         TafAkwOiBo5M4WkcJC6oTLEeD2sZMDKwAPhkCd3BnNE1huT4oW2vcf9ZgOR8Gz2XfWGm
+         7x+H97ruhkKPyLiSwJojOkRH1c2anDJv8ooIFGUBPHhEfflhZo2aj71/jNYHZyXkKrcH
+         QydYyUCfMCSHAG7XTlrMp9LNElDCUQSdn4AHYzAafO9etNK3YxNrWZ1D7mQyesj0nSgm
+         RH8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767394446; x=1767999246;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=StGZh5UIhFdeUEf/ngmSy2NSY5Z+LAPTFt5BciOr9oI=;
-        b=kbomZQR1DtpMudN/rYtg9n41otREhqMrnqppNFHHv5GHskueEmNGgHtKo01GPpz3et
-         zakaQAqVpEjJLjBSUq3GLDBO/G85kF7/0UuBSAMsAKp/ydm0h8fXtkebdkLjltX6PjHc
-         QM4VZsRV4KfDhMYVS7tmheQ5ljnEr7MLW2irM2WtXu64o8URn9R8OddCf2uYoQb55tYM
-         i19ufHjm00TQwI48zjHpBiT6OfmScmse0wWC/ZBAvW4ypolnvFhw3GDXoUjwiM3oCKtT
-         ZHC9KFMFbKMJ7JDQBoO/+BUuu1lI8uMmoMe96qTS6Cmnqyavkr92r3PyoMIeZH41YB3N
-         3mRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfbhMqPSpDCGOZFf0BpxbLJyS3UEqYQxJWHDZcTNLbVCrkA8g5ngBgxhVfQ4OSwfngGTDwVlxvQcI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNqWh1Fx7YEDQ4I60k7fgRkONXyIlewh5eEB6V7s6Xefn6Y3W9
-	/xS2fzRrgVttmNJr3JSPPDDu/KEdzG3C0gjw+9judzM2+pEnmm9NW6Ny
-X-Gm-Gg: AY/fxX7Y/Fe0e2C1qYNPEJmf9t1RIlTbRU87e+iu1seyGHWRrcF/jR6t/WALypAdwj+
-	2OEDMx1jFf/tIXG/3uN4fvbXpNejQ4NZu9K3nieCjgD4GjoklOkJKtE8MmObLNfmV/eWVO2FLe7
-	LxoJQBjsXUkxVUeDfez8xhSz+VtWYvrnK0hcqxLVEkfIVTPextHKun359WPV8BS1RBqx27/gJBU
-	hhdDtjFz52QINxvoUgQlvPyoVsbbmjNRoqt+SP+TU62bVSJ+MBpGUrjMY/vWcuaJ7MqflPKETsI
-	W62NYb3/cPqARjsqz1Bj09neeTLJv3wQduLBXI6VnZsm4o9/Xc7rZsF//sbjlcnHJpNzKkOtRAh
-	Uajv+phfmzd+A7OD6rkkMoA6yG5/AepC0P7bhyLhB56ttAFYgoDCl4AIGBEZZcr++2PxLDXuTs5
-	Z37AMXK/bMh+SE4zUNc5sbzYMbJoG01vRg9cRIizU8X2OCMMcWqrz1
-X-Google-Smtp-Source: AGHT+IHhZlcstoHojBz97OFk5owjy0cbb1cp4fYnQEbcnWo+WUycqSneA9mdGDNlnSrZ5xQclO2tXg==
-X-Received: by 2002:a5d:5392:0:b0:42f:edb6:3642 with SMTP id ffacd0b85a97d-4324e704c03mr44422531f8f.60.1767394445433;
-        Fri, 02 Jan 2026 14:54:05 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab2ebfsm86000586f8f.40.2026.01.02.14.54.04
+        d=1e100.net; s=20230601; t=1767396811; x=1768001611;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
+        b=YG3nI0WqqWywZnCerl4Lcwf6G6tqdEFTNatZRTM6rn2f2jgby6aJWBoM3nOb2ERf7N
+         4Xq9QrpiXoStHGF6loxIonSu1T5TFF9GAf+Pi4TB9nLfav/4EpBUIZCZ8PvzZwTa8dv4
+         c4W9Ewrgz0+KoClyjmqCSIS0k80KN1LL8BTFKLcnr3MFjaY/Ee79jzbjLjrNZzwmkLrZ
+         8kCFH1XCKjoDtyhJsxuYIMTxuSMHYiXarXRoEfgOMIbXO0P/qq8OE6gHdK20bBGh3Am+
+         aYBfdhiBLSyzie5lAYqub34FCFH9E459vvzxXiq+HEUZc+B+0OuJL+nsIGaAQCcUtl9g
+         Ip+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUY+9ch8NDzQIbP1d4A1/ZRp0HElE42bU2A9cJquFcmvjWbBTUmGyZt9hClVr0UXpq1wJIi3FIpCes=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxoi5aPSpXyJKmKlvVFKaztfWYxblP0eeB700+50Cp5nPghq1+u
+	1WhKEuMig25unB6IH4VCBFKlLZYad31uaiH69SC/ruIW1WhK6FrgFswq
+X-Gm-Gg: AY/fxX7FU2sYTL6Rum7FGWLD2aNxYf6csg4gGYxC04nQNTMZT0IgKPW4Ta6VwI2GSOy
+	t66zc4Tha/RcAMYbywC/a1lk1PeuZHvWCrrEOnXwUTres/kFus9UXKkgD5yPBYnui8GKQ9CCDNq
+	HjL7UJQ72swNFTPHCs3SNo70FJHBTXb80ELjqD06uUIL45yYTk43Zm0/oOVpN2jDK5ySI1BEFX9
+	H7lGFbYMvIiIS8QsSNEQ3+/c0s752cxepiyCzCPgZSwAFH/FAjcmOabSm3eEABtxeFwhh/hFFFV
+	8oHLMwfanPgoeTMXlsXEedrPtpaTkcJ5cFtxEBNT8lBnqqEjz4f1HBjjh8bA4kxvLfS6PHysbJo
+	jYJDiEta5AqxGm+zyiZDhT6oQkbE87FRwqBvqDxsSYLzPaZSVXr+7LgNQR5sCrfFB3v1oeBKTJg
+	JdFYHXohaFRLvRKzO7VCVB8kYW
+X-Google-Smtp-Source: AGHT+IH2H1z9QVIhTu3A3MPtZYT5DDmpE6MbcXNtDvemf/egyv4QEgcDqeHHJdIO1qKRKt95zoj43Q==
+X-Received: by 2002:ac2:4e08:0:b0:594:93b8:88b6 with SMTP id 2adb3069b0e04-59a17db705bmr11802619e87.38.1767396810454;
+        Fri, 02 Jan 2026 15:33:30 -0800 (PST)
+Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a185ea248sm12368060e87.43.2026.01.02.15.33.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jan 2026 14:54:05 -0800 (PST)
-Date: Fri, 2 Jan 2026 22:54:03 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland
- <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton
- <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] prandom: Convert prandom_u32_state() to
- __always_inline
-Message-ID: <20260102225403.78e26214@pumpkin>
-In-Reply-To: <CAHmME9qHiVZwf4TAringRHSZ-yqHuPwmP=Wnx98n09jv7Vu_Rg@mail.gmail.com>
-References: <20260102131156.3265118-1-ryan.roberts@arm.com>
-	<20260102131156.3265118-3-ryan.roberts@arm.com>
-	<CAHmME9qHiVZwf4TAringRHSZ-yqHuPwmP=Wnx98n09jv7Vu_Rg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Fri, 02 Jan 2026 15:33:29 -0800 (PST)
+Date: Sat, 3 Jan 2026 00:33:29 +0100
+From: Klara Modin <klarasmodin@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
+	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes,
+ zones and memory map
+Message-ID: <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
+References: <20260102070005.65328-1-rppt@kernel.org>
+ <20260102070005.65328-23-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260102070005.65328-23-rppt@kernel.org>
 
-On Fri, 2 Jan 2026 14:39:21 +0100
-"Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
+Hi,
 
-> Hi Ryan,
+On 2026-01-02 08:59:58 +0200, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> To initialize node, zone and memory map data structures every architecture
+> calls free_area_init() during setup_arch() and passes it an array of zone
+> limits.
+> 
+> Beside code duplication it creates "interesting" ordering cases between
+> allocation and initialization of hugetlb and the memory map. Some
+> architectures allocate hugetlb pages very early in setup_arch() in certain
+> cases, some only create hugetlb CMA areas in setup_arch() and sometimes
+> hugetlb allocations happen mm_core_init().
+> 
+> With arch_zone_limits_init() helper available now on all architectures it
+> is no longer necessary to call free_area_init() from architecture setup
+> code. Rather core MM initialization can call arch_zone_limits_init() in a
+> single place.
+> 
+> This allows to unify ordering of hugetlb vs memory map allocation and
+> initialization.
+> 
+> Remove the call to free_area_init() from architecture specific code and
+> place it in a new mm_core_init_early() function that is called immediately
+> after setup_arch().
+> 
+> After this refactoring it is possible to consolidate hugetlb allocations
+> and eliminate differences in ordering of hugetlb and memory map
+> initialization among different architectures.
+> 
+> As the first step of this consolidation move hugetlb_bootmem_alloc() to
+> mm_core_early_init().
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
+This breaks boot on my Raspberry Pi 1. The reason seems to be the use of
+page_folio() when initializing the dynamically allocated zero page in
+arm, which doesn't work when free_area_init() hasn't been called yet.
+
+The following oopses are generated:
+
+ Booting Linux on physical CPU 0x0
+ Linux version 6.19.0-rc3-03898-g7975b0084358 (klara@soda.int.kasm.eu) (armv6j-unknown-linux-gnueabihf-gcc (Gentoo 15.2.1_p20251122 p3) 15.2.1 20251122, GNU ld (Gentoo 2.45.1 p1) 2.45.1) #451 Fri Jan  2 20:26:00 CET 2026
+ CPU: ARMv6-compatible processor [410fb767] revision 7 (ARMv7), cr=00c5387d
+ CPU: PIPT / VIPT nonaliasing data cache, VIPT nonaliasing instruction cache
+ OF: fdt: Machine model: Raspberry Pi Model B Rev 2
+ earlycon: pl11 at MMIO32 0x20201000 (options '')
+ printk: legacy bootconsole [pl11] enabled
+ Memory policy: Data cache writeback
+ Reserved memory: created CMA memory pool at 0x19400000, size 64 MiB
+ OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
+ OF: reserved mem: 0x19400000..0x1d3fffff (65536 KiB) map reusable linux,cma
+ 8<--- cut here ---
+ Unable to handle kernel paging request at virtual address 003dfb44 when read
+ [003dfb44] *pgd=00000000
+ Internal error: Oops: 5 [#1] ARM
+ CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
+ Hardware name: BCM2835
+ PC is at paging_init (include/linux/page-flags.h:284 (discriminator 2) arch/arm/mm/mmu.c:1790 (discriminator 2))
+ LR is at paging_init (arch/arm/mm/mmu.c:1789 (discriminator 1))
+ pc :    lr :    psr: 600000d3
+ sp : c0d01ef8  ip : defdb000  fp : 0000000b
+ r10: 00200000  r9 : d9400000  r8 : ffe00000
+ r7 : c0d09050  r6 : c0d0902c  r5 : c0d43d40  r4 : 0001efda
+ r3 : c0dab20c  r2 : 00000000  r1 : 003dfb40  r0 : 00000000
+ Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
+ Control: 00c5387d  Table: 00004008  DAC: 00000051
+ Register r0 information: NULL pointer
+ Register r1 information: non-paged memory
+ Register r2 information: NULL pointer
+ Register r3 information:
+ 8<--- cut here ---
+ Unable to handle kernel paging request at virtual address 0001b564 when read
+ [0001b564] *pgd=00000000
+ Internal error: Oops: 5 [#2] ARM
+ CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
+ Hardware name: BCM2835
+ PC is at kmem_dump_obj (mm/slab.h:142 (discriminator 2) mm/slab.h:178 (discriminator 2) mm/slab_common.c:609 (discriminator 2))
+ LR is at 0x1
+ pc :    lr :    psr: 200001d3
+ sp : c0d01cc8  ip : 00000000  fp : 0000000b
+ r10: 00200000  r9 : c0dab1dc  r8 : 00000000
+ r7 : 00000005  r6 : 00000dab  r5 : 0001b560  r4 : c0dab20c
+ r3 : c0dc2058  r2 : 1f000000  r1 : 00c00000  r0 : 00000001
+ Flags: nzCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
+ Control: 00c5387d  Table: 00004008  DAC: 00000051
+ Register r0 information: non-paged memory
+ Register r1 information: non-paged memory
+ Register r2 information: non-paged memory
+ Register r3 information:
+ 8<--- cut here ---
+
+and the second one repeats for some time afterwards.
+
+I experimented a little by allocating the zero page statically as many
+other arches do which fixes the issue as it does not need to be
+initialized at this point anymore, though I have no idea if that's
+appropriate.
+
+Regards,
+Klara Modin
+
 ...
-> > +static __always_inline u32 prandom_u32_state(struct rnd_state *state)  
+
+> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> index bdcc3639681f..a8f7b4084715 100644
+> --- a/arch/arm/mm/init.c
+> +++ b/arch/arm/mm/init.c
+> @@ -118,15 +118,6 @@ void __init arch_zone_limits_init(unsigned long *max_zone_pfn)
+>  #endif
+>  }
+>  
+> -static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+> -	unsigned long max_high)
+> -{
+> -	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
+> -
+> -	arch_zone_limits_init(max_zone_pfn);
+> -	free_area_init(max_zone_pfn);
+> -}
+> -
+>  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+>  int pfn_valid(unsigned long pfn)
+>  {
+> @@ -222,13 +213,6 @@ void __init bootmem_init(void)
+>  	 * done after the fixed reservations
+>  	 */
+>  	sparse_init();
+> -
+> -	/*
+> -	 * Now free the memory - free_area_init needs
+> -	 * the sparse mem_map arrays initialized by sparse_init()
+> -	 * for memmap_init_zone(), otherwise all PFNs are invalid.
+> -	 */
+> -	zone_sizes_init(min_low_pfn, max_low_pfn, max_pfn);
+>  }
+>  
+>  /*
+
+...
+
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 628c0e0ac313..64d6f9c15ef1 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -45,6 +45,7 @@ struct pt_regs;
+>  struct folio_batch;
+>  
+>  void arch_mm_preinit(void);
+> +void mm_core_init_early(void);
+>  void mm_core_init(void);
+>  void init_mm_internals(void);
+>  
+> @@ -3536,7 +3537,7 @@ static inline unsigned long get_num_physpages(void)
+>  }
+>  
+>  /*
+> - * Using memblock node mappings, an architecture may initialise its
+> + * FIXME: Using memblock node mappings, an architecture may initialise its
+>   * zones, allocate the backing mem_map and account for memory holes in an
+>   * architecture independent manner.
+>   *
+> @@ -3551,7 +3552,6 @@ static inline unsigned long get_num_physpages(void)
+>   *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
+>   * free_area_init(max_zone_pfns);
+>   */
+> -void free_area_init(unsigned long *max_zone_pfn);
+>  void arch_zone_limits_init(unsigned long *max_zone_pfn);
+>  unsigned long node_map_pfn_alignment(void);
+>  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+> diff --git a/init/main.c b/init/main.c
+> index b84818ad9685..445b5643ecec 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1025,6 +1025,7 @@ void start_kernel(void)
+>  	page_address_init();
+>  	pr_notice("%s", linux_banner);
+>  	setup_arch(&command_line);
+> +	mm_core_init_early();
+>  	/* Static keys and static calls are needed by LSMs */
+>  	jump_label_init();
+>  	static_call_init();
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index fc2a6f1e518f..ffc4a0f1fee9 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1810,7 +1810,6 @@ static void __init set_high_memory(void)
+>  
+>  /**
+>   * free_area_init - Initialise all pg_data_t and zone data
+> - * @max_zone_pfn: an array of max PFNs for each zone
+>   *
+>   * This will call free_area_init_node() for each active node in the system.
+>   * Using the page ranges provided by memblock_set_node(), the size of each
+> @@ -1821,17 +1820,14 @@ static void __init set_high_memory(void)
+>   * starts where the previous one ended. For example, ZONE_DMA32 starts
+>   * at arch_max_dma_pfn.
+>   */
+> -void __init free_area_init(unsigned long *max_zone_pfn)
+> +static void __init free_area_init(void)
+>  {
+> +	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
+>  	unsigned long start_pfn, end_pfn;
+>  	int i, nid, zone;
+>  	bool descending;
+>  
+> -	/* Record where the zone boundaries are */
+> -	memset(arch_zone_lowest_possible_pfn, 0,
+> -				sizeof(arch_zone_lowest_possible_pfn));
+> -	memset(arch_zone_highest_possible_pfn, 0,
+> -				sizeof(arch_zone_highest_possible_pfn));
+> +	arch_zone_limits_init(max_zone_pfn);
+>  
+>  	start_pfn = PHYS_PFN(memblock_start_of_DRAM());
+>  	descending = arch_has_descending_max_zone_pfns();
+> @@ -2681,13 +2677,19 @@ void __init __weak mem_init(void)
+>  {
+>  }
+>  
+> +void __init mm_core_init_early(void)
+> +{
+> +	hugetlb_bootmem_alloc();
+> +
+> +	free_area_init();
+> +}
+> +
+>  /*
+>   * Set up kernel memory allocators
+>   */
+>  void __init mm_core_init(void)
+>  {
+>  	arch_mm_preinit();
+> -	hugetlb_bootmem_alloc();
+>  
+>  	/* Initializations relying on SMP setup */
+>  	BUILD_BUG_ON(MAX_ZONELISTS > 2);
+> -- 
+> 2.51.0
 > 
-> Why not just normal `inline`? Is gcc disagreeing with the inlinability
-> of this function?
-
-gcc has a mind of its own when it comes to inlining.
-If there weren't some massive functions marked 'inline' that should never
-really be inlined then making 'inline' '__always_inline' would make sense.
-But first an audit would be needed.
-(This has come up several times in the past.)
-But if you need a function to be inlined (for any reason) it needs to be
-always_inline.
-
-Whether there should be an non-inlined 'option' here is another matter.
-There could be a normal function that calls the inlined version.
-
-	David
-
-
-> 
-> Jason
-> 
-
