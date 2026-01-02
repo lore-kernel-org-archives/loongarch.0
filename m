@@ -1,346 +1,253 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1FD27815E
-	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 23:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01ABE19A2A3
+	for <loongarch@lists.linux.dev>; Sat,  3 Jan 2026 00:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767396815; cv=none; b=cdzG3qQJSTAtmnPJZUaO3sgjLQxLN+nyACqklI8X5IDCyTW7spZDcITLeusDPrPcc4FXiL0fFw+1Jyk8lKlZRXaLlxLYPw5a+Y+k8HfJJhDHlx4X4blkOPPv3RekJnuVWn0hPBO37oaAqSK42zhZcp2ZJAnky3UNUFaBtGCd/Tc=
+	t=1767400829; cv=none; b=PQRbfIcXgwLKl/FoeEtf7b0wKvHsFEZE+wHJqik+X216KtoFCpWoWCMthV5XgjZUoOE19is3VJT01m4TKZzje79iQFJJWApTWtH4sXYR6pTjQ8mibzq6b18E0KuurXMtVt4zyNWEZ20mnNUoL4DXWK9sj2aDjuroJpILO33l74U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767396815; c=relaxed/simple;
-	bh=fPgjbu8KKW+OSKM0Ml+0HRcMf9aJuuECFk5FjJFgyaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7ACPTajlIEeXdJCi3uTgq2jKjGL9ryYc13arx804Sl3AL+MJh2JTO5IqwCp4kKcnyPhL7RhNDwBiqlVgScl8Sv4ndxZPsCViS0X4ACkCopIyb7BzAr2DYkL84nexwKoNsZVOyO1p+zUi70BowXEGmTETgc3ix/ji6PAb7ifhGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XRwzHiAv; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1767400829; c=relaxed/simple;
+	bh=J67UORjZXBYO7lqMtFHemzhBCJvKdFYD+BnAx+uh9dg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dfej6vrkhYD9BQWRYssVV5Ufq4bGBvowqX2UqEhJQyRsY9YOVvsXk+j7IndwsTQRF2CEg6IhHUE7lB21N1bvCdG2mpau+z5Ous+Tto+qzCiH/oVAQ45Ybfz31vCat/suYP1DEHeni3CmT8yAFSCKHa20i+4jnM9HYwVQSFF4gJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1KTr50e; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRwzHiAv"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-598f8136a24so13878918e87.3
-        for <loongarch@lists.linux.dev>; Fri, 02 Jan 2026 15:33:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1KTr50e"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64b9cb94ff5so15808071a12.2
+        for <loongarch@lists.linux.dev>; Fri, 02 Jan 2026 16:40:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767396811; x=1768001611; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
-        b=XRwzHiAv6tgK+gyXljHPBWDocd8xiqUuF5D8SqYdkmmtvgG42ncPtkKXs7qw1rmVFn
-         McHGraiaVZP4iYq+yUqsqF8on8u8jdVsvrKEEL7zz9Z2sd7fNhzmXroFD1dpdI0q/Zwx
-         TafAkwOiBo5M4WkcJC6oTLEeD2sZMDKwAPhkCd3BnNE1huT4oW2vcf9ZgOR8Gz2XfWGm
-         7x+H97ruhkKPyLiSwJojOkRH1c2anDJv8ooIFGUBPHhEfflhZo2aj71/jNYHZyXkKrcH
-         QydYyUCfMCSHAG7XTlrMp9LNElDCUQSdn4AHYzAafO9etNK3YxNrWZ1D7mQyesj0nSgm
-         RH8g==
+        d=gmail.com; s=20230601; t=1767400826; x=1768005626; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lu2XOwAewPAf2hIqWYAVG0zECJ1HMFf+2EIxiKJs26A=;
+        b=K1KTr50epHJw7hTqW3aZKVF6rX+xCb74jmcHy7IqH+ta336kAyHanFMRcUFLmTPfFk
+         hHAnBRvPZ4Gyimh+ZnXyLl5nwdy5qY2v6uCCiH2PBPZjj6WHxc+U/Rn0zFW26CHKV3I4
+         K+euMt++RMnnpM0IANoCm+POVN3+CPZ1wC242jyCpp5x7/CanCqXZGz8VSaakABWKuwN
+         VPXaMNQa0LuscUw6XOfRXmCFImRQqXMPcZmL4ee5q3GdGPvHcfsiVNDPBKW2zP0zu6U5
+         g7uskmR7WiqXMhP4z3n6YGG4m7iYMegKp2A8DuuOJQcQZpEo0xuiWVVb8FfO+Ul6lHJW
+         FFyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767396811; x=1768001611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7oJkD+3I1ySqG2dU6TJV84R7uGtBSIJL6aFjqNNbCRs=;
-        b=YG3nI0WqqWywZnCerl4Lcwf6G6tqdEFTNatZRTM6rn2f2jgby6aJWBoM3nOb2ERf7N
-         4Xq9QrpiXoStHGF6loxIonSu1T5TFF9GAf+Pi4TB9nLfav/4EpBUIZCZ8PvzZwTa8dv4
-         c4W9Ewrgz0+KoClyjmqCSIS0k80KN1LL8BTFKLcnr3MFjaY/Ee79jzbjLjrNZzwmkLrZ
-         8kCFH1XCKjoDtyhJsxuYIMTxuSMHYiXarXRoEfgOMIbXO0P/qq8OE6gHdK20bBGh3Am+
-         aYBfdhiBLSyzie5lAYqub34FCFH9E459vvzxXiq+HEUZc+B+0OuJL+nsIGaAQCcUtl9g
-         Ip+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUY+9ch8NDzQIbP1d4A1/ZRp0HElE42bU2A9cJquFcmvjWbBTUmGyZt9hClVr0UXpq1wJIi3FIpCes=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxoi5aPSpXyJKmKlvVFKaztfWYxblP0eeB700+50Cp5nPghq1+u
-	1WhKEuMig25unB6IH4VCBFKlLZYad31uaiH69SC/ruIW1WhK6FrgFswq
-X-Gm-Gg: AY/fxX7FU2sYTL6Rum7FGWLD2aNxYf6csg4gGYxC04nQNTMZT0IgKPW4Ta6VwI2GSOy
-	t66zc4Tha/RcAMYbywC/a1lk1PeuZHvWCrrEOnXwUTres/kFus9UXKkgD5yPBYnui8GKQ9CCDNq
-	HjL7UJQ72swNFTPHCs3SNo70FJHBTXb80ELjqD06uUIL45yYTk43Zm0/oOVpN2jDK5ySI1BEFX9
-	H7lGFbYMvIiIS8QsSNEQ3+/c0s752cxepiyCzCPgZSwAFH/FAjcmOabSm3eEABtxeFwhh/hFFFV
-	8oHLMwfanPgoeTMXlsXEedrPtpaTkcJ5cFtxEBNT8lBnqqEjz4f1HBjjh8bA4kxvLfS6PHysbJo
-	jYJDiEta5AqxGm+zyiZDhT6oQkbE87FRwqBvqDxsSYLzPaZSVXr+7LgNQR5sCrfFB3v1oeBKTJg
-	JdFYHXohaFRLvRKzO7VCVB8kYW
-X-Google-Smtp-Source: AGHT+IH2H1z9QVIhTu3A3MPtZYT5DDmpE6MbcXNtDvemf/egyv4QEgcDqeHHJdIO1qKRKt95zoj43Q==
-X-Received: by 2002:ac2:4e08:0:b0:594:93b8:88b6 with SMTP id 2adb3069b0e04-59a17db705bmr11802619e87.38.1767396810454;
-        Fri, 02 Jan 2026 15:33:30 -0800 (PST)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a185ea248sm12368060e87.43.2026.01.02.15.33.29
+        d=1e100.net; s=20230601; t=1767400826; x=1768005626;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Lu2XOwAewPAf2hIqWYAVG0zECJ1HMFf+2EIxiKJs26A=;
+        b=XqMhZvSupeG/N3O1e5xuix1zE23DJVrNsuS3sSOuN1nPRkJC6H5grM/2GHBJQtvyJE
+         8N/MjMWHv2z3o6aE6dcldmOAXZyQVIb3yVDgNGnmRFCe/wVk9n735ttS1CpRo14B3Uvc
+         DuKcHEDVlX9KVGH+kD+vWZ+WfiTEhvNLCIXCUxif47ByCAbz8crGsTb4qPYK9h7FMUYX
+         4HJAS8+Nu3QLV3nqrcK1+vuue/yHp6OdvvFuMq7EFZRI5lxA3a5E0vPNyqkXD08n6ngE
+         CVnSg8Yw7ycCmVg2Xm4f4MombBXNhwTZeKn7KxCo0+UDf3aYZ6p1v0nY0UXTnqAvXuHd
+         ho0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVk8PEJjaRvjHHlLBqUYEl08mT3wxkDXZ4qobdD33EmxCtCNDm0elT5hAOZBVjnOJxpNi8tf3vUOOo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxVXwcibCufkbhreQyqiKUbO4aEdM5cKpNvxkemxlCNg28mR6aC
+	Xqd2aIIULHHTZ/wDjXB5h7JavamU0aSQyGLH6CR1ud3iugFfU+5RiGxjbw88aA==
+X-Gm-Gg: AY/fxX7pEbYufl7b3QMewf9L1QRbSQusVFMWuZweoa3FWYGCOW1UlPdkImVUKmr8jgb
+	RMOhflH43ZGwd2oe9FcuQ0cuuEcm7quhBBC3UKkVoL5IfM+I/qtqzz3Dt7CTxC9Z9QhBKl6jYzi
+	qA5vYII56OfuxgF3/bsejJvRwLZwDysFkUYZ1XiC3ogR4vobFZse0EqL0ay63D1GzVaNh55ScwL
+	ahKzNyYGdAKkuYuup1EBaasuQaBtvbWaCBMDz6v0Mg1EP4Wva5OTc8Ffr7sf3R0NBwios5yneAI
+	+npjjgbKU1EXY4WrFRP6ahcrwSl2iqiglhd5oEYPWOhuHmYqauMcYs//3/e0f0epDhpE7B794nn
+	9wHQvp9GTFY2rZDaCs7mKNQqZcKe+J040QrDcG3Zx9Jpapbxluh3O3VmRg6kKaczRR3yIFeXtsw
+	K+0aBTZ4ccv39EnNGBOLN2XsPi+LFRNAmzpFy7Lha0mMIfr0iJAJ4m
+X-Google-Smtp-Source: AGHT+IFdvdEcrAIYSA22XzNr2wKPflwtXqsVf2mK8AXHiedc5sR4d+y6uOcJKoLds0TT7gNd5aiiog==
+X-Received: by 2002:a05:600c:458e:b0:47a:9560:ec28 with SMTP id 5b1f17b1804b1-47d19566d27mr540529425e9.13.1767393875116;
+        Fri, 02 Jan 2026 14:44:35 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6d452c69sm6169675e9.9.2026.01.02.14.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jan 2026 15:33:29 -0800 (PST)
-Date: Sat, 3 Jan 2026 00:33:29 +0100
-From: Klara Modin <klarasmodin@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
-	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes,
- zones and memory map
-Message-ID: <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-23-rppt@kernel.org>
+        Fri, 02 Jan 2026 14:44:34 -0800 (PST)
+Date: Fri, 2 Jan 2026 22:44:32 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
+ Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
+ Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] randomize_kstack: Maintain kstack_offset per
+ task
+Message-ID: <20260102224432.172b1247@pumpkin>
+In-Reply-To: <20260102131156.3265118-2-ryan.roberts@arm.com>
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+	<20260102131156.3265118-2-ryan.roberts@arm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260102070005.65328-23-rppt@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Fri,  2 Jan 2026 13:11:52 +0000
+Ryan Roberts <ryan.roberts@arm.com> wrote:
 
-On 2026-01-02 08:59:58 +0200, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> kstack_offset was previously maintained per-cpu, but this caused a
+> couple of issues. So let's instead make it per-task.
 > 
-> To initialize node, zone and memory map data structures every architecture
-> calls free_area_init() during setup_arch() and passes it an array of zone
-> limits.
+> Issue 1: add_random_kstack_offset() and choose_random_kstack_offset()
+> expected and required to be called with interrupts and preemption
+> disabled so that it could manipulate per-cpu state. But arm64, loongarch
+> and risc-v are calling them with interrupts and preemption enabled. I
+> don't _think_ this causes any functional issues, but it's certainly
+> unexpected and could lead to manipulating the wrong cpu's state, which
+> could cause a minor performance degradation due to bouncing the cache
+> lines. By maintaining the state per-task those functions can safely be
+> called in preemptible context.
 > 
-> Beside code duplication it creates "interesting" ordering cases between
-> allocation and initialization of hugetlb and the memory map. Some
-> architectures allocate hugetlb pages very early in setup_arch() in certain
-> cases, some only create hugetlb CMA areas in setup_arch() and sometimes
-> hugetlb allocations happen mm_core_init().
+> Issue 2: add_random_kstack_offset() is called before executing the
+> syscall and expands the stack using a previously chosen rnadom offset.
+                                                           <>
+	David
+
+> choose_random_kstack_offset() is called after executing the syscall and
+> chooses and stores a new random offset for the next syscall. With
+> per-cpu storage for this offset, an attacker could force cpu migration
+> during the execution of the syscall and prevent the offset from being
+> updated for the original cpu such that it is predictable for the next
+> syscall on that cpu. By maintaining the state per-task, this problem
+> goes away because the per-task random offset is updated after the
+> syscall regardless of which cpu it is executing on.
 > 
-> With arch_zone_limits_init() helper available now on all architectures it
-> is no longer necessary to call free_area_init() from architecture setup
-> code. Rather core MM initialization can call arch_zone_limits_init() in a
-> single place.
+> Fixes: 39218ff4c625 ("stack: Optionally randomize kernel stack offset each syscall")
+> Closes: https://lore.kernel.org/all/dd8c37bc-795f-4c7a-9086-69e584d8ab24@arm.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  include/linux/randomize_kstack.h | 26 +++++++++++++++-----------
+>  include/linux/sched.h            |  4 ++++
+>  init/main.c                      |  1 -
+>  kernel/fork.c                    |  2 ++
+>  4 files changed, 21 insertions(+), 12 deletions(-)
 > 
-> This allows to unify ordering of hugetlb vs memory map allocation and
-> initialization.
-> 
-> Remove the call to free_area_init() from architecture specific code and
-> place it in a new mm_core_init_early() function that is called immediately
-> after setup_arch().
-> 
-> After this refactoring it is possible to consolidate hugetlb allocations
-> and eliminate differences in ordering of hugetlb and memory map
-> initialization among different architectures.
-> 
-> As the first step of this consolidation move hugetlb_bootmem_alloc() to
-> mm_core_early_init().
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
-This breaks boot on my Raspberry Pi 1. The reason seems to be the use of
-page_folio() when initializing the dynamically allocated zero page in
-arm, which doesn't work when free_area_init() hasn't been called yet.
-
-The following oopses are generated:
-
- Booting Linux on physical CPU 0x0
- Linux version 6.19.0-rc3-03898-g7975b0084358 (klara@soda.int.kasm.eu) (armv6j-unknown-linux-gnueabihf-gcc (Gentoo 15.2.1_p20251122 p3) 15.2.1 20251122, GNU ld (Gentoo 2.45.1 p1) 2.45.1) #451 Fri Jan  2 20:26:00 CET 2026
- CPU: ARMv6-compatible processor [410fb767] revision 7 (ARMv7), cr=00c5387d
- CPU: PIPT / VIPT nonaliasing data cache, VIPT nonaliasing instruction cache
- OF: fdt: Machine model: Raspberry Pi Model B Rev 2
- earlycon: pl11 at MMIO32 0x20201000 (options '')
- printk: legacy bootconsole [pl11] enabled
- Memory policy: Data cache writeback
- Reserved memory: created CMA memory pool at 0x19400000, size 64 MiB
- OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
- OF: reserved mem: 0x19400000..0x1d3fffff (65536 KiB) map reusable linux,cma
- 8<--- cut here ---
- Unable to handle kernel paging request at virtual address 003dfb44 when read
- [003dfb44] *pgd=00000000
- Internal error: Oops: 5 [#1] ARM
- CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
- Hardware name: BCM2835
- PC is at paging_init (include/linux/page-flags.h:284 (discriminator 2) arch/arm/mm/mmu.c:1790 (discriminator 2))
- LR is at paging_init (arch/arm/mm/mmu.c:1789 (discriminator 1))
- pc :    lr :    psr: 600000d3
- sp : c0d01ef8  ip : defdb000  fp : 0000000b
- r10: 00200000  r9 : d9400000  r8 : ffe00000
- r7 : c0d09050  r6 : c0d0902c  r5 : c0d43d40  r4 : 0001efda
- r3 : c0dab20c  r2 : 00000000  r1 : 003dfb40  r0 : 00000000
- Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
- Control: 00c5387d  Table: 00004008  DAC: 00000051
- Register r0 information: NULL pointer
- Register r1 information: non-paged memory
- Register r2 information: NULL pointer
- Register r3 information:
- 8<--- cut here ---
- Unable to handle kernel paging request at virtual address 0001b564 when read
- [0001b564] *pgd=00000000
- Internal error: Oops: 5 [#2] ARM
- CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
- Hardware name: BCM2835
- PC is at kmem_dump_obj (mm/slab.h:142 (discriminator 2) mm/slab.h:178 (discriminator 2) mm/slab_common.c:609 (discriminator 2))
- LR is at 0x1
- pc :    lr :    psr: 200001d3
- sp : c0d01cc8  ip : 00000000  fp : 0000000b
- r10: 00200000  r9 : c0dab1dc  r8 : 00000000
- r7 : 00000005  r6 : 00000dab  r5 : 0001b560  r4 : c0dab20c
- r3 : c0dc2058  r2 : 1f000000  r1 : 00c00000  r0 : 00000001
- Flags: nzCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
- Control: 00c5387d  Table: 00004008  DAC: 00000051
- Register r0 information: non-paged memory
- Register r1 information: non-paged memory
- Register r2 information: non-paged memory
- Register r3 information:
- 8<--- cut here ---
-
-and the second one repeats for some time afterwards.
-
-I experimented a little by allocating the zero page statically as many
-other arches do which fixes the issue as it does not need to be
-initialized at this point anymore, though I have no idea if that's
-appropriate.
-
-Regards,
-Klara Modin
-
-...
-
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index bdcc3639681f..a8f7b4084715 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -118,15 +118,6 @@ void __init arch_zone_limits_init(unsigned long *max_zone_pfn)
->  #endif
->  }
+> diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+> index 1d982dbdd0d0..5d3916ca747c 100644
+> --- a/include/linux/randomize_kstack.h
+> +++ b/include/linux/randomize_kstack.h
+> @@ -9,7 +9,6 @@
 >  
-> -static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
-> -	unsigned long max_high)
-> -{
-> -	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
-> -
-> -	arch_zone_limits_init(max_zone_pfn);
-> -	free_area_init(max_zone_pfn);
-> -}
-> -
->  #ifdef CONFIG_HAVE_ARCH_PFN_VALID
->  int pfn_valid(unsigned long pfn)
->  {
-> @@ -222,13 +213,6 @@ void __init bootmem_init(void)
->  	 * done after the fixed reservations
->  	 */
->  	sparse_init();
-> -
-> -	/*
-> -	 * Now free the memory - free_area_init needs
-> -	 * the sparse mem_map arrays initialized by sparse_init()
-> -	 * for memmap_init_zone(), otherwise all PFNs are invalid.
-> -	 */
-> -	zone_sizes_init(min_low_pfn, max_low_pfn, max_pfn);
->  }
+>  DECLARE_STATIC_KEY_MAYBE(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+>  			 randomize_kstack_offset);
+> -DECLARE_PER_CPU(u32, kstack_offset);
 >  
 >  /*
-
-...
-
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 628c0e0ac313..64d6f9c15ef1 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -45,6 +45,7 @@ struct pt_regs;
->  struct folio_batch;
->  
->  void arch_mm_preinit(void);
-> +void mm_core_init_early(void);
->  void mm_core_init(void);
->  void init_mm_internals(void);
->  
-> @@ -3536,7 +3537,7 @@ static inline unsigned long get_num_physpages(void)
->  }
->  
->  /*
-> - * Using memblock node mappings, an architecture may initialise its
-> + * FIXME: Using memblock node mappings, an architecture may initialise its
->   * zones, allocate the backing mem_map and account for memory holes in an
->   * architecture independent manner.
+>   * Do not use this anywhere else in the kernel. This is used here because
+> @@ -50,15 +49,14 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>   * add_random_kstack_offset - Increase stack utilization by previously
+>   *			      chosen random offset
 >   *
-> @@ -3551,7 +3552,6 @@ static inline unsigned long get_num_physpages(void)
->   *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
->   * free_area_init(max_zone_pfns);
+> - * This should be used in the syscall entry path when interrupts and
+> - * preempt are disabled, and after user registers have been stored to
+> - * the stack. For testing the resulting entropy, please see:
+> - * tools/testing/selftests/lkdtm/stack-entropy.sh
+> + * This should be used in the syscall entry path after user registers have been
+> + * stored to the stack. Preemption may be enabled. For testing the resulting
+> + * entropy, please see: tools/testing/selftests/lkdtm/stack-entropy.sh
 >   */
-> -void free_area_init(unsigned long *max_zone_pfn);
->  void arch_zone_limits_init(unsigned long *max_zone_pfn);
->  unsigned long node_map_pfn_alignment(void);
->  extern unsigned long absent_pages_in_range(unsigned long start_pfn,
+>  #define add_random_kstack_offset() do {					\
+>  	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+>  				&randomize_kstack_offset)) {		\
+> -		u32 offset = raw_cpu_read(kstack_offset);		\
+> +		u32 offset = current->kstack_offset;			\
+>  		u8 *ptr = __kstack_alloca(KSTACK_OFFSET_MAX(offset));	\
+>  		/* Keep allocation even after "ptr" loses scope. */	\
+>  		asm volatile("" :: "r"(ptr) : "memory");		\
+> @@ -69,9 +67,9 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>   * choose_random_kstack_offset - Choose the random offset for the next
+>   *				 add_random_kstack_offset()
+>   *
+> - * This should only be used during syscall exit when interrupts and
+> - * preempt are disabled. This position in the syscall flow is done to
+> - * frustrate attacks from userspace attempting to learn the next offset:
+> + * This should only be used during syscall exit. Preemption may be enabled. This
+> + * position in the syscall flow is done to frustrate attacks from userspace
+> + * attempting to learn the next offset:
+>   * - Maximize the timing uncertainty visible from userspace: if the
+>   *   offset is chosen at syscall entry, userspace has much more control
+>   *   over the timing between choosing offsets. "How long will we be in
+> @@ -85,14 +83,20 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>  #define choose_random_kstack_offset(rand) do {				\
+>  	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+>  				&randomize_kstack_offset)) {		\
+> -		u32 offset = raw_cpu_read(kstack_offset);		\
+> +		u32 offset = current->kstack_offset;			\
+>  		offset = ror32(offset, 5) ^ (rand);			\
+> -		raw_cpu_write(kstack_offset, offset);			\
+> +		current->kstack_offset = offset;			\
+>  	}								\
+>  } while (0)
+> +
+> +static inline void random_kstack_task_init(struct task_struct *tsk)
+> +{
+> +	tsk->kstack_offset = 0;
+> +}
+>  #else /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
+>  #define add_random_kstack_offset()		do { } while (0)
+>  #define choose_random_kstack_offset(rand)	do { } while (0)
+> +#define random_kstack_task_init(tsk)		do { } while (0)
+>  #endif /* CONFIG_RANDOMIZE_KSTACK_OFFSET */
+>  
+>  #endif
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index d395f2810fac..9e0080ed1484 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1591,6 +1591,10 @@ struct task_struct {
+>  	unsigned long			prev_lowest_stack;
+>  #endif
+>  
+> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+> +	u32				kstack_offset;
+> +#endif
+> +
+>  #ifdef CONFIG_X86_MCE
+>  	void __user			*mce_vaddr;
+>  	__u64				mce_kflags;
 > diff --git a/init/main.c b/init/main.c
-> index b84818ad9685..445b5643ecec 100644
+> index b84818ad9685..27fcbbde933e 100644
 > --- a/init/main.c
 > +++ b/init/main.c
-> @@ -1025,6 +1025,7 @@ void start_kernel(void)
->  	page_address_init();
->  	pr_notice("%s", linux_banner);
->  	setup_arch(&command_line);
-> +	mm_core_init_early();
->  	/* Static keys and static calls are needed by LSMs */
->  	jump_label_init();
->  	static_call_init();
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index fc2a6f1e518f..ffc4a0f1fee9 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -1810,7 +1810,6 @@ static void __init set_high_memory(void)
+> @@ -830,7 +830,6 @@ static inline void initcall_debug_enable(void)
+>  #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+>  DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,
+>  			   randomize_kstack_offset);
+> -DEFINE_PER_CPU(u32, kstack_offset);
 >  
->  /**
->   * free_area_init - Initialise all pg_data_t and zone data
-> - * @max_zone_pfn: an array of max PFNs for each zone
->   *
->   * This will call free_area_init_node() for each active node in the system.
->   * Using the page ranges provided by memblock_set_node(), the size of each
-> @@ -1821,17 +1820,14 @@ static void __init set_high_memory(void)
->   * starts where the previous one ended. For example, ZONE_DMA32 starts
->   * at arch_max_dma_pfn.
->   */
-> -void __init free_area_init(unsigned long *max_zone_pfn)
-> +static void __init free_area_init(void)
+>  static int __init early_randomize_kstack_offset(char *buf)
 >  {
-> +	unsigned long max_zone_pfn[MAX_NR_ZONES] = { 0 };
->  	unsigned long start_pfn, end_pfn;
->  	int i, nid, zone;
->  	bool descending;
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index b1f3915d5f8e..b061e1edbc43 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -95,6 +95,7 @@
+>  #include <linux/thread_info.h>
+>  #include <linux/kstack_erase.h>
+>  #include <linux/kasan.h>
+> +#include <linux/randomize_kstack.h>
+>  #include <linux/scs.h>
+>  #include <linux/io_uring.h>
+>  #include <linux/bpf.h>
+> @@ -2231,6 +2232,7 @@ __latent_entropy struct task_struct *copy_process(
+>  	if (retval)
+>  		goto bad_fork_cleanup_io;
 >  
-> -	/* Record where the zone boundaries are */
-> -	memset(arch_zone_lowest_possible_pfn, 0,
-> -				sizeof(arch_zone_lowest_possible_pfn));
-> -	memset(arch_zone_highest_possible_pfn, 0,
-> -				sizeof(arch_zone_highest_possible_pfn));
-> +	arch_zone_limits_init(max_zone_pfn);
+> +	random_kstack_task_init(p);
+>  	stackleak_task_init(p);
 >  
->  	start_pfn = PHYS_PFN(memblock_start_of_DRAM());
->  	descending = arch_has_descending_max_zone_pfns();
-> @@ -2681,13 +2677,19 @@ void __init __weak mem_init(void)
->  {
->  }
->  
-> +void __init mm_core_init_early(void)
-> +{
-> +	hugetlb_bootmem_alloc();
-> +
-> +	free_area_init();
-> +}
-> +
->  /*
->   * Set up kernel memory allocators
->   */
->  void __init mm_core_init(void)
->  {
->  	arch_mm_preinit();
-> -	hugetlb_bootmem_alloc();
->  
->  	/* Initializations relying on SMP setup */
->  	BUILD_BUG_ON(MAX_ZONELISTS > 2);
-> -- 
-> 2.51.0
-> 
+>  	if (pid != &init_struct_pid) {
+
