@@ -1,89 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B0B288C08;
-	Fri,  2 Jan 2026 18:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1796D3A1E72;
+	Fri,  2 Jan 2026 20:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767377074; cv=none; b=S2xFvuh3QBo29dnRln/1irMEtuaHWuXjghfyTkCgVE+5fMny444E9SzB4FmlrOGIygy7bLBgQLFUoAFD0O2h6sP0uZZWnkBv50vKyJOVdbeZmSNpnMwHbl23S4sxhirxHHd5TxWu+h/+gnshBheK2g+Bt7nHal576dXBHbhQWGw=
+	t=1767385318; cv=none; b=gxUXWwrJ+0bWI2AC9bLLGwLhQETIM/aRKQzIJ/mm8F1TJt/yq0JmgcUuLy3COQtUTFWex8LBkzfABM5ffkfkJ6HVi2hoyyuV9bvhkMGvHlP5KrPTy/AoiEX8k2Sg1Ec/XNw7NePLqWDbCoIhxg7Ft21qhUhknBtY6gCy7W+KEsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767377074; c=relaxed/simple;
-	bh=9Q3BCyqOSN+oJgFNTsghHD+u6iamA25tuC/5QoeUzQI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=duraF7lyrEPP1WZU4yIkiZPZL6RHVlZpevVMUKDvYqbJlQ4s48ngzUn4wzDJ4DuM9yu60mqdMeP0L7xXi0nIK7YMGrfdh+Td9szq6wMVfOYCHcblBdEOFjZDsTHCJf+yKj7y8zeedHfd3tAKyU5yJTZXlPscgxMub/qKCp4KwRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=m4LVIjF3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767385318; c=relaxed/simple;
+	bh=1gADMs+H54SbTUdJ/XbvZkaoW8tRMjHP2Po+QPtjKA8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=tpDp235c/l0hGh8pCe1y8aKm1FbzE3MlR2yww5kn2ofjC3BIQo93HjBdxU2dlyW6s4qS0HaMh8PBxGwB7Ej4j6kQ6oDfLrtLsV2ZXZuf35qmgBkMZHGWS2kJAdKeABua8YGJHWB0FMyMYeRYqLqOV5AtJbNrBqoPnG910agq/Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAOnKECk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="m4LVIjF3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEB7C116B1;
-	Fri,  2 Jan 2026 18:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1767377072;
-	bh=9Q3BCyqOSN+oJgFNTsghHD+u6iamA25tuC/5QoeUzQI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=m4LVIjF3/x1+uJPkmzdQVneFBhdr/tNflWJvzon2aAKXFzapOWWp8T9zfIUe6d3Fu
-	 /gElMshb/CMy7xVVdFVFtfq0zPQL7Po74BU1gTpXa7kMFv+gt7F6M9I77NtH9DPO1l
-	 PeYULVm06wYXARz/UnbL6bNqJludz4ddsr/It9s4=
-Date: Fri, 2 Jan 2026 10:04:30 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>, Dave Hansen
- <dave.hansen@linux.intel.com>, David Hildenbrand <david@kernel.org>, Dinh
- Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge
- Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, John Paul
- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
- <corbet@lwn.net>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo
- Stoakes <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>,
- Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>,
- Michal Simek <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, Pratyush
- Yadav <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, Russell
- King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, Suren
- Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily
- Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil
- Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 00/28] arch, mm: consolidate hugetlb early reservation
-Message-Id: <20260102100430.623bc1d19b867588bc64f890@linux-foundation.org>
-In-Reply-To: <aVdswNM9PUN6Kr8Q@kernel.org>
-References: <20251228124001.3624742-1-rppt@kernel.org>
-	<20251231172714.a7fe44e856c14fdc8fe1cb43@linux-foundation.org>
-	<aVdswNM9PUN6Kr8Q@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAOnKECk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44BEC116B1;
+	Fri,  2 Jan 2026 20:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767385318;
+	bh=1gADMs+H54SbTUdJ/XbvZkaoW8tRMjHP2Po+QPtjKA8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=rAOnKECkS9oS2IG6h1x6z76No4oJ9p4UJ955Reu1rxQlGnezkK2594fCfT+J1AiZK
+	 xVcjYTKpcXaR7SK1zOoPAI0d/QqL21v8tvN9jsol188OaOHnFDLPkt/GXJeoSVTxXp
+	 /layqQuzGGdzCZyPd8yYfGUgMRL1TKzWXEVuuEcHhh0VHwAzudRFgf/WFakz973wLI
+	 v9DqUdjRSUhzAzyWE3du0gAOt0hXqn8rrKW0onDmkAQNjO9t/6lCRhNHwspY3Agy0/
+	 9YkzE3rpWZKn2LPqfzqMLHWi0J8BKzzN+r5uLVuha3n773m8aV92xPWdZeYQJeq7Hd
+	 gz5WKQ4dVFPuA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3BBC4380A962;
+	Fri,  2 Jan 2026 20:18:39 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v6.19-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260102124218.2256215-1-chenhuacai@loongson.cn>
+References: <20260102124218.2256215-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20260102124218.2256215-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.19-1
+X-PR-Tracked-Commit-Id: bb85d206be208bbf834883e948125a35ac59993a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b993744a972722b4e15b8d2afee1a053767f4dd4
+Message-Id: <176738511770.3999225.17390909777094531472.pr-tracker-bot@kernel.org>
+Date: Fri, 02 Jan 2026 20:18:37 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 2 Jan 2026 08:59:12 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+The pull request you sent on Fri,  2 Jan 2026 20:42:18 +0800:
 
-> > > I tried to trim the distribution list and although it's still quite long
-> > > if you feel that someone was wrongly excluded please add them back.
-> > 
-> > I'll add these to mm.git's mm-new branch for some testing.  I'll
-> > suppress the usual email storm because 41 * 28 is a lot of emails ;)
-> 
-> kbuild reported failures on some configurations so I'm anyway going to send
-> a lot of emails for v2 :)
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.19-1
 
-Cool, I grabbed v2.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b993744a972722b4e15b8d2afee1a053767f4dd4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
