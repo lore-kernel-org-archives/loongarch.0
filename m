@@ -1,150 +1,115 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEC530F80B
-	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 12:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C5B2F49F6
+	for <loongarch@lists.linux.dev>; Fri,  2 Jan 2026 12:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767356450; cv=none; b=Rmw+xEuHjKvR7+GMjm1NAij4QwuuOjWT0i52qH1+45ODeOdlJO4VdcOxJ/MtFhxd2VKCiPnKx2F95fwe8bm0gjluyCANyuBTdjm0j4xC8bte5Rx+L84zQYVOQP6hZUM8bVZOoDF/Lyj8bKm9Tlrz/ctsk3eMSDElYMd8DvOxqwE=
+	t=1767357792; cv=none; b=SjSuUN52Rk7TnwY2y9QH2ZVyO82B/PYia8zCrE4BId1VJvWFCXcini9YuYPF5uLq1EsuaFX/acQtYcUGLIE8VkMYh41jS7VhoUDdhlcDBeIpVQdxDABBfDs9Qr2fan9fAdCic/Uh+t2ghG6QX5R07RNP8P+j5Lv6g3xlF0sNmXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767356450; c=relaxed/simple;
-	bh=2HnA4NQf63mqdoCRpSaED2UJTl1zBpXs4OSoQ9qTJSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ma3JBXYDvFRQcPIZhCYWWDlnqerZWe3u7Ndk+nsdC3R7ou61Q28winnZczrEeyZAIIaBHCkkqHHS15tdYYzrvpg8dvN/dX14ep5oqkQCOAcEcyhz+laynKxpcNK9hKhsKFvDePYbn5iomL+Qkp9hMjyYebmliA49V1mlXF0gumU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N/c87wbu; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N/c87wbu"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 601Nsvtq013909;
-	Fri, 2 Jan 2026 12:20:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TKK5Sw
-	BrypXXv9T4so3tN8W+1qltUU+uy3Mi8alEDvE=; b=N/c87wbuCw9e7OZaVs287x
-	U6/QbNs0KMa60aAtjtNK0YlS1yuEebcSx9n7qy+lxKdZAOT2K9r6MoaGZSdgaWKP
-	52ZP/A8NY7NnMOFP7UFdoo36h9XPjRyHVo91LaTLf7hYQk3BNwf0/SdXi0Xc2353
-	Z30Yex2Hhv/VN6SjSsA/iLRPilZgugRVnfZeA21Apgp3q592Ka0KROZBctRdI51n
-	iB3YQrXGVwvQkG2VAbDY+pIiq8KqGQH13M2+1AhPQjwyZS6TGDwr+wYjeJAm000x
-	kbt/qiW8shvJWvO5hkxpdFkhCcVFfxgOW+v3bubkkc2EJZtJ3SPIFc8B44HsEoNA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4bb46xujm7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Jan 2026 12:20:22 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 602BvSbP003059;
-	Fri, 2 Jan 2026 12:20:21 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4bavg265ak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Jan 2026 12:20:21 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 602CKG8a52494652
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 Jan 2026 12:20:16 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD8C420040;
-	Fri,  2 Jan 2026 12:20:16 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 95F0C20043;
-	Fri,  2 Jan 2026 12:20:15 +0000 (GMT)
-Received: from osiris (unknown [9.111.41.241])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  2 Jan 2026 12:20:15 +0000 (GMT)
-Date: Fri, 2 Jan 2026 13:20:14 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shuah Khan <shuah@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3] vdso: Remove struct getcpu_cache
-Message-ID: <20260102122014.10318A55-hca@linux.ibm.com>
-References: <20251230-getcpu_cache-v3-1-fb9c5f880ebe@linutronix.de>
+	s=arc-20240116; t=1767357792; c=relaxed/simple;
+	bh=8eUq3Pn+KcGsEtUGrZlabILVCNb9lpuwlVpiaLiuTAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uluCI8S12yfac2dI1f2/ouJP4OzIK0tXiEg+tqjKsvBlCezsJX75xkGFmwvUnhRS91zo54Fn94jZnl3dbTZyY8BAxBOiO/L+uGDNgH7hplq+h0J+G6cYflh1FCVld2uuZ+bKKNGy7kQKh1UZspBeaY21clIQpGmeeO3vr/7lzrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.1])
+	by gateway (Coremail) with SMTP id _____8CxacJQvVdpyf8EAA--.15387S3;
+	Fri, 02 Jan 2026 20:42:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.1])
+	by front1 (Coremail) with SMTP id qMiowJAxIMNEvVdpuaAJAA--.6861S2;
+	Fri, 02 Jan 2026 20:42:53 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.19-rc4
+Date: Fri,  2 Jan 2026 20:42:18 +0800
+Message-ID: <20260102124218.2256215-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251230-getcpu_cache-v3-1-fb9c5f880ebe@linutronix.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTAyMDEwOCBTYWx0ZWRfX9vvRNnkd8Pfx
- iw1giuFwzqM2vrv6sGKjDUbgff0h0Y3jUCCV+buGKuhJKmIds+6tH5OCPgPJ2qLIM3h06dIiFaP
- 1UYq0HSsD3FH7rEYyqTRKGtk6rSfb4j3xN+CP0hhZVFP/ejElo1I82+KGR5JFRuLRxaUXgqSt9W
- Zvsnv/2QMUpAgYrECXfeG0QvM1VSvnxqxLO+1+uyR9VK1+y/ETAGBSi3c/8MW6PBkQ7z1maYW/f
- xkjGvwoo1/AkQqTQUfB0qr3ZoKf5jVPVG/dOvw1dDtw7K2FTDJecoJYCRRJ47H74VimRcSraDZL
- Nnm2ews70dEM07L/U9IPmu8Qz252j9h0zu+hetSfHmoGZ3+2/VeXvKezWdQHDgiGnNH6huCdNc1
- nRLPlTKY9cSU5T/esXreLKw1L7W+/DXeX9pIOj85YApUXusXHF7ypYyxHhVEmQ2IUo3fF8N7RBh
- rfurbe/WqzaJ7fhU/Bg==
-X-Proofpoint-ORIG-GUID: u-CeqcOxJgfmuySfQGUJRGwUwbFNnK6A
-X-Authority-Analysis: v=2.4 cv=L7AQguT8 c=1 sm=1 tr=0 ts=6957b807 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=8nJEP1OIZ-IA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=hd350nrAjBw2G0HVihMA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10
-X-Proofpoint-GUID: u-CeqcOxJgfmuySfQGUJRGwUwbFNnK6A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-02_01,2025-12-31_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 phishscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1011 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2512120000 definitions=main-2601020108
+X-CM-TRANSID:qMiowJAxIMNEvVdpuaAJAA--.6861S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tw4kKw17ZF4UJw4fAF4UJrc_yoW5JFyrpr
+	Wa9FnxGr4rCrsxZwnIga429rnxJF1xGrW3Xa1ay34rCF1DZr1UXw45Ar1kXFZrJ3yfGryI
+	qF18Jw1jgF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcTKZDUUUU
 
-On Tue, Dec 30, 2025 at 08:08:44AM +0100, Thomas Weiﬂschuh wrote:
-> The cache parameter of getcpu() is useless nowadays for various reasons.
-> * It is never passed by userspace for either the vDSO or syscalls.
-> * It is never used by the kernel.
-> * It could not be made to work on the current vDSO architecture.
-> * The structure definition is not part of the UAPI headers.
-> * vdso_getcpu() is superseded by restartable sequences in any case.
-> 
-> Remove the struct and its header.
-> 
-> As a side-effect we get rid of an unwanted inclusion of the linux/
-> header namespace from vDSO code.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> ---
-> Changes in v3:
-> - Rebase on v6.19-rc1
->   - Fix conflict with UML vdso_getcpu() removal
-> - Flesh out commit message
-> - Link to v2: https://lore.kernel.org/r/20251013-getcpu_cache-v2-1-880fbfa3b7cc@linutronix.de
-> 
-> Changes in v2:
-> - Rebase on v6.18-rc1
-> - Link to v1: https://lore.kernel.org/r/20250826-getcpu_cache-v1-1-8748318f6141@linutronix.de
-> ---
-> We could also completely remove the parameter, but I am not sure if
-> that is a good idea for syscalls and vDSO entrypoints.
-> ---
->  arch/loongarch/vdso/vgetcpu.c                   |  5 ++---
->  arch/s390/kernel/vdso/getcpu.c                  |  3 +--
->  arch/s390/kernel/vdso/vdso.h                    |  4 +---
->  arch/x86/entry/vdso/vgetcpu.c                   |  5 ++---
->  arch/x86/include/asm/vdso/processor.h           |  4 +---
->  include/linux/getcpu.h                          | 19 -------------------
->  include/linux/syscalls.h                        |  3 +--
->  kernel/sys.c                                    |  4 +---
->  tools/testing/selftests/vDSO/vdso_test_getcpu.c |  4 +---
->  9 files changed, 10 insertions(+), 41 deletions(-)
+The following changes since commit f8f9c1f4d0c7a64600e2ca312dec824a0bc2f1da:
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+  Linux 6.19-rc3 (2025-12-28 13:24:26 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.19-1
+
+for you to fetch changes up to bb85d206be208bbf834883e948125a35ac59993a:
+
+  samples/ftrace: Adjust LoongArch register restore order in direct calls (2025-12-31 15:19:25 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.19-rc4
+
+Complete CPUCFG registers definition, set correct protection_map[] for
+VM_NONE/VM_SHARED, fix some bugs about orc stack unwinder, ftrace and BPF
+JIT.
+----------------------------------------------------------------
+Chenghao Duan (7):
+      LoongArch: Enable exception fixup for specific ADE subcode
+      LoongArch: Refactor register restoration in ftrace_common_return
+      LoongArch: BPF: Save return address register ra to t0 before trampoline
+      LoongArch: BPF: Adjust the jump offset of tail calls
+      LoongArch: BPF: Enable trampoline-based tracing for module functions
+      LoongArch: BPF: Enhance the bpf_arch_text_poke() function
+      samples/ftrace: Adjust LoongArch register restore order in direct calls
+
+Hengqi Chen (2):
+      LoongArch: BPF: Sign extend kfunc call arguments
+      LoongArch: BPF: Zero-extend bpf_tail_call() index
+
+Huacai Chen (2):
+      LoongArch: Complete CPUCFG registers definition
+      LoongArch: Set correct protection_map[] for VM_NONE/VM_SHARED
+
+Tiezhu Yang (3):
+      LoongArch: Use UNWIND_HINT_END_OF_STACK for entry points
+      LoongArch: Remove is_entry_func() and kernel_entry_end
+      LoongArch: Remove unnecessary checks for ORC unwinder
+
+ arch/loongarch/include/asm/loongarch.h      |  7 ++++
+ arch/loongarch/kernel/head.S                |  4 +-
+ arch/loongarch/kernel/mcount_dyn.S          | 14 +++++--
+ arch/loongarch/kernel/traps.c               |  5 +++
+ arch/loongarch/kernel/unwind_orc.c          | 27 +++-----------
+ arch/loongarch/mm/cache.c                   |  8 ++--
+ arch/loongarch/net/bpf_jit.c                | 58 +++++++++++++++++++++++------
+ arch/loongarch/net/bpf_jit.h                | 26 +++++++++++++
+ samples/ftrace/ftrace-direct-modify.c       |  8 ++--
+ samples/ftrace/ftrace-direct-multi-modify.c |  8 ++--
+ samples/ftrace/ftrace-direct-multi.c        |  4 +-
+ samples/ftrace/ftrace-direct-too.c          |  4 +-
+ samples/ftrace/ftrace-direct.c              |  4 +-
+ 13 files changed, 120 insertions(+), 57 deletions(-)
+
