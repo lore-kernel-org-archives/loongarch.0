@@ -1,399 +1,183 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5D829BD9A
-	for <loongarch@lists.linux.dev>; Sat,  3 Jan 2026 20:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1735B24DCE5
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 04:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767472353; cv=none; b=dKW7/hMZHOLGO87EPcQoTzLD8JIFJHgwf68WIRqWsXTjN+cZcd+wPOiShFueEAkgus0EJ9rAuYplGR7tEaZ1KgKs1SvcH+9n0SbKXvGyoncYVEYOqgPWHe7N+fvIPXcY26cbFLGjXRTbPjsJdd33lpEBTfCYN2AGH1t9hMhjZys=
+	t=1767502702; cv=none; b=SQAzqivSUMJZYiniSsI5kBjEIy6DBCK9s2i0ArNXhpb3RNUw7JecixiFoelJicvF/N4xjXTaIZcajRrpRZmwIY7HQ5ydeoc1OYuLcV5/nT9DDedX1FYUn82hzWR9MJhneRQw99DtLJb4meseVQOYS2bd7t84qVz4f498Tylwzp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767472353; c=relaxed/simple;
-	bh=5+oEr/jkE5oCGIkGYrJbM3CWVfRfPAoBvVwyUQAaYAI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7k5DKc+VFAV6ZSWAOD0lXJiDZTzBp0XQvA37BKpkfUfZHwFRpztd5IAmMgkmZYog2KZ3MluHY1cGInzcfaO2mFkmLkkvh0CzByupnPDvBVPAE2tKXPUCSHL3rpGDWVYaXFKJAhlPaJjMVJXd5EA5l4TSPXKXweJ7I+5CoJitns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i4RWrybi; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767502702; c=relaxed/simple;
+	bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qO0tE4nNJ6ABrSJ0X2Nx6ZHXS8jT9sFbt0DM0Q4+zqVPpYHBl9j6Le7JJ5O12J7Dnasl9DnC4tpLrX3psHDe7oQTDXdGtqqCqvc6Uc5gNLa4XIRhKEQzt+EZ06qSuy4IdBTkjKb6+MKcg0HV5S5Iu27C411LWjj5ZVA5nIOF728=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2PGc8Na; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4RWrybi"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5942b58ac81so10506153e87.2
-        for <loongarch@lists.linux.dev>; Sat, 03 Jan 2026 12:32:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767472349; x=1768077149; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7o+8V3bXuMIGcHyQUku83CYs/vu8fbyRY+Gob8yvlG8=;
-        b=i4RWrybilT/ZoueWWJAwjBxRGDCyG6wNiHeY8w1cPt/h2MWpdHhj5PZ8PhiNoLvkea
-         LI7PDQEvWZlm4B20MhnHJaM1OFFZXfcgD83K6CuoSIMGSslBfzaQqR3xaXioGW24nL6I
-         rfeuSaYRZD5vvEPtExgKlJJmF/uBT6IKtWRIdkhmSPnlH3gbGOhA44TaRI9hCXOFIOAk
-         W0MTAmYeLkhrwtc62aABNgnCGbXzIitNDTGAbA3PqfstPO47s6t3RX1HHgj4hvxFj37R
-         BTo4HbS6ZVyiF9FB6JSZ62vvuvfMW/8SmknQmevULyuzUdoqUVsO7hQT2qAKaBQdqlhu
-         lRtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767472349; x=1768077149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7o+8V3bXuMIGcHyQUku83CYs/vu8fbyRY+Gob8yvlG8=;
-        b=F/dtxN8LNhKGfEBfZYkrOZackis7EKZ1z+A+dJXbplLq6CrBDxtN0NdvT455HEaUKL
-         NfaU0ryU7JaPHTn+JPHaPMeEcuDLeu+hm9ryTgyVN8TUwceexXz6A3Qcl2jDirG/wWNf
-         IiP+UBwtT5GskCRUAXVyP/bbHwc29o6O8g8kGY5wMjXjo2IBhXUMp+1nuinD/hiVJgMn
-         qrTiX+2TE+fW5LGEf4W5PlUL5ZDBr9Ai5gqEUfSe9IUBzjFCa4BH/U9QKfNBl7seS96K
-         riipliiNzzdcCvtKQKq7fNyde3ojvgG3nqS02RpPPEHipKJlZNgjG69r1jsi52U9q7f3
-         z1Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/1xOMQPfn5B2W00wPdS9z6FcVK/yyqbh9UsFhfycOZPZlUdFXP2MhvgT7MUT27ftJogk0oBJJo1o=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwIyCwUj/Lzs+s5WzIqWZs6txbl6/CweeKOVS0+C6CpBVMwQXR6
-	Oie7u7MeUJpZ8Ok55oIQC8Vb/7Y7UhyIjQDdnSLr/aterj4cGnvllBAB
-X-Gm-Gg: AY/fxX5u+bhEJRJ4Li3JUHDf9pIzIiZpwe4YMfMUrnH0dsvvkirh1Q8mT8JSTavlsIa
-	ndYxEnR9QE6TsPnzlgswTp+qiAY9op0AD02Ls026qusBR8hJOtsYk956t1gQx/NIrkzrmp948oT
-	V50ToaXF/uSogwQ6UyGFHjjMDEP7gCDneMxCfsteSbMDdFA8XGTpKzc4RI7gutVlXW94KKmhCAZ
-	YOqItBULRCXRY74OWVrDEGgwSwjryPN0MecaN0lQPWLm70L9hPia75R/gDFqI8I1o2rerCLBWTI
-	uvmFWdGmjDSo3t/5hgnSScvxW9LCM0hOuUA1TS2cTI1+Z51nt+FcOkSfgAHcDG60+hlEsEKBDDf
-	67qfQm94FfaC0BC9Xjf9+Lnqnc8hHpMIWcGtilpKFbaTL6BZQ0iRUxG7qa2JUHlbwmka7nEehzV
-	oz7G/S3Lq9mCfjLkrjXRvn3xv/cPjN8Xat9U3crYmfwA==
-X-Google-Smtp-Source: AGHT+IEnoPR3bLjgiHz8V/D0bqIfe+KGL8qN+8iViiiSSYeZJp9K5TsXzLfWqe+YE0ZXBkQi72/slw==
-X-Received: by 2002:a05:6512:401b:b0:598:fabf:afc2 with SMTP id 2adb3069b0e04-59a17d77697mr15522207e87.14.1767472348240;
-        Sat, 03 Jan 2026 12:32:28 -0800 (PST)
-Received: from localhost (parmesan.int.kasm.eu. [2001:678:a5c:1204:126f:f00a:513f:807b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a185ddc12sm13314957e87.37.2026.01.03.12.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 12:32:27 -0800 (PST)
-Date: Sat, 3 Jan 2026 21:32:26 +0100
-From: Klara Modin <klarasmodin@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson <andreas@gaisler.com>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
-	Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org, 
-	linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes,
- zones and memory map
-Message-ID: <aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-23-rppt@kernel.org>
- <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
- <aVll339wim7dCIaQ@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2PGc8Na"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767502700; x=1799038700;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
+  b=F2PGc8NaIWRMaxUuZhJNfDF+9znhP/43SIb3IrQUnfmXDoJ4OMXMKa8r
+   vGaxGibNvDk0ZODF5BMmmnINkeIgug4oz9/zaXorUdNFPyJZRFjpwq8PQ
+   sVSAYTd+JP+jOA3x4X4YxWTjyAxurGDkYArQdR03tyiQ2cFPRFvbYT+vK
+   mJP21fOqxpn6TdBrdsPsdu9J4MF3ExWuZU8Ka1k6BUuw3/eTnehQlvSul
+   ghIvebdi2DD9RHiW8ZooPvslTvyaGV5FLbngpDCGgIJMeqoXoyEg3+gnP
+   mSj7zKIWAmlWLvctR1whpQGbBloAkuHxGelAKzm1J6SZUpp3davV8e7ZS
+   Q==;
+X-CSE-ConnectionGUID: WId5ZgU2SJuZB+RtVaEbcw==
+X-CSE-MsgGUID: 4FFIDauRTi24Ob+Qb/cuiQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="94383253"
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="94383253"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:19 -0800
+X-CSE-ConnectionGUID: eeOzE9QuRci49bOSmoyeiQ==
+X-CSE-MsgGUID: w8DYRJktSgulAJez2gEiPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
+   d="scan'208";a="202576729"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:15 -0800
+Message-ID: <7214053a-070c-45c3-8cd8-b4306c49328a@linux.intel.com>
+Date: Sun, 4 Jan 2026 12:58:12 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aVll339wim7dCIaQ@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Fix PMU counter allocation for mixed-type
+ event groups
+To: Lisa Robinson <lisa@bytefly.space>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, WANG Xuerui <kernel@xen0n.name>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20251231091500.530432-1-lisa@bytefly.space>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251231091500.530432-1-lisa@bytefly.space>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 2026-01-03 20:54:23 +0200, Mike Rapoport wrote:
-> Hi,
-> 
-> On Sat, Jan 03, 2026 at 12:33:29AM +0100, Klara Modin wrote:
-> > On 2026-01-02 08:59:58 +0200, Mike Rapoport wrote:
-> > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > > 
-> > > To initialize node, zone and memory map data structures every architecture
-> > > calls free_area_init() during setup_arch() and passes it an array of zone
-> > > limits.
-> > > 
-> > > Beside code duplication it creates "interesting" ordering cases between
-> > > allocation and initialization of hugetlb and the memory map. Some
-> > > architectures allocate hugetlb pages very early in setup_arch() in certain
-> > > cases, some only create hugetlb CMA areas in setup_arch() and sometimes
-> > > hugetlb allocations happen mm_core_init().
-> > > 
-> > > With arch_zone_limits_init() helper available now on all architectures it
-> > > is no longer necessary to call free_area_init() from architecture setup
-> > > code. Rather core MM initialization can call arch_zone_limits_init() in a
-> > > single place.
-> > > 
-> > > This allows to unify ordering of hugetlb vs memory map allocation and
-> > > initialization.
-> > > 
-> > > Remove the call to free_area_init() from architecture specific code and
-> > > place it in a new mm_core_init_early() function that is called immediately
-> > > after setup_arch().
-> > > 
-> > > After this refactoring it is possible to consolidate hugetlb allocations
-> > > and eliminate differences in ordering of hugetlb and memory map
-> > > initialization among different architectures.
-> > > 
-> > > As the first step of this consolidation move hugetlb_bootmem_alloc() to
-> > > mm_core_early_init().
-> > > 
-> > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > 
-> > This breaks boot on my Raspberry Pi 1. The reason seems to be the use of
-> > page_folio() when initializing the dynamically allocated zero page in
-> > arm, which doesn't work when free_area_init() hasn't been called yet.
-> 
-> I believe the reason is rather the use of virt_to_phys() that now happens
-> before the memory map is ready.
-> 
-
-Right, that makes sense, the fault just becomes apparent when
-page_folio() is called on some bogus address then?
-
-> > The following oopses are generated:
-> > 
-> >  8<--- cut here ---
-> >  Unable to handle kernel paging request at virtual address 003dfb44 when read
-> >  [003dfb44] *pgd=00000000
-> >  Internal error: Oops: 5 [#1] ARM
-> >  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.19.0-rc3-03898-g7975b0084358 #451 NONE
-> >  Hardware name: BCM2835
-> >  PC is at paging_init (include/linux/page-flags.h:284 (discriminator 2) arch/arm/mm/mmu.c:1790 (discriminator 2))
-> >  LR is at paging_init (arch/arm/mm/mmu.c:1789 (discriminator 1))
-> 
-> ...
-> 
-> >  8<--- cut here ---
-> > 
-> > and the second one repeats for some time afterwards.
-> > 
-> > I experimented a little by allocating the zero page statically as many
-> > other arches do which fixes the issue as it does not need to be
-> > initialized at this point anymore, though I have no idea if that's
-> > appropriate.
-> 
-> Do you mean putting the zero in the BSS like, e.g. arm64? I don't see a
-> reason why this shouldn't work.
-> 
-
-Yes, exactly that. The diff I had was:
-
-diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
-index 86378eec7757..6fa9acd6a7f5 100644
---- a/arch/arm/include/asm/pgtable.h
-+++ b/arch/arm/include/asm/pgtable.h
-@@ -15,8 +15,8 @@
-  * ZERO_PAGE is a global shared page that is always zero: used
-  * for zero-mapped memory areas etc..
-  */
--extern struct page *empty_zero_page;
--#define ZERO_PAGE(vaddr)	(empty_zero_page)
-+extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-+#define ZERO_PAGE(vaddr)	(virt_to_page(empty_zero_page))
- #endif
- 
- #include <asm-generic/pgtable-nopud.h>
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index 8bac96e205ac..518def8314e7 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -45,7 +45,7 @@ extern unsigned long __atags_pointer;
-  * empty_zero_page is a special page that is used for
-  * zero-initialized data and COW.
-  */
--struct page *empty_zero_page;
-+unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
- EXPORT_SYMBOL(empty_zero_page);
- 
- /*
-@@ -1754,8 +1754,6 @@ static void __init early_fixmap_shutdown(void)
-  */
- void __init paging_init(const struct machine_desc *mdesc)
- {
--	void *zero_page;
--
- #ifdef CONFIG_XIP_KERNEL
- 	/* Store the kernel RW RAM region start/end in these variables */
- 	kernel_sec_start = CONFIG_PHYS_OFFSET & SECTION_MASK;
-@@ -1781,13 +1779,7 @@ void __init paging_init(const struct machine_desc *mdesc)
- 
- 	top_pmd = pmd_off_k(0xffff0000);
- 
--	/* allocate the zero page. */
--	zero_page = early_alloc(PAGE_SIZE);
--
- 	bootmem_init();
--
--	empty_zero_page = virt_to_page(zero_page);
--	__flush_dcache_folio(NULL, page_folio(empty_zero_page));
- }
- 
- void __init early_mm_init(const struct machine_desc *mdesc)
-diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-index d638cc87807e..7e42d8accec6 100644
---- a/arch/arm/mm/nommu.c
-+++ b/arch/arm/mm/nommu.c
-@@ -31,7 +31,7 @@ unsigned long vectors_base;
-  * empty_zero_page is a special page that is used for
-  * zero-initialized data and COW.
-  */
--struct page *empty_zero_page;
-+unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
- EXPORT_SYMBOL(empty_zero_page);
- 
- #ifdef CONFIG_ARM_MPU
-@@ -156,18 +156,10 @@ void __init adjust_lowmem_bounds(void)
-  */
- void __init paging_init(const struct machine_desc *mdesc)
- {
--	void *zero_page;
--
- 	early_trap_init((void *)vectors_base);
- 	mpu_setup();
- 
--	/* allocate the zero page. */
--	zero_page = (void *)memblock_alloc_or_panic(PAGE_SIZE, PAGE_SIZE);
--
- 	bootmem_init();
--
--	empty_zero_page = virt_to_page(zero_page);
--	flush_dcache_page(empty_zero_page);
- }
- 
- /*
-
-> I also have a patch with some minor changes that still keeps
-> empty_zero_page allocated, but avoids virt_to_page() and folio_page()
-> dance. Can you please test it in your setup?
-> 
-> From 8a213c13211106d592fbe96b68ee29879ed739f8 Mon Sep 17 00:00:00 2001
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> Date: Sat, 3 Jan 2026 20:40:09 +0200
-> Subject: [PATCH] arm: make initialization of zero page independent of the
->  memory map
-> 
-> Unlike most architectures, arm keeps a struct page pointer to the
-> empty_zero_page and to initialize it requires conversion of a virtual
-> address to page which makes it necessary to have memory map initialized
-> before creating the empty_zero_page.
-> 
-> Make empty_zero_page a void * to decouple it's initialization from the
-> initialization of the memory map.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On 12/31/2025 5:15 PM, Lisa Robinson wrote:
+> When validating a perf event group, validate_group() unconditionally
+> attempts to allocate hardware PMU counters for the leader, sibling
+> events and the new event being added.
+>
+> This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
+> ispart of the group, the current code still tries to allocate a hardware
+> PMU counter for it, which can wrongly consume hardware PMU resources and
+> cause spurious allocation failures.
+>
+> Fix this by only allocating PMU counters for hardware events during group
+> validation, and skipping software events.
+>
+> A trimmed down reproducer is as simple as this:
+>
+>   #include <stdio.h>
+>   #include <assert.h>
+>   #include <unistd.h>
+>   #include <string.h>
+>   #include <sys/syscall.h>
+>   #include <linux/perf_event.h>
+>
+>   int
+>   main (int argc, char *argv[])
+>   {
+>   	struct perf_event_attr attr = { 0 };
+>   	int fds[5];
+>
+>   	attr.disabled = 1;
+>   	attr.exclude_kernel = 1;
+>   	attr.exclude_hv = 1;
+>   	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+>   		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
+>   	attr.size = sizeof (attr);
+>
+>   	attr.type = PERF_TYPE_SOFTWARE;
+>   	attr.config = PERF_COUNT_SW_DUMMY;
+>   	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
+>   	assert (fds[0] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CPU_CYCLES;
+>   	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[1] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>   	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[2] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
+>   	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[3] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
+>   	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[4] >= 0);
+>
+>   	printf ("PASSED\n");
+>
+>   	return 0;
+>   }
+>
+> Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
+> Signed-off-by: Lisa Robinson <lisa@bytefly.space>
 > ---
->  arch/arm/include/asm/pgtable.h |  4 ++--
->  arch/arm/mm/mmu.c              | 10 +++-------
->  arch/arm/mm/nommu.c            | 10 +++-------
->  3 files changed, 8 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
-> index 86378eec7757..08bbd2aed6c9 100644
-> --- a/arch/arm/include/asm/pgtable.h
-> +++ b/arch/arm/include/asm/pgtable.h
-> @@ -15,8 +15,8 @@
->   * ZERO_PAGE is a global shared page that is always zero: used
->   * for zero-mapped memory areas etc..
->   */
-> -extern struct page *empty_zero_page;
-> -#define ZERO_PAGE(vaddr)	(empty_zero_page)
-> +extern void *empty_zero_page;
-> +#define ZERO_PAGE(vaddr)	(virt_to_page(empty_zero_page))
->  #endif
+>  arch/loongarch/kernel/perf_event.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+> index 9d257c8519c9..82cc08c2b056 100644
+> --- a/arch/loongarch/kernel/perf_event.c
+> +++ b/arch/loongarch/kernel/perf_event.c
+> @@ -633,15 +633,24 @@ static int validate_group(struct perf_event *event)
 >  
->  #include <asm-generic/pgtable-nopud.h>
-> diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> index 8bac96e205ac..867258f1ae09 100644
-> --- a/arch/arm/mm/mmu.c
-> +++ b/arch/arm/mm/mmu.c
-> @@ -45,7 +45,7 @@ extern unsigned long __atags_pointer;
->   * empty_zero_page is a special page that is used for
->   * zero-initialized data and COW.
->   */
-> -struct page *empty_zero_page;
-> +void *empty_zero_page;
->  EXPORT_SYMBOL(empty_zero_page);
+>  	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
 >  
->  /*
-> @@ -1754,8 +1754,6 @@ static void __init early_fixmap_shutdown(void)
->   */
->  void __init paging_init(const struct machine_desc *mdesc)
->  {
-> -	void *zero_page;
-> -
->  #ifdef CONFIG_XIP_KERNEL
->  	/* Store the kernel RW RAM region start/end in these variables */
->  	kernel_sec_start = CONFIG_PHYS_OFFSET & SECTION_MASK;
-> @@ -1782,12 +1780,10 @@ void __init paging_init(const struct machine_desc *mdesc)
->  	top_pmd = pmd_off_k(0xffff0000);
->  
->  	/* allocate the zero page. */
-> -	zero_page = early_alloc(PAGE_SIZE);
-> +	empty_zero_page = early_alloc(PAGE_SIZE);
-> +	__cpuc_flush_dcache_area(empty_zero_page, PAGE_SIZE);
->  
->  	bootmem_init();
-> -
-> -	empty_zero_page = virt_to_page(zero_page);
-> -	__flush_dcache_folio(NULL, page_folio(empty_zero_page));
->  }
->  
->  void __init early_mm_init(const struct machine_desc *mdesc)
-> diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-> index d638cc87807e..f80ff5a69fbb 100644
-> --- a/arch/arm/mm/nommu.c
-> +++ b/arch/arm/mm/nommu.c
-> @@ -31,7 +31,7 @@ unsigned long vectors_base;
->   * empty_zero_page is a special page that is used for
->   * zero-initialized data and COW.
->   */
-> -struct page *empty_zero_page;
-> +void *empty_zero_page;
->  EXPORT_SYMBOL(empty_zero_page);
->  
->  #ifdef CONFIG_ARM_MPU
-> @@ -156,18 +156,14 @@ void __init adjust_lowmem_bounds(void)
->   */
->  void __init paging_init(const struct machine_desc *mdesc)
->  {
-> -	void *zero_page;
-> -
->  	early_trap_init((void *)vectors_base);
->  	mpu_setup();
->  
->  	/* allocate the zero page. */
-> -	zero_page = (void *)memblock_alloc_or_panic(PAGE_SIZE, PAGE_SIZE);
-> +	empty_zero_page = memblock_alloc_or_panic(PAGE_SIZE, PAGE_SIZE);
-> +	__cpuc_flush_dcache_area(empty_zero_page, PAGE_SIZE);
->  
->  	bootmem_init();
-> -
-> -	empty_zero_page = virt_to_page(zero_page);
-> -	flush_dcache_page(empty_zero_page);
->  }
->  
->  /*
-> -- 
-> 2.51.0
-> 
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+> +	if ((PERF_TYPE_HARDWARE == leader->attr.type ||
+> +	     PERF_TYPE_HW_CACHE == leader->attr.type ||
+> +	     PERF_TYPE_RAW == leader->attr.type) &&
 
-This also works for me.
+Better introduce an inline function to check these event types instead of
+duplicating same code.
 
-Thanks,
-Tested-by: Klara Modin <klarasmodin@gmail.com>
 
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+>  		return -EINVAL;
 >  
-> > Regards,
-> > Klara Modin
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
+>  	for_each_sibling_event(sibling, leader) {
+> -		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+> +		if ((PERF_TYPE_HARDWARE == sibling->attr.type ||
+> +		     PERF_TYPE_HW_CACHE == sibling->attr.type ||
+> +		     PERF_TYPE_RAW == sibling->attr.type) &&
+> +		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+>  			return -EINVAL;
+>  	}
+>  
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+> +	if ((PERF_TYPE_HARDWARE == event->attr.type ||
+> +	     PERF_TYPE_HW_CACHE == event->attr.type ||
+> +	     PERF_TYPE_RAW == event->attr.type) &&
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+>  		return -EINVAL;
+>  
+>  	return 0;
