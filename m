@@ -1,212 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0AD219319;
-	Sun,  4 Jan 2026 12:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D8E2F9D85
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 13:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767528124; cv=none; b=PpySiCteg4u2pA8dFbmeZM4TEbszEpxTSO2RwA5ryb1xjPbMZ5zDxl8BYPA4Ok4eyRJHcqJAaKf1xv4t8OUCA/CVMXkCpIHAqv6QRyracyZmmM/oMM1VW/v2C0ZvEzoWrqfmBwsbqpv7ay1skW/F6EO3GP9ASDDfp2w7joXLO6o=
+	t=1767532157; cv=none; b=IXT27KRvT+nVDIenZ5gqCNSIzLYH0ruJCjJSdBY6SZs5PxaMHhi/p++++whukg47aRdj17Jo9+2faLtNJmACYu9OsG5kYOLlqF+pAQU/uvpnPT7ZvXXLsdDHl1vgakntquKbMCN8ElgSnBC8VoZMxaaFtl8Th0S1t53h+xu3Ttg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767528124; c=relaxed/simple;
-	bh=4sa1iSi4oDg5XKMoz/YTQfrnb1djTAsHN5WmWDd4u+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIiBnLViYrQ/NiG59GvzFyDY7zd/c4dmypOxsLwqOblGzw4c9tFdTahdy3kKmysD1xzC4BzirG2HHjoDqTYp79PBJHwWqFQEJbMvWhJ4vlf1EsoeWYDybuTKFZztPWpbodXal2um+C/iSnGd+W9X5IrMpYzQMaTCXlbNe29+r1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INT0kxBN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767532157; c=relaxed/simple;
+	bh=xhbBpZPjeFau9TEO0yHrCoV89RWRT3dACYB9ZeecuX8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aV02oyXiDGz07ADMHYl+rW/3D6j8ZBJhhh3e/l9F0VJy+Fs2KInGxKsKhMpe6b0ahGapUGeggH/SFt6hmej40lvp8f4Qjai+AUnjB2mkyEoAKawBa7E9c2Tpd0Ur/zV5Ab1BBVgYjPGnDobAtfwJnmTj+J6rg/lDu0KlduY3DKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fb1nuK4w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INT0kxBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEE4C4CEF7;
-	Sun,  4 Jan 2026 12:01:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fb1nuK4w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFBABC19424
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 13:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767528123;
-	bh=4sa1iSi4oDg5XKMoz/YTQfrnb1djTAsHN5WmWDd4u+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=INT0kxBNHgbBEXAA8WBKHyCuHkaVMGgpladnOebfsTa2yzQEYV4mt1yJlN1PwnUNz
-	 G4VwNDd1qyIbSlxRqbG31MW/aCW0NgYeMa2AQOcXg9gdLQ2vLQ8cpLRs/OvRLxPgLM
-	 zrYw+rbOt3/ZgtPyhC+4awQoJA3/jIoNRc6jn+AQvMSMdpvmZk0yDmwOEIirlcn6Fk
-	 MRm98b/tsfvPN/LkKJNqg07jtHRl5wM8VTQcUWaDc+iUxs0zzTGNhqOtNPkcd9CZqU
-	 27IV33yAMIJYJGbt3gk6IFngZkbX6GD6/FqDbQgyLW1/3NDufvpgxz5xhJM1ESJUtq
-	 0kvgqRIhU453Q==
-Date: Sun, 4 Jan 2026 14:01:40 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Klara Modin <klarasmodin@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	x86@kernel.org, linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 3.5] arm: make initialization of zero page independent of the
- memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate initialization of
- nodes, zones and memory map)
-Message-ID: <aVpWpLV4Dut5Muo2@kernel.org>
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-23-rppt@kernel.org>
- <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
- <aVll339wim7dCIaQ@kernel.org>
- <aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
+	s=k20201202; t=1767532156;
+	bh=xhbBpZPjeFau9TEO0yHrCoV89RWRT3dACYB9ZeecuX8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Fb1nuK4wKOB4Zvj7Emeltybcths6AjP3kHZ1Mtbso+hI3XI+m6bhJWRP3OPe9CH4a
+	 SB0vcex//y5dounwSuAGCTqT/BYfmEA6Bdu0qwVLIAbXLr58p6DlXjIH8V7mRYBLb3
+	 p12W2UqfIk4UVic2W/UZXH/EWqFK2VyuJ8SHD2ZxEV8+uNyiNAFpVCQP0hsMqFodtp
+	 P/d8/pvayEZjiTtSklyoLteU00Ij3RK0EPgH2we4TOyINQIFai+Djd1EgIGkQhxUjv
+	 F2Eq+tzbH7sTwbIRAZ3EPwJks83eXFdx3eFjRLTqUoRfVsFfDoUvFhvk761ddcRlMY
+	 XTcuQ6br98iYw==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b76b5afdf04so2038868566b.1
+        for <loongarch@lists.linux.dev>; Sun, 04 Jan 2026 05:09:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUlbs2bdJe0nT/EwG7eXflnIu1+NFcuVl7rK5rmI7ZU4c4w8xDLaB5ebFfoV3NuKtPLYbpx1zI860w=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yysmo2A/DC2TulJKEOsVjcePKul3wkUM7pIqRED/sMaWbArmwlp
+	Ur0Rdqq84/qTmuKaKazZTlt0RxCj0jL90tls/OrFvC6tKoi+iHe6f77dkrdJw1YoT8CWU2r7wv3
+	zK4mMCcW7SiDKdgWWF6e4ssGDmDa8+/Y=
+X-Google-Smtp-Source: AGHT+IHTd7+rkGWj+5amevkc7uqoJRZS0EY40dfZqALuYmRhehRsVVSUnLbKz8VkocRwjK1iryHSKjtruaQIC8y9D/Y=
+X-Received: by 2002:a17:907:724e:b0:b6d:5bc3:e158 with SMTP id
+ a640c23a62f3a-b8036f2ac34mr5020185266b.17.1767532155199; Sun, 04 Jan 2026
+ 05:09:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
+References: <20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com> <9ddf7822-eda7-4c6c-9240-31ab1c4708c3@aosc.io>
+In-Reply-To: <9ddf7822-eda7-4c6c-9240-31ab1c4708c3@aosc.io>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 4 Jan 2026 21:09:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xfqXQA600YPAB43H9phOyUAnTiPsOH7Qxztu=D+-9Fw@mail.gmail.com>
+X-Gm-Features: AQt7F2qLjPUqyx4dpaY_lZeOY3JtwPHfi0peRTrmFWBxFvPwpqtwUyeT2MtSjw0
+Message-ID: <CAAhV-H5xfqXQA600YPAB43H9phOyUAnTiPsOH7Qxztu=D+-9Fw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: loongson: Override PCIe bridge supported speeds
+ for older Loongson 3C6000 series steppings
+To: Mingcong Bai <jeffbai@aosc.io>
+Cc: liziyao@uniontech.com, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com, 
+	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Lain Fearyncess Yang <fsf@live.com>, 
+	Ayden Meng <aydenmeng@yeah.net>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Andrew,
-
-Can you please stick this between patch 3 (arm: introduce
-arch_zone_limits_init()) and patch 4 (arm64: introduce
-arch_zone_limits_init())?
-
-From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
-From: Klara Modin <klarasmodin@gmail.com>
-Date: Sat, 3 Jan 2026 20:40:09 +0200
-Subject: [PATCH] arm: make initialization of zero page independent of the
- memory map
-
-Unlike most architectures, arm keeps a struct page pointer to the
-empty_zero_page and to initialize it requires conversion of a virtual
-address to page which makes it necessary to have memory map initialized
-before creating the empty_zero_page.
-
-Make empty_zero_page a stataic array in BSS to decouple it's
-initialization from the initialization of the memory map.
-
-This also aligns arm with vast majorty of architectures.
-
-Signed-off-by: Klara Modin <klarasmodin@gmail.com>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/arm/include/asm/pgtable.h |  4 ++--
- arch/arm/mm/mmu.c              | 10 +---------
- arch/arm/mm/nommu.c            | 10 +---------
- 3 files changed, 4 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
-index 86378eec7757..6fa9acd6a7f5 100644
---- a/arch/arm/include/asm/pgtable.h
-+++ b/arch/arm/include/asm/pgtable.h
-@@ -15,8 +15,8 @@
-  * ZERO_PAGE is a global shared page that is always zero: used
-  * for zero-mapped memory areas etc..
-  */
--extern struct page *empty_zero_page;
--#define ZERO_PAGE(vaddr)	(empty_zero_page)
-+extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
-+#define ZERO_PAGE(vaddr)	(virt_to_page(empty_zero_page))
- #endif
- 
- #include <asm-generic/pgtable-nopud.h>
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index 8bac96e205ac..518def8314e7 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -45,7 +45,7 @@ extern unsigned long __atags_pointer;
-  * empty_zero_page is a special page that is used for
-  * zero-initialized data and COW.
-  */
--struct page *empty_zero_page;
-+unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
- EXPORT_SYMBOL(empty_zero_page);
- 
- /*
-@@ -1754,8 +1754,6 @@ static void __init early_fixmap_shutdown(void)
-  */
- void __init paging_init(const struct machine_desc *mdesc)
- {
--	void *zero_page;
+On Sun, Jan 4, 2026 at 7:03=E2=80=AFPM Mingcong Bai <jeffbai@aosc.io> wrote=
+:
+>
+> Hi Ziyao Li,
+>
+> =E5=9C=A8 2026/1/4 18:00, Ziyao Li via B4 Relay =E5=86=99=E9=81=93:
+> > From: Ziyao Li <liziyao@uniontech.com>
+> >
+> > Older steppings of the Loongson 3C6000 series incorrectly report the
+> > supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
+> > only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
+> > up to 16 GT/s.
+> >
+> > As a result, certain PCIe devices would be incorrectly probed as a Gen1=
 -
- #ifdef CONFIG_XIP_KERNEL
- 	/* Store the kernel RW RAM region start/end in these variables */
- 	kernel_sec_start = CONFIG_PHYS_OFFSET & SECTION_MASK;
-@@ -1781,13 +1779,7 @@ void __init paging_init(const struct machine_desc *mdesc)
- 
- 	top_pmd = pmd_off_k(0xffff0000);
- 
--	/* allocate the zero page. */
--	zero_page = early_alloc(PAGE_SIZE);
--
- 	bootmem_init();
--
--	empty_zero_page = virt_to_page(zero_page);
--	__flush_dcache_folio(NULL, page_folio(empty_zero_page));
- }
- 
- void __init early_mm_init(const struct machine_desc *mdesc)
-diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-index d638cc87807e..7e42d8accec6 100644
---- a/arch/arm/mm/nommu.c
-+++ b/arch/arm/mm/nommu.c
-@@ -31,7 +31,7 @@ unsigned long vectors_base;
-  * empty_zero_page is a special page that is used for
-  * zero-initialized data and COW.
-  */
--struct page *empty_zero_page;
-+unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)] __page_aligned_bss;
- EXPORT_SYMBOL(empty_zero_page);
- 
- #ifdef CONFIG_ARM_MPU
-@@ -156,18 +156,10 @@ void __init adjust_lowmem_bounds(void)
-  */
- void __init paging_init(const struct machine_desc *mdesc)
- {
--	void *zero_page;
--
- 	early_trap_init((void *)vectors_base);
- 	mpu_setup();
- 
--	/* allocate the zero page. */
--	zero_page = (void *)memblock_alloc_or_panic(PAGE_SIZE, PAGE_SIZE);
--
- 	bootmem_init();
--
--	empty_zero_page = virt_to_page(zero_page);
--	flush_dcache_page(empty_zero_page);
- }
- 
- /*
--- 
-2.51.0
+> > only, even if higher link speeds are supported, harming performance and
+> > prevents dynamic link speed functionality from being enabled in drivers
+> > such as amdgpu.
+> >
+> > Manually override the `supported_speeds` field for affected PCIe bridge=
+s
+> > with those found on the upstream bus to correctly reflect the supported
+> > link speeds.
+> >
+> > This patch was originally found from AOSC OS[1].
+>
+> Thanks for the patch. Looping loongarch.
+I prefer naming consistency, which means loongson_pci_bridge_speed_quirk().
 
+Huacai
+>
+> Best Regards,
+> Mingcong Bai
+>
