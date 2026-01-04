@@ -1,183 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1735B24DCE5
-	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 04:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC052DEA80
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 06:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767502702; cv=none; b=SQAzqivSUMJZYiniSsI5kBjEIy6DBCK9s2i0ArNXhpb3RNUw7JecixiFoelJicvF/N4xjXTaIZcajRrpRZmwIY7HQ5ydeoc1OYuLcV5/nT9DDedX1FYUn82hzWR9MJhneRQw99DtLJb4meseVQOYS2bd7t84qVz4f498Tylwzp8=
+	t=1767508906; cv=none; b=bzxOJvNWEOOEalqEsEmO/DGPniA+pFM1zVBkqOIBdqqKtuBBTxIQOlnt4zI9yaLGMtdzxg4f7vP85GTbCQdM9TLnn6SXgZOXLkp5nMbBMa3GfTtJ0xkzomJJVzvRtYmKWSqOR+T/rdzqsdLIH+BOHQupj4be4qcDMv+N3A0/FSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767502702; c=relaxed/simple;
-	bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qO0tE4nNJ6ABrSJ0X2Nx6ZHXS8jT9sFbt0DM0Q4+zqVPpYHBl9j6Le7JJ5O12J7Dnasl9DnC4tpLrX3psHDe7oQTDXdGtqqCqvc6Uc5gNLa4XIRhKEQzt+EZ06qSuy4IdBTkjKb6+MKcg0HV5S5Iu27C411LWjj5ZVA5nIOF728=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2PGc8Na; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2PGc8Na"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767502700; x=1799038700;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SPk05DH6d+e7NScDZCXch8OVPGw6o0Ni8DWwxHeunWk=;
-  b=F2PGc8NaIWRMaxUuZhJNfDF+9znhP/43SIb3IrQUnfmXDoJ4OMXMKa8r
-   vGaxGibNvDk0ZODF5BMmmnINkeIgug4oz9/zaXorUdNFPyJZRFjpwq8PQ
-   sVSAYTd+JP+jOA3x4X4YxWTjyAxurGDkYArQdR03tyiQ2cFPRFvbYT+vK
-   mJP21fOqxpn6TdBrdsPsdu9J4MF3ExWuZU8Ka1k6BUuw3/eTnehQlvSul
-   ghIvebdi2DD9RHiW8ZooPvslTvyaGV5FLbngpDCGgIJMeqoXoyEg3+gnP
-   mSj7zKIWAmlWLvctR1whpQGbBloAkuHxGelAKzm1J6SZUpp3davV8e7ZS
-   Q==;
-X-CSE-ConnectionGUID: WId5ZgU2SJuZB+RtVaEbcw==
-X-CSE-MsgGUID: 4FFIDauRTi24Ob+Qb/cuiQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11659"; a="94383253"
-X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="94383253"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:19 -0800
-X-CSE-ConnectionGUID: eeOzE9QuRci49bOSmoyeiQ==
-X-CSE-MsgGUID: w8DYRJktSgulAJez2gEiPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,200,1763452800"; 
-   d="scan'208";a="202576729"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2026 20:58:15 -0800
-Message-ID: <7214053a-070c-45c3-8cd8-b4306c49328a@linux.intel.com>
-Date: Sun, 4 Jan 2026 12:58:12 +0800
+	s=arc-20240116; t=1767508906; c=relaxed/simple;
+	bh=RnVxskyqAy13UFjKv1o7YUk01teDpgQs89ugfKwizY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pB53gqx3+/g16Ktyi4x/YDTXsRBI22UhS+umI0mrQ2Zdd3IWhZMoHwhVDGRUJc9NwLbkeBU/XBi+L3QO0aBZ+FRYicjR3FN5Wu6LCo3T8yaOJMpm3P443y3xqqOGqV877bEq+l9zl0QkXL+yrd8XxWsNAItAUlJhRLDa+nZFG+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.1])
+	by gateway (Coremail) with SMTP id _____8Dx_8OdC1ppqFIFAA--.17067S3;
+	Sun, 04 Jan 2026 14:41:33 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.1])
+	by front1 (Coremail) with SMTP id qMiowJCx2+CWC1ppbzUMAA--.28347S3;
+	Sun, 04 Jan 2026 14:41:32 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Yao Zi <me@ziyao.cc>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 1/9] dt-bindings: PCI: loongson: Document msi-parent property
+Date: Sun,  4 Jan 2026 14:41:11 +0800
+Message-ID: <15d61a50f0fcca34f6a5da5fbfdb181646d60fee.1767505859.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <cover.1767505859.git.zhoubinbin@loongson.cn>
+References: <cover.1767505859.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: Fix PMU counter allocation for mixed-type
- event groups
-To: Lisa Robinson <lisa@bytefly.space>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, WANG Xuerui <kernel@xen0n.name>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <20251231091500.530432-1-lisa@bytefly.space>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251231091500.530432-1-lisa@bytefly.space>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx2+CWC1ppbzUMAA--.28347S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQERCGlaATYAeAAAsl
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFWkGr48Wry3XF45XF4DWrX_yoWktFXEvF
+	yxCFs5Crs8JF1Igwn0vr4xAFy3Za4Ik3Z8ua1kJanYy3WSv39xtF97J3s8ZF13Gr45ur15
+	uws7GrWkZr1xGosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7TKZDUUUU
 
+From: Yao Zi <me@ziyao.cc>
 
-On 12/31/2025 5:15 PM, Lisa Robinson wrote:
-> When validating a perf event group, validate_group() unconditionally
-> attempts to allocate hardware PMU counters for the leader, sibling
-> events and the new event being added.
->
-> This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
-> ispart of the group, the current code still tries to allocate a hardware
-> PMU counter for it, which can wrongly consume hardware PMU resources and
-> cause spurious allocation failures.
->
-> Fix this by only allocating PMU counters for hardware events during group
-> validation, and skipping software events.
->
-> A trimmed down reproducer is as simple as this:
->
->   #include <stdio.h>
->   #include <assert.h>
->   #include <unistd.h>
->   #include <string.h>
->   #include <sys/syscall.h>
->   #include <linux/perf_event.h>
->
->   int
->   main (int argc, char *argv[])
->   {
->   	struct perf_event_attr attr = { 0 };
->   	int fds[5];
->
->   	attr.disabled = 1;
->   	attr.exclude_kernel = 1;
->   	attr.exclude_hv = 1;
->   	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
->   		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
->   	attr.size = sizeof (attr);
->
->   	attr.type = PERF_TYPE_SOFTWARE;
->   	attr.config = PERF_COUNT_SW_DUMMY;
->   	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
->   	assert (fds[0] >= 0);
->
->   	attr.type = PERF_TYPE_HARDWARE;
->   	attr.config = PERF_COUNT_HW_CPU_CYCLES;
->   	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
->   	assert (fds[1] >= 0);
->
->   	attr.type = PERF_TYPE_HARDWARE;
->   	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->   	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
->   	assert (fds[2] >= 0);
->
->   	attr.type = PERF_TYPE_HARDWARE;
->   	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
->   	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
->   	assert (fds[3] >= 0);
->
->   	attr.type = PERF_TYPE_HARDWARE;
->   	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
->   	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
->   	assert (fds[4] >= 0);
->
->   	printf ("PASSED\n");
->
->   	return 0;
->   }
->
-> Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
-> Signed-off-by: Lisa Robinson <lisa@bytefly.space>
-> ---
->  arch/loongarch/kernel/perf_event.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-> index 9d257c8519c9..82cc08c2b056 100644
-> --- a/arch/loongarch/kernel/perf_event.c
-> +++ b/arch/loongarch/kernel/perf_event.c
-> @@ -633,15 +633,24 @@ static int validate_group(struct perf_event *event)
->  
->  	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
->  
-> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
-> +	if ((PERF_TYPE_HARDWARE == leader->attr.type ||
-> +	     PERF_TYPE_HW_CACHE == leader->attr.type ||
-> +	     PERF_TYPE_RAW == leader->attr.type) &&
+Loongson PCI controllers found in LS2K1000/2000 SoCs
+(loongson,ls2k-pci), 7A1000/2000 bridge chips (loongson,ls7a-pci), and
+RS780E bridge chips (loongson,rs780e-pci) all have their paired MSI
+controllers.
 
-Better introduce an inline function to check these event types instead of
-duplicating same code.
+Though only the one in LS2K2000 SoC is described in devicetree, we
+should document the property for all variants. For the same reason, it
+isn't marked as required for now.
 
+Fixes: 83e757ecfd5d ("dt-bindings: Document Loongson PCI Host Controller")
+Signed-off-by: Yao Zi <me@ziyao.cc>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ Documentation/devicetree/bindings/pci/loongson.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
->  		return -EINVAL;
->  
->  	for_each_sibling_event(sibling, leader) {
-> -		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
-> +		if ((PERF_TYPE_HARDWARE == sibling->attr.type ||
-> +		     PERF_TYPE_HW_CACHE == sibling->attr.type ||
-> +		     PERF_TYPE_RAW == sibling->attr.type) &&
-> +		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
->  			return -EINVAL;
->  	}
->  
-> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
-> +	if ((PERF_TYPE_HARDWARE == event->attr.type ||
-> +	     PERF_TYPE_HW_CACHE == event->attr.type ||
-> +	     PERF_TYPE_RAW == event->attr.type) &&
-> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
->  		return -EINVAL;
->  
->  	return 0;
+diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
+index e5bba63aa947..26e77218b901 100644
+--- a/Documentation/devicetree/bindings/pci/loongson.yaml
++++ b/Documentation/devicetree/bindings/pci/loongson.yaml
+@@ -32,6 +32,8 @@ properties:
+     minItems: 1
+     maxItems: 3
+ 
++  msi-parent: true
++
+ required:
+   - compatible
+   - reg
+-- 
+2.47.3
+
