@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D5962E4266
-	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 06:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E12427F732
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 06:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767508960; cv=none; b=NvbtfFW3PdJpR5p7sZ+g75g9SCk8/U2iWScBE/dKs0KSq+ihWyXe7ZSC0J/963qMwiP78pIzol3qAe4HxYjqFqwd201qsFmHarwnhK0cBLqtVTRJNEEBCfHoNZ72heLK4ZVD1qPc0Q69BJmpX94P6AsTmPSxf9YUmbMGwhjpqK4=
+	t=1767508967; cv=none; b=B1Dt+sMzFcXHyJIsSrUKIIxlaQNDcmgIYjGVnPzpb6wxfY17F32l72eJ5W1hbP2L6WiO70EVNYe5SUgMvtvW8yoRIgf/KI+YzBTC2/A7IP5BhaiAl4MTeCMRY/Gxy7O8RdDEFtBCpCxmFstfTXZJeTHspiQbnTGSSS3n/nKOPIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767508960; c=relaxed/simple;
-	bh=IR20Ohj1NTAwBUfYLQ8frcz1K2pIAlA+ktCHfr+leXs=;
+	s=arc-20240116; t=1767508967; c=relaxed/simple;
+	bh=r2N+XBID7U5hOuWoeLfGPFILKAnaWx7TIavk7RBBwMA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p8qt7eojhuKSmHWoTRhkhDcyRMVdiYcw+bi8V/v7QFyt00GZSjz/vlQPhYXoclL9c+zIPEfrC0rdN8LEDVvR+W3diid16XAerYjBgx2b2Vq/UxnMpMyT+LWb0w92dQqRv/GArTY/wKDDKgJ+XIheg7W7GiA1ejxkUW6kLZz+bs4=
+	 MIME-Version; b=pFnPss8LywvHV+dCQ6Md/vwTEwWwve31IAcDssQiSxWKEynIPXLQCHIEL3BCUvI+2TDqOdgP0BV25SADjT/pRr+bdWbjLuDIRzTLAgaWWhdFM+dksKV2N4q/qlS9M/QkO4OWsS7oa28Aje2aJGSVMCisuLEY8aBNs6NqUfGlgzo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.1])
-	by gateway (Coremail) with SMTP id _____8CxKMLAC1pp91IFAA--.16498S3;
-	Sun, 04 Jan 2026 14:42:08 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx_8PSC1ppD1MFAA--.17073S3;
+	Sun, 04 Jan 2026 14:42:26 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.69.1])
-	by front1 (Coremail) with SMTP id qMiowJBxSeC4C1pplDUMAA--.28219S5;
-	Sun, 04 Jan 2026 14:42:08 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxzsLQC1ppszUMAA--.28035S2;
+	Sun, 04 Jan 2026 14:42:26 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Yao Zi <me@ziyao.cc>,
 	Binbin Zhou <zhoubb.aaron@gmail.com>,
@@ -30,9 +30,9 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	devicetree@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 7/9] LoongArch: dts: loongson-2k1000: Add default Local I/O interrupt controller address cells
-Date: Sun,  4 Jan 2026 14:41:52 +0800
-Message-ID: <c6fbe29f67c0273452585c9da29c087100ae425f.1767505859.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v3 8/9] LoongArch: dts: loongson-2k2000: Add default interrupt controller address cells
+Date: Sun,  4 Jan 2026 14:42:14 +0800
+Message-ID: <b97730a80d5444f7cf07e9807791417fa2c6c943.1767505859.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <cover.1767505859.git.zhoubinbin@loongson.cn>
 References: <cover.1767505859.git.zhoubinbin@loongson.cn>
@@ -43,14 +43,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxSeC4C1pplDUMAA--.28219S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgERCGlaARoAdgAAsE
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFy8XrWkZr4xZr47Jr18Zwc_yoW8WFyUpa
-	y29wsrWr48JF1fJw4Dta4YvrnrZF98AFnI9wsakay8ArZIq34UZr1SkF9aqF1UWFZ5J340
-	qrnYy3y8Kan8JabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxzsLQC1ppszUMAA--.28035S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgERCGlaARoAgAAAsy
+X-Coremail-Antispam: 1Uk129KBj93XoW7AFW8XryxZFy3tF1UCw47KFX_yoW8Cw1xpF
+	W2kan7Wr40qF1fC3yDta4jvrnrAF98AFnF9wn2yay8ArsIqw1jvr4fJF9aqF45Gr4rJ34j
+	qrnYyw10qa17JabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
 	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
@@ -60,16 +60,16 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7ZFy8XrWkZr4xZr47Jr18Zwc_yoW8WFyUpa
 	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
 	IY6xIIjxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAI
 	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jT-e5UUUUU=
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jxKsUUUUUU=
 
-Add missing address-cells 0 to the local I/O interrupt controller node
-to silence W=1 warning:
+Add missing address-cells 0 to the PCH/Local I/O/Extend I/O Interrupt
+Controller node to silence W=1 warning:
 
-  loongson-2k1000.dtsi:498.5-55: Warning (interrupt_map): /bus@10000000/pcie@1a000000/pcie@9,0:interrupt-map:
-    Missing property '#address-cells' in node /bus@10000000/interrupt-controller@1fe01440, using 0 as fallback
+  loongson-2k2000.dtsi:364.5-49: Warning (interrupt_map): /bus@10000000/pcie@1a000000/pcie@9,0:interrupt-map:
+    Missing property '#address-cells' in node /bus@10000000/interrupt-controller@10000000, using 0 as fallback
 
 Value '0' is correct because:
-1. The local I/O interrupt controller does not have children,
+1. The PCH interrupt controller does not have children,
 2. interrupt-map property (in PCI node) consists of five components and
    the fourth component "parent unit address", which size is defined by
    '#address-cells' of the node pointed to by the interrupt-parent
@@ -77,29 +77,37 @@ Value '0' is correct because:
 
 Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/boot/dts/loongson-2k1000.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-index eee06b84951c..440a8f3c01f4 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -114,6 +114,7 @@ liointc0: interrupt-controller@1fe01400 {
- 			      <0x0 0x1fe01140 0x0 0x8>;
- 			reg-names = "main", "isr0", "isr1";
+diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+index 87c45f1f7cc7..3678c084adf7 100644
+--- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
+@@ -126,6 +126,7 @@ liointc: interrupt-controller@1fe01400 {
+ 			reg = <0x0 0x1fe01400 0x0 0x64>;
+ 
  			interrupt-controller;
 +			#address-cells = <0>;
  			#interrupt-cells = <2>;
  			interrupt-parent = <&cpuintc>;
  			interrupts = <2>;
-@@ -131,6 +132,7 @@ liointc1: interrupt-controller@1fe01440 {
- 			      <0x0 0x1fe01148 0x0 0x8>;
- 			reg-names = "main", "isr0", "isr1";
+@@ -140,6 +141,7 @@ eiointc: interrupt-controller@1fe01600 {
+ 			compatible = "loongson,ls2k2000-eiointc";
+ 			reg = <0x0 0x1fe01600 0x0 0xea00>;
+ 			interrupt-controller;
++			#address-cells = <0>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-parent = <&cpuintc>;
+ 			interrupts = <3>;
+@@ -149,6 +151,7 @@ pic: interrupt-controller@10000000 {
+ 			compatible = "loongson,pch-pic-1.0";
+ 			reg = <0x0 0x10000000 0x0 0x400>;
  			interrupt-controller;
 +			#address-cells = <0>;
  			#interrupt-cells = <2>;
- 			interrupt-parent = <&cpuintc>;
- 			interrupts = <3>;
+ 			loongson,pic-base-vec = <0>;
+ 			interrupt-parent = <&eiointc>;
 -- 
 2.47.3
 
