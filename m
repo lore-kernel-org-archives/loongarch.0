@@ -1,210 +1,145 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B041D88A4
-	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 16:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F87A2F0C70
+	for <loongarch@lists.linux.dev>; Sun,  4 Jan 2026 20:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767543822; cv=none; b=JAnakc/a58n2OIQsTVy8TGhXeEYdtDMXvulG+vAGaZqBqJMZk+OdHL4Aa+gS0U3JkVMO1HTVAewheSnuV125OfIoNSX20ejJ0BoPH7Zh4nxzJNY8TIywVf3+SnOGxOCLY73fL2q0we6VkyiC/8CN+PMY2IPZvKZDYljigwuGl10=
+	t=1767560298; cv=none; b=UZgphbP9neuKFWSfJaaqkIMIfazJMk3OsRWZiN3QMOZVro6OiFeg7XAIBA8mT8uH902gXpatIqwjPxq0FdKxTnDSNuVEvjaEflT3BIqeal03u3C6Xvyd+8v6gSlEnbZ4PW8jC996/gol6LGQsND0zS9U50zIa0JAYLuXe80vTKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767543822; c=relaxed/simple;
-	bh=eXy8dJxgdO4IOADeWzWF2vncup0JjrNG9ubJINT0K5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mBAg4gU5pIrKWGnAser2oFtPq+2eN34YD+91KzslIFsZci/UnquqwiHLpRcl/LuwGYcsqnIvwoRMiSw3QV/9/d9NbAJH2iFk7lpSGyIhdYrfmO/Hx/1IsPIKCHff9vlk5zis6oRqBhYrUZonzXROlxdmAsqTcShUIZqgRwSIoTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space; spf=pass smtp.mailfrom=bytefly.space; dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b=i8NL5vst; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytefly.space
+	s=arc-20240116; t=1767560298; c=relaxed/simple;
+	bh=zsNkllQtFPstvC0JmaISPDmi9Nm6BaIOMpzu48l2M4M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3BT15Xd635VxjRLF7TMuCMv0GV0HH4Ao+yc2Gci/tj2fF8huROaHb/nmtFDOb6TzqAzg2gnmMFk8KzuJjQm8UG/q6z34ZpBgUop8YpQbmpQ6zyNsgFo+p7tq2LjNQjfjXBlf1zoOjn6gfeY9LjBBEPnevfOsSHc8zte0+Rawu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=PQx51yTY; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b="i8NL5vst"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-34ccb7ad166so12255408a91.2
-        for <loongarch@lists.linux.dev>; Sun, 04 Jan 2026 08:23:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytefly-space.20230601.gappssmtp.com; s=20230601; t=1767543821; x=1768148621; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EiSxz2yDPnHRK0lKIWI7snTOOhCOMT5nNtbjzhr1fj0=;
-        b=i8NL5vst0qg+Ha9yboVhZzPvK+llEZOqK+VJ3t7oZFJuT2sO8a/j+EKl/Clzjy/+gq
-         DiJJEA6mGxgiEM/SgBwSBj9HqObN0qysea0aprQbZgp33VW2wrCMFsu7w+t/DhNYpd7o
-         tpvmPm9uFIMk/c73vdx6kJmHwSNXPnZzGlIR3RvAh6MN/0wDEYyzoWmXzhTAFU4kofD1
-         x1AtY16OjJZTGCZTFj3HT7k39VSYLoR87ZMpYMZp1HkPdST/NTLeJu1OnEMNLzy0fYO+
-         cBLOfhfc653zC6aRhCLH5gj6rxtVEs/U5+1JH1NWEWEwY077ICip3hetpbMDiI+RlyYQ
-         apRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767543821; x=1768148621;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EiSxz2yDPnHRK0lKIWI7snTOOhCOMT5nNtbjzhr1fj0=;
-        b=DiYqqIBOWd+J6OgekBLhGguH3oxkcnzVAf9jSXtHu3vdiZQ4wjgPI1C+wfQtToNf+d
-         zDLYTBo5pLVyF/yX97d15FvRGCXRXdHofIXkYrBNKG4mWt77Fqyo1APhbGy6TpCGY+Hq
-         8tj4NKvuFR2KZnUGHE7EPTYqYQJ6va9lGY7Q8uO6kiENyB2fk6PeBd1uD/+Jb1/QUgGH
-         q2xF0caDrnnmd2T7a9aFjqtBsqYi/81Yv9WVARTsRzc+O1RjkXJMSzYKzy7oepOP59EU
-         BMQ1O2jzHmSWc2+zOS+2GmjkdNtJZ0b+yrmAhClwGfE8FWDDzUtDJF4vq3PULVdzvO+I
-         boig==
-X-Forwarded-Encrypted: i=1; AJvYcCXD8JA3krfIKhODkgSB4wUFEdSe5IKJa69vcJz7BJdrPM9Lm7lzWEsWPq5g9idACR3uDVo4RyZr9Q4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwTRbZI7/XydmKypbrgGIn0TPorCgeB5uyvTj3oqgu82MwR4Go0
-	f+ya4i9BoviOxWUYUjSQQX9Lg339b+/i0wKpTqORo8laILvD/jrHndj0qEugnKdqZf0=
-X-Gm-Gg: AY/fxX5POjV4eaLRJm6q60mbOgyb9+lCd3u4ePtrr7CH6qa4o8+t5YE1zW+HOKvvWYs
-	CHNk6tXptKvWdigwN5scwqKbSlZMcDBGncS87wb0LyXFaHv6cYfzR4QhkGyO61tApw661ThzMlR
-	bPi3VY3P0rjdwKPuvFD1XbL1O0We1m6edS1IXIQvG0kPd9JibLAwjR5RGuBKyEJJMOSJucUy6ts
-	VzScKOdFSr9/KsZGnw/8H8lHkuO1PX9JYR0W9pXeWABQFkACiPa4eHARck1qIN0cAT0wg0TUYKM
-	a1R9U6yNGx/U3N4JuRR2PuL8REflRBL8k95lhanwm9hu6vV5YllMQxL4+ZCj8EnIzhnq7OYsVvw
-	KjnjyqMo2M07un/MK6NOTg0fr+DyI/AwLG2BVxART8aEl0iL5d/cCJ9wWzLaQas9FGdaieRiv/7
-	epnQ==
-X-Google-Smtp-Source: AGHT+IFIt0L/lSx8x4bwgvwsbukxt5schrdOqEBeVjh0PRwngkl52ZaA4mBXXVo3bGBUMETqo7YQkQ==
-X-Received: by 2002:a17:90b:2fc5:b0:33b:a906:e40 with SMTP id 98e67ed59e1d1-34e92137cd4mr33880998a91.2.1767543820504;
-        Sun, 04 Jan 2026 08:23:40 -0800 (PST)
-Received: from xpc ([2400:8902:e002:dec2:6246:24bc:b792:73cd])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c1e79a17fdesm40021606a12.8.2026.01.04.08.23.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jan 2026 08:23:40 -0800 (PST)
-From: Lisa Robinson <lisa@bytefly.space>
-To: Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PQx51yTY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=I1gCbeyIrlCt5J2/Bjwg6Lr/ehCAIvx4DrMKPGr0mIk=; b=PQx51yTYkgAaIUXq0xW7qPDXV/
+	l2XTuAum3C4YTdjh59Zd9jjet7ae799URg+ZV8rmTkWl+kVHfkxUYw1s/dRjs9aTXD7D6Ho4syQaF
+	UUWur1xKtbiRo01UTGcAE17bVwa7Q1raKrI86aomWrm1nziVTW376kzGUJt7sSCvBg/iJuo8+kzDd
+	nyMzCE7bdEmvI/HMHy4otFSPHCGqcEajEQ2/jkcO2mu5bn1Ymv/9fmd0dXa7MO9wYyaIe2D76FfaF
+	n5lZTtrjJRF5D9eduOTkj4eWKLscCmoWno8MdEQ6ghyWUX2t1zONW89YiFsB5z/4C0opIIXPgMGiC
+	0kKrZFQA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60852)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1vcV9l-000000007Jz-1ZeD;
+	Sun, 04 Jan 2026 20:56:57 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1vcV9Z-000000007Df-1tyX;
+	Sun, 04 Jan 2026 20:56:45 +0000
+Date: Sun, 4 Jan 2026 20:56:45 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Klara Modin <klarasmodin@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Shi <alexs@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	dapeng1.mi@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Lisa Robinson <lisa@bytefly.space>
-Subject: [PATCH v2] LoongArch: Fix PMU counter allocation for mixed-type event groups
-Date: Mon,  5 Jan 2026 00:23:04 +0800
-Message-ID: <20260104162304.64604-1-lisa@bytefly.space>
-X-Mailer: git-send-email 2.52.0
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Stafford Horne <shorne@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	x86@kernel.org, linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org
+Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent of
+ the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate
+ initialization of nodes, zones and memory map)
+Message-ID: <aVrUDeSkqqY9ZCtS@shell.armlinux.org.uk>
+References: <20260102070005.65328-1-rppt@kernel.org>
+ <20260102070005.65328-23-rppt@kernel.org>
+ <aVhN2NgQEKe0yzva@soda.int.kasm.eu>
+ <aVll339wim7dCIaQ@kernel.org>
+ <aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
+ <aVpWpLV4Dut5Muo2@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVpWpLV4Dut5Muo2@kernel.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-When validating a perf event group, validate_group() unconditionally
-attempts to allocate hardware PMU counters for the leader, sibling
-events and the new event being added.
+On Sun, Jan 04, 2026 at 02:01:40PM +0200, Mike Rapoport wrote:
+> From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
+> From: Klara Modin <klarasmodin@gmail.com>
+> Date: Sat, 3 Jan 2026 20:40:09 +0200
+> Subject: [PATCH] arm: make initialization of zero page independent of the
+>  memory map
+> 
+> Unlike most architectures, arm keeps a struct page pointer to the
+> empty_zero_page and to initialize it requires conversion of a virtual
+> address to page which makes it necessary to have memory map initialized
+> before creating the empty_zero_page.
+> 
+> Make empty_zero_page a stataic array in BSS to decouple it's
+> initialization from the initialization of the memory map.
 
-This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
-ispart of the group, the current code still tries to allocate a hardware
-PMU counter for it, which can wrongly consume hardware PMU resources and
-cause spurious allocation failures.
+I see you haven't considered _why_ ARM does this.
 
-Fix this by only allocating PMU counters for hardware events during group
-validation, and skipping software events.
+You are getting rid of the flush_dcache_page() call, which ensures
+that the zeroed contents of the page are pushed out of the cache
+into memory. This is necessary.
 
-A trimmed down reproducer is as simple as this:
+BSS is very similar. It's memset() during the kernel boot _after_
+the caches are enabled. Without an explicit flush, nothing
+guarantees that those writes will be visible to userspace.
 
-  #include <stdio.h>
-  #include <assert.h>
-  #include <unistd.h>
-  #include <string.h>
-  #include <sys/syscall.h>
-  #include <linux/perf_event.h>
+To me, this seems like a bad idea, which will cause userspace to
+break.
 
-  int
-  main (int argc, char *argv[])
-  {
-  	struct perf_event_attr attr = { 0 };
-  	int fds[5];
+We need to call flush_dcache_page(), and _that_ requires a struct
+page.
 
-  	attr.disabled = 1;
-  	attr.exclude_kernel = 1;
-  	attr.exclude_hv = 1;
-  	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-  		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
-  	attr.size = sizeof (attr);
-
-  	attr.type = PERF_TYPE_SOFTWARE;
-  	attr.config = PERF_COUNT_SW_DUMMY;
-  	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
-  	assert (fds[0] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CPU_CYCLES;
-  	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[1] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-  	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[2] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
-  	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[3] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
-  	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[4] >= 0);
-
-  	printf ("PASSED\n");
-
-  	return 0;
-  }
-
-Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
-Signed-off-by: Lisa Robinson <lisa@bytefly.space>
----
-Changes in v2:
-- Factor out duplicated perf event type checks into an inline helper.
----
- arch/loongarch/kernel/perf_event.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 9d257c8519c9..e34a6fb33e11 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -626,6 +626,18 @@ static const struct loongarch_perf_event *loongarch_pmu_map_cache_event(u64 conf
- 	return pev;
- }
- 
-+static inline bool loongarch_pmu_event_requires_counter(const struct perf_event *event)
-+{
-+	switch (event->attr.type) {
-+	case PERF_TYPE_HARDWARE:
-+	case PERF_TYPE_HW_CACHE:
-+	case PERF_TYPE_RAW:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- static int validate_group(struct perf_event *event)
- {
- 	struct cpu_hw_events fake_cpuc;
-@@ -633,15 +645,18 @@ static int validate_group(struct perf_event *event)
- 
- 	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
-+	if (loongarch_pmu_event_requires_counter(leader) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
- 		return -EINVAL;
- 
- 	for_each_sibling_event(sibling, leader) {
--		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
-+		if (loongarch_pmu_event_requires_counter(sibling) &&
-+		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
- 			return -EINVAL;
- 	}
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
-+	if (loongarch_pmu_event_requires_counter(event) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
- 		return -EINVAL;
- 
- 	return 0;
 -- 
-2.52.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
