@@ -1,257 +1,240 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21095342532
-	for <loongarch@lists.linux.dev>; Mon,  5 Jan 2026 14:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767622199; cv=fail; b=iAV+YJxAVu7WdFHKkgNa59C4dP7UsawsOQzDJg6ykHge25OFteM8uKm6vEZ3o/EPOeL8i351YifMGofUi8wth6HGNueNOPe2QV2/dxLEh8bla942CiQPnA45zPrdiU++qUzv0sCIQSIejywEVacF4c5fsAV88IO/X0jD+nmBxys=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767622199; c=relaxed/simple;
-	bh=xqzjJCcujZeFNJzDwvqNPdhZIueDuJs/s0th0T29LQc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pI1pxeGtc27KBZOL3WYos9MhABqTy7Et06SjiQ85d1NGSSQdlYRBGG0NK5NqSIzmn7Pe2ghPujdiJ4Kyx1WH1X3PHBYry0G4rCceRuR84rOkUPRPw2e/75S8tof67/C4W9VIuhlS6Ewy5s+QXAYOzZKHWWyhndGCHEwVZTBALU4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TnsRu8r+; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=r7Ut4Cf5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035B43446C2
+	for <loongarch@lists.linux.dev>; Mon,  5 Jan 2026 14:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767624353; cv=none; b=BlKZaRKeXVvDCmfDHRdg0dsAtys0aWeHyG6gdandks+Y4E2E4SfwuWjzQg4AqXfRfMCbi0majWGpD0S5MIJSdUlBZiCeVnI4vTcSjVnXBQp3JlG+6pZdyqo2YnfZVcmnlPpGJPiYJL3hcl4PrEV2zX4LJbODoZS3DAZdJIKdjTI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767624353; c=relaxed/simple;
+	bh=SHzH2YatMTJEak8gFqKEZdJe9xo/UPeNX1MXbrpo6iU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jmHaBu0qHt8fdiVXHqw+8MxRpQbDTsy+jG776/OBqjVvX/VRO5t/yay1kW93HFFo/ZXUjaYUJKOgKhLGbgQ/9fNY7DvGTAW6cSeXj0yT8aI1pHLFy19WnnwrbU5VM2n7jAocR18Ni7yJI0dz3TcyYv/v8XRhAejHWc1du7KxD6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i6jnWx57; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TnsRu8r+";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="r7Ut4Cf5"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6050RPq6328332;
-	Mon, 5 Jan 2026 14:09:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=RYAUYyqe2lDuuWSeq6ZbF5i5s0Ne8XGCqzS5PafUdkM=; b=
-	TnsRu8r+AFXKrvrpe5Jd5SlU21GFWEyd2HQvO8BWI6vztq6GNHZ4sofG7ocD/BxW
-	gt3MJjZ2ncsBRf8+/+FdDyxP6aVV6UiBkY9oarSCNOOu61WWq2wh1S7tvu5KMXgs
-	WFsVi6arWkAnPorxFcePn4/piRi4C6uHqFNukad6ZTyTIUazq0Mi76CoCkZzgbQR
-	e8vecFigUsKHHTVjtI7pMRolE7kdWcj5+b418RHhb1cbwt1yfMaKOKWMIR/Ry52w
-	Ri3f+d4inTddlP2ag8a2StipZxnxxNghgCNUpx8Wm8Iby69Kcp6pCgO1Yi1enhyQ
-	fTtyRKe56RFWFvgcyuDCBw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bev1qss41-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 05 Jan 2026 14:09:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 605D05Rd003234;
-	Mon, 5 Jan 2026 14:09:27 GMT
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011002.outbound.protection.outlook.com [52.101.62.2])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4besj75jf9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 05 Jan 2026 14:09:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bqL7jO3m3CREV9Sq7+VCwNqs9LWVlfBwCZS/XiezSQ4+8+KLiJkHTMw9S3KFJrTC6m46sTI7+rpdWHO7cKI128pQP3Xir6JIHzytHxh8FNi/whfh+jJO99w6eAzE++8jHUMmk2Y4JUkf8skl0qKQmNez9k3GkUSKL4y/dhwCyGWaks13u+IF1e7ToVM+Mn3kXdXV4MWx8EfaWF1g6GM/o14GnZACSsNOcZxOVlGARAAId0AFAkqgnTtnS+ho3fD5Ke074rW1upaBQRl8Vu6g9/h2/u0aLOlkfQS9vTRPI6bYNrpzg6VAgEdAMLoNfQFBz+AvoriXKE+EYLydn5HC/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RYAUYyqe2lDuuWSeq6ZbF5i5s0Ne8XGCqzS5PafUdkM=;
- b=eIZGAf2ZEYNCfeEoPpB2+1Aak69vGaiLKGejEDr2YafiTmn8VflaZsbsKcH6XlmVAjG3Obgtbyv9IuDXmM+oZew8cR5+pU/Q8rXJDFzTPNlczV16HNjUafk6b63HYgpNA8ycDfdadoBg87nAUJpDGXf+s7oF/oxEmJywbgETUNhlrQoEJMPNU4kXEw7BUYVe0Z0VDGyIKpAE2j+HegOz78cXuggqIgcVHgFBHNY//Eyo9v+qHzxhd3y7eiYTrD8jlN9/W7FLhONjvbuUNEHo82BGndove+DIJGXKi/dYQQ6v5GUwMRFEWa+hn9VNWK9b6eM1mI7GRKGSFt75M7rRbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6jnWx57"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-47a95efd2ceso126790815e9.2
+        for <loongarch@lists.linux.dev>; Mon, 05 Jan 2026 06:45:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RYAUYyqe2lDuuWSeq6ZbF5i5s0Ne8XGCqzS5PafUdkM=;
- b=r7Ut4Cf5L7GOthh1thWoFrVZog9LCz92Axqj5c/Rf3Zz1PGkx0YYXhD3+eCEa3ws/DmYD6mnfWL+XS4q4R7nE53QeNE/xL+JZynXeMx4n01El+aFjE9RROSUxDy6bzJrXW15THtaQLyC181VPttadsZFZL1fesJNj6CkQLlHpqM=
-Received: from DS4PPFEAFA21C69.namprd10.prod.outlook.com
- (2603:10b6:f:fc00::d54) by CH0PR10MB5081.namprd10.prod.outlook.com
- (2603:10b6:610:c2::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Mon, 5 Jan
- 2026 14:09:24 +0000
-Received: from DS4PPFEAFA21C69.namprd10.prod.outlook.com
- ([fe80::ba87:9589:750c:6861]) by DS4PPFEAFA21C69.namprd10.prod.outlook.com
- ([fe80::ba87:9589:750c:6861%8]) with mapi id 15.20.9478.004; Mon, 5 Jan 2026
- 14:09:24 +0000
-Message-ID: <e5dbec93-8400-4e20-a6f6-b245765144f5@oracle.com>
-Date: Mon, 5 Jan 2026 14:09:18 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] LoongArch: Make cpumask_of_node() robust against
- NUMA_NO_NODE
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
-        peterz@infradead.org, arnd@arndb.de, x86@kernel.org,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-arch@vger.kernel.org,
-        vulab@iscas.ac.cn, gregkh@linuxfoundation.org, rafael@kernel.org,
-        dakr@kernel.org
-References: <20260105100547.287332-1-john.g.garry@oracle.com>
- <20260105100547.287332-3-john.g.garry@oracle.com>
- <CAAhV-H4e9NOuO0ZyYfa1W1CyDnJVuuUDNEOavMS9o+h-u8PzLw@mail.gmail.com>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <CAAhV-H4e9NOuO0ZyYfa1W1CyDnJVuuUDNEOavMS9o+h-u8PzLw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0182.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::17) To DS4PPFEAFA21C69.namprd10.prod.outlook.com
- (2603:10b6:f:fc00::d54)
+        d=gmail.com; s=20230601; t=1767624348; x=1768229148; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XSwPcNo8o0N6KCcNlfNXq5S6yUSOj9uBi5hsA/QPZGo=;
+        b=i6jnWx572lxLjREtXI7xjw/dMx2rvkTqb2xUO6s/KL1oA416x9DX9CCV2jXtfOZbHr
+         YrzlZ2MIWdjn1EJC6XbZlT6qsezo0narUSaD82i2LDECYdyYMexN2VXUL/p72AeyL/0p
+         PrMaSCY0kLj86CAw7U8eVtM/w97gZ5EhySYJMnUIK16fe/FlfxZG7X8A5W0ptNQM0QXV
+         g881m4a3CDt21X/Gy3Y+sJDNiysSXGxbm/ULueU7oNO1kdne1gOiKvMVSAAWaEwHjahG
+         qI7A7l2AbpXewiIRIzXdJ/tTSlCzfqMa4f3K1M//X2GqItW/xoxUGeSM5w+bUT0zIYjr
+         15+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767624348; x=1768229148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XSwPcNo8o0N6KCcNlfNXq5S6yUSOj9uBi5hsA/QPZGo=;
+        b=XCWcq2qBPEVBcv1YuTIubtJF2b4KfKHg27i2BSOjr3FvtOr/pd45wZUnWsq6RjJlPq
+         bMR/coNVp+3Lt9onJUZ1WSi3VzILGq6/Y05zlueY1lr68uObWdNtQPhImPH/712nd2kN
+         ExSmWexPWjVegoFF5Xf9EXvrtbMAKwojVFsf537arKjFS0fOmSO4+0Ylwbgx6y4rJ5me
+         lQZVPFYwpdAHYViZ8Rq4mKTSgIgk3MuiEPHedGdLLSJFj1Z+2WAPNXQixl29HeyCZBOg
+         MC13lGAmbIh7xU84j5UFZG5ieQEsedIwU8e7aM7wndkHVCvvemzSbdJcZBEjN+Gt4su5
+         /wGg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0q5/kS/V6XMAWj6HBMAmrJ2B5CEHjLvsqMJMT7yPs8Ym4tMA+aJEkJqjt8zfLqnqRf+J17+oEebg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YywulNdVc5/rcG8vOlOw7BSgDlAEzN1PV0Oj7Ummp7lAarabGSK
+	VFEBEjVCUS9fKRio3AO8YQnovn4w7tcWap0xA7oNhV6oNM0Ho3Z9dV4t
+X-Gm-Gg: AY/fxX6RoAh9FGCe/rGxwfafnchZl2sxMNm9YfuMo1R7MHuMSIyKIfrTS/h/D5L3qJl
+	kSKDAGyc6urXLBhgYtn+vvVGigyNABokPNAiL8It2tuPB3QxkAB2YnS3//8Yy8osZmxhnbly8EY
+	Dd9dy8PMfuUJ1dfo+48lgoRt3kYpTgAIQCsKJuAFadYlVwCKnUc3bUwe+H9Gc5k42XGxmgO0PIC
+	eZMOnPfx/R0GRINlM0TxWXlR4mgdxycEeuWhb0mUWIriLGldGJv97KQhgNhZ9UxwCYauwoYCU2I
+	jrfUAvvS8hipzZtQca+XTwWoteYtsebOTLIp/ZfPwVNAkYI1+WFGhyreePl/SyoSJRhBZKuDFuu
+	H3C84qP779Qnx2awtM3gqxS/3rTjGaxu3Wh1BAFnTBTDQUzrA+dBqty6jqWSTu2/xzNbIXq6s9C
+	7dccpDkh3d5mS0PKsD1lM0owtfVS0kzDzureLs1HhLILWo9O19V94cupFD4ZLql2g=
+X-Google-Smtp-Source: AGHT+IEzQJ2d8LdW+ZAISEQqtjJZ6hu3kCqntkmy/4NpDB13AhMox7IMuU26/rlmQkOaOYroxoA3pQ==
+X-Received: by 2002:a05:600c:1991:b0:477:5af7:6fa with SMTP id 5b1f17b1804b1-47d195aa354mr674903875e9.32.1767624347886;
+        Mon, 05 Jan 2026 06:45:47 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d6d452c69sm195826845e9.9.2026.01.05.06.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jan 2026 06:45:47 -0800 (PST)
+Date: Mon, 5 Jan 2026 14:45:45 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
+ Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
+ Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
+ arches
+Message-ID: <20260105144545.45f2b0ba@pumpkin>
+In-Reply-To: <60c5d7b1-1ab7-490c-8cb8-dfd50cf23856@arm.com>
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+	<20260102131156.3265118-4-ryan.roberts@arm.com>
+	<20260104230136.7aaf8886@pumpkin>
+	<60c5d7b1-1ab7-490c-8cb8-dfd50cf23856@arm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPFEAFA21C69:EE_|CH0PR10MB5081:EE_
-X-MS-Office365-Filtering-Correlation-Id: df9c0c7b-1c26-4bca-201e-08de4c640797
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkJqLzRDcXlrZENnbmR2V1FHVDIwdkZ0Z2NVbUtkMHNPcUlmMDdlSTMvZmhH?=
- =?utf-8?B?VTY1Rmo0WTAxbzc3Q0VXdUV2cnhmT3VBUFd4dit1Z1BKZmljSjVIWDVtZHpG?=
- =?utf-8?B?T2p0RmtZYnV3Vlh5dytSY1VzRFlML1F0amhrVlM1Sm85Zis5akhyZUNaRzRD?=
- =?utf-8?B?ajJUSXUvLzdTSHIrcEJKNTRIQ2RWTEZKeVk5WW1FSVJmOE1QSkVwQlRscm1Y?=
- =?utf-8?B?emlMQ1NWbXNLZjFhNENkc3cxVTdxMm95OUE5WUd3MWpjNjIzcjFEeDFnYlhQ?=
- =?utf-8?B?djVRaUdKbmVQN1NRSTVYelRmc21Pa2JJRnlKTUFYdmVMaGcvemltZmR2ZkJB?=
- =?utf-8?B?TWQ3eHBrNlREeXZWY0RabkNKNzdmcVluTVRYYUh3eloybEhXWGhqVGdVSCtF?=
- =?utf-8?B?ajFvY0RTSVA2RTVyeHByMzIxS2l4ckJmeGU1cHJ2bEdMQjhjbXIzeHlJR2VX?=
- =?utf-8?B?Wlp6K3N0c25QTjlzeEQ3N3g5a3RWU1hoWWFCVXVhYjFVTWNPZ25LeFloOURT?=
- =?utf-8?B?SXRMbFNGSU1UWWVhaWZoenlWdHhEemwwa1lLcHY4MmxyTVpQdFVmaVhWK05r?=
- =?utf-8?B?YjJJektoOU9yZUlGVVZibFowS21BcE5XSGZIUEIwTitVK0R6V2ZTMXZURUlz?=
- =?utf-8?B?cGFDYVRLUjFzK255MmVybndPNUdkM3BoNWVuMTljeDFsMEpmYVNpQjZ0OGdM?=
- =?utf-8?B?dDE1dnowaHFwbFVOTWdGUlVjNzVNL3JqRWNZNmZKZ0NvditBZXpseFQyODBk?=
- =?utf-8?B?NTFPV1JmdzhobVYyby93TG51OWxiN1Nzc2hZd3lKOHB1Z3lWb09IMUNZOXNk?=
- =?utf-8?B?dzJoa0FjY1plWUUweWVNclRuSnBKMFRHb2F1ZnVzekpNaUJnamZpejN1L1RY?=
- =?utf-8?B?Y0pQSTZqZkVJNjVoRGVnSUdZblBUcm52UzFjZWd5dUk3SzlQUkJtYURDUURD?=
- =?utf-8?B?bnRIRWVVdEkrZDY1R2w1SDJLVVdWS3NMMnVzdEp5OHdHaU40S29zSXlNMDJQ?=
- =?utf-8?B?YXdTcGNlWGJ2YVFaRTMrWTllSFFMaGh4RnlWTy8zbCs0OURoRjYxdXlEWWlp?=
- =?utf-8?B?aUc5czlnREpUWWMyR0s5bnR2YnJsKzJoelduVXU5UVBJcjBZRnZjbWdYSS92?=
- =?utf-8?B?ZEhsZ1puN1c4NjJhNkVOY3BGcm12azFVVno4ZDI5b0xHaEhodmNyTk1MZytz?=
- =?utf-8?B?SHBTKzk5Wm12cllUS2hSMXlpQm41TUxzKzR2R0g3bDl1T0VOYkZ6WnE3SVhw?=
- =?utf-8?B?RlhjNlFJb3dNVDljK0s3QUI2UXY0M1dpZkI4S1lVeGNreUQ4Z1NiS0VQOXJC?=
- =?utf-8?B?eTg1TDlxS1RjekIwdERMVytIek1HL1JhQzY4RVArYkd6VDByV3FsZ1d5Nncr?=
- =?utf-8?B?VzFGMllHdWQrblhlNGIxNS9pL1BiSVV2UllMQjJ6QStvUDgzOENoMDNvMm1n?=
- =?utf-8?B?S2w2Q2V3SndoTWlHTGZtZXFVdHpTL3lZekdxQXdYY1ljUnhqTnp5YUxUUmh0?=
- =?utf-8?B?Q0FaNlU3SERhZWxyVUU0bi8zUHhmSUV3dFFTZWcvL2llSjByTHhpbllpRUg5?=
- =?utf-8?B?OStlVTBGSEtGN3FKVGtrWE50dzBxQU84aGV3cVRxNWxBWXhOV2t5YTRjTTQx?=
- =?utf-8?B?ZVEwa0dWemEzOG1kZGdwRmhmZG0rcFBGN2RpMFphSVpMQ3k2ZjhLMllMOW02?=
- =?utf-8?B?OWNPMngxNmcvbks4RC9IUmpNaWxuNkNpYnJ0aWs1R2F1ai83bkFPdjIrOFRY?=
- =?utf-8?B?bllxTFNjaE12MGk0Rm9KamprWlVmRnlLdG9xNUJlSllTWngrcS9xcWs2dU15?=
- =?utf-8?B?TmwwRE42NzlEK2NXU282RWg5VnVtdjZYQ1hwVnpscWt1TlZYYm1zSlZaenVC?=
- =?utf-8?B?VUFoQmVjU3Aya2tOL3FleXJYVjU5OVVZdGtJUVBWTmFhT1pFeDVQZng1dkVy?=
- =?utf-8?Q?wlioBiA7SKvSOnXKwS+QxVuyAsVWTwWr?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPFEAFA21C69.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHhHZmhuZU05bDB3WE9WUUQ1Q3ZSYkFyZlBLRzJ2REtUZUxXTWUrd2htK1pY?=
- =?utf-8?B?TkwzMnRlckFtWHlyTS93RzJxdGhnSFBSSzBpTU1VUjVkYzFxMUt6Tlpod1Fr?=
- =?utf-8?B?cGkzdmVibDZCdy9kUnJtMTJpU2RHWUJUcUhDc0NlZm55SDh0MCtCa0RhQ0V5?=
- =?utf-8?B?TW50b0F6UVcrZjVDZEM5cCtSMk1BZmFuRG5BeXhKcm9PVWpJNndVd2w3dWcx?=
- =?utf-8?B?eU9McXdQUThwZC9ENXBLNUdwZ0p0elZPUXVjRkNGaVAzWFhVbTNVKzhVY0R5?=
- =?utf-8?B?MU5reTNqMjZ1NHgwaUEzRHhieFBXSk5scUx6d1orbHU3UkdnNzNwS3dvQlZu?=
- =?utf-8?B?cTROd2ZsQ2UzMEt1NS9zQU9BYXB6SGpLWWJOK1p4WWx0YUJnUGhzUkJ1SHNR?=
- =?utf-8?B?NTNwRTVIWUsvMk1PWGFwaldZMEVId1BMdnJhRzlDS1d2UVg1V2xndmY4M1Ry?=
- =?utf-8?B?dGFtM0JVV0ZEMmRSQU51cDVlRVdRa1ZZWlJZUGR1bkRvTVF0NTlSbWM1UkZm?=
- =?utf-8?B?d0NDMW42QldzK0VjQnc3VWJhZzl1T01VZ2grazRXVS9FQjBBc0xRcFNmM1U1?=
- =?utf-8?B?cnNjVDh6R1hhQXQ2NWNBTnRScGJ1eXVhV25VaWxncGlaRnRSZE9tdStXRDVH?=
- =?utf-8?B?WjRmMTRuQ0hZc0xZUEJBVkppeURzZTlIZU5LcHBiT1FGTnlHbE5oSWQxaTNx?=
- =?utf-8?B?TTdjMTU1YU1ETEVjVG9ZUzNsM0ZjSlZUeWthU2k2a2RhbHJUUjI0NzFxRy9i?=
- =?utf-8?B?enltTFMxTUFBcWtTRU94NWZtVis2blFtSk9aeWRYbmo5ZjVVMmp3MWRjOFA3?=
- =?utf-8?B?anp4RS9tN1d1S0U0NTFCYzdmZ2JMQVk0cTZaMm84U05qenV1WXhLbFhlcFdz?=
- =?utf-8?B?STM2OGsyakpYUk44UEJ0Mkp4dmhQZms3NE1FeEJVRmZlYjQ0TkhhaFI5MmRj?=
- =?utf-8?B?aVFUS1dQbnh3OFhBMzI0V0x5aXlXS0x2YUFqYm1MVzNoQjg4U2s2ZUdERzhu?=
- =?utf-8?B?SnU4MDFTM3dKRVB1dWZIWEVLck1ZclVITTJQTTd2LzFBUnBsQTlsdk5YdTNm?=
- =?utf-8?B?RHRFeGxiRlNCQjhDbkpJUkdidkVhRFJ1d0NDcVFRUDhDS1pCdWxKL25HRmd6?=
- =?utf-8?B?NUxsaE5vUVJ4NlE4bGZVVVFoRVdJZmYxM1MvR0RUSm02SkwzTGNWREJWMkxX?=
- =?utf-8?B?UUlkQVFkWjhoV0tHSW5ud0M5TGlDSXAyTm1HdzNsZHdHa0hselBmY0hydU5m?=
- =?utf-8?B?T0I5cUlnU29ET0lZUTloQ1pHQlhMUWR3TUZKRGQxellVZzZHRUR3RUUrSGJa?=
- =?utf-8?B?V1pYR1Vha2ZLT003N2pnWEVLQ2NWR1pnWHYxTlNDd08rbnlUZFl5bitGNitr?=
- =?utf-8?B?Q2FFbkg5TGVWRFAzTkFtT2xnWDJzLzB0V0NDUjVCMnV3U2NBc2ZpTTRpOGp0?=
- =?utf-8?B?VVJwT0l4Z2xsby9UVlNnZndrVG1SQ1RWMWdSOGg3bzVZNVNvL1B2SW1DYmZD?=
- =?utf-8?B?WEdSakJvcWtLUzN6OTlDdmt4SEUrajR3ZjVFQVJNcGVRS0lUbk11N0NoY3RW?=
- =?utf-8?B?Q3JCaythbzdEanJXQ1VmdGRzdTFMZjlSK0M3eTlUTkFqNVdsSXV2VkVIMnZP?=
- =?utf-8?B?VndyQnR5K1ZCYjh6eWZQRUIvZmNaNUVNVnBTMHRrSi9KRWNMMDNxVTdqb1F4?=
- =?utf-8?B?SHNCYXVOVWc3NTV0SGlncDBaV2NyOHNiVTFGblJEWmhiWE1JN1N4QmkvSy9V?=
- =?utf-8?B?dGpyMGJpZVJ5MWRVclJYRFdDUmlWdjh6cHA1OGhsaEtrR25KbXpGU0U2TSt0?=
- =?utf-8?B?Q1RtMjBYWUY4aWxoOWZKMXFhUndua0xDdzhKNzJvejV5a3UxdXBTSDlpUFNl?=
- =?utf-8?B?R1ByVzNTLzhIaVBCUVR0aHNNbDl4NHBabTZ0QzUyL3k1TE02REV1a0IwUXJ4?=
- =?utf-8?B?NG1Dek9GVmoweHovNk5QVUwzQ1h2aC9NWFdQZEVFcjF3WkVJTkFsZTZRU0Zp?=
- =?utf-8?B?R1VjQ3JmYXN0aGpSeGVPM0F5QUdHRU94WDU4ZDVSNUIvSU1BMEJrUWF3R1RS?=
- =?utf-8?B?bERHMEF1SHR5a0U2dVdKOWNDdUYwR3dadllUVWdhekxhQ1VjSXdGa1NaUnZv?=
- =?utf-8?B?dWpsUy9leEhVZjZGanZXSTk3VlNiUnpNL1FHbDg5SGJ0dnFpZGovZUhMZ1N1?=
- =?utf-8?B?VFVsdUZrUEd3OXd5V0dPY2tSa1lITXRETHhNR0dhVld2L3VtcGdTdXREeTF4?=
- =?utf-8?B?SUNObkE0OXBoQXMzdWFEYmJhQmJaYzFGWkgrNGNZTm55QloyWkNvQVNSLzlG?=
- =?utf-8?B?STI0Q0J0VHhVQmxHNFpKaGQ5anhoRS9LUGN3Qy9IQ0orNzl0VFBSRGxVcHBk?=
- =?utf-8?Q?+AerqiI/hFJaEOoY=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	uRK/pAzHIb4Q3TquKTJolazUkZ3x/4Yk5Tp4jn7d8HYhg9sU3LR2rrn9uT/mWsehaLuarnu+g2ueX1ibZo2zjN7tequ2voOX87YN96Lr+bk2CQUW1iL5NR/b6MmNHhxhvyvRwVjpLXS5bVUgMyhmU/Koy4qzJ8Yy+mRSTcSSL0t32135CyD1e220FV+ZEJJf/thkyOUDuWrU9046vXJF8wjxZUeI5MIxm/KXSmsCvHHIAo0o8uQhv/Qu2SfrXPKtDsVhj/j9icaj7MpLL9/Sxnva9r7c96WU56ONZdE0vVen3gcihDGGGPJqXEMwLlHmzEQ6KXTIXt/2VU9Mik219TiX78AKwFQ2TcqGTl+KUj0iUz63/LUJJegnvEuyYsPZk2W59P+6N4q+EG/h7fD8JcLL5mqzxZO55J5zVx1sOBYY/GdVxtSczY9t/Erohdt35CQ8//aUCU/02VpO4IDltLXWiQzVuML55C2QiorOP0YLXRjc9Q3qrNYbjl5NLlNdSbFv/ILJb4G21M+CNrjpx+Sa5zicXdYsCXTPshGccHqKQG1j0wYq17YycVkEYEUJBN8+annrWukh2Ttda1At/LwSKGRHT85Unijyhxi5TQI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df9c0c7b-1c26-4bca-201e-08de4c640797
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPFEAFA21C69.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2026 14:09:24.3444
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aFZPley2iE81L0GcKMI1Hz8pWV8e7FhLno7WLnMHmqifR/EOALyYt0A5fTn5l/pB5srvsSA1hka7gjCFUAMHlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5081
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-05_01,2026-01-05_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2512120000
- definitions=main-2601050124
-X-Proofpoint-GUID: CEZOcSAb51Zc2qAQZhecaxpULGivuJx_
-X-Authority-Analysis: v=2.4 cv=Ec7FgfmC c=1 sm=1 tr=0 ts=695bc618 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=yPCof4ZbAAAA:8 a=sIHEVLj31ub637hHCCAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: CEZOcSAb51Zc2qAQZhecaxpULGivuJx_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA1MDEyMyBTYWx0ZWRfX9Pcx/jNp2jaW
- xUWGRUUdu7A8/JPNCzBv9sAKNi5rrejBs2ke9dEIb3ue6gvJVhG8ib5KjomuzBb2omB3DMNUDF7
- bt4jOSB6UkK6s6rfR86rb32LYX1Iw+/lr1O58KMiXylLHIWniGw5jHAdnjNTL05q+Rtr8qSctxU
- RjVIz4BUf5j7SN7kvQn4yJHrpbA+UxBrdux+4LyywNUeUCpU8jMVOG2DpwPndLU4C52m+hV9iMS
- kWDY/UDu07LZcrRazpBrW4AeWOxVgyUBFndaEXB8DvfBQdHYRzJrfe3l0eVyaFWCvK5Seqh1chh
- 74P//9wIAZtXNkNGb6VzHvSkJAeJ8zZtgybqlC58dKBnAnvQWLZvZ96tuACznr21FenY394yfr6
- 7OpbUG//Ho5fqc0E+5XCLyS6HBPPg/BJ5Q0OGHWV5DIRhTfpRr21K4R795nOv8Fo9//Kb1QI40j
- DP/CA21HlQorQGODJkA==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 05/01/2026 12:54, Huacai Chen wrote:
-> Hi, John,
+On Mon, 5 Jan 2026 11:05:18 +0000
+Ryan Roberts <ryan.roberts@arm.com> wrote:
+
+> On 04/01/2026 23:01, David Laight wrote:
+> > On Fri,  2 Jan 2026 13:11:54 +0000
+> > Ryan Roberts <ryan.roberts@arm.com> wrote:
+> >   
+> >> Previously different architectures were using random sources of
+> >> differing strength and cost to decide the random kstack offset. A number
+> >> of architectures (loongarch, powerpc, s390, x86) were using their
+> >> timestamp counter, at whatever the frequency happened to be. Other
+> >> arches (arm64, riscv) were using entropy from the crng via
+> >> get_random_u16().
+> >>
+> >> There have been concerns that in some cases the timestamp counters may
+> >> be too weak, because they can be easily guessed or influenced by user
+> >> space. And get_random_u16() has been shown to be too costly for the
+> >> level of protection kstack offset randomization provides.
+> >>
+> >> So let's use a common, architecture-agnostic source of entropy; a
+> >> per-cpu prng, seeded at boot-time from the crng. This has a few
+> >> benefits:
+> >>
+> >>   - We can remove choose_random_kstack_offset(); That was only there to
+> >>     try to make the timestamp counter value a bit harder to influence
+> >>     from user space.
+> >>
+> >>   - The architecture code is simplified. All it has to do now is call
+> >>     add_random_kstack_offset() in the syscall path.
+> >>
+> >>   - The strength of the randomness can be reasoned about independently
+> >>     of the architecture.
+> >>
+> >>   - Arches previously using get_random_u16() now have much faster
+> >>     syscall paths, see below results.
+> >>
+> >> There have been some claims that a prng may be less strong than the
+> >> timestamp counter if not regularly reseeded. But the prng has a period
+> >> of about 2^113. So as long as the prng state remains secret, it should
+> >> not be possible to guess. If the prng state can be accessed, we have
+> >> bigger problems.  
+> > 
+> > If you have 128 bits of output from consecutive outputs I think you
+> > can trivially determine the full state using (almost) 'school boy' maths
+> > that could be done on pencil and paper.
+> > (Most of the work only has to be done once.)
+> > 
+> > The underlying problem is that the TAUSWORTHE() transformation is 'linear'
+> > So that TAUSWORTHE(x ^ y) == TAUSWORTHE(x) ^ TAUSWORTHE(y).
+> > (This is true of a LFSR/CRC and TOUSWORTH() is doing some subset of CRCs.)
+> > This means that each output bit is the 'xor' of some of the input bits.
+> > The four new 'state' values are just xor of the the bits of the old ones.
+> > The final xor of the four states gives a 32bit value with each bit just
+> > an xor of some of the 128 state bits.
+> > Get four consecutive 32 bit values and you can solve the 128 simultaneous
+> > equations (by trivial substitution) and get the initial state.
+> > The solution gives you the 128 128bit constants for:
+> > 	u128 state = 0;
+> > 	u128 val = 'value returned from 4 calls';
+> > 	for (int i = 0; i < 128; i++)
+> > 		state |= parity(const128[i] ^ val) << i;  
 > 
-> On Mon, Jan 5, 2026 at 6:07 PM John Garry <john.g.garry@oracle.com> wrote:
->>
->> The arch definition of cpumask_of_node() cannot handle NUMA_NO_NODE - which
->> is a valid index - so add a check for this.
->>
->> Signed-off-by: John Garry <john.g.garry@oracle.com>
->> ---
->>   arch/loongarch/include/asm/topology.h | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/include/asm/topology.h
->> index f06e7ff25bb7c..9857e4c20023c 100644
->> --- a/arch/loongarch/include/asm/topology.h
->> +++ b/arch/loongarch/include/asm/topology.h
->> @@ -12,7 +12,9 @@
->>
->>   extern cpumask_t cpus_on_node[];
->>
->> -#define cpumask_of_node(node)  (&cpus_on_node[node])
->> +#define cpumask_of_node(node)  ((node) == NUMA_NO_NODE ?       \
->> +                               cpu_all_mask :                  \
->> +                               &cpus_on_node[node])
-> You can define it in one line, so does the MIPS version.
+> What is const128[] here?
+
+Some values you prepared earlier :-)
+
+> > You done need all 32bits, just accumulate 128 bits.  
+> > So if you can get the 5bit stack offset from 26 system calls you know the
+> > value that will be used for all the subsequent calls.  
 > 
+> It's not immediately obvious to me how user space would do this, but I'll take
+> it on faith that it may be possible.
 
-ok, I can do it that way if you prefer. The reason I had it in flow was:
-- a single line will overflow 80 characters, which some people still 
-prefer not doing
-- following example of other archs and general coding style to split 
-macros functions across multiple lines.
+It shouldn't be possible, but anything that leaks a stack address would
+give it away.
+It is also pretty much why you care about the cycle length of the PRNG.
+(If the length is short a rogue application can remember all the values.)
 
-Thanks,
-John
+> > 
+> > Simply changing the final line to use + not ^ makes the output non-linear
+> > and solving the equations a lot harder.  
+> 
+> There has been pushback on introducing new primitives [1] but I don't think
+> that's a reason not to considder it.
+
+That is a more general issue with the PRNG.
+ISTR it was true for the previous version that explicitly used four CRC.
+Jason should know more about whether the xor are a good idea.
+
+> 
+> [1] https://lore.kernel.org/all/aRyppb8PCxFKVphr@zx2c4.com/
+> 
+> > 
+> > I might sit down tomorrow and see if I can actually code it...  
+> 
+> Thanks for the analysis! I look forward to seeing your conclusion... although
+> I'm not sure I'll be qualified to evaluate it mathematically.
+
+I need to drag out the brian cells from when I learnt about CRC (actually
+relating to burst error correction) over 40 years ago...
+ 
+> FWIW, I previously had a go at various schemes using siphash to calculate some
+> random bits. I found it to be significantly slower than this prng. I've so far
+> taken the view that 6 bits of randomness is not much of a defence against brute
+> force so we really shouldn't be spending too many cycles to generate the bits.
+> If we can get to approach to work, I think that's best.
+
+Indeed.
+A single 32bit CRC using (crc + (crc >> 16)) & 0x3f could be 'good enough'.
+Especially if the value is 'perturbed' during (say) context switch.
+The '16' might need adjusting for the actual CRC, especially if TAUSWORTHE()
+is used - you don't want the value to match one of the shifts it uses.
+
+prandom_u32_state() is defined as:
+#define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
+	state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
+	state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
+	state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
+	state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
+	return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
+This is equivalent to:
+#define TAUSWORTHE(s, a, b, c, d) ((s & ~c) << d) ^ (s >> a) ^ (s >> b)
+	state->s1 = TAUSWORTHE(state->s1,  7, 13,   1, 18);
+	state->s2 = TAUSWORTHE(state->s2, 25, 27,   7,  2);
+	state->s3 = TAUSWORTHE(state->s3,  8, 21,  15,  7);
+	state->s4 = TAUSWORTHE(state->s4,  9, 12, 127, 13);
+which makes it clear that some low bits of each 's' get discarded reducing
+the length of each CRC to (I think) 31, 29, 28 and 25.
+Since 'b + d' matches the bits discarded by 'c', two of those shifts are
+actually just a rotate, so there isn't really much 'bit stirring' going on.
+
+By comparison CRC-16 (for hdlc comms like x25, isdn and ss7) reduces to:
+u32 crc_step(u32 crc, u8 byte_val)
+{
+    u8 t = crc ^ byte_val;
+    t = (t ^ t << 4);
+    return crc >> 8 ^ t << 8 ^ t << 3 ^ t >> 4;
+}
+Much more 'stirring'.
+
+	David
+
+
