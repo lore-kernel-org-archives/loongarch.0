@@ -1,89 +1,154 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D86E32D0D0
-	for <loongarch@lists.linux.dev>; Mon,  5 Jan 2026 10:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66035330666
+	for <loongarch@lists.linux.dev>; Mon,  5 Jan 2026 11:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767610533; cv=none; b=T9/ZCuKVmcAFIIuekxyPJggp9W092geN9a9MqQS1Ht2rhYAjWkERnSWUyq1fbOYxescUmFEiqll8WdzX4W6bAXWDUAuuENphQ057lk6Nyndz9+UMjiHeKoO+e9afXxwnhRYlQVywDBdEumtDf/5Sm5qLOwzD2Osm10ZFrSwvtKY=
+	t=1767611125; cv=none; b=mH4XgpF40aDN3mSDSxGcjYgFg2+nyresTOiQHdk4iA25dfZcPU1wlOCo+1eoHcG3MmfhVLG8ex9venUV/t7ljdPbPFuSMYaLqlyJGlpsynsHvjedahTs3zPyMEfgeEDym2TKi7MJw+wI83SXt0wyvgprJDm4JoNsnKU9w80MWx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767610533; c=relaxed/simple;
-	bh=VvIMH6uDCfo9dHgHYOA50uC9oucTRbBEH2ez1L+nu/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aI+ZD0UeeIiEpTAAKcZHMjq9o3MX03y3oOlT1gYM0jdBOSFZ+NcM7JNJY0RJdMvCSYEIt9DEpAmF9VYzs2nRBmPvxWe3Rvmu3Uxlg4BY0q1qPach3AgJJWzmTVAKZDy2EhV8xWp7FS6K5cnBkSvAQgDC/V+JcYK//xj1LK/6tC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ELLsImp8; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ELLsImp8"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767610529;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=90lPtiX5iGw6HKdw2bSu0Tovhut4F8g9SrqqXr/vigA=;
-	b=ELLsImp8JFptd+lTJNZSfdVorahEefI8KjaNa2rDC5GcGrfiODzfnoECuPDP4KG1Af2MAv
-	XWN9r7PSsQAYwTLsMndefSojZCDLqhWOu7DGCBLTJt/LjJYpp093OYoKmYaVQbho4OEG/S
-	A4LN5JMvYdwODSvvWQiDGuayJzSZVrA=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: dongtai.guo@linux.dev,
-	hengqi.chen@gmail.com,
-	kernel@xen0n.name,
-	lianyangyang@kylinos.cn,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	r@hev.cc,
-	xry111@xry111.site,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v9 loongarch-next 4/4] LoongArch: Enable 128-bit atomics cmpxchg support
-Date: Mon,  5 Jan 2026 18:55:14 +0800
-Message-ID: <20260105105514.76021-5-dongtai.guo@linux.dev>
-In-Reply-To: <20260105105514.76021-1-dongtai.guo@linux.dev>
-References: <20260105105514.76021-1-dongtai.guo@linux.dev>
+	s=arc-20240116; t=1767611125; c=relaxed/simple;
+	bh=/IWMkjWKAb7cBRk9rXBo7XSunxAC8lWcg1+e5MkGQ1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k5tC3VMaM5+evfmTJQe4S6vE9MN6jlnxxPKIoTFopP2BQFAlGtFCqRwNjbxOaTElv8FVgdnsH9UY9CBgIRfsjgY766eNGvQirocV4q7yrhitxuZJyc7Bklh1li372khRpkuU3vuXxfhsAoOWwf5ofRtPhTABfR+MATcVbnFX21c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6BC5497;
+	Mon,  5 Jan 2026 03:05:15 -0800 (PST)
+Received: from [10.1.38.150] (XHFQ2J9959.cambridge.arm.com [10.1.38.150])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 652C93F5A1;
+	Mon,  5 Jan 2026 03:05:19 -0800 (PST)
+Message-ID: <60c5d7b1-1ab7-490c-8cb8-dfd50cf23856@arm.com>
+Date: Mon, 5 Jan 2026 11:05:18 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+ <20260102131156.3265118-4-ryan.roberts@arm.com>
+ <20260104230136.7aaf8886@pumpkin>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20260104230136.7aaf8886@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: George Guo <guodongtai@kylinos.cn>
+On 04/01/2026 23:01, David Laight wrote:
+> On Fri,  2 Jan 2026 13:11:54 +0000
+> Ryan Roberts <ryan.roberts@arm.com> wrote:
+> 
+>> Previously different architectures were using random sources of
+>> differing strength and cost to decide the random kstack offset. A number
+>> of architectures (loongarch, powerpc, s390, x86) were using their
+>> timestamp counter, at whatever the frequency happened to be. Other
+>> arches (arm64, riscv) were using entropy from the crng via
+>> get_random_u16().
+>>
+>> There have been concerns that in some cases the timestamp counters may
+>> be too weak, because they can be easily guessed or influenced by user
+>> space. And get_random_u16() has been shown to be too costly for the
+>> level of protection kstack offset randomization provides.
+>>
+>> So let's use a common, architecture-agnostic source of entropy; a
+>> per-cpu prng, seeded at boot-time from the crng. This has a few
+>> benefits:
+>>
+>>   - We can remove choose_random_kstack_offset(); That was only there to
+>>     try to make the timestamp counter value a bit harder to influence
+>>     from user space.
+>>
+>>   - The architecture code is simplified. All it has to do now is call
+>>     add_random_kstack_offset() in the syscall path.
+>>
+>>   - The strength of the randomness can be reasoned about independently
+>>     of the architecture.
+>>
+>>   - Arches previously using get_random_u16() now have much faster
+>>     syscall paths, see below results.
+>>
+>> There have been some claims that a prng may be less strong than the
+>> timestamp counter if not regularly reseeded. But the prng has a period
+>> of about 2^113. So as long as the prng state remains secret, it should
+>> not be possible to guess. If the prng state can be accessed, we have
+>> bigger problems.
+> 
+> If you have 128 bits of output from consecutive outputs I think you
+> can trivially determine the full state using (almost) 'school boy' maths
+> that could be done on pencil and paper.
+> (Most of the work only has to be done once.)
+> 
+> The underlying problem is that the TAUSWORTHE() transformation is 'linear'
+> So that TAUSWORTHE(x ^ y) == TAUSWORTHE(x) ^ TAUSWORTHE(y).
+> (This is true of a LFSR/CRC and TOUSWORTH() is doing some subset of CRCs.)
+> This means that each output bit is the 'xor' of some of the input bits.
+> The four new 'state' values are just xor of the the bits of the old ones.
+> The final xor of the four states gives a 32bit value with each bit just
+> an xor of some of the 128 state bits.
+> Get four consecutive 32 bit values and you can solve the 128 simultaneous
+> equations (by trivial substitution) and get the initial state.
+> The solution gives you the 128 128bit constants for:
+> 	u128 state = 0;
+> 	u128 val = 'value returned from 4 calls';
+> 	for (int i = 0; i < 128; i++)
+> 		state |= parity(const128[i] ^ val) << i;
 
-Add select HAVE_CMPXCHG_DOUBLE and select HAVE_ALIGNED_STRUCT_PAGE in Kconfig
-to enable 128-bit atomic cmpxchg support on LoongArch.
+What is const128[] here?
 
-Reviewed-by: Hengqi Chen <hengqi.chen@gmail.com>
-Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+> You done need all 32bits, just accumulate 128 bits.  
+> So if you can get the 5bit stack offset from 26 system calls you know the
+> value that will be used for all the subsequent calls.
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 730f34214519..f9845ebec1a4 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -114,6 +114,7 @@ config LOONGARCH
- 	select GENERIC_TIME_VSYSCALL
- 	select GPIOLIB
- 	select HAS_IOPORT
-+	select HAVE_ALIGNED_STRUCT_PAGE
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_BITREVERSE
- 	select HAVE_ARCH_JUMP_LABEL
-@@ -130,6 +131,7 @@ config LOONGARCH
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
- 	select HAVE_ASM_MODVERSIONS
-+	select HAVE_CMPXCHG_DOUBLE
- 	select HAVE_CONTEXT_TRACKING_USER
- 	select HAVE_C_RECORDMCOUNT
- 	select HAVE_DEBUG_KMEMLEAK
--- 
-2.43.0
+It's not immediately obvious to me how user space would do this, but I'll take
+it on faith that it may be possible.
+
+> 
+> Simply changing the final line to use + not ^ makes the output non-linear
+> and solving the equations a lot harder.
+
+There has been pushback on introducing new primitives [1] but I don't think
+that's a reason not to considder it.
+
+[1] https://lore.kernel.org/all/aRyppb8PCxFKVphr@zx2c4.com/
+
+> 
+> I might sit down tomorrow and see if I can actually code it...
+
+Thanks for the analysis! I look forward to seeing your conclusion... although
+I'm not sure I'll be qualified to evaluate it mathematically.
+
+FWIW, I previously had a go at various schemes using siphash to calculate some
+random bits. I found it to be significantly slower than this prng. I've so far
+taken the view that 6 bits of randomness is not much of a defence against brute
+force so we really shouldn't be spending too many cycles to generate the bits.
+If we can get to approach to work, I think that's best.
+
+Thanks,
+Ryan
+
+> 
+> 	David
+> 
+>  
 
