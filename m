@@ -1,109 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9D72D12F5;
-	Thu,  8 Jan 2026 19:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC7F329C56
+	for <loongarch@lists.linux.dev>; Thu,  8 Jan 2026 20:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899962; cv=none; b=mjs8T2vDHw0bFs87Ph022gMftAZ4mpsPNBhvUaHy1uvHp06gsXg1J8aqicnTy5104oMJGQmfRVTjFJCsulgLsnb8dnCQzLOAHGAmbVs1d5Kb8pIQrAn8FkfTV/cr6Y33p78/QVg4uXAjn6gUx8mMN2/BvsvKDtL3qttBF793ksM=
+	t=1767902654; cv=none; b=ry9fMCzwqtq8eN4XaX3Z+aLLb3EM82W5G4oc33RJFszohsHsDcA6IUDOEIKqBIKThGCJIkEDfvfVffaQNEa/tXI3ZYQ1WeTx3HQ43Qpqt8aIUNnEk6FRaNkmLNl+SKeRW8+eeE4M6oYNSjCzKb+yzprU8jJzZMIkXbbikiWVDzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899962; c=relaxed/simple;
-	bh=fSg1rFUc7Lj8obCBDIiOBzwmsy2PDWnpS6aiVKuno6E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lZKq+/mNe0KkgH7LqfphQ7mITA5boXiSsOZb1fO6dG1msYF0oQY4rHX/q1PT8lXdRRxRYhC7ci9oTqGCRHw86ehlq03pKvT7/2IxDj9+uWjydrrSrrRrVc755AKVyrHS03EGAM5vQq3055who61jnZGEaFF7Pyu9fuP598OKG1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CVumgl5u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767902654; c=relaxed/simple;
+	bh=Sc+ak6kXD2O2otUHZGDuYAqOJ/KnbA1ceZEKyhd2zdc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kGpvOxN4uckBYkKo7HX8A08ON0s5XevwNNWFKlMCz146ZVD3wxuDx+qr+CGo+K+byFbDzONDzDyx/4HPPNvIdyksHG8oV9FTUBv4XORa9YutM7VR7gzoVz2Z6Kv4+z51U2aP+6SZJlQN1HgFW+BeMrqoccHljPngNk4WC9rJeWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s+n44V3U; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CVumgl5u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE9CC116C6;
-	Thu,  8 Jan 2026 19:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1767899961;
-	bh=fSg1rFUc7Lj8obCBDIiOBzwmsy2PDWnpS6aiVKuno6E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CVumgl5uYfQfaLqYgweLov8FT7OgO1ch7qHlwuZbONKicqb+bmGFoLIsYAxoWfRsr
-	 6BxVTZH+QFJx2xSpWVk0NUrA2Ddxjwu2/Wcc1JG/gPIWft2fVjXp2CIt9nEHIpeVml
-	 fnOoO4sO6q/7KPmJQudmyHeHcLC9E7nvlzSuO+ys=
-Date: Thu, 8 Jan 2026 11:19:19 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Klara Modin <klarasmodin@gmail.com>, Alex Shi <alexs@kernel.org>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson
- <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain
- <bcain@kernel.org>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller"
- <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, David
- Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Geert
- Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko
- Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
- <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, Johannes Berg
- <johannes@sipsolutions.net>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, Matt
- Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek
- <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
- <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav
- <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, Russell King
- <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, Suren
- Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily
- Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil
- Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent
- of the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate
- initialization of nodes, zones and memory map)
-Message-Id: <20260108111919.ac5f811132672e760f47fbab@linux-foundation.org>
-In-Reply-To: <aVpWpLV4Dut5Muo2@kernel.org>
-References: <20260102070005.65328-1-rppt@kernel.org>
-	<20260102070005.65328-23-rppt@kernel.org>
-	<aVhN2NgQEKe0yzva@soda.int.kasm.eu>
-	<aVll339wim7dCIaQ@kernel.org>
-	<aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
-	<aVpWpLV4Dut5Muo2@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s+n44V3U"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c52ebdd2d43so790161a12.0
+        for <loongarch@lists.linux.dev>; Thu, 08 Jan 2026 12:04:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767902653; x=1768507453; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
+        b=s+n44V3UwJQpIqU1SQAF7BPYXQqGoQ22WKSWZk9e51SMEmNb3pbZm8Rspvklez1NZz
+         ylsnbyL9fE9mC9FPHyc5+fmtq7wQDUcwzdFYkNtatwtyp87slt3/IaITbmHdObieSLW7
+         rigrynk62iO226le05tRDliuEM+o97aD9y8EucjqvqGlMJDxOYRxl0f+Dqr/3YT8vzsq
+         OFOTdn2Bh9FS7fB5ViNhasEvIOEaLIiNigb8ikXbGtKkt35wp/oe72aRtAJKrlr04bwT
+         SRtyQ3ADArO6Bwjdpny75U7gSkm0U1O9/69kF4piulpqZboZBfG+j+BKN/oqQPYY+oWu
+         aAvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767902653; x=1768507453;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHDeNFz490Nrky17RXCNoP5KLrJVy9PVF3wfzv9VqJU=;
+        b=iXxGletYmsIuKERB+aYQBnFPqiIlE/WULnxExrW0B4GOd20Vna1VS/kCXH3loeWsDU
+         DGDhQHyVEyL/6PHwHx9GK12tg1obW3X5Un/DClpqvDSET7TA7Rt4+cmQE6HZLwQLLFnU
+         6sZi7HmZAKOlRmxIj+p9fUdt5YPTgEOeORoWF/zE/bGlFKV9YjVfBDCEv+SE/mFswpmY
+         1ytHuDij5In2pja6KKO78NXKaD8UtCvIzqH/SaHI8SlAoB34ybIg1kI7UtIn05pZnegd
+         YdOpSZvpBgcmnHNGDTq/vUq+uPUb2uvj4uepDRKdHxy9q6ZgwiVvbEk7AfdLF7MLj7e1
+         XIEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSFYl8nTKZzomEzVlzF6btIisO7+oDXBqP4l6f5i1pPXtUR3OBaDujCVqhInbdf/GnG0xPRwXskRc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzKo/MCX7SP0Pl4Zu3Z0v+317iBaIwa+tlxq3rRgY12qpdtLPLZ
+	wUj2juflIl1U5DOadRjx9kps6J+JO904WoohUki88EAylgh/ty9poQcZ/3fw/4kBY8eguvjkxQj
+	FR+cFUQ==
+X-Google-Smtp-Source: AGHT+IFhKs48GN0WkSDiAO4qPNHLVPhcEoNB+pDwryoeKjyNGQcxURXgfxIrWzkPwVlbxpHNfeozbbrhcz8=
+X-Received: from plhi7.prod.google.com ([2002:a17:903:2ec7:b0:29f:68b:3548])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3947:b0:344:97a7:8c6a
+ with SMTP id adf61e73a8af0-3898f9cc49cmr7749765637.51.1767902652739; Thu, 08
+ Jan 2026 12:04:12 -0800 (PST)
+Date: Thu, 8 Jan 2026 12:04:11 -0800
+In-Reply-To: <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-40-seanjc@google.com>
+ <04c70698-e523-43ae-9092-f360c848d797@linux.intel.com>
+Message-ID: <aWANuxukqWmo36N0@google.com>
+Subject: Re: [PATCH v6 39/44] KVM: VMX: Bug the VM if either MSR auto-load
+ list is full
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Xudong Hao <xudong.hao@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Sun, 4 Jan 2026 14:01:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
-
-> Can you please stick this between patch 3 (arm: introduce
-> arch_zone_limits_init()) and patch 4 (arm64: introduce
-> arch_zone_limits_init())?
-
-Did, thanks.  I made this a standalone patch rather than  a
-squashable -fix.
-
-> >From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
-> From: Klara Modin <klarasmodin@gmail.com>
-> Date: Sat, 3 Jan 2026 20:40:09 +0200
-> Subject: [PATCH] arm: make initialization of zero page independent of the
->  memory map
+On Mon, Dec 08, 2025, Dapeng Mi wrote:
+> On 12/6/2025 8:17 AM, Sean Christopherson wrote:
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 38491962b2c1..2c50ebf4ff1b 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1098,6 +1098,7 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  {
+> >  	int i, j = 0;
+> >  	struct msr_autoload *m = &vmx->msr_autoload;
+> > +	struct kvm *kvm = vmx->vcpu.kvm;
+> >  
+> >  	switch (msr) {
+> >  	case MSR_EFER:
+> > @@ -1134,12 +1135,10 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+> >  	j = vmx_find_loadstore_msr_slot(&m->host, msr);
+> >  
+> > -	if ((i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS) ||
+> > -	    (j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS)) {
+> > -		printk_once(KERN_WARNING "Not enough msr switch entries. "
+> > -				"Can't add msr %x\n", msr);
+> > +	if (KVM_BUG_ON(i < 0 && m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm) ||
+> > +	    KVM_BUG_ON(j < 0 &&  m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
 > 
-> Unlike most architectures, arm keeps a struct page pointer to the
-> empty_zero_page and to initialize it requires conversion of a virtual
-> address to page which makes it necessary to have memory map initialized
-> before creating the empty_zero_page.
-> 
-> Make empty_zero_page a stataic array in BSS to decouple it's
-> initialization from the initialization of the memory map.
-> 
-> This also aligns arm with vast majorty of architectures.
+> nit: Remove one extra space before "m->host.nr".
 
-Russell, can you please update us on your concerns with this change?
+Oh, that's intentional, so that the rest of the line is aligned with the "guest"
+line above.
