@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA912231836;
-	Thu,  8 Jan 2026 02:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B586399A51
+	for <loongarch@lists.linux.dev>; Thu,  8 Jan 2026 08:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767840994; cv=none; b=oSZlZcklT2Xw7eV4fIcOZBSBcMLPXu0mYP92TjFo/FJGviSfCCS6Wf6Q79hwhHV9BosmChLxf592thXEaKvh2nUZReIvdVNoFyHNhg68YhGHEdxOI+Ioc53RjWmuoXgeEFsKsXf6AQvhNj5njVvm9nzoHPkkBqJRfbPZbcM2O2I=
+	t=1767859671; cv=none; b=KqBDsxM/0NvFJ3pJQ66wkb3WZTVorbcKXTLELs/gScI/vOLvKFa4uGx3rehCadnI7ifTGUf2ZpHZ48iO7j7ca4MUJMUUUcjFrGeSX2OMfiG0Vem4iTLeaYDcHX1ob9tJuJQ7JaTU4MyZjmzSf4/fn486QrUqXBxWNglvxX/4szo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767840994; c=relaxed/simple;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
+	s=arc-20240116; t=1767859671; c=relaxed/simple;
+	bh=FA1FqvfnhVoEmzQKmMsaGobaXtY5ks01xM+NgwFA5hk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YWeTggRijzeilZTc/TpfnINLHouXg4/4Hktkegy4gpv3zNeGgnLNOnc8mYDhewttnVvw3un6aZeLoNQUV8vl4/efO1Ee36shzqSB/XBSXm1uy2cTOL3ikrfHYt3k239OIPwvyyrVH55BqfbHWl5KiypCOZiNQG0lLOOlzAgxZBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO9+Hp/X; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=RpEy7KEmV+nuQEzjZzdGJsuN/osYzZ7lRTxbU8w+g/qsf8Klugq8rPmdwnzoHA2j7QpRFrHlAYzew6vJcgoewwdCCxBEwK3K7kUskUu6accmjk7Ro+F2jl1mc8GwOa4Gcq5cFRhrQaEZWM+vh27mM5x5Yp+sDXw4VxIJnvKmxVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJ9UbVIm; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO9+Hp/X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97908C4CEF1;
-	Thu,  8 Jan 2026 02:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767840993;
-	bh=bb09VXEHSGVuDvACYJHsjuF/qKdFpVlUXhZlI58yIwU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VO9+Hp/XVRs8XQB3IDBstup2R+DaU4I6K4mDp34Wm113uMcakMBKaj2eTx55ExHtE
-	 nBWUzkdaWvlhDxELVvEA3C6puD6nUZG5J+gpcQ61WkLHnhj+M05LSE5AZcHJamwhvc
-	 j/BMfPrbYmdBOqJI5BeEugABP3Mc/vfHCk9GLrpJscoyfLAOJwB+2t8XFPTPsEybag
-	 xGnWNL183qpjfSIH8SOBIaB8sVnhazL4Rw/1WNvWFQdpTNcIdnvnpj/0Brkneg1BPR
-	 7qMuhdE1AoXtCk2F775jaiAkT9nh2gM4h7JiM3GPN+qLCo8vxQs/u1WGbxiPYaxbeg
-	 hV7kgr+lj43kw==
-Message-ID: <dc57f648-524c-4fdc-9fce-73f1bab2fee4@kernel.org>
-Date: Wed, 7 Jan 2026 18:56:29 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJ9UbVIm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767859666; x=1799395666;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FA1FqvfnhVoEmzQKmMsaGobaXtY5ks01xM+NgwFA5hk=;
+  b=MJ9UbVImoMdMoidK5R7JxiZ1M8ZxGqoG76u6YrHBq0cqOFEg2ovu9HSw
+   etNWnkz17r0sxDZPcMxGNnU18sGqKK+Jy4HrUj+vcTXR2qoGX/hI72vW/
+   jnmcsps5B6d7JSlDO4O4QpIBdpkL6v3pBpuCreX00fvn0FP0QvXy2OHg2
+   v+GoANpkXPAbQpvtVmMsGvlQJhnmQxoxwBG73qEoeDBZib6XAEywF1joC
+   AwKQzMKioah8iz4iAmajYujcuz0/0uwknpKeuxw6D1Idxu/Ec8G4MHoSD
+   UtFAyGSc58yPjhGB5qkCibz0R6Peh8lbReTdTMCMTgjWqzD8wT+se6Y5U
+   w==;
+X-CSE-ConnectionGUID: x+fKjzCZT92OOLsNHQpDVA==
+X-CSE-MsgGUID: QlJQXnqaRSiVj1enHmkgIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11664"; a="73082416"
+X-IronPort-AV: E=Sophos;i="6.21,210,1763452800"; 
+   d="scan'208";a="73082416"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 00:07:39 -0800
+X-CSE-ConnectionGUID: PPUETjq6RjC/JGniApqYdw==
+X-CSE-MsgGUID: t1qu5xbHQqmxLyGWoZH+rA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,210,1763452800"; 
+   d="scan'208";a="203581559"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.14]) ([10.124.240.14])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2026 00:07:35 -0800
+Message-ID: <42bcaa57-bab3-457f-83cc-d908303090f2@linux.intel.com>
+Date: Thu, 8 Jan 2026 16:07:33 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,66 +52,153 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/28] arc: introduce arch_zone_limits_init()
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
- Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Jonathan Corbet <corbet@lwn.net>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>,
- Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
- Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Thomas Gleixner <tglx@linutronix.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Will Deacon <will@kernel.org>, x86@kernel.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
- linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
-References: <20260102070005.65328-1-rppt@kernel.org>
- <20260102070005.65328-3-rppt@kernel.org>
+Subject: Re: [PATCH v2] LoongArch: Fix PMU counter allocation for mixed-type
+ event groups
+To: Lisa Robinson <lisa@bytefly.space>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, WANG Xuerui <kernel@xen0n.name>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+References: <20260104162304.64604-1-lisa@bytefly.space>
 Content-Language: en-US
-From: Vineet Gupta <vgupta@kernel.org>
-In-Reply-To: <20260102070005.65328-3-rppt@kernel.org>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260104162304.64604-1-lisa@bytefly.space>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-
-On 1/1/26 22:59, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 1/5/2026 12:23 AM, Lisa Robinson wrote:
+> When validating a perf event group, validate_group() unconditionally
+> attempts to allocate hardware PMU counters for the leader, sibling
+> events and the new event being added.
 >
-> Move calculations of zone limits to a dedicated arch_zone_limits_init()
-> function.
->
-> Later MM core will use this function as an architecture specific callback
-> during nodes and zones initialization and thus there won't be a need to
-> call free_area_init() from every architecture.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
+> ispart of the group, the current code still tries to allocate a hardware
 
-Thx !
+ispart -> "is part"
 
-Acked-by: Vineet Gupta <vgupta@kernel.org>
+
+> PMU counter for it, which can wrongly consume hardware PMU resources and
+> cause spurious allocation failures.
+>
+> Fix this by only allocating PMU counters for hardware events during group
+> validation, and skipping software events.
+>
+> A trimmed down reproducer is as simple as this:
+>
+>   #include <stdio.h>
+>   #include <assert.h>
+>   #include <unistd.h>
+>   #include <string.h>
+>   #include <sys/syscall.h>
+>   #include <linux/perf_event.h>
+>
+>   int
+>   main (int argc, char *argv[])
+>   {
+>   	struct perf_event_attr attr = { 0 };
+>   	int fds[5];
+>
+>   	attr.disabled = 1;
+>   	attr.exclude_kernel = 1;
+>   	attr.exclude_hv = 1;
+>   	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+>   		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
+>   	attr.size = sizeof (attr);
+>
+>   	attr.type = PERF_TYPE_SOFTWARE;
+>   	attr.config = PERF_COUNT_SW_DUMMY;
+>   	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
+>   	assert (fds[0] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CPU_CYCLES;
+>   	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[1] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>   	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[2] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
+>   	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[3] >= 0);
+>
+>   	attr.type = PERF_TYPE_HARDWARE;
+>   	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
+>   	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
+>   	assert (fds[4] >= 0);
+>
+>   	printf ("PASSED\n");
+>
+>   	return 0;
+>   }
+>
+> Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
+> Signed-off-by: Lisa Robinson <lisa@bytefly.space>
+> ---
+> Changes in v2:
+> - Factor out duplicated perf event type checks into an inline helper.
+> ---
+>  arch/loongarch/kernel/perf_event.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+> index 9d257c8519c9..e34a6fb33e11 100644
+> --- a/arch/loongarch/kernel/perf_event.c
+> +++ b/arch/loongarch/kernel/perf_event.c
+> @@ -626,6 +626,18 @@ static const struct loongarch_perf_event *loongarch_pmu_map_cache_event(u64 conf
+>  	return pev;
+>  }
+>  
+> +static inline bool loongarch_pmu_event_requires_counter(const struct perf_event *event)
+> +{
+> +	switch (event->attr.type) {
+> +	case PERF_TYPE_HARDWARE:
+> +	case PERF_TYPE_HW_CACHE:
+> +	case PERF_TYPE_RAW:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+>  static int validate_group(struct perf_event *event)
+>  {
+>  	struct cpu_hw_events fake_cpuc;
+> @@ -633,15 +645,18 @@ static int validate_group(struct perf_event *event)
+>  
+>  	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
+>  
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+> +	if (loongarch_pmu_event_requires_counter(leader) &&
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
+>  		return -EINVAL;
+>  
+>  	for_each_sibling_event(sibling, leader) {
+> -		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+> +		if (loongarch_pmu_event_requires_counter(sibling) &&
+> +		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
+>  			return -EINVAL;
+>  	}
+>  
+> -	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+> +	if (loongarch_pmu_event_requires_counter(event) &&
+> +	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
+>  		return -EINVAL;
+>  
+>  	return 0;
+
+The code looks good to me, but I'm not quite familiar the loongarch perf
+code, then I won't give a reviewed-by and leave it to loongarch perf
+experts. Thanks.
+
+
