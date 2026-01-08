@@ -1,200 +1,109 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A623030FC25
-	for <loongarch@lists.linux.dev>; Thu,  8 Jan 2026 18:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9D72D12F5;
+	Thu,  8 Jan 2026 19:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767897086; cv=none; b=KETAUWb05ZJpzMtrrv5WG1jqYtG+Ji1G3IpweWqiWhuTWaTr/HoGcVdbzX7+qFb8dzr47VyfJiHOSd05WaQQmy16Rx4ZzQcCcRpDK54xsWGtJtzq7ZrWkHu8dQmcG1lBy4556wnDe8gYTVx9kL8i59Zg0FZfBTUUhM9NL/RYxk0=
+	t=1767899962; cv=none; b=mjs8T2vDHw0bFs87Ph022gMftAZ4mpsPNBhvUaHy1uvHp06gsXg1J8aqicnTy5104oMJGQmfRVTjFJCsulgLsnb8dnCQzLOAHGAmbVs1d5Kb8pIQrAn8FkfTV/cr6Y33p78/QVg4uXAjn6gUx8mMN2/BvsvKDtL3qttBF793ksM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767897086; c=relaxed/simple;
-	bh=HiZzKC6IpEiXD+YG7Xq5JdCfDWfJLzGMhECalIcNpBQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lifUdc5vGUZEIzcpUhggK9OdXwEyJ4WH+z5aCyepEAokPgMWzIT22PvHOX6904LsgPEdYBjrNLkSHuzfDvnDGs80PoLxYAJPI8AZkJLrQNIZxJEw1SoVPn4HF+QXOUTm5gxSF3RThCeSFgp9QH1dEkaYJk/3oMG6OFN7Gs1bSYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M1iKyuMV; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1767899962; c=relaxed/simple;
+	bh=fSg1rFUc7Lj8obCBDIiOBzwmsy2PDWnpS6aiVKuno6E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lZKq+/mNe0KkgH7LqfphQ7mITA5boXiSsOZb1fO6dG1msYF0oQY4rHX/q1PT8lXdRRxRYhC7ci9oTqGCRHw86ehlq03pKvT7/2IxDj9+uWjydrrSrrRrVc755AKVyrHS03EGAM5vQq3055who61jnZGEaFF7Pyu9fuP598OKG1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CVumgl5u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1iKyuMV"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34ec823527eso5373241a91.2
-        for <loongarch@lists.linux.dev>; Thu, 08 Jan 2026 10:31:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1767897084; x=1768501884; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nY/l54WU76DsZYqDI43j/uSoqA/+4oD9QHehzkck2fM=;
-        b=M1iKyuMViBxJejpHmLtu8hIy1ZKVHbNoIgeBaU/IEBk7xYB6ailRSQEWo/UUHieOfC
-         wyi+050o6TianzOfoM5r/20DB8ix77oSS11kvRI4brXPcn9hqfNjk0xGbUq/miuvWbEd
-         p4EkSkEi5g3xFK124rB8D6vkEpMrNfSZ2SGiT/zd8w1ntQhON0zPndkTuTBWka2QBIe/
-         kL90pYb4TjlNuIcjwsVI+q54swOXwL1KfuLkkrkQyu5CB9KLPwDhkRH7pqr6+pW/Zl7l
-         5rqnHxivDbyNfAMKTWuLMx+00iIoqF73vGQsi2B8w+huIwmkiCX5RoHl0PzgQ1+XQzMD
-         zJOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767897084; x=1768501884;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nY/l54WU76DsZYqDI43j/uSoqA/+4oD9QHehzkck2fM=;
-        b=vd5Mt4yXM5F2wZY6ia5QrFY2kUbxyg48QpttzV5cNjSe2h4YnVv5uDLpTY1hEidqBf
-         TDBtSIgwPmmV0tATaZEZzq/FsAUZkpOFxAqhI8cC6hFmAMbtOFgO1NsXwWWY/UBGYROR
-         Z2/KKUiLGUxRbxO+uGu1w9JAtlGX6gfz20/CuLmGTpsYaDkk9Q7pFR84UWuGO6sHPR9v
-         3lEp1sL/QMQkjSGsZg7WAuyU7CbS9anenf4KqoPbBs8VnnE4n+9gQ0VnYsKh1Kk9DejT
-         yG/OAjB5sZze0uU+9v1ZeOV1b1vRCiSEbIT5HH1ErOdv0HlEbGME5OUqyb8j/ez4Wts/
-         LwEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4jStmQ+guLVY9DP2qdw6Dx6nWPLGPCOdM9ufTZBbBVkvRZ27DfZZ+vBSXduj2O7kdNcuLJI1MCxM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxm69HIvOIJEfvTGtsEi/Dld2bBhCAewb6+Yi3nNhW/PhrjJKAf
-	NnBaPJaz42aHGZSuUJ2C7ptc6Ove5jd6iHVonSAPSoUWxpvm4fAabvx1Jrw8evGeQEI30GUqok1
-	KKDsEgA==
-X-Google-Smtp-Source: AGHT+IHEOdI4r0O9pcHM188bqvdusRA2ROI4oJ6wpZajhgwchTGU2kxOjQW3XQ2z18n6bt3vYCQzcYAxHoc=
-X-Received: from pjrx16.prod.google.com ([2002:a17:90a:bc90:b0:34c:6f7a:2ab8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c09:b0:349:2154:eef4
- with SMTP id 98e67ed59e1d1-34f68b83d71mr6555128a91.5.1767897083980; Thu, 08
- Jan 2026 10:31:23 -0800 (PST)
-Date: Thu, 8 Jan 2026 10:31:22 -0800
-In-Reply-To: <gzyjze3wszmrwxdwnudij6nfqdxzihm37uappfqxorfjy5vatf@hffzaobbm3g7>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CVumgl5u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE9CC116C6;
+	Thu,  8 Jan 2026 19:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1767899961;
+	bh=fSg1rFUc7Lj8obCBDIiOBzwmsy2PDWnpS6aiVKuno6E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CVumgl5uYfQfaLqYgweLov8FT7OgO1ch7qHlwuZbONKicqb+bmGFoLIsYAxoWfRsr
+	 6BxVTZH+QFJx2xSpWVk0NUrA2Ddxjwu2/Wcc1JG/gPIWft2fVjXp2CIt9nEHIpeVml
+	 fnOoO4sO6q/7KPmJQudmyHeHcLC9E7nvlzSuO+ys=
+Date: Thu, 8 Jan 2026 11:19:19 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Klara Modin <klarasmodin@gmail.com>, Alex Shi <alexs@kernel.org>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Andreas Larsson
+ <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>, Brian Cain
+ <bcain@kernel.org>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, "David S. Miller"
+ <davem@davemloft.net>, Dave Hansen <dave.hansen@linux.intel.com>, David
+ Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Heiko
+ Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
+ <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, Johannes Berg
+ <johannes@sipsolutions.net>, John Paul Adrian Glaubitz
+ <glaubitz@physik.fu-berlin.de>, Jonathan Corbet <corbet@lwn.net>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, Magnus Lindholm <linmag7@gmail.com>, Matt
+ Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek
+ <monstr@monstr.eu>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
+ <osalvador@suse.de>, Palmer Dabbelt <palmer@dabbelt.com>, Pratyush Yadav
+ <pratyush@kernel.org>, Richard Weinberger <richard@nod.at>, Russell King
+ <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, Suren
+ Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily
+ Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil
+ Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent
+ of the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate
+ initialization of nodes, zones and memory map)
+Message-Id: <20260108111919.ac5f811132672e760f47fbab@linux-foundation.org>
+In-Reply-To: <aVpWpLV4Dut5Muo2@kernel.org>
+References: <20260102070005.65328-1-rppt@kernel.org>
+	<20260102070005.65328-23-rppt@kernel.org>
+	<aVhN2NgQEKe0yzva@soda.int.kasm.eu>
+	<aVll339wim7dCIaQ@kernel.org>
+	<aVlwOyicOLPB9SOa@parmesan.int.kasm.eu>
+	<aVpWpLV4Dut5Muo2@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20251230230150.4150236-1-seanjc@google.com> <20251230230150.4150236-22-seanjc@google.com>
- <t7dcszq3quhqprdcqz7keykxbmqf62pdelqrkeilpbmsrnuji5@a3lplybmlbwf>
- <aV_cLAlz4v1VOkDt@google.com> <gzyjze3wszmrwxdwnudij6nfqdxzihm37uappfqxorfjy5vatf@hffzaobbm3g7>
-Message-ID: <aV_3-lhnZ-MoKnjv@google.com>
-Subject: Re: [PATCH v4 21/21] KVM: selftests: Test READ=>WRITE dirty logging
- behavior for shadow MMU
-From: Sean Christopherson <seanjc@google.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 08, 2026, Yosry Ahmed wrote:
-> On Thu, Jan 08, 2026 at 08:32:44AM -0800, Sean Christopherson wrote:
-> > On Fri, Jan 02, 2026, Yosry Ahmed wrote:
-> > diff --git a/tools/testing/selftests/kvm/lib/x86/processor.c b/tools/testing/selftests/kvm/lib/x86/processor.c
-> > index ab869a98bbdc..fab18e9be66c 100644
-> > --- a/tools/testing/selftests/kvm/lib/x86/processor.c
-> > +++ b/tools/testing/selftests/kvm/lib/x86/processor.c
-> > @@ -390,6 +390,13 @@ static uint64_t *__vm_get_page_table_entry(struct kvm_vm *vm,
-> >  	return virt_get_pte(vm, mmu, pte, vaddr, PG_LEVEL_4K);
-> >  }
-> >  
-> > +uint64_t *tdp_get_pte(struct kvm_vm *vm, uint64_t l2_gpa)
+On Sun, 4 Jan 2026 14:01:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+
+> Can you please stick this between patch 3 (arm: introduce
+> arch_zone_limits_init()) and patch 4 (arm64: introduce
+> arch_zone_limits_init())?
+
+Did, thanks.  I made this a standalone patch rather than  a
+squashable -fix.
+
+> >From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
+> From: Klara Modin <klarasmodin@gmail.com>
+> Date: Sat, 3 Jan 2026 20:40:09 +0200
+> Subject: [PATCH] arm: make initialization of zero page independent of the
+>  memory map
 > 
-> nested_paddr is the name used by tdp_map(), maybe use that here as well
-> (and in the header)?
-
-Oh hell no :-)  nested_paddr is a terrible name (I was *very* tempted to change
-it on the fly, but restrained myself).  "nested" is far too ambigous, e.g. without
-nested virtualization, "nested_paddr" arguably refers to _L1_ physical addresses
-(SVM called 'em Nested Page Tables after all).
-
-> > +	int level = PG_LEVEL_4K;
-> > +
-> > +	return __vm_get_page_table_entry(vm, &vm->stage2_mmu, l2_gpa, &level);
-> > +}
-> > +
-> >  uint64_t *vm_get_pte(struct kvm_vm *vm, uint64_t vaddr)
-> >  {
-> >  	int level = PG_LEVEL_4K;
-> [..]
-> > @@ -133,35 +220,50 @@ static void test_dirty_log(bool nested_tdp)
-> >  
-> >  	/* Add an extra memory slot for testing dirty logging */
-> >  	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-> > -				    GUEST_TEST_MEM,
-> > +				    TEST_MEM_BASE,
-> >  				    TEST_MEM_SLOT_INDEX,
-> >  				    TEST_MEM_PAGES,
-> >  				    KVM_MEM_LOG_DIRTY_PAGES);
-> >  
-> >  	/*
-> > -	 * Add an identity map for GVA range [0xc0000000, 0xc0002000).  This
-> > +	 * Add an identity map for GVA range [0xc0000000, 0xc0004000).  This
-> >  	 * affects both L1 and L2.  However...
-> >  	 */
-> > -	virt_map(vm, GUEST_TEST_MEM, GUEST_TEST_MEM, TEST_MEM_PAGES);
-> > +	virt_map(vm, TEST_MEM_BASE, TEST_MEM_BASE, TEST_MEM_PAGES);
-> >  
-> >  	/*
-> > -	 * ... pages in the L2 GPA range [0xc0001000, 0xc0003000) will map to
-> > -	 * 0xc0000000.
-> > +	 * ... pages in the L2 GPA ranges [0xc0001000, 0xc0002000) and
-> > +	 * [0xc0003000, 0xc0004000) will map to 0xc0000000 and 0xc0001000
-> > +	 * respectively.
+> Unlike most architectures, arm keeps a struct page pointer to the
+> empty_zero_page and to initialize it requires conversion of a virtual
+> address to page which makes it necessary to have memory map initialized
+> before creating the empty_zero_page.
 > 
-> Are these ranges correct? I thought L2 GPA range [0xc0002000,
-> 0xc0004000) will map to [0xc0000000, 0xc0002000).
-
-Gah, no.  I looked at the comments after changing things around, but my eyes had
-glazed over by that point.
-
-> Also, perhaps it's better to express those in terms of the macros?
+> Make empty_zero_page a stataic array in BSS to decouple it's
+> initialization from the initialization of the memory map.
 > 
-> L2 GPA range [TEST_MEM_ALIAS_BASE, TEST_MEM_ALIAS_BASE + 2*PAGE_SIZE)
-> will map to [TEST_MEM_BASE, TEST_MEM_BASE + 2*PAGE_SIZE)?
+> This also aligns arm with vast majorty of architectures.
 
-Hmm, no, at some point we need to concretely state the addresses, so that people
-debugging this know what to expect, i.e. don't have to manually compute the
-addresses from the macros in order to debug.
-
-> >  	 *
-> >  	 * When TDP is disabled, the L2 guest code will still access the same L1
-> >  	 * GPAs as the TDP enabled case.
-> > +	 *
-> > +	 * Set the Dirty bit in the PTEs used by L2 so that KVM will create
-> > +	 * writable SPTEs when handling read faults (if the Dirty bit isn't
-> > +	 * set, KVM must intercept the next write to emulate the Dirty bit
-> > +	 * update).
-> >  	 */
-> >  	if (nested_tdp) {
-> > +		vm_vaddr_t gva0 = TEST_GUEST_ADDR(TEST_MEM_ALIAS_BASE, 0);
-> > +		vm_vaddr_t gva1 = TEST_GUEST_ADDR(TEST_MEM_ALIAS_BASE, 1);
-> 
-> Why are these gvas? Should these be L2 GPAs?
-
-Pure oversight.
-
-> Maybe 'uint64_t l2_gpa0' or 'uint64_t nested_paddr0'?
-
-For better of worse, vm_paddr_t is the typedef in selftests.  Hmm, if/when we go
-with David M's proposal to switch to u64 (from e.g. uint64_t), it'd probably be
-a good time to switch to KVM's gva_t and gpa_t as well.
-
-> Also maybe add TEST_ALIAS_GPA() macro to keep things consistent?
-
-Ya, then the line lengths are short enough to omit the local variables.  How's
-this look?
-
-	/*
-	 * ... pages in the L2 GPA address range [0xc0002000, 0xc0004000) will
-	 * map to [0xc0000000, 0xc0002000) when TDP is enabled (for L2).
-	 *
-	 * When TDP is disabled, the L2 guest code will still access the same L1
-	 * GPAs as the TDP enabled case.
-	 *
-	 * Set the Dirty bit in the PTEs used by L2 so that KVM will create
-	 * writable SPTEs when handling read faults (if the Dirty bit isn't
-	 * set, KVM must intercept the next write to emulate the Dirty bit
-	 * update).
-	 */
-	if (nested_tdp) {
-		tdp_identity_map_default_memslots(vm);
-		tdp_map(vm, TEST_ALIAS_GPA(0), TEST_GPA(0), PAGE_SIZE);
-		tdp_map(vm, TEST_ALIAS_GPA(1), TEST_GPA(1), PAGE_SIZE);
-
-		*tdp_get_pte(vm, TEST_ALIAS_GPA(0)) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-		*tdp_get_pte(vm, TEST_ALIAS_GPA(1)) |= PTE_DIRTY_MASK(&vm->stage2_mmu);
-	} else {
-		*vm_get_pte(vm, TEST_GVA(0)) |= PTE_DIRTY_MASK(&vm->mmu);
-		*vm_get_pte(vm, TEST_GVA(1)) |= PTE_DIRTY_MASK(&vm->mmu);
-	}
+Russell, can you please update us on your concerns with this change?
