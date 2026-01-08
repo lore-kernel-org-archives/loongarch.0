@@ -1,108 +1,128 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F181326926
-	for <loongarch@lists.linux.dev>; Thu,  8 Jan 2026 20:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EA532252D
+	for <loongarch@lists.linux.dev>; Thu,  8 Jan 2026 20:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767903989; cv=none; b=NwxsIjywM2WoCexnP68+cAeFGmknvxkLS48UquRu2ZhckEY1ZH/6ZHVma7W12V3PNvDxW3RWgqTrED7EMqSZR8rKoFLRkc3J+XJoaDSCxrhiTkePUslvNAQy+IzUmaYhB6FaoQ3ubts+k832NEKGuF5ayv6Ol0pnE3fwlg2MZ18=
+	t=1767904155; cv=none; b=XV+lf6ZTBClvtCWJgvJiqlnpF3iuuIyQA9nPzA9jfF/i7yuMemz7AQhDCsbSFf18NWhVG3d+W7coR3bBq6r6BzMSzv65eAFnD6Ws00f4VBBfPC2ha6S6JRpkDGuyK2radezcucOMkH5//iWnPvNzmtJ/v2fFwqcDOWOkRsfyQZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767903989; c=relaxed/simple;
-	bh=Sdd4amalyUrWWlwupWxWmHu8yEjWHGcZK7d8qSJ/OPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=earZ9XT3gYzy3Y6Q/hFg/iaQhAd3UB6of/vdHTDuq6AjUaAc/nU1Fp590p9QqzWki8lklDgd31jHDVTfT2XIuOsPW+BD4MarvozMCuAIUpj4US3WecGy1/bVytI18B+PIB8C+M5S6MB0wtTvoc4CukfXnxWYkOTr8LsKXuPgDYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PMw7fKit; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767904155; c=relaxed/simple;
+	bh=COjeahyQKq/WjlvRhmJa/k/eFDaGlubJQKHvMo2HvWI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KC2y4kVnqt4qAiFDAhNUAAxZtaGCg+p2u92/OkJ4Vs7shL/jR+mpYCr98ICghPZgbSw6DjD1LEP8I+p+jPLwFoeRg0agbii/54pAXJ9P2PWUVC2DOA5EQa+NnAawrvJH66OaKdnbPu7XSQ9+eCccs6pAK4r1xm9zizJY3xJuIDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ktxchsgK; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PMw7fKit"
-Date: Thu, 8 Jan 2026 20:26:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767903975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwq273udHL84MC93sFKE2b+YO778RBmqz0tqmApt9d4=;
-	b=PMw7fKitVdHrjyge5ljK6/L68v7R+4+vzO9D7MrAm90dsGbLRrjsBC9NHx8c3OlKqAGUK9
-	RQOIL7n4eXlANPwfoUtyWD4bE7eFC4rCNTurJe+s9+e85FwgZizfMWhqRDh9j0WIuoS6J7
-	lSSYP0wZh7tUajkrEiLaovdXVyWWH7s=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ktxchsgK"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-34ac814f308so5474452a91.3
+        for <loongarch@lists.linux.dev>; Thu, 08 Jan 2026 12:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1767904151; x=1768508951; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ncr9wQixKp0DuZvt8wQRxeDUwFvl6Ym9a7uU4tCK5vA=;
+        b=ktxchsgK2yxobDr/nm3vyGJhWqnHzrbx0Ct4LZBsTUxVDLKTICOEZUfINmMZS56YgS
+         kpQIY0m0YBS3HqOFO5y1VEVxAdjs51lbKOFxV2a3UFcluGo6kKz3qnWYueoIpezS1ZNX
+         hvQwPiQ9DzbqelxUD81bXdASGKCSelXqt5wjnw/yeSj7WbKyc/5CzQ1XFob8VWt8n856
+         5cukd8B1rn2CYy5sp+D+Pa6vCXdYDnk2RH77xA17L3ciIBQhE21wVvtSnsy5Oldgld98
+         sgRpXm/LH9TXI5dny24wgyZRPEy7lHvuslwoAN24GhhM3dmQThAgTM9uSo6KSr781wdt
+         7qLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767904151; x=1768508951;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ncr9wQixKp0DuZvt8wQRxeDUwFvl6Ym9a7uU4tCK5vA=;
+        b=IkP1gdxQ2dIdy1Qabikt6g6jMH2y4ePbQamaFSAgo4gjKJtAb/tkkZBMSXpZ6tfOwg
+         Spfv3Gj89JEDq7zkeu/CUhMvGICL2rAr3y5VMC4FB3sROcIQ3X82XbBn0OoFi701Vz3K
+         fjNyNFgJNmNvCX4Of0Iu+4yHr8mjV4wVUUuXFaJhmSrR0D5GAR1T/1hS9VBwwrluiOTu
+         b/BZVQOwtk0/NtyPpfKWRQhGxUE9q3DUIToFbEgdIEvXQU0gjwexzY3z9Wkl77pTtwq2
+         MNNCjJ8N9n8HQKfdr/ZTgr8CZjM1j2gwiRfz8CpGT30dUUPs5d5W6RRI/J9x7HS/KeLj
+         p+TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3t0xgJ5+t3gM0LrjtxlIUiCAw1FEA2Rz5UDCqTmWqjjjXjq+IPJa+oxXhdfcZPZcb94ZwKslUAeM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxlaBQ30ofoh8ZBUgZe4YPLRU6zSJLcoFEHCU5TzSKj5taS5UZ2
+	XLkwFojTkHlVeqBfr9qxiJ2IRXcAKpq4c6iS/jmmlwqa7sTdkttjgRLBkds6j1X9fWiG+NoKCvd
+	v6HBSlQ==
+X-Google-Smtp-Source: AGHT+IESJ6DBGvd9XcEdp+Peyz/5rANQAvVoqUp8W0UHChsh0K8dNusc9fRWmWPXBczuvgljaqvYKeQ4Bc0=
+X-Received: from pjop14.prod.google.com ([2002:a17:90a:930e:b0:33b:52d6:e13e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2647:b0:340:dd2c:a3f5
+ with SMTP id 98e67ed59e1d1-34f68c30870mr6773023a91.3.1767904151387; Thu, 08
+ Jan 2026 12:29:11 -0800 (PST)
+Date: Thu, 8 Jan 2026 12:29:09 -0800
+In-Reply-To: <3xrew6ag7pefka7wava4z7ht54e6xlpwbywcm2ivsgnkdbahe4@yqzsaxnhedj7>
+Precedence: bulk
+X-Mailing-List: loongarch@lists.linux.dev
+List-Id: <loongarch.lists.linux.dev>
+List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0
+References: <20251230230150.4150236-1-seanjc@google.com> <20251230230150.4150236-22-seanjc@google.com>
+ <t7dcszq3quhqprdcqz7keykxbmqf62pdelqrkeilpbmsrnuji5@a3lplybmlbwf>
+ <aV_cLAlz4v1VOkDt@google.com> <gzyjze3wszmrwxdwnudij6nfqdxzihm37uappfqxorfjy5vatf@hffzaobbm3g7>
+ <aV_3-lhnZ-MoKnjv@google.com> <3xrew6ag7pefka7wava4z7ht54e6xlpwbywcm2ivsgnkdbahe4@yqzsaxnhedj7>
+Message-ID: <aWATlfisv8ZVZi0c@google.com>
+Subject: Re: [PATCH v4 21/21] KVM: selftests: Test READ=>WRITE dirty logging
+ behavior for shadow MMU
+From: Sean Christopherson <seanjc@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
 	Oliver Upton <oupton@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
 	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
 	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
 	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
 	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
 	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 21/21] KVM: selftests: Test READ=>WRITE dirty logging
- behavior for shadow MMU
-Message-ID: <kivowzryb3mbntaoud4kmhxjbix3usqjiy7phwihjc7p4rp4gk@ppilefrxpu35>
-References: <20251230230150.4150236-1-seanjc@google.com>
- <20251230230150.4150236-22-seanjc@google.com>
- <t7dcszq3quhqprdcqz7keykxbmqf62pdelqrkeilpbmsrnuji5@a3lplybmlbwf>
- <aV_cLAlz4v1VOkDt@google.com>
-Precedence: bulk
-X-Mailing-List: loongarch@lists.linux.dev
-List-Id: <loongarch.lists.linux.dev>
-List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aV_cLAlz4v1VOkDt@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Jan 08, 2026 at 08:32:44AM -0800, Sean Christopherson wrote:
-[..]
-> @@ -106,12 +139,66 @@ static void l1_guest_code(void *data)
->  		l1_svm_code(data);
->  }
->  
-> +static void test_handle_ucall_sync(struct kvm_vm *vm, u64 arg,
-> +				   unsigned long *bmap)
-> +{
-> +	vm_vaddr_t gva = arg & ~(PAGE_SIZE - 1);
-> +	int page_nr, i;
-> +
-> +	/*
-> +	 * Extract the page number of underlying physical page, which is also
-> +	 * the _L1_ page number.  The dirty bitmap _must_ be updated based on
-> +	 * the L1 GPA, not L2 GPA, i.e. whether or not L2 used an aliased GPA
-> +	 * (i.e. if TDP enabled for L2) is irrelevant with respect to the dirty
-> +	 * bitmap and which underlying physical page is accessed.
-> +	 *
-> +	 * Note, gva will be '0' if there was no access, i.e. if the purpose of
-> +	 * the sync is to verify all pages are clean.
-> +	 */
-> +	if (!gva)
-> +		page_nr = 0;
-> +	else if (gva >= TEST_MEM_ALIAS_BASE)
-> +		page_nr = (gva - TEST_MEM_ALIAS_BASE) >> PAGE_SHIFT;
-> +	else
-> +		page_nr = (gva - TEST_MEM_BASE) >> PAGE_SHIFT;
-> +	TEST_ASSERT(page_nr == 0 || page_nr == 1,
-> +		    "Test bug, unexpected frame number '%u' for arg = %lx", page_nr, arg);
-> +	TEST_ASSERT(gva || (arg & TEST_SYNC_NO_FAULT),
-> +		    "Test bug, gva must be valid if a fault is expected");
-> +
-> +	kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
-> +
-> +	/*
-> +	 * Check all pages to verify the correct physical page was modified (or
-> +	 * not), and that all pages are clean/dirty as expected.
-> +	 *
-> +	 * If a fault of any kind is expected, the target page should be dirty
-> +	 * as the Dirty bit is set in the gPTE.  KVM should create a writable
-> +	 * SPTE even on a read fault, *and* KVM must mark the GFN as dirty
-> +	 * when doing so.
-> +	 */
-> +	for (i = 0; i < TEST_MEM_PAGES; i++) {
-> +		if (i == page_nr && arg & TEST_SYNC_WRITE_FAULT)
+On Thu, Jan 08, 2026, Yosry Ahmed wrote:
+> On Thu, Jan 08, 2026 at 10:31:22AM -0800, Sean Christopherson wrote:
+> > On Thu, Jan 08, 2026, Yosry Ahmed wrote:
+> > > >  	/*
+> > > > -	 * Add an identity map for GVA range [0xc0000000, 0xc0002000).  This
+> > > > +	 * Add an identity map for GVA range [0xc0000000, 0xc0004000).  This
+> > > >  	 * affects both L1 and L2.  However...
+> > > >  	 */
+> > > > -	virt_map(vm, GUEST_TEST_MEM, GUEST_TEST_MEM, TEST_MEM_PAGES);
+> > > > +	virt_map(vm, TEST_MEM_BASE, TEST_MEM_BASE, TEST_MEM_PAGES);
+> > > >  
+> > > >  	/*
+> > > > -	 * ... pages in the L2 GPA range [0xc0001000, 0xc0003000) will map to
+> > > > -	 * 0xc0000000.
+> > > > +	 * ... pages in the L2 GPA ranges [0xc0001000, 0xc0002000) and
+> > > > +	 * [0xc0003000, 0xc0004000) will map to 0xc0000000 and 0xc0001000
+> > > > +	 * respectively.
+> > > 
+> > > Are these ranges correct? I thought L2 GPA range [0xc0002000,
+> > > 0xc0004000) will map to [0xc0000000, 0xc0002000).
+> > 
+> > Gah, no.  I looked at the comments after changing things around, but my eyes had
+> > glazed over by that point.
+> > 
+> > > Also, perhaps it's better to express those in terms of the macros?
+> > > 
+> > > L2 GPA range [TEST_MEM_ALIAS_BASE, TEST_MEM_ALIAS_BASE + 2*PAGE_SIZE)
+> > > will map to [TEST_MEM_BASE, TEST_MEM_BASE + 2*PAGE_SIZE)?
+> > 
+> > Hmm, no, at some point we need to concretely state the addresses, so that people
+> > debugging this know what to expect, i.e. don't have to manually compute the
+> > addresses from the macros in order to debug.
+> 
+> I was trying to avoid a situation where the comment gets out of sync
+> with the macros in a way that gets confusing. Maybe reference both if
+> it's not too verbose?
+> 
+> 	/*
+> 	 * ... pages in the L2 GPA range [0xc0002000, 0xc0004000) at
+> 	 * TEST_MEM_ALIAS_BASE will map to [[0xc0000000, 0xc0002000) at
+> 	 * TEST_MEM_BASE.
+> 	 */
 
-Micro nit: I think this is slightly clearer:
-		if (i == page_nr && (arg & TEST_SYNC_WRITE_FAULT))
+Heh, your solution to a mitigate a comment getting out of sync is to add more
+things to the comment that can get out of sync :-D
 
+Unless you feel very strongly about having the names of the macros in the comments,
+I'd prefer to keep just the raw addresses.
