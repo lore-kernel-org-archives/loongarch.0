@@ -1,180 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D76235BE2;
-	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E602030A
+	for <loongarch@lists.linux.dev>; Fri,  9 Jan 2026 05:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767929832; cv=none; b=fBx3QRKyvA2gGwgtpoxmHNSR1xorPPCGt8Nhm0JsFBDOBMV98t5+GAkEJrHXVFReTncM2nf7F41DA4wr9Z22n3W3gIaWpAt1RagBzKTQZPotdDrsxzpUtP3a2ve+iB15Bb+iabT5pbdtGsgGxH6AfALepwyF9NIH/BBCY5FysQo=
+	t=1767935523; cv=none; b=qU44xgwgTKqnuL21PJFTgtXvalOuxJIB/ocOW/tvCsqc4WXQM6RcfJMV7n3THGIyXKXCclfcvxU2rfjTxa5rb3bVaQbwIkb5cHL2BZZhIm+rXaG/YFR0YDRCeYst+H4iEQx5JadXC4fpr2tVnSar3NdVr1ymCtIvWk3BBfuYqHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767929832; c=relaxed/simple;
-	bh=UzCHgaOdbN806X+suNom7v2Hf7jRxYEHOHHzxuw5dug=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UBGEtetmQpim863y0j/JjU3PF/gFz5lijBuj77v36Lww+OGzGbn1JhL/+NgaQ9s2rrDvDEvSwM5qSygg6sKdHPQqNBX3EO+Blbs4XrdCeHzgTupIzBfdrjXQXQS+rU5bUYMNm6SB7ceec4mNEjQg28Mm7H620oCdb1qxdpqMVMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UudThjRc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767935523; c=relaxed/simple;
+	bh=XUGcHWBeKsSGyKahv/f9EJ/2cAIemFw0hvMY1sSvpLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Okug27vE5XtdLzQP4/B2tXvGklFfUY0NU1FY1/FRSowX9k0DN4JQ6SO/AjibP4tH9NXWVKYvVvLSBJmqKaBM5aLxalYwZPpkPxBRBz2Jt7uKzu9vpqmausREHv097lARyQAY6QwSpKRN0GwQyYeG/eYAuEFhIbdTxGik9O+JQok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=MKmBQjpf; arc=none smtp.client-ip=159.100.241.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UudThjRc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C01EEC4CEF7;
-	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767929831;
-	bh=UzCHgaOdbN806X+suNom7v2Hf7jRxYEHOHHzxuw5dug=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=UudThjRcnWPCIrqgBdo0my3dNrnYeYKEwY7cZhK8nGsO7WSOlzgCRlJnfYr1T/4mO
-	 M8TnDmxZbpJmWROxPAsiXhDu64u9f+z68yyEhqp3r40fHXUQFldcpeKI9+lsZ3ZvVn
-	 a1YoFCxo41PobtKdTaiAnJ8czQYInD0I8MnEpmJsXhD4+2/4+IwOhyye0pNvYLFxJ8
-	 U2JXfE6v9cDAQaCVmKu1K8oOd/KTVXw0nKLTb+69IbbpUFw1dtNhNTo/IvIms4kKoZ
-	 T8a+Lz27FcA8Tc0p0z2OT9TNODO8gd27TMH2aPryu8C0XGBloZFrnkbe3nP178EstL
-	 96D8ZpbMuP9FA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC078D232CC;
-	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
-From: Ziyao Li via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
-Date: Fri, 09 Jan 2026 11:36:58 +0800
-Subject: [PATCH v3] PCI: loongson: Override PCIe bridge supported speeds
- for older Loongson 3C6000 series steppings
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="MKmBQjpf"
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 266C220221
+	for <loongarch@lists.linux.dev>; Fri,  9 Jan 2026 05:11:54 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 434793E877;
+	Fri,  9 Jan 2026 05:11:46 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 4B996400D4;
+	Fri,  9 Jan 2026 05:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1767935504; bh=XUGcHWBeKsSGyKahv/f9EJ/2cAIemFw0hvMY1sSvpLA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MKmBQjpfw3rjzq1XIKddnhmvXl4W21WgFm7GKA2WJWuobYtzF5ETYkoBj70Jj8GhW
+	 iPZfi6ThuPeUymAoQVr1kVKaGmROIxh/81TWsCWF0z0HTroQu+iKirfg0oJ1YwZ+Jl
+	 jyEq0RexZEMVlx7+MKKp8jEhf5OYpr3p7c1h9ZVE=
+Received: from Mir.wok.cipunited.com (unknown [130.162.235.122])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 3DAFC407DF;
+	Fri,  9 Jan 2026 05:11:37 +0000 (UTC)
+From: Lain Fearyncess Yang <fearyncess@aosc.io>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	"Lain \"Fearyncess\" Yang" <fearyncess@aosc.io>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH] loongarch: wire up memfd_secret system call
+Date: Fri,  9 Jan 2026 13:10:51 +0800
+Message-ID: <20260109051054.188030-1-fearyncess@aosc.io>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
-X-B4-Tracking: v=1; b=H4sIANl3YGkC/3XOTQrCMBCG4atI1kYy6a+uvIe4aDKTNqBJSWpQS
- u9uWnBTcPl+MA8zs0jBUmSXw8wCJRutdzmK44HpoXM9cYu5mRSyEq2U/OG966N3fNQWeImEApv
- WgFIs34yBjH1v3u2ee7Bx8uGz8QnW9Z+UgAMvzl2nFAIYhdeXy79MpIeT9k+2akn+hFqAKPeCz
- AJCBVQ1qibT7oVlWb5N0d5r8AAAAA==
-X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, 
- guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, 
- Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
- Ziyao Li <liziyao@uniontech.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767929829; l=4136;
- i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
- bh=oMHSSUNney/eskB1K6w/DmvTz2ry8+yQZ5lOuXaB2is=;
- b=bsb8AjnxdcUhPFca5e11Q1ysRRyqUV8kU2lrpnIy2JlQgjXcp20ZD3ireEHdqbYYnf5XxGXXI
- 4Wdlvc/IKYMAi49A2GoFRlrK6aOPYCIFXiB7uNmUSWvecPNcXAwOUBQ
-X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
- pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
-X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
- auth_id=471
-X-Original-From: Ziyao Li <liziyao@uniontech.com>
-Reply-To: liziyao@uniontech.com
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4B996400D4
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [1.40 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[fearyncess.aosc.io:server fail];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Action: no action
 
-From: Ziyao Li <liziyao@uniontech.com>
+From: "Lain \"Fearyncess\" Yang" <fearyncess@aosc.io>
 
-Older steppings of the Loongson 3C6000 series incorrectly report the
-supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-up to 16 GT/s.
+LoongArch supports ARCH_HAS_SET_DIRECT_MAP, therefore wire up the
+memfd_secret system call, which depends on it.
 
-As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
-than one speed is supported"), bwctrl will be disabled if there's only
-one 2.5 GT/s value in vector `supported_speeds`.
-
-Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
-partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
-lanes in power management. We hope this can prevent similar problems
-in future driver changes (similar checks may be implemented in other
-GPU, storage controller, NIC, etc. drivers).
-
-Manually override the `supported_speeds` field for affected PCIe bridges
-with those found on the upstream bus to correctly reflect the supported
-link speeds.
-
-This patch was originally found from AOSC OS[1].
-
-Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
-Tested-by: Lain Fearyncess Yang <fsf@live.com>
-Tested-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-[Xi Ruoyao: Fix falling through logic and add kernel log output.]
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
-[Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
-Signed-off-by: Ziyao Li <liziyao@uniontech.com>
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
+Signed-off-by: Lain "Fearyncess" Yang <fearyncess@aosc.io>
 ---
-Changes in v3:
-- Adjust commit message
-- Make the program flow more intuitive
-- Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
+ arch/loongarch/include/asm/unistd.h     | 1 +
+ arch/loongarch/kernel/Makefile.syscalls | 6 +++---
+ tools/testing/selftests/mm/Makefile     | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-Changes in v2:
-- Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
-- Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
-- Fix falling through logic and add kernel log output by Xi Ruoyao
----
- drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index bc630ab8a283..67a6d99b9e82 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include/asm/unistd.h
+index e2c0f3d86c7bd..e7649c1582482 100644
+--- a/arch/loongarch/include/asm/unistd.h
++++ b/arch/loongarch/include/asm/unistd.h
+@@ -10,5 +10,6 @@
  
-+/*
-+ * Older steppings of the Loongson 3C6000 series incorrectly report the
-+ * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
-+ * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
-+ * up to 16 GT/s.
-+ */
-+static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
-+{
-+	u8 old_supported_speeds = pdev->supported_speeds;
-+
-+	switch (pdev->bus->max_bus_speed) {
-+	case PCIE_SPEED_16_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_8_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_5_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_2_5GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
-+		break;
-+	default:
-+		pci_warn(pdev, "unexpected max bus speed");
-+
-+		return;
-+	}
-+
-+	if (pdev->supported_speeds != old_supported_speeds)
-+		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
-+			 old_supported_speeds, pdev->supported_speeds);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
-+			 loongson_pci_bridge_speed_quirk);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
-+			 loongson_pci_bridge_speed_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
-
----
-base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
-change-id: 20250822-loongson-pci1-4ded0d78f1bb
-
-Best regards,
+ #define __ARCH_WANT_NEW_STAT
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_MEMFD_SECRET
+ 
+ #define NR_syscalls (__NR_syscalls)
+diff --git a/arch/loongarch/kernel/Makefile.syscalls b/arch/loongarch/kernel/Makefile.syscalls
+index cd46c2b69c7fd..6360381baf931 100644
+--- a/arch/loongarch/kernel/Makefile.syscalls
++++ b/arch/loongarch/kernel/Makefile.syscalls
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-# No special ABIs on loongarch so far
+-syscall_abis_32 +=
+-syscall_abis_64 +=
++# Add memfd_secret explictly for la64 and la32
++syscall_abis_32 += memfd_secret
++syscall_abis_64 += memfd_secret
+diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
+index eaf9312097f7b..79582438efc4d 100644
+--- a/tools/testing/selftests/mm/Makefile
++++ b/tools/testing/selftests/mm/Makefile
+@@ -72,7 +72,7 @@ TEST_GEN_FILES += madv_populate
+ TEST_GEN_FILES += map_fixed_noreplace
+ TEST_GEN_FILES += map_hugetlb
+ TEST_GEN_FILES += map_populate
+-ifneq (,$(filter $(ARCH),arm64 riscv riscv64 x86 x86_64))
++ifneq (,$(filter $(ARCH),arm64 riscv riscv64 x86 x86_64 loongarch32 loongarch64))
+ TEST_GEN_FILES += memfd_secret
+ endif
+ TEST_GEN_FILES += migration
 -- 
-Ziyao Li <liziyao@uniontech.com>
-
+2.52.0
 
