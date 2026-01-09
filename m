@@ -1,78 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0503302176;
-	Fri,  9 Jan 2026 08:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B24335B13E;
+	Fri,  9 Jan 2026 12:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767946873; cv=none; b=ptPGU3GgUYow7HJP1IDQzupqVDmXfNWQX/qj5qMU4G0ahWSeGY8FkH+kQ7K3SFZTl2xLkxu/sGO7tGuU3ev8sDc6ZsOnL7bJ041hl0B23OKAYmRDgKYF6VYl53riXIw1ZJ+IYnqhf9q5PA5auqSKbmWBEs6QFpgkr2rArITZnfg=
+	t=1767960573; cv=none; b=OjteA7tU2HhcLii6u+p2A/aSD1V8lI2Sgog+jMc1uUXhcakn1UI89GCn2NXTKEJvmfpXTaTiDumP2n3PrSSGJooIBrMzopBpwkkrRcRuMS9hXlwyCFeeePABNskeg1zlbzpKtiVp+IRCcnO8xzSiFptnm1FpiP+d3ikKaJ+D5q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767946873; c=relaxed/simple;
-	bh=KUFuE5V8UAiIurL6g3Fp/lJo2ewluF8KzNFw5f5PUjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A2DOlzGeLNV3Pw8FLyo7bQLnB6qzYxng/dnX4iGjcdqVm0B4IMAwKhTpui/g4jw0EZB/ad2uYpy+65YKem65mI98X11jBe8w4iqmMGWEOBxa3NihE+Noa6M8Ohtu1TVD+LRNJ39xsnN80kVCYIRvNyDdh+CSz/F1gE+STLjG4Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk+RzwZJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767960573; c=relaxed/simple;
+	bh=KRKZju+IaQaP6u/CbzL2n9ZD8AKowg2r61leFb+qKOU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GbiR/ZuVRz5k5+49PKX+hPPn5n2mqPGmEj8q8d3QCGimn9SUc/eUYcMpcTX8dXLBBhnEHBpJM3Cqof12uMq9svSU/47BrhpSqJjEtjVv39M7dOms2SouML8qBrWtCEdKPMv5GL5VGwtOessNB2YqcSvhJUHaiwbIGClsO56TndY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLYNCCte; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk+RzwZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA62C19422;
-	Fri,  9 Jan 2026 08:21:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLYNCCte"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A2EC4CEF1;
+	Fri,  9 Jan 2026 12:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767946871;
-	bh=KUFuE5V8UAiIurL6g3Fp/lJo2ewluF8KzNFw5f5PUjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gk+RzwZJgqFqDXbdeT7Ij2ANvkctK08svhshZT4R6yu6GK6U5FU7oH4Xe+zv8qwMi
-	 4CjPgeTPbBjv8HsMIltG5ewdwonA8kjSIA667gREwSdMJ3RS+7Buq5U6Eos8SvbK+J
-	 nKkrMxUoT4X8Q0FyxCy4EZdhe4iqJhr4V6t7/UJCAhTlbVpUQXR/gm208md0TMmWZM
-	 HkmXt9IdJ7rCxhmZTAD0oRgGfDs7xzYOTVswLzOoZ7GMgJgYq9abd0Ivcl84yf5tq9
-	 J4AmlCsrCF8YDst8YMFTNmMfuhpye4VlBUo7YM7KAkx0A9LACF/F+ezsCZLKZlQrcl
-	 B6Hco6Rs0QnpA==
-Date: Fri, 9 Jan 2026 10:21:00 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Lain Fearyncess Yang <fearyncess@aosc.io>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-	Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] loongarch: wire up memfd_secret system call
-Message-ID: <aWC6bIEg6UqvX1DO@kernel.org>
-References: <20260109051054.188030-1-fearyncess@aosc.io>
+	s=k20201202; t=1767960573;
+	bh=KRKZju+IaQaP6u/CbzL2n9ZD8AKowg2r61leFb+qKOU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=gLYNCCteUYaFM29q8UhfF94jbsY71FecPpBkd95oFIU+6s+tFwVuZCJIo0x+85QSS
+	 6WWhxfwpy5MwVttL5Kvlu+kWWHPnW0TjZtvWtStO7Vgq5PDFOMVUrs5FeflBlRanIh
+	 QPp2ydqFEJf9+kBAIxrCHb2fy/PQMPENjngMINvcwr2lOz9ZB238CFGuOPVlyc3pMh
+	 ZUBWtw5yL+o1WG0qJD1FVh9igmN4TnjQlSMquell90GSndyU2XJGBuLeHvDwAFPDq9
+	 lQZm5tVBHHB5Pe7hOzs8twbjMvrF2pJv/g3qawYp8BZ4QUVMX+TDf19xRvxjacO1Zt
+	 Vorte3NfyWLdQ==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Xuefeng Li
+ <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH 1/7] irqchip/loongarch-avec: Adjust irqchip driver for
+ 32BIT/64BIT
+In-Reply-To: <20251223080437.3367240-2-chenhuacai@loongson.cn>
+References: <20251223080437.3367240-1-chenhuacai@loongson.cn>
+ <20251223080437.3367240-2-chenhuacai@loongson.cn>
+Date: Fri, 09 Jan 2026 13:09:29 +0100
+Message-ID: <87bjj3rnra.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260109051054.188030-1-fearyncess@aosc.io>
+Content-Type: text/plain
 
-On Fri, Jan 09, 2026 at 01:10:51PM +0800, Lain Fearyncess Yang wrote:
-> From: "Lain \"Fearyncess\" Yang" <fearyncess@aosc.io>
-> 
-> LoongArch supports ARCH_HAS_SET_DIRECT_MAP, therefore wire up the
-> memfd_secret system call, which depends on it.
+On Tue, Dec 23 2025 at 16:04, Huacai Chen wrote:
 
-LoongArch version of set_memory* does not support splitting of leaf PMD
-entries. Does LoongArch always use PTE-level mappings in the direct map?
- 
-> Signed-off-by: Lain "Fearyncess" Yang <fearyncess@aosc.io>
-> ---
->  arch/loongarch/include/asm/unistd.h     | 1 +
->  arch/loongarch/kernel/Makefile.syscalls | 6 +++---
->  tools/testing/selftests/mm/Makefile     | 2 +-
->  3 files changed, 5 insertions(+), 4 deletions(-)
+> csr_read64() is only available on 64BIT LoongArch platform, so use
+> recently added adaptive csr_read() instead, so as to make the driver
+> work on both 32BIT and 64BIT platform.
+>
+> BTW, make avecintc_enable() be a no-op since it is only needed by 64BIT
+> platform.
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
--- 
-Sincerely yours,
-Mike.
+I assume Jiaxun is the author, which means that this lacks a
+
+  From: Jiaxun
+
+line in the mail body before the change log starts. Please try again.
+
+>  static inline void avecintc_enable(void)
+>  {
+> +#ifdef CONFIG_MACH_LOONGSON64
+>  	u64 value;
+>  
+>  	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+>  	value |= IOCSR_MISC_FUNC_AVEC_EN;
+>  	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> +#endif
+
+Can't this be:
+
+      if (IS_ENABLED(CONFIG_MACH_LOONGSON64))
+
+which is preferred over ifdeffery?
+
+Thanks,
+
+        tglx
