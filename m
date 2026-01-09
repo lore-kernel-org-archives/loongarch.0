@@ -1,158 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE7921D3F4;
-	Fri,  9 Jan 2026 13:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFF7285068;
+	Fri,  9 Jan 2026 20:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767965333; cv=none; b=sX90hXrfTvRCX9bFIeFj02DBON4wRuqCXMRQVVF0XLAgANqkSY1qMWPn86rOfs/YDf0rH6oNhr8HZFLVzS/z0lwyoVAwaKWqcpm6hM00jCQlHE7+s/2gYaLYnzS/LFNuoliWaZYk0MX14NjzRgFGoAD/46fgxYsz5LCEqafW5ls=
+	t=1767991068; cv=none; b=cKdDlLZJdgJlxhG9kCHKrnbEOC8BVznL21EcxxBzrWCRBNX3+R5cHdL6Wu3bchsdECWMWTNiQ8Lf/ZYQAHhdKhCDAYyPfA8uvaV4T7mX5KhYTBV4AmpC2V77Ca6hcZGZWqTU7uHXzP3ZJ5Zm8sta/D6X4n9UIXFOg77DyNTZkEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767965333; c=relaxed/simple;
-	bh=KbGNKDR58KSn4+oTOJL1NdoFtGGmzkqP2D4O9W11qko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jxv3MBctVqi6WGXGW2KvEUmR3X65p6JJEiOAOCildxzVVx4nYJ4DAvUEwEqKatKmotIYOoNP++OuxO9eFlTzY0Q4TooJlOzwRR0/AgV7RcEc8J5xV0OTGYTEU+8NkuBtfQpjtNys8kxna0pcFHoDk0ZuRZUzGzaiAjeMlqZm9Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llL55zqj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767991068; c=relaxed/simple;
+	bh=IpwRDHSDdQ1xcIh2OsPxGzDoZwsCDaob4WeomkJmtuI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jn56Q7usdFgUnclRKoiJPrfP4Z1KB3t0IyDSXuq7yzYrN11BqY6MorpzivJnQ+Rd4ukPiEQRzOUo6O5OSb3kftMcFnm/TTjIjIrSJiL31/MoWKU7ySJSu7X5YFj1tZq5gdabAtOl+lgwvQSl+7Vev5XmzlnQ9DTl7yng7EeRMeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUdRDZF7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llL55zqj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD68AC4CEF1;
-	Fri,  9 Jan 2026 13:28:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUdRDZF7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E600C4CEF1;
+	Fri,  9 Jan 2026 20:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767965333;
-	bh=KbGNKDR58KSn4+oTOJL1NdoFtGGmzkqP2D4O9W11qko=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=llL55zqjqi+MT92LPRj4SFMimqMF6ITiHAVUU1cLWrTf0TVZfjetX53J3dPEPjAXj
-	 qV6WzGKL/23BEdDanD9wA02+lSX8dh15NzcDjdSFtCINTReIC8Q58OYORr6GSgRWD+
-	 UH8oRGbB6lpl/lLZBF350wdYHN0k5GXOPIb/JWfwiyi0PXkG8YZopbVSo6UqrZqzWq
-	 PYGawZf6RL8p96oA1+TcxhOs9sqGB4HQlalFlKqLh2b3PATLisuPYZJIWni/C+1tI/
-	 0RgeEYAP8hGhpHJMUaLcmGXkvrGSdxxKXykY5kxxsb9Om5YN5pi183VK+ZRZpnYel/
-	 bzwLe8wPPcrxw==
-Message-ID: <b5502d6c-62c2-41bb-9564-3741656e07e2@kernel.org>
-Date: Fri, 9 Jan 2026 14:28:43 +0100
+	s=k20201202; t=1767991067;
+	bh=IpwRDHSDdQ1xcIh2OsPxGzDoZwsCDaob4WeomkJmtuI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aUdRDZF7AWvwS1qXfDpiOO09oNSGDUMc7PPTbDp17bdwb1/YHqdBaH8dxpPyLtcsH
+	 pnsafP7aY5kjZV4e1gyZDymHwCHVuAtds3jTBEa2NzCrAPQpwSDX6XfhQLcR8RxV5B
+	 U7trz2chDdH2SzQ4SDYZyO0ho2Ici84xd2nenhWvUaWWFqZQ3dpAy7Ygk5CEg20+ue
+	 Pre5EjilzUYfrSv1htYozDNVpMsuVqiSxBbqX2006XAd7CngnKZw+9s/gdoj2sKAzc
+	 RV2y/k6tdq8IMO4O03erjUzZtxgCZuQ7ltP6rWN5qYlABsNIFDnB2NWEDVf4NN4GGQ
+	 Eeh8+QIoqRqBA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Xuefeng Li
+ <lixuefeng@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>
+Subject: Re: [PATCH 1/7] irqchip/loongarch-avec: Adjust irqchip driver for
+ 32BIT/64BIT
+In-Reply-To: <57748542-d86e-4528-bea3-8f8d8f1abbed@app.fastmail.com>
+References: <20251223080437.3367240-1-chenhuacai@loongson.cn>
+ <20251223080437.3367240-2-chenhuacai@loongson.cn> <87bjj3rnra.ffs@tglx>
+ <57748542-d86e-4528-bea3-8f8d8f1abbed@app.fastmail.com>
+Date: Fri, 09 Jan 2026 21:37:44 +0100
+Message-ID: <87h5suiktj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] loongarch: wire up memfd_secret system call
-To: Lain Fearyncess Yang <fearyncess@aosc.io>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Shuah Khan <shuah@kernel.org>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20260109051054.188030-1-fearyncess@aosc.io>
-From: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
-In-Reply-To: <20260109051054.188030-1-fearyncess@aosc.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 1/9/26 06:10, Lain Fearyncess Yang wrote:
-> From: "Lain \"Fearyncess\" Yang" <fearyncess@aosc.io>
-> 
-> LoongArch supports ARCH_HAS_SET_DIRECT_MAP, therefore wire up the
-> memfd_secret system call, which depends on it.
-> 
-> Signed-off-by: Lain "Fearyncess" Yang <fearyncess@aosc.io>
-> ---
->   arch/loongarch/include/asm/unistd.h     | 1 +
->   arch/loongarch/kernel/Makefile.syscalls | 6 +++---
->   tools/testing/selftests/mm/Makefile     | 2 +-
->   3 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include/asm/unistd.h
-> index e2c0f3d86c7bd..e7649c1582482 100644
-> --- a/arch/loongarch/include/asm/unistd.h
-> +++ b/arch/loongarch/include/asm/unistd.h
-> @@ -10,5 +10,6 @@
->   
->   #define __ARCH_WANT_NEW_STAT
->   #define __ARCH_WANT_SYS_CLONE
-> +#define __ARCH_WANT_MEMFD_SECRET
->   
->   #define NR_syscalls (__NR_syscalls)
-> diff --git a/arch/loongarch/kernel/Makefile.syscalls b/arch/loongarch/kernel/Makefile.syscalls
-> index cd46c2b69c7fd..6360381baf931 100644
-> --- a/arch/loongarch/kernel/Makefile.syscalls
-> +++ b/arch/loongarch/kernel/Makefile.syscalls
-> @@ -1,5 +1,5 @@
->   # SPDX-License-Identifier: GPL-2.0
->   
-> -# No special ABIs on loongarch so far
-> -syscall_abis_32 +=
-> -syscall_abis_64 +=
-> +# Add memfd_secret explictly for la64 and la32
-> +syscall_abis_32 += memfd_secret
-> +syscall_abis_64 += memfd_secret
-> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-> index eaf9312097f7b..79582438efc4d 100644
-> --- a/tools/testing/selftests/mm/Makefile
-> +++ b/tools/testing/selftests/mm/Makefile
-> @@ -72,7 +72,7 @@ TEST_GEN_FILES += madv_populate
->   TEST_GEN_FILES += map_fixed_noreplace
->   TEST_GEN_FILES += map_hugetlb
->   TEST_GEN_FILES += map_populate
-> -ifneq (,$(filter $(ARCH),arm64 riscv riscv64 x86 x86_64))
-> +ifneq (,$(filter $(ARCH),arm64 riscv riscv64 x86 x86_64 loongarch32 loongarch64))
+On Fri, Jan 09 2026 at 12:23, Jiaxun Yang wrote:
+> On Fri, 9 Jan 2026, at 12:09 PM, Thomas Gleixner wrote:
+>>>  static inline void avecintc_enable(void)
+>>>  {
+>>> +#ifdef CONFIG_MACH_LOONGSON64
+>>>  	u64 value;
+>>>  
+>>>  	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+>>>  	value |= IOCSR_MISC_FUNC_AVEC_EN;
+>>>  	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+>>> +#endif
+>>
+>> Can't this be:
+>>
+>>       if (IS_ENABLED(CONFIG_MACH_LOONGSON64))
+>>
+>> which is preferred over ifdeffery?
+>
+> Sadly, iocsr_read64 symbol is only available on 64 bit systems,
+> so it must be guarded somehow.
 
-For the core-mm bits
+It's unconditionally defined so using IS_ENABLED() is fine because the
+compiler optimizes everything out before the resolv stage.
 
-Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
+Thanks,
 
--- 
-Cheers
-
-David
+        tglx
