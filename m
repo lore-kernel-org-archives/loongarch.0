@@ -1,212 +1,180 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFFF2EA172
-	for <loongarch@lists.linux.dev>; Fri,  9 Jan 2026 02:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D76235BE2;
+	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767927207; cv=none; b=Tm+M+LjpLlCH+tje6tJ42NBxCDF725hIkkIi+f9sf4o4YVWXXL2Cps2OZcDLL5vrdZO9mlTnFYrQOyGRk/fXD3aZmWLP400vByp2+T2vzM0SgBz9K08G8w8cHrnCiDYjo7sGGJw4BoVl1MA64fCH/DT06LLFTuJVNUCY8jm9Tak=
+	t=1767929832; cv=none; b=fBx3QRKyvA2gGwgtpoxmHNSR1xorPPCGt8Nhm0JsFBDOBMV98t5+GAkEJrHXVFReTncM2nf7F41DA4wr9Z22n3W3gIaWpAt1RagBzKTQZPotdDrsxzpUtP3a2ve+iB15Bb+iabT5pbdtGsgGxH6AfALepwyF9NIH/BBCY5FysQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767927207; c=relaxed/simple;
-	bh=jlDI4QhjXX0sm+AzlIRpnFAmVKzlWGzF2ws15pSU3dA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=biml7+n5Eu+hr3ajeTMWR9ws855V8wn8TqIIkwfl5KU5BV8SnbYC4u349vszWIk/Tx8D9d7qHnyDJu2Q/mJGwHKHZHUPuJdJSnOONXZk0+nyR6wVG8F60mfadBYf+j9rki2CdaXwvzYVaLQq+O+d+H2adbaUudGz094K4bhbv3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space; spf=pass smtp.mailfrom=bytefly.space; dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b=nIsekICZ; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytefly.space
+	s=arc-20240116; t=1767929832; c=relaxed/simple;
+	bh=UzCHgaOdbN806X+suNom7v2Hf7jRxYEHOHHzxuw5dug=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UBGEtetmQpim863y0j/JjU3PF/gFz5lijBuj77v36Lww+OGzGbn1JhL/+NgaQ9s2rrDvDEvSwM5qSygg6sKdHPQqNBX3EO+Blbs4XrdCeHzgTupIzBfdrjXQXQS+rU5bUYMNm6SB7ceec4mNEjQg28Mm7H620oCdb1qxdpqMVMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UudThjRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b="nIsekICZ"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b852bb31d9so3388785b3a.0
-        for <loongarch@lists.linux.dev>; Thu, 08 Jan 2026 18:53:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytefly-space.20230601.gappssmtp.com; s=20230601; t=1767927204; x=1768532004; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUXH7ztgyQ+0f072AQRkPa8ArAP5onIH7wP+MjdfZtU=;
-        b=nIsekICZ8p4Mox8J0BrdIWaokKI0AqrkvhuMfzJjDQULvKy47xVchA60NoYKhQAKpo
-         PPOQQo2T5+5FQvKW6b0P+3AOQRTpnQVt1dhNfXrBOFNgouh5srXTLSo89MX9EolTCat2
-         MdXkj2G9IxWZkaks2tsMi1Wo9mQnFz/X9z9wG9kI7Pk8/Df8mYjuJq0jAXWnRRTxb4Ii
-         6omG1P4T1KPwbl2UveGD3B8qNnBZKssMawuuQ5npyF54DlxXP5T4WV7BnxP5Z+fJz3tD
-         qses9qhJrArox+OHvKcUMWECx9EWqlZhjASB7mXhNtQRUh7S0FhYnsY+S1VQF3TFJn89
-         HxTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767927204; x=1768532004;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uUXH7ztgyQ+0f072AQRkPa8ArAP5onIH7wP+MjdfZtU=;
-        b=Az26b1iOIOAwUCdG0n4ER3R1N7dLmLa/XFuvavyyBnWe2Z7t1NHa4uXskSkyNp2aY5
-         Re3Vz8KYax3eU1Yx0oyH2eGULPyGNg6SQIVBCVK6j5EW+5rfD5gitxkG3lRvGgaG47/+
-         4Kje54ftAVRz0aS8FkG7FcIaCzWRHXJ5At+gzUUKAMm6qN8d0Z1JUyDQCKlxZnvGBONE
-         b2kmLWRV97e8SyxVJtO6QkXUFHKlAuct0mpyA6v57WmyKmOeSRLI7T1a8X7W0KaRhtWA
-         fAmYDfv09ohzG4MNiydKPgnN7pmNUQSzYrsd2RGYlhTHBVUFOZjsDbxfXv8DmG3oCDyA
-         PRZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqnSdRVfb1IFvo/2Ng4owWy81wJz9i8XuglFDfOxVSb2pg8hInYcK7lj5tnlOP+QYB047q/uqqrO4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwCNMZb1cgSISgC+kSHWp1nVsixaBxDYI7UaeUR8gV1ekZYO5Ae
-	kEH+3JRILUJgY1dW2xz/IeKw8Vywbo4K/kOi1s3nzRhX2iyUtXa74sl9LBvJudswDdo=
-X-Gm-Gg: AY/fxX5JE21EODBhKkiBz1kUF/8DQEY9A7WM/Mn31uzYz9w2UBO7c1qVaB694K3e+Vk
-	o0YaTfZXFZdbFR4/3ASZtidtRBRah+xMcsqYUNswbZhItPA8PEEbolj310GKVXXawBK0pJuVNMR
-	JIFrjhyC+EZmj5MpWwhzHpPep2oZykkHLEfcZqAM43X171I/uUjqWdVjbu+LIJS3e38jezNd9WI
-	W4QzmPnu/bGJtxl/Kpo1BKJi6AAWsNy5i5SZRe8E3L9sFsbZ/vxNpuLbdkgI1N4hURgB7LJ1zZF
-	QfpR7CQtR2TwmHtH4ojLMtauHbexyeidx/PIbt03+xR6q/g9qS8piXEbgWAwXQFXM7A8z2W7jvo
-	a9YolZKYWtUZof7Vq6QQxzGIZWwazv3Jn7/huVRVPzBa9I0uDc+lOj2Vu7qJCW7uLyAuNsX4s9a
-	4XGQ==
-X-Google-Smtp-Source: AGHT+IH0HUr0MdRXguipbzsaEA/OlWzBSmlBph10zKzEYjFwr3gALLho1tjkPB9DgVkeAspeCEoTkg==
-X-Received: by 2002:a05:6a00:1c9e:b0:7fb:eb9c:66a7 with SMTP id d2e1a72fcca58-81b7f3f2282mr6338630b3a.36.1767927204353;
-        Thu, 08 Jan 2026 18:53:24 -0800 (PST)
-Received: from xpc ([2400:8902:e002:dec2:6246:24bc:b792:73cd])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cc9e7e824sm9069051a12.30.2026.01.08.18.53.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 18:53:23 -0800 (PST)
-From: Lisa Robinson <lisa@bytefly.space>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	dapeng1.mi@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Lisa Robinson <lisa@bytefly.space>
-Subject: [PATCH v3] LoongArch: Fix PMU counter allocation for mixed-type event groups
-Date: Fri,  9 Jan 2026 10:53:12 +0800
-Message-ID: <20260109025312.226700-1-lisa@bytefly.space>
-X-Mailer: git-send-email 2.52.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UudThjRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C01EEC4CEF7;
+	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767929831;
+	bh=UzCHgaOdbN806X+suNom7v2Hf7jRxYEHOHHzxuw5dug=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=UudThjRcnWPCIrqgBdo0my3dNrnYeYKEwY7cZhK8nGsO7WSOlzgCRlJnfYr1T/4mO
+	 M8TnDmxZbpJmWROxPAsiXhDu64u9f+z68yyEhqp3r40fHXUQFldcpeKI9+lsZ3ZvVn
+	 a1YoFCxo41PobtKdTaiAnJ8czQYInD0I8MnEpmJsXhD4+2/4+IwOhyye0pNvYLFxJ8
+	 U2JXfE6v9cDAQaCVmKu1K8oOd/KTVXw0nKLTb+69IbbpUFw1dtNhNTo/IvIms4kKoZ
+	 T8a+Lz27FcA8Tc0p0z2OT9TNODO8gd27TMH2aPryu8C0XGBloZFrnkbe3nP178EstL
+	 96D8ZpbMuP9FA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC078D232CC;
+	Fri,  9 Jan 2026 03:37:11 +0000 (UTC)
+From: Ziyao Li via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
+Date: Fri, 09 Jan 2026 11:36:58 +0800
+Subject: [PATCH v3] PCI: loongson: Override PCIe bridge supported speeds
+ for older Loongson 3C6000 series steppings
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com>
+X-B4-Tracking: v=1; b=H4sIANl3YGkC/3XOTQrCMBCG4atI1kYy6a+uvIe4aDKTNqBJSWpQS
+ u9uWnBTcPl+MA8zs0jBUmSXw8wCJRutdzmK44HpoXM9cYu5mRSyEq2U/OG966N3fNQWeImEApv
+ WgFIs34yBjH1v3u2ee7Bx8uGz8QnW9Z+UgAMvzl2nFAIYhdeXy79MpIeT9k+2akn+hFqAKPeCz
+ AJCBVQ1qibT7oVlWb5N0d5r8AAAAA==
+X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, 
+ guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, 
+ Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
+ Ziyao Li <liziyao@uniontech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767929829; l=4136;
+ i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
+ bh=oMHSSUNney/eskB1K6w/DmvTz2ry8+yQZ5lOuXaB2is=;
+ b=bsb8AjnxdcUhPFca5e11Q1ysRRyqUV8kU2lrpnIy2JlQgjXcp20ZD3ireEHdqbYYnf5XxGXXI
+ 4Wdlvc/IKYMAi49A2GoFRlrK6aOPYCIFXiB7uNmUSWvecPNcXAwOUBQ
+X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
+ pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
+X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
+ auth_id=471
+X-Original-From: Ziyao Li <liziyao@uniontech.com>
+Reply-To: liziyao@uniontech.com
 
-When validating a perf event group, validate_group() unconditionally
-attempts to allocate hardware PMU counters for the leader, sibling
-events and the new event being added.
+From: Ziyao Li <liziyao@uniontech.com>
 
-This is incorrect for mixed-type groups. If a PERF_TYPE_SOFTWARE event
-is part of the group, the current code still tries to allocate a hardware
-PMU counter for it, which can wrongly consume hardware PMU resources and
-cause spurious allocation failures.
+Older steppings of the Loongson 3C6000 series incorrectly report the
+supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
+only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
+up to 16 GT/s.
 
-Fix this by only allocating PMU counters for hardware events during group
-validation, and skipping software events.
+As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+than one speed is supported"), bwctrl will be disabled if there's only
+one 2.5 GT/s value in vector `supported_speeds`.
 
-A trimmed down reproducer is as simple as this:
+Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
+partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
+lanes in power management. We hope this can prevent similar problems
+in future driver changes (similar checks may be implemented in other
+GPU, storage controller, NIC, etc. drivers).
 
-  #include <stdio.h>
-  #include <assert.h>
-  #include <unistd.h>
-  #include <string.h>
-  #include <sys/syscall.h>
-  #include <linux/perf_event.h>
+Manually override the `supported_speeds` field for affected PCIe bridges
+with those found on the upstream bus to correctly reflect the supported
+link speeds.
 
-  int
-  main (int argc, char *argv[])
-  {
-  	struct perf_event_attr attr = { 0 };
-  	int fds[5];
+This patch was originally found from AOSC OS[1].
 
-  	attr.disabled = 1;
-  	attr.exclude_kernel = 1;
-  	attr.exclude_hv = 1;
-  	attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
-  		PERF_FORMAT_TOTAL_TIME_RUNNING | PERF_FORMAT_ID | PERF_FORMAT_GROUP;
-  	attr.size = sizeof (attr);
-
-  	attr.type = PERF_TYPE_SOFTWARE;
-  	attr.config = PERF_COUNT_SW_DUMMY;
-  	fds[0] = syscall (SYS_perf_event_open, &attr, 0, -1, -1, 0);
-  	assert (fds[0] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CPU_CYCLES;
-  	fds[1] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[1] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-  	fds[2] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[2] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_BRANCH_MISSES;
-  	fds[3] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[3] >= 0);
-
-  	attr.type = PERF_TYPE_HARDWARE;
-  	attr.config = PERF_COUNT_HW_CACHE_REFERENCES;
-  	fds[4] = syscall (SYS_perf_event_open, &attr, 0, -1, fds[0], 0);
-  	assert (fds[4] >= 0);
-
-  	printf ("PASSED\n");
-
-  	return 0;
-  }
-
-Fixes: b37042b2bb7c ("LoongArch: Add perf events support")
-Signed-off-by: Lisa Robinson <lisa@bytefly.space>
+Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+Tested-by: Lain Fearyncess Yang <fsf@live.com>
+Tested-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+[Xi Ruoyao: Fix falling through logic and add kernel log output.]
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
+[Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
+Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
 ---
 Changes in v3:
-- Fix typo.
-Changes in v2:
-- Factor out duplicated perf event type checks into an inline helper.
----
- arch/loongarch/kernel/perf_event.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+- Adjust commit message
+- Make the program flow more intuitive
+- Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
 
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 9d257c8519c9..e34a6fb33e11 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -626,6 +626,18 @@ static const struct loongarch_perf_event *loongarch_pmu_map_cache_event(u64 conf
- 	return pev;
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
+- Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
+- Fix falling through logic and add kernel log output by Xi Ruoyao
+---
+ drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index bc630ab8a283..67a6d99b9e82 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
  }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
  
-+static inline bool loongarch_pmu_event_requires_counter(const struct perf_event *event)
++/*
++ * Older steppings of the Loongson 3C6000 series incorrectly report the
++ * supported link speeds on their PCIe bridges (device IDs 3c19, 3c29) as
++ * only 2.5 GT/s, despite the upstream bus supporting speeds from 2.5 GT/s
++ * up to 16 GT/s.
++ */
++static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
 +{
-+	switch (event->attr.type) {
-+	case PERF_TYPE_HARDWARE:
-+	case PERF_TYPE_HW_CACHE:
-+	case PERF_TYPE_RAW:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
++	u8 old_supported_speeds = pdev->supported_speeds;
 +
- static int validate_group(struct perf_event *event)
++	switch (pdev->bus->max_bus_speed) {
++	case PCIE_SPEED_16_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
++		fallthrough;
++	case PCIE_SPEED_8_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
++		fallthrough;
++	case PCIE_SPEED_5_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
++		fallthrough;
++	case PCIE_SPEED_2_5GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
++		break;
++	default:
++		pci_warn(pdev, "unexpected max bus speed");
++
++		return;
++	}
++
++	if (pdev->supported_speeds != old_supported_speeds)
++		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
++			 old_supported_speeds, pdev->supported_speeds);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
++			 loongson_pci_bridge_speed_quirk);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
++			 loongson_pci_bridge_speed_quirk);
++
+ static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
  {
- 	struct cpu_hw_events fake_cpuc;
-@@ -633,15 +645,18 @@ static int validate_group(struct perf_event *event)
- 
- 	memset(&fake_cpuc, 0, sizeof(fake_cpuc));
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
-+	if (loongarch_pmu_event_requires_counter(leader) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &leader->hw) < 0)
- 		return -EINVAL;
- 
- 	for_each_sibling_event(sibling, leader) {
--		if (loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
-+		if (loongarch_pmu_event_requires_counter(sibling) &&
-+		    loongarch_pmu_alloc_counter(&fake_cpuc, &sibling->hw) < 0)
- 			return -EINVAL;
- 	}
- 
--	if (loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
-+	if (loongarch_pmu_event_requires_counter(event) &&
-+	    loongarch_pmu_alloc_counter(&fake_cpuc, &event->hw) < 0)
- 		return -EINVAL;
- 
- 	return 0;
+ 	struct pci_config_window *cfg;
+
+---
+base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+change-id: 20250822-loongson-pci1-4ded0d78f1bb
+
+Best regards,
 -- 
-2.52.0
+Ziyao Li <liziyao@uniontech.com>
+
 
