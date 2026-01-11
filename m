@@ -1,111 +1,264 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC01A294
-	for <loongarch@lists.linux.dev>; Sun, 11 Jan 2026 01:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356951E1A3D;
+	Sun, 11 Jan 2026 08:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768096176; cv=none; b=mLdrzY4nrcZQ3c2fQCBGkVWh8ZY4lw4YJJV7XN2k0I/3rlaqNw3ZmVk0sUKpe7IDAR0lWus0lzY4MKVNWC54CHplLXAv1BIJBqUtEW3teH2AmbyVRvabifaNLKW0Oza21MveND/FcGRdI7RZmev4S690U5Ue1x74oT4d1HX2UCs=
+	t=1768119684; cv=none; b=GBDS1UvKtSgPpzuw9GWIA8S1UvpYHAqjgSxtul93PpyltG2naZr4uJq9y5nzxJNCp5Ru2GG9uPYnFJvoStYD4iq2E34rmbzhtN9EnUvqJaxJprfGQ8xQMECZTdK22vFTmZ/vb6kRfESmj+H7FF/G2vKumyluyRbWVCo0LKtZDsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768096176; c=relaxed/simple;
-	bh=3b/8DRNWBNvmQ88Y7gJraVp2bLkfZF2LSd8q8EenBPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y6n87QCyLFAKmZrxSL5GmlkSeMGsbqYz6LhBMDffSP/HSXxdKTS/SckNwUtvOvN9kuYvRYHdP3u78dLf6LpryFWV92omL6Z3YDVU09cUM1QzpQ2bz505xeMeUJpI8ngOVNxd3/L2B3/rz2fsryrRIYDROaP8+DX3ICCd9luFIrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1SHfQN+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768119684; c=relaxed/simple;
+	bh=15VB+6hE09IpORerfJ9cs3QzayYtdIP5ByWTlGt3qZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJn1wCM04C+lFftk2jBUI8D40CMGaxXqnjA3FdYuqM8bVYGtPI8Y/fIZGpb5FhpZ91nQffsbbzFGiTZKBNw6UPPPk7UXenHrCtB2HLLzee2InAdDtWftUH1zC/0PL4C+gS4Bc50myA+UJJbpj31CVK29SQCjGvXg7FwZOtaRwEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqKHBj52; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1SHfQN+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEA7C2BC87
-	for <loongarch@lists.linux.dev>; Sun, 11 Jan 2026 01:49:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqKHBj52"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1837CC4CEF7;
+	Sun, 11 Jan 2026 08:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768096176;
-	bh=3b/8DRNWBNvmQ88Y7gJraVp2bLkfZF2LSd8q8EenBPs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a1SHfQN+7b15J3stAti8RHbo+7X9+/1wA2O4Cs6S+d3G7UFo/lpai5fhW9/xinOO6
-	 YXnkwToD/BJREE9UW+9VbhDhMQz0Lufomxat2jRtftk7vKYUJFllmnK+pCRSrZ0tZ/
-	 l+Eo5OCO3vwVZsilndc8n/N8xbw+y0b5Zg1iB3/VvJtCaQ+H6m+Sg15V6SzdOPJqMM
-	 DZithtx+KAgBDR3cCz5sHcvZNWQJPGeoUKsfNWyEee/qrb41zHtUVUJvmet4chpg0E
-	 oiz/SqEypBPlSmMTZ7duTVhTOL4xQPaqNF0AZff98BT5C9BYZzp+KIPpEhqXqI8cXo
-	 lp7B0Po3qOfQA==
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64fabaf9133so9656992a12.3
-        for <loongarch@lists.linux.dev>; Sat, 10 Jan 2026 17:49:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUP10oti/NiFTAK57BFTJGscuRT+uHb8/KcLghI1/pUwU3p/DchPmg6zTb+C5y9H+hlnnuBuP7jTWE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxEkqqGtbVTNtyL16gDwQGccm+9jU7F0dcr5NMMSynC2ss48/1A
-	/ltLwq1xSSo5gssT7mgxwmrO7ULLdi2yLfUfmKBjgPnArfUEw+HTgQQH6A9OSzruh69jNESETBR
-	cgLywZuM4ysMO+5pI9+Xs8iXgKXw26KU=
-X-Google-Smtp-Source: AGHT+IEnAh2DyawqA/iNlhRsTs7cbMXT+2ZfFpPUOh/NanWJQbTpMSL+3a2zD/ZHfOCk6yISKSd3nu6j/2C1tyxLy6I=
-X-Received: by 2002:a17:906:31d5:b0:b83:13b3:5197 with SMTP id
- a640c23a62f3a-b8444c4d291mr986087666b.11.1768096174541; Sat, 10 Jan 2026
- 17:49:34 -0800 (PST)
+	s=k20201202; t=1768119683;
+	bh=15VB+6hE09IpORerfJ9cs3QzayYtdIP5ByWTlGt3qZ0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fqKHBj520f2MDgk71DmE5pqtB/pBMemGe6ljrad1JZT4TjuKzKTHs3xUpJ0K4Tlv7
+	 kS7/A7Qj7f6FHcIqZOCnTKWbxC4liAYLtpcFU2lTPOu6nAiYlDoYoUkFsbagYk4hjx
+	 /oeAeIyD4g/6QlmHRXuiPhGuV0z/TfFiVYiZjEtj2+8KVb2ZpA5QnWSqMsk5vvuf9z
+	 2zZGEX+f1wmTWFlirbnVw4Z57ZhFPuOpza3yBonfV6hLgXOimHNXs2/zTsLzh0SIA+
+	 XoqGttk/l45ZEV1dW3wg6KCyo98ksi4A7G6uUd+LsrXwkQfZV/ycd0xkOa/n8lvRu2
+	 u3qAfKtz7b0cw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Shi <alexs@kernel.org>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Klara Modin <klarasmodin@gmail.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Hocko <mhocko@suse.com>,
+	Michal Simek <monstr@monstr.eu>,
+	Mike Rapoport <rppt@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Richard Weinberger <richard@nod.at>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Vineet Gupta <vgupta@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Will Deacon <will@kernel.org>,
+	x86@kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org
+Subject: [PATCH v3 00/29] arch, mm: consolidate hugetlb early reservation
+Date: Sun, 11 Jan 2026 10:20:34 +0200
+Message-ID: <20260111082105.290734-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260110131124.99866-1-dongtai.guo@linux.dev> <20260110131124.99866-4-dongtai.guo@linux.dev>
- <5770eef8d028b4e1778ccee21433ac753e439223.camel@perches.com>
-In-Reply-To: <5770eef8d028b4e1778ccee21433ac753e439223.camel@perches.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 11 Jan 2026 09:48:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6o4FFmkOw3FQy7nW5gNuokZcweNbptSN7PTXpLJA6Vaw@mail.gmail.com>
-X-Gm-Features: AZwV_Qg3pPy9YQeg5aTePDJjsEWZZqSKDjfr6Y-0HcoxpD4FqXwbwKlY9NeH0_g
-Message-ID: <CAAhV-H6o4FFmkOw3FQy7nW5gNuokZcweNbptSN7PTXpLJA6Vaw@mail.gmail.com>
-Subject: Re: [PATCH v10 loongarch-next 3/3] LoongArch: Replace seq_printf with
- seq_puts for simple strings
-To: Joe Perches <joe@perches.com>
-Cc: George Guo <dongtai.guo@linux.dev>, guodongtai@kylinos.cn, hengqi.chen@gmail.com, 
-	kernel@xen0n.name, lianyangyang@kylinos.cn, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, r@hev.cc, xry111@xry111.site
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi, Joe,
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-On Sun, Jan 11, 2026 at 2:04=E2=80=AFAM Joe Perches <joe@perches.com> wrote=
-:
->
-> On Sat, 2026-01-10 at 21:11 +0800, George Guo wrote:
-> > Fix warnings like: "Prefer seq_puts to seq_printf" by checkpatch.pl.
-> >
-> > Replace seq_printf() calls with seq_puts() in show_cpuinfo()
-> > when outputting simple constant strings without format specifiers.
-> >
-> > This improves performance slightly as seq_puts() avoids parsing
-> > the format string.
-> []
-> > diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.=
-c
-> []
-> > @@ -50,33 +50,49 @@ static int show_cpuinfo(struct seq_file *m, void *v=
-)
-> []
-> > -     seq_printf(m, "Features\t\t:");
-> > -     if (cpu_has_cpucfg)     seq_printf(m, " cpucfg");
-> > -     if (cpu_has_lam)        seq_printf(m, " lam");
-> [etc]
-> > +     seq_puts(m, "Features\t\t:");
-> > +     if (cpu_has_cpucfg)
-> > +             seq_puts(m, " cpucfg");
-> > +     if (cpu_has_lam)
-> > +             seq_puts(m, " lam");
->
-> trivia:
->
-> Not sure this is better style as it's fairly difficult to read.
->
-> Maybe a macro might help, something like:
->
-> #define seq_cpu_feature(m, feature) \
->         if (cpu_has_##feature) seq_puts(m, " " #feature)
->
->         seq_cpu_feature(m, cpucfg);
->         seq_cpu_feature(m, lam);
-Seems just some bikesheedings, the current style is OK at least for
-me. Since George has worked on this series for a very long time, let's
-stop changing and get it merged.
+Hi,
 
-Huacai
+Order in which early memory reservation for hugetlb happens depends on
+architecture, on configuration options and on command line parameters.
 
->
-> etc.
->
+Some architectures rely on the core MM to call hugetlb_bootmem_alloc()
+while others call it very early to allow pre-allocation of HVO-style
+vmemmap.
+
+When hugetlb_cma is supported by an architecture it is initialized during
+setup_arch() and then later hugetlb_init code needs to understand did it
+happen or not.
+
+To make everything consistent and unified, both reservation of hugetlb
+memory from bootmem and creation of CMA areas for hugetlb must be called
+from core MM initialization and it would have been a simple change.
+However, HVO-style pre-initialization ordering requirements slightly
+complicate things and for HVO pre-init to work sparse and memory map should
+be initialized after hugetlb reservations.
+
+This required pulling out the call to free_area_init() out of setup_arch()
+path and moving it MM initialization and this is what the first 23 patches
+do.
+
+These changes are deliberately split into per-arch patches that change how
+the zone limits are calculated for each architecture and the patches 22 and
+23 just remove the calls to free_area_init() and sprase_init() from arch/*.
+
+Patch 24 is a simple cleanup for MIPS.
+
+Patches 25 and 26 actually consolidate hugetlb reservations and patches 27
+and 28 perform some aftermath cleanups.
+
+I tried to trim the distribution list and although it's still quite long
+if you feel that someone was wrongly excluded please add them back.
+
+The changes also available in git:
+https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=hugetlb-init/v3
+
+v3 changes:
+* fix empty_zero_page initialization on arm
+* fix ZONE_DMA limit calculation on powerpc
+* add Acks
+
+v2: https://lore.kernel.org/all/20260102070005.65328-1-rppt@kernel.org
+* move the hugetlb and memory map initializaion to mm_core_init_early()
+* add Acks
+
+v1: https://lore.kernel.org/all/20251228124001.3624742-1-rppt@kernel.org
+
+
+Klara Modin (1):
+  arm: make initialization of zero page independent of the memory map
+
+Mike Rapoport (Microsoft) (28):
+  alpha: introduce arch_zone_limits_init()
+  arc: introduce arch_zone_limits_init()
+  arm: introduce arch_zone_limits_init()
+  arm64: introduce arch_zone_limits_init()
+  csky: introduce arch_zone_limits_init()
+  hexagon: introduce arch_zone_limits_init()
+  loongarch: introduce arch_zone_limits_init()
+  m68k: introduce arch_zone_limits_init()
+  microblaze: introduce arch_zone_limits_init()
+  mips: introduce arch_zone_limits_init()
+  nios2: introduce arch_zone_limits_init()
+  openrisc: introduce arch_zone_limits_init()
+  parisc: introduce arch_zone_limits_init()
+  powerpc: introduce arch_zone_limits_init()
+  riscv: introduce arch_zone_limits_init()
+  s390: introduce arch_zone_limits_init()
+  sh: introduce arch_zone_limits_init()
+  sparc: introduce arch_zone_limits_init()
+  um: introduce arch_zone_limits_init()
+  x86: introduce arch_zone_limits_init()
+  xtensa: introduce arch_zone_limits_init()
+  arch, mm: consolidate initialization of nodes, zones and memory map
+  arch, mm: consolidate initialization of SPARSE memory model
+  mips: drop paging_init()
+  x86: don't reserve hugetlb memory in setup_arch()
+  mm, arch: consolidate hugetlb CMA reservation
+  mm/hugetlb: drop hugetlb_cma_check()
+  Revert "mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc"
+
+ .../driver-api/cxl/linux/early-boot.rst       |  2 +-
+ Documentation/mm/memory-model.rst             |  3 --
+ .../translations/zh_CN/mm/memory-model.rst    |  2 -
+ arch/alpha/kernel/setup.c                     |  1 -
+ arch/alpha/mm/init.c                          | 16 ++++----
+ arch/arc/mm/init.c                            | 37 +++++++++---------
+ arch/arm/include/asm/pgtable.h                |  4 +-
+ arch/arm/mm/init.c                            | 25 ++----------
+ arch/arm/mm/mmu.c                             | 10 +----
+ arch/arm/mm/nommu.c                           | 10 +----
+ arch/arm64/include/asm/hugetlb.h              |  2 -
+ arch/arm64/mm/hugetlbpage.c                   | 10 ++---
+ arch/arm64/mm/init.c                          | 39 ++++++++-----------
+ arch/csky/kernel/setup.c                      | 16 ++++----
+ arch/hexagon/mm/init.c                        | 19 +++------
+ arch/loongarch/include/asm/pgtable.h          |  2 -
+ arch/loongarch/kernel/setup.c                 | 10 -----
+ arch/loongarch/mm/init.c                      |  6 +--
+ arch/m68k/mm/init.c                           |  8 ++--
+ arch/m68k/mm/mcfmmu.c                         |  3 --
+ arch/m68k/mm/motorola.c                       |  6 +--
+ arch/m68k/mm/sun3mmu.c                        |  9 -----
+ arch/microblaze/mm/init.c                     | 22 +++++------
+ arch/mips/include/asm/pgalloc.h               |  2 -
+ arch/mips/include/asm/pgtable.h               |  2 +-
+ arch/mips/kernel/setup.c                      | 15 +------
+ arch/mips/loongson64/numa.c                   | 10 ++---
+ arch/mips/mm/init.c                           |  8 +---
+ arch/mips/sgi-ip27/ip27-memory.c              |  8 +---
+ arch/nios2/mm/init.c                          | 12 +++---
+ arch/openrisc/mm/init.c                       | 10 +----
+ arch/parisc/mm/init.c                         | 11 +-----
+ arch/powerpc/include/asm/hugetlb.h            |  5 ---
+ arch/powerpc/include/asm/setup.h              |  4 ++
+ arch/powerpc/kernel/setup-common.c            |  1 -
+ arch/powerpc/mm/hugetlbpage.c                 | 11 ++----
+ arch/powerpc/mm/mem.c                         | 27 +++++--------
+ arch/powerpc/mm/numa.c                        |  2 -
+ arch/riscv/mm/hugetlbpage.c                   |  8 ++++
+ arch/riscv/mm/init.c                          | 10 +----
+ arch/s390/kernel/setup.c                      |  2 -
+ arch/s390/mm/hugetlbpage.c                    |  8 ++++
+ arch/s390/mm/init.c                           | 13 +++----
+ arch/sh/mm/init.c                             | 12 +++---
+ arch/sparc/mm/init_64.c                       | 17 +++-----
+ arch/sparc/mm/srmmu.c                         | 17 ++++----
+ arch/um/kernel/mem.c                          | 10 ++---
+ arch/x86/kernel/setup.c                       |  5 ---
+ arch/x86/mm/hugetlbpage.c                     |  8 ++++
+ arch/x86/mm/init.c                            |  8 +---
+ arch/x86/mm/init_32.c                         |  2 -
+ arch/x86/mm/init_64.c                         |  4 --
+ arch/x86/mm/mm_internal.h                     |  1 -
+ arch/xtensa/mm/init.c                         | 14 +++----
+ include/linux/hugetlb.h                       | 12 ++----
+ include/linux/mm.h                            |  5 ++-
+ include/linux/mmzone.h                        |  2 -
+ init/main.c                                   |  1 +
+ mm/hugetlb.c                                  | 13 -------
+ mm/hugetlb_cma.c                              | 33 ++++++++--------
+ mm/hugetlb_cma.h                              |  5 ---
+ mm/hugetlb_vmemmap.c                          | 11 ------
+ mm/internal.h                                 |  6 +++
+ mm/mm_init.c                                  | 20 ++++++----
+ 64 files changed, 223 insertions(+), 414 deletions(-)
+
+
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+-- 
+2.51.0
+
