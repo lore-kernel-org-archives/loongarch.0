@@ -1,136 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E96314B72;
-	Mon, 12 Jan 2026 07:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B70634107E;
+	Mon, 12 Jan 2026 08:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768203303; cv=none; b=Sb9birxABwnbRoSE4Y34sq5no3Ua4z6CUoDl5mliV5nXlbSwxtGCw0aljqBnqFGYqvFP/ih3dnNOzXKN+HcDzqtUsl3q3wgMz5McTVWVrN620PfevRPowdOKqMY+l3nBxkyGjTj99VeJcm5Nk0kml36ttEjeqhGmnkg+R/4qHhU=
+	t=1768207418; cv=none; b=nIlNkQI3tkYD5hTj6scnrEvIBa19yVXJ9KrEsbLydpw0pcDWZd5CiPW5iIUFcLn7e2zZ9SVbsDsr7zh24EOooe3YaNqihGLt4sN2G1+Veth2Mi2jrF+RJSXpIy5dwDsoM4wcJEN3h9r/GNwcXiOr6Z2Vz63+L4l+RUMfgRdteb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768203303; c=relaxed/simple;
-	bh=H0wpDyU4+hGvGadEaJXaoKwU4fABU87rkRhUJIykrtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBhrdeRTh92xdo/ID8VjGaJCDnL79nrEGYmjfQokOWH22fRZGusq10tUTd3PCap2g7mk31OxDYB/1cnX4+3EqO4XNIt8ildaVlo1lHkMpFC8/dnIf7MJaP1nU6b4ESSm6gLT4cYmgLDlA2SlGt9IxE70ceY3onZoz4059iqw3Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cB9JlNOs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cB9JlNOs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61041C19422;
-	Mon, 12 Jan 2026 07:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768203303;
-	bh=H0wpDyU4+hGvGadEaJXaoKwU4fABU87rkRhUJIykrtE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cB9JlNOsE5ASTDSwfciaJvBRecBB1lB0Uwj+GaWwyCjgypyJQWPdkiELZQ8iVJPfz
-	 nMocJbirHN/1lk3J7Si3fdDg+XjkNRlIqWpD36vowiVH0S+GvTZEHLt/X4w6L2bjbX
-	 MW70tMpH6LtqJ9xirliNmH6ey3Jn3uobFlK0X2Mc7rV2i4ddTSmSf1HxKEBm5toCRi
-	 d46Yvu6ZlmDb9ZF7jcWZyute2z21cTSvo7YbjPFCodLjqoxUiSIWkDnwdalYjHh76y
-	 ow7pMfD3F6CiXLdHJYJqrOQj4clSEc/bsWScF8TIIT22yhLrTWzvu1RJLquyFnQ26r
-	 U5L75tv4dABXw==
-Date: Mon, 12 Jan 2026 09:34:40 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Alex Shi <alexs@kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Klara Modin <klarasmodin@gmail.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Richard Weinberger <richard@nod.at>,
-	Ritesh Harjani <ritesh.list@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vasily Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	x86@kernel.org, linux-alpha@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-mm@kvack.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 17/29] s390: introduce arch_zone_limits_init()
-Message-ID: <aWSkELL7xJ04QAct@kernel.org>
-References: <20260111082105.290734-1-rppt@kernel.org>
- <20260111082105.290734-18-rppt@kernel.org>
- <b211f877-f9bb-4892-b67c-d2610048575a-agordeev@linux.ibm.com>
+	s=arc-20240116; t=1768207418; c=relaxed/simple;
+	bh=w3j6qL/U3kEXRhLhAXrwyVT6Qb4/zvMyjE3xxNaCinE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Piw20ZRR+4CVb77PRLtt7npl9EB+kZS241rQoGSEdbennrtGfJLi23SGMf6sG4jvqkLT3SYwclPCHVYqCKvqevXR1OwIk+iNF0BUpTSk5XMbNFU6bAi+D5gt4uzFZ+W8SKszoQm95KneTxgipFFUUKCpTWpDYG53VQPGKc7dW2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04617C116D0;
+	Mon, 12 Jan 2026 08:43:35 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V2 0/7] irqchip: Adjust LoongArch irqchip drivers for 32BIT/64BIT
+Date: Mon, 12 Jan 2026 16:43:13 +0800
+Message-ID: <20260112084320.1982244-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b211f877-f9bb-4892-b67c-d2610048575a-agordeev@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Linux-6.19 adds basic LoongArch32 support:
+https://git.kernel.org/torvalds/c/9551a26f17d9445eed497bd7c639d48dfc3c0af4
 
-On Mon, Jan 12, 2026 at 08:02:48AM +0100, Alexander Gordeev wrote:
-> On Sun, Jan 11, 2026 at 10:20:51AM +0200, Mike Rapoport wrote:
-> 
-> Hi Mike,
-> 
-> ...
-> > +void __init arch_zone_limits_init(unsigned long *max_zone_pfns)
-> > +{
-> > +	max_zone_pfns[ZONE_DMA] = virt_to_pfn(MAX_DMA_ADDRESS);
-> > +	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> > +}
-> > +
-> >  /*
-> >   * paging_init() sets up the page tables
-> >   */
-> > @@ -97,8 +103,7 @@ void __init paging_init(void)
-> >  	sparse_init();
-> >  	zone_dma_limit = DMA_BIT_MASK(31);
-> >  	memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
-> > -	max_zone_pfns[ZONE_DMA] = virt_to_pfn(MAX_DMA_ADDRESS);
-> > -	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> > +	arch_zone_limits_init(max_zone_pfns);
-> 
-> You move initialization of max_zone_pfns[] to a function, name the
-> function arch_zone_limits_init(), but leave the initializatio of
-> max_zone_pfns[] to zeroes outside. Should not it be brought along?
+On the basis, this series adjust the LoongArch-specific irqchip drivers
+for both 32BIT and 64BIT.
 
-The idea is that is the caller responsibility to initialize max_zone_pfns
-to zero. After patch 24: "arch, mm: consolidate initialization of
-SPARSE memory model" there is a single caller of arch_zone_limits_init()
-and having initialization of max_zone_pfns() there is more optimal than
-having 20-something of those.
- 
-> >  	free_area_init(max_zone_pfns);
-> >  }
-> 
-> Thanks!
+V1 -> V2:
+1. Use if IS_ENABLED() instead of ifdeffery.
+2. Add Co-developed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>.
 
--- 
-Sincerely yours,
-Mike.
+Jiaxun Yang & Huacai Chen (7):
+ irqchip/loongarch-avec: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-liointc: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-eiointc: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-htvec: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-pch-msi: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip/loongson-pch-pic: Adjust irqchip driver for 32BIT/64BIT.
+ irqchip: Allow LoongArch irqchip drivers on both 32BIT/64BIT.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/irqchip/Kconfig                | 11 +++++------
+ drivers/irqchip/irq-loongarch-avec.c   | 14 +++++++------
+ drivers/irqchip/irq-loongson-eiointc.c | 36 ++++++++++++++++++++++++++++------
+ drivers/irqchip/irq-loongson-htvec.c   |  6 +++---
+ drivers/irqchip/irq-loongson-liointc.c |  5 +++--
+ drivers/irqchip/irq-loongson-pch-msi.c |  7 ++++---
+ drivers/irqchip/irq-loongson-pch-pic.c |  7 ++++---
+ 7 files changed, 57 insertions(+), 29 deletions(-)
+---
+2.27.0
+
