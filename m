@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E90E32A3C1;
-	Mon, 12 Jan 2026 08:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADA232A3C1;
+	Mon, 12 Jan 2026 08:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768207462; cv=none; b=UJJzuXKfZuU81V7FFt2Jadi6IkhXukpalozEixgAnJux9wTebkGsYPwWKoAtztfyHh8F6oC7RcuxYy5ks5XmJFn84Ydykn+EYeB4e78DDTSsbd6QQMIQFQ4453cWC6UasENUHFMUUtLdTGO5hQcKRlEX5PJR+UBWkrrHch2nmCs=
+	t=1768207478; cv=none; b=QWiwpTBKwCLsRgqTT0SosXFwm7wUdQIAKKovarcBjAGpSlPn35iotL6a8UnX9Lg4uJO840nu5A8zC5/IwHAwP07YiioWRmThivOt0L7cOv4xeHr/xtz9eRQFx55+RuSKAMkdmRlMTO67CEKh6hm71TTn3gSQ/iZSTxrFLfuSLUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768207462; c=relaxed/simple;
-	bh=dXK5xc/0Iy/RjvinuAmJfA4hXGDZuFREYUPikq+i30c=;
+	s=arc-20240116; t=1768207478; c=relaxed/simple;
+	bh=+DrtJfuavYoccwOIdmy5if+qbnnLpqRQOHzCCWTiBPc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iVAe0B39f022mMBXnUxE8GZK0pptX32Uu6sxUPlIYie6VKd6y4LBJAcWZw70X8CNbJFInMJ5uT2Pft/mdDHDsLMNI3MgDKC6/JQG5ADVaAdigZRnchUQcj+1sSwh9+4KM3X4FpiS1OX0cpdSCNtGN5+8R0RVZ2ekUXANx54mmHE=
+	 MIME-Version; b=fecDpJNw0WaaT80WClMOuk6CJUUdHiaaokT6glxvCUxqNp+vuZcC7VcE4eYoE4MTLVD4i5bmFtFtpHXGiPENElghJUri0n0rfZjukdV9X51aFTQK0Oyn0RrPsDjVNqPqPhF3jVEbOPdO/cz20irqK3c/u5jUZLBU/eGWtFL/afg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A960C116D0;
-	Mon, 12 Jan 2026 08:44:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB84C116D0;
+	Mon, 12 Jan 2026 08:44:36 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: loongarch@lists.linux.dev,
@@ -22,9 +22,9 @@ Cc: loongarch@lists.linux.dev,
 	Huacai Chen <chenhuacai@gmail.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 2/7] irqchip/loongson-liointc: Adjust irqchip driver for 32BIT/64BIT
-Date: Mon, 12 Jan 2026 16:43:15 +0800
-Message-ID: <20260112084320.1982244-3-chenhuacai@loongson.cn>
+Subject: [PATCH V2 3/7] irqchip/loongson-eiointc: Adjust irqchip driver for 32BIT/64BIT
+Date: Mon, 12 Jan 2026 16:43:16 +0800
+Message-ID: <20260112084320.1982244-4-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260112084320.1982244-1-chenhuacai@loongson.cn>
 References: <20260112084320.1982244-1-chenhuacai@loongson.cn>
@@ -36,42 +36,108 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-irq_domain_alloc_fwnode() takes a parameter with the phys_addr_t type.
-Currently we pass acpi_liointc->address to it. This can only work on
-64BIT platform because its type is u64, so cast it to phys_addr_t and
-then the driver works on both 32BIT and 64BIT platform.
+iocsr_read64()/iocsr_write64() are only available on 64BIT LoongArch
+platform, so add and use a pair of helpers, i.e. read_isr()/write_isr()
+instead, so as to make the driver work on both 32BIT and 64BIT platform.
+
+BTW, make eiointc_enable() be a no-op since it is only needed by 64BIT
+platform.
 
 Co-developed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/irqchip/irq-loongson-liointc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-loongson-eiointc.c | 44 ++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
-index 0033c2188abc..f001a34878ba 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -394,8 +394,9 @@ static int __init acpi_cascade_irqdomain_init(void)
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index ad2105685b48..7fd0397d37f1 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -37,9 +37,9 @@
+ #define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
+ #define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
  
- int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic *acpi_liointc)
+-#define VEC_REG_COUNT		4
+-#define VEC_COUNT_PER_REG	64
+-#define VEC_COUNT		(VEC_REG_COUNT * VEC_COUNT_PER_REG)
++#define VEC_COUNT		256
++#define VEC_COUNT_PER_REG	BITS_PER_LONG
++#define VEC_REG_COUNT		(VEC_COUNT / BITS_PER_LONG)
+ #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
+ #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
+ #define EIOINTC_ALL_ENABLE	0xffffffff
+@@ -85,11 +85,13 @@ static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
+ 
+ static void eiointc_enable(void)
  {
--	int ret;
-+	phys_addr_t addr = acpi_liointc->address;
- 	struct fwnode_handle *domain_handle;
-+	int ret;
+-	uint64_t misc;
++	if (IS_ENABLED(CONFIG_MACH_LOONGSON64)) {
++		uint64_t misc;
  
- 	parent_int_map[0] = acpi_liointc->cascade_map[0];
- 	parent_int_map[1] = acpi_liointc->cascade_map[1];
-@@ -403,7 +404,7 @@ int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic
- 	parent_irq[0] = irq_create_mapping(parent, acpi_liointc->cascade[0]);
- 	parent_irq[1] = irq_create_mapping(parent, acpi_liointc->cascade[1]);
+-	misc = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+-	misc |= IOCSR_MISC_FUNC_EXT_IOI_EN;
+-	iocsr_write64(misc, LOONGARCH_IOCSR_MISC_FUNC);
++		misc = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
++		misc |= IOCSR_MISC_FUNC_EXT_IOI_EN;
++		iocsr_write64(misc, LOONGARCH_IOCSR_MISC_FUNC);
++	}
+ }
  
--	domain_handle = irq_domain_alloc_fwnode(&acpi_liointc->address);
-+	domain_handle = irq_domain_alloc_fwnode(&addr);
- 	if (!domain_handle) {
- 		pr_err("Unable to allocate domain handle\n");
- 		return -ENOMEM;
+ static int cpu_to_eio_node(int cpu)
+@@ -281,12 +283,34 @@ static int eiointc_router_init(unsigned int cpu)
+ 	return 0;
+ }
+ 
++#if VEC_COUNT_PER_REG == 32
++static unsigned long read_isr(int i)
++{
++	return iocsr_read32(EIOINTC_REG_ISR + (i << 2));
++}
++
++static void write_isr(int i, unsigned long val)
++{
++	iocsr_write32(val, EIOINTC_REG_ISR + (i << 2));
++}
++#else
++static unsigned long read_isr(int i)
++{
++	return iocsr_read64(EIOINTC_REG_ISR + (i << 3));
++}
++
++static void write_isr(int i, unsigned long val)
++{
++	iocsr_write64(val, EIOINTC_REG_ISR + (i << 3));
++}
++#endif
++
+ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ {
+ 	struct eiointc_ip_route *info = irq_desc_get_handler_data(desc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	bool handled = false;
+-	u64 pending;
++	unsigned long pending;
+ 	int i;
+ 
+ 	chained_irq_enter(chip, desc);
+@@ -299,14 +323,14 @@ static void eiointc_irq_dispatch(struct irq_desc *desc)
+ 	 * read ISR for these 64 interrupt vectors rather than all vectors
+ 	 */
+ 	for (i = info->start; i < info->end; i++) {
+-		pending = iocsr_read64(EIOINTC_REG_ISR + (i << 3));
++		pending = read_isr(i);
+ 
+ 		/* Skip handling if pending bitmap is zero */
+ 		if (!pending)
+ 			continue;
+ 
+ 		/* Clear the IRQs */
+-		iocsr_write64(pending, EIOINTC_REG_ISR + (i << 3));
++		write_isr(i, pending);
+ 		while (pending) {
+ 			int bit = __ffs(pending);
+ 			int irq = bit + VEC_COUNT_PER_REG * i;
 -- 
 2.47.3
 
