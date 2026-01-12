@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E75342C80;
-	Mon, 12 Jan 2026 08:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E90E32A3C1;
+	Mon, 12 Jan 2026 08:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768207441; cv=none; b=ZpVOdX6hgQ85TbhVvq17EbEPAF29HssfTpIb0nSS6keDZvNXxmAFTRiICCd5E8GvZ+1MqLPUAyaxriZtUKRXPsLoVmtEqz9HooRu9ztrHjjDBv51q17541S1Jkp3ItqJs1jTFnWbVTRS469UuUzac3KXqkfpkeeEmmmPYJs0Wuc=
+	t=1768207462; cv=none; b=UJJzuXKfZuU81V7FFt2Jadi6IkhXukpalozEixgAnJux9wTebkGsYPwWKoAtztfyHh8F6oC7RcuxYy5ks5XmJFn84Ydykn+EYeB4e78DDTSsbd6QQMIQFQ4453cWC6UasENUHFMUUtLdTGO5hQcKRlEX5PJR+UBWkrrHch2nmCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768207441; c=relaxed/simple;
-	bh=aKhduY20fT9Hpvr0jeldTUmtyfo5KwPrSMTVQGzYKtA=;
+	s=arc-20240116; t=1768207462; c=relaxed/simple;
+	bh=dXK5xc/0Iy/RjvinuAmJfA4hXGDZuFREYUPikq+i30c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LmZoeeTkhxoggkR3GIoaDjxWsKV8r3nXXmvEvZMkk07ZQJmhe/ZEl2g0D68R3YuMpZP4XBzAQu9ObeqgyLjzkwce2kphwLPVm634YyWtEXOsRUdgPQ5Y8KYeWeoVnNBQOd4JPAQgYiiO5qqbPWmBYEyTaZMRF63Scd5rkbsrrsE=
+	 MIME-Version; b=iVAe0B39f022mMBXnUxE8GZK0pptX32Uu6sxUPlIYie6VKd6y4LBJAcWZw70X8CNbJFInMJ5uT2Pft/mdDHDsLMNI3MgDKC6/JQG5ADVaAdigZRnchUQcj+1sSwh9+4KM3X4FpiS1OX0cpdSCNtGN5+8R0RVZ2ekUXANx54mmHE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CDEC116D0;
-	Mon, 12 Jan 2026 08:43:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A960C116D0;
+	Mon, 12 Jan 2026 08:44:20 +0000 (UTC)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: loongarch@lists.linux.dev,
@@ -22,9 +22,9 @@ Cc: loongarch@lists.linux.dev,
 	Huacai Chen <chenhuacai@gmail.com>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 1/7] irqchip/loongarch-avec: Adjust irqchip driver for 32BIT/64BIT
-Date: Mon, 12 Jan 2026 16:43:14 +0800
-Message-ID: <20260112084320.1982244-2-chenhuacai@loongson.cn>
+Subject: [PATCH V2 2/7] irqchip/loongson-liointc: Adjust irqchip driver for 32BIT/64BIT
+Date: Mon, 12 Jan 2026 16:43:15 +0800
+Message-ID: <20260112084320.1982244-3-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260112084320.1982244-1-chenhuacai@loongson.cn>
 References: <20260112084320.1982244-1-chenhuacai@loongson.cn>
@@ -36,81 +36,42 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-csr_read64() is only available on 64BIT LoongArch platform, so use
-recently added adaptive csr_read() instead, so as to make the driver
-work on both 32BIT and 64BIT platform.
-
-BTW, make avecintc_enable() be a no-op since it is only needed by 64BIT
-platform.
+irq_domain_alloc_fwnode() takes a parameter with the phys_addr_t type.
+Currently we pass acpi_liointc->address to it. This can only work on
+64BIT platform because its type is u64, so cast it to phys_addr_t and
+then the driver works on both 32BIT and 64BIT platform.
 
 Co-developed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- drivers/irqchip/irq-loongarch-avec.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/irqchip/irq-loongson-liointc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index ba556c008cf3..bd29bf4c07ed 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -58,11 +58,13 @@ struct avecintc_data {
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+index 0033c2188abc..f001a34878ba 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -394,8 +394,9 @@ static int __init acpi_cascade_irqdomain_init(void)
  
- static inline void avecintc_enable(void)
+ int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic *acpi_liointc)
  {
--	u64 value;
-+	if (IS_ENABLED(CONFIG_MACH_LOONGSON64)) {
-+		u64 value;
+-	int ret;
++	phys_addr_t addr = acpi_liointc->address;
+ 	struct fwnode_handle *domain_handle;
++	int ret;
  
--	value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
--	value |= IOCSR_MISC_FUNC_AVEC_EN;
--	iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-+		value = iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
-+		value |= IOCSR_MISC_FUNC_AVEC_EN;
-+		iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
-+	}
- }
+ 	parent_int_map[0] = acpi_liointc->cascade_map[0];
+ 	parent_int_map[1] = acpi_liointc->cascade_map[1];
+@@ -403,7 +404,7 @@ int __init liointc_acpi_init(struct irq_domain *parent, struct acpi_madt_lio_pic
+ 	parent_irq[0] = irq_create_mapping(parent, acpi_liointc->cascade[0]);
+ 	parent_irq[1] = irq_create_mapping(parent, acpi_liointc->cascade[1]);
  
- static inline void avecintc_ack_irq(struct irq_data *d)
-@@ -167,7 +169,7 @@ void complete_irq_moving(void)
- 	struct pending_list *plist = this_cpu_ptr(&pending_list);
- 	struct avecintc_data *adata, *tdata;
- 	int cpu, vector, bias;
--	uint64_t isr;
-+	unsigned long isr;
- 
- 	guard(raw_spinlock)(&loongarch_avec.lock);
- 
-@@ -177,16 +179,16 @@ void complete_irq_moving(void)
- 		bias = vector / VECTORS_PER_REG;
- 		switch (bias) {
- 		case 0:
--			isr = csr_read64(LOONGARCH_CSR_ISR0);
-+			isr = csr_read(LOONGARCH_CSR_ISR0);
- 			break;
- 		case 1:
--			isr = csr_read64(LOONGARCH_CSR_ISR1);
-+			isr = csr_read(LOONGARCH_CSR_ISR1);
- 			break;
- 		case 2:
--			isr = csr_read64(LOONGARCH_CSR_ISR2);
-+			isr = csr_read(LOONGARCH_CSR_ISR2);
- 			break;
- 		case 3:
--			isr = csr_read64(LOONGARCH_CSR_ISR3);
-+			isr = csr_read(LOONGARCH_CSR_ISR3);
- 			break;
- 		}
- 
-@@ -234,7 +236,7 @@ static void avecintc_irq_dispatch(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 
- 	while (true) {
--		unsigned long vector = csr_read64(LOONGARCH_CSR_IRR);
-+		unsigned long vector = csr_read(LOONGARCH_CSR_IRR);
- 		if (vector & IRR_INVALID_MASK)
- 			break;
- 
+-	domain_handle = irq_domain_alloc_fwnode(&acpi_liointc->address);
++	domain_handle = irq_domain_alloc_fwnode(&addr);
+ 	if (!domain_handle) {
+ 		pr_err("Unable to allocate domain handle\n");
+ 		return -ENOMEM;
 -- 
 2.47.3
 
