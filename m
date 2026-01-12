@@ -1,126 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EF3346FD1
-	for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 270961C701F
+	for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 12:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768209839; cv=none; b=BYfkrhEQbwqaGrrxv13mUOKsj0bTXGPNVAfdq+6J/Ilg9UU8wcSEk5UL6HJyVdYMvsaVWFXy7h3nzdSL9Dk24Z1LV7SEEQZ5NN45bdg+1+4brOJpNKASveq6A9slmrwCyvF5wYwL89rh8fHsKpDP/ni3uB4QyMrvH0fq36z/G0c=
+	t=1768220794; cv=none; b=k0TCoolMgUI7n4662iadRdJXzSb3Shot6bJ3YS/s19wD0JZm4CQXmYcH2PWMFSbT7+tTmtWKClAGkN3vROW5MKB2p8gilu2yL50+RsQgTHS4+0P/zhuOy6PXs3g8wm3fORusQRH7eX7Ctq5tSr5HhUZM2anwUxb+9agGxUr+F7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768209839; c=relaxed/simple;
-	bh=h8p6HzMwTnGz8+/tWQUGIqpIFo7/UTaLeSRuhoxEu+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sJ8tCVNa5/Fh6lan7IsuE1LsvIG1zNpcLzP62oqOZL1NsjRh6H5gAV5KspbWouYUvUFZP3Zbdh6QaI0/xtZlxwX/g0qXVcTLV/Tq50ZCrNa0R1REy8g72e4C7VQq22R/gOyxAwBXafqWfmqpGDy2HtQ2FbPZ7xUBu5YituevoO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDT7lyHF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDT7lyHF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733CCC4AF0B
-	for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 09:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768209839;
-	bh=h8p6HzMwTnGz8+/tWQUGIqpIFo7/UTaLeSRuhoxEu+g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PDT7lyHFyga1m0gMccTQdmS7LuoQelKtxqZDIDtJLliN53zyxt0gdKDsupZl1MlY0
-	 KA4oEfAJ5eu7IswC+IunEmnFcJUhv+nxasthYqhJrO3dAWwOshNgMWoC7KSRtVSi6V
-	 R3HcA04PHJhrWSElb9JhW6TQzLIzLuUg6QtjhZmkU13fb8JZWuCcot7Ty47TetRLSF
-	 fYSm4rWzgD33MPZC0XaMaUIPHdNy72zU6UIjFrgnNsmi9QEanRn4pzcdXhHwWIo2GQ
-	 cTCpXyIEp/CkQOr3U77RZj6XTLK+RihDFNS4OQ3oa8fI195r+JMK+GvZiBuyooH0z7
-	 LtSrmgQfNK2DQ==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b8010b8f078so1022116766b.0
-        for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 01:23:59 -0800 (PST)
-X-Gm-Message-State: AOJu0YydHTAhplSvh7NakdupQ3r0zuwE0v8RkrpNeWOvr9RqHzC1i4Kh
-	lcUmoT/ImtwDSBnVfpENewXZ991kbBPK04yFWcCPjS2fGkQTAikaIkLTFAKLpFffMcRaZOEaVtF
-	5qdjSorSTsIg6Luhdv5DMxFyRssW+GFA=
-X-Google-Smtp-Source: AGHT+IF5fwZwBVkTrXDRsl1u4ZLcynijRT059DLq2H9ot2RBkSuhPr2ZEqMitb4WHffgHdfu3zc7YyEoDc0r3k/eaRc=
-X-Received: by 2002:a17:907:94cd:b0:b77:1b03:66a1 with SMTP id
- a640c23a62f3a-b844517a078mr1801561366b.41.1768209838014; Mon, 12 Jan 2026
- 01:23:58 -0800 (PST)
+	s=arc-20240116; t=1768220794; c=relaxed/simple;
+	bh=IOz/0cRFYtfPIWNv1W0KIDRSBDCMapaNOnPEZTHhwuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=euZlsKUg8DfQqU0n1vfZxjle4IFj/awv8Gi76+yBhIOjeEXyJ01yggzxXNguv0VJVg2nKYmAM5kOF2lNdccaYGvR/12++68dyy0BlJY3VP57VVQ1O5M0lDxsrBwsNlNs9o/0h3GYjO6mycRXIzVXBPuZgIB/TR47e6VUso9uaY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D88E497;
+	Mon, 12 Jan 2026 04:26:25 -0800 (PST)
+Received: from [10.57.95.123] (unknown [10.57.95.123])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6C913F59E;
+	Mon, 12 Jan 2026 04:26:27 -0800 (PST)
+Message-ID: <09de87bc-d952-41e7-9657-852c2924aaa7@arm.com>
+Date: Mon, 12 Jan 2026 12:26:26 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260112091531.12735-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260112091531.12735-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 12 Jan 2026 17:23:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6xLX5ZjVKV9bixN=PT6p47JheDU4pYtqeo-=2BSnQkRg@mail.gmail.com>
-X-Gm-Features: AZwV_QgrS_3ROi83aicyZrvmLFeMoxmVVWxDiX2XQbzEDSaPYoy_1ihDqA_3Bac
-Message-ID: <CAAhV-H6xLX5ZjVKV9bixN=PT6p47JheDU4pYtqeo-=2BSnQkRg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "LoongArch: Remove unnecessary checks for ORC unwinder"
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260102131156.3265118-1-ryan.roberts@arm.com>
+ <20260102131156.3265118-4-ryan.roberts@arm.com>
+ <20260104230136.7aaf8886@pumpkin> <20260107140533.2b3c46a1@pumpkin>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20260107140533.2b3c46a1@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Tiezhu,
+On 07/01/2026 14:05, David Laight wrote:
+> On Sun, 4 Jan 2026 23:01:36 +0000
+> David Laight <david.laight.linux@gmail.com> wrote:
+> 
+>> On Fri,  2 Jan 2026 13:11:54 +0000
+>> Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>>> Previously different architectures were using random sources of
+>>> differing strength and cost to decide the random kstack offset. A number
+>>> of architectures (loongarch, powerpc, s390, x86) were using their
+>>> timestamp counter, at whatever the frequency happened to be. Other
+>>> arches (arm64, riscv) were using entropy from the crng via
+>>> get_random_u16().
+>>>
+>>> There have been concerns that in some cases the timestamp counters may
+>>> be too weak, because they can be easily guessed or influenced by user
+>>> space. And get_random_u16() has been shown to be too costly for the
+>>> level of protection kstack offset randomization provides.
+>>>
+>>> So let's use a common, architecture-agnostic source of entropy; a
+>>> per-cpu prng, seeded at boot-time from the crng. This has a few
+>>> benefits:
+>>>
+>>>   - We can remove choose_random_kstack_offset(); That was only there to
+>>>     try to make the timestamp counter value a bit harder to influence
+>>>     from user space.
+>>>
+>>>   - The architecture code is simplified. All it has to do now is call
+>>>     add_random_kstack_offset() in the syscall path.
+>>>
+>>>   - The strength of the randomness can be reasoned about independently
+>>>     of the architecture.
+>>>
+>>>   - Arches previously using get_random_u16() now have much faster
+>>>     syscall paths, see below results.
+>>>
+>>> There have been some claims that a prng may be less strong than the
+>>> timestamp counter if not regularly reseeded. But the prng has a period
+>>> of about 2^113. So as long as the prng state remains secret, it should
+>>> not be possible to guess. If the prng state can be accessed, we have
+>>> bigger problems.  
+>>
+>> If you have 128 bits of output from consecutive outputs I think you
+>> can trivially determine the full state using (almost) 'school boy' maths
+>> that could be done on pencil and paper.
+>> (Most of the work only has to be done once.)
+>>
+>> The underlying problem is that the TAUSWORTHE() transformation is 'linear'
+>> So that TAUSWORTHE(x ^ y) == TAUSWORTHE(x) ^ TAUSWORTHE(y).
+>> (This is true of a LFSR/CRC and TOUSWORTH() is doing some subset of CRCs.)
+>> This means that each output bit is the 'xor' of some of the input bits.
+>> The four new 'state' values are just xor of the the bits of the old ones.
+>> The final xor of the four states gives a 32bit value with each bit just
+>> an xor of some of the 128 state bits.
+>> Get four consecutive 32 bit values and you can solve the 128 simultaneous
+>> equations (by trivial substitution) and get the initial state.
+>> The solution gives you the 128 128bit constants for:
+>> 	u128 state = 0;
+>> 	u128 val = 'value returned from 4 calls';
+>> 	for (int i = 0; i < 128; i++)
+>> 		state |= parity(const128[i] ^ val) << i;
+>> You don't need all 32bits, just accumulate 128 bits.  
+>> So if you can get the 5bit stack offset from 26 system calls you know the
+>> value that will be used for all the subsequent calls.
+> 
+> Some of the state bits don't get used, so you only need 123 bits.
+> The stack offset is 6 bits - so you need the values from 19 calls.
+> 
+>> Simply changing the final line to use + not ^ makes the output non-linear
+>> and solving the equations a lot harder.
+>>
+>> I might sit down tomorrow and see if I can actually code it...
+> 
+> Finally done:
+> 
+> #include <stdio.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+> 
+> typedef unsigned int u32;
+> typedef unsigned long long u64;
+> typedef unsigned __int128 u128;
+> 
+> struct rnd_state { u32 s1; u32 s2; u32 s3; u32 s4; };
+> u32 prandom_u32_state(struct rnd_state *state)
+> {
+> #define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
+>         state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
+>         state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
+>         state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
+>         state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
+> 
+>         return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
+> }
+> 
+> #define X(n, hi, lo) [n] = (u128)0x##hi << 64 | 0x##lo
+> u128 map[128] = {
+>         X(  1, 23acb122e4a76, e206c3f6fe435cb6),
+> 	...
+>         X(127, 00d3276d8a76a, e560d1975675be24) };
+> 
+> u128 parity_128(u128 v)                 
+> {                               
+>         return __builtin_parityll(v) ^ __builtin_parityll(v >> 64);
+> }
+> 
+> int main(int argc, char **argv)
+> {
+>         struct rnd_state s = {};
+>         u128 s0, v, r = 0;
+> 
+>         read(open("/dev/urandom", O_RDONLY), &s, sizeof s);
+>         // Remove low bits that get masked by the (s & c) term.
+>         s.s1 &= ~1; s.s2 &= ~7; s.s3 &= ~15; s.s4 &= ~127;
+>         s0 = (((u128)s.s4 << 32 | s.s3) << 32 | s.s2) << 32 | s.s1;
+>         v = prandom_u32_state(&s);
+>         v |= (u128)prandom_u32_state(&s) << 32;
+>         v |= (u128)prandom_u32_state(&s) << 64;
+>         v |= (u128)prandom_u32_state(&s) << 96;
+> 
+>         for (int n = 0; n < 128; n++)
+>                 r |= parity_128(v & map[n]) << n;
+> 
+>         printf("%016llx%016llx\n", (u64)(s0 >> 64), (u64)s0);
+>         printf("values%s match\n", r == s0 ? "" : " do not");
+> 
+>         return r != s0;
+> }
+> 
+> I've trimmed the initialiser - it is very boring.
+> The code to create the initialiser is actually slightly smaller than it is.
+> Doable by hand provided you can do 128bit shift and xor without making
+> any mistakes.
+> 
+> I've just done a quick search through the kernel sources and haven't found
+> many uses of prandom_u32_state() outside of test code.
+> There is sched_rng() which uses a per-cpu rng to throw a 1024 sized die.
+> bpf also has a per-cpu one for 'unprivileged user space'.
+> net/sched/sch_netem.c seems to use one - mostly for packet loss generation.
+> 
+> Since the randomize_kstack code is now using a per-task rng (initialised
+> by clone?) that could be used instead of all the others provided they
+> are run when 'current' is valid.
+> 
+> But the existing prandom_u32_state() needs a big health warning that
+> four outputs leak the entire state.
+> That is fixable by changing the last line to:
+>         return state->s1 + state->s2 + state->s3 + state->s4;
+> That only affects the output value, the period is unchanged.
 
-On Mon, Jan 12, 2026 at 5:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> This reverts commit 4cd641a79e69270a062777f64a0dd330abb9044a.
->
-> The system can not boot normally with the latest kernel 6.19-rc5 under
-> different configs, commit 4cd641a79e69 ("LoongArch: Remove unnecessary
-> checks for ORC unwinder") is the first bad commit since 6.19-rc4, just
-> revert it first before finding the root cause.
-Can you show the errors in the boot log?
+Hi David,
 
-Huacai
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/unwind_orc.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index 8a6e3429a860..710f82d73797 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -352,6 +352,12 @@ static inline unsigned long bt_address(unsigned long=
- ra)
->  {
->         extern unsigned long eentry;
->
-> +       if (__kernel_text_address(ra))
-> +               return ra;
-> +
-> +       if (__module_text_address(ra))
-> +               return ra;
-> +
->         if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
->                 unsigned long func;
->                 unsigned long type =3D (ra - eentry) / VECSIZE;
-> @@ -369,13 +375,10 @@ static inline unsigned long bt_address(unsigned lon=
-g ra)
->                         break;
->                 }
->
-> -               ra =3D func + offset;
-> +               return func + offset;
->         }
->
-> -       if (__kernel_text_address(ra))
-> -               return ra;
-> -
-> -       return 0;
-> +       return ra;
->  }
->
->  bool unwind_next_frame(struct unwind_state *state)
-> @@ -498,6 +501,9 @@ bool unwind_next_frame(struct unwind_state *state)
->                 goto err;
->         }
->
-> +       if (!__kernel_text_address(state->pc))
-> +               goto err;
-> +
->         return true;
->
->  err:
-> --
-> 2.42.0
->
->
+This all seems interesting, but I'm not clear that it is a blocker for this
+series. As I keep saying, we only use 6 bits for offset randmization so it is
+trival to brute force, regardless of how easy it is to recover the prng state.
+
+Perhaps we can decouple these 2 things and make them independent:
+
+ - this series, which is motivated by speeding up syscalls on arm64; given 6
+   bits is not hard to brute force, spending a lot of cycles calculating those
+   bits is unjustified.
+
+ - Your observation that that the current prng could be improved to make
+   recoving it's state harder.
+
+What do you think?
+
+Thanks,
+Ryan
+
+
+> 
+> 	David
+> 
+> 
+
