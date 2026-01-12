@@ -1,167 +1,95 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3515F358D07
-	for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 13:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E0B283FD8
+	for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 17:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768224985; cv=none; b=TZ5jahGxbn2ib2GY/E6H7k1XxSjMQ+NpugUYKc0D1wLOUMfvS7NvokTLpPfqAbLw3Hwh4SH3zFIsBmamhtBudaS4+iPH88//zMUuCVg8hHPOi+Fpev6xL/GnjBBb3mH1E0z95+f33jtI8S9xASSrWgj4syNewWc3oaUOUgXgY8c=
+	t=1768239591; cv=none; b=lKfSmqh/ygiQHhKpObfUIhLvPgoRTmcNI1YrLvciK3NJRpiQJ7TBtTbdq6LPuzFpKq/pG0SL6mf+TPmKVjydXLXoWQ7wIhSnn+LvEnxb7n3ZorRQkHLT8sdYaGdCtUL6jWl/lYsZZSYtY0oaaHCdcSW/l8xvxu7B3fmP5FI/uOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768224985; c=relaxed/simple;
-	bh=aaBMsDaRPA4eC7AULe89WndPY2/JAXufqja2AvkHIwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JeEOoSMyU9vPWrk45/Wxu2sALWhOcdeMlmumimkJQGpAS9kAb5VVTcpqiU5KdBkpXp7DjmJIbWKrpzxzgwYyroxjwwXNMAw7Kr1wjDYdc8yzPRbfyzWLasGEPRZd+Y6HqzTdJ4DGbloWcvfOEUwF2zEMGZ1/w0i9YobxhukErxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwlSTktw; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768239591; c=relaxed/simple;
+	bh=5WOjJJi9GshJrzbNszTXOCjQ/WC3CHWW6Rm24QuGEGg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YFWRVkbTDvyoQaKrF5/pcHEcFARqt4R+TDSbuvOrNHFSLmN9R5/tF7eFtSLag1PVUo9at93T7IBCnwaBskYuIFMy5uHdBAYAgiOB6gihv0U+OdQWBAbLhO82UHpnAmwOhP3//wLN10xixLLYN9CTCsJZ81e28xVvV8SKSOPPbvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kzUxNEP2; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwlSTktw"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-430f5ecaa08so3025069f8f.3
-        for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 05:36:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kzUxNEP2"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34c7d0c5ed2so5976760a91.0
+        for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 09:39:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768224982; x=1768829782; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bLo3Abz9wAwu25esY4s8FeJ9KMDvXVIZnqcKTN+SMTE=;
-        b=UwlSTktwfWLXns4RXGTrnApxlmNoe3B6cxJmrl0WF+mg6/sdNhmzfywG9ggcDMFXr3
-         jeh/vOR8yYpXCSW8hyIGhvpbgknYW2AIoeXG7OE1rSJ4ZhYgeHRM3N8Idv3s5jlRsWfk
-         CWsaIOqLwAEomIc7IU03m75i+UdGCx1Rv6hfGZoBlpcojQ3oPyDzt0zTm4YlhTtBPjys
-         LXjAM35uOtv7XxhiSARwzbuQtSlaYDNPHSAtVJoehdDqI2wSy5DhQXpsC4eujhzgLY4g
-         EihyuJSAZDNsAmYe/JVqtmbsOntvCaonBJck/baha+eHs9pW/SWJ6xOoNRiF0K44TQ21
-         qxpg==
+        d=google.com; s=20230601; t=1768239589; x=1768844389; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PjBpIA3ZO3sQJJLy61/+UM/sv023xJCPIJTeEkES88=;
+        b=kzUxNEP2PpWCXxbydVOO3yyaKN5ysoZ0LyCX8px3KQIEudwVOmiZoGllUHaAtTWbmP
+         hMVlYFrIGdvWdW5M+3jOagJV1lvuj56GF09w58MzVhmGJwGbTuTmLf+3U1c/xMqcSstJ
+         BzgC7RhedR/0yuJr1MnRiJAY6pHb3R8mAFuW/hVpS85iT6XIYlbdsUhkpNii8EZ/hAGb
+         06KYgZWmCzYPK1yx6NzAAkUd3kWEz79bjJZJ+8CVbc6ZKUHOKMYu8TfG0Qe8zwxSTJAU
+         8A44SZIvsfJGZ4Gz0h7omH0oE/6Pc6G6QTuisgLIK+D1J+9YxLG6rzLzlAU9omicM0oC
+         YjXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768224982; x=1768829782;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bLo3Abz9wAwu25esY4s8FeJ9KMDvXVIZnqcKTN+SMTE=;
-        b=cg+IGpwFgsVLarK5GR7BHxhkGZiTeDhLbcLxPCZnLhbrWrJj77AhbGuWPidJ3spLyM
-         sR4KzkeJzEPayVNa6Vqb8aD6mSOQWFVssr2nAfnAPlNZUjdY5e2hjVSi8EeXlBujcZRi
-         ubA+RKTnAUiI9NHdpxyqOHaop0Mbc4rVVAyqAJz39e70CHPh0YcYwUloPgb0fbqo5cgG
-         fXglDP9Y6Ke1Z76N40/ktq38H9Ja/xWN0kusRqCC330g0vB1PKH60EF0x7yKFTz82lkf
-         SnNRd80xz+DrTy7fSHlMrPzfuV4UWDkgZLo+81eE2IVeE9UTNIy61bdN5H8w8Le6Q/JQ
-         wscA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeUuKsyx2grLAJQ5tGSfFfcL/mByX6TfM/RutjNQvAPZtgSuGdJ7URn3XN0bFnhdveyvrfqLOh0xo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzwd/tzoo8DN3GaR1RCi877RErhqsgldHa89BT+fwTjindZ5itM
-	bbDCTlwmUWiqRoqDw/o/eo6/wzSvfAkfg7BaHbV1MTHE/kSl8pwMxj9s
-X-Gm-Gg: AY/fxX73FLAaH01yeCO0Bg7Pu8vsG/RxNufbzPs7fm6Q9fnLVkqruuORSF5xR5pJHod
-	pIDMLR1OzAUgEilotvGs7uBryoAF3YwXZVzsk7WxW/3zMnMLFrvrliSbqf+PZ13lvTnmgzrfTzy
-	64E54q4jtQNRJoPnXpL3WTRBC/eNLUG+LPIp+Q+JyYwidxsHJsD4EFy9TxRbVpJctkuNhvS6RCf
-	me5pT+fIFmF746Oh7MshQBbQpx05+c94Tl2pbhdqVOsjzQGpy+TBCfCw/jZuYx1+k/JXe563Fqx
-	hwoMFDMVVFFn8RL99XF5Lei5TxU23aDtAivs36CeW0pndWIoLNhckfVutSx0v8MVBOCjTLT7jcf
-	zodPJOKCsewrH9bBb0dnhdu3UMZ0dMyniR9fbpL//0sPsbcoTp36P6R9EZTwpLPPuLo+RJAdMhF
-	m6r4tSWJv1iwC+t/cPb7HPvILIyvIfJAhMlEAYLYCU5J3SsfzvedTK
-X-Google-Smtp-Source: AGHT+IGyxiv2XFt49Pj+G/FCKb6Do+/qO1fvIxMUjWKWGTcpTcAtASoZtqcJMaJZUWyMrmC4TwCROg==
-X-Received: by 2002:a05:6000:40c9:b0:430:fafd:f1d2 with SMTP id ffacd0b85a97d-432c3628374mr22009793f8f.11.1768224982426;
-        Mon, 12 Jan 2026 05:36:22 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5df9afsm41054434f8f.24.2026.01.12.05.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 05:36:22 -0800 (PST)
-Date: Mon, 12 Jan 2026 13:36:20 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
- Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
- Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] randomize_kstack: Unify random source across
- arches
-Message-ID: <20260112133620.2863e1d6@pumpkin>
-In-Reply-To: <09de87bc-d952-41e7-9657-852c2924aaa7@arm.com>
-References: <20260102131156.3265118-1-ryan.roberts@arm.com>
-	<20260102131156.3265118-4-ryan.roberts@arm.com>
-	<20260104230136.7aaf8886@pumpkin>
-	<20260107140533.2b3c46a1@pumpkin>
-	<09de87bc-d952-41e7-9657-852c2924aaa7@arm.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1768239589; x=1768844389;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+PjBpIA3ZO3sQJJLy61/+UM/sv023xJCPIJTeEkES88=;
+        b=HlcBn/9yAdaMtDFPzRVM7iWColyMeW7O3dF6VeKtPLzRgaWhY1vkExcadbEgIcUcYH
+         Nlj1EQuV8aNhghn+AoCl/xZ1khMgkgJLTvczFILhLBFFkiwK/e+7dyJh4Hvsr1qFOqpq
+         u0nPeffunIlzK140uhF1LkcBac9qRQDE4e/Z5G01ustzOzHkKKg4TCCYq78nKMul5Zxd
+         crWR05eyoOTQyttA6rzycOAa2PU2JIoFn56nlcQlT/O6qGkfME4JvH0jn3lGz0wzHTeD
+         orTE6I1e7QFEOMZ+8r2ZMbMcVnX01LdZ0fOZeivKbY+Uy+X0o88pcrC5EiHUe1Ko8fRU
+         5etQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8xRsnovBh5ujmPNY4ndOUgDGP6npt8aVtUICyL5wm9s1LJFZDll26NK7kRaqH1P5mfoYkeQYwAXc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwuXWgMnqXb3RYP8YTYWchI3VCC2X9nVHNwvqp66QgQE55kOPND
+	h4lGiqgDzmP8uFukdsjfJ+BcAHCntfUfP25l/b6QAXlmUvevL1Jj+shPr8sD0ShdKvWjk/6GHIs
+	fzPhUPA==
+X-Google-Smtp-Source: AGHT+IF668cUxxhKhGHv90tNvsIeTkhAR6ns6JG1hxt5u/yIlrpHwYKq8uhAaCwc/umnpMOixfg8y4oIB3A=
+X-Received: from pjbgk17.prod.google.com ([2002:a17:90b:1191:b0:34c:489a:f4c9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2251:b0:33e:30e8:81cb
+ with SMTP id 98e67ed59e1d1-34f68b65ff0mr15047069a91.13.1768239588965; Mon, 12
+ Jan 2026 09:39:48 -0800 (PST)
+Date: Mon, 12 Jan 2026 09:38:38 -0800
+In-Reply-To: <20251205232655.445294-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20251205232655.445294-1-seanjc@google.com>
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <176823927133.1374677.16641795988105461817.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: Remove subtle "struct kvm_stats_desc" pseudo-overlay
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, 12 Jan 2026 12:26:26 +0000
-Ryan Roberts <ryan.roberts@arm.com> wrote:
+On Fri, 05 Dec 2025 15:26:55 -0800, Sean Christopherson wrote:
+> Remove KVM's internal pseudo-overlay of kvm_stats_desc, which subtly
+> aliases the flexible name[] in the uAPI definition with a fixed-size array
+> of the same name.  The unusual embedded structure results in compiler
+> warnings due to -Wflex-array-member-not-at-end, and also necessitates an
+> extra level of dereferencing in KVM.  To avoid the "overlay", define the
+> uAPI structure to have a fixed-size name when building for the kernel.
+> 
+> [...]
 
-> On 07/01/2026 14:05, David Laight wrote:
-> > On Sun, 4 Jan 2026 23:01:36 +0000
-> > David Laight <david.laight.linux@gmail.com> wrote:
-...
-> > I've trimmed the initialiser - it is very boring.
-> > The code to create the initialiser is actually slightly smaller than it is.
-> > Doable by hand provided you can do 128bit shift and xor without making
-> > any mistakes.
-> > 
-> > I've just done a quick search through the kernel sources and haven't found
-> > many uses of prandom_u32_state() outside of test code.
-> > There is sched_rng() which uses a per-cpu rng to throw a 1024 sized die.
-> > bpf also has a per-cpu one for 'unprivileged user space'.
-> > net/sched/sch_netem.c seems to use one - mostly for packet loss generation.
-> > 
-> > Since the randomize_kstack code is now using a per-task rng (initialised
-> > by clone?) that could be used instead of all the others provided they
-> > are run when 'current' is valid.
-> > 
-> > But the existing prandom_u32_state() needs a big health warning that
-> > four outputs leak the entire state.
-> > That is fixable by changing the last line to:
-> >         return state->s1 + state->s2 + state->s3 + state->s4;
-> > That only affects the output value, the period is unchanged.  
-> 
-> Hi David,
-> 
-> This all seems interesting, but I'm not clear that it is a blocker for this
-> series. As I keep saying, we only use 6 bits for offset randmization so it is
-> trival to brute force, regardless of how easy it is to recover the prng state.
-> 
-> Perhaps we can decouple these 2 things and make them independent:
-> 
->  - this series, which is motivated by speeding up syscalls on arm64; given 6
->    bits is not hard to brute force, spending a lot of cycles calculating those
->    bits is unjustified.
-> 
->  - Your observation that that the current prng could be improved to make
->    recoving it's state harder.
-> 
-> What do you think?
+Applied to kvm-x86 generic, thanks!
 
-They are separate.
-I should have a 'mostly written' patch series for prandom_u32_state().
+[1/1] KVM: Remove subtle "struct kvm_stats_desc" pseudo-overlay
+      https://github.com/kvm-x86/linux/commit/da142f3d373a
 
-If you unconditionally add a per-task prng there are a few places that could
-use it instead of a per-cpu one.
-It could be 'perturbed' during task switch - eg by:
-	s->s1 = (s->s1 ^ something) | 2;
-(The 2 stops the new value being 0 or 1, losing 1 bit wont be significant.)
-
-This one is much nearer 'ready' and has an obvious impact.
-
-	David
-
-> 
-> Thanks,
-> Ryan
-> 
-> 
-> > 
-> > 	David
-> > 
-> >   
-> 
-
+--
+https://github.com/kvm-x86/linux/tree/next
