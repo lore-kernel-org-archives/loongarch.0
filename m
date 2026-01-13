@@ -1,185 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DE22C3749;
-	Tue, 13 Jan 2026 02:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135CA285418
+	for <loongarch@lists.linux.dev>; Tue, 13 Jan 2026 04:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768271940; cv=none; b=gLjvjjXj3GIqqdzydb8E8Pf5LPo2ZsYA+s0osefo6OkB8F1Www7WP02m8k74T9GtZQij0UX9Q9ez2OZ+CzHQ0jrgo3fMWiVX9tC6+VaNsDiEfccnVwYas6LEy2hOjV6lmKDnREDQTnzv5iqVY5JYDteoxLw1/VXRacB0KPHDRxc=
+	t=1768279331; cv=none; b=mlk9SjroT24pK1C8n25Ru7ThVnbs5B+VRv0UdWRll77tmBGP3ImZZk1gnIChOEoObBX/btkiWps3Ny6AX8p/seGDEIztj9m4cA4gGUv34h+/MZthsuiEQhrkuzET+sLJRkfBzPb5HbOrrXn2iTxUqF/+wqvvpV48ZP40fOLfHYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768271940; c=relaxed/simple;
-	bh=5a3BZXpFutt/8/dSKJ4D8/A1NP2ywsvTDflXEzl7OIQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Wwj5ZQ8ufTIkRzrT14dniIKxf10x6QXQUZ3pcfCpMcBs7U5rIfYNgWP2fIV+UqhQVJb5GlOsqol13chGnf/TuQJFJZRXg34wqcx/D0KnPAoGiqS0pI9Eu6dqU9334zN0z1W0l/MvmqeISTBL2SlWttetGpsLlCjhA5204x7mGWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hS+Sybs8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768279331; c=relaxed/simple;
+	bh=kJYCXgJaBFGROYrM4z/Y/a+i/odNdursZw3fa2ISiLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ttbU2ukz6xJHpHSjUugEetsKcy0oVlOnjUXxvFekPMZWF2ePBNPdALwnY+kJAzf8hfwSxAw81NLp15eGyuyV6xuXgrKrxT5CxuWV6ppe2ZBIC6C0OICS5zjfpASwflVRweHYgclh/s51WMZoLD9LagX6ccDMJEcLm+8vj1V0igU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cDQAcsda; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hS+Sybs8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA503C19421;
-	Tue, 13 Jan 2026 02:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768271939;
-	bh=5a3BZXpFutt/8/dSKJ4D8/A1NP2ywsvTDflXEzl7OIQ=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=hS+Sybs858OM/Erh+PXpotOM6/dFGIu9F6xds4kHF0aZ9xljxsSrySesrHwGMtfkw
-	 LCWMevZTfytd7dobAnx6sweWg0iCr74OU1Giq2cfPlT07r5jzqj+Kz/eyaT7n4xPmI
-	 gudX3T2TgsMC1so1H4QABfXFO/5v+QrJGhEG3iHwoDkVLCSmnq0PJs0kiqZJbuR48F
-	 MnPPp5aOejMMEYd/VlWAReJMPKybuMtX9M+bSlid2jtgbmMr6vC6vBdsxplP2lyiDO
-	 PGtNFEyPlfjZGXnmeLcxlk0ko8FaTXeNYG76D/zOTwgbEuRqHfNlPKFrXhhgo6Gnze
-	 YHOPYqs7tbiBg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957FFCF45DF;
-	Tue, 13 Jan 2026 02:38:59 +0000 (UTC)
-From: Ziyao Li via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
-Date: Tue, 13 Jan 2026 10:38:58 +0800
-Subject: [PATCH v4] PCI: loongson: Override PCIe bridge supported speeds
- for Loongson-3C6000 series
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDQAcsda"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-652fdd043f9so802623a12.1
+        for <loongarch@lists.linux.dev>; Mon, 12 Jan 2026 20:42:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768279328; x=1768884128; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z/lDQFu0LLEkZhQXSlidHvFYOofM51JncT3Ixf9RmME=;
+        b=cDQAcsdatgaewcXP6iPa+NfzfCKKeNNmwgBH+6EvUTFomnn/6YTYYi+mBiMXQBvQ7X
+         0b4qsXjuhEc+ThVlYLw3PBgJjvo1MZN8GbmMekdZepTDStSEHnZj3KCpvNs1BkJmPbbQ
+         tKJDDCzIXJtgupSYgDW3cX48OW8Ur5uDmlin2EQIfC3JonMMPFdALirZ8ckOWAVyiaVr
+         y6hN0YAlpN7BGyFaTDs49Cp9XnVIR4cD9DRGUvlr+LMLGPzdbipTKedXowNlUBHjxAzD
+         f1T1lYN/aqtGf3OTngBNyq4mWe9r6g+veTRQwtEFd++bUQIA7Odeg2xnN+wSIdiz9sNa
+         b8zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768279328; x=1768884128;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=z/lDQFu0LLEkZhQXSlidHvFYOofM51JncT3Ixf9RmME=;
+        b=hPbKO+mG+zx9xN+EEjB9D6Wj0s4o9DnxokZeZ4y7PBRMtpTV4pVLN13WlczuQlKsqE
+         kO4NY3qYf1cIQ0BlkLFN61Xcx5behcpAu6N5sPLva9VUpOayd6nRgB0dJQ71DSr20oXb
+         wcimt2wU/+NUDnp/Qxg/5pOS3KHE9nKVWEGajonMlfLRp1ghpOEBlHtPCkKhTNOMDxG9
+         866i5VVge0r6p/uNCfHOjozar1JGagVQBPtxYY1lbk2XmJRzPMvhacp8bI4cNe4SukuQ
+         knovHolGjFIjWjTSN9QLP/s32Jpl1gPkfF87iuEJW1dzfP3mSNB1LrSR/QdsaYOXxb3w
+         JvQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXd45lImEhYZsFBZB6+WY5uzV/HCtliYk+MW13j6ZcmSDYQb6F/w4f9zFQmNNAHMFUliiBxQe/GTp8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwUXDW79+vIJQRJWdseO7l/UPuzlElCjY83+9izM0rXCHg3UsMN
+	bg795lEz+DSU1VV1KeiJX4IYZmp80CD8hsROZ1Bi1Lz8azBuo48e52usJh/rXggKeour2eTk6w6
+	qwKfqtkHqP2pvLG61qZHWCzVJRzIJ1POfTvT6Fp8wpg==
+X-Gm-Gg: AY/fxX6IjLk3aWtTs/hQhVHdxEN/uek+WSbBD8FiYIGj2f9hYZHzh3XJNIiK/UY8gDg
+	YlXzxsAWpZRZ8izcyI4nCQ9WmfdczZoZz7q4YiwaLx9OTU0zUafgGYWmwIfaVfm1Y+hP7O+nhuU
+	WK8QSffEKF3qCO9KsEXscy/FaiXCt1BvMcpOGJWTweSztvu2HvU0nMdf81oO00bqyvqv0xzrW3B
+	G9nqdEcUaJLh1b7mlhKK/hKZlgFamXSV82Vl8PVTWyvFqTciSxZdPN2taT9xsW+dxn71dSKdS/I
+	YQnq5N66BSJBopCjLndqrE8KpKt5tlRyzz8MybooWSGeVtKa0OJZvG6eZXS31jpO97DOk/oNu35
+	KMUkuQF8T2KABTzFLrWIA2Mq818C0itmFe4auGA==
+X-Google-Smtp-Source: AGHT+IFPvxasewnmsZAsth9GQCtldIq0N28CE0vaBHwg8p8y0sWAlCae9biBesZox9b2s7LDJyYfaWiuotYB2z+2IOU=
+X-Received: by 2002:a17:907:96a3:b0:b87:d44:81d with SMTP id
+ a640c23a62f3a-b870d441169mr530583566b.45.1768279328057; Mon, 12 Jan 2026
+ 20:42:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com>
-X-B4-Tracking: v=1; b=H4sIAEGwZWkC/3XOQQrCMBCF4auUrI1kksa2rryHuEgyUxvQpDS1K
- KV3NwqCFF3+D+ZjZpZo8JTYvpjZQJNPPoYc5aZgrjPhTNxjbiaF1KKWkl9iDOcUA++dB14iocC
- qbsFalm/6gVp/f3vHU+7OpzEOjzc/wWv9J03AgavGGGsRoLV4uIX8y0iu27p4ZS9tkh9hJ0CUa
- 0FmAUED6cruqK1/CepbaNaCyoJGdNqQsqZRa2FZlifoRZhfMgEAAA==
-X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, 
- guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, 
- Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
- Ziyao Li <liziyao@uniontech.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1768271938; l=4318;
- i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
- bh=7rRFGJVoKl5sZ/Owx3rAS56AhpTg53fD7seUm2ML6+o=;
- b=k+ClNVeu7ISFrUJFeAR6ztHNTkB8wEYHkrxhXmEMH0UD1lTMTQP0V+P+LDiY6GJ9c1RmVO1r2
- FWAVbiQzb1wCyAs1y6RO5epfFZpd0Xf+VMx3gZnMZRe9aDrc5Mot04K
-X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
- pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
-X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
- auth_id=471
-X-Original-From: Ziyao Li <liziyao@uniontech.com>
-Reply-To: liziyao@uniontech.com
+References: <20251223080437.3367240-1-chenhuacai@loongson.cn>
+ <20251223080437.3367240-2-chenhuacai@loongson.cn> <87bjj3rnra.ffs@tglx>
+ <57748542-d86e-4528-bea3-8f8d8f1abbed@app.fastmail.com> <87h5suiktj.ffs@tglx>
+In-Reply-To: <87h5suiktj.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Tue, 13 Jan 2026 12:41:59 +0800
+X-Gm-Features: AZwV_QgSQWVMftLV5ZoAJMh5f11XKI16WyCggEzu1UJGjbL-ezZhFfj55nYh6OM
+Message-ID: <CAAhV-H7NtSkWKeP5Kq0fvNM0qqWfTq7TAeGpmnkmPSJBBzu1KA@mail.gmail.com>
+Subject: Re: [PATCH 1/7] irqchip/loongarch-avec: Adjust irqchip driver for 32BIT/64BIT
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ziyao Li <liziyao@uniontech.com>
+On Sat, Jan 10, 2026 at 4:37=E2=80=AFAM Thomas Gleixner <tglx@kernel.org> w=
+rote:
+>
+> On Fri, Jan 09 2026 at 12:23, Jiaxun Yang wrote:
+> > On Fri, 9 Jan 2026, at 12:09 PM, Thomas Gleixner wrote:
+> >>>  static inline void avecintc_enable(void)
+> >>>  {
+> >>> +#ifdef CONFIG_MACH_LOONGSON64
+> >>>     u64 value;
+> >>>
+> >>>     value =3D iocsr_read64(LOONGARCH_IOCSR_MISC_FUNC);
+> >>>     value |=3D IOCSR_MISC_FUNC_AVEC_EN;
+> >>>     iocsr_write64(value, LOONGARCH_IOCSR_MISC_FUNC);
+> >>> +#endif
+> >>
+> >> Can't this be:
+> >>
+> >>       if (IS_ENABLED(CONFIG_MACH_LOONGSON64))
+> >>
+> >> which is preferred over ifdeffery?
+> >
+> > Sadly, iocsr_read64 symbol is only available on 64 bit systems,
+> > so it must be guarded somehow.
+>
+> It's unconditionally defined so using IS_ENABLED() is fine because the
+> compiler optimizes everything out before the resolv stage.
+I'm sorry but IS_ENABLED() doesn't work in this case. Because
+iocsr_read64() is not a regular function but a compiler intrinsic, it
+is handled in the pre-process stage, so still causes build errors.
 
-Older steppings of the Loongson-3C6000 series incorrectly report the
-supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
-as only 2.5 GT/s, despite the upstream bus supporting speeds from
-2.5 GT/s up to 16 GT/s.
+Please ignore my V2 and I will re-send V3, thanks.
 
-As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
-than one speed is supported"), bwctrl will be disabled if there's only
-one 2.5 GT/s value in vector `supported_speeds`.
+Huacai
 
-Also, amdgpu reads the value by pcie_get_speed_cap() in amdgpu_device_
-partner_bandwidth(), for its dynamic adjustment of PCIe clocks and
-lanes in power management. We hope this can prevent similar problems
-in future driver changes (similar checks may be implemented in other
-GPU, storage controller, NIC, etc. drivers).
-
-Manually override the `supported_speeds` field for affected PCIe bridges
-with those found on the upstream bus to correctly reflect the supported
-link speeds.
-
-This patch was originally found from AOSC OS[1].
-
-Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
-Tested-by: Lain Fearyncess Yang <fsf@live.com>
-Tested-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-[Xi Ruoyao: Fix falling through logic and add kernel log output.]
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
-[Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
-Signed-off-by: Ziyao Li <liziyao@uniontech.com>
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
----
-Changes in v4:
-- rename subject
-- use 0x3c19/0x3c29 instead of 3c19/3c29
-- Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
-
-Changes in v3:
-- Adjust commit message
-- Make the program flow more intuitive
-- Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
-
-Changes in v2:
-- Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
-- Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
-- Fix falling through logic and add kernel log output by Xi Ruoyao
----
- drivers/pci/controller/pci-loongson.c | 38 +++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index bc630ab8a283..3d0873b63cd6 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -176,6 +176,44 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
- 
-+/*
-+ * Older steppings of the Loongson-3C6000 series incorrectly report the
-+ * supported link speeds on their PCIe bridges (device IDs 0x3c19,
-+ * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
-+ * from 2.5 GT/s up to 16 GT/s.
-+ */
-+static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
-+{
-+	u8 old_supported_speeds = pdev->supported_speeds;
-+
-+	switch (pdev->bus->max_bus_speed) {
-+	case PCIE_SPEED_16_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_8_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_5_0GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
-+		fallthrough;
-+	case PCIE_SPEED_2_5GT:
-+		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
-+		break;
-+	default:
-+		pci_warn(pdev, "unexpected max bus speed");
-+
-+		return;
-+	}
-+
-+	if (pdev->supported_speeds != old_supported_speeds)
-+		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
-+			 old_supported_speeds, pdev->supported_speeds);
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
-+			 loongson_pci_bridge_speed_quirk);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
-+			 loongson_pci_bridge_speed_quirk);
-+
- static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
- {
- 	struct pci_config_window *cfg;
-
----
-base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
-change-id: 20250822-loongson-pci1-4ded0d78f1bb
-
-Best regards,
--- 
-Ziyao Li <liziyao@uniontech.com>
-
-
+>
+> Thanks,
+>
+>         tglx
