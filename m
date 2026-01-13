@@ -1,91 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA6E277CAB;
-	Mon, 12 Jan 2026 22:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E69E1F0994
+	for <loongarch@lists.linux.dev>; Tue, 13 Jan 2026 01:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768256606; cv=none; b=LKgWQiO+v0EKFHvBqT3TJtXEUEWxJUNJbJ3cdiOJwsa3148baIOFlBRxza+aDmUtvI54VTsaZkynhO7nWcPLK+zPljnUc9TOOdCNUh0d0lakBWNNVb1v66fdyXPGR40hKIACzk1nIsTpeXdkpKWv2ZHhPU9wWdUWYU6fQe2h+eQ=
+	t=1768267019; cv=none; b=KB1lZJ/eADnvk+D5PCYtZz2N0gLJMNQhIM88xyU6OULJMT+JupGoQ8+KPRIde7+08CCkK9jbdNFBpNXK0I4Qdp4w6gQd/Hu/TyK9Me8Mz9X5wioR4uPgyXXRuSVgaEpPPVg4+4mjbmUr9rSJW6QbzlI/m24YmXaSKs2gWkooh6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768256606; c=relaxed/simple;
-	bh=SpuDKcG9IirDr1Ez2z498LsN8t6S/nWxhPc0slzDnQc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hu/uW86hR9TiY8ScZcdSWMNG/qbh5b7zycl+THzK7YQL1T2VS76+oDgERRthuheyx8ayURNK6K0I21tRV0SS/anjheds4wKmFm0LNTIRp/jnIlxC2ouIFi5qCaCiGZiPOEqnxVgyCdszPk8sHJI4Z/ISU5HA60hqfhIOU1Y0p5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Cu3Pfm/+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Cu3Pfm/+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1AAAC116D0;
-	Mon, 12 Jan 2026 22:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1768256605;
-	bh=SpuDKcG9IirDr1Ez2z498LsN8t6S/nWxhPc0slzDnQc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Cu3Pfm/+1TcchxFM/qGiV5fGrKj24o0e3dohdRVVx8JRBK5f1xTeaKdQe1aN7KItj
-	 nSpF4OOybQ5f2IlmddpVi4OD3JNYihOeyIRTxNzuxSiGem9/NnrlLPMv/9xRBenAfz
-	 EMoQzi5wVQrdA51MdiCDjlgWkvA7qQuIwG0aa67A=
-Date: Mon, 12 Jan 2026 14:23:23 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mike Rapoport <rppt@kernel.org>, Kalle Niemi <kaleposti@gmail.com>
-Cc: Alex Shi <alexs@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "David S. Miller" <davem@davemloft.net>, Dave Hansen
- <dave.hansen@linux.intel.com>, David Hildenbrand <david@kernel.org>, Dinh
- Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Guo Ren <guoren@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Helge
- Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, John Paul
- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Jonathan Corbet
- <corbet@lwn.net>, Klara Modin <klarasmodin@gmail.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>, Max
- Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, Muchun
- Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Palmer
- Dabbelt <palmer@dabbelt.com>, Pratyush Yadav <pratyush@kernel.org>, Richard
- Weinberger <richard@nod.at>, Ritesh Harjani <ritesh.list@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
- Suren Baghdasaryan <surenb@google.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, Vasily
- Gorbik <gor@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Vlastimil
- Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- loongarch@lists.linux.dev, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 00/29] arch, mm: consolidate hugetlb early
- reservation
-Message-Id: <20260112142323.495fc43e662e7d276b0fa371@linux-foundation.org>
-In-Reply-To: <20260111082105.290734-1-rppt@kernel.org>
-References: <20260111082105.290734-1-rppt@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1768267019; c=relaxed/simple;
+	bh=VVGUrqfODIjjT0y9p1rLLUWdxVZVunuVyGUrGB22CS4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DcakseD+Z+ajp6Wg61IIcMOUGTildMMtZ/rPPTATDXp/pdmpletcsDEClLcfUerlHvHLCPhvhdyyXrHTN2oCt7mD/OxbLHowgJEEInZSJErjeVpHdXbvtoM+Wv449ci4c+V1ItRKB/oTfED4wCHa5ogEfpKEjRZVXcl2KNfezuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxDMMGnWVp6CYIAA--.26408S3;
+	Tue, 13 Jan 2026 09:16:54 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxD8MFnWVpAVMcAA--.59322S3;
+	Tue, 13 Jan 2026 09:16:54 +0800 (CST)
+Subject: Re: [PATCH] Revert "LoongArch: Remove unnecessary checks for ORC
+ unwinder"
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260112091531.12735-1-yangtiezhu@loongson.cn>
+ <CAAhV-H6xLX5ZjVKV9bixN=PT6p47JheDU4pYtqeo-=2BSnQkRg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <b1c56000-8669-04e6-0468-a5ff1fd611ac@loongson.cn>
+Date: Tue, 13 Jan 2026 09:16:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H6xLX5ZjVKV9bixN=PT6p47JheDU4pYtqeo-=2BSnQkRg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxD8MFnWVpAVMcAA--.59322S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrJF48tw1UAr1kJF1kWr13ZFc_yoWxXFX_WF
+	92v3srC3ykWr4Yka1DW3W5Zr93Xa1qkrWYga1DJw43J3s5JFZ8Kr95JFyfWF48JrZrtFna
+	9Fs8Xrn3Zw1j9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25EfUUUU
+	U
 
-On Sun, 11 Jan 2026 10:20:34 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+On 2026/1/12 下午5:23, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> On Mon, Jan 12, 2026 at 5:15 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> This reverts commit 4cd641a79e69270a062777f64a0dd330abb9044a.
+>>
+>> The system can not boot normally with the latest kernel 6.19-rc5 under
+>> different configs, commit 4cd641a79e69 ("LoongArch: Remove unnecessary
+>> checks for ORC unwinder") is the first bad commit since 6.19-rc4, just
+>> revert it first before finding the root cause.
+> Can you show the errors in the boot log?
 
-> v3 changes:
-> * fix empty_zero_page initialization on arm
-> * fix ZONE_DMA limit calculation on powerpc
-> * add Acks
+Please see the coming v2 patch, there are more info in the commit
+message.
 
-updated, thanks.  I'll suppress the ensuing email flood.
+Thanks,
+Tiezhu
 
-Kalle, can you please retest sometime, see if the BeagleBone Black boot
-failure was fixed?
-
-Seems we haven't heard back from rmk regarding
-https://lkml.kernel.org/r/aVrUDeSkqqY9ZCtS@shell.armlinux.org.uk.
