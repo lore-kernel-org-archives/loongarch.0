@@ -1,236 +1,92 @@
-Received: from fra-out-007.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-007.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.75.33.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14712261B8C;
-	Wed, 14 Jan 2026 13:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.75.33.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126842F25F3;
+	Wed, 14 Jan 2026 20:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768398490; cv=none; b=I8e/fYN0vE8wrvDv1seNRpott1aM6Kb1V6kGNnY8wI24M78e/go9tL1JstYaXFWlKv3De5bQp8tVnhI1+G9ObeD8lSPvA1rIacdw71/FzIQr1t3hxmpxhfTGmPeMM9KPpaEMnZsLwWUNyMdJQFUHbm0o6MvkazXcXGjUqDEj7fM=
+	t=1768424337; cv=none; b=J6sYqK/wr50BI2883dpCL6rvAkzWaxePXkAaXkKS5l0fn+e/E2qaXf3Y3YAfE/UD6DJDd5ObzSTOwuD638+je8UrjgG5mS1LgWWYWFCyQprkzQmqmEeCRS1NteSRlZ/j//1QggcEqWO/g/bUM5XqLGzVpQhki46/hf0MHyJuXmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768398490; c=relaxed/simple;
-	bh=5UpnxnEVgU0Oy/yU6lakZ+7I/hP5dkdcXUkzHcJlwzI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fO3h1lBcwOnx4gJlGdR/W5bL/HuwU4WJN5jCvyVDA0dChO6xnI3hFLsVtHDIkqqX0t12L6lc/Xa4QIBWZpv7BF5AP3kthBjNMISx+TbTNkfh4ROzn/oHhG9tY6RsTOu81+VuE1lbWBS6IC+ip0/3YJa3puUZCg4sg5hA8oRh4oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=pI6Qkp1q; arc=none smtp.client-ip=3.75.33.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1768424337; c=relaxed/simple;
+	bh=t15mgHwN+WGpwIYDNelTtRTVGa0I3MDtGvlcDLcbvYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SSx7EEvYv/8+DULftnhv/pYV6/x4yo2y4PExe0fPreAvfgdOrjI6iGx7EEurGMS2bVj/uSTGrmD+Yconfzg0IHxV9V2/fDdmuroWt0CNOJkqz7VGn17xBDC1XWaTVF383kQyNSu6OjXiCe773a8WAG/OEiabfpOrnqZ0IegeKRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCcvHs7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="pI6Qkp1q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazoncorp2; t=1768398488; x=1799934488;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=sUXffJ10pcwposVmC9vM2kcbCnj2+0WuRal0d/tv1pE=;
-  b=pI6Qkp1qpMcnkir5CghZWT6RWElA7mrzDKllmgl1Hw8u8TJhUhPT2V5q
-   bkGO+ZwmD3PvCVc0tJVXWuJQsPUgfcnjvCFGyy/1HeDpSXwnyCrcK+96b
-   8CoCt33heC9HiJ3IyAtyRPatSZcZp0hWXiG4gbTUrCKp6btgwcGZvdWvQ
-   92Jx3v/f85BBrE9J6xc0wpqVc1j7q5iaNvrOncQxd2s+m9KYZ6YZs2IFW
-   4qBaCPGd2huQlTO3x3r1rqJLeb4HZcwRSMmseefPN58pubN6ybhxxBRQL
-   2nK+FZBnEhbWacpoRVY5VZgFod22lhX4gtijmaZzwTGLlrEDwfl+pb7zy
-   A==;
-X-CSE-ConnectionGUID: TM2P1oQYSV+xOXLTuttl/A==
-X-CSE-MsgGUID: EW6MjOESTFSHJbSl7EhLcw==
-X-IronPort-AV: E=Sophos;i="6.21,225,1763424000"; 
-   d="scan'208";a="7897283"
-Received: from ip-10-6-11-83.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.11.83])
-  by internal-fra-out-007.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 13:47:49 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [54.240.197.234:3376]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.7.212:2525] with esmtp (Farcaster)
- id 24ecbc43-4ad6-4a75-8fbe-89bf20ddb079; Wed, 14 Jan 2026 13:47:48 +0000 (UTC)
-X-Farcaster-Flow-ID: 24ecbc43-4ad6-4a75-8fbe-89bf20ddb079
-Received: from EX19D005EUB002.ant.amazon.com (10.252.51.103) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
- Wed, 14 Jan 2026 13:47:40 +0000
-Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
- EX19D005EUB002.ant.amazon.com (10.252.51.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
- Wed, 14 Jan 2026 13:47:40 +0000
-Received: from EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c]) by
- EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c%3]) with mapi id
- 15.02.2562.035; Wed, 14 Jan 2026 13:47:40 +0000
-From: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
-To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
-	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
-	<linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>
-CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
-	<corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org"
-	<oupton@kernel.org>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
-	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org"
-	<luto@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
-	"willy@infradead.org" <willy@infradead.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz"
-	<vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com"
-	<surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org"
-	<ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev"
-	<martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
-	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev"
-	<yonghong.song@linux.dev>, "john.fastabend@gmail.com"
-	<john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
-	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com"
-	<peterx@redhat.com>, "jannh@google.com" <jannh@google.com>,
-	"pfalcato@suse.de" <pfalcato@suse.de>, "shuah@kernel.org" <shuah@kernel.org>,
-	"riel@surriel.com" <riel@surriel.com>, "ryan.roberts@arm.com"
-	<ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>,
-	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org"
-	<kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
-	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, "ackerleytng@google.com"
-	<ackerleytng@google.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>,
-	"prsampat@amd.com" <prsampat@amd.com>, "mlevitsk@redhat.com"
-	<mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>,
-	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com"
-	<agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "borntraeger@linux.ibm.com"
-	<borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com"
-	<gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org" <pjw@kernel.org>,
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
-	"svens@linux.ibm.com" <svens@linux.ibm.com>, "thuth@redhat.com"
-	<thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>,
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
-	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
-	<jackmanb@google.com>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"patrick.roy@linux.dev" <patrick.roy@linux.dev>, "Thomson, Jack"
-	<jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>,
-	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco"
-	<xmarcalx@amazon.co.uk>, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
-Subject: [PATCH v9 13/13] KVM: selftests: Test guest execution from direct map
- removed gmem
-Thread-Topic: [PATCH v9 13/13] KVM: selftests: Test guest execution from
- direct map removed gmem
-Thread-Index: AQHchVxZK9VKx1JGv0KQmfxswHb3WQ==
-Date: Wed, 14 Jan 2026 13:47:39 +0000
-Message-ID: <20260114134510.1835-14-kalyazin@amazon.com>
-References: <20260114134510.1835-1-kalyazin@amazon.com>
-In-Reply-To: <20260114134510.1835-1-kalyazin@amazon.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCcvHs7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852BEC4CEF7;
+	Wed, 14 Jan 2026 20:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768424336;
+	bh=t15mgHwN+WGpwIYDNelTtRTVGa0I3MDtGvlcDLcbvYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SCcvHs7dfJFVxcq4dLHWL6gXUCCRWKtNiONjkzm/PR+KtBnxQlLSt1vJe3/CtfXRC
+	 6SaMBDntB34hDv1r+JdiAEb40VnpctKNWoW8bEjRO7I8Qiq1b24XtV2TprW+/f5kfR
+	 BcdhgHmi0dM6njT1NLDuxb53WSetxHmjUsJdUC7Ws/3HVEv7W0CyswhtXo8JamHYFw
+	 DXY8CMnAZ1Jo+uPvJ4pkrvFES59VrDwCAwGngHPjvF9UMRnqk+coXC7W1fU09bjgs6
+	 /m255OisvcgKH1GbuzzEMEfkRz+w3cCW+q+HKlRWrJWDZ5B+mA4E16mKOFEdoL02yx
+	 05I6Onq2/LF+Q==
+Date: Wed, 14 Jan 2026 14:58:55 -0600
+From: Rob Herring <robh@kernel.org>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-binding: rtc: loongson: Document
+ Loongson-2K0300 compatible
+Message-ID: <20260114205855.GA3190839-robh@kernel.org>
+References: <cover.1767663073.git.zhoubinbin@loongson.cn>
+ <8876bebaf08121bb5edd2500f5289284b75df011.1767663073.git.zhoubinbin@loongson.cn>
+ <20260106191314.GA2568583-robh@kernel.org>
+ <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
 
-From: Patrick Roy <patrick.roy@linux.dev>=0A=
-=0A=
-Add a selftest that loads itself into guest_memfd (via=0A=
-GUEST_MEMFD_FLAG_MMAP) and triggers an MMIO exit when executed. This=0A=
-exercises x86 MMIO emulation code inside KVM for guest_memfd-backed=0A=
-memslots where the guest_memfd folios are direct map removed.=0A=
-Particularly, it validates that x86 MMIO emulation code (guest page=0A=
-table walks + instruction fetch) correctly accesses gmem through the VMA=0A=
-that's been reflected into the memslot's userspace_addr field (instead=0A=
-of trying to do direct map accesses).=0A=
-=0A=
-Signed-off-by: Patrick Roy <patrick.roy@linux.dev>=0A=
-Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>=0A=
----=0A=
- .../selftests/kvm/set_memory_region_test.c    | 52 +++++++++++++++++--=0A=
- 1 file changed, 48 insertions(+), 4 deletions(-)=0A=
-=0A=
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/t=
-esting/selftests/kvm/set_memory_region_test.c=0A=
-index 7fe427ff9b38..6c57fb036b20 100644=0A=
---- a/tools/testing/selftests/kvm/set_memory_region_test.c=0A=
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c=0A=
-@@ -602,6 +602,41 @@ static void test_mmio_during_vectoring(void)=0A=
- =0A=
- 	kvm_vm_free(vm);=0A=
- }=0A=
-+=0A=
-+static void guest_code_trigger_mmio(void)=0A=
-+{=0A=
-+	/*=0A=
-+	 * Read some GPA that is not backed by a memslot. KVM consider this=0A=
-+	 * as MMIO and tell userspace to emulate the read.=0A=
-+	 */=0A=
-+	READ_ONCE(*((uint64_t *)MEM_REGION_GPA));=0A=
-+=0A=
-+	GUEST_DONE();=0A=
-+}=0A=
-+=0A=
-+static void test_guest_memfd_mmio(void)=0A=
-+{=0A=
-+	struct kvm_vm *vm;=0A=
-+	struct kvm_vcpu *vcpu;=0A=
-+	struct vm_shape shape =3D {=0A=
-+		.mode =3D VM_MODE_DEFAULT,=0A=
-+		.src_type =3D VM_MEM_SRC_GUEST_MEMFD_NO_DIRECT_MAP,=0A=
-+	};=0A=
-+	pthread_t vcpu_thread;=0A=
-+=0A=
-+	pr_info("Testing MMIO emulation for instructions in gmem\n");=0A=
-+=0A=
-+	vm =3D __vm_create_shape_with_one_vcpu(shape, &vcpu, 0, guest_code_trigge=
-r_mmio);=0A=
-+=0A=
-+	virt_map(vm, MEM_REGION_GPA, MEM_REGION_GPA, 1);=0A=
-+=0A=
-+	pthread_create(&vcpu_thread, NULL, vcpu_worker, vcpu);=0A=
-+=0A=
-+	/* If the MMIO read was successfully emulated, the vcpu thread will exit =
-*/=0A=
-+	pthread_join(vcpu_thread, NULL);=0A=
-+=0A=
-+	kvm_vm_free(vm);=0A=
-+}=0A=
- #endif=0A=
- =0A=
- int main(int argc, char *argv[])=0A=
-@@ -625,10 +660,19 @@ int main(int argc, char *argv[])=0A=
- 	test_add_max_memory_regions();=0A=
- =0A=
- #ifdef __x86_64__=0A=
--	if (kvm_has_cap(KVM_CAP_GUEST_MEMFD) &&=0A=
--	    (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))) {=
-=0A=
--		test_add_private_memory_region();=0A=
--		test_add_overlapping_private_memory_regions();=0A=
-+	if (kvm_has_cap(KVM_CAP_GUEST_MEMFD)) {=0A=
-+		uint64_t valid_flags =3D kvm_check_cap(KVM_CAP_GUEST_MEMFD_FLAGS);=0A=
-+=0A=
-+		if (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM)) {=0A=
-+			test_add_private_memory_region();=0A=
-+			test_add_overlapping_private_memory_regions();=0A=
-+		}=0A=
-+=0A=
-+		if ((valid_flags & GUEST_MEMFD_FLAG_MMAP)=0A=
-+			&& (valid_flags & GUEST_MEMFD_FLAG_NO_DIRECT_MAP))=0A=
-+			test_guest_memfd_mmio();=0A=
-+		else=0A=
-+			pr_info("Skipping tests requiring GUEST_MEMFD_FLAG_MMAP | GUEST_MEMFD_F=
-LAG_NO_DIRECT_MAP");=0A=
- 	} else {=0A=
- 		pr_info("Skipping tests for KVM_MEM_GUEST_MEMFD memory regions\n");=0A=
- 	}=0A=
--- =0A=
-2.50.1=0A=
-=0A=
+On Wed, Jan 07, 2026 at 09:22:41AM +0800, Binbin Zhou wrote:
+> Hi Rob:
+> 
+> Thanks for your review.
+> 
+> On Wed, Jan 7, 2026 at 3:13 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Jan 06, 2026 at 09:33:32AM +0800, Binbin Zhou wrote:
+> > > Add "loongson,ls2k0300-rtc" dedicated compatible to represent the RTC
+> > > interface of the Loongson-2K0300 chip.
+> > >
+> > > Its hardware design is similar to that of the Loongson-1B, but it does
+> > > not support the alarm feature.
+> >
+> > But you are requiring the interrupt property for it? Isn't it no alarm
+> > feature means no interrupt?
+> 
+> Yes, the `interrupts` attribute is not required without the alarm feature.
+> 
+> But my judgment condition is `not contains` (added in patch-1[1]).
+> There are only a few SoCs on the Loongson platform that don't support
+> the RTC alarm feature, so I think `not contains` looks cleaner and
+> simpler.
+
+I should have said allowing rather than requiring.
+
+You are allowing (though not requiring) 'interrupts' for Loongson-1B and 
+Loongson-2K0300. In patch 1, you made it required for other platforms 
+which is an ABI change. That's fine if it was a mistake and is truly 
+required.
+
+Rob
