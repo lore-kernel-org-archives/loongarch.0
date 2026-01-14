@@ -1,39 +1,39 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BB03876BA
-	for <loongarch@lists.linux.dev>; Wed, 14 Jan 2026 09:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A2D311C2A
+	for <loongarch@lists.linux.dev>; Wed, 14 Jan 2026 09:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768383117; cv=none; b=RygpHs/Y8RpCoD4XKR4jtOH/DiETyMVtfYW3BqVO/BtguOIIz4XDu7X0X5WNLhT/OEz/474OmI3AX9yhidswTga+GX9ThKQtNNsQZ2d2qfxhG9yJKX5eeTTMM3kS7K3gmmCrqLxSYBF0Z478O0bjxckMaAzZd+kWG7jFiawB83k=
+	t=1768383139; cv=none; b=ZfVOOlHeoNRF8a6sf0+N5CKLINi7itDmJspucCyD4iYKRayXikZqT5Ug9w7kLVa3wNQj1wvl2X8o4MgIJPvdS/gvlummCEsUcNOGcroDrbpE4yltPN58n8a4JmOqCAW++mcLixXomJBzfoF6FG1ZRcLFO4ZXdKXKX9tPziOddQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768383117; c=relaxed/simple;
-	bh=MsQlhrZALfGbcp76dMTKr1Ln5XiXJIPtiMEYAWnIxtg=;
+	s=arc-20240116; t=1768383139; c=relaxed/simple;
+	bh=xtVmQ5119RF4QoCVt4mvjKofrkCpkP5iM7MoSjTlWR0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N5+k33Yv3Yumbqt8bqymo6SN7e3G7DlPYBrPuI9WbgKhnPoRpziNQJcP9NN8z5BBPnZ1bZSOSLcyZti0sk43Oo/x0oRg+W9GQHL18/wQYtNRMlBrVE1NbW1+L7s6tu2dllwThv+af2Z7mNhlOvgPOQsmcDCby25uGXSrBoj39RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=neq+vk5M; arc=none smtp.client-ip=18.169.211.239
+	 In-Reply-To:Content-Type; b=oo+AhVHn5HX7Yk73rQuprcZEDAFtrGuRfSWGmyYEci+yQEx9XiX328NfinsK15UesaYAjZqZausb5xf26//nDOY2Ccd1iEVVezLtus1t/rygdYlSf7tTOJkL9Zyt4XIuI/nVWvyQtbDWuXJo9eQazE2ujqsagdFlZXFeYzZb0wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YXFyM+KM; arc=none smtp.client-ip=54.243.244.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="neq+vk5M"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YXFyM+KM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1768383073;
-	bh=CA2RHlMehdV2Z0mM+4WUwEaV48VdJ1buiG/AskLtcyI=;
+	s=onoh2408; t=1768383101;
+	bh=6vZsD17BQ123SO/NBb3/c2eUaHuldQjkCdNOqEN6qlg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=neq+vk5MPQ/KEQ6WELeW6Hq9t6bKNZS4IU2T0dbBsWxplu05Fo5/byXW72wf/5dhG
-	 TGIRGzmHYJLyeaphiFkW3KOpcyd4l02n4JNUr0zMkoIosUVAWs7yu4/zP1AHooN1IQ
-	 aV1N05POcvp5f+RbPWJtRFaxP3jjfbdVqYm2tkhU=
-X-QQ-mid: esmtpgz16t1768383059tb0e0a6e0
-X-QQ-Originating-IP: OSsAxJDnBQfgvZbpiEVC0B27yjFxrlGyM41Yngjz7xY=
+	b=YXFyM+KMWSqfd6QAYILRCuG6j2nYWdjzERSHJea3IzibxH3nKVu11qp/OF9A6JERn
+	 2XC9gi5VnSHGGdaAnbkaYtEKxtgpd99VyMHEhAsBbJ3xvlRzIm99aZbi8DZY7ySZlk
+	 v66s1hCDElldFdcwk8fM5ozvfU6hKCDY+T/rG+mM=
+X-QQ-mid: esmtpgz12t1768383087tfae7d71a
+X-QQ-Originating-IP: r7xfRQB0UxIMWH08ANZV7p4zzpdps0v409IspuxZ+68=
 Received: from [192.168.15.210] ( [223.76.134.64])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 14 Jan 2026 17:30:56 +0800 (CST)
+	id ; Wed, 14 Jan 2026 17:31:24 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15326127447143499045
+X-BIZMAIL-ID: 1787296510566603320
 EX-QQ-RecipientCnt: 20
-Message-ID: <854F8049676DE623+1972dcba-7c5b-4a52-97ab-7a2f8e137671@uniontech.com>
-Date: Wed, 14 Jan 2026 17:30:56 +0800
+Message-ID: <371A5B60F8A4F60B+ba7a4b9b-0f00-48c5-af83-99027b36f81d@uniontech.com>
+Date: Wed, 14 Jan 2026 17:31:24 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,25 +64,24 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6b-0
-X-QQ-XMAILINFO: Naw95TAcpOaRki3SdiLfOgVHPfN+HG5lHsfSblv0gGnI9f8vxsd+8/7+
-	tGW79+DUDlh2Wh6X/GnjRp3/Vmywo/x4FxHi6saTFlrEU2FHWhY8DpEkKFFQgcFM1Lbe+aB
-	3I2LiwRJzvX5s1yaK3MAqKnb1AF8Xlq0QIFdNw9E8kDbK8VBK74SD/7Nu1vPgkxn5HxfFQq
-	ZsLD8KKZKrP9x1nq/W65NMPTeVHiuZNp9ogGeDSMFCcr0ooARlJ9o7fS/P1K3rh2KqZDrVw
-	ByTWgl3zN5nrUCYIpH838SJTH81Wcd7FTJ26QKZkQiuMFdtCl8M7EHZvNC6WnS2uVqddnFR
-	nGh4cIZksaRjJ6Pj9EUtTwGHASfbBpAF6X10oq/uWpTkYSrM6zndfwdGRYdHM6oUwu3MI43
-	JtjUPHizzxZ/qwR4XM2Ax/g88QYjyDDglW6a6cfUj6ixClC+ajzugKmvu1hYOI19ONWQTn5
-	DcPqV3Aw2OOrfCyYB3H0pUQftRMkuHt8fwvLM2JFdluDWSnx0R99Sz8OhESkU1wXa81vb4p
-	mWb7FVt9B+Y+AgUzjfT/3mhP0nPLKr0S0OEX9cQCLFqTxbQhTa6km3WJqJgrrWBHmQ+b5GE
-	b7ukOgBrfyuz/LGTFAi+TM3WBjDLWeZMPDyqr6W7+EpWdnJjKyT5I8/17nFEHy6kdkQ/lUw
-	hC2npNZ9g7/U1ACToCT3iqAHAkZkrmPeFD584PEUsi91BHkTbmuApgDSny2IeabsY936x5x
-	Rg8zi7SgofsXSZdWRzApL4bn0iEIfcHhgKCAuYx6yeIIQRWyYiMvdN7OCQgVRYA/htAKDnB
-	+1fidIpP1Oj+zBbRJX88fLjLMa4gnkOWQXTkdH1J1/D3QWSeMV9uIB7B2L07B4g9fLqNwui
-	0cy7iegybqHrCwm3gGQesLFBcqlgVg/cKRnJ8G55RvYayNbqRIiZlKbEKZKiyNjgWoNzvAF
-	MEWqEGNrpmQlr83iRft9w7V4tyIE5nvjje0o/sTbY0Slsy0GmRfddzeTPJbcz6/6Tw1VktA
-	x3Ei3Mm0H7WEKnN5u1v9I6OWQV5xZdwv5xfodwxvCdhINTfotir2LrMQLulAkOpc2hkjXUT
-	Wf+KxUmzmsJoWWL2AE8BeqKdDFfCOUmmLU4jdnK600U6wEzeZ9dSXEgZA18EGKPbscQu45H
-	L7T4HOL0dC4YSwM=
-X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+X-QQ-XMAILINFO: NowxrypK3KpFefsiSzr9WLiVXHblGKxFFb8Lhy1ovAbGPZdIxCJQmQrZ
+	Y5OUwI0LnMAHnUg1kI47gNAre8GeUiE3TJB6NgVClExT1bZGgzFjro5OPqnHggFrZtPKR1b
+	r60Vewp3oJ18eJ7qwaGg9loVyRnjdOu4hNeuOtDOv6bW+XdY4Gmb+9l8lacwNvTk9dghNGS
+	RFKNWUn3DQxtMJJyCOdhpD8HEwHC9tHOJThsy+GVFlUfLzk0AAR/foZiYEJTeQxletLpp06
+	MwjUtMtcLI4ybywBp5anfvasiV6UY3h506f3QzzdIVTnxKH4/JwUVz69E7Dp22ul1R+HXJd
+	Fl9lF1zPnDwBOLXfw7DYr2LJSrM1RPhougz6MKTh2NqSqH9VvzVT+BgAW1yuyhglGEcDUv+
+	IISWnuMIcyore53vYR39OSX/pD7uy+ofLKTXeijvPdzYnIXjOg+X0P7pz2Zypf7OvT/Nft6
+	epr8VxCX1M9BT1wJrf4DSGTu4NzvLjh7QdmxUa19Rk10DiieBJZ1Y402jKxUc7LfzVPqAp/
+	WCOFiUzVnmgSjrpAcNPKZhwNjORYTi+iwnfNQ5xe0pAc7JZ2ZeREpR7C1fvlTlNdzPy76kg
+	+NsoU8yrtrMKkJY2DSA1Xo0Rc3FTx9B4dawOhPn9T3GJiIo881bHKvrTu/GLMdhRqh6FZXe
+	PYGNB4zTZN9zVHw/l9QGTyr61n9A/T1yyoSNbD8uzZ5H3KzcATaLh9bajpGPHREHkUAW5Ni
+	9JbRoVaAgH9v6IYh6gputm13bsQE9s7IUQFlCJpRXhtPjMU/Fs6kt6Ngci1hAh4d2xWGMRW
+	uhhQdIWkI8cggiAjf9qMSqq3ALErlJJoPw0zAQFNTh4eTno+qmPHaKgZG+3Zs6qC80khs7H
+	DXWCoY16+0j+ByNMP9IXW+0jmGOApcpVJTxQOQx4RIYomqfrd0FFsTsO3bHzzK+nn6qvCGm
+	aa2+GUkg4P1xg/di5wvLj9p9MYSzaEEXBgnNR4w88F3QWGh9NhAKzwb0dhQ0MIgbwTVI14P
+	mj6RP2BCl8PML/spR3xqleyja1a6qZdk8+B5955l+vTQmS13gfvJg4ABLO3u5AQGm564tXk
+	lkCt1HqHRNgx+fpQpkui3/glw+uaPzLQmseWPilEVwV20ozdUaj0R9lME34GxA8QA==
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 X-QQ-RECHKSPAM: 0
 
 
@@ -210,6 +209,9 @@ current patch ensures we only set speed bits up to what the hardware
 actually supports, based on the measured max_bus_speed. This seems
 safer for future silicon.
 
+Best regards,
+Cryolitia PukNgae
+
 >> +
 >> +		return;
 >> +	}
@@ -235,5 +237,4 @@ safer for future silicon.
 >>
 >>
 > 
-
 
