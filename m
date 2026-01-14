@@ -1,240 +1,254 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from fra-out-003.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-003.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.72.182.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A2D311C2A
-	for <loongarch@lists.linux.dev>; Wed, 14 Jan 2026 09:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC7C175D53;
+	Wed, 14 Jan 2026 13:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.72.182.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768383139; cv=none; b=ZfVOOlHeoNRF8a6sf0+N5CKLINi7itDmJspucCyD4iYKRayXikZqT5Ug9w7kLVa3wNQj1wvl2X8o4MgIJPvdS/gvlummCEsUcNOGcroDrbpE4yltPN58n8a4JmOqCAW++mcLixXomJBzfoF6FG1ZRcLFO4ZXdKXKX9tPziOddQo=
+	t=1768398338; cv=none; b=UDE1/naBYeT7B5AyTbChqZPWutXo6eXfOmJ2QPzvbyihX8H6a/t/uIo8PL5OxSdT9IUTYRdQBFfAUo3eBCzJTjB8UXP86LNofha9jLm7NJ+Nqi2lYVOOKNJLRmZYw3LIbSQY+2KMewmRKpwhIwbU4wHRMGx7fs1GJDwrZk1UHvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768383139; c=relaxed/simple;
-	bh=xtVmQ5119RF4QoCVt4mvjKofrkCpkP5iM7MoSjTlWR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oo+AhVHn5HX7Yk73rQuprcZEDAFtrGuRfSWGmyYEci+yQEx9XiX328NfinsK15UesaYAjZqZausb5xf26//nDOY2Ccd1iEVVezLtus1t/rygdYlSf7tTOJkL9Zyt4XIuI/nVWvyQtbDWuXJo9eQazE2ujqsagdFlZXFeYzZb0wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YXFyM+KM; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1768398338; c=relaxed/simple;
+	bh=JY4ANZUTEJkUasmLys76ti6ML4pdKaKCmVtSa6jInaM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Dnw6imOz2eAapygBy88rPteKCNBv+7CIq+Ochf7d5i3iUMcU8T9GPZs0lcyHnGNerjQL9gSwA5OFHApwnSGpjEsAloFQDs6d+Dv/3uzaDuw0TVOnMuIIVC51qNOt2ffeXY3AHvOxE4+GAMnbjuXoQo+8Nvv8iIP2dCnA6iy5BKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=ce3X591e; arc=none smtp.client-ip=3.72.182.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YXFyM+KM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1768383101;
-	bh=6vZsD17BQ123SO/NBb3/c2eUaHuldQjkCdNOqEN6qlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=YXFyM+KMWSqfd6QAYILRCuG6j2nYWdjzERSHJea3IzibxH3nKVu11qp/OF9A6JERn
-	 2XC9gi5VnSHGGdaAnbkaYtEKxtgpd99VyMHEhAsBbJ3xvlRzIm99aZbi8DZY7ySZlk
-	 v66s1hCDElldFdcwk8fM5ozvfU6hKCDY+T/rG+mM=
-X-QQ-mid: esmtpgz12t1768383087tfae7d71a
-X-QQ-Originating-IP: r7xfRQB0UxIMWH08ANZV7p4zzpdps0v409IspuxZ+68=
-Received: from [192.168.15.210] ( [223.76.134.64])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 14 Jan 2026 17:31:24 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1787296510566603320
-EX-QQ-RecipientCnt: 20
-Message-ID: <371A5B60F8A4F60B+ba7a4b9b-0f00-48c5-af83-99027b36f81d@uniontech.com>
-Date: Wed, 14 Jan 2026 17:31:24 +0800
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="ce3X591e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazoncorp2; t=1768398334; x=1799934334;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=C5qlMH/wtsmcLk6SljUNTD3DCGuIp1OApZnkGozlYCk=;
+  b=ce3X591eWf54jlvbKWBNUqM8m8a+WW68ruEyy9vbZIJhuXJzXtzn44I+
+   giiZ7iefr98sz7z81bV2FZP/Qv/zCZz7sKZNt0wbnkGUZraNZYtJ7b+vU
+   /1NRzo8CMUGzVVr/Df7FEj1bLMc3YP4365r/xv/SGhX/dbGOgs8N+c3TV
+   DMUsfWe354St5AoM+JF60UCGE5mwQ7KzwtoVnF1D1ALqS/fjhMAq9XzUM
+   PBUnwDrRIBIFcs9bZrNSwtanCi5zsweV+fGW6ogVsclZrS1hVuzjqGku+
+   /t7tQfFiPkv0fYUr9pcz4h/ST47yf/0ufDlIvRHZHk4aOkN/9ALSls6tc
+   Q==;
+X-CSE-ConnectionGUID: cAS/p1IlQ+6brG6UAGBozA==
+X-CSE-MsgGUID: 6cYb4iAZQq6KhV7Q0e9uwA==
+X-IronPort-AV: E=Sophos;i="6.21,225,1763424000"; 
+   d="scan'208";a="7898964"
+Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
+  by internal-fra-out-003.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 13:45:13 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [54.240.197.224:25244]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.2.33:2525] with esmtp (Farcaster)
+ id 4d53a730-c517-4321-8200-fcfe21696f25; Wed, 14 Jan 2026 13:45:13 +0000 (UTC)
+X-Farcaster-Flow-ID: 4d53a730-c517-4321-8200-fcfe21696f25
+Received: from EX19D005EUB004.ant.amazon.com (10.252.51.126) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
+ Wed, 14 Jan 2026 13:45:12 +0000
+Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
+ EX19D005EUB004.ant.amazon.com (10.252.51.126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
+ Wed, 14 Jan 2026 13:45:12 +0000
+Received: from EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c]) by
+ EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c%3]) with mapi id
+ 15.02.2562.035; Wed, 14 Jan 2026 13:45:12 +0000
+From: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org"
+	<oupton@kernel.org>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org"
+	<luto@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
+	"willy@infradead.org" <willy@infradead.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com"
+	<surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org"
+	<ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev"
+	<martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev"
+	<yonghong.song@linux.dev>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com"
+	<peterx@redhat.com>, "jannh@google.com" <jannh@google.com>,
+	"pfalcato@suse.de" <pfalcato@suse.de>, "shuah@kernel.org" <shuah@kernel.org>,
+	"riel@surriel.com" <riel@surriel.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>,
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org"
+	<kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
+	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, "ackerleytng@google.com"
+	<ackerleytng@google.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>,
+	"prsampat@amd.com" <prsampat@amd.com>, "mlevitsk@redhat.com"
+	<mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com"
+	<agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "borntraeger@linux.ibm.com"
+	<borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com"
+	<gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org" <pjw@kernel.org>,
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "thuth@redhat.com"
+	<thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>,
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
+	<jackmanb@google.com>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"patrick.roy@linux.dev" <patrick.roy@linux.dev>, "Thomson, Jack"
+	<jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>,
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco"
+	<xmarcalx@amazon.co.uk>, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+Subject: [PATCH v9 00/13] Direct Map Removal Support for guest_memfd
+Thread-Topic: [PATCH v9 00/13] Direct Map Removal Support for guest_memfd
+Thread-Index: AQHchVwBJodCfIOOzk6JfArIPtu1ug==
+Date: Wed, 14 Jan 2026 13:45:12 +0000
+Message-ID: <20260114134510.1835-1-kalyazin@amazon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] PCI: loongson: Override PCIe bridge supported speeds
- for Loongson-3C6000 series
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com,
- Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- kernel@uniontech.com, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Lain Fearyncess Yang <fsf@live.com>,
- Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>,
- Xi Ruoyao <xry111@xry111.site>, stable@vger.kernel.org,
- Huacai Chen <chenhuacai@kernel.org>
-References: <20260114-loongson-pci1-v6-1-ee8a18f5d242@uniontech.com>
- <vebnovol2s7cqigr3vq5kvapjsy7qiiusbtxqlq6qduxs4xxhk@afsqi4v3ur55>
-Content-Language: en-US
-From: Ziyao <liziyao@uniontech.com>
-In-Reply-To: <vebnovol2s7cqigr3vq5kvapjsy7qiiusbtxqlq6qduxs4xxhk@afsqi4v3ur55>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz6b-0
-X-QQ-XMAILINFO: NowxrypK3KpFefsiSzr9WLiVXHblGKxFFb8Lhy1ovAbGPZdIxCJQmQrZ
-	Y5OUwI0LnMAHnUg1kI47gNAre8GeUiE3TJB6NgVClExT1bZGgzFjro5OPqnHggFrZtPKR1b
-	r60Vewp3oJ18eJ7qwaGg9loVyRnjdOu4hNeuOtDOv6bW+XdY4Gmb+9l8lacwNvTk9dghNGS
-	RFKNWUn3DQxtMJJyCOdhpD8HEwHC9tHOJThsy+GVFlUfLzk0AAR/foZiYEJTeQxletLpp06
-	MwjUtMtcLI4ybywBp5anfvasiV6UY3h506f3QzzdIVTnxKH4/JwUVz69E7Dp22ul1R+HXJd
-	Fl9lF1zPnDwBOLXfw7DYr2LJSrM1RPhougz6MKTh2NqSqH9VvzVT+BgAW1yuyhglGEcDUv+
-	IISWnuMIcyore53vYR39OSX/pD7uy+ofLKTXeijvPdzYnIXjOg+X0P7pz2Zypf7OvT/Nft6
-	epr8VxCX1M9BT1wJrf4DSGTu4NzvLjh7QdmxUa19Rk10DiieBJZ1Y402jKxUc7LfzVPqAp/
-	WCOFiUzVnmgSjrpAcNPKZhwNjORYTi+iwnfNQ5xe0pAc7JZ2ZeREpR7C1fvlTlNdzPy76kg
-	+NsoU8yrtrMKkJY2DSA1Xo0Rc3FTx9B4dawOhPn9T3GJiIo881bHKvrTu/GLMdhRqh6FZXe
-	PYGNB4zTZN9zVHw/l9QGTyr61n9A/T1yyoSNbD8uzZ5H3KzcATaLh9bajpGPHREHkUAW5Ni
-	9JbRoVaAgH9v6IYh6gputm13bsQE9s7IUQFlCJpRXhtPjMU/Fs6kt6Ngci1hAh4d2xWGMRW
-	uhhQdIWkI8cggiAjf9qMSqq3ALErlJJoPw0zAQFNTh4eTno+qmPHaKgZG+3Zs6qC80khs7H
-	DXWCoY16+0j+ByNMP9IXW+0jmGOApcpVJTxQOQx4RIYomqfrd0FFsTsO3bHzzK+nn6qvCGm
-	aa2+GUkg4P1xg/di5wvLj9p9MYSzaEEXBgnNR4w88F3QWGh9NhAKzwb0dhQ0MIgbwTVI14P
-	mj6RP2BCl8PML/spR3xqleyja1a6qZdk8+B5955l+vTQmS13gfvJg4ABLO3u5AQGm564tXk
-	lkCt1HqHRNgx+fpQpkui3/glw+uaPzLQmseWPilEVwV20ozdUaj0R9lME34GxA8QA==
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-X-QQ-RECHKSPAM: 0
 
-
-
-On 1/14/26 16:12, Manivannan Sadhasivam wrote:
-> On Wed, Jan 14, 2026 at 10:05:45AM +0800, Ziyao Li via B4 Relay wrote:
->> From: Ziyao Li <liziyao@uniontech.com>
->>
->> Older steppings of the Loongson-3C6000 series incorrectly report the
->> supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
->> as only 2.5 GT/s, despite the upstream bus supporting speeds from
->> 2.5 GT/s up to 16 GT/s.
->>
->> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
->> than one speed is supported"), bwctrl will be disabled if there's only
->> one 2.5 GT/s value in vector `supported_speeds`.
->>
->> Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
->> amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
->> clocks and lanes in power management. We hope this can prevent similar
->> problems in future driver changes (similar checks may be implemented
->> in other GPU, storage controller, NIC, etc. drivers).
->>
->> Manually override the `supported_speeds` field for affected PCIe bridges
->> with those found on the upstream bus to correctly reflect the supported
->> link speeds.
->>
->> This patch was originally found from AOSC OS[1].
->>
->> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
->> Tested-by: Lain Fearyncess Yang <fsf@live.com>
->> Tested-by: Ayden Meng <aydenmeng@yeah.net>
->> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
->> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
->> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
->> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
->> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
->> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
->> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
->> Tested-by: Mingcong Bai <jeffbai@aosc.io>
->> Cc: stable@vger.kernel.org
->> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->> ---
->> Changes in v6:
->> - adjust commit message
->> - Link to v5: https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniontech.com
->>
->> Changes in v5:
->> - style adjust
->> - Link to v4: https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com
->>
->> Changes in v4:
->> - rename subject
->> - use 0x3c19/0x3c29 instead of 3c19/3c29
->> - Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
->>
->> Changes in v3:
->> - Adjust commit message
->> - Make the program flow more intuitive
->> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
->>
->> Changes in v2:
->> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
->> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
->> - Fix falling through logic and add kernel log output by Xi Ruoyao
->> ---
->>  drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>
->> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
->> index bc630ab8a283..a4250d7af1bf 100644
->> --- a/drivers/pci/controller/pci-loongson.c
->> +++ b/drivers/pci/controller/pci-loongson.c
->> @@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
->>  }
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
->>  
->> +/*
->> + * Older steppings of the Loongson-3C6000 series incorrectly report the
->> + * supported link speeds on their PCIe bridges (device IDs 0x3c19,
->> + * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
->> + * from 2.5 GT/s up to 16 GT/s.
->> + */
->> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
->> +{
->> +	u8 old_supported_speeds = pdev->supported_speeds;
->> +
->> +	switch (pdev->bus->max_bus_speed) {
->> +	case PCIE_SPEED_16_0GT:
->> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
->> +		fallthrough;
->> +	case PCIE_SPEED_8_0GT:
->> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
->> +		fallthrough;
->> +	case PCIE_SPEED_5_0GT:
->> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
->> +		fallthrough;
->> +	case PCIE_SPEED_2_5GT:
->> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
->> +		break;
->> +	default:
->> +		pci_warn(pdev, "unexpected max bus speed");
-> 
-> Dumb question: Why can't you just copy the Root Port's 'supported_speeds'
-> directly:
-> 
-> 	pdev->supported_speeds = pdev->bus->self->supported_speeds;
-> 
-> - Mani
-> 
-
-Although just copying pdev->bus->self->supported_speeds would be simpler.
-We're concerned that this approach assumes the upstream port reports the
-same capabilities as bridge, which may not always be the case in future
-silicon revisions.
-
-Our current conservative approach ensures we only enable speeds that are
-physically supported by checking the actual max_bus_speed. For example,
-if there's a future Loongson-3C7800 where the virtual bridge reports Gen4
-support (16 GT/s) but the physical bridge only supports Gen3 (8 GT/s)
-
-In this scenario, directly copying the upstream port's supported_speeds
-would incorrectly report Gen4 support for the downstream bridge. The
-current patch ensures we only set speed bits up to what the hardware
-actually supports, based on the measured max_bus_speed. This seems
-safer for future silicon.
-
-Best regards,
-Cryolitia PukNgae
-
->> +
->> +		return;
->> +	}
->> +
->> +	if (pdev->supported_speeds != old_supported_speeds)
->> +		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
->> +			 old_supported_speeds, pdev->supported_speeds);
->> +}
->> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, loongson_pci_bridge_speed_quirk);
->> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, loongson_pci_bridge_speed_quirk);
->> +
->>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
->>  {
->>  	struct pci_config_window *cfg;
->>
->> ---
->> base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
->> change-id: 20250822-loongson-pci1-4ded0d78f1bb
->>
->> Best regards,
->> -- 
->> Ziyao Li <liziyao@uniontech.com>
->>
->>
-> 
-
+[ based on kvm/next ]=0A=
+=0A=
+Unmapping virtual machine guest memory from the host kernel's direct map=0A=
+is a successful mitigation against Spectre-style transient execution=0A=
+issues: if the kernel page tables do not contain entries pointing to=0A=
+guest memory, then any attempted speculative read through the direct map=0A=
+will necessarily be blocked by the MMU before any observable=0A=
+microarchitectural side-effects happen.  This means that Spectre-gadgets=0A=
+and similar cannot be used to target virtual machine memory.  Roughly=0A=
+60% of speculative execution issues fall into this category [1, Table=0A=
+1].=0A=
+=0A=
+This patch series extends guest_memfd with the ability to remove its=0A=
+memory from the host kernel's direct map, to be able to attain the above=0A=
+protection for KVM guests running inside guest_memfd.=0A=
+=0A=
+Additionally, a Firecracker branch with support for these VMs can be=0A=
+found on GitHub [2].=0A=
+=0A=
+For more details, please refer to the v5 cover letter.  No substantial=0A=
+changes in design have taken place since.=0A=
+=0A=
+See also related write() syscall support in guest_memfd [3] where=0A=
+the interoperation between the two features is described.=0A=
+=0A=
+Changes since v8:=0A=
+ - Dave: create new helpers for direct map manipulations=0A=
+   (folio_{zap,restore}_direct_map()) instead of using=0A=
+   set_direct_map_valid_noflush() to abstract TLB flush logic=0A=
+ - Dave: add WARN_ON_ONCE on the error when restoring direct map=0A=
+ - John: separate patch for dropping secretmem optimisation in=0A=
+   gup_fast_folio_allowed()=0A=
+ - Vlastimil: add missing clearing of the flag when restoring direct map=0A=
+ - Reorder patches to keep the kernel compilable in between=0A=
+=0A=
+v8: https://lore.kernel.org/kvm/20251205165743.9341-1-kalyazin@amazon.com=
+=0A=
+v7: https://lore.kernel.org/kvm/20250924151101.2225820-1-patrick.roy@campus=
+.lmu.de=0A=
+v6: https://lore.kernel.org/kvm/20250912091708.17502-1-roypat@amazon.co.uk=
+=0A=
+v5: https://lore.kernel.org/kvm/20250828093902.2719-1-roypat@amazon.co.uk=
+=0A=
+v4: https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co.u=
+k=0A=
+RFCv3: https://lore.kernel.org/kvm/20241030134912.515725-1-roypat@amazon.co=
+.uk=0A=
+RFCv2: https://lore.kernel.org/kvm/20240910163038.1298452-1-roypat@amazon.c=
+o.uk=0A=
+RFCv1: https://lore.kernel.org/kvm/20240709132041.3625501-1-roypat@amazon.c=
+o.uk=0A=
+=0A=
+[1] https://download.vusec.net/papers/quarantine_raid23.pdf=0A=
+[2] https://github.com/firecracker-microvm/firecracker/tree/feature/secret-=
+hiding=0A=
+[3] https://lore.kernel.org/kvm/20251114151828.98165-1-kalyazin@amazon.com=
+=0A=
+=0A=
+Nikita Kalyazin (1):=0A=
+  set_memory: add folio_{zap,restore}_direct_map helpers=0A=
+=0A=
+Patrick Roy (12):=0A=
+  mm/gup: drop secretmem optimization from gup_fast_folio_allowed=0A=
+  mm: introduce AS_NO_DIRECT_MAP=0A=
+  KVM: guest_memfd: Add stub for kvm_arch_gmem_invalidate=0A=
+  KVM: x86: define kvm_arch_gmem_supports_no_direct_map()=0A=
+  KVM: arm64: define kvm_arch_gmem_supports_no_direct_map()=0A=
+  KVM: guest_memfd: Add flag to remove from direct map=0A=
+  KVM: selftests: load elf via bounce buffer=0A=
+  KVM: selftests: set KVM_MEM_GUEST_MEMFD in vm_mem_add() if guest_memfd=0A=
+    !=3D -1=0A=
+  KVM: selftests: Add guest_memfd based vm_mem_backing_src_types=0A=
+  KVM: selftests: cover GUEST_MEMFD_FLAG_NO_DIRECT_MAP in existing=0A=
+    selftests=0A=
+  KVM: selftests: stuff vm_mem_backing_src_type into vm_shape=0A=
+  KVM: selftests: Test guest execution from direct map removed gmem=0A=
+=0A=
+ Documentation/virt/kvm/api.rst                | 22 ++++---=0A=
+ arch/arm64/include/asm/kvm_host.h             | 13 ++++=0A=
+ arch/arm64/include/asm/set_memory.h           |  2 +=0A=
+ arch/arm64/mm/pageattr.c                      | 12 ++++=0A=
+ arch/loongarch/include/asm/set_memory.h       |  2 +=0A=
+ arch/loongarch/mm/pageattr.c                  | 16 +++++=0A=
+ arch/riscv/include/asm/set_memory.h           |  2 +=0A=
+ arch/riscv/mm/pageattr.c                      | 16 +++++=0A=
+ arch/s390/include/asm/set_memory.h            |  2 +=0A=
+ arch/s390/mm/pageattr.c                       | 18 ++++++=0A=
+ arch/x86/include/asm/kvm_host.h               |  9 +++=0A=
+ arch/x86/include/asm/set_memory.h             |  2 +=0A=
+ arch/x86/mm/pat/set_memory.c                  | 20 +++++++=0A=
+ include/linux/kvm_host.h                      | 14 +++++=0A=
+ include/linux/pagemap.h                       | 16 +++++=0A=
+ include/linux/secretmem.h                     | 18 ------=0A=
+ include/linux/set_memory.h                    | 10 ++++=0A=
+ include/uapi/linux/kvm.h                      |  1 +=0A=
+ lib/buildid.c                                 |  4 +-=0A=
+ mm/gup.c                                      | 19 ++----=0A=
+ mm/mlock.c                                    |  2 +-=0A=
+ mm/secretmem.c                                |  8 +--=0A=
+ .../testing/selftests/kvm/guest_memfd_test.c  | 17 +++++-=0A=
+ .../testing/selftests/kvm/include/kvm_util.h  | 37 +++++++++---=0A=
+ .../testing/selftests/kvm/include/test_util.h |  8 +++=0A=
+ tools/testing/selftests/kvm/lib/elf.c         |  8 +--=0A=
+ tools/testing/selftests/kvm/lib/io.c          | 23 ++++++++=0A=
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 59 +++++++++++--------=0A=
+ tools/testing/selftests/kvm/lib/test_util.c   |  8 +++=0A=
+ tools/testing/selftests/kvm/lib/x86/sev.c     |  1 +=0A=
+ .../selftests/kvm/pre_fault_memory_test.c     |  1 +=0A=
+ .../selftests/kvm/set_memory_region_test.c    | 52 ++++++++++++++--=0A=
+ .../kvm/x86/private_mem_conversions_test.c    |  7 ++-=0A=
+ virt/kvm/guest_memfd.c                        | 58 ++++++++++++++++--=0A=
+ 34 files changed, 406 insertions(+), 101 deletions(-)=0A=
+=0A=
+=0A=
+base-commit: 0499add8efd72456514c6218c062911ccc922a99=0A=
+-- =0A=
+2.50.1=0A=
+=0A=
