@@ -1,92 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126842F25F3;
-	Wed, 14 Jan 2026 20:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6242C0303
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 01:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768424337; cv=none; b=J6sYqK/wr50BI2883dpCL6rvAkzWaxePXkAaXkKS5l0fn+e/E2qaXf3Y3YAfE/UD6DJDd5ObzSTOwuD638+je8UrjgG5mS1LgWWYWFCyQprkzQmqmEeCRS1NteSRlZ/j//1QggcEqWO/g/bUM5XqLGzVpQhki46/hf0MHyJuXmk=
+	t=1768439649; cv=none; b=AwIxmuFGwBYO9J1eC3lzDw7VVXeyxbenCR9hS7yOw2ZtYA7kFMHWj1E2eVVUNUhSZqVPSlPR8mTlIhJwD28WDqDuAONXXbMjhuPcYhIVN4T1bXylIr4x0Wi3QivhwjNeJuwQlTf0JWTyNlffTroSjYzQxHxiCipjH1zp9rDXd5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768424337; c=relaxed/simple;
-	bh=t15mgHwN+WGpwIYDNelTtRTVGa0I3MDtGvlcDLcbvYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SSx7EEvYv/8+DULftnhv/pYV6/x4yo2y4PExe0fPreAvfgdOrjI6iGx7EEurGMS2bVj/uSTGrmD+Yconfzg0IHxV9V2/fDdmuroWt0CNOJkqz7VGn17xBDC1XWaTVF383kQyNSu6OjXiCe773a8WAG/OEiabfpOrnqZ0IegeKRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCcvHs7d; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCcvHs7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852BEC4CEF7;
-	Wed, 14 Jan 2026 20:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768424336;
-	bh=t15mgHwN+WGpwIYDNelTtRTVGa0I3MDtGvlcDLcbvYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCcvHs7dfJFVxcq4dLHWL6gXUCCRWKtNiONjkzm/PR+KtBnxQlLSt1vJe3/CtfXRC
-	 6SaMBDntB34hDv1r+JdiAEb40VnpctKNWoW8bEjRO7I8Qiq1b24XtV2TprW+/f5kfR
-	 BcdhgHmi0dM6njT1NLDuxb53WSetxHmjUsJdUC7Ws/3HVEv7W0CyswhtXo8JamHYFw
-	 DXY8CMnAZ1Jo+uPvJ4pkrvFES59VrDwCAwGngHPjvF9UMRnqk+coXC7W1fU09bjgs6
-	 /m255OisvcgKH1GbuzzEMEfkRz+w3cCW+q+HKlRWrJWDZ5B+mA4E16mKOFEdoL02yx
-	 05I6Onq2/LF+Q==
-Date: Wed, 14 Jan 2026 14:58:55 -0600
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-binding: rtc: loongson: Document
- Loongson-2K0300 compatible
-Message-ID: <20260114205855.GA3190839-robh@kernel.org>
-References: <cover.1767663073.git.zhoubinbin@loongson.cn>
- <8876bebaf08121bb5edd2500f5289284b75df011.1767663073.git.zhoubinbin@loongson.cn>
- <20260106191314.GA2568583-robh@kernel.org>
- <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
+	s=arc-20240116; t=1768439649; c=relaxed/simple;
+	bh=C9bO0AsgjhtifGNbJzbrxVSBXG7y+2b8jeZWZ186+ZY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=cShhPDRlzd35PBzFIidHCXEd8XBYQ6sP6quib/ee5vCdQbglGXM7UjX/DpKEiQ3kVuFnRSWOv8u7TvH1+JTmi5lqPLEWY096YZnzozB+mZ5jakKiKmdBH0fe9QXdY5VhX8ylRG4wETnX6pQqpVnhnIpeTlA+Qmu33tfzHR13EnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx58FOP2hpAgMJAA--.16909S3;
+	Thu, 15 Jan 2026 09:13:50 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxWeBJP2hpnK0eAA--.63651S3;
+	Thu, 15 Jan 2026 09:13:47 +0800 (CST)
+Subject: Re: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object
+ 'tc_bpf' from buffer
+To: Vincent Li <vincent.mc.li@gmail.com>, bpf <bpf@vger.kernel.org>,
+ loongarch@lists.linux.dev
+Cc: ast <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ Hengqi Chen <hengqi.chen@gmail.com>, Chenghao Duan
+ <duanchenghao@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <d299d7ba-4e9e-5b16-5aa4-898b62330c24@loongson.cn>
+Date: Thu, 15 Jan 2026 09:13:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
+X-CM-TRANSID:qMiowJCxWeBJP2hpnK0eAA--.63651S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar1fWFyrKFWUJw17ArWfCrX_yoW5Jr4rpa
+	y5ZFs0yr1kX3Z7Zr1Iy340vFy5Grn3WFykKF48Jryj93srGay8JF1Ut39Y93s8KrWvqr9F
+	v34ktas3X34rCagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-On Wed, Jan 07, 2026 at 09:22:41AM +0800, Binbin Zhou wrote:
-> Hi Rob:
+On 2026/1/2 上午2:26, Vincent Li wrote:
+> Hi,
 > 
-> Thanks for your review.
+> I used AI to enhance my message, hope it helps :)
 > 
-> On Wed, Jan 7, 2026 at 3:13 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Jan 06, 2026 at 09:33:32AM +0800, Binbin Zhou wrote:
-> > > Add "loongson,ls2k0300-rtc" dedicated compatible to represent the RTC
-> > > interface of the Loongson-2K0300 chip.
-> > >
-> > > Its hardware design is similar to that of the Loongson-1B, but it does
-> > > not support the alarm feature.
-> >
-> > But you are requiring the interrupt property for it? Isn't it no alarm
-> > feature means no interrupt?
+> I am reporting test failures observed while running BPF selftests on a
+> LoongArch machine. Both the ns_bpf_qdisc and xdp_synproxy tests
+> exhibit WATCHDOG timeouts and eventual failures. The issue appears
+> architecture-specific but I am not sure.
 > 
-> Yes, the `interrupts` attribute is not required without the alarm feature.
+> Issue Summary:
+> When building and running 6.19.0-rc3 BPF selftests on a LoongArch machine:
 > 
-> But my judgment condition is `not contains` (added in patch-1[1]).
-> There are only a few SoCs on the Loongson platform that don't support
-> the RTC alarm feature, so I think `not contains` looks cleaner and
-> simpler.
+> The "ns_bpf_qdisc/attach to mq" test fails with a WATCHDOG timeout
+> after 120 seconds, followed by SIGSEGV.
 
-I should have said allowing rather than requiring.
+...
 
-You are allowing (though not requiring) 'interrupts' for Loongson-1B and 
-Loongson-2K0300. In patch 1, you made it required for other platforms 
-which is an ABI change. That's fine if it was a mistake and is truly 
-required.
+> Are these two test failures (ns_bpf_qdisc and xdp_synproxy) related,
+> given they both show similar timeout patterns?
+> 
+> Environment:
+> 
+> Kernel: 6.19.0-rc3
+> 
+> Architecture: LoongArch
+> 
+> Test Command: ./test_progs -t ns_bpf_qdisc
 
-Rob
+Tested with the latest 6.19-rc5, the testcase passed on LoongArch.
+
+1. Here are the test results:
+
+$ sudo ./test_progs -t ns_bpf_qdisc
+Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
+#219/1   ns_bpf_qdisc/fifo:OK
+#219/2   ns_bpf_qdisc/fq:OK
+#219/3   ns_bpf_qdisc/attach to mq:OK
+#219/4   ns_bpf_qdisc/attach to non root:OK
+#219/5   ns_bpf_qdisc/incompl_ops:OK
+#219     ns_bpf_qdisc:OK
+Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
+
+2. Here are the toolchains:
+
+$ clang --version | head -1
+clang version 21.1.8 (https://github.com/llvm/llvm-project.git 
+2078da43e25a4623cab2d0d60decddf709aaea28)
+$ gcc --version | head -1
+gcc (GCC) 16.0.0 20260105 (experimental)
+$ as --version | head -1
+GNU assembler (GNU Binutils) 2.45.50.20260105
+$ pahole --version
+v1.31
+
+3. Here are the test steps:
+
+(1) Compile and update kernel
+
+cd linux.git
+make mrproper defconfig -j"$(nproc)"
+
+scripts/config -e FTRACE -e FUNCTION_TRACER -e DYNAMIC_FTRACE \
+-e FTRACE_SYSCALLS -e FPROBE -e BPF_LSM -e DEBUG_ATOMIC_SLEEP \
+-e KPROBES -e FUNCTION_ERROR_INJECTION -e BPF_KPROBE_OVERRIDE \
+-e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -e DEBUG_INFO_BTF \
+-m TEST_BPF -d BPF_UNPRIV_DEFAULT_OFF -d ARCH_STRICT_ALIGN \
+-e NET_SCH_BPF -e NET_SCH_HTB -e DIBS -e DIBS_LO -e SMC \
+-e SMC_HS_CTRL_BPF --set-val RCU_CPU_STALL_TIMEOUT 60
+
+make olddefconfig all -j"$(nproc)"
+sudo make modules_install -j"$(nproc)"
+sudo make install -j"$(nproc)"
+sudo reboot
+
+(2) Compile and test bpf
+
+cd linux.git
+cd tools/testing/selftests/bpf && make
+sudo ./test_progs -t ns_bpf_qdisc
+
+Thanks,
+Tiezhu
+
