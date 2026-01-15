@@ -1,234 +1,227 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD2F32693E
-	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 20:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213C324707
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 21:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768509910; cv=pass; b=spwZJCvsnupv6XsFxTLFXaMrndBC/vqqurNefV518TekyHaXGDCYS6eya49mzp1P6Hb3duMwbUalUk5ONl6gcCYIBD/RQN4s9ss088dGUZvNIOVtqNHJziypKHwfHyR4gG5x5poWLUSvz1DUIDBtzlTmsEtGCTX1bjZQFTGzk/M=
+	t=1768511230; cv=pass; b=UCWG1Y0ld71TKX4nLbEXWraDR6B1k1GPlHSz6hjXLZubv332ZlxJ3HslTEiRqfzEUZIT/bS7zIcclVEVGk2tatN4EPzDDhyK9/pbE/KEtSz+krPJ+Gv/z49umqEbY3SBRcd0c1BYUrUQsgXoyEM5WaEKip2k62tG4BAvrwxo6c0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768509910; c=relaxed/simple;
-	bh=tcBF4nuTdaJWQaR42nPx3uzp8aSI/YG/w0GCulHFaoE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eliioluVqJHvlgdrOZ3O3wN3YuFq9BnALIZFM7wEvNBODXi//UBgX8bFSZCFApjWv1yFShzus1Xx0jZF79utf5HapFqDYtlaNPhUjb1I04K9fcX6PPav3K4S1w7Kvuj6pHg+6PVJss9xx+FPvs3MmQe/XfTl+cidq4lEc4vHftc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qt+aUKjK; arc=pass smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768511230; c=relaxed/simple;
+	bh=Yj5Px6CBHG4dfhDnY0aiL+o/Xd3AGh3M1dNNpc7+Hj0=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OIcSzXahC9405z+EfPz+iuZNsR8TyXV+FLmNcjQry1pVppmelTiw1ScFmUolRFynLlX76wfxjElMlHJ+LhZAZAuzUKSCvDVEIXH3vphtH7zx4xnEKc0Q6j6kZVLmpuYgP5jiGdUrVAe0RmNNZxECjJ5z//VoJjRxfDQ4BtzyPqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jWAaMhmF; arc=pass smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qt+aUKjK"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-5014e8a42aeso13382191cf.2
-        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 12:45:08 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768509908; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWAaMhmF"
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-5eea3fe88bdso488908137.3
+        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 13:07:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768511227; cv=none;
         d=google.com; s=arc-20240605;
-        b=I7akFZl0MYHmQO+QU/g7E77zTWnUd7pzgbIGPFw1SVo8y+7kKH7eOIJPGXHZRSS8iB
-         5SmHNID0EJmIi4MlUF6Ld1ruMhnAMbGa5f/QClnJWmpPfFzIX86k9Qn87aF80UN9kF/i
-         h9+2BzMjlVQL1H5CLNSscRQo/Iqjcok5jsR8UGa/KVWGnoOZaZkDvAJfqt6Y1+gpsJMe
-         Jm6bE+dwUVhZRaqtGscERYYyJXUFwwFEsDNNbBTptqMm3TFZHClTWQ9hSrJh0RTLRqTx
-         zjNCwl8VOpByMFjWtFmPXq32/B/Mp3jSuZaG+xj57DQ7W4hzRCyuNoY8zPteVZ/57b50
-         szpQ==
+        b=N/hOvm3OoSIChA183TDTT0OxUXjv6B+grMiLvswzzGQl03nrN27knQU469LESOCtH5
+         EwFmuopMyISUnHba9QFS9i3HdPBNpKeHPe31IExx7Cj8yfzxwUETpidn1rHKivuZEF+E
+         LMnxVBLWG3TbXwPVXLYzccjbZ3YL1nac7pNT6mmN4s3VCcv/WU2HJRvNGVACAykQMMRE
+         GPxBaotSUvfyZH69uYULhAHw5ElDunkJAEhVricYqPUONPSPA1eO/iJzpar7XXN3Xffe
+         wrNkkpyBUJ80ECd6+zMeJfeCwojmPhO5T/kB2YNbA7l+VKctJI4oEP4m/Q/9f3Dpqb3L
+         j8XA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=x9DEwRAP+sPbYYatTSTzERFwiaou/pYxLbvlBBsfRQc=;
-        fh=p3io9kbXS6gM4BtYme2DjNBdaFIrVa5KBkAuVAGsORM=;
-        b=OIqLZs5yKUZU8bLOVy8a6W3WIdB04qLmXE4ApY8d7nzK6+puptz4wMVtuaPrv9EKOn
-         PdpEg+2fFgMOv/KL1TnVvH9+SEPfbttMREwJms85GkEJZ3UVj5vgMwM5ZvJygJ7UtjeL
-         1bSa4zKMCBo6Qnm2LD/IhiB3SAHuvX4TikXBCyKZbEx7iIjYCqpcXIdYUlZ2m27gHE6V
-         Z18DsZJfS7FZVvsS+Dhwtl1rtlFuES/aT+D2TyaneQxIJ88iIZG/zATyH0PDVwAu5JJZ
-         0z3oL0R1mvL80m3gX0nKVQfdkomDIExaqAvE7/vE1BnlVj86yyeSyXC+ha3h7GkNjrcF
-         TgdA==;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=y4BwArZ5FLhyM5BEN34gjuDvwbvdpN2Nxoskvco/5nM=;
+        fh=Tpz0XRSWFsbATmA33Z1qP5XLoZrvw+LMwwp5LbCSq8o=;
+        b=NI7lWU/Mio3IBzCHFzDuq34uAdiTlo3B7JFgRuhGdtii6BbIZQF/35FoOMgDqhYy7o
+         Bo+om1AXvbhwvKdWCiZ0xFNAIaVf3ti1myv9CnNm3HixIYoxPB3QDUF7jAXtv4p9lq9j
+         ByrO+6DDN4WtqornRp/LS6Pe4L9fHSvi8Fh5aUmr7aPJe4igzMhWCwFuh81TVxsE+C2K
+         cAHCWgEPkuJ/SERTex+zi3U9Dc0d5HGtZhuIVYHHcOwOROdO/vE4wUaxxU7iAu6T4Wkk
+         NfzHS0pP5A0cdz1w9s2j5xSp8b3itprLwYj3bpUOC1doTFYeko+jRSeXCpAtrF4QmeWO
+         xd1A==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768509908; x=1769114708; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9DEwRAP+sPbYYatTSTzERFwiaou/pYxLbvlBBsfRQc=;
-        b=Qt+aUKjKz4ZCF6TX2Yw/+CLsngrexELhhvUXR7braFqrjC8nayQb4R1S5LjsrQWdO3
-         kt9S5wekoivtlw11JQNXRFG9CPsMznyBzq+PP6cbvV7wmHVU8ya2jPzW6zPQnOqTxO0o
-         xu0W8d53xJiuHL+UxEpXrL/nhUCqku+zwltg807ag0hn4cKRwmDZMkaKGCab2jEY3PbG
-         cRoVk4N01VruhQxw+AlrW6KWMFFoS/52BFvI12ZpinQaLSyVNnNaGMBXfara5dW/ST2q
-         sM14L0kGEO3j+4fwRo/hHRriBbwFdVlJi8bVCVIPvKB5Oa6dEQO6uNsrfbv8ywdba6TJ
-         9wBg==
+        d=google.com; s=20230601; t=1768511227; x=1769116027; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y4BwArZ5FLhyM5BEN34gjuDvwbvdpN2Nxoskvco/5nM=;
+        b=jWAaMhmFJfRnahC361lyIAqQSJTBzrotBx9BuHyQnEyeHooBykvzIOhbNOIXjGkP4E
+         HzL1rhvhjabYXulihG8TeDtD405Ca5DfrqtmpJW9tU0AP3enjrl0k6NxCM3WFOySZE5M
+         keZ+RaQJsi/4RQ49540Qn/8QjeQM9QETg1Qd+AoWqzgxx2XzzX16dpkHYpvIdvYFiHpN
+         ks9Okodae/2PQQm7pW7LL0LtWo88EqWG0+YbsXxPe5bAXEcbG5k3iXPlyydYJqN6Kbwy
+         vi4PjQo5a3uGiz9jaZQYx0kbT3HVy0kjUf0AYhY7u+SRupXrcHzU6kES1E01ozQTcgMX
+         vjWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768509908; x=1769114708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=x9DEwRAP+sPbYYatTSTzERFwiaou/pYxLbvlBBsfRQc=;
-        b=GNwLp0crCLwwbYnPOuBCnCaiedXbputacMab6EroK3T2Hf6t0P1YgW7hwCwhYiCQFk
-         R4+PX5MuDZbrL/DcKoR4BhnmQMNuaPO9Vw/6Sg5axVi9v3D5grDqXXX3nrp/eZSTLl/e
-         bEG0Ufx0x3o8Rt8U1YJLBUNxgufKAI9r+B7LNz+Muy65pDoT3H5fGYrNzUbcnmARb4Uy
-         BkME53vbgv+Nu5mKFm7CFW1a6MZ57VhL5OOCYK/huV50TD1j8jP8Uin7B3JsIjRl1/AZ
-         FVKda8M4342WCD+GgRnJBcqCzGrqUK9qcnqM0+9m1aqNr8WPpWwNS6+rHH7CAw+I9rkR
-         dczw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNLWfKPI8YZOFEKAk7SRenFdnpbNQEeMiPkc59aitgcOSNtGoJHjN9CdugGkF6g2lhZrApQNyf4SQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyyp9D6tzKBYBqHAbZsuWo64uVzS4ILMXcOX+3EgeqCmw5Xi1Vr
-	UatVqJlQhV/ta7sgLEoGv9fR2kfhU6ItSb5vd3/5KMcVj8aas6Lu7XffRpjBUJce9iMILH1ZmYa
-	XbH1U0ozd+MitQc7ldcIxukxI0n27yjo=
-X-Gm-Gg: AY/fxX5YQXUkh8cXz2C9iNqnrVniz3KG44Ie3Llj0ZiQrsEyOW8TGxpwTmt8BOWR9vk
-	ECT6pbYAfu+yvn7Y531/Z554gCHy0x0EsYnFK8TVsv/OZvoNJiUlPY2/YriVjTUlTFWuHjjXBU3
-	FeRWIM8F06bsaYAeJAdDlYGOfsPa0YUM8vMZIzPjJb34emHpRtiYD+0wqbsYcM0CLHakXw8p9V1
-	a+W/u15/5vD88cRzVdrIl1rILv8BHDneLO0OLDXEy8e/g7D8drC7Iqu6NgzpfrrNDHW1ks=
-X-Received: by 2002:a05:622a:134a:b0:501:4528:27ca with SMTP id
- d75a77b69052e-502a1714fbamr12445591cf.51.1768509908001; Thu, 15 Jan 2026
- 12:45:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768511227; x=1769116027;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y4BwArZ5FLhyM5BEN34gjuDvwbvdpN2Nxoskvco/5nM=;
+        b=gKi06hAuVs6wpEbwKJ2xjtWoERB8qyuj6nAR0LzCmhBl0VynAsxJvYH3EnQLUrhhn8
+         YWZ51LT61gcZ79XsADDAHeUW+KBIPE4BC/C8B52XnX+ZnH5u4Q/yECiX/HPHgTkZ6zYo
+         sdMs0JK95Y/BdxAEzIIkr3MNhfIxszF1a56HNC2bGdc9/oCzJP2v1xJtHCtwR8VPhkzl
+         CXTRINdYob9Xfxzm5NNgTWHNaNxcvNF/jhFVGQShYtDyoQZ4EXtiBf2r5EtnKsBnv+OE
+         HyiFg+vbGovkuCudR9WVqQV5Tm52gWiSkHJrcMPeHEhG4RB0hxSMwi8w71wLU/RKhq+Z
+         x0PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmb0OOAbFNY+WYhYqVvPqS+rZvUwPRV7ePOEn+3jNEP2+IiInxz2RFUZqUfEEu/ClP0DJGTO0aYNE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxtkjkqRFVmdlBZTBdO6pGKNbzucHg56wAOFKqp8sF7ThRCxIcn
+	K2BgaBD2+56O95a6/IRPde7dR+102AjCoxM/W4S7HPj18wT7vN7xiyeomg2I6JhLwCGSAQEoG2z
+	PF90vJs/iAXuNmsBXNNhjKUJuiDgJL4hHoUrG1WXP
+X-Gm-Gg: AY/fxX74U/vzhIesS37pDnrqczLxuRAWtvwskQS27lEiLOa7mboy4ghzYAg5R9HHigK
+	v90/LYlvJEt1XjJLl/rlQNCMbYn9wf0RauZVho4m+3gvBDQxlRA/MoWYUB9yaffMSnBBYU0a6ZH
+	gVQmbyHMoK8vejfGYzH5+y6fHmO6niW/lrvp0Z4+KfzGZ75PDdhBg3ieuW/QDImZJ9EoINpadPt
+	M8kHSMiL2JQErn2J6PVtljL8Ci78vSLCVfx9skE62Cr3meckpcK+dC4n30Bu1wdhrOF+VU2EwO1
+	mrTAVI5lrGeHn/BcsBG2IAGONg==
+X-Received: by 2002:a05:6102:945:b0:5df:aff3:c41c with SMTP id
+ ada2fe7eead31-5f1a719e362mr155618137.30.1768511226367; Thu, 15 Jan 2026
+ 13:07:06 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 15 Jan 2026 13:07:05 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 15 Jan 2026 13:07:05 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <20260114134510.1835-2-kalyazin@amazon.com>
+References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-2-kalyazin@amazon.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
- <d299d7ba-4e9e-5b16-5aa4-898b62330c24@loongson.cn>
-In-Reply-To: <d299d7ba-4e9e-5b16-5aa4-898b62330c24@loongson.cn>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 15 Jan 2026 12:44:56 -0800
-X-Gm-Features: AZwV_QgjP2j9fiM1bbWupGQo0ZtEscx6nLExKs_juGAOHx-xoENEcocgTyDsmsA
-Message-ID: <CAK3+h2yFJDNVPo=38PcYCMNhmw0cQBouL5h7sX0KmyLu-_5zwQ@mail.gmail.com>
-Subject: Re: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object
- 'tc_bpf' from buffer
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev, ast <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Chenghao Duan <duanchenghao@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 15 Jan 2026 13:07:05 -0800
+X-Gm-Features: AZwV_QitN6L4bb0XJb_ZZH7nFdRT7CH1pyddv4cbgutSArI7UeCs00Q7KzDEw7c
+Message-ID: <CAEvNRgGXeow48BUJYyuAOUp8qK97v1LdF4KdTB=Nbk7pTs9tfw@mail.gmail.com>
+Subject: Re: [PATCH v9 01/13] set_memory: add folio_{zap,restore}_direct_map helpers
+To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
+	"maobibo@loongson.cn" <maobibo@loongson.cn>, "prsampat@amd.com" <prsampat@amd.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
+	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, 
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 14, 2026 at 5:13=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 2026/1/2 =E4=B8=8A=E5=8D=882:26, Vincent Li wrote:
-> > Hi,
-> >
-> > I used AI to enhance my message, hope it helps :)
-> >
-> > I am reporting test failures observed while running BPF selftests on a
-> > LoongArch machine. Both the ns_bpf_qdisc and xdp_synproxy tests
-> > exhibit WATCHDOG timeouts and eventual failures. The issue appears
-> > architecture-specific but I am not sure.
-> >
-> > Issue Summary:
-> > When building and running 6.19.0-rc3 BPF selftests on a LoongArch machi=
-ne:
-> >
-> > The "ns_bpf_qdisc/attach to mq" test fails with a WATCHDOG timeout
-> > after 120 seconds, followed by SIGSEGV.
->
-> ...
->
-> > Are these two test failures (ns_bpf_qdisc and xdp_synproxy) related,
-> > given they both show similar timeout patterns?
-> >
-> > Environment:
-> >
-> > Kernel: 6.19.0-rc3
-> >
-> > Architecture: LoongArch
-> >
-> > Test Command: ./test_progs -t ns_bpf_qdisc
->
-> Tested with the latest 6.19-rc5, the testcase passed on LoongArch.
->
-> 1. Here are the test results:
->
-> $ sudo ./test_progs -t ns_bpf_qdisc
-> Warning: sch_htb: quantum of class 10001 is small. Consider r2q change.
-> #219/1   ns_bpf_qdisc/fifo:OK
-> #219/2   ns_bpf_qdisc/fq:OK
-> #219/3   ns_bpf_qdisc/attach to mq:OK
-> #219/4   ns_bpf_qdisc/attach to non root:OK
-> #219/5   ns_bpf_qdisc/incompl_ops:OK
-> #219     ns_bpf_qdisc:OK
-> Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
->
-> 2. Here are the toolchains:
->
-> $ clang --version | head -1
-> clang version 21.1.8 (https://github.com/llvm/llvm-project.git
-> 2078da43e25a4623cab2d0d60decddf709aaea28)
-> $ gcc --version | head -1
-> gcc (GCC) 16.0.0 20260105 (experimental)
-> $ as --version | head -1
-> GNU assembler (GNU Binutils) 2.45.50.20260105
-> $ pahole --version
-> v1.31
->
-> 3. Here are the test steps:
->
-> (1) Compile and update kernel
->
-> cd linux.git
-> make mrproper defconfig -j"$(nproc)"
->
-> scripts/config -e FTRACE -e FUNCTION_TRACER -e DYNAMIC_FTRACE \
-> -e FTRACE_SYSCALLS -e FPROBE -e BPF_LSM -e DEBUG_ATOMIC_SLEEP \
-> -e KPROBES -e FUNCTION_ERROR_INJECTION -e BPF_KPROBE_OVERRIDE \
-> -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT -e DEBUG_INFO_BTF \
-> -m TEST_BPF -d BPF_UNPRIV_DEFAULT_OFF -d ARCH_STRICT_ALIGN \
-> -e NET_SCH_BPF -e NET_SCH_HTB -e DIBS -e DIBS_LO -e SMC \
-> -e SMC_HS_CTRL_BPF --set-val RCU_CPU_STALL_TIMEOUT 60
->
-> make olddefconfig all -j"$(nproc)"
-> sudo make modules_install -j"$(nproc)"
-> sudo make install -j"$(nproc)"
-> sudo reboot
->
-> (2) Compile and test bpf
->
-> cd linux.git
-> cd tools/testing/selftests/bpf && make
-> sudo ./test_progs -t ns_bpf_qdisc
->
-> Thanks,
-> Tiezhu
->
+"Kalyazin, Nikita" <kalyazin@amazon.co.uk> writes:
 
-Here is my toolchain version
+> From: Nikita Kalyazin <kalyazin@amazon.com>
+>
+> These allow guest_memfd to remove its memory from the direct map.
+> Only implement them for architectures that have direct map.
+> In folio_zap_direct_map(), flush TLB on architectures where
+> set_direct_map_valid_noflush() does not flush it internally.
+>
+> The new helpers need to be accessible to KVM on architectures that
+> support guest_memfd (x86 and arm64).  Since arm64 does not support
+> building KVM as a module, only export them on x86.
+>
+> Direct map removal gives guest_memfd the same protection that
+> memfd_secret does, such as hardening against Spectre-like attacks
+> through in-kernel gadgets.
+>
+> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+> ---
+>  arch/arm64/include/asm/set_memory.h     |  2 ++
+>  arch/arm64/mm/pageattr.c                | 12 ++++++++++++
+>  arch/loongarch/include/asm/set_memory.h |  2 ++
+>  arch/loongarch/mm/pageattr.c            | 16 ++++++++++++++++
+>  arch/riscv/include/asm/set_memory.h     |  2 ++
+>  arch/riscv/mm/pageattr.c                | 16 ++++++++++++++++
+>  arch/s390/include/asm/set_memory.h      |  2 ++
+>  arch/s390/mm/pageattr.c                 | 18 ++++++++++++++++++
+>  arch/x86/include/asm/set_memory.h       |  2 ++
+>  arch/x86/mm/pat/set_memory.c            | 20 ++++++++++++++++++++
+>  include/linux/set_memory.h              | 10 ++++++++++
+>  11 files changed, 102 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm/set_memory.h
+> index 90f61b17275e..d949f1deb701 100644
+> --- a/arch/arm64/include/asm/set_memory.h
+> +++ b/arch/arm64/include/asm/set_memory.h
+> @@ -14,6 +14,8 @@ int set_memory_valid(unsigned long addr, int numpages, int enable);
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>  bool kernel_page_present(struct page *page);
+>
+>  int set_memory_encrypted(unsigned long addr, int numpages);
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index f0e784b963e6..a94eff324dda 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -357,6 +357,18 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+>  	return set_memory_valid(addr, nr, valid);
+>  }
+>
+> +int folio_zap_direct_map(struct folio *folio)
+> +{
+> +	return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +					    folio_nr_pages(folio), false);
+> +}
+> +
+> +int folio_restore_direct_map(struct folio *folio)
+> +{
+> +	return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +					    folio_nr_pages(folio), true);
+> +}
+> +
 
-[root@fedora gcc]# clang --version
-clang version 21.1.5
-Target: loongarch64-redhat-linux
-Thread model: posix
-InstalledDir: /usr/bin
+Was going to suggest a _noflush suffix to these functions, but saw
+Aneesh's comment that these functions actually do flush_tlb_kernel [1]
 
-[root@fedora gcc]# pahole --version
-v1.31
+[1] https://lore.kernel.org/all/yq5ajz07czvz.fsf@kernel.org/
 
-[root@fedora gcc]# gcc --version
-gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6)
+Reviewed-by: Ackerley Tng <ackerleytng@google.com>
 
-[root@fedora gcc]# as --version
-GNU assembler version 2.42.50.20240531
-
-I repeated the same steps from above you mentioned with the same
-kernel config and ran into the same issue.
-
-I attempted to update gcc by compiling with ./configure
---prefix-/usr/local; make; but ran into problem with
-
-checking for loongarch64-unknown-linux-gnu-gcc...
-/usr/src/gcc/host-loongarch64-unknown-linux-gnu/gcc/xgcc
--B/usr/src/gcc/host-loongarch64-unknown-linux-gnu/gcc/
--B/usr/local/loongarch64-unknown-linux-gnu/bin/
--B/usr/local/loongarch64-unknown-linux-gnu/lib/ -isystem
-/usr/local/loongarch64-unknown-linux-gnu/include -isystem
-/usr/local/loongarch64-unknown-linux-gnu/sys-include -fmultiflags
--fno-checking
-checking whether the C compiler works... no
-configure: error: in `/usr/src/gcc/loongarch64-unknown-linux-gnu/libgomp':
-configure: error: C compiler cannot create executables
-See `config.log' for more details.
-
-Do you have proper instructions to compile gcc?
-
-I am not sure if it is toolchain related. The thing that really
-bothered me is why the hell tc_bpf is loaded by libbpf for
-ns_bpf_qdisc selftests that seems to have nothing to do with the
-tc_bpf object, I can't think of anything special in my build machine
-that would trigger this. Anyway, thanks for the help!
-
-Vincent
+>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>  /*
+>   * This is - apart from the return value - doing the same
+>
+> [...snip...]
+>
