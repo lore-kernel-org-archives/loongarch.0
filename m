@@ -1,328 +1,392 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325E7329E5C
-	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 07:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C236D510
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:54:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768463041; cv=none; b=fl+F6KfFhFA31oAfnTCNwsJPVglFH2NJAcPaNFOeeveoaAApvmmp44qKmZ7NJkdgjcJUSGDkxZK0XVZS9eDYjYSoPaoWpeMwuvV2KmW8/GaV6U6nJCoX+ANvXTgAshRCVp5E+q3r/ooZp5JWh6hDQMl9R9yoPcfw6iGbixh1OjU=
+	t=1768474479; cv=none; b=GpWuemDbUvN0OM5RYcuAe6mr40T1mFmLPGhjbevC9AXWT8besPeILTMkSQ9WYw4+3afIP3bo0r7ybTq/46kC0YkG8jneHE3EsyCEpz41t8XTvwBqe25OPM8QsdQ4A9/KJZKNRIsJyrm0pgf8wAlI9HFD9gPkZdssWF6Y6VWGH6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768463041; c=relaxed/simple;
-	bh=4FGPv/2RxBM3h5py+1EMqhDtPUHe2D+7RO2VfCfYdZI=;
+	s=arc-20240116; t=1768474479; c=relaxed/simple;
+	bh=/1KAtvLvvLMpDi9CfvfFJ6x5SY4Jp+t4QyV0IUSlh0I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lRpJcAXahvM0r0fc0dvOmaTLjvwQDD63ZCrZieN3GEzkcQrMkiag3VAbO7cZ5+HP32Oq5p4Hii5oux3RM9h/WUG1+iz9fbyGM/+xi9qQzkPopvnlpsdBitD0VJWQs5xkr42DLsJz9WpUZSGFVozt3dmkmVzcggOcIrwLkFiSDLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPoabBQC; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=JbaM27BsE/1tml8MkGCo3Fb98+uKAG7R/GTW7Q1dTv9rofTrTVPudqGVELy5LjAI4kEGkJ321h16KAAeclQuf53FzREYLc40edRogXTuQgNKAowLMU9oKTN13En8HdaULGNSBUdSP+EBBbGwpNbxZCij0j1NepQ6eoGngvnZAx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1kpJSEs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPoabBQC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE11C19423
-	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 07:44:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1kpJSEs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E69C19422
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768463040;
-	bh=4FGPv/2RxBM3h5py+1EMqhDtPUHe2D+7RO2VfCfYdZI=;
+	s=k20201202; t=1768474479;
+	bh=/1KAtvLvvLMpDi9CfvfFJ6x5SY4Jp+t4QyV0IUSlh0I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JPoabBQClH8LVoT1CRQ3qky/rMkHsRyVl7+QY2ZIPFUbOQg0xyf6ASkVvCJwKmbgX
-	 5UHinV5rku73xgr8lUOZHaHJzU05116Ds4TzuhKilGa25ccUGD8y1+kPTIulFfQZ7C
-	 ooAdVwg4bYGDlRFHptMg4ZEwf5JVa1v+YrebE1+ikYSR3YZtADt1Y2RJ6ijetJD+BM
-	 cR2FftV3MGt9MMRlrWwuO/0hKf6KEGkLTKoe001EPGTWO6MfcMa2vCV7PnmJKdNvvx
-	 4ClB/mY6p2FWyAEYJHt9XPvZnnZo+UDd69txsxOPo+q8M2b+Q7INv4f4h9nJLPqqO/
-	 G3iO84SuoOhpA==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6505cac9879so932305a12.1
-        for <loongarch@lists.linux.dev>; Wed, 14 Jan 2026 23:44:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXNJMQBtKZMwVc7TnDy04u1ij79N+vAgHe9Zs9NOOTNkRX2R+GnenkQBNbYlh2iZHz3NTtWhVPRxCw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyIP5VfE8M94y6epSw8q6ct2rZymfMaIEWWEBWjkRkfhcSfMzt1
-	++vJ4sWolWmjN8oikJfGHD4Nz9WIi1HvubBuSPONIaINbNNCR5s9Shx9IJM3nvrXTb98cVu4KMC
-	Jt6zufHxH6yyR7aFImwhtaT9/PQ3srZM=
-X-Received: by 2002:a17:907:7f91:b0:b79:d24b:474d with SMTP id
- a640c23a62f3a-b87676a0da7mr359416066b.16.1768463039462; Wed, 14 Jan 2026
- 23:43:59 -0800 (PST)
+	b=C1kpJSEs7ZY0zrGxNWim7K4CU3ZGx1yWEYt0RZeKKqL1WhtjbDHF7n+G9bCghDbI4
+	 DTQJFsyYjgbt4qJNgy2fy7rh7rF3LPc4cobkjtkH3N2+ZdxrNhccGYhoxM0Bg9tw2g
+	 +t7O99tNysplYsSzPs0tSyWU5rgKDpQUPwI2rjQ4moumcI6jm3YV+R9t78aQSxYlOO
+	 mUuql4j/FwEFCzKGLiifoQoHcjQ4TUXCCc/FNnXQV/WcgLv8TDT0b0gKb8V9GA2OzY
+	 c7dU/d+SPV/smaZY6X4mLH6OV2f/xdAQOPfQrTMSPW2v0MIrf99Fk8X/MaBiWdMlOA
+	 YjvK+JMj5P/lg==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b872b588774so115462366b.1
+        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 02:54:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXKviMZYrkCXQ+5bPNm7NIg7L4JpQIQYGwPD+Rzqy9SNXTNtJybn7KPIU3jNI1fkHzOp0PwRhrvIvA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YydAUCOU0VnmatVBHP1eWQtFFVkymhI07qOc+jD92KDX+XcQfDB
+	LGBCO0HAuzdUntDpruQb6dE0mRRFUUnX4NZ8+jKS2txlYM7BqbqMgIc2MGoc7UBFw/Vhh4nLCfx
+	HrEt3cLs/8/gLytnsiJeI1IXhzBtt8uM=
+X-Received: by 2002:a17:907:742:b0:b80:4103:537e with SMTP id
+ a640c23a62f3a-b87614066e3mr530726366b.53.1768474476869; Thu, 15 Jan 2026
+ 02:54:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251225091224.2893389-1-gaosong@loongson.cn> <20251225091224.2893389-2-gaosong@loongson.cn>
-In-Reply-To: <20251225091224.2893389-2-gaosong@loongson.cn>
+References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-2-kalyazin@amazon.com>
+In-Reply-To: <20260114134510.1835-2-kalyazin@amazon.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Jan 2026 15:43:51 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5h2LioH6SZD8RUNewb4De3LWM9g2PJFUnTTkX+GG4cdw@mail.gmail.com>
-X-Gm-Features: AZwV_QiaUyKFTIxEaKv_MY3PKwCihURSdn_6U07VTAlpWKWayuoeaNBCR3B_XX8
-Message-ID: <CAAhV-H5h2LioH6SZD8RUNewb4De3LWM9g2PJFUnTTkX+GG4cdw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] LongArch: KVM: Add DMSINTC device support
-To: Song Gao <gaosong@loongson.cn>
-Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kernel@xen0n.name, linux-kernel@vger.kernel.org
+Date: Thu, 15 Jan 2026 18:54:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6S4bVdpwbER84-iwSE+bQrFu_gF=Ww-bCFxThJ7WiUwQ@mail.gmail.com>
+X-Gm-Features: AZwV_QhNEeWPSp4pau3pJiv_muGT_zHnXI7A5fP4Fz_wHAvUMBfJQxrRqBdZrqI
+Message-ID: <CAAhV-H6S4bVdpwbER84-iwSE+bQrFu_gF=Ww-bCFxThJ7WiUwQ@mail.gmail.com>
+Subject: Re: [PATCH v9 01/13] set_memory: add folio_{zap,restore}_direct_map helpers
+To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"corbet@lwn.net" <corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>, 
+	"prsampat@amd.com" <prsampat@amd.com>, "mlevitsk@redhat.com" <mlevitsk@redhat.com>, 
+	"jmattson@google.com" <jmattson@google.com>, "jthoughton@google.com" <jthoughton@google.com>, 
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "dev.jain@arm.com" <dev.jain@arm.com>, 
+	"gor@linux.ibm.com" <gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, 
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Song,
+Hi, Nikita,
 
-On Thu, Dec 25, 2025 at 5:37=E2=80=AFPM Song Gao <gaosong@loongson.cn> wrot=
-e:
+On Wed, Jan 14, 2026 at 9:45=E2=80=AFPM Kalyazin, Nikita <kalyazin@amazon.c=
+o.uk> wrote:
 >
-> Add device model for DMSINTC interrupt controller, implement basic
-> create/destroy/set_attr interfaces, and register device model to kvm
-> device table.
+> From: Nikita Kalyazin <kalyazin@amazon.com>
 >
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Song Gao <gaosong@loongson.cn>
+> These allow guest_memfd to remove its memory from the direct map.
+> Only implement them for architectures that have direct map.
+> In folio_zap_direct_map(), flush TLB on architectures where
+> set_direct_map_valid_noflush() does not flush it internally.
+>
+> The new helpers need to be accessible to KVM on architectures that
+> support guest_memfd (x86 and arm64).  Since arm64 does not support
+> building KVM as a module, only export them on x86.
+>
+> Direct map removal gives guest_memfd the same protection that
+> memfd_secret does, such as hardening against Spectre-like attacks
+> through in-kernel gadgets.
+>
+> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
 > ---
->  arch/loongarch/include/asm/kvm_dmsintc.h |  21 +++++
->  arch/loongarch/include/asm/kvm_host.h    |   3 +
->  arch/loongarch/include/uapi/asm/kvm.h    |   4 +
->  arch/loongarch/kvm/Makefile              |   1 +
->  arch/loongarch/kvm/intc/dmsintc.c        | 110 +++++++++++++++++++++++
->  arch/loongarch/kvm/main.c                |   6 ++
->  include/uapi/linux/kvm.h                 |   2 +
->  7 files changed, 147 insertions(+)
->  create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
->  create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+>  arch/arm64/include/asm/set_memory.h     |  2 ++
+>  arch/arm64/mm/pageattr.c                | 12 ++++++++++++
+>  arch/loongarch/include/asm/set_memory.h |  2 ++
+>  arch/loongarch/mm/pageattr.c            | 16 ++++++++++++++++
+>  arch/riscv/include/asm/set_memory.h     |  2 ++
+>  arch/riscv/mm/pageattr.c                | 16 ++++++++++++++++
+>  arch/s390/include/asm/set_memory.h      |  2 ++
+>  arch/s390/mm/pageattr.c                 | 18 ++++++++++++++++++
+>  arch/x86/include/asm/set_memory.h       |  2 ++
+>  arch/x86/mm/pat/set_memory.c            | 20 ++++++++++++++++++++
+>  include/linux/set_memory.h              | 10 ++++++++++
+>  11 files changed, 102 insertions(+)
 >
-> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/in=
-clude/asm/kvm_dmsintc.h
-> new file mode 100644
-> index 000000000000..1d4f66996f3c
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef __ASM_KVM_DMSINTC_H
-> +#define __ASM_KVM_DMSINTC_H
-> +
-> +
-> +struct loongarch_dmsintc  {
-> +       struct kvm *kvm;
-> +       uint64_t msg_addr_base;
-> +       uint64_t msg_addr_size;
-> +};
-> +
-> +struct dmsintc_state {
-> +       atomic64_t  vector_map[4];
-> +};
-> +
-> +int kvm_loongarch_register_dmsintc_device(void);
-> +#endif
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
-de/asm/kvm_host.h
-> index e4fe5b8e8149..5e9e2af7312f 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -22,6 +22,7 @@
->  #include <asm/kvm_ipi.h>
->  #include <asm/kvm_eiointc.h>
->  #include <asm/kvm_pch_pic.h>
-> +#include <asm/kvm_dmsintc.h>
->  #include <asm/loongarch.h>
+> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm=
+/set_memory.h
+> index 90f61b17275e..d949f1deb701 100644
+> --- a/arch/arm64/include/asm/set_memory.h
+> +++ b/arch/arm64/include/asm/set_memory.h
+> @@ -14,6 +14,8 @@ int set_memory_valid(unsigned long addr, int numpages, =
+int enable);
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
+lid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>  bool kernel_page_present(struct page *page);
 >
->  #define __KVM_HAVE_ARCH_INTC_INITIALIZED
-> @@ -134,6 +135,7 @@ struct kvm_arch {
->         struct loongarch_ipi *ipi;
->         struct loongarch_eiointc *eiointc;
->         struct loongarch_pch_pic *pch_pic;
-> +       struct loongarch_dmsintc *dmsintc;
->  };
+>  int set_memory_encrypted(unsigned long addr, int numpages);
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index f0e784b963e6..a94eff324dda 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -357,6 +357,18 @@ int set_direct_map_valid_noflush(struct page *page, =
+unsigned nr, bool valid)
+>         return set_memory_valid(addr, nr, valid);
+>  }
 >
->  #define CSR_MAX_NUMS           0x800
-> @@ -244,6 +246,7 @@ struct kvm_vcpu_arch {
->         struct kvm_mp_state mp_state;
->         /* ipi state */
->         struct ipi_state ipi_state;
-> +       struct dmsintc_state dmsintc_state;
->         /* cpucfg */
->         u32 cpucfg[KVM_MAX_CPUCFG_REGS];
->
-> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/inclu=
-de/uapi/asm/kvm.h
-> index de6c3f18e40a..0a370d018b08 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> @@ -154,4 +154,8 @@ struct kvm_iocsr_entry {
->  #define KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL             0x40000006
->  #define KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT            0
->
-> +#define KVM_DEV_LOONGARCH_DMSINTC_CTRL                 0x40000007
-> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE                0x0
-> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE                0x1
-> +
->  #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
-> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
-> index cb41d9265662..6e184e24443c 100644
-> --- a/arch/loongarch/kvm/Makefile
-> +++ b/arch/loongarch/kvm/Makefile
-> @@ -19,6 +19,7 @@ kvm-y +=3D vm.o
->  kvm-y +=3D intc/ipi.o
->  kvm-y +=3D intc/eiointc.o
->  kvm-y +=3D intc/pch_pic.o
-> +kvm-y +=3D intc/dmsintc.o
->  kvm-y +=3D irqfd.o
->
->  CFLAGS_exit.o  +=3D $(call cc-disable-warning, override-init)
-> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/=
-dmsintc.c
-> new file mode 100644
-> index 000000000000..3fdea81a08c8
-> --- /dev/null
-> +++ b/arch/loongarch/kvm/intc/dmsintc.c
-> @@ -0,0 +1,110 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/kvm_host.h>
-> +#include <asm/kvm_dmsintc.h>
-> +#include <asm/kvm_vcpu.h>
-> +
-> +static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
-> +                               struct kvm_device_attr *attr,
-> +                               bool is_write)
+> +int folio_zap_direct_map(struct folio *folio)
 > +{
-> +       int addr =3D attr->attr;
-> +       void __user *data;
-> +       struct loongarch_dmsintc *s =3D dev->kvm->arch.dmsintc;
-> +       u64 tmp;
-> +
-> +       data =3D (void __user *)attr->addr;
-> +       switch (addr) {
-> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE:
-> +               if (is_write) {
-> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr=
-_base)))
-> +                               return -EFAULT;
-> +                       if (s->msg_addr_base) {
-> +                               /* Duplicate setting are not allowed. */
-> +                               return -EFAULT;
-> +                       }
-> +                       if ((tmp & (BIT(AVEC_CPU_SHIFT) - 1)) =3D=3D 0)
-> +                               s->msg_addr_base =3D tmp;
-> +                       else
-> +                               return  -EFAULT;
-> +               }
-> +               break;
-> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE:
-> +               if (is_write) {
-> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr=
-_size)))
-> +                               return -EFAULT;
-> +                       if (s->msg_addr_size) {
-> +                               /*Duplicate setting are not allowed. */
-> +                               return -EFAULT;
-> +                       }
-> +                       s->msg_addr_size =3D tmp;
-> +               }
-> +               break;
-> +       default:
-> +               kvm_err("%s: unknown dmsintc register, addr =3D %d\n", __=
-func__, addr);
-> +               return -ENXIO;
-> +       }
-> +
-> +       return 0;
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), false)=
+;
 > +}
 > +
-> +static int kvm_dmsintc_set_attr(struct kvm_device *dev,
-> +                       struct kvm_device_attr *attr)
+> +int folio_restore_direct_map(struct folio *folio)
 > +{
-> +       switch (attr->group) {
-> +       case KVM_DEV_LOONGARCH_DMSINTC_CTRL:
-> +               return kvm_dmsintc_ctrl_access(dev, attr, true);
-> +       default:
-> +               kvm_err("%s: unknown group (%d)\n", __func__, attr->group=
-);
-> +               return -EINVAL;
-> +       }
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), true);
 > +}
 > +
-> +static int kvm_dmsintc_create(struct kvm_device *dev, u32 type)
+>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>  /*
+>   * This is - apart from the return value - doing the same
+> diff --git a/arch/loongarch/include/asm/set_memory.h b/arch/loongarch/inc=
+lude/asm/set_memory.h
+> index 55dfaefd02c8..9bc80ac420a9 100644
+> --- a/arch/loongarch/include/asm/set_memory.h
+> +++ b/arch/loongarch/include/asm/set_memory.h
+> @@ -18,5 +18,7 @@ bool kernel_page_present(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
+lid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>
+>  #endif /* _ASM_LOONGARCH_SET_MEMORY_H */
+> diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
+> index f5e910b68229..14bd322dd112 100644
+> --- a/arch/loongarch/mm/pageattr.c
+> +++ b/arch/loongarch/mm/pageattr.c
+> @@ -236,3 +236,19 @@ int set_direct_map_valid_noflush(struct page *page, =
+unsigned nr, bool valid)
+>
+>         return __set_memory(addr, 1, set, clear);
+>  }
+> +
+> +int folio_zap_direct_map(struct folio *folio)
 > +{
-> +       struct kvm *kvm;
-> +       struct loongarch_dmsintc *s;
+> +       int ret;
 > +
-> +       if (!dev) {
-> +               kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
-> +               return -EINVAL;
-> +       }
+> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                          folio_nr_pages(folio), false);
 > +
-> +       kvm =3D dev->kvm;
-> +       if (kvm->arch.dmsintc) {
-> +               kvm_err("%s: LoongArch DMSINTC has already been created!\=
-n", __func__);
-> +               return -EINVAL;
-> +       }
-> +
-> +       s =3D kzalloc(sizeof(struct loongarch_dmsintc), GFP_KERNEL);
-> +       if (!s)
-> +               return -ENOMEM;
-> +
-> +       s->kvm =3D kvm;
-> +       kvm->arch.dmsintc =3D s;
-> +       return 0;
-> +}
-> +
-> +static void kvm_dmsintc_destroy(struct kvm_device *dev)
-> +{
-> +
-> +       if (!dev || !dev->kvm || !dev->kvm->arch.dmsintc)
-> +               return;
-> +
-> +       kfree(dev->kvm->arch.dmsintc);
-No need to call kvm_io_bus_unregister_dev()? And it seems you need to
-kfree(dev) if this series is correct:
-
-https://lore.kernel.org/loongarch/99826cf9-356d-235b-9c7c-9d51d36e53c3@loon=
-gson.cn/T/#t
+> +       return ret;
+Why not use a single statement which is the same as the ARM64 version?
+The RISCV version has the same problem.
 
 Huacai
 
 > +}
 > +
-> +static struct kvm_device_ops kvm_dmsintc_dev_ops =3D {
-> +       .name =3D "kvm-loongarch-dmsintc",
-> +       .create =3D kvm_dmsintc_create,
-> +       .destroy =3D kvm_dmsintc_destroy,
-> +       .set_attr =3D kvm_dmsintc_set_attr,
-> +};
-> +
-> +int kvm_loongarch_register_dmsintc_device(void)
+> +int folio_restore_direct_map(struct folio *folio)
 > +{
-> +       return kvm_register_device_ops(&kvm_dmsintc_dev_ops, KVM_DEV_TYPE=
-_LOONGARCH_DMSINTC);
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), true);
 > +}
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 80ea63d465b8..f363a3b24903 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -408,6 +408,12 @@ static int kvm_loongarch_env_init(void)
+> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm=
+/set_memory.h
+> index 87389e93325a..16557b70c830 100644
+> --- a/arch/riscv/include/asm/set_memory.h
+> +++ b/arch/riscv/include/asm/set_memory.h
+> @@ -43,6 +43,8 @@ static inline int set_kernel_memory(char *startp, char =
+*endp,
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
+lid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>  bool kernel_page_present(struct page *page);
 >
->         /* Register LoongArch PCH-PIC interrupt controller interface. */
->         ret =3D kvm_loongarch_register_pch_pic_device();
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Register LoongArch DMSINTC interrupt contrroller interface */
-> +       if (cpu_has_msgint)
-> +               ret =3D kvm_loongarch_register_dmsintc_device();
->
->         return ret;
+>  #endif /* __ASSEMBLER__ */
+> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
+> index 3f76db3d2769..2c218868114b 100644
+> --- a/arch/riscv/mm/pageattr.c
+> +++ b/arch/riscv/mm/pageattr.c
+> @@ -401,6 +401,22 @@ int set_direct_map_valid_noflush(struct page *page, =
+unsigned nr, bool valid)
+>         return __set_memory((unsigned long)page_address(page), nr, set, c=
+lear);
 >  }
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index dddb781b0507..7c56e7e36265 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1209,6 +1209,8 @@ enum kvm_device_type {
->  #define KVM_DEV_TYPE_LOONGARCH_EIOINTC KVM_DEV_TYPE_LOONGARCH_EIOINTC
->         KVM_DEV_TYPE_LOONGARCH_PCHPIC,
->  #define KVM_DEV_TYPE_LOONGARCH_PCHPIC  KVM_DEV_TYPE_LOONGARCH_PCHPIC
-> +       KVM_DEV_TYPE_LOONGARCH_DMSINTC,
-> +#define KVM_DEV_TYPE_LOONGARCH_DMSINTC   KVM_DEV_TYPE_LOONGARCH_DMSINTC
 >
->         KVM_DEV_TYPE_MAX,
+> +int folio_zap_direct_map(struct folio *folio)
+> +{
+> +       int ret;
+> +
+> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                          folio_nr_pages(folio), false);
+> +
+> +       return ret;
+> +}
+> +
+> +int folio_restore_direct_map(struct folio *folio)
+> +{
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), true);
+> +}
+> +
+>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>  static int debug_pagealloc_set_page(pte_t *pte, unsigned long addr, void=
+ *data)
+>  {
+> diff --git a/arch/s390/include/asm/set_memory.h b/arch/s390/include/asm/s=
+et_memory.h
+> index 94092f4ae764..fc73652e5715 100644
+> --- a/arch/s390/include/asm/set_memory.h
+> +++ b/arch/s390/include/asm/set_memory.h
+> @@ -63,6 +63,8 @@ __SET_MEMORY_FUNC(set_memory_4k, SET_MEMORY_4K)
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
+lid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>  bool kernel_page_present(struct page *page);
 >
+>  #endif
+> diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
+> index d3ce04a4b248..df4a487b484d 100644
+> --- a/arch/s390/mm/pageattr.c
+> +++ b/arch/s390/mm/pageattr.c
+> @@ -412,6 +412,24 @@ int set_direct_map_valid_noflush(struct page *page, =
+unsigned nr, bool valid)
+>         return __set_memory((unsigned long)page_to_virt(page), nr, flags)=
+;
+>  }
+>
+> +int folio_zap_direct_map(struct folio *folio)
+> +{
+> +       unsigned long addr =3D (unsigned long)folio_address(folio);
+> +       int ret;
+> +
+> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                          folio_nr_pages(folio), false);
+> +       flush_tlb_kernel_range(addr, addr + folio_size(folio));
+> +
+> +       return ret;
+> +}
+> +
+> +int folio_restore_direct_map(struct folio *folio)
+> +{
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), true);
+> +}
+> +
+>  bool kernel_page_present(struct page *page)
+>  {
+>         unsigned long addr;
+> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set=
+_memory.h
+> index 61f56cdaccb5..7208af609121 100644
+> --- a/arch/x86/include/asm/set_memory.h
+> +++ b/arch/x86/include/asm/set_memory.h
+> @@ -90,6 +90,8 @@ int set_pages_rw(struct page *page, int numpages);
+>  int set_direct_map_invalid_noflush(struct page *page);
+>  int set_direct_map_default_noflush(struct page *page);
+>  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
+lid);
+> +int folio_zap_direct_map(struct folio *folio);
+> +int folio_restore_direct_map(struct folio *folio);
+>  bool kernel_page_present(struct page *page);
+>
+>  extern int kernel_set_to_readonly;
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index 6c6eb486f7a6..3f0fc30eb320 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -2656,6 +2656,26 @@ int set_direct_map_valid_noflush(struct page *page=
+, unsigned nr, bool valid)
+>         return __set_pages_np(page, nr);
+>  }
+>
+> +int folio_zap_direct_map(struct folio *folio)
+> +{
+> +       unsigned long addr =3D (unsigned long)folio_address(folio);
+> +       int ret;
+> +
+> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                          folio_nr_pages(folio), false);
+> +       flush_tlb_kernel_range(addr, addr + folio_size(folio));
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_FOR_MODULES(folio_zap_direct_map, "kvm");
+> +
+> +int folio_restore_direct_map(struct folio *folio)
+> +{
+> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
+> +                                           folio_nr_pages(folio), true);
+> +}
+> +EXPORT_SYMBOL_FOR_MODULES(folio_restore_direct_map, "kvm");
+> +
+>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>  void __kernel_map_pages(struct page *page, int numpages, int enable)
+>  {
+> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
+> index 3030d9245f5a..8d1c8a7f7d79 100644
+> --- a/include/linux/set_memory.h
+> +++ b/include/linux/set_memory.h
+> @@ -40,6 +40,16 @@ static inline int set_direct_map_valid_noflush(struct =
+page *page,
+>         return 0;
+>  }
+>
+> +static inline int folio_zap_direct_map(struct folio *folio)
+> +{
+> +       return 0;
+> +}
+> +
+> +static inline int folio_restore_direct_map(struct folio *folio)
+> +{
+> +       return 0;
+> +}
+> +
+>  static inline bool kernel_page_present(struct page *page)
+>  {
+>         return true;
 > --
-> 2.39.3
+> 2.50.1
 >
 >
