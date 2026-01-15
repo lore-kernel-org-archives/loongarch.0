@@ -1,392 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C236D510
-	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F1E332902
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768474479; cv=none; b=GpWuemDbUvN0OM5RYcuAe6mr40T1mFmLPGhjbevC9AXWT8besPeILTMkSQ9WYw4+3afIP3bo0r7ybTq/46kC0YkG8jneHE3EsyCEpz41t8XTvwBqe25OPM8QsdQ4A9/KJZKNRIsJyrm0pgf8wAlI9HFD9gPkZdssWF6Y6VWGH6g=
+	t=1768474525; cv=none; b=tiqYL74zVx3xa5fVR8z9I1jD9JqyVToctYtCgBHNUFLqwiRt0DqoYqQ/GLCgusNssv96aRtSRVZWPzCWuFsc/6vaMdenTET9OC40/QbBQ6YQw7M8ob0IWevPpMc6tSzstaVAwbPHjvUEeHnVSDEI9E/zt+SA5bLguqgJkphMPvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768474479; c=relaxed/simple;
-	bh=/1KAtvLvvLMpDi9CfvfFJ6x5SY4Jp+t4QyV0IUSlh0I=;
+	s=arc-20240116; t=1768474525; c=relaxed/simple;
+	bh=TiYyby4EphfsmZeh1KnhoPjaXGTK9Ii1c5MLQ3mIk3g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JbaM27BsE/1tml8MkGCo3Fb98+uKAG7R/GTW7Q1dTv9rofTrTVPudqGVELy5LjAI4kEGkJ321h16KAAeclQuf53FzREYLc40edRogXTuQgNKAowLMU9oKTN13En8HdaULGNSBUdSP+EBBbGwpNbxZCij0j1NepQ6eoGngvnZAx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1kpJSEs; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=HjyMgxf70raj3E7sL4hY3pAZEDTnzmk2nTgOPDWYfBldgtDz3zWpdtsn12X7BsK3jn0OoW1EGI7weF8ck3iDu3/hATjTLNyEFZg9nSjudvcQ4a7YSVEQcGUvS1ptTQdXJeArTCichIhlOdwiq9RlrDISP7LPaeBHRXTHjF7yCrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7oQnYUM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1kpJSEs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E69C19422
-	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:54:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7oQnYUM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED3FC4AF09
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 10:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768474479;
-	bh=/1KAtvLvvLMpDi9CfvfFJ6x5SY4Jp+t4QyV0IUSlh0I=;
+	s=k20201202; t=1768474525;
+	bh=TiYyby4EphfsmZeh1KnhoPjaXGTK9Ii1c5MLQ3mIk3g=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C1kpJSEs7ZY0zrGxNWim7K4CU3ZGx1yWEYt0RZeKKqL1WhtjbDHF7n+G9bCghDbI4
-	 DTQJFsyYjgbt4qJNgy2fy7rh7rF3LPc4cobkjtkH3N2+ZdxrNhccGYhoxM0Bg9tw2g
-	 +t7O99tNysplYsSzPs0tSyWU5rgKDpQUPwI2rjQ4moumcI6jm3YV+R9t78aQSxYlOO
-	 mUuql4j/FwEFCzKGLiifoQoHcjQ4TUXCCc/FNnXQV/WcgLv8TDT0b0gKb8V9GA2OzY
-	 c7dU/d+SPV/smaZY6X4mLH6OV2f/xdAQOPfQrTMSPW2v0MIrf99Fk8X/MaBiWdMlOA
-	 YjvK+JMj5P/lg==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b872b588774so115462366b.1
-        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 02:54:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXKviMZYrkCXQ+5bPNm7NIg7L4JpQIQYGwPD+Rzqy9SNXTNtJybn7KPIU3jNI1fkHzOp0PwRhrvIvA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YydAUCOU0VnmatVBHP1eWQtFFVkymhI07qOc+jD92KDX+XcQfDB
-	LGBCO0HAuzdUntDpruQb6dE0mRRFUUnX4NZ8+jKS2txlYM7BqbqMgIc2MGoc7UBFw/Vhh4nLCfx
-	HrEt3cLs/8/gLytnsiJeI1IXhzBtt8uM=
-X-Received: by 2002:a17:907:742:b0:b80:4103:537e with SMTP id
- a640c23a62f3a-b87614066e3mr530726366b.53.1768474476869; Thu, 15 Jan 2026
- 02:54:36 -0800 (PST)
+	b=O7oQnYUMdmaWGdS7b+YqPyPKkvCBIQirYzYG3knmxHWTW7J5wQOV9nUTyOJFbzaBg
+	 Ehfitsd7n3mlkFEky90GPC/eYT9uCgH7dqzIe/V97NQD0hpuP7arqq2AbQqx6NBr4v
+	 4w3gypoaLSPsmj4AQ3sQzt1fIZA+IDe64jiuF7m78MF2ksAbVpelS93aeNlYJipSMQ
+	 sWI3fCOu1Pa6EBDiQReCTveB2rSCsznnkW/4A0hFm6NkP5CaNGmGkVtxP+/4szU9tL
+	 LmoaH+6R0WOHLWQxf9i1GIekUWpM1Sa2Qzw83o7haO3GAAxuH3PWuBc0ddLbgvbzk/
+	 PbPoW1old0XwA==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b872cf905d3so128177366b.2
+        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 02:55:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTW+TshctOTRdV3tIbSoqxUyqAsl5FrfR9mUXueHlk1jY7Xr7dRn5Q4U7Uufa8kqxzGR/mWWpuUsA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGlt9dZ7qu6gIQ2n3hIBhASRzDk/TDibCQiRabpZB0G7Vg2pbN
+	dtMdKWl4OROVVPMUor0HZgOwrtCchZXzqlKNfmJlpWAwloWGA+AERrHQ8S8/yqbJmBklqR9uKYs
+	ScLOOkwjtYNEJ95oOt2W8o6uxATA+OKk=
+X-Received: by 2002:a17:906:6a02:b0:b87:117f:b6f1 with SMTP id
+ a640c23a62f3a-b8760fdc234mr481904466b.2.1768474524197; Thu, 15 Jan 2026
+ 02:55:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-2-kalyazin@amazon.com>
-In-Reply-To: <20260114134510.1835-2-kalyazin@amazon.com>
+References: <cover.1767505859.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1767505859.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 15 Jan 2026 18:54:27 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6S4bVdpwbER84-iwSE+bQrFu_gF=Ww-bCFxThJ7WiUwQ@mail.gmail.com>
-X-Gm-Features: AZwV_QhNEeWPSp4pau3pJiv_muGT_zHnXI7A5fP4Fz_wHAvUMBfJQxrRqBdZrqI
-Message-ID: <CAAhV-H6S4bVdpwbER84-iwSE+bQrFu_gF=Ww-bCFxThJ7WiUwQ@mail.gmail.com>
-Subject: Re: [PATCH v9 01/13] set_memory: add folio_{zap,restore}_direct_map helpers
-To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"corbet@lwn.net" <corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
-	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
-	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
-	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
-	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
-	"ackerleytng@google.com" <ackerleytng@google.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>, 
-	"prsampat@amd.com" <prsampat@amd.com>, "mlevitsk@redhat.com" <mlevitsk@redhat.com>, 
-	"jmattson@google.com" <jmattson@google.com>, "jthoughton@google.com" <jthoughton@google.com>, 
-	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "dev.jain@arm.com" <dev.jain@arm.com>, 
-	"gor@linux.ibm.com" <gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"pjw@kernel.org" <pjw@kernel.org>, 
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
-	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
-	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
-	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
-	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
+Date: Thu, 15 Jan 2026 18:55:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5_H6+nuX90WH5BBOvNayHQU-dC_SLFb9mvBGjrVqZLFA@mail.gmail.com>
+X-Gm-Features: AZwV_Qjdf3FqF97HaSGbh0maD6L0HHk4mZdMA3W0D0iK6bM6DbCMn8VEH39RDGM
+Message-ID: <CAAhV-H5_H6+nuX90WH5BBOvNayHQU-dC_SLFb9mvBGjrVqZLFA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] LoongArch: DTS: Fix dtbs_check warnings
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Yao Zi <me@ziyao.cc>, Binbin Zhou <zhoubb.aaron@gmail.com>, 
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Nikita,
-
-On Wed, Jan 14, 2026 at 9:45=E2=80=AFPM Kalyazin, Nikita <kalyazin@amazon.c=
-o.uk> wrote:
->
-> From: Nikita Kalyazin <kalyazin@amazon.com>
->
-> These allow guest_memfd to remove its memory from the direct map.
-> Only implement them for architectures that have direct map.
-> In folio_zap_direct_map(), flush TLB on architectures where
-> set_direct_map_valid_noflush() does not flush it internally.
->
-> The new helpers need to be accessible to KVM on architectures that
-> support guest_memfd (x86 and arm64).  Since arm64 does not support
-> building KVM as a module, only export them on x86.
->
-> Direct map removal gives guest_memfd the same protection that
-> memfd_secret does, such as hardening against Spectre-like attacks
-> through in-kernel gadgets.
->
-> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
-> ---
->  arch/arm64/include/asm/set_memory.h     |  2 ++
->  arch/arm64/mm/pageattr.c                | 12 ++++++++++++
->  arch/loongarch/include/asm/set_memory.h |  2 ++
->  arch/loongarch/mm/pageattr.c            | 16 ++++++++++++++++
->  arch/riscv/include/asm/set_memory.h     |  2 ++
->  arch/riscv/mm/pageattr.c                | 16 ++++++++++++++++
->  arch/s390/include/asm/set_memory.h      |  2 ++
->  arch/s390/mm/pageattr.c                 | 18 ++++++++++++++++++
->  arch/x86/include/asm/set_memory.h       |  2 ++
->  arch/x86/mm/pat/set_memory.c            | 20 ++++++++++++++++++++
->  include/linux/set_memory.h              | 10 ++++++++++
->  11 files changed, 102 insertions(+)
->
-> diff --git a/arch/arm64/include/asm/set_memory.h b/arch/arm64/include/asm=
-/set_memory.h
-> index 90f61b17275e..d949f1deb701 100644
-> --- a/arch/arm64/include/asm/set_memory.h
-> +++ b/arch/arm64/include/asm/set_memory.h
-> @@ -14,6 +14,8 @@ int set_memory_valid(unsigned long addr, int numpages, =
-int enable);
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
-lid);
-> +int folio_zap_direct_map(struct folio *folio);
-> +int folio_restore_direct_map(struct folio *folio);
->  bool kernel_page_present(struct page *page);
->
->  int set_memory_encrypted(unsigned long addr, int numpages);
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index f0e784b963e6..a94eff324dda 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -357,6 +357,18 @@ int set_direct_map_valid_noflush(struct page *page, =
-unsigned nr, bool valid)
->         return set_memory_valid(addr, nr, valid);
->  }
->
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), false)=
-;
-> +}
-> +
-> +int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), true);
-> +}
-> +
->  #ifdef CONFIG_DEBUG_PAGEALLOC
->  /*
->   * This is - apart from the return value - doing the same
-> diff --git a/arch/loongarch/include/asm/set_memory.h b/arch/loongarch/inc=
-lude/asm/set_memory.h
-> index 55dfaefd02c8..9bc80ac420a9 100644
-> --- a/arch/loongarch/include/asm/set_memory.h
-> +++ b/arch/loongarch/include/asm/set_memory.h
-> @@ -18,5 +18,7 @@ bool kernel_page_present(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
-lid);
-> +int folio_zap_direct_map(struct folio *folio);
-> +int folio_restore_direct_map(struct folio *folio);
->
->  #endif /* _ASM_LOONGARCH_SET_MEMORY_H */
-> diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
-> index f5e910b68229..14bd322dd112 100644
-> --- a/arch/loongarch/mm/pageattr.c
-> +++ b/arch/loongarch/mm/pageattr.c
-> @@ -236,3 +236,19 @@ int set_direct_map_valid_noflush(struct page *page, =
-unsigned nr, bool valid)
->
->         return __set_memory(addr, 1, set, clear);
->  }
-> +
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       int ret;
-> +
-> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                          folio_nr_pages(folio), false);
-> +
-> +       return ret;
-Why not use a single statement which is the same as the ARM64 version?
-The RISCV version has the same problem.
+Applied the last 5 patches, thanks.
 
 Huacai
 
-> +}
-> +
-> +int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), true);
-> +}
-> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm=
-/set_memory.h
-> index 87389e93325a..16557b70c830 100644
-> --- a/arch/riscv/include/asm/set_memory.h
-> +++ b/arch/riscv/include/asm/set_memory.h
-> @@ -43,6 +43,8 @@ static inline int set_kernel_memory(char *startp, char =
-*endp,
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
-lid);
-> +int folio_zap_direct_map(struct folio *folio);
-> +int folio_restore_direct_map(struct folio *folio);
->  bool kernel_page_present(struct page *page);
+On Sun, Jan 4, 2026 at 2:41=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+ wrote:
 >
->  #endif /* __ASSEMBLER__ */
-> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> index 3f76db3d2769..2c218868114b 100644
-> --- a/arch/riscv/mm/pageattr.c
-> +++ b/arch/riscv/mm/pageattr.c
-> @@ -401,6 +401,22 @@ int set_direct_map_valid_noflush(struct page *page, =
-unsigned nr, bool valid)
->         return __set_memory((unsigned long)page_address(page), nr, set, c=
-lear);
->  }
+> Hi all:
 >
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       int ret;
-> +
-> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                          folio_nr_pages(folio), false);
-> +
-> +       return ret;
-> +}
-> +
-> +int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), true);
-> +}
-> +
->  #ifdef CONFIG_DEBUG_PAGEALLOC
->  static int debug_pagealloc_set_page(pte_t *pte, unsigned long addr, void=
- *data)
->  {
-> diff --git a/arch/s390/include/asm/set_memory.h b/arch/s390/include/asm/s=
-et_memory.h
-> index 94092f4ae764..fc73652e5715 100644
-> --- a/arch/s390/include/asm/set_memory.h
-> +++ b/arch/s390/include/asm/set_memory.h
-> @@ -63,6 +63,8 @@ __SET_MEMORY_FUNC(set_memory_4k, SET_MEMORY_4K)
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
-lid);
-> +int folio_zap_direct_map(struct folio *folio);
-> +int folio_restore_direct_map(struct folio *folio);
->  bool kernel_page_present(struct page *page);
+> As Krzysztof pointed out in the OSS talk, LoongArch only has three DTS,
+> but has a bunch of warnings. The patchset attempts to fix them.
 >
->  #endif
-> diff --git a/arch/s390/mm/pageattr.c b/arch/s390/mm/pageattr.c
-> index d3ce04a4b248..df4a487b484d 100644
-> --- a/arch/s390/mm/pageattr.c
-> +++ b/arch/s390/mm/pageattr.c
-> @@ -412,6 +412,24 @@ int set_direct_map_valid_noflush(struct page *page, =
-unsigned nr, bool valid)
->         return __set_memory((unsigned long)page_to_virt(page), nr, flags)=
-;
->  }
+> Patch-1 and patch-5 are taken from Yao[1],thanks a lot!
 >
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       unsigned long addr =3D (unsigned long)folio_address(folio);
-> +       int ret;
-> +
-> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                          folio_nr_pages(folio), false);
-> +       flush_tlb_kernel_range(addr, addr + folio_size(folio));
-> +
-> +       return ret;
-> +}
-> +
-> +int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), true);
-> +}
-> +
->  bool kernel_page_present(struct page *page)
->  {
->         unsigned long addr;
-> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set=
-_memory.h
-> index 61f56cdaccb5..7208af609121 100644
-> --- a/arch/x86/include/asm/set_memory.h
-> +++ b/arch/x86/include/asm/set_memory.h
-> @@ -90,6 +90,8 @@ int set_pages_rw(struct page *page, int numpages);
->  int set_direct_map_invalid_noflush(struct page *page);
->  int set_direct_map_default_noflush(struct page *page);
->  int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool va=
-lid);
-> +int folio_zap_direct_map(struct folio *folio);
-> +int folio_restore_direct_map(struct folio *folio);
->  bool kernel_page_present(struct page *page);
+> [1]: https://lore.kernel.org/all/20251209140006.54821-1-me@ziyao.cc/
 >
->  extern int kernel_set_to_readonly;
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index 6c6eb486f7a6..3f0fc30eb320 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -2656,6 +2656,26 @@ int set_direct_map_valid_noflush(struct page *page=
-, unsigned nr, bool valid)
->         return __set_pages_np(page, nr);
->  }
+> Test environment and results:
 >
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       unsigned long addr =3D (unsigned long)folio_address(folio);
-> +       int ret;
-> +
-> +       ret =3D set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                          folio_nr_pages(folio), false);
-> +       flush_tlb_kernel_range(addr, addr + folio_size(folio));
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(folio_zap_direct_map, "kvm");
-> +
-> +int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +                                           folio_nr_pages(folio), true);
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(folio_restore_direct_map, "kvm");
-> +
->  #ifdef CONFIG_DEBUG_PAGEALLOC
->  void __kernel_map_pages(struct page *page, int numpages, int enable)
->  {
-> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-> index 3030d9245f5a..8d1c8a7f7d79 100644
-> --- a/include/linux/set_memory.h
-> +++ b/include/linux/set_memory.h
-> @@ -40,6 +40,16 @@ static inline int set_direct_map_valid_noflush(struct =
-page *page,
->         return 0;
->  }
+> Package                   Version
+> ------------------------- -----------
+> attrs                     25.4.0
+> dtschema                  2025.12
+> jsonschema                4.25.1
+> jsonschema-specifications 2025.9.1
+> pip                       25.3
+> pylibfdt                  1.7.2.post1
+> referencing               0.37.0
+> rfc3987                   1.3.8
+> rpds-py                   0.30.0
+> ruamel.yaml               0.18.16
+> ruamel.yaml.clib          0.2.15
+> typing_extensions         4.15.0
 >
-> +static inline int folio_zap_direct_map(struct folio *folio)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline int folio_restore_direct_map(struct folio *folio)
-> +{
-> +       return 0;
-> +}
-> +
->  static inline bool kernel_page_present(struct page *page)
->  {
->         return true;
+> ---------
+> make dtbs_check W=3D1
+>
+>   SYNC    include/config/auto.conf
+>   UPD     include/config/kernel.release
+>   DTC [C] arch/loongarch/boot/dts/loongson-2k0500-ref.dtb
+>   DTC [C] arch/loongarch/boot/dts/loongson-2k1000-ref.dtb
+>   DTC [C] arch/loongarch/boot/dts/loongson-2k2000-ref.dtb
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D
+> V3:
+> patch (2/9)(3/9):
+>  - New patches, document `#address-cells` property;
+>
+> patch (4/9):
+>  - Rewrite commit title and message;
+>  - Remove unneeded changes, leaving only the `#address-cells`
+>    value set.
+>
+> patch (6/9):
+>  - Set `#address-cells =3D <0>` to liointc node;
+>
+> patch (8/9):
+>  - Set `#address-cells =3D <0>` to liointc and eiointc node;
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1766037997.git.zhoubinbin@loongson.cn/
+>
+>
+> V2:
+> patch(1/7)(3/7):
+>  - Add myself s-o-b;
+>
+> patch(2/7):
+>  - Define the value of #address-cells to 0;
+>
+> patch(5/7):
+>  - Set `#address-cells =3D <0>` to liointc0 node;
+>
+> patch(7/7):
+>  - Fix commit msg about `i2c@address`;
+>  - Add Reviewed-by tag form Krzysztof, thanks.
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1765778124.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (7):
+>   dt-bindings: interrupt-controller: loongson,eiointc: Document
+>     address-cells
+>   dt-bindings: interrupt-controller: loongson,liointc: Document
+>     address-cells
+>   dt-bindings: interrupt-controller: loongson,pch-pic: Document
+>     address-cells
+>   LoongArch: dts: loongson-2k0500: Add default interrupt controller
+>     address cells
+>   LoongArch: dts: loongson-2k1000: Add default Local I/O interrupt
+>     controller address cells
+>   LoongArch: dts: loongson-2k2000: Add default interrupt controller
+>     address cells
+>   LoongArch: dts: loongson-2k1000: Fix i2c-gpio node names
+>
+> Yao Zi (2):
+>   dt-bindings: PCI: loongson: Document msi-parent property
+>   LoongArch: dts: Describe PCI sideband IRQ through interrupt-extended
+>
+>  .../loongson,eiointc.yaml                     |  3 ++
+>  .../loongson,liointc.yaml                     |  3 ++
+>  .../loongson,pch-pic.yaml                     |  3 ++
+>  .../devicetree/bindings/pci/loongson.yaml     |  2 ++
+>  arch/loongarch/boot/dts/loongson-2k0500.dtsi  |  3 ++
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 31 +++++++---------
+>  arch/loongarch/boot/dts/loongson-2k2000.dtsi  | 35 ++++++++-----------
+>  7 files changed, 42 insertions(+), 38 deletions(-)
+>
+>
+> base-commit: e8a259e82c7c3ee53e933bb238366ec2ba0bc892
 > --
-> 2.50.1
+> 2.47.3
 >
 >
