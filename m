@@ -1,157 +1,142 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466FA3A1E63;
-	Thu, 15 Jan 2026 15:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20652D7DD7
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 17:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768492532; cv=none; b=VTm1VYFFIx/JI+mw9sjDh+mB8/NgDwo8PrXsxw4CjtUqs5JTu36ov1eAbK9BJCYSrst+KlMaMM/+mksTs1bo/7H0QfX6Z63q1kushony8HRgji/CJNIuV2jCh/+x3J+O7LZRlsoUENNvJcMwo68451BU3eN9GOjKVygx8Lab6nc=
+	t=1768496424; cv=none; b=g5mQAQA6Ivu29QvLOaMSTTHy4HVhxXu+G95eB4GEpI8/hKAFStvo+R+NjXC4C9wx/yA0kWFrD5ak+1ccPBauybUrdGozTeKLNpDjqkCaFC0e+v4pPHuqJkCDXGqPeazve/f8MT598zG3K82f/av6H6Etrh4YBO2wJbkVurdrHpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768492532; c=relaxed/simple;
-	bh=46BFkTdwtLapqZHArkx23WouduY4BLv38XWs7Y82E7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ECueSyTIRNEWFH7spDB5ZT7QqlZNIDoxw4jdj6pGePkKhKvzd80g8YJuSfZNRiByUwzoV3u/qOonvCOJMjKkByRffWebxQEtRFWqPCy21wxpgPShTGZv4pKhEap+/0l0rXM4UYeveRlj5h0UkOpAssQYFWYa8wHEL6/v6fRhB/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O2rIC7Vp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1768496424; c=relaxed/simple;
+	bh=ZXnoivxVBUQa2U3uRATn/SAEZubNzQew1oqA4+pLE1I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PoeECos4HzWrJq2s+y3tLnO2CHGShWO62aa+9oDEB7PcZk9F+CF4pRskR5G9uYvkKeovpRMUhzQXG7uHKXUEjTeHS8Z4RCryemDRICQ4dl7WuXGyHEGP04au2BiQ3Oy2cES2Sd+9f83mZ9qjU+CubMBDfI5i+J+8KofRfzZij0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYSxEI+O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O2rIC7Vp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=q5bkL3Phvitbtx1bT4hfJIq6tZnmxPD0rFJlAMAShJ4=; b=O2rIC7VppOmyI4NJVqpXeNx1ps
-	9E8lXOJndmHISi9czu2yHfSrQTRbYobUU55b39rEMzyDlLR6z+C4bKlMldkk0zKZcDtVQyRXirthW
-	KI1r01BntklxKvuUMRRrhgmfBmFnpmdmRgaKJwlaz+Qr95fzmRdU8AMMwVYhCB/fCB/gyfRfTEhdL
-	oCCHfn5loLBrr7rjqMykoBHhlmKOfS1Z5lF7LMiDAfY3TLvCDDF6etTTuk+ncZAGMIu/wScOPq3Qt
-	ysh0B8nLJ2h3UIs60lSbHici2O7xcYYlHYyatawLyoOOL6mJoOtWjhMKRYG6tjN8XoPCMrGZHt0W7
-	BP1PTC9g==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgPgp-00000007w8N-2zaT;
-	Thu, 15 Jan 2026 15:55:15 +0000
-Date: Thu, 15 Jan 2026 15:55:15 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"kernel@xen0n.name" <kernel@xen0n.name>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"maz@kernel.org" <maz@kernel.org>,
-	"oupton@kernel.org" <oupton@kernel.org>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"david@kernel.org" <david@kernel.org>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>,
-	"vbabka@suse.cz" <vbabka@suse.cz>,
-	"rppt@kernel.org" <rppt@kernel.org>,
-	"surenb@google.com" <surenb@google.com>,
-	"mhocko@suse.com" <mhocko@suse.com>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"martin.lau@linux.dev" <martin.lau@linux.dev>,
-	"eddyz87@gmail.com" <eddyz87@gmail.com>,
-	"song@kernel.org" <song@kernel.org>,
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"kpsingh@kernel.org" <kpsingh@kernel.org>,
-	"sdf@fomichev.me" <sdf@fomichev.me>,
-	"haoluo@google.com" <haoluo@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>,
-	"peterx@redhat.com" <peterx@redhat.com>,
-	"jannh@google.com" <jannh@google.com>,
-	"pfalcato@suse.de" <pfalcato@suse.de>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"riel@surriel.com" <riel@surriel.com>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"jgross@suse.com" <jgross@suse.com>,
-	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>,
-	"kas@kernel.org" <kas@kernel.org>,
-	"coxu@redhat.com" <coxu@redhat.com>,
-	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>,
-	"ackerleytng@google.com" <ackerleytng@google.com>,
-	"maobibo@loongson.cn" <maobibo@loongson.cn>,
-	"prsampat@amd.com" <prsampat@amd.com>,
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-	"jmattson@google.com" <jmattson@google.com>,
-	"jthoughton@google.com" <jthoughton@google.com>,
-	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-	"alex@ghiti.fr" <alex@ghiti.fr>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"dev.jain@arm.com" <dev.jain@arm.com>,
-	"gor@linux.ibm.com" <gor@linux.ibm.com>,
-	"hca@linux.ibm.com" <hca@linux.ibm.com>,
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"pjw@kernel.org" <pjw@kernel.org>,
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
-	"svens@linux.ibm.com" <svens@linux.ibm.com>,
-	"thuth@redhat.com" <thuth@redhat.com>,
-	"wyihan@google.com" <wyihan@google.com>,
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
-	"vannapurve@google.com" <vannapurve@google.com>,
-	"jackmanb@google.com" <jackmanb@google.com>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"patrick.roy@linux.dev" <patrick.roy@linux.dev>,
-	"Thomson, Jack" <jackabt@amazon.co.uk>,
-	"Itazuri, Takahiro" <itazur@amazon.co.uk>,
-	"Manwaring, Derek" <derekmn@amazon.com>,
-	"Cali, Marco" <xmarcalx@amazon.co.uk>
-Subject: Re: [PATCH v9 01/13] set_memory: add folio_{zap,restore}_direct_map
- helpers
-Message-ID: <aWkN4yzwPtotaTeq@casper.infradead.org>
-References: <20260114134510.1835-1-kalyazin@amazon.com>
- <20260114134510.1835-2-kalyazin@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYSxEI+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D49ABC19422
+	for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 17:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768496423;
+	bh=ZXnoivxVBUQa2U3uRATn/SAEZubNzQew1oqA4+pLE1I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZYSxEI+OeX2Pwcx1nci3AJUY55IvoCBETLJht1XB9aHytEC3TsGCNIMnG0FQaQ5Oe
+	 kJk46Oil1uQzFqnx2LNcu2/JDnznDXQktK7KUp7Du9UbNMwIF0au2hPCXwqm28lmmm
+	 pXjZvzjuntHxiNkxUyVO98vsUp6QqT4+rTbasD9iDQY/NJ6F49pKRlVR5zUMUj5OWc
+	 Si2J6ioWLf1T9b5uIF4mTsLmtSDfeQn8dBXfFyLBrZx7xGdiM35ToWSQg65X1XhA+X
+	 hbixT05QHZkBf2xjhgDC6Z6HEukWFo5BR3wnf9dhxZ+X+w7jdWTnPfWSVN8jC7q3v/
+	 ci1Ur/JFcY0eQ==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b7ffbf4284dso151535766b.3
+        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 09:00:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUvrm9WYtJHppi7XsKGKx+YZGlintjyeOt5VrARnDg1h+xFjuwHV7fc33Z9KgcQK74dG+6+OK06EVY=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyzs6Vml8lMq08BtIxq/Gw7yaY3Lbpp/m/pXjHuu19rG8mWatny
+	dCZBAxZ6qDOJ2tYMdGh7MpcwwY8w8liAvsRFBjCwrAjCt7t2C74Gu0pEKawrv8SQ/+aFOYQnr3S
+	TGvTf4qUpdlbYH/IzV5nJUexuTt1H/A==
+X-Received: by 2002:a17:907:a48:b0:b87:2f29:2062 with SMTP id
+ a640c23a62f3a-b8792dcdf4amr22448466b.19.1768496422244; Thu, 15 Jan 2026
+ 09:00:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260114134510.1835-2-kalyazin@amazon.com>
+References: <cover.1767663073.git.zhoubinbin@loongson.cn> <8876bebaf08121bb5edd2500f5289284b75df011.1767663073.git.zhoubinbin@loongson.cn>
+ <20260106191314.GA2568583-robh@kernel.org> <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
+ <20260114205855.GA3190839-robh@kernel.org> <CAMpQs4+v=KhLW_Cru801p06vmpjJFotvyDfKBALg6mbwxFU5-A@mail.gmail.com>
+In-Reply-To: <CAMpQs4+v=KhLW_Cru801p06vmpjJFotvyDfKBALg6mbwxFU5-A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 15 Jan 2026 11:00:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJVD3o41Zch6fMY6s-qmyd9cQg6CJ+iya+3kdtuqvNMoA@mail.gmail.com>
+X-Gm-Features: AZwV_QhH7fbAW1uy00b0PiEt9cxyR0HtWiRhvd3H6Ah7cjw_EUJkNE0JYevgxT8
+Message-ID: <CAL_JsqJVD3o41Zch6fMY6s-qmyd9cQg6CJ+iya+3kdtuqvNMoA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-binding: rtc: loongson: Document
+ Loongson-2K0300 compatible
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
+	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 14, 2026 at 01:45:23PM +0000, Kalyazin, Nikita wrote:
-> +int folio_zap_direct_map(struct folio *folio)
-> +{
-> +	return set_direct_map_valid_noflush(folio_page(folio, 0),
-> +					    folio_nr_pages(folio), false);
-> +}
+On Thu, Jan 15, 2026 at 1:39=E2=80=AFAM Binbin Zhou <zhoubb.aaron@gmail.com=
+> wrote:
+>
+> Hi Rob:
+>
+> Thanks for your reply.
+>
+> On Thu, Jan 15, 2026 at 4:58=E2=80=AFAM Rob Herring <robh@kernel.org> wro=
+te:
+> >
+> > On Wed, Jan 07, 2026 at 09:22:41AM +0800, Binbin Zhou wrote:
+> > > Hi Rob:
+> > >
+> > > Thanks for your review.
+> > >
+> > > On Wed, Jan 7, 2026 at 3:13=E2=80=AFAM Rob Herring <robh@kernel.org> =
+wrote:
+> > > >
+> > > > On Tue, Jan 06, 2026 at 09:33:32AM +0800, Binbin Zhou wrote:
+> > > > > Add "loongson,ls2k0300-rtc" dedicated compatible to represent the=
+ RTC
+> > > > > interface of the Loongson-2K0300 chip.
+> > > > >
+> > > > > Its hardware design is similar to that of the Loongson-1B, but it=
+ does
+> > > > > not support the alarm feature.
+> > > >
+> > > > But you are requiring the interrupt property for it? Isn't it no al=
+arm
+> > > > feature means no interrupt?
+> > >
+> > > Yes, the `interrupts` attribute is not required without the alarm fea=
+ture.
+> > >
+> > > But my judgment condition is `not contains` (added in patch-1[1]).
+> > > There are only a few SoCs on the Loongson platform that don't support
+> > > the RTC alarm feature, so I think `not contains` looks cleaner and
+> > > simpler.
+> >
+> > I should have said allowing rather than requiring.
+> >
+> > You are allowing (though not requiring) 'interrupts' for Loongson-1B an=
+d
+> > Loongson-2K0300. In patch 1, you made it required for other platforms
+> > which is an ABI change. That's fine if it was a mistake and is truly
+> > required.
+>
+> Emm, it's true that for the binding interface, Patch-1 is indeed an
+> ABI change, but it's more of a fixed patch.
+>
+> Throughout all existing Loongson DTS{i}, RTC nodes decide whether to
+> include the `interrupts` property or not based on the alarm feature.
+> Loongson-1c rtc nodes do not include the `interrupts` attribute [1],
+> while all other Loongson chip rtc nodes do [2].
+>
+> So, while this is an ABI change, I don't think it affects existing
+> Loongson DTS{i} rtc nodes. Also, it more accurately describes the
+> features of the corresponding RTC device.
+>
+> Therefore, I would like to clarify it in the Patch-1 commit message of
+> the next patch version and fix the error in the commit title:
+> dt-binding -> dt-bindings.
+>
+> How do you feel about that?
 
-The implementation isn't the greatest.  None of the implementations
-of set_direct_map_valid_noflush() actually do anything with the struct
-page; they all call page_address() or page_to_virt() (fundamentally the
-same thing).  So converting folio->page->address is a bit inefficient.
+That's fine, but you also need:
 
-It feels like we should change set_direct_map_valid_noflush() to take a
-const void * and pass either page_address() or folio_address(), depending
-whether the caller has a page or a folio.  What do you think?
+else:
+  properties:
+    interrupts: false
+
+So that on the 2 platforms without an interrupt(alarm), 'interrupts'
+is not allowed.
+
+With that, you might as well just drop the 'not' and flip the 'then'
+and 'else' schemas around.
+
+Rob
