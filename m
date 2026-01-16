@@ -1,178 +1,248 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com [18.156.205.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1843537A4A1
-	for <loongarch@lists.linux.dev>; Fri, 16 Jan 2026 12:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53069145348;
+	Fri, 16 Jan 2026 14:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.156.205.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768565448; cv=none; b=ZL4EIGo8+lY4Jm1ASiAAJNMNDcyA2DqGqKSdhqGoRb36jO2NNI/P0bSbLHuHb5fg57P+p1zmVnrg0QnKA9VMKGDVd+foHmUEqhLogL/o5vVAjv03sFpljX2Xxp9PgHP7ntprDBMwP56YBYQjBiScxzVRTdufHBzQ4GkRsott8Wc=
+	t=1768575382; cv=none; b=Wqaav0DocZhMRVW24XtHCm8KiDT2MPD3xL6t7xGtjCw7A/hQkS8BuT2a8qi29MEvygpk/Xaaw+2O09IKQJo+FviLvEbf3X9Kjp4e5HWEVg84Ghi9uarzStQSmEILzlpLfm9538A2VN9k3H2Cyqo5nRbHfJVK7xYr848vHXUnqu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768565448; c=relaxed/simple;
-	bh=M8rYp98Yrm3kjvDcLQr1N9Xzxwxh+1FYXNegcG1Z3gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ceGClPtM4IKm4CMbmzLnMUVZAp+qTYlRqXLY6Tc8npW7vpy01pqthhx7GoDiztEi0yojlr/Hf9KTkghCdlKQRqek6PJ7UheoD2w8wgJjOoyaw5xjq15A1PC0+QSPaFOF2rt51jnJGBLkKlt5cKP85zKrPDq8KWksJjICgyRaBUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tcY57Ktk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RoLHU8R2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1768575382; c=relaxed/simple;
+	bh=BxZnyiI6YgvskaCwpGEH+hfPdJiGYdOF3yczju02EHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Z23Aq9ewS2F9z9BqrnjZtvDNrWEPBKXp+s751UWTp2WK3dkYWBnIzXktHgD/R0KFgqxP+nWPjb6ddFuFcObyW0FZniLmQE3EdXBmVAjiFv1e94x9m50UXwQBQ5XyPz4vfgQFT5PToz5C8tQpla3/MAyt5l3v1FltvcwmXkq23bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=E0kFmVWd; arc=none smtp.client-ip=18.156.205.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tcY57Ktk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RoLHU8R2"
-Date: Fri, 16 Jan 2026 13:10:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1768565444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m4xj4CRpx5Rn02x3ca442JNSKW3N63XvSapnCzBXF8o=;
-	b=tcY57KtkxrC2Kv4y0HkpbJbC/pQS5RHj9Kp4rg1YyeKUZFPhAszR0J9jXDYqU8XKMRt5yy
-	/cxA+qFjtYuGq3R5ue0ASh4BzD6PkPogDxaC3NG7jOvQXfc6a8y1Mj7UjwdcpmtWm6QmMF
-	P4JSJneYYVjhf0ropRohWWEJusj5z7WghKS+mseOsE/SiZUELdvQaP4mmZXIUcYfG0KM1J
-	SyKqrKtvAZQtbn0EioFiC39BcksrufdUvJKV41PHxEM0/XUOhtZ5Su8mpUxN4BGoJ8QcpA
-	pDPq2VQryd3zYOIkU4e5rPmQSuL5HuVQPwsqa2yeFNGSwpwptypePDBSAzdFGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1768565444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m4xj4CRpx5Rn02x3ca442JNSKW3N63XvSapnCzBXF8o=;
-	b=RoLHU8R2m4lh+TOUGYaYUhiHbsJz60UbhmEfkq+Ri9skt252VpVK6rulxmT2CKH3E9ZPhM
-	NY+TbhTMPWk9blDA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Nick Alcock <nick.alcock@oracle.com>, John Stultz <jstultz@google.com>, 
-	Stephen Boyd <sboyd@kernel.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, "Russell King (Oracle)" <linux@armlinux.org.uk>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Shannon Nelson <sln@onemain.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v5 00/34] sparc64: vdso: Switch to the generic vDSO
- library
-Message-ID: <20260116124847-4bbc0b99-fa0c-4bd1-a229-1bd248ee8c6b@linutronix.de>
-References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
- <b870aa47-5ed4-4dcf-a407-eca83d1733d8@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="E0kFmVWd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1768575380; x=1800111380;
+  h=message-id:date:mime-version:reply-to:subject:to:cc:
+   references:from:in-reply-to:content-transfer-encoding;
+  bh=IEO4wkDrWsP8gb8dVRwVt7tfKvgBUuiF6zz/e0uDn6E=;
+  b=E0kFmVWdSct5dPf1WwjANwcxW4WVDYPPlQRzslfKBnZ/I3S1SuWfdMaq
+   1JQPcy/oHEhO3uC+e6uWsXpKSvAaCmHeKs+RxWLKYseLymm3iwE7KdXVV
+   b2DDnEl7jP3cx/tUEYslwJCNf74M6KhcPL/Mqs315NbfF7QG9HGmP5kvU
+   /4XLKosJ3GbYB6qFxXIR9/KHBSwWqAHvgVVIg6X5sz8yMKhiHDU4gXpnN
+   Cpzba0zDFv0s7VAwnBzYOf9RtM1xQ4l5BCVOzJa7V40a0CDoQzlZvL6YE
+   aKZYBjjZKXUKypX4QQPcdTOp/IPvgK1s8d2GPeLF13f+wHYMxBJQ8NKkp
+   Q==;
+X-CSE-ConnectionGUID: t80jrskTRzKiYCPAndralA==
+X-CSE-MsgGUID: hn4FZT+mTRGLqNyYAxxD5Q==
+X-IronPort-AV: E=Sophos;i="6.21,231,1763424000"; 
+   d="scan'208";a="7704673"
+Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
+  by internal-fra-out-001.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 14:56:02 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [54.240.197.232:3849]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.41.192:2525] with esmtp (Farcaster)
+ id 260b6298-10cb-4eed-9151-e85b598fcfcc; Fri, 16 Jan 2026 14:56:02 +0000 (UTC)
+X-Farcaster-Flow-ID: 260b6298-10cb-4eed-9151-e85b598fcfcc
+Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
+ Fri, 16 Jan 2026 14:56:01 +0000
+Received: from [192.168.12.13] (10.106.82.9) by EX19D005EUB003.ant.amazon.com
+ (10.252.51.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35; Fri, 16 Jan 2026
+ 14:55:57 +0000
+Message-ID: <6b50a83e-acd7-4db3-ae9b-015ffad4f615@amazon.com>
+Date: Fri, 16 Jan 2026 14:55:56 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b870aa47-5ed4-4dcf-a407-eca83d1733d8@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Reply-To: <kalyazin@amazon.com>
+Subject: Re: [PATCH v9 02/13] mm/gup: drop secretmem optimization from
+ gup_fast_folio_allowed
+To: Ackerley Tng <ackerleytng@google.com>, "Kalyazin, Nikita"
+	<kalyazin@amazon.co.uk>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org"
+	<oupton@kernel.org>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org"
+	<luto@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
+	"willy@infradead.org" <willy@infradead.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com"
+	<surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org"
+	<ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev"
+	<martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev"
+	<yonghong.song@linux.dev>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com"
+	<peterx@redhat.com>, "jannh@google.com" <jannh@google.com>,
+	"pfalcato@suse.de" <pfalcato@suse.de>, "shuah@kernel.org" <shuah@kernel.org>,
+	"riel@surriel.com" <riel@surriel.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>,
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org"
+	<kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
+	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, "maobibo@loongson.cn"
+	<maobibo@loongson.cn>, "prsampat@amd.com" <prsampat@amd.com>,
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com"
+	<jmattson@google.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "alex@ghiti.fr"
+	<alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "dev.jain@arm.com"
+	<dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>,
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, "Jonathan.Cameron@huawei.com"
+	<Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"pjw@kernel.org" <pjw@kernel.org>, "shijie@os.amperecomputing.com"
+	<shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>,
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com"
+	<wyihan@google.com>, "yang@os.amperecomputing.com"
+	<yang@os.amperecomputing.com>, "vannapurve@google.com"
+	<vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev"
+	<patrick.roy@linux.dev>, "Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri,
+ Takahiro" <itazur@amazon.co.uk>, "Manwaring, Derek" <derekmn@amazon.com>,
+	"Cali, Marco" <xmarcalx@amazon.co.uk>
+References: <20260114134510.1835-1-kalyazin@amazon.com>
+ <20260114134510.1835-3-kalyazin@amazon.com>
+ <CAEvNRgGrpv5h04s+btubhUFHo=d6mBFbr2BVrMt=bWuWOztdJQ@mail.gmail.com>
+Content-Language: en-US
+From: Nikita Kalyazin <kalyazin@amazon.com>
+Autocrypt: addr=kalyazin@amazon.com; keydata=
+ xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
+ JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
+ BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
+ IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
+ CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
+ ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
+ ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
+ i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
+In-Reply-To: <CAEvNRgGrpv5h04s+btubhUFHo=d6mBFbr2BVrMt=bWuWOztdJQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D012EUA003.ant.amazon.com (10.252.50.98) To
+ EX19D005EUB003.ant.amazon.com (10.252.51.31)
 
-Hi Andy,
 
-sorry for the long delay.
 
-On Fri, Nov 07, 2025 at 04:17:14PM -0800, Andy Lutomirski wrote:
-> On Thu, Nov 6, 2025, at 2:01 AM, Thomas Weißschuh wrote:
-> > The generic vDSO provides a lot common functionality shared between
-> > different architectures. SPARC is the last architecture not using it,
-> > preventing some necessary code cleanup.
-> >
-> > Make use of the generic infrastructure.
-> >
-> > Follow-up to and replacement for Arnd's SPARC vDSO removal patches:
-> > https://lore.kernel.org/lkml/20250707144726.4008707-1-arnd@kernel.org/
-> >
-> > SPARC64 can not map .bss into userspace, so the vDSO datapages are
-> > switched over to be allocated dynamically. This requires changes to the
-> > s390 and random subsystem vDSO initialization as preparation.
-> > The random subsystem changes in turn require some cleanup of the vDSO
-> > headers to not end up as ugly #ifdef mess.
-> >
+On 15/01/2026 21:40, Ackerley Tng wrote:
+> "Kalyazin, Nikita" <kalyazin@amazon.co.uk> writes:
 > 
-> I hate to say it, but this patch series seems like a step backwards.  You're
-> adding a whole lot of complexity and opportunity for screwups (boot failure?
-> corruption?) to support SPARC, where other architectures have no problem with
-> the existing code.  And this complexity appears to infect basically every
-> kernel subsystem that supplies data to the vDSO.
-
-Ack.
-
-> Can you at least explain what the problem is and maybe give some discussion
-> of why SPARC has no workaround available?  The closest I found was this bit
-> from "[PATCH v4 24/35] vdso/datastore: Allocate data pages dynamically":
+>> From: Patrick Roy <patrick.roy@linux.dev>
+>>
+>> This drops an optimization in gup_fast_folio_allowed() where
+>> secretmem_mapping() was only called if CONFIG_SECRETMEM=y. secretmem is
+>> enabled by default since commit b758fe6df50d ("mm/secretmem: make it on
+>> by default"), so the secretmem check did not actually end up elided in
+>> most cases anymore anyway.
+>>
+>> This is in preparation of the generalization of handling mappings where
+>> direct map entries of folios are set to not present.  Currently,
+>> mappings that match this description are secretmem mappings
+>> (memfd_secret()).  Later, some guest_memfd configurations will also fall
+>> into this category.
+>>
+>> Signed-off-by: Patrick Roy <patrick.roy@linux.dev>
+>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+>> ---
+>>   mm/gup.c | 11 +----------
+>>   1 file changed, 1 insertion(+), 10 deletions(-)
+>>
+>> diff --git a/mm/gup.c b/mm/gup.c
+>> index 95d948c8e86c..9cad53acbc99 100644
+>> --- a/mm/gup.c
+>> +++ b/mm/gup.c
+>> @@ -2739,7 +2739,6 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>>   {
+>>        bool reject_file_backed = false;
+>>        struct address_space *mapping;
+>> -     bool check_secretmem = false;
+>>        unsigned long mapping_flags;
+>>
+>>        /*
+>> @@ -2751,14 +2750,6 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
 > 
-> > Allocating the datapages as part of the kernel image does not work on
-> SPARC. It is also problematic with regards to dcache aliasing as there is
-> no guarantee that the virtual addresses used by the kernel are compatible
-> with those used by userspace.
+> Copying some lines the diff didn't contain:
 > 
-> Now I'm not an expert on any architecture that has these aliasing (coloring?)
-> issues, but from my limited understanding, it ought to be possible to choose
-> a correctly colored address to map the vdso data given where it's being
-> mapped from.  If there's an issue with gathering a bunch of basically
-> arbitrarily relatively positioned physical pages into their necessary
-> arrangement in usermode, you could presumably fix it either with some linker
-> script magic or by rearranging the C code to stick everything into a
-> multipage structure.
-
-After I wrote that commit message it turned out to probably not be an
-aliasing issue. Even with matching alignments the error would persist.
-The real reason is unknown. Nobody came up with an explanatin so far.
-
-But another advantage of this dynamic allocation is to enable mlockall()
-on these VMAs. This avoids unexpected page faults and latency spikes for
-realtime applications.
- 
-> Or maybe you could arrange to allocate all these pages during early boot and
-> to fudge up some relocation to get all the existing generic code to find
-> them.  Or create some pointers that all the generic code will use that, on
-> non-sparc architectures, will be statically populated with the right
-> addresses by the linker.  IOW, conceptually,
+>          /*
+>           * If we aren't pinning then no problematic write can occur. A long term
+>           * pin is the most egregious case so this is the one we disallow.
+>           */
+>          if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) ==
+>              (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
 > 
-> struct the_type some_vdso_thing;
+> If we're pinning, can we already return true here? IIUC this function
+> is passed a folio that is file-backed, and the check if (!mapping) is
+> just there to catch the case where the mapping got truncated.
+
+I have to admit that I am not comfortable with removing this check, 
+unless someone says it's certainly alright.
+
 > 
-> could change to:
+> Or should we wait for the check where the mapping got truncated? If so,
+> then maybe we can move this "are we pinning" check to after this check
+> and remove the reject_file_backed variable?
+
+I can indeed move the pinning check to the end to remove the variable. 
+I'd do it in a separate patch.
+
 > 
-> const struct the_type some_vdso_thing = &the_actual_data;
+>          /*
+>           * The mapping may have been truncated, in any case we cannot determine
+>           * if this mapping is safe - fall back to slow path to determine how to
+>           * proceed.
+>           */
+>          if (!mapping)
+>                  return false;
 > 
-> and SPARC could fix up the initialization of the pointer. And generic code
-> would use the pointer instead of the_actual_data.
+> 
+>>                reject_file_backed = true;
+>>
+>>        /* We hold a folio reference, so we can safely access folio fields. */
+>> -
+>> -     /* secretmem folios are always order-0 folios. */
+>> -     if (IS_ENABLED(CONFIG_SECRETMEM) && !folio_test_large(folio))
+>> -             check_secretmem = true;
+>> -
+>> -     if (!reject_file_backed && !check_secretmem)
+>> -             return true;
+>> -
+>>        if (WARN_ON_ONCE(folio_test_slab(folio)))
+>>                return false;
+>>
+>> @@ -2800,7 +2791,7 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>>         * At this point, we know the mapping is non-null and points to an
+>>         * address_space object.
+>>         */
+>> -     if (check_secretmem && secretmem_mapping(mapping))
+>> +     if (secretmem_mapping(mapping))
+>>                return false;
+>>        /* The only remaining allowed file system is shmem. */
+>>        return !reject_file_backed || shmem_mapping(mapping);
+>> --
+>> 2.50.1
 
-These pointers alread exist and are used by the generic code:
-vdso_k_time_data, vdso_k_rng_data, vdso_k_arch_data.
-As proposed elsewhere in this thread, these can point to statically allocated
-memory at first so they can be accessed by the other kernel subsystems.
-Then they after the dynamic allocation we do a mempcy from the static storage
-to the dynamic one and update the pointer. I have the code for that which
-does work nicely.
-
-While we could limit this treatment to SPARC, I prefer to keep the code
-aligned between the different architectures. Otherwise we would need
-duplicate implementations as one uses PFN maps and the other 'struct page'
-maps. Also the mlockall() usecase is architecture-agnostic.
-
-Does this sound acceptable?
-
-> If you really really really need to have non-arch-specific kernel C code
-> running before the vdso data is allocated, can you give a very clear
-> explanation of what, exactly, is wrong on sparc?  And maybe put that
-> explanation into an appropriate comment somewhere so that future kernel
-> programmers don't look at the headers and the code and think "wow, what I
-> mess -- I bet I can clean this up by using statically allocated data".
-
-Ack, will do. But as I mentioned, I do not have an actual root cause.
-
-> (Can SPARC really not map things that existed during early boot into userspace?)
-
-It looks like it.
-
-
-Thomas
