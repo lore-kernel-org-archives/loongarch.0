@@ -1,188 +1,178 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A68D328611
-	for <loongarch@lists.linux.dev>; Fri, 16 Jan 2026 01:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1843537A4A1
+	for <loongarch@lists.linux.dev>; Fri, 16 Jan 2026 12:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768526124; cv=none; b=uOSzcm/gTBPwVxTtwW6OzJPJfz9UpXQmRSXTQ1jy9N3c+dbY3g3MJlkzsjhSqFPtPmypxCXDDEBzehFbW5ZWwRmGfrrDXULfcbgTf0b6X0fbuoJDFsIdAusdD/LqE9NFG+rfnmFYCFKkytfTlKVUnYOGeChCkg2U4H5qe0VoV/Y=
+	t=1768565448; cv=none; b=ZL4EIGo8+lY4Jm1ASiAAJNMNDcyA2DqGqKSdhqGoRb36jO2NNI/P0bSbLHuHb5fg57P+p1zmVnrg0QnKA9VMKGDVd+foHmUEqhLogL/o5vVAjv03sFpljX2Xxp9PgHP7ntprDBMwP56YBYQjBiScxzVRTdufHBzQ4GkRsott8Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768526124; c=relaxed/simple;
-	bh=ROU4R67s950GbA7GHKQWHktozeFvbhpGduCMWOOF/Io=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=thrIuQRnDZgSOpA8a/acRrKxLO9KroLy/AZEiy7zacbUbRd1msIOSVXHEqIFeaa8GIv2o9zgEVtmfm8QuezxCxmND1K+aKjvbmfzsykNEkptYNQ7iv+kFpT2euxiyXHzQwCTXV9ZkGBak2YplE1BEjIEAMMgkPVRK60iKDFDap8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0qy/1zd; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768565448; c=relaxed/simple;
+	bh=M8rYp98Yrm3kjvDcLQr1N9Xzxwxh+1FYXNegcG1Z3gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ceGClPtM4IKm4CMbmzLnMUVZAp+qTYlRqXLY6Tc8npW7vpy01pqthhx7GoDiztEi0yojlr/Hf9KTkghCdlKQRqek6PJ7UheoD2w8wgJjOoyaw5xjq15A1PC0+QSPaFOF2rt51jnJGBLkKlt5cKP85zKrPDq8KWksJjICgyRaBUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tcY57Ktk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RoLHU8R2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0qy/1zd"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-64b58553449so2621165a12.1
-        for <loongarch@lists.linux.dev>; Thu, 15 Jan 2026 17:15:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768526105; x=1769130905; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KS5A6hdws9JgSg5NdQLN8SLz4AQmGLJR4UdFXen0ylY=;
-        b=A0qy/1zdCNlGmsLY10wnsvPofctS40TTe6fpTUlBc7WQ9vbbFZtrLGYZpsGChbjU08
-         ukfp3VYjKTr6XITQBIiNXM4XQgWz/MkrArJ5iNMCxi+EP3J7Z9my+MUF1ct+QiaVxePY
-         bSnvO18iJqyOR0ld5y4UPtEIFgUUJGICbyrj9u4shEZN4ZaoXyhQEN3IflN7YXvapMpp
-         F7D9KCeL2r/8mOu5D2WyKWt+f1qhba2dMMLDddcq7h6EELeFAUtMm/RQRvrCNpYb0cre
-         ikzWzwbWqwDPLGGyy2fAr8Q/MtIOsf31C4K8IhkzND8LZjXtcxXY7C56CRPNlullowlc
-         zUGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768526105; x=1769130905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KS5A6hdws9JgSg5NdQLN8SLz4AQmGLJR4UdFXen0ylY=;
-        b=uKFQYJUzQ8NwF3tCdyYZMMTxx0FWR6Pe3JRyfkiB2Lrl4p8wEqYFYDcyUOqnt3GI+i
-         ZFugFTkchEEOC4MvtU2h9sBG1CKdhvstbn/ofyRab8PBiZZGzyvGcx2U/XQMGogSp+/t
-         2DKEMxYB1MP8i8pHowd9T6SDa2R94/ZUAlWY96uxkm9XZyvYEaWib7vA803H+sAF+tFj
-         Wfc5VI1bCBpfR7Q80vRSr38Um2dClolQ4Hch2jvDmf9AB3KAskajaw9i4UxLTZQHOK9z
-         8n3TFjHeGlCOynag/d8yg1LCHq8A5PcCP15NwyqRE8v4P+0qm9jsND3uQ4yAT8eSUOxC
-         3SaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6g4t66qhsDrvYlfdR4K3c8z3lRiUHDrnV2nDo4YzEsFZWnnDkVM82TgvpsJY0I+Cp42Kk285DHic=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzsgadss4uJOtg0Cve0euELWKiZcxbcj6lkGjZKhxBoR8rqHn5E
-	b5A5FkduQu2f3R009K3w2P0cI1zp7nU0ZZqzCO6/XJAfrpFZrV58I1+pcVT3Johb44OjJcyz+uS
-	hCl7qeUVohH5SpBiSRKS5A9tRm875soM=
-X-Gm-Gg: AY/fxX6UFvFK8jn03RdSLYI2nrLwsw2B82PZ5MLZ1tZ/iFOHqmK0FzAbsOGfrCy+hUl
-	qYRRAefJuwP8DTg6W9vJOgJfYqRvSQnFxZqWIJ2VE67+kxSGMGY1s5frJ5b+8FO3PyxT6dCnx5L
-	UjH+IPLopt8PeFvolG2n3mpqEtF/1Ve1TX2kdPBEoAbwcFFPjRagVkQsQnjmaDONjJKFG7V2taE
-	vCHMTVZnS6orvU0MvoBJPtAaMMHenzi5S/HvVYJ5fNX5z5pzTyu7+oJjIl/boMZB3IEs7f4MJCR
-	OT8W9Bk=
-X-Received: by 2002:a05:6402:51c9:b0:645:1078:22aa with SMTP id
- 4fb4d7f45d1cf-65452acb341mr974597a12.19.1768526105360; Thu, 15 Jan 2026
- 17:15:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tcY57Ktk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RoLHU8R2"
+Date: Fri, 16 Jan 2026 13:10:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1768565444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m4xj4CRpx5Rn02x3ca442JNSKW3N63XvSapnCzBXF8o=;
+	b=tcY57KtkxrC2Kv4y0HkpbJbC/pQS5RHj9Kp4rg1YyeKUZFPhAszR0J9jXDYqU8XKMRt5yy
+	/cxA+qFjtYuGq3R5ue0ASh4BzD6PkPogDxaC3NG7jOvQXfc6a8y1Mj7UjwdcpmtWm6QmMF
+	P4JSJneYYVjhf0ropRohWWEJusj5z7WghKS+mseOsE/SiZUELdvQaP4mmZXIUcYfG0KM1J
+	SyKqrKtvAZQtbn0EioFiC39BcksrufdUvJKV41PHxEM0/XUOhtZ5Su8mpUxN4BGoJ8QcpA
+	pDPq2VQryd3zYOIkU4e5rPmQSuL5HuVQPwsqa2yeFNGSwpwptypePDBSAzdFGA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1768565444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m4xj4CRpx5Rn02x3ca442JNSKW3N63XvSapnCzBXF8o=;
+	b=RoLHU8R2m4lh+TOUGYaYUhiHbsJz60UbhmEfkq+Ri9skt252VpVK6rulxmT2CKH3E9ZPhM
+	NY+TbhTMPWk9blDA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Nick Alcock <nick.alcock@oracle.com>, John Stultz <jstultz@google.com>, 
+	Stephen Boyd <sboyd@kernel.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, "Russell King (Oracle)" <linux@armlinux.org.uk>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Shannon Nelson <sln@onemain.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	sparclinux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
+Subject: Re: [PATCH v5 00/34] sparc64: vdso: Switch to the generic vDSO
+ library
+Message-ID: <20260116124847-4bbc0b99-fa0c-4bd1-a229-1bd248ee8c6b@linutronix.de>
+References: <20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de>
+ <b870aa47-5ed4-4dcf-a407-eca83d1733d8@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1767663073.git.zhoubinbin@loongson.cn> <8876bebaf08121bb5edd2500f5289284b75df011.1767663073.git.zhoubinbin@loongson.cn>
- <20260106191314.GA2568583-robh@kernel.org> <CAMpQs4LpKSLGKySmzHeysS3x78inUQy9DF4dShneNymDvAi4Ew@mail.gmail.com>
- <20260114205855.GA3190839-robh@kernel.org> <CAMpQs4+v=KhLW_Cru801p06vmpjJFotvyDfKBALg6mbwxFU5-A@mail.gmail.com>
- <CAL_JsqJVD3o41Zch6fMY6s-qmyd9cQg6CJ+iya+3kdtuqvNMoA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJVD3o41Zch6fMY6s-qmyd9cQg6CJ+iya+3kdtuqvNMoA@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 16 Jan 2026 09:14:52 +0800
-X-Gm-Features: AZwV_QhUFfli37YKjCtOZoZJEFk_EN3-i1wZz_UWr78liB25i8-qldPEHYjcGIE
-Message-ID: <CAMpQs4JuGXvNA+gbo3LHeqEw+JZ2JNnmgfLZZQNV+A62e+psdQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-binding: rtc: loongson: Document
- Loongson-2K0300 compatible
-To: Rob Herring <robh@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b870aa47-5ed4-4dcf-a407-eca83d1733d8@app.fastmail.com>
 
-Hi Rob:
+Hi Andy,
 
-Thanks for your reply.
+sorry for the long delay.
 
-On Fri, Jan 16, 2026 at 1:00=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Thu, Jan 15, 2026 at 1:39=E2=80=AFAM Binbin Zhou <zhoubb.aaron@gmail.c=
-om> wrote:
+On Fri, Nov 07, 2025 at 04:17:14PM -0800, Andy Lutomirski wrote:
+> On Thu, Nov 6, 2025, at 2:01 AM, Thomas Weißschuh wrote:
+> > The generic vDSO provides a lot common functionality shared between
+> > different architectures. SPARC is the last architecture not using it,
+> > preventing some necessary code cleanup.
 > >
-> > Hi Rob:
+> > Make use of the generic infrastructure.
 > >
-> > Thanks for your reply.
+> > Follow-up to and replacement for Arnd's SPARC vDSO removal patches:
+> > https://lore.kernel.org/lkml/20250707144726.4008707-1-arnd@kernel.org/
 > >
-> > On Thu, Jan 15, 2026 at 4:58=E2=80=AFAM Rob Herring <robh@kernel.org> w=
-rote:
-> > >
-> > > On Wed, Jan 07, 2026 at 09:22:41AM +0800, Binbin Zhou wrote:
-> > > > Hi Rob:
-> > > >
-> > > > Thanks for your review.
-> > > >
-> > > > On Wed, Jan 7, 2026 at 3:13=E2=80=AFAM Rob Herring <robh@kernel.org=
-> wrote:
-> > > > >
-> > > > > On Tue, Jan 06, 2026 at 09:33:32AM +0800, Binbin Zhou wrote:
-> > > > > > Add "loongson,ls2k0300-rtc" dedicated compatible to represent t=
-he RTC
-> > > > > > interface of the Loongson-2K0300 chip.
-> > > > > >
-> > > > > > Its hardware design is similar to that of the Loongson-1B, but =
-it does
-> > > > > > not support the alarm feature.
-> > > > >
-> > > > > But you are requiring the interrupt property for it? Isn't it no =
-alarm
-> > > > > feature means no interrupt?
-> > > >
-> > > > Yes, the `interrupts` attribute is not required without the alarm f=
-eature.
-> > > >
-> > > > But my judgment condition is `not contains` (added in patch-1[1]).
-> > > > There are only a few SoCs on the Loongson platform that don't suppo=
-rt
-> > > > the RTC alarm feature, so I think `not contains` looks cleaner and
-> > > > simpler.
-> > >
-> > > I should have said allowing rather than requiring.
-> > >
-> > > You are allowing (though not requiring) 'interrupts' for Loongson-1B =
-and
-> > > Loongson-2K0300. In patch 1, you made it required for other platforms
-> > > which is an ABI change. That's fine if it was a mistake and is truly
-> > > required.
+> > SPARC64 can not map .bss into userspace, so the vDSO datapages are
+> > switched over to be allocated dynamically. This requires changes to the
+> > s390 and random subsystem vDSO initialization as preparation.
+> > The random subsystem changes in turn require some cleanup of the vDSO
+> > headers to not end up as ugly #ifdef mess.
 > >
-> > Emm, it's true that for the binding interface, Patch-1 is indeed an
-> > ABI change, but it's more of a fixed patch.
-> >
-> > Throughout all existing Loongson DTS{i}, RTC nodes decide whether to
-> > include the `interrupts` property or not based on the alarm feature.
-> > Loongson-1c rtc nodes do not include the `interrupts` attribute [1],
-> > while all other Loongson chip rtc nodes do [2].
-> >
-> > So, while this is an ABI change, I don't think it affects existing
-> > Loongson DTS{i} rtc nodes. Also, it more accurately describes the
-> > features of the corresponding RTC device.
-> >
-> > Therefore, I would like to clarify it in the Patch-1 commit message of
-> > the next patch version and fix the error in the commit title:
-> > dt-binding -> dt-bindings.
-> >
-> > How do you feel about that?
->
-> That's fine, but you also need:
->
-> else:
->   properties:
->     interrupts: false
->
-> So that on the 2 platforms without an interrupt(alarm), 'interrupts'
-> is not allowed.
->
-> With that, you might as well just drop the 'not' and flip the 'then'
-> and 'else' schemas around.
+> 
+> I hate to say it, but this patch series seems like a step backwards.  You're
+> adding a whole lot of complexity and opportunity for screwups (boot failure?
+> corruption?) to support SPARC, where other architectures have no problem with
+> the existing code.  And this complexity appears to infect basically every
+> kernel subsystem that supplies data to the vDSO.
 
-OK, I'll fall back to the writeup in the v1 patchset as follows:
+Ack.
 
-if:
-  properties:
-    compatible:
-      contains:
-        enum:
-          - loongson,ls1c-rtc
-          - loongson,ls2k0300-rtc
+> Can you at least explain what the problem is and maybe give some discussion
+> of why SPARC has no workaround available?  The closest I found was this bit
+> from "[PATCH v4 24/35] vdso/datastore: Allocate data pages dynamically":
+> 
+> > Allocating the datapages as part of the kernel image does not work on
+> SPARC. It is also problematic with regards to dcache aliasing as there is
+> no guarantee that the virtual addresses used by the kernel are compatible
+> with those used by userspace.
+> 
+> Now I'm not an expert on any architecture that has these aliasing (coloring?)
+> issues, but from my limited understanding, it ought to be possible to choose
+> a correctly colored address to map the vdso data given where it's being
+> mapped from.  If there's an issue with gathering a bunch of basically
+> arbitrarily relatively positioned physical pages into their necessary
+> arrangement in usermode, you could presumably fix it either with some linker
+> script magic or by rearranging the C code to stick everything into a
+> multipage structure.
 
-then:
-  properties:
-    interrupts: false
+After I wrote that commit message it turned out to probably not be an
+aliasing issue. Even with matching alignments the error would persist.
+The real reason is unknown. Nobody came up with an explanatin so far.
 
->
-> Rob
+But another advantage of this dynamic allocation is to enable mlockall()
+on these VMAs. This avoids unexpected page faults and latency spikes for
+realtime applications.
+ 
+> Or maybe you could arrange to allocate all these pages during early boot and
+> to fudge up some relocation to get all the existing generic code to find
+> them.  Or create some pointers that all the generic code will use that, on
+> non-sparc architectures, will be statically populated with the right
+> addresses by the linker.  IOW, conceptually,
+> 
+> struct the_type some_vdso_thing;
+> 
+> could change to:
+> 
+> const struct the_type some_vdso_thing = &the_actual_data;
+> 
+> and SPARC could fix up the initialization of the pointer. And generic code
+> would use the pointer instead of the_actual_data.
 
---=20
-Thanks.
-Binbin
+These pointers alread exist and are used by the generic code:
+vdso_k_time_data, vdso_k_rng_data, vdso_k_arch_data.
+As proposed elsewhere in this thread, these can point to statically allocated
+memory at first so they can be accessed by the other kernel subsystems.
+Then they after the dynamic allocation we do a mempcy from the static storage
+to the dynamic one and update the pointer. I have the code for that which
+does work nicely.
+
+While we could limit this treatment to SPARC, I prefer to keep the code
+aligned between the different architectures. Otherwise we would need
+duplicate implementations as one uses PFN maps and the other 'struct page'
+maps. Also the mlockall() usecase is architecture-agnostic.
+
+Does this sound acceptable?
+
+> If you really really really need to have non-arch-specific kernel C code
+> running before the vdso data is allocated, can you give a very clear
+> explanation of what, exactly, is wrong on sparc?  And maybe put that
+> explanation into an appropriate comment somewhere so that future kernel
+> programmers don't look at the headers and the code and think "wow, what I
+> mess -- I bet I can clean this up by using statically allocated data".
+
+Ack, will do. But as I mentioned, I do not have an actual root cause.
+
+> (Can SPARC really not map things that existed during early boot into userspace?)
+
+It looks like it.
+
+
+Thomas
