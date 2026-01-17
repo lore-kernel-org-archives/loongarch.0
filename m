@@ -1,174 +1,116 @@
-Received: from fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com [35.158.23.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10420DD52;
-	Fri, 16 Jan 2026 18:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.158.23.94
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25122D7392
+	for <loongarch@lists.linux.dev>; Sat, 17 Jan 2026 02:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768587436; cv=none; b=Af3QnV0zAtTqvA0s54orwUn8EnZSbQInuVpxR/KSWoKg53yZOcvA2+xcnGTHL8Ce4t8FKRHX59n8PuG7exvrOBETFRGJjhkqCiVy5Hwt6hudIyAQ2xFt3LnDKp4bT3SO3Gq3Ab8HzIida4yZFodUhJovq3ijP4FSQhh9HSKpgxc=
+	t=1768616842; cv=none; b=pezfSXNYRAXDyatSs9IaSh9VdD5dhji4TOqKZw2ruZGKr3AxIXb3x3cgKRgDuH7o2Y0+KEX4BJoWy1L05RyenSqs9LBhTehGlybD4eN0SkyBmkV5uk1vPNCDJJJyQOQVhXRXitBAS5lc1W+sIpRIAWia2C9hT2+KKsKc6Ci6KwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768587436; c=relaxed/simple;
-	bh=zrf911BvhStWuhjVEELF/Ajfn8rz9WHah1btkRBe1lA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QNqTzRLgx8GAzPMfddKIiAkm/MnHppr0VAyGUZ5h3kjYdO9RFN7+GcNQTv2U2r/uZHkPg032bHmH6HbZJhPZaXmZ38BJL/VlFzo1j/hx1jrmW7wb0PzpiATiJV/pq9Sc7K4GkGESvxagyqPDF5NeDlnJGDJahWSgum62S5/wvcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=VYaDnNsO; arc=none smtp.client-ip=35.158.23.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="VYaDnNsO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1768587434; x=1800123434;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=YapVUMmpOwobMagVZxDJCeWDb1gq+ZQf1FJDAqu8vU0=;
-  b=VYaDnNsOXe3tvOc0avSlLKzEgFfshIed65UMoY/one+laWq0gQq/14P+
-   EBPzYBmrmVtIpPQ7wVGYHnSCc8CFuL8UmxvfFesFjHNLwXt6EzV9c/IhE
-   o9PaMdIC3a+q2omAnfI0H0obeQY9H+YfggP8LmZUYRK5sQwe3EgAQ3fW0
-   nyCEEMDUo631LFKxUt3q60eeHDTh4FuOJ1c4d7qK6mFI5pn7St/IpchkS
-   jALxFm0nzKSNitH3cx9BLujUZfaa/JBcSce+km60Gr1UsqjAixs8hWFok
-   mI7fuF58O2FGgtJp0hiVozzSB86C5HiYxRsm3Z4U9FiXo1SgruHMDMpd1
-   w==;
-X-CSE-ConnectionGUID: NWjda1oCRYKn9baULLv/sw==
-X-CSE-MsgGUID: IK3nVvd5RcyK2jXvKFHlAw==
-X-IronPort-AV: E=Sophos;i="6.21,231,1763424000"; 
-   d="scan'208";a="8025027"
-Received: from ip-10-6-11-83.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.11.83])
-  by internal-fra-out-008.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2026 18:16:56 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [54.240.197.233:23681]
- by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.8.163:2525] with esmtp (Farcaster)
- id 6045a328-4a68-479c-a4ff-a5f3e38bc599; Fri, 16 Jan 2026 18:16:56 +0000 (UTC)
-X-Farcaster-Flow-ID: 6045a328-4a68-479c-a4ff-a5f3e38bc599
-Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
- Fri, 16 Jan 2026 18:16:53 +0000
-Received: from [192.168.12.13] (10.106.82.9) by EX19D005EUB003.ant.amazon.com
- (10.252.51.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35; Fri, 16 Jan 2026
- 18:16:48 +0000
-Message-ID: <e4cc7e98-9c1f-4ced-a22f-5d0fe29a6893@amazon.com>
-Date: Fri, 16 Jan 2026 18:16:47 +0000
+	s=arc-20240116; t=1768616842; c=relaxed/simple;
+	bh=MPS+Q17WZhqccCaiNObtZvCzkiuO5EvwsI+/aySsXZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tdbriDZ+jU9AXgl/ktR52QisX+oMCxEEBn9Ca6yItHGX4c0J5h1T5HlcMCA5yHlNtITMdDdGCL8rQwIVmRgoCPWHIkHd1z6R3YCChqgmZ2eKq5KJjdor0RBQgYgk8w6IEefE0Ptd/TpmROhowDIrjXdiQxcdH+ZuwXiKvH9S3TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.1])
+	by gateway (Coremail) with SMTP id _____8BxmsJ482ppzMcJAA--.31810S3;
+	Sat, 17 Jan 2026 10:27:04 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.1])
+	by front1 (Coremail) with SMTP id qMiowJDxTMJ082ppbNkgAA--.65061S2;
+	Sat, 17 Jan 2026 10:27:01 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org
+Cc: Xiaochuang Mao <maoxiaochuan@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/3] RTC: Add Loongson-2K0300 support
+Date: Sat, 17 Jan 2026 10:26:47 +0800
+Message-ID: <cover.1768616276.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [PATCH v9 07/13] KVM: guest_memfd: Add flag to remove from direct
- map
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "kalyazin@amazon.co.uk"
-	<kalyazin@amazon.co.uk>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
-	<linux-s390@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"kernel@xen0n.name" <kernel@xen0n.name>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>
-CC: "david@kernel.org" <david@kernel.org>, "svens@linux.ibm.com"
-	<svens@linux.ibm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "jgross@suse.com"
-	<jgross@suse.com>, "surenb@google.com" <surenb@google.com>, "vbabka@suse.cz"
-	<vbabka@suse.cz>, "riel@surriel.com" <riel@surriel.com>, "pfalcato@suse.de"
-	<pfalcato@suse.de>, "x86@kernel.org" <x86@kernel.org>, "rppt@kernel.org"
-	<rppt@kernel.org>, "thuth@redhat.com" <thuth@redhat.com>,
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "maz@kernel.org"
-	<maz@kernel.org>, "peterx@redhat.com" <peterx@redhat.com>, "ast@kernel.org"
-	<ast@kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>,
-	"pjw@kernel.org" <pjw@kernel.org>, "alex@ghiti.fr" <alex@ghiti.fr>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "hca@linux.ibm.com"
-	<hca@linux.ibm.com>, "willy@infradead.org" <willy@infradead.org>,
-	"wyihan@google.com" <wyihan@google.com>, "ryan.roberts@arm.com"
-	<ryan.roberts@arm.com>, "yang@os.amperecomputing.com"
-	<yang@os.amperecomputing.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
-	"jmattson@google.com" <jmattson@google.com>, "luto@kernel.org"
-	<luto@kernel.org>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"haoluo@google.com" <haoluo@google.com>, "patrick.roy@linux.dev"
-	<patrick.roy@linux.dev>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "coxu@redhat.com" <coxu@redhat.com>,
-	"mhocko@suse.com" <mhocko@suse.com>, "mlevitsk@redhat.com"
-	<mlevitsk@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, "hpa@zytor.com"
-	<hpa@zytor.com>, "song@kernel.org" <song@kernel.org>,
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "maobibo@loongson.cn"
-	<maobibo@loongson.cn>, "peterz@infradead.org" <peterz@infradead.org>,
-	"oupton@kernel.org" <oupton@kernel.org>, "lorenzo.stoakes@oracle.com"
-	<lorenzo.stoakes@oracle.com>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>,
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "jthoughton@google.com"
-	<jthoughton@google.com>, "Jonathan.Cameron@huawei.com"
-	<Jonathan.Cameron@huawei.com>, "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "yonghong.song@linux.dev"
-	<yonghong.song@linux.dev>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"shuah@kernel.org" <shuah@kernel.org>, "prsampat@amd.com" <prsampat@amd.com>,
-	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>,
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
-	"itazur@amazon.co.uk" <itazur@amazon.co.uk>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"dev.jain@arm.com" <dev.jain@arm.com>, "yuzenghui@huawei.com"
-	<yuzenghui@huawei.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>,
-	"jackabt@amazon.co.uk" <jackabt@amazon.co.uk>, "daniel@iogearbox.net"
-	<daniel@iogearbox.net>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-	"andrii@kernel.org" <andrii@kernel.org>, "mingo@redhat.com"
-	<mingo@redhat.com>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "derekmn@amazon.com"
-	<derekmn@amazon.com>, "xmarcalx@amazon.co.uk" <xmarcalx@amazon.co.uk>,
-	"kpsingh@kernel.org" <kpsingh@kernel.org>, "sdf@fomichev.me"
-	<sdf@fomichev.me>, "jackmanb@google.com" <jackmanb@google.com>,
-	"bp@alien8.de" <bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>,
-	"ackerleytng@google.com" <ackerleytng@google.com>, "jannh@google.com"
-	<jannh@google.com>, "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"kas@kernel.org" <kas@kernel.org>, "will@kernel.org" <will@kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>
-References: <20260114134510.1835-1-kalyazin@amazon.com>
- <20260114134510.1835-8-kalyazin@amazon.com>
- <e619ded526a2f9a4cec4f74383cef31519624935.camel@intel.com>
- <294bca75-2f3e-46db-bb24-7c471a779cc1@amazon.com>
- <bb58a21f91113ca39f8888d718d4450a5fd72808.camel@intel.com>
- <318407ba-ecb6-4691-8911-645fb8c20250@amazon.com>
- <c42cc00f3902673b1a964c3d098b8c3f236cf9a1.camel@intel.com>
- <98b8ea1e-3bdd-4987-8acc-58112076d451@amazon.com>
- <a84835708eb92d99ba524149bde819c4ba944cb9.camel@intel.com>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <a84835708eb92d99ba524149bde819c4ba944cb9.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D006EUA002.ant.amazon.com (10.252.50.65) To
- EX19D005EUB003.ant.amazon.com (10.252.51.31)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTMJ082ppbNkgAA--.65061S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEKCGlp0zcWgwAAsz
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryxJrWUKw4rWry8GFWDZFc_yoW8GryDpa
+	n8C3sxGr98KryUArZxJry0yrW5ZryrJFn2gFZxZw1DWay5Ga1jqw4ft3Z8XrnrCrWfZa4a
+	vF95Cr4rKFyUurXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+
+Hi all:
+
+This patch set introduces the Loongson-2K0300 RTC, which has a similar
+hardware design to the Loongson-1B, but without the alarm feature.
+
+Thanks.
+Binbin
+
+==========
+V3:
+- Add Reviewed-by tag from Huacai, thanks.
+
+Patch (1/3):
+ - Update commit title: dt-binding -> dt-bindings;
+ - Update the commit message to describe the binding ABI breaking.
+ - Drop `not` and  flip the 'then' and 'else' schemas around.
+
+Patch (2/3):
+ - Update commit title: dt-binding -> dt-bindings.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1767663073.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/3):
+ - New patch, correct Loongson-1C `interrupts` property;
+
+Patch (2/3):
+ - Drop Loongson-1C changes;
+
+Patch (3/3):
+ - Rename LS1C_RTC_CTRL_WORKAROUND to LOONGSON_RTC_CTRL_WORKAROUND for
+   consistency.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1766471839.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (3):
+  dt-bindings: rtc: loongson: Correct Loongson-1C interrupts property
+  dt-bindings: rtc: loongson: Document Loongson-2K0300 compatible
+  rtc: loongson: Add Loongson-2K0300 support
+
+ .../devicetree/bindings/rtc/loongson,rtc.yaml | 13 ++++
+ drivers/rtc/rtc-loongson.c                    | 71 ++++++++++++-------
+ 2 files changed, 60 insertions(+), 24 deletions(-)
 
 
-
-On 16/01/2026 18:10, Edgecombe, Rick P wrote:
-> On Fri, 2026-01-16 at 17:51 +0000, Nikita Kalyazin wrote:
->> Yes, this is a problem that we'd like to address.  We have been
->> discussing it in [1].  The effect of flushing on memory population
->> that we see on x86 is 5-7x elongation.  We are thinking of making use
->> of the no-direct-map memory allocator that Brendan is working on [2].
-> 
-> Ah, makes sense.
-> 
-> Do you plan to merge this before the performance problems are
-> addressed? I guess this series focuses on safety and functionality
-> first.
-
-Yes, we'd like to merge the functional part first and then optimise it 
-in the further series.
-
-> 
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+-- 
+2.47.3
 
