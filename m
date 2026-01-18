@@ -1,45 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F027B318157
-	for <loongarch@lists.linux.dev>; Sat, 17 Jan 2026 02:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D89243D544
+	for <loongarch@lists.linux.dev>; Sun, 18 Jan 2026 01:48:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768616845; cv=none; b=Z2QKx4L9fO0AvVwlUDoF9j8IQr2EHaIP/8ECfF2J4O2Op9ZW+KAJCH7KXdf/iHFf9LpwEnSVipYEAOIJk6RF3F/rTOi4g/uP0zAQi5e2A0lrdcyN9wRP7VnLjXmU6U/YZICXwXRvb7I8p7fxT5nvcDClSvmAuxHYOHiGHhBMBBw=
+	t=1768700909; cv=none; b=SeR0avMQAvBqTUKc/WY5l44cozSyAvY+EdXwtR9Cc1FiwSxTK0rG8p0SqnFVebWtndRy9ikVNgop/PCJBwky4pkP50LUf51PZi3MFxrNlID3i0yALpc4Bmg92fH3h5WuZ0r+XI5GrDsQbKFIjVguoTYfJNnPqO1qLnIIiNrOJlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768616845; c=relaxed/simple;
-	bh=TAG9OVTnNO+QpdOQEVxPbs/3BVwx5fE1zOvGMqWSGK0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KrTzma5RHMNFBlsFbeNytn+ez1HkwDAAf+wvuD+TYkwUzNoUYKxJCh8THL/C6HJL1yb34eVc3txZQwxMKvjimjCTqEIuCYGi4hZ7dE53XxnPqQIL4ZR4okExYhkRGKQkSA+y5bg7fU0smZZLa0ZRrHRhTVJ6tymOUHN+K4QUpko=
+	s=arc-20240116; t=1768700909; c=relaxed/simple;
+	bh=Ikm9Gxk9qk6EOzTmaoT40qOBfegesYQ84y0ie3YzSYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jV6la3uCzBD9TX4x4M87VTSTfm0pbtk4RYfA0gdMGZaR1/BZlSodWjj/XNIC0FKxzW6K7VHsk5+PxPD+fw/c4seTBIcjeDEcVQCXECZqdlkzymdHd+yIFlApyRDY+04NoQdMiJNz9qpdzCBActSRE92Hjp6z+dTYMHor7Octdqs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.1])
-	by gateway (Coremail) with SMTP id _____8BxHMN_82pp3scJAA--.31613S3;
-	Sat, 17 Jan 2026 10:27:11 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxCMLkO2xpGvgJAA--.20137S3;
+	Sun, 18 Jan 2026 09:48:20 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.69.1])
-	by front1 (Coremail) with SMTP id qMiowJDxTMJ082ppbNkgAA--.65061S5;
-	Sat, 17 Jan 2026 10:27:11 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org
-Cc: Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
+	by front1 (Coremail) with SMTP id qMiowJCxecHcO2xppSUiAA--.6263S2;
+	Sun, 18 Jan 2026 09:48:17 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 3/3] rtc: loongson: Add Loongson-2K0300 support
-Date: Sat, 17 Jan 2026 10:26:50 +0800
-Message-ID: <abff68dda2fe6a6601a9e58b31e278d941297fce.1768616276.git.zhoubinbin@loongson.cn>
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.19-rc6
+Date: Sun, 18 Jan 2026 09:48:03 +0800
+Message-ID: <20260118014803.754974-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1768616276.git.zhoubinbin@loongson.cn>
-References: <cover.1768616276.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -47,171 +37,72 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTMJ082ppbNkgAA--.65061S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEKCGlp0xwWWAAAsA
-X-Coremail-Antispam: 1Uk129KBj93XoWxuFW3uw1fKry8GF1kXw17twc_yoW7WF17pw
-	43Aa45Kr4FqF15urs5JayUGF13CryfGa4IqF47K3s2g3sxA34DZr1kKFy3Z3y3AF98ZFW3
-	XFWkGFWfua1UCwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxecHcO2xppSUiAA--.6263S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZrWrJw4UuF1rZr15GF1Dtwc_yoW8uF4xpr
+	W3uwsxtFn5GrW3WrnIg34Uur15XFs7Jr17Wa13try8GFnxZw1UXry8JryrAa45J3yrJF10
+	qr1rG3WjgF1UJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
+	UjIFyTuYvjxU2MKZDUUUU
 
-The Loongson-2K0300's rtc hardware design is similar to that of the
-Loongson-1B, but it does not support the alarm feature.
+The following changes since commit 0f61b1860cc3f52aef9036d7235ed1f017632193:
 
-Introduce `LOONGSON_RTC_ALARM_WORKAROUND`, which indicates a chip that
-does not support the alarm feature, and rewrite the related logic in
-`loongson_rtc_alarm_setting()`.
+  Linux 6.19-rc5 (2026-01-11 17:03:14 -1000)
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/rtc/rtc-loongson.c | 71 +++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/rtc/rtc-loongson.c b/drivers/rtc/rtc-loongson.c
-index 2ca7ffd5d7a9..066f0644d1c3 100644
---- a/drivers/rtc/rtc-loongson.c
-+++ b/drivers/rtc/rtc-loongson.c
-@@ -66,7 +66,8 @@
-  * According to the LS1C manual, RTC_CTRL and alarm-related registers are not defined.
-  * Accessing the relevant registers will cause the system to hang.
-  */
--#define LS1C_RTC_CTRL_WORKAROUND	BIT(0)
-+#define LOONGSON_RTC_CTRL_WORKAROUND	BIT(0)
-+#define LOONGSON_RTC_ALARM_WORKAROUND	BIT(1)
- 
- struct loongson_rtc_config {
- 	u32 pm_offset;	/* Offset of PM domain, for RTC alarm wakeup */
-@@ -89,7 +90,7 @@ static const struct loongson_rtc_config ls1b_rtc_config = {
- 
- static const struct loongson_rtc_config ls1c_rtc_config = {
- 	.pm_offset = 0,
--	.flags = LS1C_RTC_CTRL_WORKAROUND,
-+	.flags = LOONGSON_RTC_CTRL_WORKAROUND | LOONGSON_RTC_ALARM_WORKAROUND,
- };
- 
- static const struct loongson_rtc_config generic_rtc_config = {
-@@ -97,6 +98,11 @@ static const struct loongson_rtc_config generic_rtc_config = {
- 	.flags = 0,
- };
- 
-+static const struct loongson_rtc_config ls2k0300_rtc_config = {
-+	.pm_offset = 0x0,
-+	.flags = LOONGSON_RTC_ALARM_WORKAROUND,
-+};
-+
- static const struct loongson_rtc_config ls2k1000_rtc_config = {
- 	.pm_offset = 0x800,
- 	.flags = 0,
-@@ -153,7 +159,7 @@ static int loongson_rtc_set_enabled(struct device *dev)
- {
- 	struct loongson_rtc_priv *priv = dev_get_drvdata(dev);
- 
--	if (priv->config->flags & LS1C_RTC_CTRL_WORKAROUND)
-+	if (priv->config->flags & LOONGSON_RTC_CTRL_WORKAROUND)
- 		return 0;
- 
- 	/* Enable RTC TOY counters and crystal */
-@@ -167,7 +173,7 @@ static bool loongson_rtc_get_enabled(struct device *dev)
- 	u32 ctrl_data;
- 	struct loongson_rtc_priv *priv = dev_get_drvdata(dev);
- 
--	if (priv->config->flags & LS1C_RTC_CTRL_WORKAROUND)
-+	if (priv->config->flags & LOONGSON_RTC_CTRL_WORKAROUND)
- 		return true;
- 
- 	ret = regmap_read(priv->regmap, RTC_CTRL_REG, &ctrl_data);
-@@ -299,9 +305,41 @@ static const struct rtc_class_ops loongson_rtc_ops = {
- 	.alarm_irq_enable = loongson_rtc_alarm_irq_enable,
- };
- 
-+static int loongson_rtc_alarm_setting(struct platform_device *pdev, void __iomem *regs)
-+{
-+	int ret = 0, alarm_irq;
-+	struct device *dev = &pdev->dev;
-+	struct loongson_rtc_priv *priv = dev_get_drvdata(dev);
-+
-+	if (priv->config->flags & LOONGSON_RTC_ALARM_WORKAROUND) {
-+		/* Loongson-1C/Loongson-2K0300 RTC does not support alarm */
-+		clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
-+		return 0;
-+	}
-+
-+	/* Get RTC alarm irq */
-+	alarm_irq = platform_get_irq(pdev, 0);
-+	if (alarm_irq < 0)
-+		return alarm_irq;
-+
-+	ret = devm_request_irq(dev, alarm_irq, loongson_rtc_isr, 0, "loongson-alarm",
-+			       priv);
-+	if (ret < 0)
-+		return ret;
-+
-+	priv->pm_base = regs - priv->config->pm_offset;
-+	device_init_wakeup(dev, true);
-+
-+	if (has_acpi_companion(dev))
-+		acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
-+						 loongson_rtc_handler, priv);
-+
-+	return ret;
-+}
-+
- static int loongson_rtc_probe(struct platform_device *pdev)
- {
--	int ret, alarm_irq;
-+	int ret;
- 	void __iomem *regs;
- 	struct loongson_rtc_priv *priv;
- 	struct device *dev = &pdev->dev;
-@@ -330,25 +368,9 @@ static int loongson_rtc_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->rtcdev),
- 				     "devm_rtc_allocate_device failed\n");
- 
--	/* Get RTC alarm irq */
--	alarm_irq = platform_get_irq(pdev, 0);
--	if (alarm_irq > 0) {
--		ret = devm_request_irq(dev, alarm_irq, loongson_rtc_isr,
--				       0, "loongson-alarm", priv);
--		if (ret < 0)
--			return dev_err_probe(dev, ret, "Unable to request irq %d\n",
--					     alarm_irq);
--
--		priv->pm_base = regs - priv->config->pm_offset;
--		device_init_wakeup(dev, true);
--
--		if (has_acpi_companion(dev))
--			acpi_install_fixed_event_handler(ACPI_EVENT_RTC,
--							 loongson_rtc_handler, priv);
--	} else {
--		/* Loongson-1C RTC does not support alarm */
--		clear_bit(RTC_FEATURE_ALARM, priv->rtcdev->features);
--	}
-+	ret = loongson_rtc_alarm_setting(pdev, regs);
-+	if (ret)
-+		return ret;
- 
- 	/* Loongson RTC does not support UIE */
- 	clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, priv->rtcdev->features);
-@@ -379,6 +401,7 @@ static const struct of_device_id loongson_rtc_of_match[] = {
- 	{ .compatible = "loongson,ls1b-rtc", .data = &ls1b_rtc_config },
- 	{ .compatible = "loongson,ls1c-rtc", .data = &ls1c_rtc_config },
- 	{ .compatible = "loongson,ls7a-rtc", .data = &generic_rtc_config },
-+	{ .compatible = "loongson,ls2k0300-rtc", .data = &ls2k0300_rtc_config },
- 	{ .compatible = "loongson,ls2k1000-rtc", .data = &ls2k1000_rtc_config },
- 	{ /* sentinel */ }
- };
--- 
-2.47.3
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.19-2
+
+for you to fetch changes up to 1cf342a7c3adc5877837b53bbceb5cc9eff60bbf:
+
+  LoongArch: KVM: Fix kvm_device leak in kvm_pch_pic_destroy() (2026-01-17 10:57:03 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.19-rc6
+
+Remove redundant code in head.S, fix PMU counter allocation for mixed-
+type event groups, fix a lot of dts build warnings, and fix kvm_device
+memory leaks.
+----------------------------------------------------------------
+Binbin Zhou (4):
+      LoongArch: dts: loongson-2k0500: Add default interrupt controller address cells
+      LoongArch: dts: loongson-2k1000: Add default interrupt controller address cells
+      LoongArch: dts: loongson-2k2000: Add default interrupt controller address cells
+      LoongArch: dts: loongson-2k1000: Fix i2c-gpio node names
+
+Huacai Chen (1):
+      LoongArch: Remove redundant code in head.S
+
+Lisa Robinson (1):
+      LoongArch: Fix PMU counter allocation for mixed-type event groups
+
+Qiang Ma (3):
+      LoongArch: KVM: Fix kvm_device leak in kvm_ipi_destroy()
+      LoongArch: KVM: Fix kvm_device leak in kvm_eiointc_destroy()
+      LoongArch: KVM: Fix kvm_device leak in kvm_pch_pic_destroy()
+
+Yao Zi (1):
+      LoongArch: dts: Describe PCI sideband IRQ through interrupt-extended
+
+ arch/loongarch/boot/dts/loongson-2k0500.dtsi |  3 +++
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi | 31 +++++++++++-------------
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi | 35 ++++++++++++----------------
+ arch/loongarch/kernel/head.S                 |  8 -------
+ arch/loongarch/kernel/perf_event.c           | 21 ++++++++++++++---
+ arch/loongarch/kvm/intc/eiointc.c            |  1 +
+ arch/loongarch/kvm/intc/ipi.c                |  1 +
+ arch/loongarch/kvm/intc/pch_pic.c            |  1 +
+ 8 files changed, 52 insertions(+), 49 deletions(-)
 
