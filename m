@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B81D2367B5;
-	Mon, 19 Jan 2026 10:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB31279DCD;
+	Mon, 19 Jan 2026 10:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768817576; cv=none; b=qCTOsGN2EtkADfJupaUkiA6gApGdrSEi6SxHegZnBkhgWmYKvYYtkLCspIsVT5JKDTYp1G5hTs0ghCdVBO39GaO2ZJvWOTc1EKQNhlybL0aDBqCxQA3lVItOqMH1JtDeDDPYxiLXoaiTl0TmRQvNXJKTAtW5GKUDsVpkA/zNBX4=
+	t=1768817939; cv=none; b=n3U/9BzBFe7BIbWypYWebK5iipgawcA/gsNSNCWlxJP8h0O1md7vGn8JYO2f4ZRaGQnI3hLbMHh38YFFMf13ray14q6nJz0vs/+TuIi0UtuNsuDnrWVJv2JimBUH6jwEhEj8FH9KobkA2YJ0eL6dxmmcoxwVDnFUlbs2hFJ2ov4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768817576; c=relaxed/simple;
-	bh=JzYfQ2HAxs4i1+wCNZ4YJF2miFvaY77kYkNH822rrWs=;
+	s=arc-20240116; t=1768817939; c=relaxed/simple;
+	bh=fChsW6zHlCrxmXpBWFm7rxfPs3w59SiQtBb4E9KHfFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCFU9XG/Jlxk/3RA+TAtxFMXEkIf7beu58kg92zFuZwB0EpTSwbzkVj1M+7OhNwrTnioj1qJgvTr+yOGCHwQQrCj18vjp6gNfbwTGme2EMBFXJv+yxfh8Q4jclaFZmm/U/u42Iv1M+8dp33wEkwf7ft7AWcgs/q17GEOc8MSJYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=me8+IGew; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WHcCV72g7uzSptMk0zPuyaI3N3saSKaX8pEyt9mcg5/x6zy1yPFy1NfmMTU/a4lbmt19er7T+Cn3AnfuSIwNczwOC6UtSDHLBGKAKo9EKWP/kS9+l5+H3qf3dW4nbGtClfDbAGB4QbZ36OeBiIEX0s8oTRQNR9tAkni5glaE0Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7bFMmLq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="me8+IGew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7840C116C6;
-	Mon, 19 Jan 2026 10:12:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7bFMmLq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34AFFC2BCB2;
+	Mon, 19 Jan 2026 10:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768817576;
-	bh=JzYfQ2HAxs4i1+wCNZ4YJF2miFvaY77kYkNH822rrWs=;
+	s=k20201202; t=1768817939;
+	bh=fChsW6zHlCrxmXpBWFm7rxfPs3w59SiQtBb4E9KHfFg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=me8+IGewGCeffwxGVagl70q+hrSe2opYVeA1iGHPxfp3jOTyA5Mb5KeeLkc/Xja14
-	 HfCoVgl4rWFfeV2WDNbJUF3aDkXBLFx+1M/3Kr8Mo/047Y4IUJprtnZUgHNC0AUUCr
-	 89z9nS4T9hLB1/EnWTxzIbJhlH1HocGK/UMOIYYxqsRRynUaByy3bX0BWBcPAUw7sy
-	 WQneEXcH6ogG6xNS1YOTkZw8XHe0vetHdKxlkRbStzTvr/D+mbvAndI4gRQBd2SP9L
-	 aPNuojOPQ0OHFPjwXGaM7HxgAP5LamThIQoakceGGuilMqy4wQEx6wGMh8/64SuQCD
-	 mHUCpaQBpY2lA==
-Message-ID: <74607439-5f52-4c03-904f-01c675e8bb06@kernel.org>
-Date: Mon, 19 Jan 2026 11:12:50 +0100
+	b=d7bFMmLq1M9B8AoeKJQ9vihTU2U179+WmU91kWylvHMAex0kvNr1DQu7ArTzlhgmn
+	 4pPAxBoFN99lPf4XxyZ7tKbta1qikb7XJrp4yQh6co8oYvuotYRIA1NvXdzUJZRifS
+	 FxhutMYG4Y4QWgPa5uqAQinVsFZ/C3a1U/Ly553bgwajDO3Eafz7qBAx+ZsgAtcKkO
+	 zZN7xdRM9KwgEZWJ72QmBNlK7I+iUWDUAFicFdjUCQSAPYwBG/CXF+M+t1L9sAxu1e
+	 JiR+7Xwrb5/DZiknvTj7tiHrF90zeuEV3qr6RB81V4uGa/vwe/R5dc7JkZ36tQyv3/
+	 F3k5MADrrYaOg==
+Message-ID: <d38fcbe5-8b4a-40bc-b8c8-1c49ccaa9964@kernel.org>
+Date: Mon, 19 Jan 2026 11:18:52 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,17 +37,19 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
  MMU_GATHER_RCU_TABLE_FREE
-To: Qi Zheng <qi.zheng@linux.dev>, will@kernel.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, peterz@infradead.org, dev.jain@arm.com,
- akpm@linux-foundation.org, ioworker0@gmail.com, linmag7@gmail.com
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+To: Wei Yang <richard.weiyang@gmail.com>, Qi Zheng <qi.zheng@linux.dev>
+Cc: will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
+ peterz@infradead.org, dev.jain@arm.com, akpm@linux-foundation.org,
+ ioworker0@gmail.com, linmag7@gmail.com, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
  linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
  linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
 References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
  <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
- <bef9fc2c-c982-4b46-b16a-8ecbc9584d62@kernel.org>
- <24837e0e-db86-4c64-8387-243d94293b48@linux.dev>
+ <20251231094243.zmjs7kgflm7q6k73@master>
+ <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
+ <20260101020715.45wqnjgcklvjcth3@master>
 From: "David Hildenbrand (Red Hat)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -93,129 +95,111 @@ Autocrypt: addr=david@kernel.org; keydata=
  cFAM8nBWrEmNU2vvIGJzjJ/NVYYIY0TgOc5bS9wh6jKHL2+chrfDW5neLJjY2x3snF8q7U9G
  EIbBfNHDlOV8SyhEjtX0DyKxQKioTYPOHcW9gdV5fhSz5tEv+ipqt4kIgWqBgzK8ePtDTqRM
  qZq457g1/SXSoSQi4jN+gsneqvlTJdzaEu1bJP0iv6ViVf15+qHuY5iojCz8fa0=
-In-Reply-To: <24837e0e-db86-4c64-8387-243d94293b48@linux.dev>
+In-Reply-To: <20260101020715.45wqnjgcklvjcth3@master>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 1/19/26 04:50, Qi Zheng wrote:
-> 
-> 
-> On 1/18/26 7:23 PM, David Hildenbrand (Red Hat) wrote:
->> On 12/17/25 10:45, Qi Zheng wrote:
->>> From: Qi Zheng <zhengqi.arch@bytedance.com>
+On 1/1/26 03:07, Wei Yang wrote:
+> On Wed, Dec 31, 2025 at 05:52:57PM +0800, Qi Zheng wrote:
+>>
+>>
+>> On 12/31/25 5:42 PM, Wei Yang wrote:
+>>> On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
+>>>> From: Qi Zheng <zhengqi.arch@bytedance.com>
+>>>>
+>>>> The PT_RECLAIM can work on all architectures that support
+>>>> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
+>>>> MMU_GATHER_RCU_TABLE_FREE.
+>>>>
+>>>> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
+>>>> to turn it off.
+>>>>
+>>>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>>>> ---
+>>>> arch/x86/Kconfig | 1 -
+>>>> mm/Kconfig       | 9 ++-------
+>>>> 2 files changed, 2 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>>> index 80527299f859a..0d22da56a71b0 100644
+>>>> --- a/arch/x86/Kconfig
+>>>> +++ b/arch/x86/Kconfig
+>>>> @@ -331,7 +331,6 @@ config X86
+>>>> 	select FUNCTION_ALIGNMENT_4B
+>>>> 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>>> 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>>>> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
+>>>> 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
+>>>> 	select SCHED_SMT			if SMP
+>>>> 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
+>>>> diff --git a/mm/Kconfig b/mm/Kconfig
+>>>> index bd0ea5454af82..fc00b429b7129 100644
+>>>> --- a/mm/Kconfig
+>>>> +++ b/mm/Kconfig
+>>>> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
+>>>> 	  The architecture has hardware support for userspace shadow call
+>>>>             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+>>>>
+>>>> -config ARCH_SUPPORTS_PT_RECLAIM
+>>>> -	def_bool n
+>>>> -
+>>>> config PT_RECLAIM
+>>>> -	bool "reclaim empty user page table pages"
+>>>> -	default y
+>>>> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
+>>>> -	select MMU_GATHER_RCU_TABLE_FREE
+>>>> +	def_bool y
+>>>> +	depends on MMU_GATHER_RCU_TABLE_FREE
+>>>> 	help
+>>>> 	  Try to reclaim empty user page table pages in paths other than munmap
+>>>> 	  and exit_mmap path.
 >>>
->>> The PT_RECLAIM can work on all architectures that support
->>> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
->>> MMU_GATHER_RCU_TABLE_FREE.
+>>> Hi, Qi
 >>>
->>> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
->>> to turn it off.
+>>> I am new to PT_RECLAIM, when reading related code I got one question.
 >>>
->>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->>> ---
->>>    arch/x86/Kconfig | 1 -
->>>    mm/Kconfig       | 9 ++-------
->>>    2 files changed, 2 insertions(+), 8 deletions(-)
+>>> Before this patch,  we could have this config combination:
 >>>
->>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>> index 80527299f859a..0d22da56a71b0 100644
->>> --- a/arch/x86/Kconfig
->>> +++ b/arch/x86/Kconfig
->>> @@ -331,7 +331,6 @@ config X86
->>>        select FUNCTION_ALIGNMENT_4B
->>>        imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->>>        select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
->>> -    select ARCH_SUPPORTS_PT_RECLAIM        if X86_64
->>>        select ARCH_SUPPORTS_SCHED_SMT        if SMP
->>>        select SCHED_SMT            if SMP
->>>        select ARCH_SUPPORTS_SCHED_CLUSTER    if SMP
->>> diff --git a/mm/Kconfig b/mm/Kconfig
->>> index bd0ea5454af82..fc00b429b7129 100644
->>> --- a/mm/Kconfig
->>> +++ b/mm/Kconfig
->>> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
->>>          The architecture has hardware support for userspace shadow call
->>>              stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->>> -config ARCH_SUPPORTS_PT_RECLAIM
->>> -    def_bool n
->>> -
->>>    config PT_RECLAIM
->>> -    bool "reclaim empty user page table pages"
->>> -    default y
->>> -    depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
->>> -    select MMU_GATHER_RCU_TABLE_FREE
->>> +    def_bool y
->>> +    depends on MMU_GATHER_RCU_TABLE_FREE
->>>        help
->>>          Try to reclaim empty user page table pages in paths other than
->>> munmap
->>>          and exit_mmap path.
+>>>       CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
+>>>
+>>> This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
+>>> is semi rcu version.
+>>>
+>>> I am curious could we use rcu version tlb_remove_table_one() for this case?
+>>> Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
+>>> there some limitation here?
 >>
->> This patch seems to make s390x compilations sometimes unhappy:
+>> I think there's no problem. The rcu version can also ensure that the
+>> fast GUP works well.
 >>
->> Unverified Warning (likely false positive, kindly check if interested):
 > 
-> I believe it is a false positive.
+> Thanks for your quick response :-)
 > 
->>
->>       mm/memory.c:1911 zap_pte_range() error: uninitialized symbol 'pmdval'.
->>
->> Warning ids grouped by kconfigs:
->>
->> recent_errors
->> `-- s390-randconfig-r072-20260117
->>       `-- mm-memory.c-zap_pte_range()-error:uninitialized-symbol-pmdval-.
->>
->> I assume the compiler is not able to figure out that only when
->> try_get_and_clear_pmd() returns false that pmdval could be uninitialized.
->>
->> Maybe it has to do with LTO?
->>
->>
->> After all, that function resides in a different compilation unit.
->>
->> Which makes me wonder whether we want to just move try_get_and_clear_pmd()
->> and reclaim_pt_is_enabled() to internal.h or even just memory.c?
->>
->> But then, maybe we could remove pt_reclaim.c completely and just have
->> try_to_free_pte() in memory.c as well?
->>
->>
->> I would just do the following cleanup:
->>
->>   From cfe97092f71fcc88f729f07ee0bc6816e3e398f0 Mon Sep 17 00:00:00 2001
->> From: "David Hildenbrand (Red Hat)" <david@kernel.org>
->> Date: Sun, 18 Jan 2026 12:20:55 +0100
->> Subject: [PATCH] mm: move pte table reclaim code to memory.c
->>
->> Let's move the code and clean it up a bit along the way.
->>
->> Signed-off-by: David Hildenbrand (Red Hat) <david@kernel.org>
->> ---
->>    MAINTAINERS     |  1 -
->>    mm/internal.h   | 18 -------------
->>    mm/memory.c     | 70 ++++++++++++++++++++++++++++++++++++++++++-----
->>    mm/pt_reclaim.c | 72 -------------------------------------------------
->>    4 files changed, 64 insertions(+), 97 deletions(-)
->>    delete mode 100644 mm/pt_reclaim.c
+> And Happy New Year
 > 
-> Make sense, and LGTM. The reason it was placed in mm/pt_reclaim.c before
-> was because there would be other paths calling these functions in the
-> future. However, it can be separated out or put into a header file when
-> there are actually such callers.
+> So my little suggestion is move the definition of __tlb_remove_table_one()
+> under CONFIG_MMU_GATHER_RCU_TABLE_FREE. Do you thinks this would be more
+> clear?
 
-Most relevant zapping better happens in memory.c :)
 
-There is, of course, zapping due to RMAP unmap, but that mostly targets 
-individual PTEs, and not a complete pte table.
+Do you mean
 
-Likely, if ever required, we should expose a proper zapping interface 
-from memory.c to other users, assuming the existing one is not suitable.
+diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+index 2faa23d7f8d42..6aeba4bae68d2 100644
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -319,7 +319,7 @@ static inline void tlb_table_invalidate(struct 
+mmu_gather *tlb)
+         }
+  }
 
-> 
-> would you be willing to send out an official patch?
+-#ifdef CONFIG_PT_RECLAIM
++#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+  static inline void __tlb_remove_table_one_rcu(struct rcu_head *head)
+  {
+         struct ptdesc *ptdesc;
 
-Yes, I can send one out, thanks.
+?
 
 -- 
 Cheers
