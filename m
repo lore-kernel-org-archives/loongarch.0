@@ -1,132 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2C5364022
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66597363C5D
 	for <loongarch@lists.linux.dev>; Mon, 19 Jan 2026 13:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768827703; cv=none; b=iagwQeaVcteUiYV83hZwHaPKgFgCeb7LvG0DZrhYoRDsJ5l9pM6BIolmfATE3ofErPvMoFPMmr0guQQ3r643maLtDonMrREyjSXgz906IQciwhwyFR2pPpOuByQGL3avDRBydPdyLWDVMn9gCo8SVvRODVLH0WMA3P+e2GmPVi4=
+	t=1768827706; cv=none; b=Cp1ly8NzmsW/ybo5G0MaB/xZLoSUtnM5Qt4kxoOvDEFpmd/ziunKjZS7O3VvG4CDSqSBXrV85Zcj6QzyuBRr+mgFj60S+Cc2pTR6aghMneISHA0l+1eq6GQOI9crc74FGuYEx2UVXC6GVlVuoLPjejLoM8yeR8GDiA1K+RoLIX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768827703; c=relaxed/simple;
-	bh=XXdfNoer74kAlBnWwIuJh6HDCzEvuxazXlyaTwog5ZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TGz35ul2g/fe/+XT7k7Kxw5Fyj25WH0wnenzdpvFaGdVubZ9vmKOsFV8dyucVUFU/mASFtH+eY8b8XAPh0Gc94NzPvHopGXzhIcMtYLW3S3uf8V3bpfILoRKPsf+KYRnJaMrpeVUqmdkKDXuvIhO7gBYkBrQmV18OZ4slSJOk/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 431E11517;
-	Mon, 19 Jan 2026 05:01:35 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74ECD3F740;
-	Mon, 19 Jan 2026 05:01:38 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	David Laight <david.laight.linux@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 2/3] prandom: Add __always_inline version of prandom_u32_state()
-Date: Mon, 19 Jan 2026 13:01:09 +0000
-Message-ID: <20260119130122.1283821-3-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260119130122.1283821-1-ryan.roberts@arm.com>
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+	s=arc-20240116; t=1768827706; c=relaxed/simple;
+	bh=0bIqaq8qvfyPVtqblw/rWkEa3RnV3OOcHHkwRqyrr7M=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=HhsZE8Am/RMrrd3IeHtcWkWpyi3OEx96c3EEuz9OVCyl5u5d0iY2vAJroNrsLjsuOicE23tZ+L7ovyoDv925FOcmcMA6ScujETQzCtLk0S7XrnUsGOLEnWc8//5e0SfnNuoVnBUgr0/20C4zGlJ8G1HFTHOySaPasi2yBCSYJ9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxCMIvK25pa1MKAA--.21343S3;
+	Mon, 19 Jan 2026 21:01:35 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxHMIrK25p4HUlAA--.8265S3;
+	Mon, 19 Jan 2026 21:01:32 +0800 (CST)
+Subject: Re: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object
+ 'tc_bpf' from buffer
+To: Vincent Li <vincent.mc.li@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev, ast
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ Hengqi Chen <hengqi.chen@gmail.com>, Chenghao Duan
+ <duanchenghao@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
+References: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
+ <d299d7ba-4e9e-5b16-5aa4-898b62330c24@loongson.cn>
+ <CAK3+h2yFJDNVPo=38PcYCMNhmw0cQBouL5h7sX0KmyLu-_5zwQ@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c15fd22f-9c36-bf8d-5bd4-02993147d113@loongson.cn>
+Date: Mon, 19 Jan 2026 21:01:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAK3+h2yFJDNVPo=38PcYCMNhmw0cQBouL5h7sX0KmyLu-_5zwQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxHMIrK25p4HUlAA--.8265S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr45Ar4UJr1rZw17Gw1kXrc_yoW8CrWrpa
+	yrtF18KryvqF1rurWkGrW8KrW3G3ZrA3yrKrW7Kw4rGasxuryakr95J3W2qrnFqa4vkw42
+	9rZ5GF4Skw47AabCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxYiiDU
+	UUU
 
-We will shortly use prandom_u32_state() to implement kstack offset
-randomization and some arches need to call it from non-instrumentable
-context. So let's implement prandom_u32_state() as an out-of-line
-wrapper around a new __always_inline prandom_u32_state_inline(). kstack
-offset randomization will use this new version.
+On 2026/1/16 上午4:44, Vincent Li wrote:
+> On Wed, Jan 14, 2026 at 5:13 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
- include/linux/prandom.h | 20 ++++++++++++++++++++
- lib/random32.c          |  8 +-------
- 2 files changed, 21 insertions(+), 7 deletions(-)
+...
 
-diff --git a/include/linux/prandom.h b/include/linux/prandom.h
-index ff7dcc3fa105..801188680a29 100644
---- a/include/linux/prandom.h
-+++ b/include/linux/prandom.h
-@@ -17,6 +17,26 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
- 
-+/**
-+ * prandom_u32_state_inline - seeded pseudo-random number generator.
-+ * @state: pointer to state structure holding seeded state.
-+ *
-+ * This is used for pseudo-randomness with no outside seeding.
-+ * For more random results, use get_random_u32().
-+ * For use only where the out-of-line version, prandom_u32_state(), cannot be
-+ * used (e.g. noinstr code).
-+ */
-+static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
-+{
-+#define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
-+	state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
-+	state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
-+	state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
-+	state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
-+
-+	return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
-+}
-+
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
- void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
-diff --git a/lib/random32.c b/lib/random32.c
-index 24e7acd9343f..2a02d82e91bc 100644
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -51,13 +51,7 @@
-  */
- u32 prandom_u32_state(struct rnd_state *state)
- {
--#define TAUSWORTHE(s, a, b, c, d) ((s & c) << d) ^ (((s << a) ^ s) >> b)
--	state->s1 = TAUSWORTHE(state->s1,  6U, 13U, 4294967294U, 18U);
--	state->s2 = TAUSWORTHE(state->s2,  2U, 27U, 4294967288U,  2U);
--	state->s3 = TAUSWORTHE(state->s3, 13U, 21U, 4294967280U,  7U);
--	state->s4 = TAUSWORTHE(state->s4,  3U, 12U, 4294967168U, 13U);
--
--	return (state->s1 ^ state->s2 ^ state->s3 ^ state->s4);
-+	return prandom_u32_state_inline(state);
- }
- EXPORT_SYMBOL(prandom_u32_state);
- 
--- 
-2.43.0
+> Do you have proper instructions to compile gcc?
+
+git clone git://gcc.gnu.org/git/gcc.git gcc
+cd gcc && ./contrib/download_prerequisites --no-verify
+cp config.guess gettext/build-aux/config.guess && cp config.sub 
+gettext/build-aux/config.sub
+cp config.guess gmp/config.guess && cp config.sub gmp/config.sub
+cp config.guess mpfr/config.guess && cp config.sub mpfr/config.sub
+cp config.guess mpc/build-aux/config.guess && cp config.sub 
+mpc/build-aux/config.sub
+cp config.guess isl/config.guess && cp config.sub isl/config.sub
+rm -rf build && mkdir -p build && cd build
+../configure --prefix=/usr/local/gcc --enable-checking=release 
+--enable-languages=c,c++ --disable-multilib
+make -j"$(nproc)"
+sudo rm -rf /usr/local/gcc && sudo make install
+export PATH=/usr/local/gcc/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/gcc/lib:$LD_LIBRARY_PATH
+
+> I am not sure if it is toolchain related. The thing that really
+> bothered me is why the hell tc_bpf is loaded by libbpf for
+> ns_bpf_qdisc selftests that seems to have nothing to do with the
+> tc_bpf object, I can't think of anything special in my build machine
+> that would trigger this. Anyway, thanks for the help!
+
+I tested it again with lower version tool chains, the test still passed
+on my environment.
+
+fedora@linux:~$ clang --version | head -1
+clang version 19.1.6 (Fedora 19.1.6-3.fc42)
+fedora@linux:~$ gcc --version | head -1
+gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6)
+fedora@linux:~$ as --version | head -1
+GNU assembler version 2.43.50.20241126
+fedora@linux:~$ pahole --version
+v1.31
+fedora@linux:~$ uname -r
+6.19.0-rc6
+fedora@linux:~$ uname -m
+loongarch64
+
+Thanks,
+Tiezhu
 
