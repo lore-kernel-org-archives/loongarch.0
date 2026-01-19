@@ -1,165 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59F329AAEA
-	for <loongarch@lists.linux.dev>; Mon, 19 Jan 2026 16:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0C729BDBF
+	for <loongarch@lists.linux.dev>; Mon, 19 Jan 2026 16:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768839046; cv=none; b=pJiObgD/YWGP2F0RHAvvmkCxLgVttOqON02wd1Lbiqg5R2q4hQSWoS9ZInGgUE81GvBSF/J+c2NacPpMFYcDcq+bUnHjnSy9bmQPc48a/+VWs7nuvIX36DgfM3Ej1fg/SlGFJE73wPncGQyvg0LX0cXAHXemthjaQ8j8K76u03M=
+	t=1768839591; cv=none; b=n8Hwp7JNDtHPbc4CXhU6BLTKL0kDi6VqSEkIgio8q1drCcSbYKhdDvMIWw6AluTsfg490hyuCC8vbQh6C4F15vDmnKsH/set2697bxsg827GZcX75ETAa5g4AHP/kgbXDZGqHbu6qgN617E34O48VhYn6sCWBpgJSnsf5lfDWco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768839046; c=relaxed/simple;
-	bh=dPaEw2aa5u0SVM5+XwHOK0y6nSiExAWMwRY/JJ5VvQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T1W3ICV05j6nX/hTXNl8pWhLsZ8uC9WBBpQKyRKdGM642WSYSrN/yKBI7lET8zwH98bXgqj/fGmEfWs/zSKsCUd7SteRv1WINUPW0rPX9IXTbRPKxqcekfcj2Kr6ihY80qp7Q2D5+kipmvptinbP0pH0GEpI7gWSO59yLxzcsIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+PIHz9I; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768839591; c=relaxed/simple;
+	bh=8d4KBvGi4mqgDhSXVw/x8t8Ybs5Ts2G8TRiYTltr33E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C3ryw2XvGgLj34/ro4WeaZ2gaDtZlMtwF0aOBEuq0G2o63Oi+Ik4CfupjDB0LVoYH0KszIj+7U1i+g7JrgT4rhvLaBHJ8BVyJRMMnHXHvrxqNs7Pm6Et6u3oqBftG72QTW5GFeq7fcdCPTzZxbezcGqAVTcyUzRP16CH3iKDrsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msMJ6Kh+; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+PIHz9I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768839045; x=1800375045;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dPaEw2aa5u0SVM5+XwHOK0y6nSiExAWMwRY/JJ5VvQ4=;
-  b=k+PIHz9I8Orj1wctlZeRofEqBMCeaA2Zh+3LsKp/jVCC8CM84puvCQwa
-   3d797mBm5LD6W/9AL3m2hZOFGFNsS4gNuWRbcBK70VDnV+/kmVNK37SRi
-   QX23supjR+fOLnCHoP+CFDbarryon807RV8onJuscq1nJqSXn66GCW39j
-   xvyWKoqlGUZOiwP6/RTA6S51ThBzTMp5NFD46Y+fn7UKb6jPGcCFIzc4q
-   oXls8eSXJtkWOim+bXey97f8uuOzY6MD30fOkSdtZQMAcfhi8Pgfl77Xj
-   XbqdDdt4vZWaKn/Mm9p7lRkzuIIGvIm/l8ajuHedkct6f+VAoWBUpi8cw
-   A==;
-X-CSE-ConnectionGUID: KTcgekseTTyICY8mO8kxPA==
-X-CSE-MsgGUID: 6qiM8Q+uSzSo6NaB1TpQuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="73906850"
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="73906850"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:10:44 -0800
-X-CSE-ConnectionGUID: EjVT2CTdSL+iBJ4OGRaOlQ==
-X-CSE-MsgGUID: 8Px4MFfoQeC7IU/aMGjpQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="205150360"
-Received: from cjhill-mobl.amr.corp.intel.com (HELO [10.125.111.233]) ([10.125.111.233])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:10:43 -0800
-Message-ID: <85d0d013-eca2-4b9f-bee3-d583d0eeb99e@intel.com>
-Date: Mon, 19 Jan 2026 08:10:42 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msMJ6Kh+"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-890228ed342so38863706d6.2
+        for <loongarch@lists.linux.dev>; Mon, 19 Jan 2026 08:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768839588; x=1769444388; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pHGYVuiqm5BGfNZEy0rG+8KeNo5nPSeV0Hqn9spxebA=;
+        b=msMJ6Kh+tBuH3Y1bJawvAlgPkN4LiyrUPZ8Ejh2w9463X73rIFRRPvZhJlbtF0B8l+
+         6YMfurvctexHSh3Nc2moABvzRdccm5CUbXDsQLfIFNLoC57JaMkHLYX1Pzd3vt+D1B7L
+         qiPoCD82Fq9Zr4LEJNvS0iehOsboa/+3CWG4ag/vaxW/NI6hpBaRrLxlCIJKwDlMO8tn
+         tJuOrXpjBuMsmV+XgHQQpuOXzBUkIhDHLtMQKizH/vEd01LNyZ6VGUSnU1xot5zczd/D
+         yXW5L4rfvtQIe9E5OqWUlg4NEkNIDyXY0Lev/e6eQN+mVm2Gck42dmbBN+TwVCkKFGj8
+         Rydw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768839588; x=1769444388;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pHGYVuiqm5BGfNZEy0rG+8KeNo5nPSeV0Hqn9spxebA=;
+        b=jd1giQW8zoBp/+7nunQiCBWiubemrG5MWf9UP5rmSgWdGibULIZcLkYrPfONqYdM9p
+         rlac4+XTJ9axnE5qgtIqgHcwOBiDZyMPG5ODcOfxeCfcG+90qJO7JmerPc8VTNTzIKfA
+         EAfNSsdP0eYo58kX0VYs+nyX9iv75dNgFUEa3yDdLWgKLoX5hmt7ydGaPR2ujcoc1VBw
+         Jb1xgiOcK77cQ4BhhCI3G+wnPuqlVvk3G4vLqksPNqBL/BA6rNus2gCJTFcgj5/EpK6/
+         Oj8/yoGLGX/zZCCENfWr8xkR50eV41ppWnC6IU5QvBOvm5HAG1thApTh5kbVzfwWwUPW
+         wn9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVbVz90hLJ26OWEYZ0RFzJqbnBBb9A0YqhZuTkHRS56EmSBIDeUkAdS5Uv6Id6cAambLHW9Aj+9zkI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbFmJ7sZuX9H3YBQoiSpNFIXK50TtdnhpY0DSGwe2Vvp1JQZgb
+	GS/3NZT+dsSCo1BReqqLSLncZ8Rw00orpvesFt8HaMLbvcwP1gFjzXLW8M4h+kjlcR652bLdPXm
+	JQoPlLTKW2LATj00fCf3rr+NNwbjwqTT+CA==
+X-Gm-Gg: AY/fxX7sJhsze0+LZ5AvjtCfVbo/77EtYXw/enJLes/N7rza4BqUYSghY/tYJSOMGxe
+	HOeXpo9gTvDa4pzw9n3v79cc/TSlsQPZcMhhk9SZ1NRBYIHeyj7MjO9ULsI5woiL0tGT9Pvr/Hu
+	2dsvJuox6KcgeLlEzUkXajKd4C0Z285nkIAVFwIJvjxs7857B8V00Tjc1KcUtnhjI+SYi+m6Mcs
+	YjgK6Ou/xxmAV3BvYzv81xjxnsbmqV0qvFV4/ozWfqqIAFk4366EGddYJ2vqsgqymLxj6g=
+X-Received: by 2002:a05:622a:1191:b0:501:17e3:30bb with SMTP id
+ d75a77b69052e-502a1e29576mr153743741cf.25.1768839588516; Mon, 19 Jan 2026
+ 08:19:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] randomize_kstack: Maintain kstack_offset per task
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
- Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-hardening@vger.kernel.org, stable@vger.kernel.org
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20260119130122.1283821-2-ryan.roberts@arm.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260119130122.1283821-2-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAK3+h2yu+XkEMWz6FOHiDEEQw-G_iKG2KHP=F=1CiqLr0mCgNA@mail.gmail.com>
+ <d299d7ba-4e9e-5b16-5aa4-898b62330c24@loongson.cn> <CAK3+h2yFJDNVPo=38PcYCMNhmw0cQBouL5h7sX0KmyLu-_5zwQ@mail.gmail.com>
+ <c15fd22f-9c36-bf8d-5bd4-02993147d113@loongson.cn>
+In-Reply-To: <c15fd22f-9c36-bf8d-5bd4-02993147d113@loongson.cn>
+From: Vincent Li <vincent.mc.li@gmail.com>
+Date: Mon, 19 Jan 2026 08:19:37 -0800
+X-Gm-Features: AZwV_Qi56HUO8Vswoqi5cUeeLkQ-FnXejoq6bZuiUoBuJvqsVqq5OYqF9Jdtkoo
+Message-ID: <CAK3+h2xDBB023RQwFj9FmYVveR8qdg7RSDqU3xExsnNMY6A3pg@mail.gmail.com>
+Subject: Re: [BUG?]: bpf/selftests: ns_bpf_qdisc libbpf: loading object
+ 'tc_bpf' from buffer
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: bpf <bpf@vger.kernel.org>, loongarch@lists.linux.dev, ast <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	Chenghao Duan <duanchenghao@kylinos.cn>, Huacai Chen <chenhuacai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/19/26 05:01, Ryan Roberts wrote:
-...
-> Cc: stable@vger.kernel.org
+On Mon, Jan 19, 2026 at 5:01=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2026/1/16 =E4=B8=8A=E5=8D=884:44, Vincent Li wrote:
+> > On Wed, Jan 14, 2026 at 5:13=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+>
+> ...
+>
+> > Do you have proper instructions to compile gcc?
+>
+> git clone git://gcc.gnu.org/git/gcc.git gcc
+> cd gcc && ./contrib/download_prerequisites --no-verify
+> cp config.guess gettext/build-aux/config.guess && cp config.sub
+> gettext/build-aux/config.sub
+> cp config.guess gmp/config.guess && cp config.sub gmp/config.sub
+> cp config.guess mpfr/config.guess && cp config.sub mpfr/config.sub
+> cp config.guess mpc/build-aux/config.guess && cp config.sub
+> mpc/build-aux/config.sub
+> cp config.guess isl/config.guess && cp config.sub isl/config.sub
+> rm -rf build && mkdir -p build && cd build
+> ../configure --prefix=3D/usr/local/gcc --enable-checking=3Drelease
+> --enable-languages=3Dc,c++ --disable-multilib
+> make -j"$(nproc)"
+> sudo rm -rf /usr/local/gcc && sudo make install
+> export PATH=3D/usr/local/gcc/bin:$PATH
+> export LD_LIBRARY_PATH=3D/usr/local/gcc/lib:$LD_LIBRARY_PATH
+>
+Thanks for the instruction.
+> > I am not sure if it is toolchain related. The thing that really
+> > bothered me is why the hell tc_bpf is loaded by libbpf for
+> > ns_bpf_qdisc selftests that seems to have nothing to do with the
+> > tc_bpf object, I can't think of anything special in my build machine
+> > that would trigger this. Anyway, thanks for the help!
+>
+> I tested it again with lower version tool chains, the test still passed
+> on my environment.
+>
+I suspect it is more of bpf selftests issue or tc related selftests
+issue, I noticed for tests that invokes tc command to setup the
+environment, I would hit the issue. I guess I am the only one to hit
+this jackpot :). I do not know enough about the tc or selftests/libbpf
+(loading object from buffer thing), someone with intimate knowledge
+about that may have some clue. Thanks for the  gcc instruction again,
+I may need it sometime in the future when I need to compile gcc.
 
-Since this doesn't fix any known functional issues, if it were me, I'd
-leave stable@ alone. It isn't clear that this is stable material.
-
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1591,6 +1591,10 @@ struct task_struct {
->  	unsigned long			prev_lowest_stack;
->  #endif
->  
-> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-> +	u32				kstack_offset;
-> +#endif
-> +
->  #ifdef CONFIG_X86_MCE
->  	void __user			*mce_vaddr;
-
-Nit: This seems to be throwing a u32 potentially in between a couple of
-void*/ulong sized objects.
-
-It probably doesn't matter with struct randomization and it's really
-hard to get right among the web of task_struct #ifdefs. But, it would be
-nice to at _least_ nestle this next to another int-sized thing.
-
-Does it really even need to be 32 bits? x86 has this comment:
-
->         /*
->          * This value will get limited by KSTACK_OFFSET_MAX(), which is 10
->          * bits. The actual entropy will be further reduced by the compiler
->          * when applying stack alignment constraints (see cc_stack_align4/8 in
->          * arch/x86/Makefile), which will remove the 3 (x86_64) or 2 (ia32)
->          * low bits from any entropy chosen here.
->          *
->          * Therefore, final stack offset entropy will be 7 (x86_64) or
->          * 8 (ia32) bits.
->          */
-
+> fedora@linux:~$ clang --version | head -1
+> clang version 19.1.6 (Fedora 19.1.6-3.fc42)
+> fedora@linux:~$ gcc --version | head -1
+> gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6)
+> fedora@linux:~$ as --version | head -1
+> GNU assembler version 2.43.50.20241126
+> fedora@linux:~$ pahole --version
+> v1.31
+> fedora@linux:~$ uname -r
+> 6.19.0-rc6
+> fedora@linux:~$ uname -m
+> loongarch64
+>
+> Thanks,
+> Tiezhu
+>
