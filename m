@@ -1,142 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AF828B4E2
-	for <loongarch@lists.linux.dev>; Mon, 19 Jan 2026 16:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6EA32D0DC;
+	Mon, 19 Jan 2026 18:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768841618; cv=none; b=CxGeB37wj4uBiDpPr8JyupbHWMyl+N+YFrFjwNZDl2Qpcei8fD7YIi4iiea8AHZxVZ5WDRqjGC3KmSDa9jZtDTkMh/TzqeSvqdZnvRJ8/8PaS4DPg7smuCTgy7Ux4eo0b/4m5yML7YEw216SZJNb48bR/+4LBXp60hvzIz9i2AI=
+	t=1768846901; cv=none; b=jDfRD0U8YBOLGBMy3B2NbsDHvfiCU1tpnq6i5Qw4UCxdcXwAlxE7RsxTZDFlzFCDA8bhCM1pdgMd2rcw+H7BZEJtN54IUe7dHzqx4UbdipMyaF+D3kxBpVPbvlR59z9oL7zcPu2+PLUNbzM0Sf/IiAqob/0ohPifydXYYQhOOi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768841618; c=relaxed/simple;
-	bh=gGo/5dEmepKxgBpGGO7a+1fKH6u9HnFgdE5iPBR7Ovc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FH1hJ5ykES8yDSHRArFP/1MqqE/PwWXoHdURlAqHFaBTwDLt1Z32GgghY1xnrm0CIr0zpJCsSK3Xm+QkD1PtdcZq9DLXhbZIAriEta4VGnHzygJwQlFZtx1QXxkhv34ZSPyqW0Lr0EJOZcDy7TFAPPpSrjp3A7f2q3R08CPxs+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kDUcxkKL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1768846901; c=relaxed/simple;
+	bh=X7wTU9qUYX88IrTzo/aBEN6J2tlC7SxaQembYdHLdJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OyKIcjbu9cmTdeV1zawIFVOhTVHoVkZeIWIEhOGoJeM98tnUExtGrxedPLEga6PpDhNq63pjfjaIOIPFO737alGAIgrjC3TzBIP5mo517jiSOAVKSfLm5gnTnxhOVkS6deLu61F4D5KIWM0ag7g0YzFTKgPCH7MUEaSyUpot8Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OF2+i5Ak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kDUcxkKL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768841617; x=1800377617;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gGo/5dEmepKxgBpGGO7a+1fKH6u9HnFgdE5iPBR7Ovc=;
-  b=kDUcxkKL5FBRguJRw28mMfq94zogww9aLIR68q0TdWF1M/QS3Ke8rDPp
-   AXCjBP6c5CTcuMFxWFNvsrm/4up/J1mg3STOohJSgaT7tV2kUuiWVLiZ2
-   qaZoUdX9xbEixuTrblgre5slNNuUN06FV1WO0OYIBEe5ZCD2rUYMSgnq+
-   GcI+MHaGy3LN1uWU/G/1xGuFIrdPO7R69AFprI6jrnuRDnOn7pka3dROO
-   nJJUMVwRj288YnE1UCk3XswIKW0fEWnUzg6E359weZ8mmsqOLxl7so6vl
-   o2NXcf+L8fo5mELlD+RmWg1pWIZvPJ1grWBOBK4BqJZQloKvymtY+5231
-   Q==;
-X-CSE-ConnectionGUID: zVVsIIsQQ9eQPCj+XOeILQ==
-X-CSE-MsgGUID: xL1V1M7iSlCNYCWIiPsFvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="69787024"
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="69787024"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:53:36 -0800
-X-CSE-ConnectionGUID: LIhY/GC6TxmV4eYrlCj3qQ==
-X-CSE-MsgGUID: hkIwwTFuR8KmIa2tZvAUkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="210755999"
-Received: from cjhill-mobl.amr.corp.intel.com (HELO [10.125.111.233]) ([10.125.111.233])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:53:34 -0800
-Message-ID: <4557fd56-0640-4218-a9ad-0ae3d7c37d45@intel.com>
-Date: Mon, 19 Jan 2026 08:53:33 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OF2+i5Ak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6CDC116C6;
+	Mon, 19 Jan 2026 18:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768846900;
+	bh=X7wTU9qUYX88IrTzo/aBEN6J2tlC7SxaQembYdHLdJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OF2+i5AkQwErkla6OReI7YlVenUrB4ZCykDVqlbUteUSMCdT5PG8I/RqL2poasvIx
+	 hOcHd6TMAwqMsOT3sxCW+BBZ1vWK0XZevvismQWUKpHri5AvcQz5lFX1/3Ls5sljve
+	 FFKVy3QQQPdaPAWGOnwZ/dAS4/kElxmg4GKE8JTzd6iGFAX/fvLlhg4cZ1zQxwBeS6
+	 AxNXDawGiohTIP6eV2sK0InpUkovzKsVsmHEyOd22wwLL1hcN1smBb2VDlubIyQ2xN
+	 2WnmR+08i0UGH54ipRlNMsPT0nF8CAmvRC+yVwklS/VYQODzaXML4er96xPXrKffe+
+	 F8eAxual3kWSQ==
+Date: Mon, 19 Jan 2026 18:21:35 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: rtc: loongson: Document
+ Loongson-2K0300 compatible
+Message-ID: <20260119-dragonish-captivity-10b4c27c5bc1@spud>
+References: <cover.1768616276.git.zhoubinbin@loongson.cn>
+ <0c6a4fd221b5bf05f06cae9bb543a5bf7ea59f57.1768616276.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] randomize_kstack: Maintain kstack_offset per task
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
- Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-hardening@vger.kernel.org, stable@vger.kernel.org
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
- <20260119130122.1283821-2-ryan.roberts@arm.com>
- <85d0d013-eca2-4b9f-bee3-d583d0eeb99e@intel.com>
- <31187502-2a11-4ef3-82b4-927a271d8b44@arm.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <31187502-2a11-4ef3-82b4-927a271d8b44@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qbD8GbKWVIFFyAXR"
+Content-Disposition: inline
+In-Reply-To: <0c6a4fd221b5bf05f06cae9bb543a5bf7ea59f57.1768616276.git.zhoubinbin@loongson.cn>
 
-On 1/19/26 08:51, Ryan Roberts wrote:
->> Since this doesn't fix any known functional issues, if it were me, I'd
->> leave stable@ alone. It isn't clear that this is stable material.
-> I listed 2 issues in the commit log; I agree that issue 1 falls into the
-> category of "don't really care", but issue 2 means that kstack randomization is
-> currently trivial to defeat. That's the reason I thought it would valuable in
-> stable.
-> 
-> But if you're saying don't bother and others agree, then this whole patch can be
-> dropped; this is just intended to be the backportable fix. Patch 3 reimplements
-> this entirely for upstream.
-> 
-> I'll wait and see if others have opinions if that's ok?
 
-Sure. I don't feel that strongly about it.
+--qbD8GbKWVIFFyAXR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
+
+--qbD8GbKWVIFFyAXR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaW52LwAKCRB4tDGHoIJi
+0oG+AQDTOiQppr6sRMbNDOqpEbPTbwxSAiRagXRPo194fxfTdgEAq9V6tXFcyUPv
+8bL7qikJ5S+AlhcM939KeMDtKhNvPAQ=
+=zxHu
+-----END PGP SIGNATURE-----
+
+--qbD8GbKWVIFFyAXR--
