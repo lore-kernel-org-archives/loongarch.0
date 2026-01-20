@@ -1,118 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB0C312828;
-	Tue, 20 Jan 2026 23:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25D8413245;
+	Tue, 20 Jan 2026 23:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768952377; cv=none; b=nWfvVA6KFGmV5XCNfK7y7evkO2lZg7O0jCZCi+l5kmTyDXkeEdMGlCLwQeLF2ovacAvBJGYDfB/xYbd4ejH4iXRYhdRzfxU0PAtzL3rx0FXiPI+JRIaHKRwJo5J2Lwyr8I039dnc2Gsz3cO5bvvyatEx8riW+JJ9wLeM/6M5mUM=
+	t=1768953072; cv=none; b=N68m+q0ICs7zpOnwQmnO7qzU1DN/OvpK3Cgf4XyoYLQeL51QGU3hzYHlmBtar+KE/u+TVYzA4Ahnstq+PRLlou3laxhvedD4B60Juntz78wtyGWdMAjZO9EKPSOKP0ytih07w0AtNtausZGbpPqQ8TPR9Ggc1Tjc/MyteVjkJYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768952377; c=relaxed/simple;
-	bh=HIDptQyxrl7l/EyyrCmFy4C2HhqwWYyybCVYMiH9RDU=;
+	s=arc-20240116; t=1768953072; c=relaxed/simple;
+	bh=F5yoRbWch+cbaLBVp1uSb8AEgbjGteKlxCkICYJXx74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQORVyCWqulvFDevf3KSNG9BM5c0wUC7JjD/e0CsFWtr7yqFAZxPcXYvbr/35pgZuLCbR5XNe9oc4KCHOeFs8Wl9xNcUOWBRhch6mLm58wf2Wbs5Ksqu2wnnefj0qVbGctZo8Fz/mCi0bFxiVdFu9/Kt97Z8yrZl/N2YWcDnihU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ofou5bRu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P7QZ9G1pmGyY3ZPKilmVCj62Z9E2A5KBck7XulOaCY0JDs2OQTdFrIhR1PSOZPKFmQQeG5q/UplvFolHNBen0B00EBbFxGFpbpfZ0mFVWQ0o99CyiHAZnRqdVNBp4zfN6/hqBIpp1iEZ6zIy7W3J4pW2I/IqBSwtpmHJFsENTSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XutWQJxz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ofou5bRu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C94C16AAE;
-	Tue, 20 Jan 2026 23:39:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768952376;
-	bh=HIDptQyxrl7l/EyyrCmFy4C2HhqwWYyybCVYMiH9RDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ofou5bRu6mNASNchMBpMdKFge85/CDtJYpoL7z083Csq0rHXZT0Pge5nLG3WfPxS5
-	 w9bdNnfQfdqbb34Ujrrr2Sy2t2anfTsFpwsmm33CJDIPCkta5v+gkKdNz+03t75FtC
-	 JNO/j7HFoa4xLlPNl0kCzD2dcNqzdf4dopSOZM7vwKFgYjYPUc/ixiIRKi5D08IwWJ
-	 fSCO/c8hdGwlBeaW8HCafvug79cDbZOVzQC6i1RJt0MIYUB8gKX1MCZDVOUet1MvXO
-	 obA3WCP3gVJxp7ifrJYDN1yAfSVmsiQHX/9t7kNGOY/lhgBkyMz/3mdhUnxKn8YJf2
-	 6ZJ9Y8YZB0VQA==
-Date: Tue, 20 Jan 2026 23:39:30 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-rtc@vger.kernel.org,
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: rtc: loongson: Correct Loongson-1C
- interrupts property
-Message-ID: <20260120-proposal-retry-d0a1f3de10ea@spud>
-References: <cover.1768616276.git.zhoubinbin@loongson.cn>
- <b6295c907410f6708115cba4df0959ee6629f8a5.1768616276.git.zhoubinbin@loongson.cn>
- <20260119-tricking-premiere-ada70700f804@spud>
- <20260120075045e7e864ba@mail.local>
- <20260120-cubical-harmonica-a7b7bbb26b08@spud>
- <20260120224920df0cf2ac@mail.local>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XutWQJxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768953072; x=1800489072;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F5yoRbWch+cbaLBVp1uSb8AEgbjGteKlxCkICYJXx74=;
+  b=XutWQJxzUMNGBhSxZlOD5pjNOpgUZlR3o3U0Ls7hL15SIALi1kAuiRiB
+   qSD2U5nWzOeK4KpyXng4j5XNt2yN8b3OBBYlljX7Hhg+ezcPY6VNxI4ob
+   3FNNyAJJosKhANmaFsYsnIxJMDdgQeAIUVx1hpXYxBf2g9jgPfaTJJ8m9
+   zg33g3eAN8bUB4i8HJl0gKkwfkPpR6qsUrzX07uUrqvbYRpxe38noGWrE
+   5d7JFdxWW7h+Zil8VO9lGmzyY6cZSNL/tVaENobrn47qHcvIe4b8BA3Gz
+   AFDgl19qklo5hRQasaCKFxgfwiNprln4MNSMIpEBLaVVkymjCrQZmafV6
+   A==;
+X-CSE-ConnectionGUID: 6iwEdtvnS+S0Fk7gxa6aCQ==
+X-CSE-MsgGUID: NUojrvNES9qlEetJOU1VBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="70085027"
+X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
+   d="scan'208";a="70085027"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 15:51:11 -0800
+X-CSE-ConnectionGUID: rOndJBMSThSjHWZZ9Umqow==
+X-CSE-MsgGUID: IGZYyd04RMieHEmL0zc4kQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,241,1763452800"; 
+   d="scan'208";a="206068459"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 20 Jan 2026 15:51:03 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1viLUy-00000000Phh-3QZT;
+	Tue, 20 Jan 2026 23:51:00 +0000
+Date: Wed, 21 Jan 2026 07:50:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ryan Roberts <ryan.roberts@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	David Laight <david.laight.linux@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
+ arches
+Message-ID: <202601210752.6Nsv9et9-lkp@intel.com>
+References: <20260119130122.1283821-4-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lnVaNHpePim2zo65"
-Content-Disposition: inline
-In-Reply-To: <20260120224920df0cf2ac@mail.local>
-
-
---lnVaNHpePim2zo65
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260119130122.1283821-4-ryan.roberts@arm.com>
 
-On Tue, Jan 20, 2026 at 11:49:20PM +0100, Alexandre Belloni wrote:
-> On 20/01/2026 19:24:09+0000, Conor Dooley wrote:
-> > On Tue, Jan 20, 2026 at 08:50:45AM +0100, Alexandre Belloni wrote:
-> > > On 19/01/2026 18:24:36+0000, Conor Dooley wrote:
-> > > > On Sat, Jan 17, 2026 at 10:26:48AM +0800, Binbin Zhou wrote:
-> > > > > The `interrupts` property indicates an RTC alarm interrupt, which=
- is
-> > > > > required for RTCs that support the alarm feature, which is not su=
-pported
-> > > > > by the Loongson-1C RTC. We exclude it for a more accurate descrip=
-tion.
-> > > > >=20
-> > > > > Changing the `allowed` property is ABI-breaking behavior, but
-> > > > > throughout the existing Loongson DTS{i}, the description of the R=
-TC
-> > > > > nodes conforms to the modified bingding rules.
-> > > >=20
-> > > > Right, changing properties is an ABI break, but when following the =
-ABI
-> > > > would've produced something non-functional, breaking it is not real=
-ly
-> > > > relevant.
-> > >=20
-> > >=20
-> > > But the HW has the interrupt, the fact that is not functional doesn't
-> > > mean it isn't there. I thought we should describe the hardware?
-> >=20
-> > Does the hardware have it? My interpretation of the commit message was
-> > that it didn't have the alarm feature and thus no interrupt? Unless the
-> > interrupt has some other purpose, in which case yeah we shouldn't accept
-> > this change and only the new device should permit there being no
-> > interrupt.
->=20
-> The datasheet shows the interrupt coming out of the RTC and it has the
-> proper registers. Why it is not functional is not clear to me.
+Hi Ryan,
 
-Right.. Perhaps Binbin can explain that then? If the interrupt is
-actually there then the dts should get fixed instead IMO.
+kernel test robot noticed the following build warnings:
 
---lnVaNHpePim2zo65
-Content-Type: application/pgp-signature; name="signature.asc"
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on linus/master v6.19-rc6 next-20260119]
+[cannot apply to tip/sched/core kees/for-next/hardening kees/for-next/execve]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
------BEGIN PGP SIGNATURE-----
+url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/randomize_kstack-Maintain-kstack_offset-per-task/20260119-210329
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20260119130122.1283821-4-ryan.roberts%40arm.com
+patch subject: [PATCH v4 3/3] randomize_kstack: Unify random source across arches
+config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/reproduce)
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaXASMgAKCRB4tDGHoIJi
-0oRlAP9p3ULEJ4S1rYcPHyjv7qsgCkCsdws862oF5id1UCAfTgD7Bs1fxn8Fbfh9
-P5o3JDKXXNSLklqH3ahOVJRH4BaNyAs=
-=wCOM
------END PGP SIGNATURE-----
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601210752.6Nsv9et9-lkp@intel.com/
 
---lnVaNHpePim2zo65--
+All warnings (new ones prefixed by >>):
+
+>> vmlinux.o: warning: objtool: do_syscall_64+0x2c: call to preempt_count_add() leaves .noinstr.text section
+>> vmlinux.o: warning: objtool: __do_fast_syscall_32+0x3d: call to preempt_count_add() leaves .noinstr.text section
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
