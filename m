@@ -1,127 +1,83 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDB23314AC
-	for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 07:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88E423D3D02
+	for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 09:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768895460; cv=none; b=KX72g/arpohCWh40+v1Dop7LPKe02KI3/B4zeBLoGLH4E/j19ME4fwoKLqQea6f5vfzuHC/1TYH8HDzHI1Lv1Fgqho/j9taW1O4yUsza5lRy4e0NnMr61Ndxz1AIiEtVXh3NpJnZmIRXYN8zG7XVUIbXlyjl/BEdPTFu3stkiVs=
+	t=1768901034; cv=none; b=lTnIddVKKQ4LLX9836Xt8602wa/0DxbYl5/Lu+VmvB+PBvg0+ZYh9C5tSipZtcxSl13Z8F2QIhpSkucRRj7obLB1T34rw4z9mKbORC76nZNDYZE+EmaSuZ3u3RKxXwfOIm3hHmYvtJac7QZKVTER3Rvt9GhMD7m/andHy7FSrqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768895460; c=relaxed/simple;
-	bh=M1oDIo7kMH+o2Bqa9bB6To5fUKBi9MLVBJ4XO90c+kQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gv5sYjYnHPig/EKvTrQX+s4nSs1fu2guGttlbPkF4qqNqHuTqIicX6+adEP34a2yG4+hUk3bbk2YBsegY7Na31MeW8AY5fNJHnwhdL5qZX8/6r37WSvw/JvTohT0affvzOMuX3mF/KLnM+ZZWq5DpBX+oEFm7RZj1pK+DRbTCXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Tciaar/5; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Tciaar/5"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 6021E1A2950;
-	Tue, 20 Jan 2026 07:50:57 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 336F7606AB;
-	Tue, 20 Jan 2026 07:50:57 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 86DD110B6B17A;
-	Tue, 20 Jan 2026 08:50:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1768895453; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=OHovWdP9MJB1pmMzSrhYB5kXWJ2e1UMYi67ZL2LH0f8=;
-	b=Tciaar/5gnRd+t4yAPib0BmQ5S2MX6p/FQAwuIfRfOK3f2yY9gZSgOEoIQz1DcFik9EADG
-	lJvHfNSfknjGj/AKViafPG3BlMNQ3HaSOoSjJ1vJIWkC6WbxREQPfakZ86Wo5FR20TVPF2
-	gFynBtidjQqvMUoD+YMF7/EHZEmnq6b2pWzWRNVdj04K/FIXPc1KfgxVDU1Vw+TeFBnlCs
-	RlnT4F27PWcuvsyWO6KdNmoSaIYoTESKkZbrnrhbkEKlDxCTkYaL4Z8xoaCxDuGbREPBhm
-	fP14sCTDUNxml/aVVGDj8ULEH7n/nKnKpvaQiee7fIEhKlUq5dR9wgljvLGFVQ==
-Date: Tue, 20 Jan 2026 08:50:45 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-rtc@vger.kernel.org,
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: rtc: loongson: Correct Loongson-1C
- interrupts property
-Message-ID: <20260120075045e7e864ba@mail.local>
-References: <cover.1768616276.git.zhoubinbin@loongson.cn>
- <b6295c907410f6708115cba4df0959ee6629f8a5.1768616276.git.zhoubinbin@loongson.cn>
- <20260119-tricking-premiere-ada70700f804@spud>
+	s=arc-20240116; t=1768901034; c=relaxed/simple;
+	bh=daV5+g/aN9uFbcgilPybOF3xXtKayuRyJbqRWaUW/5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q7ibRJQYe6lKuGTPzq21sk1LhHKQMSdm8xYo+XghrQ/tZlTigS7oUyK9h7T1DXE3okNCudGx/zX8MclaOVn5RNV9TM+twLlZX+la85AqPIZURylHWJeOKB2Hzou0WBm9Ck848xwgUtUrDO2Bq9tmWJzU21G2SXymjT3GtTAJyLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx58GeSW9pTqcKAA--.22726S3;
+	Tue, 20 Jan 2026 17:23:42 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxHOGSSW9pD3InAA--.14911S3;
+	Tue, 20 Jan 2026 17:23:41 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/4] LoongArch: Use %px to print address in unwind_next_frame()
+Date: Tue, 20 Jan 2026 17:23:28 +0800
+Message-ID: <20260120092331.813-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260120092331.813-1-yangtiezhu@loongson.cn>
+References: <20260120092331.813-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260119-tricking-premiere-ada70700f804@spud>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxHOGSSW9pD3InAA--.14911S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFWkJr4rCFW5Zry8Zr45CFX_yoWfKwbEq3
+	4xXw48GrZaywn5Z3Z8XF1fJa42va10yF9Y93ZrZ3yIy34YvF13JrZaqw13Aw1qgFWrCrZ8
+	J397Wr9Ykw1IyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
 
-On 19/01/2026 18:24:36+0000, Conor Dooley wrote:
-> On Sat, Jan 17, 2026 at 10:26:48AM +0800, Binbin Zhou wrote:
-> > The `interrupts` property indicates an RTC alarm interrupt, which is
-> > required for RTCs that support the alarm feature, which is not supported
-> > by the Loongson-1C RTC. We exclude it for a more accurate description.
-> > 
-> > Changing the `allowed` property is ABI-breaking behavior, but
-> > throughout the existing Loongson DTS{i}, the description of the RTC
-> > nodes conforms to the modified bingding rules.
-> 
-> Right, changing properties is an ABI break, but when following the ABI
-> would've produced something non-functional, breaking it is not really
-> relevant.
+Currently, use %p to prevent leaking information about the kernel memory
+layout when printing the pc address, but the kernel log messages are not
+useful to debug problem if bt_address() returns 0. Given that the type of
+"pc" variable is unsigned long, it should use %px to print the unmodified
+address.
 
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/kernel/unwind_orc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But the HW has the interrupt, the fact that is not functional doesn't
-mean it isn't there. I thought we should describe the hardware?
-
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> pw-bot: not-applicable
-> 
-> > 
-> > Thus, the existing Loongson DTS{i} will not be affected.
-> > 
-> > Fixes: 487ef32caebe ("dt-bindings: rtc: Split loongson,ls2x-rtc into SoC-based compatibles")
-> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../devicetree/bindings/rtc/loongson,rtc.yaml         | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml b/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml
-> > index f89c1f660aee..fac90a18153e 100644
-> > --- a/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml
-> > +++ b/Documentation/devicetree/bindings/rtc/loongson,rtc.yaml
-> > @@ -42,6 +42,17 @@ required:
-> >  
-> >  unevaluatedProperties: false
-> >  
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - loongson,ls1c-rtc
-> > +
-> > +then:
-> > +  properties:
-> > +    interrupts: false
-> > +
-> >  examples:
-> >    - |
-> >      #include <dt-bindings/interrupt-controller/irq.h>
-> > -- 
-> > 2.47.3
-> > 
-
-
-
+diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
+index 8a6e3429a860..d6b3688a1ce9 100644
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -494,7 +494,7 @@ bool unwind_next_frame(struct unwind_state *state)
+ 
+ 	state->pc = bt_address(pc);
+ 	if (!state->pc) {
+-		pr_err("cannot find unwind pc at %p\n", (void *)pc);
++		pr_err("cannot find unwind pc at %px\n", (void *)pc);
+ 		goto err;
+ 	}
+ 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.42.0
+
