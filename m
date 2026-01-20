@@ -1,122 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B9B426D3D
-	for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 12:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66847428837
+	for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 12:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768910682; cv=none; b=PnM9ftW7DnPSyBwLGVsKEQ8RNCYXFLTN8bgV0N3G3pUe8oMST3W9hGm6Od31cvSE9YAgi+qD9RCE3kqVvuUvolY864BEJm3TkZ/NBhhEhJJaAncAygxwJ8gBVP1UGXozuxAmL0hDbddPLRsPYvi2G1Gxa2YzC4e/3oMs/QtEuTY=
+	t=1768913864; cv=none; b=ub7mT3wpFiiZHPpSEjVaG3M/SiIDU0+pSo53T/LSxnPR2e3aLuWIb+WB1gqhkwjPHt7FvBXM238itb5pO3aZYthU634T8nmS06fcvt6fDZjFhPsz8O0eJs14CJPeTpx8urmit85vp+4agMUKUkWTEyaqj/2qaVmge+KjLKvlI5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768910682; c=relaxed/simple;
-	bh=z8MmfXn/6O4AgwAXgtiQxLVfOreQ3XSFq9nCl25/da8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i0oDqf+eZN/CceJlwp+aAUMd4FsU5rBb9QB1tO4Vjfmkz6jahsNx5K0dTm7cjSwNSMH/QqQJgI5Yx48GQmX+rjlmiNiV+9M2LCCZHuNQB4K1a0ewFo/kILE5ivxsPw9Z+FU+Bcf1UVIpXUG2ldE3QdIPRCVklt5BLNdY/z+xXlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdsj6DlK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdsj6DlK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0219FC4AF09
-	for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 12:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768910682;
-	bh=z8MmfXn/6O4AgwAXgtiQxLVfOreQ3XSFq9nCl25/da8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cdsj6DlK7zryNHoEcfgLMWD2//ismS1ThRds7+t2PHIIEkuXq2nZq+MFnEC6+0ArB
-	 M3UKK+t/LUpMP4zvSDfNvYi02lF3Ja+KshFUJeRnt7EUb7OgVFe6YvyBkMptJd8SVZ
-	 SKRcq+p75PMNdHRJxECrWBMK7gsx/UrjakO3No3KzgaxoPKQa2uTqmZuCl80yaKIyG
-	 kEV0d8QOW4fEq9TQ7bXEpX4XLv4U5EkhO94gqii7Ldzrrz7eLqO5siAAB65CaSOJqd
-	 QYj2t2mHFywfBMpSkx+oeYX7+akCQ69qz8WaULN46pRJqauc6GzRINMIibEltEs9kg
-	 c3ShpCfRiftDQ==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b87693c981fso883506666b.1
-        for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 04:04:41 -0800 (PST)
-X-Gm-Message-State: AOJu0YwTuLPgpB2S4tqmNSEdm+hBco88FsRWB3PQZTnC0gOn8rgJ7PXE
-	/oInVqoGiWGkluzDab36Z/aP7GGXmvatDvqREJ5dXsCct+L1HcLkUYpUhdhDE/yuly5he1MyrTY
-	OdDUrIOD83sLDyAbvEk3z4nClETD6BS8=
-X-Received: by 2002:a17:907:6d10:b0:b87:3174:9bbe with SMTP id
- a640c23a62f3a-b8793023af2mr1242679166b.61.1768910680589; Tue, 20 Jan 2026
- 04:04:40 -0800 (PST)
+	s=arc-20240116; t=1768913864; c=relaxed/simple;
+	bh=r/N7ZU4S7MwxHTtO3DTPmIUAKbkzWslU9/yt9HAQmr8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sQ5w/7D5eFmmRcLhHyNR0deBqkuMrYnCFcoVEgp52pla6BJuKumZr36TFwTq4PyvHz8c8HiCyo6VazwzFBDRFS9iUzL0/a++HPQDNTmHhSPUNW2zsmErEuvZB43XdACSIFIn7QGuvtXhvwIqys5VuN/o1saasSlLgv5Apf7qGvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxisLBe29pGroKAA--.34990S3;
+	Tue, 20 Jan 2026 20:57:38 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAx38LAe29pQ7MnAA--.14571S3;
+	Tue, 20 Jan 2026 20:57:37 +0800 (CST)
+Subject: Re: [PATCH v1 2/4] LoongArch: Handle percpu handler address in
+ bt_address()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260120092331.813-1-yangtiezhu@loongson.cn>
+ <20260120092331.813-3-yangtiezhu@loongson.cn>
+ <CAAhV-H5pxpEM=efhdF6C0t+p6DGHcr9zQPPDx3X_w_6K18dEGg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <2a090dd9-3a24-236f-2a72-19d8567568c7@loongson.cn>
+Date: Tue, 20 Jan 2026 20:57:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260120092331.813-1-yangtiezhu@loongson.cn> <20260120092331.813-4-yangtiezhu@loongson.cn>
-In-Reply-To: <20260120092331.813-4-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 20 Jan 2026 20:04:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H52X9cc_+CoQxzHA9Z+o5kNMqD5BoieNB3R4rFK8kDDSg@mail.gmail.com>
-X-Gm-Features: AZwV_Qg9AQ0CrVJ1E7IrZW5GUHj8qv65DalyIyPxchoyaKeORi6w5RPfr4iv52Q
-Message-ID: <CAAhV-H52X9cc_+CoQxzHA9Z+o5kNMqD5BoieNB3R4rFK8kDDSg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] LoongArch: Remove some extern variables in source files
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H5pxpEM=efhdF6C0t+p6DGHcr9zQPPDx3X_w_6K18dEGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx38LAe29pQ7MnAA--.14571S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JF45Gr4UZr1rWr45JrW7WrX_yoW3WFXEgr
+	n2y3srCr48Wr9IkwsakFyrAa4DJa1DJr90gr93Wry7Z340vay8Jwn7Kas3uw4rAr4vkrsY
+	yws8ZFy3A34Y9osvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbaAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E
+	14v26r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF
+	4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8oGQDUUUUU==
 
-Hi, Tiezhu,
+On 2026/1/20 下午8:04, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> On Tue, Jan 20, 2026 at 5:23 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>
+>> After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for
+>> ORC unwinder"), the system can not boot normally under some configs,
+>> there are many error messages "cannot find unwind pc at".
 
-This patch can be the last one.
+...
 
+>> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+>> +       for (int cpu = 1; cpu < num_possible_cpus(); cpu++) {
+> Use nr_cpu_ids instead of num_possible_cpus() can improve performance a little.
+> 
+>> +               int vec_sz = sizeof(exception_handlers);
+>> +
+> It is better to add "if (!pcpu_handlers[cpu]) continue" here.
 
-Huacai
+If so, it can use for_each_possible_cpu(cpu) directly?
 
-On Tue, Jan 20, 2026 at 5:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> There are declarations of the variable "eentry", "pcpu_handlers[]" and
-> "exception_handlers[]" in asm/setup.h, the source files already include
-> this header file directly or indirectly, so no need to declare them in
-> the source files, just remove the code.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/unwind_orc.c      | 2 --
->  arch/loongarch/kernel/unwind_prologue.c | 4 ----
->  arch/loongarch/mm/tlb.c                 | 1 -
->  3 files changed, 7 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index 40f4d6c12cf6..d3bcbc82f101 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -350,8 +350,6 @@ EXPORT_SYMBOL_GPL(unwind_start);
->
->  static inline unsigned long bt_address(unsigned long ra)
->  {
-> -       extern unsigned long eentry;
-> -
->  #if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
->         for (int cpu =3D 1; cpu < num_possible_cpus(); cpu++) {
->                 int vec_sz =3D sizeof(exception_handlers);
-> diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/ker=
-nel/unwind_prologue.c
-> index 729e775bd40d..d04498d8090e 100644
-> --- a/arch/loongarch/kernel/unwind_prologue.c
-> +++ b/arch/loongarch/kernel/unwind_prologue.c
-> @@ -23,10 +23,6 @@ extern const int unwind_hint_lasx;
->  extern const int unwind_hint_lbt;
->  extern const int unwind_hint_ri;
->  extern const int unwind_hint_watch;
-> -extern unsigned long eentry;
-> -#ifdef CONFIG_NUMA
-> -extern unsigned long pcpu_handlers[NR_CPUS];
-> -#endif
->
->  static inline bool scan_handlers(unsigned long entry_offset)
->  {
-> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-> index 6a3c91b9cacd..4014c4469587 100644
-> --- a/arch/loongarch/mm/tlb.c
-> +++ b/arch/loongarch/mm/tlb.c
-> @@ -262,7 +262,6 @@ static void output_pgtable_bits_defines(void)
->  #ifdef CONFIG_NUMA
->  unsigned long pcpu_handlers[NR_CPUS];
->  #endif
-> -extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
->
->  static void setup_tlb_handler(int cpu)
->  {
-> --
-> 2.42.0
->
+Thanks,
+Tiezhu
+
