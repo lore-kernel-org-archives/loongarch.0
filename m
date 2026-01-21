@@ -1,186 +1,215 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3877042981A
-	for <loongarch@lists.linux.dev>; Wed, 21 Jan 2026 06:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768978342; cv=pass; b=Q+1gQeoHpMRd8i87Mbr38+XKThUPLBxKh1DC4zxcCWcEmqWxiVuwasE3GznHBOT/Z0MIjjGoJ0c7JM8t/2ffF6iVZsxBIQvOpplNlgCJd06as706LUhkRLBiN60SlXQ5Q+dz5aJ/KKzSL0AagDNRJPI/QzlmXTBEJE+vgD5jwYc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768978342; c=relaxed/simple;
-	bh=WuLWKn+Ff/W1Lpsf/WGVvO+l9UCyZOc5iNVqRoQOt8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HX0lmzKa6+0zuT8vennTmqZP6kzJhZtMa8t99Zn5aBONXO6MrciJAOtQsll//BPIeEA1Nt0fSCerzN08AitonvxOwqEbmruyNu2k4Q2RlWRi/pti6YqmiA7PGtXjKhpGe0H3eBc0GMTS8O8E656iSGE6F74XhN/6iWnSB/bQrnM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AkSHHNXx; arc=pass smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7C0283FE6;
+	Wed, 21 Jan 2026 08:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768983762; cv=none; b=Yh9ateMEYMYkQiBc/aqqmBnhtYh48wwo5m6r0AZvIP/ULSzUIXtAt3WJapaF3OtnHftrJbs2KMfMpOfX78eUSH19R1YUURXtZYGflUevl/GQwkHPE6xCcKi+dymLg69mkzAgnOa4HFUpZ3OX354HnimSM8hXz3D/KPLr5Dl3tkU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768983762; c=relaxed/simple;
+	bh=K9cQvsuV/BqqBzFb/VSGQFSyp4UuDjE7rEbhN036PhE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RpzFgXubfas+ZGdHpSBqkwwb2BbQv0CJnSIN4KGN3oWGJVzM5Hac4vgPKhQ4XAktk1Q0gb4IfZrb9c+cFuxE3Mhj4DUA041HOk0Odtrlk9NseRW/px4r8LucZOaazApmMDSgCrZqymf1VZbJL1adMOqN2GbWqZwxAfa8/hhlB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhM2UxNo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkSHHNXx"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b87677a8abeso999355066b.1
-        for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 22:52:19 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768978338; cv=none;
-        d=google.com; s=arc-20240605;
-        b=J5wrFbHbsZEuSeTeJCG+RRJLKwenQQ5KTsAVulzdTu7BLx3zb+nC09KK3go5+QTiyr
-         08vDCgzqGPY9pkO4mqhX+9i9N62/d0SdIxmRyQUCQX9chxEspf3i5mjhVP/01I1TwXXi
-         8ALOffN1JgSVyiDNb05D0UicSHVuTsjR1VZA3PF7CfECfu5Og0T/dckNo7BSi2UEvIUZ
-         0pVXI6h9DFhiDwIiYJTiF9twz3TVxd49G/k4ZbF8ohQv2wweFPsMO/ps2vpNtU5OuRRU
-         hwKz8/NJ6J3QsjY7Gvm0ocAtXvhqUm7ev4q1TOoZPizKxZhh0k9tA9Lu1Magi5uXbwHD
-         1C4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WuLWKn+Ff/W1Lpsf/WGVvO+l9UCyZOc5iNVqRoQOt8o=;
-        fh=moyeaLFwqUhbFgAbe5GsKdcokuHaLAAXeqo+VkIR4dg=;
-        b=LXxeE2FOw7weRtPg+WBGSHMCEG24RVVCTkZGjvOPmNfqJOY49X4PZlyxp6rQny4wNr
-         cObYt3aoBjoBDFhNd96abIb7hCBYiNaPtkXOkDI4tFgnYQ7M1e9TlS0g0PaFOkN6Qlhv
-         PVdABbqIQDsXFDvXs6Gg6WxssilZiPTQoXrnHFuprFDxHltwxQAs/8tf0h9eneHlEkwQ
-         ZwlQErdOTZ2nQpoQywm8z02sZJIMjh+TF0Axoiea4t9QKJeZsr0sh0JxZS1Elu5XM734
-         o8tJ8svhzMoR23pNF0Xb6+RJXxROc90y8CHSMSrN+zAQo7bZhb2H3vySbvnvux3CKjvY
-         Bf8g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768978338; x=1769583138; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WuLWKn+Ff/W1Lpsf/WGVvO+l9UCyZOc5iNVqRoQOt8o=;
-        b=AkSHHNXxYxL+oPsqKgiPWZ6W7IWDhDi/P1IbyHaUPRWc0Ha9yqgM3B5CDhQ7LDnwOO
-         QcZtpS+9o4nRrQ+t/vdwNjlcjQacKparq69RRfPG/RSt/m1rXZh5UjKYL0lfpyTmZLEi
-         92+O5vXaoPTR8ccTFjUhvxVoXJYHttGKsIFHHkRLkZQYdMYLlw9zrDhjwacAIbIDO6pL
-         HKv+btyhKVmcemZ+ORT4Mfi87w+At7PLj2t2Ng1vL+GFi+DaF0AbMP9o96QMx/23R3gH
-         L8imT6kWbA6gpxDOOkZjICVSuNpGXr2Q68Z0sQNCnK35ZOEL/YelySrI7fpHGdVCvr6h
-         K9+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768978338; x=1769583138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WuLWKn+Ff/W1Lpsf/WGVvO+l9UCyZOc5iNVqRoQOt8o=;
-        b=CUmxq14WHKDjaTyD5ofukGK6dyPYmBNEN4HQt1lNkHDHRNCDYUDKaaENt8vfVhhje+
-         PcEjm6RBJ0s8fqXwMtoH1tF8a218c5bX+wTaG+oHhES6tDntgjlkzEpptMbbmcHJ0fQW
-         rqs9aTbnvIj19ig+H2waS4MitRosGCyZKc8Xgv/y6d4DtEYo8aYpbtsJm8qeRrIjyRqn
-         8CHlgZZvjp7D4r8FEB17AnTlqKa3sDwZwmuCFvjsR58+MJA4TKPwlS1eehSZcBHNRfn+
-         exLXX8/2SEFNivpHsBI1/ea9nv4h4RcP/wP0mtPA8My2x8MlTOKkbdaPkQSsFDqAvqIo
-         fVqA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3FLxYezjWjcWo0tJoKw90txKcZW30bJWJe5U1Z1jz8C7T5bndb0GPfTEGyTuoTjknBdzkZDzcjWg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YydVyybcg519Yz8/Y8ZrTIZIAV3YtPAJ+mQaXGfQDB44CLhRfsS
-	9S2I4brcSIXj5IrMwWdFd34HEvxIofcOZzkmbYFlLVRTpriwIgyjsBaK3dR72s9SAvdZiTcN6SU
-	CfhfyeGeJbHp1GOG3/KKREeTIwUSsRTs=
-X-Gm-Gg: AZuq6aL25oCIrxRPSxYkgs/IKCkHl7VqdEkc1duCGtmBY8EqjAeb+xK+YTp+AqZY5Gb
-	Qo9vUcAZOOKIOr9lKse/UISnvf9IOQQizfbqQ2gYhtj0CigtjfgzMIoSEWPo1yuGkToFphBx0sD
-	O2DplPvKmhiJ7AoTd0AGR+au1PpPhnLM5ai1vTOFDRTQlJiQOzID554yG7N79M48U6PZVzfHcuk
-	QQKDgNOAxQGHXGbYbxCdkTtKuXeV19eKDSTfh364JAi9vQ7hPoWh4JUS5p6AhZMZDJS6e4=
-X-Received: by 2002:a17:907:3d42:b0:b87:35fc:ae6e with SMTP id
- a640c23a62f3a-b879327dfb1mr1455742566b.46.1768978338185; Tue, 20 Jan 2026
- 22:52:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhM2UxNo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A2D12C116D0;
+	Wed, 21 Jan 2026 08:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768983761;
+	bh=K9cQvsuV/BqqBzFb/VSGQFSyp4UuDjE7rEbhN036PhE=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=JhM2UxNoOfTNSiTYs45gN7acuXVFDBsTU2ZmbPgBDBBtFv52riQVZmUK5is3MwdLk
+	 Pez34iK/IyNaO6Vp/WO5tFzufmOFyeFK32kqtsyOALlRPcHkCYLz3olF/Io1RCw09F
+	 5/A/bJnFqlrFP0gxTyZesSROhnpn7G90cH7ZPluKHKhDCie+IlFfO7XPfGqB8HePaD
+	 J3fBNHgCWGDg0in/OQIj5tQ82otk59kQuYjX379X3fgdnKX+PV0Rvih9U/9wbGTmsc
+	 L0fxLMNU82yF+k/WRWWYwC0YCV1G7jSRrr8ClZ7MvKjwPuzDvv80bzA8y5eYjrV6EF
+	 7Ah8GLEcy7blQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91413D262B5;
+	Wed, 21 Jan 2026 08:22:41 +0000 (UTC)
+From: Ziyao Li via B4 Relay <devnull+liziyao.uniontech.com@kernel.org>
+Date: Wed, 21 Jan 2026 16:22:40 +0800
+Subject: [PATCH v7] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1768616276.git.zhoubinbin@loongson.cn> <b6295c907410f6708115cba4df0959ee6629f8a5.1768616276.git.zhoubinbin@loongson.cn>
- <20260119-tricking-premiere-ada70700f804@spud> <20260120075045e7e864ba@mail.local>
- <20260120-cubical-harmonica-a7b7bbb26b08@spud> <20260120224920df0cf2ac@mail.local>
- <20260120-proposal-retry-d0a1f3de10ea@spud>
-In-Reply-To: <20260120-proposal-retry-d0a1f3de10ea@spud>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 21 Jan 2026 14:52:06 +0800
-X-Gm-Features: AZwV_QgA6UvIfzq-IFvgjS9upO0HXk3JXVuJsZZ81j4MJRt35v5CeDrdmHWS9o0
-Message-ID: <CAMpQs4Lm1Oq8L+dY8OnseV-NNUoD3+0QjnZATRkmR-sejCKAdA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: rtc: loongson: Correct Loongson-1C
- interrupts property
-To: Conor Dooley <conor@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-rtc@vger.kernel.org, 
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-mips@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260121-loongson-pci1-v7-1-fc79c85a574d@uniontech.com>
+X-B4-Tracking: v=1; b=H4sIAM+McGkC/33QzWrDMAzA8VcpPs/D8lfinfYeowfbkhvDFpe4C
+ x0l7z63MAhZtuNfoB9CN1ZpylTZy+HGJppzzWVs0T0dWBz8eCKesTWTQhrRS8nfSxlPtYz8HDN
+ wjYQCuz5BCKztnCdK+frw3o6th1wvZfp68DPcp39JM3DgynkfAgKkgK+fY7vlQnF4juWD3bVZ/
+ ghWgNBbQTYBwQCZLlhK/Z6g1oLbCqoJBjEaTyp4p/YEvRJAbQXdBHAS0OrOJdJ7gvlXME2QVkc
+ XtHfChz3BroVff7BNIOo99Mmg1HIrLMvyDYKlmYL4AQAA
+X-Change-ID: 20250822-loongson-pci1-4ded0d78f1bb
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, 
+ guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, kernel@uniontech.com, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>, 
+ Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
+ Ziyao Li <liziyao@uniontech.com>, stable@vger.kernel.org, 
+ Huacai Chen <chenhuacai@kernel.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768983760; l=5639;
+ i=liziyao@uniontech.com; s=20250730; h=from:subject:message-id;
+ bh=aekmZZMcdoWR0EYWpMKLj8I7yyrt0QhHP+Dn7NQHYNM=;
+ b=JQZuweOAQ3mziPLwrSbTe3gPrlNAUICC9SjBSdZBJqhmnYBnsd9V4xXSQ//DY6Y11ZCUK9tys
+ Rv+D2bSfUWLDMz+pN2kl8caFUxIofS1328fr4YFRxdlS9AYzKtJZfFf
+X-Developer-Key: i=liziyao@uniontech.com; a=ed25519;
+ pk=tZ+U+kQkT45GRGewbMSB4VPmvpD+KkHC/Wv3rMOn/PU=
+X-Endpoint-Received: by B4 Relay for liziyao@uniontech.com/20250730 with
+ auth_id=471
+X-Original-From: Ziyao Li <liziyao@uniontech.com>
+Reply-To: liziyao@uniontech.com
 
-Hi Conor & Alexandre:
+From: Ziyao Li <liziyao@uniontech.com>
 
-Thanks for your reply.
+Older steppings of the Loongson-3C6000 series incorrectly report the
+supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+as only 2.5 GT/s, despite the upstream bus supporting speeds from
+2.5 GT/s up to 16 GT/s.
 
-On Wed, Jan 21, 2026 at 7:39=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Tue, Jan 20, 2026 at 11:49:20PM +0100, Alexandre Belloni wrote:
-> > On 20/01/2026 19:24:09+0000, Conor Dooley wrote:
-> > > On Tue, Jan 20, 2026 at 08:50:45AM +0100, Alexandre Belloni wrote:
-> > > > On 19/01/2026 18:24:36+0000, Conor Dooley wrote:
-> > > > > On Sat, Jan 17, 2026 at 10:26:48AM +0800, Binbin Zhou wrote:
-> > > > > > The `interrupts` property indicates an RTC alarm interrupt, whi=
-ch is
-> > > > > > required for RTCs that support the alarm feature, which is not =
-supported
-> > > > > > by the Loongson-1C RTC. We exclude it for a more accurate descr=
-iption.
-> > > > > >
-> > > > > > Changing the `allowed` property is ABI-breaking behavior, but
-> > > > > > throughout the existing Loongson DTS{i}, the description of the=
- RTC
-> > > > > > nodes conforms to the modified bingding rules.
-> > > > >
-> > > > > Right, changing properties is an ABI break, but when following th=
-e ABI
-> > > > > would've produced something non-functional, breaking it is not re=
-ally
-> > > > > relevant.
-> > > >
-> > > >
-> > > > But the HW has the interrupt, the fact that is not functional doesn=
-'t
-> > > > mean it isn't there. I thought we should describe the hardware?
-> > >
-> > > Does the hardware have it? My interpretation of the commit message wa=
-s
-> > > that it didn't have the alarm feature and thus no interrupt? Unless t=
-he
-> > > interrupt has some other purpose, in which case yeah we shouldn't acc=
-ept
-> > > this change and only the new device should permit there being no
-> > > interrupt.
-> >
-> > The datasheet shows the interrupt coming out of the RTC and it has the
-> > proper registers. Why it is not functional is not clear to me.
->
-> Right.. Perhaps Binbin can explain that then? If the interrupt is
-> actually there then the dts should get fixed instead IMO.
+As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+than one speed is supported"), bwctrl will be disabled if there's only
+one 2.5 GT/s value in vector `supported_speeds`.
 
-I carefully reviewed the manual again and believe this patch is still neces=
-sary.
+Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
+amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
+clocks and lanes in power management. We hope this patch can prevent
+similar problems in future driver changes (similar checks may be
+implemented in other GPU, storage controller, NIC, etc. drivers).
 
-First, the Loongson-1C RTC does not define the timing interrupt
-register (`TOY_MATCH0_REG`)[1], meaning it lacks hardware support for
-alarms. Consequently, `interrupts` are also unnecessary.
-The Loongson-2K0300 is different. It defines `TOY_MATCH0_REG`, but due
-to a hardware design flaw, accessing this register causes system
-crashes. Therefore, I must also classify it as lacking alarm support.
+Manually override the `supported_speeds` field for affected PCIe bridges
+with those found on the upstream bus to correctly reflect the supported
+link speeds.
 
-Additionally, in patch-3 [2], I rewrote the alarm logic to decouple
-the `interrupts` property from the alarm feature: I defined
-corresponding workaround bits in `loongson_rtc_config->flags`. This
-should be considered a SoC-specific attribute.
+This patch was originally found from AOSC OS[1].
 
-Finally, two thoughts:
-1. Retain this patch; it is correct for Loongson-1C.
-2. For Patch-2, still add the `interrupts` property to the
-Loongson-2K0300 RTC node (as it exists in hardware), combined with the
-workaround bit setting in patch-3 to avoid the hardware flaw.
+Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+Tested-by: Lain Fearyncess Yang <fsf@live.com>
+Tested-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+[Xi Ruoyao: Fix falling through logic and add kernel log output.]
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
+[Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
+Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
+Cc: stable@vger.kernel.org
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+The reason of not just copying pdev->bus->self->supported_speeds is
+that we're concerned that this approach assumes the upstream port
+reports the same capabilities as bridge, which may not always be the
+case in future silicon revisions.
 
-Would this approach be acceptable?
+Our current conservative approach ensures we only enable speeds that
+are physically supported by checking the actual max_bus_speed. For
+example, if there's a future Loongson-3C9999 where the virtual bridge
+reports Gen4 support but the physical bridge only supports Gen3.
 
-[1]: https://www.loongson.cn/uploads/images/2022051616223977135.%E9%BE%99%E=
-8%8A%AF1C300%E5%A4%84%E7%90%86%E5%99%A8%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C=
-.pdf
-(section 21.2.1)
-[2]: https://lore.kernel.org/linux-rtc/abff68dda2fe6a6601a9e58b31e278d94129=
-7fce.1768616276.git.zhoubinbin@loongson.cn/
+In this scenario, directly copying the upstream port's supported_speeds
+would incorrectly report Gen4 support for the downstream bridge. The
+current patch ensures we only set speed bits up to what the hardware
+actually supports, based on the measured max_bus_speed. This seems
+safer for future silicon.
 
---
-Thanks.
-Binbin
+Changes in v7:
+- adjust commit message
+- Link to v6: https://lore.kernel.org/r/20260114-loongson-pci1-v6-1-ee8a18f5d242@uniontech.com
+
+Changes in v6:
+- adjust commit message
+- Link to v5: https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniontech.com
+
+Changes in v5:
+- style adjust
+- Link to v4: https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com
+
+Changes in v4:
+- rename subject
+- use 0x3c19/0x3c29 instead of 3c19/3c29
+- Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
+
+Changes in v3:
+- Adjust commit message
+- Make the program flow more intuitive
+- Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
+
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
+- Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
+- Fix falling through logic and add kernel log output by Xi Ruoyao
+---
+ drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index bc630ab8a283..a4250d7af1bf 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+ 
++/*
++ * Older steppings of the Loongson-3C6000 series incorrectly report the
++ * supported link speeds on their PCIe bridges (device IDs 0x3c19,
++ * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
++ * from 2.5 GT/s up to 16 GT/s.
++ */
++static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
++{
++	u8 old_supported_speeds = pdev->supported_speeds;
++
++	switch (pdev->bus->max_bus_speed) {
++	case PCIE_SPEED_16_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
++		fallthrough;
++	case PCIE_SPEED_8_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
++		fallthrough;
++	case PCIE_SPEED_5_0GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
++		fallthrough;
++	case PCIE_SPEED_2_5GT:
++		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
++		break;
++	default:
++		pci_warn(pdev, "unexpected max bus speed");
++
++		return;
++	}
++
++	if (pdev->supported_speeds != old_supported_speeds)
++		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
++			 old_supported_speeds, pdev->supported_speeds);
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, loongson_pci_bridge_speed_quirk);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, loongson_pci_bridge_speed_quirk);
++
+ static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+ {
+ 	struct pci_config_window *cfg;
+
+---
+base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+change-id: 20250822-loongson-pci1-4ded0d78f1bb
+
+Best regards,
+-- 
+Ziyao Li <liziyao@uniontech.com>
+
+
