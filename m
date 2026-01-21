@@ -1,161 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B38AE30E85E
-	for <loongarch@lists.linux.dev>; Wed, 21 Jan 2026 01:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47253126B2
+	for <loongarch@lists.linux.dev>; Wed, 21 Jan 2026 02:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768960054; cv=none; b=Od8fgaSfpVJ926S3izW9tFT8NOuubeUjAcaNr93PqPmzLOZU2TOVI18TFv/DlUuzZQMy+/+lj9UNgz2tywIiWNKcO8tZMQzHxiVBADL47c3V+n+ZtgLW9gO2noxi7rkQxUIVHan+E4vcFrYNZv0jBo+Stmok5dVfiIrXDzi9bxY=
+	t=1768962428; cv=none; b=K4MzZrKC3sotM2Y8SwgfQ9qtuj7nRUM+LGKzvb9f2ckoenkaZ6IHyfKWNHLEQrTUSIgKkZACOPVoJalHWKHppsxtwSFaHKNbkDVWkPqM4V/81dWJzmwFiB87vcdK7bra3zYsO3d4atPLADDcPBMd1I7Z41HMFIhmE6CNFIgvvwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768960054; c=relaxed/simple;
-	bh=3HcFXezRqzep6eeB8yuKJoCYhoUCx5zIgM5K5YWJGGo=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RgGiDjcR3JRym9FVrUCpe1XaYChAlWaYOQ8Jj+Wp2olJ0GAnJQiac+HDo766kuyVm5MNEK+g6XQek/qxOoGwNi7k6Hjhfi1IzRjWp+hMumFppVVXNHYxqY7ETfYuEwKso0lILWZCON86LtZ8F0CVBg856h0ApLZm7yZ7X51XCcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxDMMsMHBp5fkKAA--.36113S3;
-	Wed, 21 Jan 2026 09:47:25 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxSMEqMHBpEKIoAA--.2660S3;
-	Wed, 21 Jan 2026 09:47:23 +0800 (CST)
-Subject: Re: [PATCH v1 2/4] LoongArch: Handle percpu handler address in
- bt_address()
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260120092331.813-1-yangtiezhu@loongson.cn>
- <20260120092331.813-3-yangtiezhu@loongson.cn>
- <CAAhV-H5pxpEM=efhdF6C0t+p6DGHcr9zQPPDx3X_w_6K18dEGg@mail.gmail.com>
- <2a090dd9-3a24-236f-2a72-19d8567568c7@loongson.cn>
- <CAAhV-H4AYtOBtnPp5Y87tfrKNJU2NDM9yqONkKpAHmGNy-xhkg@mail.gmail.com>
- <6ec0962a-8ba1-1bb9-c07d-1c344adef7fa@loongson.cn>
-Message-ID: <0059c5f2-afe3-3100-4f9e-023ddf5c1fe9@loongson.cn>
-Date: Wed, 21 Jan 2026 09:46:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1768962428; c=relaxed/simple;
+	bh=JSZfvmprFeYEIEm5yVJHuhfn8k7ODQZp2i53CCMGx2I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LBZHtfm/CKS7XqgMd5xMfi/T8bT14NNausSJlhi0A91+UYkpuFNcrny24YvR4veF+xBTBuXZA27YLtJBFF/x3dytG6C2OIMVF76SzY67Xve58Y5jNeq3yfRajJ9DBoQNtJtk7CJGQ7WS0b+3yGIuC9o/IPcqSmSKhXQvOKLuA2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWpyaQSm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWpyaQSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE91C19423
+	for <loongarch@lists.linux.dev>; Wed, 21 Jan 2026 02:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768962428;
+	bh=JSZfvmprFeYEIEm5yVJHuhfn8k7ODQZp2i53CCMGx2I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MWpyaQSm04380kFudeyk46GomDQL1nyKllfqbgbG/8H2nm/He/aiiv1CJQkjaRkdB
+	 aRRogDHF9E8HaOPZoQiG5E11ZQYL/DxEcA2bEbN4/HYriU/TZeHWoWuyx3RAnpAda3
+	 tmmzFJC7o9EAFNHwAcKuPnlRQwXzgA+naIvAO452Z7SHTITHM67sfcFbyIi8TZGz5U
+	 uN+QIVv6fDFmfY1LLsEG7rigsjX0WObznWcorqScnPNb0XKHbHzfbw3aeozk7Pq/CD
+	 GOfy4HWXFVf54oMRq8IBXD3S7bL08PFjxT4/2Q/2aj3H4HGhqcMYqNvkN+HyWq3EHX
+	 N8OmbBEYCAxow==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b87003e998bso80114266b.1
+        for <loongarch@lists.linux.dev>; Tue, 20 Jan 2026 18:27:08 -0800 (PST)
+X-Gm-Message-State: AOJu0YzOb01wkA1NhMBvrvJBveVtz1Lp7Vn+Q8B4BInOUiPDgW39hz19
+	TzS9boQktbOEWayw275zXGePvfDvVz/8NUtbvwBEAqdoyj2lJDNd4aY1zJCbLv1ZvOJHJtwLwni
+	GHUzK6a2gi4HR3jaZ6YZYD9XTNq6ek44=
+X-Received: by 2002:a17:907:3e1b:b0:b80:40ea:1d65 with SMTP id
+ a640c23a62f3a-b8793a69e79mr1635920366b.31.1768962426967; Tue, 20 Jan 2026
+ 18:27:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20260120092331.813-1-yangtiezhu@loongson.cn> <20260120092331.813-3-yangtiezhu@loongson.cn>
+ <CAAhV-H5pxpEM=efhdF6C0t+p6DGHcr9zQPPDx3X_w_6K18dEGg@mail.gmail.com>
+ <2a090dd9-3a24-236f-2a72-19d8567568c7@loongson.cn> <CAAhV-H4AYtOBtnPp5Y87tfrKNJU2NDM9yqONkKpAHmGNy-xhkg@mail.gmail.com>
+ <6ec0962a-8ba1-1bb9-c07d-1c344adef7fa@loongson.cn>
 In-Reply-To: <6ec0962a-8ba1-1bb9-c07d-1c344adef7fa@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxSMEqMHBpEKIoAA--.2660S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGr17KFy3Zr15uF1DCFyxCrX_yoW5Xw4Dpr
-	92k3WDtFW8Kr40qayq93W7Xr9Iyrn7tw12ga98KFy5CFn0qFyS9r10v34qgFWDGrW8Xa10
-	vrn5XFZI9F4UXacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UU
-	UUU==
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 21 Jan 2026 10:27:00 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H71vas03P=3YOCG-orp0NmxHG12A--bbGhHFcVcxeNMdg@mail.gmail.com>
+X-Gm-Features: AZwV_QgvqW5VvX-b4xZNNtfckMt9XJrGivUTOD9gKuGp88dpRuD8aih5qh-aWqQ
+Message-ID: <CAAhV-H71vas03P=3YOCG-orp0NmxHG12A--bbGhHFcVcxeNMdg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] LoongArch: Handle percpu handler address in bt_address()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026/1/20 下午9:08, Tiezhu Yang wrote:
-> On 2026/1/20 下午9:01, Huacai Chen wrote:
->> On Tue, Jan 20, 2026 at 8:57 PM Tiezhu Yang <yangtiezhu@loongson.cn> 
->> wrote:
->>>
->>> On 2026/1/20 下午8:04, Huacai Chen wrote:
->>>> Hi, Tiezhu,
->>>>
->>>> On Tue, Jan 20, 2026 at 5:23 PM Tiezhu Yang <yangtiezhu@loongson.cn> 
->>>> wrote:
->>>>>
->>>>> After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for
->>>>> ORC unwinder"), the system can not boot normally under some configs,
->>>>> there are many error messages "cannot find unwind pc at".
->>>
->>> ...
->>>
->>>>> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
->>>>> +       for (int cpu = 1; cpu < num_possible_cpus(); cpu++) {
->>>> Use nr_cpu_ids instead of num_possible_cpus() can improve 
->>>> performance a little.
->>>>
->>>>> +               int vec_sz = sizeof(exception_handlers);
->>>>> +
->>>> It is better to add "if (!pcpu_handlers[cpu]) continue" here.
->>>
->>> If so, it can use for_each_possible_cpu(cpu) directly?
->> It can, but I remember you want to skip CPU 0?
-> 
+On Tue, Jan 20, 2026 at 9:09=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> On 2026/1/20 =E4=B8=8B=E5=8D=889:01, Huacai Chen wrote:
+> > On Tue, Jan 20, 2026 at 8:57=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> >>
+> >> On 2026/1/20 =E4=B8=8B=E5=8D=888:04, Huacai Chen wrote:
+> >>> Hi, Tiezhu,
+> >>>
+> >>> On Tue, Jan 20, 2026 at 5:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loong=
+son.cn> wrote:
+> >>>>
+> >>>> After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for
+> >>>> ORC unwinder"), the system can not boot normally under some configs,
+> >>>> there are many error messages "cannot find unwind pc at".
+> >>
+> >> ...
+> >>
+> >>>> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+> >>>> +       for (int cpu =3D 1; cpu < num_possible_cpus(); cpu++) {
+> >>> Use nr_cpu_ids instead of num_possible_cpus() can improve performance=
+ a little.
+> >>>
+> >>>> +               int vec_sz =3D sizeof(exception_handlers);
+> >>>> +
+> >>> It is better to add "if (!pcpu_handlers[cpu]) continue" here.
+> >>
+> >> If so, it can use for_each_possible_cpu(cpu) directly?
+> > It can, but I remember you want to skip CPU 0?
+>
 > Yes, that is the intention to use the for loop, but if checking
 > !pcpu_handlers[cpu], I think no need to use for loop to skip cpu
 > 0, just use for_each_possible_cpu(cpu) is more simple and direct.
+My original purpose, checking  !pcpu_handlers[cpu] is to handle the
+memory allocation failure case, but not for skipping CPU 0.
 
-Handle this special case only if bt_address() returns 0 to avoid
-affecting performance for the normal address.
+But yes, it will skip CPU 0 indeed, so you can choose the original for
+loop or for_each_possible_cpu(cpu), both OK for me.
 
-Here is the draft change:
+>
+> The code looks like:
+>
+> ----->8-----
+> diff --git a/arch/loongarch/kernel/unwind_orc.c
+> b/arch/loongarch/kernel/unwind_orc.c
+> index d6b3688a1ce9..a0ba4e416f99 100644
+> --- a/arch/loongarch/kernel/unwind_orc.c
+> +++ b/arch/loongarch/kernel/unwind_orc.c
+> @@ -352,6 +352,24 @@ static inline unsigned long bt_address(unsigned
+> long ra)
+>   {
+>          extern unsigned long eentry;
+>
+> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+> +       int cpu;
+> +       int vec_sz __maybe_unused;
+ __maybe_unused is not needed because it is already in #ifdefs.
 
------>8-----
-diff --git a/arch/loongarch/kernel/unwind_orc.c 
-b/arch/loongarch/kernel/unwind_orc.c
-index d6b3688a1ce9..1ce10701f3c3 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -378,6 +378,28 @@ static inline unsigned long bt_address(unsigned 
-long ra)
-         return 0;
-  }
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               if (!pcpu_handlers[cpu])
+> +                       continue;
+> +
+> +               vec_sz =3D sizeof(exception_handlers);
+Calculate it when defining it.
 
-+static inline unsigned long handle_pcpu_handlers(unsigned long ra)
-+{
-+#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
-+       int cpu;
-+       int vec_sz __maybe_unused;
-+
-+       for_each_possible_cpu(cpu) {
-+               if (!pcpu_handlers[cpu])
-+                       continue;
-+
-+               vec_sz = sizeof(exception_handlers);
-+
-+               if (ra >= pcpu_handlers[cpu] &&
-+                   ra < pcpu_handlers[cpu] + vec_sz) {
-+                       ra = eentry + (ra - pcpu_handlers[cpu]);
-+                       break;
-+               }
-+       }
-+#endif
-+       return ra;
-+}
-+
-  bool unwind_next_frame(struct unwind_state *state)
-  {
-         unsigned long *p, pc;
-@@ -494,8 +516,11 @@ bool unwind_next_frame(struct unwind_state *state)
 
-         state->pc = bt_address(pc);
-         if (!state->pc) {
--               pr_err("cannot find unwind pc at %px\n", (void *)pc);
--               goto err;
-+               state->pc = bt_address(handle_pcpu_handlers(pc));
-+               if (!state->pc) {
-+                       pr_err("cannot find unwind pc at %px\n", (void 
-*)pc);
-+                       goto err;
-+               }
-         }
+Huacai
 
-         return true;
-
-I will test it, if it works well I will wait for more comments and
-submit v2 later.
-
-Thanks,
-Tiezhu
-
+> +
+> +               if (ra >=3D pcpu_handlers[cpu] &&
+> +                   ra < pcpu_handlers[cpu] + vec_sz) {
+> +                       ra =3D eentry + (ra - pcpu_handlers[cpu]);
+> +                       break;
+> +               }
+> +       }
+> +#endif
+> +
+>          if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) =
+{
+>                  unsigned long func;
+>                  unsigned long type =3D (ra - eentry) / VECSIZE;
+>
+> Please let me know what is the better way.
+>
+> Thanks,
+> Tiezhu
+>
+>
