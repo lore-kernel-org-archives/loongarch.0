@@ -1,141 +1,88 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455034657D7
-	for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 10:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE5C94418E5
+	for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 11:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769079475; cv=none; b=Q3Zdlu/qq9FPk/yJRBr6j7PJzxco9EWt31VVE8H01zTQiv+LJiKyqmvTQao4b0FI8CHEOZUuCI+zRTZIf75QQHV8F3rrgqWMX+kK87a1srhhFBhvHlcOOVxYZf6q1bP3BXlo7T5UwojrnXtNDWNMf4XGPu8KYfc7z2GDQPpl3Yk=
+	t=1769080487; cv=none; b=E/jO24/KKf+oISFcgM8PO343Dsq6UpR6+vk/VOfPvc9ExSRceYKlcyyrlhbPWsSf8DmungC9+IufMFYJtsvy7OPvl5liAKvU/IIoQUp2mnZWBjXjaw4sxJSuYAv07Xas3AcRBxcP5nnvLB2BiqalfzlNv9aJQMzRW/EGKz+W8mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769079475; c=relaxed/simple;
-	bh=0pf25QAYefSQR4VWamuqFfUc4Om5IWSa+2laY27CsaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NE4RaxVEI+5MYRd58C5T3aYELYXGYvx6mVH/ZmKrG/WzClFvA7ExAGkNSn4V4+eJQCt3nIOnbWsP3f9W49kOEMC6ky975acS27yQtTOt3y/MokUnQN8T1CIOtPV0f6HR/x3zoVYCQown2Obk8AEuY4kToPNCUUNsMpNHLyI/cJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gq/WkHNV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t6gy5+sf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gq/WkHNV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t6gy5+sf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gq/WkHNV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t6gy5+sf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gq/WkHNV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t6gy5+sf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 132AD336B4;
-	Thu, 22 Jan 2026 10:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1769079471; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oqgXrTxuNR0u24JtY6uiYo+O6M6j7KIBhbmiRaouNHk=;
-	b=gq/WkHNVWzdgCMggh/ci43nhtVOoXmcRWxgZb2J6HmWtwEa89dLolxRIz7fGD7RWVkXaeq
-	dSKuPaS0GVD8mxKTHCO1mXIX8OIF6g/p9GUKKFOF5w8DpKqfPGSZcWD6UD3bbi3ZQtpMI2
-	kYLz1S6/SvHVJelJMqWC3zJMx/Z/Gtg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1769079471;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oqgXrTxuNR0u24JtY6uiYo+O6M6j7KIBhbmiRaouNHk=;
-	b=t6gy5+sfuRn5JyC7L662WCMI6G8x3gqT0RSEE+Q7cxaREhsb4pdCVfJdCYEbZ2VHoZKC0u
-	ozqREUARCgfmnsDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1769079471; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oqgXrTxuNR0u24JtY6uiYo+O6M6j7KIBhbmiRaouNHk=;
-	b=gq/WkHNVWzdgCMggh/ci43nhtVOoXmcRWxgZb2J6HmWtwEa89dLolxRIz7fGD7RWVkXaeq
-	dSKuPaS0GVD8mxKTHCO1mXIX8OIF6g/p9GUKKFOF5w8DpKqfPGSZcWD6UD3bbi3ZQtpMI2
-	kYLz1S6/SvHVJelJMqWC3zJMx/Z/Gtg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1769079471;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oqgXrTxuNR0u24JtY6uiYo+O6M6j7KIBhbmiRaouNHk=;
-	b=t6gy5+sfuRn5JyC7L662WCMI6G8x3gqT0RSEE+Q7cxaREhsb4pdCVfJdCYEbZ2VHoZKC0u
-	ozqREUARCgfmnsDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A479F1395E;
-	Thu, 22 Jan 2026 10:57:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DNtUJa4CcmnPLwAAD6G6ig
-	(envelope-from <clopez@suse.de>); Thu, 22 Jan 2026 10:57:50 +0000
-From: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>
-To: chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Cc: =?UTF-8?q?Carlos=20L=C3=B3pez?= <clopez@suse.de>,
+	s=arc-20240116; t=1769080487; c=relaxed/simple;
+	bh=yw0kJTMQtMqr3v+Rrkx70e6nlIcqa+DOS9BluHh8uiM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ORLhgOX4g38r8gqVJdweb2NFEayQEMGpEVAMtQy/Zk6yr3S6tL+IgRdJ+PnJUTzAHO30xRyDlyWbDKegZBSKVEDy2Kf6mnBUoq/HsymqeArRkkCkkL1piZAXIZfcZoSbvYUstMcJIVzF3Xl/6i2+C4J+3JRqiUG5k3KC3TV8buY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Dx+8KdBnJpynsLAA--.36934S3;
+	Thu, 22 Jan 2026 19:14:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJDxquCbBnJpwR4rAA--.21397S4;
+	Thu, 22 Jan 2026 19:14:36 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
 	WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] loongarch/kgdb: use IS_ERR_PCPU() macro
-Date: Thu, 22 Jan 2026 11:56:36 +0100
-Message-ID: <20260122105636.89985-2-clopez@suse.de>
-X-Mailer: git-send-email 2.51.0
+	Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH 2/3] LoongArch: KVM: Move LASX capability check in LASX exception handler
+Date: Thu, 22 Jan 2026 19:14:32 +0800
+Message-Id: <20260122111434.1737872-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260122111434.1737872-1-maobibo@loongson.cn>
+References: <20260122111434.1737872-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.74
-X-Spamd-Result: default: False [-2.74 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MIXED_CHARSET(0.56)[subject];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
+X-CM-TRANSID:qMiowJDxquCbBnJpwR4rAA--.21397S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-In a759e37fb467 ("err.h: add ERR_PTR_PCPU(), PTR_ERR_PCPU() and
-IS_ERR_PCPU() macros"), specialized macros were added to check an error
-within a __percpu pointer, so use them instead of manually casting
-with __force, like all other users of register_wide_hw_breakpoint().
+Like FPU exception handler, check LASX capability in LASX exception
+handler rather than function kvm_own_lasx().
 
-Signed-off-by: Carlos López <clopez@suse.de>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kvm/exit.c | 4 +++-
+ arch/loongarch/kvm/vcpu.c | 3 ---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
-index 7be5b4c0c900..17664a6043b1 100644
---- a/arch/loongarch/kernel/kgdb.c
-+++ b/arch/loongarch/kernel/kgdb.c
-@@ -697,7 +697,7 @@ void kgdb_arch_late(void)
- 			continue;
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 76eec3f24953..74b427287e96 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -810,8 +810,10 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
+  */
+ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+-	if (kvm_own_lasx(vcpu))
++	if (!kvm_guest_has_lasx(&vcpu->arch))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
++	else
++		kvm_own_lasx(vcpu);
  
- 		breakinfo[i].pev = register_wide_hw_breakpoint(&attr, NULL, NULL);
--		if (IS_ERR((void * __force)breakinfo[i].pev)) {
-+		if (IS_ERR_PCPU(breakinfo[i].pev)) {
- 			pr_err("kgdb: Could not allocate hw breakpoints.\n");
- 			breakinfo[i].pev = NULL;
- 			return;
-
-base-commit: a66191c590b3b58eaff05d2277971f854772bd5b
+ 	return RESUME_GUEST;
+ }
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index aff295aa6b0b..d91a1160a309 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1391,9 +1391,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+ /* Enable LASX and restore context */
+ int kvm_own_lasx(struct kvm_vcpu *vcpu)
+ {
+-	if (!kvm_guest_has_fpu(&vcpu->arch) || !kvm_guest_has_lsx(&vcpu->arch) || !kvm_guest_has_lasx(&vcpu->arch))
+-		return -EINVAL;
+-
+ 	preempt_disable();
+ 
+ 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
 -- 
-2.51.0
+2.39.3
 
