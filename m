@@ -1,185 +1,255 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF31839B4BB;
-	Wed, 21 Jan 2026 18:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769020140; cv=none; b=rBje9tnhu7w67LTFnQ2yE3mYfd/wc3J3dOGg4dxQfTXNjYqXo2S00B47jXxzc5417M0JI3wTJF28xEd9vo7NXofsQpzDq1vdR/TNi56MD9s8/WfPm4kUZyZznrhSvFpAzrd6gDPdPB41ajYlbHaqCqIK7EJLytGminUJ1UtewoM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769020140; c=relaxed/simple;
-	bh=l6+u6Dylp0WfC6wdeLiE99rgNBwsRoiJbYc85FgW5Fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbvN3mqkRNEDZO4WMFGLcLPXprsfohaQZ+E0QMYgL8J7fLkF4JfmibTiPLFPPp9HsHWbY8ADZwOxD8/YZ/UoxF7bBU1cVnx35yLlSCxK+wnZmTELUT7CA/iAfEMvLr42E0l3oE5qL9lKWIZikxTY0KvjDqOZLly3JA3Xi7k4z5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNWsEkZ7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95110286D7D
+	for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 00:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769041226; cv=pass; b=ZzISnjcTU7fIrc3TnlGhUemItfoNKLNJWf3o7roSTYIs74HnWlUPvUrhhlrQlZ9PtoVPTAIT2rdtCJs8ma9K2wi5RunzYRX60h3aXR9VS516nMZUQYosZk7ZcaB3JhveWg56peqmyQspqruU44p/tgQCpGD6mzxuRHMQex1JiqE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769041226; c=relaxed/simple;
+	bh=uDet0qkeSRR1s3nfeSTE4gpghrVQ6C4op726XCOFlug=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Slwt6W/80ZqwFrwA0nAu34oQtZGl6sHB1YumLgPuPsJeKbW4+ffRxRRJEzv+FAQ4jY7Oyy8VzoS3hCQ2W0WOshuUtWYE7BneiIYIHdL0t7Bu4IjwA8rvvDWog0SYHWeNGEoHa9ttitWvoH7xpvKvN4V8tCLJqDVS6pKLQXCwxzI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jklawfyC; arc=pass smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNWsEkZ7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87027C4CEF1;
-	Wed, 21 Jan 2026 18:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769020140;
-	bh=l6+u6Dylp0WfC6wdeLiE99rgNBwsRoiJbYc85FgW5Fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pNWsEkZ7St50nxE07dRB0tDto39+JiwHq185jDR4NO8xP6EgsbhJohlntKIrEKYm1
-	 etWasqI2WlRnwHTinOziFVvUPQv9J5OdDk8Xq05bghdF+VUmy4SYdG7yr871dgfoUC
-	 pNmOTv3H6VaioaZ3cfIvePZLY5/nczx1uaneKaDzHmjD3jhgZ9yr15DTgi2UgQ4+yg
-	 IOIISPfDlKydxKEH0/zvhU6+CWGoDjzvtQzxYsOmUTm4tKH82uwDjNzafpILD4F6hV
-	 saPOq6fcNWWvE3KhYJ8/xx89NJcAJ/tf40mxTYvgB9DZ9KfAp0W9U1beU8U8HTBHmY
-	 8zFZ6ib5glnkA==
-Date: Wed, 21 Jan 2026 18:28:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-rtc@vger.kernel.org,
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: rtc: loongson: Correct Loongson-1C
- interrupts property
-Message-ID: <20260121-sadness-operating-8bffd4250085@spud>
-References: <cover.1768616276.git.zhoubinbin@loongson.cn>
- <b6295c907410f6708115cba4df0959ee6629f8a5.1768616276.git.zhoubinbin@loongson.cn>
- <20260119-tricking-premiere-ada70700f804@spud>
- <20260120075045e7e864ba@mail.local>
- <20260120-cubical-harmonica-a7b7bbb26b08@spud>
- <20260120224920df0cf2ac@mail.local>
- <20260120-proposal-retry-d0a1f3de10ea@spud>
- <CAMpQs4Lm1Oq8L+dY8OnseV-NNUoD3+0QjnZATRkmR-sejCKAdA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jklawfyC"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-93f5910b06cso231560241.0
+        for <loongarch@lists.linux.dev>; Wed, 21 Jan 2026 16:20:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769041222; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bEhTBXXyWW8NVOtFJ+iU8jOKaTF+0brx73uysDmCzrVO5zD7ZNSeiNz9TkL2S3NdPY
+         2myqXnfYDThqHHfVg39c8EAWwHQ6PM1zanf+VRhdf60UxiXR+5qVxOF5R7zRuz9OkC96
+         piBnR/UIVTSNJ7jL3HIHskdKXd3v/2Y+FFMvRSkq4lX4WznjBWg1L3aaRaAKJk6JLWzc
+         Q7IINSfy5nWVo9lzJ/qXfmGjrZ0ORQB2Rsq2HZk2iW4pitrGUz9eQhnsJvBy93jVj46/
+         oZr7BWf3ddPgC/h9JJkSnhyzNWnybjTyy7uLFEak++1otWxWDHTeDxDiSUz3VVjCLnIQ
+         cdNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=NgWkbldIsVdXmF1uopkpscBQ8hvxBRp9zzbekpxQ/oc=;
+        fh=haDAYZxPwtexVyiro5EUGEeSux+ZqrBindm/22UQPWI=;
+        b=PTJepvn6AVjIVePdruFsedMfL3ocOJEmzfOVSUxazeK/qmg8rKU6956MUl5AEuLf82
+         4C6rrmB70RVLokJwXKeDKW60l+5yV8xyvpWomRHRJpEXMk9mHhhv8Z5iId6S3UdJ/3Zq
+         0b15wR8J+cd8kZh1PDG1IR25iapM/UQDl5bqNh6W0nENwcXv3k36oEMTnusBu9ATFHjR
+         2elWZ5yctwG+dKXxU636hJWFARDKMbQ8MlHBHkkH3pQVynwOv1NE8gO/0NEmDFkhDoUB
+         ve0CGeky42D+TIYleRlLUd+r4sC+t5AATq1FC+N36X9OiyBQFFofvBWB875rfWHpwHmP
+         fKKw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1769041222; x=1769646022; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NgWkbldIsVdXmF1uopkpscBQ8hvxBRp9zzbekpxQ/oc=;
+        b=jklawfyCmFd1/dYeJHdsRlefhqyaeauT5bIcHVjHGOJwTnNvf+HwrsQPmVJ/7DwDh2
+         N4sEQwAA12JNuCGUpXLiuW0rsqbLZfAymWvLFx7ZbgDi/Zj6hmntjBpjmgKiDAqgAGna
+         wYwo9IW4h5J7LC/W2LatTj3pIFeIRcNmTenQ3dxpyZ9N2rxFNG50EfUezSvLR7Ihu0oz
+         fqr0ag0gS1YuCgr6s1o3FWN9T35XWR/mD13nP6bdHBhIWpxrytit89LfQbA2X72O2tvO
+         l3+OxkNAwiRY4aYFZbYfiubjw1wGO1KRMFrt0X3T47we/wN+88ByC4eqUY2/y35XnbdN
+         kziA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769041222; x=1769646022;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NgWkbldIsVdXmF1uopkpscBQ8hvxBRp9zzbekpxQ/oc=;
+        b=T7zyaULqu2iup6CFxLL65bwCRetdFSlgbXQ7HQQJYXy8Xu3igWbhDZSlpSIqYtg8jB
+         ohYuDXqDfuu4rIACo/KSq/szFFGlyyT6bPrIpDnboyo2/1PujZTqJpEq474vHsORtXY1
+         RQcVATqCtvLJrLKPkBOnEIf1g6x5LV87jatZxC/UpRGKb6Ud3jMmu9zrrvUky2tRe9kL
+         zqVm+LK9AQlmRE2RP2KXo8YcSeU79HNNZXy3hHGRN9skrcwe8B2liFiPkfJn2cCYlSrj
+         AEL2rp77dorRZ7qKW7WoAJ3oWAczZ/mEMT+yyCmqNkMWQm30Y5EmlgIv4eTN43ucj4KG
+         Wp8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVZSA2CszhcqYl24bD2ATm2REkCGg9CQLeyc1kX/CZ8sEK/qS/NvIge9PZaoIk3PRKbVYNhIpjU0Ds=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyol8wsroY6uuMv6aDLkWqNX3l6FQLj2Ki/bCnfBL8Qo1dQxUpx
+	SKmJ2zA6MlJkElsX35gXY2anFw9OlXLpeOwpbHeROBEmrlQGjNzutZE4Bdhq6RsruauFhITPYKt
+	Sqtx9xDvIQhHFmBtTRxglvPPEIRSbS9W02W4dVA4Z
+X-Gm-Gg: AZuq6aI8bOAseQrHwUBz19ORSYzZ3vYzG58PoAUbUj6JHUOf6NXY7uyBPWIjtRKH+sR
+	zqccf4GQkQX6DGyEAchMOTiEG4+S1/ZraPYCxYahjEvP5qw9OyrkrpZnyMidr0G5Q1+6PzGWW9d
+	FnzliTSY+Rp3JZMMKUHEe7eNf+ka84kFi3NR+1UeIFhsaQp0haACLnNl1VuYTVxGVSGYrl3V9RZ
+	Qi5tuCx/fDBkTpsbdI8+iQ50d3/HxSvSmmxPuf7smbg/0mw29zrx1WOYs1HrcOBTIz7ycytjtEs
+	/woP2j+qiQ4qfxm4b4dTABZiJQ==
+X-Received: by 2002:a05:6102:370f:b0:5ef:b32c:dff8 with SMTP id
+ ada2fe7eead31-5f532daa025mr403198137.5.1769041220288; Wed, 21 Jan 2026
+ 16:20:20 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 21 Jan 2026 16:20:19 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 21 Jan 2026 16:20:19 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <6b50a83e-acd7-4db3-ae9b-015ffad4f615@amazon.com>
+References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-3-kalyazin@amazon.com>
+ <CAEvNRgGrpv5h04s+btubhUFHo=d6mBFbr2BVrMt=bWuWOztdJQ@mail.gmail.com> <6b50a83e-acd7-4db3-ae9b-015ffad4f615@amazon.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ytcyEvQbqLkTzetR"
-Content-Disposition: inline
-In-Reply-To: <CAMpQs4Lm1Oq8L+dY8OnseV-NNUoD3+0QjnZATRkmR-sejCKAdA@mail.gmail.com>
+Date: Wed, 21 Jan 2026 16:20:19 -0800
+X-Gm-Features: AZwV_Qi8Ad3srMrd8WYJ_YHR6Nmvzc-hfHPfYm40mDZ1I3o7aAQCl-nKoDyQfts
+Message-ID: <CAEvNRgHMdnALNfT0SuEb-gqM1Aq1c6U_nRB2GzC0jYqrDRJTOw@mail.gmail.com>
+Subject: Re: [PATCH v9 02/13] mm/gup: drop secretmem optimization from gup_fast_folio_allowed
+To: kalyazin@amazon.com, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
+	"maobibo@loongson.cn" <maobibo@loongson.cn>, "prsampat@amd.com" <prsampat@amd.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
+	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, 
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 
+Nikita Kalyazin <kalyazin@amazon.com> writes:
 
---ytcyEvQbqLkTzetR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 15/01/2026 21:40, Ackerley Tng wrote:
+>> "Kalyazin, Nikita" <kalyazin@amazon.co.uk> writes:
+>>
+>>> From: Patrick Roy <patrick.roy@linux.dev>
+>>>
+>>> This drops an optimization in gup_fast_folio_allowed() where
+>>> secretmem_mapping() was only called if CONFIG_SECRETMEM=y. secretmem is
+>>> enabled by default since commit b758fe6df50d ("mm/secretmem: make it on
+>>> by default"), so the secretmem check did not actually end up elided in
+>>> most cases anymore anyway.
+>>>
+>>> This is in preparation of the generalization of handling mappings where
+>>> direct map entries of folios are set to not present.  Currently,
+>>> mappings that match this description are secretmem mappings
+>>> (memfd_secret()).  Later, some guest_memfd configurations will also fall
+>>> into this category.
+>>>
+>>> Signed-off-by: Patrick Roy <patrick.roy@linux.dev>
+>>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>>> Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
+>>> ---
+>>>   mm/gup.c | 11 +----------
+>>>   1 file changed, 1 insertion(+), 10 deletions(-)
+>>>
+>>> diff --git a/mm/gup.c b/mm/gup.c
+>>> index 95d948c8e86c..9cad53acbc99 100644
+>>> --- a/mm/gup.c
+>>> +++ b/mm/gup.c
+>>> @@ -2739,7 +2739,6 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>>>   {
+>>>        bool reject_file_backed = false;
+>>>        struct address_space *mapping;
+>>> -     bool check_secretmem = false;
+>>>        unsigned long mapping_flags;
+>>>
+>>>        /*
+>>> @@ -2751,14 +2750,6 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>>
+>> Copying some lines the diff didn't contain:
+>>
+>>          /*
+>>           * If we aren't pinning then no problematic write can occur. A long term
+>>           * pin is the most egregious case so this is the one we disallow.
+>>           */
+>>          if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) ==
+>>              (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
+>>
+>> If we're pinning, can we already return true here? IIUC this function
+>> is passed a folio that is file-backed, and the check if (!mapping) is
+>> just there to catch the case where the mapping got truncated.
+>
+> I have to admit that I am not comfortable with removing this check,
+> unless someone says it's certainly alright.
+>
 
-On Wed, Jan 21, 2026 at 02:52:06PM +0800, Binbin Zhou wrote:
-> Hi Conor & Alexandre:
->=20
-> Thanks for your reply.
->=20
-> On Wed, Jan 21, 2026 at 7:39=E2=80=AFAM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Tue, Jan 20, 2026 at 11:49:20PM +0100, Alexandre Belloni wrote:
-> > > On 20/01/2026 19:24:09+0000, Conor Dooley wrote:
-> > > > On Tue, Jan 20, 2026 at 08:50:45AM +0100, Alexandre Belloni wrote:
-> > > > > On 19/01/2026 18:24:36+0000, Conor Dooley wrote:
-> > > > > > On Sat, Jan 17, 2026 at 10:26:48AM +0800, Binbin Zhou wrote:
-> > > > > > > The `interrupts` property indicates an RTC alarm interrupt, w=
-hich is
-> > > > > > > required for RTCs that support the alarm feature, which is no=
-t supported
-> > > > > > > by the Loongson-1C RTC. We exclude it for a more accurate des=
-cription.
-> > > > > > >
-> > > > > > > Changing the `allowed` property is ABI-breaking behavior, but
-> > > > > > > throughout the existing Loongson DTS{i}, the description of t=
-he RTC
-> > > > > > > nodes conforms to the modified bingding rules.
-> > > > > >
-> > > > > > Right, changing properties is an ABI break, but when following =
-the ABI
-> > > > > > would've produced something non-functional, breaking it is not =
-really
-> > > > > > relevant.
-> > > > >
-> > > > >
-> > > > > But the HW has the interrupt, the fact that is not functional doe=
-sn't
-> > > > > mean it isn't there. I thought we should describe the hardware?
-> > > >
-> > > > Does the hardware have it? My interpretation of the commit message =
-was
-> > > > that it didn't have the alarm feature and thus no interrupt? Unless=
- the
-> > > > interrupt has some other purpose, in which case yeah we shouldn't a=
-ccept
-> > > > this change and only the new device should permit there being no
-> > > > interrupt.
-> > >
-> > > The datasheet shows the interrupt coming out of the RTC and it has the
-> > > proper registers. Why it is not functional is not clear to me.
-> >
-> > Right.. Perhaps Binbin can explain that then? If the interrupt is
-> > actually there then the dts should get fixed instead IMO.
->=20
-> I carefully reviewed the manual again and believe this patch is still nec=
-essary.
->=20
-> First, the Loongson-1C RTC does not define the timing interrupt
-> register (`TOY_MATCH0_REG`)[1], meaning it lacks hardware support for
+Perhaps David can help here, David last changed this in
+f002882ca369aba3eece5006f3346ccf75ede7c5 (mm: merge folio_is_secretmem()
+and folio_fast_pin_allowed() into gup_fast_folio_allowed()) from return
+true to check_secretmem = true :)
 
-I don't understand Chinese, so I'll take your word for it that this
-particular model doesn't have this interrupt and that there's no other
-interrupt used by the rtc via a different register :) My ack for the
-patch remains valid.
-
-Also, I looked at the existing binding again, and there's no ABI break
-anyway cos the interrupts property wasn't required in the first place,
-so any driver has to be written to permit the absence of an interrupts
-property. I think you should remove mention of ABI break from the commit
-message, since it's not actually one.
-
-> alarms. Consequently, `interrupts` are also unnecessary.
-> The Loongson-2K0300 is different. It defines `TOY_MATCH0_REG`, but due
-> to a hardware design flaw, accessing this register causes system
-> crashes. Therefore, I must also classify it as lacking alarm support.
-
-This logic also seems fair to me, assuming that this is the only
-interrupt that the device has.
-
-> Additionally, in patch-3 [2], I rewrote the alarm logic to decouple
-> the `interrupts` property from the alarm feature: I defined
-> corresponding workaround bits in `loongson_rtc_config->flags`. This
-> should be considered a SoC-specific attribute.
->=20
-> Finally, two thoughts:
-> 1. Retain this patch; it is correct for Loongson-1C.
-> 2. For Patch-2, still add the `interrupts` property to the
-> Loongson-2K0300 RTC node (as it exists in hardware), combined with the
-> workaround bit setting in patch-3 to avoid the hardware flaw.
-
-Personally, I think what you've done in patch 2 is okay, since that
-interrupt is non-functional.
-
->=20
-> Would this approach be acceptable?
->=20
-> [1]: https://www.loongson.cn/uploads/images/2022051616223977135.%E9%BE%99=
-%E8%8A%AF1C300%E5%A4%84%E7%90%86%E5%99%A8%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%=
-8C.pdf
-> (section 21.2.1)
-> [2]: https://lore.kernel.org/linux-rtc/abff68dda2fe6a6601a9e58b31e278d941=
-297fce.1768616276.git.zhoubinbin@loongson.cn/
->=20
-> --
-> Thanks.
-> Binbin
-
---ytcyEvQbqLkTzetR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaXEa4wAKCRB4tDGHoIJi
-0r1UAPwNOFlUehj5qXpainyk5Vw+hUB3Cwtlc5EQxTrSF5q6IAD7BzUEiHUCKTUg
-z1kTbYXkiG5phJRz1IVmRBTWgLPA2wM=
-=zJht
------END PGP SIGNATURE-----
-
---ytcyEvQbqLkTzetR--
+>>
+>> Or should we wait for the check where the mapping got truncated? If so,
+>> then maybe we can move this "are we pinning" check to after this check
+>> and remove the reject_file_backed variable?
+>
+> I can indeed move the pinning check to the end to remove the variable.
+> I'd do it in a separate patch.
+>
+>>
+>>          /*
+>>           * The mapping may have been truncated, in any case we cannot determine
+>>           * if this mapping is safe - fall back to slow path to determine how to
+>>           * proceed.
+>>           */
+>>          if (!mapping)
+>>                  return false;
+>>
+>>
+>>>                reject_file_backed = true;
+>>>
+>>>        /* We hold a folio reference, so we can safely access folio fields. */
+>>> -
+>>> -     /* secretmem folios are always order-0 folios. */
+>>> -     if (IS_ENABLED(CONFIG_SECRETMEM) && !folio_test_large(folio))
+>>> -             check_secretmem = true;
+>>> -
+>>> -     if (!reject_file_backed && !check_secretmem)
+>>> -             return true;
+>>> -
+>>>        if (WARN_ON_ONCE(folio_test_slab(folio)))
+>>>                return false;
+>>>
+>>> @@ -2800,7 +2791,7 @@ static bool gup_fast_folio_allowed(struct folio *folio, unsigned int flags)
+>>>         * At this point, we know the mapping is non-null and points to an
+>>>         * address_space object.
+>>>         */
+>>> -     if (check_secretmem && secretmem_mapping(mapping))
+>>> +     if (secretmem_mapping(mapping))
+>>>                return false;
+>>>        /* The only remaining allowed file system is shmem. */
+>>>        return !reject_file_backed || shmem_mapping(mapping);
+>>> --
+>>> 2.50.1
