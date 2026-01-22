@@ -1,212 +1,269 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3338234679A
-	for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 14:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769090440; cv=none; b=lfLJIaiFne9Kxdcit4Aqkdt0aksj9l3DbRmYxhoWUdHDUFSyppvXIu0pt398Sd97GgdbqKB86M0EchwEna3ePYZbgU1FgwZ/o+349tm4QX1ZFS0iTsKncykgDIzKkM5npE4b0Z8WAMN2IGSsyzP7K58SZsW5jaUQ8c7JpBj8jb4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769090440; c=relaxed/simple;
-	bh=AHSBEaRYfStLiqJd2Yrr0EQ+tzb5DiwinzVPHKX4hIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRccx2mpHHAr8bwESTaHYGMzHv1gDF2xYpHG13Ki4k0+e07iWD/Ukl81jPr5DmqOQ7lQTU4B32FKZjdg9ma9n73T/4vOzDu9X6P1pmK3vzXLdqoRVmbm7u7eHmgWaqNE1JaixLsEN5zhrY8Eii4SxEri42G0PwJKUUYjZ9X1n30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LghGpbTY; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB41829D29E
+	for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 16:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769099670; cv=pass; b=uOshGohVpVosFNjgGyp5FLP5hwBAV5Whrfe439r/25hj3FnVJT+1icVVDbwrf2lbGmFL9viVr/Tcyxhe2GwUN2vicytnBgvQIcu7V1x69il5tfMM9mclQ8+m42DudCEsyQnQSLiVLYnccrlzxsngLy0vEwuRCTPwEHKUWP4AmpI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769099670; c=relaxed/simple;
+	bh=ZYIqU7xPcH37zvSybjI3FPpHQTFAEV4LoCN7S8Ljj9w=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EPhtgJ0pwHNzh9h5+g1T2YCMBpz5p5zGd9I+rcBdCmgrGLu8MlOcSRbhAZz2zQ1/pI9/ndo/kTJqTYVAh1m4Hz2KQ7SMEMsb1UD1N4S3GJrQd1zrXpQdtT+8Xyf+zgExDFUHo5nlTWQnFuiBLhK5ZFAW61a0o/0ZuWeQN477xIQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KecpCGKl; arc=pass smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LghGpbTY"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-652fdd043f9so1717485a12.1
-        for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 06:00:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KecpCGKl"
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5efa6d5dbf5so348014137.1
+        for <loongarch@lists.linux.dev>; Thu, 22 Jan 2026 08:34:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769099662; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DvMlsT05L/U2r4u3/noLgIWc3NkSf1XQJ1ctJuwRgR60i1nDESky0vZdkjDcdMl48K
+         GyzTb+mN9faTOiJG0EfBbHKtSnbnC8HikCkVQMZp5oInYSLrk6lVLI49IgeJwry2eHYW
+         M3bw65qcrfLs7t9W8N//7/o+UJ0/oAK/9tPr+bIFydavCvcoMGRWIgQwueZBKJVueaaC
+         sqgS70cRVay/eS6TDp3siq+q9dU7jZ1hLut+AV+WCmsyrqw9tLdB2oBn8HNnUf88DtTC
+         t/sv/z6SCKD75o6i8RCdD3lExBO33AYCaOqaYx/iJpOmq6pTb+4S8HwwcR6wn89Y0a2f
+         dQEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=L0r70yq+P7UB3qkVO5/x8sBghKy9pd209cUDvkPIBxI=;
+        fh=kTecvpC28d2xzXtJCYt7DBI7ScR4c3jXJLesg2Elpfg=;
+        b=aoDJR83v4eW9wu7uP5LUokIBSAUYAxV8dINrlNt0ynd7tAhLkR0YeWbEZSAztSiarX
+         MmzLwIi44924NDYI9VOoTXbJ7KtDyFrNgqpvRETgR9J7lXXZ5zRoMFg6zSpGFddYOdsd
+         iCfSQZ8GgnIDNa0A2s6qcebgdjbZ94v7W2K5LRAEkhhs0zJATaS8yUA7Iwe21NejQ9SK
+         KH3S0+geIdTb8JPflu3wO4aPN6xcJFB8/RSw4UgshOLcLOho6WI2UakSrKF0IgPmS9+u
+         xD9JW+OvfO67ifnC9VQ4E4KEGaf5kz2VTfyimlT52t8q807ETzsnXZ3bxUq06f/rkjJY
+         MYvQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769090436; x=1769695236; darn=lists.linux.dev;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KXXllTpn+4j3DQ+o0FpmjiZEdWUg34VA5GPm+3TDwac=;
-        b=LghGpbTYIt190W+vGrjK8kvKq/5oHAPWb9fGxwMJWlHYn2jG5CYxFg34Uylo7hN/Wk
-         6nTxjAteRe/DQ9mZEREzK+nwSp8lXNTo/qlLpIJAM7NyyLHdMsqzf66qdKXElOVrkaJj
-         ntsTZfDTT3QD11GtHJpvnxYH29mQqiWvlOBKPvpWSM/nFx0qQH2P5kCRP4v3hVIRhjFn
-         InWG9TdP2uKKwEgnXrSSfFFeH0XTUVLv72CFgzbUuEcXu7VNvGQ58ua4QKTp0aY9HMfZ
-         1n9R3q8flsrHYc7WBANY2MTqNH3fnqiiSnqSMrbvaLV2dqoub875QE2xJgJHCUE8mOBQ
-         H1jA==
+        d=google.com; s=20230601; t=1769099662; x=1769704462; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L0r70yq+P7UB3qkVO5/x8sBghKy9pd209cUDvkPIBxI=;
+        b=KecpCGKlaxnLRceW4uMmJQUJpQSMztwRJlMPKDEIC33FaRHRtSDnK5S8GfS0kg8v4Q
+         rJEOF/gP+QDCLTtpX8jClddogYH8cURxX+Ee8CfzmR/Vl3SWkyT/uaw4d4yKyfmsuIc2
+         xnqFjbKDeNULT+21HHbJuZI+H3MZt7DhJr/yEYQeHYjZ9mx1Wzair6Zz3Hjoa6nhybO5
+         lEtKS6zaRQchl0j+dFnGpfrOijz6oryyus6vL/iebk53/IpNrPC1wd9cnRUIZX5BQXiZ
+         934jEBq0XYRv+fqstL8hiAzX5jaO6gHEgEEoYDHsmR3jzR/DfiV3zwWI68WzbuTFC2K+
+         MMlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769090436; x=1769695236;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KXXllTpn+4j3DQ+o0FpmjiZEdWUg34VA5GPm+3TDwac=;
-        b=SNID4rItvxOo/+yXVflR4j4AavZTXCHVIopd+d0oMSU/+RlFv/hjgRoWfKbxa0O8en
-         tCxAAmkmFLjskEvN5sWKLOTFoxq+lnbsUF9AQFQ6G24dZHKzkQYKIk7lE7M56COzldiw
-         xVkEruSsYPOKC0Y/DhbBTUyVu4JPTfm1eEIGl1XJ3vUwj/El/u5qEno1DEUZhv62N5Gh
-         x7p/Ap8oQwxTvstWK7l79zFyQJ0TFhtkjwGoQX9d0UETofEs/V6z4e+GvTuaqTdlJZq6
-         D8tvccyzEV1gzHar/qVRCINqZbURNTbw0/UHSKCOZfvJkqIKnBElChcTVqQDe7wJOMY2
-         HiHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXffU04UZp64EpsTVYAVrlfxDBoVD/SPIPGwBX46HwDgLvM61nIsmatt+P11cHxJyscd7AM6Ek+nfY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz3Wj7Y5TzkTtd1uLfhddm43o28ffLlygepe0ph69LN183QMgAS
-	Gl46+4sTPQ0+joUn4vyrWNvlW0AcwFKiohF4OwqtrTRgCEr56+Mv4R+h
-X-Gm-Gg: AZuq6aIkyFDT/ZcMJRmQVWIN0v/hXdC2ZfaTLoNObkLfB8dQd5DAauAwfgPiq6CSzn1
-	7RiXi38r9ypg0rKcY/kkfSS0tQWd8qeHKialF+HMrzDVwUIk4RRAUgPfMVK9zHJqumlT2VdVuXT
-	Pm4g/mFUS+0vz6brlV/Q//xfrRTKPPrDmHpq/tTrnTiH2xj2Sbz5NJ26rD+ha3RcG/mybW21s7k
-	8n5Wpe0tlpiGaTDHFUFb5KNO/QIecypQeeD8lE4VCn5Rj+0ksOyt8Bmz4ji0hzq2LWbHGb0PBLp
-	TPY1fAQxe2vmi/EzOTIsnuBYEqcc8UxQNP6R8HHWLIFB+mXvtFVTekS2DnTxGmk5SwqJYfKM3DT
-	UIKy8HuDkFTfkGtdvntvftOeF7CYJB0A/0KndL384WKDlEdF009sFMdxnC+j7Q57aeXzcbWFtqe
-	H8sRkNWmTTQw==
-X-Received: by 2002:a17:907:84e:b0:b87:33f3:6042 with SMTP id a640c23a62f3a-b8792d3be6dmr1826205366b.9.1769090435585;
-        Thu, 22 Jan 2026 06:00:35 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b884006d3bbsm68748466b.32.2026.01.22.06.00.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 22 Jan 2026 06:00:35 -0800 (PST)
-Date: Thu, 22 Jan 2026 14:00:34 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: "David Hildenbrand (Red Hat)" <david@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, Qi Zheng <qi.zheng@linux.dev>,
-	will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
-	peterz@infradead.org, dev.jain@arm.com, akpm@linux-foundation.org,
-	ioworker0@gmail.com, linmag7@gmail.com, linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
- MMU_GATHER_RCU_TABLE_FREE
-Message-ID: <20260122140034.ymigrfppzwvmcjkr@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
- <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
- <20251231094243.zmjs7kgflm7q6k73@master>
- <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
- <20260101020715.45wqnjgcklvjcth3@master>
- <d38fcbe5-8b4a-40bc-b8c8-1c49ccaa9964@kernel.org>
+        d=1e100.net; s=20230601; t=1769099662; x=1769704462;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L0r70yq+P7UB3qkVO5/x8sBghKy9pd209cUDvkPIBxI=;
+        b=A9vcJxEAUe31+SU31feY462zAGElzwjpvOGTylzJ8m0eBtlYcaNdTtv7psvFuwwlNp
+         nxwZ4Fh5vAI6Dgg8rHDFLLctgSlPYM5SDiZp7bq1yJD8fP0gdrYHx5AZyXr8cOLnFz1/
+         xhBNY5jBTyaKHPxrsmNXU+U3Tk1p1h8xLju9VckgbcORPJK8OV7ZbG22WiwUtSE32Ifv
+         OkaRFbRgdgHvJ7anyehxK7kWLZw5GA5+clH3VLLYunbT9xsT5GHke6WNX32JB2lPCE+m
+         RW7lnqd7YPp8KVLHQZrESA836lpTOOO78goIT/tlCJApID3vPuyB6TnHyvLffpcyAHsZ
+         nYJw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdXo1hwt/e3wb6t0dcUSj1l9EB6zYWw6BDG4HRHzXJo2MBMex4ywDa9fyiMQ8Z1U/hmetacgWi+kM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNrbRKs7VMs9rUaM4CWgWI7EXMrCZ1iVkbCaG7qdWLrg+bbNDQ
+	KIEo55R0ouj1bFr8Pg6+6h1a0ISAYfQr7rNbyhAzcSNAF8yIzHA6dY676vZhAh3y7kcBg3/gsTL
+	AXT0EfMDvQ7suHdcJz3kggB3vlZOFfA2iVchYskHk
+X-Gm-Gg: AZuq6aLzcApyECM2CQ3dZjOUxXoEHpqQZahcg3VLNP0WR88URRUYcg1sU6S/m5S9LdE
+	SIXldtbouk42VeSrw1LfKb5KCLAfUUEvajvf5P1zlb2fwbIAp0a+UpyntR+/S8omsVy+U0IeuVd
+	JbcQcKL1ZvgaYun6fmFm+QaUoN6BJhjcQjQFrowAiJjcd/6wt9FHBCrLoz6K8Sb3wnpPnl7ap9F
+	rAWtII4e7MzH1Nr7G4VvwDzCnrpeHahho9vptgi2DkgF/DVwfL4+aAjnupa1sViwWtnawhhWOr6
+	mJpk
+X-Received: by 2002:a05:6102:c52:b0:5ee:9e4b:a81c with SMTP id
+ ada2fe7eead31-5f54bc6d8edmr83779137.22.1769099661387; Thu, 22 Jan 2026
+ 08:34:21 -0800 (PST)
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 22 Jan 2026 08:34:20 -0800
+Received: from 176938342045 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 22 Jan 2026 08:34:20 -0800
+From: Ackerley Tng <ackerleytng@google.com>
+In-Reply-To: <a2b79af7-e5d1-4668-bff3-606f57d32dfc@amazon.com>
+References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-8-kalyazin@amazon.com>
+ <CAEvNRgEzVhEzr-3GWTsE7GSBsPdvVLq7WFEeLHzcmMe=R9S51w@mail.gmail.com> <a2b79af7-e5d1-4668-bff3-606f57d32dfc@amazon.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d38fcbe5-8b4a-40bc-b8c8-1c49ccaa9964@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Date: Thu, 22 Jan 2026 08:34:20 -0800
+X-Gm-Features: AZwV_QgNvHql-EMuz2B4VijAKAK9511fycMrz6pi1d87rdZBUNlP58MQhoc9tIU
+Message-ID: <CAEvNRgF46M1jp0+eBu2wQMO7P1afyo00SOkENFwvB2KYX3dnFA@mail.gmail.com>
+Subject: Re: [PATCH v9 07/13] KVM: guest_memfd: Add flag to remove from direct map
+To: kalyazin@amazon.com, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
+	"maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
+	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, 
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
+	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
+	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
+	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "riel@surriel.com" <riel@surriel.com>, 
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
+	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
+	"maobibo@loongson.cn" <maobibo@loongson.cn>, "prsampat@amd.com" <prsampat@amd.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
+	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
+	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
+	"hca@linux.ibm.com" <hca@linux.ibm.com>, 
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pjw@kernel.org" <pjw@kernel.org>, 
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
+	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com" <jackmanb@google.com>, 
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
+	"Thomson, Jack" <jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>, 
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco" <xmarcalx@amazon.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jan 19, 2026 at 11:18:52AM +0100, David Hildenbrand (Red Hat) wrote:
->On 1/1/26 03:07, Wei Yang wrote:
->> On Wed, Dec 31, 2025 at 05:52:57PM +0800, Qi Zheng wrote:
->> > 
->> > 
->> > On 12/31/25 5:42 PM, Wei Yang wrote:
->> > > On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
->> > > > From: Qi Zheng <zhengqi.arch@bytedance.com>
->> > > > 
->> > > > The PT_RECLAIM can work on all architectures that support
->> > > > MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
->> > > > MMU_GATHER_RCU_TABLE_FREE.
->> > > > 
->> > > > BTW, change PT_RECLAIM to be enabled by default, since nobody should want
->> > > > to turn it off.
->> > > > 
->> > > > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->> > > > ---
->> > > > arch/x86/Kconfig | 1 -
->> > > > mm/Kconfig       | 9 ++-------
->> > > > 2 files changed, 2 insertions(+), 8 deletions(-)
->> > > > 
->> > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> > > > index 80527299f859a..0d22da56a71b0 100644
->> > > > --- a/arch/x86/Kconfig
->> > > > +++ b/arch/x86/Kconfig
->> > > > @@ -331,7 +331,6 @@ config X86
->> > > > 	select FUNCTION_ALIGNMENT_4B
->> > > > 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->> > > > 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
->> > > > -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
->> > > > 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
->> > > > 	select SCHED_SMT			if SMP
->> > > > 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
->> > > > diff --git a/mm/Kconfig b/mm/Kconfig
->> > > > index bd0ea5454af82..fc00b429b7129 100644
->> > > > --- a/mm/Kconfig
->> > > > +++ b/mm/Kconfig
->> > > > @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
->> > > > 	  The architecture has hardware support for userspace shadow call
->> > > >             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->> > > > 
->> > > > -config ARCH_SUPPORTS_PT_RECLAIM
->> > > > -	def_bool n
->> > > > -
->> > > > config PT_RECLAIM
->> > > > -	bool "reclaim empty user page table pages"
->> > > > -	default y
->> > > > -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
->> > > > -	select MMU_GATHER_RCU_TABLE_FREE
->> > > > +	def_bool y
->> > > > +	depends on MMU_GATHER_RCU_TABLE_FREE
->> > > > 	help
->> > > > 	  Try to reclaim empty user page table pages in paths other than munmap
->> > > > 	  and exit_mmap path.
->> > > 
->> > > Hi, Qi
->> > > 
->> > > I am new to PT_RECLAIM, when reading related code I got one question.
->> > > 
->> > > Before this patch,  we could have this config combination:
->> > > 
->> > >       CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
->> > > 
->> > > This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
->> > > is semi rcu version.
->> > > 
->> > > I am curious could we use rcu version tlb_remove_table_one() for this case?
->> > > Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
->> > > there some limitation here?
->> > 
->> > I think there's no problem. The rcu version can also ensure that the
->> > fast GUP works well.
->> > 
->> 
->> Thanks for your quick response :-)
->> 
->> And Happy New Year
->> 
->> So my little suggestion is move the definition of __tlb_remove_table_one()
->> under CONFIG_MMU_GATHER_RCU_TABLE_FREE. Do you thinks this would be more
->> clear?
+Nikita Kalyazin <kalyazin@amazon.com> writes:
+
+Was preparing the reply but couldn't get to it before the
+meeting. Here's what was also discussed at the guest_memfd biweekly on
+2026-01-22:
+
 >
+> [...snip...]
 >
->Do you mean
+>>> @@ -423,6 +464,12 @@ static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
+>>>                kvm_gmem_mark_prepared(folio);
+>>>        }
+>>>
+>>> +     err = kvm_gmem_folio_zap_direct_map(folio);
+>>
+>> Perhaps the check for gmem_flags & GUEST_MEMFD_FLAG_NO_DIRECT_MAP should
+>> be done here before making the call to kvm_gmem_folio_zap_direct_map()
+>> to make it more obvious that zapping is conditional.
 >
->diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->index 2faa23d7f8d42..6aeba4bae68d2 100644
->--- a/mm/mmu_gather.c
->+++ b/mm/mmu_gather.c
->@@ -319,7 +319,7 @@ static inline void tlb_table_invalidate(struct mmu_gather
->*tlb)
->        }
+> Makes sense to me.
+>
+>>
+>> Perhaps also add a check for kvm_arch_gmem_supports_no_direct_map() so
+>> this call can be completely removed by the compiler if it wasn't
+>> compiled in.
+>
+> But if it is compiled in, we will be paying the cost of the call on
+> every page fault?  Eg on arm64, it will call the following:
+>
+> bool can_set_direct_map(void)
+> {
+>
+> ...
+>
+> 	return rodata_full || debug_pagealloc_enabled() ||
+> 		arm64_kfence_can_set_direct_map() || is_realm_world();
 > }
 >
->-#ifdef CONFIG_PT_RECLAIM
->+#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> static inline void __tlb_remove_table_one_rcu(struct rcu_head *head)
-> {
->        struct ptdesc *ptdesc;
+
+You're right that this could end up paying the cost on every page
+fault. Please ignore this request!
+
+>>
+>> The kvm_gmem_folio_no_direct_map() check should probably remain in
+>> kvm_gmem_folio_zap_direct_map() since that's a "if already zapped, don't
+>> zap again" check.
+>>
+>>> +     if (err) {
+>>> +             ret = vmf_error(err);
+>>> +             goto out_folio;
+>>> +     }
+>>> +
+>>>        vmf->page = folio_file_page(folio, vmf->pgoff);
+>>>
+>>>   out_folio:
+>>> @@ -533,6 +580,8 @@ static void kvm_gmem_free_folio(struct folio *folio)
+>>>        kvm_pfn_t pfn = page_to_pfn(page);
+>>>        int order = folio_order(folio);
+>>>
+>>> +     kvm_gmem_folio_restore_direct_map(folio);
+>>> +
+>>
+>> I can't decide if the kvm_gmem_folio_no_direct_map(folio) should be in
+>> the caller or within kvm_gmem_folio_restore_direct_map(), since this
+>> time it's a folio-specific property being checked.
 >
->?
-
-Sorry for the late reply.
-
-Yes, and maybe we can move the definition to the 
-#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE code block above, then to be next to
-tlb_remove_table_free().
-
-So that we always have rcu version when CONFIG_MMU_GATHER_RCU_TABLE_FREE.
-
+> I'm tempted to keep it similar to the kvm_gmem_folio_zap_direct_map()
+> case.  How does the fact it's a folio-speicific property change your
+> reasoning?
 >
->-- 
->Cheers
->
->David
 
--- 
-Wei Yang
-Help you, Help me
+This is good too:
+
+  if (kvm_gmem_folio_no_direct_map(folio))
+          kvm_gmem_folio_restore_direct_map(folio)
+
+>>
+>> Perhaps also add a check for kvm_arch_gmem_supports_no_direct_map() so
+>> this call can be completely removed by the compiler if it wasn't
+>> compiled in. IIUC whether the check is added in the caller or within
+>> kvm_gmem_folio_restore_direct_map() the call can still be elided.
+>
+> Same concern as the above about kvm_gmem_folio_zap_direct_map(), ie the
+> performance of the case where kvm_arch_gmem_supports_no_direct_map() exists.
+>
+
+Please ignore this request!
+
+>>
+>>>        kvm_arch_gmem_invalidate(pfn, pfn + (1ul << order));
+>>>   }
+>>>
+>>> @@ -596,6 +645,9 @@ static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags)
+>>>        /* Unmovable mappings are supposed to be marked unevictable as well. */
+>>>        WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
+>>>
+>>> +     if (flags & GUEST_MEMFD_FLAG_NO_DIRECT_MAP)
+>>> +             mapping_set_no_direct_map(inode->i_mapping);
+>>> +
+>>>        GMEM_I(inode)->flags = flags;
+>>>
+>>>        file = alloc_file_pseudo(inode, kvm_gmem_mnt, name, O_RDWR, &kvm_gmem_fops);
+>>> @@ -807,6 +859,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+>>>        if (!is_prepared)
+>>>                r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
+>>>
+>>> +     kvm_gmem_folio_zap_direct_map(folio);
+>>> +
+>>
+>> Is there a reason why errors are not handled when faulting private memory?
+>
+> No, I can't see a reason.  Will add a check, thanks.
+>
+>>
+>>>        folio_unlock(folio);
+>>>
+>>>        if (!r)
+>>> --
+>>> 2.50.1
