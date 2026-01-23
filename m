@@ -1,168 +1,147 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from o47.p25.mailjet.com (o47.p25.mailjet.com [185.189.236.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DA22749ED
-	for <loongarch@lists.linux.dev>; Fri, 23 Jan 2026 15:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC32E1DD877
+	for <loongarch@lists.linux.dev>; Fri, 23 Jan 2026 15:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.189.236.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769181367; cv=none; b=cYwW2yBt1BwYyVaqqbhw1KBMRzxn2gz2HN04sTMEcjMt3JMzOZi20q5nrbH1Tb6gTjz5Vd+dc+ZBQFBClH3Wr6Gf/rY5AiwCEeX197SWK/LAI4yWCv2rhcdFVmjzfSFzziYSykWuQ6QGNKtu8xMffepDK4BdXT0kTJOGWq64Aps=
+	t=1769183795; cv=none; b=hQrbhr/j+zWApTX+wA23g6GlkdQ/WdaV0ZYXyafgxPJxZoiYp39PYUXgC+TkzDJ1XzARYlxQji54Is/cj7YBBzNARoUK85Dj190XLsiExFqqpbiACgzY1fqO5T2EtOnKMy4q8E7j0A1dTfqTppwGw/ATYr4VAxNrLJ7wygVHyiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769181367; c=relaxed/simple;
-	bh=rXpme69WV3lZbMqXo4BPlwMSPALTvMzyYlkYjeNanmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eCXYp0XABFJib1s6etE+/NY+LarhEP0+oCLpfGpYzy9JBW8tpD8g3RuCQoBicfnb7N9DuGQAdbUoTx+M4UKCXhmtlFfZzAJPJzaoDWSxqo2W4mNbMDqkdycIFhqXaBOMLzNTm+9wsHSLec9Wsiy1HQ2WZvkpMiV0FfrQTJraeGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=ag1WRAWJ reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+	s=arc-20240116; t=1769183795; c=relaxed/simple;
+	bh=n625F9iOcmfm4oeosR440PIXnRGSOWmz0lx0rm52p6Y=;
+	h=Message-Id:MIME-Version:From:To:Subject:Date:Cc; b=pCBD/nY79Z4mVbtD3PpP6Xr8YERo+wz14S9nSGOSf7JHt+oAijToV393KiVF7vBVi4CGcsye7FT9cJS/5u4P2vhlKJC/vX7z4KX5DAyd2T4XCJrDbrEwaj1Np05ZWDlrBgt0HskW1m+V9OMdEPxUhRDFMOMA5nVU9ju/45aUQAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=a3364097.bnc3.mailjet.com; dkim=pass (2048-bit key) header.d=csmantle.top header.i=rong.bao@csmantle.top header.b=om/F2B/3; arc=none smtp.client-ip=185.189.236.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a3364097.bnc3.mailjet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="ag1WRAWJ"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4dyM2M6CZPz1DHVR;
-	Fri, 23 Jan 2026 16:15:55 +0100 (CET)
-Received: from [10.10.15.21] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4dyM2M10Vkz1FDXX;
-	Fri, 23 Jan 2026 16:15:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=simplycom2; t=1769181355;
-	bh=bZOD1qxujIU3XqsrT9Q0is3A3LXGMfjZia6aaXxikQM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ag1WRAWJtsN0/+CXBOsevJVeLpSL3/UnOj7eGnW5g7r2ql6jKEN6uMQEFz39jpWTj
-	 70hB6mp8Ve1s6Wp5eFrGmiH/PwtssmQd+OO1x2dJ25+zQ8YZn2M7a8oa0nbx1j6rlf
-	 1jVZ+eG2KhetS8xTd2rubzhycPTOvv5H3QVv5BOpKDJUbmQFZnHbjmifqmRJK+rcmN
-	 m8LMVMH5b3JJXy0dqOhyCLj8N4ZpFxTGlppCWijPb5T9bTpg9tndXUgxZ+8Iusk4Vm
-	 o7IvTCBgZd7VuKCb0Zw5Xn08LvlpLoHpw8Ts3iS9q1RU+69VDDLKM0eepskCzawiEl
-	 rXuEIPQaRFOug==
-Message-ID: <9199f28e-e2b7-48c8-b61f-0b787e322443@gaisler.com>
-Date: Fri, 23 Jan 2026 16:15:54 +0100
+	dkim=pass (2048-bit key) header.d=csmantle.top header.i=rong.bao@csmantle.top header.b="om/F2B/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; q=dns/txt;
+  d=csmantle.top; i=rong.bao@csmantle.top; s=mailjet; x=1769190989;
+  h=message-id:mime-version:from:from:to:to:subject:subject:date:date:list-unsubscribe-post:list-unsubscribe:
+  cc:feedback-id:x-csa-complaints:x-mj-mid:x-mj-smtpguid:x-report-abuse-to:
+  content-transfer-encoding;
+  bh=n625F9iOcmfm4oeosR440PIXnRGSOWmz0lx0rm52p6Y=;
+  b=om/F2B/35iV6PjjQluBBHN7EFbfiAyvEGJ0DZHQymkOxXWNxxhjN4CUGa
+ yKLwJX4PJZw4/IlZ069Gfg5v/A+cKREirXEkY7ickPOBMgQjHIKjsqDi4/5l
+ wEBgkFa5QB5lySVq4IvvJfcx6TqGnBSqigvlElIAwjJsEXly1ANF5qgYoZSw
+ af9MqZzS7Mi2vkCFxmVW23fqjm1rcaoGHEJt0bfo1UODog01Mg19z8/YjNJV
+ DUhPp9yhCfrwFaHgeqUPj8mFAEL9PLxg2P5bH0LPLbfo5OiNJTl8OWf8E5Kq
+ htWWP0wnQ3A7Yo2wNzfO/5j8QoLhcUWmfAXru7d5NkRJg==
+Message-Id: <e18efdbb.AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
- MMU_GATHER_RCU_TABLE_FREE
-To: Qi Zheng <qi.zheng@linux.dev>, will@kernel.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, peterz@infradead.org, dev.jain@arm.com,
- akpm@linux-foundation.org, david@kernel.org, ioworker0@gmail.com,
- linmag7@gmail.com
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>,
- sparclinux <sparclinux@vger.kernel.org>
-References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
- <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Rong Bao <rong.bao@csmantle.top>
+To: Huacai Chen <chenhuacai@kernel.org>
+Subject: [PATCH] loongarch: retrieve CPU package ID from PPTT when available
+Date: Fri, 23 Jan 2026 23:56:06 +0800
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Cc: Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
+	Rong Bao <rong.bao@csmantle.top>, stable@vger.kernel.org, WANG Xuerui
+	<kernel@xen0n.name>, Yuli Wang <wangyuli@uniontech.com>, Yanteng Si
+	<si.yanteng@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>,
+	Hongliang Wang <wanghongliang@loongson.cn>, Thierry Reding
+	<treding@nvidia.com>, Tianyang Zhang <zhangtianyang@loongson.cn>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Feedback-Id: 42.3364097.3062169:MJ
+X-CSA-Complaints: csa-complaints@eco.de
+X-MJ-Mid:
+	AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5otLd7pyPAUTR-76XDDX5rlTwAuuZk
+X-MJ-SMTPGUID: e6c17ccd-6fab-4083-aa61-d129a700786e
+X-REPORT-ABUSE-TO: Message sent by Mailjet please report to
+	abuse@mailjet.com with a copy of the message
+Content-Transfer-Encoding: 8bit
 
-On 2025-12-17 10:45, Qi Zheng wrote:
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
-> 
-> The PT_RECLAIM can work on all architectures that support
-> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
-> MMU_GATHER_RCU_TABLE_FREE.
-> 
-> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
-> to turn it off.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> ---
->  arch/x86/Kconfig | 1 -
->  mm/Kconfig       | 9 ++-------
->  2 files changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 80527299f859a..0d22da56a71b0 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -331,7 +331,6 @@ config X86
->  	select FUNCTION_ALIGNMENT_4B
->  	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->  	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
-> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
->  	select ARCH_SUPPORTS_SCHED_SMT		if SMP
->  	select SCHED_SMT			if SMP
->  	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index bd0ea5454af82..fc00b429b7129 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
->  	  The architecture has hardware support for userspace shadow call
->            stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->  
-> -config ARCH_SUPPORTS_PT_RECLAIM
-> -	def_bool n
-> -
->  config PT_RECLAIM
-> -	bool "reclaim empty user page table pages"
-> -	default y
-> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
-> -	select MMU_GATHER_RCU_TABLE_FREE
-> +	def_bool y
-> +	depends on MMU_GATHER_RCU_TABLE_FREE
->  	help
->  	  Try to reclaim empty user page table pages in paths other than munmap
->  	  and exit_mmap path.
+Currently, the LoongArch CPU topology initialization code calculates
+each core's package ID by dividing its physical ID by
+loongson_sysconf.cores_per_package. This relies on the assumption that
+cores_per_package counts in the same domain as physical IDs.
 
-Hi,
+On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
+core count -- 24 in this case. However, the physical IDs range from 0 to
+31 in a noncontiguous fashion:
 
-This patch unfortunately results in a WARN_ON_ONCE and unaligned
-accesses on sparc64:
+        $ cat /proc/cpuinfo | grep -i -F 'global_id'
+        global_id               : 0
+        global_id               : 1
+        global_id               : 4
+        global_id               : 5
+        global_id               : 6
+        global_id               : 7
+        global_id               : 8
+        global_id               : 9
+        global_id               : 10
+        global_id               : 11
+        global_id               : 14
+        global_id               : 15
+        global_id               : 16
+        global_id               : 17
+        global_id               : 20
+        global_id               : 21
+        global_id               : 22
+        global_id               : 23
+        global_id               : 26
+        global_id               : 27
+        global_id               : 28
+        global_id               : 29
+        global_id               : 30
+        global_id               : 31
 
-$ stress-ng --mmaphuge 20 -t 60
-stress-ng: info:  [559] setting to a 1 min run per stressor
-stress-ng: info:  [559] dispatching hogs: 20 mmaphuge
-[  560.592569] ------------[ cut here ]------------
-[  560.592663] WARNING: kernel/rcu/tree.c:3098 at __call_rcu_common.constprop.0+0x200/0x760, CPU#4: stress-ng-mmaph/568
-[  560.592777] CPU: 4 UID: 1000 PID: 568 Comm: stress-ng-mmaph Not tainted 6.19.0-rc5-00127-g62fc9f6ccb97 #8 VOLUNTARY
-[  560.592805] Call Trace:
-[  560.592812] [<00000000004368b8>] dump_stack+0x8/0x60
-[  560.592844] [<0000000000482a60>] __warn+0xe0/0x140
-[  560.592878] [<0000000000482b64>] warn_slowpath_fmt+0xa4/0x120
-[  560.592901] [<0000000000526a40>] __call_rcu_common.constprop.0+0x200/0x760
-[  560.592931] [<0000000000526fd0>] call_rcu+0x10/0x20
-[  560.592954] [<0000000000730838>] tlb_remove_table+0x98/0xc0
-[  560.592986] [<000000000071bec4>] free_pgd_range+0x224/0x4c0
-[  560.593021] [<000000000071c35c>] free_pgtables+0x1fc/0x240
-[  560.593042] [<000000000074a6f0>] vms_clear_ptes+0x110/0x140
-[  560.593068] [<000000000074c3dc>] vms_complete_munmap_vmas+0x5c/0x280
-[  560.593094] [<000000000074de5c>] do_vmi_align_munmap+0x1dc/0x260
-[  560.593117] [<000000000074df80>] do_vmi_munmap+0xa0/0x140
-[  560.593142] [<000000000074fb2c>] __vm_munmap+0x8c/0x160
-[  560.593168] [<000000000072cfd4>] vm_munmap+0x14/0x40
-[  560.593190] [<00000000004402a8>] sys_64_munmap+0x88/0xa0
-[  560.593221] [<0000000000406274>] linux_sparc_syscall+0x34/0x44
-[  560.593274] ---[ end trace 0000000000000000 ]---
-[  560.593960] log_unaligned: 209 callbacks suppressed
-[  560.593979] Kernel unaligned access at TPC[526a4c] __call_rcu_common.constprop.0+0x20c/0x760
-[  560.594121] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-[  560.594198] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
-[  560.594275] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
-[  560.594360] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-[  567.054127] log_unaligned: 1105 callbacks suppressed
-[  567.054167] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
-[  567.054331] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-[  567.054410] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
-...
+Retrieve the exact package ID from ACPI PPTT when available, in the same
+style as retrieving the core ID and thread ID in parse_acpi_topology().
+Use this information in loongson_init_secondary() when PPTT readout is
+successful. The original division logic is kept as a fallback.
 
-I bisected to this one on mm-unstable from approximately 2026-01-12.
+Cc: stable@vger.kernel.org
+Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+---
+ arch/loongarch/kernel/acpi.c | 9 ++++++++-
+ arch/loongarch/kernel/smp.c  | 2 +-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-The warning is from 
-
-	/* Misaligned rcu_head! */
-	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
-
-in __call_rcu_common() and the unaligned accesses follows from there.
-
-Regards,
-Andreas
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 1367ca759468..82c7ffd4f1ac 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -176,7 +176,7 @@ int pptt_enabled;
+ 
+ int __init parse_acpi_topology(void)
+ {
+-	int cpu, topology_id;
++	int cpu, topology_id, package_id;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		topology_id = find_acpi_cpu_topology(cpu, 0);
+@@ -194,6 +194,13 @@ int __init parse_acpi_topology(void)
+ 
+ 			cpu_data[cpu].core = topology_id;
+ 		}
++
++		package_id = find_acpi_cpu_topology_package(cpu);
++		if (package_id < 0) {
++			pr_warn("Invalid BIOS PPTT\n");
++			return -ENOENT;
++		}
++		cpu_data[cpu].package = package_id;
+ 	}
+ 
+ 	pptt_enabled = 1;
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 8b2fcb3fb874..409e49d4da37 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -412,7 +412,7 @@ void loongson_init_secondary(void)
+ 	numa_add_cpu(cpu);
+ #endif
+ 	per_cpu(cpu_state, cpu) = CPU_ONLINE;
+-	cpu_data[cpu].package =
++	cpu_data[cpu].package = pptt_enabled ? cpu_data[cpu].package :
+ 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
+ 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
+ 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
+-- 
+2.52.0
 
