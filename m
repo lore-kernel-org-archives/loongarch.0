@@ -1,147 +1,231 @@
-Received: from o47.p25.mailjet.com (o47.p25.mailjet.com [185.189.236.47])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC32E1DD877
-	for <loongarch@lists.linux.dev>; Fri, 23 Jan 2026 15:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.189.236.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8859D17A309
+	for <loongarch@lists.linux.dev>; Sat, 24 Jan 2026 01:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769183795; cv=none; b=hQrbhr/j+zWApTX+wA23g6GlkdQ/WdaV0ZYXyafgxPJxZoiYp39PYUXgC+TkzDJ1XzARYlxQji54Is/cj7YBBzNARoUK85Dj190XLsiExFqqpbiACgzY1fqO5T2EtOnKMy4q8E7j0A1dTfqTppwGw/ATYr4VAxNrLJ7wygVHyiM=
+	t=1769219158; cv=none; b=pmDC3plrs+8ErU11o6OfXmpdIVfle8tEO1cqpYZkihTW0EDPP9V+sFNlEBJBmgSxzNsdqCcPbMSW9VFKH8Sp9/2uaw+Z6eh2BMjcZjbhAcRA5WM5Ab7FlIn2O6rG32yV469svxPKSPSDBL8sHz++F7bt+60c7TF/ml8CPKEPCnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769183795; c=relaxed/simple;
-	bh=n625F9iOcmfm4oeosR440PIXnRGSOWmz0lx0rm52p6Y=;
-	h=Message-Id:MIME-Version:From:To:Subject:Date:Cc; b=pCBD/nY79Z4mVbtD3PpP6Xr8YERo+wz14S9nSGOSf7JHt+oAijToV393KiVF7vBVi4CGcsye7FT9cJS/5u4P2vhlKJC/vX7z4KX5DAyd2T4XCJrDbrEwaj1Np05ZWDlrBgt0HskW1m+V9OMdEPxUhRDFMOMA5nVU9ju/45aUQAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=a3364097.bnc3.mailjet.com; dkim=pass (2048-bit key) header.d=csmantle.top header.i=rong.bao@csmantle.top header.b=om/F2B/3; arc=none smtp.client-ip=185.189.236.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a3364097.bnc3.mailjet.com
+	s=arc-20240116; t=1769219158; c=relaxed/simple;
+	bh=9QeaE1bwD3GxKwFMm007vrZkopgiIxQPdZ7Ly6RtqsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsGwa3/9WjxZn6C9owTUUGGAuvzeYy8Bho6ry+w+PkiqjispXbxjnr7e/cw48MuQN/mwQBjzb1QrQLsbTEG20RR16sOFWlyGVnuOYwZhLuHwinkgZumhrQMsvjjkyaxeVMElV1bYnddZVuqiR1hmDp9NeK4B+1kffNvU0vj5yaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SCmrRXYk; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=csmantle.top header.i=rong.bao@csmantle.top header.b="om/F2B/3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; q=dns/txt;
-  d=csmantle.top; i=rong.bao@csmantle.top; s=mailjet; x=1769190989;
-  h=message-id:mime-version:from:from:to:to:subject:subject:date:date:list-unsubscribe-post:list-unsubscribe:
-  cc:feedback-id:x-csa-complaints:x-mj-mid:x-mj-smtpguid:x-report-abuse-to:
-  content-transfer-encoding;
-  bh=n625F9iOcmfm4oeosR440PIXnRGSOWmz0lx0rm52p6Y=;
-  b=om/F2B/35iV6PjjQluBBHN7EFbfiAyvEGJ0DZHQymkOxXWNxxhjN4CUGa
- yKLwJX4PJZw4/IlZ069Gfg5v/A+cKREirXEkY7ickPOBMgQjHIKjsqDi4/5l
- wEBgkFa5QB5lySVq4IvvJfcx6TqGnBSqigvlElIAwjJsEXly1ANF5qgYoZSw
- af9MqZzS7Mi2vkCFxmVW23fqjm1rcaoGHEJt0bfo1UODog01Mg19z8/YjNJV
- DUhPp9yhCfrwFaHgeqUPj8mFAEL9PLxg2P5bH0LPLbfo5OiNJTl8OWf8E5Kq
- htWWP0wnQ3A7Yo2wNzfO/5j8QoLhcUWmfAXru7d5NkRJg==
-Message-Id: <e18efdbb.AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCmrRXYk"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b885e8c679bso220128066b.1
+        for <loongarch@lists.linux.dev>; Fri, 23 Jan 2026 17:45:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769219154; x=1769823954; darn=lists.linux.dev;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZXp0QJyrLLUrmQyXAB/60kXaLRgyX8FN8f699HysLTo=;
+        b=SCmrRXYk1b4Tt1FFmp16fkt2C/9gukecpV+/6NXg0vUTVwl3i6O7xwhea5zyBY4KWE
+         i+H1SeTtgFiKPSt0LKCMIRj1LYQEaDYfStds3H8bADRj2OlRjUsCL9yGj6EG7vhP9NAf
+         4zEWIcu4/GUeK8pzDFCu1Mg1L+qogjCb/4hUEfyPQ6mFRA7PcAS6ODE9ewutL91lQXk9
+         9eEaEjRhcFuBBLJtke+uyHMLfbDSROSBgH6CCR2xcAyQpGmtt+gf/xr69afhJJtExQ0O
+         IzoE86c3nfCx/dNPugO9W1byNArlEVBaPpYY8s1Euz9IBSHX6ajAIFaU8FI0nxT3qylK
+         JgVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769219154; x=1769823954;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZXp0QJyrLLUrmQyXAB/60kXaLRgyX8FN8f699HysLTo=;
+        b=sVfTxeNQ2PrfDp/5QKPty96dZeh8l6yqqg3a/YUogsude7xi5CfvDxq5bp5iXWui34
+         972bFzXLQGtquA3QgWNMHoqcedF5OZUp/T9XUtFLKJew9xw3B9uvUMgZo1+Zgr1ez598
+         YdSOz2yjTL/TnXqtG45pD4MVmvFdFPUlH9AmFkTeUult8jMEN51x95SP4C7xja50S7th
+         FjmEK1If1+sf0ZbJR/YlFtCK3wXryYCOMPUJm3jnu6nxc1iTfpagbe/Ej7H6SmkrjMd1
+         dZ84uOJHe1uHos9KwGkOH+WwA2hPuyJd+Ajxv+9E1SIzHAFHYDmI2PwiWl4fpPseeVNC
+         8KyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpYk6nxoRvwC4FVNATziQMIBZW4MBUtsQVaS+USXPy4hrRrHojxJ4DxX1R9lHwlFjo1LlvrCntLgQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzf+ctvJCEdwGfLh/Mq9PaOZ0OnAOZrtp/KX3hNIPmmPugRb+1x
+	UhuVxRrrSIPFrkJYuvDzUxF1JLdsoh3YvZYpHfl97jY9nQqG1HkOLMGW
+X-Gm-Gg: AZuq6aIppW6gwXBFT6sN7j8eMPcB+Lqwu+GNe0xql2KKYDgwWkAtrts5KXF5a6EyB+S
+	jGnZtkagawx57L/rI1PC3NYkhRoBzrVov7J6zzTOS0pKgty3zTyCvqwM4g44PiFUxTXScJ3iy0X
+	AEQyC1Jrf98+9nCOyfGY7/muJGzcd4hvt4dttgN6SqWvWLGIGkGzjO/jY/VD4UZU8bVQwSA0ntR
+	CemypsqN2C1E5gUFDNTs86jyfmRRsUY/5/G01mnyJKICy8Eyza34FRAByYEb8Go7vre18Ar9ld7
+	md27j08DW/EMhC1OiXYNFJuIkR58a39oGF6N4xxnoPsFJsyBD5/i2/loRxbZllA+stbjXa1MHQr
+	krOletL1WMxC6zbzlHVzUPHH/0tSv1sHBXD/wsdelbU8HkiAWdswrofwQGrFhdOfj8R7dx5zRXt
+	7HKj3Z6s8OUw==
+X-Received: by 2002:a17:907:3f03:b0:b7a:18ba:a63 with SMTP id a640c23a62f3a-b885ac2bd1dmr330014466b.19.1769219153636;
+        Fri, 23 Jan 2026 17:45:53 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b886a249e69sm125246466b.6.2026.01.23.17.45.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 23 Jan 2026 17:45:52 -0800 (PST)
+Date: Sat, 24 Jan 2026 01:45:52 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Qi Zheng <qi.zheng@linux.dev>
+Cc: Wei Yang <richard.weiyang@gmail.com>,
+	"David Hildenbrand (Red Hat)" <david@kernel.org>, will@kernel.org,
+	aneesh.kumar@kernel.org, npiggin@gmail.com, peterz@infradead.org,
+	dev.jain@arm.com, akpm@linux-foundation.org, ioworker0@gmail.com,
+	linmag7@gmail.com, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+	linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
+ MMU_GATHER_RCU_TABLE_FREE
+Message-ID: <20260124014552.um257bwrhwjktdca@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+ <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
+ <20251231094243.zmjs7kgflm7q6k73@master>
+ <a3a60bbb-70b7-49ed-abc6-937e6c13d681@linux.dev>
+ <20260101020715.45wqnjgcklvjcth3@master>
+ <d38fcbe5-8b4a-40bc-b8c8-1c49ccaa9964@kernel.org>
+ <20260122140034.ymigrfppzwvmcjkr@master>
+ <fd90c84b-9829-4699-b7df-c43020519ec9@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Rong Bao <rong.bao@csmantle.top>
-To: Huacai Chen <chenhuacai@kernel.org>
-Subject: [PATCH] loongarch: retrieve CPU package ID from PPTT when available
-Date: Fri, 23 Jan 2026 23:56:06 +0800
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-Cc: Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	Rong Bao <rong.bao@csmantle.top>, stable@vger.kernel.org, WANG Xuerui
-	<kernel@xen0n.name>, Yuli Wang <wangyuli@uniontech.com>, Yanteng Si
-	<si.yanteng@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>,
-	Hongliang Wang <wanghongliang@loongson.cn>, Thierry Reding
-	<treding@nvidia.com>, Tianyang Zhang <zhangtianyang@loongson.cn>,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Feedback-Id: 42.3364097.3062169:MJ
-X-CSA-Complaints: csa-complaints@eco.de
-X-MJ-Mid:
-	AXMAAIuqLC8AAAAAAAAAA-ma1qEAAYKJPtkAAAAAADNVAQBpc5otLd7pyPAUTR-76XDDX5rlTwAuuZk
-X-MJ-SMTPGUID: e6c17ccd-6fab-4083-aa61-d129a700786e
-X-REPORT-ABUSE-TO: Message sent by Mailjet please report to
-	abuse@mailjet.com with a copy of the message
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd90c84b-9829-4699-b7df-c43020519ec9@linux.dev>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-Currently, the LoongArch CPU topology initialization code calculates
-each core's package ID by dividing its physical ID by
-loongson_sysconf.cores_per_package. This relies on the assumption that
-cores_per_package counts in the same domain as physical IDs.
+On Fri, Jan 23, 2026 at 11:21:50AM +0800, Qi Zheng wrote:
+>
+>
+>On 1/22/26 10:00 PM, Wei Yang wrote:
+>> On Mon, Jan 19, 2026 at 11:18:52AM +0100, David Hildenbrand (Red Hat) wrote:
+>> > On 1/1/26 03:07, Wei Yang wrote:
+>> > > On Wed, Dec 31, 2025 at 05:52:57PM +0800, Qi Zheng wrote:
+>> > > > 
+>> > > > 
+>> > > > On 12/31/25 5:42 PM, Wei Yang wrote:
+>> > > > > On Wed, Dec 17, 2025 at 05:45:48PM +0800, Qi Zheng wrote:
+>> > > > > > From: Qi Zheng <zhengqi.arch@bytedance.com>
+>> > > > > > 
+>> > > > > > The PT_RECLAIM can work on all architectures that support
+>> > > > > > MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
+>> > > > > > MMU_GATHER_RCU_TABLE_FREE.
+>> > > > > > 
+>> > > > > > BTW, change PT_RECLAIM to be enabled by default, since nobody should want
+>> > > > > > to turn it off.
+>> > > > > > 
+>> > > > > > Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>> > > > > > ---
+>> > > > > > arch/x86/Kconfig | 1 -
+>> > > > > > mm/Kconfig       | 9 ++-------
+>> > > > > > 2 files changed, 2 insertions(+), 8 deletions(-)
+>> > > > > > 
+>> > > > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> > > > > > index 80527299f859a..0d22da56a71b0 100644
+>> > > > > > --- a/arch/x86/Kconfig
+>> > > > > > +++ b/arch/x86/Kconfig
+>> > > > > > @@ -331,7 +331,6 @@ config X86
+>> > > > > > 	select FUNCTION_ALIGNMENT_4B
+>> > > > > > 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>> > > > > > 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>> > > > > > -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
+>> > > > > > 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
+>> > > > > > 	select SCHED_SMT			if SMP
+>> > > > > > 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
+>> > > > > > diff --git a/mm/Kconfig b/mm/Kconfig
+>> > > > > > index bd0ea5454af82..fc00b429b7129 100644
+>> > > > > > --- a/mm/Kconfig
+>> > > > > > +++ b/mm/Kconfig
+>> > > > > > @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
+>> > > > > > 	  The architecture has hardware support for userspace shadow call
+>> > > > > >              stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+>> > > > > > 
+>> > > > > > -config ARCH_SUPPORTS_PT_RECLAIM
+>> > > > > > -	def_bool n
+>> > > > > > -
+>> > > > > > config PT_RECLAIM
+>> > > > > > -	bool "reclaim empty user page table pages"
+>> > > > > > -	default y
+>> > > > > > -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
+>> > > > > > -	select MMU_GATHER_RCU_TABLE_FREE
+>> > > > > > +	def_bool y
+>> > > > > > +	depends on MMU_GATHER_RCU_TABLE_FREE
+>> > > > > > 	help
+>> > > > > > 	  Try to reclaim empty user page table pages in paths other than munmap
+>> > > > > > 	  and exit_mmap path.
+>> > > > > 
+>> > > > > Hi, Qi
+>> > > > > 
+>> > > > > I am new to PT_RECLAIM, when reading related code I got one question.
+>> > > > > 
+>> > > > > Before this patch,  we could have this config combination:
+>> > > > > 
+>> > > > >        CONFIG_MMU_GATHER_RCU_TABLE_FREE & !CONFIG_PT_RECLAIM
+>> > > > > 
+>> > > > > This means tlb_remove_table_free() is rcu version while tlb_remove_table_one()
+>> > > > > is semi rcu version.
+>> > > > > 
+>> > > > > I am curious could we use rcu version tlb_remove_table_one() for this case?
+>> > > > > Use rcu version tlb_remove_table_one() if CONFIG_MMU_GATHER_RCU_TABLE_FREE. Is
+>> > > > > there some limitation here?
+>> > > > 
+>> > > > I think there's no problem. The rcu version can also ensure that the
+>> > > > fast GUP works well.
+>> > > > 
+>> > > 
+>> > > Thanks for your quick response :-)
+>> > > 
+>> > > And Happy New Year
+>> > > 
+>> > > So my little suggestion is move the definition of __tlb_remove_table_one()
+>> > > under CONFIG_MMU_GATHER_RCU_TABLE_FREE. Do you thinks this would be more
+>> > > clear?
+>> > 
+>> > 
+>> > Do you mean
+>> > 
+>> > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+>> > index 2faa23d7f8d42..6aeba4bae68d2 100644
+>> > --- a/mm/mmu_gather.c
+>> > +++ b/mm/mmu_gather.c
+>> > @@ -319,7 +319,7 @@ static inline void tlb_table_invalidate(struct mmu_gather
+>> > *tlb)
+>> >         }
+>> > }
+>> > 
+>> > -#ifdef CONFIG_PT_RECLAIM
+>> > +#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+>> > static inline void __tlb_remove_table_one_rcu(struct rcu_head *head)
+>> > {
+>> >         struct ptdesc *ptdesc;
+>> > 
+>> > ?
+>> 
+>> Sorry for the late reply.
+>> 
+>> Yes, and maybe we can move the definition to the
+>> #ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE code block above, then to be next to
+>> tlb_remove_table_free().
+>> 
+>> So that we always have rcu version when CONFIG_MMU_GATHER_RCU_TABLE_FREE.
+>
+>LGTM, could you help submit an official patch?
+>
 
-On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
-core count -- 24 in this case. However, the physical IDs range from 0 to
-31 in a noncontiguous fashion:
+Sure.
 
-        $ cat /proc/cpuinfo | grep -i -F 'global_id'
-        global_id               : 0
-        global_id               : 1
-        global_id               : 4
-        global_id               : 5
-        global_id               : 6
-        global_id               : 7
-        global_id               : 8
-        global_id               : 9
-        global_id               : 10
-        global_id               : 11
-        global_id               : 14
-        global_id               : 15
-        global_id               : 16
-        global_id               : 17
-        global_id               : 20
-        global_id               : 21
-        global_id               : 22
-        global_id               : 23
-        global_id               : 26
-        global_id               : 27
-        global_id               : 28
-        global_id               : 29
-        global_id               : 30
-        global_id               : 31
+Since this is trivial cleanup, I will post it till next merge window.
 
-Retrieve the exact package ID from ACPI PPTT when available, in the same
-style as retrieving the core ID and thread ID in parse_acpi_topology().
-Use this information in loongson_init_secondary() when PPTT readout is
-successful. The original division logic is kept as a fallback.
+>Thanks,
+>Qi
+>
+>> 
+>> > 
+>> > -- 
+>> > Cheers
+>> > 
+>> > David
+>> 
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
----
- arch/loongarch/kernel/acpi.c | 9 ++++++++-
- arch/loongarch/kernel/smp.c  | 2 +-
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
-index 1367ca759468..82c7ffd4f1ac 100644
---- a/arch/loongarch/kernel/acpi.c
-+++ b/arch/loongarch/kernel/acpi.c
-@@ -176,7 +176,7 @@ int pptt_enabled;
- 
- int __init parse_acpi_topology(void)
- {
--	int cpu, topology_id;
-+	int cpu, topology_id, package_id;
- 
- 	for_each_possible_cpu(cpu) {
- 		topology_id = find_acpi_cpu_topology(cpu, 0);
-@@ -194,6 +194,13 @@ int __init parse_acpi_topology(void)
- 
- 			cpu_data[cpu].core = topology_id;
- 		}
-+
-+		package_id = find_acpi_cpu_topology_package(cpu);
-+		if (package_id < 0) {
-+			pr_warn("Invalid BIOS PPTT\n");
-+			return -ENOENT;
-+		}
-+		cpu_data[cpu].package = package_id;
- 	}
- 
- 	pptt_enabled = 1;
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 8b2fcb3fb874..409e49d4da37 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -412,7 +412,7 @@ void loongson_init_secondary(void)
- 	numa_add_cpu(cpu);
- #endif
- 	per_cpu(cpu_state, cpu) = CPU_ONLINE;
--	cpu_data[cpu].package =
-+	cpu_data[cpu].package = pptt_enabled ? cpu_data[cpu].package :
- 		     cpu_logical_map(cpu) / loongson_sysconf.cores_per_package;
- 	cpu_data[cpu].core = pptt_enabled ? cpu_data[cpu].core :
- 		     cpu_logical_map(cpu) % loongson_sysconf.cores_per_package;
 -- 
-2.52.0
-
+Wei Yang
+Help you, Help me
