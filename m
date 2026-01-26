@@ -1,180 +1,304 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A13A433B3
-	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 07:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 991692AF1D
+	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 08:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769410810; cv=none; b=Pu0tY3Zu1UjainTLqYG3AtsXNu/hdA88RlPvcUHVVnzWRw7162t4odHyY9mp4k2JvYYjTquCN70YvlK63z4Dk5VhrJMlOQyI5cLjbjBh8xkAwbvVFRZLN+ccctaDUchaj+bN4F9/SM+044m50DRY4F0qWavh4suVgePlGTYtDxU=
+	t=1769416795; cv=none; b=dXrRQqnAE/5PehH/v/sWmEMr/Oe1qh8I98h2jlxYv41B/hngvM+rOjtGdBGDNfEgsgVvhCkhcgeDeXsbogS3g0aw3indH0D9EFHEERqpcmGGS2zNXGdMFUDB9hLE9vbZCgOUg5hlC8rhqYhr1N2lFEuCZyZ5Ny3xDB83hBCFIHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769410810; c=relaxed/simple;
-	bh=hIVMICCOrwOEHb7O10TcOjpQqCQ90wHru/xyyTPnNZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tOD//1X89JMUWHvv4L9E6Ox2yClya75o/McOLOm9VPYMCuNB8WLJCjcgAajqR1SRyvSQoeRbJ0BlrGaGoRlMaMjrkH6fJCJmPTYRTIc94uQupQ/DKT3VIIGb5tA3ToqmKzlIpnpqFOr+cP1ZmjrfZcpfI3sVNBwv47KyDYlOg8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=io0Jn+3N; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="io0Jn+3N"
-Message-ID: <646d9b5c-453c-4db8-b578-0f343e170379@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769410802;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hybAGJDtwUTQyBJLSE6cgT3x4CprzyvIGdy1i62DoMg=;
-	b=io0Jn+3NajuPHPI4XjqNt9sYHPn2FyPfP/1eLMYG5oEK9p8YQ2ayv0ii4eZsQi7AY5Kxh/
-	8bRt82NClUXSKr1V31d6I/GqCfQd+DB4Ux8EDoCg31zgpyKNNatRAU/WP75QWfFgYjHG7n
-	Oc4aJiIqhIpd+iDcwrxRH5wDMzgILbU=
-Date: Mon, 26 Jan 2026 14:59:43 +0800
+	s=arc-20240116; t=1769416795; c=relaxed/simple;
+	bh=Z+5dKRYi+B3DHUXM1cr54CFqwfBXTNTdCZwJAXx+vNU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kwUiqWG5RveDTnz8NIudSHMAM3h1M84NxaNO4vhYQBslDqojiZVp8E4FtYZ/FBf/TsqtYXhq78dvb59ZqlkzeOG11/ux0SPitW+Sar2Fmyl09BgLTXwfsxuaHWthCFuAEtmhG7nRqKq/T9QEa3pO/LXQkoeKgj0vEqgPjogVY+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxnsNQKHdpd6cMAA--.41599S3;
+	Mon, 26 Jan 2026 16:39:44 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxTMJDKHdpCLoxAA--.30815S3;
+	Mon, 26 Jan 2026 16:39:33 +0800 (CST)
+Subject: Re: [PATCH 1/1] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+To: liushuyu <liushuyu@aosc.io>, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=c3=b6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ rust-for-linux@vger.kernel.org
+References: <20260125054322.1237687-1-liushuyu@aosc.io>
+ <4b504274-4241-0e3e-3ed3-7804b72b7ee8@loongson.cn>
+ <972430be-d2f3-49b6-851b-a057ddfcafec@aosc.io>
+ <29565e27-f153-c2c5-cbc3-e0457d45f094@loongson.cn>
+ <2fa2dc72-b24e-4504-8c8e-e4ecacda02c4@aosc.io>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <13746394-1a33-894a-d325-8125743f7906@loongson.cn>
+Date: Mon, 26 Jan 2026 16:36:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
- MMU_GATHER_RCU_TABLE_FREE
-To: Andreas Larsson <andreas@gaisler.com>, david@kernel.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>,
- sparclinux <sparclinux@vger.kernel.org>, will@kernel.org,
- peterz@infradead.org, akpm@linux-foundation.org, aneesh.kumar@kernel.org,
- npiggin@gmail.com, dev.jain@arm.com, ioworker0@gmail.com, linmag7@gmail.com
-References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
- <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
- <9199f28e-e2b7-48c8-b61f-0b787e322443@gaisler.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Qi Zheng <qi.zheng@linux.dev>
-In-Reply-To: <9199f28e-e2b7-48c8-b61f-0b787e322443@gaisler.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <2fa2dc72-b24e-4504-8c8e-e4ecacda02c4@aosc.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTMJDKHdpCLoxAA--.30815S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3WFy7Cw1rur15GFWxJw45XFc_yoW3Cw48pr
+	ykCFW5JrW5Jrn3Jr1j9w15WF9Fyr1UJ3WDXr1fXFyUAr4Dtr12qr18XryqgF18J3y8JF40
+	qr1UXr17urs8A3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDU
+	UUU
 
 
 
-On 1/23/26 11:15 PM, Andreas Larsson wrote:
-> On 2025-12-17 10:45, Qi Zheng wrote:
->> From: Qi Zheng <zhengqi.arch@bytedance.com>
+On 2026/1/26 下午12:22, liushuyu wrote:
+> Hi Bibo,
+> 
 >>
->> The PT_RECLAIM can work on all architectures that support
->> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
->> MMU_GATHER_RCU_TABLE_FREE.
 >>
->> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
->> to turn it off.
+>> On 2026/1/26 上午11:38, liushuyu wrote:
+>>> Hi Bibo,
+>>>>
+>>>>
+>>>> On 2026/1/25 下午1:43, Zixing Liu wrote:
+>>>>> This ioctl can be used by userspace applications to determine which
+>>>>> (special) registers are get/set-able.
+>>>>>
+>>>>> This can be very useful for cross-platform VMMs so that they do not
+>>>>> have
+>>>>> to hardcode register indices for each supported architectures.
+>>>>>
+>>>>> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+>>>>> ---
+>>>>>
+>>>>> For example, this ioctl could be used by rust-vmm/rust-kvm or maybe
+>>>>> VirtualBox-kvm in the future.
+>>>>>
+>>>>>     Documentation/virt/kvm/api.rst |  2 +-
+>>>>>     arch/loongarch/kvm/vcpu.c      | 69
+>>>>> ++++++++++++++++++++++++++++++++++
+>>>>>     2 files changed, 70 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/virt/kvm/api.rst
+>>>>> b/Documentation/virt/kvm/api.rst
+>>>>> index 01a3abef8abb..f46dd8be282f 100644
+>>>>> --- a/Documentation/virt/kvm/api.rst
+>>>>> +++ b/Documentation/virt/kvm/api.rst
+>>>>> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
+>>>>>     ---------------------
+>>>>>       :Capability: basic
+>>>>> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+>>>>> +:Architectures: arm64, loongarch, mips, riscv, x86 (if
+>>>>> KVM_CAP_ONE_REG)
+>>>>>     :Type: vcpu ioctl
+>>>>>     :Parameters: struct kvm_reg_list (in/out)
+>>>>>     :Returns: 0 on success; -1 on error
+>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>>>>> index 656b954c1134..b884eb9c76aa 100644
+>>>>> --- a/arch/loongarch/kvm/vcpu.c
+>>>>> +++ b/arch/loongarch/kvm/vcpu.c
+>>>>> @@ -1186,6 +1186,57 @@ static int kvm_loongarch_vcpu_set_attr(struct
+>>>>> kvm_vcpu *vcpu,
+>>>>>         return ret;
+>>>>>     }
+>>>>>     +static unsigned long kvm_loongarch_num_lbt_regs(void)
+>>>>> +{
+>>>>> +    /* +1 for the LBT_FTOP flag (inside arch.fpu) */
+>>>>> +    return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + 1;
+>>>>> +}
+>>>>> +
+>>>>> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
+>>>>> +{
+>>>>> +    /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
+>>>>> +    unsigned long res = CSR_MAX_NUMS + KVM_MAX_CPUCFG_REGS + 1;
+>>>>> +
+>>>>> +    if (kvm_guest_has_lbt(&vcpu->arch))
+>>>>> +        res += kvm_loongarch_num_lbt_regs();
+>>>>> +
+>>>>> +    return res;
+>>>>> +}
+>>>>> +
+>>>>> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
+>>>>> +                      u64 __user *uindices)
+>>>>> +{
+>>>>> +    u64 reg;
+>>>>> +    unsigned int i;
+>>>>> +
+>>>>> +    for (i = 0; i < CSR_MAX_NUMS; i++) {
+>>>>> +        reg = KVM_IOC_CSRID(i);
+>>>>> +        if (put_user(reg, uindices++))
+>>>>> +            return -EFAULT;
+>>>>> +    }
+>>>> CSR_MAX_NUMS is max number of accessible CSR registers, instead only
+>>>> part of them is used by vCPU model. By my understanding, there will be
+>>>> no much meaning if CSR_MAX_NUMS is returned. And I think it will be
+>>>> better if real CSR register id and number is returned.
+>>>>
+>>> Did you mean we should only return the CSR registers initialized in this
+>>> function
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/loongarch/kvm/main.c?id=63804fed149a6750ffd28610c5c1c98cce6bd377#n48
+>>>
+>>> ?
+>>>
+>>> That looks like a very large list and the values of the register IDs are
+>>> not fully continuous. If that is the case, how do we maintain the
+>>> get/set-able CSR register list?
+>> It will be better if CSR register list can be categorized, for example
+>> with LoongArch CPU manual CSR register is split into 8 types from
+>> chapter 7.4 -- 7.11
 >>
->> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->> ---
->>   arch/x86/Kconfig | 1 -
->>   mm/Kconfig       | 9 ++-------
->>   2 files changed, 2 insertions(+), 8 deletions(-)
+>> At the beginning, there is big array with size CSR_MAX_NUMS without
+>> any category, it can be fine-gained in late.
+> 
+> Does that mean in the new `kvm_loongarch_copy_reg_indices` function, it
+> is also okay to embed this big list in there?
+Firstly I do not know how to use ioctl command KVM_GET_REG_LIST in VMM 
+actually.
+
+At the second from the word "determine which (special) registers are 
+get/set-able", I think that it is better to set accessible CSR register 
+number and ID rather than the total number CSR_MAX_NUMS.
+
++static int kvm_loongarch_num_csr_regs(struct kvm_vcpu *vcpu)
++{
++	unsigned int i, count;
++
++	count = 0
++	for (i = 0; i < CSR_MAX_NUMS; i++) {
++		if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
++			continue;
++		count++;
++	}
++	return count;
++}
+
+static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
+{
+	/* +1 for the KVM_REG_LOONGARCH_COUNTER register */
++	unsigned long res = kvm_loongarch_num_csr_regs + KVM_MAX_CPUCFG_REGS + 1;
+
+	if (kvm_guest_has_lbt(&vcpu->arch))
+		res += kvm_loongarch_num_lbt_regs();
+
+	return res;
+}
+
+static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
+					  u64 __user *uindices)
+{
+	u64 reg;
+	unsigned int i;
+
+	for (i = 0; i < CSR_MAX_NUMS; i++) {
++                if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
++                    continue;
+		reg = KVM_IOC_CSRID(i);
+		if (put_user(reg, uindices++))
+			return -EFAULT;
+	}
+
+Regards
+Bibo Mao
+> 
+> Or do you want to extract the list from the `kvm_init_gcsr_flag`
+> function and refactor both functions to share one single big list
+> (probably in the kvm_host.h header)?
+> 
+> Because from what I could understand, your previous messages point to
+> that we need to use this list to make out what CSR registers to return
+> to the user space VMMs.
+
+> 
 >>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 80527299f859a..0d22da56a71b0 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -331,7 +331,6 @@ config X86
->>   	select FUNCTION_ALIGNMENT_4B
->>   	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
->>   	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
->> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
->>   	select ARCH_SUPPORTS_SCHED_SMT		if SMP
->>   	select SCHED_SMT			if SMP
->>   	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
->> diff --git a/mm/Kconfig b/mm/Kconfig
->> index bd0ea5454af82..fc00b429b7129 100644
->> --- a/mm/Kconfig
->> +++ b/mm/Kconfig
->> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
->>   	  The architecture has hardware support for userspace shadow call
->>             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
->>   
->> -config ARCH_SUPPORTS_PT_RECLAIM
->> -	def_bool n
->> -
->>   config PT_RECLAIM
->> -	bool "reclaim empty user page table pages"
->> -	default y
->> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
->> -	select MMU_GATHER_RCU_TABLE_FREE
->> +	def_bool y
->> +	depends on MMU_GATHER_RCU_TABLE_FREE
->>   	help
->>   	  Try to reclaim empty user page table pages in paths other than munmap
->>   	  and exit_mmap path.
-> 
-> Hi,
-> 
-> This patch unfortunately results in a WARN_ON_ONCE and unaligned
-> accesses on sparc64:
-> 
-> $ stress-ng --mmaphuge 20 -t 60
-> stress-ng: info:  [559] setting to a 1 min run per stressor
-> stress-ng: info:  [559] dispatching hogs: 20 mmaphuge
-> [  560.592569] ------------[ cut here ]------------
-> [  560.592663] WARNING: kernel/rcu/tree.c:3098 at __call_rcu_common.constprop.0+0x200/0x760, CPU#4: stress-ng-mmaph/568
-> [  560.592777] CPU: 4 UID: 1000 PID: 568 Comm: stress-ng-mmaph Not tainted 6.19.0-rc5-00127-g62fc9f6ccb97 #8 VOLUNTARY
-> [  560.592805] Call Trace:
-> [  560.592812] [<00000000004368b8>] dump_stack+0x8/0x60
-> [  560.592844] [<0000000000482a60>] __warn+0xe0/0x140
-> [  560.592878] [<0000000000482b64>] warn_slowpath_fmt+0xa4/0x120
-> [  560.592901] [<0000000000526a40>] __call_rcu_common.constprop.0+0x200/0x760
-> [  560.592931] [<0000000000526fd0>] call_rcu+0x10/0x20
-> [  560.592954] [<0000000000730838>] tlb_remove_table+0x98/0xc0
-> [  560.592986] [<000000000071bec4>] free_pgd_range+0x224/0x4c0
-> [  560.593021] [<000000000071c35c>] free_pgtables+0x1fc/0x240
-> [  560.593042] [<000000000074a6f0>] vms_clear_ptes+0x110/0x140
-> [  560.593068] [<000000000074c3dc>] vms_complete_munmap_vmas+0x5c/0x280
-> [  560.593094] [<000000000074de5c>] do_vmi_align_munmap+0x1dc/0x260
-> [  560.593117] [<000000000074df80>] do_vmi_munmap+0xa0/0x140
-> [  560.593142] [<000000000074fb2c>] __vm_munmap+0x8c/0x160
-> [  560.593168] [<000000000072cfd4>] vm_munmap+0x14/0x40
-> [  560.593190] [<00000000004402a8>] sys_64_munmap+0x88/0xa0
-> [  560.593221] [<0000000000406274>] linux_sparc_syscall+0x34/0x44
-> [  560.593274] ---[ end trace 0000000000000000 ]---
-> [  560.593960] log_unaligned: 209 callbacks suppressed
-> [  560.593979] Kernel unaligned access at TPC[526a4c] __call_rcu_common.constprop.0+0x20c/0x760
-> [  560.594121] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-> [  560.594198] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
-> [  560.594275] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
-> [  560.594360] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-> [  567.054127] log_unaligned: 1105 callbacks suppressed
-> [  567.054167] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
-> [  567.054331] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
-> [  567.054410] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
-
-Thanks for your report!
-
-On sparc64, pmd and pud levels are not of struct page:
-
-__pmd_free_tlb/__pud_free_tlb
---> pgtable_free_tlb(tlb, pud/pmd, false). <=== is_page == false
-     --> tlb_remove_table
-
-So in __tlb_remove_table_one(), the table cannot be treated as
-ptdesc because it does not have an pt_rcu_head member.
-
-Hi David, it seems we still need to keep ARCH_SUPPORTS_PT_RECLAIM?
-
-Thanks,
-Qi
-
-> ...
-> 
-> I bisected to this one on mm-unstable from approximately 2026-01-12.
-> 
-> The warning is from
-> 
-> 	/* Misaligned rcu_head! */
-> 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
-> 
-> in __call_rcu_common() and the unaligned accesses follows from there.
-> 
-> Regards,
-> Andreas
+>> Regards
+>> Bibo Mao
+>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>> +
+>>>>> +    for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
+>>>>> +        reg = KVM_IOC_CPUCFG(i);
+>>>>> +        if (put_user(reg, uindices++))
+>>>>> +            return -EFAULT;
+>>>>> +    }
+>>>>> +
+>>>>> +    reg = KVM_REG_LOONGARCH_COUNTER;
+>>>>> +    if (put_user(reg, uindices++))
+>>>>> +        return -EFAULT;
+>>>>> +
+>>>>> +    if (!kvm_guest_has_lbt(&vcpu->arch))
+>>>>> +        return 0;
+>>>>> +
+>>>>> +    for (i = 1; i <= kvm_loongarch_num_lbt_regs(); i++) {
+>>>>> +        reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
+>>>>> +        if (put_user(reg, uindices++))
+>>>>> +            return -EFAULT;
+>>>>> +    }
+>>>>> +
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>>     long kvm_arch_vcpu_ioctl(struct file *filp,
+>>>>>                  unsigned int ioctl, unsigned long arg)
+>>>>>     {
+>>>>> @@ -1251,6 +1302,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>>>>>             r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
+>>>>>             break;
+>>>>>         }
+>>>>> +    case KVM_GET_REG_LIST: {
+>>>>> +        struct kvm_reg_list __user *user_list = argp;
+>>>>> +        struct kvm_reg_list reg_list;
+>>>>> +        unsigned n;
+>>>>> +
+>>>>> +        r = -EFAULT;
+>>>>> +        if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
+>>>>> +            break;
+>>>>> +        n = reg_list.n;
+>>>>> +        reg_list.n = kvm_loongarch_num_regs(vcpu);
+>>>>> +        if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
+>>>>> +            break;
+>>>>> +        r = -E2BIG;
+>>>>> +        if (n < reg_list.n)
+>>>>> +            break;
+>>>>> +        r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
+>>>>> +        break;
+>>>>> +    }
+>>>>>         default:
+>>>>>             r = -ENOIOCTLCMD;
+>>>>>             break;
+>>>>>
+>>>>
+>>> Thanks,
+>>> Zixing
+>>>
+>>
+> Thanks,
+> Zixing
 > 
 
