@@ -1,87 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8327713C918;
-	Sun, 25 Jan 2026 09:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C62E252900
+	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 02:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769335153; cv=none; b=eGrMGfImjH9KHgsv9aujvUXefmEv91aGXQXDHSQWC4DNRh4nQQKNrvMCXghL57dTHdl4QZFObHYfmTgvTALrtkty46ssPKNKBuYG6fa9SP/8pEyMkQCQwFRx1pD9mxR1yiDqym/+9YGvTJNaExXOg0KKO5TApKaDWQv5k2dq36w=
+	t=1769393566; cv=none; b=byd4NG/kl4mkoI5XKMBndzI0+hLK2gOfmAVprth4z4vFx2zHCqkj/kzOTyyey9KsGEUOBVRbA5tUxuLQq9IufjGtvzDUzToUtBQQlJnzlJ4oVLkN8aG/ZZZlvIEZxxDe1AxT9eSqbbEF1v4Ot3NME7RfCxxY/P5lbYhUoIEdi74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769335153; c=relaxed/simple;
-	bh=t90pzN2k6Whbca/34ndSIUtQ6ODauPo1RiRNlXzDNBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o8Z6/tCTY/wSfEggKefyVYtm2V4CsQMqpaS/MsDMHMaJh1kqGeGhgqhCk4kLBZGAJ4EG8F1SjBn+Ui5f0GdPgOMu5I0Q1OQblPbNvf2Oy7ba2opNnqgh9EY3V+SfCMxpEA6wSnL5R6jw6z2gICfAGYwhopj+mYA8SG9erNTVSCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXW3ae0Y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXW3ae0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4929EC4CEF1;
-	Sun, 25 Jan 2026 09:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769335152;
-	bh=t90pzN2k6Whbca/34ndSIUtQ6ODauPo1RiRNlXzDNBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lXW3ae0YU8z55SpbxpHPpo8QS9OjGqTcHsbiii51ODHCMOf6hliMbhrjJWn+728Be
-	 TgZj79d5jvu5iItz6H9z2pmlrAqZUWh5ktcnp/oBBLBErOg264g+S0l93REVWuqUc7
-	 9f1SvxnhTk/H3zWkQkzLti8BWy0U2XDnGrip1KUUg+j/NWfT1ToyfG8YMEEV0sxDWC
-	 KglKM8yIWZ/13LlIhLbEqUClho2mOfcPaccYreX2EQEnOjI+jvuATB8GxADABVYNyK
-	 Jh2oups9hDCMfNMF3wtxjcp2b1X8NBJWd29wiq4EXkdQUSJ2jgLnBg87nxA121pjwM
-	 f05aOgFlDDr5w==
-Date: Sun, 25 Jan 2026 11:58:58 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Lain Fearyncess Yang <fearyncess@aosc.io>,
-	WANG Xuerui <kernel@xen0n.name>, Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Shuah Khan <shuah@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] loongarch: wire up memfd_secret system call
-Message-ID: <aXXpYqDyTeftKV2c@kernel.org>
-References: <20260109051054.188030-1-fearyncess@aosc.io>
- <aWC6bIEg6UqvX1DO@kernel.org>
- <CAAhV-H5tHZRHmXSA6m+fyhaN9nNjLFbEiVK7OWjL8EoJn16doQ@mail.gmail.com>
+	s=arc-20240116; t=1769393566; c=relaxed/simple;
+	bh=BUM8C9hkjEGzOYKfxRu8J1XeZ8xVDt4sjCeOZKvu4Ww=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WF+XaxEOpNtvfyhM1liL8yjDrrfecZO3bYopOY9Dik2HNyGuiClZTJRl/eA3lpskmPHifH2QqdFuuhI8/UHI7XRK9FlsgRMVHFpxrMth+9+YtD09pSClEhJUHtlQuQbtWDQl4JEPj/aP/4HE/GRfgxjG/pXmnKLQTqxtTc3vqc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Dx_8OMzXZpe5UMAA--.41421S3;
+	Mon, 26 Jan 2026 10:12:28 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxfcKFzXZp7TQxAA--.30120S3;
+	Mon, 26 Jan 2026 10:12:23 +0800 (CST)
+Subject: Re: [PATCH 1/1] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+To: Zixing Liu <liushuyu@aosc.io>, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=c3=b6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ rust-for-linux@vger.kernel.org
+References: <20260125054322.1237687-1-liushuyu@aosc.io>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <4b504274-4241-0e3e-3ed3-7804b72b7ee8@loongson.cn>
+Date: Mon, 26 Jan 2026 10:09:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20260125054322.1237687-1-liushuyu@aosc.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H5tHZRHmXSA6m+fyhaN9nNjLFbEiVK7OWjL8EoJn16doQ@mail.gmail.com>
+X-CM-TRANSID:qMiowJCxfcKFzXZp7TQxAA--.30120S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr4rurW3ArW7KF47ZryxJFc_yoWrGFyDpF
+	W3C3ZIqrWFyr1Ik343ZwnxuF98Xrs2gw47ZFy3Ga4xAr4Yyr4FvF40krZrXFWrJ348CF40
+	vF10gFyY9FWqv3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2pVbDUUUU
 
-On Sun, Jan 25, 2026 at 12:03:25PM +0800, Huacai Chen wrote:
-> On Fri, Jan 9, 2026 at 4:21 PM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Fri, Jan 09, 2026 at 01:10:51PM +0800, Lain Fearyncess Yang wrote:
-> > > From: "Lain \"Fearyncess\" Yang" <fearyncess@aosc.io>
-> > >
-> > > LoongArch supports ARCH_HAS_SET_DIRECT_MAP, therefore wire up the
-> > > memfd_secret system call, which depends on it.
-> >
-> > LoongArch version of set_memory* does not support splitting of leaf PMD
-> > entries. Does LoongArch always use PTE-level mappings in the direct map?
-> No PMD level mappings now.
 
-Thanks for the clarification. You can add
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On 2026/1/25 下午1:43, Zixing Liu wrote:
+> This ioctl can be used by userspace applications to determine which
+> (special) registers are get/set-able.
+> 
+> This can be very useful for cross-platform VMMs so that they do not have
+> to hardcode register indices for each supported architectures.
+> 
+> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+> ---
+> 
+> For example, this ioctl could be used by rust-vmm/rust-kvm or maybe
+> VirtualBox-kvm in the future.
+> 
+>   Documentation/virt/kvm/api.rst |  2 +-
+>   arch/loongarch/kvm/vcpu.c      | 69 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 70 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 01a3abef8abb..f46dd8be282f 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
+>   ---------------------
+>   
+>   :Capability: basic
+> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+>   :Type: vcpu ioctl
+>   :Parameters: struct kvm_reg_list (in/out)
+>   :Returns: 0 on success; -1 on error
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 656b954c1134..b884eb9c76aa 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1186,6 +1186,57 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+>   	return ret;
+>   }
+>   
+> +static unsigned long kvm_loongarch_num_lbt_regs(void)
+> +{
+> +	/* +1 for the LBT_FTOP flag (inside arch.fpu) */
+> +	return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + 1;
+> +}
+> +
+> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
+> +{
+> +	/* +1 for the KVM_REG_LOONGARCH_COUNTER register */
+> +	unsigned long res = CSR_MAX_NUMS + KVM_MAX_CPUCFG_REGS + 1;
+> +
+> +	if (kvm_guest_has_lbt(&vcpu->arch))
+> +		res += kvm_loongarch_num_lbt_regs();
+> +
+> +	return res;
+> +}
+> +
+> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
+> +					  u64 __user *uindices)
+> +{
+> +	u64 reg;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < CSR_MAX_NUMS; i++) {
+> +		reg = KVM_IOC_CSRID(i);
+> +		if (put_user(reg, uindices++))
+> +			return -EFAULT;
+> +	}
+CSR_MAX_NUMS is max number of accessible CSR registers, instead only 
+part of them is used by vCPU model. By my understanding, there will be 
+no much meaning if CSR_MAX_NUMS is returned. And I think it will be 
+better if real CSR register id and number is returned.
 
-if it's not too late :)
+Regards
+Bibo Mao
+> +
+> +	for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
+> +		reg = KVM_IOC_CPUCFG(i);
+> +		if (put_user(reg, uindices++))
+> +			return -EFAULT;
+> +	}
+> +
+> +	reg = KVM_REG_LOONGARCH_COUNTER;
+> +	if (put_user(reg, uindices++))
+> +		return -EFAULT;
+> +
+> +	if (!kvm_guest_has_lbt(&vcpu->arch))
+> +		return 0;
+> +
+> +	for (i = 1; i <= kvm_loongarch_num_lbt_regs(); i++) {
+> +		reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
+> +		if (put_user(reg, uindices++))
+> +			return -EFAULT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   long kvm_arch_vcpu_ioctl(struct file *filp,
+>   			 unsigned int ioctl, unsigned long arg)
+>   {
+> @@ -1251,6 +1302,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>   		r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
+>   		break;
+>   	}
+> +	case KVM_GET_REG_LIST: {
+> +		struct kvm_reg_list __user *user_list = argp;
+> +		struct kvm_reg_list reg_list;
+> +		unsigned n;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
+> +			break;
+> +		n = reg_list.n;
+> +		reg_list.n = kvm_loongarch_num_regs(vcpu);
+> +		if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
+> +			break;
+> +		r = -E2BIG;
+> +		if (n < reg_list.n)
+> +			break;
+> +		r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
+> +		break;
+> +	}
+>   	default:
+>   		r = -ENOIOCTLCMD;
+>   		break;
+> 
 
-> Huacai
-
--- 
-Sincerely yours,
-Mike.
