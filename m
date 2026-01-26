@@ -1,385 +1,272 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from fra-out-009.esa.eu-central-1.outbound.mail-perimeter.amazon.com (fra-out-009.esa.eu-central-1.outbound.mail-perimeter.amazon.com [3.64.237.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A640313547
-	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 10:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79068346FC8;
+	Mon, 26 Jan 2026 16:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.64.237.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769421810; cv=none; b=O5g46ifIlZk0htN9tqQF85c7exOzupbFz0oQ5EvwZPf5Y9Ypknp+PUtxHguxlgY7TQWN9tTrcQ3yeSxtXnhGfOrwv37MpxPF4RYpOa/of8+wcS02cumdh9fXNnmz5AsyHnmtMHwfVwQDwWaigAz/NeEYHyY4IPHXjyItT2s513s=
+	t=1769446032; cv=none; b=d/Z0N+hUI5va7utyX9n1A2hlYSfNMV3ePlqZAGJtj2I6RFbGfYcd8q/4DgEwjC1wx+dB5nwmaYWUQRkYTnres7j9y2DG2V+NDySKTmH762MUCR13i0oqiYi0tFG9PKi/7jQsP+Gy/xEfpdm7r3nOLObKxaFUOB7iRae53WmaitA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769421810; c=relaxed/simple;
-	bh=uL/zrKiJL0NrpRn7S1T5zQm6Z2BAWFrf2uvRyXBML8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BWX8jiq/Exv0d7HJo/NSdcORjj9Idjhv1AmZqTKsTvzmhgi9fyDYNHIb26btX937K7bK6yuuwXkZu6sRPIJf22eh690ZKZS7H7o0VHgfLHN5qVOCbqpViLxu7wqIGn2VEPCPd5/1lb2n+um0t/jM595cGB05pMvznoUb7u30oes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=WoRuJ7zr; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1769446032; c=relaxed/simple;
+	bh=Jj2MWM7REKjQ3mCzvIc3KbcDhzOgxwLiYIXs/egsra4=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=a1oCcEN8VPJYY/O7jkwYiP6U6xapn+u4fwdX16evKsVGt//2PFA4FVprjV2XLGYQ8RwNi2lllzhj3fpgF+PZ2YM9MjYmPvDlb+iPfaKWWHfmt36XYMa1ltTP1OaDxU6m82LXw7wnBY5+g6UwCq+CxDEGovRO4+I9LBfrPhoZQgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=guYD3JsD; arc=none smtp.client-ip=3.64.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="WoRuJ7zr"
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id C021F26344
-	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 10:03:26 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id 401EE3E91A;
-	Mon, 26 Jan 2026 10:03:19 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 6B19B400D5;
-	Mon, 26 Jan 2026 10:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1769421798; bh=uL/zrKiJL0NrpRn7S1T5zQm6Z2BAWFrf2uvRyXBML8I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WoRuJ7zr7IYbCSWp13iIpw6DqHAIyHS/7fcNWVySs7iNaB9fRXguSGL2oX5ZDLQE7
-	 yj7EzJT9Gi0sDx8WRKLASSk2j4R+w9p3tibWmDf2WnkOyEAtsxYzxsmvc2EChx5q2J
-	 Wi+jA8ltHfyWTb/1UX5a/b3a0P1+yU703ZQfhWog=
-Received: from [127.0.0.1] (unknown [117.151.13.225])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 754FA40594;
-	Mon, 26 Jan 2026 10:03:09 +0000 (UTC)
-Message-ID: <a3beb69c-5236-49fb-aebc-c716c10ea7c3@aosc.io>
-Date: Mon, 26 Jan 2026 18:03:06 +0800
+	dkim=pass (2048-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="guYD3JsD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazoncorp2; t=1769446028; x=1800982028;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=tbv/MTwQoTKHu7Ejd3vLaiU5iszGht/IvO/yWSvhW4o=;
+  b=guYD3JsDIGLTftCltU3ZIPafvfd78lIeAouC9x8tVc0nlpgiVXzs9V+L
+   aV4a6Fm72oLXBmmr+wy4Ns+MZ4fHRgXntq8k9F7yMA0mJ31WI/nTgMJPJ
+   HNknBjDM3EIexV+YK1EuunnUddWnuP2nPwouxkS02M83DKU5v9It09s4O
+   uNnmzYoU72XMWusiuW8SWT6ZLw75uQYrq2l48OCDWx1OgVJk2Na01zcNY
+   B19FU+bZBQBf9KkJIQMkwRiEqQdMXAuiDttYIt0GkUbh9Bz2zk24GD/9K
+   yiRymVG9IUJv8602CQiYbsWAJ4WRsh94ElktOnwXV5iSuJgxzHFc6daqP
+   g==;
+X-CSE-ConnectionGUID: 6IHftKH7SsOlKU7AyD1EnA==
+X-CSE-MsgGUID: kMm4jjHORlWTkE3xuKVThA==
+X-IronPort-AV: E=Sophos;i="6.21,255,1763424000"; 
+   d="scan'208";a="8361622"
+Received: from ip-10-6-6-97.eu-central-1.compute.internal (HELO smtpout.naws.eu-central-1.prod.farcaster.email.amazon.dev) ([10.6.6.97])
+  by internal-fra-out-009.esa.eu-central-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 16:46:49 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [54.240.197.233:30081]
+ by smtpin.naws.eu-central-1.prod.farcaster.email.amazon.dev [10.0.13.191:2525] with esmtp (Farcaster)
+ id 867ddae6-4aab-4228-9189-c90a4ffe3bcf; Mon, 26 Jan 2026 16:46:48 +0000 (UTC)
+X-Farcaster-Flow-ID: 867ddae6-4aab-4228-9189-c90a4ffe3bcf
+Received: from EX19D005EUB004.ant.amazon.com (10.252.51.126) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
+ Mon, 26 Jan 2026 16:46:48 +0000
+Received: from EX19D005EUB003.ant.amazon.com (10.252.51.31) by
+ EX19D005EUB004.ant.amazon.com (10.252.51.126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.35;
+ Mon, 26 Jan 2026 16:46:48 +0000
+Received: from EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c]) by
+ EX19D005EUB003.ant.amazon.com ([fe80::b825:becb:4b38:da0c%3]) with mapi id
+ 15.02.2562.035; Mon, 26 Jan 2026 16:46:48 +0000
+From: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+To: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"kernel@xen0n.name" <kernel@xen0n.name>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net"
+	<corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org"
+	<oupton@kernel.org>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "yuzenghui@huawei.com"
+	<yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org"
+	<willy@infradead.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com"
+	<surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, "ast@kernel.org"
+	<ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev"
+	<martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev"
+	<yonghong.song@linux.dev>, "john.fastabend@gmail.com"
+	<john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com"
+	<peterx@redhat.com>, "jannh@google.com" <jannh@google.com>,
+	"pfalcato@suse.de" <pfalcato@suse.de>, "shuah@kernel.org" <shuah@kernel.org>,
+	"riel@surriel.com" <riel@surriel.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>,
+	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org"
+	<kas@kernel.org>, "coxu@redhat.com" <coxu@redhat.com>,
+	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, "ackerleytng@google.com"
+	<ackerleytng@google.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>,
+	"prsampat@amd.com" <prsampat@amd.com>, "mlevitsk@redhat.com"
+	<mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com"
+	<agordeev@linux.ibm.com>, "alex@ghiti.fr" <alex@ghiti.fr>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "borntraeger@linux.ibm.com"
+	<borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com"
+	<gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org" <pjw@kernel.org>,
+	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>,
+	"svens@linux.ibm.com" <svens@linux.ibm.com>, "thuth@redhat.com"
+	<thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>,
+	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>,
+	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "urezki@gmail.com"
+	<urezki@gmail.com>, "zhengqi.arch@bytedance.com"
+	<zhengqi.arch@bytedance.com>, "gerald.schaefer@linux.ibm.com"
+	<gerald.schaefer@linux.ibm.com>, "jiayuan.chen@shopee.com"
+	<jiayuan.chen@shopee.com>, "lenb@kernel.org" <lenb@kernel.org>,
+	"osalvador@suse.de" <osalvador@suse.de>, "pavel@kernel.org"
+	<pavel@kernel.org>, "rafael@kernel.org" <rafael@kernel.org>,
+	"vannapurve@google.com" <vannapurve@google.com>, "jackmanb@google.com"
+	<jackmanb@google.com>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"patrick.roy@linux.dev" <patrick.roy@linux.dev>, "Thomson, Jack"
+	<jackabt@amazon.co.uk>, "Itazuri, Takahiro" <itazur@amazon.co.uk>,
+	"Manwaring, Derek" <derekmn@amazon.com>, "Cali, Marco"
+	<xmarcalx@amazon.co.uk>, "Kalyazin, Nikita" <kalyazin@amazon.co.uk>
+Subject: [PATCH v10 00/15] Direct Map Removal Support for guest_memfd
+Thread-Topic: [PATCH v10 00/15] Direct Map Removal Support for guest_memfd
+Thread-Index: AQHcjuMVKu9EzWzx90GD17TC625r+Q==
+Date: Mon, 26 Jan 2026 16:46:47 +0000
+Message-ID: <20260126164445.11867-1-kalyazin@amazon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-Content-Language: en-US-large, en-US
-To: Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- rust-for-linux@vger.kernel.org
-References: <20260125054322.1237687-1-liushuyu@aosc.io>
- <4b504274-4241-0e3e-3ed3-7804b72b7ee8@loongson.cn>
- <972430be-d2f3-49b6-851b-a057ddfcafec@aosc.io>
- <29565e27-f153-c2c5-cbc3-e0457d45f094@loongson.cn>
- <2fa2dc72-b24e-4504-8c8e-e4ecacda02c4@aosc.io>
- <13746394-1a33-894a-d325-8125743f7906@loongson.cn>
- <f3256219-bb97-45d4-9364-cf28d3c9dc8a@aosc.io>
- <913e8e96-9124-2fbe-bd00-f6122962562a@loongson.cn>
-From: liushuyu <liushuyu@aosc.io>
-In-Reply-To: <913e8e96-9124-2fbe-bd00-f6122962562a@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 6B19B400D5
-X-Spamd-Result: default: False [1.40 / 10.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	BAYES_HAM(-0.00)[36.75%];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	DBL_BLOCKED(0.00)[mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo,aosc.io:mid,aosc.io:from_smtp,aosc.io:from_mime,aosc.io:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	FREEMAIL_CC(0.00)[aosc.io,redhat.com,lwn.net,loongson.cn,kernel.org,dabbelt.com,eecs.berkeley.edu,ghiti.fr,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Server: nf1.mymailcheap.com
 
-Hi Bibo,
-
->
->
-> On 2026/1/26 下午4:54, liushuyu wrote:
->> Hi Bibo,
->>
->>>
->>>
->>> On 2026/1/26 下午12:22, liushuyu wrote:
->>>> Hi Bibo,
->>>>
->>>>>
->>>>>
->>>>> On 2026/1/26 上午11:38, liushuyu wrote:
->>>>>> Hi Bibo,
->>>>>>>
->>>>>>>
->>>>>>> On 2026/1/25 下午1:43, Zixing Liu wrote:
->>>>>>>> This ioctl can be used by userspace applications to determine
->>>>>>>> which
->>>>>>>> (special) registers are get/set-able.
->>>>>>>>
->>>>>>>> This can be very useful for cross-platform VMMs so that they do
->>>>>>>> not
->>>>>>>> have
->>>>>>>> to hardcode register indices for each supported architectures.
->>>>>>>>
->>>>>>>> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
->>>>>>>> ---
->>>>>>>>
->>>>>>>> For example, this ioctl could be used by rust-vmm/rust-kvm or
->>>>>>>> maybe
->>>>>>>> VirtualBox-kvm in the future.
->>>>>>>>
->>>>>>>>      Documentation/virt/kvm/api.rst |  2 +-
->>>>>>>>      arch/loongarch/kvm/vcpu.c      | 69
->>>>>>>> ++++++++++++++++++++++++++++++++++
->>>>>>>>      2 files changed, 70 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> diff --git a/Documentation/virt/kvm/api.rst
->>>>>>>> b/Documentation/virt/kvm/api.rst
->>>>>>>> index 01a3abef8abb..f46dd8be282f 100644
->>>>>>>> --- a/Documentation/virt/kvm/api.rst
->>>>>>>> +++ b/Documentation/virt/kvm/api.rst
->>>>>>>> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
->>>>>>>>      ---------------------
->>>>>>>>        :Capability: basic
->>>>>>>> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->>>>>>>> +:Architectures: arm64, loongarch, mips, riscv, x86 (if
->>>>>>>> KVM_CAP_ONE_REG)
->>>>>>>>      :Type: vcpu ioctl
->>>>>>>>      :Parameters: struct kvm_reg_list (in/out)
->>>>>>>>      :Returns: 0 on success; -1 on error
->>>>>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>>>>>> index 656b954c1134..b884eb9c76aa 100644
->>>>>>>> --- a/arch/loongarch/kvm/vcpu.c
->>>>>>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>>>>>> @@ -1186,6 +1186,57 @@ static int
->>>>>>>> kvm_loongarch_vcpu_set_attr(struct
->>>>>>>> kvm_vcpu *vcpu,
->>>>>>>>          return ret;
->>>>>>>>      }
->>>>>>>>      +static unsigned long kvm_loongarch_num_lbt_regs(void)
->>>>>>>> +{
->>>>>>>> +    /* +1 for the LBT_FTOP flag (inside arch.fpu) */
->>>>>>>> +    return sizeof(struct loongarch_lbt) / sizeof(unsigned long)
->>>>>>>> + 1;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu
->>>>>>>> *vcpu)
->>>>>>>> +{
->>>>>>>> +    /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
->>>>>>>> +    unsigned long res = CSR_MAX_NUMS + KVM_MAX_CPUCFG_REGS + 1;
->>>>>>>> +
->>>>>>>> +    if (kvm_guest_has_lbt(&vcpu->arch))
->>>>>>>> +        res += kvm_loongarch_num_lbt_regs();
->>>>>>>> +
->>>>>>>> +    return res;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
->>>>>>>> +                      u64 __user *uindices)
->>>>>>>> +{
->>>>>>>> +    u64 reg;
->>>>>>>> +    unsigned int i;
->>>>>>>> +
->>>>>>>> +    for (i = 0; i < CSR_MAX_NUMS; i++) {
->>>>>>>> +        reg = KVM_IOC_CSRID(i);
->>>>>>>> +        if (put_user(reg, uindices++))
->>>>>>>> +            return -EFAULT;
->>>>>>>> +    }
->>>>>>> CSR_MAX_NUMS is max number of accessible CSR registers, instead
->>>>>>> only
->>>>>>> part of them is used by vCPU model. By my understanding, there
->>>>>>> will be
->>>>>>> no much meaning if CSR_MAX_NUMS is returned. And I think it will be
->>>>>>> better if real CSR register id and number is returned.
->>>>>>>
->>>>>> Did you mean we should only return the CSR registers initialized in
->>>>>> this
->>>>>> function
->>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/loongarch/kvm/main.c?id=63804fed149a6750ffd28610c5c1c98cce6bd377#n48
->>>>>>
->>>>>>
->>>>>>
->>>>>> ?
->>>>>>
->>>>>> That looks like a very large list and the values of the register
->>>>>> IDs are
->>>>>> not fully continuous. If that is the case, how do we maintain the
->>>>>> get/set-able CSR register list?
->>>>> It will be better if CSR register list can be categorized, for
->>>>> example
->>>>> with LoongArch CPU manual CSR register is split into 8 types from
->>>>> chapter 7.4 -- 7.11
->>>>>
->>>>> At the beginning, there is big array with size CSR_MAX_NUMS without
->>>>> any category, it can be fine-gained in late.
->>>>
->>>> Does that mean in the new `kvm_loongarch_copy_reg_indices`
->>>> function, it
->>>> is also okay to embed this big list in there?
->>> Firstly I do not know how to use ioctl command KVM_GET_REG_LIST in VMM
->>> actually.
->>>
->>> At the second from the word "determine which (special) registers are
->>> get/set-able", I think that it is better to set accessible CSR
->>> register number and ID rather than the total number CSR_MAX_NUMS.
->>>
->> Understood. I will post a v2 patch, and we can continue the discussion
->> from there to see if I understood your points correctly.
-> Remember to add such lines in function kvm_init_gcsr_flag() in the
-> next round, since MSGINT CSR registers are missing here.
->
-> void kvm_init_gcsr_flag(void) {
-> +        if (cpu_has_msgint) {
-> +                set_gcsr_hw_flag(LOONGARCH_CSR_ISR0);
-> +                set_gcsr_hw_flag(LOONGARCH_CSR_ISR1);
-> +                set_gcsr_hw_flag(LOONGARCH_CSR_ISR2);
-> +                set_gcsr_hw_flag(LOONGARCH_CSR_ISR3);
-> +        }
-> } 
->
-I think this might need to be a separate patch or commit.
-
-Do you want me to include this in the KVM_GET_REG_LIST patch, or do you
-want to submit this change separately?
-
-> Regards
-> Bibo Mao
->>
->>> +static int kvm_loongarch_num_csr_regs(struct kvm_vcpu *vcpu)
->>> +{
->>> +    unsigned int i, count;
->>> +
->>> +    count = 0
->>> +    for (i = 0; i < CSR_MAX_NUMS; i++) {
->>> +        if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
->>> +            continue;
->>> +        count++;
->>> +    }
->>> +    return count;
->>> +}
->>>
->>> static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
->>> {
->>>      /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
->>> +    unsigned long res = kvm_loongarch_num_csr_regs +
->>> KVM_MAX_CPUCFG_REGS + 1;
->>>
->>>      if (kvm_guest_has_lbt(&vcpu->arch))
->>>          res += kvm_loongarch_num_lbt_regs();
->>>
->>>      return res;
->>> }
->>>
->>> static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
->>>                        u64 __user *uindices)
->>> {
->>>      u64 reg;
->>>      unsigned int i;
->>>
->>>      for (i = 0; i < CSR_MAX_NUMS; i++) {
->>> +                if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
->>> +                    continue;
->>>          reg = KVM_IOC_CSRID(i);
->>>          if (put_user(reg, uindices++))
->>>              return -EFAULT;
->>>      }
->>>
->>> Regards
->>> Bibo Mao
->>>>
->>>> Or do you want to extract the list from the `kvm_init_gcsr_flag`
->>>> function and refactor both functions to share one single big list
->>>> (probably in the kvm_host.h header)?
->>>>
->>>> Because from what I could understand, your previous messages point to
->>>> that we need to use this list to make out what CSR registers to return
->>>> to the user space VMMs.
->>>
->>>>
->>>>>
->>>>> Regards
->>>>> Bibo Mao
->>>>>>
->>>>>>> Regards
->>>>>>> Bibo Mao
->>>>>>>> +
->>>>>>>> +    for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
->>>>>>>> +        reg = KVM_IOC_CPUCFG(i);
->>>>>>>> +        if (put_user(reg, uindices++))
->>>>>>>> +            return -EFAULT;
->>>>>>>> +    }
->>>>>>>> +
->>>>>>>> +    reg = KVM_REG_LOONGARCH_COUNTER;
->>>>>>>> +    if (put_user(reg, uindices++))
->>>>>>>> +        return -EFAULT;
->>>>>>>> +
->>>>>>>> +    if (!kvm_guest_has_lbt(&vcpu->arch))
->>>>>>>> +        return 0;
->>>>>>>> +
->>>>>>>> +    for (i = 1; i <= kvm_loongarch_num_lbt_regs(); i++) {
->>>>>>>> +        reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
->>>>>>>> +        if (put_user(reg, uindices++))
->>>>>>>> +            return -EFAULT;
->>>>>>>> +    }
->>>>>>>> +
->>>>>>>> +    return 0;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>      long kvm_arch_vcpu_ioctl(struct file *filp,
->>>>>>>>                   unsigned int ioctl, unsigned long arg)
->>>>>>>>      {
->>>>>>>> @@ -1251,6 +1302,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->>>>>>>>              r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
->>>>>>>>              break;
->>>>>>>>          }
->>>>>>>> +    case KVM_GET_REG_LIST: {
->>>>>>>> +        struct kvm_reg_list __user *user_list = argp;
->>>>>>>> +        struct kvm_reg_list reg_list;
->>>>>>>> +        unsigned n;
->>>>>>>> +
->>>>>>>> +        r = -EFAULT;
->>>>>>>> +        if (copy_from_user(&reg_list, user_list,
->>>>>>>> sizeof(reg_list)))
->>>>>>>> +            break;
->>>>>>>> +        n = reg_list.n;
->>>>>>>> +        reg_list.n = kvm_loongarch_num_regs(vcpu);
->>>>>>>> +        if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
->>>>>>>> +            break;
->>>>>>>> +        r = -E2BIG;
->>>>>>>> +        if (n < reg_list.n)
->>>>>>>> +            break;
->>>>>>>> +        r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
->>>>>>>> +        break;
->>>>>>>> +    }
->>>>>>>>          default:
->>>>>>>>              r = -ENOIOCTLCMD;
->>>>>>>>              break;
->>>>>>>>
->>>>>>>
->>>>>> Thanks,
->>>>>> Zixing
->>>>>>
->>>>>
->>>> Thanks,
->>>> Zixing
->>>>
->>>
->> Thanks,
->>
->> Zixing
->>
->
-Thanks,
-
-Zixing
-
+[ based on kvm/next ]=0A=
+=0A=
+Unmapping virtual machine guest memory from the host kernel's direct map=0A=
+is a successful mitigation against Spectre-style transient execution=0A=
+issues: if the kernel page tables do not contain entries pointing to=0A=
+guest memory, then any attempted speculative read through the direct map=0A=
+will necessarily be blocked by the MMU before any observable=0A=
+microarchitectural side-effects happen.  This means that Spectre-gadgets=0A=
+and similar cannot be used to target virtual machine memory.  Roughly=0A=
+60% of speculative execution issues fall into this category [1, Table=0A=
+1].=0A=
+=0A=
+This patch series extends guest_memfd with the ability to remove its=0A=
+memory from the host kernel's direct map, to be able to attain the above=0A=
+protection for KVM guests running inside guest_memfd.=0A=
+=0A=
+Additionally, a Firecracker branch with support for these VMs can be=0A=
+found on GitHub [2].=0A=
+=0A=
+For more details, please refer to the v5 cover letter.  No substantial=0A=
+changes in design have taken place since.=0A=
+=0A=
+See also related write() syscall support in guest_memfd [3] where=0A=
+the interoperation between the two features is described.=0A=
+=0A=
+Changes since v9:=0A=
+ - Huacai/Ackerley: formatting and error handling fixes=0A=
+ - Heiko: remove TLB flushing from folio_zap_direct_map() on s390=0A=
+ - Willy: set_direct_map_valid_noflush() to take const void * instead of=0A=
+   struct page *page=0A=
+ - Ackerley: remove reject_file_backed variable in=0A=
+   gup_fast_folio_allowed()=0A=
+ - Ackerley: avoid referencing memfd_secret in doc=0A=
+ - Ackerley: make calls to kvm_gmem_folio_zap_direct_map() conditional=0A=
+   to GUEST_MEMFD_FLAG_NO_DIRECT_MAP=0A=
+ - Rick: Exclude TDX from direct map removal=0A=
+ - Rick: Add a comment about current impossibility of zapping at=0A=
+   non-base page granularity.=0A=
+=0A=
+v9: https://lore.kernel.org/kvm/20260114134510.1835-1-kalyazin@amazon.com=
+=0A=
+v8: https://lore.kernel.org/kvm/20251205165743.9341-1-kalyazin@amazon.com=
+=0A=
+v7: https://lore.kernel.org/kvm/20250924151101.2225820-1-patrick.roy@campus=
+.lmu.de=0A=
+v6: https://lore.kernel.org/kvm/20250912091708.17502-1-roypat@amazon.co.uk=
+=0A=
+v5: https://lore.kernel.org/kvm/20250828093902.2719-1-roypat@amazon.co.uk=
+=0A=
+v4: https://lore.kernel.org/kvm/20250221160728.1584559-1-roypat@amazon.co.u=
+k=0A=
+RFCv3: https://lore.kernel.org/kvm/20241030134912.515725-1-roypat@amazon.co=
+.uk=0A=
+RFCv2: https://lore.kernel.org/kvm/20240910163038.1298452-1-roypat@amazon.c=
+o.uk=0A=
+RFCv1: https://lore.kernel.org/kvm/20240709132041.3625501-1-roypat@amazon.c=
+o.uk=0A=
+=0A=
+[1] https://download.vusec.net/papers/quarantine_raid23.pdf=0A=
+[2] https://github.com/firecracker-microvm/firecracker/tree/feature/secret-=
+hiding=0A=
+[3] https://lore.kernel.org/kvm/20251114151828.98165-1-kalyazin@amazon.com=
+=0A=
+=0A=
+Nikita Kalyazin (3):=0A=
+  set_memory: set_direct_map_* to take address=0A=
+  set_memory: add folio_{zap,restore}_direct_map helpers=0A=
+  mm/gup: drop local variable in gup_fast_folio_allowed=0A=
+=0A=
+Patrick Roy (12):=0A=
+  mm/gup: drop secretmem optimization from gup_fast_folio_allowed=0A=
+  mm: introduce AS_NO_DIRECT_MAP=0A=
+  KVM: guest_memfd: Add stub for kvm_arch_gmem_invalidate=0A=
+  KVM: x86: define kvm_arch_gmem_supports_no_direct_map()=0A=
+  KVM: arm64: define kvm_arch_gmem_supports_no_direct_map()=0A=
+  KVM: guest_memfd: Add flag to remove from direct map=0A=
+  KVM: selftests: load elf via bounce buffer=0A=
+  KVM: selftests: set KVM_MEM_GUEST_MEMFD in vm_mem_add() if guest_memfd=0A=
+    !=3D -1=0A=
+  KVM: selftests: Add guest_memfd based vm_mem_backing_src_types=0A=
+  KVM: selftests: cover GUEST_MEMFD_FLAG_NO_DIRECT_MAP in existing=0A=
+    selftests=0A=
+  KVM: selftests: stuff vm_mem_backing_src_type into vm_shape=0A=
+  KVM: selftests: Test guest execution from direct map removed gmem=0A=
+=0A=
+ Documentation/virt/kvm/api.rst                | 21 +++--=0A=
+ arch/arm64/include/asm/kvm_host.h             | 13 +++=0A=
+ arch/arm64/include/asm/set_memory.h           |  9 +-=0A=
+ arch/arm64/mm/pageattr.c                      | 31 ++++---=0A=
+ arch/loongarch/include/asm/set_memory.h       |  9 +-=0A=
+ arch/loongarch/mm/pageattr.c                  | 37 +++++---=0A=
+ arch/riscv/include/asm/set_memory.h           |  9 +-=0A=
+ arch/riscv/mm/pageattr.c                      | 29 +++++--=0A=
+ arch/s390/include/asm/set_memory.h            |  9 +-=0A=
+ arch/s390/mm/pageattr.c                       | 25 ++++--=0A=
+ arch/x86/include/asm/kvm_host.h               |  6 ++=0A=
+ arch/x86/include/asm/set_memory.h             |  9 +-=0A=
+ arch/x86/kvm/x86.c                            |  5 ++=0A=
+ arch/x86/mm/pat/set_memory.c                  | 43 +++++++---=0A=
+ include/linux/kvm_host.h                      | 14 ++++=0A=
+ include/linux/pagemap.h                       | 16 ++++=0A=
+ include/linux/secretmem.h                     | 18 ----=0A=
+ include/linux/set_memory.h                    | 19 ++++-=0A=
+ include/uapi/linux/kvm.h                      |  1 +=0A=
+ kernel/power/snapshot.c                       |  4 +-=0A=
+ lib/buildid.c                                 |  4 +-=0A=
+ mm/execmem.c                                  |  6 +-=0A=
+ mm/gup.c                                      | 37 +++-----=0A=
+ mm/mlock.c                                    |  2 +-=0A=
+ mm/secretmem.c                                | 14 ++--=0A=
+ mm/vmalloc.c                                  | 11 ++-=0A=
+ .../testing/selftests/kvm/guest_memfd_test.c  | 17 +++-=0A=
+ .../testing/selftests/kvm/include/kvm_util.h  | 37 ++++++--=0A=
+ .../testing/selftests/kvm/include/test_util.h |  8 ++=0A=
+ tools/testing/selftests/kvm/lib/elf.c         |  8 +-=0A=
+ tools/testing/selftests/kvm/lib/io.c          | 23 +++++=0A=
+ tools/testing/selftests/kvm/lib/kvm_util.c    | 59 +++++++------=0A=
+ tools/testing/selftests/kvm/lib/test_util.c   |  8 ++=0A=
+ tools/testing/selftests/kvm/lib/x86/sev.c     |  1 +=0A=
+ .../selftests/kvm/pre_fault_memory_test.c     |  1 +=0A=
+ .../selftests/kvm/set_memory_region_test.c    | 52 +++++++++++-=0A=
+ .../kvm/x86/private_mem_conversions_test.c    |  7 +-=0A=
+ virt/kvm/guest_memfd.c                        | 84 +++++++++++++++++--=0A=
+ 38 files changed, 511 insertions(+), 195 deletions(-)=0A=
+=0A=
+=0A=
+base-commit: 0499add8efd72456514c6218c062911ccc922a99=0A=
+-- =0A=
+2.50.1=0A=
+=0A=
