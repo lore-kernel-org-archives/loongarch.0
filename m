@@ -1,134 +1,180 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59146279917
-	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 06:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A13A433B3
+	for <loongarch@lists.linux.dev>; Mon, 26 Jan 2026 07:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769409796; cv=none; b=IY5Pj0DXsTuChEt09jUGSGIKlN00/zcUCrjGyk8gfvJeF206LMG0f1WmcbaiNN8+iWiNSNEHxvXHbr7wf277HsMJB/vtG6fESwqHUnYy2dnl4xn+VnVMDQKYXh1yWyG8JqvmdhYEdg20viXHF3YI/eeh57V+fsz3W5/v7Io6cKg=
+	t=1769410810; cv=none; b=Pu0tY3Zu1UjainTLqYG3AtsXNu/hdA88RlPvcUHVVnzWRw7162t4odHyY9mp4k2JvYYjTquCN70YvlK63z4Dk5VhrJMlOQyI5cLjbjBh8xkAwbvVFRZLN+ccctaDUchaj+bN4F9/SM+044m50DRY4F0qWavh4suVgePlGTYtDxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769409796; c=relaxed/simple;
-	bh=Pv1j8yCqOUew2FNGuU/vYjitA5r9UxzS1Zm9DLHMrNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aOXOhUqHskU24aqv/VZpdPFShTkVzo/DLH8A9iis39TWj34XbSxgwW0HoAs6yOU6meVkki7LSzofZ5gOsR9KSkcwybGJSHHt8fJd8ljRFFPEIAIrn8BIZ9kYVQxs3XQIdGTdjV4tUV2sAnS2XrOMHzOoq7anm5gYh6YmKGpgleI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.42])
-	by gateway (Coremail) with SMTP id _____8AxisL7DHdpKqAMAA--.41111S3;
-	Mon, 26 Jan 2026 14:43:07 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.69.42])
-	by front1 (Coremail) with SMTP id qMiowJBxSeD1DHdpfYkxAA--.33376S3;
-	Mon, 26 Jan 2026 14:43:06 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 2/2] LoongArch: dts: loongson-2k1000: Add nand controller support
-Date: Mon, 26 Jan 2026 14:42:52 +0800
-Message-ID: <6d8c6f7af710321d41007ae4fea5703d24e5a36f.1769409559.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <51f52f21c3ce84dbb5b6b100186807adf146dde0.1769409559.git.zhoubinbin@loongson.cn>
-References: <51f52f21c3ce84dbb5b6b100186807adf146dde0.1769409559.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1769410810; c=relaxed/simple;
+	bh=hIVMICCOrwOEHb7O10TcOjpQqCQ90wHru/xyyTPnNZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tOD//1X89JMUWHvv4L9E6Ox2yClya75o/McOLOm9VPYMCuNB8WLJCjcgAajqR1SRyvSQoeRbJ0BlrGaGoRlMaMjrkH6fJCJmPTYRTIc94uQupQ/DKT3VIIGb5tA3ToqmKzlIpnpqFOr+cP1ZmjrfZcpfI3sVNBwv47KyDYlOg8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=io0Jn+3N; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="io0Jn+3N"
+Message-ID: <646d9b5c-453c-4db8-b578-0f343e170379@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1769410802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hybAGJDtwUTQyBJLSE6cgT3x4CprzyvIGdy1i62DoMg=;
+	b=io0Jn+3NajuPHPI4XjqNt9sYHPn2FyPfP/1eLMYG5oEK9p8YQ2ayv0ii4eZsQi7AY5Kxh/
+	8bRt82NClUXSKr1V31d6I/GqCfQd+DB4Ux8EDoCg31zgpyKNNatRAU/WP75QWfFgYjHG7n
+	Oc4aJiIqhIpd+iDcwrxRH5wDMzgILbU=
+Date: Mon, 26 Jan 2026 14:59:43 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxSeD1DHdpfYkxAA--.33376S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgETCGl3Ah0AlwAAsO
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrWxKFy5Wry3ZFWxZrW8GrX_yoW8urW8pa
-	sF9wsxKrZ29ryIgrnxJryUtr45ZF95JF97WanxuFyUG39Iv34jvr18tF9aqF4DXF4ft34F
-	gFn5G34xKF4DuabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjOJ5UUUUU=
+Subject: Re: [PATCH v3 7/7] mm: make PT_RECLAIM depends on
+ MMU_GATHER_RCU_TABLE_FREE
+To: Andreas Larsson <andreas@gaisler.com>, david@kernel.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-um@lists.infradead.org, Qi Zheng <zhengqi.arch@bytedance.com>,
+ sparclinux <sparclinux@vger.kernel.org>, will@kernel.org,
+ peterz@infradead.org, akpm@linux-foundation.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, dev.jain@arm.com, ioworker0@gmail.com, linmag7@gmail.com
+References: <cover.1765963770.git.zhengqi.arch@bytedance.com>
+ <ac2bdb2a66da1edb24f60d1da1099e2a0b734880.1765963770.git.zhengqi.arch@bytedance.com>
+ <9199f28e-e2b7-48c8-b61f-0b787e322443@gaisler.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Qi Zheng <qi.zheng@linux.dev>
+In-Reply-To: <9199f28e-e2b7-48c8-b61f-0b787e322443@gaisler.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-The module is supported, enable it.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- .../boot/dts/loongson-2k1000-ref.dts          | 22 +++++++++++++++++++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi  | 13 ++++++++++-
- 2 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-index d9a452ada5d7..51b8e53cb608 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k1000-ref.dts
-@@ -48,6 +48,28 @@ fan0: pwm-fan {
- 	};
- };
- 
-+&apbdma0 {
-+	status = "okay";
-+};
-+
-+&nand {
-+	status = "okay";
-+
-+	pinctrl-0 = <&nand_pins_default>;
-+	pinctrl-names = "default";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	nand@0 {
-+		reg = <0>;
-+		label = "ls2k1000-nand";
-+		nand-use-soft-ecc-engine;
-+		nand-ecc-algo = "bch";
-+		nand-ecc-strength = <8>;
-+		nand-ecc-step-size = <512>;
-+	};
-+};
-+
- &apbdma1 {
- 	status = "okay";
- };
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-index be4f7d119660..ab6a55937e9e 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -248,7 +248,7 @@ tsensor: thermal-sensor@1fe01500 {
- 			#thermal-sensor-cells = <1>;
- 		};
- 
--		dma-controller@1fe00c00 {
-+		apbdma0: dma-controller@1fe00c00 {
- 			compatible = "loongson,ls2k1000-apbdma";
- 			reg = <0x0 0x1fe00c00 0x0 0x8>;
- 			interrupt-parent = <&liointc1>;
-@@ -364,6 +364,17 @@ pwm@1fe22030 {
- 			status = "disabled";
- 		};
- 
-+		nand: nand-controller@1fe26000 {
-+			compatible = "loongson,ls2k1000-nand-controller";
-+			reg = <0 0x1fe26000 0 0x24>,
-+			      <0 0x1fe26040 0 0x4>,
-+			      <0 0x1fe00438 0 0x8>;
-+			reg-names = "nand", "nand-dma", "dma-config";
-+			dmas = <&apbdma0 0>;
-+			dma-names = "rxtx";
-+			status = "disabled";
-+		};
-+
- 		pmc: power-management@1fe27000 {
- 			compatible = "loongson,ls2k1000-pmc", "loongson,ls2k0500-pmc", "syscon";
- 			reg = <0x0 0x1fe27000 0x0 0x58>;
--- 
-2.47.3
+On 1/23/26 11:15 PM, Andreas Larsson wrote:
+> On 2025-12-17 10:45, Qi Zheng wrote:
+>> From: Qi Zheng <zhengqi.arch@bytedance.com>
+>>
+>> The PT_RECLAIM can work on all architectures that support
+>> MMU_GATHER_RCU_TABLE_FREE, so make PT_RECLAIM depends on
+>> MMU_GATHER_RCU_TABLE_FREE.
+>>
+>> BTW, change PT_RECLAIM to be enabled by default, since nobody should want
+>> to turn it off.
+>>
+>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>> ---
+>>   arch/x86/Kconfig | 1 -
+>>   mm/Kconfig       | 9 ++-------
+>>   2 files changed, 2 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 80527299f859a..0d22da56a71b0 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -331,7 +331,6 @@ config X86
+>>   	select FUNCTION_ALIGNMENT_4B
+>>   	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>   	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>> -	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
+>>   	select ARCH_SUPPORTS_SCHED_SMT		if SMP
+>>   	select SCHED_SMT			if SMP
+>>   	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index bd0ea5454af82..fc00b429b7129 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -1447,14 +1447,9 @@ config ARCH_HAS_USER_SHADOW_STACK
+>>   	  The architecture has hardware support for userspace shadow call
+>>             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+>>   
+>> -config ARCH_SUPPORTS_PT_RECLAIM
+>> -	def_bool n
+>> -
+>>   config PT_RECLAIM
+>> -	bool "reclaim empty user page table pages"
+>> -	default y
+>> -	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
+>> -	select MMU_GATHER_RCU_TABLE_FREE
+>> +	def_bool y
+>> +	depends on MMU_GATHER_RCU_TABLE_FREE
+>>   	help
+>>   	  Try to reclaim empty user page table pages in paths other than munmap
+>>   	  and exit_mmap path.
+> 
+> Hi,
+> 
+> This patch unfortunately results in a WARN_ON_ONCE and unaligned
+> accesses on sparc64:
+> 
+> $ stress-ng --mmaphuge 20 -t 60
+> stress-ng: info:  [559] setting to a 1 min run per stressor
+> stress-ng: info:  [559] dispatching hogs: 20 mmaphuge
+> [  560.592569] ------------[ cut here ]------------
+> [  560.592663] WARNING: kernel/rcu/tree.c:3098 at __call_rcu_common.constprop.0+0x200/0x760, CPU#4: stress-ng-mmaph/568
+> [  560.592777] CPU: 4 UID: 1000 PID: 568 Comm: stress-ng-mmaph Not tainted 6.19.0-rc5-00127-g62fc9f6ccb97 #8 VOLUNTARY
+> [  560.592805] Call Trace:
+> [  560.592812] [<00000000004368b8>] dump_stack+0x8/0x60
+> [  560.592844] [<0000000000482a60>] __warn+0xe0/0x140
+> [  560.592878] [<0000000000482b64>] warn_slowpath_fmt+0xa4/0x120
+> [  560.592901] [<0000000000526a40>] __call_rcu_common.constprop.0+0x200/0x760
+> [  560.592931] [<0000000000526fd0>] call_rcu+0x10/0x20
+> [  560.592954] [<0000000000730838>] tlb_remove_table+0x98/0xc0
+> [  560.592986] [<000000000071bec4>] free_pgd_range+0x224/0x4c0
+> [  560.593021] [<000000000071c35c>] free_pgtables+0x1fc/0x240
+> [  560.593042] [<000000000074a6f0>] vms_clear_ptes+0x110/0x140
+> [  560.593068] [<000000000074c3dc>] vms_complete_munmap_vmas+0x5c/0x280
+> [  560.593094] [<000000000074de5c>] do_vmi_align_munmap+0x1dc/0x260
+> [  560.593117] [<000000000074df80>] do_vmi_munmap+0xa0/0x140
+> [  560.593142] [<000000000074fb2c>] __vm_munmap+0x8c/0x160
+> [  560.593168] [<000000000072cfd4>] vm_munmap+0x14/0x40
+> [  560.593190] [<00000000004402a8>] sys_64_munmap+0x88/0xa0
+> [  560.593221] [<0000000000406274>] linux_sparc_syscall+0x34/0x44
+> [  560.593274] ---[ end trace 0000000000000000 ]---
+> [  560.593960] log_unaligned: 209 callbacks suppressed
+> [  560.593979] Kernel unaligned access at TPC[526a4c] __call_rcu_common.constprop.0+0x20c/0x760
+> [  560.594121] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
+> [  560.594198] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
+> [  560.594275] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
+> [  560.594360] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
+> [  567.054127] log_unaligned: 1105 callbacks suppressed
+> [  567.054167] Kernel unaligned access at TPC[526860] __call_rcu_common.constprop.0+0x20/0x760
+> [  567.054331] Kernel unaligned access at TPC[526864] __call_rcu_common.constprop.0+0x24/0x760
+> [  567.054410] Kernel unaligned access at TPC[52b3c4] rcu_segcblist_enqueue+0x24/0x40
+
+Thanks for your report!
+
+On sparc64, pmd and pud levels are not of struct page:
+
+__pmd_free_tlb/__pud_free_tlb
+--> pgtable_free_tlb(tlb, pud/pmd, false). <=== is_page == false
+     --> tlb_remove_table
+
+So in __tlb_remove_table_one(), the table cannot be treated as
+ptdesc because it does not have an pt_rcu_head member.
+
+Hi David, it seems we still need to keep ARCH_SUPPORTS_PT_RECLAIM?
+
+Thanks,
+Qi
+
+> ...
+> 
+> I bisected to this one on mm-unstable from approximately 2026-01-12.
+> 
+> The warning is from
+> 
+> 	/* Misaligned rcu_head! */
+> 	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
+> 
+> in __call_rcu_common() and the unaligned accesses follows from there.
+> 
+> Regards,
+> Andreas
+> 
 
