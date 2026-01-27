@@ -1,205 +1,176 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8563355025
-	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 12:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E388E29ACFD
+	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 14:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769518293; cv=none; b=k8jDA6LnZJrCy//DFkzpE4IMxW+124zyvqFP7Dk3toBT+TIdqhWS7WFaW1w9wLQ6DsTmASxvRzoE1g2MmRxpAhU9doIn2L/hzuuR2aD9vXj3LdZsysJO7y8/E13nYcoIBeUQ5m4cJKw3lyG/D3a0AJmvQAn16sKWFCxABrBQfGE=
+	t=1769523431; cv=none; b=sXN59Acv228GWqLKYazlxGl+uoF0F5+RBObvSMyIHGPdF252o3qKe6uXb+iDbwWvpsDcOwcBUoltOp9jQxjDemTqWlz2g2xb5S/wU1A4/fOEmoVl6nP077qckeCOmiPtghBEgq+ztBL/+GeN6N6OUyRwvoLd5rcNWLQGdG2qp5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769518293; c=relaxed/simple;
-	bh=7YIh20H2by5sDVrbfxOP83AGWSzPQwwRkf2iETQ6jlc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=snIeFwFuHNcwam/0m7NxL5xoQkX3BIqiGFnUy3rHeB3uLPJNUwrTKee+kEZcxjo/+IZsEL8D0MquyrSaBn1dJI2SQeMPUMOb1biuqWg++crsoKPzg2CnPUrUyqRRpQjdZOsiGdDbHQiVJd5spqD9oKbt/5+6SsehXFs1PVzh+RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxAfHOtHhpNB4NAA--.43148S3;
-	Tue, 27 Jan 2026 20:51:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxWcHMtHhpYpo0AA--.24006S5;
-	Tue, 27 Jan 2026 20:51:26 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH v2 3/3] LoongArch: KVM: Add FPU delay load support
-Date: Tue, 27 Jan 2026 20:51:24 +0800
-Message-Id: <20260127125124.3234252-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260127125124.3234252-1-maobibo@loongson.cn>
-References: <20260127125124.3234252-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1769523431; c=relaxed/simple;
+	bh=ZcXLInvO6iuPrZ8BTtnhaWFQll85GRjtKMuyVP5HAl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UKIoEhm9El6eS5ccC1y1VmytKOS5Sds7n/NJ13MMKKVjLJdbQHuLUHGPUceUNuhA+q9xXhY5ggdEfT7CV3h12JF7KXGkNknWPFBeizOnAZ84ZVpTzwWMFSOlZzlw+obBiLTk+OPndChOrmj91e3FRluIBabXS9Gq0m2/gs20dBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=tvbi/vGM; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="tvbi/vGM"
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5A79526344
+	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 14:17:02 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id 643543E878;
+	Tue, 27 Jan 2026 14:16:54 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id EC79C40095;
+	Tue, 27 Jan 2026 14:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1769523411; bh=ZcXLInvO6iuPrZ8BTtnhaWFQll85GRjtKMuyVP5HAl8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tvbi/vGMkblog79v+C1n6VFvErfs3VVoSCDLpgQdUVtM7nbYxZLSxpMVF2MQkw0FP
+	 bHF1Uwhlmhx9t9g5SPECWDahZHE7U+hY4IoBdcoYk08kvH1Tb8NX4c/xxezBEbKzjO
+	 5qUB4gD9fO4Xvrvnuy9wP8LFNoaawn5L31lkcPHc=
+Received: from [198.18.0.1] (unknown [203.175.14.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 653DB40601;
+	Tue, 27 Jan 2026 14:16:43 +0000 (UTC)
+Message-ID: <f94fbe61-11b9-4fbc-a2a1-57a10547655a@aosc.io>
+Date: Tue, 27 Jan 2026 22:16:39 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] loongarch: retrieve CPU package ID from PPTT when
+ available
+To: Rong Bao <rong.bao@csmantle.top>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org,
+ WANG Xuerui <kernel@xen0n.name>, Yuli Wang <wangyuli@uniontech.com>,
+ Yanteng Si <si.yanteng@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>,
+ Hongliang Wang <wanghongliang@loongson.cn>,
+ Thierry Reding <treding@nvidia.com>,
+ Tianyang Zhang <zhangtianyang@loongson.cn>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <78c75769.AU0AAIwo2ewAAAAAAAAAA-ma1psAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <78c75769.AU0AAIwo2ewAAAAAAAAAA-ma1psAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxWcHMtHhpYpo0AA--.24006S5
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Rspamd-Queue-Id: EC79C40095
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	URIBL_BLOCKED(0.00)[aosc.io:from_mime,aosc.io:mid,aosc.io:email,aosc.io:from_smtp,csmantle.top:email,mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo,xry111.site:email];
+	FROM_HAS_DN(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[xry111.xry111.site:server fail,stable.vger.kernel.org:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	LOCAL_OUTBOUND(0.00)[];
+	SURBL_MULTI_FAIL(0.00)[aosc.io:server fail,xry111.site:server fail,vger.kernel.org:server fail,mail20.mymailcheap.com:server fail]
 
-FPU is lazy enabled with KVM hypervisor. After FPU is enabled and
-loaded, vCPU can be preempted and FPU will be lost again. Here FPU
-is delay load until guest enter entry.
+Hi Rong,
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  2 ++
- arch/loongarch/kvm/exit.c             | 15 ++++++++----
- arch/loongarch/kvm/vcpu.c             | 33 +++++++++++++++++----------
- 3 files changed, 33 insertions(+), 17 deletions(-)
+在 2026/1/23 23:56, Rong Bao 写道:
+> Currently, the LoongArch CPU topology initialization code calculates
+> each core's package ID by dividing its physical ID by
+> loongson_sysconf.cores_per_package. This relies on the assumption that
+> cores_per_package counts in the same domain as physical IDs.
+> 
+> On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
+> core count -- 24 in this case. However, the physical IDs range from 0 to
+> 31 in a noncontiguous fashion:
+> 
+>          $ cat /proc/cpuinfo | grep -i -F 'global_id'
+>          global_id               : 0
+>          global_id               : 1
+>          global_id               : 4
+>          global_id               : 5
+>          global_id               : 6
+>          global_id               : 7
+>          global_id               : 8
+>          global_id               : 9
+>          global_id               : 10
+>          global_id               : 11
+>          global_id               : 14
+>          global_id               : 15
+>          global_id               : 16
+>          global_id               : 17
+>          global_id               : 20
+>          global_id               : 21
+>          global_id               : 22
+>          global_id               : 23
+>          global_id               : 26
+>          global_id               : 27
+>          global_id               : 28
+>          global_id               : 29
+>          global_id               : 30
+>          global_id               : 31
+> 
+> Retrieve the exact package ID from ACPI PPTT when available, in the same
+> style as retrieving the core ID and thread ID in parse_acpi_topology().
+> Use this information in loongson_init_secondary() when PPTT readout is
+> successful. The original division logic is kept as a fallback.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Rong Bao <rong.bao@csmantle.top>
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index e4fe5b8e8149..902ff7bc0e35 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -37,6 +37,7 @@
- #define KVM_REQ_TLB_FLUSH_GPA		KVM_ARCH_REQ(0)
- #define KVM_REQ_STEAL_UPDATE		KVM_ARCH_REQ(1)
- #define KVM_REQ_PMU			KVM_ARCH_REQ(2)
-+#define KVM_REQ_FPU_LOAD		KVM_ARCH_REQ(3)
- 
- #define KVM_GUESTDBG_SW_BP_MASK		\
- 	(KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
-@@ -234,6 +235,7 @@ struct kvm_vcpu_arch {
- 	u64 vpid;
- 	gpa_t flush_gpa;
- 
-+	int fpu_load_type;
- 	/* Frequency of stable timer in Hz */
- 	u64 timer_mhz;
- 	ktime_t expire;
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 74b427287e96..b6f08df8fedb 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -754,7 +754,8 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
- 		return RESUME_HOST;
- 	}
- 
--	kvm_own_fpu(vcpu);
-+	vcpu->arch.fpu_load_type = KVM_LARCH_FPU;
-+	kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
- 
- 	return RESUME_GUEST;
- }
-@@ -794,8 +795,10 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	if (!kvm_guest_has_lsx(&vcpu->arch))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
--	else
--		kvm_own_lsx(vcpu);
-+	else {
-+		vcpu->arch.fpu_load_type = KVM_LARCH_LSX;
-+		kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
-+	}
- 
- 	return RESUME_GUEST;
- }
-@@ -812,8 +815,10 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
- {
- 	if (!kvm_guest_has_lasx(&vcpu->arch))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
--	else
--		kvm_own_lasx(vcpu);
-+	else {
-+		vcpu->arch.fpu_load_type = KVM_LARCH_LASX;
-+		kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
-+	}
- 
- 	return RESUME_GUEST;
- }
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index d91a1160a309..3e749e9738b2 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -232,6 +232,27 @@ static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
- 			kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
- 			vcpu->arch.flush_gpa = INVALID_GPA;
- 		}
-+
-+	if (kvm_check_request(KVM_REQ_FPU_LOAD, vcpu)) {
-+		switch (vcpu->arch.fpu_load_type) {
-+		case KVM_LARCH_FPU:
-+			kvm_own_fpu(vcpu);
-+			break;
-+
-+		case KVM_LARCH_LSX:
-+			kvm_own_lsx(vcpu);
-+			break;
-+
-+		case KVM_LARCH_LASX:
-+			kvm_own_lasx(vcpu);
-+			break;
-+
-+		default:
-+			break;
-+		}
-+
-+		vcpu->arch.fpu_load_type = 0;
-+	}
- }
- 
- /*
-@@ -1338,8 +1359,6 @@ static inline void kvm_check_fcsr_alive(struct kvm_vcpu *vcpu) { }
- /* Enable FPU and restore context */
- void kvm_own_fpu(struct kvm_vcpu *vcpu)
- {
--	preempt_disable();
--
- 	/*
- 	 * Enable FPU for guest
- 	 * Set FR and FRE according to guest context
-@@ -1350,16 +1369,12 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
- 	kvm_restore_fpu(&vcpu->arch.fpu);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
--
--	preempt_enable();
- }
- 
- #ifdef CONFIG_CPU_HAS_LSX
- /* Enable LSX and restore context */
- int kvm_own_lsx(struct kvm_vcpu *vcpu)
- {
--	preempt_disable();
--
- 	/* Enable LSX for guest */
- 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
-@@ -1381,8 +1396,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
--	preempt_enable();
--
- 	return 0;
- }
- #endif
-@@ -1391,8 +1404,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- /* Enable LASX and restore context */
- int kvm_own_lasx(struct kvm_vcpu *vcpu)
- {
--	preempt_disable();
--
- 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
- 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
- 	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
-@@ -1414,8 +1425,6 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
--	preempt_enable();
--
- 	return 0;
- }
- #endif
--- 
-2.39.3
+Tested good on the following single-socket systems:
 
+- Loongson XA61200_V1.1 (Loongson 3A6000-HV)
+- Loongson AC612A0_V1.1 (Loongson 3C6000/S)
+- Loongson N2K20Z0 (Loongson 2K2000, "Cloud Laptop")
+- IPASON NL38-N11 (Loongson 3A6000, laptop)
+
+... the following dual-socket systems:
+
+- Loongson TD622E0 (Loongson 3C6000/D × 2)
+
+... and of course, the offending platform:
+
+- Loongson XB612B0_V1.2 (Loongson 3B6000, 12 cores)
+
+I should note however, I found that the patch caused lscpu(1) to report 
+incorrect processor topology on Loongson TD622E0:
+
+   Thread(s) per core:        2
+   Core(s) per socket:        64
+   Socket(s):                 1
+
+Whereas it should have been:
+
+   Thread(s) per core:        2
+   Core(s) per socket:        32
+   Socket(s):                 2
+
+Which, of course, due to the nature of this patch, was caused by 
+incorrect PPTT data included in the firmware (this was fixed earlier 
+today); NUMA topology reporting was not affected.
+
+If this patch results in incorrect processor topology reports, similarly 
+to what I ran into above, you should consult your system vendor for a 
+firmware fix (or some sort of quirk should be shipped with distros - or 
+the upstream somehow?).
+
+With that,
+
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
+Tested-by: Xi Ruoyao <xry111@xry111.site>
+
+Best Regards,
+Mingcong Bai
