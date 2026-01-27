@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A7F3EBF2F
-	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 08:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 954D03EBF2F
+	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 08:46:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769503600; cv=none; b=eFkWu6YBgS/8FGxiHvADy9mTwmxGtNuWVOa+72JgRMwht+vN949sF/oTaTF/Ni+nF3y8SV/yzdr4JkFMi4Qt5u988Pa2Eg28Xsk0Ont8S6jgbyrOXv+vk7juTnpEFlDmc2TNEWBb4ggQ7kOhLsUVqHkv3fuXQIZ2rpGtZ0cKHPA=
+	t=1769503616; cv=none; b=alQCpcjT7jWEdQBLLk/3I+Ix0dcepatArCz2fwXu2NlAPrtYtlk5ieRcoqr2PT0QeGh8ivweU19jetQjuxY6SJdeqBBXE9k2O7UJuI219F17kWAbMLw4RSuSUmByuNUJRlUdnuZpndKtq4AE7IkvGIEoVEU94xouRarZ4khlBDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769503600; c=relaxed/simple;
-	bh=Y3sgjMtW/eoij322zg4iAbMXA11GTSNg1M9zDTeyaNk=;
+	s=arc-20240116; t=1769503616; c=relaxed/simple;
+	bh=2BtqhSooR3gcF8++FKjbQwloAUpYOoclRYfbQ+XvQ2o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jZRlRJiVCdsrSX7ZyQXY1fFBSnxvDWiMoXSs9N9LKjqwWL3YDfsRWpOjnlWharvZa6dItr/V5nc33/kyAJiUmYxWgMI6hyM+UXZi93m08Acs75UB9g3Z5dXgWNcztsODMVt86rT6MdMlZl38dulesLnO4JonhjAQdq47iv3lxIs=
+	 MIME-Version; b=Vm7BTB0Z+M5P3+zkmqtJ+TRCq6jQbSEjG3vZgfi9CMpCMSJ1jCePVbhCoivH5C0qHI+r01uA1YAhWWtuBGs9zdM9yIZpYKSqOpyovS+7VB/iSYLNNo9gPQusSPksPV/SQalG+2SnFdjzN7FNehQR3UveREKsHDLD4SR3Cfirtbw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.69.42])
-	by gateway (Coremail) with SMTP id _____8DxvsNqe3hpig0NAA--.43026S3;
-	Tue, 27 Jan 2026 16:46:34 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxVvB4e3hpmQ0NAA--.43431S3;
+	Tue, 27 Jan 2026 16:46:48 +0800 (CST)
 Received: from localhost.localdomain (unknown [223.64.69.42])
-	by front1 (Coremail) with SMTP id qMiowJBxZcBke3hpNig0AA--.3500S2;
-	Tue, 27 Jan 2026 16:46:33 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxZcBke3hpNig0AA--.3500S3;
+	Tue, 27 Jan 2026 16:46:47 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: loongarch@lists.linux.dev,
@@ -26,14 +26,16 @@ Cc: loongarch@lists.linux.dev,
 	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
 	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/3] LoongArch: Prefer top-down allocation after arch_mem_init()
-Date: Tue, 27 Jan 2026 16:46:17 +0800
-Message-ID: <20260127084619.1140692-1-chenhuacai@loongson.cn>
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	stable@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 2/3] LoongArch: Disable instrumentation for setup_ptwalker()
+Date: Tue, 27 Jan 2026 16:46:18 +0800
+Message-ID: <20260127084619.1140692-2-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260127084430.1135547-1-chenhuacai@loongson.cn>
+In-Reply-To: <20260127084619.1140692-1-chenhuacai@loongson.cn>
 References: <20260127084430.1135547-1-chenhuacai@loongson.cn>
+ <20260127084619.1140692-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,61 +43,67 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxZcBke3hpNig0AA--.3500S2
+X-CM-TRANSID:qMiowJBxZcBke3hpNig0AA--.3500S3
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFWrKF4kKr4xtrWUCF18tFc_yoW8XFW8pF
-	y7Cry5GF48Gr93Ja9ag34kuryUGa1kWFy2qa1a934fursxAFn7Cr1v93srZF10vw48WayF
-	vF93tF10va1jywbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFW8ZFW5AF4kGr13Zr4fWFX_yoW8Xw4Upa
+	yS9r18Gr48XFn2qFyDZ3y8Zry7AFZxKay7uFs7ta4rXr1DZ34Sgrs3twnFqFy8J3yrXa4r
+	Zr12kry0q3WxAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
 	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jY38nUUUUU=
+	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2F4iUUUUU
 
-Currently we use bottom-up allocation after sparse_init(), the reason is
-sparse_init() need a lot of memory, and bottom-up allocation may exhaust
-precious low memory (below 4GB). On the other hand, SWIOTLB and CMA need
-low memories for DMA32, so swiotlb_init() and dma_contiguous_reserve()
-need bottom-up allocation.
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Since swiotlb_init() and dma_contiguous_reserve() are both called in
-arch_mem_init(), we no longer need bottom-up allocation after that. So
-we set the allocation policy to top-down at the end of arch_mem_init(),
-in order to avoid later memory allocations (such as KASAN) exhaust low
-memory.
+According to Documentation/dev-tools/kasan.rst, software KASAN modes use
+compiler instrumentation to insert validity checks. Such instrumentation
+might be incompatible with some parts of the kernel, and therefore needs
+to be disabled, just use the attribute __no_sanitize_address to disable
+instrumentation for the low level function setup_ptwalker().
 
-This solve at least two problems:
-1. Some buggy BIOSes use 0xfd000000~0xfe000000 for secondary CPUs, but
-   didn't reserve this range, which causes smpboot failures.
-2. Some DMA32 devices, such as Loongson-DRM and OHCI, cannot work with
-   KASAN enabled.
+Otherwise bringing up the secondary CPUs failed when CONFIG_KASAN is set
+(especially when PTW is enabled), here are the call chains:
+
+    smpboot_entry()
+      start_secondary()
+        cpu_probe()
+          per_cpu_trap_init()
+            tlb_init()
+              setup_tlb_handler()
+                setup_ptwalker()
+
+The reason is the PGD registers are configured in setup_ptwalker(), but
+KASAN instrumentation may cause TLB exceptions before that.
 
 Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/setup.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/mm/tlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 20cb6f306456..2b260d15b2e2 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -421,6 +421,7 @@ static void __init arch_mem_init(char **cmdline_p)
- 				   PFN_UP(__pa_symbol(&__nosave_end)));
- 
- 	memblock_dump_all();
-+	memblock_set_bottom_up(false);
- 
- 	early_memtest(PFN_PHYS(ARCH_PFN_OFFSET), PFN_PHYS(max_low_pfn));
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 4014c4469587..aaf7d685cc2a 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -202,7 +202,7 @@ void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep
+ 	local_irq_restore(flags);
  }
+ 
+-static void setup_ptwalker(void)
++static void __no_sanitize_address setup_ptwalker(void)
+ {
+ 	unsigned long pwctl0, pwctl1;
+ 	unsigned long pgd_i = 0, pgd_w = 0;
 -- 
 2.47.3
 
