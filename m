@@ -1,59 +1,33 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97936283FF5
-	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 12:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A3972FD69E
+	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 12:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769516229; cv=none; b=jBEp8SI/LNJEhTJQ2Vk1LWrgqvNwOXc43BcMI7mBAJLeM4Is6WrGBG9cJ5l8+43GCWEMekl7bIqCD+WF6p0foUAdBbu/QPolGkuIW8oXDVCaQTIEnblSa6U+xITGsBswqnNMIX9X1K6dLyMC/bMJ0SVg1PCP+zqhiRF6m/xjXSs=
+	t=1769518292; cv=none; b=joo0SHDJAoeB4KIZBBaCqD1YzY2uvu6SVCwR662C7M3X1ReyfpeqCPfJo/AZW+F+7ZIhp8wmFrfPx5zfIjNr0Q9qCOB9jFCHo/CCzifzUgDOsBjPgdvhNyveDl5MtRSWDNPniuF5isvOt1npOREdgW7xj8TDPbAclE/LiXlYQ48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769516229; c=relaxed/simple;
-	bh=VLhAYRab+uCXbMXmi0FAQowbk8oZ+0XrtFLxtQv6uEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J1ywQDVbFVqJmFl9ZT32OJWBN0MxOBQqJhKCjvQidF16c+R3NBLF/91yenJLCs4uJZMD/WQ0Gk+RD8PQ5wRW1vZPr2w5WNV2HbtSd94FTzJHiexjL66lZFUoMyEFit9jIH9FWynfWSIr/qwYglYUsFkk1PUnkoPu3dC+eU1SC8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PPUTXLwM; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PPUTXLwM"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769516225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9S/xSrdX3PQNdvGeiuAn8WfyMx/Wvh3tfYwOBKYci1k=;
-	b=PPUTXLwMU1duEHyeudBnwMgqeL0QFNpFSjT+IpgiJrSgmVNwexEAjm3B23aqu5g9VcrKTg
-	Aaw90cmNk5t7rMZujqg3RHg4NK585jt1GbWmBoHuCc2OwJwlcNbfr9XVJ72IPkS44CiySj
-	6Y7MLvU/JazKo2G7NgIk8Lrczju32XY=
-From: Qi Zheng <qi.zheng@linux.dev>
-To: david@kernel.org,
-	andreas@gaisler.com,
-	richard.weiyang@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	aneesh.kumar@kernel.org,
-	npiggin@gmail.com,
-	dev.jain@arm.com,
-	ioworker0@gmail.com,
-	linmag7@gmail.com,
-	akpm@linux-foundation.org
-Cc: linux-arch@vger.kernel.org,
+	s=arc-20240116; t=1769518292; c=relaxed/simple;
+	bh=cTZGm8jJRhVzmq5B5yqfHKHSgkjUudLOWfPO51Zf+NM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U2gB+FgoXYjQYbGNYWU2w0fnU80gprrgzA4lZU2SolQKx8Mj8bJkX0bY6f+7fWDJ4PxDW4SljTjaB2RUsGgBZCqTrS5og2pSTk/Iu9TCeDLqCOF7HdxmofAQ/n6ulPg9k+LLyrjmN0hMzbl0VzKEBxjaDAZKYesY4ADXEJWc87I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Axz8PNtHhpKB4NAA--.43176S3;
+	Tue, 27 Jan 2026 20:51:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxWcHMtHhpYpo0AA--.24006S2;
+	Tue, 27 Jan 2026 20:51:25 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-alpha@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	sparclinux@vger.kernel.org,
-	Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH v4 8/8] mm: make PT_RECLAIM depends on MMU_GATHER_RCU_TABLE_FREE
-Date: Tue, 27 Jan 2026 20:13:01 +0800
-Message-ID: <83b034810935a9ff18e425b085e065bb0acb28f3.1769515122.git.zhengqi.arch@bytedance.com>
-In-Reply-To: <cover.1769515122.git.zhengqi.arch@bytedance.com>
-References: <cover.1769515122.git.zhengqi.arch@bytedance.com>
+	kvm@vger.kernel.org
+Subject: [PATCH v2 0/3] LoongArch: KVM: Add FPU delay load support
+Date: Tue, 27 Jan 2026 20:51:21 +0800
+Message-Id: <20260127125124.3234252-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,58 +35,37 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJAxWcHMtHhpYpo0AA--.24006S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+FPU is lazy enabled in KVM hypervisor. After FPU is enabled and loaded,
+vCPU can be preempted and FPU will be lost, there will be FPU exception
+and FPU load again.
 
-The PT_RECLAIM can work on all architectures that support
-MMU_GATHER_RCU_TABLE_FREE, except for those that have selected
-HAVE_ARCH_TLB_REMOVE_TABLE,so make PT_RECLAIM depends on
-MMU_GATHER_RCU_TABLE_FREE && !HAVE_ARCH_TLB_REMOVE_TABLE.
+Here FPU is delay load until guest enter entry.
 
-BTW, change PT_RECLAIM to be enabled by default, since nobody should want
-to turn it off.
-
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 ---
- arch/x86/Kconfig | 1 -
- mm/Kconfig       | 9 ++-------
- 2 files changed, 2 insertions(+), 8 deletions(-)
+v1 ... v2:
+  1. Keep funtion trace_kvm_aux() with FPU restore called still, only
+     remove preempt disable/enable API call.
+  2. Use one KVM_REQ_FPU_LOAD request bit and add fpu_load_type int
+     type, remove KVM_REQ_LSX_LOAD/KVM_REQ_LASX_LOAD request bit
+---
+Bibo Mao (3):
+  LoongArch: KVM: Move LSX capability check in LSX exception handler
+  LoongArch: KVM: Move LASX capability check in LASX exception handler
+  LoongArch: KVM: Add FPU delay load support
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 80527299f859a..0d22da56a71b0 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -331,7 +331,6 @@ config X86
- 	select FUNCTION_ALIGNMENT_4B
- 	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
- 	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
--	select ARCH_SUPPORTS_PT_RECLAIM		if X86_64
- 	select ARCH_SUPPORTS_SCHED_SMT		if SMP
- 	select SCHED_SMT			if SMP
- 	select ARCH_SUPPORTS_SCHED_CLUSTER	if SMP
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 456e9eaedca39..1f3109b164d86 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1454,14 +1454,9 @@ config ARCH_HAS_USER_SHADOW_STACK
- config HAVE_ARCH_TLB_REMOVE_TABLE
- 	def_bool n
- 
--config ARCH_SUPPORTS_PT_RECLAIM
--	def_bool n
--
- config PT_RECLAIM
--	bool "reclaim empty user page table pages"
--	default y
--	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
--	select MMU_GATHER_RCU_TABLE_FREE
-+	def_bool y
-+	depends on MMU_GATHER_RCU_TABLE_FREE && !HAVE_ARCH_TLB_REMOVE_TABLE
- 	help
- 	  Try to reclaim empty user page table pages in paths other than munmap
- 	  and exit_mmap path.
+ arch/loongarch/include/asm/kvm_host.h |  2 ++
+ arch/loongarch/kvm/exit.c             | 15 ++++++++---
+ arch/loongarch/kvm/vcpu.c             | 39 ++++++++++++++-------------
+ 3 files changed, 35 insertions(+), 21 deletions(-)
+
+
+base-commit: fcb70a56f4d81450114034b2c61f48ce7444a0e2
 -- 
-2.20.1
+2.39.3
 
