@@ -1,44 +1,42 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E388E29ACFD
-	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 14:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82E53161B5
+	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 16:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769523431; cv=none; b=sXN59Acv228GWqLKYazlxGl+uoF0F5+RBObvSMyIHGPdF252o3qKe6uXb+iDbwWvpsDcOwcBUoltOp9jQxjDemTqWlz2g2xb5S/wU1A4/fOEmoVl6nP077qckeCOmiPtghBEgq+ztBL/+GeN6N6OUyRwvoLd5rcNWLQGdG2qp5Q=
+	t=1769529771; cv=none; b=svvOIWfjoq1G/BZlYHTp788+MJDuVmE0MkwB4I01VnIzp4yXaAaqZdwcW0khrtQmTYyxEgnv7bMV2Y6UpTgAey4e+nf1wEXmmqBMnXkrhj8hTiRlPPJGBXr286aTDyGFM8DceBWTeusz77e58PB5bmT/rVSMFLSWohmbz0thvRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769523431; c=relaxed/simple;
-	bh=ZcXLInvO6iuPrZ8BTtnhaWFQll85GRjtKMuyVP5HAl8=;
+	s=arc-20240116; t=1769529771; c=relaxed/simple;
+	bh=ryzKYRbfcu3WHWMX8djpR6uvSuJDdabV/Aq6Tc+9sTs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UKIoEhm9El6eS5ccC1y1VmytKOS5Sds7n/NJ13MMKKVjLJdbQHuLUHGPUceUNuhA+q9xXhY5ggdEfT7CV3h12JF7KXGkNknWPFBeizOnAZ84ZVpTzwWMFSOlZzlw+obBiLTk+OPndChOrmj91e3FRluIBabXS9Gq0m2/gs20dBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=tvbi/vGM; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	 In-Reply-To:Content-Type; b=nrEXAPFIT5JNqKI1cJXXmoLxCD8+660YaxvHgG76JNqvnF1o36BsIu1WsXtaE+LC0NukXIMRmYMZlauKzebjPn4IKB6y2KT6zHbZGCQBsOlPcX03lTAcKsWP6wVTayCB99sz31ffdyj7r2faV2ZxnG+mgULLm3JbndSa6sP4slI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=nF1rwIiB reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="tvbi/vGM"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 5A79526344
-	for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 14:17:02 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 643543E878;
-	Tue, 27 Jan 2026 14:16:54 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id EC79C40095;
-	Tue, 27 Jan 2026 14:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1769523411; bh=ZcXLInvO6iuPrZ8BTtnhaWFQll85GRjtKMuyVP5HAl8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tvbi/vGMkblog79v+C1n6VFvErfs3VVoSCDLpgQdUVtM7nbYxZLSxpMVF2MQkw0FP
-	 bHF1Uwhlmhx9t9g5SPECWDahZHE7U+hY4IoBdcoYk08kvH1Tb8NX4c/xxezBEbKzjO
-	 5qUB4gD9fO4Xvrvnuy9wP8LFNoaawn5L31lkcPHc=
-Received: from [198.18.0.1] (unknown [203.175.14.44])
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="nF1rwIiB"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4f0qtT3pH1z1DPkw;
+	Tue, 27 Jan 2026 17:02:41 +0100 (CET)
+Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 653DB40601;
-	Tue, 27 Jan 2026 14:16:43 +0000 (UTC)
-Message-ID: <f94fbe61-11b9-4fbc-a2a1-57a10547655a@aosc.io>
-Date: Tue, 27 Jan 2026 22:16:39 +0800
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4f0qtS1KPDz1DPkR;
+	Tue, 27 Jan 2026 17:02:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1769529761;
+	bh=XjNhgAV5Uc7zjxVMNfRjSJ4NulgkiTn1O8FFUA42SJ4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=nF1rwIiBmdMccnC6GLsJ+1cTxVIoLNBWUK2hRgllWz+vqzG3zn6qSGadd3ql/fc/j
+	 wftmmd9opEasAb176XRKPUE8StMbl/6p+SplfVp5nf9nN1Js2h0Lp8VSMmtcQE30aH
+	 Bl1zEaQxtIRA2e3e+l06MPu18XvsS1MAwBqoUlTwwd2s8vpthHuAcTJvSs6AHdaqC9
+	 IvGbmsJblv3nhY89l91lTlG8IritYfepiywoeUokkcFJYOBd8jK3YPlU2kPdjCdp4y
+	 HkLZ042uE8RsQsy76g2JHghhGJKUQuKXN/sEzVbuaQAH2qMCw8MbIO603QZ3+XYxw6
+	 58WjXFSREqUIw==
+Message-ID: <2157220c-0394-40fa-9918-a8514171bd10@gaisler.com>
+Date: Tue, 27 Jan 2026 17:02:39 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -46,131 +44,124 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] loongarch: retrieve CPU package ID from PPTT when
- available
-To: Rong Bao <rong.bao@csmantle.top>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org,
- WANG Xuerui <kernel@xen0n.name>, Yuli Wang <wangyuli@uniontech.com>,
- Yanteng Si <si.yanteng@linux.dev>, Masahiro Yamada <masahiroy@kernel.org>,
- Hongliang Wang <wanghongliang@loongson.cn>,
- Thierry Reding <treding@nvidia.com>,
- Tianyang Zhang <zhangtianyang@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <78c75769.AU0AAIwo2ewAAAAAAAAAA-ma1psAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
+Subject: Re: [PATCH mm-unstable] arch, mm: consolidate empty_zero_page
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Richard Weinberger <richard@nod.at>,
+ Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
+ Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20260124095628.668870-1-rppt@kernel.org>
 Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <78c75769.AU0AAIwo2ewAAAAAAAAAA-ma1psAAYKJPtkAAAAAADNVAQBpc5ot@mailjet.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EC79C40095
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	URIBL_BLOCKED(0.00)[aosc.io:from_mime,aosc.io:mid,aosc.io:email,aosc.io:from_smtp,csmantle.top:email,mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo,xry111.site:email];
-	FROM_HAS_DN(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[xry111.xry111.site:server fail,stable.vger.kernel.org:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	SURBL_MULTI_FAIL(0.00)[aosc.io:server fail,xry111.site:server fail,vger.kernel.org:server fail,mail20.mymailcheap.com:server fail]
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20260124095628.668870-1-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Rong,
-
-在 2026/1/23 23:56, Rong Bao 写道:
-> Currently, the LoongArch CPU topology initialization code calculates
-> each core's package ID by dividing its physical ID by
-> loongson_sysconf.cores_per_package. This relies on the assumption that
-> cores_per_package counts in the same domain as physical IDs.
+On 2026-01-24 10:56, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> On Loongson 3B6000 (XB612B0V_1.2), cores_per_package matches the visible
-> core count -- 24 in this case. However, the physical IDs range from 0 to
-> 31 in a noncontiguous fashion:
+> Reduce 22 declarations of empty_zero_page to 3 and 23 declarations of
+> ZERO_PAGE() to 4.
 > 
->          $ cat /proc/cpuinfo | grep -i -F 'global_id'
->          global_id               : 0
->          global_id               : 1
->          global_id               : 4
->          global_id               : 5
->          global_id               : 6
->          global_id               : 7
->          global_id               : 8
->          global_id               : 9
->          global_id               : 10
->          global_id               : 11
->          global_id               : 14
->          global_id               : 15
->          global_id               : 16
->          global_id               : 17
->          global_id               : 20
->          global_id               : 21
->          global_id               : 22
->          global_id               : 23
->          global_id               : 26
->          global_id               : 27
->          global_id               : 28
->          global_id               : 29
->          global_id               : 30
->          global_id               : 31
+> Every architecture defines empty_zero_page that way or another, but for the
+> most of them it is always a page aligned page in BSS and most definitions
+> of ZERO_PAGE do virt_to_page(empty_zero_page).
 > 
-> Retrieve the exact package ID from ACPI PPTT when available, in the same
-> style as retrieving the core ID and thread ID in parse_acpi_topology().
-> Use this information in loongson_init_secondary() when PPTT readout is
-> successful. The original division logic is kept as a fallback.
+> Move Linus vetted x86 definition of empty_zero_page and ZERO_PAGE() to the
+> core MM and drop these definitions in architectures that do not implement
+> colored zero page (MIPS and s390).
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+> ZERO_PAGE() remains a macro because turning it to a wrapper for a static
+> inline causes severe pain in header dependencies.
+> 
+> For the most part the change is mechanical, with these being noteworthy:
+> 
+> * alpha: aliased empty_zero_page with ZERO_PGE that was also used for boot
+>   parameters. Switching to a generic empty_zero_page removes the aliasing
+>   and keeps ZERO_PGE for boot parameters only
+> * arm64: uses __pa_symbol() in ZERO_PAGE() so that definition of
+>   ZERO_PAGE() is kept intact.
+> * m68k/parisc/sparc64/um: allocated empty_zero_page from memblock,
+>   although they do not support zero page coloring and having it in BSS
+>   will work fine.
+> * sh: used empty_zero_page for boot parameters at the very early boot.
+>   Rename the parameters page to boot_params_page and let sh use the generic
+>   empty_zero_page.
+> * hexagon: had an amusing comment about empty_zero_page
+> 
+> 	/* A handy thing to have if one has the RAM. Declared in head.S */
+> 
+>   that unfortunately had to go :)
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
 
-Tested good on the following single-socket systems:
+Running this in an LDOM on an UltraSparc T4 sparc64, the entire LDOM
+hangs after a while during boot.
 
-- Loongson XA61200_V1.1 (Loongson 3A6000-HV)
-- Loongson AC612A0_V1.1 (Loongson 3C6000/S)
-- Loongson N2K20Z0 (Loongson 2K2000, "Cloud Laptop")
-- IPASON NL38-N11 (Loongson 3A6000, laptop)
 
-... the following dual-socket systems:
+> diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+> index c2d19c9a9244..2bd99944176d 100644
+> --- a/arch/sparc/mm/init_64.c
+> +++ b/arch/sparc/mm/init_64.c
+> @@ -177,9 +177,6 @@ extern unsigned long sparc_ramdisk_image64;
+>  extern unsigned int sparc_ramdisk_image;
+>  extern unsigned int sparc_ramdisk_size;
+>  
+> -struct page *mem_map_zero __read_mostly;
+> -EXPORT_SYMBOL(mem_map_zero);
+> -
+>  unsigned int sparc64_highest_unlocked_tlb_ent __read_mostly;
+>  
+>  unsigned long sparc64_kern_pri_context __read_mostly;
+> @@ -2506,18 +2503,6 @@ void __init mem_init(void)
+>  	 */
+>  	register_page_bootmem_info();
+>  
+> -	/*
+> -	 * Set up the zero page, mark it reserved, so that page count
+> -	 * is not manipulated when freeing the page from user ptes.
+> -	 */
+> -	mem_map_zero = alloc_pages(GFP_KERNEL|__GFP_ZERO, 0);
+> -	if (mem_map_zero == NULL) {
+> -		prom_printf("paging_init: Cannot alloc zero page.\n");
+> -		prom_halt();
+> -	}
+> -	mark_page_reserved(mem_map_zero);
+> -
+> -
+>  	if (tlb_type == cheetah || tlb_type == cheetah_plus)
+>  		cheetah_ecache_flush_init();
+>  }
 
-- Loongson TD622E0 (Loongson 3C6000/D × 2)
+This just removes the mark_page_reserved(mem_map_zero) without 
+replacing it with something corresponding to that. Perhaps part
+of the problem?
 
-... and of course, the offending platform:
+Cheers,
+Andreas
 
-- Loongson XB612B0_V1.2 (Loongson 3B6000, 12 cores)
-
-I should note however, I found that the patch caused lscpu(1) to report 
-incorrect processor topology on Loongson TD622E0:
-
-   Thread(s) per core:        2
-   Core(s) per socket:        64
-   Socket(s):                 1
-
-Whereas it should have been:
-
-   Thread(s) per core:        2
-   Core(s) per socket:        32
-   Socket(s):                 2
-
-Which, of course, due to the nature of this patch, was caused by 
-incorrect PPTT data included in the firmware (this was fixed earlier 
-today); NUMA topology reporting was not affected.
-
-If this patch results in incorrect processor topology reports, similarly 
-to what I ran into above, you should consult your system vendor for a 
-firmware fix (or some sort of quirk should be shipped with distros - or 
-the upstream somehow?).
-
-With that,
-
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
-Tested-by: Xi Ruoyao <xry111@xry111.site>
-
-Best Regards,
-Mingcong Bai
