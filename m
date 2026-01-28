@@ -1,251 +1,195 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDB403161B2
-	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 06:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3992A1DDF3
+	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 07:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769582158; cv=none; b=l0nPcnvBMlHoYOWdwpPEhUdLVg+1+n1tnvg0TQTOUvG1QGtfdtI+AJXuRzbVTlFh0NPw4Cxrao/ycTasuDB34feWPpsjDctuNR2d2YQy8Z4haO93fAf0TooS8hUSgT3NLMGaQAmkPQXvU2dBH19ZoTnavjN+32Bnh/veSoYbmJo=
+	t=1769585768; cv=none; b=UVv1/kHN5qvlxExWo/Iylql7+gMO4q8fkPbRX6Lrn/f/ecIGrGIiQTh3mglzc78f/og3caeXhvlSbz/1Yu0u3YEZgdr2MIuaKGF438vqUv+epyKy/Udm+LpnMqZuM+ceuFfkTcAQ4/OYmiCCTOehCwDrEvXMIWAdgEpveHYOlBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769582158; c=relaxed/simple;
-	bh=RrXNW5UTOEFIsw1/Cl2k7p3NWELzRSgNTEz4rJr9IdE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dNGh7dsBRm88R60eBOJyE7OR3cndmUKbALDaWqYoe2YJJi8EZtxNAekGzoEmkgGHAKXarl88dxPwdG3v/RMyzezlON4xYAF0CR15gp1Z9jOSg+7/RDZ1cAd/LbMuWc2S5XA9tC/L/aMQS2e1cSqgVdH/IHRlA1/L71iN9V2m7Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxKMJGrnlpZm4NAA--.44029S3;
-	Wed, 28 Jan 2026 14:35:50 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxysFErnlperI2AA--.37939S3;
-	Wed, 28 Jan 2026 14:35:50 +0800 (CST)
-Subject: Re: [PATCH v2 3/3] LoongArch: KVM: Add FPU delay load support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20260127125124.3234252-1-maobibo@loongson.cn>
- <20260127125124.3234252-4-maobibo@loongson.cn>
- <CAAhV-H69F2T-PbewFqch5Sp+xhBP9Lsy74C6yVhp90r4GSYEsQ@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <67db8a93-eb62-7278-ae3f-a46a62365b20@loongson.cn>
-Date: Wed, 28 Jan 2026 14:33:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1769585768; c=relaxed/simple;
+	bh=5Fn6vv3OFcP5nxl3f3zquvoa7JS4fcZES6NH26QgRUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jHNGo23eeQJnojleVVr7F47n6qZIQdZATX7FwXIy2pKb6+9OZmk6q7/9y9HE+TemDBQqrgBiEoTHxRomFvpT2VxE4C54f+PfEus63hEf51Vlo9770ATU232eUPuO+6XD02XHUv4dyAqTNq5BoFCJdmvZ/5bfnD7lYSlPottPOHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNr1iCKA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNr1iCKA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D845FC19422
+	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 07:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769585767;
+	bh=5Fn6vv3OFcP5nxl3f3zquvoa7JS4fcZES6NH26QgRUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qNr1iCKAjQTNxNaG3Qaab4TbxxCY+KRxA311VkCslhhfSiW7t3/k00YyJn4438QID
+	 JbIVzf6zsKGJBmGJcLiY9t/zz6SxqFsaVqpVAk8uU0lNWDftycD41Z2v5ftzaDhbtu
+	 OR2vqpwcxNsI0+FNb9oWRyzWdci6cnkThmd/JgDtGtCQh5gSCYgT5Wjln65ivmsRoK
+	 yanTQB55pkGVAO0n7/IuFJjViqLk2UPTRdQ+1IuclTWLvorD2JSYnGDikmBoAQgi5y
+	 +Xu0oq76gA7aOyKvNxaSsvGIg+BIZhfLepqkMtOsKn4WPOPXZADqNzPQM5+H6FuilZ
+	 cvVSyA50GNR0w==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6505d3adc3aso8662631a12.1
+        for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 23:36:07 -0800 (PST)
+X-Gm-Message-State: AOJu0YzM6mmYGkbxIFO5ca9mqzpVeeo1MmMOjrtq8iaZxK96Chueh4s2
+	lLHEoOkF9cyZKq5KweVlA/JqnYbCRkwhlse38OMAx4bZIVgotq3EJ97KfhQD3A2CZtiuqAhgDpD
+	Ywja0EJ/qNS34tyuQCfieviwibpzV614=
+X-Received: by 2002:a17:907:3c8c:b0:b88:5c68:ece2 with SMTP id
+ a640c23a62f3a-b8dab1b9675mr294410166b.22.1769585766039; Tue, 27 Jan 2026
+ 23:36:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H69F2T-PbewFqch5Sp+xhBP9Lsy74C6yVhp90r4GSYEsQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxysFErnlperI2AA--.37939S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxtr1xWrWrZr1xXr1UGFyfAFc_yoW7tw47pF
-	s7ZFsYva1rWr1Sk34Iqrn0gr12vrWkKr1xWry2gay5Gr1qqryrGr4kKrZ09Fy5Zw1rAa1I
-	vF1FqFnxuay8J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-
-	UUUUU
+References: <20260121095911.20868-1-yangtiezhu@loongson.cn> <20260121095911.20868-3-yangtiezhu@loongson.cn>
+In-Reply-To: <20260121095911.20868-3-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 28 Jan 2026 15:35:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7KAcjHdExr-voiB_xJOcTvFD4Hm90YD_=FzV8swOS1Rg@mail.gmail.com>
+X-Gm-Features: AZwV_Qhic8IvSseZJnrmeT7MmwKb_9H8TfqrYtLmGMsKRYDiRHdGm9WooPvB6eM
+Message-ID: <CAAhV-H7KAcjHdExr-voiB_xJOcTvFD4Hm90YD_=FzV8swOS1Rg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: Handle percpu handler address for ORC unwinder
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi, Tiezhu,
+
+On Wed, Jan 21, 2026 at 5:59=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for
+> ORC unwinder"), the system can not boot normally under some configs,
+> there are many error messages "cannot find unwind pc".
+Unfortunately, after this series sometimes there are still error
+messages, such as:
+cannot find unwind pc at ffff80000231fe1c
+
+Obviously, this is no longer related to per-cpu handler, and from the
+call stack it seems related to BPF:
+
+[   75.025389] CPU: 0 UID: 0 PID: 175 Comm: systemd-udevd Not tainted
+6.19-rc7+ #721
+[   75.025409] Hardware name: Loongson Loongson-3A6000-7A2000-EVB/EVB,
+BIOS Loongson-FwSdk-V5.0.0343-stable2511 01/13/26 20:10:42
+[   75.025422] Stack : 0000000000000000 0000000000000000
+9000000000223c20 9000000116460000
+[   75.025455]         900000010009f5e0 900000010009f5e8
+0000000000000000 900000010009f728
+[   75.025487]         900000010009f720 900000010009f720
+900000010009f490 0000000000000001
+[   75.025519]         0000000000000001 900000010009f5e8
+9e6a35e67549a6db 000000fffffffffe
+[   75.025551]         0000010000000000 0000000000000022
+0000000fffffffff ffff800000000000
+[   75.025582]         0000800000000000 9000000000000000
+00000003f3fe4000 900000010009f9e0
+[   75.025615]         0000000000000000 9000000002fd9000
+0000000000000000 9000000002c15220
+[   75.025646]         9000000002ea5820 900000010009f848
+90000000040c1320 ffff80000231fe1c
+[   75.025679]         90000000003a8f20 0000000000000000
+9000000000223c3c 000055557726cb04
+[   75.025710]         00000000000000b0 0000000000000004
+0000000000000000 0000000000071c1d
+[   75.025739]         ...
+[   75.025751] Call Trace:
+[   75.025756] [<9000000000223c3c>] show_stack+0x5c/0x190
+[   75.025782] [<9000000001f2cc34>] dump_stack_lvl+0x6c/0x9c
+[   75.025807] [<9000000000236714>] unwind_next_frame+0x764/0xa70
+[   75.025837] [<9000000000231e14>] arch_stack_walk+0xd4/0x1b0
+[   75.025863] [<900000000038aa04>] stack_trace_save+0x54/0x90
+[   75.025892] [<9000000000612f80>] kasan_save_stack+0x30/0x60
+[   75.025914] [<9000000000615a68>] __kasan_record_aux_stack+0x108/0x130
+[   75.025941] [<90000000002b1c40>] task_work_add+0x100/0x300
+[   75.025968] [<90000000002d3cd8>] sched_tick+0x158/0x3e0
+[   75.025987] [<900000000038fa40>] update_process_times+0xf0/0x160
+[   75.026011] [<90000000003a9018>] tick_nohz_handler+0xf8/0x260
+[   75.026038] [<90000000003908dc>] __hrtimer_run_queues+0x20c/0x330
+[   75.026062] [<9000000000392190>] hrtimer_interrupt+0x1a0/0x3f0
+[   75.026086] [<90000000002285ac>] constant_timer_interrupt+0x5c/0x80
+[   75.026110] [<900000000034358c>] __handle_irq_event_percpu+0x6c/0x190
+[   75.026139] [<90000000003436c4>] handle_irq_event_percpu+0x14/0xa0
+[   75.026167] [<900000000034d66c>] handle_percpu_irq+0x8c/0xe0
+[   75.026189] [<9000000000342670>] generic_handle_domain_irq+0x50/0xc0
+[   75.026217] [<9000000000ffaad4>] handle_cpu_irq+0x54/0x90
+[   75.026245] [<9000000001f2d128>] handle_loongarch_irq+0x28/0x40
+[   75.026269] [<9000000001f2d1bc>] do_vint+0x7c/0xf0
+[   75.026289] [<900000000023fa20>] mem_to_shadow+0x0/0x2b0
+[   75.026313] [<9000000000615af4>] kasan_check_range+0x64/0x2c0
+[   75.026336] [<9000000001b2b7a0>] bpf_skb_load_helper_32+0x40/0x220
 
 
 
-On 2026/1/28 下午12:05, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Tue, Jan 27, 2026 at 8:51 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> FPU is lazy enabled with KVM hypervisor. After FPU is enabled and
->> loaded, vCPU can be preempted and FPU will be lost again. Here FPU
->> is delay load until guest enter entry.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_host.h |  2 ++
->>   arch/loongarch/kvm/exit.c             | 15 ++++++++----
->>   arch/loongarch/kvm/vcpu.c             | 33 +++++++++++++++++----------
->>   3 files changed, 33 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->> index e4fe5b8e8149..902ff7bc0e35 100644
->> --- a/arch/loongarch/include/asm/kvm_host.h
->> +++ b/arch/loongarch/include/asm/kvm_host.h
->> @@ -37,6 +37,7 @@
->>   #define KVM_REQ_TLB_FLUSH_GPA          KVM_ARCH_REQ(0)
->>   #define KVM_REQ_STEAL_UPDATE           KVM_ARCH_REQ(1)
->>   #define KVM_REQ_PMU                    KVM_ARCH_REQ(2)
->> +#define KVM_REQ_FPU_LOAD               KVM_ARCH_REQ(3)
->>
->>   #define KVM_GUESTDBG_SW_BP_MASK                \
->>          (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
->> @@ -234,6 +235,7 @@ struct kvm_vcpu_arch {
->>          u64 vpid;
->>          gpa_t flush_gpa;
->>
->> +       int fpu_load_type;
-> I think the logic of V1 is better, it doesn't increase the size of
-> kvm_vcpu_arch, and the constant checking is a little faster than
-> variable checking.
-The main reason is that FPU_LOAD request is not so frequent, there is 
-atomic instruction in kvm_check_request() and the unconditional 
-kvm_check_request() may be unnecessary, also there will LBT LOAD check 
-in later version.
 
-So I think one unconditional atomic test_and_clear may be better than 
-three/four atomic test_and_clear.
-     kvm_check_request(KVM_REQ_FPU_LOAD,vcpu)
-     kvm_check_request(KVM_REQ_FPU_LSX, vcpu)
-     kvm_check_request(KVM_REQ_FPU_LASX, vcpu)
 
-Actually different people have different view about this :)
+Huacai
 
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>          /* Frequency of stable timer in Hz */
->>          u64 timer_mhz;
->>          ktime_t expire;
->> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
->> index 74b427287e96..b6f08df8fedb 100644
->> --- a/arch/loongarch/kvm/exit.c
->> +++ b/arch/loongarch/kvm/exit.c
->> @@ -754,7 +754,8 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
->>                  return RESUME_HOST;
->>          }
->>
->> -       kvm_own_fpu(vcpu);
->> +       vcpu->arch.fpu_load_type = KVM_LARCH_FPU;
->> +       kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
->>
->>          return RESUME_GUEST;
->>   }
->> @@ -794,8 +795,10 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
->>   {
->>          if (!kvm_guest_has_lsx(&vcpu->arch))
->>                  kvm_queue_exception(vcpu, EXCCODE_INE, 0);
->> -       else
->> -               kvm_own_lsx(vcpu);
->> +       else {
->> +               vcpu->arch.fpu_load_type = KVM_LARCH_LSX;
->> +               kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
->> +       }
->>
->>          return RESUME_GUEST;
->>   }
->> @@ -812,8 +815,10 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
->>   {
->>          if (!kvm_guest_has_lasx(&vcpu->arch))
->>                  kvm_queue_exception(vcpu, EXCCODE_INE, 0);
->> -       else
->> -               kvm_own_lasx(vcpu);
->> +       else {
->> +               vcpu->arch.fpu_load_type = KVM_LARCH_LASX;
->> +               kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
->> +       }
->>
->>          return RESUME_GUEST;
->>   }
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index d91a1160a309..3e749e9738b2 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -232,6 +232,27 @@ static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
->>                          kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
->>                          vcpu->arch.flush_gpa = INVALID_GPA;
->>                  }
->> +
->> +       if (kvm_check_request(KVM_REQ_FPU_LOAD, vcpu)) {
->> +               switch (vcpu->arch.fpu_load_type) {
->> +               case KVM_LARCH_FPU:
->> +                       kvm_own_fpu(vcpu);
->> +                       break;
->> +
->> +               case KVM_LARCH_LSX:
->> +                       kvm_own_lsx(vcpu);
->> +                       break;
->> +
->> +               case KVM_LARCH_LASX:
->> +                       kvm_own_lasx(vcpu);
->> +                       break;
->> +
->> +               default:
->> +                       break;
->> +               }
->> +
->> +               vcpu->arch.fpu_load_type = 0;
->> +       }
->>   }
->>
->>   /*
->> @@ -1338,8 +1359,6 @@ static inline void kvm_check_fcsr_alive(struct kvm_vcpu *vcpu) { }
->>   /* Enable FPU and restore context */
->>   void kvm_own_fpu(struct kvm_vcpu *vcpu)
->>   {
->> -       preempt_disable();
->> -
->>          /*
->>           * Enable FPU for guest
->>           * Set FR and FRE according to guest context
->> @@ -1350,16 +1369,12 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
->>          kvm_restore_fpu(&vcpu->arch.fpu);
->>          vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
->>          trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
->> -
->> -       preempt_enable();
->>   }
->>
->>   #ifdef CONFIG_CPU_HAS_LSX
->>   /* Enable LSX and restore context */
->>   int kvm_own_lsx(struct kvm_vcpu *vcpu)
->>   {
->> -       preempt_disable();
->> -
->>          /* Enable LSX for guest */
->>          kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
->>          set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
->> @@ -1381,8 +1396,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
->>
->>          trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
->>          vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
->> -       preempt_enable();
->> -
->>          return 0;
->>   }
->>   #endif
->> @@ -1391,8 +1404,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
->>   /* Enable LASX and restore context */
->>   int kvm_own_lasx(struct kvm_vcpu *vcpu)
->>   {
->> -       preempt_disable();
->> -
->>          kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
->>          set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
->>          switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
->> @@ -1414,8 +1425,6 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
->>
->>          trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
->>          vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
->> -       preempt_enable();
->> -
->>          return 0;
->>   }
->>   #endif
->> --
->> 2.39.3
->>
->>
-
+>
+> The kernel boots normally with the defconfig, so no problem found out
+> at the first time. Here is one way to reproduce:
+>
+>   cd linux
+>   make mrproper defconfig -j"$(nproc)"
+>   scripts/config -e KASAN
+>   make olddefconfig all -j"$(nproc)"
+>   sudo make modules_install
+>   sudo make install
+>   sudo reboot
+>
+> The address that can not unwind is not a valid kernel address which is
+> between "pcpu_handlers[cpu]" and "pcpu_handlers[cpu] + vec_sz" due to
+> the code of eentry was copied to the new area of pcpu_handlers[cpu] in
+> setup_tlb_handler(), handle this special case to get the valid address
+> to unwind normally.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/setup.h |  2 ++
+>  arch/loongarch/kernel/unwind_orc.c | 15 +++++++++++++++
+>  2 files changed, 17 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/=
+asm/setup.h
+> index 3c2fb16b11b6..79eb63e749f9 100644
+> --- a/arch/loongarch/include/asm/setup.h
+> +++ b/arch/loongarch/include/asm/setup.h
+> @@ -14,6 +14,8 @@
+>
+>  extern unsigned long eentry;
+>  extern unsigned long tlbrentry;
+> +extern unsigned long pcpu_handlers[NR_CPUS];
+> +extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+>  extern char init_command_line[COMMAND_LINE_SIZE];
+>  extern void tlb_init(int cpu);
+>  extern void cpu_cache_init(void);
+> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
+nwind_orc.c
+> index d6b3688a1ce9..e0c0dc22eb08 100644
+> --- a/arch/loongarch/kernel/unwind_orc.c
+> +++ b/arch/loongarch/kernel/unwind_orc.c
+> @@ -351,6 +351,21 @@ EXPORT_SYMBOL_GPL(unwind_start);
+>  static inline unsigned long bt_address(unsigned long ra)
+>  {
+>         extern unsigned long eentry;
+> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+> +       int cpu;
+> +       int vec_sz =3D sizeof(exception_handlers);
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               if (!pcpu_handlers[cpu])
+> +                       continue;
+> +
+> +               if (ra >=3D pcpu_handlers[cpu] &&
+> +                   ra < pcpu_handlers[cpu] + vec_sz) {
+> +                       ra =3D eentry + (ra - pcpu_handlers[cpu]);
+> +                       break;
+> +               }
+> +       }
+> +#endif
+>
+>         if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
+>                 unsigned long func;
+> --
+> 2.42.0
+>
