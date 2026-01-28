@@ -1,196 +1,160 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78B81E2858
-	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 00:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769560149; cv=pass; b=DSLfEZpBk8I2/uIgeQNfP/1FkHfMZvG7H+8I8sDjSrZ3YgX3qzT0+LJlwEAucfgUdaaj5LoSRQgrc3Eyy6HkNOqW7IyFNIFVQX1ZiPJacWbzpyS9dnizWpHyovBKmNKIcFTbgVJq/zjcFuTpvfmi8i9k2uJy58xmk2yBz2YTgMI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769560149; c=relaxed/simple;
-	bh=afdfdT2YOMsD0iZJQSrtAQ+axiAIWjxn1C3TT/YCmDM=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZyFzONxJ9ZwM3VUwWoUJUIpHwzCJ1ix74v6d5mQr1wDBI6NQKftIb59tAy66L7J3KPFVaU79BmIHI+MFGJ8lhHDAlqdj3HSZU+/BKrYCikz3SnTHglvS48c8L/IWYl4JPq7LUAR1SM45zD37O9LTl0Oyuh3sq1vBRKae2Mr6TYY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XrZ+SgHZ; arc=pass smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B80284B29
+	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 02:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769566065; cv=none; b=BmU2vCLt9qgvv0p7UkKaC/76kLj/9/7Facq5+vkJ3N4UcgbvP/e9xM8rGhySTsE5o7/VhX5uzIyz6xU7rSXPDBEftnEr7MNK4Cx1DZjgEgpdeO+uZvJEKZREqXfFGbIlNHz+dtpRO5IBPfAW1lyDjFNvQ8cwWARz6IO7tPyD3mo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769566065; c=relaxed/simple;
+	bh=iKNsG3jb0A1cc8Pzxzt7oiyA3XWv4pR1vlL+x9/L2x4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJfnABmbroEgLVpnrDM2N0q6OWgiZifxLXPXsRTEVlSYK904RvDUCHE1+1PnpHWTutsEoJapN4P6HqWOjMyjANPsoxpMlp5d/L4L/PXh8g0+GfKoz55Ij5CXhGs9GbduVB7G/hgpI14Eod4joWdOovo7nXcO0UOl7+xbYJ3KGZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I3HQOiCH; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XrZ+SgHZ"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5f52b3d98cfso2281627137.2
-        for <loongarch@lists.linux.dev>; Tue, 27 Jan 2026 16:29:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769560147; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hfpWxjInr5C/zppXspv9l7mWotMVKGuAYqMKeHiox9XmDrxiba7BSzuNov7tT3xSFU
-         hkLxaVJAmbl/oRtowWRYqjgWzU2LjwDBqd13MrOC2bSebnCQK6DmFC2aHu7E2jTz2Z0A
-         DpVYy2JiaXmhHY4VXIeY02RS/ufg+NhjcYSdKibNvUul/WqMnW+NzsfMPPmszrgjq3Gw
-         R5p1+X2NIX2zmSzRveXg/BqfkiehhSYL0c9+QqDZreeim+yhLtuXhSnWZwTM+eoiAEyb
-         4zvJq1/jw3xMjL5AaL8Yd/vBFcQdPE0c8IBIIt2RmfyLv9ZHqn/MFUuAqgT/BHDgWV1e
-         xtJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:dkim-signature;
-        bh=afdfdT2YOMsD0iZJQSrtAQ+axiAIWjxn1C3TT/YCmDM=;
-        fh=6YjQuNbJgq15h3g1ars8n+4G2JC9j4go+QgHKEJ051s=;
-        b=RcMnM+Y1OIc9jxZ3MwCnqEubiHE4x6zAZIh8Q3HYx+435UipbU3jTlWXDZscXAKCzO
-         2jJC2n4wt2M/DjcF39yvqMTD/++L2NiZyhwgrmvd4lO9brax9RtJsaQC8o2t4x/HjD9Z
-         DpRBbgwIql5GW/z+toyWV/Hy9EpGTn/hC56ulzpj2TILply9ScllNSjsRr9+4ejTq5ez
-         hxbG/YnRZWYvXiNFqZwZIpzh9/g+6NIsvzX+fPtV+GzZn12CFJ+VJMQotAdwnmhcJdPx
-         hyUWEF3yFHV+UvfO6Titjvlhbkx2/Uw2Fx/mxkVF6foFHP87V7pFrY1g8TcM2PFIwWE0
-         mO8A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769560146; x=1770164946; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=afdfdT2YOMsD0iZJQSrtAQ+axiAIWjxn1C3TT/YCmDM=;
-        b=XrZ+SgHZaNgn848R+XPASsxb34MOIxNFVtkUkpS1l1/tc5Mbpe5kNoI/KjsHWE1c2M
-         qzlsDrYJ+tCWZcyadSEy4fzTgCr4B+m8/WBBSJNDPdvrV6D2sIWTnvqPAxoiJkvYWNWi
-         80ZVhLeJxIsHMUZFFN/g3vWMr2BaePoZb4DvxD0px+89eaWjU7R1BJ3yx1jElW6Zr4Ff
-         1vCBACGqtpb5I860FYl61y/t8jUfL+hN7aPMYfP628KRV6bRu4W85ei9UZwHg+3jr1Qz
-         uqAer42T76stvbyMpJhCzDmMWxPe1KX0duha638nnzomwAelPjvn1CwQEgcK3XIOgZMv
-         cTHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769560147; x=1770164947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=afdfdT2YOMsD0iZJQSrtAQ+axiAIWjxn1C3TT/YCmDM=;
-        b=aS0herYE6ClFsxkpEr8CMYjt3s0Zyk0/xf7QhilS87ycviOETnGHu4kFPzgOJA8zCu
-         EY4pAho3YznCEEI35v0BbRiXLlcsJxyq3J4XWbl///7Mg9HGbk3yp2pIlSl4cCVrF4dk
-         Ov91azd01RYg4X0k5Ozco/1iZTgXaEjCMWWzSlBRo62NA/BrjyuNLcY8myKy3wnIhAbB
-         niyM0PGgjHNfnAzRuV/nt4lxT0Ofsc3oqczkawEWsHuJgAicvCMN1ZateDZBWwfa3Z7z
-         k4EAhdGWSJngXcN7lgds34nCTfy/JqNMF2fIeewwMaWm5FFwh8xgRMXwUCtpAvlcpNHb
-         KmtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbNZdwSPa1p0fYro7lDHv25UUaNPZYBbsN4ZXWpL4wrdDYjELjyaFlDPUi23QHhXcg6oOMyx3Q9r0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxM00CKbrn7PMClPIZcwO88HGSLCk4Dt4JrYOgdpgr6K1jbR3mx
-	a3hqy2+Qu/JqYgbrjfjp4mca4f4V8dd8aH+7NwCRvRC6UYS343vzzNcAt6QgZ6i+hSpYFJ0xX6X
-	ifCwD6t1BPHSsH4SzvKDDfpPOkycl3MDRmGFY0ygk
-X-Gm-Gg: AZuq6aJBeh4d0E3rFUbzYptHwdX4ipYJtNHA333zlR0lBaCeuo0D9hxWvYvpopNV3hi
-	mZjL26K4E49rt5coG8yyuHBzi0ZLR5z/OyuWUQCCiC6xmaBN+zL75xS8490bYoz7R4u5TO4DxYq
-	BxTopF61HyTEJsg2IXvwaJHPO1SSGSl+97kvSfZOqN6o+rmJxMpKlwBtN/EI9YmodirSJKyCXq6
-	4x3hBu/NKII51Cq3Xniy+ttZ3UROIJqkFD8ocJXtNdlzjD8unJtkY52RZ8SaTB2/S7obgIFld63
-	uNtdVewT6GKKta4Xw6fFoTp7QqeQmMrVuJ0J
-X-Received: by 2002:a05:6102:94f:b0:5db:cba0:941 with SMTP id
- ada2fe7eead31-5f72380ed5bmr1335024137.38.1769560145803; Tue, 27 Jan 2026
- 16:29:05 -0800 (PST)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 27 Jan 2026 16:29:05 -0800
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 27 Jan 2026 16:29:04 -0800
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <f4f2a0297e38ac45e4438342ac2c882b91544acb.camel@intel.com>
-References: <20260114134510.1835-1-kalyazin@amazon.com> <20260114134510.1835-8-kalyazin@amazon.com>
- <ed01838830679880d3eadaf6f11c539b9c72c22d.camel@intel.com>
- <CAGtprH_qGGRvk3uT74-wWXDiQyY1N1ua+_P2i-0UMmGWovaZuw@mail.gmail.com>
- <8c1fb4092547e2453ddcdcfab97f06e273ad17d8.camel@intel.com>
- <CAEvNRgEbG-RhCTsX1D8a3MgEKN2dfMuKj0tY0MZZioEzjw=4Xw@mail.gmail.com>
- <ee9c649eed3893d852c3d20fb96bdc4904b7c295.camel@intel.com>
- <CAEvNRgEz0+ic9uvcsWYqWgR5EV=TfY0SAGC39zAL+n19SoBXmw@mail.gmail.com> <f4f2a0297e38ac45e4438342ac2c882b91544acb.camel@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I3HQOiCH"
+Message-ID: <4c171a25-e395-4f83-b767-18525fffbee3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1769566051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n4t3b1mOfPtHigPq6Z2WHKbf3iNBrW17rXF/iuZKlWU=;
+	b=I3HQOiCHRK+ra8CKqHdI7J6UYtfRC6z7IH9vbCxNEd8HoqK7Tyx5NW2XzLCUbSdOwtEHCJ
+	PrvEUB70GyyRlx7g5xA0Csz7PDTqbdzG32WNgMGufhfuOIaPPVRKNpL+JiU8gfGGSpRv5N
+	IuXL9L87r74XS+4rqkFgpDIaGTmcayA=
+Date: Wed, 28 Jan 2026 10:07:22 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 27 Jan 2026 16:29:04 -0800
-X-Gm-Features: AZwV_Qi5-DP-v6wjOnL-aDMsdDCx4XY7-YGdXQ0tP6_jJk0lLjibrIAwkazF3pk
-Message-ID: <CAEvNRgHMOWfCRnkx7YJoAzNpBBOHCgvR5GHe66uHJX45WDT-YA@mail.gmail.com>
-Subject: Re: [PATCH v9 07/13] KVM: guest_memfd: Add flag to remove from direct map
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Annapurve, Vishal" <vannapurve@google.com>
-Cc: "david@kernel.org" <david@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
-	"jgross@suse.com" <jgross@suse.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"surenb@google.com" <surenb@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"riel@surriel.com" <riel@surriel.com>, "pfalcato@suse.de" <pfalcato@suse.de>, "x86@kernel.org" <x86@kernel.org>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "thuth@redhat.com" <thuth@redhat.com>, 
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "maz@kernel.org" <maz@kernel.org>, 
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "ast@kernel.org" <ast@kernel.org>, 
-	"peterx@redhat.com" <peterx@redhat.com>, "alex@ghiti.fr" <alex@ghiti.fr>, "pjw@kernel.org" <pjw@kernel.org>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
-	"hca@linux.ibm.com" <hca@linux.ibm.com>, "willy@infradead.org" <willy@infradead.org>, 
-	"wyihan@google.com" <wyihan@google.com>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, 
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, "jmattson@google.com" <jmattson@google.com>, 
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, "luto@kernel.org" <luto@kernel.org>, 
-	"haoluo@google.com" <haoluo@google.com>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "coxu@redhat.com" <coxu@redhat.com>, 
-	"mhocko@suse.com" <mhocko@suse.com>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, "song@kernel.org" <song@kernel.org>, 
-	"oupton@kernel.org" <oupton@kernel.org>, "Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, 
-	"kernel@xen0n.name" <kernel@xen0n.name>, 
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, 
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>, 
-	"jthoughton@google.com" <jthoughton@google.com>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"Yu, Yu-cheng" <yu-cheng.yu@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "shuah@kernel.org" <shuah@kernel.org>, 
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "prsampat@amd.com" <prsampat@amd.com>, 
-	"kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, "maobibo@loongson.cn" <maobibo@loongson.cn>, 
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, 
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "itazur@amazon.co.uk" <itazur@amazon.co.uk>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
-	"gor@linux.ibm.com" <gor@linux.ibm.com>, "dev.jain@arm.com" <dev.jain@arm.com>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "jackabt@amazon.co.uk" <jackabt@amazon.co.uk>, 
-	"agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, "andrii@kernel.org" <andrii@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "joey.gouly@arm.com" <joey.gouly@arm.com>, 
-	"derekmn@amazon.com" <derekmn@amazon.com>, "xmarcalx@amazon.co.uk" <xmarcalx@amazon.co.uk>, 
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"kalyazin@amazon.co.uk" <kalyazin@amazon.co.uk>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "sdf@fomichev.me" <sdf@fomichev.me>, 
-	"jackmanb@google.com" <jackmanb@google.com>, "bp@alien8.de" <bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "jannh@google.com" <jannh@google.com>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kas@kernel.org" <kas@kernel.org>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "will@kernel.org" <will@kernel.org>, 
-	"seanjc@google.com" <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 0/8] enable PT_RECLAIM on more 64-bit architectures
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: david@kernel.org, andreas@gaisler.com, richard.weiyang@gmail.com,
+ will@kernel.org, peterz@infradead.org, aneesh.kumar@kernel.org,
+ npiggin@gmail.com, dev.jain@arm.com, ioworker0@gmail.com, linmag7@gmail.com,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+ Qi Zheng <zhengqi.arch@bytedance.com>
+References: <cover.1769515122.git.zhengqi.arch@bytedance.com>
+ <20260127124642.480123beb01ebb487f986a09@linux-foundation.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Qi Zheng <qi.zheng@linux.dev>
+In-Reply-To: <20260127124642.480123beb01ebb487f986a09@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-"Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
 
-> On Thu, 2026-01-22 at 14:47 -0800, Ackerley Tng wrote:
+
+On 1/28/26 4:46 AM, Andrew Morton wrote:
+> On Tue, 27 Jan 2026 20:12:53 +0800 Qi Zheng <qi.zheng@linux.dev> wrote:
+> 
+>> This series aims to enable PT_RECLAIM on more 64-bit architectures.
+> 
+> Thanks, I updated mm.git's mm-unstable branch to v4.
+> 
+>> Changes in v4:
+>>   - convert __HAVE_ARCH_TLB_REMOVE_TABLE to CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE config
+>>   - fix a WARN_ON_ONCE() on sparc64 (and on ppc)
+>>     (reported by Andreas Larsson)
+>>   - collect Acked-by (Hi David, I've kept your Acked-by, feel free to drop it)
+>>   - rebase onto the v6.19-rc7
 >>
->> There's no use case I can think of for unmapping TDX private memory
->> from the host direct map, but Sean's suggestion
->> https://lore.kernel.org/all/aWpcDrGVLrZOqdcg@google.com/=C2=A0won't even
->> let shared guest_memfd memory be unmapped from the direct map for TDX
->> VMs.
->
-> Ah!
->
->>
->> Actually, does TDX's clflush that assumes presence in the direct map
->> apply only for private pages, or all pages?
->>
->> If TDX's clflush only happens for private pages, then we could
->> restore private pages to the direct map, and then we'd be safe even
->> for TDX?
->
-> Yes, just private pages need the special treatment. But it will be much
-> simpler to start with just blocking the option for TDX. A shared pages
-> only mode could come later.
->
-> In general I think we should try to break things up like this when we
-> can. Kernel code is not set in stone, only ABI. I think it will lead to
-> overall faster upstreaming, because the series' can be simpler.
+> 
+> Below is how v4 altered mm.git.
+> 
+> I'm not seeing the WARN_ON_ONCE() fix.  I assume that was due to the
+> Kconfig alterations?
 
-I agree on splitting the feature up :), agree that simpler series are
-better.
+Yes, sparc64 and ppc will select HAVE_ARCH_TLB_REMOVE_TABLE, so
+PT_RECLAIM will not be enabled. This means it won't affect
+sparc64 and ppc, and will not trigger WARN_ON_ONCE().
 
-Perhaps just for my understanding,
+I don't have a testing environment for sparc64 and ppc, but I
+expect it should be able to fix the WARN_ON_ONCE().
 
-+ shared pages =3D> not in direct map =3D> no TDX clflush
-+ private pages =3D> always in direct map =3D> TDX performs clflush
+Thanks,
+Qi
 
-(I could put pages back into the direct map while doing shared to
-private conversions).
+> 
+> 
+> 
+> --- a/arch/powerpc/include/asm/tlb.h~b
+> +++ a/arch/powerpc/include/asm/tlb.h
+> @@ -37,7 +37,6 @@ extern void tlb_flush(struct mmu_gather
+>    */
+>   #define tlb_needs_table_invalidate()	radix_enabled()
+>   
+> -#define __HAVE_ARCH_TLB_REMOVE_TABLE
+>   /* Get the generic bits... */
+>   #include <asm-generic/tlb.h>
+>   
+> --- a/arch/powerpc/Kconfig~b
+> +++ a/arch/powerpc/Kconfig
+> @@ -305,6 +305,7 @@ config PPC
+>   	select LOCK_MM_AND_FIND_VMA
+>   	select MMU_GATHER_PAGE_SIZE
+>   	select MMU_GATHER_RCU_TABLE_FREE
+> +	select HAVE_ARCH_TLB_REMOVE_TABLE
+>   	select MMU_GATHER_MERGE_VMAS
+>   	select MMU_LAZY_TLB_SHOOTDOWN		if PPC_BOOK3S_64
+>   	select MODULES_USE_ELF_RELA
+> --- a/arch/sparc/include/asm/tlb_64.h~b
+> +++ a/arch/sparc/include/asm/tlb_64.h
+> @@ -33,7 +33,6 @@ void flush_tlb_pending(void);
+>   #define tlb_needs_table_invalidate()	(false)
+>   #endif
+>   
+> -#define __HAVE_ARCH_TLB_REMOVE_TABLE
+>   #include <asm-generic/tlb.h>
+>   
+>   #endif /* _SPARC64_TLB_H */
+> --- a/arch/sparc/Kconfig~b
+> +++ a/arch/sparc/Kconfig
+> @@ -74,6 +74,7 @@ config SPARC64
+>   	select HAVE_KRETPROBES
+>   	select HAVE_KPROBES
+>   	select MMU_GATHER_RCU_TABLE_FREE if SMP
+> +	select HAVE_ARCH_TLB_REMOVE_TABLE if SMP
+>   	select MMU_GATHER_MERGE_VMAS
+>   	select MMU_GATHER_NO_FLUSH_CACHE
+>   	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+> --- a/include/asm-generic/tlb.h~b
+> +++ a/include/asm-generic/tlb.h
+> @@ -213,7 +213,7 @@ struct mmu_table_batch {
+>   #define MAX_TABLE_BATCH		\
+>   	((PAGE_SIZE - sizeof(struct mmu_table_batch)) / sizeof(void *))
+>   
+> -#ifndef __HAVE_ARCH_TLB_REMOVE_TABLE
+> +#ifndef CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE
+>   static inline void __tlb_remove_table(void *table)
+>   {
+>   	struct ptdesc *ptdesc = (struct ptdesc *)table;
+> --- a/mm/Kconfig~b
+> +++ a/mm/Kconfig
+> @@ -1448,9 +1448,12 @@ config ARCH_HAS_USER_SHADOW_STACK
+>   	  The architecture has hardware support for userspace shadow call
+>             stacks (eg, x86 CET, arm64 GCS or RISC-V Zicfiss).
+>   
+> +config HAVE_ARCH_TLB_REMOVE_TABLE
+> +	def_bool n
+> +
+>   config PT_RECLAIM
+>   	def_bool y
+> -	depends on MMU_GATHER_RCU_TABLE_FREE
+> +	depends on MMU_GATHER_RCU_TABLE_FREE && !HAVE_ARCH_TLB_REMOVE_TABLE
+>   	help
+>   	  Try to reclaim empty user page table pages in paths other than munmap
+>   	  and exit_mmap path.
+> _
+> 
 
-Is everything good then? Or does TDX code not apply the special
-treatment, as in clflush only for private pages, as of now?
