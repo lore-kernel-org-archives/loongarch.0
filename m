@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0DB35FF7D;
-	Wed, 28 Jan 2026 13:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3746E35FF75
+	for <loongarch@lists.linux.dev>; Wed, 28 Jan 2026 13:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769608548; cv=none; b=tA+k2zktqEbnrQW1ctasH2RMcCuwTUkFHfijD01coLJxCB3VpiMZ/avV+2ISqOdU5OVnlV7VnkCbUb9Q/SRYpb7yQJfJSE9+rrw7K+Fw8xm9nRraMIyi+JfujOWCqNlbv2MzZ4FXlnyB1EdrNpMB5Fkcbf35qJKaNuSPNM4zY20=
+	t=1769608557; cv=none; b=eqSYXh1FxSvrxuCnL0D8zAcNx81a+Hnuw8tAipqpk4g9xOPhQ2E9j5OQezU/Yxp6geTWIGFZ3ZxtXk1VAQlaraIPdlQUQ1c8gvdCnA2gy9Xrm6QGAdOR7WpJY5FgkLLTjY+gDBs3XIKV4CL5kGNGvCGC7cCDlCY3rJrM4sVEW7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769608548; c=relaxed/simple;
-	bh=4F/Szy/Cik4u0re8XChd+PvOlhHKvV3FFCqDor4py4I=;
+	s=arc-20240116; t=1769608557; c=relaxed/simple;
+	bh=gSmvqtqPx9nfy8Fha/oZ+Wj5/HcAhp/Bj63bLn9BVgA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=saoW3jEwE2eDzUwd3h6wUzgdrlhmteq/5X+Eeg2PpCLDqcT0cbfjPwhfOHQziDNrAHY3UgnmmE1tDJz1z2Bubb+AJZJIxsyTmhAfvr9PTlmd0EYL5DzykvJzAVGpKXV5cq4+YzO25BzLnZ+ZEPgamZdI6NrtDKJ1mMSG+gSU7i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOvBHJXC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MJCjMWh5SkVlIAyUvHPMVrvMVkNe4HE1DRRHB0dlHqoDfn1YIOOwPxIFCGe43PjpFiAQEGlHxOImbM6wv8GGLBIcf5nYQKlUHSBykvaFo9SGwmIPqmk0TV0mAZB7zFUrosl3TPppLUmqm4w3Ei5uG2cvxPVaF4HiDcj27fkaR4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSfS4zqk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOvBHJXC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612D8C4CEF7;
-	Wed, 28 Jan 2026 13:55:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSfS4zqk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4842CC16AAE;
+	Wed, 28 Jan 2026 13:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769608548;
-	bh=4F/Szy/Cik4u0re8XChd+PvOlhHKvV3FFCqDor4py4I=;
+	s=k20201202; t=1769608557;
+	bh=gSmvqtqPx9nfy8Fha/oZ+Wj5/HcAhp/Bj63bLn9BVgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZOvBHJXCBdEVSav7bVOSuhG08QTbWvvlM9vHrnJl5ke4zZXkKPaGxt5MvEPpy4P9e
-	 QwzpK/Kr4Ua8TbKh5VKpP6sNpd+gmwJta6H/0RyVW9r2xreLLJa2vZBNKoFEjX7wV8
-	 XAHIfrer1Mb0YgoLxTXS1pNWz2GQJ71g9FdzlaLMhJHvlFUrAeMA1Gy6Hgaam0seB/
-	 Vn0m6dnSqwAUlkJa+9tojRlgioqXIC38CDAeknvH3XFWj/eVrnEC7h28SKuxzDW/b8
-	 MbV6xOrpb5b/pO6wRE3AyBTPe07b3jUbhvWgO3R3c6n3Eo5J+G/m8E97omGPUJd5ed
-	 YttuFOQuKJQ/Q==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 86550F4006A;
-	Wed, 28 Jan 2026 08:55:46 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 28 Jan 2026 08:55:46 -0500
-X-ME-Sender: <xms:YhV6aQXYXK4PTlTlsGsi-EXDgRriresz04zcDIqotuZmvsZtxfc6Rw>
-    <xme:YhV6adyB6XEUNHcJ8K7DZOLxtSBEh36rgXKCwi9-RpGND-xRgTk2NiMsRJbMIWwIh
-    nA0-rey9kH-zwWaKo85QcjpbuVpn2wu4XYje80DwncWzsGRLbOjLmSh>
-X-ME-Received: <xmr:YhV6aejTlcdBm04B9Zb0ixADZ-pd27JuoZQYdmfPWkW6bKitM1aTngU2bzgCzQ>
+	b=aSfS4zqkiQirAMa4sg/10S+f9YjL+SEBWnjL0oqrgw1ZwGZTJngNAJ72nT96X4RJF
+	 O/bCFOF/CKFdCt/MvG1wQqfVU/YWfUb+mNG+8RZWLYa6Dhilo1NQkkmjsVb+PUVljX
+	 HWt64cKbkmU7VMQ3jLd1BQLb/iVPvprRxo+s+cN/8yHRaTgzpVWdzM8PhhLykgYuce
+	 +xyu9QnskUWVexe2pVLB52fJzgPbhvuhOSdgmNFkhfI/gg2dE+TBrMQWk5+uu66ljc
+	 sFCJwrGbQq4FLLZcyrJsjybQQxEPTfNZ95iO5Mc5q+zzUjNlTmJUQ2XyYlh2G+11UX
+	 bPUclcasHDNrw==
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6E120F40069;
+	Wed, 28 Jan 2026 08:55:55 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 28 Jan 2026 08:55:55 -0500
+X-ME-Sender: <xms:axV6aXA1ExlFUtDBWzg_bt4IS7G8DRDTfKBgadVokIPfMe44t7P7BA>
+    <xme:axV6aWtqIaLFmJdFjQvxneGi9Vq0a1wFZnURiMxdK1iYHxxGTN12HAAX2DQxj4m32
+    f2pSZYcgqUUG3RehqchugthcLtLok35BOiA2NtA8wRS8dKsZCFrUw>
+X-ME-Received: <xmr:axV6actSKPCq5Ep2tkcGeMLxa5C8V1Sy3HfbLg73XsNW0jvicy-nlYW6k73Jgg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduieefheegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepmfhirhihlhcu
     ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
     hrnhephfdufeejhefhkedtuedvfeevjeffvdfhvedtudfgudffjeefieekleehvdetvdev
-    necuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
     hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
     qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
     hnrghmvgdpnhgspghrtghpthhtohepvdekpdhmohguvgepshhmthhpohhuthdprhgtphht
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduieefheegucetufdote
     tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
     guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
     rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
-X-ME-Proxy: <xmx:YhV6aQP9MF5N76J4tglK2iXE7aytvFT2B8OFD2wMmvEQM6ISVZ-P7A>
-    <xmx:YhV6aWhWq9u5KMXdTYtb8umMsbSReRRuuzZCbY3C8WNK4lOaheYJ4Q>
-    <xmx:YhV6aQq-wMuxk9YdIal3rqi6WZ1EAwSdLvkzeETKdd9rlQEhRB4HMw>
-    <xmx:YhV6aRhOa_W2y_xmndaioiM4BSpaB3NIJIRSWZirCBqugXLAfWoqpA>
-    <xmx:YhV6aWKwASNwQ7mAJ75LFcnKUB3-Ek04FvMrOZy1jdgYEszqG0DUyZgv>
+X-ME-Proxy: <xmx:axV6aar11BVtW7su70KxKpfacmLD_KKRjs1rwm6RxhxOdIp00YaVgQ>
+    <xmx:axV6aYM_1mkvTrlwWWHXImp-rSWQUlnT-77wYrYmJk715njwpiubag>
+    <xmx:axV6aYlAWDB55avl4rhWdKNXE4lnVZUNustFAxp0wNwJUNt_OJp7Xg>
+    <xmx:axV6aSv4P1g4WQ7uiaAQy7S_Lxydyfvcx6CLrwmCDWTtD69dspLNlQ>
+    <xmx:axV6aXks34t5g-5ItH6OTvzh9pV3ClyBtjP_MuqKX10NRTLBcDUU1oOE>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 Jan 2026 08:55:44 -0500 (EST)
+ 28 Jan 2026 08:55:53 -0500 (EST)
 From: Kiryl Shutsemau <kas@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
@@ -89,9 +89,9 @@ Cc: Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	Kiryl Shutsemau <kas@kernel.org>
-Subject: [PATCHv5 05/17] riscv/mm: Align vmemmap to maximal folio size
-Date: Wed, 28 Jan 2026 13:54:46 +0000
-Message-ID: <20260128135500.22121-6-kas@kernel.org>
+Subject: [PATCHv5 06/17] LoongArch/mm: Align vmemmap to maximal folio size
+Date: Wed, 28 Jan 2026 13:54:47 +0000
+Message-ID: <20260128135500.22121-7-kas@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260128135500.22121-1-kas@kernel.org>
 References: <20260128135500.22121-1-kas@kernel.org>
@@ -111,23 +111,23 @@ Align vmemmap to MAX_FOLIO_NR_PAGES.
 
 Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 ---
- arch/riscv/mm/init.c | 3 ++-
+ arch/loongarch/include/asm/pgtable.h | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 21d534824624..c555b9a4fdce 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -63,7 +63,8 @@ phys_addr_t phys_ram_base __ro_after_init;
- EXPORT_SYMBOL(phys_ram_base);
+diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/include/asm/pgtable.h
+index c33b3bcb733e..f9416acb9156 100644
+--- a/arch/loongarch/include/asm/pgtable.h
++++ b/arch/loongarch/include/asm/pgtable.h
+@@ -113,7 +113,8 @@ extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)];
+ 	 min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE * PAGE_SIZE, (1UL << cpu_vabits) / 2) - PMD_SIZE - VMEMMAP_SIZE - KFENCE_AREA_SIZE)
+ #endif
  
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--#define VMEMMAP_ADDR_ALIGN	(1ULL << SECTION_SIZE_BITS)
-+#define VMEMMAP_ADDR_ALIGN	max(1ULL << SECTION_SIZE_BITS, \
-+				    MAX_FOLIO_NR_PAGES * sizeof(struct page))
+-#define vmemmap		((struct page *)((VMALLOC_END + PMD_SIZE) & PMD_MASK))
++#define VMEMMAP_ALIGN	max(PMD_SIZE, MAX_FOLIO_NR_PAGES * sizeof(struct page))
++#define vmemmap		((struct page *)(ALIGN(VMALLOC_END, VMEMMAP_ALIGN)))
+ #define VMEMMAP_END	((unsigned long)vmemmap + VMEMMAP_SIZE - 1)
  
- unsigned long vmemmap_start_pfn __ro_after_init;
- EXPORT_SYMBOL(vmemmap_start_pfn);
+ #define KFENCE_AREA_START	(VMEMMAP_END + 1)
 -- 
 2.51.2
 
