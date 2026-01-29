@@ -1,155 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D69387591
-	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 12:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554451EA7F4
+	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 14:38:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769691326; cv=none; b=QeKGjxHNvdZWPAHmq0x0z2NIxkmbolWhNzcFamc5iol8eE8ZrMtd9vDQx6+uKl/PHPO9sSP0u+gVPLjkumbV+mVVt5TXEt7TLtAutN6UeLq3s6afGuS68CEOsxeAqfrY/nxr5dCW5OWQot+WdPDfBXhwwXYoXoO9pkMO27EDUfY=
+	t=1769697534; cv=none; b=RcOZ79MOFeHcAIUtf0vXZ37xemPRtIZW3oswq8uAVFCqA1SliIu4DUmJOUcVEjjBt19tiGVwiS5+Z9Ie+qw1qJEFuvYxRSdxW0nkkHQL3bXXv6oqHhHZ8zc7cFfaFGoeskB27G5uTbA6gOT/uIkF4ZVkqwTk6g0zE+g7n/PkM5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769691326; c=relaxed/simple;
-	bh=NqTaDHaD+pJvVAfH6kvcQ5hBCxxGl7SIeyGDhu1Vm3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EAAQKnyQSFA7QToLTsH9dH3sdG+Pgf+6EkBC3kMeVTP7pcq556l1lxYf/BrfglKUa/4OsRMrOfn5U5tMq8bG8+hpd/gH6lwZwlqju6bspVBk7cUfMkLeER443ZofEdLUi8CTFdPg3xgFxzdUvnbw3kqpRuhcFfxRZVC+U/7H+UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfDV6/fD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769697534; c=relaxed/simple;
+	bh=J0CXaR9Xv5YMEu9lpIeArNADiWmdVJJkiFyMfktIAKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7w1hga87kzXKW1qL7Okj8tZMxnP87G0lQ+yWK9bDhx481ef406okybX3/Kw1qZf3dUIJ+SHjtmPY4i8YXRwE1sRf+uenRxhcsEvWqUZZR7Ma81gxA/BUmqhnE9sXKhIy2ugCTR1CXGbdxMNga2DEYZfHb5PprEU2HOHY27Es94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O4kGgAGk; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfDV6/fD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06553C16AAE
-	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 12:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769691326;
-	bh=NqTaDHaD+pJvVAfH6kvcQ5hBCxxGl7SIeyGDhu1Vm3g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HfDV6/fDtxee90qgtUI6N/2IDdeS4qHKj6HO/gyb226nZczlcj/6KOkexToeDyxXi
-	 6lYW+VtnVzjGgFbp8SyMAy/coYX1/U5IEvOu+70MnqnNCJupJpOqfMRXKuSTqLL4/2
-	 VseSwZyZgti7OqaG1/7bl9O92rUMh/H2FoukLPQ2gcbN0wpA6FV9IGVie2U3gN3Qp1
-	 pPWf05o+kcyYUrDPBK6ehyqmrRT3BkTjlqo1rVGoBaOl7u/rAIcMwQIUVCRv1619s8
-	 ucQ96n4ZEJOQtW8i5whGJiW68kteWYs2MXEQbQvHzfejTFfXEWeQY6n1jtDsaVE2Lv
-	 F0YuBDuX2Y2LA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b88455e6663so137192866b.1
-        for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 04:55:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUjY2rmDvOvWuiHD1xEcHa8Nv0N/uzjRbiFBQJDzntT/5yMfBhlLa69Bay6147OyjgflIvaWBycWCo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyQgcwcOb8bzvBGy5FJbXySSCaA9yRcDdK5iQDfWdiFqRV7lI8F
-	Oan5OyiS3oupSl9uUuDKX1MioUmVpAmHOELh3sG3JxtBjAAdIXwekMRXAB9/6vTbYmyjOo2NrMX
-	IZtJhkMcPhwAT0RO/uEWp+2w1B7EgSsA=
-X-Received: by 2002:a17:907:dab:b0:b87:33f3:6042 with SMTP id
- a640c23a62f3a-b8dab189e43mr533514266b.9.1769691324511; Thu, 29 Jan 2026
- 04:55:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O4kGgAGk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769697533; x=1801233533;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=J0CXaR9Xv5YMEu9lpIeArNADiWmdVJJkiFyMfktIAKM=;
+  b=O4kGgAGklrv4wOV7xa3iWBow7WFwfsQfdEFe+cvhWmKsqdAzAmFSQiXu
+   kQfaJ2FuWMyc7084qE6GszCYFmRqVMIbf4u+U7qbVu9EGBuV3qgk8MKWc
+   PSKW9kHVqN2EKbsUzgXtxJtHUzpZVDxu5OAv1iUmpzJRRtlRksd7HV1OR
+   0gt/ENZj0uwmdhuWbb4eJsUQ3e4WleFSY5NA4knQlgNf1y1NjJOfj1rZ9
+   glhEVUuWxZgmkt13kzSew6KZTakXtyfceXu4QdyA79+aZU45BhAtN2ApY
+   zJUO0bCJPbUKwxxSP1s60oYmKj0xiXzqlV/Z067zlqg8FdESiQHdS1dfs
+   w==;
+X-CSE-ConnectionGUID: Quw1LDAFR/qg8uWBkoszeA==
+X-CSE-MsgGUID: BH/KvcknQ1++1rISZ8qvsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="96401233"
+X-IronPort-AV: E=Sophos;i="6.21,261,1763452800"; 
+   d="scan'208";a="96401233"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 06:38:53 -0800
+X-CSE-ConnectionGUID: mQJ0XTNXR/eGlwmM7QaAwA==
+X-CSE-MsgGUID: gW0mzCeKRs2s9OLL4qA+2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,261,1763452800"; 
+   d="scan'208";a="213552921"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.155])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2026 06:38:49 -0800
+Date: Thu, 29 Jan 2026 16:38:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C
+ controller
+Message-ID: <aXtw9h8WUs5H9MgC@smile.fi.intel.com>
+References: <cover.1769476820.git.zhoubinbin@loongson.cn>
+ <402121da829497fc97f1461c8aaa3a44252c3f06.1769476820.git.zhoubinbin@loongson.cn>
+ <aXh000kBfaqd1G9H@smile.fi.intel.com>
+ <CAMpQs4JTqWr6AqRwEO9bcno-_MjjE8GKm_kUvrpy7m_tLMtuSQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251219063021.1778659-1-maobibo@loongson.cn> <20251219063021.1778659-3-maobibo@loongson.cn>
-In-Reply-To: <20251219063021.1778659-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 29 Jan 2026 20:55:13 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7N1uXzK6Fu4x4Mrq4j1P95119HP87_spxU_E6WLxN6TQ@mail.gmail.com>
-X-Gm-Features: AZwV_QglXnv0WaO0Gz68kxYYRi7EETfoxRPoCUkAA_CB9VyzX_vP5ZvRjFhDTTM
-Message-ID: <CAAhV-H7N1uXzK6Fu4x4Mrq4j1P95119HP87_spxU_E6WLxN6TQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] LoongArch: Add paravirt support with
- vcpu_is_preempted() in guest side
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Juergen Gross <jgross@suse.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4JTqWr6AqRwEO9bcno-_MjjE8GKm_kUvrpy7m_tLMtuSQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi, Bibo,
+On Thu, Jan 29, 2026 at 04:07:06PM +0800, Binbin Zhou wrote:
+> On Tue, Jan 27, 2026 at 4:18 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Tue, Jan 27, 2026 at 10:47:57AM +0800, Binbin Zhou wrote:
 
-On Fri, Dec 19, 2025 at 2:30=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Function vcpu_is_preempted() is used to check whether vCPU is preempted
-> or not. Here add implementation with vcpu_is_preempted() when option
-> CONFIG_PARAVIRT is enabled.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> Acked-by: Juergen Gross <jgross@suse.com>
-> ---
->  arch/loongarch/include/asm/qspinlock.h |  3 +++
->  arch/loongarch/kernel/paravirt.c       | 21 ++++++++++++++++++++-
->  2 files changed, 23 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/incl=
-ude/asm/qspinlock.h
-> index e76d3aa1e1eb..fa3eaf7e48f2 100644
-> --- a/arch/loongarch/include/asm/qspinlock.h
-> +++ b/arch/loongarch/include/asm/qspinlock.h
-> @@ -34,6 +34,9 @@ static inline bool virt_spin_lock(struct qspinlock *loc=
-k)
->         return true;
->  }
->
-> +#define vcpu_is_preempted      vcpu_is_preempted
-> +bool vcpu_is_preempted(int cpu);
-> +
->  #endif /* CONFIG_PARAVIRT */
->
->  #include <asm-generic/qspinlock.h>
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
-avirt.c
-> index b1b51f920b23..a81a3e871dd1 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -12,6 +12,7 @@ static int has_steal_clock;
->  struct static_key paravirt_steal_enabled;
->  struct static_key paravirt_steal_rq_enabled;
->  static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-> +static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
->  DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
->
->  static u64 native_steal_clock(int cpu)
-> @@ -267,6 +268,18 @@ static int pv_time_cpu_down_prepare(unsigned int cpu=
-)
->
->         return 0;
->  }
-> +
-> +bool notrace vcpu_is_preempted(int cpu)
-Is "notrace" really needed? Only S390 do this.
+...
 
-Huacai
+> > > +/*
+> >
+> > It's not marked as kernel-doc, but looks very much like that. Why?
+> > Same Q for *all* cases like this.
+> 
+> I didn't intend to mark it in kernel-doc; I just wanted to comment on
+> the variable.
+> Is removing the `@` symbol sufficient?
 
-> +{
-> +       struct kvm_steal_time *src;
-> +
-> +       if (!static_branch_unlikely(&virt_preempt_key))
-> +               return false;
-> +
-> +       src =3D &per_cpu(steal_time, cpu);
-> +       return !!(src->preempted & KVM_VCPU_PREEMPTED);
-> +}
-> +EXPORT_SYMBOL(vcpu_is_preempted);
->  #endif
->
->  static void pv_cpu_reboot(void *unused)
-> @@ -308,6 +321,9 @@ int __init pv_time_init(void)
->                 pr_err("Failed to install cpu hotplug callbacks\n");
->                 return r;
+But why? If you want it being properly documented, make sure it follows
+the regular format.
+
+> > > + * struct loongson2_i2c_msg - client specific data
+> > > + * @addr: 8-bit slave addr, including r/w bit
+> > > + * @count: number of bytes to be transferred
+> > > + * @buf: data buffer
+> > > + * @stop: last I2C msg to be sent, i.e. STOP to be generated
+> > > + * @result: result of the transfer
+> > > + */
+> > > +struct loongson2_i2c_msg {
+> > > +     u8 addr;
+> > > +     u32 count;
+> > > +     u8 *buf;
+> > > +     bool stop;
+> > > +     int result;
+> >
+> > Run `pahole` and amend *all* data types accordingly.
+> 
+>  Moving 'stop' from after 'buf' to after 'addr'.
+> >
+> > > +};
+
+...
+
+> After run `pahole`, the structs are reorganized as follow:
+> 
+> pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_priv
+> i2c-ls2x-v2.o
+> struct loongson2_i2c_priv {
+>         struct i2c_adapter         adapter
+> __attribute__((__aligned__(8))); /*     0  1064 */
+>         /* --- cacheline 16 boundary (1024 bytes) was 40 bytes ago ---
+> */
+>         struct clk *               clk;                  /*  1064
+> 8 */
+>         struct completion          complete;             /*  1072
+> 32 */
+>         /* --- cacheline 17 boundary (1088 bytes) was 16 bytes ago ---
+> */
+>         struct regmap *            regmap;               /*  1104
+
+It's better to keep pointers like clk and regmap next to each other.
+They are semantically coupled as "resources".
+
+> 8 */
+>         int                        speed;                /*  1112
+> 4 */
+>         int                        parent_rate;          /*  1116
+> 4 */
+>         struct loongson2_i2c_msg   msg;                  /*  1120
+> 24 */
+> 
+>         /* XXX last struct has 4 bytes of padding */
+> 
+>         /* size: 1144, cachelines: 18, members: 7 */
+>         /* paddings: 1, sum paddings: 4 */
+>         /* forced alignments: 1 */
+>         /* last cacheline: 56 bytes */
+> } __attribute__((__aligned__(8)));
+
+...
+
+> pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_msg
+> i2c-ls2x-v2.o
+> struct loongson2_i2c_msg {
+>         u8                         addr;                 /*     0
+> 1 */
+>         bool                       stop;                 /*     1
+> 1 */
+> 
+>         /* XXX 2 bytes hole, try to pack */
+
+>         u32                        count;                /*     4
+> 4 */
+>         u8 *                       buf;                  /*     8
+> 8 */
+
+Also think about it (don't blindly follow the `pahole` automatic mode).
+This is much better if you move the pointer to be the first, followed
+by a count, result, and others.
+
+>         int                        result;               /*    16
+> 4 */
+> 
+>         /* size: 24, cachelines: 1, members: 5 */
+>         /* sum members: 18, holes: 1, sum holes: 2 */
+>         /* padding: 4 */
+>         /* last cacheline: 24 bytes */
+> };
+
+TL;DR: don't use `pahole` blindly. Use the common sense.
+
+...
+
+> > > +static int loongson2_i2c_wait_free_bus(struct loongson2_i2c_priv *priv)
+> > > +{
+> > > +     u32 status;
+> > > +     int ret;
+> > > +
+> > > +     ret = regmap_read_poll_timeout(priv->regmap, LOONGSON2_I2C_SR2, status,
+> > > +                                    !(status & LOONGSON2_I2C_SR2_BUSY),
+> > > +                                    LOONGSON2_I2C_FREE_SLEEP_US,
+> > > +                                    LOONGSON2_I2C_FREE_TIMEOUT_US);
+> > > +     if (ret) {
+> > > +             dev_dbg(priv->dev, "I2C bus free failed.\n");
+> >
+> > > +             ret = -EBUSY;
+> >
+> > Why?! What's wrong with the error code returned in ret?
+> 
+> I want to indicate the bus busy state if it times out.
+
+This is not an answer. So, why do you remap error code. What's wrong with
+the callee's one?
+
+> > > +     }
+> > > +
+> > > +     return ret;
+> > > +}
+
+...
+
+> > Ah, it seems it's a helper. Please, return the error code from it as int and
+> > not irqreturn_t, this will make things clearer.
+> 
+> How about just define it as void:
+> 
+> static void loongson2_i2c_isr_error(u32 status, void *data)
+> {
+> .........
+>         if (status & LOONGSON2_I2C_SR1_ARLO) {
+>          ........
+>                 msg->result = -EAGAIN;
+>                 goto out;
 >         }
-> +
-> +       if (kvm_para_has_feature(KVM_FEATURE_PREEMPT))
-> +               static_branch_enable(&virt_preempt_key);
->  #endif
->
->         static_call_update(pv_steal_clock, paravt_steal_clock);
-> @@ -318,7 +334,10 @@ int __init pv_time_init(void)
->                 static_key_slow_inc(&paravirt_steal_rq_enabled);
->  #endif
->
-> -       pr_info("Using paravirt steal-time\n");
-> +       if (static_key_enabled(&virt_preempt_key))
-> +               pr_info("Using paravirt steal-time with preempt enabled\n=
-");
-> +       else
-> +               pr_info("Using paravirt steal-time with preempt disabled\=
-n");
->
->         return 0;
->  }
-> --
-> 2.39.3
->
+>         if (status & LOONGSON2_I2C_SR1_AF) {
+>            .......
+>                 msg->result = -EIO;
+>                 goto out;
+>         }
+>         if (status & LOONGSON2_I2C_SR1_BERR) {
+>          .........
+>                 msg->result = -EIO;
+>                 goto out;
+>         }
+> 
+> out:
+>         loongson2_i2c_disable_irq(priv);
+>         complete(&priv->complete);
+> }
+> 
+> and in loongson2_i2c_isr_event(), I reference it as:
+> 
+>         if (status & LOONGSON2_I2C_SR1_ITERREN_MASK) {
+>                 loongson2_i2c_isr_error(status, data);
+>                 return IRQ_NONE;
+>         }
+
+> Its return value is meaningless for loongson2_i2c_isr_event().
+
+Works for me.
+
+...
+
+> > > +     u32 possible_status = LOONGSON2_I2C_SR1_ITEVTEN_MASK;
+> >
+> > Split assignment...
+
+> > ...to be here, which improves readability (no need to go somewhere up in
+> > the code to see what this is about.
+> 
+> ok, I will put  `possible_status = LOONGSON2_I2C_SR1_ITEVTEN_MASK;` here.
+> 
+> > > +     /* Update possible_status if buffer interrupt is enabled */
+> > > +     if (ien & LOONGSON2_I2C_CR2_ITBUFEN)
+> > > +             possible_status |= LOONGSON2_I2C_SR1_ITBUFEN_MASK;
+
+I expect something like this:
+
+		/* Update possible_status if buffer interrupt is enabled */
+		possible_status = LOONGSON2_I2C_SR1_ITEVTEN_MASK;
+		if (ien & LOONGSON2_I2C_CR2_ITBUFEN)
+			possible_status |= LOONGSON2_I2C_SR1_ITBUFEN_MASK;
+
+...
+
+> > > +     strscpy(adap->name, pdev->name, sizeof(adap->name));
+> >
+> > 2-arguments version is even better.
+> 
+> Sorry, I'm not quite sure what you mean by `2-arguments version.`
+
+Use 2 arguments instead of 3. I.o.w. just drop the third argument.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
