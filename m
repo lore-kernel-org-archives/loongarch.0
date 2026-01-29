@@ -1,140 +1,154 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E35483803C3
-	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 10:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD978385EC7
+	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 11:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769680808; cv=none; b=SKtR2K3wkw4s2kbZBSPohmzak1XbXUAM93BoEvV3VwBCeB0CooJoCBMj0QzwtN0we0MpDQWq9+AJCmR2yKBSK10jQjMB64RkOaQWJ7fFUJbYfq+nO8tvmIV8PEdDzVqDIqzgEydt9s7RRaHbb9r/1h2bUDW62kWbDBuDn6lhVpA=
+	t=1769684941; cv=none; b=BlFqTk+6elJM88BiYKOJkZe9nIAly/AplnzlRTJxRx5dxndWLVVomBoi/FdyOK4aVw1gLDbDMNC2Z29QLOKMVWUBYt4RgIalyW7ksB4D0l+zlo3DanDXV9Lh1uJOwcDEQGon8aSiTqIWQj4JfqZUTA52Q5ZiWhXndqaKN/1+BPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769680808; c=relaxed/simple;
-	bh=QhjPT8u9EMDvaJX1Xa39xagGJLKCosmoYbIBrDlUvvU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fiQ45E+vLRtd0GivfsBhNixyRZQJ3WOfd+sL8wIVR6HWaGAonB1TyAXw8letP9pNkHFESNH205lkPOMD8nXzsHXAGryMPeiF0ykSaGHgjQRNJUDTEDhKCZS6MWs8rKK+W8UgCnOsd0x9E4edioqjSGw42jF+9GA67uYU5EaHSrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxMvGiL3tpu9wNAA--.45714S3;
-	Thu, 29 Jan 2026 18:00:02 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxTMKeL3tp5Sc5AA--.41408S3;
-	Thu, 29 Jan 2026 18:00:01 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: KVM: Add more CPUCFG mask bit
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20260126024840.2308379-1-maobibo@loongson.cn>
- <CAAhV-H66uH1TpaKTsqNtSqKYUDatJWj+zAuw-MYE88BqOF0XTA@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <60b5e543-226c-3c15-09ed-c3c5ccfeb699@loongson.cn>
-Date: Thu, 29 Jan 2026 17:57:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1769684941; c=relaxed/simple;
+	bh=Zm5nVaUmDomhelfJ0OOFh2uwBMUINqvX7H9mQHWFywQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G1rbLfgXZKoWA7K3ovsrsLr6oG0NUn/jePaZzv1ndxQMaGeP9Dds8VePdTLGCzqhUfgPEZJJBPhmBboIZCpjnxURJuLHtbes8CLju3Lr/7NU1u9tF8P25rJDeuc1schFdOw6AHzlewABB63+5O87paJW70l0iSEwFrTP7TyMukE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7eIyCHQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7eIyCHQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE61C4AF09
+	for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 11:09:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769684941;
+	bh=Zm5nVaUmDomhelfJ0OOFh2uwBMUINqvX7H9mQHWFywQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=G7eIyCHQmVhnPUOp8Nlblqdw5C6qRjMvrmZreXtXXWsjFXsiKr6RxaACaP/yQoayh
+	 1L42nTvJT7OgxQj2TfCLjH47JcYboHJ8A5L+C8aTjfnMgjJD6gpa89aY56yYAIJZ/P
+	 5kyhRbJNsleFR6fYHBGSv+XejHw+LYZfW+D6jFRF7X07THkxnYEmsnczWlypzFKhmX
+	 F5z2LXRnCFM8dZNK6jW9PvHtEVLyVSngzSn2Q9xhIhao5BcJ745iLB8H9DUlcLG+Xp
+	 qtYGBjio1AG7dE7NR0WIjlXKY4ToBE9CDHbzgcPX7s7A8UqFVxE+I4UwKNXskL0GBS
+	 lilku0yiEMzsA==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b885e8c6700so143009266b.0
+        for <loongarch@lists.linux.dev>; Thu, 29 Jan 2026 03:09:01 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5hnR1p2LTC0EkaF0jH7fMYMh/jo/dfOGAgRoTYuAaPo/NaHMS2ikyZekWN9fxXstR/+7lD6u5K4Y=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzCZYN1nvBKH+6uEOMKHytTmyQNgcIKsTuebKImiTk8rmKl81N9
+	A1WyNwoLnv8I/vAWwi84Uw/9bPyzLOA71swotbfwCI0t6jRroAm+IGkD7+YE1EfDda7MExVh98N
+	naU4eLeCiE3feI6Hp9AOrYOy1xTctPFE=
+X-Received: by 2002:a17:907:7207:b0:b73:a2ce:540f with SMTP id
+ a640c23a62f3a-b8dab2da697mr545573566b.17.1769684940063; Thu, 29 Jan 2026
+ 03:09:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H66uH1TpaKTsqNtSqKYUDatJWj+zAuw-MYE88BqOF0XTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTMKeL3tp5Sc5AA--.41408S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFWrtFyfurW5Xw47GF15Awc_yoW5Gr1kpr
-	Z29F4q9r4rKr4I9an2qrWDCr4ayrs7KFW7ZF92ya4DAFn8u3WxJr48KFWavFy5A348WF18
-	uan5Ja4q9Fn8XacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CP
-	fJUUUUU==
+References: <20260126024840.2308379-1-maobibo@loongson.cn> <CAAhV-H66uH1TpaKTsqNtSqKYUDatJWj+zAuw-MYE88BqOF0XTA@mail.gmail.com>
+ <60b5e543-226c-3c15-09ed-c3c5ccfeb699@loongson.cn>
+In-Reply-To: <60b5e543-226c-3c15-09ed-c3c5ccfeb699@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 29 Jan 2026 19:08:48 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H57b14qY+5jqe+Fd5FTQq6jrhurfNBCqBqwG6SUpKFhTw@mail.gmail.com>
+X-Gm-Features: AZwV_QhJQXt51VkJgg5i8ghAZ4okSd3PtkuyELjz24byOkoUjHxF1C1KSBtz5vk
+Message-ID: <CAAhV-H57b14qY+5jqe+Fd5FTQq6jrhurfNBCqBqwG6SUpKFhTw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: Add more CPUCFG mask bit
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 29, 2026 at 6:00=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+>
+>
+> On 2026/1/29 =E4=B8=8B=E5=8D=885:26, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Mon, Jan 26, 2026 at 10:48=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
+ wrote:
+> >>
+> >> With LA664 CPU there are more features supported which are indicated
+> >> in CPUCFG2 bit24:30 and CPUCFG3 bit17 and bit 23. KVM hypervisor can
+> >> not enable or disable these features and there is no KVM exception
+> >> when instructions of these features are used in guest mode.
+> >>
+> >> Here add more CPUCFG mask support with LA664 CPU type.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>    1. Rebase on the latest version since some common CPUCFG bit macro
+> >>       definitions are merged.
+> >>    2. Modifiy the comments explaining why it comes from feature detect
+> >>       of host CPU.
+> >> ---
+> >>   arch/loongarch/kvm/vcpu.c | 15 +++++++++++++++
+> >>   1 file changed, 15 insertions(+)
+> >>
+> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> >> index 656b954c1134..a9608469fa7a 100644
+> >> --- a/arch/loongarch/kvm/vcpu.c
+> >> +++ b/arch/loongarch/kvm/vcpu.c
+> >> @@ -652,6 +652,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsi=
+gned int id, u64 val)
+> >>
+> >>   static int _kvm_get_cpucfg_mask(int id, u64 *v)
+> >>   {
+> >> +       unsigned int config;
+> >> +
+> >>          if (id < 0 || id >=3D KVM_MAX_CPUCFG_REGS)
+> >>                  return -EINVAL;
+> >>
+> >> @@ -684,9 +686,22 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+> >>                  if (cpu_has_ptw)
+> >>                          *v |=3D CPUCFG2_PTW;
+> >>
+> >> +               /*
+> >> +                * The capability indication of some features are the =
+same
+> >> +                * between host CPU and guest vCPU, and there is no sp=
+ecial
+> >> +                * feature detect method with vCPU. Also KVM hyperviso=
+r can
+> >> +                * not enable or disable these features.
+> >> +                *
+> >> +                * Here use host CPU detected features for vCPU
+> >> +                */
+> >> +               config =3D read_cpucfg(LOONGARCH_CPUCFG2);
+> >> +               *v |=3D config & (CPUCFG2_FRECIPE | CPUCFG2_DIV32 | CP=
+UCFG2_LAM_BH);
+> >> +               *v |=3D config & (CPUCFG2_LAMCAS | CPUCFG2_LLACQ_SCREL=
+ | CPUCFG2_SCQ);
+> >>                  return 0;
+> >>          case LOONGARCH_CPUCFG3:
+> >>                  *v =3D GENMASK(16, 0);
+> >> +               config =3D read_cpucfg(LOONGARCH_CPUCFG3);
+> >> +               *v |=3D config & (CPUCFG3_DBAR_HINTS | CPUCFG3_SLDORDE=
+R_STA);
+> > What about adding CPUCFG3_ALDORDER_STA and CPUCFG3_ASTORDER_STA here, t=
+oo?
+> I am ok to add these bits.
+>
+> It is strange that there is both capability bit and status bit. AFAIK
+> cpucfg is read-only, status bit means that it will change at runtime. I
+> will negotiate with HW guys about these bits.
+OK, then maybe capability bits should also be added here.
 
+Huacai
 
-On 2026/1/29 下午5:26, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Mon, Jan 26, 2026 at 10:48 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> With LA664 CPU there are more features supported which are indicated
->> in CPUCFG2 bit24:30 and CPUCFG3 bit17 and bit 23. KVM hypervisor can
->> not enable or disable these features and there is no KVM exception
->> when instructions of these features are used in guest mode.
->>
->> Here add more CPUCFG mask support with LA664 CPU type.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>    1. Rebase on the latest version since some common CPUCFG bit macro
->>       definitions are merged.
->>    2. Modifiy the comments explaining why it comes from feature detect
->>       of host CPU.
->> ---
->>   arch/loongarch/kvm/vcpu.c | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 656b954c1134..a9608469fa7a 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -652,6 +652,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
->>
->>   static int _kvm_get_cpucfg_mask(int id, u64 *v)
->>   {
->> +       unsigned int config;
->> +
->>          if (id < 0 || id >= KVM_MAX_CPUCFG_REGS)
->>                  return -EINVAL;
->>
->> @@ -684,9 +686,22 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
->>                  if (cpu_has_ptw)
->>                          *v |= CPUCFG2_PTW;
->>
->> +               /*
->> +                * The capability indication of some features are the same
->> +                * between host CPU and guest vCPU, and there is no special
->> +                * feature detect method with vCPU. Also KVM hypervisor can
->> +                * not enable or disable these features.
->> +                *
->> +                * Here use host CPU detected features for vCPU
->> +                */
->> +               config = read_cpucfg(LOONGARCH_CPUCFG2);
->> +               *v |= config & (CPUCFG2_FRECIPE | CPUCFG2_DIV32 | CPUCFG2_LAM_BH);
->> +               *v |= config & (CPUCFG2_LAMCAS | CPUCFG2_LLACQ_SCREL | CPUCFG2_SCQ);
->>                  return 0;
->>          case LOONGARCH_CPUCFG3:
->>                  *v = GENMASK(16, 0);
->> +               config = read_cpucfg(LOONGARCH_CPUCFG3);
->> +               *v |= config & (CPUCFG3_DBAR_HINTS | CPUCFG3_SLDORDER_STA);
-> What about adding CPUCFG3_ALDORDER_STA and CPUCFG3_ASTORDER_STA here, too?
-I am ok to add these bits.
-
-It is strange that there is both capability bit and status bit. AFAIK 
-cpucfg is read-only, status bit means that it will change at runtime. I 
-will negotiate with HW guys about these bits.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>                  return 0;
->>          case LOONGARCH_CPUCFG4:
->>          case LOONGARCH_CPUCFG5:
->>
->> base-commit: 63804fed149a6750ffd28610c5c1c98cce6bd377
->> --
->> 2.39.3
->>
->>
-
+>
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> >>                  return 0;
+> >>          case LOONGARCH_CPUCFG4:
+> >>          case LOONGARCH_CPUCFG5:
+> >>
+> >> base-commit: 63804fed149a6750ffd28610c5c1c98cce6bd377
+> >> --
+> >> 2.39.3
+> >>
+> >>
+>
+>
