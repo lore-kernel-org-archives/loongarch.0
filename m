@@ -1,43 +1,33 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587AE28000B
-	for <loongarch@lists.linux.dev>; Fri, 30 Jan 2026 03:00:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0152C2AF1B
+	for <loongarch@lists.linux.dev>; Fri, 30 Jan 2026 03:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769742002; cv=none; b=oxZNmGEkon3Vyd+JDe8vIZFv4c7gKglk+oHlrrwD1ouxKGIrVmjKRk+yMUm0jFkEQZt1xEdMVHEQREV3IqATzS30dOHyrmzNCJrcBzc/pyCYO7NrlhSYYAY1rgxwJpwA+XST0qLCcRYnGSYapVpcNRmTSww1yzy/4uhHJedCLi8=
+	t=1769743034; cv=none; b=qLk/8uui1DaPMKYWa7Xpgjcpy1kc3gyFa/lqkYVrzhY/pfN703SXkUXqwHTHwAzcssmTw/lRA8WngyZtA/dATBqoNRRaj1RLqc8bMfswqgO2xCxLJePFLz3qZQNpSwEqBgvJqO4fzNbslSosz3TQeDCoUhyuAwTTsegH/VUDAEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769742002; c=relaxed/simple;
-	bh=UnV73sncVckeAA4dm5TrQ2td2kLBGWo4xOcs/zQLmuA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b0ZY5OaKqZ9OV5nzZUvi9dD9mx7qZydsg9GHP5mC5NTdqv4hDNaX7oBr+pb0cPQRo3tkgmDS1MwqQdqH9XD67+alQIMVcIilmKeR9MdEaUKe0SJjoV2uF4m1K/a15q9QFunnCNkB83nEwdpnv6ND9Lq+6krYiobRQN8VYcCrV1g=
+	s=arc-20240116; t=1769743034; c=relaxed/simple;
+	bh=ESBPA/l+Ci9xq0i97uA6ugk5N/WDMpXEIz/ZRAqUW0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GXDrUQBKOAL7rT+DQyBCOF02PRdeTsgw0KmEVY6DBUrZRNiq8pr3f+658Rg6VtS1cecUoicFSAxt2IV0LXHnMfjrjPfCkIgs1YXO3rNTJIDZC69w0xNFBJ4Ysg3jmxYr5Rdvb/VwieUmzGhISFmsHMuqT607rgZbrRQtAjSitfc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8DxAfGsHnxpAiUOAA--.46706S3;
-	Fri, 30 Jan 2026 10:59:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJDxaeCfHnxpR_Q5AA--.45699S6;
-	Fri, 30 Jan 2026 10:59:53 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
-	maobibo@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>
-Subject: [PATCH v9 4/4] irqchip/irq-loongarch-ir:Add Redirect irqchip support
-Date: Fri, 30 Jan 2026 10:59:39 +0800
-Message-ID: <20260130025941.2140582-5-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20260130025941.2140582-1-zhangtianyang@loongson.cn>
-References: <20260130025941.2140582-1-zhangtianyang@loongson.cn>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxHMO0InxpQiYOAA--.46012S3;
+	Fri, 30 Jan 2026 11:17:08 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxSeCyInxpuvg5AA--.45071S2;
+	Fri, 30 Jan 2026 11:17:07 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: KVM: Set default return value in kvm IO bus ops
+Date: Fri, 30 Jan 2026 11:17:05 +0800
+Message-Id: <20260130031705.3929925-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,623 +35,418 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeCfHnxpR_Q5AA--.45699S6
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3Zw17uw1UGryDWFWfGF1fKrX_yoW8Ar4DAo
-	WfJrs3G34rWr18GrWFka17tFyxZ3y5Gw4Fyw1ruFWDZ3Wqqr4rtrW7GrW3Za42gF1FqF17
-	JFy0qwn3GFWxtrn3l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUOc7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26F4UJVW0owAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	ZF0_GryDMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
-	vY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8Jr1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK
-	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
-	aVAFwI0_Gr1j6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnU
-	UI43ZEXa7IU5QeOJUUUUU==
+X-CM-TRANSID:qMiowJBxSeCyInxpuvg5AA--.45071S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-The main function of the Redirected interrupt controller is to manage
-the redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+When irqchip in kernel is enabled, its register area is registered
+in the IO bus list with API kvm_io_bus_register_dev(). In MMIO/IOCSR
+register access emulation, kvm_io_bus_write/kvm_io_bus_read is called
+firstly. If it returns 0, it shows that in kernel irqchip handles
+the emulation already, else it returns to VMM and lets VMM emulate
+the register access.
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Once irqchip in kernel is enabled, it should return 0 if the address
+is within range of the registered IO bus. It should not return to VMM
+since VMM does not know how to handle it, and irqchip is handled in
+kernel already.
+
+Here set default return value with 0 in KVM IO bus operations.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- drivers/irqchip/Makefile             |   2 +-
- drivers/irqchip/irq-loongarch-avec.c |   6 +-
- drivers/irqchip/irq-loongarch-ir.c   | 534 +++++++++++++++++++++++++++
- 3 files changed, 540 insertions(+), 2 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+v1 ... v2:
+  1. Set return value with 0 in function mail_send() and send_ipi_data()
+---
+ arch/loongarch/kvm/intc/eiointc.c | 43 ++++++++++++-------------------
+ arch/loongarch/kvm/intc/ipi.c     | 24 ++++++++---------
+ arch/loongarch/kvm/intc/pch_pic.c | 31 ++++++++++------------
+ 3 files changed, 42 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 6a229443efe0..2fc15a8e6ada 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -118,7 +118,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index 7bdf3f678db4..972203182079 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -111,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
- 	}
- 
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -403,6 +404,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 
- static inline int __init acpi_cascade_irqdomain_init(void)
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index dfaf6ccfdd8b..e498a3f1e136 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -119,7 +119,7 @@ void eiointc_set_irq(struct loongarch_eiointc *s, int irq, int level)
+ static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eiointc *s,
+ 				gpa_t addr, unsigned long *val)
  {
-+	if (cpu_has_redirectint)
-+		return redirect_acpi_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
+-	int index, ret = 0;
++	int index;
+ 	u64 data = 0;
+ 	gpa_t offset;
+ 
+@@ -150,40 +150,36 @@ static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarch_eioint
+ 		data = s->coremap[index];
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	*val = data;
+ 
+-	return ret;
++	return 0;
  }
  
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..0ee7c37487f7
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,534 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Loongson Technologies, Inc.
-+ */
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/irq-msi-lib.h>
-+#include <linux/irqdomain.h>
-+#include <linux/spinlock.h>
-+#include <linux/msi.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/loongson.h>
-+#include <asm/numa.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+
-+#define LOONGARCH_IOCSR_REDIRECT_CFG           0x15e0
-+#define LOONGARCH_IOCSR_REDIRECT_TBR           0x15e8  /* IRT BASE REG*/
-+#define LOONGARCH_IOCSR_REDIRECT_CQB           0x15f0  /* IRT CACHE QUEUE BASE */
-+#define LOONGARCH_IOCSR_REDIRECT_CQH           0x15f8  /* IRT CACHE QUEUE HEAD, 32bit */
-+#define LOONGARCH_IOCSR_REDIRECT_CQT           0x15fc  /* IRT CACHE QUEUE TAIL, 32bit */
-+
-+#define GPID_ADDR_MASK			GENMASK(47, 6)
-+#define GPID_ADDR_SHIFT 		6
-+
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_MASK			GENMASK(47, 12)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct redirect_entry {
-+	struct  {
-+		u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	}	lo;
-+	u64	hi;
-+};
-+#define IRD_ENTRY_SIZE			sizeof(struct redirect_entry)
-+#define IRD_ENTRIES			65536
-+#define IRD_TABLE_PAGE_ORDER		get_order(IRD_ENTRIES * IRD_ENTRY_SIZE)
-+
-+struct redirect_gpid {
-+	u64	pir[4];      // Pending interrupt requested
-+	u8	en	: 1, // doorbell
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+};
-+
-+struct irde_inv_cmd {
-+	union {
-+		u64	cmd_info;
-+		struct {
-+			u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		}	index;
-+	};
-+	u64		notice_addr;
-+};
-+#define IRD_CMD_SIZE			sizeof(struct irde_inv_cmd)
-+#define INVALID_QUEUE_SIZE		4096
-+#define INV_QUEUE_PAGE_ORDER		get_order(INVALID_QUEUE_SIZE * IRD_CMD_SIZE)
-+
-+struct redirect_table {
-+	struct redirect_entry	*table;
-+	unsigned long		*bitmap;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct redirect_queue {
-+	struct irde_inv_cmd	*cmd_base;
-+	int			head;
-+	int			tail;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct irde_desc {
-+	struct	redirect_table	ird_table;
-+	struct	redirect_queue	inv_queue;
-+	int			node;
-+};
-+
-+struct redirect_item {
-+	int			index;
-+	struct irde_desc	*irde;
-+	struct redirect_gpid	*gpid;
-+};
-+
-+
-+static struct irq_domain *redirect_domain;
-+static struct irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+static phys_addr_t redirect_reg_base = LOONGSON_REG_BASE;
-+
-+#define REDIRECT_REG(reg, node) \
-+	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
-+
-+static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
-+{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return writeq(val, reg_addr);
-+}
-+
-+static inline void redirect_write_reg32(u32 node, u32 val, u32 reg)
-+{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return writel(val, reg_addr);
-+}
-+
-+static inline u32 redirect_read_reg32(u32 node, u32 reg)
-+{
-+	void __iomem *reg_addr = REDIRECT_REG(reg, node);
-+
-+	return readl(reg_addr);
-+}
-+
-+static inline struct redirect_entry *item_get_entry(struct redirect_item *item)
-+{
-+	return item->irde->ird_table.table + item->index;
-+}
-+
-+static inline bool invalid_queue_is_full(int node, u32 *tail)
-+{
-+	u32 head = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQH);
-+
-+	*tail = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQT);
-+
-+	return head == ((*tail + 1) % INVALID_QUEUE_SIZE);
-+}
-+
-+static void invalid_enqueue(struct redirect_item *item, struct irde_inv_cmd *cmd)
-+{
-+	struct redirect_queue *inv_queue = &item->irde->inv_queue;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&inv_queue->lock);
-+
-+	while (invalid_queue_is_full(item->irde->node, &tail))
-+		cpu_relax();
-+
-+	memcpy(&inv_queue->cmd_base[tail], cmd, sizeof(*cmd));
-+
-+	redirect_write_reg32(item->irde->node, (tail + 1) % INVALID_QUEUE_SIZE,
-+			     LOONGARCH_IOCSR_REDIRECT_CQT);
-+}
-+
-+static void irde_invalid_entry(struct redirect_item *item)
-+{
-+	struct irde_inv_cmd cmd;
-+	u64 raddr = 0;
-+
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	invalid_enqueue(item, &cmd);
-+
+ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, void *val)
+ {
+-	int ret = -EINVAL;
+ 	unsigned long flags, data, offset;
+ 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	offset = addr & 0x7;
+ 	addr -= offset;
+ 	vcpu->stat.eiointc_read_exits++;
+ 	spin_lock_irqsave(&eiointc->lock, flags);
+-	ret = loongarch_eiointc_read(vcpu, eiointc, addr, &data);
++	loongarch_eiointc_read(vcpu, eiointc, addr, &data);
+ 	spin_unlock_irqrestore(&eiointc->lock, flags);
+-	if (ret)
+-		return ret;
+ 
+ 	data = data >> (offset * 8);
+ 	switch (len) {
+@@ -208,7 +204,7 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
+ 				struct loongarch_eiointc *s,
+ 				gpa_t addr, u64 value, u64 field_mask)
+ {
+-	int index, irq, ret = 0;
++	int index, irq;
+ 	u8 cpu;
+ 	u64 data, old, mask;
+ 	gpa_t offset;
+@@ -287,29 +283,27 @@ static int loongarch_eiointc_write(struct kvm_vcpu *vcpu,
+ 		eiointc_update_sw_coremap(s, index * 8, data, sizeof(data), true);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, const void *val)
+ {
+-	int ret = -EINVAL;
+ 	unsigned long flags, value;
+ 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: eiointc not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	vcpu->stat.eiointc_write_exits++;
+@@ -317,24 +311,24 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+ 	switch (len) {
+ 	case 1:
+ 		value = *(unsigned char *)val;
+-		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, 0xFF);
++		loongarch_eiointc_write(vcpu, eiointc, addr, value, 0xFF);
+ 		break;
+ 	case 2:
+ 		value = *(unsigned short *)val;
+-		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, USHRT_MAX);
++		loongarch_eiointc_write(vcpu, eiointc, addr, value, USHRT_MAX);
+ 		break;
+ 	case 4:
+ 		value = *(unsigned int *)val;
+-		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, UINT_MAX);
++		loongarch_eiointc_write(vcpu, eiointc, addr, value, UINT_MAX);
+ 		break;
+ 	default:
+ 		value = *(unsigned long *)val;
+-		ret = loongarch_eiointc_write(vcpu, eiointc, addr, value, ULONG_MAX);
++		loongarch_eiointc_write(vcpu, eiointc, addr, value, ULONG_MAX);
+ 		break;
+ 	}
+ 	spin_unlock_irqrestore(&eiointc->lock, flags);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct kvm_io_device_ops kvm_eiointc_ops = {
+@@ -352,7 +346,7 @@ static int kvm_eiointc_virt_read(struct kvm_vcpu *vcpu,
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	addr -= EIOINTC_VIRT_BASE;
+@@ -376,28 +370,25 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *vcpu,
+ 				struct kvm_io_device *dev,
+ 				gpa_t addr, int len, const void *val)
+ {
+-	int ret = 0;
+ 	unsigned long flags;
+ 	u32 value = *(u32 *)val;
+ 	struct loongarch_eiointc *eiointc = vcpu->kvm->arch.eiointc;
+ 
+ 	if (!eiointc) {
+ 		kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 
+ 	addr -= EIOINTC_VIRT_BASE;
+ 	spin_lock_irqsave(&eiointc->lock, flags);
+ 	switch (addr) {
+ 	case EIOINTC_VIRT_FEATURES:
+-		ret = -EPERM;
+ 		break;
+ 	case EIOINTC_VIRT_CONFIG:
+ 		/*
+ 		 * eiointc features can only be set at disabled status
+ 		 */
+ 		if ((eiointc->status & BIT(EIOINTC_ENABLE)) && value) {
+-			ret = -EPERM;
+ 			break;
+ 		}
+ 		eiointc->status = value & eiointc->features;
+@@ -407,7 +398,7 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *vcpu,
+ 	}
+ 	spin_unlock_irqrestore(&eiointc->lock, flags);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static const struct kvm_io_device_ops kvm_eiointc_virt_ops = {
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index 1058c13dba7f..b269c249e037 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -111,7 +111,7 @@ static int mail_send(struct kvm *kvm, uint64_t data)
+ 	vcpu = kvm_get_vcpu_by_cpuid(kvm, cpu);
+ 	if (unlikely(vcpu == NULL)) {
+ 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 	mailbox = ((data & 0xffffffff) >> 2) & 0x7;
+ 	offset = IOCSR_IPI_BUF_20 + mailbox * 4;
+@@ -159,10 +159,17 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa_t addr, uint64_t data)
+ 	idx = srcu_read_lock(&vcpu->kvm->srcu);
+ 	ret = kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, 4, &val);
+ 	srcu_read_unlock(&vcpu->kvm->srcu, idx);
 +	/*
-+	 * CPU needs to wait here for cmd to complete, and it determines this
-+	 * by checking whether invalid queue has already written a valid value
-+	 * to cmd.notice_addr.
++	 * There is no way to forward new IOCSR addr and CPU ID to user
++	 * mode VMM, since anysend IOCSR is emulated in kernel already.
++	 *
++	 * Assuming that anysend IOCSR is only used on eiointc routing
++	 * setting
 +	 */
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(int node, u32 nr_irqs)
-+{
-+	struct redirect_table *ird_table = &irde_descs[node].ird_table;
-+	unsigned int index, order;
-+
-+	if (nr_irqs > 1) {
-+		nr_irqs = __roundup_pow_of_two(nr_irqs);
-+		order = ilog2(nr_irqs);
-+	}
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = bitmap_find_free_region(ird_table->bitmap,
-+					IRD_ENTRIES, order);
-+	if (index < 0) {
-+		pr_err("No redirect entry to use\n");
-+		return -ENOMEM;
-+	}
-+
-+	return index;
-+}
-+
-+static void redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table = &item->irde->ird_table;
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	memset(entry, 0, sizeof(*entry));
-+
-+	scoped_guard(raw_spinlock_irq, &ird_table->lock)
-+		clear_bit(item->index, ird_table->bitmap);
-+
-+	kfree(item->gpid);
-+
-+	irde_invalid_entry(item);
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item,
-+						 struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((u64)item->gpid & GPID_ADDR_MASK) >> GPID_ADDR_SHIFT;
-+	entry->lo.vector = 0xff;
-+}
-+
-+static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE) {
-+		return ret;
-+	} else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+	struct avecintc_data *adata = irq_data_get_avec_data(data);
-+
-+	redirect_domain_prepare_entry(item, adata);
-+	irde_invalid_entry(item);
-+	avecintc_sync(adata);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item = irq_data_get_irq_chip_data(d);
-+
-+	msg->address_lo = (msi_base_addr | 1 << 2) ;
-+	msg->address_hi = 0x0;
-+	msg->data = item->index;
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name			= "REDIRECT",
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_set_affinity	= redirect_set_affinity,
-+	.irq_compose_msi_msg	= redirect_compose_msi_msg,
-+};
-+
-+static void redirect_free_resources(struct irq_domain *domain, unsigned int virq,
-+				    unsigned int nr_irqs)
-+{
-+	for (int i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		if (irq_data && irq_data->chip_data) {
-+			struct redirect_item *item = irq_data->chip_data;
-+
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *arg)
-+{
-+	msi_alloc_info_t *info = arg;
-+	int ret, i, node, index;
-+
-+	node = dev_to_node(info->desc->dev);
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	index = redirect_table_alloc(node, nr_irqs);
-+	if (index < 0) {
-+		pr_err("Alloc redirect table entry failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(*item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+		item->irde = &irde_descs[node];
-+
-+		/*
-+		 * Only bits 47:6 of the GPID are passed to the controller,
-+		 * 64-byte alignment must be guarantee and make kzalloc can
-+		 * align to the respective size.
-+		 */
-+		static_assert(sizeof(*item->gpid) == 64);
-+		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+		item->index = index + i;
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+
-+		redirect_domain_prepare_entry(item, irq_data_get_avec_data(irq_data));
-+	}
+ 	if (unlikely(ret))
+ 		kvm_err("%s: : write data to addr %llx failed\n", __func__, addr);
+ 
+-	return ret;
 +	return 0;
-+
-+out_free_resources:
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -ENOMEM;
-+}
-+
-+static void redirect_domain_free(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs)
-+{
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops redirect_domain_ops = {
-+	.alloc		= redirect_domain_alloc,
-+	.free		= redirect_domain_free,
-+	.select		= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(struct irde_desc *irde)
-+{
-+	struct redirect_queue *inv_queue = &irde->inv_queue;
-+	struct folio *folio;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, INV_QUEUE_PAGE_ORDER, irde->node);
-+	if (!folio) {
-+		pr_err("Node [%d] invalid queue alloc pages failed!\n", irde->node);
-+		return -ENOMEM;
-+	}
-+
-+	inv_queue->cmd_base = folio_address(folio);
-+	inv_queue->head = 0;
-+	inv_queue->tail = 0;
-+	raw_spin_lock_init(&inv_queue->lock);
-+
+ }
+ 
+ static int any_send(struct kvm *kvm, uint64_t data)
+@@ -174,7 +181,7 @@ static int any_send(struct kvm *kvm, uint64_t data)
+ 	vcpu = kvm_get_vcpu_by_cpuid(kvm, cpu);
+ 	if (unlikely(vcpu == NULL)) {
+ 		kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+-		return -EINVAL;
++		return 0;
+ 	}
+ 	offset = data & 0xffff;
+ 
+@@ -183,7 +190,6 @@ static int any_send(struct kvm *kvm, uint64_t data)
+ 
+ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void *val)
+ {
+-	int ret = 0;
+ 	uint32_t offset;
+ 	uint64_t res = 0;
+ 
+@@ -202,28 +208,23 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int len, void
+ 		spin_unlock(&vcpu->arch.ipi_state.lock);
+ 		break;
+ 	case IOCSR_IPI_SET:
+-		res = 0;
+-		break;
+ 	case IOCSR_IPI_CLEAR:
+-		res = 0;
+ 		break;
+ 	case IOCSR_IPI_BUF_20 ... IOCSR_IPI_BUF_38 + 7:
+ 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+ 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
+ 				__func__, offset, len);
+-			ret = -EINVAL;
+ 			break;
+ 		}
+ 		res = read_mailbox(vcpu, offset, len);
+ 		break;
+ 	default:
+ 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	*(uint64_t *)val = res;
+ 
+-	return ret;
 +	return 0;
-+}
-+
-+static int redirect_table_init(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde->ird_table;
-+	unsigned long *bitmap;
-+	struct folio *folio;
-+	int node = irde->node;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, node);
-+	if (!folio) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->table = folio_address(folio);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		folio_put(folio);
-+		ird_table->table = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
+ }
+ 
+ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, const void *val)
+@@ -239,7 +240,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 
+ 	switch (offset) {
+ 	case IOCSR_IPI_STATUS:
+-		ret = -EINVAL;
+ 		break;
+ 	case IOCSR_IPI_EN:
+ 		spin_lock(&vcpu->arch.ipi_state.lock);
+@@ -257,7 +257,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 		if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+ 			kvm_err("%s: invalid offset or len: offset = %d, len = %d\n",
+ 				__func__, offset, len);
+-			ret = -EINVAL;
+ 			break;
+ 		}
+ 		write_mailbox(vcpu, offset, data, len);
+@@ -273,7 +272,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int len, cons
+ 		break;
+ 	default:
+ 		kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+index 4addb34bf432..a175f52fcf7f 100644
+--- a/arch/loongarch/kvm/intc/pch_pic.c
++++ b/arch/loongarch/kvm/intc/pch_pic.c
+@@ -74,7 +74,7 @@ void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
+ 
+ static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
+ {
+-	int ret = 0, offset;
++	int offset;
+ 	u64 data = 0;
+ 	void *ptemp;
+ 
+@@ -121,34 +121,32 @@ static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int l
+ 		data = s->isr;
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		break;
+ 	}
+ 	spin_unlock(&s->lock);
+ 
+-	if (ret == 0) {
+-		offset = (addr - s->pch_pic_base) & 7;
+-		data = data >> (offset * 8);
+-		memcpy(val, &data, len);
+-	}
++	offset = (addr - s->pch_pic_base) & 7;
++	data = data >> (offset * 8);
++	memcpy(val, &data, len);
+ 
+-	return ret;
 +	return 0;
-+}
-+
-+static void redirect_irde_cfg(struct irde_desc *irde)
-+{
-+	redirect_write_reg64(irde->node, CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	redirect_write_reg64(irde->node, __pa(irde->ird_table.table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	redirect_write_reg64(irde->node, ((u64)irde->inv_queue.cmd_base & CQB_ADDR_MASK) |
-+			     CQB_SIZE_MASK, LOONGARCH_IOCSR_REDIRECT_CQB);
-+}
-+
-+static void __redirect_irde_fini(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde_descs->ird_table;
-+	struct redirect_queue *inv_queue = &irde_descs->inv_queue;
-+
-+	if (ird_table->table) {
-+		folio_put(virt_to_folio(ird_table->table));
-+		ird_table->table = NULL;
-+	}
-+
-+	if (ird_table->bitmap) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (inv_queue->cmd_base) {
-+		folio_put(virt_to_folio(inv_queue->cmd_base));
-+		inv_queue->cmd_base = NULL;
-+	}
-+}
-+
-+static inline void redirect_irde_fini(int node)
-+{
-+	__redirect_irde_fini(&irde_descs[node]);
-+}
-+
-+static int redirect_irde_init(int node)
-+{
-+	struct irde_desc *irde = &irde_descs[node];
-+	int ret;
-+
-+	irde->node = node;
-+
-+	ret = redirect_table_init(irde);
-+	if (ret)
+ }
+ 
+ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, void *val)
+ {
+-	int ret;
++	int ret = 0;
+ 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
+ 
+ 	if (!s) {
+ 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+-		return -EINVAL;
 +		return ret;
-+
-+	ret = redirect_queue_init(irde);
-+	if (ret) {
-+		__redirect_irde_fini(irde);
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
 +		return ret;
-+	}
-+
-+	redirect_irde_cfg(irde);
-+
+ 	}
+ 
+ 	/* statistics of pch pic reading */
+@@ -161,7 +159,7 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+ static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
+ 					int len, const void *val)
+ {
+-	int ret = 0, offset;
++	int offset;
+ 	u64 old, data, mask;
+ 	void *ptemp;
+ 
+@@ -226,29 +224,28 @@ static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t addr,
+ 	case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
+ 		break;
+ 	default:
+-		ret = -EINVAL;
+ 		break;
+ 	}
+ 	spin_unlock(&s->lock);
+ 
+-	return ret;
 +	return 0;
-+}
-+
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header, const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init redirect_acpi_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	int ret = -EINVAL, node;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+						      &redirect_domain_ops, irde_descs);
-+	if (!redirect_domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+
-+	for_each_node_mask(node, node_possible_map) {
-+		ret = redirect_irde_init(node);
-+		if (ret)
-+			goto out_clear_irde;
-+	}
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_clear_irde;
-+	}
-+
-+	pr_info("loongarch irq redirect modules init succeeded\n");
-+	return 0;
-+
-+out_clear_irde:
-+	for_each_node_mask(node, node_possible_map)
-+		redirect_irde_fini(node);
-+
-+	irq_domain_remove(redirect_domain);
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return ret;
-+}
+ }
+ 
+ static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
+ 			struct kvm_io_device *dev,
+ 			gpa_t addr, int len, const void *val)
+ {
+-	int ret;
++	int ret = 0;
+ 	struct loongarch_pch_pic *s = vcpu->kvm->arch.pch_pic;
+ 
+ 	if (!s) {
+ 		kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	if (addr & (len - 1)) {
+ 		kvm_err("%s: pch pic not aligned addr %llx len %d\n", __func__, addr, len);
+-		return -EINVAL;
++		return ret;
+ 	}
+ 
+ 	/* statistics of pch pic writing */
+
+base-commit: 4d310797262f0ddf129e76c2aad2b950adaf1fda
 -- 
-2.41.0
+2.39.3
 
