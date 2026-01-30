@@ -1,95 +1,272 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0482132A3C5
-	for <loongarch@lists.linux.dev>; Fri, 30 Jan 2026 08:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF659238166;
+	Fri, 30 Jan 2026 08:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769763162; cv=none; b=pCrhxmZhQcqD9I2hXOVcDCbwx0S/dSIG7NNmT/K4E87N3q0KT81W9VKGDnOSEYK1SZd6w8FoKAsZG/8KOs0XQWLifdTdvpP5/MFrEcOqp7WRW9FPKEXUsxUX2kTezm+O9y1vYkvQD+ksJlibbkZP8ihDwtZLzbPFx/BTpe7q6hM=
+	t=1769763264; cv=none; b=K3oHOHw3wI0/ucA0OIiSIA5Ee7gzVcaTdaiyqWAz4ahAiiWseez5IFrq5YPYEyzslHPHMUSTfiOMRDuEQAwYVa2kwu84/G7DJ7lLuJ8bzSfXGLkgzygeSpCrAq2aO9d1k+oM3vEFNOf/4cW+RgusPOp85NTjNwa6ilXyEbca4yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769763162; c=relaxed/simple;
-	bh=Ns6qFKSvVn3YlOzeJGPav2vgXald/xUZ51czyM4Kp9w=;
-	h=From:Subject:To:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MYLw3H3p6aiJmD6IjPkx2sCop586XGRUBZTGTio+r0+wCx12MsnnLESHQ/nNrlSHopvfPTnRg+tgXqqiEStexnCnKUQYPR7Jg900kFfR0RfNLy7yHcbqul73n9kwqgoELoGckV1xffGK0JAmdsZ6ueMB9HfqzfltLbUJylamp5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Axy8JUcXxp8TYOAA--.46098S3;
-	Fri, 30 Jan 2026 16:52:37 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowJDxSMFRcXxpKEg6AA--.31620S3;
-	Fri, 30 Jan 2026 16:52:35 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH v9 2/4] irqchip/irq-loongson.h:irq-loongson.h preparation
- for Redirect irqchip
-To: loongarch@lists.linux.dev
+	s=arc-20240116; t=1769763264; c=relaxed/simple;
+	bh=PIzrMghgpnc4Or3bE8tdCYfrgRNiPgPhv0qk0QRKp1s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CDbCkvlXNgGwQxdPnlB1lqpx1oE9WPHZJ6WFlhUwjm+T+7qrHbZ9144YVoKMuM98pUgdggWk9ksavUb2mJ0cEejVEROIm4YCE+ykTU1O63SRaUowOE69hjpxrRJATlNyaRCL7ncCT8gANEKludQuHrnTLqsbeySh3BIWyWtcPoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZ+cavdG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZ+cavdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD99EC4CEF7;
+	Fri, 30 Jan 2026 08:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769763264;
+	bh=PIzrMghgpnc4Or3bE8tdCYfrgRNiPgPhv0qk0QRKp1s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=iZ+cavdG8u5yBN3BypBpx8sSsf5azFs0q8DBy/W5bffwIrWD6V/bKu8VBFAV5xaTt
+	 ZVA3mVpcZDWrWn4YXBhO3LUxmSRHdUV2FaXtSuNVrbq3jk0tLvEsSKH3XJ8zgRVTUw
+	 rwD3JgLJYolgqkhAvdur18tBm8r9jWAu0AKukgY+R4FN62v7WiUC5ZAPUUUJMFMUDv
+	 SDbXQ3uuTapPHMmMustM0vo5Gj+rmquXt8/pg1sV0tAVoa7uEBeTY2xnYrBRt4SbqI
+	 f/4AKc60uyaX71KkbKxR+34Z4KDEVcafQamy7Tw/uZqCWPU1Y1tccBjQ+2Xr8bKTPN
+	 ZOFQ6TjTxZDrA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, maobibo@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>,
+ Liupu Wang <wangliupu@loongson.cn>
+Subject: Re: [PATCH v9 4/4] irqchip/irq-loongarch-ir:Add Redirect irqchip
+ support
+In-Reply-To: <20260130025941.2140582-5-zhangtianyang@loongson.cn>
 References: <20260130025941.2140582-1-zhangtianyang@loongson.cn>
- <20260130025941.2140582-3-zhangtianyang@loongson.cn> <875x8jmsa8.ffs@tglx>
-Message-ID: <1eb32de8-e1ba-c7fe-b6ab-92b8f6c4e65b@loongson.cn>
-Date: Fri, 30 Jan 2026 16:50:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <20260130025941.2140582-5-zhangtianyang@loongson.cn>
+Date: Fri, 30 Jan 2026 09:54:20 +0100
+Message-ID: <87zf5vlbur.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <875x8jmsa8.ffs@tglx>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxSMFRcXxpKEg6AA--.31620S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZFW5WF1xCF4ftw4xJrWDAwc_yoWDWFXEgF
-	yFvr1xGF1DGFZ7X343GwsxZFWfGry5GFyqyrW5ZF12qas5JFs5Cr1qq3s2qrWrXayIqFna
-	grs5Xws5A34a9osvyTuYvTs0mTUanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbg8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-	Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUJVWUXwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4U
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU1RpBD
-	UUUUU==
+Content-Type: text/plain
 
-Hi, Thomas
+On Fri, Jan 30 2026 at 10:59, Tianyang Zhang wrote:
+> +// SPDX-License-Identifier: GPL-2.0
 
-ÔÚ 2026/1/30 ÏÂÎç4:14, Thomas Gleixner Ð´µÀ:
-> On Fri, Jan 30 2026 at 10:59, Tianyang Zhang wrote:
->
-> The subject line is broken and incomprehensible. Something like:
->
->      irqchip/irq-loonarch-avec: Prepare for interrupt redirection support
->
-> is concise and gives context.
->
->> Adjusted definitions and macro from loongson-avec.c to irq-loongson.h,
->> including:
->> 1 marco AVEC_MSG_OFFSET
->> 2 struct avecintc_data
->> 3 Make avecintc_sync public
-> That's not a change log because it only tells _what_ the patch is doing,
-> but not _why_. Enumerating the details of what is moved is a pointless
-> exercise because that can bee seen from the diff itself.
->
-> So you want something like:
->
->    Interrupt redirection support requires a new interrupt chip, which
->    needs to share data structures, constants and functions with the AVEC
->    code.
->
->    Move them to the header file and make the required functions public.
->
-> See?
+GPL-2.0-only please
 
-OK I got it,I will rewrite and explain these reasons.
+> +/*
+> + * Copyright (C) 2020 Loongson Technologies, Inc.
 
-Thanks
+This was written 6 years ago already?
 
+> + */
+> +
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/irq-msi-lib.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/msi.h>
+
+Includes should be alphabetically ordered.
+
+> +#define REDIRECT_REG(reg, node) \
+> +	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
+> +
+> +static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
+> +{
+> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
+> +
+> +	return writeq(val, reg_addr);
+
+Bogus return and you can simplify this to
+
+      writeq(val, REDIRECT_REG(reg, node));
+
+No?
+
+> +}
+> +
+> +static inline void redirect_write_reg32(u32 node, u32 val, u32 reg)
+> +{
+> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
+> +
+> +	return writel(val, reg_addr);
+
+Ditto
+
+> +}
+> +
+> +static inline u32 redirect_read_reg32(u32 node, u32 reg)
+> +{
+> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
+> +
+> +	return readl(reg_addr);
+
+Condense to single line as well
+
+> +static void irde_invalid_entry(struct redirect_item *item)
+
+This should be named irde_invalidate_entry() as that's what the function
+is about. irq_invalid_entry() reads more like a function which check for
+an invalid entry.
+
+> +{
+> +	struct irde_inv_cmd cmd;
+> +	u64 raddr = 0;
+> +
+> +	cmd.cmd_info = 0;
+> +	cmd.index.type = INVALID_INDEX;
+> +	cmd.index.need_notice = 1;
+> +	cmd.index.index = item->index;
+> +	cmd.notice_addr = (u64)(__pa(&raddr));
+> +
+> +	invalid_enqueue(item, &cmd);
+> +
+> +	/*
+> +	 * CPU needs to wait here for cmd to complete, and it determines this
+
+The CPU 
+
+> +	 * by checking whether invalid queue has already written a valid value
+
+whether the invalidation queue
+
+> +	 * to cmd.notice_addr.
+> +	 */
+
+> +static int redirect_table_alloc(int node, u32 nr_irqs)
+> +{
+> +	struct redirect_table *ird_table = &irde_descs[node].ird_table;
+> +	unsigned int index, order;
+> +
+> +	if (nr_irqs > 1) {
+> +		nr_irqs = __roundup_pow_of_two(nr_irqs);
+> +		order = ilog2(nr_irqs);
+> +	}
+> +
+> +	guard(raw_spinlock_irqsave)(&ird_table->lock);
+> +
+> +	index = bitmap_find_free_region(ird_table->bitmap,
+> +					IRD_ENTRIES, order);
+
+Get rid of this pointless line break. You have 100 characters and the
+above even fits into 80 
+
+> +	if (index < 0) {
+> +		pr_err("No redirect entry to use\n");
+> +		return -ENOMEM;
+> +	}
+
+> +static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> +				 unsigned int nr_irqs, void *arg)
+> +{
+> +	msi_alloc_info_t *info = arg;
+> +	int ret, i, node, index;
+> +
+> +	node = dev_to_node(info->desc->dev);
+> +
+> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	index = redirect_table_alloc(node, nr_irqs);
+> +	if (index < 0) {
+> +		pr_err("Alloc redirect table entry failed\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
+> +		struct redirect_item *item;
+> +
+> +		item = kzalloc(sizeof(*item), GFP_KERNEL);
+> +		if (!item) {
+> +			pr_err("Alloc redirect descriptor failed\n");
+> +			goto out_free_resources;
+> +		}
+> +		item->irde = &irde_descs[node];
+> +
+> +		/*
+> +		 * Only bits 47:6 of the GPID are passed to the controller,
+> +		 * 64-byte alignment must be guarantee and make kzalloc can
+> +		 * align to the respective size.
+
+-ENOPARSE
+
+> +		 */
+
+> +static const struct irq_domain_ops redirect_domain_ops = {
+> +	.alloc		= redirect_domain_alloc,
+> +	.free		= redirect_domain_free,
+> +	.select		= msi_lib_irq_domain_select,
+> +};
+
+> +static void __redirect_irde_fini(struct irde_desc *irde)
+
+This schoolbook _fini() naming is just lame and nondescriptive. Please
+use descriptive function names which make it clear what this is about,
+e.g. redirect_free_irde() or something like that.
+
+Also this should be __init, no?
+
+> +{
+> +	struct redirect_table *ird_table = &irde_descs->ird_table;
+> +	struct redirect_queue *inv_queue = &irde_descs->inv_queue;
+
+> +static inline void redirect_irde_fini(int node)
+> +{
+> +	__redirect_irde_fini(&irde_descs[node]);
+
+This indirection is really pointless. Just move the '&irde_descs[node]' to
+the only caller.
+
+> +int __init redirect_acpi_init(struct irq_domain *parent)
+> +{
+> +	struct fwnode_handle *fwnode;
+> +	int ret = -EINVAL, node;
+> +
+> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+> +	if (!fwnode) {
+> +		pr_err("Unable to alloc redirect domain handle\n");
+> +		goto fail;
+> +	}
+> +
+> +	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+> +						      &redirect_domain_ops, irde_descs);
+> +	if (!redirect_domain) {
+> +		pr_err("Unable to alloc redirect domain\n");
+> +		goto out_free_fwnode;
+> +	}
+> +
+> +
+
+stray newline
+
+> +	for_each_node_mask(node, node_possible_map) {
+> +		ret = redirect_irde_init(node);
+> +		if (ret)
+> +			goto out_clear_irde;
+> +	}
+> +
+> +	ret = acpi_cascade_irqdomain_init();
+> +	if (ret < 0) {
+> +		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
+> +		goto out_clear_irde;
+> +	}
+> +
+> +	pr_info("loongarch irq redirect modules init succeeded\n");
+
+You really want to have:
+
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
+at the top of the file, so that all printk()s in this file are properly
+prefixed.
+
+Thanks,
+
+        tglx
