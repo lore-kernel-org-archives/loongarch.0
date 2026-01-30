@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D169B34FF4F;
-	Fri, 30 Jan 2026 08:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A104C353ECE;
+	Fri, 30 Jan 2026 08:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769760851; cv=none; b=dsX6rKmvSBTL4NE2LKBQWlOpuqap9J2e81Ntaw8q5HuHbb6Obdd4jvmCee/zu+v0jqm8hLBASvLpc+M7Sm8Ddq/VjinmAWWszY8TP+t8HZf+BvvonnHbqLblE9ocubW+gkFNT5OoDAWTy92r5vk6g4Kv+dk3grkOUZ0aAPHq6l8=
+	t=1769761235; cv=none; b=tNd4LEtHtMglGepqfAoAj5XnFnQ9KexdYxOEKXnGKMcJ7f2K11aAPMXAEtSx0FbLoKBB84Zs415zkuPmlZvrdz5AT/1it3YJ8CSWdzZUvpAY/IrgyWlWze6l/rrKIULGO1PWj5bYfYcK6P3ff7Y66Ub43oWm0wEgMrV7ltbOe78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769760851; c=relaxed/simple;
-	bh=T/xTnGyF/enhfuoxS2sv+kprrbFBjOX4J2fjW88C3U0=;
+	s=arc-20240116; t=1769761235; c=relaxed/simple;
+	bh=G/ZOZMAe/12yPcUH9ozNnrWhB5fKbuqSYi+7AFxK804=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=a+6qvEWnCyTUh2amqATMePE8MbMPEFeQxWncbJ8mJn0YpT6Oxg1IAqW1UVYAtTTLEWvCtWYgqIU8SVgjOCmlfG96RwmHP+azl3ZCPJg936qib85ePGscOf0hKJY3uwl+pWIbSopN8maVmApuaF4cZw1wq+33d6qhNieL6KqVPZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HT7JjCUc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=eyKd4+ep6pUlSdcjaKRmvOsMTHO7xxhbEm1jvshSS1zh+wR8uvrrjr9CDKC6KSIk0fSAU6L9Dej4ilQsUK+XKOXLKtZ7v2cjDJpptATJBs3m0ZqL1PrNmFH39djiWAii1KH/+uq1AnpwLAVxkFmgNUcg8BNbZH2qkCehAVcdfM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYpJPDhk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HT7JjCUc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E70C4CEF7;
-	Fri, 30 Jan 2026 08:14:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYpJPDhk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF26C116D0;
+	Fri, 30 Jan 2026 08:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769760851;
-	bh=T/xTnGyF/enhfuoxS2sv+kprrbFBjOX4J2fjW88C3U0=;
+	s=k20201202; t=1769761235;
+	bh=G/ZOZMAe/12yPcUH9ozNnrWhB5fKbuqSYi+7AFxK804=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HT7JjCUcu5J2DvsQr2lzz6QPIY2ZwnZPR2rvauDa+2EcqzyzRJStEfI1NM6/JBY03
-	 FVaAY5EE1zNpJunTknA/4Rs+wOxG2LANxrcIymPgbDwYxQpfc8IRbq3GPbdK4THMeh
-	 ZbdiJ+a9l1UQMGRz6FjwZNjOHqPD8b1OUhYnHLT0+UJquHUGGatMKXWp6jMKUSXxir
-	 Np3iB46FYzrzzQ2scweU3R9cvlNyU7gG/x5F8l5HIrZG84AFEzxgda9KgN7vDyvzaC
-	 bPpdMSlys/s5TKKe3fz1bp2mvedWLnsbwWEYqYQSAr104g5y5+CYxXBZarS4hzJLIU
-	 QS9KGkZAohT4g==
+	b=QYpJPDhkaMmOD71MNUHDKPpY6dOBWotypmYNrLAndtGBr/69hr9if2m4NdINW9hwk
+	 3U5Jw+P3DFInLwNxBK/ABZbheDrsduBJ4VuoWquaivAcnT5fa5dBKSIIiN64gKuSNW
+	 woc4W0kCVuOUoMI+DtzCiVNuTAiEtSznzN6Es7zdPh7bc5tEDaim0jI5PcA5ZuQeLV
+	 sLSl5OAhuPT499pMnc7vJUIpLwIqCJp9Zz2/ePpsfFOB4MWCv3ARRBprtlFFYQxA3a
+	 OwheKBhl2GG6f34JYxXG6gcv8Mqw3HVGWSjHSG/wLMoD/yokvB2bf1PkAqmbEATcx/
+	 r8Rzlh+WtDGfA==
 From: Thomas Gleixner <tglx@kernel.org>
 To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
  kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
  jiaxun.yang@flygoat.com, maobibo@loongson.cn
 Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: Re: [PATCH v9 2/4] irqchip/irq-loongson.h:irq-loongson.h
- preparation for Redirect irqchip
-In-Reply-To: <20260130025941.2140582-3-zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v9 3/4] irqchip/loongarch-avec.c:return
+ IRQ_SET_MASK_OK_DONE when keep affinity
+In-Reply-To: <20260130025941.2140582-4-zhangtianyang@loongson.cn>
 References: <20260130025941.2140582-1-zhangtianyang@loongson.cn>
- <20260130025941.2140582-3-zhangtianyang@loongson.cn>
-Date: Fri, 30 Jan 2026 09:14:07 +0100
-Message-ID: <875x8jmsa8.ffs@tglx>
+ <20260130025941.2140582-4-zhangtianyang@loongson.cn>
+Date: Fri, 30 Jan 2026 09:20:31 +0100
+Message-ID: <87343nmrzk.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,29 +49,43 @@ Content-Type: text/plain
 
 On Fri, Jan 30 2026 at 10:59, Tianyang Zhang wrote:
 
-The subject line is broken and incomprehensible. Something like:
+  irqchip/irq-loonarch-avec: Return IRQ_SET_MASK_OK_DONE when affinity is unchanged
 
-    irqchip/irq-loonarch-avec: Prepare for interrupt redirection support
+Note the space between 'prefix: ' and the shortlog sentence
 
-is concise and gives context.
+> When it is detected in avecintc_set_affinity that the current affinity
 
-> Adjusted definitions and macro from loongson-avec.c to irq-loongson.h,
-> including:
-> 1 marco AVEC_MSG_OFFSET
-> 2 struct avecintc_data
-> 3 Make avecintc_sync public
+Functions are denoted with fname() to make it clear. See
 
-That's not a change log because it only tells _what_ the patch is doing,
-but not _why_. Enumerating the details of what is moved is a pointless
-exercise because that can bee seen from the diff itself.
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-submission-notes
 
-So you want something like:
+> remains valid, the return value is modified to IRQ_SET_MASK_OK_DONE.
 
-  Interrupt redirection support requires a new interrupt chip, which
-  needs to share data structures, constants and functions with the AVEC
-  code.
+That's the very wrong order of explaining the change. You again explain
+the _what_ first without giving context and reason.
 
-  Move them to the header file and make the required functions public.
+See the above link. It provides guidance about structuring a change log.
 
-See?
+> After the introduction of redirect-domain, for each interrupt source,
+> avecintc-domain only provides the CPU/interrupt vector, while redirect-domain
+> provides other operations to synchronize interrupt affinity information
+> among multiple cores. The original intention is to notify the cascaded
+> redirect_set_affinity that multi-core synchronization is not required.
 
+"After the introduction.." is confusing at best.
+
+> However, this introduces some compatibility issues, such as the new return
+> value causing msi_domain_set_affinity to no longer perform irq_chip_write_msi_msg.
+>   1) When redirect exist in the system, the msi msg_address and msg_data no
+> longer changes after the allocation phase, so it does not actually require updating
+> the MSI message info.
+>   2) When only avecintc exists in the system, the irq_domain_activate_irq
+> interface will be responsible for the initial configuration of the MSI message,
+> which is unconditional. After that, if unnecessary, no modification to the MSI
+> message is alse correctly.
+
+Spell checkers exist for a reason.
+
+Thanks
+
+        tglx
