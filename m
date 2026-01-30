@@ -1,118 +1,136 @@
-Received: from flow-b4-smtp.messagingengine.com (flow-b4-smtp.messagingengine.com [202.12.124.139])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E8F342CBB
-	for <loongarch@lists.linux.dev>; Fri, 30 Jan 2026 16:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72642561AB;
+	Fri, 30 Jan 2026 16:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769789566; cv=none; b=e3ANJAkntd0ojS7OvlfiRKaJYS9DaoVMG+qkOBLg+jcBO8rY9zW82IZvH6VTAxfsW1QKEaQ9DmmM664FASqyBvuysinw2DLlRJLoihYjenpq6D44KcE7l8nwyF6fPr3FWSxybGN0mgsQP2dHsF0W6gFqqBRMDBeMDr8rmhtomwE=
+	t=1769789802; cv=none; b=ZKsSi+UrjLhx/WUxE2l4yjCxnQlkXAO47FM4Cgneh7RANN9TRP/qlhA7cImim72Fs6x/8wZYgJgAAZ2Nb90pKcWmT9VGy24kLBL5+M3QverotKTvb2viNmUEdK0CFtLLnyzIKL1g6AoLuU+b/PhnT0lKFM1ZFetC9h6XMiFFDEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769789566; c=relaxed/simple;
-	bh=t1VaZcai64anTnxkmyyYyO32XtCUa02OUBLobw5ShzU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=NM03TvM78SoawuihzdotZEuoW5B0SsJHPb+rAk3bRIHipxsmUADLoPQW5M5Pm7oHsS4dTrrbEqaK2JLIZ8b/Rzo1W6RZ/lPKhQ8T22eMX5wUatAW32tmdLSMaL70JuxpGQSSV7qRZWQW4Yq7GVXnSbIwBq/vfdj7xHTprXV90T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Fd4Q2puz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eP7OX5/4; arc=none smtp.client-ip=202.12.124.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1769789802; c=relaxed/simple;
+	bh=AlNS0o8O55cP7ZrafFrQalBO7KdanY5615Qax8Ig75c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m6ex15sPO+GSPmfsOejU3l5ceMQcWcuSp3sDyXQPfmY8/alb4hBiaynhAT/Srt6R3xFTjYVjEL5ys4JnkvQ4dZSuZk//12n4rhsCjrzlIS0cXR+fM7oXAbB7/in2sw1g0OWEWMFkLNId8/145Ark4Y6YhF02i5uh5v9WOX2uzUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOS7PmZZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Fd4Q2puz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eP7OX5/4"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.stl.internal (Postfix) with ESMTP id D2B25130039A;
-	Fri, 30 Jan 2026 11:12:42 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Fri, 30 Jan 2026 11:12:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1769789562;
-	 x=1769796762; bh=NgaaW04BVeRCEXIicPLRKqDnPy40XNDnRvPy76NkRPI=; b=
-	Fd4Q2puzPhcnh4xIfcafphjjQImSdLOjE6gY98a3Pn3jrALgvMF9xXzMjN16058f
-	wTvOXis8oP1dHGqXb9KquYM46SCnL0+Zc8LcKuBM/tHo5BN7WqExItgaWb4wmboZ
-	J7p6KQ+X8EuHbkHM8dTfyI5SrJoHQn1rzESpaXs/LBQO+yFwmJMJJd145+/ub4Nk
-	+plCE+eOzs1A/UX8dQ0kLcx1qLZ6RnKVapG5JNXeoUyVS72xG8OqK3r4CJ5pgUrr
-	LU4hr5YvP1bBPvCEbLu9WSUHmx5zg+lKW2u2GoxJYr4ezH9y6WBdkKMOEOsoKf5c
-	YGCnCByKvySWbe9yy8SC7g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1769789562; x=
-	1769796762; bh=NgaaW04BVeRCEXIicPLRKqDnPy40XNDnRvPy76NkRPI=; b=e
-	P7OX5/4KRUP4j6VzSd82Fy+/0i/kHebC9lF7pG8IKD1r5N9qfg7IbDGfr6BBgV6b
-	6hur/VbJBq/YjoHaoZFgFJXzbMQB8jSJOZFD5qYZn0tZr33MP7kKy4v2fXSV/s2F
-	C9+qK027PNN4179a2ufo6R7yzM5kwxjVItffNymp2+KMHsf5cLIoW354h+cfIwuw
-	+T+zh7bYvUwS6Ov95/LGJH6auyevvOLgUwK38mqKv0LR84/10UJTbuRMZG/c0R1p
-	NeT7pI6RTUYnak9WLOT3PA8QkbC8tdwi0P1mVNow9B/NLshMst/+zxg2hE347GaC
-	0bbPNMJFUaUO303S36egQ==
-X-ME-Sender: <xms:d9h8aTTvXkBgmTH8dvLwUAGnZNpedogQ5CrO9dzRqVkpxLYXcY798w>
-    <xme:d9h8aflk0ypf6S1j1NdfnZWIp4TNaq_lCzC671G1duHpDwbLQBvQw7182_ZI4XgLO
-    QTErjSzy89X5t2uTq6eb4BVyVQMMi5XRZcgftksnC1ToFifZmvKimo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduieelgeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepvddupdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopehtshgsohhgvg
-    hnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepjhhirgiguhhnrdih
-    rghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrg
-    guvggrugdrohhrghdprhgtphhtthhopehvuhhlrggssehishgtrghsrdgrtgdrtghnpdhr
-    tghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    gurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:d9h8aYAYtQsrR8F5YcwPqS5d9I428xKFWEuayc5uW3FIUtNgaN9q8A>
-    <xmx:d9h8aXvFVlwmyqzTSuN7fyVRMtkdRWvV3Kff_rc-fR-AZmfo3paZBQ>
-    <xmx:d9h8aQEQevXu1FCHOgTTMKuc7s7QdpOQekFSl0j_lhzr9W3Jahe_Ag>
-    <xmx:d9h8aa-9DuTZysIM5xg6VfVsjeJw34yBGirSZEm6Ehp1ud5mNMKA-Q>
-    <xmx:eth8aU29_Njm0ZqFr9Ttu3N0veXitG_Ue8Oxkt1V6q77s8hZ3E4SrRVe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BE6A9700065; Fri, 30 Jan 2026 11:12:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOS7PmZZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D006C4CEF7;
+	Fri, 30 Jan 2026 16:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769789802;
+	bh=AlNS0o8O55cP7ZrafFrQalBO7KdanY5615Qax8Ig75c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hOS7PmZZrFc5HSN1dVXhZyg9M/cciPSolaQqfWhYDg7HfF1XDoB1HNjJxeiK86UnM
+	 t0paeaoxtYjhwYcMLP8ehpw722gawXSmnt1Ff80sY7yEF5L7T7o1KVKgfa1P6xx/Uk
+	 S7DHHq636jQuWcXVs9rBcbEQ2QAQvrKFpcJM6bhZnxkVAsJwslEvfWUX4cXWiSjnms
+	 hkZcBfTLn6d4cw+9OyK7Jpzkky0ySo8aVXdV/3Vs41kEzOIubFCXlw7rvKNAruk9J0
+	 NRQPKWhrHubAf3UrGWI3BkY7UvozmV6Ss4pPyWqiFlF2wY0RZojtLxb1ipESYS24SU
+	 AnDTT8wKSbTgQ==
+Message-ID: <993fb876-7958-4f1d-ba69-2601976a42d7@kernel.org>
+Date: Fri, 30 Jan 2026 17:16:32 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: A3aFyCCYhEv3
-Date: Fri, 30 Jan 2026 17:12:19 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "John Garry" <john.g.garry@oracle.com>
-Cc: loongarch@lists.linux.dev, "Peter Zijlstra" <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, vulab@iscas.ac.cn,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, x86@kernel.org,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Andy Lutomirski" <luto@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Borislav Petkov" <bp@alien8.de>, "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "WANG Xuerui" <kernel@xen0n.name>, "Huacai Chen" <chenhuacai@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Message-Id: <491f601c-00db-410b-ab7e-a411d4be71ba@app.fastmail.com>
-In-Reply-To: <1171c2c1-1d9e-49ad-8d94-ede3c68c9f9c@oracle.com>
-References: <20260107094007.966496-1-john.g.garry@oracle.com>
- <20260107094007.966496-2-john.g.garry@oracle.com>
- <1171c2c1-1d9e-49ad-8d94-ede3c68c9f9c@oracle.com>
-Subject: Re: [PATCH v2 1/4] include/asm-generic/topology.h: Remove unused definition of
- cpumask_of_node()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] prandom: Add __always_inline version of
+ prandom_u32_state()
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20260119130122.1283821-3-ryan.roberts@arm.com> <aXpArjZ1QQowshnA@zx2c4.com>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <aXpArjZ1QQowshnA@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 30, 2026, at 13:24, John Garry wrote:
-> On 07/01/2026 09:40, John Garry wrote:
->> The definition of cpumask_of_node() in question is guarded by conflicting
->> CONFIG_NUMA and !CONFIG_NUMA checks, so remove it.
->
-> Arnd, can you consider picking this up please?
 
-Merged now, sorry missing this earlier.
 
-     Arnd
+Le 28/01/2026 à 18:00, Jason A. Donenfeld a écrit :
+> On Mon, Jan 19, 2026 at 01:01:09PM +0000, Ryan Roberts wrote:
+>> We will shortly use prandom_u32_state() to implement kstack offset
+>> randomization and some arches need to call it from non-instrumentable
+>> context. So let's implement prandom_u32_state() as an out-of-line
+>> wrapper around a new __always_inline prandom_u32_state_inline(). kstack
+>> offset randomization will use this new version.
+>>
+>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>   include/linux/prandom.h | 20 ++++++++++++++++++++
+>>   lib/random32.c          |  8 +-------
+>>   2 files changed, 21 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
+>> index ff7dcc3fa105..801188680a29 100644
+>> --- a/include/linux/prandom.h
+>> +++ b/include/linux/prandom.h
+>> @@ -17,6 +17,26 @@ struct rnd_state {
+>>   	__u32 s1, s2, s3, s4;
+>>   };
+>>   
+>> +/**
+>> + * prandom_u32_state_inline - seeded pseudo-random number generator.
+>> + * @state: pointer to state structure holding seeded state.
+>> + *
+>> + * This is used for pseudo-randomness with no outside seeding.
+>> + * For more random results, use get_random_u32().
+>> + * For use only where the out-of-line version, prandom_u32_state(), cannot be
+>> + * used (e.g. noinstr code).
+>> + */
+>> +static __always_inline u32 prandom_u32_state_inline(struct rnd_state *state)
+> 
+> This is pretty bikesheddy and I'm not really entirely convinced that my
+> intuition is correct here, but I thought I should at least ask. Do you
+> think this would be better called __prandom_u32_state(), where the "__"
+> is kind of a, "don't use this directly unless you know what you're doing
+> because it's sort of internal"? It seems like either we make this inline
+> for everybody, or if there's a good reason for having most users use the
+> non-inline version, then we should be careful that new users don't use
+> the inline version. I was thinking the __ would help with that.
+
+I looked into kernel sources and there are several functions named 
+something_something_else_inline() and it doesn't mean those functions 
+get inlined, so I would also prefer __prandom_u32_state() which means 
+"If you use it you know what you are doing", just like __get_user() for 
+instance.
+
+However maybe we could also reconsider making it inline for everyone. We 
+have spotted half a dozen of places where the code size increases a lot 
+when forcing it inline, but those places deserve a local trampoline to 
+avoid code duplication, and then the compiler decides to inline or not.
+
+Because there are also several places that benefit from the inlining 
+because it allows GCC to simplify the calculation, for instance when 
+some calculation is performed with the result like with 
+(prandom_u32_state(rng) % ceil) where ceil is 2 or 4.
+
+That can of course be done as a followup patch but it means at the end 
+we will have to rename all __prandom_u32_state() to prandom_u32_state().
+
+Or should we do the other way round ? Make __prandom_u32_state() the 
+out-of-line version and just change the few places where the size 
+explodes like drm_test_buddy_alloc_range_bias(), loss_gilb_ell(), 
+generate_random_testvec_config(), generate_random_sgl_divisions(), 
+mutate_buffer(), ... ?
+
+Christophe
