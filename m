@@ -1,110 +1,517 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792C2DEA95
-	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3061E5B70
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 13:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769849440; cv=none; b=plGmoeZ+WMCpmk05SQRvZNi9PXz2eTXe64bNLWdJQsg1F4+N72BXcTsdwXFrCrL1CzOQgMZohip6chFpa//qZr6SuKr1avb1t27PC4xsaac9zrKCI9eIJmy7KROCqU0IGMDwoSR7/oH+pM0Im7eENa8XSuP5iuT4CyHFFYqNCiw=
+	t=1769867007; cv=none; b=JsTywGqm1pujcANXJl+nN4g42BEd+lVtCCygWhpa04qJ0NA6k6GM4SQieVLF/I/pYpLnxsM/YGukyvtDospSU4Rks4YurCfIn6px0x+BjZdUtvSRIAnfbNIprVugFzrIOLmmaKUs4TFmbG43l6HUCBiLHpUzdHVxOx+kxHHRwSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769849440; c=relaxed/simple;
-	bh=vySMPrpBYcsqqqwyb0Y73rGsGAGij0QBUJZITGVwK9Q=;
+	s=arc-20240116; t=1769867007; c=relaxed/simple;
+	bh=0FQXyzSpmEXk104G6tz4sOpj2YHkOPl5HXkDNBBbL3o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yctm4ySUGo04e3o9ma0DchfICfJzhhhBy7jD48WpljKOXeFoaSeitTJWGVLxi4gnJnpDOd5rot9O6Ok1u9WSuMPkgCWh6iYIiet5BxWD95Ac9uzCSF2yaOCF6zSiKwMhgAs623PXqRd8w0UkHUwXjLRkPX9nP5QI9H3VUlBkAHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esJUYmz9; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=X32VKCZwwT3WerluJ6yVxcagqcNZYTiGiIZjgMSMabGQZBH1W1yOeI146w/oF9aOUsZqDL9KtQeGwv4YWt9GswzdnoDUVUCpIWoB/IIJWBZVN3X9J2kdB2yCC29xJkufTrRDij65TWx8uB0ImuUjV9uQIT6wwHRVjprqV+JlPHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXWQxLhg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esJUYmz9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA23CC4AF0D
-	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:50:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXWQxLhg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72FDC19422
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 13:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769849439;
-	bh=vySMPrpBYcsqqqwyb0Y73rGsGAGij0QBUJZITGVwK9Q=;
+	s=k20201202; t=1769867007;
+	bh=0FQXyzSpmEXk104G6tz4sOpj2YHkOPl5HXkDNBBbL3o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=esJUYmz9Q5O44tgApY1/1BxRYv7xVun0m3XRvWhWJLpOl3BEn15dcJSJEDM3/pPze
-	 0AzJ9IjsFkQknp/imMoryUnu0exO0nOCp7ZjSxe7vdO4s5NTqkKCgdN9ND/upEWXym
-	 70SITA0utNz9CdYgbmr23k1IxEoenwmQ8sPgzkI2xuxqdCxv+qgtrLMIyugE/SrSNg
-	 6Hq8r3uJuM+RoTLj3jZCLg6lMNZPbTBEDKAirPx7Jd4y+0JGbkMmhpXbRakshBUf0R
-	 jV/Hj95aVQyZK46soCTy4gz/9hcBgMXp4qCQvFtkP4UrdhIpZoXKSBhxuozftjO11c
-	 jq5p50+0G4Ibw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-65814266b08so5718027a12.3
-        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 00:50:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXxJJGS8eBOZZ/7MvibubkdPE44tzY5neQaGiVXFz5HNDmgAiPoTLa4omF9Fwc4FNZafn9p/VMZckU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxhblreDMfrdiIhFw89o8J/mKH4SHf4YTVtza7Jj0M0UEeHhGEE
-	cAwUai0tEAJvR+RrpLLUtK4BOJJ50+pBQJmHrzQoX8yhkv5s8fN5DB46QzVqGLDjHFDwvnBdMJL
-	zDoCl6OISw7yq/UvwCUBZkOW+jidgUg8=
-X-Received: by 2002:a17:906:7946:b0:b84:2fe8:b5d8 with SMTP id
- a640c23a62f3a-b8dff5cbdb3mr333334566b.14.1769849438443; Sat, 31 Jan 2026
- 00:50:38 -0800 (PST)
+	b=iXWQxLhguGFzOYzTfyLnmTEFEPimh48evxD7F4FAJVZlxG4lnNStrgJc0kU9BQtwu
+	 tp3qSWKQuppYfcuYN6gi54ig9IY+YNTO61GbGNmkGCly4qLWHgwwwQxqHm8skB+NAt
+	 mrWby3uf75f+aBjez0ZtsUXbmI/B4+7h/dV9fkFB6wo+jmiZDJtaDDla/FQ15n5nfv
+	 hbSbNg34dI308vjcSoJIZ98YyQUePSJEoOVKvomaX8UwutslseRkD5qvgz9UUeEzq7
+	 O+Vk8N0SXHE1tjslk17GzL0y5lMqtsHG4RSZGLwVBX6VTmdWK4qnmX6gAQ6ClC+coK
+	 OL2aDvXVdEYmw==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b885e8c679bso474894466b.1
+        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 05:43:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXJ5HymdnBeYlqhu6CQCCxTqBLkzI2+7SWxseiyXR5kV3glEh/jWMSdmqvGc20T+vHvjUar54lyEMU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy0yv/jIH5cju7pTTt7UhqlPML1ded5hHG4/z7V2/YssaIWfi1D
+	sbLENdNUOFNIeGgGaGEQ0GMoE97tPh/DAGTcznxNxB9pqoac5898GH5ZB84m9WRZxXB3nP1v6GI
+	JGKA6uNUpNRxl/wEenyQB7gaMNzBjxLY=
+X-Received: by 2002:a17:907:3ea6:b0:b87:6f7c:6094 with SMTP id
+ a640c23a62f3a-b8dff7a300bmr372696466b.41.1769867005353; Sat, 31 Jan 2026
+ 05:43:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260107094007.966496-1-john.g.garry@oracle.com>
- <20260107094007.966496-3-john.g.garry@oracle.com> <CAAhV-H6qAtsBF3jwxbYGEUytZXH2ZRPfzPtUZRBnXOiZ_K5bYg@mail.gmail.com>
- <59101a15-fa63-4948-9169-3db6596bf618@oracle.com>
-In-Reply-To: <59101a15-fa63-4948-9169-3db6596bf618@oracle.com>
+References: <20260130031705.3929925-1-maobibo@loongson.cn>
+In-Reply-To: <20260130031705.3929925-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 31 Jan 2026 16:50:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Y-FzdhaNNPUa+P0Enk5hvPxJYAduQGvRUXwDuBaR+HA@mail.gmail.com>
-X-Gm-Features: AZwV_Qiwi5AAaKPHw38sH3q4aPAGkPNUvDXGj5Ir4MfEEmod4jV1jrLep1qAkhY
-Message-ID: <CAAhV-H5Y-FzdhaNNPUa+P0Enk5hvPxJYAduQGvRUXwDuBaR+HA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] LoongArch: Make cpumask_of_node() robust against NUMA_NO_NODE
-To: John Garry <john.g.garry@oracle.com>
-Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org, 
-	peterz@infradead.org, arnd@arndb.de, x86@kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-arch@vger.kernel.org, vulab@iscas.ac.cn, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
+Date: Sat, 31 Jan 2026 21:43:04 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7=exv1ZNqzus4R7CTQHqJRbJf48fwmT0x-JMQxC4DKew@mail.gmail.com>
+X-Gm-Features: AZwV_QjFginuVxdgzkp-X46Mq8FlLM15K0rNweUjawnwusYvkqgOw8mEA1VWC1c
+Message-ID: <CAAhV-H7=exv1ZNqzus4R7CTQHqJRbJf48fwmT0x-JMQxC4DKew@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: KVM: Set default return value in kvm IO bus ops
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 30, 2026 at 8:21=E2=80=AFPM John Garry <john.g.garry@oracle.com=
-> wrote:
->
-> On 25/01/2026 03:55, Huacai Chen wrote:
-> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
->
-> Thanks
->
-> So can a loongarch maintainer pick this up please?
-OK, applied.
+Applied, thanks.
+
+But since this patch is applied together with others, you may need to
+check whether everything works as expected.
+
 
 Huacai
 
+On Fri, Jan 30, 2026 at 11:17=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
 >
-> >
-> > On Wed, Jan 7, 2026 at 5:48=E2=80=AFPM John Garry <john.g.garry@oracle.=
-com> wrote:
-> >>
-> >> The arch definition of cpumask_of_node() cannot handle NUMA_NO_NODE - =
-which
-> >> is a valid index - so add a check for this.
-> >>
-> >> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> >> ---
-> >>   arch/loongarch/include/asm/topology.h | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/in=
-clude/asm/topology.h
-> >> index f06e7ff25bb7c..6b79d6183085a 100644
-> >> --- a/arch/loongarch/include/asm/topology.h
-> >> +++ b/arch/loongarch/include/asm/topology.h
-> >> @@ -12,7 +12,7 @@
-> >>
-> >>   extern cpumask_t cpus_on_node[];
-> >>
-> >> -#define cpumask_of_node(node)  (&cpus_on_node[node])
-> >> +#define cpumask_of_node(node)  ((node) =3D=3D NUMA_NO_NODE ? cpu_all_=
-mask : &cpus_on_node[node])
-> >>
-> >>   struct pci_bus;
-> >>   extern int pcibus_to_node(struct pci_bus *);
-> >> --
-> >> 2.43.5
-> >>
+> When irqchip in kernel is enabled, its register area is registered
+> in the IO bus list with API kvm_io_bus_register_dev(). In MMIO/IOCSR
+> register access emulation, kvm_io_bus_write/kvm_io_bus_read is called
+> firstly. If it returns 0, it shows that in kernel irqchip handles
+> the emulation already, else it returns to VMM and lets VMM emulate
+> the register access.
+>
+> Once irqchip in kernel is enabled, it should return 0 if the address
+> is within range of the registered IO bus. It should not return to VMM
+> since VMM does not know how to handle it, and irqchip is handled in
+> kernel already.
+>
+> Here set default return value with 0 in KVM IO bus operations.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>   1. Set return value with 0 in function mail_send() and send_ipi_data()
+> ---
+>  arch/loongarch/kvm/intc/eiointc.c | 43 ++++++++++++-------------------
+>  arch/loongarch/kvm/intc/ipi.c     | 24 ++++++++---------
+>  arch/loongarch/kvm/intc/pch_pic.c | 31 ++++++++++------------
+>  3 files changed, 42 insertions(+), 56 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index dfaf6ccfdd8b..e498a3f1e136 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -119,7 +119,7 @@ void eiointc_set_irq(struct loongarch_eiointc *s, int=
+ irq, int level)
+>  static int loongarch_eiointc_read(struct kvm_vcpu *vcpu, struct loongarc=
+h_eiointc *s,
+>                                 gpa_t addr, unsigned long *val)
+>  {
+> -       int index, ret =3D 0;
+> +       int index;
+>         u64 data =3D 0;
+>         gpa_t offset;
+>
+> @@ -150,40 +150,36 @@ static int loongarch_eiointc_read(struct kvm_vcpu *=
+vcpu, struct loongarch_eioint
+>                 data =3D s->coremap[index];
+>                 break;
+>         default:
+> -               ret =3D -EINVAL;
+>                 break;
+>         }
+>         *val =3D data;
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
+>                         struct kvm_io_device *dev,
+>                         gpa_t addr, int len, void *val)
+>  {
+> -       int ret =3D -EINVAL;
+>         unsigned long flags, data, offset;
+>         struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+>
+>         if (!eiointc) {
+>                 kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         if (addr & (len - 1)) {
+>                 kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         offset =3D addr & 0x7;
+>         addr -=3D offset;
+>         vcpu->stat.eiointc_read_exits++;
+>         spin_lock_irqsave(&eiointc->lock, flags);
+> -       ret =3D loongarch_eiointc_read(vcpu, eiointc, addr, &data);
+> +       loongarch_eiointc_read(vcpu, eiointc, addr, &data);
+>         spin_unlock_irqrestore(&eiointc->lock, flags);
+> -       if (ret)
+> -               return ret;
+>
+>         data =3D data >> (offset * 8);
+>         switch (len) {
+> @@ -208,7 +204,7 @@ static int loongarch_eiointc_write(struct kvm_vcpu *v=
+cpu,
+>                                 struct loongarch_eiointc *s,
+>                                 gpa_t addr, u64 value, u64 field_mask)
+>  {
+> -       int index, irq, ret =3D 0;
+> +       int index, irq;
+>         u8 cpu;
+>         u64 data, old, mask;
+>         gpa_t offset;
+> @@ -287,29 +283,27 @@ static int loongarch_eiointc_write(struct kvm_vcpu =
+*vcpu,
+>                 eiointc_update_sw_coremap(s, index * 8, data, sizeof(data=
+), true);
+>                 break;
+>         default:
+> -               ret =3D -EINVAL;
+>                 break;
+>         }
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>                         struct kvm_io_device *dev,
+>                         gpa_t addr, int len, const void *val)
+>  {
+> -       int ret =3D -EINVAL;
+>         unsigned long flags, value;
+>         struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+>
+>         if (!eiointc) {
+>                 kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         if (addr & (len - 1)) {
+>                 kvm_err("%s: eiointc not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         vcpu->stat.eiointc_write_exits++;
+> @@ -317,24 +311,24 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
+>         switch (len) {
+>         case 1:
+>                 value =3D *(unsigned char *)val;
+> -               ret =3D loongarch_eiointc_write(vcpu, eiointc, addr, valu=
+e, 0xFF);
+> +               loongarch_eiointc_write(vcpu, eiointc, addr, value, 0xFF)=
+;
+>                 break;
+>         case 2:
+>                 value =3D *(unsigned short *)val;
+> -               ret =3D loongarch_eiointc_write(vcpu, eiointc, addr, valu=
+e, USHRT_MAX);
+> +               loongarch_eiointc_write(vcpu, eiointc, addr, value, USHRT=
+_MAX);
+>                 break;
+>         case 4:
+>                 value =3D *(unsigned int *)val;
+> -               ret =3D loongarch_eiointc_write(vcpu, eiointc, addr, valu=
+e, UINT_MAX);
+> +               loongarch_eiointc_write(vcpu, eiointc, addr, value, UINT_=
+MAX);
+>                 break;
+>         default:
+>                 value =3D *(unsigned long *)val;
+> -               ret =3D loongarch_eiointc_write(vcpu, eiointc, addr, valu=
+e, ULONG_MAX);
+> +               loongarch_eiointc_write(vcpu, eiointc, addr, value, ULONG=
+_MAX);
+>                 break;
+>         }
+>         spin_unlock_irqrestore(&eiointc->lock, flags);
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct kvm_io_device_ops kvm_eiointc_ops =3D {
+> @@ -352,7 +346,7 @@ static int kvm_eiointc_virt_read(struct kvm_vcpu *vcp=
+u,
+>
+>         if (!eiointc) {
+>                 kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         addr -=3D EIOINTC_VIRT_BASE;
+> @@ -376,28 +370,25 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *=
+vcpu,
+>                                 struct kvm_io_device *dev,
+>                                 gpa_t addr, int len, const void *val)
+>  {
+> -       int ret =3D 0;
+>         unsigned long flags;
+>         u32 value =3D *(u32 *)val;
+>         struct loongarch_eiointc *eiointc =3D vcpu->kvm->arch.eiointc;
+>
+>         if (!eiointc) {
+>                 kvm_err("%s: eiointc irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>
+>         addr -=3D EIOINTC_VIRT_BASE;
+>         spin_lock_irqsave(&eiointc->lock, flags);
+>         switch (addr) {
+>         case EIOINTC_VIRT_FEATURES:
+> -               ret =3D -EPERM;
+>                 break;
+>         case EIOINTC_VIRT_CONFIG:
+>                 /*
+>                  * eiointc features can only be set at disabled status
+>                  */
+>                 if ((eiointc->status & BIT(EIOINTC_ENABLE)) && value) {
+> -                       ret =3D -EPERM;
+>                         break;
+>                 }
+>                 eiointc->status =3D value & eiointc->features;
+> @@ -407,7 +398,7 @@ static int kvm_eiointc_virt_write(struct kvm_vcpu *vc=
+pu,
+>         }
+>         spin_unlock_irqrestore(&eiointc->lock, flags);
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct kvm_io_device_ops kvm_eiointc_virt_ops =3D {
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
+> index 1058c13dba7f..b269c249e037 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -111,7 +111,7 @@ static int mail_send(struct kvm *kvm, uint64_t data)
+>         vcpu =3D kvm_get_vcpu_by_cpuid(kvm, cpu);
+>         if (unlikely(vcpu =3D=3D NULL)) {
+>                 kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>         mailbox =3D ((data & 0xffffffff) >> 2) & 0x7;
+>         offset =3D IOCSR_IPI_BUF_20 + mailbox * 4;
+> @@ -159,10 +159,17 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, gpa=
+_t addr, uint64_t data)
+>         idx =3D srcu_read_lock(&vcpu->kvm->srcu);
+>         ret =3D kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, 4, &val);
+>         srcu_read_unlock(&vcpu->kvm->srcu, idx);
+> +       /*
+> +        * There is no way to forward new IOCSR addr and CPU ID to user
+> +        * mode VMM, since anysend IOCSR is emulated in kernel already.
+> +        *
+> +        * Assuming that anysend IOCSR is only used on eiointc routing
+> +        * setting
+> +        */
+>         if (unlikely(ret))
+>                 kvm_err("%s: : write data to addr %llx failed\n", __func_=
+_, addr);
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int any_send(struct kvm *kvm, uint64_t data)
+> @@ -174,7 +181,7 @@ static int any_send(struct kvm *kvm, uint64_t data)
+>         vcpu =3D kvm_get_vcpu_by_cpuid(kvm, cpu);
+>         if (unlikely(vcpu =3D=3D NULL)) {
+>                 kvm_err("%s: invalid target cpu: %d\n", __func__, cpu);
+> -               return -EINVAL;
+> +               return 0;
+>         }
+>         offset =3D data & 0xffff;
+>
+> @@ -183,7 +190,6 @@ static int any_send(struct kvm *kvm, uint64_t data)
+>
+>  static int loongarch_ipi_readl(struct kvm_vcpu *vcpu, gpa_t addr, int le=
+n, void *val)
+>  {
+> -       int ret =3D 0;
+>         uint32_t offset;
+>         uint64_t res =3D 0;
+>
+> @@ -202,28 +208,23 @@ static int loongarch_ipi_readl(struct kvm_vcpu *vcp=
+u, gpa_t addr, int len, void
+>                 spin_unlock(&vcpu->arch.ipi_state.lock);
+>                 break;
+>         case IOCSR_IPI_SET:
+> -               res =3D 0;
+> -               break;
+>         case IOCSR_IPI_CLEAR:
+> -               res =3D 0;
+>                 break;
+>         case IOCSR_IPI_BUF_20 ... IOCSR_IPI_BUF_38 + 7:
+>                 if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+>                         kvm_err("%s: invalid offset or len: offset =3D %d=
+, len =3D %d\n",
+>                                 __func__, offset, len);
+> -                       ret =3D -EINVAL;
+>                         break;
+>                 }
+>                 res =3D read_mailbox(vcpu, offset, len);
+>                 break;
+>         default:
+>                 kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+> -               ret =3D -EINVAL;
+>                 break;
+>         }
+>         *(uint64_t *)val =3D res;
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int loongarch_ipi_writel(struct kvm_vcpu *vcpu, gpa_t addr, int l=
+en, const void *val)
+> @@ -239,7 +240,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu=
+, gpa_t addr, int len, cons
+>
+>         switch (offset) {
+>         case IOCSR_IPI_STATUS:
+> -               ret =3D -EINVAL;
+>                 break;
+>         case IOCSR_IPI_EN:
+>                 spin_lock(&vcpu->arch.ipi_state.lock);
+> @@ -257,7 +257,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu=
+, gpa_t addr, int len, cons
+>                 if (offset + len > IOCSR_IPI_BUF_38 + 8) {
+>                         kvm_err("%s: invalid offset or len: offset =3D %d=
+, len =3D %d\n",
+>                                 __func__, offset, len);
+> -                       ret =3D -EINVAL;
+>                         break;
+>                 }
+>                 write_mailbox(vcpu, offset, data, len);
+> @@ -273,7 +272,6 @@ static int loongarch_ipi_writel(struct kvm_vcpu *vcpu=
+, gpa_t addr, int len, cons
+>                 break;
+>         default:
+>                 kvm_err("%s: unknown addr: %llx\n", __func__, addr);
+> -               ret =3D -EINVAL;
+>                 break;
+>         }
+>
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
+pch_pic.c
+> index 4addb34bf432..a175f52fcf7f 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -74,7 +74,7 @@ void pch_msi_set_irq(struct kvm *kvm, int irq, int leve=
+l)
+>
+>  static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t add=
+r, int len, void *val)
+>  {
+> -       int ret =3D 0, offset;
+> +       int offset;
+>         u64 data =3D 0;
+>         void *ptemp;
+>
+> @@ -121,34 +121,32 @@ static int loongarch_pch_pic_read(struct loongarch_=
+pch_pic *s, gpa_t addr, int l
+>                 data =3D s->isr;
+>                 break;
+>         default:
+> -               ret =3D -EINVAL;
+> +               break;
+>         }
+>         spin_unlock(&s->lock);
+>
+> -       if (ret =3D=3D 0) {
+> -               offset =3D (addr - s->pch_pic_base) & 7;
+> -               data =3D data >> (offset * 8);
+> -               memcpy(val, &data, len);
+> -       }
+> +       offset =3D (addr - s->pch_pic_base) & 7;
+> +       data =3D data >> (offset * 8);
+> +       memcpy(val, &data, len);
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+>                         struct kvm_io_device *dev,
+>                         gpa_t addr, int len, void *val)
+>  {
+> -       int ret;
+> +       int ret =3D 0;
+>         struct loongarch_pch_pic *s =3D vcpu->kvm->arch.pch_pic;
+>
+>         if (!s) {
+>                 kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return ret;
+>         }
+>
+>         if (addr & (len - 1)) {
+>                 kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> -               return -EINVAL;
+> +               return ret;
+>         }
+>
+>         /* statistics of pch pic reading */
+> @@ -161,7 +159,7 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
+>  static int loongarch_pch_pic_write(struct loongarch_pch_pic *s, gpa_t ad=
+dr,
+>                                         int len, const void *val)
+>  {
+> -       int ret =3D 0, offset;
+> +       int offset;
+>         u64 old, data, mask;
+>         void *ptemp;
+>
+> @@ -226,29 +224,28 @@ static int loongarch_pch_pic_write(struct loongarch=
+_pch_pic *s, gpa_t addr,
+>         case PCH_PIC_ROUTE_ENTRY_START ... PCH_PIC_ROUTE_ENTRY_END:
+>                 break;
+>         default:
+> -               ret =3D -EINVAL;
+>                 break;
+>         }
+>         spin_unlock(&s->lock);
+>
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
+>                         struct kvm_io_device *dev,
+>                         gpa_t addr, int len, const void *val)
+>  {
+> -       int ret;
+> +       int ret =3D 0;
+>         struct loongarch_pch_pic *s =3D vcpu->kvm->arch.pch_pic;
+>
+>         if (!s) {
+>                 kvm_err("%s: pch pic irqchip not valid!\n", __func__);
+> -               return -EINVAL;
+> +               return ret;
+>         }
+>
+>         if (addr & (len - 1)) {
+>                 kvm_err("%s: pch pic not aligned addr %llx len %d\n", __f=
+unc__, addr, len);
+> -               return -EINVAL;
+> +               return ret;
+>         }
+>
+>         /* statistics of pch pic writing */
+>
+> base-commit: 4d310797262f0ddf129e76c2aad2b950adaf1fda
+> --
+> 2.39.3
+>
 >
