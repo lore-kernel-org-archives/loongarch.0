@@ -1,210 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF491DF74F
-	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792C2DEA95
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769849353; cv=none; b=cfIYHf8u4bz0ftUpCHb+WZdnRRJqll/hqcUrcZa1fPP5Zt/eZCqhntiMLjEBVOR/N+xFY1XGHmE4b+6yhpB3kPJqJr5imd+ZnbHSWLx0eUN/KItYJDOVeWQ47OAkywmBJC7I1mFg0wEWhYX5u5RLiTo1eeP1Wz6NqQsRYytW1HA=
+	t=1769849440; cv=none; b=plGmoeZ+WMCpmk05SQRvZNi9PXz2eTXe64bNLWdJQsg1F4+N72BXcTsdwXFrCrL1CzOQgMZohip6chFpa//qZr6SuKr1avb1t27PC4xsaac9zrKCI9eIJmy7KROCqU0IGMDwoSR7/oH+pM0Im7eENa8XSuP5iuT4CyHFFYqNCiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769849353; c=relaxed/simple;
-	bh=dGpLK5EUCc7kxrIuKT+VIjH3dXIChnaZ7t34gz+6Iws=;
+	s=arc-20240116; t=1769849440; c=relaxed/simple;
+	bh=vySMPrpBYcsqqqwyb0Y73rGsGAGij0QBUJZITGVwK9Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ovn+83ta2Mb7tNz3w7VeEWcmAxBARfIBeCo2kXK1njQ0YV5QNivccJPIqkyIX9L3/WftDonstSyFfwVR4SBsHdCkxFXCov6PQh4vtkdrA9BageVoDyM1CnJep9kyadhyTUdlkvdgyAhCAl0tUpfpmQ1eJlMKAZzz4W+UZiZJgO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPJMDi4K; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Yctm4ySUGo04e3o9ma0DchfICfJzhhhBy7jD48WpljKOXeFoaSeitTJWGVLxi4gnJnpDOd5rot9O6Ok1u9WSuMPkgCWh6iYIiet5BxWD95Ac9uzCSF2yaOCF6zSiKwMhgAs623PXqRd8w0UkHUwXjLRkPX9nP5QI9H3VUlBkAHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esJUYmz9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPJMDi4K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45E4C2BCB6
-	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esJUYmz9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA23CC4AF0D
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 08:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769849352;
-	bh=dGpLK5EUCc7kxrIuKT+VIjH3dXIChnaZ7t34gz+6Iws=;
+	s=k20201202; t=1769849439;
+	bh=vySMPrpBYcsqqqwyb0Y73rGsGAGij0QBUJZITGVwK9Q=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cPJMDi4KTOdp9mLdW89C0sAkKpBSvgv2Je/9qpAjg7VswkbD2HnopxOqP7jsSHu7V
-	 n5v8ZjVuK2Ac4+jwBe1ALh0quh2HgUJqUcyZ2Dtn5ezFXuDmqIIX72fP3Ggnh7Rnpn
-	 85Zp2Ntr5v4tQgJN5uLi09U9CyIoOJtBVYIUlsIZvtdKDQG2xZVkG7UlM/bS6Nc2nV
-	 B63sd++L/Qep9CTy9MP0QrALBNjWtNzY1L3AfXGDAmcteEw3MCbnu1X4EmwQDp2lGC
-	 bOVFYTlM5cRP7tTzgBKiDNpDJ9pJUb2KL1P0nRXwL7cMTtboVY58vmCB0lTJ62T7i4
-	 Nk35roDsR6DpQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-65807298140so4761417a12.2
-        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 00:49:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW5GL5XtDJrQpNZMoUtzcR55q1ZabuBAOLIlxlz3wi95g4U4MsCpy9FkdW2i38pQlNz0Ixrep2/s94=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxJR4egTb1k8j4c5zKSh3Ww+6GV1wzN/CxWUgN9Kjmw7+xL8Maf
-	PJfNfnt0ozS7nuCoSE088kxIpd6i+YVGMAu4wosTuH9efqV1l7pRSGI//bz7lDL7X96UqFWRvPC
-	es0YuSIJT6uZscZPMjAP6hVXc/rgMCWE=
-X-Received: by 2002:a17:907:3e1a:b0:b87:7485:b4a8 with SMTP id
- a640c23a62f3a-b8dff23aab3mr312380166b.0.1769849351173; Sat, 31 Jan 2026
- 00:49:11 -0800 (PST)
+	b=esJUYmz9Q5O44tgApY1/1BxRYv7xVun0m3XRvWhWJLpOl3BEn15dcJSJEDM3/pPze
+	 0AzJ9IjsFkQknp/imMoryUnu0exO0nOCp7ZjSxe7vdO4s5NTqkKCgdN9ND/upEWXym
+	 70SITA0utNz9CdYgbmr23k1IxEoenwmQ8sPgzkI2xuxqdCxv+qgtrLMIyugE/SrSNg
+	 6Hq8r3uJuM+RoTLj3jZCLg6lMNZPbTBEDKAirPx7Jd4y+0JGbkMmhpXbRakshBUf0R
+	 jV/Hj95aVQyZK46soCTy4gz/9hcBgMXp4qCQvFtkP4UrdhIpZoXKSBhxuozftjO11c
+	 jq5p50+0G4Ibw==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-65814266b08so5718027a12.3
+        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 00:50:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXxJJGS8eBOZZ/7MvibubkdPE44tzY5neQaGiVXFz5HNDmgAiPoTLa4omF9Fwc4FNZafn9p/VMZckU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxhblreDMfrdiIhFw89o8J/mKH4SHf4YTVtza7Jj0M0UEeHhGEE
+	cAwUai0tEAJvR+RrpLLUtK4BOJJ50+pBQJmHrzQoX8yhkv5s8fN5DB46QzVqGLDjHFDwvnBdMJL
+	zDoCl6OISw7yq/UvwCUBZkOW+jidgUg8=
+X-Received: by 2002:a17:906:7946:b0:b84:2fe8:b5d8 with SMTP id
+ a640c23a62f3a-b8dff5cbdb3mr333334566b.14.1769849438443; Sat, 31 Jan 2026
+ 00:50:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260131060600.169748-1-liushuyu@aosc.io>
-In-Reply-To: <20260131060600.169748-1-liushuyu@aosc.io>
+References: <20260107094007.966496-1-john.g.garry@oracle.com>
+ <20260107094007.966496-3-john.g.garry@oracle.com> <CAAhV-H6qAtsBF3jwxbYGEUytZXH2ZRPfzPtUZRBnXOiZ_K5bYg@mail.gmail.com>
+ <59101a15-fa63-4948-9169-3db6596bf618@oracle.com>
+In-Reply-To: <59101a15-fa63-4948-9169-3db6596bf618@oracle.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 31 Jan 2026 16:48:58 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
-X-Gm-Features: AZwV_QgPxFoSfCmMU-FyVI71xlpOxVZW5UWuDu6-xVqczdI4YRz8mS_EVp-09Zw
-Message-ID: <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
-Subject: Re: [PATCH v2 RESEND] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-To: Zixing Liu <liushuyu@aosc.io>
-Cc: WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org
+Date: Sat, 31 Jan 2026 16:50:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Y-FzdhaNNPUa+P0Enk5hvPxJYAduQGvRUXwDuBaR+HA@mail.gmail.com>
+X-Gm-Features: AZwV_Qiwi5AAaKPHw38sH3q4aPAGkPNUvDXGj5Ir4MfEEmod4jV1jrLep1qAkhY
+Message-ID: <CAAhV-H5Y-FzdhaNNPUa+P0Enk5hvPxJYAduQGvRUXwDuBaR+HA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] LoongArch: Make cpumask_of_node() robust against NUMA_NO_NODE
+To: John Garry <john.g.garry@oracle.com>
+Cc: kernel@xen0n.name, jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org, 
+	peterz@infradead.org, arnd@arndb.de, x86@kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-arch@vger.kernel.org, vulab@iscas.ac.cn, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Zixing,
-
-On Sat, Jan 31, 2026 at 2:07=E2=80=AFPM Zixing Liu <liushuyu@aosc.io> wrote=
-:
+On Fri, Jan 30, 2026 at 8:21=E2=80=AFPM John Garry <john.g.garry@oracle.com=
+> wrote:
 >
-> This ioctl can be used by the userspace applications to determine which
-> (special) registers are get/set-able in a meaningful way.
+> On 25/01/2026 03:55, Huacai Chen wrote:
+> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 >
-> This can be very useful for cross-platform VMMs so that they do not have
-> to hardcode register indices for each supported architectures.
+> Thanks
 >
-> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
-> ---
->  Documentation/virt/kvm/api.rst |  2 +-
->  arch/loongarch/kvm/vcpu.c      | 85 ++++++++++++++++++++++++++++++++++
->  2 files changed, 86 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.=
-rst
-> index 01a3abef8abb..f46dd8be282f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
->  ---------------------
->
->  :Capability: basic
-> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
-> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->  :Type: vcpu ioctl
->  :Parameters: struct kvm_reg_list (in/out)
->  :Returns: 0 on success; -1 on error
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 656b954c1134..ed11438f4544 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1186,6 +1186,73 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_=
-vcpu *vcpu,
->         return ret;
->  }
->
-> +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user *ui=
-ndices)
-> +{
-> +       unsigned int i, count;
-> +
-> +       for (i =3D 0, count =3D 0; i < CSR_MAX_NUMS; i++) {
-> +               if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
-> +                       continue;
-> +               const u64 reg =3D KVM_IOC_CSRID(i);
-> +               if (uindices && put_user(reg, uindices++))
-> +                       return -EFAULT;
-> +               count++;
-> +       }
-> +
-> +       return count;
-> +}
-> +
-> +static unsigned long kvm_loongarch_num_lbt_regs(void)
-> +{
-> +       /* +1 for the LBT_FTOP flag (inside arch.fpu) */
-> +       return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + 1;
-> +}
-This function has only one line, I think it is better to embed it into
-the caller.
+> So can a loongarch maintainer pick this up please?
+OK, applied.
 
 Huacai
 
-> +
-> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
-> +{
-> +       /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
-> +       unsigned long res =3D
-> +               kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS=
- + 1;
-> +
-> +       if (kvm_guest_has_lbt(&vcpu->arch))
-> +               res +=3D kvm_loongarch_num_lbt_regs();
-> +
-> +       return res;
-> +}
-> +
-> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
-> +                                         u64 __user *uindices)
-> +{
-> +       u64 reg;
-> +       unsigned int i;
-> +
-> +       i =3D kvm_loongarch_walk_csrs(vcpu, uindices);
-> +       if (i < 0)
-> +               return i;
-> +       uindices +=3D i;
-> +
-> +       for (i =3D 0; i < KVM_MAX_CPUCFG_REGS; i++) {
-> +               reg =3D KVM_IOC_CPUCFG(i);
-> +               if (put_user(reg, uindices++))
-> +                       return -EFAULT;
-> +       }
-> +
-> +       reg =3D KVM_REG_LOONGARCH_COUNTER;
-> +       if (put_user(reg, uindices++))
-> +               return -EFAULT;
-> +
-> +       if (!kvm_guest_has_lbt(&vcpu->arch))
-> +               return 0;
-> +
-> +       for (i =3D 1; i <=3D kvm_loongarch_num_lbt_regs(); i++) {
-> +               reg =3D (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
-> +               if (put_user(reg, uindices++))
-> +                       return -EFAULT;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  long kvm_arch_vcpu_ioctl(struct file *filp,
->                          unsigned int ioctl, unsigned long arg)
->  {
-> @@ -1251,6 +1318,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->                 r =3D kvm_loongarch_vcpu_set_attr(vcpu, &attr);
->                 break;
->         }
-> +       case KVM_GET_REG_LIST: {
-> +               struct kvm_reg_list __user *user_list =3D argp;
-> +               struct kvm_reg_list reg_list;
-> +               unsigned n;
-> +
-> +               r =3D -EFAULT;
-> +               if (copy_from_user(&reg_list, user_list, sizeof(reg_list)=
-))
-> +                       break;
-> +               n =3D reg_list.n;
-> +               reg_list.n =3D kvm_loongarch_num_regs(vcpu);
-> +               if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
-> +                       break;
-> +               r =3D -E2BIG;
-> +               if (n < reg_list.n)
-> +                       break;
-> +               r =3D kvm_loongarch_copy_reg_indices(vcpu, user_list->reg=
-);
-> +               break;
-> +       }
->         default:
->                 r =3D -ENOIOCTLCMD;
->                 break;
-> --
-> 2.52.0
+>
+> >
+> > On Wed, Jan 7, 2026 at 5:48=E2=80=AFPM John Garry <john.g.garry@oracle.=
+com> wrote:
+> >>
+> >> The arch definition of cpumask_of_node() cannot handle NUMA_NO_NODE - =
+which
+> >> is a valid index - so add a check for this.
+> >>
+> >> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> >> ---
+> >>   arch/loongarch/include/asm/topology.h | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/in=
+clude/asm/topology.h
+> >> index f06e7ff25bb7c..6b79d6183085a 100644
+> >> --- a/arch/loongarch/include/asm/topology.h
+> >> +++ b/arch/loongarch/include/asm/topology.h
+> >> @@ -12,7 +12,7 @@
+> >>
+> >>   extern cpumask_t cpus_on_node[];
+> >>
+> >> -#define cpumask_of_node(node)  (&cpus_on_node[node])
+> >> +#define cpumask_of_node(node)  ((node) =3D=3D NUMA_NO_NODE ? cpu_all_=
+mask : &cpus_on_node[node])
+> >>
+> >>   struct pci_bus;
+> >>   extern int pcibus_to_node(struct pci_bus *);
+> >> --
+> >> 2.43.5
+> >>
 >
