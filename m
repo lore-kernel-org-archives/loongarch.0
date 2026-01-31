@@ -1,88 +1,221 @@
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E44350D70
-	for <loongarch@lists.linux.dev>; Fri, 30 Jan 2026 23:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C36731E0F0
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 06:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769814973; cv=none; b=SW7t8w8iAudz9k238YQtSmR0b5r7+cihMZEVvP/HmG7ESFA0DaykHvLXzzmclGVBEZulKFD7FIBrLLaDHzk4NJC7H/zVu7U1SlPjOQCNlPPnIqLANjiDxOA5c05S0iOl1Pp5wa+daaNLhk/ztHtQcSePb8Ht/EbrlITfURfesjo=
+	t=1769839674; cv=none; b=EtA3DjYHX629rZIZHRB3fP57ySof/cD9vagrVFnYSe2YZ2lT0tgXlQf5BkEA1EX/6ngmu5MuPPPqhQnkV2xhDLujSdGus5sNQvv9mb1A3bauiyXa/TFRkR9VfOgrzS2nvvWiXqQ6l9wenZPIHONcFx1l+383ekGIHaZykrv/J0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769814973; c=relaxed/simple;
-	bh=CAbY1gnMT0plgUZ2DE5GC7jxp8aLZzGqzpE6qqOefpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yl+znku2sJtl0zEzkK6dK+sPAvVdRSInLgpsrcOa8b/v/RxTAEzjzp5MLs6a1l6ai3hY4oYZNT94WTXMw7ATjOVI5rJFHxd8bs45F6X8vCvz4ojhlka+P8XIp0I0QEekmOfUl2XWux+ZUFVTnr2pI+/DCL48bUNa4Qd4/TjeFFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BYuIaqhf; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1769839674; c=relaxed/simple;
+	bh=oeog5iZO0tE/GpnDtWPS42chjSxxsQeVLLMswgVyFfc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNHq0DC/gVOqLi9PSnz9MWvtfyResO5XaHqmYb0dBWUHrnv3gbBmQyOJju0v1O1VIntKUgifbK+mwaYWj4QEjodJ/kNUcJHqHyl1Lny5uX3NFhuTaE3YLPjn2KvjFIwpK5/HEqShUO9jBJvupg/mjz7jtgaYCY/RtsJ7C1Uv0Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=LLr1uZ2R; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BYuIaqhf"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 4EBC54E4235E;
-	Fri, 30 Jan 2026 23:16:10 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 219FA6075A;
-	Fri, 30 Jan 2026 23:16:10 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 986EF119A88BC;
-	Sat, 31 Jan 2026 00:16:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1769814969; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=Me5t3oMpBIRHDRfRlViZ2cqwz0+5i9feSrjR1VEupBU=;
-	b=BYuIaqhfydpI0kaoVlioVKLRFM4+8kGH6/typH1N3YXxEnqT8jphm3G7b1HoyfYlmnXJDc
-	G5keo34nRPb6SwNmvu0iofnRgCFCvC+bCPeCZlEcFys/gwFveTSEmoJLnRqpTcmr5IoXGM
-	O+aHkPUDUjL7q7TLrPXL/jLkNPWQEVz+vybUvhvJmE69OOLWl83aXDyGCvfWf9H8y2z3qS
-	QIcpQe0aYnOdghg+qKTdpNSipLDo7vRhW+7uM/yTo8YEOUUGKDFBj4cj4c6rgUXduRxXKp
-	NeAA8m6xkZhctsDAXHrtDSJVvAlZ6ux3Zy8se2u6eBfmFCgxeTp3B2kO6qC7lw==
-Date: Sat, 31 Jan 2026 00:16:05 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-rtc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="LLr1uZ2R"
+Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 9BF0126344
+	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 06:07:45 +0000 (UTC)
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay4.mymailcheap.com (Postfix) with ESMTPS id F1F8C202EF;
+	Sat, 31 Jan 2026 06:07:37 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 33F5B400EA;
+	Sat, 31 Jan 2026 06:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1769839655; bh=oeog5iZO0tE/GpnDtWPS42chjSxxsQeVLLMswgVyFfc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LLr1uZ2RvxnzrGxF2U7ClmQfPams39DoMhxkR9Zk4vd/JcK7kplJGnweT5Xn1qbx6
+	 Pqh5vDcvOFRG3Emrqa//GTRTieof1nbdI/DL+VNlj1ysDTCi0AF0wvgFG3//Qz1S7y
+	 nVrI0FbF24KWZOhXytUTNXbVb3dV+VcpFz/rAT2k=
+Received: from liushuyu-p15 (unknown [117.151.13.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id EC0F840F79;
+	Sat, 31 Jan 2026 06:07:29 +0000 (UTC)
+From: Zixing Liu <liushuyu@aosc.io>
+To: WANG Xuerui <kernel@xen0n.name>,
 	Huacai Chen <chenhuacai@kernel.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Xiaochuang Mao <maoxiaochuan@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>
-Subject: Re: [PATCH v3 0/3] RTC: Add Loongson-2K0300 support
-Message-ID: <176981478048.2227007.7038485759891970167.b4-ty@bootlin.com>
-References: <cover.1768616276.git.zhoubinbin@loongson.cn>
+	Bibo Mao <maobibo@loongson.cn>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v2 RESEND] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+Date: Sat, 31 Jan 2026 14:05:59 +0800
+Message-ID: <20260131060600.169748-1-liushuyu@aosc.io>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1768616276.git.zhoubinbin@loongson.cn>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 33F5B400EA
+X-Spamd-Result: default: False [1.40 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[liushuyu.aosc.io:server fail];
+	URIBL_BLOCKED(0.00)[mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo,aosc.io:email,aosc.io:from_smtp,aosc.io:mid,aosc.io:from_mime];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	LOCAL_OUTBOUND(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Action: no action
+X-Rspamd-Server: nf2.mymailcheap.com
 
-On Sat, 17 Jan 2026 10:26:47 +0800, Binbin Zhou wrote:
-> This patch set introduces the Loongson-2K0300 RTC, which has a similar
-> hardware design to the Loongson-1B, but without the alarm feature.
-> 
-> Thanks.
-> Binbin
-> 
-> ==========
-> V3:
-> - Add Reviewed-by tag from Huacai, thanks.
-> 
-> [...]
+This ioctl can be used by the userspace applications to determine which
+(special) registers are get/set-able in a meaningful way.
 
-Applied, thanks!
+This can be very useful for cross-platform VMMs so that they do not have
+to hardcode register indices for each supported architectures.
 
-[1/3] dt-bindings: rtc: loongson: Correct Loongson-1C interrupts property
-      https://git.kernel.org/abelloni/c/da9934a6583a
-[2/3] dt-bindings: rtc: loongson: Document Loongson-2K0300 compatible
-      https://git.kernel.org/abelloni/c/5d4899d4859f
-[3/3] rtc: loongson: Add Loongson-2K0300 support
-      https://git.kernel.org/abelloni/c/770a54accf80
+Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+---
+ Documentation/virt/kvm/api.rst |  2 +-
+ arch/loongarch/kvm/vcpu.c      | 85 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+), 1 deletion(-)
 
-Best regards,
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 01a3abef8abb..f46dd8be282f 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -3603,7 +3603,7 @@ VCPU matching underlying host.
+ ---------------------
+ 
+ :Capability: basic
+-:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
++:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_reg_list (in/out)
+ :Returns: 0 on success; -1 on error
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 656b954c1134..ed11438f4544 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1186,6 +1186,73 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
++static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user *uindices)
++{
++	unsigned int i, count;
++
++	for (i = 0, count = 0; i < CSR_MAX_NUMS; i++) {
++		if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
++			continue;
++		const u64 reg = KVM_IOC_CSRID(i);
++		if (uindices && put_user(reg, uindices++))
++			return -EFAULT;
++		count++;
++	}
++
++	return count;
++}
++
++static unsigned long kvm_loongarch_num_lbt_regs(void)
++{
++	/* +1 for the LBT_FTOP flag (inside arch.fpu) */
++	return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + 1;
++}
++
++static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
++{
++	/* +1 for the KVM_REG_LOONGARCH_COUNTER register */
++	unsigned long res =
++		kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS + 1;
++
++	if (kvm_guest_has_lbt(&vcpu->arch))
++		res += kvm_loongarch_num_lbt_regs();
++
++	return res;
++}
++
++static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
++					  u64 __user *uindices)
++{
++	u64 reg;
++	unsigned int i;
++
++	i = kvm_loongarch_walk_csrs(vcpu, uindices);
++	if (i < 0)
++		return i;
++	uindices += i;
++
++	for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
++		reg = KVM_IOC_CPUCFG(i);
++		if (put_user(reg, uindices++))
++			return -EFAULT;
++	}
++
++	reg = KVM_REG_LOONGARCH_COUNTER;
++	if (put_user(reg, uindices++))
++		return -EFAULT;
++
++	if (!kvm_guest_has_lbt(&vcpu->arch))
++		return 0;
++
++	for (i = 1; i <= kvm_loongarch_num_lbt_regs(); i++) {
++		reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
++		if (put_user(reg, uindices++))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
+ {
+@@ -1251,6 +1318,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
+ 		break;
+ 	}
++	case KVM_GET_REG_LIST: {
++		struct kvm_reg_list __user *user_list = argp;
++		struct kvm_reg_list reg_list;
++		unsigned n;
++
++		r = -EFAULT;
++		if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
++			break;
++		n = reg_list.n;
++		reg_list.n = kvm_loongarch_num_regs(vcpu);
++		if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
++			break;
++		r = -E2BIG;
++		if (n < reg_list.n)
++			break;
++		r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
++		break;
++	}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.52.0
+
