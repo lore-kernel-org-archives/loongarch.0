@@ -1,243 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B13269CE7
-	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 02:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50B62264FBD
+	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 02:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769913357; cv=none; b=gbFBEL0bpsZ+cKZW2igRDTVUXUhgPUvjQi+DDjiROEzsaARzbcA/Wcde4rXV6pJgqtWOWRi6t+ShtWLodjyQ7JelLWb1gSOhjghYx1wBJGUsFofzLpdA13QZP2Rl/K0LttPNzkWQSkziu+R+QQEeH1zbLkg3b1gxPpXMf/EKA+U=
+	t=1769913401; cv=none; b=K3ma0dr0kr3UCQE96YHtHm8MzJG8p2LUlE26cKvrli+nJzmp3IA6PEHCpayY1Y4mFFl9mp9hA2e+fP4WClcKTBTv17Ll3ZIb/gbQQAPQOLgZsPE1pbmm4CTNPd7Kvh2HHey54bHiOZh9vdr+xA1Bd4WMP6nVsRyooQFDi5klHIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769913357; c=relaxed/simple;
-	bh=vbiqeQeAMOJdDl2w3Y80oOeJ7TUQghamWnPJJUjLEY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HYOo/NjaBxWdAkd0EUptyQudRAti/Xt5n2pUNGM9BOzao2cm+4G0f6G3hhD/V3zV5IPHDVeEVAXXbhWmsb2cyhaPRhgO0oxhYwMUh8Zrz2qrv/7hEaYDsr8VrJok7G9KCeyzhgnCc4osB6wZTZVhjTWx9VKVbi4ZhowTur2RqHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQYODOLF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQYODOLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECE0C2BCB2
-	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 02:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769913357;
-	bh=vbiqeQeAMOJdDl2w3Y80oOeJ7TUQghamWnPJJUjLEY4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oQYODOLFFwI1DRbG66HOBvsAPdViI1Xhw/mfZVC8OWDF/eQikTHF9FhlGRRMbHOi+
-	 ZnpkeQkMfM+GnBXErmtlzLA5HGQRA0kX+/teO4XCklzUwYp65mBOgg1bibrc4/lFjT
-	 2IqKTrGFTiP0EAlqOyi1Dc+lnc/jjrWtT8Q6CieddGzLgr/EZk6Ke01//riSqaC2Wb
-	 Lif/YXJSnixpQHWIYAZakSeJ0BipMm+2+RQPv4DsdgVdaW55XeUb+vL6wugKgLCRdS
-	 +dhKjO3X//O1DOavKXTdr7rHJ8MMktBG4m0xtPieG4j4vszQXU0rZqVlhGS/3ceFeT
-	 gNKhmMWICDysA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b885e8c6727so639621766b.1
-        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 18:35:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXYd+hRcPl4H+QBU9DPaVjDqoRbu2Ry5nGnZEV6xaP5UKRVuUQaTDUtqQJMQDdCIhkVCh/AIgQ0amA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNw959OW0XBs5U+97etTUZ2N7/NalIvtt50itl3xeA19vssepa
-	BkgYtx8Lb5nNX1z6A/g6g2RrBrklIMvb+Vq1mG4AXp1K1WPEIYPkTel2bebgVSfFTnUhxyikhLN
-	SVmfWqI4rL8c4WhUGrtbE6va0q+MLDM4=
-X-Received: by 2002:a17:906:478b:b0:b8d:f737:ba8a with SMTP id
- a640c23a62f3a-b8dff430bf3mr475152766b.18.1769913355873; Sat, 31 Jan 2026
- 18:35:55 -0800 (PST)
+	s=arc-20240116; t=1769913401; c=relaxed/simple;
+	bh=Bp1rgmj1Sj797xZwsqqFLWoWqImZTDD0biPkTwZWm6c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZNOSKOcE53bXWsprFfnryzYVm5+vaZn6BApjauq6dHxwNJ9YvCcLHqeGDDgjLvcLfT4T+XVzZ3t+wmrSqh/L7vLrdqX++DDbz/pAJ7iF2f9fv+bSbbrQSLHHL2fYXmNZJN0hxFks7pFbtGr9oOpTmU60BgULdkMIX+BNw40jF2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.42])
+	by gateway (Coremail) with SMTP id _____8DxecIzvH5p06kOAA--.47422S3;
+	Sun, 01 Feb 2026 10:36:35 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.42])
+	by front1 (Coremail) with SMTP id qMiowJCxecEsvH5p4I08AA--.22276S2;
+	Sun, 01 Feb 2026 10:36:33 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH net-next] net: stmmac: Correct spelling from clk_scr_i to clk_csr_i
+Date: Sun,  1 Feb 2026 10:36:19 +0800
+Message-ID: <20260201023619.366505-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260131060600.169748-1-liushuyu@aosc.io> <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
- <b89a22a3-be55-4c86-99e3-84759e362309@aosc.io>
-In-Reply-To: <b89a22a3-be55-4c86-99e3-84759e362309@aosc.io>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 1 Feb 2026 10:35:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7JyzHtBRaB9A7oOdZah75p2tvgPe_XHrVYoO8rZEwQ-g@mail.gmail.com>
-X-Gm-Features: AZwV_QgZwz2tAGpzsIBCY_8QliHVTHc_nrfg8cZfLSpMHtcwuZh8AY9WcbekdZo
-Message-ID: <CAAhV-H7JyzHtBRaB9A7oOdZah75p2tvgPe_XHrVYoO8rZEwQ-g@mail.gmail.com>
-Subject: Re: [PATCH v2 RESEND] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-To: liushuyu <liushuyu@aosc.io>
-Cc: WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxecEsvH5p4I08AA--.22276S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZF13Ww1fJr4fAFy7GF18tFc_yoW8WF43pr
+	sFvr90kr4YkFWxKws7tryrtry3Gayqka1qqws0qw4qvF4qyr48Xr1UZrn8JFyDW3yFyryS
+	vr1qgr4ayFyxGrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On Sat, Jan 31, 2026 at 10:09=E2=80=AFPM liushuyu <liushuyu@aosc.io> wrote:
->
-> Hi Huacai,
->
-> > Hi, Zixing,
-> >
-> > On Sat, Jan 31, 2026 at 2:07=E2=80=AFPM Zixing Liu <liushuyu@aosc.io> w=
-rote:
-> >> This ioctl can be used by the userspace applications to determine whic=
-h
-> >> (special) registers are get/set-able in a meaningful way.
-> >>
-> >> This can be very useful for cross-platform VMMs so that they do not ha=
-ve
-> >> to hardcode register indices for each supported architectures.
-> >>
-> >> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
-> >> ---
-> >>  Documentation/virt/kvm/api.rst |  2 +-
-> >>  arch/loongarch/kvm/vcpu.c      | 85 +++++++++++++++++++++++++++++++++=
-+
-> >>  2 files changed, 86 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/a=
-pi.rst
-> >> index 01a3abef8abb..f46dd8be282f 100644
-> >> --- a/Documentation/virt/kvm/api.rst
-> >> +++ b/Documentation/virt/kvm/api.rst
-> >> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
-> >>  ---------------------
-> >>
-> >>  :Capability: basic
-> >> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
-> >> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_RE=
-G)
-> >>  :Type: vcpu ioctl
-> >>  :Parameters: struct kvm_reg_list (in/out)
-> >>  :Returns: 0 on success; -1 on error
-> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> >> index 656b954c1134..ed11438f4544 100644
-> >> --- a/arch/loongarch/kvm/vcpu.c
-> >> +++ b/arch/loongarch/kvm/vcpu.c
-> >> @@ -1186,6 +1186,73 @@ static int kvm_loongarch_vcpu_set_attr(struct k=
-vm_vcpu *vcpu,
-> >>         return ret;
-> >>  }
-> >>
-> >> +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user =
-*uindices)
-> >> +{
-> >> +       unsigned int i, count;
-> >> +
-> >> +       for (i =3D 0, count =3D 0; i < CSR_MAX_NUMS; i++) {
-> >> +               if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
-> >> +                       continue;
-> >> +               const u64 reg =3D KVM_IOC_CSRID(i);
-> >> +               if (uindices && put_user(reg, uindices++))
-> >> +                       return -EFAULT;
-> >> +               count++;
-> >> +       }
-> >> +
-> >> +       return count;
-> >> +}
-> >> +
-> >> +static unsigned long kvm_loongarch_num_lbt_regs(void)
-> >> +{
-> >> +       /* +1 for the LBT_FTOP flag (inside arch.fpu) */
-> >> +       return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + =
-1;
-> >> +}
-> > This function has only one line, I think it is better to embed it into
-> > the caller.
->
-> This function was used twice in this patch. If the hardware gained more
-> LBT registers that are not recorded in `struct loongarch_lbt` in the
-> future, I am afraid changing manually inlined logic will be a bit
-> error-prone.
-If this really happens, how to keep compatibility?
+In include/linux/stmmac.h clk_csr_i is spelled as clk_scr_i by mistake,
+so correct it.
 
->
-> Maybe one compromise would be making this a `const` variable somewhere
-> in this file instead of a function? What do you think?
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ include/linux/stmmac.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-I think the best way is
-#define NUM_LBT_REGS 6
-in this file.
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index f1054b9c2d8a..1ba583ef6e03 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -28,14 +28,14 @@
+  * This could also be configured at run time using CPU freq framework. */
+ 
+ /* MDC Clock Selection define*/
+-#define	STMMAC_CSR_60_100M	0x0	/* MDC = clk_scr_i/42 */
+-#define	STMMAC_CSR_100_150M	0x1	/* MDC = clk_scr_i/62 */
+-#define	STMMAC_CSR_20_35M	0x2	/* MDC = clk_scr_i/16 */
+-#define	STMMAC_CSR_35_60M	0x3	/* MDC = clk_scr_i/26 */
+-#define	STMMAC_CSR_150_250M	0x4	/* MDC = clk_scr_i/102 */
+-#define	STMMAC_CSR_250_300M	0x5	/* MDC = clk_scr_i/124 */
+-#define	STMMAC_CSR_300_500M	0x6	/* MDC = clk_scr_i/204 */
+-#define	STMMAC_CSR_500_800M	0x7	/* MDC = clk_scr_i/324 */
++#define	STMMAC_CSR_60_100M	0x0	/* MDC = clk_csr_i/42 */
++#define	STMMAC_CSR_100_150M	0x1	/* MDC = clk_csr_i/62 */
++#define	STMMAC_CSR_20_35M	0x2	/* MDC = clk_csr_i/16 */
++#define	STMMAC_CSR_35_60M	0x3	/* MDC = clk_csr_i/26 */
++#define	STMMAC_CSR_150_250M	0x4	/* MDC = clk_csr_i/102 */
++#define	STMMAC_CSR_250_300M	0x5	/* MDC = clk_csr_i/124 */
++#define	STMMAC_CSR_300_500M	0x6	/* MDC = clk_csr_i/204 */
++#define	STMMAC_CSR_500_800M	0x7	/* MDC = clk_csr_i/324 */
+ 
+ /* MTL algorithms identifiers */
+ #define MTL_TX_ALGORITHM_WRR	0x0
+-- 
+2.47.3
 
-Huacai
-
->
-> > Huacai
->
-> Thanks,
->
-> Zixing
->
-> >> +
-> >> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
-> >> +{
-> >> +       /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
-> >> +       unsigned long res =3D
-> >> +               kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_R=
-EGS + 1;
-> >> +
-> >> +       if (kvm_guest_has_lbt(&vcpu->arch))
-> >> +               res +=3D kvm_loongarch_num_lbt_regs();
-> >> +
-> >> +       return res;
-> >> +}
-> >> +
-> >> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
-> >> +                                         u64 __user *uindices)
-> >> +{
-> >> +       u64 reg;
-> >> +       unsigned int i;
-> >> +
-> >> +       i =3D kvm_loongarch_walk_csrs(vcpu, uindices);
-> >> +       if (i < 0)
-> >> +               return i;
-> >> +       uindices +=3D i;
-> >> +
-> >> +       for (i =3D 0; i < KVM_MAX_CPUCFG_REGS; i++) {
-> >> +               reg =3D KVM_IOC_CPUCFG(i);
-> >> +               if (put_user(reg, uindices++))
-> >> +                       return -EFAULT;
-> >> +       }
-> >> +
-> >> +       reg =3D KVM_REG_LOONGARCH_COUNTER;
-> >> +       if (put_user(reg, uindices++))
-> >> +               return -EFAULT;
-> >> +
-> >> +       if (!kvm_guest_has_lbt(&vcpu->arch))
-> >> +               return 0;
-> >> +
-> >> +       for (i =3D 1; i <=3D kvm_loongarch_num_lbt_regs(); i++) {
-> >> +               reg =3D (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i)=
-;
-> >> +               if (put_user(reg, uindices++))
-> >> +                       return -EFAULT;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >>  long kvm_arch_vcpu_ioctl(struct file *filp,
-> >>                          unsigned int ioctl, unsigned long arg)
-> >>  {
-> >> @@ -1251,6 +1318,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
-> >>                 r =3D kvm_loongarch_vcpu_set_attr(vcpu, &attr);
-> >>                 break;
-> >>         }
-> >> +       case KVM_GET_REG_LIST: {
-> >> +               struct kvm_reg_list __user *user_list =3D argp;
-> >> +               struct kvm_reg_list reg_list;
-> >> +               unsigned n;
-> >> +
-> >> +               r =3D -EFAULT;
-> >> +               if (copy_from_user(&reg_list, user_list, sizeof(reg_li=
-st)))
-> >> +                       break;
-> >> +               n =3D reg_list.n;
-> >> +               reg_list.n =3D kvm_loongarch_num_regs(vcpu);
-> >> +               if (copy_to_user(user_list, &reg_list, sizeof(reg_list=
-)))
-> >> +                       break;
-> >> +               r =3D -E2BIG;
-> >> +               if (n < reg_list.n)
-> >> +                       break;
-> >> +               r =3D kvm_loongarch_copy_reg_indices(vcpu, user_list->=
-reg);
-> >> +               break;
-> >> +       }
-> >>         default:
-> >>                 r =3D -ENOIOCTLCMD;
-> >>                 break;
-> >> --
-> >> 2.52.0
-> >>
->
