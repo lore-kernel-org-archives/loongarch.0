@@ -1,238 +1,243 @@
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7885D23B615
-	for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 14:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.74.80.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B13269CE7
+	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 02:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769868554; cv=none; b=mST78AFZ8yZWgPQnYFYMRBRl6h7tpTFzVI1LGqPwyXrRZcnwHDl/oaVV+3x6Lnlmh5ROkKlo06PQTLSqKWjZo7sJTfYMx/HTkvUa9V9ZkUbZJi2HF8PL2RkZHYuKXfGMz7vjH6Zi0nW6Rx4pytIO0pglb3teefPC7SR1W399Ye0=
+	t=1769913357; cv=none; b=gbFBEL0bpsZ+cKZW2igRDTVUXUhgPUvjQi+DDjiROEzsaARzbcA/Wcde4rXV6pJgqtWOWRi6t+ShtWLodjyQ7JelLWb1gSOhjghYx1wBJGUsFofzLpdA13QZP2Rl/K0LttPNzkWQSkziu+R+QQEeH1zbLkg3b1gxPpXMf/EKA+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769868554; c=relaxed/simple;
-	bh=wKjWwAJDesOvn1+Zai9dJuWomkGTs+IRFJbxkSgLNQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b6Yim6UMfZ79N7ynUa1cSPh6QuOtoIbsT3khnmnp7NTsF2UBvRdTpt3ibrVI3FtkG7LH4NZN2QGC2Ui2yle+h8f0+9YuMrT9/+xMbGibLTHn4X0mKbrhNgonYXpeRn9aMNnGanCYTLTKLaSJhzGaZtbm5KSMsLTTdDn3tONvL3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=QvjPHoHw; arc=none smtp.client-ip=137.74.80.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1769913357; c=relaxed/simple;
+	bh=vbiqeQeAMOJdDl2w3Y80oOeJ7TUQghamWnPJJUjLEY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HYOo/NjaBxWdAkd0EUptyQudRAti/Xt5n2pUNGM9BOzao2cm+4G0f6G3hhD/V3zV5IPHDVeEVAXXbhWmsb2cyhaPRhgO0oxhYwMUh8Zrz2qrv/7hEaYDsr8VrJok7G9KCeyzhgnCc4osB6wZTZVhjTWx9VKVbi4ZhowTur2RqHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQYODOLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="QvjPHoHw"
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 78742202EF;
-	Sat, 31 Jan 2026 14:09:09 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 25FD8400D5;
-	Sat, 31 Jan 2026 14:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1769868544; bh=wKjWwAJDesOvn1+Zai9dJuWomkGTs+IRFJbxkSgLNQk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QvjPHoHwEgO8gx+Zhcn2hOoHbSeVsG7b6cx6tkxsFow0OTUhuRBe2Qqk0uxNof75i
-	 k9FX9PaXUMxSwqOQn53lizfLeNcjGoIl3/iRdmdAa3XNFWO8KwWD+nSXk4RcyMwOZg
-	 XxAy1jldNZixA8pMXBLcyoMBnsHghh+J3B32ottQ=
-Received: from [127.0.0.1] (unknown [117.151.13.225])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 24E3740F79;
-	Sat, 31 Jan 2026 14:08:51 +0000 (UTC)
-Message-ID: <b89a22a3-be55-4c86-99e3-84759e362309@aosc.io>
-Date: Sat, 31 Jan 2026 22:08:47 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQYODOLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECE0C2BCB2
+	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 02:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769913357;
+	bh=vbiqeQeAMOJdDl2w3Y80oOeJ7TUQghamWnPJJUjLEY4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oQYODOLFFwI1DRbG66HOBvsAPdViI1Xhw/mfZVC8OWDF/eQikTHF9FhlGRRMbHOi+
+	 ZnpkeQkMfM+GnBXErmtlzLA5HGQRA0kX+/teO4XCklzUwYp65mBOgg1bibrc4/lFjT
+	 2IqKTrGFTiP0EAlqOyi1Dc+lnc/jjrWtT8Q6CieddGzLgr/EZk6Ke01//riSqaC2Wb
+	 Lif/YXJSnixpQHWIYAZakSeJ0BipMm+2+RQPv4DsdgVdaW55XeUb+vL6wugKgLCRdS
+	 +dhKjO3X//O1DOavKXTdr7rHJ8MMktBG4m0xtPieG4j4vszQXU0rZqVlhGS/3ceFeT
+	 gNKhmMWICDysA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b885e8c6727so639621766b.1
+        for <loongarch@lists.linux.dev>; Sat, 31 Jan 2026 18:35:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXYd+hRcPl4H+QBU9DPaVjDqoRbu2Ry5nGnZEV6xaP5UKRVuUQaTDUtqQJMQDdCIhkVCh/AIgQ0amA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwNw959OW0XBs5U+97etTUZ2N7/NalIvtt50itl3xeA19vssepa
+	BkgYtx8Lb5nNX1z6A/g6g2RrBrklIMvb+Vq1mG4AXp1K1WPEIYPkTel2bebgVSfFTnUhxyikhLN
+	SVmfWqI4rL8c4WhUGrtbE6va0q+MLDM4=
+X-Received: by 2002:a17:906:478b:b0:b8d:f737:ba8a with SMTP id
+ a640c23a62f3a-b8dff430bf3mr475152766b.18.1769913355873; Sat, 31 Jan 2026
+ 18:35:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20260131060600.169748-1-liushuyu@aosc.io> <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
+ <b89a22a3-be55-4c86-99e3-84759e362309@aosc.io>
+In-Reply-To: <b89a22a3-be55-4c86-99e3-84759e362309@aosc.io>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 1 Feb 2026 10:35:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7JyzHtBRaB9A7oOdZah75p2tvgPe_XHrVYoO8rZEwQ-g@mail.gmail.com>
+X-Gm-Features: AZwV_QgZwz2tAGpzsIBCY_8QliHVTHc_nrfg8cZfLSpMHtcwuZh8AY9WcbekdZo
+Message-ID: <CAAhV-H7JyzHtBRaB9A7oOdZah75p2tvgPe_XHrVYoO8rZEwQ-g@mail.gmail.com>
 Subject: Re: [PATCH v2 RESEND] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-Content-Language: en-US-large, en-US
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
- Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260131060600.169748-1-liushuyu@aosc.io>
- <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
-From: liushuyu <liushuyu@aosc.io>
-In-Reply-To: <CAAhV-H7g4StjP5fnHVVEyR_xFx9=fg6S9UuHWnPpMV_k=ZVGGw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 25FD8400D5
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	BAYES_HAM(-0.00)[44.79%];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[liushuyu.aosc.io:server fail];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	SURBL_MULTI_FAIL(0.00)[aosc.io:query refused]
-X-Rspamd-Action: no action
-X-Rspamd-Server: nf1.mymailcheap.com
+To: liushuyu <liushuyu@aosc.io>
+Cc: WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Huacai,
-
-> Hi, Zixing,
+On Sat, Jan 31, 2026 at 10:09=E2=80=AFPM liushuyu <liushuyu@aosc.io> wrote:
 >
-> On Sat, Jan 31, 2026 at 2:07 PM Zixing Liu <liushuyu@aosc.io> wrote:
->> This ioctl can be used by the userspace applications to determine which
->> (special) registers are get/set-able in a meaningful way.
->>
->> This can be very useful for cross-platform VMMs so that they do not have
->> to hardcode register indices for each supported architectures.
->>
->> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
->> ---
->>  Documentation/virt/kvm/api.rst |  2 +-
->>  arch/loongarch/kvm/vcpu.c      | 85 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 86 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 01a3abef8abb..f46dd8be282f 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
->>  ---------------------
->>
->>  :Capability: basic
->> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->>  :Type: vcpu ioctl
->>  :Parameters: struct kvm_reg_list (in/out)
->>  :Returns: 0 on success; -1 on error
->> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->> index 656b954c1134..ed11438f4544 100644
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -1186,6 +1186,73 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
->>         return ret;
->>  }
->>
->> +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user *uindices)
->> +{
->> +       unsigned int i, count;
->> +
->> +       for (i = 0, count = 0; i < CSR_MAX_NUMS; i++) {
->> +               if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
->> +                       continue;
->> +               const u64 reg = KVM_IOC_CSRID(i);
->> +               if (uindices && put_user(reg, uindices++))
->> +                       return -EFAULT;
->> +               count++;
->> +       }
->> +
->> +       return count;
->> +}
->> +
->> +static unsigned long kvm_loongarch_num_lbt_regs(void)
->> +{
->> +       /* +1 for the LBT_FTOP flag (inside arch.fpu) */
->> +       return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + 1;
->> +}
-> This function has only one line, I think it is better to embed it into
-> the caller.
+> Hi Huacai,
+>
+> > Hi, Zixing,
+> >
+> > On Sat, Jan 31, 2026 at 2:07=E2=80=AFPM Zixing Liu <liushuyu@aosc.io> w=
+rote:
+> >> This ioctl can be used by the userspace applications to determine whic=
+h
+> >> (special) registers are get/set-able in a meaningful way.
+> >>
+> >> This can be very useful for cross-platform VMMs so that they do not ha=
+ve
+> >> to hardcode register indices for each supported architectures.
+> >>
+> >> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
+> >> ---
+> >>  Documentation/virt/kvm/api.rst |  2 +-
+> >>  arch/loongarch/kvm/vcpu.c      | 85 +++++++++++++++++++++++++++++++++=
++
+> >>  2 files changed, 86 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/a=
+pi.rst
+> >> index 01a3abef8abb..f46dd8be282f 100644
+> >> --- a/Documentation/virt/kvm/api.rst
+> >> +++ b/Documentation/virt/kvm/api.rst
+> >> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
+> >>  ---------------------
+> >>
+> >>  :Capability: basic
+> >> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+> >> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_RE=
+G)
+> >>  :Type: vcpu ioctl
+> >>  :Parameters: struct kvm_reg_list (in/out)
+> >>  :Returns: 0 on success; -1 on error
+> >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> >> index 656b954c1134..ed11438f4544 100644
+> >> --- a/arch/loongarch/kvm/vcpu.c
+> >> +++ b/arch/loongarch/kvm/vcpu.c
+> >> @@ -1186,6 +1186,73 @@ static int kvm_loongarch_vcpu_set_attr(struct k=
+vm_vcpu *vcpu,
+> >>         return ret;
+> >>  }
+> >>
+> >> +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user =
+*uindices)
+> >> +{
+> >> +       unsigned int i, count;
+> >> +
+> >> +       for (i =3D 0, count =3D 0; i < CSR_MAX_NUMS; i++) {
+> >> +               if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
+> >> +                       continue;
+> >> +               const u64 reg =3D KVM_IOC_CSRID(i);
+> >> +               if (uindices && put_user(reg, uindices++))
+> >> +                       return -EFAULT;
+> >> +               count++;
+> >> +       }
+> >> +
+> >> +       return count;
+> >> +}
+> >> +
+> >> +static unsigned long kvm_loongarch_num_lbt_regs(void)
+> >> +{
+> >> +       /* +1 for the LBT_FTOP flag (inside arch.fpu) */
+> >> +       return sizeof(struct loongarch_lbt) / sizeof(unsigned long) + =
+1;
+> >> +}
+> > This function has only one line, I think it is better to embed it into
+> > the caller.
+>
+> This function was used twice in this patch. If the hardware gained more
+> LBT registers that are not recorded in `struct loongarch_lbt` in the
+> future, I am afraid changing manually inlined logic will be a bit
+> error-prone.
+If this really happens, how to keep compatibility?
 
-This function was used twice in this patch. If the hardware gained more
-LBT registers that are not recorded in `struct loongarch_lbt` in the
-future, I am afraid changing manually inlined logic will be a bit
-error-prone.
+>
+> Maybe one compromise would be making this a `const` variable somewhere
+> in this file instead of a function? What do you think?
 
-Maybe one compromise would be making this a `const` variable somewhere
-in this file instead of a function? What do you think?
+I think the best way is
+#define NUM_LBT_REGS 6
+in this file.
 
-> Huacai
+Huacai
 
-Thanks,
-
-Zixing
-
->> +
->> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
->> +{
->> +       /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
->> +       unsigned long res =
->> +               kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS + 1;
->> +
->> +       if (kvm_guest_has_lbt(&vcpu->arch))
->> +               res += kvm_loongarch_num_lbt_regs();
->> +
->> +       return res;
->> +}
->> +
->> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
->> +                                         u64 __user *uindices)
->> +{
->> +       u64 reg;
->> +       unsigned int i;
->> +
->> +       i = kvm_loongarch_walk_csrs(vcpu, uindices);
->> +       if (i < 0)
->> +               return i;
->> +       uindices += i;
->> +
->> +       for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
->> +               reg = KVM_IOC_CPUCFG(i);
->> +               if (put_user(reg, uindices++))
->> +                       return -EFAULT;
->> +       }
->> +
->> +       reg = KVM_REG_LOONGARCH_COUNTER;
->> +       if (put_user(reg, uindices++))
->> +               return -EFAULT;
->> +
->> +       if (!kvm_guest_has_lbt(&vcpu->arch))
->> +               return 0;
->> +
->> +       for (i = 1; i <= kvm_loongarch_num_lbt_regs(); i++) {
->> +               reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
->> +               if (put_user(reg, uindices++))
->> +                       return -EFAULT;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>  long kvm_arch_vcpu_ioctl(struct file *filp,
->>                          unsigned int ioctl, unsigned long arg)
->>  {
->> @@ -1251,6 +1318,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->>                 r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
->>                 break;
->>         }
->> +       case KVM_GET_REG_LIST: {
->> +               struct kvm_reg_list __user *user_list = argp;
->> +               struct kvm_reg_list reg_list;
->> +               unsigned n;
->> +
->> +               r = -EFAULT;
->> +               if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
->> +                       break;
->> +               n = reg_list.n;
->> +               reg_list.n = kvm_loongarch_num_regs(vcpu);
->> +               if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
->> +                       break;
->> +               r = -E2BIG;
->> +               if (n < reg_list.n)
->> +                       break;
->> +               r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
->> +               break;
->> +       }
->>         default:
->>                 r = -ENOIOCTLCMD;
->>                 break;
->> --
->> 2.52.0
->>
+>
+> > Huacai
+>
+> Thanks,
+>
+> Zixing
+>
+> >> +
+> >> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
+> >> +{
+> >> +       /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
+> >> +       unsigned long res =3D
+> >> +               kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_R=
+EGS + 1;
+> >> +
+> >> +       if (kvm_guest_has_lbt(&vcpu->arch))
+> >> +               res +=3D kvm_loongarch_num_lbt_regs();
+> >> +
+> >> +       return res;
+> >> +}
+> >> +
+> >> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
+> >> +                                         u64 __user *uindices)
+> >> +{
+> >> +       u64 reg;
+> >> +       unsigned int i;
+> >> +
+> >> +       i =3D kvm_loongarch_walk_csrs(vcpu, uindices);
+> >> +       if (i < 0)
+> >> +               return i;
+> >> +       uindices +=3D i;
+> >> +
+> >> +       for (i =3D 0; i < KVM_MAX_CPUCFG_REGS; i++) {
+> >> +               reg =3D KVM_IOC_CPUCFG(i);
+> >> +               if (put_user(reg, uindices++))
+> >> +                       return -EFAULT;
+> >> +       }
+> >> +
+> >> +       reg =3D KVM_REG_LOONGARCH_COUNTER;
+> >> +       if (put_user(reg, uindices++))
+> >> +               return -EFAULT;
+> >> +
+> >> +       if (!kvm_guest_has_lbt(&vcpu->arch))
+> >> +               return 0;
+> >> +
+> >> +       for (i =3D 1; i <=3D kvm_loongarch_num_lbt_regs(); i++) {
+> >> +               reg =3D (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i)=
+;
+> >> +               if (put_user(reg, uindices++))
+> >> +                       return -EFAULT;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >>  long kvm_arch_vcpu_ioctl(struct file *filp,
+> >>                          unsigned int ioctl, unsigned long arg)
+> >>  {
+> >> @@ -1251,6 +1318,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+> >>                 r =3D kvm_loongarch_vcpu_set_attr(vcpu, &attr);
+> >>                 break;
+> >>         }
+> >> +       case KVM_GET_REG_LIST: {
+> >> +               struct kvm_reg_list __user *user_list =3D argp;
+> >> +               struct kvm_reg_list reg_list;
+> >> +               unsigned n;
+> >> +
+> >> +               r =3D -EFAULT;
+> >> +               if (copy_from_user(&reg_list, user_list, sizeof(reg_li=
+st)))
+> >> +                       break;
+> >> +               n =3D reg_list.n;
+> >> +               reg_list.n =3D kvm_loongarch_num_regs(vcpu);
+> >> +               if (copy_to_user(user_list, &reg_list, sizeof(reg_list=
+)))
+> >> +                       break;
+> >> +               r =3D -E2BIG;
+> >> +               if (n < reg_list.n)
+> >> +                       break;
+> >> +               r =3D kvm_loongarch_copy_reg_indices(vcpu, user_list->=
+reg);
+> >> +               break;
+> >> +       }
+> >>         default:
+> >>                 r =3D -ENOIOCTLCMD;
+> >>                 break;
+> >> --
+> >> 2.52.0
+> >>
+>
