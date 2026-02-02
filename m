@@ -1,249 +1,407 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B8721773F
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 03:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770001311; cv=none; b=Z56ROUcD6/YkTVkw25Nv2ow5DM+GVE9co2Bx/0rmplFsaXFa2SptoCQtRYgovr6pwwchadEvfjygO5t5GpX7Q1/sBZipEe54U+ib4o+v9SxScmkaWmdcBv7dnGxqqIe1kUo2FfKGJqQh38v0aunaS8JLWqMf7aQTwgA+ZZ7SyQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770001311; c=relaxed/simple;
-	bh=WiXhFRtyB6TH2mQxUV6GDUuCbq5D2Mx+Ihocy5CMMhg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rOUTsEYU+9WUyvdHvL78/jIdsm0BgzxfMskCEf6v93Ppxum6eTkdiQOWqiUOW0DtNHPxGWHS3cDvrtNT7zckWOt0U1P3lwFRaNJ+sh0KmtspvDBRb976w4ZfcfFdwyW/VOuXDyL+zLJj06Ppt0ib8+HkIfWuISAwi3LjNh9BXPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxmsKXE4BpFtcOAA--.48437S3;
-	Mon, 02 Feb 2026 11:01:43 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBx78KRE4BpM8k9AA--.49717S3;
-	Mon, 02 Feb 2026 11:01:40 +0800 (CST)
-Subject: Re: [PATCH v3] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-To: liushuyu <liushuyu@aosc.io>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260201072124.566587-1-liushuyu@aosc.io>
- <fe2dd7e1-4480-78e0-cfbd-4fc3574c589c@loongson.cn>
- <c35ba2fd-6fc2-4cbf-ba62-70dcfaac399c@aosc.io>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <5dfa6dd3-eefe-cdbc-6d6e-dd9e2385a8ec@loongson.cn>
-Date: Mon, 2 Feb 2026 10:59:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319DC2F6582
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 06:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770014384; cv=pass; b=E9s+1T/YLIuF7qbu5IC6UflMFJN971bDZe7blT8wdR3HjmZtczcgEGp1NvXdVXIF5ZqtDnHA7jRPFodnC8G1owLmbaI5+6KZZjbAD8jOvZ/tYCjDQyR4KZhiSXz0dx23Jcacoi1OeCgJrsGjtF6TJtHKvz1+ULRosRULNoJpgBk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770014384; c=relaxed/simple;
+	bh=kkuvM7CJppS0pU/h0KzKixJfh04HhSPTu3S4mwLZ9mM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M9lXv63E7cBr/GLZVHPwg9THeBCTbMeRDXU4UISUjNaOtSJbh0mf/5OtRC5xvZDVxZxVDPA33uV0dTuM3xlRNrlJxcEj4JOhuwkzzjZJFEJ+rhXnYTk5vqpL0FaZ+9Lf+xZ+4eh3HHm9RQ1ui5gT6lRyqRp7U3eJaKXEduyNg3U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SzKWouCG; arc=pass smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SzKWouCG"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b8e526081ceso108499966b.1
+        for <loongarch@lists.linux.dev>; Sun, 01 Feb 2026 22:39:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770014381; cv=none;
+        d=google.com; s=arc-20240605;
+        b=giWvBRC7H9sKVcw1DGOqG8gudRwHHnYK02Xb/VQLksCWJq3gQRE9JmMv1MskMwFAxT
+         rDwCxBz839Zb7a7cM73ahJ/FuVGu+6Ipg3kbXb7EKExhP067SVByrdGryB500/nGbUP0
+         X//DYtUucfJL6mymlDmWAkdVB456rUQ4CibnpR1VX/10j9DzTrQfMz8Cvb3idKBWDcTB
+         t552J0K6zGlpb2uVYzi0tRTVXkWF7cArjprKZhzs9C5HEnKx4s23O4FiSE0R3v1omCCm
+         XuDAZAegvTLPWKe32rozRtu1hw82Kl3kwuujU6QKTQ1OBL0yOC1Zod9jztBwOrcq7Rux
+         SQqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=dE6334Db/8q+LVE4TPM0RlZCcc1UGZ7Evu81B8EwWuA=;
+        fh=fULUS/Fltp1nWDiJK43IXiKgwBxH1XFSBjYEC7ElsoE=;
+        b=TWQ9m31wWjUXRQ6sIJFIbo7UZ8Bf2N4/yoV2EEP5m/DZ0yHdJynulFMjT4IsigpcyV
+         yxZ68pSiqamkNHkOZg9BmNzJaU26wxOlQbDUGctiffdI3eZl5stCHTfZj4+GEhZGsy6H
+         TTyRnyPrsMuTAE57DwNm2KFtJnkeDsUL1y+BlND31uzWWKmy5c7XiNBsCFgjYUsnvb77
+         8uKTPrp4Hnj5IYBVRwcGey9wWe5dxV/XHVb6I6puQPG0d1TpGDobWkKauSVxC+FiVOYR
+         +JNFuZlcPTB4gp50wz4E6DtIKlqLXFs0Ktch1lRzHPwQo67Q+E5WxwClHLCLNO/67mp7
+         A51w==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770014381; x=1770619181; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dE6334Db/8q+LVE4TPM0RlZCcc1UGZ7Evu81B8EwWuA=;
+        b=SzKWouCG2ZPP8rrbFxVY5RrMMmg1U5xQZNfaABSakxdVhsR8pX9R4FyFtwSlZCzJ0V
+         W8UuYyOrjqy2Y5adTdEBOp5drWWyO8lI+o9uOoU3+0Qq4iX14JhP5mPM3VymI7WIxGIV
+         Sq2eYEwQz2nh2N76suBa1PwQvszzebhw5YcC+dHGEjR+Bh0kLlsoKkcV6RRfjmThVVNh
+         GbasI8z0S7eCs89tyTp3T4xzDlCC1Cj6ImXiHzn/f/nuEat6rrMGnm0vw+492YyexFlz
+         JXzlBjBOWT/c4bQb/Q/ySme3BPJqDlY86WhJwAklHkh26/8KUsg7cRj3YQWz82kEXodU
+         GA4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770014381; x=1770619181;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dE6334Db/8q+LVE4TPM0RlZCcc1UGZ7Evu81B8EwWuA=;
+        b=LrUhumrqnKZbZyOGgE6OGkFOFxFDVIc7qPB1zmTsHnd/eBOnm49KHG0hQQ2E2FSGn6
+         zi+y1/1NAwBsYls49SRvfPAiS35eFdV6HZApOC3cHEzVh4dzD0nhkBc06d/2oRvx05p6
+         yDF28cLnaKoSfTLNlcK13Rcv9kEohQ1k6fyaVPw9RipRVY40/uXW0vcYnCiM0DYjVq2i
+         KEeVkMc8qE+DpASHBaMsjeKxUTFRGv9aLuh/eFzsdbhNp1gGbgRGLKVdZpG3kgsi4w6v
+         uNn6XAZ0NBjax07sNAq7jauxYn2+LNM/eOcpj5Wx7gmRdedV9MIwhgqv0v9EIJXZEdS9
+         ZCbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWExFzcfROHBgMoC1b4FkKLHveRHzs41RA6Bp+n4pzzu3GJ13UZJwmpMIYb9hYym4kFuvyOkwD5muU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzMI4wnQd+Ys54sxP97c2sn5a7y7BSF2TkvOZN1bCJB4GV/cmhB
+	hUgfXquFuochXqGu3aUwMHN7pEjv+w3mLHQY1ei2HuR6FQQ/o8Jm+A9CmAVPpHGvCbuH9Myj0Fm
+	/T3OYrDrpk9Pggx52wOo3NP42ulS2rNo=
+X-Gm-Gg: AZuq6aKYpTOxtnV4Waocx4te/DdCKYFOx5twM7FWcpCWOFuJBnXBe+EgbymaBMvq5aa
+	8rR3EvatxItWgPAg1xpdY4dFzZtl3K94psmyWnvAsaJUdbMxvLeaQYwtxH8hAXxAI/V56Qtyypg
+	7l2a8z9EMFZwINQTNLEkYT1O+DExH4OfuJf+e1/Ozi7y/8/cbbRMY3+5l5kaHhxYVVSi/YwmgLL
+	/rhdg8QkhuZ9n4joYE7jiOz6hkthGR1VNLHeim3Fo0VRzNBd5Xz9jdtVJBGTjkLs1dppx8=
+X-Received: by 2002:a17:906:2547:b0:b8e:380:5669 with SMTP id
+ a640c23a62f3a-b8e03805c91mr453056266b.32.1770014381217; Sun, 01 Feb 2026
+ 22:39:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <c35ba2fd-6fc2-4cbf-ba62-70dcfaac399c@aosc.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx78KRE4BpM8k9AA--.49717S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3AF4xCw1xZF18Jw48GFyUJwc_yoWxZFyxpr
-	1kAFW5Xry5Grn3Cw1UWF1UXFyUAr18Ja1DXrn3X3W8Ar42yr12gr1jgryqgF1UJw48AF4j
-	vr15XrnrursxJrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVW8ZVWrXwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joc_-UUU
-	UU=
+References: <cover.1769476820.git.zhoubinbin@loongson.cn> <402121da829497fc97f1461c8aaa3a44252c3f06.1769476820.git.zhoubinbin@loongson.cn>
+ <aXh000kBfaqd1G9H@smile.fi.intel.com> <CAMpQs4JTqWr6AqRwEO9bcno-_MjjE8GKm_kUvrpy7m_tLMtuSQ@mail.gmail.com>
+ <aXtw9h8WUs5H9MgC@smile.fi.intel.com>
+In-Reply-To: <aXtw9h8WUs5H9MgC@smile.fi.intel.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 2 Feb 2026 14:39:28 +0800
+X-Gm-Features: AZwV_QhXj9tszc0HGFFue9c8RTPxI3-iEb6Mu4cCGgevEV_nbiL8J0mGuBe64dI
+Message-ID: <CAMpQs4+Rk7-ERUetW_V4ojGxLtpzoX+hGgr7wV+0iQ8Uhdri4A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Andy:
 
+Thanks for your patient reply.
 
-On 2026/2/2 上午10:41, liushuyu wrote:
-> 
->>
->>
->> On 2026/2/1 下午3:21, Zixing Liu wrote:
->>> This ioctl can be used by the userspace applications to determine which
->>> (special) registers are get/set-able in a meaningful way.
->>>
->>> This can be very useful for cross-platform VMMs so that they do not have
->>> to hardcode register indices for each supported architectures.
->>>
->>> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
->>> ---
->>>    Documentation/virt/kvm/api.rst |  2 +-
->>>    arch/loongarch/kvm/vcpu.c      | 81 ++++++++++++++++++++++++++++++++++
->>>    2 files changed, 82 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/virt/kvm/api.rst
->>> b/Documentation/virt/kvm/api.rst
->>> index 01a3abef8abb..f46dd8be282f 100644
->>> --- a/Documentation/virt/kvm/api.rst
->>> +++ b/Documentation/virt/kvm/api.rst
->>> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
->>>    ---------------------
->>>      :Capability: basic
->>> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->>> +:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->>>    :Type: vcpu ioctl
->>>    :Parameters: struct kvm_reg_list (in/out)
->>>    :Returns: 0 on success; -1 on error
->>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>> index 656b954c1134..fb8001deadc9 100644
->>> --- a/arch/loongarch/kvm/vcpu.c
->>> +++ b/arch/loongarch/kvm/vcpu.c
->>> @@ -14,6 +14,8 @@
->>>    #define CREATE_TRACE_POINTS
->>>    #include "trace.h"
->>>    +#define NUM_LBT_REGS 6
->>> +
->>>    const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
->>>        KVM_GENERIC_VCPU_STATS(),
->>>        STATS_DESC_COUNTER(VCPU, int_exits),
->>> @@ -1186,6 +1188,67 @@ static int kvm_loongarch_vcpu_set_attr(struct
->>> kvm_vcpu *vcpu,
->>>        return ret;
->>>    }
->>>    +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64
->>> __user *uindices)
->>> +{
->>> +    unsigned int i, count;
->>> +
->>> +    for (i = 0, count = 0; i < CSR_MAX_NUMS; i++) {
->>> +        if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
->> My main concern is how to use KVM_GET_REG_LIST ioctl command, there
->> will be compatible issue if the detail use scenery about
->> KVM_GET_REG_LIST command is not clear.
->>
->> Can KVM_GET_REG_LIST ioctl command be used before vCPU feature
->> finalized? If not, it is only used after vCPU feature finalized, guest
->> CSR registers should base on vCPU features rather than host features.
->> Here get_gcsr_flag() is based on host features.
->>
-> We can add a warning to the documentation saying using KVM_GET_REG_LIST
-> before vCPU feature finalization is forbidden. This is how ARM
-> implemented their thing (the documentation said "Other calls that depend
-> on a particular feature being finalized, such as KVM_RUN,
-> KVM_GET_REG_LIST, KVM_GET_ONE_REG and KVM_SET_ONE_REG, will fail with
-> -EPERM unless the feature has already been finalized by means of a
-> KVM_ARM_VCPU_FINALIZE call.") We can probably do the same.
-> 
-> What do you think? If you think this is acceptable, I can send a v4
-> patch that adds a similar warning to the documentation.
-No special document is need.
+On Thu, Jan 29, 2026 at 10:38=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Thu, Jan 29, 2026 at 04:07:06PM +0800, Binbin Zhou wrote:
+> > On Tue, Jan 27, 2026 at 4:18=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@intel.com> wrote:
+> > > On Tue, Jan 27, 2026 at 10:47:57AM +0800, Binbin Zhou wrote:
+>
+> ...
+>
+> > > > +/*
+> > >
+> > > It's not marked as kernel-doc, but looks very much like that. Why?
+> > > Same Q for *all* cases like this.
+> >
+> > I didn't intend to mark it in kernel-doc; I just wanted to comment on
+> > the variable.
+> > Is removing the `@` symbol sufficient?
+>
+> But why? If you want it being properly documented, make sure it follows
+> the regular format.
 
-If KVM_GET_REG_LIST command is used after vCPU feature finalization, 
-vCPU feature can be checked when KVM_GET_REG_LIST command is called.
+I sincerely apologize for not having read `kernel-doc.rst` earlier.
+`kernel-doc` comments use `/**` as its opening marker. I will take
+this time to learn the documentation.
 
-Here funciton kvm_loongarch_walk_csrs() should be modified. 
-get_gcsr_flag() is based on host HW feature rather than vCPU feature. 
-For example VM can disable PMU/MSGINT features, so CSR registers 
-relative with PMU/MSGINT should be listed based on vCPU features.
+>
+> > > > + * struct loongson2_i2c_msg - client specific data
+> > > > + * @addr: 8-bit slave addr, including r/w bit
+> > > > + * @count: number of bytes to be transferred
+> > > > + * @buf: data buffer
+> > > > + * @stop: last I2C msg to be sent, i.e. STOP to be generated
+> > > > + * @result: result of the transfer
+> > > > + */
+> > > > +struct loongson2_i2c_msg {
+> > > > +     u8 addr;
+> > > > +     u32 count;
+> > > > +     u8 *buf;
+> > > > +     bool stop;
+> > > > +     int result;
+> > >
+> > > Run `pahole` and amend *all* data types accordingly.
+> >
+> >  Moving 'stop' from after 'buf' to after 'addr'.
+> > >
+> > > > +};
+>
+> ...
+>
+> > After run `pahole`, the structs are reorganized as follow:
+> >
+> > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_priv
+> > i2c-ls2x-v2.o
+> > struct loongson2_i2c_priv {
+> >         struct i2c_adapter         adapter
+> > __attribute__((__aligned__(8))); /*     0  1064 */
+> >         /* --- cacheline 16 boundary (1024 bytes) was 40 bytes ago ---
+> > */
+> >         struct clk *               clk;                  /*  1064
+> > 8 */
+> >         struct completion          complete;             /*  1072
+> > 32 */
+> >         /* --- cacheline 17 boundary (1088 bytes) was 16 bytes ago ---
+> > */
+> >         struct regmap *            regmap;               /*  1104
+>
+> It's better to keep pointers like clk and regmap next to each other.
+> They are semantically coupled as "resources".
+>
+> > 8 */
+> >         int                        speed;                /*  1112
+> > 4 */
+> >         int                        parent_rate;          /*  1116
+> > 4 */
+> >         struct loongson2_i2c_msg   msg;                  /*  1120
+> > 24 */
+> >
+> >         /* XXX last struct has 4 bytes of padding */
+> >
+> >         /* size: 1144, cachelines: 18, members: 7 */
+> >         /* paddings: 1, sum paddings: 4 */
+> >         /* forced alignments: 1 */
+> >         /* last cacheline: 56 bytes */
+> > } __attribute__((__aligned__(8)));
+>
+> ...
+>
+> > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_msg
+> > i2c-ls2x-v2.o
+> > struct loongson2_i2c_msg {
+> >         u8                         addr;                 /*     0
+> > 1 */
+> >         bool                       stop;                 /*     1
+> > 1 */
+> >
+> >         /* XXX 2 bytes hole, try to pack */
+>
+> >         u32                        count;                /*     4
+> > 4 */
+> >         u8 *                       buf;                  /*     8
+> > 8 */
+>
+> Also think about it (don't blindly follow the `pahole` automatic mode).
+> This is much better if you move the pointer to be the first, followed
+> by a count, result, and others.
+>
+> >         int                        result;               /*    16
+> > 4 */
+> >
+> >         /* size: 24, cachelines: 1, members: 5 */
+> >         /* sum members: 18, holes: 1, sum holes: 2 */
+> >         /* padding: 4 */
+> >         /* last cacheline: 24 bytes */
+> > };
+>
+> TL;DR: don't use `pahole` blindly. Use the common sense.
+>
 
-Regards
-Bibo Mao
-> 
->> Regards
->> Bibo Mao
-> 
-> Thanks,
-> 
-> Zixing
-> 
->>> +            continue;
->>> +        const u64 reg = KVM_IOC_CSRID(i);
->>> +        if (uindices && put_user(reg, uindices++))
->>> +            return -EFAULT;
->>> +        count++;
->>> +    }
->>> +
->>> +    return count;
->>> +}
->>> +
->>> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
->>> +{
->>> +    /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
->>> +    unsigned long res =
->>> +        kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS + 1;
->>> +
->>> +    if (kvm_guest_has_lbt(&vcpu->arch))
->>> +        res += NUM_LBT_REGS;
->>> +
->>> +    return res;
->>> +}
->>> +
->>> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
->>> +                      u64 __user *uindices)
->>> +{
->>> +    u64 reg;
->>> +    unsigned int i;
->>> +
->>> +    i = kvm_loongarch_walk_csrs(vcpu, uindices);
->>> +    if (i < 0)
->>> +        return i;
->>> +    uindices += i;
->>> +
->>> +    for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
->>> +        reg = KVM_IOC_CPUCFG(i);
->>> +        if (put_user(reg, uindices++))
->>> +            return -EFAULT;
->>> +    }
->>> +
->>> +    reg = KVM_REG_LOONGARCH_COUNTER;
->>> +    if (put_user(reg, uindices++))
->>> +        return -EFAULT;
->>> +
->>> +    if (!kvm_guest_has_lbt(&vcpu->arch))
->>> +        return 0;
->>> +
->>> +    for (i = 1; i <= NUM_LBT_REGS; i++) {
->>> +        reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
->>> +        if (put_user(reg, uindices++))
->>> +            return -EFAULT;
->>> +    }
->>> +
->>> +    return 0;
->>> +}
->>> +
->>>    long kvm_arch_vcpu_ioctl(struct file *filp,
->>>                 unsigned int ioctl, unsigned long arg)
->>>    {
->>> @@ -1251,6 +1314,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->>>            r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
->>>            break;
->>>        }
->>> +    case KVM_GET_REG_LIST: {
->>> +        struct kvm_reg_list __user *user_list = argp;
->>> +        struct kvm_reg_list reg_list;
->>> +        unsigned n;
->>> +
->>> +        r = -EFAULT;
->>> +        if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
->>> +            break;
->>> +        n = reg_list.n;
->>> +        reg_list.n = kvm_loongarch_num_regs(vcpu);
->>> +        if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
->>> +            break;
->>> +        r = -E2BIG;
->>> +        if (n < reg_list.n)
->>> +            break;
->>> +        r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
->>> +        break;
->>> +    }
->>>        default:
->>>            r = -ENOIOCTLCMD;
->>>            break;
->>>
->>
+Sorry, I slacked off.
+How about the organized data structure as follows:
 
+struct loongson2_i2c_msg {
+        u8      *buf;
+        u32     count;
+        int     result;
+        u8      addr;
+        bool    stop;
+};
+
+struct loongson2_i2c_priv {
+        struct i2c_adapter              adapter;
+        struct completion               complete;
+        struct clk                      *clk;
+        struct regmap                   *regmap;
+        int                             speed;
+        int                             parent_rate;
+        struct loongson2_i2c_msg        msg;
+};
+
+> ...
+>
+> > > > +static int loongson2_i2c_wait_free_bus(struct loongson2_i2c_priv *=
+priv)
+> > > > +{
+> > > > +     u32 status;
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D regmap_read_poll_timeout(priv->regmap, LOONGSON2_I2C_=
+SR2, status,
+> > > > +                                    !(status & LOONGSON2_I2C_SR2_B=
+USY),
+> > > > +                                    LOONGSON2_I2C_FREE_SLEEP_US,
+> > > > +                                    LOONGSON2_I2C_FREE_TIMEOUT_US)=
+;
+> > > > +     if (ret) {
+> > > > +             dev_dbg(priv->dev, "I2C bus free failed.\n");
+> > >
+> > > > +             ret =3D -EBUSY;
+> > >
+> > > Why?! What's wrong with the error code returned in ret?
+> >
+> > I want to indicate the bus busy state if it times out.
+>
+> This is not an answer. So, why do you remap error code. What's wrong with
+> the callee's one?
+
+I examined the existing callee and found no special checks for
+`-EBUSY`. Using the return value of `regmap_read_poll_timeout()`
+directly is the more appropriate choice.
+
+Additionally, `loongson2_i2c_wait_free_bus()` is only called by
+`loongson2_i2c_xfer()`. Its separate definition does not appear
+essential. Calling `regmap_read_poll_timeout()` directly within
+`loongson2_i2c_xfer()` seems more concise.
+
+As follows:
+
+static int loongson2_i2c_xfer(struct i2c_adapter *i2c_adap, struct
+i2c_msg msgs[], int num)
+{
+............
+
+        /* Wait I2C bus free */
+        ret =3D regmap_read_poll_timeout(priv->regmap, LOONGSON2_I2C_SR2, s=
+tatus,
+                                       !(status & LOONGSON2_I2C_SR2_BUSY),
+                                       LOONGSON2_I2C_FREE_SLEEP_US,
+                                       LOONGSON2_I2C_FREE_TIMEOUT_US);
+        if (ret) {
+                dev_dbg(dev, "I2C bus free failed.\n");
+                return ret;
+        }
+
+        /* Start generation */
+        regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1,
+LOONGSON2_I2C_CR1_START,
+                           LOONGSON2_I2C_CR1_START);
+
+.......
+
+        return num;
+}
+
+>
+> > > > +     }
+> > > > +
+> > > > +     return ret;
+> > > > +}
+>
+> ...
+>
+> > > Ah, it seems it's a helper. Please, return the error code from it as =
+int and
+> > > not irqreturn_t, this will make things clearer.
+> >
+> > How about just define it as void:
+> >
+> > static void loongson2_i2c_isr_error(u32 status, void *data)
+> > {
+> > .........
+> >         if (status & LOONGSON2_I2C_SR1_ARLO) {
+> >          ........
+> >                 msg->result =3D -EAGAIN;
+> >                 goto out;
+> >         }
+> >         if (status & LOONGSON2_I2C_SR1_AF) {
+> >            .......
+> >                 msg->result =3D -EIO;
+> >                 goto out;
+> >         }
+> >         if (status & LOONGSON2_I2C_SR1_BERR) {
+> >          .........
+> >                 msg->result =3D -EIO;
+> >                 goto out;
+> >         }
+> >
+> > out:
+> >         loongson2_i2c_disable_irq(priv);
+> >         complete(&priv->complete);
+> > }
+> >
+> > and in loongson2_i2c_isr_event(), I reference it as:
+> >
+> >         if (status & LOONGSON2_I2C_SR1_ITERREN_MASK) {
+> >                 loongson2_i2c_isr_error(status, data);
+> >                 return IRQ_NONE;
+> >         }
+>
+> > Its return value is meaningless for loongson2_i2c_isr_event().
+>
+> Works for me.
+>
+> ...
+>
+> > > > +     u32 possible_status =3D LOONGSON2_I2C_SR1_ITEVTEN_MASK;
+> > >
+> > > Split assignment...
+>
+> > > ...to be here, which improves readability (no need to go somewhere up=
+ in
+> > > the code to see what this is about.
+> >
+> > ok, I will put  `possible_status =3D LOONGSON2_I2C_SR1_ITEVTEN_MASK;` h=
+ere.
+> >
+> > > > +     /* Update possible_status if buffer interrupt is enabled */
+> > > > +     if (ien & LOONGSON2_I2C_CR2_ITBUFEN)
+> > > > +             possible_status |=3D LOONGSON2_I2C_SR1_ITBUFEN_MASK;
+>
+> I expect something like this:
+>
+>                 /* Update possible_status if buffer interrupt is enabled =
+*/
+>                 possible_status =3D LOONGSON2_I2C_SR1_ITEVTEN_MASK;
+>                 if (ien & LOONGSON2_I2C_CR2_ITBUFEN)
+>                         possible_status |=3D LOONGSON2_I2C_SR1_ITBUFEN_MA=
+SK;
+
+ok...
+>
+> ...
+>
+> > > > +     strscpy(adap->name, pdev->name, sizeof(adap->name));
+> > >
+> > > 2-arguments version is even better.
+> >
+> > Sorry, I'm not quite sure what you mean by `2-arguments version.`
+>
+> Use 2 arguments instead of 3. I.o.w. just drop the third argument.
+
+Ah, I see, the third argument is optional.
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+--
+Thanks.
+Binbin
