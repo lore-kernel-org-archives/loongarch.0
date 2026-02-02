@@ -1,655 +1,172 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4F0B30AD0A
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C5E2DB7A1
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770023479; cv=none; b=SMO85Y8nXA2JfgOXad3E5RE2WQHLEgWU6wG4TGd3np/pWgmioZxXwp5FuUSbXxodTYrnr6zdVKmQAP0NMNnCP61e7oD41VZ5Q8atM8trhw/12WxfFbfsZnyPkIImSxOqkLNj4a4f7i2NTFMLyDdFBMW5FdGaCEe5erjCIfZ24FU=
+	t=1770025714; cv=none; b=GpXkGvb7YxNi06T4dyDYp4KeMYih0Y+NIDjrd3j7jcFqlrxlN+h/w/QM8T73VSXAVMiHCB4mGT5Qw+orRKH/qNasIEddQFfYPs8iTL8VylUu/rWCIVelrgr4tPHWx2jzCnnLZMeMt0XXuimdjo9AcfQVDSUWPRiVibFjs5K/eA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770023479; c=relaxed/simple;
-	bh=l071vAjZRC63Ao3EJqY+PzqJiez2NjHc2Be5fqLg6Ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qUWx1/fAzvt+S6dUWvB5uTPXYqlJjP+N1yXupnLO+S2laOi5V8cRrT0lzdX8i4OCO8+WCmwVPtPuqib+5ZumPsNZIFIVNEjvzyQgKfFfvkHV3Vbrft9LtTGDNPgkG50+BHfdUpfeZPZcA2cNai0CvrYYyROMqw+vrlY5oU8hV9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.57.136])
-	by gateway (Coremail) with SMTP id _____8CxLMMzaoBphOoOAA--.48709S3;
-	Mon, 02 Feb 2026 17:11:15 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.57.136])
-	by front1 (Coremail) with SMTP id qMiowJDxSMETaoBp5Rk+AA--.36301S6;
-	Mon, 02 Feb 2026 17:11:12 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	tglx@linutronix.de,
-	jiaxun.yang@flygoat.com,
-	maobibo@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>
-Subject: [PATCH v10 4/4] irqchip/irq-loongarch-ir:Add Redirect irqchip support
-Date: Mon,  2 Feb 2026 17:10:39 +0800
-Message-ID: <20260202091041.2278271-5-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20260202091041.2278271-1-zhangtianyang@loongson.cn>
-References: <20260202091041.2278271-1-zhangtianyang@loongson.cn>
+	s=arc-20240116; t=1770025714; c=relaxed/simple;
+	bh=vWwVuDVwjMwFP5MTUalu6/VQMN54yDsQ+cxjHswApBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jCl6zEHIjTS4cwUMBiG0/lZYfiY6BN2vIW9iRh05ZGcoEMPiJPI3vyaOWohfvg6BAMPBOLR99Mu5yvpUo0uhm05xWM8uQKG9nvt0+YRmispkmDhTXeVEF+5fp/Y68vFh1YEEbdxDa/h6TYMv6DKjmspVuVDxAXW6eudRqAStxCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCINpOMg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCINpOMg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4594AC116C6
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770025714;
+	bh=vWwVuDVwjMwFP5MTUalu6/VQMN54yDsQ+cxjHswApBI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eCINpOMg5MfpzBW4OPEilbSwGrQ1586+5OZRZssKSe60inj9QsQyvVzDBWo2S2SkE
+	 V3WvhWg2o2tkpxZ96FhmzP450sfjNtFLiue/pbDWHA6ox1FNfDIllSonCA3uCnYLlx
+	 dDyUVEMiChsUnRnv2/SmIxdzuusKs+eRKaEOkbIA+pHTLFbw7eEt+ltJREXPBUxTDy
+	 aIiPCV7UVkRhJAyYS8KCR9/bFsXiJHpofHbJMv2iPfX1fCVlLFECbutsKbeARN60fP
+	 Oqp71vqB23YSY4CRa7TxSUkMOq1V6RvchP1G6n7lghEJpEXXrZzAZLTc0dYqOwDJdL
+	 jOZ2e9u2jKVdQ==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-658b7d13f09so7694091a12.2
+        for <loongarch@lists.linux.dev>; Mon, 02 Feb 2026 01:48:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWNErNMAPNe/P3nyVhIIjDFSmOW2P684yoYuVdVWFINfMUBcigM71H/0eYPQBQkVjRMa6by9dnga4g=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxz+pIGazzAmlVtWhaTZb51nvdU5L+XnmvybUkh1D91q/m6z/zD
+	y/VvyhGT6vfrYOLNZoEGCuR5A07RsSI6/Z7OElxTrHBGOw8bulmmZ7Yd7QJ+wK1Wgt+dnTS9xRW
+	Spktdc+acthKvKCOSSqp84m2vi+SJYKs=
+X-Received: by 2002:a17:907:1b1d:b0:b87:1d71:f44d with SMTP id
+ a640c23a62f3a-b8dff591487mr634836666b.11.1770025712817; Mon, 02 Feb 2026
+ 01:48:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxSMETaoBp5Rk+AA--.36301S6
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3Zw17uw1UGryDWFWfGF1fKrX_yoW8Ar1xWo
-	WfJFs3J34rWr18GrW0ka17tFyxZ3y5Gr4Fyw1ruFWDZ3Wqqr4rtrW7GrW3Za42gF10qF17
-	JFy0qwn3GFW7trn3l-sFpf9Il3svdjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYC7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Wrv_ZF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jqRRiUUUUU=
+References: <20260202082631.1678388-1-maobibo@loongson.cn>
+In-Reply-To: <20260202082631.1678388-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 2 Feb 2026 17:48:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6in768UbTqxjrwxXynPPRxAsoeksbau6O5_o5fg8DEyw@mail.gmail.com>
+X-Gm-Features: AZwV_Qi0gZeeCqTwzuZaQYUNF6jPu6KS9q96SV5QUjuHZAnfP1IgFBac4zZuwI8
+Message-ID: <CAAhV-H6in768UbTqxjrwxXynPPRxAsoeksbau6O5_o5fg8DEyw@mail.gmail.com>
+Subject: Re: [PATCH v3] LoongArch: KVM: Add more CPUCFG mask bit
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The main function of the Redirected interrupt controller is to manage
-the redirected-interrupt table, which consists of many redirected entries.
-When MSI interrupts are requested, the driver creates a corresponding
-redirected entry that describes the target CPU/vector number and the
-operating mode of the interrupt. The redirected interrupt module has an
-independent cache, and during the interrupt routing process, it will
-prioritize the redirected entries that hit the cache. The driver
-invalidates certain entry caches via a command queue.
+Applied with some small changes, thanks.
 
-Co-developed-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Liupu Wang <wangliupu@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
----
- drivers/irqchip/Makefile             |   2 +-
- drivers/irqchip/irq-loongarch-avec.c |   6 +-
- drivers/irqchip/irq-loongarch-ir.c   | 523 +++++++++++++++++++++++++++
- 3 files changed, 529 insertions(+), 2 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongarch-ir.c
+Huacai
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 6a229443efe0..2fc15a8e6ada 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -118,7 +118,7 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_TI_PRUSS_INTC)		+= irq-pruss-intc.o
--obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o
-+obj-$(CONFIG_IRQ_LOONGARCH_CPU)		+= irq-loongarch-cpu.o irq-loongarch-avec.o irq-loongarch-ir.o
- obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
- obj-$(CONFIG_LOONGSON_EIOINTC)		+= irq-loongson-eiointc.o
- obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongarch-avec.c b/drivers/irqchip/irq-loongarch-avec.c
-index 7bdf3f678db4..972203182079 100644
---- a/drivers/irqchip/irq-loongarch-avec.c
-+++ b/drivers/irqchip/irq-loongarch-avec.c
-@@ -111,7 +111,8 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
- 		adata->cpu = cpu;
- 		adata->vec = vector;
- 		per_cpu_ptr(irq_map, adata->cpu)[adata->vec] = irq_data_to_desc(data);
--		avecintc_sync(adata);
-+		if (!cpu_has_redirectint)
-+			avecintc_sync(adata);
- 	}
- 
- 	irq_data_update_effective_affinity(data, cpumask_of(cpu));
-@@ -403,6 +404,9 @@ static int __init pch_msi_parse_madt(union acpi_subtable_headers *header,
- 
- static inline int __init acpi_cascade_irqdomain_init(void)
- {
-+	if (cpu_has_redirectint)
-+		return redirect_acpi_init(loongarch_avec.domain);
-+
- 	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
- }
- 
-diff --git a/drivers/irqchip/irq-loongarch-ir.c b/drivers/irqchip/irq-loongarch-ir.c
-new file mode 100644
-index 000000000000..bff2fcaae49e
---- /dev/null
-+++ b/drivers/irqchip/irq-loongarch-ir.c
-@@ -0,0 +1,523 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Loongson Technologies, Inc.
-+ */
-+#define pr_fmt(fmt) "redirect: " fmt
-+
-+#include <linux/cpuhotplug.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/irq-msi-lib.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/msi.h>
-+#include <linux/spinlock.h>
-+
-+#include <asm/irq.h>
-+#include <asm/loongarch.h>
-+#include <asm/loongson.h>
-+#include <asm/numa.h>
-+#include <asm/setup.h>
-+#include <larchintrin.h>
-+
-+#include "irq-loongson.h"
-+
-+#define LOONGARCH_IOCSR_REDIRECT_CFG           0x15e0
-+#define LOONGARCH_IOCSR_REDIRECT_TBR           0x15e8  /* IRT BASE REG*/
-+#define LOONGARCH_IOCSR_REDIRECT_CQB           0x15f0  /* IRT CACHE QUEUE BASE */
-+#define LOONGARCH_IOCSR_REDIRECT_CQH           0x15f8  /* IRT CACHE QUEUE HEAD, 32bit */
-+#define LOONGARCH_IOCSR_REDIRECT_CQT           0x15fc  /* IRT CACHE QUEUE TAIL, 32bit */
-+
-+#define GPID_ADDR_MASK			GENMASK(47, 6)
-+#define GPID_ADDR_SHIFT 		6
-+
-+#define CQB_SIZE_MASK			0xf
-+#define CQB_ADDR_MASK			GENMASK(47, 12)
-+
-+#define CFG_DISABLE_IDLE		2
-+#define INVALID_INDEX			0
-+
-+#define MAX_IR_ENGINES			16
-+
-+struct redirect_entry {
-+	struct  {
-+		u64	valid	: 1,
-+			res1	: 5,
-+			gpid	: 42,
-+			res2	: 8,
-+			vector	: 8;
-+	}	lo;
-+	u64	hi;
-+};
-+#define IRD_ENTRY_SIZE			sizeof(struct redirect_entry)
-+#define IRD_ENTRIES			65536
-+#define IRD_TABLE_PAGE_ORDER		get_order(IRD_ENTRIES * IRD_ENTRY_SIZE)
-+
-+struct redirect_gpid {
-+	u64	pir[4];      // Pending interrupt requested
-+	u8	en	: 1, // doorbell
-+		res0	: 7;
-+	u8	irqnum;
-+	u16	res1;
-+	u32	dst;
-+	u32	rsvd[6];
-+};
-+
-+struct irde_inv_cmd {
-+	union {
-+		u64	cmd_info;
-+		struct {
-+			u64	res1		: 4,
-+				type		: 1,
-+				need_notice	: 1,
-+				pad		: 2,
-+				index		: 16,
-+				pad2		: 40;
-+		}	index;
-+	};
-+	u64		notice_addr;
-+};
-+#define IRD_CMD_SIZE			sizeof(struct irde_inv_cmd)
-+#define INVALID_QUEUE_SIZE		4096
-+#define INV_QUEUE_PAGE_ORDER		get_order(INVALID_QUEUE_SIZE * IRD_CMD_SIZE)
-+
-+struct redirect_table {
-+	struct redirect_entry	*table;
-+	unsigned long		*bitmap;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct redirect_queue {
-+	struct irde_inv_cmd	*cmd_base;
-+	int			head;
-+	int			tail;
-+	raw_spinlock_t		lock;
-+};
-+
-+struct irde_desc {
-+	struct	redirect_table	ird_table;
-+	struct	redirect_queue	inv_queue;
-+	int			node;
-+};
-+
-+struct redirect_item {
-+	int			index;
-+	struct irde_desc	*irde;
-+	struct redirect_gpid	*gpid;
-+};
-+
-+
-+static struct irq_domain *redirect_domain;
-+static struct irde_desc irde_descs[MAX_IR_ENGINES];
-+static phys_addr_t msi_base_addr;
-+static phys_addr_t redirect_reg_base = LOONGSON_REG_BASE;
-+
-+#define REDIRECT_REG(reg, node) \
-+	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
-+
-+static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
-+{
-+	return writeq(val, REDIRECT_REG(reg, node));
-+}
-+
-+static inline void redirect_write_reg32(u32 node, u32 val, u32 reg)
-+{
-+	return writel(val, REDIRECT_REG(reg, node));
-+}
-+
-+static inline u32 redirect_read_reg32(u32 node, u32 reg)
-+{
-+	return readl(REDIRECT_REG(reg, node));
-+}
-+
-+static inline struct redirect_entry *item_get_entry(struct redirect_item *item)
-+{
-+	return item->irde->ird_table.table + item->index;
-+}
-+
-+static inline bool invalid_queue_is_full(int node, u32 *tail)
-+{
-+	u32 head = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQH);
-+
-+	*tail = redirect_read_reg32(node, LOONGARCH_IOCSR_REDIRECT_CQT);
-+
-+	return head == ((*tail + 1) % INVALID_QUEUE_SIZE);
-+}
-+
-+static void invalid_enqueue(struct redirect_item *item, struct irde_inv_cmd *cmd)
-+{
-+	struct redirect_queue *inv_queue = &item->irde->inv_queue;
-+	u32 tail;
-+
-+	guard(raw_spinlock_irqsave)(&inv_queue->lock);
-+
-+	while (invalid_queue_is_full(item->irde->node, &tail))
-+		cpu_relax();
-+
-+	memcpy(&inv_queue->cmd_base[tail], cmd, sizeof(*cmd));
-+
-+	redirect_write_reg32(item->irde->node, (tail + 1) % INVALID_QUEUE_SIZE,
-+			     LOONGARCH_IOCSR_REDIRECT_CQT);
-+}
-+
-+static void irde_invalidate_entry(struct redirect_item *item)
-+{
-+	struct irde_inv_cmd cmd;
-+	u64 raddr = 0;
-+
-+	cmd.cmd_info = 0;
-+	cmd.index.type = INVALID_INDEX;
-+	cmd.index.need_notice = 1;
-+	cmd.index.index = item->index;
-+	cmd.notice_addr = (u64)(__pa(&raddr));
-+
-+	invalid_enqueue(item, &cmd);
-+
-+	/*
-+	 * The CPU needs to wait here for cmd to complete, and it determines this
-+	 * by checking whether the invalidation queue has already written a valid value
-+	 * to cmd.notice_addr.
-+	 */
-+	while (!raddr)
-+		cpu_relax();
-+
-+}
-+
-+static inline struct avecintc_data *irq_data_get_avec_data(struct irq_data *data)
-+{
-+	return data->parent_data->chip_data;
-+}
-+
-+static int redirect_table_alloc(int node, u32 nr_irqs)
-+{
-+	struct redirect_table *ird_table = &irde_descs[node].ird_table;
-+	unsigned int index, order = 0;
-+
-+	if (nr_irqs > 1) {
-+		nr_irqs = __roundup_pow_of_two(nr_irqs);
-+		order = ilog2(nr_irqs);
-+	}
-+
-+	guard(raw_spinlock_irqsave)(&ird_table->lock);
-+
-+	index = bitmap_find_free_region(ird_table->bitmap, IRD_ENTRIES, order);
-+	if (index < 0) {
-+		pr_err("No redirect entry to use\n");
-+		return -EINVAL;
-+	}
-+
-+	return index;
-+}
-+
-+static void redirect_table_free(struct redirect_item *item)
-+{
-+	struct redirect_table *ird_table = &item->irde->ird_table;
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	memset(entry, 0, sizeof(*entry));
-+
-+	scoped_guard(raw_spinlock_irq, &ird_table->lock)
-+		clear_bit(item->index, ird_table->bitmap);
-+
-+	kfree(item->gpid);
-+
-+	irde_invalidate_entry(item);
-+}
-+
-+static inline void redirect_domain_prepare_entry(struct redirect_item *item,
-+						 struct avecintc_data *adata)
-+{
-+	struct redirect_entry *entry = item_get_entry(item);
-+
-+	item->gpid->en = 1;
-+	item->gpid->irqnum = adata->vec;
-+	item->gpid->dst = adata->cpu;
-+
-+	entry->lo.valid = 1;
-+	entry->lo.gpid = ((u64)item->gpid & GPID_ADDR_MASK) >> GPID_ADDR_SHIFT;
-+	entry->lo.vector = 0xff;
-+}
-+
-+static int redirect_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
-+{
-+	struct redirect_item *item = data->chip_data;
-+	int ret;
-+
-+	ret = irq_chip_set_affinity_parent(data, dest, force);
-+	if (ret == IRQ_SET_MASK_OK_DONE) {
-+		return ret;
-+	} else if (ret) {
-+		pr_err("IRDE:set_affinity error %d\n", ret);
-+		return ret;
-+	}
-+	struct avecintc_data *adata = irq_data_get_avec_data(data);
-+
-+	redirect_domain_prepare_entry(item, adata);
-+	irde_invalidate_entry(item);
-+	avecintc_sync(adata);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void redirect_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct redirect_item *item = irq_data_get_irq_chip_data(d);
-+
-+	msg->address_lo = (msi_base_addr | 1 << 2);
-+	msg->address_hi = 0x0;
-+	msg->data = item->index;
-+}
-+
-+static struct irq_chip loongarch_redirect_chip = {
-+	.name			= "REDIRECT",
-+	.irq_ack		= irq_chip_ack_parent,
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_set_affinity	= redirect_set_affinity,
-+	.irq_compose_msi_msg	= redirect_compose_msi_msg,
-+};
-+
-+static void redirect_free_resources(struct irq_domain *domain, unsigned int virq,
-+				    unsigned int nr_irqs)
-+{
-+	for (int i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+
-+		if (irq_data && irq_data->chip_data) {
-+			struct redirect_item *item = irq_data->chip_data;
-+
-+			redirect_table_free(item);
-+			kfree(item);
-+		}
-+	}
-+}
-+
-+static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *arg)
-+{
-+	msi_alloc_info_t *info = arg;
-+	int ret, i, node, index;
-+
-+	node = dev_to_node(info->desc->dev);
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
-+	if (ret < 0)
-+		return ret;
-+
-+	index = redirect_table_alloc(node, nr_irqs);
-+	if (index < 0) {
-+		pr_err("Alloc redirect table entry failed\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < nr_irqs; i++) {
-+		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
-+		struct redirect_item *item;
-+
-+		item = kzalloc(sizeof(*item), GFP_KERNEL);
-+		if (!item) {
-+			pr_err("Alloc redirect descriptor failed\n");
-+			goto out_free_resources;
-+		}
-+		item->irde = &irde_descs[node];
-+
-+		/*
-+		 * Only bits 47:6 of the GPID are passed to the controller,
-+		 * 64-byte alignment must be guarantee and make kzalloc can
-+		 * align to the respective size.
-+		 */
-+		static_assert(sizeof(*item->gpid) == 64);
-+		item->gpid = kzalloc_node(sizeof(*item->gpid), GFP_KERNEL, node);
-+		if (!item->gpid) {
-+			pr_err("Alloc redirect GPID failed\n");
-+			goto out_free_resources;
-+		}
-+		item->index = index + i;
-+
-+		irq_data->chip_data = item;
-+		irq_data->chip = &loongarch_redirect_chip;
-+
-+		redirect_domain_prepare_entry(item, irq_data_get_avec_data(irq_data));
-+	}
-+	return 0;
-+
-+out_free_resources:
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+
-+	return -ENOMEM;
-+}
-+
-+static void redirect_domain_free(struct irq_domain *domain, unsigned int virq, unsigned int nr_irqs)
-+{
-+	redirect_free_resources(domain, virq, nr_irqs);
-+	return irq_domain_free_irqs_common(domain, virq, nr_irqs);
-+}
-+
-+static const struct irq_domain_ops redirect_domain_ops = {
-+	.alloc		= redirect_domain_alloc,
-+	.free		= redirect_domain_free,
-+	.select		= msi_lib_irq_domain_select,
-+};
-+
-+static int redirect_queue_init(struct irde_desc *irde)
-+{
-+	struct redirect_queue *inv_queue = &irde->inv_queue;
-+	struct folio *folio;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, INV_QUEUE_PAGE_ORDER, irde->node);
-+	if (!folio) {
-+		pr_err("Node [%d] invalid queue alloc pages failed!\n", irde->node);
-+		return -ENOMEM;
-+	}
-+
-+	inv_queue->cmd_base = folio_address(folio);
-+	inv_queue->head = 0;
-+	inv_queue->tail = 0;
-+	raw_spin_lock_init(&inv_queue->lock);
-+
-+	return 0;
-+}
-+
-+static int redirect_table_init(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde->ird_table;
-+	unsigned long *bitmap;
-+	struct folio *folio;
-+	int node = irde->node;
-+
-+	folio = __folio_alloc_node(GFP_KERNEL | __GFP_ZERO, IRD_TABLE_PAGE_ORDER, node);
-+	if (!folio) {
-+		pr_err("Node [%d] redirect table alloc pages failed!\n", node);
-+		return -ENOMEM;
-+	}
-+	ird_table->table = folio_address(folio);
-+
-+	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
-+	if (!bitmap) {
-+		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
-+		folio_put(folio);
-+		ird_table->table = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	ird_table->bitmap = bitmap;
-+
-+	raw_spin_lock_init(&ird_table->lock);
-+
-+	return 0;
-+}
-+
-+static void redirect_irde_cfg(struct irde_desc *irde)
-+{
-+	redirect_write_reg64(irde->node, CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
-+	redirect_write_reg64(irde->node, __pa(irde->ird_table.table), LOONGARCH_IOCSR_REDIRECT_TBR);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQH);
-+	redirect_write_reg32(irde->node, 0, LOONGARCH_IOCSR_REDIRECT_CQT);
-+	redirect_write_reg64(irde->node, ((u64)irde->inv_queue.cmd_base & CQB_ADDR_MASK) |
-+			     CQB_SIZE_MASK, LOONGARCH_IOCSR_REDIRECT_CQB);
-+}
-+
-+static void __init redirect_free_irde(struct irde_desc *irde)
-+{
-+	struct redirect_table *ird_table = &irde_descs->ird_table;
-+	struct redirect_queue *inv_queue = &irde_descs->inv_queue;
-+
-+	if (ird_table->table) {
-+		folio_put(virt_to_folio(ird_table->table));
-+		ird_table->table = NULL;
-+	}
-+
-+	if (ird_table->bitmap) {
-+		bitmap_free(ird_table->bitmap);
-+		ird_table->bitmap = NULL;
-+	}
-+
-+	if (inv_queue->cmd_base) {
-+		folio_put(virt_to_folio(inv_queue->cmd_base));
-+		inv_queue->cmd_base = NULL;
-+	}
-+}
-+
-+static int __init redirect_irde_init(int node)
-+{
-+	struct irde_desc *irde = &irde_descs[node];
-+	int ret;
-+
-+	irde->node = node;
-+
-+	ret = redirect_table_init(irde);
-+	if (ret)
-+		return ret;
-+
-+	ret = redirect_queue_init(irde);
-+	if (ret) {
-+		redirect_free_irde(irde);
-+		return ret;
-+	}
-+
-+	redirect_irde_cfg(irde);
-+
-+	return 0;
-+}
-+
-+static int __init pch_msi_parse_madt(union acpi_subtable_headers *header, const unsigned long end)
-+{
-+	struct acpi_madt_msi_pic *pchmsi_entry = (struct acpi_madt_msi_pic *)header;
-+
-+	msi_base_addr = pchmsi_entry->msg_address - AVEC_MSG_OFFSET;
-+
-+	return pch_msi_acpi_init_avec(redirect_domain);
-+}
-+
-+static int __init acpi_cascade_irqdomain_init(void)
-+{
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MSI_PIC, pch_msi_parse_madt, 1);
-+}
-+
-+int __init redirect_acpi_init(struct irq_domain *parent)
-+{
-+	struct fwnode_handle *fwnode;
-+	int ret = -EINVAL, node;
-+
-+	fwnode = irq_domain_alloc_named_fwnode("redirect");
-+	if (!fwnode) {
-+		pr_err("Unable to alloc redirect domain handle\n");
-+		goto fail;
-+	}
-+
-+	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
-+						      &redirect_domain_ops, irde_descs);
-+	if (!redirect_domain) {
-+		pr_err("Unable to alloc redirect domain\n");
-+		goto out_free_fwnode;
-+	}
-+
-+	for_each_node_mask(node, node_possible_map) {
-+		ret = redirect_irde_init(node);
-+		if (ret)
-+			goto out_clear_irde;
-+	}
-+
-+	ret = acpi_cascade_irqdomain_init();
-+	if (ret < 0) {
-+		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
-+		goto out_clear_irde;
-+	}
-+
-+	pr_info("init succeeded\n");
-+	return 0;
-+
-+out_clear_irde:
-+	for_each_node_mask(node, node_possible_map) {
-+		redirect_free_irde(&irde_descs[node]);
-+	}
-+
-+	irq_domain_remove(redirect_domain);
-+out_free_fwnode:
-+	irq_domain_free_fwnode(fwnode);
-+fail:
-+	return ret;
-+}
--- 
-2.41.0
-
+On Mon, Feb 2, 2026 at 4:26=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+> With LA664 CPU there are more features supported which are indicated
+> in CPUCFG2 bit24:30 and CPUCFG3 bit17 and bit 23. KVM hypervisor
+> cannot enable or disable these features and there is no KVM exception
+> when instructions of these features are executed in guest mode.
+>
+> Here add more CPUCFG mask support with LA664 CPU type.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v2 ... v3:
+>   1. Add CPUCFG3_ALDORDER_STA and CPUCFG3_ASTORDER_STA in cpucfg3.
+>   2. Disable bit CPUCFG3_SFB since VM does not support SFB controling.
+>   3. Add checking with max supported page directory level and max virtual
+>      address width.
+>
+> v1 ... v2:
+>   1. Rebase on the latest version since some common CPUCFG bit macro
+>      definitions are merged.
+>   2. Modifiy the comments explaining why it comes from feature detect
+>      of host CPU.
+> ---
+>  arch/loongarch/kvm/vcpu.c | 32 +++++++++++++++++++++++++++++---
+>  1 file changed, 29 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 656b954c1134..7bea5e162a4d 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -652,6 +652,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigne=
+d int id, u64 val)
+>
+>  static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>  {
+> +       unsigned int config;
+> +
+>         if (id < 0 || id >=3D KVM_MAX_CPUCFG_REGS)
+>                 return -EINVAL;
+>
+> @@ -684,9 +686,26 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>                 if (cpu_has_ptw)
+>                         *v |=3D CPUCFG2_PTW;
+>
+> +               /*
+> +                * The capability indication of some features are the sam=
+e
+> +                * between host CPU and guest vCPU, and there is no speci=
+al
+> +                * feature detect method with vCPU. Also KVM hypervisor c=
+an
+> +                * not enable or disable these features.
+> +                *
+> +                * Here use host CPU detected features for vCPU
+> +                */
+> +               config =3D read_cpucfg(LOONGARCH_CPUCFG2);
+> +               *v |=3D config & (CPUCFG2_FRECIPE | CPUCFG2_DIV32 | CPUCF=
+G2_LAM_BH);
+> +               *v |=3D config & (CPUCFG2_LAMCAS | CPUCFG2_LLACQ_SCREL | =
+CPUCFG2_SCQ);
+>                 return 0;
+>         case LOONGARCH_CPUCFG3:
+> -               *v =3D GENMASK(16, 0);
+> +               /*
+> +                * VM does not support memory order and SFB setting
+> +                * only support memory order display
+> +                */
+> +               *v =3D read_cpucfg(LOONGARCH_CPUCFG3) & GENMASK(23, 0);
+> +               *v &=3D ~(CPUCFG3_ALDORDER_CAP | CPUCFG3_ASTORDER_CAP | C=
+PUCFG3_SLDORDER_CAP);
+> +               *v &=3D ~CPUCFG3_SFB;
+>                 return 0;
+>         case LOONGARCH_CPUCFG4:
+>         case LOONGARCH_CPUCFG5:
+> @@ -716,7 +735,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
+>
+>  static int kvm_check_cpucfg(int id, u64 val)
+>  {
+> -       int ret;
+> +       int ret, host;
+>         u64 mask =3D 0;
+>
+>         ret =3D _kvm_get_cpucfg_mask(id, &mask);
+> @@ -746,9 +765,16 @@ static int kvm_check_cpucfg(int id, u64 val)
+>                         /* LASX architecturally implies LSX and FP but va=
+l does not satisfy that */
+>                         return -EINVAL;
+>                 return 0;
+> +       case LOONGARCH_CPUCFG3:
+> +               host =3D read_cpucfg(LOONGARCH_CPUCFG3);
+> +               if ((val & CPUCFG3_SPW_LVL) > (host & CPUCFG3_SPW_LVL))
+> +                       return -EINVAL;
+> +               if ((val & CPUCFG3_RVAMAX) > (host & CPUCFG3_RVAMAX))
+> +                       return -EINVAL;
+> +               return 0;
+>         case LOONGARCH_CPUCFG6:
+>                 if (val & CPUCFG6_PMP) {
+> -                       u32 host =3D read_cpucfg(LOONGARCH_CPUCFG6);
+> +                       host =3D read_cpucfg(LOONGARCH_CPUCFG6);
+>                         if ((val & CPUCFG6_PMBITS) !=3D (host & CPUCFG6_P=
+MBITS))
+>                                 return -EINVAL;
+>                         if ((val & CPUCFG6_PMNUM) > (host & CPUCFG6_PMNUM=
+))
+>
+> base-commit: 18f7fcd5e69a04df57b563360b88be72471d6b62
+> --
+> 2.39.3
+>
+>
