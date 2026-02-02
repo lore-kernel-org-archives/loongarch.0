@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6651A25393B
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 15:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509C836CE08
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 15:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770047918; cv=none; b=jAz02HaO5bb1bT4HD4y1AJ6Z7xRJs1oue86ZjHU697stkbgUXGluPiq7hmYJAAkW5bO/RgwlSS/8tPFtllJTxZFWMOQ8ZjF/gvWo2WiPlwKhZ9zo4adF7rGU220MRoYoTL50h+fx2oQ9jy8iVi4gNJ3vW89e6r9a/Uuk1C574vU=
+	t=1770047926; cv=none; b=bwMsbRfB7q/wdl6a17ntCXpN7+vKNO1Ws8auGhMaD9BTwlAPVX45e9RnL6mwxP4Qxkz0/H2hoDwICSHwoeSp9yAserTClWgk7Z4Fmf0HUasn79IIOR/2ewF5GnB0xvmURrdT5GXK2FKlaNKdnynRkSXsXYjS8e3DvyNYT5qzDN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770047918; c=relaxed/simple;
-	bh=xBYdRN3sYZ6CyWP7NsrlACbZJA1Cw/lqNiJhnZq7FSU=;
+	s=arc-20240116; t=1770047926; c=relaxed/simple;
+	bh=hHQLWMhahxCY/meKke54BXwjoj9QXEZAW+ce8KhMydU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P0nHH/VQsUmRX6XeDQQoyeQxDlRzIQk6CQVoehG7yBFSt1sJnDdlN9AnyREnQj13CFdrBomwptC7H98mMcRbOlSR5CpIgw1HqeuEd6/Q2aPFPUw8JzIsfafsMS74Cizxtgt65R28C8IQx6uUVVqsU/11L+ooWLThNi9NtEY1zq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUuYPjvH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Jr+XPBembo4MudN/m5rQSb3k7wXDpLIsr6wJoWGwyFWcsXA8dvzuCcgjNhYzx3Mf1IDKJvqFdXQh6FDjv6lh6uM0GIZlU/lvohFcGqlR7nrGEuVpBBqfCzPW5vHNUrAGfJlVZlicWZzL86FUjA8lCbfv9Y/JJUwZbb4tdSn+Exc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENafFWTK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUuYPjvH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86342C4AF09;
-	Mon,  2 Feb 2026 15:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENafFWTK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E885C19425;
+	Mon,  2 Feb 2026 15:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770047918;
-	bh=xBYdRN3sYZ6CyWP7NsrlACbZJA1Cw/lqNiJhnZq7FSU=;
+	s=k20201202; t=1770047925;
+	bh=hHQLWMhahxCY/meKke54BXwjoj9QXEZAW+ce8KhMydU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JUuYPjvHnLyfoerZQnpfLmN8zC5Uq4UkgI6PydwFpb+a6+d0kLTWxdeqNId5pCQ4S
-	 bjHkWdhttVZ2QyojnL4HX77XPmc+hi8J4ogibnqKEWYLSEgY8cCLxBpCuaqZqzkdQu
-	 ONqi06hobi0lrIc6QJaLtaTDCXpiwE8UocnZz5DUIHpR35fuMkWqrcRqpyNiQHuiBo
-	 qgPiDUyFBDHPB6eYIPo3ORtKtPhz3Rkdvo3Z9ZJvMqPy1mPbkrQ9uiyGPHJnaUg8ji
-	 TJQmZ82s5ONBBPon8GTJ0VkWA/7KzhbqvJdl+iF9Jr/1LJ/ANlDIdnRVleRhle+iNr
-	 vzuJ1lpcQtyxQ==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id AD0C6F40069;
-	Mon,  2 Feb 2026 10:58:36 -0500 (EST)
+	b=ENafFWTKJrbQqnV2VDvdoxkMl8FgcSSNW4aI3Cvub+S8COIhFCL/xMwClSAk4g0/V
+	 mwW9MJu7DPPLym80fXqWmDIIm1HD8ZbCe9bpyliWCGKiJG1snx3D0tMVJdWS1S4Mlc
+	 daXRW2AgYFJh6hL3RgQgosfH7gI852pQPBm2YhJApY3C/+ABJ0tw9P8izRje+v+5Fp
+	 JGguv1GoteQ/9qpjF3o+tFhwwmfQ0FcRAUa2+u0BUecRxtIYIZl1NVx3dSnOtl7pjR
+	 Czx4A83zrUcsA66ZsfE6td9heui0F43l+/NXKoT0P8RNOkZtERLpGr4M5GkvGjLHXL
+	 seBC6OdyjBipg==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 66437F40069;
+	Mon,  2 Feb 2026 10:58:44 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Mon, 02 Feb 2026 10:58:36 -0500
-X-ME-Sender: <xms:rMmAaQktccmo5zRUOKfM8qYXSW_Rs-wxgg1SFe7h15zsDGggavwAug>
-    <xme:rMmAaZBMoxWm4wLE7JprxWxqzoZbsnkGRt2E5KlQbYd0qc53WIFPk2PCAU1hS7QWT
-    6vxfEFCYKBgqFD95iw4om0DGCo0Srf0feZPVqdSYTQP41_lGn62jeg>
-X-ME-Received: <xmr:rMmAaYzavl9ROuv6CkdLxcjnWMwqNgJWmkPJ68CDY9k1itnKJESV1ejjEPl-Uw>
+  by phl-compute-03.internal (MEProxy); Mon, 02 Feb 2026 10:58:44 -0500
+X-ME-Sender: <xms:tMmAaT6K18Wvd0HKkaGoE4t1MKUHqKOWniKK8Slh0t0mZVSEigY1Ig>
+    <xme:tMmAaSGa0mdtPyBuNth8XS5WbywiUOE954wqqOjbFveO6Fvoi-08_rQSoxGYwJk5m
+    vKnhF9tlwM6cJ2z845M71_O3s263TMrXnhJeSLceZxT7LlvFqK04mB5>
+X-ME-Received: <xmr:tMmAaUknPx1N-S0kFLlVg1ElOKs4Zx8dgAQ7u5mGO9mT7KqaIEdJD84TMHSW6Q>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeektdeiucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeektdeiucetufdote
     tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
     guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
     rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
-X-ME-Proxy: <xmx:rMmAadco0FpI0FoHfSbz9WDxtIqAgoR5SRUYz1MhB9fi8vU7Jd8MFw>
-    <xmx:rMmAaax3Qax-1wdz_e3Zp3-zwt0OTS9Rs3_h0ouojgvViU6rbUC16A>
-    <xmx:rMmAaf7_PyCQBGnNbqgj50-cs3qO-RV-5_JVF-VssC8cYdQ7ESYl1w>
-    <xmx:rMmAafyay6lY5WEAMUXUUSxW5Nt9vwUjSqOOrgtE0ZLk4thNL8fzVQ>
-    <xmx:rMmAaXZFRw-DkCfmrIfAw2Ct358ZDGDgKhhm_osk17roauah1yHnwk1L>
+X-ME-Proxy: <xmx:tMmAaVCjnvOi37sjHrH5c2YoK5qniyc88D6-zATSoj-K260C6NAz1A>
+    <xmx:tMmAaTFTwBN4w2sY2x9XHsmuLbNm77XhH562heWrOazwBYQNMv7o5w>
+    <xmx:tMmAaZ_1GN-puOj1MakR2gQ_GcZ8roej8ffqPxtHQcjAswIwy94giw>
+    <xmx:tMmAaYnWRueQ_UyYgaOP70c45ePncAFrZZlTzvg6i4J6oDGNdMrunA>
+    <xmx:tMmAaX9OPCBnH-pK8V3B8suUm7HtyXnXY7qSHuhx3EvW4oizJzdXFCOm>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Feb 2026 10:58:34 -0500 (EST)
+ 2 Feb 2026 10:58:42 -0500 (EST)
 From: Kiryl Shutsemau <kas@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
@@ -89,9 +89,9 @@ Cc: Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	Kiryl Shutsemau <kas@kernel.org>
-Subject: [PATCHv6 14/17] mm/hugetlb: Remove hugetlb_optimize_vmemmap_key static key
-Date: Mon,  2 Feb 2026 15:56:30 +0000
-Message-ID: <20260202155634.650837-15-kas@kernel.org>
+Subject: [PATCHv6 15/17] mm: Remove the branch from compound_head()
+Date: Mon,  2 Feb 2026 15:56:31 +0000
+Message-ID: <20260202155634.650837-16-kas@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260202155634.650837-1-kas@kernel.org>
 References: <20260202155634.650837-1-kas@kernel.org>
@@ -103,89 +103,66 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The hugetlb_optimize_vmemmap_key static key was used to guard fake head
-detection in compound_head() and related functions. It allowed skipping
-the fake head checks entirely when HVO was not in use.
+The compound_head() function is a hot path. For example, the zap path
+calls it for every leaf page table entry.
 
-With fake heads eliminated and the detection code removed, the static
-key serves no purpose. Remove its definition and all increment/decrement
-calls.
+Rewrite the helper function in a branchless manner to eliminate the risk
+of CPU branch misprediction.
 
 Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 Reviewed-by: Muchun Song <muchun.song@linux.dev>
+Reviewed-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/page-flags.h |  2 --
- mm/hugetlb_vmemmap.c       | 14 ++------------
- 2 files changed, 2 insertions(+), 14 deletions(-)
+ include/linux/page-flags.h | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 5a8f6fab2255..1aaa604f4b9b 100644
+index 1aaa604f4b9b..16384cb6f962 100644
 --- a/include/linux/page-flags.h
 +++ b/include/linux/page-flags.h
-@@ -221,8 +221,6 @@ static __always_inline bool compound_info_has_mask(void)
- 	return is_power_of_2(sizeof(struct page));
- }
- 
--DECLARE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
--
+@@ -224,25 +224,32 @@ static __always_inline bool compound_info_has_mask(void)
  static __always_inline unsigned long _compound_head(const struct page *page)
  {
  	unsigned long info = READ_ONCE(page->compound_info);
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 6088fc77865c..bdb68779d7b2 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -385,9 +385,6 @@ static int vmemmap_remap_alloc(unsigned long start, unsigned long end,
- 	return vmemmap_remap_range(start, end, &walk);
- }
++	unsigned long mask;
++
++	if (!compound_info_has_mask()) {
++		/* Bit 0 encodes PageTail() */
++		if (info & 1)
++			return info - 1;
  
--DEFINE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
--EXPORT_SYMBOL(hugetlb_optimize_vmemmap_key);
+-	/* Bit 0 encodes PageTail() */
+-	if (!(info & 1))
+ 		return (unsigned long)page;
 -
- static bool vmemmap_optimize_enabled = IS_ENABLED(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON);
- static int __init hugetlb_vmemmap_optimize_param(char *buf)
- {
-@@ -419,10 +416,8 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
- 	 * discarded vmemmap pages must be allocated and remapping.
- 	 */
- 	ret = vmemmap_remap_alloc(vmemmap_start, vmemmap_end, flags);
--	if (!ret) {
-+	if (!ret)
- 		folio_clear_hugetlb_vmemmap_optimized(folio);
--		static_branch_dec(&hugetlb_optimize_vmemmap_key);
--	}
+-	/*
+-	 * If compound_info_has_mask() is false, the rest of compound_info is
+-	 * the pointer to the head page.
+-	 */
+-	if (!compound_info_has_mask())
+-		return info - 1;
++	}
  
- 	return ret;
- }
-@@ -544,8 +539,6 @@ static int __hugetlb_vmemmap_optimize_folio(const struct hstate *h,
- 	if (!vmemmap_tail)
- 		return -ENOMEM;
- 
--	static_branch_inc(&hugetlb_optimize_vmemmap_key);
--
  	/*
- 	 * Very Subtle
- 	 * If VMEMMAP_REMAP_NO_TLB_FLUSH is set, TLB flushing is not performed
-@@ -581,10 +574,8 @@ static int __hugetlb_vmemmap_optimize_folio(const struct hstate *h,
- 				 vmemmap_head, vmemmap_tail,
- 				 vmemmap_pages, flags);
- out:
--	if (ret) {
--		static_branch_dec(&hugetlb_optimize_vmemmap_key);
-+	if (ret)
- 		folio_clear_hugetlb_vmemmap_optimized(folio);
--	}
- 
- 	return ret;
+ 	 * If compoun_info_has_mask() is true the rest of the info encodes
+ 	 * the mask that converts the address of the tail page to the head page.
+ 	 *
+ 	 * No need to clear bit 0 in the mask as 'page' always has it clear.
++	 *
++	 * Let's do it in a branchless manner.
+ 	 */
+-	return (unsigned long)page & info;
++
++	/* Non-tail: -1UL, Tail: 0 */
++	mask = (info & 1) - 1;
++
++	/* Non-tail: -1UL, Tail: info */
++	mask |= info;
++
++	return (unsigned long)page & mask;
  }
-@@ -650,7 +641,6 @@ static void __hugetlb_vmemmap_optimize_folios(struct hstate *h,
- 			register_page_bootmem_memmap(pfn_to_section_nr(spfn),
- 					&folio->page,
- 					HUGETLB_VMEMMAP_RESERVE_SIZE);
--			static_branch_inc(&hugetlb_optimize_vmemmap_key);
- 			continue;
- 		}
  
+ #define compound_head(page)	((typeof(page))_compound_head(page))
 -- 
 2.51.2
 
