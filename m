@@ -1,159 +1,273 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D7C2874FB
-	for <loongarch@lists.linux.dev>; Sun,  1 Feb 2026 22:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769983305; cv=pass; b=G8V5mNkgKKJzV46HejnXS6w0IgwihTHSrjMrbm8rCeL1Qgog0KNsmo//g05z7LH7Swca7nwU8NI0yXXXCbeYOxjNC39n26KgfbSzTewONtDmE5yI5AxHpjp1g14cnKnMtW30nvs8LXl1lszae/FNvG8qX9JhEnjAtcUfmtbiptw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769983305; c=relaxed/simple;
-	bh=wl7Jk6JsU5yKG4duQoEsXxxYC+OIwiJhzlKIg8HfxyQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MsMc6oZA8MqTkv/AdA8BOEGynhKoLzgs5jNt1dE//ORQajjBo2Jzd9QzZmn5hxBYWuQFy3ubTB8+XFyqQeUaxiWhK8FQJdjhzJs64Vv//3NFKUxW+9fhzo1UqDHwD4oMtOlCiocntf2wgMqoZoMt2x91EPrLD8HCBC+WyPL9vqY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UovnTcjD; arc=pass smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UovnTcjD"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6581327d6baso5447563a12.3
-        for <loongarch@lists.linux.dev>; Sun, 01 Feb 2026 14:01:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769983302; cv=none;
-        d=google.com; s=arc-20240605;
-        b=WeugozvCp33BPgxak7OGuL1jxWKuNCe1dqi9lMRsQALWsfobOyNk3fpJ31dU0H3qJF
-         f2FUF2OYJ7EOHtw/kO9aoemdYSXlz3ceFBTAu5OGejIwHwRcK3i2ri++z7Ct6gQ32lov
-         4XUIL4Zq6clZvIJB1amo1zBgxC5+WjHrDvLmXrJmCvc2Xr0i4AywOhVra2KV4yJu5+FP
-         E78Ia2bd3wMGZtX8WrXXDvrYdAFxi0ZA7b+w+z7BX43Qfi4g3FsRNQoZk31w6mscebG4
-         nskCjgcCS16Z9G9eoKVl/73oG5C7wr9wdOta1JfQWZFgvK20lUAVnIXgDhEIcqU+XCT1
-         9mJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nxxXeMZ2Mj2NhEcakAGevZjWJ8Zk/OwUaMBA61xjWow=;
-        fh=NxK54mGc3diDsI6OHR82f8F/VOdY46b2SnE7+UIerN4=;
-        b=Hn4WAOJEbtqP6bYE7Xvbia0F+SJzALVn54qxkXveuHN6RE+PFMffcTDxSd/ZOKfi7Q
-         c8ciarL0wKkrDcRIgT+ZVNLG0/y+1q2GYKIElxKbTs1nlGI75DFrX/n3imXBHofsILEZ
-         iDpwMsyCkW4hsoN0moBCgU/WmPPLfQQVch+5XnQflaJajhUA5vQ0VnF9GKqFkbbg+SND
-         F1hCQq1Uci5Tuf8aTk+iksXXsX1vpfRN+rAj/XIkjXXwkHfv7lsfbnZ8IF5UovFQiElW
-         CTEJ/eXovQsnpXG1Q2nVSybxh1fcqryhdEAC2vpeZO3JvfMnk0dLCWfS3q8vjaOuK4IM
-         Gizw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769983302; x=1770588102; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nxxXeMZ2Mj2NhEcakAGevZjWJ8Zk/OwUaMBA61xjWow=;
-        b=UovnTcjDRGMASKPjzPtZxnI3kDxFs8f0r+i9NXBAEF/I+ZR5Get7yjj0NJFngQcxLf
-         k+a48WCXCiQ8rSs124euJOE3sTawy1qjBD/Ige0DUFIi3drzW9fb0gapMA7U+oiEli6S
-         CtA0+mG12whR929gFG2XvnfZIXWeNAlAGR5WBmWQCezF0zyoFQ4bcRA6/HEy7YgSwzf2
-         xMhx63yRhPi7vRfGhpQa+wzNYoh7/WmVAEprJziwVXuChT8+kH4teOJcKf+nDp94wM8V
-         d1rr/zmebKtZIlCxHFf+XSN8RJyTRhCThEtdzlnSy9GimN4yuGUmQE0TF56BIyHnUkek
-         gnrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769983302; x=1770588102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nxxXeMZ2Mj2NhEcakAGevZjWJ8Zk/OwUaMBA61xjWow=;
-        b=FF54uvTLxhadWZUtyRbybrIvpvz+TIS3Q981GPztI+XA7ORBbZc353h+WoC7c9N5ds
-         7k46m8cGBLebQnPA7sIawVi77nutemsdKew/eFtg5N5Gc+zWy8OENAw+wce13LDpF4EO
-         +GClVzmj3IiifHdbnny2tysK2YSF7TJxgGkdko8cCYd6dED9mYwSkVEKLLpAEKnYYtLx
-         04SSB8ylOCL70MoYFTXy+CmD6ZK2E7qBLOCqT4Ml9yUut6OYFh6wrf42CAkQJ/klrcIn
-         td7E7IlK0pGYv9c6mnLGL9J37UlPL3Z8cLeOASQ6V1utn4fRDgL2vZlz96TRoPG+F0W+
-         D0Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0iaAsZkKWLfb5tG09TQWCi7pbgorw16FRCtndj6sA3cXoO9JRiMtYsQ5GQkAE8tIIjG08OCXsqAI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwMlFCdA5J+et4N2W3KZux0UrMNcG26WIGPgmzQx2VLj75xF7P+
-	j9LF2/Svlc7j4kXk5DpPRznK3RoVD6yxMALG2/zwopsGbFmV+iVyMby9XFp3W3z4C3LCPMSOJvq
-	22gwQ8G0ylVfZSwhR6r8bhaOa/3bpE6k=
-X-Gm-Gg: AZuq6aJW9e3ZAmxkXIpDyD8F8DFjAELO/vKJVdAbt7J3gyQwP3lavxcBVF/nX34gNYF
-	vztOJ7IomoLbOl0xXESyhGCu9MUFL6Yeu/tKw2EQM+8D2mnXlibKotmHJqfx7ipNIdc1JGSyv2v
-	HgN7MN9fnLi52Hm6kJTdQnsRK23E7rytXgYw8Z70ggToV2tOQRJs3H91X5C8S+RHO7faQNcatzv
-	IeA5+vkjkOROKpBD0vXQ1ypl2J3kM98piXxkj6mjSo0U6M47HsGBcUqojuOHmqIYgdjZy+/ACaZ
-	P2+Ia2uf3UI+d04le+/hgEO3hqbx
-X-Received: by 2002:a05:6402:90b:b0:64c:9e19:9858 with SMTP id
- 4fb4d7f45d1cf-658de58d61fmr5598076a12.22.1769983301701; Sun, 01 Feb 2026
- 14:01:41 -0800 (PST)
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FBFD15853B
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 01:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769994157; cv=none; b=GK6Kenq0RxlhasqLMrue2YnasbreN5ekXeesA+Ok9QbwWUbEHxQIvIjHJjKDfqzTgsWeEb4N5V3S2HUDl7HmcZScHM23u2BrFwy0/+N7mIaIEes2fswfHoBNZwHMuIs6jAk7mpFr0cmBQ4Wj5DbmkRB5oh8Ib5VJSdmXkHTj8oc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769994157; c=relaxed/simple;
+	bh=Taq3aQvAkG7RXdPkBdMx05dT1kxY4R6YCuxa0d8RgP0=;
+	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eSyyipSmys3LbXcRISlXGrkxlVNMH9sU0yvgkn0aopC9I3a82AIXX25DzMASJdUTFtgNz/5BGyMwXkEnTujnJhb8b5H/M8jtXME5nlgFVzgGMVawhPFxi7sl2YFhmulL94Ss4hHkZoQjJ7RZ3fAymmh+ddvP9pWqEdIMd43yQtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8CxKMKf939p0M4OAA--.48496S3;
+	Mon, 02 Feb 2026 09:02:23 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowJDxzsKc939pAqs9AA--.49068S3;
+	Mon, 02 Feb 2026 09:02:22 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v9 4/4] irqchip/irq-loongarch-ir:Add Redirect irqchip
+ support
+To: zhangtianyang@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260130025941.2140582-1-zhangtianyang@loongson.cn>
+ <20260130025941.2140582-5-zhangtianyang@loongson.cn> <87zf5vlbur.ffs@tglx>
+Message-ID: <f4ca291a-97bc-62b0-31b6-58549d5cea7b@loongson.cn>
+Date: Mon, 2 Feb 2026 09:00:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1769515122.git.zhengqi.arch@bytedance.com> <3380f40a89b73c488202c85f9a8abf99fb08543b.1769515122.git.zhengqi.arch@bytedance.com>
-In-Reply-To: <3380f40a89b73c488202c85f9a8abf99fb08543b.1769515122.git.zhengqi.arch@bytedance.com>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Sun, 1 Feb 2026 23:01:30 +0100
-X-Gm-Features: AZwV_Qj9VNkT5OuGD6ka3IvGbnZ780_iMCZkDjCZeudKZ-RrGhxplhYBmunMjcY
-Message-ID: <CA+=Fv5RhxvyxKr2t+pHd1tbGrK57P-+b3pGe1nVaK_OLiFt2wg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/8] alpha: mm: enable MMU_GATHER_RCU_TABLE_FREE
-To: Qi Zheng <qi.zheng@linux.dev>
-Cc: david@kernel.org, andreas@gaisler.com, richard.weiyang@gmail.com, 
-	will@kernel.org, peterz@infradead.org, aneesh.kumar@kernel.org, 
-	npiggin@gmail.com, dev.jain@arm.com, ioworker0@gmail.com, 
-	akpm@linux-foundation.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-alpha@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linux-um@lists.infradead.org, 
-	sparclinux@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87zf5vlbur.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxzsKc939pAqs9AA--.49068S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ar17Cr1rWFy8Zw1xGw4xXwc_yoW7KF47pF
+	W8Kan7tF4fJr4UCrn29F4UZF9IqryFgr42v3yY9F17Awn0vrn7KF4rWrya9Fn5CrW5AF4j
+	vF4UX3s7uF1DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
-On Tue, Jan 27, 2026 at 1:16=E2=80=AFPM Qi Zheng <qi.zheng@linux.dev> wrote=
-:
->
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
->
-> On a 64-bit system, madvise(MADV_DONTNEED) may cause a large number of
-> empty PTE page table pages (such as 100GB+). To resolve this problem,
-> first enable MMU_GATHER_RCU_TABLE_FREE to prepare for enabling the
-> PT_RECLAIM feature, which resolves this problem.
->
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-> Cc: Richard Henderson <richard.henderson@linaro.org>
-> Cc: Matt Turner <mattst88@gmail.com>
-> ---
->  arch/alpha/Kconfig           | 1 +
->  arch/alpha/include/asm/tlb.h | 6 +++---
->  2 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
-> index 80367f2cf821c..6c7dbf0adad62 100644
-> --- a/arch/alpha/Kconfig
-> +++ b/arch/alpha/Kconfig
-> @@ -38,6 +38,7 @@ config ALPHA
->         select OLD_SIGSUSPEND
->         select CPU_NO_EFFICIENT_FFS if !ALPHA_EV67
->         select MMU_GATHER_NO_RANGE
-> +       select MMU_GATHER_RCU_TABLE_FREE
->         select SPARSEMEM_EXTREME if SPARSEMEM
->         select ZONE_DMA
->         help
-> diff --git a/arch/alpha/include/asm/tlb.h b/arch/alpha/include/asm/tlb.h
-> index 4f79e331af5ea..ad586b898fd6b 100644
-> --- a/arch/alpha/include/asm/tlb.h
-> +++ b/arch/alpha/include/asm/tlb.h
-> @@ -4,7 +4,7 @@
->
->  #include <asm-generic/tlb.h>
->
-> -#define __pte_free_tlb(tlb, pte, address)              pte_free((tlb)->m=
-m, pte)
-> -#define __pmd_free_tlb(tlb, pmd, address)              pmd_free((tlb)->m=
-m, pmd)
-> -
-> +#define __pte_free_tlb(tlb, pte, address)      tlb_remove_ptdesc((tlb), =
-page_ptdesc(pte))
-> +#define __pmd_free_tlb(tlb, pmd, address)      tlb_remove_ptdesc((tlb), =
-virt_to_ptdesc(pmd))
-> +
->  #endif
-> --
-> 2.20.1
->
+Hi, Thomas
 
-Looks good from an Alpha perspective.
+在 2026/1/30 下午4:54, Thomas Gleixner 写道:
+> On Fri, Jan 30 2026 at 10:59, Tianyang Zhang wrote:
+>> +// SPDX-License-Identifier: GPL-2.0
+> GPL-2.0-only please
+Ok, I got it
+>
+>> +/*
+>> + * Copyright (C) 2020 Loongson Technologies, Inc.
+> This was written 6 years ago already?
+This was copied from other files, and I will rework it, thanks
+>
+>> + */
+>> +
+>> +#include <linux/cpuhotplug.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/irqchip/irq-msi-lib.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/msi.h>
+> Includes should be alphabetically ordered.
+Ok, I got it
+>
+>> +#define REDIRECT_REG(reg, node) \
+>> +	((void __iomem *)(IO_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg)))
+>> +
+>> +static inline void redirect_write_reg64(u32 node, u64 val, u32 reg)
+>> +{
+>> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
+>> +
+>> +	return writeq(val, reg_addr);
+> Bogus return and you can simplify this to
+>
+>        writeq(val, REDIRECT_REG(reg, node));
+>
+> No?
+Ok, this is more reasonable.
+>
+>> +}
+>> +
+>> +static inline u32 redirect_read_reg32(u32 node, u32 reg)
+>> +{
+>> +	void __iomem *reg_addr = REDIRECT_REG(reg, node);
+>> +
+>> +	return readl(reg_addr);
+> Condense to single line as well
+Ok, I got it
+>
+>> +static void irde_invalid_entry(struct redirect_item *item)
+> This should be named irde_invalidate_entry() as that's what the function
+> is about. irq_invalid_entry() reads more like a function which check for
+> an invalid entry.
+Ok, I got it
+>
+>> +{
+>> +	struct irde_inv_cmd cmd;
+>> +	u64 raddr = 0;
+>> +
+>> +	cmd.cmd_info = 0;
+>> +	cmd.index.type = INVALID_INDEX;
+>> +	cmd.index.need_notice = 1;
+>> +	cmd.index.index = item->index;
+>> +	cmd.notice_addr = (u64)(__pa(&raddr));
+>> +
+>> +	invalid_enqueue(item, &cmd);
+>> +
+>> +	/*
+>> +	 * CPU needs to wait here for cmd to complete, and it determines this
+> The CPU
+Ok, I got it, thanks
+>
+>> +	 * by checking whether invalid queue has already written a valid value
+> whether the invalidation queue
+Ok, I got it, thanks
+>
+>> +static int redirect_table_alloc(int node, u32 nr_irqs)
+>> +{
+>> +	struct redirect_table *ird_table = &irde_descs[node].ird_table;
+>> +	unsigned int index, order;
+>> +
+>> +	if (nr_irqs > 1) {
+>> +		nr_irqs = __roundup_pow_of_two(nr_irqs);
+>> +		order = ilog2(nr_irqs);
+>> +	}
+>> +
+>> +	guard(raw_spinlock_irqsave)(&ird_table->lock);
+>> +
+>> +	index = bitmap_find_free_region(ird_table->bitmap,
+>> +					IRD_ENTRIES, order);
+> Get rid of this pointless line break. You have 100 characters and the
+> above even fits into 80
+Ok, I got it
+>
+>> +	if (index < 0) {
+>> +		pr_err("No redirect entry to use\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +static int redirect_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> +				 unsigned int nr_irqs, void *arg)
+>> +{
+>> +	msi_alloc_info_t *info = arg;
+>> +	int ret, i, node, index;
+>> +
+>> +	node = dev_to_node(info->desc->dev);
+>> +
+>> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	index = redirect_table_alloc(node, nr_irqs);
+>> +	if (index < 0) {
+>> +		pr_err("Alloc redirect table entry failed\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	for (i = 0; i < nr_irqs; i++) {
+>> +		struct irq_data *irq_data = irq_domain_get_irq_data(domain, virq + i);
+>> +		struct redirect_item *item;
+>> +
+>> +		item = kzalloc(sizeof(*item), GFP_KERNEL);
+>> +		if (!item) {
+>> +			pr_err("Alloc redirect descriptor failed\n");
+>> +			goto out_free_resources;
+>> +		}
+>> +		item->irde = &irde_descs[node];
+>> +
+>> +		/*
+>> +		 * Only bits 47:6 of the GPID are passed to the controller,
+>> +		 * 64-byte alignment must be guarantee and make kzalloc can
+>> +		 * align to the respective size.
+> -ENOPARSE
+Ok ,I got it
+>> +		 */
+>> +static const struct irq_domain_ops redirect_domain_ops = {
+>> +	.alloc		= redirect_domain_alloc,
+>> +	.free		= redirect_domain_free,
+>> +	.select		= msi_lib_irq_domain_select,
+>> +};
+>> +static void __redirect_irde_fini(struct irde_desc *irde)
+> This schoolbook _fini() naming is just lame and nondescriptive. Please
+> use descriptive function names which make it clear what this is about,
+> e.g. redirect_free_irde() or something like that.
+>
+> Also this should be __init, no?
+Yes , This code style is indeed not very appropriate, I will adjust the 
+function name
+>
+>> +{
+>> +	struct redirect_table *ird_table = &irde_descs->ird_table;
+>> +	struct redirect_queue *inv_queue = &irde_descs->inv_queue;
+>> +static inline void redirect_irde_fini(int node)
+>> +{
+>> +	__redirect_irde_fini(&irde_descs[node]);
+> This indirection is really pointless. Just move the '&irde_descs[node]' to
+> the only caller.
+Ok, I got it
+>
+>> +int __init redirect_acpi_init(struct irq_domain *parent)
+>> +{
+>> +	struct fwnode_handle *fwnode;
+>> +	int ret = -EINVAL, node;
+>> +
+>> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+>> +	if (!fwnode) {
+>> +		pr_err("Unable to alloc redirect domain handle\n");
+>> +		goto fail;
+>> +	}
+>> +
+>> +	redirect_domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+>> +						      &redirect_domain_ops, irde_descs);
+>> +	if (!redirect_domain) {
+>> +		pr_err("Unable to alloc redirect domain\n");
+>> +		goto out_free_fwnode;
+>> +	}
+>> +
+>> +
+> stray newline
+Ok, I got it
+>
+>> +	for_each_node_mask(node, node_possible_map) {
+>> +		ret = redirect_irde_init(node);
+>> +		if (ret)
+>> +			goto out_clear_irde;
+>> +	}
+>> +
+>> +	ret = acpi_cascade_irqdomain_init();
+>> +	if (ret < 0) {
+>> +		pr_err("Failed to cascade IRQ domain, ret=%d\n", ret);
+>> +		goto out_clear_irde;
+>> +	}
+>> +
+>> +	pr_info("loongarch irq redirect modules init succeeded\n");
+> You really want to have:
+>
+> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>
+> at the top of the file, so that all printk()s in this file are properly
+> prefixed.
+Ok, I got it, thanks
+>
+> Thanks,
+>
+>          tglx
 
-Acked-by: Magnus Lindholm <linmag7@gmail.com>
+Tiyang
+
