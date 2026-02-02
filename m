@@ -1,172 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C5E2DB7A1
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15413570BA
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770025714; cv=none; b=GpXkGvb7YxNi06T4dyDYp4KeMYih0Y+NIDjrd3j7jcFqlrxlN+h/w/QM8T73VSXAVMiHCB4mGT5Qw+orRKH/qNasIEddQFfYPs8iTL8VylUu/rWCIVelrgr4tPHWx2jzCnnLZMeMt0XXuimdjo9AcfQVDSUWPRiVibFjs5K/eA0=
+	t=1770026394; cv=none; b=pOv5O5ptyymHwj1G3aRBU2diPRM7dniAHLGbV28H7vyW/LrS+2HpP00ZA1q2mPn+pw2m/zFkFLTCtefM8Vun1gDmVbc3LfPRbRud5NbTj4YemV0+K7mE3KlL9nN4UJFCbvUAV2cN564MQrzkmUWAHimksKgsks97xqBATf2XlLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770025714; c=relaxed/simple;
-	bh=vWwVuDVwjMwFP5MTUalu6/VQMN54yDsQ+cxjHswApBI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jCl6zEHIjTS4cwUMBiG0/lZYfiY6BN2vIW9iRh05ZGcoEMPiJPI3vyaOWohfvg6BAMPBOLR99Mu5yvpUo0uhm05xWM8uQKG9nvt0+YRmispkmDhTXeVEF+5fp/Y68vFh1YEEbdxDa/h6TYMv6DKjmspVuVDxAXW6eudRqAStxCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCINpOMg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770026394; c=relaxed/simple;
+	bh=m14eH5SkrBikH5k6bFBD0mKCFteemijFiTMcA5d+3Tg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NhDjCS/aUi7IyB4WbyE7u6P6+1MH5iFTTmaudzWX6b8ZmH1FelFSg9qgxpWq9id/W5oHgw9QY91GWOdCVhtfHSXEDU59CUBu9izDku10ZAyxl3p0NZDce+VY77NFLTLnxL85xucw7c5beUdLOMBKYlkbOganuELU0Pb00HIOY2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j09KHu8T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Aw5eyl5G; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCINpOMg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4594AC116C6
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 09:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770025714;
-	bh=vWwVuDVwjMwFP5MTUalu6/VQMN54yDsQ+cxjHswApBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eCINpOMg5MfpzBW4OPEilbSwGrQ1586+5OZRZssKSe60inj9QsQyvVzDBWo2S2SkE
-	 V3WvhWg2o2tkpxZ96FhmzP450sfjNtFLiue/pbDWHA6ox1FNfDIllSonCA3uCnYLlx
-	 dDyUVEMiChsUnRnv2/SmIxdzuusKs+eRKaEOkbIA+pHTLFbw7eEt+ltJREXPBUxTDy
-	 aIiPCV7UVkRhJAyYS8KCR9/bFsXiJHpofHbJMv2iPfX1fCVlLFECbutsKbeARN60fP
-	 Oqp71vqB23YSY4CRa7TxSUkMOq1V6RvchP1G6n7lghEJpEXXrZzAZLTc0dYqOwDJdL
-	 jOZ2e9u2jKVdQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-658b7d13f09so7694091a12.2
-        for <loongarch@lists.linux.dev>; Mon, 02 Feb 2026 01:48:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWNErNMAPNe/P3nyVhIIjDFSmOW2P684yoYuVdVWFINfMUBcigM71H/0eYPQBQkVjRMa6by9dnga4g=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz+pIGazzAmlVtWhaTZb51nvdU5L+XnmvybUkh1D91q/m6z/zD
-	y/VvyhGT6vfrYOLNZoEGCuR5A07RsSI6/Z7OElxTrHBGOw8bulmmZ7Yd7QJ+wK1Wgt+dnTS9xRW
-	Spktdc+acthKvKCOSSqp84m2vi+SJYKs=
-X-Received: by 2002:a17:907:1b1d:b0:b87:1d71:f44d with SMTP id
- a640c23a62f3a-b8dff591487mr634836666b.11.1770025712817; Mon, 02 Feb 2026
- 01:48:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j09KHu8T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Aw5eyl5G"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1770026390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m14eH5SkrBikH5k6bFBD0mKCFteemijFiTMcA5d+3Tg=;
+	b=j09KHu8Tn7Bz/AZLA8PEOhERhnvJXV0tVVC/ZbMYr+hK6u4Co+AHmS1ATzksgBtTnHW5nP
+	Ym/Z9Krm3cWiUigIbK39RpRp8VzhqXSPDFxN7SA8ktJDl9NkEKAE4I20uLUGEQbP+jEOEB
+	/SzTEvDtcQK/aHssaFF4mjhXUSGfm7hhXUZApLjoEdqYWfsqlY2yhvlEeZUnR7nyrwarAc
+	WIEMG4G/rjcIqMTyYqzu9UeBfgn4OxnRoqbv4XNRDSWfe8Sxef4i9ONV9022oJUxHy9hxh
+	7UhmBqmCVqm/w71E/PC6aAfIJthAWGzQE/rZnIKdkXijlKFjCt9dOt9Jn/VZQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1770026390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m14eH5SkrBikH5k6bFBD0mKCFteemijFiTMcA5d+3Tg=;
+	b=Aw5eyl5GTkxGFlTH3CHG7a1CAY0eJl0kZwQrnljCFWOTTY08zXmFXbnadV5ME9rDy8B00V
+	+iRkOQPZ5zXRC7Dw==
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, maobibo@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: Re: [PATCH v10 2/4] irqchip/irq-loongson.h: irq-loongson.h
+ preparation for Redirect irqchip
+In-Reply-To: <20260202091041.2278271-3-zhangtianyang@loongson.cn>
+References: <20260202091041.2278271-1-zhangtianyang@loongson.cn>
+ <20260202091041.2278271-3-zhangtianyang@loongson.cn>
+Date: Mon, 02 Feb 2026 10:59:50 +0100
+Message-ID: <87pl6nfotl.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260202082631.1678388-1-maobibo@loongson.cn>
-In-Reply-To: <20260202082631.1678388-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 2 Feb 2026 17:48:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6in768UbTqxjrwxXynPPRxAsoeksbau6O5_o5fg8DEyw@mail.gmail.com>
-X-Gm-Features: AZwV_Qi0gZeeCqTwzuZaQYUNF6jPu6KS9q96SV5QUjuHZAnfP1IgFBac4zZuwI8
-Message-ID: <CAAhV-H6in768UbTqxjrwxXynPPRxAsoeksbau6O5_o5fg8DEyw@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: KVM: Add more CPUCFG mask bit
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Applied with some small changes, thanks.
+On Mon, Feb 02 2026 at 17:10, Tianyang Zhang wrote:
 
-Huacai
+> Interrupt redirection support requires a new interrupt chip, which
+> needs to share data structures, constants and functions with the AVEC
+> code.
+>
+> Move them to the header file and make the required functions public.
+>
+> including:
+> 1 marco AVEC_MSG_OFFSET
+> 2 struct avecintc_data
+> 3 Make avecintc_sync public
 
-On Mon, Feb 2, 2026 at 4:26=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
-> With LA664 CPU there are more features supported which are indicated
-> in CPUCFG2 bit24:30 and CPUCFG3 bit17 and bit 23. KVM hypervisor
-> cannot enable or disable these features and there is no KVM exception
-> when instructions of these features are executed in guest mode.
->
-> Here add more CPUCFG mask support with LA664 CPU type.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> v2 ... v3:
->   1. Add CPUCFG3_ALDORDER_STA and CPUCFG3_ASTORDER_STA in cpucfg3.
->   2. Disable bit CPUCFG3_SFB since VM does not support SFB controling.
->   3. Add checking with max supported page directory level and max virtual
->      address width.
->
-> v1 ... v2:
->   1. Rebase on the latest version since some common CPUCFG bit macro
->      definitions are merged.
->   2. Modifiy the comments explaining why it comes from feature detect
->      of host CPU.
-> ---
->  arch/loongarch/kvm/vcpu.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 656b954c1134..7bea5e162a4d 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -652,6 +652,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigne=
-d int id, u64 val)
->
->  static int _kvm_get_cpucfg_mask(int id, u64 *v)
->  {
-> +       unsigned int config;
-> +
->         if (id < 0 || id >=3D KVM_MAX_CPUCFG_REGS)
->                 return -EINVAL;
->
-> @@ -684,9 +686,26 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
->                 if (cpu_has_ptw)
->                         *v |=3D CPUCFG2_PTW;
->
-> +               /*
-> +                * The capability indication of some features are the sam=
-e
-> +                * between host CPU and guest vCPU, and there is no speci=
-al
-> +                * feature detect method with vCPU. Also KVM hypervisor c=
-an
-> +                * not enable or disable these features.
-> +                *
-> +                * Here use host CPU detected features for vCPU
-> +                */
-> +               config =3D read_cpucfg(LOONGARCH_CPUCFG2);
-> +               *v |=3D config & (CPUCFG2_FRECIPE | CPUCFG2_DIV32 | CPUCF=
-G2_LAM_BH);
-> +               *v |=3D config & (CPUCFG2_LAMCAS | CPUCFG2_LLACQ_SCREL | =
-CPUCFG2_SCQ);
->                 return 0;
->         case LOONGARCH_CPUCFG3:
-> -               *v =3D GENMASK(16, 0);
-> +               /*
-> +                * VM does not support memory order and SFB setting
-> +                * only support memory order display
-> +                */
-> +               *v =3D read_cpucfg(LOONGARCH_CPUCFG3) & GENMASK(23, 0);
-> +               *v &=3D ~(CPUCFG3_ALDORDER_CAP | CPUCFG3_ASTORDER_CAP | C=
-PUCFG3_SLDORDER_CAP);
-> +               *v &=3D ~CPUCFG3_SFB;
->                 return 0;
->         case LOONGARCH_CPUCFG4:
->         case LOONGARCH_CPUCFG5:
-> @@ -716,7 +735,7 @@ static int _kvm_get_cpucfg_mask(int id, u64 *v)
->
->  static int kvm_check_cpucfg(int id, u64 val)
->  {
-> -       int ret;
-> +       int ret, host;
->         u64 mask =3D 0;
->
->         ret =3D _kvm_get_cpucfg_mask(id, &mask);
-> @@ -746,9 +765,16 @@ static int kvm_check_cpucfg(int id, u64 val)
->                         /* LASX architecturally implies LSX and FP but va=
-l does not satisfy that */
->                         return -EINVAL;
->                 return 0;
-> +       case LOONGARCH_CPUCFG3:
-> +               host =3D read_cpucfg(LOONGARCH_CPUCFG3);
-> +               if ((val & CPUCFG3_SPW_LVL) > (host & CPUCFG3_SPW_LVL))
-> +                       return -EINVAL;
-> +               if ((val & CPUCFG3_RVAMAX) > (host & CPUCFG3_RVAMAX))
-> +                       return -EINVAL;
-> +               return 0;
->         case LOONGARCH_CPUCFG6:
->                 if (val & CPUCFG6_PMP) {
-> -                       u32 host =3D read_cpucfg(LOONGARCH_CPUCFG6);
-> +                       host =3D read_cpucfg(LOONGARCH_CPUCFG6);
->                         if ((val & CPUCFG6_PMBITS) !=3D (host & CPUCFG6_P=
-MBITS))
->                                 return -EINVAL;
->                         if ((val & CPUCFG6_PMNUM) > (host & CPUCFG6_PMNUM=
-))
->
-> base-commit: 18f7fcd5e69a04df57b563360b88be72471d6b62
-> --
-> 2.39.3
->
->
+https://lore.kernel.org/all/875x8jmsa8.ffs@tglx/
+
+still applies.
