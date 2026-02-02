@@ -1,224 +1,107 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523242882B2
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318C9208961
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770017781; cv=none; b=R3Pz8qPHzDIhxRtsjqsGc2i/wc87MPv5ajUPCnBHfQTppLIc6/wlmDNNszth3ag9mSwDXHnS8VuOmlKKhO9hk8l6e0xjtYxMu+r2jaceJLOPSVKE19XAQbm3qVUKKIh+RiNPpnhGwUvW7/wukhKhRwsBFsNTiiLSvF30DXTfMWE=
+	t=1770018192; cv=none; b=nDwb5Da24CRsWzW0wB3QvOrrVeZyGGyjJbNeY+mwp/fcWBoWJ75TZoC9eiV7XJS3rIipLdb5j3gn4axNaQiECdkN4O/+IgW2kmD/+xALuSF2FxBZM6IluNb4+42tsGrPjWdkjZG54zkbaegYuSo90CMFZ3Xk2g+K3hzOdy3L1TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770017781; c=relaxed/simple;
-	bh=WUfXq+uO17hFScq5V/kXwLQOZdVa5rF7TWMEUg0R3NM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bndLvKLqG4OElOy+gOMtsUdmRa3IIMj02RH1rWwWtqRXYh4hxVFvjwX7QGGnjMcd8bjXjGyVkTw6IKYIPhoqg252N548PYCNIVBWS+4kLHWeibN7BCKUkOkz3uBVj253xz5txpFgq93Viq4xRRu9w3exB8NWYPl5Tz1fLFa9IZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxMvHrU4BpwuMOAA--.48856S3;
-	Mon, 02 Feb 2026 15:36:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx98DqU4BpOgg+AA--.35552S3;
-	Mon, 02 Feb 2026 15:36:11 +0800 (CST)
-Subject: Re: [PATCH] KVM: LoongArch: selftests: Add steal time test case
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>,
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260129021839.3674879-1-maobibo@loongson.cn>
- <CAAhV-H5yZbocBBBN5nMqb32UaVP6i8+9X4RNAwquVYVFVRaBVg@mail.gmail.com>
- <865fdd00-b8ef-1e17-c1b9-1cb264e32914@loongson.cn>
- <CAAhV-H539vn34ptS-9N8VZ9qMjJ-Lk8LE1_GAbvoNR20L+k5Ng@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <eb3a4eea-0403-9b8f-770d-e3bf10eee513@loongson.cn>
-Date: Mon, 2 Feb 2026 15:33:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1770018192; c=relaxed/simple;
+	bh=G7Ms0Rdb076S1fetXyEIkIwmDu+ivrLjNBLHbP+2rsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GIQWcnBwrRZ2RkQVcWYiMeQLN8fq+8ONmn4C6kbyqdNRG88xbNL+JnJy+KUN6ZwSDbr9j+Ipm71vk7KXnyJZoS5+RPFMRx88Z8dOYveDFPULDfHobfCMd/nlKU6/fVc3DigTxLiBnPJ0KwOPnJSBUeB8r5+AcyDzH2i+RG3c++s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n/QYfyh2; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n/QYfyh2"
+Message-ID: <bef6065d-57d6-4b88-aa7e-ece766107892@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770018188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G7Ms0Rdb076S1fetXyEIkIwmDu+ivrLjNBLHbP+2rsE=;
+	b=n/QYfyh2o06E59isIib+1RpgCaFdFKk5mTGmQ0ehzmTDBQcbmITS0vDCpzqXtpu8vs+IYr
+	c2ZF5/KKEBML2OJYZQNWZC8H5doWuUvPNfcNmNQZ+1LFayd/LwhEv3+/6EDHjxiq/A3Ext
+	CpQCXDaBVEsHx3Tn0wZdPC8EMzNq15k=
+Date: Mon, 2 Feb 2026 15:43:01 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H539vn34ptS-9N8VZ9qMjJ-Lk8LE1_GAbvoNR20L+k5Ng@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Subject: Re: [PATCH net-next] net: stmmac: Correct spelling from clk_scr_i to
+ clk_csr_i
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, Serge Semin <fancer.lancer@gmail.com>,
+ loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20260201023619.366505-1-chenhuacai@loongson.cn>
+ <524246d9-bc9b-4d65-814d-d544b53bcd0b@linux.dev>
+ <CAAhV-H5T=1FefitLWSf5Qw3HEwFO0ERhefq1udae6mt9tq+ikQ@mail.gmail.com>
 Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <CAAhV-H5T=1FefitLWSf5Qw3HEwFO0ERhefq1udae6mt9tq+ikQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx98DqU4BpOgg+AA--.35552S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3AF4kKw15ZF43ZFW5Cr4UAwc_yoW7Cryrpr
-	Z2kF4jgFW0qr17Jr10gw1qvFnxtrn2kr4xZF17Xw45Ar1qvFsrJr18tryUCFn5Zwn5GF1S
-	v3Z5KF43uFW5JrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
-	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
-	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
-	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
-	1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBI
-	daVFxhVjvjDU0xZFpf9x07j5WrAUUUUU=
+X-Migadu-Flow: FLOW_OUT
 
 
-
-On 2026/2/2 下午3:31, Huacai Chen wrote:
-> On Mon, Feb 2, 2026 at 10:03 AM Bibo Mao <maobibo@loongson.cn> wrote:
+在 2026/2/2 15:29, Huacai Chen 写道:
+> On Mon, Feb 2, 2026 at 9:36 AM Yanteng Si <si.yanteng@linux.dev> wrote:
 >>
->> Hi Huacai,
->>
->> On 2026/1/31 下午9:47, Huacai Chen wrote:
->>> Since paravirt preempt is also applied, I applied this one with some
->>> modifications, you can check whether it is correct.
+>> 在 2026/2/1 10:36, Huacai Chen 写道:
+>>> In include/linux/stmmac.h clk_csr_i is spelled as clk_scr_i by mistake,
+>>> so correct it.
 >>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/commit/?h=loongarch-kvm&id=cf991b57ffc808d69cb1f911563b1d4658774ccf
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>> fix tag?
 >>
->> I checked the pendning patches in loongarch-kvm branch, they all look
->> good to me.
-> OK, then are there any updates on this one?
-> https://lore.kernel.org/loongarch/CAAhV-H57b14qY+5jqe+Fd5FTQq6jrhurfNBCqBqwG6SUpKFhTw@mail.gmail.com/T/#t
-there is an update version and I am testing the patch.
-Will post the patch soon.
+>> But this is just a comment, no need to backport it (I'm fine either way).
+>>
+>> If no fix tag, please update the subject to typo fix instead.
+> Why? Is the subject line wrong?
 
-Regards
-Bibo Mao
-> 
+You're absolutely right, and "typo" specifically refers to a typographical
+
+error in written content—this patch is a correction to a comment, so using
+
+"typo" is perfectly appropriate.
+
+
+I might be misinterpreting the wording here – what I really want is to tell
+
+exactly what a patch modifies from the subject alone, without having to
+
+check the patch content. Maybe "correct comment" is a better fit. I know
+
+I'm splitting hairs a bit, but I couldn't just stay silent after receiving your
+
+patch, right?
+
+
+Thanks,
+
+Yanteng
+
+>
 > Huacai
+>
 >>
->> Thanks for doing this.
+>> Thanks,
 >>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>> On Thu, Jan 29, 2026 at 10:18 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>> LoongArch KVM supports steal time accounting now, here add steal time
->>>> test case on LoongArch.
->>>>
->>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>> ---
->>>>    tools/testing/selftests/kvm/Makefile.kvm |  1 +
->>>>    tools/testing/selftests/kvm/steal_time.c | 85 ++++++++++++++++++++++++
->>>>    2 files changed, 86 insertions(+)
->>>>
->>>> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
->>>> index ba5c2b643efa..a18c00f1a4fa 100644
->>>> --- a/tools/testing/selftests/kvm/Makefile.kvm
->>>> +++ b/tools/testing/selftests/kvm/Makefile.kvm
->>>> @@ -228,6 +228,7 @@ TEST_GEN_PROGS_loongarch += kvm_page_table_test
->>>>    TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
->>>>    TEST_GEN_PROGS_loongarch += memslot_perf_test
->>>>    TEST_GEN_PROGS_loongarch += set_memory_region_test
->>>> +TEST_GEN_PROGS_loongarch += steal_time
->>>>
->>>>    SPLIT_TESTS += arch_timer
->>>>    SPLIT_TESTS += get-reg-list
->>>> diff --git a/tools/testing/selftests/kvm/steal_time.c b/tools/testing/selftests/kvm/steal_time.c
->>>> index 8edc1fca345b..ee13e8973c45 100644
->>>> --- a/tools/testing/selftests/kvm/steal_time.c
->>>> +++ b/tools/testing/selftests/kvm/steal_time.c
->>>> @@ -301,6 +301,91 @@ static void steal_time_dump(struct kvm_vm *vm, uint32_t vcpu_idx)
->>>>           pr_info("\n");
->>>>    }
->>>>
->>>> +#elif defined(__loongarch__)
->>>> +/* steal_time must have 64-byte alignment */
->>>> +#define STEAL_TIME_SIZE                ((sizeof(struct kvm_steal_time) + 63) & ~63)
->>>> +#define KVM_STEAL_PHYS_VALID   BIT_ULL(0)
->>>> +
->>>> +struct kvm_steal_time {
->>>> +       __u64 steal;
->>>> +       __u32 version;
->>>> +       __u32 flags;
->>>> +       __u32 pad[12];
->>>> +};
->>>> +
->>>> +static bool is_steal_time_supported(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +       int err;
->>>> +       uint64_t val;
->>>> +       struct kvm_device_attr attr = {
->>>> +               .group = KVM_LOONGARCH_VCPU_CPUCFG,
->>>> +               .attr = CPUCFG_KVM_FEATURE,
->>>> +               .addr = (uint64_t)&val,
->>>> +       };
->>>> +
->>>> +       err = __vcpu_ioctl(vcpu, KVM_HAS_DEVICE_ATTR, &attr);
->>>> +       if (err)
->>>> +               return false;
->>>> +
->>>> +       err = __vcpu_ioctl(vcpu, KVM_GET_DEVICE_ATTR, &attr);
->>>> +       if (err)
->>>> +               return false;
->>>> +
->>>> +       return val & BIT(KVM_FEATURE_STEAL_TIME);
->>>> +}
->>>> +
->>>> +static void steal_time_init(struct kvm_vcpu *vcpu, uint32_t i)
->>>> +{
->>>> +       struct kvm_vm *vm = vcpu->vm;
->>>> +       uint64_t st_gpa;
->>>> +       int err;
->>>> +       struct kvm_device_attr attr = {
->>>> +               .group = KVM_LOONGARCH_VCPU_PVTIME_CTRL,
->>>> +               .attr = KVM_LOONGARCH_VCPU_PVTIME_GPA,
->>>> +               .addr = (uint64_t)&st_gpa,
->>>> +       };
->>>> +
->>>> +       /* ST_GPA_BASE is identity mapped */
->>>> +       st_gva[i] = (void *)(ST_GPA_BASE + i * STEAL_TIME_SIZE);
->>>> +       sync_global_to_guest(vm, st_gva[i]);
->>>> +
->>>> +       err = __vcpu_ioctl(vcpu, KVM_HAS_DEVICE_ATTR, &attr);
->>>> +       TEST_ASSERT(err == 0, "No PV stealtime Feature");
->>>> +
->>>> +       st_gpa = (unsigned long)st_gva[i] | KVM_STEAL_PHYS_VALID;
->>>> +       err = __vcpu_ioctl(vcpu, KVM_SET_DEVICE_ATTR, &attr);
->>>> +       TEST_ASSERT(err == 0, "Fail to set PV stealtime GPA");
->>>> +}
->>>> +
->>>> +static void guest_code(int cpu)
->>>> +{
->>>> +       struct kvm_steal_time *st = st_gva[cpu];
->>>> +       uint32_t version;
->>>> +
->>>> +       memset(st, 0, sizeof(*st));
->>>> +       GUEST_SYNC(0);
->>>> +
->>>> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
->>>> +       WRITE_ONCE(guest_stolen_time[cpu], st->steal);
->>>> +       version = READ_ONCE(st->version);
->>>> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
->>>> +       GUEST_SYNC(1);
->>>> +
->>>> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
->>>> +       GUEST_ASSERT(version < READ_ONCE(st->version));
->>>> +       WRITE_ONCE(guest_stolen_time[cpu], st->steal);
->>>> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
->>>> +       GUEST_DONE();
->>>> +}
->>>> +
->>>> +static void steal_time_dump(struct kvm_vm *vm, uint32_t vcpu_idx)
->>>> +{
->>>> +       struct kvm_steal_time *st = addr_gva2hva(vm, (ulong)st_gva[vcpu_idx]);
->>>> +
->>>> +       ksft_print_msg("VCPU%d:\n", vcpu_idx);
->>>> +       ksft_print_msg("    steal:     %lld\n", st->steal);
->>>> +       ksft_print_msg("    version:   %d\n", st->version);
->>>> +}
->>>>    #endif
->>>>
->>>>    static void *do_steal_time(void *arg)
->>>>
->>>> base-commit: 8dfce8991b95d8625d0a1d2896e42f93b9d7f68d
->>>> --
->>>> 2.39.3
->>>>
+>> Yanteng
 >>
 >>
-
+>>
