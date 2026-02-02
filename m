@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86D236CE08;
-	Mon,  2 Feb 2026 15:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4963814AD0D;
+	Mon,  2 Feb 2026 15:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770047870; cv=none; b=UfcuWywNJ/jG0l4sZT67gLwS3L/ufbFM11HvguutFxpdFPGVN/yTPqES5OBfEwlwMORGxUamg/+B6WPKLVMXRWnYILhjlWb89sdJgvg+44cZaP7SujeSqpEBHGRgOJmspHPjkiZOuRf85n/FmEpDcllAkSL3DLyezzb+Bm3QkUA=
+	t=1770047880; cv=none; b=Q3elC9ELuzT5OhOd6CMaI4hiNyZcIQ4iQnY3YVxRb7LF3B1XZjfHoGhu96jR5h8Pk5HwJOmmkPJdVnkc9JSfxd4dxNharz4LfUS9iBAhgbOo5csQFyd0ynUAf8X3nzZrdpcAQUE015u5bBeI+GVW6c2W74t9TEkSyoGRUAcyJOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770047870; c=relaxed/simple;
-	bh=VrUiLq75DGzOguYtbXE6XDIwgQv8ey6yUw/4kWmprNw=;
+	s=arc-20240116; t=1770047880; c=relaxed/simple;
+	bh=WA5hQUJoQwTD5DQSyUz0pDcyfXp3ks3On7x7VB179to=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ha9B51d3Ntfa99/jeiJ+4LWqOzCC6NvvShpxqs7gknNgCHffKJXoVj4qGOn5etNNfRjJHyN+pT+Q11G+Des24Nstt32VCLFBLB2+cnyZKC5cSFyEKnoZNWFeBCBRY0tLOobEogOpRJYPyxboJoitcyWIQ9XJtSAm9hsu/gErHDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvtcO+aQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=pzfrrcv4AcLPvbQ/yhlaGo/bLjN/LfFvqDDrqlHuX01jkdpJjaHRdvxgqRBlY7hQ8yvZvJtWZpjMeRHMPhifL8dJcANt/GTJIj3X+tu5YAQOlh/XagluMMynS9xy1sj7pC141OsnjTzqTrDE+i2NXdQjc7/BJWUwTa8enj4Q/cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Klu0DsYu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvtcO+aQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 835C9C19425;
-	Mon,  2 Feb 2026 15:57:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Klu0DsYu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D08C2BC9E;
+	Mon,  2 Feb 2026 15:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770047870;
-	bh=VrUiLq75DGzOguYtbXE6XDIwgQv8ey6yUw/4kWmprNw=;
+	s=k20201202; t=1770047880;
+	bh=WA5hQUJoQwTD5DQSyUz0pDcyfXp3ks3On7x7VB179to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EvtcO+aQ9OQr4h7jVSo1frzhSOxnbEFza5TzKINdvokRgHhzCFihUKNirsH5eRqQI
-	 o+nHAnSP3Eoi0bhKqFBJ3u2eSv+qnLcMX9Vd2tQiKRGw4ttIeXYOU/ERlhl5MqOJul
-	 PsuLlBgmcEFXn0AuZ32ZOEVEX45Clr5tA5fO+yadkQQj6G6HdMqxFhw3mFdUjHHBXr
-	 myrGdBa3SKJ4aSeOQEMvIpP8bh9ers08+Fo6MriW9fAD03sNqBn+9zezmIGd4gom+G
-	 jyzYK0M9VwIuZH5OcQeH0iR1bKf5iuEY+RTC0/SsnYMbsljNln0//btttmiAeZNY0x
-	 c5pO5QBbZGNjQ==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id AE3FCF40069;
-	Mon,  2 Feb 2026 10:57:48 -0500 (EST)
+	b=Klu0DsYuaYozCwLNGavUAlPZy2KjbSwvgiApyFwgXkNmjidWLu+q9teR78UWmj9VG
+	 X3ZC4Y+hm4yPvYf7iUhKp2TEYn73Z0WBfL+GeRYqhGvE/5bQ+MoftRP+leQnZ/i1ew
+	 a7lgbkUw9wlGYIkc+XNt/CG37pLcmV7ahGuPSV6lyFf6WyzBLtarUJUg0wGck4DAaY
+	 7bhNoPvNT0xdlNpTgfIL/Hm32CMRfrPXbo0dfWMiyeLsFNw2NQbfP4d6z+l/aTHuiW
+	 tqpQoC9pn6yLtsX4i5ifdzl+VbHJStIw4v1wl83hghe2iWBkoo4yaqtTp8N2L8nR/5
+	 Xp8H5NUh5Wj4A==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 47309F40069;
+	Mon,  2 Feb 2026 10:57:58 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 02 Feb 2026 10:57:48 -0500
-X-ME-Sender: <xms:fMmAaRmSarQtSgkJL9ElgoWpBN4BS4MNEmLnHRHV6F99rZKMtNTTBw>
-    <xme:fMmAaWC0Xz2TieQ8kW0LBdV-hQQhv6v2aDnvjoEeS8YkOBLp3bjHiuklagKlCPa9b
-    dWwlqPSveHajPxdOf6gFL3XuztwNv7CRGxmfxMKjoKNaXQmsC2yTAc>
-X-ME-Received: <xmr:fMmAaRzu-6Ov4o68ZrAs1fsMHIkekcEygHLprxa3NZwsSl9ugG7hi-6TLMrNdw>
+  by phl-compute-04.internal (MEProxy); Mon, 02 Feb 2026 10:57:58 -0500
+X-ME-Sender: <xms:hsmAaTBQZnR96Q91CZbmjPSTynsTVNZHY1DrMuXy2dOUuuY5IVSovw>
+    <xme:hsmAaStOjFcQZEGn751h8X3BtKm2h7RP9etcmAKofmY0s7nHtkRsl7PaXQzIiEMmS
+    JN9IyHyC_QB5o_wf4KSpLcS4db3EGHqpT0r303vTIlHGddgIbOaa3o>
+X-ME-Received: <xmr:hsmAaYvLSawEGBnSu6hIZGeYAtPiRYjKtE7pbBIAio-yUv6gc6DVSi73tcilPA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeektdeiucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepmfhirhihlhcu
     ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
     hrnhephfdufeejhefhkedtuedvfeevjeffvdfhvedtudfgudffjeefieekleehvdetvdev
-    necuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
     hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
     qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
     hnrghmvgdpnhgspghrtghpthhtohepvdekpdhmohguvgepshhmthhpohhuthdprhgtphht
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeektdeiucetufdote
     tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
     guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
     rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
-X-ME-Proxy: <xmx:fMmAaSfdJDEPUUayeRq0_IedMJFA63QZZDNwuXMpIlsxg_PtDbT70w>
-    <xmx:fMmAabwdEqLjU_0sxb900rKtA_5hXCpvTfDBPBc7EdbygooWNN7YqA>
-    <xmx:fMmAac4UCTbwO-KzGoscML5ay9adm1RDBg-oUftUQLU47tQtNdtsuQ>
-    <xmx:fMmAaYxX3Ch1V6RubEzj8Zil73pfO2J9zLr5vSfJug1YDdj_fvfEzg>
-    <xmx:fMmAacbukOcaweQH080ju9vu0XhOswAzy5C2A4J3UVL_JveQqEs5iY8B>
+X-ME-Proxy: <xmx:hsmAaWrfkRMR-C481qatfZVcrV7WP255E9JiKBpBFYHu34vxe6T1sw>
+    <xmx:hsmAaUNGSCpkDpGg21FjG5PCQVfurMWNdvxf_13zAqbCu9oHDe3Klw>
+    <xmx:hsmAaUmg9Ut75Ri69ArrFnTmH23UMAcC5eOYZyJ9ln4p8ruiWiuQ_w>
+    <xmx:hsmAaes8SEOO3JrV17-fS01MfuAA7GyPcoxf10sWs9kU9GIckuILmQ>
+    <xmx:hsmAaTnyKO1nCmkLtmeUgvlHwZhpCCTOlpIMK0dE-1r-Nd8eLa9G01Sf>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Feb 2026 10:57:46 -0500 (EST)
+ 2 Feb 2026 10:57:56 -0500 (EST)
 From: Kiryl Shutsemau <kas@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
@@ -89,9 +89,9 @@ Cc: Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	Kiryl Shutsemau <kas@kernel.org>
-Subject: [PATCHv6 08/17] mm: Make page_zonenum() use head page
-Date: Mon,  2 Feb 2026 15:56:24 +0000
-Message-ID: <20260202155634.650837-9-kas@kernel.org>
+Subject: [PATCHv6 09/17] mm/sparse: Check memmap alignment for compound_info_has_mask()
+Date: Mon,  2 Feb 2026 15:56:25 +0000
+Message-ID: <20260202155634.650837-10-kas@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260202155634.650837-1-kas@kernel.org>
 References: <20260202155634.650837-1-kas@kernel.org>
@@ -103,31 +103,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With the upcoming changes to HVO, a single page of tail struct pages
-will be shared across all huge pages of the same order on a node. Since
-huge pages on the same node may belong to different zones, the zone
-information stored in shared tail page flags would be incorrect.
+If page->compound_info encodes a mask, it is expected that vmemmap to be
+naturally aligned to the maximum folio size.
 
-Always fetch zone information from the head page, which has unique and
-correct zone flags for each compound page.
+Add a VM_BUG_ON() to check the alignment.
 
 Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 Acked-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/mmzone.h | 1 +
- 1 file changed, 1 insertion(+)
+ mm/sparse.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index be8ce40b5638..192143b5cdc0 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1219,6 +1219,7 @@ static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
+diff --git a/mm/sparse.c b/mm/sparse.c
+index b5b2b6f7041b..6c9b62607f3f 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -600,6 +600,13 @@ void __init sparse_init(void)
+ 	BUILD_BUG_ON(!is_power_of_2(sizeof(struct mem_section)));
+ 	memblocks_present();
  
- static inline enum zone_type page_zonenum(const struct page *page)
- {
-+	page = compound_head(page);
- 	return memdesc_zonenum(page->flags);
- }
++	if (compound_info_has_mask()) {
++		unsigned long alignment;
++
++		alignment = MAX_FOLIO_NR_PAGES * sizeof(struct page);
++		VM_BUG_ON(!IS_ALIGNED((unsigned long) pfn_to_page(0), alignment));
++	}
++
+ 	pnum_begin = first_present_section_nr();
+ 	nid_begin = sparse_early_nid(__nr_to_section(pnum_begin));
  
 -- 
 2.51.2
