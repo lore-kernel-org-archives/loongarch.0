@@ -1,89 +1,219 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6C7287507
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D825227EFEE
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:31:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770017356; cv=none; b=fsWXSKUSQr8iTWjvPaBY/ZmlKHd8wQAmcmvwXW5TFz4Fp3ZoyL4INUynt9GCjLU+Ee6+PNr5ixzyflcYlYmKr4raoC6vD4hHByEsr4WwujBc8FYaiCQN+DrmMRwiph8pgZL8Qmaa04ozYoucCnbbyMEL8bllLtUsnqIMoyE0Bqg=
+	t=1770017490; cv=none; b=drB/7uZNzi/7vESOQZqmFwxjGiQtXjgLMrunfAiP6yH7x7+nbiv3JrMp0hzRPQ6zs4dqGOMe6pkVgZQHsYT+6pp5kbwaS0eG/dSRsvD2A5ultO5QMcGaoRx4n5bSGjbzfDk+dn4xF0yC8bM2jKM2Dq5CV+CgbVx18/S8tb1Rc1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770017356; c=relaxed/simple;
-	bh=TGnT5lbpo0tIDMxQINJrccn3qHJ6m6eJOH+UZBFcV+8=;
+	s=arc-20240116; t=1770017490; c=relaxed/simple;
+	bh=712wRN6EWIS01X5o6JuTZ7FSNFfFpQ84hrmEyj7O/IA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QrdhGEOYml3feusi9NjagJlG+86kgeW5VNJ5UGHZfNlYeeqi27dITg13XG7choT/mXCKxVdHaDYFJt5JXNF6H4qQhoOc1OXgWyRpdRtc1xfN+oYy219yZkbz9ObDyxOSbXCk6Kum+kyRukPRn5OffGfSRkawzXe+2wJZUGMjM7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLH0oj4K; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=vFCraE2dPCfX8hAnCyZS43kWKpO4hXxjl2QSDPa8YfmZf7hqeCpGGAahH6mSlen2Hr3445rMUQNVjfH5GN4GHsp7uGoLMGCvMxl04xpl22ZJTUkaiePQYaouw2s779A1K07lSrD0Hrl7yJ9eSMZ1x8/2/4tWxwYE++3+H1o+R2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDnQLyC2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLH0oj4K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FC05C2BCB5
-	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:29:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDnQLyC2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943AAC2BC9E
+	for <loongarch@lists.linux.dev>; Mon,  2 Feb 2026 07:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770017356;
-	bh=TGnT5lbpo0tIDMxQINJrccn3qHJ6m6eJOH+UZBFcV+8=;
+	s=k20201202; t=1770017490;
+	bh=712wRN6EWIS01X5o6JuTZ7FSNFfFpQ84hrmEyj7O/IA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WLH0oj4KqX2ig0SPDTUKIczlDHH2/doqWdv+mhA5O67RZr7TMuvBhnMc1tDraJnWQ
-	 yxQLqT7uRHJxGzjtBVsxiEa6AuuZSWdmhHFh5qXpV3AtDJW0NghuDn32DD4lZb9soD
-	 oYSWmTjKqXAtgl7KNJ3N/zjDYLY8IdPyMKleiIlxFfIVwdvnWgREzls+oF1aBIXQuQ
-	 MdbQlVZobX9GZdLWykwYbQ7wMOplHovwminx6DkwC6P2ei2PkPFLFJA6WNonLsTKGw
-	 QuImiLcqtaXQQTRDND1Io8gQR+4LzBYG7di0THgj0/e8dqOzIFHQ5h9W2PyOcNWmKN
-	 DfAywDkyH1mPQ==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6581234d208so6898103a12.3
-        for <loongarch@lists.linux.dev>; Sun, 01 Feb 2026 23:29:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVNWC0CMlEjxBpI294v7RedvpG1EN9ij3B6n173oY/fjcEyHuWcXaobx53RVZxnoUcG7gsoEVhXY54=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxmIQta5kcGB4D9JsSfMHNCtuxZHGDnpkbjW8ubdnbHz6ea9wrl
-	Nwn6BInq1Kq5lh8O7b0zHwe7EyR23RVrEFkxGy8xc656JyKiGBOSdZ8v3jbBTNNDKwzDr2BCWD3
-	DiMoqD72yoyT7XD/UpYKfrG38xPxzpbk=
-X-Received: by 2002:a17:907:9491:b0:b87:115c:4a30 with SMTP id
- a640c23a62f3a-b8dff5dbcb0mr601744366b.16.1770017354475; Sun, 01 Feb 2026
- 23:29:14 -0800 (PST)
+	b=BDnQLyC2KqK6d0NgVcTpogIdhBeNKBOIEKe5WJ96foNL2lfPYFNYdIqcrwzxo56JP
+	 QbjzyA7APYtQsLFK2DMu8j4/cIU3/7JPRbvWTlWt/hatsspZ1XU8KkiWgXZVfu8OhZ
+	 imeH3Weej54qoxh57UrLgPCQM5f78X6ksKhA/ed5Y9Bj4DfVYvKgzqMNnv1AbREDD+
+	 rOIB7JJcJNlB8lY1C7I6WCi5rrcx+ZIeKVDrVt5qJwu20Wm0jJp6xFglRZlRNHOFpH
+	 VT3O/0LqJxR98pnizhnJIofjcW1mA4+dqRHJtWlRW0VvMm/GGNmT5AHWgu1ZxVS2jG
+	 okoJdxQ03b7og==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8849dc12f6so591645466b.1
+        for <loongarch@lists.linux.dev>; Sun, 01 Feb 2026 23:31:30 -0800 (PST)
+X-Gm-Message-State: AOJu0Yy5p5F95KQy2fhfBIi84aASO1IRS7fHKvqIj/EQmgy7uHVwa+9J
+	zy+2aNEJoLNqyS/jwnwHblMXGb9lTr0ZEvHWZ3ojQ6vCT2cou34a3ug4xVq1ieBxvCuiVzxlBor
+	9H+SPkBUS9Nz1y+E4Jg1fmk03jHFeGAY=
+X-Received: by 2002:a17:907:7f8a:b0:b73:6c97:af4b with SMTP id
+ a640c23a62f3a-b8dff6f791cmr596960466b.45.1770017489080; Sun, 01 Feb 2026
+ 23:31:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260201023619.366505-1-chenhuacai@loongson.cn> <524246d9-bc9b-4d65-814d-d544b53bcd0b@linux.dev>
-In-Reply-To: <524246d9-bc9b-4d65-814d-d544b53bcd0b@linux.dev>
+References: <20260129021839.3674879-1-maobibo@loongson.cn> <CAAhV-H5yZbocBBBN5nMqb32UaVP6i8+9X4RNAwquVYVFVRaBVg@mail.gmail.com>
+ <865fdd00-b8ef-1e17-c1b9-1cb264e32914@loongson.cn>
+In-Reply-To: <865fdd00-b8ef-1e17-c1b9-1cb264e32914@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 2 Feb 2026 15:29:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5T=1FefitLWSf5Qw3HEwFO0ERhefq1udae6mt9tq+ikQ@mail.gmail.com>
-X-Gm-Features: AZwV_QgGzJgYG70N5fLwFnRgnJT1H2uKpZxrzyYmWtqkr7Vxb0F18smoBxNIzhs
-Message-ID: <CAAhV-H5T=1FefitLWSf5Qw3HEwFO0ERhefq1udae6mt9tq+ikQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: stmmac: Correct spelling from clk_scr_i to clk_csr_i
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Serge Semin <fancer.lancer@gmail.com>, loongarch@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Mon, 2 Feb 2026 15:31:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H539vn34ptS-9N8VZ9qMjJ-Lk8LE1_GAbvoNR20L+k5Ng@mail.gmail.com>
+X-Gm-Features: AZwV_QiFoBR3TEVIfrukpoQ-8BMqUcaGoOzl-sqqoB655rsSNqxxhBdI5qqbZ8M
+Message-ID: <CAAhV-H539vn34ptS-9N8VZ9qMjJ-Lk8LE1_GAbvoNR20L+k5Ng@mail.gmail.com>
+Subject: Re: [PATCH] KVM: LoongArch: selftests: Add steal time test case
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: "open list:LOONGARCH" <loongarch@lists.linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 2, 2026 at 9:36=E2=80=AFAM Yanteng Si <si.yanteng@linux.dev> wr=
-ote:
+On Mon, Feb 2, 2026 at 10:03=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
+> Hi Huacai,
 >
-> =E5=9C=A8 2026/2/1 10:36, Huacai Chen =E5=86=99=E9=81=93:
-> > In include/linux/stmmac.h clk_csr_i is spelled as clk_scr_i by mistake,
-> > so correct it.
+> On 2026/1/31 =E4=B8=8B=E5=8D=889:47, Huacai Chen wrote:
+> > Since paravirt preempt is also applied, I applied this one with some
+> > modifications, you can check whether it is correct.
 > >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongs=
+on.git/commit/?h=3Dloongarch-kvm&id=3Dcf991b57ffc808d69cb1f911563b1d4658774=
+ccf
 >
-> fix tag?
->
-> But this is just a comment, no need to backport it (I'm fine either way).
->
-> If no fix tag, please update the subject to typo fix instead.
-Why? Is the subject line wrong?
+> I checked the pendning patches in loongarch-kvm branch, they all look
+> good to me.
+OK, then are there any updates on this one?
+https://lore.kernel.org/loongarch/CAAhV-H57b14qY+5jqe+Fd5FTQq6jrhurfNBCqBqw=
+G6SUpKFhTw@mail.gmail.com/T/#t
 
 Huacai
-
 >
+> Thanks for doing this.
 >
-> Thanks,
->
-> Yanteng
->
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> > On Thu, Jan 29, 2026 at 10:18=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
+ wrote:
+> >>
+> >> LoongArch KVM supports steal time accounting now, here add steal time
+> >> test case on LoongArch.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   tools/testing/selftests/kvm/Makefile.kvm |  1 +
+> >>   tools/testing/selftests/kvm/steal_time.c | 85 ++++++++++++++++++++++=
+++
+> >>   2 files changed, 86 insertions(+)
+> >>
+> >> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/=
+selftests/kvm/Makefile.kvm
+> >> index ba5c2b643efa..a18c00f1a4fa 100644
+> >> --- a/tools/testing/selftests/kvm/Makefile.kvm
+> >> +++ b/tools/testing/selftests/kvm/Makefile.kvm
+> >> @@ -228,6 +228,7 @@ TEST_GEN_PROGS_loongarch +=3D kvm_page_table_test
+> >>   TEST_GEN_PROGS_loongarch +=3D memslot_modification_stress_test
+> >>   TEST_GEN_PROGS_loongarch +=3D memslot_perf_test
+> >>   TEST_GEN_PROGS_loongarch +=3D set_memory_region_test
+> >> +TEST_GEN_PROGS_loongarch +=3D steal_time
+> >>
+> >>   SPLIT_TESTS +=3D arch_timer
+> >>   SPLIT_TESTS +=3D get-reg-list
+> >> diff --git a/tools/testing/selftests/kvm/steal_time.c b/tools/testing/=
+selftests/kvm/steal_time.c
+> >> index 8edc1fca345b..ee13e8973c45 100644
+> >> --- a/tools/testing/selftests/kvm/steal_time.c
+> >> +++ b/tools/testing/selftests/kvm/steal_time.c
+> >> @@ -301,6 +301,91 @@ static void steal_time_dump(struct kvm_vm *vm, ui=
+nt32_t vcpu_idx)
+> >>          pr_info("\n");
+> >>   }
+> >>
+> >> +#elif defined(__loongarch__)
+> >> +/* steal_time must have 64-byte alignment */
+> >> +#define STEAL_TIME_SIZE                ((sizeof(struct kvm_steal_time=
+) + 63) & ~63)
+> >> +#define KVM_STEAL_PHYS_VALID   BIT_ULL(0)
+> >> +
+> >> +struct kvm_steal_time {
+> >> +       __u64 steal;
+> >> +       __u32 version;
+> >> +       __u32 flags;
+> >> +       __u32 pad[12];
+> >> +};
+> >> +
+> >> +static bool is_steal_time_supported(struct kvm_vcpu *vcpu)
+> >> +{
+> >> +       int err;
+> >> +       uint64_t val;
+> >> +       struct kvm_device_attr attr =3D {
+> >> +               .group =3D KVM_LOONGARCH_VCPU_CPUCFG,
+> >> +               .attr =3D CPUCFG_KVM_FEATURE,
+> >> +               .addr =3D (uint64_t)&val,
+> >> +       };
+> >> +
+> >> +       err =3D __vcpu_ioctl(vcpu, KVM_HAS_DEVICE_ATTR, &attr);
+> >> +       if (err)
+> >> +               return false;
+> >> +
+> >> +       err =3D __vcpu_ioctl(vcpu, KVM_GET_DEVICE_ATTR, &attr);
+> >> +       if (err)
+> >> +               return false;
+> >> +
+> >> +       return val & BIT(KVM_FEATURE_STEAL_TIME);
+> >> +}
+> >> +
+> >> +static void steal_time_init(struct kvm_vcpu *vcpu, uint32_t i)
+> >> +{
+> >> +       struct kvm_vm *vm =3D vcpu->vm;
+> >> +       uint64_t st_gpa;
+> >> +       int err;
+> >> +       struct kvm_device_attr attr =3D {
+> >> +               .group =3D KVM_LOONGARCH_VCPU_PVTIME_CTRL,
+> >> +               .attr =3D KVM_LOONGARCH_VCPU_PVTIME_GPA,
+> >> +               .addr =3D (uint64_t)&st_gpa,
+> >> +       };
+> >> +
+> >> +       /* ST_GPA_BASE is identity mapped */
+> >> +       st_gva[i] =3D (void *)(ST_GPA_BASE + i * STEAL_TIME_SIZE);
+> >> +       sync_global_to_guest(vm, st_gva[i]);
+> >> +
+> >> +       err =3D __vcpu_ioctl(vcpu, KVM_HAS_DEVICE_ATTR, &attr);
+> >> +       TEST_ASSERT(err =3D=3D 0, "No PV stealtime Feature");
+> >> +
+> >> +       st_gpa =3D (unsigned long)st_gva[i] | KVM_STEAL_PHYS_VALID;
+> >> +       err =3D __vcpu_ioctl(vcpu, KVM_SET_DEVICE_ATTR, &attr);
+> >> +       TEST_ASSERT(err =3D=3D 0, "Fail to set PV stealtime GPA");
+> >> +}
+> >> +
+> >> +static void guest_code(int cpu)
+> >> +{
+> >> +       struct kvm_steal_time *st =3D st_gva[cpu];
+> >> +       uint32_t version;
+> >> +
+> >> +       memset(st, 0, sizeof(*st));
+> >> +       GUEST_SYNC(0);
+> >> +
+> >> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
+> >> +       WRITE_ONCE(guest_stolen_time[cpu], st->steal);
+> >> +       version =3D READ_ONCE(st->version);
+> >> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
+> >> +       GUEST_SYNC(1);
+> >> +
+> >> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
+> >> +       GUEST_ASSERT(version < READ_ONCE(st->version));
+> >> +       WRITE_ONCE(guest_stolen_time[cpu], st->steal);
+> >> +       GUEST_ASSERT(!(READ_ONCE(st->version) & 1));
+> >> +       GUEST_DONE();
+> >> +}
+> >> +
+> >> +static void steal_time_dump(struct kvm_vm *vm, uint32_t vcpu_idx)
+> >> +{
+> >> +       struct kvm_steal_time *st =3D addr_gva2hva(vm, (ulong)st_gva[v=
+cpu_idx]);
+> >> +
+> >> +       ksft_print_msg("VCPU%d:\n", vcpu_idx);
+> >> +       ksft_print_msg("    steal:     %lld\n", st->steal);
+> >> +       ksft_print_msg("    version:   %d\n", st->version);
+> >> +}
+> >>   #endif
+> >>
+> >>   static void *do_steal_time(void *arg)
+> >>
+> >> base-commit: 8dfce8991b95d8625d0a1d2896e42f93b9d7f68d
+> >> --
+> >> 2.39.3
+> >>
 >
 >
