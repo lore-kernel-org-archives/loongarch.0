@@ -1,186 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02EF2FFDEC
-	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 09:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E120930FC1F
+	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 10:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770112397; cv=none; b=Dq2r3wjYouMWGmawNKbcjSDjdJBcClayv0fqohQqFsW12RstKtrUrWhbhvR78RJnBxRYQBoZGfqCLhhSMouWJrIfyGhK/4kkJFLpVTuw2wPyf43ljjCT5QPWvkCeLjbo+I58EgzCyIPvrv/nKkjW9vCQFKXgHVoFT5PFQpQtqcc=
+	t=1770113845; cv=none; b=n5UJjUNIo8c0uOyLmxVXSSX1Yhu4objhvSZzQRdPl+NhWWDj5O7+y3ifuiGEmHuiVH/oxGXN51jMSWjWMwT8DcCgJ6v+6UPo23ZgGc+s1EdywEFHw61Q8iAVKaZYEDqr1XCs5yz77Yfr/Z6QtYcUkU36g+iou70qj98P59gi/YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770112397; c=relaxed/simple;
-	bh=eLCHDZQSBnp8TQNvGvK8JfVIMSYc96hG4trl4sdtfqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2cMCoiT42JGL0BKa7BW3sjAKWCilo2N5v4XKbiJ+i6MEgie7SAwhVaanazmwdEtkJlly01WOj1yhrK/IbXdw6cQ6tPpuzCG1NGUF2+30gRQmVfHiA+F2cXrVt84qyXvN2dp9XoA6xQRIiWs2CIvCrnGTPLLRElhyDItPBDb9vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta07Qlpl; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1770113845; c=relaxed/simple;
+	bh=Vc2QbSixSsb2ON81jWvWOUH8cSKvDtILixarN96mqWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ckz2v1Qn+/FePy03CaPGxS922AvzU61+mJDsPgXrlBE0XXuVNa2Er2htQ4xvdSHt4K+J5GdRU1t95zWcApvnai+l9ukNcnS+aIv8fWZPcxdIn4Ndx462ZZRhMVNmCd2niR869h6QCGONgRTuqp/Q5P5lw99ZK4FJaEvrOhPfSS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=lUAE2uVq reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta07Qlpl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770112396; x=1801648396;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eLCHDZQSBnp8TQNvGvK8JfVIMSYc96hG4trl4sdtfqk=;
-  b=Ta07Qlpl2w6DWhwcbABwEhSxU/AK1jvSujtLRTPIrokVNFG9ztRVExEK
-   BPdwrZHAiXg0tDjvu9+1jrupoKkPlviGUxO/xc2rIoIYyACupr0yaPnId
-   RedDVfoE9LyX244PPYG+bCXF4uyh8SefWagVbGOo7VhQ7mYDXQG2zMxlO
-   0x1vlps1IYdFD/+3iSs+3KVRCKdYlCHl0mwEpgyO/JGdzbuQLDlCTW5SR
-   lSGAAa/1Er20dfdvJjvC9fYYdC2yE9gx4DAFnCPQViuZhzh5l2uo1B4oG
-   KdadzHUjdUnoXOxWcK0dp5ZPyGlJEdhHgxDS8kZT3OcbtXPcbC9MvO6lZ
-   A==;
-X-CSE-ConnectionGUID: 89auTRccQs+IOSx+QdYeaw==
-X-CSE-MsgGUID: MtwIDr0yT/yMrs6r27CpGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="81908320"
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="81908320"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 01:53:16 -0800
-X-CSE-ConnectionGUID: GNFGkw07RIOTfgCtUURYtw==
-X-CSE-MsgGUID: JzwdxFYWSxW57x3BwOns+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="209955718"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 01:53:12 -0800
-Date: Tue, 3 Feb 2026 11:53:10 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C
- controller
-Message-ID: <aYHFhsjUo1SzAlQF@smile.fi.intel.com>
-References: <cover.1769476820.git.zhoubinbin@loongson.cn>
- <402121da829497fc97f1461c8aaa3a44252c3f06.1769476820.git.zhoubinbin@loongson.cn>
- <aXh000kBfaqd1G9H@smile.fi.intel.com>
- <CAMpQs4JTqWr6AqRwEO9bcno-_MjjE8GKm_kUvrpy7m_tLMtuSQ@mail.gmail.com>
- <aXtw9h8WUs5H9MgC@smile.fi.intel.com>
- <CAMpQs4+Rk7-ERUetW_V4ojGxLtpzoX+hGgr7wV+0iQ8Uhdri4A@mail.gmail.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="lUAE2uVq"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4f4ztd00Nsz1FDXZ;
+	Tue,  3 Feb 2026 11:17:13 +0100 (CET)
+Received: from [10.10.15.18] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4f4ztY1CK4z1DHbc;
+	Tue,  3 Feb 2026 11:17:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=simplycom2; t=1770113832;
+	bh=bIz4RVwkv6KARy4MwQOhUdd22JeZFr0fFrNF7J4bRPM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lUAE2uVqAzYhZ1sm97fYuqy+vlFYURoO/ESgRDOLYwoPcj+AJLYcKftxzXr+4y/HX
+	 2YOyDda3zoXt+26+AX8pMM7QHh5T+XJuM4W03HRzJukix5g8rdsb/fjilKm09oxzSx
+	 tBwy+nern6bg1a50/KfLMYddppMeG7txUbC4/AmsAXT1tuu3+smPwBXiUUqokjSpVv
+	 UUsrhLX04O7HNQNLLVmIA6iNk0y72m91fWDt4UXVjn71WutyJfQfTM3K8uFvvtoUBz
+	 jIXUHdgIYTlrZQBjHS4KV4lgMsEWYt8Uw9Kgk+K14XLmF28umAniXCSL8090kqia/S
+	 lC0jknJm/j/RQ==
+Message-ID: <ec965a79-dad8-4358-a8e9-ebc9f330b67b@gaisler.com>
+Date: Tue, 3 Feb 2026 11:17:08 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpQs4+Rk7-ERUetW_V4ojGxLtpzoX+hGgr7wV+0iQ8Uhdri4A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mm-unstable] arch, mm: consolidate empty_zero_page
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov
+ <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
+ Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Richard Weinberger <richard@nod.at>,
+ Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
+ Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>,
+ Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-mm@kvack.org, x86@kernel.org
+References: <20260124095628.668870-1-rppt@kernel.org>
+ <2157220c-0394-40fa-9918-a8514171bd10@gaisler.com>
+ <aXj_x5CyUeys7ONM@kernel.org>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <aXj_x5CyUeys7ONM@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 02, 2026 at 02:39:28PM +0800, Binbin Zhou wrote:
-> On Thu, Jan 29, 2026 at 10:38 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Thu, Jan 29, 2026 at 04:07:06PM +0800, Binbin Zhou wrote:
-> > > On Tue, Jan 27, 2026 at 4:18 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > On Tue, Jan 27, 2026 at 10:47:57AM +0800, Binbin Zhou wrote:
-
-...
-
-> > > After run `pahole`, the structs are reorganized as follow:
-> > >
-> > > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_priv
-> > > i2c-ls2x-v2.o
-> > > struct loongson2_i2c_priv {
-> > >         struct i2c_adapter         adapter
-> > > __attribute__((__aligned__(8))); /*     0  1064 */
-> > >         /* --- cacheline 16 boundary (1024 bytes) was 40 bytes ago ---
-> > > */
-> > >         struct clk *               clk;                  /*  1064
-> > > 8 */
-> > >         struct completion          complete;             /*  1072
-> > > 32 */
-> > >         /* --- cacheline 17 boundary (1088 bytes) was 16 bytes ago ---
-> > > */
-> > >         struct regmap *            regmap;               /*  1104
-> >
-> > It's better to keep pointers like clk and regmap next to each other.
-> > They are semantically coupled as "resources".
-> >
-> > > 8 */
-> > >         int                        speed;                /*  1112
-> > > 4 */
-> > >         int                        parent_rate;          /*  1116
-> > > 4 */
-> > >         struct loongson2_i2c_msg   msg;                  /*  1120
-> > > 24 */
-> > >
-> > >         /* XXX last struct has 4 bytes of padding */
-> > >
-> > >         /* size: 1144, cachelines: 18, members: 7 */
-> > >         /* paddings: 1, sum paddings: 4 */
-> > >         /* forced alignments: 1 */
-> > >         /* last cacheline: 56 bytes */
-> > > } __attribute__((__aligned__(8)));
-> >
-> > ...
-> >
-> > > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_msg
-> > > i2c-ls2x-v2.o
-> > > struct loongson2_i2c_msg {
-> > >         u8                         addr;                 /*     0
-> > > 1 */
-> > >         bool                       stop;                 /*     1
-> > > 1 */
-> > >
-> > >         /* XXX 2 bytes hole, try to pack */
-> >
-> > >         u32                        count;                /*     4
-> > > 4 */
-> > >         u8 *                       buf;                  /*     8
-> > > 8 */
-> >
-> > Also think about it (don't blindly follow the `pahole` automatic mode).
-> > This is much better if you move the pointer to be the first, followed
-> > by a count, result, and others.
-> >
-> > >         int                        result;               /*    16
-> > > 4 */
-> > >
-> > >         /* size: 24, cachelines: 1, members: 5 */
-> > >         /* sum members: 18, holes: 1, sum holes: 2 */
-> > >         /* padding: 4 */
-> > >         /* last cacheline: 24 bytes */
-> > > };
-> >
-> > TL;DR: don't use `pahole` blindly. Use the common sense.
+On 2026-01-27 19:11, Mike Rapoport wrote:
+> On Tue, Jan 27, 2026 at 05:02:39PM +0100, Andreas Larsson wrote:
+>> On 2026-01-24 10:56, Mike Rapoport wrote:
+>>
+>>> Every architecture defines empty_zero_page that way or another, but for the
+>>> most of them it is always a page aligned page in BSS and most definitions
+>>> of ZERO_PAGE do virt_to_page(empty_zero_page).
+>>
+>> Running this in an LDOM on an UltraSparc T4 sparc64, the entire LDOM
+>> hangs after a while during boot.
+>>
+>>> diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+>>> index c2d19c9a9244..2bd99944176d 100644
+>>> --- a/arch/sparc/mm/init_64.c
+>>> +++ b/arch/sparc/mm/init_64.c
+>>> @@ -177,9 +177,6 @@ extern unsigned long sparc_ramdisk_image64;
+>>>  extern unsigned int sparc_ramdisk_image;
+>>>  extern unsigned int sparc_ramdisk_size;
+>>>  
+>>> -struct page *mem_map_zero __read_mostly;
+>>> -EXPORT_SYMBOL(mem_map_zero);
+>>> -
+>>>  unsigned int sparc64_highest_unlocked_tlb_ent __read_mostly;
+>>>  
+>>>  unsigned long sparc64_kern_pri_context __read_mostly;
+>>> @@ -2506,18 +2503,6 @@ void __init mem_init(void)
+>>>  	 */
+>>>  	register_page_bootmem_info();
+>>>  
+>>> -	/*
+>>> -	 * Set up the zero page, mark it reserved, so that page count
+>>> -	 * is not manipulated when freeing the page from user ptes.
+>>> -	 */
+>>> -	mem_map_zero = alloc_pages(GFP_KERNEL|__GFP_ZERO, 0);
+>>> -	if (mem_map_zero == NULL) {
+>>> -		prom_printf("paging_init: Cannot alloc zero page.\n");
+>>> -		prom_halt();
+>>> -	}
+>>> -	mark_page_reserved(mem_map_zero);
+>>> -
+>>> -
+>>>  	if (tlb_type == cheetah || tlb_type == cheetah_plus)
+>>>  		cheetah_ecache_flush_init();
+>>>  }
+>>
+>> This just removes the mark_page_reserved(mem_map_zero) without 
+>> replacing it with something corresponding to that. Perhaps part
+>> of the problem?
 > 
-> Sorry, I slacked off.
-> How about the organized data structure as follows:
+> I don't think so, empty_zero_page is in BSS now an it's reserved as a part
+> of the kernel image.
 > 
-> struct loongson2_i2c_msg {
->         u8      *buf;
->         u32     count;
->         int     result;
->         u8      addr;
->         bool    stop;
-> };
+> I suspect that virt_to_page() does not work BSS symbols on sparc64. Can you
+> please try with this patch:
 > 
-> struct loongson2_i2c_priv {
->         struct i2c_adapter              adapter;
->         struct completion               complete;
->         struct clk                      *clk;
->         struct regmap                   *regmap;
->         int                             speed;
->         int                             parent_rate;
->         struct loongson2_i2c_msg        msg;
-> };
+> diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
+> index 74ede706fb32..0578c5172d4e 100644
+> --- a/arch/sparc/include/asm/pgtable_64.h
+> +++ b/arch/sparc/include/asm/pgtable_64.h
+> @@ -22,6 +22,7 @@
+>  #include <asm/adi.h>
+>  #include <asm/page.h>
+>  #include <asm/processor.h>
+> +#include <asm/vaddrs.h>
+>  
+>  /* The kernel image occupies 0x4000000 to 0x6000000 (4MB --> 96MB).
+>   * The page copy blockops can use 0x6000000 to 0x8000000.
+> @@ -210,6 +211,11 @@ extern unsigned long _PAGE_CACHE;
+>  extern unsigned long pg_iobits;
+>  extern unsigned long _PAGE_ALL_SZ_BITS;
+>  
+> +extern unsigned long kern_base;
+> +#define ZERO_PAGE(vaddr)						   \
+> +	(virt_to_page(empty_zero_page + ((unsigned long)__va(kern_base)) - \
+> +		      ((unsigned long)KERNBASE)))
+> +
+>  /* PFNs are real physical page numbers.  However, mem_map only begins to record
+>   * per-page information starting at pfn_base.  This is to handle systems where
+>   * the first physical page in the machine is at some huge physical address,
+> diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+> index 2bd99944176d..d2d724ba4f83 100644
+> --- a/arch/sparc/mm/init_64.c
+> +++ b/arch/sparc/mm/init_64.c
+> @@ -170,6 +170,8 @@ static void __init read_obp_memory(const char *property,
+>  
+>  /* Kernel physical address base and size in bytes.  */
+>  unsigned long kern_base __read_mostly;
+> +EXPORT_SYMBOL(kern_base);
+> +
+>  unsigned long kern_size __read_mostly;
+>  
+>  /* Initial ramdisk setup */
+Hi,
 
-At the first glance looks okay to me.
+Unfortunately, that does not help. The LDOM goes down in the same fashion.
 
--- 
-With Best Regards,
-Andy Shevchenko
+In QEMU, with or without this extra patch, I get this:
 
+[    3.310674] BUG: Bad page map in process mount  pte:ffffc800016436b0
+[    3.310778] pgd:027dc000 p4d:027dc000 pud:027d8000 pmd:0269a000
+[    3.311686] addr:000001000020a000 vm_flags:00100077 anon_vma:fffff80002688548 mapping:0000000000000000 index:8000105
+[    3.312449] file:(null) fault:0x0 mmap:0x0 mmap_prepare: 0x0 read_folio:0x0
+[    3.313622] CPU: 0 UID: 0 PID: 46 Comm: mount Not tainted 6.19.0-rc5-00269-g28acabacf9b0 #22 VOLUNTARY 
+[    3.314056] Call Trace:
+[    3.314182] [<00000000005e822c>] print_bad_page_map+0x10c/0x260
+[    3.314375] [<00000000005e9f30>] vm_normal_page+0x70/0x80
+[    3.314400] [<00000000005ea5a8>] unmap_page_range+0x4e8/0x13c0
+[    3.314421] [<00000000005eb54c>] unmap_vmas+0x2c/0x120
+[    3.314440] [<00000000005f781c>] exit_mmap+0xdc/0x440
+[    3.314457] [<000000000047193c>] mmput+0x3c/0x100
+[    3.314477] [<0000000000479e94>] do_exit+0x1f4/0xa00
+[    3.314494] [<000000000047a83c>] do_group_exit+0x1c/0xa0
+[    3.314511] [<0000000000489b28>] get_signal+0x8a8/0x8e0
+[    3.314529] [<000000000043be24>] do_notify_resume+0xa4/0x5a0
+[    3.314549] [<0000000000404b48>] __handle_signal+0xc/0x30
+[    3.314687] Disabling lock debugging due to kernel taint
+
+Cheers,
+Andreas
 
