@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EEA9226CF1
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6CD2F6170
 	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 03:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770089501; cv=none; b=Q2S/GNltmvZCssMCsXfbAHzhDSkpFCDDRPmJ44HYaQOi9AvMGZps1e5LI4kKnu0i5AWkQgrXhGwI0l2izh1B1C33CHpwcVBXrV+crULjSli7Ek8Y610hT2Fd+Mvl+TfT7NnoEKN4aoVy3nSc2gI6r8w1M+J9AOuyTCoBTVSw5nE=
+	t=1770089501; cv=none; b=lXRcKy9fZ3ZrMVQrHbw7q8+H+hekzQQfdmyEaS6dNI0xU8C7teB7uC83FJzC7EtChPMcLppu4twTf50XFDdnrOpG8wFtpa8I0WWMHVUpLmFie73yVzHK0W+CfrH6UhVjcJcu30WzU6WhQE0CfKDin9WQJHUEJ69mtZSNQz9tO7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770089501; c=relaxed/simple;
-	bh=/52FdCO+2MJf5DIczIzycLBU53I2LCS2snJAb73d9h4=;
+	bh=IdLW44VGZExsGvqUufz+gqPKgso8L+J5SayaiaaCZhY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QuMo5AODH0TDzJUczVufSP/nXdtirjS08j0LRTu2so0XJU/cPvGETbD6O23Gcbp70aA+a5SctGf3lf8YGeNx7LbX1hOsoUNIDHHfyMbyNA/XIniZswVVv41/ebbi18UYGJWxU6PCzLV314g4fGBzQIBvuWMpFsJaXe27+TSBHL0=
+	 MIME-Version; b=b+bWiTorqv744pJkxxInzvZY0giH7IjEcTyz4ul1d8Gagvr8wEXcp+CJYu6sJlrwFesp3OSuZOi6ANbzjwqbGvZ7btjdjlO5Dr8Dn2otXpYBPbsc8C2UJn7wMR7hKlKLEPmcT5rAaFpjCWtTFDxt9spqE+Wt2TH3XcRFn/C9B9I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axy8IXbIFp5jwPAA--.49025S3;
+	by gateway (Coremail) with SMTP id _____8DxHvAXbIFp4jwPAA--.50470S3;
 	Tue, 03 Feb 2026 11:31:35 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxGMEVbIFpbtk+AA--.37628S5;
+	by front1 (Coremail) with SMTP id qMiowJAxGMEVbIFpbtk+AA--.37628S4;
 	Tue, 03 Feb 2026 11:31:35 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
@@ -25,9 +25,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Subject: [PATCH v3 3/4] LoongArch: KVM: Move LBT capability checking in LBT exception handler
-Date: Tue,  3 Feb 2026 11:31:30 +0800
-Message-Id: <20260203033131.3372834-4-maobibo@loongson.cn>
+Subject: [PATCH v3 2/4] LoongArch: KVM: Move LASX capability check in LASX exception handler
+Date: Tue,  3 Feb 2026 11:31:29 +0800
+Message-Id: <20260203033131.3372834-3-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20260203033131.3372834-1-maobibo@loongson.cn>
 References: <20260203033131.3372834-1-maobibo@loongson.cn>
@@ -38,14 +38,16 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxGMEVbIFpbtk+AA--.37628S5
+X-CM-TRANSID:qMiowJAxGMEVbIFpbtk+AA--.37628S4
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Like FPU exception handler, check LBT capability in LBT exception
-handler rather than function kvm_own_lbt().
+Like FPU exception handler, check LASX capability in LASX exception
+handler rather than function kvm_own_lasx(). LASX capability in function
+kvm_guest_has_lasx() implies FPU and LSX capability, only checking
+kvm_guest_has_lasx() is ok here.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
@@ -54,35 +56,35 @@ Signed-off-by: Bibo Mao <maobibo@loongson.cn>
  2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index 74b427287e96..65ec10a7245a 100644
+index 76eec3f24953..74b427287e96 100644
 --- a/arch/loongarch/kvm/exit.c
 +++ b/arch/loongarch/kvm/exit.c
-@@ -820,8 +820,10 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
- 
- static int kvm_handle_lbt_disabled(struct kvm_vcpu *vcpu, int ecode)
+@@ -810,8 +810,10 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
+  */
+ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
  {
--	if (kvm_own_lbt(vcpu))
-+	if (!kvm_guest_has_lbt(&vcpu->arch))
+-	if (kvm_own_lasx(vcpu))
++	if (!kvm_guest_has_lasx(&vcpu->arch))
  		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
 +	else
-+		kvm_own_lbt(vcpu);
++		kvm_own_lasx(vcpu);
  
  	return RESUME_GUEST;
  }
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index d91a1160a309..995461d724b5 100644
+index aff295aa6b0b..d91a1160a309 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -1286,9 +1286,6 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *vcpu, struct kvm_fpu *fpu)
- #ifdef CONFIG_CPU_HAS_LBT
- int kvm_own_lbt(struct kvm_vcpu *vcpu)
+@@ -1391,9 +1391,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+ /* Enable LASX and restore context */
+ int kvm_own_lasx(struct kvm_vcpu *vcpu)
  {
--	if (!kvm_guest_has_lbt(&vcpu->arch))
+-	if (!kvm_guest_has_fpu(&vcpu->arch) || !kvm_guest_has_lsx(&vcpu->arch) || !kvm_guest_has_lasx(&vcpu->arch))
 -		return -EINVAL;
 -
  	preempt_disable();
- 	if (!(vcpu->arch.aux_inuse & KVM_LARCH_LBT)) {
- 		set_csr_euen(CSR_EUEN_LBTEN);
+ 
+ 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
 -- 
 2.39.3
 
