@@ -1,108 +1,186 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC0A395243
-	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 09:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02EF2FFDEC
+	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 09:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770112282; cv=none; b=MYvxHmc2C+b640x9BpIzYxVlNrKVBTt3OMwaquhjhAbvCZlq7+q28CadFBaEiFCQ68XnGtVlTeeIgyHedVEaq0gMvtuzMGghXTngqhGTvdIlKcRZGxygKuXV4OWjLG99Q0rroR+Kic51gq857HEy7FVwBPyZsNkCu0YOatzNZcg=
+	t=1770112397; cv=none; b=Dq2r3wjYouMWGmawNKbcjSDjdJBcClayv0fqohQqFsW12RstKtrUrWhbhvR78RJnBxRYQBoZGfqCLhhSMouWJrIfyGhK/4kkJFLpVTuw2wPyf43ljjCT5QPWvkCeLjbo+I58EgzCyIPvrv/nKkjW9vCQFKXgHVoFT5PFQpQtqcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770112282; c=relaxed/simple;
-	bh=JB37f7aWRV58dvpxkW8UNrxVvq8Wiv2PvuKT2/vvQio=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=GDhW8r5fAG+h79szuy8JYd+AnMlqgg6SQUVx7jE3774dJ4S7dlRxTiELRrJfe8+9sk6kHekByB3mhhP+o+m9AAJ5JwAqBaNA8chMUAZrxU3IIfGWRVaV068RKKlhYPQiPOiMX7T6QXfZUTntnbsO8Sw8uEQfTSRV5M1cLnsizIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ESMSiqS5; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1770112397; c=relaxed/simple;
+	bh=eLCHDZQSBnp8TQNvGvK8JfVIMSYc96hG4trl4sdtfqk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M2cMCoiT42JGL0BKa7BW3sjAKWCilo2N5v4XKbiJ+i6MEgie7SAwhVaanazmwdEtkJlly01WOj1yhrK/IbXdw6cQ6tPpuzCG1NGUF2+30gRQmVfHiA+F2cXrVt84qyXvN2dp9XoA6xQRIiWs2CIvCrnGTPLLRElhyDItPBDb9vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ta07Qlpl; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ESMSiqS5"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1770112277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9LMV/UqSLQLqZskyhJdWEgGaTiL2QvED1GhTKVUM7dY=;
-	b=ESMSiqS5ORHZuZjWRltobDFH6KzSxY4kRV2ycmTIHL0HadXikXjnfkOnrlbsP1Fbvat2zN
-	JZTwdZTssymJkx5X6YALhYhxOhEzwJWov3PuvlVQpLQ6w9EYcqwmDE8Gi3nwvqdiTDy9DL
-	vJ9KphjIGx1nE1AgsHx+O2A8hJQWtX0=
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ta07Qlpl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770112396; x=1801648396;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=eLCHDZQSBnp8TQNvGvK8JfVIMSYc96hG4trl4sdtfqk=;
+  b=Ta07Qlpl2w6DWhwcbABwEhSxU/AK1jvSujtLRTPIrokVNFG9ztRVExEK
+   BPdwrZHAiXg0tDjvu9+1jrupoKkPlviGUxO/xc2rIoIYyACupr0yaPnId
+   RedDVfoE9LyX244PPYG+bCXF4uyh8SefWagVbGOo7VhQ7mYDXQG2zMxlO
+   0x1vlps1IYdFD/+3iSs+3KVRCKdYlCHl0mwEpgyO/JGdzbuQLDlCTW5SR
+   lSGAAa/1Er20dfdvJjvC9fYYdC2yE9gx4DAFnCPQViuZhzh5l2uo1B4oG
+   KdadzHUjdUnoXOxWcK0dp5ZPyGlJEdhHgxDS8kZT3OcbtXPcbC9MvO6lZ
+   A==;
+X-CSE-ConnectionGUID: 89auTRccQs+IOSx+QdYeaw==
+X-CSE-MsgGUID: MtwIDr0yT/yMrs6r27CpGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="81908320"
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="81908320"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 01:53:16 -0800
+X-CSE-ConnectionGUID: GNFGkw07RIOTfgCtUURYtw==
+X-CSE-MsgGUID: JzwdxFYWSxW57x3BwOns+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
+   d="scan'208";a="209955718"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 01:53:12 -0800
+Date: Tue, 3 Feb 2026 11:53:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C
+ controller
+Message-ID: <aYHFhsjUo1SzAlQF@smile.fi.intel.com>
+References: <cover.1769476820.git.zhoubinbin@loongson.cn>
+ <402121da829497fc97f1461c8aaa3a44252c3f06.1769476820.git.zhoubinbin@loongson.cn>
+ <aXh000kBfaqd1G9H@smile.fi.intel.com>
+ <CAMpQs4JTqWr6AqRwEO9bcno-_MjjE8GKm_kUvrpy7m_tLMtuSQ@mail.gmail.com>
+ <aXtw9h8WUs5H9MgC@smile.fi.intel.com>
+ <CAMpQs4+Rk7-ERUetW_V4ojGxLtpzoX+hGgr7wV+0iQ8Uhdri4A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCHv6 11/17] mm/hugetlb: Remove fake head pages
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20260202155634.650837-12-kas@kernel.org>
-Date: Tue, 3 Feb 2026 17:50:34 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Matthew Wilcox <willy@infradead.org>,
- Usama Arif <usamaarif642@gmail.com>,
- Frank van der Linden <fvdl@google.com>,
- Oscar Salvador <osalvador@suse.de>,
- Mike Rapoport <rppt@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>,
- Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- kernel-team@meta.com,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <1FFEED62-343D-433C-BB81-EB646D066AC9@linux.dev>
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-12-kas@kernel.org>
-To: Kiryl Shutsemau <kas@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpQs4+Rk7-ERUetW_V4ojGxLtpzoX+hGgr7wV+0iQ8Uhdri4A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Mon, Feb 02, 2026 at 02:39:28PM +0800, Binbin Zhou wrote:
+> On Thu, Jan 29, 2026 at 10:38 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Thu, Jan 29, 2026 at 04:07:06PM +0800, Binbin Zhou wrote:
+> > > On Tue, Jan 27, 2026 at 4:18 PM Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+> > > > On Tue, Jan 27, 2026 at 10:47:57AM +0800, Binbin Zhou wrote:
 
+...
 
-> On Feb 2, 2026, at 23:56, Kiryl Shutsemau <kas@kernel.org> wrote:
+> > > After run `pahole`, the structs are reorganized as follow:
+> > >
+> > > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_priv
+> > > i2c-ls2x-v2.o
+> > > struct loongson2_i2c_priv {
+> > >         struct i2c_adapter         adapter
+> > > __attribute__((__aligned__(8))); /*     0  1064 */
+> > >         /* --- cacheline 16 boundary (1024 bytes) was 40 bytes ago ---
+> > > */
+> > >         struct clk *               clk;                  /*  1064
+> > > 8 */
+> > >         struct completion          complete;             /*  1072
+> > > 32 */
+> > >         /* --- cacheline 17 boundary (1088 bytes) was 16 bytes ago ---
+> > > */
+> > >         struct regmap *            regmap;               /*  1104
+> >
+> > It's better to keep pointers like clk and regmap next to each other.
+> > They are semantically coupled as "resources".
+> >
+> > > 8 */
+> > >         int                        speed;                /*  1112
+> > > 4 */
+> > >         int                        parent_rate;          /*  1116
+> > > 4 */
+> > >         struct loongson2_i2c_msg   msg;                  /*  1120
+> > > 24 */
+> > >
+> > >         /* XXX last struct has 4 bytes of padding */
+> > >
+> > >         /* size: 1144, cachelines: 18, members: 7 */
+> > >         /* paddings: 1, sum paddings: 4 */
+> > >         /* forced alignments: 1 */
+> > >         /* last cacheline: 56 bytes */
+> > > } __attribute__((__aligned__(8)));
+> >
+> > ...
+> >
+> > > pahole --show_reorg_steps --reorganize --sort -C loongson2_i2c_msg
+> > > i2c-ls2x-v2.o
+> > > struct loongson2_i2c_msg {
+> > >         u8                         addr;                 /*     0
+> > > 1 */
+> > >         bool                       stop;                 /*     1
+> > > 1 */
+> > >
+> > >         /* XXX 2 bytes hole, try to pack */
+> >
+> > >         u32                        count;                /*     4
+> > > 4 */
+> > >         u8 *                       buf;                  /*     8
+> > > 8 */
+> >
+> > Also think about it (don't blindly follow the `pahole` automatic mode).
+> > This is much better if you move the pointer to be the first, followed
+> > by a count, result, and others.
+> >
+> > >         int                        result;               /*    16
+> > > 4 */
+> > >
+> > >         /* size: 24, cachelines: 1, members: 5 */
+> > >         /* sum members: 18, holes: 1, sum holes: 2 */
+> > >         /* padding: 4 */
+> > >         /* last cacheline: 24 bytes */
+> > > };
+> >
+> > TL;DR: don't use `pahole` blindly. Use the common sense.
 > 
-> HugeTLB Vmemmap Optimization (HVO) reduces memory usage by freeing most
-> vmemmap pages for huge pages and remapping the freed range to a single
-> page containing the struct page metadata.
+> Sorry, I slacked off.
+> How about the organized data structure as follows:
 > 
-> With the new mask-based compound_info encoding (for power-of-2 struct
-> page sizes), all tail pages of the same order are now identical
-> regardless of which compound page they belong to. This means the tail
-> pages can be truly shared without fake heads.
+> struct loongson2_i2c_msg {
+>         u8      *buf;
+>         u32     count;
+>         int     result;
+>         u8      addr;
+>         bool    stop;
+> };
 > 
-> Allocate a single page of initialized tail struct pages per NUMA node
-> per order in the vmemmap_tails[] array in pglist_data. All huge pages of
-> that order on the node share this tail page, mapped read-only into their
-> vmemmap. The head page remains unique per huge page.
-> 
-> Redefine MAX_FOLIO_ORDER using ilog2(). The define has to produce a
-> compile-constant as it is used to specify vmemmap_tail array size.
-> For some reason, compiler is not able to solve get_order() at
-> compile-time, but ilog2() works.
-> 
-> Avoid PUD_ORDER to define MAX_FOLIO_ORDER as it adds dependency to
-> <linux/pgtable.h> which generates hard-to-break include loop.
-> 
-> This eliminates fake heads while maintaining the same memory savings,
-> and simplifies compound_head() by removing fake head detection.
-> 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> struct loongson2_i2c_priv {
+>         struct i2c_adapter              adapter;
+>         struct completion               complete;
+>         struct clk                      *clk;
+>         struct regmap                   *regmap;
+>         int                             speed;
+>         int                             parent_rate;
+>         struct loongson2_i2c_msg        msg;
+> };
 
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
+At the first glance looks okay to me.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
