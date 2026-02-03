@@ -1,90 +1,270 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C9A226CF1
-	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 03:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1FE126BF1
+	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 04:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770089771; cv=none; b=TV72dPvwT3H+Im5TyUzfY3JqbNpxjJmkYNsKFmuQeFVFEU5NKQtKnZ+4RpG2zIPybSAZ/oQrgc3yIjAttixauxIpS9YP3+8vN08VTYj6PBRqg4Y2MrHX38XwfsJhmap9EI6NdReZHmLJ4XjoZH+HJ1pCDxFucxTlovhNqRgj2vY=
+	t=1770092125; cv=none; b=LhR5P8wbhc7TOP3mmz4k2wTZ1Fmg3pnp7ijtsrtwiRAIwDbHDgrOIqwi8BvoIwWzwhkGeqH8uzkA7z8ydu8rBbzmHCUa5Firw4xdY2hzIaho2gugG5zjYb/LlqcgXRPHFnwSnno5x3mr4c1iLGh8P9dWv3Pbj+oapreJghzQ3xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770089771; c=relaxed/simple;
-	bh=hYz6UnZl98fvkQAs9RG2iuggv8a2xR1Tt8nipqzQHTs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EI0Em27Teh3jXomj0Xywoj59s6YtkAw4Uy+pwJ/ydQ6ulfzok6G4eDc3/tOO8NrWATV2JtUYSanQxlALQgkiUO6k02bkh0bymqqm9I4b3OL7jTwBiuTlmPexb5odeBfDtAHp28XRJ95dS9LRmYMOtYaDof0FKMMekAPX77tH+Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DhVo4INP; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1770092125; c=relaxed/simple;
+	bh=guvltzg1l3zjJVBgKvT/Kx33A5vXt4tjb4uuEuMzpVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tnwH6tuTHgDc8iI9KHctgZ0SsBhsyKnRYK6L/KqSpZ6R57qarkvSn4py+AsZ2Oz85YETIG7QHC9T4CkbFvpwiFvUIGsNzRWPEkVVRK9Y0Ai27hBRxl8Nz2H2y2syeyDOrXamzQzhE38H8PI7KvrBrsNhahLExWuM50+No+4tmQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qeCtC6vr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DhVo4INP"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1770089766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KJxP6n3p44LkH03IkDqQsgS+GpBo2zU5MsWmp0JlB5A=;
-	b=DhVo4INPC4Ons8xaBCpPzhhwL+sntJgmv9IgIoulLAZYf4pzz3ZpnHm6k400LdHZDLpymV
-	RE4bhGg4+b+2pq+2qsmy0OYtR5wulCSX8hs4mU+edMcJEJJyb/vV+yKryUukukDMjvejJ5
-	5aEU0wJ5Ls+w6TvtZLrP2w07z99oZXw=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qeCtC6vr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AEF5C2BC9E
+	for <loongarch@lists.linux.dev>; Tue,  3 Feb 2026 04:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770092125;
+	bh=guvltzg1l3zjJVBgKvT/Kx33A5vXt4tjb4uuEuMzpVU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qeCtC6vrqPG8zuHenUZX+BSSqg5QAcXQMyjml0DEVcvZUOxJ3YTymDVohBoDz4M86
+	 5NqCn8vVaCzwZ+vhB1L/f7wNHx/FJOuS4bkXoXlA7puW2BYxcfJEVqt5KbuHhxQSnb
+	 FLCCnrfLV1+bgbpQos78pLMwAACZVSgxYOIRZyWzRugVy2UnurcGV6Hrl4UhZCv9I0
+	 qQdKhtXknqKKq5tydQ1Fz/Gi1mLQriKfeCtsiPQszFZNYz2e4TIYnKohDBEWfnApC2
+	 1vpDYjf1KQS8IZMHK2iZ3VhHBAOkmpCCMryy+4sfF2ajsTUIsrPSC+bDGIPy3IOm6S
+	 NVu95l1fUPshA==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-658381b28e8so7238042a12.0
+        for <loongarch@lists.linux.dev>; Mon, 02 Feb 2026 20:15:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXaNZRxLfnRjQbDdBqh4tNr5iUdgubAFEampvoKa8MnBgrnZN62X7WiJIAm/RNTbMtyTLF0vQy8vEc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgSAIBPmzZdYOw/pybS0BFa3T5OUBBtm64jLmsqUpHs7ZTm8IE
+	A78EgrZ5bOe1Q9Jy97SL29r/gORbDFw9bXtOY4hJiysQw0SsWffqHjiWx9CnRd3wjn974H9mhll
+	xzGpk8z4nRSAjdT8KrDqv5PGTKrTVp5E=
+X-Received: by 2002:a17:906:99c2:b0:b87:711f:97b9 with SMTP id
+ a640c23a62f3a-b8dff739531mr940441766b.31.1770092123521; Mon, 02 Feb 2026
+ 20:15:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCHv6 09/17] mm/sparse: Check memmap alignment for
- compound_info_has_mask()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20260202155634.650837-10-kas@kernel.org>
-Date: Tue, 3 Feb 2026 11:35:24 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Matthew Wilcox <willy@infradead.org>,
- Usama Arif <usamaarif642@gmail.com>,
- Frank van der Linden <fvdl@google.com>,
- Oscar Salvador <osalvador@suse.de>,
- Mike Rapoport <rppt@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>,
- Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- kernel-team@meta.com,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <C310A603-DB7F-4140-B045-7F1E3CC98C05@linux.dev>
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-10-kas@kernel.org>
-To: Kiryl Shutsemau <kas@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+References: <20260203033131.3372834-1-maobibo@loongson.cn> <20260203033131.3372834-5-maobibo@loongson.cn>
+In-Reply-To: <20260203033131.3372834-5-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 3 Feb 2026 12:15:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7Y-m2wfV2YZ7J_nU0Zc198jroP6o8m0C+qSZ-8S79kwg@mail.gmail.com>
+X-Gm-Features: AZwV_QhV5SagLyS2un7s1aDpWm1Us8Ees-sCmL2sDtlxMuYxz0hRr4KpVhp0xvg
+Message-ID: <CAAhV-H7Y-m2wfV2YZ7J_nU0Zc198jroP6o8m0C+qSZ-8S79kwg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] LoongArch: KVM: Add FPU delay load support
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Bibo,
 
+On Tue, Feb 3, 2026 at 11:31=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> FPU is lazy enabled with KVM hypervisor. After FPU is enabled and
+> loaded, vCPU can be preempted and FPU will be lost again, there will
+> be unnecessary FPU exception, load and store process. Here FPU is
+> delay load until guest enter entry.
+Calling LSX/LASX as FPU is a little strange, but somewhat reasonable.
+Calling LBT as FPU is very strange. So I still like the V1 logic.
 
-> On Feb 2, 2026, at 23:56, Kiryl Shutsemau <kas@kernel.org> wrote:
-> 
-> If page->compound_info encodes a mask, it is expected that vmemmap to be
-> naturally aligned to the maximum folio size.
-> 
-> Add a VM_BUG_ON() to check the alignment.
-> 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Acked-by: Zi Yan <ziy@nvidia.com>
+If you insist on this version, please rename KVM_REQ_FPU_LOAD to
+KVM_REQ_AUX_LOAD and rename fpu_load_type to aux_type, which is
+similar to aux_inuse.
 
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
+Huacai
 
-
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/kvm_host.h |  2 ++
+>  arch/loongarch/kvm/exit.c             | 21 ++++++++++-----
+>  arch/loongarch/kvm/vcpu.c             | 37 ++++++++++++++++++---------
+>  3 files changed, 41 insertions(+), 19 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index e4fe5b8e8149..902ff7bc0e35 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -37,6 +37,7 @@
+>  #define KVM_REQ_TLB_FLUSH_GPA          KVM_ARCH_REQ(0)
+>  #define KVM_REQ_STEAL_UPDATE           KVM_ARCH_REQ(1)
+>  #define KVM_REQ_PMU                    KVM_ARCH_REQ(2)
+> +#define KVM_REQ_FPU_LOAD               KVM_ARCH_REQ(3)
+>
+>  #define KVM_GUESTDBG_SW_BP_MASK                \
+>         (KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP)
+> @@ -234,6 +235,7 @@ struct kvm_vcpu_arch {
+>         u64 vpid;
+>         gpa_t flush_gpa;
+>
+> +       int fpu_load_type;
+>         /* Frequency of stable timer in Hz */
+>         u64 timer_mhz;
+>         ktime_t expire;
+> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+> index 65ec10a7245a..62403c7c6f9a 100644
+> --- a/arch/loongarch/kvm/exit.c
+> +++ b/arch/loongarch/kvm/exit.c
+> @@ -754,7 +754,8 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *v=
+cpu, int ecode)
+>                 return RESUME_HOST;
+>         }
+>
+> -       kvm_own_fpu(vcpu);
+> +       vcpu->arch.fpu_load_type =3D KVM_LARCH_FPU;
+> +       kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+>
+>         return RESUME_GUEST;
+>  }
+> @@ -794,8 +795,10 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *=
+vcpu, int ecode)
+>  {
+>         if (!kvm_guest_has_lsx(&vcpu->arch))
+>                 kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+> -       else
+> -               kvm_own_lsx(vcpu);
+> +       else {
+> +               vcpu->arch.fpu_load_type =3D KVM_LARCH_LSX;
+> +               kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+> +       }
+>
+>         return RESUME_GUEST;
+>  }
+> @@ -812,8 +815,10 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu =
+*vcpu, int ecode)
+>  {
+>         if (!kvm_guest_has_lasx(&vcpu->arch))
+>                 kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+> -       else
+> -               kvm_own_lasx(vcpu);
+> +       else {
+> +               vcpu->arch.fpu_load_type =3D KVM_LARCH_LASX;
+> +               kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+> +       }
+>
+>         return RESUME_GUEST;
+>  }
+> @@ -822,8 +827,10 @@ static int kvm_handle_lbt_disabled(struct kvm_vcpu *=
+vcpu, int ecode)
+>  {
+>         if (!kvm_guest_has_lbt(&vcpu->arch))
+>                 kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+> -       else
+> -               kvm_own_lbt(vcpu);
+> +       else {
+> +               vcpu->arch.fpu_load_type =3D KVM_LARCH_LBT;
+> +               kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+> +       }
+>
+>         return RESUME_GUEST;
+>  }
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 995461d724b5..d05fe6c8f456 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -232,6 +232,31 @@ static void kvm_late_check_requests(struct kvm_vcpu =
+*vcpu)
+>                         kvm_flush_tlb_gpa(vcpu, vcpu->arch.flush_gpa);
+>                         vcpu->arch.flush_gpa =3D INVALID_GPA;
+>                 }
+> +
+> +       if (kvm_check_request(KVM_REQ_FPU_LOAD, vcpu)) {
+> +               switch (vcpu->arch.fpu_load_type) {
+> +               case KVM_LARCH_FPU:
+> +                       kvm_own_fpu(vcpu);
+> +                       break;
+> +
+> +               case KVM_LARCH_LSX:
+> +                       kvm_own_lsx(vcpu);
+> +                       break;
+> +
+> +               case KVM_LARCH_LASX:
+> +                       kvm_own_lasx(vcpu);
+> +                       break;
+> +
+> +               case KVM_LARCH_LBT:
+> +                       kvm_own_lbt(vcpu);
+> +                       break;
+> +
+> +               default:
+> +                       break;
+> +               }
+> +
+> +               vcpu->arch.fpu_load_type =3D 0;
+> +       }
+>  }
+>
+>  /*
+> @@ -1286,13 +1311,11 @@ int kvm_arch_vcpu_ioctl_set_fpu(struct kvm_vcpu *=
+vcpu, struct kvm_fpu *fpu)
+>  #ifdef CONFIG_CPU_HAS_LBT
+>  int kvm_own_lbt(struct kvm_vcpu *vcpu)
+>  {
+> -       preempt_disable();
+>         if (!(vcpu->arch.aux_inuse & KVM_LARCH_LBT)) {
+>                 set_csr_euen(CSR_EUEN_LBTEN);
+>                 _restore_lbt(&vcpu->arch.lbt);
+>                 vcpu->arch.aux_inuse |=3D KVM_LARCH_LBT;
+>         }
+> -       preempt_enable();
+>
+>         return 0;
+>  }
+> @@ -1335,8 +1358,6 @@ static inline void kvm_check_fcsr_alive(struct kvm_=
+vcpu *vcpu) { }
+>  /* Enable FPU and restore context */
+>  void kvm_own_fpu(struct kvm_vcpu *vcpu)
+>  {
+> -       preempt_disable();
+> -
+>         /*
+>          * Enable FPU for guest
+>          * Set FR and FRE according to guest context
+> @@ -1347,16 +1368,12 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
+>         kvm_restore_fpu(&vcpu->arch.fpu);
+>         vcpu->arch.aux_inuse |=3D KVM_LARCH_FPU;
+>         trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
+> -
+> -       preempt_enable();
+>  }
+>
+>  #ifdef CONFIG_CPU_HAS_LSX
+>  /* Enable LSX and restore context */
+>  int kvm_own_lsx(struct kvm_vcpu *vcpu)
+>  {
+> -       preempt_disable();
+> -
+>         /* Enable LSX for guest */
+>         kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
+>         set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
+> @@ -1378,7 +1395,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+>
+>         trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
+>         vcpu->arch.aux_inuse |=3D KVM_LARCH_LSX | KVM_LARCH_FPU;
+> -       preempt_enable();
+>
+>         return 0;
+>  }
+> @@ -1388,8 +1404,6 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+>  /* Enable LASX and restore context */
+>  int kvm_own_lasx(struct kvm_vcpu *vcpu)
+>  {
+> -       preempt_disable();
+> -
+>         kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
+>         set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
+>         switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
+> @@ -1411,7 +1425,6 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
+>
+>         trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
+>         vcpu->arch.aux_inuse |=3D KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LA=
+RCH_FPU;
+> -       preempt_enable();
+>
+>         return 0;
+>  }
+> --
+> 2.39.3
+>
+>
