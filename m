@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C10238171;
-	Wed,  4 Feb 2026 16:14:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C5A2BEC4E;
+	Wed,  4 Feb 2026 16:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770221661; cv=none; b=gJiMnnslTEgP26W7Y5H3FRZ9tOHLDUOaP4jfbcvsbho52OU+gYqYe5a372KWKA3p3yogsJm4KdhEI77KdPc6SKQIBAMZwiY+4QUswfmaMzvT0r3qbjHOj2s1ArT/oFyOfQOADP+tuPiw0MWW0or9IMdTGgiBN/8Lfjdnem/wrsg=
+	t=1770221698; cv=none; b=GST99yo58SUU3MwBL1x4940yVDGGcGOQFZTU8+RSXrNTk9S9+jG6t8oHmdmV4hmnOo5mN5b7BnG83bWk/iug4dpKQ/u9fsO9ClGoTOuU1Zqz6cXQ5NTumOEtDONhR0aVvruyXzt/lLI/CCxwzHSGYBpbXFgjm5c5GAnPN+4CYY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770221661; c=relaxed/simple;
-	bh=fpIWi3ZlUU6GICbdztTffdwV8kcfmInvBOHJZpSmhzI=;
+	s=arc-20240116; t=1770221698; c=relaxed/simple;
+	bh=Yq7rjOmFg4CcgdWMbNPzzzqdWj+uSBMikYGgvwuzD/M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K5WX+SGXJ/H0HfPoexZbVIErhfReeF09LpJ6HK68tucujgCkbL9FICNxpEhKP6ZHE9UdKJFqKQxET8MN+8VaRLO0GjHzuOrs9n42iUZyVUEJHCTHyEIjsw9ucLBmprj5FYP4e3ZvF59zTaocDYYB1Lki3qHnV+l0nS4XXbar9S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1vPGXhU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=E7IEvskMHjTwalGWH0zPB4af6aKFmLG3Ik6QCAHro0hVDrqCRl9WVRv1tm8surloJiF70mE7DCYV8PoIfiMx1e5pwmAjlcStRB3qIygSvMN5pghrVDWzGR3mDtfS7z7rQAFmMISx1GQGQlKf3NAaS7802KDgt1YtUK7AYFHbssg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qq6PmPjD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1vPGXhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0BC7C19423;
-	Wed,  4 Feb 2026 16:14:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qq6PmPjD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD053C4CEF7;
+	Wed,  4 Feb 2026 16:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770221661;
-	bh=fpIWi3ZlUU6GICbdztTffdwV8kcfmInvBOHJZpSmhzI=;
+	s=k20201202; t=1770221697;
+	bh=Yq7rjOmFg4CcgdWMbNPzzzqdWj+uSBMikYGgvwuzD/M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H1vPGXhUwV6c5NaktCTjngbifuDhCiF+MY5C9rAm7aQpM5UhZIbsPHjKUaCIe3UbT
-	 ZPan+cYjuPFcRTfiQwRp/Dsej0VELkl9kaMOIAbUzkJDkyGz4L2UiwDsU4b36C51v9
-	 MhKrNeaY79muH+KxquiZQbjLHI1Qj3LOb13NqQsfOiWDxqSVlKUPgnxqy6QmZiuULt
-	 Vg2X4M5Z2v2caTdEbzzI6mAwcTsbi7IWZPydTFK985L+WavMc0OfHDgPnUmU7HI5dX
-	 WOWKlCW/gGBMqBOCbmtqu11Dwr8VTP/CMpea3GpAszgJcoyFcHseGtZXiUIxONMT6U
-	 W6EDNps1rC7pg==
-Message-ID: <a61bc0a8-cf5a-418a-aeb4-96553b87f043@kernel.org>
-Date: Wed, 4 Feb 2026 17:14:12 +0100
+	b=qq6PmPjD7zhT9ot2QC9bw/em+sjKidISKx+M6635S/VLsnSzIHdkjtN3GpT67jcVr
+	 QKlfXbkrjUsEQPFC2Jpef0f3usL6xPZI9xZieC3loEmehrI+znscnN4is22oUYPksR
+	 rLNA6LbvFNFQvaNtCFMw/183u+J4q4YjuNpPXp6sffxhBR5wqIFTUEdaQ65autXc19
+	 r+6Ehby9ipL0DS9jDaoAPiPGn1RaSy1oDCFzEP+D7twyWyIz1qzdBZUqdAS0Aunubc
+	 msROGZeqxyTwEBrXiYGhpKhc4MQLyN1l+teThtvVP0lC0IvtsOE4AYyeMp8bbmQasP
+	 Zp78VUUPu8HZg==
+Message-ID: <7904198f-f4cb-492b-9e6b-4d9989b8d40d@kernel.org>
+Date: Wed, 4 Feb 2026 17:14:48 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 02/17] mm: Change the interface of prep_compound_tail()
+Subject: Re: [PATCHv6 03/17] mm: Rename the 'compound_head' field in the
+ 'struct page' to 'compound_info'
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>,
@@ -53,7 +54,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-3-kas@kernel.org>
+ <20260202155634.650837-4-kas@kernel.org>
 From: "David Hildenbrand (arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -100,84 +101,22 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-3-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-4-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> Instead of passing down the head page and tail page index, pass the tail
-> and head pages directly, as well as the order of the compound page.
+> The 'compound_head' field in the 'struct page' encodes whether the page
+> is a tail and where to locate the head page. Bit 0 is set if the page is
+> a tail, and the remaining bits in the field point to the head page.
 > 
-> This is a preparation for changing how the head position is encoded in
-> the tail page.
+> As preparation for changing how the field encodes information about the
+> head page, rename the field to 'compound_info'.
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 > Reviewed-by: Muchun Song <muchun.song@linux.dev>
 > Reviewed-by: Zi Yan <ziy@nvidia.com>
 > ---
->   include/linux/page-flags.h |  4 +++-
->   mm/hugetlb.c               |  8 +++++---
->   mm/internal.h              | 12 ++++++------
->   mm/mm_init.c               |  2 +-
->   mm/page_alloc.c            |  2 +-
->   5 files changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index f7a0e4af0c73..8a3694369e15 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -865,7 +865,9 @@ static inline bool folio_test_large(const struct folio *folio)
->   	return folio_test_head(folio);
->   }
->   
-> -static __always_inline void set_compound_head(struct page *page, struct page *head)
-> +static __always_inline void set_compound_head(struct page *page,
-> +					      const struct page *head,
-> +					      unsigned int order)
-
-Two tab indents please on second+ parameter list whenever you touch code.
-
->   {
->   	WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
->   }
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 6e855a32de3d..54ba7cd05a86 100644
-
-
-[...]
-
-> diff --git a/mm/internal.h b/mm/internal.h
-> index d67e8bb75734..037ddcda25ff 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -879,13 +879,13 @@ static inline void prep_compound_head(struct page *page, unsigned int order)
->   		INIT_LIST_HEAD(&folio->_deferred_list);
->   }
->   
-> -static inline void prep_compound_tail(struct page *head, int tail_idx)
-> +static inline void prep_compound_tail(struct page *tail,
-
-Just wondering whether we should call this "struct page *page" for 
-consistency with set_compound_head().
-
-Or alternatively, call it also "tail" in set_compound_head().
-
-> +				      const struct page *head,
-> +				      unsigned int order)
-
-Two tab indent, then this fits into two lines in total.
-
->   {
-> -	struct page *p = head + tail_idx;
-> -
-> -	p->mapping = TAIL_MAPPING;
-> -	set_compound_head(p, head);
-> -	set_page_private(p, 0);
-> +	tail->mapping = TAIL_MAPPING;
-> +	set_compound_head(tail, head, order);
-> +	set_page_private(tail, 0);
->   }
-Only nits, in general LGTM
 
 Acked-by: David Hildenbrand (arm) <david@kernel.org>
 
