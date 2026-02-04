@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB5B1A0BF1;
-	Wed,  4 Feb 2026 16:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88D130497C;
+	Wed,  4 Feb 2026 16:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770222942; cv=none; b=NX1S3j77jL4NhFvv/fXsPSvdpM/B7JY9YoIpWNvY1i8+ZbdjkxVq339WlYqx5pu6IpLONOEuidwtMlIRCWKaVgJfLc9HMvy9rI2wefVxwQRHpLuzsw6fJG+BGk4FHHWK5ehTNBSi1PFjaEN2FaOFaEu7FeTD0hs/ZveayhZ1pIM=
+	t=1770223832; cv=none; b=BPpNiXkjsDogomMwC/3k87ZyGFdHaLyWEkVA7FCAmzqOg+171ZcvaMpp6DLw6sBx0YMjvjHqL1yDlFIVOyS1tpuZywnso20Sd9S0lI93G0AR1x1I8lIQoBKis4KN/UxvWVYjARJotffw6Ws0voiEtWv9bukyxrzjh/KM9KnA5DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770222942; c=relaxed/simple;
-	bh=5/OZ1qIQmuwJcm9OYX9ZIjpspcSxqstv+AWTE6uVKoc=;
+	s=arc-20240116; t=1770223832; c=relaxed/simple;
+	bh=fd9mB6uxi20UpngRQKWBUIqmPqpBhJ06BLLPzdm+xN8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tls1hrXAtiTRQD6sPnPlQaxUq95+hquyqJKtTHL/7OXgRTQG5m4uCysvwH2Cna8Lt7YmdZRm2QlbVzTsfBWMBtwod45K07IxWOlt6FCKr+J/HttToRl45Hhhb0Zb1oN+xoJdWm5Q+ccn0djlvZaiI5jd7S6Uy358vl/c7ByCdkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guHG9jw3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fz08PosMp8tEv1f5CqxzBLbYST8CKbxSBuRD7UjcuUoXGTQs1X+lWn6w2sUgLPwcwFxHFA6CFZ/cJvpaIxlV3OAeM/rtffvc+7tSRH75TnUBN54w3pDaSQ+4sSjPP4N5OIaI0Q5Gei8eKdosDjri8RLuG7ry0hBS+9xla9Ym2fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvP2Ej0r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guHG9jw3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7674FC4CEF7;
-	Wed,  4 Feb 2026 16:35:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvP2Ej0r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F69C4CEF7;
+	Wed,  4 Feb 2026 16:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770222941;
-	bh=5/OZ1qIQmuwJcm9OYX9ZIjpspcSxqstv+AWTE6uVKoc=;
+	s=k20201202; t=1770223831;
+	bh=fd9mB6uxi20UpngRQKWBUIqmPqpBhJ06BLLPzdm+xN8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=guHG9jw3N8I+xNLsa3f9nQa+Pmm2chRIav6Y51f4z/2JnAkdTEpX16Fbp74Vrsyfq
-	 Np8Ej508J36pKV5jc21t9LWaCvrngApFoEihPykdHOB5+GRDryzPG5TRTewk4V23Sz
-	 Wr1eyMyqWy6ZZ+F5Cg3X12kq4hY2A384zk5sqv9uxI9kYUl62ub6ovbRSafVvtZrfl
-	 6XKUvmI+uG20ar43iJqGmP1+y4MMzYu18Ha5HWbnYJKTCIPh1LgnmAMv/Ck9tJ6Hns
-	 CchYrBzdmIMmlYg8vgJvzobxdWYpN0Q+T4STBKBmXwKXv4BxtnsW0+vvdlw/o6oT0c
-	 XGofgnumfQ/Zw==
-Message-ID: <7e21f06e-6948-465c-b531-100749a76b26@kernel.org>
-Date: Wed, 4 Feb 2026 17:35:33 +0100
+	b=KvP2Ej0r49rqN3zlMVpi7wdZOiGb5ddjkwluNNwr9i65tfI+kq4umf0NzPJuSsz8p
+	 P6qg5MuNuC/5M3knmpbfL5L40N42mK4CxEuRfEkEvj5XMAVFGkQ5ALUg/vIDbzsrpn
+	 //iCatRb0KhDzkd/uzYZNxOW53aznd3RDzb/Zz2Zl7jilmlNc1PgoPNluqUj5Pdz/2
+	 6b47830F8Tvk2zwwsSlOD9haOzCh25eYY3PiIsZkPeucUqpGe9bEw1u0YDXiUIHiK+
+	 uatWn5zfW2IwFwvhWhhIepkHH5jQtDQ0ES43T91LXVz3v288R1X14ywTluExwNxg70
+	 eVR618or/n1mg==
+Message-ID: <1b80b189-b549-40ba-800c-8037ce12b081@kernel.org>
+Date: Wed, 4 Feb 2026 17:50:23 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 04/17] mm: Move set/clear_compound_head() next to
- compound_head()
+Subject: Re: [PATCHv6 05/17] riscv/mm: Align vmemmap to maximal folio size
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -53,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-5-kas@kernel.org>
+ <20260202155634.650837-6-kas@kernel.org>
 From: "David Hildenbrand (arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -100,40 +99,71 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-5-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-6-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> Move set_compound_head() and clear_compound_head() to be adjacent to the
-> compound_head() function in page-flags.h.
+> The upcoming change to the HugeTLB vmemmap optimization (HVO) requires
+> struct pages of the head page to be naturally aligned with regard to the
+> folio size.
 > 
-> These functions encode and decode the same compound_info field, so
-> keeping them together makes it easier to verify their logic is
-> consistent, especially when the encoding changes.
+> Align vmemmap to MAX_FOLIO_NR_PAGES.
+
+I think neither that statement nor the one in the patch description is 
+correct?
+
+"MAX_FOLIO_NR_PAGES * sizeof(struct page)" is neither the maximum folio 
+size nor MAX_FOLIO_NR_PAGES.
+
+It's the size of the memmap that a large folio could span at maximum.
+
+
+Assuming we have a 16 GiB folio, the calculation would give us
+
+	4194304 * sizeof(struct page)
+
+Which could be something like (assuming 80 bytes)
+
+	335544320
+
+-> not even a power of 2, weird? (for HVO you wouldn't care as HVO would 
+be disabled, but that aliment is super weird?)
+
+
+Assuming 64 bytes, it would be a power of two (as 64 is a power of two).
+
+	268435456 (1<< 28)
+
+
+Which makes me wonder whether there is a way to avoid sizeof(struct 
+page) here completely.
+
+Or limit the alignment to the case where HVO is actually active and 
+sizeof(struct page) makes any sense?
+
+
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
 > ---
->   include/linux/page-flags.h | 24 ++++++++++++------------
->   1 file changed, 12 insertions(+), 12 deletions(-)
+>   arch/riscv/mm/init.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index aa46d49e82f7..d14a17ffb55b 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -290,6 +290,18 @@ static __always_inline unsigned long _compound_head(const struct page *page)
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 21d534824624..c555b9a4fdce 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -63,7 +63,8 @@ phys_addr_t phys_ram_base __ro_after_init;
+>   EXPORT_SYMBOL(phys_ram_base);
 >   
->   #define compound_head(page)	((typeof(page))_compound_head(page))
+>   #ifdef CONFIG_SPARSEMEM_VMEMMAP
+> -#define VMEMMAP_ADDR_ALIGN	(1ULL << SECTION_SIZE_BITS)
+> +#define VMEMMAP_ADDR_ALIGN	max(1ULL << SECTION_SIZE_BITS, \
+> +				    MAX_FOLIO_NR_PAGES * sizeof(struct page))
 >   
-> +static __always_inline void set_compound_head(struct page *page,
-> +					      const struct page *head,
-> +					      unsigned int order)
+>   unsigned long vmemmap_start_pfn __ro_after_init;
+>   EXPORT_SYMBOL(vmemmap_start_pfn);
 
-^ :)
-
-Acked-by: David Hildenbrand (arm) <david@kernel.org>
 
 -- 
 Cheers,
