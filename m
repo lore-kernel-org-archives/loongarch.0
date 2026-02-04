@@ -1,197 +1,234 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7E53A0EA3
-	for <loongarch@lists.linux.dev>; Wed,  4 Feb 2026 09:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3760325727
+	for <loongarch@lists.linux.dev>; Wed,  4 Feb 2026 11:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.217.248.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770197811; cv=none; b=S3Q9s7OimLh19E9BE38eaT597lwBvk5fv9cwDpIXUEiyx6pKU8q6Uqy+1hmNeYakwyBJmMGEEg4jhJlXB7xQV3DEXjYmBWGNGm+B9YuN70F3xMv7t5Cnjtsi0CHBT5XH/WtGm4SIXyFki4f/izqr1lPiD56M4eIKxOYPHRkkRL4=
+	t=1770204990; cv=none; b=Eg039ipezGuyMrjya9C4kLT3BD+A6V9vjmW9Zyh2mI3oB/osNzD1xnwDxS/am2HoQXCDYP1qW35VOll1BlPZ3tCPtlp4kSNRbB+NKkM57gjO+5pIVgiksggb8DB0IvRGnkO9Z44NTrAX8iJAsq4u0jZQqIFxkcYJ+DhZEVsE2Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770197811; c=relaxed/simple;
-	bh=ueUFBgjwghimLwosxClqIywcDoixiq767fqmAeAlyeA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E3SWR0zVJSTLhU+f385qjg7lWICT+7VOqn7Z00FADRleUZeoLozRdGdVtcEf4uMOOhFT6SN+CWvj5EIidvQpiSKzkf+WgSOkEJXh/HOlBZVobzbGvm5bnV28T8nIxI4R9385vNfbfM4AmwEG27E6JFHd/+E/VTaCCHFHOmqb4+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=O05tgehu; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=O05tgehu; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770204990; c=relaxed/simple;
+	bh=58LqpetPvvp7KfRxRprE4DTYph3Dq/zzrccU1r05rww=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mlGNZhILmDxpCBq5ZIVVJ2/BUrcQew/F0cyZ4KEFylxbYR4ds6nA+mQK/k5pcl9+3kymRBqGHF+fw82DJQjBS4QWaxMRA/W/XbTj6LegKOFHhnKidqlixteqhbT38FJF8/au/IHfs2JSXyFlSvFNMfSInFbDZSSlvesc/1U7Ack=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=hfp6HnSa; arc=none smtp.client-ip=144.217.248.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="O05tgehu";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="O05tgehu"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=9dh41FuXoskin5kEyP/EzKDXWLppsq5+vDzuAG9frAc=;
-	b=O05tgehusLXxCPdoMc3HuZGiKmyI7zPSArAukVtx29XJeeSPz6a9SN/2YFTXxU1lSlAJ79XK1
-	K0hTPthQMZ92VIfFMbzLuF5PiVF+fIshLc7csCP+lx0p4fKMolwvRJCvTP4q8HxXlOf5doEOqux
-	NH1bTdersZfl51BebkcMNZM=
-Received: from canpmsgout01.his.huawei.com (unknown [172.19.92.178])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4f5Zwj2tynz1BGCs
-	for <loongarch@lists.linux.dev>; Wed,  4 Feb 2026 17:36:05 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=9dh41FuXoskin5kEyP/EzKDXWLppsq5+vDzuAG9frAc=;
-	b=O05tgehusLXxCPdoMc3HuZGiKmyI7zPSArAukVtx29XJeeSPz6a9SN/2YFTXxU1lSlAJ79XK1
-	K0hTPthQMZ92VIfFMbzLuF5PiVF+fIshLc7csCP+lx0p4fKMolwvRJCvTP4q8HxXlOf5doEOqux
-	NH1bTdersZfl51BebkcMNZM=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4f5ZrP1l8Wz1T4fn;
-	Wed,  4 Feb 2026 17:32:21 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9E0B5404AD;
-	Wed,  4 Feb 2026 17:36:43 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 4 Feb
- 2026 17:36:40 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<alex@ghiti.fr>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<kees@kernel.org>, <elver@google.com>, <arnd@arndb.de>,
-	<lirongqing@baidu.com>, <fvdl@google.com>, <leitao@debian.org>,
-	<rppt@kernel.org>, <cfsworks@gmail.com>, <osandov@fb.com>,
-	<sourabhjain@linux.ibm.com>, <ardb@kernel.org>, <ryan.roberts@arm.com>,
-	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <bjorn@rivosinc.com>,
-	<songshuaishuai@tinylab.org>, <samuel.holland@sifive.com>,
-	<kevin.brodsky@arm.com>, <junhui.liu@pigmoral.tech>,
-	<vishal.moola@gmail.com>, <coxu@redhat.com>, <jbohac@suse.cz>,
-	<liaoyuanhong@vivo.com>, <brgerst@gmail.com>, <fuqiang.wang@easystack.cn>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 2/3] arm64: kexec: Add support for crashkernel CMA reservation
-Date: Wed, 4 Feb 2026 17:37:27 +0800
-Message-ID: <20260204093728.1447527-3-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260204093728.1447527-1-ruanjinjie@huawei.com>
-References: <20260204093728.1447527-1-ruanjinjie@huawei.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="hfp6HnSa"
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 4A3903E980;
+	Wed,  4 Feb 2026 11:36:23 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id A9536400B6;
+	Wed,  4 Feb 2026 11:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1770204981; bh=58LqpetPvvp7KfRxRprE4DTYph3Dq/zzrccU1r05rww=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hfp6HnSaID1je6wGMMhvx4x+k9OCuxPgggzHdQmrb+woIgr1a9d2THWhgVAoWWPaq
+	 1nKFUme2KhJ5b3ADlpWfva1hQIoR0QGolXOZpeIyBxL9BaN6UcIQTlRIF9nVGyq1V/
+	 YAACK+d9yJwqqGhl8cQ8oEhBgI1XyUVTbQCHe/TU=
+Received: from liushuyu-p15 (unknown [117.151.13.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id F347641280;
+	Wed,  4 Feb 2026 11:36:09 +0000 (UTC)
+From: Zixing Liu <liushuyu@aosc.io>
+To: WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v4] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+Date: Wed,  4 Feb 2026 19:36:00 +0800
+Message-ID: <20260204113601.912413-1-liushuyu@aosc.io>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-Rspamd-Queue-Id: A9536400B6
+X-Spamd-Result: default: False [1.40 / 10.00];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	RCVD_COUNT_ONE(0.00)[1];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[liushuyu.aosc.io:server fail];
+	URIBL_BLOCKED(0.00)[mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	LOCAL_OUTBOUND(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Action: no action
+X-Rspamd-Server: nf2.mymailcheap.com
 
-Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-crashkernel= command line option") and commit ab475510e042 ("kdump:
-implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation.
+This ioctl can be used by the userspace applications to determine which
+(special) registers are get/set-able in a meaningful way.
 
-Crash kernel memory reservation wastes production resources if too
-large, risks kdump failure if too small, and faces allocation difficulties
-on fragmented systems due to contiguous block constraints. The new
-CMA-based crashkernel reservation scheme splits the "large fixed
-reservation" into a "small fixed region + large CMA dynamic region": the
-CMA memory is available to userspace during normal operation to avoid
-waste, and is reclaimed for kdump upon crash—saving memory while
-improving reliability.
+This can be very useful for cross-platform VMMs so that they do not have
+to hardcode register indices for each supported architectures.
 
-So extend crashkernel CMA reservation support to arm64. The following
-changes are made to enable CMA reservation:
-
-- Parse and obtain the CMA reservation size along with other crashkernel
-  parameters.
-- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use.
-- Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which is already
-  done in the crash core.
-
-Update kernel-parameters.txt to document CMA support for crashkernel on
-arm64 architecture.
-
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Signed-off-by: Zixing Liu <liushuyu@aosc.io>
 ---
-v3:
-- Add Acked-by.
-v2:
-- Free cmem in prepare_elf_headers()
-- Add the mtivation.
----
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- arch/arm64/kernel/machine_kexec_file.c          | 8 +++++++-
- arch/arm64/mm/init.c                            | 5 +++--
- 3 files changed, 11 insertions(+), 4 deletions(-)
+ Documentation/virt/kvm/api.rst |  2 +-
+ arch/loongarch/kvm/vcpu.c      | 87 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 1058f2a6d6a8..36bb642a7edd 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1119,7 +1119,7 @@ Kernel parameters
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
--			[KNL, X86, ppc] Reserve additional crash kernel memory from
-+			[KNL, X86, ARM64, ppc] Reserve additional crash kernel memory from
- 			CMA. This reservation is usable by the first system's
- 			userspace memory and kernel movable allocations (memory
- 			balloon, zswap). Pages allocated from this memory range
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index ed2c45007158..cab4aaf8cb22 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -48,7 +48,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	u64 i;
- 	phys_addr_t start, end;
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 01a3abef8abb..f46dd8be282f 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -3603,7 +3603,7 @@ VCPU matching underlying host.
+ ---------------------
  
--	nr_ranges = 2; /* for exclusion of crashkernel region */
-+	nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
+ :Capability: basic
+-:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
++:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
+ :Type: vcpu ioctl
+ :Parameters: struct kvm_reg_list (in/out)
+ :Returns: 0 on success; -1 on error
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 656b954c1134..bd855ee20ee2 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+  */
  
-@@ -64,6 +64,12 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 		cmem->nr_ranges++;
- 	}
++#include "asm/kvm_host.h"
+ #include <linux/kvm_host.h>
+ #include <asm/fpu.h>
+ #include <asm/lbt.h>
+@@ -14,6 +15,8 @@
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
  
-+	for (i = 0; i < crashk_cma_cnt; i++) {
-+		cmem->ranges[cmem->nr_ranges].start = crashk_cma_ranges[i].start;
-+		cmem->ranges[cmem->nr_ranges].end = crashk_cma_ranges[i].end;
-+		cmem->nr_ranges++;
-+	}
++#define NUM_LBT_REGS 6
 +
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
- 	kfree(cmem);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 524d34a0e921..28165d94af08 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
- 
- static void __init arch_reserve_crashkernel(void)
- {
-+	unsigned long long crash_base, crash_size, cma_size = 0;
- 	unsigned long long low_size = 0;
--	unsigned long long crash_base, crash_size;
- 	bool high = false;
- 	int ret;
- 
-@@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
+ const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
+ 	KVM_GENERIC_VCPU_STATS(),
+ 	STATS_DESC_COUNTER(VCPU, int_exits),
+@@ -1186,6 +1189,72 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
+ 	return ret;
  }
  
- static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
++static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user *uindices)
++{
++	unsigned int i, count;
++
++	for (i = 0, count = 0; i < CSR_MAX_NUMS; i++) {
++		if (!(get_gcsr_flag(i) & (SW_GCSR | HW_GCSR)))
++			continue;
++		if (i >= LOONGARCH_CSR_PERFCTRL0 && i <= LOONGARCH_CSR_PERFCNTR3) {
++			/* Skip PMU CSRs if not supported by the guest */
++			if (!kvm_guest_has_pmu(&vcpu->arch))
++				continue;
++		}
++		const u64 reg = KVM_IOC_CSRID(i);
++		if (uindices && put_user(reg, uindices++))
++			return -EFAULT;
++		count++;
++	}
++
++	return count;
++}
++
++static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
++{
++	/* +1 for the KVM_REG_LOONGARCH_COUNTER register */
++	unsigned long res =
++		kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS + 1;
++
++	if (kvm_guest_has_lbt(&vcpu->arch))
++		res += NUM_LBT_REGS;
++
++	return res;
++}
++
++static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
++					  u64 __user *uindices)
++{
++	u64 reg;
++	unsigned int i;
++
++	i = kvm_loongarch_walk_csrs(vcpu, uindices);
++	if (i < 0)
++		return i;
++	uindices += i;
++
++	for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
++		reg = KVM_IOC_CPUCFG(i);
++		if (put_user(reg, uindices++))
++			return -EFAULT;
++	}
++
++	reg = KVM_REG_LOONGARCH_COUNTER;
++	if (put_user(reg, uindices++))
++		return -EFAULT;
++
++	if (!kvm_guest_has_lbt(&vcpu->arch))
++		return 0;
++
++	for (i = 1; i <= NUM_LBT_REGS; i++) {
++		reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
++		if (put_user(reg, uindices++))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
+ {
+@@ -1251,6 +1320,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
+ 		break;
+ 	}
++	case KVM_GET_REG_LIST: {
++		struct kvm_reg_list __user *user_list = argp;
++		struct kvm_reg_list reg_list;
++		unsigned n;
++
++		r = -EFAULT;
++		if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
++			break;
++		n = reg_list.n;
++		reg_list.n = kvm_loongarch_num_regs(vcpu);
++		if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
++			break;
++		r = -E2BIG;
++		if (n < reg_list.n)
++			break;
++		r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
++		break;
++	}
+ 	default:
+ 		r = -ENOIOCTLCMD;
+ 		break;
 -- 
-2.34.1
+2.53.0
 
