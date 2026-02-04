@@ -1,66 +1,198 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60F093043DC
-	for <loongarch@lists.linux.dev>; Wed,  4 Feb 2026 17:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29521318EC5;
+	Wed,  4 Feb 2026 19:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770227482; cv=none; b=sxKrld6KgXfnKpE5wlDQi0iG9cvvMs4UKTzsx8pvQJpq5jB7icS9nDvZOl5cUbGUylOhrvkR/usAEd8ky90wbgpluvaZ9yyqN+iLlYvM/tvRQAxGU3mf3my7NQc6VPRcrePesq1f2Kx25WOy2gma9Mzj8QeTq1ARXYV1bPOc1T0=
+	t=1770231879; cv=none; b=Dg2n+/US4Qa6cEegU081oTb8HL4IJtUqAm87VKT+0Q5EHEVIjKxf/ed2ZgRWc7/vXtZQceS7f2YmHgzV7gXJiOnn0R9K/cYF/9C1KrRDQNxKIhCQMNgAzkfvrD2Gm2IPXuUoeN59307AcWjkzdpugUZOXzqAV+T5tcvVan2eyps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770227482; c=relaxed/simple;
-	bh=G1ls1ovLla0PwhNu7yYxNroPct7rquwUYRb7LHfE7+g=;
+	s=arc-20240116; t=1770231879; c=relaxed/simple;
+	bh=aEgivNh6lf5umyGVj1PNqoU0kduEbNPMta4Z0lh4ySg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HpbEFxyY4Gx0L/2zx3GdfXWUUsotGy9j4u+1maEtyCam2rxkhRUEtvdyxXqxJgxg4Ew9kM7GJ/m3U7Cmvi6jL9S/SJtelbKjZn1nyIHNhvCHxK9/ag9rgHsx3PGeujKNjA/Q6KdV9jkjU96VVKOLSemNsnbsM3vV+ufznwqSQrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 678371516;
-	Wed,  4 Feb 2026 09:51:15 -0800 (PST)
-Received: from arm.com (arrakis.cambridge.arm.com [10.1.197.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EC233F778;
-	Wed,  4 Feb 2026 09:51:18 -0800 (PST)
-Date: Wed, 4 Feb 2026 17:51:15 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH 02/15] arm64: vDSO: compat_gettimeofday: Add explicit
- includes
-Message-ID: <aYOHEzX4Djcui5vO@arm.com>
-References: <20260114-vdso-header-cleanups-v1-0-803b80ee97b4@linutronix.de>
- <20260114-vdso-header-cleanups-v1-2-803b80ee97b4@linutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sf8ZnkYLymAZLP10XHJmAvcASfUZEBPEjViR6pQpwxVRZM2h0DRr0NwRDkZdO11QZjE2TgMLhuUMKiqYZ9ym56XNgkgepk2gzWDCEanNgMtDqk8FbAPONG1jt4h59z2Lqr3mf8l5muaGB140KMTPtr2MF3zy+0jEAx5Ad6eZZTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TWH4g7e2; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TWH4g7e2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770231879; x=1801767879;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aEgivNh6lf5umyGVj1PNqoU0kduEbNPMta4Z0lh4ySg=;
+  b=TWH4g7e2wARj848PC4LWL5mzbbjPYl0GYHOIH5N3gCI3ISx/lTzUgivf
+   KYEr/S6Gkn54ecJe9LTN4DB+rPpv52PGBfzaBnAeH2IANVPqIRvyjjLTN
+   huhhRMCWuBhzvWAdp5oxh9QWn9kpdSkRIOiunR0foec/4GIAlt/skKTK3
+   7fW6Q3ylmhUK1Yf9Ev0Zp5KwzM0JvO3Pgg7+ZCU4B2zkvX3zJcY8eOb+P
+   6lR9KDqUQtnZFI9GDv6z2pGoilT6B3Oy15Dy3jC1gSux4mS+PzWl5xdnf
+   UwBulrz6M/pS9sF0rrm6/qezt7kCZzUcIKnN+WNkOjkLeKvMUydyKWHX2
+   A==;
+X-CSE-ConnectionGUID: QTXVUUiYTNai8JduP62+/w==
+X-CSE-MsgGUID: MO5mvhb7TmOCrviabip1Uw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="82797735"
+X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
+   d="scan'208";a="82797735"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 11:04:38 -0800
+X-CSE-ConnectionGUID: Fa3lG6CZSvagjstaQ6uPDA==
+X-CSE-MsgGUID: tcXmNBmaQnSzW20DrV4KTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,273,1763452800"; 
+   d="scan'208";a="233178785"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 04 Feb 2026 11:04:33 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vniAx-00000000j7U-08MJ;
+	Wed, 04 Feb 2026 19:04:31 +0000
+Date: Thu, 5 Feb 2026 03:03:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Zixing Liu <liushuyu@aosc.io>, WANG Xuerui <kernel@xen0n.name>,
+	Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>, Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+Message-ID: <202602050229.BAdKUB3a-lkp@intel.com>
+References: <20260204113601.912413-1-liushuyu@aosc.io>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260114-vdso-header-cleanups-v1-2-803b80ee97b4@linutronix.de>
+In-Reply-To: <20260204113601.912413-1-liushuyu@aosc.io>
 
-On Wed, Jan 14, 2026 at 09:01:34AM +0100, Thomas Weiﬂschuh wrote:
-> The reference to VDSO_CLOCKMODE_ARCHTIMER requires vdso/clocksource.h and
-> 'struct old_timespec32' requires vdso/time32.h. Currently these headers
-> are included transitively, but those transitive inclusions are about to go
-> away.
-> 
-> Explicitly include the headers.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+Hi Zixing,
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on kvm/queue]
+[also build test ERROR on kvm/next linus/master v6.19-rc8]
+[cannot apply to kvm/linux-next next-20260204]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Zixing-Liu/KVM-Add-KVM_GET_REG_LIST-ioctl-for-LoongArch/20260204-193844
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+patch link:    https://lore.kernel.org/r/20260204113601.912413-1-liushuyu%40aosc.io
+patch subject: [PATCH v4] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
+config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20260205/202602050229.BAdKUB3a-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260205/202602050229.BAdKUB3a-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602050229.BAdKUB3a-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from arch/loongarch/kvm/vcpu.c:6:
+   In file included from arch/loongarch/include/asm/kvm_host.h:21:
+   In file included from arch/loongarch/include/asm/kvm_mmu.h:9:
+>> include/linux/kvm_host.h:389:23: error: field has incomplete type 'struct kvm_vcpu_arch'
+     389 |         struct kvm_vcpu_arch arch;
+         |                              ^
+   include/linux/kvm_host.h:389:9: note: forward declaration of 'struct kvm_vcpu_arch'
+     389 |         struct kvm_vcpu_arch arch;
+         |                ^
+>> include/linux/kvm_host.h:390:23: error: field has incomplete type 'struct kvm_vcpu_stat'
+     390 |         struct kvm_vcpu_stat stat;
+         |                              ^
+   include/linux/kvm_host.h:390:9: note: forward declaration of 'struct kvm_vcpu_stat'
+     390 |         struct kvm_vcpu_stat stat;
+         |                ^
+>> include/linux/kvm_host.h:601:30: error: field has incomplete type 'struct kvm_arch_memory_slot'
+     601 |         struct kvm_arch_memory_slot arch;
+         |                                     ^
+   include/linux/kvm_host.h:601:9: note: forward declaration of 'struct kvm_arch_memory_slot'
+     601 |         struct kvm_arch_memory_slot arch;
+         |                ^
+>> include/linux/kvm_host.h:831:21: error: field has incomplete type 'struct kvm_vm_stat'
+     831 |         struct kvm_vm_stat stat;
+         |                            ^
+   include/linux/kvm_host.h:831:9: note: forward declaration of 'struct kvm_vm_stat'
+     831 |         struct kvm_vm_stat stat;
+         |                ^
+>> include/linux/kvm_host.h:832:18: error: field has incomplete type 'struct kvm_arch'
+     832 |         struct kvm_arch arch;
+         |                         ^
+   include/linux/kvm_host.h:832:9: note: forward declaration of 'struct kvm_arch'
+     832 |         struct kvm_arch arch;
+         |                ^
+>> include/linux/kvm_host.h:1023:11: error: use of undeclared identifier 'KVM_MAX_VCPUS'
+    1023 |         if (id < KVM_MAX_VCPUS)
+         |                  ^
+   In file included from arch/loongarch/kvm/vcpu.c:6:
+>> arch/loongarch/include/asm/kvm_host.h:46:9: warning: 'KVM_DIRTY_LOG_MANUAL_CAPS' macro redefined [-Wmacro-redefined]
+      46 | #define KVM_DIRTY_LOG_MANUAL_CAPS       \
+         |         ^
+   include/linux/kvm_host.h:643:9: note: previous definition is here
+     643 | #define KVM_DIRTY_LOG_MANUAL_CAPS KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE
+         |         ^
+>> arch/loongarch/kvm/vcpu.c:48:10: error: assigning to 'struct kvm_context *' from incompatible type 'void'
+      48 |         context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
+         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/vcpu.c:63:10: error: assigning to 'struct kvm_context *' from incompatible type 'void'
+      63 |         context = this_cpu_ptr(vcpu->kvm->arch.vmcs);
+         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/vcpu.c:1669:11: error: assigning to 'struct kvm_context *' from incompatible type 'void'
+    1669 |                 context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+         |                         ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/loongarch/kvm/vcpu.c:1691:10: error: assigning to 'struct kvm_context *' from incompatible type 'void'
+    1691 |         context = per_cpu_ptr(vcpu->kvm->arch.vmcs, cpu);
+         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning and 10 errors generated.
+
+
+vim +389 include/linux/kvm_host.h
+
+af585b921e5d1e include/linux/kvm_host.h Gleb Natapov        2010-10-14  372  
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  373  #ifdef CONFIG_HAVE_KVM_CPU_RELAX_INTERCEPT
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  374  	/*
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  375  	 * Cpu relax intercept or pause loop exit optimization
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  376  	 * in_spin_loop: set when a vcpu does a pause loop exit
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  377  	 *  or cpu relax intercepted.
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  378  	 * dy_eligible: indicates whether vcpu is eligible for directed yield.
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  379  	 */
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  380  	struct {
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  381  		bool in_spin_loop;
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  382  		bool dy_eligible;
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  383  	} spin_loop;
+4c088493c8d07e include/linux/kvm_host.h Raghavendra K T     2012-07-18  384  #endif
+a6816314af5749 include/linux/kvm_host.h David Matlack       2024-05-03  385  	bool wants_to_run;
+3a08a8f9f0936e include/linux/kvm_host.h Raghavendra K T     2013-03-04  386  	bool preempted;
+d73eb57b80b98a include/linux/kvm_host.h Wanpeng Li          2019-07-18  387  	bool ready;
+d1ae567fb8b559 include/linux/kvm_host.h Sean Christopherson 2024-05-21  388  	bool scheduled_out;
+d657a98e3c2053 drivers/kvm/kvm.h        Zhang Xiantao       2007-12-14 @389  	struct kvm_vcpu_arch arch;
+ce55c049459cff include/linux/kvm_host.h Jing Zhang          2021-06-18 @390  	struct kvm_vcpu_stat stat;
+ce55c049459cff include/linux/kvm_host.h Jing Zhang          2021-06-18  391  	char stats_id[KVM_STATS_NAME_SIZE];
+fb04a1eddb1a65 include/linux/kvm_host.h Peter Xu            2020-09-30  392  	struct kvm_dirty_ring dirty_ring;
+fe22ed827c5b60 include/linux/kvm_host.h David Matlack       2021-08-04  393  
+fe22ed827c5b60 include/linux/kvm_host.h David Matlack       2021-08-04  394  	/*
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  395  	 * The most recently used memslot by this vCPU and the slots generation
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  396  	 * for which it is valid.
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  397  	 * No wraparound protection is needed since generations won't overflow in
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  398  	 * thousands of years, even assuming 1M memslot operations per second.
+fe22ed827c5b60 include/linux/kvm_host.h David Matlack       2021-08-04  399  	 */
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  400  	struct kvm_memory_slot *last_used_slot;
+a54d806688fe1e include/linux/kvm_host.h Maciej S. Szmigiero 2021-12-06  401  	u64 last_used_slot_gen;
+d657a98e3c2053 drivers/kvm/kvm.h        Zhang Xiantao       2007-12-14  402  };
+d657a98e3c2053 drivers/kvm/kvm.h        Zhang Xiantao       2007-12-14  403  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
