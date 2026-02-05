@@ -1,269 +1,190 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C2F31A7EE
-	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 05:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B6D3ACEEC;
+	Thu,  5 Feb 2026 11:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770268822; cv=none; b=c1tG+uZwI/9lcHF33FouJWXuASE0PhijdBBdQOJP2D8K8AUOlIi1slkL6k2fUhUz1hmXXVPhgIPG9uW4mtx94vwq6UwnXQiYb8P06yEFdVHwEE37nnUILWdf2V38iRcHJ9uG4lXell13V83ImwUDhREt0wu+4E80e9mzgxsBzIo=
+	t=1770291359; cv=none; b=WiI72baLD9M0SXV01IYfyxVTEx1rX4qGSYw8a93IDcSfX7WxgtjVzhEof4AmMjOEZObzrktKjc8AOQDepzBMSVH9kjm7YEfUYHqXnbGlM1vpNV2+47bklPy2qeOlh+m8nz24Cutnaqyi72nhl1bNZH36iU6G1WlJTJu5ZAXY3UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770268822; c=relaxed/simple;
-	bh=rKiM9obf5J95LrwQvikvlTBi0k90jrSuoyJmI+GnCrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F/4Tambv3/SZWvUr7rkNY7gXk7fk6LaUCkcqkxgykdL2k32VcIisbIQ0WGdmT++PRSUoOuYrt1EL1UCDZm3njpW1DlNur7Mld8VXss5PlgWhoO+QK8i8cK/1/1pC2zxfKvGCNbm4CWYdhu0KnLM78FAzxX3Oh1KxM/yt/oGYGtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=ai3P1gKB; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1770291359; c=relaxed/simple;
+	bh=3sMz1aXuuijzMsHvvObi2VXR9fx4WgEVichiU4CKZDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XyEVBkFM/nOZrxDLQdzJdiAz+8oGfvCVz8mLLiXpTneWp4iobIsR6ZhM9w4B443rwyhtfGSO9B31gp432HzWakGHPdGs5JJ52IJ8nJJSfnfLbGqkcZe1PthzQZSmJpUlsQRkLQ2wEJmh0OLvhbVgqPY3xcDFnqn17+s+5uU//B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu7s1t/w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="ai3P1gKB"
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.155])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id D5A9820236
-	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 05:20:19 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id AE9E93EC2C;
-	Thu,  5 Feb 2026 05:20:11 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 4AB0B400D5;
-	Thu,  5 Feb 2026 05:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1770268811; bh=rKiM9obf5J95LrwQvikvlTBi0k90jrSuoyJmI+GnCrU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ai3P1gKBXn10pa96H5KA6uSSJZM2T3JxUesA04AItcASi5hdcIId+ImAbvzXfrTIK
-	 /hsHqp5/f4KU5nQc8ZNrHgQl5m5+4i2KZLOy7xunBQDBmrktWhcPlsY7x/tbgeBR6C
-	 MbNBUPyNzyhM8hxvAQmqOZITM40b8IjE5t6IRTwQ=
-Received: from liushuyu-p15 (unknown [117.151.13.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 6A3EC4017F;
-	Thu,  5 Feb 2026 05:20:03 +0000 (UTC)
-From: Zixing Liu <liushuyu@aosc.io>
-To: WANG Xuerui <kernel@xen0n.name>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Zixing Liu <liushuyu@aosc.io>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu7s1t/w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E695BC4CEF7;
+	Thu,  5 Feb 2026 11:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770291359;
+	bh=3sMz1aXuuijzMsHvvObi2VXR9fx4WgEVichiU4CKZDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cu7s1t/w6916Ya6ixpS6ttgjpMI2URV57aNBympnofTya/gxFpRRp61I06akmavdL
+	 eQu0GohOQWs/g6dXAoYwIi5nj7gz2j0M7LOYJZJ5sO9IqcKJrdbCLpskJNbMSlFWLX
+	 UG82wzpZSIE1w8UVOTbUcAxsMVVkI/nPtrOynuoG/DJFIg48BaVfjnNV+Nmj2kH21A
+	 EQ3LaZKgCM/XBi+WtrdE/qdIFQLWJC8TURH7/eQznHgVg9EwRXhzMmSgN1/e7LpGdL
+	 He24meVNRkv/Ke8oXQ6sEJ2GN+y3q74OQtXvENKyJXDzJ3ctLSrOyGZyQdaKGC3nch
+	 Pv/Wt/rESj1UQ==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EDAACF4006C;
+	Thu,  5 Feb 2026 06:35:56 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 05 Feb 2026 06:35:56 -0500
+X-ME-Sender: <xms:nICEaW_GvSSBINXf0ofq_x-yLSb58h8Og9sxOg20LDUUqtVKPd2rGw>
+    <xme:nICEaS84tMRreNW5lZJAPhpBScOsKOGhe6iSr3R_x1nVEK-b0PtH-38d0qQvhAlfd
+    3s4NizCjv59vM_uLsgD3MC1EKHuXUlovGPmlKJdkjJUzkee04UF42Q>
+X-ME-Received: <xmr:nICEaVquclR8ZwZTFgdXvcQmyteANYL9y2MDtUACN47OUj1NDZeNvAxb9eMqNA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeehvddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefmihhrhihl
+    ucfuhhhuthhsvghmrghuuceokhgrsheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeeigfdvtdekveejhfehtdduueeuieekjeekvdfggfdtkeegieevjedvgeetvdeh
+    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkih
+    hrihhllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeiudduiedvieeh
+    hedqvdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgsehshhhuthgvmhhovh
+    drnhgrmhgvpdhnsggprhgtphhtthhopeehiedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepuggrvhhiugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlih
+    hnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmuhgthhhunhdrshho
+    nhhgsehlihhnuhigrdguvghvpdhrtghpthhtohepuggrvhhiugesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtohepfihilhhlhiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
+    pehushgrmhgrrghrihhfieegvdesghhmrghilhdrtghomhdprhgtphhtthhopehfvhgulh
+    esghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhsrghlvhgrughorhesshhushgvrdgu
+    vgdprhgtphhtthhopehrphhptheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:nICEaexJkDciWL0gFKUnWwSDONB_D9Vg9IWhiPLedXxhJBnzDgZGKg>
+    <xmx:nICEaUn-QwjMmOgHFazrgt66R5nUW1MxGWRvDl-sNftjNrODSjgR2w>
+    <xmx:nICEaanFFBKtYwPiT8WBYCH1FdMASU4t8LDB18cpKxTCSriwe6BV7g>
+    <xmx:nICEaazz6wcm51a7dwkOdM8i3af2JSfws-k5O4hX_h4YlCy-sTkk0g>
+    <xmx:nICEaRZub43Z5DZ1aTG6jE-RP89KGBpGg0cgqYFgv_KJH-iiJipqwpQ_>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 5 Feb 2026 06:35:54 -0500 (EST)
+Date: Thu, 5 Feb 2026 11:35:50 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>, 
+	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
+	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, 
+	Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, loongarch@lists.linux.dev, 
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v5] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-Date: Thu,  5 Feb 2026 13:18:21 +0800
-Message-ID: <20260205051822.1318253-1-liushuyu@aosc.io>
-X-Mailer: git-send-email 2.53.0
+Subject: Re: [PATCHv6 02/17] mm: Change the interface of prep_compound_tail()
+Message-ID: <aYR-YULI3lBtl9y_@thinkstation>
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-3-kas@kernel.org>
+ <a61bc0a8-cf5a-418a-aeb4-96553b87f043@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4AB0B400D5
-X-Spamd-Result: default: False [1.40 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Server: nf1.mymailcheap.com
+In-Reply-To: <a61bc0a8-cf5a-418a-aeb4-96553b87f043@kernel.org>
 
-This ioctl can be used by the userspace applications to determine which
-(special) registers are get/set-able in a meaningful way.
+On Wed, Feb 04, 2026 at 05:14:12PM +0100, David Hildenbrand (arm) wrote:
+> On 2/2/26 16:56, Kiryl Shutsemau wrote:
+> > Instead of passing down the head page and tail page index, pass the tail
+> > and head pages directly, as well as the order of the compound page.
+> > 
+> > This is a preparation for changing how the head position is encoded in
+> > the tail page.
+> > 
+> > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> > Reviewed-by: Muchun Song <muchun.song@linux.dev>
+> > Reviewed-by: Zi Yan <ziy@nvidia.com>
+> > ---
+> >   include/linux/page-flags.h |  4 +++-
+> >   mm/hugetlb.c               |  8 +++++---
+> >   mm/internal.h              | 12 ++++++------
+> >   mm/mm_init.c               |  2 +-
+> >   mm/page_alloc.c            |  2 +-
+> >   5 files changed, 16 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> > index f7a0e4af0c73..8a3694369e15 100644
+> > --- a/include/linux/page-flags.h
+> > +++ b/include/linux/page-flags.h
+> > @@ -865,7 +865,9 @@ static inline bool folio_test_large(const struct folio *folio)
+> >   	return folio_test_head(folio);
+> >   }
+> > -static __always_inline void set_compound_head(struct page *page, struct page *head)
+> > +static __always_inline void set_compound_head(struct page *page,
+> > +					      const struct page *head,
+> > +					      unsigned int order)
+> 
+> Two tab indents please on second+ parameter list whenever you touch code.
 
-This can be very useful for cross-platform VMMs so that they do not have
-to hardcode register indices for each supported architectures.
+Do we have this coding style preference written down somewhere?
 
-Signed-off-by: Zixing Liu <liushuyu@aosc.io>
----
- Documentation/virt/kvm/api.rst |   2 +-
- arch/loongarch/kvm/vcpu.c      | 120 +++++++++++++++++++++++++++++++++
- 2 files changed, 121 insertions(+), 1 deletion(-)
+-tip tree wants the opposite. Documentation/process/maintainer-tip.rst:
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 01a3abef8abb..f46dd8be282f 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -3603,7 +3603,7 @@ VCPU matching underlying host.
- ---------------------
- 
- :Capability: basic
--:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
-+:Architectures: arm64, loongarch, mips, riscv, x86 (if KVM_CAP_ONE_REG)
- :Type: vcpu ioctl
- :Parameters: struct kvm_reg_list (in/out)
- :Returns: 0 on success; -1 on error
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 656b954c1134..de02e409ae39 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/kvm_host.h>
- #include <asm/fpu.h>
-+#include <asm/kvm_host.h>
- #include <asm/lbt.h>
- #include <asm/loongarch.h>
- #include <asm/setup.h>
-@@ -14,6 +15,8 @@
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-+#define NUM_LBT_REGS 6
-+
- const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
- 	KVM_GENERIC_VCPU_STATS(),
- 	STATS_DESC_COUNTER(VCPU, int_exits),
-@@ -1186,6 +1189,105 @@ static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
- 	return ret;
- }
- 
-+static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64 __user *uindices)
-+{
-+	unsigned int i, count;
-+	const unsigned int csrs_to_save[] = {
-+		LOONGARCH_CSR_CRMD,	  LOONGARCH_CSR_PRMD,
-+		LOONGARCH_CSR_EUEN,	  LOONGARCH_CSR_MISC,
-+		LOONGARCH_CSR_ECFG,	  LOONGARCH_CSR_ESTAT,
-+		LOONGARCH_CSR_ERA,	  LOONGARCH_CSR_BADV,
-+		LOONGARCH_CSR_BADI,	  LOONGARCH_CSR_EENTRY,
-+		LOONGARCH_CSR_TLBIDX,	  LOONGARCH_CSR_TLBEHI,
-+		LOONGARCH_CSR_TLBELO0,	  LOONGARCH_CSR_TLBELO1,
-+		LOONGARCH_CSR_ASID,	  LOONGARCH_CSR_PGDL,
-+		LOONGARCH_CSR_PGDH,	  LOONGARCH_CSR_PGD,
-+		LOONGARCH_CSR_PWCTL0,	  LOONGARCH_CSR_PWCTL1,
-+		LOONGARCH_CSR_STLBPGSIZE, LOONGARCH_CSR_RVACFG,
-+		LOONGARCH_CSR_CPUID,	  LOONGARCH_CSR_PRCFG1,
-+		LOONGARCH_CSR_PRCFG2,	  LOONGARCH_CSR_PRCFG3,
-+		LOONGARCH_CSR_KS0,	  LOONGARCH_CSR_KS1,
-+		LOONGARCH_CSR_KS2,	  LOONGARCH_CSR_KS3,
-+		LOONGARCH_CSR_KS4,	  LOONGARCH_CSR_KS5,
-+		LOONGARCH_CSR_KS6,	  LOONGARCH_CSR_KS7,
-+		LOONGARCH_CSR_TMID,	  LOONGARCH_CSR_CNTC,
-+		LOONGARCH_CSR_TINTCLR,	  LOONGARCH_CSR_LLBCTL,
-+		LOONGARCH_CSR_IMPCTL1,	  LOONGARCH_CSR_IMPCTL2,
-+		LOONGARCH_CSR_TLBRENTRY,  LOONGARCH_CSR_TLBRBADV,
-+		LOONGARCH_CSR_TLBRERA,	  LOONGARCH_CSR_TLBRSAVE,
-+		LOONGARCH_CSR_TLBRELO0,	  LOONGARCH_CSR_TLBRELO1,
-+		LOONGARCH_CSR_TLBREHI,	  LOONGARCH_CSR_TLBRPRMD,
-+		LOONGARCH_CSR_DMWIN0,	  LOONGARCH_CSR_DMWIN1,
-+		LOONGARCH_CSR_DMWIN2,	  LOONGARCH_CSR_DMWIN3,
-+		LOONGARCH_CSR_TVAL,	  LOONGARCH_CSR_TCFG,
-+	};
-+
-+	for (i = 0, count = 0;
-+	     i < sizeof(csrs_to_save) / sizeof(csrs_to_save[0]); i++) {
-+		const u64 reg = KVM_IOC_CSRID(i);
-+		if (uindices && put_user(reg, uindices++))
-+			return -EFAULT;
-+		count++;
-+	}
-+
-+	/* Skip PMU CSRs if not supported by the guest */
-+	if (!kvm_guest_has_pmu(&vcpu->arch))
-+		return count;
-+	for (i = LOONGARCH_CSR_PERFCTRL0; i <= LOONGARCH_CSR_PERFCNTR3; i++) {
-+		const u64 reg = KVM_IOC_CSRID(i);
-+		if (uindices && put_user(reg, uindices++))
-+			return -EFAULT;
-+		count++;
-+	}
-+
-+	return count;
-+}
-+
-+static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
-+{
-+	/* +1 for the KVM_REG_LOONGARCH_COUNTER register */
-+	unsigned long res =
-+		kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS + 1;
-+
-+	if (kvm_guest_has_lbt(&vcpu->arch))
-+		res += NUM_LBT_REGS;
-+
-+	return res;
-+}
-+
-+static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
-+					  u64 __user *uindices)
-+{
-+	u64 reg;
-+	unsigned int i;
-+
-+	i = kvm_loongarch_walk_csrs(vcpu, uindices);
-+	if (i < 0)
-+		return i;
-+	uindices += i;
-+
-+	for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
-+		reg = KVM_IOC_CPUCFG(i);
-+		if (put_user(reg, uindices++))
-+			return -EFAULT;
-+	}
-+
-+	reg = KVM_REG_LOONGARCH_COUNTER;
-+	if (put_user(reg, uindices++))
-+		return -EFAULT;
-+
-+	if (!kvm_guest_has_lbt(&vcpu->arch))
-+		return 0;
-+
-+	for (i = 1; i <= NUM_LBT_REGS; i++) {
-+		reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
-+		if (put_user(reg, uindices++))
-+			return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
- long kvm_arch_vcpu_ioctl(struct file *filp,
- 			 unsigned int ioctl, unsigned long arg)
- {
-@@ -1251,6 +1353,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 		r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
- 		break;
- 	}
-+	case KVM_GET_REG_LIST: {
-+		struct kvm_reg_list __user *user_list = argp;
-+		struct kvm_reg_list reg_list;
-+		unsigned n;
-+
-+		r = -EFAULT;
-+		if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
-+			break;
-+		n = reg_list.n;
-+		reg_list.n = kvm_loongarch_num_regs(vcpu);
-+		if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
-+			break;
-+		r = -E2BIG;
-+		if (n < reg_list.n)
-+			break;
-+		r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
-+		break;
-+	}
- 	default:
- 		r = -ENOIOCTLCMD;
- 		break;
+	When splitting function declarations or function calls, then please align
+	the first argument in the second line with the first argument in the first
+	line::
+
+I want the editor to do The Right Thing™ without my brain involvement.
+Having different coding styles in different corners of the kernel makes
+it hard.
+
+> 
+> >   {
+> >   	WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
+> >   }
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 6e855a32de3d..54ba7cd05a86 100644
+> 
+> 
+> [...]
+> 
+> > diff --git a/mm/internal.h b/mm/internal.h
+> > index d67e8bb75734..037ddcda25ff 100644
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> > @@ -879,13 +879,13 @@ static inline void prep_compound_head(struct page *page, unsigned int order)
+> >   		INIT_LIST_HEAD(&folio->_deferred_list);
+> >   }
+> > -static inline void prep_compound_tail(struct page *head, int tail_idx)
+> > +static inline void prep_compound_tail(struct page *tail,
+> 
+> Just wondering whether we should call this "struct page *page" for
+> consistency with set_compound_head().
+> 
+> Or alternatively, call it also "tail" in set_compound_head().
+
+I will take the alternative path :)
+
+> 
+> > +				      const struct page *head,
+> > +				      unsigned int order)
+> 
+> Two tab indent, then this fits into two lines in total.
+> 
+> >   {
+> > -	struct page *p = head + tail_idx;
+> > -
+> > -	p->mapping = TAIL_MAPPING;
+> > -	set_compound_head(p, head);
+> > -	set_page_private(p, 0);
+> > +	tail->mapping = TAIL_MAPPING;
+> > +	set_compound_head(tail, head, order);
+> > +	set_page_private(tail, 0);
+> >   }
+> Only nits, in general LGTM
+> 
+> Acked-by: David Hildenbrand (arm) <david@kernel.org>
+
+Thanks!
+
 -- 
-2.53.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
