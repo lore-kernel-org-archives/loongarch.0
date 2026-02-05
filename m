@@ -1,68 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8444B28469F
-	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 13:44:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009103D7D67
+	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 13:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770299047; cv=none; b=fa6+UqKeuiOfSKr3yBi86us/4o+lScgZqYVZLEZZJ1A1PG7q37qnJvKpV5s3RdmRHNJCDvqLchByeX1CaSvgFI2ifx20lZP3B6sYww13C54wwjAAZaaoS7pn6Um7NGwl+UJrtaAPpDqnU+hD2y0WeHVCfkYCcaCWcCZc52a4EL4=
+	t=1770299429; cv=none; b=Hf53GTw26K53WUKRhvefuNJnL2PcJl5vBV+jovGHAvtCETus0djpS7SO7Ukq4VQLGi73IAId/kQ4An/qaWWLcZVOTUMOCbQKt3kJFdNENmrkpVvaCorAkJjdHTHm+OUfRO8kx6GCwqcNjov88InW8DXeW5PILTVmHs17Apcv+Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770299047; c=relaxed/simple;
-	bh=zbAqPoMW8uRm4vnv38zuUnwWsFnsj8UNXtCVNmXf7C4=;
+	s=arc-20240116; t=1770299429; c=relaxed/simple;
+	bh=3TY2LvtZnrCiQseYdsb0tgxnCGw9BQjaOFOmpcNjY34=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bkb2m+g5se8X6WNxcm18eXY2A2Xzf52/+aWP+aB8l80/+IEIpUdaEsk5o0jgAZoWsmVuVcvk9Vhylw2HnBIv/AarhQU4AGTvd1qmNblthJjGIct360FslQgRv1FUWZhtU8bDOTk+uwMIMJ0b90ziTTBbmvbliT1Hb2f8jlCT8FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6eiX6lz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GT2d33mUe5Bu2tyNShezRaZRsvAjEfPFrw2W/crrPf6NSt2FxcBfgue25SFVokjrh6+g0DxUxZYUTqOjkytHLn5XZW7PAqD+VcrUK84xswzqJm//fSe6BEUeFW88VswgGVSwDYWWEcwp2etNY6LEm+5UpEKOfyTTmLCxAnMAK/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZjt/qf9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6eiX6lz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F75C19424;
-	Thu,  5 Feb 2026 13:44:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZjt/qf9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDAEC4AF0B;
+	Thu,  5 Feb 2026 13:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770299047;
-	bh=zbAqPoMW8uRm4vnv38zuUnwWsFnsj8UNXtCVNmXf7C4=;
+	s=k20201202; t=1770299428;
+	bh=3TY2LvtZnrCiQseYdsb0tgxnCGw9BQjaOFOmpcNjY34=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J6eiX6lzbwi3mcjWTLjOR9hgujeNI51sOYc0ooy0Mi4x7K9F8hAUDeeHzKbynrFn9
-	 kRGp+YJO1sZleB6zcJVAYCc1dOWZMTP6KVx/17TKAL4r3B7shQy7wMRQ2Kz2kx4pIA
-	 UCFlHD1snGZk4Qt5doDftxIBkgzBt8Gnc6m3r5Pz11COTZDAjKNiacUv1NwhCPAU7t
-	 uOGg/15FZBbvs5jNQfxXHOIRzO1lvRXi+7EAwXM839tx37Ul+D5NCbibqg9Hj58qoc
-	 J32wQHETLbxMyiaAf+aaFU66WP5HRaVGi1KX7PaM9SMZU+KU6fPuNMf3BenMSRl74Y
-	 0Ciu0j6Wi5/Mg==
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 86159F4006B;
-	Thu,  5 Feb 2026 08:44:05 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Thu, 05 Feb 2026 08:44:05 -0500
-X-ME-Sender: <xms:pZ6EaSwZIqcQbi3eSr2YeSyNY4soW7jIrW7KmxqFCodpBsJhmMqIng>
-    <xme:pZ6EaR_6UL-HGKaU9kn078cFaH47RcIX-KhAhlp-s0QPg22Tvt0mBeORnm4DgAasp
-    a900ohlCLT7uvqL5JOucndpSFZmzDKToYeC13QOxu3CJbz9yRWFf_1A>
-X-ME-Received: <xmr:pZ6EafZmGKOvZwxi9DHeE6Y2VFHt1kmMw83NW8vMrNwYQ9lhbGY2CIFNR5dleg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeehgeehucetufdoteggodetrf
+	b=nZjt/qf9VJzwFHOgqySxuAcrbSQuBulW3qm/ouJrbXrHLZ8x9pa9nwMgX+3jZo6mU
+	 N4ifhi7PUe9zhliFzPLyXsxoVeLSXF0e6ob9+MuKAQ7Jn5iQvx59m8BbNQ/6fYZIVm
+	 RfSeKPKJpsbdoiBt8Jne2ISM9DDP5cLeWA++u6OsBmvof7sYwh2DvltqJMX0/AGT7/
+	 FyaXn8CIRNnAgm3tAUjjNoO6gUIwFlX/CNrNgoDO7hTBW0CJ3kXk4QORwkTGwf6LGu
+	 v/sYAB0S2Keapjr6rAebNdO7eGUqPtTHQEhj33GWQpAsdidUkrLHNZg7J2BH4rWzLf
+	 y7+WUGfjW0+ng==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 0D54DF40068;
+	Thu,  5 Feb 2026 08:50:27 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Thu, 05 Feb 2026 08:50:27 -0500
+X-ME-Sender: <xms:IqCEaZf6StkWfOqu8wFSOZeK9vXsBWrdIeava6LuaFgh6MhYGi-y-w>
+    <xme:IqCEaQ5qls25rtsGHqFrm2Ttf2ZPHFXPplBaTUa4iYpfpLkNRd7SjVQfMZkBxqdaP
+    5jbZJcwMo_ziIilnQwc0Y2dZ5ffYmh-ZBxRxDMc4_GMbK_-ACh8Ncw>
+X-ME-Received: <xmr:IqCEaZebtFCUBddCzka2qZR1s7YPqIztazpkzNjE7oPAi1YH8moJgmlpqubZNA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeehgeeiucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefmihhrhihl
-    ucfuhhhuthhsvghmrghuuceokhgrsheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
-    gvrhhnpeeludettdeigfefhffhhfelveeludeuleduvefhgefgueeitedtleffudegfffg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkih
-    hrihhllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeiudduiedvieeh
-    hedqvdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgsehshhhuthgvmhhovh
-    drnhgrmhgvpdhnsggprhgtphhtthhopeehgedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepuggrvhhiugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlih
-    hnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmuhgthhhunhdrshho
-    nhhgsehlihhnuhigrdguvghvpdhrtghpthhtohepfihilhhlhiesihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopehushgrmhgrrghrihhfieegvdesghhmrghilhdrtghomhdp
-    rhgtphhtthhopehfvhgulhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhsrghlvh
-    grughorhesshhushgvrdguvgdprhgtphhtthhopehrphhptheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:pZ6EaV-6JVghQKxYV_55hxtxUr4iQA-30PgRWCcUY9Xf7uhmyhO0Lg>
-    <xmx:pZ6EaZjRTUOTpn-mSaE2tDB2ylLW_8-qfcbK_oEpeURhBS7Ej8EW0g>
-    <xmx:pZ6EaVlVwycuCa55s_M8An0K5sVkf5dS5d_JRAvkWPk7p2-WBE0hZQ>
-    <xmx:pZ6EaWCl7a_Al3zWzIrd-nfqWzXQPB4PFdHAg5OpAt3vK9Z9oYlT3w>
-    <xmx:pZ6EacOAkLoPSQQtH2x-RFqLuZSXT0NwgUCuBq8jTs4nTH97CVjwbWAA>
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
+    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
+    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
+    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
+    hnrghmvgdpnhgspghrtghpthhtohepheegpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghvihgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinh
+    hugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepmhhutghhuhhnrdhsohhn
+    gheslhhinhhugidruggvvhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurd
+    horhhgpdhrtghpthhtohepuhhsrghmrggrrhhifheigedvsehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
+    guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
+X-ME-Proxy: <xmx:IqCEaXAGHKZMBJS6DUsJ98T7WyuRMoEUVJhkNCQ9KG1MejXV8BfpSw>
+    <xmx:I6CEaVHlKYRyqwTh2vTVJYQ9F735Nv0bH_bNCRQM-oWLhwZ-9a_fqg>
+    <xmx:I6CEafjBkfUHcOHA-WfHtJvjD79HzFhOUFGs7C8chXL6k23xFLRu_A>
+    <xmx:I6CEaXs9Qf8A_cpGbYT3ZbCh3Xs_yGK5n3wyq6EE5VNQ2zEc4GNTkw>
+    <xmx:I6CEaV-n2W8zWDLDGHDrciU6x5-ShBKOSo7gnftoJrzCpdjBdgcLcSiJ>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 5 Feb 2026 08:44:03 -0500 (EST)
-Date: Thu, 5 Feb 2026 13:43:58 +0000
+ 5 Feb 2026 08:50:25 -0500 (EST)
+Date: Thu, 5 Feb 2026 13:50:18 +0000
 From: Kiryl Shutsemau <kas@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
+To: "David Hildenbrand (arm)" <david@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
 	Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>, 
 	Usama Arif <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>, 
@@ -75,108 +75,68 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, 
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
 	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCHv6 06/17] LoongArch/mm: Align vmemmap to maximal folio size
-Message-ID: <aYSdW2YaJdpgXYos@thinkstation>
+Subject: Re: [PATCHv6 05/17] riscv/mm: Align vmemmap to maximal folio size
+Message-ID: <aYSe0TAIzxJ9i1Wy@thinkstation>
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-7-kas@kernel.org>
- <2ce0e684-de54-43ec-be7d-c58bbffb3f4e@kernel.org>
- <062900fa-6419-4748-81d1-9128ce6c46d0@kernel.org>
+ <20260202155634.650837-6-kas@kernel.org>
+ <1b80b189-b549-40ba-800c-8037ce12b081@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <062900fa-6419-4748-81d1-9128ce6c46d0@kernel.org>
+In-Reply-To: <1b80b189-b549-40ba-800c-8037ce12b081@kernel.org>
 
-On Thu, Feb 05, 2026 at 01:56:36PM +0100, David Hildenbrand (Arm) wrote:
-> On 2/4/26 17:56, David Hildenbrand (arm) wrote:
-> > On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> > > The upcoming change to the HugeTLB vmemmap optimization (HVO) requires
-> > > struct pages of the head page to be naturally aligned with regard to the
-> > > folio size.
-> > > 
-> > > Align vmemmap to MAX_FOLIO_NR_PAGES.
-> > > 
-> > > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> > > ---
-> > >   arch/loongarch/include/asm/pgtable.h | 3 ++-
-> > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/loongarch/include/asm/pgtable.h b/arch/loongarch/
-> > > include/asm/pgtable.h
-> > > index c33b3bcb733e..f9416acb9156 100644
-> > > --- a/arch/loongarch/include/asm/pgtable.h
-> > > +++ b/arch/loongarch/include/asm/pgtable.h
-> > > @@ -113,7 +113,8 @@ extern unsigned long empty_zero_page[PAGE_SIZE /
-> > > sizeof(unsigned long)];
-> > >        min(PTRS_PER_PGD * PTRS_PER_PUD * PTRS_PER_PMD * PTRS_PER_PTE
-> > > * PAGE_SIZE, (1UL << cpu_vabits) / 2) - PMD_SIZE - VMEMMAP_SIZE -
-> > > KFENCE_AREA_SIZE)
-> > >   #endif
-> > > -#define vmemmap        ((struct page *)((VMALLOC_END + PMD_SIZE) &
-> > > PMD_MASK))
-> > > +#define VMEMMAP_ALIGN    max(PMD_SIZE, MAX_FOLIO_NR_PAGES *
-> > > sizeof(struct page))
-> > > +#define vmemmap        ((struct page *)(ALIGN(VMALLOC_END,
-> > > VMEMMAP_ALIGN)))
+On Wed, Feb 04, 2026 at 05:50:23PM +0100, David Hildenbrand (arm) wrote:
+> On 2/2/26 16:56, Kiryl Shutsemau wrote:
+> > The upcoming change to the HugeTLB vmemmap optimization (HVO) requires
+> > struct pages of the head page to be naturally aligned with regard to the
+> > folio size.
 > > 
-> > 
-> > Same comment, the "MAX_FOLIO_NR_PAGES * sizeof(struct page)" is just
-> > black magic here
-> > and the description of the situation is wrong.
-> > 
-> > Maybe you want to pull the magic "MAX_FOLIO_NR_PAGES * sizeof(struct
-> > page)" into the core and call it
-> > 
-> > #define MAX_FOLIO_VMEMMAP_ALIGN    (MAX_FOLIO_NR_PAGES * sizeof(struct
-> > page))
-> > 
-> > But then special case it base on (a) HVO being configured in an (b) HVO
-> > being possible
-> > 
-> > #ifdef HUGETLB_PAGE_OPTIMIZE_VMEMMAP && is_power_of_2(sizeof(struct page)
-> > /* A very helpful comment explaining the situation. */
-> > #define MAX_FOLIO_VMEMMAP_ALIGN    (MAX_FOLIO_NR_PAGES * sizeof(struct
-> > page))
-> > #else
-> > #define MAX_FOLIO_VMEMMAP_ALIGN    0
-> > #endif
-> > 
-> > Something like that.
-> > 
+> > Align vmemmap to MAX_FOLIO_NR_PAGES.
 > 
-> Thinking about this ...
+> I think neither that statement nor the one in the patch description is
+> correct?
 > 
-> the vmemmap start is always struct-page-aligned. Otherwise we'd be in
-> trouble already.
+> "MAX_FOLIO_NR_PAGES * sizeof(struct page)" is neither the maximum folio size
+> nor MAX_FOLIO_NR_PAGES.
 > 
-> Isn't it then sufficient to just align the start to MAX_FOLIO_NR_PAGES?
+> It's the size of the memmap that a large folio could span at maximum.
 > 
-> Let's assume sizeof(struct page) == 64 and MAX_FOLIO_NR_PAGES = 512 for
-> simplicity.
 > 
-> vmemmap start would be multiples of 512 (0x0010000000).
+> Assuming we have a 16 GiB folio, the calculation would give us
 > 
-> 512, 1024, 1536, 2048 ...
+> 	4194304 * sizeof(struct page)
 > 
-> Assume we have an 256-pages folio at 1536+256 = 0x111000000
+> Which could be something like (assuming 80 bytes)
+> 
+> 	335544320
+> 
+> -> not even a power of 2, weird? (for HVO you wouldn't care as HVO would be
+> disabled, but that aliment is super weird?)
+> 
+> 
+> Assuming 64 bytes, it would be a power of two (as 64 is a power of two).
+> 
+> 	268435456 (1<< 28)
+> 
+> 
+> Which makes me wonder whether there is a way to avoid sizeof(struct page)
+> here completely.
 
-s/0x/0b/, but okay.
+I don't think we can. See the other thread.
 
-> Assume we have the last page of that folio (0x011111111111), we would just
-> get to the start of that folio by AND-ing with ~(256-1).
-> 
-> Which case am I ignoring?
+What about using roundup_pow_of_two(sizeof(struct page)) here.
 
-IIUC, you are ignoring the actual size of struct page. It is not 1 byte :P
+> Or limit the alignment to the case where HVO is actually active and
+> sizeof(struct page) makes any sense?
 
-The last page of this 256-page folio is at 1536+256 + (64 * 255) which
-is 0b100011011000000. There's no mask that you can AND that gets you to
-0b11100000000.
+The annoying part of HVO is that it is unknown at compile-time if it
+will be used. You can compile kernel with HVO that will no be activated
+due to non-power-of-2 sizeof(struct page) because of a debug config option.
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
