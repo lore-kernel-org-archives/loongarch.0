@@ -1,225 +1,79 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCAB186E2E
-	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 03:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F352652B6;
+	Thu,  5 Feb 2026 04:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770261348; cv=none; b=KrLEp/VRSzTtLSI8cGhmZHYwc0+l4mo3DdcZR/7I2T9e0YDjoCbYaNSqyRZPlwnzK+twOa7SgbFjdLRX/UeW+VDim6uWd4BIWBLPAUskZ2Qbfz3c5+KmOHCh8Sc5aOPseWO5FCLOA9peV7D0pqH2vRLwA+J9Z316erV3Tulx0g8=
+	t=1770267022; cv=none; b=J0S3XpeCauuUoNLpv5/7GTbgr/FtH4VRSkzv8/C8RN42eURbnsEZz9B1iTnoPImAB4uvE90Cdesdfmg4LLSXxH6FLkixzQM9vd3qVzd6tYWacDZ1z3XnKT194jPnRhs93y5Vdhg76i75Ts7dk/TckhefERv5tkDv7hSPlLxaMYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770261348; c=relaxed/simple;
-	bh=kGtWHHTA3fwgZYHB1C+2bZnx9p4RNST3A1ud1SPTVSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XAc6yYvkUqOvtFgM9VcNnYQOH6LGpnrYUUpIZoUASthuaVrDMgV58rm4V29xfXDySV/E38aTDDH52wUMvbJuEcglw5f9SwkqlQH2cCPD4IuINhkHLM83kQb4gtFUS/6RIz9/BLQuyFxkrvKHgdUSxnyMhu0FRwHpwzktbSMaovI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=mrg81Ley; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770267022; c=relaxed/simple;
+	bh=fH87LTU4sipG80JEbjtRCAh1ElxM7xzqJYLKrjvK7l8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=G+X3TH3OeemKDBLgR8gwzi3C4GlmxXOTW/Ajo+1anS0wmEufbsEpWe4VYdxXJOuJ1/FijRvjF52pz8j6l+oTxJBp5slva5b/5g5mqVIgo/JJFHQfJ8JfuuMetC4xAuXcoDYnUUoinDx4Y3mviU7w+JzTmvbxIv74cGT8ZipHh2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JpWhmrDD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="mrg81Ley"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=m0YhAEtCzGzoYGvZg42KcYgs+OHxXA5AmpEhewJRkE0=;
-	b=mrg81Ley9PfGVLZQRfso+yz1ManXQbV+PfgxLEEqszlmqVu7nf5ibUS3D3jz2hxv4nVKl3Pxy
-	u1f26cRtxz6qdg+Sa5H47rkNKtSL2+fw1FqsGBvUi1egGqaUWoOeHZW1xEPRfIPMfxyDybkK+me
-	y6AzQqnzHgyAcWGTJDZFXnA=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4f62L33nmhz1prQr;
-	Thu,  5 Feb 2026 11:11:07 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0B3540561;
-	Thu,  5 Feb 2026 11:15:44 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Feb 2026 11:15:41 +0800
-Message-ID: <113f1d02-69df-b28e-edb9-514d284c6b29@huawei.com>
-Date: Thu, 5 Feb 2026 11:15:40 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JpWhmrDD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8754FC4CEF7;
+	Thu,  5 Feb 2026 04:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770267022;
+	bh=fH87LTU4sipG80JEbjtRCAh1ElxM7xzqJYLKrjvK7l8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=JpWhmrDD697OxjpiE03GT+TldrsJwV0es5DGr5A2NozBZF7tzmk6EVlvQ2Qcgt4by
+	 spilMuGu0StcHCxkXFaqj3jr6SQB6kFHbabmdu4IzIuBkonqpzjLaQ4sXMbHHNg2C2
+	 do4Qz7b/rCj5CAaSeLtD/GI+ZmOn4tST43bYUto8X6c7BljYfEzGkR1yzA1Kom66uk
+	 jN+kgJCvXOVMQV2rP1OlW35JINzjG+Y69hwPD+TUA57OOu0A2S6MRP9hs3rWJ+jGmr
+	 sScnjBc6Zk5ldrGYeNj+fexbYH6EE49i0j3GlDqn1EIZvCNRPCmonamj0wYhJcenLO
+	 X8LIUl+h4MC5g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id C24E63808200;
+	Thu,  5 Feb 2026 04:50:21 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 1/3] crash: Exclude crash kernel memory in crash core
-Content-Language: en-US
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, <corbet@lwn.net>,
-	<catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<kees@kernel.org>, <elver@google.com>, <arnd@arndb.de>,
-	<lirongqing@baidu.com>, <fvdl@google.com>, <leitao@debian.org>,
-	<rppt@kernel.org>, <cfsworks@gmail.com>, <osandov@fb.com>, <ardb@kernel.org>,
-	<ryan.roberts@arm.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
-	<bjorn@rivosinc.com>, <songshuaishuai@tinylab.org>,
-	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
-	<junhui.liu@pigmoral.tech>, <vishal.moola@gmail.com>, <coxu@redhat.com>,
-	<jbohac@suse.cz>, <liaoyuanhong@vivo.com>, <brgerst@gmail.com>,
-	<fuqiang.wang@easystack.cn>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-References: <20260204093728.1447527-1-ruanjinjie@huawei.com>
- <20260204093728.1447527-2-ruanjinjie@huawei.com>
- <4dc944c7-20ad-4e92-b05e-28a9e0c5a2b8@linux.ibm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <4dc944c7-20ad-4e92-b05e-28a9e0c5a2b8@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Subject: Re: [PATCH V2 net-next] net: stmmac: Fix typo from clk_scr_i to
+ clk_csr_i
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <177026702032.165764.4026219262923266957.git-patchwork-notify@kernel.org>
+Date: Thu, 05 Feb 2026 04:50:20 +0000
+References: <20260203062658.2156653-1-chenhuacai@loongson.cn>
+In-Reply-To: <20260203062658.2156653-1-chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: chenhuacai@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ si.yanteng@linux.dev, alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+ fancer.lancer@gmail.com, loongarch@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
+Hello:
 
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On 2026/2/4 20:32, Sourabh Jain wrote:
+On Tue,  3 Feb 2026 14:26:58 +0800 you wrote:
+> In include/linux/stmmac.h clk_csr_i is spelled as clk_scr_i by mistake,
+> so correct the typo.
 > 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> V2: Update subject line and remove "Cc stable".
 > 
-> On 04/02/26 15:07, Jinjie Ruan wrote:
->> The exclude of crashk_res, crashk_low_res and crashk_cma memory
->> are almost identical across different architectures, so handling them
->> in the crash core would eliminate a lot of duplication, so do
->> them in the common code.
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>   arch/arm64/kernel/machine_kexec_file.c     | 12 -------
->>   arch/loongarch/kernel/machine_kexec_file.c | 12 -------
->>   arch/powerpc/kexec/ranges.c                | 16 ++-------
->>   arch/riscv/kernel/machine_kexec_file.c     |  5 +--
->>   arch/x86/kernel/crash.c                    | 39 ++--------------------
->>   kernel/crash_core.c                        | 28 ++++++++++++++++
->>   6 files changed, 34 insertions(+), 78 deletions(-)
->>
+> [...]
 
-[...]
+Here is the summary with links:
+  - [V2,net-next] net: stmmac: Fix typo from clk_scr_i to clk_csr_i
+    https://git.kernel.org/netdev/net-next/c/42a940ef1845
 
->> -static int crash_exclude_mem_range_guarded(struct crash_mem
->> **mem_ranges,
->> -                       unsigned long long mstart,
->> -                       unsigned long long mend)
->> +static int crash_realloc_mem_range_guarded(struct crash_mem
->> **mem_ranges)
->>   {
->>       struct crash_mem *tmem = *mem_ranges;
->>   @@ -566,7 +564,7 @@ static int
->> crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
->>               return -ENOMEM;
->>       }
->>   -    return crash_exclude_mem_range(tmem, mstart, mend);
->> +    return 0;
->>   }
->>     /**
->> @@ -604,18 +602,10 @@ int get_crash_memory_ranges(struct crash_mem
->> **mem_ranges)
->>               sort_memory_ranges(*mem_ranges, true);
->>       }
->>   -    /* Exclude crashkernel region */
->> -    ret = crash_exclude_mem_range_guarded(mem_ranges,
->> crashk_res.start, crashk_res.end);
->> +    ret = crash_realloc_mem_range_guarded(mem_ranges);
-> 
-> What if max_nr_ranges - nr_ranges = 1, then no realloc will happen here.
-> And in
-> elf_header_exclude_ranges we may not enough space to store additional
-> memory ranges needed while excluding one or more CMA ranges.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-You're absolutely right — if max_nr_ranges - nr_ranges == 1 we skip the
-realloc, yet elf_header_exclude_ranges() can easily need more than one
-extra slot.
 
-Thanks for catching this.
-Jinjie
-
-> 
->>       if (ret)
->>           goto out;
->>   -    for (i = 0; i < crashk_cma_cnt; ++i) {
->> -        ret = crash_exclude_mem_range_guarded(mem_ranges,
->> crashk_cma_ranges[i].start,
->> -                          crashk_cma_ranges[i].end);
->> -        if (ret)
->> -            goto out;
->> -    }
->> -
->>       /*
->>        * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
->>        *        regions are exported to save their context at the time of
-
-[...]
-
->>   +static int crash_exclude_mem_ranges(struct crash_mem *cmem)
->> +{
->> +    int ret, i;
->> +
->> +    /* Exclude crashkernel region */
->> +    ret = crash_exclude_mem_range(cmem, crashk_res.start,
->> crashk_res.end);
->> +    if (ret)
->> +        return ret;
->> +
->> +    if (crashk_low_res.end) {
->> +        ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
->> crashk_low_res.end);
->> +        if (ret)
->> +            return ret;
->> +    }
->>   +    for (i = 0; i < crashk_cma_cnt; ++i) {
->> +        ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
->> +                          crashk_cma_ranges[i].end);
->> +        if (ret)
->> +            return ret;
->> +    }
->>   +    return ret;
->> +}
->>     int crash_prepare_elf64_headers(struct crash_mem *mem, int
->> need_kernel_map,
->>                 void **addr, unsigned long *sz)
->> @@ -174,6 +197,11 @@ int crash_prepare_elf64_headers(struct crash_mem
->> *mem, int need_kernel_map,
->>       unsigned int cpu, i;
->>       unsigned long long notes_addr;
->>       unsigned long mstart, mend;
->> +    int ret;
->> +
->> +    ret = crash_exclude_mem_ranges(mem);
-> 
-> I think the assumption here is that mem should have enough space
-> to hold the extra ranges created while excluding crash memory ranges.
-> Right now, this is not happening on powerpc for the case I mentioned
-> in the above comment.
-
-Yes, as you mentioned above.
-
-> 
-> Also, if crashk_cma_cnt changes in the future, or if a new type of
-> crash memory is added, then every architecture would need to adjust
-> the mem allocation accordingly. Instead, could we handle this in
-> generic code rather than in architecture-specific code, so that we
-> always ensure mem has enough space?
-
-I agree — hard-coding the worst-case count in every arch is a
-maintenance trap.
-Let's move the size calculation (and the realloc if needed) into the
-generic crash core so that:
-
-- New CMA regions or future crash-memory types are automatically
-accounted for;
-
-- Each architecture no longer has to play whack-a-mole with its private
-array size.
-
-Thanks for the suggestion.
-
-> 
->> +    if (ret)
->> +        return ret;
->>         /* extra phdr for vmcoreinfo ELF note */
->>       nr_phdr = nr_cpus + 1;
-> 
