@@ -1,190 +1,330 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B6D3ACEEC;
-	Thu,  5 Feb 2026 11:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0FF770810
+	for <loongarch@lists.linux.dev>; Thu,  5 Feb 2026 11:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770291359; cv=none; b=WiI72baLD9M0SXV01IYfyxVTEx1rX4qGSYw8a93IDcSfX7WxgtjVzhEof4AmMjOEZObzrktKjc8AOQDepzBMSVH9kjm7YEfUYHqXnbGlM1vpNV2+47bklPy2qeOlh+m8nz24Cutnaqyi72nhl1bNZH36iU6G1WlJTJu5ZAXY3UQ=
+	t=1770291731; cv=none; b=sYRttrmW3IO7AmHj4eJrUdYKxzVR9q7ccQWZOrpo92AeZexTsSafc3ZhwUpJjadn2dNNdh5kMzyEOS9bTwYKroRloV/7mJmTFiEKbtvLgZhB7WYDFGoL1E3iCb7vgIxqvorLhyeE0KhcJvzu4v6Ruk2DTpiYzH2JEAPlGMu44XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770291359; c=relaxed/simple;
-	bh=3sMz1aXuuijzMsHvvObi2VXR9fx4WgEVichiU4CKZDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XyEVBkFM/nOZrxDLQdzJdiAz+8oGfvCVz8mLLiXpTneWp4iobIsR6ZhM9w4B443rwyhtfGSO9B31gp432HzWakGHPdGs5JJ52IJ8nJJSfnfLbGqkcZe1PthzQZSmJpUlsQRkLQ2wEJmh0OLvhbVgqPY3xcDFnqn17+s+5uU//B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu7s1t/w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu7s1t/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E695BC4CEF7;
-	Thu,  5 Feb 2026 11:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770291359;
-	bh=3sMz1aXuuijzMsHvvObi2VXR9fx4WgEVichiU4CKZDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cu7s1t/w6916Ya6ixpS6ttgjpMI2URV57aNBympnofTya/gxFpRRp61I06akmavdL
-	 eQu0GohOQWs/g6dXAoYwIi5nj7gz2j0M7LOYJZJ5sO9IqcKJrdbCLpskJNbMSlFWLX
-	 UG82wzpZSIE1w8UVOTbUcAxsMVVkI/nPtrOynuoG/DJFIg48BaVfjnNV+Nmj2kH21A
-	 EQ3LaZKgCM/XBi+WtrdE/qdIFQLWJC8TURH7/eQznHgVg9EwRXhzMmSgN1/e7LpGdL
-	 He24meVNRkv/Ke8oXQ6sEJ2GN+y3q74OQtXvENKyJXDzJ3ctLSrOyGZyQdaKGC3nch
-	 Pv/Wt/rESj1UQ==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id EDAACF4006C;
-	Thu,  5 Feb 2026 06:35:56 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Thu, 05 Feb 2026 06:35:56 -0500
-X-ME-Sender: <xms:nICEaW_GvSSBINXf0ofq_x-yLSb58h8Og9sxOg20LDUUqtVKPd2rGw>
-    <xme:nICEaS84tMRreNW5lZJAPhpBScOsKOGhe6iSr3R_x1nVEK-b0PtH-38d0qQvhAlfd
-    3s4NizCjv59vM_uLsgD3MC1EKHuXUlovGPmlKJdkjJUzkee04UF42Q>
-X-ME-Received: <xmr:nICEaVquclR8ZwZTFgdXvcQmyteANYL9y2MDtUACN47OUj1NDZeNvAxb9eMqNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeehvddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefmihhrhihl
-    ucfuhhhuthhsvghmrghuuceokhgrsheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
-    gvrhhnpeeigfdvtdekveejhfehtdduueeuieekjeekvdfggfdtkeegieevjedvgeetvdeh
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkih
-    hrihhllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeiudduiedvieeh
-    hedqvdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgsehshhhuthgvmhhovh
-    drnhgrmhgvpdhnsggprhgtphhtthhopeehiedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepuggrvhhiugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlih
-    hnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmuhgthhhunhdrshho
-    nhhgsehlihhnuhigrdguvghvpdhrtghpthhtohepuggrvhhiugesrhgvughhrghtrdgtoh
-    hmpdhrtghpthhtohepfihilhhlhiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthho
-    pehushgrmhgrrghrihhfieegvdesghhmrghilhdrtghomhdprhgtphhtthhopehfvhgulh
-    esghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhsrghlvhgrughorhesshhushgvrdgu
-    vgdprhgtphhtthhopehrphhptheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:nICEaexJkDciWL0gFKUnWwSDONB_D9Vg9IWhiPLedXxhJBnzDgZGKg>
-    <xmx:nICEaUn-QwjMmOgHFazrgt66R5nUW1MxGWRvDl-sNftjNrODSjgR2w>
-    <xmx:nICEaanFFBKtYwPiT8WBYCH1FdMASU4t8LDB18cpKxTCSriwe6BV7g>
-    <xmx:nICEaazz6wcm51a7dwkOdM8i3af2JSfws-k5O4hX_h4YlCy-sTkk0g>
-    <xmx:nICEaRZub43Z5DZ1aTG6jE-RP89KGBpGg0cgqYFgv_KJH-iiJipqwpQ_>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 5 Feb 2026 06:35:54 -0500 (EST)
-Date: Thu, 5 Feb 2026 11:35:50 +0000
-From: Kiryl Shutsemau <kas@kernel.org>
-To: "David Hildenbrand (arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
-	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, 
-	Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCHv6 02/17] mm: Change the interface of prep_compound_tail()
-Message-ID: <aYR-YULI3lBtl9y_@thinkstation>
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-3-kas@kernel.org>
- <a61bc0a8-cf5a-418a-aeb4-96553b87f043@kernel.org>
+	s=arc-20240116; t=1770291731; c=relaxed/simple;
+	bh=vHL+E3uxxnhFuaa6PISDD3la3/3ftmgbCRpBwX9kRBM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sV40391wcU7J9+Nimrjy0wNXMYmrAk4shCJJmx8EjHiSn326afJ6L8XJMiPgVaAnmkJsUmMYEcMaOl/hJUWtsAwOZ3e2+bgWXHPZViVqKyZfQ+zlLQuCQ7NmlhakI9GXEC+SqJiALOU+boc6fOkIgnRmgG5giilEMYJwWVUfYb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8BxnsMNgoRpvRoQAA--.52405S3;
+	Thu, 05 Feb 2026 19:42:05 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by front1 (Coremail) with SMTP id qMiowJBxLMIJgoRp1mdAAA--.52533S3;
+	Thu, 05 Feb 2026 19:42:03 +0800 (CST)
+Subject: Re: [PATCH v5 1/2] LongArch: KVM: Add DMSINTC device support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kernel@xen0n.name, linux-kernel@vger.kernel.org
+References: <20251225091224.2893389-1-gaosong@loongson.cn>
+ <20251225091224.2893389-2-gaosong@loongson.cn>
+ <CAAhV-H5h2LioH6SZD8RUNewb4De3LWM9g2PJFUnTTkX+GG4cdw@mail.gmail.com>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <373e1c37-07f2-8a20-c305-03a88b573001@loongson.cn>
+Date: Thu, 5 Feb 2026 19:43:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAAhV-H5h2LioH6SZD8RUNewb4De3LWM9g2PJFUnTTkX+GG4cdw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a61bc0a8-cf5a-418a-aeb4-96553b87f043@kernel.org>
+Content-Language: en-US
+X-CM-TRANSID:qMiowJBxLMIJgoRp1mdAAA--.52533S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Jr1xJF13AF1kXFyUKw1UXFc_yoWfJFyUpF
+	9rAFs8Gr48WryxCrn2gas8urnFvr4fKr129FyjgFW5ArnFvryrJry8Kr9ruF9xXa18Gr10
+	vFyS93WY9a1Ut3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1Ek
+	sDUUUUU==
 
-On Wed, Feb 04, 2026 at 05:14:12PM +0100, David Hildenbrand (arm) wrote:
-> On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> > Instead of passing down the head page and tail page index, pass the tail
-> > and head pages directly, as well as the order of the compound page.
-> > 
-> > This is a preparation for changing how the head position is encoded in
-> > the tail page.
-> > 
-> > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> > Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> > Reviewed-by: Zi Yan <ziy@nvidia.com>
-> > ---
-> >   include/linux/page-flags.h |  4 +++-
-> >   mm/hugetlb.c               |  8 +++++---
-> >   mm/internal.h              | 12 ++++++------
-> >   mm/mm_init.c               |  2 +-
-> >   mm/page_alloc.c            |  2 +-
-> >   5 files changed, 16 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> > index f7a0e4af0c73..8a3694369e15 100644
-> > --- a/include/linux/page-flags.h
-> > +++ b/include/linux/page-flags.h
-> > @@ -865,7 +865,9 @@ static inline bool folio_test_large(const struct folio *folio)
-> >   	return folio_test_head(folio);
-> >   }
-> > -static __always_inline void set_compound_head(struct page *page, struct page *head)
-> > +static __always_inline void set_compound_head(struct page *page,
-> > +					      const struct page *head,
-> > +					      unsigned int order)
-> 
-> Two tab indents please on second+ parameter list whenever you touch code.
+Hi,
 
-Do we have this coding style preference written down somewhere?
+在 2026/1/15 下午3:43, Huacai Chen 写道:
+> Hi, Song,
+>
+> On Thu, Dec 25, 2025 at 5:37 PM Song Gao <gaosong@loongson.cn> wrote:
+>> Add device model for DMSINTC interrupt controller, implement basic
+>> create/destroy/set_attr interfaces, and register device model to kvm
+>> device table.
+>>
+>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>> Signed-off-by: Song Gao <gaosong@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/kvm_dmsintc.h |  21 +++++
+>>   arch/loongarch/include/asm/kvm_host.h    |   3 +
+>>   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
+>>   arch/loongarch/kvm/Makefile              |   1 +
+>>   arch/loongarch/kvm/intc/dmsintc.c        | 110 +++++++++++++++++++++++
+>>   arch/loongarch/kvm/main.c                |   6 ++
+>>   include/uapi/linux/kvm.h                 |   2 +
+>>   7 files changed, 147 insertions(+)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
+>>   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+>>
+>> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/include/asm/kvm_dmsintc.h
+>> new file mode 100644
+>> index 000000000000..1d4f66996f3c
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
+>> @@ -0,0 +1,21 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef __ASM_KVM_DMSINTC_H
+>> +#define __ASM_KVM_DMSINTC_H
+>> +
+>> +
+>> +struct loongarch_dmsintc  {
+>> +       struct kvm *kvm;
+>> +       uint64_t msg_addr_base;
+>> +       uint64_t msg_addr_size;
+>> +};
+>> +
+>> +struct dmsintc_state {
+>> +       atomic64_t  vector_map[4];
+>> +};
+>> +
+>> +int kvm_loongarch_register_dmsintc_device(void);
+>> +#endif
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> index e4fe5b8e8149..5e9e2af7312f 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -22,6 +22,7 @@
+>>   #include <asm/kvm_ipi.h>
+>>   #include <asm/kvm_eiointc.h>
+>>   #include <asm/kvm_pch_pic.h>
+>> +#include <asm/kvm_dmsintc.h>
+>>   #include <asm/loongarch.h>
+>>
+>>   #define __KVM_HAVE_ARCH_INTC_INITIALIZED
+>> @@ -134,6 +135,7 @@ struct kvm_arch {
+>>          struct loongarch_ipi *ipi;
+>>          struct loongarch_eiointc *eiointc;
+>>          struct loongarch_pch_pic *pch_pic;
+>> +       struct loongarch_dmsintc *dmsintc;
+>>   };
+>>
+>>   #define CSR_MAX_NUMS           0x800
+>> @@ -244,6 +246,7 @@ struct kvm_vcpu_arch {
+>>          struct kvm_mp_state mp_state;
+>>          /* ipi state */
+>>          struct ipi_state ipi_state;
+>> +       struct dmsintc_state dmsintc_state;
+>>          /* cpucfg */
+>>          u32 cpucfg[KVM_MAX_CPUCFG_REGS];
+>>
+>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>> index de6c3f18e40a..0a370d018b08 100644
+>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>> @@ -154,4 +154,8 @@ struct kvm_iocsr_entry {
+>>   #define KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL             0x40000006
+>>   #define KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT            0
+>>
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_CTRL                 0x40000007
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE                0x0
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE                0x1
+>> +
+>>   #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
+>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+>> index cb41d9265662..6e184e24443c 100644
+>> --- a/arch/loongarch/kvm/Makefile
+>> +++ b/arch/loongarch/kvm/Makefile
+>> @@ -19,6 +19,7 @@ kvm-y += vm.o
+>>   kvm-y += intc/ipi.o
+>>   kvm-y += intc/eiointc.o
+>>   kvm-y += intc/pch_pic.o
+>> +kvm-y += intc/dmsintc.o
+>>   kvm-y += irqfd.o
+>>
+>>   CFLAGS_exit.o  += $(call cc-disable-warning, override-init)
+>> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
+>> new file mode 100644
+>> index 000000000000..3fdea81a08c8
+>> --- /dev/null
+>> +++ b/arch/loongarch/kvm/intc/dmsintc.c
+>> @@ -0,0 +1,110 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#include <linux/kvm_host.h>
+>> +#include <asm/kvm_dmsintc.h>
+>> +#include <asm/kvm_vcpu.h>
+>> +
+>> +static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
+>> +                               struct kvm_device_attr *attr,
+>> +                               bool is_write)
+>> +{
+>> +       int addr = attr->attr;
+>> +       void __user *data;
+>> +       struct loongarch_dmsintc *s = dev->kvm->arch.dmsintc;
+>> +       u64 tmp;
+>> +
+>> +       data = (void __user *)attr->addr;
+>> +       switch (addr) {
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE:
+>> +               if (is_write) {
+>> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_base)))
+>> +                               return -EFAULT;
+>> +                       if (s->msg_addr_base) {
+>> +                               /* Duplicate setting are not allowed. */
+>> +                               return -EFAULT;
+>> +                       }
+>> +                       if ((tmp & (BIT(AVEC_CPU_SHIFT) - 1)) == 0)
+>> +                               s->msg_addr_base = tmp;
+>> +                       else
+>> +                               return  -EFAULT;
+>> +               }
+>> +               break;
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE:
+>> +               if (is_write) {
+>> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_size)))
+>> +                               return -EFAULT;
+>> +                       if (s->msg_addr_size) {
+>> +                               /*Duplicate setting are not allowed. */
+>> +                               return -EFAULT;
+>> +                       }
+>> +                       s->msg_addr_size = tmp;
+>> +               }
+>> +               break;
+>> +       default:
+>> +               kvm_err("%s: unknown dmsintc register, addr = %d\n", __func__, addr);
+>> +               return -ENXIO;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int kvm_dmsintc_set_attr(struct kvm_device *dev,
+>> +                       struct kvm_device_attr *attr)
+>> +{
+>> +       switch (attr->group) {
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_CTRL:
+>> +               return kvm_dmsintc_ctrl_access(dev, attr, true);
+>> +       default:
+>> +               kvm_err("%s: unknown group (%d)\n", __func__, attr->group);
+>> +               return -EINVAL;
+>> +       }
+>> +}
+>> +
+>> +static int kvm_dmsintc_create(struct kvm_device *dev, u32 type)
+>> +{
+>> +       struct kvm *kvm;
+>> +       struct loongarch_dmsintc *s;
+>> +
+>> +       if (!dev) {
+>> +               kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       kvm = dev->kvm;
+>> +       if (kvm->arch.dmsintc) {
+>> +               kvm_err("%s: LoongArch DMSINTC has already been created!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       s = kzalloc(sizeof(struct loongarch_dmsintc), GFP_KERNEL);
+>> +       if (!s)
+>> +               return -ENOMEM;
+>> +
+>> +       s->kvm = kvm;
+>> +       kvm->arch.dmsintc = s;
+>> +       return 0;
+>> +}
+>> +
+>> +static void kvm_dmsintc_destroy(struct kvm_device *dev)
+>> +{
+>> +
+>> +       if (!dev || !dev->kvm || !dev->kvm->arch.dmsintc)
+>> +               return;
+>> +
+>> +       kfree(dev->kvm->arch.dmsintc);
+> No need to call kvm_io_bus_unregister_dev()? And it seems you need to
+> kfree(dev) if this series is correct:
+Yes , need  kfree(dev), I will correct it on v6.
 
--tip tree wants the opposite. Documentation/process/maintainer-tip.rst:
+but no need kvm_io_bus_unregister_dev()
+dmsintc did't use kvm_io_bus_register_dev().
 
-	When splitting function declarations or function calls, then please align
-	the first argument in the second line with the first argument in the first
-	line::
+Thanks.
+Song Gao
+> https://lore.kernel.org/loongarch/99826cf9-356d-235b-9c7c-9d51d36e53c3@loongson.cn/T/#t
+>
+> Huacai
+>
+>> +}
+>> +
+>> +static struct kvm_device_ops kvm_dmsintc_dev_ops = {
+>> +       .name = "kvm-loongarch-dmsintc",
+>> +       .create = kvm_dmsintc_create,
+>> +       .destroy = kvm_dmsintc_destroy,
+>> +       .set_attr = kvm_dmsintc_set_attr,
+>> +};
+>> +
+>> +int kvm_loongarch_register_dmsintc_device(void)
+>> +{
+>> +       return kvm_register_device_ops(&kvm_dmsintc_dev_ops, KVM_DEV_TYPE_LOONGARCH_DMSINTC);
+>> +}
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index 80ea63d465b8..f363a3b24903 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -408,6 +408,12 @@ static int kvm_loongarch_env_init(void)
+>>
+>>          /* Register LoongArch PCH-PIC interrupt controller interface. */
+>>          ret = kvm_loongarch_register_pch_pic_device();
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* Register LoongArch DMSINTC interrupt contrroller interface */
+>> +       if (cpu_has_msgint)
+>> +               ret = kvm_loongarch_register_dmsintc_device();
+>>
+>>          return ret;
+>>   }
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index dddb781b0507..7c56e7e36265 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1209,6 +1209,8 @@ enum kvm_device_type {
+>>   #define KVM_DEV_TYPE_LOONGARCH_EIOINTC KVM_DEV_TYPE_LOONGARCH_EIOINTC
+>>          KVM_DEV_TYPE_LOONGARCH_PCHPIC,
+>>   #define KVM_DEV_TYPE_LOONGARCH_PCHPIC  KVM_DEV_TYPE_LOONGARCH_PCHPIC
+>> +       KVM_DEV_TYPE_LOONGARCH_DMSINTC,
+>> +#define KVM_DEV_TYPE_LOONGARCH_DMSINTC   KVM_DEV_TYPE_LOONGARCH_DMSINTC
+>>
+>>          KVM_DEV_TYPE_MAX,
+>>
+>> --
+>> 2.39.3
+>>
+>>
 
-I want the editor to do The Right Thing™ without my brain involvement.
-Having different coding styles in different corners of the kernel makes
-it hard.
-
-> 
-> >   {
-> >   	WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
-> >   }
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index 6e855a32de3d..54ba7cd05a86 100644
-> 
-> 
-> [...]
-> 
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index d67e8bb75734..037ddcda25ff 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -879,13 +879,13 @@ static inline void prep_compound_head(struct page *page, unsigned int order)
-> >   		INIT_LIST_HEAD(&folio->_deferred_list);
-> >   }
-> > -static inline void prep_compound_tail(struct page *head, int tail_idx)
-> > +static inline void prep_compound_tail(struct page *tail,
-> 
-> Just wondering whether we should call this "struct page *page" for
-> consistency with set_compound_head().
-> 
-> Or alternatively, call it also "tail" in set_compound_head().
-
-I will take the alternative path :)
-
-> 
-> > +				      const struct page *head,
-> > +				      unsigned int order)
-> 
-> Two tab indent, then this fits into two lines in total.
-> 
-> >   {
-> > -	struct page *p = head + tail_idx;
-> > -
-> > -	p->mapping = TAIL_MAPPING;
-> > -	set_compound_head(p, head);
-> > -	set_page_private(p, 0);
-> > +	tail->mapping = TAIL_MAPPING;
-> > +	set_compound_head(tail, head, order);
-> > +	set_page_private(tail, 0);
-> >   }
-> Only nits, in general LGTM
-> 
-> Acked-by: David Hildenbrand (arm) <david@kernel.org>
-
-Thanks!
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
