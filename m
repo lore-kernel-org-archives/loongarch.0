@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D4A32ED57;
-	Fri,  6 Feb 2026 10:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C20360749;
+	Fri,  6 Feb 2026 10:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770374138; cv=none; b=Ds+vg35VvNyoB7UdKUZ0aY74+9IHNW8beJGJXbYFUBp/hq5kbrRoV4BSlM+cMal9t5nCpm7Cd44J/HS0mQs8YCYduhbdo4RiwE23t0TN9u3Xl/dsOiHktOxsPjiCuTwNO4D7O8WcRiPLWTprIZGsAsFxuoAC6ydLckrZkDEeLxE=
+	t=1770374538; cv=none; b=EZM0lGhe7NLfimW7Pv4nccG/j1o+4tY4XDq3WXeCwCGF2L6rHOMuBR3WM7tNpmKPb5LY2cT9YxF0kSRf43UsDoTHfExLHUjHfPE9CXSf80ToI8dCJvf9M68z0Su6J0e5ETF87qtHOuBzPr/2S7pZXX6DJTSxFcFV+2qP+Ef9Wak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770374138; c=relaxed/simple;
-	bh=4eHKEhmEK8xsEIAIBEaQ/Y5Lb5Y5nnEuAYz1Q4HZ+SU=;
+	s=arc-20240116; t=1770374538; c=relaxed/simple;
+	bh=X4ulH2AmDkCSg3stSWU0qmNiUtFh+CTtBIZg9eTnXM0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mQWy87uCZJON4kBMVZ1NFmgu/bI5wTM5oDzjodT1nvuZgmRSGiaSfgz3QNlcXKOU/4dM7G75UOj2cFvoO6oBdOrjfpb+pRTGRUfh944lRs1HkqsIYaNheCFRdsDEQgTCqCQ+j0cTQtKag0ZqjWZbM9rH5a/ha4HinIBIQ9dFG0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6dc09FX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QGGzfZRprMu08inFQcm7dJwG1oJBi7lD98YfxCZu4IKb2Dolge3G5il5VThGcF/uR2X0W0eZx4c2jG3MExUk6JZNTjTspD6a5gCQx+n/3KsFBLcCgjABts4d1XJU0sKkuK+xPs3ZUVQ8MYmTOGcuPGGXOty8l19qOXpr/xYbSow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTysHtsF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6dc09FX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADBFC116C6;
-	Fri,  6 Feb 2026 10:35:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTysHtsF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA05C116C6;
+	Fri,  6 Feb 2026 10:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770374137;
-	bh=4eHKEhmEK8xsEIAIBEaQ/Y5Lb5Y5nnEuAYz1Q4HZ+SU=;
+	s=k20201202; t=1770374537;
+	bh=X4ulH2AmDkCSg3stSWU0qmNiUtFh+CTtBIZg9eTnXM0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S6dc09FXA/oslyvgU5XYJDzbCDyPHsKVIty3YtaZStxu0DwL5tirjTKmYgh/T9eCa
-	 MlLAjkLZP2A+XpbtVzHQ5Hz16O2G1paaoIzPh2aoh42Kpm3eyzKze2jUxg0BBedXS2
-	 s0zLAKQGkVIYs9iA7x4O3L+mjVW6FOgKEcEJkqoHCqohjarOqhC1D2k7FP3EF/jaRQ
-	 tzQLNwDlYLIgmWgUZgs4ly60PYVii+9ZTKLF/Xl5C74FJwKJ6isZZy1sDvMWNNjura
-	 pNWziuoPV3Q2aXliocKXSW2xjWG7kteH3CBWMUYoiMoM/1nrnYcrBfDVRyjSuuWQQ3
-	 C+or9FiaofU8w==
-Message-ID: <bf413c9c-eabf-4eb7-bae4-947dd7e012cd@kernel.org>
-Date: Fri, 6 Feb 2026 11:35:30 +0100
+	b=VTysHtsFbDZOc9nla0Q2lgBis/brgO6Tu+kf3ZjW0lCZpL1uJplM9eZTkXQhCcum2
+	 UIQVwE1+A3z9/osnfEUHa5wrcr52RX4ivjXktLIzY5oVFuwODBON2ufk5tTgU6mn+R
+	 kRQjtEeQq2irifXeO/1G3CFjPn3stmMk/VvAx3qvWB8gbBiWAQl6yd0+kYztL1a+QJ
+	 eagSYMaSu7JIt54TiZMwJU+j3SfNPW7mc3mRGstPV06L/k2NOUTqClojWUxdl8PEiw
+	 /vumUJqdqpNOYsec/0f6JZTDY41m2mszc4Rs+BB36RPHPk/B4ZAjutUf6q1FNZNSrq
+	 eP+Xw8P8QMVAg==
+Message-ID: <0ecdd75e-ccd8-4217-a409-51da756ff1fe@kernel.org>
+Date: Fri, 6 Feb 2026 11:42:10 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 16/17] hugetlb: Update vmemmap_dedup.rst
+Subject: Re: [PATCHv6 17/17] mm/slab: Use compound_head() in page_slab()
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-17-kas@kernel.org>
+ <20260202155634.650837-18-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,74 +99,46 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-17-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-18-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> Update the documentation regarding vmemmap optimization for hugetlb to
-> reflect the changes in how the kernel maps the tail pages.
+> page_slab() contained an open-coded implementation of compound_head().
 > 
-> Fake heads no longer exist. Remove their description.
+> Replace the duplicated code with a direct call to compound_head().
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> ---
->   Documentation/mm/vmemmap_dedup.rst | 60 +++++++++++++-----------------
->   1 file changed, 26 insertions(+), 34 deletions(-)
 > 
-> diff --git a/Documentation/mm/vmemmap_dedup.rst b/Documentation/mm/vmemmap_dedup.rst
-> index 1863d88d2dcb..fca9d0ce282a 100644
-> --- a/Documentation/mm/vmemmap_dedup.rst
-> +++ b/Documentation/mm/vmemmap_dedup.rst
-> @@ -124,33 +124,35 @@ Here is how things look before optimization::
->    |           |
->    +-----------+
->   
-> -The value of page->compound_info is the same for all tail pages. The first
-> -page of ``struct page`` (page 0) associated with the HugeTLB page contains the 4
-> -``struct page`` necessary to describe the HugeTLB. The only use of the remaining
-> -pages of ``struct page`` (page 1 to page 7) is to point to page->compound_info.
-> -Therefore, we can remap pages 1 to 7 to page 0. Only 1 page of ``struct page``
-> -will be used for each HugeTLB page. This will allow us to free the remaining
-> -7 pages to the buddy allocator.
-> +The first page of ``struct page`` (page 0) associated with the HugeTLB page
-> +contains the 4 ``struct page`` necessary to describe the HugeTLB. The remaining
-> +pages of ``struct page`` (page 1 to page 7) are tail pages.
-> +
-> +The optimization is only applied when the size of the struct page is a power-of-2
-> +In this case, all tail pages of the same order are identical. See
-> +compound_head(). This allows us to remap the tail pages of the vmemmap to a
-> +shared, read-only page. The head page is also remapped to a new page. This
-> +allows the original vmemmap pages to be freed.
->   
->   Here is how things look after remapping::
->   
-> -    HugeTLB                  struct pages(8 pages)         page frame(8 pages)
-> - +-----------+ ---virt_to_page---> +-----------+   mapping to   +-----------+
-> - |           |                     |     0     | -------------> |     0     |
-> - |           |                     +-----------+                +-----------+
-> - |           |                     |     1     | ---------------^ ^ ^ ^ ^ ^ ^
-> - |           |                     +-----------+                  | | | | | |
-> - |           |                     |     2     | -----------------+ | | | | |
-> - |           |                     +-----------+                    | | | | |
-> - |           |                     |     3     | -------------------+ | | | |
-> - |           |                     +-----------+                      | | | |
-> - |           |                     |     4     | ---------------------+ | | |
-> - |    PMD    |                     +-----------+                        | | |
-> - |   level   |                     |     5     | -----------------------+ | |
-> - |  mapping  |                     +-----------+                          | |
-> - |           |                     |     6     | -------------------------+ |
-> - |           |                     +-----------+                            |
-> - |           |                     |     7     | ---------------------------+
-> +    HugeTLB                  struct pages(8 pages)                 page frame
+> ---
+> 
+> I am not sure if this open-coded version is intentional and required for
+> memdesc transition. Drop the patch if it is.
 
-You could highlight that we allocate a new head page like "page frame 
-(new)".
+commit 2bcd3800f2da1be13b972858f63c66d035b1ec6d
+Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+Date:   Thu Nov 13 00:09:15 2025 +0000
 
-Wasn't aware of that detail before reading your change above.
+     slab: Reimplement page_slab()
+     
+     In order to separate slabs from folios, we need to convert from any page
+     in a slab to the slab directly without going through a page to folio
+     conversion first.
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+     Up to this point, page_slab() has followed the example of other memdesc
+     converters (page_folio(), page_ptdesc() etc) and just cast the pointer
+     to the requested type, regardless of whether the pointer is actually a
+     pointer to the correct type or not.
+     
+     That changes with this commit; we check that the page actually belongs
+     to a slab and return NULL if it does not.  Other memdesc converters will
+     adopt this convention in future.
+
+
+I think using compound_head() is fine. For memdescs the function has to be changed to
+lookup the memdesc either way, and not go through the head page.
+
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
