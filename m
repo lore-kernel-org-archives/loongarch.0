@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB4D32A3EB;
-	Fri,  6 Feb 2026 09:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7830C35E54D;
+	Fri,  6 Feb 2026 09:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770369290; cv=none; b=oT2kSp45eUgqLBWZURB4sAGXrqXtxF+/9mfPgXVOZ0Djv071akrR47TG1j5bxkDYd8P4wzgcdrA6iApzITfZuYnG6sqGWiKZZ2GrBqfjTpRpO6e7nBhpNKZacY4alof/8WcEGTj7fTnmD7h6ElCJi+PsqpY0xquATbHmf4fWCSI=
+	t=1770370592; cv=none; b=fl8wmwBgP88HCHuH2aLZM9BgtFaMQE1NxHiXndaFAuUIh8UCEM6K+7eINIeksnTwQRauHodwaraguT6erslmAhxmJvZL8Bt3wLJTTBrOZohKBq4VgqbGwQZYKHw1ZuIMATOMLOcYG7Ee69IDB0qbwnS303bCfFKI1J04knBwHUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770369290; c=relaxed/simple;
-	bh=TsoItULYpmYPP5+qItOY9/D0ks8BEhX/aixQCeipdPo=;
+	s=arc-20240116; t=1770370592; c=relaxed/simple;
+	bh=l8Fj/023PJxXbH0Z5uzpECT9RXbJgRSHplYgq+pm8fs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oE7O3NynvFLVjdOqNvpieO9O9hRCCHlGvyFrOqQFlBzt1tKll+zTM2VkW/9j3BYCAeXSSrPpdmMur5tfs2um+14K2ARzhtUqbUYSZJ16ZTNE4YXOPpXeljNzgd7P0C/3MTB5JsU3PjV/Fvw8yZ50n1gt8aJ2xCd4miG7w/qedM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5sOJ/AQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FeOa54yxTrM/EXpGKjV9T99fwE1TbkgTcbVNqOLTjXuGAOuzaEwYcHm7NUnUmEulmRAeKaNiZi+ehXV0x0qDWELBvfsju7qL50fHKr4o9y/+bPN6w9TZeZLkqg6WINmQd4pZoHQVrld5NLAlZEzG5VUY0ZaVcBYWvS4PnHGcWPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtXyxhUl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5sOJ/AQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD80C116C6;
-	Fri,  6 Feb 2026 09:14:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtXyxhUl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F87C116C6;
+	Fri,  6 Feb 2026 09:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770369290;
-	bh=TsoItULYpmYPP5+qItOY9/D0ks8BEhX/aixQCeipdPo=;
+	s=k20201202; t=1770370592;
+	bh=l8Fj/023PJxXbH0Z5uzpECT9RXbJgRSHplYgq+pm8fs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H5sOJ/AQVD4KQdyWWnwpvGbsCTZKl09ACof7WNuoWazmfL2kJlPFbD5heZfAYPIbz
-	 d2CnLYUMcjF0tIbpv8zNS4Qg1isPdfN474/nNE3Eulr9/zFc5gyKGxM8T33/oy367q
-	 6fs1VzwFF7AGydtM9nWDqkQuQxSLFHXOZFF0ABPsCQZ44YHHvBaD7f+jyCx13Y8Npu
-	 EC/ISRF8qqpjKLGAUrmlvuTVz5ntYB1AURrL/xPiKqN0+TYLMb2W5us/8fIkpHwMrK
-	 uKicF1sG7SysotASG6r7gI5GHQStrqKlaklkU1b6PT+Xqp1rJG9ZuVVg16mXQ3J1HK
-	 Zf0C4zQ37KubQ==
-Message-ID: <7b88fdcb-6bd9-4eea-9174-81ab4763a0eb@kernel.org>
-Date: Fri, 6 Feb 2026 10:14:41 +0100
+	b=RtXyxhUlqdIqL97gdfK2G+tqkx4gG1wk6EyIvfQ2g11VN/Nv2NzFaLMYlDc5LAnS/
+	 l5ceRRf8F169VZTzH2MOPFGaFb7YLAoodmqdt/qnaXbloi/wZgWPxDdYjx22j9eU1D
+	 YNwGiBfVKXOq/YqTvIvudoetXoLHYAD4v+2OYgyWH9yPme1IYRAPvRAHxkf7sYa3w5
+	 YpPccUUgm7tDakvcDeKkBxafXTwsxHphbGcO58DJ94+ntRtweAEDEAo0A/KWpOiWv5
+	 YnHYlJesvXMrFM0/97ZkvQsnSeZsdjqa2su1C9DyTaMZUgx9+JJyq+hzZPYlUnLKvM
+	 dpZPjx10HeldA==
+Message-ID: <3fcbad05-bef2-486a-8d9b-7010a91c85b8@kernel.org>
+Date: Fri, 6 Feb 2026 10:36:24 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -101,9 +101,114 @@ Autocrypt: addr=david@kernel.org; keydata=
  qIws/H2t
 In-Reply-To: <20260202155634.650837-12-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On 2/2/26 16:56, Kiryl Shutsemau wrote:
+> HugeTLB Vmemmap Optimization (HVO) reduces memory usage by freeing most
+> vmemmap pages for huge pages and remapping the freed range to a single
+> page containing the struct page metadata.
+> 
+> With the new mask-based compound_info encoding (for power-of-2 struct
+> page sizes), all tail pages of the same order are now identical
+> regardless of which compound page they belong to. This means the tail
+> pages can be truly shared without fake heads.
+> 
+> Allocate a single page of initialized tail struct pages per NUMA node
+> per order in the vmemmap_tails[] array in pglist_data. All huge pages of
+> that order on the node share this tail page, mapped read-only into their
+> vmemmap. The head page remains unique per huge page.
+> 
+> Redefine MAX_FOLIO_ORDER using ilog2(). The define has to produce a
+> compile-constant as it is used to specify vmemmap_tail array size.
+> For some reason, compiler is not able to solve get_order() at
+> compile-time, but ilog2() works.
+> 
+> Avoid PUD_ORDER to define MAX_FOLIO_ORDER as it adds dependency to
+> <linux/pgtable.h> which generates hard-to-break include loop.
+> 
+> This eliminates fake heads while maintaining the same memory savings,
+> and simplifies compound_head() by removing fake head detection.
+> 
+> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> ---
 
+[...]
+
+>   #define node_present_pages(nid)	(NODE_DATA(nid)->node_present_pages)
+> diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+> index a39a301e08b9..688764c52c72 100644
+> --- a/mm/hugetlb_vmemmap.c
+> +++ b/mm/hugetlb_vmemmap.c
+> @@ -19,6 +19,7 @@
+>   
+>   #include <asm/tlbflush.h>
+>   #include "hugetlb_vmemmap.h"
+> +#include "internal.h"
+>   
+>   /**
+>    * struct vmemmap_remap_walk - walk vmemmap page table
+> @@ -505,6 +506,32 @@ static bool vmemmap_should_optimize_folio(const struct hstate *h, struct folio *
+>   	return true;
+>   }
+>   
+> +static struct page *vmemmap_get_tail(unsigned int order, int node)
+> +{
+> +	struct page *tail, *p;
+> +	unsigned int idx;
+> +
+> +	idx = 
+
+Could do
+
+const unsigned int idx = order - VMEMMAP_TAIL_MIN_ORDER;
+
+above.
+
+> +	tail = READ_ONCE(NODE_DATA(node)->vmemmap_tails[idx]);
+> +	if (tail)
+
+Wondering if a likely() would be a good idea here. I guess we'll usually 
+go through that fast path on a system that has been running for a bit.
+
+> +		return tail;
+> +
+> +	tail = alloc_pages_node(node, GFP_KERNEL | __GFP_ZERO, 0);
+> +	if (!tail)
+> +		return NULL;
+> +
+> +	p = page_to_virt(tail);
+> +	for (int i = 0; i < PAGE_SIZE / sizeof(struct page); i++)
+> +		prep_compound_tail(p + i, NULL, order);
+
+This leaves all pageflags, refcount etc. set to 0, which is mostly 
+expected for tail pages.
+
+But, I would have expected something a bit more from 
+__init_single_page() that initialized the page properly.
+
+In particular:
+* set_page_node(page, node), or how is page_to_nid() handled?
+* atomic_set(&page->_mapcount, -1), to not indicate something odd to
+   core-mm where we would suddenly have a page mapping for a hugetlb
+   folio.
+
+> +
+> +	if (cmpxchg(&NODE_DATA(node)->vmemmap_tails[idx], NULL, tail)) {
+> +		__free_page(tail);
+> +		tail = READ_ONCE(NODE_DATA(node)->vmemmap_tails[idx]);
+> +	}
+> +
+> +	return tail;
+> +}
+
+[...]
+
+> --- a/mm/sparse-vmemmap.c
+> +++ b/mm/sparse-vmemmap.c
+> @@ -378,16 +378,44 @@ void vmemmap_wrprotect_hvo(unsigned long addr, unsigned long end,
+>   	}
+>   }
+>   
 > -/*
 > - * Populate vmemmap pages HVO-style. The first page contains the head
 > - * page and needed tail pages, the other ones are mirrors of the first
@@ -116,8 +221,49 @@ Content-Transfer-Encoding: 7bit
 > +
 > +	BUG_ON(order < VMEMMAP_TAIL_MIN_ORDER);
 > +	BUG_ON(order > MAX_FOLIO_ORDER);
+> +
+> +	idx = order - VMEMMAP_TAIL_MIN_ORDER;
+> +	tail = NODE_DATA(node)->vmemmap_tails[idx];
+> +	if (tail)
+> +		return page_to_pfn(tail);
+> +
+> +	p = vmemmap_alloc_block_zero(PAGE_SIZE, node);
+> +	if (!p)
+> +		return 0;
+> +
+> +	for (int i = 0; i < PAGE_SIZE / sizeof(struct page); i++)
+> +		prep_compound_tail(p + i, NULL, order);
+> +
+> +	tail = virt_to_page(p);
+> +	NODE_DATA(node)->vmemmap_tails[idx] = tail;
+> +
+> +	return page_to_pfn(tail);
+> +}
+> +
+>   int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
+>   				       int node, unsigned long headsize)
+>   {
+> +	unsigned long maddr, len, tail_pfn;
+> +	unsigned int order;
+>   	pte_t *pte;
+> -	unsigned long maddr;
+> +
+> +	len = end - addr;
+> +	order = ilog2(len * sizeof(struct page) / PAGE_SIZE);
 
-No BUG_ON.
+
+Could initialize them as const above.
+
+But I am wondering whether it shouldn't be the caller that provides this 
+to use? After all, it's all hugetlb code that allocates and prepares that.
+
+Then we could maybe change
+
+#ifdef·CONFIG_SPARSEMEM_VMEMMAP
+	struct·page·*vmemmap_tails[NR_VMEMMAP_TAILS];
+#endif
+
+to be HVO-only.
 
 -- 
 Cheers,
