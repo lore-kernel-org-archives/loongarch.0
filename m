@@ -1,84 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2D226AA91;
-	Fri,  6 Feb 2026 02:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770345007; cv=none; b=XCjf/W0lZf2PUSuDKGsHHVxaOMzMtMzGOddDyxCgWg4Is75IB2O5M7Su07P+bxOQiVuvqcFSjAGeYbJCQP4XAnJ4eHxPMe17TXYLFiv4ZWMP4BYsO/0FOdLuOiKaQ9CaaWRqCbdIkZN9cI/WqTV4NzxGy3O+DE7dWMGVujM2MTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770345007; c=relaxed/simple;
-	bh=YvVUVgTpvs+4E6hrcojKMAmpmIeWsDByWtiLRL8LSQk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MbMkB0URPo9RbcvHlXpQnDSqzXmWfW/yyWwO6ur+OsLah1kUv+aQGq5jnFORejFUtR9KRWyTbo+6rFDSTlelbvhMtxLscxuURCwvUUKWN19+2j6yb+gn7eZxqUIHjwnUnyys1Ohhk5AJgmf36saPuSu9b65008XJ4WoNM0wRUAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBkl62Jr; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BF033067A
+	for <loongarch@lists.linux.dev>; Fri,  6 Feb 2026 03:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770348894; cv=pass; b=NNQWaCiJa2KOrrg/vvEEf2qsDSn0h3wFjuZEQ9ixELI7sVNqa7BBx4I5/Soh313CwaWt9Lpd3k8/nJrwSezwt7FwUNGVdmNWA+DFMoMWzxZ8YV9d4HM15B3uPcicYLvdZyC0VxOMD0ZqMZ3WQQBW+TdILmE6p9ZaiMZSD1w8dHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770348894; c=relaxed/simple;
+	bh=bq/GLY4H/bSUfQB+OfZ0AfftnABf3kW2Lo52g8x5QuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpMnoUdKhGDqqEHLZccqgLyu7lUaK6N1iy4Mtf1IzMTX3prSKauTn7Z/xD7LdlKbxELrTJflXMLbZSsdMLP9oTwv1WnSO/dwWFMMqNSpP/RS1JC/J4N4AQBEReuMXlgym1WlD1+M/hskeM2w+ewT3PeNYAALMFzFTT+/sDihKQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=l0RmotT0; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBkl62Jr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46368C4CEF7;
-	Fri,  6 Feb 2026 02:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770345007;
-	bh=YvVUVgTpvs+4E6hrcojKMAmpmIeWsDByWtiLRL8LSQk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SBkl62JrXn7Jydo2wc/OOXnOLrBRPRHO5ZjHAKYc6z8sSbvQF1wIRL5G8gkGdzlKQ
-	 rHDsFuYp6S9qdQUOUhrBV7kfXUBHlwOnw0wr/0SxmfQguGYuIw0LRaTNSHlSL3pUwW
-	 mkGeUnKnwm6PzfiSuPnRcbT+FACPAOldvwkyeXea3/FypEg8g1GfEgH32ZNg4IY8D9
-	 g3+b0k+9f6JZ7x1PuUMpYxANpKXirkYCye3mNQVJ7Ae1PrIxpEtKXpzSStRk2bseyG
-	 BdX3tbld3iNET4H1WkXQpvTfvnOFRa9vJR9RdTUJPyIvwWYarblkkWVDEYSe5oEy2j
-	 +wiNQUl+UOHDg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0B02B3808200;
-	Fri,  6 Feb 2026 02:30:06 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="l0RmotT0"
+ARC-Seal: i=1; a=rsa-sha256; t=1770348882; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=i9b/c2lOBLo9rrmCdp6P10o0NhKtnO+SuKPAUv6YVZW0fwG48stA2+OKmRQfYXPU8JEuw2IkagSPvh437qyXhdsGX2rp/A5+Z9B5Ido5fgBG/LwT+/tgWkJD2CGw2Bu1yqekO30MSCf84Ai81HW/TM5Fphl+0w8iOoZK/MWUcA8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770348882; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ytVDG181jwZsXmo/aNohS0Ou07+vfJqUMBsLgAw8gs4=; 
+	b=LRIhhbi+Pvz1B38XX/5eh0+w3ahrwOqjtw2KsvoPKOUMpcFEeXrwHy0xw8lmkpjWsZkoE4Gq27QYsnSCZJ4xRm41Jet8kcU+bqsdF601Cn2KZOQ3+aNHM+HVVb9pYh8FQB85vIMXT7LGu/J4cboKdFFU+S0cXFgsPUXlyft79T0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770348882;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=ytVDG181jwZsXmo/aNohS0Ou07+vfJqUMBsLgAw8gs4=;
+	b=l0RmotT0BY2qgVlTsejdVTlIFv9qiCgSeJlOMwT8mnI1rA/cD/u9VLVzQCrIq6G8
+	q5D3GoQQmipOjkACX/1ATgOfASODIy6UyzV1CFIwpVWzqDCLmfw+U3b4oZXFs6SXVj8
+	BsduiuNuUKzC8WHthyZV/UQwIJe7bkLQWNG8JTYY=
+Received: by mx.zohomail.com with SMTPS id 1770348880707918.1372263152211;
+	Thu, 5 Feb 2026 19:34:40 -0800 (PST)
+Date: Fri, 6 Feb 2026 03:34:34 +0000
+From: Yao Zi <me@ziyao.cc>
+To: Song Gao <gaosong@loongson.cn>, maobibo@loongson.cn,
+	chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] LongArch: KVM: Add DMSINTC support irqchip in
+ kernel
+Message-ID: <aYVhSp_eGBkpXdp-@pie>
+References: <20260206012028.3318291-1-gaosong@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH V2 net-next] net: stmmac: dwmac-loongson: Set clk_csr_i to
- 100-150MHz
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177034500483.652141.1900919994217180563.git-patchwork-notify@kernel.org>
-Date: Fri, 06 Feb 2026 02:30:04 +0000
-References: <20260203062901.2158236-1-chenhuacai@loongson.cn>
-In-Reply-To: <20260203062901.2158236-1-chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: chenhuacai@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- si.yanteng@linux.dev, alexandre.torgue@foss.st.com, joabreu@synopsys.com,
- fancer.lancer@gmail.com, loongarch@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- wanghongliang@loongson.cn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260206012028.3318291-1-gaosong@loongson.cn>
+X-ZohoMailClient: External
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue,  3 Feb 2026 14:29:01 +0800 you wrote:
-> Current clk_csr_i setting of Loongson STMMAC (including LS7A1000/2000
-> and LS2K1000/2000/3000) are copy & paste from other drivers. In fact,
-> Loongson STMMAC use 125MHz clocks and need 62 freq division to within
-> 2.5MHz, meeting most PHY MDC requirement. So fix by setting clk_csr_i
-> to 100-150MHz, otherwise some PHYs may link fail.
+On Fri, Feb 06, 2026 at 09:20:26AM +0800, Song Gao wrote:
+> Hi,
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 30bba69d7db40e7 ("stmmac: pci: Add dwmac support for Loongson")
-> Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> This series  implements the DMSINTC in-kernel irqchip device,
+> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI interrupts
+> to the target vCPU.
+> applied this series.  use netperf test.
+> VM with one CPU and start netserver, host run netperf.
+> disable dmsintc
+> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
+> Local /Remote
+> Socket Size   Request  Resp.   Elapsed  Trans.
+> Send   Recv   Size     Size    Time     Rate
+> bytes  Bytes  bytes    bytes   secs.    per sec   
 > 
-> [...]
+> 212992 212992 1        1       36000.00   27107.36   
+> 
+> enable dmsintc
+> Local /Remote
+> Socket Size   Request  Resp.   Elapsed  Trans.
+> Send   Recv   Size     Size    Time     Rate         
+> bytes  Bytes  bytes    bytes   secs.    per sec   
+> 
+> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
+> 
+> v6: 
+>   Fix kvm_device leak in kvm_dmsintc_destroy(). 
+> 
+> v5:
+>   Combine patch2 and patch3
+>   Add check msgint feature when register DMSINT device. 
+> 
+> V4: Rebase and R-b; 
+>    replace DINTC to DMSINTC.
+> 
+> 
+> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
+> 
+> V2:
+> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
+> 
+> Thanks.
+> Song Gao
+> 
+> Song Gao (2):
+>   LongArch: KVM: Add DMSINTC device support
+>   LongArch: KVM: Add dmsintc inject msi to the dest vcpu
 
-Here is the summary with links:
-  - [V2,net-next] net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
-    https://git.kernel.org/netdev/net/c/e1aa5ef892fb
+There's a typo in the titles, it should be LoongArch instead of
+"LongArch".
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Best regards,
+Yao Zi
