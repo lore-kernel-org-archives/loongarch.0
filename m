@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A8634F24B;
-	Fri,  6 Feb 2026 09:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D524D2E3387;
+	Fri,  6 Feb 2026 09:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770370912; cv=none; b=XitB4ehmlqANzIbCcHmkYym8fTivV/mgSERA/IHNVJMtfHpHiOE6FF7K7fJ9LDVwm7hepXbOlTK+hUgpzYP9cSOf/ito3BdU8V2eesB/pfmbz8ineuTXiAlumPLv7pvxMAwRwC1iOuKgYT/LKhTamwHYo74WIjTEBVoBrbeMI/4=
+	t=1770370952; cv=none; b=sUh/mA6PHulfyOKxiuzF/FWI99YfyXUt+Cpo62O8zXohyQ0d/toXKIt8KEYZPifmC0WOYwumpds7CgLYtKwIdm4dxwAS6Fw6e3RZHu38bskML9Beg9NG16KJpeuQm91G1UDQFsPQ5tTSwRF4h8j/pNyuclbmmZygx540TwtLE6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770370912; c=relaxed/simple;
-	bh=83rnD8t3DNJ6QPw39Ew9UXjnTNb13axZkWJb6v64MTg=;
+	s=arc-20240116; t=1770370952; c=relaxed/simple;
+	bh=LhrTzSWf7NEah6Z7Oux3u9gbfwj2MNl56bdSDhRmPl8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NsyEqzuQiwjsLsww/x/B2Z096xwj+MAb5Z0JIrw1nDasJIT8smp+uh7qLXiYrzh/jU1eiiYOvpdx6EBk+1GDUAvNHtLAlS+IPEYtxeKX2qLJsIrguOx4Qoy8Oys3bvofn0c+Yp64i76xdzb9nR8ReqgVtQIY8qarjs++1H1dnFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUCfLDqu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=M4nzBqWQEIj7/RYOiJGyOmez30uzcYu1gMzzM7wScU5/929yL4iIHLoebVcpTg7F+TOMjLZLfNKR4RbNtIBSXN49UZI6Gta8S0ALLF7F+tTyFUBmXgAiYeFGRgevguA01md+t6G0jJd+k3nf89272FoImu3vCrAxLe68v0oKoGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSvVnMTC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUCfLDqu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6227EC116C6;
-	Fri,  6 Feb 2026 09:41:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSvVnMTC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF4C116C6;
+	Fri,  6 Feb 2026 09:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770370912;
-	bh=83rnD8t3DNJ6QPw39Ew9UXjnTNb13axZkWJb6v64MTg=;
+	s=k20201202; t=1770370952;
+	bh=LhrTzSWf7NEah6Z7Oux3u9gbfwj2MNl56bdSDhRmPl8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RUCfLDqu4SJx8/KJLBbnt2bOOruTXTFBRj3zfNkkKbLB/6TbEbz0Zv7LmeTW5kEb3
-	 Ndti+ks1LLtKOQ5cKLBEoSYmrf26R1l/Uieb9s4ACUmCYAxAaOt6RElMgtu/NSy0hQ
-	 ty0IXApx24A3cS3dVj8/zxAYlnOkfwlb+8O3YqzK3kuc9QEJAeZJOMpnxjfjzfpGxG
-	 ZS+aq70CmWJNi8hzlzLfgMW/SPn0Yf5MY92b5kkon/PPpe4z6LDqZq1ydO0FYbYQsR
-	 vVER/vc/M3/bb1+mj8BjP6ZAph5B33SqPo6eA7qvylTuEdkb0Pk1HbEic1QMOi1sPu
-	 GivGlnw+Zi3bw==
-Message-ID: <f417576d-ab79-44f5-99a1-3f672b490bf2@kernel.org>
-Date: Fri, 6 Feb 2026 10:41:45 +0100
+	b=GSvVnMTCcRhkxqlqeDx3rM6srCHZuDenv1DdtPoFP9SUQF8TtuPX/r+4ffLF35a1z
+	 Ya3vXMuTz4OOJrBpC3QVOcQytVqQMUT1mJ5GxbGIGf7EJGU+N6gJF9KKyPHkdhuied
+	 j04tYZXUUvXAkbj2ysXMysEc59RfXPQGZHhTSA6i6PI4+j57T7VPUOH69hOp+j/cy2
+	 yVhWELbxXuWm5SP2qxoGok6mGdD2AiEEDOTR9oIxhwob/7H52+k1jLuQMGzMgKqnNt
+	 u8PlegUm+gteaVi/n5UohU/uGYeeR/8vQpstamEQl+CsHkiUMRiikbcO/+Ojwu/bls
+	 wMOHaiNU6bRzA==
+Message-ID: <ad1a6ccd-d542-420f-b862-b41b7a29054b@kernel.org>
+Date: Fri, 6 Feb 2026 10:42:24 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 12/17] mm: Drop fake head checks
+Subject: Re: [PATCHv6 13/17] hugetlb: Remove VMEMMAP_SYNCHRONIZE_RCU
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-13-kas@kernel.org>
+ <20260202155634.650837-14-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,35 +99,27 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-13-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-14-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> With fake head pages eliminated in the previous commit, remove the
-> supporting infrastructure:
+> The VMEMMAP_SYNCHRONIZE_RCU flag triggered synchronize_rcu() calls to
+> prevent a race between HVO remapping and page_ref_add_unless(). The
+> race could occur when a speculative PFN walker tried to modify the
+> refcount on a struct page that was in the process of being remapped
+> to a fake head.
 > 
->    - page_fixed_fake_head(): no longer needed to detect fake heads;
->    - page_is_fake_head(): no longer needed;
->    - page_count_writable(): no longer needed for RCU protection;
->    - RCU read_lock in page_ref_add_unless(): no longer needed;
+> With fake heads eliminated, page_ref_add_unless() no longer needs RCU
+> protection.
 > 
-> This substantially simplifies compound_head() and page_ref_add_unless(),
-> removing both branches and RCU overhead from these hot paths.
+> Remove the flag and synchronize_rcu() calls.
+> 
+> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> Reviewed-by: Muchun Song <muchun.song@linux.dev>
+> ---
 
-Can you say a bit words more why RCU was required and is now no longer 
-needed?
-
-IIRC, it's because we now no longer reuse the real head page (page 0) 
-for a tail, and there could have been a race where we could have 
-attempted to write to that page0 while already mapped (r/o) to page1.
-
-Also good to mention that the corresponding RCU sync will be removed 
-separately in a following commit.
-
-Nothing jumped at me and it's a great simplification for core-mm.
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
