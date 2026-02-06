@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F863009F6;
-	Fri,  6 Feb 2026 10:23:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D4A32ED57;
+	Fri,  6 Feb 2026 10:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770373436; cv=none; b=ZqEBkJR0TxrwQ+BePMAY8AM9z8gUq6Mna1rdb2eVZRUgWibLBDdBz1MUV+vsaJ/EMrRWkoP8OAavSQSJ7fkcmtKfoh5TEZijd8hjNLRonbzFxR/FzX7tiDm2WyBShMTkc35zfhZYLUxdlOA9Mq3lTOUVuqWYRAO1W+m0iv0kG5s=
+	t=1770374138; cv=none; b=Ds+vg35VvNyoB7UdKUZ0aY74+9IHNW8beJGJXbYFUBp/hq5kbrRoV4BSlM+cMal9t5nCpm7Cd44J/HS0mQs8YCYduhbdo4RiwE23t0TN9u3Xl/dsOiHktOxsPjiCuTwNO4D7O8WcRiPLWTprIZGsAsFxuoAC6ydLckrZkDEeLxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770373436; c=relaxed/simple;
-	bh=CVRfjenhPNZ53C5ptXLpHu6G+l5qThn6T1w+S3R43J4=;
+	s=arc-20240116; t=1770374138; c=relaxed/simple;
+	bh=4eHKEhmEK8xsEIAIBEaQ/Y5Lb5Y5nnEuAYz1Q4HZ+SU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nu6IfMP3nrWeu9iIN2FNMNHo0VAvqAkoY9TGJ1+Y0jV1fffQrHow0vgGxfC03lxrlqi2xs+mgJ/CFA9ZIRyHRzNFwo5VqJn/IXpczT+76TiLEmUfo0p7kbd8TCmI3yKxdUrmdWcpeB/o7maG7blAOsWO/UqYFYUJJ7mjkhR9NZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkgsOVjM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mQWy87uCZJON4kBMVZ1NFmgu/bI5wTM5oDzjodT1nvuZgmRSGiaSfgz3QNlcXKOU/4dM7G75UOj2cFvoO6oBdOrjfpb+pRTGRUfh944lRs1HkqsIYaNheCFRdsDEQgTCqCQ+j0cTQtKag0ZqjWZbM9rH5a/ha4HinIBIQ9dFG0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6dc09FX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkgsOVjM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA86DC19422;
-	Fri,  6 Feb 2026 10:23:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6dc09FX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADBFC116C6;
+	Fri,  6 Feb 2026 10:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770373435;
-	bh=CVRfjenhPNZ53C5ptXLpHu6G+l5qThn6T1w+S3R43J4=;
+	s=k20201202; t=1770374137;
+	bh=4eHKEhmEK8xsEIAIBEaQ/Y5Lb5Y5nnEuAYz1Q4HZ+SU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lkgsOVjM8345QQjYJiRfQfJ0oSMWqIL/dF3b44KB/OYvtFa5wtksT4epKW7dc7zQK
-	 n13iIxkGzKpBzMaIzGDTNhk7k+VRqM3ICVJzDUOySg0Dee4z13wjFn7Cl2EN1ekcLW
-	 XWt4/jPFLIpPhf3JY1BeyzKTbyedA1v9JDaYVUAjI9tYMJtEuJsfrVQR+lDly5qhC1
-	 zCwWghcKG4Qbwjg/A1hG6Xsrw28MryrTIl0yqvYqtw7HzK9njc9BhbXFrF7jt0cFdj
-	 aloqve3suzVNAbni2tS3Lc0IjWEudBVqDr37kT5BZXF3tUmnGa4ntBhXN5Von7/OEX
-	 EKyVfiMLATw8A==
-Message-ID: <ac8ea0ef-4175-4563-b312-d888b31b83a9@kernel.org>
-Date: Fri, 6 Feb 2026 11:23:48 +0100
+	b=S6dc09FXA/oslyvgU5XYJDzbCDyPHsKVIty3YtaZStxu0DwL5tirjTKmYgh/T9eCa
+	 MlLAjkLZP2A+XpbtVzHQ5Hz16O2G1paaoIzPh2aoh42Kpm3eyzKze2jUxg0BBedXS2
+	 s0zLAKQGkVIYs9iA7x4O3L+mjVW6FOgKEcEJkqoHCqohjarOqhC1D2k7FP3EF/jaRQ
+	 tzQLNwDlYLIgmWgUZgs4ly60PYVii+9ZTKLF/Xl5C74FJwKJ6isZZy1sDvMWNNjura
+	 pNWziuoPV3Q2aXliocKXSW2xjWG7kteH3CBWMUYoiMoM/1nrnYcrBfDVRyjSuuWQQ3
+	 C+or9FiaofU8w==
+Message-ID: <bf413c9c-eabf-4eb7-bae4-947dd7e012cd@kernel.org>
+Date: Fri, 6 Feb 2026 11:35:30 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 15/17] mm: Remove the branch from compound_head()
+Subject: Re: [PATCHv6 16/17] hugetlb: Update vmemmap_dedup.rst
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-16-kas@kernel.org>
+ <20260202155634.650837-17-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,75 +99,74 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-16-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-17-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> The compound_head() function is a hot path. For example, the zap path
-> calls it for every leaf page table entry.
+> Update the documentation regarding vmemmap optimization for hugetlb to
+> reflect the changes in how the kernel maps the tail pages.
 > 
-> Rewrite the helper function in a branchless manner to eliminate the risk
-> of CPU branch misprediction.
+> Fake heads no longer exist. Remove their description.
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 > Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
 > ---
->   include/linux/page-flags.h | 27 +++++++++++++++++----------
->   1 file changed, 17 insertions(+), 10 deletions(-)
+>   Documentation/mm/vmemmap_dedup.rst | 60 +++++++++++++-----------------
+>   1 file changed, 26 insertions(+), 34 deletions(-)
 > 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 1aaa604f4b9b..16384cb6f962 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -224,25 +224,32 @@ static __always_inline bool compound_info_has_mask(void)
->   static __always_inline unsigned long _compound_head(const struct page *page)
->   {
->   	unsigned long info = READ_ONCE(page->compound_info);
-> +	unsigned long mask;
-> +
-> +	if (!compound_info_has_mask()) {
-> +		/* Bit 0 encodes PageTail() */
-> +		if (info & 1)
-> +			return info - 1;
+> diff --git a/Documentation/mm/vmemmap_dedup.rst b/Documentation/mm/vmemmap_dedup.rst
+> index 1863d88d2dcb..fca9d0ce282a 100644
+> --- a/Documentation/mm/vmemmap_dedup.rst
+> +++ b/Documentation/mm/vmemmap_dedup.rst
+> @@ -124,33 +124,35 @@ Here is how things look before optimization::
+>    |           |
+>    +-----------+
 >   
-> -	/* Bit 0 encodes PageTail() */
-> -	if (!(info & 1))
->   		return (unsigned long)page;
-> -
-> -	/*
-> -	 * If compound_info_has_mask() is false, the rest of compound_info is
-> -	 * the pointer to the head page.
-> -	 */
-> -	if (!compound_info_has_mask())
-> -		return info - 1;
-> +	}
+> -The value of page->compound_info is the same for all tail pages. The first
+> -page of ``struct page`` (page 0) associated with the HugeTLB page contains the 4
+> -``struct page`` necessary to describe the HugeTLB. The only use of the remaining
+> -pages of ``struct page`` (page 1 to page 7) is to point to page->compound_info.
+> -Therefore, we can remap pages 1 to 7 to page 0. Only 1 page of ``struct page``
+> -will be used for each HugeTLB page. This will allow us to free the remaining
+> -7 pages to the buddy allocator.
+> +The first page of ``struct page`` (page 0) associated with the HugeTLB page
+> +contains the 4 ``struct page`` necessary to describe the HugeTLB. The remaining
+> +pages of ``struct page`` (page 1 to page 7) are tail pages.
+> +
+> +The optimization is only applied when the size of the struct page is a power-of-2
+> +In this case, all tail pages of the same order are identical. See
+> +compound_head(). This allows us to remap the tail pages of the vmemmap to a
+> +shared, read-only page. The head page is also remapped to a new page. This
+> +allows the original vmemmap pages to be freed.
 >   
->   	/*
->   	 * If compoun_info_has_mask() is true the rest of the info encodes
->   	 * the mask that converts the address of the tail page to the head page.
->   	 *
->   	 * No need to clear bit 0 in the mask as 'page' always has it clear.
-> +	 *
-> +	 * Let's do it in a branchless manner.
->   	 */
-> -	return (unsigned long)page & info;
-> +
-> +	/* Non-tail: -1UL, Tail: 0 */
-> +	mask = (info & 1) - 1;
-> +
-> +	/* Non-tail: -1UL, Tail: info */
-> +	mask |= info;
-> +
-> +	return (unsigned long)page & mask;
->   }
+>   Here is how things look after remapping::
 >   
->   #define compound_head(page)	((typeof(page))_compound_head(page))
+> -    HugeTLB                  struct pages(8 pages)         page frame(8 pages)
+> - +-----------+ ---virt_to_page---> +-----------+   mapping to   +-----------+
+> - |           |                     |     0     | -------------> |     0     |
+> - |           |                     +-----------+                +-----------+
+> - |           |                     |     1     | ---------------^ ^ ^ ^ ^ ^ ^
+> - |           |                     +-----------+                  | | | | | |
+> - |           |                     |     2     | -----------------+ | | | | |
+> - |           |                     +-----------+                    | | | | |
+> - |           |                     |     3     | -------------------+ | | | |
+> - |           |                     +-----------+                      | | | |
+> - |           |                     |     4     | ---------------------+ | | |
+> - |    PMD    |                     +-----------+                        | | |
+> - |   level   |                     |     5     | -----------------------+ | |
+> - |  mapping  |                     +-----------+                          | |
+> - |           |                     |     6     | -------------------------+ |
+> - |           |                     +-----------+                            |
+> - |           |                     |     7     | ---------------------------+
+> +    HugeTLB                  struct pages(8 pages)                 page frame
 
-Nice!
+You could highlight that we allocate a new head page like "page frame 
+(new)".
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Wasn't aware of that detail before reading your change above.
+
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
