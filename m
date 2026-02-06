@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C20360749;
-	Fri,  6 Feb 2026 10:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4969B35F8A3;
+	Fri,  6 Feb 2026 11:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770374538; cv=none; b=EZM0lGhe7NLfimW7Pv4nccG/j1o+4tY4XDq3WXeCwCGF2L6rHOMuBR3WM7tNpmKPb5LY2cT9YxF0kSRf43UsDoTHfExLHUjHfPE9CXSf80ToI8dCJvf9M68z0Su6J0e5ETF87qtHOuBzPr/2S7pZXX6DJTSxFcFV+2qP+Ef9Wak=
+	t=1770375996; cv=none; b=HHCEEA2LJg5vh/81XayTufIryUaV/WZ1aSX6uWfLmxKzC8Qa3ZSf6c9X3W4zlJCaa9zxiBzlWDFu450NuUdyDXpfsqbxErxVHs+joVyS2UEOaX6tX69I8HYowhL/zV9+0y/OAi1P+d128EQYsZcLPY1HaNi1usaPL+IqY9GsvYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770374538; c=relaxed/simple;
-	bh=X4ulH2AmDkCSg3stSWU0qmNiUtFh+CTtBIZg9eTnXM0=;
+	s=arc-20240116; t=1770375996; c=relaxed/simple;
+	bh=FfLhWVGDPHejmrWqxyZFCbJibVEgdoAEGrtSIPxShgc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QGGzfZRprMu08inFQcm7dJwG1oJBi7lD98YfxCZu4IKb2Dolge3G5il5VThGcF/uR2X0W0eZx4c2jG3MExUk6JZNTjTspD6a5gCQx+n/3KsFBLcCgjABts4d1XJU0sKkuK+xPs3ZUVQ8MYmTOGcuPGGXOty8l19qOXpr/xYbSow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTysHtsF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GyClzdbtUp1Mpk7hZmwMXefQHyW1dUQ1fjMq+fawiVt4LIVMqUO2vFd5MJ2JQGnLIq/X/l5R0oTVvexRkQAF4abhRXPa32ipJVhPhIvN719WeEL6Z/68q8wofStR5EmqkpkljlPuntnMz7al2ZFR0PBIx532OX+zi+JCjeiRmnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PocMkmj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTysHtsF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA05C116C6;
-	Fri,  6 Feb 2026 10:42:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PocMkmj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E49FC116C6;
+	Fri,  6 Feb 2026 11:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770374537;
-	bh=X4ulH2AmDkCSg3stSWU0qmNiUtFh+CTtBIZg9eTnXM0=;
+	s=k20201202; t=1770375996;
+	bh=FfLhWVGDPHejmrWqxyZFCbJibVEgdoAEGrtSIPxShgc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VTysHtsFbDZOc9nla0Q2lgBis/brgO6Tu+kf3ZjW0lCZpL1uJplM9eZTkXQhCcum2
-	 UIQVwE1+A3z9/osnfEUHa5wrcr52RX4ivjXktLIzY5oVFuwODBON2ufk5tTgU6mn+R
-	 kRQjtEeQq2irifXeO/1G3CFjPn3stmMk/VvAx3qvWB8gbBiWAQl6yd0+kYztL1a+QJ
-	 eagSYMaSu7JIt54TiZMwJU+j3SfNPW7mc3mRGstPV06L/k2NOUTqClojWUxdl8PEiw
-	 /vumUJqdqpNOYsec/0f6JZTDY41m2mszc4Rs+BB36RPHPk/B4ZAjutUf6q1FNZNSrq
-	 eP+Xw8P8QMVAg==
-Message-ID: <0ecdd75e-ccd8-4217-a409-51da756ff1fe@kernel.org>
-Date: Fri, 6 Feb 2026 11:42:10 +0100
+	b=PocMkmj7+7sN8yXHuhV/63yFz8Ku98DVQk6ZAMCytQnKdG6p6j+k3QriS+8Zmiur/
+	 YO5L+sacJmF/7mrYHzJTvVLTaaB6d6nN6vO1fB1Mh9Ci76/g/f9TyRv3kISd60numH
+	 EVGD7oVOT8ClRWYUpxU16WOKi7A40bZDccyIpOEciwiIr+m0e5xzsuGmzw2txucZjn
+	 KJLQR2TzAidtcunf1WZXUkcjtM7Ipn5pYEPhzxUBNaAX7Hrv9rPb3+RNrz9ydFZTTv
+	 afYQ5iWZHwlXPol/+rICg1T/1ZV/Cu3fagguZZnihVZWFTHM9xht08M/kJrHDBYPFP
+	 9fXuNssE74guQ==
+Message-ID: <a404e9ec-35ff-44b1-b321-9cc4fbf72060@kernel.org>
+Date: Fri, 6 Feb 2026 12:06:29 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,24 +35,19 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 17/17] mm/slab: Use compound_head() in page_slab()
-To: Kiryl Shutsemau <kas@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
- Usama Arif <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>
-Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-18-kas@kernel.org>
+Subject: Re: [PATCH v4 7/8] mm: convert __HAVE_ARCH_TLB_REMOVE_TABLE to
+ CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE config
+To: Qi Zheng <qi.zheng@linux.dev>, andreas@gaisler.com,
+ richard.weiyang@gmail.com, will@kernel.org, peterz@infradead.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, dev.jain@arm.com,
+ ioworker0@gmail.com, linmag7@gmail.com, akpm@linux-foundation.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+ Qi Zheng <zhengqi.arch@bytedance.com>
+References: <cover.1769515122.git.zhengqi.arch@bytedance.com>
+ <5ebfa3d4b56e63c6906bda5eccaa9f7194d3a86b.1769515122.git.zhengqi.arch@bytedance.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,46 +94,69 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-18-kas@kernel.org>
+In-Reply-To: <5ebfa3d4b56e63c6906bda5eccaa9f7194d3a86b.1769515122.git.zhengqi.arch@bytedance.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> page_slab() contained an open-coded implementation of compound_head().
+On 1/27/26 13:13, Qi Zheng wrote:
+> From: Qi Zheng <zhengqi.arch@bytedance.com>
 > 
-> Replace the duplicated code with a direct call to compound_head().
+> For architectures that define __HAVE_ARCH_TLB_REMOVE_TABLE, the page
+> tables at the pmd/pud level are generally not of struct ptdesc type, and
+> do not have pt_rcu_head member, thus these architectures cannot support
+> PT_RECLAIM.
 > 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> In preparation for enabling PT_RECLAIM on more architectures, convert
+> __HAVE_ARCH_TLB_REMOVE_TABLE to CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE config,
+> so that we can make conditional judgments in Kconfig.
 > 
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 > ---
+>   arch/powerpc/Kconfig            | 1 +
+>   arch/powerpc/include/asm/tlb.h  | 1 -
+>   arch/sparc/Kconfig              | 1 +
+>   arch/sparc/include/asm/tlb_64.h | 1 -
+>   include/asm-generic/tlb.h       | 2 +-
+>   mm/Kconfig                      | 3 +++
+>   6 files changed, 6 insertions(+), 3 deletions(-)
 > 
-> I am not sure if this open-coded version is intentional and required for
-> memdesc transition. Drop the patch if it is.
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 9537a61ebae02..b47aa8fd62742 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -304,6 +304,7 @@ config PPC
+>   	select LOCK_MM_AND_FIND_VMA
+>   	select MMU_GATHER_PAGE_SIZE
+>   	select MMU_GATHER_RCU_TABLE_FREE
+> +	select HAVE_ARCH_TLB_REMOVE_TABLE
+>   	select MMU_GATHER_MERGE_VMAS
+>   	select MMU_LAZY_TLB_SHOOTDOWN		if PPC_BOOK3S_64
+>   	select MODULES_USE_ELF_RELA
+> diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+> index 2058e8d3e0138..1ca7d4c4b90db 100644
+> --- a/arch/powerpc/include/asm/tlb.h
+> +++ b/arch/powerpc/include/asm/tlb.h
+> @@ -37,7 +37,6 @@ extern void tlb_flush(struct mmu_gather *tlb);
+>    */
+>   #define tlb_needs_table_invalidate()	radix_enabled()
+>   
+> -#define __HAVE_ARCH_TLB_REMOVE_TABLE
+>   /* Get the generic bits... */
+>   #include <asm-generic/tlb.h>
+>   
+> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+> index a630d373e6453..25fa2908d6152 100644
+> --- a/arch/sparc/Kconfig
+> +++ b/arch/sparc/Kconfig
+> @@ -74,6 +74,7 @@ config SPARC64
+>   	select HAVE_KRETPROBES
+>   	select HAVE_KPROBES
+>   	select MMU_GATHER_RCU_TABLE_FREE if SMP
+> +	select HAVE_ARCH_TLB_REMOVE_TABLE if SMP
 
-commit 2bcd3800f2da1be13b972858f63c66d035b1ec6d
-Author: Matthew Wilcox (Oracle) <willy@infradead.org>
-Date:   Thu Nov 13 00:09:15 2025 +0000
+Why the SMP? At least in tlb_64.h, it was not protected by SMP IIUC.
 
-     slab: Reimplement page_slab()
-     
-     In order to separate slabs from folios, we need to convert from any page
-     in a slab to the slab directly without going through a page to folio
-     conversion first.
-
-     Up to this point, page_slab() has followed the example of other memdesc
-     converters (page_folio(), page_ptdesc() etc) and just cast the pointer
-     to the requested type, regardless of whether the pointer is actually a
-     pointer to the correct type or not.
-     
-     That changes with this commit; we check that the page actually belongs
-     to a slab and return NULL if it does not.  Other memdesc converters will
-     adopt this convention in future.
-
-
-I think using compound_head() is fine. For memdescs the function has to be changed to
-lookup the memdesc either way, and not go through the head page.
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Apart from that LGTM.
 
 -- 
 Cheers,
