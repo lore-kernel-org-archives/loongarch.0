@@ -1,112 +1,125 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BF033067A
-	for <loongarch@lists.linux.dev>; Fri,  6 Feb 2026 03:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770348894; cv=pass; b=NNQWaCiJa2KOrrg/vvEEf2qsDSn0h3wFjuZEQ9ixELI7sVNqa7BBx4I5/Soh313CwaWt9Lpd3k8/nJrwSezwt7FwUNGVdmNWA+DFMoMWzxZ8YV9d4HM15B3uPcicYLvdZyC0VxOMD0ZqMZ3WQQBW+TdILmE6p9ZaiMZSD1w8dHU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770348894; c=relaxed/simple;
-	bh=bq/GLY4H/bSUfQB+OfZ0AfftnABf3kW2Lo52g8x5QuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jpMnoUdKhGDqqEHLZccqgLyu7lUaK6N1iy4Mtf1IzMTX3prSKauTn7Z/xD7LdlKbxELrTJflXMLbZSsdMLP9oTwv1WnSO/dwWFMMqNSpP/RS1JC/J4N4AQBEReuMXlgym1WlD1+M/hskeM2w+ewT3PeNYAALMFzFTT+/sDihKQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=l0RmotT0; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB4D32A3EB;
+	Fri,  6 Feb 2026 09:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770369290; cv=none; b=oT2kSp45eUgqLBWZURB4sAGXrqXtxF+/9mfPgXVOZ0Djv071akrR47TG1j5bxkDYd8P4wzgcdrA6iApzITfZuYnG6sqGWiKZZ2GrBqfjTpRpO6e7nBhpNKZacY4alof/8WcEGTj7fTnmD7h6ElCJi+PsqpY0xquATbHmf4fWCSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770369290; c=relaxed/simple;
+	bh=TsoItULYpmYPP5+qItOY9/D0ks8BEhX/aixQCeipdPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oE7O3NynvFLVjdOqNvpieO9O9hRCCHlGvyFrOqQFlBzt1tKll+zTM2VkW/9j3BYCAeXSSrPpdmMur5tfs2um+14K2ARzhtUqbUYSZJ16ZTNE4YXOPpXeljNzgd7P0C/3MTB5JsU3PjV/Fvw8yZ50n1gt8aJ2xCd4miG7w/qedM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5sOJ/AQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="l0RmotT0"
-ARC-Seal: i=1; a=rsa-sha256; t=1770348882; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=i9b/c2lOBLo9rrmCdp6P10o0NhKtnO+SuKPAUv6YVZW0fwG48stA2+OKmRQfYXPU8JEuw2IkagSPvh437qyXhdsGX2rp/A5+Z9B5Ido5fgBG/LwT+/tgWkJD2CGw2Bu1yqekO30MSCf84Ai81HW/TM5Fphl+0w8iOoZK/MWUcA8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770348882; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ytVDG181jwZsXmo/aNohS0Ou07+vfJqUMBsLgAw8gs4=; 
-	b=LRIhhbi+Pvz1B38XX/5eh0+w3ahrwOqjtw2KsvoPKOUMpcFEeXrwHy0xw8lmkpjWsZkoE4Gq27QYsnSCZJ4xRm41Jet8kcU+bqsdF601Cn2KZOQ3+aNHM+HVVb9pYh8FQB85vIMXT7LGu/J4cboKdFFU+S0cXFgsPUXlyft79T0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ziyao.cc;
-	spf=pass  smtp.mailfrom=me@ziyao.cc;
-	dmarc=pass header.from=<me@ziyao.cc>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770348882;
-	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ytVDG181jwZsXmo/aNohS0Ou07+vfJqUMBsLgAw8gs4=;
-	b=l0RmotT0BY2qgVlTsejdVTlIFv9qiCgSeJlOMwT8mnI1rA/cD/u9VLVzQCrIq6G8
-	q5D3GoQQmipOjkACX/1ATgOfASODIy6UyzV1CFIwpVWzqDCLmfw+U3b4oZXFs6SXVj8
-	BsduiuNuUKzC8WHthyZV/UQwIJe7bkLQWNG8JTYY=
-Received: by mx.zohomail.com with SMTPS id 1770348880707918.1372263152211;
-	Thu, 5 Feb 2026 19:34:40 -0800 (PST)
-Date: Fri, 6 Feb 2026 03:34:34 +0000
-From: Yao Zi <me@ziyao.cc>
-To: Song Gao <gaosong@loongson.cn>, maobibo@loongson.cn,
-	chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] LongArch: KVM: Add DMSINTC support irqchip in
- kernel
-Message-ID: <aYVhSp_eGBkpXdp-@pie>
-References: <20260206012028.3318291-1-gaosong@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5sOJ/AQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD80C116C6;
+	Fri,  6 Feb 2026 09:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770369290;
+	bh=TsoItULYpmYPP5+qItOY9/D0ks8BEhX/aixQCeipdPo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H5sOJ/AQVD4KQdyWWnwpvGbsCTZKl09ACof7WNuoWazmfL2kJlPFbD5heZfAYPIbz
+	 d2CnLYUMcjF0tIbpv8zNS4Qg1isPdfN474/nNE3Eulr9/zFc5gyKGxM8T33/oy367q
+	 6fs1VzwFF7AGydtM9nWDqkQuQxSLFHXOZFF0ABPsCQZ44YHHvBaD7f+jyCx13Y8Npu
+	 EC/ISRF8qqpjKLGAUrmlvuTVz5ntYB1AURrL/xPiKqN0+TYLMb2W5us/8fIkpHwMrK
+	 uKicF1sG7SysotASG6r7gI5GHQStrqKlaklkU1b6PT+Xqp1rJG9ZuVVg16mXQ3J1HK
+	 Zf0C4zQ37KubQ==
+Message-ID: <7b88fdcb-6bd9-4eea-9174-81ab4763a0eb@kernel.org>
+Date: Fri, 6 Feb 2026 10:14:41 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260206012028.3318291-1-gaosong@loongson.cn>
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 11/17] mm/hugetlb: Remove fake head pages
+To: Kiryl Shutsemau <kas@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
+ Usama Arif <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>
+Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
+ Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-12-kas@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260202155634.650837-12-kas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 06, 2026 at 09:20:26AM +0800, Song Gao wrote:
-> Hi,
-> 
-> This series  implements the DMSINTC in-kernel irqchip device,
-> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI interrupts
-> to the target vCPU.
-> applied this series.  use netperf test.
-> VM with one CPU and start netserver, host run netperf.
-> disable dmsintc
-> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
-> Local /Remote
-> Socket Size   Request  Resp.   Elapsed  Trans.
-> Send   Recv   Size     Size    Time     Rate
-> bytes  Bytes  bytes    bytes   secs.    per sec   
-> 
-> 212992 212992 1        1       36000.00   27107.36   
-> 
-> enable dmsintc
-> Local /Remote
-> Socket Size   Request  Resp.   Elapsed  Trans.
-> Send   Recv   Size     Size    Time     Rate         
-> bytes  Bytes  bytes    bytes   secs.    per sec   
-> 
-> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
-> 
-> v6: 
->   Fix kvm_device leak in kvm_dmsintc_destroy(). 
-> 
-> v5:
->   Combine patch2 and patch3
->   Add check msgint feature when register DMSINT device. 
-> 
-> V4: Rebase and R-b; 
->    replace DINTC to DMSINTC.
-> 
-> 
-> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
-> 
-> V2:
-> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
-> 
-> Thanks.
-> Song Gao
-> 
-> Song Gao (2):
->   LongArch: KVM: Add DMSINTC device support
->   LongArch: KVM: Add dmsintc inject msi to the dest vcpu
 
-There's a typo in the titles, it should be LoongArch instead of
-"LongArch".
+> -/*
+> - * Populate vmemmap pages HVO-style. The first page contains the head
+> - * page and needed tail pages, the other ones are mirrors of the first
+> - * page.
+> - */
+> +static __meminit unsigned long vmemmap_get_tail(unsigned int order, int node)
+> +{
+> +	struct page *p, *tail;
+> +	unsigned int idx;
+> +
+> +	BUG_ON(order < VMEMMAP_TAIL_MIN_ORDER);
+> +	BUG_ON(order > MAX_FOLIO_ORDER);
 
-Best regards,
-Yao Zi
+No BUG_ON.
+
+-- 
+Cheers,
+
+David
