@@ -1,112 +1,117 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548843EBF0D
-	for <loongarch@lists.linux.dev>; Fri,  6 Feb 2026 13:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6A84219F1
+	for <loongarch@lists.linux.dev>; Fri,  6 Feb 2026 14:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770384809; cv=none; b=lTm0xgdqYB8s+byEFCm4kpJiUaoMSAFxzRWAuKHM6XMTVVFh8RUDPwNEYcBpDaQO2VUtUnye2WA9mtUdKoFqMT0Z/srCmWQwpIxDooKzDcvC4H+7OpaTxfdMSBRj89n4NvnfIGhC5VkfW6p34Ny+cSkAk0kqhse8Vke0DJvD/EQ=
+	t=1770389805; cv=none; b=FvaCLPGzXfrV55FFHAgyGPEIw8DGUgVfBKQzfohV7Ym48jf6YS7iebjaKBOvAZCI1OvTWxb4BuwSyqc0o/Ec0uSUzcXoBOGu1pnMXg77OYI9qKJKRPVBks2PhQSsnlIoLzKyHOn+uzShuEeaFAIfvabPbwDvOUn6OCZmwgVnonA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770384809; c=relaxed/simple;
-	bh=Q4fwLaPjgYRjVXL9lLHQUYevXebKIZ+Ej0AuFFMIbG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KHT8a9rQK3aaNa0/JYQHsmrHzJQjPSQ2tOhl+OLxHq8ozGFeM++sjZe61HB749lpGtbLHeY4t/uQaMoOlnmOdRnOAdVXeUlpIbKDUPhRe2rdq0pCBvjU+B6e6YTHHQiomuu2HuNOX+HAXaGcKYKkSwzb/6T2d769nCTqHgeMMjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=fail (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=Z9Z88ceb reason="key not found in DNS"; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="Z9Z88ceb"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4f6w5f1jGqz1FDXx;
-	Fri,  6 Feb 2026 14:33:26 +0100 (CET)
-Received: from [10.10.15.18] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4f6w5d3Z4Lz1FQVL;
-	Fri,  6 Feb 2026 14:33:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=simplycom2; t=1770384806;
-	bh=vb13Vwh1fPqNxRNlEIYNEmJHIJtcIK4aczKvaS88OeA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Z9Z88cebMu7Ddw1jVWtT448QIvjHL3GiCwWDGvsQ01Wxtyv3l79H+bPYslc1UOB9Y
-	 BdTB81cJcyiWlbAk4Xtv+cSCwqG0dm8ZtfsJ0+1NUs0nMYD/nsZAWUQ7EG3GW5LUcx
-	 0wBqY7vrdo20aOPF/76QbRmshC7PSNXwuN38zJAxeBlYBIzyXSflwMh2TZ4DIboOxw
-	 vVux+ighrR6Q5uNjNY7Izr87aZexRGjwxcfGrRU9WPwEYfMjDFCgLUCpuncK1iWdjy
-	 /ZR4ft/NA5cLVxWSHqdmyJ6d7uUMeuP1zpoKteadSBJ5gNGxos6/Pw/tMDP1Ddpwbt
-	 dhqXYTI9hYY9A==
-Message-ID: <847afd79-e8f8-4547-8167-0125809de055@gaisler.com>
-Date: Fri, 6 Feb 2026 14:33:24 +0100
+	s=arc-20240116; t=1770389805; c=relaxed/simple;
+	bh=AON4s7gGNul3vm4e7beL4pwbpsd9djRz8f0TOTDxqws=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdCkUZg6LOlI7VnYNuh77uPzvpS0PNF58mxJ7ZYwvH27vjcFXb5CHhKIInpVohSrpeilm/EI8VDiFJ2b4xnBajS9q2pJ+90pDjemLZNwhbdhYEumyoIPGpvrqQvgovC5xz1yJYnBP6gCIbrJgWxyV6o3fvJmp0ZHfWN/O2UJjvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.69.42])
+	by gateway (Coremail) with SMTP id _____8CxJMEmAYZppoAQAA--.5965S3;
+	Fri, 06 Feb 2026 22:56:38 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.69.42])
+	by front1 (Coremail) with SMTP id qMiowJBx58AgAYZpphBBAA--.23473S2;
+	Fri, 06 Feb 2026 22:56:38 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v6.20
+Date: Fri,  6 Feb 2026 22:56:22 +0800
+Message-ID: <20260206145622.2433924-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/8] mm: convert __HAVE_ARCH_TLB_REMOVE_TABLE to
- CONFIG_HAVE_ARCH_TLB_REMOVE_TABLE config
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Qi Zheng <qi.zheng@linux.dev>, richard.weiyang@gmail.com, will@kernel.org,
- peterz@infradead.org, aneesh.kumar@kernel.org, npiggin@gmail.com,
- dev.jain@arm.com, ioworker0@gmail.com, linmag7@gmail.com,
- akpm@linux-foundation.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
- Qi Zheng <zhengqi.arch@bytedance.com>
-References: <cover.1769515122.git.zhengqi.arch@bytedance.com>
- <5ebfa3d4b56e63c6906bda5eccaa9f7194d3a86b.1769515122.git.zhengqi.arch@bytedance.com>
- <a404e9ec-35ff-44b1-b321-9cc4fbf72060@kernel.org>
- <1663ae90-3247-4e12-a25a-049fc3281e19@linux.dev>
- <538fef61-3903-407e-8486-538a28b99e9d@kernel.org>
- <53a1bbdd-26d1-454d-af06-169172278718@linux.dev>
- <c24c32bd-085d-460a-833a-a982eb5becaa@kernel.org>
-Content-Language: en-US
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <c24c32bd-085d-460a-833a-a982eb5becaa@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBx58AgAYZpphBBAA--.23473S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF1rCr1DXFWUXrWUGFyUArc_yoW5Gw15pF
+	y3Crn3Ar4rGr4fZrnxt34Uur13Jr1xGF1aqayayry8Cr4jvF1UJr48JrykXFy5CayrJry0
+	vF1rGw1j9F1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-On 2026-02-06 13:59, David Hildenbrand (Arm) wrote:
-> On 2/6/26 12:58, Qi Zheng wrote:
->>
->>
->> On 2/6/26 7:45 PM, David Hildenbrand (Arm) wrote:
->>> On 2/6/26 12:13, Qi Zheng wrote:
->>>>
->>>>
->>>>
->>>> Ah, It's just simply aligned with the MMU_GATHER_RCU_TABLE_FREE above.
->>>
->>> But does that work as expected for !SMP?
->>
->> In the case of !SMP, tlb_remove_table() will not be called:
->>
->> static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, bool is_page)
->> {
->>      pgtable_free(table, is_page);
->> }
-> 
-> Ah, okay. Confusing stuff. Would have been nice to document/mention that in the patch description.
-> 
-> So if it compiles, all good
-> 
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> 
+The following changes since commit 18f7fcd5e69a04df57b563360b88be72471d6b62:
 
-It looks a bit weird, but it is actually more logically correct than
-before the patch. Before this in the !SMP sparc64 case
-__HAVE_ARCH_TLB_REMOVE_TABLE was defined even with no actual
-__tlb_remove_table() present. But it did not matter in practice.
-But I agree that a mention would not hurt.
+  Linux 6.19-rc8 (2026-02-01 14:01:13 -0800)
 
-Tested both with SMP and !SMP
+are available in the Git repository at:
 
-Tested-by: Andreas Larsson <andreas@gaisler.com> #sparc
-Acked-by: Andreas Larsson <andreas@gaisler.com> #sparc
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-6.20
 
-Cheers,
-Andreas
+for you to fetch changes up to 2d94a3f7088b69ae25e27fb98d7f1ef572c843f9:
+
+  KVM: LoongArch: selftests: Add steal time test case (2026-02-06 09:28:01 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v6.20
+
+1. Add more CPUCFG mask bits.
+2. Improve feature detection.
+3. Add FPU/LBT delay load support.
+4. Set default return value in KVM IO bus ops.
+5. Add paravirt preempt feature support.
+6. Add KVM steal time test case for tools/selftests.
+
+----------------------------------------------------------------
+Bibo Mao (13):
+      LoongArch: KVM: Add more CPUCFG mask bits
+      LoongArch: KVM: Move feature detection in kvm_vm_init_features()
+      LoongArch: KVM: Add msgint registers in kvm_init_gcsr_flag()
+      LoongArch: KVM: Check VM msgint feature during interrupt handling
+      LoongArch: KVM: Handle LOONGARCH_CSR_IPR during vCPU context switch
+      LoongArch: KVM: Move LSX capability check in exception handler
+      LoongArch: KVM: Move LASX capability check in exception handler
+      LoongArch: KVM: Move LBT capability check in exception handler
+      LoongArch: KVM: Add FPU/LBT delay load support
+      LoongArch: KVM: Set default return value in KVM IO bus ops
+      LoongArch: KVM: Add paravirt preempt feature in hypervisor side
+      LoongArch: KVM: Add paravirt vcpu_is_preempted() support in guest side
+      KVM: LoongArch: selftests: Add steal time test case
+
+ arch/loongarch/include/asm/kvm_host.h      |   9 +++
+ arch/loongarch/include/asm/kvm_para.h      |   4 +-
+ arch/loongarch/include/asm/loongarch.h     |   1 +
+ arch/loongarch/include/asm/qspinlock.h     |   4 +
+ arch/loongarch/include/uapi/asm/kvm.h      |   1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h |   1 +
+ arch/loongarch/kernel/paravirt.c           |  21 ++++-
+ arch/loongarch/kvm/exit.c                  |  21 ++++-
+ arch/loongarch/kvm/intc/eiointc.c          |  43 ++++------
+ arch/loongarch/kvm/intc/ipi.c              |  26 ++----
+ arch/loongarch/kvm/intc/pch_pic.c          |  31 ++++---
+ arch/loongarch/kvm/interrupt.c             |   4 +-
+ arch/loongarch/kvm/main.c                  |   8 ++
+ arch/loongarch/kvm/vcpu.c                  | 125 +++++++++++++++++++++++------
+ arch/loongarch/kvm/vm.c                    |  39 +++++----
+ tools/testing/selftests/kvm/Makefile.kvm   |   1 +
+ tools/testing/selftests/kvm/steal_time.c   |  96 ++++++++++++++++++++++
+ 17 files changed, 319 insertions(+), 116 deletions(-)
 
