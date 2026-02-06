@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D524D2E3387;
-	Fri,  6 Feb 2026 09:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF23308F1D;
+	Fri,  6 Feb 2026 09:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770370952; cv=none; b=sUh/mA6PHulfyOKxiuzF/FWI99YfyXUt+Cpo62O8zXohyQ0d/toXKIt8KEYZPifmC0WOYwumpds7CgLYtKwIdm4dxwAS6Fw6e3RZHu38bskML9Beg9NG16KJpeuQm91G1UDQFsPQ5tTSwRF4h8j/pNyuclbmmZygx540TwtLE6E=
+	t=1770370986; cv=none; b=e4Wel1pTgghCihaQFYutpjBgQhVTfPARYmiehDB0gGpoPqa2qrKAsAi/+LORA1Iq4Zz0zsdAGmC+vS0A+8YTHuWNXAAQwlVrdXP+oS9VNqWP0FvZus5z3ztRFT27zOuTAzMi/rg9Ju87YuABXEFDu8dThNXlUZ7prXLrHu8sgm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770370952; c=relaxed/simple;
-	bh=LhrTzSWf7NEah6Z7Oux3u9gbfwj2MNl56bdSDhRmPl8=;
+	s=arc-20240116; t=1770370986; c=relaxed/simple;
+	bh=opKNMeKc5dUGPWp6AFdxTH7O+3QX2spoWarAppjxqc0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M4nzBqWQEIj7/RYOiJGyOmez30uzcYu1gMzzM7wScU5/929yL4iIHLoebVcpTg7F+TOMjLZLfNKR4RbNtIBSXN49UZI6Gta8S0ALLF7F+tTyFUBmXgAiYeFGRgevguA01md+t6G0jJd+k3nf89272FoImu3vCrAxLe68v0oKoGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSvVnMTC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qDAy+l1/8CJUtkJXnNIeKHID2EUw2rQB0AJU0tP6UEywM6N0IXQd77/xuVJFM9kkgNoVPxGwR4j247F/27BB78PiIcKLiP7yF2DS3RUyLlmlCJp52Fba8g4rBfFh0wlGaTPjb6LgvGEullOORx+kZMLec4Tjt5Fz00/PBzLFuIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0q2M1Y1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSvVnMTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FF4C116C6;
-	Fri,  6 Feb 2026 09:42:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0q2M1Y1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C084C116C6;
+	Fri,  6 Feb 2026 09:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770370952;
-	bh=LhrTzSWf7NEah6Z7Oux3u9gbfwj2MNl56bdSDhRmPl8=;
+	s=k20201202; t=1770370986;
+	bh=opKNMeKc5dUGPWp6AFdxTH7O+3QX2spoWarAppjxqc0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GSvVnMTCcRhkxqlqeDx3rM6srCHZuDenv1DdtPoFP9SUQF8TtuPX/r+4ffLF35a1z
-	 Ya3vXMuTz4OOJrBpC3QVOcQytVqQMUT1mJ5GxbGIGf7EJGU+N6gJF9KKyPHkdhuied
-	 j04tYZXUUvXAkbj2ysXMysEc59RfXPQGZHhTSA6i6PI4+j57T7VPUOH69hOp+j/cy2
-	 yVhWELbxXuWm5SP2qxoGok6mGdD2AiEEDOTR9oIxhwob/7H52+k1jLuQMGzMgKqnNt
-	 u8PlegUm+gteaVi/n5UohU/uGYeeR/8vQpstamEQl+CsHkiUMRiikbcO/+Ojwu/bls
-	 wMOHaiNU6bRzA==
-Message-ID: <ad1a6ccd-d542-420f-b862-b41b7a29054b@kernel.org>
-Date: Fri, 6 Feb 2026 10:42:24 +0100
+	b=b0q2M1Y1+zFPHhE8ZfPQRp3VzxIogdG5i7e6pVAmwCnkqZPgiOkhMl2qkj3kC5NEg
+	 Axto48z8EEp6E+zuf9FLH4pnYtMWe46vAG4eYCOmfS+gE2nvNHhyCacw8WicO7aJFN
+	 iSH/EqOPEgf+At3uRYkyWNwfZZNKNh9bPQUVdLdW5QDEojnAfrnUJA5DKNufmuLMHd
+	 GH6RBqlMqSwoEKrcIyfmIS5x0Z1ZkDgRhnPL6MfhgJfpbvx6UJz2WqOfW7JACfIbgF
+	 GN1R89A+idESDTjIRjGwz1hS/d6rNe5iGfc9RKewY6R+4qqVJj4clFyq6YJNw8/AQA
+	 KIT3r+LwgJSTw==
+Message-ID: <33e5e080-6e07-4cc0-88da-0cb55c9d0ae2@kernel.org>
+Date: Fri, 6 Feb 2026 10:42:59 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 13/17] hugetlb: Remove VMEMMAP_SYNCHRONIZE_RCU
+Subject: Re: [PATCHv6 14/17] mm/hugetlb: Remove hugetlb_optimize_vmemmap_key
+ static key
 To: Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +53,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-14-kas@kernel.org>
+ <20260202155634.650837-15-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,27 +100,23 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260202155634.650837-14-kas@kernel.org>
+In-Reply-To: <20260202155634.650837-15-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> The VMEMMAP_SYNCHRONIZE_RCU flag triggered synchronize_rcu() calls to
-> prevent a race between HVO remapping and page_ref_add_unless(). The
-> race could occur when a speculative PFN walker tried to modify the
-> refcount on a struct page that was in the process of being remapped
-> to a fake head.
+> The hugetlb_optimize_vmemmap_key static key was used to guard fake head
+> detection in compound_head() and related functions. It allowed skipping
+> the fake head checks entirely when HVO was not in use.
 > 
-> With fake heads eliminated, page_ref_add_unless() no longer needs RCU
-> protection.
-> 
-> Remove the flag and synchronize_rcu() calls.
+> With fake heads eliminated and the detection code removed, the static
+> key serves no purpose. Remove its definition and all increment/decrement
+> calls.
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 > Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> ---
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
