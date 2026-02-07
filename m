@@ -1,238 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C0F302756;
-	Sat,  7 Feb 2026 10:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF1886277
+	for <loongarch@lists.linux.dev>; Sat,  7 Feb 2026 20:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770460623; cv=none; b=Wkn9Ctv1u5Dem/kQyEmu6WRAx9HkoSAlAqxoJbgYYOUSgexbSvwzspegBnmJLJXlkHYn4Li/4+91sQyeAiE2B25GjSGFXUiCpK0zgUltCDgSkhAiKGPfwzsb3nvVNiFf+xiHeMOtVnMJhRN1voPP6u9ShuVNozWJtKI5dDa4H2E=
+	t=1770495388; cv=none; b=E05tqaZdzM4qn4jkXjAnkA+DrIAIsfQvAoh634x2AjapU+DmKn1oHUtnqAjB1x68LdME0mrbB+LMWwvDjfMnuyocH3fCW3HFFPOaClA/cpjscsCeRjnPswjpzGXUyJeTmYkMxigqFTCEmf3mx9UJMz3l2Y6/gErOE4RlLZZ+ZKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770460623; c=relaxed/simple;
-	bh=5txootZk9XnxQipltUnu1uJG2kCaI77i7XiNzSKLg6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t14+WNwUfeSF2E8XvenwNa9dFI5isP5e86o6IKvE5VegWRY22s0na/r+vCypBPheekR9RRszn3j3a39y36TTAvh4oh2CRYAd2GSModpvpYxtQFKGzkdB3eeq8tkzWRRVI9YKL9GeJliq7hzoRnQm/KgyADnHk6741xt6j4c2wtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfYuL09Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770495388; c=relaxed/simple;
+	bh=1f6G4v+4U4f6IIr3zzk56Nlc0wxLZuYQLXFP9N6lfd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZcQV42IZOkdSjBxdsK/H2c9JjXk3eTQ1iYlXGHxIVcLFFcnH9ew2uNt/i1yy7CuZa2wNBc0lH18ZVB/se8RmlGLHMGEWQ7whebh6jV0bv9mLSRe6j2sdtGEgvCvCIkF0ZCBvOYRs/hciSFVaD/1U9PzkovSHZlFmcry23h/tDX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sx8rAtph; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfYuL09Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A2BFC116D0;
-	Sat,  7 Feb 2026 10:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770460622;
-	bh=5txootZk9XnxQipltUnu1uJG2kCaI77i7XiNzSKLg6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cfYuL09YPhGMJd7P35kyjr0lAxa/iHu/YfsEkzH8LubrxmisxkzKdBFcs1Y2N2MU2
-	 dvs+BpQiIMu7RNuFgOa2U4lhfkQQMWEApPyUIFI4G5jPDx5SxM7vGgvEgcMaAZR3wb
-	 b5TmWeYHqGOnIP6RUJQS0EZeSOfMx7DmDO3xOwzBoST0J5Zd5mVF9jwQn1yVKcNfBE
-	 uWSTfKP2vKbdUd2LRGCkPloiDZT2rrMv/eHBuetCIurcEWl+GxWXDT1apLvIJsW7lK
-	 ecWz7qUsRKRAGOnHYFNSzWF/NyB7DB8z+ZPDngeTtgHQpWl15K7AQ1eM41lt8lTvb6
-	 U9okHU4kls45Q==
-Date: Sat, 7 Feb 2026 12:36:43 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Stafford Horne <shorne@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@kernel.org>, Vineet Gupta <vgupta@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH mm-unstable] arch, mm: consolidate empty_zero_page
-Message-ID: <aYcVu7gs65S1CeST@kernel.org>
-References: <20260124095628.668870-1-rppt@kernel.org>
- <2157220c-0394-40fa-9918-a8514171bd10@gaisler.com>
- <aXj_x5CyUeys7ONM@kernel.org>
- <ec965a79-dad8-4358-a8e9-ebc9f330b67b@gaisler.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sx8rAtph"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-48327b8350dso13612255e9.1
+        for <loongarch@lists.linux.dev>; Sat, 07 Feb 2026 12:16:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770495387; x=1771100187; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0tgEE4qPRK7pF2tP48CJlGhSYjJKIgdfs2GqYMm8p6Y=;
+        b=Sx8rAtphfgOkPspm2U4+plYv2MnIv0V/Hv+l6bkjHtrxWVSCnHlOqwS1NJPPu/CE1U
+         hsRDJDlZd2ntx0FMP88OmB+y0k9MOSptYw5d0nlNr86zjik99kofcmWfQAfnMubUQmBa
+         JkJwuzVgGcAX6oPYNo7yW8XfOtc5w3tD3IYa/DmkjSco4i57hui0OfxTNlnPYMeAmThU
+         ReT9hhIJOXfjnMWjQgoT3mZGDOjpiYK9qzm9vRjQG+V7XO1teYx1FWhvNJkZQ6ut18Ro
+         TXQI4z0k1iQJBBepcp/WZaGBKfCSPrXjTuB7dz/IJL41nvRtLhFj2SeAWLSL+IgJCNok
+         c7hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770495387; x=1771100187;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0tgEE4qPRK7pF2tP48CJlGhSYjJKIgdfs2GqYMm8p6Y=;
+        b=FcF5PUjCRL0CWiycRwEGw3S90PGvzBO/2HjOUbgL2BL+g6b4fa9aYgC+rmYuo2eAlz
+         ZoTeRdDV2vxCPebh5BM79uncMMdMcG/Tza5+2BPHFoxlZxpLP0eHId73nDM3UClfBibh
+         Bnl0yJn5J+SQB/NiKHka9c10azWhcAC+Kn9lYXk37HnBMxLiU/xTAkvVVp0aSHP3Ch2+
+         /3H7HwQPt8cqgbH5UqpqtdYXZRv1qDTg72q1oEJ4xOm6+oyDcL1PL17XPe0fCFKPRz5r
+         koJ5+IYibOdproZnXpbSjDA7KRwt9/6hx6QYxlfV5/k5MlvfgrnHpQUvJISwBa3vjR79
+         Qemg==
+X-Forwarded-Encrypted: i=1; AJvYcCX26vJiWHFnyazd9XGYCWJqYROmrHZ3THS91J05HQInekIkI9t/VEfXcRe30YM9u/vaWA5AUMqabsM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywz7O6XkZMB3d6dbnvtnrPsTzjHg2M9h55lG5MNxWHVti57TCB2
+	PipMhypGGLW0F94OF61zSLhvWnQddCz49ZMSSkCAaTF5IGMWSuSQfgVC
+X-Gm-Gg: AZuq6aIjWbVsyEAe9RRh+sEgcVpaU+EJtqfWHbRBgGercae8QH3DyHAAtLQO65mAR0Q
+	jLBPJnxdG9BFpaaS8HRYw8fZoKy+rfY4z3vturY3eW4eQ8vmdy6BVufCZnLaS49ez6tomOTvu+6
+	nWwdrSjy0yNEx9QJ4PtLxN4U4KS83hK5rvKIGKAXB8ern81QdtO0LP5Cr3VUdqq4t1SfNBLD8AM
+	FxNhqCOzi2VSy7zEvYEDxZYsKH32OSlQo6UHJmvIidcLy1//qKTNAduSLHy5e0LcnjJUjDaDh8T
+	4Q9E3V2/HIksgombJSNs4uZqnmZcGFAr0d9vSkTTfk/m68xKlskmphvRWPPMbgKGb8W4RzazxKE
+	hqeid2w1Sx//bUGYxT0aZ4gbKy2AldGisC7bSMFSrWS3ljMWPp6+VAtMhE0qCxhMeB5myHU85mA
+	aeZFxe9oXwnDk7bk0XbyOH8+rnft00qE1qi88CFKzPnI6g50pRRuPnQKhTQAR+BSpflt1grSVdj
+	Dvmk7wcDgym8dg=
+X-Received: by 2002:a05:600c:3e12:b0:476:d494:41d2 with SMTP id 5b1f17b1804b1-4832021d67dmr86909015e9.29.1770495386585;
+        Sat, 07 Feb 2026 12:16:26 -0800 (PST)
+Received: from ?IPV6:2a02:6b6f:e752:9400:18cf:c773:ee86:c436? ([2a02:6b6f:e752:9400:18cf:c773:ee86:c436])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48320719b8fsm144010445e9.9.2026.02.07.12.16.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Feb 2026 12:16:25 -0800 (PST)
+Message-ID: <907ff793-9b02-4a22-a85e-2873246f6402@gmail.com>
+Date: Sat, 7 Feb 2026 20:16:25 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec965a79-dad8-4358-a8e9-ebc9f330b67b@gaisler.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv6 11/17] mm/hugetlb: Remove fake head pages
+Content-Language: en-GB
+To: Kiryl Shutsemau <kas@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>,
+ Matthew Wilcox <willy@infradead.org>, Frank van der Linden <fvdl@google.com>
+Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
+ Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-12-kas@kernel.org>
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <20260202155634.650837-12-kas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 03, 2026 at 11:17:08AM +0100, Andreas Larsson wrote:
-> On 2026-01-27 19:11, Mike Rapoport wrote:
-> > On Tue, Jan 27, 2026 at 05:02:39PM +0100, Andreas Larsson wrote:
-> >> On 2026-01-24 10:56, Mike Rapoport wrote:
-> >>
-> >>> Every architecture defines empty_zero_page that way or another, but for the
-> >>> most of them it is always a page aligned page in BSS and most definitions
-> >>> of ZERO_PAGE do virt_to_page(empty_zero_page).
-> >>
-> >> Running this in an LDOM on an UltraSparc T4 sparc64, the entire LDOM
-> >> hangs after a while during boot.
-> >>
-> >>> diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-> >>> index c2d19c9a9244..2bd99944176d 100644
-> >>> --- a/arch/sparc/mm/init_64.c
-> >>> +++ b/arch/sparc/mm/init_64.c
-> >>> @@ -177,9 +177,6 @@ extern unsigned long sparc_ramdisk_image64;
-> >>>  extern unsigned int sparc_ramdisk_image;
-> >>>  extern unsigned int sparc_ramdisk_size;
-> >>>  
-> >>> -struct page *mem_map_zero __read_mostly;
-> >>> -EXPORT_SYMBOL(mem_map_zero);
-> >>> -
-> >>>  unsigned int sparc64_highest_unlocked_tlb_ent __read_mostly;
-> >>>  
-> >>>  unsigned long sparc64_kern_pri_context __read_mostly;
-> >>> @@ -2506,18 +2503,6 @@ void __init mem_init(void)
-> >>>  	 */
-> >>>  	register_page_bootmem_info();
-> >>>  
-> >>> -	/*
-> >>> -	 * Set up the zero page, mark it reserved, so that page count
-> >>> -	 * is not manipulated when freeing the page from user ptes.
-> >>> -	 */
-> >>> -	mem_map_zero = alloc_pages(GFP_KERNEL|__GFP_ZERO, 0);
-> >>> -	if (mem_map_zero == NULL) {
-> >>> -		prom_printf("paging_init: Cannot alloc zero page.\n");
-> >>> -		prom_halt();
-> >>> -	}
-> >>> -	mark_page_reserved(mem_map_zero);
-> >>> -
-> >>> -
-> >>>  	if (tlb_type == cheetah || tlb_type == cheetah_plus)
-> >>>  		cheetah_ecache_flush_init();
-> >>>  }
-> >>
-> >> This just removes the mark_page_reserved(mem_map_zero) without 
-> >> replacing it with something corresponding to that. Perhaps part
-> >> of the problem?
-> > 
-> > I don't think so, empty_zero_page is in BSS now an it's reserved as a part
-> > of the kernel image.
-> > 
-> > I suspect that virt_to_page() does not work BSS symbols on sparc64. Can you
-> > please try with this patch:
-> > 
-> > diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-> > index 74ede706fb32..0578c5172d4e 100644
-> > --- a/arch/sparc/include/asm/pgtable_64.h
-> > +++ b/arch/sparc/include/asm/pgtable_64.h
-> > @@ -22,6 +22,7 @@
-> >  #include <asm/adi.h>
-> >  #include <asm/page.h>
-> >  #include <asm/processor.h>
-> > +#include <asm/vaddrs.h>
-> >  
-> >  /* The kernel image occupies 0x4000000 to 0x6000000 (4MB --> 96MB).
-> >   * The page copy blockops can use 0x6000000 to 0x8000000.
-> > @@ -210,6 +211,11 @@ extern unsigned long _PAGE_CACHE;
-> >  extern unsigned long pg_iobits;
-> >  extern unsigned long _PAGE_ALL_SZ_BITS;
-> >  
-> > +extern unsigned long kern_base;
-> > +#define ZERO_PAGE(vaddr)						   \
-> > +	(virt_to_page(empty_zero_page + ((unsigned long)__va(kern_base)) - \
-> > +		      ((unsigned long)KERNBASE)))
-> > +
-> >  /* PFNs are real physical page numbers.  However, mem_map only begins to record
-> >   * per-page information starting at pfn_base.  This is to handle systems where
-> >   * the first physical page in the machine is at some huge physical address,
-> > diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-> > index 2bd99944176d..d2d724ba4f83 100644
-> > --- a/arch/sparc/mm/init_64.c
-> > +++ b/arch/sparc/mm/init_64.c
-> > @@ -170,6 +170,8 @@ static void __init read_obp_memory(const char *property,
-> >  
-> >  /* Kernel physical address base and size in bytes.  */
-> >  unsigned long kern_base __read_mostly;
-> > +EXPORT_SYMBOL(kern_base);
-> > +
-> >  unsigned long kern_size __read_mostly;
-> >  
-> >  /* Initial ramdisk setup */
-> Hi,
-> 
-> Unfortunately, that does not help. The LDOM goes down in the same fashion.
 
-Apparently something is wrong with my pointer arithmetics :/
+> +
+>  int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
+>  				       int node, unsigned long headsize)
+>  {
+> +	unsigned long maddr, len, tail_pfn;
+> +	unsigned int order;
+>  	pte_t *pte;
+> -	unsigned long maddr;
+> +
+> +	len = end - addr;
+> +	order = ilog2(len * sizeof(struct page) / PAGE_SIZE);
 
-Can you try this one instead?
 
-diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm/pgtable_64.h
-index 74ede706fb32..615f460c50af 100644
---- a/arch/sparc/include/asm/pgtable_64.h
-+++ b/arch/sparc/include/asm/pgtable_64.h
-@@ -210,6 +210,9 @@ extern unsigned long _PAGE_CACHE;
- extern unsigned long pg_iobits;
- extern unsigned long _PAGE_ALL_SZ_BITS;
- 
-+extern struct page *mem_map_zero;
-+#define ZERO_PAGE(vaddr)	(mem_map_zero)
-+
- /* PFNs are real physical page numbers.  However, mem_map only begins to record
-  * per-page information starting at pfn_base.  This is to handle systems where
-  * the first physical page in the machine is at some huge physical address,
-diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
-index 2bd99944176d..aa1f9f071fb2 100644
---- a/arch/sparc/mm/init_64.c
-+++ b/arch/sparc/mm/init_64.c
-@@ -177,6 +177,9 @@ extern unsigned long sparc_ramdisk_image64;
- extern unsigned int sparc_ramdisk_image;
- extern unsigned int sparc_ramdisk_size;
- 
-+struct page *mem_map_zero __read_mostly;
-+EXPORT_SYMBOL(mem_map_zero);
-+
- unsigned int sparc64_highest_unlocked_tlb_ent __read_mostly;
- 
- unsigned long sparc64_kern_pri_context __read_mostly;
-@@ -2495,6 +2498,9 @@ static void __init register_page_bootmem_info(void)
- }
- void __init mem_init(void)
- {
-+	phys_addr_t zero_page_pa = kern_base +
-+		((unsigned long)&empty_zero_page[0] - KERNBASE);
-+
- 	/*
- 	 * Must be done after boot memory is put on freelist, because here we
- 	 * might set fields in deferred struct pages that have not yet been
-@@ -2503,6 +2509,12 @@ void __init mem_init(void)
- 	 */
- 	register_page_bootmem_info();
- 
-+	/*
-+	 * Set up the zero page, mark it reserved, so that page count
-+	 * is not manipulated when freeing the page from user ptes.
-+	 */
-+	mem_map_zero = pfn_to_page(PHYS_PFN(zero_page_pa));
-+
- 	if (tlb_type == cheetah || tlb_type == cheetah_plus)
- 		cheetah_ecache_flush_init();
- }
+This doesnt work for ARM. For len = 32 (2MB contiguous-PTE hugetlb on arm64):
+ilog2(32 * 64 / 65536) = ilog2(2048 / 65536) = ilog2(0) which is undefined.
 
--- 
-Sincerely yours,
-Mike.
+Is order = ilog2(len / sizeof(struct page)) better?
+
+
+
+> +	tail_pfn = vmemmap_get_tail(order, node);
+> +	if (!tail_pfn)
+> +		return -ENOMEM;
+>  
+>  	for (maddr = addr; maddr < addr + headsize; maddr += PAGE_SIZE) {
+>  		pte = vmemmap_populate_address(maddr, node, NULL, -1, 0);
+> @@ -398,8 +426,7 @@ int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
+>  	/*
+>  	 * Reuse the last page struct page mapped above for the rest.
+>  	 */
+> -	return vmemmap_populate_range(maddr, end, node, NULL,
+> -					pte_pfn(ptep_get(pte)), 0);
+> +	return vmemmap_populate_range(maddr, end, node, NULL, tail_pfn, 0);
+>  }
+>  
+>  void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+
