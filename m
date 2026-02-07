@@ -1,67 +1,33 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8BC33CEA1
-	for <loongarch@lists.linux.dev>; Sat,  7 Feb 2026 20:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CEE50276;
+	Sat,  7 Feb 2026 21:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770495608; cv=none; b=GGb8WB8M7JkwuvDDuNNLmEK8XpD5hUIH8DoylimkUGbBqIgSRt0ZemZDBer6XzpCbXbX/MoyJJGzl3Typ9UpG8g4MwqIYtCptFAF+mSq+W0K/ygUI0CVwmtLOEqHR1JEyqDIiEyT/3uKNL/CKTuW74VT5B1mzqFph9GWCR8RjSQ=
+	t=1770499538; cv=none; b=JLTdA81gRXHEhxM/quz3Ww8nFpVLMSmuFhZigJSHo45XiQLlo2Rd6OeIheMemVta32uFIiHMgU2DAluWp9RDvwPufUKsU+9rmSQKgZOlDBAdkefZWffh+dlf4WhSHj//p5upc3oFhZoyO6CoSEuoZVArwclmnByqlHmzpe09H/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770495608; c=relaxed/simple;
-	bh=ImAYCiSTK6i1+gxOxS9jG+GM+vLaHxdB1SVCmCPXlrI=;
+	s=arc-20240116; t=1770499538; c=relaxed/simple;
+	bh=eR2kc1dFLNt01z/eTQHHUqpkmv+ymUfHbEBpx9JIxIw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oUFwCkhpdyQR/mjCoohefA0bmikvicZAs4kuGkdMkPTy92Ih7plH4T0+SalAJaz8+UjYpVotoSI3WgUSVTTL+x+ZCPjW+ihQY8DHRpwpf4mCM7paAyIu48Q6b7BjRBrHqBvm8VR83JY6qrKWVgIPebuO7AafTJV+B5RO4JIei4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jakHV6cQ; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=d4mv+67m+k1aTpYZ8FHzcrT4rWxDWXo10tw1CyTbVYlxwoXjFWTh3sODKaTPiw6JE0wB0QCbLn+led4jqIh7a6Zj4PsIesB3mWmWZ7z1ibfqIU6kzkwcqFAaJ4vPjnqfaghmOp+Q54KyimrmDJC0o34GHKAtKqOye4o1eX4kozg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGFEabRW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jakHV6cQ"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4806cc07ce7so33140355e9.1
-        for <loongarch@lists.linux.dev>; Sat, 07 Feb 2026 12:20:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770495607; x=1771100407; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2CLN/nBgZu1TXV2x2w92nD7nqppwuTNa2tEtzd/B9Hg=;
-        b=jakHV6cQy2d03Q/3zueXxbsNeLfZiRQWKPPuA4XC1t3DWDjUFr5KrXEr1Q65+sD+za
-         NYemtfF+5MKObIEXVMs1GEgSqh+yHrUOUtcQalehcs7F2a+SCzegUEnco/+PbjPNNBe6
-         An8Zm/CpHkaM8Bdq4ezsyerRkMGG9ldpyZwgCLge21o4/2wOvS0rNZ2VgazBXW0B0rY3
-         KLIu6ThyX44R+rzN5PyyUTsTQVma9LmkmxTnBI59gnYsKl1HKL5R68COvCfN0JhyXhVI
-         6dx5ePBX7ziTRIl02a0sYPBKWg46y6vB7uNF0nWw4f9jm+R3y+726lXcYpkmslHcpP3R
-         umeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770495607; x=1771100407;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2CLN/nBgZu1TXV2x2w92nD7nqppwuTNa2tEtzd/B9Hg=;
-        b=T6TNKET0XX/kysKt0+/05T1D0OycG1Jjtu5w/D7Ehy7GHb14q1fEd/u/ht8In9yh8W
-         TzTlJNxyI7Z7hYq+8aDzgUbUh/ciI9Jy6iEGWl0V9cg4FjjruYv/5/1/dEw9qyoI3F4A
-         19btbQNWkp17Mw4eq4DtIilK5NcXaPlF0YO3nlaPaVM4pKV8Hwy7XXLBsOamObUPDGaz
-         LjeQCG0JyBLswmjRFo46C6KmlcWbzLj4MWejeM21L3gdLQONeel02Z1YFzfzlKR3/Gqd
-         eUV311gUQ/a3YGaDAlecqwzLmIES/7DIwQM3Oe7RysjzJimkes0fIeSYGlSAq/z7GbtG
-         eUxw==
-X-Forwarded-Encrypted: i=1; AJvYcCULgK5uSQxyyL+BoNNiaeXk2MRXAUF9hONk8dTMV0yI4oP1YLMqA5sqd1tM4fWNdIcXWK6MavpgRtQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwAWHw1yG8csiuvUX9yZSAryPlCaRiE7YoqEDEvuMhiWYw7McuS
-	b3RzI8PZYWzE63WlQi/ez29ueFAv9783LXSiWdloUz4KlnN4PZaHsEf2
-X-Gm-Gg: AZuq6aL8rx75S4ZpjjgCmcWozQOYOQSEZHwLZSAKxBVrXLf4SxI1efqQQy0QzQ6d+fq
-	PderiBNJLnVSKrxj4CehrwdETkpJe5ZSqVUGOXmEx6k9kEFCDWzS+x2E5RB7cBocF8CGBUjlQE3
-	2O9s3s1dsO5F5Izx+h8UcV2+rIVHGW5QyXyjOm4afaQ7U2xRQujEg1+T6Jl1DuZ66IVOsy6GTz2
-	srcaK3ODq59adTrbmp+5ArdQmTbHLO6Qb9v9hOq63jkNMA+N/YIhW+ubmLFITXO3ozLDu/ZRIyF
-	mbAzoGlULed+smx2retPJCmD9Kbku5QW48nQC+o6oRNA3wMlrQKgYjHEBjMeK3fLVeUMR9teFmQ
-	VQdK9WPxn73SRnZFlREIg0uiVDqyen0hEefbv/uFtmIYfPuTQT6UD9NIfg60H16PEfqwlibxK7y
-	KBEc0RPiZxnxggAINbZg4HOoObvyeKjxeczRQF4AzjRdGwK/OEp49tlvpeJmw70E1RUfRlH5jsS
-	4xSuITWbXLbcF4=
-X-Received: by 2002:a05:600c:548d:b0:480:7162:fa48 with SMTP id 5b1f17b1804b1-483201ecd90mr108547085e9.13.1770495606497;
-        Sat, 07 Feb 2026 12:20:06 -0800 (PST)
-Received: from ?IPV6:2a02:6b6f:e752:9400:18cf:c773:ee86:c436? ([2a02:6b6f:e752:9400:18cf:c773:ee86:c436])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483209cfd77sm51750705e9.14.2026.02.07.12.20.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Feb 2026 12:20:05 -0800 (PST)
-Message-ID: <f4e66e8d-d285-4362-8bc9-fef00f2f624d@gmail.com>
-Date: Sat, 7 Feb 2026 20:20:04 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGFEabRW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89BA2C116D0;
+	Sat,  7 Feb 2026 21:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770499538;
+	bh=eR2kc1dFLNt01z/eTQHHUqpkmv+ymUfHbEBpx9JIxIw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GGFEabRWsR0NmmRAYjKK0QnagsaLpG1VVhv/wQMslI79amhm14y7ppsKtm+3oR/JO
+	 ALqWzvnhsTiDDdaiz60YTm87Ksz+E+TbsKhoF+bu5CbiWgKT+fJA9BP6s3/JrPpFZ6
+	 c68j5J9nFq0GxjPkhGDC/tNSypWPWZ0/Kzl/V5/BCmiBe1KUEftCBAPt7PAyorRBXh
+	 tTSIXpFyvvkeWfFFflYZ3qI+sIw+SkzK5aTotneLCQeF3LCtUeXag/2E7AEcfEJDBr
+	 XLVhK5PhzgKICaHnCaoSkklm+XBuwhLsefpOKNI/YpX9UvHlgICuE6yvuTETC0HcWL
+	 ojpZb7YuCu1LQ==
+Message-ID: <412359f2-ecfb-498a-9717-f0a442abd3f7@kernel.org>
+Date: Sat, 7 Feb 2026 22:25:28 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -69,12 +35,11 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 01/17] mm: Move MAX_FOLIO_ORDER definition to mmzone.h
-Content-Language: en-GB
-To: Kiryl Shutsemau <kas@kernel.org>,
+Subject: Re: [PATCHv6 11/17] mm/hugetlb: Remove fake head pages
+To: Usama Arif <usamaarif642@gmail.com>, Kiryl Shutsemau <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>,
- Matthew Wilcox <willy@infradead.org>, Frank van der Linden <fvdl@google.com>
+ Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
+ Frank van der Linden <fvdl@google.com>
 Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  Vlastimil Babka <vbabka@suse.cz>,
  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
@@ -85,26 +50,84 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
  Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- "David Hildenbrand (Red Hat)" <david@kernel.org>
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-2-kas@kernel.org>
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20260202155634.650837-2-kas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+ <20260202155634.650837-12-kas@kernel.org>
+ <907ff793-9b02-4a22-a85e-2873246f6402@gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <907ff793-9b02-4a22-a85e-2873246f6402@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 02/02/2026 15:56, Kiryl Shutsemau wrote:
-> Move MAX_FOLIO_ORDER definition from mm.h to mmzone.h.
+On 2/7/26 21:16, Usama Arif wrote:
 > 
-> This is preparation for adding the vmemmap_tails array to struct
-> pglist_data, which requires MAX_FOLIO_ORDER to be available in mmzone.h.
+>> +
+>>   int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
+>>   				       int node, unsigned long headsize)
+>>   {
+>> +	unsigned long maddr, len, tail_pfn;
+>> +	unsigned int order;
+>>   	pte_t *pte;
+>> -	unsigned long maddr;
+>> +
+>> +	len = end - addr;
+>> +	order = ilog2(len * sizeof(struct page) / PAGE_SIZE);
 > 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: Muchun Song <muchun.song@linux.dev>
+> 
+> This doesnt work for ARM. For len = 32 (2MB contiguous-PTE hugetlb on arm64):
+> ilog2(32 * 64 / 65536) = ilog2(2048 / 65536) = ilog2(0) which is undefined.
 
-Acked-by: Usama Arif <usamaarif642@gmail.com>
+HVO should not be possible for that size, and we should never reach that 
+point, no?
+
+Remember that for HVO, the metadata must span at least two pages.
+
+-- 
+Cheers,
+
+David
