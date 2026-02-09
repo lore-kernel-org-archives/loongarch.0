@@ -1,124 +1,136 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3534366069
-	for <loongarch@lists.linux.dev>; Mon,  9 Feb 2026 09:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51262F3618;
+	Mon,  9 Feb 2026 11:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770631130; cv=none; b=NDYnh6Dbsi2g3Ju5jf/H2jLPnHOp2463wQJuIqCxKQq0+iY2s0OiGfiq2WmBmpbmQUab1LIHY8Y49h7VaIgJ1MOVbnuB+OfKIu7ex5XOxf+nbgC/Kz9GOYqL0QyK3uBA9IzJvNyPi7Rs9AG0ZtJyhWCYDFXC2wO3QguIdwdAHJw=
+	t=1770637942; cv=none; b=ISM8vCwMNp8SmFB8t9oKRBuHdWdZyePgJSWz2a2FX8pfXpLuSTDk+QY2B53vBfFqx9BC0fxPZe9aXlWFQ33SSdS41ZP2oMBp7ZSLZv23vidBoZWqjnxktzw6hA4sEP91oCKIb0Zwfuk7KdQ+kUlxQ7hbBm7HH86FIsHzuwNSybg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770631130; c=relaxed/simple;
-	bh=/HC/BDgTxAA05XgjcRY8O6PN0xJnJsh9iwfK7lnJUE0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ko1+awrqStOHbdMwb4ECrdGwvkUtWNZqFaIalLkZu1FJbEtyZtMbeUmI+c+Ygtz80uyLtm5M6Gr8M6xPiHt5gV7w+/LvGkCQeSf3FgAu8Iu9sg1PDry9FJZ2u8HX44Aq9/Mgbli1lD8kCzyVZaao8wtAYIIcBVvO4AfVNxH+mDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=hhs9dNsd; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=hhs9dNsd; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770637942; c=relaxed/simple;
+	bh=/oVfWEPDEAt5G8rJ12d4rW+JXmSiJVKmDZMLxp+j8rQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYn6Mbnt4ZYzz0vEFrKZkpSJ6z3sRy6gADZGs95QGYjK4IG27hqgfYwEoJggIQgTN2be0DEnGTpNwjG9xTcOhhiFOfObVfkAUj07xG3uSTfqWs0sxCyFUUKYL8GC6NHeCGRhw7PKPMl338dxOmrLiZabP4lOirtFDD03FCZ1d9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH1QHvfK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="hhs9dNsd";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="hhs9dNsd"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=rZbn2DX+TpOyjPxTrik+wvw3h17J9tL/MLsovlvAZxo=;
-	b=hhs9dNsdwe4qkbK7HPFjHzXVe+tEdgWvlYgxvjQ+66g+iSMAe6/pwiihzhDiak6cf8lDusHvs
-	OcMhzeSKNnSvqdRfFEnMQI0HtAxRMeSjpqLj8wOnfenTD8HasNqQUnmpYZapopvoOtj8aqI1qqk
-	Qk1z6f7tD12iwcZTC7CUEcw=
-Received: from canpmsgout01.his.huawei.com (unknown [172.19.92.178])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4f8g9b2CKQz1BFyb
-	for <loongarch@lists.linux.dev>; Mon,  9 Feb 2026 17:57:55 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=rZbn2DX+TpOyjPxTrik+wvw3h17J9tL/MLsovlvAZxo=;
-	b=hhs9dNsdwe4qkbK7HPFjHzXVe+tEdgWvlYgxvjQ+66g+iSMAe6/pwiihzhDiak6cf8lDusHvs
-	OcMhzeSKNnSvqdRfFEnMQI0HtAxRMeSjpqLj8wOnfenTD8HasNqQUnmpYZapopvoOtj8aqI1qqk
-	Qk1z6f7tD12iwcZTC7CUEcw=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4f8g5D4r3jz1T4K2;
-	Mon,  9 Feb 2026 17:54:08 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1E25840538;
-	Mon,  9 Feb 2026 17:58:38 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 9 Feb
- 2026 17:58:35 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<alex@ghiti.fr>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
-	<rdunlap@infradead.org>, <pmladek@suse.com>, <feng.tang@linux.alibaba.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<arnd@arndb.de>, <lirongqing@baidu.com>, <fvdl@google.com>,
-	<leitao@debian.org>, <rppt@kernel.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<sourabhjain@linux.ibm.com>, <osandov@fb.com>, <ryan.roberts@arm.com>,
-	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
-	<thuth@redhat.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
-	<bjorn@rivosinc.com>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <dwmw@amazon.co.uk>, <pbonzini@redhat.com>,
-	<thomas.lendacky@amd.com>, <kai.huang@intel.com>, <ubizjak@gmail.com>,
-	<coxu@redhat.com>, <liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
-	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v4 0/3] arm64/riscv: Add support for crashkernel CMA reservation
-Date: Mon, 9 Feb 2026 17:59:28 +0800
-Message-ID: <20260209095931.2813152-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH1QHvfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA5EC116C6;
+	Mon,  9 Feb 2026 11:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770637941;
+	bh=/oVfWEPDEAt5G8rJ12d4rW+JXmSiJVKmDZMLxp+j8rQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hH1QHvfKc7CEJbSL0jt1YJJAqkMs759E290lV0qaNYFiNewfF2Ti/nUXuSSLl6rbc
+	 wxaeDRbEkGrHOS6hoDtZ9lGQZtbRiCKPU2RrNffy06KwcfMMsZsXJ67vfP2LPwyf/H
+	 uqyaL6pGSPycCvB41OiJtW95NihkBpCG7/k57aJJQ2Veom3VNwRF0sNgT7HJFF7ojp
+	 u407lKJtbEoLyPWvbYZ6ECZJqjDKWWMuyESJo9WIs4TteL2FqbsNtAI0g86D5mhTFn
+	 vXPBSmYoWrii+48+QrwZFcDJSCq5sQbs92l08YQzuXpg9wQ6TQSoVGWvv+1jF7OVGv
+	 GyXhG+FdGllNQ==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7F447F40068;
+	Mon,  9 Feb 2026 06:52:19 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Mon, 09 Feb 2026 06:52:19 -0500
+X-ME-Sender: <xms:c8qJaRnGgHcwQlUzKxM0pi1M6-sooBlwZEoLpFUFMGR7HRbHFqyO3Q>
+    <xme:c8qJaQiJeXcg7jUEq21SU_9vYrWiTR0pldGbxPvjkRdWUvaC-puVBUk87Zn_-b_jp
+    pPi1wIM1DBsogn1-UA00mdLWYjp3bRgG40OSLBt7rdrxECqYpa-K0w>
+X-ME-Received: <xmr:c8qJaSuWjkk_xgUOyTKjFMNbnGwBGVYvtdWmNUhZy39Lahey-cfTbWuxswkiog>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduleeijeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
+    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
+    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
+    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
+    hnrghmvgdpnhgspghrtghpthhtohepheegpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghvihgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinh
+    hugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepmhhutghhuhhnrdhsohhn
+    gheslhhinhhugidruggvvhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurd
+    horhhgpdhrtghpthhtohepuhhsrghmrggrrhhifheigedvsehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
+    guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
+X-ME-Proxy: <xmx:c8qJafBxveFtzYJ6sUMVxdezrYUNbFteSL281M5auAzdFoY-ZftXtw>
+    <xmx:c8qJaVVAfx-CKI9XWQgj2X8tsJxQcG_EWguwGOVW9HLLVWHHcfZnVg>
+    <xmx:c8qJadJJiU55uXizmOjCpiQQscs8mVm0de_3HA4JnGZLPHwuHr7zOA>
+    <xmx:c8qJaeVyZ1n4cPaoHrIWYehWghRX-6E3bvjJAlBHqxqmt7qbPfbzgw>
+    <xmx:c8qJaWSArh7v-pa87OwkWLqvR1MBp2DxJl5d6Rv7stWO7ti6O7oPdFzq>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Feb 2026 06:52:16 -0500 (EST)
+Date: Mon, 9 Feb 2026 11:52:11 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>, 
+	Usama Arif <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>, 
+	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
+Message-ID: <aYnJCnE5vooLROnu@thinkstation>
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-9-kas@kernel.org>
+ <e5831f0b-88c5-4a20-82b3-6e5952388132@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5831f0b-88c5-4a20-82b3-6e5952388132@kernel.org>
 
-Exclude crash kernel memory in crash core to avoid duplication. Also move
-the size calculation (and the realloc if needed) into crash core.
+On Thu, Feb 05, 2026 at 02:10:40PM +0100, David Hildenbrand (Arm) wrote:
+> On 2/2/26 16:56, Kiryl Shutsemau wrote:
+> > With the upcoming changes to HVO, a single page of tail struct pages
+> > will be shared across all huge pages of the same order on a node. Since
+> > huge pages on the same node may belong to different zones, the zone
+> > information stored in shared tail page flags would be incorrect.
+> > 
+> > Always fetch zone information from the head page, which has unique and
+> > correct zone flags for each compound page.
+> > 
+> > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> > Acked-by: Zi Yan <ziy@nvidia.com>
+> > ---
+> >   include/linux/mmzone.h | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > index be8ce40b5638..192143b5cdc0 100644
+> > --- a/include/linux/mmzone.h
+> > +++ b/include/linux/mmzone.h
+> > @@ -1219,6 +1219,7 @@ static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
+> >   static inline enum zone_type page_zonenum(const struct page *page)
+> >   {
+> > +	page = compound_head(page);
+> >   	return memdesc_zonenum(page->flags);
+> 
+> We end up calling page_zonenum() without holding a reference.
+> 
+> Given that _compound_head() does a READ_ONCE(), this should work even if we
+> see concurrent page freeing etc.
+> 
+> However, this change implies that we now perform a compound page lookup for
+> every PageHighMem() [meh], page_zone() [quite some users in the buddy,
+> including for pageblock access and page freeing].
+> 
+> That's a nasty compromise for making HVO better? :)
+> 
+> We should likely limit that special casing to kernels that really rquire it
+> (HVO).
 
-And add support for crashkernel CMA reservation for arm64 and riscv.
-
-Changes in v4:
-- Move the size calculation (and the realloc if needed) into the
-  generic crash.
-
-Changs in v3:
-- Exclude crash kernel memory in crash core as Mike suggested.
-- Add acked-by.
-
-
-Jinjie Ruan (3):
-  crash: Exclude crash kernel memory in crash core
-  arm64: kexec: Add support for crashkernel CMA reservation
-  riscv: kexec: Add support for crashkernel CMA reservation
-
- .../admin-guide/kernel-parameters.txt         |  16 +--
- arch/arm64/kernel/machine_kexec_file.c        |  47 +-------
- arch/arm64/mm/init.c                          |   5 +-
- arch/loongarch/kernel/machine_kexec_file.c    |  45 +------
- arch/powerpc/include/asm/kexec.h              |  13 ++
- arch/powerpc/kexec/crash.c                    |  52 ++++----
- arch/powerpc/kexec/file_load_64.c             |  17 +--
- arch/powerpc/kexec/ranges.c                   |  18 +--
- arch/riscv/include/asm/kexec.h                |  10 ++
- arch/riscv/kernel/machine_kexec_file.c        |  39 +++---
- arch/riscv/mm/init.c                          |   5 +-
- arch/x86/include/asm/kexec.h                  |  10 ++
- arch/x86/kernel/crash.c                       | 104 ++--------------
- include/linux/crash_core.h                    | 114 +++++++++++++++++-
- kernel/crash_core.c                           |  71 +++++++++--
- 15 files changed, 290 insertions(+), 276 deletions(-)
+I will add compound_info_has_mask() check.
 
 -- 
-2.34.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
