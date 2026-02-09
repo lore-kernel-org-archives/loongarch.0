@@ -1,147 +1,344 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011031.outbound.protection.outlook.com [52.101.70.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91AF3793D2
-	for <loongarch@lists.linux.dev>; Mon,  9 Feb 2026 15:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770650419; cv=none; b=DRsaaHzJH/sW4k6m1pm9WDYQali9Pka+aLl0IlB0lm5LtPoa5N7jw65tRk3qHH5Q2VPqTlDIAcNeOVZLLxxdaOk79peibNbezWiHTMOV7n6p6dda3eLZR0m1t2822REogdKw0HRN1qP8VTcXsWvhbdd+W4gFtTElsfoTPEblPDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770650419; c=relaxed/simple;
-	bh=nmXJ+jWEo/z81w9oyX9ApAZJkh48iDrBFf9GYDPqlyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FP9wbhjw098oJcNinSd+knBkt4D/VazwgI+5vQLuvM2fp5a0C29cI1LXVvaNpEaZUYLsez3COKZ0cdptbW/IPebFBg1LuuToActAR/Z0vTSKw2OVAHi9oDl8d/N+5FIDIu/6rkt4WnFwKSHVc7DlJpHsHXjFGrr9Gz5TBRuFw/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FDVuhBWD; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCC63816EC
+	for <loongarch@lists.linux.dev>; Mon,  9 Feb 2026 16:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770655705; cv=fail; b=TpiLYnA6IHHGlX3XU5WZpSYv5YYgdKjtmI2x2CQNtybdL0mfvtx0JKPyYEfAO9c0slFdEZWoG6zmCS8pZ5nNJmwMgQGiN0PPbp+7VA5QcGhGrfqUn/7MY4NCw/OHDm9uE1PlDrQErFBuOS/bOEnbyk8xdf5eI1vQo28DlhmxMGM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770655705; c=relaxed/simple;
+	bh=lkHSn6B8wDdqZyvc3DYe66Aq1dlWejhnPOwTlBEiArY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=I7/sYJ7k1fHGAnlsVQukkrnjO8s3gK1mZYZ1svULPJOwKREOFlWLWPu0HrVMUWu9I0fM3kYsxSgPQzWTZUkrhXKBLE2glZGzoqVrSxJ6l3rzvdKA/mzv5bhSiB85t7IDkVhHb6enn/WnTdHlRILEFTEsu/Kgy4872OCRp5Tu0Vs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=QrzubQ+X; arc=fail smtp.client-ip=52.101.70.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FDVuhBWD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770650419; x=1802186419;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nmXJ+jWEo/z81w9oyX9ApAZJkh48iDrBFf9GYDPqlyQ=;
-  b=FDVuhBWDv50gPMJL1RknCCsJaWML/UpXCTndK5OcVs2bpqOGpboq+oCY
-   /PWv89tvMuJaiqA9ExUnONCvotIRlHsaTXKwrSp0K6Hr2ngY2DJzbCZx8
-   2fRt6w4clwYT21IyTf5gfF6Rnr5f/vrO5ZZClnWKvWQvH0t+8kYano3N7
-   quFVZAoAFGQ5bwi4UTDqPNF9/ryrI2f50SHgZiEXAucjwpsXo32YGao6L
-   7gA3A398ZRtlUDP4cKsG6J9V/zD/sG0O9HE9/E9w+c8LKbuRIiLj9pI1n
-   dSFxOulGAc5mefQsMUL8+U1R1hByweKTTq4jYfux1u1TtqAKZOBB8EsBv
-   A==;
-X-CSE-ConnectionGUID: rKDDClPQQnCzQH3o1RK6eg==
-X-CSE-MsgGUID: NE2JGjboRyCD+3OvynIq2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11696"; a="70778602"
-X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
-   d="scan'208";a="70778602"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:20:11 -0800
-X-CSE-ConnectionGUID: 582YU2ENSaqF3h08Xvh3Lw==
-X-CSE-MsgGUID: 4CBRhAj3Qym7tVxCsKPGyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,282,1763452800"; 
-   d="scan'208";a="216136252"
-Received: from dwesterg-mobl1.amr.corp.intel.com (HELO [10.125.111.231]) ([10.125.111.231])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2026 07:20:10 -0800
-Message-ID: <8224204a-42f5-4b83-b4c2-ee976f711d18@intel.com>
-Date: Mon, 9 Feb 2026 07:20:09 -0800
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="QrzubQ+X"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GBcRgQZuEYa5mFJK0cIyoQ0dGFZmPXA+zs31jYL6j33doA/nJeYdEOR3WBHBWGY3Lmmh9yN+XbLfA/MktkbpoLuhHk7T+DeMIFB9uiye6PtUq4OBNdBKUNWjqwAoU0Jg6DmYVVPCtpkexgFNzbJ5/jARJk6y12cGkxdyTLbd4LqPH/IzZylHiV49C13iFXzTDbUGoZkJOxBDgwl9HOOzqK4DAZObdVWMSI26LYvU2/DkyocTHqGHN1gWMPBIsKk1euOt6BnN1YYWoKNMGcUJPjwhDoYzaqe5NAipsKv08RjscIu9gQcPUKHA5tZ+No/5FIabKR5jRUqZ2ZKiiLlNvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q6ZCAQZjrf23K0qnN/0FK9RQcdEaSqS+ztf2Q+Wea+Q=;
+ b=OBP1fPvb3HvccqrLbv8Iru/6OIkGQCBrXjRFOPj7D2cwY0akSrr9QX0TC9TN3JOz6J9MqydFgSkbVpW51EGLH6lgda0fdAhl5Wt0NOjrMs3UzIXBw0aJJvcS33flRBHnWdUY/81+6iYk681WdqLaewE27fmO7Loq581G5IytHRuZ4XnV+Blh9+1cn+8Xo2TzqnE56iUf+Li6QEgoRLusCrIvIDNnYJ+RjV1dC4TTnjhawiuxxt5Q0WA9iAjYCqN+NCfxx0bjB8tfgT6JJP/zZp83uXPYL6SbZjJHpDraSF/6ENc25vnPHUNWs3xMOObZrcvgQBgjI881h/BFT9C5XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q6ZCAQZjrf23K0qnN/0FK9RQcdEaSqS+ztf2Q+Wea+Q=;
+ b=QrzubQ+XfqyQEq3uMiwGSuqq5Tga9iClnm6HeT4X100YqtVlWTCRLfGHdkaXAYcfq3/yYdYNHLV3Yv5mIdihayh70rCish2ccyrzRiK1g3q+scPuyTtuyDSyYNnRv1TCGAOZzOgoYsHuP3qGKjKPguDlVappAvJA9Oa9DLGrmwuFGkfr6/Q1fBN3MYc8KflttvJYkXRTJYqvY7FgtqtvgEaok0Li+ocmgai2uPtQiEkmDVQaCNljVQppVG1CZ0arHXmeR19JJHmued9+qY6SQ95gRwgwK8yUAAj1Z2MNnOA7D/YNA/4SdCVuKbjCYuNgOOyFTzEpWcGj8LtLbgrT8A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by GVXPR04MB10561.eurprd04.prod.outlook.com (2603:10a6:150:227::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.14; Mon, 9 Feb
+ 2026 16:48:20 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9587.010; Mon, 9 Feb 2026
+ 16:48:19 +0000
+Date: Mon, 9 Feb 2026 11:48:09 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	dmaengine@vger.kernel.org,
+	Xiaochuang Mao <maoxiaochuan@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>,
+	linux-mips@vger.kernel.org, jeffbai@aosc.io
+Subject: Re: [PATCH v2 1/4] dmaengine: loongson: New directory for Loongson
+ DMA controllers drivers
+Message-ID: <aYoPyWS7o27G-AHh@lizhi-Precision-Tower-5810>
+References: <cover.1770605931.git.zhoubinbin@loongson.cn>
+ <d62faafc653efab602c8d6bfcdcee1cb217171b9.1770605931.git.zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d62faafc653efab602c8d6bfcdcee1cb217171b9.1770605931.git.zhoubinbin@loongson.cn>
+X-ClientProxiedBy: BY5PR13CA0001.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::14) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arch, mm: consolidate empty_zero_page
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>, Borislav Petkov <bp@alien8.de>,
- Brian Cain <bcain@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- "David S. Miller" <davem@davemloft.net>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- David Hildenbrand <david@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>,
- Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Magnus Lindholm <linmag7@gmail.com>, Matt Turner <mattst88@gmail.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>,
- Palmer Dabbelt <palmer@dabbelt.com>, Richard Weinberger <richard@nod.at>,
- Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>,
- Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Vineet Gupta <vgupta@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-mm@kvack.org, x86@kernel.org
-References: <20260209144058.2092871-1-rppt@kernel.org>
- <20260209144058.2092871-4-rppt@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20260209144058.2092871-4-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|GVXPR04MB10561:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ab0b3a6-dedf-46ef-ff1a-08de67fb07aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|52116014|366016|19092799006|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zgULMXwN4GiCeKOxuQZ3HmT8JKc0vAPxhbajuo3nYI7l7mqaDbrBMhSpJ0Ky?=
+ =?us-ascii?Q?5jsTzVbnJCRw5/fuNPdIV96kcf/2sG4zKyiC9ju1Uis4z9UXFuZV0yVigxwD?=
+ =?us-ascii?Q?JRN6aK3fbKq1pB51kBK7xKsztU5e6MSmIfQlvYuuklwcsRAaOHr4cVqJMqZ5?=
+ =?us-ascii?Q?Oy0N/EX3Bl1XyOV53s3DqsgrcnelffMSy8FBOT5K5KtOTB7XxEF/ScnbTYN+?=
+ =?us-ascii?Q?9J/l+y1g01R67/mAQO/yrhBXdM6dhuwAPIeV12xe0jT1pbtmOGa3UyF4jm8q?=
+ =?us-ascii?Q?1trGQazJRCJoU+QQfwf/9TouvxVg4fFzu9g+N8pVAFbuoOuAVltq46KVWeMY?=
+ =?us-ascii?Q?LKajYCnGvCInduvRf8C9WBz5+lq1V+EBYO9Lz8Y70rvd/iFx9fNrhdWPUHHm?=
+ =?us-ascii?Q?bMJnqk0ESuQcnp3QDIcG8R1EzMT0kIg8ouXXa5lO24Lh1KoDDim0z4sXMLfZ?=
+ =?us-ascii?Q?n2pdqB4+Qso++xBrnvN+I/DMdEusYJ/kmj9dGuMwEm8KMTVjncDe7FsIGFTs?=
+ =?us-ascii?Q?MyA8Hohqy2fDDvViOOsxuWNMJ1KCfu8qqF8j6RM+uP0PLD5cU2pNJVvUh/RJ?=
+ =?us-ascii?Q?T6WHezJHn6BdM6P/Ixwmd+TU558nP0BnO5SxW69fxQKDj4H8EGd9z7ktg79k?=
+ =?us-ascii?Q?qcDgWcOzFiAis/zY/3H5LClUXSkPZLYlmev2N76s8nuX+BFIglite+HUYKhf?=
+ =?us-ascii?Q?SsBfMjjB9ocqxp0x7eOh9lcgulS30csCM91ZNcLtLD4X6VI8UQ6eYkSV1cVG?=
+ =?us-ascii?Q?xjyNVCbsbB3Lkv5jInF/pBPk65qf/kVBK34plY2Lx8GpBH9+WLiOAUjajc+/?=
+ =?us-ascii?Q?sU3eSVGwoupjP9qhHavUAzMq+yDYcXSH8x4WCnPRBgylZMUE3NeqY2hoXVmF?=
+ =?us-ascii?Q?bS3t9B2hO8gidyYKL2/1tPOrUY5R+M36M9VIYLkfQmp2LaMspp5Vp/D437lN?=
+ =?us-ascii?Q?RKvzpuLiCv9ERc0fRSiaatMv3662pB0g2VE/3iWSpkKDK/t0eQWMJXtBLfMy?=
+ =?us-ascii?Q?eeHzyViCQ38SO3lec1VygpcNekVNnEi5uQWwsUnn7HlyZMop09id3KHzrCZ+?=
+ =?us-ascii?Q?UoZvSdCngNfYIIenF7OJBHxtoIzR6qjEdrQl0wNKJzoaacXTuAGN29lKACBU?=
+ =?us-ascii?Q?lEr7zOJxduisdScbvKYq58MpDPGyEp6C/yNf3GswbveDO3sPb4NDIVnf0t+T?=
+ =?us-ascii?Q?Wrvou0HAUh8NeU0ivBzvRkpCbk6UnG8TzRw+WNIRS/sDJok5UOXPRLiEUyC9?=
+ =?us-ascii?Q?WjrhtJ9DPudEhnmxilrxuX+wwpaTyIiuD32LA+EApeXwNjcz8ZwSFuA5tq/H?=
+ =?us-ascii?Q?gyKS3Z/TPPaf2dr1N7N7g6BIYVOf9jzGrbqkKfCvGAPwBYs5qlcpUwBRDHWj?=
+ =?us-ascii?Q?JrEVROGaB+oc+mik8gvOKS50BjMxhNRFZIO/8p0HVwNe7QIEzEk0Utw1pkqw?=
+ =?us-ascii?Q?q4gihtRzkh9EJoJkmdaAXI5lQaAUSBZtq4b2dFxEydWQjkwh0vPEtqD0x00S?=
+ =?us-ascii?Q?/NY//n09knAYPPR3M+PJ9Cf/Q6gg/DQk8QqTUBZjpHdlKMfSC3s8ITpMrcra?=
+ =?us-ascii?Q?VdAfmoJyNwXGlY2/18aPxQ8Sj0GZsEWOCQFFc7XEw7SjERX5q0HlOqBNonxm?=
+ =?us-ascii?Q?fg06oObTpIZYu9IAHhNECXg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(52116014)(366016)(19092799006)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dGDpjeYD1Fe2fbzM+KwdmRwoseHrfWufX18ZNUYgrj2qHB3w2Tw9jmxoekaG?=
+ =?us-ascii?Q?60w5+w3X1Qdx+XJ16pt13S5n5FCCuNJRmv9PrdcTtzorX0aa7kJAADa4EnHe?=
+ =?us-ascii?Q?fA5FtJRFTuOKEr8M+wM9b+TUyheJPzLsqH4qB+VZdW4/i+TvZAvCUFiMdryE?=
+ =?us-ascii?Q?/rcyCQ3u4OsBg582bsJ+LP6fFX71xAGlWkAcxMnthOwhiQCHQpuwgC0ZTHSO?=
+ =?us-ascii?Q?ixCM5l8PrruNarEcQCnGOhSE4MmaPICC6DWmeBsi3fGP4OJgG069llWrVX2P?=
+ =?us-ascii?Q?cxz2VROIczYrydrOp474XKVtDpfd34Pfft5l8QJdET/LCmG8ORX+08cC2QtC?=
+ =?us-ascii?Q?23QDWXQ8FM/A+oQ6vNmkEXiVrxhkU9j8da08Q8mmUHUgh5+7L9ac6zW4jek2?=
+ =?us-ascii?Q?vze6xZazGS1Dh2lZVCgKGsCsVKqO3mKWh+zJWMXNzccg5GXmYwgfdunFZ69X?=
+ =?us-ascii?Q?hKzQ8q8iY9LGlMDapVAeY+hlrb1tP4HC5DexSANi+2CMCb6QFe9eGovdltDj?=
+ =?us-ascii?Q?9gwxqnRlJBVI+e0fDr5t5E9BXwjlSPhFuuo2okOqwnsMQZ3WTGYM6lk8EY/7?=
+ =?us-ascii?Q?BDHr5KJM66pz+iazpdSCRXX93XxBOtjfgpBIaJOzj4JaI53hN81U2URkpyk7?=
+ =?us-ascii?Q?Uo37F68HcV6QVdoVs1RTEXNCB8q3nxi9wgeXdnUV1GYcotEU1XyFiozZ8fv/?=
+ =?us-ascii?Q?fLwu6n4fbI/O3ApmoQlr3E7vVhA/ET6AGNUx0OZ1qTlmtGnUK00p35jkQu7z?=
+ =?us-ascii?Q?h2eefmZT96naKv6dq+rWRZWQcwJmyZDXnS1WLz1iQithT78fadiPWDNMyJW9?=
+ =?us-ascii?Q?zhBUbj9RYoNd6keVAF19+IEQxdGSH8xyCVNlfEy2bjLwUeI5QqLhxOrL9z0W?=
+ =?us-ascii?Q?L022qLMh5swLBeEiYtTWPPyuStyskdYMYVLe6Z+cPzm701r+CQZBlZVDVcfo?=
+ =?us-ascii?Q?GQTG8OlA35q5vJi8m2hYh/TOss1truUi3bOJBWRTxMhDbIXMKR15C4DbGA4L?=
+ =?us-ascii?Q?fuMaNvoWtuhsdjYos6E4d2PHxmNzt1lcnNFbYSO/kSZePmWecpcWLZguhbDm?=
+ =?us-ascii?Q?tjHMa9qMeu2h7G7aSpLQVOI0LRp4fXVhsyuX8KdKBew6m/bFHwjUlMtMzHT5?=
+ =?us-ascii?Q?GBaS5nTR9sRovdfPoCClGxNz2g+S2G72j9T/kbEOs289zBJVkZOeeRZ28Fyx?=
+ =?us-ascii?Q?4egVsLGzdD2ghTZV7x2kVv033tf1HWWkXwI9ajcvX5rjh9ihKWZb2915IDq3?=
+ =?us-ascii?Q?sC6KyeiTc6XaLplxfqBr8wa+hyQfoKY3B9v78MRvlaHbzidxEyuq0LYS/K8D?=
+ =?us-ascii?Q?ciLWfFzyMIRezDGDO2hP4A7idaIUeIOXOn/4TPHqSk84GBjFaJXDb3gek3NJ?=
+ =?us-ascii?Q?dXhdo+uJumf4wg6Hb9ah6F9PM30p/KreYwm1Trmk21LJuYvl4eezuY+1TkPm?=
+ =?us-ascii?Q?gkfisQil69kmlRaiJUWi5WACSEVTASgkHpYROg7BRehT0YtQ1PfY74yxjfP/?=
+ =?us-ascii?Q?c0v7lG+V+3/OohH9a9i/CxtU1Ce5GVfYuJ81j9Cxp9S2WSEjeEnxINoPDUHI?=
+ =?us-ascii?Q?buleKOFPXCKfGid0GW8BgPGtq/mwxoFzPEIUN89CdnNtDc7uFjDzfDOEWUiJ?=
+ =?us-ascii?Q?J8/W31VX6HUaVO0+PAbzRs1wFs+17PaiLTgI1aCeVHywDzmvkvqgUxYkAksK?=
+ =?us-ascii?Q?q3Q+iz3d9Jez6ywrsDXsjjhGBSWibJgBrCXFwiRA9UcuV6EvKwQ0nWIZg965?=
+ =?us-ascii?Q?TrJKcwuyCg=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab0b3a6-dedf-46ef-ff1a-08de67fb07aa
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2026 16:48:19.8528
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: heogAK2OqCWn27cvpRhfc+P80276rA2tWPUxn5CdRJ+o/S1QpeG+DFGClbP8IeIujMKDe/Ys8A9+OLLvaOXRUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10561
 
-On 2/9/26 06:40, Mike Rapoport wrote:
->  arch/x86/include/asm/pgtable.h            |  8 --------
->  arch/x86/kernel/head_32.S                 |  4 ----
->  arch/x86/kernel/head_64.S                 |  7 -------
+On Mon, Feb 09, 2026 at 11:04:18AM +0800, Binbin Zhou wrote:
+> Gather the Loongson DMA controllers under drivers/dma/loongson/
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  MAINTAINERS                                   |  3 +-
+>  drivers/dma/Kconfig                           | 25 ++---------------
+>  drivers/dma/Makefile                          |  3 +-
+>  drivers/dma/loongson/Kconfig                  | 28 +++++++++++++++++++
+>  drivers/dma/loongson/Makefile                 |  3 ++
+>  .../dma/{ => loongson}/loongson1-apb-dma.c    |  4 +--
+>  .../dma/{ => loongson}/loongson2-apb-dma.c    |  4 +--
+>  7 files changed, 40 insertions(+), 30 deletions(-)
+>  create mode 100644 drivers/dma/loongson/Kconfig
+>  create mode 100644 drivers/dma/loongson/Makefile
+>  rename drivers/dma/{ => loongson}/loongson1-apb-dma.c (99%)
+>  rename drivers/dma/{ => loongson}/loongson2-apb-dma.c (99%)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f630328ca6ae..27f77b68d596 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14777,7 +14777,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
+>  L:	dmaengine@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+> -F:	drivers/dma/loongson2-apb-dma.c
+> +F:	drivers/dma/loongson/loongson2-apb-dma.c
+>
+>  LOONGSON LS2X I2C DRIVER
+>  M:	Binbin Zhou <zhoubinbin@loongson.cn>
+> @@ -17515,6 +17515,7 @@ F:	arch/mips/boot/dts/loongson/loongson1*
+>  F:	arch/mips/configs/loongson1_defconfig
+>  F:	arch/mips/loongson32/
+>  F:	drivers/*/*loongson1*
+> +F:	drivers/dma/loongson/loongson1-apb-dma.c
+>  F:	drivers/mtd/nand/raw/loongson-nand-controller.c
+>  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-loongson1.c
+>  F:	sound/soc/loongson/loongson1_ac97.c
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 66cda7cc9f7a..1b84c5b11654 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -376,29 +376,6 @@ config K3_DMA
+>  	  Support the DMA engine for Hisilicon K3 platform
+>  	  devices.
+>
+> -config LOONGSON1_APB_DMA
+> -	tristate "Loongson1 APB DMA support"
+> -	depends on MACH_LOONGSON32 || COMPILE_TEST
+> -	select DMA_ENGINE
+> -	select DMA_VIRTUAL_CHANNELS
+> -	help
+> -	  This selects support for the APB DMA controller in Loongson1 SoCs,
+> -	  which is required by Loongson1 NAND and audio support.
+> -
+> -config LOONGSON2_APB_DMA
+> -	tristate "Loongson2 APB DMA support"
+> -	depends on LOONGARCH || COMPILE_TEST
+> -	select DMA_ENGINE
+> -	select DMA_VIRTUAL_CHANNELS
+> -	help
+> -	  Support for the Loongson2 APB DMA controller driver. The
+> -	  DMA controller is having single DMA channel which can be
+> -	  configured for different peripherals like audio, nand, sdio
+> -	  etc which is in APB bus.
+> -
+> -	  This DMA controller transfers data from memory to peripheral fifo.
+> -	  It does not support memory to memory data transfer.
+> -
+>  config LPC18XX_DMAMUX
+>  	bool "NXP LPC18xx/43xx DMA MUX for PL080"
+>  	depends on ARCH_LPC18XX || COMPILE_TEST
+> @@ -774,6 +751,8 @@ source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
+>
+>  source "drivers/dma/lgm/Kconfig"
+>
+> +source "drivers/dma/loongson/Kconfig"
+> +
+>  source "drivers/dma/stm32/Kconfig"
+>
+>  # clients
+> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> index a54d7688392b..a1c73415b79f 100644
+> --- a/drivers/dma/Makefile
+> +++ b/drivers/dma/Makefile
+> @@ -49,8 +49,6 @@ obj-$(CONFIG_INTEL_IDMA64) += idma64.o
+>  obj-$(CONFIG_INTEL_IOATDMA) += ioat/
+>  obj-y += idxd/
+>  obj-$(CONFIG_K3_DMA) += k3dma.o
+> -obj-$(CONFIG_LOONGSON1_APB_DMA) += loongson1-apb-dma.o
+> -obj-$(CONFIG_LOONGSON2_APB_DMA) += loongson2-apb-dma.o
+>  obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
+>  obj-$(CONFIG_LPC32XX_DMAMUX) += lpc32xx-dmamux.o
+>  obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
+> @@ -88,6 +86,7 @@ obj-$(CONFIG_INTEL_LDMA) += lgm/
+>
+>  obj-y += amd/
+>  obj-y += mediatek/
+> +obj-y += loongson/
 
-Thanks for doing this, Mike. This is definitely one of those cross-arch
-warts that's been there forever. It's great to see it cleaned up.
+keep alphabet order
 
-For the x86 bits:
-
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Frank
+>  obj-y += qcom/
+>  obj-y += stm32/
+>  obj-y += ti/
+> diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kconfig
+> new file mode 100644
+> index 000000000000..9dbdaef5a59f
+> --- /dev/null
+> +++ b/drivers/dma/loongson/Kconfig
+> @@ -0,0 +1,28 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Loongson DMA controllers drivers
+> +#
+> +if MACH_LOONGSON32 || MACH_LOONGSON64 || COMPILE_TEST
+> +
+> +config LOONGSON1_APB_DMA
+> +	tristate "Loongson1 APB DMA support"
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	help
+> +	  This selects support for the APB DMA controller in Loongson1 SoCs,
+> +	  which is required by Loongson1 NAND and audio support.
+> +
+> +config LOONGSON2_APB_DMA
+> +	tristate "Loongson2 APB DMA support"
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	help
+> +	  Support for the Loongson2 APB DMA controller driver. The
+> +	  DMA controller is having single DMA channel which can be
+> +	  configured for different peripherals like audio, nand, sdio
+> +	  etc which is in APB bus.
+> +
+> +	  This DMA controller transfers data from memory to peripheral fifo.
+> +	  It does not support memory to memory data transfer.
+> +
+> +endif
+> diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Makefile
+> new file mode 100644
+> index 000000000000..6cdd08065e92
+> --- /dev/null
+> +++ b/drivers/dma/loongson/Makefile
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_LOONGSON1_APB_DMA) += loongson1-apb-dma.o
+> +obj-$(CONFIG_LOONGSON2_APB_DMA) += loongson2-apb-dma.o
+> diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/loongson/loongson1-apb-dma.c
+> similarity index 99%
+> rename from drivers/dma/loongson1-apb-dma.c
+> rename to drivers/dma/loongson/loongson1-apb-dma.c
+> index 255fe7eca212..e99247cf90c1 100644
+> --- a/drivers/dma/loongson1-apb-dma.c
+> +++ b/drivers/dma/loongson/loongson1-apb-dma.c
+> @@ -16,8 +16,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>
+> -#include "dmaengine.h"
+> -#include "virt-dma.h"
+> +#include "../dmaengine.h"
+> +#include "../virt-dma.h"
+>
+>  /* Loongson-1 DMA Control Register */
+>  #define LS1X_DMA_CTRL		0x0
+> diff --git a/drivers/dma/loongson2-apb-dma.c b/drivers/dma/loongson/loongson2-apb-dma.c
+> similarity index 99%
+> rename from drivers/dma/loongson2-apb-dma.c
+> rename to drivers/dma/loongson/loongson2-apb-dma.c
+> index c528f02b9f84..0cb607595d04 100644
+> --- a/drivers/dma/loongson2-apb-dma.c
+> +++ b/drivers/dma/loongson/loongson2-apb-dma.c
+> @@ -17,8 +17,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+>
+> -#include "dmaengine.h"
+> -#include "virt-dma.h"
+> +#include "../dmaengine.h"
+> +#include "../virt-dma.h"
+>
+>  /* Global Configuration Register */
+>  #define LDMA_ORDER_ERG		0x0
+> --
+> 2.52.0
+>
