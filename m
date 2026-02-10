@@ -1,346 +1,255 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584072F851
-	for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 04:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770696329; cv=none; b=frYRGTpTWx7zO7TH6lWIJPTLACMN+3sFadF9RWisCFPbLcMPYcLiKoQqfeYtJvfSj9XEvJgwfbrGYqNRZOhTZA5nDD7Rn7c5Krr0eAW6ZSSRkbyMl/XafrneWx0jr1dK/ibEsYci+3OgCFpTEg4kDulkT4dShwKy+CwFQpbvTtc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770696329; c=relaxed/simple;
-	bh=0ry7lb9MTn4jHFR15JG4kLiV3I/j4KHAaoVmcURAKHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pfemQLTSFkdgF7cCniVb/ZzJCacY/J6jYAEhZ0zPsakcXiaX43AAobWF7skojlUwUaXVDEW2U+WPklC9mKhbSdvDoxXg8dGI5d++0DWNVcIP8JWkfSxxs7Tc3vIJAQeZtRJS28SzH6rXaPztAwXtz11nKvwiXeZYOaqKFQb2sRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=aWWxIEBn; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0A174C14
+	for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 06:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770703347; cv=pass; b=T1EJr5+/AH36vvBSGKVUQhiM7N1r9nxwITZMtYP3C02/v35Is3QyLV+hQnAmNOyjCqLvrWuPTF3Y69C+MJqJfznujDZthHxhO8rRhK3grE/a8B3KzuWv2d3+PArOvjBtWAcWHKws2+TKlhZ6hEjvF1fKLK2OPdhmR9BNoc3B7Uw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770703347; c=relaxed/simple;
+	bh=SBGRUJE27Sh9oreSO41Rbst3WAb+KnZAYy13PKJYLsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SOIRFG3E+jP1PCySWq3S4J3OvY/Zvl2LILqm3CRYQeCOnTZ1lzEbMG/9SJDl+S5svoUO6UgdDavhbbyg1v5pQkPIkMV0jAxU+SbR59U7WCQvnMZw09HvWpLJSIM+mLTMyvUMGumSumYx+bJb+2/ciXI2q4+XXEy8E2Glua6NCrM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gpu6TW+X; arc=pass smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="aWWxIEBn"
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id C4F7826344
-	for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 04:05:20 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id D1D3E3E91A;
-	Tue, 10 Feb 2026 04:05:12 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id A3678400AA;
-	Tue, 10 Feb 2026 04:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1770696310; bh=0ry7lb9MTn4jHFR15JG4kLiV3I/j4KHAaoVmcURAKHE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aWWxIEBnWNuoB/Ei/zW2QCmB7zimf7EOztaC8QxkKZjGWMTJPH9xj0uNVrTaI7iyf
-	 TP0SJ4y03nnYmK35DiI/5WKvXXqq6C49ngGdONToEws1UKUNX867e48aJGi6cHpccG
-	 FlkDxcmMRhzvVoSnXCPoa3JOeZvrsCv6+r2M79AU=
-Received: from [127.0.0.1] (unknown [117.151.82.151])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 7EBE040D09;
-	Tue, 10 Feb 2026 04:05:06 +0000 (UTC)
-Message-ID: <7559856f-ad4d-49e9-bb24-051e3eed30a4@aosc.io>
-Date: Tue, 10 Feb 2026 12:05:04 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gpu6TW+X"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b883787268fso591847966b.3
+        for <loongarch@lists.linux.dev>; Mon, 09 Feb 2026 22:02:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770703345; cv=none;
+        d=google.com; s=arc-20240605;
+        b=E9sX3+ZihqXokte5GaKYA+bkY4M7LOUv9oB2HrTcEQmzup47aYJYDy73uLyVg0LZTd
+         zlT9v7rHZDjekHremDC266f4SALdhrdib+I0pugOv2woBSWsOmhSZfQZRs6Od4Drr45N
+         9Dw0g4GW9ID2Oce50CQYnpQx3URzoeC9ucZvEHac5ppbeER8SbCMGWQEvUS2zS76T51F
+         aSkd+7EUQ6XI3l3FKyX6zPRAR4i7PUO9CceUzAZYsWkLQP/eixy6r/ORw3DvRcaRiedh
+         Sc8ZyRmniuEqh98WfO8rnETl+CcASEOW4/+lSIzitRo9qbJ/Fs4w7Fb4WW1vlmXz3pz0
+         hWMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=wdfQoNjE0A1x2BNxyqiUYamnhnBwjzLKcZCZB7uzUFA=;
+        fh=WxZ5dk9tTPEM2gv3bUfxGQ8BCUwweJOH9tn+ri9OaRQ=;
+        b=Tox4NTNYOiup2b+Tza6a0/10pys0EE8J9Y3EcSKjcWuamRoRAZF7vVLWc1BBmXOuf9
+         FkgI5k2XkfUOIXbteNj33/J6PN0n7Cbf1S1TzHKK3JcjWguku3v9JiC0wGC+kq4JaGGJ
+         IH62yoY8QWQmlKbXpyu+tzbRE7UHGPZKQ9nuDNJS5yG/aWlrLPUUJ9Grx5BRgjKFjD4p
+         t+tLAnjUPt8i71JYIcI0PD1F1iODeJJyJSyaHBXzUx3uk78OdYORc7QRbl92gdYD3S4l
+         YGEqKDi51ppolgZJYQ4jK1prz6LUD50Q7k7yFz2vClyLYwdV11RGGFaBf5UE71bb3tsW
+         X+MQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770703345; x=1771308145; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wdfQoNjE0A1x2BNxyqiUYamnhnBwjzLKcZCZB7uzUFA=;
+        b=Gpu6TW+XAAEaA+mKJIugdK3A3UbmrlgN6ABVcyX5MaC5hN1Tw6rojdYtEAQFjTzCn4
+         Eyb5lBXp64c49cM2cyoRmDy48shOtyh2wDewgRZ3Ucn5VPbpmze9er7ST+gnPUr7LvSW
+         4ojdiydczmMXNPS26q6AfxAToddhyraBM1S9/qy4x3Aso2wo7xOLjoUw1PmAm9o5F0ck
+         QXIiE4gkxejfZkrnEQF1VGHnxUbmlJbvMY01ytH1QfK/p83/7XahQQRViV9kvwoQvojD
+         AYEU+kBuwoutXSOghXXEIz9EtH7zafEjhYql65j7zz7bkj422Q93BcerLstGefQ0EZnu
+         +0JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770703345; x=1771308145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wdfQoNjE0A1x2BNxyqiUYamnhnBwjzLKcZCZB7uzUFA=;
+        b=oMkdfDoWARZwppzVhE6PG3ZK5hqn5za79cM+2Mq6s38vI6RxuGXTL9/QcJpvcljxiG
+         shPuGz1WnWmp3DFvcxmh6a1/jj6abFov7/Y/gaQPvuPDSOSIaC8Y3pFsfZcFh7tRivts
+         i/OvjxkWkDA2X+ntrU3h5RIeBtEirZR9O/gHHKtIOzQPIgmztvSCGZfzPAm+gMIF8VSU
+         cnbcZwhAvzoXTtXJfR70qPqaKltG585CXPxPb6KzLbprc0JJZjo3PkND5qoGWIr1e8n1
+         lHFAaRGtwwgw0vD/2uraquMwZC3uaMOGjODRvLY01WhLzESN8gYFIFmFMDpLMOTA9l3u
+         muig==
+X-Forwarded-Encrypted: i=1; AJvYcCU8S7mczKCTUgCotUEZDwZKtWKVv4aujf5EwEDginXF4ECanQybIbOXfBxdPJVWCt3NdWiHPkwBreU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwYsO1BH7YrwnbYcdJvDbHutKAQrJ9E4EOt0ROBp3FnHqs+LCvI
+	OJCtj2gxdp7oQklfH/1/d2dYy2vpp/8ONfEUE8tl00xjd+qxCBf6BRL2YahGUvOKUj0339IlMlu
+	yciBFM9yyUFurMBwg3iAnSPc3f0NjyR0=
+X-Gm-Gg: AZuq6aJ4WgJtgqo3LVv1hHdBuV9LCt25aZeOwtUKGk5GNtAkjyqAv0HhRMFoAyIfGVe
+	HJv16jn+xYomXhT+9IdL5b+84LDYE/J4bh6lw70SeoC8L75B2jVr4MIvsf1oGpPWSjA8DuMmxzy
+	e1+tF0Y9rgwTkCplMSl0EuQ9eJ2jX8AV+oAW5jWTiBlyKA+bC4kUfWdxvq8pI9uXaxU9Dp0R0ek
+	6NvuFZuofkibBOSRLBlKM4mZXEfbRzn51x7WHkuStl2vSVtmY7sipD6sqQs/J1YcB2apauFyuOm
+	0Hrs/3pO
+X-Received: by 2002:a17:907:3dac:b0:b87:965:9078 with SMTP id
+ a640c23a62f3a-b8edf14c39emr680666066b.7.1770703344240; Mon, 09 Feb 2026
+ 22:02:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] KVM: Add KVM_GET_REG_LIST ioctl for LoongArch
-Content-Language: en-US-large, en-US
-To: Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260205051822.1318253-1-liushuyu@aosc.io>
- <aa35c7a6-6361-9f83-a726-89d7deff8560@loongson.cn>
- <c4be7e68-6e51-4f2b-8a51-bef658a8ac4a@aosc.io>
- <f4ba7538-e413-d8c8-d4b6-7c8686c4aec6@loongson.cn>
-From: liushuyu <liushuyu@aosc.io>
-In-Reply-To: <f4ba7538-e413-d8c8-d4b6-7c8686c4aec6@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A3678400AA
-X-Spamd-Result: default: False [-0.22 / 10.00];
-	BAYES_HAM(-0.12)[66.67%];
-	MIME_GOOD(-0.10)[text/plain];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	LOCAL_OUTBOUND(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail20.mymailcheap.com:rdns,mail20.mymailcheap.com:helo,aosc.io:email,aosc.io:from_smtp,aosc.io:mid,aosc.io:from_mime]
-X-Rspamd-Action: no action
-X-Rspamd-Server: nf2.mymailcheap.com
+References: <cover.1770605931.git.zhoubinbin@loongson.cn> <36cc977f0746095196354b631f0b158365208a0e.1770605931.git.zhoubinbin@loongson.cn>
+ <20260210030346.GA2406064-robh@kernel.org>
+In-Reply-To: <20260210030346.GA2406064-robh@kernel.org>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 10 Feb 2026 14:02:11 +0800
+X-Gm-Features: AZwV_QiqIfn7ZPx0x3V31tbQ_jX8n-lqXvq0szv7fUMgSdTmEq3QSZCxI0OoBUg
+Message-ID: <CAMpQs4JcnkmVM6B2rCQnFsdnMs9XnoV3EwO+0yA9XdXvVQg8cQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: dmaengine: Add Loongson Multi-Channel
+ DMA controller
+To: Rob Herring <robh@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	dmaengine@vger.kernel.org, Xiaochuang Mao <maoxiaochuan@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, Keguang Zhang <keguang.zhang@gmail.com>, 
+	linux-mips@vger.kernel.org, jeffbai@aosc.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bibo,
+Hi Rob:
+
+Thanks for your reply.
+
+On Tue, Feb 10, 2026 at 11:03=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
 >
-> On 2026/2/10 上午11:23, liushuyu wrote:
->> Hi Bibo,
->>
->>>
->>>
->>> On 2026/2/5 下午1:18, Zixing Liu wrote:
->>>> This ioctl can be used by the userspace applications to determine
->>>> which
->>>> (special) registers are get/set-able in a meaningful way.
->>>>
->>>> This can be very useful for cross-platform VMMs so that they do not
->>>> have
->>>> to hardcode register indices for each supported architectures.
->>>>
->>>> Signed-off-by: Zixing Liu <liushuyu@aosc.io>
->>>> ---
->>>>    Documentation/virt/kvm/api.rst |   2 +-
->>>>    arch/loongarch/kvm/vcpu.c      | 120
->>>> +++++++++++++++++++++++++++++++++
->>>>    2 files changed, 121 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/virt/kvm/api.rst
->>>> b/Documentation/virt/kvm/api.rst
->>>> index 01a3abef8abb..f46dd8be282f 100644
->>>> --- a/Documentation/virt/kvm/api.rst
->>>> +++ b/Documentation/virt/kvm/api.rst
->>>> @@ -3603,7 +3603,7 @@ VCPU matching underlying host.
->>>>    ---------------------
->>>>      :Capability: basic
->>>> -:Architectures: arm64, mips, riscv, x86 (if KVM_CAP_ONE_REG)
->>>> +:Architectures: arm64, loongarch, mips, riscv, x86 (if
->>>> KVM_CAP_ONE_REG)
->>>>    :Type: vcpu ioctl
->>>>    :Parameters: struct kvm_reg_list (in/out)
->>>>    :Returns: 0 on success; -1 on error
->>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>> index 656b954c1134..de02e409ae39 100644
->>>> --- a/arch/loongarch/kvm/vcpu.c
->>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>> @@ -5,6 +5,7 @@
->>>>      #include <linux/kvm_host.h>
->>>>    #include <asm/fpu.h>
->>>> +#include <asm/kvm_host.h>
->>>>    #include <asm/lbt.h>
->>>>    #include <asm/loongarch.h>
->>>>    #include <asm/setup.h>
->>>> @@ -14,6 +15,8 @@
->>>>    #define CREATE_TRACE_POINTS
->>>>    #include "trace.h"
->>>>    +#define NUM_LBT_REGS 6
->>>> +
->>>>    const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
->>>>        KVM_GENERIC_VCPU_STATS(),
->>>>        STATS_DESC_COUNTER(VCPU, int_exits),
->>>> @@ -1186,6 +1189,105 @@ static int kvm_loongarch_vcpu_set_attr(struct
->>>> kvm_vcpu *vcpu,
->>>>        return ret;
->>>>    }
->>>>    +static int kvm_loongarch_walk_csrs(struct kvm_vcpu *vcpu, u64
->>>> __user *uindices)
->>>> +{
->>>> +    unsigned int i, count;
->>>> +    const unsigned int csrs_to_save[] = {
->>>> +        LOONGARCH_CSR_CRMD,      LOONGARCH_CSR_PRMD,
->>>> +        LOONGARCH_CSR_EUEN,      LOONGARCH_CSR_MISC,
->>>> +        LOONGARCH_CSR_ECFG,      LOONGARCH_CSR_ESTAT,
->>>> +        LOONGARCH_CSR_ERA,      LOONGARCH_CSR_BADV,
->>>> +        LOONGARCH_CSR_BADI,      LOONGARCH_CSR_EENTRY,
->>>> +        LOONGARCH_CSR_TLBIDX,      LOONGARCH_CSR_TLBEHI,
->>>> +        LOONGARCH_CSR_TLBELO0,      LOONGARCH_CSR_TLBELO1,
->>>> +        LOONGARCH_CSR_ASID,      LOONGARCH_CSR_PGDL,
->>>> +        LOONGARCH_CSR_PGDH,      LOONGARCH_CSR_PGD,
->>>> +        LOONGARCH_CSR_PWCTL0,      LOONGARCH_CSR_PWCTL1,
->>>> +        LOONGARCH_CSR_STLBPGSIZE, LOONGARCH_CSR_RVACFG,
->>>> +        LOONGARCH_CSR_CPUID,      LOONGARCH_CSR_PRCFG1,
->>>> +        LOONGARCH_CSR_PRCFG2,      LOONGARCH_CSR_PRCFG3,
->>>> +        LOONGARCH_CSR_KS0,      LOONGARCH_CSR_KS1,
->>>> +        LOONGARCH_CSR_KS2,      LOONGARCH_CSR_KS3,
->>>> +        LOONGARCH_CSR_KS4,      LOONGARCH_CSR_KS5,
->>>> +        LOONGARCH_CSR_KS6,      LOONGARCH_CSR_KS7,
->>>> +        LOONGARCH_CSR_TMID,      LOONGARCH_CSR_CNTC,
->>>> +        LOONGARCH_CSR_TINTCLR,      LOONGARCH_CSR_LLBCTL,
->>>> +        LOONGARCH_CSR_IMPCTL1,      LOONGARCH_CSR_IMPCTL2,
->>>> +        LOONGARCH_CSR_TLBRENTRY,  LOONGARCH_CSR_TLBRBADV,
->>>> +        LOONGARCH_CSR_TLBRERA,      LOONGARCH_CSR_TLBRSAVE,
->>>> +        LOONGARCH_CSR_TLBRELO0,      LOONGARCH_CSR_TLBRELO1,
->>>> +        LOONGARCH_CSR_TLBREHI,      LOONGARCH_CSR_TLBRPRMD,
->>>> +        LOONGARCH_CSR_DMWIN0,      LOONGARCH_CSR_DMWIN1,
->>>> +        LOONGARCH_CSR_DMWIN2,      LOONGARCH_CSR_DMWIN3,
->>>> +        LOONGARCH_CSR_TVAL,      LOONGARCH_CSR_TCFG,
->>>> +    };
->>> this increases much kernel stack size usage :)
->>>
->>> Please wait a moment, I am considering how to cleanup code about CSR
->>> registers.
->> Okay.
->>> And KVM_GET_REG_LIST is not so urgent, else there is
->>> KVM_read_from_REG_LIST/KVM_write_from_REG_LIST ioctl commands to
->>> access registers in batch mode.
->>>
->> Adding KVM_GET_REG_LIST is not urgent. However, unlike
->> KVM_read_from_REG_LIST and KVM_write_from_REG_LIST, KVM_GET_REG_LIST
->> serves a different purpose.
->>
->> The KVM_GET_REG_LIST ioctl lets user-space VMMs determine the number of
->> get/set-able registers (via KVM_GET_ONE_REG/KVM_SET_ONE_REG) and their
->> register IDs. User-space VMMs use this ioctl so they don't have to
->> hardcode a register ID table for each architecture.
-> In theory it is so, I only know QEMU VMM now, is there other VMMs
-> which does not use hardcoded register ID for different architecture?
-> Which one if there is actually.
-There is https://github.com/firecracker-microvm/firecracker (from
-Amazon), which uses https://github.com/rust-vmm/kvm as the VMM library
-(which uses the KVM_GET_REG_LIST ioctl to determine how many registers
-to save).
-> There is some potential issues by my knowledge such as:
-> 1. How to solve the compatible issue if KVM_GET_REG_LIST does not
-> support? 
-I agree this could be an issue for LoongArch as we are trying to add
-this ioctl very late. I am guessing we either tell the user that you
-will need to use Linux 7.1 or something for this to work; or, for older
-kernel versions, we have to resort to embedding a table in the
-user-space VMM (and maybe remove it after a few years). For other
-architectures, they implemented it somewhat early and did not have this
-issue.
-> 2. How to solve dependency between registers? Dependency should be
-> solved in VMM or KVM hypervisr. 
-If the dependency issue can be solved by simply re-ordering the register
-IDs in the list returned to the user space, we can help the user space
-VMM by sorting the list to the correct order when the kernel-side is
-walking the CSR list (for instance, put the registers that require other
-registers to be saved last). If that is not the case, we will need to
-add a paragraph to the KVM documentation explaining how to properly
-interpret the list returned by this ioctl.
+> On Mon, Feb 09, 2026 at 11:04:20AM +0800, Binbin Zhou wrote:
+> > The Loongson-2K0300/Loongson-2K3000 have built-in multi-channel DMA
+> > controllers, which are similar except for some of the register offsets
+> > and number of channels.
+> >
+> > Obviously, this is quite different from the APB DMA controller used in
+> > the Loongson-2K0500/Loongson-2K1000, such as the latter being a
+> > single-channel DMA controller.
+> >
+> > To avoid cluttering a single dt-binding file, add a new yaml file.
+> >
+> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > ---
+> >  .../bindings/dma/loongson,ls2k0300-dma.yaml   | 78 +++++++++++++++++++
+> >  MAINTAINERS                                   |  3 +-
+> >  2 files changed, 80 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2k=
+0300-dma.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/loongson,ls2k0300-dm=
+a.yaml b/Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
+> > new file mode 100644
+> > index 000000000000..77e5df47ec01
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
+> > @@ -0,0 +1,78 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/dma/loongson,ls2k0300-dma.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Looongson-2 Multi-Channel DMA controller
+> > +
+> > +description:
+> > +  The Loongson-2 Multi-Channel DMA controller is used for transferring=
+ data
+> > +  between system memory and the peripherals on the APB bus.
+> > +
+> > +maintainers:
+> > +  - Binbin Zhou <zhoubinbin@loongson.cn>
+> > +
+> > +allOf:
+> > +  - $ref: dma-controller.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - loongson,ls2k0300-dma
+> > +      - loongson,ls2k3000-dma
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 4
+> > +    maxItems: 8
 >
-> Regards
-> Bibo Mao
->>
->> I also had trouble finding information on the KVM_read_from_REG_LIST and
->> KVM_write_from_REG_LIST ioctl commands. As of commit
->> 3d29a326eba82d987a82fd59379d6d668b769965, I could not find any logic or
->> identifiers for these two ioctls.
->>
->> In some cases, KVM_GET_REG_LIST is a prerequisite for using
->> KVM_read_from_REG_LIST or KVM_write_from_REG_LIST (assuming they exist),
->> as you still need to know the register IDs to use these ioctls.
->>
->>> Regards
->>> Bibo Mao
->>>
->>>> +
->>>> +    for (i = 0, count = 0;
->>>> +         i < sizeof(csrs_to_save) / sizeof(csrs_to_save[0]); i++) {
->>>> +        const u64 reg = KVM_IOC_CSRID(i);
->>>> +        if (uindices && put_user(reg, uindices++))
->>>> +            return -EFAULT;
->>>> +        count++;
->>>> +    }
->>>> +
->>>> +    /* Skip PMU CSRs if not supported by the guest */
->>>> +    if (!kvm_guest_has_pmu(&vcpu->arch))
->>>> +        return count;
->>>> +    for (i = LOONGARCH_CSR_PERFCTRL0; i <= LOONGARCH_CSR_PERFCNTR3;
->>>> i++) {
->>>> +        const u64 reg = KVM_IOC_CSRID(i);
->>>> +        if (uindices && put_user(reg, uindices++))
->>>> +            return -EFAULT;
->>>> +        count++;
->>>> +    }
->>>> +
->>>> +    return count;
->>>> +}
->>>> +
->>>> +static unsigned long kvm_loongarch_num_regs(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +    /* +1 for the KVM_REG_LOONGARCH_COUNTER register */
->>>> +    unsigned long res =
->>>> +        kvm_loongarch_walk_csrs(vcpu, NULL) + KVM_MAX_CPUCFG_REGS
->>>> + 1;
->>>> +
->>>> +    if (kvm_guest_has_lbt(&vcpu->arch))
->>>> +        res += NUM_LBT_REGS;
->>>> +
->>>> +    return res;
->>>> +}
->>>> +
->>>> +static int kvm_loongarch_copy_reg_indices(struct kvm_vcpu *vcpu,
->>>> +                      u64 __user *uindices)
->>>> +{
->>>> +    u64 reg;
->>>> +    unsigned int i;
->>>> +
->>>> +    i = kvm_loongarch_walk_csrs(vcpu, uindices);
->>>> +    if (i < 0)
->>>> +        return i;
->>>> +    uindices += i;
->>>> +
->>>> +    for (i = 0; i < KVM_MAX_CPUCFG_REGS; i++) {
->>>> +        reg = KVM_IOC_CPUCFG(i);
->>>> +        if (put_user(reg, uindices++))
->>>> +            return -EFAULT;
->>>> +    }
->>>> +
->>>> +    reg = KVM_REG_LOONGARCH_COUNTER;
->>>> +    if (put_user(reg, uindices++))
->>>> +        return -EFAULT;
->>>> +
->>>> +    if (!kvm_guest_has_lbt(&vcpu->arch))
->>>> +        return 0;
->>>> +
->>>> +    for (i = 1; i <= NUM_LBT_REGS; i++) {
->>>> +        reg = (KVM_REG_LOONGARCH_LBT | KVM_REG_SIZE_U64 | i);
->>>> +        if (put_user(reg, uindices++))
->>>> +            return -EFAULT;
->>>> +    }
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>>    long kvm_arch_vcpu_ioctl(struct file *filp,
->>>>                 unsigned int ioctl, unsigned long arg)
->>>>    {
->>>> @@ -1251,6 +1353,24 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->>>>            r = kvm_loongarch_vcpu_set_attr(vcpu, &attr);
->>>>            break;
->>>>        }
->>>> +    case KVM_GET_REG_LIST: {
->>>> +        struct kvm_reg_list __user *user_list = argp;
->>>> +        struct kvm_reg_list reg_list;
->>>> +        unsigned n;
->>>> +
->>>> +        r = -EFAULT;
->>>> +        if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
->>>> +            break;
->>>> +        n = reg_list.n;
->>>> +        reg_list.n = kvm_loongarch_num_regs(vcpu);
->>>> +        if (copy_to_user(user_list, &reg_list, sizeof(reg_list)))
->>>> +            break;
->>>> +        r = -E2BIG;
->>>> +        if (n < reg_list.n)
->>>> +            break;
->>>> +        r = kvm_loongarch_copy_reg_indices(vcpu, user_list->reg);
->>>> +        break;
->>>> +    }
->>>>        default:
->>>>            r = -ENOIOCTLCMD;
->>>>            break;
->>>>
->>>
->> Thanks,
->> Zixing
->>
+> I'm assuming this is 1 interrupt per channel? If so, add a description
+> saying that.
+
+Yes. this part will be rewritten as:
+
+  interrupts:
+    description:
+      Should contain all of the per-channel DMA interrupts in ascending ord=
+er
+      with respect to the DMA channel index.
+    minItems: 4
+    maxItems: 8
+
 >
-Thanks,
-Zixing
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  '#dma-cells':
+> > +    const: 2
+> > +    description: |
+> > +      DMA request from clients consists of 2 cells:
+> > +        1. Channel index
+> > +        2. Transfer request factor number, If no transfer factor, use =
+0.
+> > +           The number is SoC-specific, and this should be specified wi=
+th
+> > +           relation to the device to use the DMA controller.
+> > +
+> > +  dma-channels:
+> > +    enum: [4, 8]
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - '#dma-cells'
+> > +  - dma-channels
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+> > +
+> > +    dma-controller@1612c000 {
+> > +        compatible =3D "loongson,ls2k0300-dma";
+> > +        reg =3D <0x1612c000 0xff>;
+> > +        interrupt-parent =3D <&liointc0>;
+> > +        interrupts =3D <23 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <24 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <25 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <26 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <27 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <28 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <29 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <30 IRQ_TYPE_LEVEL_HIGH>;
+> > +        clocks =3D <&clk LS2K0300_CLK_APB_GATE>;
+> > +        #dma-cells =3D <2>;
+> > +        dma-channels =3D <8>;
+> > +    };
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 27f77b68d596..d3cb541aee2a 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14772,10 +14772,11 @@ S:  Maintained
+> >  F:   Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> >  F:   drivers/gpio/gpio-loongson-64bit.c
+> >
+> > -LOONGSON-2 APB DMA DRIVER
+> > +LOONGSON-2 DMA DRIVER
+> >  M:   Binbin Zhou <zhoubinbin@loongson.cn>
+> >  L:   dmaengine@vger.kernel.org
+> >  S:   Maintained
+> > +F:   Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
+> >  F:   Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+> >  F:   drivers/dma/loongson/loongson2-apb-dma.c
+> >
+> > --
+> > 2.52.0
+> >
+
+--=20
+Thanks.
+Binbin
