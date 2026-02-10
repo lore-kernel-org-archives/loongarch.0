@@ -1,1124 +1,1039 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E75327BF4
-	for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 12:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770724959; cv=pass; b=AXrX8RRa4/u46FcNuzgd4zAvw7zSzj5wc268wY9skNe7V9aMuD7VHIu1QnASa7sHzLktSMxMwdXG02O5mnpz5BYJokIctWbEokEOJJMp7JY9QNeo0BVqWPbn38UEP0TFZKnkGCZGjjONDkMNJ2nkgb5dCOv21Gm6inx9eRCDzRI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770724959; c=relaxed/simple;
-	bh=UigD3+OqF1+MEDsJ2x11N2Ieayddz/LZ6ZxRwaRYViU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kI4BQWnC9aph0zm8U1SUxTn6ipmZ4fQlB/TkB0CKv7pzD/br9GOph9rzIWOFnWEJVE71X0X17fjzpIw99ao1NpkzyHqv6dlf+u9XtWC0NsluA9Cp3iOgjDF4sQ2oU8rHjsA10Fx6coP6sLjWtlyWInOvsA6Eppru/hjfgvcJAlk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsSVhlgI; arc=pass smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C211B4138
+	for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 12:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770726667; cv=none; b=Q3eNonT3hOdSMEkcVcn/+QUyTgGug2PBFM9LK4wiwuA6yeulkeptuhn7TZXGKx07JtLlC8EnHvTEoEMgcZKlLtNP8TQJpojc/n9Fdmykb/H6eXXl/fufaJMmLxGnHHvH2DQkhPaMzKX3YhFP0lnS6tjeK/cfEsBCQNkboNlDgns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770726667; c=relaxed/simple;
+	bh=Xxq3wzzkjB05Q8uYYamfL/NBjmUG2AdmepQq0PKr74I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=M/NEpENkclj6yQcL23kIAtlFL1ZUipcImc5yzkf0APSOy0uAXXdjPhs8CGy7kukWBBwGTWUw1nCexiMcs56YcYxHI3vrgSlKUGtjiPHGXki2GrezU8VfK6xqxFYZiVOeQgXW5Z5Vak5ec2eFOJ8XmQMAfZmTMlyUMcmHdpx16Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=U5C2G8ix; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsSVhlgI"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b885a18f620so854643366b.3
-        for <loongarch@lists.linux.dev>; Tue, 10 Feb 2026 04:02:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770724955; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KSyF6lMcC6exzi9llowteF61bRAoxfHNKNWdDJVhvAcSGa/DNGE7sjJ3sMUjSIRqRq
-         QbVrNs4UjhecfWGw+hGoSD7wNDYDt19+aeAzrVAY/NLY01u4nAAHtp+NId0FDxD+MaGH
-         4xZydpf7REhP59SkxePqmgnoiQWMuaAUEnuWrgJXvT2cW3QRskuNzrLIsrPhWRTepAKQ
-         qwnY5f4DupbkUJJIPGSn16A4B6M/ROQHh5PULn++8GfwEMS9tG92JuZgkywxC1gJuJUJ
-         g27EK288Idu7GVx3MPZ/rEQK3L68Ht5KZU1xqOG+EJJglmgKHaNpeCHzPXX3llBhEdhe
-         djXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jlobonFksXUw3edm8WG+pAaHV9pn5FXEA80gC0oc9ww=;
-        fh=wrob2KIh/QDsXqx/H6EIhCbZ1FZSLAfVn+p6ehcyOaU=;
-        b=FTX/GBnZ0lC46b2sAIpf3hsXmIZOUl5qu3iKB/t/cqBq1UwTevMidmeyX+CaF/2WLk
-         5aVb3WnZr1oUd0sB/AuVUzMnZtVu97wbJ0W+N2uO3yzYgjVShw9o737uCverkliug2Vv
-         oArvd3jKobhWhmZcAxfeCrh4DbTL4J0hWtg721bvGejhg71s+BWFQpumcQtXLXxSShT7
-         DkRAClFynENeEajBhAkmUfq/qu5r2y45aIusEAn3JM34csQF+vCyj+qW/+4fPLFc9SCg
-         XsRQzXqd0GUxdy5MetKBka+0OXJ7hF9wA9Bm6hOR/BQgDFOAlzLpO8iisKbbLVeFzAcO
-         XVjw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770724955; x=1771329755; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jlobonFksXUw3edm8WG+pAaHV9pn5FXEA80gC0oc9ww=;
-        b=CsSVhlgIaqLHfy6hxkFNLHtA2yWkacWth7u/dbOcLcWiW1KBA6pGxNxr0MBViZs305
-         IPz3sv8e4K08T/K6qxGqfPAqBfmFKr89jcJqkjT2v2ZR0GyywOU75IRu+YNbumUaPD5X
-         R+P6b9GIppR0eKIqZyPs7xofJfOtkDmfJJ904gEzNOc16KbbSfPHu/uXbfqqr4w5R4Vk
-         VJPHN/+nUF+lSpLHc7Z1IU9mPGCO+qaWj7EV6S1OpQKfDVnaZOwYeIeCrlt4yAJdj5iB
-         uyXbdkm/wL3dy0P+GcIwRMMAdWwNnzCrYBBAoL5Kx/7oF5KGa0BZPFwijMqGJ072ldQ5
-         biXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770724955; x=1771329755;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jlobonFksXUw3edm8WG+pAaHV9pn5FXEA80gC0oc9ww=;
-        b=oDanB0QKUOBmZmJaqL11muwxYn3mk60Ux8f6aSgSbK6gtLyba78oKUMi9D+j77kyK8
-         QsI4TXdZhowr4IrvtPrb2XdqJK4YCsLCgbfaEgE78CRVdwCIQchjaO26a5Wqmj59qE2Q
-         OJ4WgsVT2qo/OL8k5NyIGvNR7Ro0MMzCFnLu3hZmbp0ma8yrTySkwbF6Kaj61eFsjKoz
-         l50MM1Pk0ISPXHQd7vwTlIwRXaLZfikSKmGmnWa0twI7WuaJEgty0kaS8VT34nas+3NU
-         h1sjK2oSVkOzWMhMumwXE9KN6KYiVUUScGYReaDSU/JK6r4w0UKGmkH/eCm9kMrGbXHP
-         ecxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjUtoqAIYhHakuTxTy0y0GmM5R+zM4VJhJGjH5PYLvgm31HIo5f9rEjEsvBGMYT0VCUYTUtXFfvZI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNqBNaqfizNiYM8DNBoqaFKdcjOTW+3vyyaMF4aT01LNXI9q+z
-	o8RFn+l+zB8wcfVgrRCTUbhhj2633DTsDOwHu5wXqLMofA6qgsRW7LK1e2wWXizVptl6bQJ5WBm
-	gniQn+T9rgTlRjEw7Rb+fdRwtg0iSHG4=
-X-Gm-Gg: AZuq6aI4ZoPH7ETVderqhAXYJRGVUFfMQVdLf6ngOL+7mca3FUyloPYRFSkYlgk9asF
-	jNrBcBjEhhFcPHNudM1vb1oXsLJt8rHaV6AcVoMph8gunMcLKY4heU/rtMf7Y8sMjILtDNuwaek
-	9Zr6pIy8cvWYPHcwO5lwRik2EV9UPywOMCKFUgzvt09v3XVkJ0RkgfLWwsxC4+gXYloxjk1y/WO
-	dmtpkOYXBjHifg2yD8Mzx1/AnMF1gGDP4KGaB1V0wP1l0PMG/5+6qqua4skpHqZiMWr6q1ixRhl
-	2FCirMsUBA==
-X-Received: by 2002:a17:906:f595:b0:b83:1326:a504 with SMTP id
- a640c23a62f3a-b8f546a2f80mr118964266b.60.1770724954237; Tue, 10 Feb 2026
- 04:02:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="U5C2G8ix"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61AANZfW1198145;
+	Tue, 10 Feb 2026 12:30:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=gqBbaG
+	Il+/PAnVpCQ4wW31+BLMWwi2YpItoyyhgPEgY=; b=U5C2G8ixKGPMDBC6EVisnZ
+	AR7YkR4AR/PjLRjC9vq8Wuv8l0WtWHvU9ILALKhoLSTIdcnsdNEWwl8l7vZ6bY3v
+	4OxQrsc9zd7bdCxoTL/KjiwV03I6f5+d2pWGXJhauzQ1H2qjpsJlEdgO0U6FJ4Fm
+	PtWESlZELHWFXikcbzfD/BBS8ctxoQ3SdNb8bgjHGAoOCxyDHTQDDZ8B4QirzYau
+	iD9ZZa3EUG0plSs8cRKPAnYMyW5qNB5KEmTOlsjid7pCB6PKzTQEz/GGq6eiSWsZ
+	M3lx6BXB/UsgWw5pU2a6IRX/QCSGbveJ4M8p4+4tNZuXnykqil80bYVOQmj0Jbow
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696ut1te-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Feb 2026 12:30:27 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61A9CHYD008378;
+	Tue, 10 Feb 2026 12:30:27 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4c6g3y9aw1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Feb 2026 12:30:26 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61ACUMhU37945616
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Feb 2026 12:30:22 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56AB020040;
+	Tue, 10 Feb 2026 12:30:22 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 453D52004B;
+	Tue, 10 Feb 2026 12:30:08 +0000 (GMT)
+Received: from [9.109.204.116] (unknown [9.109.204.116])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 10 Feb 2026 12:30:08 +0000 (GMT)
+Message-ID: <50693f0c-c610-4347-86aa-40d50dc681fc@linux.ibm.com>
+Date: Tue, 10 Feb 2026 18:00:21 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1770605931.git.zhoubinbin@loongson.cn> <a0eac5b7ba0bcced9664ff64349e563da3d031b3.1770605931.git.zhoubinbin@loongson.cn>
- <aYoTtQ01VGXEW2Fu@lizhi-Precision-Tower-5810> <CAMpQs4JwDSWCXYFiPXNf1pKbYqUK+9hLXYsQsG+rQQqi_eZJwQ@mail.gmail.com>
-In-Reply-To: <CAMpQs4JwDSWCXYFiPXNf1pKbYqUK+9hLXYsQsG+rQQqi_eZJwQ@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 10 Feb 2026 20:02:21 +0800
-X-Gm-Features: AZwV_Qh19JlE9vSf5r1_Lgk0soTVFM4ClXo7_J90T1vOIasgyK6DG6AN_Q2Nd2w
-Message-ID: <CAMpQs4KSyj3HFrY0Qn_ZByekVWu3-re__6TAE=nU+uC_VfKB8w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dmaengine: loongson: New driver for the Loongson
- Multi-Channel DMA controller
-To: Frank Li <Frank.li@nxp.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	Xiaochuang Mao <maoxiaochuan@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org, jeffbai@aosc.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] crash: Exclude crash kernel memory in crash core
+To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+        tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org,
+        bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
+        rdunlap@infradead.org, pmladek@suse.com, feng.tang@linux.alibaba.com,
+        pawan.kumar.gupta@linux.intel.com, kees@kernel.org, elver@google.com,
+        arnd@arndb.de, lirongqing@baidu.com, fvdl@google.com,
+        leitao@debian.org, rppt@kernel.org, ardb@kernel.org, jbohac@suse.cz,
+        osandov@fb.com, ryan.roberts@arm.com, cfsworks@gmail.com,
+        tangyouling@kylinos.cn, ritesh.list@gmail.com, thuth@redhat.com,
+        hbathini@linux.ibm.com, eajames@linux.ibm.com, bjorn@rivosinc.com,
+        songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
+        samuel.holland@sifive.com, vishal.moola@gmail.com,
+        junhui.liu@pigmoral.tech, dwmw@amazon.co.uk, pbonzini@redhat.com,
+        thomas.lendacky@amd.com, kai.huang@intel.com, ubizjak@gmail.com,
+        coxu@redhat.com, liaoyuanhong@vivo.com, fuqiang.wang@easystack.cn,
+        brgerst@gmail.com, x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, kexec@lists.infradead.org
+References: <20260209095931.2813152-1-ruanjinjie@huawei.com>
+ <20260209095931.2813152-2-ruanjinjie@huawei.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260209095931.2813152-2-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEwMDEwMyBTYWx0ZWRfX+V6O0aJZtSyS
+ sLf1H0lB5ePDOOTVV3yDojDidqTWfypDNjk7+2swa8depV9LVc6Ci4/pX0SVSmSRgZ32/l4YbV3
+ P0fOO+zoHDrW6VrxGsOIAfdWc2uahw0JFZWLBbhf5f8xJcihjr4qLw68wGvGJBNDVmwotgpHrcp
+ JODUHPSKDNjrVuzlm2MaW8m2Kzmv7SG8OrfwPyjnOtQ5EUwzuWKAAvsFGaqy8I8LTAe54OHdCA1
+ vcUJ+etBgYo9jVU8frZPYSu57DP97SCcVFGKiPwqMnFzjM50WjnETPkRdf/EkWdQ7Mpre/WgRTe
+ dWHJaTg7oqDLTxkEhcBGQkEgmht5fHKUkXILQFwlONWyBvuSPp0PVhqQvAnK6eFAVtK99cJZ7LB
+ OdwGvsgID7K5IQWHpfaDEheaMGAx9khVW9WufLDvrkB4GZn2VGhrLtRrUODqyGHJpx5x/3emTC6
+ o0X+C1sb2qu6Ag1rUXQ==
+X-Proofpoint-ORIG-GUID: eeKw8mLZBRjpv3fT7fLHiImOUPPHzv0U
+X-Proofpoint-GUID: 7aO9lz2FFcGtLMmIBBoD1Ue_Mkhb18vD
+X-Authority-Analysis: v=2.4 cv=O+Y0fR9W c=1 sm=1 tr=0 ts=698b24e4 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=i0EeH86SAAAA:8 a=Er6CJE1HOtQne2_zMaUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-10_01,2026-02-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 adultscore=0
+ malwarescore=0 impostorscore=0 bulkscore=0 clxscore=1011 spamscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602100103
 
-Hi Frank:
+Hello Jinjie,
 
-On Tue, Feb 10, 2026 at 3:41=E2=80=AFPM Binbin Zhou <zhoubb.aaron@gmail.com=
-> wrote:
+On 09/02/26 15:29, Jinjie Ruan wrote:
+> The exclude of crashk_res, crashk_low_res and crashk_cma memory
+> are almost identical across different architectures, handling them
+> in the crash core would eliminate a lot of duplication, so do
+> them in the common code.
 >
-> Hi Frank:
+> And move the size calculation (and the realloc if needed) into the
+> generic crash core so that:
 >
-> Thanks for your reply.
+> - New CMA regions or future crash-memory types can automatically
+>    accounted for in crash core;
 >
-> On Tue, Feb 10, 2026 at 1:05=E2=80=AFAM Frank Li <Frank.li@nxp.com> wrote=
-:
-> >
-> > On Mon, Feb 09, 2026 at 11:04:55AM +0800, Binbin Zhou wrote:
-> > > This DMA controller appears in Loongson-2K0300 and Loongson-2K3000.
-> > >
-> > > It is a chain multi-channel controller that enables data transfers fr=
-om
-> > > memory to memory, device to memory, and memory to device, as well as
-> > > channel prioritization configurable through the channel configuration
-> > > registers.
-> > >
-> > > In addition, there are slight differences between Loongson-2K0300 and
-> > > Loongson-2K3000, such as channel register offsets and the number of
-> > > channels.
-> > >
-> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > > ---
-> > >  MAINTAINERS                                  |   1 +
-> > >  drivers/dma/loongson/Kconfig                 |  10 +
-> > >  drivers/dma/loongson/Makefile                |   1 +
-> > >  drivers/dma/loongson/loongson2-apb-cmc-dma.c | 736 +++++++++++++++++=
-++
-> > >  4 files changed, 748 insertions(+)
-> > >  create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index d3cb541aee2a..61a39070d7a0 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -14778,6 +14778,7 @@ L:    dmaengine@vger.kernel.org
-> > >  S:   Maintained
-> > >  F:   Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yam=
-l
-> > >  F:   Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-> > > +F:   drivers/dma/loongson/loongson2-apb-cmc-dma.c
-> > >  F:   drivers/dma/loongson/loongson2-apb-dma.c
-> > >
-> > >  LOONGSON LS2X I2C DRIVER
-> > > diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kcon=
-fig
-> > > index 9dbdaef5a59f..28b3daeed4e3 100644
-> > > --- a/drivers/dma/loongson/Kconfig
-> > > +++ b/drivers/dma/loongson/Kconfig
-> > > @@ -25,4 +25,14 @@ config LOONGSON2_APB_DMA
-> > >         This DMA controller transfers data from memory to peripheral =
-fifo.
-> > >         It does not support memory to memory data transfer.
-> > >
-> > > +config LOONGSON2_APB_CMC_DMA
-> > > +     tristate "Loongson2 Chain Multi-Channel DMA support"
-> > > +     select DMA_ENGINE
-> > > +     select DMA_VIRTUAL_CHANNELS
-> > > +     help
-> > > +       Support for the Loongson Chain Multi-Channel DMA controller d=
-river.
-> > > +       It is discovered on the Loongson-2K chip (Loongson-2K0300/Loo=
-ngson-2K3000),
-> > > +       which has 4/8 channels internally, enabling bidirectional dat=
-a transfer
-> > > +       between devices and memory.
-> > > +
-> > >  endif
-> > > diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Mak=
-efile
-> > > index 6cdd08065e92..48c19781e729 100644
-> > > --- a/drivers/dma/loongson/Makefile
-> > > +++ b/drivers/dma/loongson/Makefile
-> > > @@ -1,3 +1,4 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > >  obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
-> > >  obj-$(CONFIG_LOONGSON2_APB_DMA) +=3D loongson2-apb-dma.o
-> > > +obj-$(CONFIG_LOONGSON2_APB_CMC_DMA) +=3D loongson2-apb-cmc-dma.o
-> > > diff --git a/drivers/dma/loongson/loongson2-apb-cmc-dma.c b/drivers/d=
-ma/loongson/loongson2-apb-cmc-dma.c
-> > > new file mode 100644
-> > > index 000000000000..f598ad095686
-> > > --- /dev/null
-> > > +++ b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
-> > > @@ -0,0 +1,736 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +/*
-> > > + * Looongson-2 Multi-Channel DMA Controller driver
-> > > + *
-> > > + * Copyright (C) 2024-2026 Loongson Technology Corporation Limited
-> > > + */
-> > > +
-> > > +#include <linux/acpi.h>
-> > > +#include <linux/acpi_dma.h>
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/dma-mapping.h>
-> > > +#include <linux/dmapool.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_dma.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > > +#include "../dmaengine.h"
-> > > +#include "../virt-dma.h"
-> > > +
-> > > +#define LOONGSON2_CMCDMA_ISR         0x0     /* DMA Interrupt Status=
- Register */
-> > > +#define LOONGSON2_CMCDMA_IFCR                0x4     /* DMA Interrup=
-t Flag Clear Register */
-> > > +#define LOONGSON2_CMCDMA_CCR         0x8     /* DMA Channel Configur=
-ation Register */
-> > > +#define LOONGSON2_CMCDMA_CNDTR               0xc     /* DMA Channel =
-Transmit Count Register */
-> > > +#define LOONGSON2_CMCDMA_CPAR                0x10    /* DMA Channel =
-Peripheral Address Register */
-> > > +#define LOONGSON2_CMCDMA_CMAR                0x14    /* DMA Channel =
-Memory Address Register */
-> > > +
-> > > +/* Bitfields of DMA interrupt status register */
-> > > +#define LOONGSON2_CMCDMA_TCI         BIT(1) /* Transfer Complete Int=
-errupt */
-> > > +#define LOONGSON2_CMCDMA_HTI         BIT(2) /* Half Transfer Interru=
-pt */
-> > > +#define LOONGSON2_CMCDMA_TEI         BIT(3) /* Transfer Error Interr=
-upt */
-> > > +
-> > > +#define LOONGSON2_CMCDMA_MASKI               \
-> > > +     (LOONGSON2_CMCDMA_TCI | LOONGSON2_CMCDMA_HTI | LOONGSON2_CMCDMA=
-_TEI)
-> > > +
-> > > +/* Bitfields of DMA channel x Configuration Register */
-> > > +#define LOONGSON2_CMCDMA_CCR_EN              BIT(0) /* Stream Enable=
- */
-> > > +#define LOONGSON2_CMCDMA_CCR_TCIE    BIT(1) /* Transfer Complete Int=
-errupt Enable */
-> > > +#define LOONGSON2_CMCDMA_CCR_HTIE    BIT(2) /* Half Transfer Complet=
-e Interrupt Enable */
-> > > +#define LOONGSON2_CMCDMA_CCR_TEIE    BIT(3) /* Transfer Error Interr=
-upt Enable */
-> > > +#define LOONGSON2_CMCDMA_CCR_DIR     BIT(4) /* Data Transfer Directi=
-on */
-> > > +#define LOONGSON2_CMCDMA_CCR_CIRC    BIT(5) /* Circular mode */
-> > > +#define LOONGSON2_CMCDMA_CCR_PINC    BIT(6) /* Peripheral increment =
-mode */
-> > > +#define LOONGSON2_CMCDMA_CCR_MINC    BIT(7) /* Memory increment mode=
- */
-> > > +#define LOONGSON2_CMCDMA_CCR_PSIZE_MASK      GENMASK(9, 8)
-> > > +#define LOONGSON2_CMCDMA_CCR_MSIZE_MASK      GENMASK(11, 10)
-> > > +#define LOONGSON2_CMCDMA_CCR_PL_MASK GENMASK(13, 12)
-> > > +#define LOONGSON2_CMCDMA_CCR_M2M     BIT(14)
-> > > +
-> > > +#define LOONGSON2_CMCDMA_CCR_CFG_MASK        \
-> > > +     (LOONGSON2_CMCDMA_CCR_PINC | LOONGSON2_CMCDMA_CCR_MINC | LOONGS=
-ON2_CMCDMA_CCR_PL_MASK)
-> > > +
-> > > +#define LOONGSON2_CMCDMA_CCR_IRQ_MASK        \
-> > > +     (LOONGSON2_CMCDMA_CCR_TCIE | LOONGSON2_CMCDMA_CCR_HTIE | LOONGS=
-ON2_CMCDMA_CCR_TEIE)
-> > > +
-> > > +#define LOONGSON2_CMCDMA_STREAM_MASK \
-> > > +     (LOONGSON2_CMCDMA_CCR_CFG_MASK | LOONGSON2_CMCDMA_CCR_IRQ_MASK)
-> > > +
-> > > +#define LOONGSON2_CMCDMA_BUSWIDTHS   (BIT(DMA_SLAVE_BUSWIDTH_1_BYTE)=
- | \
-> > > +                                      BIT(DMA_SLAVE_BUSWIDTH_2_BYTES=
-) | \
-> > > +                                      BIT(DMA_SLAVE_BUSWIDTH_4_BYTES=
-))
-> > > +
-> > > +enum loongson2_cmc_dma_width {
-> > > +     LOONGSON2_CMCDMA_BYTE,
-> > > +     LOONGSON2_CMCDMA_HALF_WORD,
-> > > +     LOONGSON2_CMCDMA_WORD,
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_chan_reg {
-> > > +     u32 ccr;
-> > > +     u32 cndtr;
-> > > +     u32 cpar;
-> > > +     u32 cmar;
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_sg_req {
-> > > +     u32 len;
-> > > +     struct loongson2_cmc_dma_chan_reg chan_reg;
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_desc {
-> > > +     struct virt_dma_desc vdesc;
-> > > +     bool cyclic;
-> > > +     u32 num_sgs;
-> > > +     struct loongson2_cmc_dma_sg_req sg_req[] __counted_by(num_sgs);
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_chan {
-> > > +     struct virt_dma_chan vchan;
-> > > +     struct dma_slave_config dma_sconfig;
-> > > +     struct loongson2_cmc_dma_desc *desc;
-> > > +     u32 id;
-> > > +     u32 irq;
-> > > +     u32 next_sg;
-> > > +     struct loongson2_cmc_dma_chan_reg chan_reg;
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_config {
-> > > +     u32 max_channels;
-> > > +     u32 chan_reg_offset;
-> > > +};
-> > > +
-> > > +struct loongson2_cmc_dma_dev {
-> > > +     struct dma_device ddev;
-> > > +     struct clk *dma_clk;
-> > > +     void __iomem *base;
-> > > +     u32 nr_channels;
-> > > +     u32 chan_reg_offset;
-> > > +     struct loongson2_cmc_dma_chan chan[] __counted_by(nr_channels);
-> > > +};
-> > > +
-> > > +static const struct loongson2_cmc_dma_config ls2k0300_cmc_dma_config=
- =3D {
-> > > +     .max_channels =3D 8,
-> > > +     .chan_reg_offset =3D 0x14,
-> > > +};
-> > > +
-> > > +static const struct loongson2_cmc_dma_config ls2k3000_cmc_dma_config=
- =3D {
-> > > +     .max_channels =3D 4,
-> > > +     .chan_reg_offset =3D 0x18,
-> > > +};
-> > > +
-> > > +static struct loongson2_cmc_dma_dev *lmdma_get_dev(struct loongson2_=
-cmc_dma_chan *lchan)
-> > > +{
-> > > +     return container_of(lchan->vchan.chan.device, struct loongson2_=
-cmc_dma_dev, ddev);
-> > > +}
-> > > +
-> > > +static struct loongson2_cmc_dma_chan *to_lmdma_chan(struct dma_chan =
-*chan)
-> > > +{
-> > > +     return container_of(chan, struct loongson2_cmc_dma_chan, vchan.=
-chan);
-> > > +}
-> > > +
-> > > +static struct loongson2_cmc_dma_desc *to_lmdma_desc(struct virt_dma_=
-desc *vdesc)
-> > > +{
-> > > +     return container_of(vdesc, struct loongson2_cmc_dma_desc, vdesc=
-);
-> > > +}
-> > > +
-> > > +static struct device *chan2dev(struct loongson2_cmc_dma_chan *lchan)
-> > > +{
-> > > +     return &lchan->vchan.chan.dev->device;
-> > > +}
-> > > +
-> > > +static u32 loongson2_cmc_dma_read(struct loongson2_cmc_dma_dev *ldde=
-v, u32 reg, u32 id)
-> > > +{
-> > > +     return readl(lddev->base + (reg + lddev->chan_reg_offset * id))=
-;
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_write(struct loongson2_cmc_dma_dev *ld=
-dev, u32 reg, u32 id, u32 val)
-> > > +{
-> > > +     writel(val, lddev->base + (reg + lddev->chan_reg_offset * id));
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_get_width(struct loongson2_cmc_dma_chan=
- *lchan,
-> > > +                                    enum dma_slave_buswidth width)
-> > > +{
-> > > +     switch (width) {
-> > > +     case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> > > +             return LOONGSON2_CMCDMA_BYTE;
-> > > +     case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> > > +             return LOONGSON2_CMCDMA_HALF_WORD;
-> > > +     case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> > > +             return LOONGSON2_CMCDMA_WORD;
-> >
-> > is ffs() helper in case your hardware support more buswidth in future?
+> - Each architecture no longer has to play whack-a-mole with
+>    its private array size.
 >
-> It seems there's no need for us to do this.
-> The data width setting bit in the DMA channel configuration register
-> only has two bits (LOONGSON2_CMCDMA_CCR_PSIZE_MASK). The bitmask
-> values are: 8-bit/16-bit/32-bit/reserved.
-
-Sorry, I checked again, the ffs() helper can make the code cleaner:
-
-static int loongson2_cmc_dma_get_width(enum dma_slave_buswidth width)
-{
-        switch (width) {
-        case DMA_SLAVE_BUSWIDTH_1_BYTE:
-        case DMA_SLAVE_BUSWIDTH_2_BYTES:
-        case DMA_SLAVE_BUSWIDTH_4_BYTES:
-                return ffs(width) - 1;
-        default:
-                return -EINVAL;
-        }
-}
-
-And the enum loongson2_cmc_dma_width{ } can be dropped.
-
-> >
-> > > +     default:
-> > > +             dev_err(chan2dev(lchan), "Dma bus width not supported\n=
-");
-> > > +             return -EINVAL;
-> > > +     }
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_slave_config(struct dma_chan *chan, str=
-uct dma_slave_config *config)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +
-> > > +     memcpy(&lchan->dma_sconfig, config, sizeof(*config));
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_irq_clear(struct loongson2_cmc_dma_cha=
-n *lchan, u32 flags)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     u32 ifcr;
-> > > +
-> > > +     ifcr =3D flags << (4 * lchan->id);
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_IFCR, 0, ifcr);
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_stop(struct loongson2_cmc_dma_chan *lc=
-han)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     u32 ccr;
-> > > +
-> > > +     ccr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lch=
-an->id);
-> > > +     ccr &=3D ~(LOONGSON2_CMCDMA_CCR_IRQ_MASK | LOONGSON2_CMCDMA_CCR=
-_EN);
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id,=
- ccr);
-> > > +
-> > > +     loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_MASKI);
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_terminate_all(struct dma_chan *chan)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     unsigned long flags;
-> > > +
-> > > +     LIST_HEAD(head);
-> > > +
-> > > +     spin_lock_irqsave(&lchan->vchan.lock, flags);
-> > > +     if (lchan->desc) {
-> > > +             vchan_terminate_vdesc(&lchan->desc->vdesc);
-> > > +             loongson2_cmc_dma_stop(lchan);
-> > > +             lchan->desc =3D NULL;
-> > > +     }
-> > > +     vchan_get_all_descriptors(&lchan->vchan, &head);
-> > > +     spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> > > +
-> > > +     vchan_dma_desc_free_list(&lchan->vchan, &head);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_synchronize(struct dma_chan *chan)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +
-> > > +     vchan_synchronize(&lchan->vchan);
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_start_transfer(struct loongson2_cmc_dm=
-a_chan *lchan)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     struct loongson2_cmc_dma_sg_req *sg_req;
-> > > +     struct loongson2_cmc_dma_chan_reg *reg;
-> > > +     struct virt_dma_desc *vdesc;
-> > > +
-> > > +     loongson2_cmc_dma_stop(lchan);
-> > > +
-> > > +     if (!lchan->desc) {
-> > > +             vdesc =3D vchan_next_desc(&lchan->vchan);
-> > > +             if (!vdesc)
-> > > +                     return;
-> > > +
-> > > +             list_del(&vdesc->node);
-> > > +             lchan->desc =3D to_lmdma_desc(vdesc);
-> > > +             lchan->next_sg =3D 0;
-> > > +     }
-> > > +
-> > > +     if (lchan->next_sg =3D=3D lchan->desc->num_sgs)
-> > > +             lchan->next_sg =3D 0;
-> > > +
-> > > +     sg_req =3D &lchan->desc->sg_req[lchan->next_sg];
-> > > +     reg =3D &sg_req->chan_reg;
-> > > +
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id,=
- reg->ccr);
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CNDTR, lchan->i=
-d, reg->cndtr);
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CPAR, lchan->id=
-, reg->cpar);
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CMAR, lchan->id=
-, reg->cmar);
-> > > +
-> > > +     lchan->next_sg++;
-> > > +
-> > > +     /* Start DMA */
-> > > +     reg->ccr |=3D LOONGSON2_CMCDMA_CCR_EN;
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id,=
- reg->ccr);
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_configure_next_sg(struct loongson2_cmc=
-_dma_chan *lchan)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     struct loongson2_cmc_dma_sg_req *sg_req;
-> > > +     u32 ccr, id =3D lchan->id;
-> > > +
-> > > +     if (lchan->next_sg =3D=3D lchan->desc->num_sgs)
-> > > +             lchan->next_sg =3D 0;
-> > > +
-> > > +     /* stop to update mem addr */
-> > > +     ccr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, id)=
-;
-> > > +     ccr &=3D ~LOONGSON2_CMCDMA_CCR_EN;
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, id, ccr);
-> > > +
-> > > +     sg_req =3D &lchan->desc->sg_req[lchan->next_sg];
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CMAR, id, sg_re=
-q->chan_reg.cmar);
-> > > +
-> > > +     /* start transition */
-> > > +     ccr |=3D LOONGSON2_CMCDMA_CCR_EN;
-> > > +     loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, id, ccr);
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_handle_chan_done(struct loongson2_cmc_=
-dma_chan *lchan)
-> > > +{
-> > > +     if (!lchan->desc)
-> > > +             return;
-> > > +
-> > > +     if (lchan->desc->cyclic) {
-> > > +             vchan_cyclic_callback(&lchan->desc->vdesc);
-> > > +             /* LOONGSON2_CMCDMA_CCR_CIRC mode don't need update reg=
-ister */
-> > > +             if (lchan->desc->num_sgs =3D=3D 1)
-> > > +                     return;
-> > > +             loongson2_cmc_dma_configure_next_sg(lchan);
-> > > +             lchan->next_sg++;
-> > > +     } else {
-> > > +             if (lchan->next_sg =3D=3D lchan->desc->num_sgs) {
-> > > +                     vchan_cookie_complete(&lchan->desc->vdesc);
-> > > +                     lchan->desc =3D NULL;
-> > > +             }
-> > > +             loongson2_cmc_dma_start_transfer(lchan);
-> > > +     }
-> > > +}
-> > > +
-> > > +static irqreturn_t loongson2_cmc_dma_chan_irq(int irq, void *devid)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D devid;
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     u32 ists, status, scr;
-> > > +
-> > > +     spin_lock(&lchan->vchan.lock);
-> > > +
-> > > +     ists =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_ISR, 0)=
-;
-> > > +     scr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lch=
-an->id);
-> > > +
-> > > +     status =3D (ists >> (4 * lchan->id)) & LOONGSON2_CMCDMA_MASKI;
-> > > +     status &=3D scr;
-> > > +
-> > > +     if (status & LOONGSON2_CMCDMA_TCI)
-> > > +             loongson2_cmc_dma_handle_chan_done(lchan);
-> > > +
-> > > +     if (status & LOONGSON2_CMCDMA_HTI)
-> > > +             loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_HTI=
-);
-> > > +
-> > > +     if (status & LOONGSON2_CMCDMA_TEI)
-> > > +             dev_err(chan2dev(lchan), "DMA Transform Error\n");
-> > > +
-> > > +     loongson2_cmc_dma_irq_clear(lchan, status);
-> >
-> > irq clear should before loongson2_cmc_dma_handle_chan_done() incase you
-> > missed irq, if loongson2_cmc_dma_handle_chan_done() trigger new irq bef=
-ore
-> > your call irq_cler().
-
-Yes, this part should be refracted, how about the following code:
-
-        spin_lock(&lchan->vchan.lock);
-
-        ccr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lchan->=
-id);
-        ists =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_ISR, 0);
-        status =3D (ists >> (4 * lchan->id)) & LOONGSON2_CMCDMA_MASKI;
-
-        if (status & LOONGSON2_CMCDMA_TCI) {
-                loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_TCI);
-                if (ccr & LOONGSON2_CMCDMA_CCR_TCIE)
-                        loongson2_cmc_dma_handle_chan_done(lchan);
-                status &=3D ~LOONGSON2_CMCDMA_TCI;
-        }
-
-        if (status & LOONGSON2_CMCDMA_HTI) {
-                loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_HTI);
-                status &=3D ~LOONGSON2_CMCDMA_HTI;
-        }
-
-        if (status & LOONGSON2_CMCDMA_TEI) {
-                loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_HTI);
-                dev_err(chan2dev(lchan), "DMA Transform Error\n");
-                if (!(ccr & LOONGSON2_CMCDMA_CCR_EN))
-                        dev_err(chan2dev(lchan), "chan disabled by HW\n");
-        }
-
-        spin_unlock(&lchan->vchan.lock);
-
-> >
-> > > +
-> > > +     spin_unlock(&lchan->vchan.lock);
-> > > +
-> > > +     return IRQ_HANDLED;
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_issue_pending(struct dma_chan *chan)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     unsigned long flags;
-> > > +
-> > > +     spin_lock_irqsave(&lchan->vchan.lock, flags);
-> > > +     if (vchan_issue_pending(&lchan->vchan) && !lchan->desc) {
-> > > +             dev_dbg(chan2dev(lchan), "vchan %pK: issued\n", &lchan-=
->vchan);
-> > > +             loongson2_cmc_dma_start_transfer(lchan);
-> > > +     }
-> > > +     spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_set_xfer_param(struct loongson2_cmc_dma=
-_chan *lchan,
-> > > +                                         enum dma_transfer_direction=
- direction,
-> > > +                                         enum dma_slave_buswidth *bu=
-swidth, u32 buf_len)
-> > > +{
-> > > +     struct dma_slave_config sconfig =3D lchan->dma_sconfig;
-> > > +     int dev_width;
-> > > +     u32 ccr;
-> > > +
-> > > +     switch (direction) {
-> > > +     case DMA_MEM_TO_DEV:
-> > > +             dev_width =3D loongson2_cmc_dma_get_width(lchan, sconfi=
-g.dst_addr_width);
-> > > +             if (dev_width < 0)
-> > > +                     return dev_width;
-> > > +             lchan->chan_reg.cpar =3D sconfig.dst_addr;
-> > > +             ccr =3D LOONGSON2_CMCDMA_CCR_DIR;
-> > > +             *buswidth =3D sconfig.dst_addr_width;
-> > > +             break;
-> > > +     case DMA_DEV_TO_MEM:
-> > > +             dev_width =3D loongson2_cmc_dma_get_width(lchan, sconfi=
-g.src_addr_width);
-> > > +             if (dev_width < 0)
-> > > +                     return dev_width;
-> > > +             lchan->chan_reg.cpar =3D sconfig.src_addr;
-> > > +             ccr =3D LOONGSON2_CMCDMA_CCR_MINC;
-> > > +             *buswidth =3D sconfig.src_addr_width;
-> > > +             break;
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +
-> > > +     ccr |=3D FIELD_PREP(LOONGSON2_CMCDMA_CCR_PSIZE_MASK, dev_width)=
- |
-> > > +            FIELD_PREP(LOONGSON2_CMCDMA_CCR_MSIZE_MASK, dev_width);
-> > > +
-> > > +     /* Set DMA control register */
-> > > +     lchan->chan_reg.ccr &=3D ~(LOONGSON2_CMCDMA_CCR_PSIZE_MASK | LO=
-ONGSON2_CMCDMA_CCR_MSIZE_MASK);
-> > > +     lchan->chan_reg.ccr |=3D ccr;
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static struct dma_async_tx_descriptor *
-> > > +loongson2_cmc_dma_prep_slave_sg(struct dma_chan *chan, struct scatte=
-rlist *sgl, u32 sg_len,
-> > > +                             enum dma_transfer_direction direction,
-> > > +                             unsigned long flags, void *context)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     struct loongson2_cmc_dma_desc *desc;
-> > > +     enum dma_slave_buswidth buswidth;
-> > > +     struct scatterlist *sg;
-> > > +     u32 num_items, i;
-> > > +     int ret;
-> > > +
-> > > +     desc =3D kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT)=
-;
-> > > +     if (!desc)
-> > > +             return NULL;
-> > > +
-> > > +     for_each_sg(sgl, sg, sg_len, i) {
-> > > +             ret =3D loongson2_cmc_dma_set_xfer_param(lchan, directi=
-on, &buswidth, sg_dma_len(sg));
-> > > +             if (ret)
-> > > +                     return NULL;
-> > > +
-> > > +             desc->sg_req[i].len =3D sg_dma_len(sg);
-> > > +
-> > > +             num_items =3D desc->sg_req[i].len / buswidth;
-> > > +             if (num_items >=3D SZ_64K) {
-> > > +                     dev_err(chan2dev(lchan), "Number of items not s=
-upported\n");
-> > > +                     kfree(desc);
-> > > +                     return NULL;
-> >
-> > if use sg_nents_for_dma(), you can use multi sg to trasfer more than 64=
-K
-> > data.
+> To achieve the above goal, 4 architecture-specific functions are
+> introduced:
 >
-> Sorry, are you referring to sg_nents_for_len()?
-> 64K is a hardware limitation of the controller, so it seems impossible
-> to resolve it using that function, right?
+> - arch_get_system_nr_ranges() and arch_prepare_elf64_ram_headers().
+>    The 1st function pre-counts the number of memory ranges, and
+>    the 2st function fill the memory ranges into the cmem->ranges[] array,
+>    and count the actual number of ranges filled. The default implementation
+>    is consistent with arm64 and loongson.
 >
-> >
-> > > +             }
-> > > +             desc->sg_req[i].chan_reg.ccr =3D lchan->chan_reg.ccr;
-> > > +             desc->sg_req[i].chan_reg.cpar =3D lchan->chan_reg.cpar;
-> > > +             desc->sg_req[i].chan_reg.cmar =3D sg_dma_address(sg);
-> > > +             desc->sg_req[i].chan_reg.cndtr =3D num_items;
-> > > +     }
-> > > +
-> > > +     desc->num_sgs =3D sg_len;
-> > > +     desc->cyclic =3D false;
-> > > +
-> > > +     return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-> > > +}
-> > > +
-> > > +static struct dma_async_tx_descriptor *
-> > > +loongson2_cmc_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t =
-buf_addr, size_t buf_len,
-> > > +                               size_t period_len, enum dma_transfer_=
-direction direction,
-> > > +                               unsigned long flags)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     struct loongson2_cmc_dma_desc *desc;
-> > > +     enum dma_slave_buswidth buswidth;
-> > > +     u32 num_periods, num_items, i;
-> > > +     int ret;
-> > > +
-> > > +     if (unlikely(buf_len % period_len))
-> > > +             return NULL;
-> > > +
-> > > +     ret =3D loongson2_cmc_dma_set_xfer_param(lchan, direction, &bus=
-width, period_len);
-> > > +     if (ret)
-> > > +             return NULL;
-> > > +
-> > > +     num_items =3D period_len / buswidth;
-> > > +     if (num_items >=3D SZ_64K) {
-> > > +             dev_err(chan2dev(lchan), "Number of items not supported=
-\n");
-> > > +             return NULL;
-> > > +     }
-> > > +
-> > > +     /* Enable Circular mode */
-> > > +     if (buf_len =3D=3D period_len)
-> > > +             lchan->chan_reg.ccr |=3D LOONGSON2_CMCDMA_CCR_CIRC;
-> > > +
-> > > +     num_periods =3D buf_len / period_len;
-> > > +     desc =3D kzalloc(struct_size(desc, sg_req, num_periods), GFP_NO=
-WAIT);
-> > > +     if (!desc)
-> > > +             return NULL;
-> > > +
-> > > +     for (i =3D 0; i < num_periods; i++) {
-> > > +             desc->sg_req[i].len =3D period_len;
-> > > +             desc->sg_req[i].chan_reg.ccr =3D lchan->chan_reg.ccr;
-> > > +             desc->sg_req[i].chan_reg.cpar =3D lchan->chan_reg.cpar;
-> > > +             desc->sg_req[i].chan_reg.cmar =3D buf_addr;
-> > > +             desc->sg_req[i].chan_reg.cndtr =3D num_items;
-> > > +             buf_addr +=3D period_len;
-> > > +     }
-> > > +
-> > > +     desc->num_sgs =3D num_periods;
-> > > +     desc->cyclic =3D true;
-> > > +
-> > > +     return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-> > > +}
-> > > +
-> > > +static size_t loongson2_cmc_dma_desc_residue(struct loongson2_cmc_dm=
-a_chan *lchan,
-> > > +                                          struct loongson2_cmc_dma_d=
-esc *desc, u32 next_sg)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D lmdma_get_dev(lchan);
-> > > +     u32 residue, width, ndtr, ccr, i;
-> > > +
-> > > +     ccr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lch=
-an->id);
-> > > +     width =3D FIELD_GET(LOONGSON2_CMCDMA_CCR_PSIZE_MASK, ccr);
-> > > +
-> > > +     ndtr =3D loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CNDTR, =
-lchan->id);
-> > > +     residue =3D ndtr << width;
-> > > +
-> > > +     if (lchan->desc->cyclic && next_sg =3D=3D 0)
-> > > +             return residue;
-> > > +
-> > > +     for (i =3D next_sg; i < desc->num_sgs; i++)
-> > > +             residue +=3D desc->sg_req[i].len;
-> > > +
-> > > +     return residue;
-> > > +}
-> > > +
-> > > +static enum dma_status loongson2_cmc_dma_tx_status(struct dma_chan *=
-chan, dma_cookie_t cookie,
-> > > +                                                struct dma_tx_state =
-*state)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     struct virt_dma_desc *vdesc;
-> > > +     enum dma_status status;
-> > > +     unsigned long flags;
-> > > +
-> > > +     status =3D dma_cookie_status(chan, cookie, state);
-> > > +     if (status =3D=3D DMA_COMPLETE || !state)
-> > > +             return status;
-> > > +
-> > > +     spin_lock_irqsave(&lchan->vchan.lock, flags);
-> > > +     vdesc =3D vchan_find_desc(&lchan->vchan, cookie);
-> > > +     if (lchan->desc && cookie =3D=3D lchan->desc->vdesc.tx.cookie)
-> > > +             state->residue =3D loongson2_cmc_dma_desc_residue(lchan=
-, lchan->desc, lchan->next_sg);
-> > > +     else if (vdesc)
-> > > +             state->residue =3D loongson2_cmc_dma_desc_residue(lchan=
-, to_lmdma_desc(vdesc), 0);
-> > > +
-> > > +     spin_unlock_irqrestore(&lchan->vchan.lock, flags);
-> > > +
-> > > +     return status;
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_free_chan_resources(struct dma_chan *c=
-han)
-> > > +{
-> > > +     vchan_free_chan_resources(to_virt_chan(chan));
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_desc_free(struct virt_dma_desc *vdesc)
-> > > +{
-> > > +     kfree(to_lmdma_desc(vdesc));
-> > > +}
-> > > +
-> > > +static bool loongson2_cmc_dma_acpi_filter(struct dma_chan *chan, voi=
-d *param)
-> > > +{
-> > > +     struct loongson2_cmc_dma_chan *lchan =3D to_lmdma_chan(chan);
-> > > +     struct acpi_dma_spec *dma_spec =3D param;
-> > > +
-> > > +     memset(&lchan->chan_reg, 0, sizeof(struct loongson2_cmc_dma_cha=
-n_reg));
-> > > +     lchan->chan_reg.ccr =3D dma_spec->chan_id & LOONGSON2_CMCDMA_ST=
-REAM_MASK;
-> > > +
-> > > +     return true;
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_acpi_controller_register(struct loongso=
-n2_cmc_dma_dev *lddev)
-> > > +{
-> > > +     struct device *dev =3D lddev->ddev.dev;
-> > > +     struct acpi_dma_filter_info *info;
-> > > +     int ret;
-> > > +
-> > > +     if (!has_acpi_companion(dev))
-> > > +             return 0;
-> > > +
-> > > +     info =3D devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> > > +     if (!info)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     dma_cap_zero(info->dma_cap);
-> > > +     info->dma_cap =3D lddev->ddev.cap_mask;
-> > > +     info->filter_fn =3D loongson2_cmc_dma_acpi_filter;
-> > > +
-> > > +     ret =3D devm_acpi_dma_controller_register(dev, acpi_dma_simple_=
-xlate, info);
-> > > +     if (ret)
-> > > +             dev_err(dev, "could not register acpi_dma_controller\n"=
-);
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static struct dma_chan *loongson2_cmc_dma_of_xlate(struct of_phandle=
-_args *dma_spec,
-> > > +                                                struct of_dma *ofdma=
-)
-> > > +{
-> > > +     struct loongson2_cmc_dma_dev *lddev =3D ofdma->of_dma_data;
-> > > +     struct device *dev =3D lddev->ddev.dev;
-> > > +     struct loongson2_cmc_dma_chan *lchan;
-> > > +     struct dma_chan *chan;
-> > > +
-> > > +     if (dma_spec->args_count < 2)
-> > > +             return NULL;
-> > > +
-> > > +     if (dma_spec->args[0] >=3D lddev->nr_channels) {
-> > > +             dev_err(dev, "Invalid channel id\n");
-> > > +             return NULL;
-> > > +     }
-> > > +
-> > > +     lchan =3D &lddev->chan[dma_spec->args[0]];
-> > > +     chan =3D dma_get_slave_channel(&lchan->vchan.chan);
-> > > +     if (!chan) {
-> > > +             dev_err(dev, "No more channels available\n");
-> > > +             return NULL;
-> > > +     }
-> > > +
-> > > +     memset(&lchan->chan_reg, 0, sizeof(struct loongson2_cmc_dma_cha=
-n_reg));
-> > > +     lchan->chan_reg.ccr =3D dma_spec->args[1] & LOONGSON2_CMCDMA_ST=
-REAM_MASK;
-> > > +
-> > > +     return chan;
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_of_controller_register(struct loongson2=
-_cmc_dma_dev *lddev)
-> > > +{
-> > > +     struct device *dev =3D lddev->ddev.dev;
-> > > +     int ret;
-> > > +
-> > > +     if (!dev->of_node)
-> > > +             return 0;
-> > > +
-> > > +     ret =3D of_dma_controller_register(dev->of_node, loongson2_cmc_=
-dma_of_xlate, lddev);
-> > > +     if (ret)
-> > > +             dev_err(dev, "could not register of_dma_controller\n");
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int loongson2_cmc_dma_probe(struct platform_device *pdev)
-> > > +{
-> > > +     const struct loongson2_cmc_dma_config *config;
-> > > +     struct loongson2_cmc_dma_chan *lchan;
-> > > +     struct loongson2_cmc_dma_dev *lddev;
-> > > +     struct device *dev =3D &pdev->dev;
-> > > +     struct dma_device *ddev;
-> > > +     u32 nr_chans, i;
-> > > +     int ret;
-> > > +
-> > > +     config =3D (const struct loongson2_cmc_dma_config *)device_get_=
-match_data(dev);
-> > > +     if (!config)
-> > > +             return -EINVAL;
-> > > +
-> > > +     ret =3D device_property_read_u32(dev, "dma-channels", &nr_chans=
-);
-> > > +     if (ret || nr_chans > config->max_channels) {
-> > > +             dev_err(dev, "missing or invalid dma-channels property\=
-n");
-> > > +             nr_chans =3D config->max_channels;
-> > > +     }
-> > > +
-> > > +     lddev =3D devm_kzalloc(dev, struct_size(lddev, chan, nr_chans),=
- GFP_KERNEL);
-> > > +     if (!lddev)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     lddev->base =3D devm_platform_ioremap_resource(pdev, 0);
-> > > +     if (IS_ERR(lddev->base))
-> > > +             return PTR_ERR(lddev->base);
-> > > +
-> > > +     platform_set_drvdata(pdev, lddev);
-> > > +     lddev->nr_channels =3D nr_chans;
-> > > +     lddev->chan_reg_offset =3D config->chan_reg_offset;
-> > > +
-> > > +     lddev->dma_clk =3D devm_clk_get_optional_enabled(dev, NULL);
-> > > +     if (IS_ERR(lddev->dma_clk))
-> > > +             return dev_err_probe(dev, PTR_ERR(lddev->dma_clk), "Fai=
-led to get dma clock\n");
-> > > +
-> > > +     ddev =3D &lddev->ddev;
-> > > +     ddev->dev =3D dev;
-> > > +
-> > > +     dma_cap_zero(ddev->cap_mask);
-> > > +     dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-> > > +     dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
-> > > +     dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
-> > > +
-> > > +     ddev->device_free_chan_resources =3D loongson2_cmc_dma_free_cha=
-n_resources;
-> > > +     ddev->device_config =3D loongson2_cmc_dma_slave_config;
-> > > +     ddev->device_prep_slave_sg =3D loongson2_cmc_dma_prep_slave_sg;
-> > > +     ddev->device_prep_dma_cyclic =3D loongson2_cmc_dma_prep_dma_cyc=
-lic;
-> > > +     ddev->device_issue_pending =3D loongson2_cmc_dma_issue_pending;
-> > > +     ddev->device_synchronize =3D loongson2_cmc_dma_synchronize;
-> > > +     ddev->device_tx_status =3D loongson2_cmc_dma_tx_status;
-> > > +     ddev->device_terminate_all =3D loongson2_cmc_dma_terminate_all;
-> > > +
-> > > +     ddev->src_addr_widths =3D LOONGSON2_CMCDMA_BUSWIDTHS;
-> > > +     ddev->dst_addr_widths =3D LOONGSON2_CMCDMA_BUSWIDTHS;
-> > > +     ddev->directions =3D BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> > > +     INIT_LIST_HEAD(&ddev->channels);
-> >
-> > where use this 'channels' ?
+> - arch_crash_exclude_mem_range(). Realloc for powerpc. The default
+>    implementation is crash_exclude_mem_range(), and use
+>    crash_exclude_mem_range_guarded() to implement the arch version
+>    for powerpc.
 >
-> It will be used by global functions such as `dma_async_device_register()`=
-.
-> >
-> > Frank
-> > > +
-> > > +     for (i =3D 0; i < nr_chans; i++) {
-> > > +             lchan =3D &lddev->chan[i];
-> > > +
-> > > +             lchan->id =3D i;
-> > > +             lchan->vchan.desc_free =3D loongson2_cmc_dma_desc_free;
-> > > +             vchan_init(&lchan->vchan, ddev);
-> > > +     }
-> > > +
-> > > +     ret =3D dmaenginem_async_device_register(ddev);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     for (i =3D 0; i < nr_chans; i++) {
-> > > +             lchan =3D &lddev->chan[i];
-> > > +
-> > > +             lchan->irq =3D platform_get_irq(pdev, i);
-> > > +             if (lchan->irq < 0)
-> > > +                     return lchan->irq;
-> > > +
-> > > +             ret =3D devm_request_irq(dev, lchan->irq, loongson2_cmc=
-_dma_chan_irq, IRQF_SHARED,
-> > > +                                    dev_name(chan2dev(lchan)), lchan=
-);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +     }
-> > > +
-> > > +     ret =3D loongson2_cmc_dma_acpi_controller_register(lddev);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     return loongson2_cmc_dma_of_controller_register(lddev);
-> > > +}
-> > > +
-> > > +static void loongson2_cmc_dma_remove(struct platform_device *pdev)
-> > > +{
-> > > +     of_dma_controller_free(pdev->dev.of_node);
-> > > +}
-> > > +
-> > > +static const struct of_device_id loongson2_cmc_dma_of_match[] =3D {
-> > > +     { .compatible =3D "loongson,ls2k0300-dma", .data =3D &ls2k0300_=
-cmc_dma_config },
-> > > +     { .compatible =3D "loongson,ls2k3000-dma", .data =3D &ls2k3000_=
-cmc_dma_config },
-> > > +     { /* sentinel */ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, loongson2_cmc_dma_of_match);
-> > > +
-> > > +static const struct acpi_device_id loongson2_cmc_dma_acpi_match[] =
-=3D {
-> > > +     { "LOON0014", .driver_data =3D (kernel_ulong_t)&ls2k3000_cmc_dm=
-a_config },
-> > > +     { /* sentinel */ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(acpi, loongson2_cmc_dma_acpi_match);
-> > > +
-> > > +static struct platform_driver loongson2_cmc_dma_driver =3D {
-> > > +     .driver =3D {
-> > > +             .name =3D "loongson2-apb-cmc-dma",
-> > > +             .of_match_table =3D loongson2_cmc_dma_of_match,
-> > > +             .acpi_match_table =3D loongson2_cmc_dma_acpi_match,
-> > > +     },
-> > > +     .probe =3D loongson2_cmc_dma_probe,
-> > > +     .remove =3D loongson2_cmc_dma_remove,
-> > > +};
-> > > +module_platform_driver(loongson2_cmc_dma_driver);
-> > > +
-> > > +MODULE_DESCRIPTION("Looongson-2 Multi-Channel DMA Controller driver"=
-);
-> > > +MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> > > +MODULE_LICENSE("GPL");
-> > > --
-> > > 2.52.0
-> > >
+> - arch_get_crash_memory_ranges(). Get crash memory ranges for arch and
+>    the default implementation is generic across x86, arm64, riscv, and
+>    loongson by using the first two arch functions above. powerpc has its
+>    own implementation by calling get_crash_memory_ranges().
 >
-> --
-> Thanks.
-> Binbin
+> Tested on x86, arm64 and riscv with QEMU.
+>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>   arch/arm64/kernel/machine_kexec_file.c     |  47 +--------
+>   arch/loongarch/kernel/machine_kexec_file.c |  45 +-------
+>   arch/powerpc/include/asm/kexec.h           |  13 +++
+>   arch/powerpc/kexec/crash.c                 |  52 ++++++----
+>   arch/powerpc/kexec/file_load_64.c          |  17 ++-
+>   arch/powerpc/kexec/ranges.c                |  18 +---
+>   arch/riscv/include/asm/kexec.h             |  10 ++
+>   arch/riscv/kernel/machine_kexec_file.c     |  37 ++-----
+>   arch/x86/include/asm/kexec.h               |  10 ++
+>   arch/x86/kernel/crash.c                    | 104 ++-----------------
+>   include/linux/crash_core.h                 | 114 +++++++++++++++++++--
+>   kernel/crash_core.c                        |  71 +++++++++++--
+>   12 files changed, 269 insertions(+), 269 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 410060ebd86d..8a29449e992d 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -39,50 +39,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>   	return kexec_image_post_load_cleanup_default(image);
+>   }
+>   
+> -#ifdef CONFIG_CRASH_DUMP
+> -static int prepare_elf_headers(void **addr, unsigned long *sz)
+> -{
+> -	struct crash_mem *cmem;
+> -	unsigned int nr_ranges;
+> -	int ret;
+> -	u64 i;
+> -	phys_addr_t start, end;
+> -
+> -	nr_ranges = 2; /* for exclusion of crashkernel region */
+> -	for_each_mem_range(i, &start, &end)
+> -		nr_ranges++;
+> -
+> -	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> -
+> -	cmem->max_nr_ranges = nr_ranges;
+> -	cmem->nr_ranges = 0;
+> -	for_each_mem_range(i, &start, &end) {
+> -		cmem->ranges[cmem->nr_ranges].start = start;
+> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> -		cmem->nr_ranges++;
+> -	}
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> -	if (ret)
+> -		goto out;
+> -
+> -	if (crashk_low_res.end) {
+> -		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+> -		if (ret)
+> -			goto out;
+> -	}
+> -
+> -	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+> -
+> -out:
+> -	kfree(cmem);
+> -	return ret;
+> -}
+> -#endif
+> -
+>   /*
+>    * Tries to add the initrd and DTB to the image. If it is not possible to find
+>    * valid locations, this function will undo changes to the image and return non
+> @@ -109,7 +65,8 @@ int load_other_segments(struct kimage *image,
+>   	void *headers;
+>   	unsigned long headers_sz;
+>   	if (image->type == KEXEC_TYPE_CRASH) {
+> -		ret = prepare_elf_headers(&headers, &headers_sz);
+> +		ret = crash_prepare_elf64_headers(true, &headers, &headers_sz,
+> +						  NULL, NULL, NULL);
+>   		if (ret) {
+>   			pr_err("Preparing elf core header failed\n");
+>   			goto out_err;
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+> index fb57026f5f25..93555b92bbeb 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -56,48 +56,6 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
+>   }
+>   
+>   #ifdef CONFIG_CRASH_DUMP
+> -
+> -static int prepare_elf_headers(void **addr, unsigned long *sz)
+> -{
+> -	int ret, nr_ranges;
+> -	uint64_t i;
+> -	phys_addr_t start, end;
+> -	struct crash_mem *cmem;
+> -
+> -	nr_ranges = 2; /* for exclusion of crashkernel region */
+> -	for_each_mem_range(i, &start, &end)
+> -		nr_ranges++;
+> -
+> -	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> -
+> -	cmem->max_nr_ranges = nr_ranges;
+> -	cmem->nr_ranges = 0;
+> -	for_each_mem_range(i, &start, &end) {
+> -		cmem->ranges[cmem->nr_ranges].start = start;
+> -		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> -		cmem->nr_ranges++;
+> -	}
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> -	if (ret < 0)
+> -		goto out;
+> -
+> -	if (crashk_low_res.end) {
+> -		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+> -		if (ret < 0)
+> -			goto out;
+> -	}
+> -
+> -	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+> -
+> -out:
+> -	kfree(cmem);
+> -	return ret;
+> -}
+> -
+>   /*
+>    * Add the "mem=size@start" command line parameter to command line, indicating the
+>    * memory region the new kernel can use to boot into.
+> @@ -163,7 +121,8 @@ int load_other_segments(struct kimage *image,
+>   		void *headers;
+>   		unsigned long headers_sz;
+>   
+> -		ret = prepare_elf_headers(&headers, &headers_sz);
+> +		ret = crash_prepare_elf64_headers(true, &headers, &headers_sz,
+> +						  NULL, NULL, NULL);
+>   		if (ret < 0) {
+>   			pr_err("Preparing elf core header failed\n");
+>   			goto out_err;
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index bd4a6c42a5f3..ec64c26ca81a 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -123,6 +123,11 @@ static inline void kdump_cma_reserve(void) { }
+>   #endif
+>   
+>   #if defined(CONFIG_CRASH_DUMP)
+> +#include <asm/kexec_ranges.h>
+> +
+> +struct crash_mem;
+> +struct memory_notify;
+> +
+>   /*
+>    * This function is responsible for capturing register states if coming
+>    * via panic or invoking dump using sysrq-trigger.
+> @@ -147,6 +152,14 @@ unsigned int arch_crash_get_elfcorehdr_size(void);
+>   #define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
+>   #endif /* CONFIG_CRASH_HOTPLUG */
+>   
+> +int arch_crash_exclude_mem_range(struct crash_mem **mem, unsigned long long mstart,
+> +				 unsigned long long mend);
+> +#define arch_crash_exclude_mem_range arch_crash_exclude_mem_range
+> +
+> +int arch_get_crash_memory_ranges(struct crash_mem **cmem, unsigned long *nr_mem_ranges,
+> +				 struct kimage *image, struct memory_notify *mn);
+> +#define arch_get_crash_memory_ranges arch_get_crash_memory_ranges
+> +
+>   extern int crashing_cpu;
+>   extern void crash_send_ipi(void (*crash_ipi_callback)(struct pt_regs *));
+>   extern void crash_ipi_callback(struct pt_regs *regs);
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index a325c1c02f96..5ade9a853fb0 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -419,30 +419,21 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>   	return sizeof(struct elfhdr) + (phdr_cnt * sizeof(Elf64_Phdr));
+>   }
+>   
+> -/**
+> - * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
+> - *			       elfcorehdr in the kexec segment array.
+> - * @image: the active struct kimage
+> - * @mn: struct memory_notify data handler
+> - */
+> -static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *mn)
+> +int arch_get_crash_memory_ranges(struct crash_mem **cmem, unsigned long *nr_mem_ranges,
+> +				 struct kimage *image, struct memory_notify *mn)
+>   {
+> +	unsigned long base_addr, size;
+>   	int ret;
+> -	struct crash_mem *cmem = NULL;
+> -	struct kexec_segment *ksegment;
+> -	void *ptr, *mem, *elfbuf = NULL;
+> -	unsigned long elfsz, memsz, base_addr, size;
+>   
+> -	ksegment = &image->segment[image->elfcorehdr_index];
+> -	mem = (void *) ksegment->mem;
+> -	memsz = ksegment->memsz;
+> -
+> -	ret = get_crash_memory_ranges(&cmem);
+> +	ret = get_crash_memory_ranges(cmem);
+>   	if (ret) {
+>   		pr_err("Failed to get crash mem range\n");
+> -		return;
+> +		return ret;
+>   	}
+>   
+> +	if (!image || !mn)
+> +		return 0;
+> +
+>   	/*
+>   	 * The hot unplugged memory is part of crash memory ranges,
+>   	 * remove it here.
+> @@ -450,14 +441,34 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
+>   	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
+>   		base_addr = PFN_PHYS(mn->start_pfn);
+>   		size = mn->nr_pages * PAGE_SIZE;
+> -		ret = remove_mem_range(&cmem, base_addr, size);
+> +		ret = remove_mem_range(cmem, base_addr, size);
 
---=20
-Thanks.
-Binbin
+I like the overall design for handling crashkernel memory exclusion
+in this patch series, especially the way you managed to free the
+crash_mem object (mem) in the generic code (crash_prepare_elf64_headers()).
+
+However, the way crash memory is prepared after a memory hotplug
+event on powerpc by calling remove_mem_range(), can leave the crash
+memory ranges unsorted. This can cause issues in the generic code
+when excluding crashkernel memory, because crash_exclude_mem_range()
+expects crash_mem to be sorted.
+
+So I wrote a simple patch to cover this scenario. Including the
+patch below as the first patch in this series would be helpful.
+https://lore.kernel.org/all/20260210120803.433978-1-sourabhjain@linux.ibm.com/
+
+Jinjie, will it be possible for you to include the above patch in this 
+patch series?
+>   		if (ret) {
+>   			pr_err("Failed to remove hot-unplugged memory from crash memory ranges\n");
+> -			goto out;
+> +			return ret;
+>   		}
+>   	}
+>   
+> -	ret = crash_prepare_elf64_headers(cmem, false, &elfbuf, &elfsz);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
+> + *			       elfcorehdr in the kexec segment array.
+> + * @image: the active struct kimage
+> + * @mn: struct memory_notify data handler
+> + */
+> +static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *mn)
+> +{
+> +	void *ptr, *mem, *elfbuf = NULL;
+> +	struct kexec_segment *ksegment;
+> +	unsigned long elfsz, memsz;
+> +	int ret;
+> +
+> +	ksegment = &image->segment[image->elfcorehdr_index];
+> +	mem = (void *) ksegment->mem;
+> +	memsz = ksegment->memsz;
+> +
+> +	ret = crash_prepare_elf64_headers(false, &elfbuf, &elfsz, NULL, image, mn);
+>   	if (ret) {
+>   		pr_err("Failed to prepare elf header\n");
+>   		goto out;
+> @@ -486,7 +497,6 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
+>   		xchg(&kexec_crash_image, image);
+>   	}
+>   out:
+> -	kvfree(cmem);
+>   	kvfree(elfbuf);
+>   }
+>   
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index e7ef8b2a2554..6fe13031236c 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -401,17 +401,17 @@ static void update_backup_region_phdr(struct kimage *image, Elf64_Ehdr *ehdr)
+>   	}
+>   }
+>   
+> -static unsigned int kdump_extra_elfcorehdr_size(struct crash_mem *cmem)
+> +static unsigned int kdump_extra_elfcorehdr_size(unsigned long nr_mem_ranges)
+>   {
+>   #if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
+>   	unsigned int extra_sz = 0;
+>   
+>   	if (CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM)
+>   		pr_warn("Number of Phdrs %u exceeds max\n", CONFIG_CRASH_MAX_MEMORY_RANGES);
+> -	else if (cmem->nr_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES)
+> +	else if (nr_mem_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES)
+>   		pr_warn("Configured crash mem ranges may not be enough\n");
+>   	else
+> -		extra_sz = (CONFIG_CRASH_MAX_MEMORY_RANGES - cmem->nr_ranges) * sizeof(Elf64_Phdr);
+> +		extra_sz = (CONFIG_CRASH_MAX_MEMORY_RANGES - nr_mem_ranges) * sizeof(Elf64_Phdr);
+>   
+>   	return extra_sz;
+>   #endif
+> @@ -428,17 +428,13 @@ static unsigned int kdump_extra_elfcorehdr_size(struct crash_mem *cmem)
+>    */
+>   static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+>   {
+> -	struct crash_mem *cmem = NULL;
+> +	unsigned long nr_mem_ranges;
+>   	unsigned long headers_sz;
+>   	void *headers = NULL;
+>   	int ret;
+>   
+> -	ret = get_crash_memory_ranges(&cmem);
+> -	if (ret)
+> -		goto out;
+> -
+>   	/* Setup elfcorehdr segment */
+> -	ret = crash_prepare_elf64_headers(cmem, false, &headers, &headers_sz);
+> +	ret = crash_prepare_elf64_headers(false, &headers, &headers_sz, &nr_mem_ranges, NULL, NULL);
+>   	if (ret) {
+>   		pr_err("Failed to prepare elf headers for the core\n");
+>   		goto out;
+> @@ -450,7 +446,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+>   	kbuf->buffer = headers;
+>   	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+>   	kbuf->bufsz = headers_sz;
+> -	kbuf->memsz = headers_sz + kdump_extra_elfcorehdr_size(cmem);
+> +	kbuf->memsz = headers_sz + kdump_extra_elfcorehdr_size(nr_mem_ranges);
+>   	kbuf->top_down = false;
+>   
+>   	ret = kexec_add_buffer(kbuf);
+> @@ -463,7 +459,6 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+>   	image->elf_headers_sz = headers_sz;
+>   	image->elf_headers = headers;
+>   out:
+> -	kfree(cmem);
+>   	return ret;
+>   }
+>   
+> diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+> index 867135560e5c..34e3058ff1d5 100644
+> --- a/arch/powerpc/kexec/ranges.c
+> +++ b/arch/powerpc/kexec/ranges.c
+> @@ -553,9 +553,9 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+>   #endif /* CONFIG_KEXEC_FILE */
+>   
+>   #ifdef CONFIG_CRASH_DUMP
+> -static int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
+> -					   unsigned long long mstart,
+> -					   unsigned long long mend)
+> +int arch_crash_exclude_mem_range(struct crash_mem **mem_ranges,
+> +				 unsigned long long mstart,
+> +				 unsigned long long mend)
+>   {
+>   	struct crash_mem *tmem = *mem_ranges;
+>   
+> @@ -604,18 +604,6 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+>   			sort_memory_ranges(*mem_ranges, true);
+>   	}
+>   
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range_guarded(mem_ranges, crashk_res.start, crashk_res.end);
+> -	if (ret)
+> -		goto out;
+> -
+> -	for (i = 0; i < crashk_cma_cnt; ++i) {
+> -		ret = crash_exclude_mem_range_guarded(mem_ranges, crashk_cma_ranges[i].start,
+> -					      crashk_cma_ranges[i].end);
+> -		if (ret)
+> -			goto out;
+> -	}
+> -
+>   	/*
+>   	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+>   	 *        regions are exported to save their context at the time of
+> diff --git a/arch/riscv/include/asm/kexec.h b/arch/riscv/include/asm/kexec.h
+> index b9ee8346cc8c..daee8388a26d 100644
+> --- a/arch/riscv/include/asm/kexec.h
+> +++ b/arch/riscv/include/asm/kexec.h
+> @@ -75,4 +75,14 @@ int load_extra_segments(struct kimage *image, unsigned long kernel_start,
+>   			unsigned long cmdline_len);
+>   #endif
+>   
+> +#ifdef CONFIG_CRASH_DUMP
+> +struct crash_mem;
+> +
+> +int arch_get_system_nr_ranges(unsigned int *nr_ranges);
+> +#define arch_get_system_nr_ranges arch_get_system_nr_ranges
+> +
+> +int arch_prepare_elf64_ram_headers(struct crash_mem *cmem);
+> +#define arch_prepare_elf64_ram_headers arch_prepare_elf64_ram_headers
+> +#endif
+> +
+>   #endif
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+> index dd9d92a96517..2f0e7bbeb2f0 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -44,6 +44,13 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+>   	return 0;
+>   }
+>   
+> +int arch_get_system_nr_ranges(unsigned int *nr_ranges)
+> +{
+> +	walk_system_ram_res(0, -1, nr_ranges, get_nr_ram_ranges_callback);
+> +
+> +	return 0;
+> +}
+> +
+>   static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>   {
+>   	struct crash_mem *cmem = arg;
+> @@ -55,33 +62,10 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>   	return 0;
+>   }
+>   
+> -static int prepare_elf_headers(void **addr, unsigned long *sz)
+> +int arch_prepare_elf64_ram_headers(struct crash_mem *cmem)
+>   {
+> -	struct crash_mem *cmem;
+> -	unsigned int nr_ranges;
+> -	int ret;
+> -
+> -	nr_ranges = 1; /* For exclusion of crashkernel region */
+> -	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> -
+> -	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> -
+> -	cmem->max_nr_ranges = nr_ranges;
+>   	cmem->nr_ranges = 0;
+> -	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> -	if (!ret)
+> -		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+> -
+> -out:
+> -	kfree(cmem);
+> -	return ret;
+> +	return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+>   }
+>   
+>   static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+> @@ -273,7 +257,8 @@ int load_extra_segments(struct kimage *image, unsigned long kernel_start,
+>   	if (image->type == KEXEC_TYPE_CRASH) {
+>   		void *headers;
+>   		unsigned long headers_sz;
+> -		ret = prepare_elf_headers(&headers, &headers_sz);
+> +
+> +		ret = crash_prepare_elf64_headers(true, &headers, &headers_sz, NULL, NULL, NULL);
+>   		if (ret) {
+>   			pr_err("Preparing elf core header failed\n");
+>   			goto out;
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 5cfb27f26583..9939dd8715df 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -232,6 +232,16 @@ unsigned int arch_crash_get_elfcorehdr_size(void);
+>   #define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
+>   #endif
+>   
+> +#ifdef CONFIG_CRASH_DUMP
+> +struct crash_mem;
+> +
+> +int arch_get_system_nr_ranges(unsigned int *nr_ranges);
+> +#define arch_get_system_nr_ranges arch_get_system_nr_ranges
+> +
+> +int arch_prepare_elf64_ram_headers(struct crash_mem *cmem);
+> +#define arch_prepare_elf64_ram_headers arch_prepare_elf64_ram_headers
+> +#endif
+> +
+>   #endif /* __ASSEMBLER__ */
+>   
+>   #endif /* _ASM_X86_KEXEC_H */
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 335fd2ee9766..3fbbd518604a 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -152,73 +152,15 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+>   	return 0;
+>   }
+>   
+> -/* Gather all the required information to prepare elf headers for ram regions */
+> -static struct crash_mem *fill_up_crash_elf_data(void)
+> +int arch_get_system_nr_ranges(unsigned int *nr_ranges)
+>   {
+> -	unsigned int nr_ranges = 0;
+> -	struct crash_mem *cmem;
+> +	int ret;
+>   
+> -	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> +	ret = walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+>   	if (!nr_ranges)
+> -		return NULL;
+> -
+> -	/*
+> -	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
+> -	 * may cause range splits. So add extra slots here.
+> -	 *
+> -	 * Exclusion of low 1M may not cause another range split, because the
+> -	 * range of exclude is [0, 1M] and the condition for splitting a new
+> -	 * region is that the start, end parameters are both in a certain
+> -	 * existing region in cmem and cannot be equal to existing region's
+> -	 * start or end. Obviously, the start of [0, 1M] cannot meet this
+> -	 * condition.
+> -	 *
+> -	 * But in order to lest the low 1M could be changed in the future,
+> -	 * (e.g. [start, 1M]), add a extra slot.
+> -	 */
+> -	nr_ranges += 3 + crashk_cma_cnt;
+> -	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+> -	if (!cmem)
+> -		return NULL;
+> -
+> -	cmem->max_nr_ranges = nr_ranges;
+> -
+> -	return cmem;
+> -}
+> -
+> -/*
+> - * Look for any unwanted ranges between mstart, mend and remove them. This
+> - * might lead to split and split ranges are put in cmem->ranges[] array
+> - */
+> -static int elf_header_exclude_ranges(struct crash_mem *cmem)
+> -{
+> -	int ret = 0;
+> -	int i;
+> -
+> -	/* Exclude the low 1M because it is always reserved */
+> -	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> -	if (ret)
+> -		return ret;
+> -
+> -	if (crashk_low_res.end)
+> -		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
+> -					      crashk_low_res.end);
+> -	if (ret)
+> -		return ret;
+> -
+> -	for (i = 0; i < crashk_cma_cnt; ++i) {
+> -		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
+> -					      crashk_cma_ranges[i].end);
+> -		if (ret)
+> -			return ret;
+> -	}
+> +		return -ENOMEM;
+>   
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+> @@ -232,35 +174,9 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>   	return 0;
+>   }
+>   
+> -/* Prepare elf headers. Return addr and size */
+> -static int prepare_elf_headers(void **addr, unsigned long *sz,
+> -			       unsigned long *nr_mem_ranges)
+> +int arch_prepare_elf64_ram_headers(struct crash_mem *cmem)
+>   {
+> -	struct crash_mem *cmem;
+> -	int ret;
+> -
+> -	cmem = fill_up_crash_elf_data();
+> -	if (!cmem)
+> -		return -ENOMEM;
+> -
+> -	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/* Exclude unwanted mem ranges */
+> -	ret = elf_header_exclude_ranges(cmem);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/* Return the computed number of memory ranges, for hotplug usage */
+> -	*nr_mem_ranges = cmem->nr_ranges;
+> -
+> -	/* By default prepare 64bit headers */
+> -	ret = crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
+> -
+> -out:
+> -	vfree(cmem);
+> -	return ret;
+> +	return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+>   }
+>   #endif
+>   
+> @@ -418,7 +334,8 @@ int crash_load_segments(struct kimage *image)
+>   				  .buf_max = ULONG_MAX, .top_down = false };
+>   
+>   	/* Prepare elf headers and add a segment */
+> -	ret = prepare_elf_headers(&kbuf.buffer, &kbuf.bufsz, &pnum);
+> +	ret = crash_prepare_elf64_headers(IS_ENABLED(CONFIG_X86_64), &kbuf.buffer,
+> +					  &kbuf.bufsz, &pnum, NULL, NULL);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -529,7 +446,8 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>   	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>   	 * memory resources.
+>   	 */
+> -	if (prepare_elf_headers(&elfbuf, &elfsz, &nr_mem_ranges)) {
+> +	if (crash_prepare_elf64_headers(IS_ENABLED(CONFIG_X86_64), &elfbuf, &elfsz,
+> +					&nr_mem_ranges, NULL, NULL)) {
+>   		pr_err("unable to create new elfcorehdr");
+>   		goto out;
+>   	}
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index d35726d6a415..8d92cd16b625 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -2,11 +2,15 @@
+>   #ifndef LINUX_CRASH_CORE_H
+>   #define LINUX_CRASH_CORE_H
+>   
+> -#include <linux/linkage.h>
+>   #include <linux/elfcore.h>
+>   #include <linux/elf.h>
+> +#include <linux/kexec.h>
+> +#include <linux/linkage.h>
+> +#include <linux/memblock.h>
+> +#include <linux/vmalloc.h>
+>   
+>   struct kimage;
+> +struct memory_notify;
+>   
+>   struct crash_mem {
+>   	unsigned int max_nr_ranges;
+> @@ -54,6 +58,104 @@ static inline int arch_crash_hotplug_support(struct kimage *image, unsigned long
+>   }
+>   #endif
+>   
+> +#ifndef arch_get_system_nr_ranges
+> +static inline int arch_get_system_nr_ranges(unsigned int *nr_ranges)
+> +{
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range(i, &start, &end)
+> +		(*nr_ranges)++;
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +#ifndef arch_prepare_elf64_ram_headers
+> +static inline int arch_prepare_elf64_ram_headers(struct crash_mem *cmem)
+> +{
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	cmem->nr_ranges = 0;
+> +	for_each_mem_range(i, &start, &end) {
+> +		cmem->ranges[cmem->nr_ranges].start = start;
+> +		cmem->ranges[cmem->nr_ranges].end = end - 1;
+> +		cmem->nr_ranges++;
+> +	}
+> +
+> +	for (i = 0; i < crashk_cma_cnt; i++) {
+> +		cmem->ranges[cmem->nr_ranges].start = crashk_cma_ranges[i].start;
+> +		cmem->ranges[cmem->nr_ranges].end = crashk_cma_ranges[i].end;
+> +		cmem->nr_ranges++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +extern int crash_exclude_mem_range(struct crash_mem *mem,
+> +				   unsigned long long mstart,
+> +				   unsigned long long mend);
+> +
+> +#ifndef arch_crash_exclude_mem_range
+> +static __always_inline int arch_crash_exclude_mem_range(struct crash_mem **mem_ranges,
+> +							unsigned long long mstart,
+> +							unsigned long long mend)
+> +{
+> +	return crash_exclude_mem_range(*mem_ranges, mstart, mend);
+> +}
+> +#endif
+> +
+> +#ifndef arch_get_crash_memory_ranges
+> +static inline int arch_get_crash_memory_ranges(struct crash_mem **cmem,
+> +					       unsigned long *nr_mem_ranges,
+> +					       struct kimage *image,
+> +					       struct memory_notify *mn)
+> +{
+> +	unsigned int nr_ranges;
+> +	int ret;
+> +
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_X86_32)
+> +	/*
+> +	 * Exclusion of crash region, crashk_low_res and/or crashk_cma_ranges
+> +	 * may cause range splits. So add extra slots here.
+> +	 *
+> +	 * Exclusion of low 1M may not cause another range split, because the
+> +	 * range of exclude is [0, 1M] and the condition for splitting a new
+> +	 * region is that the start, end parameters are both in a certain
+> +	 * existing region in cmem and cannot be equal to existing region's
+> +	 * start or end. Obviously, the start of [0, 1M] cannot meet this
+> +	 * condition.
+> +	 *
+> +	 * But in order to lest the low 1M could be changed in the future,
+> +	 * (e.g. [start, 1M]), add a extra slot.
+> +	 */
+> +	nr_ranges = 3 + crashk_cma_cnt;
+> +#else
+> +	/* For exclusion of crashkernel region*/
+> +	nr_ranges = 1 + (crashk_low_res.end != 0) + crashk_cma_cnt;
+> +#endif
+> +
+> +	ret = arch_get_system_nr_ranges(&nr_ranges);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*cmem = kvzalloc(struct_size(*cmem, ranges, nr_ranges), GFP_KERNEL);
+> +	if (!(*cmem))
+> +		return -ENOMEM;
+> +
+> +	(*cmem)->max_nr_ranges = nr_ranges;
+> +	ret = arch_prepare_elf64_ram_headers(*cmem);
+> +	if (ret) {
+> +		kvfree(*cmem);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>   #ifndef crash_get_elfcorehdr_size
+>   static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>   #endif
+> @@ -61,11 +163,11 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>   /* Alignment required for elf header segment */
+>   #define ELF_CORE_HEADER_ALIGN   4096
+>   
+> -extern int crash_exclude_mem_range(struct crash_mem *mem,
+> -				   unsigned long long mstart,
+> -				   unsigned long long mend);
+> -extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+> -				       void **addr, unsigned long *sz);
+> +extern int crash_prepare_elf64_headers(int need_kernel_map,
+> +				       void **addr, unsigned long *sz,
+> +				       unsigned long *nr_mem_ranges,
+> +				       struct kimage *image,
+> +				       struct memory_notify *mn);
+>   
+>   struct kimage;
+>   struct kexec_segment;
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 99dac1aa972a..39048c87d7a2 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/memblock.h>
+>   #include <linux/kmemleak.h>
+>   #include <linux/crash_core.h>
+> +#include <linux/crash_reserve.h>
+>   #include <linux/reboot.h>
+>   #include <linux/btf.h>
+>   #include <linux/objtool.h>
+> @@ -161,19 +162,66 @@ static inline resource_size_t crash_resource_size(const struct resource *res)
+>   	return !res->end ? 0 : resource_size(res);
+>   }
+>   
+> +static int crash_exclude_mem_ranges(struct crash_mem *cmem,
+> +				    unsigned long *nr_mem_ranges)
+> +{
+> +	int ret, i;
+> +
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_X86_32)
+> +	/* Exclude the low 1M because it is always reserved */
+> +	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
+> +	if (ret)
+> +		return ret;
+> +#endif
+>   
+> +	/* Exclude crashkernel region */
+> +	ret = arch_crash_exclude_mem_range(&cmem, crashk_res.start, crashk_res.end);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (crashk_low_res.end) {
+> +		ret = arch_crash_exclude_mem_range(&cmem, crashk_low_res.start, crashk_low_res.end);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	for (i = 0; i < crashk_cma_cnt; ++i) {
+> +		ret = arch_crash_exclude_mem_range(&cmem, crashk_cma_ranges[i].start,
+> +						   crashk_cma_ranges[i].end);
+> +		if (ret)
+> +			return ret;
+> +	}
+>   
+> +	/* Return the computed number of memory ranges, for hotplug usage */
+> +	if (nr_mem_ranges)
+> +		*nr_mem_ranges = cmem->nr_ranges;
+>   
+> -int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+> -			  void **addr, unsigned long *sz)
+> +	return 0;
+> +}
+> +
+> +int crash_prepare_elf64_headers(int need_kernel_map, void **addr,
+> +				unsigned long *sz, unsigned long *nr_mem_ranges,
+> +				struct kimage *image, struct memory_notify *mn)
+>   {
+> -	Elf64_Ehdr *ehdr;
+> -	Elf64_Phdr *phdr;
+>   	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
+> -	unsigned char *buf;
+> -	unsigned int cpu, i;
+>   	unsigned long long notes_addr;
+> +	struct crash_mem *mem = NULL;
+>   	unsigned long mstart, mend;
+> +	unsigned int cpu, i;
+> +	unsigned char *buf;
+> +	Elf64_Ehdr *ehdr;
+> +	Elf64_Phdr *phdr;
+> +	int ret = 0;
+> +
+> +	ret = arch_get_crash_memory_ranges(&mem, nr_mem_ranges, image, mn);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (mem) {
+> +		ret = crash_exclude_mem_ranges(mem, nr_mem_ranges);
+> +		if (ret)
+> +			goto out;
+> +	}
+>   
+>   	/* extra phdr for vmcoreinfo ELF note */
+>   	nr_phdr = nr_cpus + 1;
+> @@ -192,8 +240,10 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+>   	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
+>   
+>   	buf = vzalloc(elf_sz);
+> -	if (!buf)
+> -		return -ENOMEM;
+> +	if (!buf) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+>   
+>   	ehdr = (Elf64_Ehdr *)buf;
+>   	phdr = (Elf64_Phdr *)(ehdr + 1);
+> @@ -262,7 +312,10 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+>   
+>   	*addr = buf;
+>   	*sz = elf_sz;
+> -	return 0;
+> +
+> +out:
+> +	kvfree(mem);
+> +	return ret;
+>   }
+>   
+>   /**
+
