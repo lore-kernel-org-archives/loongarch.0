@@ -1,196 +1,326 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4532B357A37
-	for <loongarch@lists.linux.dev>; Wed, 11 Feb 2026 20:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770840874; cv=pass; b=dzpvnux9jBzTKBKkO+mQyrGGn9z/OhB0e+64X62QeMKOEOqPx3iJ/xBh9UlZ9H1v5jsePBd2xNVUL29Ia8IiFKFYFPH5c6wXNyy6LHhVrrTBWGAENMmIrHo1JU7ALXIibzsJLmuSCTg9VfGDMHg959PBCqX5HvkoNM10HPMzGz8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770840874; c=relaxed/simple;
-	bh=XTU0SZsxOmJ3FoM/DLxyJrm+s5UGvDwm08Uhn3BjVVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJzoftSCTuqK4OcmIZC4C9JYELXlr9nWh9t/Zvb+2eorOK4mCZHdoWWm+I9iy8B1dtBGDRv9HeFN1//9JI+FzLG5NFp2RkKxsX9tvp8CPji2sNqxk+4yS4c7ohoGVrn60IbgBkZjx0fc8bMcHfdNjQgQl9HOTT7M1tI2QwIiK18=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LiQjiJxx; arc=pass smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEE03EBF31
+	for <loongarch@lists.linux.dev>; Thu, 12 Feb 2026 03:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770866940; cv=none; b=pMsnt3eoWtjVL7ymAj8k4UQO9oqbjoxMFhPIU/KD3hZVr6LjiP3yIvYQFAB0UrZuITNVKxrMqGhUd0rOAInDki5C2etSFRUibIKKYtdeujv/XLRo4dlkNVZy4EUBRIYAo4CLZK2qZ6WBLOOnOx+fCChUEZCYogsh69OsJLUjyV8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770866940; c=relaxed/simple;
+	bh=/hJXl8P8KRPeoAl1PZPqloc/AO104jBQ2+3QgzeJoJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dkoX2sTPX/Yqxwsp5yw1gd85CpUS9PvaGJScPfiS/F030ZbOrWygHMp1P0P6GgnUDkkWwh8XdwmBs5EiAfWOzcUm/tE2BCci91rbdoCM4fcX9noRQPBk6cVKZv4j2ioiF9Sp4guAvblrwZ3xGM6MNhhIZlLzR1LUK6cZMnO4XKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=cXMfoad+; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiQjiJxx"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b885d8f4092so952148666b.2
-        for <loongarch@lists.linux.dev>; Wed, 11 Feb 2026 12:14:33 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770840872; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NiLr1W+rQGWvpB1/i7V/e3sy47sRzNqtVbvQM7BHpmandCApOA7stXUG24jtJynZI4
-         LZqDxPl9tyH5jjqN9Vbg63W6XaAnOd6xJOPD4Rz5JBNOZ+oERfvsvlFq/PrHV/RsY/MK
-         IvRfSBF6y2WTsIQhlUi4EDA62RYOkaw6VYjpK0cCUa0/pEn8OsIiKT790UnHZlGU7iSf
-         nMk+jtYAw9bSjO8+2KM7/HNiCSP9XxprLb7xBjuW2Bw+CDHD1+e4Mhmu9I57GOBfgbuM
-         UrOSX4SzOWFSO/OWw+Ez6nXWOgexbWoeyRwJ4scV9WL7bGxyad4xyhLvRZQdeN7uG6+u
-         RzjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=28hr9LjidhOb4+7vDtUZiT7dYr2nuAMqMlceW5mXuOg=;
-        fh=1rVK+mEWK88srjqhaUk7UwFAPfUMH0nlevXTR0JjQ+s=;
-        b=Yiqen+iznTD/sohSFjkneiFANT5+aeIgw7DSvnCee9R57YIS9S4FhscQPHZsEeK94v
-         1DHUhG07urLCtkc4A89h/ExtNDcwVrguuR4SJcr7CaJDYWD51cfkYqEfo2GKs/NFALA9
-         MxQIHE8fZBsA7Mdc9FdArjTZbaoWVmRyGJ28Ztfd9SFSnxBstwjRX8r6OnW0+QeJBK5b
-         ciw2iXpNtMsop4BYVLMBuiaB7Fnlt5+B2G5Sx2Ionb27iqDaH6PaaKEJhcJRgzpuIxir
-         pJdFW/Sbbzxy5BTJ5KSl1G3vJmkxEKg9GKKFsV0GMuYeIufymFpa1qxI5j2gyqM/W+4r
-         K5xQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770840872; x=1771445672; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=28hr9LjidhOb4+7vDtUZiT7dYr2nuAMqMlceW5mXuOg=;
-        b=LiQjiJxxiw8jbEiMD0lQvlvyjQwqIWaXsN0Dl/08CJWe9E4HYXbh9XJ54Je+9VSt5A
-         qSaMUr+ZZF9PsWhAHEHdr1+/kH2Oq31+kCoStVmsGjhuTvIeIbQZaRlvAOin4KApSqEu
-         vasXDAAX37oGaLnc+qj+JW5TJV0BLfuAcgpKzZK/iwUnUg0lWoi2ZZfskYzLm/yIjF6M
-         0ZgHA/8fgT5SLACmMsIOvJ0wBqRWf6KrvpzUzAQbry5WqWemiRBuUVG0HbXYgSE6IL/A
-         O9xYa/Tiq4DVxgVyJ3bn3abkUAO3ECpkJQ6knq6hU73x7mYKfaNCpcB1G9fheJAiTytl
-         az2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770840872; x=1771445672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=28hr9LjidhOb4+7vDtUZiT7dYr2nuAMqMlceW5mXuOg=;
-        b=RC9cR6RV3qHLHCOA/4HRolAghSVMsABMPR0YWmaHFD34cS8boWa2SzWgkcKtHOEIwK
-         sgTtMDK6qGnAyzZT60Lxnh+YTaqZdMjg2HmTJMc3qGizwo/tCTpF7Z4Y/gryyu9LG5y4
-         EIwzR+mYFcWS2z8i44nqLSkRSM7jIP+184VAFxEbFE6QbS8Zr5slAp3DR7RVABKqZyRV
-         6EPkzVaUuT3CqNnioFidn0PQwf4V/xZr2iG684cz5hIHrrE5AwFxkRuPL6ouoKLPM1ZU
-         IbQYjFe1sne003mZ0ChxTPdYzF2pXiWlFWY3hwITGuiIHVh72MshZ142OaHTr7jNQON9
-         br3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUmhgP8q8zCfUctXHdB82RFsHgkWsDmDgWCJZz9MsectKueKn9CdkQCPlMYydCZ5CxuyaRDPRmefJc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxh6V/CVlsyJpwS0dSZYm2kIriv0PGebBPaNNIriJ+JlOsd+44X
-	2/gkja85Il+Q2OWHOMTPUdaVNoTIHfFaDdyuTzBpFBifNQDsvK5ISPeXNBPzrLo2ZT3oWDJ5aKF
-	sHxNssiAJnMXZCyd0W8hcQ4dnDBTYlnA=
-X-Gm-Gg: AZuq6aKH0oolgEEUkA2Q9MU6beD9boOUmATBQsS/qbymDK6e5sUPlEyftWCJvI6OuBi
-	/Q4G5iW0cCeVOXmZUjg18L3gLaDUstaOZfu05RniyZjwOapJGp2BK/LMMiTqvb0XRnnbfDfJfEo
-	2YLXesqM0plWtaKODM0ymUeuPwd7vFHKopQD1zEmSxK1GWg6P8U3ZVNB9iVuKfdq97dNvJJAF19
-	mn3ySMSt84y82Qi+ra1tqCTbJdemTsUZwQI+O4RrSvNZ2NE+day7FLzq3yHZO1xTqjVRvC1w+dm
-	xcJ0amoA0R8S3pcCNININkqEsaem2R7e/S1ZtsfU9g==
-X-Received: by 2002:a17:907:a08a:b0:b8e:64e:1ed with SMTP id
- a640c23a62f3a-b8f8f72d91emr17643566b.50.1770840871149; Wed, 11 Feb 2026
- 12:14:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="cXMfoad+"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=RZTcbKUpf2wubcUUQwFd4TLSwyssXimapX4rFbyIz5A=;
+	b=cXMfoad+w/Ix+LI9YndMWoNmF4Iu3IJhXflwlT1MxUXYGZVZzdihNCJKOT0lufO87rj8TPJxq
+	3rCoLyHgE6YQfJO7OcmMQHWBZTvKnoxt4QdFUAjcXo3Ou/NK7Ychs3Q1erI52ZOjhspHUesfzbk
+	tjGTeV7nVTLFy9vfIpqFDy4=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fBLHs1gjWzRhRT;
+	Thu, 12 Feb 2026 11:24:09 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7371340567;
+	Thu, 12 Feb 2026 11:28:47 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 12 Feb 2026 11:28:43 +0800
+Message-ID: <31c2ae53-cbb7-bfad-9b8f-f9e1a254491e@huawei.com>
+Date: Thu, 12 Feb 2026 11:28:42 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260211103141.3215197-1-rppt@kernel.org> <20260211103141.3215197-4-rppt@kernel.org>
-In-Reply-To: <20260211103141.3215197-4-rppt@kernel.org>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Wed, 11 Feb 2026 21:14:19 +0100
-X-Gm-Features: AZwV_QgdPAvH3hw0825YIt93LQPupYFvh_AV-2zMkwGhubC87cSa2iVxpdoZwag
-Message-ID: <CA+=Fv5T07oBJweU3tURD4Nuh7VRWovsf0zjHtA1nDAVNmO=D2w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] arch, mm: consolidate empty_zero_page
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@kernel.org>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Hocko <mhocko@suse.com>, Michal Simek <monstr@monstr.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Richard Weinberger <richard@nod.at>, 
-	Russell King <linux@armlinux.org.uk>, Stafford Horne <shorne@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@kernel.org>, Vineet Gupta <vgupta@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org, 
-	x86@kernel.org
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v4 1/3] crash: Exclude crash kernel memory in crash core
+Content-Language: en-US
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, <corbet@lwn.net>,
+	<catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
+	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<rdunlap@infradead.org>, <pmladek@suse.com>, <feng.tang@linux.alibaba.com>,
+	<pawan.kumar.gupta@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<arnd@arndb.de>, <lirongqing@baidu.com>, <fvdl@google.com>,
+	<leitao@debian.org>, <rppt@kernel.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
+	<osandov@fb.com>, <ryan.roberts@arm.com>, <cfsworks@gmail.com>,
+	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <thuth@redhat.com>,
+	<hbathini@linux.ibm.com>, <eajames@linux.ibm.com>, <bjorn@rivosinc.com>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <dwmw@amazon.co.uk>, <pbonzini@redhat.com>,
+	<thomas.lendacky@amd.com>, <kai.huang@intel.com>, <ubizjak@gmail.com>,
+	<coxu@redhat.com>, <liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
+	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+References: <20260209095931.2813152-1-ruanjinjie@huawei.com>
+ <20260209095931.2813152-2-ruanjinjie@huawei.com>
+ <50693f0c-c610-4347-86aa-40d50dc681fc@linux.ibm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <50693f0c-c610-4347-86aa-40d50dc681fc@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Wed, Feb 11, 2026 at 11:32=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Reduce 22 declarations of empty_zero_page to 3 and 23 declarations of
-> ZERO_PAGE() to 4.
->
-> Every architecture defines empty_zero_page that way or another, but for t=
-he
-> most of them it is always a page aligned page in BSS and most definitions
-> of ZERO_PAGE do virt_to_page(empty_zero_page).
->
-> Move Linus vetted x86 definition of empty_zero_page and ZERO_PAGE() to th=
-e
-> core MM and drop these definitions in architectures that do not implement
-> colored zero page (MIPS and s390).
->
-> ZERO_PAGE() remains a macro because turning it to a wrapper for a static
-> inline causes severe pain in header dependencies.
->
-> For the most part the change is mechanical, with these being noteworthy:
->
-> * alpha: aliased empty_zero_page with ZERO_PGE that was also used for boo=
-t
->   parameters. Switching to a generic empty_zero_page removes the aliasing
->   and keeps ZERO_PGE for boot parameters only
-> * arm64: uses __pa_symbol() in ZERO_PAGE() so that definition of
->   ZERO_PAGE() is kept intact.
-> * m68k/parisc/um: allocated empty_zero_page from memblock,
->   although they do not support zero page coloring and having it in BSS
->   will work fine.
-> * sparc64 can have empty_zero_page in BSS rather allocate it, but it
->   can't use virt_to_page() for BSS. Keep it's definition of ZERO_PAGE()
->   but instead of allocating it, make mem_map_zero point to
->   empty_zero_page.
-> * sh: used empty_zero_page for boot parameters at the very early boot.
->   Rename the parameters page to boot_params_page and let sh use the gener=
-ic
->   empty_zero_page.
-> * hexagon: had an amusing comment about empty_zero_page
->
->         /* A handy thing to have if one has the RAM. Declared in head.S *=
-/
->
->   that unfortunately had to go :)
->
-> Acked-by: Helge Deller <deller@gmx.de>   # parisc
-> Tested-by: Helge Deller <deller@gmx.de>  # parisc
-> Reviewed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/alpha/include/asm/pgtable.h          |  6 ------
 
-> diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pg=
-table.h
-> index 90e7a9539102..12a3c5f8ece8 100644
-> --- a/arch/alpha/include/asm/pgtable.h
-> +++ b/arch/alpha/include/asm/pgtable.h
-> @@ -125,12 +125,6 @@ struct vm_area_struct;
->   */
->  #define pgprot_noncached(prot) (prot)
->
-> -/*
-> - * ZERO_PAGE is a global shared page that is always zero:  used
-> - * for zero-mapped memory areas etc..
-> - */
-> -#define ZERO_PAGE(vaddr)       (virt_to_page(ZERO_PGE))
-> -
->  /*
->   * On certain platforms whose physical address space can overlap KSEG,
->   * namely EV6 and above, we must re-twiddle the physaddr to restore the
 
-This looks good from an Alpha perspective
+On 2026/2/10 20:30, Sourabh Jain wrote:
+> Hello Jinjie,
+> 
+> On 09/02/26 15:29, Jinjie Ruan wrote:
+>> The exclude of crashk_res, crashk_low_res and crashk_cma memory
+>> are almost identical across different architectures, handling them
+>> in the crash core would eliminate a lot of duplication, so do
+>> them in the common code.
+>>
+>> And move the size calculation (and the realloc if needed) into the
+>> generic crash core so that:
+>>
+>> - New CMA regions or future crash-memory types can automatically
+>>    accounted for in crash core;
+>>
+>> - Each architecture no longer has to play whack-a-mole with
+>>    its private array size.
+>>
+>> To achieve the above goal, 4 architecture-specific functions are
+>> introduced:
+>>
+>> - arch_get_system_nr_ranges() and arch_prepare_elf64_ram_headers().
+>>    The 1st function pre-counts the number of memory ranges, and
+>>    the 2st function fill the memory ranges into the cmem->ranges[] array,
+>>    and count the actual number of ranges filled. The default
+>> implementation
+>>    is consistent with arm64 and loongson.
+>>
+>> - arch_crash_exclude_mem_range(). Realloc for powerpc. The default
+>>    implementation is crash_exclude_mem_range(), and use
+>>    crash_exclude_mem_range_guarded() to implement the arch version
+>>    for powerpc.
+>>
+>> - arch_get_crash_memory_ranges(). Get crash memory ranges for arch and
+>>    the default implementation is generic across x86, arm64, riscv, and
+>>    loongson by using the first two arch functions above. powerpc has its
+>>    own implementation by calling get_crash_memory_ranges().
+>>
+>> Tested on x86, arm64 and riscv with QEMU.
+>>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>   arch/arm64/kernel/machine_kexec_file.c     |  47 +--------
+>>   arch/loongarch/kernel/machine_kexec_file.c |  45 +-------
+>>   arch/powerpc/include/asm/kexec.h           |  13 +++
+>>   arch/powerpc/kexec/crash.c                 |  52 ++++++----
+>>   arch/powerpc/kexec/file_load_64.c          |  17 ++-
+>>   arch/powerpc/kexec/ranges.c                |  18 +---
+>>   arch/riscv/include/asm/kexec.h             |  10 ++
+>>   arch/riscv/kernel/machine_kexec_file.c     |  37 ++-----
+>>   arch/x86/include/asm/kexec.h               |  10 ++
+>>   arch/x86/kernel/crash.c                    | 104 ++-----------------
+>>   include/linux/crash_core.h                 | 114 +++++++++++++++++++--
+>>   kernel/crash_core.c                        |  71 +++++++++++--
+>>   12 files changed, 269 insertions(+), 269 deletions(-)
+>>
 
-Acked-by: Magnus Lindholm <linmag7@gmail.com>
+[...]
+
+>>   extern void crash_ipi_callback(struct pt_regs *regs);
+>> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+>> index a325c1c02f96..5ade9a853fb0 100644
+>> --- a/arch/powerpc/kexec/crash.c
+>> +++ b/arch/powerpc/kexec/crash.c
+>> @@ -419,30 +419,21 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>>       return sizeof(struct elfhdr) + (phdr_cnt * sizeof(Elf64_Phdr));
+>>   }
+>>   -/**
+>> - * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it
+>> with old
+>> - *                   elfcorehdr in the kexec segment array.
+>> - * @image: the active struct kimage
+>> - * @mn: struct memory_notify data handler
+>> - */
+>> -static void update_crash_elfcorehdr(struct kimage *image, struct
+>> memory_notify *mn)
+>> +int arch_get_crash_memory_ranges(struct crash_mem **cmem, unsigned
+>> long *nr_mem_ranges,
+>> +                 struct kimage *image, struct memory_notify *mn)
+>>   {
+>> +    unsigned long base_addr, size;
+>>       int ret;
+>> -    struct crash_mem *cmem = NULL;
+>> -    struct kexec_segment *ksegment;
+>> -    void *ptr, *mem, *elfbuf = NULL;
+>> -    unsigned long elfsz, memsz, base_addr, size;
+>>   -    ksegment = &image->segment[image->elfcorehdr_index];
+>> -    mem = (void *) ksegment->mem;
+>> -    memsz = ksegment->memsz;
+>> -
+>> -    ret = get_crash_memory_ranges(&cmem);
+>> +    ret = get_crash_memory_ranges(cmem);
+>>       if (ret) {
+>>           pr_err("Failed to get crash mem range\n");
+>> -        return;
+>> +        return ret;
+>>       }
+>>   +    if (!image || !mn)
+>> +        return 0;
+>> +
+>>       /*
+>>        * The hot unplugged memory is part of crash memory ranges,
+>>        * remove it here.
+>> @@ -450,14 +441,34 @@ static void update_crash_elfcorehdr(struct
+>> kimage *image, struct memory_notify *
+>>       if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
+>>           base_addr = PFN_PHYS(mn->start_pfn);
+>>           size = mn->nr_pages * PAGE_SIZE;
+>> -        ret = remove_mem_range(&cmem, base_addr, size);
+>> +        ret = remove_mem_range(cmem, base_addr, size);
+> 
+> I like the overall design for handling crashkernel memory exclusion
+> in this patch series, especially the way you managed to free the
+> crash_mem object (mem) in the generic code (crash_prepare_elf64_headers()).
+
+Thanks for the review.
+
+> 
+> However, the way crash memory is prepared after a memory hotplug
+> event on powerpc by calling remove_mem_range(), can leave the crash
+> memory ranges unsorted. This can cause issues in the generic code
+> when excluding crashkernel memory, because crash_exclude_mem_range()
+> expects crash_mem to be sorted.
+
+You are absolutely correct.
+
+> 
+> So I wrote a simple patch to cover this scenario. Including the
+> patch below as the first patch in this series would be helpful.
+> https://lore.kernel.org/all/20260210120803.433978-1-sourabhjain@linux.ibm.com/
+
+Thanks for the additional patch. I'll add it as the first patch in the
+next revision to ensure crash_mem remains sorted after memory hotplug
+events on powerpc.
+
+Best regards,
+Jinjie
+
+> 
+> Jinjie, will it be possible for you to include the above patch in this
+> patch series?
+
+My pleasure.
+
+>>           if (ret) {
+>>               pr_err("Failed to remove hot-unplugged memory from crash
+>> memory ranges\n");
+>> -            goto out;
+>> +            return ret;
+>>           }
+>>       }
+>>   -    ret = crash_prepare_elf64_headers(cmem, false, &elfbuf, &elfsz);
+>> +    return 0;
+>> +}
+>> +
+>> +/**
+>> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it
+>> with old
+>> + *                   elfcorehdr in the kexec segment array.
+>> + * @image: the active struct kimage
+>> + * @mn: struct memory_notify data handler
+>> + */
+>> +static void update_crash_elfcorehdr(struct kimage *image, struct
+>> memory_notify *mn)
+>> +{
+>> +    void *ptr, *mem, *elfbuf = NULL;
+>> +    struct kexec_segment *ksegment;
+>> +    unsigned long elfsz, memsz;
+>> +    int ret;
+>> +
+>> +    ksegment = &image->segment[image->elfcorehdr_index];
+>> +    mem = (void *) ksegment->mem;
+>> +    memsz = ksegment->memsz;
+>> +
+>> +    ret = crash_prepare_elf64_headers(false, &elfbuf, &elfsz, NULL,
+>> image, mn);
+>>       if (ret) {
+>>           pr_err("Failed to prepare elf header\n");
+>>           goto out;
+>> @@ -486,7 +497,6 @@ static void update_crash_elfcorehdr(struct kimage
+>> *image, struct memory_notify *
+>>           xchg(&kexec_crash_image, image);
+>>       }
+>>   out:
+>> -    kvfree(cmem);
+>>       kvfree(elfbuf);
+>>   }
+
+[...]
+
+>> +int crash_prepare_elf64_headers(int need_kernel_map, void **addr,
+>> +                unsigned long *sz, unsigned long *nr_mem_ranges,
+>> +                struct kimage *image, struct memory_notify *mn)
+>>   {
+>> -    Elf64_Ehdr *ehdr;
+>> -    Elf64_Phdr *phdr;
+>>       unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
+>> -    unsigned char *buf;
+>> -    unsigned int cpu, i;
+>>       unsigned long long notes_addr;
+>> +    struct crash_mem *mem = NULL;
+>>       unsigned long mstart, mend;
+>> +    unsigned int cpu, i;
+>> +    unsigned char *buf;
+>> +    Elf64_Ehdr *ehdr;
+>> +    Elf64_Phdr *phdr;
+>> +    int ret = 0;
+>> +
+>> +    ret = arch_get_crash_memory_ranges(&mem, nr_mem_ranges, image, mn);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (mem) {
+>> +        ret = crash_exclude_mem_ranges(mem, nr_mem_ranges);
+>> +        if (ret)
+>> +            goto out;
+>> +    }
+>>         /* extra phdr for vmcoreinfo ELF note */
+>>       nr_phdr = nr_cpus + 1;
+>> @@ -192,8 +240,10 @@ int crash_prepare_elf64_headers(struct crash_mem
+>> *mem, int need_kernel_map,
+>>       elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
+>>         buf = vzalloc(elf_sz);
+>> -    if (!buf)
+>> -        return -ENOMEM;
+>> +    if (!buf) {
+>> +        ret = -ENOMEM;
+>> +        goto out;
+>> +    }
+>>         ehdr = (Elf64_Ehdr *)buf;
+>>       phdr = (Elf64_Phdr *)(ehdr + 1);
+>> @@ -262,7 +312,10 @@ int crash_prepare_elf64_headers(struct crash_mem
+>> *mem, int need_kernel_map,
+>>         *addr = buf;
+>>       *sz = elf_sz;
+>> -    return 0;
+>> +
+>> +out:
+>> +    kvfree(mem);
+>> +    return ret;
+>>   }
+>>     /**
+> 
