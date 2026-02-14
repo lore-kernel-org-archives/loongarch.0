@@ -1,63 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9771C30F52A;
-	Sat, 14 Feb 2026 20:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771102449; cv=none; b=Tb50Ays1pFDKybe9D1XCJxjnvek+PHlMapo2XYh316p7ShOCYwlqse7MBgQZ2R4xWacTlQ6k7/OkhzDAOzXWxuJfDutswPeQ9+V+0dw/jtjyRPUR7TQ5QDBw8CEQ0QTQaQI2aO4zlr/VjQvVPEkI6B/Xw3NpAolUvuru1cXgNo4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771102449; c=relaxed/simple;
-	bh=/X5j0/V8oagcD0kaOY4bRUYm8NK814rvm1aiJ3MgG+A=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=agfWDJY0ovlul0YJ0pEML8L3O7zYACgnmZTCPPBbw/n4n1aI+4Ufz9mKbDaHMNjQW6rD5w00qzCX7ggw24Jy55/MGipuaBJHlHxZIGCHRJ0B2gPqiJivT+QnZyMXQCa5XMNm52lIWsYqVtPQNTqGpcFzN9JmXOhesEQrlMtFWEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeekuZv9; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8174981AA8
+	for <loongarch@lists.linux.dev>; Sat, 14 Feb 2026 22:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771107536; cv=pass; b=Y2HNZM956qUFdlGF83qO8PyiNjanNV7pLxCCJsBOkpVfslNn6VvqXo5r6EAJ1p/Gg97w7482o97GuUbPkZT4j413bjiIWo7uXZJvUXIm3u4Wwbcgy5vBlsBi2GjGhbbAtPtiXs7wu+clYCDsAlV0v035TCw+2b7hPG/0iSMxWpA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771107536; c=relaxed/simple;
+	bh=aLYUkEHd9SSbNnHq6tCKpj0y2iLuJRY+hRfDDQclMPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QVx+OPVcgxhXfIu3cHNWjT5ORV20NYxtBSsRvtAk+UqAk3+QLHjtT7dX/L31bX0hjCM6wRuIjW9vRkZbak+Wb6jMqxgDdYoDnH5wzRq0YpL4dlz6expoXPY9QMsBJs7Jop48CDNPCvbMpH+gpavssYDlsJMz6vgy0UkjDkMLKEc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BTg20nJf; arc=pass smtp.client-ip=74.125.82.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeekuZv9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BFC16AAE;
-	Sat, 14 Feb 2026 20:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771102449;
-	bh=/X5j0/V8oagcD0kaOY4bRUYm8NK814rvm1aiJ3MgG+A=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=AeekuZv9V6BUGhDpYxl7qqaioe/DGnFgcDmmH+JhGMiuaV0tfR5sL84yNjW47KnWI
-	 8PxbAxx81JSjv8zeXsZFX3Jrk4h0pNlITObNbur0kt21jBK2RyWaR3fUsNH+zO0eVL
-	 zK2EKASrUEoRWkBdV5VwuOZBgG2Zh/QHDmBfnC0eeCyTD2XR/yoVdbr4WsCvk81i1M
-	 s1a0z4kON1NfXaYUBmMEk3zioakwMIFEcigNSNjVnISrGuZ/kRy9FPRT2FTRg5wYQf
-	 Wklfgh4fAaJDinsalqWgAgF0XuRYTfaV+ECZyJAwV4OEYm3B5QGqw6Jdth+suU/DPp
-	 2vYFHC4MoBYxg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0B269393091E;
-	Sat, 14 Feb 2026 20:54:04 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch changes for v7.0
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260214131533.865218-1-chenhuacai@loongson.cn>
-References: <20260214131533.865218-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20260214131533.865218-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.0
-X-PR-Tracked-Commit-Id: 92860256402cce9fa6268763365f5333a56c1428
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 64275e9fda3702bfb5ab3b95f7c2b9b414667164
-Message-Id: <177110244258.2897141.10712297788280145163.pr-tracker-bot@kernel.org>
-Date: Sat, 14 Feb 2026 20:54:02 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTg20nJf"
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-2ba7eb6022eso87635eec.1
+        for <loongarch@lists.linux.dev>; Sat, 14 Feb 2026 14:18:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771107535; cv=none;
+        d=google.com; s=arc-20240605;
+        b=iywztv6pud+Goz7RBjTPphvpjjeGc1JBPBd0cFh6DHmSktFvuSR7iLfxwRjyHDeJr/
+         QEfmvpY8Jf6OAXVbpvo4X8IgfYurSpE+w0PibIFWJq/s8yd8/WWb77Y8BBfU5FH4+JpD
+         Gk29S7E/MZ96ulJvi+d8tpF/2BJ/dX2dzBb+6xg2zl66qArEOFlSCjBQOR5W5DAHrLrJ
+         0uovMas0JOPrdHPmsIf4++GFnF6jExf+iE6hsIbanjOtFjkEPdOtJBFAx3Km7Pr3qvTC
+         c/8aKw8/Z/LqOkTBwUraqGnU/Whfa1kGzCqellFveAWik7ZDfAnOf/OrZP062xI47y8Y
+         ix4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=jkTOOQAA5Rhl6wOanfGy9kxtf17omN8v4sffsu3HOTY=;
+        fh=jLMPzMuOtEKt0wo1V/tVX2iDB++g4/hi9DAjWW5jgaQ=;
+        b=AqwLaa/0LzUeG4xAUSk+dUYytK2B+gTJLVRFqtwuHH4Ss2tNulJSPKM0OJBxBUaj8V
+         e2c1aJTZ6wCWGyMBhC+WzZcSPjeUbFCyIZ/CFjduiQd99IGZcfSeVUaQ0DICfwNaafTP
+         pnnmVBaUXDXT0ZZxIDY06oc7jGoacIiXpjSoWuryOJAx3EZTlPnSkZN9L1/uHtd79p3e
+         4t7HepMvGhHQ6yiS+8T2q+IkB1P2Tk1l494jtWODqHLyTqwosPocHuWo39n/hYKkKoZO
+         rGiLYUw+jty6mfczD57wcPHsAltmRAAsPKLENBZKlbafvtzzktGZJpdBA++ffQgL08YN
+         QMiQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771107535; x=1771712335; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jkTOOQAA5Rhl6wOanfGy9kxtf17omN8v4sffsu3HOTY=;
+        b=BTg20nJfeKS0ah1kL04RJoTosmItMFDsGZ01YfEStUp0A5L2D+xNToNd/tHdKn11z2
+         G/2y0jfjtdM0kJBrY/AlkoyKPRSPWMu+WFtNfziaAo6oTePu/zZFm8CCVS426c0ufiUl
+         /NsPFJDHUk+xomFyQm57ytLdNy9f8DwJyLnJtKtp4/JHQaEKEMAoOw2sXOlVb+MJKAt+
+         MKrKWvcQ2uWGEdiYfWC2jCGTD5nUx/g3rfWH8C0SLwMeTxMNn4E5OZVwJ21ioef6ktDw
+         gRTCB4+MacY8JMRci0blgCFQqXBtFzBsUfFLUw1PGiP75XMY+xY9Q2ms7pcr6mKBFj2f
+         GXXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771107535; x=1771712335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jkTOOQAA5Rhl6wOanfGy9kxtf17omN8v4sffsu3HOTY=;
+        b=XGWvHEkZd9YaokK4vePC/wWqk2HrMwNmjNrvzkSULpGy50hri9Kh2d/EXgc5/a6j5o
+         uI8ngxBptr6Xyei3UMtFIOE+Lk7Iq2P1WHxkpqYpgFzblZiUzEbeK6gXraprEnkIQsy9
+         uMgKJuxCqv67PxskrfteYvkAdcxkOxOaWRgbZdltN5qIVZNsKexUfdTMFpMnslIk/YQJ
+         EyCH0fBwwUMsUXKD6eeqELkqOjvV60bTuEuIgTjNKh58JEWqIezncPCsq1j/2Ztv8vIo
+         7yi+OMyEzh+2fEbFCxXbfWCSB17+wIfGi6sdlwDz6jQgmO490HeAVg32q0GlVKjTKMwV
+         maVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSGUzcyaWTy3nBbTF0GCRVLiBq5avw2UWaQV0gAHICONOczGdB927s3QVDBqPqnpMzgLWAr7Bc1pM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywi9rD5NITKtQ9LlZ4DyKHLhaDOTXH2SG2DfKNNP5JopX8WEyHd
+	jgqsldp01Qk85e/zhRY6/rTLsHpuPhDPOsMZs/wmEPLIc6f6nUrJ59RV2Ms+ERbGHlalaJLYfaR
+	tXHmheDn9y9NeCw5PVkQ20YJIvDCbbxE=
+X-Gm-Gg: AZuq6aL88ijHmG+qbSWkxODDxTTAda/q+UOKjm6Sw8xZGxJ8ZyhYVTywWtNUIa4ckEM
+	bjypHeo+F2u8rmbQZxJYfmgGnyOLRDc+bmuhz6iPu4Lw8Uoad6JWB7F10/BGRh0NKX6Qu60zHtV
+	JfdMeeefORzIrl76D/N3ZIAxNs++sCikg6l1DRacMiugnRNMiFxJ+3P3xA4wQSB0Bube1BFODf8
+	6qvVIc8idfxAIpdtZTQG4z18itMczMxtsd3w4uq29ZGUc8uJY7mvt3rgpL8W4v4kMEL/U/Of/k+
+	e7nfZ1puXyGDRC19yf+jOndXcIVzRFLWxFijjnS92t/3FmPKJJPAoocdG5k/wMY2uM/0CYbNsGo
+	gy12C8P5Af+/Hh6irqklEgxOs
+X-Received: by 2002:a05:7301:608b:b0:2b7:103a:7697 with SMTP id
+ 5a478bee46e88-2baba0dc237mr1177734eec.5.1771107534544; Sat, 14 Feb 2026
+ 14:18:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <20260214133337.112720-1-xry111@xry111.site>
+In-Reply-To: <20260214133337.112720-1-xry111@xry111.site>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 14 Feb 2026 23:18:42 +0100
+X-Gm-Features: AaiRm516VoA-BlaE52MerAybt9vzW03a3XJ43B7kMfls6jQhlQBhFNpxDHrNq5A
+Message-ID: <CANiq72naHZT+CuuMBFAoKmzTjVRZpicL+Wo9ai3QY5Rja-v1sA@mail.gmail.com>
+Subject: Re: [PATCH v2] rust_binder: Fix build failure if !CONFIG_COMPAT
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Alice Ryhl <aliceryhl@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Mingcong Bai <jeffbai@aosc.io>, loongarch@lists.linux.dev, 
+	hev <r@hev.cc>, Miguel Ojeda <ojeda@kernel.org>, stable@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Christian Brauner <brauner@kernel.org>, 
+	Carlos Llamas <cmllamas@google.com>, Matt Gilbride <mattgilbride@google.com>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Paul Moore <paul@paul-moore.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Sat, 14 Feb 2026 21:15:27 +0800:
+On Sat, Feb 14, 2026 at 2:34=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> Reported-by: Miguel Ojeda <ojeda@kernel.org>
+> Closes: https://lore.kernel.org/all/CANiq72mrVzqXnAV=3DHy2XBOonLHA6YQgH-c=
+kZoc_h0VBvTGK8rA@mail.gmail.com/
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.0
+Hmm... Wasn't this applied as:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/64275e9fda3702bfb5ab3b95f7c2b9b414667164
+  174e2a339bf7 ("rust_binder: Fix build failure if !CONFIG_COMPAT")
 
-Thank you!
+Then there was also this other thread:
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+  https://lore.kernel.org/rust-for-linux/20260105-redefine-compat_ptr_ioctl=
+-v1-1-25edb3d91acc@google.com/
+
+which got applied as:
+
+  68aabb29a546 ("rust: redefine `bindings::compat_ptr_ioctl` in Rust")
+
+Cheers,
+Miguel
