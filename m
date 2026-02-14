@@ -1,97 +1,63 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9951F92E
-	for <loongarch@lists.linux.dev>; Sat, 14 Feb 2026 13:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9771C30F52A;
+	Sat, 14 Feb 2026 20:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771076063; cv=none; b=biY09i1uf5moDHKtmegCbMFDV57jh8io6MJxowjOsnbeKOT+Dl6vOS+/KijU3XwVI9clNvAbCDffmAHzNcFiHWMkx6IuHGMcVnmsKIMyGjlbtpSY/y7SvR/nvf/vdpMTK/FZuDWpM0yVoG8eiNOUCh5av6IJuz8Xq2IjK8Q5AR4=
+	t=1771102449; cv=none; b=Tb50Ays1pFDKybe9D1XCJxjnvek+PHlMapo2XYh316p7ShOCYwlqse7MBgQZ2R4xWacTlQ6k7/OkhzDAOzXWxuJfDutswPeQ9+V+0dw/jtjyRPUR7TQ5QDBw8CEQ0QTQaQI2aO4zlr/VjQvVPEkI6B/Xw3NpAolUvuru1cXgNo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771076063; c=relaxed/simple;
-	bh=XYHDZzVKW99T6G9pkb2RTf2Fk7EvGAbdf7cdUCaErIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YAYpApyyXwW6NxtmUBTzuazxqTb1CBUdDmaLp0KS0trCbQolPEMwEaoUOJMb9T111wSrmopUUwxZ+Bnyjt6sCNIxHeF/tp7PgcMGx2NjzXvtIG6dEm3uUxThmXdjyhzN3ukGxuHxCgPoZZabsJNV4UWI54IBTyuXHQPArdNpaYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=cN+XJ0ud; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1771102449; c=relaxed/simple;
+	bh=/X5j0/V8oagcD0kaOY4bRUYm8NK814rvm1aiJ3MgG+A=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=agfWDJY0ovlul0YJ0pEML8L3O7zYACgnmZTCPPBbw/n4n1aI+4Ufz9mKbDaHMNjQW6rD5w00qzCX7ggw24Jy55/MGipuaBJHlHxZIGCHRJ0B2gPqiJivT+QnZyMXQCa5XMNm52lIWsYqVtPQNTqGpcFzN9JmXOhesEQrlMtFWEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeekuZv9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="cN+XJ0ud"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1771076060;
-	bh=phx2U09w0bMe/osybBoIqJR9EWk1uNkB+tFOzqwtjBc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cN+XJ0ud3ERtMvIy0pPuEuAQ8VUi2EDCF2gBmFpknfMeCM+E4KCmJ/xX3lcfIxeK7
-	 uOiYd620PywDNo3Rnj9CcPjTPn7zsZwYI/vgRiA6yFcqhSHvWt5xmP+IWcb1RbeXzY
-	 FvMjkZZ/HvOAH1xMITACe/n+N6aHJhWulIq1cq6o=
-Received: from stargazer (unknown [IPv6:2408:8427:6a1:ffef:9848:ba49:67aa:3472])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 549C26696A;
-	Sat, 14 Feb 2026 08:34:10 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	loongarch@lists.linux.dev,
-	hev <r@hev.cc>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Matt Gilbride <mattgilbride@google.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] rust_binder: Fix build failure if !CONFIG_COMPAT
-Date: Sat, 14 Feb 2026 21:32:06 +0800
-Message-ID: <20260214133337.112720-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeekuZv9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777BFC16AAE;
+	Sat, 14 Feb 2026 20:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771102449;
+	bh=/X5j0/V8oagcD0kaOY4bRUYm8NK814rvm1aiJ3MgG+A=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=AeekuZv9V6BUGhDpYxl7qqaioe/DGnFgcDmmH+JhGMiuaV0tfR5sL84yNjW47KnWI
+	 8PxbAxx81JSjv8zeXsZFX3Jrk4h0pNlITObNbur0kt21jBK2RyWaR3fUsNH+zO0eVL
+	 zK2EKASrUEoRWkBdV5VwuOZBgG2Zh/QHDmBfnC0eeCyTD2XR/yoVdbr4WsCvk81i1M
+	 s1a0z4kON1NfXaYUBmMEk3zioakwMIFEcigNSNjVnISrGuZ/kRy9FPRT2FTRg5wYQf
+	 Wklfgh4fAaJDinsalqWgAgF0XuRYTfaV+ECZyJAwV4OEYm3B5QGqw6Jdth+suU/DPp
+	 2vYFHC4MoBYxg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0B269393091E;
+	Sat, 14 Feb 2026 20:54:04 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch changes for v7.0
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260214131533.865218-1-chenhuacai@loongson.cn>
+References: <20260214131533.865218-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20260214131533.865218-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.0
+X-PR-Tracked-Commit-Id: 92860256402cce9fa6268763365f5333a56c1428
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 64275e9fda3702bfb5ab3b95f7c2b9b414667164
+Message-Id: <177110244258.2897141.10712297788280145163.pr-tracker-bot@kernel.org>
+Date: Sat, 14 Feb 2026 20:54:02 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The bindgen utility cannot handle "#define compat_ptr_ioctl NULL" in the
-C header, so we need to handle this case on our own.
+The pull request you sent on Sat, 14 Feb 2026 21:15:27 +0800:
 
-Simply skip this field in the initializer when !CONFIG_COMPAT as the
-SAFETY comment above this initializer implies this is allowed.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.0
 
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://lore.kernel.org/all/CANiq72mrVzqXnAV=Hy2XBOonLHA6YQgH-ckZoc_h0VBvTGK8rA@mail.gmail.com/
-Fixes: eafedbc7c050 ("rust_binder: add Rust Binder driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/64275e9fda3702bfb5ab3b95f7c2b9b414667164
 
-Changes from v1: fix Miguel's mail address and add tags for stable
-backport.
+Thank you!
 
- drivers/android/binder/rust_binder_main.rs | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/android/binder/rust_binder_main.rs b/drivers/android/binder/rust_binder_main.rs
-index 47bfb114cabb..e70f250bb4cd 100644
---- a/drivers/android/binder/rust_binder_main.rs
-+++ b/drivers/android/binder/rust_binder_main.rs
-@@ -312,6 +312,7 @@ unsafe impl<T> Sync for AssertSync<T> {}
-         owner: THIS_MODULE.as_ptr(),
-         poll: Some(rust_binder_poll),
-         unlocked_ioctl: Some(rust_binder_ioctl),
-+        #[cfg(CONFIG_COMPAT)]
-         compat_ioctl: Some(bindings::compat_ptr_ioctl),
-         mmap: Some(rust_binder_mmap),
-         open: Some(rust_binder_open),
 -- 
-2.53.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
