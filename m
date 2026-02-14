@@ -1,149 +1,86 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40747149E17
-	for <loongarch@lists.linux.dev>; Sat, 14 Feb 2026 13:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DF020E334
+	for <loongarch@lists.linux.dev>; Sat, 14 Feb 2026 13:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771074966; cv=none; b=b+RskFXWOm3Eumf6IX0rZEmfZFgV3dQg7JQcDi10gFUeyT460VVpkyam43h/6x75HbfHHtWWVHqeIo2J8zja1O4ehoiB4WVrQy5R4GJYG1nPaNcswqmqAR0gyEqQZpvDt0k3N3t58YBJcU6zY39hkB0Fujicc/1V0DL78aPn0Lg=
+	t=1771075291; cv=none; b=Y9NwUf+U1Yw1uGgSguBLqKbu3ytebzFXCW8ten9Cdkhu1qlup1qn/hFag9fRRDweUUroMyHMr9CbMSRKfUIJpi5LnsbrMe6QpQyArJqbLT0+50SKQF6ygH9eIsVq3XkxdLYahYTj0yP33oCl8IJiYURtJsvHQmYxmI2upNcCzEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771074966; c=relaxed/simple;
-	bh=0bkLvZ2OhEs/78Ax9cA6o7EwomLnumh8LYHfMNqyxVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XSxtUB76QexvuauvIf4Ikxs1H/L8Z6jJg6wY0Vh9fEkeuY05lzsRTEH1FVlqI31gceNWEPDKkLA+4riF53OKiGVksBM17GiYo5TFVmU4DRGPAJ0o1uK5D6IftnjVS0/tX5LCKuPyrTAqBxP1L4hbpRskrGTKRh4RKoy4vKIRgH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8AxisKHdZBpjXwSAA--.58231S3;
-	Sat, 14 Feb 2026 21:15:51 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJBxZcB+dZBpqQ5GAA--.20330S2;
-	Sat, 14 Feb 2026 21:15:48 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v7.0
-Date: Sat, 14 Feb 2026 21:15:27 +0800
-Message-ID: <20260214131533.865218-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1771075291; c=relaxed/simple;
+	bh=TgAINh7AkrQHq98HFKAPjnS1TrOaofTq6HlgB/QHRvY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O5Yd5TRHkiCzQAmXsKF2AOpn035HKMna6Yr0oprLyQxr2VXqz7NnA47UCjkpMRbNhm4TIbDuhF6CLpg/O7vraiJqkkTIPnqYSyVclF1NKbKlPIUjP0RVGERh8YjDnvS6Fi4/4UAwEQa9+y4UCheB+9vwtgu6MrkbGpoQs2Nmo2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=A9IPDM0c; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="A9IPDM0c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1771075281;
+	bh=TgAINh7AkrQHq98HFKAPjnS1TrOaofTq6HlgB/QHRvY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=A9IPDM0c2SFwFfPeUQ5I1YnXmgogs7X+3u3k/73f8pAqBzmW0EYrRK6ly0u0cxT25
+	 i4W2WRXvYiNSXzIMsAi7w2BeWR44daFZvToEA5wcCfR4FVSYbKAF9vvC5Im/7JWyt8
+	 TCR0n5eKzcsCCU7S9VHinzeOAZQ+SNru/HHaKt8Y=
+Received: from [IPv6:2408:8427:6a1:ffef:9848:ba49:67aa:3472] (unknown [IPv6:2408:8427:6a1:ffef:9848:ba49:67aa:3472])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3DB1666222;
+	Sat, 14 Feb 2026 08:21:16 -0500 (EST)
+Message-ID: <183595cad33ba7aa85482d7e566b914a8c917584.camel@xry111.site>
+Subject: Ping: [PATCH] LoongArch: Don't define __ARCH_WANT_NEW_STAT for LA32
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Arnd Bergmann
+	 <arnd@arndb.de>
+Cc: Mingcong Bai <jeffbai@aosc.io>, loongarch@lists.linux.dev, Jiaxun Yang
+	 <jiaxun.yang@flygoat.com>, open list <linux-kernel@vger.kernel.org>
+Date: Sat, 14 Feb 2026 21:21:11 +0800
+In-Reply-To: <20251215033443.196159-2-xry111@xry111.site>
+References: <20251215033443.196159-2-xry111@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxZcB+dZBpqQ5GAA--.20330S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr43Ar48ZryftF1rXw4DWrX_yoWrJr4rpF
-	y3urnxGF4rGrW3XrnrK347ur1DJFyxG342qa1akry8CF12vr1UXr1Iqrn7XFyUt3yrJry0
-	qF1rG34agF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73
-	UjIFyTuYvjxU2MKZDUUUU
 
-The following changes since commit 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b:
+Ping.
 
-  Linux 6.19 (2026-02-08 13:03:27 -0800)
+On Mon, 2025-12-15 at 11:34 +0800, Xi Ruoyao wrote:
+> While on LA64 we had added __ARCH_WANT_NEW_STAT back for technological
+> aesthetics reason, on LA32 the newstat family suffers Y2038 issue and it
+> should not be used at all, as the commit 82b355d161c9 ("y2038: Remove
+> newstat family from default syscall set") has already pointed out.
+>=20
+> Fixes: 14338e631afd ("LoongArch: Adjust system call for 32BIT/64BIT")
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+> =C2=A0arch/loongarch/include/asm/unistd.h | 3 +++
+> =C2=A01 file changed, 3 insertions(+)
+>=20
+> diff --git a/arch/loongarch/include/asm/unistd.h b/arch/loongarch/include=
+/asm/unistd.h
+> index e2c0f3d86c7b..4a7e4a6b6627 100644
+> --- a/arch/loongarch/include/asm/unistd.h
+> +++ b/arch/loongarch/include/asm/unistd.h
+> @@ -8,7 +8,10 @@
+> =C2=A0
+> =C2=A0#include <uapi/asm/unistd.h>
+> =C2=A0
+> +#if defined(__LP64__) && !defined(__SYSCALL_COMPAT)
+> =C2=A0#define __ARCH_WANT_NEW_STAT
+> +#endif
+> +
+> =C2=A0#define __ARCH_WANT_SYS_CLONE
+> =C2=A0
+> =C2=A0#define NR_syscalls (__NR_syscalls)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.0
-
-for you to fetch changes up to 92860256402cce9fa6268763365f5333a56c1428:
-
-  LoongArch: dts: loongson-2k1000: Add nand controller support (2026-02-10 19:31:33 +0800)
-
-----------------------------------------------------------------
-LoongArch changes for v7.0
-
-1, Select HAVE_CMPXCHG_{LOCAL,DOUBLE};
-2, Add 128-bit atomic cmpxchg support;
-3, Add HOTPLUG_SMT implementation;
-4, Wire up memfd_secret system call;
-5, Fix boot errors and unwind errors for KASAN;
-6, Use BPF prog pack allocator and add BPF arena support;
-7, Update dts files to add nand controllers;
-8, Some bug fixes and other small changes.
-
-----------------------------------------------------------------
-Binbin Zhou (2):
-      LoongArch: dts: loongson-2k0500: Add nand controller support
-      LoongArch: dts: loongson-2k1000: Add nand controller support
-
-Carlos López (1):
-      LoongArch: Use IS_ERR_PCPU() macro for KGDB
-
-George Guo (3):
-      LoongArch: Add detection for SC.Q support
-      LoongArch: Add 128-bit atomic cmpxchg support
-      LoongArch: Replace seq_printf() with seq_puts() for simple strings
-
-Hengqi Chen (3):
-      LoongArch: BPF: Use BPF prog pack allocator
-      LoongArch: BPF: Implement PROBE_MEM32 pseudo instructions
-      LoongArch: BPF: Implement bpf_addr_space_cast instruction
-
-Huacai Chen (3):
-      LoongArch: Select HAVE_CMPXCHG_LOCAL in Kconfig
-      LoongArch: Add HOTPLUG_SMT implementation
-      LoongArch: Prefer top-down allocation after arch_mem_init()
-
-John Garry (1):
-      LoongArch: Make cpumask_of_node() robust against NUMA_NO_NODE
-
-Lain "Fearyncess" Yang (1):
-      LoongArch: Wire up memfd_secret system call
-
-Tiezhu Yang (6):
-      LoongArch: Use %px to print unmodified unwinding address
-      LoongArch: Handle percpu handler address for ORC unwinder
-      LoongArch: Guard percpu handler under !CONFIG_PREEMPT_RT
-      LoongArch: Remove some extern variables in source files
-      LoongArch: Disable instrumentation for setup_ptwalker()
-      LoongArch: Rework KASAN initialization for PTW-enabled systems
-
- Documentation/admin-guide/kernel-parameters.txt |   2 +-
- arch/loongarch/Kconfig                          |   4 +
- arch/loongarch/boot/dts/loongson-2k0500-ref.dts |  19 +++
- arch/loongarch/boot/dts/loongson-2k0500.dtsi    |  12 +-
- arch/loongarch/boot/dts/loongson-2k1000-ref.dts |  22 +++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi    |  13 +-
- arch/loongarch/include/asm/cmpxchg.h            |  54 +++++++
- arch/loongarch/include/asm/cpu-features.h       |   1 +
- arch/loongarch/include/asm/cpu.h                |  62 +++----
- arch/loongarch/include/asm/setup.h              |   3 +
- arch/loongarch/include/asm/topology.h           |   2 +-
- arch/loongarch/include/asm/unistd.h             |   1 +
- arch/loongarch/include/uapi/asm/hwcap.h         |   1 +
- arch/loongarch/kernel/Makefile.syscalls         |   5 +-
- arch/loongarch/kernel/cpu-probe.c               |   4 +
- arch/loongarch/kernel/kgdb.c                    |   2 +-
- arch/loongarch/kernel/proc.c                    |  63 +++++---
- arch/loongarch/kernel/setup.c                   |   1 +
- arch/loongarch/kernel/smp.c                     |  13 ++
- arch/loongarch/kernel/unwind_orc.c              |  18 ++-
- arch/loongarch/kernel/unwind_prologue.c         |   6 +-
- arch/loongarch/mm/kasan_init.c                  |  78 ++++-----
- arch/loongarch/mm/tlb.c                         |   3 +-
- arch/loongarch/net/bpf_jit.c                    | 206 +++++++++++++++++++-----
- arch/loongarch/net/bpf_jit.h                    |   4 +-
- tools/testing/selftests/mm/Makefile             |   2 +-
- 26 files changed, 449 insertions(+), 152 deletions(-)
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
