@@ -1,219 +1,86 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660281397
-	for <loongarch@lists.linux.dev>; Sun, 15 Feb 2026 14:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC81A9F91;
+	Sun, 15 Feb 2026 23:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771164621; cv=none; b=ZHpBlI3y4QVaIinObzH9/tWIym73TrIsVo491ZpGXxKDGWcC6lJvntZz6VqD+DX+mtWhrWR4FzBZ4UEQrvlEGJPGHFr8WxgGy57MyTHhk0ztPyHODbpyXaQZlrzjAt4zN/9SSd18b5kj9mYBOQros0msDH3Bi5e1VCOQq19NwZ4=
+	t=1771197259; cv=none; b=k9nZ6f6a2/OJtg56r+7rjNyMHZl59OENNYU31C2AVN5/JJ7nNSiC3yUuQcRcWt/qfrTopddeZs/wx/U/BXlajGs3sjrZpwkO+8y9Js7UTYsiIO2PZzHMmpCEVeDLq2U6KEc+/yBmLFxCtlCjVAQ8VgTpl1dCxdetSGbs8aNoesM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771164621; c=relaxed/simple;
-	bh=2yStp3xIxZCnJt/Lg5CSUzoUxFjXzXcqf0vrc6IeYec=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UISTeaf5uXbxQGEaNE7jfrMXhwMrlEuQjx25ybSeM3TwY00uD7aeIYrzvJ6DDyxCF72uXT9k84oL/5uezELIQ+1vSbpkeVqaQhOSdVME3ZsXk/GB4U/VBUpdXi8Mft0K3uM8l0fWU+C40r2XObCmsCfofIzi9LDj2SWelc5TG6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8CxVvDA05Fpk50SAA--.59644S3;
-	Sun, 15 Feb 2026 22:10:09 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJCxdcC705Fpp5xGAA--.20583S2;
-	Sun, 15 Feb 2026 22:10:07 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for 6.6 & 6.12] LoongArch: Rework KASAN initialization for PTW-enabled systems
-Date: Sun, 15 Feb 2026 22:09:53 +0800
-Message-ID: <20260215140953.1224579-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1771197259; c=relaxed/simple;
+	bh=F0LAK3YWrgUb4yAqU75Ie/YcGfuVcgaDhx8BTx15Wbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7HFue/SWUAJSY5FPoAj0jV8R6ELmqJWR7aRvNQTlt8FflQm2N1mBac1LTi8A2ulFK0KilyObaeJWOHK0frHBxiOQOFp76POq3IdW3BbtACOxH1qbfjjBtKq8qzqTJW4Z0+g2L+gSchR010e6P9SrQ6INWqps3x0izKM/Ld8who=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Tq38ZBkw; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tq38ZBkw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Orx67w0OdZsiD/sxqMgXoLutvDapJy44psufStBNd34=; b=Tq38ZBkwHinLdgKHuJ2F6wb0Lw
+	nuKJ0utimPTEs5necEg4OiOp93omwKGRX71185wTqzVACW8X/Btm5RQFtI2l9t/0LXp/dZlyaIOLM
+	GehWSFz/SBsnkXJyZynrq8iJyDwnyPiZ75nYhPdeisBx/mBVpuALLKyyepWJzVzLGdsoKKXUpVTrP
+	UiG1h5BkIqArcpktGdrJGEQfcuC7wHIfdw2rR8FSTBse3ekOr3x0SqqKT2TOwpGA16cFQh9WQ4mcJ
+	1LELudn4ti3SdkfASP4GSMU16UMLBkxEsG2Ob5cpm0F+uWJ/zPQ4zd/VuW57a7wmiDUp7TXRaurH9
+	jJ6U3oAw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vrlJH-00000001duk-2IlM;
+	Sun, 15 Feb 2026 23:13:51 +0000
+Date: Sun, 15 Feb 2026 23:13:51 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	Usama Arif <usamaarif642@gmail.com>,
+	Frank van der Linden <fvdl@google.com>,
+	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	kernel-team@meta.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
+Message-ID: <aZJTLwV2SaaKu1k_@casper.infradead.org>
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-9-kas@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxdcC705Fpp5xGAA--.20583S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Wry5Kw1fAF4kWw45KF1UCFX_yoW7Cw1xpr
-	WkKa48Gr4vvr4qqanxGw1UAry8Jwn3Ca97tFWaqa95Kay3CFy0qr1DGFykZr17WrW7JFyY
-	9w1SvFWDGF45tacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7iFxUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260202155634.650837-9-kas@kernel.org>
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Mon, Feb 02, 2026 at 03:56:24PM +0000, Kiryl Shutsemau wrote:
+> With the upcoming changes to HVO, a single page of tail struct pages
+> will be shared across all huge pages of the same order on a node. Since
+> huge pages on the same node may belong to different zones, the zone
+> information stored in shared tail page flags would be incorrect.
+> 
+> Always fetch zone information from the head page, which has unique and
+> correct zone flags for each compound page.
 
-commit 5ec5ac4ca27e4daa234540ac32f9fc5219377d53 upstream.
+You're right that different pages in the same folio can have different
+zone number.  But does it matter ... or to put it another way, why is
+returning the zone number of the head page the correct way to resolve
+this?
 
-"kasan_early_stage = false" indicates that kasan is fully initialized,
-so it should be put at end of kasan_init().
-
-Otherwise bringing up the primary CPU failed when CONFIG_KASAN is set
-on PTW-enabled systems, here are the call chains:
-
-    kernel_entry()
-      start_kernel()
-        setup_arch()
-          kasan_init()
-            kasan_early_stage = false
-
-The reason is PTW-enabled systems have speculative accesses which means
-memory accesses to the shadow memory after kasan_init() may be executed
-by hardware before. However, accessing shadow memory is safe only after
-kasan fully initialized because kasan_init() uses a temporary PGD table
-until we have populated all levels of shadow page tables and writen the
-PGD register. Moving "kasan_early_stage = false" later can defer the
-occasion of kasan_arch_is_ready(), so as to avoid speculative accesses
-on shadow pages.
-
-After moving "kasan_early_stage = false" to the end, kasan_init() can no
-longer call kasan_mem_to_shadow() for shadow address conversion because
-it will always return kasan_early_shadow_page. On the other hand, we
-should keep the current logic of kasan_mem_to_shadow() for both the early
-and final stage because there may be instrumentation before kasan_init().
-
-To solve this, we factor out a new mem_to_shadow() function from current
-kasan_mem_to_shadow() for the shadow address conversion in kasan_init().
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/mm/kasan_init.c | 77 ++++++++++++++++++----------------
- 1 file changed, 40 insertions(+), 37 deletions(-)
-
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index d2681272d8f0..9337380a70eb 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -42,39 +42,43 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
- 
- bool kasan_early_stage = true;
- 
--void *kasan_mem_to_shadow(const void *addr)
-+static void *mem_to_shadow(const void *addr)
- {
--	if (!kasan_arch_is_ready()) {
-+	unsigned long offset = 0;
-+	unsigned long maddr = (unsigned long)addr;
-+	unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
-+
-+	if (maddr >= FIXADDR_START)
- 		return (void *)(kasan_early_shadow_page);
--	} else {
--		unsigned long maddr = (unsigned long)addr;
--		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
--		unsigned long offset = 0;
--
--		if (maddr >= FIXADDR_START)
--			return (void *)(kasan_early_shadow_page);
--
--		maddr &= XRANGE_SHADOW_MASK;
--		switch (xrange) {
--		case XKPRANGE_CC_SEG:
--			offset = XKPRANGE_CC_SHADOW_OFFSET;
--			break;
--		case XKPRANGE_UC_SEG:
--			offset = XKPRANGE_UC_SHADOW_OFFSET;
--			break;
--		case XKPRANGE_WC_SEG:
--			offset = XKPRANGE_WC_SHADOW_OFFSET;
--			break;
--		case XKVRANGE_VC_SEG:
--			offset = XKVRANGE_VC_SHADOW_OFFSET;
--			break;
--		default:
--			WARN_ON(1);
--			return NULL;
--		}
- 
--		return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
-+	maddr &= XRANGE_SHADOW_MASK;
-+	switch (xrange) {
-+	case XKPRANGE_CC_SEG:
-+		offset = XKPRANGE_CC_SHADOW_OFFSET;
-+		break;
-+	case XKPRANGE_UC_SEG:
-+		offset = XKPRANGE_UC_SHADOW_OFFSET;
-+		break;
-+	case XKPRANGE_WC_SEG:
-+		offset = XKPRANGE_WC_SHADOW_OFFSET;
-+		break;
-+	case XKVRANGE_VC_SEG:
-+		offset = XKVRANGE_VC_SHADOW_OFFSET;
-+		break;
-+	default:
-+		WARN_ON(1);
-+		return NULL;
- 	}
-+
-+	return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
-+}
-+
-+void *kasan_mem_to_shadow(const void *addr)
-+{
-+	if (kasan_arch_is_ready())
-+		return mem_to_shadow(addr);
-+	else
-+		return (void *)(kasan_early_shadow_page);
- }
- 
- const void *kasan_shadow_to_mem(const void *shadow_addr)
-@@ -295,10 +299,8 @@ void __init kasan_init(void)
- 	/* Maps everything to a single page of zeroes */
- 	kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END, NUMA_NO_NODE, true);
- 
--	kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_START),
--					kasan_mem_to_shadow((void *)KFENCE_AREA_END));
--
--	kasan_early_stage = false;
-+	kasan_populate_early_shadow(mem_to_shadow((void *)VMALLOC_START),
-+					mem_to_shadow((void *)KFENCE_AREA_END));
- 
- 	/* Populate the linear mapping */
- 	for_each_mem_range(i, &pa_start, &pa_end) {
-@@ -308,13 +310,13 @@ void __init kasan_init(void)
- 		if (start >= end)
- 			break;
- 
--		kasan_map_populate((unsigned long)kasan_mem_to_shadow(start),
--			(unsigned long)kasan_mem_to_shadow(end), NUMA_NO_NODE);
-+		kasan_map_populate((unsigned long)mem_to_shadow(start),
-+			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
- 	}
- 
- 	/* Populate modules mapping */
--	kasan_map_populate((unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR),
--		(unsigned long)kasan_mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
-+	kasan_map_populate((unsigned long)mem_to_shadow((void *)MODULES_VADDR),
-+		(unsigned long)mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
- 	/*
- 	 * KAsan may reuse the contents of kasan_early_shadow_pte directly, so we
- 	 * should make sure that it maps the zero page read-only.
-@@ -329,5 +331,6 @@ void __init kasan_init(void)
- 
- 	/* At this point kasan is fully initialized. Enable error messages */
- 	init_task.kasan_depth = 0;
-+	kasan_early_stage = false;
- 	pr_info("KernelAddressSanitizer initialized.\n");
- }
--- 
-2.52.0
-
+Arguably, the caller is asking for the zone number of _this page_, and
+does not care about the zone number of the head page.  It would be good
+to have a short discussion of this in the commit message (but probably
+not worth putting this in a comment).
