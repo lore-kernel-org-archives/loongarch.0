@@ -1,146 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F251F2BE644
-	for <loongarch@lists.linux.dev>; Mon, 16 Feb 2026 11:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A94310625
+	for <loongarch@lists.linux.dev>; Mon, 16 Feb 2026 14:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771241424; cv=none; b=QnuSOmQVfKoQwMmEtF+0s8hAymbVeRkp8YAwJ6isWSkB/z2k6fjfhD+Go3epWcw9DDKGhhamBpJo5zOLQzSK6ruWzH5+NUug5EFgSpuTlqNN+f/Jf3oQU9jXQbTdCanCxPuU8jtDJH2RNg7KOgwnyHIiCSG7Nvf2M/o7Pb3YVmM=
+	t=1771251979; cv=none; b=JQw8wEDgQXbSvJmFdWtRmDjIm9IuvKQn9jVrbL2nASEFaN8AJetmFYqezH6Gi+DDaUuP38+uSFTnptyFW2qea2Z85N8f8Ya7Hh8yqIsk6tPAE+SOEXNqY9DOPo19yU7jSNqfJaIpgAFlfZZ31mWDkYK5Oqyn9dA1k4ERCCJIvpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771241424; c=relaxed/simple;
-	bh=KFgAyA/laS4/MU7pCChfZBh0Hjfg1QRQ88qFNdP1x20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7Dzn4s0IiqKqrwKdXD9k4mEbV8G29cE1WB9S30xETpHLC1JrO/ts7YcU3kFPx325scVbRadsCsWFHUL/vHSOdmg80F+VQFN0iHJLoLuKZGrg8RMwAZ3GFsWhVKmCFbU0MrsWLMPd6fkv9qZIjFFJBl38057cGuiO36W8/x5nGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWiceWhk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWiceWhk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A63CC116C6;
-	Mon, 16 Feb 2026 11:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771241423;
-	bh=KFgAyA/laS4/MU7pCChfZBh0Hjfg1QRQ88qFNdP1x20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QWiceWhkirDnroa2amGc7Yzcuqe5G8ZzuTAhP4Vi2rX9YaCZJRFkQEv1BUtrcTxme
-	 CoTj9P4GePUXa+2Wik7u0Wa9Lh6eiWEnP85WL5vkfkwuTCedCzTsZIF7r86yv3rmN8
-	 EB3pDibfGA3+kpFRt/kznLXW1GxPgr9DifC2KrGsvT6tFlNTTQA5FjR+5Fu0n4QbjA
-	 oZuG7n1Usbb9IuvLtGMS7n7BRFUGm4ngi6H4saX9JqxL4vwB6mZIK7FcyjoXUhHmT4
-	 ES6C+lZbk7cW84yPq72i7mDl9/00ThL3LQotaKdFI0i4HvL+d1sbmmGneJO0Ny4gR/
-	 cLQC7uOK+Iz6Q==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 18EFFF4006D;
-	Mon, 16 Feb 2026 06:30:22 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 16 Feb 2026 06:30:22 -0500
-X-ME-Sender: <xms:zv-SafP6SdpwtyKrIy61_w1L6KRCDqa3wojRXdKE-WnfoRqegezjLg>
-    <xme:zv-SaTo5THFs5nSUYFTs8rKGfx5IX0WsRqgOhoR-nGDQS3gxV9h-ysxYRQmfQbZRU
-    rbR0SvvqJ50mFzQq0muRybdErIXOO4O9sBw69GMNxjx7zvk7ro2CZw>
-X-ME-Received: <xmr:zv-SaVNZz4F9fftM3y5usJj4f403Eg3OPTylNcGpQErHuIZy8W7ryInBHKOaaw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvudeijeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
-    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
-    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
-    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
-    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
-    hnrghmvgdpnhgspghrtghpthhtohepheegpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehvsggrsghkrgesshhushgvrdgtiidprhgtphhtthhopegurghvihgusehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
-    rdhorhhgpdhrtghpthhtohepmhhutghhuhhnrdhsohhngheslhhinhhugidruggvvhdprh
-    gtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepuhhs
-    rghmrggrrhhifheigedvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfhhvughlsehgoh
-    hoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrgguohhrsehsuhhsvgdruggvpdhr
-    tghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:zv-SaXy3RYYkVrgjT2ePItIoI7nROGRlXkxJI-DmcNGsMg3Ks4NSYw>
-    <xmx:zv-SaW0PCwprxWMPv1amXkIEXGoFlPtc4-K63ZVJwbuAOtiDic-kqg>
-    <xmx:zv-SaeTXFVwr2DgeActR2sgR2pncUgpqpAePUJrhigvtC8oLr0r4pw>
-    <xmx:zv-SafeawC4-UkIKrewg6FMu9XD5_XA_EuL2IW4uShBV2qn_vICcnQ>
-    <xmx:zv-SaSvdYc1ErSSH4ujiq4HdlsAPlErFh89bDsMP690zvTe17atmywkM>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 16 Feb 2026 06:30:20 -0500 (EST)
-Date: Mon, 16 Feb 2026 11:30:13 +0000
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Muchun Song <muchun.song@linux.dev>, 
-	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
-	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
-Message-ID: <aZL-7mpPT_S3Paon@thinkstation>
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-9-kas@kernel.org>
- <e5831f0b-88c5-4a20-82b3-6e5952388132@kernel.org>
- <aYnJCnE5vooLROnu@thinkstation>
- <6afd7334-82e8-4f87-8ed3-6448e89328c2@suse.cz>
+	s=arc-20240116; t=1771251979; c=relaxed/simple;
+	bh=rLmnyxyErHYiXtdh+CV6iMzJzbzCJSo0gnxl2xhAGRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ow+MknsyhRnwWLH2VdMkWjuIg7JzpbRXgbs3GdkqOm8ZblMEVUaB/vbpKgZjWcHyO4LRff/cHV1xY9xMMz8kyILVWs6JoXjyMxBKMqVEKqicjA5CVnCFmHcNyZ3V9IFOUCBn751yR8C2p0nntTTJkA2TG0hOcVUiWrkOIhSXZgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.227])
+	by gateway (Coremail) with SMTP id _____8AxScL+KJNpedISAA--.59522S3;
+	Mon, 16 Feb 2026 22:26:06 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.227])
+	by front1 (Coremail) with SMTP id qMiowJCxdcD3KJNpUiFHAA--.20742S2;
+	Mon, 16 Feb 2026 22:26:03 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH V2 for 6.6 & 6.12] LoongArch: Rework KASAN initialization for PTW-enabled systems
+Date: Mon, 16 Feb 2026 22:25:50 +0800
+Message-ID: <20260216142550.1479337-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6afd7334-82e8-4f87-8ed3-6448e89328c2@suse.cz>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxdcD3KJNpUiFHAA--.20742S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Wry5Kw1fAF4kAr1kGr13KFX_yoW7ur43pr
+	WkKa48Kr4vvr4qqwsxGw1UZry8Jws3Ca97tFZxta9Ykay7CF1Fqr1kGF97ZF1UWrW8JF1Y
+	9w1SvFWDGr45JacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
 
-On Tue, Feb 10, 2026 at 04:57:55PM +0100, Vlastimil Babka wrote:
-> On 2/9/26 12:52, Kiryl Shutsemau wrote:
-> > On Thu, Feb 05, 2026 at 02:10:40PM +0100, David Hildenbrand (Arm) wrote:
-> >> On 2/2/26 16:56, Kiryl Shutsemau wrote:
-> >> > With the upcoming changes to HVO, a single page of tail struct pages
-> >> > will be shared across all huge pages of the same order on a node. Since
-> >> > huge pages on the same node may belong to different zones, the zone
-> >> > information stored in shared tail page flags would be incorrect.
-> >> > 
-> >> > Always fetch zone information from the head page, which has unique and
-> >> > correct zone flags for each compound page.
-> >> > 
-> >> > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> >> > Acked-by: Zi Yan <ziy@nvidia.com>
-> >> > ---
-> >> >   include/linux/mmzone.h | 1 +
-> >> >   1 file changed, 1 insertion(+)
-> >> > 
-> >> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> >> > index be8ce40b5638..192143b5cdc0 100644
-> >> > --- a/include/linux/mmzone.h
-> >> > +++ b/include/linux/mmzone.h
-> >> > @@ -1219,6 +1219,7 @@ static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
-> >> >   static inline enum zone_type page_zonenum(const struct page *page)
-> >> >   {
-> >> > +	page = compound_head(page);
-> >> >   	return memdesc_zonenum(page->flags);
-> >> 
-> >> We end up calling page_zonenum() without holding a reference.
-> >> 
-> >> Given that _compound_head() does a READ_ONCE(), this should work even if we
-> >> see concurrent page freeing etc.
-> >> 
-> >> However, this change implies that we now perform a compound page lookup for
-> >> every PageHighMem() [meh], page_zone() [quite some users in the buddy,
-> >> including for pageblock access and page freeing].
-> >> 
-> >> That's a nasty compromise for making HVO better? :)
-> >> 
-> >> We should likely limit that special casing to kernels that really rquire it
-> >> (HVO).
-> > 
-> > I will add compound_info_has_mask() check.
-> 
-> Not thrilled by this indeed. Would it be a problem to have the shared tail
-> pages per node+zone instead of just per node?
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-I thought it would be overkill. It likely is going to be unused for most
-nodes. But sure, move it to per-zone.
+commit 5ec5ac4ca27e4daa234540ac32f9fc5219377d53 upstream.
 
+kasan_init_generic() indicates that kasan is fully initialized, so it
+should be put at end of kasan_init().
+
+Otherwise bringing up the primary CPU failed when CONFIG_KASAN is set
+on PTW-enabled systems, here are the call chains:
+
+    kernel_entry()
+      start_kernel()
+        setup_arch()
+          kasan_init()
+            kasan_init_generic()
+
+The reason is PTW-enabled systems have speculative accesses which means
+memory accesses to the shadow memory after kasan_init() may be executed
+by hardware before. However, accessing shadow memory is safe only after
+kasan fully initialized because kasan_init() uses a temporary PGD table
+until we have populated all levels of shadow page tables and writen the
+PGD register. Moving kasan_init_generic() later can defer the occasion
+of kasan_enabled(), so as to avoid speculative accesses on shadow pages.
+
+After moving kasan_init_generic() to the end, kasan_init() can no longer
+call kasan_mem_to_shadow() for shadow address conversion because it will
+always return kasan_early_shadow_page. On the other hand, we should keep
+the current logic of kasan_mem_to_shadow() for both the early and final
+stage because there may be instrumentation before kasan_init().
+
+To solve this, we factor out a new mem_to_shadow() function from current
+kasan_mem_to_shadow() for the shadow address conversion in kasan_init().
+
+[ Huacai: To backport from upstream to 6.6 & 6.12, kasan_enabled() is
+          replaced with kasan_arch_is_ready() and kasan_init_generic()
+          is replaced with "kasan_early_stage = false". ]
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/mm/kasan_init.c | 77 ++++++++++++++++++----------------
+ 1 file changed, 40 insertions(+), 37 deletions(-)
+
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index d2681272d8f0..9337380a70eb 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -42,39 +42,43 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+ 
+ bool kasan_early_stage = true;
+ 
+-void *kasan_mem_to_shadow(const void *addr)
++static void *mem_to_shadow(const void *addr)
+ {
+-	if (!kasan_arch_is_ready()) {
++	unsigned long offset = 0;
++	unsigned long maddr = (unsigned long)addr;
++	unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
++
++	if (maddr >= FIXADDR_START)
+ 		return (void *)(kasan_early_shadow_page);
+-	} else {
+-		unsigned long maddr = (unsigned long)addr;
+-		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
+-		unsigned long offset = 0;
+-
+-		if (maddr >= FIXADDR_START)
+-			return (void *)(kasan_early_shadow_page);
+-
+-		maddr &= XRANGE_SHADOW_MASK;
+-		switch (xrange) {
+-		case XKPRANGE_CC_SEG:
+-			offset = XKPRANGE_CC_SHADOW_OFFSET;
+-			break;
+-		case XKPRANGE_UC_SEG:
+-			offset = XKPRANGE_UC_SHADOW_OFFSET;
+-			break;
+-		case XKPRANGE_WC_SEG:
+-			offset = XKPRANGE_WC_SHADOW_OFFSET;
+-			break;
+-		case XKVRANGE_VC_SEG:
+-			offset = XKVRANGE_VC_SHADOW_OFFSET;
+-			break;
+-		default:
+-			WARN_ON(1);
+-			return NULL;
+-		}
+ 
+-		return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
++	maddr &= XRANGE_SHADOW_MASK;
++	switch (xrange) {
++	case XKPRANGE_CC_SEG:
++		offset = XKPRANGE_CC_SHADOW_OFFSET;
++		break;
++	case XKPRANGE_UC_SEG:
++		offset = XKPRANGE_UC_SHADOW_OFFSET;
++		break;
++	case XKPRANGE_WC_SEG:
++		offset = XKPRANGE_WC_SHADOW_OFFSET;
++		break;
++	case XKVRANGE_VC_SEG:
++		offset = XKVRANGE_VC_SHADOW_OFFSET;
++		break;
++	default:
++		WARN_ON(1);
++		return NULL;
+ 	}
++
++	return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
++}
++
++void *kasan_mem_to_shadow(const void *addr)
++{
++	if (kasan_arch_is_ready())
++		return mem_to_shadow(addr);
++	else
++		return (void *)(kasan_early_shadow_page);
+ }
+ 
+ const void *kasan_shadow_to_mem(const void *shadow_addr)
+@@ -295,10 +299,8 @@ void __init kasan_init(void)
+ 	/* Maps everything to a single page of zeroes */
+ 	kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END, NUMA_NO_NODE, true);
+ 
+-	kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_START),
+-					kasan_mem_to_shadow((void *)KFENCE_AREA_END));
+-
+-	kasan_early_stage = false;
++	kasan_populate_early_shadow(mem_to_shadow((void *)VMALLOC_START),
++					mem_to_shadow((void *)KFENCE_AREA_END));
+ 
+ 	/* Populate the linear mapping */
+ 	for_each_mem_range(i, &pa_start, &pa_end) {
+@@ -308,13 +310,13 @@ void __init kasan_init(void)
+ 		if (start >= end)
+ 			break;
+ 
+-		kasan_map_populate((unsigned long)kasan_mem_to_shadow(start),
+-			(unsigned long)kasan_mem_to_shadow(end), NUMA_NO_NODE);
++		kasan_map_populate((unsigned long)mem_to_shadow(start),
++			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
+ 	}
+ 
+ 	/* Populate modules mapping */
+-	kasan_map_populate((unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR),
+-		(unsigned long)kasan_mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
++	kasan_map_populate((unsigned long)mem_to_shadow((void *)MODULES_VADDR),
++		(unsigned long)mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
+ 	/*
+ 	 * KAsan may reuse the contents of kasan_early_shadow_pte directly, so we
+ 	 * should make sure that it maps the zero page read-only.
+@@ -329,5 +331,6 @@ void __init kasan_init(void)
+ 
+ 	/* At this point kasan is fully initialized. Enable error messages */
+ 	init_task.kasan_depth = 0;
++	kasan_early_stage = false;
+ 	pr_info("KernelAddressSanitizer initialized.\n");
+ }
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.52.0
+
