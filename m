@@ -1,147 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD764273D6D;
-	Mon, 16 Feb 2026 09:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EC92EF64F;
+	Mon, 16 Feb 2026 09:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771232827; cv=none; b=h9qHEbUCQG8VYc26KgZl1qKOdFgQT4ixmLC/cYvm2N32T7eMH/TxSV4uQ9tT5RTMQ0wcKw9JpythlsNIgKlBcIXaxlVj1BYdAI3LXhUhdJf55e2XIcp6zRvOu0LDTcTG4IXozp9UxTUOZhV9zDt9k+/5L15hszdXoH93Jn1k0hs=
+	t=1771235531; cv=none; b=tv3CsLSbHpHxMgREX2OvZeEZH97vn15dGe/ZiCMDJQN9U8lMTnb1kJJ55p3BhoAlX8ORBITqZcqgAN84CsCsLjf3KGyUo+s8Ap0kceyg8UI5SJ4RLGpP7ISv/34m4P1cT/LsQXzUoE7jQXKYBCXceF7jqfKnRtrR4zI2zm5Dd4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771232827; c=relaxed/simple;
-	bh=Pn8iMDIZmzFd3kkBcfiQHX1j0BjcMGClm/3MIGwtj78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GgeEX1Wn/tv0DpKES8vOzilP0ojNmccNyQdgeOHolP2wbTpIeu7mt0OUpLk3oN8mzRJGLu+l8fHBjqa1hK+67A//9Mp7fCPKIe4VooYVDONAXbN5iwrkT70IxWjR6GWMCdfRJRScWDbsTQsGSWMZYleJTs503i09zdAN8a03nAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYvIch1U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771235531; c=relaxed/simple;
+	bh=sIGdx8mX9ScmiwW4cj0jA42fQyDS7P82HBU3mo3hBsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUwQTgoegz2nFppZOzUBSIeZr6T3n0jNTvFejMrLh2+N8L/b1Dnyw6P4+GwCzs6inYDLJIPHixNFq+I5HksMUHPqsc5TPATs3ejdufzNV4awbops5Hw41lT2xKtmKCRbjpSP6Tdr/U8EAf3NPPhprnHW4hKJbYpCxoFdOXPr4iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FT6BEkj0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYvIch1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C93C116C6;
-	Mon, 16 Feb 2026 09:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771232827;
-	bh=Pn8iMDIZmzFd3kkBcfiQHX1j0BjcMGClm/3MIGwtj78=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FYvIch1U38DwPufVNrBLBAbn0caX9A0u2fc1XTx+8xS4GM6lbSoz0aK6WztCOQhgu
-	 Vx0h8p4NW70I4RYvdbzNN3WeCbH2veDYorXEU+XuRnOO2bBGmDyuj0HdvJ0UO9NapA
-	 WMmllVlT3Sps3rZOVIgM21JGVU3rPlmkTd/PrNsaqsDBCNcKojNsZ8ARxqvwtAxRsI
-	 TgoqrGz+UUyTZMy5qOlBHvr/5o0DCg0PWIfE7yqHUeBhz0YnA2tbX9c9NMxbQZ18nI
-	 H0ZFyO/ROTLHJ/Eh3O1IjbDs9b2IQPw4FXOY0/N4Vsc9RofntPgvkSjl5odPTVBJV7
-	 RbqdaQo9YbeBw==
-Message-ID: <ec4a9a1e-8c08-4879-a787-3b9e0bc38160@kernel.org>
-Date: Mon, 16 Feb 2026 10:06:57 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FT6BEkj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE04C19424;
+	Mon, 16 Feb 2026 09:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1771235531;
+	bh=sIGdx8mX9ScmiwW4cj0jA42fQyDS7P82HBU3mo3hBsc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FT6BEkj0wqDLLyITZEN6SGDO7xN3AHI49SV/55StDGGuQGhW28C+WLzwcXB4Q7HKw
+	 N8Prsgn2qSCbw8DKWg8mG5bmYdc4iFazPFc9d26Ah8X04lkyUFQbYdi/6rQtEmRhBw
+	 nwdw/U+CqFq0QqhGwM9DzctdB6Ts9/XOzFbGnqg8=
+Date: Mon, 16 Feb 2026 10:52:08 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH for 6.6 & 6.12] LoongArch: Rework KASAN initialization
+ for PTW-enabled systems
+Message-ID: <2026021631-sabbath-wrangle-3496@gregkh>
+References: <20260215140953.1224579-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
-To: Matthew Wilcox <willy@infradead.org>, Kiryl Shutsemau <kas@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Usama Arif <usamaarif642@gmail.com>,
- Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>,
- Mike Rapoport <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-9-kas@kernel.org>
- <aZJTLwV2SaaKu1k_@casper.infradead.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aZJTLwV2SaaKu1k_@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260215140953.1224579-1-chenhuacai@loongson.cn>
 
-On 2/16/26 00:13, Matthew Wilcox wrote:
-> On Mon, Feb 02, 2026 at 03:56:24PM +0000, Kiryl Shutsemau wrote:
->> With the upcoming changes to HVO, a single page of tail struct pages
->> will be shared across all huge pages of the same order on a node. Since
->> huge pages on the same node may belong to different zones, the zone
->> information stored in shared tail page flags would be incorrect.
->>
->> Always fetch zone information from the head page, which has unique and
->> correct zone flags for each compound page.
+On Sun, Feb 15, 2026 at 10:09:53PM +0800, Huacai Chen wrote:
+> From: Tiezhu Yang <yangtiezhu@loongson.cn>
 > 
-> You're right that different pages in the same folio can have different
-> zone number.  But does it matter ... or to put it another way, why is
-> returning the zone number of the head page the correct way to resolve
-> this?
-
-How can a folio cross zones?
-
-Runtime allocated hugetlb folios from the CMA/buddy (alloc_contig_range) 
-definitely fall into a single zone.
-
-So is it about ones allocated early during boot, where, by chance, we 
-manage to cross ZONE_NORMAL + ZONE_MOVABLE etc?
-
-I thought that it's also not allowed there, and I wonder whether we 
-should disallow it if it's possible.
-
+> commit 5ec5ac4ca27e4daa234540ac32f9fc5219377d53 upstream.
 > 
-> Arguably, the caller is asking for the zone number of _this page_, and
-> does not care about the zone number of the head page.  It would be good
-> to have a short discussion of this in the commit message (but probably
-> not worth putting this in a comment).
+> "kasan_early_stage = false" indicates that kasan is fully initialized,
+> so it should be put at end of kasan_init().
+> 
+> Otherwise bringing up the primary CPU failed when CONFIG_KASAN is set
+> on PTW-enabled systems, here are the call chains:
+> 
+>     kernel_entry()
+>       start_kernel()
+>         setup_arch()
+>           kasan_init()
+>             kasan_early_stage = false
+> 
+> The reason is PTW-enabled systems have speculative accesses which means
+> memory accesses to the shadow memory after kasan_init() may be executed
+> by hardware before. However, accessing shadow memory is safe only after
+> kasan fully initialized because kasan_init() uses a temporary PGD table
+> until we have populated all levels of shadow page tables and writen the
+> PGD register. Moving "kasan_early_stage = false" later can defer the
+> occasion of kasan_arch_is_ready(), so as to avoid speculative accesses
+> on shadow pages.
+> 
+> After moving "kasan_early_stage = false" to the end, kasan_init() can no
+> longer call kasan_mem_to_shadow() for shadow address conversion because
+> it will always return kasan_early_shadow_page. On the other hand, we
+> should keep the current logic of kasan_mem_to_shadow() for both the early
+> and final stage because there may be instrumentation before kasan_init().
+> 
+> To solve this, we factor out a new mem_to_shadow() function from current
+> kasan_mem_to_shadow() for the shadow address conversion in kasan_init().
 
-Agreed, in particular, if there would be a functional change. So far I 
-assumed there would be no such change.
+The subject line AND the commit text here do not match the upstream
+commit AND the diff is different and you did not explain what changed or
+why :(
 
-Things like shrink_zone_span() really need to know the zone of that 
-page, not the one of the head; unless both fall into the same zone.
+So as-is, I can't take this, sorry.
 
--- 
-Cheers,
+thanks,
 
-David
+greg k-h
