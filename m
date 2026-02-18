@@ -1,99 +1,138 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA54E309F18
-	for <loongarch@lists.linux.dev>; Wed, 18 Feb 2026 12:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC82B336EDA;
+	Wed, 18 Feb 2026 15:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771416805; cv=none; b=j3QVjzj0bQj1sTtmU2evkBDa+s8pfpja7Msnj8I149fwNP0Fk3mpUG3miBw9pTxQgY+l5cX5j+QJa4oi/UBbsuQlZARpRlVEjf3JZJKhISlBrRdp1aCCc881ENIm0gV7qTWqyytwJQ8HqSNaWUY6W/1zLOgciZ1Ryx88wy46zu0=
+	t=1771428050; cv=none; b=a0hIOLfYPyNT/69/BiXkrx2VAq8DUW3U9xdIQy1eq8gF+8KzQpWjyY810xQeCI+RtUh5TL4kCH7H80Z5amgj3fak+LNUfZqoeNCnEzLOWs/3vn/vAtzQuvQmHdYAAp+2UFF7jICbuYRSGIwLcE2TVD8E/hK2vbCR7kGBXxnXuBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771416805; c=relaxed/simple;
-	bh=gIfvuKQzIkpL52yvmmroKBHHCJs47s4C3JGzCDEiBpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UEczrKBm23IWdF8n4LmqLGv8fN+xo1DiZmzkKuIMgQiXBF6kzf3d10HvoNLrpKYDkLLTf5xrSk3JNzpoOeL3n8BlncpBbWnHWLR5zdY5IQ4qnyg2X3ecJ9SD8kBEm2oOKDp8fSOA5ktVxhci/GVcxPJqT1GrqtSn2p3m9+VcWg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8DxPMPirJVpF00TAA--.60226S3;
-	Wed, 18 Feb 2026 20:13:22 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJAxVcDdrJVpjhRIAA--.20818S2;
-	Wed, 18 Feb 2026 20:13:21 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Hongliang Wang <wanghongliang@loongson.cn>
-Subject: [PATCH for 5.15 & 6.1] net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
-Date: Wed, 18 Feb 2026 20:13:10 +0800
-Message-ID: <20260218121310.2545149-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1771428050; c=relaxed/simple;
+	bh=Ao5mD3Q+WTXCpJ+gFtNlcVBNBqafVvxRYOedK/Uy9Vk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SDMx0dZIhdlXAYr7OmBCW2b3/E105oD00VFjJoZLbe9EoMXnNFgtdKQ/Y/gMYTgwyeWHZO54RiMHtfvE391AQuBkVQqoFLmTpUVouAnEKUWdxpG3gzNJkdQTQbBA4XOBj7d9kW/zy6OZP2nkzRgnB72nK/5OXz+Dkr+1+gBQpxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9997339;
+	Wed, 18 Feb 2026 07:20:33 -0800 (PST)
+Received: from [10.57.81.199] (unknown [10.57.81.199])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990193F7F5;
+	Wed, 18 Feb 2026 07:20:34 -0800 (PST)
+Message-ID: <8531da33-a4dc-48ac-abf3-c831d4493afb@arm.com>
+Date: Wed, 18 Feb 2026 15:20:32 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxVcDdrJVpjhRIAA--.20818S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrWDtF13CrW7Jr4UCrW5twc_yoW8GF15pr
-	WfZa42g34ayr12k3Z8Z34DZFy5Za4YgFZrGa1xtw4fur92ka4jqryYgFZ8AFW29FW5C3Wa
-	vr4qkr15GFs8CwbCm3ZEXasCq-sJn29KB7ZKAUJUUUjU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5rUUUUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: kernel test robot <lkp@intel.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>, llvm@lists.linux.dev,
+ oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org
+References: <20260119130122.1283821-4-ryan.roberts@arm.com>
+ <202601210752.6Nsv9et9-lkp@intel.com>
+ <46c7d109-b076-4bb3-9e6e-36c34c546c20@arm.com> <aXDHSIn3hIvESjXg@J2N7QTR9R3>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <aXDHSIn3hIvESjXg@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-commit e1aa5ef892fb4fa9014a25e87b64b97347919d37 upstream.
+On 21/01/2026 12:32, Mark Rutland wrote:
+> On Wed, Jan 21, 2026 at 10:52:21AM +0000, Ryan Roberts wrote:
+>> On 20/01/2026 23:50, kernel test robot wrote:
+>>> Hi Ryan,
+>>>
+>>> kernel test robot noticed the following build warnings:
+>>>
+>>> [auto build test WARNING on akpm-mm/mm-everything]
+>>> [also build test WARNING on linus/master v6.19-rc6 next-20260119]
+>>> [cannot apply to tip/sched/core kees/for-next/hardening kees/for-next/execve]
+>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>>> And when submitting patch, we suggest to use '--base' as documented in
+>>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>>
+>>> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/randomize_kstack-Maintain-kstack_offset-per-task/20260119-210329
+>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+>>> patch link:    https://lore.kernel.org/r/20260119130122.1283821-4-ryan.roberts%40arm.com
+>>> patch subject: [PATCH v4 3/3] randomize_kstack: Unify random source across arches
+>>> config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/config)
+>>> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+>>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/reproduce)
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202601210752.6Nsv9et9-lkp@intel.com/
+>>>
+>>> All warnings (new ones prefixed by >>):
+>>>
+>>>>> vmlinux.o: warning: objtool: do_syscall_64+0x2c: call to preempt_count_add() leaves .noinstr.text section
+>>>>> vmlinux.o: warning: objtool: __do_fast_syscall_32+0x3d: call to preempt_count_add() leaves .noinstr.text section
+>>
+>> Hmm, clearly Dave was correct not to rush this through... yuck. I'll take a
+>> look, but I guess there is no rush if this won't go into -next until shortly
+>> after -rc1.
+> 
+> Sorry, I should have checked the entry sequencing more thoroughly when I
+> reviewed this,.
+> 
+> From a quick look, I suspect the right thing to do is to pull the call
+> to add_random_kstack_offset() a bit later in a few cases; after the
+> entry logic has run, and after instrumentation_begin() (if the arch code
+> uses that), such that it doesn't matter if this gets instrumented.
+> 
+> Considering the callers of add_random_kstack_offset(), if we did that:
+> 
+> * arm64 is fine as-is.
+> 
+> * loongarch is fine as-is.
+> 
+> * powerpc's system_call_exception() would need this moved after the
+>   user_exit_irqoff(). Given that function is notrace rather than
+>   noinstr, it looks like there are bigger extant issues here.
+> 
+> * riscv is fine as-is.
+> 
+> * s390's __do_syscall() would need this moved after
+>   enter_from_user_mode().
+> 
+> * On x86:
+>   - do_int80_emulation() is fine as-is.
+>   - int80_emulation() is fine as-is.
+>   - do_int80_syscall_32() would need this moved after
+>     instrumentation_begin().
+>   - __do_fast_syscall_32() would need this moved after
+>     instrumentation_begin().
+>   - do_syscall_64() would need this moved after instrumentation_begin().
 
-Current clk_csr_i setting of Loongson STMMAC (including LS7A1000/2000
-and LS2K1000/2000/3000) are copy & paste from other drivers. In fact,
-Loongson STMMAC use 125MHz clocks and need 62 freq division to within
-2.5MHz, meeting most PHY MDC requirement. So fix by setting clk_csr_i
-to 100-150MHz, otherwise some PHYs may link fail.
+Thanks for the detailed suggestions, Mark. I've taken this approach, and
+assuming perf testing doesn't throw up any issue, I'm going to revert back to
+using the out-of-line version of prandom_u32_state() and will drop patch 2.
 
-Cc: stable@vger.kernel.org
-Fixes: 30bba69d7db40e7 ("stmmac: pci: Add dwmac support for Loongson")
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Ryan
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 472ea1bb454c..ed2d7d4a85f0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -11,7 +11,7 @@
- 
- static int loongson_default_data(struct plat_stmmacenet_data *plat)
- {
--	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
-+	plat->clk_csr = 1;	/* clk_csr_i = 100-150MHz & MDC = clk_csr_i/62 */
- 	plat->has_gmac = 1;
- 	plat->force_sf_dma_mode = 1;
- 
--- 
-2.52.0
+
+> 
+> Mark.
 
