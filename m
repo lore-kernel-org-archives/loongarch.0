@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB970307492
-	for <loongarch@lists.linux.dev>; Wed, 18 Feb 2026 12:12:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4039C307492
+	for <loongarch@lists.linux.dev>; Wed, 18 Feb 2026 12:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771416754; cv=none; b=ZWtUquIKeA9JzkBrSjmQcqTfYVzcFCpW6XFOUevoc0kkp+ht/BPnJmlwZeYr4xq/9+3PwOMXhnMI5WKHBIc1RZlYCllMnug0UkjzLnhEjUEYNYQqw4CBltKdhy37kY+xNYu3cCDvDfdfGBwgyJpUct9zN05dZprkWfH6m9hdIr0=
+	t=1771416778; cv=none; b=Uss9bxUbpP2MlOlIpv3t4uy+z8I10q+2L6V+zctwTiNqkuF/ujYAfiYnxIs2maLnBeHGWF8kFche6bQ2GfqIedFos70J5tu4zf/2gEE+ocTISLTKc/GENW5H0W5scU85m3N58F3vrcgNXZit4Y81eoIZatNUtsMaccqDblXxb8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771416754; c=relaxed/simple;
-	bh=gvY48VTQ6xlhmYUWk7lSy+5q47b0BW6hSwgfoujHq4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ArpTZhzROYeBGRECWbqqaWBcXWjIwmvTLF173oFKhz3c1mVAMli5pePe2TsrEwxprjf9r/zQMJsvQpNPl+Qf/VBhrWreAdD0+qtkLc3M6ZPrL1Jok47kJmNFYV8eWld8Bcu2fY+2XGZGqxlHwnW37vfrsZ1iespMohMOi4enwVg=
+	s=arc-20240116; t=1771416778; c=relaxed/simple;
+	bh=mgHdEUBHNshv9h5J3P2CpAR3RksdPryr7+kLC8Z29aE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gonS2yLkSuuxETSgxshNE4sDh0K6QUcsiF8KVz4/dNoieocSgSb05tobqywXleH27Ez7UiE5WMGj2+gfc89RnvXMmQA4YiMetRGRADe7AsisOU6M4uYe4Qvce13p1d0EKs90rjmR0SjYUsRSrhKT+YzZCwvacaAq38WOtBF7R5w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8Dx7qmvrJVp20wTAA--.1184S3;
-	Wed, 18 Feb 2026 20:12:31 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8BxWcLHrJVp70wTAA--.60523S3;
+	Wed, 18 Feb 2026 20:12:55 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJBxDOGrrJVpdhRIAA--.31302S2;
-	Wed, 18 Feb 2026 20:12:30 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBx58DCrJVpfBRIAA--.25618S2;
+	Wed, 18 Feb 2026 20:12:53 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Xuerui Wang <kernel@xen0n.name>,
 	netdev@vger.kernel.org,
 	Huacai Chen <chenhuacai@loongson.cn>,
 	Hongliang Wang <wanghongliang@loongson.cn>
-Subject: [PATCH for 6.12] net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
-Date: Wed, 18 Feb 2026 20:12:19 +0800
-Message-ID: <20260218121219.2545107-1-chenhuacai@loongson.cn>
+Subject: [PATCH for 6.6] net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
+Date: Wed, 18 Feb 2026 20:12:42 +0800
+Message-ID: <20260218121242.2545128-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -45,15 +45,15 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxDOGrrJVpdhRIAA--.31302S2
+X-CM-TRANSID:qMiowJBx58DCrJVpfBRIAA--.25618S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrWDtF13CrW7Jr4UCrW5twc_yoW8Gw4Dpr
-	WxZa47W3yayr1jy3Z5Xw1UZFy5Za4YgFW7GF4xtw4furZaya4jqryUKFZ8ZFW7ZFWUC3Wa
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrWDtF13CrW7Jr4UCrW5twc_yoW8GF15pr
+	WxZa42g3yayr12k3Z8X34DZFy5Za4YgFWxGa1xtw4fur97Ka4jqry5KFZ8AFW29FW5u3Wa
 	vr1qkr45GFn8CwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
 	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
@@ -61,7 +61,7 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7CrWDtF13CrW7Jr4UCrW5twc_yoW8Gw4Dpr
 	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
 	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
 	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
 	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
 	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUUU==
 
@@ -82,13 +82,13 @@ Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-index 0cb8e23a7828..4b0860d3ad8a 100644
+index bdeec098309a..9bdebb8d7446 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -90,7 +90,7 @@ static void loongson_default_data(struct pci_dev *pdev,
- 	/* Get bus_id, this can be overwritten later */
- 	plat->bus_id = pci_dev_id(pdev);
+@@ -14,7 +14,7 @@
+ static int loongson_default_data(struct plat_stmmacenet_data *plat)
  
+ {
 -	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
 +	plat->clk_csr = 1;	/* clk_csr_i = 100-150MHz & MDC = clk_csr_i/62 */
  	plat->has_gmac = 1;
