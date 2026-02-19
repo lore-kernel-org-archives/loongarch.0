@@ -1,138 +1,213 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC82B336EDA;
-	Wed, 18 Feb 2026 15:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312E2148850
+	for <loongarch@lists.linux.dev>; Thu, 19 Feb 2026 03:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771428050; cv=none; b=a0hIOLfYPyNT/69/BiXkrx2VAq8DUW3U9xdIQy1eq8gF+8KzQpWjyY810xQeCI+RtUh5TL4kCH7H80Z5amgj3fak+LNUfZqoeNCnEzLOWs/3vn/vAtzQuvQmHdYAAp+2UFF7jICbuYRSGIwLcE2TVD8E/hK2vbCR7kGBXxnXuBk=
+	t=1771472678; cv=none; b=T3TYLa1H8tenTTThOBABDi9s5UXn8n9mMv1Uht57IO8rQyUTJub9JCVVmNCuN8Z1bd9NZqskurfGiA8fd6KdPnmXx01hjhNVGo1th1KeVnZpzBhlQbrkas/ZvmuNkCZrXab9cIhcYWg4+UNmEQNeVjONXPctegjZcIRfTHnBlHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771428050; c=relaxed/simple;
-	bh=Ao5mD3Q+WTXCpJ+gFtNlcVBNBqafVvxRYOedK/Uy9Vk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDMx0dZIhdlXAYr7OmBCW2b3/E105oD00VFjJoZLbe9EoMXnNFgtdKQ/Y/gMYTgwyeWHZO54RiMHtfvE391AQuBkVQqoFLmTpUVouAnEKUWdxpG3gzNJkdQTQbBA4XOBj7d9kW/zy6OZP2nkzRgnB72nK/5OXz+Dkr+1+gBQpxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9997339;
-	Wed, 18 Feb 2026 07:20:33 -0800 (PST)
-Received: from [10.57.81.199] (unknown [10.57.81.199])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 990193F7F5;
-	Wed, 18 Feb 2026 07:20:34 -0800 (PST)
-Message-ID: <8531da33-a4dc-48ac-abf3-c831d4493afb@arm.com>
-Date: Wed, 18 Feb 2026 15:20:32 +0000
+	s=arc-20240116; t=1771472678; c=relaxed/simple;
+	bh=yNO2tw3C8oBvyd4RypjP9XiqQ9nNXRWI7/xuiRxvYag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W0ntc3nYUzqUcpHiKl5uSoOe3lR3UtD0pDBT3exKjmuG5kkmddRJrfPLsozzaYy9GLsRCFKp4QBustv362ijg2bqnLr+AsVG96oa90tfaGIQBNkWBbyyOrZyrwnmhiteJvJJG7o37VOMToyR3Dz1iXzdM6v0I1KbdRoDerh62n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g04Xl5pw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g04Xl5pw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC091C4AF09
+	for <loongarch@lists.linux.dev>; Thu, 19 Feb 2026 03:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771472677;
+	bh=yNO2tw3C8oBvyd4RypjP9XiqQ9nNXRWI7/xuiRxvYag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g04Xl5pwPRdZkk8r3oxkg7BBeHaBKjR/iXJgXZ0Jpeo9cAijI1OLJSKQzuOBUcYEv
+	 Q1En1WwQ1pyP4wSSw7sJ1zHynO18hX7rVvYUBs1PfjUuGwu3sUKzaAzxGsHY8Pp1bv
+	 Dcq6F4NKuNJamrg+zZffNvrWPMWQlUPyNTriTJNKLIJB9q715cIzmpK8VuAD6ZkRKo
+	 O3ouqCLGC0m2w3nsvSJs8DgpUJ6VuSlR4ZG+oqJzG67sVGyYodqRBSkwaMPGBRBnW9
+	 YIjciz6rXbZwI6CCJb4+7fWPmZRBj2pfThOmTof6k5TKjY4cXHkR7s4HOJKL/IZPxs
+	 ZeTtN1HquCIWQ==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-65a431e305eso753050a12.0
+        for <loongarch@lists.linux.dev>; Wed, 18 Feb 2026 19:44:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVud3gcWRxo/Rd3Px/qPGGV4kn+ZLCjljyPJXLjz+nTLeG1LjwswIs9X8Wr/psGzlqXaqqrnBwIOOM=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzm0j9ejeMJf/YbI7mvxt37lPiTfXJdsChRecJKL/nVzTmekOZB
+	i7AJehM0xPi8DodTrlJJUxJEO3FFsp6UXF4FuIHOcRpRlml/WupKKdFGgUPUqDrQxnIO/CJBTtS
+	ydcHC8fcn0VOH8AsPOIjN/Hp2SdyZNZw=
+X-Received: by 2002:a05:6402:f16:b0:658:cc59:1624 with SMTP id
+ 4fb4d7f45d1cf-65bc78549bemr6581713a12.5.1771472676136; Wed, 18 Feb 2026
+ 19:44:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
- arches
-Content-Language: en-GB
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: kernel test robot <lkp@intel.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Ard Biesheuvel <ardb@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>,
- David Laight <david.laight.linux@gmail.com>, llvm@lists.linux.dev,
- oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org
-References: <20260119130122.1283821-4-ryan.roberts@arm.com>
- <202601210752.6Nsv9et9-lkp@intel.com>
- <46c7d109-b076-4bb3-9e6e-36c34c546c20@arm.com> <aXDHSIn3hIvESjXg@J2N7QTR9R3>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <aXDHSIn3hIvESjXg@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251028065139.10227-1-youling.tang@linux.dev>
+In-Reply-To: <20251028065139.10227-1-youling.tang@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Feb 2026 11:44:35 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6mQJ5RR4Oad9aOA2nbVa4BeFYfTHLTvdj=5dL56O7FTw@mail.gmail.com>
+X-Gm-Features: AaiRm53tP1To4B0gkvVzXooN_0ptRk2jrg07EI9ng-ysViblAhIyKkBnj5k-BpA
+Message-ID: <CAAhV-H6mQJ5RR4Oad9aOA2nbVa4BeFYfTHLTvdj=5dL56O7FTw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: jump_label: Batch icache maintenance
+To: Youling Tang <youling.tang@linux.dev>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/01/2026 12:32, Mark Rutland wrote:
-> On Wed, Jan 21, 2026 at 10:52:21AM +0000, Ryan Roberts wrote:
->> On 20/01/2026 23:50, kernel test robot wrote:
->>> Hi Ryan,
->>>
->>> kernel test robot noticed the following build warnings:
->>>
->>> [auto build test WARNING on akpm-mm/mm-everything]
->>> [also build test WARNING on linus/master v6.19-rc6 next-20260119]
->>> [cannot apply to tip/sched/core kees/for-next/hardening kees/for-next/execve]
->>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>> And when submitting patch, we suggest to use '--base' as documented in
->>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->>>
->>> url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Roberts/randomize_kstack-Maintain-kstack_offset-per-task/20260119-210329
->>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
->>> patch link:    https://lore.kernel.org/r/20260119130122.1283821-4-ryan.roberts%40arm.com
->>> patch subject: [PATCH v4 3/3] randomize_kstack: Unify random source across arches
->>> config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/config)
->>> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
->>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260121/202601210752.6Nsv9et9-lkp@intel.com/reproduce)
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <lkp@intel.com>
->>> | Closes: https://lore.kernel.org/oe-kbuild-all/202601210752.6Nsv9et9-lkp@intel.com/
->>>
->>> All warnings (new ones prefixed by >>):
->>>
->>>>> vmlinux.o: warning: objtool: do_syscall_64+0x2c: call to preempt_count_add() leaves .noinstr.text section
->>>>> vmlinux.o: warning: objtool: __do_fast_syscall_32+0x3d: call to preempt_count_add() leaves .noinstr.text section
->>
->> Hmm, clearly Dave was correct not to rush this through... yuck. I'll take a
->> look, but I guess there is no rush if this won't go into -next until shortly
->> after -rc1.
-> 
-> Sorry, I should have checked the entry sequencing more thoroughly when I
-> reviewed this,.
-> 
-> From a quick look, I suspect the right thing to do is to pull the call
-> to add_random_kstack_offset() a bit later in a few cases; after the
-> entry logic has run, and after instrumentation_begin() (if the arch code
-> uses that), such that it doesn't matter if this gets instrumented.
-> 
-> Considering the callers of add_random_kstack_offset(), if we did that:
-> 
-> * arm64 is fine as-is.
-> 
-> * loongarch is fine as-is.
-> 
-> * powerpc's system_call_exception() would need this moved after the
->   user_exit_irqoff(). Given that function is notrace rather than
->   noinstr, it looks like there are bigger extant issues here.
-> 
-> * riscv is fine as-is.
-> 
-> * s390's __do_syscall() would need this moved after
->   enter_from_user_mode().
-> 
-> * On x86:
->   - do_int80_emulation() is fine as-is.
->   - int80_emulation() is fine as-is.
->   - do_int80_syscall_32() would need this moved after
->     instrumentation_begin().
->   - __do_fast_syscall_32() would need this moved after
->     instrumentation_begin().
->   - do_syscall_64() would need this moved after instrumentation_begin().
+Hi, Youling,
 
-Thanks for the detailed suggestions, Mark. I've taken this approach, and
-assuming perf testing doesn't throw up any issue, I'm going to revert back to
-using the out-of-line version of prandom_u32_state() and will drop patch 2.
-
-Thanks,
-Ryan
+First of all, it is better to split to two patches:
+LoongArch: Add flush_icache_all()/local_flush_icache_all()
+LoongArch: Batch icache maintenance for jump_label
 
 
-> 
-> Mark.
+On Tue, Oct 28, 2025 at 2:53=E2=80=AFPM Youling Tang <youling.tang@linux.de=
+v> wrote:
+>
+> From: Youling Tang <tangyouling@kylinos.cn>
+>
+> Switch to the batched version of the jump label update functions so
+> instruction cache maintenance is deferred until the end of the update.
+>
+> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/cacheflush.h | 16 +++++++++++++++-
+>  arch/loongarch/include/asm/jump_label.h |  1 +
+>  arch/loongarch/kernel/inst.c            |  6 +++---
+>  arch/loongarch/kernel/jump_label.c      | 13 +++++++++++--
+>  arch/loongarch/mm/cache.c               | 10 ----------
+>  5 files changed, 30 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/cacheflush.h b/arch/loongarch/inc=
+lude/asm/cacheflush.h
+> index f8754d08a31a..66c34c821ecb 100644
+> --- a/arch/loongarch/include/asm/cacheflush.h
+> +++ b/arch/loongarch/include/asm/cacheflush.h
+> @@ -31,9 +31,23 @@ static inline unsigned int cpu_last_level_cache_line_s=
+ize(void)
+>         return boot_cpu_data.cache_leaves[cache_present - 1].linesz;
+>  }
+>
+> +/*
+> + * LoongArch maintains ICache/DCache coherency by hardware,
+> + * we just need "ibar" to avoid instruction hazard here.
+> + */
+> +static inline void local_flush_icache_all(void)
+> +{
+> +       asm volatile ("\tibar 0\n"::);
+> +}
+> +
+> +static inline void local_flush_icache_range(unsigned long start, unsigne=
+d long end)
+> +{
+> +       local_flush_icache_all();
+Just use a plain "asm volatile ("\tibar 0\n"::);", and put them after
+__flush_cache_all().
 
+Huacai
+
+> +}
+> +
+>  asmlinkage void __flush_cache_all(void);
+> -void local_flush_icache_range(unsigned long start, unsigned long end);
+>
+> +#define flush_icache_all       local_flush_icache_all
+>  #define flush_icache_range     local_flush_icache_range
+>  #define flush_icache_user_range        local_flush_icache_range
+>
+> diff --git a/arch/loongarch/include/asm/jump_label.h b/arch/loongarch/inc=
+lude/asm/jump_label.h
+> index 4000c7603d8e..d0689032fd9d 100644
+> --- a/arch/loongarch/include/asm/jump_label.h
+> +++ b/arch/loongarch/include/asm/jump_label.h
+> @@ -11,6 +11,7 @@
+>
+>  #include <linux/types.h>
+>
+> +#define HAVE_JUMP_LABEL_BATCH
+>  #define JUMP_LABEL_NOP_SIZE    4
+>
+>  /* This macro is also expanded on the Rust side. */
+> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+> index bf037f0c6b26..65c1b74d677a 100644
+> --- a/arch/loongarch/kernel/inst.c
+> +++ b/arch/loongarch/kernel/inst.c
+> @@ -209,6 +209,9 @@ int larch_insn_write(void *addr, u32 insn)
+>         int ret;
+>         unsigned long flags =3D 0;
+>
+> +       if ((unsigned long)addr & 3)
+> +               return -EINVAL;
+> +
+>         raw_spin_lock_irqsave(&patch_lock, flags);
+>         ret =3D copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
+>         raw_spin_unlock_irqrestore(&patch_lock, flags);
+> @@ -221,9 +224,6 @@ int larch_insn_patch_text(void *addr, u32 insn)
+>         int ret;
+>         u32 *tp =3D addr;
+>
+> -       if ((unsigned long)tp & 3)
+> -               return -EINVAL;
+> -
+>         ret =3D larch_insn_write(tp, insn);
+>         if (!ret)
+>                 flush_icache_range((unsigned long)tp,
+> diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/j=
+ump_label.c
+> index 31891214b767..f5a394bdb5f3 100644
+> --- a/arch/loongarch/kernel/jump_label.c
+> +++ b/arch/loongarch/kernel/jump_label.c
+> @@ -6,9 +6,11 @@
+>   */
+>  #include <linux/kernel.h>
+>  #include <linux/jump_label.h>
+> +#include <asm/cacheflush.h>
+>  #include <asm/inst.h>
+>
+> -void arch_jump_label_transform(struct jump_entry *entry, enum jump_label=
+_type type)
+> +bool arch_jump_label_transform_queue(struct jump_entry *entry,
+> +                                    enum jump_label_type type)
+>  {
+>         u32 insn;
+>         void *addr =3D (void *)jump_entry_code(entry);
+> @@ -18,5 +20,12 @@ void arch_jump_label_transform(struct jump_entry *entr=
+y, enum jump_label_type ty
+>         else
+>                 insn =3D larch_insn_gen_nop();
+>
+> -       larch_insn_patch_text(addr, insn);
+> +       larch_insn_write(addr, insn);
+> +
+> +       return true;
+> +}
+> +
+> +void arch_jump_label_transform_apply(void)
+> +{
+> +       flush_icache_all();
+>  }
+> diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
+> index 6be04d36ca07..966b8d2b04ad 100644
+> --- a/arch/loongarch/mm/cache.c
+> +++ b/arch/loongarch/mm/cache.c
+> @@ -31,16 +31,6 @@ void cache_error_setup(void)
+>         set_merr_handler(0x0, &except_vec_cex, 0x80);
+>  }
+>
+> -/*
+> - * LoongArch maintains ICache/DCache coherency by hardware,
+> - * we just need "ibar" to avoid instruction hazard here.
+> - */
+> -void local_flush_icache_range(unsigned long start, unsigned long end)
+> -{
+> -       asm volatile ("\tibar 0\n"::);
+> -}
+> -EXPORT_SYMBOL(local_flush_icache_range);
+> -
+>  static void flush_cache_leaf(unsigned int leaf)
+>  {
+>         int i, j, nr_nodes;
+> --
+> 2.43.0
+>
