@@ -1,78 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143FF1ADFE4
-	for <loongarch@lists.linux.dev>; Thu, 19 Feb 2026 12:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3ED2F5A1F;
+	Thu, 19 Feb 2026 19:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771504918; cv=none; b=OKUaLXCS7RToKts3G8WUSruqCLw9XB0hwdxHGWL2vL600u3PIDJSXNanXW2ocC8i7BfYW8+TkjjPQkg0YLM59QQDAJDMpiOa3mqNTD/kuKefSb/8wgJVe1Fl7GKNeTH+PAnKBbtV7Ciuw337ZiXDW3O/Atb2JpKS3sahfucxqe8=
+	t=1771529481; cv=none; b=SDCLDGxH6kR9J8mj2Yx8eAFadEEx4REVxRTRAwIro1uUBWSwDwSdZ4TkueVS+8JQL+8egJ6aGyxHAi02DFEJL7TTQFR0ZBweuJnwzEN4KBk8I/zkU/yWqmSMI3ZWqskCGARVpgzsU8qfATVAX/ptesWVptl9zRHx1EimkOTlSv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771504918; c=relaxed/simple;
-	bh=WFgEdxjnF8A05d5mgtvj836zAZLdzQveFoZlSYE1Meo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cUIKxFqLN9asgBQATxuoVLy3ljG1/dijuzMlN3rN5PYTW2ol6trVkzmpiATAYXI0N6gn3BWKhW2JWZHgmuwqROjy0ZeyHeqxEM02tej9e/IObV6SBjx0zP/hjkAJqJyenxurJ+t/OiC7OXO+cXPiIWNu7vLOIwXKVShLgn1/PBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkOfKaHD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771529481; c=relaxed/simple;
+	bh=eEbIoo2q1/IW9azGPa53pZmcMQrNecjqCKNKnaoLUAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anj4Tg8KXq8MKO5t1r+3FJ/fLUiBnafoLmD5HWL0JQbetjaZzPVOKnTjazK+mqTKNJ1vjdeWB7LleIPvoAVRCZLhqRTEHrRElPw6R89mnW2Lu9VMdqVegSTpI4UA+7U9Lejg8H982IsFVNPLPzQb+NQWOsJWjAeYI6HpUxoCvd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFaGOqs/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkOfKaHD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE88CC4AF09
-	for <loongarch@lists.linux.dev>; Thu, 19 Feb 2026 12:41:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFaGOqs/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0939BC4CEF7;
+	Thu, 19 Feb 2026 19:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771504917;
-	bh=WFgEdxjnF8A05d5mgtvj836zAZLdzQveFoZlSYE1Meo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BkOfKaHDtS3pj4WCPyqCg1YsMxbQ7QF5dW525+24v1b62MP6ztZMsuv1NqXn5HMeH
-	 +SpVGAkkjhLaxb2wrjc/SC2LYPnC8syGjZyB6NC39ULW+GaJeRpHtN3tzGcqBAUptN
-	 IkchXnZg6CGOV07zmiQPZcW3/DFGWdRWuEx+4lKPaqtSN68zsv5qRNMENAaYrBU2rW
-	 ZO2Nta3IDPcFr7DZSFF7BIMpy8+SZR5X6S1r+SHZvtwj0fR+GrNe+o6BsqmUzg4hUA
-	 x2ird0KQilHONcRPPoolfrRQujfeKiETonFgYOMMsWivRzD3eCtgF+cmnV0wFcNpuv
-	 ltUm+pCea3dWA==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65815ec51d3so1324689a12.2
-        for <loongarch@lists.linux.dev>; Thu, 19 Feb 2026 04:41:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWrDg6CfvkmUYHKEwb7k12YqmCQnmr9ufuu3XjQR6fq209+X2G/VbTA3xMyXTwrc8ny00QT8++eo4w=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxdCCPlOmbW67Xrf1D3jinU75I3UEwQmOFxVqMTLH54+SgJ0cdJ
-	9ZOb8H3Us/5z1J9K0vNE2LmIxPKGdfPpnqHOsKoMZ5cSNn7HTt+DNzQK603Gzs0m6kyAoF2q6PB
-	bshhZ111aAUr+dj85TglW+hiLFKAtrOY=
-X-Received: by 2002:a05:6402:3649:b0:65c:139:2579 with SMTP id
- 4fb4d7f45d1cf-65c01392959mr6141869a12.15.1771504916203; Thu, 19 Feb 2026
- 04:41:56 -0800 (PST)
+	s=k20201202; t=1771529481;
+	bh=eEbIoo2q1/IW9azGPa53pZmcMQrNecjqCKNKnaoLUAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eFaGOqs/Ut2CksfJcyyCXPz/G+49WQAqARVkkt7s0uuz77lzNCcFABEsPoxLrM/+/
+	 stFVezcwfKsdB5T+uHpWZIfYS+Xkw+9tMLF2j9W7gXqlB2NK2jloyauUQ5R1KtMQ+C
+	 pEy8TliEZzi8KHpeXkl39ilFhF+tz5Z7pFd+wMpggDxJcQxP7N1LWGJ+O+4gytrAnf
+	 FHPVhqTzXarIfMAIh88xDSwQ9dAJ8j2Tyg6iW+wqHVBG+M2S/f7rDdHSvEn10qzOF7
+	 Nt+ju4WrkNa+cagWpaRY3uoJtyitTIw3KEO2S0qTJbt9irBD5+Lm3zpUm4L0Icp1F8
+	 QvqvcyrboX9nA==
+Date: Thu, 19 Feb 2026 11:31:18 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Mingwei Zhang <mizhang@google.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v6 42/44] KVM: VMX: Dedup code for adding MSR to VMCS's
+ auto list
+Message-ID: <aZdlBkLEQyv9q5ll@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-43-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251028065139.10227-1-youling.tang@linux.dev>
- <CAAhV-H6mQJ5RR4Oad9aOA2nbVa4BeFYfTHLTvdj=5dL56O7FTw@mail.gmail.com> <47e7eac65966408b28417e5be3bd6b24dd397a08.camel@xry111.site>
-In-Reply-To: <47e7eac65966408b28417e5be3bd6b24dd397a08.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Feb 2026 20:41:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5t+vWE76ZNTxkyjO+wwnj83V0AYJzPd-0_rZnhfHjKBA@mail.gmail.com>
-X-Gm-Features: AaiRm50MjpWomX4RMtXbJBDdS9ly54aU_H6JgA1qq2w3U57WkRbd2_FChoo8bM0
-Message-ID: <CAAhV-H5t+vWE76ZNTxkyjO+wwnj83V0AYJzPd-0_rZnhfHjKBA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: jump_label: Batch icache maintenance
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Youling Tang <youling.tang@linux.dev>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251206001720.468579-43-seanjc@google.com>
 
-On Thu, Feb 19, 2026 at 6:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> On Thu, 2026-02-19 at 11:44 +0800, Huacai Chen wrote:
-> > > +static inline void local_flush_icache_range(unsigned long start,
-> > > unsigned long end)
-> > > +{
-> > > +       local_flush_icache_all();
-> > Just use a plain "asm volatile ("\tibar 0\n"::);", and put them after
-> > __flush_cache_all().
->
-> IMO for consistency it should be "ibar\t0" (without the leading \t and
-> trailing \n: we don't have those in any of other inline assemblies).
-Leading \t should be removed, but trailing \n can be kept (\t is also OK).
+Hello,
 
-Huacai
+On Fri, Dec 05, 2025 at 04:17:18PM -0800, Sean Christopherson wrote:
+> Add a helper to add an MSR to a VMCS's "auto" list to deduplicate the code
+> in add_atomic_switch_msr(), and so that the functionality can be used in
+> the future for managing the MSR auto-store list.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++----------------------
+>  1 file changed, 19 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 018e01daab68..3f64d4b1b19c 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1093,12 +1093,28 @@ static __always_inline void add_atomic_switch_msr_special(struct vcpu_vmx *vmx,
+>  	vm_exit_controls_setbit(vmx, exit);
+>  }
+>  
+> +static void vmx_add_auto_msr(struct vmx_msrs *m, u32 msr, u64 value,
+> +			     unsigned long vmcs_count_field, struct kvm *kvm)
+> +{
+> +	int i;
+> +
+> +	i = vmx_find_loadstore_msr_slot(m, msr);
+> +	if (i < 0) {
+> +		if (KVM_BUG_ON(m->nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> +			return;
+> +
+> +		i = m->nr++;
+> +		m->val[i].index = msr;
+> +		vmcs_write32(vmcs_count_field, m->nr);
+> +	}
+> +	m->val[i].value = value;
+> +}
+> +
+>  static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+>  				  u64 guest_val, u64 host_val)
+>  {
+>  	struct msr_autoload *m = &vmx->msr_autoload;
+>  	struct kvm *kvm = vmx->vcpu.kvm;
+> -	int i;
+>  
+>  	switch (msr) {
+>  	case MSR_EFER:
+> @@ -1132,27 +1148,8 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+>  		wrmsrq(MSR_IA32_PEBS_ENABLE, 0);
+>  	}
+>  
+> -	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+> -	if (i < 0) {
+> -		if (KVM_BUG_ON(m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> -			return;
+> -
+> -		i = m->guest.nr++;
+> -		m->guest.val[i].index = msr;
+> -		vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->guest.nr);
+> -	}
+> -	m->guest.val[i].value = guest_val;
+> -
+> -	i = vmx_find_loadstore_msr_slot(&m->host, msr);
+> -	if (i < 0) {
+> -		if (KVM_BUG_ON(m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> -			return;
+> -
+> -		i = m->host.nr++;
+> -		m->host.val[i].index = msr;
+> -		vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, m->host.nr);
+> -	}
+> -	m->host.val[i].value = host_val;
+> +	vmx_add_auto_msr(&m->guest, msr, guest_val, VM_ENTRY_MSR_LOAD_COUNT, kvm);
+> +	vmx_add_auto_msr(&m->guest, msr, host_val, VM_EXIT_MSR_LOAD_COUNT, kvm);
 
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
+Shouldn't it be &m->host for the host_val?
+
+Thanks,
+Namhyung
+
+>  }
+>  
+>  static bool update_transition_efer(struct vcpu_vmx *vmx)
+> -- 
+> 2.52.0.223.gf5cc29aaa4-goog
+> 
