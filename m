@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B5B318EE4;
-	Fri, 20 Feb 2026 04:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434732BF32
+	for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 04:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771560648; cv=none; b=FQv9kY5E4Ey7WN2GTRPzYCk0SyqflnvZy51Ex5oCdgEbuIGxyw+zIbErb/X9j9g8C5NpJ360F1rfg3+PzP0wUKrwTrriG4V3BB1gMyQhJGtz3i0JdxpD5PRdGwtKC0qACI8Vyfnoxcq//MoTK5e8m+z0MyynhgBY/SChWLpX6QY=
+	t=1771560654; cv=none; b=O2M98dtiOjFjn6gWK90AqGKI0dTwIHw5XwGyCazEDpfdnhe3DkotMQvSRjyhIXnx3BQfiUeBuB9kSNo7B2FNx3/rgDmDrLdapa4uWN0V2vG+fjKPUH1KqFe+4Z+2sN+1cpua1GRimrSaYcctFvid753Fua4UckpQvXNXvVcBKrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771560648; c=relaxed/simple;
-	bh=PDGCDysOegPLK/FytUAeu19yfLdHed/5Qq2CJVsDdvs=;
+	s=arc-20240116; t=1771560654; c=relaxed/simple;
+	bh=Wl/q2I9MW4EAYAIqkkPs9cMuPySyeP7Ys0yLcRoxiik=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=OGjFCHGN7xyeIWKHFQWWvey1E1BQlYkIi7cI41DXCdClKWlX2HDkQRKHmVYsAMr5yDX2bDNcAmu2DeevWGCjbbNpcE+jY87+14rKTgqGDVP0txXIHaeGqjMbPwout0iZjCDTkSLwR6ImHE2tWvictWGz2jltrp4UojKtDVPwhKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQ0aOCCb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=sWrcsNMX8CCeDPiwtCNI6d/bzG5pwSTgZyiwzTkp9o5PQsqTYBFxJPjNPxAUZxiNpBSlBDvjkrJ1dAr8mbAFhmoWIQwwnREQOgbBUAJwObyN76NTufuBt8R5Fbf6Lj8QYOWWdFxeSZ6ItzoFE4r7Q/2lY9LJE0QczEr82Zb3AV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1VrZuK9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQ0aOCCb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94005C116D0;
-	Fri, 20 Feb 2026 04:10:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1VrZuK9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD7FC116D0;
+	Fri, 20 Feb 2026 04:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771560648;
-	bh=PDGCDysOegPLK/FytUAeu19yfLdHed/5Qq2CJVsDdvs=;
+	s=k20201202; t=1771560654;
+	bh=Wl/q2I9MW4EAYAIqkkPs9cMuPySyeP7Ys0yLcRoxiik=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YQ0aOCCbuBRr/Aj8Xu6A2nQTmM3iuzSUGERzFgZbv6JdPxvdz+pC4pQ7N+j3/AeDI
-	 ZR1+txPjQ18ja/OqZDa5/Nv4iP8tYkbr0J5tyqjvHLDgH87Rd2ShE1YzmIdowzD/RD
-	 CsPYoHLNtIYdNoA3PjI4oImf1wHzn1ACCU1aY4WmuUFHjoSbr1VEqO81cRnWBfE1Fl
-	 DtF5oGuWhKxoo/nfAA+KyC/Cal3t7yAW3TFJKawNjmzwjn3ZBgsbHgfplzpD3KNJeR
-	 8FbCY63LhQSnD4N4iCdVyw9b+7gQBNb4B3wZrehtaZVPNIMqMLJEjzFqPXwYkXzjTS
-	 NlPxhLiM8yB3A==
+	b=N1VrZuK9lrvi+0jv5UrnpCwpMzW70T8EtjcsHnyvYb/C3ysXhXnwcXh0J1BUrz/fQ
+	 FXvJgc0MX5grtuvCDCjFOveYmh43k7YKrhJKjA6KNPY5GbthY3tSAB5Rd8DWyI60O4
+	 60LGpZhdpz2TPplFhz9GOt22IkO9j9SafKfb23NhzY6Pqtbyy2AyC4nRduEnajg21H
+	 pPrMunHoqFuSELpIJz/FNzbQUBVTQ/4/r5X9keCr5k8mekJQPLFSEN/1VTk4FKKX96
+	 mGvQFqOn+07PQ7stZW8usaIlrYxFaew9yX4CoBIDJ2elY6T+mswJuAAcc8jX+e9rPf
+	 2Anz+jmhWYL+g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FD393809A88;
-	Fri, 20 Feb 2026 04:10:58 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FEBA3809A88;
+	Fri, 20 Feb 2026 04:11:04 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,61 +37,65 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 00/21] paravirt: cleanup and reorg
+Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent of
+ the
+ memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate initialization of
+ nodes, zones and memory map)
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177156065679.189817.6221298327341838079.git-patchwork-notify@kernel.org>
-Date: Fri, 20 Feb 2026 04:10:56 +0000
-References: <20251127070844.21919-1-jgross@suse.com>
-In-Reply-To: <20251127070844.21919-1-jgross@suse.com>
-To: =?utf-8?b?SsO8cmdlbiBHcm/DnyA8amdyb3NzQHN1c2UuY29tPg==?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- peterz@infradead.org, will@kernel.org, boqun.feng@gmail.com,
- longman@redhat.com, jikos@kernel.org, jpoimboe@kernel.org,
- pawan.kumar.gupta@linux.intel.com, boris.ostrovsky@oracle.com,
- xen-devel@lists.xenproject.org, ajay.kaher@broadcom.com,
- alexey.makhalov@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- linux@armlinux.org.uk, catalin.marinas@arm.com, chenhuacai@kernel.org,
- kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
- npiggin@gmail.com, christophe.leroy@csgroup.eu, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, linux-arm-kernel@lists.infradead.org,
- pbonzini@redhat.com, vkuznets@redhat.com, sstabellini@kernel.org,
- oleksandr_tyshchenko@epam.com, daniel.lezcano@linaro.org, oleg@redhat.com
+ <177156066278.189817.13783312336351868850.git-patchwork-notify@kernel.org>
+Date: Fri, 20 Feb 2026 04:11:02 +0000
+References: <aVpWpLV4Dut5Muo2@kernel.org>
+In-Reply-To: <aVpWpLV4Dut5Muo2@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-riscv@lists.infradead.org, klarasmodin@gmail.com,
+ akpm@linux-foundation.org, alexs@kernel.org, agordeev@linux.ibm.com,
+ andreas@gaisler.com, bp@alien8.de, bcain@kernel.org, chleroy@kernel.org,
+ catalin.marinas@arm.com, davem@davemloft.net, dave.hansen@linux.intel.com,
+ david@kernel.org, dinguyen@kernel.org, geert@linux-m68k.org,
+ guoren@kernel.org, hca@linux.ibm.com, deller@gmx.de, chenhuacai@kernel.org,
+ mingo@redhat.com, johannes@sipsolutions.net, glaubitz@physik.fu-berlin.de,
+ corbet@lwn.net, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ linmag7@gmail.com, mattst88@gmail.com, jcmvbkbc@gmail.com,
+ mpe@ellerman.id.au, mhocko@suse.com, monstr@monstr.eu, muchun.song@linux.dev,
+ osalvador@suse.de, palmer@dabbelt.com, pratyush@kernel.org, richard@nod.at,
+ linux@armlinux.org.uk, shorne@gmail.com, surenb@google.com,
+ tsbogend@alpha.franken.de, tglx@linutronix.de, gor@linux.ibm.com,
+ vgupta@kernel.org, vbabka@suse.cz, will@kernel.org, x86@kernel.org,
+ linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
-by Borislav Petkov (AMD) <bp@alien8.de>:
+This patch was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-On Thu, 27 Nov 2025 08:08:23 +0100 you wrote:
-> Some cleanups and reorg of paravirt code and headers:
+On Sun, 4 Jan 2026 14:01:40 +0200 you wrote:
+> Andrew,
 > 
-> - The first 2 patches should be not controversial at all, as they
->   remove just some no longer needed #include and struct forward
->   declarations.
+> Can you please stick this between patch 3 (arm: introduce
+> arch_zone_limits_init()) and patch 4 (arm64: introduce
+> arch_zone_limits_init())?
 > 
-> - The 3rd patch is removing CONFIG_PARAVIRT_DEBUG, which IMO has
->   no real value, as it just changes a crash to a BUG() (the stack
->   trace will basically be the same). As the maintainer of the main
->   paravirt user (Xen) I have never seen this crash/BUG() to happen.
+> From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
+> From: Klara Modin <klarasmodin@gmail.com>
+> Date: Sat, 3 Jan 2026 20:40:09 +0200
+> Subject: [PATCH] arm: make initialization of zero page independent of the
+>  memory map
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,05/21] paravirt: Remove asm/paravirt_api_clock.h
-    https://git.kernel.org/riscv/c/68b10fd40d49
-  - [v4,06/21] sched: Move clock related paravirt code to kernel/sched
-    (no matching commit)
-  - [v4,10/21] riscv/paravirt: Use common code for paravirt_steal_clock()
-    https://git.kernel.org/riscv/c/ee9ffcf99f07
+  - [3.5] arm: make initialization of zero page independent of the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes, zones and memory map)
+    https://git.kernel.org/riscv/c/18b7cc70dea8
 
 You are awesome, thank you!
 -- 
