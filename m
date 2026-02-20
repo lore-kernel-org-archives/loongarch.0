@@ -1,105 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C434732BF32
-	for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 04:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E81883F
+	for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 16:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771560654; cv=none; b=O2M98dtiOjFjn6gWK90AqGKI0dTwIHw5XwGyCazEDpfdnhe3DkotMQvSRjyhIXnx3BQfiUeBuB9kSNo7B2FNx3/rgDmDrLdapa4uWN0V2vG+fjKPUH1KqFe+4Z+2sN+1cpua1GRimrSaYcctFvid753Fua4UckpQvXNXvVcBKrQ=
+	t=1771605971; cv=none; b=rrIjXw8m+JMjACTZFwRmGxtldh6G5ZPbYwgb2pgu8rv5TyhEP0FGnSZEMZ+shyY6vTs4CbTYhZ0CucbrFo/3nZYWA/4Qcg+JrhaYdoVjV6+b5t/w6avGqhdi+kQBTML78hO7LjTAbs2vSjLDKeh+86m0q0Fxm7hml2XWLd1Hjr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771560654; c=relaxed/simple;
-	bh=Wl/q2I9MW4EAYAIqkkPs9cMuPySyeP7Ys0yLcRoxiik=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=sWrcsNMX8CCeDPiwtCNI6d/bzG5pwSTgZyiwzTkp9o5PQsqTYBFxJPjNPxAUZxiNpBSlBDvjkrJ1dAr8mbAFhmoWIQwwnREQOgbBUAJwObyN76NTufuBt8R5Fbf6Lj8QYOWWdFxeSZ6ItzoFE4r7Q/2lY9LJE0QczEr82Zb3AV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1VrZuK9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771605971; c=relaxed/simple;
+	bh=RdADZ2qvOwFUII0e06TsD4htMLQmUhUg2PjK9uFPPJw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FWDrJqDVqBi2hbqngnpjzukcG671cLsnPE5R32jaIiNQnBrk6elQo0JiTYg1KIFNWYwnJdx2Knrj83x46Eihfb2rkURoJsVnIU3L9TvCJEff421iBbzCT07hy0s4Jd3ZVcKzs4IwHLEbAIZaQs7TzASzIQL63D/GvXrpmMDEjP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pKnpSenC; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1VrZuK9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD7FC116D0;
-	Fri, 20 Feb 2026 04:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771560654;
-	bh=Wl/q2I9MW4EAYAIqkkPs9cMuPySyeP7Ys0yLcRoxiik=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=N1VrZuK9lrvi+0jv5UrnpCwpMzW70T8EtjcsHnyvYb/C3ysXhXnwcXh0J1BUrz/fQ
-	 FXvJgc0MX5grtuvCDCjFOveYmh43k7YKrhJKjA6KNPY5GbthY3tSAB5Rd8DWyI60O4
-	 60LGpZhdpz2TPplFhz9GOt22IkO9j9SafKfb23NhzY6Pqtbyy2AyC4nRduEnajg21H
-	 pPrMunHoqFuSELpIJz/FNzbQUBVTQ/4/r5X9keCr5k8mekJQPLFSEN/1VTk4FKKX96
-	 mGvQFqOn+07PQ7stZW8usaIlrYxFaew9yX4CoBIDJ2elY6T+mswJuAAcc8jX+e9rPf
-	 2Anz+jmhWYL+g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FEBA3809A88;
-	Fri, 20 Feb 2026 04:11:04 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKnpSenC"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2a79164b686so35036265ad.0
+        for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 08:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771605969; x=1772210769; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2NjEt0nlzd3sSfAI7ozchxl45oY7orW7xyZnr6QEkg=;
+        b=pKnpSenC7UYZIZPUL7HIisUiJHJcQe7BnGhLTnO3Z0yyilBceuxq2D3Z2h5QFyK6YN
+         W6lwYObYDjabduHNNneCahZnaTxQMRuV1utRnAynSW6u0ifHrIRVVP76ATW7Nq/cTzoT
+         rxqdZG8tp4N37YNjzXfXUUpv0/FM0sOczoSBmxFjlmp5q8XyAqtcNV44C4YbBSI6TocU
+         zzZRDJMYE0LjdM27beJyEIOfPsckzWLDwHTgu2996OwrulodF/byTQNj2sTERpwwm6dY
+         lJW4RIzWf7XpsLzFGtX2pRhbTPq61iw4MTw2EZHshGOhz8uRXCErF/ojSm8Rqu/AudRF
+         TTww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771605969; x=1772210769;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2NjEt0nlzd3sSfAI7ozchxl45oY7orW7xyZnr6QEkg=;
+        b=M4kn/wydaDhjIuUad9EKO/pT5UfsKXWPRdnwpxdX3/pEGR+jstUg+8B7l55sUvVITt
+         YPHt11CgZlHbYyOt3hBxcg3ulHwkUIIatDMQ5c3byhQ4SwczsZdM0Un+z769yjSmCOis
+         A8W+S+nDuI+MQkZWEelWeRb27QZXt91vvIniD5tWb5j/choFa84/RvUUkuA78B8twfAA
+         n6RLlXpHDqbArGGOWJIH3X6o0uQsxxL3DNzLUvy/IQbMxyL/k5JN2tG5+uHEsq1jnesr
+         TODJD3SaIvT/8fRNl70XISpWOtNyS9hLukfA/qu1RClZsl1KDUVzAODfaRLN6DplcdBf
+         E4Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgqZPlAV4GGNTppzCH2ME+qjhhF2ndA/koftDaatYTEJC8BsPzDPzkPZDJFEs+q3z10M+lKcbhXXE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6wlTGZZyinOjA+fdhpu1vdL+gptuzmIlmzpXfebxvmc2atZWi
+	HNNeUY0qBjX/BGsm+MIJc/gVzxeFZ3HUd16KcKdFIFRx0PUZOmqbZdooOx6Ry3AK4yhbgy1u9g6
+	8Hle66A==
+X-Received: from plma6.prod.google.com ([2002:a17:902:7d86:b0:2a9:622c:47d6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e80c:b0:2a1:388d:8ef3
+ with SMTP id d9443c01a7336-2ad7444e7fcmr1749985ad.18.1771605969111; Fri, 20
+ Feb 2026 08:46:09 -0800 (PST)
+Date: Fri, 20 Feb 2026 08:46:07 -0800
+In-Reply-To: <aZdlBkLEQyv9q5ll@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 3.5] arm: make initialization of zero page independent of
- the
- memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate initialization of
- nodes, zones and memory map)
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <177156066278.189817.13783312336351868850.git-patchwork-notify@kernel.org>
-Date: Fri, 20 Feb 2026 04:11:02 +0000
-References: <aVpWpLV4Dut5Muo2@kernel.org>
-In-Reply-To: <aVpWpLV4Dut5Muo2@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-riscv@lists.infradead.org, klarasmodin@gmail.com,
- akpm@linux-foundation.org, alexs@kernel.org, agordeev@linux.ibm.com,
- andreas@gaisler.com, bp@alien8.de, bcain@kernel.org, chleroy@kernel.org,
- catalin.marinas@arm.com, davem@davemloft.net, dave.hansen@linux.intel.com,
- david@kernel.org, dinguyen@kernel.org, geert@linux-m68k.org,
- guoren@kernel.org, hca@linux.ibm.com, deller@gmx.de, chenhuacai@kernel.org,
- mingo@redhat.com, johannes@sipsolutions.net, glaubitz@physik.fu-berlin.de,
- corbet@lwn.net, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
- linmag7@gmail.com, mattst88@gmail.com, jcmvbkbc@gmail.com,
- mpe@ellerman.id.au, mhocko@suse.com, monstr@monstr.eu, muchun.song@linux.dev,
- osalvador@suse.de, palmer@dabbelt.com, pratyush@kernel.org, richard@nod.at,
- linux@armlinux.org.uk, shorne@gmail.com, surenb@google.com,
- tsbogend@alpha.franken.de, tglx@linutronix.de, gor@linux.ibm.com,
- vgupta@kernel.org, vbabka@suse.cz, will@kernel.org, x86@kernel.org,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hexagon@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
- sparclinux@vger.kernel.org
+Mime-Version: 1.0
+References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-43-seanjc@google.com>
+ <aZdlBkLEQyv9q5ll@google.com>
+Message-ID: <aZe6UR1EGg0RcB69@google.com>
+Subject: Re: [PATCH v6 42/44] KVM: VMX: Dedup code for adding MSR to VMCS's
+ auto list
+From: Sean Christopherson <seanjc@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, 
+	Xudong Hao <xudong.hao@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hello:
-
-This patch was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
-
-On Sun, 4 Jan 2026 14:01:40 +0200 you wrote:
-> Andrew,
+On Thu, Feb 19, 2026, Namhyung Kim wrote:
+> Hello,
 > 
-> Can you please stick this between patch 3 (arm: introduce
-> arch_zone_limits_init()) and patch 4 (arm64: introduce
-> arch_zone_limits_init())?
+> On Fri, Dec 05, 2025 at 04:17:18PM -0800, Sean Christopherson wrote:
+> > Add a helper to add an MSR to a VMCS's "auto" list to deduplicate the code
+> > in add_atomic_switch_msr(), and so that the functionality can be used in
+> > the future for managing the MSR auto-store list.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++----------------------
+> >  1 file changed, 19 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 018e01daab68..3f64d4b1b19c 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -1093,12 +1093,28 @@ static __always_inline void add_atomic_switch_msr_special(struct vcpu_vmx *vmx,
+> >  	vm_exit_controls_setbit(vmx, exit);
+> >  }
+> >  
+> > +static void vmx_add_auto_msr(struct vmx_msrs *m, u32 msr, u64 value,
+> > +			     unsigned long vmcs_count_field, struct kvm *kvm)
+> > +{
+> > +	int i;
+> > +
+> > +	i = vmx_find_loadstore_msr_slot(m, msr);
+> > +	if (i < 0) {
+> > +		if (KVM_BUG_ON(m->nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > +			return;
+> > +
+> > +		i = m->nr++;
+> > +		m->val[i].index = msr;
+> > +		vmcs_write32(vmcs_count_field, m->nr);
+> > +	}
+> > +	m->val[i].value = value;
+> > +}
+> > +
+> >  static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  				  u64 guest_val, u64 host_val)
+> >  {
+> >  	struct msr_autoload *m = &vmx->msr_autoload;
+> >  	struct kvm *kvm = vmx->vcpu.kvm;
+> > -	int i;
+> >  
+> >  	switch (msr) {
+> >  	case MSR_EFER:
+> > @@ -1132,27 +1148,8 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> >  		wrmsrq(MSR_IA32_PEBS_ENABLE, 0);
+> >  	}
+> >  
+> > -	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+> > -	if (i < 0) {
+> > -		if (KVM_BUG_ON(m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > -			return;
+> > -
+> > -		i = m->guest.nr++;
+> > -		m->guest.val[i].index = msr;
+> > -		vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->guest.nr);
+> > -	}
+> > -	m->guest.val[i].value = guest_val;
+> > -
+> > -	i = vmx_find_loadstore_msr_slot(&m->host, msr);
+> > -	if (i < 0) {
+> > -		if (KVM_BUG_ON(m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > -			return;
+> > -
+> > -		i = m->host.nr++;
+> > -		m->host.val[i].index = msr;
+> > -		vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, m->host.nr);
+> > -	}
+> > -	m->host.val[i].value = host_val;
+> > +	vmx_add_auto_msr(&m->guest, msr, guest_val, VM_ENTRY_MSR_LOAD_COUNT, kvm);
+> > +	vmx_add_auto_msr(&m->guest, msr, host_val, VM_EXIT_MSR_LOAD_COUNT, kvm);
 > 
-> From 35d016bbf5da7c08cc5c5547c85558fc50cb63aa Mon Sep 17 00:00:00 2001
-> From: Klara Modin <klarasmodin@gmail.com>
-> Date: Sat, 3 Jan 2026 20:40:09 +0200
-> Subject: [PATCH] arm: make initialization of zero page independent of the
->  memory map
-> 
-> [...]
+> Shouldn't it be &m->host for the host_val?
 
-Here is the summary with links:
-  - [3.5] arm: make initialization of zero page independent of the memory map (was Re: [PATCH v2 22/28] arch, mm: consolidate initialization of nodes, zones and memory map)
-    https://git.kernel.org/riscv/c/18b7cc70dea8
+Ouch.  Yes.  How on earth did this escape testing...  Ah, because in practice
+only MSR_IA32_PEBS_ENABLE goes through the load lists, and the VM-Entry load list
+will use the guest's value due to VM_ENTRY_MSR_LOAD_COUNT not covering the bad
+host value.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Did you happen to run into problems when using PEBS events in the host?
 
-
+Regardless, do you want to send a patch?  Either way, I'll figure out a way to
+verify the bug and the fix.
