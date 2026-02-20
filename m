@@ -1,169 +1,168 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E81883F
-	for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 16:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBE53176EB;
+	Fri, 20 Feb 2026 19:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771605971; cv=none; b=rrIjXw8m+JMjACTZFwRmGxtldh6G5ZPbYwgb2pgu8rv5TyhEP0FGnSZEMZ+shyY6vTs4CbTYhZ0CucbrFo/3nZYWA/4Qcg+JrhaYdoVjV6+b5t/w6avGqhdi+kQBTML78hO7LjTAbs2vSjLDKeh+86m0q0Fxm7hml2XWLd1Hjr0=
+	t=1771614892; cv=none; b=UsoMjsufmU9U0DM13AgMSwDAjTd6GN8ZcxKGHXPw15Tkg8PYD9qGZKz9LrD+aK9HTrOUeizrf74WHh8WygOodoetwh2A0Ft9q3X5bxdQV/oTgTJrtUIV2fPVQVenGmNpMw9VtyREoU3409LY5Q7XUZAQEz6+0zIUsDCb1/2UTmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771605971; c=relaxed/simple;
-	bh=RdADZ2qvOwFUII0e06TsD4htMLQmUhUg2PjK9uFPPJw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FWDrJqDVqBi2hbqngnpjzukcG671cLsnPE5R32jaIiNQnBrk6elQo0JiTYg1KIFNWYwnJdx2Knrj83x46Eihfb2rkURoJsVnIU3L9TvCJEff421iBbzCT07hy0s4Jd3ZVcKzs4IwHLEbAIZaQs7TzASzIQL63D/GvXrpmMDEjP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pKnpSenC; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1771614892; c=relaxed/simple;
+	bh=N/dul5YjHzDXPfrduHVCi4Yg6lOyDfk2HzDDWaV+YQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mHkru+qcOA7XTY9aTxcw1oOesaN4Qm60W5/mcxnC8ELNN3kZH8e6o4MgHEJm48X7XbYs9yeODMeslRoJ2CXw1BXqyRNqFeQ8XdSeSdCLMalTfK6i7aerg/I9REYCggWvdjrPC5zA3w7hCzDBG/tsTrHEvlf3dpGmBrgjD6EO9Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl4K9twK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKnpSenC"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2a79164b686so35036265ad.0
-        for <loongarch@lists.linux.dev>; Fri, 20 Feb 2026 08:46:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771605969; x=1772210769; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2NjEt0nlzd3sSfAI7ozchxl45oY7orW7xyZnr6QEkg=;
-        b=pKnpSenC7UYZIZPUL7HIisUiJHJcQe7BnGhLTnO3Z0yyilBceuxq2D3Z2h5QFyK6YN
-         W6lwYObYDjabduHNNneCahZnaTxQMRuV1utRnAynSW6u0ifHrIRVVP76ATW7Nq/cTzoT
-         rxqdZG8tp4N37YNjzXfXUUpv0/FM0sOczoSBmxFjlmp5q8XyAqtcNV44C4YbBSI6TocU
-         zzZRDJMYE0LjdM27beJyEIOfPsckzWLDwHTgu2996OwrulodF/byTQNj2sTERpwwm6dY
-         lJW4RIzWf7XpsLzFGtX2pRhbTPq61iw4MTw2EZHshGOhz8uRXCErF/ojSm8Rqu/AudRF
-         TTww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771605969; x=1772210769;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2NjEt0nlzd3sSfAI7ozchxl45oY7orW7xyZnr6QEkg=;
-        b=M4kn/wydaDhjIuUad9EKO/pT5UfsKXWPRdnwpxdX3/pEGR+jstUg+8B7l55sUvVITt
-         YPHt11CgZlHbYyOt3hBxcg3ulHwkUIIatDMQ5c3byhQ4SwczsZdM0Un+z769yjSmCOis
-         A8W+S+nDuI+MQkZWEelWeRb27QZXt91vvIniD5tWb5j/choFa84/RvUUkuA78B8twfAA
-         n6RLlXpHDqbArGGOWJIH3X6o0uQsxxL3DNzLUvy/IQbMxyL/k5JN2tG5+uHEsq1jnesr
-         TODJD3SaIvT/8fRNl70XISpWOtNyS9hLukfA/qu1RClZsl1KDUVzAODfaRLN6DplcdBf
-         E4Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgqZPlAV4GGNTppzCH2ME+qjhhF2ndA/koftDaatYTEJC8BsPzDPzkPZDJFEs+q3z10M+lKcbhXXE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz6wlTGZZyinOjA+fdhpu1vdL+gptuzmIlmzpXfebxvmc2atZWi
-	HNNeUY0qBjX/BGsm+MIJc/gVzxeFZ3HUd16KcKdFIFRx0PUZOmqbZdooOx6Ry3AK4yhbgy1u9g6
-	8Hle66A==
-X-Received: from plma6.prod.google.com ([2002:a17:902:7d86:b0:2a9:622c:47d6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e80c:b0:2a1:388d:8ef3
- with SMTP id d9443c01a7336-2ad7444e7fcmr1749985ad.18.1771605969111; Fri, 20
- Feb 2026 08:46:09 -0800 (PST)
-Date: Fri, 20 Feb 2026 08:46:07 -0800
-In-Reply-To: <aZdlBkLEQyv9q5ll@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl4K9twK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA755C116C6;
+	Fri, 20 Feb 2026 19:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771614892;
+	bh=N/dul5YjHzDXPfrduHVCi4Yg6lOyDfk2HzDDWaV+YQQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dl4K9twKTKk+64XuV3tx697p+tSKE4KpQAY+Nm3YF1p4RQ05z2krCL7vET+svQbq5
+	 VG8ENPLrxvLm/+whZxz7wR4sSkpTeUfkYv0ng1u1YVUiDdnp8o8K/ltQpAb0sRhhOy
+	 rXgnEi1fxdVV7wKy6o/+ac2dBU905VE6WwRTURFE2/UJPkevi35wRQJ3wcx8pxvJL3
+	 qH7yoJBL8zTJatIySTsfhPDUB1BBxBRzyo1NKjJzbcnEssXaEJKTQi0Oye1uhAaXPh
+	 P3BILrh7CooTpzS9Xd2cs8bvXzY3zgzfP1rVyzHWfNebJK+Q3V4jNuZh9AQyF9VNxU
+	 mNL8AGmVqa1wA==
+Date: Fri, 20 Feb 2026 11:14:49 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Mingwei Zhang <mizhang@google.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v6 42/44] KVM: VMX: Dedup code for adding MSR to VMCS's
+ auto list
+Message-ID: <aZiyqcd2V6Ncm6wY@google.com>
+References: <20251206001720.468579-1-seanjc@google.com>
+ <20251206001720.468579-43-seanjc@google.com>
+ <aZdlBkLEQyv9q5ll@google.com>
+ <aZe6UR1EGg0RcB69@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20251206001720.468579-1-seanjc@google.com> <20251206001720.468579-43-seanjc@google.com>
- <aZdlBkLEQyv9q5ll@google.com>
-Message-ID: <aZe6UR1EGg0RcB69@google.com>
-Subject: Re: [PATCH v6 42/44] KVM: VMX: Dedup code for adding MSR to VMCS's
- auto list
-From: Sean Christopherson <seanjc@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Mingwei Zhang <mizhang@google.com>, 
-	Xudong Hao <xudong.hao@intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Manali Shukla <manali.shukla@amd.com>, Jim Mattson <jmattson@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aZe6UR1EGg0RcB69@google.com>
 
-On Thu, Feb 19, 2026, Namhyung Kim wrote:
-> Hello,
+On Fri, Feb 20, 2026 at 08:46:07AM -0800, Sean Christopherson wrote:
+> On Thu, Feb 19, 2026, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Fri, Dec 05, 2025 at 04:17:18PM -0800, Sean Christopherson wrote:
+> > > Add a helper to add an MSR to a VMCS's "auto" list to deduplicate the code
+> > > in add_atomic_switch_msr(), and so that the functionality can be used in
+> > > the future for managing the MSR auto-store list.
+> > > 
+> > > No functional change intended.
+> > > 
+> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++----------------------
+> > >  1 file changed, 19 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index 018e01daab68..3f64d4b1b19c 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -1093,12 +1093,28 @@ static __always_inline void add_atomic_switch_msr_special(struct vcpu_vmx *vmx,
+> > >  	vm_exit_controls_setbit(vmx, exit);
+> > >  }
+> > >  
+> > > +static void vmx_add_auto_msr(struct vmx_msrs *m, u32 msr, u64 value,
+> > > +			     unsigned long vmcs_count_field, struct kvm *kvm)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	i = vmx_find_loadstore_msr_slot(m, msr);
+> > > +	if (i < 0) {
+> > > +		if (KVM_BUG_ON(m->nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > > +			return;
+> > > +
+> > > +		i = m->nr++;
+> > > +		m->val[i].index = msr;
+> > > +		vmcs_write32(vmcs_count_field, m->nr);
+> > > +	}
+> > > +	m->val[i].value = value;
+> > > +}
+> > > +
+> > >  static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> > >  				  u64 guest_val, u64 host_val)
+> > >  {
+> > >  	struct msr_autoload *m = &vmx->msr_autoload;
+> > >  	struct kvm *kvm = vmx->vcpu.kvm;
+> > > -	int i;
+> > >  
+> > >  	switch (msr) {
+> > >  	case MSR_EFER:
+> > > @@ -1132,27 +1148,8 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+> > >  		wrmsrq(MSR_IA32_PEBS_ENABLE, 0);
+> > >  	}
+> > >  
+> > > -	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
+> > > -	if (i < 0) {
+> > > -		if (KVM_BUG_ON(m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > > -			return;
+> > > -
+> > > -		i = m->guest.nr++;
+> > > -		m->guest.val[i].index = msr;
+> > > -		vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->guest.nr);
+> > > -	}
+> > > -	m->guest.val[i].value = guest_val;
+> > > -
+> > > -	i = vmx_find_loadstore_msr_slot(&m->host, msr);
+> > > -	if (i < 0) {
+> > > -		if (KVM_BUG_ON(m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
+> > > -			return;
+> > > -
+> > > -		i = m->host.nr++;
+> > > -		m->host.val[i].index = msr;
+> > > -		vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, m->host.nr);
+> > > -	}
+> > > -	m->host.val[i].value = host_val;
+> > > +	vmx_add_auto_msr(&m->guest, msr, guest_val, VM_ENTRY_MSR_LOAD_COUNT, kvm);
+> > > +	vmx_add_auto_msr(&m->guest, msr, host_val, VM_EXIT_MSR_LOAD_COUNT, kvm);
+> > 
+> > Shouldn't it be &m->host for the host_val?
 > 
-> On Fri, Dec 05, 2025 at 04:17:18PM -0800, Sean Christopherson wrote:
-> > Add a helper to add an MSR to a VMCS's "auto" list to deduplicate the code
-> > in add_atomic_switch_msr(), and so that the functionality can be used in
-> > the future for managing the MSR auto-store list.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 41 +++++++++++++++++++----------------------
-> >  1 file changed, 19 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 018e01daab68..3f64d4b1b19c 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -1093,12 +1093,28 @@ static __always_inline void add_atomic_switch_msr_special(struct vcpu_vmx *vmx,
-> >  	vm_exit_controls_setbit(vmx, exit);
-> >  }
-> >  
-> > +static void vmx_add_auto_msr(struct vmx_msrs *m, u32 msr, u64 value,
-> > +			     unsigned long vmcs_count_field, struct kvm *kvm)
-> > +{
-> > +	int i;
-> > +
-> > +	i = vmx_find_loadstore_msr_slot(m, msr);
-> > +	if (i < 0) {
-> > +		if (KVM_BUG_ON(m->nr == MAX_NR_LOADSTORE_MSRS, kvm))
-> > +			return;
-> > +
-> > +		i = m->nr++;
-> > +		m->val[i].index = msr;
-> > +		vmcs_write32(vmcs_count_field, m->nr);
-> > +	}
-> > +	m->val[i].value = value;
-> > +}
-> > +
-> >  static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
-> >  				  u64 guest_val, u64 host_val)
-> >  {
-> >  	struct msr_autoload *m = &vmx->msr_autoload;
-> >  	struct kvm *kvm = vmx->vcpu.kvm;
-> > -	int i;
-> >  
-> >  	switch (msr) {
-> >  	case MSR_EFER:
-> > @@ -1132,27 +1148,8 @@ static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
-> >  		wrmsrq(MSR_IA32_PEBS_ENABLE, 0);
-> >  	}
-> >  
-> > -	i = vmx_find_loadstore_msr_slot(&m->guest, msr);
-> > -	if (i < 0) {
-> > -		if (KVM_BUG_ON(m->guest.nr == MAX_NR_LOADSTORE_MSRS, kvm))
-> > -			return;
-> > -
-> > -		i = m->guest.nr++;
-> > -		m->guest.val[i].index = msr;
-> > -		vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->guest.nr);
-> > -	}
-> > -	m->guest.val[i].value = guest_val;
-> > -
-> > -	i = vmx_find_loadstore_msr_slot(&m->host, msr);
-> > -	if (i < 0) {
-> > -		if (KVM_BUG_ON(m->host.nr == MAX_NR_LOADSTORE_MSRS, kvm))
-> > -			return;
-> > -
-> > -		i = m->host.nr++;
-> > -		m->host.val[i].index = msr;
-> > -		vmcs_write32(VM_EXIT_MSR_LOAD_COUNT, m->host.nr);
-> > -	}
-> > -	m->host.val[i].value = host_val;
-> > +	vmx_add_auto_msr(&m->guest, msr, guest_val, VM_ENTRY_MSR_LOAD_COUNT, kvm);
-> > +	vmx_add_auto_msr(&m->guest, msr, host_val, VM_EXIT_MSR_LOAD_COUNT, kvm);
+> Ouch.  Yes.  How on earth did this escape testing...  Ah, because in practice
+> only MSR_IA32_PEBS_ENABLE goes through the load lists, and the VM-Entry load list
+> will use the guest's value due to VM_ENTRY_MSR_LOAD_COUNT not covering the bad
+> host value.
 > 
-> Shouldn't it be &m->host for the host_val?
+> Did you happen to run into problems when using PEBS events in the host?
 
-Ouch.  Yes.  How on earth did this escape testing...  Ah, because in practice
-only MSR_IA32_PEBS_ENABLE goes through the load lists, and the VM-Entry load list
-will use the guest's value due to VM_ENTRY_MSR_LOAD_COUNT not covering the bad
-host value.
+No, I just found it by reading the patch.
 
-Did you happen to run into problems when using PEBS events in the host?
+> 
+> Regardless, do you want to send a patch?  Either way, I'll figure out a way to
+> verify the bug and the fix.
 
-Regardless, do you want to send a patch?  Either way, I'll figure out a way to
-verify the bug and the fix.
+Sure, will do.
+
+Thanks,
+Namhyung
+
