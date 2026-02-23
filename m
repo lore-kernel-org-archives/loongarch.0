@@ -1,124 +1,158 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D6E34F47D
-	for <loongarch@lists.linux.dev>; Mon, 23 Feb 2026 09:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C052080C1
+	for <loongarch@lists.linux.dev>; Mon, 23 Feb 2026 14:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771839723; cv=none; b=OAgvh8M+PjnTJd98w0KUyySHwMoZKPqYo2rdqQA3Dgm9F6CsviKeOt/ISFqicfm0ifeMy8ICD3iGp0LxYvnGXMOC36GhrtoM73XeQuZ7oC0oJEN72dsmTJfV/2SqmQvHB8xyXbqHZ1GSxwDbvWfzdxSjaW+NDOJfIPKmMrEjU88=
+	t=1771858354; cv=none; b=ksztUxfyhhzNGC1qsWnN3ZGXV1TlDsWy3XUAQNTBXGz0tX6pm2y78dzu3H4PRq+zzJEDIOawG1Fqf7wR+pv/sOFrqFxzGrVYUuutEplVjljwYwZGbmtaqExe6BE77nlK2XWmqDN4ewxOU2GJbyrpmQLP1IwOeqFegDYLsy4pGFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771839723; c=relaxed/simple;
-	bh=h2fE6FJnt+GTKQVQdqqbEpUoyJIa8aBYwbs8ZoZNJxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UOSLqaLQOqBvcJorzuYl+Ohxa2ACSSksaWtrpmmbYtd/hwCtqe2nwrIahwYKK0+xRk5YVkSVw/JisnY9jMxpq7q24eBwhrN1U8v0Iu+jCQJdXNAQO3CEf0vzju8930/HapzsyxtIPnpXPTF5UpqixNftptJ+fezy2/6MUwvV9kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EDe0jBWy; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771858354; c=relaxed/simple;
+	bh=UVAFpGopAm1uHGWKPm+YTJ1SMuDgyk8tqHgCMtYq+7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q21Ch0UmBJZTzdqWfYNtWUWs06M9OM6qGw4lzjzlHVyMxsQ1zckoFnvRdx+a5VAnb7xKMMKD5Umc19fUgf9qX0IymXTWagF/Jan/BN3I/Xsj3UPboLNvSfr69O0WPxW3L6TBSOQMY2681C/4tSG3Hj7aMi8dIZEgdhR2OyX8Lt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4yqZFpa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDe0jBWy"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-4359228b7c6so3155303f8f.2
-        for <loongarch@lists.linux.dev>; Mon, 23 Feb 2026 01:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771839721; x=1772444521; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
-        b=EDe0jBWyFHm/IwHYxADKbf8Cg8QDwP+xQRHz3KIq1HcvZYpYx8jb2SGmS15XMLG+7P
-         zAJAYe8EnYQaiAB1ERjORvOtJUtwifiwh40IH61x9nFM/KQmCC70MxdfBGz1P/CJR9xk
-         TcWHK5Fg75WbZyg89PSmoI5LJsdb4wdxKGRjj61SBeSdSAv/QjYWMGIQ+lS8jc5wTRJj
-         MOiQtgluB+alm6Mh78Tx3at6Jm4LgJ5UBfrfZM7btVjU3Y3Kddb+NeP3b/r32i4dRwrC
-         WRyG5R/tRYG4OoSeeK/1d/XtaustkxT4ND+DYfqJohtg25jLk+DasmCnV5hTi51mU7z7
-         E8Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771839721; x=1772444521;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uP6bWvtU8eeL2/gAQvmkB1Apc9H5g4lS1edf4fQ7WfI=;
-        b=cZKJT5Vntoiu78HZakOFkboraHeJwI05axbhK11d2SYTkW0lvvEUhgasMDoACqA8V2
-         tekNnoavuNABNQHjbC1UCJ7gi4jqerAB7F2HfxomPcW3B7ulJsGD0lyqz8PnENJEmxlK
-         Q/tEyhjTsSnP8XsJatNnJc2aB9G9XbycylOU+7QSZx0AM5bT4Zfz+vtQ8FJ2CBEefdDI
-         6xKhDhexGFkzmctnYTG2EdAzVAd2607YWMcSU2MfGLEcIbIT3ev00emzTd0yu+P0lJBN
-         ixe/5RhU7CQbpilBrUmpJP8v2mfUgz56Ha3t/iJIwHv91WUyviCpcnizn9ajpuXN2mSk
-         ItCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWYix1UW0Ly/0zbvSnWLduT8mM2sDd/y/wR16jj80b1Y6RUeqM/d2xq7fE0IbSNApl42zU9AUqnXc=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yym/U+e0ZQrLol/aVpMRh3dJ9HAdGDueomys4taqVmlRYrWK0E9
-	PzBnI0nHOmm6ko3ZLOmHI3x8tY3X2wROglezOkOjsjqGWZ+EuXHKGNlB
-X-Gm-Gg: AZuq6aIbGviExwAad1uiuhdLjxY1tyLapjD58JLluA/1leYQnKXR1Ll0EB7Zf6XHWSW
-	Pi/GFpSeNxZ1gbbrdpK/UJb1aAYeVpzsm8GHEkUhC1FN4BkUEu9NkUAoa6XKVtwjPhgv3XmXxvA
-	dy8V9i1lLrPuRlEykfwZZtk7CerxOlSLl5UnZy3s/HYkfNwLdKI/FR9MawD4kvNiKaXsoyDAwHA
-	RhjRJePT0ggB7gosXkyOIOrcYgwhV4u2LbjtbDkhfj6GSTf0mC9QKbz1V7zS2HbxZ5CHZRJTkFz
-	zgSj8UICOxu/xKMXbAnbCxFuVns/0scvMUD65KeuQjhMPw91GESdMwOTVdcV/j0cgLxVGLGUEc9
-	4dh6OCwDvKQPqyEzxn9huaXf0Pdiwerv0gd707SUi6G43f9aVcVdpApwYmxBSB7cyZsQMZsS2Qp
-	swzLjf/724j4Bf6nIBvYQncjxdQxN8rgtR9wtVRM6bVswYXQIF2uFMXnxb1a/005/rcnx2ibs/p
-	d0=
-X-Received: by 2002:a05:600c:3b27:b0:483:702f:4641 with SMTP id 5b1f17b1804b1-483a95bd842mr121940845e9.3.1771839720960;
-        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a31f0330sm222508405e9.9.2026.02.23.01.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 01:42:00 -0800 (PST)
-Date: Mon, 23 Feb 2026 09:41:58 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
- Gordeev <agordeev@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Kees Cook
- <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "Jason A.
- Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>, Jeremy
- Linton <jeremy.linton@arm.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
- arches
-Message-ID: <20260223094158.2197d7af@pumpkin>
-In-Reply-To: <87ecmcwjh9.ffs@tglx>
-References: <20260119130122.1283821-1-ryan.roberts@arm.com>
-	<20260119130122.1283821-4-ryan.roberts@arm.com>
-	<87ecmcwjh9.ffs@tglx>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4yqZFpa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52CCC116C6;
+	Mon, 23 Feb 2026 14:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771858354;
+	bh=UVAFpGopAm1uHGWKPm+YTJ1SMuDgyk8tqHgCMtYq+7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H4yqZFpaipymBSDijM07NWYMUzRVMGQxKSvag/WbJsRZMXu8UPpkgdYVQDK+ZmOjS
+	 CQe8IAiTjs7khPJ1nlJnmZSOB5h0jRhjgvVLZ5cGZVU1pOv8frRsiEDRpqtnmbplDy
+	 Lht/XzygjzffCqWtbIO99oCnpuIBgrOWGynu0ZtOvDn7md9VbLqpMR7HcuGskaJCjA
+	 yxdNAgpnjq1fiWvog+AgwOVgenVeAJZW480BSTugFXQmZOe/CPWEGoEVF8Qof2ybAg
+	 C7pVZtKtiygDfIIXagz4qs+RaBRL6jUCnzS9rjZ1Fe+svcwKUAHOvDvuVzzk00arpC
+	 G96e2vc5zIrpA==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D183DF4006C;
+	Mon, 23 Feb 2026 09:52:32 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Mon, 23 Feb 2026 09:52:32 -0500
+X-ME-Sender: <xms:sGmcaW8L9wvFHE9xaKhbeX8JgZt0lnMyi9ulvqIu-cRvaG3b6rt2pA>
+    <xme:sGmcaaZSaG8I5M6m1GvoKUH4LaO8U4CEWh114E5A0nNudgyzuIUKncAqQ5T_e66G-
+    NOslw5KSJB8Qo6MeB8VALGBCHzEytytGzyAA_Ljg2fxngRougTPbA>
+X-ME-Received: <xmr:sGmcaXFiBkUGBA_xw9Nzg3RQQEQBYqkXKxm4WowbCJKYKx2umbWxPLKBfTn14w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeejhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
+    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
+    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
+    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
+    hnrghmvgdpnhgspghrtghpthhtohepheegpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehvsggrsghkrgesshhushgvrdgtiidprhgtphhtthhopegurghvihgusehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhn
+    rdhorhhgpdhrtghpthhtohepmhhutghhuhhnrdhsohhngheslhhinhhugidruggvvhdprh
+    gtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepuhhs
+    rghmrggrrhhifheigedvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfhhvughlsehgoh
+    hoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrgguohhrsehsuhhsvgdruggvpdhr
+    tghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:sGmcab5PzpnO5klB-RmRGOlp75eh_0ZN1UWzu3rtxmVrF0HDL3Ytmg>
+    <xmx:sGmcaQvF3MOs6LmVkT3fJrDl4ASxADJy5NxGaaSRi4g9Ae-_RJtIyw>
+    <xmx:sGmcaVBPXnseaXteAEKPGybiYblNvylyKEz-quFqXS1vgYJFTwH0bQ>
+    <xmx:sGmcaYv9MSdgZdgG3nnKOXXoxjbQ8gJUrE_GKyyzeQp8t6KF3Wop_A>
+    <xmx:sGmcaRKthHvOALCnZzC9C5_ytVbe1T1h3tw12XeJuRFen4yWwxEa5du9>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Feb 2026 09:52:30 -0500 (EST)
+Date: Mon, 23 Feb 2026 14:52:25 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Muchun Song <muchun.song@linux.dev>, 
+	Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>, 
+	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>, 
+	Mike Rapoport <rppt@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
+Message-ID: <aZxn34ebvSKFCWth@thinkstation>
+References: <20260202155634.650837-1-kas@kernel.org>
+ <20260202155634.650837-9-kas@kernel.org>
+ <e5831f0b-88c5-4a20-82b3-6e5952388132@kernel.org>
+ <aYnJCnE5vooLROnu@thinkstation>
+ <6afd7334-82e8-4f87-8ed3-6448e89328c2@suse.cz>
+ <aZL-7mpPT_S3Paon@thinkstation>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aZL-7mpPT_S3Paon@thinkstation>
 
-On Sun, 22 Feb 2026 22:34:26 +0100
-Thomas Gleixner <tglx@kernel.org> wrote:
-
-> On Mon, Jan 19 2026 at 13:01, Ryan Roberts wrote:
-> > I tested an earlier version of this change on x86 bare metal and it
-> > showed a smaller but still significant improvement. The bare metal
-> > system wasn't available this time around so testing was done in a VM
-> > instance. I'm guessing the cost of rdtsc is higher for VMs.  
+On Mon, Feb 16, 2026 at 11:30:22AM +0000, Kiryl Shutsemau wrote:
+> On Tue, Feb 10, 2026 at 04:57:55PM +0100, Vlastimil Babka wrote:
+> > On 2/9/26 12:52, Kiryl Shutsemau wrote:
+> > > On Thu, Feb 05, 2026 at 02:10:40PM +0100, David Hildenbrand (Arm) wrote:
+> > >> On 2/2/26 16:56, Kiryl Shutsemau wrote:
+> > >> > With the upcoming changes to HVO, a single page of tail struct pages
+> > >> > will be shared across all huge pages of the same order on a node. Since
+> > >> > huge pages on the same node may belong to different zones, the zone
+> > >> > information stored in shared tail page flags would be incorrect.
+> > >> > 
+> > >> > Always fetch zone information from the head page, which has unique and
+> > >> > correct zone flags for each compound page.
+> > >> > 
+> > >> > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> > >> > Acked-by: Zi Yan <ziy@nvidia.com>
+> > >> > ---
+> > >> >   include/linux/mmzone.h | 1 +
+> > >> >   1 file changed, 1 insertion(+)
+> > >> > 
+> > >> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > >> > index be8ce40b5638..192143b5cdc0 100644
+> > >> > --- a/include/linux/mmzone.h
+> > >> > +++ b/include/linux/mmzone.h
+> > >> > @@ -1219,6 +1219,7 @@ static inline enum zone_type memdesc_zonenum(memdesc_flags_t flags)
+> > >> >   static inline enum zone_type page_zonenum(const struct page *page)
+> > >> >   {
+> > >> > +	page = compound_head(page);
+> > >> >   	return memdesc_zonenum(page->flags);
+> > >> 
+> > >> We end up calling page_zonenum() without holding a reference.
+> > >> 
+> > >> Given that _compound_head() does a READ_ONCE(), this should work even if we
+> > >> see concurrent page freeing etc.
+> > >> 
+> > >> However, this change implies that we now perform a compound page lookup for
+> > >> every PageHighMem() [meh], page_zone() [quite some users in the buddy,
+> > >> including for pageblock access and page freeing].
+> > >> 
+> > >> That's a nasty compromise for making HVO better? :)
+> > >> 
+> > >> We should likely limit that special casing to kernels that really rquire it
+> > >> (HVO).
+> > > 
+> > > I will add compound_info_has_mask() check.
+> > 
+> > Not thrilled by this indeed. Would it be a problem to have the shared tail
+> > pages per node+zone instead of just per node?
 > 
-> No it's not, unless the hypervisor traps RDTSC, which would be insane as
-> that would cause massive regressions all over the place.
-> 
-> So guessing is not really helpful if you want to argue performance.
+> I thought it would be overkill. It likely is going to be unused for most
+> nodes. But sure, move it to per-zone.
 
-The cost of rdtsc will depend on the cpu architecture.
-To get valid comparisons you need to run on identical systems.
+I gave it a try, but stumbled on a problem.
 
-Regardless, the cost of rdtsc could easily be larger than the
-cost of the prandom_u32_state() code (especially if inlined or
-without all the return thunk 'crap').
+We need to know the zone in hugetlb_vmemmap_init_early(), but zones are
+not yet defined.
 
-	David
+hugetlb_vmemmap_init_early() is called from within sparse_init(), but
+span of zones is defined in free_area_init() after sparse_init().
 
-> 
-> Thanks,
-> 
->         tglx
+Any ideas, how get past this? :/
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
