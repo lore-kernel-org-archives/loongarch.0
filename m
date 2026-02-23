@@ -1,92 +1,133 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365FA33B95A;
-	Mon, 23 Feb 2026 18:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D76836E469;
+	Mon, 23 Feb 2026 19:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771870703; cv=none; b=gdlWCE5Xvi6kPizkioBM0gM1Mto/lGMW+WsKPQqduwZQaKG/PF13uHVwPnFeXcPk6DwoiyNH1JX4gIAh+Kf+PWEI9UddMDs9H8wG58KKs0SM+xZC7RVSmBFawR4pEHMRpt7Hg4kQRtrKJUCzNF/DCbslnXUBpJMY2DieIgBL3hg=
+	t=1771873857; cv=none; b=K79FsP6ZQKOKLSnEtTpYxumStHdvMWaNtxvFr5xNpXJlzzS62J5eUs99oZcqzku72RPZGvfyAK6lLDtQV17Vq/6LEvK1yt/BhWqh6ahZExAmqWO5BPPrp418Amz6nqDI6CxwvvkMvf9V69kV0LQwcAtk/2qTtXCZQhInnhRbB5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771870703; c=relaxed/simple;
-	bh=+VZ7Kwr43qtcpUWCNbDxydoVIfRKXFsPdkZVbgvisX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bNvU7kPIbv4W8c5EQTOZ9yEb4Z6TeTm0+vxZpjf1ufFRRM5h/q1wDAaUEwh5ElZVVLlkablgAc3+IYXGl08gijKnPLsFhMHXMLDTWtpzpjrXKoBcUGtbZlC9YnmMEZJUYsT+GsZcYU5j6SEYBxxcrrrWjq5Tok1SwvSi0JHdSKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DwysRZ8w; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1771873857; c=relaxed/simple;
+	bh=lEKimZnEjne2BNdsm8RfAwEFAB1/q1VUQbalmtODD1Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hItMJ4WkOwdN+wKqoPgyhAw37f14lR+eRGgFkn3SLqL1QB1FZ07SNkB+ZHiCZbTLKga4hXKEKjc01884NMZNdvf6kD5QQYgpIlWYWD1xV0MsTd1UnJpASOEeQwWOhhkMzdDw1MJDS43J/MaFwP172UjiJRvsqgcB2WgRhXvnfkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7lb9mvt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DwysRZ8w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FfglRdAZ7//oiLVr9rHZZA3KADO9fxzVK1RtdGfizyk=; b=DwysRZ8w8bsWlmYNGYULfAJmG7
-	hSJNuNbMf7YB6Bw+2+sdN+gpEHiWW8es4C0T6zJwktdLc3RhPZw2vHww2zYIaIWd9OMMo2f0GMQGB
-	+o+JmrdW5o641PR1oftCRk1CdSsMCxhp4d9yPIn62FPbQm05ucvWkQHqdVdKmus/qgvGWHPyoTMq0
-	Bi0bMdMVoMOK4+Y5UeEhXVzRwRMx69dUFCB7knGSbhp+g85lK+Ftmjm+AdVAocCgB4qJLd5e7BYXG
-	DwhcEFl1UkLOZyTvFO6oylY9vWhv/isIrE2AqJyzG9EjoCNjXR2fZEj1huiJ1sS22n3Y0H4myV9zV
-	XW3KWFzQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuaVP-0000000Et8q-2Mg0;
-	Mon, 23 Feb 2026 18:18:03 +0000
-Date: Mon, 23 Feb 2026 18:18:03 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Kiryl Shutsemau <kas@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Usama Arif <usamaarif642@gmail.com>,
-	Frank van der Linden <fvdl@google.com>,
-	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	kernel-team@meta.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCHv6 08/17] mm: Make page_zonenum() use head page
-Message-ID: <aZyZ2-7Xr-zUnInC@casper.infradead.org>
-References: <20260202155634.650837-1-kas@kernel.org>
- <20260202155634.650837-9-kas@kernel.org>
- <aZJTLwV2SaaKu1k_@casper.infradead.org>
- <ec4a9a1e-8c08-4879-a787-3b9e0bc38160@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7lb9mvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55F7C2BCAF;
+	Mon, 23 Feb 2026 19:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771873857;
+	bh=lEKimZnEjne2BNdsm8RfAwEFAB1/q1VUQbalmtODD1Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=W7lb9mvt8Ss7DIDpVVbHvo8HG9uV2RHrY5VNGVfhxu/bODlNHPOMU8AHU7cyge+Yt
+	 iRloWl9TfRuTMAM2B+UtspS3O6ZXW8kKmkvGes8uLVlEMNdiU2xt3fqmoiVtIi1Cod
+	 SarcI/AdLtw17TCwEFJVDqDlJoLVMkEcAdtk4srZiwFRO4xHP50LbwxcaP0hEea+z4
+	 RQpOuIRuHl6d6iyM1gY+9wf/r1WTKKzhKqKQITVCr+YsLeL7dTY8wNVJ/jbAXYxUvW
+	 G8FCGINS88O6kG4fIPtGvpELH4y3kmpwj/vyFTEAcpNbcJGdv8VyHGqk/ExuZxYFDL
+	 2gl/lR3828f7g==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/2] kbuild: Switch from '-fms-extensions' to
+ '-fms-anonymous-structs' when available
+Date: Mon, 23 Feb 2026 12:10:27 -0700
+Message-Id: <20260223-fms-anonymous-structs-v1-0-8ee406d3c36c@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec4a9a1e-8c08-4879-a787-3b9e0bc38160@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQqDMBBA0avIrDtgIwbxKqWLGCc6gknJJNIi3
+ t1Ul2/x/w5CkUmgr3aItLFw8AXPRwV2Nn4i5LEYVK10rVSDbhU0PvjfGrKgpJhtEnTajKRtN7R
+ GQ2k/kRx/r+/rfVvysJBN/xkcxwnoIdTAeQAAAA==
+X-Change-ID: 20260223-fms-anonymous-structs-f6ade6c8b5a6
+To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, 
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Kees Cook <kees@kernel.org>, linux-kbuild@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ loongarch@lists.linux.dev, linux-parisc@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+ linux-efi@vger.kernel.org, llvm@lists.linux.dev
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2594; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=lEKimZnEjne2BNdsm8RfAwEFAB1/q1VUQbalmtODD1Q=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDJlzllkKpdb9/H8vK1IjjHf1par1+w9qXs5/w91Rs6jo7
+ o0KpXUhHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAiR+IYGR7dj3Mv9tp9XOzY
+ T6tjbKzOTUe/79vdcuXP9qw297/fahUZ/qec2K/kXJAvNPuxK8fqb9Jb/zLOkuXmujS3dH7QXL9
+ tnWwA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Mon, Feb 16, 2026 at 10:06:57AM +0100, David Hildenbrand (Arm) wrote:
-> On 2/16/26 00:13, Matthew Wilcox wrote:
-> > On Mon, Feb 02, 2026 at 03:56:24PM +0000, Kiryl Shutsemau wrote:
-> > > With the upcoming changes to HVO, a single page of tail struct pages
-> > > will be shared across all huge pages of the same order on a node. Since
-> > > huge pages on the same node may belong to different zones, the zone
-> > > information stored in shared tail page flags would be incorrect.
-> > > 
-> > > Always fetch zone information from the head page, which has unique and
-> > > correct zone flags for each compound page.
-> > 
-> > You're right that different pages in the same folio can have different
-> > zone number.  But does it matter ... or to put it another way, why is
-> > returning the zone number of the head page the correct way to resolve
-> > this?
-> 
-> How can a folio cross zones?
+Hi all,
 
-I thought 1GB pages in hugetlb could cross zones?  Maybe that used to be
-true and isn't any more, or maybe it was never true and I was just
-confused.
+The kernel enabled '-fms-extensions' in commit c4781dc3d1cf ("Kbuild:
+enable -fms-extensions") in 6.19 to gain access to a Microsoft
+(originally Plan 9) extension around including a tagged structure/union
+anonymously in an other structure/union. Since then, Clang 23.0.0
+(current main) has added a flag to enable only that extension, rather
+than all Microsoft extensions, '-fms-anonymous-structs' [1]. Using this
+narrower compiler option would have avoided the build error fixed by
+commit a6773e6932cb ("jfs: Rename _inline to avoid conflict with clang's
+'-fms-extensions'"). While these errors are not expected to be common,
+using the narrower option when available has no drawbacks because the
+kernel only cares about this extension in '-fms-extensions', no others.
+While this could result in build errors for folks using
+'-fms-anonymous-structs' if a developer uses another extension in
+'-fms-extensions' (either intentionally or unintentionally), flagging
+these uses for further scrutiny seems worthwhile.
+
+This series converts the build system to use that flag when it is
+available. The first patch consolidates all of the C dialect flags into
+a single variable to make future updates to the dialect flags less
+painful, as updating the logic in every place that uses their custom
+built C flags is getting cumbersome (and C23 is looming). The second
+patch makes the actual switch.
+
+I would like Nicolas to carry this in the Kbuild tree for 7.1, please
+provide Acks as necessary.
+
+[1]: https://github.com/llvm/llvm-project/commit/c391efe6fb67329d8e2fd231692cc6b0ea902956
+
+---
+Nathan Chancellor (2):
+      kbuild: Consolidate C dialect options
+      kbuild: Use '-fms-anonymous-structs' if it is available
+
+ Makefile                              | 16 ++++++++++++----
+ arch/arm64/kernel/vdso32/Makefile     |  3 +--
+ arch/loongarch/vdso/Makefile          |  2 +-
+ arch/parisc/boot/compressed/Makefile  |  2 +-
+ arch/powerpc/boot/Makefile            |  3 +--
+ arch/s390/Makefile                    |  3 +--
+ arch/s390/purgatory/Makefile          |  3 +--
+ arch/x86/Makefile                     |  6 +-----
+ arch/x86/boot/compressed/Makefile     |  6 +-----
+ drivers/firmware/efi/libstub/Makefile |  3 +--
+ init/Kconfig                          |  5 +++++
+ scripts/Makefile.warn                 |  5 -----
+ 12 files changed, 26 insertions(+), 31 deletions(-)
+---
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+change-id: 20260223-fms-anonymous-structs-f6ade6c8b5a6
+
+Best regards,
+--  
+Nathan Chancellor <nathan@kernel.org>
 
