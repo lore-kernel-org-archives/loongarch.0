@@ -1,55 +1,32 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9F25F988
-	for <loongarch@lists.linux.dev>; Tue, 24 Feb 2026 03:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D1D73644AD
+	for <loongarch@lists.linux.dev>; Tue, 24 Feb 2026 07:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771902362; cv=none; b=qmXTgmBgFW1POyEMznz6nXQ5qmBZOUQVShzLKO3aNIVeLsnDGfq19+FbADf9Ck4agCx4SgmBfD6yljI6wFGNrD78VEeSEjiVc4O8fX76QjaYizPwweGdOsA0TZiVG96MKxBHLQJPdXlstSVR+vexucLQexCGLKPMTMdQCry0h+U=
+	t=1771918598; cv=none; b=n7/Ab5MrS+gEJ09k/TxJ2TI/tvs+7y40d7fX1aeNNXuqMmDWB8rI7Lhb0D1D31tETsPUV+QXYG0F7+Vedd46woOJD2GkJkSnMCITnaRprSHaPCG9RddnkttzEy4E7jKrNz9e7woSrBcWG6Jpo2wkKVUMAFVgEwjmAKLTRf7mheU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771902362; c=relaxed/simple;
-	bh=qssF05MfIm4PKdUmGfxwNYhwrYKsgr/FAsbcuWSiwV4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rrzs+8+D3TCg+RlCQjwWUzE/PSSn4Z8+w23BnDPcYy1zz3u1pB5khgR9zxsA+qwxFXow3KJVDdZZEH8cB51jKWiQRJaImZHga8H60MNrysrwOkbWXQ7lD1YkEkC6T6QQMNyjQG5VCQMp4Ub1F/k8cnWg+ysxrvBSUx5DyhNMv1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b=JX8KmRgF; arc=none smtp.client-ip=114.132.58.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b="JX8KmRgF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smail.nju.edu.cn;
-	s=iohv2404; t=1771902301;
-	bh=w7ScbXAlDg77dLFPD9/y+vNR4xu0fzduE0FT6qpaER0=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=JX8KmRgFZ8/RRz1yvtZdLPu6ewfXaOg7kEM5GPdT9HKwpZPfAmEXW+bfJSkl30Zr7
-	 hbtEEUepOEmEZVQajIApOD3ZR0YVWaAfOnJ9z6mcHfJ1WMrklmRX8kB3OLzu2w3GyT
-	 Z1muN7a4CT+0z1iVRNuhVh4SGnYr2VwfTYe+H370=
-X-QQ-mid: zesmtpgz9t1771902299t335be9eb
-X-QQ-Originating-IP: k9kXXmnjdlkQUeBx6U3J5mySxJB/gzlKmcje5uWhwNM=
-Received: from localhost.localdomain ( [116.172.93.199])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 24 Feb 2026 11:04:56 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3330235604714080646
-EX-QQ-RecipientCnt: 14
-From: kexinsun <kexinsun@smail.nju.edu.cn>
-To: zhaotianrui@loongson.cn
-Cc: maobibo@loongson.cn,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tsbogend@alpha.franken.de,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	julia.lawall@inria.fr,
-	xutong.ma@inria.fr,
-	yunbolyu@smu.edu.sg,
-	ratnadiraw@smu.edu.sg,
-	kexinsun@smail.nju.edu.cn
-Subject: [PATCH] KVM: MIPS/LoongArch: Fix typo in pfn_to_pfn_prot comments
-Date: Tue, 24 Feb 2026 11:04:53 +0800
-Message-Id: <20260224030453.2311-1-kexinsun@smail.nju.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1771918598; c=relaxed/simple;
+	bh=8baXd13LnBPFoL+ptkiSSrqHYmtb/XQigtMi8989nd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CKrYA0xZXrcgJqjvKE4oMaIi4DTvjdCkCnK8EPEHSIcB2/JixCh2w9PwrrZbMBmMra/0NCWk8UaFhZyh0smMmfIws1aVcRjb4EbxA5U1emgI75KTt1gwcacX2Dx6zNAoFvgaTVJOrszlxId80n9vvOLO+T1BaUB5TRQ0PIPe6YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxcfC1VJ1pz6cUAA--.63861S3;
+	Tue, 24 Feb 2026 15:35:17 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxD8O0VJ1p9kxKAA--.9173S2;
+	Tue, 24 Feb 2026 15:35:16 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] LoongArch: BPF: Support more features for trampoline
+Date: Tue, 24 Feb 2026 15:35:12 +0800
+Message-ID: <20260224073515.1273-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -57,83 +34,35 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz5b-0
-X-QQ-XMAILINFO: Ng+Kv6QQ5H8idZXDU7uKnFG5tE30S++zH90fXU4RNb9dZPv/jslz+1mL
-	nHyYSHDiSFcba3UJh+snSQJtdPJDMHcVsGldioS70KW7Rsrn/NR8DPlXrDpyOWRXdXcIVko
-	3hPkW3RiL9q9M9bQHSg2YGkB5fwbUr4LJsSZk9B/yYS+p+fSbKRYUuoE4l0mL1TND1Jdx1O
-	nu72svLCNstGTHKyM/G28fTgLN191+cEQZMHk+YvvVs4NsD+KtRPXtFK7tQw8dOwY0Or7Vu
-	UPkLSplxLxhgMdhSTuJv6TwrLt9OuFDhAg6YjoljZN6cdW6jnyXHpBJAKQxUaduENhIhHHR
-	INAu6VHZNVklKASwLwaHczwKiLj5YLz4lnoiRp1sZ++eAPXKQ9xBbTLxvs+TlZWQwKTqyO/
-	yHuDUUQ4KTd6vF+v7i4Vs6/E20Nn5gucxCSmVSfIU/TLFZVaoVELbKL9+qti7ZVfWSlv42Z
-	FVypRXTD+lpzXml+4VzcXNZVHLKPjxdKHLQbzgteDZDtvRSOaJeEfU3VpUm8uLeiv20sTu1
-	ulabu2L8kshQeHkfXloH6UmlNfQ+1D55RKMZNKwi7XQM7S8Xs1IQkzgRTaugBaLdkOnnpji
-	DlcsjBPe75dgXAp/39eR+C6pC6oFtwxFPBQ2nbJm2I9sFjgxNHPbQ/7+GQULNgZFLHJKwYk
-	AvMQjz/1fHmBzg4HPKzOozrQiBRflRy0U5TL/vV8OsqpbNbubGk6YVA6V5SQh+ICFl+/5T0
-	V1d1V1mD9mKiKlJBRjGKKGhpt3bdsL2wVtwzpphEEimSHrpfcBYWjyZ8twyiu2iW5PjhH8I
-	DqN2cQli8anBgx5D/Au9GqufCoAn/+S29pAaNuICJIzEfW/FJLVV29HHVsW+MZ2I0us1YLb
-	FUCdxLNGLsL0QeONtBjNQbq+cI4ejjCQbhDKgWuaHXSJQ0BqzORJWphSrRm1Y/x/AziatBw
-	4gVnqRi4GQ4d3dip79uzEbTpG52PVfQBn5rx0rNQlDKPEAmExajnKyEQ8zHFoK3yZGI+Ra5
-	dDewRIriivJRlg+bcgP7TyukP06n57vD2eqYppMTqvU2ddG3LvBcDJixG0FyP4gtvGAfg8d
-	QR9MvEd67REWQd/cHLruHw7nCfduhNQHbrB41zzs+v2f25VxE5obobjak4Jm9Ad/g==
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:qMiowJDxD8O0VJ1p9kxKAA--.9173S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
+	jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-The comments in arch/{mips,loongarch}/kvm/mmu.c refer to a non-existent
-function "pfn_to_pfn_prot". This is a historical typo.
+This series is based on Linux 7.0-rc1, tested on Loongson-3A6000,
+the main aim is to support small struct arguments and 12 function
+arguments for LoongArch BPF trampoline.
 
-In MIPS, it was introduced in commit 411740f5422a ("KVM: MIPS/MMU:
-Implement KVM_CAP_SYNC_MMU") where the actual function being called was
-`gfn_to_pfn_prot`.
-(see `pfn = gfn_to_pfn_prot(kvm, gfn, write, &writeable);`).
-This was later replaced by `kvm_faultin_pfn()` in commit 7e8f1aa59d0b
-("KVM: MIPS: Use kvm_faultin_pfn() to map pfns into the guest").
+Tiezhu Yang (3):
+  LoongArch: BPF: Open code and remove invoke_bpf_mod_ret()
+  LoongArch: BPF: Support small struct arguments for trampoline
+  LoongArch: BPF: support 12 function arguments for trampoline
 
-The LoongArch code, likely copied from MIPS, inherited this typo upon
-its introduction in commit 752e2cd7b4fb ("LoongArch: KVM: Implement
-kvm mmu operations"). The actual function call was likewise updated to
-`kvm_faultin_pfn()` in commit 14d02b7ff912 ("KVM: LoongArch: Use
-kvm_faultin_pfn() to map pfns into the guest").
-Update the comments in both files to correctly reference the current
-function, `kvm_faultin_pfn`.
+ arch/loongarch/net/bpf_jit.c | 109 +++++++++++++++++++++++------------
+ 1 file changed, 71 insertions(+), 38 deletions(-)
 
-No functional change; comments only.
-
-Fixes: 411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
-Fixes: 752e2cd7b4fb ("LoongArch: KVM: Implement kvm mmu operations")
-
-Signed-off-by: kexinsun <kexinsun@smail.nju.edu.cn>
----
- arch/loongarch/kvm/mmu.c | 2 +-
- arch/mips/kvm/mmu.c      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index a7fa458e3360..a3fb6ace4a98 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -803,7 +803,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
- retry:
- 	/*
- 	 * Used to check for invalidations in progress, of the pfn that is
--	 * returned by pfn_to_pfn_prot below.
-+	 * returned by kvm_faultin_pfn() below.
- 	 */
- 	mmu_seq = kvm->mmu_invalidate_seq;
- 	/*
-diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
-index d2c3b6b41f18..da51707a2366 100644
---- a/arch/mips/kvm/mmu.c
-+++ b/arch/mips/kvm/mmu.c
-@@ -574,7 +574,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
- retry:
- 	/*
- 	 * Used to check for invalidations in progress, of the pfn that is
--	 * returned by pfn_to_pfn_prot below.
-+	 * returned by kvm_faultin_pfn() below.
- 	 */
- 	mmu_seq = kvm->mmu_invalidate_seq;
- 	/*
 -- 
-2.25.1
+2.42.0
 
