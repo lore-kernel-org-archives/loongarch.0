@@ -1,114 +1,132 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CF9A29B799
-	for <loongarch@lists.linux.dev>; Tue, 24 Feb 2026 07:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A08E368276
+	for <loongarch@lists.linux.dev>; Tue, 24 Feb 2026 08:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771918599; cv=none; b=Eh2HH8eyGcQH7uLA2go5Z0IdSIYuDOazn84RRQRiqFOIxsfURHLFzH/UlKM09Uo0xU3HKHSaWuyANwJ3HwX527DgmYtZx5wxCM1kRrCHzWI1zT9W6+m5Wb13/ITwkA039BAyLW1w3aY+n+0SOagTddfzyaq4QJP8y7ycMpEwL0k=
+	t=1771923294; cv=none; b=L3kJZDtDhZHCJvSDhc3PCpxsMP4YpHlzqWYcGlAsWrHaNz6/sTLStgR2cT/oJq0pwLjFmtkAeKaLNT4nXUIpOPZA3q8Dzy+AXs+N9uH3gcmtKwwdqvO7Vh1l+vs4G7g/er13q1GkHxse6lGUPCK54oyRwiJKMmu+o97rfKU/bYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771918599; c=relaxed/simple;
-	bh=YUwQpWAZ98BGv+KiycMPE2KKwDQUXb3+lbMpDSDyEKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1x/wJ5NbeGWB9ePoeMvcThxnq1frR6iy5EUutSY1FwQUAWmRCqDK3c95/q9b8246XEyxtB8aRSYAY05efFy2XpKJ9Le38QbyCP6xI/c534mp8Ke/XYkNNbv5gIKUH5Vbj2Ou0fXjXGOXczbG2Jf0LhhlRSvB7DJQ4GYfY/8S9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxWcK2VJ1p06cUAA--.63629S3;
-	Tue, 24 Feb 2026 15:35:18 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxD8O0VJ1p9kxKAA--.9173S3;
-	Tue, 24 Feb 2026 15:35:17 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] LoongArch: BPF: Open code and remove invoke_bpf_mod_ret()
-Date: Tue, 24 Feb 2026 15:35:13 +0800
-Message-ID: <20260224073515.1273-2-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260224073515.1273-1-yangtiezhu@loongson.cn>
-References: <20260224073515.1273-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1771923294; c=relaxed/simple;
+	bh=dGe5AJtuOi6pa16sbmTvjxhS4yVaLIp+mOvklFl9JzM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oReCszu1gf3uK99YNMkTF8VahUy2RAK0VL+8oXbE/NeSQ4nZSMIA9W6m+YgwVQU1aee7VjXHvOEy/pwKNpXE482DrI0jc1KSI1zYunt4okka/NKiQpUPf1gXa9va9dWtg9kTOnabRJrXSkeZ0FEsAVUGqKeB+zyBdx9zr2gzu/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=6mvmQ08n; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="6mvmQ08n"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Rj8PWSOYXTg3Y1UAvq0lqqf9rZsdqg+RR9xCPK5IpV8=;
+	b=6mvmQ08nBnbmNo9FUuiDx7FDue6lBFgQt7AUs+gx3RTWTiDgPE+gw1gkK22WPQTYkiigF7hzj
+	oKnNTJO9H4HyXuToRa6ZTLbUlVEb3aDAYC4b8Cn/w6SsXs8Swi3h54VflsSnBGgCmFBXx/mikzw
+	OjkCq3N15kKzXu+kDCHJdKk=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fKryK20m6zmVBy;
+	Tue, 24 Feb 2026 16:50:01 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6A252402AB;
+	Tue, 24 Feb 2026 16:54:48 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
+ 2026 16:54:45 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <akpm@linux-foundation.org>, <bhe@redhat.com>,
+	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
+	<pmladek@suse.com>, <dapeng1.mi@linux.intel.com>, <kees@kernel.org>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <arnd@arndb.de>,
+	<ardb@kernel.org>, <leitao@debian.org>, <rppt@kernel.org>,
+	<cfsworks@gmail.com>, <ryan.roberts@arm.com>, <sourabhjain@linux.ibm.com>,
+	<tangyouling@kylinos.cn>, <eajames@linux.ibm.com>, <hbathini@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <songshuaishuai@tinylab.org>,
+	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <jbohac@suse.cz>,
+	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v6 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Date: Tue, 24 Feb 2026 16:53:37 +0800
+Message-ID: <20260224085342.387996-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxD8O0VJ1p9kxKAA--.9173S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Aw18Kw15ZFWUWF15WF47KFX_yoW8ury7pr
-	nrCrW8ArW0gr43XFZ7Xr4UXr1ayanIgry3WasrKrZ7ua13Zry5W34xG3sa9F90kr9YyFyx
-	ZrsYy39F9F17GabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8niSPUUUUU==
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-invoke_bpf_mod_ret() is a small wrapper over invoke_bpf_prog(),
-it should check the return value of invoke_bpf_prog() and then
-return immediately if invoke_bpf_prog() failed, just open code
-and remove it due to it is called only once.
+The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+and crashk_cma memory are almost identical across different architectures,
+This patch set handle them in crash core in a general way, which eliminate
+a lot of duplication code.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+And add support for crashkernel CMA reservation for arm64 and riscv.
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 3bd89f55960d..98c04d6056f4 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1544,20 +1544,6 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
- 	return ret;
- }
- 
--static void invoke_bpf_mod_ret(struct jit_ctx *ctx, struct bpf_tramp_links *tl,
--			       int args_off, int retval_off, int run_ctx_off, u32 **branches)
--{
--	int i;
--
--	emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
--	for (i = 0; i < tl->nr_links; i++) {
--		invoke_bpf_prog(ctx, tl->links[i], args_off, retval_off, run_ctx_off, true);
--		emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
--		branches[i] = (u32 *)ctx->image + ctx->idx;
--		emit_insn(ctx, nop);
--	}
--}
--
- void *arch_alloc_bpf_trampoline(unsigned int size)
- {
- 	return bpf_prog_pack_alloc(size, jit_fill_hole);
-@@ -1764,7 +1750,16 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
- 		if (!branches)
- 			return -ENOMEM;
- 
--		invoke_bpf_mod_ret(ctx, fmod_ret, args_off, retval_off, run_ctx_off, branches);
-+		emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -retval_off);
-+		for (i = 0; i < fmod_ret->nr_links; i++) {
-+			ret = invoke_bpf_prog(ctx, fmod_ret->links[i], args_off, retval_off,
-+					      run_ctx_off, true);
-+			if (ret)
-+				goto out;
-+			emit_insn(ctx, ldd, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -retval_off);
-+			branches[i] = (u32 *)ctx->image + ctx->idx;
-+			emit_insn(ctx, nop);
-+		}
- 	}
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
+Rebased on v7.0-rc1.
+
+Basic test were performed on QEMU platforms for x86, ARM64, and RISC-V
+architectures with the following parameters:
+
+	"cma=256M crashkernel=256M crashkernel=64M,cma"
+
+Changes in v6:
+- Update the crash core exclude code as Mike suggested.
+- Rebased on v7.0-rc1.
+- Add acked-by.
+- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
+
+Changes in v5:
+- Fix the kernel test robot build warnings.
+- Sort crash memory ranges before preparing elfcorehdr for powerpc
+- Link to v4: https://lore.kernel.org/all/20260209095931.2813152-1-ruanjinjie@huawei.com/
+
+Changes in v4:
+- Move the size calculation (and the realloc if needed) into the
+  generic crash.
+- Link to v3: https://lore.kernel.org/all/20260204093728.1447527-1-ruanjinjie@huawei.com/
+
+Changs in v3:
+- Exclude crash kernel memory in crash core as Mike suggested.
+- Add acked-by.
+
+Jinjie Ruan (4):
+  crash: Exclude crash kernel memory in crash core
+  crash: Use crash_exclude_core_ranges() on powerpc
+  arm64: kexec: Add support for crashkernel CMA reservation
+  riscv: kexec: Add support for crashkernel CMA reservation
+
+Sourabh Jain (1):
+  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+
+ .../admin-guide/kernel-parameters.txt         |  16 +--
+ arch/arm64/kernel/machine_kexec_file.c        |  41 +++----
+ arch/arm64/mm/init.c                          |   5 +-
+ arch/loongarch/kernel/machine_kexec_file.c    |  39 +++----
+ arch/powerpc/include/asm/kexec_ranges.h       |   4 +-
+ arch/powerpc/kexec/crash.c                    |   5 +-
+ arch/powerpc/kexec/ranges.c                   | 101 +-----------------
+ arch/riscv/kernel/machine_kexec_file.c        |  40 ++++---
+ arch/riscv/mm/init.c                          |   5 +-
+ arch/x86/kernel/crash.c                       |  89 +++------------
+ include/linux/crash_core.h                    |   9 ++
+ kernel/crash_core.c                           |  89 ++++++++++++++-
+ 12 files changed, 178 insertions(+), 265 deletions(-)
+
 -- 
-2.42.0
+2.34.1
 
