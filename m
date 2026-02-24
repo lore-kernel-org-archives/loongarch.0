@@ -1,102 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.58.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B7A34CFC4;
-	Mon, 23 Feb 2026 23:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F9F25F988
+	for <loongarch@lists.linux.dev>; Tue, 24 Feb 2026 03:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.58.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771887753; cv=none; b=NpYZan65GizD0C+pNKFrtOaD2xYW6Cs65/bJWVTuzChpiWdjYTqwweBbfXwVljibNt+2AH5FeU7O5WwEBwfN9t/qzH2pmOFR2TtAHKgy0R4GRiTXqtd3bFmZe2BayOhBy8oyIHBd1uXj/XXveagP+tCGhYQ8Yn26yyCmaRSPD3k=
+	t=1771902362; cv=none; b=qmXTgmBgFW1POyEMznz6nXQ5qmBZOUQVShzLKO3aNIVeLsnDGfq19+FbADf9Ck4agCx4SgmBfD6yljI6wFGNrD78VEeSEjiVc4O8fX76QjaYizPwweGdOsA0TZiVG96MKxBHLQJPdXlstSVR+vexucLQexCGLKPMTMdQCry0h+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771887753; c=relaxed/simple;
-	bh=nT0awucs3thOhxybhtypZ+eYhg7lv1UzxhZoWxrV7JE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sqphRfl4aNtD6t5VL2lspO1UMpjWrQoZl+HFe+TP3BCHroxfst+Y4zz+WbhojUnqCVcDE9rFsOwC/4UkFfJI3Ft/jec6FPHjECgAtviATzJin3l1Gw98PqFkbXQIRQWEU90AwUjZ9KxxjuT8Paj6JAicxZkfCEO5h0J2h5Kwkcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+fu9p4B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771902362; c=relaxed/simple;
+	bh=qssF05MfIm4PKdUmGfxwNYhwrYKsgr/FAsbcuWSiwV4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rrzs+8+D3TCg+RlCQjwWUzE/PSSn4Z8+w23BnDPcYy1zz3u1pB5khgR9zxsA+qwxFXow3KJVDdZZEH8cB51jKWiQRJaImZHga8H60MNrysrwOkbWXQ7lD1YkEkC6T6QQMNyjQG5VCQMp4Ub1F/k8cnWg+ysxrvBSUx5DyhNMv1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b=JX8KmRgF; arc=none smtp.client-ip=114.132.58.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+fu9p4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48409C116C6;
-	Mon, 23 Feb 2026 23:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771887753;
-	bh=nT0awucs3thOhxybhtypZ+eYhg7lv1UzxhZoWxrV7JE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V+fu9p4BCluguUa+f3d7BCn1pI2i9AqAEMBzkLqH4bddGKT5WSOohV6ymAwB0/TBL
-	 lXNzrl+hmSZblzdOixCvwDFcjW9iJo5ImvPlqCzkT22dc1XMIZWAMVzlyyqxTDXaZ5
-	 4A5XwGEGtPXUctEhtggMXSRCQOq7U1cR9rpjbXPVnxUBOrPDtTlXe7A3JD/7+OhTOF
-	 pTf4SXBjLVNbVuMyClIxv9c3QaOT9qAcBGv/vWbbNANtpasn+pQ210tXeKbMh0saY3
-	 VU3OBF9raOPDCjnuuQKM50HH+X66NKDZ7QZi6Z7SFHAdAZXCsNZW64QbGHR00fFjZH
-	 58/1MtBytYDmg==
-Date: Mon, 23 Feb 2026 15:02:32 -0800
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-efi@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 2/2] kbuild: Use '-fms-anonymous-structs' if it is
- available
-Message-ID: <202602231459.2A1DD53E0@keescook>
-References: <20260223-fms-anonymous-structs-v1-0-8ee406d3c36c@kernel.org>
- <20260223-fms-anonymous-structs-v1-2-8ee406d3c36c@kernel.org>
- <202602231432.20F3F0CF@keescook>
- <20260223225311.GA2462602@ax162>
+	dkim=pass (1024-bit key) header.d=smail.nju.edu.cn header.i=@smail.nju.edu.cn header.b="JX8KmRgF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smail.nju.edu.cn;
+	s=iohv2404; t=1771902301;
+	bh=w7ScbXAlDg77dLFPD9/y+vNR4xu0fzduE0FT6qpaER0=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=JX8KmRgFZ8/RRz1yvtZdLPu6ewfXaOg7kEM5GPdT9HKwpZPfAmEXW+bfJSkl30Zr7
+	 hbtEEUepOEmEZVQajIApOD3ZR0YVWaAfOnJ9z6mcHfJ1WMrklmRX8kB3OLzu2w3GyT
+	 Z1muN7a4CT+0z1iVRNuhVh4SGnYr2VwfTYe+H370=
+X-QQ-mid: zesmtpgz9t1771902299t335be9eb
+X-QQ-Originating-IP: k9kXXmnjdlkQUeBx6U3J5mySxJB/gzlKmcje5uWhwNM=
+Received: from localhost.localdomain ( [116.172.93.199])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 24 Feb 2026 11:04:56 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 3330235604714080646
+EX-QQ-RecipientCnt: 14
+From: kexinsun <kexinsun@smail.nju.edu.cn>
+To: zhaotianrui@loongson.cn
+Cc: maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tsbogend@alpha.franken.de,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	julia.lawall@inria.fr,
+	xutong.ma@inria.fr,
+	yunbolyu@smu.edu.sg,
+	ratnadiraw@smu.edu.sg,
+	kexinsun@smail.nju.edu.cn
+Subject: [PATCH] KVM: MIPS/LoongArch: Fix typo in pfn_to_pfn_prot comments
+Date: Tue, 24 Feb 2026 11:04:53 +0800
+Message-Id: <20260224030453.2311-1-kexinsun@smail.nju.edu.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260223225311.GA2462602@ax162>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz5b-0
+X-QQ-XMAILINFO: Ng+Kv6QQ5H8idZXDU7uKnFG5tE30S++zH90fXU4RNb9dZPv/jslz+1mL
+	nHyYSHDiSFcba3UJh+snSQJtdPJDMHcVsGldioS70KW7Rsrn/NR8DPlXrDpyOWRXdXcIVko
+	3hPkW3RiL9q9M9bQHSg2YGkB5fwbUr4LJsSZk9B/yYS+p+fSbKRYUuoE4l0mL1TND1Jdx1O
+	nu72svLCNstGTHKyM/G28fTgLN191+cEQZMHk+YvvVs4NsD+KtRPXtFK7tQw8dOwY0Or7Vu
+	UPkLSplxLxhgMdhSTuJv6TwrLt9OuFDhAg6YjoljZN6cdW6jnyXHpBJAKQxUaduENhIhHHR
+	INAu6VHZNVklKASwLwaHczwKiLj5YLz4lnoiRp1sZ++eAPXKQ9xBbTLxvs+TlZWQwKTqyO/
+	yHuDUUQ4KTd6vF+v7i4Vs6/E20Nn5gucxCSmVSfIU/TLFZVaoVELbKL9+qti7ZVfWSlv42Z
+	FVypRXTD+lpzXml+4VzcXNZVHLKPjxdKHLQbzgteDZDtvRSOaJeEfU3VpUm8uLeiv20sTu1
+	ulabu2L8kshQeHkfXloH6UmlNfQ+1D55RKMZNKwi7XQM7S8Xs1IQkzgRTaugBaLdkOnnpji
+	DlcsjBPe75dgXAp/39eR+C6pC6oFtwxFPBQ2nbJm2I9sFjgxNHPbQ/7+GQULNgZFLHJKwYk
+	AvMQjz/1fHmBzg4HPKzOozrQiBRflRy0U5TL/vV8OsqpbNbubGk6YVA6V5SQh+ICFl+/5T0
+	V1d1V1mD9mKiKlJBRjGKKGhpt3bdsL2wVtwzpphEEimSHrpfcBYWjyZ8twyiu2iW5PjhH8I
+	DqN2cQli8anBgx5D/Au9GqufCoAn/+S29pAaNuICJIzEfW/FJLVV29HHVsW+MZ2I0us1YLb
+	FUCdxLNGLsL0QeONtBjNQbq+cI4ejjCQbhDKgWuaHXSJQ0BqzORJWphSrRm1Y/x/AziatBw
+	4gVnqRi4GQ4d3dip79uzEbTpG52PVfQBn5rx0rNQlDKPEAmExajnKyEQ8zHFoK3yZGI+Ra5
+	dDewRIriivJRlg+bcgP7TyukP06n57vD2eqYppMTqvU2ddG3LvBcDJixG0FyP4gtvGAfg8d
+	QR9MvEd67REWQd/cHLruHw7nCfduhNQHbrB41zzs+v2f25VxE5obobjak4Jm9Ad/g==
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+X-QQ-RECHKSPAM: 0
 
-On Mon, Feb 23, 2026 at 03:53:11PM -0700, Nathan Chancellor wrote:
-> On Mon, Feb 23, 2026 at 02:33:35PM -0800, Kees Cook wrote:
-> > Series looks good to me. One style question, why go the round-trip with
-> > Kconfig instead of doing it all with a fallback in the Makefile:
-> > 
-> > CC_FLAGS_DIALECT += $(call cc-option,-fms-anonymous-structs,-fms-extensions)
-> 
-> I might be misunderstanding how Kbuild works but
-> arch/$(SRCARCH)/Makefile may have logic for selecting CROSS_COMPILE,
-> which can impact the selection of $(CC), so I cannot use cc-option prior
-> to its inclusion but I need CC_FLAGS_DIALECT to be included before
-> arch/$(SRCARCH)/Makefile in the main build so that they can be used
-> within it, which is only possible after Kconfig has run. This is
-> probably worth more flushing out in the code or a comment since it is
-> subtle.
+The comments in arch/{mips,loongarch}/kvm/mmu.c refer to a non-existent
+function "pfn_to_pfn_prot". This is a historical typo.
 
-Will Kconfig see a different CC than Makefile? Regardless, I trust your
-judgement here! I actually rather prefer having it exposed via Kconfig.
-:)
+In MIPS, it was introduced in commit 411740f5422a ("KVM: MIPS/MMU:
+Implement KVM_CAP_SYNC_MMU") where the actual function being called was
+`gfn_to_pfn_prot`.
+(see `pfn = gfn_to_pfn_prot(kvm, gfn, write, &writeable);`).
+This was later replaced by `kvm_faultin_pfn()` in commit 7e8f1aa59d0b
+("KVM: MIPS: Use kvm_faultin_pfn() to map pfns into the guest").
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+The LoongArch code, likely copied from MIPS, inherited this typo upon
+its introduction in commit 752e2cd7b4fb ("LoongArch: KVM: Implement
+kvm mmu operations"). The actual function call was likewise updated to
+`kvm_faultin_pfn()` in commit 14d02b7ff912 ("KVM: LoongArch: Use
+kvm_faultin_pfn() to map pfns into the guest").
+Update the comments in both files to correctly reference the current
+function, `kvm_faultin_pfn`.
 
--Kees
+No functional change; comments only.
 
+Fixes: 411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
+Fixes: 752e2cd7b4fb ("LoongArch: KVM: Implement kvm mmu operations")
+
+Signed-off-by: kexinsun <kexinsun@smail.nju.edu.cn>
+---
+ arch/loongarch/kvm/mmu.c | 2 +-
+ arch/mips/kvm/mmu.c      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index a7fa458e3360..a3fb6ace4a98 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -803,7 +803,7 @@ static int kvm_map_page(struct kvm_vcpu *vcpu, unsigned long gpa, bool write)
+ retry:
+ 	/*
+ 	 * Used to check for invalidations in progress, of the pfn that is
+-	 * returned by pfn_to_pfn_prot below.
++	 * returned by kvm_faultin_pfn() below.
+ 	 */
+ 	mmu_seq = kvm->mmu_invalidate_seq;
+ 	/*
+diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+index d2c3b6b41f18..da51707a2366 100644
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -574,7 +574,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
+ retry:
+ 	/*
+ 	 * Used to check for invalidations in progress, of the pfn that is
+-	 * returned by pfn_to_pfn_prot below.
++	 * returned by kvm_faultin_pfn() below.
+ 	 */
+ 	mmu_seq = kvm->mmu_invalidate_seq;
+ 	/*
 -- 
-Kees Cook
+2.25.1
+
