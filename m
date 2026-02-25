@@ -1,133 +1,166 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1709E392824
-	for <loongarch@lists.linux.dev>; Wed, 25 Feb 2026 10:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5261DF75D
+	for <loongarch@lists.linux.dev>; Wed, 25 Feb 2026 14:15:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772016508; cv=none; b=n8pHyf46jY7hgSJkDUqQfWsbUDvu/lpzRn16vKnkq/OFm+DOnwVFCry/874tIUoNhR3lt7XIPUTDX+8sd1izFWYz973LUWM0v3ICz85SxK+KgPpjquaKPV2i5pnuFo2vyMcuEWS6+IA5IQ8EA15JDchm3EUkIvCDPEiq6qnYsts=
+	t=1772028925; cv=none; b=br7DbZK6/ytsnA60WPKaE2iFOeStR/kEbuiHELBfiIBSx1sUEe5A4SKPxtxB0tMeF/BkrtuoyK8DUgH9a6at0SHRP+gwu8TYJOuRwKR+eOWKG4UTmXSRi8VEP6kAZOZZRs/+WJVc3d3EZCHMUYPZk+CEgf/t5DVTpP7HixCCk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772016508; c=relaxed/simple;
-	bh=3G7eOh3gPI7+Assdr0E7boXKHEgdJi4r6Nk5nD2RUXg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j+5BUgpu3Dd4YcdCCTCjk/qb7huc49L1KNJQ/2oys/hFlW6mzJGCBKpBXmyqftCbhm4SQNBPyOOpiGug20Mu5vYPxZZWtz4mRQco3o+cR+fd5yObJqUo2BJiyU04Qv9CGEnBq+a7pen43pV1sNUxcskbNqhT8RB4faGuV4JBo2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=dB0qHVDQ; arc=none smtp.client-ip=89.208.246.23
+	s=arc-20240116; t=1772028925; c=relaxed/simple;
+	bh=AVYgVW1Oq7gO4+QnysxWAvg1evILwwV159VO5F9DPlQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OT5kiFHbXkoTAWnX7cwpK97oWWZrqBP0YIGjH7jCsRXkX7X7kHgPKrOJjlOEEpsZmGtsJKhF1mCYvDPtuYvS3mcG3Bj6MZfnH1aglG45YSt4chrzAsUnOs6ujbOnMazfUIhZhp8bawywau29mVn3zn/jj+MRSkejBu+V8ktPguM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=jqzKkcfA; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="dB0qHVDQ"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="jqzKkcfA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772016506;
-	bh=W4Wx3SDh/mzpMoyF21pwdIx2JTnFftFUlUrWx6YcEGE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dB0qHVDQK8WCjozgi9aURdAHZxSXZU5POoFUuDF61+8Lby/hbfAzjDPKn8re5zbrz
-	 S/Ou91VZDR3csonTRCBRaXfxEdhc9E8Pq5CgYQsMynMJh0nSp63VZ7IRM+Kj497IBP
-	 bbI3XHztkFtLG4VId+zExOrNXJzJDUJRwB4xF9XQ=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	s=default; t=1772028920;
+	bh=3pvUGRlmdavixZVPrxVrN1vvUZK1c752LzmogmPwc5Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jqzKkcfA3DDlHLUnJa+rsVfgKwRWcWMIR+jNPkgZDGwI9gSirlrQQ/zPXIIXtDN5g
+	 dD4e2EC151/Y1DlDITpF8vA/a57l6i3NNBykcsmjcEYRbL+J0EhF6RBlSTyb5CFJnH
+	 Sm0dftzPng42oJUDVLnnFO8rgTbtXRBmxkBwI4WA=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id A3C6C1A42B5;
-	Wed, 25 Feb 2026 05:48:24 -0500 (EST)
-Message-ID: <9fea14633756325f822c5d5242224494c0cb4cbe.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Only use SC.Q when supported by the assembler
+	by xry111.site (Postfix) with ESMTPSA id E718C1A4370;
+	Wed, 25 Feb 2026 09:15:10 -0500 (EST)
 From: Xi Ruoyao <xry111@xry111.site>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- George Guo <guodongtai@kylinos.cn>,  Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Wed, 25 Feb 2026 18:48:22 +0800
-In-Reply-To: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
-References: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	George Guo <guodongtai@kylinos.cn>,
+	Chenghao Duan <duanchenghao@kylinos.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix calling smp_processor_id() in preemptible code
+Date: Wed, 25 Feb 2026 22:14:02 +0800
+Message-ID: <20260225141404.178823-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2026-02-25 at 11:09 +0100, Thomas Wei=C3=9Fschuh wrote:
-> The 128-bit atomic cmpxchg implementation uses the SC.Q instruction.
-> Older versions of GNU AS do not support that instruction, erroring out:
->=20
-> ERROR:root:{standard input}: Assembler messages:
-> {standard input}:4831: Error: no match insn: sc.q	$t0,$t1,$r14
-> {standard input}:6407: Error: no match insn: sc.q	$t0,$t1,$r23
-> {standard input}:10856: Error: no match insn: sc.q	$t0,$t1,$r14
-> make[4]: *** [../scripts/Makefile.build:289: mm/slub.o] Error 1
->=20
-> (Binutils 2.41)
->=20
-> Test support for SC.Q in kconfig and disable the atomics if the
-> instruction is not available.
->=20
-> Fixes: f0e4b1b6e295 ("LoongArch: Add 128-bit atomic cmpxchg support")
-> Closes: https://lore.kernel.org/lkml/20260216082834-edc51c46-7b7a-4295-8e=
-a5-4d9a3ca2224f@linutronix.de/
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+Fix the warning recently exploited by commit 4ab17e762b34 ("LoongArch:
+BPF: Use BPF prog pack allocator"):
 
-I have written something similar (only the identifier of the config
-entry is different), but I just didn't get the time to set up an old
-toolchain and test it.
+    BUG: using smp_processor_id() in preemptible [00000000] code: systemd/1
+    caller is larch_insn_text_copy+0x40/0xf0
 
-Reviewed-by: Xi Ruoyao <xry111@xry111.site>
+Simply changing it to raw_smp_processor_id() is not enough: if preempt
+and CPU hotplug happens after raw_smp_processor_id() but before
+stop_machine(), the CPU where raw_smp_processor_id() has run may be
+offline when stop_machine() and no CPU will run copy_to_kernel_nofault()
+in text_copy_cb().  Thus guard the larch_insn_text_copy() calls with
+cpus_read_lock() and change stop_machine() to stop_machine_cpuslocked()
+to prevent this.
 
-> ---
-> =C2=A0arch/loongarch/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 3 +++
-> =C2=A0arch/loongarch/include/asm/cmpxchg.h | 5 +++++
-> =C2=A02 files changed, 8 insertions(+)
->=20
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d211c6572b0a..92068ff38685 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -304,6 +304,9 @@ config AS_HAS_LBT_EXTENSION
-> =C2=A0config AS_HAS_LVZ_EXTENSION
-> =C2=A0	def_bool $(as-instr,hvcl 0)
-> =C2=A0
-> +config AS_HAS_SCQ_EXTENSION
-> +	def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-> +
-> =C2=A0config CC_HAS_ANNOTATE_TABLEJUMP
-> =C2=A0	def_bool $(cc-option,-mannotate-tablejump)
-> =C2=A0
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 58cabab6d90d..909f9274fe71 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -238,6 +238,8 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsi=
-gned long new, unsigned int
-> =C2=A0	arch_cmpxchg((ptr), (o), (n));					\
-> =C2=A0=C2=A0 })
-> =C2=A0
-> +#ifdef CONFIG_AS_HAS_SCQ_EXTENSION
-> +
-> =C2=A0union __u128_halves {
-> =C2=A0	u128 full;
-> =C2=A0	struct {
-> @@ -290,6 +292,9 @@ union __u128_halves {
-> =C2=A0	BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);				\
-> =C2=A0	__arch_cmpxchg128(ptr, o, n, "");				\
-> =C2=A0})
-> +
-> +#endif /* CONFIG_AS_HAS_SCQ_EXTENSION */
-> +
-> =C2=A0#else
-> =C2=A0#include <asm-generic/cmpxchg-local.h>
-> =C2=A0#define arch_cmpxchg64_local(ptr, o, n) __generic_cmpxchg64_local((=
-ptr), (o), (n))
->=20
-> ---
-> base-commit: 2961f841b025fb234860bac26dfb7fa7cb0fb122
-> change-id: 20260218-loongarch-scq-2434ec5aec4d
->=20
-> Best regards,
+Fixes: 9fbd18cf4c69 ("LoongArch: BPF: Add dynamic code modification support")
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+P.S. I've considered moving the locks inside larch_insn_text_copy() but
+doing so seems not an easy hack.  In bpf_arch_text_poke() obviously the
+memcpy() call must be guarded by text_mutex, so we have to leave the
+acquire of text_mutex out of larch_insn_text_copy.  But in the entire
+kernel the acquire of mutexes is always after cpus_read_lock(), so we
+cannot put cpus_read_lock() into larch_insn_text_copy() while leaving
+the text_mutex acquire out (or we risk a deadlock due to inconsistent
+lock acquire order).  So I'd just submit this as-is to fix the bug and
+leave the posssible refactor for others.
+
+ arch/loongarch/kernel/inst.c | 4 ++--
+ arch/loongarch/net/bpf_jit.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index bf037f0c6b26..db236e2b34a7 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -263,14 +263,14 @@ int larch_insn_text_copy(void *dst, void *src, size_t len)
+ 		.dst = dst,
+ 		.src = src,
+ 		.len = len,
+-		.cpu = smp_processor_id(),
++		.cpu = raw_smp_processor_id(),
+ 	};
+ 
+ 	start = round_down((size_t)dst, PAGE_SIZE);
+ 	end   = round_up((size_t)dst + len, PAGE_SIZE);
+ 
+ 	set_memory_rw(start, (end - start) / PAGE_SIZE);
+-	ret = stop_machine(text_copy_cb, &copy, cpu_online_mask);
++	ret = stop_machine_cpuslocked(text_copy_cb, &copy, cpu_online_mask);
+ 	set_memory_rox(start, (end - start) / PAGE_SIZE);
+ 
+ 	return ret;
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 3bd89f55960d..e8e0ad34928c 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1379,9 +1379,11 @@ void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+ {
+ 	int ret;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	ret = larch_insn_text_copy(dst, src, len);
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	return ret ? ERR_PTR(-EINVAL) : dst;
+ }
+@@ -1429,10 +1431,12 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+ 	if (ret)
+ 		return ret;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+ 		ret = larch_insn_text_copy(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES);
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	return ret;
+ }
+@@ -1450,10 +1454,12 @@ int bpf_arch_text_invalidate(void *dst, size_t len)
+ 	for (i = 0; i < (len / sizeof(u32)); i++)
+ 		inst[i] = INSN_BREAK;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	if (larch_insn_text_copy(dst, inst, len))
+ 		ret = -EINVAL;
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	kvfree(inst);
+ 
+-- 
+2.53.0
+
