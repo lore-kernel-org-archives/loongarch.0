@@ -1,206 +1,204 @@
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C42727E0
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 03:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAAB2DC783;
+	Thu, 26 Feb 2026 06:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772076296; cv=none; b=DHZ/VoJH4DQLy0MxjcmpjCkYLxJBidni7AeImjHSGgvVVim28ARg1FjKpcjLrwqsbiaEE2a091eV0UFm1eJG7MnRoDKawRY5SsWJfWraap7wXv5gRX111x2dvDUqge6xPxD6kCmOCNIG+/JMdocckDZPdmrGvgA2gB1YQvIttJ8=
+	t=1772087505; cv=none; b=WzHYjPfaJvYfc3IuuyuffDITwVNf9I7UCStnpvBGdob+V0baCsC6JLCz2mcIY9xV+MnnsqjZGPcNMSvVATXSxmUZnV45yhMhajX1utaggfNJaJURWRUKQ0/2AcH+Ozs/L36HeDCQQzto/Fxfp+K09IsZ6L/L/XNWHubzemW+/Bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772076296; c=relaxed/simple;
-	bh=ycnqTJfQp1mFvF26g5iva6jQWeWZ11Wa7JKjHd7Lpeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dTPLH1WRYM4AvwdNgTLlqFCIbMZrcTjWfc4LDHbIoKtxU/DLKUY2QgDJ0w0QL8+wFe7n3kacrmBvH77dGztIZolhSoFRDj65jRZPWzPEiwEStP3Yd/3VWP4Mek4jaY9AfwDEM0wDKFcwGkJVB9ue+sQVkKTM+4eVLjmJhx8vSic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=x1l2VLMm; arc=none smtp.client-ip=113.46.200.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772087505; c=relaxed/simple;
+	bh=Rg0sp/qeKk/n/CsiBDt2E7lGex79tuAYp/erhRShyug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2xSYVdiw1cLLpeSQu8OPjSDy1cnZpzgp7o9m4rT/0h+KmElnx5Oe58n4x+GRmiYyMIcOSqN5qISPnyoaF7ojI1pux4zQR6zDfOvDHvGqFM5HzzAhtcOpI6WFZgrf9puqnq1hY9WqdLMrZ58j2L6/4P06MRlruoM1CnCvL8qCuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPQR+jTQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="x1l2VLMm"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=X/tw47XVxnBSBQVQnzbdQeBRFqR3Av4K63nH/lDW8AE=;
-	b=x1l2VLMmjYlYgtz9e9QHe2mOtGBgkKNh7hz5MB9XCgwIHUNdvwywy/MiST1AdgYMZ8Zyzmb27
-	xiMAI8GTBB37K4MPa+6n43+ne+oVZQwZt5AaCiT8i/cHG9pw7k06FxwueZqr+OCknXS8TuOpk3e
-	TFufapm/JkqBD70EL8N9gQs=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fLxXn5h2NznTW8;
-	Thu, 26 Feb 2026 11:20:09 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0E70340561;
-	Thu, 26 Feb 2026 11:24:50 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 26 Feb 2026 11:24:46 +0800
-Message-ID: <0b0c0a34-f67d-9cf5-d5fc-ed8e1870a104@huawei.com>
-Date: Thu, 26 Feb 2026 11:24:45 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPQR+jTQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDDB9C19422;
+	Thu, 26 Feb 2026 06:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772087505;
+	bh=Rg0sp/qeKk/n/CsiBDt2E7lGex79tuAYp/erhRShyug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JPQR+jTQSJz6TSsWLbsn3O8vlUzTcBNji1CEN7eWZJQzN+4Akb7098a5E/LsDAuiQ
+	 ZUU7W9o/lphLNVpypXqOdJ21HxbSOwc+r65cEPGuKytsoLEWohea+MwHvGzE+uEVJu
+	 LforkieBEEmic1/nMstjnqy+uxmgzpUKgVKH6aFD1gg3i7TxbqWFIrQoEDp78ssLbO
+	 EGufe8yZprk3xNmt+h//UE+CV2P0uNkTLOUxZ7jZaF1r0MvvuMz5SFAku3oCmRWa6i
+	 rzuYLg2TX4SkU6PV/0zjJBvSPIh9r404NuqCqGGS01XIwxlKMekfnLnDEQe6hUDjb6
+	 XNvdulBv0HTHQ==
+Date: Thu, 26 Feb 2026 12:01:34 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: liziyao@uniontech.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, niecheng1@uniontech.com, zhanjun@uniontech.com, 
+	guanwentao@uniontech.com, Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, kernel@uniontech.com, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Lain Fearyncess Yang <fsf@live.com>, 
+	Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>, 
+	stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>
+Subject: Re: [PATCH v7] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
+Message-ID: <taoupjxwaewzvolh2n6bciji36j4dx6jtvjf7k6tt5hdt54hjw@rrgbu47umz4v>
+References: <20260121-loongson-pci1-v7-1-fc79c85a574d@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v6 4/5] arm64: kexec: Add support for crashkernel CMA
- reservation
-To: Mike Rapoport <rppt@kernel.org>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <bhe@redhat.com>,
-	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
-	<pmladek@suse.com>, <dapeng1.mi@linux.intel.com>, <kees@kernel.org>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <arnd@arndb.de>,
-	<ardb@kernel.org>, <leitao@debian.org>, <cfsworks@gmail.com>,
-	<ryan.roberts@arm.com>, <sourabhjain@linux.ibm.com>,
-	<tangyouling@kylinos.cn>, <eajames@linux.ibm.com>, <hbathini@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <songshuaishuai@tinylab.org>,
-	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <jbohac@suse.cz>,
-	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-References: <20260224085342.387996-1-ruanjinjie@huawei.com>
- <20260224085342.387996-5-ruanjinjie@huawei.com> <aZ8Z2WXw3QwaXRo8@kernel.org>
-Content-Language: en-US
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <aZ8Z2WXw3QwaXRo8@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+In-Reply-To: <20260121-loongson-pci1-v7-1-fc79c85a574d@uniontech.com>
 
-
-
-On 2026/2/25 23:48, Mike Rapoport wrote:
-> On Tue, Feb 24, 2026 at 04:53:41PM +0800, Jinjie Ruan wrote:
->> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
->> crashkernel= command line option") and commit ab475510e042 ("kdump:
->> implement reserve_crashkernel_cma") added CMA support for kdump
->> crashkernel reservation.
->>
->> Crash kernel memory reservation wastes production resources if too
->> large, risks kdump failure if too small, and faces allocation difficulties
->> on fragmented systems due to contiguous block constraints. The new
->> CMA-based crashkernel reservation scheme splits the "large fixed
->> reservation" into a "small fixed region + large CMA dynamic region": the
->> CMA memory is available to userspace during normal operation to avoid
->> waste, and is reclaimed for kdump upon crash—saving memory while
->> improving reliability.
->>
->> So extend crashkernel CMA reservation support to arm64. The following
->> changes are made to enable CMA reservation:
->>
->> - Parse and obtain the CMA reservation size along with other crashkernel
->>   parameters.
->> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
->> - Include the CMA-reserved ranges for kdump kernel to use.
->> - Exclude the CMA-reserved ranges from the crash kernel memory to
->>   prevent them from being exported through /proc/vmcore, which is already
->>   done in the crash core.
->>
->> Update kernel-parameters.txt to document CMA support for crashkernel on
->> arm64 architecture.
->>
->> Acked-by: Ard Biesheuvel <ardb@kernel.org>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->> v3:
->> - Add Acked-by.
->> v2:
->> - Free cmem in prepare_elf_headers()
->> - Add the mtivation.
->> ---
->>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
->>  arch/arm64/kernel/machine_kexec_file.c          | 8 +++++++-
->>  arch/arm64/mm/init.c                            | 5 +++--
->>  3 files changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index cb850e5290c2..497f63b76898 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -1121,7 +1121,7 @@ Kernel parameters
->>  			It will be ignored when crashkernel=X,high is not used
->>  			or memory reserved is below 4G.
->>  	crashkernel=size[KMG],cma
->> -			[KNL, X86, ppc] Reserve additional crash kernel memory from
->> +			[KNL, X86, ARM64, ppc] Reserve additional crash kernel memory from
->>  			CMA. This reservation is usable by the first system's
->>  			userspace memory and kernel movable allocations (memory
->>  			balloon, zswap). Pages allocated from this memory range
->> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
->> index c338506a580b..c8862a762eb3 100644
->> --- a/arch/arm64/kernel/machine_kexec_file.c
->> +++ b/arch/arm64/kernel/machine_kexec_file.c
->> @@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
->>  #ifdef CONFIG_CRASH_DUMP
->>  unsigned int arch_get_system_nr_ranges(void)
->>  {
->> -	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
->> +	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
->>  	phys_addr_t start, end;
->>  	u64 i;
->>  
->> @@ -64,6 +64,12 @@ int arch_crash_populate_cmem(struct crash_mem *cmem)
->>  		cmem->nr_ranges++;
->>  	}
->>  
->> +	for (i = 0; i < crashk_cma_cnt; i++) {
->> +		cmem->ranges[cmem->nr_ranges].start = crashk_cma_ranges[i].start;
->> +		cmem->ranges[cmem->nr_ranges].end = crashk_cma_ranges[i].end;
->> +		cmem->nr_ranges++;
->> +	}
+On Wed, Jan 21, 2026 at 04:22:40PM +0800, Ziyao Li via B4 Relay wrote:
+> From: Ziyao Li <liziyao@uniontech.com>
 > 
-> Why do we need to add cma ranges here? They are anyway will be excluded in
-> crash_exclude_core_ranges().
+> Older steppings of the Loongson-3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+> as only 2.5 GT/s, despite the upstream bus supporting speeds from
+> 2.5 GT/s up to 16 GT/s.
 > 
-> The same comment applies to riscv patch.
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
+> 
+> Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
+> amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
+> clocks and lanes in power management. We hope this patch can prevent
+> similar problems in future driver changes (similar checks may be
+> implemented in other GPU, storage controller, NIC, etc. drivers).
+> 
+> Manually override the `supported_speeds` field for affected PCIe bridges
+> with those found on the upstream bus to correctly reflect the supported
+> link speeds.
+> 
+> This patch was originally found from AOSC OS[1].
+> 
+> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+> Tested-by: Lain Fearyncess Yang <fsf@live.com>
+> Tested-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> [Xi Ruoyao: Fix falling through logic and add kernel log output.]
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
+> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
+> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+> Tested-by: Mingcong Bai <jeffbai@aosc.io>
+> Cc: stable@vger.kernel.org
 
-Indeed, it should not be placed here. In the kexec DT code, these memory
-regions need to be included in the "usable-memory-range",which is
-equivalent to the x86 crash_setup_memmap_entries() function.
+Since this is a bug fix which needs to be backported, what is the commit SHA for
+the Fixes tag? The one which added Loongson-3C6000 support to this driver.
 
+- Mani
+
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> The reason of not just copying pdev->bus->self->supported_speeds is
+> that we're concerned that this approach assumes the upstream port
+> reports the same capabilities as bridge, which may not always be the
+> case in future silicon revisions.
 > 
->>  	return 0;
->>  }
->>  #endif
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 96711b8578fd..144e30fe9a75 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
->>  
->>  static void __init arch_reserve_crashkernel(void)
->>  {
->> +	unsigned long long crash_base, crash_size, cma_size = 0;
->>  	unsigned long long low_size = 0;
->> -	unsigned long long crash_base, crash_size;
->>  	bool high = false;
->>  	int ret;
->>  
->> @@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
->>  
->>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->>  				&crash_size, &crash_base,
->> -				&low_size, NULL, &high);
->> +				&low_size, &cma_size, &high);
->>  	if (ret)
->>  		return;
->>  
->>  	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
->> +	reserve_crashkernel_cma(cma_size);
->>  }
->>  
->>  static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
->> -- 
->> 2.34.1
->>
+> Our current conservative approach ensures we only enable speeds that
+> are physically supported by checking the actual max_bus_speed. For
+> example, if there's a future Loongson-3C9999 where the virtual bridge
+> reports Gen4 support but the physical bridge only supports Gen3.
 > 
+> In this scenario, directly copying the upstream port's supported_speeds
+> would incorrectly report Gen4 support for the downstream bridge. The
+> current patch ensures we only set speed bits up to what the hardware
+> actually supports, based on the measured max_bus_speed. This seems
+> safer for future silicon.
+> 
+> Changes in v7:
+> - adjust commit message
+> - Link to v6: https://lore.kernel.org/r/20260114-loongson-pci1-v6-1-ee8a18f5d242@uniontech.com
+> 
+> Changes in v6:
+> - adjust commit message
+> - Link to v5: https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniontech.com
+> 
+> Changes in v5:
+> - style adjust
+> - Link to v4: https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com
+> 
+> Changes in v4:
+> - rename subject
+> - use 0x3c19/0x3c29 instead of 3c19/3c29
+> - Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
+> 
+> Changes in v3:
+> - Adjust commit message
+> - Make the program flow more intuitive
+> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
+> 
+> Changes in v2:
+> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
+> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
+> - Fix falling through logic and add kernel log output by Xi Ruoyao
+> ---
+>  drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index bc630ab8a283..a4250d7af1bf 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+>  
+> +/*
+> + * Older steppings of the Loongson-3C6000 series incorrectly report the
+> + * supported link speeds on their PCIe bridges (device IDs 0x3c19,
+> + * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
+> + * from 2.5 GT/s up to 16 GT/s.
+> + */
+> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
+> +{
+> +	u8 old_supported_speeds = pdev->supported_speeds;
+> +
+> +	switch (pdev->bus->max_bus_speed) {
+> +	case PCIE_SPEED_16_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_8_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_5_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_2_5GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
+> +		break;
+> +	default:
+> +		pci_warn(pdev, "unexpected max bus speed");
+> +
+> +		return;
+> +	}
+> +
+> +	if (pdev->supported_speeds != old_supported_speeds)
+> +		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
+> +			 old_supported_speeds, pdev->supported_speeds);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, loongson_pci_bridge_speed_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, loongson_pci_bridge_speed_quirk);
+> +
+>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>  {
+>  	struct pci_config_window *cfg;
+> 
+> ---
+> base-commit: ea1013c1539270e372fc99854bc6e4d94eaeff66
+> change-id: 20250822-loongson-pci1-4ded0d78f1bb
+> 
+> Best regards,
+> -- 
+> Ziyao Li <liziyao@uniontech.com>
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
