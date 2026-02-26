@@ -1,138 +1,154 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636C313285
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 09:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA92C3101B0
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 09:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772098335; cv=none; b=FuhNwD3jCS4XU8W+i4NNCXwC6rE+czuKQi6qJbzen9Rgp6lkk2am1e8GSjl1UK5pUD35sRYczCrawbm9lc3w5frgVHAhypS5YVXsVKjwSXHozOsviZZIxNCDIPNfUf1MuqBiEBr6y9JXLrIhB1uxwWWqYoG8Jpgn/UWB83a+x4w=
+	t=1772098448; cv=none; b=XONM2ayrYVhtUTxjy92v31vQoy5xgp2MU0raYhFO3S18J2bIjh41ZEyGxu8rCTcJjuFmyrkBqA5Na12H0YeNGmcu5m+VFsAVt99zizj3mFkroc9vsZKTcYyChqR1PtwluU5WMHftuzjOXAfj4WShBfCU9QZvGu7OdpvRif8Hj4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772098335; c=relaxed/simple;
-	bh=m5mtnbJ2X65BR6QuQDkTsPW41IRAVxN/CnC2fL/G7yk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=latP142Ik540zXgNlFsmk/6sEic/lMy2nBqL4fKFexYp9M/kfxu7VzoDxfGkOAcqm3ZXdRYVp9So9fo67WyDe6ucJPsb3PDT7+ZBlL3qNp2Pu0qB9UqNYNNCHXVe7ZDCICvc1ATqisVXF0THeQJ2sHLKQu9zcssGIaKbEtTnRAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=KcC+UUjf; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1772098448; c=relaxed/simple;
+	bh=Z1yt6kzeNlQg0WJ7Zb6KUr2UATU7PoG1znlxMzawMlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=cDb8OKpO40nv3wBCvonwDd5N9RQFjTMZHXQx6A5Hn3c36gNh2P0j7mPH0geF/9C5qJf9eiALyNl7CC/wfPWlFsaDXeT0ttGZ7V5AbBtfVuUFcDEXYmp32mmB7Oo6nlrRRirvy4OoGEm0w/UCukYVIOxxkXPh0N5dSAZasbH+MCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z82ROHHi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="KcC+UUjf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772098326;
-	bh=m5mtnbJ2X65BR6QuQDkTsPW41IRAVxN/CnC2fL/G7yk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KcC+UUjfmnPjkrNyweyw2BIqXep1KooO91X6GA60CVkh2gZpo2SoaOXVip3hDirzg
-	 dWE6fTPqEMwoszcrx9WwRCofQp+uJ6AYydnCTAldZoi2ucfHZn3copcwY9jCAG1tTg
-	 LPkD1N0FbJLZmskqY5/q8obsxYz3OxyrEYtdfp5Q=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z82ROHHi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772098445;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XkGmC86NoLQjvZOxhyrqXHuM788hxYhHZtfwsGaL3u0=;
+	b=Z82ROHHiHzcsjigDP4Y5CFK/+42rOSzDKP9ox1+VTaNUNowPoCP/uOfwEuNsPj9tXPSBz0
+	C8aA3Qc2cH0TKLED/rIr3sJgvCuD2b/RkkPy46UZOzrv1xn/1JdmN7h8tjCQORrq34yEW1
+	QVn8L9BrU7VZ+aVkq8FOhuZkTr1NpdQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-609-cKoIy_McNXyrDuGueNJKMw-1; Thu,
+ 26 Feb 2026 04:33:56 -0500
+X-MC-Unique: cKoIy_McNXyrDuGueNJKMw-1
+X-Mimecast-MFC-AGG-ID: cKoIy_McNXyrDuGueNJKMw_1772098431
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 289561A44C2;
-	Thu, 26 Feb 2026 04:32:00 -0500 (EST)
-Message-ID: <7b5200ab6541cbee3b1a6ba0b7185596a78bed2c.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: Fix calling smp_processor_id() in
- preemptible code
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Hengqi Chen <hengqi.chen@gmail.com>, 
- Mingcong Bai <jeffbai@aosc.io>, Zixing Liu <liushuyu@aosc.io>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau	
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu	
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend	
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev	 <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>,  Tiezhu Yang <yangtiezhu@loongson.cn>, George Guo
- <guodongtai@kylinos.cn>, Chenghao Duan	 <duanchenghao@kylinos.cn>,
- loongarch@lists.linux.dev, 	linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Date: Thu, 26 Feb 2026 17:31:58 +0800
-In-Reply-To: <CAAhV-H7rF+XwXmp_wfcHFmAgaybQdtzSUDRinFneLrGJKaNQCw@mail.gmail.com>
-References: <20260225141404.178823-2-xry111@xry111.site>
-	 <CAAhV-H7rF+XwXmp_wfcHFmAgaybQdtzSUDRinFneLrGJKaNQCw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7373E18002FB;
+	Thu, 26 Feb 2026 09:33:49 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.101])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88ECE30001B9;
+	Thu, 26 Feb 2026 09:33:44 +0000 (UTC)
+Date: Thu, 26 Feb 2026 17:33:36 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, akpm@linux-foundation.org, vgoyal@redhat.com,
+	dyoung@redhat.com, rdunlap@infradead.org, pmladek@suse.com,
+	dapeng1.mi@linux.intel.com, kees@kernel.org, paulmck@kernel.org,
+	lirongqing@baidu.com, arnd@arndb.de, ardb@kernel.org,
+	leitao@debian.org, rppt@kernel.org, cfsworks@gmail.com,
+	ryan.roberts@arm.com, sourabhjain@linux.ibm.com,
+	tangyouling@kylinos.cn, eajames@linux.ibm.com,
+	hbathini@linux.ibm.com, ritesh.list@gmail.com,
+	songshuaishuai@tinylab.org, samuel.holland@sifive.com,
+	kevin.brodsky@arm.com, vishal.moola@gmail.com,
+	junhui.liu@pigmoral.tech, coxu@redhat.com, liaoyuanhong@vivo.com,
+	fuqiang.wang@easystack.cn, jbohac@suse.cz, brgerst@gmail.com,
+	x86@kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, kexec@lists.infradead.org
+Subject: Re: [PATCH v6 4/5] arm64: kexec: Add support for crashkernel CMA
+ reservation
+Message-ID: <aaATcPGToAxEVIvh@MiWiFi-R3L-srv>
+References: <20260224085342.387996-1-ruanjinjie@huawei.com>
+ <20260224085342.387996-5-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260224085342.387996-5-ruanjinjie@huawei.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: wPg5cn5vTkLn0QBcr2o55HHTeRpiBYbaCcnb-yEPFFc_1772098431
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2026-02-26 at 17:08 +0800, Huacai Chen wrote:
-> Hi, Ruoyao,
->=20
-> On Wed, Feb 25, 2026 at 10:15=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> w=
-rote:
-> >=20
-> > Fix the warning recently exploited by commit 4ab17e762b34 ("LoongArch:
-> > BPF: Use BPF prog pack allocator"):
-> >=20
-> > =C2=A0=C2=A0=C2=A0 BUG: using smp_processor_id() in preemptible [000000=
-00] code: systemd/1
-> > =C2=A0=C2=A0=C2=A0 caller is larch_insn_text_copy+0x40/0xf0
-> >=20
-> > Simply changing it to raw_smp_processor_id() is not enough: if preempt
-> > and CPU hotplug happens after raw_smp_processor_id() but before
-> > stop_machine(), the CPU where raw_smp_processor_id() has run may be
-> > offline when stop_machine() and no CPU will run copy_to_kernel_nofault(=
-)
-> > in text_copy_cb().=C2=A0 Thus guard the larch_insn_text_copy() calls wi=
-th
-> > cpus_read_lock() and change stop_machine() to stop_machine_cpuslocked()
-> > to prevent this.
-> >=20
-> > Fixes: 9fbd18cf4c69 ("LoongArch: BPF: Add dynamic code modification sup=
-port")
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > ---
-> >=20
-> > P.S. I've considered moving the locks inside larch_insn_text_copy() but
-> > doing so seems not an easy hack.=C2=A0 In bpf_arch_text_poke() obviousl=
-y the
-> > memcpy() call must be guarded by text_mutex, so we have to leave the
-> > acquire of text_mutex out of larch_insn_text_copy.=C2=A0 But in the ent=
-ire
-> > kernel the acquire of mutexes is always after cpus_read_lock(), so we
-> > cannot put cpus_read_lock() into larch_insn_text_copy() while leaving
-> > the text_mutex acquire out (or we risk a deadlock due to inconsistent
-> > lock acquire order).=C2=A0 So I'd just submit this as-is to fix the bug=
- and
-> > leave the posssible refactor for others.
-> >=20
-> > =C2=A0arch/loongarch/kernel/inst.c | 4 ++--
-> > =C2=A0arch/loongarch/net/bpf_jit.c | 6 ++++++
-> > =C2=A02 files changed, 8 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.=
-c
-> > index bf037f0c6b26..db236e2b34a7 100644
-> > --- a/arch/loongarch/kernel/inst.c
-> > +++ b/arch/loongarch/kernel/inst.c
-> > @@ -263,14 +263,14 @@ int larch_insn_text_copy(void *dst, void *src, si=
-ze_t len)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .dst =3D dst,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .src =3D src,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 .len =3D len,
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 .cpu =3D smp_processor_id(),
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 .cpu =3D raw_smp_processor_id(),
-> I think we should keep the old function here, because it can help
-> others to catch new bugs if the code is refactored in future.
+On 02/24/26 at 04:53pm, Jinjie Ruan wrote:
+> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+> crashkernel= command line option") and commit ab475510e042 ("kdump:
+> implement reserve_crashkernel_cma") added CMA support for kdump
+> crashkernel reservation.
+> 
+> Crash kernel memory reservation wastes production resources if too
+> large, risks kdump failure if too small, and faces allocation difficulties
+> on fragmented systems due to contiguous block constraints. The new
+> CMA-based crashkernel reservation scheme splits the "large fixed
+> reservation" into a "small fixed region + large CMA dynamic region": the
+> CMA memory is available to userspace during normal operation to avoid
+> waste, and is reclaimed for kdump upon crash—saving memory while
+> improving reliability.
+> 
+> So extend crashkernel CMA reservation support to arm64. The following
+> changes are made to enable CMA reservation:
+> 
+> - Parse and obtain the CMA reservation size along with other crashkernel
+>   parameters.
+> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
+> - Include the CMA-reserved ranges for kdump kernel to use.
+> - Exclude the CMA-reserved ranges from the crash kernel memory to
+>   prevent them from being exported through /proc/vmcore, which is already
+>   done in the crash core.
+> 
+> Update kernel-parameters.txt to document CMA support for crashkernel on
+> arm64 architecture.
+> 
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+> v3:
+> - Add Acked-by.
+> v2:
+> - Free cmem in prepare_elf_headers()
+> - Add the mtivation.
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>  arch/arm64/kernel/machine_kexec_file.c          | 8 +++++++-
+>  arch/arm64/mm/init.c                            | 5 +++--
+>  3 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index cb850e5290c2..497f63b76898 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1121,7 +1121,7 @@ Kernel parameters
+>  			It will be ignored when crashkernel=X,high is not used
+>  			or memory reserved is below 4G.
+>  	crashkernel=size[KMG],cma
+> -			[KNL, X86, ppc] Reserve additional crash kernel memory from
+> +			[KNL, X86, ARM64, ppc] Reserve additional crash kernel memory from
+                                          ~~~~ 
+This should be written as 'PPC', even though it's not introduced in this patch.
+===
+ PPC     PowerPC architecture is enabled.
+===
 
-Hmm, IIUC using smp_processor_id will still trigger the warning as we've
-only acquired the cpu hotplug lock, instead of disabling the preemption
-completely.
+Other than this nit, the overral looks good to me.
 
-How about adding a lockdep_assert_cpus_held() in this function with an
-explanatory comment?
->=20
+>  			CMA. This reservation is usable by the first system's
+>  			userspace memory and kernel movable allocations (memory
+>  			balloon, zswap). Pages allocated from this memory range
+......snip...
 
---=20
-Xi Ruoyao <xry111@xry111.site>
