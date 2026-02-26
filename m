@@ -1,313 +1,206 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6061531C1
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 02:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C42727E0
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 03:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772073386; cv=none; b=vEnMovuu5MQBIkFOhekcCTU+7an9Qe5C8EmNXU7bZUvXMBB+OyLg/A60zm6yH15mnrPYO2VyJMxa2jv5JAOXKKmryfuaoiGVGBxgMPOOLmCRyHTKmwbvcQK5HJtEkvjt7Mko1yCqnPveREVRhu61qU8bSq0qHj/Xg9H83PPFxvA=
+	t=1772076296; cv=none; b=DHZ/VoJH4DQLy0MxjcmpjCkYLxJBidni7AeImjHSGgvVVim28ARg1FjKpcjLrwqsbiaEE2a091eV0UFm1eJG7MnRoDKawRY5SsWJfWraap7wXv5gRX111x2dvDUqge6xPxD6kCmOCNIG+/JMdocckDZPdmrGvgA2gB1YQvIttJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772073386; c=relaxed/simple;
-	bh=bKF7whReJIn8JKfwcVEEd5XFoh76kcATdGd43AVoMJo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=saeOx39Vi/fBcjMHkisKFjjpo/R8megb3bs0CuWuv5qkWPhswFS0SrL2jo9JBYvSFgMTc1bLQAufdd7sZLsA3YMTrw5m2xzt9IOvn1NK5+G/Ehkkts7XqB+ao4Wg4yrVM6o5I+hZ8HSfRCKC0Nfj7S2LVaNiYBXSKOtYCulyJ2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=eKFhXQvN; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1772076296; c=relaxed/simple;
+	bh=ycnqTJfQp1mFvF26g5iva6jQWeWZ11Wa7JKjHd7Lpeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dTPLH1WRYM4AvwdNgTLlqFCIbMZrcTjWfc4LDHbIoKtxU/DLKUY2QgDJ0w0QL8+wFe7n3kacrmBvH77dGztIZolhSoFRDj65jRZPWzPEiwEStP3Yd/3VWP4Mek4jaY9AfwDEM0wDKFcwGkJVB9ue+sQVkKTM+4eVLjmJhx8vSic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=x1l2VLMm; arc=none smtp.client-ip=113.46.200.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="eKFhXQvN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772073381;
-	bh=49RBKy8u4LElecUSYTEDeez5MCwRWq4fA5GLRxjd93I=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eKFhXQvNBK57c2NYIDM6mG4Yc2CqWHt2yRSQdAulpJ3W1xWTJk9iH2dchgr5FprBO
-	 Y8lo8QcKvdj+ODC3pgh24kDE/Qhw+wAOdnTIb29Cz6LOx1iTb3RVhnhAFAE8KdqF1W
-	 7wbkBfjI1nZtIbiDeNCruAV4Sz/6twy3Vi7ssrYU=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 3F69066EE5;
-	Wed, 25 Feb 2026 21:36:15 -0500 (EST)
-Message-ID: <a9284c7a78b12502973ae39be041a0d52b83a1fe.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-  WANG Xuerui <kernel@xen0n.name>
-Cc: WANG Rui <wangrui@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>, Zixing
- Liu	 <liushuyu@aosc.io>, "H . Peter Anvin" <hpa@zytor.com>,
- stable@vger.kernel.org,  "Peter Zijlstra (Intel)"	 <peterz@infradead.org>,
- Menglong Dong <menglong8.dong@gmail.com>, Bibo Mao	 <maobibo@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, Hanlu Li	 <lihanlu@loongson.cn>,
- Nathan Chancellor <nathan@kernel.org>, Jiaxun Yang	
- <jiaxun.yang@flygoat.com>, Ard Biesheuvel <ardb@kernel.org>, Wentao Guan	
- <guanwentao@uniontech.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 26 Feb 2026 10:36:11 +0800
-In-Reply-To: <ab012e96-e0c8-cc26-ab09-9f2bd2f65b42@loongson.cn>
-References: <20260225104607.3803060-1-xry111@xry111.site>
-	 <ab012e96-e0c8-cc26-ab09-9f2bd2f65b42@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="x1l2VLMm"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=X/tw47XVxnBSBQVQnzbdQeBRFqR3Av4K63nH/lDW8AE=;
+	b=x1l2VLMmjYlYgtz9e9QHe2mOtGBgkKNh7hz5MB9XCgwIHUNdvwywy/MiST1AdgYMZ8Zyzmb27
+	xiMAI8GTBB37K4MPa+6n43+ne+oVZQwZt5AaCiT8i/cHG9pw7k06FxwueZqr+OCknXS8TuOpk3e
+	TFufapm/JkqBD70EL8N9gQs=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4fLxXn5h2NznTW8;
+	Thu, 26 Feb 2026 11:20:09 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0E70340561;
+	Thu, 26 Feb 2026 11:24:50 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 26 Feb 2026 11:24:46 +0800
+Message-ID: <0b0c0a34-f67d-9cf5-d5fc-ed8e1870a104@huawei.com>
+Date: Thu, 26 Feb 2026 11:24:45 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v6 4/5] arm64: kexec: Add support for crashkernel CMA
+ reservation
+To: Mike Rapoport <rppt@kernel.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <akpm@linux-foundation.org>, <bhe@redhat.com>,
+	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
+	<pmladek@suse.com>, <dapeng1.mi@linux.intel.com>, <kees@kernel.org>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <arnd@arndb.de>,
+	<ardb@kernel.org>, <leitao@debian.org>, <cfsworks@gmail.com>,
+	<ryan.roberts@arm.com>, <sourabhjain@linux.ibm.com>,
+	<tangyouling@kylinos.cn>, <eajames@linux.ibm.com>, <hbathini@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <songshuaishuai@tinylab.org>,
+	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <jbohac@suse.cz>,
+	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+References: <20260224085342.387996-1-ruanjinjie@huawei.com>
+ <20260224085342.387996-5-ruanjinjie@huawei.com> <aZ8Z2WXw3QwaXRo8@kernel.org>
+Content-Language: en-US
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <aZ8Z2WXw3QwaXRo8@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Thu, 2026-02-26 at 09:30 +0800, Jinyang He wrote:
-> On 2026-02-25 18:45, Xi Ruoyao wrote:
->=20
-> > With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the
-> > default
-> > of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S)
-> > is
-> > empty.=C2=A0 This is not valid, as the current DWARF specification
-> > mandates
-> > the first byte of the EH frame to be the version number 1.=C2=A0 It
-> > causes
-> > some unwinders to complain, for example the ClickHouse query
-> > profiler
-> > spams the log with messages:
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0 clickhouse-server[365854]: libunwind: unsuppor=
-ted .eh_frame_hdr
-> > =C2=A0=C2=A0=C2=A0=C2=A0 version: 127 at 7ffffffb0000
-> >=20
-> > Here "127" is just the byte located at the p_vaddr (0, i.e. the
-> > beginning of the vDSO) of the empty GNU_EH_FRAME segment.
-> > Cross-checking with /proc/365854/maps has also proven 7ffffffb0000
-> > is
-> > the start of vDSO in the process VM image.
-> >=20
-> > In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-> > MIPS legacy, and MIPS only uses this option to satisfy the MIPS-
-> > specific
-> > "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO:
-> > Explicitly
-> > use -fno-asynchronous-unwind-tables").=C2=A0 IIUC it indicates some
-> > inherent
-> > limitation of the MIPS ELF ABI and has nothing to do with
-> > LoongArch.=C2=A0 So
-> > we can simply flip it over to -fasynchronous-unwind-tables and pass
-> > --eh-frame-hdr for linking the vDSO, allowing the profilers to
-> > unwind the
-> > stack for statistics even if the sample point is taken when the PC
-> > is in
-> > the vDSO.
-> >=20
-> > However simply adjusting the options above would exploit an issue:
-> > when
-> > the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it
-> > silently
-> > falled back to a machine-specific routine to match the code pattern
-> > of
-> > rt_sigreturn and extract the registers saved in the sigframe if the
-> > code
-> > pattern is matched.=C2=A0 As unwinding from signal handlers is vital fo=
-r
-> > libgcc to support pthread cancellation etc., the fall-back routine
-> > had
-> > been silently keeping the LoongArch Linux systems functioning since
-> > Linux 5.19.=C2=A0 But when we start to emit GNU_EH_FRAME with the corre=
-ct
-> > format, fall-back routine will no longer be used and libgcc will
-> > fail
-> > to unwind the sigframe, and unwinding from signal handlers will no
-> > longer work, causing dozens of glibc test failures.=C2=A0 To make it
-> > possible
-> > to unwind from signal handlers again, it's necessary to code the
-> > unwind
-> > info in __vdso_rt_sigreturn via .cfi_* directives.
-> >=20
-> > The offsets in the .cfi_* directives depend on the layout of struct
-> > sigframe, notably the offset of sigcontect in the sigframe.=C2=A0 To us=
-e
-> > the
-> > offset in the assembly file, factor out struct sigframe into a
-> > header to
-> > allow asm-offsets.c to output the offset for assembly.
-> >=20
-> > To work around a long-term issue in the libgcc unwinder (the pc is
-> > unconditionally substracted by 1: doing so is technically incorrect
-> > for
-> > a signal frame), a nop instruction is included with the two real
-> > instructions in __vdso_rt_sigreturn in the same FDE PC range.=C2=A0 The
-> > same
-> > hack has been used on x86 for a long time.
-> >=20
-> > Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > ---
-> > =C2=A0 arch/loongarch/include/asm/sigframe.h | 22 ++++++++++++++
-> > =C2=A0 arch/loongarch/kernel/asm-offsets.c=C2=A0=C2=A0 |=C2=A0 2 ++
-> > =C2=A0 arch/loongarch/kernel/signal.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 6 +---
-> > =C2=A0 arch/loongarch/vdso/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +--
-> > =C2=A0 arch/loongarch/vdso/sigreturn.S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 44
-> > ++++++++++++++++++++++++---
-> > =C2=A0 5 files changed, 67 insertions(+), 11 deletions(-)
-> > =C2=A0 create mode 100644 arch/loongarch/include/asm/sigframe.h
-> >=20
-> > diff --git a/arch/loongarch/include/asm/sigframe.h
-> > b/arch/loongarch/include/asm/sigframe.h
-> > new file mode 100644
-> > index 000000000000..6889bcf5dc88
-> > --- /dev/null
-> > +++ b/arch/loongarch/include/asm/sigframe.h
-> > @@ -0,0 +1,22 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +/*
-> > + * Separated from arch/loongarch/kernel/signal.c:
-> > + *
-> > + * Author: Hanlu Li <lihanlu@loongson.cn>
-> > + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Huacai Chen <chenhu=
-acai@loongson.cn>
-> > + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-> > + *
-> > + * Derived from MIPS:
-> > + * Copyright (C) 1991, 1992=C2=A0 Linus Torvalds
-> > + * Copyright (C) 1994 - 2000=C2=A0 Ralf Baechle
-> > + * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
-> > + * Copyright (C) 2014, Imagination Technologies Ltd.
-> > + */
-> > +
-> > +#include <uapi/asm/ucontext.h>
-> > +#include <asm/siginfo.h>
-> > +
-> > +struct rt_sigframe {
-> > +	struct siginfo rs_info;
-> > +	struct ucontext rs_uctx;
-> > +};
-> > diff --git a/arch/loongarch/kernel/asm-offsets.c
-> > b/arch/loongarch/kernel/asm-offsets.c
-> > index 3017c7157600..2cc953f113ac 100644
-> > --- a/arch/loongarch/kernel/asm-offsets.c
-> > +++ b/arch/loongarch/kernel/asm-offsets.c
-> > @@ -16,6 +16,7 @@
-> > =C2=A0 #include <asm/ptrace.h>
-> > =C2=A0 #include <asm/processor.h>
-> > =C2=A0 #include <asm/ftrace.h>
-> > +#include <asm/sigframe.h>
-> > =C2=A0 #include <vdso/datapage.h>
-> > =C2=A0=20
-> > =C2=A0 static void __used output_ptreg_defines(void)
-> > @@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
-> > =C2=A0=C2=A0	COMMENT("Linux sigcontext offsets.");
-> > =C2=A0=C2=A0	OFFSET(SC_REGS, sigcontext, sc_regs);
-> > =C2=A0=C2=A0	OFFSET(SC_PC, sigcontext, sc_pc);
-> > +	OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
-> > =C2=A0=C2=A0	BLANK();
-> > =C2=A0 }
-> > =C2=A0=20
-> > diff --git a/arch/loongarch/kernel/signal.c
-> > b/arch/loongarch/kernel/signal.c
-> > index c9f7ca778364..e297d54ea638 100644
-> > --- a/arch/loongarch/kernel/signal.c
-> > +++ b/arch/loongarch/kernel/signal.c
-> > @@ -37,6 +37,7 @@
-> > =C2=A0 #include <asm/lbt.h>
-> > =C2=A0 #include <asm/ucontext.h>
-> > =C2=A0 #include <asm/vdso.h>
-> > +#include <asm/sigframe.h>
-> > =C2=A0=20
-> > =C2=A0 #ifdef DEBUG_SIG
-> > =C2=A0 #=C2=A0 define DEBUGP(fmt, args...) printk("%s: " fmt, __func__,
-> > ##args)
-> > @@ -51,11 +52,6 @@
-> > =C2=A0 #define lock_lbt_owner()	({ preempt_disable();
-> > pagefault_disable(); })
-> > =C2=A0 #define unlock_lbt_owner()	({ pagefault_enable();
-> > preempt_enable(); })
-> > =C2=A0=20
-> > -struct rt_sigframe {
-> > -	struct siginfo rs_info;
-> > -	struct ucontext rs_uctx;
-> > -};
-> > -
-> > =C2=A0 struct _ctx_layout {
-> > =C2=A0=C2=A0	struct sctx_info *addr;
-> > =C2=A0=C2=A0	unsigned int size;
-> > diff --git a/arch/loongarch/vdso/Makefile
-> > b/arch/loongarch/vdso/Makefile
-> > index 520f1513f07d..294c16b9517f 100644
-> > --- a/arch/loongarch/vdso/Makefile
-> > +++ b/arch/loongarch/vdso/Makefile
-> > @@ -26,7 +26,7 @@ cflags-vdso :=3D $(ccflags-vdso) \
-> > =C2=A0=C2=A0	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) =
-\
-> > =C2=A0=C2=A0	-std=3Dgnu11 -fms-extensions -O2 -g -fno-strict-aliasing -
-> > fno-common -fno-builtin \
-> > =C2=A0=C2=A0	-fno-stack-protector -fno-jump-tables -
-> > DDISABLE_BRANCH_PROFILING \
-> > -	$(call cc-option, -fno-asynchronous-unwind-tables) \
-> > +	$(call cc-option, -fasynchronous-unwind-tables) \
-> > =C2=A0=C2=A0	$(call cc-option, -fno-stack-protector)
-> > =C2=A0 aflags-vdso :=3D $(ccflags-vdso) \
-> > =C2=A0=C2=A0	-D__ASSEMBLY__ -Wa,-gdwarf-2
-> > @@ -41,7 +41,7 @@ endif
-> > =C2=A0=20
-> > =C2=A0 # VDSO linker flags.
-> > =C2=A0 ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so=
-.1 \
-> > -	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
-> > +	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-
-> > frame-hdr -T
-> > =C2=A0=20
-> > =C2=A0 #
-> > =C2=A0 # Shared build commands.
-> > diff --git a/arch/loongarch/vdso/sigreturn.S
-> > b/arch/loongarch/vdso/sigreturn.S
-> > index 9cb3c58fad03..e46c1deacb9e 100644
-> > --- a/arch/loongarch/vdso/sigreturn.S
-> > +++ b/arch/loongarch/vdso/sigreturn.S
-> > @@ -12,13 +12,49 @@
-> > =C2=A0=20
-> > =C2=A0 #include <asm/regdef.h>
-> > =C2=A0 #include <asm/asm.h>
-> > +#include <asm/asm-offsets.h>
-> > =C2=A0=20
-> > =C2=A0=C2=A0	.section	.text
-> > -	.cfi_sections	.debug_frame
-> > =C2=A0=20
-> > -SYM_FUNC_START(__vdso_rt_sigreturn)
-> > +	.cfi_startproc
-> > +	.cfi_signal_frame
-> > =C2=A0=20
-> > +	/*
-> > +	 * There is a struct rt_sigframe at $sp, set CFA to the
-> > address of
-> > +	 * the struct sigcontext in the rt_sigframe to simplify the
-> > +	 * offsets below.
-> > +	 */
-> > +	.cfi_def_cfa 3, RT_SIGFRAME_SC
-> > +
-> > +	/*
-> > +	 * 72 is DWARF 2 CFA column for the return address from a
-> > signal
-> > +	 * handler context on LoongArch, i.e. the PC stored in the
-> > +	 * sigcontext.
-> > +	 */
-> Could we use `.cfi_return_column 0` here? Since I recommended
-> llvm::libunwind that restore register to zero not destroy it
-> and we can use it as a hack, [1]. But I don't know whether the
-> libgcc works ok or not in this case.
-> Otherwise I think we should update [2] first.
->=20
-> Others look good to me.
->=20
-> [1] https://reviews.llvm.org/D137010#3907282
-> [2] https://github.com/loongson/la-abi-specs/blob/release/ladwarf.adoc
 
-I'll take a look but I think [2] needs an update no matter if we use 0
-or 72.  I.e. if we use 0 we should document the slot for the signal
-frame RA instead of $r0.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+On 2026/2/25 23:48, Mike Rapoport wrote:
+> On Tue, Feb 24, 2026 at 04:53:41PM +0800, Jinjie Ruan wrote:
+>> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+>> crashkernel= command line option") and commit ab475510e042 ("kdump:
+>> implement reserve_crashkernel_cma") added CMA support for kdump
+>> crashkernel reservation.
+>>
+>> Crash kernel memory reservation wastes production resources if too
+>> large, risks kdump failure if too small, and faces allocation difficulties
+>> on fragmented systems due to contiguous block constraints. The new
+>> CMA-based crashkernel reservation scheme splits the "large fixed
+>> reservation" into a "small fixed region + large CMA dynamic region": the
+>> CMA memory is available to userspace during normal operation to avoid
+>> waste, and is reclaimed for kdump upon crash—saving memory while
+>> improving reliability.
+>>
+>> So extend crashkernel CMA reservation support to arm64. The following
+>> changes are made to enable CMA reservation:
+>>
+>> - Parse and obtain the CMA reservation size along with other crashkernel
+>>   parameters.
+>> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
+>> - Include the CMA-reserved ranges for kdump kernel to use.
+>> - Exclude the CMA-reserved ranges from the crash kernel memory to
+>>   prevent them from being exported through /proc/vmcore, which is already
+>>   done in the crash core.
+>>
+>> Update kernel-parameters.txt to document CMA support for crashkernel on
+>> arm64 architecture.
+>>
+>> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>> v3:
+>> - Add Acked-by.
+>> v2:
+>> - Free cmem in prepare_elf_headers()
+>> - Add the mtivation.
+>> ---
+>>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>>  arch/arm64/kernel/machine_kexec_file.c          | 8 +++++++-
+>>  arch/arm64/mm/init.c                            | 5 +++--
+>>  3 files changed, 11 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index cb850e5290c2..497f63b76898 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -1121,7 +1121,7 @@ Kernel parameters
+>>  			It will be ignored when crashkernel=X,high is not used
+>>  			or memory reserved is below 4G.
+>>  	crashkernel=size[KMG],cma
+>> -			[KNL, X86, ppc] Reserve additional crash kernel memory from
+>> +			[KNL, X86, ARM64, ppc] Reserve additional crash kernel memory from
+>>  			CMA. This reservation is usable by the first system's
+>>  			userspace memory and kernel movable allocations (memory
+>>  			balloon, zswap). Pages allocated from this memory range
+>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+>> index c338506a580b..c8862a762eb3 100644
+>> --- a/arch/arm64/kernel/machine_kexec_file.c
+>> +++ b/arch/arm64/kernel/machine_kexec_file.c
+>> @@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>>  #ifdef CONFIG_CRASH_DUMP
+>>  unsigned int arch_get_system_nr_ranges(void)
+>>  {
+>> -	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
+>> +	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
+>>  	phys_addr_t start, end;
+>>  	u64 i;
+>>  
+>> @@ -64,6 +64,12 @@ int arch_crash_populate_cmem(struct crash_mem *cmem)
+>>  		cmem->nr_ranges++;
+>>  	}
+>>  
+>> +	for (i = 0; i < crashk_cma_cnt; i++) {
+>> +		cmem->ranges[cmem->nr_ranges].start = crashk_cma_ranges[i].start;
+>> +		cmem->ranges[cmem->nr_ranges].end = crashk_cma_ranges[i].end;
+>> +		cmem->nr_ranges++;
+>> +	}
+> 
+> Why do we need to add cma ranges here? They are anyway will be excluded in
+> crash_exclude_core_ranges().
+> 
+> The same comment applies to riscv patch.
+
+Indeed, it should not be placed here. In the kexec DT code, these memory
+regions need to be included in the "usable-memory-range",which is
+equivalent to the x86 crash_setup_memmap_entries() function.
+
+> 
+>>  	return 0;
+>>  }
+>>  #endif
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 96711b8578fd..144e30fe9a75 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+>>  
+>>  static void __init arch_reserve_crashkernel(void)
+>>  {
+>> +	unsigned long long crash_base, crash_size, cma_size = 0;
+>>  	unsigned long long low_size = 0;
+>> -	unsigned long long crash_base, crash_size;
+>>  	bool high = false;
+>>  	int ret;
+>>  
+>> @@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
+>>  
+>>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>>  				&crash_size, &crash_base,
+>> -				&low_size, NULL, &high);
+>> +				&low_size, &cma_size, &high);
+>>  	if (ret)
+>>  		return;
+>>  
+>>  	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
+>> +	reserve_crashkernel_cma(cma_size);
+>>  }
+>>  
+>>  static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
+>> -- 
+>> 2.34.1
+>>
+> 
