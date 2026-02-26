@@ -1,177 +1,208 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4B63AEF2F
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 14:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772114491; cv=pass; b=WNGZAFKGVVGFnxRH7FWjCUH3jbzyi9K3m+uRAEcMXPXStKIv2qU5T6Er081PmlxbZQLf7VLuz6F1WaYlTgEeZEPdpuD9VFjI6x9OLa43Ol/dL02Tuv8Jw+CGleGRcs7BpjxB0Ngb45AqXq+bWDGfwvbcwRSXFofXv3z4b6Qx28Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772114491; c=relaxed/simple;
-	bh=BwyF0qpF0HcXt65zTqNvfpD96B+4qTUiKq0XX1e2ZeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qksN/moyxy9gyZtlIVawfP4M4Ahv9RNt+GmuKagkeV0qG0P0sJmqk4iSiH37AJNW6wismTOvj20K0w8JwDE9fUASC82Enk9br6tF7yxEoRfkqQUT8+PYYThGShe1DzyCzjexiKrM/vRKLnYQXhwrJejCRsYO10g0Xy8xcK84jaU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=caNk7ZHd; arc=pass smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0D1389E06;
+	Thu, 26 Feb 2026 15:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772118700; cv=none; b=qe3jqpA9Ia228fYj4Y1ywe9D/1Se4cUaptYhnSTyxjpyE2Ah7eYDliB24ZEq/CXC2YdpLyIcoBvFhG1ZO4SQYls+f8W56zATYzcW6zBldcYFo0gN5uYBSZRs9DJnkaha4GkKRKjwnndzG9d7Q5qSdqWcab1AFEHXdgXRPkT3RkM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772118700; c=relaxed/simple;
+	bh=TUaqwSYTvclS+sWK53n6TjxnxsuKNTYDMRO6+RyQ5I0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=THeOhadWniRYMByxSKXfbv2VbseEALi5AiKO28v+FaoVyjYoGlqfEvCisZT+2MLqg1gbUlmd4mBV5ZOI9wbC8bres1HO0HLezh5ORNWEb2e45hyTXCU9hQhFXi+ZHuXaWBKHfpZ68el9T/VadPh3/8GY4oU2MQ7dnV1vxMCnDvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QR03zetW; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caNk7ZHd"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-5ff19e74779so570235137.0
-        for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 06:01:18 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772114477; cv=none;
-        d=google.com; s=arc-20240605;
-        b=N8mUwBw7MrdxIzvgN/pKl6yD2gutcloksJrM+Hzm3QjdoqyGJ1xvYoms6sQVZ0EPlC
-         3NfS7M5TLpGyHqIEnvtdvuh7qPnCFr1HiDGpXodXQyohTyO9cEiwXHNXwUd13gjlpgLQ
-         vDLnVrUT3h9uCJuN2Lpy5/JckgI8Qrc+ADWpGExtWmgJl0d37PYPomjL/fvsjqQ7UaEV
-         mzc/kihxDB5Exns4oLH6j2+a41iOYkZXN5fDFiS+lJXDvYEak3lZUsFkwfRew1rBdlgO
-         7zu0bAtQMPh+OvrPUPRp89hnNVFbbGYy0yNUGw+yFiWjIq5INQn6opC3zcNFUWiw6+01
-         lw7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
-        fh=MKjpi4u6CwEUanzTVoMZCRxnM73kznBkWZo91Uv7bUI=;
-        b=NEQZdlZlZRYb6JmavNSvsHnuJEfdfsRqiX3kBTTw6oy4/m7kMdIoMkTzHd2mXR3Xuw
-         29EBba3ipkEF7QvUozp0VEWABv1qTfMn3aILSvEFIQ1Cmbsso7cap/JKaqymgaC0/rUo
-         iRABKt6wqy+3YsUY0ZQXZtRaEoXYBiEq1FdkvyoVMUTj8r5rU+pQLhwVRGu03pKtVuM5
-         /q27THQ4LcETmZbjBWtdinr8Yha/HTd82btmEsxduNt1D+8/e7KxclzikEmMkQjoq/b/
-         Zs1sRkXQiOlo0LXpLZz0TSrOPjIQts6x0UznC1yWvoAzvXvPJUn/Vx6350SaYzi5Rneh
-         KF0Q==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772114477; x=1772719277; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
-        b=caNk7ZHdP/5H4tSgjI11k53FC1N9q23L83kiVkLWyAjsfeXcXFTT7pfWZ1nY3pjjJL
-         HkZxXYQtZCT7lnWF1wDXXt8hnvN3oSOSvRjISOa7MHFBTrFgrlY0sdHzQqwlcSxz3Y18
-         xYb2sLLfPyaxA5iDH6PGeT/Sp7C7eT6xFl+To0k5ewEtfSoJGCF7SgIXORJM724XTuQH
-         SUihMoN7a+jue/OV3oJMJRPsO9eaftE3yDh1sDFQpIwf4MRby1IblzwGAYE7b+EP2I3C
-         QzCR4PFHGU4QM8CUoxZXikZ1yKwCtYSErs1Ld2wGrtii8YfLBHbVjvr9NudJCjMf5ZX9
-         k2jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772114477; x=1772719277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
-        b=d5blhIbp5qhcTdh39T0nweHw7qxlBuAs22T9rJ6fWxTgy4rHih3s77gfL9Y0NzHumW
-         /OOOfIB6Ok1IGyDbCmNT1Zr/teR+Jgygkez7cBhRGEbMkFrGVJYRo4BIeXri/whZ+gfZ
-         APqtlW/LcxAKtaXTdRw0ra3yFMWHo2gCV/EAqZO/ZDutE8y/nDCqXVHgO2WcU/RjH2uS
-         Y5sQCHCqEY1SoZ7ryKktTh1SudcULDDKIsvgLyc3L4eQd4PhVfEnLFcVvfhJrOBh9lkK
-         LYBMIG+k1CYxv9joNwsV8TB1s0GFctc1cT6y5CYo2QnVaIII6nqHsJ+M5wtCyDU2AswB
-         JbsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUw/+eHbotHdHkfDSQ9nXbhPSP/xFlhVPhlWbdC+p3kIDTDBW2iyC5SNUF3iA4R17qEXNe/jixa5j8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx66EaOYXhfek0Eix+DKl4R/zZAs5IZ8V9J1lwlMFRTeIKI6vY2
-	quzcq0VKoH8e746jP7Nh6L1P/zZ1oI6vrzvoCITjQQlGKq5X9hx+XAYcHIeEv2/4SEDKEexb9/U
-	76l20DE2PkjPB+9a78kCWmFI/KRSphEk=
-X-Gm-Gg: ATEYQzxD1UIuOZmW2GXYqOQvfTyUV07b1HAe4YzRpf/t2AZHTDVBc+aIw1p3loIGRdT
-	nGIZhTF5acHURYNkv7NHFTS/ea5SQJmUaBoOHwldoNaqN9ZX0hbeHHytCZlB8lDxGgouvxnZLW4
-	kaFL6xzamEz3rIeXZK4/nDcBpCekIZ05JXFWtE4mioXAnsMP16U/uZNISYrsFP2BVmoy8npyDGj
-	uSudrDNWZTEO444b9JQzIVoDG+jYV6JRvkklh5Pxl5L3FsO06169JEc6Xlf7PLfjqvv66Bw7tVH
-	GUba/LJL1Cvv5Eep6ME=
-X-Received: by 2002:a05:6102:94d:b0:5fd:faf5:bc7a with SMTP id
- ada2fe7eead31-5ff20caf80fmr1039579137.41.1772114476573; Thu, 26 Feb 2026
- 06:01:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QR03zetW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=qP+8VdwzX18rY5bvgdY1sWuLjPIGZuDXB9vEoLM33a0=; b=QR03zetWTad5XyZ1Gw4pLwB3nJ
+	bBW2z8/AfBzf6ywTsDIo41OiCTtpsjYjgepK9QsrzsI7cElVXtM7rURrehCLHg7n3dJp3pEEuguPs
+	IV28EsbN9NXPibalVzcYNCMt7WUj5amt2cLL/uhfFZSbZasPO8mE2vPJU0F6TCesV+k682eK7OpEb
+	0s0PEhS0Lb4d7H7xxKtb1UPzv/QjIpRm5y7UyO6jsg8yFhe2aE6J9EjqkFmDdqerweEN4NKLgisiM
+	Kabaz6sDQQzQIMT6aHsvYmfsxULpzWH25hK5F1NxFrVLPKvob/3mX0qd2TgoR9ypObigmjPl/bDFb
+	OUEtcJnA==;
+Received: from [4.28.11.157] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vvd1A-00000006Pxh-0z8F;
+	Thu, 26 Feb 2026 15:11:08 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: cleanup the RAID5 XOR library
+Date: Thu, 26 Feb 2026 07:10:12 -0800
+Message-ID: <20260226151106.144735-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
-In-Reply-To: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
-From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Thu, 26 Feb 2026 22:01:04 +0800
-X-Gm-Features: AaiRm50ZU6anVyxfGx856SeSGod9RQJsxhSEsUiPo0miVMukWok53I-87oZ52NA
-Message-ID: <CAEyhmHSOtpcDpeKqZw0zWuYFq746xqx96RRhe5Mp8ctEJivU=Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Only use SC.Q when supported by the assembler
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	George Guo <guodongtai@kylinos.cn>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Feb 25, 2026 at 6:09=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> The 128-bit atomic cmpxchg implementation uses the SC.Q instruction.
-> Older versions of GNU AS do not support that instruction, erroring out:
->
-> ERROR:root:{standard input}: Assembler messages:
-> {standard input}:4831: Error: no match insn: sc.q       $t0,$t1,$r14
-> {standard input}:6407: Error: no match insn: sc.q       $t0,$t1,$r23
-> {standard input}:10856: Error: no match insn: sc.q      $t0,$t1,$r14
-> make[4]: *** [../scripts/Makefile.build:289: mm/slub.o] Error 1
->
-> (Binutils 2.41)
->
-> Test support for SC.Q in kconfig and disable the atomics if the
-> instruction is not available.
->
-> Fixes: f0e4b1b6e295 ("LoongArch: Add 128-bit atomic cmpxchg support")
-> Closes: https://lore.kernel.org/lkml/20260216082834-edc51c46-7b7a-4295-8e=
-a5-4d9a3ca2224f@linutronix.de/
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
+Hi all,
 
-Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
-Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
+the XOR library used for the RAID5 parity is a bit of a mess right now.
+The main file sits in crypto/ despite not being cryptography and not
+using the crypto API, with the generic implementations sitting in
+include/asm-generic and the arch implementations sitting in an asm/
+header in theory.  The latter doesn't work for many cases, so
+architectures often build the code directly into the core kernel, or
+create another module for the architecture code.
 
->  arch/loongarch/Kconfig               | 3 +++
->  arch/loongarch/include/asm/cmpxchg.h | 5 +++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d211c6572b0a..92068ff38685 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -304,6 +304,9 @@ config AS_HAS_LBT_EXTENSION
->  config AS_HAS_LVZ_EXTENSION
->         def_bool $(as-instr,hvcl 0)
->
-> +config AS_HAS_SCQ_EXTENSION
-> +       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
-> +
->  config CC_HAS_ANNOTATE_TABLEJUMP
->         def_bool $(cc-option,-mannotate-tablejump)
->
-> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
-e/asm/cmpxchg.h
-> index 58cabab6d90d..909f9274fe71 100644
-> --- a/arch/loongarch/include/asm/cmpxchg.h
-> +++ b/arch/loongarch/include/asm/cmpxchg.h
-> @@ -238,6 +238,8 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsi=
-gned long new, unsigned int
->         arch_cmpxchg((ptr), (o), (n));                                  \
->    })
->
-> +#ifdef CONFIG_AS_HAS_SCQ_EXTENSION
-> +
->  union __u128_halves {
->         u128 full;
->         struct {
-> @@ -290,6 +292,9 @@ union __u128_halves {
->         BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
- \
->         __arch_cmpxchg128(ptr, o, n, "");                               \
->  })
-> +
-> +#endif /* CONFIG_AS_HAS_SCQ_EXTENSION */
-> +
->  #else
->  #include <asm-generic/cmpxchg-local.h>
->  #define arch_cmpxchg64_local(ptr, o, n) __generic_cmpxchg64_local((ptr),=
- (o), (n))
->
-> ---
-> base-commit: 2961f841b025fb234860bac26dfb7fa7cb0fb122
-> change-id: 20260218-loongarch-scq-2434ec5aec4d
->
-> Best regards,
-> --
-> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
->
+Changes this to a single module in lib/ that also contains the
+architecture optimizations, similar to the library work Eric Biggers
+has done for the CRC and crypto libraries later.  After that it changes
+to better calling conventions that allow for smarter architecture
+implementations (although none is contained here yet), and uses
+static_call to avoid indirection function call overhead.
+
+A git tree is also available here:
+
+    git://git.infradead.org/users/hch/misc.git xor-improvements
+
+Gitweb:
+
+    https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/xor-improvements
+
+Diffstat:
+ arch/arm64/include/asm/xor.h              |   73 --
+ arch/loongarch/include/asm/xor.h          |   68 --
+ arch/loongarch/include/asm/xor_simd.h     |   34 -
+ arch/loongarch/lib/xor_simd_glue.c        |   72 --
+ arch/powerpc/include/asm/xor.h            |   47 -
+ arch/powerpc/include/asm/xor_altivec.h    |   22 
+ arch/powerpc/lib/xor_vmx.h                |   22 
+ arch/powerpc/lib/xor_vmx_glue.c           |   63 --
+ arch/riscv/include/asm/xor.h              |   68 --
+ arch/s390/include/asm/xor.h               |   21 
+ arch/sparc/include/asm/xor.h              |    9 
+ arch/sparc/include/asm/xor_64.h           |   79 ---
+ arch/um/include/asm/xor.h                 |   24 
+ arch/x86/include/asm/xor_64.h             |   28 -
+ b/arch/alpha/Kconfig                      |    1 
+ b/arch/arm/Kconfig                        |    1 
+ b/arch/arm/lib/Makefile                   |    5 
+ b/arch/arm64/Kconfig                      |    1 
+ b/arch/arm64/lib/Makefile                 |    6 
+ b/arch/loongarch/Kconfig                  |    1 
+ b/arch/loongarch/lib/Makefile             |    2 
+ b/arch/powerpc/Kconfig                    |    1 
+ b/arch/powerpc/lib/Makefile               |    5 
+ b/arch/riscv/Kconfig                      |    1 
+ b/arch/riscv/lib/Makefile                 |    1 
+ b/arch/s390/Kconfig                       |    1 
+ b/arch/s390/lib/Makefile                  |    2 
+ b/arch/sparc/Kconfig                      |    1 
+ b/arch/sparc/include/asm/asm-prototypes.h |    1 
+ b/arch/sparc/lib/Makefile                 |    2 
+ b/arch/um/Kconfig                         |    1 
+ b/arch/x86/Kconfig                        |    1 
+ b/crypto/Kconfig                          |    2 
+ b/crypto/Makefile                         |    1 
+ b/crypto/async_tx/async_xor.c             |   16 
+ b/fs/btrfs/raid56.c                       |   27 -
+ b/include/asm-generic/Kbuild              |    1 
+ b/include/linux/raid/xor.h                |   28 -
+ b/lib/Kconfig                             |    1 
+ b/lib/Makefile                            |    2 
+ b/lib/raid/Kconfig                        |    7 
+ b/lib/raid/Makefile                       |    2 
+ b/lib/raid/xor/Makefile                   |   50 ++
+ b/lib/raid/xor/alpha/xor.c                |   46 -
+ b/lib/raid/xor/alpha/xor_arch.h           |   22 
+ b/lib/raid/xor/arm/xor-neon-glue.c        |   19 
+ b/lib/raid/xor/arm/xor-neon.c             |   22 
+ b/lib/raid/xor/arm/xor.c                  |  105 ----
+ b/lib/raid/xor/arm/xor_arch.h             |   22 
+ b/lib/raid/xor/arm64/xor-neon-glue.c      |   26 +
+ b/lib/raid/xor/arm64/xor-neon.c           |   94 +--
+ b/lib/raid/xor/arm64/xor-neon.h           |    6 
+ b/lib/raid/xor/arm64/xor_arch.h           |   21 
+ b/lib/raid/xor/loongarch/xor_arch.h       |   33 +
+ b/lib/raid/xor/loongarch/xor_simd_glue.c  |   37 +
+ b/lib/raid/xor/powerpc/xor_arch.h         |   22 
+ b/lib/raid/xor/powerpc/xor_vmx.c          |   40 -
+ b/lib/raid/xor/powerpc/xor_vmx.h          |   10 
+ b/lib/raid/xor/powerpc/xor_vmx_glue.c     |   28 +
+ b/lib/raid/xor/riscv/xor-glue.c           |   25 +
+ b/lib/raid/xor/riscv/xor_arch.h           |   17 
+ b/lib/raid/xor/s390/xor.c                 |   15 
+ b/lib/raid/xor/s390/xor_arch.h            |   13 
+ b/lib/raid/xor/sparc/xor-niagara-glue.c   |   33 +
+ b/lib/raid/xor/sparc/xor-niagara.S        |  346 --------------
+ b/lib/raid/xor/sparc/xor-sparc32.c        |   32 -
+ b/lib/raid/xor/sparc/xor-vis-glue.c       |   34 +
+ b/lib/raid/xor/sparc/xor-vis.S            |  348 ++++++++++++++
+ b/lib/raid/xor/sparc/xor_arch.h           |   35 +
+ b/lib/raid/xor/um/xor_arch.h              |    9 
+ b/lib/raid/xor/x86/xor-avx.c              |   52 --
+ b/lib/raid/xor/x86/xor-mmx.c              |  120 +---
+ b/lib/raid/xor/x86/xor-sse.c              |  105 +---
+ b/lib/raid/xor/x86/xor_arch.h             |   36 +
+ b/lib/raid/xor/xor-32regs-prefetch.c      |  267 ++++++++++
+ b/lib/raid/xor/xor-32regs.c               |  217 ++++++++
+ b/lib/raid/xor/xor-8regs-prefetch.c       |  146 +++++
+ b/lib/raid/xor/xor-8regs.c                |  103 ++++
+ b/lib/raid/xor/xor-core.c                 |  187 +++++++
+ b/lib/raid/xor/xor_impl.h                 |   60 ++
+ crypto/xor.c                              |  174 -------
+ include/asm-generic/xor.h                 |  738 ------------------------------
+ 82 files changed, 2033 insertions(+), 2433 deletions(-)
