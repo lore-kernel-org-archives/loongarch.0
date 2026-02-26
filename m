@@ -1,462 +1,299 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C2E3191D3;
-	Wed, 25 Feb 2026 22:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30090944F
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 01:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772056992; cv=none; b=ModbOKD9jHbGh0GHAXEsFulgKWQj3M+M9l7gO3GRgHOwvoM6rlvgLFX5Gq45G1HEL78/9AX2QNUS8fFjYuq/i6NZngmf5AEN87vtOtD2+akHTX0OEfYq23EbzGKsUvICWQ+C1EPFf9DRBzAupK2CQQqYLWOUCJ9txkp0nNMpnbg=
+	t=1772069439; cv=none; b=nKFSZnv3OA9VeWJLIoyCl6kWCH8wAQ9FDc14S9/Jp1DBHo0LgRBTXniGfNgF04M3zwlH5uMdsVOqDZzzvRg57GoIb4gYRPwgO0evv6Y8Pp84rRlvGJSJOeJbBVZIO9y6apaNQ1rOgP9U4HDVOzthFAfJcHEEaGGWg7x++dOM3Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772056992; c=relaxed/simple;
-	bh=gYzWYbqUVyUWAs9EGE5ShllXabtNZu/2sUv3FCUuj7w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qTAN8uSZhsn9WqwWaT+AEBGvgRP/Bo5D6Ahn+TajH3i9GepwsFhpTbHkOXAGfJiZnSUIZbKsgs2qMTd9m19mS3pBwwgRe2gIOkFkHehXqJIOKLkhLh3wWhGVja9z5CKbfAFngxl1/6GYMGU95a6bECvWsSUKcJ1A1YSdymUanQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lh2Gp07e; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lh2Gp07e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71333C116D0;
-	Wed, 25 Feb 2026 22:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772056991;
-	bh=gYzWYbqUVyUWAs9EGE5ShllXabtNZu/2sUv3FCUuj7w=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Lh2Gp07eMCKl2XdNkedsqAZVkfBDWlOl2fsRxHEWE9tKv6jQh0edVVUsxDh6W5Xp/
-	 cpuHLuvKro/8fpHAIcfb6xh/0YkDcRPPmsCi3vH9hoM2N/cp4Zu293fjw8x0Y3sBRt
-	 xrryrjjtuF0G+GfHoJWSUPrL9Ub+h33d7ZDtN9xF5vWiBWN/Dqwh64X9F4ye8SQCek
-	 kzV0xNeQjeGNvdSYha+gv6+Zs0BqrJ4PL5GFW9IS3v5kg8ppoQ0ELPzksn51X2e+bF
-	 DsAPQYsTPAgDK9wa/O/d5HZiuyl/GUUOQtp0CrrKYMUtc7XQZ+nQdyI2fcEiQZeqbq
-	 KLkKqVrgOPu2w==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 25 Feb 2026 15:02:51 -0700
-Subject: [PATCH] kbuild: Split .modinfo out from ELF_DETAILS
+	s=arc-20240116; t=1772069439; c=relaxed/simple;
+	bh=aAZQlM+mM5UZqJGdjBICV1gTjgyXio/kwuDjKdeL0lI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tKJSW/dN5fjy9A7KVPbuVypNgRwWmYTLAcefeJ4v1IrD4HTELVkwPNlwfvebLK2q38l1uOSBAa5oZgveO7euR42LBlVyHhCSHWI26//54bQuNtxghGI0nzOr1ItaWeXe/Gny3Fto4MuJtQaLeX1TCibVFNxepx198tsT8eu/9v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8Bx36s4op9p30wVAA--.5950S3;
+	Thu, 26 Feb 2026 09:30:32 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowJCxOMExop9p0glLAA--.62144S3;
+	Thu, 26 Feb 2026 09:30:27 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>
+Cc: WANG Rui <wangrui@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>,
+ Zixing Liu <liushuyu@aosc.io>, "H . Peter Anvin" <hpa@zytor.com>,
+ stable@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Menglong Dong <menglong8.dong@gmail.com>, Bibo Mao <maobibo@loongson.cn>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Hanlu Li <lihanlu@loongson.cn>,
+ Nathan Chancellor <nathan@kernel.org>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Wentao Guan <guanwentao@uniontech.com>, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260225104607.3803060-1-xry111@xry111.site>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <ab012e96-e0c8-cc26-ab09-9f2bd2f65b42@loongson.cn>
+Date: Thu, 26 Feb 2026 09:30:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20260225104607.3803060-1-xry111@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260225-separate-modinfo-from-elf-details-v1-1-387ced6baf4b@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXNwQrCMAyA4VcZORvoOh3MVxEPcUk1srWj6UQYe
- 3erHr/L/29gklUMzs0GWV5qmmJFe2hgfFC8CypXg3e+d94f0WShTEVwTqwxJAw5zShTQJZCOhl
- y1/aO6RS6YYDaWbIEff8el+vftt6eMpZvGPb9A+qYJnaFAAAA
-X-Change-ID: 20260224-separate-modinfo-from-elf-details-d3160da5f399
-To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
-Cc: Richard Henderson <richard.henderson@linaro.org>, 
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
- Vineet Gupta <vgupta@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
- Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
- Sam Creasey <sammy@sammy.net>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
- Stafford Horne <shorne@gmail.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Masahiro Yamada <masahiroy@kernel.org>, Alexey Gladkov <legion@kernel.org>, 
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
- linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org, 
- stable@vger.kernel.org, Ed W <lists@wildgooses.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11544; i=nathan@kernel.org;
- h=from:subject:message-id; bh=gYzWYbqUVyUWAs9EGE5ShllXabtNZu/2sUv3FCUuj7w=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDJnzCyeriCZdaxI+5Sf0rTM57l6D0sWGw+sO7C6JuqWuV
- lv08cGpjhIWBjEuBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjAR9SKG75EsPLMZNsz8+2PX
- foVJdy5bdNqZ6l3jFRDMuD/jsMiKLoa/Andbtyi/Z/w0p6XQ5urDDXN8jKJenk+u2/pZubeWW6q
- QDwA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxOMExop9p0glLAA--.62144S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3ArWDAF4fAw1rJw4kCr4Utrc_yoWfuFy3pF
+	n8Aan3GrWDGFyI9r9rtw4rZrZ5A3Z7Wr1Ygan0ka48Cr90gr1xJr4vyrs0qF1DJ3ykCryI
+	gF98tFW3uFs8AagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-Commit 3e86e4d74c04 ("kbuild: keep .modinfo section in
-vmlinux.unstripped") added .modinfo to ELF_DETAILS while removing it
-from DISCARDS, as it was needed in vmlinux.unstripped and ELF_DETAILS
-was present in all architecture specific vmlinux linker scripts. While
-this shuffle is fine for vmlinux, ELF_DETAILS and DISCARDS may be used
-by other linker scripts, such as the s390 and x86 compressed boot
-images, which may not expect to have a modinfo section. In certain
-circumstances, this could result in a bootloader failing to load the
-compressed kernel [1].
+On 2026-02-25 18:45, Xi Ruoyao wrote:
 
-Commit ddc6cbef3ef1 ("s390/boot/vmlinux.lds.S: Ensure bzImage ends with
-SecureBoot trailer") recently addressed this for the s390 bzImage but
-the same bug remains for parisc and x86. The presence of .modinfo in the
-x86 bzImage was the root cause of the issue workad around with
-commit d50f21091358 ("kbuild: align modinfo section for Secureboot
-Authenticode EDK2 compat"). misc.c in arch/x86/boot/compressed includes
-lib/decompress_unzstd.c, which in turn includes lib/xxhash.c and its
-MODULE_LICENSE / MODULE_DESCRIPTION macros due to the STATIC definition.
+> With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
+> of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
+> empty.  This is not valid, as the current DWARF specification mandates
+> the first byte of the EH frame to be the version number 1.  It causes
+> some unwinders to complain, for example the ClickHouse query profiler
+> spams the log with messages:
+>
+>      clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
+>      version: 127 at 7ffffffb0000
+>
+> Here "127" is just the byte located at the p_vaddr (0, i.e. the
+> beginning of the vDSO) of the empty GNU_EH_FRAME segment.
+> Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
+> the start of vDSO in the process VM image.
+>
+> In LoongArch the -fno-asynchronous-unwind-tables option seems just a
+> MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
+> "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
+> use -fno-asynchronous-unwind-tables").  IIUC it indicates some inherent
+> limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
+> we can simply flip it over to -fasynchronous-unwind-tables and pass
+> --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
+> stack for statistics even if the sample point is taken when the PC is in
+> the vDSO.
+>
+> However simply adjusting the options above would exploit an issue: when
+> the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
+> falled back to a machine-specific routine to match the code pattern of
+> rt_sigreturn and extract the registers saved in the sigframe if the code
+> pattern is matched.  As unwinding from signal handlers is vital for
+> libgcc to support pthread cancellation etc., the fall-back routine had
+> been silently keeping the LoongArch Linux systems functioning since
+> Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
+> format, fall-back routine will no longer be used and libgcc will fail
+> to unwind the sigframe, and unwinding from signal handlers will no
+> longer work, causing dozens of glibc test failures.  To make it possible
+> to unwind from signal handlers again, it's necessary to code the unwind
+> info in __vdso_rt_sigreturn via .cfi_* directives.
+>
+> The offsets in the .cfi_* directives depend on the layout of struct
+> sigframe, notably the offset of sigcontect in the sigframe.  To use the
+> offset in the assembly file, factor out struct sigframe into a header to
+> allow asm-offsets.c to output the offset for assembly.
+>
+> To work around a long-term issue in the libgcc unwinder (the pc is
+> unconditionally substracted by 1: doing so is technically incorrect for
+> a signal frame), a nop instruction is included with the two real
+> instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
+> hack has been used on x86 for a long time.
+>
+> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>   arch/loongarch/include/asm/sigframe.h | 22 ++++++++++++++
+>   arch/loongarch/kernel/asm-offsets.c   |  2 ++
+>   arch/loongarch/kernel/signal.c        |  6 +---
+>   arch/loongarch/vdso/Makefile          |  4 +--
+>   arch/loongarch/vdso/sigreturn.S       | 44 ++++++++++++++++++++++++---
+>   5 files changed, 67 insertions(+), 11 deletions(-)
+>   create mode 100644 arch/loongarch/include/asm/sigframe.h
+>
+> diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/include/asm/sigframe.h
+> new file mode 100644
+> index 000000000000..6889bcf5dc88
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/sigframe.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Separated from arch/loongarch/kernel/signal.c:
+> + *
+> + * Author: Hanlu Li <lihanlu@loongson.cn>
+> + *         Huacai Chen <chenhuacai@loongson.cn>
+> + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> + *
+> + * Derived from MIPS:
+> + * Copyright (C) 1991, 1992  Linus Torvalds
+> + * Copyright (C) 1994 - 2000  Ralf Baechle
+> + * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
+> + * Copyright (C) 2014, Imagination Technologies Ltd.
+> + */
+> +
+> +#include <uapi/asm/ucontext.h>
+> +#include <asm/siginfo.h>
+> +
+> +struct rt_sigframe {
+> +	struct siginfo rs_info;
+> +	struct ucontext rs_uctx;
+> +};
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+> index 3017c7157600..2cc953f113ac 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -16,6 +16,7 @@
+>   #include <asm/ptrace.h>
+>   #include <asm/processor.h>
+>   #include <asm/ftrace.h>
+> +#include <asm/sigframe.h>
+>   #include <vdso/datapage.h>
+>   
+>   static void __used output_ptreg_defines(void)
+> @@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
+>   	COMMENT("Linux sigcontext offsets.");
+>   	OFFSET(SC_REGS, sigcontext, sc_regs);
+>   	OFFSET(SC_PC, sigcontext, sc_pc);
+> +	OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
+>   	BLANK();
+>   }
+>   
+> diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+> index c9f7ca778364..e297d54ea638 100644
+> --- a/arch/loongarch/kernel/signal.c
+> +++ b/arch/loongarch/kernel/signal.c
+> @@ -37,6 +37,7 @@
+>   #include <asm/lbt.h>
+>   #include <asm/ucontext.h>
+>   #include <asm/vdso.h>
+> +#include <asm/sigframe.h>
+>   
+>   #ifdef DEBUG_SIG
+>   #  define DEBUGP(fmt, args...) printk("%s: " fmt, __func__, ##args)
+> @@ -51,11 +52,6 @@
+>   #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
+>   #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
+>   
+> -struct rt_sigframe {
+> -	struct siginfo rs_info;
+> -	struct ucontext rs_uctx;
+> -};
+> -
+>   struct _ctx_layout {
+>   	struct sctx_info *addr;
+>   	unsigned int size;
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index 520f1513f07d..294c16b9517f 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -26,7 +26,7 @@ cflags-vdso := $(ccflags-vdso) \
+>   	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+>   	-std=gnu11 -fms-extensions -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
+>   	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+> -	$(call cc-option, -fno-asynchronous-unwind-tables) \
+> +	$(call cc-option, -fasynchronous-unwind-tables) \
+>   	$(call cc-option, -fno-stack-protector)
+>   aflags-vdso := $(ccflags-vdso) \
+>   	-D__ASSEMBLY__ -Wa,-gdwarf-2
+> @@ -41,7 +41,7 @@ endif
+>   
+>   # VDSO linker flags.
+>   ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+> -	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
+> +	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr -T
+>   
+>   #
+>   # Shared build commands.
+> diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigreturn.S
+> index 9cb3c58fad03..e46c1deacb9e 100644
+> --- a/arch/loongarch/vdso/sigreturn.S
+> +++ b/arch/loongarch/vdso/sigreturn.S
+> @@ -12,13 +12,49 @@
+>   
+>   #include <asm/regdef.h>
+>   #include <asm/asm.h>
+> +#include <asm/asm-offsets.h>
+>   
+>   	.section	.text
+> -	.cfi_sections	.debug_frame
+>   
+> -SYM_FUNC_START(__vdso_rt_sigreturn)
+> +	.cfi_startproc
+> +	.cfi_signal_frame
+>   
+> +	/*
+> +	 * There is a struct rt_sigframe at $sp, set CFA to the address of
+> +	 * the struct sigcontext in the rt_sigframe to simplify the
+> +	 * offsets below.
+> +	 */
+> +	.cfi_def_cfa 3, RT_SIGFRAME_SC
+> +
+> +	/*
+> +	 * 72 is DWARF 2 CFA column for the return address from a signal
+> +	 * handler context on LoongArch, i.e. the PC stored in the
+> +	 * sigcontext.
+> +	 */
+Could we use `.cfi_return_column 0` here? Since I recommended
+llvm::libunwind that restore register to zero not destroy it
+and we can use it as a hack, [1]. But I don't know whether the
+libgcc works ok or not in this case.
+Otherwise I think we should update [2] first.
 
-Split .modinfo out from ELF_DETAILS into its own macro and handle it in
-all vmlinux linker scripts. Discard .modinfo in the places where it was
-previously being discarded from being in DISCARDS, as it has never been
-necessary in those uses.
+Others look good to me.
 
-Cc: stable@vger.kernel.org
-Fixes: 3e86e4d74c04 ("kbuild: keep .modinfo section in vmlinux.unstripped")
-Reported-by: Ed W <lists@wildgooses.com>
-Closes: https://lore.kernel.org/587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com/ [1]
-Tested-by: Ed W <lists@wildgooses.com> # x86_64
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-I intend to take this as a fix via the Kbuild tree for 7.0 after
-sufficient testing in -next, please Ack accordingly.
----
- arch/alpha/kernel/vmlinux.lds.S           | 1 +
- arch/arc/kernel/vmlinux.lds.S             | 1 +
- arch/arm64/kernel/vmlinux.lds.S           | 1 +
- arch/csky/kernel/vmlinux.lds.S            | 1 +
- arch/hexagon/kernel/vmlinux.lds.S         | 1 +
- arch/loongarch/kernel/vmlinux.lds.S       | 1 +
- arch/m68k/kernel/vmlinux-nommu.lds        | 1 +
- arch/m68k/kernel/vmlinux-std.lds          | 1 +
- arch/m68k/kernel/vmlinux-sun3.lds         | 1 +
- arch/mips/kernel/vmlinux.lds.S            | 1 +
- arch/nios2/kernel/vmlinux.lds.S           | 1 +
- arch/openrisc/kernel/vmlinux.lds.S        | 1 +
- arch/parisc/boot/compressed/vmlinux.lds.S | 1 +
- arch/parisc/kernel/vmlinux.lds.S          | 1 +
- arch/powerpc/kernel/vmlinux.lds.S         | 1 +
- arch/riscv/kernel/vmlinux.lds.S           | 1 +
- arch/s390/kernel/vmlinux.lds.S            | 1 +
- arch/sh/kernel/vmlinux.lds.S              | 1 +
- arch/sparc/kernel/vmlinux.lds.S           | 1 +
- arch/um/kernel/dyn.lds.S                  | 1 +
- arch/um/kernel/uml.lds.S                  | 1 +
- arch/x86/boot/compressed/vmlinux.lds.S    | 2 +-
- arch/x86/kernel/vmlinux.lds.S             | 1 +
- include/asm-generic/vmlinux.lds.h         | 4 +++-
- 24 files changed, 26 insertions(+), 2 deletions(-)
+[1] https://reviews.llvm.org/D137010#3907282
+[2] https://github.com/loongson/la-abi-specs/blob/release/ladwarf.adoc
 
-diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
-index 2efa7dfc798a..2d136c63db16 100644
---- a/arch/alpha/kernel/vmlinux.lds.S
-+++ b/arch/alpha/kernel/vmlinux.lds.S
-@@ -71,6 +71,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/arc/kernel/vmlinux.lds.S b/arch/arc/kernel/vmlinux.lds.S
-index 61a1b2b96e1d..6af63084ff28 100644
---- a/arch/arc/kernel/vmlinux.lds.S
-+++ b/arch/arc/kernel/vmlinux.lds.S
-@@ -123,6 +123,7 @@ SECTIONS
- 	_end = . ;
- 
- 	STABS_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 	DISCARDS
- 
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index ad6133b89e7a..2964aad0362e 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -349,6 +349,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	HEAD_SYMBOLS
-diff --git a/arch/csky/kernel/vmlinux.lds.S b/arch/csky/kernel/vmlinux.lds.S
-index d718961786d2..81943981b3af 100644
---- a/arch/csky/kernel/vmlinux.lds.S
-+++ b/arch/csky/kernel/vmlinux.lds.S
-@@ -109,6 +109,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/hexagon/kernel/vmlinux.lds.S b/arch/hexagon/kernel/vmlinux.lds.S
-index 1150b77fa281..aae22283b5e0 100644
---- a/arch/hexagon/kernel/vmlinux.lds.S
-+++ b/arch/hexagon/kernel/vmlinux.lds.S
-@@ -62,6 +62,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 	.hexagon.attributes 0 : { *(.hexagon.attributes) }
- 
-diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
-index 08ea921cdec1..d0e1377a041d 100644
---- a/arch/loongarch/kernel/vmlinux.lds.S
-+++ b/arch/loongarch/kernel/vmlinux.lds.S
-@@ -147,6 +147,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- #ifdef CONFIG_EFI_STUB
-diff --git a/arch/m68k/kernel/vmlinux-nommu.lds b/arch/m68k/kernel/vmlinux-nommu.lds
-index 2624fc18c131..45d7f4b0177b 100644
---- a/arch/m68k/kernel/vmlinux-nommu.lds
-+++ b/arch/m68k/kernel/vmlinux-nommu.lds
-@@ -85,6 +85,7 @@ SECTIONS {
- 	_end = .;
- 
- 	STABS_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	/* Sections to be discarded */
-diff --git a/arch/m68k/kernel/vmlinux-std.lds b/arch/m68k/kernel/vmlinux-std.lds
-index 1ccdd04ae462..7326586afe15 100644
---- a/arch/m68k/kernel/vmlinux-std.lds
-+++ b/arch/m68k/kernel/vmlinux-std.lds
-@@ -58,6 +58,7 @@ SECTIONS
-   _end = . ;
- 
-   STABS_DEBUG
-+  MODINFO
-   ELF_DETAILS
- 
-   /* Sections to be discarded */
-diff --git a/arch/m68k/kernel/vmlinux-sun3.lds b/arch/m68k/kernel/vmlinux-sun3.lds
-index f13ddcc2af5c..1b19fef201fb 100644
---- a/arch/m68k/kernel/vmlinux-sun3.lds
-+++ b/arch/m68k/kernel/vmlinux-sun3.lds
-@@ -51,6 +51,7 @@ __init_begin = .;
-   _end = . ;
- 
-   STABS_DEBUG
-+  MODINFO
-   ELF_DETAILS
- 
-   /* Sections to be discarded */
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index 2b708fac8d2c..579b2cc1995a 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -217,6 +217,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	/* These must appear regardless of  .  */
-diff --git a/arch/nios2/kernel/vmlinux.lds.S b/arch/nios2/kernel/vmlinux.lds.S
-index 37b958055064..206f92445bfa 100644
---- a/arch/nios2/kernel/vmlinux.lds.S
-+++ b/arch/nios2/kernel/vmlinux.lds.S
-@@ -57,6 +57,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/openrisc/kernel/vmlinux.lds.S b/arch/openrisc/kernel/vmlinux.lds.S
-index 049bff45f612..9b29c3211774 100644
---- a/arch/openrisc/kernel/vmlinux.lds.S
-+++ b/arch/openrisc/kernel/vmlinux.lds.S
-@@ -101,6 +101,7 @@ SECTIONS
- 	/* Throw in the debugging sections */
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
-         /* Sections to be discarded -- must be last */
-diff --git a/arch/parisc/boot/compressed/vmlinux.lds.S b/arch/parisc/boot/compressed/vmlinux.lds.S
-index ab7b43990857..87d24cc824b6 100644
---- a/arch/parisc/boot/compressed/vmlinux.lds.S
-+++ b/arch/parisc/boot/compressed/vmlinux.lds.S
-@@ -90,6 +90,7 @@ SECTIONS
- 	/* Sections to be discarded */
- 	DISCARDS
- 	/DISCARD/ : {
-+		*(.modinfo)
- #ifdef CONFIG_64BIT
- 		/* temporary hack until binutils is fixed to not emit these
- 		 * for static binaries
-diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlinux.lds.S
-index b445e47903cf..0ca93d6d7235 100644
---- a/arch/parisc/kernel/vmlinux.lds.S
-+++ b/arch/parisc/kernel/vmlinux.lds.S
-@@ -165,6 +165,7 @@ SECTIONS
- 	_end = . ;
- 
- 	STABS_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 	.note 0 : { *(.note) }
- 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 15850296c0a9..8fc11d6565bf 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -397,6 +397,7 @@ SECTIONS
- 	_end = . ;
- 
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 61bd5ba6680a..997f9eb3b22b 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -170,6 +170,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 	.riscv.attributes 0 : { *(.riscv.attributes) }
- 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 53bcbb91bb9b..2b62395e35bf 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -221,6 +221,7 @@ SECTIONS
- 	/* Debugging sections.	*/
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	/*
-diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
-index 008c30289eaa..169c63fb3c1d 100644
---- a/arch/sh/kernel/vmlinux.lds.S
-+++ b/arch/sh/kernel/vmlinux.lds.S
-@@ -89,6 +89,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
-index f1b86eb30340..7ea510d9b42f 100644
---- a/arch/sparc/kernel/vmlinux.lds.S
-+++ b/arch/sparc/kernel/vmlinux.lds.S
-@@ -191,6 +191,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
-index a36b7918a011..ad3cefeff2ac 100644
---- a/arch/um/kernel/dyn.lds.S
-+++ b/arch/um/kernel/dyn.lds.S
-@@ -172,6 +172,7 @@ SECTIONS
- 
-   STABS_DEBUG
-   DWARF_DEBUG
-+  MODINFO
-   ELF_DETAILS
- 
-   DISCARDS
-diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
-index a409d4b66114..30aa24348d60 100644
---- a/arch/um/kernel/uml.lds.S
-+++ b/arch/um/kernel/uml.lds.S
-@@ -113,6 +113,7 @@ SECTIONS
- 
-   STABS_DEBUG
-   DWARF_DEBUG
-+  MODINFO
-   ELF_DETAILS
- 
-   DISCARDS
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 587ce3e7c504..e0b152715d9c 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -88,7 +88,7 @@ SECTIONS
- 	/DISCARD/ : {
- 		*(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
- 		*(.hash) *(.gnu.hash)
--		*(.note.*)
-+		*(.note.*) *(.modinfo)
- 	}
- 
- 	.got.plt (INFO) : {
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 3a24a3fc55f5..4711a35e706c 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -427,6 +427,7 @@ SECTIONS
- 	.llvm_bb_addr_map : { *(.llvm_bb_addr_map) }
- #endif
- 
-+	MODINFO
- 	ELF_DETAILS
- 
- 	DISCARDS
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index eeb070f330bd..1e1580febe4b 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -848,12 +848,14 @@
- 
- /* Required sections not related to debugging. */
- #define ELF_DETAILS							\
--		.modinfo : { *(.modinfo) . = ALIGN(8); }		\
- 		.comment 0 : { *(.comment) }				\
- 		.symtab 0 : { *(.symtab) }				\
- 		.strtab 0 : { *(.strtab) }				\
- 		.shstrtab 0 : { *(.shstrtab) }
- 
-+#define MODINFO								\
-+		.modinfo : { *(.modinfo) . = ALIGN(8); }
-+
- #ifdef CONFIG_GENERIC_BUG
- #define BUG_TABLE							\
- 	. = ALIGN(8);							\
 
----
-base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-change-id: 20260224-separate-modinfo-from-elf-details-d3160da5f399
-
-Best regards,
---  
-Nathan Chancellor <nathan@kernel.org>
+Thanks,
+Jinyang
+> +	.cfi_return_column 72
+> +	.cfi_offset 72, SC_PC
+> +
+> +	/* The GPRs of the "caller" are also stored in the sigcontext.  */
+> +.irp	num, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, \
+> +	     17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+> +	.cfi_offset \num, SC_REGS + \num * SZREG
+> +.endr
+> +
+> +	/*
+> +	 * HACK: The dwarf2 unwind routine will subtract 1 from the return
+> +	 * address to get an address in the middle of the persumed call
+> +	 * instruction.  While in libgcc there exists a logic to avoid
+> +	 * subtracting 1 for the signal frame (a frame with the 'S'
+> +	 * augmentation that we've already added via .cfi_signal_frame),
+> +	 * unfortunately it doesn't really work: the check of signal frame
+> +	 * is at libgcc/unwind-dw2:1008 in GCC 15.2.0, but the flag it
+> +	 * checks will only get updated by the extract_cie_info call at line
+> +	 * 1025.  So include a nop before the real start to make up for it.
+> +	 * This is also the reason we don't use SYM_FUNC_START.
+> +	 */
+> +	nop
+> +SYM_START(__vdso_rt_sigreturn, SYM_L_GLOBAL, SYM_A_ALIGN)
+>   	li.w	a7, __NR_rt_sigreturn
+>   	syscall	0
+> -
+> -SYM_FUNC_END(__vdso_rt_sigreturn)
+> +	.cfi_endproc
+> +SYM_END(__vdso_rt_sigreturn, SYM_T_FUNC)
 
