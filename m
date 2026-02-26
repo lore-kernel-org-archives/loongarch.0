@@ -1,178 +1,177 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70BE30B52E
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 13:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772111140; cv=none; b=JKLhT9JvjA0dXuuSxenf8OgsoWeXcRoEpz908whZ6HCddgKJhydQpzQDZY6wM8wMjy+2syk8stH7guf8lYNq/pCj7o2Zl3PB/m4bdUsP02L+JQJm7Q50r/Y3GnaN5LYJfs384C48wy/eXMfNdKDz/EST4FAHFQP2zKCsd0Liqzc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772111140; c=relaxed/simple;
-	bh=Yy7TYOq9+DLW5lTV5qgrvxr0Wq43dOTY3mD9Ti2H2g8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mnmzS0wFTcZbabihxEKi4FsRnxhBqaxcUXgnSoJNs0qT9bEAIg1bvZOUmGWYWezkfg3HnzH8U9vF0WC+wApVAPjzHUDKolZ0cTeI6R3vgUtSMWivMqILx6Om4NgDMZDnJjc3mkhuY16Qh+g+BYU9o60XgHBkaUm8dcBqiJ3dpeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=P/ctHr74; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4B63AEF2F
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 14:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772114491; cv=pass; b=WNGZAFKGVVGFnxRH7FWjCUH3jbzyi9K3m+uRAEcMXPXStKIv2qU5T6Er081PmlxbZQLf7VLuz6F1WaYlTgEeZEPdpuD9VFjI6x9OLa43Ol/dL02Tuv8Jw+CGleGRcs7BpjxB0Ngb45AqXq+bWDGfwvbcwRSXFofXv3z4b6Qx28Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772114491; c=relaxed/simple;
+	bh=BwyF0qpF0HcXt65zTqNvfpD96B+4qTUiKq0XX1e2ZeA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qksN/moyxy9gyZtlIVawfP4M4Ahv9RNt+GmuKagkeV0qG0P0sJmqk4iSiH37AJNW6wismTOvj20K0w8JwDE9fUASC82Enk9br6tF7yxEoRfkqQUT8+PYYThGShe1DzyCzjexiKrM/vRKLnYQXhwrJejCRsYO10g0Xy8xcK84jaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=caNk7ZHd; arc=pass smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="P/ctHr74"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=5KMCn7a2GKKaDXYDNep+ArUoPi23K/kWIYh5pBL8RVE=;
-	b=P/ctHr74UaOq4A6mzMooorWBwvIH3h5TwQ3bYTUJ73OQ+qtkfUMG+xT/SWoMOl18gSo+wfLw8
-	ZQ5Vy7bUgT7ZR6HUShJjraNXtT93za/waZsQN/NSvUikGNxQidB9Ulfr8DutOIDeGB2Onhj8b4u
-	7sFx9+hyKvTa+Iz5UpvTSGM=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4fMBQm6QxGzLlTK;
-	Thu, 26 Feb 2026 21:00:48 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4F2AF40363;
-	Thu, 26 Feb 2026 21:05:36 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 26 Feb
- 2026 21:05:33 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <pmladek@suse.com>, <rdunlap@infradead.org>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <paulmck@kernel.org>,
-	<lirongqing@baidu.com>, <arnd@arndb.de>, <rppt@kernel.org>,
-	<ardb@kernel.org>, <leitao@debian.org>, <sourabhjain@linux.ibm.com>,
-	<jbohac@suse.cz>, <cfsworks@gmail.com>, <ryan.roberts@arm.com>,
-	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <hbathini@linux.ibm.com>,
-	<eajames@linux.ibm.com>, <songshuaishuai@tinylab.org>,
-	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<liaoyuanhong@vivo.com>, <brgerst@gmail.com>, <fuqiang.wang@easystack.cn>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v7 5/5] riscv: kexec: Add support for crashkernel CMA reservation
-Date: Thu, 26 Feb 2026 21:04:37 +0800
-Message-ID: <20260226130437.1867658-6-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260226130437.1867658-1-ruanjinjie@huawei.com>
-References: <20260226130437.1867658-1-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caNk7ZHd"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-5ff19e74779so570235137.0
+        for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 06:01:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772114477; cv=none;
+        d=google.com; s=arc-20240605;
+        b=N8mUwBw7MrdxIzvgN/pKl6yD2gutcloksJrM+Hzm3QjdoqyGJ1xvYoms6sQVZ0EPlC
+         3NfS7M5TLpGyHqIEnvtdvuh7qPnCFr1HiDGpXodXQyohTyO9cEiwXHNXwUd13gjlpgLQ
+         vDLnVrUT3h9uCJuN2Lpy5/JckgI8Qrc+ADWpGExtWmgJl0d37PYPomjL/fvsjqQ7UaEV
+         mzc/kihxDB5Exns4oLH6j2+a41iOYkZXN5fDFiS+lJXDvYEak3lZUsFkwfRew1rBdlgO
+         7zu0bAtQMPh+OvrPUPRp89hnNVFbbGYy0yNUGw+yFiWjIq5INQn6opC3zcNFUWiw6+01
+         lw7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
+        fh=MKjpi4u6CwEUanzTVoMZCRxnM73kznBkWZo91Uv7bUI=;
+        b=NEQZdlZlZRYb6JmavNSvsHnuJEfdfsRqiX3kBTTw6oy4/m7kMdIoMkTzHd2mXR3Xuw
+         29EBba3ipkEF7QvUozp0VEWABv1qTfMn3aILSvEFIQ1Cmbsso7cap/JKaqymgaC0/rUo
+         iRABKt6wqy+3YsUY0ZQXZtRaEoXYBiEq1FdkvyoVMUTj8r5rU+pQLhwVRGu03pKtVuM5
+         /q27THQ4LcETmZbjBWtdinr8Yha/HTd82btmEsxduNt1D+8/e7KxclzikEmMkQjoq/b/
+         Zs1sRkXQiOlo0LXpLZz0TSrOPjIQts6x0UznC1yWvoAzvXvPJUn/Vx6350SaYzi5Rneh
+         KF0Q==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772114477; x=1772719277; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
+        b=caNk7ZHdP/5H4tSgjI11k53FC1N9q23L83kiVkLWyAjsfeXcXFTT7pfWZ1nY3pjjJL
+         HkZxXYQtZCT7lnWF1wDXXt8hnvN3oSOSvRjISOa7MHFBTrFgrlY0sdHzQqwlcSxz3Y18
+         xYb2sLLfPyaxA5iDH6PGeT/Sp7C7eT6xFl+To0k5ewEtfSoJGCF7SgIXORJM724XTuQH
+         SUihMoN7a+jue/OV3oJMJRPsO9eaftE3yDh1sDFQpIwf4MRby1IblzwGAYE7b+EP2I3C
+         QzCR4PFHGU4QM8CUoxZXikZ1yKwCtYSErs1Ld2wGrtii8YfLBHbVjvr9NudJCjMf5ZX9
+         k2jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772114477; x=1772719277;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=02AQeb96mxx7nVc5qFj3TJGlqoShlbe8RZjJHkcNMSQ=;
+        b=d5blhIbp5qhcTdh39T0nweHw7qxlBuAs22T9rJ6fWxTgy4rHih3s77gfL9Y0NzHumW
+         /OOOfIB6Ok1IGyDbCmNT1Zr/teR+Jgygkez7cBhRGEbMkFrGVJYRo4BIeXri/whZ+gfZ
+         APqtlW/LcxAKtaXTdRw0ra3yFMWHo2gCV/EAqZO/ZDutE8y/nDCqXVHgO2WcU/RjH2uS
+         Y5sQCHCqEY1SoZ7ryKktTh1SudcULDDKIsvgLyc3L4eQd4PhVfEnLFcVvfhJrOBh9lkK
+         LYBMIG+k1CYxv9joNwsV8TB1s0GFctc1cT6y5CYo2QnVaIII6nqHsJ+M5wtCyDU2AswB
+         JbsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw/+eHbotHdHkfDSQ9nXbhPSP/xFlhVPhlWbdC+p3kIDTDBW2iyC5SNUF3iA4R17qEXNe/jixa5j8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx66EaOYXhfek0Eix+DKl4R/zZAs5IZ8V9J1lwlMFRTeIKI6vY2
+	quzcq0VKoH8e746jP7Nh6L1P/zZ1oI6vrzvoCITjQQlGKq5X9hx+XAYcHIeEv2/4SEDKEexb9/U
+	76l20DE2PkjPB+9a78kCWmFI/KRSphEk=
+X-Gm-Gg: ATEYQzxD1UIuOZmW2GXYqOQvfTyUV07b1HAe4YzRpf/t2AZHTDVBc+aIw1p3loIGRdT
+	nGIZhTF5acHURYNkv7NHFTS/ea5SQJmUaBoOHwldoNaqN9ZX0hbeHHytCZlB8lDxGgouvxnZLW4
+	kaFL6xzamEz3rIeXZK4/nDcBpCekIZ05JXFWtE4mioXAnsMP16U/uZNISYrsFP2BVmoy8npyDGj
+	uSudrDNWZTEO444b9JQzIVoDG+jYV6JRvkklh5Pxl5L3FsO06169JEc6Xlf7PLfjqvv66Bw7tVH
+	GUba/LJL1Cvv5Eep6ME=
+X-Received: by 2002:a05:6102:94d:b0:5fd:faf5:bc7a with SMTP id
+ ada2fe7eead31-5ff20caf80fmr1039579137.41.1772114476573; Thu, 26 Feb 2026
+ 06:01:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+References: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
+In-Reply-To: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Thu, 26 Feb 2026 22:01:04 +0800
+X-Gm-Features: AaiRm50ZU6anVyxfGx856SeSGod9RQJsxhSEsUiPo0miVMukWok53I-87oZ52NA
+Message-ID: <CAEyhmHSOtpcDpeKqZw0zWuYFq746xqx96RRhe5Mp8ctEJivU=Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Only use SC.Q when supported by the assembler
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	George Guo <guodongtai@kylinos.cn>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-crashkernel= command line option") and commit ab475510e042 ("kdump:
-implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation. This allows the kernel to dynamically allocate
-contiguous memory for crash dumping when needed, rather than permanently
-reserving a fixed region at boot time.
+On Wed, Feb 25, 2026 at 6:09=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> The 128-bit atomic cmpxchg implementation uses the SC.Q instruction.
+> Older versions of GNU AS do not support that instruction, erroring out:
+>
+> ERROR:root:{standard input}: Assembler messages:
+> {standard input}:4831: Error: no match insn: sc.q       $t0,$t1,$r14
+> {standard input}:6407: Error: no match insn: sc.q       $t0,$t1,$r23
+> {standard input}:10856: Error: no match insn: sc.q      $t0,$t1,$r14
+> make[4]: *** [../scripts/Makefile.build:289: mm/slub.o] Error 1
+>
+> (Binutils 2.41)
+>
+> Test support for SC.Q in kconfig and disable the atomics if the
+> instruction is not available.
+>
+> Fixes: f0e4b1b6e295 ("LoongArch: Add 128-bit atomic cmpxchg support")
+> Closes: https://lore.kernel.org/lkml/20260216082834-edc51c46-7b7a-4295-8e=
+a5-4d9a3ca2224f@linutronix.de/
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
 
-So extend crashkernel CMA reservation support to riscv. The following
-changes are made to enable CMA reservation:
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
 
-- Parse and obtain the CMA reservation size along with other crashkernel
-  parameters.
-- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use, which was
-  already done in of_kexec_alloc_and_setup_fdt().
-- Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which was
-  already done in the crash core.
-
-Update kernel-parameters.txt to document CMA support for crashkernel on
-riscv architecture.
-
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++--------
- arch/riscv/kernel/machine_kexec_file.c          |  2 +-
- arch/riscv/mm/init.c                            |  5 +++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index afb3112510f7..3fe5724d6e39 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1121,14 +1121,14 @@ Kernel parameters
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
--			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
--			CMA. This reservation is usable by the first system's
--			userspace memory and kernel movable allocations (memory
--			balloon, zswap). Pages allocated from this memory range
--			will not be included in the vmcore so this should not
--			be used if dumping of userspace memory is intended and
--			it has to be expected that some movable kernel pages
--			may be missing from the dump.
-+			[KNL, X86, ARM64, RISCV, PPC] Reserve additional crash
-+			kernel memory from CMA. This reservation is usable by
-+			the first system's userspace memory and kernel movable
-+			allocations (memory balloon, zswap). Pages allocated
-+			from this memory range will not be included in the vmcore
-+			so this should not be used if dumping of userspace memory
-+			is intended and it has to be expected that some movable
-+			kernel pages may be missing from the dump.
- 
- 			A standard crashkernel reservation, as described above,
- 			is still needed to hold the crash kernel and initrd.
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index d0e331d87155..297b910e4116 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -46,7 +46,7 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- 
- unsigned int arch_get_system_nr_ranges(void)
- {
--	unsigned int nr_ranges = 1; /* For exclusion of crashkernel region */
-+	unsigned int nr_ranges = 1 + crashk_cma_cnt; /* For exclusion of crashkernel region */
- 
- 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
- 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 811e03786c56..4cd49afa9077 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1398,7 +1398,7 @@ static inline void setup_vm_final(void)
-  */
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long low_size = 0;
-+	unsigned long long low_size = 0, cma_size = 0;
- 	unsigned long long crash_base, crash_size;
- 	bool high = false;
- 	int ret;
-@@ -1408,11 +1408,12 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- void __init paging_init(void)
--- 
-2.34.1
-
+>  arch/loongarch/Kconfig               | 3 +++
+>  arch/loongarch/include/asm/cmpxchg.h | 5 +++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d211c6572b0a..92068ff38685 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -304,6 +304,9 @@ config AS_HAS_LBT_EXTENSION
+>  config AS_HAS_LVZ_EXTENSION
+>         def_bool $(as-instr,hvcl 0)
+>
+> +config AS_HAS_SCQ_EXTENSION
+> +       def_bool $(as-instr,sc.q \$t0$(comma)\$t1$(comma)\$t2)
+> +
+>  config CC_HAS_ANNOTATE_TABLEJUMP
+>         def_bool $(cc-option,-mannotate-tablejump)
+>
+> diff --git a/arch/loongarch/include/asm/cmpxchg.h b/arch/loongarch/includ=
+e/asm/cmpxchg.h
+> index 58cabab6d90d..909f9274fe71 100644
+> --- a/arch/loongarch/include/asm/cmpxchg.h
+> +++ b/arch/loongarch/include/asm/cmpxchg.h
+> @@ -238,6 +238,8 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsi=
+gned long new, unsigned int
+>         arch_cmpxchg((ptr), (o), (n));                                  \
+>    })
+>
+> +#ifdef CONFIG_AS_HAS_SCQ_EXTENSION
+> +
+>  union __u128_halves {
+>         u128 full;
+>         struct {
+> @@ -290,6 +292,9 @@ union __u128_halves {
+>         BUILD_BUG_ON(sizeof(*(ptr)) !=3D 16);                            =
+ \
+>         __arch_cmpxchg128(ptr, o, n, "");                               \
+>  })
+> +
+> +#endif /* CONFIG_AS_HAS_SCQ_EXTENSION */
+> +
+>  #else
+>  #include <asm-generic/cmpxchg-local.h>
+>  #define arch_cmpxchg64_local(ptr, o, n) __generic_cmpxchg64_local((ptr),=
+ (o), (n))
+>
+> ---
+> base-commit: 2961f841b025fb234860bac26dfb7fa7cb0fb122
+> change-id: 20260218-loongarch-scq-2434ec5aec4d
+>
+> Best regards,
+> --
+> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+>
