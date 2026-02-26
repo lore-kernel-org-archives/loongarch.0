@@ -1,134 +1,76 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4187B2BE641
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 07:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A3B37418C
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 07:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772089232; cv=none; b=NQhl7ynfFpSh3XitlkcfyXIZJUYMmAWszkru7CN/MHQgAam+81YCG3M7xsSZ+9CW1gXTPSUe4F4dxilUmiRK3ncaXciC39hjp7duALxZ/+vv4J9+Zcqr8htMQ9bgliPRwFgvj4MWQZ39w+RzrTy9f8Gz1qf+a+qQSkpUf3nfRUs=
+	t=1772089787; cv=none; b=d4DdoomxNB+B8+i3x0u7X+IkzIenYS/StbGSEZPUxSnTWmQ+2pYiaaTIoP768Bw9CTH1T8Ra+uw7gt1spq+gEvwuyC89z2TdaKP5HYYAsQHYyxqV4BmCQ7ag9TUwo9Ea0GpfBR8TeCoodWXRLQfaXKmCNp4lpdUUEwr8y4M4/8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772089232; c=relaxed/simple;
-	bh=triRoJFAO9QGmTQRAWS+cLWW1nI1iOFeYJbdtBXZxJI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eVtiBP9igQbpLOocpm91j4sTQlnAPCIP8XI489ohAGo+G/Oe3EZo9weDa7D4uzjoPHAL506Fdf3hcIHHz+ZPFdMJSToJciFGduf3yD7PeClB0R1H0lDWL44pZQpULiIH+hEEpUDNqDYyFQgiWnG72m4oMUFr7CwQY+LRfqe3e/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jY++06bZ; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1772089787; c=relaxed/simple;
+	bh=4pn1M7qsn+PIMka5vqZd6ooy+lAfq/v/u5sfMvm/f90=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pbiW6CYeVZ89bdDrGefLSloAnoELQkOFqgKGEFLXNf6QZppEY6ZeYgok+/LKrRo7xmw5QubSHijA07PzLXH1q7nKXN1W5joDTVfQEAMqt8CkInO2BLTD1sQYBReWOvtFqDCKYkpu9VRbhtz1ohzYxTz4F3fcjWXx1KjwgzF942E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=cUQqAjek; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jY++06bZ"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ade574f05eso3240725ad.3
-        for <loongarch@lists.linux.dev>; Wed, 25 Feb 2026 23:00:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772089230; x=1772694030; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PkyUhk8dgF38d8q1EBE3loZO3CJfZ89yev/FRmDZYJk=;
-        b=jY++06bZ3vqtt0TOYxxM7bva3eo1fdwE+sdJM2GZw/5NprlmErJ/tPAD/gYID9c07Y
-         hyWidz9tpJWr9yJh7P+KxUu6i4L2JPjCGm3Fry8ggRc561TAPZgDNAVol98KtZpTsA3v
-         0hrYsFdRjg5VenEeIBN9eKh/CSqv+MrQnkK55fjqZ3oC9GUH5a3kGwSVqzu83d6ZtDng
-         ZA+bGZK67WPAFBYmeW4O1dt0Eg53xMwMIR4R3eFAtQOytL3koMaRi6qza9jYLBkE684c
-         yiRARtGfFCwLSwRKtTw+2xvUOmlqGCQArz52eKFBMYAa5E5YCX0GyvYjzszuKbbU2bM6
-         guhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772089230; x=1772694030;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PkyUhk8dgF38d8q1EBE3loZO3CJfZ89yev/FRmDZYJk=;
-        b=BWIP7eLZLEEVfv3vD2nPymZIJYD0Xqj4ac6YHMKwoBpdStR+Mc9KIeaiT4EB94jJfa
-         FhUg5dicays/xFKseVPKYFJbGlTFULSuT9bX5u0OSbvZvsIfimWisbJakrqSGgUT+M5q
-         z8EC2Wd/GA2TuA0CvUpftg3Ra3/g5w8HeTslHAKGPLCFjGXhvVDoCGhHwLpRn8KtGBfx
-         AvOroFtvS1Z2vOPZbHbPag6D7UrohkgmMsGEENJaQC4F/1Vk6qY6uP0kdvB9hG8XxfIc
-         RDYhtreSrM+cI7QpYa83dNFAjLcNU4+Q+ioNoTFl5YmvtfIdpdKP+Y/1hDZnp3SoE9Ss
-         Oa5g==
-X-Gm-Message-State: AOJu0YwlAzJGUvN13sataWCjKzn5uSLq1tgpai6a60vTLC9SukbBbqZG
-	dedqZfWvy4e1hmMARfNo+3YdKRiQQyk7B8l7Wdsvsm4S+VVKfuOVoJzP
-X-Gm-Gg: ATEYQzzgUwn2ZQ5TpVYkv35ldwyPwDHxxFZwmyyLD9216v7YAnJyri2WetV04Ypjj/r
-	QDZ1zk43ssIjejCLTDiPKXsARMM/SJaBAe/RzmpI5ftt8BO4+cWJlnlk9lCK7gVElaWk83eQmbP
-	NvsxxZCL6e5YxunhoMG6GnO4cMOhyFvoMI6Tp7TcPA8kqV2ZDYttIGA4/FIMbUrL12QliUC+s2d
-	hQuOMXxYTTwpsfhIbdfAAi4/nfgLZGUtwY3Fp1577H12JlY9PCnENfjzVzgScfwv1eARVzWlZZD
-	5ebXf21Skn2GTuhl4Xx7w7BwfzRwLOcJvAFdwXns3XERBikB8Kczjd7nE6jcIcYeugba44KgQ2O
-	W7dQKwRB971mgrtLVKOdD2WW0wsQAWmfm/qGq40KdKztg4Gs7Ke9YWp5F+XNH9ZCA1baYP10DIa
-	KjBf4hiy/ZO5iPcOQUlNJ7QdyhUjFjgDn6VAP0iLAE9fQRODY1r/yG9nAr6rjFbJsmPc5wLw==
-X-Received: by 2002:a17:903:3848:b0:2ad:cede:3a1a with SMTP id d9443c01a7336-2ae03495f6fmr14300495ad.39.1772089230036;
-        Wed, 25 Feb 2026 23:00:30 -0800 (PST)
-Received: from localhost.localdomain ([14.116.239.35])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2adfb5b2296sm14803135ad.5.2026.02.25.23.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 23:00:29 -0800 (PST)
-From: Hengqi Chen <hengqi.chen@gmail.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	chenhuacai@kernel.org,
-	yangtiezhu@loongson.cn,
-	vincent.mc.li@gmail.com,
-	menglong8.dong@gmail.com
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH bpf-next 3/3] bpf/selftests: Enable fsession tests for LoongArch
-Date: Thu, 26 Feb 2026 06:59:51 +0000
-Message-ID: <20260226065952.4082859-4-hengqi.chen@gmail.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20260226065952.4082859-1-hengqi.chen@gmail.com>
-References: <20260226065952.4082859-1-hengqi.chen@gmail.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="cUQqAjek"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1772089783;
+	bh=4pn1M7qsn+PIMka5vqZd6ooy+lAfq/v/u5sfMvm/f90=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=cUQqAjeke9yHJg/esZCZv2gceO7gysCnd0uLGIiwOlE8k86iZC6rpKKe/dY4zNJ9y
+	 ad3KgJKjc4G2xwA2/LRlKxm6zrveCQuftbUvEwsO60jMwaBDbiGGPXH/eYJaIl2MAv
+	 2AaJtyhEwtXR55nJIqoY16uPhnPmnjtMk4h18wmY=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id E03D31A41CF;
+	Thu, 26 Feb 2026 02:09:36 -0500 (EST)
+Message-ID: <1d86afeeb6f9e7aa4ab1310d6339ad8dfb349a00.camel@xry111.site>
+Subject: Re: [PATCH v7] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
+From: Xi Ruoyao <xry111@xry111.site>
+To: Manivannan Sadhasivam <mani@kernel.org>, liziyao@uniontech.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
+ =?gb2312?Q?Wilczy=A8=BDski?=	 <kwilczynski@kernel.org>, Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas	 <bhelgaas@google.com>,
+ niecheng1@uniontech.com, zhanjun@uniontech.com, 	guanwentao@uniontech.com,
+ Kexy Biscuit <kexybiscuit@aosc.io>, 	linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	loongarch@lists.linux.dev,
+ kernel@uniontech.com, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Lain Fearyncess Yang <fsf@live.com>, Ayden
+ Meng <aydenmeng@yeah.net>,  Mingcong Bai <jeffbai@aosc.io>,
+ stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 26 Feb 2026 15:09:34 +0800
+In-Reply-To: <taoupjxwaewzvolh2n6bciji36j4dx6jtvjf7k6tt5hdt54hjw@rrgbu47umz4v>
+References: <20260121-loongson-pci1-v7-1-fc79c85a574d@uniontech.com>
+	 <taoupjxwaewzvolh2n6bciji36j4dx6jtvjf7k6tt5hdt54hjw@rrgbu47umz4v>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Now that the LoongArch JIT supports BPF_TRACE_FSESSION, allow
-the fsession-related tests to run on LoongArch.
+On Thu, 2026-02-26 at 12:01 +0530, Manivannan Sadhasivam wrote:
+> > Cc: stable@vger.kernel.org
+>=20
+> Since this is a bug fix which needs to be backported, what is the commit =
+SHA for
+> the Fixes tag? The one which added Loongson-3C6000 support to this driver=
+.
 
-    $ ./test_progs -a fsession_test,get_func_args_test,get_func_ip_test
-    #136/1   fsession_test/fsession_test:OK
-    #136/2   fsession_test/fsession_reattach:OK
-    #136/3   fsession_test/fsession_cookie:OK
-    #136     fsession_test:OK
-    #138     get_func_args_test:OK
-    #139     get_func_ip_test:OK
-    Summary: 3/3 PASSED, 0 SKIPPED, 0 FAILED
+The PCI controller driver didn't have any change specifically for
+Loongson-3C6000 before this one, but the kernel will only boot on
+Loongson-3C6000 if the AVECINTC support (commit ae16f05c928a, i.e. Linux
+6.12+) is available.
 
-Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
----
- tools/testing/selftests/bpf/progs/get_func_args_test.c | 3 ++-
- tools/testing/selftests/bpf/progs/get_func_ip_test.c   | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/progs/get_func_args_test.c b/tools/testing/selftests/bpf/progs/get_func_args_test.c
-index 075a1180ec26..afb185fdf60c 100644
---- a/tools/testing/selftests/bpf/progs/get_func_args_test.c
-+++ b/tools/testing/selftests/bpf/progs/get_func_args_test.c
-@@ -167,7 +167,8 @@ int BPF_PROG(tp_test2)
- }
- 
- __u64 test7_result = 0;
--#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_target_riscv)
-+#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-+    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
- SEC("fsession/bpf_fentry_test1")
- int BPF_PROG(test7)
- {
-diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-index 45eaa54d1ac7..3816a3616fbe 100644
---- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-+++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-@@ -106,7 +106,8 @@ int BPF_URETPROBE(test8, int ret)
- 
- __u64 test9_entry_result = 0;
- __u64 test9_exit_result = 0;
--#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_target_riscv)
-+#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-+    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
- SEC("fsession/bpf_fentry_test1")
- int BPF_PROG(test9, int a)
- {
--- 
-2.43.5
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
