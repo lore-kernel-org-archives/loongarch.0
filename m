@@ -1,145 +1,234 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B406314A8D
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 09:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D5C396D2F
+	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 09:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772098533; cv=none; b=B/6eidH/sxSov2m6Uwe5dxbGV5gvwTOLm6+Vc/+5WgioerUtjWYhaT9SnGqYtJso65/tgeQxgJaGJV3oJEOWTv3DtPsGAa3+s7hI1pTI3vwjpYGHYntN8x3dcVkBKjkH+Ran0EJgutQpvrWKtQuIyI4owRczYBZ6VsuGGQ21giw=
+	t=1772099094; cv=none; b=jAPggMiZGn5V5PblLfnongm5lvrwA1Bwy4Ns7cqnJoRKwFZdLxgNjVqjz7nwjPxKoZ1BU/9H/isR1SwLXqoEPvMZ865eLIhLuthEdMA0xVF9Av+ZkGCAacYsqCgASDULXPutVA4VjVDYcy80AqTFufZMQEJO9OYZGDNu2hp2kEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772098533; c=relaxed/simple;
-	bh=p5gP5tx9RQ7vZD9jKRbxdIIw6QLuFGxeAWtY8jM32Ds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uaVNF6E0Nr3d14TOZStjp9D+nr+9h2tB4+oivZjzQr0vBxMjC1JjE4aV604bq3RMdmoJstqYw39UWMD/L/cCoOYI1LoafzKwHHpNfctmSdBXIFpvUtaT1z6WFswSKY31vX2Ghi5+PZRtjRM/DmPIPkE3IK0pxGna9JR/UuvanUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=DWNv0GeH; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=DWNv0GeH; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1772099094; c=relaxed/simple;
+	bh=E7N92gzXpH05h23WdhX6bsUGcMmNWSNLUuFYwgCc9uA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FcFMBMQ+2w5VUHuP90HH07dmHHJ60F95OeRHNTA/o1USnRKzbDIlUR+5ZrAEY9k5I8SFX01GRFbcSqWTal1wMxbfjL2phuMgais06A2uiqKhe56jw7+3Ain8GckcOkJX08Kh7h1DBKHBmcthXgmr+sL/++xG2d+AHWZtNU4Jn7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Z5bkXRIk; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="DWNv0GeH";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="DWNv0GeH"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=cArUbXgPd0s4ZtREeL/7x46kP7PE/lat666eUsS6sDM=;
-	b=DWNv0GeHcKAOhD5xvaCowiagwlW275NAmdFdeG8qlLEXg0HK9DVne1d75o15RGyJa7vwcAWO6
-	vwEOtoSqxVKaatv+CDrTZSmvfXkTGoof3Dzf35VFrW/nnCipbp9TUQ6QsuUvS03Qv/DbB9CjEPb
-	Q7rsPApKKIvJvhGOP5dZOd0=
-Received: from canpmsgout01.his.huawei.com (unknown [172.19.92.178])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4fM5sL1vvrz1BGH1
-	for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 17:35:02 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=cArUbXgPd0s4ZtREeL/7x46kP7PE/lat666eUsS6sDM=;
-	b=DWNv0GeHcKAOhD5xvaCowiagwlW275NAmdFdeG8qlLEXg0HK9DVne1d75o15RGyJa7vwcAWO6
-	vwEOtoSqxVKaatv+CDrTZSmvfXkTGoof3Dzf35VFrW/nnCipbp9TUQ6QsuUvS03Qv/DbB9CjEPb
-	Q7rsPApKKIvJvhGOP5dZOd0=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fM5m15ySPz1T4Fg;
-	Thu, 26 Feb 2026 17:30:25 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11EC340567;
-	Thu, 26 Feb 2026 17:35:19 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 26 Feb 2026 17:35:15 +0800
-Message-ID: <15ea8a98-2b0c-dd51-b0d4-911905b194c3@huawei.com>
-Date: Thu, 26 Feb 2026 17:35:14 +0800
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Z5bkXRIk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1772099090;
+	bh=C+isJdGDTiiQ6TnD/DAtbrRXRdlm8oylfOj/2zTVcd0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Z5bkXRIkAL9O5K2+Wmwig9R5HkrtZ2cpw+nZqMppE0F8grMS6uUYqEttKRE6BH877
+	 YY59sZuuRj2OdAhNEqZQdnkr9R9tnl8M2B0EsunBSaOwyGHjnB/v6btGxxJBMLSnPN
+	 UYTlfLz+B+WMI2/d2a4zzLXpvsL5eYXVvBhck9bE=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id D5F361A4242;
+	Thu, 26 Feb 2026 04:44:45 -0500 (EST)
+Message-ID: <343022ca4deda29affa70f399d238049078d8832.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>, WANG Rui <wangrui@loongson.cn>, 
+ Mingcong Bai <jeffbai@aosc.io>, Zixing Liu <liushuyu@aosc.io>, "H . Peter
+ Anvin" <hpa@zytor.com>, 	stable@vger.kernel.org, "Peter Zijlstra (Intel)"
+ <peterz@infradead.org>,  Menglong Dong <menglong8.dong@gmail.com>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>,  Hanlu Li
+ <lihanlu@loongson.cn>, Nathan Chancellor <nathan@kernel.org>, Jiaxun Yang	
+ <jiaxun.yang@flygoat.com>, Ard Biesheuvel <ardb@kernel.org>, Wentao Guan	
+ <guanwentao@uniontech.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 26 Feb 2026 17:44:44 +0800
+In-Reply-To: <CAAhV-H4pUw_OOSbQOLO5pZUmkYU1F0_13GAMzKmkzedBPdYOAA@mail.gmail.com>
+References: <20260225104607.3803060-1-xry111@xry111.site>
+	 <CAAhV-H4pUw_OOSbQOLO5pZUmkYU1F0_13GAMzKmkzedBPdYOAA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v6 1/5] powerpc/crash: sort crash memory ranges before
- preparing elfcorehdr
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <pmladek@suse.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <paulmck@kernel.org>,
-	<lirongqing@baidu.com>, <arnd@arndb.de>, <ardb@kernel.org>,
-	<leitao@debian.org>, <rppt@kernel.org>, <cfsworks@gmail.com>,
-	<ryan.roberts@arm.com>, <sourabhjain@linux.ibm.com>,
-	<tangyouling@kylinos.cn>, <eajames@linux.ibm.com>, <hbathini@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <songshuaishuai@tinylab.org>,
-	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <jbohac@suse.cz>,
-	<brgerst@gmail.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
-References: <20260224085342.387996-1-ruanjinjie@huawei.com>
- <20260224085342.387996-2-ruanjinjie@huawei.com>
- <aaARRZh9k_0oG3Qo@MiWiFi-R3L-srv>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <aaARRZh9k_0oG3Qo@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
 
+On Thu, 2026-02-26 at 17:22 +0800, Huacai Chen wrote:
+> Hi, Ruoyao,
+>=20
+> On Wed, Feb 25, 2026 at 6:46=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wr=
+ote:
+> >=20
+> > With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
+> > of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
+> > empty.=C2=A0 This is not valid, as the current DWARF specification mand=
+ates
+> > the first byte of the EH frame to be the version number 1.=C2=A0 It cau=
+ses
+> > some unwinders to complain, for example the ClickHouse query profiler
+> > spams the log with messages:
+> >=20
+> > =C2=A0=C2=A0=C2=A0 clickhouse-server[365854]: libunwind: unsupported .e=
+h_frame_hdr
+> > =C2=A0=C2=A0=C2=A0 version: 127 at 7ffffffb0000
+> >=20
+> > Here "127" is just the byte located at the p_vaddr (0, i.e. the
+> > beginning of the vDSO) of the empty GNU_EH_FRAME segment.
+> > Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
+> > the start of vDSO in the process VM image.
+> >=20
+> > In LoongArch the -fno-asynchronous-unwind-tables option seems just a
+> > MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specifi=
+c
+> > "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
+> > use -fno-asynchronous-unwind-tables").=C2=A0 IIUC it indicates some inh=
+erent
+> > limitation of the MIPS ELF ABI and has nothing to do with LoongArch.=C2=
+=A0 So
+> > we can simply flip it over to -fasynchronous-unwind-tables and pass
+> > --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind t=
+he
+> > stack for statistics even if the sample point is taken when the PC is i=
+n
+> > the vDSO.
+> >=20
+> > However simply adjusting the options above would exploit an issue: when
+> > the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
+> > falled back to a machine-specific routine to match the code pattern of
+> > rt_sigreturn and extract the registers saved in the sigframe if the cod=
+e
+> > pattern is matched.=C2=A0 As unwinding from signal handlers is vital fo=
+r
+> > libgcc to support pthread cancellation etc., the fall-back routine had
+> > been silently keeping the LoongArch Linux systems functioning since
+> > Linux 5.19.=C2=A0 But when we start to emit GNU_EH_FRAME with the corre=
+ct
+> > format, fall-back routine will no longer be used and libgcc will fail
+> > to unwind the sigframe, and unwinding from signal handlers will no
+> > longer work, causing dozens of glibc test failures.=C2=A0 To make it po=
+ssible
+> > to unwind from signal handlers again, it's necessary to code the unwind
+> > info in __vdso_rt_sigreturn via .cfi_* directives.
+> >=20
+> > The offsets in the .cfi_* directives depend on the layout of struct
+> > sigframe, notably the offset of sigcontect in the sigframe.=C2=A0 To us=
+e the
+> > offset in the assembly file, factor out struct sigframe into a header t=
+o
+> > allow asm-offsets.c to output the offset for assembly.
+> >=20
+> > To work around a long-term issue in the libgcc unwinder (the pc is
+> > unconditionally substracted by 1: doing so is technically incorrect for
+> > a signal frame), a nop instruction is included with the two real
+> > instructions in __vdso_rt_sigreturn in the same FDE PC range.=C2=A0 The=
+ same
+> > hack has been used on x86 for a long time.
+> >=20
+> > Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> > ---
+> > =C2=A0arch/loongarch/include/asm/sigframe.h | 22 ++++++++++++++
+> > =C2=A0arch/loongarch/kernel/asm-offsets.c=C2=A0=C2=A0 |=C2=A0 2 ++
+> > =C2=A0arch/loongarch/kernel/signal.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 6 +---
+> > =C2=A0arch/loongarch/vdso/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +--
+> > =C2=A0arch/loongarch/vdso/sigreturn.S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 44 ++++++++++++++++++++++++---
+> > =C2=A05 files changed, 67 insertions(+), 11 deletions(-)
+> > =C2=A0create mode 100644 arch/loongarch/include/asm/sigframe.h
+> >=20
+> > diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/inc=
+lude/asm/sigframe.h
+> > new file mode 100644
+> > index 000000000000..6889bcf5dc88
+> > --- /dev/null
+> > +++ b/arch/loongarch/include/asm/sigframe.h
+> > @@ -0,0 +1,22 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +/*
+> > + * Separated from arch/loongarch/kernel/signal.c:
+> > + *
+> > + * Author: Hanlu Li <lihanlu@loongson.cn>
+> > + *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Huacai Chen <chenhu=
+acai@loongson.cn>
+> > + * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
+> > + *
+> > + * Derived from MIPS:
+> > + * Copyright (C) 1991, 1992=C2=A0 Linus Torvalds
+> > + * Copyright (C) 1994 - 2000=C2=A0 Ralf Baechle
+> > + * Copyright (C) 1999, 2000 Silicon Graphics, Inc.
+> > + * Copyright (C) 2014, Imagination Technologies Ltd.
+> > + */
+> I think we don't need to copy so many lines here, they are enough in sign=
+al.c.
 
+Will remove them in V2.
 
-On 2026/2/26 17:24, Baoquan He wrote:
-> On 02/24/26 at 04:53pm, Jinjie Ruan wrote:
->> From: Sourabh Jain <sourabhjain@linux.ibm.com>
->>
->> During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
->> the removed memory. While updating the crash memory ranges for this
->> operation, the crash memory ranges array can become unsorted. This
->> happens because remove_mem_range() may split a memory range into two
->> parts and append the higher-address part as a separate range at the end
->> of the array.
->>
->> So far, no issues have been observed due to the unsorted crash memory
->> ranges. However, this could lead to problems once crash memory range
->> removal is handled by generic code, as introduced in the upcoming
->> patches in this series.
->>
->> Currently, powerpc uses a platform-specific function,
->> remove_mem_range(), to exclude hot-removed memory from the crash memory
->> ranges. This function performs the same task as the generic
->> crash_exclude_mem_range() in crash_core.c. The generic helper also
->> ensures that the crash memory ranges remain sorted. So remove the
->> redundant powerpc-specific implementation and instead call
->> crash_exclude_mem_range_guarded() (which internally calls
->> crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Baoquan he <bhe@redhat.com>
->> Cc: Jinjie Ruan <ruanjinjie@huawei.com>
->> Cc: Hari Bathini <hbathini@linux.ibm.com>
->> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
->> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
->> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
->> Cc: linux-kernel@vger.kernel.org
->> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> 
-> You should add your own Signed-off-by since you sent it out.
+> > +
+> > +#include <uapi/asm/ucontext.h>
+> Is it a requirement that the UAPI header should be the first?
 
-Ack, I'll add my Signed-off-by in the next revision.
-Thanks,
+I don't think so, and it seems the uapi/ component isn't needed here (as
+Kbuild passes -Iarch/$(ARCH)/include/uapi).  I'd remove the uapi/
+component and move it after siginfo.h following the alphabetical order.
 
-> 
->> ---
->>  arch/powerpc/include/asm/kexec_ranges.h |  4 +-
->>  arch/powerpc/kexec/crash.c              |  5 +-
->>  arch/powerpc/kexec/ranges.c             | 87 +------------------------
->>  3 files changed, 7 insertions(+), 89 deletions(-)
-> ......snip...
-> 
-> 
+> > +#include <asm/siginfo.h>
+
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * HACK: The dwarf2 unwind r=
+outine will subtract 1 from the return
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * address to get an address=
+ in the middle of the persumed call
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * instruction.=C2=A0 While =
+in libgcc there exists a logic to avoid
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * subtracting 1 for the sig=
+nal frame (a frame with the 'S'
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * augmentation that we've a=
+lready added via .cfi_signal_frame),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * unfortunately it doesn't =
+really work: the check of signal frame
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * is at libgcc/unwind-dw2:1=
+008 in GCC 15.2.0, but the flag it
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * checks will only get upda=
+ted by the extract_cie_info call at line
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * 1025.=C2=A0 So include a =
+nop before the real start to make up for it.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * This is also the reason w=
+e don't use SYM_FUNC_START.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nop
+> This hack is out of my knowledge, can "nop" be after SYM_START()?
+
+I guess we can do it if:
+
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.=
+c
+index e297d54ea638..b2c7f5754818 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -1009,7 +1009,7 @@ static void handle_signal(struct ksignal *ksig, struc=
+t pt_regs *regs)
+=20
+ 	rseq_signal_deliver(ksig, regs);
+=20
+-	ret =3D setup_rt_frame(vdso + current->thread.vdso->offset_sigreturn, ksi=
+g, regs, oldset);
++	ret =3D setup_rt_frame(vdso + current->thread.vdso->offset_sigreturn + 4,=
+ ksig, regs, oldset);
+=20
+ 	signal_setup_done(ret, ksig, 0);
+ }
+
+I.e. the FDE must include one instruction before what we set up as the
+return address of the signal handler.  But I don't think this would be
+prettier.
+>=20
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
