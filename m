@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAC64779A4;
-	Fri, 27 Feb 2026 19:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363CD466B75
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 19:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772221412; cv=none; b=TRhrgbkqadRwJHjayzQWW68EbCCUd+IT1yak6g7cHktXzoHKn6G32ECBDVwsqqib4QyvRo8wZRA3uVyAj3tRVhNZ8NLbmVv/tdgPpM4Ig8b1Us10EsNxNS+GqSaT1DoD1W8PJdB/XPZcl9Q7Bz9SKd2Tw+XG2WXGaVJxaMR585s=
+	t=1772221414; cv=none; b=ZSXqLsOwo556OC3JW+Mdi8cYxTgb0pbP5fkYnxX1Hc4JVsMtjDnnLHpVMOI5iXNtanlAPIN+gVWu2EBPji5SwtLXDMVGC4gNpgUOjwpbwIuL2tl5Ht+ZS3es4+QnSzpL5uuOZ+3cqwt14rFT0tDuDDi8zGAoLyAZmdF5vxunTAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772221412; c=relaxed/simple;
-	bh=TtTBjHeyxhGqdZ1CkWcmkv4w9nL6WGbMg0cd8jsgw08=;
+	s=arc-20240116; t=1772221414; c=relaxed/simple;
+	bh=FHdzeRKulPcy6fiq+UUCtu6gFm6WIXAqf8YglnUe5co=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RpqmvCjJRCGgeCIEL4fqy6/GYkgpDwOwfAy645dHvT6NSuawsW87T/mK6Mf+qBqjMocsfX+IpmC39ierS4yes28Mfe5w6xgJu1XHG7LyMjy2Oa4ZRGhSEVQjAskqRc0xJs4Vly8B+P0eGrY0XRzN6UChs6mnWmgDb+VkS/3kunQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0M1Ly6c; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uZZp1VuhA/RaxWVJbditNPNWO5PomC6ChmmgkXvwGs3bj/+1VSw40QjdvnD0xMNre0ZNcMkVA3insrit0dvr71x8gfO5i2JBUIMmELohfoJvkibK5v7bArp6PsLy96ntaWZKaEE9ccB4/Yzyd404U6lW6QlbQbyFtWlYDFD07X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyRscqYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0M1Ly6c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99114C116C6;
-	Fri, 27 Feb 2026 19:43:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyRscqYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440E8C19423;
+	Fri, 27 Feb 2026 19:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772221412;
-	bh=TtTBjHeyxhGqdZ1CkWcmkv4w9nL6WGbMg0cd8jsgw08=;
+	s=k20201202; t=1772221413;
+	bh=FHdzeRKulPcy6fiq+UUCtu6gFm6WIXAqf8YglnUe5co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k0M1Ly6cKPu0RIage8jMCteBV69mwxszdQd1MVvptiJqScirOfeNEnm/qJWnzBm38
-	 +89SjwEQDZWfw6CRnX5hAcdtFAlDj1NZ6et0UB+vn1bOwNbmXQvjJBexzgTZvg6IN1
-	 EOpIfrvTSlt72AW1c1yEfBkH2KJiOniG5TbeXm8Rn4CfoL9otGuDsj2jz3g78qPDxu
-	 e6Tv8cu9UFCrizTIZL9A9IO8HDePpBXiSFaoICJrIhJNPC/eBhvbeH6Nmt/li44By+
-	 l88s7vBUp2w/ZHCiXSfTAandGPfdTx94k/WAjlb3Wp49tVt88Megdw8eBhmSeJyfWO
-	 fgDK0a8A7ajGw==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C0FFFF40069;
-	Fri, 27 Feb 2026 14:43:30 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Fri, 27 Feb 2026 14:43:30 -0500
-X-ME-Sender: <xms:4vOhaTHt3DW9QRfv5dLsSWnzpZecptBrk2Kno8jrbbUGst6jQcMPaA>
-    <xme:4vOhaZgNCOMfg-icOL6clAWH0jxPiSxHF7QPuC7n1ZefpMwpcOPNOz6SG2tkJepxP
-    0QGEycY-CHHQZQ3R2M3Ob4KsJVLpGDRrCZpJ-P4iNrWP0RvFUw2KeU>
-X-ME-Received: <xmr:4vOhafQ6cjzGMN3eO_P8oTifOKcAVDjxpO4efXbYQvhFm0dp3pYQY4iuLL2dNA>
+	b=pyRscqYHSErGyEk4Kg6BcibkJYXx2FYIvix7+la49cGtu9yNcCmif7L2fOuALEY61
+	 Z26QmqDHwg2z+dkTSm/8jC2zZJkyyg7zG8IzRX2mh+8xZD1plX/5vRLJ2dTno8fgkW
+	 CbGUu7Brszn3JjcHyCCzzBeG73fh6K/IQ34zX7PFUtBCtIUCeKJdjHZLCGWTe6Ry2r
+	 pFs4O37qmjlWCh0LaDqKypLBHTeXSqKOM5z1GHMFLE7XmNlqkj6MhzWVW9PAYSPdt7
+	 ttqwaoxZR83AaKOa+aUTzQqjCAZuXxIag3lLli8pEGUV/EDjufFCPn4y5q0XywdJFG
+	 /JV6PzrYNSkpw==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6C577F40068;
+	Fri, 27 Feb 2026 14:43:32 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Fri, 27 Feb 2026 14:43:32 -0500
+X-ME-Sender: <xms:5POhaWft2Z4hNMgdKH-WvEt06V_ySuhI88_10pmYGOt1VXp3vem3mQ>
+    <xme:5POhaZaouepT4twhJM4oFKGeiz4qcb8rMiDepWwNjwnpiEZpwjh_7cOZPbXnCsbAz
+    uNSU4w5R2Rn5FfF-vl2DGJf--bPMPesmv9AfkbmFU2uWBnJMZ-YMpI>
+X-ME-Received: <xmr:5POhaRpteTqqn0tRHifEiRlxojYOQ-AFQaWyHCe_6-8FogWx4w69m5LOAiZKwA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeelkeejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
     gurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfmihhrhihl
     ucfuhhhuthhsvghmrghuucdlofgvthgrmddfuceokhgrsheskhgvrhhnvghlrdhorhhgqe
     enucggtffrrghtthgvrhhnpefhudejfedvgeekffefvdekheekkeeuveeftdelheegteel
-    gfefveevueekhfdtteenucevlhhushhtvghrufhiiigvpedvnecurfgrrhgrmhepmhgrih
+    gfefveevueekhfdtteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
     hlfhhrohhmpehkihhrihhllhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidq
     udeiudduiedvieehhedqvdekgeeggeejvdekqdhkrghspeepkhgvrhhnvghlrdhorhhgse
     hshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthhopedvkedpmhhouggvpehsmhht
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeelkeejucetufdote
     rghilhdrtghomhdprhgtphhtthhopehfvhgulhesghhoohhglhgvrdgtohhmpdhrtghpth
     htohepohhsrghlvhgrughorhesshhushgvrdguvgdprhgtphhtthhopehrphhptheskhgv
     rhhnvghlrdhorhhgpdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:4vOhaR-lrYtaFNh2v5a-qD6QkUUOMdKsXvCR4LVi7lKi8uhGdoj2HQ>
-    <xmx:4vOhaVQSmHr7lzq0wQ67chPXayOijeobm3QhaQeYPPaf4P0eByWb6A>
-    <xmx:4vOhaYbJ8gyKIGlbdSfl17VTFdzHFeA2k0QOaiRs5FPml4n_9VyKxA>
-    <xmx:4vOhaeSZW8yXc1yxCy1obpPgsemxNGz91ALhLgrV_7Q9ZP71YDglyA>
-    <xmx:4vOhaT4-e1NwRGbjjQ_SrqHaEWn03brxsYkgr-MxVYIKlb-WXoc73nSS>
+X-ME-Proxy: <xmx:5POhaU0j1FoiFXjb4FDCf3_iHuq1E1IiTM4SAnrJirJhjsszj6qbcg>
+    <xmx:5POhaeofwXlbs3T5hVHwocrRjaSJkZbhIfhEjK7LjFANz8FdtwFB5Q>
+    <xmx:5POhaWRW6i03tA2446PryzOTtzbG7IJ_oAmFyYsnJVJB9cVwVvZZ-Q>
+    <xmx:5POhaWoI-p5ajUv4Cb5_Z-JMPmieNc5amNRBDKdy4YEHiEugCUapKw>
+    <xmx:5POhaUyxxG_bSb5m-F8feWcYLH7uI8dYZolnRb819cVXuRYJQ6nq54pR>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Feb 2026 14:43:30 -0500 (EST)
+ 27 Feb 2026 14:43:31 -0500 (EST)
 From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
@@ -89,9 +89,9 @@ Cc: Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	Kiryl Shutsemau <kas@kernel.org>
-Subject: [PATCHv7 13/18] mm: Drop fake head checks
-Date: Fri, 27 Feb 2026 19:42:51 +0000
-Message-ID: <20260227194302.274384-14-kas@kernel.org>
+Subject: [PATCHv7 14/18] hugetlb: Remove VMEMMAP_SYNCHRONIZE_RCU
+Date: Fri, 27 Feb 2026 19:42:52 +0000
+Message-ID: <20260227194302.274384-15-kas@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227194302.274384-1-kas@kernel.org>
 References: <20260227194302.274384-1-kas@kernel.org>
@@ -105,181 +105,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Kiryl Shutsemau <kas@kernel.org>
 
-With fake head pages eliminated in the previous commit, remove the
-supporting infrastructure:
+The VMEMMAP_SYNCHRONIZE_RCU flag triggered synchronize_rcu() calls to
+prevent a race between HVO remapping and page_ref_add_unless(). The
+race could occur when a speculative PFN walker tried to modify the
+refcount on a struct page that was in the process of being remapped
+to a fake head.
 
-  - page_fixed_fake_head(): no longer needed to detect fake heads;
-  - page_is_fake_head(): no longer needed;
-  - page_count_writable(): no longer needed for RCU protection;
-  - RCU read_lock in page_ref_add_unless(): no longer needed;
+With fake heads eliminated, page_ref_add_unless() no longer needs RCU
+protection.
 
-This substantially simplifies compound_head() and page_ref_add_unless(),
-removing both branches and RCU overhead from these hot paths.
-
-RCU was required to serialize allocation of hugetlb page against
-get_page_unless_zero() and prevent writing to read-only fake head.
-It is redundant without fake heads.
-
-See bd225530a4c7 ("mm/hugetlb_vmemmap: fix race with speculative PFN
-walkers") for more details.
-
-synchronize_rcu() in mm/hugetlb_vmemmap.c will be removed by a separate
-patch.
+Remove the flag and synchronize_rcu() calls.
 
 Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 Reviewed-by: Muchun Song <muchun.song@linux.dev>
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- include/linux/page-flags.h | 93 ++------------------------------------
- include/linux/page_ref.h   |  8 +---
- 2 files changed, 4 insertions(+), 97 deletions(-)
+ mm/hugetlb_vmemmap.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 01970bd38bff..9f22e4f4ef9f 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -221,102 +221,15 @@ static __always_inline bool compound_info_has_mask(void)
- 	return is_power_of_2(sizeof(struct page));
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 92330f172eb7..fd1d5d5d12b4 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -47,8 +47,6 @@ struct vmemmap_remap_walk {
+ #define VMEMMAP_SPLIT_NO_TLB_FLUSH	BIT(0)
+ /* Skip the TLB flush when we remap the PTE */
+ #define VMEMMAP_REMAP_NO_TLB_FLUSH	BIT(1)
+-/* synchronize_rcu() to avoid writes from page_ref_add_unless() */
+-#define VMEMMAP_SYNCHRONIZE_RCU		BIT(2)
+ 	unsigned long		flags;
+ };
+ 
+@@ -409,9 +407,6 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
+ 	if (!folio_test_hugetlb_vmemmap_optimized(folio))
+ 		return 0;
+ 
+-	if (flags & VMEMMAP_SYNCHRONIZE_RCU)
+-		synchronize_rcu();
+-
+ 	vmemmap_start	= (unsigned long)&folio->page;
+ 	vmemmap_end	= vmemmap_start + hugetlb_vmemmap_size(h);
+ 
+@@ -444,7 +439,7 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
+  */
+ int hugetlb_vmemmap_restore_folio(const struct hstate *h, struct folio *folio)
+ {
+-	return __hugetlb_vmemmap_restore_folio(h, folio, VMEMMAP_SYNCHRONIZE_RCU);
++	return __hugetlb_vmemmap_restore_folio(h, folio, 0);
  }
  
--#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
- DECLARE_STATIC_KEY_FALSE(hugetlb_optimize_vmemmap_key);
+ /**
+@@ -467,14 +462,11 @@ long hugetlb_vmemmap_restore_folios(const struct hstate *h,
+ 	struct folio *folio, *t_folio;
+ 	long restored = 0;
+ 	long ret = 0;
+-	unsigned long flags = VMEMMAP_REMAP_NO_TLB_FLUSH | VMEMMAP_SYNCHRONIZE_RCU;
++	unsigned long flags = VMEMMAP_REMAP_NO_TLB_FLUSH;
  
--/*
-- * Return the real head page struct iff the @page is a fake head page, otherwise
-- * return the @page itself. See Documentation/mm/vmemmap_dedup.rst.
-- */
--static __always_inline const struct page *page_fixed_fake_head(const struct page *page)
--{
--	/* Fake heads only exists if compound_info_has_mask() is true */
--	if (!compound_info_has_mask())
--		return page;
+ 	list_for_each_entry_safe(folio, t_folio, folio_list, lru) {
+ 		if (folio_test_hugetlb_vmemmap_optimized(folio)) {
+ 			ret = __hugetlb_vmemmap_restore_folio(h, folio, flags);
+-			/* only need to synchronize_rcu() once for each batch */
+-			flags &= ~VMEMMAP_SYNCHRONIZE_RCU;
 -
--	if (!static_branch_unlikely(&hugetlb_optimize_vmemmap_key))
--		return page;
--
--	/*
--	 * Only addresses aligned with PAGE_SIZE of struct page may be fake head
--	 * struct page. The alignment check aims to avoid access the fields (
--	 * e.g. compound_info) of the @page[1]. It can avoid touch a (possibly)
--	 * cold cacheline in some cases.
--	 */
--	if (IS_ALIGNED((unsigned long)page, PAGE_SIZE) &&
--	    test_bit(PG_head, &page->flags.f)) {
--		/*
--		 * We can safely access the field of the @page[1] with PG_head
--		 * because the @page is a compound page composed with at least
--		 * two contiguous pages.
--		 */
--		unsigned long info = READ_ONCE(page[1].compound_info);
--
--		/* See set_compound_head() */
--		if (likely(info & 1)) {
--			unsigned long p = (unsigned long)page;
--
--			return (const struct page *)(p & info);
--		}
--	}
--	return page;
--}
--
--static __always_inline bool page_count_writable(const struct page *page, int u)
--{
--	if (!static_branch_unlikely(&hugetlb_optimize_vmemmap_key))
--		return true;
--
--	/*
--	 * The refcount check is ordered before the fake-head check to prevent
--	 * the following race:
--	 *   CPU 1 (HVO)                     CPU 2 (speculative PFN walker)
--	 *
--	 *   page_ref_freeze()
--	 *   synchronize_rcu()
--	 *                                   rcu_read_lock()
--	 *                                   page_is_fake_head() is false
--	 *   vmemmap_remap_pte()
--	 *   XXX: struct page[] becomes r/o
--	 *
--	 *   page_ref_unfreeze()
--	 *                                   page_ref_count() is not zero
--	 *
--	 *                                   atomic_add_unless(&page->_refcount)
--	 *                                   XXX: try to modify r/o struct page[]
--	 *
--	 * The refcount check also prevents modification attempts to other (r/o)
--	 * tail pages that are not fake heads.
--	 */
--	if (atomic_read_acquire(&page->_refcount) == u)
--		return false;
--
--	return page_fixed_fake_head(page) == page;
--}
--#else
--static inline const struct page *page_fixed_fake_head(const struct page *page)
--{
--	return page;
--}
--
--static inline bool page_count_writable(const struct page *page, int u)
--{
--	return true;
--}
--#endif
--
--static __always_inline int page_is_fake_head(const struct page *page)
--{
--	return page_fixed_fake_head(page) != page;
--}
--
- static __always_inline unsigned long _compound_head(const struct page *page)
- {
- 	unsigned long info = READ_ONCE(page->compound_info);
+ 			if (ret)
+ 				break;
+ 			restored++;
+@@ -554,8 +546,6 @@ static int __hugetlb_vmemmap_optimize_folio(const struct hstate *h,
  
- 	/* Bit 0 encodes PageTail() */
- 	if (!(info & 1))
--		return (unsigned long)page_fixed_fake_head(page);
-+		return (unsigned long)page;
+ 	static_branch_inc(&hugetlb_optimize_vmemmap_key);
  
+-	if (flags & VMEMMAP_SYNCHRONIZE_RCU)
+-		synchronize_rcu();
  	/*
- 	 * If compound_info_has_mask() is false, the rest of compound_info is
-@@ -396,7 +309,7 @@ static __always_inline void clear_compound_head(struct page *page)
- 
- static __always_inline int PageTail(const struct page *page)
+ 	 * Very Subtle
+ 	 * If VMEMMAP_REMAP_NO_TLB_FLUSH is set, TLB flushing is not performed
+@@ -613,7 +603,7 @@ void hugetlb_vmemmap_optimize_folio(const struct hstate *h, struct folio *folio)
  {
--	return READ_ONCE(page->compound_info) & 1 || page_is_fake_head(page);
-+	return READ_ONCE(page->compound_info) & 1;
+ 	LIST_HEAD(vmemmap_pages);
+ 
+-	__hugetlb_vmemmap_optimize_folio(h, folio, &vmemmap_pages, VMEMMAP_SYNCHRONIZE_RCU);
++	__hugetlb_vmemmap_optimize_folio(h, folio, &vmemmap_pages, 0);
+ 	free_vmemmap_page_list(&vmemmap_pages);
  }
  
- static __always_inline int PageCompound(const struct page *page)
-@@ -923,7 +836,7 @@ static __always_inline bool folio_test_head(const struct folio *folio)
- static __always_inline int PageHead(const struct page *page)
- {
- 	PF_POISONED_CHECK(page);
--	return test_bit(PG_head, &page->flags.f) && !page_is_fake_head(page);
-+	return test_bit(PG_head, &page->flags.f);
- }
+@@ -641,7 +631,7 @@ static void __hugetlb_vmemmap_optimize_folios(struct hstate *h,
+ 	struct folio *folio;
+ 	int nr_to_optimize;
+ 	LIST_HEAD(vmemmap_pages);
+-	unsigned long flags = VMEMMAP_REMAP_NO_TLB_FLUSH | VMEMMAP_SYNCHRONIZE_RCU;
++	unsigned long flags = VMEMMAP_REMAP_NO_TLB_FLUSH;
  
- __SETPAGEFLAG(Head, head, PF_ANY)
-diff --git a/include/linux/page_ref.h b/include/linux/page_ref.h
-index 544150d1d5fd..490d0ad6e56d 100644
---- a/include/linux/page_ref.h
-+++ b/include/linux/page_ref.h
-@@ -230,13 +230,7 @@ static inline int folio_ref_dec_return(struct folio *folio)
+ 	nr_to_optimize = 0;
+ 	list_for_each_entry(folio, folio_list, lru) {
+@@ -694,8 +684,6 @@ static void __hugetlb_vmemmap_optimize_folios(struct hstate *h,
+ 		int ret;
  
- static inline bool page_ref_add_unless(struct page *page, int nr, int u)
- {
--	bool ret = false;
--
--	rcu_read_lock();
--	/* avoid writing to the vmemmap area being remapped */
--	if (page_count_writable(page, u))
--		ret = atomic_add_unless(&page->_refcount, nr, u);
--	rcu_read_unlock();
-+	bool ret = atomic_add_unless(&page->_refcount, nr, u);
+ 		ret = __hugetlb_vmemmap_optimize_folio(h, folio, &vmemmap_pages, flags);
+-		/* only need to synchronize_rcu() once for each batch */
+-		flags &= ~VMEMMAP_SYNCHRONIZE_RCU;
  
- 	if (page_ref_tracepoint_active(page_ref_mod_unless))
- 		__page_ref_mod_unless(page, nr, ret);
+ 		/*
+ 		 * Pages to be freed may have been accumulated.  If we
 -- 
 2.51.2
 
