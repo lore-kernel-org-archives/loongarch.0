@@ -1,309 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FF43859DF
-	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8C63A7F63
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 09:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772182730; cv=none; b=TyvnLwrE7oTeIZAD3b+yCgaiJSk/m3dYUliY1s+4u0ceSDSQPNiXSdOolKqPOT2K/+T3WoE00Giw49TkmlXyGpniS52vFBjTVPFwXwAHqjKCEXN6ZzJrIGF3T0dHlrKgB7H0Hog1aEXzBGn4BhuBDAZ13CzmDeqd/c7BNsSWfPo=
+	t=1772183502; cv=none; b=FdRn3xYTAs7F8qUdHIbVMZkgAA2PJbdTwq4PtQofpYN9bo4y35BQVmYdfKlkg1LNtMPv8aGz6ww9SEmDphdpUBmSTgv1WOWzOYhxX83p7aiF27c3g5BBL9jfKZd07vYVxSm0hQHp25ptUb8cDEO1jSTpqbTlOwH5TZPgo8ddhz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772182730; c=relaxed/simple;
-	bh=JbAhXCV/tGNO+mlv+/M8DxreICdBnIgMdz3TIxxdR8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dh1pP3v1FTjW0BrS0MvrOA2tvpPOUSr2xtoyzJCiaa22Cn+xcXHsn+sNZbUj0zdbV5cbssv6cu0y66ZqcmirlNRzmMRIIkWE0xgOVkIGfq8cDrDyrNayeJOf7qGTi8GKMpjTscCLOBf+O5n3D6CBqcnhTaLmwhwjquekxoYb75c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLXljj31; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772183502; c=relaxed/simple;
+	bh=zHYdbKnsq8dhCXkAKHSWS7m786Mc+pWJxumIZ3n3mhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ElzoLBggIP+KoMqKmymfyD98CWkIvIqvonOhR5/RH995kl+jjxGbyeZxCIup5tvH5IARfS1GmxqW0ZrAMScR8jB9HfWPGMnSS9pmDdTIwL47GB+v4W9gKTvu45OIwlZK1eRdETpfe3Ud/z91qbPiOL1gNKVdltSDdhbnazR8ZZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WsV8TR6r; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLXljj31"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AA8C2BCAF
-	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772182729;
-	bh=JbAhXCV/tGNO+mlv+/M8DxreICdBnIgMdz3TIxxdR8I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MLXljj31I3d6xyYasBOr50yADdzMkDbZ60BFYj5ffjof1X0yV9J39nGQL7Lqv+xah
-	 ++JilO3lTlPMueBLEP6JUgEvoJ1JD6aLtituV11tP1pgNt49ymvbKC4YTGaEi4Mlvk
-	 hbkegBQDz7Up0F/l5PKjXud3r02l9GO+MCAhY3TDERnef6+zKpK03V9QpuqThhGKnC
-	 gJCCiHBKjSWMHL84L99HdiA8UD8sXNCzCtvs6XyZbBYGLHGAs6kVnta0ExwVhptc2a
-	 uhSBRVbeVb7+qoyFrSfUHEOphLHO97JqxrAUNhOIDrhxJjDDdXiKNzIJW06tMngRP0
-	 JirO6H1O04Gtg==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65f771c6b89so2690535a12.3
-        for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 00:58:49 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVJayjrMHR7Q5ZA3Wd2ZcQtm55spgNrOIsZJyKJstJq6b3iLy7I5oDfo4KHJPFHATD8L1BAu6L59SA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwcVgLI0Rr1D+vtSSADmXBWyZiDHy2fw/yuq8AIsqvHrEn307HW
-	LYrP6aw2u8FQMYRH6Dl6cjqp6/jebFOhq1KcvZzGN+VjbLQZFW9G38Ofk2WzXomJJ1VwtEwKU0a
-	LJgqBGuWVD4HQYkt3NTHy+4/p7g9wCTA=
-X-Received: by 2002:a05:6402:42c4:b0:65b:ec2d:e60d with SMTP id
- 4fb4d7f45d1cf-65fde2d08c7mr1492485a12.32.1772182728176; Fri, 27 Feb 2026
- 00:58:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WsV8TR6r"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61R42kun3100088;
+	Fri, 27 Feb 2026 09:10:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=9fJNQ8hFc6Hs06NykvFdnbwjP22Qa4
+	Czsab7f5+iT/s=; b=WsV8TR6rk52sfgi0yEDU4EhQlIECmYdEVoCyjTqw7gZ3F3
+	eeHg+aJhMwLYBfRrvCTB+X1E8112JloZG505tr4YoHOHpsA+0VMCmikGSenHxCgI
+	8HXR4cEHiWmwwkzLwBscjDqpDZO3ne2k4EEE07xYvkotrBxJdXJpgPVvwn27muSf
+	xqBav/gaocnH+/b+cmw7rtzjfv7peKnbFuS/n+xyS+NBW6dWAjUvlxf2Z1nhGNyZ
+	JW8mx8qyfv8JeTYDboY2RdD3NfJMbMKBk4Cfsm9yXyMH2NxCMnd5vEs8SgkmIVEz
+	9iyvjXnemPAPNRZVT+C81oevbnLXFbPBfFIhRcFg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cf34cjvka-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Feb 2026 09:10:08 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61R7xVgm027794;
+	Fri, 27 Feb 2026 09:10:07 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cfsr291xx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 27 Feb 2026 09:10:07 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61R9A3w526345784
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 27 Feb 2026 09:10:03 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3E7ED20043;
+	Fri, 27 Feb 2026 09:10:03 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 88C6E20040;
+	Fri, 27 Feb 2026 09:10:00 +0000 (GMT)
+Received: from osiris (unknown [9.87.152.66])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 27 Feb 2026 09:10:00 +0000 (GMT)
+Date: Fri, 27 Feb 2026 10:09:59 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+        Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 17/25] s390: move the XOR code to lib/raid/
+Message-ID: <20260227090959.10882Af7-hca@linux.ibm.com>
+References: <20260226151106.144735-1-hch@lst.de>
+ <20260226151106.144735-18-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260227072031.581229-1-xry111@xry111.site>
-In-Reply-To: <20260227072031.581229-1-xry111@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Feb 2026 16:58:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nedWAfUXL-mwuoQGgn24pvS7=w9BwQ=t+iZfqJO0CFA@mail.gmail.com>
-X-Gm-Features: AaiRm51CvE3ujOyUMIiu8vKxIb7D03jUOAIPnYhiwWoqehLjwp35ZQM_B_2MNK4
-Message-ID: <CAAhV-H5nedWAfUXL-mwuoQGgn24pvS7=w9BwQ=t+iZfqJO0CFA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
-	WANG Rui <wangrui@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>, Zixing Liu <liushuyu@aosc.io>, 
-	"H . Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Menglong Dong <menglong8.dong@gmail.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Hanlu Li <lihanlu@loongson.cn>, Nathan Chancellor <nathan@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Wentao Guan <guanwentao@uniontech.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260226151106.144735-18-hch@lst.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI3MDA3OCBTYWx0ZWRfX82U5aVPSCKMj
+ b+0tJb22GfHqv9v4ECkZvrQTVdwe0NpyD3M0iH/J0+Xwr+YNeZjI36wIQPTa9rvjnE1UWrx9YkQ
+ JHFDvWeaZB3m0vLeSHPjQ41gZNyK3P7jz3/RMGU+PQUjTrl/esmjGZf3JQqOP9wpvYUJI8IGwZd
+ /XesnT0Fp6f7P6zmIK4NRyzDQXfXKB/frdS7KrKVpjV7P2YYv2qXUSwm17bcz6D+3OU43mCcNJw
+ VglTApNotpU5nP84m/1BO0OHu/I+7q5gBb6aF778m34dUw2mKpCO0GIw5iCL/18UvCIDVst+Cg2
+ or+7hBFh9lVuTlBEIYrN26hWcqnQmJk+cg6nVuLOR39apbYgayyTTwj8euDUuBGnNDky60OnBzo
+ zdR2VUTZDeHZGzwsBRd/sH8aRuZ3XZmPmK5c8OM2MVccRTGc8Hd/VLBtD8pqPq/pRTFgfAMLrBX
+ 75ZY0FEa+686cu8Lnvw==
+X-Proofpoint-ORIG-GUID: F8S8ZNtQow6uofq1eM08rQyj9jFeslmn
+X-Authority-Analysis: v=2.4 cv=F9lat6hN c=1 sm=1 tr=0 ts=69a15f71 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8
+ a=HpkjO1BTjMN3Ce6vPK4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: j1a5E8YeCxBUvXVfRM302zEA8A8N1Tzy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-27_01,2026-02-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
+ clxscore=1011 suspectscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602270078
 
-Hi, Ruoyao,
-
-On Fri, Feb 27, 2026 at 3:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
->
-> With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
-> of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
-> empty.  This is not valid, as the current DWARF specification mandates
-> the first byte of the EH frame to be the version number 1.  It causes
-> some unwinders to complain, for example the ClickHouse query profiler
-> spams the log with messages:
->
->     clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
->     version: 127 at 7ffffffb0000
->
-> Here "127" is just the byte located at the p_vaddr (0, i.e. the
-> beginning of the vDSO) of the empty GNU_EH_FRAME segment.
-> Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
-> the start of vDSO in the process VM image.
->
-> In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-> MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
-> "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
-> use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
-> limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
-> we can simply flip it over to -fasynchronous-unwind-tables and pass
-> --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
-> stack for statistics even if the sample point is taken when the PC is in
-> the vDSO.
->
-> However simply adjusting the options above would exploit an issue: when
-> the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
-> falled back to a machine-specific routine to match the code pattern of
-> rt_sigreturn and extract the registers saved in the sigframe if the code
-> pattern is matched.  As unwinding from signal handlers is vital for
-> libgcc to support pthread cancellation etc., the fall-back routine had
-> been silently keeping the LoongArch Linux systems functioning since
-> Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
-> format, fall-back routine will no longer be used and libgcc will fail
-> to unwind the sigframe, and unwinding from signal handlers will no
-> longer work, causing dozens of glibc test failures.  To make it possible
-> to unwind from signal handlers again, it's necessary to code the unwind
-> info in __vdso_rt_sigreturn via .cfi_* directives.
->
-> The offsets in the .cfi_* directives depend on the layout of struct
-> sigframe, notably the offset of sigcontect in the sigframe.  To use the
-> offset in the assembly file, factor out struct sigframe into a header to
-> allow asm-offsets.c to output the offset for assembly.
->
-> To work around a long-term issue in the libgcc unwinder (the pc is
-> unconditionally substracted by 1: doing so is technically incorrect for
-> a signal frame), a nop instruction is included with the two real
-> instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
-> hack has been used on x86 for a long time.
->
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+On Thu, Feb 26, 2026 at 07:10:29AM -0800, Christoph Hellwig wrote:
+> Move the optimized XOR into lib/raid and include it it in xor.ko
+> instead of unconditionally building it into the main kernel image.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->
-> Changes from [v1]:
-> - Use DWARF column 0 instead of the libgcc-specific column 72.
-> - Style change to sigframe.h.
->
-> [v1]: https://lore.kernel.org/20260225104607.3803060-1-xry111@xry111.site
->
->  arch/loongarch/include/asm/sigframe.h | 12 +++++++
->  arch/loongarch/kernel/asm-offsets.c   |  2 ++
->  arch/loongarch/kernel/signal.c        |  6 +---
->  arch/loongarch/vdso/Makefile          |  4 +--
->  arch/loongarch/vdso/sigreturn.S       | 46 ++++++++++++++++++++++++---
->  5 files changed, 59 insertions(+), 11 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/sigframe.h
->
-> diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/inclu=
-de/asm/sigframe.h
-> new file mode 100644
-> index 000000000000..59db3de6db85
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/sigframe.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Separated from arch/loongarch/kernel/signal.c.
-I think this is also unnecessary.
+>  arch/s390/lib/Makefile                     | 2 +-
+>  lib/raid/xor/Makefile                      | 1 +
+>  {arch/s390/lib => lib/raid/xor/s390}/xor.c | 2 --
+>  3 files changed, 2 insertions(+), 3 deletions(-)
+>  rename {arch/s390/lib => lib/raid/xor/s390}/xor.c (98%)
 
-> + */
-> +
-> +#include <asm/siginfo.h>
-> +#include <asm/ucontext.h>
-> +
-> +struct rt_sigframe {
-> +       struct siginfo rs_info;
-> +       struct ucontext rs_uctx;
-> +};
-> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/=
-asm-offsets.c
-> index 3017c7157600..2cc953f113ac 100644
-> --- a/arch/loongarch/kernel/asm-offsets.c
-> +++ b/arch/loongarch/kernel/asm-offsets.c
-> @@ -16,6 +16,7 @@
->  #include <asm/ptrace.h>
->  #include <asm/processor.h>
->  #include <asm/ftrace.h>
-> +#include <asm/sigframe.h>
->  #include <vdso/datapage.h>
->
->  static void __used output_ptreg_defines(void)
-> @@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
->         COMMENT("Linux sigcontext offsets.");
->         OFFSET(SC_REGS, sigcontext, sc_regs);
->         OFFSET(SC_PC, sigcontext, sc_pc);
-> +       OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
->         BLANK();
->  }
->
-> diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signa=
-l.c
-> index c9f7ca778364..e297d54ea638 100644
-> --- a/arch/loongarch/kernel/signal.c
-> +++ b/arch/loongarch/kernel/signal.c
-> @@ -37,6 +37,7 @@
->  #include <asm/lbt.h>
->  #include <asm/ucontext.h>
->  #include <asm/vdso.h>
-> +#include <asm/sigframe.h>
->
->  #ifdef DEBUG_SIG
->  #  define DEBUGP(fmt, args...) printk("%s: " fmt, __func__, ##args)
-> @@ -51,11 +52,6 @@
->  #define lock_lbt_owner()       ({ preempt_disable(); pagefault_disable()=
-; })
->  #define unlock_lbt_owner()     ({ pagefault_enable(); preempt_enable(); =
-})
->
-> -struct rt_sigframe {
-> -       struct siginfo rs_info;
-> -       struct ucontext rs_uctx;
-> -};
-> -
->  struct _ctx_layout {
->         struct sctx_info *addr;
->         unsigned int size;
-> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-> index 520f1513f07d..294c16b9517f 100644
-> --- a/arch/loongarch/vdso/Makefile
-> +++ b/arch/loongarch/vdso/Makefile
-> @@ -26,7 +26,7 @@ cflags-vdso :=3D $(ccflags-vdso) \
->         $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
->         -std=3Dgnu11 -fms-extensions -O2 -g -fno-strict-aliasing -fno-com=
-mon -fno-builtin \
->         -fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING =
-\
-> -       $(call cc-option, -fno-asynchronous-unwind-tables) \
-> +       $(call cc-option, -fasynchronous-unwind-tables) \
->         $(call cc-option, -fno-stack-protector)
->  aflags-vdso :=3D $(ccflags-vdso) \
->         -D__ASSEMBLY__ -Wa,-gdwarf-2
-> @@ -41,7 +41,7 @@ endif
->
->  # VDSO linker flags.
->  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
-> -       $(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
-> +       $(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr =
--T
->
->  #
->  # Shared build commands.
-> diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigret=
-urn.S
-> index 9cb3c58fad03..a72c5d592ff5 100644
-> --- a/arch/loongarch/vdso/sigreturn.S
-> +++ b/arch/loongarch/vdso/sigreturn.S
-> @@ -12,13 +12,51 @@
->
->  #include <asm/regdef.h>
->  #include <asm/asm.h>
-> +#include <asm/asm-offsets.h>
->
->         .section        .text
-> -       .cfi_sections   .debug_frame
->
-> -SYM_FUNC_START(__vdso_rt_sigreturn)
-> +       .cfi_startproc
-> +       .cfi_signal_frame
->
-> +       /*
-> +        * There is a struct rt_sigframe at $sp, set CFA to the address o=
-f
-> +        * the struct sigcontext in the rt_sigframe to simplify the
-> +        * offsets below.
-> +        */
-> +       .cfi_def_cfa 3, RT_SIGFRAME_SC
-> +
-> +       /*
-> +        * The "DWARF for the LoongArch(TM) Architecture" manual states
-> +        * column 0 is for $zero, but it does not make too much sense
-> +        * to save/restore the hardware zero register.  Repurpose the
-> +        * column here (both libgcc and LLVM libunwind allow to do so)
-> +        * and we'd update the manual later.
-> +        */
-> +       .cfi_return_column 0
-> +       .cfi_offset 0, SC_PC
-> +
-> +       /* The GPRs of the "caller" are also stored in the sigcontext.  *=
-/
-> +.irp   num, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, \
-> +            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
-> +       .cfi_offset \num, SC_REGS + \num * SZREG
-> +.endr
-> +
-> +       /*
-> +        * HACK: The dwarf2 unwind routine will subtract 1 from the retur=
-n
-> +        * address to get an address in the middle of the persumed call
-> +        * instruction.  While in libgcc there exists a logic to avoid
-> +        * subtracting 1 for the signal frame (a frame with the 'S'
-> +        * augmentation that we've already added via .cfi_signal_frame),
-> +        * unfortunately it doesn't really work: the check of signal fram=
-e
-> +        * is at libgcc/unwind-dw2:1008 in GCC 15.2.0, but the flag it
-> +        * checks will only get updated by the extract_cie_info call at l=
-ine
-> +        * 1025.  So include a nop before the real start to make up for i=
-t.
-> +        * This is also the reason we don't use SYM_FUNC_START.
-> +        */
-> +       nop
-> +SYM_START(__vdso_rt_sigreturn, SYM_L_GLOBAL, SYM_A_ALIGN)
-Is it possible to define SYM_SIGFUNC_START/SYM_SIGFUNC_END in
-linkage.h, and then use them here?
+FWIW:
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
 
-
-Huacai
-
->         li.w    a7, __NR_rt_sigreturn
->         syscall 0
-> -
-> -SYM_FUNC_END(__vdso_rt_sigreturn)
-> +       .cfi_endproc
-> +SYM_END(__vdso_rt_sigreturn, SYM_T_FUNC)
-> --
-> 2.53.0
->
->
+However, I just had a look at the s390 implementation and just saw that the
+inline assembly constraints for xor_xc_2() are incorrect. "bytes", "p1",
+and "p2" are input operands, while all three of them are modified within
+the inline assembly. Given that the function consists only of this inline
+assembly I doubt that this causes any harm, however I still want to fix
+this now; but your patch should apply fine with or without this fixed.
