@@ -1,115 +1,121 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD8F1A9F97;
-	Fri, 27 Feb 2026 21:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DDC257431;
+	Fri, 27 Feb 2026 23:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772226547; cv=none; b=oaz3aFxRhZeNkypTzLrCjcrcetnZDksR50M/8uRF7AmuiCBKcsEkN8KEiqyBFGw/U8zo7Fn6ey+MijY8qkUWpJudRF2+TDLgFTD8jKpa2ECxo8qp4N3j82306w9+dRZj9iXQWR2h0Q4vXxK18/Uh3Jk44OOForHPsFsuE3CDFuc=
+	t=1772236532; cv=none; b=kOWBoK93+Y947mOnMCSBjas7ifdLVOX7ccAvFyk1vDqJ1Tn8DJ1peowk6Xw0mqsWfg33k6XsP1/Uq5KBg+DVOIPMmW4ynFvf8AbV05nW4jhDye78FifO1logcVGpBpSYYHB1iIbYbit1e1KiHQRAkvoxdDTAH6WamVwiuJDsUaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772226547; c=relaxed/simple;
-	bh=xjkcwnrAWf8OrFv2bcOg2en4S/OMGTVvWvqpKRZcaDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JeBTZf/Um981+qUoeDDTbLiYoyp/TzfY7dCxpd9OjZsb24qpceyNd98pNPA9+ggQtUu9JSi95u1RMviAeflyhMQt+80zouIfUiGC+ROsZNeH1XLwDfHthtPtdd5G2YK3nmFTkxdueZUkphhf8hklNRuaRn5KCtvacYPWXx8Oby8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R4nGnP1c; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1772236532; c=relaxed/simple;
+	bh=9epsKT1Tqv7365SBQ+LgdgBkS+QLvJq0YDfqzGCQppg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfDzI4rmuuG670rfVBaQpSv5MwnCFSyuWIXWv+G5wo7Hz8s1wlrVCEX9j7Z9Itta4SrX7zxz+eWTQg1c/iQlAXCVUdKfYTvtsez5OBA3dHui+MvaK6bvQz4vb08+3ZXmg1F8e9Fpl9FgpJJJJjpIJJZK7YpNn9qjbZiVyHStBXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVTF8TDa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R4nGnP1c"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=4FuBhsUwwCOInnqB7O2GDaXeBFXb9h+2Obvf7L/ta9E=; b=R4nGnP1cbd2DInksjBWnv/d0gZ
-	ddMiXwJQ6PFlTGSrO4IoZMGFmmQIXDaYGedozjGH+yn4XfqDSkk3Jv/s5ir9UPpsNZ41AQfWI07Sm
-	BPaRF8DKchzsIFPxz1dfIz6y5nluh+GHF0qVxD6DBS/bsTV/EPpJ+n7dV/La/vzpCqXyKlIwaRlEQ
-	DU1I3pxQAzNCEcAysnohMM6ujLMLvuXbsH21wqKxEAczIZ2Y9XrLBT7p0moUXfnhGzWbZeg3VkqhL
-	pYwcZes5wDl9MlmKLnO7r1XeNP9XgUXeHaHblD3R/rFKyxxsvcRd+3/Z7uFLH1uQnyTv7h+3nlUSZ
-	LOywukdw==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vw54u-00000009A1r-3Ob7;
-	Fri, 27 Feb 2026 21:08:52 +0000
-Message-ID: <7d4ece82-2d92-4e97-851b-822816cfd800@infradead.org>
-Date: Fri, 27 Feb 2026 13:08:51 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVTF8TDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97119C116C6;
+	Fri, 27 Feb 2026 23:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772236532;
+	bh=9epsKT1Tqv7365SBQ+LgdgBkS+QLvJq0YDfqzGCQppg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XVTF8TDa48poxgWx9OMrHOWcWeX+DIvF8W0Cz9PzVZzIIYVyeCBp8CVqVCQqnKv6k
+	 5zzYRJst/PHEWqq92j85maQBi7plq+GNVhfHcc+9Pog+YMNqi1zTL7+4Ehtq9UJ7o9
+	 QJHa0cD62wS9Zi36AMnb9/VkZXXyv/qc0FNC/OF8hsDCWgrlGfX7gqqn/VNAfN6Fee
+	 CkNTC4E/BHSyzLgTwiN6IqzHfjJo9okaT9JcgxYGTsEHUQc31er3WUHfK/2Gx865yY
+	 ogRz41c7RbSVwCM0hpH/O2zyx2nKKDpUW5eh/FdyMQPRe2Q68ih/qS1f7bbUEX5IYc
+	 3kMoxNtkaet5g==
+Date: Fri, 27 Feb 2026 15:55:29 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 18/25] x86: move the XOR code to lib/raid/
+Message-ID: <20260227235529.GA31321@quark>
+References: <20260226151106.144735-1-hch@lst.de>
+ <20260226151106.144735-19-hch@lst.de>
+ <20260227143016.GH1282955@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 17/18] hugetlb: Update vmemmap_dedup.rst
-To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Usama Arif <usamaarif642@gmail.com>,
- Frank van der Linden <fvdl@google.com>
-Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-18-kas@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260227194302.274384-18-kas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227143016.GH1282955@noisy.programming.kicks-ass.net>
 
-
-
-On 2/27/26 11:42 AM, Kiryl Shutsemau (Meta) wrote:
-> From: Kiryl Shutsemau <kas@kernel.org>
+On Fri, Feb 27, 2026 at 03:30:16PM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 26, 2026 at 07:10:30AM -0800, Christoph Hellwig wrote:
+> > Move the optimized XOR code out of line into lib/raid.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/x86/include/asm/xor.h                    | 518 ++----------------
+> >  arch/x86/include/asm/xor_64.h                 |  32 --
+> >  lib/raid/xor/Makefile                         |   8 +
+> >  .../xor_avx.h => lib/raid/xor/x86/xor-avx.c   |  14 +-
+> >  .../xor_32.h => lib/raid/xor/x86/xor-mmx.c    |  60 +-
+> >  lib/raid/xor/x86/xor-sse.c                    | 476 ++++++++++++++++
 > 
-> Update the documentation regarding vmemmap optimization for hugetlb to
-> reflect the changes in how the kernel maps the tail pages.
-> 
-> Fake heads no longer exist. Remove their description.
-> 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
->  Documentation/mm/vmemmap_dedup.rst | 60 +++++++++++++-----------------
->  1 file changed, 26 insertions(+), 34 deletions(-)
-> 
-> diff --git a/Documentation/mm/vmemmap_dedup.rst b/Documentation/mm/vmemmap_dedup.rst
-> index 1863d88d2dcb..4aaef36d8971 100644
-> --- a/Documentation/mm/vmemmap_dedup.rst
-> +++ b/Documentation/mm/vmemmap_dedup.rst
-> @@ -124,33 +124,35 @@ Here is how things look before optimization::
->   |           |
->   +-----------+
->  
-> -The value of page->compound_info is the same for all tail pages. The first
-> -page of ``struct page`` (page 0) associated with the HugeTLB page contains the 4
-> -``struct page`` necessary to describe the HugeTLB. The only use of the remaining
-> -pages of ``struct page`` (page 1 to page 7) is to point to page->compound_info.
-> -Therefore, we can remap pages 1 to 7 to page 0. Only 1 page of ``struct page``
-> -will be used for each HugeTLB page. This will allow us to free the remaining
-> -7 pages to the buddy allocator.
-> +The first page of ``struct page`` (page 0) associated with the HugeTLB page
-> +contains the 4 ``struct page`` necessary to describe the HugeTLB. The remaining
-> +pages of ``struct page`` (page 1 to page 7) are tail pages.
-> +
-> +The optimization is only applied when the size of the struct page is a power-of-2
+> I gotta ask, why lib/raid/xor/$arch/ instead of something like
+> arch/$arch/lib/xor ?
 
-                  end that ^^ sentence with a period                      power of 2.
+Similar to lib/crypto/ and lib/crc/, it allows the translation units
+(either .c or .S files) containing architecture-optimized XOR code to be
+included directly in the xor.ko module, where they should be.
 
-> +In this case, all tail pages of the same order are identical. See
-> +compound_head(). This allows us to remap the tail pages of the vmemmap to a
-> +shared, read-only page. The head page is also remapped to a new page. This
-> +allows the original vmemmap pages to be freed.
+Previously, these were always built into the core kernel even if
+XOR_BLOCKS was 'n' or 'm', or they were built into a separate module
+xor-neon.ko which xor.ko depended on.  So either the code was included
+unnecessarily, or there was an extra module.
 
+Technically we could instead have the lib makefile compile stuff in
+arch/, but that would be unusual.  It's much cleaner to have the
+directory structure match the build system.
 
--- 
-~Randy
+If we made this code always built-in, like memcpy(), then we could put
+it anywhere.  But (like many of the crypto and CRC algorithms) many
+kernels don't need this code, and even if they do it may be needed only
+by 'm' code.  So it makes sense to support tristate.
 
+- Eric
