@@ -1,155 +1,119 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8C63A7F63
-	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 09:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772183502; cv=none; b=FdRn3xYTAs7F8qUdHIbVMZkgAA2PJbdTwq4PtQofpYN9bo4y35BQVmYdfKlkg1LNtMPv8aGz6ww9SEmDphdpUBmSTgv1WOWzOYhxX83p7aiF27c3g5BBL9jfKZd07vYVxSm0hQHp25ptUb8cDEO1jSTpqbTlOwH5TZPgo8ddhz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772183502; c=relaxed/simple;
-	bh=zHYdbKnsq8dhCXkAKHSWS7m786Mc+pWJxumIZ3n3mhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElzoLBggIP+KoMqKmymfyD98CWkIvIqvonOhR5/RH995kl+jjxGbyeZxCIup5tvH5IARfS1GmxqW0ZrAMScR8jB9HfWPGMnSS9pmDdTIwL47GB+v4W9gKTvu45OIwlZK1eRdETpfe3Ud/z91qbPiOL1gNKVdltSDdhbnazR8ZZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WsV8TR6r; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146B5376BCE
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 09:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.161.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772186139; cv=pass; b=W2h5ApVlN4AE0VSWSlPCAMwTVlSTK4LgAc95XfYlIkuVL7pvGwET/HF0+kfErJssuVyo8k30byMrPRaM5M9CsdlEavPxsjinHBd62A4PlDkpRf7tttKkODu2/Cz2YBi8oGY5uIQJ2SKB3XuR1As+6+e9yNxiHvzdeq/cmNnwIo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772186139; c=relaxed/simple;
+	bh=HiSI0lU9AAW8Bi7i/XZVtO7ZCqEmkeDjYdIHFxH1EcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eKIFIg2BpqBnCYYL1R2J7q88e5qPGIIhppmJ6VygOZMe638z00SHRfCMWH8gaJoyBX2GRMcLXCIx4ZB8+hqVtZUY9X5gZ3kTXSUKsVAFIhd5xqv/P1ZuirNjje26xJ/MfZKKtYPYYPcgjTVXbMlZQoxZIQlM2Ew/zFJp082HvpY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TeR1PcPC; arc=pass smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WsV8TR6r"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61R42kun3100088;
-	Fri, 27 Feb 2026 09:10:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=9fJNQ8hFc6Hs06NykvFdnbwjP22Qa4
-	Czsab7f5+iT/s=; b=WsV8TR6rk52sfgi0yEDU4EhQlIECmYdEVoCyjTqw7gZ3F3
-	eeHg+aJhMwLYBfRrvCTB+X1E8112JloZG505tr4YoHOHpsA+0VMCmikGSenHxCgI
-	8HXR4cEHiWmwwkzLwBscjDqpDZO3ne2k4EEE07xYvkotrBxJdXJpgPVvwn27muSf
-	xqBav/gaocnH+/b+cmw7rtzjfv7peKnbFuS/n+xyS+NBW6dWAjUvlxf2Z1nhGNyZ
-	JW8mx8qyfv8JeTYDboY2RdD3NfJMbMKBk4Cfsm9yXyMH2NxCMnd5vEs8SgkmIVEz
-	9iyvjXnemPAPNRZVT+C81oevbnLXFbPBfFIhRcFg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cf34cjvka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Feb 2026 09:10:08 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61R7xVgm027794;
-	Fri, 27 Feb 2026 09:10:07 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cfsr291xx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Feb 2026 09:10:07 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61R9A3w526345784
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Feb 2026 09:10:03 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3E7ED20043;
-	Fri, 27 Feb 2026 09:10:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 88C6E20040;
-	Fri, 27 Feb 2026 09:10:00 +0000 (GMT)
-Received: from osiris (unknown [9.87.152.66])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 27 Feb 2026 09:10:00 +0000 (GMT)
-Date: Fri, 27 Feb 2026 10:09:59 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-        Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 17/25] s390: move the XOR code to lib/raid/
-Message-ID: <20260227090959.10882Af7-hca@linux.ibm.com>
-References: <20260226151106.144735-1-hch@lst.de>
- <20260226151106.144735-18-hch@lst.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeR1PcPC"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-679aebf4e56so1327485eaf.3
+        for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 01:55:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772186137; cv=none;
+        d=google.com; s=arc-20240605;
+        b=N2zucbZ68WtyXlCU/E/BLa8AhkyZu5dz62mTtihLZYVJpn2536Da/dmPbphzvgjdd6
+         vH7N5XxpD8Yvj1LooL+JeIxN+0AGXyCBGURUMabI7bg8G83jenvDaNa9nSve9e8vyoGg
+         eHHW4PZbrGZqL+zZhuOatfO4ysLHOPPaNGl7LX4NhtXn88QmbAysLnFvcWzhIm2rGTe3
+         NigIW3sGjZpDdYPmmOSXT0xyXB3pALUP5k8dLlPSvJxtjzDTxVGOWvT0O5e58HrDH+8V
+         sqz38VBfARsH0rGSKhkpTLjln+XyDVfI7u55+cFbn1HegoqVW3qvkeV/AeUKyFY5YdS/
+         Epvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=S/KJb9IiHquzk7HYxCf6i4TfDA+7vLU5j0god34XCBM=;
+        fh=5uUrYSlznIUdeLxCG//6N5siR8zTB3L7MnxTsxCm5Oo=;
+        b=cxQBd7T0NNd15ozqFXMcX41GyN7bMZgLTWHWgawlfM0hezinfxIWFrh9ZrYbP15pqP
+         vJegycNYZgxjucxZF8Isjaeb41tinZ5xPEVvKT5PP/Nw4R5yCWGLaS8DOhQp5x0Oo71W
+         d/1CPDABBDjRzFm1qDdMRSw07F95RergBkStw1QGa7v8t1anhJt9EuMhrpYjk6DBT+QB
+         6kCH4Gx62fV8Waz1rk7LJauB+mk0FaVqZVE+2Jf7tqBFimb7wPsWkVKCDpFW/g/t1GVI
+         254l5SRZc0Df4dZhmBhhy5BVC4h4m+mUX7QJVubvf6loixm9TWYFqXiOFDkViaY2M8TY
+         iYPg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772186137; x=1772790937; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S/KJb9IiHquzk7HYxCf6i4TfDA+7vLU5j0god34XCBM=;
+        b=TeR1PcPCnTn7p1BLgqh9PaSUNCiBwZOB8AA2QAsGys5DN1qCrf7h8GvjvcWpzthP+k
+         osEGXJS0AFKi9IQGeA7NLKxQOqirFAmQkvyRRj6Fs9H2P6aZ4Nzhg11teevsmLR4G1G7
+         ljmXdDGogSwv5MqZJanuKjhJAp/LHKiKxUUh0fj64Ry5vDDog2kV9157VUI8xqVBWTph
+         T9mre2Ztzju1uA/cgbiIliOhlVuYJiBm5w03TO3LGYbW+GG9vJdIaDgzRc3RwL3QQ9rS
+         v2QS2JaJIzURhQS6/OkGtPoGSKpV34leBlzLxlowWI3PMHGCJbnZTJYFikqdrkJXTKCY
+         m6Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772186137; x=1772790937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=S/KJb9IiHquzk7HYxCf6i4TfDA+7vLU5j0god34XCBM=;
+        b=aO8I2YeGBYGP7/e5rUMCR0qNXEBbuwo4Q5BxzftYmsTMulyMuSbLIsRcEAET29Lb+x
+         Lslh7O+XhS5x5xjFk7whghWEWm6YPdw2aR4gCi1OgCHfODwOr/+kc05Y4Lve0UL+1eB/
+         n6BfuMqpFsL58qELha3BIkEOQDvahd8tWOpNCRO37wCxCGlkqpLBEkjSHC847E9NRWok
+         PgWo3DQNkn+A1wFgolnE4jd063wbPBYz6sih8+qv6gZ4TIXxQO8oOAcPkMtrli8btEZW
+         zjk2T1v+JZqPurT5Wc+rCLG0xY/Fu9pgzoM4N1Go82L5XgMLj8RfEQFZIdgoeki8Qp6P
+         qybg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLOUK+GA/NRpvYWnUKi1dSfKH750QPwO/XPZUFTm3ls/KzI4a9Uq+PuPzeftWzn31K0iwG87jjpY0=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy/Ed2QwOmh/WXBmB1SI3EoWQeOlf6mR4txodO94qjesQ8MlzxD
+	KuDcov7O9FVSd5Nhk7QfVmYoO2RL5bES21xBLv/mPS7wSCMPkEyrSqoj4M7o1aJMcdwCJjGJHlt
+	K2SOgZxJHwnSSuGNv5tuKPsF01m0z188=
+X-Gm-Gg: ATEYQzzG8S8k0WYoxZb7F1kKYLMcAXzko5ytYOyfZG8ygWddfK5v4Xqr5E82nm0i+JT
+	uO9d4zRTy+uwVPbFqy5NjcEvd1bEl/OHQd3z03PJJHfHJfRfulTNmFDB1+FvZMpwai0qoAmuI6o
+	vEIrHgTHaHmFw4CFQlO4veTUFeJe8DOGxR6Eq18dke+Yt6oOLKIBPwNaZsRqYSMGvh0NmM5a91/
+	czBVCa3HcQC1baHigA/wWKjnkxJPmOJg3CATn+kxerwZjXNd9fwcLtIcix0wpcKsS6YY2yFoeIG
+	ArXy+o9AMwHhjacLn/s=
+X-Received: by 2002:a05:6820:488a:b0:673:ebaf:ce52 with SMTP id
+ 006d021491bc7-679faf84b68mr1104232eaf.57.1772186137013; Fri, 27 Feb 2026
+ 01:55:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260226151106.144735-18-hch@lst.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI3MDA3OCBTYWx0ZWRfX82U5aVPSCKMj
- b+0tJb22GfHqv9v4ECkZvrQTVdwe0NpyD3M0iH/J0+Xwr+YNeZjI36wIQPTa9rvjnE1UWrx9YkQ
- JHFDvWeaZB3m0vLeSHPjQ41gZNyK3P7jz3/RMGU+PQUjTrl/esmjGZf3JQqOP9wpvYUJI8IGwZd
- /XesnT0Fp6f7P6zmIK4NRyzDQXfXKB/frdS7KrKVpjV7P2YYv2qXUSwm17bcz6D+3OU43mCcNJw
- VglTApNotpU5nP84m/1BO0OHu/I+7q5gBb6aF778m34dUw2mKpCO0GIw5iCL/18UvCIDVst+Cg2
- or+7hBFh9lVuTlBEIYrN26hWcqnQmJk+cg6nVuLOR39apbYgayyTTwj8euDUuBGnNDky60OnBzo
- zdR2VUTZDeHZGzwsBRd/sH8aRuZ3XZmPmK5c8OM2MVccRTGc8Hd/VLBtD8pqPq/pRTFgfAMLrBX
- 75ZY0FEa+686cu8Lnvw==
-X-Proofpoint-ORIG-GUID: F8S8ZNtQow6uofq1eM08rQyj9jFeslmn
-X-Authority-Analysis: v=2.4 cv=F9lat6hN c=1 sm=1 tr=0 ts=69a15f71 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VnNF1IyMAAAA:8
- a=HpkjO1BTjMN3Ce6vPK4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: j1a5E8YeCxBUvXVfRM302zEA8A8N1Tzy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-27_01,2026-02-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
- clxscore=1011 suspectscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602270078
+References: <20260224073515.1273-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20260224073515.1273-1-yangtiezhu@loongson.cn>
+From: Hengqi Chen <hengqi.chen@gmail.com>
+Date: Fri, 27 Feb 2026 17:55:25 +0800
+X-Gm-Features: AaiRm52XVBiKUry11FjHKqNVfETs7nGqLIo9iJjKEFSTMsaM-HMLMgEvnGKb08o
+Message-ID: <CAEyhmHQVTzOohJUAL5FfP39pY=8q=ui7LYE3Z4+n1s71GK3Shw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] LoongArch: BPF: Support more features for trampoline
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 26, 2026 at 07:10:29AM -0800, Christoph Hellwig wrote:
-> Move the optimized XOR into lib/raid and include it it in xor.ko
-> instead of unconditionally building it into the main kernel image.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/s390/lib/Makefile                     | 2 +-
->  lib/raid/xor/Makefile                      | 1 +
->  {arch/s390/lib => lib/raid/xor/s390}/xor.c | 2 --
->  3 files changed, 2 insertions(+), 3 deletions(-)
->  rename {arch/s390/lib => lib/raid/xor/s390}/xor.c (98%)
+On Tue, Feb 24, 2026 at 3:35=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> This series is based on Linux 7.0-rc1, tested on Loongson-3A6000,
+> the main aim is to support small struct arguments and 12 function
+> arguments for LoongArch BPF trampoline.
+>
+> Tiezhu Yang (3):
+>   LoongArch: BPF: Open code and remove invoke_bpf_mod_ret()
+>   LoongArch: BPF: Support small struct arguments for trampoline
+>   LoongArch: BPF: support 12 function arguments for trampoline
+>
 
-FWIW:
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+For the series:
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
 
-However, I just had a look at the s390 implementation and just saw that the
-inline assembly constraints for xor_xc_2() are incorrect. "bytes", "p1",
-and "p2" are input operands, while all three of them are modified within
-the inline assembly. Given that the function consists only of this inline
-assembly I doubt that this causes any harm, however I still want to fix
-this now; but your patch should apply fine with or without this fixed.
+>  arch/loongarch/net/bpf_jit.c | 109 +++++++++++++++++++++++------------
+>  1 file changed, 71 insertions(+), 38 deletions(-)
+>
+> --
+> 2.42.0
+>
