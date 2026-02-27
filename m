@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078114657FB;
-	Fri, 27 Feb 2026 19:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C5846AEC8;
+	Fri, 27 Feb 2026 19:43:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772221398; cv=none; b=dfDoNgDv6Xp+LOsvTuGRqiHOLzsGLeq1bvxoRFcDH9tNYf1IxU/soeXCbwM+DI3QOHeiA4ha33jBsmnBOwvIdLPEZ4390jrV7tsEceh4hspUK74UtqeJZPV97yB/uoOn2lPpXO64Pf9VtJNl8rFPBc2Gw+aTHjRWQPVJAteajzQ=
+	t=1772221399; cv=none; b=gfsx46AvyJNLk4jlngxMuzvhPgombhtJZMu5KaCobU3xG8uK4JQt1J3xR3xj8e/5kD/hCTQEFwO/eTI3E4YMb1vDnhIkOh+iITA60sBpE9thesDCuq9MOr+mlrE1ImArRge5e3/oNvXXt4yz+ddTRl5+n+SIvHLbk3lJcgzqbX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772221398; c=relaxed/simple;
-	bh=SAMYtAvGiq2l3siqpeP/HjyvgvsrRuVBB1mTlVx3THc=;
+	s=arc-20240116; t=1772221399; c=relaxed/simple;
+	bh=Qa3n5VKBU/DN+usEuz8+Om7G9sqmqxUGPeiY6zJ/Qrk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZISn+s9hWtTQ8c4DwC2ZAkvQVKCBd6d2SElwrTf/vNEVBRAMeKrU+T/3ahm0TTw3Upe+JUWNbo7BOJlVv/h8qdthhPYngX7EsPpMdrWTxcuaTPwnOE/xdO+uIvNWQpXUjdVL+3DQC+jXg6z5mLtLUwMcqDHTgqnnbZaAzZ0ue/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcY8+B1p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Amj+cIoH3pVg4Id4wccRPp19JA2gdgnbgxvtWFkoZyA4jT+Fw5BlPEKo2P2Hp9ApjVsoPHOhBLUb0I0fyctJRffYvi1LfbUAgR70GnpEuW+LFba7pfzZJuDBVI1vaBSR8uFQqb5UUcX5NDUH68R2pULetoDknEvD+AviVuAZgxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pz7x/zeR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcY8+B1p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25694C19421;
-	Fri, 27 Feb 2026 19:43:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pz7x/zeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE576C4AF09;
+	Fri, 27 Feb 2026 19:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772221397;
-	bh=SAMYtAvGiq2l3siqpeP/HjyvgvsrRuVBB1mTlVx3THc=;
+	s=k20201202; t=1772221399;
+	bh=Qa3n5VKBU/DN+usEuz8+Om7G9sqmqxUGPeiY6zJ/Qrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tcY8+B1pcBpmKdlfCS0uOZ512/5KyplcwQlwEN0riGqHbwjNQAx0jMfCuPwb+j7bo
-	 QTo7Hn26jsaBCD6x8+xZ3LAkO1InTpbihOC/cpljfElycYpd4ueewY83LtTyrULyhF
-	 9Vifg2QibBztU8orJDKm/LDbPjRiW0JDGXR9CADTTGwsi+b3bnNy9+xloQpsq2VNVb
-	 1lNLBIhny6cu8Zx0eNxyKG3ykqDSkVFU1KTYiOJVWtmg4Xg7LQcV0d3VC4ikEi6tOM
-	 Uv3/BD6OOJdE9kIOm7lAIi5l1pzPT5a/OVOxeLMKCzChMJ1RL0yIYWxctoc1mXy4Jx
-	 yVj1KvyY/leoA==
+	b=pz7x/zeRZhQ6xZh/JF2PLBA3UVxYt5R7fliDJqQsrA7EWawCcDrq6rzktU+2Xknfo
+	 tlAd7MbWAstB6zD7YDLt40LYBwiyBPtk/5130dQdxkHsr+jNi6oGQySAvmpDt3qVmf
+	 s19NFBZCsIh3k5ZDvNy4BUsvYkbTDpxXcqw3ONh/PgxkXxAbPpQQCRZE1xaiz/mlHK
+	 qmfkudr2BHhOHDDcJAFG8InHd4JESRAMaS8xCUrqhKkjlhhtSXUK647GOpOI4CgAHC
+	 2FjqjqC9OPN+yaDqpOYnL2vnDhijVJ8ie2lehbduuMxeQ4TjgqWr4dEq46b9Xiyci/
+	 CgMe6S4W/Rq3Q==
 Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 509F8F40068;
-	Fri, 27 Feb 2026 14:43:16 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 167ACF40069;
+	Fri, 27 Feb 2026 14:43:18 -0500 (EST)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Fri, 27 Feb 2026 14:43:16 -0500
-X-ME-Sender: <xms:1POhaTPYYIx41emnSltkSPqXLs7Hw07GkH2erO2UVreMOcH7aRHXNQ>
-    <xme:1POhaXLpLqC3CgEIU3xtszaBhGEElS7OpjSlH1TW8K67YmRAAYihChJIThB26_OZD
-    ghRVBh0nz2xziQRiabzH7hwp5sJSk1yvDsYP1IEgYQTv0FZpoNYRjA>
-X-ME-Received: <xmr:1POhacaye2j0k2NKv4CmZ5wSqYbQ02TxqLESpFRdQFKAPO59yh6ikDXxZP1KVA>
+  by phl-compute-06.internal (MEProxy); Fri, 27 Feb 2026 14:43:18 -0500
+X-ME-Sender: <xms:1vOhae7YFFAxZXh3_N19WWfb2lBzOwlSxqyevDM4BtfJ-BidljQ59w>
+    <xme:1vOhaRE734JhlpbsLxbnczaJk9g1Lhp3aCegQ1fJ8EFJ4sJbA-M1y887CyhX4tiTo
+    y-9nZD5a4huuGeV22LOqmIFkpBvSzEa3FJr1hUinhqyphyszHF_cplS>
+X-ME-Received: <xmr:1vOhaXlNd3fqpGJtnHBHpj_4sS5cx8LORSG1Zdqhuxo50BCkCNKJSopNR9EFxw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeelkeejucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
@@ -52,14 +52,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgeelkeejucetufdote
     rghilhdrtghomhdprhgtphhtthhopehfvhgulhesghhoohhglhgvrdgtohhmpdhrtghpth
     htohepohhsrghlvhgrughorhesshhushgvrdguvgdprhgtphhtthhopehrphhptheskhgv
     rhhnvghlrdhorhhgpdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgii
-X-ME-Proxy: <xmx:1POhaYlV9F7FZhkhPP5UR7LfiXU6yPyJrPGzwTL6WRDORp1W2i3PAg>
-    <xmx:1POhaXZr6H8m-b0joZT-p1OXlbwkGQzpcQX-LIjAPoH-NN7_Jkf5IA>
-    <xmx:1POhaQBJlSdzCZ0oSCNa2A_5TTgq1iBBuH7YThh5LrfhqqRLl3vkBA>
-    <xmx:1POhadZ8i3JjbDQAlPlYfQHZOXHq8w7pPx_dv5VK1_lw6zxR2VRcIQ>
-    <xmx:1POhaUhL3C6uixSlUoBGYAj6w1gryeKqIB1jiI6nvwKAdmF3xLrwUeIM>
+X-ME-Proxy: <xmx:1vOhacAFFqSOI4885Zy7Iqo0us3SXf_Rk7cqi7_GkheLV8lhkcXWpQ>
+    <xmx:1vOhaeHcRVjpp47P7EB6ZOgUrov8X3dLllIUEtUN8eJcPa6fKn8mKA>
+    <xmx:1vOhaY-16JPOoDp2IoZQcFlovyvM32cGRyMZpOu_Xa4yYLoeawolRA>
+    <xmx:1vOhabkvbZv7ZqtIx-vd9H6Q44WMt4kD_MgZLhDFouQyirDnHmfbCA>
+    <xmx:1vOhae9n8SDoKW34ApDWeA6Vz33Dgkc3q7pqQGTX0-uJGpGArdUeqCRt>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 27 Feb 2026 14:43:15 -0500 (EST)
+ 27 Feb 2026 14:43:17 -0500 (EST)
 From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Muchun Song <muchun.song@linux.dev>,
@@ -89,9 +89,9 @@ Cc: Oscar Salvador <osalvador@suse.de>,
 	loongarch@lists.linux.dev,
 	linux-riscv@lists.infradead.org,
 	Kiryl Shutsemau <kas@kernel.org>
-Subject: [PATCHv7 04/18] mm: Move set/clear_compound_head() next to compound_head()
-Date: Fri, 27 Feb 2026 19:42:42 +0000
-Message-ID: <20260227194302.274384-5-kas@kernel.org>
+Subject: [PATCHv7 05/18] riscv/mm: Align vmemmap to maximal folio size
+Date: Fri, 27 Feb 2026 19:42:43 +0000
+Message-ID: <20260227194302.274384-6-kas@kernel.org>
 X-Mailer: git-send-email 2.51.2
 In-Reply-To: <20260227194302.274384-1-kas@kernel.org>
 References: <20260227194302.274384-1-kas@kernel.org>
@@ -105,62 +105,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Kiryl Shutsemau <kas@kernel.org>
 
-Move set_compound_head() and clear_compound_head() to be adjacent to the
-compound_head() function in page-flags.h.
+The upcoming change to the HugeTLB vmemmap optimization (HVO) requires
+struct pages of the head page to be naturally aligned with regard to the
+folio size.
 
-These functions encode and decode the same compound_info field, so
-keeping them together makes it easier to verify their logic is
-consistent, especially when the encoding changes.
+Align vmemmap to the newly introduced MAX_FOLIO_VMEMMAP_ALIGN.
 
 Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-Reviewed-by: Muchun Song <muchun.song@linux.dev>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Acked-by: David Hildenbrand (arm) <david@kernel.org>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- include/linux/page-flags.h | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/riscv/mm/init.c   |  3 ++-
+ include/linux/mmzone.h | 11 +++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 70c4e43f2d9a..42bf8ed02a29 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -290,6 +290,17 @@ static __always_inline unsigned long _compound_head(const struct page *page)
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 811e03786c56..e8fb2239a0b5 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -63,7 +63,8 @@ phys_addr_t phys_ram_base __ro_after_init;
+ EXPORT_SYMBOL(phys_ram_base);
  
- #define compound_head(page)	((typeof(page))_compound_head(page))
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-#define VMEMMAP_ADDR_ALIGN	(1ULL << SECTION_SIZE_BITS)
++#define VMEMMAP_ADDR_ALIGN	max(1ULL << SECTION_SIZE_BITS, \
++				    MAX_FOLIO_VMEMMAP_ALIGN)
  
-+static __always_inline void set_compound_head(struct page *tail,
-+		const struct page *head, unsigned int order)
-+{
-+	WRITE_ONCE(tail->compound_info, (unsigned long)head + 1);
-+}
+ unsigned long vmemmap_start_pfn __ro_after_init;
+ EXPORT_SYMBOL(vmemmap_start_pfn);
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index be8ce40b5638..492a5be1090f 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -92,6 +92,17 @@
+ 
+ #define MAX_FOLIO_NR_PAGES	(1UL << MAX_FOLIO_ORDER)
+ 
++/*
++ * HugeTLB Vmemmap Optimization (HVO) requires struct pages of the head page to
++ * be naturally aligned with regard to the folio size.
++ *
++ * HVO which is only active if the size of struct page is a power of 2.
++ */
++#define MAX_FOLIO_VMEMMAP_ALIGN \
++	(IS_ENABLED(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP) && \
++	 is_power_of_2(sizeof(struct page)) ? \
++	 MAX_FOLIO_NR_PAGES * sizeof(struct page) : 0)
 +
-+static __always_inline void clear_compound_head(struct page *page)
-+{
-+	WRITE_ONCE(page->compound_info, 0);
-+}
-+
- /**
-  * page_folio - Converts from page to folio.
-  * @p: The page.
-@@ -865,17 +876,6 @@ static inline bool folio_test_large(const struct folio *folio)
- 	return folio_test_head(folio);
- }
- 
--static __always_inline void set_compound_head(struct page *tail,
--		const struct page *head, unsigned int order)
--{
--	WRITE_ONCE(tail->compound_info, (unsigned long)head + 1);
--}
--
--static __always_inline void clear_compound_head(struct page *page)
--{
--	WRITE_ONCE(page->compound_info, 0);
--}
--
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- static inline void ClearPageCompound(struct page *page)
- {
+ enum migratetype {
+ 	MIGRATE_UNMOVABLE,
+ 	MIGRATE_MOVABLE,
 -- 
 2.51.2
 
