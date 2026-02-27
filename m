@@ -1,169 +1,309 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83BD3290DD
-	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FF43859DF
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772179466; cv=none; b=dWEq7aC8Wgi0SUMWJQTJ0bKEiX0YeOIxIB+LWixto4SEkj8lZkQxWpWAbYz5kPON5d6ItolySiTFCT+qcjOfqj19vXlta4LwTIVL1yv7SJsfYA3fJCylr+n2qv8CA42Pa51OKyQkcOGmKQ0Zk7JdxJSYma2iUqbH/1nUIMw9vdM=
+	t=1772182730; cv=none; b=TyvnLwrE7oTeIZAD3b+yCgaiJSk/m3dYUliY1s+4u0ceSDSQPNiXSdOolKqPOT2K/+T3WoE00Giw49TkmlXyGpniS52vFBjTVPFwXwAHqjKCEXN6ZzJrIGF3T0dHlrKgB7H0Hog1aEXzBGn4BhuBDAZ13CzmDeqd/c7BNsSWfPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772179466; c=relaxed/simple;
-	bh=nXFHV3cR8GxbsgsKMu/kZAx/DtO5IgAoFy/fvYHBuJI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=puona1gl2tihcNNxlYRHUwF4fKDaYpDvE7xYBYjZeD6iaKjqPbjXXlmxOIKHE+z5j++kL7OB13xxJE7yXg/ClnHLTglRX+SULxMmbiDqgGRFQXETcGlZsfbVXnHcea8MnVD6hXqcJMEl81RXn8l3UYW0rdwGW9e2tg5p2bOjndk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=kCM09yw3; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1772182730; c=relaxed/simple;
+	bh=JbAhXCV/tGNO+mlv+/M8DxreICdBnIgMdz3TIxxdR8I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dh1pP3v1FTjW0BrS0MvrOA2tvpPOUSr2xtoyzJCiaa22Cn+xcXHsn+sNZbUj0zdbV5cbssv6cu0y66ZqcmirlNRzmMRIIkWE0xgOVkIGfq8cDrDyrNayeJOf7qGTi8GKMpjTscCLOBf+O5n3D6CBqcnhTaLmwhwjquekxoYb75c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLXljj31; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="kCM09yw3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772179456;
-	bh=nk+cafLP4mV0qNkYoAZlk+EQK8C5KbyOru1aOnmjWE4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kCM09yw3iEjKLaAOFWoWgTPCq7gOFlzqk6QKgsQQ3tWLHHNHNQQ98TS303rtnWrke
-	 kKWowDBNjLi0kUoxG4VAOU7VqFXN1r7qDCx5za6BEG+TPIA5U309eJhbt8RovPNCyU
-	 Qgu+DDguq1uw2qfTc6MeyhXkmTVl8jKhum3gecls=
-Received: from stargazer (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 70E3F1A41C4;
-	Fri, 27 Feb 2026 03:04:09 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Mingcong Bai <jeffbai@aosc.io>,
-	Zixing Liu <liushuyu@aosc.io>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	George Guo <guodongtai@kylinos.cn>,
-	Chenghao Duan <duanchenghao@kylinos.cn>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Fix calling smp_processor_id() in preemptible code
-Date: Fri, 27 Feb 2026 16:03:51 +0800
-Message-ID: <20260227080351.663693-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLXljj31"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AA8C2BCAF
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772182729;
+	bh=JbAhXCV/tGNO+mlv+/M8DxreICdBnIgMdz3TIxxdR8I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MLXljj31I3d6xyYasBOr50yADdzMkDbZ60BFYj5ffjof1X0yV9J39nGQL7Lqv+xah
+	 ++JilO3lTlPMueBLEP6JUgEvoJ1JD6aLtituV11tP1pgNt49ymvbKC4YTGaEi4Mlvk
+	 hbkegBQDz7Up0F/l5PKjXud3r02l9GO+MCAhY3TDERnef6+zKpK03V9QpuqThhGKnC
+	 gJCCiHBKjSWMHL84L99HdiA8UD8sXNCzCtvs6XyZbBYGLHGAs6kVnta0ExwVhptc2a
+	 uhSBRVbeVb7+qoyFrSfUHEOphLHO97JqxrAUNhOIDrhxJjDDdXiKNzIJW06tMngRP0
+	 JirO6H1O04Gtg==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-65f771c6b89so2690535a12.3
+        for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 00:58:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVJayjrMHR7Q5ZA3Wd2ZcQtm55spgNrOIsZJyKJstJq6b3iLy7I5oDfo4KHJPFHATD8L1BAu6L59SA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwcVgLI0Rr1D+vtSSADmXBWyZiDHy2fw/yuq8AIsqvHrEn307HW
+	LYrP6aw2u8FQMYRH6Dl6cjqp6/jebFOhq1KcvZzGN+VjbLQZFW9G38Ofk2WzXomJJ1VwtEwKU0a
+	LJgqBGuWVD4HQYkt3NTHy+4/p7g9wCTA=
+X-Received: by 2002:a05:6402:42c4:b0:65b:ec2d:e60d with SMTP id
+ 4fb4d7f45d1cf-65fde2d08c7mr1492485a12.32.1772182728176; Fri, 27 Feb 2026
+ 00:58:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260227072031.581229-1-xry111@xry111.site>
+In-Reply-To: <20260227072031.581229-1-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 27 Feb 2026 16:58:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5nedWAfUXL-mwuoQGgn24pvS7=w9BwQ=t+iZfqJO0CFA@mail.gmail.com>
+X-Gm-Features: AaiRm51CvE3ujOyUMIiu8vKxIb7D03jUOAIPnYhiwWoqehLjwp35ZQM_B_2MNK4
+Message-ID: <CAAhV-H5nedWAfUXL-mwuoQGgn24pvS7=w9BwQ=t+iZfqJO0CFA@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
+	WANG Rui <wangrui@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>, Zixing Liu <liushuyu@aosc.io>, 
+	"H . Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Menglong Dong <menglong8.dong@gmail.com>, 
+	Bibo Mao <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Hanlu Li <lihanlu@loongson.cn>, Nathan Chancellor <nathan@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Wentao Guan <guanwentao@uniontech.com>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix the warning:
+Hi, Ruoyao,
 
-    BUG: using smp_processor_id() in preemptible [00000000] code: sys
-temd/1
-    caller is larch_insn_text_copy+0x40/0xf0
+On Fri, Feb 27, 2026 at 3:21=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
+e:
+>
+> With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
+> of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
+> empty.  This is not valid, as the current DWARF specification mandates
+> the first byte of the EH frame to be the version number 1.  It causes
+> some unwinders to complain, for example the ClickHouse query profiler
+> spams the log with messages:
+>
+>     clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
+>     version: 127 at 7ffffffb0000
+>
+> Here "127" is just the byte located at the p_vaddr (0, i.e. the
+> beginning of the vDSO) of the empty GNU_EH_FRAME segment.
+> Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
+> the start of vDSO in the process VM image.
+>
+> In LoongArch the -fno-asynchronous-unwind-tables option seems just a
+> MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
+> "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
+> use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
+> limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
+> we can simply flip it over to -fasynchronous-unwind-tables and pass
+> --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
+> stack for statistics even if the sample point is taken when the PC is in
+> the vDSO.
+>
+> However simply adjusting the options above would exploit an issue: when
+> the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
+> falled back to a machine-specific routine to match the code pattern of
+> rt_sigreturn and extract the registers saved in the sigframe if the code
+> pattern is matched.  As unwinding from signal handlers is vital for
+> libgcc to support pthread cancellation etc., the fall-back routine had
+> been silently keeping the LoongArch Linux systems functioning since
+> Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
+> format, fall-back routine will no longer be used and libgcc will fail
+> to unwind the sigframe, and unwinding from signal handlers will no
+> longer work, causing dozens of glibc test failures.  To make it possible
+> to unwind from signal handlers again, it's necessary to code the unwind
+> info in __vdso_rt_sigreturn via .cfi_* directives.
+>
+> The offsets in the .cfi_* directives depend on the layout of struct
+> sigframe, notably the offset of sigcontect in the sigframe.  To use the
+> offset in the assembly file, factor out struct sigframe into a header to
+> allow asm-offsets.c to output the offset for assembly.
+>
+> To work around a long-term issue in the libgcc unwinder (the pc is
+> unconditionally substracted by 1: doing so is technically incorrect for
+> a signal frame), a nop instruction is included with the two real
+> instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
+> hack has been used on x86 for a long time.
+>
+> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>
+> Changes from [v1]:
+> - Use DWARF column 0 instead of the libgcc-specific column 72.
+> - Style change to sigframe.h.
+>
+> [v1]: https://lore.kernel.org/20260225104607.3803060-1-xry111@xry111.site
+>
+>  arch/loongarch/include/asm/sigframe.h | 12 +++++++
+>  arch/loongarch/kernel/asm-offsets.c   |  2 ++
+>  arch/loongarch/kernel/signal.c        |  6 +---
+>  arch/loongarch/vdso/Makefile          |  4 +--
+>  arch/loongarch/vdso/sigreturn.S       | 46 ++++++++++++++++++++++++---
+>  5 files changed, 59 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/loongarch/include/asm/sigframe.h
+>
+> diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/inclu=
+de/asm/sigframe.h
+> new file mode 100644
+> index 000000000000..59db3de6db85
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/sigframe.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Separated from arch/loongarch/kernel/signal.c.
+I think this is also unnecessary.
 
-Simply changing it to raw_smp_processor_id() is not enough: if preempt
-and CPU hotplug happens after raw_smp_processor_id() but before
-stop_machine(), the CPU where raw_smp_processor_id() has run may be
-offline when stop_machine() and no CPU will run copy_to_kernel_nofault()
-in text_copy_cb().  Thus guard the larch_insn_text_copy() calls with
-cpus_read_lock() and change stop_machine() to stop_machine_cpuslocked()
-to prevent this.
+> + */
+> +
+> +#include <asm/siginfo.h>
+> +#include <asm/ucontext.h>
+> +
+> +struct rt_sigframe {
+> +       struct siginfo rs_info;
+> +       struct ucontext rs_uctx;
+> +};
+> diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/=
+asm-offsets.c
+> index 3017c7157600..2cc953f113ac 100644
+> --- a/arch/loongarch/kernel/asm-offsets.c
+> +++ b/arch/loongarch/kernel/asm-offsets.c
+> @@ -16,6 +16,7 @@
+>  #include <asm/ptrace.h>
+>  #include <asm/processor.h>
+>  #include <asm/ftrace.h>
+> +#include <asm/sigframe.h>
+>  #include <vdso/datapage.h>
+>
+>  static void __used output_ptreg_defines(void)
+> @@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
+>         COMMENT("Linux sigcontext offsets.");
+>         OFFSET(SC_REGS, sigcontext, sc_regs);
+>         OFFSET(SC_PC, sigcontext, sc_pc);
+> +       OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
+>         BLANK();
+>  }
+>
+> diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signa=
+l.c
+> index c9f7ca778364..e297d54ea638 100644
+> --- a/arch/loongarch/kernel/signal.c
+> +++ b/arch/loongarch/kernel/signal.c
+> @@ -37,6 +37,7 @@
+>  #include <asm/lbt.h>
+>  #include <asm/ucontext.h>
+>  #include <asm/vdso.h>
+> +#include <asm/sigframe.h>
+>
+>  #ifdef DEBUG_SIG
+>  #  define DEBUGP(fmt, args...) printk("%s: " fmt, __func__, ##args)
+> @@ -51,11 +52,6 @@
+>  #define lock_lbt_owner()       ({ preempt_disable(); pagefault_disable()=
+; })
+>  #define unlock_lbt_owner()     ({ pagefault_enable(); preempt_enable(); =
+})
+>
+> -struct rt_sigframe {
+> -       struct siginfo rs_info;
+> -       struct ucontext rs_uctx;
+> -};
+> -
+>  struct _ctx_layout {
+>         struct sctx_info *addr;
+>         unsigned int size;
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index 520f1513f07d..294c16b9517f 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -26,7 +26,7 @@ cflags-vdso :=3D $(ccflags-vdso) \
+>         $(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+>         -std=3Dgnu11 -fms-extensions -O2 -g -fno-strict-aliasing -fno-com=
+mon -fno-builtin \
+>         -fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING =
+\
+> -       $(call cc-option, -fno-asynchronous-unwind-tables) \
+> +       $(call cc-option, -fasynchronous-unwind-tables) \
+>         $(call cc-option, -fno-stack-protector)
+>  aflags-vdso :=3D $(ccflags-vdso) \
+>         -D__ASSEMBLY__ -Wa,-gdwarf-2
+> @@ -41,7 +41,7 @@ endif
+>
+>  # VDSO linker flags.
+>  ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.1 \
+> -       $(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
+> +       $(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr =
+-T
+>
+>  #
+>  # Shared build commands.
+> diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigret=
+urn.S
+> index 9cb3c58fad03..a72c5d592ff5 100644
+> --- a/arch/loongarch/vdso/sigreturn.S
+> +++ b/arch/loongarch/vdso/sigreturn.S
+> @@ -12,13 +12,51 @@
+>
+>  #include <asm/regdef.h>
+>  #include <asm/asm.h>
+> +#include <asm/asm-offsets.h>
+>
+>         .section        .text
+> -       .cfi_sections   .debug_frame
+>
+> -SYM_FUNC_START(__vdso_rt_sigreturn)
+> +       .cfi_startproc
+> +       .cfi_signal_frame
+>
+> +       /*
+> +        * There is a struct rt_sigframe at $sp, set CFA to the address o=
+f
+> +        * the struct sigcontext in the rt_sigframe to simplify the
+> +        * offsets below.
+> +        */
+> +       .cfi_def_cfa 3, RT_SIGFRAME_SC
+> +
+> +       /*
+> +        * The "DWARF for the LoongArch(TM) Architecture" manual states
+> +        * column 0 is for $zero, but it does not make too much sense
+> +        * to save/restore the hardware zero register.  Repurpose the
+> +        * column here (both libgcc and LLVM libunwind allow to do so)
+> +        * and we'd update the manual later.
+> +        */
+> +       .cfi_return_column 0
+> +       .cfi_offset 0, SC_PC
+> +
+> +       /* The GPRs of the "caller" are also stored in the sigcontext.  *=
+/
+> +.irp   num, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, \
+> +            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+> +       .cfi_offset \num, SC_REGS + \num * SZREG
+> +.endr
+> +
+> +       /*
+> +        * HACK: The dwarf2 unwind routine will subtract 1 from the retur=
+n
+> +        * address to get an address in the middle of the persumed call
+> +        * instruction.  While in libgcc there exists a logic to avoid
+> +        * subtracting 1 for the signal frame (a frame with the 'S'
+> +        * augmentation that we've already added via .cfi_signal_frame),
+> +        * unfortunately it doesn't really work: the check of signal fram=
+e
+> +        * is at libgcc/unwind-dw2:1008 in GCC 15.2.0, but the flag it
+> +        * checks will only get updated by the extract_cie_info call at l=
+ine
+> +        * 1025.  So include a nop before the real start to make up for i=
+t.
+> +        * This is also the reason we don't use SYM_FUNC_START.
+> +        */
+> +       nop
+> +SYM_START(__vdso_rt_sigreturn, SYM_L_GLOBAL, SYM_A_ALIGN)
+Is it possible to define SYM_SIGFUNC_START/SYM_SIGFUNC_END in
+linkage.h, and then use them here?
 
-Fixes: 9fbd18cf4c69 ("LoongArch: BPF: Add dynamic code modification support")
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
 
-Change since [v1]:
-- Add lockdep_assert_cpus_held() with a comment to prevent people from
-  calling larch_insn_text_copy() w/o acquiring the cpus lock in the
-  future.
+Huacai
 
-[v1]:https://lore.kernel.org/20260225141404.178823-2-xry111@xry111.site
-
- arch/loongarch/kernel/inst.c | 10 ++++++++--
- arch/loongarch/net/bpf_jit.c |  6 ++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index bf037f0c6b26..7545ae3c796e 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -263,14 +263,20 @@ int larch_insn_text_copy(void *dst, void *src, size_t len)
- 		.dst = dst,
- 		.src = src,
- 		.len = len,
--		.cpu = smp_processor_id(),
-+		.cpu = raw_smp_processor_id(),
- 	};
- 
-+	/*
-+	 * Ensure copy.cpu won't be hot removed before stop_machine.  If
-+	 * it's removed nobody will really update the text.
-+	 */
-+	lockdep_assert_cpus_held();
-+
- 	start = round_down((size_t)dst, PAGE_SIZE);
- 	end   = round_up((size_t)dst + len, PAGE_SIZE);
- 
- 	set_memory_rw(start, (end - start) / PAGE_SIZE);
--	ret = stop_machine(text_copy_cb, &copy, cpu_online_mask);
-+	ret = stop_machine_cpuslocked(text_copy_cb, &copy, cpu_online_mask);
- 	set_memory_rox(start, (end - start) / PAGE_SIZE);
- 
- 	return ret;
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 3bd89f55960d..e8e0ad34928c 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1379,9 +1379,11 @@ void *bpf_arch_text_copy(void *dst, void *src, size_t len)
- {
- 	int ret;
- 
-+	cpus_read_lock();
- 	mutex_lock(&text_mutex);
- 	ret = larch_insn_text_copy(dst, src, len);
- 	mutex_unlock(&text_mutex);
-+	cpus_read_unlock();
- 
- 	return ret ? ERR_PTR(-EINVAL) : dst;
- }
-@@ -1429,10 +1431,12 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
- 	if (ret)
- 		return ret;
- 
-+	cpus_read_lock();
- 	mutex_lock(&text_mutex);
- 	if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
- 		ret = larch_insn_text_copy(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES);
- 	mutex_unlock(&text_mutex);
-+	cpus_read_unlock();
- 
- 	return ret;
- }
-@@ -1450,10 +1454,12 @@ int bpf_arch_text_invalidate(void *dst, size_t len)
- 	for (i = 0; i < (len / sizeof(u32)); i++)
- 		inst[i] = INSN_BREAK;
- 
-+	cpus_read_lock();
- 	mutex_lock(&text_mutex);
- 	if (larch_insn_text_copy(dst, inst, len))
- 		ret = -EINVAL;
- 	mutex_unlock(&text_mutex);
-+	cpus_read_unlock();
- 
- 	kvfree(inst);
- 
--- 
-2.53.0
-
+>         li.w    a7, __NR_rt_sigreturn
+>         syscall 0
+> -
+> -SYM_FUNC_END(__vdso_rt_sigreturn)
+> +       .cfi_endproc
+> +SYM_END(__vdso_rt_sigreturn, SYM_T_FUNC)
+> --
+> 2.53.0
+>
+>
