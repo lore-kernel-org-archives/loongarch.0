@@ -1,166 +1,138 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2821E570D
-	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 01:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772157597; cv=pass; b=ODoRq+MhcEva9wj0Q81BSU3kuXamLCbdtjdfq/aoRGEFP417sBbpRF9/EwUcE5SkHz/C3HpuSwP7Z+eCQnEv5wDtWDpAt+47xbEXoJahk0iZb2uA8yHVAVNKcX0Ofm4+9Ho8qin5P/7jm4FW5wT1dupldj1dD39s4vu2ZE4jcz0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772157597; c=relaxed/simple;
-	bh=Ij8SC/G3dcyNsGNqzFPAw24A5ANOJGekvDBGgGPZ4Gg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=elOrJxCdWH9uqZnZekwFclHhai+TqeKP0zbdjMivN/g4/AQwmuu2umH0DlHY6blm5Tmu3FhvocHAlXmDFZrOxpKLYCgG/oEucgvZj9lOsVLawSnNvY1A1rRTPPjOA2N0gPzRi0A6CQSoxJBT8uyBpxUY5B/wVlU4J1AFa1LSFKo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kg7HmQe+; arc=pass smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352CA3314C5
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 06:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772174684; cv=none; b=nO03woGOlLpPXQzQnM4myoIjtaVOQxqG3qCcAFpxiM0zfAMoLcsnmp1PWYg387fSpTse+9q2bVnTuLQ4N1N9EbDzTwjGoDFiW+8UsYmqt+2wnIvRwAnqGAhLqKDzahFjNp+tnaUmf7qk5I5BdVPGAT+zFIBHOrnrnFSK7EIJGXs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772174684; c=relaxed/simple;
+	bh=zI4WNBxKE1oqYDsbwbv7mmrObw8MTsILZFRv4cugSQ8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DBrGUgi0KdI4uQ7ExFKLxTqc0f6li/2/aJpVvHc2xygHWvnka51j1woAcXxONWR1JaA7zOP7PLMZOohiI8+PZgmy1IsgyoH6o4wKmQjbzojamoRRuXsWyBNgu7RL2/eOJTxa2/m/FF7y1+snQlOdIrRJGGfJATV2i+pJmBuJQWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M85pSVFQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R9NsRIvi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kg7HmQe+"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-506a747448dso13218021cf.0
-        for <loongarch@lists.linux.dev>; Thu, 26 Feb 2026 17:59:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772157595; cv=none;
-        d=google.com; s=arc-20240605;
-        b=KPTpUjlBvKStevEaYvVTncsQnI+bGFOXMn1o3DfmpLqd030IE/pgZ60iKCDxXQS0Ed
-         8JmrkyImuP9KkUICaVhLA82kMm0JjjK+rStlPZmo/+l71CBaKL137/mq3C0Fxu0k85w/
-         25piuNFZWndoD2pwwgpmR7X//aTLbrR+VbvrtukxI5YKeEFrS9MNPn9T3V0OZEXJm8em
-         bUIykA9IGNtDIMOkgEdLrwKD3IHuv+QXaEUiQK5KgOy7ivnxfNkAsTGISApmxeo2IH1z
-         ZTvJF9Zl7ZJ2arbaGMrEKy1N58eNpd1djDQHg9owv5ywPJUZivzdvOFVUc+k5fSgy1Rw
-         GHiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=evNy6jazY3xnKMkGc+5DNvdvNChV3K/OuW2kn1xZLCc=;
-        fh=xqGkAUOtfNwj3dzSVLA7YSt441lh2IGaAhYKW0hytPo=;
-        b=WCi1oA4JYq8lehQ6EKvim92K9OWLDAokKXsIF1h21Wf/wpf0c7xnERP8iKazhmsvbt
-         ZsBTss94aiLQc50mBAykLGKuLKeOOa+aK/IrIMiD0acdKfpyFM0DGyfvc8aktUV4c5kU
-         XgOW8AwSp49MXAiAuIgII0fRiGghohpU+x7vvAYBtDte0MwdQDl2IdqmKQLDwgkEBPeC
-         7PPRCJFS9tZmeVjHNhyt6QFyNkHSMfsbIr7D3sgIHUiixsW/qAVVJ7NFITAMfG83n3Vo
-         7W0H8XBHKEnHFgBVPeiU305fp7GkEMqHt/sVi8uGqKxQISCiU6tmLQ3PAyPUibFEVpa0
-         D81w==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772157595; x=1772762395; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=evNy6jazY3xnKMkGc+5DNvdvNChV3K/OuW2kn1xZLCc=;
-        b=kg7HmQe+BgQW4pwv2SYelF31+5pptCjfvCeSWtx/9XOaqet3vPprEA9hZSGLQFb7E+
-         eJ5o0KCIi2aPacK0hACe3BB576e1dv68JfU9ap7iWDIaprNW6O3K6Was1sqhX4vZPsRH
-         vhiGfnmJcgbsacsTy3cB2BDp7MiwvN+kk0yGexUXF5wSA+aKWq9Rizyq1OXVj9pSeW+x
-         VDPtGnsx/A2WJ3bPuksLoFr4EtzpvglLtBqKYdA85zJ0r9F4YEtHa83UH/IZGeDtBS0W
-         SJwmlVYKNSOchyBMoi1LV5VtRF/X2CrARDK34FOwKvEqKJSE8XN1fcALo1zEetVma9jA
-         Qk4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772157595; x=1772762395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=evNy6jazY3xnKMkGc+5DNvdvNChV3K/OuW2kn1xZLCc=;
-        b=SoDNdFajBz35qk6wnQt2bqZInxMbg23ETT60wC8duQ0HCUAKQ3RQlZs0rrfRw3vJVS
-         zBDVtxL0TnLN98jQBDFyQndg/9LOx4O5Ih71h4tnxiOAfy3Jm/36O72de25cyyOeAFh2
-         NRoeamLcQGvpSdyPVSCMi3XO/90vBWwas6MJE55hIMPjObx8KTpYVMNNuji9V6Nt73dk
-         2cJhETmHMi8kmBAgNQNiZWwATI3bzOqUdTFbxQ0aunvoW/WuFUihei5mIwg2xfGLVf7V
-         ioWCGb86T3F5Vk0SmPhD1he+77TYEtxcNqBBH2IumiEvjjx/v50m03fwzCaOZh6f0hTi
-         xgkA==
-X-Forwarded-Encrypted: i=1; AJvYcCW67anNq5o9WVsXyWJQa1O7qQq+0uWBdt1qKTR7xZdHyGriqlxmpVFRymjntY1pIP169fZXojwD3qw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx7DLMt7/ccigs+2t+skc6uVQESJo3gK7ganUL3Qif5S7hyzTI1
-	ukNdDS5hctLTziXrPphCKI5FH/hf/utriy32tTzOpz/9skMeIcs8Lb2m36EXHjI6cDab0I33EeU
-	/MDv99XPk1mkXuoAgMy3xEtiVeMNRe08=
-X-Gm-Gg: ATEYQzxgdd9QbrT5t3C52QEVLM9FeNzdZAUDqP08ESwSm1bg2s/lcsQO4JadsxZghDr
-	poXdTYMroqom+0CudwJmVawi9e1c73PbpMxK2NehIi3uARALx8vZzJ0H8GIvKVqC2Qk2wq92QyU
-	lDFjwd5R+oLH/hShQgvoLZIBapMEcJt79mIuuqBSL1803MVn6VqTrMkjz8h2K9TU+UtejLL8QFp
-	njRbK9FaMCYgC1Ii3HmDIMDAAaikqabZf0N7NqhDvqsBTXvhrqzCQv9+d6gzvMSjbkMYj4BD17c
-	1fyYo2w=
-X-Received: by 2002:a05:622a:1190:b0:4ff:c17f:726 with SMTP id
- d75a77b69052e-507527146cemr16522181cf.15.1772157595056; Thu, 26 Feb 2026
- 17:59:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M85pSVFQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R9NsRIvi"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1772174681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xJvj9oQFQeeMCbDd+GICAEc7FTw0NbC/VPhyAd1JJKo=;
+	b=M85pSVFQdCyhtVthb4y3GdgjGae2qjnUR2acQJS/2Lz6ZG5gaWw+wfjB40Qze/eavODE6u
+	ZfIOjPPAKbm/OV+pNLogLSoSIMlSVrz9xk3cG8Es+YowNSoTyYvmK54lERaBho6Q/4qFL7
+	j3dkg3kLv/Zic3xdbtAZIb7YfyFPFZ4gFIjbhRWxNire+kIhHbIfkn46ylr6pUDvC/Wi0W
+	gRt8oFP6BdPOVzyr9fOLDwhMxbuFtRE4r2Cr8ro0jk7B0RRAL7J8LFzRpkXfTe2pf65uvS
+	e6oAGaRbMoZIVglqn6olNqsRL68TX3BO9O0dq7tWIDGmB3rU74bwh3khDIbIpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1772174681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xJvj9oQFQeeMCbDd+GICAEc7FTw0NbC/VPhyAd1JJKo=;
+	b=R9NsRIviSPQjcWSg0uQHOs18QhYxOdO58Gzs91l8uNso2iAl21Qya8XrkfoOaM4mLlsg/r
+	y1Jn/BdTjCVaUCCA==
+Subject: [PATCH v2 00/15] vDSO: header file cleanups
+Date: Fri, 27 Feb 2026 07:44:26 +0100
+Message-Id: <20260227-vdso-header-cleanups-v2-0-35d60acf7410@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260226065952.4082859-1-hengqi.chen@gmail.com> <20260226065952.4082859-4-hengqi.chen@gmail.com>
-In-Reply-To: <20260226065952.4082859-4-hengqi.chen@gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Thu, 26 Feb 2026 17:59:44 -0800
-X-Gm-Features: AaiRm53dVv20PZPdJFbffE_0aav73coUVY6FwOJJ0z1TIffKxtwmmOKxgDmhrL0
-Message-ID: <CAK3+h2wDcR4tsLQMaCjo0qQxyyYCY-t5w7_5nXXVCAX9DsNbSw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/3] bpf/selftests: Enable fsession tests for LoongArch
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, chenhuacai@kernel.org, yangtiezhu@loongson.cn, 
-	menglong8.dong@gmail.com, loongarch@lists.linux.dev, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4WNQQ6CMBBFr0Jm7Zi2IiAr72FYFDrYSUhLWmgwh
+ LtbuYDL95L//g6RAlOEttghUOLI3mVQlwIGq92bkE1mUEJVQsoSk4keLWlDAYeJtFvniEaNWlX
+ 1vSEykKdzoJG3M/vqMluOiw+f8yXJn/0TTBIFNuLWN4LoUfflc2K3LsE73q6GoDuO4wvZQ+Q/v
+ AAAAA==
+X-Change-ID: 20260114-vdso-header-cleanups-d2fa26758eed
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+ Christophe Leroy <chleroy@kernel.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772174681; l=2786;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=zI4WNBxKE1oqYDsbwbv7mmrObw8MTsILZFRv4cugSQ8=;
+ b=erC3nB1DKmuQs15OOkp3AAhmZKYK9eudzE8BP0VU2g3116caadMiZY0nDvfbDDgVCnj/hub0/
+ Uaq1gn9VKGWAp3F6pRbxoqspNNYnUpIHkC4zAS+KyqX4uXIR65801d1
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Wed, Feb 25, 2026 at 11:00=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com=
-> wrote:
->
-> Now that the LoongArch JIT supports BPF_TRACE_FSESSION, allow
-> the fsession-related tests to run on LoongArch.
->
->     $ ./test_progs -a fsession_test,get_func_args_test,get_func_ip_test
->     #136/1   fsession_test/fsession_test:OK
->     #136/2   fsession_test/fsession_reattach:OK
->     #136/3   fsession_test/fsession_cookie:OK
->     #136     fsession_test:OK
->     #138     get_func_args_test:OK
->     #139     get_func_ip_test:OK
->     Summary: 3/3 PASSED, 0 SKIPPED, 0 FAILED
->
+The vDSO header files are a bit of a mess, relying on transitive
+includes and pulling in much more definitions than necessary.
 
-[root@fedora bpf]# ./test_progs -a
-fsession_test,get_func_args_test,get_func_ip_test
-#135/1   fsession_test/fsession_test:OK
-#135/2   fsession_test/fsession_reattach:OK
-#135/3   fsession_test/fsession_cookie:OK
-#135     fsession_test:OK
-#138     get_func_args_test:OK
-#139     get_func_ip_test:OK
-Summary: 3/3 PASSED, 0 SKIPPED, 0 FAILED
+Clean up the headers and remove some ifdeffery in the rng core.
 
-Tested-by: Vincent Li <vincent.mc.li@gmail.com>
+This was originally part of my SPARC generic vDSO patch series [0].
+After feedback I am reworking that series and it may not require these
+cleanups anymore. But as the code is already written I am submitting it
+here standalone.
 
-> Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
-> ---
->  tools/testing/selftests/bpf/progs/get_func_args_test.c | 3 ++-
->  tools/testing/selftests/bpf/progs/get_func_ip_test.c   | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/progs/get_func_args_test.c b/too=
-ls/testing/selftests/bpf/progs/get_func_args_test.c
-> index 075a1180ec26..afb185fdf60c 100644
-> --- a/tools/testing/selftests/bpf/progs/get_func_args_test.c
-> +++ b/tools/testing/selftests/bpf/progs/get_func_args_test.c
-> @@ -167,7 +167,8 @@ int BPF_PROG(tp_test2)
->  }
->
->  __u64 test7_result =3D 0;
-> -#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_=
-target_riscv)
-> +#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-> +    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
->  SEC("fsession/bpf_fentry_test1")
->  int BPF_PROG(test7)
->  {
-> diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools=
-/testing/selftests/bpf/progs/get_func_ip_test.c
-> index 45eaa54d1ac7..3816a3616fbe 100644
-> --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> @@ -106,7 +106,8 @@ int BPF_URETPROBE(test8, int ret)
->
->  __u64 test9_entry_result =3D 0;
->  __u64 test9_exit_result =3D 0;
-> -#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_=
-target_riscv)
-> +#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-> +    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
->  SEC("fsession/bpf_fentry_test1")
->  int BPF_PROG(test9, int a)
->  {
-> --
-> 2.43.5
->
+Based on tip/timers/vdso.
+
+[0] https://lore.kernel.org/lkml/20251106-vdso-sparc64-generic-2-v5-0-97ff2b6542f7@linutronix.de/
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Rebase on v7.0-rc1
+- Link to v1: https://lore.kernel.org/r/20260114-vdso-header-cleanups-v1-0-803b80ee97b4@linutronix.de
+
+---
+Thomas Weißschuh (15):
+      arm64: vDSO: gettimeofday: Explicitly include vdso/clocksource.h
+      arm64: vDSO: compat_gettimeofday: Add explicit includes
+      ARM: vdso: gettimeofday: Add explicit includes
+      powerpc/vdso/gettimeofday: Explicitly include vdso/time32.h
+      powerpc/vdso: Explicitly include asm/cputable.h and asm/feature-fixups.h
+      LoongArch: vDSO: Explicitly include asm/vdso/vdso.h
+      MIPS: vdso: Add include guard to asm/vdso/vdso.h
+      MIPS: vdso: Explicitly include asm/vdso/vdso.h
+      random: vDSO: add explicit includes
+      vdso/gettimeofday: Add explicit includes
+      vdso/helpers: Explicitly include vdso/processor.h
+      vdso/datapage: Remove inclusion of gettimeofday.h
+      vdso/datapage: Trim down unnecessary includes
+      random: vDSO: trim vDSO includes
+      random: vDSO: remove ifdeffery
+
+ arch/arm/include/asm/vdso/gettimeofday.h          |  2 ++
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h |  3 +++
+ arch/arm64/include/asm/vdso/gettimeofday.h        |  2 ++
+ arch/loongarch/kernel/process.c                   |  1 +
+ arch/loongarch/kernel/vdso.c                      |  1 +
+ arch/mips/include/asm/vdso/vdso.h                 |  5 +++++
+ arch/mips/kernel/vdso.c                           |  1 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h      |  1 +
+ arch/powerpc/include/asm/vdso/processor.h         |  3 +++
+ drivers/char/random.c                             | 16 ++++++----------
+ include/vdso/datapage.h                           | 23 ++---------------------
+ include/vdso/helpers.h                            |  1 +
+ lib/vdso/getrandom.c                              |  3 +++
+ lib/vdso/gettimeofday.c                           | 17 +++++++++++++++++
+ 14 files changed, 48 insertions(+), 31 deletions(-)
+---
+base-commit: 375f574d703d3af5174d6357d3ca8990bd4a1e42
+change-id: 20260114-vdso-header-cleanups-d2fa26758eed
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
