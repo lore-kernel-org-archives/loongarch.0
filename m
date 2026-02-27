@@ -1,122 +1,169 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B323290CA;
-	Fri, 27 Feb 2026 07:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83BD3290DD
+	for <loongarch@lists.linux.dev>; Fri, 27 Feb 2026 08:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772178034; cv=none; b=EG9OjANfqOQ/X5RsplimQjEXNRRHmUvdlUiO1b8QNmMyCdtxTMgf2QhfAbFQ5Zx218q3QyHAdtj/oCUZP8GDAEn/kbbW0921N1XfmmXF26+IJiPRiIXDUQT9UMtmzeTtMsjdfqwyYac9lWK5e4sC8CMjxjF5ZGcO2yf1grWVuQQ=
+	t=1772179466; cv=none; b=dWEq7aC8Wgi0SUMWJQTJ0bKEiX0YeOIxIB+LWixto4SEkj8lZkQxWpWAbYz5kPON5d6ItolySiTFCT+qcjOfqj19vXlta4LwTIVL1yv7SJsfYA3fJCylr+n2qv8CA42Pa51OKyQkcOGmKQ0Zk7JdxJSYma2iUqbH/1nUIMw9vdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772178034; c=relaxed/simple;
-	bh=6TeB+wxnECTY0tW0ZKEAuaK+iy41tgHYSXrYQbS68lU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p2bBCehUPWRt0WmV+q9r40cU80XRtl3eWzk3mjO9qe8fi0g2KkIZdHQbN2GvF7yQqHMjAFX45nOcr79FVamfOk6ey2kmYszRkzOH2cF/CHEDWgx+CImXPuh5IHWaAWTNdQkV6sBhMrsz3Z/29UwIeuXyp7NDKVDbNZ8dsOiZ+h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=olls9gHq; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1772179466; c=relaxed/simple;
+	bh=nXFHV3cR8GxbsgsKMu/kZAx/DtO5IgAoFy/fvYHBuJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=puona1gl2tihcNNxlYRHUwF4fKDaYpDvE7xYBYjZeD6iaKjqPbjXXlmxOIKHE+z5j++kL7OB13xxJE7yXg/ClnHLTglRX+SULxMmbiDqgGRFQXETcGlZsfbVXnHcea8MnVD6hXqcJMEl81RXn8l3UYW0rdwGW9e2tg5p2bOjndk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=kCM09yw3; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="olls9gHq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=V6J0SL9RsbUQWhN8iu+ey8pLnEs4VtLYMczUYtzIoAc=;
-	t=1772178033; x=1773387633; b=olls9gHq4SfXvD7rB7T8SpHOijo2QBHoX6MRNp3DUbo+0Im
-	y+q06hN04UokGh0RMfdWm1bYFHKotymTHTa1+GjC7ZCe9l8+McnJ5AS76iQnFZdD3wIA5nOR/cg+k
-	8mTWhwYPXLtuFofRu8uph/xh82gjsE6JsS8m7BbSPM0AW+jUdVwDOKgniqinilyZzKsJrQNNw0Y1V
-	CqVnb2bf8xsLxTVcXNAnoiny1SFp+03CShFkZt4M+0+1i8G97TFjPLnTj58ZaSPJtdh/Lx9ZNj8ds
-	mUhPCVLTDnmgVy1evl8fzWNhiXKjnq4cBZTCGmJtBl7XRJudvEpAWYezHg0MCAXw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1vvsRx-00000003Eus-2oGQ;
-	Fri, 27 Feb 2026 08:39:49 +0100
-Message-ID: <4f69d30f952bc374e69f44786f662886c30058e9.camel@sipsolutions.net>
-Subject: Re: [PATCH 03/25] um/xor: don't override XOR_SELECT_TEMPLATE
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Richard Weinberger <richard@nod.at>, hch <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Richard Henderson	
- <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Magnus
- Lindholm <linmag7@gmail.com>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas	 <catalin.marinas@arm.com>, will <will@kernel.org>, Huacai Chen	
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan
- Srinivasan	 <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin	 <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>,  Paul Walmsley	 <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou	 <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>, Heiko Carstens	 <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev	 <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>,  Sven Schnelle
- <svens@linux.ibm.com>, davem <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>,  anton ivanov <anton.ivanov@cambridgegreys.com>,
- Thomas Gleixner <tglx@kernel.org>, mingo <mingo@redhat.com>,  bp
- <bp@alien8.de>, dave hansen <dave.hansen@linux.intel.com>, x86
- <x86@kernel.org>, hpa	 <hpa@zytor.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, dan j williams	 <dan.j.williams@intel.com>,
- Chris Mason <clm@fb.com>, David Sterba	 <dsterba@suse.com>, Arnd Bergmann
- <arnd@arndb.de>, Song Liu <song@kernel.org>,  Yu Kuai <yukuai@fnnas.com>,
- Li Nan <linan122@huawei.com>, linux-alpha <linux-alpha@vger.kernel.org>, 
- linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>,  loongarch
- <loongarch@lists.linux.dev>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- linux-riscv	 <linux-riscv@lists.infradead.org>, linux-s390
- <linux-s390@vger.kernel.org>,  sparclinux <sparclinux@vger.kernel.org>,
- linux-um <linux-um@lists.infradead.org>, Linux Crypto Mailing List
- <linux-crypto@vger.kernel.org>, linux-btrfs <linux-btrfs@vger.kernel.org>,
- linux-arch	 <linux-arch@vger.kernel.org>, linux-raid
- <linux-raid@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 27 Feb 2026 08:39:47 +0100
-In-Reply-To: <445921547.2198.1772142326749.JavaMail.zimbra@nod.at>
-References: <20260226151106.144735-1-hch@lst.de>
-	 <20260226151106.144735-4-hch@lst.de>
-	 <445921547.2198.1772142326749.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="kCM09yw3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1772179456;
+	bh=nk+cafLP4mV0qNkYoAZlk+EQK8C5KbyOru1aOnmjWE4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kCM09yw3iEjKLaAOFWoWgTPCq7gOFlzqk6QKgsQQ3tWLHHNHNQQ98TS303rtnWrke
+	 kKWowDBNjLi0kUoxG4VAOU7VqFXN1r7qDCx5za6BEG+TPIA5U309eJhbt8RovPNCyU
+	 Qgu+DDguq1uw2qfTc6MeyhXkmTVl8jKhum3gecls=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 70E3F1A41C4;
+	Fri, 27 Feb 2026 03:04:09 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	Xi Ruoyao <xry111@xry111.site>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	George Guo <guodongtai@kylinos.cn>,
+	Chenghao Duan <duanchenghao@kylinos.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Fix calling smp_processor_id() in preemptible code
+Date: Fri, 27 Feb 2026 16:03:51 +0800
+Message-ID: <20260227080351.663693-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2026-02-26 at 22:45 +0100, Richard Weinberger wrote:
-> ----- Urspr=C3=BCngliche Mail -----
-> > Von: "hch" <hch@lst.de>
-> > XOR_SELECT_TEMPLATE is only ever called with a NULL argument, so all th=
-e
-> > ifdef'ery doesn't do anything.  With our without this, the time travel
-> > mode should work fine on CPUs that support AVX2, as the AVX2
-> > implementation is forced in this case, and won't work otherwise.
->=20
-> IIRC Johannes added XOR_SELECT_TEMPLATE() here to skip
-> the template selection logic because it didn't work with time travel mode=
-.
->=20
-> Johannes, can you please test whether this change does not break
-> time travel mode?
+Fix the warning:
 
-It does work, even if it reports nonsense (as you'd expect):
+    BUG: using smp_processor_id() in preemptible [00000000] code: sys
+temd/1
+    caller is larch_insn_text_copy+0x40/0xf0
 
-xor: measuring software checksum speed
-   prefetch64-sse  : 12816000 MB/sec
-   sse             : 12816000 MB/sec
-xor: using function: prefetch64-sse (12816000 MB/sec)
+Simply changing it to raw_smp_processor_id() is not enough: if preempt
+and CPU hotplug happens after raw_smp_processor_id() but before
+stop_machine(), the CPU where raw_smp_processor_id() has run may be
+offline when stop_machine() and no CPU will run copy_to_kernel_nofault()
+in text_copy_cb().  Thus guard the larch_insn_text_copy() calls with
+cpus_read_lock() and change stop_machine() to stop_machine_cpuslocked()
+to prevent this.
 
-I think it works now because the loop is using ktime and is bounded by
-REPS, since commit c055e3eae0f1 ("crypto: xor - use ktime for template
-benchmarking").
+Fixes: 9fbd18cf4c69 ("LoongArch: BPF: Add dynamic code modification support")
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
 
-The RAID speed select still hangs, but we've gotten that removed via
-Kconfig, so that's already handled. Perhaps raid6_choose_gen() should
-use a similar algorithm? But for UML it doesn't really matter since
-CONFIG_RAID6_PQ_BENCHMARK exists.
+Change since [v1]:
+- Add lockdep_assert_cpus_held() with a comment to prevent people from
+  calling larch_insn_text_copy() w/o acquiring the cpus lock in the
+  future.
 
+[v1]:https://lore.kernel.org/20260225141404.178823-2-xry111@xry111.site
 
-As far as AVX2 is concerned, yeah, I guess that was a bug, but evidently
-nobody (who configured time-travel) ever cared - what _did_ matter
-though in practice is that the boot not get stuck entirely... Two
-completely separate issues.
+ arch/loongarch/kernel/inst.c | 10 ++++++++--
+ arch/loongarch/net/bpf_jit.c |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-johannes
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index bf037f0c6b26..7545ae3c796e 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -263,14 +263,20 @@ int larch_insn_text_copy(void *dst, void *src, size_t len)
+ 		.dst = dst,
+ 		.src = src,
+ 		.len = len,
+-		.cpu = smp_processor_id(),
++		.cpu = raw_smp_processor_id(),
+ 	};
+ 
++	/*
++	 * Ensure copy.cpu won't be hot removed before stop_machine.  If
++	 * it's removed nobody will really update the text.
++	 */
++	lockdep_assert_cpus_held();
++
+ 	start = round_down((size_t)dst, PAGE_SIZE);
+ 	end   = round_up((size_t)dst + len, PAGE_SIZE);
+ 
+ 	set_memory_rw(start, (end - start) / PAGE_SIZE);
+-	ret = stop_machine(text_copy_cb, &copy, cpu_online_mask);
++	ret = stop_machine_cpuslocked(text_copy_cb, &copy, cpu_online_mask);
+ 	set_memory_rox(start, (end - start) / PAGE_SIZE);
+ 
+ 	return ret;
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 3bd89f55960d..e8e0ad34928c 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1379,9 +1379,11 @@ void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+ {
+ 	int ret;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	ret = larch_insn_text_copy(dst, src, len);
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	return ret ? ERR_PTR(-EINVAL) : dst;
+ }
+@@ -1429,10 +1431,12 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_poke_type old_t,
+ 	if (ret)
+ 		return ret;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
+ 		ret = larch_insn_text_copy(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES);
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	return ret;
+ }
+@@ -1450,10 +1454,12 @@ int bpf_arch_text_invalidate(void *dst, size_t len)
+ 	for (i = 0; i < (len / sizeof(u32)); i++)
+ 		inst[i] = INSN_BREAK;
+ 
++	cpus_read_lock();
+ 	mutex_lock(&text_mutex);
+ 	if (larch_insn_text_copy(dst, inst, len))
+ 		ret = -EINVAL;
+ 	mutex_unlock(&text_mutex);
++	cpus_read_unlock();
+ 
+ 	kvfree(inst);
+ 
+-- 
+2.53.0
+
