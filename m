@@ -1,141 +1,127 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E12E285C
-	for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 10:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734AD3859D9;
+	Sat, 28 Feb 2026 10:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772274608; cv=none; b=cBxCJpZty8Y61vRP5Gsn3uizJJv2A+cIkx3ETMzYr1+UbDDAwhTis4OuZWQj3xVbhRDDl9KNIsGGnHmx6DD/sKu3bZDDkdoK6+Lrxc8eV15HXYolnd30VVYVNZmcPC/hpNnl9Lf7hGy4HbdAQ7OaZThjK6qVdYc0SQ1GAGJhUWQ=
+	t=1772274716; cv=none; b=YtAsVQLYq5TjkttKBNtSPhJA5UbKEtHyVGSfMqubYcoq1j+n7C4BxtkfvkNr+KrhBAVgs0NBplbt1ceLt6ROvAAX5YKeDv/ZPowvLccU9AtgTMXdSq3SLF26eDES5dq7HMZ4g1W62q2ZxNooYHXny1A81c1ziggy6CuPHCTFz+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772274608; c=relaxed/simple;
-	bh=AawrdwbBOMsHCqYB21J/92mvuB3GpzoxXU2ceO1vee4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H4akMXf/1dEh2Gn1VRnWCDJ1f76zLcLGny2DL01lI+Ohu4S5mxhnSOQZV+C2J0A2wMdMNwymYs/6P9xE6N10dzWMRgG4nhvuoHWP8Yw+T2vQilrOIH6v2rbG/ErrDAKLjE9ytAdHLRIcyGmavDsrp0APInKu3Xyh26OtYByKOzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IiAWs8/Q; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772274716; c=relaxed/simple;
+	bh=yfoqQ9vN7OO2ec4V/ZA9PZIXZ4CKF9DDFJKzwpjOEpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nm1CtzMCriQWe7CPOOt9sf4YyH3tGw5xuYMYjmIbN+8ZtKbZOflRYr0dx8vE+4lW+JhDHAy+7Xh7lBmc36jgNgmRzmJEZnK4YDHoqLlZPMsgnlkhYb6hsvSw3nNRuAn8cUEj/QdAbCKUPsONAVrw8wcSjdPxwI9lDm0GDr+CYSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ihs5Yf5H; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IiAWs8/Q"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772274594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oBiJOfFdr0HmL0Jncb/PQJIBHKyVVi1wurGB7AAqKSA=;
-	b=IiAWs8/QrPhIaJEQsE7ZerwrnDxo9de2iMPgBlD1aQvwWlK4uHEC9EXHSx9Taygs5ZC5e+
-	Ge9ePW9s3Yu+AGFa0QkBGIljocIu/FFtOyNLV+FTdSh82vb4EuRLaow6xeM+VgihkWFSj+
-	Ys7vNffAFiD0wTXyDPl6fJl2oF2W5pg=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	joe@perches.com
-Cc: guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	hengqi.chen@gmail.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] LoongArch: proc: Simplify cpuinfo features output
-Date: Sat, 28 Feb 2026 18:29:46 +0800
-Message-ID: <20260228102946.4045-1-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ihs5Yf5H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TMfQFraLliTO9OYi4VnvV7gf7AjKPxIluxE2boSfq9E=; b=Ihs5Yf5HVrcI20Hvh5VGWrIGtj
+	w539I2X4jBa2jKtS495tj7OW6yzhUvsPzuvYxap8QuwZoigJhFPba8v5sdtkPlsa6ID6C16CNvr3D
+	fYcDuOEFbymUfK08ZwvafhxK/cQQqT8fuyE87FJ8bLSaBRcRuE1oHdJ8cGt5ahL8RttPyiMxygm7n
+	mt+sFX75z3hVeBiEagfvPL++3zVOztglGmkatawM3oQt9uFpQqkNr4WQvFkrT+2czFsf7HwHxTWyD
+	ed2+E9lBjpxNLnaogre7bAMexNOCdGPm1iLI1kQQI6WFzJBF95/QpTcsQabK0eral+I71Lj4w+g8Q
+	gLUIf0SA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vwHbS-0000000EUcv-1pQT;
+	Sat, 28 Feb 2026 10:31:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2ADC430066A; Sat, 28 Feb 2026 11:31:17 +0100 (CET)
+Date: Sat, 28 Feb 2026 11:31:17 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 18/25] x86: move the XOR code to lib/raid/
+Message-ID: <20260228103117.GK1282955@noisy.programming.kicks-ass.net>
+References: <20260226151106.144735-1-hch@lst.de>
+ <20260226151106.144735-19-hch@lst.de>
+ <20260227143016.GH1282955@noisy.programming.kicks-ass.net>
+ <20260227235529.GA31321@quark>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227235529.GA31321@quark>
 
-From: George Guo <guodongtai@kylinos.cn>
+On Fri, Feb 27, 2026 at 03:55:29PM -0800, Eric Biggers wrote:
+> On Fri, Feb 27, 2026 at 03:30:16PM +0100, Peter Zijlstra wrote:
+> > On Thu, Feb 26, 2026 at 07:10:30AM -0800, Christoph Hellwig wrote:
+> > > Move the optimized XOR code out of line into lib/raid.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  arch/x86/include/asm/xor.h                    | 518 ++----------------
+> > >  arch/x86/include/asm/xor_64.h                 |  32 --
+> > >  lib/raid/xor/Makefile                         |   8 +
+> > >  .../xor_avx.h => lib/raid/xor/x86/xor-avx.c   |  14 +-
+> > >  .../xor_32.h => lib/raid/xor/x86/xor-mmx.c    |  60 +-
+> > >  lib/raid/xor/x86/xor-sse.c                    | 476 ++++++++++++++++
+> > 
+> > I gotta ask, why lib/raid/xor/$arch/ instead of something like
+> > arch/$arch/lib/xor ?
+> 
+> Similar to lib/crypto/ and lib/crc/, it allows the translation units
+> (either .c or .S files) containing architecture-optimized XOR code to be
+> included directly in the xor.ko module, where they should be.
+> 
+> Previously, these were always built into the core kernel even if
+> XOR_BLOCKS was 'n' or 'm', or they were built into a separate module
+> xor-neon.ko which xor.ko depended on.  So either the code was included
+> unnecessarily, or there was an extra module.
+> 
+> Technically we could instead have the lib makefile compile stuff in
+> arch/, but that would be unusual.  It's much cleaner to have the
+> directory structure match the build system.
 
-Introduce seq_cpu_feature() macro to eliminate repetitive if statements
-in show_cpuinfo(). The macro expands to:
-    do {
-        if (cpu_has_##feature)
-            seq_puts(m, " " #feature);
-    } while (0)
+Hmm, I suppose. Its just weird that we now have to look in both
+arch/$foo and lib/*/$foo/ to find all arch code.
 
-This improves code readability and maintainability.
-
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/kernel/proc.c | 56 ++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 32 deletions(-)
-
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index a8127e83da65..4742bdfc3872 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -13,6 +13,12 @@
- #include <asm/processor.h>
- #include <asm/time.h>
- 
-+#define seq_cpu_feature(m, feature)		\
-+do {						\
-+	if (cpu_has_##feature)			\
-+		seq_puts(m, " " #feature);	\
-+} while (0)
-+
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
-@@ -60,38 +66,24 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 	seq_puts(m, "\n");
- 
- 	seq_puts(m, "Features\t\t:");
--	if (cpu_has_cpucfg)
--		seq_puts(m, " cpucfg");
--	if (cpu_has_lam)
--		seq_puts(m, " lam");
--	if (cpu_has_scq)
--		seq_puts(m, " scq");
--	if (cpu_has_ual)
--		seq_puts(m, " ual");
--	if (cpu_has_fpu)
--		seq_puts(m, " fpu");
--	if (cpu_has_lsx)
--		seq_puts(m, " lsx");
--	if (cpu_has_lasx)
--		seq_puts(m, " lasx");
--	if (cpu_has_crc32)
--		seq_puts(m, " crc32");
--	if (cpu_has_complex)
--		seq_puts(m, " complex");
--	if (cpu_has_crypto)
--		seq_puts(m, " crypto");
--	if (cpu_has_ptw)
--		seq_puts(m, " ptw");
--	if (cpu_has_lspw)
--		seq_puts(m, " lspw");
--	if (cpu_has_lvz)
--		seq_puts(m, " lvz");
--	if (cpu_has_lbt_x86)
--		seq_puts(m, " lbt_x86");
--	if (cpu_has_lbt_arm)
--		seq_puts(m, " lbt_arm");
--	if (cpu_has_lbt_mips)
--		seq_puts(m, " lbt_mips");
-+
-+	seq_cpu_feature(m, cpucfg);
-+	seq_cpu_feature(m, lam);
-+	seq_cpu_feature(m, scq);
-+	seq_cpu_feature(m, ual);
-+	seq_cpu_feature(m, fpu);
-+	seq_cpu_feature(m, lsx);
-+	seq_cpu_feature(m, lasx);
-+	seq_cpu_feature(m, crc32);
-+	seq_cpu_feature(m, complex);
-+	seq_cpu_feature(m, crypto);
-+	seq_cpu_feature(m, ptw);
-+	seq_cpu_feature(m, lspw);
-+	seq_cpu_feature(m, lvz);
-+	seq_cpu_feature(m, lbt_x86);
-+	seq_cpu_feature(m, lbt_arm);
-+	seq_cpu_feature(m, lbt_mips);
-+
- 	seq_puts(m, "\n");
- 
- 	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
--- 
-2.34.1
-
+And I don't suppose symlinks would make it better?
