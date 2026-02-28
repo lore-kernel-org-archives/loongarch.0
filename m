@@ -1,123 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492DD280CFC;
-	Sat, 28 Feb 2026 07:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E12E285C
+	for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 10:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772264157; cv=none; b=hK/Kol6V2P5QBnMG0kt3xqYzXE+HnGzn5WQV/ibkJ8yuMXP4+SC2hZoRaw3oAYfqhmsiMfrKgzCQ/ETTdVZnSKDCzLFtu22h6yGUO+TJrR1+3JRpOflS4V7C+wzd9ghmT0itgNs5d5aN3gkOEjr95l8VotOhV6ie+4n76a3WOYE=
+	t=1772274608; cv=none; b=cBxCJpZty8Y61vRP5Gsn3uizJJv2A+cIkx3ETMzYr1+UbDDAwhTis4OuZWQj3xVbhRDDl9KNIsGGnHmx6DD/sKu3bZDDkdoK6+Lrxc8eV15HXYolnd30VVYVNZmcPC/hpNnl9Lf7hGy4HbdAQ7OaZThjK6qVdYc0SQ1GAGJhUWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772264157; c=relaxed/simple;
-	bh=6sJNyE+VY1nO/tYyDnefgTdhbr4qcMLaxVtizhQQLOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mmr3O2JO2lSzENY5/KVILdgy1zkWzep9wUNf584SWubh96uoLXS5eILlsS8TWSKNl0pqWMrRv0gPWpm/JK/r8PX+1K5hYsMSQpKP8HcudRQrDyrVyXkoAxZQYPDfZ+F9/HFo4jaA9/ZE9KfnqcbwLiA1luZE3n/YBbM29bRIogA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9tdtdMW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772274608; c=relaxed/simple;
+	bh=AawrdwbBOMsHCqYB21J/92mvuB3GpzoxXU2ceO1vee4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H4akMXf/1dEh2Gn1VRnWCDJ1f76zLcLGny2DL01lI+Ohu4S5mxhnSOQZV+C2J0A2wMdMNwymYs/6P9xE6N10dzWMRgG4nhvuoHWP8Yw+T2vQilrOIH6v2rbG/ErrDAKLjE9ytAdHLRIcyGmavDsrp0APInKu3Xyh26OtYByKOzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IiAWs8/Q; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9tdtdMW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7026C116D0;
-	Sat, 28 Feb 2026 07:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772264156;
-	bh=6sJNyE+VY1nO/tYyDnefgTdhbr4qcMLaxVtizhQQLOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9tdtdMWAI5Ijh2x1iw7nM2tuOn7VcN+8js+7SLSFQBQ9vU2vt9oqu+EgowziSK73
-	 sAzO21bZJQxKxmtHlu0vSUH2tGUcQRgjFGbZX7mbQPKN8WjwpFmWL8+xDtI3qS0EtF
-	 4Jfc+10mCY+RphkrG2fcHyK/TMz2wuYQYlWWVT80/0ZLPVgACgd9amxPCn3FPf0AgL
-	 JgqFFYCABzbxFrg5KHqTTW/MBNJ7iUh+0uZMyEIV2cew4CSOzs95au6LqecDztGc2s
-	 U0mqa9zSxlhCMSe8/lU1BD692HSjIX3cPWlCgttoWYJBTO4L+PB6fHsLYOLKccSpod
-	 azry3uoyDBKgg==
-Date: Fri, 27 Feb 2026 23:35:53 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library
-Message-ID: <20260228073553.GL65277@quark>
-References: <20260226151106.144735-1-hch@lst.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IiAWs8/Q"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772274594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oBiJOfFdr0HmL0Jncb/PQJIBHKyVVi1wurGB7AAqKSA=;
+	b=IiAWs8/QrPhIaJEQsE7ZerwrnDxo9de2iMPgBlD1aQvwWlK4uHEC9EXHSx9Taygs5ZC5e+
+	Ge9ePW9s3Yu+AGFa0QkBGIljocIu/FFtOyNLV+FTdSh82vb4EuRLaow6xeM+VgihkWFSj+
+	Ys7vNffAFiD0wTXyDPl6fJl2oF2W5pg=
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	joe@perches.com
+Cc: guodongtai@kylinos.cn,
+	kernel@xen0n.name,
+	hengqi.chen@gmail.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] LoongArch: proc: Simplify cpuinfo features output
+Date: Sat, 28 Feb 2026 18:29:46 +0800
+Message-ID: <20260228102946.4045-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260226151106.144735-1-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 26, 2026 at 07:10:12AM -0800, Christoph Hellwig wrote:
-> Hi all,
-> 
-> the XOR library used for the RAID5 parity is a bit of a mess right now.
-> The main file sits in crypto/ despite not being cryptography and not
-> using the crypto API, with the generic implementations sitting in
-> include/asm-generic and the arch implementations sitting in an asm/
-> header in theory.  The latter doesn't work for many cases, so
-> architectures often build the code directly into the core kernel, or
-> create another module for the architecture code.
-> 
-> Changes this to a single module in lib/ that also contains the
-> architecture optimizations, similar to the library work Eric Biggers
-> has done for the CRC and crypto libraries later.  After that it changes
-> to better calling conventions that allow for smarter architecture
-> implementations (although none is contained here yet), and uses
-> static_call to avoid indirection function call overhead.
-> 
-> A git tree is also available here:
-> 
->     git://git.infradead.org/users/hch/misc.git xor-improvements
-> 
-> Gitweb:
-> 
->     https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/xor-improvements
+From: George Guo <guodongtai@kylinos.cn>
 
-Overall this looks great.  xor_gen() really needs a KUnit test, though.
-Without that, how was this tested?
+Introduce seq_cpu_feature() macro to eliminate repetitive if statements
+in show_cpuinfo(). The macro expands to:
+    do {
+        if (cpu_has_##feature)
+            seq_puts(m, " " #feature);
+    } while (0)
 
-Later we should remove some of the obsolete implementations, such as the
-alpha or x86 MMX ones.  Those platforms have no optimized code in
-lib/crc/ or lib/crypto/, and I doubt anyone cares.  But that should be a
-separate series later: porting them over unchanged is the right call for
-now so that this series doesn't get blocked on debates about removals...
+This improves code readability and maintainability.
 
-Also, I notice that no one has optimized this for the latest x86_64 CPUs
-by using the vpternlogd instruction to do 3-input XORs.  That would be
-another good future project.
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+ arch/loongarch/kernel/proc.c | 56 ++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 32 deletions(-)
 
-- Eric
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index a8127e83da65..4742bdfc3872 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -13,6 +13,12 @@
+ #include <asm/processor.h>
+ #include <asm/time.h>
+ 
++#define seq_cpu_feature(m, feature)		\
++do {						\
++	if (cpu_has_##feature)			\
++		seq_puts(m, " " #feature);	\
++} while (0)
++
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	unsigned long n = (unsigned long) v - 1;
+@@ -60,38 +66,24 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	seq_puts(m, "\n");
+ 
+ 	seq_puts(m, "Features\t\t:");
+-	if (cpu_has_cpucfg)
+-		seq_puts(m, " cpucfg");
+-	if (cpu_has_lam)
+-		seq_puts(m, " lam");
+-	if (cpu_has_scq)
+-		seq_puts(m, " scq");
+-	if (cpu_has_ual)
+-		seq_puts(m, " ual");
+-	if (cpu_has_fpu)
+-		seq_puts(m, " fpu");
+-	if (cpu_has_lsx)
+-		seq_puts(m, " lsx");
+-	if (cpu_has_lasx)
+-		seq_puts(m, " lasx");
+-	if (cpu_has_crc32)
+-		seq_puts(m, " crc32");
+-	if (cpu_has_complex)
+-		seq_puts(m, " complex");
+-	if (cpu_has_crypto)
+-		seq_puts(m, " crypto");
+-	if (cpu_has_ptw)
+-		seq_puts(m, " ptw");
+-	if (cpu_has_lspw)
+-		seq_puts(m, " lspw");
+-	if (cpu_has_lvz)
+-		seq_puts(m, " lvz");
+-	if (cpu_has_lbt_x86)
+-		seq_puts(m, " lbt_x86");
+-	if (cpu_has_lbt_arm)
+-		seq_puts(m, " lbt_arm");
+-	if (cpu_has_lbt_mips)
+-		seq_puts(m, " lbt_mips");
++
++	seq_cpu_feature(m, cpucfg);
++	seq_cpu_feature(m, lam);
++	seq_cpu_feature(m, scq);
++	seq_cpu_feature(m, ual);
++	seq_cpu_feature(m, fpu);
++	seq_cpu_feature(m, lsx);
++	seq_cpu_feature(m, lasx);
++	seq_cpu_feature(m, crc32);
++	seq_cpu_feature(m, complex);
++	seq_cpu_feature(m, crypto);
++	seq_cpu_feature(m, ptw);
++	seq_cpu_feature(m, lspw);
++	seq_cpu_feature(m, lvz);
++	seq_cpu_feature(m, lbt_x86);
++	seq_cpu_feature(m, lbt_arm);
++	seq_cpu_feature(m, lbt_mips);
++
+ 	seq_puts(m, "\n");
+ 
+ 	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+-- 
+2.34.1
+
