@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797362EBBA9;
-	Sun,  1 Mar 2026 01:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51A12FE042;
+	Sun,  1 Mar 2026 01:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330111; cv=none; b=iMKnplJiOD/yykyUhB7kbfz+kFxlx0KxbUp2H9hAPuRTfKkUx0Kaw6erGlbImd3MUsizPZVeUrEvIb4QdCQxY+RPu+4J9SVYwr5WxFt14qeILq61sRbfRDOm5nrc9PeBbwUulncl2gkfBqAQERFu5rQDLd8TYe9CFbQL8fJEICw=
+	t=1772330113; cv=none; b=BlppqQf36r6J1aTESRnLBYxtbdfbtpYGkRLTSCZi0fWv7hm65luCrvrmyzh7mABitNyrq91VUtVi8MADVXMAIX0jUSM48U7ScUF5TbIDqu8XBMhed4axYiCLLqeVd2PhCfJkuZBmQlK7U17TOgnx9aIb2aRFozrHn11bBMqwXzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330111; c=relaxed/simple;
-	bh=/MjnyF/uA5gUuq22TYmYFvlmHZfbYj1mSB5UNWzUxZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TjTBLWF9M0gxzMI5AWJ96qD8q0cETJEgY2oU3JICrift5sKZ/hUE9Icbyz3WUbnWJieJP+7jQKXtDCZxDrjrldRSB3CznRiXBD80MZ18VMXUVKEjCJlv/gafZwD2IP0nShiJ324HuxXSGMYBr1/hV4Jaful+rOHiAL5BtBjEXnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZETfzRE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772330113; c=relaxed/simple;
+	bh=UXrhaS0QHJ3C6jFRxdCza1FcWs9cZJIdCZ1oWfXkMno=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i5Hftl33SDxyXp2DEBJkV58P8SLlXZf3H9dB5ewiHQxVpJHBeu31r6svqPLGhSNHUP/Ugtb3jRB0zOx/FS57kMQqy6ihUriMz3wA1KO9bHqfyweoA9WDNQfahNILQM6fEjucEny7bgNewtOgqRgxt40yi5b413nL80SBWCETlvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqGk88VE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZETfzRE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D13BAC19421;
-	Sun,  1 Mar 2026 01:55:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqGk88VE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3621BC19421;
+	Sun,  1 Mar 2026 01:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330111;
-	bh=/MjnyF/uA5gUuq22TYmYFvlmHZfbYj1mSB5UNWzUxZ8=;
+	s=k20201202; t=1772330113;
+	bh=UXrhaS0QHJ3C6jFRxdCza1FcWs9cZJIdCZ1oWfXkMno=;
 	h=From:To:Cc:Subject:Date:From;
-	b=gZETfzRE2W9/SnfWl5RzPTvHOxErfNqtyXU2C+oG+ZpfFj9KmAI3GBxWlH+XVIPg8
-	 51cP20KAWGMz3rseJNcILxq5EDTmRr5tnhvvUBTLrK7yl/BPTIqb2a70EnO0Imz6Zr
-	 /DC14Y5vHowOfZ+bLldhQPbEE6a3kIiT1HRUVNdBOCSgQ8zhoUQTxuIx+7OpwjpXzI
-	 cg0EXMShwcay0khHnOGkjnmdiRT/CZBXzPGEzroF9JomVf9CX/b7pIdrV6cEdi5vpo
-	 Ap1Y7DIHcuVJ9TaM/QnhYR3AX/6HZ6NFKrzdnCuG8KANSoiqaHPXOpMPn0j8DSeA5/
-	 6CE/a/TQ5jr+Q==
+	b=JqGk88VEY5k3h01KpLqsbMsRbzZhkBr7xomzWFkvIwivI0SD/ULX5fJ0Y7C/1r1ps
+	 6UPHOQ/dWzh++paXrsTNX14CwbTHYQ5GfRwwNA0pCG1VknAyrhVoKHpedWHAxKh2D2
+	 iHNxWArjGo/rosRnhWeI/Bfr+XqyR34QiVRyeikCyTkoT2tRSGYl+/hoEnJ1RB5BSs
+	 rVBwWeIy6HeVCiKlFI9W/8Xn/xZYTZhJVR5kTPXNGpdB/m97gJusMUz4ox8GtMBSg1
+	 EXkfrNihC9kknZqwV4eD321FNtdopto268/RwYAsBTsKZu2qf7cabe1OTWs15RGjnq
+	 zeWAiG1a+HhoQ==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	yangtiezhu@loongson.cn
 Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	loongarch@lists.linux.dev
-Subject: FAILED: Patch "LoongArch: Use %px to print unmodified unwinding address" failed to apply to 5.15-stable tree
-Date: Sat, 28 Feb 2026 20:55:09 -0500
-Message-ID: <20260301015509.1722300-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch: Remove some extern variables in source files" failed to apply to 5.15-stable tree
+Date: Sat, 28 Feb 2026 20:55:11 -0500
+Message-ID: <20260301015512.1722356-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -54,37 +54,65 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 77403a06d845db1caf9a6b0867b43e9dd8de8e4a Mon Sep 17 00:00:00 2001
+From 0e6f596d6ac635e80bb265d587b2287ef8fa1cd6 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue, 10 Feb 2026 19:31:13 +0800
-Subject: [PATCH] LoongArch: Use %px to print unmodified unwinding address
+Date: Tue, 10 Feb 2026 19:31:14 +0800
+Subject: [PATCH] LoongArch: Remove some extern variables in source files
 
-Currently, use %p to prevent leaking information about the kernel memory
-layout when printing the PC address, but the kernel log messages are not
-useful to debug problem if bt_address() returns 0. Given that the type of
-"pc" variable is unsigned long, it should use %px to print the unmodified
-unwinding address.
+There are declarations of the variable "eentry", "pcpu_handlers[]" and
+"exception_handlers[]" in asm/setup.h, the source files already include
+this header file directly or indirectly, so no need to declare them in
+the source files, just remove the code.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/unwind_orc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kernel/unwind_orc.c      | 2 --
+ arch/loongarch/kernel/unwind_prologue.c | 4 ----
+ arch/loongarch/mm/tlb.c                 | 1 -
+ 3 files changed, 7 deletions(-)
 
 diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
-index 8a6e3429a860e..d6b3688a1ce97 100644
+index 11ba3e4ac9eee..9cfb5bb1991f2 100644
 --- a/arch/loongarch/kernel/unwind_orc.c
 +++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -494,7 +494,7 @@ bool unwind_next_frame(struct unwind_state *state)
+@@ -350,8 +350,6 @@ EXPORT_SYMBOL_GPL(unwind_start);
  
- 	state->pc = bt_address(pc);
- 	if (!state->pc) {
--		pr_err("cannot find unwind pc at %p\n", (void *)pc);
-+		pr_err("cannot find unwind pc at %px\n", (void *)pc);
- 		goto err;
- 	}
+ static inline unsigned long bt_address(unsigned long ra)
+ {
+-	extern unsigned long eentry;
+-
+ #if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+ 	int cpu;
+ 	int vec_sz = sizeof(exception_handlers);
+diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
+index ee1c29686ab05..da07acad7973a 100644
+--- a/arch/loongarch/kernel/unwind_prologue.c
++++ b/arch/loongarch/kernel/unwind_prologue.c
+@@ -23,10 +23,6 @@ extern const int unwind_hint_lasx;
+ extern const int unwind_hint_lbt;
+ extern const int unwind_hint_ri;
+ extern const int unwind_hint_watch;
+-extern unsigned long eentry;
+-#ifdef CONFIG_NUMA
+-extern unsigned long pcpu_handlers[NR_CPUS];
+-#endif
  
+ static inline bool scan_handlers(unsigned long entry_offset)
+ {
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 6a3c91b9cacdc..4014c44695878 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -262,7 +262,6 @@ static void output_pgtable_bits_defines(void)
+ #ifdef CONFIG_NUMA
+ unsigned long pcpu_handlers[NR_CPUS];
+ #endif
+-extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+ 
+ static void setup_tlb_handler(int cpu)
+ {
 -- 
 2.51.0
 
