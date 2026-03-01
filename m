@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754D01DF271;
-	Sun,  1 Mar 2026 01:46:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4F72EA480;
+	Sun,  1 Mar 2026 01:46:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329597; cv=none; b=axkeGt89fRc/C3UYzEblFMvP6T/1qwzMmzVX5Ht4suvGq2sa48Cz+FjAYDKVa4H1gp/9nquwLDeD+JXummTjEb8U8dDNZojaiz2/+D78nQdA+bnJl2Tao2V95MQFeTnfcmhD7Z7LlOOt3VnfTri/zK83xyzMA4UX7OxbkvuA6yg=
+	t=1772329604; cv=none; b=dkLnBHQQ+CWxjT3mXOJ1ZpZ1DCBhGP0ZW6pAJXgXp5ClaMtPvtQfBRLOoxnskiUIxTokSQlJY3X2dsES7yxxPmUtjuUrL17XvG4JgohsX81Nouep60W3NITnQTFqzJUXpcvuKzFMQyECea577lU0MnVhoPLLa3EJb8b7PILpDao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329597; c=relaxed/simple;
-	bh=cOGi4dWuC3p6O8QJ5tq3AyMsebbHpTOnen6Vm7Rtjvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dfa8Fsb8nWIlm+Z9Ghs0uaxISQe9YoEI+THCiy9yuXbBifCt+5X2b0nqlR2+5ik3Ym3+PyEkZGX0fHiP8NWVeEbHwKS4FhHhlOG2o7zy3dhRg6H6CX3GICRUV8slNevBPJz79A3ISog3Ic+cln2bvdmQYEyGhSXYlwfTUKBtmx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toD6ZZRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329604; c=relaxed/simple;
+	bh=/ESP39iXWkJ34gV5s/WtaQBZsFZmDzvzo9LjJyBY9UM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TqdMlvtg0EUxZMU9CQo4hsAZx5oJJN+EqGTHxNsbA7tY0bxu3BC40LvmRloV3diSsilKn5JwbzkF4bL9IKWBsbBPd7E3jVArs/LNDjeAo58ewNoWlvpO3oRkeueqIpTZbs349jV6fqcfpKHNBO/PPc3FGC35XW7bC9xu4nFr1Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzzioFi+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toD6ZZRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3E5C19424;
-	Sun,  1 Mar 2026 01:46:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzzioFi+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08C3C19421;
+	Sun,  1 Mar 2026 01:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329597;
-	bh=cOGi4dWuC3p6O8QJ5tq3AyMsebbHpTOnen6Vm7Rtjvc=;
+	s=k20201202; t=1772329604;
+	bh=/ESP39iXWkJ34gV5s/WtaQBZsFZmDzvzo9LjJyBY9UM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=toD6ZZRNdF4C+4oxtZHtgxq1cpCS7c6Vz+eJ1dhMbi8MfLnqnVckV3WzJTg1yD9Oy
-	 CDgMqWr7jyBelJYrhxe8KaojCQkB/0n4VX0ma+8pRVn8qsMJJh8fVTdgPpYK7PpuBL
-	 NP6JS0KlgVdRHEUF6eiK9IHGRwx58n6R4nLmJUog+P+8PnDS098PmfV/NTWB+3eKRi
-	 +GbBJHwyKBhU/GnN67sSZMRdaXe2PruZOZjgXBjW0qU+zL2DzZQNA4tgtf1X2pWHLX
-	 v1TGqDWsrvP5g+fe3Fdv9QhKSYpTndRxUzWVnZOHviKT+namdfdgj7UCE7CjeAhTKr
-	 0EABDJeqQepVg==
+	b=gzzioFi+FJXaaYW2dekXrFlZ/agpi8ix7jwukdWk2ENBFPL3QDkW5C4HYNp/yzcdN
+	 rnhREwR5VMu0wceWc5YtAbb1/YzQ/TZpeOM2e82rlcri2C+gK+TTF/18XT36+VwwYL
+	 O8VSqvNqlbJZFS4lqOtbuu/G3aHWLZqUjWh/iq+fph/fB8ciFa+jEMth6QTncNsDvw
+	 Wp/NkkoHRfrMI0BZg2zh8JCrn7o5/lcbgMOBhJjPLFsCuASrG7Hkk7+qXh5i2WWTTh
+	 en4/+srJnfmGI+pT8JgzHTbVd7rHFxIcuLjJTm4mBvkl3F5e7mP7nUbuKlwYKs8pO0
+	 RnZtXok7g5Y+g==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	john.g.garry@oracle.com
+	chenhuacai@kernel.org
 Cc: Huacai Chen <chenhuacai@loongson.cn>,
 	loongarch@lists.linux.dev
-Subject: FAILED: Patch "LoongArch: Make cpumask_of_node() robust against NUMA_NO_NODE" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:46:35 -0500
-Message-ID: <20260301014635.1709598-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch: Prefer top-down allocation after arch_mem_init()" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:46:42 -0500
+Message-ID: <20260301014642.1709744-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -54,34 +54,47 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 94b0c831eda778ae9e4f2164a8b3de485d8977bb Mon Sep 17 00:00:00 2001
-From: John Garry <john.g.garry@oracle.com>
-Date: Tue, 10 Feb 2026 19:31:12 +0800
-Subject: [PATCH] LoongArch: Make cpumask_of_node() robust against NUMA_NO_NODE
+From 2172d6ebac9372eb01fe4505a53e18cb061e103b Mon Sep 17 00:00:00 2001
+From: Huacai Chen <chenhuacai@loongson.cn>
+Date: Tue, 10 Feb 2026 19:31:13 +0800
+Subject: [PATCH] LoongArch: Prefer top-down allocation after arch_mem_init()
 
-The arch definition of cpumask_of_node() cannot handle NUMA_NO_NODE -
-which is a valid index - so add a check for this.
+Currently we use bottom-up allocation after sparse_init(), the reason is
+sparse_init() need a lot of memory, and bottom-up allocation may exhaust
+precious low memory (below 4GB). On the other hand, SWIOTLB and CMA need
+low memories for DMA32, so swiotlb_init() and dma_contiguous_reserve()
+need bottom-up allocation.
+
+Since swiotlb_init() and dma_contiguous_reserve() are both called in
+arch_mem_init(), we no longer need bottom-up allocation after that. So
+we set the allocation policy to top-down at the end of arch_mem_init(),
+in order to avoid later memory allocations (such as KASAN) exhaust low
+memory.
+
+This solve at least two problems:
+1. Some buggy BIOSes use 0xfd000000~0xfe000000 for secondary CPUs, but
+   didn't reserve this range, which causes smpboot failures.
+2. Some DMA32 devices, such as Loongson-DRM and OHCI, cannot work with
+   KASAN enabled.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: John Garry <john.g.garry@oracle.com>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/include/asm/topology.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kernel/setup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/include/asm/topology.h
-index f06e7ff25bb7c..6b79d6183085a 100644
---- a/arch/loongarch/include/asm/topology.h
-+++ b/arch/loongarch/include/asm/topology.h
-@@ -12,7 +12,7 @@
+diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+index 20cb6f3064568..2b260d15b2e25 100644
+--- a/arch/loongarch/kernel/setup.c
++++ b/arch/loongarch/kernel/setup.c
+@@ -421,6 +421,7 @@ static void __init arch_mem_init(char **cmdline_p)
+ 				   PFN_UP(__pa_symbol(&__nosave_end)));
  
- extern cpumask_t cpus_on_node[];
+ 	memblock_dump_all();
++	memblock_set_bottom_up(false);
  
--#define cpumask_of_node(node)  (&cpus_on_node[node])
-+#define cpumask_of_node(node)  ((node) == NUMA_NO_NODE ? cpu_all_mask : &cpus_on_node[node])
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
+ 	early_memtest(PFN_PHYS(ARCH_PFN_OFFSET), PFN_PHYS(max_low_pfn));
+ }
 -- 
 2.51.0
 
