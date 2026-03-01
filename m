@@ -1,74 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159224C97
-	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 05:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384C22F4A18
+	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772344667; cv=none; b=gVThqN5rVhd+fgSDtGug73HqSaWcNvOpz4SYG1ibMi2CPagEdkkX/sRPyeWSknU0OLAW3ghohzHVKiHY/0WIHSVN2OxCrQN5eKkUi7S6V4N9tGHD4AtA4U1Gz1NXmv+4ZBsG3NK+DEDFJMOAIavI5Zrt9GTfPmUfq95Dl/MpTIQ=
+	t=1772346609; cv=none; b=J8Z1GK5hHMkeJanLy6JFRqtou6x3SyGI8/Y/Gmf3VwyQddlpvZ4+U6K8G51cricbtTFGatn5sQvbS0Cxe9fKVaDRe3pne1dztrZ94LWTyZ2sWt/fAxncvAzTDrWs5TRqY2kM5u4gjLN26oqUC7cn4zjNQD4s5EJbxE+LipJh/4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772344667; c=relaxed/simple;
-	bh=IdKgk6ijWp8kUU8Q2S9JtScG7492fW4G6cBZo1f8DlA=;
+	s=arc-20240116; t=1772346609; c=relaxed/simple;
+	bh=isAkMY5xLEvuyv0ACpWczwrAEWOhgfE4drkaGkr+nJ0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EJ2nVcXkurRvuTlea6WqTQt1ilBZ+NODFI6Tm0wB2DzIWEt/O6rkx+BhsdFGiCxNN3Q5+qlI/q5vGky8ssGXROJllhp0FucsLBCbcMmrGrd54BY0zrYC59nB7/wGXEkVGkHVfefG882MMlHbMaDeqpnJ4Ecayl1yRB8VScbcgqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ptn/j+ip; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=FJbhqStIYKMnINpvO9vn7MlaksPK3WdhLGx6SsZ4o21i6JHstrRuLnh2qhUaHHrjMbWjuw1YvzrR2XdNxqf7/Ludepa66noz96xGuYN3JPY+d0GvgU8uYh1SHssQrYxs2U863AEOp7LAzeDGZsU/LLIsNB3v35iG+xjUptJWGyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LY1rlaUh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ptn/j+ip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0739C4AF0B
-	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 05:57:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY1rlaUh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE835C2BC9E
+	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772344666;
-	bh=IdKgk6ijWp8kUU8Q2S9JtScG7492fW4G6cBZo1f8DlA=;
+	s=k20201202; t=1772346608;
+	bh=isAkMY5xLEvuyv0ACpWczwrAEWOhgfE4drkaGkr+nJ0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ptn/j+ip/X4Md6MuxIaHbIG9tHPk4jllMi8MDJ5roTk8HpTXnfpz0SZm0sSM78RqY
-	 42B69X25weV1uCFDdHyBu3pyuWKTzd1psvhA2LoOb7uqLqXSyfqyE9TePQJe6M595e
-	 fgtI5mEe5wojI2PWccJbPIFvJC27ENYK8J7VFmo9TGYKlsOxbFg42lbSgLo9SsTsSo
-	 O1G3Nr5QNVSGofiikhKGwOS7jnQ7sCc/f4WswGhZPDk33mxI/YG1vtM5YE0MubFCIB
-	 KaBvu+t80OLAkvioh2/dJJQGTwz6FNdYEjLyLxyMvepTiymSvHIQLzXbijtFuFufDJ
-	 DiweGhbbsJgDg==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-65c187dfc82so5326068a12.2
-        for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 21:57:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUfxZGuo4ymkyegWofD315+RnGKHVMqKeeIOOOBFG69WdfnMkZYYD0cdgr5DOJMUlFrCPgcFr6I25Y=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyfNEUYrCNeRhVpXFTWe0KBjFt1u/nC7JCGBh4V6jCsOOLyZRMr
-	n0nvNdbQJM+9JvmRJaqMvObfXmULNRgYsIi5bYZ1rs+kXmOAsxRGztpypruItRPrm2XTiQuQO8R
-	3HjJkQd3K3ldaBm19+32j56TPnpW+oIM=
-X-Received: by 2002:a05:6402:2110:b0:65c:972:7073 with SMTP id
- 4fb4d7f45d1cf-65fde4c676emr5799791a12.28.1772344665254; Sat, 28 Feb 2026
- 21:57:45 -0800 (PST)
+	b=LY1rlaUhrSu9DflrkMQp741oC2FYx5cStfIynZ6PNA20fYp+HsTGQU59gUQc4k69a
+	 rodG+rgz2sZAKZRLNw5Or8w1CxouV/X7BMgCYZd0Fw5MBvQatXM1C0rzaXR8Sgp2Zv
+	 J7+aPpT7u6hNX7+86yMTpsnSZXyPz4Y6lS8J/jjxd4BRyAdDtQCi1y5PwZqxhEFqoD
+	 hgvaiZ1KXebM3wKr0iakLhhBewjBBQjuZHJij/obqPmXMS7M9+IdLQDm265pq0dNpH
+	 D12zyq8jVUuW+bLaVHm8zYci13pIvC9m0fFrJ5qFVpD+tAkD4ZePtrty7YtAuOU5dS
+	 CQss5V/xpXJYQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-65b9d8d6b7dso5567062a12.2
+        for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 22:30:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULRfZ4FaqxCoTAxUYA/XWJDZYcfjhA3SLpGjzb06lYgA4D9+mNbBvDcwQ5/otrurBi0Y76HQ25rZs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzeY9lWnj5o7lYQwSRQthOGS0sZRYgwXTEVWWkQvo1rQiDl55n+
+	FSwTb2all8hdlIUw5Klj18VrQ0+CQ64aYAPGbxkw1FK8V3OBadsxuIs3Ad6JIGcJYMiyV70DXs9
+	hyPnbuYrSIgQG+PIdTfbaqhjIvL9ubS8=
+X-Received: by 2002:a05:6402:27c9:b0:65c:972:7085 with SMTP id
+ 4fb4d7f45d1cf-65fddaf6c47mr5131604a12.18.1772346607163; Sat, 28 Feb 2026
+ 22:30:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260301011732.1671502-1-sashal@kernel.org>
-In-Reply-To: <20260301011732.1671502-1-sashal@kernel.org>
+References: <20260301012730.1685022-1-sashal@kernel.org>
+In-Reply-To: <20260301012730.1685022-1-sashal@kernel.org>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 1 Mar 2026 13:57:33 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H46pdrJgJ0tg493nK8S8X6NQrXu+jHO-yDpBBdyDpRQKw@mail.gmail.com>
-X-Gm-Features: AaiRm53AMPG4vNbW7cnia_a82DoSif7QrjvcUnOF5IP5lHdodd5yuyFSY8lMvh4
-Message-ID: <CAAhV-H46pdrJgJ0tg493nK8S8X6NQrXu+jHO-yDpBBdyDpRQKw@mail.gmail.com>
-Subject: Re: FAILED: Patch "LoongArch: Handle percpu handler address for ORC
- unwinder" failed to apply to 6.18-stable tree
+Date: Sun, 1 Mar 2026 14:29:55 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5b7MHvW-eB4rfMoZBPDR-bTt+xYBq-pqe7VVf=9N+PRQ@mail.gmail.com>
+X-Gm-Features: AaiRm50rwQMqz8Y6FgxjFys-UELMehhIJVhXrh0UUnegmJ_nzMcX6gZ0ojDjBkI
+Message-ID: <CAAhV-H5b7MHvW-eB4rfMoZBPDR-bTt+xYBq-pqe7VVf=9N+PRQ@mail.gmail.com>
+Subject: Re: FAILED: Patch "LoongArch: Make cpumask_of_node() robust against
+ NUMA_NO_NODE" failed to apply to 6.12-stable tree
 To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org, yangtiezhu@loongson.cn, 
-	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-rt-devel@lists.linux.dev
+Cc: stable@vger.kernel.org, john.g.garry@oracle.com, 
+	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi, Sasha,
 
-On Sun, Mar 1, 2026 at 9:17=E2=80=AFAM Sasha Levin <sashal@kernel.org> wrot=
+On Sun, Mar 1, 2026 at 9:27=E2=80=AFAM Sasha Levin <sashal@kernel.org> wrot=
 e:
 >
-> The patch below does not apply to the 6.18-stable tree.
+> The patch below does not apply to the 6.12-stable tree.
 > If someone wants it applied there, or to any other stable or longterm
 > tree, then please email the backport, including the original git commit
 > id to <stable@vger.kernel.org>.
-Please add 4cd641a79e69270a062777f64a0dd330abb9044a ("LoongArch:
-Remove unnecessary checks for ORC unwinder") as a dependency, then
-this one and another one can be applied.
+I'm very confused because it can be applied and already here:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tre=
+e/queue-6.12
 
 Huacai
 
@@ -78,92 +77,37 @@ Huacai
 >
 > ------------------ original commit in Linus's tree ------------------
 >
-> From 055c7e75190e0be43037bd663a3f6aced194416e Mon Sep 17 00:00:00 2001
-> From: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Date: Tue, 10 Feb 2026 19:31:13 +0800
-> Subject: [PATCH] LoongArch: Handle percpu handler address for ORC unwinde=
-r
+> From 94b0c831eda778ae9e4f2164a8b3de485d8977bb Mon Sep 17 00:00:00 2001
+> From: John Garry <john.g.garry@oracle.com>
+> Date: Tue, 10 Feb 2026 19:31:12 +0800
+> Subject: [PATCH] LoongArch: Make cpumask_of_node() robust against NUMA_NO=
+_NODE
 >
-> After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for ORC
-> unwinder"), the system can not boot normally under some configs (such as
-> enable KASAN), there are many error messages "cannot find unwind pc".
->
-> The kernel boots normally with the defconfig, so no problem found out at
-> the first time. Here is one way to reproduce:
->
->   cd linux
->   make mrproper defconfig -j"$(nproc)"
->   scripts/config -e KASAN
->   make olddefconfig all -j"$(nproc)"
->   sudo make modules_install
->   sudo make install
->   sudo reboot
->
-> The address that can not unwind is not a valid kernel address which is
-> between "pcpu_handlers[cpu]" and "pcpu_handlers[cpu] + vec_sz" due to
-> the code of eentry was copied to the new area of pcpu_handlers[cpu] in
-> setup_tlb_handler(), handle this special case to get the valid address
-> to unwind normally.
+> The arch definition of cpumask_of_node() cannot handle NUMA_NO_NODE -
+> which is a valid index - so add a check for this.
 >
 > Cc: stable@vger.kernel.org
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/loongarch/include/asm/setup.h |  3 +++
->  arch/loongarch/kernel/unwind_orc.c | 16 ++++++++++++++++
->  2 files changed, 19 insertions(+)
+>  arch/loongarch/include/asm/topology.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/=
-asm/setup.h
-> index 3c2fb16b11b64..f81375e5e89c0 100644
-> --- a/arch/loongarch/include/asm/setup.h
-> +++ b/arch/loongarch/include/asm/setup.h
-> @@ -7,6 +7,7 @@
->  #define _LOONGARCH_SETUP_H
+> diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/inclu=
+de/asm/topology.h
+> index f06e7ff25bb7c..6b79d6183085a 100644
+> --- a/arch/loongarch/include/asm/topology.h
+> +++ b/arch/loongarch/include/asm/topology.h
+> @@ -12,7 +12,7 @@
 >
->  #include <linux/types.h>
-> +#include <linux/threads.h>
->  #include <asm/sections.h>
->  #include <uapi/asm/setup.h>
+>  extern cpumask_t cpus_on_node[];
 >
-> @@ -14,6 +15,8 @@
+> -#define cpumask_of_node(node)  (&cpus_on_node[node])
+> +#define cpumask_of_node(node)  ((node) =3D=3D NUMA_NO_NODE ? cpu_all_mas=
+k : &cpus_on_node[node])
 >
->  extern unsigned long eentry;
->  extern unsigned long tlbrentry;
-> +extern unsigned long pcpu_handlers[NR_CPUS];
-> +extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
->  extern char init_command_line[COMMAND_LINE_SIZE];
->  extern void tlb_init(int cpu);
->  extern void cpu_cache_init(void);
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index d6b3688a1ce97..11ba3e4ac9eee 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -352,6 +352,22 @@ static inline unsigned long bt_address(unsigned long=
- ra)
->  {
->         extern unsigned long eentry;
->
-> +#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
-> +       int cpu;
-> +       int vec_sz =3D sizeof(exception_handlers);
-> +
-> +       for_each_possible_cpu(cpu) {
-> +               if (!pcpu_handlers[cpu])
-> +                       continue;
-> +
-> +               if (ra >=3D pcpu_handlers[cpu] &&
-> +                   ra < pcpu_handlers[cpu] + vec_sz) {
-> +                       ra =3D ra + eentry - pcpu_handlers[cpu];
-> +                       break;
-> +               }
-> +       }
-> +#endif
-> +
->         if (ra >=3D eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
->                 unsigned long func;
->                 unsigned long type =3D (ra - eentry) / VECSIZE;
+>  struct pci_bus;
+>  extern int pcibus_to_node(struct pci_bus *);
 > --
 > 2.51.0
 >
