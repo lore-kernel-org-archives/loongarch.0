@@ -1,55 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E521D3E4
-	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC1B1C549F
+	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772346743; cv=none; b=QwLAi9EqAChjR9dc5oG8DPa3ZCTQr9u6p2P5TwVvRGkm6ZtvnHAFtv+niIsdetY5AXexFrlj2Iykzhf1gRfh0Z6v3VRZbriQE7L7JLNSHzlbHRiEFPaLqb25kwO9O99F3eDroqvL4kGK1fwAcmUf1wFM2n6Aa0ptOrudn3MBbeQ=
+	t=1772346783; cv=none; b=IRYfE60Q9MwZUWY4ZNcyYOMqAkX5nqbzG49RQ0GamJRYn0l5eS1yRMx3WbViRyZjGbLtokr3s1NHwI25wBwy6YEYqF76h2mTQFRbnnDL+TImZZQRzLCOUhYXiIocnOQgtLwiSWtWJhiOFPWtl/FQ7r8rIsECpOt0oLtCemLNIxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772346743; c=relaxed/simple;
-	bh=TqxBh2p8iwhTysf0T9JFQIrXHKi66jGKvtWigiD8xiU=;
+	s=arc-20240116; t=1772346783; c=relaxed/simple;
+	bh=1qw1RuXaslaONg1rnL1B3YeaTAUvwOQSUOC8m2sNsU8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TKZ8xdVi0KFvAgy4Xmlowi/HNflBf86Ze1fsCWLmOfTGyfhiabwUQB7GRaRZu95HArgMYt5Z/KRBfCexG7JJAJinpCNRm+PCQ5/nwrEKha74XscHomMu6KxTH915ldUxswE1Wq25jbgep8jvKzswh1hAjUs7/v3nfbwNYOaKWkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5XogwF4; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=slCtltmgnbjMkXPJI/W5kTf6ojuygLaiXZfM/TFOdOPeIwiQIsNajNwhHtJQU6+Cel2m26QjgFdI7gd4ulgVcgiJLlbldCgYp5y0HCveUPXYC20YnRL/IsV0b2CTvkImyMvTt/fJ3JfGqTKEHWx+ypbm2atmOEwvBAFlvEpkw1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eu1z7KcL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5XogwF4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1708C2BCAF
-	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:32:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eu1z7KcL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 644AEC4AF09
+	for <loongarch@lists.linux.dev>; Sun,  1 Mar 2026 06:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772346743;
-	bh=TqxBh2p8iwhTysf0T9JFQIrXHKi66jGKvtWigiD8xiU=;
+	s=k20201202; t=1772346783;
+	bh=1qw1RuXaslaONg1rnL1B3YeaTAUvwOQSUOC8m2sNsU8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=P5XogwF4/KXTK0/iLiAJL1PXflyo7fixxUxNvtJJwS+fxj4sxft0WOxKLKSUKJUmP
-	 pPwtTlv8kWZunflgHcbCM9nVXii8urog6/wPCBdEuTakjVOSSCMJywFLXaCz4316RD
-	 f2zp+26go0ziJIxBlPPR57nOADF7fqSi/NV12u3uoYn0VuAh2+jGEL8E2BEIS8TFE6
-	 CmIgwSWhQY4u+bqyj6cAwrEHJryf2tCAoki9OgTKjzgjiHXqcWQ3oGovFARiU7lfuK
-	 vIyucYxztTMavERhuPDp+i8xbv646TqwsOUxvdtlPBVKPZBSXgosdkHbEAAUOqTsIM
-	 8L2LokXOBQZtw==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-65f812e0d93so5297043a12.2
-        for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 22:32:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVmPPEo2Kbk+qmL2z7F5ogJ/XHd8OgCq6GKj0wfB1Qr6rl8it/4vNw3XS3/uYkIm3+8pG43TDQiHRQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyzzEobtr38WZqHw4/pt8F6VW7D5TqGxenlwUl4vZhuzYAQ5XBn
-	lwJLpv9MAemEsm33mlT3nBSudgLyDoaxbfriX7Z4vd8UGifElGTGDDNDSISbi/UNF+KdAAcPyAS
-	Z7KxUJf+U6rsWCfIEvkFvcnM9xJZTGBU=
-X-Received: by 2002:a05:6402:5113:b0:65c:62b6:4be5 with SMTP id
- 4fb4d7f45d1cf-65fdd4cc062mr5104870a12.3.1772346742204; Sat, 28 Feb 2026
- 22:32:22 -0800 (PST)
+	b=Eu1z7KcLOGhATxuAGmLhQUC9iBqk/tPICTv2Sjv6PDNnLMBr7TjJmsGpJlgCOeRv+
+	 7a7et7+S/EL7TyeIWnz/V09xUPCjBWpmAZMFU6knSwfB324g5/XGQNXYCtrI3DR9gK
+	 JVsvhV++KXumJ5+LldRs4dvKb9kLkpokj4UVqFWxVIAttudyHGL2lAzcpnXv+i3XDu
+	 o6X9KxbMIyLDy59hmOGwhWx4OhQI9JcPBfet8ekNOUUnC4ymnxwmbc3ZeuQgf/dRGQ
+	 vuoZ5fGs5t3Pd1tK8GXrFmxVou7TOnyatKJjSK6YJ1cJGPwzYZ5GV2+9REoa3HsSvY
+	 EiJh1XrHGTvhQ==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-65b9d8d6b7dso5568959a12.2
+        for <loongarch@lists.linux.dev>; Sat, 28 Feb 2026 22:33:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX33V+2u2SRJn6VozqPhjg8R6fJDydMsrTCIDr/+NpCrSrVklfPkmhXYsf9md2FT7UCiu8UUXbO7Y8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxVHjgzDY79oQn0ILPnb2Z3PhDf5wHdkewEi61Ri+pQdCqv5i+0
+	D4YSW3c4ZCvLnRRAX2SLXE4oCQwqvM4Jlf4B+FeCbgDgxKWXqG7eJRAS/TUQ+nMuHM+KQOGLKHL
+	X7Nw5tQaFc1bQAYboS99VbJTlkay/m74=
+X-Received: by 2002:a05:6402:5113:b0:65f:88f7:da0 with SMTP id
+ 4fb4d7f45d1cf-65fddaf6e1cmr5264647a12.15.1772346781918; Sat, 28 Feb 2026
+ 22:33:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260301012744.1685320-1-sashal@kernel.org>
-In-Reply-To: <20260301012744.1685320-1-sashal@kernel.org>
+References: <20260301012749.1685415-1-sashal@kernel.org>
+In-Reply-To: <20260301012749.1685415-1-sashal@kernel.org>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 1 Mar 2026 14:32:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6VRe5NRpBjo-_FBoDDvJmq-jNCYbvtdPZ-j_TZzFzS4A@mail.gmail.com>
-X-Gm-Features: AaiRm50oAUpwLRrnZu2pQjh2ya2n9b_I6Cqis0M5D-p0oiLJEPONeIls3Qd1R84
-Message-ID: <CAAhV-H6VRe5NRpBjo-_FBoDDvJmq-jNCYbvtdPZ-j_TZzFzS4A@mail.gmail.com>
-Subject: Re: FAILED: Patch "LoongArch: Use %px to print unmodified unwinding
- address" failed to apply to 6.12-stable tree
+Date: Sun, 1 Mar 2026 14:32:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ZrV0EJG-4zEj6xtkusB+=AihzQW3s9Mi4JZJZZG36PA@mail.gmail.com>
+X-Gm-Features: AaiRm50BJJVC7RT0cVN1Z6Ko-W-_z29EWpZzqi4t7mY_IDr-i4jfO2Yg3-Ms9cw
+Message-ID: <CAAhV-H6ZrV0EJG-4zEj6xtkusB+=AihzQW3s9Mi4JZJZZG36PA@mail.gmail.com>
+Subject: Re: FAILED: Patch "LoongArch: Disable instrumentation for
+ setup_ptwalker()" failed to apply to 6.12-stable tree
 To: Sasha Levin <sashal@kernel.org>
 Cc: stable@vger.kernel.org, yangtiezhu@loongson.cn, 
 	Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev
@@ -77,38 +77,52 @@ Huacai
 >
 > ------------------ original commit in Linus's tree ------------------
 >
-> From 77403a06d845db1caf9a6b0867b43e9dd8de8e4a Mon Sep 17 00:00:00 2001
+> From 7cb37af61f09c9cfd90c43c9275307c16320cbf2 Mon Sep 17 00:00:00 2001
 > From: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Date: Tue, 10 Feb 2026 19:31:13 +0800
-> Subject: [PATCH] LoongArch: Use %px to print unmodified unwinding address
+> Date: Tue, 10 Feb 2026 19:31:17 +0800
+> Subject: [PATCH] LoongArch: Disable instrumentation for setup_ptwalker()
 >
-> Currently, use %p to prevent leaking information about the kernel memory
-> layout when printing the PC address, but the kernel log messages are not
-> useful to debug problem if bt_address() returns 0. Given that the type of
-> "pc" variable is unsigned long, it should use %px to print the unmodified
-> unwinding address.
+> According to Documentation/dev-tools/kasan.rst, software KASAN modes use
+> compiler instrumentation to insert validity checks. Such instrumentation
+> might be incompatible with some parts of the kernel, and therefore needs
+> to be disabled, just use the attribute __no_sanitize_address to disable
+> instrumentation for the low level function setup_ptwalker().
+>
+> Otherwise bringing up the secondary CPUs failed when CONFIG_KASAN is set
+> (especially when PTW is enabled), here are the call chains:
+>
+>     smpboot_entry()
+>       start_secondary()
+>         cpu_probe()
+>           per_cpu_trap_init()
+>             tlb_init()
+>               setup_tlb_handler()
+>                 setup_ptwalker()
+>
+> The reason is the PGD registers are configured in setup_ptwalker(), but
+> KASAN instrumentation may cause TLB exceptions before that.
 >
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 > ---
->  arch/loongarch/kernel/unwind_orc.c | 2 +-
+>  arch/loongarch/mm/tlb.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/u=
-nwind_orc.c
-> index 8a6e3429a860e..d6b3688a1ce97 100644
-> --- a/arch/loongarch/kernel/unwind_orc.c
-> +++ b/arch/loongarch/kernel/unwind_orc.c
-> @@ -494,7 +494,7 @@ bool unwind_next_frame(struct unwind_state *state)
+> diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+> index 4014c44695878..aaf7d685cc2aa 100644
+> --- a/arch/loongarch/mm/tlb.c
+> +++ b/arch/loongarch/mm/tlb.c
+> @@ -202,7 +202,7 @@ void __update_tlb(struct vm_area_struct *vma, unsigne=
+d long address, pte_t *ptep
+>         local_irq_restore(flags);
+>  }
 >
->         state->pc =3D bt_address(pc);
->         if (!state->pc) {
-> -               pr_err("cannot find unwind pc at %p\n", (void *)pc);
-> +               pr_err("cannot find unwind pc at %px\n", (void *)pc);
->                 goto err;
->         }
->
+> -static void setup_ptwalker(void)
+> +static void __no_sanitize_address setup_ptwalker(void)
+>  {
+>         unsigned long pwctl0, pwctl1;
+>         unsigned long pgd_i =3D 0, pgd_w =3D 0;
 > --
 > 2.51.0
 >
