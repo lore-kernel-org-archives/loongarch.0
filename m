@@ -1,38 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39792244670;
-	Sun,  1 Mar 2026 01:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3472D0C63;
+	Sun,  1 Mar 2026 01:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329618; cv=none; b=R8QGe1fpF42jbWx4XRnaBpyaZ/LhfcNO7k8ES6IlUJa4RZWYG2uwjwbyem/VaSetL5a/2PReFiHDMrf9Vjfk5huiRsBBh4a2N+0EhtzqTBedkO7pGI1/h/FnXEQAWp1I9KjKfgAbSrRLpPKWwo16r2XnZm+BWxOw2UQHSI5TrzA=
+	t=1772329627; cv=none; b=TDmdBn/WFwxBIU65d78E6sKeOOjwGEhK4yAi9RwXGCmE66b/52g2autJYVKDssEljnQWz7WfQqTmbKAVBxRRno1NqbULT7PRm+lUUPiorTOXMgDcwcVLr2nTFI4szqlMZkjN+1+CWnrVxU3aW9ifqBNrqcd48NjscOcdt8WoKh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329618; c=relaxed/simple;
-	bh=7MmCKH264CCWcRiMJcymFcY6AVVyNWwRNvZPFlq5YRw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KcmUem53qyNkBnwCEIeOOfQGCGO5TGpJEQ+5qp30apLCb4Bf6nNcnCZn4EvHSIXpVTibmgzqdfqyPcKuwTv26IAQTe2ChSkMdBDGNsFHKI4RiaL1XAq/JXOfLCRXKE6Z0dvIpRIq6i9sQ4pcAdA0HIOmc7HxrHGA7CWXZHAab9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAfAag9q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329627; c=relaxed/simple;
+	bh=he7oVumGwFgLCrVHsN3ubBudK7vqjjKajAsbFNtOeAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4LkBbmv/u+Q5NpLXS6Eiiv1N6rnHizaDoInHA3T/zHkXZEUru1KKtluBIVvqV8yQsB8NEMsRAfdHL8Rb+ki2rMEc6/vALFNi/8gY1ExysOw4WlS7qZj1nFZr7VfwD8dpkwbkrNCYtAtPXTzkk2TgX6V7f9UM3Ithk8p0EJvTcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVhrEg50; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAfAag9q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D18DC19421;
-	Sun,  1 Mar 2026 01:46:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVhrEg50"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C896EC19421;
+	Sun,  1 Mar 2026 01:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329618;
-	bh=7MmCKH264CCWcRiMJcymFcY6AVVyNWwRNvZPFlq5YRw=;
+	s=k20201202; t=1772329627;
+	bh=he7oVumGwFgLCrVHsN3ubBudK7vqjjKajAsbFNtOeAg=;
 	h=From:To:Cc:Subject:Date:From;
-	b=bAfAag9qSdNm+px0qMOr5mNmJCN0WamPs6HXy3buU1tKY2B5OzT7uJSY2H8vNC7f2
-	 LUAjjFE/z/hELGSrdhdkF+YF4uV7RHrftddgVNpICzU4y4bhQUm9XWcf5aTnHYSs3H
-	 coGLwhMJAZzA+8WKr6+d6/d5FZx/Lj7O3tWMhLJki93B68YVeX2+VC7/FXykZkmbGt
-	 zOwW96EzRWW9M8HSoWp+9adw3SXBDfQy4M33gN+Hi8kz+voPYjKc7F7Qru37S93Bqf
-	 QKEGEkaZJcFV7fUwpGYdJ0kQSfNY49RA1Vchw3uld4z0UUxLk2J9i8iyTpfkHLdCBR
-	 GHYTNsZUvdDbw==
+	b=FVhrEg502x9g4HqIU8bffLM+5OtVD9j4i5q9GzMVMpJYe4WoxmOrOV79PTxWvr8XG
+	 E4zdRFjesn/BPQxrrf5qLkam7BNpsC7ybKoexlSiZHUjxl9O1YD614l7zpUeLi1UnR
+	 Usc2NtRkYlQ9lWYRGkDaNtL6/eZZd9V8K/UiwrITfdAlSEALQeSC331fNMF6jlqJSo
+	 SegAsdUOM3FfLWZ4y1uDoCQt7wje5MUQFTLt6s/BJuySKYNjaUl+Enkf/hwiuMsYgB
+	 2krLZudGq9JYhOvpocrP/Wnp2NGlMv78SHI7KmAJT4D6eb/A62uxWtS4f9jBNPIGjn
+	 3XkW9RLGg6ctA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	yangtiezhu@loongson.cn
 Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	kasan-dev@googlegroups.com,
 	loongarch@lists.linux.dev
-Subject: FAILED: Patch "LoongArch: Disable instrumentation for setup_ptwalker()" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:46:56 -0500
-Message-ID: <20260301014656.1710036-1-sashal@kernel.org>
+Subject: FAILED: Patch "LoongArch: Rework KASAN initialization for PTW-enabled systems" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:47:05 -0500
+Message-ID: <20260301014705.1710302-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -54,51 +55,163 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 7cb37af61f09c9cfd90c43c9275307c16320cbf2 Mon Sep 17 00:00:00 2001
+From 5ec5ac4ca27e4daa234540ac32f9fc5219377d53 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 Date: Tue, 10 Feb 2026 19:31:17 +0800
-Subject: [PATCH] LoongArch: Disable instrumentation for setup_ptwalker()
+Subject: [PATCH] LoongArch: Rework KASAN initialization for PTW-enabled
+ systems
 
-According to Documentation/dev-tools/kasan.rst, software KASAN modes use
-compiler instrumentation to insert validity checks. Such instrumentation
-might be incompatible with some parts of the kernel, and therefore needs
-to be disabled, just use the attribute __no_sanitize_address to disable
-instrumentation for the low level function setup_ptwalker().
+kasan_init_generic() indicates that kasan is fully initialized, so it
+should be put at end of kasan_init().
 
-Otherwise bringing up the secondary CPUs failed when CONFIG_KASAN is set
-(especially when PTW is enabled), here are the call chains:
+Otherwise bringing up the primary CPU failed when CONFIG_KASAN is set
+on PTW-enabled systems, here are the call chains:
 
-    smpboot_entry()
-      start_secondary()
-        cpu_probe()
-          per_cpu_trap_init()
-            tlb_init()
-              setup_tlb_handler()
-                setup_ptwalker()
+    kernel_entry()
+      start_kernel()
+        setup_arch()
+          kasan_init()
+            kasan_init_generic()
 
-The reason is the PGD registers are configured in setup_ptwalker(), but
-KASAN instrumentation may cause TLB exceptions before that.
+The reason is PTW-enabled systems have speculative accesses which means
+memory accesses to the shadow memory after kasan_init() may be executed
+by hardware before. However, accessing shadow memory is safe only after
+kasan fully initialized because kasan_init() uses a temporary PGD table
+until we have populated all levels of shadow page tables and writen the
+PGD register. Moving kasan_init_generic() later can defer the occasion
+of kasan_enabled(), so as to avoid speculative accesses on shadow pages.
+
+After moving kasan_init_generic() to the end, kasan_init() can no longer
+call kasan_mem_to_shadow() for shadow address conversion because it will
+always return kasan_early_shadow_page. On the other hand, we should keep
+the current logic of kasan_mem_to_shadow() for both the early and final
+stage because there may be instrumentation before kasan_init().
+
+To solve this, we factor out a new mem_to_shadow() function from current
+kasan_mem_to_shadow() for the shadow address conversion in kasan_init().
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/mm/tlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/mm/kasan_init.c | 78 +++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 38 deletions(-)
 
-diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
-index 4014c44695878..aaf7d685cc2aa 100644
---- a/arch/loongarch/mm/tlb.c
-+++ b/arch/loongarch/mm/tlb.c
-@@ -202,7 +202,7 @@ void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep
- 	local_irq_restore(flags);
+diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+index 170da98ad4f55..0fc02ca064573 100644
+--- a/arch/loongarch/mm/kasan_init.c
++++ b/arch/loongarch/mm/kasan_init.c
+@@ -40,39 +40,43 @@ static pgd_t kasan_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+ #define __pte_none(early, pte) (early ? pte_none(pte) : \
+ ((pte_val(pte) & _PFN_MASK) == (unsigned long)__pa(kasan_early_shadow_page)))
+ 
+-void *kasan_mem_to_shadow(const void *addr)
++static void *mem_to_shadow(const void *addr)
+ {
+-	if (!kasan_enabled()) {
++	unsigned long offset = 0;
++	unsigned long maddr = (unsigned long)addr;
++	unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
++
++	if (maddr >= FIXADDR_START)
+ 		return (void *)(kasan_early_shadow_page);
+-	} else {
+-		unsigned long maddr = (unsigned long)addr;
+-		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
+-		unsigned long offset = 0;
+-
+-		if (maddr >= FIXADDR_START)
+-			return (void *)(kasan_early_shadow_page);
+-
+-		maddr &= XRANGE_SHADOW_MASK;
+-		switch (xrange) {
+-		case XKPRANGE_CC_SEG:
+-			offset = XKPRANGE_CC_SHADOW_OFFSET;
+-			break;
+-		case XKPRANGE_UC_SEG:
+-			offset = XKPRANGE_UC_SHADOW_OFFSET;
+-			break;
+-		case XKPRANGE_WC_SEG:
+-			offset = XKPRANGE_WC_SHADOW_OFFSET;
+-			break;
+-		case XKVRANGE_VC_SEG:
+-			offset = XKVRANGE_VC_SHADOW_OFFSET;
+-			break;
+-		default:
+-			WARN_ON(1);
+-			return NULL;
+-		}
+ 
+-		return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
++	maddr &= XRANGE_SHADOW_MASK;
++	switch (xrange) {
++	case XKPRANGE_CC_SEG:
++		offset = XKPRANGE_CC_SHADOW_OFFSET;
++		break;
++	case XKPRANGE_UC_SEG:
++		offset = XKPRANGE_UC_SHADOW_OFFSET;
++		break;
++	case XKPRANGE_WC_SEG:
++		offset = XKPRANGE_WC_SHADOW_OFFSET;
++		break;
++	case XKVRANGE_VC_SEG:
++		offset = XKVRANGE_VC_SHADOW_OFFSET;
++		break;
++	default:
++		WARN_ON(1);
++		return NULL;
+ 	}
++
++	return (void *)((maddr >> KASAN_SHADOW_SCALE_SHIFT) + offset);
++}
++
++void *kasan_mem_to_shadow(const void *addr)
++{
++	if (kasan_enabled())
++		return mem_to_shadow(addr);
++	else
++		return (void *)(kasan_early_shadow_page);
  }
  
--static void setup_ptwalker(void)
-+static void __no_sanitize_address setup_ptwalker(void)
- {
- 	unsigned long pwctl0, pwctl1;
- 	unsigned long pgd_i = 0, pgd_w = 0;
+ const void *kasan_shadow_to_mem(const void *shadow_addr)
+@@ -293,11 +297,8 @@ void __init kasan_init(void)
+ 	/* Maps everything to a single page of zeroes */
+ 	kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END, NUMA_NO_NODE, true);
+ 
+-	kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_START),
+-					kasan_mem_to_shadow((void *)KFENCE_AREA_END));
+-
+-	/* Enable KASAN here before kasan_mem_to_shadow(). */
+-	kasan_init_generic();
++	kasan_populate_early_shadow(mem_to_shadow((void *)VMALLOC_START),
++					mem_to_shadow((void *)KFENCE_AREA_END));
+ 
+ 	/* Populate the linear mapping */
+ 	for_each_mem_range(i, &pa_start, &pa_end) {
+@@ -307,13 +308,13 @@ void __init kasan_init(void)
+ 		if (start >= end)
+ 			break;
+ 
+-		kasan_map_populate((unsigned long)kasan_mem_to_shadow(start),
+-			(unsigned long)kasan_mem_to_shadow(end), NUMA_NO_NODE);
++		kasan_map_populate((unsigned long)mem_to_shadow(start),
++			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
+ 	}
+ 
+ 	/* Populate modules mapping */
+-	kasan_map_populate((unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR),
+-		(unsigned long)kasan_mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
++	kasan_map_populate((unsigned long)mem_to_shadow((void *)MODULES_VADDR),
++		(unsigned long)mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
+ 	/*
+ 	 * KAsan may reuse the contents of kasan_early_shadow_pte directly, so we
+ 	 * should make sure that it maps the zero page read-only.
+@@ -328,4 +329,5 @@ void __init kasan_init(void)
+ 
+ 	/* At this point kasan is fully initialized. Enable error messages */
+ 	init_task.kasan_depth = 0;
++	kasan_init_generic();
+ }
 -- 
 2.51.0
 
