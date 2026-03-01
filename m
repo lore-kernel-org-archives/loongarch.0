@@ -1,39 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFE52C21F2;
-	Sun,  1 Mar 2026 01:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D662C21F2;
+	Sun,  1 Mar 2026 01:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772329606; cv=none; b=S0lJf2zQkv8qLMG/NwTcBFs8Ijt0xW0UpqtxYHW/5gb4HDYcZyKq1moqsJAxMDUmj8eCJltEaVgJ5+qCIIR3QaCrU1F9XDSukXc6Rgb8us+JjGmXOnCcvRoVXfZbJPAu/yrfJQkaEwDyMIVkFHZp/Usc2B6C+CXLoUuzkNGxld8=
+	t=1772329611; cv=none; b=tuhniKT3knyZGfLtU4yZxnUkJXqQtjRCLdxBY6ZWRM4bPMdMPhYOCrZ2GH9H5xZgpLrCynfG6BJow2K9Ljff+Y8lLDGM79cv8AAxeKT6FJZk2vvGh6Xj424Xp6YZSb7dpNho5iAPSoR9A4qd6xvJO8wzPnD550h+R/Zo7KI2Q/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772329606; c=relaxed/simple;
-	bh=PNg5hhknE+TMd+QxOsmYRx9MOwlYqd1Q+qDLrQpXfuo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hyfs9sW93jykVCiLO3UsISyikMWLDktphFpcQKdc2GZuJ2qXQ1LD9fcHyta3mUlNp/sXqMPTDXIpOFbUNmiCh1BhUE5onEFhqN5l4CHdiWY8iyPBlDwWpvUDl09HtjBIFxFzrdf50ebMy8cdcrlsKJLMi7CvvqVr+AB2jNhXOcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0c+y0tM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772329611; c=relaxed/simple;
+	bh=XmdmCjJq2uRX+bkL0UOEYKJkzBgtSfnzWNr9ZHdv8AM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d6hsvb8Mkq2G+sYfWucgvxFoRoeFSPgvRbBqVHfaH3OuUgUZcLpnOroDVxVV/cxa6Qipw7qj5e6hHfgCz8BrUjROhrwqlj7I2Pu0BoR+8ExGYMBxF/TRFt/S9WEkRghjf50QIshd70511xRWmBGtoNU6jVRjAM1tDR0K6WY87Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOw1QqpR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0c+y0tM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB644C19421;
-	Sun,  1 Mar 2026 01:46:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOw1QqpR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1036C19421;
+	Sun,  1 Mar 2026 01:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772329606;
-	bh=PNg5hhknE+TMd+QxOsmYRx9MOwlYqd1Q+qDLrQpXfuo=;
+	s=k20201202; t=1772329611;
+	bh=XmdmCjJq2uRX+bkL0UOEYKJkzBgtSfnzWNr9ZHdv8AM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=m0c+y0tM+4nlALYDtwB5pU2RHoWIqb8KMMJSHLeXqaUiIMtTT8fu5SyEeQo+bOeNu
-	 DcqY8Qcd/ofsDIXfrZ8hhvRpfKIuMhXhv7dVjuatXqMk8Q7EOHH0dpCTjQxwLkJEga
-	 eQutTKk42Aq5TxCeUeuN0OeX0v9db6qzAbdxUFq2ErOzCv704Rdu4uT8nF78gwc33G
-	 RJsADBnvHjrEFKXyCjf4zG1m13DHcljhigI6HAPXtlAEAdXL3ekOv3gXMQPmeMrs/j
-	 CYo5w0g3EhRFrjFuAFHk4Wq/ha+Ho4hFvYlqngOtA2fa4qHKuh3O0GGKR+I+xzIV1D
-	 JmfRf8gtzIqoA==
+	b=nOw1QqpRibT8wjqNv8lHGS2y7K9ZVInYT90lls7gpf+jQw7nrWhNQOXJmwQOCH8T0
+	 3L6rlqsP2W6g0rvwi/j8DiNTcWa5kQfVt1Ysw00VGtHKdJZVkCgAZlOanGYvas3oVR
+	 4vlXWWWggn9f7PJrmRVlIsNjAy0y6GqHMG8W2nM8awv9iRWjI+f3uSCiu/zWV4SL9S
+	 wrvEIdHBLeVDNL2ACUcOzeA5x3dpf+DPDRk3zEppScC3L0DTfbV/zdmelxYxw2gyNu
+	 +X2U75bCgluJJM7YXCbj0sELOc+Q3vE2udtRZ5ogvLzW2zYrCWsyHzAVMbc+DyW0zu
+	 +Cyobk/ZubDew==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	yangtiezhu@loongson.cn
 Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	loongarch@lists.linux.dev,
-	linux-rt-devel@lists.linux.dev
-Subject: FAILED: Patch "LoongArch: Guard percpu handler under !CONFIG_PREEMPT_RT" failed to apply to 6.1-stable tree
-Date: Sat, 28 Feb 2026 20:46:44 -0500
-Message-ID: <20260301014644.1709796-1-sashal@kernel.org>
+	loongarch@lists.linux.dev
+Subject: FAILED: Patch "LoongArch: Remove some extern variables in source files" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:46:49 -0500
+Message-ID: <20260301014649.1709887-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -55,35 +54,65 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 70b0faae3590c628a98a627a10e5d211310169d4 Mon Sep 17 00:00:00 2001
+From 0e6f596d6ac635e80bb265d587b2287ef8fa1cd6 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue, 10 Feb 2026 19:31:13 +0800
-Subject: [PATCH] LoongArch: Guard percpu handler under !CONFIG_PREEMPT_RT
+Date: Tue, 10 Feb 2026 19:31:14 +0800
+Subject: [PATCH] LoongArch: Remove some extern variables in source files
 
-After commit 88fd2b70120d ("LoongArch: Fix sleeping in atomic context for
-PREEMPT_RT"), it should guard percpu handler under !CONFIG_PREEMPT_RT to
-avoid redundant operations.
+There are declarations of the variable "eentry", "pcpu_handlers[]" and
+"exception_handlers[]" in asm/setup.h, the source files already include
+this header file directly or indirectly, so no need to declare them in
+the source files, just remove the code.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/unwind_prologue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/kernel/unwind_orc.c      | 2 --
+ arch/loongarch/kernel/unwind_prologue.c | 4 ----
+ arch/loongarch/mm/tlb.c                 | 1 -
+ 3 files changed, 7 deletions(-)
 
+diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
+index 11ba3e4ac9eee..9cfb5bb1991f2 100644
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -350,8 +350,6 @@ EXPORT_SYMBOL_GPL(unwind_start);
+ 
+ static inline unsigned long bt_address(unsigned long ra)
+ {
+-	extern unsigned long eentry;
+-
+ #if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
+ 	int cpu;
+ 	int vec_sz = sizeof(exception_handlers);
 diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 729e775bd40dd..ee1c29686ab05 100644
+index ee1c29686ab05..da07acad7973a 100644
 --- a/arch/loongarch/kernel/unwind_prologue.c
 +++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -65,7 +65,7 @@ static inline bool scan_handlers(unsigned long entry_offset)
- 
- static inline bool fix_exception(unsigned long pc)
- {
+@@ -23,10 +23,6 @@ extern const int unwind_hint_lasx;
+ extern const int unwind_hint_lbt;
+ extern const int unwind_hint_ri;
+ extern const int unwind_hint_watch;
+-extern unsigned long eentry;
 -#ifdef CONFIG_NUMA
-+#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
- 	int cpu;
+-extern unsigned long pcpu_handlers[NR_CPUS];
+-#endif
  
- 	for_each_possible_cpu(cpu) {
+ static inline bool scan_handlers(unsigned long entry_offset)
+ {
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 6a3c91b9cacdc..4014c44695878 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -262,7 +262,6 @@ static void output_pgtable_bits_defines(void)
+ #ifdef CONFIG_NUMA
+ unsigned long pcpu_handlers[NR_CPUS];
+ #endif
+-extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+ 
+ static void setup_tlb_handler(int cpu)
+ {
 -- 
 2.51.0
 
