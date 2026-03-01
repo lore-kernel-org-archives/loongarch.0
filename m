@@ -1,39 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021F22FE07D;
-	Sun,  1 Mar 2026 01:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662DC2DB7B5;
+	Sun,  1 Mar 2026 01:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772330116; cv=none; b=a2ejrXcooTSx5hJ1xKBeDsGZxhELSWQ+QrrAbRjmwhHsV4f9ko/MiiUU+9vMP5j8gD9QGDcNuMHowAjDHvQ/SpbgM5I2167XVPcvpaipv6L4ZxZOPb7NR1b5yGW3Axi/ktWOEHE/fvSrhd3H1XcsgVqD5hT167/wrBsjesqkB10=
+	t=1772330120; cv=none; b=X20wSEFnnRvev9XoPsQubU82umL3exz6wVon7sp6chra/I3AsKtYja12/H7YgcdNjLqS/jZp4bRMK34Gg5xcZMJnyNUITe5g4Wf+JcQItsUIu/mAF/+AhSilPQzYDKiWXccX+UZ5EZV6x16iBXksLk/nLLNzAlZEwOoSG/2xLmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772330116; c=relaxed/simple;
-	bh=bhfHUyEcFd2BY07SAHZSvIUgr1GdW/hebPkTiFlnHvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q24VCCJ02LuxUAZ7xNuhOFk8tPrJkZBCm26ULd6W7glhTYz8JasDo+iGlqK2POsZWJaZwze7wH6aMZ9tv9n1v8ftgHRJGJVZWRrB3Uym/lDdATi7YjFUEaivZeqiXPUE7d0LqcbrxmEFLQZ/8eF6uFtEpv0H/3/CAm82JOh9aw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gw81YRVx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772330120; c=relaxed/simple;
+	bh=0pTxAGVlKbMivZuPzyc+wak+hRdqT70/3tz5oR7nXRU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cTBxNr3fK29x3Z/uAOiuIVUX+DJxZM8yKl/Dxxl7zOpu7ZzlpRehHv/DC/+JdtYR6hg7CSTJKrjThrp12EbB6vgcy6on6+U95EwhRNHXaPpu+c0Quba9cFcaqWXcb3GUt/V+7t0fUgmy4SwOMWOWoQFQtVLseGdtIMsiAGSOt3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvgZh3gy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gw81YRVx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 559FBC19421;
-	Sun,  1 Mar 2026 01:55:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvgZh3gy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF876C19421;
+	Sun,  1 Mar 2026 01:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772330115;
-	bh=bhfHUyEcFd2BY07SAHZSvIUgr1GdW/hebPkTiFlnHvA=;
+	s=k20201202; t=1772330120;
+	bh=0pTxAGVlKbMivZuPzyc+wak+hRdqT70/3tz5oR7nXRU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Gw81YRVxC9ymZ0K0UMYXJTgXbUBq1CzkL/2ngV36vxcasb+cEymnvzVvq5xRhm+7h
-	 cDFatiQ8AZ1aVZjRuy+k5wDQ0zGQlZzx0wNhRqb35Yp8WWBEoqwNE0yc7hlaLHqv7i
-	 7zae8yf4GIU5nx/zR7fHwvBKrNK9aHrvqV0jmkUq0+HfUwHG+LMu7WVbiPvPA1EtZy
-	 H5zfneCulB09cFt8U6aWmZdpVilaE9dtWxh4Np/+UsmGdyh6msGIffagVN4kSAbn9B
-	 4IzPlc0dNgPbvyENvhjp4T6ViM1JuDqhyeePL92+xHEU9uKeNYr/BIt1A8ks7y7Emr
-	 WpKLPWYUezAiw==
+	b=SvgZh3gy2q407rFTeI6bCArNg0QsYMBT4wv4WeVEMgYhVY6zjdHL3OOIMoP/safZp
+	 k03lCajLE6YWhvh4mn5Aknyg61xLHrjcYRTlh04W7lv8JZ8xGpvDcIRXF4NFHM9NdA
+	 FKMbEg+Fqzx0kXhjnfXJs8Hxd3ghpxFEOM2GFV5GJFrm3lZNb2hgSesCjMCEffishS
+	 PCiB5yOaT2Aos7gr6qHbfnuYH8vpW3/JMau4vjNsHVWMsatcUNEOV1p7MTk09QCRAC
+	 6RTQ7HDOuQTipCead6f5LehqvcveZV0qf3K1Ctlm++Im8w23tMpVxfrpXWv0kbeYSR
+	 CSfBMvNfaXzIA==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	yangtiezhu@loongson.cn
 Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	loongarch@lists.linux.dev,
-	linux-rt-devel@lists.linux.dev
-Subject: FAILED: Patch "LoongArch: Guard percpu handler under !CONFIG_PREEMPT_RT" failed to apply to 5.15-stable tree
-Date: Sat, 28 Feb 2026 20:55:13 -0500
-Message-ID: <20260301015514.1722401-1-sashal@kernel.org>
+	loongarch@lists.linux.dev
+Subject: FAILED: Patch "LoongArch: Disable instrumentation for setup_ptwalker()" failed to apply to 5.15-stable tree
+Date: Sat, 28 Feb 2026 20:55:18 -0500
+Message-ID: <20260301015518.1722495-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -55,35 +54,51 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 70b0faae3590c628a98a627a10e5d211310169d4 Mon Sep 17 00:00:00 2001
+From 7cb37af61f09c9cfd90c43c9275307c16320cbf2 Mon Sep 17 00:00:00 2001
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue, 10 Feb 2026 19:31:13 +0800
-Subject: [PATCH] LoongArch: Guard percpu handler under !CONFIG_PREEMPT_RT
+Date: Tue, 10 Feb 2026 19:31:17 +0800
+Subject: [PATCH] LoongArch: Disable instrumentation for setup_ptwalker()
 
-After commit 88fd2b70120d ("LoongArch: Fix sleeping in atomic context for
-PREEMPT_RT"), it should guard percpu handler under !CONFIG_PREEMPT_RT to
-avoid redundant operations.
+According to Documentation/dev-tools/kasan.rst, software KASAN modes use
+compiler instrumentation to insert validity checks. Such instrumentation
+might be incompatible with some parts of the kernel, and therefore needs
+to be disabled, just use the attribute __no_sanitize_address to disable
+instrumentation for the low level function setup_ptwalker().
+
+Otherwise bringing up the secondary CPUs failed when CONFIG_KASAN is set
+(especially when PTW is enabled), here are the call chains:
+
+    smpboot_entry()
+      start_secondary()
+        cpu_probe()
+          per_cpu_trap_init()
+            tlb_init()
+              setup_tlb_handler()
+                setup_ptwalker()
+
+The reason is the PGD registers are configured in setup_ptwalker(), but
+KASAN instrumentation may cause TLB exceptions before that.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/unwind_prologue.c | 2 +-
+ arch/loongarch/mm/tlb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kernel/unwind_prologue.c b/arch/loongarch/kernel/unwind_prologue.c
-index 729e775bd40dd..ee1c29686ab05 100644
---- a/arch/loongarch/kernel/unwind_prologue.c
-+++ b/arch/loongarch/kernel/unwind_prologue.c
-@@ -65,7 +65,7 @@ static inline bool scan_handlers(unsigned long entry_offset)
+diff --git a/arch/loongarch/mm/tlb.c b/arch/loongarch/mm/tlb.c
+index 4014c44695878..aaf7d685cc2aa 100644
+--- a/arch/loongarch/mm/tlb.c
++++ b/arch/loongarch/mm/tlb.c
+@@ -202,7 +202,7 @@ void __update_tlb(struct vm_area_struct *vma, unsigned long address, pte_t *ptep
+ 	local_irq_restore(flags);
+ }
  
- static inline bool fix_exception(unsigned long pc)
+-static void setup_ptwalker(void)
++static void __no_sanitize_address setup_ptwalker(void)
  {
--#ifdef CONFIG_NUMA
-+#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
- 	int cpu;
- 
- 	for_each_possible_cpu(cpu) {
+ 	unsigned long pwctl0, pwctl1;
+ 	unsigned long pgd_i = 0, pgd_w = 0;
 -- 
 2.51.0
 
