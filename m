@@ -1,73 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF152430B9A;
-	Sat, 28 Feb 2026 23:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2AB23EABA;
+	Sun,  1 Mar 2026 01:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772319694; cv=none; b=nOHJt8Z8DmeLF6jHpgwdwwU9CMYOfCanMM5i8ZavyfHEAhZfsazGsgOHdIa+O9eTn7fec/suWTH5E5ftlAtesUKpFaJiE4Z7pLLBQpP7wmPAkcCVjINABT56ejBVSHHoxN42wVel1/WuZho6tf5cxvA61ICW1CozQMG4tEJL70o=
+	t=1772327854; cv=none; b=Vl3xIpu30UrQKorBdOOpX5ojfeWUbllE4tw1nIdB4eMkqWFH5WzMkWIbovpTqRZjwi1Vr1mByHJVQdBjyg93TI1A04tG5jhVADQNrzWDxvaNB7tUqN4GLo3SRaz2fk7Q5LJpQmHfwLiXCLhBGblS20SJYc1b+R9GouVJBnmNBrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772319694; c=relaxed/simple;
-	bh=O9uOBnZ/lKOtmWpG8ozM2E0DAaC9mNV1xzrSoLZmrkY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=aKI9VGd5x7MQJEsKFH14Jqz0N6Ps9PZXqHNrUdt+mWEpNb3kS2uXbqhcCr4eolhJUMatfbKfI3X+Yf+rdn6YfmuQNXlvYcedPJfEIT9e3pJstcPHfYfNEAtFThOUxLUrvlLK6BX/N5cO0nGs4UIssarae3ol4iXK7i381/wOuZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Y9QqY/Um; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772327854; c=relaxed/simple;
+	bh=Oo7HI7gZ/7OGgdEacUFLxqe0nxPxWp1WsRPts8VqBTk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KsaeWMAQ1CfVBShDIEUhSYIk4nZl5WBdu05SNlVMvSoep08bzIPxOIsGcueyYUTKqQuSbmA16ds1uzTWZlgf2+AE+cbH1vNIe51qADGK0HQQhhdgEJwz1RkBG6sx3sYzMEyW5gMd/x5WyydhV24NBevIhFVEWiSEHP0ETTC8XII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eS3WovQk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Y9QqY/Um"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AF2C116D0;
-	Sat, 28 Feb 2026 23:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1772319694;
-	bh=O9uOBnZ/lKOtmWpG8ozM2E0DAaC9mNV1xzrSoLZmrkY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Y9QqY/Umx9XtOjZ16O164ix2TSzEP3hGmrykgRAgox/0ibPBIvA9ydXrC9Yy2qv4z
-	 fKFd8R6RWFSRWyHuDm3dSHPW9dpgJWbVvCl1frTIjiVjTxSPr+Bzy1R5C17i0zZJOw
-	 iv1lhi9GBCZuxsNYUaFFulSdDc+61t9gjdWA+NuA=
-Date: Sat, 28 Feb 2026 15:01:33 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>, Gladyshev Ilya
- <gladyshev.ilya1@h-partners.com>
-Cc: Muchun Song <muchun.song@linux.dev>, David Hildenbrand
- <david@kernel.org>, Matthew Wilcox <willy@infradead.org>, Usama Arif
- <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>, Oscar
- Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, Vlastimil
- Babka <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi
- Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, Michal Hocko
- <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet
- <corbet@lwn.net>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, kernel-team@meta.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCHv7 RESEND 00/17] mm: Eliminate fake head pages from
- vmemmap optimization
-Message-Id: <20260228150133.67fd58ef1ae9e50ea3f32476@linux-foundation.org>
-In-Reply-To: <20260227194302.274384-1-kas@kernel.org>
-References: <20260227194302.274384-1-kas@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eS3WovQk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9958C19421;
+	Sun,  1 Mar 2026 01:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772327854;
+	bh=Oo7HI7gZ/7OGgdEacUFLxqe0nxPxWp1WsRPts8VqBTk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eS3WovQkr4HMVxSZ2H7XONfIJ6W4TBWczk/P7WeBT2Ch2bxcc2mHelnvHZJH4nlAc
+	 K9hzGF3lYINz89chAFRsSuxNYXCnXVPdAf2IUGD74Z2/2rHKnAlq3T6z9pjxv9T5Wc
+	 MmK3UucQy/eQn34eUKMSH/xXRlVuLWXnvc6DY8HnXoG7RCUi9kuf8FB/7z97mh8vSQ
+	 1xV5Ihob8ZpJ0nB3pCunj18ce+yu7oFX0TRWWPOlXhiGK9U+6FHPbjP9u6v/lv374B
+	 sxgKAa0VDWfreF52ZpygedV8jOr7drw5Iv5AaYABP8RMhVOHxV+dwYIbA4CqS9UeiM
+	 FCKom7TwaOwUg==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	yangtiezhu@loongson.cn
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-rt-devel@lists.linux.dev
+Subject: FAILED: Patch "LoongArch: Handle percpu handler address for ORC unwinder" failed to apply to 6.18-stable tree
+Date: Sat, 28 Feb 2026 20:17:32 -0500
+Message-ID: <20260301011732.1671502-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 
-On Fri, 27 Feb 2026 19:42:38 +0000 "Kiryl Shutsemau (Meta)" <kas@kernel.org> wrote:
+The patch below does not apply to the 6.18-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-> This series removes "fake head pages" from the HugeTLB vmemmap
-> optimization (HVO) by changing how tail pages encode their relationship
-> to the head page.
-> 
-> It simplifies compound_head() and page_ref_add_unless(). Both are in the
-> hot path.
+Thanks,
+Sasha
 
-This series is unaware of (and incompatible with) Gladyshev's "mm: make
-ref_unless functions unless_zero only" cleanup
-(https://lkml.kernel.org/r/20260206133328.426921-1-gladyshev.ilya1@h-partners.com).
+------------------ original commit in Linus's tree ------------------
 
-Gladyshev, I'll drop that patch.  If you believe that similar changes
-after Kiryl's series are desirable, please send them along, thanks.
+From 055c7e75190e0be43037bd663a3f6aced194416e Mon Sep 17 00:00:00 2001
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Date: Tue, 10 Feb 2026 19:31:13 +0800
+Subject: [PATCH] LoongArch: Handle percpu handler address for ORC unwinder
+
+After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for ORC
+unwinder"), the system can not boot normally under some configs (such as
+enable KASAN), there are many error messages "cannot find unwind pc".
+
+The kernel boots normally with the defconfig, so no problem found out at
+the first time. Here is one way to reproduce:
+
+  cd linux
+  make mrproper defconfig -j"$(nproc)"
+  scripts/config -e KASAN
+  make olddefconfig all -j"$(nproc)"
+  sudo make modules_install
+  sudo make install
+  sudo reboot
+
+The address that can not unwind is not a valid kernel address which is
+between "pcpu_handlers[cpu]" and "pcpu_handlers[cpu] + vec_sz" due to
+the code of eentry was copied to the new area of pcpu_handlers[cpu] in
+setup_tlb_handler(), handle this special case to get the valid address
+to unwind normally.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/setup.h |  3 +++
+ arch/loongarch/kernel/unwind_orc.c | 16 ++++++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
+index 3c2fb16b11b64..f81375e5e89c0 100644
+--- a/arch/loongarch/include/asm/setup.h
++++ b/arch/loongarch/include/asm/setup.h
+@@ -7,6 +7,7 @@
+ #define _LOONGARCH_SETUP_H
+ 
+ #include <linux/types.h>
++#include <linux/threads.h>
+ #include <asm/sections.h>
+ #include <uapi/asm/setup.h>
+ 
+@@ -14,6 +15,8 @@
+ 
+ extern unsigned long eentry;
+ extern unsigned long tlbrentry;
++extern unsigned long pcpu_handlers[NR_CPUS];
++extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+ extern char init_command_line[COMMAND_LINE_SIZE];
+ extern void tlb_init(int cpu);
+ extern void cpu_cache_init(void);
+diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
+index d6b3688a1ce97..11ba3e4ac9eee 100644
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -352,6 +352,22 @@ static inline unsigned long bt_address(unsigned long ra)
+ {
+ 	extern unsigned long eentry;
+ 
++#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
++	int cpu;
++	int vec_sz = sizeof(exception_handlers);
++
++	for_each_possible_cpu(cpu) {
++		if (!pcpu_handlers[cpu])
++			continue;
++
++		if (ra >= pcpu_handlers[cpu] &&
++		    ra < pcpu_handlers[cpu] + vec_sz) {
++			ra = ra + eentry - pcpu_handlers[cpu];
++			break;
++		}
++	}
++#endif
++
+ 	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
+ 		unsigned long func;
+ 		unsigned long type = (ra - eentry) / VECSIZE;
+-- 
+2.51.0
+
+
+
 
