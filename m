@@ -1,228 +1,142 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CD72D0C64
-	for <loongarch@lists.linux.dev>; Mon,  2 Mar 2026 03:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AE523D7F0
+	for <loongarch@lists.linux.dev>; Mon,  2 Mar 2026 03:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772421114; cv=none; b=tFsNZUs6XC4U7xhIgdirsnl6kY7DBSnRBVBT8YyTKqk+pEBtKpIgLsu8LEQcd6XjYu56/4XXNFSwtW6eVLkd63GXViaOn+ByWITVTditJuhjUS1qzXESPXe30Pnljj/kZY2iGNM9BZ6Q+FGsYWonux38okdIPBHX/OrgkvWUi+I=
+	t=1772423621; cv=none; b=Z7qotykhv2uiJSn0lrJTSMiceGPuLmwiU/rVa3EsqEanZca9Rmj9GWKkb1vVm7QemtrvCspAdZHKXHbffrl7uMws/iq54p/K4HHA8rIpO4lwQ6TvDXe4GKALkYHstONKI2J4vRrrvUxDK+VSMybfvH0MEVbgbdNBh8wAskmdrIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772421114; c=relaxed/simple;
-	bh=BVR85JZsBdA5YhaCWav14e0U4PdgOrVUGlkqBYLVCYA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=VyFKp5NZnhsZ3amNtx2LJBV+mM+pWPLFGI7Uj1D9P9UlRmTUcMHruX6NQtsJGAu78Zpq/puRBLHRxzB1kcwNwEH+3rg2ib7Qna0qxnY5qUdRS2/LkmaiaVa5sX5d2xSdBtcgevjgEczFnNAT/UNKn0GwgtqhnCVuR0fdNKHuA0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XWQnUevh; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772423621; c=relaxed/simple;
+	bh=yBkOw314O+7XSAFbwPUmcXoCXPZ7RWfxWmANhz1r1q8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZVJ+lkDwgDZj+rgQrLDaZG447wtX6kB9k3XgKQMuKO2mZg5U4IyQ8aaxlGbhsOP+ySxqE80fPLFMIC7rFbY7LEbWccVBCnc2sUYostUgbVf5dLt092yJmLsv5cPp8zDfrLb+M2aDd6Q91VSuGWHCZB9on5Qipy85dDjGv+K0dUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=l+D7xZtn; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XWQnUevh"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772421100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c80IjFmwrSTyfEdA2osb6JnCGS7RM2etVw9Vzge3vcA=;
-	b=XWQnUevhvW3qqt0n4MlcEcWHSZ9PyYGSKnaoUT9LD7wZytjhOoL4nZQVilpTsPHWq03g7t
-	cWdDmURaQq8W53Sfoqq1cwyqVh/BY7X9Q3O30L3PFDo0vomLWjqiuHGs12JSmtR86BFf6N
-	6SN+deifYZIQ7qmRKRLZh9ibPTEC1/Q=
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="l+D7xZtn"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Z1sEAvaHkLWMtMbzMmXnApZeH7AfC1KWFCkOAYYuwo8=;
+	b=l+D7xZtnwu76T/ZSDnkYt4tlkXVd/aGuJwNXaMC4yAmfRWNQe9GmyUWFjJeupA8HLOlWv7U5+
+	1+lmqn8dkfdAi129Xzbav7SRG5J7JFF1fFixb5eBXBDdslSqeWdrIwtH/jkpxlifEq+FquJsOep
+	6KoLwxhwCIppHafvEj5KQOU=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4fPPzZ657Jzcb0N;
+	Mon,  2 Mar 2026 11:48:26 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59F7940561;
+	Mon,  2 Mar 2026 11:53:36 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 2 Mar
+ 2026 11:53:32 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+	<dyoung@redhat.com>, <rdunlap@infradead.org>, <pmladek@suse.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <paulmck@kernel.org>,
+	<lirongqing@baidu.com>, <fvdl@google.com>, <rppt@kernel.org>,
+	<ardb@kernel.org>, <leitao@debian.org>, <sourabhjain@linux.ibm.com>,
+	<jbohac@suse.cz>, <cfsworks@gmail.com>, <osandov@fb.com>,
+	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <hbathini@linux.ibm.com>,
+	<eajames@linux.ibm.com>, <songshuaishuai@tinylab.org>,
+	<kevin.brodsky@arm.com>, <samuel.holland@sifive.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <brgerst@gmail.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v8 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Date: Mon, 2 Mar 2026 11:53:10 +0800
+Message-ID: <20260302035315.3892241-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
-Subject: Re: [PATCHv7 17/18] hugetlb: Update vmemmap_dedup.rst
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20260227194302.274384-18-kas@kernel.org>
-Date: Mon, 2 Mar 2026 11:10:54 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Matthew Wilcox <willy@infradead.org>,
- Usama Arif <usamaarif642@gmail.com>,
- Frank van der Linden <fvdl@google.com>,
- Oscar Salvador <osalvador@suse.de>,
- Mike Rapoport <rppt@kernel.org>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Zi Yan <ziy@nvidia.com>,
- Baoquan He <bhe@redhat.com>,
- Michal Hocko <mhocko@suse.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Jonathan Corbet <corbet@lwn.net>,
- Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>,
- kernel-team@meta.com,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A2A3453A-DA4B-43E1-B970-F704B140A4D3@linux.dev>
-References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-18-kas@kernel.org>
-To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
+The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+and crashk_cma memory are almost identical across different architectures,
+This patch set handle them in crash core in a general way, which eliminate
+a lot of duplication code.
 
+And add support for crashkernel CMA reservation for arm64 and riscv.
 
-> On Feb 28, 2026, at 03:42, Kiryl Shutsemau (Meta) <kas@kernel.org> =
-wrote:
->=20
-> From: Kiryl Shutsemau <kas@kernel.org>
->=20
-> Update the documentation regarding vmemmap optimization for hugetlb to
-> reflect the changes in how the kernel maps the tail pages.
->=20
-> Fake heads no longer exist. Remove their description.
->=20
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Reviewed-by: Muchun Song <muchun.song@linux.dev>
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
-> ---
-> Documentation/mm/vmemmap_dedup.rst | 60 +++++++++++++-----------------
-> 1 file changed, 26 insertions(+), 34 deletions(-)
->=20
-> diff --git a/Documentation/mm/vmemmap_dedup.rst =
-b/Documentation/mm/vmemmap_dedup.rst
-> index 1863d88d2dcb..4aaef36d8971 100644
-> --- a/Documentation/mm/vmemmap_dedup.rst
-> +++ b/Documentation/mm/vmemmap_dedup.rst
-> @@ -124,33 +124,35 @@ Here is how things look before optimization::
->  |           |
->  +-----------+
->=20
-> -The value of page->compound_info is the same for all tail pages. The =
-first
-> -page of ``struct page`` (page 0) associated with the HugeTLB page =
-contains the 4
-> -``struct page`` necessary to describe the HugeTLB. The only use of =
-the remaining
-> -pages of ``struct page`` (page 1 to page 7) is to point to =
-page->compound_info.
-> -Therefore, we can remap pages 1 to 7 to page 0. Only 1 page of =
-``struct page``
-> -will be used for each HugeTLB page. This will allow us to free the =
-remaining
-> -7 pages to the buddy allocator.
-> +The first page of ``struct page`` (page 0) associated with the =
-HugeTLB page
-> +contains the 4 ``struct page`` necessary to describe the HugeTLB. The =
-remaining
-> +pages of ``struct page`` (page 1 to page 7) are tail pages.
-> +
-> +The optimization is only applied when the size of the struct page is =
-a power-of-2
-> +In this case, all tail pages of the same order are identical. See
-> +compound_head(). This allows us to remap the tail pages of the =
-vmemmap to a
-> +shared, read-only page. The head page is also remapped to a new page. =
-This
-> +allows the original vmemmap pages to be freed.
->=20
-> Here is how things look after remapping::
->=20
-> -    HugeTLB                  struct pages(8 pages)         page =
-frame(8 pages)
-> - +-----------+ ---virt_to_page---> +-----------+   mapping to   =
-+-----------+
-> - |           |                     |     0     | -------------> |     =
-0     |
-> - |           |                     +-----------+                =
-+-----------+
-> - |           |                     |     1     | ---------------^ ^ ^ =
-^ ^ ^ ^
-> - |           |                     +-----------+                  | | =
-| | | |
-> - |           |                     |     2     | -----------------+ | =
-| | | |
-> - |           |                     +-----------+                    | =
-| | | |
-> - |           |                     |     3     | -------------------+ =
-| | | |
-> - |           |                     +-----------+                      =
-| | | |
-> - |           |                     |     4     | =
----------------------+ | | |
-> - |    PMD    |                     +-----------+                      =
-  | | |
-> - |   level   |                     |     5     | =
------------------------+ | |
-> - |  mapping  |                     +-----------+                      =
-    | |
-> - |           |                     |     6     | =
--------------------------+ |
-> - |           |                     +-----------+                      =
-      |
-> - |           |                     |     7     | =
----------------------------+
-> +    HugeTLB                  struct pages(8 pages)                 =
-page frame (new)
-> + +-----------+ ---virt_to_page---> +-----------+   mapping to   =
-+----------------+
-> + |           |                     |     0     | -------------> |     =
-  0        |
-> + |           |                     +-----------+                =
-+----------------+
-> + |           |                     |     1     | ------=E2=94=90
-> + |           |                     +-----------+       |
-> + |           |                     |     2     | ------=E2=94=BC      =
-  +----------------------------+
-> + |           |                     +-----------+       |        | A =
-single, per-node page    |
+Rebased on v7.0-rc1.
 
-You've changed it to per-node-per-zone. Need update.
+Basic second kernel boot test were performed on QEMU platforms for x86,
+ARM64, and RISC-V architectures with the following parameters:
 
-> + |           |                     |     3     | ------=E2=94=BC------>=
- | frame shared among all     |
-> + |           |                     +-----------+       |        | =
-hugepages of the same size |
-> + |           |                     |     4     | ------=E2=94=BC      =
-  +----------------------------+
-> + |           |                     +-----------+       |
-> + |           |                     |     5     | ------=E2=94=BC
-> + |    PMD    |                     +-----------+       |
-> + |   level   |                     |     6     | ------=E2=94=BC
-> + |  mapping  |                     +-----------+       |
-> + |           |                     |     7     | ------=E2=94=98
->  |           |                     +-----------+
->  |           |
->  |           |
-> @@ -172,16 +174,6 @@ The contiguous bit is used to increase the =
-mapping size at the pmd and pte
-> (last) level. So this type of HugeTLB page can be optimized only when =
-its
-> size of the ``struct page`` structs is greater than **1** page.
->=20
-> -Notice: The head vmemmap page is not freed to the buddy allocator and =
-all
-> -tail vmemmap pages are mapped to the head vmemmap page frame. So we =
-can see
-> -more than one ``struct page`` struct with ``PG_head`` (e.g. 8 per 2 =
-MB HugeTLB
-> -page) associated with each HugeTLB page. The ``compound_head()`` can =
-handle
-> -this correctly. There is only **one** head ``struct page``, the tail
-> -``struct page`` with ``PG_head`` are fake head ``struct page``.  We =
-need an
-> -approach to distinguish between those two different types of ``struct =
-page`` so
-> -that ``compound_head()`` can return the real head ``struct page`` =
-when the
-> -parameter is the tail ``struct page`` but with ``PG_head``.
-> -
-> Device DAX
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> --=20
-> 2.51.2
->=20
+	"cma=256M crashkernel=256M crashkernel=64M,cma"
+
+Changes in v8:
+- Fix the build issues reported by kernel test robot and Sourabh.
+- Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
+
+Changes in v7:
+- Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
+  for arm64 and riscv.
+- Add Acked-by.
+- Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
+
+Changes in v6:
+- Update the crash core exclude code as Mike suggested.
+- Rebased on v7.0-rc1.
+- Add acked-by.
+- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
+
+Changes in v5:
+- Fix the kernel test robot build warnings.
+- Sort crash memory ranges before preparing elfcorehdr for powerpc
+- Link to v4: https://lore.kernel.org/all/20260209095931.2813152-1-ruanjinjie@huawei.com/
+
+Changes in v4:
+- Move the size calculation (and the realloc if needed) into the
+  generic crash.
+- Link to v3: https://lore.kernel.org/all/20260204093728.1447527-1-ruanjinjie@huawei.com/
+
+Jinjie Ruan (4):
+  crash: Exclude crash kernel memory in crash core
+  crash: Use crash_exclude_core_ranges() on powerpc
+  arm64: kexec: Add support for crashkernel CMA reservation
+  riscv: kexec: Add support for crashkernel CMA reservation
+
+Sourabh Jain (1):
+  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+
+ .../admin-guide/kernel-parameters.txt         |  16 +--
+ arch/arm64/kernel/machine_kexec_file.c        |  39 +++----
+ arch/arm64/mm/init.c                          |   5 +-
+ arch/loongarch/kernel/machine_kexec_file.c    |  39 +++----
+ arch/powerpc/include/asm/kexec_ranges.h       |   1 -
+ arch/powerpc/kexec/crash.c                    |   5 +-
+ arch/powerpc/kexec/ranges.c                   | 101 +-----------------
+ arch/riscv/kernel/machine_kexec_file.c        |  38 +++----
+ arch/riscv/mm/init.c                          |   5 +-
+ arch/x86/kernel/crash.c                       |  89 +++------------
+ drivers/of/fdt.c                              |   9 +-
+ drivers/of/kexec.c                            |   9 ++
+ include/linux/crash_core.h                    |   9 ++
+ kernel/crash_core.c                           |  89 ++++++++++++++-
+ 14 files changed, 178 insertions(+), 276 deletions(-)
+
+-- 
+2.34.1
 
