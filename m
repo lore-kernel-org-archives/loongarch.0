@@ -1,101 +1,228 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D9E175A93
-	for <loongarch@lists.linux.dev>; Mon,  2 Mar 2026 02:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CD72D0C64
+	for <loongarch@lists.linux.dev>; Mon,  2 Mar 2026 03:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772418159; cv=none; b=ZnFo1wtyvuAle5dvDJ1kLCNMGCfFtSc/2TYu+HFWaPhf0elxLXxWgf4M6dpD02ZWiBsB37XRrkVyT9pxT9Vx9SuW2Kc9XJMoFUJrfV1ox0DAfOs2awLEeO2shJWgzOjC19/MyhCxyLXKUu6cI/p0ADxXMjtHK37Kl0OnBvr5x9I=
+	t=1772421114; cv=none; b=tFsNZUs6XC4U7xhIgdirsnl6kY7DBSnRBVBT8YyTKqk+pEBtKpIgLsu8LEQcd6XjYu56/4XXNFSwtW6eVLkd63GXViaOn+ByWITVTditJuhjUS1qzXESPXe30Pnljj/kZY2iGNM9BZ6Q+FGsYWonux38okdIPBHX/OrgkvWUi+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772418159; c=relaxed/simple;
-	bh=6zAy6gReJcleCqNHP1MmxDQ9Xz+aQderSR0GGhLr1pI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ViGNVwb4kjQ7WxaPPt4T3F5eDqvjyPZji1Y26L2VdvLJcGAGQyaQTHKHjDrjE51QL3Z/M7C+zpom26WdJL4mnrmvGxFLbaQ3MDV8qso8idxnRKKlbBr7588WFegK2E4KhUzsHzWP33tBaCO/AXQlUIkvntfqxQUPN0+YL7VQhdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=lm7N2ZIm; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1772421114; c=relaxed/simple;
+	bh=BVR85JZsBdA5YhaCWav14e0U4PdgOrVUGlkqBYLVCYA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=VyFKp5NZnhsZ3amNtx2LJBV+mM+pWPLFGI7Uj1D9P9UlRmTUcMHruX6NQtsJGAu78Zpq/puRBLHRxzB1kcwNwEH+3rg2ib7Qna0qxnY5qUdRS2/LkmaiaVa5sX5d2xSdBtcgevjgEczFnNAT/UNKn0GwgtqhnCVuR0fdNKHuA0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XWQnUevh; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="lm7N2ZIm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772418148;
-	bh=6zAy6gReJcleCqNHP1MmxDQ9Xz+aQderSR0GGhLr1pI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lm7N2ZImQhodvGc2BqpdKduMN036R8BbCgpOTPJDmWK/nKCMuzHMa0C6dKfWZXUzm
-	 9CWJVusSrx5JxW6d4BY32NmVQxOIoUAszHDJFUx6iZAb2IXdPfy367PzVLrwjYnqVR
-	 qKsf7Gm5OBLno2fMOQze9cpj+0blCrMDRRGsJKsQ=
-Received: from [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8] (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 512C16760A;
-	Sun,  1 Mar 2026 21:22:25 -0500 (EST)
-Message-ID: <9bb8b1ae61ccebec6460e2b271cbcc709aba9765.camel@xry111.site>
-Subject: Re: loongarch64 objtool warning with LLVM 18 in Rust object file
-From: Xi Ruoyao <xry111@xry111.site>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Josh Poimboeuf
-	 <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Huacai Chen
-	 <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: Danilo Krummrich <dakr@kernel.org>, Alexandre Courbot
- <acourbot@nvidia.com>, 	loongarch@lists.linux.dev, rust-for-linux
- <rust-for-linux@vger.kernel.org>,  Nouveau Dev
- <nouveau@lists.freedesktop.org>
-Date: Mon, 02 Mar 2026 10:22:20 +0800
-In-Reply-To: <CANiq72mAQxbRJZDnik3Qmd4phvFwPA01O2jwaaXRh_T+2=L-qA@mail.gmail.com>
-References: 
-	<CANiq72mAQxbRJZDnik3Qmd4phvFwPA01O2jwaaXRh_T+2=L-qA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XWQnUevh"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1772421100;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c80IjFmwrSTyfEdA2osb6JnCGS7RM2etVw9Vzge3vcA=;
+	b=XWQnUevhvW3qqt0n4MlcEcWHSZ9PyYGSKnaoUT9LD7wZytjhOoL4nZQVilpTsPHWq03g7t
+	cWdDmURaQq8W53Sfoqq1cwyqVh/BY7X9Q3O30L3PFDo0vomLWjqiuHGs12JSmtR86BFf6N
+	6SN+deifYZIQ7qmRKRLZh9ibPTEC1/Q=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
+Subject: Re: [PATCHv7 17/18] hugetlb: Update vmemmap_dedup.rst
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20260227194302.274384-18-kas@kernel.org>
+Date: Mon, 2 Mar 2026 11:10:54 +0800
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Usama Arif <usamaarif642@gmail.com>,
+ Frank van der Linden <fvdl@google.com>,
+ Oscar Salvador <osalvador@suse.de>,
+ Mike Rapoport <rppt@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Zi Yan <ziy@nvidia.com>,
+ Baoquan He <bhe@redhat.com>,
+ Michal Hocko <mhocko@suse.com>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ kernel-team@meta.com,
+ linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,
+ loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A2A3453A-DA4B-43E1-B970-F704B140A4D3@linux.dev>
+References: <20260227194302.274384-1-kas@kernel.org>
+ <20260227194302.274384-18-kas@kernel.org>
+To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 2026-03-02 at 00:42 +0100, Miguel Ojeda wrote:
-> Hi objtool & loongarch,
+
+
+> On Feb 28, 2026, at 03:42, Kiryl Shutsemau (Meta) <kas@kernel.org> =
+wrote:
 >=20
-> I noticed an objtool warning in a Rust object file for loongarch64 in
-> mainline:
+> From: Kiryl Shutsemau <kas@kernel.org>
 >=20
-> drivers/gpu/nova-core/nova_core.o: warning: objtool:
-> _RNvMs1_NtNtCs3LxSlPxFOnk_9nova_core3gsp4cmdqNtB5_4Cmdq3new+0x238:
-> return with modified stack frame
+> Update the documentation regarding vmemmap optimization for hugetlb to
+> reflect the changes in how the kernel maps the tail pages.
 >=20
-> From a quick test, I saw it happened only with older upstream Rust
-> binaries (1.78.0 to 1.81.0), so I suspected a switch of major LLVM
-> version, and indeed with 1.82.0 LLVM 19 is used instead of LLVM 18.
-
-/* snip */
-
-> While with LLVM 19 I get:
-
-/* snip */
-
-> =C2=A0=C2=A0=C2=A0 lu12i.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 $a2, 1
-> =C2=A0=C2=A0=C2=A0 ori=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 $a2, $a2, 0x870
-> =C2=A0=C2=A0=C2=A0 sub.d=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 $sp, $sp, $a2
-> =C2=A0=C2=A0=C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 lu12i.w=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 $a0, 1
-> =C2=A0=C2=A0=C2=A0 ori=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 $a0, $a0, 0x870
-> =C2=A0=C2=A0=C2=A0 add.d=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 $sp, $sp, $a0
-
-/* snip */
+> Fake heads no longer exist. Remove their description.
 >=20
-> So I suspect the stack pointer is not getting tracked properly and
-> thus the mismatch. Is it a known limitation for `objtool` on
-> loongarch64?
+> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> Reviewed-by: Muchun Song <muchun.song@linux.dev>
+> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+> Documentation/mm/vmemmap_dedup.rst | 60 +++++++++++++-----------------
+> 1 file changed, 26 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/Documentation/mm/vmemmap_dedup.rst =
+b/Documentation/mm/vmemmap_dedup.rst
+> index 1863d88d2dcb..4aaef36d8971 100644
+> --- a/Documentation/mm/vmemmap_dedup.rst
+> +++ b/Documentation/mm/vmemmap_dedup.rst
+> @@ -124,33 +124,35 @@ Here is how things look before optimization::
+>  |           |
+>  +-----------+
+>=20
+> -The value of page->compound_info is the same for all tail pages. The =
+first
+> -page of ``struct page`` (page 0) associated with the HugeTLB page =
+contains the 4
+> -``struct page`` necessary to describe the HugeTLB. The only use of =
+the remaining
+> -pages of ``struct page`` (page 1 to page 7) is to point to =
+page->compound_info.
+> -Therefore, we can remap pages 1 to 7 to page 0. Only 1 page of =
+``struct page``
+> -will be used for each HugeTLB page. This will allow us to free the =
+remaining
+> -7 pages to the buddy allocator.
+> +The first page of ``struct page`` (page 0) associated with the =
+HugeTLB page
+> +contains the 4 ``struct page`` necessary to describe the HugeTLB. The =
+remaining
+> +pages of ``struct page`` (page 1 to page 7) are tail pages.
+> +
+> +The optimization is only applied when the size of the struct page is =
+a power-of-2
+> +In this case, all tail pages of the same order are identical. See
+> +compound_head(). This allows us to remap the tail pages of the =
+vmemmap to a
+> +shared, read-only page. The head page is also remapped to a new page. =
+This
+> +allows the original vmemmap pages to be freed.
+>=20
+> Here is how things look after remapping::
+>=20
+> -    HugeTLB                  struct pages(8 pages)         page =
+frame(8 pages)
+> - +-----------+ ---virt_to_page---> +-----------+   mapping to   =
++-----------+
+> - |           |                     |     0     | -------------> |     =
+0     |
+> - |           |                     +-----------+                =
++-----------+
+> - |           |                     |     1     | ---------------^ ^ ^ =
+^ ^ ^ ^
+> - |           |                     +-----------+                  | | =
+| | | |
+> - |           |                     |     2     | -----------------+ | =
+| | | |
+> - |           |                     +-----------+                    | =
+| | | |
+> - |           |                     |     3     | -------------------+ =
+| | | |
+> - |           |                     +-----------+                      =
+| | | |
+> - |           |                     |     4     | =
+---------------------+ | | |
+> - |    PMD    |                     +-----------+                      =
+  | | |
+> - |   level   |                     |     5     | =
+-----------------------+ | |
+> - |  mapping  |                     +-----------+                      =
+    | |
+> - |           |                     |     6     | =
+-------------------------+ |
+> - |           |                     +-----------+                      =
+      |
+> - |           |                     |     7     | =
+---------------------------+
+> +    HugeTLB                  struct pages(8 pages)                 =
+page frame (new)
+> + +-----------+ ---virt_to_page---> +-----------+   mapping to   =
++----------------+
+> + |           |                     |     0     | -------------> |     =
+  0        |
+> + |           |                     +-----------+                =
++----------------+
+> + |           |                     |     1     | ------=E2=94=90
+> + |           |                     +-----------+       |
+> + |           |                     |     2     | ------=E2=94=BC      =
+  +----------------------------+
+> + |           |                     +-----------+       |        | A =
+single, per-node page    |
 
-It indeed looks like objtool cannot handle the sp update using a scratch
-register above.
+You've changed it to per-node-per-zone. Need update.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+> + |           |                     |     3     | ------=E2=94=BC------>=
+ | frame shared among all     |
+> + |           |                     +-----------+       |        | =
+hugepages of the same size |
+> + |           |                     |     4     | ------=E2=94=BC      =
+  +----------------------------+
+> + |           |                     +-----------+       |
+> + |           |                     |     5     | ------=E2=94=BC
+> + |    PMD    |                     +-----------+       |
+> + |   level   |                     |     6     | ------=E2=94=BC
+> + |  mapping  |                     +-----------+       |
+> + |           |                     |     7     | ------=E2=94=98
+>  |           |                     +-----------+
+>  |           |
+>  |           |
+> @@ -172,16 +174,6 @@ The contiguous bit is used to increase the =
+mapping size at the pmd and pte
+> (last) level. So this type of HugeTLB page can be optimized only when =
+its
+> size of the ``struct page`` structs is greater than **1** page.
+>=20
+> -Notice: The head vmemmap page is not freed to the buddy allocator and =
+all
+> -tail vmemmap pages are mapped to the head vmemmap page frame. So we =
+can see
+> -more than one ``struct page`` struct with ``PG_head`` (e.g. 8 per 2 =
+MB HugeTLB
+> -page) associated with each HugeTLB page. The ``compound_head()`` can =
+handle
+> -this correctly. There is only **one** head ``struct page``, the tail
+> -``struct page`` with ``PG_head`` are fake head ``struct page``.  We =
+need an
+> -approach to distinguish between those two different types of ``struct =
+page`` so
+> -that ``compound_head()`` can return the real head ``struct page`` =
+when the
+> -parameter is the tail ``struct page`` but with ``PG_head``.
+> -
+> Device DAX
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> --=20
+> 2.51.2
+>=20
+
