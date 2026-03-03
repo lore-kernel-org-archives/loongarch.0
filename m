@@ -1,366 +1,439 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613ED37DE95
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 09:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772529139; cv=none; b=q1eefshkyF4foKC8TfMpFrsrJrcK0c+PO293UXf/80vrwvFMcPy39Jc14MpqzXWL/09T2Mcf65/BXm/fhAI15M7512hvZvPt7lwXA1JRHI9G3AWn2eddHy0MUlcAUOgks3YPKy4BfQJ5DSlyKkPKzF/CyI5AHbEm4yog+g1KiR4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772529139; c=relaxed/simple;
-	bh=W+k3tgk00XEusak3vneXCe8oDLrRoBUY7m8ARrYYqoo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=McbVsotStCZqPBFlpd4G1+mb+66S/nPacvpJ235noHyl2+s+yHQTCODjPV6B69XZuPAV3j2+Dl/cdNiXM2KVH0cnUB0c/rARZCy0AyxEefgWiGWyPQQNVV648pjy+hWZydQFG0M6dSLpfFvj3QjFY0A//wk2Vabhbot5Fa2SPVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=gTeoqOPh; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582EC38C2DB
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 09:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772529680; cv=pass; b=mvLK/6LO+yk7QGBvPV4fXXFe9L6Zsmw7uCyR34CNbdG9+MDexm2KQsoIA9D2lLa5ZXHYGdTfiipb9q++wl1BFD2LKdOluSIeedpwr4JdrxjScFUe5oqdkRVMT+KU/HhBbaqGHl53wh5gy60L8LYOY9wrGN+FLvqoOtIqwaKAogA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772529680; c=relaxed/simple;
+	bh=qUC4hlaUmuE3q9EP1O1YjY8UBnpLS5yfmPzZcVaubz0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WnrDf4DGpoihw0aGddZe8gNMeq4RpHk80R4s90wVE8v2gnFEsb/PslUXDZzbTidVd7k/5v2Xt09xCGw+syzCPoIfIvGVJbD5geSrKBmjfRVdiKKu0qIqu81QHnHtbZjcaqasbl9n6cTVPrrqxCdm8DsXiJCr/VlTjRehDO2paAo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/20pMpU; arc=pass smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="gTeoqOPh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772529133;
-	bh=Qf5UX4CYvJ2qHksAOeFCAUgTdb8D6lnBU1KDdk2gENk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gTeoqOPhFEPr5gMQzb8CdiUheMZmm0TVPD7aw9PbacfuaaXroZy3nMTGh+hxUBrDU
-	 ZEA98JHSFU3ZBpBwoSGLMj8I0Tp+g/GpK6ZcaL2ESTtNwVKWJdsj3+ZT2IUmd7lBTl
-	 42MLy7M023AYLqrwLlyVXzGqMRO2+YtIascfmR6w=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id AFE1267061;
-	Tue,  3 Mar 2026 04:12:05 -0500 (EST)
-Message-ID: <809bd3ac6eba9db5fc28ba3360907e847018b88a.camel@xry111.site>
-Subject: Re: [PATCH v3] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Jinyang He <hejinyang@loongson.cn>, 
- WANG Rui <wangrui@loongson.cn>, Mingcong Bai <jeffbai@aosc.io>, Zixing Liu
- <liushuyu@aosc.io>, "H . Peter Anvin"	 <hpa@zytor.com>,
- stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,  Menglong
- Dong <menglong8.dong@gmail.com>, Bibo Mao <maobibo@loongson.cn>, Tiezhu
- Yang <yangtiezhu@loongson.cn>,  Hanlu Li <lihanlu@loongson.cn>, Nathan
- Chancellor <nathan@kernel.org>, Jiaxun Yang	 <jiaxun.yang@flygoat.com>, Ard
- Biesheuvel <ardb@kernel.org>, Wentao Guan	 <guanwentao@uniontech.com>,
- loongarch@lists.linux.dev, 	linux-kernel@vger.kernel.org
-Date: Tue, 03 Mar 2026 17:12:02 +0800
-In-Reply-To: <CAAhV-H4mk5f4RMspuwFtWpT775zwJMhiOy2W83jav5XZfg_L-A@mail.gmail.com>
-References: <20260303083248.567185-1-xry111@xry111.site>
-	 <CAAhV-H4mk5f4RMspuwFtWpT775zwJMhiOy2W83jav5XZfg_L-A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/20pMpU"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-65c5a7785b4so7844217a12.1
+        for <loongarch@lists.linux.dev>; Tue, 03 Mar 2026 01:21:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772529678; cv=none;
+        d=google.com; s=arc-20240605;
+        b=K2ZIiJcn2mUbZ5k5A1v+nMw1TLOgGIHVfjUa05nNQzwJrXZrXoNNWlQ7fRbyVWULJ5
+         nP7tK5TBx/4AEE9eDMWi7i7v0g7sBkp43GpYd++ge+Iu5nuy1qnJ07mVFRr5CwRuMqal
+         lQSzNKdKqVPTF/wwgm6lQWvqrozCCauZR5WUuC5Sv84e6xyk5WEIy/uusnI3cCBDQTgn
+         7cUgVntwcVz4xZdqFCQ9HCPmBlv3ztVEgATNnLJmcGHwY6/OLVnlwD55dzqx4TKamgzx
+         +iNoxA3z6T3+qcuiKvZHM+SGtCabmilHt0KBY9EQUhWeLGQwu93pFmXwRheAhmyJEPfv
+         nBKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=b+6M2KZPF5EI514CqHFmtrBWN6sT/McXIxVWsbPFXH8=;
+        fh=4RbM7SiIn+I68o9fgRYIWN92OpJkkCIMJ28nbFzT+gs=;
+        b=FDsu3B0jnutuht7cmak41dshzYYv+0dnPvZTjYSyNjAQnXkL870nccCHaeohpRgd9V
+         xYvVxYsI/Nf3RYTpG4F4tjBEdchOoiJJhiA47fhmwDMJqgAZRdnkszelw0Vn/85Q8OVd
+         UZusX1DASwwlKutJ9tVJR5Uz7zxnNzAlKpF8UNhdOdImBCe/JMjJPncbXbvj2tEyr56D
+         b4PiTjUuPjE4aYuE61MYpDmZi8H/8FCB6RyME53x99G41cG4Na63D350/ACR/AHt7Np7
+         jH1o5GjGcOzJ7XvqDCqxygXYRznykm1aJh4DyHeKh7wDdPw5Ze6MeM+loydSkPmKxQFL
+         PaIA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772529678; x=1773134478; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b+6M2KZPF5EI514CqHFmtrBWN6sT/McXIxVWsbPFXH8=;
+        b=Y/20pMpUMtfTuJfM1fb6MCMdxOF4dDYncUGJWUBshPh1N9lDcRN2UAxWxlzfRc5ux2
+         x0rHIOvHQXJOD/sI7ofJ66ABAEIu0P+BI0AgMIET1KmMu1ZKZMVyYN9l4tdkCpvv1LgZ
+         g61PDrjCXhvg/unQhNp1VDAHU0cytyzZ5Nh0lacmkJVtJNDo/ICD7hz0EamHKRhnGDO5
+         NXEXSH5D2Kz9CaQ0XdzHoh33BE3vBKLBfMtAU0+mO7S2OE3Dd9iyAObXwvQAC3XWxFN2
+         l9q379z65qmgpMNy3mj27gIKlbfab/cX1FWnWQV2Ert4JkeBxKrFlpMKtN6DQbkVzdtB
+         A4bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772529678; x=1773134478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=b+6M2KZPF5EI514CqHFmtrBWN6sT/McXIxVWsbPFXH8=;
+        b=ObbCdonga4YZbWWOJ8hqFww9oVMapsgs+nMn8DN5pbbWNkKYSBHtLUxBNsquVxZImf
+         AsN/AhMyK9Th/FqR7T2A1tLJOx1NYw7UUTVSZvOR/KC7yXqvYQrpIKnwY+Uw4hB+Ehea
+         rNHj8GCGFluIal/KIJXv1dxYXYbrVynM7EBx40eWbiq/QWKG3wHv+jhkAoBhiZ34K/Jj
+         clrl4WSeLBmc0OepmrxcXDRh6ZP9/Mla05iXxIyHUQn9qdSu956GAFyDliyPo0aePb04
+         2DfhRYZ/YNe4jmcYeAb5bQwaGYgsbG7bOI0gdBmCtT1WxId4aFj5SoIR2rZw7ocqbxnf
+         AaVw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9bZyOEHawyJoQLMG4mxfMTdTpcj8G1UfSZMZb8vCG7zpbgNqvcIo/wv6CAe4GhFM4TcQYL9lZF9M=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzlbKzipAT5OXonfuR6LmnswNyaLLaGmj70Qu/YBFpKX0AU4UEb
+	wCH/WJm4b0crwczqBfNhqj9yknhnXF7iTXoxKSL7leuPiX6bb4oTOYwe80FToC0Pghr9ccaX8ll
+	z77AA6O/6kV6548DtgdmdzGGaavHjMOY=
+X-Gm-Gg: ATEYQzzoi8CY2w5IghBMOOr2T6UkVs1JX2iy3KQX/Ed36TF6o5PuiK3Q742UlXF+Myo
+	yW+vnDgaPBFRw79WevF2Rxtj9SnuRLyJtCrHBSzG8/N5z+IFuKZ90LFNZT9d+uSeNGhe23OfFNi
+	IErg7cs1nurZ+W2mO2CbPnwSXcdD/R7QRPJ7RyyIQ73cCG7h0z2pHJooaFUTERhD0fGniUL4T5q
+	eq8121DeyHbHE5GAhGqFr8OBscOMXl/BEctM43+IyLLfFT0t+fK0QNJQVkaL9X/HiJvUEw1kKUM
+	tSBWKKs=
+X-Received: by 2002:a17:907:3d51:b0:b93:62dd:a4a4 with SMTP id
+ a640c23a62f3a-b93765924famr1000653266b.51.1772529677321; Tue, 03 Mar 2026
+ 01:21:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <cover.1772001073.git.zhoubinbin@loongson.cn> <27899156d9218ced7cb0679cad2b2f59f688bd99.1772001073.git.zhoubinbin@loongson.cn>
+ <aZ7Jq5GTbROvcrJH@smile.fi.intel.com>
+In-Reply-To: <aZ7Jq5GTbROvcrJH@smile.fi.intel.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 3 Mar 2026 17:21:05 +0800
+X-Gm-Features: AaiRm53N21CC9RPmD2Ik9krhB2wBhnxwcc0xxmriyv_oPuqBCDKnV5p1bMyZQPI
+Message-ID: <CAMpQs4J2NS23seuNWQOUeBxGF+=L=XZL9j478xc=bZx4x9v5Ww@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-03-03 at 16:54 +0800, Huacai Chen wrote:
-> Hi, Ruoyao,
->=20
-> On Tue, Mar 3, 2026 at 4:33=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
-> >=20
-> > With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
-> > of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
-> > empty.=C2=A0 This is not valid, as the current DWARF specification mand=
-ates
-> > the first byte of the EH frame to be the version number 1.=C2=A0 It cau=
-ses
-> > some unwinders to complain, for example the ClickHouse query profiler
-> > spams the log with messages:
-> >=20
-> > =C2=A0=C2=A0=C2=A0 clickhouse-server[365854]: libunwind: unsupported .e=
-h_frame_hdr
-> > =C2=A0=C2=A0=C2=A0 version: 127 at 7ffffffb0000
-> >=20
-> > Here "127" is just the byte located at the p_vaddr (0, i.e. the
-> > beginning of the vDSO) of the empty GNU_EH_FRAME segment.
-> > Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
-> > the start of vDSO in the process VM image.
-> >=20
-> > In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-> > MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specifi=
+Hi Andy:
+
+Sorry for the late reply.
+
+On Wed, Feb 25, 2026 at 6:06=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Wed, Feb 25, 2026 at 03:34:44PM +0800, Binbin Zhou wrote:
+> > This I2C module is integrated into the Loongson-2K0300 SoCs.
+> >
+> > It provides multi-master functionality and controls all I2C bus-specifi=
 c
-> > "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
-> > use -fno-asynchronous-unwind-tables").=C2=A0 IIRC it indicates some inh=
-erent
-> > limitation of the MIPS ELF ABI and has nothing to do with LoongArch.=C2=
-=A0 So
-> > we can simply flip it over to -fasynchronous-unwind-tables and pass
-> > --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind t=
-he
-> > stack for statistics even if the sample point is taken when the PC is i=
-n
-> > the vDSO.
-> >=20
-> > However simply adjusting the options above would exploit an issue: when
-> > the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
-> > falled back to a machine-specific routine to match the code pattern of
-> > rt_sigreturn and extract the registers saved in the sigframe if the cod=
-e
-> > pattern is matched.=C2=A0 As unwinding from signal handlers is vital fo=
-r
-> > libgcc to support pthread cancellation etc., the fall-back routine had
-> > been silently keeping the LoongArch Linux systems functioning since
-> > Linux 5.19.=C2=A0 But when we start to emit GNU_EH_FRAME with the corre=
-ct
-> > format, fall-back routine will no longer be used and libgcc will fail
-> > to unwind the sigframe, and unwinding from signal handlers will no
-> > longer work, causing dozens of glibc test failures.=C2=A0 To make it po=
-ssible
-> > to unwind from signal handlers again, it's necessary to code the unwind
-> > info in __vdso_rt_sigreturn via .cfi_* directives.
-> >=20
-> > The offsets in the .cfi_* directives depend on the layout of struct
-> > sigframe, notably the offset of sigcontect in the sigframe.=C2=A0 To us=
-e the
-> > offset in the assembly file, factor out struct sigframe into a header t=
-o
-> > allow asm-offsets.c to output the offset for assembly.
-> >=20
-> > To work around a long-term issue in the libgcc unwinder (the pc is
-> > unconditionally substracted by 1: doing so is technically incorrect for
-> > a signal frame), a nop instruction is included with the two real
-> > instructions in __vdso_rt_sigreturn in the same FDE PC range.=C2=A0 The=
- same
-> > hack has been used on x86 for a long time.
-> >=20
-> > Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > ---
-> >=20
-> > Changes from [v2]:
-> > - Wrap .cfi_* for signal trampoline in SYM_SIGFUNC_START.
-> > - Remove comment lines in sigframe.h not so meaningful.
-> >=20
-> > Changes from [v1] to v2:
-> > - Use DWARF column 0 instead of the libgcc-specific column 72.
-> > - Style change to sigframe.h.
-> >=20
-> > [v1]: https://lore.kernel.org/20260225104607.3803060-1-xry111@xry111.si=
-te
-> >=20
-> > =C2=A0arch/loongarch/include/asm/linkage.h=C2=A0 | 34 +++++++++++++++++=
-++++++++++
-> > =C2=A0arch/loongarch/include/asm/sigframe.h |=C2=A0 9 +++++++
-> > =C2=A0arch/loongarch/kernel/asm-offsets.c=C2=A0=C2=A0 |=C2=A0 2 ++
-> > =C2=A0arch/loongarch/kernel/signal.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 6 +----
-> > =C2=A0arch/loongarch/vdso/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 4 ++--
-> > =C2=A0arch/loongarch/vdso/sigreturn.S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 10 +++-----
-> > =C2=A06 files changed, 51 insertions(+), 14 deletions(-)
-> > =C2=A0create mode 100644 arch/loongarch/include/asm/sigframe.h
-> >=20
-> > diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/incl=
-ude/asm/linkage.h
-> > index e2eca1a25b4e..db465036385f 100644
-> > --- a/arch/loongarch/include/asm/linkage.h
-> > +++ b/arch/loongarch/include/asm/linkage.h
-> > @@ -42,3 +42,37 @@
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SYM_END(name, SYM_T_NONE)
-> >=20
-> > =C2=A0#endif
-> > +
-> > +/*
-> > + * This is for the signal handler trampoline, which is used as the ret=
-urn
-> > + * address of the signal handlers in userspace instead of called norma=
-lly.
-> > + * The long standing libgcc bug https://gcc.gnu.org/PR124050=C2=A0requ=
-ires a
-> > + * nop between .cfi_startproc and the actual address of the trampoline=
-, so
-> > + * we cannot simply use SYM_FUNC_START.
-> > + *
-> > + * This wrapper also contains all the .cfi_* directives for recovering
-> > + * the content of the GPRs and the "return address" (where the rt_sigr=
-eturn
-> > + * syscall will jump to), assuming there is a struct rt_sigframe (wher=
-e
-> > + * a struct sigcontext containing those information we need to recover=
-) at
-> > + * $sp.=C2=A0 The "DWARF for the LoongArch(TM) Architecture" manual st=
-ates
-> > + * column 0 is for $zero, but it does not make too much sense to
-> > + * save/restore the hardware zero register.=C2=A0 Repurpose this colum=
-n here
-> > + * for the return address (here it's not the content of $ra we cannot =
-use
-> > + * the default column 3).
-> > + */
-> > +#define SYM_SIGFUNC_START(name)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_startproc;=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_signal_frame;=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_def_cfa 3, RT_SIGFRAME_SC;=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_return_column 0;=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_offset 0, SC_PC;=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .irp=C2=A0=C2=A0=C2=A0 num, 1, 2,=
- 3, 4, 5, 6, 7, 8,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 9, 10, 11, 12, 13, 14, 15, 16=
-,=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 17, 18, 19, 20, 21, 22, 23, 2=
-4,=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 25, 26, 27, 28, 29, 30, 31;=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .cfi_offset \num, SC_REGS + \num =
-* SZREG;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .endr;=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nop;=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SYM_START(name, SYM_L_GLOBAL, SYM=
-_A_ALIGN)
-> > +
-> > +#define SYM_SIGFUNC_END(name) SYM_FUNC_END(name)
-> Why this block is out of #endif ?
->=20
-> > diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/inc=
-lude/asm/sigframe.h
-> > new file mode 100644
-> > index 000000000000..109298b8d7e0
-> > --- /dev/null
-> > +++ b/arch/loongarch/include/asm/sigframe.h
-> > @@ -0,0 +1,9 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > +
-> > +#include <asm/siginfo.h>
-> > +#include <asm/ucontext.h>
-> > +
-> > +struct rt_sigframe {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct siginfo rs_info;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ucontext rs_uctx;
+> > timing, protocols, arbitration, and timing. It supports both standard
+> > and fast modes.
+>
+> ...
+>
+> > +struct loongson2_i2c_priv {
+> > +     struct i2c_adapter              adapter;
+> > +     struct completion               complete;
+> > +     struct clk                      *clk;
+> > +     struct regmap                   *regmap;
+>
+> > +     int                             speed;
+> > +     int                             parent_rate;
+>
+> May any of these two be negative? The kernel doc says nothing about that.
+
+It should be:
+
+u32 speed;
+unsigned long parent_rate;
+>
+> > +     struct loongson2_i2c_msg        msg;
 > > +};
-> > diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kerne=
-l/asm-offsets.c
-> > index 3017c7157600..2cc953f113ac 100644
-> > --- a/arch/loongarch/kernel/asm-offsets.c
-> > +++ b/arch/loongarch/kernel/asm-offsets.c
-> > @@ -16,6 +16,7 @@
-> > =C2=A0#include <asm/ptrace.h>
-> > =C2=A0#include <asm/processor.h>
-> > =C2=A0#include <asm/ftrace.h>
-> > +#include <asm/sigframe.h>
-> > =C2=A0#include <vdso/datapage.h>
-> >=20
-> > =C2=A0static void __used output_ptreg_defines(void)
-> > @@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 COMMENT("Linux sigcontext of=
-fsets.");
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 OFFSET(SC_REGS, sigcontext, =
-sc_regs);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 OFFSET(SC_PC, sigcontext, sc=
-_pc);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 OFFSET(RT_SIGFRAME_SC, rt_sigfram=
-e, rs_uctx.uc_mcontext);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BLANK();
-> > =C2=A0}
-> >=20
-> > diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/sig=
-nal.c
-> > index c9f7ca778364..e297d54ea638 100644
-> > --- a/arch/loongarch/kernel/signal.c
-> > +++ b/arch/loongarch/kernel/signal.c
-> > @@ -37,6 +37,7 @@
-> > =C2=A0#include <asm/lbt.h>
-> > =C2=A0#include <asm/ucontext.h>
-> > =C2=A0#include <asm/vdso.h>
-> > +#include <asm/sigframe.h>
-> >=20
-> > =C2=A0#ifdef DEBUG_SIG
-> > =C2=A0#=C2=A0 define DEBUGP(fmt, args...) printk("%s: " fmt, __func__, =
-##args)
-> > @@ -51,11 +52,6 @@
-> > =C2=A0#define lock_lbt_owner()=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ({ p=
-reempt_disable(); pagefault_disable(); })
-> > =C2=A0#define unlock_lbt_owner()=C2=A0=C2=A0=C2=A0=C2=A0 ({ pagefault_e=
-nable(); preempt_enable(); })
-> >=20
-> > -struct rt_sigframe {
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct siginfo rs_info;
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ucontext rs_uctx;
-> > -};
-> > -
-> > =C2=A0struct _ctx_layout {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sctx_info *addr;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int size;
-> > diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefil=
-e
-> > index 520f1513f07d..294c16b9517f 100644
-> > --- a/arch/loongarch/vdso/Makefile
-> > +++ b/arch/loongarch/vdso/Makefile
-> > @@ -26,7 +26,7 @@ cflags-vdso :=3D $(ccflags-vdso) \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(filter -W%,$(filter-out -W=
-a$(comma)%,$(KBUILD_CFLAGS))) \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -std=3Dgnu11 -fms-extensions=
- -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -fno-stack-protector -fno-ju=
-mp-tables -DDISABLE_BRANCH_PROFILING \
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(call cc-option, -fno-asynchrono=
-us-unwind-tables) \
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(call cc-option, -fasynchronous-=
-unwind-tables) \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(call cc-option, -fno-stack=
--protector)
-> > =C2=A0aflags-vdso :=3D $(ccflags-vdso) \
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -D__ASSEMBLY__ -Wa,-gdwarf-2
-> > @@ -41,7 +41,7 @@ endif
-> >=20
-> > =C2=A0# VDSO linker flags.
-> > =C2=A0ldflags-y :=3D -Bsymbolic --no-undefined -soname=3Dlinux-vdso.so.=
-1 \
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(filter -E%,$(KBUILD_CFLAGS)) -s=
-hared --build-id -T
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 $(filter -E%,$(KBUILD_CFLAGS)) -s=
-hared --build-id --eh-frame-hdr -T
-> >=20
-> > =C2=A0#
-> > =C2=A0# Shared build commands.
-> > diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigr=
-eturn.S
-> > index 9cb3c58fad03..e40bf4186f29 100644
-> > --- a/arch/loongarch/vdso/sigreturn.S
-> > +++ b/arch/loongarch/vdso/sigreturn.S
-> > @@ -12,13 +12,9 @@
-> >=20
-> > =C2=A0#include <asm/regdef.h>
-> > =C2=A0#include <asm/asm.h>
-> > +#include <asm/asm-offsets.h>
-> >=20
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .section=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 .text
-> Can we keep this line?
+>
+> ...
+>
+> > +static void loongson2_i2c_handle_read(struct loongson2_i2c_priv *priv,=
+ int flag)
+> > +{
+> > +     struct loongson2_i2c_msg *msg =3D &priv->msg;
+> > +     unsigned int i;
+> > +     bool changed;
+> > +
+> > +     switch (msg->count) {
+> > +     case 1:
+> > +             /* only transmit 1 bytes condition */
+> > +             loongson2_i2c_disable_irq(priv);
+> > +             loongson2_i2c_read_msg(priv);
+> > +             complete(&priv->complete);
+> > +             break;
+> > +     case 2:
+> > +             if (flag !=3D 1) {
+> > +                     /* ensure only transmit 2 bytes condition */
+> > +                     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR=
+2,
+> > +                                        LOONGSON2_I2C_CR2_ITBUFEN, 0);
+> > +                     break;
+> > +             }
+> > +             regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONG=
+SON2_I2C_CR1_OP_MASK,
+> > +                                msg->stop ? LOONGSON2_I2C_CR1_STOP : L=
+OONGSON2_I2C_CR1_START);
+> > +
+> > +             loongson2_i2c_disable_irq(priv);
+> > +
+> > +             for (i =3D msg->count; i > 0; i--)
+> > +                     loongson2_i2c_read_msg(priv);
+> > +
+> > +             regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONG=
+SON2_I2C_CR1_POS, 0);
+> > +             complete(&priv->complete);
+> > +             break;
+> > +     case 3:
+> > +             regmap_update_bits_check(priv->regmap, LOONGSON2_I2C_CR2,=
+ LOONGSON2_I2C_CR2_ITBUFEN,
+> > +                                      0, &changed);
+> > +             if (changed)
+> > +                     break;
+> > +             regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONG=
+SON2_I2C_CR1_ACK, 0);
+> > +             fallthrough;
+>
+> Instead better to spell it explicitly:
+>
+>                 loongson2_i2c_read_msg(priv);
+>                 break;
+>
+> > +     default:
+> > +             loongson2_i2c_read_msg(priv);
+>
+> Missing break.
+>
+> > +     }
+> > +}
+>
+> This also make me think for the possible optimisations.
+> if regmap_updates_bit() in case 2 can be run after the completion,
+> the case 1 with a parameter may be split to a helper.
+>
+> Also would be nice to have a comment why in case 3 we only read a single
+> message.
 
-Oops, indeed this should be kept.  I'm unsure why I didn't see any issue
-without it...
+This part might be a bit confusing. I'll try to restructure it, which
+might make it clearer.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+In `loongson2_i2c_isr_event()`, the read/write operations are divided
+into three parts.
+
+        /* TX empty */
+        if ((event & LOONGSON2_I2C_SR1_TXE) && !(msg->addr & I2C_M_RD))
+                loongson2_i2c_handle_write(priv);
+
+        /* RX not empty */
+        if ((event & LOONGSON2_I2C_SR1_RXNE) && (msg->addr & I2C_M_RD))
+                loongson2_i2c_handle_read(priv);
+//Handle FIFO empty interrupt in case of read, it is called when a new
+data is received in data register
+
+        /*
+         * The BTF (Byte Transfer finished) event occurs
+         */
+        if (event & LOONGSON2_I2C_SR1_BTF) {
+                if (msg->addr & I2C_M_RD)
+                        loongson2_i2c_handle_rx_done(priv);
+//Handle byte transfer finished interrupt in case of read
+                else
+                        loongson2_i2c_handle_write(priv);
+        }
+
+
+static void loongson2_i2c_handle_read(struct loongson2_i2c_priv *priv)
+{
+        struct loongson2_i2c_msg *msg =3D &priv->msg;
+
+        switch (msg->count) {
+        case 1:
+                loongson2_i2c_disable_irq(priv);
+                loongson2_i2c_read_msg(priv);
+                complete(&priv->complete);
+                break;
+        case 2:
+        case 3:
+                /*
+                 * For 2-byte/3-byte reception and for N-byte
+reception with N > 3, we have to
+                 * wait for byte transferred finished event before reading =
+data.
+                 * Just disable buffer interrupt in order to avoid
+another system preemption due
+                 * to RX not empty event.
+                 */
+                regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2,
+LOONGSON2_I2C_CR2_ITBUFEN, 0);
+                break;
+        default:
+                /*
+                 * For N byte reception with N > 3 we directly read
+data register
+                 * until N-2 data.
+                 */
+                loongson2_i2c_read_msg(priv);
+                break;
+        }
+}
+
+static void loongson2_i2c_handle_rx_done(struct loongson2_i2c_priv *priv)
+{
+        struct loongson2_i2c_msg *msg =3D &priv->msg;
+        u32 i;
+
+        switch (msg->count) {
+        case 2:
+                /*
+                 * The STOP/START bit has to be set before reading the
+last two bytes.
+                 * After that, we could read the last two bytes.
+                 */
+                regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1,
+LOONGSON2_I2C_CR1_OP_MASK,
+                                   msg->stop ? LOONGSON2_I2C_CR1_STOP
+: LOONGSON2_I2C_CR1_START);
+
+                for (i =3D 2; i > 0; i--)
+                        loongson2_i2c_read_msg(priv);
+
+                loongson2_i2c_disable_irq(priv);
+                complete(&priv->complete);
+                break;
+        case 3:
+                /*
+                 * In order to generate the NACK after the last
+received data byte, enable NACK
+                 * before reading N-2 data
+                 */
+                regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1,
+LOONGSON2_I2C_CR1_ACK, 0);
+                loongson2_i2c_read_msg(priv);
+                break;
+        default:
+                loongson2_i2c_read_msg(priv);
+                break;
+        }
+}
+
+>
+> ...
+>
+> > +static void loongson2_i2c_handle_write(struct loongson2_i2c_priv *priv=
+)
+> > +{
+> > +     struct loongson2_i2c_msg *msg =3D &priv->msg;
+> > +
+> > +     if (msg->count) {
+> > +             loongson2_i2c_write_msg(priv, *msg->buf++);
+>
+> > +             msg->count--;
+> > +             if (!msg->count)
+>
+> Can be
+>
+>                 if (!--msg->count)
+>
+> but someone may find it difficult to correctly parse.
+>
+> > +                     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR=
+2,
+> > +                                        LOONGSON2_I2C_CR2_ITBUFEN, 0);
+> > +     } else {
+> > +             loongson2_i2c_terminate_xfer(priv);
+> > +     }
+> > +}
+>
+> ...
+>
+> > +static int loongson2_i2c_adjust_bus_speed(struct loongson2_i2c_priv *p=
+riv)
+> > +{
+> > +     u32 val, freq_mhz, ccr;
+> > +
+> > +     priv->parent_rate =3D clk_get_rate(priv->clk);
+>
+> > +     freq_mhz =3D DIV_ROUND_UP(priv->parent_rate, HZ_PER_MHZ);
+>
+> Usually the rule of thumb to put assignments close to its first user...
+
+See blow.
+>
+> > +     if (priv->speed =3D=3D I2C_MAX_STANDARD_MODE_FREQ) {
+> > +              /* Select Standard mode */
+> > +             ccr =3D 0;
+> > +             val =3D DIV_ROUND_UP(priv->parent_rate, I2C_MAX_STANDARD_=
+MODE_FREQ * 2);
+> > +     } else {
+> > +             /* Select Fast mode */
+> > +             ccr =3D LOONGSON2_I2C_CCR_FS;
+> > +             val =3D DIV_ROUND_UP(priv->parent_rate, I2C_MAX_FAST_MODE=
+_FREQ * 3);
+> > +     }
+> > +
+> > +     FIELD_MODIFY(LOONGSON2_I2C_CCR_CCR, &ccr, val);
+> > +     regmap_write(priv->regmap, LOONGSON2_I2C_CCR, ccr);
+>
+> ...somewhere here.
+>
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C=
+_CR2_FREQ,
+> > +                        FIELD_GET(LOONGSON2_I2C_CR2_FREQ, freq_mhz));
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_TRISE, LOONGSON2_I=
+2C_TRISE_SCL,
+> > +                        LOONGSON2_I2C_TRISE_SCL);
+> > +
+> > +     /* Enable I2C */
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C=
+_CR1_PE,
+> > +                        LOONGSON2_I2C_CR1_PE);
+> > +
+> > +     return 0;
+> > +}
+>
+> ...
+>
+> > +     priv->speed =3D I2C_MAX_STANDARD_MODE_FREQ;
+> > +     ret =3D device_property_read_u32(dev, "clock-frequency", &clk_rat=
+e);
+> > +     if (!ret && clk_rate >=3D I2C_MAX_FAST_MODE_FREQ)
+> > +             priv->speed =3D I2C_MAX_FAST_MODE_FREQ;
+>
+> Please, use i2c_parse_fw_timings() instead of custom approach.
+
+This section will be merged into `loongson2_i2c_adjust_bus_speed()`,
+and `bus_freq_hz` will replace `priv->speed` as follows:
+
+static int loongson2_i2c_adjust_bus_speed(struct loongson2_i2c_priv *priv)
+{
+        struct i2c_timings i2c_t;
+        ....
+
+        i2c_parse_fw_timings(dev, &i2c_t, true);
+        priv->parent_rate =3D clk_get_rate(priv->clk);
+
+        if (i2c_t.bus_freq_hz =3D=3D I2C_MAX_STANDARD_MODE_FREQ) {
+                 /* Select Standard mode */
+                ccr =3D 0;
+                val =3D DIV_ROUND_UP(priv->parent_rate, i2c_t.bus_freq_hz *=
+ 2);
+        } else if (i2c_t.bus_freq_hz =3D=3D I2C_MAX_FAST_MODE_FREQ) {
+                /* Select Fast mode */
+                ccr =3D LOONGSON2_I2C_CCR_FS;
+                val =3D DIV_ROUND_UP(priv->parent_rate, i2c_t.bus_freq_hz *=
+ 3);
+        } else {
+                dev_err(dev, "Unsupported speed (%uhz)\n", i2c_t.bus_freq_h=
+z);
+                return -EINVAL;
+        }
+
+......
+        freq_mhz =3D DIV_ROUND_UP(priv->parent_rate, HZ_PER_MHZ);
+        regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2,
+LOONGSON2_I2C_CR2_FREQ,
+                           FIELD_GET(LOONGSON2_I2C_CR2_FREQ, freq_mhz));
+.............
+
+        return 0;
+}
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+--
+Thanks.
+Binbin
