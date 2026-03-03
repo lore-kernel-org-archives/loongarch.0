@@ -1,22 +1,22 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFD84ADDA9
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:11:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEECF4BC033
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772554314; cv=none; b=Ne2ePtctHzE0IbrtoEhE6M6pOM5RJ2ESiehyPyU/vDhm+oXQ0kIkfjlW3Eazxvz8+M2BozbmFjKZMjrX4ZaKeOVN/Z8pN4pJOfkZs4KNGkcgm1VJvAr81qh4NZ75oEGsHBSu3uE1kTgkai0HwSPZfRwABohhX0P7VegiCFtqGcE=
+	t=1772554509; cv=none; b=hmGFrjrao1+vjNm5MmxKyayr+9wMcEsnbZD5FwIWvcuv7rY3YRQ5erwnBF+l+nKddH7wqveWgqDNnP9MfEmFTAGbk/rK/cET8o+TKWVyKGsWotHXQD9OuAuaYa3E9/qUq9YPmRKlY5106UbYQt/UY5W+Q7uFbrBDBjc55atGTWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772554314; c=relaxed/simple;
-	bh=qXfMFx1V+SjVZ1JKY59h8uVCQyv/ezN1YeeaK8ler8s=;
+	s=arc-20240116; t=1772554509; c=relaxed/simple;
+	bh=pKylT2VdZF5opvqkK8HdDFCn1ZVdiR2rvHWlCHqkFLU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdXgQYAQ7Gj4Efo4gJHl/RSs4r9ncwqWKWILCFVw5RVCsdM9GRDBSBLh3OAgu0qoeG5fCTsXVnUMztX982l3kpegJdhI1gac0bicXOkt7lI3dBOKTEXRF+6jMrgFwrE4bS2g6nvVDLv9EW4bfR0+1XYT6yFv3I2wb8nmIzEQ0Js=
+	 Content-Type:Content-Disposition:In-Reply-To; b=YHxKpKhK/pSE962OaK8VEhIkW5XtgYF/BflsOQL67i3OyRkIMHez3warKStPk5FLMSFOUOQ+a/k9KReZu2Nk90QV+rINFCIROFb+Vpkx73Zlfsn0yFIOwYf1rsMPo92iPuP4aJ3DJ06Q38pSMCr8lg31SLLDo1gajkSHWGYfUsI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id E4C7E68BEB; Tue,  3 Mar 2026 17:11:45 +0100 (CET)
-Date: Tue, 3 Mar 2026 17:11:45 +0100
+	id 59EE368BEB; Tue,  3 Mar 2026 17:15:00 +0100 (CET)
+Date: Tue, 3 Mar 2026 17:15:00 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Eric Biggers <ebiggers@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>,
@@ -59,9 +59,9 @@ Cc: Christoph Hellwig <hch@lst.de>,
 	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
 	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
 	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library
-Message-ID: <20260303161145.GK7021@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260228073553.GL65277@quark>
+Subject: Re: [PATCH 07/25] xor: split xor.h
+Message-ID: <20260303161500.GA8975@lst.de>
+References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-8-hch@lst.de> <20260228044355.GD65277@quark> <20260303160309.GD7021@lst.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -70,29 +70,33 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260228073553.GL65277@quark>
+In-Reply-To: <20260303160309.GD7021@lst.de>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Feb 27, 2026 at 11:35:53PM -0800, Eric Biggers wrote:
-> >     https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/xor-improvements
+On Tue, Mar 03, 2026 at 05:03:09PM +0100, Christoph Hellwig wrote:
+> On Fri, Feb 27, 2026 at 08:43:55PM -0800, Eric Biggers wrote:
+> > On Thu, Feb 26, 2026 at 07:10:19AM -0800, Christoph Hellwig wrote:
+> > > Keep xor.h for the public API, and split the struct xor_block_template
+> > > definition that is only needed by the xor.ko core and
+> > > architecture-specific optimizations into a separate xor_impl.h header.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  arch/arm/lib/xor-neon.c       |  1 +
+> > >  arch/s390/lib/xor.c           |  2 +-
+> > >  include/linux/raid/xor.h      | 22 +---------------------
+> > >  include/linux/raid/xor_impl.h | 25 +++++++++++++++++++++++++
+> > >  lib/raid/xor/xor-core.c       |  1 +
+> > >  5 files changed, 29 insertions(+), 22 deletions(-)
+> > >  create mode 100644 include/linux/raid/xor_impl.h
+> > 
+> > arch/arm64/lib/xor-neon.c needs to be updated to include xor_impl.h.
 > 
-> Overall this looks great.  xor_gen() really needs a KUnit test, though.
-> Without that, how was this tested?
+> As of this patch it is not using anything from that header (but
+> neither from the public xor.h).
 
-fio data integrity testing on degraded raid.  But yes, a unit test
-would be nice.
+Actually looks like we do need it because it pulls in
+arch/arm64/include/asm/xor.h.
 
-> Later we should remove some of the obsolete implementations, such as the
-> alpha or x86 MMX ones.  Those platforms have no optimized code in
-> lib/crc/ or lib/crypto/, and I doubt anyone cares.
-
-I'd rather leave that to the architecture maintainers, but overall I
-ahree.
-
-> Also, I notice that no one has optimized this for the latest x86_64 CPUs
-> by using the vpternlogd instruction to do 3-input XORs.  That would be
-> another good future project.
-
-Yes, as would rewriting the routines to deal with more than 4 + 1 stripes
-as that is a really narrow raid these days.
-
+Anyway, I think I'll actually move this patch to the end so that the
+impl header does not need moving to it's final place.
