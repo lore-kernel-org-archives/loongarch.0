@@ -1,22 +1,22 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95948495507
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7C839D6F1
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772553710; cv=none; b=pJyg753KpaCVPTdSGPu9fkItCJdLFkyR71X9kMq0IZ/XH1apfkGN4lnzcU8n5dHc0ChEa3V3jVFMC1HvHZmc7INspyFnGT/OPG3mSn7SfRXwqwRBVjcH0TW2vkYOU2MDgl2nZabxLleQYyIamxNqp7V3A8c1lkuLxysrKIhgSNA=
+	t=1772553795; cv=none; b=TUlZuUbmoOiYNrMJFEc2D4SRIfwCIeEvPZi5in0wqW0ucOR9Ho2gDcheJj9EyZhfZs4Fq3bIWcie2qdEDhn2nlK2t9qu97OeR/xyMcR5koXHHRumgzujSkr/iYWyN3OVvV/FBAn0ytv573UAYrIMoQs1GHuntRL90auBKz6URGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772553710; c=relaxed/simple;
-	bh=uemFPhsC15cjBKDQX1TwcqeqGp4FNOmPfJ/DABL8c3g=;
+	s=arc-20240116; t=1772553795; c=relaxed/simple;
+	bh=ZWv+gO+FdnwlR8dPywhHmr+HYcl63OF2TGtLqHW5BxE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/1Sc65aXbeCC08RqRl6TSNz4ZL3V153/h0fqRVvrHVI539VLedNqTaGFHxta5EStbkaEui3a7x9OnV8XJg0tK34EC4j4h0o6ZF55yHac8qmht3F5qhmRQvenMgWzSEOdYvaeQf1sixqF4Dn2FnCHUOehXO+Z8Qy2nNNURRrIb8=
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCHYubleEGG+l7ZCZfG5hizlvOcO3tJwURUtI+CtkVFpmqtE+w+5syxoyZB8CiEqmpIguoCPfUns9KEKFwyGpBltwYA383vq40QPI57OuoldrUxYUsEG3QU9HBTEfm7ltGx+MmcKrWX3/87jN5aas7xXz+QBU34jHueMSHunhKg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id E4F5368BFE; Tue,  3 Mar 2026 17:01:45 +0100 (CET)
-Date: Tue, 3 Mar 2026 17:01:45 +0100
+	id C1C3F68C4E; Tue,  3 Mar 2026 17:03:10 +0100 (CET)
+Date: Tue, 3 Mar 2026 17:03:09 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Eric Biggers <ebiggers@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>,
@@ -59,9 +59,9 @@ Cc: Christoph Hellwig <hch@lst.de>,
 	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
 	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
 	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 04/25] xor: move to lib/raid/
-Message-ID: <20260303160145.GC7021@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-5-hch@lst.de> <20260228043523.GB65277@quark>
+Subject: Re: [PATCH 07/25] xor: split xor.h
+Message-ID: <20260303160309.GD7021@lst.de>
+References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-8-hch@lst.de> <20260228044355.GD65277@quark>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -70,15 +70,27 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260228043523.GB65277@quark>
+In-Reply-To: <20260228044355.GD65277@quark>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Feb 27, 2026 at 08:35:23PM -0800, Eric Biggers wrote:
-> This adds lib/raid/ alongside the existing lib/raid6/ directory.  Is
-> that the intended final state, or is the intent for the code in
-> lib/raid6/ to eventually be moved to a subdirectory of lib/raid/
-> (alongside the "xor" subdirectory)?
+On Fri, Feb 27, 2026 at 08:43:55PM -0800, Eric Biggers wrote:
+> On Thu, Feb 26, 2026 at 07:10:19AM -0800, Christoph Hellwig wrote:
+> > Keep xor.h for the public API, and split the struct xor_block_template
+> > definition that is only needed by the xor.ko core and
+> > architecture-specific optimizations into a separate xor_impl.h header.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/arm/lib/xor-neon.c       |  1 +
+> >  arch/s390/lib/xor.c           |  2 +-
+> >  include/linux/raid/xor.h      | 22 +---------------------
+> >  include/linux/raid/xor_impl.h | 25 +++++++++++++++++++++++++
+> >  lib/raid/xor/xor-core.c       |  1 +
+> >  5 files changed, 29 insertions(+), 22 deletions(-)
+> >  create mode 100644 include/linux/raid/xor_impl.h
+> 
+> arch/arm64/lib/xor-neon.c needs to be updated to include xor_impl.h.
 
-Yes, the raid6 code will get a dutup and move after this.  And we'll
-also plan to add a library for more than 2 parities eventually.
+As of this patch it is not using anything from that header (but
+neither from the public xor.h).
 
