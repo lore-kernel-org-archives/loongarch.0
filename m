@@ -1,24 +1,24 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F583112AD
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95948495507
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:01:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772553663; cv=none; b=B7Fxmk9Bt7jeD3Nt+2h86jZHg/TEtO4EkwaoXsv+mKYQ+7H43QiPqjrxcLq8OMosK1hXliFomM+gSYYMEOb5vEQsl+fBlfAPG5/gbzCdkKMKgwmy8QaetOFBqEZ1A5wFOWN+dUVW88t1g1K7JXN/lOy/P1xo3zJiRQN+b6Abn04=
+	t=1772553710; cv=none; b=pJyg753KpaCVPTdSGPu9fkItCJdLFkyR71X9kMq0IZ/XH1apfkGN4lnzcU8n5dHc0ChEa3V3jVFMC1HvHZmc7INspyFnGT/OPG3mSn7SfRXwqwRBVjcH0TW2vkYOU2MDgl2nZabxLleQYyIamxNqp7V3A8c1lkuLxysrKIhgSNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772553663; c=relaxed/simple;
-	bh=mTiv9QtnxAmDU7iBPLuvPKwF8m82DFxtJ9m30zudKqY=;
+	s=arc-20240116; t=1772553710; c=relaxed/simple;
+	bh=uemFPhsC15cjBKDQX1TwcqeqGp4FNOmPfJ/DABL8c3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aopt7W5K3bFHkav84OH1eKCr75NwHmZOYVWONeD0tNSzHM+0ueHukydkHqpqcZY4+gyIcFjCuCxOzvOF6gG5RvTlCs7YJsXVy5QG7FfQMitdLLY0Q8DW+hGFD87+vHSoaZuAHfvfUwyWWEZCOBrJH6YsmI5BiuGodGXX7htD6Iw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=i/1Sc65aXbeCC08RqRl6TSNz4ZL3V153/h0fqRVvrHVI539VLedNqTaGFHxta5EStbkaEui3a7x9OnV8XJg0tK34EC4j4h0o6ZF55yHac8qmht3F5qhmRQvenMgWzSEOdYvaeQf1sixqF4Dn2FnCHUOehXO+Z8Qy2nNNURRrIb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 89BBD68BFE; Tue,  3 Mar 2026 17:00:51 +0100 (CET)
-Date: Tue, 3 Mar 2026 17:00:50 +0100
+	id E4F5368BFE; Tue,  3 Mar 2026 17:01:45 +0100 (CET)
+Date: Tue, 3 Mar 2026 17:01:45 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Peter Zijlstra <peterz@infradead.org>
+To: Eric Biggers <ebiggers@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Richard Henderson <richard.henderson@linaro.org>,
@@ -59,10 +59,9 @@ Cc: Christoph Hellwig <hch@lst.de>,
 	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
 	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
 	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 01/25] xor: assert that xor_blocks is not called from
- interrupt context
-Message-ID: <20260303160050.GB7021@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-2-hch@lst.de> <20260227142455.GG1282955@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH 04/25] xor: move to lib/raid/
+Message-ID: <20260303160145.GC7021@lst.de>
+References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-5-hch@lst.de> <20260228043523.GB65277@quark>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -71,27 +70,15 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260227142455.GG1282955@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260228043523.GB65277@quark>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Feb 27, 2026 at 03:24:55PM +0100, Peter Zijlstra wrote:
-> >  	unsigned long *p1, *p2, *p3, *p4;
-> >  
-> > +	WARN_ON_ONCE(in_interrupt());
-> 
-> Your changelog makes it sound like you want:
-> 
-> 	WARN_ON_ONCE(!in_task());
-> 
-> But perhaps something like so:
-> 
-> 	lockdep_assert_preempt_enabled();
-> 
-> Would do? That ensures we are in preemptible context, which is much the
-> same. That also ensures the cost of this assertion is only paid on debug
-> kernels.
+On Fri, Feb 27, 2026 at 08:35:23PM -0800, Eric Biggers wrote:
+> This adds lib/raid/ alongside the existing lib/raid6/ directory.  Is
+> that the intended final state, or is the intent for the code in
+> lib/raid6/ to eventually be moved to a subdirectory of lib/raid/
+> (alongside the "xor" subdirectory)?
 
-No idea honestly.  The kernel FPU/vector helpers generally don't work
-from irq context, and I want to assert that.  Happy to do whatever
-version works best for that.
+Yes, the raid6 code will get a dutup and move after this.  And we'll
+also plan to add a library for more than 2 parities eventually.
 
