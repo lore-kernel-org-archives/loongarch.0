@@ -1,131 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1813834B190
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 04:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5923016E9
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 07:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772511273; cv=none; b=LGNhKsjI8Joc7QO6bocgbvTQatchztXGqwtDi+TdbzW27iPs6YS/XtVQh2mu++VAclHJL6rzL3Dt7Ri4s6VqG/k/F/NRuBDmsGWuaJMVMnZ9rt5Sk249IAJoa+kjmtpOgfNG6hsq7QFwsAOdlDuJxLoco0I0Wp2pYSMXNtV+UVg=
+	t=1772521625; cv=none; b=VmFKSbQ7GSd2tWNVa5P4K9p3f6ngMbz23t3DWeWwEyeq1Plw+NeRFzP56C8ei8qEuJJBLyUKVSV8dY26LrU2r9+nR58Olbf5Q/ov24OmX2240kZaBT/SnLGhepOGcrrm8h69eP/ZDPRIB8liHh1lINLGQht1720+S7+vReHYk3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772511273; c=relaxed/simple;
-	bh=ZSQHLmAb+Ryn7kywl6DTB7LYe5JnGGQK4k8s3bcjzDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKkDHMv23srxvQ4Z08rrqhx8YU6f9Jcr3+wwoU+ha6DjnFsQZ2aVKGm9Z2nr0ESLeNVpMsGbk/bh4uldXIKFnxGPShtdGjOjwUOlh1CwU6U0hzCzSxnDYG0tWkmNojCo41TOOBuc/mpMgp+yH46WFem2Ktxq4qRGYAnMrHrMpQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bw2AvQwV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bw2AvQwV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8756C2BCAF
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 04:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772511272;
-	bh=ZSQHLmAb+Ryn7kywl6DTB7LYe5JnGGQK4k8s3bcjzDY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Bw2AvQwVXt9MAZhIzWW3dXPxyy4PJpWBpBbJTEV8i4vGJKfJ7jdRZ9HTvTb910Vl2
-	 lnFQeTFu9jLBj8WkQ9YFhYgkhc+6LgobvWHfH537ALrUTEk22YWNMfn4HiVmGKV0PZ
-	 VbHvxIgPeRhZHUR89+7GTZweUH2Esv/oM5YnP/aBG8i9LDxCdO23CntbE1OFPQ0Krf
-	 HwL1uuVsEdWA3Kky9MFYGicxG1wr4ZYHLCJGNJcaOXLrXxl04abnloyHfhn698qX0D
-	 TckT3sYX+RFltSGV9glv3NmG/NYvByV9DDp5ikVrBRHyM8KGi1kHdeKvVJMACikdGd
-	 5WVV5hvxojX5A==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-65fa79f5c98so1825551a12.1
-        for <loongarch@lists.linux.dev>; Mon, 02 Mar 2026 20:14:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+NUMeUvPt1pBLMBjIYQTGSxErqBrKeNGPMuxScy7qmnm13j+bqhgmSg1gvBzOQ5PJqOlwKOwXiDA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxwqWTc3PsF1clkMTpkCOnRfqe3+Q9loaM24YJDhgb2xd9K47by
-	XNVyyp25WgQoT1b9Wl9mlaqQFv73bByEWIoZd7Eo6y0dz2Poz+hUsse8jtiJ52LQ46w+GSqk/ta
-	kvTPgfVucswa17FmiDTpBdTYap1xRzR8=
-X-Received: by 2002:a05:6402:270c:b0:64b:5d42:52f4 with SMTP id
- 4fb4d7f45d1cf-660a466a6a6mr359374a12.15.1772511271244; Mon, 02 Mar 2026
- 20:14:31 -0800 (PST)
+	s=arc-20240116; t=1772521625; c=relaxed/simple;
+	bh=eVNij862v85tR6MBDOa2teZvuozAxO+pCCEnMOL6Oz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U7rUaag3eUxEVyMggqS1M4+4AAdI5I2YYndTsl0OwEraF6TtDrzFaIk3f/W9aym3c6vOsFiFPdFGF+0tmzvzY1+K/ZLppilDsBYysXLogSd4TLZ9K5S1uy7z0mGw2wMqOAl1K7tpKWlG21bAFIGED2jyI8GsJ7xZSViaVHYBgno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.227])
+	by gateway (Coremail) with SMTP id _____8AxgsCSiKZp9fAWAA--.10052S3;
+	Tue, 03 Mar 2026 15:06:59 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.227])
+	by front1 (Coremail) with SMTP id qMiowJCxWeCRiKZp14VNAA--.16604S2;
+	Tue, 03 Mar 2026 15:06:58 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	soc@kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH] soc: loongson: loongson2_guts: Use of_root instead of own reference
+Date: Tue,  3 Mar 2026 15:06:42 +0800
+Message-ID: <20260303070642.2785715-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260206012028.3318291-1-gaosong@loongson.cn> <aYVhSp_eGBkpXdp-@pie>
- <df4de374-c5ef-6652-985f-39598e234e35@loongson.cn>
-In-Reply-To: <df4de374-c5ef-6652-985f-39598e234e35@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 3 Mar 2026 12:14:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6w0hr1byyw6XEfFhR774_jDEeMQW=7omYNm9qnjDHufg@mail.gmail.com>
-X-Gm-Features: AaiRm51sVum94D2VetgZyQNifNDhziF_-ggE4pI6Lo6yoqjEYVwcnMAjyXETbqQ
-Message-ID: <CAAhV-H6w0hr1byyw6XEfFhR774_jDEeMQW=7omYNm9qnjDHufg@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] LongArch: KVM: Add DMSINTC support irqchip in kernel
-To: gaosong <gaosong@loongson.cn>
-Cc: Yao Zi <me@ziyao.cc>, maobibo@loongson.cn, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, kernel@xen0n.name, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxWeCRiKZp14VNAA--.16604S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEPCGmmeEEBzQAAs9
+X-Coremail-Antispam: 1Uk129KBj93XoW7trWkWr4DtrWDGr1rCw47Jrc_yoW8WF13pF
+	sakay5KF4Utrs7u3s8Aa48Wa4Yk3y0ga9xJF4xJws7WF98A3W7Wry3JF1Yvr4fZFy8C34U
+	XFyvg3yUCa4UWrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-On Tue, Mar 3, 2026 at 11:54=E2=80=AFAM gaosong <gaosong@loongson.cn> wrote=
-:
->
-> =E5=9C=A8 2026/2/6 =E4=B8=8A=E5=8D=8811:34, Yao Zi =E5=86=99=E9=81=93:
-> > On Fri, Feb 06, 2026 at 09:20:26AM +0800, Song Gao wrote:
-> >> Hi,
-> >>
-> >> This series  implements the DMSINTC in-kernel irqchip device,
-> >> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI in=
-terrupts
-> >> to the target vCPU.
-> >> applied this series.  use netperf test.
-> >> VM with one CPU and start netserver, host run netperf.
-> >> disable dmsintc
-> >> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
-> >> Local /Remote
-> >> Socket Size   Request  Resp.   Elapsed  Trans.
-> >> Send   Recv   Size     Size    Time     Rate
-> >> bytes  Bytes  bytes    bytes   secs.    per sec
-> >>
-> >> 212992 212992 1        1       36000.00   27107.36
-> >>
-> >> enable dmsintc
-> >> Local /Remote
-> >> Socket Size   Request  Resp.   Elapsed  Trans.
-> >> Send   Recv   Size     Size    Time     Rate
-> >> bytes  Bytes  bytes    bytes   secs.    per sec
-> >>
-> >> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
-> >>
-> >> v6:
-> >>    Fix kvm_device leak in kvm_dmsintc_destroy().
-> >>
-> >> v5:
-> >>    Combine patch2 and patch3
-> >>    Add check msgint feature when register DMSINT device.
-> >>
-> >> V4: Rebase and R-b;
-> >>     replace DINTC to DMSINTC.
-> >>
-> >>
-> >> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
-> >>
-> >> V2:
-> >> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn=
-/
-> >>
-> >> Thanks.
-> >> Song Gao
-> >>
-> >> Song Gao (2):
-> >>    LongArch: KVM: Add DMSINTC device support
-> >>    LongArch: KVM: Add dmsintc inject msi to the dest vcpu
-> > There's a typo in the titles, it should be LoongArch instead of
-> > "LongArch".
->
-> Hi,   huacai
->
-> Should I need send v7 to fix this typo error?
-Wait a moment, maybe there are other comments.
+There is already a global of_root reference. Use that instead of getting
+one on our own. We don't need to care about the reference count either
+this way.
 
-Huacai
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ drivers/soc/loongson/loongson2_guts.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
->
-> Thanks.
->
-> Song Gao
-> >
-> > Best regards,
-> > Yao Zi
-> >
-> >
->
+diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson/loongson2_guts.c
+index 16913c3ef65c..d32ec0748b12 100644
+--- a/drivers/soc/loongson/loongson2_guts.c
++++ b/drivers/soc/loongson/loongson2_guts.c
+@@ -92,7 +92,7 @@ static u32 loongson2_guts_get_svr(void)
+ 
+ static int loongson2_guts_probe(struct platform_device *pdev)
+ {
+-	struct device_node *root, *np = pdev->dev.of_node;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	const struct loongson2_soc_die_attr *soc_die;
+ 	const char *machine;
+@@ -109,11 +109,8 @@ static int loongson2_guts_probe(struct platform_device *pdev)
+ 	if (IS_ERR(guts->regs))
+ 		return PTR_ERR(guts->regs);
+ 
+-	/* Register soc device */
+-	root = of_find_node_by_path("/");
+-	if (of_property_read_string(root, "model", &machine))
+-		of_property_read_string_index(root, "compatible", 0, &machine);
+-	of_node_put(root);
++	if (of_property_read_string(of_root, "model", &machine))
++		of_property_read_string_index(of_root, "compatible", 0, &machine);
+ 	if (machine) {
+ 		soc_dev_attr.machine = devm_kstrdup(dev, machine, GFP_KERNEL);
+ 		if (!soc_dev_attr.machine)
+
+base-commit: 862ad12fb14cdad9c647100fbc16f7d8171b4470
+-- 
+2.52.0
+
