@@ -1,109 +1,285 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAD5285C8B
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 07:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12B6379EFA
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 08:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772522296; cv=none; b=VnH4+Up0EA1SwRAKu0aGBu8a2DtAzm+kosicR8QC0YFexfzbIm7j8c2BrXRPMWwIbUrHHgWoiOf8J6sBTF5AH8x3ckOplBHnFSWhOI6PGOqvId7c0CWbApUTfNR8bKvVKd4p8PCKMfjEPyyybKXEAvcxmvlTzTUSaw3oGnG2uLM=
+	t=1772526805; cv=none; b=TqMcAoaRH7MScc7xb2oOsK4NlD7xmbAhUo3PTkfOqvSr44CAuvBKQ9LU6KNNolCY2aNZoXEwQ5/ZIknwn39PUWGrRnWAiaHA3iMIU4oZ++1ws8soQV8cdSD86xdgIpV2MVFvuWewv2URCPZd+qnTQABaxQnl/8I6gapt/XM3D/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772522296; c=relaxed/simple;
-	bh=byBKUW0x2IsXhu04e1WoNba4SmnQ+2gbd+40x0R8t6g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sGWXmiBuWWkBo2MvuKDu6chHurNdsgyuxO7xsfs/i3igT+gCRbxhRHe+cenquryiwu9zo6c6GJfHPyXrLg51we3Gme38J8nwIHHZsnHYi9++3HM+CR/EE3LilsBKK796lq2Xb428u8xteWhofsEFNcIo9/K+TDb3W3Pl92cOfww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSiH4dJF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772526805; c=relaxed/simple;
+	bh=K7uRyUn/m0s5FMTXG48hrxNnmaoHPRiIuADnDuTZbsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PmNRg63Xmgj12NM7B7MolLU+vMd/Exdjg9+GAdnh/jV/UC0Y4JaBWXxtMNMLZ/xfc0EPE/mcmyoNYkpylRk/q2jWq6aZIGmanBpDZRnHO6FpGQyVceynUs/iN790yEzbjUb4u4OtbPLNRgXpf4Mhu7SxdKPfD8u3NGuLY7RQaFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=QSpth2Ew; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSiH4dJF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B496C2BCB1
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 07:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772522296;
-	bh=byBKUW0x2IsXhu04e1WoNba4SmnQ+2gbd+40x0R8t6g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SSiH4dJFZskqDgygr02tEbf/PmGCYr3cbrlR38cgbhHNdrANYNncJAkDvt5cihwk3
-	 xJu3mWbx1qqnCt6HLtorYWR8MAY81208QRc0byUzxBFv634fcQiDXzcuVrKXglkAfO
-	 8+L6YxxdH6CJyV+Cj9qTEdMtOFuwzccBxdWA13aiVJ1Og299yXo+nYn7J7a0Bu8e4G
-	 SzWlzxbf78FX7O89I+GjTwuwfavpxGHcQ2SxmEPx4/gOzuT19oj138+ewh/Zw+BxmM
-	 E61mLT13P/EbuEvXdaEB++wTkwUjJ/16Dwmr1NMZeuS1t5oJsKSjl9ZIxVjfmI5AoR
-	 HZj4MOsRqmz5Q==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-65c0891f4e9so389061a12.1
-        for <loongarch@lists.linux.dev>; Mon, 02 Mar 2026 23:18:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVazY0ztEfjRnZ1N7/MvER0xtX8Mtu6cUmPFC8Btl0bFKSDituaQydy53ki0ZZ4UimyQM+9mQAEWKU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yynn1y1GY9jx8wve4wjuPnrFMYJHSjcUHwKyCNAnnmCxUOlRkZH
-	Cgbiy7EJ6th2GSIGQag0tLMmgt+m5tD9obc8WMgr+6RoEKCpLdXCrRCRiBDZU7b55bhf8U+DLt0
-	DXDRE3E4xEzIxX+hcnu44Al5b24CnzXk=
-X-Received: by 2002:a17:907:847:b0:b8f:99c2:1a99 with SMTP id
- a640c23a62f3a-b937636cdf3mr895673766b.9.1772522294672; Mon, 02 Mar 2026
- 23:18:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="QSpth2Ew"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1772526793;
+	bh=xF97roPctHZnLD2rCQPN6qIo2wFyTHqYmxzPCTCKw/I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QSpth2Ew/XnhRu2EbSMVM2MifrEIrwSrD8LDHBGxves6tegesNY5k68yIJm7G2QGO
+	 cS3Ff02jrQZ9My8Gd4PQcS/pcnYruBzJ8F/fmTu1Y32ttCMtRWUsvdmJXfvbFz5CBt
+	 eqGWj6qZ6QAVV/s3BTvTp5d5fNGu80ysBOvxUP60=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 28277674A2;
+	Tue,  3 Mar 2026 03:33:03 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Jinyang He <hejinyang@loongson.cn>
+Cc: WANG Rui <wangrui@loongson.cn>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Zixing Liu <liushuyu@aosc.io>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	stable@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Menglong Dong <menglong8.dong@gmail.com>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Hanlu Li <lihanlu@loongson.cn>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH v3] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
+Date: Tue,  3 Mar 2026 16:32:47 +0800
+Message-ID: <20260303083248.567185-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260303070642.2785715-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20260303070642.2785715-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 3 Mar 2026 15:18:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6zGpe6hOsv2EmjVp0aOgSHKp4L4q=kYgQrkZJ=LRm5Xg@mail.gmail.com>
-X-Gm-Features: AaiRm52eAIZuLtci_5CaB99XMkBd1OxhEYe2uMbV7mIpKfmmovGtvjGqcpAaUmg
-Message-ID: <CAAhV-H6zGpe6hOsv2EmjVp0aOgSHKp4L4q=kYgQrkZJ=LRm5Xg@mail.gmail.com>
-Subject: Re: [PATCH] soc: loongson: loongson2_guts: Use of_root instead of own reference
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 3, 2026 at 3:07=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
- wrote:
->
-> There is already a global of_root reference. Use that instead of getting
-> one on our own. We don't need to care about the reference count either
-> this way.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
+of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
+empty.  This is not valid, as the current DWARF specification mandates
+the first byte of the EH frame to be the version number 1.  It causes
+some unwinders to complain, for example the ClickHouse query profiler
+spams the log with messages:
 
-> ---
->  drivers/soc/loongson/loongson2_guts.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/soc/loongson/loongson2_guts.c b/drivers/soc/loongson=
-/loongson2_guts.c
-> index 16913c3ef65c..d32ec0748b12 100644
-> --- a/drivers/soc/loongson/loongson2_guts.c
-> +++ b/drivers/soc/loongson/loongson2_guts.c
-> @@ -92,7 +92,7 @@ static u32 loongson2_guts_get_svr(void)
->
->  static int loongson2_guts_probe(struct platform_device *pdev)
->  {
-> -       struct device_node *root, *np =3D pdev->dev.of_node;
-> +       struct device_node *np =3D pdev->dev.of_node;
->         struct device *dev =3D &pdev->dev;
->         const struct loongson2_soc_die_attr *soc_die;
->         const char *machine;
-> @@ -109,11 +109,8 @@ static int loongson2_guts_probe(struct platform_devi=
-ce *pdev)
->         if (IS_ERR(guts->regs))
->                 return PTR_ERR(guts->regs);
->
-> -       /* Register soc device */
-> -       root =3D of_find_node_by_path("/");
-> -       if (of_property_read_string(root, "model", &machine))
-> -               of_property_read_string_index(root, "compatible", 0, &mac=
-hine);
-> -       of_node_put(root);
-> +       if (of_property_read_string(of_root, "model", &machine))
-> +               of_property_read_string_index(of_root, "compatible", 0, &=
-machine);
->         if (machine) {
->                 soc_dev_attr.machine =3D devm_kstrdup(dev, machine, GFP_K=
-ERNEL);
->                 if (!soc_dev_attr.machine)
->
-> base-commit: 862ad12fb14cdad9c647100fbc16f7d8171b4470
-> --
-> 2.52.0
->
+    clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
+    version: 127 at 7ffffffb0000
+
+Here "127" is just the byte located at the p_vaddr (0, i.e. the
+beginning of the vDSO) of the empty GNU_EH_FRAME segment.
+Cross-checking with /proc/365854/maps has also proven 7ffffffb0000 is
+the start of vDSO in the process VM image.
+
+In LoongArch the -fno-asynchronous-unwind-tables option seems just a
+MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
+"genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
+use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
+limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
+we can simply flip it over to -fasynchronous-unwind-tables and pass
+--eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
+stack for statistics even if the sample point is taken when the PC is in
+the vDSO.
+
+However simply adjusting the options above would exploit an issue: when
+the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
+falled back to a machine-specific routine to match the code pattern of
+rt_sigreturn and extract the registers saved in the sigframe if the code
+pattern is matched.  As unwinding from signal handlers is vital for
+libgcc to support pthread cancellation etc., the fall-back routine had
+been silently keeping the LoongArch Linux systems functioning since
+Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
+format, fall-back routine will no longer be used and libgcc will fail
+to unwind the sigframe, and unwinding from signal handlers will no
+longer work, causing dozens of glibc test failures.  To make it possible
+to unwind from signal handlers again, it's necessary to code the unwind
+info in __vdso_rt_sigreturn via .cfi_* directives.
+
+The offsets in the .cfi_* directives depend on the layout of struct
+sigframe, notably the offset of sigcontect in the sigframe.  To use the
+offset in the assembly file, factor out struct sigframe into a header to
+allow asm-offsets.c to output the offset for assembly.
+
+To work around a long-term issue in the libgcc unwinder (the pc is
+unconditionally substracted by 1: doing so is technically incorrect for
+a signal frame), a nop instruction is included with the two real
+instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
+hack has been used on x86 for a long time.
+
+Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+
+Changes from [v2]:
+- Wrap .cfi_* for signal trampoline in SYM_SIGFUNC_START.
+- Remove comment lines in sigframe.h not so meaningful.
+
+Changes from [v1] to v2:
+- Use DWARF column 0 instead of the libgcc-specific column 72.
+- Style change to sigframe.h.
+
+[v1]: https://lore.kernel.org/20260225104607.3803060-1-xry111@xry111.site
+
+ arch/loongarch/include/asm/linkage.h  | 34 +++++++++++++++++++++++++++
+ arch/loongarch/include/asm/sigframe.h |  9 +++++++
+ arch/loongarch/kernel/asm-offsets.c   |  2 ++
+ arch/loongarch/kernel/signal.c        |  6 +----
+ arch/loongarch/vdso/Makefile          |  4 ++--
+ arch/loongarch/vdso/sigreturn.S       | 10 +++-----
+ 6 files changed, 51 insertions(+), 14 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/sigframe.h
+
+diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
+index e2eca1a25b4e..db465036385f 100644
+--- a/arch/loongarch/include/asm/linkage.h
++++ b/arch/loongarch/include/asm/linkage.h
+@@ -42,3 +42,37 @@
+ 	SYM_END(name, SYM_T_NONE)
+ 
+ #endif
++
++/*
++ * This is for the signal handler trampoline, which is used as the return
++ * address of the signal handlers in userspace instead of called normally.
++ * The long standing libgcc bug https://gcc.gnu.org/PR124050 requires a
++ * nop between .cfi_startproc and the actual address of the trampoline, so
++ * we cannot simply use SYM_FUNC_START.
++ *
++ * This wrapper also contains all the .cfi_* directives for recovering
++ * the content of the GPRs and the "return address" (where the rt_sigreturn
++ * syscall will jump to), assuming there is a struct rt_sigframe (where
++ * a struct sigcontext containing those information we need to recover) at
++ * $sp.  The "DWARF for the LoongArch(TM) Architecture" manual states
++ * column 0 is for $zero, but it does not make too much sense to
++ * save/restore the hardware zero register.  Repurpose this column here
++ * for the return address (here it's not the content of $ra we cannot use
++ * the default column 3).
++ */
++#define SYM_SIGFUNC_START(name)				\
++	.cfi_startproc;					\
++	.cfi_signal_frame;				\
++	.cfi_def_cfa 3, RT_SIGFRAME_SC;			\
++	.cfi_return_column 0;				\
++	.cfi_offset 0, SC_PC;				\
++	.irp	num, 1, 2, 3, 4, 5, 6, 7, 8, 		\
++		     9, 10, 11, 12, 13, 14, 15, 16,	\
++		     17, 18, 19, 20, 21, 22, 23, 24,	\
++		     25, 26, 27, 28, 29, 30, 31;	\
++	.cfi_offset \num, SC_REGS + \num * SZREG;	\
++	.endr;						\
++	nop;						\
++	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
++
++#define SYM_SIGFUNC_END(name) SYM_FUNC_END(name)
+diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/include/asm/sigframe.h
+new file mode 100644
+index 000000000000..109298b8d7e0
+--- /dev/null
++++ b/arch/loongarch/include/asm/sigframe.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#include <asm/siginfo.h>
++#include <asm/ucontext.h>
++
++struct rt_sigframe {
++	struct siginfo rs_info;
++	struct ucontext rs_uctx;
++};
+diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
+index 3017c7157600..2cc953f113ac 100644
+--- a/arch/loongarch/kernel/asm-offsets.c
++++ b/arch/loongarch/kernel/asm-offsets.c
+@@ -16,6 +16,7 @@
+ #include <asm/ptrace.h>
+ #include <asm/processor.h>
+ #include <asm/ftrace.h>
++#include <asm/sigframe.h>
+ #include <vdso/datapage.h>
+ 
+ static void __used output_ptreg_defines(void)
+@@ -220,6 +221,7 @@ static void __used output_sc_defines(void)
+ 	COMMENT("Linux sigcontext offsets.");
+ 	OFFSET(SC_REGS, sigcontext, sc_regs);
+ 	OFFSET(SC_PC, sigcontext, sc_pc);
++	OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
+ 	BLANK();
+ }
+ 
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index c9f7ca778364..e297d54ea638 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -37,6 +37,7 @@
+ #include <asm/lbt.h>
+ #include <asm/ucontext.h>
+ #include <asm/vdso.h>
++#include <asm/sigframe.h>
+ 
+ #ifdef DEBUG_SIG
+ #  define DEBUGP(fmt, args...) printk("%s: " fmt, __func__, ##args)
+@@ -51,11 +52,6 @@
+ #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
+ #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
+ 
+-struct rt_sigframe {
+-	struct siginfo rs_info;
+-	struct ucontext rs_uctx;
+-};
+-
+ struct _ctx_layout {
+ 	struct sctx_info *addr;
+ 	unsigned int size;
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index 520f1513f07d..294c16b9517f 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -26,7 +26,7 @@ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-std=gnu11 -fms-extensions -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+-	$(call cc-option, -fno-asynchronous-unwind-tables) \
++	$(call cc-option, -fasynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
+ aflags-vdso := $(ccflags-vdso) \
+ 	-D__ASSEMBLY__ -Wa,-gdwarf-2
+@@ -41,7 +41,7 @@ endif
+ 
+ # VDSO linker flags.
+ ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+-	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
++	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr -T
+ 
+ #
+ # Shared build commands.
+diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigreturn.S
+index 9cb3c58fad03..e40bf4186f29 100644
+--- a/arch/loongarch/vdso/sigreturn.S
++++ b/arch/loongarch/vdso/sigreturn.S
+@@ -12,13 +12,9 @@
+ 
+ #include <asm/regdef.h>
+ #include <asm/asm.h>
++#include <asm/asm-offsets.h>
+ 
+-	.section	.text
+-	.cfi_sections	.debug_frame
+-
+-SYM_FUNC_START(__vdso_rt_sigreturn)
+-
++SYM_SIGFUNC_START(__vdso_rt_sigreturn)
+ 	li.w	a7, __NR_rt_sigreturn
+ 	syscall	0
+-
+-SYM_FUNC_END(__vdso_rt_sigreturn)
++SYM_SIGFUNC_END(__vdso_rt_sigreturn)
+-- 
+2.53.0
+
