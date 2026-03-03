@@ -1,102 +1,75 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEECF4BC033
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 16:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC903A8735;
+	Tue,  3 Mar 2026 19:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772554509; cv=none; b=hmGFrjrao1+vjNm5MmxKyayr+9wMcEsnbZD5FwIWvcuv7rY3YRQ5erwnBF+l+nKddH7wqveWgqDNnP9MfEmFTAGbk/rK/cET8o+TKWVyKGsWotHXQD9OuAuaYa3E9/qUq9YPmRKlY5106UbYQt/UY5W+Q7uFbrBDBjc55atGTWc=
+	t=1772564811; cv=none; b=XEZ7+HIDtwJx1VdUu1vSqQW+THcjtZ58yDg1j/s0Ai6P4QRLOw6CKR3qxM1Pvd32ntS7MrfrX6IPyMVgNJSLrs4YahvVmkaoslPPd2HJ6aW72d7rHcr5kCUEBWMWYTpiHJijoBT0GO8VsLyVr9tusw01eGfN6CEiEARwjHTOVGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772554509; c=relaxed/simple;
-	bh=pKylT2VdZF5opvqkK8HdDFCn1ZVdiR2rvHWlCHqkFLU=;
+	s=arc-20240116; t=1772564811; c=relaxed/simple;
+	bh=o6SqLoLouGO5bXslSs/4F7gpfo57naGALRlZ1K+ZiU4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHxKpKhK/pSE962OaK8VEhIkW5XtgYF/BflsOQL67i3OyRkIMHez3warKStPk5FLMSFOUOQ+a/k9KReZu2Nk90QV+rINFCIROFb+Vpkx73Zlfsn0yFIOwYf1rsMPo92iPuP4aJ3DJ06Q38pSMCr8lg31SLLDo1gajkSHWGYfUsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 59EE368BEB; Tue,  3 Mar 2026 17:15:00 +0100 (CET)
-Date: Tue, 3 Mar 2026 17:15:00 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 07/25] xor: split xor.h
-Message-ID: <20260303161500.GA8975@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-8-hch@lst.de> <20260228044355.GD65277@quark> <20260303160309.GD7021@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LbL6cmRCguzx4PtQgxO+VJ1053FuPLR+jvyijJpfv1nHi7LZFfm7cBeV7VvanRFkOzaw0JYFKUrV924YS8aiexYWpT/eXqH9uLe/K14H7YsqnTJLpIzWcIES5hBHFaUfTSRPqvjJRQ3Szwml8VwABbUzTWfBUfpDP54VrP3njbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9PPqUIF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9PPqUIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F552C116C6;
+	Tue,  3 Mar 2026 19:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772564811;
+	bh=o6SqLoLouGO5bXslSs/4F7gpfo57naGALRlZ1K+ZiU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k9PPqUIFRLeeMpLf+XS9BN9LZAJTe1QWd1uFaPEnJie1rK3xaon2kvnwE6x05Gore
+	 oxOkYRoitAgJeTVv4+VBD2FPfQTQRexNOJaYYAq89sGkGOELs+/NiHz299w8XhNhYi
+	 yNyK2F38+EO46b/EBQEFlkLRXDKBCWZoy/TVE8ZvdW5+zpziTzin1MTaQmxXWaNRlK
+	 UnaYbM0s/f+iM5+XMJJB5Sc6VL3CyZnGamgbtf1L5lsKJu5ZjqQUvlAODMWXRC58tz
+	 EGyhhzH13w/id3QjGdj1a/dkjgfw3i2ziSdtDEGZb/5PraiMPcQG+oHlIRNnqDy5/T
+	 lemKe0rdoJDZQ==
+Date: Tue, 3 Mar 2026 19:06:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: loongson,ls2k0500-mmc: Add
+ compatible for Loongson-2K0300
+Message-ID: <20260303-saint-cubicle-67cbf5909ef2@spud>
+References: <cover.1772529875.git.zhoubinbin@loongson.cn>
+ <5fd555050c62d1bd7dc4f7fc15f93dd48a8a40c3.1772529875.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IODElQvcItTdZo/x"
+Content-Disposition: inline
+In-Reply-To: <5fd555050c62d1bd7dc4f7fc15f93dd48a8a40c3.1772529875.git.zhoubinbin@loongson.cn>
+
+
+--IODElQvcItTdZo/x
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260303160309.GD7021@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Mar 03, 2026 at 05:03:09PM +0100, Christoph Hellwig wrote:
-> On Fri, Feb 27, 2026 at 08:43:55PM -0800, Eric Biggers wrote:
-> > On Thu, Feb 26, 2026 at 07:10:19AM -0800, Christoph Hellwig wrote:
-> > > Keep xor.h for the public API, and split the struct xor_block_template
-> > > definition that is only needed by the xor.ko core and
-> > > architecture-specific optimizations into a separate xor_impl.h header.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/arm/lib/xor-neon.c       |  1 +
-> > >  arch/s390/lib/xor.c           |  2 +-
-> > >  include/linux/raid/xor.h      | 22 +---------------------
-> > >  include/linux/raid/xor_impl.h | 25 +++++++++++++++++++++++++
-> > >  lib/raid/xor/xor-core.c       |  1 +
-> > >  5 files changed, 29 insertions(+), 22 deletions(-)
-> > >  create mode 100644 include/linux/raid/xor_impl.h
-> > 
-> > arch/arm64/lib/xor-neon.c needs to be updated to include xor_impl.h.
-> 
-> As of this patch it is not using anything from that header (but
-> neither from the public xor.h).
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+pw-bot: not-applicable
 
-Actually looks like we do need it because it pulls in
-arch/arm64/include/asm/xor.h.
+--IODElQvcItTdZo/x
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Anyway, I think I'll actually move this patch to the end so that the
-impl header does not need moving to it's final place.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaacxRwAKCRB4tDGHoIJi
+0jS9AQDSc9WSVw08r08VcFLqfqMDbJZEfc37cMAgPngoYWMkzwD/WpD9cKhcf2Xs
+1QGC6wUDULr1fUlifiDcPUOa44LDBA0=
+=wT3X
+-----END PGP SIGNATURE-----
+
+--IODElQvcItTdZo/x--
