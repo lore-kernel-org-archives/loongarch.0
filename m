@@ -1,120 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE06373BE9
-	for <loongarch@lists.linux.dev>; Mon,  2 Mar 2026 12:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD5A92F12AF
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 03:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772454357; cv=none; b=Nu70UaECdwxD5OFIlAtsXIIlPuarTBdtum72wMEOouh+jCxWSNhKVfAhRe+j5qMuUwhV3+nownpOrkPI4VaEWythUh6KxUBWxB4aBKGPJ0pRqp7bAPpY8cd2fYdLEaP20NS/CZMKwv0x8tVWYVnTryc9bhTAdWRv5tcPdhoEyeQ=
+	t=1772510098; cv=none; b=DU+y25MlMBSzZv4KewTmmzZj6qJVMhfRFQv3eJcNgQKBLRPpJVAN5R9k5s5YaRdtcYmllN4EbBz7cYQ77dgTtR8JKHvFam83/U5s3NZf9npbIXFm+0sYlwb7rzHmfkAjO7JMsoqnMiqtAA7LJKe48ftjThLAw1AiXMD4o1BSZ8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772454357; c=relaxed/simple;
-	bh=H/m8MEbscz6WrH/+FAiysHkWJ0RcGdw589TTpDmII/4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UkOFZNPyB+YfgAAGKHG33C8L0rgnIH/1QMMMh+OV0acASPqbcRfiLZ2TjowzrzKmP3TfhYyt4yprz3h25vadyNAcdbnEhQT9JNM0PjkEt5if3ddjYrdIJrCX+eHswNnmc9u5H6Jz6BYr6BmktMKPQEtvwXiBWT+SaNgBfDcBxz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=da6EZmSf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l0hZVyeq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="da6EZmSf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l0hZVyeq"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1772454352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6IuCsvm2cGfELoFVj6dzhBy1SObe9G7IuVP1EF/2gXo=;
-	b=da6EZmSfUm9111bFjIM3F+dNlZNGWPW1eN0BtOHAmyUkek/S4ApnyYsLAvQDTs3BfD8bNR
-	olHyAq4d14aPCG7ZVsMhzqZcxVZhq3SlX2/LZCZ6bRx/FXwxP01+/B9YgUVTVhxcjQD3Xe
-	2QVGzitWwT+eK+uYSrOBd3wPjWBv6oX0WxUiljKTgs5w4p1AATrCcykQEjpm7Wckv9EzS4
-	R+prsnzd1PNt3Wn0W+ZeBl5H6RAhXbXQNmrGKr9HD5az0J/a+4xWjV23G7X5AoolJFcj9Z
-	JCL0A7KseyQ+esU0vtZv29qwN6j6gzV74ezeGydEcvB+RCAX1FY+gd/IX8cYpQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1772454352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6IuCsvm2cGfELoFVj6dzhBy1SObe9G7IuVP1EF/2gXo=;
-	b=l0hZVyeqGYmKCh8kKgBW2VcGXwDLfx5b9Gdrnegn+TBMrdFjh/F3qGt4TKfpLXDUNM+pxG
-	6dNRMGZ/nruazVAg==
-Date: Mon, 02 Mar 2026 13:25:37 +0100
-Subject: [PATCH 13/15] sh: Remove AT_VECTOR_SIZE_ARCH from UAPI
+	s=arc-20240116; t=1772510098; c=relaxed/simple;
+	bh=RGWnQo32idVwzGjSVUcvWaFpWkVwatNcwHnmCfLFbDc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=sMCM8iXxnlP+87PF3JLABHKfb0z+H7guvFlFPsu8O3+mdJajDsc3cdPOZOsiE/cFwdJet+Vy14/DyTIwcKLn8LnHMhyMUt8c8fNrh6lisnwT2IbfGJCB3WZFodibRpj2pHjagO/vnANvN8N0uXBzMw5dme7JcaNnK9uTRZ3r/D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.30])
+	by gateway (Coremail) with SMTP id _____8Dx88CHW6Zp0ukWAA--.9818S3;
+	Tue, 03 Mar 2026 11:54:47 +0800 (CST)
+Received: from [10.2.10.30] (unknown [10.2.10.30])
+	by front1 (Coremail) with SMTP id qMiowJAxWcGFW6ZpMXdNAA--.2933S3;
+	Tue, 03 Mar 2026 11:54:45 +0800 (CST)
+Subject: Re: [PATCH v6 0/2] LongArch: KVM: Add DMSINTC support irqchip in
+ kernel
+To: Yao Zi <me@ziyao.cc>, maobibo@loongson.cn, chenhuacai@kernel.org
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev, kernel@xen0n.name,
+ linux-kernel@vger.kernel.org
+References: <20260206012028.3318291-1-gaosong@loongson.cn>
+ <aYVhSp_eGBkpXdp-@pie>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <df4de374-c5ef-6652-985f-39598e234e35@loongson.cn>
+Date: Tue, 3 Mar 2026 11:54:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <aYVhSp_eGBkpXdp-@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260302-at-vector-size-arch-v1-13-a11f03ba2ca8@linutronix.de>
-References: <20260302-at-vector-size-arch-v1-0-a11f03ba2ca8@linutronix.de>
-In-Reply-To: <20260302-at-vector-size-arch-v1-0-a11f03ba2ca8@linutronix.de>
-To: Kees Cook <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, 
- linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-mips@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-sh@vger.kernel.org, linux-alpha@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772454343; l=1566;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=H/m8MEbscz6WrH/+FAiysHkWJ0RcGdw589TTpDmII/4=;
- b=70FaFWSkNZh4Bigz/FCzkj6Q189+PNtssX+j5xte676xMOG9LLtUgl7gGtydm5ZgSwLz8qm7a
- m8JP07HyaioCw989TZl/9nlUAJ4kPMiJ3LDiNOJB7E4QpPK9Lg7q5Qc
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Language: en-US
+X-CM-TRANSID:qMiowJAxWcGFW6ZpMXdNAA--.2933S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr1DCr48Zw1fAFW8trWfXrc_yoW8Xw47pF
+	W7Ga4jkrWDXw15Kws29FW0ga1jvrn3Jry8W39Iqa42kFWDur1xWr4fGrWjy3s2g3yfGw1S
+	y3srW343ZF1UZFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24So
+	DUUUU
 
-There is nothing userspace can do with this value. In the kernel is
-always combined with AT_VECTOR_SIZE_BASE, which is not exposed to
-userspace and also changes from time to time.
+在 2026/2/6 上午11:34, Yao Zi 写道:
+> On Fri, Feb 06, 2026 at 09:20:26AM +0800, Song Gao wrote:
+>> Hi,
+>>
+>> This series  implements the DMSINTC in-kernel irqchip device,
+>> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI interrupts
+>> to the target vCPU.
+>> applied this series.  use netperf test.
+>> VM with one CPU and start netserver, host run netperf.
+>> disable dmsintc
+>> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
+>>
+>> 212992 212992 1        1       36000.00   27107.36
+>>
+>> enable dmsintc
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
+>>
+>> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
+>>
+>> v6:
+>>    Fix kvm_device leak in kvm_dmsintc_destroy().
+>>
+>> v5:
+>>    Combine patch2 and patch3
+>>    Add check msgint feature when register DMSINT device.
+>>
+>> V4: Rebase and R-b;
+>>     replace DINTC to DMSINTC.
+>>
+>>
+>> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
+>>
+>> V2:
+>> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
+>>
+>> Thanks.
+>> Song Gao
+>>
+>> Song Gao (2):
+>>    LongArch: KVM: Add DMSINTC device support
+>>    LongArch: KVM: Add dmsintc inject msi to the dest vcpu
+> There's a typo in the titles, it should be LoongArch instead of
+> "LongArch".
 
-Move the symbol to a kernel-internal header.
+Hi,   huacai
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- arch/sh/include/asm/auxvec.h      | 7 +++++++
- arch/sh/include/uapi/asm/auxvec.h | 8 +++-----
- 2 files changed, 10 insertions(+), 5 deletions(-)
+Should I need send v7 to fix this typo error?
 
-diff --git a/arch/sh/include/asm/auxvec.h b/arch/sh/include/asm/auxvec.h
-new file mode 100644
-index 000000000000..f0830808eb19
---- /dev/null
-+++ b/arch/sh/include/asm/auxvec.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_SH_AUXVEC_H
-+#define __ASM_SH_AUXVEC_H
-+
-+#define AT_VECTOR_SIZE_ARCH 5 /* entries in ARCH_DLINFO */
-+
-+#endif /* __ASM_SH_AUXVEC_H */
-diff --git a/arch/sh/include/uapi/asm/auxvec.h b/arch/sh/include/uapi/asm/auxvec.h
-index 8eb47ede7193..1b07c4bfe160 100644
---- a/arch/sh/include/uapi/asm/auxvec.h
-+++ b/arch/sh/include/uapi/asm/auxvec.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--#ifndef __ASM_SH_AUXVEC_H
--#define __ASM_SH_AUXVEC_H
-+#ifndef __UAPI_ASM_SH_AUXVEC_H
-+#define __UAPI_ASM_SH_AUXVEC_H
- 
- /*
-  * Architecture-neutral AT_ values in 0-17, leave some room
-@@ -34,6 +34,4 @@
- #define AT_L1D_CACHESHAPE	35
- #define AT_L2_CACHESHAPE	36
- 
--#define AT_VECTOR_SIZE_ARCH 5 /* entries in ARCH_DLINFO */
--
--#endif /* __ASM_SH_AUXVEC_H */
-+#endif /* __UAPI_ASM_SH_AUXVEC_H */
+Thanks.
 
--- 
-2.53.0
+Song Gao
+>
+> Best regards,
+> Yao Zi
+>
+>
 
