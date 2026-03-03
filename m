@@ -1,161 +1,113 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6C48480354
-	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 11:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B593C196E
+	for <loongarch@lists.linux.dev>; Tue,  3 Mar 2026 14:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772537279; cv=none; b=B4bXo4Zl5MboWEm9JK6nPsLRlQtzwQNLjRerk1+qchC1G2cs3fhnSLD46gqKFMkuWovCm9CtIEbFGhVxjdXdRUhNrijBnaS6MwLtXO/SZDRVoJrnoaw3QS2n8aimLgF6t80SgUpnblEIa3GLRrSjmEKbBP7W+BKsTgkwI2epbr4=
+	t=1772548991; cv=none; b=fCu6h3vViwQ3CtFpOHXSoXA8d5R/5lLc8GSpfQ6zq2OrVXB4wXxR8t0Iv2Z/URnQnV7iR4uPwz6RzAYDYw9vOEJVar3hZOKkBBb3qSz99PBj9Ir2gs11zSkpuoPo0ZSvImxVC6Q7H/akZKTZnWdCYns5LhYMRYzRa+Bvbesb9tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772537279; c=relaxed/simple;
-	bh=SJe5esYN7YvntoVpKqkDm4cXCVGplHyoosdxsF/e4QQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VTherUzCpV65oZvCBdc1fuD1TQqmZVqq+hrl3dOfjog/TACcI5x9r+Pf4e3YPTpbgGtya5smAzggjcwZI3ABuDa+cIZHQ7SOSlSKqjT+ezpEqQJlJVjUEizobFLm9Do3Msvmemk+43cFT7yt8QSs7p73qw7oGJbQ8pkOuB0hUwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8Axw8C5xaZpUwEXAA--.10079S3;
-	Tue, 03 Mar 2026 19:27:53 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJAxHMKzxaZpM59NAA--.14456S5;
-	Tue, 03 Mar 2026 19:27:52 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 3/3] mmc: loongson2: Add Loongson-2K0300 SD/SDIO/eMMC controller driver
-Date: Tue,  3 Mar 2026 19:27:40 +0800
-Message-ID: <365d1022b4b33f69bbd9b561aa15df2a07795e79.1772529875.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1772529875.git.zhoubinbin@loongson.cn>
-References: <cover.1772529875.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1772548991; c=relaxed/simple;
+	bh=EMGnVRjQbLjyIY9qUixp0Up05NpgzTmwbXFz2gri1Cw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mFycvewPT9B24MDXBfj06DAy97foxhlUADyeydv8JXEdWx+j2lR0rinrlwJUlzgbtbw+MffjLJhEzTjD1famLuA/9SM4bRqgkkSHvC6RV8BkhBgot00r0csJ/Bq8rglYm1sY9T371iVa/K0bA1VZCeACUtsdiuHoJG/BZ7yG19Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D7F4497;
+	Tue,  3 Mar 2026 06:43:03 -0800 (PST)
+Received: from [10.1.31.220] (XHFQ2J9959.cambridge.arm.com [10.1.31.220])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12EE23F694;
+	Tue,  3 Mar 2026 06:43:05 -0800 (PST)
+Message-ID: <8c799a17-56e3-4ea4-84a2-b878337bddfd@arm.com>
+Date: Tue, 3 Mar 2026 14:43:04 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHMKzxaZpM59NAA--.14456S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEPCGmmeEEIjgAAs3
-X-Coremail-Antispam: 1Uk129KBj93XoWxWrW5Wr43JF4fKr1xCF4fCrX_yoWrGw4rpF
-	W7Z3yUKF4UKF4Y9F98XayUZr15ZrySqF9Fya17Ww1av3s5t34Dur1UJFySvF4FkFyxGF17
-	Xr4kWws293WDCrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] randomize_kstack: Unify random source across
+ arches
+Content-Language: en-GB
+To: Thomas Gleixner <tglx@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260119130122.1283821-1-ryan.roberts@arm.com>
+ <20260119130122.1283821-4-ryan.roberts@arm.com> <87ecmcwjh9.ffs@tglx>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <87ecmcwjh9.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch describes the two MMC controllers of the Loongson-2K0300 SoC,
-one providing an eMMC interface and the other exporting an SD/SDIO
-interface.
+On 22/02/2026 21:34, Thomas Gleixner wrote:
+> On Mon, Jan 19 2026 at 13:01, Ryan Roberts wrote:
+>> I tested an earlier version of this change on x86 bare metal and it
+>> showed a smaller but still significant improvement. The bare metal
+>> system wasn't available this time around so testing was done in a VM
+>> instance. I'm guessing the cost of rdtsc is higher for VMs.
+> 
+> No it's not, unless the hypervisor traps RDTSC, which would be insane as
+> that would cause massive regressions all over the place.
+> 
+> So guessing is not really helpful if you want to argue performance.
 
-Its hardware design is similar to that of the Loongson-2K2000, but it
-suffers from hardware defects such as missing CMD48 interrupts.
+Sorry for the slow response. I no longer have access to a recent bare metal x86
+system that I can do performance testing on. All I have is the Sapphire Rapids
+(m7i.24xlarge) VM.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/mmc/host/loongson2-mmc.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+My original testing was on bare metal Sapphire Rapids (same number of CPUs and
+RAM as the VM).
 
-diff --git a/drivers/mmc/host/loongson2-mmc.c b/drivers/mmc/host/loongson2-mmc.c
-index 333bed60df3b..f553e92fd9e5 100644
---- a/drivers/mmc/host/loongson2-mmc.c
-+++ b/drivers/mmc/host/loongson2-mmc.c
-@@ -189,6 +189,12 @@
- #define LOONGSON2_MMC_DLLVAL_TIMEOUT_US		4000
- #define LOONGSON2_MMC_TXFULL_TIMEOUT_US		500
- 
-+/*
-+ * Due to a hardware design flaw, the Loongson-2K0300 may fail to recognize the
-+ * CMD48 (SD_READ_EXTR_SINGLE) interrupt.
-+ */
-+#define LOONGSON2_MMC_CMD48_QUIRK	BIT(0)
-+
- /* Loongson-2K1000 SDIO2 DMA routing register */
- #define LS2K1000_SDIO_DMA_MASK		GENMASK(17, 15)
- #define LS2K1000_DMA0_CONF		0x0
-@@ -245,6 +251,7 @@ struct loongson2_mmc_host {
- };
- 
- struct loongson2_mmc_pdata {
-+	u32 flags;
- 	const struct regmap_config *regmap_config;
- 	void (*reorder_cmd_data)(struct loongson2_mmc_host *host, struct mmc_command *cmd);
- 	void (*fix_data_timeout)(struct loongson2_mmc_host *host, struct mmc_command *cmd);
-@@ -568,6 +575,12 @@ static void loongson2_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
- {
- 	struct loongson2_mmc_host *host = mmc_priv(mmc);
- 
-+	if ((host->pdata->flags & LOONGSON2_MMC_CMD48_QUIRK) &&
-+	    mrq->cmd->opcode == SD_READ_EXTR_SINGLE) {
-+		mmc_request_done(mmc, mrq);
-+		return;
-+	}
-+
- 	host->cmd_is_stop = 0;
- 	host->mrq = mrq;
- 	loongson2_mmc_send_request(mmc);
-@@ -839,7 +852,18 @@ static void loongson2_mmc_release_internal_dma(struct loongson2_mmc_host *host,
- 	dma_free_coherent(dev, PAGE_SIZE, host->sg_cpu, host->sg_dma);
- }
- 
-+static struct loongson2_mmc_pdata ls2k0300_mmc_pdata = {
-+	.flags			= LOONGSON2_MMC_CMD48_QUIRK,
-+	.regmap_config		= &ls2k2000_mmc_regmap_config,
-+	.reorder_cmd_data	= ls2k2000_mmc_reorder_cmd_data,
-+	.fix_data_timeout	= ls2k2000_mmc_fix_data_timeout,
-+	.setting_dma		= ls2k2000_mmc_set_internal_dma,
-+	.prepare_dma		= loongson2_mmc_prepare_internal_dma,
-+	.release_dma		= loongson2_mmc_release_internal_dma,
-+};
-+
- static struct loongson2_mmc_pdata ls2k0500_mmc_pdata = {
-+	.flags			= 0,
- 	.regmap_config		= &ls2k0500_mmc_regmap_config,
- 	.reorder_cmd_data	= ls2k0500_mmc_reorder_cmd_data,
- 	.setting_dma		= ls2k0500_mmc_set_external_dma,
-@@ -848,6 +872,7 @@ static struct loongson2_mmc_pdata ls2k0500_mmc_pdata = {
- };
- 
- static struct loongson2_mmc_pdata ls2k1000_mmc_pdata = {
-+	.flags			= 0,
- 	.regmap_config		= &ls2k0500_mmc_regmap_config,
- 	.reorder_cmd_data	= ls2k0500_mmc_reorder_cmd_data,
- 	.setting_dma		= ls2k1000_mmc_set_external_dma,
-@@ -856,6 +881,7 @@ static struct loongson2_mmc_pdata ls2k1000_mmc_pdata = {
- };
- 
- static struct loongson2_mmc_pdata ls2k2000_mmc_pdata = {
-+	.flags			= 0,
- 	.regmap_config		= &ls2k2000_mmc_regmap_config,
- 	.reorder_cmd_data	= ls2k2000_mmc_reorder_cmd_data,
- 	.fix_data_timeout	= ls2k2000_mmc_fix_data_timeout,
-@@ -984,6 +1010,7 @@ static void loongson2_mmc_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id loongson2_mmc_of_ids[] = {
-+	{ .compatible = "loongson,ls2k0300-mmc", .data = &ls2k0300_mmc_pdata },
- 	{ .compatible = "loongson,ls2k0500-mmc", .data = &ls2k0500_mmc_pdata },
- 	{ .compatible = "loongson,ls2k1000-mmc", .data = &ls2k1000_mmc_pdata },
- 	{ .compatible = "loongson,ls2k2000-mmc", .data = &ls2k2000_mmc_pdata },
--- 
-2.52.0
+Just to be clear, these are the results I got with bare metal vs vm. Negative is
+an improvement (less time). (I)/(R) means statistically significant
+improvement/regression:
+
++-----------------+--------------+---------------+---------------+
+| Benchmark       | Result Class |        x86_64 |        x86_64 |
+|                 |              |    bare metal |            VM |
++=================+==============+===============+===============+
+| syscall/getpid  | mean (ns)    |    (I) -7.69% |   (I) -17.65% |
+|                 | p99 (ns)     |         4.14% |   (I) -24.41% |
+|                 | p99.9 (ns)   |         2.68% |   (I) -28.52% |
++-----------------+--------------+---------------+---------------+
+| syscall/getppid | mean (ns)    |    (I) -5.98% |   (I) -19.24% |
+|                 | p99 (ns)     |        -3.11% |   (I) -25.03% |
+|                 | p99.9 (ns)   |     (R) 9.84% |   (I) -28.17% |
++-----------------+--------------+---------------+---------------+
+| syscall/invalid | mean (ns)    |    (I) -6.94% |   (I) -18.56% |
+|                 | p99 (ns)     |    (I) -5.57% |   (I) -20.06% |
+|                 | p99.9 (ns)   |    (R) 10.53% |   (I) -25.04% |
++-----------------+--------------+---------------+---------------+
+
+So both sets of results represent an improvement, I would say.
+
+Given the level of review that the series has had, I propose to repost today,
+then hopefully Kees will be happy to put it in his branch so that it can get
+plenty of linux-next soak testing and if there are any x86 regressions lurking,
+hopefully ZeroDay will spot them?
+
+Thanks,
+Ryan
+
+
+> 
+> Thanks,
+> 
+>         tglx
 
