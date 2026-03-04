@@ -1,155 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E5388E6B
-	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 07:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB052D949B
+	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 08:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772610566; cv=none; b=CZu0BBV8TzOSw0Pmzit6lNqIFmvjWFgkgzz/bmJ7+wzdc+Ea1yuquFID0tLhix8iQ1RR7XL+WvTgcOtgjpRJrxcafeSvAfAwLadLX4CIYKWNeawaRMbvKxgLhJSrmBGSQKd70RbWXXVLJBQ5nt9SSGbBJLnUBy+55LZuS5KctPE=
+	t=1772611531; cv=none; b=ZhxMykomXiirxOOetCL/vZjlJ7vSx+lvl0KZRgiC7Lo6MVOqmiBA1WUux4s274KDYVL0Bd8p5PRR6JIBujlaaZG/dgwM3W0P2KeUF2MXdVrqvsmKAQJ6w6iuzuOO1OAkpA7Gd2JotXzcj+rnzoK3daZrNLJAdjXXFBz6tO0ZPgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772610566; c=relaxed/simple;
-	bh=lAm54urt5GeKbrhjyma6H2Eqz4yOWeFSr0NbX7+a7M8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oN3mQLh5RGxvNFH5ZqSkByRuiMLcrwdbtBUuoNqlG93voRyYpONWCeP+Hd2vV3MSS6+ki8Q15718lU+8E4ooPiWV3eZF2mkDh8VxZ873Jh2kE8WjZjM6a6/LBp1e34jZv85o2OdHsxgnzHsODLhjzc0RP1CrmV1Oy3AvyXhaKTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FgrMGw+0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oCmPdg4P; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1772611531; c=relaxed/simple;
+	bh=KMi1ZzxBwygb+ShEqom6d2oRXjczeTMXv5/P1YKh2SQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UXQtJMyR3aht8xJqmDXJ3bfI5ueLH+d80ULIIMGmvE50qcFyIntD8HiqTgnPHMiOhmRIGnbJJBa2IAtwvKKlMUU5g2Z2KeNCW8dSiluk9COnblsKPP0X2dEvkicm+p/pjwbVUiz7Tgksexdh4tQ6O/7shWrirBFEDdQmDQl+Zco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4NwYnLG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FgrMGw+0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oCmPdg4P"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1772610557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kJIJ4haN/w6vuaqusVIG8WNni7LxRg4LJbwm81SsxRs=;
-	b=FgrMGw+0tDqATS7VwFn8jniFPxJsB1ys8YQGHcvAHXkxmFMvYo6Su3Bt0V4VMk2Y4kVrdM
-	dLSWl2sXdEhJkfN+thXnqeDTJO9tF3Q+GFZkArXzG58ZAELVAd5ePAS0t/05yJv32pQJtr
-	X249I8HKclhJSXnQ9SSOLoszCvitctXN39T2GrOGypkuf4Twrv2AJvUId15eRl0ml5NYun
-	q0lgkc05M41XY33v3Q7EwwlIs7TVNNc6/stetmzcpT6OFhls/hNTXsaSLJLPGH8iS6Z5QJ
-	G7xyia40qtFY2IO09BkRWCrWuSP+lMCV/J9Bpw7bAWCsMzAK0gPM2ZNxiomtiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1772610557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kJIJ4haN/w6vuaqusVIG8WNni7LxRg4LJbwm81SsxRs=;
-	b=oCmPdg4PYMuRU28zbCRjZi00Kgg7Vz/AMlJi7v/8L4i0VKJBR7Gvw83sDhM3TFAxcPROYG
-	1swfM4HYiuR6GOBQ==
-Date: Wed, 04 Mar 2026 08:49:08 +0100
-Subject: [PATCH v6 11/14] sparc64: vdso2c: Drop sym_vvar_start handling
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4NwYnLG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83B1C2BC87
+	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 08:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772611530;
+	bh=KMi1ZzxBwygb+ShEqom6d2oRXjczeTMXv5/P1YKh2SQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W4NwYnLG0di05yt/S1+9n2xrHsY7W+2kXru8ELMe8ZBbRcBCRbjYN6TZ0Js4SJBxE
+	 /ix9UkvKYzX7CBv4QQV4+I25DlQH3/Ydj9N/zQ0WKjLdNHlkMPfutEvcJJ4YHOTtpX
+	 uh6SlCkSkiQUZuF5YQk2Lx0SPxTlbx/Do6ZxCttRLgo6KHxRkYWZZAc2EpfRfbQmtk
+	 2X27PNOJdwkY/M7vsaolVvM3nRY3e+odZrEqOTrLk2Ccic0iXD5Ov0tDo0YaZB1B4b
+	 kV0VP39FAT87m2qbbW5xw6nuV2ulOMNZDYLVUvudGN6wXIoRc4twYeFuDexlCmaGh+
+	 +Q5v4IG2Zh9PQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-660a293515fso3320223a12.1
+        for <loongarch@lists.linux.dev>; Wed, 04 Mar 2026 00:05:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWuq7G7d3C7ZETL8TBqTQQtpcxLuS/I0ae6RWssClnB+GVlPSbv2reOWcAE6ma12biWPGLeA5pv3ac=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzkbprn8F1340B84gqrY2IEyLcwLjl/knfnLiSmZ79xyo+JpLJV
+	PQcQkXOa4Kgeb/xuIDKM+Ms/uC5h8KU7cjK3RcymYoU6TMm/KO02//YyLFMYGd8BQPjTAvK8tno
+	CHvZ1f3+9D2KMQvLrgFCVb4Y7g7sz4Fg=
+X-Received: by 2002:a05:6402:358d:b0:65f:bad8:9c6 with SMTP id
+ 4fb4d7f45d1cf-660efcb74femr610451a12.12.1772611529254; Wed, 04 Mar 2026
+ 00:05:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260304-vdso-sparc64-generic-2-v6-11-d8eb3b0e1410@linutronix.de>
-References: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
-In-Reply-To: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
-To: Andy Lutomirski <luto@kernel.org>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
- Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
- John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- "Jason A. Donenfeld" <Jason@zx2c4.com>, 
- Russell King <linux@armlinux.org.uk>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, Shannon Nelson <sln@onemain.com>, 
- Thomas Gleixner <tglx@kernel.org>, Christophe Leroy <chleroy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
- linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772610551; l=1941;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=lAm54urt5GeKbrhjyma6H2Eqz4yOWeFSr0NbX7+a7M8=;
- b=vKnzLJwiTGLossMMdtO2qf7gplf5mOJDMBQibefKfyvuPYaMi9b+gqFaCGXGXyYlvq2XHuYd+
- udeFTC0sjXUBWp7AIwh8IXBxRQmiYo8pDDgSjJjmpHs3cgPsp+ki3wf
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <cover.1772529875.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1772529875.git.zhoubinbin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 4 Mar 2026 16:05:17 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xJZCMRXf-T4b85+LSXNFfb1dd=85kLWdV6R6zpcyShw@mail.gmail.com>
+X-Gm-Features: AaiRm51nTmgkp3KgT1K3e3QreJcEQb2kKiJHBsHBXz9J6atuQZnYsSrKv8JfRhs
+Message-ID: <CAAhV-H5xJZCMRXf-T4b85+LSXNFfb1dd=85kLWdV6R6zpcyShw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] mmc: Add Loongson-2K0300 SD/SDIO/eMMC controller support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After the adoption of the generic vDSO library this symbol does not exist.
+For the whole series:
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-The alignment invariant is now guaranteed by the generic code.
-
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Tested-by: Andreas Larsson <andreas@gaisler.com>
-Reviewed-by: Andreas Larsson <andreas@gaisler.com>
-Acked-by: Andreas Larsson <andreas@gaisler.com>
----
- arch/sparc/include/asm/vdso.h | 2 --
- arch/sparc/vdso/vdso2c.c      | 6 ------
- arch/sparc/vdso/vdso2c.h      | 4 ----
- 3 files changed, 12 deletions(-)
-
-diff --git a/arch/sparc/include/asm/vdso.h b/arch/sparc/include/asm/vdso.h
-index 59e79d35cd73..f08562d10215 100644
---- a/arch/sparc/include/asm/vdso.h
-+++ b/arch/sparc/include/asm/vdso.h
-@@ -8,8 +8,6 @@
- struct vdso_image {
- 	void *data;
- 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
--
--	long sym_vvar_start;  /* Negative offset to the vvar area */
- };
- 
- #ifdef CONFIG_SPARC64
-diff --git a/arch/sparc/vdso/vdso2c.c b/arch/sparc/vdso/vdso2c.c
-index b97af5ec9f35..70b14a436fe2 100644
---- a/arch/sparc/vdso/vdso2c.c
-+++ b/arch/sparc/vdso/vdso2c.c
-@@ -58,18 +58,12 @@
- 
- const char *outfilename;
- 
--/* Symbols that we need in vdso2c. */
--enum {
--	sym_vvar_start,
--};
--
- struct vdso_sym {
- 	const char *name;
- 	int export;
- };
- 
- struct vdso_sym required_syms[] = {
--	[sym_vvar_start] = {"vvar_start", 1},
- };
- 
- __attribute__((format(printf, 1, 2))) __attribute__((noreturn))
-diff --git a/arch/sparc/vdso/vdso2c.h b/arch/sparc/vdso/vdso2c.h
-index 60d69acc748f..ba0794659eb5 100644
---- a/arch/sparc/vdso/vdso2c.h
-+++ b/arch/sparc/vdso/vdso2c.h
-@@ -104,10 +104,6 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
- 		}
- 	}
- 
--	/* Validate mapping addresses. */
--	if (syms[sym_vvar_start] % 8192)
--		fail("vvar_begin must be a multiple of 8192\n");
--
- 	if (!name) {
- 		fwrite(stripped_addr, stripped_len, 1, outfile);
- 		return;
-
--- 
-2.53.0
-
+On Tue, Mar 3, 2026 at 7:27=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
+ wrote:
+>
+> Hi all:
+>
+> The patchset describes two MMC controllers of the Loongson-2K0300 SoC,
+> one providing an eMMC interface and the other exporting an SD/SDIO
+> interface.
+>
+> Its hardware design is similar to that of the Loongson-2K2000, but it
+> suffers from hardware defects such as missing CMD48 interrupts.
+>
+> Thanks.
+> Binbin
+>
+> Binbin Zhou (3):
+>   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
+>     Loongson-2K0300
+>   mmc: loongson2: Gathering all SoCs private data together
+>   mmc: loongson2: Add Loongson-2K0300 SD/SDIO/eMMC controller driver
+>
+>  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  1 +
+>  drivers/mmc/host/loongson2-mmc.c              | 59 ++++++++++++++-----
+>  2 files changed, 44 insertions(+), 16 deletions(-)
+>
+>
+> base-commit: 6a4a4c1cc0012590b8bebf6c95d51687d39b420c
+> --
+> 2.52.0
+>
