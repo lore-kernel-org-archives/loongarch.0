@@ -1,47 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7566538BF60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF90D38C2C8
 	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 07:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772610562; cv=none; b=RG24vF6SD3UKVFji2RnIkpGY9bAtE2cft9Th57nKNsCvZOQk5fQu+KM2oQXoyN3fOS2TJOzStgxjGLB6W0SaTRD1mWFTZFoSfMXngXfZu6JWjiKLzcoQaJq+1i3Uom3Iy4Kx/fJS2GZehBHMXgmnw7k19C6c+HV2GL7jhuVrqAg=
+	t=1772610563; cv=none; b=jbcqPZHJXcmFci1eGQGFUhnjIfBjIXrjWnmmKuLkzkJxcY3zPH9r2AmKjRSEQup333zNPViRIDNynkl0RBclFekGlQaPXjyKvZQ18jhpvWDGpTRFTJeCSc1We/0TVOETruaT0YxpRh4HV9HJz37vlrpgnGlRJiv78DSG+pEpkv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772610562; c=relaxed/simple;
-	bh=oQUOtMJuNveW+RclD59fWViVXCPJwVTHt+8MLrC6gp0=;
+	s=arc-20240116; t=1772610563; c=relaxed/simple;
+	bh=MNZEUW6M8syIcj66jnZDrROQra2sbKC2bYbyN7iI9dE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MuyGLqfYin1ZmmEnJu1iCFftA7bRGRKbVRJsMn/Wi5uEMlclf1Oa33XnWxI/MXarUOk+9vpN5GuBh7+drEtsDCVhIuEr1JAZdinCs0LRByYRKVc41Oc0r127n/F2c9pZoo43ynR/yAd151XabXBP+yFHA/VCMgJ8Z3xGRYHZd7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ip/nm1Xq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jt07OPnU; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=ADkRmLMh8AZEgjHsbSWt8l7u5dTQ5OdcYJAlPtC5dqfIg2jxpRNXigDAEt5CX1l7cHmYtF71MrVK52rSpbr9c6OZR2fgbsV62Z2vrhmuiEHot9Q1mFcOPolF71XlYE/Z0a13JvhuvXcNZcWD0IuP9p5g3w2EQEUWq1c5v5abS2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lTOD78Xe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g73Ugvgn; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ip/nm1Xq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jt07OPnU"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lTOD78Xe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g73Ugvgn"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1772610553;
+	s=2020; t=1772610555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hnj7NK9+EESQajO58zJziHpx6y/buUwM86V1gnS791w=;
-	b=ip/nm1XqyI7wcCjokpOSiXYv2n4lYU7fwSpV26RLy9siZObCvemuLW2RP4YD1tdRMAI0S8
-	m+pQAaNqdYQ+QygPxVgvdAGCXk+06s3gMrKpXuEh7+flyTwmqsyaD2gML2Ee/87aOwrZMe
-	rkT21vqFiQ+eSMbBUCWSEJcvY2EtBXdR+uFvI30sCEhASj3CYKT6VwpRcNe2RjqfcoevWC
-	6Gy7UfRjSV5D94MjpJ7b/NaJ4APifgGovw2Hepb7xHBR+mJW15Wwj9n+xidp4akBsLGnF/
-	6KJn/Nt73SmPkpUD52uMOGRcrLgn4rC4amrE3fxiLeEM1pUuTjpdlB5wVP4oFg==
+	bh=Bg7n45l3BhxjQl2mgK6tZyeAOE3I5YycolIzoCC4NDY=;
+	b=lTOD78Xe94uc1KdWphFN02t8RRANHlqTV+ltXDRfp88yRt+1aIhBO4PYUjTCOqo6c+L9bg
+	jmaAbSdKVYJq5zS+tSlawyW9Q+NOflyF6BMQ4E/ARa9Nc/k7aTdv/iIEW+fgsTsjOTBeB+
+	pqNaBN2ZdPOSINd2p+kyW83xKMSq4yJcABWiLSWzTSZQKA5oP2AsNW/jDNnjNEyy0mCPvC
+	ozz8c2va6gxS17ckMi6wgp4b3FgLAVwrmCNzTErnG9r2qlS44+e42Mv0LJe0OFi4dRnWL+
+	dl0ZYar8Z8OgutWi40Vte94dZZIZe/1X6Hrcx3Rc+y2V4+vvLJxCxrseelo7vA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1772610553;
+	s=2020e; t=1772610555;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hnj7NK9+EESQajO58zJziHpx6y/buUwM86V1gnS791w=;
-	b=Jt07OPnU+KT/z86+XHVkhIv4Yw0F2z4/1pj2e1Zuj+DMBO/23sXm5rdimCt979Ch6i0Lum
-	FZuSOtNue8YM41Cw==
-Date: Wed, 04 Mar 2026 08:49:02 +0100
-Subject: [PATCH v6 05/14] sparc64: vdso: Remove obsolete "fake section
- table" reservation
+	bh=Bg7n45l3BhxjQl2mgK6tZyeAOE3I5YycolIzoCC4NDY=;
+	b=g73UgvgnqZt+77yUZp05qYt8zKLP2434x0orfQ+2QiuTsIJXxk3UcM5PQXd5xMNFuAAiwq
+	dKJG/IABFLN8ScAA==
+Date: Wed, 04 Mar 2026 08:49:06 +0100
+Subject: [PATCH v6 09/14] sparc64: vdso: Introduce vdso/processor.h
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -50,7 +49,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260304-vdso-sparc64-generic-2-v6-5-d8eb3b0e1410@linutronix.de>
+Message-Id: <20260304-vdso-sparc64-generic-2-v6-9-d8eb3b0e1410@linutronix.de>
 References: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
 In-Reply-To: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
 To: Andy Lutomirski <luto@kernel.org>, 
@@ -77,100 +76,140 @@ Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
  linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772610551; l=2603;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772610551; l=4546;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=oQUOtMJuNveW+RclD59fWViVXCPJwVTHt+8MLrC6gp0=;
- b=ONjGMauf8t71olRAN5ufRU1QPoFqmeZuj0jaVTXePVPM/+6cJ1aj+IcJKK9s9JN0YdCHpDCxu
- e00adRtTraRBTXyKxFnAHlW8bX79J2+hczfZ7oL9CPomYAMSfq5sEXH
+ bh=MNZEUW6M8syIcj66jnZDrROQra2sbKC2bYbyN7iI9dE=;
+ b=17XaTEXthlAZd+cHLsVCZsZ7RGr32B6aj0u9EBT6lr2dChc81D5X3sAveJ7v3v/7jDkCGypoW
+ yIIPmzALosvDvosr77dMJ4acqURTb45wGP4zJdwYp90fuxyv6epxy/H
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-When the vDSO logic was copied from x86 to SPARC some unused remnants of
-the fake section handling were copied, too. In x86 the original fake
-section handling had already been removed incompletely in commit
-da861e18eccc ("x86, vdso: Get rid of the fake section mechanism").
-On x86 the reservation was only cleaned up in commit 24b7c77bbb24
-("x86/vdso: Remove obsolete "fake section table" reservation").
+The generic vDSO library expects a vdso/processor.h with an definition of
+cpu_relax().
 
-Remove the reservation for SPARC, too.
+Split out cpu_relax() into this dedicated header.
 
-Fixes: 9a08862a5d2e ("vDSO for sparc")
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Tested-by: Andreas Larsson <andreas@gaisler.com>
 Reviewed-by: Andreas Larsson <andreas@gaisler.com>
 Acked-by: Andreas Larsson <andreas@gaisler.com>
 ---
- arch/sparc/vdso/vdso-layout.lds.S | 21 ---------------------
- arch/sparc/vdso/vdso2c.c          |  8 --------
- 2 files changed, 29 deletions(-)
+ arch/sparc/include/asm/processor.h      |  3 +++
+ arch/sparc/include/asm/processor_32.h   |  2 --
+ arch/sparc/include/asm/processor_64.h   | 25 --------------------
+ arch/sparc/include/asm/vdso/processor.h | 41 +++++++++++++++++++++++++++++++++
+ 4 files changed, 44 insertions(+), 27 deletions(-)
 
-diff --git a/arch/sparc/vdso/vdso-layout.lds.S b/arch/sparc/vdso/vdso-layout.lds.S
-index d31e57e8a3bb..9e0804789d11 100644
---- a/arch/sparc/vdso/vdso-layout.lds.S
-+++ b/arch/sparc/vdso/vdso-layout.lds.S
-@@ -4,16 +4,6 @@
-  * This script controls its layout.
-  */
+diff --git a/arch/sparc/include/asm/processor.h b/arch/sparc/include/asm/processor.h
+index 18295ea625dd..e34de956519a 100644
+--- a/arch/sparc/include/asm/processor.h
++++ b/arch/sparc/include/asm/processor.h
+@@ -1,6 +1,9 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef ___ASM_SPARC_PROCESSOR_H
+ #define ___ASM_SPARC_PROCESSOR_H
++
++#include <asm/vdso/processor.h>
++
+ #if defined(__sparc__) && defined(__arch64__)
+ #include <asm/processor_64.h>
+ #else
+diff --git a/arch/sparc/include/asm/processor_32.h b/arch/sparc/include/asm/processor_32.h
+index ba8b70ffec08..a074d313f4f8 100644
+--- a/arch/sparc/include/asm/processor_32.h
++++ b/arch/sparc/include/asm/processor_32.h
+@@ -91,8 +91,6 @@ unsigned long __get_wchan(struct task_struct *);
+ extern struct task_struct *last_task_used_math;
+ int do_mathemu(struct pt_regs *regs, struct task_struct *fpt);
  
--#if defined(BUILD_VDSO64)
--# define SHDR_SIZE 64
--#elif defined(BUILD_VDSO32)
--# define SHDR_SIZE 40
--#else
--# error unknown VDSO target
+-#define cpu_relax()	barrier()
+-
+ extern void (*sparc_idle)(void);
+ 
+ #endif
+diff --git a/arch/sparc/include/asm/processor_64.h b/arch/sparc/include/asm/processor_64.h
+index 321859454ca4..485070495263 100644
+--- a/arch/sparc/include/asm/processor_64.h
++++ b/arch/sparc/include/asm/processor_64.h
+@@ -182,31 +182,6 @@ unsigned long __get_wchan(struct task_struct *task);
+ #define KSTK_EIP(tsk)  (task_pt_regs(tsk)->tpc)
+ #define KSTK_ESP(tsk)  (task_pt_regs(tsk)->u_regs[UREG_FP])
+ 
+-/* Please see the commentary in asm/backoff.h for a description of
+- * what these instructions are doing and how they have been chosen.
+- * To make a long story short, we are trying to yield the current cpu
+- * strand during busy loops.
+- */
+-#ifdef	BUILD_VDSO
+-#define	cpu_relax()	asm volatile("\n99:\n\t"			\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     ::: "memory")
+-#else /* ! BUILD_VDSO */
+-#define cpu_relax()	asm volatile("\n99:\n\t"			\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     "rd	%%ccr, %%g0\n\t"	\
+-				     ".section	.pause_3insn_patch,\"ax\"\n\t"\
+-				     ".word	99b\n\t"		\
+-				     "wr	%%g0, 128, %%asr27\n\t"	\
+-				     "nop\n\t"				\
+-				     "nop\n\t"				\
+-				     ".previous"			\
+-				     ::: "memory")
 -#endif
 -
--#define NUM_FAKE_SHDRS 7
--
- SECTIONS
- {
- 	/*
-@@ -47,19 +37,8 @@ SECTIONS
- 		*(.bss*)
- 		*(.dynbss*)
- 		*(.gnu.linkonce.b.*)
--
--		/*
--		 * Ideally this would live in a C file: kept in here for
--		 * compatibility with x86-64.
--		 */
--		VDSO_FAKE_SECTION_TABLE_START = .;
--		. = . + NUM_FAKE_SHDRS * SHDR_SIZE;
--		VDSO_FAKE_SECTION_TABLE_END = .;
- 	}						:text
- 
--	.fake_shstrtab	: { *(.fake_shstrtab) }		:text
--
--
- 	.note		: { *(.note.*) }		:text	:note
- 
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
-diff --git a/arch/sparc/vdso/vdso2c.c b/arch/sparc/vdso/vdso2c.c
-index dc81240aab6f..b97af5ec9f35 100644
---- a/arch/sparc/vdso/vdso2c.c
-+++ b/arch/sparc/vdso/vdso2c.c
-@@ -61,8 +61,6 @@ const char *outfilename;
- /* Symbols that we need in vdso2c. */
- enum {
- 	sym_vvar_start,
--	sym_VDSO_FAKE_SECTION_TABLE_START,
--	sym_VDSO_FAKE_SECTION_TABLE_END,
- };
- 
- struct vdso_sym {
-@@ -72,12 +70,6 @@ struct vdso_sym {
- 
- struct vdso_sym required_syms[] = {
- 	[sym_vvar_start] = {"vvar_start", 1},
--	[sym_VDSO_FAKE_SECTION_TABLE_START] = {
--		"VDSO_FAKE_SECTION_TABLE_START", 0
--	},
--	[sym_VDSO_FAKE_SECTION_TABLE_END] = {
--		"VDSO_FAKE_SECTION_TABLE_END", 0
--	},
- };
- 
- __attribute__((format(printf, 1, 2))) __attribute__((noreturn))
+ /* Prefetch support.  This is tuned for UltraSPARC-III and later.
+  * UltraSPARC-I will treat these as nops, and UltraSPARC-II has
+  * a shallower prefetch queue than later chips.
+diff --git a/arch/sparc/include/asm/vdso/processor.h b/arch/sparc/include/asm/vdso/processor.h
+new file mode 100644
+index 000000000000..f7a9adc807f7
+--- /dev/null
++++ b/arch/sparc/include/asm/vdso/processor.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _ASM_SPARC_VDSO_PROCESSOR_H
++#define _ASM_SPARC_VDSO_PROCESSOR_H
++
++#include <linux/compiler.h>
++
++#if defined(__arch64__)
++
++/* Please see the commentary in asm/backoff.h for a description of
++ * what these instructions are doing and how they have been chosen.
++ * To make a long story short, we are trying to yield the current cpu
++ * strand during busy loops.
++ */
++#ifdef	BUILD_VDSO
++#define	cpu_relax()	asm volatile("\n99:\n\t"			\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     ::: "memory")
++#else /* ! BUILD_VDSO */
++#define cpu_relax()	asm volatile("\n99:\n\t"			\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     "rd	%%ccr, %%g0\n\t"	\
++				     ".section	.pause_3insn_patch,\"ax\"\n\t"\
++				     ".word	99b\n\t"		\
++				     "wr	%%g0, 128, %%asr27\n\t"	\
++				     "nop\n\t"				\
++				     "nop\n\t"				\
++				     ".previous"			\
++				     ::: "memory")
++#endif /* BUILD_VDSO */
++
++#else /* ! __arch64__ */
++
++#define cpu_relax()	barrier()
++
++#endif /* __arch64__ */
++
++#endif /* _ASM_SPARC_VDSO_PROCESSOR_H */
 
 -- 
 2.53.0
