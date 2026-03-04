@@ -1,46 +1,46 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9B82836F
-	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 01:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AF7223DC6
+	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 02:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772588638; cv=none; b=DfB2HHSJj4OLs5PAAnfNz3Gicvr3fbOl1eY+lreq67DT1ReozI0X/3MPFkcCe6zQHBle7M/joszuDWk8onBmmx6Q9MTzFngfyGa1vo5sAfm+oq1A/yPAvNUc789oCCpL17Um7SEy/yj4+EVju2fGi0eGTAV5ib4+qaI+IsmAdwo=
+	t=1772589872; cv=none; b=K0DrQlmjduH0YGkNz4xoMxIyiCMGdmZzrXiQKEASHhDCH57hbAJJXplIqvlhR4XrN00yZ0cPT4J1AIi38iU30Bdzqn0PdkhIslTceDn64Jmk1ZOWm9ht2aXliCgaRe1gTV2IuNM2yyyTgmaM2lrRsbYMmAGbZr+n1h7Cl319Cdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772588638; c=relaxed/simple;
-	bh=pweUVnV31JEUF1FTpI7AIMRyaMvVExRTL4LgxaNelNA=;
+	s=arc-20240116; t=1772589872; c=relaxed/simple;
+	bh=QhTV/iWXDi65yO7UJFlwrHJ77vXGxJPcWuiou5imFPw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a8dM1z1sN0WkiSgjDUL/3Wbhn8lfEt2t+ZoQ0O7L9GJL2p+MR0pTlIho1JHN2Jr8iQN0QWVV6xv990fqn5X6eeRqxhL6OB7UQLvtnJ3Z6+SIbqtCwQoxQMpk//sDaODfUxNw67rUmHcR1rVnT/3uh0WO3xVabGA49DwgfwyJAlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dwxnXhtu; arc=none smtp.client-ip=95.215.58.183
+	 MIME-Version:Content-Type; b=f/3Fp1eKBZ5ODtevlm50ABp/2Fluk27iEHeepvGtFB+1vQJnhBaUHFm+WpLWbJGGHpZVe+xqWGOczd3TXaLHiRfazjCZRrZqWs63O4Kfnt1DlL7ARG9BsQ9BIeExhyCjSMsKpsUqchL/QXe7+8nffCj5f2o0jHdzYUvdGEIJeOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vIO0GibL; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dwxnXhtu"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vIO0GibL"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772588624;
+	t=1772589859;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LoH1JvM5eEae/EYrTmhHLOmzHKnwbLDxV3lBHEOw8I4=;
-	b=dwxnXhtuW9xxBJiPrcL/yVbKD+aFJmHutNPXcdkUlkOedu9W4G6v3yXVZIUtmwDG8zWWQ1
-	iZi1Jpq4VOISMIKQ4XPlCW0jV/7gOSH4hEhundUQ53euRMEq8/HXt04RLlxaekf/sXdCe9
-	rZTAn7osiXMl1FHPZPKRLinJjLD3ovA=
+	bh=dZNYN9APb6O7lTvOGYOzyJCu+M47K/ysceq9bq5ATMI=;
+	b=vIO0GibLLoapKGgBaqp46JHz55azCvqWBBp8FpUyfN/vRMERAZzLwJes4ikCrD5thUwenZ
+	dZ7wmpFKLmWvRQmu12TsNj+HQqaGyn3fPp6ymTwZWbZ3VVB7bTtU5b8UPt9X3HR9Mo3awY
+	gF7QApKWx472HstbZuX6de7LLSrJ0/Q=
 From: Menglong Dong <menglong.dong@linux.dev>
-To: Hengqi Chen <hengqi.chen@gmail.com>
+To: yangtiezhu@loongson.cn, Hengqi Chen <hengqi.chen@gmail.com>
 Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, chenhuacai@kernel.org, yangtiezhu@loongson.cn,
- vincent.mc.li@gmail.com, menglong8.dong@gmail.com, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, Hengqi Chen <hengqi.chen@gmail.com>
+ martin.lau@linux.dev, chenhuacai@kernel.org, vincent.mc.li@gmail.com,
+ menglong8.dong@gmail.com, loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ Hengqi Chen <hengqi.chen@gmail.com>
 Subject:
- Re: [PATCH bpf-next 3/3] bpf/selftests: Enable fsession tests for LoongArch
-Date: Wed, 04 Mar 2026 09:43:28 +0800
-Message-ID: <5970598.DvuYhMxLoT@7940hx>
-In-Reply-To: <20260226065952.4082859-4-hengqi.chen@gmail.com>
+ Re: [PATCH 1/3] LoongArch: BPF: Introduce emit_store_stack_imm64() helper
+Date: Wed, 04 Mar 2026 10:04:02 +0800
+Message-ID: <4716621.LvFx2qVVIh@7940hx>
+In-Reply-To: <20260226065952.4082859-2-hengqi.chen@gmail.com>
 References:
  <20260226065952.4082859-1-hengqi.chen@gmail.com>
- <20260226065952.4082859-4-hengqi.chen@gmail.com>
+ <20260226065952.4082859-2-hengqi.chen@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -52,61 +52,72 @@ Content-Type: text/plain; charset="utf-8"
 X-Migadu-Flow: FLOW_OUT
 
 On 2026/2/26 14:59 Hengqi Chen <hengqi.chen@gmail.com> write:
-> Now that the LoongArch JIT supports BPF_TRACE_FSESSION, allow
-> the fsession-related tests to run on LoongArch.
-> 
->     $ ./test_progs -a fsession_test,get_func_args_test,get_func_ip_test
->     #136/1   fsession_test/fsession_test:OK
->     #136/2   fsession_test/fsession_reattach:OK
->     #136/3   fsession_test/fsession_cookie:OK
->     #136     fsession_test:OK
->     #138     get_func_args_test:OK
->     #139     get_func_ip_test:OK
->     Summary: 3/3 PASSED, 0 SKIPPED, 0 FAILED
-
-Hi Hengqi,
-
-The testcases is updated in c1eee8d1e84f "selftests/bpf: factor out
-get_func_* tests for fsession", so we don't need the 3rd patch anymore.
-
-Thanks!
-Menglong Dong
-
+> Introduce a helper to store 64-bit immediate on the trampoline stack.
+> The helper will be used in the next patch. Also refactor the existing
+> code to use this helper.
 > 
 > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
 > ---
->  tools/testing/selftests/bpf/progs/get_func_args_test.c | 3 ++-
->  tools/testing/selftests/bpf/progs/get_func_ip_test.c   | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
+>  arch/loongarch/net/bpf_jit.c | 24 +++++++++++++-----------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/bpf/progs/get_func_args_test.c b/tools/testing/selftests/bpf/progs/get_func_args_test.c
-> index 075a1180ec26..afb185fdf60c 100644
-> --- a/tools/testing/selftests/bpf/progs/get_func_args_test.c
-> +++ b/tools/testing/selftests/bpf/progs/get_func_args_test.c
-> @@ -167,7 +167,8 @@ int BPF_PROG(tp_test2)
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 3bd89f55960d..e3deb0da6a50 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1480,6 +1480,12 @@ static void restore_args(struct jit_ctx *ctx, int nargs, int args_off)
+>  	}
 >  }
+
+LGTM.
+
+Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
+
 >  
->  __u64 test7_result = 0;
-> -#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_target_riscv)
-> +#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-> +    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
->  SEC("fsession/bpf_fentry_test1")
->  int BPF_PROG(test7)
+> +static void emit_store_stack_imm64(struct jit_ctx *ctx, int reg, int stack_off, u64 imm64)
+> +{
+> +	move_imm(ctx, reg, imm64, false);
+> +	emit_insn(ctx, std, reg, LOONGARCH_GPR_FP, stack_off);
+> +}
+> +
+>  static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+>  			   int args_off, int retval_off, int run_ctx_off, bool save_ret)
 >  {
-> diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> index 45eaa54d1ac7..3816a3616fbe 100644
-> --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> @@ -106,7 +106,8 @@ int BPF_URETPROBE(test8, int ret)
+> @@ -1488,12 +1494,11 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+>  	struct bpf_prog *p = l->link.prog;
+>  	int cookie_off = offsetof(struct bpf_tramp_run_ctx, bpf_cookie);
 >  
->  __u64 test9_entry_result = 0;
->  __u64 test9_exit_result = 0;
-> -#if defined(bpf_target_x86) || defined(bpf_target_arm64) || defined(bpf_target_riscv)
-> +#if defined(bpf_target_x86) || defined(bpf_target_arm64) || \
-> +    defined(bpf_target_riscv) || defined(bpf_target_loongarch)
->  SEC("fsession/bpf_fentry_test1")
->  int BPF_PROG(test9, int a)
->  {
+> -	if (l->cookie) {
+> -		move_imm(ctx, LOONGARCH_GPR_T1, l->cookie, false);
+> -		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
+> -	} else {
+> +	if (l->cookie)
+> +		emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1,
+> +				      -run_ctx_off + cookie_off, l->cookie);
+> +	else
+>  		emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
+> -	}
+>  
+>  	/* arg1: prog */
+>  	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
+> @@ -1726,14 +1731,11 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+>  	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
+>  
+>  	/* store ip address of the traced function */
+> -	if (flags & BPF_TRAMP_F_IP_ARG) {
+> -		move_imm(ctx, LOONGARCH_GPR_T1, (const s64)func_addr, false);
+> -		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -ip_off);
+> -	}
+> +	if (flags & BPF_TRAMP_F_IP_ARG)
+> +		emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1, -ip_off, (u64)func_addr);
+>  
+>  	/* store nargs number */
+> -	move_imm(ctx, LOONGARCH_GPR_T1, nargs, false);
+> -	emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nargs_off);
+> +	emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1, -nargs_off, nargs);
+>  
+>  	store_args(ctx, nargs, args_off);
+>  
 > -- 
 > 2.43.5
 > 
