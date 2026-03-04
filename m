@@ -1,92 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB052D949B
-	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 08:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E9F31AF2D;
+	Wed,  4 Mar 2026 08:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772611531; cv=none; b=ZhxMykomXiirxOOetCL/vZjlJ7vSx+lvl0KZRgiC7Lo6MVOqmiBA1WUux4s274KDYVL0Bd8p5PRR6JIBujlaaZG/dgwM3W0P2KeUF2MXdVrqvsmKAQJ6w6iuzuOO1OAkpA7Gd2JotXzcj+rnzoK3daZrNLJAdjXXFBz6tO0ZPgk=
+	t=1772611841; cv=none; b=lZZ3WDGSUEONNdqOGKik4Epk1ftDy18NL2GrYAu/c+9QzT4otbvBnD60JFbVKMkcJ6rM6fdgGPX9TUjiSnv3/8MPsTCGIZV30026mHiIhJMTqjnrd/Kr5u7zfUbxjpdIjzrcxXnR2GJwoNx+A6YjvV1htRsgmupTrBfQ8MzyMGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772611531; c=relaxed/simple;
-	bh=KMi1ZzxBwygb+ShEqom6d2oRXjczeTMXv5/P1YKh2SQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UXQtJMyR3aht8xJqmDXJ3bfI5ueLH+d80ULIIMGmvE50qcFyIntD8HiqTgnPHMiOhmRIGnbJJBa2IAtwvKKlMUU5g2Z2KeNCW8dSiluk9COnblsKPP0X2dEvkicm+p/pjwbVUiz7Tgksexdh4tQ6O/7shWrirBFEDdQmDQl+Zco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4NwYnLG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772611841; c=relaxed/simple;
+	bh=x/cjkUsrdE57qY9IYoGwEYkkvopBW35thxqhqdiJIAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qWuhvGSvgt+RqdEXOutsXBPR4IGmtHyDVpLq8+D8Hgtin98j0UK18FBjzNEVfI9ReVC+I3Iu0jQJfERJD6o+WtCYCqi1pAmOfAsSk7Z82oDKQU+9vWLAivLB4uDVfKcPfNbvTZZ0fr0PkBY6OtaUyFdN9OL8aS0Inzkx7RMEMbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZvsY4JxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4NwYnLG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83B1C2BC87
-	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 08:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZvsY4JxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53E8C19423;
+	Wed,  4 Mar 2026 08:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772611530;
-	bh=KMi1ZzxBwygb+ShEqom6d2oRXjczeTMXv5/P1YKh2SQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W4NwYnLG0di05yt/S1+9n2xrHsY7W+2kXru8ELMe8ZBbRcBCRbjYN6TZ0Js4SJBxE
-	 /ix9UkvKYzX7CBv4QQV4+I25DlQH3/Ydj9N/zQ0WKjLdNHlkMPfutEvcJJ4YHOTtpX
-	 uh6SlCkSkiQUZuF5YQk2Lx0SPxTlbx/Do6ZxCttRLgo6KHxRkYWZZAc2EpfRfbQmtk
-	 2X27PNOJdwkY/M7vsaolVvM3nRY3e+odZrEqOTrLk2Ccic0iXD5Ov0tDo0YaZB1B4b
-	 kV0VP39FAT87m2qbbW5xw6nuV2ulOMNZDYLVUvudGN6wXIoRc4twYeFuDexlCmaGh+
-	 +Q5v4IG2Zh9PQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-660a293515fso3320223a12.1
-        for <loongarch@lists.linux.dev>; Wed, 04 Mar 2026 00:05:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWuq7G7d3C7ZETL8TBqTQQtpcxLuS/I0ae6RWssClnB+GVlPSbv2reOWcAE6ma12biWPGLeA5pv3ac=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzkbprn8F1340B84gqrY2IEyLcwLjl/knfnLiSmZ79xyo+JpLJV
-	PQcQkXOa4Kgeb/xuIDKM+Ms/uC5h8KU7cjK3RcymYoU6TMm/KO02//YyLFMYGd8BQPjTAvK8tno
-	CHvZ1f3+9D2KMQvLrgFCVb4Y7g7sz4Fg=
-X-Received: by 2002:a05:6402:358d:b0:65f:bad8:9c6 with SMTP id
- 4fb4d7f45d1cf-660efcb74femr610451a12.12.1772611529254; Wed, 04 Mar 2026
- 00:05:29 -0800 (PST)
+	s=k20201202; t=1772611840;
+	bh=x/cjkUsrdE57qY9IYoGwEYkkvopBW35thxqhqdiJIAY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZvsY4JxFcYf52LCAM8zNIoCTUr/ugS8UrXI8DpnABve0PkoahFeUDVQyAZ2T7w5tc
+	 qvDxXw377nK660zLOZq0b1o4TMaqwXcThhKOlEpjZFL0bkvwxztXrr9ZfUwyJTBKr8
+	 cQxEFx0psqwMRwqmtOZEExTbQ7fXQvjYQp1XY9q5+MJUrg2BO+qa42sUoMUFw/UKDM
+	 FTPPks6SNAe+9AFIQxr/FV9a/NoFSZsQPHrTqKnPcpAk+LPhi9vX+9vtaSsBZMqckd
+	 jCBvfJZ1aYZ2JCuOJ5wjnShT63I1i+NIZT0LHit09LZaUnxSAYz27d1DHaKybPv+SF
+	 oKjTezLFpLZ+A==
+Message-ID: <21ee2f0b-ae8e-40b6-ab13-e46f55c34254@kernel.org>
+Date: Wed, 4 Mar 2026 09:10:31 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1772529875.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1772529875.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 4 Mar 2026 16:05:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5xJZCMRXf-T4b85+LSXNFfb1dd=85kLWdV6R6zpcyShw@mail.gmail.com>
-X-Gm-Features: AaiRm51nTmgkp3KgT1K3e3QreJcEQb2kKiJHBsHBXz9J6atuQZnYsSrKv8JfRhs
-Message-ID: <CAAhV-H5xJZCMRXf-T4b85+LSXNFfb1dd=85kLWdV6R6zpcyShw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] mmc: Add Loongson-2K0300 SD/SDIO/eMMC controller support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/14] vdso/datastore: Reduce scope of some variables
+ in vvar_fault()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnd Bergmann
+ <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>,
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Russell King
+ <linux@armlinux.org.uk>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Shannon Nelson <sln@onemain.com>,
+ Thomas Gleixner <tglx@kernel.org>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
+ <20260304-vdso-sparc64-generic-2-v6-1-d8eb3b0e1410@linutronix.de>
+Content-Language: fr-FR
+From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+In-Reply-To: <20260304-vdso-sparc64-generic-2-v6-1-d8eb3b0e1410@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-For the whole series:
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-On Tue, Mar 3, 2026 at 7:27=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn>=
- wrote:
->
-> Hi all:
->
-> The patchset describes two MMC controllers of the Loongson-2K0300 SoC,
-> one providing an eMMC interface and the other exporting an SD/SDIO
-> interface.
->
-> Its hardware design is similar to that of the Loongson-2K2000, but it
-> suffers from hardware defects such as missing CMD48 interrupts.
->
-> Thanks.
-> Binbin
->
-> Binbin Zhou (3):
->   dt-bindings: mmc: loongson,ls2k0500-mmc: Add compatible for
->     Loongson-2K0300
->   mmc: loongson2: Gathering all SoCs private data together
->   mmc: loongson2: Add Loongson-2K0300 SD/SDIO/eMMC controller driver
->
->  .../bindings/mmc/loongson,ls2k0500-mmc.yaml   |  1 +
->  drivers/mmc/host/loongson2-mmc.c              | 59 ++++++++++++++-----
->  2 files changed, 44 insertions(+), 16 deletions(-)
->
->
-> base-commit: 6a4a4c1cc0012590b8bebf6c95d51687d39b420c
-> --
-> 2.52.0
->
+
+Le 04/03/2026 à 08:48, Thomas Weißschuh a écrit :
+> These variables are only used inside a single branch.
+> 
+> Move their declarations there.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> Tested-by: Andreas Larsson <andreas@gaisler.com>
+> Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+
+Reviewed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+
+> ---
+>   lib/vdso/datastore.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
+> index a565c30c71a0..2cca4e84e5b5 100644
+> --- a/lib/vdso/datastore.c
+> +++ b/lib/vdso/datastore.c
+> @@ -41,8 +41,7 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+>   			     struct vm_area_struct *vma, struct vm_fault *vmf)
+>   {
+>   	struct page *timens_page = find_timens_vvar_page(vma);
+> -	unsigned long addr, pfn;
+> -	vm_fault_t err;
+> +	unsigned long pfn;
+>   
+>   	switch (vmf->pgoff) {
+>   	case VDSO_TIME_PAGE_OFFSET:
+> @@ -54,6 +53,9 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+>   			 * Fault in VVAR page too, since it will be accessed
+>   			 * to get clock data anyway.
+>   			 */
+> +			unsigned long addr;
+> +			vm_fault_t err;
+> +
+>   			addr = vmf->address + VDSO_TIMENS_PAGE_OFFSET * PAGE_SIZE;
+>   			err = vmf_insert_pfn(vma, addr, pfn);
+>   			if (unlikely(err & VM_FAULT_ERROR))
+> 
+
