@@ -1,138 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78863890E9;
-	Tue,  3 Mar 2026 19:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D77F22F5468
+	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 01:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772567776; cv=none; b=UZf84atDxYdzOlZ62ATudKTjWCJLwCGWnz46FpQwU0DV01ji9DLG7HzuSOf145kxA3aqtgpEVpE+MRcLEh3ZTtdmfKGQRQrMP4/G0mcbOUmxsvybm13gCRShPrZ0jAy+D6QL0J9iMJt/d34RX8tO7WrJedTIVRXUNy9Rvbi2hfA=
+	t=1772587161; cv=none; b=jYP24izogY9L0Y5+YAe0z2TNLME8yUbWz0N9axkV30kpMFVHizPiyPnTrrtzRYyUfbP3izE7QxInkxMwG1WhKyCJ3Be+I+xRKNFfMFh4vSJHhV2cIWo3SgOm16du5WxghawSVt70RWTfxN1fWvRIWJ/jNMwKse4cXqc9Dyyy8q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772567776; c=relaxed/simple;
-	bh=9sr6A1ZQ/OAOM0MyaKuNScWB7UA08hne7lVI9ssYSPg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oYoTYjaKU31rDK5RzhF2BbBUGjdBu104ZgDQWBpvi8jBNu2GchXWxU+YCU5vZbWNT8U4yymINOqPxIW6Q8MDM0GrGES+RGEhZ5WqhGnnQqQ9vD39/r5oDJbwHt3xKjnvWIhl7T/UxEwERsyF15UBwl+WplbBdYITXA5fV6wdMxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHMra/+s; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHMra/+s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1644C116C6;
-	Tue,  3 Mar 2026 19:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772567774;
-	bh=9sr6A1ZQ/OAOM0MyaKuNScWB7UA08hne7lVI9ssYSPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mHMra/+se8TmXPAvXWkLhgpf0kETRB4dEaJCtUtlUTftYpe0ReqfitRfwD4MGq4+T
-	 WuzDe+k5qMfwF8Pvg7plbRdHjZuWKh+IB7lEOogeIHeGkKvwd2/EpZagMr99KeT7V+
-	 XN7WYkTp/J6gkuhSVqd3D55QMpvT59XaPLLtFxjhlFBUF5SPdV1HoakLZQKIIo/fdH
-	 BGibgd4432V2o3DyL8VfocxjZKarY5SdEW/Gzxyc6CkyylsV/unCa5mrJJyTo1wkxn
-	 QMVCX29BeW41faad8f8MgUVR1waChaWC40npYyOs3agb3dJecKXchWeHWLYBSYXFrd
-	 nwEHrCxoK1HSw==
-Date: Tue, 3 Mar 2026 11:55:17 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 01/25] xor: assert that xor_blocks is not called from
- interrupt context
-Message-ID: <20260303195517.GC2846@sol>
-References: <20260226151106.144735-1-hch@lst.de>
- <20260226151106.144735-2-hch@lst.de>
- <20260227142455.GG1282955@noisy.programming.kicks-ass.net>
- <20260303160050.GB7021@lst.de>
+	s=arc-20240116; t=1772587161; c=relaxed/simple;
+	bh=cvUz5nycCJzJGIvFMOEtfX5tbJQc5PIUEAbKKTFVa14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TprDOEbQcXC+PW8LyLC18NVCtvAWMYWLAWaLJ4UgvI7w557pa0c5Iv6QC9ehiWWjvEWegK8esMnpCv5/jCpuH5aOx25JXH6eC76T//zMd++BIJcYkRZpDiI+TKN7cs7kSQrIjcR+BoiQLdejcE2qEqhz+NlvcIIHjjt3uP5fod0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.207.111.194])
+	by gateway (Coremail) with SMTP id _____8DxNMGUiKdpVEIXAA--.22696S3;
+	Wed, 04 Mar 2026 09:19:16 +0800 (CST)
+Received: from ubuntu.. (unknown [111.207.111.194])
+	by front1 (Coremail) with SMTP id qMiowJCxHOGTiKdp5vFNAA--.17480S2;
+	Wed, 04 Mar 2026 09:19:15 +0800 (CST)
+From: Ming Wang <wangming01@loongson.cn>
+To: kexec@lists.infradead.org
+Cc: horms@kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH] LoongArch: Increase MAX_MEMORY_RANGES to 1024
+Date: Wed,  4 Mar 2026 09:19:14 +0800
+Message-ID: <20260304011914.880120-1-wangming01@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260303160050.GB7021@lst.de>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxHOGTiKdp5vFNAA--.17480S2
+X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAgEQEmmmeCEbPQAAsx
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GFy3XFyUKr45ZFWUGry7CFX_yoWkWFg_WF
+	17Zw18WrWrCa17Jw4jga45tayjqFy8AF15ZFn3WF4xGw15JF4ayr4rW345ur1UKrWDZFs5
+	J3sYqrsxZw1UtosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU83DG5UU
+	UUU==
 
-On Tue, Mar 03, 2026 at 05:00:50PM +0100, Christoph Hellwig wrote:
-> On Fri, Feb 27, 2026 at 03:24:55PM +0100, Peter Zijlstra wrote:
-> > >  	unsigned long *p1, *p2, *p3, *p4;
-> > >  
-> > > +	WARN_ON_ONCE(in_interrupt());
-> > 
-> > Your changelog makes it sound like you want:
-> > 
-> > 	WARN_ON_ONCE(!in_task());
-> > 
-> > But perhaps something like so:
-> > 
-> > 	lockdep_assert_preempt_enabled();
-> > 
-> > Would do? That ensures we are in preemptible context, which is much the
-> > same. That also ensures the cost of this assertion is only paid on debug
-> > kernels.
-> 
-> No idea honestly.  The kernel FPU/vector helpers generally don't work
-> from irq context, and I want to assert that.  Happy to do whatever
-> version works best for that.
+On some LoongArch systems, especially multi-socket machines like 3D6000,
+the current limit of MAX_MEMORY_RANGES (64) is too small to accommodate
+all memory range entries in /proc/iomem.
 
-may_use_simd() is the "generic" way to check "can the FPU/vector/SIMD
-registers be used".  However, what it does varies by architecture, and
-it's kind of a questionable abstraction in the first place.  It's used
-mostly by architecture-specific code.
+When the limit is reached, get_memory_ranges() stops parsing, which causes
+kexec to fail with "locate_hole failed" because it cannot correctly identify
+the crash kernel reserved memory or necessary RAM segments.
 
-If you union together the context restrictions from all the
-architectures, I think you get: "For may_use_simd() to be guaranteed not
-to return false due to the context, the caller needs to be running in
-task context without hardirqs or softirqs disabled."
+Increase MAX_MEMORY_RANGES to 1024 to support systems with complex
+memory layouts.
 
-However, some architectures also incorporate a CPU feature check in
-may_use_simd() as well, which makes it return false if some
-CPU-dependent SIMD feature is not supported.
+Signed-off-by: Ming Wang <wangming01@loongson.cn>
+---
+ kexec/arch/loongarch/kexec-loongarch.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Because of that CPU feature check, I don't think
-"WARN_ON_ONCE(!may_use_simd())" would actually be correct here.
+diff --git a/kexec/arch/loongarch/kexec-loongarch.h b/kexec/arch/loongarch/kexec-loongarch.h
+index 2e65eb0..895809c 100644
+--- a/kexec/arch/loongarch/kexec-loongarch.h
++++ b/kexec/arch/loongarch/kexec-loongarch.h
+@@ -8,7 +8,7 @@
+ #define BOOT_BLOCK_VERSION 17
+ #define BOOT_BLOCK_LAST_COMP_VERSION 16
+ 
+-#define MAX_MEMORY_RANGES 64
++#define MAX_MEMORY_RANGES 1024
+ #define MAX_LINE 160
+ 
+ #define CORE_TYPE_ELF64 1
+-- 
+2.43.0
 
-How about "WARN_ON_ONCE(!preemptible())"?  I think that covers the union
-of the context restrictions correctly.  (Compared to in_task(), it
-handles the cases where hardirqs or softirqs are disabled.)
-
-Yes, it could be lockdep_assert_preemption_enabled(), but I'm not sure
-"ensures the cost of this assertion is only paid on debug kernels" is
-worth the cost of hiding this on production kernels.  The consequences
-of using FPU/vector/SIMD registers when they can't be are very bad: some
-random task's registers get corrupted.
-
-- Eric
