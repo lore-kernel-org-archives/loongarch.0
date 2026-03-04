@@ -1,79 +1,126 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1905F3502A0
-	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 02:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73969382298
+	for <loongarch@lists.linux.dev>; Wed,  4 Mar 2026 07:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772592712; cv=none; b=RLSPB7tmKvcZkNUUCrXagi91NiY34N9kXzK/13c1KkZ3uDv9aBEkTEPE0WBsj8mUOL1eJWp7JCrcAIlv9Y0Ej3OKDXSKwH1Bf7INDCHATPJZGS9JIwhkFqxxtjJTkq090e9SSnpznau0pLcYQ2TlbgHBeP29qIqkrzo8CWPNu20=
+	t=1772610556; cv=none; b=sSuGNoMCr7W5Cf3tEOI3gJ9X3khjNgi52z7GHE5u/p0txQh0+GhPOOssVj/Kx9E4lSZTsfe2EStykuNwG1X8fIQ3ey98jC2DK+yfbJKu1/SJS5mQzcB4E3SVlDuaMwcSwwdqAweZOu8nuGPx7y1nJ7A6WBj5+3iaz/8d3JoK3NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772592712; c=relaxed/simple;
-	bh=6js1o54ryXRCa8VC7u119yh+U5NNqvO3/hqcgoHrtTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GU2H/WYXTpdr0dX06Te6C+K5+vIm+X3TQnle6xF2o6pYAZYOOI9EJhBzfMdFOxd8B2cAnEXLxEVl0OzoLhJUd9pUsEnZAsNDmUVzZVTtWavTgJ5v1MtGOoyfu7VJeKDOQbRbohA4Ney6CCdaBS8o/+wRdmGVE8DY8JzGgURFj0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dJeVA1yo; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1772610556; c=relaxed/simple;
+	bh=6rb/ks5vA+PZYvcsn3/vAHKN0WZCZ2EWh3gRKAxxCTs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TQF51cdNgVO0ZSpIgYb877kdtv7PqZHusihwQCH64ru7m7Cng700eH9bAtuAA8gV6ivnFN9JZLy1cNjxgJGh/Q5mzQEbwLOkLdktt4DNLIBtbPiYakmArKE13UYLom2pFngKJ5n0Y30Bg4eFRzJVF5fQGgf7EdWWKAYhf78+6C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mXCcVxWf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QPlKgad7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dJeVA1yo"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772592708;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mXCcVxWf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QPlKgad7"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1772610551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aiCd+4qx7fOEPmnN8rK1eg8/6oLc65/zTNVRMairnu0=;
-	b=dJeVA1yozw+G8upR/M77kyqyu3tVsqWSFOo6CAdEtSFkoQo+6vTmwzFcLUhNRvEKXPLcFm
-	qNgEIJAq9sTRytyeJip2p4rk3LeAyv5pt/J5EmGRB/+Bhq31rC07B33yHEggmPaEXJD9dd
-	ZvT3eihZMoCh+OM4AwgFXmqwo8knzts=
-From: Menglong Dong <menglong.dong@linux.dev>
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, chenhuacai@kernel.org, yangtiezhu@loongson.cn,
- vincent.mc.li@gmail.com, menglong8.dong@gmail.com, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, Hengqi Chen <hengqi.chen@gmail.com>
-Subject: Re: [PATCH 0/3] bpf: fsession support for LoongArch
-Date: Wed, 04 Mar 2026 10:51:22 +0800
-Message-ID: <3398058.aeNJFYEL58@7940hx>
-In-Reply-To: <20260226065952.4082859-1-hengqi.chen@gmail.com>
-References: <20260226065952.4082859-1-hengqi.chen@gmail.com>
+	bh=CLyyrQ8E3zgrcPegPvm1C9TrAhNcjCD2got6qjqs9rk=;
+	b=mXCcVxWfr5BEVOUfCl+flDwT8W3JTfMG973lY3FqWKz/J2gh/PCAvZz87yF3WKPPpzK4fP
+	cbjAM6gwY6UpVj++0uAP4BbDfiFUo6k8b43b6Ajdabto6K7i3f9fqlWexwI8dmzPcbLYBZ
+	DgzUnEv9TIrczAVbfT8bQKcAYikDjM7LanpOstOBAZti7EXXa42fdMJjnTZTYUB+cZ+2aw
+	Fkf+11FVl+Wn8nWaeU32NuDPkNyk3UzLDf//5XFq9XCZcgug7BRo96FDaDKydgmjc+/7EG
+	Mhuump2lqyQOGSn2dFjhfyxAzMoQd1ZSEbIxAYwru8zSTQohITLsMRQPC+efgA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1772610551;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLyyrQ8E3zgrcPegPvm1C9TrAhNcjCD2got6qjqs9rk=;
+	b=QPlKgad7K+cQyDTZf+yOmUsIAtqT+NCdRnQRLLN9141Rz+MVCU7hhcYg0NQTOK3GbrZGx1
+	68dA2qj4XqmhrEDQ==
+Date: Wed, 04 Mar 2026 08:48:58 +0100
+Subject: [PATCH v6 01/14] vdso/datastore: Reduce scope of some variables in
+ vvar_fault()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260304-vdso-sparc64-generic-2-v6-1-d8eb3b0e1410@linutronix.de>
+References: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
+In-Reply-To: <20260304-vdso-sparc64-generic-2-v6-0-d8eb3b0e1410@linutronix.de>
+To: Andy Lutomirski <luto@kernel.org>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, Nick Alcock <nick.alcock@oracle.com>, 
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+ Shuah Khan <shuah@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, Shannon Nelson <sln@onemain.com>, 
+ Thomas Gleixner <tglx@kernel.org>, Christophe Leroy <chleroy@kernel.org>
+Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, 
+ linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772610551; l=1240;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=6rb/ks5vA+PZYvcsn3/vAHKN0WZCZ2EWh3gRKAxxCTs=;
+ b=ebgCPti7Ca1uQvRO5fjaqRSC0VPAzpzm8s6h7lWHrCvbtrC8Z2sR3f32JNrACGN3FKY/JSqML
+ 11Pjp5qWkYdAWP0IDCJi7iAJx/vF8Q/4S/S6aEsoQ4vDrmQxcAIr6q4
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On 2026/2/26 14:59 Hengqi Chen <hengqi.chen@gmail.com> write:
-> This small set implements fsession support for LoongArch.
-> 
-> Patch 1 introduces a helper named emit_store_stack_imm64().
-> Patch 2 implements fsession support.
-> Patch 3 enable fsession selftests on LoongArch.
+These variables are only used inside a single branch.
 
-I think this series belongs to the bpf-next tree, right? So pls add the
-"bpf-next" tag in the next version.
+Move their declarations there.
 
-> 
-> Hengqi Chen (3):
->   LoongArch: BPF: Introduce emit_store_stack_imm64() helper
->   LoongArch: BPF: Add fsession support for trampolines
->   bpf/selftests: Enable fsession tests for LoongArch
-> 
->  arch/loongarch/net/bpf_jit.c                  | 100 ++++++++++++++----
->  .../selftests/bpf/progs/get_func_args_test.c  |   3 +-
->  .../selftests/bpf/progs/get_func_ip_test.c    |   3 +-
->  3 files changed, 83 insertions(+), 23 deletions(-)
-> 
-> --
-> 2.43.5
-> 
-> 
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+---
+ lib/vdso/datastore.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
+index a565c30c71a0..2cca4e84e5b5 100644
+--- a/lib/vdso/datastore.c
++++ b/lib/vdso/datastore.c
+@@ -41,8 +41,7 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 			     struct vm_area_struct *vma, struct vm_fault *vmf)
+ {
+ 	struct page *timens_page = find_timens_vvar_page(vma);
+-	unsigned long addr, pfn;
+-	vm_fault_t err;
++	unsigned long pfn;
+ 
+ 	switch (vmf->pgoff) {
+ 	case VDSO_TIME_PAGE_OFFSET:
+@@ -54,6 +53,9 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+ 			 * Fault in VVAR page too, since it will be accessed
+ 			 * to get clock data anyway.
+ 			 */
++			unsigned long addr;
++			vm_fault_t err;
++
+ 			addr = vmf->address + VDSO_TIMENS_PAGE_OFFSET * PAGE_SIZE;
+ 			err = vmf_insert_pfn(vma, addr, pfn);
+ 			if (unlikely(err & VM_FAULT_ERROR))
 
-
+-- 
+2.53.0
 
