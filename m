@@ -1,64 +1,65 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40CF3DBD6D
-	for <loongarch@lists.linux.dev>; Thu,  5 Mar 2026 17:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D37A3DFC80
+	for <loongarch@lists.linux.dev>; Thu,  5 Mar 2026 17:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772731177; cv=none; b=bgxmPI6gzg+uWPtYqbSWg49s/zSqwK8cP5fRd43vu7jiLDRnb1iBH6y50QlhiaaeShCs1EoxWNwOabOUtwQUueES8Bza7ZHJwSENCq+NowKYcrbCD8fkw/PBTZm1zTi8MRIvLanFwG35tI7CNzTS2HgZszwRkdpzFmoJ9QELueU=
+	t=1772731378; cv=none; b=nliBEbZy5D6JO/V/Zx+wzWQcYe4fr3vOqTYXaf43TtTVKr53gSWBG21yfc4abfQ4EAvKZBthGpSDKG3G9pxRuQGztaz1hdyKyNBM6mZgMRzQaW9v4XAQb/W5J8KsE4JRaoc1kIBDwQuxwWJXqLkKuUhfGEwFMCdqTWXKh8FsnKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772731177; c=relaxed/simple;
-	bh=44DsyPZjR3+ZY9GszCDwqZ3g/HaaKmi7IKLakzXhb6E=;
+	s=arc-20240116; t=1772731378; c=relaxed/simple;
+	bh=44nrwl9MtsM8nG2wYpqGAWFgiMCuaPB9R7DRYfG94no=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=u0J7V227nH5Gd6gAG26Dv9W7BecOQ73/9Xypn2ZcFLFmxWgEa8dO6cadbfFfxy+7BtiHPmZhUEPsftC5u11cdmjSI3ypF2Toy2t32ypqk2GVXbyX4OdC+4kYbls/nFbxcnpxVrn50fZYZ08Wr4GZ8Wjh0KalVzcRFIl+H0XtGHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e7kw53Ss; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=l7xsqwbGzV3/6PRhftl6rWHii/a/6QnS6MtJytp09xgh6SFGJ0lh0emmr1p9F8p706Wq42wpeL0pvllWHFGF0oXU2cH0U7xss6A3LFpmW6O6QMSmOGn36heSKCkDmi6o7jb+/GKIpTiFFy8cImT237aAStqeqDvhgKYjYdIeB9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q3F5Sj9X; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e7kw53Ss"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8297b714548so693187b3a.2
-        for <loongarch@lists.linux.dev>; Thu, 05 Mar 2026 09:19:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3F5Sj9X"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2ae6dd98043so17987075ad.3
+        for <loongarch@lists.linux.dev>; Thu, 05 Mar 2026 09:22:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772731176; x=1773335976; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1772731376; x=1773336176; darn=lists.linux.dev;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvL7QI7vtAV/elV7wuwJjb0ouQ5MS/0W571Ri2ejdh8=;
-        b=e7kw53SsSMt+893fYb3FL3sSVuo5UDrFozWX4NgI2v17tjwq2cjyKaObn8g6pSiq3v
-         mQwVORDZ0AJo1o6KjlEIrjkq6Q/Moq4rxteVOVAzAJoIHZ3gVHc9eN4QSGyHsZxYZpKD
-         AssA2by42Jk7hZM2GDosVstR/kJ5p7H4uhWMzm1T258Kcx6QmlFJEZO4QfanMs41QG4x
-         1RsB5WW7l8jKbqHCtn+RvKwRsbVT961whdEutaaekfsY9bKEMlUUcYQwnPZL4zLxT5nQ
-         molgIvRQ/En0OYJd0q5GadWiYuD4eypUzNGGbNnjyEUFR6OeWVlYql62S2mKpaAMZu5S
-         FB7Q==
+        bh=p1wGeuRJ/eZ0ds4iRA1USsFNUrpQJYzw8H7jxKUj2JY=;
+        b=Q3F5Sj9Xnql/2WoPcpifQUQpuhRoTtFTRqAb45tRqS5AHAqIm8cqLZU9PjUtE3vYXT
+         DxLWehh3ENAiATU1KFV8jM2BGCM1t+BQd9Sn/Jt9XCx2cuY+I0nrlz0EwnQTnV5nkNu3
+         afCH+o5ic76H/6BMvFJPjxNDIJQu6teJ1g2CtKq/m9ISOqAok28rHlTBWOhOMpiuS7Iy
+         2vUaR4bRUK6MdICRCU3+GHCryAa2mhyt4BJPxeqqWLQM7h15dDUiHqS0pLLvzGgC24OV
+         c+gW/AFgZ0WBxBRSSIts4DPYN1Bs+0O8na/kxc0olIWjRpbGjSKjKMzGPpY6D8xAYYfZ
+         TS6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772731176; x=1773335976;
+        d=1e100.net; s=20230601; t=1772731376; x=1773336176;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvL7QI7vtAV/elV7wuwJjb0ouQ5MS/0W571Ri2ejdh8=;
-        b=QqsZEDNSATHAb68Dg+VA0R7p7mnvvfYXwcegb9449bKMfl7jt3+KtDKrwCSvGVVHiv
-         vpEUDN4v5FFTx1rcycVriMmfdRD9aKWQlDZhq7N09ftUPE2WMFwdIu6Dp+5XSTQDUh2C
-         6oG3VmcIAJVou1vrDAmpsf+t6iUdvgJpz2auZ97zTKGPJXOySQo78/BicurklbchF2hj
-         OueQSuIW49bFe1bmDYUkl1eKMGR7eivXmTA5XzLAUK2GuMotG6r3vZ0iYmre29853lel
-         UvVrnwE/hJdO4Jy/wbeojYyk3gMCtA2oNmHJt8pK78GzkHIkwR20fFCvzm8uTxsHnT2F
-         PMbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvy8NOa2oHMmzpVI5ahGX/um3J5vhh36/PqLtNvkTh3nBQqaU7Rh0HvYVVBnHnmCBABFEceidoWRs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx/d0ldj9711BuQiOi219mEJBGd/kZ19nk8yb6blbOPcShH2aFM
-	r1MFORyTma6nDGmOQloNpC/4k0DWYoUOpwG59ann2zngW9wqKgPhadeCFkH6grUfTgu0stA2rNW
-	R1wnktg==
-X-Received: from pfcp25.prod.google.com ([2002:a05:6a00:a259:b0:829:808f:cb8d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4295:b0:81b:d5d9:a83a
- with SMTP id d2e1a72fcca58-8299ae60809mr419972b3a.61.1772731175885; Thu, 05
- Mar 2026 09:19:35 -0800 (PST)
-Date: Thu, 5 Mar 2026 09:19:34 -0800
-In-Reply-To: <20260220004223.4168331-5-dmatlack@google.com>
+        bh=p1wGeuRJ/eZ0ds4iRA1USsFNUrpQJYzw8H7jxKUj2JY=;
+        b=DF9mDFXE4z9mJ+79JRWRPXMCBFtzNA8jW8ez0GMpcfUblArXigqowiva37N+aKk5MM
+         SlHxrX0cPPFXTorIAAFEvwQ2rxKDMqA+KU1TdWACvGq81PtP5NylQsB/7BX9hJJIKMQF
+         LTGEgMXIIQEMKoLxHNRN79ha9doSkmk8N5/+zMyJYeTsEZ+i+4CNi3PvAYj6a/UV+QAq
+         a8sowJTYo771YiKnHvbu2PW/aSOQUojauUeFcHOzRZN2SE6szaUjIoCnIWusKs/pqMIE
+         5CDPBq07P+V4liGFkPXf84B8SpXppsDV5het+ZyBtbcunvypYtqTySXqwxZiYcsqqD6U
+         29rA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvFi1uKm/w6VhHb0s63cmk/9dye8LWiZqGu3oGqfJugtsjdwvPvuuWI1I0LyvEKQnQkqrUMrqeQmc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyPbundjuOb4oNNJqICq3oJEgzchGigZVachmxiFeRqQIvo4Tcy
+	vPfz/V9QCZ7x1PddpMmxu5S7w8bi5mj9VgIlJgJtNHuW/U9cr3UaBcft5VDDPfjZCyHkmo5CNza
+	9lqvNYQ==
+X-Received: from pgbda4.prod.google.com ([2002:a05:6a02:2384:b0:c73:7810:6005])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:166e:b0:2ae:7efa:b2ee
+ with SMTP id d9443c01a7336-2ae7efab422mr8334235ad.45.1772731376023; Thu, 05
+ Mar 2026 09:22:56 -0800 (PST)
+Date: Thu, 5 Mar 2026 09:22:54 -0800
+In-Reply-To: <20260220004223.4168331-1-dmatlack@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0
-References: <20260220004223.4168331-1-dmatlack@google.com> <20260220004223.4168331-5-dmatlack@google.com>
-Message-ID: <aam7JsCyQ5Oacvl5@google.com>
-Subject: Re: [PATCH v2 04/10] KVM: selftests: Use u64 instead of uint64_t
+References: <20260220004223.4168331-1-dmatlack@google.com>
+Message-ID: <aam77t8fe5RKSr2Q@google.com>
+Subject: Re: [PATCH v2 00/10] KVM: selftests: Use kernel-style integer and
+ g[vp]a_t types
 From: Sean Christopherson <seanjc@google.com>
 To: David Matlack <dmatlack@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Ackerley Tng <ackerleytng@google.com>, 
@@ -82,14 +83,33 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Ackerley Tng <ackerleytng@google.com>,
 Content-Type: text/plain; charset="us-ascii"
 
 On Fri, Feb 20, 2026, David Matlack wrote:
-> -static uint64_t pread_uint64(int fd, const char *filename, uint64_t index)
-> +static u64 pread_uint64(int fd, const char *filename, u64 index)
+> This series renames types across all KVM selftests to more align with
+> types used in the kernel:
+> 
+>   vm_vaddr_t -> gva_t
+>   vm_paddr_t -> gpa_t
+> 
+>   uint64_t -> u64
+>   uint32_t -> u32
+>   uint16_t -> u16
+>   uint8_t  -> u8
+> 
+>   int64_t -> s64
+>   int32_t -> s32
+>   int16_t -> s16
+>   int8_t  -> s8
+> 
+> The goal of this series is to make the KVM selftests code more concise
+> (the new type names are shorter) and more similar to the kernel, since
+> selftests are developed by kernel developers.
+> 
+> v2:
+>  - Reapply the series on top of kvm/queue
+> 
+> v1: https://lore.kernel.org/kvm/20250501183304.2433192-1-dmatlack@google.com
 
-I think it's also worth converting the function to pread_u64().
+Sorry, I was too slow and missed the window to get this into kvm/next without
+causing a disaster of merge conflicts.
 
->  {
-> -	uint64_t value;
-> +	u64 value;
->  	off_t offset = index * sizeof(value);
->  
->  	TEST_ASSERT(pread(fd, &value, sizeof(value), offset) == sizeof(value),
+I don't think you need to send a v3 though.  I'll prep a v3, a branch, and send
+Paolo a pull request during the next merge window.
