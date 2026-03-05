@@ -1,340 +1,135 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A178033F369
-	for <loongarch@lists.linux.dev>; Thu,  5 Mar 2026 12:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BAEB257423
+	for <loongarch@lists.linux.dev>; Thu,  5 Mar 2026 12:56:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772714261; cv=none; b=FpKl76/SCXw+uMIhkoxl4kAJ9vuTqU8qUmSj+RQCz0wD64Fn4CJ4o+96fCwAl6oSFe9t4ytcVl19kkpX6crYCXy04Cx9OQ3Qp8hQzDWC7GiWH8bl+pP3aTgcmxmSv0p/1ZFlrsaQJYMW62veiH094w+NF4zu8XMznULt/LFgg4E=
+	t=1772715417; cv=none; b=LtUlTSwVuYa6j7agFkoYqDU/gJq/8mh05sUfg2NBTDOIRWQI+lROuUYUTf0ZK28ALZrRfuoBi9FmiSxzJzeWNwV6GcxxcQ8Zoo9841MoItKEJa2UJv6CbmAYjFrLvGRdBxujLSB3pDo5vv17p/8Tiz2fy/A7mDvuNNjeVvRu4ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772714261; c=relaxed/simple;
-	bh=nv9gh6ezBxJOvp0uZ1L0GbmfqjP40BJ9xqxfgSclWzA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=K845Ey8c60MPxyVjciBQ0VQOdsx0Eik3SeEjnBgAV0VezKAP1n42N0u0Xrc0pmbwHj4Yhz6So+rS59QtCNE+gku8d7e9PQOIUA5xi94t+3Nck0QoadPeobA9KaF6/UrmQmQTo8c/eSUAJHBZCpwlglIUm9K7kfdpwqU8Uilzh9w=
+	s=arc-20240116; t=1772715417; c=relaxed/simple;
+	bh=OohVGk8rJoJKukEILdvo11BXKOqdjAIBoh85kJ5Eye8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tMlIh5XfbUPMoe6dr3u7ILaPS7649RWHUXB9BbHqQNutF6JbLfhi+aYBiTYWvO2lvRNT4tFB8GNLVRQUU0le9VdgDouUyDwxywX7M0W594T/hNBMtXVe21aO1yBx9+Y2SXNs1IEYf0lrh/ugDERsALQBZdpm8x8genmKTkTPnII=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.239])
-	by gateway (Coremail) with SMTP id _____8BxnsMGealpHsUXAA--.6287S3;
-	Thu, 05 Mar 2026 20:37:27 +0800 (CST)
-Received: from [10.20.42.239] (unknown [10.20.42.239])
-	by front1 (Coremail) with SMTP id qMiowJBxbcIDealpx9tOAA--.16675S3;
-	Thu, 05 Mar 2026 20:37:25 +0800 (CST)
-Subject: Re: [PATCH v6 1/2] LongArch: KVM: Add DMSINTC device support
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kernel@xen0n.name, linux-kernel@vger.kernel.org
-References: <20260206012028.3318291-1-gaosong@loongson.cn>
- <20260206012028.3318291-2-gaosong@loongson.cn>
- <CAAhV-H4a=c7CmwtK95rF-3hwq=6c2DYv1dvEdrHKM_+MKFPK-g@mail.gmail.com>
-From: gaosong <gaosong@loongson.cn>
-Message-ID: <24a9fd42-37ab-fa09-4571-c91df946da10@loongson.cn>
-Date: Thu, 5 Mar 2026 20:38:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.227])
+	by gateway (Coremail) with SMTP id _____8BxmsKNfalpJMYXAA--.5938S3;
+	Thu, 05 Mar 2026 20:56:46 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.227])
+	by front1 (Coremail) with SMTP id qMiowJDxjcKGfalpJt5OAA--.16319S2;
+	Thu, 05 Mar 2026 20:56:43 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-i2c@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/2] i2c: Add Loongson-2K0300 I2C controller support
+Date: Thu,  5 Mar 2026 20:56:29 +0800
+Message-ID: <cover.1772714348.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4a=c7CmwtK95rF-3hwq=6c2DYv1dvEdrHKM_+MKFPK-g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJBxbcIDealpx9tOAA--.16675S3
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JFyDJr4xAw1UGw1rCr18tFc_yoWfWry5pF
-	9rAFs5Gr48WryxCrn2gas8urnFvr4fKr129FyYgFyUArnFvrykAry8Kr9ruFy3Xa18Gr10
-	vFya93WY9a1Ut3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDxjcKGfalpJt5OAA--.16319S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQERCGmpG0IKfAAAs2
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZrWDWFWfCr17uF1DKFWxGrX_yoW8uFWfpa
+	y5A3sIkF1jgr129rs3XrWfZryavF4fJF43Wr47A34Y9anrA3yUZ3yakFs0vFWDCryxuF42
+	q39rKw1UCa4qvFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
 	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU86OJ5UUUUU==
 
-Hi, Huacai
+Hi all:
 
-在 2026/3/5 下午3:31, Huacai Chen 写道:
-> Hi, Song,
->
-> On Fri, Feb 6, 2026 at 9:45 AM Song Gao <gaosong@loongson.cn> wrote:
->> Add device model for DMSINTC interrupt controller, implement basic
->> create/destroy/set_attr interfaces, and register device model to kvm
->> device table.
->>
->> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
->> Signed-off-by: Song Gao <gaosong@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_dmsintc.h |  21 +++++
->>   arch/loongarch/include/asm/kvm_host.h    |   3 +
->>   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
->>   arch/loongarch/kvm/Makefile              |   1 +
->>   arch/loongarch/kvm/intc/dmsintc.c        | 111 +++++++++++++++++++++++
->>   arch/loongarch/kvm/main.c                |   6 ++
->>   include/uapi/linux/kvm.h                 |   2 +
->>   7 files changed, 148 insertions(+)
->>   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
->>   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
->>
->> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/include/asm/kvm_dmsintc.h
->> new file mode 100644
->> index 000000000000..1d4f66996f3c
->> --- /dev/null
->> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
->> @@ -0,0 +1,21 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2025 Loongson Technology Corporation Limited
->> + */
->> +
->> +#ifndef __ASM_KVM_DMSINTC_H
->> +#define __ASM_KVM_DMSINTC_H
->> +
->> +
->> +struct loongarch_dmsintc  {
-> Here is an extra space.
-I'll correct it on v7.
->> +       struct kvm *kvm;
->> +       uint64_t msg_addr_base;
->> +       uint64_t msg_addr_size;
->> +};
->> +
->> +struct dmsintc_state {
->> +       atomic64_t  vector_map[4];
->> +};
->> +
->> +int kvm_loongarch_register_dmsintc_device(void);
->> +#endif
->> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
->> index e4fe5b8e8149..5e9e2af7312f 100644
->> --- a/arch/loongarch/include/asm/kvm_host.h
->> +++ b/arch/loongarch/include/asm/kvm_host.h
->> @@ -22,6 +22,7 @@
->>   #include <asm/kvm_ipi.h>
->>   #include <asm/kvm_eiointc.h>
->>   #include <asm/kvm_pch_pic.h>
->> +#include <asm/kvm_dmsintc.h>
->>   #include <asm/loongarch.h>
->>
->>   #define __KVM_HAVE_ARCH_INTC_INITIALIZED
->> @@ -134,6 +135,7 @@ struct kvm_arch {
->>          struct loongarch_ipi *ipi;
->>          struct loongarch_eiointc *eiointc;
->>          struct loongarch_pch_pic *pch_pic;
->> +       struct loongarch_dmsintc *dmsintc;
->>   };
->>
->>   #define CSR_MAX_NUMS           0x800
->> @@ -244,6 +246,7 @@ struct kvm_vcpu_arch {
->>          struct kvm_mp_state mp_state;
->>          /* ipi state */
->>          struct ipi_state ipi_state;
->> +       struct dmsintc_state dmsintc_state;
->>          /* cpucfg */
->>          u32 cpucfg[KVM_MAX_CPUCFG_REGS];
->>
->> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
->> index de6c3f18e40a..0a370d018b08 100644
->> --- a/arch/loongarch/include/uapi/asm/kvm.h
->> +++ b/arch/loongarch/include/uapi/asm/kvm.h
->> @@ -154,4 +154,8 @@ struct kvm_iocsr_entry {
->>   #define KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL             0x40000006
->>   #define KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT            0
->>
->> +#define KVM_DEV_LOONGARCH_DMSINTC_CTRL                 0x40000007
->> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE                0x0
->> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE                0x1
->> +
->>   #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
->> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
->> index cb41d9265662..6e184e24443c 100644
->> --- a/arch/loongarch/kvm/Makefile
->> +++ b/arch/loongarch/kvm/Makefile
->> @@ -19,6 +19,7 @@ kvm-y += vm.o
->>   kvm-y += intc/ipi.o
->>   kvm-y += intc/eiointc.o
->>   kvm-y += intc/pch_pic.o
->> +kvm-y += intc/dmsintc.o
->>   kvm-y += irqfd.o
->>
->>   CFLAGS_exit.o  += $(call cc-disable-warning, override-init)
->> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
->> new file mode 100644
->> index 000000000000..00e401de0464
->> --- /dev/null
->> +++ b/arch/loongarch/kvm/intc/dmsintc.c
->> @@ -0,0 +1,111 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2025 Loongson Technology Corporation Limited
->> + */
->> +
->> +#include <linux/kvm_host.h>
->> +#include <asm/kvm_dmsintc.h>
->> +#include <asm/kvm_vcpu.h>
->> +
->> +static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
->> +                               struct kvm_device_attr *attr,
->> +                               bool is_write)
->> +{
->> +       int addr = attr->attr;
->> +       void __user *data;
->> +       struct loongarch_dmsintc *s = dev->kvm->arch.dmsintc;
->> +       u64 tmp;
->> +
->> +       data = (void __user *)attr->addr;
->> +       switch (addr) {
->> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE:
->> +               if (is_write) {
->> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_base)))
->> +                               return -EFAULT;
->> +                       if (s->msg_addr_base) {
->> +                               /* Duplicate setting are not allowed. */
->> +                               return -EFAULT;
->> +                       }
->> +                       if ((tmp & (BIT(AVEC_CPU_SHIFT) - 1)) == 0)
->> +                               s->msg_addr_base = tmp;
->> +                       else
->> +                               return  -EFAULT;
->> +               }
->> +               break;
->> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE:
->> +               if (is_write) {
->> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_size)))
->> +                               return -EFAULT;
->> +                       if (s->msg_addr_size) {
->> +                               /*Duplicate setting are not allowed. */
->> +                               return -EFAULT;
->> +                       }
->> +                       s->msg_addr_size = tmp;
->> +               }
->> +               break;
->> +       default:
->> +               kvm_err("%s: unknown dmsintc register, addr = %d\n", __func__, addr);
->> +               return -ENXIO;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static int kvm_dmsintc_set_attr(struct kvm_device *dev,
->> +                       struct kvm_device_attr *attr)
->> +{
->> +       switch (attr->group) {
->> +       case KVM_DEV_LOONGARCH_DMSINTC_CTRL:
->> +               return kvm_dmsintc_ctrl_access(dev, attr, true);
->> +       default:
->> +               kvm_err("%s: unknown group (%d)\n", __func__, attr->group);
->> +               return -EINVAL;
->> +       }
->> +}
->> +
->> +static int kvm_dmsintc_create(struct kvm_device *dev, u32 type)
->> +{
->> +       struct kvm *kvm;
->> +       struct loongarch_dmsintc *s;
->> +
->> +       if (!dev) {
->> +               kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
->> +               return -EINVAL;
->> +       }
->> +
->> +       kvm = dev->kvm;
->> +       if (kvm->arch.dmsintc) {
->> +               kvm_err("%s: LoongArch DMSINTC has already been created!\n", __func__);
->> +               return -EINVAL;
->> +       }
->> +
->> +       s = kzalloc(sizeof(struct loongarch_dmsintc), GFP_KERNEL);
->> +       if (!s)
->> +               return -ENOMEM;
->> +
->> +       s->kvm = kvm;
->> +       kvm->arch.dmsintc = s;
->> +       return 0;
->> +}
->> +
->> +static void kvm_dmsintc_destroy(struct kvm_device *dev)
->> +{
->> +
->> +       if (!dev || !dev->kvm || !dev->kvm->arch.dmsintc)
->> +               return;
->> +
->> +       kfree(dev->kvm->arch.dmsintc);
->> +       kfree(dev);
->> +}
->> +
->> +static struct kvm_device_ops kvm_dmsintc_dev_ops = {
->> +       .name = "kvm-loongarch-dmsintc",
->> +       .create = kvm_dmsintc_create,
->> +       .destroy = kvm_dmsintc_destroy,
->> +       .set_attr = kvm_dmsintc_set_attr,
->> +};
->> +
->> +int kvm_loongarch_register_dmsintc_device(void)
->> +{
->> +       return kvm_register_device_ops(&kvm_dmsintc_dev_ops, KVM_DEV_TYPE_LOONGARCH_DMSINTC);
->> +}
->> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->> index 80ea63d465b8..f363a3b24903 100644
->> --- a/arch/loongarch/kvm/main.c
->> +++ b/arch/loongarch/kvm/main.c
->> @@ -408,6 +408,12 @@ static int kvm_loongarch_env_init(void)
->>
->>          /* Register LoongArch PCH-PIC interrupt controller interface. */
->>          ret = kvm_loongarch_register_pch_pic_device();
->> +       if (ret)
->> +               return ret;
->> +
->> +       /* Register LoongArch DMSINTC interrupt contrroller interface */
->> +       if (cpu_has_msgint)
-> I'm not sure, but there is kvm_guest_has_msgint(), I don't know which
-> one is really needed.
->
-It should be cpu_has_msgint.
+This patch set describes the I2C controller integrated the
+Loongson-2K0300 chip.
 
-1.kvm_loongarch_env_init is part of module initialization, runs when KVM 
-module is loaded.
-  At that time, no VM or vCPU objects exist yet.
-2.cpu_has_msgint is a global flag indicating physical CPU capability 
-(detected early, e.g., via cpucfg).
-3.kvm_guest_has_msgint() typically depends on a specific vCPU's 
-configuration (e.g., whether the guest has PMU enabled via userspace 
-settings).
-It requires a valid vCPU pointer and cannot be used before any vCPU is 
-created.
+It has a significantly different design from the previous I2C
+controller(i2c-ls2x), such as support for master-slave transfer mode,
+and DMA transfers (implementation in progress), etc. Therefore, we try
+to name it i2c-ls2x-v2.
 
 Thanks.
-Song Gao
-> Huacai
->
->> +               ret = kvm_loongarch_register_dmsintc_device();
->>
->>          return ret;
->>   }
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index dddb781b0507..7c56e7e36265 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -1209,6 +1209,8 @@ enum kvm_device_type {
->>   #define KVM_DEV_TYPE_LOONGARCH_EIOINTC KVM_DEV_TYPE_LOONGARCH_EIOINTC
->>          KVM_DEV_TYPE_LOONGARCH_PCHPIC,
->>   #define KVM_DEV_TYPE_LOONGARCH_PCHPIC  KVM_DEV_TYPE_LOONGARCH_PCHPIC
->> +       KVM_DEV_TYPE_LOONGARCH_DMSINTC,
->> +#define KVM_DEV_TYPE_LOONGARCH_DMSINTC   KVM_DEV_TYPE_LOONGARCH_DMSINTC
->>
->>          KVM_DEV_TYPE_MAX,
->>
->> --
->> 2.39.3
->>
->>
+
+======
+V4:
+- Rebase on linux-i2c/i2c-next;
+Patch (2/2):
+ - The parent_rate parameter type should be `unsigned long`;
+ - Drop fallthrough and add missing break;
+ - device_set_node()->i2c_adapter_set_node();
+ - Use i2c_parse_fw_timings();
+ - Use i2c_t.bus_freq_hz instead of priv->speed;
+ - Sperate loongson2_i2c_handle_read() into loongson2_i2c_handle_read()
+   and loongson2_i2c_handle_rx_done().
+
+Link to V3:
+https://lore.kernel.org/all/cover.1772001073.git.zhoubinbin@loongson.cn/
+
+V3:
+- Rebase on linux-i2c/i2c-next;
+Patch (2/2):
+ - Reorder header file follow IWYU principle;
+ - Better indentation and coding style;
+ - Use generic macro definitions;
+ - Amend *all* struct data types;
+ - Correct unreasonable variable type definitions;
+ - Refact loongson2_i2c_isr_error();
+ - of_property_read_u32()->device_property_read_u32();
+ - Remove meaningless blank lines and output.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1769476820.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (1/2):
+ - Add Acked-by tag from Conor, thanks.
+
+Patch (2/2):
+ - Reorder the definitions of read() and write();
+ - Adjust the calculation method for bus speed.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1763018288.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c compatible
+  i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
+
+ .../bindings/i2c/loongson,ls2x-i2c.yaml       |   4 +
+ MAINTAINERS                                   |   1 +
+ drivers/i2c/busses/Kconfig                    |  10 +
+ drivers/i2c/busses/Makefile                   |   1 +
+ drivers/i2c/busses/i2c-ls2x-v2.c              | 545 ++++++++++++++++++
+ 5 files changed, 561 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-ls2x-v2.c
+
+
+base-commit: 6117e1ba1db78a52a4161208ea403d3769ad73c6
+-- 
+2.52.0
 
