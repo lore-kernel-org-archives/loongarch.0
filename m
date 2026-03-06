@@ -1,102 +1,146 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE1B256C8B
-	for <loongarch@lists.linux.dev>; Fri,  6 Mar 2026 06:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E03734DCD1
+	for <loongarch@lists.linux.dev>; Fri,  6 Mar 2026 10:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772779283; cv=none; b=G46qqcab74SrDGrfl1vx9AkxFs+mMRB9MaWmMn5YvLAw+UbX/bPaUA1ukfT53xOQ2iNecwJiCL+nSXIleeQiIEiW4KGitrHb37/zLCizbgFAGIImP2M5EI+RWIMlhvyQWS05XvncySoWKVptYaqwNlBVclFupByZvioZCX1ovlE=
+	t=1772792421; cv=none; b=eDPBGkYhmlMGIt58I5xzliqiK92hGGsw9+kCa0VOqBPxfFVq0Dd3Roq33vaHi1j25VE7e8Drgn0M1OCwP/PsLrM+YwKWjqggrKa03kMerFG/+q4Xcu87NBpNVkewe6dw8x1m3EW9lkmNWCRl2vah17jhenB+Xaia00Ojs3NFBjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772779283; c=relaxed/simple;
-	bh=I1/cm5LttFDd0g4Y4v3qyD1slgVyu6rpnomFiYRE5Uk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JvmbunuW8rOmRUdnKrAP2JfyN5Aa+1nFTlvAZG5JgMw9SfYfzjv6qHoUS+9H29vlZJDQ6YkS7I95/7nZcf0Q5KieW+jGJ3rV1Ye5viGxDMCtigrEGqvyrXb3nlpQM5c+xZWgqjsxp1OWBOEDapkdNEy1QoKlgCSq7kM/EK81fFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=EYXZTqkQ; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="EYXZTqkQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1772779270;
-	bh=V06FD4fP1WIlRIby4zy56+KfUfGL0hLt7tHMLgURozw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EYXZTqkQ5bGe3BLEovkWeLcFXBJylZBTXxIoFlcObKjm2bH8K8Z6bwPOs1PrcxsRm
-	 nmqmshBlbjNztWfkduw1/73BvZh2sOK+BkZWh2OpVSOK7/v8JHMMJSgiz/TouwRp9H
-	 KP7vSdjMzEiBFIkgLRk6UQfRbNFbFDzCq4eBNtCg=
-Received: from stargazer (unknown [IPv6:2409:8a4c:e11:4510:818c:b334:624:49f8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 81F801A3F28;
-	Fri,  6 Mar 2026 01:41:01 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Alex Hung <alex.hung@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Zixing Liu <liushuyu@aosc.io>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Xi Ruoyao <xry111@xry111.site>,
-	LiarOnce <liaronce@hotmail.com>,
-	stable@vger.kernel.org,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <siqueira@igalia.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Alvin Lee <alvin.lee2@amd.com>,
-	Dillon Varone <Dillon.Varone@amd.com>,
-	Ray Wu <ray.wu@amd.com>,
-	Kees Cook <kees@kernel.org>,
-	Yan Li <yan.li@amd.com>,
-	Ryan Seto <ryanseto@amd.com>,
-	Saaem Rizvi <SyedSaaem.Rizvi@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/display: Wrap dcn32_override_min_req_memclk() in DC_FP_{START,END}
-Date: Fri,  6 Mar 2026 14:28:03 +0800
-Message-ID: <20260306062805.1464383-2-xry111@xry111.site>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1772792421; c=relaxed/simple;
+	bh=B4Iz5OWHrL/GsYmEXkDnVo27GZHa07EKtd/KCQQ/MF8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N+0jsJH9pWUiioPqY+nhUUDmYcFbhI9ZLS2n/LYZ+s5JOnHLAonAOypsV7goatD8Bl0BHtYYzUUlpuPkTrq8B5BksfYiGLqeJ1Aafmawf37A9kdHEzUWxtHo/ogHibmtPhK8D8dswVT+uthGyKr1p3HjiXYTQ9301k1rOQEd5ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fS2454tK9zHnH5p;
+	Fri,  6 Mar 2026 18:01:25 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 214B440086;
+	Fri,  6 Mar 2026 18:02:25 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 6 Mar
+ 2026 10:02:23 +0000
+Date: Fri, 6 Mar 2026 10:01:50 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Chengwen Feng <fengchengwen@huawei.com>
+CC: <linux-pci@vger.kernel.org>, <bhelgaas@google.com>, Jonathan Corbet
+	<corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+	<chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
+	<pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner
+	<tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Mark
+ Rutland <mark.rutland@arm.com>, "Eric Van Tassell" <Eric.VanTassell@amd.com>,
+	Wei Huang <wei.huang2@amd.com>, "Ajit Khaparde" <ajit.khaparde@broadcom.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	<linux-acpi@vger.kernel.org>, <wangzhou1@hisilicon.com>,
+	<wanghuiqiang@huawei.com>, <liuyonglong@huawei.com>,
+	<stable@vger.kernel.org>, <jeremy.linton@arm.com>,
+	<sunilvl@oss.qualcomm.com>, <chenhuacai@loongson.cn>,
+	<wangliupu@loongson.cn>, Somnath Kotur <somnath.kotur@broadcom.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI/TPH: Fix get cpu steer-tag fail on ARM64
+ platform
+Message-ID: <20260306100150.00003f38@huawei.com>
+In-Reply-To: <20260306021920.23233-1-fengchengwen@huawei.com>
+References: <20260303003625.39035-1-fengchengwen@huawei.com>
+	<20260306021920.23233-1-fengchengwen@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-[Why]
-The dcn32_override_min_req_memclk function is in dcn32_fpu.c, which is
-compiled with CC_FLAGS_FPU into FP instructions.  So when we call it we
-must use DC_FP_{START,END} to save and restore the FP context, and
-prepare the FP unit on architectures like LoongArch where the FP unit
-isn't always on.
+On Fri, 6 Mar 2026 10:19:17 +0800
+Chengwen Feng <fengchengwen@huawei.com> wrote:
 
-Reported-by: LiarOnce <liaronce@hotmail.com>
-Fixes: ee7be8f3de1c ("drm/amd/display: Limit DCN32 8 channel or less parts to DPM1 for FPO")
-Cc: stable@vger.kernel.org
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c | 3 +++
- 1 file changed, 3 insertions(+)
+> Currently the pcie_tph_get_cpu_st() has an issue on ARM64 platform:
+> 1. The pcie_tph_get_cpu_st() function directly uses cpu_uid as the input
+>    parameter to call the PCI ACPI DSM method. According to the DSM
+>    definition, the input value should be the ACPI Processor UID (see [1]
+>    for details).
+> 2. In the Broadcom driver implementation [2] (which invokes
+>    pcie_tph_get_cpu_st()), cpu_uid is obtained via
+>    cpumask_first(irq->cpu_mask) - this is the logical CPU ID of a CPU
+>    core, generated and managed by kernel (e.g., [0,255] for a system
+>    with 256 logical CPU cores).
+> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
+>    MADT table, and this UID may not match the kernel's logical CPU ID.
+>    As a result, the current implementation fails to retrieve the correct
+>    CPU steer-tag in such cases.
+> 4. The function works on AMD x86 platforms only because the logical CPU
+>    ID is identical to the ACPI Processor UID on those systems.
+> 
+> This commit fixes it by:
+> 1. For ACPI-enabled platforms, unify the CPU ACPI ID retrieval
+>    interface:
+>    - On arm64/riscv/loongarch: Rename existing get_acpi_id_for_cpu() to
+>      acpi_get_cpu_acpi_id().
+>    - On x86: Add new acpi_get_cpu_acpi_id() implementation that wraps
+>      cpu_acpi_id().
+> 2. Update pcie_tph_get_cpu_st() to use acpi_get_cpu_acpi_id(cpu) to get
+>    valid ACPI Processor UID for DSM calls.
+> 3. Renaming pcie_tph_get_cpu_st()'s input parameter cpu_uid to cpu for
+>    clarity, as the parameter now represents a logical CPU ID (not a
+>    UID).
+> 
+> [1] According to ECN_TPH-ST_Revision_20200924
+>     (https://members.pcisig.com/wg/PCI-SIG/document/15470), the input
+>     is defined as: "If the target is a processor, then this field
+>     represents the ACPI Processor UID of the processor as specified in
+>     the MADT. If the target is a processor container, then this field
+>     represents the ACPI Processor UID of the processor container as
+>     specified in the PPTT."
+> [2] commit c214410c47d6e ("bnxt_en: Add TPH support in BNXT driver")
+> 
+> Fixes: d2e8a34876ce ("PCI/TPH: Add Steering Tag support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+> 
+> ---
+> Changes in v3:
+> - Rename existing get_acpi_id_for_cpu() to acpi_get_cpu_acpi_id() other
+>   than add one new API.
+Ah. I wasn't clear around that rename suggestion.  Split this into two patches.
+1) Rename
+2) The new stuff plus x86 implementation.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-index 7ebb7d1193af..c7fd604024d6 100644
---- a/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c
-@@ -1785,7 +1785,10 @@ static bool dml1_validate(struct dc *dc, struct dc_state *context, enum dc_valid
- 
- 	dc->res_pool->funcs->calculate_wm_and_dlg(dc, context, pipes, pipe_cnt, vlevel);
- 
-+	DC_FP_START();
- 	dcn32_override_min_req_memclk(dc, context);
-+	DC_FP_END();
-+
- 	dcn32_override_min_req_dcfclk(dc, context);
- 
- 	BW_VAL_TRACE_END_WATERMARKS();
--- 
-2.53.0
+> 
+> Changes in v2:
+> - Add ECN _DSM reference doc name and its URL.
+> - Separate implement acpi_get_cpu_acpi_id() in each arch which supports
+>   ACPI.
+> - Refine commit-log.
+> 
+> ---
+>  Documentation/PCI/tph.rst          |  4 ++--
+>  arch/arm64/include/asm/acpi.h      |  4 ++--
+>  arch/loongarch/include/asm/acpi.h  |  2 +-
+>  arch/riscv/include/asm/acpi.h      |  2 +-
+>  arch/riscv/kernel/acpi_numa.c      |  2 +-
+>  arch/x86/include/asm/acpi.h        |  2 ++
+>  arch/x86/kernel/cpu/common.c       |  8 ++++++++
+>  drivers/acpi/pptt.c                | 16 ++++++++--------
+>  drivers/acpi/riscv/rhct.c          |  2 +-
+>  drivers/pci/tph.c                  | 11 ++++++-----
+>  drivers/perf/arm_cspmu/arm_cspmu.c |  2 +-
+>  include/linux/pci-tph.h            |  4 ++--
+>  12 files changed, 35 insertions(+), 24 deletions(-)
+
+
 
