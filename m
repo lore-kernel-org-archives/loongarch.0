@@ -1,125 +1,175 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ADA33C52A;
-	Fri,  6 Mar 2026 23:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A98D2F3C22
+	for <loongarch@lists.linux.dev>; Sat,  7 Mar 2026 03:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772840921; cv=none; b=rXu7lBD/2YeLVJAy8uGoGp4yL4HUScLSHw7MB4PfNi7hwM0nuJ74YJFkXC1m9eAnJOadazACArcNFfQRMtpDRZFQE/WuomHz6IqsnEpbPT8vSwte1WesJYeXmRnZ0ZkdNjjYXp2+b6XDdQKe9omMHXkllRwqeGS9/ZHkppU/P7E=
+	t=1772853941; cv=none; b=EQR6jVIO6DK3rpkVuL7ESoUnLHavNwMYI8UI0j1oLw5JuT6l3U/v80LGlcC2A9Rb4i3vbFn7+3LtWLCBCFU8TaS3qNSA3BEc9YXzb8szSxz0SQPH2XuQd54i3nlo1dhe3ECYflQb0pITIx0A4VaoQPnWSKAIr6n9Un6hkYo6rBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772840921; c=relaxed/simple;
-	bh=Cumo5affjPLcsVDjRUQxVwzoQguZomb+2nAYaG1f9XY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JTCNQk63EiFbp3DHeM+iy8ajeTeYqpg9npI8D4mbnGir82dDafm4RjrXmcyIfVvcKg+DKTGDtzELlKdU+jEjursagRNJjj+vrRpv4Hx12ksHlFZkovkCRNkQe6XwggKQiW0WFtmPm1O2EFnJgMeH/WJZ8gBHjgREDWy3D0toc6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=PioK8n1G; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PioK8n1G"
-Received: from [172.27.2.41] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 626NVQj92208026
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 6 Mar 2026 15:31:58 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 626NVQj92208026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026022301; t=1772839922;
-	bh=+EuyHHVP1ezysh+DOMChYpQ6YLA93nDMuTUQuNAbUKI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PioK8n1GDOCMylG5Zt2121yBqaQjmuAgAG8ArmoqbSGk+AY2HjiUf0EtOT1DsexRY
-	 3XzpMhpcVWr9RPSEgwVE9ESR7uck6X+0Brpr8WoubZ+TlXmlH4lDGa0CVViVEYVOPr
-	 a2U1eLnne4Jq8YkGPdE7tatxcJ2Gd+LMg66XDUlWERyyYKh8whYexkpditNEyz4ILx
-	 yckiGOkMmhcxGYFKzQD0ff8pydvHcvjyUktvDHaVTIquZDk64YCElixBnK+5hWClOa
-	 uRJidGVd5gvOOIeokQ5EcbFwoFLXBWjUIyo+ZDse7szoWgdzIXdm2JW1VkFzyB6i6x
-	 eQ3pvQwa4welw==
-Message-ID: <75d0ca29-b227-49c1-8204-b305f64b009b@zytor.com>
-Date: Fri, 6 Mar 2026 15:31:21 -0800
+	s=arc-20240116; t=1772853941; c=relaxed/simple;
+	bh=Xi6c1dAck5ti3ckerzYqQncj4PWvRvHDU6pbAFkcqmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PjOcVKIE7ETwyW25ntNJqbZ8d4puDtxiofe0AEEYUkZxnf7jiQNNPVXSKnll8F2ozPhgdI6l/C09bWWqbjgs44i+EkhFOlNmmPi+wWnPoVlO7B6+oyXpdvix95Nxu9m80++qQXCKigNEKAThlW13J5SHRZpDTBdE8tgEPWAozAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.227])
+	by gateway (Coremail) with SMTP id _____8AxgsCpmqtpCmcYAA--.13772S3;
+	Sat, 07 Mar 2026 11:25:29 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.227])
+	by front1 (Coremail) with SMTP id qMiowJCx2+ClmqtpI+BPAA--.21248S2;
+	Sat, 07 Mar 2026 11:25:26 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Frank Li <Frank.Li@kernel.org>,
+	dmaengine@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	Keguang Zhang <keguang.zhang@gmail.com>,
+	linux-mips@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v4 0/6] dmaengine: Add Loongson Multi-Channel DMA controller support
+Date: Sat,  7 Mar 2026 11:25:09 +0800
+Message-ID: <cover.1772853681.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] kbuild: Switch from '-fms-extensions' to
- '-fms-anonymous-structs' when available
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-        llvm@lists.linux.dev
-References: <20260223-fms-anonymous-structs-v1-0-8ee406d3c36c@kernel.org>
- <01433066-eb9b-4a96-8d7f-794af941d365@zytor.com>
- <20260306231705.GD2746259@ax162>
-Content-Language: en-US, sv-SE
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20260306231705.GD2746259@ax162>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx2+ClmqtpI+BPAA--.21248S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQETCGmqbMIYzgAAsg
+X-Coremail-Antispam: 1Uk129KBj93XoWxJF1xtry3ZFy7GF43CF1xJFc_yoW5KFW7pF
+	WfA3s3GFWUtF43uwn3JFy8Ar15Aa4fJrZxWa9rZw1UCryDu3yUZr1Fk3WjqF47ArW5GFW2
+	qFWkGF48CF4UGrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On 2026-03-06 15:17, Nathan Chancellor wrote:
-> On Thu, Mar 05, 2026 at 03:43:29PM -0800, H. Peter Anvin wrote:
->> Question: does clang allow this with __extension__, or only if the option is
->> on the command line?  It would be desirable in the long run if both clang and
-> 
-> It looks like only on the command line:
-> 
->   https://godbolt.org/z/zrE766obe
-> 
->> gcc would allow this with __extension__, as that would be required to use it
->> in uapi headers (at least without some doable-but-nontrivial preprocessing,
->> which might be worthwhile to do anyway...)
-> 
-> I agree that would be desirable but wouldn't that change how
-> __extension__ works? As far as I can tell from reading GCC's
-> documentation [1], __extension__ just supresses warnings from -pedantic
-> and such, it does not actually enable a used extension if it conflicts
-> with whatever -std= value is passed?
-> 
-> [1]: https://gcc.gnu.org/onlinedocs/gcc/Alternate-Keywords.html
-> 
+Hi all:
 
-Maybe it does, but it's explicit purpose is to allow code to be compiled with
-a -std= setting lower than the system libraries.
+This patchset introduces the Loongson multi-channel DMA controller,
+which is present in the Loongson-2K0300 and Loongson-2K3000 processors.
 
-I was a little surprised to see that -std=c90 doesn't actually enforce C90
-compatibility; even with -Wall -Wextra it requires -pedantic to issue
-warnings; the same seems to apply to -std=c99 for at least some features that
-were included in gnu* standards like anonymous structures and unions.
+It is a multi-channel controller that enables data transfers from memory
+to memory, device to memory, and memory to device, as well as channel
+prioritization configurable through the channel configuration registers.
 
-The latter is probably a particular indication about the desirability of this,
-since the extension we are talking about is a relatively obvious extension of
-the anonymous struct/union construct!
+Additionally, since multiple distinct types of DMA controllers exist on
+the Loongson platform, I have attempted to consolidate all Loongson DMA
+drivers into a new directory named `Loongson` for easier management.
 
-It is an incredibly useful thing in ABI headers, because it lets you avoid the
-"copy/macro this entire structure definition into another."
+Thanks.
+Binbin
 
-	-hpa
+===========
+V4:
+- Rebase on dmaengine/next tree;
+- Add Reviewed-by tags from Frank and Rob, thanks;
+
+patch(1/6):
+ - Add `depends on` restrictions.
+
+patch(6/6):
+ - Move loongson2_cmc_dma_config{..} close to its users.
+
+Link to V3:
+https://lore.kernel.org/dmaengine/cover.1771989595.git.zhoubinbin@loongson.cn/
+
+V3:
+- Rebase on dmaengine/next tree;
+
+patch(1/6):
+ - Keep alphabet order;
+
+patch(2/6):
+ - Add Reviewed-by tag from Frank, thanks;
+
+patch(3/6)/(4/6):
+ - New patches, format loongson2-apb-dma driver code;
+
+patch(5/6):
+ - Add description for `interrupts` property;
+
+patch(6/6):
+ - Use ffs() helper make the code cleaner;
+ - Refact loongson2_cmc_dma_chan_irq();
+ - Simplify locking with guard() and scoped_guard();
+ - kzalloc()->kzalloc_flex().
+
+Link to V2:
+https://lore.kernel.org/all/cover.1770605931.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/4):
+ - Update loongson1-apb-dma.c entry in MAINTAINERS.
+
+patch(2/4):
+ - New patch, use dmaenginem_async_device_register() helper.
+
+patch(3/4):
+ - `additionalProperties: false` replaced by
+   `unevaluatedProperties: false`.
+
+patch(4/4):
+ - Rename filename as loongson2-apb-cmc-dma.c;
+ - Rename Kconfig item as LOONGSON2_APB_CMC_DMA;
+ - Rename the variable prefix as `loongson2_cmc_dma`;
+ - Use dmaenginem_async_device_register() helper;
+ - Drop 'dma_' prefix in struct loongson2_mdma_chan_reg;
+ - Use struct_size();
+
+Link to V1:
+https://lore.kernel.org/all/cover.1770119693.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (6):
+  dmaengine: loongson: New directory for Loongson DMA controllers
+    drivers
+  dmaengine: loongson: loongson2-apb: Convert to
+    dmaenginem_async_device_register()
+  dmaengine: loongson: loongson2-apb: Convert to devm_clk_get_enabled()
+  dmaengine: loongson: loongson2-apb: Simplify locking with guard() and
+    scoped_guard()
+  dt-bindings: dmaengine: Add Loongson Multi-Channel DMA controller
+  dmaengine: loongson: New driver for the Loongson Multi-Channel DMA
+    controller
+
+ .../bindings/dma/loongson,ls2k0300-dma.yaml   |  81 ++
+ MAINTAINERS                                   |   7 +-
+ drivers/dma/Kconfig                           |  25 +-
+ drivers/dma/Makefile                          |   3 +-
+ drivers/dma/loongson/Kconfig                  |  41 +
+ drivers/dma/loongson/Makefile                 |   4 +
+ .../dma/{ => loongson}/loongson1-apb-dma.c    |   4 +-
+ drivers/dma/loongson/loongson2-apb-cmc-dma.c  | 730 ++++++++++++++++++
+ .../dma/{ => loongson}/loongson2-apb-dma.c    |  93 +--
+ 9 files changed, 903 insertions(+), 85 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
+ create mode 100644 drivers/dma/loongson/Kconfig
+ create mode 100644 drivers/dma/loongson/Makefile
+ rename drivers/dma/{ => loongson}/loongson1-apb-dma.c (99%)
+ create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
+ rename drivers/dma/{ => loongson}/loongson2-apb-dma.c (91%)
 
 
-
-
+base-commit: c8e9b1d9febc83ee94944695a07cfd40a1b29743
+-- 
+2.52.0
 
