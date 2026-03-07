@@ -1,870 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD0E30DD16
-	for <loongarch@lists.linux.dev>; Sat,  7 Mar 2026 03:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6A5344DA9
+	for <loongarch@lists.linux.dev>; Sat,  7 Mar 2026 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772853956; cv=none; b=jufhgyAPTQ35vNVxwhUOVwYDd64NvawTeZyW8FAqiQbG/Y2sngKolSQFU8jd7nUYFK7e35oHpH7inxjddixbLJZb24dRx0yaJNjqywZqSj62VqPTabl3spchgU6nkMwW2OuKOMng800mFmPsxtM6li/C/j2syhBxlhnSYIFHFyA=
+	t=1772878490; cv=none; b=stgL/xX9wkca+PfpvInDwet1YJwspdY70Z1f5R53SdI/QSyGGsga/JwxBfGYjNbLB1HX39/cIhzgvZYQkkXgF1n4JtlHRYLfao5OLMwU4ibaiCJHu5JgFQQqm8JRBYTvm5IVOAIrJQeTaux6cRqYmE5yL3Do4oG5i7lhJ2k0XSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772853956; c=relaxed/simple;
-	bh=T49GWU/JBBstZpm7vDNuXZQYyFrM3JpKwHY+TOELNZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gTG3ExpFOobiaKvr/TKmG9NS+WeQ3vWPhInfJcTFEx9vzjcXOPmMMw9bngCtQy6JSM5IPMDVocwcdTFbq33Mi+FepqFuAAIZE7zt+TFH/CxXO9MtSuqUMno7tMoot81J3Qg4BuQFdwguadrIYyQnOWb4NmDbpC0V3Y/RaiuDuUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8Dx7qm9mqtpP2cYAA--.13406S3;
-	Sat, 07 Mar 2026 11:25:49 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJDxD8O4mqtpK+BPAA--.21629S4;
-	Sat, 07 Mar 2026 11:25:49 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Frank Li <Frank.Li@kernel.org>,
-	dmaengine@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	linux-mips@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v4 6/6] dmaengine: loongson: New driver for the Loongson Multi-Channel DMA controller
-Date: Sat,  7 Mar 2026 11:25:37 +0800
-Message-ID: <73bc32ba6249f1eef94fec9b349bc9efa98278ea.1772853681.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1772853681.git.zhoubinbin@loongson.cn>
-References: <cover.1772853681.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1772878490; c=relaxed/simple;
+	bh=pYo+aFs7KqnzLIbe4dqJCgpWEmLZ/GbYhfq0AZyFlSI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FjxXzTpGM7vaE/bnxMJjTd3v0oHEof4IgLbVxCQbLYMCewF0GlsdwUWXiLf+b2gtL6hgxNuhNoMdtex3IQKHyobjO0XErV9upqhGxu7LvJBaTH3MbC+W+g2yybFhKD1naZUpbICNUf83TjtPBI8V/IdNOxn3qvDSdb96G9K7TpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YapQ9uqP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YapQ9uqP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7579C19422;
+	Sat,  7 Mar 2026 10:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772878489;
+	bh=pYo+aFs7KqnzLIbe4dqJCgpWEmLZ/GbYhfq0AZyFlSI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YapQ9uqPbcqlS3iTOB7dykcs77uVb400zODjXj3aSFZFm1Jb35XpKB0gMv3nNgMi3
+	 hMyAQGn43V8jY9iZ6qYlsBmdloDcfrtvMcgCTTLITnl6NcScLmmEz9ikhHjwMrC7Fb
+	 0xpxmM8e565VDh7JjfjqHTegzIrTzQrJeMR6bZyYTW2LQgYtCn8Jno/l4e5MOEHmrQ
+	 n5K+sBrh0EVUwC2lH9d9dRtu5aFfThbCbDIeC0u5xWPdU/RZ70nnGeRDN/uIdcKH0f
+	 lV3y/sVxXsWD/lJTgIlZ3Va0MrhU58WiZDOQHGsktwx4gIkYvDpoEe3xL2JUX1+DCl
+	 NZVF91/dWu+6Q==
+Message-ID: <f0baa480-cd6d-42ad-bdb9-92cb793d774e@kernel.org>
+Date: Sat, 7 Mar 2026 11:14:46 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxD8O4mqtpK+BPAA--.21629S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQETCGmqbMIY2AAAs2
-X-Coremail-Antispam: 1Uk129KBj9fXoWfZF1kAr13Gr4fuw1rWw17Jwc_yoW5XF15Xo
-	ZxZFnxW3yrXw1xWay2gFyftrW7XFyUZ34vkwn3Ar4qvrZ0yFy5AFWUGrnrGFy7JFy3tFWU
-	C34SqFWxXa17JF45l-sFpf9Il3svdjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY17kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUAVWUZwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsrcTUUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: loongson: loongson2_guts: Use of_root instead of own
+ reference
+To: Binbin Zhou <zhoubinbin@loongson.cn>, Binbin Zhou
+ <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>,
+ Yinbo Zhu <zhuyinbo@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ loongarch@lists.linux.dev, soc@kernel.org
+References: <20260303070642.2785715-1-zhoubinbin@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260303070642.2785715-1-zhoubinbin@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This DMA controller appears in Loongson-2K0300 and Loongson-2K3000.
+On 03/03/2026 08:06, Binbin Zhou wrote:
+> There is already a global of_root reference. Use that instead of getting
+> one on our own. We don't need to care about the reference count either
+> this way.
+> 
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
 
-It is a chain multi-channel controller that enables data transfers from
-memory to memory, device to memory, and memory to device, as well as
-channel prioritization configurable through the channel configuration
-registers.
 
-In addition, there are slight differences between Loongson-2K0300 and
-Loongson-2K3000, such as channel register offsets and the number of
-channels.
+Please follow standard defconfig submission rules, so as explained in
+maintainer soc profile document: you are not supposed to send patches
+soc@ for review.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS                                  |   1 +
- drivers/dma/loongson/Kconfig                 |  11 +
- drivers/dma/loongson/Makefile                |   1 +
- drivers/dma/loongson/loongson2-apb-cmc-dma.c | 730 +++++++++++++++++++
- 4 files changed, 743 insertions(+)
- create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aea29c28d865..af9fbb3b43e2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14954,6 +14954,7 @@ L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/dma/loongson,ls2k0300-dma.yaml
- F:	Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
-+F:	drivers/dma/loongson/loongson2-apb-cmc-dma.c
- F:	drivers/dma/loongson/loongson2-apb-dma.c
- 
- LOONGSON LS2X I2C DRIVER
-diff --git a/drivers/dma/loongson/Kconfig b/drivers/dma/loongson/Kconfig
-index 0a865a8fd3a6..c4e62dce5d4f 100644
---- a/drivers/dma/loongson/Kconfig
-+++ b/drivers/dma/loongson/Kconfig
-@@ -27,4 +27,15 @@ config LOONGSON2_APB_DMA
- 	  This DMA controller transfers data from memory to peripheral fifo.
- 	  It does not support memory to memory data transfer.
- 
-+config LOONGSON2_APB_CMC_DMA
-+	tristate "Loongson2 Chain Multi-Channel DMA support"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  Support for the Loongson Chain Multi-Channel DMA controller driver.
-+	  It is discovered on the Loongson-2K chip (Loongson-2K0300/Loongson-2K3000),
-+	  which has 4/8 channels internally, enabling bidirectional data transfer
-+	  between devices and memory.
-+
- endif
-diff --git a/drivers/dma/loongson/Makefile b/drivers/dma/loongson/Makefile
-index 6cdd08065e92..48c19781e729 100644
---- a/drivers/dma/loongson/Makefile
-+++ b/drivers/dma/loongson/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_LOONGSON1_APB_DMA) += loongson1-apb-dma.o
- obj-$(CONFIG_LOONGSON2_APB_DMA) += loongson2-apb-dma.o
-+obj-$(CONFIG_LOONGSON2_APB_CMC_DMA) += loongson2-apb-cmc-dma.o
-diff --git a/drivers/dma/loongson/loongson2-apb-cmc-dma.c b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
-new file mode 100644
-index 000000000000..2f2ef51e41b6
---- /dev/null
-+++ b/drivers/dma/loongson/loongson2-apb-cmc-dma.c
-@@ -0,0 +1,730 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Looongson-2 Chain Multi-Channel DMA Controller driver
-+ *
-+ * Copyright (C) 2024-2026 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/acpi_dma.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmapool.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "../dmaengine.h"
-+#include "../virt-dma.h"
-+
-+#define LOONGSON2_CMCDMA_ISR		0x0	/* DMA Interrupt Status Register */
-+#define LOONGSON2_CMCDMA_IFCR		0x4	/* DMA Interrupt Flag Clear Register */
-+#define LOONGSON2_CMCDMA_CCR		0x8	/* DMA Channel Configuration Register */
-+#define LOONGSON2_CMCDMA_CNDTR		0xc	/* DMA Channel Transmit Count Register */
-+#define LOONGSON2_CMCDMA_CPAR		0x10	/* DMA Channel Peripheral Address Register */
-+#define LOONGSON2_CMCDMA_CMAR		0x14	/* DMA Channel Memory Address Register */
-+
-+/* Bitfields of DMA interrupt status register */
-+#define LOONGSON2_CMCDMA_TCI		BIT(1) /* Transfer Complete Interrupt */
-+#define LOONGSON2_CMCDMA_HTI		BIT(2) /* Half Transfer Interrupt */
-+#define LOONGSON2_CMCDMA_TEI		BIT(3) /* Transfer Error Interrupt */
-+
-+#define LOONGSON2_CMCDMA_MASKI		\
-+	(LOONGSON2_CMCDMA_TCI | LOONGSON2_CMCDMA_HTI | LOONGSON2_CMCDMA_TEI)
-+
-+/* Bitfields of DMA channel x Configuration Register */
-+#define LOONGSON2_CMCDMA_CCR_EN		BIT(0) /* Stream Enable */
-+#define LOONGSON2_CMCDMA_CCR_TCIE	BIT(1) /* Transfer Complete Interrupt Enable */
-+#define LOONGSON2_CMCDMA_CCR_HTIE	BIT(2) /* Half Transfer Complete Interrupt Enable */
-+#define LOONGSON2_CMCDMA_CCR_TEIE	BIT(3) /* Transfer Error Interrupt Enable */
-+#define LOONGSON2_CMCDMA_CCR_DIR	BIT(4) /* Data Transfer Direction */
-+#define LOONGSON2_CMCDMA_CCR_CIRC	BIT(5) /* Circular mode */
-+#define LOONGSON2_CMCDMA_CCR_PINC	BIT(6) /* Peripheral increment mode */
-+#define LOONGSON2_CMCDMA_CCR_MINC	BIT(7) /* Memory increment mode */
-+#define LOONGSON2_CMCDMA_CCR_PSIZE_MASK	GENMASK(9, 8)
-+#define LOONGSON2_CMCDMA_CCR_MSIZE_MASK	GENMASK(11, 10)
-+#define LOONGSON2_CMCDMA_CCR_PL_MASK	GENMASK(13, 12)
-+#define LOONGSON2_CMCDMA_CCR_M2M	BIT(14)
-+
-+#define LOONGSON2_CMCDMA_CCR_CFG_MASK	\
-+	(LOONGSON2_CMCDMA_CCR_PINC | LOONGSON2_CMCDMA_CCR_MINC | LOONGSON2_CMCDMA_CCR_PL_MASK)
-+
-+#define LOONGSON2_CMCDMA_CCR_IRQ_MASK	\
-+	(LOONGSON2_CMCDMA_CCR_TCIE | LOONGSON2_CMCDMA_CCR_HTIE | LOONGSON2_CMCDMA_CCR_TEIE)
-+
-+#define LOONGSON2_CMCDMA_STREAM_MASK	\
-+	(LOONGSON2_CMCDMA_CCR_CFG_MASK | LOONGSON2_CMCDMA_CCR_IRQ_MASK)
-+
-+#define LOONGSON2_CMCDMA_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
-+					 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
-+					 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES))
-+
-+#define LOONSON2_CMCDMA_MAX_DATA_ITEMS	SZ_64K
-+
-+struct loongson2_cmc_dma_chan_reg {
-+	u32 ccr;
-+	u32 cndtr;
-+	u32 cpar;
-+	u32 cmar;
-+};
-+
-+struct loongson2_cmc_dma_sg_req {
-+	u32 len;
-+	struct loongson2_cmc_dma_chan_reg chan_reg;
-+};
-+
-+struct loongson2_cmc_dma_desc {
-+	struct virt_dma_desc vdesc;
-+	bool cyclic;
-+	u32 num_sgs;
-+	struct loongson2_cmc_dma_sg_req sg_req[] __counted_by(num_sgs);
-+};
-+
-+struct loongson2_cmc_dma_chan {
-+	struct virt_dma_chan vchan;
-+	struct dma_slave_config	dma_sconfig;
-+	struct loongson2_cmc_dma_desc *desc;
-+	u32 id;
-+	u32 irq;
-+	u32 next_sg;
-+	struct loongson2_cmc_dma_chan_reg chan_reg;
-+};
-+
-+struct loongson2_cmc_dma_dev {
-+	struct dma_device ddev;
-+	struct clk *dma_clk;
-+	void __iomem *base;
-+	u32 nr_channels;
-+	u32 chan_reg_offset;
-+	struct loongson2_cmc_dma_chan chan[] __counted_by(nr_channels);
-+};
-+
-+struct loongson2_cmc_dma_config {
-+	u32 max_channels;
-+	u32 chan_reg_offset;
-+};
-+
-+static const struct loongson2_cmc_dma_config ls2k0300_cmc_dma_config = {
-+	.max_channels = 8,
-+	.chan_reg_offset = 0x14,
-+};
-+
-+static const struct loongson2_cmc_dma_config ls2k3000_cmc_dma_config = {
-+	.max_channels = 4,
-+	.chan_reg_offset = 0x18,
-+};
-+
-+static struct loongson2_cmc_dma_dev *lmdma_get_dev(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	return container_of(lchan->vchan.chan.device, struct loongson2_cmc_dma_dev, ddev);
-+}
-+
-+static struct loongson2_cmc_dma_chan *to_lmdma_chan(struct dma_chan *chan)
-+{
-+	return container_of(chan, struct loongson2_cmc_dma_chan, vchan.chan);
-+}
-+
-+static struct loongson2_cmc_dma_desc *to_lmdma_desc(struct virt_dma_desc *vdesc)
-+{
-+	return container_of(vdesc, struct loongson2_cmc_dma_desc, vdesc);
-+}
-+
-+static struct device *chan2dev(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	return &lchan->vchan.chan.dev->device;
-+}
-+
-+static u32 loongson2_cmc_dma_read(struct loongson2_cmc_dma_dev *lddev, u32 reg, u32 id)
-+{
-+	return readl(lddev->base + (reg + lddev->chan_reg_offset * id));
-+}
-+
-+static void loongson2_cmc_dma_write(struct loongson2_cmc_dma_dev *lddev, u32 reg, u32 id, u32 val)
-+{
-+	writel(val, lddev->base + (reg + lddev->chan_reg_offset * id));
-+}
-+
-+static int loongson2_cmc_dma_get_width(enum dma_slave_buswidth width)
-+{
-+	switch (width) {
-+	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-+	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-+	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-+		return ffs(width) - 1;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int loongson2_cmc_dma_slave_config(struct dma_chan *chan, struct dma_slave_config *config)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+
-+	memcpy(&lchan->dma_sconfig, config, sizeof(*config));
-+
-+	return 0;
-+}
-+
-+static void loongson2_cmc_dma_irq_clear(struct loongson2_cmc_dma_chan *lchan, u32 flags)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	u32 ifcr;
-+
-+	ifcr = flags << (4 * lchan->id);
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_IFCR, 0, ifcr);
-+}
-+
-+static void loongson2_cmc_dma_stop(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	u32 ccr;
-+
-+	ccr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lchan->id);
-+	ccr &= ~(LOONGSON2_CMCDMA_CCR_IRQ_MASK | LOONGSON2_CMCDMA_CCR_EN);
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id, ccr);
-+
-+	loongson2_cmc_dma_irq_clear(lchan, LOONGSON2_CMCDMA_MASKI);
-+}
-+
-+static int loongson2_cmc_dma_terminate_all(struct dma_chan *chan)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+
-+	LIST_HEAD(head);
-+
-+	scoped_guard(spinlock_irqsave, &lchan->vchan.lock) {
-+		if (lchan->desc) {
-+			vchan_terminate_vdesc(&lchan->desc->vdesc);
-+			loongson2_cmc_dma_stop(lchan);
-+			lchan->desc = NULL;
-+		}
-+		vchan_get_all_descriptors(&lchan->vchan, &head);
-+	}
-+
-+	vchan_dma_desc_free_list(&lchan->vchan, &head);
-+
-+	return 0;
-+}
-+
-+static void loongson2_cmc_dma_synchronize(struct dma_chan *chan)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+
-+	vchan_synchronize(&lchan->vchan);
-+}
-+
-+static void loongson2_cmc_dma_start_transfer(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	struct loongson2_cmc_dma_sg_req *sg_req;
-+	struct loongson2_cmc_dma_chan_reg *reg;
-+	struct virt_dma_desc *vdesc;
-+
-+	loongson2_cmc_dma_stop(lchan);
-+
-+	if (!lchan->desc) {
-+		vdesc = vchan_next_desc(&lchan->vchan);
-+		if (!vdesc)
-+			return;
-+
-+		list_del(&vdesc->node);
-+		lchan->desc = to_lmdma_desc(vdesc);
-+		lchan->next_sg = 0;
-+	}
-+
-+	if (lchan->next_sg == lchan->desc->num_sgs)
-+		lchan->next_sg = 0;
-+
-+	sg_req = &lchan->desc->sg_req[lchan->next_sg];
-+	reg = &sg_req->chan_reg;
-+
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id, reg->ccr);
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CNDTR, lchan->id, reg->cndtr);
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CPAR, lchan->id, reg->cpar);
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CMAR, lchan->id, reg->cmar);
-+
-+	lchan->next_sg++;
-+
-+	/* Start DMA */
-+	reg->ccr |= LOONGSON2_CMCDMA_CCR_EN;
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, lchan->id, reg->ccr);
-+}
-+
-+static void loongson2_cmc_dma_configure_next_sg(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	struct loongson2_cmc_dma_sg_req *sg_req;
-+	u32 ccr, id = lchan->id;
-+
-+	if (lchan->next_sg == lchan->desc->num_sgs)
-+		lchan->next_sg = 0;
-+
-+	/* Stop to update mem addr */
-+	ccr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, id);
-+	ccr &= ~LOONGSON2_CMCDMA_CCR_EN;
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, id, ccr);
-+
-+	sg_req = &lchan->desc->sg_req[lchan->next_sg];
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CMAR, id, sg_req->chan_reg.cmar);
-+
-+	/* Start transition */
-+	ccr |= LOONGSON2_CMCDMA_CCR_EN;
-+	loongson2_cmc_dma_write(lddev, LOONGSON2_CMCDMA_CCR, id, ccr);
-+}
-+
-+static void loongson2_cmc_dma_handle_chan_done(struct loongson2_cmc_dma_chan *lchan)
-+{
-+	if (!lchan->desc)
-+		return;
-+
-+	if (lchan->desc->cyclic) {
-+		vchan_cyclic_callback(&lchan->desc->vdesc);
-+		/* LOONGSON2_CMCDMA_CCR_CIRC mode don't need update register */
-+		if (lchan->desc->num_sgs == 1)
-+			return;
-+		loongson2_cmc_dma_configure_next_sg(lchan);
-+		lchan->next_sg++;
-+	} else {
-+		if (lchan->next_sg == lchan->desc->num_sgs) {
-+			vchan_cookie_complete(&lchan->desc->vdesc);
-+			lchan->desc = NULL;
-+		}
-+		loongson2_cmc_dma_start_transfer(lchan);
-+	}
-+}
-+
-+static irqreturn_t loongson2_cmc_dma_chan_irq(int irq, void *devid)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = devid;
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	struct device *dev = chan2dev(lchan);
-+	u32 ists, status, ccr;
-+
-+	scoped_guard(spinlock, &lchan->vchan.lock) {
-+		ccr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lchan->id);
-+		ists = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_ISR, 0);
-+		status = (ists >> (4 * lchan->id)) & LOONGSON2_CMCDMA_MASKI;
-+
-+		loongson2_cmc_dma_irq_clear(lchan, status);
-+
-+		if (status & LOONGSON2_CMCDMA_TCI) {
-+			loongson2_cmc_dma_handle_chan_done(lchan);
-+			status &= ~LOONGSON2_CMCDMA_TCI;
-+		}
-+
-+		if (status & LOONGSON2_CMCDMA_HTI)
-+			status &= ~LOONGSON2_CMCDMA_HTI;
-+
-+		if (status & LOONGSON2_CMCDMA_TEI) {
-+			dev_err(dev, "DMA Transform Error.\n");
-+			if (!(ccr & LOONGSON2_CMCDMA_CCR_EN))
-+				dev_err(dev, "Channel disabled by HW.\n");
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void loongson2_cmc_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+
-+	guard(spinlock_irqsave)(&lchan->vchan.lock);
-+
-+	if (vchan_issue_pending(&lchan->vchan) && !lchan->desc) {
-+		dev_dbg(chan2dev(lchan), "vchan %pK: issued\n", &lchan->vchan);
-+		loongson2_cmc_dma_start_transfer(lchan);
-+	}
-+}
-+
-+static int loongson2_cmc_dma_set_xfer_param(struct loongson2_cmc_dma_chan *lchan,
-+					    enum dma_transfer_direction direction,
-+					    enum dma_slave_buswidth *buswidth, u32 buf_len)
-+{
-+	struct dma_slave_config	sconfig = lchan->dma_sconfig;
-+	struct device *dev = chan2dev(lchan);
-+	int dev_width;
-+	u32 ccr;
-+
-+	switch (direction) {
-+	case DMA_MEM_TO_DEV:
-+		dev_width = loongson2_cmc_dma_get_width(sconfig.dst_addr_width);
-+		if (dev_width < 0) {
-+			dev_err(dev, "DMA_MEM_TO_DEV bus width not supported\n");
-+			return dev_width;
-+		}
-+		lchan->chan_reg.cpar = sconfig.dst_addr;
-+		ccr = LOONGSON2_CMCDMA_CCR_DIR;
-+		*buswidth = sconfig.dst_addr_width;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		dev_width = loongson2_cmc_dma_get_width(sconfig.src_addr_width);
-+		if (dev_width < 0) {
-+			dev_err(dev, "DMA_DEV_TO_MEM bus width not supported\n");
-+			return dev_width;
-+		}
-+		lchan->chan_reg.cpar = sconfig.src_addr;
-+		ccr = LOONGSON2_CMCDMA_CCR_MINC;
-+		*buswidth = sconfig.src_addr_width;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ccr |= FIELD_PREP(LOONGSON2_CMCDMA_CCR_PSIZE_MASK, dev_width) |
-+	       FIELD_PREP(LOONGSON2_CMCDMA_CCR_MSIZE_MASK, dev_width);
-+
-+	/* Set DMA control register */
-+	lchan->chan_reg.ccr &= ~(LOONGSON2_CMCDMA_CCR_PSIZE_MASK | LOONGSON2_CMCDMA_CCR_MSIZE_MASK);
-+	lchan->chan_reg.ccr |= ccr;
-+
-+	return 0;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+loongson2_cmc_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl, u32 sg_len,
-+				enum dma_transfer_direction direction,
-+				unsigned long flags, void *context)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+	struct loongson2_cmc_dma_desc *desc;
-+	enum dma_slave_buswidth buswidth;
-+	struct scatterlist *sg;
-+	u32 num_items, i;
-+	int ret;
-+
-+	desc = kzalloc_flex(*desc, sg_req, sg_len, GFP_NOWAIT);
-+	if (!desc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for_each_sg(sgl, sg, sg_len, i) {
-+		ret = loongson2_cmc_dma_set_xfer_param(lchan, direction, &buswidth, sg_dma_len(sg));
-+		if (ret)
-+			return ERR_PTR(ret);
-+
-+		num_items = DIV_ROUND_UP(sg_dma_len(sg), buswidth);
-+		if (num_items >= LOONSON2_CMCDMA_MAX_DATA_ITEMS) {
-+			dev_err(chan2dev(lchan), "Number of items not supported\n");
-+			kfree(desc);
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		desc->sg_req[i].len = sg_dma_len(sg);
-+		desc->sg_req[i].chan_reg.ccr = lchan->chan_reg.ccr;
-+		desc->sg_req[i].chan_reg.cpar = lchan->chan_reg.cpar;
-+		desc->sg_req[i].chan_reg.cmar = sg_dma_address(sg);
-+		desc->sg_req[i].chan_reg.cndtr = num_items;
-+	}
-+
-+	desc->num_sgs = sg_len;
-+	desc->cyclic = false;
-+
-+	return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-+}
-+
-+static struct dma_async_tx_descriptor *
-+loongson2_cmc_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
-+				  size_t period_len, enum dma_transfer_direction direction,
-+				  unsigned long flags)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+	struct loongson2_cmc_dma_desc *desc;
-+	enum dma_slave_buswidth buswidth;
-+	u32 num_periods, num_items, i;
-+	int ret;
-+
-+	if (unlikely(buf_len % period_len))
-+		return ERR_PTR(-EINVAL);
-+
-+	ret = loongson2_cmc_dma_set_xfer_param(lchan, direction, &buswidth, period_len);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	num_items = DIV_ROUND_UP(period_len, buswidth);
-+	if (num_items >= LOONSON2_CMCDMA_MAX_DATA_ITEMS) {
-+		dev_err(chan2dev(lchan), "Number of items not supported\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	/* Enable Circular mode */
-+	if (buf_len == period_len)
-+		lchan->chan_reg.ccr |= LOONGSON2_CMCDMA_CCR_CIRC;
-+
-+	num_periods = DIV_ROUND_UP(buf_len, period_len);
-+	desc = kzalloc_flex(*desc, sg_req, num_periods, GFP_NOWAIT);
-+	if (!desc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i = 0; i < num_periods; i++) {
-+		desc->sg_req[i].len = period_len;
-+		desc->sg_req[i].chan_reg.ccr = lchan->chan_reg.ccr;
-+		desc->sg_req[i].chan_reg.cpar = lchan->chan_reg.cpar;
-+		desc->sg_req[i].chan_reg.cmar = buf_addr;
-+		desc->sg_req[i].chan_reg.cndtr = num_items;
-+		buf_addr += period_len;
-+	}
-+
-+	desc->num_sgs = num_periods;
-+	desc->cyclic = true;
-+
-+	return vchan_tx_prep(&lchan->vchan, &desc->vdesc, flags);
-+}
-+
-+static size_t loongson2_cmc_dma_desc_residue(struct loongson2_cmc_dma_chan *lchan,
-+					     struct loongson2_cmc_dma_desc *desc, u32 next_sg)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = lmdma_get_dev(lchan);
-+	u32 residue, width, ndtr, ccr, i;
-+
-+	ccr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CCR, lchan->id);
-+	width = FIELD_GET(LOONGSON2_CMCDMA_CCR_PSIZE_MASK, ccr);
-+
-+	ndtr = loongson2_cmc_dma_read(lddev, LOONGSON2_CMCDMA_CNDTR, lchan->id);
-+	residue = ndtr << width;
-+
-+	if (lchan->desc->cyclic && next_sg == 0)
-+		return residue;
-+
-+	for (i = next_sg; i < desc->num_sgs; i++)
-+		residue += desc->sg_req[i].len;
-+
-+	return residue;
-+}
-+
-+static enum dma_status loongson2_cmc_dma_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
-+						   struct dma_tx_state *state)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+	struct virt_dma_desc *vdesc;
-+	enum dma_status status;
-+
-+	status = dma_cookie_status(chan, cookie, state);
-+	if (status == DMA_COMPLETE || !state)
-+		return status;
-+
-+	scoped_guard(spinlock_irqsave, &lchan->vchan.lock) {
-+		vdesc = vchan_find_desc(&lchan->vchan, cookie);
-+		if (lchan->desc && cookie == lchan->desc->vdesc.tx.cookie)
-+			state->residue = loongson2_cmc_dma_desc_residue(lchan, lchan->desc,
-+									lchan->next_sg);
-+		else if (vdesc)
-+			state->residue = loongson2_cmc_dma_desc_residue(lchan,
-+									to_lmdma_desc(vdesc), 0);
-+	}
-+
-+	return status;
-+}
-+
-+static void loongson2_cmc_dma_free_chan_resources(struct dma_chan *chan)
-+{
-+	vchan_free_chan_resources(to_virt_chan(chan));
-+}
-+
-+static void loongson2_cmc_dma_desc_free(struct virt_dma_desc *vdesc)
-+{
-+	kfree(to_lmdma_desc(vdesc));
-+}
-+
-+static bool loongson2_cmc_dma_acpi_filter(struct dma_chan *chan, void *param)
-+{
-+	struct loongson2_cmc_dma_chan *lchan = to_lmdma_chan(chan);
-+	struct acpi_dma_spec *dma_spec = param;
-+
-+	memset(&lchan->chan_reg, 0, sizeof(struct loongson2_cmc_dma_chan_reg));
-+	lchan->chan_reg.ccr = dma_spec->chan_id & LOONGSON2_CMCDMA_STREAM_MASK;
-+
-+	return true;
-+}
-+
-+static int loongson2_cmc_dma_acpi_controller_register(struct loongson2_cmc_dma_dev *lddev)
-+{
-+	struct device *dev = lddev->ddev.dev;
-+	struct acpi_dma_filter_info *info;
-+
-+	if (!is_acpi_node(dev_fwnode(dev)))
-+		return 0;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	dma_cap_zero(info->dma_cap);
-+	info->dma_cap = lddev->ddev.cap_mask;
-+	info->filter_fn = loongson2_cmc_dma_acpi_filter;
-+
-+	return devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
-+}
-+
-+static struct dma_chan *loongson2_cmc_dma_of_xlate(struct of_phandle_args *dma_spec,
-+						   struct of_dma *ofdma)
-+{
-+	struct loongson2_cmc_dma_dev *lddev = ofdma->of_dma_data;
-+	struct device *dev = lddev->ddev.dev;
-+	struct loongson2_cmc_dma_chan *lchan;
-+	struct dma_chan *chan;
-+
-+	if (dma_spec->args_count < 2)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (dma_spec->args[0] >= lddev->nr_channels) {
-+		dev_err(dev, "Invalid channel id.\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	lchan = &lddev->chan[dma_spec->args[0]];
-+	chan = dma_get_slave_channel(&lchan->vchan.chan);
-+	if (!chan) {
-+		dev_err(dev, "No more channels available.\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	memset(&lchan->chan_reg, 0, sizeof(struct loongson2_cmc_dma_chan_reg));
-+	lchan->chan_reg.ccr = dma_spec->args[1] & LOONGSON2_CMCDMA_STREAM_MASK;
-+
-+	return chan;
-+}
-+
-+static int loongson2_cmc_dma_of_controller_register(struct loongson2_cmc_dma_dev *lddev)
-+{
-+	struct device *dev = lddev->ddev.dev;
-+
-+	if (!is_of_node(dev_fwnode(dev)))
-+		return 0;
-+
-+	return of_dma_controller_register(dev->of_node, loongson2_cmc_dma_of_xlate, lddev);
-+}
-+
-+static int loongson2_cmc_dma_probe(struct platform_device *pdev)
-+{
-+	const struct loongson2_cmc_dma_config *config;
-+	struct loongson2_cmc_dma_chan *lchan;
-+	struct loongson2_cmc_dma_dev *lddev;
-+	struct device *dev = &pdev->dev;
-+	struct dma_device *ddev;
-+	u32 nr_chans, i;
-+	int ret;
-+
-+	config = (const struct loongson2_cmc_dma_config *)device_get_match_data(dev);
-+	if (!config)
-+		return -EINVAL;
-+
-+	ret = device_property_read_u32(dev, "dma-channels", &nr_chans);
-+	if (ret || nr_chans > config->max_channels) {
-+		dev_err(dev, "missing or invalid dma-channels property\n");
-+		nr_chans = config->max_channels;
-+	}
-+
-+	lddev = devm_kzalloc(dev, struct_size(lddev, chan, nr_chans), GFP_KERNEL);
-+	if (!lddev)
-+		return -ENOMEM;
-+
-+	lddev->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(lddev->base))
-+		return PTR_ERR(lddev->base);
-+
-+	platform_set_drvdata(pdev, lddev);
-+	lddev->nr_channels = nr_chans;
-+	lddev->chan_reg_offset = config->chan_reg_offset;
-+
-+	lddev->dma_clk = devm_clk_get_optional_enabled(dev, NULL);
-+	if (IS_ERR(lddev->dma_clk))
-+		return dev_err_probe(dev, PTR_ERR(lddev->dma_clk), "Failed to get dma clock\n");
-+
-+	ddev = &lddev->ddev;
-+	ddev->dev = dev;
-+
-+	dma_cap_zero(ddev->cap_mask);
-+	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-+	dma_cap_set(DMA_PRIVATE, ddev->cap_mask);
-+	dma_cap_set(DMA_CYCLIC, ddev->cap_mask);
-+
-+	ddev->device_free_chan_resources = loongson2_cmc_dma_free_chan_resources;
-+	ddev->device_config = loongson2_cmc_dma_slave_config;
-+	ddev->device_prep_slave_sg = loongson2_cmc_dma_prep_slave_sg;
-+	ddev->device_prep_dma_cyclic = loongson2_cmc_dma_prep_dma_cyclic;
-+	ddev->device_issue_pending = loongson2_cmc_dma_issue_pending;
-+	ddev->device_synchronize = loongson2_cmc_dma_synchronize;
-+	ddev->device_tx_status = loongson2_cmc_dma_tx_status;
-+	ddev->device_terminate_all = loongson2_cmc_dma_terminate_all;
-+
-+	ddev->max_sg_burst = LOONSON2_CMCDMA_MAX_DATA_ITEMS;
-+	ddev->src_addr_widths = LOONGSON2_CMCDMA_BUSWIDTHS;
-+	ddev->dst_addr_widths = LOONGSON2_CMCDMA_BUSWIDTHS;
-+	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-+	INIT_LIST_HEAD(&ddev->channels);
-+
-+	for (i = 0; i < nr_chans; i++) {
-+		lchan = &lddev->chan[i];
-+
-+		lchan->id = i;
-+		lchan->vchan.desc_free = loongson2_cmc_dma_desc_free;
-+		vchan_init(&lchan->vchan, ddev);
-+	}
-+
-+	ret = dmaenginem_async_device_register(ddev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register DMA engine device.\n");
-+
-+	for (i = 0; i < nr_chans; i++) {
-+		lchan = &lddev->chan[i];
-+
-+		lchan->irq = platform_get_irq(pdev, i);
-+		if (lchan->irq < 0)
-+			return lchan->irq;
-+
-+		ret = devm_request_irq(dev, lchan->irq, loongson2_cmc_dma_chan_irq, IRQF_SHARED,
-+				       dev_name(chan2dev(lchan)), lchan);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = loongson2_cmc_dma_acpi_controller_register(lddev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register dma controller with ACPI.\n");
-+
-+	ret = loongson2_cmc_dma_of_controller_register(lddev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register dma controller with FDT.\n");
-+
-+	dev_info(dev, "Loongson-2 Multi-Channel DMA Controller registered successfully.\n");
-+
-+	return 0;
-+}
-+
-+static void loongson2_cmc_dma_remove(struct platform_device *pdev)
-+{
-+	of_dma_controller_free(pdev->dev.of_node);
-+}
-+
-+static const struct of_device_id loongson2_cmc_dma_of_match[] = {
-+	{ .compatible = "loongson,ls2k0300-dma", .data = &ls2k0300_cmc_dma_config },
-+	{ .compatible = "loongson,ls2k3000-dma", .data = &ls2k3000_cmc_dma_config },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, loongson2_cmc_dma_of_match);
-+
-+static const struct acpi_device_id loongson2_cmc_dma_acpi_match[] = {
-+	{ "LOON0014", .driver_data = (kernel_ulong_t)&ls2k3000_cmc_dma_config },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(acpi, loongson2_cmc_dma_acpi_match);
-+
-+static struct platform_driver loongson2_cmc_dma_driver = {
-+	.driver = {
-+		.name = "loongson2-apb-cmc-dma",
-+		.of_match_table = loongson2_cmc_dma_of_match,
-+		.acpi_match_table = loongson2_cmc_dma_acpi_match,
-+	},
-+	.probe = loongson2_cmc_dma_probe,
-+	.remove = loongson2_cmc_dma_remove,
-+};
-+module_platform_driver(loongson2_cmc_dma_driver);
-+
-+MODULE_DESCRIPTION("Looongson-2 Chain Multi-Channel DMA Controller driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited");
-+MODULE_LICENSE("GPL");
--- 
-2.52.0
+Best regards,
+Krzysztof
 
