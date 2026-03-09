@@ -1,98 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3D1917F1
-	for <loongarch@lists.linux.dev>; Mon,  9 Mar 2026 13:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974622556E
+	for <loongarch@lists.linux.dev>; Mon,  9 Mar 2026 13:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773063114; cv=none; b=Byjb5/GUOepVAiW3pm0SKWh1zsbD6GqDNa5LrPd1lwY/cqFA79yj64SVxbXBp07oMtx34dTAZDEI7b62uKGNlBoHvD0dIqREQwjf2ZXTfQejQ87NZgM/Bd8U4DBrXOZi8mQfbHPSlP6dbW0x7+V2qkX/c4CrAQ12+cthfty36b0=
+	t=1773063183; cv=none; b=CNQ6Alv+qokyECQ7+XER25CQURZjD9IHTLVkc0o8eKemMzoLSktm4Lhi4t2T1FvoRp/SYJevqb5CGvrLtGygeE6ZGvJi9HUrzZD3SJR4zSReQKq6z3rj9oxK3NUlBc6pfO/hfAJmXkcCrCN35bBC71HlUM3qR4Jiu5YecZww9z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773063114; c=relaxed/simple;
-	bh=chGpSmu/QUMAx6qvJsIGqTkrxHOBlNJu++547U14VxE=;
+	s=arc-20240116; t=1773063183; c=relaxed/simple;
+	bh=BTHtEpNf79/aZLsd9vWZFWEtV159n9Y/T5kPu0xKjDE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Od65gqnKwv6XiZBsQ+1h6Q//0359mZxXhzHS/bTcc9PFPbvlxHlwvuZx0tAA9iirbRJ3/tJPPpesSVwGQ3RGh4osaPW562cUhlhKM/u0LA51K80ExLntqgQnu6EjXqSThNSEbJx1FFif/8oZ3kjKKXFLltsngOOvaZp/NawKzUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3qJnswW; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=LykoaBR7XWDF2OzgxXcE9pW+fayfgvTACHroiShLXZZ3aGw4uzFytOvh2iptDML8ndI1r/OciG9OGtrXYqRqpxHkMVCOL5f8QGmjbeVWbxjx1PuYaeiIY91w2iNg0SLj68KnVb926PIp1LSw9ArPGGi++UUb4+AnHQV+xHjYhYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4wL+B0K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3qJnswW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C613C2BCAF
-	for <loongarch@lists.linux.dev>; Mon,  9 Mar 2026 13:31:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4wL+B0K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79614C2BCB4
+	for <loongarch@lists.linux.dev>; Mon,  9 Mar 2026 13:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773063114;
-	bh=chGpSmu/QUMAx6qvJsIGqTkrxHOBlNJu++547U14VxE=;
+	s=k20201202; t=1773063183;
+	bh=BTHtEpNf79/aZLsd9vWZFWEtV159n9Y/T5kPu0xKjDE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C3qJnswWPOk/d3rLnekvqGH/Fpk+Sq2VS6K3P3dZQtYCN8A6XxXxLdansmhfdTPmF
-	 5vBnbzm8r29mM+IV1nLWfuisYkkPJDoyYxx4gPYKL9GylF8mjmwhK1DxGWH5QlF5PO
-	 B0GPwQUjYfRhBIy1jzOefPHpbe0IakucfGoIKXzZvBESii8UHVWQll/NWWnffJR1sy
-	 U0XE4PXCsbhDlxk+Bgr9VSn01i7jKrrXBUqQerY3Cwt4CeUU+uV/czNJv90b+1Y0zY
-	 UIUwDPXT389+EHUVfALdbEeabMlkvqSGyJswX8DFIZDdLMzu+/xV7Q/Fz+uyTfc4aV
-	 ZGounL8dNRoOg==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-662b42ca100so3796a12.0
-        for <loongarch@lists.linux.dev>; Mon, 09 Mar 2026 06:31:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXXJhXudEC8SyO1tvxAkhwmYsHo8oauA8bO4Fur7icthUmqo64giTpBTuAbHjXKk/q1rAonlh+fcvo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwS7aotV7EarZefrUYu8wAyC9hQQ88nwJBn2UDzWdDqMSCtcR0j
-	GpCRYeQMJoVEX6DjBzxVLl3IPG/wJR/5P8zTfImDq3TxNKPO+wmPYf9oYKmB0O5vgy49RefaE6g
-	VMDoDZy5pVPhso2oGCJfoyjBAakTN/m0=
-X-Received: by 2002:a05:6402:144c:b0:65c:b21:2df4 with SMTP id
- 4fb4d7f45d1cf-6619d45a17dmr6580142a12.6.1773063112558; Mon, 09 Mar 2026
- 06:31:52 -0700 (PDT)
+	b=V4wL+B0KN0+mkKl6jlrce5TKebjg3Y43ayQb2agA8rlsxB2L5KrJbPRM4lffmOYVv
+	 WeoCbphnvAiSn14vJApR0DkykhCZi84KdCPucmK3ODu0eGjLqok6PdyDHKytnwBgBj
+	 CbNU5aXCnZQXzrMjw6j+NcNqh0foBwzW4aeI7pggoVoZ8ohWLocNPApwbUoMo85MFY
+	 oGTTo7w0CXdRGL0nRVVZAoudiPxXEXUTap9s9O4ghOFb505d8XzBb/FUXUrxweC0Z3
+	 PaYzMaRcgmkoxPVWNRrh+XRwyJqxfXrInguSTibxttrVEWJpgfwnDvqzFQAaapkrWb
+	 n3DnV8F/mtSjQ==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-660d2e48383so188475a12.1
+        for <loongarch@lists.linux.dev>; Mon, 09 Mar 2026 06:33:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKfSMWKz1g9Ux5v3gqwer3FS42E2Qh4FRTdrCMT6VBXyevaxd0FKlAo/rM1vMMrQ+2rdR6lV3hG+g=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzjMte5DVcGRFfx2FLpLaVc4zlOuJk7eq4nVFSNdrQt3/GSto4R
+	WCzEQteafC2q53wcLmd3CUez7SyHxSVFv+Wc5BatqejQd1ZgCcy5f5woKmbJNWRb/U1in+lsdSn
+	FfEjcHZec0fV14VoxMCLdUPnq2qR6G7A=
+X-Received: by 2002:a05:6402:42d1:b0:661:3804:b0c2 with SMTP id
+ 4fb4d7f45d1cf-6619d51d6admr5919005a12.27.1773063181991; Mon, 09 Mar 2026
+ 06:33:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260225-loongarch-scq-v1-1-47acc2e45ec2@linutronix.de> <20260309080529-64921486-31cf-4bf3-90a1-ed7459bb16c5@linutronix.de>
-In-Reply-To: <20260309080529-64921486-31cf-4bf3-90a1-ed7459bb16c5@linutronix.de>
+References: <cover.1772853681.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1772853681.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 9 Mar 2026 21:31:41 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6ymiABkRu7VQqX87Qx_4k4=VWnB-WrcMo+sB7piUOntQ@mail.gmail.com>
-X-Gm-Features: AaiRm51yKODZEKLI63eTWhMli5PUntHoLbQt7PjzRIk0E1fFXCBzPLSagBdQFe4
-Message-ID: <CAAhV-H6ymiABkRu7VQqX87Qx_4k4=VWnB-WrcMo+sB7piUOntQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Only use SC.Q when supported by the assembler
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: WANG Xuerui <kernel@xen0n.name>, George Guo <guodongtai@kylinos.cn>, 
-	Hengqi Chen <hengqi.chen@gmail.com>, Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 9 Mar 2026 21:32:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H65H5WjRarf8KHN3zb1jSyFpGPS1By2=0Kqd1MqnVx9ow@mail.gmail.com>
+X-Gm-Features: AaiRm53ShuE-RRVpgsb6NRxueHra0ZOJThCsn08_hzoyeP4saxxF_8G4DDjsnCc
+Message-ID: <CAAhV-H65H5WjRarf8KHN3zb1jSyFpGPS1By2=0Kqd1MqnVx9ow@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] dmaengine: Add Loongson Multi-Channel DMA
+ controller support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Frank Li <Frank.Li@kernel.org>, dmaengine@vger.kernel.org, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 9, 2026 at 3:07=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
+On Sat, Mar 7, 2026 at 11:25=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
 >
-> Hi LoongArch maintainers,
+> Hi all:
 >
-> On Wed, Feb 25, 2026 at 11:09:39AM +0100, Thomas Wei=C3=9Fschuh wrote:
-> > The 128-bit atomic cmpxchg implementation uses the SC.Q instruction.
-> > Older versions of GNU AS do not support that instruction, erroring out:
-> >
-> > ERROR:root:{standard input}: Assembler messages:
-> > {standard input}:4831: Error: no match insn: sc.q     $t0,$t1,$r14
-> > {standard input}:6407: Error: no match insn: sc.q     $t0,$t1,$r23
-> > {standard input}:10856: Error: no match insn: sc.q    $t0,$t1,$r14
-> > make[4]: *** [../scripts/Makefile.build:289: mm/slub.o] Error 1
-> >
-> > (Binutils 2.41)
-> >
-> > Test support for SC.Q in kconfig and disable the atomics if the
-> > instruction is not available.
-> >
-> > Fixes: f0e4b1b6e295 ("LoongArch: Add 128-bit atomic cmpxchg support")
-> > Closes: https://lore.kernel.org/lkml/20260216082834-edc51c46-7b7a-4295-=
-8ea5-4d9a3ca2224f@linutronix.de/
-> > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> >  arch/loongarch/Kconfig               | 3 +++
-> >  arch/loongarch/include/asm/cmpxchg.h | 5 +++++
-> >  2 files changed, 8 insertions(+)
+> This patchset introduces the Loongson multi-channel DMA controller,
+> which is present in the Loongson-2K0300 and Loongson-2K3000 processors.
 >
-> (...)
+> It is a multi-channel controller that enables data transfers from memory
+> to memory, device to memory, and memory to device, as well as channel
+> prioritization configurable through the channel configuration registers.
 >
-> This is still broken in mainline. Any chance to get this patch to Linus?
-Now queued for loongarch-fixes, sorry for the late response.
-
-Huacai
+> Additionally, since multiple distinct types of DMA controllers exist on
+> the Loongson platform, I have attempted to consolidate all Loongson DMA
+> drivers into a new directory named `Loongson` for easier management.
+For the whole series,
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
 >
+> Thanks.
+> Binbin
 >
-> Thomas
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> V4:
+> - Rebase on dmaengine/next tree;
+> - Add Reviewed-by tags from Frank and Rob, thanks;
+>
+> patch(1/6):
+>  - Add `depends on` restrictions.
+>
+> patch(6/6):
+>  - Move loongson2_cmc_dma_config{..} close to its users.
+>
+> Link to V3:
+> https://lore.kernel.org/dmaengine/cover.1771989595.git.zhoubinbin@loongso=
+n.cn/
+>
+> V3:
+> - Rebase on dmaengine/next tree;
+>
+> patch(1/6):
+>  - Keep alphabet order;
+>
+> patch(2/6):
+>  - Add Reviewed-by tag from Frank, thanks;
+>
+> patch(3/6)/(4/6):
+>  - New patches, format loongson2-apb-dma driver code;
+>
+> patch(5/6):
+>  - Add description for `interrupts` property;
+>
+> patch(6/6):
+>  - Use ffs() helper make the code cleaner;
+>  - Refact loongson2_cmc_dma_chan_irq();
+>  - Simplify locking with guard() and scoped_guard();
+>  - kzalloc()->kzalloc_flex().
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1770605931.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> patch(1/4):
+>  - Update loongson1-apb-dma.c entry in MAINTAINERS.
+>
+> patch(2/4):
+>  - New patch, use dmaenginem_async_device_register() helper.
+>
+> patch(3/4):
+>  - `additionalProperties: false` replaced by
+>    `unevaluatedProperties: false`.
+>
+> patch(4/4):
+>  - Rename filename as loongson2-apb-cmc-dma.c;
+>  - Rename Kconfig item as LOONGSON2_APB_CMC_DMA;
+>  - Rename the variable prefix as `loongson2_cmc_dma`;
+>  - Use dmaenginem_async_device_register() helper;
+>  - Drop 'dma_' prefix in struct loongson2_mdma_chan_reg;
+>  - Use struct_size();
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1770119693.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (6):
+>   dmaengine: loongson: New directory for Loongson DMA controllers
+>     drivers
+>   dmaengine: loongson: loongson2-apb: Convert to
+>     dmaenginem_async_device_register()
+>   dmaengine: loongson: loongson2-apb: Convert to devm_clk_get_enabled()
+>   dmaengine: loongson: loongson2-apb: Simplify locking with guard() and
+>     scoped_guard()
+>   dt-bindings: dmaengine: Add Loongson Multi-Channel DMA controller
+>   dmaengine: loongson: New driver for the Loongson Multi-Channel DMA
+>     controller
+>
+>  .../bindings/dma/loongson,ls2k0300-dma.yaml   |  81 ++
+>  MAINTAINERS                                   |   7 +-
+>  drivers/dma/Kconfig                           |  25 +-
+>  drivers/dma/Makefile                          |   3 +-
+>  drivers/dma/loongson/Kconfig                  |  41 +
+>  drivers/dma/loongson/Makefile                 |   4 +
+>  .../dma/{ =3D> loongson}/loongson1-apb-dma.c    |   4 +-
+>  drivers/dma/loongson/loongson2-apb-cmc-dma.c  | 730 ++++++++++++++++++
+>  .../dma/{ =3D> loongson}/loongson2-apb-dma.c    |  93 +--
+>  9 files changed, 903 insertions(+), 85 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2k03=
+00-dma.yaml
+>  create mode 100644 drivers/dma/loongson/Kconfig
+>  create mode 100644 drivers/dma/loongson/Makefile
+>  rename drivers/dma/{ =3D> loongson}/loongson1-apb-dma.c (99%)
+>  create mode 100644 drivers/dma/loongson/loongson2-apb-cmc-dma.c
+>  rename drivers/dma/{ =3D> loongson}/loongson2-apb-dma.c (91%)
+>
+>
+> base-commit: c8e9b1d9febc83ee94944695a07cfd40a1b29743
+> --
+> 2.52.0
 >
