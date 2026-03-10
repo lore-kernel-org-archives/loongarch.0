@@ -1,74 +1,88 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C4E3D4118
-	for <loongarch@lists.linux.dev>; Tue, 10 Mar 2026 06:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A5C3D523B
+	for <loongarch@lists.linux.dev>; Tue, 10 Mar 2026 06:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773125725; cv=none; b=NomtCAdf2h5U40oQCtNsr2mnql0rnHtq6mP99gdrXwA3l+EPu8fgvKc8IosP+7PtwIobxr6YOB7tidMSLE3nTtbeaEqJXQlQ4Y1hbTCF0lEtexe6wLz9yDaRTUv4t6PO5asIg9uqJT+7hB+XISbLciRV43npK+g6okvL915JWWQ=
+	t=1773125935; cv=none; b=Gx0DlUNf+AjWSVgSfh6uZfNsiPSD936oFrymHW+nEfLibzCWkjtsS0Y0chgGT9dqhs845OPpmK34gDBcMfODzgXpABbpqs/4t1+uvCCGwbZKrZvUt5C7eQdOpIHU3RW/lZw+7IvyYTKEfhwF1GXlTmF62IFy34Pz3H2LqOSbY8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773125725; c=relaxed/simple;
-	bh=c9Q+wruj5QbEwYFLIuRfyp1BNEnlAWSjalZJTxdMi24=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AS6tUkDhUWOlKh3FxOxV5txWlefVUm0HcjKIoj/KbiLBq20j5uqzO1rLETP5T6pn9mgzC6VMcFcaRGeBGtotSeV0XQLlwIO49MXWz5xD8izdfZ8nArB0ALzlH/Mz6dy5cHfaeFKFLAt/k34q7rQsNSB8dmgt6IlvA/cJK7Rd73o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bx36tSwK9pfmsZAA--.15775S3;
-	Tue, 10 Mar 2026 14:55:14 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxKMFPwK9prulRAA--.11822S2;
-	Tue, 10 Mar 2026 14:55:11 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/3] LoongArch: Preparation for BPF patch
-Date: Tue, 10 Mar 2026 14:55:07 +0800
-Message-ID: <20260310065510.8189-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1773125935; c=relaxed/simple;
+	bh=TWEzqV1T6nOJN1sLUnuVvgCbRiWOhKncO+7Ywdr8dcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D2zltsoSo2PT/haKLQObmeiyd6ANUbQtIDNl3A6kMwNVUVbwak5ZgK+5MelY25g/CMkjX0VlexzmO4Ry1aM9G09Wqb7hVVOc7GrxZ/C4Om4xdgVnSr/4+f6oe2PZ26xsGNhgAMOx2XZcnrq6+V8Pi0NesmuMIE8IBNWQZg/NrCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7056668AFE; Tue, 10 Mar 2026 07:58:40 +0100 (CET)
+Date: Tue, 10 Mar 2026 07:58:40 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: [PATCH 21/25] xor: add a better public API
+Message-ID: <20260310065840.GA10296@lst.de>
+References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-22-hch@lst.de> <20260228065038.GH65277@quark>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxKMFPwK9prulRAA--.11822S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw1xCr15Zryrtw18XF4DJrc_yoW3tFb_Ca
-	1furW8Gr48Ja15Aas2ga1rZayqvFW8tFsYkF97tryfW343Jr1rJFs8JF15ZFy0grZ7Jrs8
-	ArW5Zrn5Zr1aqosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jOdb8UUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260228065038.GH65277@quark>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-This series is based on 7.0-rc3 and the following patch:
+On Fri, Feb 27, 2026 at 10:50:38PM -0800, Eric Biggers wrote:
+> > +void xor_gen(void *dest, void **srcss, unsigned int src_cnt,
+> > +		unsigned int bytes);
+> 
+> srcss => srcs
+> 
+> Ideally the source vectors would be 'const' as well.
 
-"[PATCH v3] LoongArch: Fix calling smp_processor_id() in preemptible code"
-https://lore.kernel.org/loongarch/20260303084314.628311-1-xry111@xry111.site/
-
-it is a preparation for the dmesg log of BPF patch:
-"LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0"
-https://lore.kernel.org/loongarch/20260310064706.4985-1-yangtiezhu@loongson.cn/
-
-Tiezhu Yang (3):
-  LoongArch: Give more information if memory access failed
-  LoongArch: Check return values for set_memory_{rw,rox}
-  LoongArch: No need to flush icache if copy failed
-
- arch/loongarch/include/asm/uaccess.h | 14 ++++++++++++--
- arch/loongarch/kernel/inst.c         | 21 +++++++++++++++++----
- 2 files changed, 29 insertions(+), 6 deletions(-)
-
--- 
-2.42.0
+I looked at the constification, and it's a bit painful because the
+same source arrays are also passed to the raid6 code by the callers.
+I'll clean up the raid6 API first, and then will give it another
+spin.
 
