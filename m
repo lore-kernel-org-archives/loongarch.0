@@ -1,88 +1,78 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A5C3D523B
-	for <loongarch@lists.linux.dev>; Tue, 10 Mar 2026 06:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B883A961F;
+	Tue, 10 Mar 2026 07:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773125935; cv=none; b=Gx0DlUNf+AjWSVgSfh6uZfNsiPSD936oFrymHW+nEfLibzCWkjtsS0Y0chgGT9dqhs845OPpmK34gDBcMfODzgXpABbpqs/4t1+uvCCGwbZKrZvUt5C7eQdOpIHU3RW/lZw+7IvyYTKEfhwF1GXlTmF62IFy34Pz3H2LqOSbY8k=
+	t=1773127779; cv=none; b=LLUiyT7SXi49k/8YtaWs3iSz3jrUMaPi2fQXdSOWyrqnyJ8ZUnTFBMYG1z4KA4wAx82cBMOW2YeCWOiLfZMQ4KDO5S9L/To2qBqBikrGnVnV6ElSUomBbJ1nP07CQJflDUOfJG7clxSfUg8VyiE+HTR3N70CbpJILQlcHuPFzUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773125935; c=relaxed/simple;
-	bh=TWEzqV1T6nOJN1sLUnuVvgCbRiWOhKncO+7Ywdr8dcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2zltsoSo2PT/haKLQObmeiyd6ANUbQtIDNl3A6kMwNVUVbwak5ZgK+5MelY25g/CMkjX0VlexzmO4Ry1aM9G09Wqb7hVVOc7GrxZ/C4Om4xdgVnSr/4+f6oe2PZ26xsGNhgAMOx2XZcnrq6+V8Pi0NesmuMIE8IBNWQZg/NrCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7056668AFE; Tue, 10 Mar 2026 07:58:40 +0100 (CET)
-Date: Tue, 10 Mar 2026 07:58:40 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 21/25] xor: add a better public API
-Message-ID: <20260310065840.GA10296@lst.de>
-References: <20260226151106.144735-1-hch@lst.de> <20260226151106.144735-22-hch@lst.de> <20260228065038.GH65277@quark>
+	s=arc-20240116; t=1773127779; c=relaxed/simple;
+	bh=CMqsrQUPybQdjV2uvX1ukTo3S1N3bl3uFt8kMxHhogs=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=hUjN1VoadmxNfcUXcKb2IDbsUk55HAF/W8HHmVG/Vdx7KBt2wCsKZs9gk3rHoAsBHTjK0d0MEo4JwpPSgq7ZcEFdCbbGQEABk3JzdX+jnl55iJtbA4bXpeaad7GbyMVuUJGlPGhjM3aIGrAEM74FGCgdLFQzIyQZel+jA+t2KPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojyR+eLh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojyR+eLh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB79C19423;
+	Tue, 10 Mar 2026 07:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773127778;
+	bh=CMqsrQUPybQdjV2uvX1ukTo3S1N3bl3uFt8kMxHhogs=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=ojyR+eLhafshvkoMfJKJ/VLucEhhE23KJL0p+DjM29iYtssPXZVVe2DGQjZPW1pMt
+	 pN4IRBULUkBPQCsYKDea7GmfmUCEbSpgeU8+G4bLu51bTmUV4ddVhZqXW8c9sgNBO2
+	 4k89CY2zO6fcv7DohI/vS8OITqIB5cjuNPhiiWANfPGr4DfW5krKvuERxbeB1+H8WM
+	 dpZRll0NLHeThxhsDxz2NKMSM9UjSBi4eVxoRNyO6k4FV9T0Fyw2G/gWxHnlNzd1+g
+	 y/4RP1tklYt4a+NL/aGwy7QVRrM1xDa4DdpF863LCO4ESWypI5QS8etVj87FuUn3v/
+	 Q/D8QPJkALtcA==
+Content-Type: multipart/mixed; boundary="===============7609470448589289696=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260228065038.GH65277@quark>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-Id: <eb603d18eb0634a5cb8de531b12479a8c7e00f2893a0415536c33f9a76ee9535@mail.kernel.org>
+In-Reply-To: <20260310064706.4985-1-yangtiezhu@loongson.cn>
+References: <20260310064706.4985-1-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Tue, 10 Mar 2026 07:29:38 +0000 (UTC)
 
-On Fri, Feb 27, 2026 at 10:50:38PM -0800, Eric Biggers wrote:
-> > +void xor_gen(void *dest, void **srcss, unsigned int src_cnt,
-> > +		unsigned int bytes);
-> 
-> srcss => srcs
-> 
-> Ideally the source vectors would be 'const' as well.
+--===============7609470448589289696==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-I looked at the constification, and it's a bit painful because the
-same source arrays are also passed to the raid6 code by the callers.
-I'll clean up the raid6 API first, and then will give it another
-spin.
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 3bd89f55960d..4f1af3b7a363 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1568,6 +1568,11 @@ void arch_free_bpf_trampoline(void *image, unsigned int size)
+>  	bpf_prog_pack_free(image, size);
+>  }
+>
+> +int arch_protect_bpf_trampoline(void *image, unsigned int size)
+> +{
+> +	return 0;
+> +}
 
+The fix itself looks correct and is consistent with x86, arm64, and
+powerpc which all override arch_protect_bpf_trampoline() to return 0
+when using the prog pack allocator.
+
+Should this have a Fixes: tag? The race was introduced when LoongArch
+switched to the prog pack allocator without overriding the protect
+function. Consider adding:
+
+Fixes: 4ab17e762b34 ("LoongArch: BPF: Use BPF prog pack allocator")
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/22891104109
+--===============7609470448589289696==--
