@@ -1,188 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795FA2E11B0;
-	Wed, 11 Mar 2026 17:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0222F371892;
+	Wed, 11 Mar 2026 18:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773248548; cv=none; b=Ctv3WU8ohCu3xMQHwVyWD49UFYrhMwj+u35BtR0EXJscnwFI0GPmt8+kZ7cEnNYbiCQ4JugtDtGZ5IkNVv6wMaxm/xuytBlRTc6i3tjSny9pwnn04DqmdzT8hyyXoOW1La4r0ZbCoj/s2628rU4aIFXL4cAh2UOZtJTThSePqXA=
+	t=1773255477; cv=none; b=YDNfCOO8wwfIqNvRVTKhCEOFVpNTSJ1FVjMlALgfnKn2U11PHYL3Bu1ytge1j+yRzhSflJzAbKbFa10AbrMRkZfBteDTFuye349I9HFRg1dfRLg9YudK2tS7A5dIevrIxhKtLX596K4j03hyb/C35FpL/AhfJFoCHQ7G06ucjuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773248548; c=relaxed/simple;
-	bh=qbQHUZHFrMSl9GZ0M449xWT2lv88BuJUsOUnExNCyK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P1rjuNmhbq0wrpebwfbcwvWIeUK1QalB6g1pbT7IikWrsjs+LbUp6jLMro62313cWkPCckSaQqrXqfDSUoGlwUd0M2ueEpjcBkxwkpzCNkiq4I4GCOKfPXMq8+5ewg63XpaILUNgByVSrmwasZTnY8NcHnDaesOK5ffeED/SUUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auYcSsap; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773255477; c=relaxed/simple;
+	bh=RIP4VTL8ZKfCAED/llWzV24bhb3+EBezOHbYfQlNNVw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=JXln7/F1KaLkPWddVMdeSqNh5bnrGxSL3R7eaMHnZUe98kJlWVSjIxjcpx+Sox6HmMCYI2d0HDh2VYPo5JTM46F4sPdrxleze6XXsFqnaoIOBT/stK3DAiqpnhCV/bivhhArnLIA3jmpivar0JFeoph+ydYhbx/zip+F9JmKW8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=lwNHqHof; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auYcSsap"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD869C4CEF7;
-	Wed, 11 Mar 2026 17:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773248548;
-	bh=qbQHUZHFrMSl9GZ0M449xWT2lv88BuJUsOUnExNCyK4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=auYcSsapz8p65gnvMN/VpGSca+m0V47rs2fNjRxHOGbcOF7khTzKCshNZHWFukUEa
-	 bnXC+yfrXbKqbLhu68q0yQfhAyMWSCXNXNIBAKRaLjxFgWqWGJAvlEHVE71SrnEki3
-	 dKD9hbUZKlFZq0UVuNyj0aL4WApKHEHlTf0M8Ea7qH5r5ypeguDSCVP7fDO8XFkDzz
-	 KqLzUOMWPsO+YrDPq38kiCFHjNbZq9K/tQnyESpkcZj3YnLHqDfmRejiAWwWhB2AUQ
-	 D64NsEu8EfPzJunss4O8z5+fy5ezEJbruvUviqIng0ygosw3JnId/51TdCe9FKqRYj
-	 4x+0E9RndXZcA==
-Date: Wed, 11 Mar 2026 12:02:26 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: fengchengwen <fengchengwen@huawei.com>
-Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>, wangzhou1@hisilicon.com,
-	wanghuiqiang@huawei.com, liuyonglong@huawei.com,
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, stable@vger.kernel.org,
-	Wathsala Vithanage <wathsala.vithanage@arm.com>
-Subject: Re: [PATCH v5 2/2] PCI/TPH: Fix get cpu steer-tag fail on ARM64
- platform
-Message-ID: <20260311170226.GA930029@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="lwNHqHof"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B60C4CEF7;
+	Wed, 11 Mar 2026 18:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1773255476;
+	bh=RIP4VTL8ZKfCAED/llWzV24bhb3+EBezOHbYfQlNNVw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lwNHqHofCZymV9ZwzL4O4QC3oCCorqSKfgbbui0vSPfhppxGKPRL/IJ69bcF8P337
+	 vhDG95oCrnrO9ZlV2DZHEmUO88ZgVNVnKPQNiPvM1Z9VRi+eMXmLsJiRCJ8qnumnHG
+	 0HNrR7TfydlMZ9E+xCePC4BRnc2O1ZREJXn9QWnU=
+Date: Wed, 11 Mar 2026 11:57:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner
+ <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul Walmsley
+ <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>, Andreas Larsson
+ <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
+ <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
+ <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
+ <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
+ <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
+Subject: Re: cleanup the RAID5 XOR library v2
+Message-Id: <20260311115754.ca2206d1428c49c3bd6e93cf@linux-foundation.org>
+In-Reply-To: <20260311070416.972667-1-hch@lst.de>
+References: <20260311070416.972667-1-hch@lst.de>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ef9b529-839b-4cf0-a294-5b68fe8aa768@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 11, 2026 at 11:00:02AM +0800, fengchengwen wrote:
-> On 3/11/2026 6:09 AM, Bjorn Helgaas wrote:
-> > On Tue, Mar 10, 2026 at 10:58:49AM -0500, Jeremy Linton wrote:
-> >> On 3/9/26 10:20 PM, Chengwen Feng wrote:
-> >>> pcie_tph_get_cpu_st() is broken on ARM64:
-> >>> 1. pcie_tph_get_cpu_st() passes cpu_uid to the PCI ACPI DSM method.
-> >>>     cpu_uid should be the ACPI Processor UID [1].
-> >>> 2. In BNXT, pcie_tph_get_cpu_st() is passed a cpu_uid obtained via
-> >>>     cpumask_first(irq->cpu_mask) - the logical CPU ID of a CPU core,
-> >>>     generated and managed by kernel (e.g., [0,255] for a system  with 256
-> >>>     logical CPU cores).
-> >>> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
-> >>>     MADT table, and this UID may not match the kernel's logical CPU ID.
-> >>>     When this occurs, the mismatch results in the wrong CPU steer-tag.
-> >>> 4. On AMD x86 the logical CPU ID is identical to the ACPI Processor UID
-> >>>     so the mismatch is not seen.
-> > 
-> >>>   int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
-> >>> -			unsigned int cpu_uid, u16 *tag)
-> >>> +			unsigned int cpu, u16 *tag)
-> >>>   {
-> >>>   #ifdef CONFIG_ACPI
-> >>> +	u32 cpu_uid = acpi_get_cpu_acpi_id(cpu);
-> > 
-> > From AI review (gemini/gemini-3.1-pro-preview):
-> > 
-> >   Does this code need to validate that `cpu` is within bounds before
-> >   using it?  Before this change, the `cpu_uid` parameter was passed
-> >   opaquely to the ACPI firmware via `tph_invoke_dsm()`, which would
-> >   gracefully handle invalid values.
-> > 
-> >   Now, `cpu` is treated as a logical CPU index and passed to
-> >   `acpi_get_cpu_acpi_id(cpu)`. On architectures like arm64 and riscv,
-> >   `acpi_get_cpu_acpi_id()` uses `cpu` directly as an array index
-> >   (`&cpu_madt_gicc[cpu]` and `&cpu_madt_rintc[cpu]`). On x86, it uses
-> >   `per_cpu(x86_cpu_to_acpiid, cpu)`.
-> > 
-> >   If a caller passes an out-of-bounds `cpu` index (for example, if an
-> >   IRQ affinity mask is empty and `cpumask_first()` returns
-> >   `nr_cpu_ids`, or if userspace passes an arbitrary ID via
-> >   `mlx5_st_alloc_index()`), this will result in an out-of-bounds
-> >   memory read.
-> > 
-> >   Consider adding a bounds check:
-> > 
-> >     if (cpu >= nr_cpu_ids)
-> >       return -EINVAL;
-> > 
-> > I agree that this is an issue, and I think implementations of
-> > acpi_get_cpu_acpi_id() should validate their inputs.
-> > 
-> > I don't know if there's a value that can never be a valid ACPI CPU UID
-> > and could be used as an error value from acpi_get_cpu_acpi_id().  I do
-> > see a few mentions of a ~0 value meaning "all processors" (ACPI r6.6,
-> > sec 5.2.12.13).  
+On Wed, 11 Mar 2026 08:03:32 +0100 Christoph Hellwig <hch@lst.de> wrote:
+
+> the XOR library used for the RAID5 parity is a bit of a mess right now.
+> The main file sits in crypto/ despite not being cryptography and not
+> using the crypto API, with the generic implementations sitting in
+> include/asm-generic and the arch implementations sitting in an asm/
+> header in theory.  The latter doesn't work for many cases, so
+> architectures often build the code directly into the core kernel, or
+> create another module for the architecture code.
 > 
-> I only have the ACPI Specification Version 6.5, so I will use v6.5
-> as an example.
+> Changes this to a single module in lib/ that also contains the
+> architecture optimizations, similar to the library work Eric Biggers
+> has done for the CRC and crypto libraries later.  After that it changes
+> to better calling conventions that allow for smarter architecture
+> implementations (although none is contained here yet), and uses
+> static_call to avoid indirection function call overhead.
 
-https://uefi.org/sites/default/files/resources/ACPI_Spec_6.6.pdf
+Cool, thanks, I updated mm.git's mm-nonmm-unstable branch (and hence
+linux-next) to this version.
 
-> 	int acpi_get_cpu_uid(unsigned int cpu, u32 *uid) {
-> 		if (cpu >= nr_cpu_ids)
-> 			return -EINVAL;
-> 		*uid = xxx;
-> 		return 0;
-> 	}
-
-This looks good to me.
-
-> Another issue: This commit also provides an implementation for the
-> x86 platform.  However, further code analysis revealed a potential
-> problem in the implementation:
-> 
-> The acpi_get_cpu_acpi_id() retrieves uid from x86_cpu_to_acpiid in
-> SMP, and x86_cpu_to_acpiid is set through the call chain:
-> acpi_parse_lapic() -> topology_register_apic() ->
-> topo_register_apic() -> topo_set_cpuids() -> x86_cpu_to_acpiid. It
-> appears to retrieve the "ACPI Processor UID" from ACPI Section
-> 5.2.12.2, but the problem is that this field is only one byte in
-> length, which may cause issues in huge-core systems.
-> 
-> Therefore, I suggest re-implementing the acpi_get_cpu_uid function
-> for the x86 platform. Either I provide a default implementation
-> (shown below), or x86 guys contribute to the implementation:
-> 
-> 	s64 acpi_get_cpu_uid(unsigned int cpu) {
-> 		if (cpu >= nr_cpu_ids)
-> 			return -EINVAL;
-> 		return cpu;
-> 	}
-
-I don't think this is your problem to solve, so don't worry about it.
-If you implement acpi_get_cpu_uid() to return the same values as
-cpu_acpi_id(), it's up to the x86 folks to deal with any one-byte ID
-issues.
-
-Bjorn
+I retained Heiko's ack on [17/27].
