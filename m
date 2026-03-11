@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BB72989B7
-	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 06:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3915A2BEC5E
+	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 06:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773211052; cv=none; b=YlRWGnnGKuP8Hg4HLn/3FWYSZ+NaMQYX2PSrY6QdFA9FcwgzWCyzsuGZSuC5gU1hHSDv/pl2/iobBFwsOOHf3zatUP5h7EwLXkGZDpouMEO8F/9KKJNt8Z6ZXA7z9vG9HXhWSgpHGHUNgB34QuhY3BzcrACSiOHhuaHwxN69QHM=
+	t=1773211053; cv=none; b=DEcKD5Pl8XyxcGy2F5EEUQBx11FBXOcH0PFxnMMQgXA71GPZtmnMj0Pts6kE91AgJQTbkhegMhYoxL3ciBn4wt9m/ZgOg8310FVEAliSiQ6YqIiKOzUX7lFEZ9+zHdoAdoH04aWJZtflhkfCbpbi9jSn4+/Y5iGQ0OJj947M/aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773211052; c=relaxed/simple;
-	bh=4SNQOngjEtcFeQhjM4CmDgqJ5nWhxKl2AcnpSAK2Gx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BtjInBnMe5AcAKqzpIEQIM0EV1F7ojw/EEJ2ciVXEYdt3f/TlfxE2E+4nu57oA/qYxMijbx08GIMf9018xJWVGiTmBGAtzua1JqjUffNlswpgs6FL9vcAPAWLgriiKW9ihpJxj6KJhVTGXb0cvBkodomhfIbkPlVAuV6AaDqU5Y=
+	s=arc-20240116; t=1773211053; c=relaxed/simple;
+	bh=qt0fOfNbq4Yu2DKVKmOyRZG8eyzInj50vaae7IuRQrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E1MNTpk/0aZzs/4cFYp/lftNJRPO2WhvLDkZIPnTLIjVwJX3Ewi1akfy7KzqvrO3INzlQALg1rf9Pc6cxhuI8p6QGVGuPmmj4yowu4e1m627SU2v50K2kTdPR3rxk8YieKbC65eG3XYKe7yIEl7LPRlmJzWIeNqtqar2LFqJ2Qc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.227])
-	by gateway (Coremail) with SMTP id _____8BxUcCpDbFpm9IZAA--.16589S3;
-	Wed, 11 Mar 2026 14:37:29 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxisKqDbFpoNIZAA--.10006S3;
+	Wed, 11 Mar 2026 14:37:30 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.227])
-	by front1 (Coremail) with SMTP id qMiowJCx_8KoDbFpqclSAA--.26805S2;
-	Wed, 11 Mar 2026 14:37:28 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCx_8KoDbFpqclSAA--.26805S3;
+	Wed, 11 Mar 2026 14:37:29 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -33,10 +34,12 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH 0/3] ASoC: Add Loongson-2k0300 I2S controller support
-Date: Wed, 11 Mar 2026 14:37:15 +0800
-Message-ID: <cover.1773107475.git.zhoubinbin@loongson.cn>
+Subject: [PATCH 1/6] MAINTAINERS: Add entry for Loongson ASoC driver
+Date: Wed, 11 Mar 2026 14:37:16 +0800
+Message-ID: <3d55a01253654adfcc99c0ab6d0460ab3de5689a.1773107475.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1773107475.git.zhoubinbin@loongson.cn>
+References: <cover.1773107475.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,60 +47,51 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx_8KoDbFpqclSAA--.26805S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEDCGmvssIbJAABsD
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF4xJrWrur1fAF15uw1ruFX_yoW8JFWDpw
-	sxC393WrW5Jr4ayrnxJryrGr1rZryrZwsxXa17Jw1UCr9xA3WUuw1UKF4rAFW7Zry8Jryq
-	vry8GFW8uasxCabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-TRANSID:qMiowJCx_8KoDbFpqclSAA--.26805S3
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEDCGmxBEIAkgAAsH
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jr4fJrWDWryktw4UKrW5XFc_yoW3AFg_u3
+	Wag3yxWr18CFnrG3y8XFWfAryYqayfC3Wru3ZFqw13Za4jy34YyryDArnrGr15Wr4rCF4a
+	qayxGw1xur1jqosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7TKZDUUUU
 
-Hi all:
+Add myself as maintainer of Loongson ASoC driver as I will be
+responsible for this driver.
 
-This patchset adds support for the Loongson-2K0300 I2S controller.
-Similar to the Loongson-2K2000, it utilizes internal DMA for data
-transfer but interfaces as a platform device.
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Also, I cleaned up the redundant code from before.
-
-Thanks.
-Binbin
-
-Binbin Zhou (6):
-  MAINTAINERS: Add entry for Loongson ASoC driver
-  ASoC: loongson: Combined regmap definitions
-  ASoC: loongson: Add `internal` to the names of internal DMA variables
-  ASoC: loongson: Separate external shared DMA from the platform
-    interface
-  ASoC: dt-bindings: loongson,ls2k1000-i2s: Document Loongson-2K0300
-    compatible
-  ASoC: loongson: Add Loongson-2k0300 I2S controller support
-
- .../bindings/sound/loongson,ls2k1000-i2s.yaml |  22 ++-
- MAINTAINERS                                   |   7 +
- sound/soc/loongson/Makefile                   |   4 +-
- sound/soc/loongson/loongson_card.c            |   2 +-
- sound/soc/loongson/loongson_dma.c             | 142 ++++++++++++------
- sound/soc/loongson/loongson_dma.h             |   6 +-
- sound/soc/loongson/loongson_i2s.c             |  61 +++++++-
- sound/soc/loongson/loongson_i2s.h             |   7 +-
- sound/soc/loongson/loongson_i2s_pci.c         |  59 +-------
- sound/soc/loongson/loongson_i2s_plat.c        |  98 ++++--------
- 10 files changed, 229 insertions(+), 179 deletions(-)
-
-
-base-commit: e69bc9b4c9827f4af5dfecba10df35dcc67d180a
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 77fdfcb55f06..d58619de1c97 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14936,6 +14936,13 @@ F:	arch/loongarch/
+ F:	drivers/*/*loongarch*
+ F:	drivers/cpufreq/loongson3_cpufreq.c
+ 
++LOONGSON AUDIO (ASoC) DRIVERS
++M:	Binbin Zhou <zhoubinbin@loongson.cn>
++L:	linux-sound@vger.kernel.org
++S:	Maintained
++F:	sound/soc/loongson/loongson_*.c
++F:	sound/soc/loongson/loongson_*.h
++
+ LOONGSON GPIO DRIVER
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-gpio@vger.kernel.org
 -- 
 2.52.0
 
