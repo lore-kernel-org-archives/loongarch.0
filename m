@@ -1,213 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3205819DF6A
-	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 04:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE78B2989B7
+	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 06:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773203935; cv=none; b=rlS07VesEPiKDrVurdTeV0Jrdjcm+981gSRsR9pJJ5TcLYpBOMQs0sjruYzWSaYFa0HTxSrc7McOE+TKfZawzloHm6uhxxlBBX9bICRqAkNTaNeQfIiPgpJMMy03iYAQTZm4Z1kU7WIXoUlQPF2bLhINJA84bkZeJyL0hrHWLKk=
+	t=1773210772; cv=none; b=HymMggji0uVXKkd16Tuf7v/647OjcIoqbTHWvTAgR/Oon209KMq7LbcbLSXWXM+/rk3/9Dj2EaknxpXr4TeqTnrRmJ2rBZfNEHJYkI5H/Z7K0MQ1yk+NbfGlOFAD6oi6AoZvsmB/XDgalevtW5p0PSkanKQLyt6FVv1067fRtpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773203935; c=relaxed/simple;
-	bh=FYjkf/XPpQAQYCZ7NH+ogPLzbLlfLoodh05/RH99ZuI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SRxLAFFFrRhsGAzpxmunb4bnzP0a2KB0F4dYWbQ8dg2GKqubKOBojEid+gKZbt42fqWdy1+Nf8xo7Hw65VqmBf2kmCTpohZLyikbdyTuYE5EdW6XFBK0aHbe04sQUbU9LVDZqKHjBk6bOMwXEVf41jreMcl5jC9xpfO7EbGT1y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFMLl2Ya; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFMLl2Ya"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC862C2BCAF
-	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 04:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773203934;
-	bh=FYjkf/XPpQAQYCZ7NH+ogPLzbLlfLoodh05/RH99ZuI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RFMLl2YaWFAeRNkO2F7N2pp92mCiUkPEkgOxEC3BHzwjtEgj/0Dxrefx3G7f1ydwY
-	 0L2P1mi2+KVYlIasrItn+FoE9x6EFF6v9U4J++n5leta+WfARxM/n7134nC2nUOnKp
-	 POAxXfZk4gfC30pqGrXGJa9TVYUIqkTKF7oMqM6klkyDWYOa9mf2Vr29qNtS7VxLHL
-	 r854JUt1Gq1XjOtchkYMsEr7oRoKbO/on8zYaZ2wo3oyqGuXSUleb/5lClbA3DBl8y
-	 AjtMPlPiZlYTG8ws69rgviip9RgE/bl9/p6TsROyckfkkgK/VPxHTNYbm/At986hoG
-	 aSdUoum5VtqCQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6611d20c026so10659429a12.1
-        for <loongarch@lists.linux.dev>; Tue, 10 Mar 2026 21:38:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWlan3KXPlOFv1/q+nmOsrLeLg5emsItfWi1N9j1DjsvdnGSbWrK+DYVVgBLjTMlzGiyRqU0tQyeGI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzF4bCFtV7G0x9cVeHC97YuOEIq9bOEjPdkAz093/+GGqFy/H1U
-	0DWC95TSgtzw/q/tNByj19l/Wm5rO77AM8ZQy/2J4jJGnNwV8zKnEN83F8JDBG4rKo6nH/qqEFx
-	ZrSdResb6A+1VuMkCk62eTrLJR+i7tlU=
-X-Received: by 2002:a05:6402:210b:b0:660:ce49:f6b6 with SMTP id
- 4fb4d7f45d1cf-6631a8d3a69mr569779a12.29.1773203933374; Tue, 10 Mar 2026
- 21:38:53 -0700 (PDT)
+	s=arc-20240116; t=1773210772; c=relaxed/simple;
+	bh=aP6NhZCXPpqc4cLW3SXt7kyLB0qbx8EGs0tig7xe0og=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YdhT0C3+dHyKx692llJCIJOcoV3B8qMoG/TQb9myg6pJGnS79IPl7NIKduPZwvptBhsk2xr7KMfrPzPu6vnh54gOZR6J+F9I2XE1WnVgvC4bNbQUmXogmFL0BNBigpLG3b75xh0huP/qVvU/4YQkORWO9EU07Tm01VYBBGervQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxacKPDLFpXdIZAA--.9576S3;
+	Wed, 11 Mar 2026 14:32:47 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxKMGNDLFp28hSAA--.13658S3;
+	Wed, 11 Mar 2026 14:32:47 +0800 (CST)
+Subject: Re: [PATCH 3/3] LoongArch: KVM: Set vcpu_is_preempted() macro rather
+ than function
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>
+References: <20260311031857.3591470-1-maobibo@loongson.cn>
+ <20260311031857.3591470-4-maobibo@loongson.cn>
+ <CAAhV-H6p=bArdYHkE-0s55Ogvm+Dtv8TVVCLAHGeqA-pnPOXwA@mail.gmail.com>
+ <7f4c6ef8-b24f-88c5-82f2-e00d1629ae4c@loongson.cn>
+ <CAAhV-H499qApb0sW-HcyrHQS1Sn2gDp9jHVFahNz-u0GoLCLng@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <a72cefd7-8da3-043b-67d2-39ff43f1934b@loongson.cn>
+Date: Wed, 11 Mar 2026 14:30:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260311031857.3591470-1-maobibo@loongson.cn> <20260311031857.3591470-4-maobibo@loongson.cn>
- <CAAhV-H6p=bArdYHkE-0s55Ogvm+Dtv8TVVCLAHGeqA-pnPOXwA@mail.gmail.com> <7f4c6ef8-b24f-88c5-82f2-e00d1629ae4c@loongson.cn>
-In-Reply-To: <7f4c6ef8-b24f-88c5-82f2-e00d1629ae4c@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 11 Mar 2026 12:38:43 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H499qApb0sW-HcyrHQS1Sn2gDp9jHVFahNz-u0GoLCLng@mail.gmail.com>
-X-Gm-Features: AaiRm53pfc-DYY1bOysrdNJaqZFfDCvHHbBhyCftOy-jfqFYG1KhG_ln48PSw6w
-Message-ID: <CAAhV-H499qApb0sW-HcyrHQS1Sn2gDp9jHVFahNz-u0GoLCLng@mail.gmail.com>
-Subject: Re: [PATCH 3/3] LoongArch: KVM: Set vcpu_is_preempted() macro rather
- than function
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Juergen Gross <jgross@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H499qApb0sW-HcyrHQS1Sn2gDp9jHVFahNz-u0GoLCLng@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxKMGNDLFp28hSAA--.13658S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJw4kCFWDJF48JFyDXF1DJwc_yoW7JF1kpF
+	y7CFnYya18Wr1xXw42qw4q9r98t397GFn7XFy7Ja4rAw4DtFnrJr10vryj9Fy0qw1kWF10
+	qFn5WFW7WFyaywbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqW
+	UUUUU
 
-On Wed, Mar 11, 2026 at 11:51=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
-te:
->
->
->
-> On 2026/3/11 =E4=B8=8A=E5=8D=8811:35, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Wed, Mar 11, 2026 at 11:21=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>
-> >> vcpu_is_preempted() is performance sensitive called in function
-> >> osq_lock(), here set it as macro. So that parameter is not parsed
-> >> at most time, it can avoid cache line thrashing across numa node.
-> > I remember that I had suggested you define vcpu_is_preempted() in the
-> > header file but you refused.
-> yes, I refuse then, that is a tragedy, I am sorry for that:(
->
-> By some benchmarks, vcpu_is_preempted() is called in busy-loop method,
-> more obvious with more CPUs, it may be a bottleneck.
-I also remember that you said the static key and percpu steal_time
-structure should be EXPORT_SYMBOL, but you haven't done this patch.
 
-Huacai
 
->
-> Regards
-> Bibo Mao
->
-> >
-> > Huacai
-> >
-> >>
-> >> Here is part of unixbench result on 3C5000 DualWay machine with 32
-> >> Cores and 2 Numa node.
-> >>            origin    with patch    CONFIG_PARAVIRT disabled
-> >> execl     6871.9    7134.2        7190.8
-> >> fstime    425.5     959.9         956.1
-> >>
-> >>  From the test result, with macro method it is almost the same with
-> >> CONFIG_PARAVIRT disabled, and there is some improvment compared with
-> >> function method.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++---=
---
-> >>   arch/loongarch/kernel/paravirt.c       | 15 ++------------
-> >>   2 files changed, 24 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/i=
-nclude/asm/qspinlock.h
-> >> index 66244801db67..305afd37cdcb 100644
-> >> --- a/arch/loongarch/include/asm/qspinlock.h
-> >> +++ b/arch/loongarch/include/asm/qspinlock.h
-> >> @@ -5,8 +5,10 @@
-> >>   #include <linux/jump_label.h>
-> >>
-> >>   #ifdef CONFIG_PARAVIRT
-> >> -
-> >> +#include <asm/kvm_para.h>
-> >>   DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> >> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-> >> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
-> >>
-> >>   #define virt_spin_lock virt_spin_lock
-> >>
-> >> @@ -34,10 +36,25 @@ static inline bool virt_spin_lock(struct qspinlock=
- *lock)
-> >>          return true;
-> >>   }
-> >>
-> >> -#define vcpu_is_preempted vcpu_is_preempted
-> >> -
-> >> -bool vcpu_is_preempted(int cpu);
-> >> -
-> >> +/*
-> >> + * Macro is better than inline function here
-> >> + * With inline function, parameter cpu is parsed even though it is no=
-t used.
-> >> + * This may cause cache line thrashing across NUMA node.
-> >> + * With macro method, parameter cpu is parsed only when it is used.
-> >> + */
-> >> +#define vcpu_is_preempted(cpu)                                       =
-  \
-> >> +({                                                                   =
-  \
-> >> +       bool __val;                                                   =
-  \
-> >> +                                                                     =
-  \
-> >> +       if (!static_branch_unlikely(&virt_preempt_key))               =
-  \
-> >> +               __val =3D false;                                      =
-    \
-> >> +       else {                                                        =
-  \
-> >> +               struct kvm_steal_time *src;                           =
-  \
-> >> +               src =3D &per_cpu(steal_time, cpu);                    =
-    \
-> >> +               __val =3D !!(src->preempted & KVM_VCPU_PREEMPTED);    =
-    \
-> >> +       }                                                             =
-  \
-> >> +       __val;                                                        =
-  \
-> >> +})
-> >>   #endif /* CONFIG_PARAVIRT */
-> >>
-> >>   #include <asm-generic/qspinlock.h>
-> >> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/=
-paravirt.c
-> >> index b74fe6db49ab..2d1206e486e2 100644
-> >> --- a/arch/loongarch/kernel/paravirt.c
-> >> +++ b/arch/loongarch/kernel/paravirt.c
-> >> @@ -10,8 +10,8 @@
-> >>   #include <asm/paravirt.h>
-> >>
-> >>   static int has_steal_clock;
-> >> -static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64=
-);
-> >> -static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
-> >> +DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-> >> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
-> >>   DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> >>
-> >>   static bool steal_acc =3D true;
-> >> @@ -261,17 +261,6 @@ static int pv_time_cpu_down_prepare(unsigned int =
-cpu)
-> >>          return 0;
-> >>   }
-> >>
-> >> -bool vcpu_is_preempted(int cpu)
-> >> -{
-> >> -       struct kvm_steal_time *src;
-> >> -
-> >> -       if (!static_branch_unlikely(&virt_preempt_key))
-> >> -               return false;
-> >> -
-> >> -       src =3D &per_cpu(steal_time, cpu);
-> >> -       return !!(src->preempted & KVM_VCPU_PREEMPTED);
-> >> -}
-> >> -EXPORT_SYMBOL(vcpu_is_preempted);
-> >>   #endif
-> >>
-> >>   static void pv_cpu_reboot(void *unused)
-> >> --
-> >> 2.39.3
-> >>
-> >>
->
->
+On 2026/3/11 下午12:38, Huacai Chen wrote:
+> On Wed, Mar 11, 2026 at 11:51 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/3/11 上午11:35, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Wed, Mar 11, 2026 at 11:21 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> vcpu_is_preempted() is performance sensitive called in function
+>>>> osq_lock(), here set it as macro. So that parameter is not parsed
+>>>> at most time, it can avoid cache line thrashing across numa node.
+>>> I remember that I had suggested you define vcpu_is_preempted() in the
+>>> header file but you refused.
+>> yes, I refuse then, that is a tragedy, I am sorry for that:(
+>>
+>> By some benchmarks, vcpu_is_preempted() is called in busy-loop method,
+>> more obvious with more CPUs, it may be a bottleneck.
+> I also remember that you said the static key and percpu steal_time
+> structure should be EXPORT_SYMBOL, but you haven't done this patch.
+Currently API vcpu_is_preempted() and its caller owner_on_cpu() is only 
+used on files in kernel/locking/mutex.c, rwsem.c etc, it seems that it 
+is only used by kernel. And there is no obvious signals for module usage 
+with this API.
+
+So I do not want to export the symbol this time, will export the symbol 
+if there is actually usage for modules.
+
+Regards
+Bibo Mao
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Here is part of unixbench result on 3C5000 DualWay machine with 32
+>>>> Cores and 2 Numa node.
+>>>>             origin    with patch    CONFIG_PARAVIRT disabled
+>>>> execl     6871.9    7134.2        7190.8
+>>>> fstime    425.5     959.9         956.1
+>>>>
+>>>>   From the test result, with macro method it is almost the same with
+>>>> CONFIG_PARAVIRT disabled, and there is some improvment compared with
+>>>> function method.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++-----
+>>>>    arch/loongarch/kernel/paravirt.c       | 15 ++------------
+>>>>    2 files changed, 24 insertions(+), 18 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+>>>> index 66244801db67..305afd37cdcb 100644
+>>>> --- a/arch/loongarch/include/asm/qspinlock.h
+>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
+>>>> @@ -5,8 +5,10 @@
+>>>>    #include <linux/jump_label.h>
+>>>>
+>>>>    #ifdef CONFIG_PARAVIRT
+>>>> -
+>>>> +#include <asm/kvm_para.h>
+>>>>    DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+>>>> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>>>>
+>>>>    #define virt_spin_lock virt_spin_lock
+>>>>
+>>>> @@ -34,10 +36,25 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+>>>>           return true;
+>>>>    }
+>>>>
+>>>> -#define vcpu_is_preempted vcpu_is_preempted
+>>>> -
+>>>> -bool vcpu_is_preempted(int cpu);
+>>>> -
+>>>> +/*
+>>>> + * Macro is better than inline function here
+>>>> + * With inline function, parameter cpu is parsed even though it is not used.
+>>>> + * This may cause cache line thrashing across NUMA node.
+>>>> + * With macro method, parameter cpu is parsed only when it is used.
+>>>> + */
+>>>> +#define vcpu_is_preempted(cpu)                                         \
+>>>> +({                                                                     \
+>>>> +       bool __val;                                                     \
+>>>> +                                                                       \
+>>>> +       if (!static_branch_unlikely(&virt_preempt_key))                 \
+>>>> +               __val = false;                                          \
+>>>> +       else {                                                          \
+>>>> +               struct kvm_steal_time *src;                             \
+>>>> +               src = &per_cpu(steal_time, cpu);                        \
+>>>> +               __val = !!(src->preempted & KVM_VCPU_PREEMPTED);        \
+>>>> +       }                                                               \
+>>>> +       __val;                                                          \
+>>>> +})
+>>>>    #endif /* CONFIG_PARAVIRT */
+>>>>
+>>>>    #include <asm-generic/qspinlock.h>
+>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>> index b74fe6db49ab..2d1206e486e2 100644
+>>>> --- a/arch/loongarch/kernel/paravirt.c
+>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>> @@ -10,8 +10,8 @@
+>>>>    #include <asm/paravirt.h>
+>>>>
+>>>>    static int has_steal_clock;
+>>>> -static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+>>>> -static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>> +DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+>>>> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>>    DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
+>>>>
+>>>>    static bool steal_acc = true;
+>>>> @@ -261,17 +261,6 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> -bool vcpu_is_preempted(int cpu)
+>>>> -{
+>>>> -       struct kvm_steal_time *src;
+>>>> -
+>>>> -       if (!static_branch_unlikely(&virt_preempt_key))
+>>>> -               return false;
+>>>> -
+>>>> -       src = &per_cpu(steal_time, cpu);
+>>>> -       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+>>>> -}
+>>>> -EXPORT_SYMBOL(vcpu_is_preempted);
+>>>>    #endif
+>>>>
+>>>>    static void pv_cpu_reboot(void *unused)
+>>>> --
+>>>> 2.39.3
+>>>>
+>>>>
+>>
+>>
+
