@@ -1,187 +1,213 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C033563F4
-	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 08:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773217780; cv=pass; b=dS6OpzBb8ssgd3Zb4RTfXQFYGmS+Xhh5mvBggCF3vzpLVW4nTYg7CbataXdZzWGeEKjM8r5ELZ7GUibsq2QZ7xBdyIlJF79ovS+w3YYlEInOFJ9Kik31/qTmxD4yClgJj9p5buh9LZJOMRAh/+YKVXREFCzIKn/D2diQ3KwgAW4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773217780; c=relaxed/simple;
-	bh=WpTM2bK03v+GeetS/yO9RyrJ2EbEhx/HhLsYsyaMS4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EmQnCxTRo2xYuqDXvHZ2LlxpoVDqpNzrIJAJQcnTMC7CKXEkBWwDh9K6LnXfemzrhD07ArO0KqRlLmjzHgn2qFy6fX8IZm8+EeIyzcgDI76k8YJdBzATB5Hohngoct5SEMKxGaNd1kqT5JLw9GOEQAFpR0GNs0D4EPCUIK6Ylsw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LM7F8iVL; arc=pass smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM7F8iVL"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-661b08b04deso5532741a12.2
-        for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 01:29:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773217774; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HYVPa6NdGMO2R/zQzbHbEDNzaDPwTsImQWkZTMXi0nqL8oTVwhTxxcSNuetHFxFOia
-         L1FAmiX66SgePWoy5lQknVmTY3eZJtnfCHqZ/WRpZfiyVQspNbTS2mSH/v5U9stsBh8q
-         dAD2XxbIEshaFdiupjp9HQSBTaeqbwS3eIHnMZn3Z7lXmemEHtw1bA8rCs8RHldSVjBP
-         JOiVFHzoCcTE6PerattTBkblnxAJQc4Vzay/u6cO1MOi6/ylWXpHIbvAvtZGropalbgZ
-         6R7Gq83aNSxTfHRb/oLyDqZRFkUL1WH6lnLlsRepfT+dGtCFii684+tbWydBHO+RRDde
-         6eJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=YPFuevo92I9LbD3FU4d+etP0u9DGkGJOBwn9Rvp7Sj4=;
-        fh=EjgO+Jlyx+y1rVVg71aj11gUmtTrn3y+V9fy/JBtRiM=;
-        b=Gldz4Qca2wRe2MUzUE7/gCFQSd1Z5SrS8LsceJqzB4YawZuYZolHDFs/1pP2tyxujg
-         Iq03XAyswEmZZEu352TyelKQvD7ZNak5LQ4CXuF2N/CQV5ffBQu6uLK2IHMTpVXhtiBj
-         Raj1mFomhajEgV/u/fLz0CdrxcIr6DGtoKM22TJDozNl0Ifq655w/KHGLiFUWIXa3dFE
-         8gkmcn33XM3bBPk39HK7UYdP+766sbQdvPGpe5XqsOZ3rgIbrIpgrb+lN0K8Y1yc1s89
-         fXY34Pjk3jTPIH9rEZsXk5aXU5C0ZkwMiX/z5BUjj3vqQ2cfyA3J3UpdhfogSgWTh6Ef
-         qB2A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773217774; x=1773822574; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YPFuevo92I9LbD3FU4d+etP0u9DGkGJOBwn9Rvp7Sj4=;
-        b=LM7F8iVL/CaHU6zn8ME7SU6DKT/ii+C7vqUFcgfaCFp5x0n9RcqAnttf6FxOggoUBz
-         pU22BZm0IY1r0nuWGZYJanGcHqDxbK8ndeAGTBqLmlaxbQy2UQ1dz8S/4jF6rDAhaBrh
-         iV3YSZq7i7TlA2zaORdttqEQjNtKqM0oq9fJGvOEqA3z8JWhoimUBcglrtBan6oMdwlk
-         7vyixTu7Fl44LOHZlWKsTVsO0ql5ylNJQwodmLapYgPU6e6wtwW4Wg811vBWB4z72fHc
-         wKoInd2egLMImAH89P8HWhFuDfhFZj2LvJGREYAvvWnAMk7qmdaBdbgcttjcRsDx6jG+
-         qkXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773217774; x=1773822574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YPFuevo92I9LbD3FU4d+etP0u9DGkGJOBwn9Rvp7Sj4=;
-        b=VbCvzSxGAHVutN0vNacD02asufQG9bs0pp1RUSKubj14q+K9w3kAmllBUDksuV+nMI
-         Jn5mo1+Q+RBC89jt/2mtXmpsgWxz+Np3+oJ+TePqiMlXeHsJt5mLrueCUOVxcQZA37zZ
-         xQvEWTd38dVaca74eUaJDzEjQjXLff5vtmV7jajYtzzGleO6eM9em+ASJAbAsvwTskzP
-         cUKJDnapBTexBW2UhUjDHE2IYGtG47XXqh2bIJXuBDYsZlVODvNGM0suBKN0EjA3Rpqo
-         8L+DFZKFhuPEqqjikbk3Ed4yVbcj8/QPryZ6drcMcAPyLav+UKE7bHqZQrwePSaOjdQJ
-         Ifmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDt6m+L3FGNgsT+9dq+4Fg2pIbqzfEOuzmB4Tem1Im3SXXOp4V5USKFq3NMutMok7HjUQfVRzoX0w=@lists.linux.dev
-X-Gm-Message-State: AOJu0YypoFOmIRbvR5IEULPW/pvp7iFGkzRLDFoGLPgkeUKQWlQbmXU7
-	sFuUeO6vWJRUA7Synargrde1ZSe9E1UKC595c34i817SyR/pGqxpBZkUQj3sbJfRbhHr6KrhWje
-	ajs/xea4ARK3Y1hwS5I1Ib+ERGr/9YOo=
-X-Gm-Gg: ATEYQzxQCusovnbe14JXd6z2WUSvL/ddM2vPCzvJb+7Alw9v3UB+4iXLn9rV/vlMLLd
-	JgrYukLlpFYoDGEpQALEJhqFqRXsgepNYMas4ofi7Q5+js9Q0owMBlHKzprxCpZi9PCIQbf4Rfc
-	VSG/CunatXcCZ8WxWugGbSA8Krj3+GLLUPfJPCmRXkVWzR9SmlQV3YGv5jQszeshitFPxCd73Ck
-	zmjc+b1NFoo0mmnHSqGx6/30dldtNfYt1xmW+GRVGOY/zexwr0zJvFWI7yI6ORDGb4ybgg00YcQ
-	Wrdsc3CobLkfgRwhBg==
-X-Received: by 2002:a17:907:3e23:b0:b93:8460:4af with SMTP id
- a640c23a62f3a-b972e638494mr92203866b.56.1773217773738; Wed, 11 Mar 2026
- 01:29:33 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD6A33C2794
+	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 08:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773217932; cv=none; b=WOaqeuNyVj6VDYRNvuNGyk8R3c+Qm5tiIbdMAWxuhleF5BS0wpPUbhSUwZwdIiNDahYXBG289gWBbv58p7Dy5RSSwe/NT2Y/SuCcbG1FSD+r6JQs2kUO3pH/GK+ajJTlxrLVy69nic7FOAoIUouha2p59aSvsIMH86Eo+EAJ3RY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773217932; c=relaxed/simple;
+	bh=wRHgbk75gdKjuBa/S1QaCXa4CP6gzCI8B52jOie/cHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C04hror8d7Kv14KFRUQe8IuuqIOpYps9zyzwo5HJe4stFfzdiKXMcyv+YEjLHFwqcGQyHktJGDo5jyfquZpTIeflQGKsgmTzBEoxC/pgPoOv5RA4k7Y3dAyw7RgxmzR+War5ETo4c+ehdb4WYMY9KDOfcawbQg//npXKrttFu9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25D5B20E3;
+	Wed, 11 Mar 2026 01:32:04 -0700 (PDT)
+Received: from [10.57.83.155] (unknown [10.57.83.155])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D80843F836;
+	Wed, 11 Mar 2026 01:32:05 -0700 (PDT)
+Message-ID: <7687ded7-ecb1-45fe-bfa6-37d1a04355c8@arm.com>
+Date: Wed, 11 Mar 2026 08:32:04 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1773107475.git.zhoubinbin@loongson.cn> <600bfea91c1f14f089b2f7677578cd8690412fac.1773107475.git.zhoubinbin@loongson.cn>
- <CAAhV-H6zg2MfO2HC1+Q-FE4CJJLh2+Boo=ZP57XYPfufvCBhkw@mail.gmail.com>
-In-Reply-To: <CAAhV-H6zg2MfO2HC1+Q-FE4CJJLh2+Boo=ZP57XYPfufvCBhkw@mail.gmail.com>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Wed, 11 Mar 2026 16:29:21 +0800
-X-Gm-Features: AaiRm52LMclNErp_XC41jPQYbAEz3jRj8zDpbY8eNCvPJgxQGExmtPVsZSonLDk
-Message-ID: <CAMpQs4Ja_+B28p30dJYM0WU-scwgZSxLO9igvsXY+0dtbSxAGA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] ASoC: dt-bindings: loongson,ls2k1000-i2s: Document
- Loongson-2K0300 compatible
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset
+ randomisation
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260303150840.3789438-1-ryan.roberts@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 11, 2026 at 3:57=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Binbin,
->
-> On Wed, Mar 11, 2026 at 2:38=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.=
-cn> wrote:
-> >
-> > Add "loongson,ls2k0300-i2s" dedicated compatible to represent the I2S
-> > interface of the Loongson-2K0300 chip.
-> >
-> > The hardware integration of the Loongson-2K0300 I2S interface differs
-> > significantly from that of the Loongson-2K1000. Specifically, while bot=
-h
-> > utilize external DMA controllers, the Loongson-2K0300 configures DMA
-> > channel routing via the `dmas` property, whereas the Loongson-2K1000
-> > requires additional register.
-> Can this patch be the second one?
+Hi Kees,
 
-Typically, I place the dt-binding patch before the new platform driver
-patches, while patch 2-4 involve code cleanup for existing drivers.
-Therefore, I prefer to position this patch after them.
->
-> Huacai
->
-> >
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  .../bindings/sound/loongson,ls2k1000-i2s.yaml | 22 ++++++++++++++++++-
-> >  1 file changed, 21 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/loongson,ls2k1000-=
-i2s.yaml b/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.ya=
-ml
-> > index da79510bb2d9..51e23c189f7a 100644
-> > --- a/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yam=
-l
-> > +++ b/Documentation/devicetree/bindings/sound/loongson,ls2k1000-i2s.yam=
-l
-> > @@ -14,9 +14,12 @@ allOf:
-> >
-> >  properties:
-> >    compatible:
-> > -    const: loongson,ls2k1000-i2s
-> > +    enum:
-> > +      - loongson,ls2k0300-i2s
-> > +      - loongson,ls2k1000-i2s
-> >
-> >    reg:
-> > +    minItems: 1
-> >      items:
-> >        - description: Loongson I2S controller Registers.
-> >        - description: APB DMA config register for Loongson I2S controll=
-er.
-> > @@ -49,6 +52,23 @@ required:
-> >
-> >  unevaluatedProperties: false
-> >
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - loongson,ls2k1000-i2s
-> > +
-> > +then:
-> > +  properties:
-> > +    reg:
-> > +      minItems: 2
-> > +
-> > +else:
-> > +  properties:
-> > +    reg:
-> > +      maxItems: 1
-> > +
-> >  examples:
-> >    - |
-> >      #include <dt-bindings/clock/loongson,ls2k-clk.h>
-> > --
-> > 2.52.0
-> >
+I'm keen to get some testing in linux-next and hopefully get this upstream for
+v7.1 as we previously discussed. Are you willing/able to take this via your tree?
 
---
-Thanks.
-Binbin
+Thanks,
+Ryan
+
+
+
+On 03/03/2026 15:08, Ryan Roberts wrote:
+> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+> good to get some linux-next testing.]
+> 
+> Hi All,
+> 
+> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> and, on arm64 at least, the performance is poor. This series attempts to fix
+> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+> proposes a performance improvement approach.
+> 
+> I've looked at a few different options but ultimately decided that Jeremy's
+> original prng approach is the fastest. I made the argument that this approach is
+> secure "enough" in the RFC [2] and the responses indicated agreement.
+> 
+> More details in the commit logs.
+> 
+> 
+> Performance
+> ===========
+> 
+> Mean and tail performance of 3 "small" syscalls was measured. syscall was made
+> 10 million times and each individually measured and binned. These results have
+> low noise so I'm confident that they are trustworthy.
+> 
+> The baseline is v6.18-rc5 with stack randomization turned *off*. So I'm showing
+> performance cost of turning it on without any changes to the implementation,
+> then the reduced performance cost of turning it on with my changes applied.
+> 
+> **NOTE**: The below results were generated using the RFC patches but there is no
+> meaningful change, so the numbers are still valid. I've also rerun the tests
+> with this version on top of v7.0-rc2 on arm64 and confirmed simialr results.
+> 
+> arm64 (AWS Graviton3):
+> +-----------------+--------------+-------------+---------------+
+> | Benchmark       | Result Class |   v6.18-rc5 |  per-cpu-prng |
+> |                 |              | rndstack-on |               |
+> |                 |              |             |               |
+> +=================+==============+=============+===============+
+> | syscall/getpid  | mean (ns)    |  (R) 15.62% |     (R) 3.43% |
+> |                 | p99 (ns)     | (R) 155.01% |     (R) 3.20% |
+> |                 | p99.9 (ns)   | (R) 156.71% |     (R) 2.93% |
+> +-----------------+--------------+-------------+---------------+
+> | syscall/getppid | mean (ns)    |  (R) 14.09% |     (R) 2.12% |
+> |                 | p99 (ns)     | (R) 152.81% |         1.55% |
+> |                 | p99.9 (ns)   | (R) 153.67% |         1.77% |
+> +-----------------+--------------+-------------+---------------+
+> | syscall/invalid | mean (ns)    |  (R) 13.89% |     (R) 3.32% |
+> |                 | p99 (ns)     | (R) 165.82% |     (R) 3.51% |
+> |                 | p99.9 (ns)   | (R) 168.83% |     (R) 3.77% |
+> +-----------------+--------------+-------------+---------------+
+> 
+> Because arm64 was previously using get_random_u16(), it was expensive when it
+> didn't have any buffered bits and had to call into the crng. That's what caused
+> the enormous tail latency.
+> 
+> 
+> x86 (AWS Sapphire Rapids):
+> +-----------------+--------------+-------------+---------------+
+> | Benchmark       | Result Class |   v6.18-rc5 |  per-cpu-prng |
+> |                 |              | rndstack-on |               |
+> |                 |              |             |               |
+> +=================+==============+=============+===============+
+> | syscall/getpid  | mean (ns)    |  (R) 13.32% |     (R) 4.60% |
+> |                 | p99 (ns)     |  (R) 13.38% |    (R) 18.08% |
+> |                 | p99.9 (ns)   |      16.26% |    (R) 19.38% |
+> +-----------------+--------------+-------------+---------------+
+> | syscall/getppid | mean (ns)    |  (R) 11.96% |     (R) 5.26% |
+> |                 | p99 (ns)     |  (R) 11.83% |     (R) 8.35% |
+> |                 | p99.9 (ns)   |  (R) 11.42% |    (R) 22.37% |
+> +-----------------+--------------+-------------+---------------+
+> | syscall/invalid | mean (ns)    |  (R) 10.58% |     (R) 2.91% |
+> |                 | p99 (ns)     |  (R) 10.51% |     (R) 4.36% |
+> |                 | p99.9 (ns)   |  (R) 10.35% |    (R) 21.97% |
+> +-----------------+--------------+-------------+---------------+
+> 
+> I was surprised to see that the baseline cost on x86 is 10-12% since it is just
+> using rdtsc. But as I say, I believe the results are accurate.
+> 
+> 
+> Changes since v4 [5]
+> ====================
+> 
+> - Moved add_random_kstack_offset() later in syscall entry code for powerpc, s390
+>   and x86. On these platforms it was previously within noinstr sections but for
+>   some exotic Kconfigs, [get|put]_cpu_var() was calling out to instrumentable
+>   code. (reported by kernel test robot)
+> - Removed what was previously patch 2 (inline version of prandom_u32_state()).
+>   With the above change, there is no longer an issue with calling the
+>   out-of-line version.
+> 
+> Changes since v3 [4]
+> ====================
+> 
+> - Patch 1: Fixed typo in commit log (per David L)
+> - Patch 2: Reinstated prandom_u32_state() as out-of-line function, which
+>   forwards to inline version (per David L)
+> - Patch 3: Added supplementary info about benefits of removing
+>   choose_random_kstack_offset() (per Mark R)
+> 
+> Changes since v2 [3]
+> ====================
+> 
+> - Moved late_initcall() to initialize kstack_rnd_state out of
+>   randomize_kstack.h and into main.c. (issue noticed by kernel test robot)
+> 
+> Changes since v1 (RFC) [2]
+> ==========================
+> 
+> - Introduced patch 2 to make prandom_u32_state() __always_inline (needed since
+>   its called from noinstr code)
+> - In patch 3, prng is now per-cpu instead of per-task (per Ard)
+> 
+> 
+> [1] https://lore.kernel.org/all/dd8c37bc-795f-4c7a-9086-69e584d8ab24@arm.com/
+> [2] https://lore.kernel.org/all/20251127105958.2427758-1-ryan.roberts@arm.com/
+> [3] https://lore.kernel.org/all/20251215163520.1144179-1-ryan.roberts@arm.com/
+> [4] https://lore.kernel.org/all/20260102131156.3265118-1-ryan.roberts@arm.com/
+> [5] https://lore.kernel.org/all/20260119130122.1283821-1-ryan.roberts@arm.com
+> 
+> Thanks,
+> Ryan
+> 
+> 
+> Ryan Roberts (2):
+>   randomize_kstack: Maintain kstack_offset per task
+>   randomize_kstack: Unify random source across arches
+> 
+>  arch/Kconfig                         |  5 ++-
+>  arch/arm64/kernel/syscall.c          | 11 ------
+>  arch/loongarch/kernel/syscall.c      | 11 ------
+>  arch/powerpc/kernel/syscall.c        | 16 ++-------
+>  arch/riscv/kernel/traps.c            | 12 -------
+>  arch/s390/include/asm/entry-common.h |  8 -----
+>  arch/s390/kernel/syscall.c           |  2 +-
+>  arch/x86/entry/syscall_32.c          |  4 +--
+>  arch/x86/entry/syscall_64.c          |  2 +-
+>  arch/x86/include/asm/entry-common.h  | 12 -------
+>  include/linux/randomize_kstack.h     | 54 +++++++++++-----------------
+>  init/main.c                          |  9 ++++-
+>  kernel/fork.c                        |  1 +
+>  13 files changed, 37 insertions(+), 110 deletions(-)
+> 
+> --
+> 2.43.0
+> 
+
