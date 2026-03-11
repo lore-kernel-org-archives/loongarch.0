@@ -1,204 +1,325 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3151D5CD1
-	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 03:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773198010; cv=none; b=r2B2jtdlS8LPfpbojXZP9TCgg97CKHFEWD4sVdtoVBICOSCBF0fQEIHhN4c3CrVUNgamKxl3pc4YnkFRb06e1q1DFrVWrhxvmOBFOpFsXF5jRRdEk9Pk555JEqNI/TWJ0j1duYei0b1hdzG0Ci4dJ114H6qFdi+SX0phiSh4PyE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773198010; c=relaxed/simple;
-	bh=ZVNRdZOlzeflVbYT5vXQDtqpMaNUZi2VFbF2LUVNHBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uooMZMzvm+9QtcxRJHnoRy+yySxcTYX1uUmvguXmrTJHhwsr2/TS42k4wK4PoQvKPNOnYEzwG2d7JW4NyqEcNJywz/Pd1UgmjUwHf1OM8z1lXAUikJNP8e9t2YD1QhletZxajT1hqFEWozyZHJQhbRWUQklVN9xBo145vUE+79M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=UIuMwL2Z; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048772E06E6
+	for <loongarch@lists.linux.dev>; Wed, 11 Mar 2026 03:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773198454; cv=pass; b=JlRhEaqS+gib9PQvURYHh8lv/8rLSUYOFywCb2BqN4NIICRKN4sKct3gul/ForewR1OF9SR5gVI4GDKkyJu5PxZBD7EoGYdWu0bmeF6ee5FRumg4GOh0oHjjk4KhNT0W9sIRoGvxMmIbxa0JtAH5Xx3MlYx1EoFg/fcxdRPQLA8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773198454; c=relaxed/simple;
+	bh=YcdgJwR+tV/SUrqfcIFipReYxQ9TgZ17E68VThHwd3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TfBUpxw5XkmlGKx427B/sIaBH4sNTT/MKxopQZAHvjSAmz3V/cw3jgDxjbR3ltQZugok6zlkrx1RrXnvCIN7vQ+Rv05G/1EUA2jZd1YOATj6LN5QRmCUCHpS/yieI55eSn3MuqKDfDrWsNN0UKE5KYKAVgOVsWU1Ltp/VGQm+z8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZpGXIMbq; arc=pass smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="UIuMwL2Z"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=DUKycpPzpFIpG0env8jwSvfK5sQZJJ1YY0eqvDa9Ls4=;
-	b=UIuMwL2ZnQBHKt0OSz5st4Og2VYIGREkqW4SE+XsyKkbHXGhNjJEsAWrxVSqy6OOZJ3NLbK9Z
-	kP8s3Xd0pnLT2F4QMacoWnfn19/NxFuvNNLMkzdoJPW46wBbTVsZOQsEtjgpquwRCBs94A0/o7e
-	g1HUZD+aWdwNP2wFTTnfWEY=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4fVwMy3T5lzLlSf;
-	Wed, 11 Mar 2026 10:55:10 +0800 (CST)
-Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7FEF34056C;
-	Wed, 11 Mar 2026 11:00:05 +0800 (CST)
-Received: from [10.67.121.161] (10.67.121.161) by
- kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Mar 2026 11:00:03 +0800
-Message-ID: <9ef9b529-839b-4cf0-a294-5b68fe8aa768@huawei.com>
-Date: Wed, 11 Mar 2026 11:00:02 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZpGXIMbq"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b8f97c626aaso2286094466b.2
+        for <loongarch@lists.linux.dev>; Tue, 10 Mar 2026 20:07:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773198451; cv=none;
+        d=google.com; s=arc-20240605;
+        b=R+9Z4SfGKFLSRmXPVgF2mp2TWyzYP3uKWHFYAWbc6JxigeYMTO2Awmwmio0rfwlOtk
+         r/0S3JDv8OaEZ/dgRefrCOj0l/ajwMCOpRQij+zV1YZeB9/i0pV+rBklvkDFONyqNhjd
+         ekRfEfD2Dwsk22AXkGhLg8U24HMMkXST3y8xcfuckkJWTL0Wq1r08LT7wTt0xp/09VF1
+         /w/OyeYrj3USkjf7uzQHjH0EizAwMOxqztvM1nGN+N8ok8BYQlVMypq6kyXXXSmb4qJY
+         s2RTvAn2WE1+uUlk3dqQ1MkrWqh9oyi1cgB0mhPah4S+5oCYGFt9ZALm9pKi1xxXjDLj
+         GlCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Yw3z5TruSohF4QKS94PIgWDRcyGqH7FND6pkLUOm9rc=;
+        fh=pASHeos5IhX0IpzhNR1PfatvuWicgAnJW89RptWLVRs=;
+        b=CIj0MCtpLaaDwpQsVtXyzluTgfkb4XxViSxPqULqJZd8TfuJEOTVpiAWqss1H+iET9
+         zK21VECH2oK7h2k2pqnSlXnn43/g96XOvURWzZXRCeWJ1BVdMT3+Rv2VNizZuwg4wwO4
+         IPSOUhUggD0PLNmZX2qKqxWyULDZWWbTLILcfdSUSraMYu3h7j4HKYwpbGRC837Oc1B+
+         nMGEy+MNn9vbTnm6ft0SgOBOUwBEjcACzMGuXxf4CCS3yMf+FPvfeGVmt7VBGItIKCYB
+         /3Qr8NVsA8Tbb3cMOIggk9r7BHkSwOoY3JNjbTsETI8Pe7iJNA8znvlUIJ1eKKZDxFx8
+         vgZg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773198451; x=1773803251; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yw3z5TruSohF4QKS94PIgWDRcyGqH7FND6pkLUOm9rc=;
+        b=ZpGXIMbqlNImhKxqzXzUNFTW7G/rbr/oXub3CHgzcVGqOcxL/I9NLg7l90mU9BT38o
+         Jsd9O3+e6fNu54HzyoNl+whC0u6IZJ9Rpete4GfU9kwWkK6DX2mClQ5x+HmAnaLulzQ8
+         KiRxXBgqkE/7ObbCPDDAXRXSrGPIzIUrDtsl7PuhAlezA4uhPH4m/YwY/JdkpwlrWX3g
+         xQNmUV6MQys83b23cFEpRkVe06/WtZcqNwVSKs9nL/gc4vcwkRAIX3VaWwY40G6smEfc
+         FCjB2kUYPz26dOpmTSVWcHt4/YLIWglKaJ1n0m3sHblEd3FkagIg5IjNxQuchXxlytOx
+         QSlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773198451; x=1773803251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Yw3z5TruSohF4QKS94PIgWDRcyGqH7FND6pkLUOm9rc=;
+        b=ILK1sp5zeWBN2oUptJl5tSdhnSMnxOTsiJE+4YB9ibExV9Uwk9YoxsXz3sf+muZLRm
+         YrbcjYk4Jp6YblZ0oiwaH6fyQGqLWMz8TG/mZHA5WJtbrY1yPKF2dAll6iPDbK6ugfBH
+         uJnRnsUGxcvMINpwWgPy4wrT0Fww2fSRN01Z4fskrpu56KOy8kQI7pzACLBDVaQEDgGa
+         uqbBQaAoYgX1Ad91OXLMD3VrHIDL2OsnItZIarGh1sE/mAVo/G9hsiJ2dw+xsn/DXosN
+         3g3HHvXBOIdGlqB8VORPl6erpGHvc5HAgOct67TVUAecso+wFu/mLbD4yjKx9oxoPzUw
+         a7yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoei4AOBCSEvURteGrJVfVlFpnQKphxnHqlOthfNtJHBafnY044a5oB3mBk6wNFU6haJ/prLsUTsY=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywaxt4OSJ4QpJdxP2vGxzJLLscmwZh+GSAbM3hv55nr3grUXVCx
+	6OzcFV5rKWSKsz3zEGFaoeiiJ1Igqvzgza6EjvhMaqdHHth0EI+qwSZhRc40V12yfUSeRXyKZ5k
+	5J/vFVrmNL4ZT+yS3w/8S92twknupyyM=
+X-Gm-Gg: ATEYQzwGyxIrbjKU1FVDC+wzhcTmq/vG4e+H+33DWN4fWOZl9z23vRlBCa33lFyBgxD
+	Spa+HdBiyalGvqy1QUdLwnbQRHJbpLpw2QihTQLbPRY3qlTFUe8Rt1X+rVhfx63itlUqrCBYH/Q
+	g3CgS6MpaOmuqjoYqyOlyBDnpVb8i0hPiSRAzZKBuu5hvPiGSZdLoKTDotGZARk96idixka1IjV
+	81klJtotNMzbrQdC0obZomBqG5BydX1yyIBiq58e845poCdhuKgDCs8bywV1oEuCZDYV25omKlM
+	Twjx9Kc=
+X-Received: by 2002:a17:907:3e10:b0:b94:1913:7802 with SMTP id
+ a640c23a62f3a-b972e58db89mr40090566b.35.1773198451017; Tue, 10 Mar 2026
+ 20:07:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] PCI/TPH: Fix get cpu steer-tag fail on ARM64
- platform
-To: Bjorn Helgaas <helgaas@kernel.org>, Jeremy Linton <jeremy.linton@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
- Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
-	<alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris Ostrovsky
-	<boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V L
-	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan
- Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>, Yanteng
- Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>, Kai Huang
-	<kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth
-	<thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin
-	<kevinloughlin@google.com>, Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra
-	<peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin
- Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
-	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
- Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
- Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Ajit Khaparde
-	<ajit.khaparde@broadcom.com>, Wei Huang <wei.huang2@amd.com>, Andy Gospodarek
-	<andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>,
-	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
-	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
-	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<stable@vger.kernel.org>, Wathsala Vithanage <wathsala.vithanage@arm.com>
-References: <20260310220920.GA826995@bhelgaas>
-Content-Language: en-US
-From: fengchengwen <fengchengwen@huawei.com>
-In-Reply-To: <20260310220920.GA826995@bhelgaas>
+References: <cover.1773142933.git.zhoubinbin@loongson.cn> <bd5c06a20ef2e61f76902c4209f2be539ca91a97.1773142933.git.zhoubinbin@loongson.cn>
+ <abAyd9uyl3TC8vC_@ashevche-desk.local>
+In-Reply-To: <abAyd9uyl3TC8vC_@ashevche-desk.local>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Wed, 11 Mar 2026 11:07:19 +0800
+X-Gm-Features: AaiRm52S10jKyg3CzEsWlvTqDK1di5Q_PURZWQ746N292xm1melrStZy-WP5vrw
+Message-ID: <CAMpQs4JVYRo4DQyEVe5NhHQ=VN96mF17AtSoo6a4CGB6w_Aphw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk500009.china.huawei.com (7.202.194.94)
+Content-Transfer-Encoding: quoted-printable
 
-On 3/11/2026 6:09 AM, Bjorn Helgaas wrote:
-> On Tue, Mar 10, 2026 at 10:58:49AM -0500, Jeremy Linton wrote:
->> On 3/9/26 10:20 PM, Chengwen Feng wrote:
->>> pcie_tph_get_cpu_st() is broken on ARM64:
->>> 1. pcie_tph_get_cpu_st() passes cpu_uid to the PCI ACPI DSM method.
->>>     cpu_uid should be the ACPI Processor UID [1].
->>> 2. In BNXT, pcie_tph_get_cpu_st() is passed a cpu_uid obtained via
->>>     cpumask_first(irq->cpu_mask) - the logical CPU ID of a CPU core,
->>>     generated and managed by kernel (e.g., [0,255] for a system  with 256
->>>     logical CPU cores).
->>> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
->>>     MADT table, and this UID may not match the kernel's logical CPU ID.
->>>     When this occurs, the mismatch results in the wrong CPU steer-tag.
->>> 4. On AMD x86 the logical CPU ID is identical to the ACPI Processor UID
->>>     so the mismatch is not seen.
-> 
->>>   int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
->>> -			unsigned int cpu_uid, u16 *tag)
->>> +			unsigned int cpu, u16 *tag)
->>>   {
->>>   #ifdef CONFIG_ACPI
->>> +	u32 cpu_uid = acpi_get_cpu_acpi_id(cpu);
-> 
-> From AI review (gemini/gemini-3.1-pro-preview):
-> 
->   Does this code need to validate that `cpu` is within bounds before
->   using it?  Before this change, the `cpu_uid` parameter was passed
->   opaquely to the ACPI firmware via `tph_invoke_dsm()`, which would
->   gracefully handle invalid values.
-> 
->   Now, `cpu` is treated as a logical CPU index and passed to
->   `acpi_get_cpu_acpi_id(cpu)`. On architectures like arm64 and riscv,
->   `acpi_get_cpu_acpi_id()` uses `cpu` directly as an array index
->   (`&cpu_madt_gicc[cpu]` and `&cpu_madt_rintc[cpu]`). On x86, it uses
->   `per_cpu(x86_cpu_to_acpiid, cpu)`.
-> 
->   If a caller passes an out-of-bounds `cpu` index (for example, if an
->   IRQ affinity mask is empty and `cpumask_first()` returns
->   `nr_cpu_ids`, or if userspace passes an arbitrary ID via
->   `mlx5_st_alloc_index()`), this will result in an out-of-bounds
->   memory read.
-> 
->   Consider adding a bounds check:
-> 
->     if (cpu >= nr_cpu_ids)
->       return -EINVAL;
-> 
-> I agree that this is an issue, and I think implementations of
-> acpi_get_cpu_acpi_id() should validate their inputs.
-> 
-> I don't know if there's a value that can never be a valid ACPI CPU UID
-> and could be used as an error value from acpi_get_cpu_acpi_id().  I do
-> see a few mentions of a ~0 value meaning "all processors" (ACPI r6.6,
-> sec 5.2.12.13).  
+Hi Andy:
 
-I only have the ACPI Specification Version 6.5, so I will use v6.5 as an example.
+Thanks for your detailed review.
 
-The ACPI specification does not define invalid value ranges for the ACPI UID.
-For the arm64 platform (Section 5.2.12.14):
-  ACPI Processor UID: The OS associates this GICC Structure with a processor device
-                      object in the namespace when the _UID child object of the
-                      processor device evaluates to a numeric value that matches
-                      the numeric value in this field.
+On Tue, Mar 10, 2026 at 11:02=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Tue, Mar 10, 2026 at 07:48:53PM +0800, Binbin Zhou wrote:
+> > This I2C module is integrated into the Loongson-2K0300 SoCs.
+> >
+> > It provides multi-master functionality and controls all I2C bus-specifi=
+c
+> > timing, protocols, arbitration, and timing. It supports both standard
+> > and fast modes.
+>
+> Nothing really worrying, this version only has an issue to access embedde=
+d
+> struct device in the i2c_adapter. See below.
+>
+> ...
+>
+> > +/**
+> > + * struct loongson2_i2c_priv - private data of the controller
+> > + * @adapter: I2C adapter for this controller
+> > + * @complete: completion of I2C message
+> > + * @clk: hw i2c clock
+> > + * @regmap: regmap of the I2C device
+> > + * @parent_rate_MHz: I2C clock parent rate in MHz
+>
+> ' in MHz' now is redundant.
+>
+> > + * @msg: I2C transfer information
+> > + */
+>
+> ...
+>
+> > +     /*
+> > +      * Acknowledge failure:
+> > +      * In master transmitter mode a Stop must be generated by softwar=
+e
+>
+> Missing period.
+>
+> > +      */
+>
+> ...
+>
+> > +     case 3:
+> > +             /*
+> > +              * In order to generate the NACK after the last received =
+data byte, enable NACK
+> > +              * before reading N-2 data
+> > +              */
+>
+> Ditto.
+>
+> > +             regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONG=
+SON2_I2C_CR1_ACK, 0);
+> > +             loongson2_i2c_read_msg(priv);
+> > +             break;
+>
+> ...
+>
+> > +     event =3D status & possible_status;
+> > +     if (!event) {
+> > +             dev_dbg(dev, "spurious evt irq (status=3D0x%08x, ien=3D0x=
+%08x)\n", status, ien);
+>
+> IRQ
+>
+> > +             return IRQ_NONE;
+> > +     }
+>
+> ...
+>
+> > +     /*
+> > +      * The BTF (Byte Transfer finished) event occurs when:
+> > +      * - in reception : a new byte is received in the shift register
+>
+> Extra space before :.
+>
+> > +      * but the previous byte has not been read yet from data register
+> > +      * - in transmission: a new byte should be sent but the data regi=
+ster
+> > +      * has not been written yet
+> > +      */
+>
+> ...
+>
+> > +static int loongson2_i2c_adjust_bus_speed(struct loongson2_i2c_priv *p=
+riv)
+> > +{
+> > +     struct device *dev =3D priv->adapter.dev.parent;
+>
+> Derive it from regmap (and check elsewhere) as accessing dev in the adapt=
+er
+> may lead to issues related to the object lifetime.
 
-I am concerned that we cannot implement it like this:
-	int acpi_get_cpu_uid(unsigned int cpu) {
-		if (cpu >= nr_cpu_ids)
-			return -EINVAL;
-		...
-	}
-or:
-	u32 acpi_get_cpu_uid(unsigned int cpu) {
-		if (cpu >= nr_cpu_ids)
-			return U32_MAX;
-		...
-	}
+Do you mean regmap_get_device() API?
 
-How about implementing it as follows:
-	s64 acpi_get_cpu_uid(unsigned int cpu) {
-		if (cpu >= nr_cpu_ids)
-			return -EINVAL;
-		...
-	}
-or
-	int acpi_get_cpu_uid(unsigned int cpu, u32 *uid) {
-		if (cpu >= nr_cpu_ids)
-			return -EINVAL;
-		*uid = xxx;
-		return 0;
-	}
+Also, similar references exist in `loongson2_i2c_xfer()` and
+`loongson2_i2c_isr_event()`, requiring synchronized updates.
+>
+> > +     struct i2c_timings i2c_t;
+> > +     u32 val, freq_MHz, ccr;
+> > +
+> > +     i2c_parse_fw_timings(dev, &i2c_t, true);
+> > +     priv->parent_rate_MHz =3D clk_get_rate(priv->clk);
+> > +
+> > +     if (i2c_t.bus_freq_hz =3D=3D I2C_MAX_STANDARD_MODE_FREQ) {
+> > +              /* Select Standard mode */
+> > +             ccr =3D 0;
+> > +             val =3D DIV_ROUND_UP(priv->parent_rate_MHz, i2c_t.bus_fre=
+q_hz * 2);
+> > +     } else if (i2c_t.bus_freq_hz =3D=3D I2C_MAX_FAST_MODE_FREQ) {
+> > +             /* Select Fast mode */
+> > +             ccr =3D LOONGSON2_I2C_CCR_FS;
+> > +             val =3D DIV_ROUND_UP(priv->parent_rate_MHz, i2c_t.bus_fre=
+q_hz * 3);
+> > +     } else {
+> > +             return dev_err_probe(dev, -EINVAL, "Unsupported speed (%u=
+Hz)\n", i2c_t.bus_freq_hz);
+> > +     }
+> > +
+> > +     FIELD_MODIFY(LOONGSON2_I2C_CCR_CCR, &ccr, val);
+> > +     regmap_write(priv->regmap, LOONGSON2_I2C_CCR, ccr);
+> > +
+> > +     freq_MHz =3D DIV_ROUND_UP(priv->parent_rate_MHz, HZ_PER_MHZ);
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C=
+_CR2_FREQ,
+> > +                        FIELD_GET(LOONGSON2_I2C_CR2_FREQ, freq_MHz));
+> > +
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_TRISE, LOONGSON2_I=
+2C_TRISE_SCL,
+> > +                        LOONGSON2_I2C_TRISE_SCL);
+> > +
+> > +     /* Enable I2C */
+> > +     regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C=
+_CR1_PE,
+> > +                        LOONGSON2_I2C_CR1_PE);
+> > +
+> > +     return 0;
+> > +}
+>
+> ...
+>
+> > +static int loongson2_i2c_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev =3D &pdev->dev;
+> > +     struct loongson2_i2c_priv *priv;
+> > +     struct i2c_adapter *adap;
+> > +     void __iomem *base;
+> > +     int irq, ret;
+> > +
+> > +     priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> > +
+> > +     base =3D devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(base))
+> > +             return PTR_ERR(base);
+> > +
+> > +     priv->regmap =3D devm_regmap_init_mmio(dev, base, &loongson2_i2c_=
+regmap_config);
+> > +     if (IS_ERR(priv->regmap))
+> > +             return dev_err_probe(dev, PTR_ERR(priv->regmap), "Failed =
+to init regmap.\n");
+> > +
+> > +     priv->clk =3D devm_clk_get_enabled(dev, NULL);
+> > +     if (IS_ERR(priv->clk))
+> > +             return dev_err_probe(dev, PTR_ERR(priv->clk), "Failed to =
+enable clock.\n");
+> > +
+> > +     irq =3D platform_get_irq(pdev, 0);
+> > +     if (irq < 0)
+> > +             return irq;
+> > +
+> > +     adap =3D &priv->adapter;
+> > +     adap->retries =3D 5;
+> > +     adap->nr =3D pdev->id;
+> > +     adap->dev.parent =3D dev;
+> > +     adap->owner =3D THIS_MODULE;
+> > +     adap->algo =3D &loongson2_i2c_algo;
+> > +     adap->timeout =3D 2 * HZ;
+>
+> > +     device_set_node(&adap->dev, dev_fwnode(dev));
+>
+> Why?! i2c_adapter_set_node() is part of the i2c-next.
+
+Indeed, when I rebased the v4 patchset, `i2c_adapter_set_node()`
+existed in the i2c-next[1]. However, when I prepared the v5 patchset,
+it was removed[2].
+
+[1]: base commit: 6117e1ba1db78a52a4161208ea403d3769ad73c6
+[2]: base commit: b82316862bea929265725c077dffcec42e3dc20b
+
+>
+> > +     i2c_set_adapdata(adap, priv);
+> > +     strscpy(adap->name, pdev->name);
+> > +     init_completion(&priv->complete);
+> > +     platform_set_drvdata(pdev, priv);
+> > +
+> > +     ret =3D loongson2_i2c_adjust_bus_speed(priv);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D devm_request_irq(dev, irq, loongson2_i2c_isr_event, IRQF_=
+SHARED, pdev->name, priv);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return devm_i2c_add_adapter(dev, adap);
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
 
-
-Another issue: This commit also provides an implementation for the x86 platform.
-However, further code analysis revealed a potential problem in the implementation:
-
-The acpi_get_cpu_acpi_id() retrieves uid from x86_cpu_to_acpiid in SMP, and
-x86_cpu_to_acpiid is set through the call chain: acpi_parse_lapic() ->
-topology_register_apic() -> topo_register_apic() -> topo_set_cpuids() ->
-x86_cpu_to_acpiid. It appears to retrieve the "ACPI Processor UID" from
-ACPI Section 5.2.12.2, but the problem is that this field is only one byte in length,
-which may cause issues in huge-core systems.
-
-Therefore, I suggest re-implementing the acpi_get_cpu_uid function for the x86
-platform. Either I provide a default implementation (shown below), or x86 guys
-contribute to the implementation:
-
-	s64 acpi_get_cpu_uid(unsigned int cpu) {
-		if (cpu >= nr_cpu_ids)
-			return -EINVAL;
-		return cpu;
-	}
-
-Thanks
-
-> 
-
+--
+Thanks.
+Binbin
