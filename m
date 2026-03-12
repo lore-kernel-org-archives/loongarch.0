@@ -1,202 +1,102 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DF22DF134
-	for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 11:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345CB397E71
+	for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 11:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773313364; cv=none; b=qCDfa/oTJkzN3fY3YePnaWs3HJRcHXiVeuR1kV7sHwcbQPWohaCEvKv4/a8r/C6yzp3fO3+eHn/zybyRAUFHPsfPtEXP/bgpwtyhlN1LpBh5oP9LSf0vV3XyzhN9gTsqOGDvfUIQAzsx7rM/CKhvTZchSK3TdOG5x8B6EWjL7SY=
+	t=1773313615; cv=none; b=nVFxV4FD5bAgjD4uEiRrsBE+w8kG3cUrmBGs4IX7ZIhdRmhUnL2oCyF1MD1hVgckpgNgnPymYZ7x1v08VpKe1WsaPiCvvT5wEojCFnwS8Yxyg3OTLvPzzYODx3GKyyf9kgjFTiGmvAqdFcc320lRCHjTVH00+xOeG6YL579fPm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773313364; c=relaxed/simple;
-	bh=6J5SDcO5DMKytvtsx36wcU0BxOxT41bThTx/x7rN40A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kI6gm1sVj3qMysPiXc1l1ioWs8GXyox6iiEkTTj5mxPaefe8rBzHsdArtIQ4HjOvdC37snFQ0rhvBWwYXqZaUGvGocZNIDSZwDG8+QX+bvcvdsBPH29nTZl9htIltervuILoJlZC/M4j3TRPTKnSFWQEmoszmjUukeQdBHJOzbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=an8qvmMR; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="an8qvmMR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TKIEX/tTmZZzj6V6Q9LOzPYb6+bhVRh9N9evN1bqSfc=; b=an8qvmMRT6e0/uIgvv6SvD7SLo
-	4m+UvPB5+18GpbDiaL9IxO3UA1h4nyJ0FZtTMBA4+J8t9buo20vz5+l2obe0Hhuhm03AWzFimVp4D
-	YtHlF5LCr5cNGTsUr/nANJN0G/ar8NTW96doAb79xogVjlFtfvWv3tS4G8vgrwid1zRyuKnnoOtRg
-	cRE6fVkUPmEULPsE/mtiFGjwxhTv0E57tOdjLrOaPqcviA5Hx/nImdKNCvkkIHyFLP9mr/wm0JSMb
-	0Thh4CDgCwqZ4HpWOjjPbbgfQIiKl0MIq4avo+r94PhokRILHHajLVnNT16BcpXuKO/m4C7RcJSQ1
-	afukQ/VQ==;
-Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0dnq-0000000BDV5-3GNL;
-	Thu, 12 Mar 2026 11:02:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AC3B5300462; Thu, 12 Mar 2026 12:02:05 +0100 (CET)
-Date: Thu, 12 Mar 2026 12:02:05 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
-	Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Zheyun Shen <szy0127@sjtu.edu.cn>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
-	Wei Huang <wei.huang2@amd.com>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>,
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com,
-	suzuki.poulose@arm.com, ryan.roberts@arm.com,
-	chenl311@chinatelecom.cn, masahiroy@kernel.org,
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com,
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com,
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com,
-	liuyonglong@huawei.com, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] x86: Implement acpi_get_cpu_uid()
-Message-ID: <20260312110205.GG606826@noisy.programming.kicks-ass.net>
-References: <20260312072316.4806-1-fengchengwen@huawei.com>
- <20260312072316.4806-3-fengchengwen@huawei.com>
+	s=arc-20240116; t=1773313615; c=relaxed/simple;
+	bh=Ezfzk+y4Aajp92+VbSBmBGx8P8IjMipnXiYNleFbsIA=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=h8HiGHvFnc0r/phpd9kF1WJBB24wtcepWdo6plvBrJNbvcp8SUOKQuCdcBUENRrh3c6hGhQNB2AMF7m6XGQUh1EOO1SVYaK0pwOv6tYevl6BUusFPM20ipHxAMiGYbIc6ww/i45edoGY8+qgT76q4QeRcTyd4fOtAzSu4RjT/W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxYcBDnrJp70waAA--.17808S3;
+	Thu, 12 Mar 2026 19:06:43 +0800 (CST)
+Received: from [10.130.40.84] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxjcI+nrJpQdZTAA--.26265S3;
+	Thu, 12 Mar 2026 19:06:39 +0800 (CST)
+Subject: Re: [PATCH bpf-next v1 1/2] selftests/bpf: Check alignment flag if
+ expected result is REJECT
+To: Paul Chaignon <paul.chaignon@gmail.com>
+References: <20260310064507.4228-1-yangtiezhu@loongson.cn>
+ <20260310064507.4228-2-yangtiezhu@loongson.cn>
+ <DH02R7I6EAUH.16649BMB7V1N8@etsalapatis.com>
+ <fe04d981-fc83-0ba6-4dee-8fc0c953e09f@loongson.cn>
+ <abKHi9Pr5iUbIQZI@mail.gmail.com>
+Cc: Emil Tsalapatis <emil@etsalapatis.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>,
+ loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <7ea56716-fd5f-1740-e634-1dec4196dd2c@loongson.cn>
+Date: Thu, 12 Mar 2026 19:06:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260312072316.4806-3-fengchengwen@huawei.com>
+In-Reply-To: <abKHi9Pr5iUbIQZI@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJDxjcI+nrJpQdZTAA--.26265S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XF43Jw4fAF4xXw4xtry3KFX_yoWDAwc_W3
+	s5Cwn5uw1DAF45t3ZrtF1Fyr4YqrZIqF18Z3y7XrnFkFyrtF1DXrs3uryYqayrGa4avr4k
+	CFnava1YvryUuosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbIxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8yr
+	W7UUUUU==
 
-On Thu, Mar 12, 2026 at 03:23:15PM +0800, Chengwen Feng wrote:
-> Add acpi_get_cpu_uid() implementation for x86, replacing the existing
-> cpu_acpi_id() function. This completes the unified ACPI Processor UID
-> retrieval interface across all ACPI-enabled architectures.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
-> ---
->  arch/x86/include/asm/cpu.h   |  1 -
->  arch/x86/include/asm/smp.h   |  1 -
->  arch/x86/kernel/cpu/common.c | 15 +++++++++++++++
->  arch/x86/xen/enlighten_hvm.c |  5 +++--
->  include/linux/acpi.h         |  2 --
->  5 files changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> index ad235dda1ded..57a0786dfd75 100644
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -11,7 +11,6 @@
->  
->  #ifndef CONFIG_SMP
->  #define cpu_physical_id(cpu)			boot_cpu_physical_apicid
-> -#define cpu_acpi_id(cpu)			0
->  #endif /* CONFIG_SMP */
->  
->  #ifdef CONFIG_HOTPLUG_CPU
-> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-> index 84951572ab81..05d1d479b4cf 100644
-> --- a/arch/x86/include/asm/smp.h
-> +++ b/arch/x86/include/asm/smp.h
-> @@ -130,7 +130,6 @@ __visible void smp_call_function_interrupt(struct pt_regs *regs);
->  __visible void smp_call_function_single_interrupt(struct pt_regs *r);
->  
->  #define cpu_physical_id(cpu)	per_cpu(x86_cpu_to_apicid, cpu)
-> -#define cpu_acpi_id(cpu)	per_cpu(x86_cpu_to_acpiid, cpu)
->  
->  /*
->   * This function is needed by all SMP systems. It must _always_ be valid
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 1c3261cae40c..3081557542c7 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -28,6 +28,7 @@
->  #include <linux/stackprotector.h>
->  #include <linux/utsname.h>
->  #include <linux/efi.h>
-> +#include <linux/acpi.h>
->  
->  #include <asm/alternative.h>
->  #include <asm/cmdline.h>
-> @@ -57,6 +58,7 @@
->  #include <asm/asm.h>
->  #include <asm/bugs.h>
->  #include <asm/cpu.h>
-> +#include <asm/smp.h>
->  #include <asm/mce.h>
->  #include <asm/msr.h>
->  #include <asm/cacheinfo.h>
-> @@ -2643,3 +2645,16 @@ void __init arch_cpu_finalize_init(void)
->  	 */
->  	mem_encrypt_init();
->  }
-> +
-> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
-> +{
-> +	if (cpu >= nr_cpu_ids)
-> +		return -EINVAL;
-> +#ifndef CONFIG_SMP
-> +	*uid = 0;
-> +#else
-> +	*uid = per_cpu(x86_cpu_to_acpiid, cpu);
-> +#endif
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
-> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-> index fe57ff85d004..2f9fa27e5a3c 100644
-> --- a/arch/x86/xen/enlighten_hvm.c
-> +++ b/arch/x86/xen/enlighten_hvm.c
-> @@ -151,6 +151,7 @@ static void xen_hvm_crash_shutdown(struct pt_regs *regs)
->  
->  static int xen_cpu_up_prepare_hvm(unsigned int cpu)
->  {
-> +	u32 cpu_uid;
->  	int rc = 0;
->  
->  	/*
-> @@ -161,8 +162,8 @@ static int xen_cpu_up_prepare_hvm(unsigned int cpu)
->  	 */
->  	xen_uninit_lock_cpu(cpu);
->  
-> -	if (cpu_acpi_id(cpu) != CPU_ACPIID_INVALID)
-> -		per_cpu(xen_vcpu_id, cpu) = cpu_acpi_id(cpu);
-> +	if (acpi_get_cpu_uid(cpu, &cpu_uid) == 0)
-> +		per_cpu(xen_vcpu_id, cpu) = cpu_uid;
->  	else
->  		per_cpu(xen_vcpu_id, cpu) = cpu;
->  	xen_vcpu_setup(cpu);
+On 03/12/2026 05:29 PM, Paul Chaignon wrote:
+> On Thu, Mar 12, 2026 at 02:59:57PM +0800, Tiezhu Yang wrote:
 
-This doesn't look right, it will now set CPU_ACPIID_INVALID, while
-previously it would not.
+...
+
+>> For example, for the test_verifier 14,
+>> verifier/atomic_cmpxchg.c:215
+>> "Dest pointer in r0 - succeed, check 5",
+>> if remove ".flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,",
+>
+> I think I'm missing something. Why would you remove this flag?
+>
+> Are you trying to illustrate that this is a program that could be
+> rejected because of misaligned accesses?
+
+Yes.
+
+> I agree, but here the flag is
+> set and this program is therefore rejected because of an invalid memory
+> access; the misalgined access check is skipped in the verifier.
+
+...
+
+>> -#14/p Dest pointer in r0 - succeed, check 5 OK
+>> +#14/p Dest pointer in r0 - succeed, check 5 OK (NOTE: not executed due to
+>> unknown alignment)
+>
+> As stated in my previous answer, this note would be incorrect: the
+> program was executed in test case #14 because it was rejected, not
+> because of unknown alignment.
+
+OK, please ignore this patch.
+
+Thanks,
+Tiezhu
 
