@@ -1,119 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12C03BE649;
-	Thu, 12 Mar 2026 12:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E000B39936F
+	for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 12:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773317437; cv=none; b=WejTnyH7jTEvQUJnmkDzUwX7NmzCdmiriexXfRZ9uaZ9VPC3rilkYgpuB7zeQDy8ieAdtGxuMTiUph0LWgSDxq5J0XiKEK8gRSEH4samEwvFCRgHA2sKnH8oND6IX9PP4WBJayYQ2aokiQ1aVKqb9J1g9lnUK4DluUhUyZ+Gv0s=
+	t=1773320028; cv=none; b=Z5BVA/YkUWAsKZZHPRPrsjIhtcXwZgBPp07LOTXsxp4wvhpZKenhfUpzxkRVhle+9BOlgoTKdraq2sYwf9wQkhyGIhhTp5S2LVLWnlHYno0GGH5pmowJ5AYGMaN5cCA4jJpN6n7k8BbcFAtBUGSnjxgG3h1x49aCvaxzUMldBV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773317437; c=relaxed/simple;
-	bh=nQuXQCfJ/SfXG9YfnkL7myftheQ9u5GoCmA3GEgvOX4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JjJIE8EilaZhXsmXS2O1fZDTKwrl8iiVOg2xTe0LTOO8EfIVkMHQHpPpa8eCd4TaIp+pS9UmsiA8MGIVIJH3TbLl0tKflKHut/8XVoWb6rrILrmkqYiicXDK0k7SCl+V+qVMUddvzVl9Vm0n1y+7ETXWqXA5uE5POUSLpif4ghA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzp5oTip; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773320028; c=relaxed/simple;
+	bh=C8Tmx+wVgPaQO3SA5g1GPxNl28HZYA6VUhyX4LUkXAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mwd+TLe5NVkf3Rz/Z4nLvuEjTDcDe+bafwgjasUVJu0pty/6IxWmAOCMzZ6tRKNDo4vnhSz0C07NK+2oJqHABpj9xi+1rm+NAUxmHb3/A3dAhHsjLzot6U37JOJHc0SBDXfk88Lo/GgBIEFIoFxDQ1cJ82d0rJLA7dejzC4jI/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=NzLKp1qc; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzp5oTip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8DBDC4CEF7;
-	Thu, 12 Mar 2026 12:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773317436;
-	bh=nQuXQCfJ/SfXG9YfnkL7myftheQ9u5GoCmA3GEgvOX4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kzp5oTipiNOs9fmIBpi1nmmSuQ4uLVNq08LPCSch8yiIeOkyJ8Az9MBCTybE7cm5d
-	 AMxfwpohLYKZvdRcwY6FVWNb1PtjdZE3EgpeQC628X0efwh2wRrw0LhWn9yaxAQfpf
-	 w6ZUYG6LkLltn75gOmO38N55qeVwus4Wr+Sb10hyo0888DrxKRH5rYKA32g+xfcRRS
-	 vWwOBuST+wlsK+dHrf7tH4G3ruupinYIHv4ZCjmtIer0Zb+wbl+bwIETcNIuNLPGvg
-	 W1154YFBZI0Xw+DtOH34QkYfcH3Ndv6eraBdM09caT66SnioiGB/fgmwobzxV3sXLI
-	 1S2FtYnyjdp3A==
-From: Nicolas Schier <nsc@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Nicolas Schier <nsc@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Kees Cook <kees@kernel.org>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 0/2] kbuild: Switch from '-fms-extensions' to '-fms-anonymous-structs' when available
-Date: Thu, 12 Mar 2026 13:08:48 +0100
-Message-ID: <177331711843.39835.18126183139184363231.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260223-fms-anonymous-structs-v1-0-8ee406d3c36c@kernel.org>
-References: <20260223-fms-anonymous-structs-v1-0-8ee406d3c36c@kernel.org>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NzLKp1qc"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-40ef10ec84cso666900fac.2
+        for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 05:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1773320025; x=1773924825; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ky7U0hmCeNi6OyUrf2MxogfDAlaxZWXxIQIvc2Y9k8Y=;
+        b=NzLKp1qcJECyXZP5TibRb1PvnY70VCaUHd3adNLJYmI6XvMeH+XjOHXBB/DwPEJnG1
+         ZKFdaHGJawnRJCxO3a+rOB+oOXOQKc3dgdOSQq5XWMW58nSuwET1ngZXHPw3I7hkpFPv
+         wOQ4ui6vADWHsPAN2/eenQMVfQNTo7rOQ3XcCjmomzOIDFLe/Y1Sype2OQgecRs9juY3
+         N24SytDT+ZKAMvCiON0KiSFD1OVlIEbBvHUZJOgsPe+amvD+TpnJ4I8TfhaLailmzygG
+         LXPnDmNtFsvp7QrSHF1EA8ihMgoEpDtgp8vNkPkaoJssKqJ/CXtvtEz0F5RPYAA7xc6j
+         0RCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773320025; x=1773924825;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ky7U0hmCeNi6OyUrf2MxogfDAlaxZWXxIQIvc2Y9k8Y=;
+        b=kJUK+XK7MIn4i5ZKhjRU4TqtAaJztnCi83JV+Tvn7zhkEEOjRdfkrSNsPfX1fpTOqQ
+         kqFG943wuReY2ZsUZtvGIMfLJZEWKbrh5QE8aCQpTh/If12crRximoyevkPoK1lREJZL
+         noSy//rEMij2mcibUl9pgPl7kh0NmLMyugRtRnE0H46KUuKlzpx8Qi5oRmEgmCSNd0LS
+         03Tf92z1L7+Kw3wvEhgQRgYPs3GfnQgAm94R6aineeus/t8VOmO4ftX77WUbF2sfJLyJ
+         8QO+3w6h7E8ghMIt5PfwmlR71qim/kTak/WN+9v+qoyyzhgtJvP3V9crfI60K9fLM4oL
+         CGuA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8/ktWBgLIhhxxhjV7XeO4Vzgna0EdAM3F4pLa2uCCTnWReBnnxGzQgVJ2T4U2AzCI5w5REtTohB8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwanKuh5vA20o5NQvMy+TrzHKAP57I06PtF+uyD3nrb4EHTy9NT
+	tOHDh+hXUsQMF0qOGi+SPOTLHR0X5kozxhrT0qZmr9/VG5j6TvRF2UkptcuyTVGWoNI=
+X-Gm-Gg: ATEYQzx4i23tRMkMEXRtYmFCvrOOYsl2NkykDJF12QLO8ycYtid72HvhBAseSmYtREV
+	7coyXuo8KFdaGsdeO8M2baFco5cXgGRrZxodnCfJOiYAUQpmEOqb5cxACoxNSTxQe2IRsgxmTLG
+	VjBeKXS011WeapYXIaoFmJLk2536ZGrNkodfKe+IFtpyul6gyimkSEF+WqVmdgbz/y+F/qsYxTX
+	Lp8LPbYDmOB/Sy977QR2rQU9xuUVJ7neQXJeolf5nT8Oo5XvpJGEBby6/sMHjwiEh44uOuQt6/2
+	aQX4nk40kfHCHIlWsqZQ5yv0/DRayFFJQXw94E6qwe/VqVZ6c0Tbdr3A+52SaLnL2SRJB5t+4dl
+	NwXiZAtryY7peXqHyMCbPUaA3xo6ddff3KzY4z+RftUjzB4GPHJv+ViKO4ictwpEOgEQp2Avd01
+	YMoamHYqeOJLaYAgHoXkI8lfnv9Ve0Cu4Q+W+HQwk=
+X-Received: by 2002:a05:6870:649f:b0:409:74c7:1cbb with SMTP id 586e51a60fabf-4177c6f1d08mr3392540fac.7.1773320024820;
+        Thu, 12 Mar 2026 05:53:44 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.103.0])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41791432d87sm3765785fac.1.2026.03.12.05.53.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 05:53:44 -0700 (PDT)
+Message-ID: <f7054184-dca2-4c7c-9e2e-4a5e3e1c81da@sifive.com>
+Date: Thu, 12 Mar 2026 07:53:42 -0500
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 14/15] mm/kasan: add document into
+ kernel-parameters.txt
+To: Baoquan He <bhe@redhat.com>, kasan-dev@googlegroups.com
+Cc: linux-mm@kvack.org, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
+ glider@google.com, dvyukov@google.com, linux-kernel@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, x86@kernel.org, chris@zankel.net,
+ jcmvbkbc@gmail.com, linux-s390@vger.kernel.org, hca@linux.ibm.com
+References: <20260225081412.76502-1-bhe@redhat.com>
+ <20260225081412.76502-15-bhe@redhat.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <20260225081412.76502-15-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Feb 2026 12:10:27 -0700, Nathan Chancellor wrote:
-> The kernel enabled '-fms-extensions' in commit c4781dc3d1cf ("Kbuild:
-> enable -fms-extensions") in 6.19 to gain access to a Microsoft
-> (originally Plan 9) extension around including a tagged structure/union
-> anonymously in an other structure/union. Since then, Clang 23.0.0
-> (current main) has added a flag to enable only that extension, rather
-> than all Microsoft extensions, '-fms-anonymous-structs' [1]. Using this
-> narrower compiler option would have avoided the build error fixed by
-> commit a6773e6932cb ("jfs: Rename _inline to avoid conflict with clang's
-> '-fms-extensions'"). While these errors are not expected to be common,
-> using the narrower option when available has no drawbacks because the
-> kernel only cares about this extension in '-fms-extensions', no others.
-> While this could result in build errors for folks using
-> '-fms-anonymous-structs' if a developer uses another extension in
-> '-fms-extensions' (either intentionally or unintentionally), flagging
-> these uses for further scrutiny seems worthwhile.
+Hi Baoquan,
+
+On 2026-02-25 2:14 AM, Baoquan He wrote:
+> And also remove the relevant description in dev-tools/kasan.rst
+> which is hw_tags specificially.
 > 
-> [...]
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 4 ++++
+>  Documentation/dev-tools/kasan.rst               | 2 --
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index cb850e5290c2..e0115fad9e60 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2899,6 +2899,10 @@ Kernel parameters
+>  	js=		[HW,JOY] Analog joystick
+>  			See Documentation/input/joydev/joystick.rst.
+>  
+> +	kasan=		[KNL] controls whether KASAN is enabled.
+> +			Format: off | on
+> +			default: on
+> +
+>  	kasan_multi_shot
+>  			[KNL] Enforce KASAN (Kernel Address Sanitizer) to print
+>  			report on every invalid memory access. Without this
+> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
+> index a034700da7c4..eaae83fcb5e4 100644
+> --- a/Documentation/dev-tools/kasan.rst
+> +++ b/Documentation/dev-tools/kasan.rst
+> @@ -129,8 +129,6 @@ Hardware Tag-Based KASAN mode is intended for use in production as a security
+>  mitigation. Therefore, it supports additional boot parameters that allow
+>  disabling KASAN altogether or controlling its features:
 
-Applied to kbuild/kbuild-next.git (kbuild-next), thanks!
+The sentence above is now incorrect as well. I would recommend documenting the
+parameter earlier in the "Boot parameters" section instead of removing it from
+this document entirely.
 
-[1/2] kbuild: Consolidate C dialect options
-      https://git.kernel.org/kbuild/c/ec4c2827
-[2/2] kbuild: Use '-fms-anonymous-structs' if it is available
-      https://git.kernel.org/kbuild/c/0d3fccf6
+Regards,
+Samuel
 
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped,
-reverted or modified (e.g. trailers).
-
-Acks from arch maintainers are still welcome!
-
-Best regards,
--- 
-Nicolas
+>  
+> -- ``kasan=off`` or ``=on`` controls whether KASAN is enabled (default: ``on``).
+> -
+>  - ``kasan.mode=sync``, ``=async`` or ``=asymm`` controls whether KASAN
+>    is configured in synchronous, asynchronous or asymmetric mode of
+>    execution (default: ``sync``).
 
