@@ -1,324 +1,191 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C0D32D0DC
-	for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 11:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B339BFFA
+	for <loongarch@lists.linux.dev>; Thu, 12 Mar 2026 11:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773313671; cv=none; b=MVWQ6vXNlSCLj7aeyg4HcQK4GEi4mDt3+D9I7XxqxTtJbJTxsicHQlYp5vxRwfg5FdBcMup88+hhwHouXr1wTp8MQwOwiymrANdvXbvIM5+KORnfmUMZcrC2x9LwDVY6iaExYad3Ok4mPP6Llc3+f15YTRwtwaEvbJDFbn5larA=
+	t=1773313984; cv=none; b=K4Nx81dhlIc+cc8vGXLdz3PxkpLJtjw07lIAeHaRz1kQnAFi5BRLuVW89MPBFlnd9eZ+jxaYTOK9t4f0xgr+eNEpbCI3atyJhCzrF8so2lqP8bbSQRNMfw8VwF6X/FOL2hSqH8aqG6s8zBrK1rl60SVbwRajX0UMjdfGH7D56bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773313671; c=relaxed/simple;
-	bh=quM1dCUzex7hsDIaji+Lt2uHH4N7ImU0pUBpHPkVSAQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aazMR3Kaa7vxiTLBDMgSfVAJPPjAZ9CRVgodQjq+kkW0jXeEUFQVvCBU4MxJxqE5THaJLMoOK8O+qhuYAOwJyRdcVPfPVPDZz8g0mwbOMsapouMy9bGod6eAqeiM059S5LCq9tLZd26m5BFj7F3gTsHHCwgY3RHmV5ShXR/WW+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fWlFh4gmtzHnH8v;
-	Thu, 12 Mar 2026 19:07:36 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29C2E40584;
-	Thu, 12 Mar 2026 19:07:46 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 12 Mar
- 2026 11:07:43 +0000
-Date: Thu, 12 Mar 2026 11:07:42 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Chengwen Feng <fengchengwen@huawei.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
- Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>, "WANG
- Xuerui" <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, "Palmer Dabbelt"
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Alexandre Ghiti"
-	<alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris Ostrovsky
-	<boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V L
-	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook
-	<kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Sean Christopherson
-	<seanjc@google.com>, Kai Huang <kai.huang@intel.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, Thorsten Blum
-	<thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, Zheyun
- Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, "Ahmed S .
- Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, Ilkka
- Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>,
-	James Clark <james.clark@linaro.org>, Besar Wicaksono
-	<bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, "Wei Huang"
-	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
-	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
-	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
-	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
-	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
-	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
-	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
-	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: Re: [PATCH v6 1/3] ACPI: Rename get_acpi_id_for_cpu() to
- acpi_get_cpu_uid() on non-x86
-Message-ID: <20260312110742.00002716@huawei.com>
-In-Reply-To: <20260312072316.4806-2-fengchengwen@huawei.com>
-References: <20260312072316.4806-1-fengchengwen@huawei.com>
-	<20260312072316.4806-2-fengchengwen@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1773313984; c=relaxed/simple;
+	bh=pDzvH3yAtFUwiJFWUNR5tMIuT0wd20nHw/B6sHg2vgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQ4j3FkkJuwTymbF9zGQ7brzs5tnGp7bHsvP/NDhKvYf0BbfcQD/fngwbKXjp5BzW9MmHJFbzGHZAVIAHvwCoKWGzF39w+GY/PqEGWB5l9L44yXslEPcp6vgtPu0oXEP/aU7IRszjbNrxeDbrF52kioMDKyvDcND/Xhe546LHcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CkvJemL8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CkvJemL8"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62BMWPq02279397;
+	Thu, 12 Mar 2026 11:12:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=qFwb11
+	X0zrrF96hDRnrNne+UfFUOQp/uf8JCpdTCVwI=; b=CkvJemL88mOKrQnUYcuUw9
+	v/lgsBx8TN5vdU6h/SIF8Ldu3K8Ug6D+Yp5oOpfuyZmsQt8w7UWAJS27LWxzO2AB
+	qJiJZKWL+I2Ssbtc0opT3qdsA44BKHuwAaYqVM6g7nsQbGEODsco5l+huQ5I+xxx
+	BZauCHcdzpBAr+cc4WxU22UEDZypALbDY+VCjW8DLlk/6wxbAXi1ZFzuAYIAmh+O
+	k+3Slj+7c9xAMUhN9xjLSefjQUt4axPosk4bfZ0jp7bigiV9LjFIJtfSfaUqWV/p
+	lktUd/dgHUAUJ+cXeQbwo7JBL0aKhao8/lM1CDSj9CGS2NQB30kI8Vv4JtgGvZwA
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cuh91jb9v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Mar 2026 11:12:53 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62C9aRxI014797;
+	Thu, 12 Mar 2026 11:12:52 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cuha8a1xj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Mar 2026 11:12:51 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62CBCoTr36503948
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Mar 2026 11:12:50 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F28362004B;
+	Thu, 12 Mar 2026 11:12:49 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A21220040;
+	Thu, 12 Mar 2026 11:12:47 +0000 (GMT)
+Received: from [9.109.204.116] (unknown [9.109.204.116])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 12 Mar 2026 11:12:46 +0000 (GMT)
+Message-ID: <71921cca-b890-41c4-93e9-957d3f647ffa@linux.ibm.com>
+Date: Thu, 12 Mar 2026 16:42:45 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 09/15] arch/powerpc: don't initialize kasan if it's
+ disabled
+To: Baoquan He <bhe@redhat.com>, kasan-dev@googlegroups.com
+Cc: linux-mm@kvack.org, andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
+        glider@google.com, dvyukov@google.com, linux-kernel@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org, chris@zankel.net,
+        jcmvbkbc@gmail.com, linux-s390@vger.kernel.org, hca@linux.ibm.com
+References: <20260225081412.76502-1-bhe@redhat.com>
+ <20260225081412.76502-10-bhe@redhat.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260225081412.76502-10-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: sK4H9fwZp-KLt_Uh6QEN1FURiK-VcUay
+X-Authority-Analysis: v=2.4 cv=E6/AZKdl c=1 sm=1 tr=0 ts=69b29fb5 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=20KFwNOVAAAA:8
+ a=voM4FWlXAAAA:8 a=VnNF1IyMAAAA:8 a=e6XaAvPcIE9lEXRYuwcA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=IC2XNlieTeVoXbcui8wp:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEyMDA4NyBTYWx0ZWRfX/mtfNCEYEuc6
+ WHnW4p9iVwWYhz47Or92vnI3HCFHwJtfujDrjNzVlJPrH+HNMFrM5rei+tcs68Z8xKbUMLW4OGS
+ nCC3o1olVSQZigyKu8dPplVewbl+wRYHv9pug6m4GgXDTxjkx/bFrguphZ3UlQo8DTuZgOK7pT7
+ XoX/Pn2toTKs0nsYAIR0bSRishOkQI7WvgwwfqCbulME6FSQeiA+c1uiCQVkk5pmlyfJAVn0xAp
+ Pd2bmli4VyUJXDxXTGZdXRFpkSuVHPAXPQU/E02hIaN/9uTz9550KWyukcPEC/RWPfdtgQaWvnT
+ dA5KdZMWC431ZuagttMr9l48fgf2ZsGNNBHZ778481DcVjv3LdLN4uwlF7NKiDY3IpRloCGz839
+ sR9Hlsf9U+wi24kTc7YK1aOscBc/I0desU0vcau1oECfMdpaWfrggI5bqsG8fSprzOHFsV0rdAa
+ 5fL4EVBZVPzrPv5kKmA==
+X-Proofpoint-ORIG-GUID: appgZUPYvO44oILc1-ob_bhU232DA-fp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-11_02,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 impostorscore=0 clxscore=1011 malwarescore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603120087
 
-On Thu, 12 Mar 2026 15:23:14 +0800
-Chengwen Feng <fengchengwen@huawei.com> wrote:
 
-> To unify the CPU ACPI ID retrieval interface across architectures,
-> rename the existing get_acpi_id_for_cpu() function to
-> acpi_get_cpu_uid() on arm64/riscv/loongarch platforms.
->=20
-> This is a pure rename with no functional change, preparing for a
 
-It's not just a rename.  This should mention that the addition of error
-checks and hence the resulting signature change.
-
-> consistent ACPI Processor UID retrieval interface across all ACPI-enabled
-> platforms.
->=20
-> Note: Move the ARM64-specific get_cpu_for_acpi_id() implementation to
->       arch/arm64/kernel/acpi_numa.c to fix compilation errors from
->       circular header dependencies introduced by the rename.
->=20
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-=46rom a reread, a few minor style consistency things inline.
-
+On 25/02/26 13:44, Baoquan He wrote:
+> Here, kasan is disabled if specified 'kasan=off' in kernel cmdline.
+>
+> This includes 32bit, book3s/64 and book3e/64.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
 > ---
->  arch/arm64/include/asm/acpi.h      | 16 +---------
->  arch/arm64/kernel/acpi.c           | 16 ++++++++++
->  arch/arm64/kernel/acpi_numa.c      | 15 ++++++++++
->  arch/loongarch/include/asm/acpi.h  |  5 ----
->  arch/loongarch/kernel/acpi.c       |  9 ++++++
->  arch/riscv/include/asm/acpi.h      |  4 ---
->  arch/riscv/kernel/acpi.c           | 16 ++++++++++
->  arch/riscv/kernel/acpi_numa.c      |  8 +++--
->  drivers/acpi/pptt.c                | 47 +++++++++++++++++++++---------
->  drivers/acpi/riscv/rhct.c          |  7 ++++-
->  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
->  include/linux/acpi.h               | 13 +++++++++
->  12 files changed, 120 insertions(+), 42 deletions(-)
-
-> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-> index af90128cfed5..984a11788265 100644
-> --- a/arch/arm64/kernel/acpi.c
-> +++ b/arch/arm64/kernel/acpi.c
-> @@ -458,3 +458,19 @@ int acpi_unmap_cpu(int cpu)
->  }
->  EXPORT_SYMBOL(acpi_unmap_cpu);
->  #endif /* CONFIG_ACPI_HOTPLUG_CPU */
+>   arch/powerpc/mm/kasan/init_32.c        | 6 +++++-
+>   arch/powerpc/mm/kasan/init_book3e_64.c | 4 ++++
+>   arch/powerpc/mm/kasan/init_book3s_64.c | 4 ++++
+>   3 files changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/mm/kasan/init_32.c b/arch/powerpc/mm/kasan/init_32.c
+> index 1d083597464f..0ea2a636c992 100644
+> --- a/arch/powerpc/mm/kasan/init_32.c
+> +++ b/arch/powerpc/mm/kasan/init_32.c
+> @@ -141,6 +141,10 @@ void __init kasan_init(void)
+>   	u64 i;
+>   	int ret;
+>   
+> +	/* If KASAN is disabled via command line, don't initialize it. */
+> +	if (kasan_arg_disabled)
+> +		return;
 > +
-> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
-> +{
-> +	struct acpi_madt_generic_interrupt *gicc;
+>   	for_each_mem_range(i, &base, &end) {
+>   		phys_addr_t top = min(end, total_lowmem);
+>   
+> @@ -170,7 +174,7 @@ void __init kasan_init(void)
+>   
+>   void __init kasan_late_init(void)
+>   {
+> -	if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
+> +	if (IS_ENABLED(CONFIG_KASAN_VMALLOC) && kasan_enabled())
+>   		kasan_unmap_early_shadow_vmalloc();
+>   }
+>   
+> diff --git a/arch/powerpc/mm/kasan/init_book3e_64.c b/arch/powerpc/mm/kasan/init_book3e_64.c
+> index 0d3a73d6d4b0..fbe4c9a7e460 100644
+> --- a/arch/powerpc/mm/kasan/init_book3e_64.c
+> +++ b/arch/powerpc/mm/kasan/init_book3e_64.c
+> @@ -111,6 +111,10 @@ void __init kasan_init(void)
+>   	u64 i;
+>   	pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page), PAGE_KERNEL_RO);
+>   
+> +	/* If KASAN is disabled via command line, don't initialize it. */
+> +	if (kasan_arg_disabled)
+> +		return;
 > +
-> +	if (cpu >=3D nr_cpu_ids)
-> +		return -EINVAL;
+>   	for_each_mem_range(i, &start, &end)
+>   		kasan_init_phys_region(phys_to_virt(start), phys_to_virt(end));
+>   
+> diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c b/arch/powerpc/mm/kasan/init_book3s_64.c
+> index dcafa641804c..f7906f9ef9be 100644
+> --- a/arch/powerpc/mm/kasan/init_book3s_64.c
+> +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
+> @@ -54,6 +54,10 @@ void __init kasan_init(void)
+>   	u64 i;
+>   	pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page), PAGE_KERNEL);
+>   
+> +	/* If KASAN is disabled via command line, don't initialize it. */
+> +	if (kasan_arg_disabled)
+> +		return;
 > +
-> +	gicc =3D acpi_cpu_get_madt_gicc(cpu);
-> +	if (gicc =3D=3D NULL)
+>   	if (!early_radix_enabled()) {
+>   		pr_warn("KASAN not enabled as it requires radix!");
+>   		return;
 
-Seems local style for null pointer checks is
-	if (!gicc)
-Just for consistency we should follow that.
+Should we log in the kernel log buffer that KASAN is disabled?
 
-> +		return -ENODEV;
-> +
-> +	*uid =3D gicc->uid;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
-> diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
-> index 2465f291c7e1..56e2e486e49b 100644
-> --- a/arch/arm64/kernel/acpi_numa.c
-> +++ b/arch/arm64/kernel/acpi_numa.c
-> @@ -34,6 +34,21 @@ int __init acpi_numa_get_nid(unsigned int cpu)
->  	return acpi_early_node_map[cpu];
->  }
-> =20
-> +int get_cpu_for_acpi_id(u32 uid)
-> +{
-> +	u32 cpu_uid;
-> +	int cpu;
-> +	int ret;
-> +
-> +	for (cpu =3D 0; cpu < nr_cpu_ids; cpu++) {
+Right now, I don't see the kernel advertising the same.
 
-Given more recent acceptance of the following perhaps it is neater here.
+$ dmesg | grep -i kasan
+[    0.000000] Kernel command line: 
+BOOT_IMAGE=(ieee1275//vdevice/v-scsi@30000070/disk@8100000000000000,msdos2)/vmlinuz-7.0.0-rc3+ 
+crashkernel=2G kasan=off
 
-	for (int cpu =3D 0; cpu < nr_cpu_ids; cpu++) {
+Tested this series on powerpc Pseries platform.
+So feel free to add:
+Tested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-Amazingly there aren't any for loops in this file so we can do what we
-like from a consistency point of view.
-
-
-> +		ret =3D acpi_get_cpu_uid(cpu, &cpu_uid);
-> +		if (ret =3D=3D 0 && uid =3D=3D cpu_uid)
-> +			return cpu;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
->  static int __init acpi_parse_gicc_pxm(union acpi_subtable_headers *heade=
-r,
->  				      const unsigned long end)
->  {
-
-
-> diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
-> index 71698ee11621..bde810d02c4f 100644
-> --- a/arch/riscv/kernel/acpi.c
-> +++ b/arch/riscv/kernel/acpi.c
-> @@ -337,3 +337,19 @@ int raw_pci_write(unsigned int domain, unsigned int =
-bus,
->  }
-> =20
->  #endif	/* CONFIG_PCI */
-> +
-> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
-> +{
-> +	struct acpi_madt_rintc *rintc;
-> +
-> +	if (cpu >=3D nr_cpu_ids)
-> +		return -EINVAL;
-> +
-> +	rintc =3D acpi_cpu_get_madt_rintc(cpu);
-> +	if (rintc =3D=3D NULL)
-
-Similar to above. Local style for NULL checks is
-	if (!rintc)
-so this should follow that.
-> +		return -ENODEV;
-> +
-> +	*uid =3D rintc->uid;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
-> diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
-> index 130769e3a99c..cd8adc9857e3 100644
-> --- a/arch/riscv/kernel/acpi_numa.c
-> +++ b/arch/riscv/kernel/acpi_numa.c
-> @@ -37,11 +37,15 @@ static int __init acpi_numa_get_nid(unsigned int cpu)
-> =20
->  static inline int get_cpu_for_acpi_id(u32 uid)
->  {
-> +	u32 cpu_uid;
->  	int cpu;
-> +	int ret;
-> =20
-> -	for (cpu =3D 0; cpu < nr_cpu_ids; cpu++)
-> -		if (uid =3D=3D get_acpi_id_for_cpu(cpu))
-> +	for (cpu =3D 0; cpu < nr_cpu_ids; cpu++) {
-
-Can pull the int into the loop her as well.
-
-> +		ret =3D acpi_get_cpu_uid(cpu, &cpu_uid);
-> +		if (ret =3D=3D 0 && uid =3D=3D cpu_uid)
->  			return cpu;
-> +	}
-> =20
->  	return -EINVAL;
->  }
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index de5f8c018333..d034a217e85b 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-
->  static int check_acpi_cpu_flag(unsigned int cpu, int rev, u32 flag)
->  {
->  	struct acpi_table_header *table;
-> -	u32 acpi_cpu_id =3D get_acpi_id_for_cpu(cpu);
-> +	u32 acpi_cpu_id;
->  	struct acpi_pptt_processor *cpu_node =3D NULL;
->  	int ret =3D -ENOENT;
-> =20
-> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) !=3D 0)
-> +		return -ENOENT;
-> +
->  	table =3D acpi_get_pptt();
->  	if (!table)
->  		return -ENOENT;
-> @@ -651,7 +661,8 @@ static int check_acpi_cpu_flag(unsigned int cpu, int =
-rev, u32 flag)
->   * in the PPTT. Errors caused by lack of a PPTT table, or otherwise, ret=
-urn 0
->   * indicating we didn't find any cache levels.
->   *
-> - * Return: -ENOENT if no PPTT table or no PPTT processor struct found.
-> + * Return: -ENOENT if no PPTT table, can't get CPU's ACPI Process UID or=
- no PPTT
-> + *	   processor struct found.
->   *	   0 on success.
->   */
->  int acpi_get_cache_info(unsigned int cpu, unsigned int *levels,
-> @@ -671,7 +682,8 @@ int acpi_get_cache_info(unsigned int cpu, unsigned in=
-t *levels,
-> =20
->  	pr_debug("Cache Setup: find cache levels for CPU=3D%d\n", cpu);
-> =20
-> -	acpi_cpu_id =3D get_acpi_id_for_cpu(cpu);
-> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id))
-> +		return -ENOENT;
-I'd put a blank line here (similar to the code you added just above).
->  	cpu_node =3D acpi_find_processor_node(table, acpi_cpu_id);
->  	if (!cpu_node)
->  		return -ENOENT;
-> @@ -780,8 +792,9 @@ int find_acpi_cpu_topology_package(unsigned int cpu)
->   * It may not exist in single CPU systems. In simple multi-CPU systems,
->   * it may be equal to the package topology level.
->   *
-> - * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found
-> - * or there is no toplogy level above the CPU..
-> + * Return: -ENOENT if the PPTT doesn't exist, can't get CPU's ACPI
-> + * Processor UID, the CPU cannot be found or there is no toplogy level
-> + * above the CPU.
->   * Otherwise returns a value which represents the package for this CPU.
->   */
-> =20
-> @@ -797,7 +810,8 @@ int find_acpi_cpu_topology_cluster(unsigned int cpu)
->  	if (!table)
->  		return -ENOENT;
-> =20
-> -	acpi_cpu_id =3D get_acpi_id_for_cpu(cpu);
-> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) !=3D 0)
-> +		return -ENOENT;
-Again, I'd put a blank line here.
-
->  	cpu_node =3D acpi_find_processor_node(table, acpi_cpu_id);
->  	if (!cpu_node || !cpu_node->parent)
->  		return -ENOENT;
-> @@ -872,7 +886,8 @@ static void acpi_pptt_get_child_cpus(struct acpi_tabl=
-e_header *table_hdr,
->  	cpumask_clear(cpus);
-> =20
->  	for_each_possible_cpu(cpu) {
-> -		acpi_id =3D get_acpi_id_for_cpu(cpu);
-> +		if (acpi_get_cpu_uid(cpu, &acpi_id) !=3D 0)
-> +			continue;
-and here.
->  		cpu_node =3D acpi_find_processor_node(table_hdr, acpi_id);
-> =20
->  		while (cpu_node) {
-
-
+- Sourabh Jain
