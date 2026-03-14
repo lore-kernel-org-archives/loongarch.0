@@ -1,123 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B39B1EC01B;
-	Fri, 13 Mar 2026 21:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D8C260566
+	for <loongarch@lists.linux.dev>; Sat, 14 Mar 2026 16:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773439021; cv=none; b=CQTacgWhlNAb+HWfcRvqMcIFkUgpiV6IFVa5r9NVTzovTLSedaio3oXDkhUBryKDbwVnNHLTaDW3Jovd5CXrL1fiw1HyX5wLAFWJ+qQg+3Rxpcu5gCW56ZbGR5H0a/oq7WfuUEyC7CLo9hrZBrPYGyhAcIvBnTtlXKqBI4hi2S8=
+	t=1773505735; cv=none; b=WYzbsdl0ps83kGdadH0T+RzBR3Xy79Oi2TcqyCp1V1EdXROJdgbeffoMw+iGZMsDrxZ4ReqUJEAqfAuL5rBJ9Yrp9oQ/f0YmxkfGZDdXGX31JwjbzkMyKzAe+RlneXKMbKi0qkr2MFpomHhghSMMeKReRg0SPc38jIcDVqHtp4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773439021; c=relaxed/simple;
-	bh=BwGIzF3Y1kGJ7LSzEz+7QIlkvRAEX1ybLPLbwYlypHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RPPspZzz0A1gAYAAOkBUsLl08QYTqL20QNWlev5DSuj1x2mz8TXS9cCvisIKTvjJU2uO5dJlV22RAlHKJxW+TXj7qzaj4c4xDGeysAqrGbaOs6NWMPhWNbON57hVbL56yZSPbambEXv14OvXPcvsB8nGTKDuiYKEpjFk2g92dFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8LFC/Y2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8LFC/Y2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE5AC19421;
-	Fri, 13 Mar 2026 21:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773439021;
-	bh=BwGIzF3Y1kGJ7LSzEz+7QIlkvRAEX1ybLPLbwYlypHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D8LFC/Y2BvExaUUaQwCZ1enN784C4eGC3QLIYlLXoQRLLoZbcIPAW+9UHxunos89u
-	 W2FcjOgbPlul4rkrHWNMnWcebVKNCNJBcZAC9W9bHqSllID/Yx8/g7Pg0waFNdbV1F
-	 PZkKpvhQhygkjCvndRt4AGAp3O3ce5dB8Hf9tYRkl1Yd2G1/EC1V7ihRTEFOlFWtJD
-	 TVRWH74L5h1udZNpGw4w/HeSz46hbFXg77yqFlXWTNDJcGX7icfPbrJEmetdc7x+30
-	 MorgajnbJ3XPvDp3w4FMrauooCX4QG0hYbWRVYVLx7aMFlZXvlf6/A/GVpusGs1ME1
-	 T/VOcVRh6Fn9Q==
-Date: Fri, 13 Mar 2026 16:56:59 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: loongarch@lists.linux.dev, cfsworks@gmail.com, alex@ghiti.fr,
-	skhan@linuxfoundation.org, liaoyuanhong@vivo.com,
-	ritesh.list@gmail.com, linux-arm-kernel@lists.infradead.org,
-	kees@kernel.org, leitao@debian.org, lirongqing@baidu.com,
-	corbet@lwn.net, pmladek@suse.com, jbohac@suse.cz,
-	eajames@linux.ibm.com, sourabhjain@linux.ibm.com,
-	palmer@dabbelt.com, vishal.moola@gmail.com, npiggin@gmail.com,
-	dapeng1.mi@linux.intel.com, brgerst@gmail.com, will@kernel.org,
-	paulmck@kernel.org, tglx@kernel.org, rdunlap@infradead.org,
-	hbathini@linux.ibm.com, kexec@lists.infradead.org, bhe@redhat.com,
-	dyoung@redhat.com, x86@kernel.org, pjw@kernel.org, rppt@kernel.org,
-	linux-doc@vger.kernel.org, kernel@xen0n.name,
-	dave.hansen@linux.intel.com, catalin.marinas@arm.com,
-	saravanak@kernel.org, samuel.holland@sifive.com,
-	songshuaishuai@tinylab.org, coxu@redhat.com,
-	fuqiang.wang@easystack.cn, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, osandov@fb.com, chenhuacai@kernel.org,
-	aou@eecs.berkeley.edu, tangyouling@kylinos.cn, hpa@zytor.com,
-	chleroy@kernel.org, linuxppc-dev@lists.ozlabs.org, bp@alien8.de,
-	vgoyal@redhat.com, fvdl@google.com, kevin.brodsky@arm.com,
-	mingo@redhat.com, maddy@linux.ibm.com, akpm@linux-foundation.org,
-	junhui.liu@pigmoral.tech, ardb@kernel.org, mpe@ellerman.id.au,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 4/5] arm64: kexec: Add support for crashkernel CMA
- reservation
-Message-ID: <177343901948.3415566.6726187926870600451.robh@kernel.org>
-References: <20260302035315.3892241-1-ruanjinjie@huawei.com>
- <20260302035315.3892241-5-ruanjinjie@huawei.com>
+	s=arc-20240116; t=1773505735; c=relaxed/simple;
+	bh=fFVepg2Wl75Yf2JJDEIXm+4/5C5inV2EAKG0Z/pf/I4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ixDD6ujffMNtK2e+uiNXlRLIHrsY3MTlniDIK9MmvQJGRc0TNw47RE3tYEw1drwkhmgNcquciPoolAbqGdIyJi7zdCaFJTcpcfRRlrquX4/kqE5e1agqzUrbQpsQMYVbKI38SMm+M6ISZS6l4TIcdCUTJjXBjiNmph+Nicb92OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from edelgard.fodlan.icenowy.me (unknown [112.94.100.43])
+	by APP-03 (Coremail) with SMTP id rQCowAB3ktmwjLVpHpqpCg--.41252S2;
+	Sun, 15 Mar 2026 00:28:34 +0800 (CST)
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+To: Thomas Gleixner <tglx@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>,
+	Yao Zi <me@ziyao.cc>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Subject: [PATCH v3 0/8] Add support for LS7A LPC IRQ for MIPS Loongson systems
+Date: Sun, 15 Mar 2026 00:28:20 +0800
+Message-ID: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260302035315.3892241-5-ruanjinjie@huawei.com>
+X-CM-TRANSID:rQCowAB3ktmwjLVpHpqpCg--.41252S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZFy3KrWkuFyfJw48Ar4xJFb_yoW5JF1Up3
+	y3u3W3tr48JFW7C3saya48ZryfZFWfJa9rGanxXr17X3s0gF9Fg3WYyFs8XrW7Crs3Xw1j
+	vFy093WUWFyjkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: x2kh0wp0lqwv3d6l2u1dvotugofq/
 
+This patchset tries to add support for Loongson 7A1000 PCH's LPC
+interrupt controller to MIPS-based Loongson systems.
 
-On Mon, 02 Mar 2026 11:53:14 +0800, Jinjie Ruan wrote:
-> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-> crashkernel= command line option") and commit ab475510e042 ("kdump:
-> implement reserve_crashkernel_cma") added CMA support for kdump
-> crashkernel reservation.
-> 
-> Crash kernel memory reservation wastes production resources if too
-> large, risks kdump failure if too small, and faces allocation difficulties
-> on fragmented systems due to contiguous block constraints. The new
-> CMA-based crashkernel reservation scheme splits the "large fixed
-> reservation" into a "small fixed region + large CMA dynamic region": the
-> CMA memory is available to userspace during normal operation to avoid
-> waste, and is reclaimed for kdump upon crash—saving memory while
-> improving reliability.
-> 
-> So extend crashkernel CMA reservation support to arm64. The following
-> changes are made to enable CMA reservation:
-> 
-> - Parse and obtain the CMA reservation size along with other crashkernel
->   parameters.
-> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-> - Include the CMA-reserved ranges for kdump kernel to use.
-> - Exclude the CMA-reserved ranges from the crash kernel memory to
->   prevent them from being exported through /proc/vmcore, which is already
->   done in the crash core.
-> 
-> Update kernel-parameters.txt to document CMA support for crashkernel on
-> arm64 architecture.
-> 
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
-> v7:
-> - Correct the inclusion of CMA-reserved ranges for kdump
->   kernel in of/kexec.
-> v3:
-> - Add Acked-by.
-> v2:
-> - Free cmem in prepare_elf_headers()
-> - Add the mtivation.
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 2 +-
->  arch/arm64/kernel/machine_kexec_file.c          | 2 +-
->  arch/arm64/mm/init.c                            | 5 +++--
->  drivers/of/fdt.c                                | 9 +++++----
->  drivers/of/kexec.c                              | 9 +++++++++
->  5 files changed, 19 insertions(+), 8 deletions(-)
-> 
+LPC, from software's perspective of view, is just ISA, so the interrupts
+should be handled as legacy ones occupying the lowest 0-15 IRQ numbers.
+Despite the current PCH LPC driver for ACPI-based LoongArch Loongson
+machines handled it, the setup is fragile and depends on its specific
+setup sequence (allocating the LPC IRQs first, and then allocate the
+parent IRQ at PCH PIC). The refactor of extracting parent IRQ allocation
+breaks this fragile sequence, so the first two commits is created to
+address this issue (by reserving ISA interrupts from the dynamic
+allocation space).
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Then the remaining commits are just adding OF(DT) based initialization
+of PCH LPC interrupt controller, like what happened on PCH PIC.
+
+Tested on a Haier Boyue G51 system with legacy i8042 keyboard/mouse as
+integrated ones.
+
+Changes in v3:
+- Override arch_dynirq_lower_bound() in MIPS Loongson64 / LoongArch
+  instead of modifying the global version of function.
+- Added Rob's R-b to the binding patch.
+
+Changes in v2:
+- Rebased on top of `irq-drivers-2026-02-09` tag.
+- Compatible changed to `loongson,ls7a-lpc` .
+- Merged the patch for conditionally build of ACPI code to the patch
+  introducing OF code.
+- Sorted function variable definitions.
+- Reworded some commit messages as Thomas Glexiner suggests.
+- Added __init to the LPC irqchip OF initialization code to prevent
+  section mismatch.
+
+Icenowy Zheng (8):
+  MIPS: loongson64: Override arch_dynirq_lower_bound to reserve LPC IRQs
+  LoongArch: Override arch_dynirq_lower_bound to reserve LPC IRQs
+  dt-bindings: interrupt-controller: add LS7A PCH LPC
+  irqchip/loongson-pch-lpc: extract non-ACPI-related code from ACPI init
+  irqchip/loongson-pch-lpc: add OF init code
+  irqchip/loongson-pch-lpc: enable building on MIPS Loongson64
+  MIPS: Loongson64: dts: sort nodes
+  MIPS: Loongson64: dts: add node for LS7A PCH LPC
+
+ .../loongson,pch-lpc.yaml                     | 52 +++++++++++
+ arch/loongarch/kernel/irq.c                   |  6 ++
+ arch/mips/boot/dts/loongson/ls7a-pch.dtsi     | 17 +++-
+ arch/mips/loongson64/init.c                   |  6 ++
+ drivers/irqchip/Kconfig                       |  1 -
+ drivers/irqchip/irq-loongson-pch-lpc.c        | 87 ++++++++++++++-----
+ 6 files changed, 144 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-lpc.yaml
+
+-- 
+2.52.0
 
