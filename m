@@ -1,22 +1,22 @@
 Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D6A2580CF
-	for <loongarch@lists.linux.dev>; Sat, 14 Mar 2026 16:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEC822332E
+	for <loongarch@lists.linux.dev>; Sat, 14 Mar 2026 16:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773505750; cv=none; b=OBgPO//lAe2VZcUce1IO3fMwTjBvTE/jaHUZx5jf8OcnDkC2PFJaYuG2IxMdWgW+V+o4M6IwjOL+Wrw05mAg6d2xH31F+H31ALWrSs6VYFdnARuLr7BfUU9W3DFEZXf4I+/9Q98QVfNZV6JQmNrhhb4Ru88GXJ3+Uf053XR36wE=
+	t=1773505751; cv=none; b=nWaV2XQb5aeUU6EpIyqT4y/PmcG+WRbBkrxQiy8/dvL8r7/LzbvmRxC5FDXbUijQJ5Vil0Kb+bEmThF4CaAoi5JG4kNWf8UANo/ohZ9MpdsbY5HHc7geYqMlHV2WbDBHkWD2s0ctkFpvIl7s+Hs4afzRmZuBYlpiHcZFKnElwJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773505750; c=relaxed/simple;
-	bh=2e5Lu9J3BOI3wAKN3cpt0gtB6i25xcA42yATWTMpBlM=;
+	s=arc-20240116; t=1773505751; c=relaxed/simple;
+	bh=iVShpG0Z/dcJZEudexrQsbP4JDOi+uyIxkpcfEemDE8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EiHF/r761aBrAQvY9ByXlatFgfgjd0F/X5/MlBQDNyhpSK8pan0LJdBo5PH/7oMMNfudWOEFu8hhkW5QGQg/N2Q3/in6UofGWcX/O37iLeKHIwISILTA1Zoav2mWiqH881iTEv0eCHEbFgtaa8fDGQPLtAxnMLKDLqd7oNxf7c8=
+	 MIME-Version; b=bimrB5Za4/9ZiQxeGWSZDxOF0eGdmArSRcNfHPeT3725oIWa3De17c/0urmCAmbCi3lXFk9Z+iXL+W6cIJPhGcYIgfhSgT8zbkkMSyw4weLzJW9qDj8SCPkhY42op2v3OS84c8Bt2YUzrSpBz0T/fLr6GRySgEF4/O/mEswetT0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from edelgard.fodlan.icenowy.me (unknown [112.94.100.43])
-	by APP-03 (Coremail) with SMTP id rQCowAB3ktmwjLVpHpqpCg--.41252S5;
-	Sun, 15 Mar 2026 00:28:50 +0800 (CST)
+	by APP-03 (Coremail) with SMTP id rQCowAB3ktmwjLVpHpqpCg--.41252S9;
+	Sun, 15 Mar 2026 00:29:03 +0800 (CST)
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -33,9 +33,9 @@ Cc: Icenowy Zheng <uwu@icenowy.me>,
 	loongarch@lists.linux.dev,
 	linux-mips@vger.kernel.org,
 	Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Subject: [PATCH v3 3/8] dt-bindings: interrupt-controller: add LS7A PCH LPC
-Date: Sun, 15 Mar 2026 00:28:23 +0800
-Message-ID: <20260314162828.1055188-4-zhengxingda@iscas.ac.cn>
+Subject: [PATCH v3 7/8] MIPS: Loongson64: dts: sort nodes
+Date: Sun, 15 Mar 2026 00:28:27 +0800
+Message-ID: <20260314162828.1055188-8-zhengxingda@iscas.ac.cn>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
 References: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
@@ -46,96 +46,68 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAB3ktmwjLVpHpqpCg--.41252S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr15XrW7Ar47tr1DWr1kuFg_yoW8ur1fpF
-	45C3ZxWF40qF13C39Yga40kFnxZr98ArnxCws7tw47Gr9Fga45XrWakF95X3WfCr9rXa47
-	ZFyF93W0g347JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjfUO_MaUUUUU
+X-CM-TRANSID:rQCowAB3ktmwjLVpHpqpCg--.41252S9
+X-Coremail-Antispam: 1UD129KBjvJXoWrZFy3Wr1ktr45Aw1fAr48Xrb_yoW8JrWfpw
+	srA3929r4FgFn8trn0qFyrXF4fAFZYyFyDuFs2yrW7J3sYq3Wjvr1xGFyrtr9rWrWrZ34j
+	grn7t34jkF1xuw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_
+	Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x
+	IIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_
+	Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8c
+	xan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
+	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
+	CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4U
+	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
+	WUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUv
+	cSsGvfC2KfnxnUUI43ZEXa7VUbPC7UUUUUU==
 X-CM-SenderInfo: x2kh0wp0lqwv3d6l2u1dvotugofq/
 
-Loongson 7A series PCH contains an LPC controller with an interrupt
-controller.
+The RTC's address is after UARTs, however the node is currently before
+them.
 
-Add the device tree binding for the interrupt controller.
+Re-order the node to match address sequence.
 
 Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../loongson,pch-lpc.yaml                     | 52 +++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-lpc.yaml
+ arch/mips/boot/dts/loongson/ls7a-pch.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-lpc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-lpc.yaml
-new file mode 100644
-index 0000000000000..ff2a425b6f0b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-lpc.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/loongson,pch-lpc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
+index 6dee85909f5a6..59ca1ef0a7b64 100644
+--- a/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
++++ b/arch/mips/boot/dts/loongson/ls7a-pch.dtsi
+@@ -19,13 +19,6 @@ pic: interrupt-controller@10000000 {
+ 			#interrupt-cells = <2>;
+ 		};
+ 
+-		rtc0: rtc@100d0100 {
+-			compatible = "loongson,ls7a-rtc";
+-			reg = <0 0x100d0100 0 0x78>;
+-			interrupt-parent = <&pic>;
+-			interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		ls7a_uart0: serial@10080000 {
+ 			compatible = "ns16550a";
+ 			reg = <0 0x10080000 0 0x100>;
+@@ -65,6 +58,13 @@ ls7a_uart3: serial@10080300 {
+ 			no-loopback-test;
+ 		};
+ 
++		rtc0: rtc@100d0100 {
++			compatible = "loongson,ls7a-rtc";
++			reg = <0 0x100d0100 0 0x78>;
++			interrupt-parent = <&pic>;
++			interrupts = <52 IRQ_TYPE_LEVEL_HIGH>;
++		};
 +
-+title: Loongson PCH LPC Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+description:
-+  This interrupt controller is found in the Loongson LS7A family of PCH for
-+  accepting interrupts sent by LPC-connected peripherals and signalling PIC
-+  via a single interrupt line when interrupts are available.
-+
-+properties:
-+  compatible:
-+    const: loongson,ls7a-lpc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - interrupts
-+  - '#interrupt-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    lpc: interrupt-controller@10002000 {
-+      compatible = "loongson,ls7a-lpc";
-+      reg = <0x10002000 0x400>;
-+      interrupt-controller;
-+      #interrupt-cells = <2>;
-+      interrupt-parent = <&pic>;
-+      interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+...
+ 		pci@1a000000 {
+ 			compatible = "loongson,ls7a-pci";
+ 			device_type = "pci";
 -- 
 2.52.0
 
