@@ -1,65 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0496238159
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 07:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C3D155A5D
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773560943; cv=none; b=i0cnjgKndj4t71CGWapq4IFoL0Js5tFA4FEO8/Ne6B5tGREg30yCgaphpXCpY9Inw3cTGN0zYPnqKXxOy1RFzs1i8PJiJDoFpzT8rfJCo+eMsA1af8c5BrMAcxJsYZ+BomRQvP74uayzk0wreRsxDnfbUmxr+uv0blbqi5plbVA=
+	t=1773561816; cv=none; b=Unt4t5lUtiqXZJEpIepzY6TGgJ7hrLmF3QmVsDgodHcziUzx7n1APikZhr1MRz3L0cwQZUeLZw4pLJd8Hqm0faJGg0EqqmSutHvCFffK65SfWSeu8BrB6iOeGZb0Rt0KaXvuXxE2+pfCwU1ySDJoUGwW7FVzl5IoKZXgu4fWY7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773560943; c=relaxed/simple;
-	bh=9+4WEo4/E7Ja2Uugyi2TnrkC0M1eH8c1DA4EnTfUmsQ=;
+	s=arc-20240116; t=1773561816; c=relaxed/simple;
+	bh=0WYXzzTo4+7yyvFucUL6qBG07+FQTHZ0JbJCsd55X00=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EaPzphR+IvXEMhn1huzXyQdTjJILArl2LHQ8eTXuT0Ee5Dj9135WzCfM/KoELly5io9FZZvt/10imfWnqZEgstTa7KBq55HSG6ngbhVYUEugz+1jj4+hw0eepz0Q4RtnoVxSP3waz9MVq6PVraexmb/ehRlYfQzHk6QENTsF7e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CK7T/FrX; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=G0rYT80olPY+fEPHo2TlTTb/lG7Y1wHGn3oM9ILUIimge1BiPY6MSeJT23ttjfmtADvUMZ4OAdx7hqpyQXJh4Pjy6WSEmLupny+j+8I6bL5QHMNSliPIXeZiX+SHX4185LevrgmHpIHS4FJcUhSheEhfUcxNKJWBJFQVyVHp6uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z73hahok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CK7T/FrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89653C2BCB6
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 07:49:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z73hahok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E98C19424
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773560942;
-	bh=9+4WEo4/E7Ja2Uugyi2TnrkC0M1eH8c1DA4EnTfUmsQ=;
+	s=k20201202; t=1773561815;
+	bh=0WYXzzTo4+7yyvFucUL6qBG07+FQTHZ0JbJCsd55X00=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CK7T/FrX5FZS7o+zenPMYzRCa4G8OitUfsBOEcs5SygEMPsptzXeoOwXtJjF3oNE7
-	 FvzC6hyTNtvtU+hIDx0zZ4LoQrYGaNhYVBaLURXCmHyhbx0q+imHydbhmzTwfCMDZR
-	 tJDRxYg8DyzwbgE2IFT6puizsIAwu4MZGcvRIl33JQcCz2bi1xkC7VZy8lfvTMEPUZ
-	 LwD98Xx1gHnScUyfvee5ieLxS3dtJq+s3o+bz10rl7KS28ClK28NhLrxLvn0VCU66i
-	 LrW8zuQzsqb0DXCjCg1ZnEy2pppIYv5AZz7aqkx7mmO1UPlbKxv3cw11PrfDrzaJVQ
-	 KsSdD4Jd8yGSA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b9795ca4e6dso139729666b.2
-        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 00:49:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0HsKjL5C++7w2zBMybAWakqqLQtwS1LHb63tFhyaTmdzvaXvTqwML/d0jCtbT1JtA7lvJ47QTjIo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyQuNzKU8lO/xpoOQ3aQkCWQ6Y47XAicaTY2BoYyqdCm3WyG3YF
-	KOdyfwGGBbf+TEdcuDHWI3hCaJcJK8tb65ZQPB1EiWr5CMWt9zUmtj7kSmqtv0Y2fbeAw+RwVM/
-	ejiWd8yOcvvXxWahzKzjXKnjrV1p/8rw=
-X-Received: by 2002:a17:906:209c:b0:b96:f9c9:9d2b with SMTP id
- a640c23a62f3a-b9764f4ba23mr342750866b.8.1773560940809; Sun, 15 Mar 2026
- 00:49:00 -0700 (PDT)
+	b=Z73hahok5M0oILKuuebsYGE3NaGCdD29t7KC5x3Ri1utJS5FCnei6NGsNpg6PDdqy
+	 zZB7e2SGfvEzyBpt8He5HWoyc0dB+WUOs/jne/++wyLW9+CR9uL50YNZlSIEu4UhxJ
+	 t2d6P5jx8FxZbQWwmvMNBruQKtQb0k5WoP0ExsOb663QrtkHSCJL3mCVPoz9cKk8y5
+	 bOgmEOzdG/x9jdqHdH38uxGAE+8u43TlCE2BIvdlJaX6YR6yugteVyIYXvR9whNVq9
+	 u0ygtj0dyE4IE7iB9fX456y2n3dKYoaNxnkEF7pE5i3Df6mYNmdJHXO5oG/6+af+l3
+	 htFMHXZE77CRw==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9793fa5371so95632066b.2
+        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:03:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVaaYwfYASXeSexlPxXAXA1oUCwiDZx0obtUrbPW011TcHLMZE/77gKnQcK+JY7vpbCKRuqqpkbeaE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxz/lx3sOdYlRO2D+x5pYd/1mlKUeQIN5Et2fQfTht4tvln7OkZ
+	KU+CrdqeWWayd/6O0bG5HqikZt7TsgZsI0mJjA8PB/sWYnKmRQggD/aE2FXg236/mdK4a1509WA
+	hmvFXjV72Tr5x5szkY+RFZXZ0w2YhjP8=
+X-Received: by 2002:a17:907:2da7:b0:b97:7d04:bb4f with SMTP id
+ a640c23a62f3a-b977d04c7f5mr344487766b.7.1773561814089; Sun, 15 Mar 2026
+ 01:03:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260303084314.628311-1-xry111@xry111.site>
-In-Reply-To: <20260303084314.628311-1-xry111@xry111.site>
+References: <20260304013254.2543620-1-maobibo@loongson.cn>
+In-Reply-To: <20260304013254.2543620-1-maobibo@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 15 Mar 2026 15:48:52 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6RXYGkt4uLgOCd_1UvmKvUyQBnvoZqFEXH=Qchq3TZfw@mail.gmail.com>
-X-Gm-Features: AaiRm52aiU_o36LSlB2hsQZX7tuT4jvOtCTcnbwsPZbPZNmEOqTUp5FGztod56A
-Message-ID: <CAAhV-H6RXYGkt4uLgOCd_1UvmKvUyQBnvoZqFEXH=Qchq3TZfw@mail.gmail.com>
-Subject: Re: [PATCH v3] LoongArch: Fix calling smp_processor_id() in
- preemptible code
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	Mingcong Bai <jeffbai@aosc.io>, Zixing Liu <liushuyu@aosc.io>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	George Guo <guodongtai@kylinos.cn>, Chenghao Duan <duanchenghao@kylinos.cn>, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Date: Sun, 15 Mar 2026 16:03:28 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Po6kAEnti2erZAnojZo7ePksHC7SYuPuv4T=jnhzzXQ@mail.gmail.com>
+X-Gm-Features: AaiRm51bYXLTUkebafKzwzFT8OTqTREqgZNYP9zLCMSpNcD_xiPtiavJ0NBmNog
+Message-ID: <CAAhV-H6Po6kAEnti2erZAnojZo7ePksHC7SYuPuv4T=jnhzzXQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Fix typo issue in kvm_vm_init_features()
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -67,129 +59,39 @@ Applied, thanks.
 
 Huacai
 
-On Tue, Mar 3, 2026 at 4:43=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
+On Wed, Mar 4, 2026 at 9:33=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
 :
 >
-> Fix the warning:
+> Most of VM feature detection is integer or operation, and integer
+> assignment operation will clear previous integer or operation. Here
+> change integer assignment operation with integer or operation.
 >
->     BUG: using smp_processor_id() in preemptible [00000000] code: sys
-> temd/1
->     caller is larch_insn_text_copy+0x40/0xf0
->
-> Simply changing it to raw_smp_processor_id() is not enough: if preempt
-> and CPU hotplug happens after raw_smp_processor_id() but before
-> stop_machine(), the CPU where raw_smp_processor_id() has run may be
-> offline when stop_machine() and no CPU will run copy_to_kernel_nofault()
-> in text_copy_cb().  Thus guard the larch_insn_text_copy() calls with
-> cpus_read_lock() and change stop_machine() to stop_machine_cpuslocked()
-> to prevent this.
->
-> I've considered moving the locks inside larch_insn_text_copy() but
-> doing so seems not an easy hack.  In bpf_arch_text_poke() obviously the
-> memcpy() call must be guarded by text_mutex, so we have to leave the
-> acquire of text_mutex out of larch_insn_text_copy.  But in the entire
-> kernel the acquire of mutexes is always after cpus_read_lock(), so we
-> cannot put cpus_read_lock() into larch_insn_text_copy() while leaving
-> the text_mutex acquire out (or we risk a deadlock due to inconsistent
-> lock acquire order).  So let's fix the bug first and leave the
-> posssible refactor as future work.
->
-> Fixes: 9fbd18cf4c69 ("LoongArch: BPF: Add dynamic code modification suppo=
-rt")
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> Fixes: 82db90bf461b ("LoongArch: KVM: Move feature detection in kvm_vm_in=
+it_features()")
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
+>  arch/loongarch/kvm/vm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> Change since [v2]:
-> - Include the annotation of v1 in the commit message.
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index 63fd40530aa9..a555ea037cf5 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -49,8 +49,8 @@ static void kvm_vm_init_features(struct kvm *kvm)
+>                 kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PMU=
+);
 >
-> Change since [v1] to v2:
-> - Add lockdep_assert_cpus_held() with a comment to prevent people from
->   calling larch_insn_text_copy() w/o acquiring the cpus lock in the
->   future.
+>         /* Enable all PV features by default */
+> -       kvm->arch.pv_features =3D BIT(KVM_FEATURE_IPI);
+> -       kvm->arch.kvm_features =3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
+> +       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI);
+> +       kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
+>         if (kvm_pvtime_supported()) {
+>                 kvm->arch.pv_features |=3D BIT(KVM_FEATURE_PREEMPT);
+>                 kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME);
 >
-> [v1]:https://lore.kernel.org/20260225141404.178823-2-xry111@xry111.site
-> [v2]:https://lore.kernel.org/20260227080351.663693-1-xry111@xry111.site
->
->  arch/loongarch/kernel/inst.c | 10 ++++++++--
->  arch/loongarch/net/bpf_jit.c |  6 ++++++
->  2 files changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index bf037f0c6b26..7545ae3c796e 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -263,14 +263,20 @@ int larch_insn_text_copy(void *dst, void *src, size=
-_t len)
->                 .dst =3D dst,
->                 .src =3D src,
->                 .len =3D len,
-> -               .cpu =3D smp_processor_id(),
-> +               .cpu =3D raw_smp_processor_id(),
->         };
->
-> +       /*
-> +        * Ensure copy.cpu won't be hot removed before stop_machine.  If
-> +        * it's removed nobody will really update the text.
-> +        */
-> +       lockdep_assert_cpus_held();
-> +
->         start =3D round_down((size_t)dst, PAGE_SIZE);
->         end   =3D round_up((size_t)dst + len, PAGE_SIZE);
->
->         set_memory_rw(start, (end - start) / PAGE_SIZE);
-> -       ret =3D stop_machine(text_copy_cb, &copy, cpu_online_mask);
-> +       ret =3D stop_machine_cpuslocked(text_copy_cb, &copy, cpu_online_m=
-ask);
->         set_memory_rox(start, (end - start) / PAGE_SIZE);
->
->         return ret;
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 3bd89f55960d..e8e0ad34928c 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1379,9 +1379,11 @@ void *bpf_arch_text_copy(void *dst, void *src, siz=
-e_t len)
->  {
->         int ret;
->
-> +       cpus_read_lock();
->         mutex_lock(&text_mutex);
->         ret =3D larch_insn_text_copy(dst, src, len);
->         mutex_unlock(&text_mutex);
-> +       cpus_read_unlock();
->
->         return ret ? ERR_PTR(-EINVAL) : dst;
->  }
-> @@ -1429,10 +1431,12 @@ int bpf_arch_text_poke(void *ip, enum bpf_text_po=
-ke_type old_t,
->         if (ret)
->                 return ret;
->
-> +       cpus_read_lock();
->         mutex_lock(&text_mutex);
->         if (memcmp(ip, new_insns, LOONGARCH_LONG_JUMP_NBYTES))
->                 ret =3D larch_insn_text_copy(ip, new_insns, LOONGARCH_LON=
-G_JUMP_NBYTES);
->         mutex_unlock(&text_mutex);
-> +       cpus_read_unlock();
->
->         return ret;
->  }
-> @@ -1450,10 +1454,12 @@ int bpf_arch_text_invalidate(void *dst, size_t le=
-n)
->         for (i =3D 0; i < (len / sizeof(u32)); i++)
->                 inst[i] =3D INSN_BREAK;
->
-> +       cpus_read_lock();
->         mutex_lock(&text_mutex);
->         if (larch_insn_text_copy(dst, inst, len))
->                 ret =3D -EINVAL;
->         mutex_unlock(&text_mutex);
-> +       cpus_read_unlock();
->
->         kvfree(inst);
->
+> base-commit: 4d349ee5c7782f8b27f6cb550f112c5e26fff38d
 > --
-> 2.53.0
+> 2.39.3
 >
 >
