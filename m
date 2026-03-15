@@ -1,57 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C3D155A5D
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:03:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DFF14A4F0
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773561816; cv=none; b=Unt4t5lUtiqXZJEpIepzY6TGgJ7hrLmF3QmVsDgodHcziUzx7n1APikZhr1MRz3L0cwQZUeLZw4pLJd8Hqm0faJGg0EqqmSutHvCFffK65SfWSeu8BrB6iOeGZb0Rt0KaXvuXxE2+pfCwU1ySDJoUGwW7FVzl5IoKZXgu4fWY7Q=
+	t=1773561892; cv=none; b=rortHm5HyrGD8+18d12MrhZ7XF/QZ1l2nOYEPgZmRAsjkbNuaJYMewotNDzhcZbhbbNKeJ+B3OXeXT4A5UUJgt6r1XGw2OhjXKY9U0EA5qQTTWgufCJ+JIHT4hWgYKt4oYzr2IiaAnEB5kL/j8zxGjajb1O5ngHD7Dv+WQMVoh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773561816; c=relaxed/simple;
-	bh=0WYXzzTo4+7yyvFucUL6qBG07+FQTHZ0JbJCsd55X00=;
+	s=arc-20240116; t=1773561892; c=relaxed/simple;
+	bh=89J2fzFv0E5+/z3QYbLMtJmkhyPIAqbhG+j6lVXYT1Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G0rYT80olPY+fEPHo2TlTTb/lG7Y1wHGn3oM9ILUIimge1BiPY6MSeJT23ttjfmtADvUMZ4OAdx7hqpyQXJh4Pjy6WSEmLupny+j+8I6bL5QHMNSliPIXeZiX+SHX4185LevrgmHpIHS4FJcUhSheEhfUcxNKJWBJFQVyVHp6uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z73hahok; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=V5cJMurL3KSXuvHLhquqOQjDwtHlFpr6t9AcH6JWgEKdPmIJReCmTOkIkBelyD3yYWGxg7vvBjDBwGDJNIC291GT0tKRliOGCpJDeqAt65O5McIr8r4lnn5WA2y+pn2nXxg4Kx60qOgG9KD52hkClxZffhKaFsuXhdOwvQ+rUjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFCK7BdB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z73hahok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5E98C19424
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:03:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFCK7BdB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9572FC2BC9E
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773561815;
-	bh=0WYXzzTo4+7yyvFucUL6qBG07+FQTHZ0JbJCsd55X00=;
+	s=k20201202; t=1773561892;
+	bh=89J2fzFv0E5+/z3QYbLMtJmkhyPIAqbhG+j6lVXYT1Q=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Z73hahok5M0oILKuuebsYGE3NaGCdD29t7KC5x3Ri1utJS5FCnei6NGsNpg6PDdqy
-	 zZB7e2SGfvEzyBpt8He5HWoyc0dB+WUOs/jne/++wyLW9+CR9uL50YNZlSIEu4UhxJ
-	 t2d6P5jx8FxZbQWwmvMNBruQKtQb0k5WoP0ExsOb663QrtkHSCJL3mCVPoz9cKk8y5
-	 bOgmEOzdG/x9jdqHdH38uxGAE+8u43TlCE2BIvdlJaX6YR6yugteVyIYXvR9whNVq9
-	 u0ygtj0dyE4IE7iB9fX456y2n3dKYoaNxnkEF7pE5i3Df6mYNmdJHXO5oG/6+af+l3
-	 htFMHXZE77CRw==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9793fa5371so95632066b.2
-        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:03:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVaaYwfYASXeSexlPxXAXA1oUCwiDZx0obtUrbPW011TcHLMZE/77gKnQcK+JY7vpbCKRuqqpkbeaE=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz/lx3sOdYlRO2D+x5pYd/1mlKUeQIN5Et2fQfTht4tvln7OkZ
-	KU+CrdqeWWayd/6O0bG5HqikZt7TsgZsI0mJjA8PB/sWYnKmRQggD/aE2FXg236/mdK4a1509WA
-	hmvFXjV72Tr5x5szkY+RFZXZ0w2YhjP8=
-X-Received: by 2002:a17:907:2da7:b0:b97:7d04:bb4f with SMTP id
- a640c23a62f3a-b977d04c7f5mr344487766b.7.1773561814089; Sun, 15 Mar 2026
- 01:03:34 -0700 (PDT)
+	b=FFCK7BdBXAUwNe4zflpqYhLRUDn6v/p8zCvRH+/GK4c96YjpB2KyD2lJrm4yaMCfW
+	 PrspjMcWKFsbvzA64cae4quq+v/2Wp38yxOIzJZmdLU/9iJa+fNQeVgR+LYtGX58PG
+	 PvCI0JyNR/45eN5ptWAAKafn2OguqgycKEKiorv6p4Ui/MR9Nv94Oq8m2Oyfx06Qp8
+	 FVgzDRl4CiehfZvtB0Mr/FxOLBzTQWSrwSTji7dUATCj3D3oMv41q97SV/SdPknEsG
+	 Hct+7nASrBLuAyuTPPZGr6n36HewpS8BRdtpSM+3V6Ijkj7XtiY5jn3QFVnrG2ErH0
+	 OpJoYbPZ0FcpQ==
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-663a6bb0fa1so3971067a12.3
+        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:04:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUUtfw+IVKfWEB7VDZOJwAwNrhrGegUg11GyrUlzfExZ6xTxADWgyMrlFGVmDHo1tVL3N9mQXcetTY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMSN3yA+OPu3EaPHJyXyfW46bYFRRsVYto3hq+lwKXhLOuh98O
+	9BmYO/bWCV5BIudrAlAXKb2Or/czZPDmpI+0RqEWyDST2Z0dX//KX4jSmszRJat5Oibu22E1UZ3
+	dQG33vo8HeG3xdaPEnHVK/hcgHDXNAsY=
+X-Received: by 2002:a17:907:d649:b0:b96:e11e:979b with SMTP id
+ a640c23a62f3a-b97651d2146mr528888066b.29.1773561890950; Sun, 15 Mar 2026
+ 01:04:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260304013254.2543620-1-maobibo@loongson.cn>
-In-Reply-To: <20260304013254.2543620-1-maobibo@loongson.cn>
+References: <20260310064706.4985-1-yangtiezhu@loongson.cn> <CAEyhmHQiz510vQMu-WRZ==Q71mW70UEDvyedqe8giXF=0hXSHw@mail.gmail.com>
+In-Reply-To: <CAEyhmHQiz510vQMu-WRZ==Q71mW70UEDvyedqe8giXF=0hXSHw@mail.gmail.com>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 15 Mar 2026 16:03:28 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Po6kAEnti2erZAnojZo7ePksHC7SYuPuv4T=jnhzzXQ@mail.gmail.com>
-X-Gm-Features: AaiRm51bYXLTUkebafKzwzFT8OTqTREqgZNYP9zLCMSpNcD_xiPtiavJ0NBmNog
-Message-ID: <CAAhV-H6Po6kAEnti2erZAnojZo7ePksHC7SYuPuv4T=jnhzzXQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Fix typo issue in kvm_vm_init_features()
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Sun, 15 Mar 2026 16:04:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6mSE8Pea=txB=MGYOckwTLN-S57WZ1eHU-uFUsAos1Ng@mail.gmail.com>
+X-Gm-Features: AaiRm50FUFf3--D9r03HUBtKuPQN2dSLERKCFQlCDBbBoRgdewGDrPt3Oy91LfU
+Message-ID: <CAAhV-H6mSE8Pea=txB=MGYOckwTLN-S57WZ1eHU-uFUsAos1Ng@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline()
+ return 0
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -59,39 +60,101 @@ Applied, thanks.
 
 Huacai
 
-On Wed, Mar 4, 2026 at 9:33=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
+On Sun, Mar 15, 2026 at 11:27=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com=
+> wrote:
 >
-> Most of VM feature detection is integer or operation, and integer
-> assignment operation will clear previous integer or operation. Here
-> change integer assignment operation with integer or operation.
+> On Tue, Mar 10, 2026 at 2:47=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > Occasionally, there exists "text_copy_cb: operation failed" when execut=
+ing
+> > bpf selftests, the reason is copy_to_kernel_nofault() failed and the ec=
+ode
+> > of estat register is 0x4 (PME: Page Modification Exception) due to the =
+pte
+> > is not writeable, the root cause is that there is another place to set =
+pte
+> > readonly which is in the generic weak arch_protect_bpf_trampoline().
+> >
+> > There are two ways to fix this race condition issue, the direct way is =
+to
+> > modify the generic weak arch_protect_bpf_trampoline() to add a mutex lo=
+ck
+> > for set_memory_rox(), but the other simple and proper way is to just ma=
+ke
+> > arch_protect_bpf_trampoline() return 0 in the arch-specific code becaus=
+e
+> > LoongArch already uses BPF prog pack allocator for trampoline.
+> >
+> > Here are the trimmed kernel log messages:
+> >
+> >   copy_to_kernel_nofault: memory access failed, ecode is 0x4
+> >   copy_to_kernel_nofault: caller is text_copy_cb+0x50/0xa0
+> >   text_copy_cb: operation failed
+> >   ------------[ cut here ]------------
+> >   bpf_prog_pack bug: missing bpf_arch_text_invalidate?
+> >   WARNING: kernel/bpf/core.c:1008 at bpf_prog_pack_free+0x200/0x228
+> >   ...
+> >   Call Trace:
+> >   [<9000000000248914>] show_stack+0x64/0x188
+> >   [<9000000000241308>] dump_stack_lvl+0x6c/0x9c
+> >   [<90000000002705bc>] __warn+0x9c/0x200
+> >   [<9000000001c428c0>] __report_bug+0xa8/0x1c0
+> >   [<9000000001c42b5c>] report_bug+0x64/0x120
+> >   [<9000000001c7dcd0>] do_bp+0x270/0x3c0
+> >   [<9000000000246f40>] handle_bp+0x120/0x1c0
+> >   [<900000000047b030>] bpf_prog_pack_free+0x200/0x228
+> >   [<900000000047b2ec>] bpf_jit_binary_pack_free+0x24/0x60
+> >   [<900000000026989c>] bpf_jit_free+0x54/0xb0
+> >   [<900000000029e10c>] process_one_work+0x184/0x610
+> >   [<900000000029ef8c>] worker_thread+0x24c/0x388
+> >   [<90000000002a902c>] kthread+0x13c/0x170
+> >   [<9000000001c7dfe8>] ret_from_kernel_thread+0x28/0x1c0
+> >   [<9000000000246624>] ret_from_kernel_thread_asm+0xc/0x88
+> >
+> >   ---[ end trace 0000000000000000 ]---
+> >
+> > Here is a simple shell script to reproduce:
+> >
+> >   #!/bin/bash
+> >
+> >   for ((i=3D1; i<=3D1000; i++))
+> >   do
+> >     echo "under testing $i ..."
+> >     dmesg -c > /dev/null
+> >     ./test_progs -t fentry_attach_stress > /dev/null
+> >     dmesg -t | grep "text_copy_cb: operation failed"
+> >     if [ $? -eq 0 ]; then
+> >       break
+> >     fi
+> >   done
+> >
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
 >
-> Fixes: 82db90bf461b ("LoongArch: KVM: Move feature detection in kvm_vm_in=
-it_features()")
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/kvm/vm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
 >
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 63fd40530aa9..a555ea037cf5 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -49,8 +49,8 @@ static void kvm_vm_init_features(struct kvm *kvm)
->                 kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PMU=
-);
->
->         /* Enable all PV features by default */
-> -       kvm->arch.pv_features =3D BIT(KVM_FEATURE_IPI);
-> -       kvm->arch.kvm_features =3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
-> +       kvm->arch.pv_features |=3D BIT(KVM_FEATURE_IPI);
-> +       kvm->arch.kvm_features |=3D BIT(KVM_LOONGARCH_VM_FEAT_PV_IPI);
->         if (kvm_pvtime_supported()) {
->                 kvm->arch.pv_features |=3D BIT(KVM_FEATURE_PREEMPT);
->                 kvm->arch.pv_features |=3D BIT(KVM_FEATURE_STEAL_TIME);
->
-> base-commit: 4d349ee5c7782f8b27f6cb550f112c5e26fff38d
-> --
-> 2.39.3
->
->
+> >  arch/loongarch/net/bpf_jit.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index 3bd89f55960d..4f1af3b7a363 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -1568,6 +1568,11 @@ void arch_free_bpf_trampoline(void *image, unsig=
+ned int size)
+> >         bpf_prog_pack_free(image, size);
+> >  }
+> >
+> > +int arch_protect_bpf_trampoline(void *image, unsigned int size)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> >  /*
+> >   * Sign-extend the register if necessary
+> >   */
+> > --
+> > 2.42.0
+> >
