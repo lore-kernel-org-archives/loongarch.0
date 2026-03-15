@@ -1,160 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DFF14A4F0
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF651DDC35
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773561892; cv=none; b=rortHm5HyrGD8+18d12MrhZ7XF/QZ1l2nOYEPgZmRAsjkbNuaJYMewotNDzhcZbhbbNKeJ+B3OXeXT4A5UUJgt6r1XGw2OhjXKY9U0EA5qQTTWgufCJ+JIHT4hWgYKt4oYzr2IiaAnEB5kL/j8zxGjajb1O5ngHD7Dv+WQMVoh8=
+	t=1773561920; cv=none; b=fLpR5mAhaEQilbgqVvsmldaUJrIDOmyGTW/sMNZKf3nbMdyqBcD0g435iJ02nbGs/6mVwhWoQKv7dFImB/1kyBD/XfR/DGr8pRz2hIODwbPLitkydytfmO9Ys1f2aaEqq9bwxigIESShKRc0gHJAo55u6gBprEhW9EFnDMBX8iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773561892; c=relaxed/simple;
-	bh=89J2fzFv0E5+/z3QYbLMtJmkhyPIAqbhG+j6lVXYT1Q=;
+	s=arc-20240116; t=1773561920; c=relaxed/simple;
+	bh=VMVForwe+gHO5PwN6l0SCdc4WN2qcCfs/uwTYd/9BG4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V5cJMurL3KSXuvHLhquqOQjDwtHlFpr6t9AcH6JWgEKdPmIJReCmTOkIkBelyD3yYWGxg7vvBjDBwGDJNIC291GT0tKRliOGCpJDeqAt65O5McIr8r4lnn5WA2y+pn2nXxg4Kx60qOgG9KD52hkClxZffhKaFsuXhdOwvQ+rUjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFCK7BdB; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=sMzXbyvafEr0fAb/aGhbnSL7RhSOh5+2+lXbZtrIDHxE+CGBT29ey0k6df10FZgemZDXHz23KDZ0KpU+zhNA2WOcgyyatq3FFqojf2EuQ53zw59T6bw69ef7JPkQk5GvCLdyQrzaaEBlbU/3f4kMOpB7sGC2KERBMT/GVVBq5z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kez4rLyg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFCK7BdB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9572FC2BC9E
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:04:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kez4rLyg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB2DFC4AF09
+	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773561892;
-	bh=89J2fzFv0E5+/z3QYbLMtJmkhyPIAqbhG+j6lVXYT1Q=;
+	s=k20201202; t=1773561919;
+	bh=VMVForwe+gHO5PwN6l0SCdc4WN2qcCfs/uwTYd/9BG4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FFCK7BdBXAUwNe4zflpqYhLRUDn6v/p8zCvRH+/GK4c96YjpB2KyD2lJrm4yaMCfW
-	 PrspjMcWKFsbvzA64cae4quq+v/2Wp38yxOIzJZmdLU/9iJa+fNQeVgR+LYtGX58PG
-	 PvCI0JyNR/45eN5ptWAAKafn2OguqgycKEKiorv6p4Ui/MR9Nv94Oq8m2Oyfx06Qp8
-	 FVgzDRl4CiehfZvtB0Mr/FxOLBzTQWSrwSTji7dUATCj3D3oMv41q97SV/SdPknEsG
-	 Hct+7nASrBLuAyuTPPZGr6n36HewpS8BRdtpSM+3V6Ijkj7XtiY5jn3QFVnrG2ErH0
-	 OpJoYbPZ0FcpQ==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-663a6bb0fa1so3971067a12.3
-        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:04:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUtfw+IVKfWEB7VDZOJwAwNrhrGegUg11GyrUlzfExZ6xTxADWgyMrlFGVmDHo1tVL3N9mQXcetTY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwMSN3yA+OPu3EaPHJyXyfW46bYFRRsVYto3hq+lwKXhLOuh98O
-	9BmYO/bWCV5BIudrAlAXKb2Or/czZPDmpI+0RqEWyDST2Z0dX//KX4jSmszRJat5Oibu22E1UZ3
-	dQG33vo8HeG3xdaPEnHVK/hcgHDXNAsY=
-X-Received: by 2002:a17:907:d649:b0:b96:e11e:979b with SMTP id
- a640c23a62f3a-b97651d2146mr528888066b.29.1773561890950; Sun, 15 Mar 2026
- 01:04:50 -0700 (PDT)
+	b=Kez4rLygPm7D0RGsHiR1dco7r/0jb0whvpX9g6hxXUr9Gbqc0jX7qfBnvjhMJAQWm
+	 vdD2QR3FmFR2E/Nby5t8xlKthwuXFMUzaC1ksHcBAuP0OThhUkSNc1kKuxbUxyh7wJ
+	 L0afb5Dt9wxgdDDRGtHLuNItZNkzQy0QoIuAduyRAqpcQAyJHO98R3XTxWody4gN5w
+	 RKDbPymu5AFxEIIUR4GixZfi6L8b5mCV9WQb6PPwswIisdE0hOjC7I9bEmNaPZGeRD
+	 HGW9KK8hnotRkgfVUj7GXqvUPhGKyNQeXU8PRSghfMzvYC6yxcp3VLIYTqC3VPQ+D6
+	 S3OzW23NciiGQ==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b941762394aso433268466b.1
+        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:05:19 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyA6YGOmrc8vqD1GW0mzP3q3XQqCBb+Qzv1IPH0NrINlguSsGBu
+	v39V5SKiFiY8Oa8yZ8gwpwGhvIbSQRUegPWYVzaHn0qVZGqZJgrvhEDYRiOXSm0cYEctFTEgsAw
+	ndhe8ZbAFycdlRcWggMpfFUaQJmuEJB4=
+X-Received: by 2002:a17:907:7253:b0:b96:efe7:b064 with SMTP id
+ a640c23a62f3a-b976519951dmr567797966b.41.1773561918134; Sun, 15 Mar 2026
+ 01:05:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260310064706.4985-1-yangtiezhu@loongson.cn> <CAEyhmHQiz510vQMu-WRZ==Q71mW70UEDvyedqe8giXF=0hXSHw@mail.gmail.com>
-In-Reply-To: <CAEyhmHQiz510vQMu-WRZ==Q71mW70UEDvyedqe8giXF=0hXSHw@mail.gmail.com>
+References: <20260310065510.8189-1-yangtiezhu@loongson.cn> <20260310065510.8189-2-yangtiezhu@loongson.cn>
+In-Reply-To: <20260310065510.8189-2-yangtiezhu@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 15 Mar 2026 16:04:44 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6mSE8Pea=txB=MGYOckwTLN-S57WZ1eHU-uFUsAos1Ng@mail.gmail.com>
-X-Gm-Features: AaiRm50FUFf3--D9r03HUBtKuPQN2dSLERKCFQlCDBbBoRgdewGDrPt3Oy91LfU
-Message-ID: <CAAhV-H6mSE8Pea=txB=MGYOckwTLN-S57WZ1eHU-uFUsAos1Ng@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline()
- return 0
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Sun, 15 Mar 2026 16:05:12 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H76FjHEtaBditJAjcXEKMtM6nQB0V1CjEXXCeB09fkaWw@mail.gmail.com>
+X-Gm-Features: AaiRm52uejQr3GnkpR7_F2J9ecNyLA0HcJZFo7pxd_uSy30kOhAyJORSkfIB-BA
+Message-ID: <CAAhV-H76FjHEtaBditJAjcXEKMtM6nQB0V1CjEXXCeB09fkaWw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] LoongArch: Give more information if memory access failed
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Applied with small modifications, thanks.
 
 Huacai
 
-On Sun, Mar 15, 2026 at 11:27=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com=
+On Tue, Mar 10, 2026 at 2:55=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
 > wrote:
 >
-> On Tue, Mar 10, 2026 at 2:47=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > Occasionally, there exists "text_copy_cb: operation failed" when execut=
-ing
-> > bpf selftests, the reason is copy_to_kernel_nofault() failed and the ec=
-ode
-> > of estat register is 0x4 (PME: Page Modification Exception) due to the =
-pte
-> > is not writeable, the root cause is that there is another place to set =
-pte
-> > readonly which is in the generic weak arch_protect_bpf_trampoline().
-> >
-> > There are two ways to fix this race condition issue, the direct way is =
-to
-> > modify the generic weak arch_protect_bpf_trampoline() to add a mutex lo=
-ck
-> > for set_memory_rox(), but the other simple and proper way is to just ma=
-ke
-> > arch_protect_bpf_trampoline() return 0 in the arch-specific code becaus=
-e
-> > LoongArch already uses BPF prog pack allocator for trampoline.
-> >
-> > Here are the trimmed kernel log messages:
-> >
-> >   copy_to_kernel_nofault: memory access failed, ecode is 0x4
-> >   copy_to_kernel_nofault: caller is text_copy_cb+0x50/0xa0
-> >   text_copy_cb: operation failed
-> >   ------------[ cut here ]------------
-> >   bpf_prog_pack bug: missing bpf_arch_text_invalidate?
-> >   WARNING: kernel/bpf/core.c:1008 at bpf_prog_pack_free+0x200/0x228
-> >   ...
-> >   Call Trace:
-> >   [<9000000000248914>] show_stack+0x64/0x188
-> >   [<9000000000241308>] dump_stack_lvl+0x6c/0x9c
-> >   [<90000000002705bc>] __warn+0x9c/0x200
-> >   [<9000000001c428c0>] __report_bug+0xa8/0x1c0
-> >   [<9000000001c42b5c>] report_bug+0x64/0x120
-> >   [<9000000001c7dcd0>] do_bp+0x270/0x3c0
-> >   [<9000000000246f40>] handle_bp+0x120/0x1c0
-> >   [<900000000047b030>] bpf_prog_pack_free+0x200/0x228
-> >   [<900000000047b2ec>] bpf_jit_binary_pack_free+0x24/0x60
-> >   [<900000000026989c>] bpf_jit_free+0x54/0xb0
-> >   [<900000000029e10c>] process_one_work+0x184/0x610
-> >   [<900000000029ef8c>] worker_thread+0x24c/0x388
-> >   [<90000000002a902c>] kthread+0x13c/0x170
-> >   [<9000000001c7dfe8>] ret_from_kernel_thread+0x28/0x1c0
-> >   [<9000000000246624>] ret_from_kernel_thread_asm+0xc/0x88
-> >
-> >   ---[ end trace 0000000000000000 ]---
-> >
-> > Here is a simple shell script to reproduce:
-> >
-> >   #!/bin/bash
-> >
-> >   for ((i=3D1; i<=3D1000; i++))
-> >   do
-> >     echo "under testing $i ..."
-> >     dmesg -c > /dev/null
-> >     ./test_progs -t fentry_attach_stress > /dev/null
-> >     dmesg -t | grep "text_copy_cb: operation failed"
-> >     if [ $? -eq 0 ]; then
-> >       break
-> >     fi
-> >   done
-> >
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
+> If memory access such as copy_{from, to}_kernel_nofault failed,
+> the users do not know what happened, it is very useful to print
+> the exception code for such cases. Furthermore, it is better to
+> print the caller function to know where is the entry.
 >
-> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Here are the low level call chains:
 >
-> >  arch/loongarch/net/bpf_jit.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index 3bd89f55960d..4f1af3b7a363 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
-> > @@ -1568,6 +1568,11 @@ void arch_free_bpf_trampoline(void *image, unsig=
-ned int size)
-> >         bpf_prog_pack_free(image, size);
-> >  }
-> >
-> > +int arch_protect_bpf_trampoline(void *image, unsigned int size)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> >  /*
-> >   * Sign-extend the register if necessary
-> >   */
-> > --
-> > 2.42.0
-> >
+>   copy_from_kernel_nofault()
+>     copy_from_kernel_nofault_loop()
+>       __get_kernel_nofault()
+>
+>   copy_to_kernel_nofault()
+>     copy_to_kernel_nofault_loop()
+>       __put_kernel_nofault()
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/uaccess.h | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/uaccess.h b/arch/loongarch/includ=
+e/asm/uaccess.h
+> index 4e259d490e45..4dacbb32854c 100644
+> --- a/arch/loongarch/include/asm/uaccess.h
+> +++ b/arch/loongarch/include/asm/uaccess.h
+> @@ -253,8 +253,13 @@ do {                                                =
+                       \
+>                                                                         \
+>         __get_kernel_common(*((type *)(dst)), sizeof(type),             \
+>                             (__force type *)(src));                     \
+> -       if (unlikely(__gu_err))                                         \
+> +       if (unlikely(__gu_err)) {                                       \
+> +               pr_info("%s: memory access failed, ecode is 0x%x\n",    \
+> +                       __func__, read_csr_excode());                   \
+> +               pr_info("%s: caller is %pS\n",                          \
+> +                       __func__, __builtin_return_address(0));         \
+>                 goto err_label;                                         \
+> +       }                                                               \
+>  } while (0)
+>
+>  #define __put_kernel_nofault(dst, src, type, err_label)                 =
+       \
+> @@ -264,8 +269,13 @@ do {                                                =
+                       \
+>                                                                         \
+>         __pu_val =3D *(__force type *)(src);                             =
+ \
+>         __put_kernel_common(((type *)(dst)), sizeof(type));             \
+> -       if (unlikely(__pu_err))                                         \
+> +       if (unlikely(__pu_err)) {                                       \
+> +               pr_info("%s: memory access failed, ecode is 0x%x\n",    \
+> +                       __func__, read_csr_excode());                   \
+> +               pr_info("%s: caller is %pS\n",                          \
+> +                       __func__, __builtin_return_address(0));         \
+>                 goto err_label;                                         \
+> +       }                                                               \
+>  } while (0)
+>
+>  extern unsigned long __copy_user(void *to, const void *from, __kernel_si=
+ze_t n);
+> --
+> 2.42.0
+>
