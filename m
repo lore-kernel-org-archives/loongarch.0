@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806393B7B76;
-	Mon, 16 Mar 2026 16:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657563B7B76;
+	Mon, 16 Mar 2026 16:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773678658; cv=none; b=IEwFATUYiN1unwLGR4PEJkPW5xR382gYz5ip13dMArmsp8UsrS/yU0aXD1gKQizvO8ZbNKMZjBU+GAkSo5fuWy4rfOq9E7VO3nLHEpYsQpqsDucS6VvmiPJX2cZKw5xV2ArLGHj9UvY7L5fmSAXsayNEHjAJ/HfXYgkteYak2DI=
+	t=1773678711; cv=none; b=R9hVeB/lBNcwKRiOWhDUCstPXXWULuCnHVW6Rhk8xuxxbMGq/nRd2M8cXr7hc5DzzcgMRnwzTwgd8h5ZRVSx9huuvvJ8YV5lCsFJxlCQsSkFN8TYXiwsT6k1yEitDjWW1D5BXjBx+ix+FBrT+o4M5940qxV1TFdRsjq/fWIB5GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773678658; c=relaxed/simple;
-	bh=CvqhlbZ6pZRpmgYEengTiRdk2wqsmPtfd4AlTRX6XAQ=;
+	s=arc-20240116; t=1773678711; c=relaxed/simple;
+	bh=9tTGJ8xmnCXmNkktqRH7NLuhVDHU2e7HFmvsJCGcDrU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uHwO2etz2KuOsnEKaKA8vkF9Fh/ZcXVKxd83Zk7A+uqhy7R5g8NfkcVYzYlPIter5FC6q5x2WrOIqy8RAwkyeDDtH7/Lg4gqH8emnQ2jS3B8uwaMUhIPHh92UZTR9L8MbVukj+izRua1RS6d3Y0J6089dc3JQlwsZBpJ16S437E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lS0PsNXH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=X/0igWI/zp7hfJ00Bhxpq69PJ10K+s3tSNmxNgG+zTrQxcd9gegeRXOIJNLS0rt5fQtxwx9KPKxFAeH1tMN1WZKDJXPXoEiR3bZ34ZYVAE4jzizRwJ2bUdegYPbfay/ehEBMJ2hXC6YEIA9hmeKoup6x5YLzaIqXX54lUJ7kHsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bk9S8whD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lS0PsNXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961D6C19421;
-	Mon, 16 Mar 2026 16:30:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bk9S8whD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00A0C19421;
+	Mon, 16 Mar 2026 16:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773678658;
-	bh=CvqhlbZ6pZRpmgYEengTiRdk2wqsmPtfd4AlTRX6XAQ=;
+	s=k20201202; t=1773678711;
+	bh=9tTGJ8xmnCXmNkktqRH7NLuhVDHU2e7HFmvsJCGcDrU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lS0PsNXH9/7mKjFbl7P6BYXKU5yTyrWNZZgvFNT4ECWzUajz0KDb7gPKpFteZGR3F
-	 xd0gnK4HNCVXh9YpkBomXUnaGgldp1N6Rgf8QdFarxvNkGe6W4L9e0UWPDkWcrgBr1
-	 6YbftjhWSFs9ocW1Ak31uKAKbdPErLg7x9IGs6ryGTEwqny4xCRIi4C/M2iZOLX0ld
-	 I1hCgyfHQGxJk+lopAMeHCpqY1kTYSNWnOxYeXL0B+8TZ2oztbYTDOeXzuT/AbE3Cm
-	 JWAojxIDMDmnmBOnAWUQ41bnzyxd/N0ZFQOzZW7WR9rTWTsLFwV9NPP46L9zsQ+dsN
-	 2Uz8Da6DiL9bA==
-Message-ID: <02c62e7b-9ece-4334-8312-52d635dc6171@kernel.org>
-Date: Mon, 16 Mar 2026 17:30:48 +0100
+	b=Bk9S8whDQdEnqW8ivoY5HX7nZMwZc0L9+aRbd+FeNHoZjTq+j8OGcarcdrT1AG40R
+	 nrrLY+QC/TTcjOUasLpldywlhcZfBWmtht15G8LlwCB1WxLv9OxwvdpkbqX+76nI1I
+	 sjvnlEzt04Qkv3r0ZYl8hjOEgyqvC6kkELiiNLPbY6SLuXv+CRpoEZR+raUtV3KMhR
+	 Znw5eCXl0BfAnswB60wy+5Uz6imrsnGy/LwDqJ8f8LzRBAESWl09x1ti+wwAfQymsm
+	 jiLUPufNOanffV04CImNSB8s8lrBQUPEk8IeHdtQzKWkUwe3ttFiz+MU8LxWna40I/
+	 wUcm3gK29qIWQ==
+Message-ID: <488499f2-3e3f-4377-bc28-40ff7f5166ec@kernel.org>
+Date: Mon, 16 Mar 2026 17:31:42 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 05/18] riscv/mm: Align vmemmap to maximal folio size
+Subject: Re: [PATCHv7 06/18] LoongArch/mm: Align vmemmap to maximal folio size
 To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-6-kas@kernel.org>
+ <20260227194302.274384-7-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,7 +99,7 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227194302.274384-6-kas@kernel.org>
+In-Reply-To: <20260227194302.274384-7-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -110,7 +110,7 @@ On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
 > struct pages of the head page to be naturally aligned with regard to the
 > folio size.
 > 
-> Align vmemmap to the newly introduced MAX_FOLIO_VMEMMAP_ALIGN.
+> Align vmemmap to MAX_FOLIO_VMEMMAP_ALIGN.
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 > ---
