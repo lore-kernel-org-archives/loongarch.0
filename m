@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F98239F17D;
-	Mon, 16 Mar 2026 16:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BFC3CF049;
+	Mon, 16 Mar 2026 17:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679761; cv=none; b=Q+3mgNhjKbMh8WxHrKYGI1ImYplB6m5FxVMEyp9CLUUXb0RtB3qs37GY6wcV3Y7vaut+5aQv1Gc9KpwAT9TCi2oqSA6JDus/7mM+SeIZCJ90EECBak9qeqdCkQVXmBywWslDO/UOxOm+dSiX1dmo1SFE8H2RsTYRTR8IKElcytI=
+	t=1773680519; cv=none; b=MA8xBNjudaWVf9Gg8Ryq/8mkb8Rvjkq9pQKAKEwE1Ew1KIDQ2dKcyWYkHf5XZVNJhjSzgg+4vYCpfQuTSObSPqTdPGD59ZdZSeMzuTG/DA7aNCamsRClxQWYqBknWJXgtDE4rVrzRbudaajzqGvpFXnV6QOQbF0EyHt0rLmnol0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679761; c=relaxed/simple;
-	bh=uk1xHHKJArXOa0D/n6OA2egxALwqJwTNCh5fudHqvn8=;
+	s=arc-20240116; t=1773680519; c=relaxed/simple;
+	bh=ETulvVJzr+X1Ku5WeaZkYZesCeUYQzFa7GOml7F5mxs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsuK4r6PlOGe+jqscdEFiOKTACHMLxgCldEc4aeDNwmPqAgKTWi17stA1b5ojCrMs6+/4+QEHOJQfgICs8I7cvkAtD/vpiH2YNr6wHeRZPQEDIgzz3jNpr2y9R2WwrWzowBd+Eox/Pm7r5uJ+2MF/8j3a9KQYwzR9fuI0ALBLg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S18YUcU7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pgB93v5ZiaSWQ6+USPcL0dPqcv5JEspaytWtb7pP+dnipxHr18NxZhteIwSG892OxvRmydhEf2T8MIUjLalxnISP+KvyyfugNjW/bmyhF2k3RcATwejt/oxhwCPMt60F6H685p4dIYOu8diYrF8KJMUiC5cIwCWxVQFzFfWqP+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRylpIw2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S18YUcU7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB465C19421;
-	Mon, 16 Mar 2026 16:49:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRylpIw2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270D3C19421;
+	Mon, 16 Mar 2026 17:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773679760;
-	bh=uk1xHHKJArXOa0D/n6OA2egxALwqJwTNCh5fudHqvn8=;
+	s=k20201202; t=1773680519;
+	bh=ETulvVJzr+X1Ku5WeaZkYZesCeUYQzFa7GOml7F5mxs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S18YUcU7zj5dwedocu26adSAA6wCoD342MiDux8Lqox9E5YEW7px8XzMPZp3l/GG2
-	 X33FV25AdFzEz9i8jaHd1X8c5XpHUxaZjGA9Zv/wuFs2gDGu/nV/KA+76Ac3D3AyrH
-	 A9iiph3Q3pTq2hmxvlXuP7RB0tm2DDiDaO+iLDXr9H/arruE4C+HDHB2PNVGllDs2S
-	 /IoWz8Kdo8wG0x7VrpPDsKDlQiSspFfZm6qMVD6jbHD2bgbR8g1sHxgtniRnTWPsJv
-	 8jwOMtYleOb+cWDLHvCGbsP9ly6WhoA1uWte8qt1uQQqdytuSnqZ3l4Slx/aUFe5rt
-	 za9JXBprOuoZw==
-Message-ID: <3ac4a544-53bd-42e7-8191-ae9f79aad5e9@kernel.org>
-Date: Mon, 16 Mar 2026 17:49:13 +0100
+	b=RRylpIw2eIVb7L9jiz2iaEGM/RV33gOA0TX/2UtNgBjLDL0za8hdtwl+ym1TAAdYk
+	 rO/D1H+L3G1jrcZpLbeEc2exebBJs2fRf1RQSnrbK92Ngemue+WX+mZAgPQwylYlg7
+	 rrtziz7OHiiUjLsV2PO6Yt6gNFCMroC3kGBcfKE8WHHNOqhHgy1Zpflx1aZ3o4n18g
+	 2SQZtJwZ3EMpYh5DzRdtBwa4OzrSQGhQgJB35B1KNH2DyUN4F/07GxjVNpC7KsxmEa
+	 xO/vDMwFbDZ32X3ASDl4Nm10wMbRwhWHgoPD7VFx16hAd1yqWX/C/XUKbRXao8DJj0
+	 E3S68YKLGpmGg==
+Message-ID: <d5755c59-d010-4770-b26a-b233fd000190@kernel.org>
+Date: Mon, 16 Mar 2026 18:01:51 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 11/18] x86/vdso: Undefine
- CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP for vdso32
+Subject: Re: [PATCHv7 12/18] mm/hugetlb: Remove fake head pages
 To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -53,7 +52,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-12-kas@kernel.org>
+ <20260227194302.274384-13-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -100,37 +99,82 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227194302.274384-12-kas@kernel.org>
+In-Reply-To: <20260227194302.274384-13-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
-> The 32-bit VDSO build on x86_64 uses fake_32bit_build.h to undefine
-> various kernel configuration options that are not suitable for the
-> VDSO context or may cause build issues when including kernel headers.
+> From: Kiryl Shutsemau <kas@kernel.org>
 > 
-> Undefine CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP in fake_32bit_build.h to
-> prepare for change in  HugeTLB Vmemmap Optimization.
+> HugeTLB Vmemmap Optimization (HVO) reduces memory usage by freeing most
+> vmemmap pages for huge pages and remapping the freed range to a single
+> page containing the struct page metadata.
 > 
-> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> With the new mask-based compound_info encoding (for power-of-2 struct
+> page sizes), all tail pages of the same order are now identical
+> regardless of which compound page they belong to. This means the tail
+> pages can be truly shared without fake heads.
+> 
+> Allocate a single page of initialized tail struct pages per zone
+> per order in the vmemmap_tails[] array in struct zone. All huge pages of
+> that order in the zone share this tail page, mapped read-only into their
+> vmemmap. The head page remains unique per huge page.
+> 
+> Redefine MAX_FOLIO_ORDER using ilog2(). The define has to produce a
+> compile-constant as it is used to specify vmemmap_tail array size.
+> For some reason, compiler is not able to solve get_order() at
+> compile-time, but ilog2() works.
+> 
+> Avoid PUD_ORDER to define MAX_FOLIO_ORDER as it adds dependency to
+> <linux/pgtable.h> which generates hard-to-break include loop.
+> 
+> This eliminates fake heads while maintaining the same memory savings,
+> and simplifies compound_head() by removing fake head detection.
+> 
+> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
 > ---
->  arch/x86/entry/vdso/vdso32/fake_32bit_build.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/entry/vdso/vdso32/fake_32bit_build.h b/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
-> index db1b15f686e3..bc3e549795c3 100644
-> --- a/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
-> +++ b/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
-> @@ -11,6 +11,7 @@
->  #undef CONFIG_PGTABLE_LEVELS
->  #undef CONFIG_ILLEGAL_POINTER_VALUE
->  #undef CONFIG_SPARSEMEM_VMEMMAP
-> +#undef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
->  #undef CONFIG_NR_CPUS
->  #undef CONFIG_PARAVIRT_XXL
->  
 
-Pain as always :)
+[...]
+>  
+> +static struct zone *pfn_to_zone(unsigned nid, unsigned long pfn)
+
+I'd make it clearer that this some hugetlb helper, not just some
+page_zone(pfn_to_page()).
+
+Also, it's only really valid during boot, where we cannot have
+overlapping zones yet (hopefully IIRC).
+
+static struct zone *hugetlb_early_pfn_to_zone(unsigned nid,
+	unsigned long pfn)
+
+or sth. like that (throwing in an __init).
+
+[...]
+
+> index c76122f22294..928e79c7549c 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -886,6 +886,15 @@ static inline void prep_compound_tail(struct page *tail,
+>  	set_page_private(tail, 0);
+>  }
+>  
+> +static inline void init_compound_tail(struct page *tail,
+> +		const struct page *head, unsigned int order, struct zone *zone)
+> +{
+
+In light of the refcount rework (lock/frozen bit), it might make sense
+to directly set the page count here to 0, so it's easier to spot and
+consider later.
+
+set_page_count(tail, 0)
+
+> +	atomic_set(&tail->_mapcount, -1);
+> +	set_page_node(tail, zone_to_nid(zone));
+> +	set_page_zone(tail, zone_idx(zone));
+> +	prep_compound_tail(tail, head, order);
+> +}
+> +
+Nothing else jumped at me
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
