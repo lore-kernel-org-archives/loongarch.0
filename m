@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EFF3CE4B5;
-	Mon, 16 Mar 2026 16:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F98239F17D;
+	Mon, 16 Mar 2026 16:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679713; cv=none; b=hNSpvrpo8kHiMPeIRabBpM+prMNZIM2RIptfmm71nj63GcoPrGHxPNUuckb+X735NTUWccearPbklrJQo4SRvexg8ycNqz2ZREEWWNvBHbDlM0dMbX9XyzizKXVmIsIqwsc8gcqomW8/pmyl+ySzO4AaApmzFbH3c3V6a8TPKB4=
+	t=1773679761; cv=none; b=Q+3mgNhjKbMh8WxHrKYGI1ImYplB6m5FxVMEyp9CLUUXb0RtB3qs37GY6wcV3Y7vaut+5aQv1Gc9KpwAT9TCi2oqSA6JDus/7mM+SeIZCJ90EECBak9qeqdCkQVXmBywWslDO/UOxOm+dSiX1dmo1SFE8H2RsTYRTR8IKElcytI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679713; c=relaxed/simple;
-	bh=WuhfP0oahkZFMDr9DJw5bOig+EPYbiQxrAUeY6rjrp8=;
+	s=arc-20240116; t=1773679761; c=relaxed/simple;
+	bh=uk1xHHKJArXOa0D/n6OA2egxALwqJwTNCh5fudHqvn8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GkHbc1TL2qOkeGZzAIe4TQ4DsKelpzn79MAduwyChnpKl5o9hh07GFEukNdWgoNjCP8UTVgpi/eLF2Re7NB1HY8LRiVYHaevoKdXhhMBdU2gVymUI3vk8nwYUcKpSzeA77ttaPeH6g3M8IqK1DmzwskTm9CQwkdgjXyVIGISubA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfDNQUax; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XsuK4r6PlOGe+jqscdEFiOKTACHMLxgCldEc4aeDNwmPqAgKTWi17stA1b5ojCrMs6+/4+QEHOJQfgICs8I7cvkAtD/vpiH2YNr6wHeRZPQEDIgzz3jNpr2y9R2WwrWzowBd+Eox/Pm7r5uJ+2MF/8j3a9KQYwzR9fuI0ALBLg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S18YUcU7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfDNQUax"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3519CC19421;
-	Mon, 16 Mar 2026 16:48:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S18YUcU7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB465C19421;
+	Mon, 16 Mar 2026 16:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773679712;
-	bh=WuhfP0oahkZFMDr9DJw5bOig+EPYbiQxrAUeY6rjrp8=;
+	s=k20201202; t=1773679760;
+	bh=uk1xHHKJArXOa0D/n6OA2egxALwqJwTNCh5fudHqvn8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tfDNQUaxol6LRd60RlzKMPBwZeRswtt0gijLKRle/y1Gh2I8LCYZPLlSGuyVRuaXo
-	 51KnhnRizLNklEFx071MubuAC2yWZkUVVvh54WEZaNBLoexRQsc2eG26lodtQXLGlM
-	 oI/QKSm+xuFjQlMaAei1lExj53BlnuTkSXYqRZCwHwg9R/WwTh2j9VA8fpTX4uLXV6
-	 jPdw41sY/fP161N7mgDB0lonw74jjjnDVcu//OG7HFE50IXE3C68Lf2V+z7mwJ78Uy
-	 npy24JfcTGg6xdNBU+M2rp91Q0ZhlJLwe+IiGGd2raRV+o+sh90pV6lVkRhLAe5a0K
-	 A9yNbLsJuqUOA==
-Message-ID: <4e52f70d-e0c3-471f-8073-68c0e9bc94ca@kernel.org>
-Date: Mon, 16 Mar 2026 17:48:24 +0100
+	b=S18YUcU7zj5dwedocu26adSAA6wCoD342MiDux8Lqox9E5YEW7px8XzMPZp3l/GG2
+	 X33FV25AdFzEz9i8jaHd1X8c5XpHUxaZjGA9Zv/wuFs2gDGu/nV/KA+76Ac3D3AyrH
+	 A9iiph3Q3pTq2hmxvlXuP7RB0tm2DDiDaO+iLDXr9H/arruE4C+HDHB2PNVGllDs2S
+	 /IoWz8Kdo8wG0x7VrpPDsKDlQiSspFfZm6qMVD6jbHD2bgbR8g1sHxgtniRnTWPsJv
+	 8jwOMtYleOb+cWDLHvCGbsP9ly6WhoA1uWte8qt1uQQqdytuSnqZ3l4Slx/aUFe5rt
+	 za9JXBprOuoZw==
+Message-ID: <3ac4a544-53bd-42e7-8191-ae9f79aad5e9@kernel.org>
+Date: Mon, 16 Mar 2026 17:49:13 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 09/18] mm/hugetlb: Defer vmemmap population for bootmem
- hugepages
+Subject: Re: [PATCHv7 11/18] x86/vdso: Undefine
+ CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP for vdso32
 To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -53,7 +53,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-10-kas@kernel.org>
+ <20260227194302.274384-12-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -100,42 +100,37 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227194302.274384-10-kas@kernel.org>
+In-Reply-To: <20260227194302.274384-12-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
-> Currently, the vmemmap for bootmem-allocated gigantic pages is populated
-> early in hugetlb_vmemmap_init_early(). However, the zone information is
-> only available after zones are initialized. If it is later discovered
-> that a page spans multiple zones, the HVO mapping must be undone and
-> replaced with a normal mapping using vmemmap_undo_hvo().
+> The 32-bit VDSO build on x86_64 uses fake_32bit_build.h to undefine
+> various kernel configuration options that are not suitable for the
+> VDSO context or may cause build issues when including kernel headers.
 > 
-> Defer the actual vmemmap population to hugetlb_vmemmap_init_late(). At
-> this stage, zones are already initialized, so it can be checked if the
-> page is valid for HVO before deciding how to populate the vmemmap.
+> Undefine CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP in fake_32bit_build.h to
+> prepare for change in  HugeTLB Vmemmap Optimization.
 > 
-> This allows us to remove vmemmap_undo_hvo() and the complex logic
-> required to rollback HVO mappings.
+> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> ---
+>  arch/x86/entry/vdso/vdso32/fake_32bit_build.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> In hugetlb_vmemmap_init_late(), if HVO population fails or if the zones
-> are invalid, fall back to a normal vmemmap population.
-> 
-> Postponing population until hugetlb_vmemmap_init_late() also makes zone
-> information available from within vmemmap_populate_hvo().
+> diff --git a/arch/x86/entry/vdso/vdso32/fake_32bit_build.h b/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
+> index db1b15f686e3..bc3e549795c3 100644
+> --- a/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
+> +++ b/arch/x86/entry/vdso/vdso32/fake_32bit_build.h
+> @@ -11,6 +11,7 @@
+>  #undef CONFIG_PGTABLE_LEVELS
+>  #undef CONFIG_ILLEGAL_POINTER_VALUE
+>  #undef CONFIG_SPARSEMEM_VMEMMAP
+> +#undef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+>  #undef CONFIG_NR_CPUS
+>  #undef CONFIG_PARAVIRT_XXL
+>  
 
-So we'll keep marking the sections as SECTION_IS_VMEMMAP_PREINIT such
-that sparse_init_nid() will still properly skip it and leave population
-to hugetlb_vmemmap_init_late().
-
-Should we clear SECTION_IS_VMEMMAP_PREINIT in case we run into the
-hugetlb_bootmem_page_zones_valid() scenario?
-
-I suspect we don't care about SECTION_IS_VMEMMAP_PREINIT after boot and
-can just leave the flag set. (maybe we wan to add a comment in the code?
-above the vmemmap_populate() ?)
-
-Nothing else jumped at me
+Pain as always :)
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
