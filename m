@@ -1,154 +1,207 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A2536F42A
-	for <loongarch@lists.linux.dev>; Mon, 16 Mar 2026 22:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F43379982
+	for <loongarch@lists.linux.dev>; Mon, 16 Mar 2026 23:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773699176; cv=pass; b=bF9d9PF1a1fIs40OzX4njC1MBL68huEFPXYUdlqs52ihsavWktG1pkE/ruM0TEe/lAr4vuSGt/R6Mr1LZ+IgNWYPxj982/DMwI1rHhoXkykxPiFMBXGNMQjz1JcGyV+fvcR1fsN1ErKPh6uKRV1n9ERK51E/LQ0ccGLWE30zs2Q=
+	t=1773703398; cv=pass; b=PkkEI3Sx/GuUWNATkmZYPix72iiX//o0258Si3yRYGg4f6iQ9uLQpLvJ1u92V9FxLw/7JJzJbFPOESMZp/A7ttU90xt6of7IGMrKi8net2D7SdhfCLBzPgWb+XRfXQ/pzv+grMbIDCgUokqiuFzmK3jP/iay9FGYVORw+sRd/NA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773699176; c=relaxed/simple;
-	bh=rsp7Ihi8TSAj7hc2vakkxGqqL2oEkNH6XMA5zjqI1qA=;
+	s=arc-20240116; t=1773703398; c=relaxed/simple;
+	bh=XTOZYOCHUctLkYMS5qNPCkNocPEUYtAP2iODWNe7Wt4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h4FKCw5VhEMHa6PUIOIJjNJwqlLxez80XceKfXDTAaEGp+8qSiE3Bth6c42JGAobfcjnCpSO50tqi/3yZ92pqW+tLjtVM5ucI+7pRuzQgKW3ENIFVi7XHhsoX9tEBclCnJJx0olZt9iV7SCrV/4Z8yOWAMN9OhMxTwZGeWOlGUA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRwRL18l; arc=pass smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=U/QX0kU12U++MGM/3kr+kpy07J/+hshOOVmtEkOc7t7+yDfr8ZtQ3av7jOx50t717oyyKEJbJGJCCxdZA9Dhuy4yi7rrPT1I1iB0gEtytcGIrrQoDGxUOF4fwHR9PNpIxiByDM7lf0tTvXCkou/MuDapTaQ+STIXHp/rCrxzNBQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=LdO9jSYK; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRwRL18l"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6655469237aso2792433a12.0
-        for <loongarch@lists.linux.dev>; Mon, 16 Mar 2026 15:12:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773699172; cv=none;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="LdO9jSYK"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b062069f80so5537115ad.0
+        for <loongarch@lists.linux.dev>; Mon, 16 Mar 2026 16:23:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773703396; cv=none;
         d=google.com; s=arc-20240605;
-        b=IoY+7EFKVi8XpbuJQf/tZm8HBE3qYveAFnzMawqxhlZUPRIfA4ktPYhdeKfL602I7L
-         J8GhV2EZsvb0Ii/mA1S7zknrg4xVb4NmXtTEHO/i3s7JN1JsbNoHynU3hi9X4RsU5Lhe
-         Pdwds/W3NHVGLJxAGBYSnosDeRbQ4Sd3ppIVmKYACL7wxtrGx3QEZ8HGBdXL6Cc0IKKg
-         JtHjAiM9ZMHiLbv0L5v/cN14MrgxLNt+e8l1TcD5FayQqTabTQHEEasOm6xdmU5oYsjo
-         oUA61JIBPzc3oohjJLsfjgQCXGazXUvKvo7I5gZNlcJ4aXN4ZC7MmCAV2NBIH6zgIEHI
-         RSMg==
+        b=a7d+bSDw3F3dbrqrkd5R/bfPe3h2iKnuLhc/2cm8fyOzPMyc4/YP2F2B7/5LsUiAwK
+         UWbYRTy14nlxI1+wZwsxJz1FVO+uQ3oKUsq89il4L3XyPQiGbAZEk2/NL122Wp2lPA3W
+         j7/weexunoDmijYBZERh2gFyMU1dUBd0yEaoHxOzOPcFyeNO9wDAbkIMVGr4Y4VoiNga
+         FkLvyzO6RN880BrKNY4F8CswH7CcRmLmrjLC76EN5DAYuJAn0RzkPDHRr6TCUxUbaG71
+         zy9nfKgahlkJsZ3/GAdFJZJDz0I9wt6Xp74u35SRUrq9qL+XjA0HSlAJBB8xotTIXCTw
+         UTDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=pAPcwDRyDaYRxv6m5ec0p6vencyIfyK+pU3obaup7wA=;
-        fh=W7HrhxLz2L9rvQvHD1lil9KQmxanWqT//QdI5z3ZLWg=;
-        b=AfWk81t47sff6N8WYK6Aogf+ulsfd8pmYiFBEdfeLQvye0ydrAoPLxieqieLQfE5jf
-         WVw9vHEH1ZwKLeDxAoiXoaAvxEsZvetNZQVpGYHG6vYLXVv7nqnaodu26qEOB5he6QZe
-         ewAFInppQhMtEn6wJaUp8wprdiPkYnRBueGHmpbrTcKJnudObbfe6mELoJ+jO8+VawRl
-         wfD917OmH9mwyFaWKIIC9HbdzB8VJoUXd9xraI3EMSa6R4CZK/hr41dNTNRP6vagRjHk
-         vLQb4wDgW5i31exxdm17WTb2iXlhfP5uJzVn4si5u7MtaRnP4AyfZY2u2hw+icDiH8Hu
-         XL+g==;
+        bh=OjoL/xI+JfK24mJlLYQ/qQdhvwGI+GcsV2kW/9vszrY=;
+        fh=ojP7DoTcmcQvHSxfccMrpdzeXLKy7YNXfnSu3ocO6Gc=;
+        b=I0JSp9s7mIMMVgLyEkgUo1qmPQY3BQtDkuwjNjsvY1fIoXAI0a0/pqmHroUDti79+J
+         8QaisB37FFtCFWlJu2Mmui2e3HZsSieQgMnPDsLEs+5LZC+5DjsFlujtVIaZYF3bmZtf
+         WEVopDzw4QRm8eNdoQXScmipmLvtpMlPYI/PjWK7++RBxgoWOM/hZdoCLpdcfNmf40Sa
+         TKbFTw+gEt1Mm48lBmftfPLZfjvVCX/6+ajTNAtyC/PXyLYqj7jknPGHKZJB/e2xZZlW
+         +moKfyxFfoMFB/a+yr3XXMlJzBg3Iarzq+hrilcMZrFQM0PCscl62KhewaVY3JaSzZFs
+         klaQ==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773699172; x=1774303972; darn=lists.linux.dev;
+        d=paul-moore.com; s=google; t=1773703396; x=1774308196; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pAPcwDRyDaYRxv6m5ec0p6vencyIfyK+pU3obaup7wA=;
-        b=YRwRL18lnc7DcIi5Q3PT9LShLDgIDOFDRz+7cMUrrFbFkb6tfxiVz1D9k58D34Qp1I
-         J/mO3ZDwgZ+6sxktWxo8ynpWCkpxvZOn4ftufoUZqBp3dV7aSN+7GwKTM1SfQZKsjSwR
-         snoWmXTnRPeTFeVQj6bWMcV0GmaMYppRSS3lToyG+mzwyMNX1SkSVCKYUHvKB9jzsfDQ
-         d3aCixko8rvqrzfYxgxvbcOgES343PvHgQ8J71Sk+aEkRD/cq1gbw2CH6bleN8KRbSKk
-         6IHE13TYbenp7rceccyWs2QOf+BoJPJHZ7GD8v0MZsIjgs+vmP2fm3ru/VeJ1tFQ4Oi1
-         T57g==
+        bh=OjoL/xI+JfK24mJlLYQ/qQdhvwGI+GcsV2kW/9vszrY=;
+        b=LdO9jSYKIkL3ML1LymYr++s5CGomsMIuLhIxdOIfFu/FXbsNhSgMpNUNS0PPZIDPY/
+         yvh239TJihuqXYQ89oxikDiWgKGdwXs7NgZaxtCGK2qmknBtfJyR4DVnYgEWWetsS//Z
+         tM79jZRkV1dUxrhM0t7sbvgHRoJdm56NK+fVD9Xxc04ZZ3tj67s5Dt1S8FgnIcvLMsx5
+         MudYNQ+TXpmRvIlqo4MRcn3JyZVu5K/WP58v4PnK63uv4FZjzcuexgw3AN1QyBUJnrQO
+         9CZB/m/n+mP6dRvpfV+uAhlg/unXqWVuhpDFhdaJqq71PxFmApyJaIuDAzgWsl9TwPKU
+         uZgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773699172; x=1774303972;
+        d=1e100.net; s=20251104; t=1773703396; x=1774308196;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=pAPcwDRyDaYRxv6m5ec0p6vencyIfyK+pU3obaup7wA=;
-        b=aK/A5GRoy0tjCLIKjynp1JGG4ECH1/F7LpqoK50UhshUM78ipxv7zVJogfmIUttcqi
-         u5ZGaQvjpsSY5tIVkseVfY/dFccyfDVKX7ybSqWqMqhjfEk84k4HCoTiAyAKfufI9aPP
-         kGMGvsUby3lkvrqwVURET6CPIZME686Rxg1mUp5m8ym0jrSw5Pblr/1D8VXeeTRa5zpf
-         RcHddQMEvOc81RhQm8doj/pU43U8z2+80Y2AnYScrvCrA0FlRmFCQWxw7LpoqOQZFUkv
-         K1pdaoVr5fn/j4u3Ur+5+ZsUlndq4EZ45cz7SHbm2tVXzBjxseRo6ezyyT/rPNoQWPHC
-         p0Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKnP9JdU5PtCPN8uWwH3u9nxikfU0L0rIDqMZx1XaNYrMY3AnQTX/WSSFkwmWGAZGJyGl1EUbc4iY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyfPqikFrzR8QOLwPPDhp0Czalnxp9vgkyh/K/h75Gq3vXE/qw0
-	zaajP8ocVkcab7hqy/J4rSqndCDCEF/R8zmk9/21Ry+Mbig7MOad5VnbOphvOo+QhAbUqi/sWkb
-	VBzBEgdMU9xI94zzAkl2B3W8q5WM6qvc=
-X-Gm-Gg: ATEYQzxPKEgtQCyG4IAQlMk2Sc/Y1HO8CWzGPJj1Sa+aKvRS5XLGEpIu2aB0XNUAElR
-	3wfg/Zv860CpZNA7yPmCClQ08CaIRpN5cftJVwW9/snKSkwY9vEf9PilYEvOyKli0EO+a3rZSSN
-	gldPEeBOJWgPa5F5Ur1hgi2BXuFrLYu/8dAc9xSnNMJ3yO6S+il4nW5L+HE8t84XCtYOZE6KEtr
-	+sC73tfb4MiwgB7k+u8eOnhmJtVwPbaYhAuMQI9Nz5k3pvT/SM39oTQJ7x50HgjkD7zNx6SI/Sq
-	mXIZsKv7je0fJzBXdoeoInr+jNkpWSxrb2XvONeV
-X-Received: by 2002:a17:907:1c0b:b0:b97:b515:31e with SMTP id
- a640c23a62f3a-b97b51509acmr346111966b.50.1773699172087; Mon, 16 Mar 2026
- 15:12:52 -0700 (PDT)
+        bh=OjoL/xI+JfK24mJlLYQ/qQdhvwGI+GcsV2kW/9vszrY=;
+        b=tDsIZ4VsiuSEBecs99gmB+orPfiDdYCQtktHUZ1lWM5i5n+vKhTlzm5kCG3YiwOaJV
+         bpcj0cSWKZsJYAviwiFzcspJj9d3fwHVYVQ09N5Sa+jND8tQTuTMnuQFeRhqYIo9JaMn
+         VrLWh61wE6KuR5apXJ1bPnyyO5ALB4lXnv1tHcvylSkBfJOAL/Y7DRBGHmFwwqGxO4Kw
+         vdRTwGrkY8mDwTPh9i3M92KEmFnRxbCjsUTMUcaxDBXYxIjvOBgwrppPc91Q9DFsAdeP
+         Mj5RvOWthxg4oK1xnbSMxUVNdJSSdgS6tya2XFUxSzBz/kiLf6aOsW5REom0wfsuodDh
+         k5ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUdoGG1in4pIud0t0WxaeRsvsz8s/k9L15jm0VUEyfowSEQ19yb6wXlFVIhXYlAc2b+3dHppdcPTIo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YykVnyHeK6TqxD/QvBb34gUGbq/2z69tFbOmyTKjveuzKixjdOY
+	/o4q3PmZLgdzdL4qquwERvAUYpmTmrVo1WV/bv0k9g3yLpho83sy/vyTOk58ds5YvIYNJd0L9Kc
+	BQrWu3YDunB4TQy6IoGd/QROioN2U19qgYyqD3S2g
+X-Gm-Gg: ATEYQzyKKv4BPzuKE8yo4IqpUYPDoGqWr5gHljkbiCV7xVZGdsImZvPGPKoFKnNj5NJ
+	GE4fMPIj0ahW7Hb4NME0k+CG9h5ROHLQXwKVPxgpffwgf85VAfkLQc+CS0fgiCjtUyEn+QXOlWi
+	oNaGBBJax6e5wecTqai4lVfwkG/Etq9tiEd91MBxFcmcss9ly21PFs/Ek8aujXIP9ZPEyWTNxb2
+	iC6z8xpEqVbX7XNBTo17eywVrO+KCjM2adbZ/kfJ0jzk3Xz77qMxjVRvi90Ww9o83RJEDZwoq5G
+	e6oos6niNvCekHOOHA==
+X-Received: by 2002:a17:902:ea06:b0:2b0:5c3f:c0d8 with SMTP id
+ d9443c01a7336-2b05c3fc4damr40223235ad.47.1773703396327; Mon, 16 Mar 2026
+ 16:23:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260311070416.972667-1-hch@lst.de> <20260311070416.972667-11-hch@lst.de>
-In-Reply-To: <20260311070416.972667-11-hch@lst.de>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Mon, 16 Mar 2026 23:12:39 +0100
-X-Gm-Features: AaiRm53MOL-S4iIRiZrnVZNNZCm-cfe6kMQGe2L4WL9TC_xpq_akeJ994p2lXMA
-Message-ID: <CA+=Fv5QkJm8+ysx8W=ypr84oSR=rrikfk-iMMU6_xrtS1PsWvg@mail.gmail.com>
-Subject: Re: [PATCH 10/27] alpha: move the XOR code to lib/raid/
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+References: <cover.1773665966.git.ljs@kernel.org> <063af0422d99bee0195589aa63f8f44edaf409fa.1773665966.git.ljs@kernel.org>
+In-Reply-To: <063af0422d99bee0195589aa63f8f44edaf409fa.1773665966.git.ljs@kernel.org>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 16 Mar 2026 19:23:04 -0400
+X-Gm-Features: AaiRm50DdYFqfixz3H6HRwMmLfdf5osoLUZfr0b1blDqz3IzGNPvd_xOI_ajOas
+Message-ID: <CAHC9VhR2T8ujtfvz-HgkgSFByptTLmhbCYS+scY53aYg=sgfqw@mail.gmail.com>
+Subject: Re: [PATCH v2 17/23] mm: convert do_brk_flags() to use vma_flags_t
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Kees Cook <kees@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>, 
 	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
 	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, 
+	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, 
 	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, 
-	Li Nan <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Michal Hocko <mhocko@suse.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
 	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-crypto@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-raid@vger.kernel.org
+	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 11, 2026 at 8:06=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrot=
-e:
+On Mon, Mar 16, 2026 at 9:09=E2=80=AFAM Lorenzo Stoakes (Oracle) <ljs@kerne=
+l.org> wrote:
 >
-> Move the optimized XOR code out of line into lib/raid.
+> In order to be able to do this, we need to change VM_DATA_DEFAULT_FLAGS a=
+nd
+> friends and update the architecture-specific definitions also.
 >
-> Note that the giant inline assembly block might be better off as a
-> separate assembly source file now, but I'll leave that to the alpha
-> maintainers.
+> We then have to update some KSM logic to handle VMA flags, and introduce
+> VMA_STACK_FLAGS to define the vma_flags_t equivalent of VM_STACK_FLAGS.
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> We also introduce two helper functions for use during the time we are
+> converting legacy flags to vma_flags_t values - vma_flags_to_legacy() and
+> legacy_to_vma_flags().
+>
+> This enables us to iteratively make changes to break these changes up int=
+o
+> separate parts.
+>
+> We use these explicitly here to keep VM_STACK_FLAGS around for certain
+> users which need to maintain the legacy vm_flags_t values for the time
+> being.
+>
+> We are no longer able to rely on the simple VM_xxx being set to zero if t=
+he
+> feature is not enabled, so in the case of VM_DROPPABLE we introduce
+> VMA_DROPPABLE as the vma_flags_t equivalent, which is set to
+> EMPTY_VMA_FLAGS if the droppable flag is not available.
+>
+> While we're here, we make the description of do_brk_flags() into a kdoc
+> comment, as it almost was already.
+>
+> We use vma_flags_to_legacy() to not need to update the vm_get_page_prot()
+> logic as this time.
+>
+> Note that in create_init_stack_vma() we have to replace the BUILD_BUG_ON(=
+)
+> with a VM_WARN_ON_ONCE() as the tested values are no longer build time
+> available.
+>
+> We also update mprotect_fixup() to use VMA flags where possible, though w=
+e
+> have to live with a little duplication between vm_flags_t and vma_flags_t
+> values for the time being until further conversions are made.
+>
+> Finally, we update the VMA tests to reflect these changes.
+>
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 > ---
->  arch/alpha/include/asm/xor.h | 853 +----------------------------------
->  lib/raid/xor/Makefile        |   2 +
->  lib/raid/xor/alpha/xor.c     | 849 ++++++++++++++++++++++++++++++++++
->  3 files changed, 855 insertions(+), 849 deletions(-)
->  create mode 100644 lib/raid/xor/alpha/xor.c
->
+>  arch/arc/include/asm/page.h        |  2 +-
+>  arch/arm/include/asm/page.h        |  2 +-
+>  arch/arm64/include/asm/page.h      |  3 +-
+>  arch/hexagon/include/asm/page.h    |  2 +-
+>  arch/loongarch/include/asm/page.h  |  2 +-
+>  arch/mips/include/asm/page.h       |  2 +-
+>  arch/nios2/include/asm/page.h      |  2 +-
+>  arch/powerpc/include/asm/page.h    |  4 +--
+>  arch/powerpc/include/asm/page_32.h |  2 +-
+>  arch/powerpc/include/asm/page_64.h | 12 ++++----
+>  arch/riscv/include/asm/page.h      |  2 +-
+>  arch/s390/include/asm/page.h       |  2 +-
+>  arch/x86/include/asm/page_types.h  |  2 +-
+>  arch/x86/um/asm/vm-flags.h         |  4 +--
+>  include/linux/ksm.h                | 10 +++----
+>  include/linux/mm.h                 | 47 ++++++++++++++++++------------
+>  mm/internal.h                      |  3 ++
+>  mm/ksm.c                           | 43 ++++++++++++++-------------
+>  mm/mmap.c                          | 13 +++++----
+>  mm/mprotect.c                      | 46 +++++++++++++++++------------
+>  mm/mremap.c                        |  6 ++--
+>  mm/vma.c                           | 34 +++++++++++----------
+>  mm/vma.h                           | 14 +++++++--
+>  mm/vma_exec.c                      |  5 ++--
+>  security/selinux/hooks.c           |  4 ++-
+>  tools/testing/vma/include/custom.h |  3 --
+>  tools/testing/vma/include/dup.h    | 42 ++++++++++++++------------
+>  tools/testing/vma/include/stubs.h  |  9 +++---
+>  tools/testing/vma/tests/merge.c    |  3 +-
+>  29 files changed, 186 insertions(+), 139 deletions(-)
 
-Hi,
+Not that the SELinux changes are really all that significant, but they
+look fine to me.
 
-I applied this patch and ran it on my UP2000+
+Acked-by: Paul Moore <paul@paul-moore.com> (SELinux)
 
-The kernel builds and boots, and I verified the new lib/raid/xor/alpha
-implementation using the XOR KUnit test, the test passed, see below:
-
-[   25.705064]     KTAP version 1
-[   25.705064]     # Subtest: xor
-[   25.705064]     # module: xor_kunit
-[   25.705064]     1..1
-[   28.957992]     # xor_test: Test should be marked slow (runtime:
-3.253413330s)
-[   28.958969]     ok 1 xor_test
-
-Acked-by: Magnus Lindholm <linmag7@gmail.com>
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
+--=20
+paul-moore.com
