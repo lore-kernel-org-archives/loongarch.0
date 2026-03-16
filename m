@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657563B7B76;
-	Mon, 16 Mar 2026 16:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009E41D514E;
+	Mon, 16 Mar 2026 16:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773678711; cv=none; b=R9hVeB/lBNcwKRiOWhDUCstPXXWULuCnHVW6Rhk8xuxxbMGq/nRd2M8cXr7hc5DzzcgMRnwzTwgd8h5ZRVSx9huuvvJ8YV5lCsFJxlCQsSkFN8TYXiwsT6k1yEitDjWW1D5BXjBx+ix+FBrT+o4M5940qxV1TFdRsjq/fWIB5GI=
+	t=1773678838; cv=none; b=eHPxTYIAaa+zZAwGspqz2j6UWJH+0/8T3YsfD3gdNqGTzDhg0No7bos6QnBNbnlrthG2k+dCvm62Y8Wsgb53UMqgEqA4oNuJrEcXnaPQyePwQ88kLw9JQiEJmlHDfS7tYBlPTWiv/iHSWqOdU9LVw1lU/sAbNrLw6LLnXu8i764=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773678711; c=relaxed/simple;
-	bh=9tTGJ8xmnCXmNkktqRH7NLuhVDHU2e7HFmvsJCGcDrU=;
+	s=arc-20240116; t=1773678838; c=relaxed/simple;
+	bh=N0DM7WgflxXMH9CI2Ekdcuzztaf1QkYHMyojhK3C5VE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/0igWI/zp7hfJ00Bhxpq69PJ10K+s3tSNmxNgG+zTrQxcd9gegeRXOIJNLS0rt5fQtxwx9KPKxFAeH1tMN1WZKDJXPXoEiR3bZ34ZYVAE4jzizRwJ2bUdegYPbfay/ehEBMJ2hXC6YEIA9hmeKoup6x5YLzaIqXX54lUJ7kHsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bk9S8whD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ekuibktVpwI4Cx5++zHV4O/+iOcvVdg+EcCT+k7Hg6oeTAJtfV2VdEHo65g9A+NeKJAY7evTbOuMMSdjzP8F9hsHjRhrXPVcuGRsI64YYLUdhg6X0FKcdTN1mkhktRlVQJkssy1wUfZOLkHp01LfUGAHYfsz5YJywgSlaToPGk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMChSLEt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bk9S8whD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00A0C19421;
-	Mon, 16 Mar 2026 16:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMChSLEt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B59C19421;
+	Mon, 16 Mar 2026 16:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773678711;
-	bh=9tTGJ8xmnCXmNkktqRH7NLuhVDHU2e7HFmvsJCGcDrU=;
+	s=k20201202; t=1773678837;
+	bh=N0DM7WgflxXMH9CI2Ekdcuzztaf1QkYHMyojhK3C5VE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bk9S8whDQdEnqW8ivoY5HX7nZMwZc0L9+aRbd+FeNHoZjTq+j8OGcarcdrT1AG40R
-	 nrrLY+QC/TTcjOUasLpldywlhcZfBWmtht15G8LlwCB1WxLv9OxwvdpkbqX+76nI1I
-	 sjvnlEzt04Qkv3r0ZYl8hjOEgyqvC6kkELiiNLPbY6SLuXv+CRpoEZR+raUtV3KMhR
-	 Znw5eCXl0BfAnswB60wy+5Uz6imrsnGy/LwDqJ8f8LzRBAESWl09x1ti+wwAfQymsm
-	 jiLUPufNOanffV04CImNSB8s8lrBQUPEk8IeHdtQzKWkUwe3ttFiz+MU8LxWna40I/
-	 wUcm3gK29qIWQ==
-Message-ID: <488499f2-3e3f-4377-bc28-40ff7f5166ec@kernel.org>
-Date: Mon, 16 Mar 2026 17:31:42 +0100
+	b=FMChSLEtbpV8Fe0O1mCMgCpyyx/kSFa8HuP4jivAPKecTy2/YueOmPbbvxeDoKCvA
+	 HMb/n0MANqiGuD4T+Kb4GYr6oa99D9dG2MIg6BUHoboUGXiy/pJT1iN2XHoHhq2ezq
+	 U3AAY2dnSbcACPTNanXJy4wIqAuTtztUaWfbS5n5phR3V9CdkktTVAH3etZXlG3ACk
+	 QugccaXFzZdvwk976B5IlJxQ0XzY00WB0GIUS9n/WbBFNDnycHSnqbz7bgnfUtkt7B
+	 zTkuQu0LfnXmPjkLcA9lleK624DND6yTebw7vsQCJyBsyHFmXhvbaX881PS5NDmYKC
+	 wB4PPta+kOYwA==
+Message-ID: <13006181-d35b-4c1b-97fd-f1f88c3d66c9@kernel.org>
+Date: Mon, 16 Mar 2026 17:33:49 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 06/18] LoongArch/mm: Align vmemmap to maximal folio size
+Subject: Re: [PATCHv7 08/18] mm/sparse: Check memmap alignment for
+ compound_info_has_mask()
 To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -52,7 +53,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-7-kas@kernel.org>
+ <20260227194302.274384-9-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -99,21 +100,42 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227194302.274384-7-kas@kernel.org>
+In-Reply-To: <20260227194302.274384-9-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
 > From: Kiryl Shutsemau <kas@kernel.org>
 > 
-> The upcoming change to the HugeTLB vmemmap optimization (HVO) requires
-> struct pages of the head page to be naturally aligned with regard to the
-> folio size.
+> If page->compound_info encodes a mask, it is expected that vmemmap to be
+> naturally aligned to the maximum folio size.
 > 
-> Align vmemmap to MAX_FOLIO_VMEMMAP_ALIGN.
+> Add a VM_WARN_ON_ONCE() to check the alignment.
 > 
 > Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
+> Acked-by: Zi Yan <ziy@nvidia.com>
 > ---
+>  mm/sparse.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index b5b2b6f7041b..dfabe554adf8 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -600,6 +600,11 @@ void __init sparse_init(void)
+>  	BUILD_BUG_ON(!is_power_of_2(sizeof(struct mem_section)));
+>  	memblocks_present();
+>  
+> +	if (compound_info_has_mask()) {
+> +		VM_WARN_ON_ONCE(!IS_ALIGNED((unsigned long) pfn_to_page(0),
+> +				    MAX_FOLIO_VMEMMAP_ALIGN));
+> +	}
+
+You could drop the {} or incorporate it into the VM_WARN_ON_ONCE
+
+VM_WARN_ON_ONCE(compound_info_has_mask() &&
+		!IS_ALIGNED((unsigned long) pfn_to_page(0),
+			    MAX_FOLIO_VMEMMAP_ALIGN)
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
