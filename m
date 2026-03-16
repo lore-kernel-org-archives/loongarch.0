@@ -1,97 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3996770810
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A410E34D905
+	for <loongarch@lists.linux.dev>; Mon, 16 Mar 2026 07:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773561976; cv=none; b=sU4Dyc4aElM0MOm2E1jEnDxPgDCY1kvwKIVxobQ3CzXgwRRxCfHnFJ1/cBlfjFurO4TrBa5Fc+KgUK5GLZk5EnVPTCrsPoXnYGpzto2sX/fWo5f1id2t+TQI87s+zsOpahXJG4qRTV4EKInmAQ7iT2UEuu95LGIV3gIgH3HUpg4=
+	t=1773646547; cv=none; b=HPs8ByyCeNMkcLX0Y6vaLpCzv/hQ8kFm09RsVBiGNyfdVv/Y1Gwv6m6tb3x9t6yUJC7bWnjcgPYytQxhKhcPHQOBG39/6dMzO5L2XKKtvX3KZdkPTxkS9DGiLhROiXeVsokrzZXSoysEk4ZG0WeRxr9W8f+nHMbuC6uti5Geb8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773561976; c=relaxed/simple;
-	bh=3T6KWEf4HpvJSVpqJekP3KIC45ewpQIIio/JBXvJvek=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IfNFRwE4HoxYd2kef/r5p83CZ3yuUfQos1MuPVbILKCrTlrw5qaQlIZBxHsWmXwNiXVDY7fkpEiQbsVzR4Aux6dsYHqRTlbjjE79xjrZWR7f9ROQk8/iFAZMYMhABdXF9/XbIt/N3X4DhUIfY2t4JTmOSO8NxBS8pZAahMUSaT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EetEdAN1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773646547; c=relaxed/simple;
+	bh=rafZZvPGPG7/C2Fjzh5ZhqF4LIAYTNyYf3H+YTpFBS8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SJ3haua2wMdOEiigWmxrX49mZoOraQprCIzDmQhjXfbtX9dNgtIJRMyhK5lL/7ch/9jp/glz+8/TAQKbRIcUkN2yw9InxDbTlIxQIrL2tldrEKf7aUkRhzsK/lx9s7sGw8ZnWOMJ6pfDcallJhQgiWU0KDITfMfZNU4cCd7ntvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K3PX52xP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=64l5qKG8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EetEdAN1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF7DC19424
-	for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 08:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773561976;
-	bh=3T6KWEf4HpvJSVpqJekP3KIC45ewpQIIio/JBXvJvek=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EetEdAN1mQ+RA/+82df1hJjhn2qGLmv7/2cbpPvNnEmEcouBU8l8F1PkLEQTtdzEK
-	 otzcTTDfYtA3b2Qjd/EPaBSBeEvFtgSjGqYgictjNmMOugCqIH6Jo2/CHPbIA/1dxg
-	 TJNDCOkIvtQHy5f6DSRbybSXazyZqqGDOHojb1VPMUcB2FWV5VSOj+5tGMFbMFENk0
-	 zU5tBnd57i9ggX+yG4dXXXqvkBEuGO9jPyalZHEHNZmF8aQX9V7G1MZCn990MLqXF1
-	 sz9l5eyp8SK9Gy+3chCD/vjznWW0h65hwLFqaKUqsb8szScYW+tcUY999hUB4cdvH7
-	 opm7PR1qusKdQ==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-661568ce781so5211010a12.0
-        for <loongarch@lists.linux.dev>; Sun, 15 Mar 2026 01:06:16 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yybh0ldxhpGxzP1U4uIfcFh6g4KUVGMwjZZ45YO+1wZYXoc3uyf
-	vJGlekwJ10exPBh60+/mi2FEkn/lgIO+w/Jy6E0rhK/x5NcJAMwjAW/7W53sRZRTxIbmmde4QVH
-	HSmIXTlDvVGUET9pVShzDOi3oI6r1Dgw=
-X-Received: by 2002:a17:906:1393:b0:b94:2ba7:d606 with SMTP id
- a640c23a62f3a-b9764fcb283mr376164966b.5.1773561974557; Sun, 15 Mar 2026
- 01:06:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K3PX52xP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="64l5qKG8"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1773646178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oPhsobU4F6abVLNhIEn25GFy9fn769tdfue+kCQjVVk=;
+	b=K3PX52xPO9RysLmtaah5kf5R1IVP/x7/03ml8sW+M24Sb8K/swF6UJxr8m/t/RK1qTQkDT
+	AnGStdxNWGPBy+//Fft2HL5G78gR4vB7NaygUg+T+G4ZrnKolEex5SM+sv/rSnBLoLR5r+
+	BQbFDd12CvOtn269i+kb+ZUl3ei04ZviG6BmnGfsA0BmjxB4QnhnmIssp4YzK1X3wu2CiZ
+	kXbQNTjD1CGGf0PvKM8h2Pr4zYSh6v/1QTxlP4deDKVvvLcvE0w2/+LHyV4hrBuwZnk6RZ
+	Yrf/LBoj+KdbVraVGwdXcD8UnkbexOA8z2e4t2A4MVS+cWgNeUXCEQu5N6ub0g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1773646178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oPhsobU4F6abVLNhIEn25GFy9fn769tdfue+kCQjVVk=;
+	b=64l5qKG8UkGu2oZE0E5ujEU0DZBye7We+D6BgrJK0GHnmzTm5Dc0emA4zSZ8wwxinheN7i
+	6asmmel2r4ignMCQ==
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Gleixner <tglx@kernel.org>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH] genirq/matrix, LoongArch: Delete IRQ_MATRIX_BITS leftovers
+Date: Mon, 16 Mar 2026 08:28:50 +0100
+Message-ID: <20260316072850.467995-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260310065510.8189-1-yangtiezhu@loongson.cn> <20260310065510.8189-4-yangtiezhu@loongson.cn>
-In-Reply-To: <20260310065510.8189-4-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 15 Mar 2026 16:06:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Ub0OSQ0y8hg53O0-ovhCJxjLEw1yOz7DUtm3=w+JbHw@mail.gmail.com>
-X-Gm-Features: AaiRm52KZhpYuMhEs6_bfQnv_FTZDzmpVlQRkuEXVc4RcRotpsmzvWgk-DMe5yg
-Message-ID: <CAAhV-H6Ub0OSQ0y8hg53O0-ovhCJxjLEw1yOz7DUtm3=w+JbHw@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] LoongArch: No need to flush icache if copy failed
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied with small modifications (return ret rather than -EFAULT), thanks.
+Delete IRQ_MATRIX_BITS leftovers after commit
+5b98d210ac1e ("genirq/matrix: Dynamic bitmap allocation") has made
+IRQ_MATRIX_BITS obsolete.
 
-Huacai
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ arch/loongarch/include/asm/irq.h | 1 -
+ kernel/irq/matrix.c              | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-On Tue, Mar 10, 2026 at 2:55=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> If copy_to_kernel_nofault() failed, no need to flush icache and just
-> return -EFAULT immediately.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/kernel/inst.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-> index 77da3b886dcb..dd5e8864eff9 100644
-> --- a/arch/loongarch/kernel/inst.c
-> +++ b/arch/loongarch/kernel/inst.c
-> @@ -246,13 +246,15 @@ static int text_copy_cb(void *data)
->
->         if (smp_processor_id() =3D=3D copy->cpu) {
->                 ret =3D copy_to_kernel_nofault(copy->dst, copy->src, copy=
-->len);
-> -               if (ret)
-> +               if (ret) {
->                         pr_err("%s: operation failed\n", __func__);
-> +                       return -EFAULT;
-> +               }
->         }
->
->         flush_icache_range((unsigned long)copy->dst, (unsigned long)copy-=
->dst + copy->len);
->
-> -       return ret;
-> +       return 0;
->  }
->
->  int larch_insn_text_copy(void *dst, void *src, size_t len)
-> --
-> 2.42.0
->
+diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/=
+irq.h
+index 3943647503a9..537add26daf4 100644
+--- a/arch/loongarch/include/asm/irq.h
++++ b/arch/loongarch/include/asm/irq.h
+@@ -48,7 +48,6 @@ void spurious_interrupt(void);
+  */
+ #define NR_VECTORS		256
+ #define NR_LEGACY_VECTORS	16
+-#define IRQ_MATRIX_BITS		NR_VECTORS
+=20
+ #define AVEC_IRQ_SHIFT		4
+ #define AVEC_IRQ_BIT		8
+diff --git a/kernel/irq/matrix.c b/kernel/irq/matrix.c
+index 0f79a4abea05..faafb43a4e61 100644
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -39,7 +39,7 @@ struct irq_matrix {
+=20
+ /**
+  * irq_alloc_matrix - Allocate a irq_matrix structure and initialize it
+- * @matrix_bits:	Number of matrix bits must be <=3D IRQ_MATRIX_BITS
++ * @matrix_bits:	Number of matrix bits
+  * @alloc_start:	From which bit the allocation search starts
+  * @alloc_end:		At which bit the allocation search ends, i.e first
+  *			invalid bit
+--=20
+2.47.3
+
