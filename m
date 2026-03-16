@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009E41D514E;
-	Mon, 16 Mar 2026 16:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EFF3CE4B5;
+	Mon, 16 Mar 2026 16:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773678838; cv=none; b=eHPxTYIAaa+zZAwGspqz2j6UWJH+0/8T3YsfD3gdNqGTzDhg0No7bos6QnBNbnlrthG2k+dCvm62Y8Wsgb53UMqgEqA4oNuJrEcXnaPQyePwQ88kLw9JQiEJmlHDfS7tYBlPTWiv/iHSWqOdU9LVw1lU/sAbNrLw6LLnXu8i764=
+	t=1773679713; cv=none; b=hNSpvrpo8kHiMPeIRabBpM+prMNZIM2RIptfmm71nj63GcoPrGHxPNUuckb+X735NTUWccearPbklrJQo4SRvexg8ycNqz2ZREEWWNvBHbDlM0dMbX9XyzizKXVmIsIqwsc8gcqomW8/pmyl+ySzO4AaApmzFbH3c3V6a8TPKB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773678838; c=relaxed/simple;
-	bh=N0DM7WgflxXMH9CI2Ekdcuzztaf1QkYHMyojhK3C5VE=;
+	s=arc-20240116; t=1773679713; c=relaxed/simple;
+	bh=WuhfP0oahkZFMDr9DJw5bOig+EPYbiQxrAUeY6rjrp8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekuibktVpwI4Cx5++zHV4O/+iOcvVdg+EcCT+k7Hg6oeTAJtfV2VdEHo65g9A+NeKJAY7evTbOuMMSdjzP8F9hsHjRhrXPVcuGRsI64YYLUdhg6X0FKcdTN1mkhktRlVQJkssy1wUfZOLkHp01LfUGAHYfsz5YJywgSlaToPGk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMChSLEt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GkHbc1TL2qOkeGZzAIe4TQ4DsKelpzn79MAduwyChnpKl5o9hh07GFEukNdWgoNjCP8UTVgpi/eLF2Re7NB1HY8LRiVYHaevoKdXhhMBdU2gVymUI3vk8nwYUcKpSzeA77ttaPeH6g3M8IqK1DmzwskTm9CQwkdgjXyVIGISubA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfDNQUax; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMChSLEt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98B59C19421;
-	Mon, 16 Mar 2026 16:33:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfDNQUax"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3519CC19421;
+	Mon, 16 Mar 2026 16:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773678837;
-	bh=N0DM7WgflxXMH9CI2Ekdcuzztaf1QkYHMyojhK3C5VE=;
+	s=k20201202; t=1773679712;
+	bh=WuhfP0oahkZFMDr9DJw5bOig+EPYbiQxrAUeY6rjrp8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FMChSLEtbpV8Fe0O1mCMgCpyyx/kSFa8HuP4jivAPKecTy2/YueOmPbbvxeDoKCvA
-	 HMb/n0MANqiGuD4T+Kb4GYr6oa99D9dG2MIg6BUHoboUGXiy/pJT1iN2XHoHhq2ezq
-	 U3AAY2dnSbcACPTNanXJy4wIqAuTtztUaWfbS5n5phR3V9CdkktTVAH3etZXlG3ACk
-	 QugccaXFzZdvwk976B5IlJxQ0XzY00WB0GIUS9n/WbBFNDnycHSnqbz7bgnfUtkt7B
-	 zTkuQu0LfnXmPjkLcA9lleK624DND6yTebw7vsQCJyBsyHFmXhvbaX881PS5NDmYKC
-	 wB4PPta+kOYwA==
-Message-ID: <13006181-d35b-4c1b-97fd-f1f88c3d66c9@kernel.org>
-Date: Mon, 16 Mar 2026 17:33:49 +0100
+	b=tfDNQUaxol6LRd60RlzKMPBwZeRswtt0gijLKRle/y1Gh2I8LCYZPLlSGuyVRuaXo
+	 51KnhnRizLNklEFx071MubuAC2yWZkUVVvh54WEZaNBLoexRQsc2eG26lodtQXLGlM
+	 oI/QKSm+xuFjQlMaAei1lExj53BlnuTkSXYqRZCwHwg9R/WwTh2j9VA8fpTX4uLXV6
+	 jPdw41sY/fP161N7mgDB0lonw74jjjnDVcu//OG7HFE50IXE3C68Lf2V+z7mwJ78Uy
+	 npy24JfcTGg6xdNBU+M2rp91Q0ZhlJLwe+IiGGd2raRV+o+sh90pV6lVkRhLAe5a0K
+	 A9yNbLsJuqUOA==
+Message-ID: <4e52f70d-e0c3-471f-8073-68c0e9bc94ca@kernel.org>
+Date: Mon, 16 Mar 2026 17:48:24 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 08/18] mm/sparse: Check memmap alignment for
- compound_info_has_mask()
+Subject: Re: [PATCHv7 09/18] mm/hugetlb: Defer vmemmap population for bootmem
+ hugepages
 To: "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>,
@@ -53,7 +53,7 @@ Cc: Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>,
  linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
 References: <20260227194302.274384-1-kas@kernel.org>
- <20260227194302.274384-9-kas@kernel.org>
+ <20260227194302.274384-10-kas@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -100,42 +100,42 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260227194302.274384-9-kas@kernel.org>
+In-Reply-To: <20260227194302.274384-10-kas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
-> From: Kiryl Shutsemau <kas@kernel.org>
+> Currently, the vmemmap for bootmem-allocated gigantic pages is populated
+> early in hugetlb_vmemmap_init_early(). However, the zone information is
+> only available after zones are initialized. If it is later discovered
+> that a page spans multiple zones, the HVO mapping must be undone and
+> replaced with a normal mapping using vmemmap_undo_hvo().
 > 
-> If page->compound_info encodes a mask, it is expected that vmemmap to be
-> naturally aligned to the maximum folio size.
+> Defer the actual vmemmap population to hugetlb_vmemmap_init_late(). At
+> this stage, zones are already initialized, so it can be checked if the
+> page is valid for HVO before deciding how to populate the vmemmap.
 > 
-> Add a VM_WARN_ON_ONCE() to check the alignment.
+> This allows us to remove vmemmap_undo_hvo() and the complex logic
+> required to rollback HVO mappings.
 > 
-> Signed-off-by: Kiryl Shutsemau <kas@kernel.org>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> ---
->  mm/sparse.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> In hugetlb_vmemmap_init_late(), if HVO population fails or if the zones
+> are invalid, fall back to a normal vmemmap population.
 > 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index b5b2b6f7041b..dfabe554adf8 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -600,6 +600,11 @@ void __init sparse_init(void)
->  	BUILD_BUG_ON(!is_power_of_2(sizeof(struct mem_section)));
->  	memblocks_present();
->  
-> +	if (compound_info_has_mask()) {
-> +		VM_WARN_ON_ONCE(!IS_ALIGNED((unsigned long) pfn_to_page(0),
-> +				    MAX_FOLIO_VMEMMAP_ALIGN));
-> +	}
+> Postponing population until hugetlb_vmemmap_init_late() also makes zone
+> information available from within vmemmap_populate_hvo().
 
-You could drop the {} or incorporate it into the VM_WARN_ON_ONCE
+So we'll keep marking the sections as SECTION_IS_VMEMMAP_PREINIT such
+that sparse_init_nid() will still properly skip it and leave population
+to hugetlb_vmemmap_init_late().
 
-VM_WARN_ON_ONCE(compound_info_has_mask() &&
-		!IS_ALIGNED((unsigned long) pfn_to_page(0),
-			    MAX_FOLIO_VMEMMAP_ALIGN)
+Should we clear SECTION_IS_VMEMMAP_PREINIT in case we run into the
+hugetlb_bootmem_page_zones_valid() scenario?
+
+I suspect we don't care about SECTION_IS_VMEMMAP_PREINIT after boot and
+can just leave the flag set. (maybe we wan to add a comment in the code?
+above the vmemmap_populate() ?)
+
+Nothing else jumped at me
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
