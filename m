@@ -1,84 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426C53AB275;
-	Tue, 17 Mar 2026 11:28:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D596348880;
+	Tue, 17 Mar 2026 11:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773746912; cv=none; b=toa6rXo2KPdPR4CaZwriJxqzqkhV8QNH3S2pcHOd9ZiteahpZ7/nZPzAW5zw+v/Q/+oIuhN2qc3ghV+BQAQk+4vX1zLhZB+fOiJxi0RcyJ3l2oddPRWIvbeJkMHJlir91Sz/wVRH2RxcLkRuKRQMDteCteh1sDWx6gRJliEf4Kk=
+	t=1773746922; cv=none; b=TTv4Q6472E9a2gEgWZeeKvdxdVVftO+XGcwRkFXEF+AwRvcPvBmwihUh2K8wJ/MjPnJlwTBt7vUx0FZ0gW2FY2ntvQ5PpQWs8Xfgib81HbZESHDDjwPThJ51Ym2l08vRv+XSvv+ncj4m52wl1oxjsaifzHV87U+WsboRCFJpgsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773746912; c=relaxed/simple;
-	bh=7MS7Odatrc28GGahSuXodA1j4BTKHK8U6ebok7EBrOk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NyH5VoSJ2q4zkVuT7nlUobsxFqwwX5iikMROA0Q7zF6V/zXF7IH126jl0sDEUzgaDD7T5oIo9OJekyisnsGa43px6/ZTZiyZfKDF4dOrD4San3we6ZxozGxiB2nYJ6VcEOj+6qM+hNrgRM6L+GKm+vxiydBwr8bdfhKyMtwpang=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rItg2e/A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773746922; c=relaxed/simple;
+	bh=32qbYYZEgqHyAOOKzk5WrymnIe+x73RqYh712Mog1As=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tjx34SGlAbH9Ph8DnMjDnLIEuZd3Gq89Kdt2IGJ8iJgAx5ckcKZIZrbLUN/4bpcvZyGj1ewKDdNauK9K2tP1YR0tMaGZLG/YiRfN3Ltzw2AzpnK9oolTmPQZTTRaGjezzTWxN+UefvuXINSd4zaBsdmGPXoBu8Cm/NhP8p8pfOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdIGeuR5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rItg2e/A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C054C2BCB0;
-	Tue, 17 Mar 2026 11:28:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdIGeuR5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FE9C4CEF7;
+	Tue, 17 Mar 2026 11:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773746911;
-	bh=7MS7Odatrc28GGahSuXodA1j4BTKHK8U6ebok7EBrOk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rItg2e/A04b4BF/9+cTtBd09SDdhWHkS0liklWLHDbem8dG1pEppzQxNAUUfE00iv
-	 zBgkmuGMYep+Cw4deHFSo0I8XM3uPh+THS4aRmrRVJwGIYjBTMWRlQZXNwn9VEPH/O
-	 JdKLffEtgWrePG9lF8QGE3db1/TSwD0zaOfZgh0+Kk32p9uKJTvVBJvRtuATaTSHNV
-	 k6oTmoBLTm3YJiqHVH/9rQjCIQQNqglOFElKfX+KXdpihr3uvf6SBBHMBwftnuL+p6
-	 /1Q6uL24MUCkksGOZwGJejV/zevX09JHrw1WGWmyR5VCQWyzHlT3BlgIRwOHvr5P+K
-	 Fak4HUVfNsx+A==
-From: Vinod Koul <vkoul@kernel.org>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@kernel.org>, 
- dmaengine@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
- Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, 
- loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
- Keguang Zhang <keguang.zhang@gmail.com>, linux-mips@vger.kernel.org
-In-Reply-To: <cover.1772853681.git.zhoubinbin@loongson.cn>
-References: <cover.1772853681.git.zhoubinbin@loongson.cn>
-Subject: Re: [PATCH v4 0/6] dmaengine: Add Loongson Multi-Channel DMA
- controller support
-Message-Id: <177374690827.337210.13271036907193844178.b4-ty@kernel.org>
-Date: Tue, 17 Mar 2026 16:58:28 +0530
+	s=k20201202; t=1773746922;
+	bh=32qbYYZEgqHyAOOKzk5WrymnIe+x73RqYh712Mog1As=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hdIGeuR59iiqFhPnWcecegpZD30lBPjH6oyJgNrZ6sTuqfj67G8KwOQMWRpH66ln7
+	 Tb+7rKSnyapJxOuOYPf0JqsZH2UEsi7+u7bYXa84wITJpd0GoQExdA157pROiQ0xUG
+	 FkP/HT0QhUuw5NL2RQRZavEB2AO8Z6ynUUE65XnPSOjoNXoU74KUjQ+SHXoxtRuIUS
+	 TOnUblaSujaS4wEbaEDE+Z0BBhVvhMdSbMomo10xrl9uEkH5esYJK4Bo9jOSvD5lO9
+	 UHg+lN1Vc3K6yiC0r5V5MihGfutd9Xtk6BEwYZhd4ijbJ2iH45Yye6vueuxh2SZZSA
+	 WmIwjPwb4DRKw==
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E28B8F40068;
+	Tue, 17 Mar 2026 07:28:40 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 17 Mar 2026 07:28:40 -0400
+X-ME-Sender: <xms:6Dq5aRezeypjqaoWwhIQjsBuBEhtrdSNLXG62S2ccj2KBrdeDFlkMQ>
+    <xme:6Dq5aY74Fzu_kW2IqbfV7ADlOCPU3a5H6IRhoUJbaJFuIFM6vzTvk6CH4GA_9jHxe
+    pdSR_A8fESh31IsvOjhte6pYMvlqQX2L24C8ZGztBbjCN7_vsrTO-o>
+X-ME-Received: <xmr:6Dq5aRdI5bQ3PZ3PcWm9JNgk0qQj8TjCz4neksWXvW5aj-IlU9F2Xjfx8kX_RQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeftdduudefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepmfhirhihlhcu
+    ufhhuhhtshgvmhgruhcuoehkrghssehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
+    hrnhepueeijeeiffekheeffffftdekleefleehhfefhfduheejhedvffeluedvudefgfek
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirh
+    hilhhlodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieduudeivdeiheeh
+    qddvkeeggeegjedvkedqkhgrsheppehkvghrnhgvlhdrohhrghesshhhuhhtvghmohhvrd
+    hnrghmvgdpnhgspghrtghpthhtohepheegpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegurghvihgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinh
+    hugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepmhhutghhuhhnrdhsohhn
+    gheslhhinhhugidruggvvhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurd
+    horhhgpdhrtghpthhtohepuhhsrghmrggrrhhifheigedvsehgmhgrihhlrdgtohhmpdhr
+    tghpthhtohepfhhvughlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehoshgrlhhvrg
+    guohhrsehsuhhsvgdruggvpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehvsggrsghkrgesshhushgvrdgtii
+X-ME-Proxy: <xmx:6Dq5afB40A8o3F4M6vXhGQivGB23CU8zGa6dY7zbd2L7KjB6TmweRw>
+    <xmx:6Dq5adGl3TJC6mmbn9eD1LlxwlRJZfuXH1_ME-MYxf98BtvkMSsgnQ>
+    <xmx:6Dq5aXi4DU2MhQ1B_Ii0EIM91z-qBbr92LZM83CYfF-7lQlzf6SkjQ>
+    <xmx:6Dq5afsxgNwr3DMB23qGX1nysq_EKzWatd4vzWcPpqaHXuIM_OQKzQ>
+    <xmx:6Dq5ad_BUpkXLTbLl-0RPF25cJY_OlBhTA00Q_FsAXEWdi13FUI84bed>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 17 Mar 2026 07:28:38 -0400 (EDT)
+Date: Tue, 17 Mar 2026 11:28:34 +0000
+From: Kiryl Shutsemau <kas@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Muchun Song <muchun.song@linux.dev>, Matthew Wilcox <willy@infradead.org>, 
+	Usama Arif <usamaarif642@gmail.com>, Frank van der Linden <fvdl@google.com>, 
+	Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Zi Yan <ziy@nvidia.com>, Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@suse.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, kernel-team@meta.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCHv7 09/18] mm/hugetlb: Defer vmemmap population for bootmem
+ hugepages
+Message-ID: <abk58j2bV0sGabEU@thinkstation>
+References: <20260227194302.274384-1-kas@kernel.org>
+ <20260227194302.274384-10-kas@kernel.org>
+ <4e52f70d-e0c3-471f-8073-68c0e9bc94ca@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e52f70d-e0c3-471f-8073-68c0e9bc94ca@kernel.org>
 
-
-On Sat, 07 Mar 2026 11:25:09 +0800, Binbin Zhou wrote:
-> This patchset introduces the Loongson multi-channel DMA controller,
-> which is present in the Loongson-2K0300 and Loongson-2K3000 processors.
+On Mon, Mar 16, 2026 at 05:48:24PM +0100, David Hildenbrand (Arm) wrote:
+> On 2/27/26 20:42, Kiryl Shutsemau (Meta) wrote:
+> > Currently, the vmemmap for bootmem-allocated gigantic pages is populated
+> > early in hugetlb_vmemmap_init_early(). However, the zone information is
+> > only available after zones are initialized. If it is later discovered
+> > that a page spans multiple zones, the HVO mapping must be undone and
+> > replaced with a normal mapping using vmemmap_undo_hvo().
+> > 
+> > Defer the actual vmemmap population to hugetlb_vmemmap_init_late(). At
+> > this stage, zones are already initialized, so it can be checked if the
+> > page is valid for HVO before deciding how to populate the vmemmap.
+> > 
+> > This allows us to remove vmemmap_undo_hvo() and the complex logic
+> > required to rollback HVO mappings.
+> > 
+> > In hugetlb_vmemmap_init_late(), if HVO population fails or if the zones
+> > are invalid, fall back to a normal vmemmap population.
+> > 
+> > Postponing population until hugetlb_vmemmap_init_late() also makes zone
+> > information available from within vmemmap_populate_hvo().
 > 
-> It is a multi-channel controller that enables data transfers from memory
-> to memory, device to memory, and memory to device, as well as channel
-> prioritization configurable through the channel configuration registers.
+> So we'll keep marking the sections as SECTION_IS_VMEMMAP_PREINIT such
+> that sparse_init_nid() will still properly skip it and leave population
+> to hugetlb_vmemmap_init_late().
 > 
-> [...]
+> Should we clear SECTION_IS_VMEMMAP_PREINIT in case we run into the
+> hugetlb_bootmem_page_zones_valid() scenario?
+> 
+> I suspect we don't care about SECTION_IS_VMEMMAP_PREINIT after boot and
+> can just leave the flag set. (maybe we wan to add a comment in the code?
+> above the vmemmap_populate() ?)
 
-Applied, thanks!
+I think keeping the flag is right thing to do.
 
-[1/6] dmaengine: loongson: New directory for Loongson DMA controllers drivers
-      commit: ffee2dc04e7e06534aaa4fd51ef89645b809b6b8
-[2/6] dmaengine: loongson: loongson2-apb: Convert to dmaenginem_async_device_register()
-      commit: 7d348227f4961bbf21255281438ee3aebe12830f
-[3/6] dmaengine: loongson: loongson2-apb: Convert to devm_clk_get_enabled()
-      commit: bdf1621a6a67b6327e2a26a1d47bffcde3be3b26
-[4/6] dmaengine: loongson: loongson2-apb: Simplify locking with guard() and scoped_guard()
-      commit: 9de4303fc04977d15b257726a6519caca687c43a
-[5/6] dt-bindings: dmaengine: Add Loongson Multi-Channel DMA controller
-      commit: 7a65e81e8e2e58b0db9f2dedda410ee2b6042859
-[6/6] dmaengine: loongson: New driver for the Loongson Multi-Channel DMA controller
-      commit: 1c0028e725f156ebabe68b0025f9c8e7a6170ffd
+SECTION_IS_VMEMMAP_PREINIT indicates to core-sparse that the section
+should not be populated and it will be initialized elsewhere. Even in
+!hugetlb_bootmem_page_zones_valid() we take care of it in
+hugetlb_vmemmap_init_late().
 
-Best regards,
+And, as you mentioned, nobody looks at the flag after boot.
+
+> Nothing else jumped at me
+> 
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> 
+> -- 
+> Cheers,
+> 
+> David
+
 -- 
-~Vinod
-
-
+  Kiryl Shutsemau / Kirill A. Shutemov
