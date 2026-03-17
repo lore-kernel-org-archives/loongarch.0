@@ -1,99 +1,173 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C52CD35966
-	for <loongarch@lists.linux.dev>; Tue, 17 Mar 2026 02:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AFA3446C5
+	for <loongarch@lists.linux.dev>; Tue, 17 Mar 2026 02:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773713114; cv=none; b=V7ymSwdmkSmTzHawpmGi1L3A/hYzG6MloJI+PGC1lWYjZuglLOaWTmGH8nsrx9blgfcJObVTDfpBOo4wsACf0p6Ca6J2lAsE2DyhycqOOqs51o45NIAwx13SuGbJlp6VzW8pUdwSe7vc7UVtuzvmyXBDlBw/6/jgyQe8uGOeNvc=
+	t=1773713452; cv=none; b=Uv6GPQX7/sgCc2NyBcoMzxrSl04tdVe1eygXlB+etJFV9TZfihuBYXAXy8WAKYNvTbzOQyv/GWfwvzN7O2e3VXnju3KjVAAKWLCupPA/AQs4paCDdQEM2ru/n32rR18rKoc0GyC9WwqTBr7xQlL4lpo0NaoAjQ0JSgLfoQAgmh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773713114; c=relaxed/simple;
-	bh=tfwNf41ejK8KnD9NFWnuWxv4enrqedRikctxYHlNzwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AnLoLjeg4PJblgWSsAH5+0AVADHzF9UY0oV5OaD96lY9urZ1mPoLoz9kjUknIBZe6yyGEoW/Yl1SvNnAK4Clgb56Dz6Buin+pNcSTel37cyfKXaojrA4moPz05fZ3xjJ0PggSpqHRm5UpzNTAd/4WujtePjqS9AGH1z+VjS+Nh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx_6vXtrhpEcobAA--.21445S3;
-	Tue, 17 Mar 2026 10:05:11 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxHOHTtrhpKcVWAA--.34870S2;
-	Tue, 17 Mar 2026 10:05:07 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: Emil Tsalapatis <emil@etsalapatis.com>,
-	Paul Chaignon <paul.chaignon@gmail.com>,
-	loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2] selftests/bpf: Add alignment flag for test_verifier 190 testcase
-Date: Tue, 17 Mar 2026 10:05:06 +0800
-Message-ID: <20260317020506.27797-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1773713452; c=relaxed/simple;
+	bh=6APpjZWVDoYhnyrU2ukjEox3NsHiAR54Lg0paX9dEzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=jG1TNVoxOxBJiCLS5Abn+Hr/Li7/Fa5qwTkxpvlH8uKGUF7uLnCOsHjeCeImeqb2aS/sHg4antwuEA7mlxZFZJkOVUHZkRGjsxTtznggiO/59HNs9kDbEYAbQG+wcTlyVgKO+ooZATJ0HSbqz2gpIJ4sBEWAXsu/WgLWbLat6es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UE5RPQJo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UE5RPQJo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773713450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j4sbtWDw4DJ2JBJ+y1C7vQWjeEXxcelaEAyT7ptHthE=;
+	b=UE5RPQJomup9qv/o0ixPU1NJEEYu2ANfhkR7nG17960EWYiYFNYWFSGULqJ3kUVZKdMG5F
+	HirS7tG/bliMT0vtcM0R/gR31PvIdoJKwbheauiDQuAYxwDz3QliHEfI9RAiSxjkgJBSpD
+	KIhwBUNKQbwddIKTWdemd081/7Wo7pQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-338-3Bd5hukVNg6_8EEIPcheoQ-1; Mon,
+ 16 Mar 2026 22:10:46 -0400
+X-MC-Unique: 3Bd5hukVNg6_8EEIPcheoQ-1
+X-Mimecast-MFC-AGG-ID: 3Bd5hukVNg6_8EEIPcheoQ_1773713443
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF4D218005B6;
+	Tue, 17 Mar 2026 02:10:41 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.155])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B823C1955F19;
+	Tue, 17 Mar 2026 02:10:38 +0000 (UTC)
+Date: Tue, 17 Mar 2026 10:10:34 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: kasan-dev@googlegroups.com, linux-mm@kvack.org, andreyknvl@gmail.com,
+	ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	x86@kernel.org, chris@zankel.net, jcmvbkbc@gmail.com,
+	linux-s390@vger.kernel.org, hca@linux.ibm.com
+Subject: Re: [PATCH v5 09/15] arch/powerpc: don't initialize kasan if it's
+ disabled
+Message-ID: <abi4Gumt0Qr_h-3W@fedora>
+References: <20260225081412.76502-1-bhe@redhat.com>
+ <20260225081412.76502-10-bhe@redhat.com>
+ <71921cca-b890-41c4-93e9-957d3f647ffa@linux.ibm.com>
+ <0bc30137-3f1d-4a4a-8573-8f26866fcc26@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <0bc30137-3f1d-4a4a-8573-8f26866fcc26@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: kRBYJ6twuUONGgKu6NJJMUvMyJGtIKTx0j4-Mwd6v9E_1773713443
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxHOHTtrhpKcVWAA--.34870S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr4DAry7tryrCF4xAFyktFc_yoW8Wrykpw
-	1fAa90kFn5tF17CFy7A39ruFWrWFZ8XryfGF1jkryUZw10yry7JrWxKF17Xr9xZ395tw4S
-	yrySyFW2v3Z5ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8EeHDUUUUU==
 
-CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is set unconditionally for the
-most archs such as x86_64, aarch64, ppc64el and s390x, but this config
-may be not set by users for riscv64 and loongarch64.
+On 03/12/26 at 12:23pm, Christophe Leroy (CS GROUP) wrote:
+> 
+> 
+> Le 12/03/2026 à 12:12, Sourabh Jain a écrit :
+> > 
+> > 
+> > On 25/02/26 13:44, Baoquan He wrote:
+> > > Here, kasan is disabled if specified 'kasan=off' in kernel cmdline.
+> > > 
+> > > This includes 32bit, book3s/64 and book3e/64.
+> > > 
+> > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > Cc: linuxppc-dev@lists.ozlabs.org
+> > > ---
+> > >   arch/powerpc/mm/kasan/init_32.c        | 6 +++++-
+> > >   arch/powerpc/mm/kasan/init_book3e_64.c | 4 ++++
+> > >   arch/powerpc/mm/kasan/init_book3s_64.c | 4 ++++
+> > >   3 files changed, 13 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/powerpc/mm/kasan/init_32.c
+> > > b/arch/powerpc/mm/kasan/ init_32.c
+> > > index 1d083597464f..0ea2a636c992 100644
+> > > --- a/arch/powerpc/mm/kasan/init_32.c
+> > > +++ b/arch/powerpc/mm/kasan/init_32.c
+> > > @@ -141,6 +141,10 @@ void __init kasan_init(void)
+> > >       u64 i;
+> > >       int ret;
+> > > +    /* If KASAN is disabled via command line, don't initialize it. */
+> > > +    if (kasan_arg_disabled)
+> > > +        return;
+> > > +
+> > >       for_each_mem_range(i, &base, &end) {
+> > >           phys_addr_t top = min(end, total_lowmem);
+> > > @@ -170,7 +174,7 @@ void __init kasan_init(void)
+> > >   void __init kasan_late_init(void)
+> > >   {
+> > > -    if (IS_ENABLED(CONFIG_KASAN_VMALLOC))
+> > > +    if (IS_ENABLED(CONFIG_KASAN_VMALLOC) && kasan_enabled())
+> > >           kasan_unmap_early_shadow_vmalloc();
+> > >   }
+> > > diff --git a/arch/powerpc/mm/kasan/init_book3e_64.c
+> > > b/arch/powerpc/mm/ kasan/init_book3e_64.c
+> > > index 0d3a73d6d4b0..fbe4c9a7e460 100644
+> > > --- a/arch/powerpc/mm/kasan/init_book3e_64.c
+> > > +++ b/arch/powerpc/mm/kasan/init_book3e_64.c
+> > > @@ -111,6 +111,10 @@ void __init kasan_init(void)
+> > >       u64 i;
+> > >       pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page),
+> > > PAGE_KERNEL_RO);
+> > > +    /* If KASAN is disabled via command line, don't initialize it. */
+> > > +    if (kasan_arg_disabled)
+> > > +        return;
+> > > +
+> > >       for_each_mem_range(i, &start, &end)
+> > >           kasan_init_phys_region(phys_to_virt(start), phys_to_virt(end));
+> > > diff --git a/arch/powerpc/mm/kasan/init_book3s_64.c
+> > > b/arch/powerpc/mm/ kasan/init_book3s_64.c
+> > > index dcafa641804c..f7906f9ef9be 100644
+> > > --- a/arch/powerpc/mm/kasan/init_book3s_64.c
+> > > +++ b/arch/powerpc/mm/kasan/init_book3s_64.c
+> > > @@ -54,6 +54,10 @@ void __init kasan_init(void)
+> > >       u64 i;
+> > >       pte_t zero_pte = pfn_pte(virt_to_pfn(kasan_early_shadow_page),
+> > > PAGE_KERNEL);
+> > > +    /* If KASAN is disabled via command line, don't initialize it. */
+> > > +    if (kasan_arg_disabled)
+> > > +        return;
+> > > +
+> > >       if (!early_radix_enabled()) {
+> > >           pr_warn("KASAN not enabled as it requires radix!");
+> > >           return;
+> > 
+> > Should we log in the kernel log buffer that KASAN is disabled?
+> > 
+> > Right now, I don't see the kernel advertising the same.
+> 
+> When KASAN is enabled it is advertised with:
+> 
+> 	pr_info("KernelAddressSanitizer initialized (generic)\n");
+> 
+> Isn't the absence of that message enough to understand KASAN is not there ?
 
-There exists failure about misaligned access when executing the testcase
-"./test_verifier 190" when CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS is not
-set on LoongArch due to CONFIG_ARCH_STRICT_ALIGN is set by default.
+Right, that's the way I took when I tested it.
 
-It means that the program has unaligned accesses, but the kernel enables
-the compiler option -mstrict-align to prevent unaligned accesses, so add
-a flag F_NEEDS_EFFICIENT_UNALIGNED_ACCESS into the testcase to avoid the
-failure.
+> 
+> > 
+> > $ dmesg | grep -i kasan
+> > [    0.000000] Kernel command line: BOOT_IMAGE=(ieee1275//vdevice/v-
+> > scsi@30000070/disk@8100000000000000,msdos2)/vmlinuz-7.0.0-rc3+
+> > crashkernel=2G kasan=off
+> > 
+> > Tested this series on powerpc Pseries platform.
+> > So feel free to add:
+> > Tested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Emil Tsalapatis <emil@etsalapatis.com>
-Acked-by: Paul Chaignon <paul.chaignon@gmail.com>
----
-
-v2: Update the commit message and collect R-b and A-b,
-    thanks Emil and Paul.
-
- tools/testing/selftests/bpf/verifier/calls.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/bpf/verifier/calls.c b/tools/testing/selftests/bpf/verifier/calls.c
-index 86887130a0ef..29e57f0e56c3 100644
---- a/tools/testing/selftests/bpf/verifier/calls.c
-+++ b/tools/testing/selftests/bpf/verifier/calls.c
-@@ -1521,6 +1521,7 @@
- 	.errstr = "R0 invalid mem access 'scalar'",
- 	.result_unpriv = REJECT,
- 	.errstr_unpriv = "invalid read from stack R7 off=-16 size=8",
-+	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
- },
- {
- 	"calls: two calls that receive map_value via arg=ptr_stack_of_caller. test1",
--- 
-2.42.0
+Thanks for testing.
 
