@@ -1,145 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB2835B125;
-	Tue, 17 Mar 2026 09:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46B4835F181
+	for <loongarch@lists.linux.dev>; Tue, 17 Mar 2026 09:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773739100; cv=none; b=hf6uH0aur5hMxK1vxi2ocynIcHzJA8QcDMHUC36/3Si+EaZMRUKCAFBoSkI3RJDgdkNjdrkYdjLSvXN8YrURDz7D7/zhEZR0qPc67wJ6pCfBiIw+bebzuDpSYy1o77CttS9ap7aU7RvgCD9+P2wHtjPTZR28+IZ44QFRfV2OSJw=
+	t=1773739766; cv=none; b=oLMWZRDaCxNOJHf3h4eV7l7Zz6NSplq3q5qQ82S/LhdeIU/cGS6Id6F4LosrFcPC6A38AmHdDhHI/YKAvEPCwI/uKhRzftUb6f5QOeyCZBPkFJfrFmavt2b1Akc4oiCEGQH0VeYOT3FNpUkrFaNuU1bXlYLidIVYD+t/Uy0TvYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773739100; c=relaxed/simple;
-	bh=aDNsd04I+L/FbjpEUbNbTUbkn5QKAI4xvdupFjUj+7s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F4F/g+5zPi8+nhsJCTju7NrRSdUoKMQR2yo/rr2MhME9Bp9fjzjx7FADbH32MeqhDpPXlWNl1h55S86FAhdcKpvlQh/gwJWXoYXWVNq25x/JsqoXHHK0NRmBcE3UtPtReh4JRiM8laPLHmYXse51zSkPEYzPOeIFYlQ2f5DdylU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ReNXgdl8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ReNXgdl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B28DC19425;
-	Tue, 17 Mar 2026 09:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773739099;
-	bh=aDNsd04I+L/FbjpEUbNbTUbkn5QKAI4xvdupFjUj+7s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ReNXgdl8wrMR0j9myTw0vxEUXdUH3VmbBFakEpeGWMQyqMywjtPl5Xtqb7CK3MSmU
-	 qEqNhLfqwOJ19vhybs59iW13+uwkx3KQPD1k0k49R2AF01pvm7oM/8bhpwu6TqSVHj
-	 U3AZOviPY7TMOtnC9489kfNRt6LCPMAYNZMv9zltaD4QIxRnuzLjQFi9j3bHLWFv0J
-	 79xnWFh2qUeQUt8ASeRZuMi2RryimNsz37FHt/1I8V/TuTHEJAKzClw6hbiX+LbLFP
-	 6qKpGFIeXpFt2tjpIv6KSmSCUuge4UXMpHfNph3juVSSLwwmFhtiqS83E7BmpwGge3
-	 YHW1tZ2nsZxbg==
-From: "Vincent Mailhol (Arm)" <mailhol@kernel.org>
-Date: Tue, 17 Mar 2026 10:13:45 +0100
-Subject: [PATCH 9/9] arm64: defconfig: remove obsolete assignment to
- SLIM_QCOM_CTRL
+	s=arc-20240116; t=1773739766; c=relaxed/simple;
+	bh=Jk1R7YSGK0Dvja2SjgnDZzQuJF8Un/G/wEMdgQPaGpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kXxbU0bWzFHHzz8eI1N+0e7NWWFUkuiBYnGCZpQJx0/YDhAEqk2jjQsuLCKY8I1EDC35lahsoZvKTWZUCgagX/SoOmuK/lG1xibXIK5bxcdcXByCAocs/UZR7AAbEk/FCFLuW62Qmj5db5fDQ3zYq77aLzO3TcPRD345IB3/hhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxccDrHrlpPeQbAA--.21756S3;
+	Tue, 17 Mar 2026 17:29:15 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxHOHpHrlp3PlWAA--.35253S2;
+	Tue, 17 Mar 2026 17:29:13 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Juergen Gross <jgross@suse.com>
+Subject: [PATCH v2 0/3] LoongArch: KVM: Some small enhanments
+Date: Tue, 17 Mar 2026 17:29:08 +0800
+Message-Id: <20260317092911.1400248-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260317-arm_defconf_cleanup-v1-9-8eecb7fdd24d@kernel.org>
-References: <20260317-arm_defconf_cleanup-v1-0-8eecb7fdd24d@kernel.org>
-In-Reply-To: <20260317-arm_defconf_cleanup-v1-0-8eecb7fdd24d@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
- Mikko Rapeli <mikko.rapeli@linaro.org>, 
- Richard Henderson <richard.henderson@linaro.org>, 
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Frank Li <Frank.Li@nxp.com>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@kernel.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Helge Deller <deller@gmx.de>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>, 
- Heiko Stuebner <heiko@sntech.de>, 
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- Mark Brown <broonie@kernel.org>, Eric Biggers <ebiggers@kernel.org>, 
- Ard Biesheuvel <ardb@kernel.org>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Guenter Roeck <linux@roeck-us.net>, 
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Alexandre Gonzalo <alexandre.gonzalo@arm.com>, 
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-omap@vger.kernel.org, loongarch@lists.linux.dev, 
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-sh@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
- linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev, 
- linux-renesas-soc@vger.kernel.org, linux-parisc@vger.kernel.org, 
- openbmc@lists.ozlabs.org, "Vincent Mailhol (Arm)" <mailhol@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=784; i=mailhol@kernel.org;
- h=from:subject:message-id; bh=aDNsd04I+L/FbjpEUbNbTUbkn5QKAI4xvdupFjUj+7s=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDJk7pft4ZO8tTex4wfvw9YIiq6jtBybw7z0uX/S3IE/wW
- /Gtf8Y5HaUsDGJcDLJiiizLyjm5FToKvcMO/bWEmcPKBDKEgYtTACbS4MLwP4DxBcvGZZMnmd8M
- 9V0kJLhc+/yjhz7H/3y47t6w4o3BuxmMDHdCHOdwaR1uVt49bc6ST6s71+S/Mphb8ebstGlNC1b
- b2fEAAA==
-X-Developer-Key: i=mailhol@kernel.org; a=openpgp;
- fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxHOHpHrlp3PlWAA--.35253S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-The Qcom Slimbus controller driver is not in the kernel tree
-anymore. Clean-up the leftover reference to CONFIG_SLIM_QCOM_CTRL
-which was left in the defconfig.
+There are some small enhancements about LoongArch KVM. There is
+improvement about VM entry path in patch 1 and patch, add pending
+request checking in advance and it is empty at most time.
 
-Fixes: 7cbba32a2d62 ("slimbus: qcom: remove unused qcom controller driver")
-Signed-off-by: Vincent Mailhol (Arm) <mailhol@kernel.org>
+Also change vcpu_is_preempted() from function to macro method, by actual
+benchmark test such as unixbench. It is affected on physical machine
+with function method. With the macro method, only one nop instruction
+is added and there is no parameter parsing, there is no obvious
+performance influence with physical machine.
 ---
- arch/arm64/configs/defconfig | 1 -
- 1 file changed, 1 deletion(-)
+v1 ... v2:
+  1. Add READ_ONCE() with src->preempted to avoid compiler optimization.
+---
+Bibo Mao (3):
+  LoongArch: KVM: Add kvm_request_pending checking in
+    kvm_late_check_requests()
+  LoongArch: KVM: Move host CSR_EENTRY save in context switch
+  LoongArch: KVM: Set vcpu_is_preempted() macro rather than function
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c5e23beeaebf..88951844c203 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1822,7 +1822,6 @@ CONFIG_OPTEE=y
- CONFIG_MUX_GPIO=m
- CONFIG_MUX_MMIO=y
- CONFIG_SLIMBUS=m
--CONFIG_SLIM_QCOM_CTRL=m
- CONFIG_SLIM_QCOM_NGD_CTRL=m
- CONFIG_INTERCONNECT=y
- CONFIG_INTERCONNECT_IMX=y
+ arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++-----
+ arch/loongarch/kernel/paravirt.c       | 15 ++------------
+ arch/loongarch/kvm/vcpu.c              | 24 +++++++++++------------
+ 3 files changed, 36 insertions(+), 30 deletions(-)
 
+
+base-commit: f338e77383789c0cae23ca3d48adcc5e9e137e3c
 -- 
-2.43.0
+2.39.3
 
