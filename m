@@ -1,91 +1,127 @@
-Received: from mx-2023-1.gwdg.de (mx-2023-1.gwdg.de [134.76.10.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EDB3EC2EB;
-	Wed, 18 Mar 2026 15:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC323A451C;
+	Wed, 18 Mar 2026 16:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773849311; cv=none; b=DPnl9cROL9TJzTnfz2xlYZpwkFFrxNTM0gg3HxJeJ2UWOtJ2w/g8FhPAXiHJu/Lte8q/dFftFZU1ttxD/XazWq32hIQbAT1A0sQCnPYbrz7YYcNlXgl/T2MIzUn9DNoRIhtIJ5Bypu9lRA6ev+6RQldlYO7ILO+gOZAms9niEcs=
+	t=1773850948; cv=none; b=WaxkUCM8rX+o8T3aEhCimbUBXrp+ZYxkmfSdt8jugZBDgc/ecW/Y7sGau/1W0m7LAxzWsJGas0nL+CupSU/MU3KbgdG+EsD50ymjezmZRTlUULBl8KVqQ74nNfz8CwywB/avSrHpdsc7e55eOPkKluk3CpvWJZWFcYH/8koTMGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773849311; c=relaxed/simple;
-	bh=Ccj7uU/hgogvAAnwRzXyWCy2N+zdHOpB+0udJVr6c+M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EhVytYe4rPgOp7A9rgNn5AVllaMOSBbJablvW+60Rx/cy5QkA3oy7ICGbwH97aNOMXD5s3euuKPZ2SzWVuIMXTnC09cVUjwutXjfzZtKURhWYqUSp3EjWtxmhhZit8TCX7Rk9SJqG5+5yK3Y1GBPHXUmjvtxPRohVf2Ps1PnKLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cispa.de; spf=pass smtp.mailfrom=cispa.de; dkim=pass (2048-bit key) header.d=cispa.de header.i=@cispa.de header.b=rWsT4cC6; arc=none smtp.client-ip=134.76.10.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cispa.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cispa.de
+	s=arc-20240116; t=1773850948; c=relaxed/simple;
+	bh=FGNSu4DlIfiUMZa5ZkmaJp/QIn2lggE4u2Ndygv6FBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4XoJgBvGk8omxqUHeKagTRikK27RSZd7Ir73QUJ4hDq0GWJkuKj7gI0EyOijKNpwmSGSiNbZhDQ4qDTfckutjc2zJm92VlA6qzqdqRn8PIZArJqbsgkJBOqosQ6VLoYhH8o/apWUXzkegYN5bhVHLMzZN4TK3od8IqG2VYPJsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpeluXyx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cispa.de header.i=@cispa.de header.b="rWsT4cC6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cispa.de;
-	s=2023-rsa; h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:
-	Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=cvGeMvE9YnClpQPYErkfU70z9HT5KgRZdjo4pOsDJLc=; b=rWsT4cC6edBc1LpKfKTnVgLV5y
-	6bpC9KLoJ/W04ipiU0zsPblden+aX/ZN9d55IqlKy/vtFB4qKxlJYdCrc3msXfZ1g0LXyht3KqOrm
-	c/RaG1RCqsO21vcX5PsN+4T5ZCcEGIzOn7ljmmJZt61msWwtvg6RzJdyrJ2nlsehpNibBQdovW7Tl
-	NeA1eOgaH/RAryJLUGGvwcWS/5wG89loT+xRwfJaL8JBhsI3uw/9lcLMW5q4uWauuZP7tRxXa/NpI
-	rCFhlhY6vhP3YyV4ryRes7i4hCuno3plMjJ7q9L0yX2hjAXp6455Iju5vvy/lGVPjrMmJBHibxsTn
-	lT8NAavQ==;
-Received: from mailer.gwdg.de ([134.76.10.26]:60256)
-	by mailer.gwdg.de with esmtp (GWDG Mailer)
-	(envelope-from <lorenz.hetterich@cispa.de>)
-	id 1w2sfG-00EBLl-01;
-	Wed, 18 Mar 2026 16:18:30 +0100
-Received: from mbx19-sub-04.um.gwdg.de ([10.108.142.69] helo=email.gwdg.de)
-	by mailer.gwdg.de with esmtps (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-	(GWDG Mailer)
-	(envelope-from <lorenz.hetterich@cispa.de>)
-	id 1w2sfG-0002oJ-24;
-	Wed, 18 Mar 2026 16:18:30 +0100
-Received: from Laptop.fritz.box (10.250.9.200) by MBX19-SUB-04.um.gwdg.de
- (10.108.142.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.37; Wed, 18 Mar
- 2026 16:18:30 +0100
-From: Lorenz Hetterich <lorenz.hetterich@cispa.de>
-To: <chenhuacai@kernel.org>
-CC: <loongarch@lists.linux.dev>, <linux-kernel@vger.kernel.org>, Lorenz
- Hetterich <lorenz.hetterich@cispa.de>
-Subject: [PATCH 0/2] Fix issues in LoongArch page fault handling
-Date: Wed, 18 Mar 2026 16:18:19 +0100
-Message-ID: <20260318151821.190439-1-lorenz.hetterich@cispa.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpeluXyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC48C19421;
+	Wed, 18 Mar 2026 16:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773850947;
+	bh=FGNSu4DlIfiUMZa5ZkmaJp/QIn2lggE4u2Ndygv6FBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XpeluXyxDsZzF3NAmckdqJwpVkaAqttUopjBMOigcEjrW9PG4hOk9bFNjIu2+1hu1
+	 IcsDTmGhCVATBRixcmNQQhBpayz2AxBxUoh+MbYsjRcLuorNTLiwBf6/k0JgHJn6Wz
+	 raA3nLiznqIL8OBq0mPUTLKCPd5eb3Bv2V64KLPcxM+MrRFRw5yx4UwmNfiJttbMZO
+	 J7HUEZM+SLsx9D5/aRBj0upZmqFXxEgFHzFGt2zHtfm6J4HCe4vfApVE0dgUg61GmQ
+	 0lp53wfP1tgknNDPDCf1MumSabgXnKYpdnqZftaDNWH4frl/QojAulg09IVXxCoww0
+	 l5WkFd3jbD+kg==
+Date: Wed, 18 Mar 2026 09:22:26 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-mips@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH 00/15] exec: Remove AT_VECTOR_SIZE_ARCH from UAPI
+Message-ID: <202603180921.1B52D626@keescook>
+References: <20260302-at-vector-size-arch-v1-0-a11f03ba2ca8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MBX19-GWD-03.um.gwdg.de (10.108.142.56) To
- MBX19-SUB-04.um.gwdg.de (10.108.142.69)
-X-Virus-Scanned: (clean) by clamav
-X-Spam-Level: -
+In-Reply-To: <20260302-at-vector-size-arch-v1-0-a11f03ba2ca8@linutronix.de>
 
-This patch series addresses two issues in LoongArch page fault handling.
+On Mon, Mar 02, 2026 at 01:25:24PM +0100, Thomas Weiﬂschuh wrote:
+> There is nothing userspace can do with this value. In the kernel is
+> always combined with AT_VECTOR_SIZE_BASE, which is not exposed to
+> userspace and also changes from time to time.
+> 
+> Move the symbol to kernel-internal headers.
+> 
+> Meant to be applied through the asm-generic tree.
+> The default recipient list was huge. I trimmed it to only the
+> architecture lists.
 
-First, the page fault handler calls kprobe_page_fault
-with the current thread's trap_nr.
-However, the thread's trap number is not updated prior
-to the call leading to a stale value being used.
+I don't see anything in Debian Code Search that actually uses this
+symbol, so that seems fine. Userspace already parses auxvec looking for
+AT_NULL, so length isn't useful.
 
-Second, the page fault handler never sets the FAULT_FLAG_INSTRUCTION flag.
-This means architecture-independent linux code like
-handle_mm_fault cannot distinguish between read and execute faults.
-While this does not seem to cause immediate problems,
-it is inconsistent with other architectures like x86, arm64, and riscv.
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-Signed-off-by: Lorenz Hetterich <lorenz.hetterich@cispa.de>
-
-Lorenz Hetterich (2):
-  Loongarch: Fix stale value in __do_page_fault()
-  LoongArch: Set FAULT_FLAG_INSTRUCTION in __do_page_fault()
-
- arch/loongarch/include/asm/exception.h | 3 +++
- arch/loongarch/mm/fault.c              | 4 ++++
- 2 files changed, 7 insertions(+)
+> 
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> ---
+> Thomas Weiﬂschuh (15):
+>       MAINTAINERS: exec: Add more auxvec.h variants
+>       auxvec.h: Move AT_VECTOR_SIZE definitions to linux/auxvec.h
+>       asm-generic: add an in-kernel auxvec.h header
+>       ARM: drop custom asm/auxvec.h
+>       x86: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       arm64: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       RISC-V: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       LoongArch: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       s390: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       powerpc: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       MIPS: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       sparc: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       sh: Remove AT_VECTOR_SIZE_ARCH from UAPI
+>       alpha: remove AT_VECTOR_SIZE_ARCH from UAPI
+>       auxvec.h: Drop fallback AT_VECTOR_SIZE_ARCH
+> 
+>  MAINTAINERS                              |  5 +++++
+>  arch/alpha/include/asm/auxvec.h          |  7 +++++++
+>  arch/alpha/include/uapi/asm/auxvec.h     |  8 +++-----
+>  arch/arm/include/asm/auxvec.h            |  1 -
+>  arch/arm64/include/asm/auxvec.h          |  7 +++++++
+>  arch/arm64/include/uapi/asm/auxvec.h     |  6 ++----
+>  arch/loongarch/include/asm/auxvec.h      | 14 ++++++++++++++
+>  arch/loongarch/include/uapi/asm/auxvec.h |  8 +++-----
+>  arch/mips/include/asm/auxvec.h           | 17 +++++++++++++++++
+>  arch/mips/include/uapi/asm/auxvec.h      |  8 +++-----
+>  arch/powerpc/include/asm/auxvec.h        |  7 +++++++
+>  arch/powerpc/include/uapi/asm/auxvec.h   |  6 ++----
+>  arch/riscv/include/asm/auxvec.h          | 13 +++++++++++++
+>  arch/riscv/include/uapi/asm/auxvec.h     |  2 --
+>  arch/s390/include/asm/auxvec.h           |  7 +++++++
+>  arch/s390/include/uapi/asm/auxvec.h      |  6 ++----
+>  arch/sh/include/asm/auxvec.h             |  7 +++++++
+>  arch/sh/include/uapi/asm/auxvec.h        |  8 +++-----
+>  arch/sparc/include/asm/auxvec.h          |  6 ++++++
+>  arch/sparc/include/uapi/asm/auxvec.h     |  8 +++-----
+>  arch/x86/include/asm/auxvec.h            | 12 ++++++++++++
+>  arch/x86/include/uapi/asm/auxvec.h       | 13 +++----------
+>  include/asm-generic/Kbuild               |  1 +
+>  include/asm-generic/auxvec.h             |  7 +++++++
+>  include/linux/auxvec.h                   |  5 +++++
+>  include/linux/mm_types.h                 |  6 ------
+>  26 files changed, 139 insertions(+), 56 deletions(-)
+> ---
+> base-commit: f6b3b0a4c85882ad75bce3b093173203e3f39f28
+> change-id: 20260109-at-vector-size-arch-6e0f2e9ff8b6
+> 
+> Best regards,
+> -- 
+> Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> 
 
 -- 
-2.43.0
-
+Kees Cook
