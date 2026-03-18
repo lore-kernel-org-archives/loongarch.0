@@ -1,118 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3A3376494;
-	Wed, 18 Mar 2026 14:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B533DB62A;
+	Wed, 18 Mar 2026 14:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773843382; cv=none; b=BsfPQwm9YN+q+Ox2Y4wGKiQ5eQIthvUjLm/+pGlHZpA6dUPlqyNtrEtM/TRRcL7LybtBG4pkFWuy3XpEBOCD4ekP1n6AISqh+bMVbygsPyF4nkJmFKWw4ndKTenHfcedzLk+cHcPN7KkYzqOhidcoNHrAFJWalZC6dVwTCTKwFI=
+	t=1773844858; cv=none; b=nZQ/jopyEzpbiq7tWWaVe5u66VSHC51rB+VQUWofsxotJGz+fbcVXN+XkNXz9akVuHWMMKoOzdR9/MI526Y6vc3zYqcrO1GDNhfg4j2YbX71tIqPft24Hclk5bLIARfbWavKKdAsKZMBQm3kweYxLHbr7mQ/OyeiHXLkqtoxON8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773843382; c=relaxed/simple;
-	bh=U+geDLQctOzjU6lpYMPmK82jS4J8nkFiv2wgeZj38Ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jfbr/bQzq/kcUUKDgYlc+MXlRCKWM9FgIUoSY1i/dV6B4lGQSFagt/Yxz6SYcIHTW9XfBNW65uHcQSi8u7ahB9F2Y3sdVguKx94ToUs5k1hl70D9VeSsRwOGwMxpTwOQUh6V0Y7kps5CenC4U/kB8LwrfI6+BOjyuhsvEh6jvS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQWzXqzf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773844858; c=relaxed/simple;
+	bh=QPe6wXvdAXZ1WsVrzW/I1Ea8rZgbDN6tCubJm34Z2So=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OmUOdMzDTBbdp2/SUG8PDRUWe80WdGY6WTrYrIJ55kGncC3z/sULkLzF4fmv0BxO+5S2oGpE/aB2YPaqBURGD4I2ALVrGCHfJpQdvPxPbLFPuK5q71z9DhunGb9CSCWKp3ZPuGHTDDiD6xZmnPoVwGjwKuntxsSUi+byJ8gcVIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngbdPPAx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQWzXqzf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DECC19421;
-	Wed, 18 Mar 2026 14:16:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngbdPPAx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F29C2BC87;
+	Wed, 18 Mar 2026 14:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773843382;
-	bh=U+geDLQctOzjU6lpYMPmK82jS4J8nkFiv2wgeZj38Ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BQWzXqzfHbPJtflPDM7mtNdEmDMy6FXO9ifJZrK+7KoyOczb/euvMyik/yngFsA3H
-	 POyiLnn5BRCtTpwat1gSTWYbJsIzd+8dPeMWKHqYoEnOIY7B6jzNqcfq55y3wch0ue
-	 Cdf+iNoX4wqKmkjqOsWJdiPDDDUvID4lse5/53BId11/QdtwVg1662gxvrYiW6mHBq
-	 deQR887EVev1FfyCTN2usy6SpZATevMxOUPEPlZpZAg+ubP+iNtvbo/TCgVeR9TuxR
-	 JQxS6JOqFymNu/YQudXC2EZ2TRxak41Mre87y2JShHBGYMhRoFZIaQqWjYnn68tvKP
-	 lWGAS1mcQbnPA==
-Date: Wed, 18 Mar 2026 14:16:17 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH 2/4] ASoC: loongson: Combined regmap definitions
-Message-ID: <f68854fb-bb50-4975-b6b1-708aac149993@sirena.org.uk>
-References: <cover.1773821115.git.zhoubinbin@loongson.cn>
- <f6768a2027f788697ed9f7bb161c8564261f02bb.1773821115.git.zhoubinbin@loongson.cn>
+	s=k20201202; t=1773844858;
+	bh=QPe6wXvdAXZ1WsVrzW/I1Ea8rZgbDN6tCubJm34Z2So=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ngbdPPAxWjFSAiZvMouaeaCI+yNsZe/5Ks8XfwK23bbuJ+JwMl7yKx8wLk1AN3mNT
+	 TMgJMbhcekeQl6cZDmfGyt8APhVYsofGCMvUz7w5d4VSUqCEDHmA0FWwHmr908obc6
+	 Ca6I5aFuRQUI1yi4z3tpGvtErfL8rr5nKPdU3xQY3LcDhPRgWknRM3aO06irdxNWBm
+	 2TlgtJ0ipwGbJWHORKvyo/BwbM/qZgR2EjBk9w3ApuIqc+XrUbVpU21pCoE11NYSNq
+	 L1oljmENCVJ0s9YwPt8FVfCFDTEwjEsGgigo721LFalxDK0WN06IRwXdh82jFvxUSk
+	 UiZTvvvmHDYJQ==
+Message-ID: <4620167c-bcfe-414b-85f6-a5d28563b9af@kernel.org>
+Date: Wed, 18 Mar 2026 15:40:45 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="alM+PLk1P/8XtCCf"
-Content-Disposition: inline
-In-Reply-To: <f6768a2027f788697ed9f7bb161c8564261f02bb.1773821115.git.zhoubinbin@loongson.cn>
-X-Cookie: The coast was clear.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/23] mm/vma: add vma_flags_empty(), vma_flags_and(),
+ vma_flags_diff_pair()
+Content-Language: en-US
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@kernel.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Kees Cook <kees@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Dinh Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Michal Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, linux-snps-arc@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
+References: <cover.1773665966.git.ljs@kernel.org>
+ <ede9b0f8a2e2dc72e7fbc1a0ddbeb513364c28a2.1773665966.git.ljs@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <ede9b0f8a2e2dc72e7fbc1a0ddbeb513364c28a2.1773665966.git.ljs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/16/26 14:07, Lorenzo Stoakes (Oracle) wrote:
+> Firstly, add the ability to determine if VMA flags are empty, that is no
+> flags are set in a vma_flags_t value.
+> 
+> Next, add the ability to obtain the equivalent of the bitwise and of two
+> vma_flags_t values, via vma_flags_and().
 
---alM+PLk1P/8XtCCf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Nit: "two values" is vma_flags_and_mask(), while vma_flags_and() takes one
+value and list of flags, no?
 
-On Wed, Mar 18, 2026 at 05:16:36PM +0800, Binbin Zhou wrote:
+> Next, add the ability to obtain the difference between two sets of VMA
+> flags, that is the equivalent to the exclusive bitwise OR of the two sets
+> of flags, via vma_flags_diff_pair().
+> 
+> vma_flags_xxx_mask() typically operates on a pointer to a vma_flags_t
+> value, which is assumed to be an lvalue of some kind (such as a field in a
+> struct or a stack variable) and an rvalue of some kind (typically a
+> constant set of VMA flags obtained e.g. via mk_vma_flags() or equivalent).
+> 
+> However vma_flags_diff_pair() is intended to operate on two lvalues, so use
+> the _pair() suffix to make this clear.
+> 
+> Finally, update VMA userland tests to add these helpers.
+> 
+> We also port bitmap_xor() and __bitmap_xor() to the tools/ headers and
+> source to allow the tests to work with vma_flags_diff_pair().
+> 
+> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
 
-> +static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case LS_I2S_CFG:
-> +	case LS_I2S_CTRL:
-> +	case LS_I2S_RX_DATA:
-> +	case LS_I2S_TX_DATA:
-> +	case LS_I2S_CFG1:
-> +		return true;
-> +	default:
-> +		return false;
-> +	};
-> +}
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-This is the same as what was in the PCI driver but...
-
-> --- a/sound/soc/loongson/loongson_i2s_plat.c
-> +++ b/sound/soc/loongson/loongson_i2s_plat.c
-
-> -static const struct regmap_config loongson_i2s_regmap_config = {
-> -	.reg_bits = 32,
-> -	.reg_stride = 4,
-> -	.val_bits = 32,
-> -	.max_register = 0x14,
-> -	.cache_type = REGCACHE_FLAT,
-> -};
-
-...the platform driver marked all the registers as cacheable.  With
-registers like LS_I2S_CTRL marked as volatile this means we'll stop
-caching the configuration done by set_fmt(), and currently the driver
-uses a regcache sync to restore from suspend so things might get
-confused.
-
-If you're just marking things volatile to stop the warnings and the zero
-defaults are actually fine you can also supply explicit zero defaults
-for all the registers, or switch to a sparse cache type if the
-performance and allocation requirements you have are OK with that.
-
-I think this means there was an issue that got missed in the PCI
-driver..
-
---alM+PLk1P/8XtCCf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmm6s7AACgkQJNaLcl1U
-h9AfiAf+IZUNY2T/y43Qsi2c49Q/84v3I4kxZuHSn2j4UCiDIh6lTsZHeBTBxj1y
-JQ6c46kyq77LOLbY856WW03u3D0IYkWU5f1geU91obKLHCOBmWGvafCkRNDY6ViQ
-SdjTAh2PIVfpCfUticlzsqP20ANHVtfPT3vzO6IEkJ0JLRL9NsIwMPXlQ2XjWL6/
-4ViYUPBjoHN8rA9FHbQGP/LLP/xM2Wxt0stduLAd7NrZkY+Tg9AQAx9lnltu0q0F
-O8o8tUU21XMSqkVb6s9F66mI014ovrSBNq0WSnFjiqv6cm/gu3ChyMwCmEkgAZOZ
-xVbj1JEMQICJaqICTGmkHjQbnyR7JQ==
-=Fgu1
------END PGP SIGNATURE-----
-
---alM+PLk1P/8XtCCf--
