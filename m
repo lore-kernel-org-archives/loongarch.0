@@ -1,344 +1,518 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375792DB7AE;
-	Wed, 18 Mar 2026 17:48:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67DE2459E5;
+	Wed, 18 Mar 2026 21:34:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773856082; cv=none; b=fcmBgbDOhHLb6smXC9y8NOami16Cg1K7hxQQSvGd0EBc+r10c8F72vZi7FXbLSextLkjrfrP/GD23aRV7gSRFX1gIKc1fHn/yW1GBkdNmEHv4Ro/NlS7r+qDvK3JGj30G2W+GwTz0dv+Cm0vkus02GATQE7S1CofdAGmAOwTnHQ=
+	t=1773869699; cv=none; b=AXU1FGGyIyUOfD62bGOSKJnkRyfdW4aH2N/RLvL6zbOesLd5XygNTXclgCj7xF6DyOrEHtVHznQYRbM6YHYfZ7xXK5fC4lVMl45kYH6h/IcpcnbSaRVCpSe9tKY6m7hUieaQDZX+WkJ0JzMRLLuwvYVGdcEd/OAFwaku0/y8G68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773856082; c=relaxed/simple;
-	bh=hq72KfDI9YIjm4UqddYP9KoqIbbXOeXeI0l+6wtPMMo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=X5h0LuMwvML8u1zmaYQO1oUenrhqUxGsvVW4/W6Dbwa4kinB2agVeACG/bsifsyOYa/sPSGWa2j7V30qRv0IN4vTEuZjbKR4Ez2/loEr/E9nvuCe810rCAMkEYI7MkdNYJky29ztjqtgJWkjnqGJ9wkfL6LUyl99XRLR7uzvohM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jzROPGVp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773869699; c=relaxed/simple;
+	bh=Z0sKaJzTVL625RHeAqUXkWbk+PwyTXe6rgvq5zdqspk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=i79fnK4TUyoOo2ETLBkwyanAGfI9/NHJVJ5JTu9I3XH9EQrIxlT4O2JIpFQcaaz668olJzHBUxr0MYp69NxFfXqMCtP5aNEfA6keAXWXnsDE2iJlQeNQPcKRf/TmYDotShTf3kRzMWntt20MMI47lGzu+ivl6X0+zQct4igmvf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enhKUZI1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jzROPGVp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B7CC19421;
-	Wed, 18 Mar 2026 17:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1773856081;
-	bh=hq72KfDI9YIjm4UqddYP9KoqIbbXOeXeI0l+6wtPMMo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jzROPGVpzZ38jRINIUlrs6pYfFojw6d5rE/vbNiFKT2UViwtaZd0lDJtPPR3nnuYS
-	 FF9HJXYzwRihCsjyfkE7AMRmpanGALhCQ9VX7i/W6cYBSjxY2y2GwDDanrboMs/kOZ
-	 kogswLXx++OfebTDVl2acbny9BYIqCrFpBBH+dng=
-Date: Wed, 18 Mar 2026 10:47:59 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-Cc: David Hildenbrand <david@kernel.org>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Kees Cook
- <kees@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, Vineet
- Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian
- Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
- Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
- <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Xu Xin
- <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Michal
- Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>, Stephen Smalley
- <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-um@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- selinux@vger.kernel.org
-Subject: Re: [PATCH v3 00/23] mm/vma: convert vm_flags_t to vma_flags_t in
- vma code
-Message-Id: <20260318104759.92b339d382e7d8d25daea54b@linux-foundation.org>
-In-Reply-To: <cover.1773846935.git.ljs@kernel.org>
-References: <cover.1773846935.git.ljs@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enhKUZI1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426C5C19421;
+	Wed, 18 Mar 2026 21:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773869699;
+	bh=Z0sKaJzTVL625RHeAqUXkWbk+PwyTXe6rgvq5zdqspk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=enhKUZI1jj3ieMY8eJQdZfts0UzqIVpSvb7BNpwyEo6cCVUZVq3lzrQXsNun9R5Xp
+	 zd1CJufEu7ggTl02IPQL02vxNO8ijzyn4l07satVwgFMF1cs1W5f73zso2t4w92x37
+	 nW9Kzojr52ITf2ngCjyoU4hz3kfWo+O19Dc0ZQK0o8gIVL13XBhMcjbxkgr0GHNqIu
+	 hEJuTBn5+/ESMFoAFZ6lP1pdiNYZWtgiw9hZDF+BjOitYdv5OaH9l66Jisr4d8N69E
+	 931It9dGXXcbbh64ru+9TYZtZ9D7WNdsZ1R2sNYyXF+JT++5BxxX6xv1zaHGAsLqPN
+	 Qgvd979U3ojbw==
+Date: Wed, 18 Mar 2026 16:34:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Chengwen Feng <fengchengwen@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Zheyun Shen <szy0127@sjtu.edu.cn>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Wei Huang <wei.huang2@amd.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>,
+	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com,
+	suzuki.poulose@arm.com, ryan.roberts@arm.com,
+	chenl311@chinatelecom.cn, masahiroy@kernel.org,
+	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com,
+	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com,
+	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com,
+	liuyonglong@huawei.com, linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v8 1/3] ACPI: Refactor get_acpi_id_for_cpu() to
+ acpi_get_cpu_uid() on non-x86
+Message-ID: <20260318213458.GA474040@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260318060151.29438-2-fengchengwen@huawei.com>
 
-On Wed, 18 Mar 2026 15:50:11 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
+On Wed, Mar 18, 2026 at 02:01:49PM +0800, Chengwen Feng wrote:
+> Unify CPU ACPI ID retrieval interface across architectures by
+> refactoring get_acpi_id_for_cpu() to acpi_get_cpu_uid() on
+> arm64/riscv/loongarch:
+> - Add input parameter validation
+> - Adjust interface to int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+>   (old: u32 get_acpi_id_for_cpu(unsigned int cpu), no input check)
+> 
+> This refactoring (not a pure rename) enhances interface robustness while
+> preparing for consistent ACPI Processor UID retrieval across all
+> ACPI-enabled platforms. Valid inputs retain original behavior.
+> 
+> Note: Move the ARM64-specific get_cpu_for_acpi_id() implementation to
+>       arch/arm64/kernel/acpi.c to fix compilation errors from circular
+>       header dependencies introduced by the rename.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> ---
+>  arch/arm64/include/asm/acpi.h      | 16 +---------
+>  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
+>  arch/loongarch/include/asm/acpi.h  |  5 ---
+>  arch/loongarch/kernel/acpi.c       |  9 ++++++
+>  arch/riscv/include/asm/acpi.h      |  4 ---
+>  arch/riscv/kernel/acpi.c           | 16 ++++++++++
+>  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
+>  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
+>  drivers/acpi/riscv/rhct.c          |  7 ++++-
+>  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
+>  include/linux/acpi.h               | 13 ++++++++
+>  11 files changed, 122 insertions(+), 43 deletions(-)
 
-> This series converts a lot of the existing use of the legacy vm_flags_t
-> data type to the new vma_flags_t type which replaces it.
+There's a lot going on in this single patch, which makes it hard to
+review.  I think this might make more sense as several patches:
 
-Updated, thanks.  Below is how v3 altered mm.git:
+  - arm64: declare acpi_get_cpu_uid() in arch/arm64/include, implement
+    it, and use in drivers/perf/arm_cspmu/arm_cspmu.c
 
+  - loongarch: declare acpi_get_cpu_uid() in arch/loongarch/include
+    and implement
 
- arch/arm64/include/asm/page.h   |    4 +++
- include/linux/mm_types.h        |   32 +++++++++++++++---------------
- mm/mseal.c                      |    1 
- mm/vma.c                        |   27 +++++++++++++------------
- tools/testing/vma/include/dup.h |   22 +++++++++++---------
- tools/testing/vma/tests/vma.c   |    3 --
- 6 files changed, 48 insertions(+), 41 deletions(-)
+  - riscv: declare acpi_get_cpu_uid() in arch/riscv/include, implement
+    it, and use in rhct.c, riscv/kernel/acpi_numa.c
 
---- a/arch/arm64/include/asm/page.h~b
-+++ a/arch/arm64/include/asm/page.h
-@@ -46,8 +46,12 @@ int pfn_is_map_memory(unsigned long pfn)
- 
- #endif /* !__ASSEMBLER__ */
- 
-+#ifdef CONFIG_ARM64_MTE
- #define VMA_DATA_DEFAULT_FLAGS	append_vma_flags(VMA_DATA_FLAGS_TSK_EXEC, \
- 						 VMA_MTE_ALLOWED_BIT)
-+#else
-+#define VMA_DATA_DEFAULT_FLAGS	VMA_DATA_FLAGS_TSK_EXEC
-+#endif
- 
- #include <asm-generic/getorder.h>
- 
---- a/include/linux/mm_types.h~b
-+++ a/include/linux/mm_types.h
-@@ -871,9 +871,9 @@ typedef struct {
- #define EMPTY_VMA_FLAGS ((vma_flags_t){ })
- 
- /* Are no flags set in the specified VMA flags? */
--static __always_inline bool vma_flags_empty(vma_flags_t *flags)
-+static __always_inline bool vma_flags_empty(const vma_flags_t *flags)
- {
--	unsigned long *bitmap = flags->__vma_flags;
-+	const unsigned long *bitmap = flags->__vma_flags;
- 
- 	return bitmap_empty(bitmap, NUM_VMA_FLAG_BITS);
- }
-@@ -1082,20 +1082,6 @@ static __always_inline vm_flags_t vma_fl
- }
- 
- /*
-- * Helper function which converts a legacy vm_flags_t value to a vma_flags_t
-- * value.
-- *
-- * Will be removed once the conversion to VMA flags is complete.
-- */
--static __always_inline vma_flags_t legacy_to_vma_flags(vm_flags_t flags)
--{
--	vma_flags_t ret;
--
--	ret.__vma_flags[0] = (unsigned long)flags;
--	return ret;
--}
--
--/*
-  * Copy value to the first system word of VMA flags, non-atomically.
-  *
-  * IMPORTANT: This does not overwrite bytes past the first system word. The
-@@ -1110,6 +1096,20 @@ static __always_inline void vma_flags_ov
- }
- 
- /*
-+ * Helper function which converts a legacy vm_flags_t value to a vma_flags_t
-+ * value.
-+ *
-+ * Will be removed once the conversion to VMA flags is complete.
-+ */
-+static __always_inline vma_flags_t legacy_to_vma_flags(vm_flags_t flags)
-+{
-+	vma_flags_t ret = EMPTY_VMA_FLAGS;
-+
-+	vma_flags_overwrite_word(&ret, flags);
-+	return ret;
-+}
-+
-+/*
-  * Copy value to the first system word of VMA flags ONCE, non-atomically.
-  *
-  * IMPORTANT: This does not overwrite bytes past the first system word. The
---- a/mm/mseal.c~b
-+++ a/mm/mseal.c
-@@ -77,6 +77,7 @@ static int mseal_apply(struct mm_struct
- 					       curr_end, &vma_flags);
- 			if (IS_ERR(vma))
- 				return PTR_ERR(vma);
-+			vma_start_write(vma);
- 			vma_set_flags(vma, VMA_SEALED_BIT);
- 		}
- 
---- a/mm/vma.c~b
-+++ a/mm/vma.c
-@@ -905,20 +905,21 @@ static __must_check struct vm_area_struc
- 	vma_start_write(middle);
- 
- 	if (merge_right) {
--		const vma_flags_t next_sticky =
--			vma_flags_and_mask(&next->flags, VMA_STICKY_FLAGS);
-+		vma_flags_t next_sticky;
- 
- 		vma_start_write(next);
- 		vmg->target = next;
-+		next_sticky = vma_flags_and_mask(&next->flags, VMA_STICKY_FLAGS);
- 		vma_flags_set_mask(&sticky_flags, next_sticky);
- 	}
- 
- 	if (merge_left) {
--		const vma_flags_t prev_sticky =
--			vma_flags_and_mask(&prev->flags, VMA_STICKY_FLAGS);
-+		vma_flags_t prev_sticky;
- 
- 		vma_start_write(prev);
- 		vmg->target = prev;
-+
-+		prev_sticky = vma_flags_and_mask(&prev->flags, VMA_STICKY_FLAGS);
- 		vma_flags_set_mask(&sticky_flags, prev_sticky);
- 	}
- 
-@@ -1170,13 +1171,14 @@ int vma_expand(struct vma_merge_struct *
- 	bool remove_next = false;
- 	vma_flags_t sticky_flags =
- 		vma_flags_and_mask(&vmg->vma_flags, VMA_STICKY_FLAGS);
--	const vma_flags_t target_sticky =
--		vma_flags_and_mask(&target->flags, VMA_STICKY_FLAGS);
-+	vma_flags_t target_sticky;
- 	int ret = 0;
- 
- 	mmap_assert_write_locked(vmg->mm);
- 	vma_start_write(target);
- 
-+	target_sticky = vma_flags_and_mask(&target->flags, VMA_STICKY_FLAGS);
-+
- 	if (next && target != next && vmg->end == next->vm_end)
- 		remove_next = true;
- 
-@@ -1192,12 +1194,6 @@ int vma_expand(struct vma_merge_struct *
- 		       target->vm_end > vmg->end, vmg);
- 
- 	vma_flags_set_mask(&sticky_flags, target_sticky);
--	if (remove_next) {
--		const vma_flags_t next_sticky =
--			vma_flags_and_mask(&next->flags, VMA_STICKY_FLAGS);
--
--		vma_flags_set_mask(&sticky_flags, next_sticky);
--	}
- 
- 	/*
- 	 * If we are removing the next VMA or copying from a VMA
-@@ -1214,8 +1210,13 @@ int vma_expand(struct vma_merge_struct *
- 		return ret;
- 
- 	if (remove_next) {
-+		vma_flags_t next_sticky;
-+
- 		vma_start_write(next);
- 		vmg->__remove_next = true;
-+
-+		next_sticky = vma_flags_and_mask(&next->flags, VMA_STICKY_FLAGS);
-+		vma_flags_set_mask(&sticky_flags, next_sticky);
- 	}
- 	if (commit_merge(vmg))
- 		goto nomem;
-@@ -2950,7 +2951,7 @@ out:
- 	if (vma_flags_test(&vma_flags, VMA_LOCKED_BIT))
- 		mm->locked_vm += (len >> PAGE_SHIFT);
- 	if (pgtable_supports_soft_dirty())
--		vma_flags_set(&vma_flags, VMA_SOFTDIRTY_BIT);
-+		vma_set_flags(vma, VMA_SOFTDIRTY_BIT);
- 	return 0;
- 
- mas_store_fail:
---- a/tools/testing/vma/include/dup.h~b
-+++ a/tools/testing/vma/include/dup.h
-@@ -441,9 +441,9 @@ struct vma_iterator {
- #define MAPCOUNT_ELF_CORE_MARGIN	(5)
- #define DEFAULT_MAX_MAP_COUNT	(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
- 
--static __always_inline bool vma_flags_empty(vma_flags_t *flags)
-+static __always_inline bool vma_flags_empty(const vma_flags_t *flags)
- {
--	unsigned long *bitmap = flags->__vma_flags;
-+	const unsigned long *bitmap = flags->__vma_flags;
- 
- 	return bitmap_empty(bitmap, NUM_VMA_FLAG_BITS);
- }
-@@ -775,7 +775,9 @@ static inline bool mm_flags_test(int fla
- static __always_inline void vma_flags_overwrite_word(vma_flags_t *flags,
- 		unsigned long value)
- {
--	*ACCESS_PRIVATE(flags, __vma_flags) = value;
-+	unsigned long *bitmap = flags->__vma_flags;
-+
-+	bitmap[0] = value;
- }
- 
- /*
-@@ -787,7 +789,7 @@ static __always_inline void vma_flags_ov
- static __always_inline void vma_flags_overwrite_word_once(vma_flags_t *flags,
- 		unsigned long value)
- {
--	unsigned long *bitmap = ACCESS_PRIVATE(flags, __vma_flags);
-+	unsigned long *bitmap = flags->__vma_flags;
- 
- 	WRITE_ONCE(*bitmap, value);
- }
-@@ -796,7 +798,7 @@ static __always_inline void vma_flags_ov
- static __always_inline void vma_flags_set_word(vma_flags_t *flags,
- 		unsigned long value)
- {
--	unsigned long *bitmap = ACCESS_PRIVATE(flags, __vma_flags);
-+	unsigned long *bitmap = flags->__vma_flags;
- 
- 	*bitmap |= value;
- }
-@@ -805,7 +807,7 @@ static __always_inline void vma_flags_se
- static __always_inline void vma_flags_clear_word(vma_flags_t *flags,
- 		unsigned long value)
- {
--	unsigned long *bitmap = ACCESS_PRIVATE(flags, __vma_flags);
-+	unsigned long *bitmap = flags->__vma_flags;
- 
- 	*bitmap &= ~value;
- }
-@@ -835,9 +837,9 @@ static __always_inline vm_flags_t vma_fl
-  */
- static __always_inline vma_flags_t legacy_to_vma_flags(vm_flags_t flags)
- {
--	vma_flags_t ret;
-+	vma_flags_t ret = EMPTY_VMA_FLAGS;
- 
--	ret.__vma_flags[0] = (unsigned long)flags;
-+	vma_flags_overwrite_word(&ret, flags);
- 	return ret;
- }
- 
-@@ -1073,8 +1075,8 @@ static __always_inline void vma_clear_fl
- 	vma_flags_clear_mask(&vma->flags, flags);
- }
- 
--#define vma_clear_flags(vmag, ...) \
--	vma_clear_flags_mask(vmag, mk_vma_flags(__VA_ARGS__))
-+#define vma_clear_flags(vma, ...) \
-+	vma_clear_flags_mask(vma, mk_vma_flags(__VA_ARGS__))
- 
- static __always_inline bool vma_desc_test(const struct vm_area_desc *desc,
- 		vma_flag_t bit)
---- a/tools/testing/vma/tests/vma.c~b
-+++ a/tools/testing/vma/tests/vma.c
-@@ -356,10 +356,9 @@ static bool test_vma_flags_clear(void)
- 
- 	/* Cursory check of _mask() variant, as the helper macros imply. */
- 	vma_flags_clear_mask(&flags, mask);
--	vma_flags_clear_mask(&vma.flags, mask);
-+	vma_clear_flags_mask(&vma, mask);
- 	vma_desc_clear_flags_mask(&desc, mask);
- #if NUM_VMA_FLAG_BITS > 64
--	vma_clear_flags_mask(&vma, mask);
- 	ASSERT_FALSE(vma_flags_test_any(&flags, VMA_EXEC_BIT, 64));
- 	ASSERT_FALSE(vma_test_any(&vma, VMA_EXEC_BIT, 64));
- 	ASSERT_FALSE(vma_desc_test_any(&desc, VMA_EXEC_BIT, 64));
-_
+  - x86: declare acpi_get_cpu_uid() in arch/x86/include, implement it,
+    and use in xen
 
+  - declare acpi_get_cpu_uid() in include/linux/acpi.h, remove
+    declarations from arm64, loongarch, riscv, x86
+
+  - convert acpi/pptt.c to use acpi_get_cpu_uid(), remove unused
+    get_acpi_id_for_cpu() from arm64, loongarch, riscv
+
+  - use acpi_get_cpu_uid() in tph.c
+
+Doc nit below.
+
+> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+> index c07a58b96329..106a08556cbf 100644
+> --- a/arch/arm64/include/asm/acpi.h
+> +++ b/arch/arm64/include/asm/acpi.h
+> @@ -114,22 +114,8 @@ static inline bool acpi_has_cpu_in_madt(void)
+>  }
+>  
+>  struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu);
+> -static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+> -{
+> -	return	acpi_cpu_get_madt_gicc(cpu)->uid;
+> -}
+> -
+> -static inline int get_cpu_for_acpi_id(u32 uid)
+> -{
+> -	int cpu;
+> -
+> -	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+> -		if (acpi_cpu_get_madt_gicc(cpu) &&
+> -		    uid == get_acpi_id_for_cpu(cpu))
+> -			return cpu;
+>  
+> -	return -EINVAL;
+> -}
+> +int get_cpu_for_acpi_id(u32 uid);
+>  
+>  static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+>  void __init acpi_init_cpus(void);
+> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> index af90128cfed5..24b9d934be54 100644
+> --- a/arch/arm64/kernel/acpi.c
+> +++ b/arch/arm64/kernel/acpi.c
+> @@ -458,3 +458,33 @@ int acpi_unmap_cpu(int cpu)
+>  }
+>  EXPORT_SYMBOL(acpi_unmap_cpu);
+>  #endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> +
+> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+> +{
+> +	struct acpi_madt_generic_interrupt *gicc;
+> +
+> +	if (cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+> +
+> +	gicc = acpi_cpu_get_madt_gicc(cpu);
+> +	if (!gicc)
+> +		return -ENODEV;
+> +
+> +	*uid = gicc->uid;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
+> +
+> +int get_cpu_for_acpi_id(u32 uid)
+> +{
+> +	u32 cpu_uid;
+> +	int ret;
+> +
+> +	for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
+> +		ret = acpi_get_cpu_uid(cpu, &cpu_uid);
+> +		if (ret == 0 && uid == cpu_uid)
+> +			return cpu;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+> index 7376840fa9f7..eda9d4d0a493 100644
+> --- a/arch/loongarch/include/asm/acpi.h
+> +++ b/arch/loongarch/include/asm/acpi.h
+> @@ -40,11 +40,6 @@ extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
+>  
+>  extern int __init parse_acpi_topology(void);
+>  
+> -static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+> -{
+> -	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+> -}
+> -
+>  #endif /* !CONFIG_ACPI */
+>  
+>  #define ACPI_TABLE_UPGRADE_MAX_PHYS ARCH_LOW_ADDRESS_LIMIT
+> diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+> index 1367ca759468..058f0dbe8e8f 100644
+> --- a/arch/loongarch/kernel/acpi.c
+> +++ b/arch/loongarch/kernel/acpi.c
+> @@ -385,3 +385,12 @@ int acpi_unmap_cpu(int cpu)
+>  EXPORT_SYMBOL(acpi_unmap_cpu);
+>  
+>  #endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> +
+> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+> +{
+> +	if (cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+> +	*uid = acpi_core_pic[cpu_logical_map(cpu)].processor_id;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
+> diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
+> index 6e13695120bc..26ab37c171bc 100644
+> --- a/arch/riscv/include/asm/acpi.h
+> +++ b/arch/riscv/include/asm/acpi.h
+> @@ -61,10 +61,6 @@ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+>  
+>  void acpi_init_rintc_map(void);
+>  struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu);
+> -static inline u32 get_acpi_id_for_cpu(int cpu)
+> -{
+> -	return acpi_cpu_get_madt_rintc(cpu)->uid;
+> -}
+>  
+>  int acpi_get_riscv_isa(struct acpi_table_header *table,
+>  		       unsigned int cpu, const char **isa);
+> diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+> index 71698ee11621..322ea92aa39f 100644
+> --- a/arch/riscv/kernel/acpi.c
+> +++ b/arch/riscv/kernel/acpi.c
+> @@ -337,3 +337,19 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
+>  }
+>  
+>  #endif	/* CONFIG_PCI */
+> +
+> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
+> +{
+> +	struct acpi_madt_rintc *rintc;
+> +
+> +	if (cpu >= nr_cpu_ids)
+> +		return -EINVAL;
+> +
+> +	rintc = acpi_cpu_get_madt_rintc(cpu);
+> +	if (!rintc)
+> +		return -ENODEV;
+> +
+> +	*uid = rintc->uid;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
+> diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
+> index 130769e3a99c..6a2d4289f806 100644
+> --- a/arch/riscv/kernel/acpi_numa.c
+> +++ b/arch/riscv/kernel/acpi_numa.c
+> @@ -37,11 +37,14 @@ static int __init acpi_numa_get_nid(unsigned int cpu)
+>  
+>  static inline int get_cpu_for_acpi_id(u32 uid)
+>  {
+> -	int cpu;
+> +	u32 cpu_uid;
+> +	int ret;
+>  
+> -	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+> -		if (uid == get_acpi_id_for_cpu(cpu))
+> +	for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
+> +		ret = acpi_get_cpu_uid(cpu, &cpu_uid);
+> +		if (ret == 0 && uid == cpu_uid)
+>  			return cpu;
+> +	}
+>  
+>  	return -EINVAL;
+>  }
+> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+> index de5f8c018333..7bd5bc1f225a 100644
+> --- a/drivers/acpi/pptt.c
+> +++ b/drivers/acpi/pptt.c
+> @@ -459,11 +459,14 @@ static void cache_setup_acpi_cpu(struct acpi_table_header *table,
+>  {
+>  	struct acpi_pptt_cache *found_cache;
+>  	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+> -	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	u32 acpi_cpu_id;
+>  	struct cacheinfo *this_leaf;
+>  	unsigned int index = 0;
+>  	struct acpi_pptt_processor *cpu_node = NULL;
+>  
+> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +		return;
+> +
+>  	while (index < get_cpu_cacheinfo(cpu)->num_leaves) {
+>  		this_leaf = this_cpu_ci->info_list + index;
+>  		found_cache = acpi_find_cache_node(table, acpi_cpu_id,
+> @@ -546,7 +549,10 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
+>  				     unsigned int cpu, int level, int flag)
+>  {
+>  	struct acpi_pptt_processor *cpu_node;
+> -	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	u32 acpi_cpu_id;
+> +
+> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +		return -ENOENT;
+>  
+>  	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>  	if (cpu_node) {
+> @@ -614,18 +620,22 @@ static int find_acpi_cpu_topology_tag(unsigned int cpu, int level, int flag)
+>   *
+>   * Check the node representing a CPU for a given flag.
+>   *
+> - * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found or
+> - *	   the table revision isn't new enough.
+> + * Return: -ENOENT if can't get CPU's ACPI Processor UID, the PPTT doesn't
+> + *	   exist, the CPU cannot be found or the table revision isn't new
+> + *	   enough.
+>   *	   1, any passed flag set
+>   *	   0, flag unset
+>   */
+>  static int check_acpi_cpu_flag(unsigned int cpu, int rev, u32 flag)
+>  {
+>  	struct acpi_table_header *table;
+> -	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	u32 acpi_cpu_id;
+>  	struct acpi_pptt_processor *cpu_node = NULL;
+>  	int ret = -ENOENT;
+>  
+> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +		return -ENOENT;
+> +
+>  	table = acpi_get_pptt();
+>  	if (!table)
+>  		return -ENOENT;
+> @@ -651,7 +661,8 @@ static int check_acpi_cpu_flag(unsigned int cpu, int rev, u32 flag)
+>   * in the PPTT. Errors caused by lack of a PPTT table, or otherwise, return 0
+>   * indicating we didn't find any cache levels.
+>   *
+> - * Return: -ENOENT if no PPTT table or no PPTT processor struct found.
+> + * Return: -ENOENT if no PPTT table, can't get CPU's ACPI Process UID or no PPTT
+> + *	   processor struct found.
+>   *	   0 on success.
+>   */
+>  int acpi_get_cache_info(unsigned int cpu, unsigned int *levels,
+> @@ -671,7 +682,9 @@ int acpi_get_cache_info(unsigned int cpu, unsigned int *levels,
+>  
+>  	pr_debug("Cache Setup: find cache levels for CPU=%d\n", cpu);
+>  
+> -	acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id))
+> +		return -ENOENT;
+> +
+>  	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>  	if (!cpu_node)
+>  		return -ENOENT;
+> @@ -780,8 +793,9 @@ int find_acpi_cpu_topology_package(unsigned int cpu)
+>   * It may not exist in single CPU systems. In simple multi-CPU systems,
+>   * it may be equal to the package topology level.
+>   *
+> - * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found
+> - * or there is no toplogy level above the CPU..
+> + * Return: -ENOENT if the PPTT doesn't exist, can't get CPU's ACPI
+> + * Processor UID, the CPU cannot be found or there is no toplogy level
+> + * above the CPU.
+>   * Otherwise returns a value which represents the package for this CPU.
+>   */
+>  
+> @@ -797,7 +811,9 @@ int find_acpi_cpu_topology_cluster(unsigned int cpu)
+>  	if (!table)
+>  		return -ENOENT;
+>  
+> -	acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +		return -ENOENT;
+> +
+>  	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>  	if (!cpu_node || !cpu_node->parent)
+>  		return -ENOENT;
+> @@ -872,7 +888,9 @@ static void acpi_pptt_get_child_cpus(struct acpi_table_header *table_hdr,
+>  	cpumask_clear(cpus);
+>  
+>  	for_each_possible_cpu(cpu) {
+> -		acpi_id = get_acpi_id_for_cpu(cpu);
+> +		if (acpi_get_cpu_uid(cpu, &acpi_id) != 0)
+> +			continue;
+> +
+>  		cpu_node = acpi_find_processor_node(table_hdr, acpi_id);
+>  
+>  		while (cpu_node) {
+> @@ -966,10 +984,13 @@ int find_acpi_cache_level_from_id(u32 cache_id)
+>  	for_each_possible_cpu(cpu) {
+>  		bool empty;
+>  		int level = 1;
+> -		u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +		u32 acpi_cpu_id;
+>  		struct acpi_pptt_cache *cache;
+>  		struct acpi_pptt_processor *cpu_node;
+>  
+> +		if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +			continue;
+> +
+>  		cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>  		if (!cpu_node)
+>  			continue;
+> @@ -1030,10 +1051,13 @@ int acpi_pptt_get_cpumask_from_cache_id(u32 cache_id, cpumask_t *cpus)
+>  	for_each_possible_cpu(cpu) {
+>  		bool empty;
+>  		int level = 1;
+> -		u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +		u32 acpi_cpu_id;
+>  		struct acpi_pptt_cache *cache;
+>  		struct acpi_pptt_processor *cpu_node;
+>  
+> +		if (acpi_get_cpu_uid(cpu, &acpi_cpu_id) != 0)
+> +			continue;
+> +
+>  		cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
+>  		if (!cpu_node)
+>  			continue;
+> diff --git a/drivers/acpi/riscv/rhct.c b/drivers/acpi/riscv/rhct.c
+> index caa2c16e1697..8f3f38c64a88 100644
+> --- a/drivers/acpi/riscv/rhct.c
+> +++ b/drivers/acpi/riscv/rhct.c
+> @@ -44,10 +44,15 @@ int acpi_get_riscv_isa(struct acpi_table_header *table, unsigned int cpu, const
+>  	struct acpi_rhct_isa_string *isa_node;
+>  	struct acpi_table_rhct *rhct;
+>  	u32 *hart_info_node_offset;
+> -	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
+> +	u32 acpi_cpu_id;
+> +	int ret;
+>  
+>  	BUG_ON(acpi_disabled);
+>  
+> +	ret = acpi_get_cpu_uid(cpu, &acpi_cpu_id);
+> +	if (ret != 0)
+> +		return ret;
+> +
+>  	if (!table) {
+>  		rhct = acpi_get_rhct();
+>  		if (!rhct)
+> diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+> index 34430b68f602..ed72c3d1f796 100644
+> --- a/drivers/perf/arm_cspmu/arm_cspmu.c
+> +++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+> @@ -1107,15 +1107,17 @@ static int arm_cspmu_acpi_get_cpus(struct arm_cspmu *cspmu)
+>  {
+>  	struct acpi_apmt_node *apmt_node;
+>  	int affinity_flag;
+> +	u32 cpu_uid;
+>  	int cpu;
+> +	int ret;
+>  
+>  	apmt_node = arm_cspmu_apmt_node(cspmu->dev);
+>  	affinity_flag = apmt_node->flags & ACPI_APMT_FLAGS_AFFINITY;
+>  
+>  	if (affinity_flag == ACPI_APMT_FLAGS_AFFINITY_PROC) {
+>  		for_each_possible_cpu(cpu) {
+> -			if (apmt_node->proc_affinity ==
+> -			    get_acpi_id_for_cpu(cpu)) {
+> +			ret = acpi_get_cpu_uid(cpu, &cpu_uid);
+> +			if (ret == 0 && apmt_node->proc_affinity == cpu_uid) {
+>  				cpumask_set_cpu(cpu, &cspmu->associated_cpus);
+>  				break;
+>  			}
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 4d2f0bed7a06..035094a55f18 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -324,6 +324,19 @@ int acpi_unmap_cpu(int cpu);
+>  
+>  acpi_handle acpi_get_processor_handle(int cpu);
+>  
+> +#ifndef CONFIG_X86
+> +/*
+> + * acpi_get_cpu_uid() - Get ACPI Processor UID of a specified CPU from MADT table
+> + * @cpu: Logical CPU number (0-based)
+> + * @uid: Pointer to store the ACPI Processor UID (valid only on successful return)
+
+This would normally go at the implementation, but it probably does
+make sense here because each arch has its own implementation.
+
+Should start with "/**" to make it kernel-doc though.
+
+Wrap to fit in 78 columns, like other comments in this file.
+
+> + * Return: 0 on successful retrieval (the ACPI Processor ID is stored in *uid);
+> + *         -EINVAL if the CPU number is invalid or out of range;
+> + *         -ENODEV if the ACPI Processor UID for the specified CPU is not found.
+> + */
+> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
+> +#endif
