@@ -1,75 +1,142 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FA737AA6F
-	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 11:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6612D3DA5C0
+	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 13:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773832141; cv=none; b=brNd4R21v3YO2R/ppLie0Y54I20sXLMbQW86NuNUajXbusfqIUJ7j3JTTnVFG4eqKYqtIoWExE+GgbKtbDimLyilD5llrz3E88qWSk0ZijHNtkSU5ihLv2hRHZH7i7GbasJar8FoaMDFKyBI29C32b4ehesdMyUYtcZKaPSRXXs=
+	t=1773842252; cv=none; b=G3OWjAnT6TT8aCe12XHz7fGYchHctDZMzAsGhQhNbihal+3/aVKgG5juU3zTHAm7xtdrClHD30tKJFmClgGa11QCUHog5uGfQlZG8SQFv30SK4oroBF1fokKnw+yM4y3pdoNaeuOyIqBrpzFMsBN9Bw/m83et9Nscs4DdxQE+n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773832141; c=relaxed/simple;
-	bh=Sg+FPLUmwDhB8zAf3K2hm7oMai6uSGhDNOeJKiECIao=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=XS/SAgff7oSBCIoBF8yd7yX+buRxN2kHTfkrYDUWLMNLflax/D9sjQJK60ENMD8biZ7lwGfl67ZPNiTVPVJv9obELvpLwt4suKByezfT5cfyfiQL+ZyO5Rdfn0gSHd/8zz2XyIAh7fsQrb0UWVX/uF3wuHZ1ka280/I4EnzkInU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d81a024022ba11f1a21c59e7364eecb8-20260318
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.11,REQID:e4a61af1-c273-4b6a-aa28-fd672e785170,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:89c9d04,CLOUDID:564890a783ef0e9feb79c896791cd2bf,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|898,TC:nil,Content:0|15|50,EDM:5
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: d81a024022ba11f1a21c59e7364eecb8-20260318
-X-User: lijun01@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1176601763; Wed, 18 Mar 2026 19:08:51 +0800
-From: Li Jun <lijun01@kylinos.cn>
-To: chenhuacai@kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lijun01@kylinos.cn
-Subject: [PATCH] Loongarch: env: fix missing NULL checks for kstrdup
-Date: Wed, 18 Mar 2026 19:08:48 +0800
-Message-Id: <20260318110848.2779003-1-lijun01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1773842252; c=relaxed/simple;
+	bh=gnx7uWxAC+gLJ3Mdq7xy1t6BYYdm0AV9Cqp1s3NHoDM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nvPSSbnymaIfhp/nW4k5GQCdND7iZspd3WnlcsiZSsO7sS1h2C5Hb4kDyhmr//asgwZeOeoJ35Y8ZVmERdAmEsev6Pe6mTNPMKCDWJU+of7GS76DiG2CLTOenOUwRgHdkxmSAmHmAXCMHQ+67RrAMlibWOO5DOO6+nAdl0xhUNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tG0m2dOB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tG0m2dOB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4731FC2BCB4
+	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 13:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773842252;
+	bh=gnx7uWxAC+gLJ3Mdq7xy1t6BYYdm0AV9Cqp1s3NHoDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tG0m2dOB3VF+KR4QsAaWd375AEAaHi6goPXz2Rb0W8MyzyhFIxZxh58hjbc5jMyXW
+	 nHuf6T5X+HnlEOGoVuSeTmSRWkkTp27jM4oCIYekluJE1SI7Cv6HL9TgPdzGi4ngXT
+	 4cu0OV5zU0n/tb17vWImKB40GheDd4ujEFRxbLTd1+Kfq3cKxyOH8pPAC5HwAyDk2t
+	 ma0Oz6/AASaFYBJLVKB0qubSU/WVVM6a/L9X20mEqbir9lsr/kXNxv0R3nWCpVROBZ
+	 yc14qUDHVkASgLhn83xOX5adYu/xkAmSE62gBJ8iGjR/mOcZWqtruibHfnuDGP4bYf
+	 OWvXkCrubRKLQ==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b980b35534eso33481966b.1
+        for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 06:57:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVyWxrAVQIcE2I6WSgQw1qAN+wR3LxIDU1OncPNJyxTNb6McQ63nhVyypwNBth7+9v7SiNvBpqGafU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwAnJpcH835Vb3w+8lLchFvOy5ZOYSua0NC9bGS0GH/wOc5yr/a
+	hr+NZz6PdIvu0X+RNabA/22mU7j+1VE1hm2uhhIqwBSyAYIZGNTTiQg515Yqw6UidHMh52yUYiP
+	2qQxQFw5JEV+ENVEybVb0/00r92XP7eI=
+X-Received: by 2002:a17:907:7244:b0:b93:f24a:127 with SMTP id
+ a640c23a62f3a-b97d6de76a1mr489038566b.24.1773842250621; Wed, 18 Mar 2026
+ 06:57:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
+In-Reply-To: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 18 Mar 2026 21:57:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4OYVB21jH3PSzOi4GPU+t4LY664Yp=CeDhjFRKf9V07Q@mail.gmail.com>
+X-Gm-Features: AaiRm51L7NG5tsCrybND45L_NZrxxhNvUkDMnSa4KOQ_a2hgp11NA1VrtQjPUV4
+Message-ID: <CAAhV-H4OYVB21jH3PSzOi4GPU+t4LY664Yp=CeDhjFRKf9V07Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add support for LS7A LPC IRQ for MIPS Loongson systems
+To: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Cc: Thomas Gleixner <tglx@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Icenowy Zheng <uwu@icenowy.me>, Yao Zi <me@ziyao.cc>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes potential kernel oops during early boot when memory
-allocation fails while parsing CPU model from device tree.
+Hi, Icenowy,
 
-Signed-off-by: Li Jun <lijun01@kylinos.cn>
----
- arch/loongarch/kernel/env.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Sun, Mar 15, 2026 at 12:28=E2=80=AFAM Icenowy Zheng <zhengxingda@iscas.a=
+c.cn> wrote:
+>
+> This patchset tries to add support for Loongson 7A1000 PCH's LPC
+> interrupt controller to MIPS-based Loongson systems.
+>
+> LPC, from software's perspective of view, is just ISA, so the interrupts
+> should be handled as legacy ones occupying the lowest 0-15 IRQ numbers.
+> Despite the current PCH LPC driver for ACPI-based LoongArch Loongson
+> machines handled it, the setup is fragile and depends on its specific
+> setup sequence (allocating the LPC IRQs first, and then allocate the
+> parent IRQ at PCH PIC). The refactor of extracting parent IRQ allocation
+> breaks this fragile sequence, so the first two commits is created to
+> address this issue (by reserving ISA interrupts from the dynamic
+> allocation space).
+>
+> Then the remaining commits are just adding OF(DT) based initialization
+> of PCH LPC interrupt controller, like what happened on PCH PIC.
+>
+> Tested on a Haier Boyue G51 system with legacy i8042 keyboard/mouse as
+> integrated ones.
+>
+> Changes in v3:
+> - Override arch_dynirq_lower_bound() in MIPS Loongson64 / LoongArch
+>   instead of modifying the global version of function.
+> - Added Rob's R-b to the binding patch.
+>
+> Changes in v2:
+> - Rebased on top of `irq-drivers-2026-02-09` tag.
+> - Compatible changed to `loongson,ls7a-lpc` .
+> - Merged the patch for conditionally build of ACPI code to the patch
+>   introducing OF code.
+> - Sorted function variable definitions.
+> - Reworded some commit messages as Thomas Glexiner suggests.
+> - Added __init to the LPC irqchip OF initialization code to prevent
+>   section mismatch.
+>
+> Icenowy Zheng (8):
+>   MIPS: loongson64: Override arch_dynirq_lower_bound to reserve LPC IRQs
+>   LoongArch: Override arch_dynirq_lower_bound to reserve LPC IRQs
+Use upper case for the first word, which means....
 
-diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-index 841206fde3ab..8d331e4f1c9a 100644
---- a/arch/loongarch/kernel/env.c
-+++ b/arch/loongarch/kernel/env.c
-@@ -49,6 +49,8 @@ static int __init init_cpu_fullname(void)
- 	ret = of_property_read_string(root, "model", &model);
- 	if (ret == 0) {
- 		cpuname = kstrdup(model, GFP_KERNEL);
-+		if (!cpuname)
-+			return -ENOMEM;
- 		loongson_sysconf.cpuname = strsep(&cpuname, " ");
- 	}
- 	of_node_put(root);
--- 
-2.25.1
+>   dt-bindings: interrupt-controller: add LS7A PCH LPC
+s/add/Add/g
 
+>   irqchip/loongson-pch-lpc: extract non-ACPI-related code from ACPI init
+s/extract/Extract/g
+
+>   irqchip/loongson-pch-lpc: add OF init code
+s/add/Add/g
+
+>   irqchip/loongson-pch-lpc: enable building on MIPS Loongson64
+s/enable/Enable/g
+
+>   MIPS: Loongson64: dts: sort nodes
+s/sort/Sort/g
+
+>   MIPS: Loongson64: dts: add node for LS7A PCH LPC
+s/add/Add/g
+
+In addition, I think the last two patches should be in another series
+because they won't go to the irqchip tree.
+
+Huacai
+
+>
+>  .../loongson,pch-lpc.yaml                     | 52 +++++++++++
+>  arch/loongarch/kernel/irq.c                   |  6 ++
+>  arch/mips/boot/dts/loongson/ls7a-pch.dtsi     | 17 +++-
+>  arch/mips/loongson64/init.c                   |  6 ++
+>  drivers/irqchip/Kconfig                       |  1 -
+>  drivers/irqchip/irq-loongson-pch-lpc.c        | 87 ++++++++++++++-----
+>  6 files changed, 144 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controlle=
+r/loongson,pch-lpc.yaml
+>
+> --
+> 2.52.0
+>
