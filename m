@@ -1,231 +1,103 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FE926E6F2
-	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 04:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8FA186329
+	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 04:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773806664; cv=none; b=DhFr0P8+OuOT18i4jpVPQ+W/C9HJwzledD7tQoIC10VV6zm4BkL0qmqykRRTx/ga0jTOxjaSMdIqTyj+9crrXwAwYKOQpfGLvkuToL0t0ZqAgldB7Pmz0UCX63FsK26sBFxlTL8cpYMmnLKqtwzLa2NfUPMhrc4iVIn5Il95lCE=
+	t=1773807686; cv=none; b=hl8UKuRHhTZBHWtYzcNhF9u5+JO+jRiy4oAQqil9KvU4ePFdXsbZhR0U2jk3qtLCZDqgDm8ZpjzOET4RVMMvYxkqTuo7wsjEN+EawbWBGrfSTxNzGiNdSRHgUJtDsRjEVrv3vj+obaqub115t0XZ6JLeHd5uJRSKDOkhe+l27cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773806664; c=relaxed/simple;
-	bh=Dt5Oam7a8ddqq3BfktyQN9kIOpoRHtuXRpWswvc3GAs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=NafaOv5hGHhME4ucsnmRn/ysMfL6+rYPn0r5TRw6lkau53JCKFLv4MNaBd5IjFF3UUDh7Gq38isuDhNKdnZd/k3qtblDDBCVy0+UyqFq+WtHJMEBO0DqAtf/hwGesms1fKcoMGGb5VcB7KZUJcGoMyrsu934ND6wxvFm+QZeL10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tgKSLKH3; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=tgKSLKH3; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tgKSLKH3";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="tgKSLKH3"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=XZKg5HSzqw961TE78Y1nHw4DDOpQ3KVITP3+xW3FZMU=;
-	b=tgKSLKH3FRXeuZflU+YmXS6o6Nivgvm0hUbiV+64ojQwdlRuj748sRRNImMTKVJ0zSqQ4mFD9
-	vyWfROqFApjH8PJl/yObRR3ZUwmsw9hG0AiTaunIlNM5kOdnbqS/nXO8pxQZ0gDOyc2ERqq/FSD
-	tUkS7f1ubwBj8AMZrIXLpUM=
-Received: from canpmsgout03.his.huawei.com (unknown [172.19.92.159])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4fbFYS3XNTz1BFww
-	for <loongarch@lists.linux.dev>; Wed, 18 Mar 2026 12:03:24 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=XZKg5HSzqw961TE78Y1nHw4DDOpQ3KVITP3+xW3FZMU=;
-	b=tgKSLKH3FRXeuZflU+YmXS6o6Nivgvm0hUbiV+64ojQwdlRuj748sRRNImMTKVJ0zSqQ4mFD9
-	vyWfROqFApjH8PJl/yObRR3ZUwmsw9hG0AiTaunIlNM5kOdnbqS/nXO8pxQZ0gDOyc2ERqq/FSD
-	tUkS7f1ubwBj8AMZrIXLpUM=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fbFSC5sDgzpTMG;
-	Wed, 18 Mar 2026 11:58:51 +0800 (CST)
-Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 19BFD40569;
-	Wed, 18 Mar 2026 12:04:15 +0800 (CST)
-Received: from [10.67.121.161] (10.67.121.161) by
- kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Mar 2026 12:04:14 +0800
-Message-ID: <0744ee77-78ee-4e3d-9f0d-e8fe44be1c28@huawei.com>
-Date: Wed, 18 Mar 2026 12:04:13 +0800
+	s=arc-20240116; t=1773807686; c=relaxed/simple;
+	bh=CUaagZUYqxKuvt+PwFg+8gtaESU8LG/Itlmlshi19mI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fb+5NS/LxcOWg+cYihHBFUma6mMnFr2ybDHbTPXHlKBEsx63bg1AsDp/cdUGmcpVF4MZ3B8MbpEvNUm2bUVpA0Gn3aW4CvEDGqNzJYup/OmdBUSlx9lz6R/qYUlvkMFC90ysXb0FLT+d12u5xCEPqevtKvZ8SDVAFJkgbXAbH6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.17])
+	by gateway (Coremail) with SMTP id _____8CxJME_KLppSTUcAA--.34725S3;
+	Wed, 18 Mar 2026 12:21:19 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.17])
+	by front1 (Coremail) with SMTP id qMiowJBxxuI6KLppL4FXAA--.37122S2;
+	Wed, 18 Mar 2026 12:21:17 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v7.0-rc5
+Date: Wed, 18 Mar 2026 12:20:56 +0800
+Message-ID: <20260318042101.626343-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] ACPI: Refactor get_acpi_id_for_cpu() to
- acpi_get_cpu_uid() on non-x86
-From: fengchengwen <fengchengwen@huawei.com>
-To: Jeremy Linton <jeremy.linton@arm.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
-	<will@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
-CC: <punit.agrawal@oss.qualcomm.com>, <guohanjun@huawei.com>,
-	<suzuki.poulose@arm.com>, <ryan.roberts@arm.com>, <chenl311@chinatelecom.cn>,
-	<masahiroy@kernel.org>, <wangyuquan1236@phytium.com.cn>,
-	<anshuman.khandual@arm.com>, <heinrich.schuchardt@canonical.com>,
-	<Eric.VanTassell@amd.com>, <jonathan.cameron@huawei.com>,
-	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
-	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
-	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <20260313022144.40942-1-fengchengwen@huawei.com>
- <20260313022144.40942-2-fengchengwen@huawei.com>
- <e4b0aefa-7108-47b4-ad5d-d62d385b8f33@arm.com>
- <c9eb7f53-db46-4229-b9ef-8faa1138aca7@huawei.com>
-Content-Language: en-US
-In-Reply-To: <c9eb7f53-db46-4229-b9ef-8faa1138aca7@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemk500009.china.huawei.com (7.202.194.94)
+X-CM-TRANSID:qMiowJBxxuI6KLppL4FXAA--.37122S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryDCw17urWxJF4xXw48KrX_yoW8AFWxpr
+	13ur9xJr4UGryfX3W3t345Wr45JF48K34IqF4akw1rCFyUZr1UXr4xXry8XFyDJ3yYqr10
+	qF4rJw1jgF1DJacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU90b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jepB-UUUUU=
 
-Sorry to self-reply
+The following changes since commit f338e77383789c0cae23ca3d48adcc5e9e137e3c:
 
-On 3/18/2026 10:02 AM, fengchengwen wrote:
-> Hi,
-> 
-> On 3/18/2026 5:38 AM, Jeremy Linton wrote:
->> Hi,
->>
->> Lets try this again, since the last one looks like it got caught in the moderation system and wasn't quite right anyway.
->>
->> On 3/12/26 9:21 PM, Chengwen Feng wrote:
->>> Unify CPU ACPI ID retrieval interface across architectures by
->>> refactoring get_acpi_id_for_cpu() to acpi_get_cpu_uid() on
->>> arm64/riscv/loongarch:
->>> - Add input parameter validation
->>> - Adjust interface to int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
->>>    (old: u32 get_acpi_id_for_cpu(unsigned int cpu), no input check)
->>>
->>> This refactoring (not a pure rename) enhances interface robustness while
->>> preparing for consistent ACPI Processor UID retrieval across all
->>> ACPI-enabled platforms. Valid inputs retain original behavior.
->>>
->>> Note: Move the ARM64-specific get_cpu_for_acpi_id() implementation to
->>>        arch/arm64/kernel/acpi_numa.c to fix compilation errors from
->>>        circular header dependencies introduced by the rename.
->>>
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
->>> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
->>> ---
->>>   arch/arm64/include/asm/acpi.h      | 16 +---------
->>>   arch/arm64/kernel/acpi.c           | 16 ++++++++++
->>>   arch/arm64/kernel/acpi_numa.c      | 14 +++++++++
->>>   arch/loongarch/include/asm/acpi.h  |  5 ---
->>>   arch/loongarch/kernel/acpi.c       |  9 ++++++
->>>   arch/riscv/include/asm/acpi.h      |  4 ---
->>>   arch/riscv/kernel/acpi.c           | 16 ++++++++++
->>>   arch/riscv/kernel/acpi_numa.c      |  9 ++++--
->>>   drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
->>>   drivers/acpi/riscv/rhct.c          |  7 ++++-
->>>   drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
->>>   include/linux/acpi.h               | 13 ++++++++
->>>   12 files changed, 122 insertions(+), 43 deletions(-)
->>>
->>> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
->>> index c07a58b96329..106a08556cbf 100644
->>> --- a/arch/arm64/include/asm/acpi.h
->>> +++ b/arch/arm64/include/asm/acpi.h
->>> @@ -114,22 +114,8 @@ static inline bool acpi_has_cpu_in_madt(void)
->>>   }
->>>     struct acpi_madt_generic_interrupt *acpi_cpu_get_madt_gicc(int cpu);
->>> -static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
->>> -{
->>> -    return    acpi_cpu_get_madt_gicc(cpu)->uid;
->>> -}
->>> -
->>> -static inline int get_cpu_for_acpi_id(u32 uid)
->>> -{
->>> -    int cpu;
->>> -
->>> -    for (cpu = 0; cpu < nr_cpu_ids; cpu++)
->>> -        if (acpi_cpu_get_madt_gicc(cpu) &&
->>> -            uid == get_acpi_id_for_cpu(cpu))
->>> -            return cpu;
->>>   -    return -EINVAL;
->>> -}
->>> +int get_cpu_for_acpi_id(u32 uid);
->>>     static inline void arch_fix_phys_package_id(int num, u32 slot) { }
->>>   void __init acpi_init_cpus(void);
->>> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
->>> index af90128cfed5..f3866606fc46 100644
->>> --- a/arch/arm64/kernel/acpi.c
->>> +++ b/arch/arm64/kernel/acpi.c
->>> @@ -458,3 +458,19 @@ int acpi_unmap_cpu(int cpu)
->>>   }
->>>   EXPORT_SYMBOL(acpi_unmap_cpu);
->>>   #endif /* CONFIG_ACPI_HOTPLUG_CPU */
->>> +
->>> +int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
->>> +{
->>> +    struct acpi_madt_generic_interrupt *gicc;
->>> +
->>> +    if (cpu >= nr_cpu_ids)
->>> +        return -EINVAL;
->> If this actually happens, its probably useful to know it with a pr_warn/pr_warn_once.> +
-> 
-> The function maybe called from userspace which on later roadmap, so I prefer not add
-> warning or error here.
-> BTW: the function will return -EINVAL, so caller could know the case.
-> 
->>> +    gicc = acpi_cpu_get_madt_gicc(cpu);
->>> +    if (!gicc)
->> I think this check is redundant because we can't have logical cpu's that aren't in the cpu_possible() list, which on arm64 doesn't AFAIK have holes. In the past this might have made sense if we weren't maintaining a copy of the gicc structure from the MADT for each core.> +        return -ENODEV;
-> 
-> This commit will backport to stable branch at least 6.6. So I think it's OK to keep it.
-> 
->>> +
->>> +    *uid = gicc->uid;
->>> +    return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
->>> diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
->>> index 2465f291c7e1..41d1e46a4338 100644
->>> --- a/arch/arm64/kernel/acpi_numa.c
->>> +++ b/arch/arm64/kernel/acpi_numa.c
->>> @@ -34,6 +34,20 @@ int __init acpi_numa_get_nid(unsigned int cpu)
->>>       return acpi_early_node_map[cpu];
->>>   }
->>>   +int get_cpu_for_acpi_id(u32 uid)
->>> +{
->>> +    u32 cpu_uid;
->>> +    int ret;
->>> +
->>> +    for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
->>> +        ret = acpi_get_cpu_uid(cpu, &cpu_uid);
->> This might have been a simplification, but since we are basically doing a for_each_possible_cpu(cpu) and every possible cpu will have a GICC entry before it becomes 'possible' there will be a UID, so all the error checking AFAIK, is impossible here.> +        if (ret == 0 && uid == cpu_uid)
-> 
-> I prefer to keep the current impl, as it may catch future error.
-> 
->>> +            return cpu;
->>> +    }
->>> +
->>> +    return -EINVAL;
->>> +}
->>> +
->> I also moved this below acpi_get_cpu_uid() in acpi.c and I don't see the a forward error issue you mentioned. It seems to me that they should be kept close to each other since they are basically inverses of each other.
-> 
-> As long as you ensure that it is not placed in asm/acpi.h, that's fine.
-> So it's OK to move this function to acpi.c
-> 
-> But I just checked the callers of this function again and found that there are
-> all in acpi_numa.c, so I will now add the static keyword to this function and
-> make it an internal function.
+  Linux 7.0-rc4 (2026-03-15 13:52:05 -0700)
 
-I just found drivers/irqchip/irq-gic-v3.c has a call for get_cpu_for_acpi_id,
-so We should not marking as static.
+are available in the Git repository at:
 
-According to your advise, I moved it in acpi.c in v8.
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.0-1
 
-Thanks
+for you to fetch changes up to c252c12d1f55bd5737e3b8e7839914ccdc7a701c:
 
-> 
-> Thanks
-> 
->>
-> 
+  LoongArch: KVM: Fix typo issue in kvm_vm_init_features() (2026-03-16 10:36:02 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v7.0-rc5
+
+Only use SC.Q when supported by the assembler to fix a build failure,
+fix calling smp_processor_id() in preemptible code, make a BPF helper
+arch_protect_bpf_trampoline() return 0 to fix a kernel memory access
+failure, and fix a typo issue in kvm_vm_init_features().
+----------------------------------------------------------------
+Bibo Mao (1):
+      LoongArch: KVM: Fix typo issue in kvm_vm_init_features()
+
+Thomas Weißschuh (1):
+      LoongArch: Only use SC.Q when supported by the assembler
+
+Tiezhu Yang (4):
+      LoongArch: Give more information if kmem access failed
+      LoongArch: Check return values for set_memory_{rw,rox}
+      LoongArch: No need to flush icache if text copy failed
+      LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0
+
+Xi Ruoyao (1):
+      LoongArch: Fix calling smp_processor_id() in preemptible code
+
+ arch/loongarch/Kconfig               |  3 +++
+ arch/loongarch/include/asm/cmpxchg.h |  5 +++++
+ arch/loongarch/include/asm/uaccess.h | 14 ++++++++++++--
+ arch/loongarch/kernel/inst.c         | 31 +++++++++++++++++++++++++------
+ arch/loongarch/kvm/vm.c              |  4 ++--
+ arch/loongarch/net/bpf_jit.c         | 11 +++++++++++
+ 6 files changed, 58 insertions(+), 10 deletions(-)
 
