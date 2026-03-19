@@ -1,109 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8A718DF9D
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391F03AB268
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773909058; cv=none; b=A5STp+kaRz6zsz0UANX7lIErEwSCz+js3WIF/I4mdzMM88/i3JXslnkgmgYdiF+yEreXEoNpF3YFfzRv5geXntt6vIfUseoa+tyi6iaFLeUIfQ8p8wltogoX9h9voMY6GZ84qVxrn2GZ1vd/JvtQXUZlmesKOkV6u4qMIxFxYw8=
+	t=1773909071; cv=none; b=GUXK//SwkBcjtMw3eY3YcF5CyXabsrJUr/VSUv0WdQlRucJ2PcY5I2WmdOji+qxLPU4oMqRGo8OytDR1ASqbjtsCp5RmKUgfdV2n/xMltRlHnwZ9JTobN5pOOVZwsEX+NgeUwvh/kNxdi1c/pTyMBkprCOiifIZJv5LhyzSTezg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773909058; c=relaxed/simple;
-	bh=/q62PxMTwT8xTvQD9mbJt20RvM+TuFD0D4p633toAWk=;
+	s=arc-20240116; t=1773909071; c=relaxed/simple;
+	bh=6H5G1xC4Zr8Ca4p5PccYaX/LOaFBKLKfhmTDxX4QWv0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuqTrtdaSHYr9Fk67usr8PCoDQx4IkbfJS7RCQFOTE/fGkPszz+JinvocJpbzjc+uEz1je2iHfMrOOOgF8LJurmbX5wRg9ZtsE+6USycKWQbbiFu/yQiGVdp24vdkPaccy3Qdkp+0+qmN2bvPA6DOplSoxRQZAT0no7z7nQ5Fvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2DZVNKl; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=G4su8Xz5eNR7G4R9RDms2hidlNh5U36xvPfcXkbWZkjovH1fHodDPler6bVC6rWTAcetlsVYeD4xuo2tbFug2fu5CDmVoUZYABFUP6aePiNdDydC3aBL3qdx/bJhbYNbgIJLGp8YDie30LQFWXvTVEK6hGnF1qpdH5y7SgOB140=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scUJLJNu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2DZVNKl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF46C19424
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:30:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scUJLJNu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A35C19425
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773909058;
-	bh=/q62PxMTwT8xTvQD9mbJt20RvM+TuFD0D4p633toAWk=;
+	s=k20201202; t=1773909070;
+	bh=6H5G1xC4Zr8Ca4p5PccYaX/LOaFBKLKfhmTDxX4QWv0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t2DZVNKlagBCDHbonduEI4J7GfFxGmiA3e/ZNhFT3tX28YkjFfQkV9a8tJa8NqjxX
-	 Za9PBJXmnxm62V9e2/Andq4Wiwq8g5jhmDuQlNxdJ5QvFGKqci/WkqUuVmDxLpPeHw
-	 HfhC0QOxE97mOmaChLRA8GGVxDBTIXFjZ4lbfCfUCg24JjuwGTrpaNijicHIw3LsSP
-	 XNEO0WK4fqQkNpvryhx+5DeW+dM80tNLWzXF5QnCtEYOERIZAWoSJslrBKsYQqHSz1
-	 A1altDBa3Jf6bfreah2mC82tk01hOFOZYXqj/4YSrKn8CwkKbXU654S7DITkzCsTwz
-	 XhWpy+ZsGMb1Q==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9382e59c0eso101335966b.0
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 01:30:58 -0700 (PDT)
-X-Gm-Message-State: AOJu0YyLc+gxnk6iLXn/qs1V5oUslerUv9ZreEoOsFP+0KwyWivLmzNR
-	AicDA9r8LY9J++Sndq50iBnLfyy7epGUzQ3C6VozW6y4BKpmyrjrhBmTy4h1ouvEEC1ZRnfWkvI
-	SpMsoefnN+m5LYHpvsXRJ7TKr1lRsS5c=
-X-Received: by 2002:a17:907:a0e:b0:b97:f28c:fea6 with SMTP id
- a640c23a62f3a-b97f486677amr378433166b.8.1773909057032; Thu, 19 Mar 2026
- 01:30:57 -0700 (PDT)
+	b=scUJLJNuJQf06BIu8DptKH2trEJME6EGn7rOtMVhRpNoko1kzmbrmA8+Ufed/T4Zz
+	 8LwC/1KmVTP2n+qpfseFUlR5Umf+3DXMaI7/D//mVx5AF06QMF4qxLQlijiTGyuJsw
+	 NcnFsQ9yeTeFbLR008u7qblLXaNAdfGErhJDy/AeXNF4mvG6bfP9Q4/iiDPbFAYK0q
+	 2DaQfejrmvUEDj9DxXEHJnbMuTf6LGMNIarqeZAXYPJn7hqmMDYYJVI3vw0tEhVh0A
+	 fbDUhd/040KFgesKRJIS+Ayn2fMhXWBaiPBDAhFpC6pNBSJ9BilLXrhs4d+Luz5y6u
+	 mWYREYM+NfO3A==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so1259053a12.2
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 01:31:10 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxw7xrf6RTkix2cOKi0Pv0vgZxlMJYWyC4vlYjhOP9YddGK9O8d
+	te4HIbQG/ozAjjWo43FOaYd2dEdBxzqbfZICewr7T7wwLOkc7YWWQc2M4EpyQ5TV7ftL24j6ngo
+	C7w7oIhRXhucBfh2JSQDJ5Jf5Xi8aGXM=
+X-Received: by 2002:a17:907:3cc1:b0:b97:a459:b66a with SMTP id
+ a640c23a62f3a-b97f49248e8mr406602266b.25.1773909069427; Thu, 19 Mar 2026
+ 01:31:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260318151821.190439-1-lorenz.hetterich@cispa.de> <20260318151821.190439-3-lorenz.hetterich@cispa.de>
-In-Reply-To: <20260318151821.190439-3-lorenz.hetterich@cispa.de>
+References: <20260319055801.4187615-1-lijun01@kylinos.cn>
+In-Reply-To: <20260319055801.4187615-1-lijun01@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Mar 2026 16:30:50 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H42kvs79-bTR+E-89Lthb9F=o8P4_q7ZYwMgEyjywT+kw@mail.gmail.com>
-X-Gm-Features: AaiRm50P3vZqGEH5Ll1n0yExG9Wjsm4WR0u16113GSWzGvK5_HqpZXZrni-zGeM
-Message-ID: <CAAhV-H42kvs79-bTR+E-89Lthb9F=o8P4_q7ZYwMgEyjywT+kw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] LoongArch: Set FAULT_FLAG_INSTRUCTION in __do_page_fault()
-To: Lorenz Hetterich <lorenz.hetterich@cispa.de>
+Date: Thu, 19 Mar 2026 16:31:02 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6Q2U2eNQFZmrOz9qATJhd3ri2SDpfA2ZHkazx5vLCxtw@mail.gmail.com>
+X-Gm-Features: AaiRm52kvMg_F97WYf8pmPx9vD0a3fvOnALu5y3s1UeKvij-mrzfghW_CBsavlo
+Message-ID: <CAAhV-H6Q2U2eNQFZmrOz9qATJhd3ri2SDpfA2ZHkazx5vLCxtw@mail.gmail.com>
+Subject: Re: [PATCH v3] Loongarch: env: fix missing NULL checks for kstrdup
+To: Li Jun <lijun01@kylinos.cn>
 Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Lorenz,
+Hi, Jun,
 
-On Wed, Mar 18, 2026 at 11:18=E2=80=AFPM Lorenz Hetterich
-<lorenz.hetterich@cispa.de> wrote:
+Please replace Loongarch with LoongArch, and...
+
+On Thu, Mar 19, 2026 at 1:58=E2=80=AFPM Li Jun <lijun01@kylinos.cn> wrote:
 >
-> The page-fault handler never sets the FAULT_FLAG_INSTRUCTION flag.
+> 1.Replacing `of_find_node_by_path("/")` with `of_root` avoids multiple
+> calls to `of_node_put()`.
+> 2.Fixes potential kernel oops during early boot when memory
+> allocation fails while parsing CPU model from device tree.
 >
-> Set FAULT_FLAG_INSTRUCTION for faults related to instruction fetches.
+> --Replacing `of_find_node_by_path("/")` with `of_root`,
+> Fix missing NULL checks.
+Why say it again?
+
 >
-> Signed-off-by: Lorenz Hetterich <lorenz.hetterich@cispa.de>
+> Signed-off-by: Li Jun <lijun01@kylinos.cn>
 > ---
->  arch/loongarch/include/asm/exception.h | 3 +++
->  arch/loongarch/mm/fault.c              | 3 +++
->  2 files changed, 6 insertions(+)
+>  arch/loongarch/kernel/env.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/exception.h b/arch/loongarch/incl=
-ude/asm/exception.h
-> index c6d20736fd92..7305b7065a43 100644
-> --- a/arch/loongarch/include/asm/exception.h
-> +++ b/arch/loongarch/include/asm/exception.h
-> @@ -6,6 +6,9 @@
->  #include <asm/ptrace.h>
->  #include <linux/kprobes.h>
->
-> +#define EXC_PIF        3  /* Page Invalid Fetch */
-> +#define EXC_PNX        6  /* Page Non-eXecutable */
-Needn't, you can use EXCCODE_TLBI/EXCCODE_TLBNX in loongarch.h directly.
+> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> index 841206fde3ab..2afc9b09f139 100644
+> --- a/arch/loongarch/kernel/env.c
+> +++ b/arch/loongarch/kernel/env.c
+> @@ -15,6 +15,7 @@
+>  #include <asm/loongson.h>
+>  #include <asm/setup.h>
+>  #include <asm/time.h>
+> +#include <linux/of.h>
+I don't think this is needed, we already use of_find_node_by_path in
+of.h, which means it has already been included implicitly.
 
 
 Huacai
 
-> +
->  extern void *exception_table[];
 >
->  void show_registers(struct pt_regs *regs);
-> diff --git a/arch/loongarch/mm/fault.c b/arch/loongarch/mm/fault.c
-> index c7703bdec4fc..7cd422c1224e 100644
-> --- a/arch/loongarch/mm/fault.c
-> +++ b/arch/loongarch/mm/fault.c
-> @@ -215,6 +215,9 @@ static void __kprobes __do_page_fault(struct pt_regs =
-*regs,
->         if (user_mode(regs))
->                 flags |=3D FAULT_FLAG_USER;
+>  u64 efi_system_table;
+>  struct loongson_system_configuration loongson_sysconf;
+> @@ -42,16 +43,15 @@ static int __init init_cpu_fullname(void)
+>         int cpu, ret;
+>         char *cpuname;
+>         const char *model;
+> -       struct device_node *root;
 >
-> +       if (current->thread.trap_nr =3D=3D EXC_PIF || current->thread.tra=
-p_nr =3D=3D EXC_PNX)
-> +               flags |=3D FAULT_FLAG_INSTRUCTION;
-> +
->         perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+>         /* Parsing cpuname from DTS model property */
+> -       root =3D of_find_node_by_path("/");
+> -       ret =3D of_property_read_string(root, "model", &model);
+> +       ret =3D of_property_read_string(of_root, "model", &model);
+>         if (ret =3D=3D 0) {
+>                 cpuname =3D kstrdup(model, GFP_KERNEL);
+> +               if (!cpuname)
+> +                       return -ENOMEM;
+>                 loongson_sysconf.cpuname =3D strsep(&cpuname, " ");
+>         }
+> -       of_node_put(root);
 >
->         if (!(flags & FAULT_FLAG_USER))
+>         if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname=
+, "Loongson", 8)) {
+>                 for (cpu =3D 0; cpu < NR_CPUS; cpu++)
 > --
-> 2.43.0
+> 2.34.1
+>
 >
