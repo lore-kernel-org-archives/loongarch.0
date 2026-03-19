@@ -1,102 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD5B3C6615;
-	Thu, 19 Mar 2026 11:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF08F238150
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 12:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773918813; cv=none; b=EQHs8vg4EENw2i7QrYp3QKM9ZsqIwg53XZPyQdP8JDIuSfbFvFh8u4nh1jsKXxqV1WZW8aXIoNNrOLtsoUogRA6rWguXEUWDpU5UkqqMO64eG2ZBaf08LdrPvYwduaP7APaMGL2VrkvDnTkV4ROhD/Av7KDn52ivBAwgiRL97gg=
+	t=1773924490; cv=none; b=h+Ra2n1nYTAXgr37jbMEvhC7tj3ZI4teZZtR0AjX1arKW5njL4uUfFY+Aj08guytw8fnSl5N2iW8sI1U4MWexV01UFEElTnaDDK+d+HoZPvEtuwB/KYrZM7+fKHe/6gS4mXzMMuGV6VlWud5zaoin3NlTGPs30i2V1J+wEcqv7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773918813; c=relaxed/simple;
-	bh=zYf03P8u45Fv4dMDysWd8u0Mx0wOVq5nKovrFEBNLWM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=YaX3wRaVteUnJz5O5EmVRmKZFdcG1Lszi0H4DjHsGu9NQJCYh6zcfYwF73XMY8jk7p+7A6SglO6kT6LqeqrQSmH7C4yw5iPL7uQuNzTemaXpYrUAVCqLdQf0xt2DMozQ2Qa5qJyZuw3B3RRCcTf2QDbbP3VZ14nICcOb2sDHX9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1c3V7zNl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773924490; c=relaxed/simple;
+	bh=SbqkXRq0ja7cuWUf0xeeaWfYZjGP/+SIq83A5PorvrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qDBW0gl/O5GROdGnpwqOTNjEPGfa7PTcdjVCQK/8MNuifA7BwZHA0BrHBgspkJz5L4FvoaDovSDlNmY07+MdJij5pe6JXwu/OVKQX9xa/JB3Re3HpvUKw0opeStxitI7F0j/zYnX0a/Rz4UZvd1gZHqD/rQ2ej/XjU+lLFRP4Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFaGZW4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1c3V7zNl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E6DC2BC87;
-	Thu, 19 Mar 2026 11:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1773918812;
-	bh=zYf03P8u45Fv4dMDysWd8u0Mx0wOVq5nKovrFEBNLWM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=1c3V7zNl/gEnylOFh7L4nsWrf2e8iqSr8vz82ckJGieZXUlhbumSz5FCbqOT60Gdh
-	 pbDeJeB7S+/FiGQLTmyn48lTLmxGTKBP35xciIJxCljcUZv67/asVwzvhdtoozrVw7
-	 dtECoHH+dOi5u9zfBACVG/ZzgYJCzOQjknKZhBa8=
-Subject: Patch "net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz" has been added to the 6.6-stable tree
-To: andrew+netdev@lunn.ch,chenhuacai@kernel.org,chenhuacai@loongson.cn,davem@davemloft.net,edumazet@google.com,gregkh@linuxfoundation.org,kernel@xen0n.name,kuba@kernel.org,loongarch@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,si.yanteng@linux.dev,wanghongliang@loongson.cn
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Thu, 19 Mar 2026 12:12:52 +0100
-In-Reply-To: <20260218121242.2545128-1-chenhuacai@loongson.cn>
-Message-ID: <2026031952-uncrown-gondola-399d@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFaGZW4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C3EC2BCB1
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 12:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773924490;
+	bh=SbqkXRq0ja7cuWUf0xeeaWfYZjGP/+SIq83A5PorvrI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uFaGZW4mTxE9PZP/AWRdmxnMQKqR/DSAEjuqBt+NSOgYTOiyDBLEirwsSl6SM5oBp
+	 L6afgm2ktQasjOnpAO41M7KBVwzYxEdoabeKmY+BudmqYdTorKUrg1DL3IRprsm/Lf
+	 iJGWBS4Iht0zYuI5V6cRSx7T8wC7Nr9Yv4KDVaeFdNMVHv36e4+VFJPjdfRQC1DcT7
+	 em3fi/LmvTZXQqexKST2GwrrZ0R/WCmHIh8GenskLSd58t3Kdk5SlyJMNOQiyABHi2
+	 pFHNDxJjuNeaIMKEByu4sPXSVZ+GH0xZC8906ppVAebN2ZX1oMvuEpr+NZVLoKFrhn
+	 EE9SFATzB272Q==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b980785a0bfso118048466b.3
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 05:48:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+Tzjyt/E9DzfD/OfFC8bILqfsOR6DbISq5kEsvGteithE9XhouO6dV1JQVQCb/2bpDqfqfyo3NrY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyWrW2exUHfuMV3+eWjEu8v8iA+8YTptdoc5g9JHpVmQKBdlFZh
+	xnsg9+DCYfhVFBkhTofu/SUjQaCx45qLzvN9zTEdJZNFxuUk4TGbT6Zbgt7gwl+d/ZILwDe7NHh
+	8zQWYaznOGLkosv2MMgLJZ7ZKn9hOAUM=
+X-Received: by 2002:a17:907:84d:b0:b88:4e52:bfb6 with SMTP id
+ a640c23a62f3a-b97f4a32186mr445503566b.56.1773924488971; Thu, 19 Mar 2026
+ 05:48:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20260317092911.1400248-1-maobibo@loongson.cn> <20260317092911.1400248-4-maobibo@loongson.cn>
+In-Reply-To: <20260317092911.1400248-4-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 19 Mar 2026 20:48:03 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5aKoTTdjwzco6Yv84SJgtt0Eq9xXNp6PkcDaxM+H9gZw@mail.gmail.com>
+X-Gm-Features: AaiRm52d-uldn0ip33KfjiXps4IIs4qKy6WU0XqqA5mEV-xxXTSUXsRS0e_xaOA
+Message-ID: <CAAhV-H5aKoTTdjwzco6Yv84SJgtt0Eq9xXNp6PkcDaxM+H9gZw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] LoongArch: KVM: Set vcpu_is_preempted() macro
+ rather than function
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Juergen Gross <jgross@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi, Bibo,
+
+On Tue, Mar 17, 2026 at 5:29=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> vcpu_is_preempted() is performance sensitive called in function
+> osq_lock(), here set it as macro. So that parameter is not parsed
+> at most time, it can avoid cache line thrashing across numa node.
+>
+> Here is part of unixbench result on 3C5000 DualWay machine with 32
+> Cores and 2 Numa node.
+>           origin    with patch    CONFIG_PARAVIRT disabled
+> execl     6871.9    7134.2        7190.8
+> fstime    425.5     959.9         956.1
+>
+> From the test result, with macro method it is almost the same with
+> CONFIG_PARAVIRT disabled, and there is some improvment compared with
+> function method.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++-----
+>  arch/loongarch/kernel/paravirt.c       | 15 ++------------
+>  2 files changed, 24 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/incl=
+ude/asm/qspinlock.h
+> index 66244801db67..b5d7a038faf1 100644
+> --- a/arch/loongarch/include/asm/qspinlock.h
+> +++ b/arch/loongarch/include/asm/qspinlock.h
+> @@ -5,8 +5,10 @@
+>  #include <linux/jump_label.h>
+>
+>  #ifdef CONFIG_PARAVIRT
+> -
+> +#include <asm/kvm_para.h>
+>  DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>
+>  #define virt_spin_lock virt_spin_lock
+>
+> @@ -34,10 +36,25 @@ static inline bool virt_spin_lock(struct qspinlock *l=
+ock)
+>         return true;
+>  }
+>
+> -#define vcpu_is_preempted vcpu_is_preempted
+> -
+> -bool vcpu_is_preempted(int cpu);
+> -
+> +/*
+> + * Macro is better than inline function here
+> + * With inline function, parameter cpu is parsed even though it is not u=
+sed.
+> + * This may cause cache line thrashing across NUMA node.
+> + * With macro method, parameter cpu is parsed only when it is used.
+What is the test result with inline function? If it isn't
+significantly worse than with macro, we usually prefer inline
+functions.
 
 
-This is a note to let you know that I've just added the patch titled
 
-    net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
+Huacai
 
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     net-stmmac-dwmac-loongson-set-clk_csr_i-to-100-150mhz.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-217275-greg=kroah.com@vger.kernel.org Wed Feb 18 13:13:16 2026
-From: Huacai Chen <chenhuacai@loongson.cn>
-Date: Wed, 18 Feb 2026 20:12:42 +0800
-Subject: net: stmmac: dwmac-loongson: Set clk_csr_i to 100-150MHz
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yanteng Si <si.yanteng@linux.dev>, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, netdev@vger.kernel.org, Huacai Chen <chenhuacai@loongson.cn>, Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <20260218121242.2545128-1-chenhuacai@loongson.cn>
-
-From: Huacai Chen <chenhuacai@loongson.cn>
-
-commit e1aa5ef892fb4fa9014a25e87b64b97347919d37 upstream.
-
-Current clk_csr_i setting of Loongson STMMAC (including LS7A1000/2000
-and LS2K1000/2000/3000) are copy & paste from other drivers. In fact,
-Loongson STMMAC use 125MHz clocks and need 62 freq division to within
-2.5MHz, meeting most PHY MDC requirement. So fix by setting clk_csr_i
-to 100-150MHz, otherwise some PHYs may link fail.
-
-Cc: stable@vger.kernel.org
-Fixes: 30bba69d7db40e7 ("stmmac: pci: Add dwmac support for Loongson")
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-@@ -14,7 +14,7 @@
- static int loongson_default_data(struct plat_stmmacenet_data *plat)
- 
- {
--	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
-+	plat->clk_csr = 1;	/* clk_csr_i = 100-150MHz & MDC = clk_csr_i/62 */
- 	plat->has_gmac = 1;
- 	plat->force_sf_dma_mode = 1;
- 
-
-
-Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
-
-queue-6.6/net-stmmac-dwmac-loongson-set-clk_csr_i-to-100-150mhz.patch
+> + */
+> +#define vcpu_is_preempted(cpu)                                          =
+       \
+> +({                                                                      =
+       \
+> +       bool __val;                                                      =
+       \
+> +                                                                        =
+       \
+> +       if (!static_branch_unlikely(&virt_preempt_key))                  =
+       \
+> +               __val =3D false;                                         =
+         \
+> +       else {                                                           =
+       \
+> +               struct kvm_steal_time *src;                              =
+       \
+> +               src =3D &per_cpu(steal_time, cpu);                       =
+         \
+> +               __val =3D !!(READ_ONCE(src->preempted) & KVM_VCPU_PREEMPT=
+ED);     \
+> +       }                                                                =
+       \
+> +       __val;                                                           =
+       \
+> +})
+>  #endif /* CONFIG_PARAVIRT */
+>
+>  #include <asm-generic/qspinlock.h>
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/par=
+avirt.c
+> index b74fe6db49ab..2d1206e486e2 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -10,8 +10,8 @@
+>  #include <asm/paravirt.h>
+>
+>  static int has_steal_clock;
+> -static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+> -static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+> +DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>  DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
+>
+>  static bool steal_acc =3D true;
+> @@ -261,17 +261,6 @@ static int pv_time_cpu_down_prepare(unsigned int cpu=
+)
+>         return 0;
+>  }
+>
+> -bool vcpu_is_preempted(int cpu)
+> -{
+> -       struct kvm_steal_time *src;
+> -
+> -       if (!static_branch_unlikely(&virt_preempt_key))
+> -               return false;
+> -
+> -       src =3D &per_cpu(steal_time, cpu);
+> -       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+> -}
+> -EXPORT_SYMBOL(vcpu_is_preempted);
+>  #endif
+>
+>  static void pv_cpu_reboot(void *unused)
+> --
+> 2.39.3
+>
