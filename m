@@ -1,96 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B2F18FDBD;
-	Thu, 19 Mar 2026 14:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E742C3DC4B1
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 15:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773931864; cv=none; b=HuQ+7T0hgH7ASG8s3jJGFfLspyzs+saqKTCgmEtnaUBRzusygUsxvPXKKiALKpvNyAw2yJsTATsKX9b0SlSsCEpM3h7aBhl0AL3LopEwh5F6cSnyZwshLDZDk4bPk+xTR4D1pUT7cRoHEU7ATXx96y/mULUSRH6hKlRcS1Puh3w=
+	t=1773933874; cv=none; b=uLYP3k8vt4kz6Om4nym2aPszciG4QkvllYi5KYiByFhsfzgkuseOZRYnDtu9kxiVWx3l+zi7yIEXmPbITZANSxPkVg8uNjsskAGs0qjyoD4+5kpLdpvSM4HU3OLh34eIsNTdjurES5a4HHIDUn30TN3kLjcVizu21yF8XIvClrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773931864; c=relaxed/simple;
-	bh=NA2DgZthntn+Bg9p76vM8EhmWgvmuxh9uchtbNyldWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UnxJjFobENvomFd3IdsSpjc8ZWRLTPEtfTphxVErA6mpgZwByI8up59jNsjmzCS/HYkoyN/PsOWTTFhufheDVWd2i/e8nb3Z8ZygLgBQnhnnbsHKRQ/sEeuiOUPWnNevPmDXrUasJ881umS3RsowI4otzGKXx1jFcoPFF2y1bEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlQhb5U8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773933874; c=relaxed/simple;
+	bh=pg6Bqlz4hp2TL3LRD1rOcSMVpMNVbsxv6jOeSgguD9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwTXfWJ3Ku8ORSGwEjc4F1T89wWoqLJjhFzKFGLospYcC3TRsKNiMih9RdNDxhZs7LdcTI0tbbgiNcg5AihfNeCZKlZd6ZdV1H0RQ6L71MLiAk4Mc+7gq0SVl4WmYqpBSl7i5nl7no6YyJprMcfMjgs2FnFFmqFcsAAQ+vkmuhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tqxEnR3d; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlQhb5U8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB216C19424;
-	Thu, 19 Mar 2026 14:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773931864;
-	bh=NA2DgZthntn+Bg9p76vM8EhmWgvmuxh9uchtbNyldWI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tlQhb5U8pIGZhJaEn9uhM9ipP5ZvbmouNAA4Ihk1ejHR3ke0/ewxTzj1Uka5Mlbsz
-	 pLFIkb5W+Mw6Rsis43iKa0qN6vLRn0ljIl1K4AqJpZBa80h16MTiD8oqj+iJM4WThc
-	 kusDk2vZvs4JUK3T949S1jzI/YslUIbM6gzh5sJRM/vYH93dJ4dxbk4gkNrT+X16Rx
-	 fUr3JhyrOpq3I7hQhysr+JmVqv9MscUTJ92KmOG7AbffJcsmGWC2CNA1DN6cSCgLY3
-	 7MUiaGRvcclIs1U/sbbK8uxKQlHPcpehRaRJjgR5eByOaTptAwSYsjLR7y5Yus/f0a
-	 wIhLrOmaLh76g==
-Message-ID: <ee4029ba-87e9-4ec8-9391-c2c3a96bdbc7@kernel.org>
-Date: Thu, 19 Mar 2026 15:50:50 +0100
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tqxEnR3d"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-89a1347051aso19031276d6.2
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1773933871; x=1774538671; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAHdFeNRl4yy2sR/1LOHb2d72hyJTySGsjAok8mzB+g=;
+        b=tqxEnR3dRPDLVW+mU6+H4RC/ihtVEjKlOiyg2ORORk3q9vrlklauD5p8PXE59PQpxl
+         RHNfWtqjSexGD6V7y3beYpdEDDKAusLOgPq8uKVBWBmCZbD9ZmOLftCKeF+IGCafcjFk
+         oGjtnO3z3qrlgoDxRMB0Ap2fOG5SiFVjQZV7vKuce3CAOSuR4qvdZg8Dah0h++PAGchF
+         LhNQ21Yqw7EieB6XBetqAUfGZaw5MOmWGgkcrqL1K1fRcwxHcJXrBPv0rBn4yc1+ynC0
+         RTKhARYQUDHIvPb7jTMHu6ZvWXtpsKjLC4/aRHJxrZzloa2/fGxbbRRlSpHRCCcDmi8a
+         AcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773933871; x=1774538671;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CAHdFeNRl4yy2sR/1LOHb2d72hyJTySGsjAok8mzB+g=;
+        b=hvp8R+vi9VRxfOSXY90okFwiUh4Z9IoDlzXpNz9HrReVutZKJKlUH9DkmnG2wXLSBs
+         S0a9QwlKBVE2gOrrbmSiBfNRycYdtlwnhp9BTnpg2yoir4ZqrbgNi9nNg/ndNei0Z8qK
+         8YM6C8tEI+QHCQe19JGv6hGoUXov/vm9Ya8Q+rOCaKlWAtirsGxjVAwKt71QQYjsfOAe
+         mWtcN8Iq3Ie1p3pNkhfqarPN40Cbp07CGKvNSO/p5JPgvDtOazRxvdk1zDi5ModbUAgc
+         DIvvs2FE1DUhMAgCjpGNFQl8jQmeOlxobn4PyJcyuRm5MEpF/lyOMPv6zDDdyoxLdlXw
+         HkEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwGrSgXr9CHTSvN0/JI4qoGPN84lm/nd2JehiEGSw8HqeIPiSZRe6x7oc0P5iNoGC8JfIQRHHzjxo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz1STFnO1JdW1OlOjyKJd7w5K4dvRO85NNFMRLfOHevRKZapru3
+	I4wGSKvtwEK8rse6cKxI8u4WZH1a9dXiIVtlxOb49dDaUTJZsWl7e1kSngSIRy/X370=
+X-Gm-Gg: ATEYQzyGBnZLAjVXiyPRLKlEsUbm/7rzuca+SPcz7Ou4ze9iuxyyiT13TLtvN7+6S3Z
+	JsAoSjxIhQZFZCW9HNeV2JqvHk42WINombMI8cG1tV4hCroEUqqz46Uf9yqahg4qQalKPcaBfWc
+	rALoHmVrW4Kw6JpsnUaQrTbi0GX79iFCq0X5QIz1jEU8XwPU14D5f9018Dpp+FunymPSX3EdRz/
+	f5i412bYPgsTlNg78AKycjPMJ70XIVDnomu1uIe07jGa9FeAZZdR7S9Fzk/QZ617Fb67pQ7nb3K
+	nCb11gaDC8nfGkpy8VkmEXx/jK+e9wG7UAIMPhDtvKXmp6E+IhZO91tOWICWBZg72dRLtvj31yg
+	itHEiYeXm+YyqS/HMCMduK8i+0oOn2EiYrGeP0XE5DNV5aa+MrpCOggDKARkyqEzeHltoOrjoQM
+	Jfj3RPOxohDzLQtaDEgM8XmYlzn/iU9mmfpKGTnEbPsyS73t3PEA1HjCjeN3XzABR76A7kqgT6q
+	V59CJdjBQ==
+X-Received: by 2002:a05:6214:3314:b0:899:e702:b852 with SMTP id 6a1803df08f44-89c6b5fbac4mr107205736d6.57.1773933870639;
+        Thu, 19 Mar 2026 08:24:30 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c6b8dfdf6sm49250646d6.5.2026.03.19.08.24.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 08:24:30 -0700 (PDT)
+Date: Thu, 19 Mar 2026 11:24:27 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-mm@kvack.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH 1/2] mm: remove CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE
+Message-ID: <abwVK8nLpSLVcT5G@gourry-fedora-PF4VCD3F>
+References: <20260319-config_migration-v1-0-42270124966f@kernel.org>
+ <20260319-config_migration-v1-1-42270124966f@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/23] mm/vma: use new VMA flags for sticky flags logic
-Content-Language: en-US
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@kernel.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Kees Cook <kees@kernel.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Michal Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
-References: <cover.1773846935.git.ljs@kernel.org>
- <fd4276d39055290061f87e9fded20b6a6b712975.1773846935.git.ljs@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <fd4276d39055290061f87e9fded20b6a6b712975.1773846935.git.ljs@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260319-config_migration-v1-1-42270124966f@kernel.org>
 
-On 3/18/26 16:50, Lorenzo Stoakes (Oracle) wrote:
-> Use the new vma_flags_t flags implementation to perform the logic around
-> sticky flags and what flags are ignored on VMA merge.
+On Thu, Mar 19, 2026 at 09:19:40AM +0100, David Hildenbrand (Arm) wrote:
+> All architectures that select CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE also
+> select CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG. So we can just remove
+> CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE.
 > 
-> We make use of the new vma_flags_empty(), vma_flags_diff_pair(), and
-> vma_flags_and_mask() functionality.
+> For CONFIG_MIGRATION, make it depend on CONFIG_MEMORY_HOTREMOVE instead,
+> and make CONFIG_MEMORY_HOTREMOVE select CONFIG_MIGRATION (just like
+> CONFIG_CMA and CONFIG_COMPACTION already do).
 > 
-> Also update the VMA tests accordingly.
+> We'll clean up CONFIG_MIGRATION next.
 > 
-> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+HOTREMOVE has long been a thorn in my side, I appreciate you cleaning
+this up.
 
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
+~Gregory
