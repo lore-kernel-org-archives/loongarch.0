@@ -1,142 +1,98 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEF230FF33
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCB8332615
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929684; cv=none; b=P6p10gdJKMKqdPXi/x8aukvkfDTFX9cx3XG5wCngRWMBSCmesJkT+BjWP1eCnHPjntEa6WEwSV/WFzGFWsu58Vf2tztg0UyXfPoRkl7E9kMr+Ycmroa66rNhNXYxuiNbS6WHFV6KTkiRpZtJcamDC0JQzURJwBVDTB8Ya3XfC/c=
+	t=1773929701; cv=none; b=p54EkQZcH2vM/kglde1XD5fD954uwY+YliUCkH34BwuCOn7ODmHx4WeYs5Spp93BOhgCmVRnsX7163+hNIq4jH4cAwx6wR27FLoc0wXj+k4ghNTTI7aQ7H3j1G7hzM7sPSAp7+5KCoTwfW23BpAyNecCTU5lsQ9YcqvyhHTMFWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929684; c=relaxed/simple;
-	bh=/nvuLQ6hKFv63U1YHBSa/Uk5cFBZ0KJIR4YblpPl2Jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d6tgK414fbBej8XNL5paQaSUnBwnXvGls8fa1uT2xFkDkRHixLn/SN4pEwJOwzKjWbHut2/CTEZIz07Quw20+VmYW+ddcAvCg11evZ47q+F/XtG6N6hcOCgWZCNGw3ihaabdpwaRSw2brbvW3JYd560wqfIKxQB2NBZzVC8FbDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lwlmPLDz; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773929701; c=relaxed/simple;
+	bh=siBUZXFQrW3WG414z3XwSGJh9Rh8xvrFpXx8+5dxurc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iVv+lWDS0wqCXDsBLKApmmJBN57aMW8yEgW7qckVaPU2ofC98ekfiPFC2p55AmDH3oyS7gRNOhYxYWAEODfPrtUe7evH9FOgZOk4GoZO4JqCzvsHVRp0NGHKYR27/f58dSPiP8SlqoWgRf3Ot4p7lPMD3giJUqO7/vWOcZDPDfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWiZfyKt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwlmPLDz"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-67baf20e8c2so370899eaf.3
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 07:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773929682; x=1774534482; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ntFH0htT9ffFrh9knb0jn+m+GRQSXC/6K3X5v8dqre4=;
-        b=lwlmPLDzU1RBR3c21Lgrjj1lVJLFfy0E6ZCmwakVs29L4ty+EDS9R3AZ1Ql+cLFcYt
-         gA2yHNBv6x7QzUxO0FUHvwdVMbCMzdopMlUOMSxpaAj+fwz2ydTxJtw2O5AzI9exKGcx
-         4QRWP3Ce6AYRAjgcYkLy/oOyW6JijdH9eqhwK2vGj1TmAjGGwTxBZrCFXb6/ornpjhr0
-         5zTejTBSuuutrs8AopqFD1jQmoFkF023buXa2ZkhQ2M2IAZDHYw3lbPvXsSziF48k0w8
-         i1ZXt8qW/q8/S0a3+4FqiieLv3yWAaXyC9Qb4IYPqQPtsqQup11KpAiGdWgNWagGBdb4
-         72oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773929682; x=1774534482;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ntFH0htT9ffFrh9knb0jn+m+GRQSXC/6K3X5v8dqre4=;
-        b=esVVF/EIwLXVnPUQTQFhhg4X3HCPJyiY5cScH5Wg+vnphfAqFSgo5rVW2s/fo2m/1p
-         +eRvXkUP6hCPkZP7sq488pvwmVz59bneWZ8lV6w9sSGM4T0S9YINZPmFZKFClPH44GM1
-         0UQCx1YJyKonxXYCVbA+W/Hi+VnFdQoDfg9PkfEdFSUgSEPErZJiRNe4utapgvxE5rkM
-         YdVBR+39SEyHiiu3KYM/wdNzmVNSZc+J62aDYQ/v/3qGVXSd04WOVILm5R9pCkuvL0Im
-         r7HqfhT2MIrLi+zkWGbD9KOjouadl4bvgOKTdiHb47yyrzheFFitDUWXUaEhbO1hIpZF
-         MDwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwb+Lg/S1777QQVKnsRuHl3nayoJSaz9tm7kA/oVq3VbVpfyddJ7G5cu9JR3AG88WNXewuS5tF3uU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxYFTZE8PoY4rS5S2CKkotLRLsaqwJkFwnzsGLWW/iLTVdzJOsS
-	e9/iAct3IcZQtFJDdSkBR5lU5tNcRu5i6zOktPwDvI0y4a86y8Kxh0Pd
-X-Gm-Gg: ATEYQzxOJLBTOHiOpBl0p6f/o6+IfyaXAtzXHbjThdMVoAxZja2r/eLJffuSrapHICi
-	5VHk7+dEIeUMyXiI5Tq+t4gFLWfku9IXQENCDnz/R/irvZM6hJytZHJL9zW3huQhCThZCaW1IVx
-	DgbQFUGc2e9pxAQr7sbUJqswAldRc/xYPClxNE8vdSHOGaDQzghu6JXRIBcTTZ4Cdo2sUVPY2ij
-	nVSvJfumy2LFXbDj5K1V3se3du/nqs3kV2BRTRsBTB/JH+Q5bPVpiUspMPBSrXs8pq+jBYJ/5sC
-	y5+ZdVOALLSr4iWdoRhnzZImdWcQnoU6HjOleq68Mo20LX+1Zf1u5qgbca2qZhy4F0O5RBHOAQU
-	SK8MHmYJYg2SfuhDh2eLsnyAwxlYu1rpxeEYr/Q5qx1Q6t8m4rs9qxQdGCiY6S5SrMSN/L71a2a
-	CvAgwza6HiQLirzzkyZuuC
-X-Received: by 2002:a05:6820:1518:b0:67c:c4e:4ca with SMTP id 006d021491bc7-67c0dab23c8mr4161966eaf.29.1773929681867;
-        Thu, 19 Mar 2026 07:14:41 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:8::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41bd689e3cdsm5313808fac.6.2026.03.19.07.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 07:14:41 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH 1/2] mm: remove CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE
-Date: Thu, 19 Mar 2026 07:14:36 -0700
-Message-ID: <20260319141439.218078-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260319-config_migration-v1-1-42270124966f@kernel.org>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWiZfyKt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8640CC2BCC9
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773929701;
+	bh=siBUZXFQrW3WG414z3XwSGJh9Rh8xvrFpXx8+5dxurc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QWiZfyKtSTu5VAxd4NqtdosVlxNOZnsHbkOQroXm2rh1idU5YG8k0RfWGpxwGCsMO
+	 Wl3an4UDbftKqPR8r1IJMvXJ054gr5E1HGZCnX0ICm66qH37HIiFyv78l7GVGBMSHS
+	 eYHBYLrdHYVQr8dmggUnbBtmgv9xzC86dtA2FJ33hdmLZOWS6r5MGhu4Td0Vj/LE7d
+	 XoSBPWofUiZd6GCi0mfRHVBbS5JJ03kiAkF1tzcgpt2mNJOexQ+Z+mriiq393PqD0J
+	 ot9OUqwM8is6k+pMj1BNTtx/haTMxWsCkdqWBehXuBX5spNW+r1VTgV4D1Hb2aeg4o
+	 QyP4k80MrRJAQ==
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-78fc4425b6bso10010067b3.1
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 07:15:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVtPyh9b3az0z3/MDnOrXzhuKbqpQVywbHt4b/GfbvETXz0Rnr9mGgBcZGaJuzfTXE7e2RimsWCplg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywz0F8oxErissQxCKiDD7gv88VCm2CwTjZteI4yeggXp/1LWc+c
+	Yb4C0eC2PR/D1VrTHTmMZQ+ymbQMWVStluDBRS7gMSOpcijeLB8PLXVl0JXuotYjle5eFoK71hS
+	GGQKuSTOvunV057+qplfCZUTDkUzj1Lk=
+X-Received: by 2002:a05:690c:e3ce:b0:798:6042:12f8 with SMTP id
+ 00721157ae682-79a71cb3425mr66055977b3.55.1773929700196; Thu, 19 Mar 2026
+ 07:15:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-5-ruanjinjie@huawei.com>
+In-Reply-To: <20260317082020.737779-5-ruanjinjie@huawei.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 19 Mar 2026 15:14:49 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=s1LzyoyANzTiU-Y1xh7b9fqUSHOOYnZdPReJctQ-QvQ@mail.gmail.com>
+X-Gm-Features: AaiRm529IHnMzPCccxvwnmkfcrTA0f3Z6ET0HOvZ4g4MIV-cA5draGQXMNj2eRI
+Message-ID: <CAD++jL=s1LzyoyANzTiU-Y1xh7b9fqUSHOOYnZdPReJctQ-QvQ@mail.gmail.com>
+Subject: Re: [PATCH v13 RESEND 04/14] arm64/ptrace: Use syscall_get_arguments()
+ helper for audit
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, arnd@arndb.de, 
+	peterz@infradead.org, luto@kernel.org, shuah@kernel.org, kees@kernel.org, 
+	wad@chromium.org, kevin.brodsky@arm.com, deller@gmx.de, macro@orcam.me.uk, 
+	akpm@linux-foundation.org, ldv@strace.io, anshuman.khandual@arm.com, 
+	ryan.roberts@arm.com, mark.rutland@arm.com, thuth@redhat.com, song@kernel.org, 
+	ada.coupriediaz@arm.com, broonie@kernel.org, pengcan@kylinos.cn, 
+	liqiang01@kylinos.cn, ziyao@disroot.org, guanwentao@uniontech.com, 
+	guoren@kernel.org, schuster.simon@siemens-energy.com, jremus@linux.ibm.com, 
+	david@kernel.org, mathieu.desnoyers@efficios.com, edumazet@google.com, 
+	kmal@cock.li, dvyukov@google.com, reddybalavignesh9979@gmail.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 19 Mar 2026 09:19:40 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+On Tue, Mar 17, 2026 at 9:20=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 
-> All architectures that select CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE also
-> select CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG. So we can just remove
-> CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE.
-> 
-> For CONFIG_MIGRATION, make it depend on CONFIG_MEMORY_HOTREMOVE instead,
-> and make CONFIG_MEMORY_HOTREMOVE select CONFIG_MIGRATION (just like
-> CONFIG_CMA and CONFIG_COMPACTION already do).
-> 
-> We'll clean up CONFIG_MIGRATION next.
-> 
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> Extract syscall_enter_audit() helper and use syscall_get_arguments()
+> to get syscall arguments, matching the generic entry implementation.
+>
+> The new code:
+> - Checks audit_context() first to avoid unnecessary memcpy when audit
+>   is not active.
+> - Uses syscall_get_arguments() helper instead of directly accessing
+>   regs fields.
+> - Is now exactly equivalent to generic entry's syscall_enter_audit().
+>
+> No functional changes.
+>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-Hello David,
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Looks good to me : -) Thank you for the patch, I hope you have a great day!
-
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Yours,
+Linus Walleij
