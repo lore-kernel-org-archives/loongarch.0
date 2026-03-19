@@ -1,208 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69011F4CA9;
-	Thu, 19 Mar 2026 14:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEF230FF33
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929507; cv=none; b=A6zVeWfYvbp8NLpyJ64vl8fAEPIk5JCJGr0d3ltOC9a6tcb3Z6WiUNPAR1D3YWrLwmXy4ifF+lOBE1mSpVsWIA8F5iBFY0WE4F+4cbvE4HB6sr1e7qfj1PVDoTtLKJ1Ak5V4SxdpKXz6DtPBvulvwdw+BBOrczRISjtAAcumb9c=
+	t=1773929684; cv=none; b=P6p10gdJKMKqdPXi/x8aukvkfDTFX9cx3XG5wCngRWMBSCmesJkT+BjWP1eCnHPjntEa6WEwSV/WFzGFWsu58Vf2tztg0UyXfPoRkl7E9kMr+Ycmroa66rNhNXYxuiNbS6WHFV6KTkiRpZtJcamDC0JQzURJwBVDTB8Ya3XfC/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929507; c=relaxed/simple;
-	bh=MivZjiW5NvagivYMYH70K18NXOP+4XjdCcrtxZRKzWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pC/VRf6VCd4g39ra0hL0pRuFO0SkVEtnjGKBf8Nx0jS8IhWYjHNT9vip3vzWqjVVxYKmeQJVRpM56trf/fjcGdk2nTdapAxRNYN21JrSy76nJOLjleYcs+BWzKW9Tc0mMYaUGwcIzQf6Ts5l7HPewUrnIgIldPY2qcOigC81ego=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UerHPcIh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773929684; c=relaxed/simple;
+	bh=/nvuLQ6hKFv63U1YHBSa/Uk5cFBZ0KJIR4YblpPl2Jw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d6tgK414fbBej8XNL5paQaSUnBwnXvGls8fa1uT2xFkDkRHixLn/SN4pEwJOwzKjWbHut2/CTEZIz07Quw20+VmYW+ddcAvCg11evZ47q+F/XtG6N6hcOCgWZCNGw3ihaabdpwaRSw2brbvW3JYd560wqfIKxQB2NBZzVC8FbDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lwlmPLDz; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UerHPcIh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664A8C19424;
-	Thu, 19 Mar 2026 14:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773929507;
-	bh=MivZjiW5NvagivYMYH70K18NXOP+4XjdCcrtxZRKzWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UerHPcIhZf5iw1L4uJ064Sm5pT3BEiIczGzptBjlWHw2pf3d+tNXIabR0FlPqyIRk
-	 i5A/s8jANJQ+6DUKj9E72Pk/lWL3jerwH8bHCa5SFCaU4jhsmeb+7/x+Ua9i0WELOr
-	 Ul+vuoba3lTnp86TRF2Gqt6t+s9MBbPodYgntONPFxSLb6c4CzdLpTzVBK9FDDgtpb
-	 GtbHzfXlvHPbrSvV7xXFxD3nRPfQ6pzF6z2CrsaJL1o1mZx8i0TVCMMHxmzlmccQr2
-	 TxqxhEmmNyEKoFOHBIAHTBuL5gqIQSxljyLvzzcUAdFWSowUlBD6xMHugYmz7rRveT
-	 VQko93pO+Dwtw==
-Date: Thu, 19 Mar 2026 14:11:34 +0000
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwlmPLDz"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-67baf20e8c2so370899eaf.3
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 07:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773929682; x=1774534482; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ntFH0htT9ffFrh9knb0jn+m+GRQSXC/6K3X5v8dqre4=;
+        b=lwlmPLDzU1RBR3c21Lgrjj1lVJLFfy0E6ZCmwakVs29L4ty+EDS9R3AZ1Ql+cLFcYt
+         gA2yHNBv6x7QzUxO0FUHvwdVMbCMzdopMlUOMSxpaAj+fwz2ydTxJtw2O5AzI9exKGcx
+         4QRWP3Ce6AYRAjgcYkLy/oOyW6JijdH9eqhwK2vGj1TmAjGGwTxBZrCFXb6/ornpjhr0
+         5zTejTBSuuutrs8AopqFD1jQmoFkF023buXa2ZkhQ2M2IAZDHYw3lbPvXsSziF48k0w8
+         i1ZXt8qW/q8/S0a3+4FqiieLv3yWAaXyC9Qb4IYPqQPtsqQup11KpAiGdWgNWagGBdb4
+         72oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773929682; x=1774534482;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ntFH0htT9ffFrh9knb0jn+m+GRQSXC/6K3X5v8dqre4=;
+        b=esVVF/EIwLXVnPUQTQFhhg4X3HCPJyiY5cScH5Wg+vnphfAqFSgo5rVW2s/fo2m/1p
+         +eRvXkUP6hCPkZP7sq488pvwmVz59bneWZ8lV6w9sSGM4T0S9YINZPmFZKFClPH44GM1
+         0UQCx1YJyKonxXYCVbA+W/Hi+VnFdQoDfg9PkfEdFSUgSEPErZJiRNe4utapgvxE5rkM
+         YdVBR+39SEyHiiu3KYM/wdNzmVNSZc+J62aDYQ/v/3qGVXSd04WOVILm5R9pCkuvL0Im
+         r7HqfhT2MIrLi+zkWGbD9KOjouadl4bvgOKTdiHb47yyrzheFFitDUWXUaEhbO1hIpZF
+         MDwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwb+Lg/S1777QQVKnsRuHl3nayoJSaz9tm7kA/oVq3VbVpfyddJ7G5cu9JR3AG88WNXewuS5tF3uU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxYFTZE8PoY4rS5S2CKkotLRLsaqwJkFwnzsGLWW/iLTVdzJOsS
+	e9/iAct3IcZQtFJDdSkBR5lU5tNcRu5i6zOktPwDvI0y4a86y8Kxh0Pd
+X-Gm-Gg: ATEYQzxOJLBTOHiOpBl0p6f/o6+IfyaXAtzXHbjThdMVoAxZja2r/eLJffuSrapHICi
+	5VHk7+dEIeUMyXiI5Tq+t4gFLWfku9IXQENCDnz/R/irvZM6hJytZHJL9zW3huQhCThZCaW1IVx
+	DgbQFUGc2e9pxAQr7sbUJqswAldRc/xYPClxNE8vdSHOGaDQzghu6JXRIBcTTZ4Cdo2sUVPY2ij
+	nVSvJfumy2LFXbDj5K1V3se3du/nqs3kV2BRTRsBTB/JH+Q5bPVpiUspMPBSrXs8pq+jBYJ/5sC
+	y5+ZdVOALLSr4iWdoRhnzZImdWcQnoU6HjOleq68Mo20LX+1Zf1u5qgbca2qZhy4F0O5RBHOAQU
+	SK8MHmYJYg2SfuhDh2eLsnyAwxlYu1rpxeEYr/Q5qx1Q6t8m4rs9qxQdGCiY6S5SrMSN/L71a2a
+	CvAgwza6HiQLirzzkyZuuC
+X-Received: by 2002:a05:6820:1518:b0:67c:c4e:4ca with SMTP id 006d021491bc7-67c0dab23c8mr4161966eaf.29.1773929681867;
+        Thu, 19 Mar 2026 07:14:41 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:8::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41bd689e3cdsm5313808fac.6.2026.03.19.07.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 07:14:41 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, 
+Cc: linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-rt-devel@lists.linux.dev
 Subject: Re: [PATCH 1/2] mm: remove CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE
-Message-ID: <2b23080c-0af9-4269-958b-957e7c093258@lucifer.local>
-References: <20260319-config_migration-v1-0-42270124966f@kernel.org>
- <20260319-config_migration-v1-1-42270124966f@kernel.org>
+Date: Thu, 19 Mar 2026 07:14:36 -0700
+Message-ID: <20260319141439.218078-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260319-config_migration-v1-1-42270124966f@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260319-config_migration-v1-1-42270124966f@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 19, 2026 at 09:19:40AM +0100, David Hildenbrand (Arm) wrote:
+On Thu, 19 Mar 2026 09:19:40 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
+
 > All architectures that select CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE also
 > select CONFIG_ARCH_ENABLE_MEMORY_HOTPLUG. So we can just remove
 > CONFIG_ARCH_ENABLE_MEMORY_HOTREMOVE.
->
+> 
 > For CONFIG_MIGRATION, make it depend on CONFIG_MEMORY_HOTREMOVE instead,
 > and make CONFIG_MEMORY_HOTREMOVE select CONFIG_MIGRATION (just like
 > CONFIG_CMA and CONFIG_COMPACTION already do).
-
-Makes sense!
-
->
+> 
 > We'll clean up CONFIG_MIGRATION next.
->
+> 
 > Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
 
-LGTM, so:
+Hello David,
 
-Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+Looks good to me : -) Thank you for the patch, I hope you have a great day!
 
-> ---
->  arch/arm64/Kconfig     | 1 -
->  arch/loongarch/Kconfig | 1 -
->  arch/powerpc/Kconfig   | 1 -
->  arch/riscv/Kconfig     | 1 -
->  arch/s390/Kconfig      | 1 -
->  arch/x86/Kconfig       | 1 -
->  mm/Kconfig             | 9 +++------
->  7 files changed, 3 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 38dba5f7e4d2..bcd9f5bc66e2 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -16,7 +16,6 @@ config ARM64
->  	select ARCH_BINFMT_ELF_STATE
->  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
->  	select ARCH_ENABLE_MEMORY_HOTPLUG
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE
->  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
->  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
->  	select ARCH_HAS_CACHE_LINE_SIZE
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index d211c6572b0a..dbf65ad512f1 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -12,7 +12,6 @@ config LOONGARCH
->  	select ARCH_NEEDS_DEFER_KASAN
->  	select ARCH_DISABLE_KASAN_INLINE
->  	select ARCH_ENABLE_MEMORY_HOTPLUG
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE
->  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
->  	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
->  	select ARCH_HAS_CPU_FINALIZE_INIT
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index ad7a2fe63a2a..9f3417b75b2b 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -126,7 +126,6 @@ config PPC
->  	select ARCH_DISABLE_KASAN_INLINE	if PPC_RADIX_MMU
->  	select ARCH_DMA_DEFAULT_COHERENT	if !NOT_COHERENT_CACHE
->  	select ARCH_ENABLE_MEMORY_HOTPLUG
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE
->  	select ARCH_HAS_COPY_MC			if PPC64
->  	select ARCH_HAS_CURRENT_STACK_POINTER
->  	select ARCH_HAS_DEBUG_VIRTUAL
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 90c531e6abf5..61a9d8d3ea64 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -21,7 +21,6 @@ config RISCV
->  	select ARCH_DMA_DEFAULT_COHERENT
->  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
->  	select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM_VMEMMAP
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE if MEMORY_HOTPLUG
->  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
->  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
->  	select ARCH_HAS_BINFMT_FLAT
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index edc927d9e85a..d01800962d84 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -85,7 +85,6 @@ config S390
->  	select ARCH_32BIT_USTAT_F_TINODE
->  	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
->  	select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE
->  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
->  	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
->  	select ARCH_HAS_CC_CAN_LINK
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index e2df1b147184..c290fe363f27 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -69,7 +69,6 @@ config X86
->  	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
->  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if X86_64 && HUGETLB_PAGE && MIGRATION
->  	select ARCH_ENABLE_MEMORY_HOTPLUG if X86_64
-> -	select ARCH_ENABLE_MEMORY_HOTREMOVE if MEMORY_HOTPLUG
->  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if (PGTABLE_LEVELS > 2) && (X86_64 || X86_PAE)
->  	select ARCH_ENABLE_THP_MIGRATION if X86_64 && TRANSPARENT_HUGEPAGE
->  	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index c012944938a7..b2e21d873d3f 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -465,9 +465,6 @@ config HAVE_BOOTMEM_INFO_NODE
->  config ARCH_ENABLE_MEMORY_HOTPLUG
->  	bool
->
-> -config ARCH_ENABLE_MEMORY_HOTREMOVE
-> -	bool
-> -
->  # eventually, we can have this option just 'select SPARSEMEM'
->  menuconfig MEMORY_HOTPLUG
->  	bool "Memory hotplug"
-> @@ -540,8 +537,8 @@ endchoice
->  config MEMORY_HOTREMOVE
->  	bool "Allow for memory hot remove"
->  	select HAVE_BOOTMEM_INFO_NODE if (X86_64 || PPC64)
-> -	depends on MEMORY_HOTPLUG && ARCH_ENABLE_MEMORY_HOTREMOVE
-> -	depends on MIGRATION
-> +	depends on MEMORY_HOTPLUG
-> +	select MIGRATION
->
->  config MHP_MEMMAP_ON_MEMORY
->  	def_bool y
-> @@ -636,7 +633,7 @@ config PAGE_REPORTING
->  config MIGRATION
->  	bool "Page migration"
->  	default y
-> -	depends on (NUMA || ARCH_ENABLE_MEMORY_HOTREMOVE || COMPACTION || CMA) && MMU
-> +	depends on (NUMA || MEMORY_HOTREMOVE || COMPACTION || CMA) && MMU
->  	help
->  	  Allows the migration of the physical location of pages of processes
->  	  while the virtual addresses are not changed. This is useful in
->
-> --
-> 2.43.0
->
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
