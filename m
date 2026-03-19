@@ -1,119 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391F03AB268
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAE73C13E1
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 10:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773909071; cv=none; b=GUXK//SwkBcjtMw3eY3YcF5CyXabsrJUr/VSUv0WdQlRucJ2PcY5I2WmdOji+qxLPU4oMqRGo8OytDR1ASqbjtsCp5RmKUgfdV2n/xMltRlHnwZ9JTobN5pOOVZwsEX+NgeUwvh/kNxdi1c/pTyMBkprCOiifIZJv5LhyzSTezg=
+	t=1773917927; cv=none; b=O25qrPVd+SD/jsF0514T0mv216K5uWfeOKR3cyxJkt8GWVJhW2Mim0Z9Z0l6U9n27tpOlgwk2Eoi62bJX1Igt1HvrmdtfqUVf34/QktTNNJsMS/65PxMKXiBCYL8NlweCzesJBHTRDG6zsALCOLUrkH2iCIoTGMOVTblblazL5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773909071; c=relaxed/simple;
-	bh=6H5G1xC4Zr8Ca4p5PccYaX/LOaFBKLKfhmTDxX4QWv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G4su8Xz5eNR7G4R9RDms2hidlNh5U36xvPfcXkbWZkjovH1fHodDPler6bVC6rWTAcetlsVYeD4xuo2tbFug2fu5CDmVoUZYABFUP6aePiNdDydC3aBL3qdx/bJhbYNbgIJLGp8YDie30LQFWXvTVEK6hGnF1qpdH5y7SgOB140=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scUJLJNu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scUJLJNu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A35C19425
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 08:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773909070;
-	bh=6H5G1xC4Zr8Ca4p5PccYaX/LOaFBKLKfhmTDxX4QWv0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=scUJLJNuJQf06BIu8DptKH2trEJME6EGn7rOtMVhRpNoko1kzmbrmA8+Ufed/T4Zz
-	 8LwC/1KmVTP2n+qpfseFUlR5Umf+3DXMaI7/D//mVx5AF06QMF4qxLQlijiTGyuJsw
-	 NcnFsQ9yeTeFbLR008u7qblLXaNAdfGErhJDy/AeXNF4mvG6bfP9Q4/iiDPbFAYK0q
-	 2DaQfejrmvUEDj9DxXEHJnbMuTf6LGMNIarqeZAXYPJn7hqmMDYYJVI3vw0tEhVh0A
-	 fbDUhd/040KFgesKRJIS+Ayn2fMhXWBaiPBDAhFpC6pNBSJ9BilLXrhs4d+Luz5y6u
-	 mWYREYM+NfO3A==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-661b16ac011so1259053a12.2
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 01:31:10 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yxw7xrf6RTkix2cOKi0Pv0vgZxlMJYWyC4vlYjhOP9YddGK9O8d
-	te4HIbQG/ozAjjWo43FOaYd2dEdBxzqbfZICewr7T7wwLOkc7YWWQc2M4EpyQ5TV7ftL24j6ngo
-	C7w7oIhRXhucBfh2JSQDJ5Jf5Xi8aGXM=
-X-Received: by 2002:a17:907:3cc1:b0:b97:a459:b66a with SMTP id
- a640c23a62f3a-b97f49248e8mr406602266b.25.1773909069427; Thu, 19 Mar 2026
- 01:31:09 -0700 (PDT)
+	s=arc-20240116; t=1773917927; c=relaxed/simple;
+	bh=AgCBXHZnTJeW1jAh7B9Ei661agzhi2bu6A1p7nceQYM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W+KonpLASqLy2VMjbNX4CgQFkFekGQhTCMMH499N84RPIPdzdq9uIJw2durS4qitlMsXEfJf++tlWRzrbFYX8K4PAzDe2CgOfM8JFyes5ytjPP4cJfPGwfQ2mNGLmLufXhTLXjNr6ePNEUsDxAuM23mp61RZ+SsmxGMOq8GEk+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fc2jd203FzHnHKF;
+	Thu, 19 Mar 2026 18:58:13 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 94D4A40569;
+	Thu, 19 Mar 2026 18:58:36 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 19 Mar
+ 2026 10:58:34 +0000
+Date: Thu, 19 Mar 2026 10:58:32 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Chengwen Feng <fengchengwen@huawei.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>, "WANG
+ Xuerui" <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, "Palmer Dabbelt"
+	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Alexandre Ghiti"
+	<alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
+	<hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V L
+	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Kees Cook
+	<kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Sean Christopherson
+	<seanjc@google.com>, Kai Huang <kai.huang@intel.com>, Tom Lendacky
+	<thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, Thorsten Blum
+	<thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, Zheyun
+ Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, "Ahmed S .
+ Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, Ilkka
+ Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>,
+	James Clark <james.clark@linaro.org>, Besar Wicaksono
+	<bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, "Wei Huang"
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
+	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<stable@vger.kernel.org>
+Subject: Re: [PATCH v9 0/7] ACPI: Unify CPU UID interface and fix ARM64 TPH
+ steer-tag issue
+Message-ID: <20260319105832.00002218@huawei.com>
+In-Reply-To: <20260319065735.45954-1-fengchengwen@huawei.com>
+References: <20260319065735.45954-1-fengchengwen@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260319055801.4187615-1-lijun01@kylinos.cn>
-In-Reply-To: <20260319055801.4187615-1-lijun01@kylinos.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Mar 2026 16:31:02 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Q2U2eNQFZmrOz9qATJhd3ri2SDpfA2ZHkazx5vLCxtw@mail.gmail.com>
-X-Gm-Features: AaiRm52kvMg_F97WYf8pmPx9vD0a3fvOnALu5y3s1UeKvij-mrzfghW_CBsavlo
-Message-ID: <CAAhV-H6Q2U2eNQFZmrOz9qATJhd3ri2SDpfA2ZHkazx5vLCxtw@mail.gmail.com>
-Subject: Re: [PATCH v3] Loongarch: env: fix missing NULL checks for kstrdup
-To: Li Jun <lijun01@kylinos.cn>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Hi, Jun,
+On Thu, 19 Mar 2026 14:57:28 +0800
+Chengwen Feng <fengchengwen@huawei.com> wrote:
 
-Please replace Loongarch with LoongArch, and...
+> This patchset unifies ACPI Processor UID retrieval across
+> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
+> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
+> 
+> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
+>      respective users)
+> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+> 6: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
+> 7: Fix ARM64 platform CPU steer-tag retrieval failure
+> 
+> The interface refactor ensures consistent CPU UID retrieval across
+> architectures (no functional changes for valid inputs) and provides the
+> unified interface required for the ARM64 TPH fix.
 
-On Thu, Mar 19, 2026 at 1:58=E2=80=AFPM Li Jun <lijun01@kylinos.cn> wrote:
->
-> 1.Replacing `of_find_node_by_path("/")` with `of_root` avoids multiple
-> calls to `of_node_put()`.
-> 2.Fixes potential kernel oops during early boot when memory
-> allocation fails while parsing CPU model from device tree.
->
-> --Replacing `of_find_node_by_path("/")` with `of_root`,
-> Fix missing NULL checks.
-Why say it again?
+Given the structure of the series has slowly evolved since I gave
+tags, I took another look.  All looks good to me.
+Nice work.
 
->
-> Signed-off-by: Li Jun <lijun01@kylinos.cn>
-> ---
->  arch/loongarch/kernel/env.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
-> index 841206fde3ab..2afc9b09f139 100644
-> --- a/arch/loongarch/kernel/env.c
-> +++ b/arch/loongarch/kernel/env.c
-> @@ -15,6 +15,7 @@
->  #include <asm/loongson.h>
->  #include <asm/setup.h>
->  #include <asm/time.h>
-> +#include <linux/of.h>
-I don't think this is needed, we already use of_find_node_by_path in
-of.h, which means it has already been included implicitly.
-
-
-Huacai
-
->
->  u64 efi_system_table;
->  struct loongson_system_configuration loongson_sysconf;
-> @@ -42,16 +43,15 @@ static int __init init_cpu_fullname(void)
->         int cpu, ret;
->         char *cpuname;
->         const char *model;
-> -       struct device_node *root;
->
->         /* Parsing cpuname from DTS model property */
-> -       root =3D of_find_node_by_path("/");
-> -       ret =3D of_property_read_string(root, "model", &model);
-> +       ret =3D of_property_read_string(of_root, "model", &model);
->         if (ret =3D=3D 0) {
->                 cpuname =3D kstrdup(model, GFP_KERNEL);
-> +               if (!cpuname)
-> +                       return -ENOMEM;
->                 loongson_sysconf.cpuname =3D strsep(&cpuname, " ");
->         }
-> -       of_node_put(root);
->
->         if (loongson_sysconf.cpuname && !strncmp(loongson_sysconf.cpuname=
-, "Loongson", 8)) {
->                 for (cpu =3D 0; cpu < NR_CPUS; cpu++)
-> --
-> 2.34.1
->
->
+Jonathan
