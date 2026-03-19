@@ -1,54 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9707358379
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285F33603EF
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:20:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929943; cv=none; b=RtJmunYz0dWnRQ6npTbn/sA1bD/q9GhElThGK2iSHEowP3Qy+fU12iYqceIWHodfTJuMcNkKERKqQNSv4HzG4i2xxsbqOR2YQRXHr4UIOK3aoE9CnPjAudImni7qN4dvzZ3BQjwk3ZlfjP4D3wWocFHbd/SiyWAG97CXblv40eA=
+	t=1773930044; cv=none; b=mqyIq0OeAH+fx8mjZNLjLpdHu4xKEQtFEYtID58gRTfvQi6Gf8oImPRuQPfBUFQnsETKivz5Y3WnI/m4ormAsGDnPV75XVfgTqcQ+0rXcvpTsNAstpspZ2e0hLSz/IiN1HDvQwmMP3EnnBeX4xYElBUTXdHmWHopinfzgcpeGsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929943; c=relaxed/simple;
-	bh=5In9ocaR+6jg3LqC0+4n3Jkx7M1/roXYIwDOHJoB1Fo=;
+	s=arc-20240116; t=1773930044; c=relaxed/simple;
+	bh=mojo3oAvax9/GztVjCTiOKJXIMlZnOTZaoYng3QPfOA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CCvfr3xKqknOaUqZvanb4h9SyXzO5NaA4wyA2KOtR+tnoYO3IULogo5oMkd+CqHHjBIwkDeuMx4zU2tiDMVEFFqy4LqU3lc+B7J/iBtG7KPkbCU3Eq1a3NZQ21zB6XyFq0p6jlgMAsOLKrBBMvEu5DOV6BC2P4nsyVI9ZwtlEyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kIQrp4QN; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=jtenhzZwtw+VDwBojzpCqXh8V4JnKW44cmtI8iGYHfHEhmy9xGjAM3qROWU5agEk0vGOtRuWn9Tj0ZYuKC3EjNk85q1CAmEsB6c6MaE/bbiFU5wLBV9zECFbZwvcmzT2Q8tuFVHZTG3p5PacRFzlxODCbuf+iagcHCsgpOQqZ8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrW7k6o2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kIQrp4QN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8855CC2BCFD
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:19:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrW7k6o2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B13C2BCB6
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 14:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773929943;
-	bh=5In9ocaR+6jg3LqC0+4n3Jkx7M1/roXYIwDOHJoB1Fo=;
+	s=k20201202; t=1773930043;
+	bh=mojo3oAvax9/GztVjCTiOKJXIMlZnOTZaoYng3QPfOA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kIQrp4QNkQuQbjZ+641LKbMDnPEL9fwxWAeU4X/BRUy7aQ2WIi3Ep7+C/jWoLFfrp
-	 fx6qNgsXM5f5QrhkUyUunulS754GHjIlPt7oSP3I3VgkJBBhslVNqiGskgLd49+M/O
-	 vCcgvJWNji+/GKnFGsnnKFv+6k0IudruwIyp0bmDrZXBYLFDH4Cqx4WiBlLE2eO9+U
-	 TvaKWmKFe6flDlLa+J01Zr7EtI2wrF10MacdNf0ajm7W1AFCKWa3NamGWtaeedFcpy
-	 9ZOUIAmtI9dEnBhha2IdeNhvgN/9L0RA9zUsAp89wPDAiFQtaSKV3oOckIfVV6OKJP
-	 wljJz8vLnisog==
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-79885f4a8ffso9694897b3.3
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 07:19:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXqBppIW5NFhx3mE/EsZZaG5VbXGwkofZ8Wwjq2rftKs6AQkptZTRdZNrX3mJ2rXdR5JCEONL+3IdU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxFpID7kYLqjDhNhup/AlZX/WkPA/AFS8JdRvYVuw9UP3k0R+Gu
-	o/SSJmWswe9gHn9AuiFD+KbChuWhRNC9Ul6i9+yns7ZdD36P/MrUusTK9gEqx9OuvqJe8ahyvuG
-	h8j578v62enWGadUQoquFLWz/0Tj3E+8=
-X-Received: by 2002:a05:690c:6e87:b0:796:3917:7291 with SMTP id
- 00721157ae682-79a71cba4c8mr76329307b3.58.1773929942527; Thu, 19 Mar 2026
- 07:19:02 -0700 (PDT)
+	b=VrW7k6o2Xmz4BqkpjcCuZGXErV+nf4xcjzf406LB+O1umD7d4h0gZ5hEDaGo9lhDt
+	 C+lkxpfHt1eWu6d6cv8DvVrLpQqLGlBT4aJlXssUGZN+Sg16Lpk3ThkARbDqKAbv7c
+	 2BhjKuW8BdVVZ/Hd+dYlW0Xc23hExpVjyTV1ONk8ETFFOjdMgQlNTgttfoSFch+6SO
+	 SvyFLP6eAs/VolXNnqSMG5A5MwySyVDrXYG6uzAcpccnX5JtBi8c0mfL5YJPd8yJUN
+	 GGT24llmPPzf01cd86TUlsnQFA0bOLXHaCDKsvIwVWVz1LaMDh30wXTwJVdRtOcViX
+	 HQR2eun41oAnA==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79a8e873ca1so731857b3.1
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 07:20:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX8cpc1rQNxsToL/nZhC9RomKSi/uJWiz/W7UMb3Tobms4u6QYb1zmXaVt8EWB+dM7uke96mv1U/1k=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxt9Ky0aNihTmyHSyfBHh8yRdhkn6zRAi21FAEeDVg82l7pkwT+
+	rEyq2lI41hiN0XYDVMkOW/Ka4s5NQNXGAJFWebAurmL1S9MCYE0CbNWG3ZRQ9Rhz2e09BjJxdnC
+	0XZaBc+USwHcKrY8U2wIe6B6DhDQCBK8=
+X-Received: by 2002:a05:690c:22c5:b0:79a:31ca:6663 with SMTP id
+ 00721157ae682-79a81c2bb7emr36396827b3.28.1773930043109; Thu, 19 Mar 2026
+ 07:20:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-8-ruanjinjie@huawei.com>
-In-Reply-To: <20260317082020.737779-8-ruanjinjie@huawei.com>
+References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-9-ruanjinjie@huawei.com>
+In-Reply-To: <20260317082020.737779-9-ruanjinjie@huawei.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 19 Mar 2026 15:18:51 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnd53rOuRhWgmChdJgRGR0oNbMk2h44B=7MyU_K5bSkHw@mail.gmail.com>
-X-Gm-Features: AaiRm53qjb8luXRudNPzAExMRmb-2YjIAOwzo5IV_LB42SfludlKqsGd2TH6RSA
-Message-ID: <CAD++jLnd53rOuRhWgmChdJgRGR0oNbMk2h44B=7MyU_K5bSkHw@mail.gmail.com>
-Subject: Re: [PATCH v13 RESEND 07/14] arm64/ptrace: Define and use _TIF_SYSCALL_EXIT_WORK
+Date: Thu, 19 Mar 2026 15:20:32 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnHDvr0yqRvzizLB7+F_ND9REpmvHuuVVTH8-21r8qWjA@mail.gmail.com>
+X-Gm-Features: AaiRm50vdTnYR88F37UdAdftTV3WbWpRHcokf0IbSenh2CTNQkgHJ3ly7MnRDsU
+Message-ID: <CAD++jLnHDvr0yqRvzizLB7+F_ND9REpmvHuuVVTH8-21r8qWjA@mail.gmail.com>
+Subject: Re: [PATCH v13 RESEND 08/14] arm64/ptrace: Skip syscall exit
+ reporting for PTRACE_SYSEMU_SINGLESTEP
 To: Jinjie Ruan <ruanjinjie@huawei.com>
 Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com, 
 	chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, 
@@ -74,45 +75,50 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Mar 17, 2026 at 9:20=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
  wrote:
 
-> Introduce _TIF_SYSCALL_EXIT_WORK to filter out entry-only flags
-> during the syscall exit path. This aligns arm64 with the generic
-> entry framework's SYSCALL_WORK_EXIT semantics.
+> Align the syscall exit reporting logic with the generic entry
+> framework by skipping the exit stop when PTRACE_SYSEMU_SINGLESTEP is
+> in effect.
 >
 > [Rationale]
-> The current syscall exit path uses _TIF_SYSCALL_WORK to decide whether
-> to invoke syscall_exit_work(). However, _TIF_SYSCALL_WORK includes
-> flags that are only relevant during syscall entry:
+> When a tracer uses PTRACE_SYSEMU_SINGLESTEP, both _TIF_SYSCALL_EMU
+> and _TIF_SINGLESTEP flags are set. Currently, arm64 reports a syscall
+> exit stop whenever _TIF_SINGLESTEP is set, regardless of the
+> emulation state.
 >
-> 1. _TIF_SECCOMP: Seccomp filtering (__secure_computing) only runs
->   on entry. There is no seccomp callback for syscall exit.
+> However, as per the generic entry implementation (see
+> include/linux/entry-common.h):
+> "If SYSCALL_EMU is set, then the only reason to report is when SINGLESTEP
+> is set (i.e. PTRACE_SYSEMU_SINGLESTEP). This syscall instruction has been
+> already reported in syscall_trace_enter()."
 >
-> 2. _TIF_SYSCALL_EMU: In PTRACE_SYSEMU mode, the syscall is
->   intercepted and skipped on entry. Since the syscall is never
->   executed, reporting a syscall exit stop is unnecessary.
+> Since PTRACE_SYSEMU intercepts and skips the actual syscall
+> execution, reporting a subsequent exit stop is redundant and
+> inconsistent with the expected behavior of emulated system calls.
 >
 > [Changes]
-> - Define _TIF_SYSCALL_EXIT_WORK: A new mask containing only flags
->   requiring exit processing: _TIF_SYSCALL_TRACE, _TIF_SYSCALL_AUDIT,
->   and _TIF_SYSCALL_TRACEPOINT.
+> - Introduce report_single_step(): Add a helper to encapsulate the
+>   logic for deciding whether to report a single-step stop at syscall
+>   exit. It returns false if _TIF_SYSCALL_EMU is set, ensuring the
+>   emulated syscall does not trigger a duplicate report.
 >
-> - Update exit path: Use _TIF_SYSCALL_EXIT_WORK in
->   syscall_exit_to_user_mode_work() to avoid redundant calls to
->   audit and ptrace reporting when only entry-flags are set.
->
-> - Cleanup: Remove the has_syscall_work() helper as it is no longer
->   needed. Direct flag comparison is now used to distinguish between
->   entry and exit work requirements.
+> - Update syscall_exit_work(): Use the new helper to determine
+>   the stepping state instead of directly checking _TIF_SINGLESTEP.
 >
 > [Impact]
-> audit_syscall_exit() and report_syscall_exit() will no longer be
-> triggered for seccomp-only or emu-only syscalls. This matches the
-> generic entry behavior and improves efficiency by skipping unnecessary
-> exit processing.
+> - PTRACE_SINGLESTEP: Continues to report exit stops for actual
+>   instructions.
+>
+> - PTRACE_SYSEMU: Continues to skip exit stops.
+>
+> - PTRACE_SYSEMU_SINGLESTEP: Now correctly skips the redundant exit
+>   stop, aligning arm64 with the generic entry infrastructure.
 >
 > Cc: Will Deacon <will@kernel.org>
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
+These small semantic glitches underscores the need to move
+to generic entry.
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
