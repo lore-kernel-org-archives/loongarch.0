@@ -1,311 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1003D3483
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 12:48:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9292DB794
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 13:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773924534; cv=none; b=bwqqWVmRcuqtAnSlTBtyvv5aYsYb51d7SZqchHm4YTn8+AN1YIQteyLiGLs+cSmdvJPrLNWHmZpNEhqqQ/WkLejklkK1kA+q4BQuriv+pWpTswx5RyebR5Vcy0CIARt5OZHPkvRfdzkDLtX7t3ZIyWYO/Q9mi663FHJgu+cZGGU=
+	t=1773928085; cv=none; b=Y6kwIo8KsqHW1Pk5+E0rhIGscaPu+QznQX2ZCDVeX6H5wfrMa3SPjLMvylS0I32ImiuODWd3JFWrTr/onn1kH9re4ecpfHOo63SjlSVNRxXjQPlIWgL4LUo3z9ifqkV4asbgHEcyFekVAOu8VA8/ohU1/TVbiuYvbgfLU5SPIP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773924534; c=relaxed/simple;
-	bh=1y9g5qLBTxvzrCGzDqg/MwRo1XJNaHN1tYT9TtlPq1s=;
+	s=arc-20240116; t=1773928085; c=relaxed/simple;
+	bh=QOJle0HAErcuAk1B1GgrI2OCaaOFq04voQ/vijiMH9Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=srBrtEspVw471nP9r5NWrELuiTPoDD0bTUXFKs09hmc1xa9srRvu2n9CF4BqWtnx9XWNZ2YFGef7jvIdJVGe1u0yO1qnpfxMF8/OGiqs1mE0QokCDjjg04ZNMeKgDbnWgYetAg3KMGdNt2IQmuYeoPNxEEDmt9lZD7ZpD5iwdv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQjJRAmH; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=AUeWODHNVLT1kfdO1c7rms+2pF0LK7fO3aj5tp7SwWxYPURZJYsfolp+aFF2o5uiCjJ7QRpOyWpNRZlCcNiRuI9Ci5YBSwDiCTut9ZfT2Y3Nsj+dygArfltCMYUI43/kMLIew6QlVFUiKR+qF72EyRNrezSxK+K0peQnRlBWGNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJfBrRJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQjJRAmH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A45C19424
-	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 12:48:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJfBrRJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59177C2BCB4
+	for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 13:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773924533;
-	bh=1y9g5qLBTxvzrCGzDqg/MwRo1XJNaHN1tYT9TtlPq1s=;
+	s=k20201202; t=1773928085;
+	bh=QOJle0HAErcuAk1B1GgrI2OCaaOFq04voQ/vijiMH9Q=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RQjJRAmHlMbhsXzEGReOjeAgEb2ZNWIKtZTR+abQQaPL4qMHmFuXTBJtDy2S9X3Ek
-	 FVibF2JfxfKtCS6usHTcXOkEZN4Vy+/YaBvpMK8RFVgAwel1ypVSlNEhpEqLSBw3nz
-	 UX71Vpu9CNfF7PuoAehhyLYc5gYp9dYMRfJRdeqyBhwwMk+o2li/myVn38TosqBZtW
-	 +nd6r6VmXCJSBnO+qtdpPcSdpyCy2BYKGH58pmG/wFW+6CB0ElJDvi3rcXaU7mlBRD
-	 NKYk2B6pKgWUB83QnFH25FzmJlZ5nXw5jbnsaiH9oNkJHuZD6O8dhCLjzdAWqxC7Az
-	 6WnmpGUiNvzBQ==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b8f9568e074so128974266b.0
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 05:48:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVH0CvZLcCP4dLKlfA64u3ByIPaz1sS93/oJicZEqQKqJ3fTko/5BUG0nTqyeNC5jfCaisIedcns54=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yykn3szF3k/EQODoGwR3fiv0dcd8eLHvz2yIhPkXg+4s6ZDVdi7
-	7fxXT3wBxWqKdIrBGd5WfLXnGYN4F1fKlD7r4zPTg8BcpKnoUAgpw5WHSgvhQJG1evDrEPXI0U5
-	myjhSaw7Z9bQW1uTlTtCnkCV847vn/vk=
-X-Received: by 2002:a17:907:2da7:b0:b90:e278:a09a with SMTP id
- a640c23a62f3a-b97f4a4d4dcmr549092266b.55.1773924532141; Thu, 19 Mar 2026
- 05:48:52 -0700 (PDT)
+	b=KJfBrRJ8sbFD3zMucjkhepLRMBdph3OktdEDcyFOVTXeM4G8ZT2NnK0Q3aOvuVzYa
+	 EohsHAGYO61CRJXeh1yVgHA3aLrHZBs0Bcixk+IUqO+mwrT+1iyxQqZ2z66egbbLMU
+	 P8hKWXA2iSqbRAZBe1hXdAI5cQ1yMZQ4cgP4Pt4rcrtg77ugCe4yyeo3/UKC1JfeF/
+	 cxxndBaoFJoKXbaD5srTgfCVfzvhMSDeJkBzgC56sLuDx+fBr8yNVn4SdEtBQCIcaU
+	 tEj+w/85QKFFNswve+Wp5aDVg+k0RGA1pcNxcNVfv3TBe5XZnC1hNcdaGiebRDFCmI
+	 TUF3sXcB1e9ZQ==
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-79a2ee65171so10193327b3.2
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 06:48:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWr33TJWZQWVHAUJYGkfRjGquzOvdq9bsh8zDGTFfhmbyy6MKEf3HOivPmOsi6O0vOWr85JmPEvn6o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwD0Su9dfv+raJwkrb8lDWj+mA/fb3bTJujwU5tAnfrtRnLCBD3
+	F1+T5r37AQlwwVjU6L83HcKdnRzjJ+5B27zjXD8+uVHLzhceBBmtBDg3ZyA5gBj//s9FpJNx2In
+	k599l3ryKBAcD3p1MeyybiqMi6UMTIxY=
+X-Received: by 2002:a05:690c:ed6:b0:79a:47b4:397b with SMTP id
+ 00721157ae682-79a71c9679dmr78182707b3.57.1773928084138; Thu, 19 Mar 2026
+ 06:48:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260311085059.1040263-1-gaosong@loongson.cn> <20260311085059.1040263-3-gaosong@loongson.cn>
-In-Reply-To: <20260311085059.1040263-3-gaosong@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 19 Mar 2026 20:48:46 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4DbH4M--eaozv5LpOxHFWKQnGPeMqvLWz6gKZC2yWDLA@mail.gmail.com>
-X-Gm-Features: AaiRm50W0GQ7l2H0zC2B3uvYWadSVlqwF8RPL8n6xbuAn5bMLN_3Fr7U1baiyUE
-Message-ID: <CAAhV-H4DbH4M--eaozv5LpOxHFWKQnGPeMqvLWz6gKZC2yWDLA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
-To: Song Gao <gaosong@loongson.cn>
-Cc: maobibo@loongson.cn, lixianglai@loongson.cn, loongarch@lists.linux.dev, 
-	kernel@xen0n.name, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260317082020.737779-1-ruanjinjie@huawei.com> <20260317082020.737779-2-ruanjinjie@huawei.com>
+In-Reply-To: <20260317082020.737779-2-ruanjinjie@huawei.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 19 Mar 2026 14:47:53 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnBpKm7Q0hjgkRMmivpYdzY8r1-FuQS=H3Km1G=mE1fTg@mail.gmail.com>
+X-Gm-Features: AaiRm50KZNLEM2TEBH0s8s1elOG_LwkGWTvhDRRNnuvJQ3BSSvTT7GXQ8nkJRwA
+Message-ID: <CAD++jLnBpKm7Q0hjgkRMmivpYdzY8r1-FuQS=H3Km1G=mE1fTg@mail.gmail.com>
+Subject: Re: [PATCH v13 RESEND 01/14] arm64/ptrace: Refactor
+ syscall_trace_enter/exit() to accept flags parameter
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, oleg@redhat.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, hca@linux.ibm.com, 
+	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
+	svens@linux.ibm.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, arnd@arndb.de, 
+	peterz@infradead.org, luto@kernel.org, shuah@kernel.org, kees@kernel.org, 
+	wad@chromium.org, kevin.brodsky@arm.com, deller@gmx.de, macro@orcam.me.uk, 
+	akpm@linux-foundation.org, ldv@strace.io, anshuman.khandual@arm.com, 
+	ryan.roberts@arm.com, mark.rutland@arm.com, thuth@redhat.com, song@kernel.org, 
+	ada.coupriediaz@arm.com, broonie@kernel.org, pengcan@kylinos.cn, 
+	liqiang01@kylinos.cn, ziyao@disroot.org, guanwentao@uniontech.com, 
+	guoren@kernel.org, schuster.simon@siemens-energy.com, jremus@linux.ibm.com, 
+	david@kernel.org, mathieu.desnoyers@efficios.com, edumazet@google.com, 
+	kmal@cock.li, dvyukov@google.com, reddybalavignesh9979@gmail.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Song,
+On Tue, Mar 17, 2026 at 9:20=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 
-On Wed, Mar 11, 2026 at 5:16=E2=80=AFPM Song Gao <gaosong@loongson.cn> wrot=
-e:
+> Refactor syscall_trace_enter() and syscall_trace_exit() to move thread
+> flag reading to the caller. This aligns arm64's syscall trace enter/exit
+> function signature with generic entry framework.
 >
-> Implement irqfd deliver msi to vcpu and vcpu dmsintc inject irq.
-> Add irqfd choice dmsintc to set msi irq by the msg_addr and
-> implement dmsintc set msi irq.
+> [Changes]
+> 1. Function signature changes:
+>    - syscall_trace_enter(regs) =E2=86=92 syscall_trace_enter(regs, flags)
+>    - syscall_trace_exit(regs) =E2=86=92 syscall_trace_exit(regs, flags)
 >
-> Signed-off-by: Song Gao <gaosong@loongson.cn>
-> ---
->  arch/loongarch/include/asm/kvm_dmsintc.h |  2 +
->  arch/loongarch/include/asm/kvm_pch_pic.h |  4 +-
->  arch/loongarch/kvm/intc/pch_pic.c        | 16 +++++++-
->  arch/loongarch/kvm/interrupt.c           | 37 ++++++++++++++++++
->  arch/loongarch/kvm/irqfd.c               | 48 +++++++++++++++++++++---
->  5 files changed, 98 insertions(+), 9 deletions(-)
+> 2. Move flags reading to caller:
+>    - Previously: read_thread_flags() called inside each function.
+>    - Now: caller (like el0_svc_common) passes flags as parameter.
 >
-> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/in=
-clude/asm/kvm_dmsintc.h
-> index b04b89dd2a35..7046c66cac93 100644
-> --- a/arch/loongarch/include/asm/kvm_dmsintc.h
-> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-> @@ -11,11 +11,13 @@ struct loongarch_dmsintc {
->         struct kvm *kvm;
->         uint64_t msg_addr_base;
->         uint64_t msg_addr_size;
-> +       uint32_t cpu_mask;
->  };
+> 3. Update syscall.c:
+>    - el0_svc_common() now passes flags to tracing functions and
+>      re-fetches flags before exit to handle potential TIF updates.
 >
->  struct dmsintc_state {
->         atomic64_t  vector_map[4];
->  };
+> [Why this matters]
+> - Aligns arm64 with the generic entry interface.
+> - Makes future migration to generic entry framework.
 >
-> +int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int lev=
-el);
->  int kvm_loongarch_register_dmsintc_device(void);
->  #endif
-> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/in=
-clude/asm/kvm_pch_pic.h
-> index 7f33a3039272..5f49b1f82c56 100644
-> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> @@ -70,6 +70,8 @@ struct loongarch_pch_pic {
+> No functional changes intended.
 >
->  int kvm_loongarch_register_pch_pic_device(void);
->  void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level);
-> -void pch_msi_set_irq(struct kvm *kvm, int irq, int level);
-> +struct kvm_kernel_irq_routing_entry;
-> +int pch_msi_set_irq(struct kvm *kvm,
-> +               struct kvm_kernel_irq_routing_entry *e, int level);
->
->  #endif /* __ASM_KVM_PCH_PIC_H */
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
-pch_pic.c
-> index dd7e7f8d53db..1c0ed0665736 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -4,6 +4,7 @@
->   */
->
->  #include <asm/kvm_eiointc.h>
-> +#include <asm/kvm_dmsintc.h>
->  #include <asm/kvm_pch_pic.h>
->  #include <asm/kvm_vcpu.h>
->  #include <linux/count_zeros.h>
-> @@ -67,9 +68,20 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int =
-irq, int level)
->  }
->
->  /* msi irq handler */
-> -void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
-> +int pch_msi_set_irq(struct kvm *kvm,
-> +               struct kvm_kernel_irq_routing_entry *e, int level)
->  {
-> -       eiointc_set_irq(kvm->arch.eiointc, irq, level);
-> +       u64 msg_addr;
-> +
-> +       msg_addr =3D (((u64)e->msi.address_hi) << 32) | e->msi.address_lo=
-;
-> +       if (cpu_has_msgint && kvm->arch.dmsintc &&
-> +               msg_addr >=3D kvm->arch.dmsintc->msg_addr_base &&
-> +               msg_addr < (kvm->arch.dmsintc->msg_addr_base  + kvm->arch=
-.dmsintc->msg_addr_size)) {
-> +               return kvm_dmsintc_set_msi_irq(kvm, msg_addr, e->msi.data=
-, level);
-> +       }
-> +
-> +       eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
-> +       return 0;
->  }
->
->  static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t add=
-r, int len, void *val)
-> diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrup=
-t.c
-> index fb704f4c8ac5..76a133adedc2 100644
-> --- a/arch/loongarch/kvm/interrupt.c
-> +++ b/arch/loongarch/kvm/interrupt.c
-> @@ -8,6 +8,42 @@
->  #include <asm/kvm_csr.h>
->  #include <asm/kvm_vcpu.h>
->
-> +static void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
-> +{
-> +       struct dmsintc_state *ds =3D &vcpu->arch.dmsintc_state;
-> +       unsigned int i;
-> +       unsigned long temp[4], old;
-> +
-> +       if (!ds)
-> +               return;
-> +
-> +       for (i =3D 0; i < 4; i++) {
-> +               old =3D atomic64_read(&(ds->vector_map[i]));
-> +               if (old)
-> +                       temp[i] =3D atomic64_xchg(&(ds->vector_map[i]), 0=
-);
-> +       }
-> +
-> +       if (temp[0]) {
-> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR0);
-> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR0, temp[0]|old);
-> +       }
-> +
-> +       if (temp[1]) {
-> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR1);
-> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR1, temp[1]|old);
-> +       }
-> +
-> +       if (temp[2]) {
-> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR2);
-> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR2, temp[2]|old);
-> +       }
-> +
-> +       if (temp[3]) {
-> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR3);
-> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR3, temp[3]|old);
-> +       }
-> +}
-Thank you for your rework, but after rework dmsintc_inject_irq(),
-dmsintc_deliver_msi_to_vcpu() and dmsintc_set_msi_irq() should be in
-dmsintc.c now.
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Huacai
-
-> +
->  static unsigned int priority_to_irq[EXCCODE_INT_NUM] =3D {
->         [INT_TI]        =3D CPU_TIMER,
->         [INT_IPI]       =3D CPU_IPI,
-> @@ -33,6 +69,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsig=
-ned int priority)
->                 irq =3D priority_to_irq[priority];
->
->         if (kvm_guest_has_msgint(&vcpu->arch) && (priority =3D=3D INT_AVE=
-C)) {
-> +               dmsintc_inject_irq(vcpu);
->                 set_gcsr_estat(irq);
->                 return 1;
->         }
-> diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-> index 9a39627aecf0..4788705ddf9f 100644
-> --- a/arch/loongarch/kvm/irqfd.c
-> +++ b/arch/loongarch/kvm/irqfd.c
-> @@ -6,6 +6,28 @@
->  #include <linux/kvm_host.h>
->  #include <trace/events/kvm.h>
->  #include <asm/kvm_pch_pic.h>
-> +#include <asm/kvm_vcpu.h>
-> +
-> +static int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
-> +                               struct kvm_vcpu *vcpu,
-> +                               u32 vector, int level)
-> +{
-> +       struct kvm_interrupt vcpu_irq;
-> +       struct dmsintc_state *ds;
-> +
-> +       if (!level)
-> +               return 0;
-> +       if (!vcpu || vector >=3D 256)
-> +               return -EINVAL;
-> +       ds =3D &vcpu->arch.dmsintc_state;
-> +       if (!ds)
-> +               return -ENODEV;
-> +       set_bit(vector, (unsigned long *)&ds->vector_map);
-> +       vcpu_irq.irq =3D INT_AVEC;
-> +       kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-> +       kvm_vcpu_kick(vcpu);
-> +       return 0;
-> +}
->
->  static int kvm_set_pic_irq(struct kvm_kernel_irq_routing_entry *e,
->                 struct kvm *kvm, int irq_source_id, int level, bool line_=
-status)
-> @@ -16,6 +38,21 @@ static int kvm_set_pic_irq(struct kvm_kernel_irq_routi=
-ng_entry *e,
->         return 0;
->  }
->
-> +int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int lev=
-el)
-> +{
-> +       unsigned int virq, dest;
-> +       struct kvm_vcpu *vcpu;
-> +
-> +       virq =3D (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
-> +       dest =3D (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
-> +       if (dest > KVM_MAX_VCPUS)
-> +               return -EINVAL;
-> +       vcpu =3D kvm_get_vcpu_by_cpuid(kvm, dest);
-> +       if (!vcpu)
-> +               return -EINVAL;
-> +       return dmsintc_deliver_msi_to_vcpu(kvm, vcpu, virq, level);
-> +}
-> +
->  /*
->   * kvm_set_msi: inject the MSI corresponding to the
->   * MSI routing entry
-> @@ -28,10 +65,7 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e=
-,
->  {
->         if (!level)
->                 return -1;
-> -
-> -       pch_msi_set_irq(kvm, e->msi.data, level);
-> -
-> -       return 0;
-> +       return pch_msi_set_irq(kvm, e, level);
->  }
->
->  /*
-> @@ -71,13 +105,15 @@ int kvm_set_routing_entry(struct kvm *kvm,
->  int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
->                 struct kvm *kvm, int irq_source_id, int level, bool line_=
-status)
->  {
-> +       if (!level)
-> +               return -EWOULDBLOCK;
-> +
->         switch (e->type) {
->         case KVM_IRQ_ROUTING_IRQCHIP:
->                 pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, level)=
-;
->                 return 0;
->         case KVM_IRQ_ROUTING_MSI:
-> -               pch_msi_set_irq(kvm, e->msi.data, level);
-> -               return 0;
-> +               return pch_msi_set_irq(kvm, e, level);
->         default:
->                 return -EWOULDBLOCK;
->         }
-> --
-> 2.39.3
->
+Yours,
+Linus Walleij
