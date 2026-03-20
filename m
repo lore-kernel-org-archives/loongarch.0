@@ -1,103 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7682C2DCBFA
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFE723EAB3
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773977262; cv=none; b=mUYRWaGM2i4y/obIPqleoGiDgFhZS0HttMmi1WkFFErNX9q266k3Qg0/444Rvqi0EDiFeBjYoRzXVo/O8p9xB19JUPLkb737o9J4Wx6AoFWDydf4778O6iGW5dNVvV8jG+wcdD1njN5ZUhblew+0WkPOoluLcEYDuT09EI1+PWI=
+	t=1773977360; cv=none; b=C4kX8L3Cyt0n0ka6djpIbhNgAeDj1ysZIQzslwEdgcUT+GfETPR4swi4PdcBuCb7+9AbTaxgc8FX52nwoFKO7/ofYFJLZlcOfyUkVA9KZZq3zCLBObHnUU2ovGYA7FoTaxvW99cWbDJ0L5MbLWrPT+aw5Uar4sU4+3AUKg7LTHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773977262; c=relaxed/simple;
-	bh=qXz0Pgas60ZAPaaRyDGLcOVaC/mBvadZ7GzHjeKYWKo=;
+	s=arc-20240116; t=1773977360; c=relaxed/simple;
+	bh=a0aGeD5ccGq8zx1IlDeTIxlMzWLOfY0HTmUE922hIZI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lAwuuQE26vAG0Nn6mkLfvH4O/ku8u2WIQV2dlMcoczqFex6k2hwqOuhmA06nmA4h7WukbZigVNsdM++7u9BRt5ZvGCQnUHj/LYf3p630D+yAwI5zmWXIpmOHYf+QW0eZFgULXirklVfItqYk3mA5GXqMRwCPzLOu5SE9HcTWPv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6Vr6nZs; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=iIGdN3+RqtZufteMt4+oHBHsMGF28eoZsW0KnwI6fRl5EVdI7AjgBRvFUX7xTp3cF33NS3GHsW4dt927qNJkK/3z+7KklKUbXgPpvSLsmyj+ua9rN/rdClZf59wsrBqzaHGsZbq2f82EkmYInNtKiB+LmMFF9gMSDSvZPcgs9bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LT9CM3OI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6Vr6nZs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 477DDC4AF0B
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:27:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LT9CM3OI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72526C19424
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773977262;
-	bh=qXz0Pgas60ZAPaaRyDGLcOVaC/mBvadZ7GzHjeKYWKo=;
+	s=k20201202; t=1773977360;
+	bh=a0aGeD5ccGq8zx1IlDeTIxlMzWLOfY0HTmUE922hIZI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m6Vr6nZsRp1eUogdXgBW71G65aHLYPs7abrHqhk77GT+LU5gbD4HM8b0uTZzzbnUC
-	 Cd46hG9ap/OacRpS7hxyX8z00NrorbXXiXjQ4qW4DgmqQtNsyZN7mX4ASxDs8U/PwM
-	 Ylo8FRtna/AHfV4sZcK1XxaVb9H6xWRGn2qCvoa/UkTCI0CMNnZIOdj7qFatO7RYD9
-	 AsZTKgj3aZtV8CjEHun++ubo8GDnKCI5Bkn1KOk3g/BYNYCQ+y1/Iwkcpdkq7JRF0z
-	 2P8t+jKRHcvv9h+wv0IxZ6o/ekphFExL51G0Vhw8YhKG24WeWVfE7+KFiv3d/+4Hn6
-	 eqaGvTkUJnDww==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b97a9f4b4dcso22597866b.3
-        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 20:27:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV9NZX1bFE7/B7V2PzzZLKrOjI8a3PVdEkgQb9aDNTZ3/OMEg6TbaUh9k2CSjV6jpuVSN6lvth9A9o=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwLzX4BELjAA9WUiqFuHt1YLM60IeDiB7KWBlbw7nWrlzssbLYE
-	DNaHCz1Sqrz5s+b8tuWBIgnv6cbURefpHfdeCwMuQc9ERnCPNdZEArmj4LtADwgWU6TfXqZ5+CZ
-	UDcuWsIrpAhSnYo+CivRvt3rwo+VnPTk=
-X-Received: by 2002:a17:906:2554:b0:b98:1e:6642 with SMTP id
- a640c23a62f3a-b982f3e2c7cmr82421266b.45.1773977260691; Thu, 19 Mar 2026
- 20:27:40 -0700 (PDT)
+	b=LT9CM3OIDEAD0YS+9SF5gjt3az7B3KxqE5Xkq8KFz30efxMMt1yDo/iXUVg9+TTAR
+	 2URFXVgpiFrm+MH9U4/xE+Eujt5fc9WQvllD6L1ameA3qGdTVA80j1PxSDSUG0xP8E
+	 gLHUg/xdnb1pl7HiSaTqRADjv/I+/TA7dvi2J26it1XQ+dHFjHjhaDv7CsioilcEQs
+	 uWQjy64qGASFUBdVXVJs24+5ddDsezqbYL2zvaOocxMaj214H/Ctw+3JjpStDKKcVd
+	 Vvxqb6THEnRfNIYAmVMvmJ/zuWPofEpfUrB9E+lFDzXufEWdxggj1FA8ldJN1OSVPD
+	 rAmNAF4n+42Ew==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b98133bdc4bso177842966b.0
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 20:29:20 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxiDwEkpD8GtrUakuVk2bL7hyTCPe6GwZFnS4krOV3rSI3MxUvf
+	Ln3G1oeg0PA89P1MPp8h5VrfF5u7q2xwbtIkh9UhllWX9LjT+2sbxJ65RGjCYEqviGT9ECue2W7
+	sMSVaHapPIVLM9mTK8RcIDwrEU8yBdeE=
+X-Received: by 2002:a17:906:6a94:b0:b97:98e9:1b17 with SMTP id
+ a640c23a62f3a-b982f2f8edcmr66844366b.28.1773977358960; Thu, 19 Mar 2026
+ 20:29:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260310064706.4985-1-yangtiezhu@loongson.cn> <177395545307.1805592.472462208613814092.git-patchwork-notify@kernel.org>
-In-Reply-To: <177395545307.1805592.472462208613814092.git-patchwork-notify@kernel.org>
+References: <20260320004725.1927073-1-lijun01@kylinos.cn>
+In-Reply-To: <20260320004725.1927073-1-lijun01@kylinos.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 20 Mar 2026 11:27:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6m4959xs9tYw7MhZFtarvpAFk8xRub7D9W5eycJ+67hg@mail.gmail.com>
-X-Gm-Features: AaiRm5391JWnSRNoPmaJO6MbrAe8WXd12FKAPPaVO21zvfiu8HcpMI2r9nwJAkQ
-Message-ID: <CAAhV-H6m4959xs9tYw7MhZFtarvpAFk8xRub7D9W5eycJ+67hg@mail.gmail.com>
-Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline()
- return 0
-To: patchwork-bot+netdevbpf@kernel.org
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, hengqi.chen@gmail.com, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 20 Mar 2026 11:29:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7mcb5sMCVH7Yf37cKOkXaPW1h5gZEndhyprZiVqZ6H5Q@mail.gmail.com>
+X-Gm-Features: AaiRm50Bqun6yIFh3eww2H3mEhq2PI8LQK1Vqm8uhtxfBpEy1Eppk8JMrYTEBGQ
+Message-ID: <CAAhV-H7mcb5sMCVH7Yf37cKOkXaPW1h5gZEndhyprZiVqZ6H5Q@mail.gmail.com>
+Subject: Re: [PATCH v4] LoongArch: env: fix missing NULL checks for kstrdup
+To: Li Jun <lijun01@kylinos.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 5:24=E2=80=AFAM <patchwork-bot+netdevbpf@kernel.org=
-> wrote:
->
-> Hello:
->
-> This patch was applied to netdev/net.git (main)
-> by Huacai Chen <chenhuacai@loongson.cn>:
-Emmm, this patch has already been upstream...
+Hi, Jun,
+
+What are you doing? In your understanding, my comments in V3 meant to
+tell you to go back to V2?
 
 Huacai
 
+On Fri, Mar 20, 2026 at 8:48=E2=80=AFAM Li Jun <lijun01@kylinos.cn> wrote:
 >
-> On Tue, 10 Mar 2026 14:47:06 +0800 you wrote:
-> > Occasionally, there exists "text_copy_cb: operation failed" when execut=
-ing
-> > bpf selftests, the reason is copy_to_kernel_nofault() failed and the ec=
-ode
-> > of estat register is 0x4 (PME: Page Modification Exception) due to the =
-pte
-> > is not writeable, the root cause is that there is another place to set =
-pte
-> > readonly which is in the generic weak arch_protect_bpf_trampoline().
-> >
-> > There are two ways to fix this race condition issue, the direct way is =
-to
-> > modify the generic weak arch_protect_bpf_trampoline() to add a mutex lo=
-ck
-> > for set_memory_rox(), but the other simple and proper way is to just ma=
-ke
-> > arch_protect_bpf_trampoline() return 0 in the arch-specific code becaus=
-e
-> > LoongArch already uses BPF prog pack allocator for trampoline.
-> >
-> > [...]
+> Fixes potential kernel oops during early boot when memory
+> allocation fails while parsing CPU model from device tree.
+> before return -ENOMEM, of_node_put(root) first.
 >
-> Here is the summary with links:
->   - [v1] LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0
->     https://git.kernel.org/netdev/net/c/b254c629a963
+> Signed-off-by: Li Jun <lijun01@kylinos.cn>
+> ---
+>  arch/loongarch/kernel/env.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> You are awesome, thank you!
+> diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+> index 841206fde3ab..c586de80027c 100644
+> --- a/arch/loongarch/kernel/env.c
+> +++ b/arch/loongarch/kernel/env.c
+> @@ -49,6 +49,10 @@ static int __init init_cpu_fullname(void)
+>         ret =3D of_property_read_string(root, "model", &model);
+>         if (ret =3D=3D 0) {
+>                 cpuname =3D kstrdup(model, GFP_KERNEL);
+> +               if (!cpuname) {
+> +                       of_node_put(root);
+> +                       return -ENOMEM;
+> +               }
+>                 loongson_sysconf.cpuname =3D strsep(&cpuname, " ");
+>         }
+>         of_node_put(root);
 > --
-> Deet-doot-dot, I am a bot.
-> https://korg.docs.kernel.org/patchwork/pwbot.html
->
+> 2.25.1
 >
