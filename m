@@ -1,35 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A043B358386;
-	Thu, 19 Mar 2026 21:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DCD13B7AE
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 00:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773955462; cv=none; b=TC8qj/SyEBwRKx5DKb16p0sJySj+2fWZnF0bNRXkjb0GSQWO/5N40B7TVmvW79nG5vj2DFgooQ59PIeVudY+pmc1VVqm7SSyoKiTbBKvRDpW6Q8xV/1GoifKVY4TDmsN7vC9RLNPlxheeVGrPXlSl2Cttn4BrQXJ0sUWm3/mWSw=
+	t=1773967680; cv=none; b=qN+mQZ1lZ+7rBZ32MpOsm47/QxmLou1FNwdsHN72nz2jPNdu+GY5x2UJZUM7oeKh/gnp/Txionw1GNdm86ZBJNTcNpBkTqGcqamsSXOCAYmpivrEOZs8yx+3eRigpyHUwTYX/i+tDmyiHV9Anfcw9JhzQiDMKiKP+aH//uFO1qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773955462; c=relaxed/simple;
-	bh=7QMcKkitHSe5yPhGmP83fIi+rSv+5T64EME3dNEitIA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=J+P0FvR/f+ULBC2/GRVsChtNL6bKDJVr5laHS1yGMMyeCEmmUw/eusJ9AFJdRTBZ+Xuz6OT59Mif1pSWVe+PWK+CkI+ZEi0Sxr0xn7EMtPzjcf9t6TzrDlFj1YmOOb/TLs9FYefRsLfBGbemdcJOBn7XU5N1Lai/+KRhiLOHKjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzLTw/yt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzLTw/yt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E252C19424;
-	Thu, 19 Mar 2026 21:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773955462;
-	bh=7QMcKkitHSe5yPhGmP83fIi+rSv+5T64EME3dNEitIA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=uzLTw/ytJdBIPr6XhiwHgDhGKjxUHEE7dIQoI8Eb+YebTbHcKGvy76yHMcjNnmE3f
-	 5hpWLXCnKuzUaUSb4kUs+CTGM40Arsg71xWIZOmGZEBlanwUuA3fUDHHFGSBZSHLBK
-	 jMt+tLTc8ARL32KTKDDEa2pXcKQkXmIjg22hIL7ekAJ8Tx2YpPl5y46tSZcQ4kDZTm
-	 zokImpwvqGtlspoc8JyRWoM9qZekG6TJKX2Tdy7502D31cZVzhi5pTG6+ASFwP2vCY
-	 OFTjQyh2fyyOUxCP+HiNtJ659946Dy50jEo5aEudxZzkjJzcZ8c4f7jeLIjNFaAZF1
-	 +j4gueu9uyjOA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4001439302F6;
-	Thu, 19 Mar 2026 21:24:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1773967680; c=relaxed/simple;
+	bh=JJP1uTI5YqyipvlNocQT85eLLiIKoV6+cf22QunQ77g=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=ZB9xrpGrF42dUNlB9nzw4p0cSOrs3BUB08jA/61eiSqV3ivZkBPLWe0PvGAINH5OJ5Xbs2fN8OHqkNR2BvaBpfiXjAWuLFjsJVYcvYsF7lVDwF3vgNDhQIkpelMr5eNCIztHuy87bzRYASzWld7sFVHiixipTqVZnEgffmnHsaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 6b47a80623f611f1a21c59e7364eecb8-20260320
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.11,REQID:80d328d6-ada2-4d48-88e6-bf85aca3a120,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:89c9d04,CLOUDID:c779df367d5696cb3ab714bd41115998,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|898,TC:nil,Content:0|15|50,EDM:5
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 6b47a80623f611f1a21c59e7364eecb8-20260320
+X-User: lijun01@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 43189593; Fri, 20 Mar 2026 08:47:49 +0800
+From: Li Jun <lijun01@kylinos.cn>
+To: chenhuacai@kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lijun01@kylinos.cn
+Subject: [PATCH v4] LoongArch: env: fix missing NULL checks for kstrdup
+Date: Fri, 20 Mar 2026 08:47:25 +0800
+Message-Id: <20260320004725.1927073-1-lijun01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,46 +48,31 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline()
- return
- 0
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177395545307.1805592.472462208613814092.git-patchwork-notify@kernel.org>
-Date: Thu, 19 Mar 2026 21:24:13 +0000
-References: <20260310064706.4985-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260310064706.4985-1-yangtiezhu@loongson.cn>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: chenhuacai@kernel.org, hengqi.chen@gmail.com, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Fixes potential kernel oops during early boot when memory
+allocation fails while parsing CPU model from device tree.
+before return -ENOMEM, of_node_put(root) first.
 
-This patch was applied to netdev/net.git (main)
-by Huacai Chen <chenhuacai@loongson.cn>:
+Signed-off-by: Li Jun <lijun01@kylinos.cn>
+---
+ arch/loongarch/kernel/env.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Tue, 10 Mar 2026 14:47:06 +0800 you wrote:
-> Occasionally, there exists "text_copy_cb: operation failed" when executing
-> bpf selftests, the reason is copy_to_kernel_nofault() failed and the ecode
-> of estat register is 0x4 (PME: Page Modification Exception) due to the pte
-> is not writeable, the root cause is that there is another place to set pte
-> readonly which is in the generic weak arch_protect_bpf_trampoline().
-> 
-> There are two ways to fix this race condition issue, the direct way is to
-> modify the generic weak arch_protect_bpf_trampoline() to add a mutex lock
-> for set_memory_rox(), but the other simple and proper way is to just make
-> arch_protect_bpf_trampoline() return 0 in the arch-specific code because
-> LoongArch already uses BPF prog pack allocator for trampoline.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v1] LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0
-    https://git.kernel.org/netdev/net/c/b254c629a963
-
-You are awesome, thank you!
+diff --git a/arch/loongarch/kernel/env.c b/arch/loongarch/kernel/env.c
+index 841206fde3ab..c586de80027c 100644
+--- a/arch/loongarch/kernel/env.c
++++ b/arch/loongarch/kernel/env.c
+@@ -49,6 +49,10 @@ static int __init init_cpu_fullname(void)
+ 	ret = of_property_read_string(root, "model", &model);
+ 	if (ret == 0) {
+ 		cpuname = kstrdup(model, GFP_KERNEL);
++		if (!cpuname) {
++			of_node_put(root);
++			return -ENOMEM;
++		}
+ 		loongson_sysconf.cpuname = strsep(&cpuname, " ");
+ 	}
+ 	of_node_put(root);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
