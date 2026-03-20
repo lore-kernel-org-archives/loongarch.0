@@ -1,261 +1,103 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDF315687D
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7682C2DCBFA
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773977198; cv=none; b=BUj+qnW+tUku5wfFYRC3aVcd4XDcclsZZf6fNbP/FRPAXlulFWl9LyoeUr4aFjUTm+TJVjfPDZKTsiNaZg30qz0DFSKmEG5hOFXm95F5W4bzlunF2mhAvIQ0WRCtMOTqAnZ6N/U3DBUWmZxUxUyhG7EAlebuKweFFgqbFGL2MF8=
+	t=1773977262; cv=none; b=mUYRWaGM2i4y/obIPqleoGiDgFhZS0HttMmi1WkFFErNX9q266k3Qg0/444Rvqi0EDiFeBjYoRzXVo/O8p9xB19JUPLkb737o9J4Wx6AoFWDydf4778O6iGW5dNVvV8jG+wcdD1njN5ZUhblew+0WkPOoluLcEYDuT09EI1+PWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773977198; c=relaxed/simple;
-	bh=xh+ffbb2oaNHZsmPafLZjYdLct4e+SO5Mig7THEgVVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mIgZxr5MEX5sMXxAGhdbVvGFfOrDV/sb+S7NEqilT0u8KYKfuXs22StEe9pSVlcK6Cmg+OMvTwj0m5ADnht9FQbHXdXi0OadhXuZ7MUuOy2flW0bsA8Bhf/sNDRfHSDB/ZKsLRWBQUDhZwWAWm6a65jjU+ZzJf/cvS+VDLwJ9Gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=PzyvQYqy; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1773977262; c=relaxed/simple;
+	bh=qXz0Pgas60ZAPaaRyDGLcOVaC/mBvadZ7GzHjeKYWKo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lAwuuQE26vAG0Nn6mkLfvH4O/ku8u2WIQV2dlMcoczqFex6k2hwqOuhmA06nmA4h7WukbZigVNsdM++7u9BRt5ZvGCQnUHj/LYf3p630D+yAwI5zmWXIpmOHYf+QW0eZFgULXirklVfItqYk3mA5GXqMRwCPzLOu5SE9HcTWPv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6Vr6nZs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="PzyvQYqy"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=3LiHuocNrG9VyhQSPGsfxkLqow8jinLscyafTJUH7n0=;
-	b=PzyvQYqytsSSptjXyQJXJSFxg0IsfMHvz47ITRg5ssR326CVuLSufayFGG12zYgBkkQvJa9KB
-	JV6YGyDu/jcmqj8yhrn0VgSgQUJ+FE1fdp4aXgqP1j+6e0GjQLxYAFTO3TjEwrZXKdnbrJr1nvU
-	oTV5X1+VOGWBf29jt2KHEOw=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4fcSWg2sZ3z12LDG;
-	Fri, 20 Mar 2026 11:21:03 +0800 (CST)
-Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id B830440569;
-	Fri, 20 Mar 2026 11:26:33 +0800 (CST)
-Received: from [10.67.121.161] (10.67.121.161) by
- kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 20 Mar 2026 11:26:31 +0800
-Message-ID: <823d8281-f01c-4ed1-94ed-17869b2c7526@huawei.com>
-Date: Fri, 20 Mar 2026 11:26:31 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6Vr6nZs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 477DDC4AF0B
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773977262;
+	bh=qXz0Pgas60ZAPaaRyDGLcOVaC/mBvadZ7GzHjeKYWKo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=m6Vr6nZsRp1eUogdXgBW71G65aHLYPs7abrHqhk77GT+LU5gbD4HM8b0uTZzzbnUC
+	 Cd46hG9ap/OacRpS7hxyX8z00NrorbXXiXjQ4qW4DgmqQtNsyZN7mX4ASxDs8U/PwM
+	 Ylo8FRtna/AHfV4sZcK1XxaVb9H6xWRGn2qCvoa/UkTCI0CMNnZIOdj7qFatO7RYD9
+	 AsZTKgj3aZtV8CjEHun++ubo8GDnKCI5Bkn1KOk3g/BYNYCQ+y1/Iwkcpdkq7JRF0z
+	 2P8t+jKRHcvv9h+wv0IxZ6o/ekphFExL51G0Vhw8YhKG24WeWVfE7+KFiv3d/+4Hn6
+	 eqaGvTkUJnDww==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b97a9f4b4dcso22597866b.3
+        for <loongarch@lists.linux.dev>; Thu, 19 Mar 2026 20:27:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV9NZX1bFE7/B7V2PzzZLKrOjI8a3PVdEkgQb9aDNTZ3/OMEg6TbaUh9k2CSjV6jpuVSN6lvth9A9o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwLzX4BELjAA9WUiqFuHt1YLM60IeDiB7KWBlbw7nWrlzssbLYE
+	DNaHCz1Sqrz5s+b8tuWBIgnv6cbURefpHfdeCwMuQc9ERnCPNdZEArmj4LtADwgWU6TfXqZ5+CZ
+	UDcuWsIrpAhSnYo+CivRvt3rwo+VnPTk=
+X-Received: by 2002:a17:906:2554:b0:b98:1e:6642 with SMTP id
+ a640c23a62f3a-b982f3e2c7cmr82421266b.45.1773977260691; Thu, 19 Mar 2026
+ 20:27:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 7/7] PCI/TPH: Fix get cpu steer-tag fail on ARM64
- platform
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
- Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
-	<kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
-	<alex@ghiti.fr>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris Ostrovsky
-	<boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V L
-	<sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan
- Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>, Yanteng
- Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>, Kai Huang
-	<kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth
-	<thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin
-	<kevinloughlin@google.com>, Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra
-	<peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin
- Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
-	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
- Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
- Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Wei Huang
-	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
-	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
-	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
-	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
-	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
-	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
-	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
-	<liuyonglong@huawei.com>, <linux-pci@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <xen-devel@lists.xenproject.org>,
-	<linux-acpi@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<stable@vger.kernel.org>
-References: <20260319183219.GA519221@bhelgaas>
-Content-Language: en-US
-From: fengchengwen <fengchengwen@huawei.com>
-In-Reply-To: <20260319183219.GA519221@bhelgaas>
+References: <20260310064706.4985-1-yangtiezhu@loongson.cn> <177395545307.1805592.472462208613814092.git-patchwork-notify@kernel.org>
+In-Reply-To: <177395545307.1805592.472462208613814092.git-patchwork-notify@kernel.org>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 20 Mar 2026 11:27:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6m4959xs9tYw7MhZFtarvpAFk8xRub7D9W5eycJ+67hg@mail.gmail.com>
+X-Gm-Features: AaiRm5391JWnSRNoPmaJO6MbrAe8WXd12FKAPPaVO21zvfiu8HcpMI2r9nwJAkQ
+Message-ID: <CAAhV-H6m4959xs9tYw7MhZFtarvpAFk8xRub7D9W5eycJ+67hg@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: BPF: Make arch_protect_bpf_trampoline()
+ return 0
+To: patchwork-bot+netdevbpf@kernel.org
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, hengqi.chen@gmail.com, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk500009.china.huawei.com (7.202.194.94)
+Content-Transfer-Encoding: quoted-printable
 
-On 3/20/2026 2:32 AM, Bjorn Helgaas wrote:
-> Let's make the subject a little more specific, e.g.,
-> 
->   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+On Fri, Mar 20, 2026 at 5:24=E2=80=AFAM <patchwork-bot+netdevbpf@kernel.org=
+> wrote:
+>
+> Hello:
+>
+> This patch was applied to netdev/net.git (main)
+> by Huacai Chen <chenhuacai@loongson.cn>:
+Emmm, this patch has already been upstream...
 
-done in v10
+Huacai
 
-> 
-> On Thu, Mar 19, 2026 at 02:57:35PM +0800, Chengwen Feng wrote:
->> pcie_tph_get_cpu_st() is broken on ARM64:
->> 1. pcie_tph_get_cpu_st() passes cpu_uid to the PCI ACPI DSM method.
->>    cpu_uid should be the ACPI Processor UID [1].
->> 2. In BNXT, pcie_tph_get_cpu_st() is passed a cpu_uid obtained via
->>    cpumask_first(irq->cpu_mask) - the logical CPU ID of a CPU core,
->>    generated and managed by kernel (e.g., [0,255] for a system  with 256
->>    logical CPU cores).
->> 3. On ARM64 platforms, ACPI assigns Processor UID to cores listed in the
->>    MADT table, and this UID may not match the kernel's logical CPU ID.
->>    When this occurs, the mismatch results in the wrong CPU steer-tag.
->> 4. On AMD x86 the logical CPU ID is identical to the ACPI Processor UID
->>    so the mismatch is not seen.
->>
->> Resolution:
->> 1. Use acpi_get_cpu_uid() in pcie_tph_get_cpu_st() to translate from
->>    logical CPU ID to ACPI Processor UID needed for the DSM call.
->> 2. Rename pcie_tpu_get_cpu_st() parameter from cpu_uid to cpu to
->>    reflect that it is a logical CPU_ID.
-> 
-> And simplify this, e.g.,
-> 
->   pcie_tph_get_cpu_st() uses the Query Cache Locality Features _DSM
->   [1] to retrieve the TPH Steering Tag for memory associated with the
->   CPU identified by its "cpu_uid" parameter, a Linux logical CPU ID.
-> 
->   The _DSM requires a ACPI Processor UID, which pcie_tph_get_cpu_st()
->   previously assumed was the same as the Linux logical CPU ID.  This
->   is true on x86 but not on arm64, so pcie_tph_get_cpu_st() failed on
->   arm64.
-> 
->   Convert the Linux logical CPU ID to the ACPI Processor UID with
->   acpi_get_cpu_uid() before passing it to the _DSM.
-> 
-> If there's a specific error message from BNXT or similar that is a
-> symptom of this problem, it'd be nice to include that.  Or if the
-> problem was just poor performance because the _DSM returned the wrong
-> Steering Tag, you could say something like:
-> 
->   ... so pcie_tph_get_cpu_st() returned the wrong Steering Tag,
->   resulting in poor network performance.
-
-It is indeed simplified, done in v10
-
-> 
->> [1] According to ECN_TPH-ST_Revision_20200924
->>     (https://members.pcisig.com/wg/PCI-SIG/document/15470), the input
->>     is defined as: "If the target is a processor, then this field
->>     represents the ACPI Processor UID of the processor as specified in
->>     the MADT. If the target is a processor container, then this field
->>     represents the ACPI Processor UID of the processor container as
->>     specified in the PPTT."
->>
->> Fixes: d2e8a34876ce ("PCI/TPH: Add Steering Tag support")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
->> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> The patch looks good to me.  Thanks for all your work on this!
-> 
-> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks Bjorn for your review and kind words! I really appreciate it.
-
-> 
->> ---
->>  Documentation/PCI/tph.rst |  4 ++--
->>  drivers/pci/tph.c         | 16 +++++++++++-----
->>  include/linux/pci-tph.h   |  4 ++--
->>  3 files changed, 15 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
->> index e8993be64fd6..b6cf22b9bd90 100644
->> --- a/Documentation/PCI/tph.rst
->> +++ b/Documentation/PCI/tph.rst
->> @@ -79,10 +79,10 @@ To retrieve a Steering Tag for a target memory associated with a specific
->>  CPU, use the following function::
->>  
->>    int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type type,
->> -                          unsigned int cpu_uid, u16 *tag);
->> +                          unsigned int cpu, u16 *tag);
->>  
->>  The `type` argument is used to specify the memory type, either volatile
->> -or persistent, of the target memory. The `cpu_uid` argument specifies the
->> +or persistent, of the target memory. The `cpu` argument specifies the
->>  CPU where the memory is associated to.
->>  
->>  After the ST value is retrieved, the device driver can use the following
->> diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
->> index ca4f97be7538..b67c9ad14bda 100644
->> --- a/drivers/pci/tph.c
->> +++ b/drivers/pci/tph.c
->> @@ -236,21 +236,27 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
->>   * with a specific CPU
->>   * @pdev: PCI device
->>   * @mem_type: target memory type (volatile or persistent RAM)
->> - * @cpu_uid: associated CPU id
->> + * @cpu: associated CPU id
->>   * @tag: Steering Tag to be returned
->>   *
->>   * Return the Steering Tag for a target memory that is associated with a
->> - * specific CPU as indicated by cpu_uid.
->> + * specific CPU as indicated by cpu.
->>   *
->>   * Return: 0 if success, otherwise negative value (-errno)
->>   */
->>  int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
->> -			unsigned int cpu_uid, u16 *tag)
->> +			unsigned int cpu, u16 *tag)
->>  {
->>  #ifdef CONFIG_ACPI
->>  	struct pci_dev *rp;
->>  	acpi_handle rp_acpi_handle;
->>  	union st_info info;
->> +	u32 cpu_uid;
->> +	int ret;
->> +
->> +	ret = acpi_get_cpu_uid(cpu, &cpu_uid);
->> +	if (ret != 0)
->> +		return ret;
->>  
->>  	rp = pcie_find_root_port(pdev);
->>  	if (!rp || !rp->bus || !rp->bus->bridge)
->> @@ -265,9 +271,9 @@ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
->>  
->>  	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
->>  
->> -	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
->> +	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu=%d, tag=%#04x\n",
->>  		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
->> -		cpu_uid, *tag);
->> +		cpu, *tag);
->>  
->>  	return 0;
->>  #else
->> diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
->> index ba28140ce670..be68cd17f2f8 100644
->> --- a/include/linux/pci-tph.h
->> +++ b/include/linux/pci-tph.h
->> @@ -25,7 +25,7 @@ int pcie_tph_set_st_entry(struct pci_dev *pdev,
->>  			  unsigned int index, u16 tag);
->>  int pcie_tph_get_cpu_st(struct pci_dev *dev,
->>  			enum tph_mem_type mem_type,
->> -			unsigned int cpu_uid, u16 *tag);
->> +			unsigned int cpu, u16 *tag);
->>  void pcie_disable_tph(struct pci_dev *pdev);
->>  int pcie_enable_tph(struct pci_dev *pdev, int mode);
->>  u16 pcie_tph_get_st_table_size(struct pci_dev *pdev);
->> @@ -36,7 +36,7 @@ static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
->>  { return -EINVAL; }
->>  static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
->>  				      enum tph_mem_type mem_type,
->> -				      unsigned int cpu_uid, u16 *tag)
->> +				      unsigned int cpu, u16 *tag)
->>  { return -EINVAL; }
->>  static inline void pcie_disable_tph(struct pci_dev *pdev) { }
->>  static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
->> -- 
->> 2.17.1
->>
-> 
-
+>
+> On Tue, 10 Mar 2026 14:47:06 +0800 you wrote:
+> > Occasionally, there exists "text_copy_cb: operation failed" when execut=
+ing
+> > bpf selftests, the reason is copy_to_kernel_nofault() failed and the ec=
+ode
+> > of estat register is 0x4 (PME: Page Modification Exception) due to the =
+pte
+> > is not writeable, the root cause is that there is another place to set =
+pte
+> > readonly which is in the generic weak arch_protect_bpf_trampoline().
+> >
+> > There are two ways to fix this race condition issue, the direct way is =
+to
+> > modify the generic weak arch_protect_bpf_trampoline() to add a mutex lo=
+ck
+> > for set_memory_rox(), but the other simple and proper way is to just ma=
+ke
+> > arch_protect_bpf_trampoline() return 0 in the arch-specific code becaus=
+e
+> > LoongArch already uses BPF prog pack allocator for trampoline.
+> >
+> > [...]
+>
+> Here is the summary with links:
+>   - [v1] LoongArch: BPF: Make arch_protect_bpf_trampoline() return 0
+>     https://git.kernel.org/netdev/net/c/b254c629a963
+>
+> You are awesome, thank you!
+> --
+> Deet-doot-dot, I am a bot.
+> https://korg.docs.kernel.org/patchwork/pwbot.html
+>
+>
