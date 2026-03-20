@@ -1,38 +1,38 @@
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A272F25F5
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9A927E04C
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773976677; cv=none; b=Oib12TtqjG1Kh0lKaWy1w9nXC1kvla8xDHjR6XNEYgQkXzn+YwIJdRs6bRec/2mxdjHZ51Ilh68mGWuZ2wwqV29WLKeOpDBdJJm0Exp1QyWr7/1Oq1AmgzqQsRZFGsJGE2ulJ3NhIEOtqt1SV2jnB8cWWymzoaaro/3/6lBbfrE=
+	t=1773976678; cv=none; b=DgbS1G5fajSUfdf1Emkbq1IgVc/Nj4CVoPQqEkGhsZgCE7ryERXkAq+Fhb6S8tX3x0xlV+JSckKRm8sOUe+2STuoDvngP91Rvp7uCT+9l9flYgVuGampWoIS9Cp1JuCqizeoytndQvC9ysBHfxImypWry8MHbJC1/XdcqG35FU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773976677; c=relaxed/simple;
-	bh=425fWiSrilzQ1wl2CPxfhnZrrHqEHVxKbyTM+Z2Qq/M=;
+	s=arc-20240116; t=1773976678; c=relaxed/simple;
+	bh=JJ+irYO0/Sk53ifwdtDInLmbzYF7zyJYMf5T6EoJuv4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RcWnxrkdumEK2Yr5Ox0Ms5pvojRNrjEu3mbaw1RKveqkeMLVxeUUR+QsQP75+Cysdl6GSabkkgxSFXBpn1/Pu8uytyt7gG2HjT+JJCnx4eThIQ2M/yILIjCbrvtHgxpnyZo/RD1NzATQFBBVeg7+wDN/rToC5r6Vnqn64p5Z1lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=gAhZczIG; arc=none smtp.client-ip=113.46.200.225
+	 MIME-Version:Content-Type; b=JikAf9NMqRa6UwU1qe+Rcjex6dP27Yma1Yd2rVdntb08NdUUwx15qtRc89IA2wUwe/YRJ1ih62nQdWIQd6qBdCoVeFHERju9RYPY1VN73weGUDhxSq9lWFxwDozY88SfuUsHFDCMOoo2Q7IFLCRltWivtFmF/sE+QvbylWoQnoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=J5TZKxoH; arc=none smtp.client-ip=113.46.200.222
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="gAhZczIG"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="J5TZKxoH"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=ANvjKw/V+x/xgnK84bsEKs2slfuc72S2wtUZ6Ltd7AU=;
-	b=gAhZczIG65dC2yh+2aADvwVAp++19t5FyGF4ZzbeSLiKAirv37HFkiFuy/A1lWBlr5MpsM4Ut
-	Lnhv1/GDpeZI1w99rpED8gfQlunCOXOTiUjR1yp3rBy23eO6v/Ttq6ZYJsfo+fm/1xgWotDODEb
-	YV0jLZY6lrTP0qpYzZ1KoG4=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fcSK46PmXz1K96X;
+	bh=zauzEDoW1iZZVg1rc8HmzuZCwLSftmOLfB8Jb8RY2BQ=;
+	b=J5TZKxoHIReSEQmbTRfXFVLNZ+/IUwuE+uW11i8+jkMuLeZGtwJVXLQfuq4LHOSczhwfghmzc
+	YFCMaPt2RTCEgwugJISj0LKEbk2ZW0qVVKN1TRrnTPUfnEonx2LqeBG0wXshmZawXX2M7xbOaMf
+	BcPDzWOBbKROUN5RO0vtU+I=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4fcSK46rJzzLlVb;
 	Fri, 20 Mar 2026 11:11:52 +0800 (CST)
 Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id E9F8040567;
-	Fri, 20 Mar 2026 11:17:52 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7BEF640565;
+	Fri, 20 Mar 2026 11:17:54 +0800 (CST)
 Received: from localhost.localdomain (10.50.163.32) by
  kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 20 Mar 2026 11:17:51 +0800
+ 15.2.1544.11; Fri, 20 Mar 2026 11:17:52 +0800
 From: Chengwen Feng <fengchengwen@huawei.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
 	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
@@ -65,9 +65,9 @@ CC: Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>,
 	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
 	<xen-devel@lists.xenproject.org>, <linux-acpi@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v10 5/8] ACPI: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
-Date: Fri, 20 Mar 2026 11:17:34 +0800
-Message-ID: <20260320031737.35048-6-fengchengwen@huawei.com>
+Subject: [PATCH v10 6/8] perf: arm_cspmu: Switch to acpi_get_cpu_uid() from get_acpi_id_for_cpu()
+Date: Fri, 20 Mar 2026 11:17:35 +0800
+Message-ID: <20260320031737.35048-7-fengchengwen@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
 References: <20260320031737.35048-1-fengchengwen@huawei.com>
@@ -81,93 +81,43 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  kwepemk500009.china.huawei.com (7.202.194.94)
 
-Centralize acpi_get_cpu_uid() in include/linux/acpi.h (global scope) and
-remove arch-specific declarations from arm64/loongarch/riscv/x86
-asm/acpi.h. This unifies the interface across architectures and
-simplifies maintenance by eliminating duplicate prototypes.
+Update arm_cspmu to use acpi_get_cpu_uid() instead of
+get_acpi_id_for_cpu(), aligning with unified ACPI CPU UID interface.
+
+No functional changes are introduced by this switch (valid inputs retain
+original behavior).
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
- arch/arm64/include/asm/acpi.h     |  1 -
- arch/loongarch/include/asm/acpi.h |  1 -
- arch/riscv/include/asm/acpi.h     |  1 -
- arch/x86/include/asm/acpi.h       |  2 --
- include/linux/acpi.h              | 11 +++++++++++
- 5 files changed, 11 insertions(+), 5 deletions(-)
+ drivers/perf/arm_cspmu/arm_cspmu.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
-index 2219a3301e72..bdb0ecf95b5c 100644
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -118,7 +118,6 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+index 34430b68f602..ed72c3d1f796 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.c
++++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+@@ -1107,15 +1107,17 @@ static int arm_cspmu_acpi_get_cpus(struct arm_cspmu *cspmu)
  {
- 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
- }
--int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
- int get_cpu_for_acpi_id(u32 uid);
+ 	struct acpi_apmt_node *apmt_node;
+ 	int affinity_flag;
++	u32 cpu_uid;
+ 	int cpu;
++	int ret;
  
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
-index 8bb101b4557e..7376840fa9f7 100644
---- a/arch/loongarch/include/asm/acpi.h
-+++ b/arch/loongarch/include/asm/acpi.h
-@@ -44,7 +44,6 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
- {
- 	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
- }
--int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
+ 	apmt_node = arm_cspmu_apmt_node(cspmu->dev);
+ 	affinity_flag = apmt_node->flags & ACPI_APMT_FLAGS_AFFINITY;
  
- #endif /* !CONFIG_ACPI */
- 
-diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
-index f3520cc85af3..6e13695120bc 100644
---- a/arch/riscv/include/asm/acpi.h
-+++ b/arch/riscv/include/asm/acpi.h
-@@ -65,7 +65,6 @@ static inline u32 get_acpi_id_for_cpu(int cpu)
- {
- 	return acpi_cpu_get_madt_rintc(cpu)->uid;
- }
--int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
- 
- int acpi_get_riscv_isa(struct acpi_table_header *table,
- 		       unsigned int cpu, const char **isa);
-diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-index 92b5c27c4fea..a03aa6f999d1 100644
---- a/arch/x86/include/asm/acpi.h
-+++ b/arch/x86/include/asm/acpi.h
-@@ -157,8 +157,6 @@ static inline bool acpi_has_cpu_in_madt(void)
- 	return !!acpi_lapic;
- }
- 
--int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
--
- #define ACPI_HAVE_ARCH_SET_ROOT_POINTER
- static __always_inline void acpi_arch_set_root_pointer(u64 addr)
- {
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 4d2f0bed7a06..74a73f0e5944 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -324,6 +324,17 @@ int acpi_unmap_cpu(int cpu);
- 
- acpi_handle acpi_get_processor_handle(int cpu);
- 
-+/**
-+ * acpi_get_cpu_uid() - Get ACPI Processor UID of from MADT table
-+ * @cpu: Logical CPU number (0-based)
-+ * @uid: Pointer to store ACPI Processor UID
-+ *
-+ * Return: 0 on success (ACPI Processor ID stored in *uid);
-+ *         -EINVAL if CPU number is invalid or out of range;
-+ *         -ENODEV if ACPI Processor UID for the CPU is not found.
-+ */
-+int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
-+
- #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
- int acpi_get_ioapic_id(acpi_handle handle, u32 gsi_base, u64 *phys_addr);
- #endif
+ 	if (affinity_flag == ACPI_APMT_FLAGS_AFFINITY_PROC) {
+ 		for_each_possible_cpu(cpu) {
+-			if (apmt_node->proc_affinity ==
+-			    get_acpi_id_for_cpu(cpu)) {
++			ret = acpi_get_cpu_uid(cpu, &cpu_uid);
++			if (ret == 0 && apmt_node->proc_affinity == cpu_uid) {
+ 				cpumask_set_cpu(cpu, &cspmu->associated_cpus);
+ 				break;
+ 			}
 -- 
 2.17.1
 
