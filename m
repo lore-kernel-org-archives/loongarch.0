@@ -1,319 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963501DFFD;
-	Fri, 20 Mar 2026 12:15:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9A42BD030
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 13:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774008951; cv=none; b=Cz1A5v+FTHOgMMP3QVUydNBsVTzf1FYPdDbkT5aqMPIqucMhrEywljIaHz5CAk0uHYzImRtOUW297G3DZUBZsdPCYGQhZntBAgtct/gfmDvAKKqJGvhc68w7d1nGqjIVrRdcIBnA4jqyBRCIlIE3Vtl04E4QmE62Uu7Qj2h8t7k=
+	t=1774014071; cv=none; b=DV6uiYQl4ky+V1dz7S4EJyGT0FWdnV/6GDwTqTnEXJzP9HYsaj4C/G6N4erfr2Qm0sXWkSl7Ihe3ZslPGJ13QI9R8NwFpcRDna082l0I1viwZHEBQhNvvjUDwAKJQSEYlo2vbEbpb1Jox3ysw/HR2lp2D8HPtlNBEIMWqGi3ltQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774008951; c=relaxed/simple;
-	bh=0a8d+i8ryZ8Qz2/DM7FqnFIwG0FqrZAF/wmekpBJUaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLHmMEhlrt1YXLZXW5SIZvgZZY4pmh4E+g8onW35qjMrzlbdKAp2ikpsda/x6pSmky35gT6SBxd8KuenU/bXSUgoUa3zv7EdK05Hh5+wTSK38LHW+eNbnxe/hwploePY8ihtKRxxAhwAlxsWG+W/MawMNDf4Yb/Yhb6d4UHdmcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDZF/FE9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774014071; c=relaxed/simple;
+	bh=4cQ77l3jUUu/0NTgxuBkklNb6Y2mFPOzQNvBYvPzuUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U1h/MGIG5OgYBz+AlW/qlXkobpAdQwZZcoITppFIRg5AVa2YQebBx3Nk/CKjAZS8KrsBRcgoPYRTGB/XVfZjwqiv7xEVoaguRmStrawODaZqoukD79L9jGb42dlbKCf9+kchfkKbdqhstBfeVqxB3G3jQClPL2WtknL3/5g6K+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ww44zBT8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDZF/FE9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EB0C2BC9E;
-	Fri, 20 Mar 2026 12:15:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ww44zBT8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C32FCC19425
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 13:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774008951;
-	bh=0a8d+i8ryZ8Qz2/DM7FqnFIwG0FqrZAF/wmekpBJUaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jDZF/FE9fX6C3+vM+jJy47M0EDpEvblTPV5F0Pl123V3O1jJPY6CxVfUvr5772OF0
-	 EwbFrRgFOMZ/HpYb4NZEpUGSYrLQi87HZkE7NRk6+fuun1vK7QZuwtpGT0RqYSRfFH
-	 5A+oXBXOcTOMiGae8q5ZIN2KC7PLnZqyLH2l646xGPAqU8LagVo4pd9PlFVH4c+EtA
-	 Pqh2ZXu7DwvuAuAEDFJDwB4KfEyqaegNTwQce0W+FDPQbl/idWlRYA3HUwornsKTMQ
-	 d8qWBnaA8QJH2RCt0j8JFUq9AuSv7rIJ6MBBUmVUq3PURFTUDPrFIxk7cw9pFtcgs7
-	 R5z9kb3c/HG6A==
-Date: Fri, 20 Mar 2026 12:15:36 +0000
-From: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
-To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Kees Cook <kees@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v3 22/23] mm/vma: convert vma_modify_flags[_uffd]() to
- use vma_flags_t
-Message-ID: <7ce8bdb6-f6f9-42fc-9464-ba0eaac9cd13@lucifer.local>
-References: <cover.1773846935.git.ljs@kernel.org>
- <98a004bf89227ea9abaef5fef06ea7e584f77bcf.1773846935.git.ljs@kernel.org>
- <0b5765da-67e9-4e2e-99d8-08501730bf76@kernel.org>
- <7e22cc48-aa04-406d-b4d0-8ebb182b34b9@lucifer.local>
- <373186fb-5000-47ba-85a3-4085658a7101@kernel.org>
+	s=k20201202; t=1774014071;
+	bh=4cQ77l3jUUu/0NTgxuBkklNb6Y2mFPOzQNvBYvPzuUA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ww44zBT8YZ32c5W/sr0XJLW1VRxTvZHMiL/3oSaZdEm53jx6FFoIRcyE/YmJSKuhY
+	 vUpfMsZpnblONjDHF6wQCNtH7jHTt90/TYH4TOHcTZy6TRCTCXXmMA0XTGN38NRNyi
+	 cg8yjzjdr3yrFaHnbJNlH8rLx6ejfEz7mB/MJ/eLuDr156jeE0YJ+NGSj1O7upmW9M
+	 KrAvcUh0+Db+QXarBipd8Sn8vTKBkE5lTxgv+EaJ81rY8x5nUnhF2WCiedOKJEGu2f
+	 ROw2opoBPCWT9eOuWyJILlE0s5KZWlUnCGsOm4ot1lCFLAYcqqYugTNCHXEGyR6bvg
+	 jKNINJOE8MSdQ==
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-64ad8435f46so671156d50.1
+        for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 06:41:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXZWaXk4g2V9/2jJBx6r/zs2PoG1HZODD0bonZHj2f2FC/X7MzSLuAubDOG2uxDhuMHNSRkNnByZmk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyiPZaaEF6feOga4ZFbofp4GEeBtG4wxMgpY1TGNFZdOmTryOjB
+	FvJfxmZi2MQeU2gSBbXBwoe54gd6QZVwuaWRzSitr+IvR/WH1GhFnSgyfX0VIh+Z3mDuSL9K4pr
+	DSvqr0CxyvDrEu9hLiwFLT4KK46cdeww=
+X-Received: by 2002:a05:690c:4992:b0:79a:9308:956d with SMTP id
+ 00721157ae682-79a93089ad2mr24134867b3.42.1774014070583; Fri, 20 Mar 2026
+ 06:41:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <373186fb-5000-47ba-85a3-4085658a7101@kernel.org>
+References: <20260320104222.1381274-1-ruanjinjie@huawei.com> <20260320104222.1381274-5-ruanjinjie@huawei.com>
+In-Reply-To: <20260320104222.1381274-5-ruanjinjie@huawei.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 20 Mar 2026 14:40:59 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnGb261e-OBSM0Cq1WeqreC0_mhwr2Drs=jxTA_BPdZJA@mail.gmail.com>
+X-Gm-Features: AaiRm53_RKos6cVTpDm6VjWzuRZcscDfdc9HHkMQundtQ2MYdyZbCDI6tg8vY8E
+Message-ID: <CAD++jLnGb261e-OBSM0Cq1WeqreC0_mhwr2Drs=jxTA_BPdZJA@mail.gmail.com>
+Subject: Re: [PATCH v14 4/4] selftests: sud_test: Support aarch64
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com, 
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com, 
+	oleg@redhat.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, arnd@arndb.de, shuah@kernel.org, 
+	kevin.brodsky@arm.com, yeoreum.yun@arm.com, anshuman.khandual@arm.com, 
+	thuth@redhat.com, ryan.roberts@arm.com, mark.rutland@arm.com, song@kernel.org, 
+	ziyao@disroot.org, schuster.simon@siemens-energy.com, jremus@linux.ibm.com, 
+	akpm@linux-foundation.org, mathieu.desnoyers@efficios.com, kmal@cock.li, 
+	dvyukov@google.com, reddybalavignesh9979@gmail.com, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 12:56:56PM +0100, Vlastimil Babka (SUSE) wrote:
-> On 3/20/26 12:08, Lorenzo Stoakes (Oracle) wrote:
-> > On Fri, Mar 20, 2026 at 11:39:58AM +0100, Vlastimil Babka (SUSE) wrote:
-> >> On 3/18/26 16:50, Lorenzo Stoakes (Oracle) wrote:
-> >> > Update the vma_modify_flags() and vma_modify_flags_uffd() functions to
-> >> > accept a vma_flags_t parameter rather than a vm_flags_t one, and propagate
-> >> > the changes as needed to implement this change.
-> >> >
-> >> > Finally, update the VMA tests to reflect this.
-> >> >
-> >> > Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-> >>
-> >> > --- a/mm/mlock.c
-> >> > +++ b/mm/mlock.c
-> >> > @@ -415,13 +415,14 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
-> >> >   * @vma - vma containing range to be mlock()ed or munlock()ed
-> >> >   * @start - start address in @vma of the range
-> >> >   * @end - end of range in @vma
-> >> > - * @newflags - the new set of flags for @vma.
-> >> > + * @new_vma_flags - the new set of flags for @vma.
-> >> >   *
-> >> >   * Called for mlock(), mlock2() and mlockall(), to set @vma VM_LOCKED;
-> >> >   * called for munlock() and munlockall(), to clear VM_LOCKED from @vma.
-> >> >   */
-> >> >  static void mlock_vma_pages_range(struct vm_area_struct *vma,
-> >> > -	unsigned long start, unsigned long end, vm_flags_t newflags)
-> >> > +	unsigned long start, unsigned long end,
-> >> > +	vma_flags_t *new_vma_flags)
-> >> >  {
-> >> >  	static const struct mm_walk_ops mlock_walk_ops = {
-> >> >  		.pmd_entry = mlock_pte_range,
-> >> > @@ -439,18 +440,18 @@ static void mlock_vma_pages_range(struct vm_area_struct *vma,
-> >> >  	 * combination should not be visible to other mmap_lock users;
-> >> >  	 * but WRITE_ONCE so rmap walkers must see VM_IO if VM_LOCKED.
-> >> >  	 */
-> >> > -	if (newflags & VM_LOCKED)
-> >> > -		newflags |= VM_IO;
-> >> > +	if (vma_flags_test(new_vma_flags, VMA_LOCKED_BIT))
-> >> > +		vma_flags_set(new_vma_flags, VMA_IO_BIT);
-> >> >  	vma_start_write(vma);
-> >> > -	vm_flags_reset_once(vma, newflags);
-> >> > +	WRITE_ONCE(vma->flags, *new_vma_flags);
-> >>
-> >> It's not clear to me, how is switching from vm_flags_t to vma_flags_t
-> >> allowing us to simply do WRITE_ONCE() instead of the full logic of
-> >> vm_flags_reset_once()? Won't it fail to compile once once flags are more
-> >> than single word? Or worse, will compile but silently allow tearing?
-> >
-> > We only care about tearing in the flags that can be contained within a
-> > system word, but true we should probably do this more carefully, as I did
-> > for vm_flags_reset_once().
-> >
-> > I will reimplement this as a new, hideous, helper function.
-> >
-> > I am not a fan of this being a thing to handle races, it's a hack. But I
-> > guess that should be addressed separately.
->
-> Right, thanks!
+On Fri, Mar 20, 2026 at 11:41=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com=
+> wrote:
 
-No problem. I might be able to avoid it being too hideous let's see :)
+> From: kemal <kmal@cock.li>
+>
+> Support aarch64 to test "Syscall User Dispatch" feature with
+> sud_test selftest testcase.
+>
+> On qemu-kvm machine, the sud_benchmark test results are as below:
+>
+>         # ./sud_benchmark
+>         Calibrating test set to last ~5 seconds...
+>         test iterations =3D 24500000
+>         Avg syscall time 208ns.
+>         Enabling syscall trapping.
+>         Caught sys_1c2
+>         trapped_call_count 1, native_call_count 0.
+>         Avg syscall time 213ns.
+>         Interception overhead: 2.5% (+5ns).
+>
+> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> Signed-off-by: kemal <kmal@cock.li>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
->
-> >>
-> >> >  	}
-> >> >  }
-> >> >
-> >> > @@ -467,20 +468,22 @@ static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >> >  	       struct vm_area_struct **prev, unsigned long start,
-> >> >  	       unsigned long end, vm_flags_t newflags)
-> >> >  {
-> >> > +	vma_flags_t new_vma_flags = legacy_to_vma_flags(newflags);
-> >> > +	const vma_flags_t old_vma_flags = vma->flags;
-> >> >  	struct mm_struct *mm = vma->vm_mm;
-> >> >  	int nr_pages;
-> >> >  	int ret = 0;
-> >> > -	vm_flags_t oldflags = vma->vm_flags;
-> >> >
-> >> > -	if (newflags == oldflags || vma_is_secretmem(vma) ||
-> >> > -	    !vma_supports_mlock(vma))
-> >> > +	if (vma_flags_same_pair(&old_vma_flags, &new_vma_flags) ||
-> >> > +	    vma_is_secretmem(vma) || !vma_supports_mlock(vma)) {
-> >> >  		/*
-> >> >  		 * Don't set VM_LOCKED or VM_LOCKONFAULT and don't count.
-> >> >  		 * For secretmem, don't allow the memory to be unlocked.
-> >> >  		 */
-> >> >  		goto out;
-> >> > +	}
-> >> >
-> >> > -	vma = vma_modify_flags(vmi, *prev, vma, start, end, &newflags);
-> >> > +	vma = vma_modify_flags(vmi, *prev, vma, start, end, &new_vma_flags);
-> >> >  	if (IS_ERR(vma)) {
-> >> >  		ret = PTR_ERR(vma);
-> >> >  		goto out;
-> >> > @@ -490,9 +493,9 @@ static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >> >  	 * Keep track of amount of locked VM.
-> >> >  	 */
-> >> >  	nr_pages = (end - start) >> PAGE_SHIFT;
-> >> > -	if (!(newflags & VM_LOCKED))
-> >> > +	if (!vma_flags_test(&new_vma_flags, VMA_LOCKED_BIT))
-> >> >  		nr_pages = -nr_pages;
-> >> > -	else if (oldflags & VM_LOCKED)
-> >> > +	else if (vma_flags_test(&old_vma_flags, VMA_LOCKED_BIT))
-> >> >  		nr_pages = 0;
-> >> >  	mm->locked_vm += nr_pages;
-> >> >
-> >> > @@ -501,12 +504,13 @@ static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >> >  	 * It's okay if try_to_unmap_one unmaps a page just after we
-> >> >  	 * set VM_LOCKED, populate_vma_page_range will bring it back.
-> >> >  	 */
-> >> > -	if ((newflags & VM_LOCKED) && (oldflags & VM_LOCKED)) {
-> >> > +	if (vma_flags_test(&new_vma_flags, VMA_LOCKED_BIT) &&
-> >> > +	    vma_flags_test(&old_vma_flags, VMA_LOCKED_BIT)) {
-> >> >  		/* No work to do, and mlocking twice would be wrong */
-> >> >  		vma_start_write(vma);
-> >> > -		vm_flags_reset(vma, newflags);
-> >> > +		vma->flags = new_vma_flags;
-> >>
-> >> This also does lot less than vm_flags_reset()?
-> >
-> > Well let's look:
-> >
-> > 	VM_WARN_ON_ONCE(!pgtable_supports_soft_dirty() && (flags & VM_SOFTDIRTY));
-> >
-> > Are we really at a point where this is problematic? Do we hit this? Why are
-> > we specifically checking only this case on every single instance of
-> > resetting VMA flags?
->
-> I'll admit I don't know, but sounds like we can stop being so paranoid when
-> converting code to the new API.
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Yeah I think so. I think Suren is ok with it, probably :P
-
->
-> >
-> > 	vma_assert_write_locked(vma);
-> >
-> > Note the vma_start_write() line above. I want to separate vma_flags_t
-> > helpers from asserts like that, because:
-> >
-> > 1. We might be operating on a VMA that is not yet added to the tree
-> > 2. We might be operating on a VMA that is now detached
-> > 3. Really in all but core code, you should be using vma_desc_xxx().
-> > 4. Other VMA fields are manipulated with no such checks.
-> > 5. It'd be egregious to have to add variants of flag functions just to
-> >    account for cases such as the above, especially when we don't do so for
-> >    other VMA fields. Drivers are the problematic cases and why it was
-> >    especially important (and also for debug as VMA locks were introduced),
-> >    the mmap_prepare work is solving this generally.
->
-> Perfectly reasonable!
->
-> > 	vm_flags_init(vma, flags);
-> >
-> > Analysing what's in this function:
-> >
-> > 	VM_WARN_ON_ONCE(!pgtable_supports_soft_dirty() && (flags & VM_SOFTDIRTY));
-> >
-> > Duplicated.
-> >
-> > 	vma_flags_clear_all(&vma->flags);
-> >
-> > Only necessary while you're only setting the first system word of
-> > vma->flags.
-> >
-> > 	vma_flags_overwrite_word(&vma->flags, flags);
-> >
-> > Again only necessary when you're only setting the first system word.
-> >
-> > So yeah it's doing the equivalent and (intentionally) eliminating some
-> > noise.
->
-> Ack.
->
-> > But I'll add the S/D check back I guess.
->
-> Thanks for the detailed explanation. It's fine to drop legacy stuff, it just
-> wasn't obvious if intentional or by mistake. Maybe just mention the
-> intention in the changelog?
-
-Yeah that's a fair point will do!
-
->
-> Thanks!
->
-> >>
-> >> >  	} else {
-> >> > -		mlock_vma_pages_range(vma, start, end, newflags);
-> >> > +		mlock_vma_pages_range(vma, start, end, &new_vma_flags);
-> >> >  	}
-> >> >  out:
-> >> >  	*prev = vma;
-> >> > diff --git a/mm/mprotect.c b/mm/mprotect.c
-> >> > index eaa724b99908..2b8a85689ab7 100644
-> >> > --- a/mm/mprotect.c
-> >> > +++ b/mm/mprotect.c
-> >> > @@ -756,13 +756,11 @@ mprotect_fixup(struct vma_iterator *vmi, struct mmu_gather *tlb,
-> >> >  		vma_flags_clear(&new_vma_flags, VMA_ACCOUNT_BIT);
-> >> >  	}
-> >> >
-> >> > -	newflags = vma_flags_to_legacy(new_vma_flags);
-> >> > -	vma = vma_modify_flags(vmi, *pprev, vma, start, end, &newflags);
-> >> > +	vma = vma_modify_flags(vmi, *pprev, vma, start, end, &new_vma_flags);
-> >> >  	if (IS_ERR(vma)) {
-> >> >  		error = PTR_ERR(vma);
-> >> >  		goto fail;
-> >> >  	}
-> >> > -	new_vma_flags = legacy_to_vma_flags(newflags);
-> >> >
-> >> >  	*pprev = vma;
-> >> >
-> >> > @@ -771,7 +769,7 @@ mprotect_fixup(struct vma_iterator *vmi, struct mmu_gather *tlb,
-> >> >  	 * held in write mode.
-> >> >  	 */
-> >> >  	vma_start_write(vma);
-> >> > -	vm_flags_reset_once(vma, newflags);
-> >> > +	WRITE_ONCE(vma->flags, new_vma_flags);
-> >>
-> >> Ditto.
-> >
-> > I mean overall these cases are hacks in my opinion to work around code that
-> > should have solved their problem another way.
-> >
-> > But sure, as above I'll add a helper function or such.
->
-> Great.
->
-> >>
-> >> >  	if (vma_wants_manual_pte_write_upgrade(vma))
-> >> >  		mm_cp_flags |= MM_CP_TRY_CHANGE_WRITABLE;
-> >> >  	vma_set_page_prot(vma);
-> >> > @@ -796,6 +794,7 @@ mprotect_fixup(struct vma_iterator *vmi, struct mmu_gather *tlb,
-> >> >  	}
-> >> >
-> >> >  	vm_stat_account(mm, vma_flags_to_legacy(old_vma_flags), -nrpages);
-> >> > +	newflags = vma_flags_to_legacy(new_vma_flags);
-> >> >  	vm_stat_account(mm, newflags, nrpages);
-> >> >  	perf_event_mmap(vma);
-> >> >  	return 0;
-> >> > diff --git a/mm/mseal.c b/mm/mseal.c
-> >> > index 316b5e1dec78..603df53ad267 100644
->
-
-Cheers, Lorenzo
+Yours,
+Linus Walleij
