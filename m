@@ -1,676 +1,358 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F942DC782
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 07:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43B13355F5C
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 07:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773991570; cv=none; b=GW6fWVEvKl4/rBziSm4/Qa0OITEFn+njR4n+BoU9RQUEJz5xZ//sGIvaeshYopCLZFtE1/HyJPnaktSQJ1I/qXTjgK5cWtzPB/GWg3UZJqGMHiMfM7vb6GtDRZi0UAu6T3VUm//dYuWYt/n7OMqc9P+73zptmpvkEL6o6mYIK58=
+	t=1773991632; cv=none; b=qIga487At44LN4/gSue7fuUShkpJRKmAiK2UUB94AbkHA4fKBAl4hlJjIKb/InI+vGcCfFwanE+bFJwn3c9CTPdv8JibXvur3g57ADKiHd/Qjqfowhn78PnRxeLIp3XS78lbURvYBUBrb1we61VesC9usKgJs2kt7/buXsnL8cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773991570; c=relaxed/simple;
-	bh=1xrcg5AfRZivLgzDd0oj54uw/3fdjxgO5EG8JbbgqkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UUyecsFkLTFQ/8K8a2RjPymWoWttaHF8xFqBnK4y6aEG9ETnwbJ++ko7V2R2FMSaP6j6ouvPosGUnTF6LhZCN/bW1C5miG2wwdr5onkN2rCtJAo3YAxMZAqPytbSSH1NMvYJQQAifQegiUP6zJIHPGTTRuE6cc81BDMpNLXpuXw=
+	s=arc-20240116; t=1773991632; c=relaxed/simple;
+	bh=KS4TgO7e6P7nO4E/WVl5mY8q++S6VMLWvBNQMvDzdX0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=R2mKm9iStI+0mYC3tK1PcvYIp1/kZc1N9yz84YQt9AwSfOZe8sx7Bv5/MnWajNDiu8IjnwYdz27uAYk+uTyMFtGmotuKEDYU8wWSDct/vZWhRgOVi6LymOf1bA6yawhCZ//9zzoRk51OIK4HNVCgeKEHM0FmstcCbW08yR1LB8I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.17])
-	by gateway (Coremail) with SMTP id _____8DxccCN9rxpwfYcAA--.24491S3;
-	Fri, 20 Mar 2026 15:26:05 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.17])
-	by front1 (Coremail) with SMTP id qMiowJDxaeCD9rxp7DxZAA--.40268S4;
-	Fri, 20 Mar 2026 15:25:59 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-i2c@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v6 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
-Date: Fri, 20 Mar 2026 15:25:47 +0800
-Message-ID: <4236113143cc88b45062c1b8a34a1f840f29a0ac.1773991081.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1773991081.git.zhoubinbin@loongson.cn>
-References: <cover.1773991081.git.zhoubinbin@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8AxjsPM9rxp5PYcAA--.18541S3;
+	Fri, 20 Mar 2026 15:27:08 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by front1 (Coremail) with SMTP id qMiowJCxfcLL9rxpIT1ZAA--.37348S3;
+	Fri, 20 Mar 2026 15:27:07 +0800 (CST)
+Subject: Re: [PATCH v7 1/2] LoongArch: KVM: Add DMSINTC device support
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo@loongson.cn, lixianglai@loongson.cn, loongarch@lists.linux.dev,
+ kernel@xen0n.name, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260311085059.1040263-1-gaosong@loongson.cn>
+ <20260311085059.1040263-2-gaosong@loongson.cn>
+ <CAAhV-H4WZj3LmghXxXY1hNUjEmihx1fjggOZLNRRDS5PN2s0kg@mail.gmail.com>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <43459637-6aba-c31d-5840-ee4675712e0a@loongson.cn>
+Date: Fri, 20 Mar 2026 15:28:36 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H4WZj3LmghXxXY1hNUjEmihx1fjggOZLNRRDS5PN2s0kg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeCD9rxp7DxZAA--.40268S4
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEMCGm84cQBQQAAs0
-X-Coremail-Antispam: 1Uk129KBj9fXoWfWw13uFWDuw1DKw1DXr4kKrX_yoW8Zw1xKo
-	Wj93WfXr45Jw18u34jk34Yyr4xXF95CrnrCw4xJrs7Xryjy3WUKFWvkw13Ga4fCryUtr4f
-	ZF95tFWxCFs3t3s8l-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
-	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
-	IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
-	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxfcLL9rxpIT1ZAA--.37348S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3JFyDJr4xAw1UGw1rCr18tFc_yoWDJFWDpa
+	47AFs8Gr48WryxCrn2qas8ur17Zr4fKr129FyjgFyUCrnFvry8Ary8Kr9ruF9xXa18Gr10
+	vFyag3WY9a1Ut3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-This I2C module is integrated into the Loongson-2K0300 SoCs.
+Hi Huacai,
 
-It provides multi-master functionality and controls all I2C bus-specific
-timing, protocols, arbitration, and timing. It supports both standard
-and fast modes.
+Thank you for your review and the insightful question.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- MAINTAINERS                      |   1 +
- drivers/i2c/busses/Kconfig       |  10 +
- drivers/i2c/busses/Makefile      |   1 +
- drivers/i2c/busses/i2c-ls2x-v2.c | 544 +++++++++++++++++++++++++++++++
- 4 files changed, 556 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-ls2x-v2.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96ea84948d76..b6802b3a3101 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14954,6 +14954,7 @@ M:	Binbin Zhou <zhoubinbin@loongson.cn>
- L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-+F:	drivers/i2c/busses/i2c-ls2x-v2.c
- F:	drivers/i2c/busses/i2c-ls2x.c
- 
- LOONGSON PWM DRIVER
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index e11d50750e63..5cad2d0d2569 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -850,6 +850,16 @@ config I2C_LS2X
- 	  This driver can also be built as a module. If so, the module
- 	  will be called i2c-ls2x.
- 
-+config I2C_LS2X_V2
-+	tristate "Loongson-2 Fast Speed I2C adapter"
-+	depends on LOONGARCH || COMPILE_TEST
-+	help
-+	  If you say yes to this option, support will be included for the
-+	  I2C interface on the Loongson-2K0300 SoCs.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called i2c-ls2x-v2.
-+
- config I2C_MLXBF
-         tristate "Mellanox BlueField I2C controller"
-         depends on (MELLANOX_PLATFORM && ARM64) || COMPILE_TEST
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 547123ab351f..3755c54b3d82 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_I2C_KEBA)		+= i2c-keba.o
- obj-$(CONFIG_I2C_KEMPLD)	+= i2c-kempld.o
- obj-$(CONFIG_I2C_LPC2K)		+= i2c-lpc2k.o
- obj-$(CONFIG_I2C_LS2X)		+= i2c-ls2x.o
-+obj-$(CONFIG_I2C_LS2X_V2)	+= i2c-ls2x-v2.o
- obj-$(CONFIG_I2C_MESON)		+= i2c-meson.o
- obj-$(CONFIG_I2C_MICROCHIP_CORE)	+= i2c-microchip-corei2c.o
- obj-$(CONFIG_I2C_MPC)		+= i2c-mpc.o
-diff --git a/drivers/i2c/busses/i2c-ls2x-v2.c b/drivers/i2c/busses/i2c-ls2x-v2.c
-new file mode 100644
-index 000000000000..517760d70169
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-ls2x-v2.c
-@@ -0,0 +1,544 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Loongson-2K0300 I2C controller driver
-+ *
-+ * Copyright (C) 2025-2026 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+/* Loongson-2 fast I2C offset registers */
-+#define LOONGSON2_I2C_CR1	0x00	/* I2C control 1 register */
-+#define LOONGSON2_I2C_CR2	0x04	/* I2C control 2 register */
-+#define LOONGSON2_I2C_OAR	0x08	/* I2C slave address register */
-+#define LOONGSON2_I2C_DR	0x10	/* I2C data register */
-+#define LOONGSON2_I2C_SR1	0x14	/* I2C status 1 register */
-+#define LOONGSON2_I2C_SR2	0x18	/* I2C status 2 register */
-+#define LOONGSON2_I2C_CCR	0x1c	/* I2C clock control register */
-+#define LOONGSON2_I2C_TRISE	0x20	/* I2C trise register */
-+#define LOONGSON2_I2C_FLTR	0x24
-+
-+/* Bitfields of I2C control 1 register */
-+#define LOONGSON2_I2C_CR1_PE		BIT(0)	/* Peripheral enable */
-+#define LOONGSON2_I2C_CR1_START		BIT(8)	/* Start generation */
-+#define LOONGSON2_I2C_CR1_STOP		BIT(9)	/* Stop generation */
-+#define LOONGSON2_I2C_CR1_ACK		BIT(10)	/* Acknowledge enable */
-+#define LOONGSON2_I2C_CR1_POS		BIT(11)	/* Acknowledge/PEC Position (for data reception) */
-+
-+#define LOONGSON2_I2C_CR1_OP_MASK	(LOONGSON2_I2C_CR1_START | LOONGSON2_I2C_CR1_STOP)
-+
-+/* Bitfields of I2C control 2 register */
-+#define LOONGSON2_I2C_CR2_FREQ		GENMASK(5, 0)	/* APB Clock Frequency in MHz */
-+#define LOONGSON2_I2C_CR2_ITERREN	BIT(8)	/* Fault-Class Interrupt Enable */
-+#define LOONGSON2_I2C_CR2_ITEVTEN	BIT(9)	/* Event-Based Interrupt Enable */
-+#define LOONGSON2_I2C_CR2_ITBUFEN	BIT(10)	/* Cache-Class Interrupt Enable */
-+
-+#define LOONGSON2_I2C_CR2_INT_MASK	\
-+	(LOONGSON2_I2C_CR2_ITBUFEN | LOONGSON2_I2C_CR2_ITEVTEN | LOONGSON2_I2C_CR2_ITERREN)
-+
-+/* Bitfields of I2C status 1 register */
-+#define LOONGSON2_I2C_SR1_SB		BIT(0)	/* Start bit (Master mode) */
-+#define LOONGSON2_I2C_SR1_ADDR		BIT(1)	/* Address sent (master mode) */
-+#define LOONGSON2_I2C_SR1_BTF		BIT(2)	/* Byte transfer finished */
-+#define LOONGSON2_I2C_SR1_RXNE		BIT(6)	/* Data register not empty (receivers) */
-+#define LOONGSON2_I2C_SR1_TXE		BIT(7)	/* Data register empty (transmitters) */
-+#define LOONGSON2_I2C_SR1_BERR		BIT(8)	/* Bus error */
-+#define LOONGSON2_I2C_SR1_ARLO		BIT(9)	/* Arbitration lost (master mode) */
-+#define LOONGSON2_I2C_SR1_AF		BIT(10)	/* Acknowledge failure */
-+
-+#define LOONGSON2_I2C_SR1_ITEVTEN_MASK	\
-+	(LOONGSON2_I2C_SR1_BTF | LOONGSON2_I2C_SR1_ADDR | LOONGSON2_I2C_SR1_SB)
-+#define LOONGSON2_I2C_SR1_ITBUFEN_MASK	(LOONGSON2_I2C_SR1_TXE | LOONGSON2_I2C_SR1_RXNE)
-+#define LOONGSON2_I2C_SR1_ITERREN_MASK	\
-+	(LOONGSON2_I2C_SR1_AF | LOONGSON2_I2C_SR1_ARLO | LOONGSON2_I2C_SR1_BERR)
-+
-+/* Bitfields of I2C status 2 register */
-+#define LOONGSON2_I2C_SR2_MSL		BIT(0)	/* Master/slave */
-+#define LOONGSON2_I2C_SR2_BUSY		BIT(1)	/* Bus busy */
-+#define LOONGSON2_I2C_SR2_TRA		BIT(2)	/* Transmitter/receiver */
-+#define LOONGSON2_I2C_SR2_GENCALL	BIT(4)	/* General call address (Slave mode) */
-+
-+/* Bitfields of I2C clock control register */
-+#define LOONGSON2_I2C_CCR_CCR		GENMASK(11, 0)
-+#define LOONGSON2_I2C_CCR_DUTY		BIT(14)
-+#define LOONGSON2_I2C_CCR_FS		BIT(15)
-+
-+/* Bitfields of I2C trise register */
-+#define LOONGSON2_I2C_TRISE_SCL		GENMASK(5, 0)
-+
-+#define LOONGSON2_I2C_FREE_SLEEP_US	10
-+#define LOONGSON2_I2C_FREE_TIMEOUT_US	(2 * USEC_PER_MSEC)
-+
-+/**
-+ * struct loongson2_i2c_msg - client specific data
-+ * @buf: data buffer
-+ * @count: number of bytes to be transferred
-+ * @result: result of the transfer
-+ * @addr: 8-bit slave addr, including r/w bit
-+ * @stop: last I2C msg to be sent, i.e. STOP to be generated
-+ */
-+struct loongson2_i2c_msg {
-+	u8	*buf;
-+	u32	count;
-+	int	result;
-+	u8      addr;
-+	bool	stop;
-+};
-+
-+/**
-+ * struct loongson2_i2c_priv - private data of the controller
-+ * @adapter: I2C adapter for this controller
-+ * @complete: completion of I2C message
-+ * @clk: hw i2c clock
-+ * @regmap: regmap of the I2C device
-+ * @parent_rate_MHz: I2C clock parent rate
-+ * @msg: I2C transfer information
-+ */
-+struct loongson2_i2c_priv {
-+	struct i2c_adapter		adapter;
-+	struct completion		complete;
-+	struct clk			*clk;
-+	struct regmap			*regmap;
-+	unsigned long			parent_rate_MHz;
-+	struct loongson2_i2c_msg	msg;
-+};
-+
-+static void loongson2_i2c_disable_irq(struct loongson2_i2c_priv *priv)
-+{
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C_CR2_INT_MASK, 0);
-+}
-+
-+static void loongson2_i2c_read_msg(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+	u32 rbuf;
-+
-+	regmap_read(priv->regmap, LOONGSON2_I2C_DR, &rbuf);
-+	*msg->buf++ = rbuf;
-+	msg->count--;
-+}
-+
-+static void loongson2_i2c_write_msg(struct loongson2_i2c_priv *priv, u8 byte)
-+{
-+	regmap_write(priv->regmap, LOONGSON2_I2C_DR, byte);
-+}
-+
-+static void loongson2_i2c_terminate_xfer(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	loongson2_i2c_disable_irq(priv);
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_OP_MASK,
-+			   msg->stop ? LOONGSON2_I2C_CR1_STOP : LOONGSON2_I2C_CR1_START);
-+	complete(&priv->complete);
-+}
-+
-+static void loongson2_i2c_handle_write(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	if (msg->count) {
-+		loongson2_i2c_write_msg(priv, *msg->buf++);
-+		if (!--msg->count)
-+			regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2,
-+					   LOONGSON2_I2C_CR2_ITBUFEN, 0);
-+	} else {
-+		loongson2_i2c_terminate_xfer(priv);
-+	}
-+}
-+
-+static void loongson2_i2c_handle_rx_addr(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	switch (msg->count) {
-+	case 0:
-+		loongson2_i2c_terminate_xfer(priv);
-+		break;
-+	case 1:
-+		/* Enable NACK and reset POS (Acknowledge position) */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1,
-+				   LOONGSON2_I2C_CR1_ACK | LOONGSON2_I2C_CR1_POS, 0);
-+		/* Set STOP or RepSTART */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_OP_MASK,
-+				   msg->stop ? LOONGSON2_I2C_CR1_STOP : LOONGSON2_I2C_CR1_START);
-+		break;
-+	case 2:
-+		/* Enable NACK */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_ACK, 0);
-+		/* Set POS (NACK position) */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_POS,
-+				   LOONGSON2_I2C_CR1_POS);
-+		break;
-+
-+	default:
-+		/* Enable ACK */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_ACK,
-+				   LOONGSON2_I2C_CR1_ACK);
-+		/* Reset POS (ACK position) */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_POS, 0);
-+		break;
-+	}
-+}
-+
-+static void loongson2_i2c_isr_error(u32 status, void *data)
-+{
-+	struct loongson2_i2c_priv *priv = data;
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	/* Arbitration lost */
-+	if (status & LOONGSON2_I2C_SR1_ARLO) {
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_SR1, LOONGSON2_I2C_SR1_ARLO, 0);
-+		msg->result = -EAGAIN;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Acknowledge failure:
-+	 * In master transmitter mode a Stop must be generated by software.
-+	 */
-+	if (status & LOONGSON2_I2C_SR1_AF) {
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_STOP,
-+				   LOONGSON2_I2C_CR1_STOP);
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_SR1, LOONGSON2_I2C_SR1_AF, 0);
-+		msg->result = -EIO;
-+		goto out;
-+	}
-+
-+	/* Bus error */
-+	if (status & LOONGSON2_I2C_SR1_BERR) {
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_SR1, LOONGSON2_I2C_SR1_BERR, 0);
-+		msg->result = -EIO;
-+		goto out;
-+	}
-+
-+out:
-+	loongson2_i2c_disable_irq(priv);
-+	complete(&priv->complete);
-+}
-+
-+static void loongson2_i2c_handle_read(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	switch (msg->count) {
-+	case 1:
-+		loongson2_i2c_disable_irq(priv);
-+		loongson2_i2c_read_msg(priv);
-+		complete(&priv->complete);
-+		break;
-+	case 2:
-+	case 3:
-+		/*
-+		 * For 2-byte/3-byte reception and for N-byte reception with N > 3, we have to
-+		 * wait for byte transferred finished event before reading data.
-+		 * Just disable buffer interrupt in order to avoid another system preemption due
-+		 * to RX not empty event.
-+		 */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C_CR2_ITBUFEN, 0);
-+		break;
-+	default:
-+		/*
-+		 * For N byte reception with N > 3 we directly read data register
-+		 * until N-2 data.
-+		 */
-+		loongson2_i2c_read_msg(priv);
-+		break;
-+	}
-+}
-+
-+static void loongson2_i2c_handle_rx_done(struct loongson2_i2c_priv *priv)
-+{
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+
-+	switch (msg->count) {
-+	case 2:
-+		/*
-+		 * The STOP/START bit has to be set before reading the last two bytes.
-+		 * After that, we could read the last two bytes.
-+		 */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_OP_MASK,
-+				   msg->stop ? LOONGSON2_I2C_CR1_STOP : LOONGSON2_I2C_CR1_START);
-+
-+		for (unsigned int i = msg->count; i > 0; i--)
-+			loongson2_i2c_read_msg(priv);
-+
-+		loongson2_i2c_disable_irq(priv);
-+
-+		complete(&priv->complete);
-+		break;
-+	case 3:
-+		/*
-+		 * In order to generate the NACK after the last received data byte, enable NACK
-+		 * before reading N-2 data.
-+		 */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_ACK, 0);
-+		loongson2_i2c_read_msg(priv);
-+		break;
-+	default:
-+		loongson2_i2c_read_msg(priv);
-+		break;
-+	}
-+}
-+
-+static irqreturn_t loongson2_i2c_isr_event(int irq, void *data)
-+{
-+	struct loongson2_i2c_priv *priv = data;
-+	struct device *dev = regmap_get_device(priv->regmap);
-+	struct loongson2_i2c_msg *msg = &priv->msg;
-+	u32 status, ien, event, cr2, possible_status;
-+
-+	regmap_read(priv->regmap, LOONGSON2_I2C_SR1, &status);
-+	if (status & LOONGSON2_I2C_SR1_ITERREN_MASK) {
-+		loongson2_i2c_isr_error(status, data);
-+		return IRQ_NONE;
-+	}
-+
-+	regmap_read(priv->regmap, LOONGSON2_I2C_CR2, &cr2);
-+	ien = cr2 & LOONGSON2_I2C_CR2_INT_MASK;
-+
-+	/* Update possible_status if buffer interrupt is enabled */
-+	possible_status = LOONGSON2_I2C_SR1_ITEVTEN_MASK;
-+	if (ien & LOONGSON2_I2C_CR2_ITBUFEN)
-+		possible_status |= LOONGSON2_I2C_SR1_ITBUFEN_MASK;
-+
-+	event = status & possible_status;
-+	if (!event) {
-+		dev_dbg(dev, "spurious evt IRQ (status=0x%08x, ien=0x%08x)\n", status, ien);
-+		return IRQ_NONE;
-+	}
-+
-+	/* Start condition generated */
-+	if (event & LOONGSON2_I2C_SR1_SB)
-+		loongson2_i2c_write_msg(priv, msg->addr);
-+
-+	/* I2C Address sent */
-+	if (event & LOONGSON2_I2C_SR1_ADDR) {
-+		if (msg->addr & I2C_M_RD)
-+			loongson2_i2c_handle_rx_addr(priv);
-+		/* Clear ADDR flag */
-+		regmap_read(priv->regmap, LOONGSON2_I2C_SR2, &status);
-+		/* Enable buffer interrupts for RX/TX not empty events */
-+		regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C_CR2_ITBUFEN,
-+				   LOONGSON2_I2C_CR2_ITBUFEN);
-+	}
-+
-+	/* TX empty */
-+	if ((event & LOONGSON2_I2C_SR1_TXE) && !(msg->addr & I2C_M_RD))
-+		loongson2_i2c_handle_write(priv);
-+
-+	/* RX not empty */
-+	if ((event & LOONGSON2_I2C_SR1_RXNE) && (msg->addr & I2C_M_RD))
-+		loongson2_i2c_handle_read(priv);
-+
-+	/*
-+	 * The BTF (Byte Transfer finished) event occurs when:
-+	 * - in reception: a new byte is received in the shift register
-+	 * but the previous byte has not been read yet from data register
-+	 * - in transmission: a new byte should be sent but the data register
-+	 * has not been written yet
-+	 */
-+	if (event & LOONGSON2_I2C_SR1_BTF) {
-+		if (msg->addr & I2C_M_RD)
-+			loongson2_i2c_handle_rx_done(priv);
-+		else
-+			loongson2_i2c_handle_write(priv);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int loongson2_i2c_xfer_msg(struct loongson2_i2c_priv *priv, struct i2c_msg *msg,
-+				  bool is_stop)
-+{
-+	struct loongson2_i2c_msg *l_msg = &priv->msg;
-+	unsigned long timeout;
-+
-+	l_msg->addr   = i2c_8bit_addr_from_msg(msg);
-+	l_msg->buf    = msg->buf;
-+	l_msg->count  = msg->len;
-+	l_msg->stop   = is_stop;
-+	l_msg->result = 0;
-+
-+	reinit_completion(&priv->complete);
-+
-+	/* Enable events and errors interrupts */
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2,
-+			   LOONGSON2_I2C_CR2_ITEVTEN | LOONGSON2_I2C_CR2_ITERREN,
-+			   LOONGSON2_I2C_CR2_ITEVTEN | LOONGSON2_I2C_CR2_ITERREN);
-+
-+	timeout = wait_for_completion_timeout(&priv->complete, priv->adapter.timeout);
-+	if (!timeout)
-+		return -ETIMEDOUT;
-+
-+	return l_msg->result;
-+}
-+
-+static int loongson2_i2c_xfer(struct i2c_adapter *i2c_adap, struct i2c_msg msgs[], int num)
-+{
-+	struct loongson2_i2c_priv *priv = i2c_get_adapdata(i2c_adap);
-+	struct device *dev = regmap_get_device(priv->regmap);
-+	unsigned int status;
-+	int ret;
-+
-+	/* Wait I2C bus free */
-+	ret = regmap_read_poll_timeout(priv->regmap, LOONGSON2_I2C_SR2, status,
-+				       !(status & LOONGSON2_I2C_SR2_BUSY),
-+				       LOONGSON2_I2C_FREE_SLEEP_US,
-+				       LOONGSON2_I2C_FREE_TIMEOUT_US);
-+	if (ret) {
-+		dev_dbg(dev, "The I2C bus is busy now.\n");
-+		return ret;
-+	}
-+
-+	/* Start generation */
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_START,
-+			   LOONGSON2_I2C_CR1_START);
-+
-+	for (unsigned int i = 0; i < num; i++) {
-+		ret = loongson2_i2c_xfer_msg(priv, &msgs[i], i == num - 1);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return num;
-+}
-+
-+static u32 loongson2_i2c_func(struct i2c_adapter *adap)
-+{
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_algorithm loongson2_i2c_algo = {
-+	.xfer		= loongson2_i2c_xfer,
-+	.functionality	= loongson2_i2c_func,
-+};
-+
-+static int loongson2_i2c_adjust_bus_speed(struct loongson2_i2c_priv *priv)
-+{
-+	struct device *dev = regmap_get_device(priv->regmap);
-+	struct i2c_timings i2c_t;
-+	u32 val, freq_MHz, ccr;
-+
-+	i2c_parse_fw_timings(dev, &i2c_t, true);
-+	priv->parent_rate_MHz = clk_get_rate(priv->clk);
-+
-+	if (i2c_t.bus_freq_hz == I2C_MAX_STANDARD_MODE_FREQ) {
-+		 /* Select Standard mode */
-+		ccr = 0;
-+		val = DIV_ROUND_UP(priv->parent_rate_MHz, i2c_t.bus_freq_hz * 2);
-+	} else if (i2c_t.bus_freq_hz == I2C_MAX_FAST_MODE_FREQ) {
-+		/* Select Fast mode */
-+		ccr = LOONGSON2_I2C_CCR_FS;
-+		val = DIV_ROUND_UP(priv->parent_rate_MHz, i2c_t.bus_freq_hz * 3);
-+	} else {
-+		return dev_err_probe(dev, -EINVAL, "Unsupported speed (%uHz)\n", i2c_t.bus_freq_hz);
-+	}
-+
-+	FIELD_MODIFY(LOONGSON2_I2C_CCR_CCR, &ccr, val);
-+	regmap_write(priv->regmap, LOONGSON2_I2C_CCR, ccr);
-+
-+	freq_MHz = DIV_ROUND_UP(priv->parent_rate_MHz, HZ_PER_MHZ);
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR2, LOONGSON2_I2C_CR2_FREQ,
-+			   FIELD_GET(LOONGSON2_I2C_CR2_FREQ, freq_MHz));
-+
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_TRISE, LOONGSON2_I2C_TRISE_SCL,
-+			   LOONGSON2_I2C_TRISE_SCL);
-+
-+	/* Enable I2C */
-+	regmap_update_bits(priv->regmap, LOONGSON2_I2C_CR1, LOONGSON2_I2C_CR1_PE,
-+			   LOONGSON2_I2C_CR1_PE);
-+
-+	return 0;
-+}
-+
-+static const struct regmap_config loongson2_i2c_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = LOONGSON2_I2C_TRISE,
-+};
-+
-+static int loongson2_i2c_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct loongson2_i2c_priv *priv;
-+	struct i2c_adapter *adap;
-+	void __iomem *base;
-+	int irq, ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->regmap = devm_regmap_init_mmio(dev, base, &loongson2_i2c_regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return dev_err_probe(dev, PTR_ERR(priv->regmap), "Failed to init regmap.\n");
-+
-+	priv->clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(dev, PTR_ERR(priv->clk), "Failed to enable clock.\n");
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	adap = &priv->adapter;
-+	adap->retries = 5;
-+	adap->nr = pdev->id;
-+	adap->dev.parent = dev;
-+	adap->owner = THIS_MODULE;
-+	adap->algo = &loongson2_i2c_algo;
-+	adap->timeout = 2 * HZ;
-+	device_set_node(&adap->dev, dev_fwnode(dev));
-+	i2c_set_adapdata(adap, priv);
-+	strscpy(adap->name, pdev->name);
-+	init_completion(&priv->complete);
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = loongson2_i2c_adjust_bus_speed(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_request_irq(dev, irq, loongson2_i2c_isr_event, IRQF_SHARED, pdev->name, priv);
-+	if (ret)
-+		return ret;
-+
-+	return devm_i2c_add_adapter(dev, adap);
-+}
-+
-+static const struct of_device_id loongson2_i2c_id_table[] = {
-+	{ .compatible = "loongson,ls2k0300-i2c" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, loongson2_i2c_id_table);
-+
-+static struct platform_driver loongson2_i2c_driver = {
-+	.driver = {
-+		.name = "loongson2-i2c-v2",
-+		.of_match_table = loongson2_i2c_id_table,
-+	},
-+	.probe = loongson2_i2c_probe,
-+};
-+module_platform_driver(loongson2_i2c_driver);
-+
-+MODULE_DESCRIPTION("Loongson-2K0300 I2C bus driver");
-+MODULE_AUTHOR("Loongson Technology Corporation Limited");
-+MODULE_LICENSE("GPL");
--- 
-2.52.0
+在 2026/3/19 下午8:48, Huacai Chen 写道:
+> Hi, Song,
+>
+> On Wed, Mar 11, 2026 at 5:16 PM Song Gao <gaosong@loongson.cn> wrote:
+>> Add device model for DMSINTC interrupt controller, implement basic
+>> create/destroy/set_attr interfaces, and register device model to kvm
+>> device table.
+>>
+>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+>> Signed-off-by: Song Gao <gaosong@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/kvm_dmsintc.h |  21 ++++
+>>   arch/loongarch/include/asm/kvm_host.h    |   3 +
+>>   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
+>>   arch/loongarch/kvm/Makefile              |   1 +
+>>   arch/loongarch/kvm/intc/dmsintc.c        | 117 +++++++++++++++++++++++
+>>   arch/loongarch/kvm/main.c                |   6 ++
+>>   include/uapi/linux/kvm.h                 |   2 +
+>>   7 files changed, 154 insertions(+)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
+>>   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+>>
+>> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/include/asm/kvm_dmsintc.h
+>> new file mode 100644
+>> index 000000000000..b04b89dd2a35
+>> --- /dev/null
+>> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
+>> @@ -0,0 +1,21 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#ifndef __ASM_KVM_DMSINTC_H
+>> +#define __ASM_KVM_DMSINTC_H
+>> +
+>> +
+>> +struct loongarch_dmsintc {
+>> +       struct kvm *kvm;
+>> +       uint64_t msg_addr_base;
+>> +       uint64_t msg_addr_size;
+>> +};
+>> +
+>> +struct dmsintc_state {
+>> +       atomic64_t  vector_map[4];
+>> +};
+>> +
+>> +int kvm_loongarch_register_dmsintc_device(void);
+>> +#endif
+>> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+>> index 19eb5e5c3984..6a8d72cf8e4e 100644
+>> --- a/arch/loongarch/include/asm/kvm_host.h
+>> +++ b/arch/loongarch/include/asm/kvm_host.h
+>> @@ -22,6 +22,7 @@
+>>   #include <asm/kvm_ipi.h>
+>>   #include <asm/kvm_eiointc.h>
+>>   #include <asm/kvm_pch_pic.h>
+>> +#include <asm/kvm_dmsintc.h>
+>>   #include <asm/loongarch.h>
+>>
+>>   #define __KVM_HAVE_ARCH_INTC_INITIALIZED
+>> @@ -135,6 +136,7 @@ struct kvm_arch {
+>>          struct loongarch_ipi *ipi;
+>>          struct loongarch_eiointc *eiointc;
+>>          struct loongarch_pch_pic *pch_pic;
+>> +       struct loongarch_dmsintc *dmsintc;
+>>   };
+>>
+>>   #define CSR_MAX_NUMS           0x800
+>> @@ -247,6 +249,7 @@ struct kvm_vcpu_arch {
+>>          struct kvm_mp_state mp_state;
+>>          /* ipi state */
+>>          struct ipi_state ipi_state;
+>> +       struct dmsintc_state dmsintc_state;
+>>          /* cpucfg */
+>>          u32 cpucfg[KVM_MAX_CPUCFG_REGS];
+>>
+>> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+>> index 419647aacdf3..c39b8ac7a90a 100644
+>> --- a/arch/loongarch/include/uapi/asm/kvm.h
+>> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+>> @@ -155,4 +155,8 @@ struct kvm_iocsr_entry {
+>>   #define KVM_DEV_LOONGARCH_PCH_PIC_GRP_CTRL             0x40000006
+>>   #define KVM_DEV_LOONGARCH_PCH_PIC_CTRL_INIT            0
+>>
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_CTRL                 0x40000007
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE                0x0
+>> +#define KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE                0x1
+>> +
+>>   #endif /* __UAPI_ASM_LOONGARCH_KVM_H */
+>> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+>> index cb41d9265662..6e184e24443c 100644
+>> --- a/arch/loongarch/kvm/Makefile
+>> +++ b/arch/loongarch/kvm/Makefile
+>> @@ -19,6 +19,7 @@ kvm-y += vm.o
+>>   kvm-y += intc/ipi.o
+>>   kvm-y += intc/eiointc.o
+>>   kvm-y += intc/pch_pic.o
+>> +kvm-y += intc/dmsintc.o
+>>   kvm-y += irqfd.o
+>>
+>>   CFLAGS_exit.o  += $(call cc-disable-warning, override-init)
+>> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
+>> new file mode 100644
+>> index 000000000000..1bb61e55d061
+>> --- /dev/null
+>> +++ b/arch/loongarch/kvm/intc/dmsintc.c
+>> @@ -0,0 +1,117 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2025 Loongson Technology Corporation Limited
+>> + */
+>> +
+>> +#include <linux/kvm_host.h>
+>> +#include <asm/kvm_dmsintc.h>
+>> +#include <asm/kvm_vcpu.h>
+>> +
+>> +static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
+>> +                               struct kvm_device_attr *attr,
+>> +                               bool is_write)
+>> +{
+>> +       int addr = attr->attr;
+>> +       void __user *data;
+>> +       struct loongarch_dmsintc *s = dev->kvm->arch.dmsintc;
+>> +       u64 tmp;
+>> +       u32 cpu_bit;
+>> +
+>> +       data = (void __user *)attr->addr;
+>> +       switch (addr) {
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_BASE:
+>> +               if (is_write) {
+>> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_base)))
+>> +                               return -EFAULT;
+>> +                       if (s->msg_addr_base) {
+>> +                               /* Duplicate setting are not allowed. */
+>> +                               return -EFAULT;
+>> +                       }
+>> +                       if ((tmp & (BIT(AVEC_CPU_SHIFT) - 1)) == 0)
+>> +                               s->msg_addr_base = tmp;
+>> +                       else
+>> +                               return  -EFAULT;
+>> +                       s->msg_addr_base = tmp;
+>> +                       cpu_bit = find_first_bit((unsigned long *)&(s->msg_addr_base), 64)
+>> +                                               - AVEC_CPU_SHIFT;
+>> +                       cpu_bit = min(cpu_bit, AVEC_CPU_BIT);
+>> +                       s->cpu_mask = GENMASK(cpu_bit - 1, 0) & AVEC_CPU_MASK;
+>> +               }
+>> +               break;
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_MSG_ADDR_SIZE:
+>> +               if (is_write) {
+>> +                       if (copy_from_user(&tmp, data, sizeof(s->msg_addr_size)))
+>> +                               return -EFAULT;
+>> +                       if (s->msg_addr_size) {
+>> +                               /*Duplicate setting are not allowed. */
+>> +                               return -EFAULT;
+>> +                       }
+>> +                       s->msg_addr_size = tmp;
+>> +               }
+>> +               break;
+>> +       default:
+>> +               kvm_err("%s: unknown dmsintc register, addr = %d\n", __func__, addr);
+>> +               return -ENXIO;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int kvm_dmsintc_set_attr(struct kvm_device *dev,
+>> +                       struct kvm_device_attr *attr)
+>> +{
+>> +       switch (attr->group) {
+>> +       case KVM_DEV_LOONGARCH_DMSINTC_CTRL:
+>> +               return kvm_dmsintc_ctrl_access(dev, attr, true);
+>> +       default:
+>> +               kvm_err("%s: unknown group (%d)\n", __func__, attr->group);
+>> +               return -EINVAL;
+>> +       }
+>> +}
+>> +
+>> +static int kvm_dmsintc_create(struct kvm_device *dev, u32 type)
+>> +{
+>> +       struct kvm *kvm;
+>> +       struct loongarch_dmsintc *s;
+>> +
+>> +       if (!dev) {
+>> +               kvm_err("%s: kvm_device ptr is invalid!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       kvm = dev->kvm;
+>> +       if (kvm->arch.dmsintc) {
+>> +               kvm_err("%s: LoongArch DMSINTC has already been created!\n", __func__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       s = kzalloc(sizeof(struct loongarch_dmsintc), GFP_KERNEL);
+>> +       if (!s)
+>> +               return -ENOMEM;
+>> +
+>> +       s->kvm = kvm;
+>> +       kvm->arch.dmsintc = s;
+>> +       return 0;
+>> +}
+>> +
+>> +static void kvm_dmsintc_destroy(struct kvm_device *dev)
+>> +{
+>> +
+>> +       if (!dev || !dev->kvm || !dev->kvm->arch.dmsintc)
+>> +               return;
+>> +
+>> +       kfree(dev->kvm->arch.dmsintc);
+>> +       kfree(dev);
+>> +}
+>> +
+>> +static struct kvm_device_ops kvm_dmsintc_dev_ops = {
+>> +       .name = "kvm-loongarch-dmsintc",
+>> +       .create = kvm_dmsintc_create,
+>> +       .destroy = kvm_dmsintc_destroy,
+>> +       .set_attr = kvm_dmsintc_set_attr,
+>> +};
+>> +
+>> +int kvm_loongarch_register_dmsintc_device(void)
+>> +{
+>> +       return kvm_register_device_ops(&kvm_dmsintc_dev_ops, KVM_DEV_TYPE_LOONGARCH_DMSINTC);
+>> +}
+>> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+>> index 2c593ac7892f..713771a93d90 100644
+>> --- a/arch/loongarch/kvm/main.c
+>> +++ b/arch/loongarch/kvm/main.c
+>> @@ -416,6 +416,12 @@ static int kvm_loongarch_env_init(void)
+>>
+>>          /* Register LoongArch PCH-PIC interrupt controller interface. */
+>>          ret = kvm_loongarch_register_pch_pic_device();
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       /* Register LoongArch DMSINTC interrupt contrroller interface */
+>> +       if (cpu_has_msgint)
+> I still have some questions here. If we always create dmsintc when
+> cpu_has_msgint, then kvm_guest_has_msgint() is completely useless.
+> Because there will be no guest without dmsintc while the host has
+> dmsintc.
+>   
+
+I'd like to clarify two points:
+
+1. Registration vs. Instantiation:
+In kvm_loongarch_env_init(), the call to kvm_loongarch_register_dmsintc_device()
+(guarded by cpu_has_msgint) only registers the dmsintc device type with KVM.
+This makes the device type available for userspace to create instances via KVM_CREATE_DEVICE.
+It does not automatically instantiate the device for every VM. The actual creation of
+a dmsintc device for a specific VM is explicitly controlled by userspace (e.g., QEMU).
+Therefore, a VM may or may not have dmsintc depending on userspace configuration,
+even on hosts that support MSGINT.
+
+2.Purpose of kvm_guest_has_msgint():
+This function is intended to reflect the userspace configuration for the guest,
+i.e., whether the guest VM has MSGINT enabled.
+
+With this in mind, the registration condition does not force every guest to have dmsintc,
+and kvm_guest_has_msgint() remains meaningful as long as it queries per-VM state.
+
+Please let me know if you have further concerns or suggestions.
+
+Thanks.
+Song Gao
+
+>
+> Huacai
+>
+>> +               ret = kvm_loongarch_register_dmsintc_device();
+>>
+>>          return ret;
+>>   }
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index 65500f5db379..f2aa9d6ad7d3 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1220,6 +1220,8 @@ enum kvm_device_type {
+>>   #define KVM_DEV_TYPE_LOONGARCH_EIOINTC KVM_DEV_TYPE_LOONGARCH_EIOINTC
+>>          KVM_DEV_TYPE_LOONGARCH_PCHPIC,
+>>   #define KVM_DEV_TYPE_LOONGARCH_PCHPIC  KVM_DEV_TYPE_LOONGARCH_PCHPIC
+>> +       KVM_DEV_TYPE_LOONGARCH_DMSINTC,
+>> +#define KVM_DEV_TYPE_LOONGARCH_DMSINTC   KVM_DEV_TYPE_LOONGARCH_DMSINTC
+>>
+>>          KVM_DEV_TYPE_MAX,
+>>
+>> --
+>> 2.39.3
+>>
 
