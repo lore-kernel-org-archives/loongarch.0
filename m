@@ -1,114 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41461372B4D;
-	Fri, 20 Mar 2026 08:59:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6EC3793CC;
+	Fri, 20 Mar 2026 09:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773997169; cv=none; b=XUUzUjyHQCBhICuDhertsp5JK4EluiZ4Np2uTUHcsfNUxlhUtMCO2a+I6eSWe5HmunLDK2Nc97BqFrD49CwbSm8FleL2c4x5xgKyOldAKvVVFB17P1yuMW3kC9w5WfK3zf+OG+EU0M6UUzmpa/1kJqVvBMFSJ49QXqPq88hRaXo=
+	t=1773997756; cv=none; b=GSJPxTqama1wFwt9tsSZxVnSnUaeaFWbePSgwIaVN4cSWt9GjChFaBfKOA0uixZJcCsF9jhAgUFvDQsrN8rs+jcc1v9DVLBM2i3KWbJgommD8F8XM/dua2l9rd3encKbl7M43ZagQTFuOSGBgCIR7Zli1uhXd/pIRJVuATf7/gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773997169; c=relaxed/simple;
-	bh=gZ7mo8VD+NAhXZQb0GYWny9AT9mHJxVOkGXSXRSlXkU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A6ZIkh7nwpqF8VVKkDI6lFDA1xEDn4yv3VtuIK5FFhRh5xL2C4TdSTHKRs/169d0y/FAXOy2shvNaBIhi5lBvqgcGKY1Eb6lacA0J8cT5tCyUsGcgSU9IWJzaXLGlkseix+GHxkELxS9XFhbqb3RQJhuLHwCPctHZBfuiDemWzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vnv5g+fa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773997756; c=relaxed/simple;
+	bh=sdgC/KkwAU//GqwnfohFe3+blWfZ1LFGtORl/qFH1DQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XVKeBTku+ZcspvKdW6axpiVxHnOFVTRUxuhaq8Y4U257xXKPLcInLsqZTtwZqZUsXdlv6PnhY+Q/b1i/GeEQK5XcG4jfXJyA/AeWI91sLD+NevTzpmtaVdUQU/y03BAaokxeaONWJPcqZ3kVYc4ZmLuRBli8l4X/HvPR7fneUHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUbGz2rE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vnv5g+fa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99035C4CEF7;
-	Fri, 20 Mar 2026 08:59:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUbGz2rE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A6E8C4CEF7;
+	Fri, 20 Mar 2026 09:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773997168;
-	bh=gZ7mo8VD+NAhXZQb0GYWny9AT9mHJxVOkGXSXRSlXkU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vnv5g+fajJemAepqRKZRz47c22+umNsA8K+bcibnuhBXHBu1d5YmKqWsG7qOfUFHJ
-	 CztV2PyO5tXV2ndgWUvx38ZhYgi/lqkSfU/R+xvcHnxYaqLoT/e6BRXTA0NdY6badP
-	 onDLOW/x64CNFEUrBONrSFSXSn2B8FQntJuy/TT5vt3gBjuLsep153gxDZT/dirYhC
-	 CVXFpifY9igf7fwFZwHhAhTf6uDN0JdiB+PEafeRbGrcMqNb+21IkikxadesfcAOxw
-	 W1QaWfzU+BhIh3qR/LFIA31TyjFUkVqrJLl/fZ5m//RUqAkbCbCMSFvmboEAlRrHUw
-	 pulfK6egziujA==
-Message-ID: <c45932ed-844c-48ab-9481-9973bd0193c3@kernel.org>
-Date: Fri, 20 Mar 2026 09:59:15 +0100
+	s=k20201202; t=1773997756;
+	bh=sdgC/KkwAU//GqwnfohFe3+blWfZ1LFGtORl/qFH1DQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pUbGz2rE90r9tKAzl3vaQGbCiLDtAjpIab+to/8m+8g3i/bQFrTpa3MFHwCQOE6p6
+	 Wo7GKo+Nk+pdmDjAJ2AzmhGuncBc4hNcen48r3q6b+yqqzj6djEE/z2zuAkL+SXbzk
+	 P3ta7ru0QpQpEzx30qyjA/bvI8mRkNYYivAa1K9P7Jf2jzMljHZwJ+luZSyzQ7beTk
+	 WyNncxu122uqcgu52Web8W3qOFgPnSb4N5g2J96JyyLz3iomTlDOSPWfTAQ9baxoLS
+	 +QX6c2r3Bdn5P374ItW58T2ac1JMNud2RZyDyNvHJczVKS2765jHwm00cl/xw0OpDB
+	 S7WI0ZwvyQ7vg==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Icenowy Zheng <zhengxingda@iscas.ac.cn>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>, Yao Zi <me@ziyao.cc>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org, Icenowy Zheng
+ <zhengxingda@iscas.ac.cn>
+Subject: Re: [PATCH v3 1/8] MIPS: Loongson64: Override
+ arch_dynirq_lower_bound to reserve LPC IRQs
+In-Reply-To: <20260314162828.1055188-2-zhengxingda@iscas.ac.cn>
+References: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
+ <20260314162828.1055188-2-zhengxingda@iscas.ac.cn>
+Date: Fri, 20 Mar 2026 10:09:10 +0100
+Message-ID: <87a4w2lvex.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 15/23] mm: introduce vma_flags_count() and
- vma[_flags]_test_single_mask()
-Content-Language: en-US
-To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@kernel.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Kees Cook <kees@kernel.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Dinh Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, Richard Weinberger <richard@nod.at>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Michal Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, linux-snps-arc@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org
-References: <cover.1773846935.git.ljs@kernel.org>
- <02a6b26542ab70d60175e0125cff5fd00073c7ae.1773846935.git.ljs@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <02a6b26542ab70d60175e0125cff5fd00073c7ae.1773846935.git.ljs@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 3/18/26 16:50, Lorenzo Stoakes (Oracle) wrote:
-> vma_flags_count() determines how many bits are set in VMA flags, using
-> bitmap_weight().
-> 
-> vma_flags_test_single_mask() determines if a vma_flags_t set of flags
-> contains a single flag specified as another vma_flags_t value, or if the
-> sought flag mask is empty, it is defined to return false.
-> 
-> This is useful when we want to declare a VMA flag as optionally a single
-> flag in a mask or empty depending on kernel configuration.
-> 
-> This allows us to have VM_NONE-like semantics when checking whether the
-> flag is set.
-> 
-> In a subsequent patch, we introduce the use of VMA_DROPPABLE of type
-> vma_flags_t using precisely these semantics.
-> 
-> It would be actively confusing to use vma_flags_test_any_single_mask() for
-> this (and vma_flags_test_all_mask() is not correct to use here, as it
-> trivially returns true when tested against an empty vma flags mask).
-> 
-> We introduce vma_flags_count() to be able to assert that the compared flag
-> mask is singular or empty, checked when CONFIG_DEBUG_VM is enabled.
-> 
-> Also update the VMA tests as part of this change.
-> 
-> Signed-off-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
+On Sun, Mar 15 2026 at 00:28, Icenowy Zheng wrote:
+> On some Loongson 3A devices, a LPC bus is present and some legacy
+> devices (e.g. 8259) on it expect hardcoded low IRQ numbers. However
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+s/IRQ/interrupt/ all over the place
 
+Change log are supposed to be written in proper prose and not be riddled
+with acronyms unless the acronym has a technical relevance like LPC or
+ACPI. IRQ[s] does not qualify for that.
+
+Thanks,
+
+     tglx
