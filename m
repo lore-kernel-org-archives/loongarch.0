@@ -1,49 +1,38 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCBB304BA3
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125ED2E22BD
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773976680; cv=none; b=V7rTk5dCRBGVrXl/5Hc8GbabpkA49nVWQraVEf3NuSQxzpTgP4qoVImDoTTTYwbDR47HDB/C7kJxXBZttzx0Ot1XOe6xAYmjD7WBQuIyRRwwEu5km5vEuC6CiqnmIAh0PmeklycfxYXovp0QhROehsCCgH7woyMl4pbthaXnk5M=
+	t=1773976682; cv=none; b=gAyrb79z73ikg+so1FTlk90PU6jf7ZAayBN1/Heb7xGMbTp5yyJCXGavP+ucwfp7fitwkF10DtFX4TmAZxqJNsxYnmFkkgunerjpOsUF5hsb4zoxQsZQ/K602Xu6Iyjvkb37w+6JRSLnxizN/waCSTKwiXPp0aRaWfiVTnQDziU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773976680; c=relaxed/simple;
-	bh=xnGg7URF6SJUcVBsYgX8twXUnvnGOuIUA9tK8uf3WvE=;
+	s=arc-20240116; t=1773976682; c=relaxed/simple;
+	bh=EKUkpbq7JSTnCQVDsQ7Bo7f2ZKWsZtAK12DNKf/nJlk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=urU7KyMGZjMSxiCEouG3YDAjuMYr9F+fDbH4ki5p9LOoyfoxnk6Fb+lZF1v+w/XDcNJsjikiIwQo77YZTUdxJL14xlFu8ez0ixKqSzDf0Tsxn/IAI5qHOByin/PJzcVd83ivTEI6HQbwOGDHq9Hupx+qdCBTi4/1KGXo6jh/F84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=l/7oJpMq; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=l/7oJpMq; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=Ky/FXhp7PnC9Y092bzzEFkJJL7LMk8MxKh+5MPet79tdIlcfjRiH53tVEaI411o7r8cewI1JAvNvZrZ9AUV2mZloO3bks14/7zcKA6vduD4OR3nfZl+eglNkgRrCMHsITeVyp0dotGAiCkDjXhsY6TIOXPBw3kYtj8eRisRYkdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=qLgUdTXy; arc=none smtp.client-ip=113.46.200.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="l/7oJpMq";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="l/7oJpMq"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="qLgUdTXy"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=BMMryEb1CdnOx2gMiVv+9iHKONhR3XK5c+5CZUibkPo=;
-	b=l/7oJpMqJuYSGHZyOqLiw5LD07h+45LWAipYVAvEt9pYxSp4UxJSqwXgX66M8/EZ74aeSBY3M
-	qLpVsSs+rpKpxDOoVmFTloYQFQ4DUIG80JTpBOmlHJ7rSI3KUDZxGFyGCXDxs8sVu0UH3BlI+It
-	fJwAj4fQtMaqP5gUwirfIBk=
-Received: from canpmsgout08.his.huawei.com (unknown [172.19.92.156])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4fcSQz70fhz1BG7l
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 11:16:59 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=BMMryEb1CdnOx2gMiVv+9iHKONhR3XK5c+5CZUibkPo=;
-	b=l/7oJpMqJuYSGHZyOqLiw5LD07h+45LWAipYVAvEt9pYxSp4UxJSqwXgX66M8/EZ74aeSBY3M
-	qLpVsSs+rpKpxDOoVmFTloYQFQ4DUIG80JTpBOmlHJ7rSI3KUDZxGFyGCXDxs8sVu0UH3BlI+It
-	fJwAj4fQtMaqP5gUwirfIBk=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fcSL815VlzmV66;
-	Fri, 20 Mar 2026 11:12:48 +0800 (CST)
+	bh=hE9w7JoPF7q5rCf6KhhEJWJqCptovuDZd/Iy/+tLfKo=;
+	b=qLgUdTXyB2huFMYWwsBs6yJ/F+9lt0zGJ2NBn+WC66I23Xw4lD/MYLZdp/AaESL9MDwbvh4PG
+	4g/cCYoR/67GmTbgs1X5afshxewzUwAWGLnOlgBOHKQjEtF2bK4P57/PDC46EmJDfRwKl3h1FiZ
+	k+9EKAAKSPQbPzHjYnS4Cu4=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fcSKt0TLYz1T4jB;
+	Fri, 20 Mar 2026 11:12:34 +0800 (CST)
 Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id B24234056B;
-	Fri, 20 Mar 2026 11:17:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B38694056A;
+	Fri, 20 Mar 2026 11:17:57 +0800 (CST)
 Received: from localhost.localdomain (10.50.163.32) by
  kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 20 Mar 2026 11:17:47 +0800
+ 15.2.1544.11; Fri, 20 Mar 2026 11:17:55 +0800
 From: Chengwen Feng <fengchengwen@huawei.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
 	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
@@ -76,9 +65,9 @@ CC: Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>,
 	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
 	<xen-devel@lists.xenproject.org>, <linux-acpi@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v10 3/8] RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
-Date: Fri, 20 Mar 2026 11:17:32 +0800
-Message-ID: <20260320031737.35048-4-fengchengwen@huawei.com>
+Subject: [PATCH v10 8/8] PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+Date: Fri, 20 Mar 2026 11:17:37 +0800
+Message-ID: <20260320031737.35048-9-fengchengwen@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
 References: <20260320031737.35048-1-fengchengwen@huawei.com>
@@ -92,102 +81,125 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  kwepemk500009.china.huawei.com (7.202.194.94)
 
-As a step towards unifying the interface for retrieving ACPI CPU UID
-across architectures, introduce a new function acpi_get_cpu_uid() for
-riscv. While at it, add input validation to make the code more robust.
+pcie_tph_get_cpu_st() uses the Query Cache Locality Features _DSM [1]
+to retrieve the TPH Steering Tag for memory associated with the CPU
+identified by its "cpu_uid" parameter, a Linux logical CPU ID.
 
-And also update acpi_numa.c and rhct.c to use the new interface instead
-of the legacy get_acpi_id_for_cpu().
+The _DSM requires an ACPI Processor UID, which pcie_tph_get_cpu_st()
+previously assumed was the same as the Linux logical CPU ID. This is
+true on x86 but not on arm64, so pcie_tph_get_cpu_st() returned the
+wrong Steering Tag, resulting in incorrect TPH functionality on arm64.
 
+Convert the Linux logical CPU ID to the ACPI Processor UID with
+acpi_get_cpu_uid() before passing it to the _DSM. Additionally, rename
+the pcie_tph_get_cpu_st() parameter from "cpu_uid" to "cpu" to reflect
+that it represents a logical CPU ID (not an ACPI Processor UID).
+
+[1] According to ECN_TPH-ST_Revision_20200924
+    (https://members.pcisig.com/wg/PCI-SIG/document/15470), the input
+    is defined as: "If the target is a processor, then this field
+    represents the ACPI Processor UID of the processor as specified in
+    the MADT. If the target is a processor container, then this field
+    represents the ACPI Processor UID of the processor container as
+    specified in the PPTT."
+
+Fixes: d2e8a34876ce ("PCI/TPH: Add Steering Tag support")
 Cc: stable@vger.kernel.org
 Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
 Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- arch/riscv/include/asm/acpi.h |  1 +
- arch/riscv/kernel/acpi.c      | 16 ++++++++++++++++
- arch/riscv/kernel/acpi_numa.c |  9 ++++++---
- drivers/acpi/riscv/rhct.c     |  7 ++++++-
- 4 files changed, 29 insertions(+), 4 deletions(-)
+ Documentation/PCI/tph.rst |  4 ++--
+ drivers/pci/tph.c         | 16 +++++++++++-----
+ include/linux/pci-tph.h   |  4 ++--
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.h
-index 6e13695120bc..f3520cc85af3 100644
---- a/arch/riscv/include/asm/acpi.h
-+++ b/arch/riscv/include/asm/acpi.h
-@@ -65,6 +65,7 @@ static inline u32 get_acpi_id_for_cpu(int cpu)
+diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
+index e8993be64fd6..b6cf22b9bd90 100644
+--- a/Documentation/PCI/tph.rst
++++ b/Documentation/PCI/tph.rst
+@@ -79,10 +79,10 @@ To retrieve a Steering Tag for a target memory associated with a specific
+ CPU, use the following function::
+ 
+   int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type type,
+-                          unsigned int cpu_uid, u16 *tag);
++                          unsigned int cpu, u16 *tag);
+ 
+ The `type` argument is used to specify the memory type, either volatile
+-or persistent, of the target memory. The `cpu_uid` argument specifies the
++or persistent, of the target memory. The `cpu` argument specifies the
+ CPU where the memory is associated to.
+ 
+ After the ST value is retrieved, the device driver can use the following
+diff --git a/drivers/pci/tph.c b/drivers/pci/tph.c
+index ca4f97be7538..b67c9ad14bda 100644
+--- a/drivers/pci/tph.c
++++ b/drivers/pci/tph.c
+@@ -236,21 +236,27 @@ static int write_tag_to_st_table(struct pci_dev *pdev, int index, u16 tag)
+  * with a specific CPU
+  * @pdev: PCI device
+  * @mem_type: target memory type (volatile or persistent RAM)
+- * @cpu_uid: associated CPU id
++ * @cpu: associated CPU id
+  * @tag: Steering Tag to be returned
+  *
+  * Return the Steering Tag for a target memory that is associated with a
+- * specific CPU as indicated by cpu_uid.
++ * specific CPU as indicated by cpu.
+  *
+  * Return: 0 if success, otherwise negative value (-errno)
+  */
+ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
+-			unsigned int cpu_uid, u16 *tag)
++			unsigned int cpu, u16 *tag)
  {
- 	return acpi_cpu_get_madt_rintc(cpu)->uid;
- }
-+int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
- 
- int acpi_get_riscv_isa(struct acpi_table_header *table,
- 		       unsigned int cpu, const char **isa);
-diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
-index 71698ee11621..322ea92aa39f 100644
---- a/arch/riscv/kernel/acpi.c
-+++ b/arch/riscv/kernel/acpi.c
-@@ -337,3 +337,19 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
- }
- 
- #endif	/* CONFIG_PCI */
-+
-+int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
-+{
-+	struct acpi_madt_rintc *rintc;
-+
-+	if (cpu >= nr_cpu_ids)
-+		return -EINVAL;
-+
-+	rintc = acpi_cpu_get_madt_rintc(cpu);
-+	if (!rintc)
-+		return -ENODEV;
-+
-+	*uid = rintc->uid;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
-diff --git a/arch/riscv/kernel/acpi_numa.c b/arch/riscv/kernel/acpi_numa.c
-index 130769e3a99c..6a2d4289f806 100644
---- a/arch/riscv/kernel/acpi_numa.c
-+++ b/arch/riscv/kernel/acpi_numa.c
-@@ -37,11 +37,14 @@ static int __init acpi_numa_get_nid(unsigned int cpu)
- 
- static inline int get_cpu_for_acpi_id(u32 uid)
- {
--	int cpu;
+ #ifdef CONFIG_ACPI
+ 	struct pci_dev *rp;
+ 	acpi_handle rp_acpi_handle;
+ 	union st_info info;
 +	u32 cpu_uid;
 +	int ret;
- 
--	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
--		if (uid == get_acpi_id_for_cpu(cpu))
-+	for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
-+		ret = acpi_get_cpu_uid(cpu, &cpu_uid);
-+		if (ret == 0 && uid == cpu_uid)
- 			return cpu;
-+	}
- 
- 	return -EINVAL;
- }
-diff --git a/drivers/acpi/riscv/rhct.c b/drivers/acpi/riscv/rhct.c
-index caa2c16e1697..8f3f38c64a88 100644
---- a/drivers/acpi/riscv/rhct.c
-+++ b/drivers/acpi/riscv/rhct.c
-@@ -44,10 +44,15 @@ int acpi_get_riscv_isa(struct acpi_table_header *table, unsigned int cpu, const
- 	struct acpi_rhct_isa_string *isa_node;
- 	struct acpi_table_rhct *rhct;
- 	u32 *hart_info_node_offset;
--	u32 acpi_cpu_id = get_acpi_id_for_cpu(cpu);
-+	u32 acpi_cpu_id;
-+	int ret;
- 
- 	BUG_ON(acpi_disabled);
- 
-+	ret = acpi_get_cpu_uid(cpu, &acpi_cpu_id);
++
++	ret = acpi_get_cpu_uid(cpu, &cpu_uid);
 +	if (ret != 0)
 +		return ret;
-+
- 	if (!table) {
- 		rhct = acpi_get_rhct();
- 		if (!rhct)
+ 
+ 	rp = pcie_find_root_port(pdev);
+ 	if (!rp || !rp->bus || !rp->bus->bridge)
+@@ -265,9 +271,9 @@ int pcie_tph_get_cpu_st(struct pci_dev *pdev, enum tph_mem_type mem_type,
+ 
+ 	*tag = tph_extract_tag(mem_type, pdev->tph_req_type, &info);
+ 
+-	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu_uid=%d, tag=%#04x\n",
++	pci_dbg(pdev, "get steering tag: mem_type=%s, cpu=%d, tag=%#04x\n",
+ 		(mem_type == TPH_MEM_TYPE_VM) ? "volatile" : "persistent",
+-		cpu_uid, *tag);
++		cpu, *tag);
+ 
+ 	return 0;
+ #else
+diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
+index ba28140ce670..be68cd17f2f8 100644
+--- a/include/linux/pci-tph.h
++++ b/include/linux/pci-tph.h
+@@ -25,7 +25,7 @@ int pcie_tph_set_st_entry(struct pci_dev *pdev,
+ 			  unsigned int index, u16 tag);
+ int pcie_tph_get_cpu_st(struct pci_dev *dev,
+ 			enum tph_mem_type mem_type,
+-			unsigned int cpu_uid, u16 *tag);
++			unsigned int cpu, u16 *tag);
+ void pcie_disable_tph(struct pci_dev *pdev);
+ int pcie_enable_tph(struct pci_dev *pdev, int mode);
+ u16 pcie_tph_get_st_table_size(struct pci_dev *pdev);
+@@ -36,7 +36,7 @@ static inline int pcie_tph_set_st_entry(struct pci_dev *pdev,
+ { return -EINVAL; }
+ static inline int pcie_tph_get_cpu_st(struct pci_dev *dev,
+ 				      enum tph_mem_type mem_type,
+-				      unsigned int cpu_uid, u16 *tag)
++				      unsigned int cpu, u16 *tag)
+ { return -EINVAL; }
+ static inline void pcie_disable_tph(struct pci_dev *pdev) { }
+ static inline int pcie_enable_tph(struct pci_dev *pdev, int mode)
 -- 
 2.17.1
 
