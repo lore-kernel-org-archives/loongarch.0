@@ -1,195 +1,165 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631B82AE68
-	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B140DFC0
+	for <loongarch@lists.linux.dev>; Fri, 20 Mar 2026 03:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773975690; cv=none; b=MAqXgcV4WgKx7r6AozwysADRxpeh+jIbGdeMsP1cRF8c3oSVSWrBCfWXTUVgbWoWXhZOX9AfY1rib7Xh6yaT9cBBeYM5l9tRC0BukmUquzCXS9v8CG2xZNLGklg74m/XgAxwvaK/v6iZSf/q7ic6YTUepqD1NmA2U7heOxDY/qc=
+	t=1773976672; cv=none; b=dbRf7sgXQssswyL/vEz5vEkgOlyqgQewDdo2QuQCrEu64kwfh8L3q0tyfvVCDeitvXu1dcMl88Q1UVld2sTqgyTZRc3YfMKPyIHa2pvQi1ozhf+zn/yXkgEfYiG+rNq9S/WrQf2jvaYt2CPgs8yicEKiVsHqvWoZK9w8YFk8vgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773975690; c=relaxed/simple;
-	bh=mKfhNpE6jU7cB40T0n/mgleQ4I5cG+GPuLuZLNrXGPI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tsFjkOABCEVEiRQQ0xH/bp619CLRV+NTgzR7Gbkq00t4vSkEvMFzy0C5TLwCJawzgROea7Gb6FMLvXzGM5UStRNiiI/mcA0YcjOyMNqH/ppzMNGFkXYgZKviqvdBsoL0BjvHumfL0EcYw1OwrA9DMu4o6B2YsVZTBLfgtPuITXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxL6qFuLxp5uwcAA--.24376S3;
-	Fri, 20 Mar 2026 11:01:25 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx+8GEuLxp6BhZAA--.38652S3;
-	Fri, 20 Mar 2026 11:01:24 +0800 (CST)
-Subject: Re: [PATCH v2 3/3] LoongArch: KVM: Set vcpu_is_preempted() macro
- rather than function
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>
-References: <20260317092911.1400248-1-maobibo@loongson.cn>
- <20260317092911.1400248-4-maobibo@loongson.cn>
- <CAAhV-H5aKoTTdjwzco6Yv84SJgtt0Eq9xXNp6PkcDaxM+H9gZw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <6118cbb5-f895-e04d-7b76-91f9e9ad3b05@loongson.cn>
-Date: Fri, 20 Mar 2026 10:58:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1773976672; c=relaxed/simple;
+	bh=rBDJHBYmgroztPQFPMnBBd9tWYnEWaiAObWYcU3tk+o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oERzh4nJF/rtjIPhjSDRqjsewnWNTuf7qSjyoj4A366NhZtQmCHIpeqDmRDZcAhVRj4OZV57xfqmijSWLe8bHGAg6zQNYqUqjXXT3w0GdYxALf04K+sJWgsZYEKAII5ARx2u+OCRPPcE83AvQCQCvVmFYWWARNP4LZ1aCGTSa/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=JkiHQ4PO; arc=none smtp.client-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="JkiHQ4PO"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=iz8YIEZdONKZjhVUadBKtisgs3GnBKQW890wI7E2K40=;
+	b=JkiHQ4POUePhg6nVnn7KYCDnENz7SLcoof0mOjF3SuSUq8iuNklW2rhRA5lGQFfksKsKg/CJB
+	fgMOjIFrgZCX9KAxkrsIaVclooF0P9jJSHtGkT9OJDkVde3FzBSqg1oVyD4JQp6fGM3G+LNl1gU
+	iaDtpnWu2OjsLqrqB35ybCc=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fcSKf63Y8z1T4Fg;
+	Fri, 20 Mar 2026 11:12:22 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id 832D62012A;
+	Fri, 20 Mar 2026 11:17:46 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 20 Mar 2026 11:17:44 +0800
+From: Chengwen Feng <fengchengwen@huawei.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>
+CC: Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Juergen
+ Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Len
+ Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, Mark Rutland
+	<mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, Kees
+ Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Sean
+ Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, Tom
+ Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, Thorsten
+ Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>,
+	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>,
+	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
+	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
+ Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
+ Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Wei Huang
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <fengchengwen@huawei.com>,
+	<linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+	<xen-devel@lists.xenproject.org>, <linux-acpi@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH v10 1/8] arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+Date: Fri, 20 Mar 2026 11:17:30 +0800
+Message-ID: <20260320031737.35048-2-fengchengwen@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
+References: <20260320031737.35048-1-fengchengwen@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5aKoTTdjwzco6Yv84SJgtt0Eq9xXNp6PkcDaxM+H9gZw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx+8GEuLxp6BhZAA--.38652S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWw1rtFy5tw18GF4UWFWDJrc_yoWrCry8pF
-	9rCFnYva18Wa4xua9Ivw4Dur1Yqws7W3Z29a43Ga4rAa1qqr1ktr1vgrWj9FW2q34v9a1I
-	qF95Xr4xu3ZIy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
-	UUUU=
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
+As a step towards unifying the interface for retrieving ACPI CPU UID
+across architectures, introduce a new function acpi_get_cpu_uid() for
+arm64. While at it, add input validation to make the code more robust.
 
+Reimplement get_cpu_for_acpi_id() based on acpi_get_cpu_uid() for
+consistency, and move its implementation next to the new function for
+code coherence.
 
-On 2026/3/19 下午8:48, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Tue, Mar 17, 2026 at 5:29 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> vcpu_is_preempted() is performance sensitive called in function
->> osq_lock(), here set it as macro. So that parameter is not parsed
->> at most time, it can avoid cache line thrashing across numa node.
->>
->> Here is part of unixbench result on 3C5000 DualWay machine with 32
->> Cores and 2 Numa node.
->>            origin    with patch    CONFIG_PARAVIRT disabled
->> execl     6871.9    7134.2        7190.8
->> fstime    425.5     959.9         956.1
->>
->>  From the test result, with macro method it is almost the same with
->> CONFIG_PARAVIRT disabled, and there is some improvment compared with
->> function method.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++-----
->>   arch/loongarch/kernel/paravirt.c       | 15 ++------------
->>   2 files changed, 24 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
->> index 66244801db67..b5d7a038faf1 100644
->> --- a/arch/loongarch/include/asm/qspinlock.h
->> +++ b/arch/loongarch/include/asm/qspinlock.h
->> @@ -5,8 +5,10 @@
->>   #include <linux/jump_label.h>
->>
->>   #ifdef CONFIG_PARAVIRT
->> -
->> +#include <asm/kvm_para.h>
->>   DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
->> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
->> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
->>
->>   #define virt_spin_lock virt_spin_lock
->>
->> @@ -34,10 +36,25 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
->>          return true;
->>   }
->>
->> -#define vcpu_is_preempted vcpu_is_preempted
->> -
->> -bool vcpu_is_preempted(int cpu);
->> -
->> +/*
->> + * Macro is better than inline function here
->> + * With inline function, parameter cpu is parsed even though it is not used.
->> + * This may cause cache line thrashing across NUMA node.
->> + * With macro method, parameter cpu is parsed only when it is used.
-> What is the test result with inline function? If it isn't
-> significantly worse than with macro, we usually prefer inline
-> functions.
-In the beginning, I had the similar thoughts. And inline function is 
-better to maintain, however here is obvious performance gap between 
-inline and macro method.
+Cc: stable@vger.kernel.org
+Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+---
+ arch/arm64/include/asm/acpi.h | 14 ++------------
+ arch/arm64/kernel/acpi.c      | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 12 deletions(-)
 
-Here is part of unixbench result on 3C5000 DualWay machine with 32
-Cores and 2 Numa node, based on 7.0.0-rc4 kernel version. 
-vcpu_is_preempted() is implemented with different methods.
-          origin (function)   inline        macro
-execl     7025.7             6991.2        7242.3
-fstime    474.6              703.1         1071.1
-
-Regards
-Bibo Mao
-> 
-> 
-> 
-> Huacai
-> 
->> + */
->> +#define vcpu_is_preempted(cpu)                                                 \
->> +({                                                                             \
->> +       bool __val;                                                             \
->> +                                                                               \
->> +       if (!static_branch_unlikely(&virt_preempt_key))                         \
->> +               __val = false;                                                  \
->> +       else {                                                                  \
->> +               struct kvm_steal_time *src;                                     \
->> +               src = &per_cpu(steal_time, cpu);                                \
->> +               __val = !!(READ_ONCE(src->preempted) & KVM_VCPU_PREEMPTED);     \
->> +       }                                                                       \
->> +       __val;                                                                  \
->> +})
->>   #endif /* CONFIG_PARAVIRT */
->>
->>   #include <asm-generic/qspinlock.h>
->> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
->> index b74fe6db49ab..2d1206e486e2 100644
->> --- a/arch/loongarch/kernel/paravirt.c
->> +++ b/arch/loongarch/kernel/paravirt.c
->> @@ -10,8 +10,8 @@
->>   #include <asm/paravirt.h>
->>
->>   static int has_steal_clock;
->> -static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
->> -static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
->> +DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
->> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
->>   DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
->>
->>   static bool steal_acc = true;
->> @@ -261,17 +261,6 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
->>          return 0;
->>   }
->>
->> -bool vcpu_is_preempted(int cpu)
->> -{
->> -       struct kvm_steal_time *src;
->> -
->> -       if (!static_branch_unlikely(&virt_preempt_key))
->> -               return false;
->> -
->> -       src = &per_cpu(steal_time, cpu);
->> -       return !!(src->preempted & KVM_VCPU_PREEMPTED);
->> -}
->> -EXPORT_SYMBOL(vcpu_is_preempted);
->>   #endif
->>
->>   static void pv_cpu_reboot(void *unused)
->> --
->> 2.39.3
->>
+diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+index c07a58b96329..2219a3301e72 100644
+--- a/arch/arm64/include/asm/acpi.h
++++ b/arch/arm64/include/asm/acpi.h
+@@ -118,18 +118,8 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+ {
+ 	return	acpi_cpu_get_madt_gicc(cpu)->uid;
+ }
+-
+-static inline int get_cpu_for_acpi_id(u32 uid)
+-{
+-	int cpu;
+-
+-	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
+-		if (acpi_cpu_get_madt_gicc(cpu) &&
+-		    uid == get_acpi_id_for_cpu(cpu))
+-			return cpu;
+-
+-	return -EINVAL;
+-}
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
++int get_cpu_for_acpi_id(u32 uid);
+ 
+ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+ void __init acpi_init_cpus(void);
+diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+index af90128cfed5..24b9d934be54 100644
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -458,3 +458,33 @@ int acpi_unmap_cpu(int cpu)
+ }
+ EXPORT_SYMBOL(acpi_unmap_cpu);
+ #endif /* CONFIG_ACPI_HOTPLUG_CPU */
++
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
++{
++	struct acpi_madt_generic_interrupt *gicc;
++
++	if (cpu >= nr_cpu_ids)
++		return -EINVAL;
++
++	gicc = acpi_cpu_get_madt_gicc(cpu);
++	if (!gicc)
++		return -ENODEV;
++
++	*uid = gicc->uid;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
++
++int get_cpu_for_acpi_id(u32 uid)
++{
++	u32 cpu_uid;
++	int ret;
++
++	for (int cpu = 0; cpu < nr_cpu_ids; cpu++) {
++		ret = acpi_get_cpu_uid(cpu, &cpu_uid);
++		if (ret == 0 && uid == cpu_uid)
++			return cpu;
++	}
++
++	return -EINVAL;
++}
+-- 
+2.17.1
 
