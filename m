@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5DA35958;
-	Sun, 22 Mar 2026 20:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F14C37268A;
+	Sun, 22 Mar 2026 20:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774211306; cv=none; b=QAsITEyAoYZ9JfHdxQiggaiLqU0YpsrHn/dEyP65Ay4F7J5yhBtAZ/AD5H5jpMp4EkSTtKgvsQPWEYdNRxytH1DfsFRVzTcISN1Sl0ByXrq8Rf7VrklX3RprJHQ/vHaJNyjU+jR8CjETDoORfpcNwzH7d51YwgerOhaLlU0HKT4=
+	t=1774211337; cv=none; b=ubV58UU9OxPeqEsL+e52MRV+LaRQnkgOaezlEeEHVpxUaH1Q6RPKH3mXyLxx1NjLUGXY67kelx7SR42AqFFyKJNAtI2whFfYUX9TJHW85nZPvueDhkyEJhGxyBhPW2rO84tA/kBJ8HizyxtWqYyc2G7B4q5yb4puZ/nvYYE/4Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774211306; c=relaxed/simple;
-	bh=j0YB0NG5aFXVLdzByEjLmqOiQQM0sfRrvrmwpTddXXI=;
+	s=arc-20240116; t=1774211337; c=relaxed/simple;
+	bh=a8u3d+2Q9SN390gmXGFefZ1g6XSCEiZIqnbCBwRZtLg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U9kKmmUbCpFYshWv8UmbSS6DoqHOp8nNPVfLTnmAMdIYNDjRd70ThQ6FaQEtVw1Ltv9g8JSj9FEmAih31/emkmz5b4acVr3WY8NOAl7dETP0rQqOqExhC5R8sgFx8d3y7n3lgtdPK2io/HaS/SXSMLlZPJCtFAJuileR/3Ss9q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMrcdkdi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tVVbgp7l0zUXShTmKe+aI1M++mNpBdQviLGAuK3drCR2Ei3JJ/CqHRWZUbjYs32nMMliA2/AlwC4vwPxqppZpgODc5J2X2vOukRh3SDOWqopo2zBotH2ZQIhblgd0AFk4IFnrt39d8Z6FP6CUb2NlIHjjHLTi+rNm1NTf02z3oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJaQ/EOK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMrcdkdi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85823C19424;
-	Sun, 22 Mar 2026 20:28:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJaQ/EOK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADF8C19424;
+	Sun, 22 Mar 2026 20:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774211306;
-	bh=j0YB0NG5aFXVLdzByEjLmqOiQQM0sfRrvrmwpTddXXI=;
+	s=k20201202; t=1774211337;
+	bh=a8u3d+2Q9SN390gmXGFefZ1g6XSCEiZIqnbCBwRZtLg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OMrcdkdiEIR4n74FrQ47A9dzJpomxdJSVGZJUN/olozx56hOiFYopozn/qWiZK8Tv
-	 mXZcwzJnimy+LTLbmh53sbz3VQaOAqB7z+BIMjLMfxvCWUy399Qwz9+ph6uxEdgM6B
-	 7/epwx6jVAS70u7nZfz4NHadQk5WThyPMQCKal+yTgM3/XcFrXeMH1pasU+cdQrbvp
-	 vMVgeRyrhSAzo+r+2uaG6fhWZjrZhZci0sU14Ziz7wUi9qEWBnloE7i3JfDjdUNs0m
-	 Dl0m97veTw7oT+b3QYkdZICSj0DjKWnutMLnYfy3XpZWE/5sI2G1FpCGsKyUguNhzq
-	 re162bFogd72Q==
-Message-ID: <00525f82-b310-4ea6-a60d-46c0b626bb93@kernel.org>
-Date: Sun, 22 Mar 2026 21:28:21 +0100
+	b=HJaQ/EOKa1foteW/PfBk9A4jVDk0OmdmJERJi1sG1mGmUmp+wfaEjjGFB/Sqo/flM
+	 XLRLfUn/RybHLh64Ep375hQsUsrJrl5j7MKs4CsEjobzjevieAuNoxApOWgYCSEnQC
+	 O3h69wb9m+X8AdVoPboWscJGQ8OHyxip/Ov+aYurU54tnSbd80azn55HtB1PfPWliU
+	 Frxbb87iGA47+aloiufWd04L1jNL+5S4zoNzblhhEuwaeG8C0mfSJkzZK+qvfySHGe
+	 23eVLxfqipIsYH2yqNvDuIzKCM1fk+KvinopVJiKh7lBl9FXVRtkqRhW1StFg+QLwf
+	 nEzmXYdLIIUuA==
+Message-ID: <acaf9cb6-842c-44d0-a20f-fe3880130de2@kernel.org>
+Date: Sun, 22 Mar 2026 21:28:52 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: loongson,ls2k: Add ls2k1000
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: loongson,ls2k: Add ls2k1000
  compatible and deprecate legacy
 To: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, chenhuacai@kernel.org, zhuyinbo@loongson.cn,
  mturquette@baylibre.com, sboyd@kernel.org
 Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
  loongarch@lists.linux.dev, kernel@xen0n.name, devicetree@vger.kernel.org
-References: <20260322152030.60257-1-wjjsn@qq.com>
- <tencent_98546566F32FCE5313A7355EF1D288011909@qq.com>
+References: <20260322150836.55196-1-wjjsn@qq.com>
+ <tencent_C35FFFD2C601DB54E967312ED852DDA70F09@qq.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,11 +89,11 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <tencent_98546566F32FCE5313A7355EF1D288011909@qq.com>
+In-Reply-To: <tencent_C35FFFD2C601DB54E967312ED852DDA70F09@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/03/2026 16:20, wjjsn wrote:
+On 22/03/2026 16:08, wjjsn wrote:
 > Add a SoC-specific compatible string "loongson,ls2k1000-clk" for
 > Loongson-2K1000.
 > 
@@ -102,11 +102,8 @@ On 22/03/2026 16:20, wjjsn wrote:
 > textual description.
 > 
 > Update the example to use the new compatible.
-> 
-> Signed-off-by: wjjsn <wjjsn@qq.com>
 
-So you completely ignored the feedback, did not respond to it and again
-send multiple versions and duplicates within short timeframe.
+NAK, for reasons already explained in other threads.
 
 Best regards,
 Krzysztof
