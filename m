@@ -1,122 +1,89 @@
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B73367F58
-	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 15:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A98332638
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 16:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774192853; cv=none; b=nVbUU4rdvcU5FJWznHaNrlOwMS7Q+64thglyR89elQAJChkAgbWhGOvEP5FbL84TjdvaSgVpEXY+gA+ffQmmeqq5bHo/01hVXkQ4A+Dc2bJbtN1Zr/K2PpljkLh56JxfQ38hqTg0MaWJiFkD/y1G7VFnHoR8Y4DD160AZ3bLaOo=
+	t=1774197220; cv=none; b=noiAlvJMp3lIQraYwJS3iUbP42Bs0Zg0HYGdhuegTcn2XF2CoIztL05WyQHbd6FAHsi/w/1iHWHgCfvzaxKPz8nf53fmJUTOuLKUimR6z0L6KVIYuFi1tqB9KBqySfTcGET0C4UIW4snO2dk4n3urN2dpQzHQP1/PdFyV2Emvdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774192853; c=relaxed/simple;
-	bh=Pl/kyTY93KfYPXj8ZDJfn1oFFZXVs6wAzLptKrLJRoA=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=kUu7mJL74J++XHbDjywBPmF3/Ym86JRvANtFIYZVh+ozjGDpX0OUlD7kL7ysSxRvW+XuZX5MF1IQEO1JsfzUST58xB3s4X+upS3sFw5DBDOUXyPG7TrK638xxmKfilrWpk70rPNA5cVXc4//516v8OjmdyCqnBlDpmoK4BJNiCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=nWltr8B7; arc=none smtp.client-ip=162.62.57.64
+	s=arc-20240116; t=1774197220; c=relaxed/simple;
+	bh=/f+ODEMe9MqDUSEhrPEyaS3c6pNJWP+UrwJzzxpbq7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uy3qePcN9KuibRoTx4//kPhQWc9eoRFH1pN+a5Qx99KuA4OGuuj576zyW2ci4Vf7/h2JB596faSx5sFk1C69iFRu2gqUC6DZp68iK+9D2wVIU9AVouhUZlwFBdih+9QI7mEQQGPGuAP2yOnfQZBNIQlDTxPlbSSwutRovNZlsUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=PH85wew3; arc=none smtp.client-ip=203.205.221.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="nWltr8B7"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="PH85wew3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1774192837; bh=rMmegBW1amz+M/3CmjvRObPa3qIIxBCigPF0d3EAryg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=nWltr8B7XoE0WZqFxcsuvo0wFqMOrhU0oDXN/WTj6kO6bfC3rD6cRraB8D8oIytV/
-	 n3/pEyuRY7PC7kARl2BJq3DB6PiAEj81VhV3vMs5qAXtsA0Tt/GeH9WVjr+/FbXaN7
-	 +7bdeG6PMsTeAFHTmD8MtlQIITOxxf7yJASFfwBA=
-Received: from MYJGMC.lan ([122.195.139.226])
-	by newxmesmtplogicsvrszc56-0.qq.com (NewEsmtp) with SMTP
-	id 51F9320C; Sun, 22 Mar 2026 23:20:31 +0800
-X-QQ-mid: xmsmtpt1774192835t55bo2o5j
-Message-ID: <tencent_2BD9BD0B9BD4A0698E57C1340E402ED5AC07@qq.com>
-X-QQ-XMAILINFO: MT62wbyzuzqmtmPpOXYlCg9isr72tHrr/c9q4ki1AuqPeHI+jK0bb8FJSQXkmx
-	 X9sS6Eu4Axy1vlfbzz2CYy4Yw/71E53U3sqpfRS+3+FIRXC5KysBvLS0e+hHBfmI80VPsHeNByVt
-	 ItzZQMSZ5pAu+qBZFJ1+bDvz51t5Odr7R04gdPuJP+jaNYCiIPaK5qOSPnx4NfGgCtTuF6M7/0hK
-	 yuRPiHOWtk6BXzmr6AtLJarfFkKacz04wuKFASRy7tpcwEzQTjCExnnbkISlnn/XqFobXx2t5HqR
-	 jlTNFOVblRumZVdoCCgF+nWQ9Zxa21rZ8oV+z0pqqh31ejqzvHJU0HdSybwrRAMwobKlzubBzN+M
-	 dpb5VREfTCIp4ieqWreu0rwwII6puq8+hSyKaWNuI4xZINS/gSPG0fFmFZO8ukdio0myEkoFV9L9
-	 /NOZC+6BZRB1ky26Rm+mPx66yfT2B8S9AHlq+PG7aNPk7h88XskNTEJGlE0t1JIKnBtgXhazbPAh
-	 Y83jlmumeI7gP+teQpFMxH9Ev3EqFuUy+2xGb2jlu0AG9bddRMQRlAZjI6eMzN+Ti9pEjs8McqJO
-	 7M5OFHANhh07CRBsrF7Ap/oku+yRNaaxlzX8LXzwU3wKDhoaAcVPFm+s5zQn2i6DfBrIerjbMOhW
-	 u9SIflEWb+mDB5CflnR3+4V6PrYAeEj42Ksi7f1pmdeeMGkX+bd74wnV8Z6die9athLZjxKx/gl5
-	 zZ+OAHe26xuowccMrReuySosnwfbkmbfS1p4IC9zHTvx/E7iDTpcjk6Mo+90RpqVoqCb/lipWMKv
-	 BkLNjpHk/yohsJunYI5VusnNuiq45wwCNN4w9KrexhaF6vdgWyzt77EuuZSmxHOBFRmjB4spNe4o
-	 1ZnNeIESkUMlkc/tvU2Zgn5KniwHjFxcOs7/wGA7QkHc42D6IXIoQn6/ycS1GIjpbnV3iZ+GE6Ou
-	 95kKSfAY+eCGDsO8kUgFxFDZJdsQWVQFw4D74RCyRaLFvANdvw+94MOD3NQ3ScNmiYljU5OOuJwf
-	 nH4GLzqRSLd79YtpU7XHBG//o3R+Wq3HLEAW9g6VjBEhBQsalq0tkWZ+h4Su5koD0QOH/NBkeoId
-	 S1TwoT82Levem3gFZdZ7b5zlbm6RGE6Ucm6vvjL5v9F5TqlPpfAyKFZpP1RA==
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
-From: wjjsn <wjjsn@qq.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	chenhuacai@kernel.org,
-	zhuyinbo@loongson.cn,
-	mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kernel@xen0n.name,
-	devicetree@vger.kernel.org,
-	wjjsn <wjjsn@qq.com>
-Subject: [PATCH v3 2/2] clk: loongson2: Add ls2k1000 compatible
-Date: Sun, 22 Mar 2026 23:20:30 +0800
-X-OQ-MSGID: <20260322152030.60257-3-wjjsn@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260322152030.60257-1-wjjsn@qq.com>
-References: <20260322152030.60257-1-wjjsn@qq.com>
+	t=1774197214; bh=fgqbGuBb730kM/CXHiOrLPDeUmjLFpy/x3bfks10UPY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=PH85wew3G5P05qqfDWWEMRJRfKznMt7hKzF9hM68SKffljkg52d8MUFE1CVvX2Nx+
+	 ihXljKPpBFgZ6J4UN4czei8ZaVNjGB/XhIsXPK4DN+2fEkbhbhtRB3EvO4bKE8acN4
+	 mH5xLl3oLrNwJboDovUV6mBML2PoQzGn6zSizZfw=
+Received: from [192.168.1.123] ([122.195.139.226])
+	by newxmesmtplogicsvrszb43-0.qq.com (NewEsmtp) with SMTP
+	id 85FB30CB; Mon, 23 Mar 2026 00:33:31 +0800
+X-QQ-mid: xmsmtpt1774197211thrz2obhv
+Message-ID: <tencent_CA7176E8823B957F1AEB15254D17904D5505@qq.com>
+X-QQ-XMAILINFO: OK7NBzdNss/RCzvQ9fuOZiZU3jQ8HmXYuNzaUjmM8AW1pcSQ1js37eMi24bAAE
+	 hZd9hgzDsKTDPG+fLX+YxWYluNADS9nS8oGYVEKy5LS3sSSVjcmRLhsnwn6gcjjOEEWzXpFJzijD
+	 9mDwTc+L5K9x18ky59K9UN+zCBTly1d4LIGpGTUB8o/LoOs3wIzH6LhEat6LlkvzM/DhOCxEcjLX
+	 PVX8OT02tZsbzUnVEJU3ZUyrVp1K2epxlbJXRnK66cZI418VQOaUQuoOxw9F4zkKIUt5qXY1SHtc
+	 NtaTIAwMZtREP7kSJKqfqI7NJVpozxtSVrAeq3s7jdmN8LHMR5j9hykhROokGzlkrGsiW5t18oDp
+	 guKXu72VwW4NBMZKZ0HKjNafEB65BBE6wrmyxWNi5Wdw8ImEBPUHNrOHblciaZ3+i8vnB49Hlcpr
+	 skutC+HhGlEAMzxDbpXf4azL/qsTxRFHAEZa0o1rRLtKwgXzVgPS4wTypWi3xnAwRT29pD1Ul2Tu
+	 oM8BmpypptwzOWLJU5YM8FJSEAmUiWmjceC29QRRWfTaX2cC0jtzFoHY5Pe4kvSl80sT2BFx6YnG
+	 ZpxlVyR/tNmTEM0PxhypzgED2BX7OAJUYRTKR8wFivA+Q7JA5tP+lSKd3NO5ca6MvzBgUrkwBkfA
+	 +EmV47RVPNUQzbNgHwfVOxS4/2cvgeZZlm2f1A8b9fAQYf0jsKb7/QfjRh8LSFgWZYgADLVbYZa8
+	 FCioEXWpyjuC2x2UJkvqP3Mj21QFs77UeuMTnEuVtb0zHPuyGMCzEwwPghuGArxvVJOQyqi3pkEm
+	 TLEdTB70el/faIjlDUdl2PUzXSBXL4vLh2IRvXmizFM7gNSp11Uqs+sb/+Up+cX9O1YBZ/A6HyoF
+	 sYn5WmFxQosvjd6TvT4gw9OHzTQ/ykvaPrwA/whYKJ2AaO4/E/4QuAkTkQOaVvlkKe9+pUc6Fq/d
+	 hb++0Ef6F5mfg5JcRepbk6gao1Ue/wHSce9ntuF4/OAZv6hwVCuTgAMFnH5NMcvq9xSPipteTzbR
+	 k9Q8zhiqFguUyw5XNY
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+X-OQ-MSGID: <e296ba12-c88c-411c-9983-9e4c93a8eda8@qq.com>
+Date: Mon, 23 Mar 2026 00:33:31 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] Add Loongson-2K0300 processor support
+To: Huacai Chen <chenhuacai@kernel.org>, Yao Zi <me@ziyao.cc>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ kernel@xen0n.name, devicetree@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, wjjsn <2858482031@qq.com>
+References: <tencent_325FB1D2C600CD55E367332EC453E5A64B09@qq.com>
+ <ab_iF2hjZRfp16HP@pie>
+ <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+Content-Language: en-US
+From: wjjsn <wjjsn@qq.com>
+In-Reply-To: <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add a SoC-specific compatible string "loongson,ls2k1000-clk" for
-Loongson-2K1000.
+On 3/22/26 21:15, Huacai Chen wrote:
+> On Sun, Mar 22, 2026 at 8:36 PM Yao Zi <me@ziyao.cc> wrote:
+>> Also, previously Huacai expressed preference on delaying devicetree
+>> changes until basic drivers are ready[4], so anyway we should probably
+>> get driver patches merged first.
+> Yes, I confirm that.
+> 
+> Huacai
+> 
 
-Update the clock controller in DTS and driver:
+Hi Huacai and Yao,
 
-- DTS: compatible changed from "loongson,ls2k-clk" to
-    "loongson,ls2k1000-clk"
-- Driver: add { .compatible = "loongson,ls2k1000-clk" } 
-	to of_device_id table while retaining the legacy 
-	"loongson,ls2k-clk" for backward compatibility.
+I noticed that:
+1. The current clock driver in mainline has some problems.
+   The pll_ddr is lower than the user_manual,the clk_apb_gate will
+   turn off by kernel while booting,though 16100000.serial is using
+2. eiointc support for 2k0300 is missing.
 
-Signed-off-by: wjjsn <wjjsn@qq.com>
----
- arch/loongarch/boot/dts/loongson-2k1000.dtsi | 2 +-
- drivers/clk/clk-loongson2.c                  | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-index ab6a55937e9e..6dff7eacf3f3 100644
---- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
-@@ -156,7 +156,7 @@ pctrl: pinctrl@1fe00420 {
- 		};
- 
- 		clk: clock-controller@1fe00480 {
--			compatible = "loongson,ls2k-clk";
-+			compatible = "loongson,ls2k1000-clk";
- 			reg = <0x0 0x1fe00480 0x0 0x58>;
- 			#clock-cells = <1>;
- 			clocks = <&ref_100m>;
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index 9c4c6c99db3e..ac075e970699 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -440,8 +440,9 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- static const struct of_device_id loongson2_clk_match_table[] = {
- 	{ .compatible = "loongson,ls2k0300-clk", .data = &ls2k0300_clks },
- 	{ .compatible = "loongson,ls2k0500-clk", .data = &ls2k0500_clks },
--	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
-+	{ .compatible = "loongson,ls2k1000-clk", .data = &ls2k1000_clks },
- 	{ .compatible = "loongson,ls2k2000-clk", .data = &ls2k2000_clks },
-+	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, loongson2_clk_match_table);
--- 
-2.43.0
+Is there any WIP (Work In Progress) tree I can follow?
+I'm happy to help with the development or testing.
 
