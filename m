@@ -1,66 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128842512DE;
-	Sat, 21 Mar 2026 17:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CB3175A6E
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 04:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774113260; cv=none; b=PsgG3R9FcUGixS87r5GpiJeK1LkXtKiuHCIx3Inid9vw11FeNzrP/KYINEMgz1bQHp/P09N9WWicRTv3do4rwTEy6qSQhCsIC+6FJohnwxldEhhbCrkTrRnbVGBwHm5HElXXr9yFkI0H15P1L/PVN4aomrvnnQnvTzhnH1/NbY8=
+	t=1774155319; cv=none; b=KymjyIzoldnG0MLTTgRvwvJqFnSEe/UCMKKGt5Z0YR//vSCfiaSs01ja2Ksf+nJKOKMCQOjfaY/yifYyJXId6gbn5vO8oibTK2T8PB9OvO6YMo3rchsVY0pF85tRQU3J0ZmPYEvWk3uxgHyYNoK3VVL+wJkxNoqt+Z4lAIT5D18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774113260; c=relaxed/simple;
-	bh=UJMWvvJqdR1PYRby9qfnQtq6VQYLY8kw5EyYq0j5wBE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RiFiMwN/nTVwDaxLNPgH3+XjoQGUglPr8K6NJ2zyCVn1ynF0G/0vE5HOli7/Py3B2IF5IvCmLLhEf5m4rZGCKZYAS7hz3dC/PGmiDKE1lCdepHtjzcszqyMbcmoZNS+vjjGkLlBzB+KhLAjRZ6Mykuqe0sHfsfLv9DCPM9cNj+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekI7OpOs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774155319; c=relaxed/simple;
+	bh=zkHXbqjuH7xNDRcO/cDCnZPkcfwtiLZWj/z4NWNS16w=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=VhzJeT1Lc3BJEJGaQOl383zJyp5tlFWbPxfXEP0avPqNsRqWhIdUoRmnLRTDeMWCj3Zu6ZCBp9zjBkwtqG+o9p9GDULwsGwx3M7ve0Fw1gGzS65aLitymaIumg93EW46XIpJPbpzYZ0X56i8IDVwvNO/N10oDo9qNaonZ646Rj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=xBJjQRHZ; arc=none smtp.client-ip=43.163.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekI7OpOs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F5BC19421;
-	Sat, 21 Mar 2026 17:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774113259;
-	bh=UJMWvvJqdR1PYRby9qfnQtq6VQYLY8kw5EyYq0j5wBE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ekI7OpOsREtU9+uWbUP7OVozxIe1KjD3/kC/QpUEA0aWE0ZK66hNdeiaI9dZa7YA9
-	 eKJCFrl3vwi8zCmlS6+vi15Z2gD0DkhqQw5BQ4ToPMRP6ejBWCxo0TyebvZ6f4/+cK
-	 fLYanaoaXt56DTql+q95erFgv6FAJpFNFjhjc7iBh784emhLDAs8O2xXGLyK6Sqlrs
-	 LTCCg4u/ctUmynTQmshMr9B9Ibswum/PPsvxofgwEsOoh2MSepMbJc9K78KTevOFDK
-	 IYhkHIkigt3FLxx40LDot/Ke5txY5taTSCh8af4IgNMd2bxnmUNQyRzN5w3METS8XO
-	 2BZlrCXVi289Q==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Yao Zi <me@ziyao.cc>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] Add support for LS7A LPC IRQ for MIPS Loongson
- systems
-In-Reply-To: <87f24e166c931d0040e7b838785e7b360cbc7c6a.camel@icenowy.me>
-References: <20260314162828.1055188-1-zhengxingda@iscas.ac.cn>
- <CAAhV-H4OYVB21jH3PSzOi4GPU+t4LY664Yp=CeDhjFRKf9V07Q@mail.gmail.com>
- <87f24e166c931d0040e7b838785e7b360cbc7c6a.camel@icenowy.me>
-Date: Sat, 21 Mar 2026 18:14:15 +0100
-Message-ID: <87ikaphzq0.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="xBJjQRHZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1774155307; bh=/0ewG1jfRqw2ZDFlfiYehEmV8RlvaqJ8CTQftNgJvdA=;
+	h=From:To:Cc:Subject:Date;
+	b=xBJjQRHZ6NT17nvn8g+vuj1CpysP1NSl5HZiHpc1nLW63B6mIYFgX3AbMp6E5BCQZ
+	 OBCS5gFzhw02bbLa4SH3w2/+t+xXliOXX0KfDkyTcjx2NNGC4y6WdLaBsBO5D62j0/
+	 uwSYgqDkO/SdRZobs/pNuSUmJYM+tY1r/F3rqUSI=
+Received: from MYJGMC.tail4697e5.ts.net ([122.195.139.226])
+	by newxmesmtplogicsvrsza73-0.qq.com (NewEsmtp) with SMTP
+	id DC48220F; Sun, 22 Mar 2026 12:55:04 +0800
+X-QQ-mid: xmsmtpt1774155304tsg9q12a4
+Message-ID: <tencent_043BCD1F1043957E96ED022D75601AF05505@qq.com>
+X-QQ-XMAILINFO: OJYupdf7O4Wt0641tOobxNTBtkln+0Eu/XjveXCPwXzVp1wSRhqRdhDie0MBcK
+	 0tmqWCPqiMGx27jp62QZ80nzUo4BS6WMbTq8eWuMPYpHKmwWK9UeQCVBEI5bCYglGuQWLrwVVu8s
+	 gKtFkjHzdzLs7k+P7ideEbAhVhyvfZop3YsbGK0BzOLu5jeA33YwWz+vnlcli72b1MxfoYPJfyU/
+	 dhGCakzPxPUrPK1RfJLXQW2MUE6lcOD9xJDmau+kbgZcYjkQtCRAoojUL7hi8PZ/CUoQAv0SFCIv
+	 dqD2zDCPc8H3l2WDT5C6/NUKCZ7mrtlwFM9Y1mOAkgVFdPSOQxv2EoQVguoZzp1XNfWWFObQPLZw
+	 YBMooyl4tXCGjN2qLipeaKDjeLMoi4Ts6ciwmx22mTCC+4ul1UJ653PKBJKo0XweEfntrZvTt3oT
+	 Bu6ejGKzRE1E9YbBOFlWXTXclWptbyd31TwXK04A24yN4RXhwOfhRW4aw0ZtzFr49LczObHgsTic
+	 IVJkd3XZHcdbmqGypna3a9x+gUBhWhS+EcI28vZO3QGePU8SNg8idhEZrzEjF0zTCtsVTynP8EC+
+	 hMSOl+kpgQ4IOhp4ToK7TWnPUR+Ja5diPMWsswo2MSG61pbzjxSXBC7AkBUdQa00iBKIbr0qPHEx
+	 SDQV9bG4C6SLGSpk3wMv1Skxl6dwk3viTWiNKuIvfCHSKtXAXaeF82Pb5QPO11wCAfKAJ5hOAAW3
+	 bRRawYt+Cgtt+trt851VBXi7SAycyDr1k/XazL9NG9HH2+2nZZis+A0hD6StXV6fGN8bR8mBVrwC
+	 +3XyqsSfG9y5YcRxUbEMNklUENZaknCFoTGquXZMKf/yTqrHho7ZAXk6NmLbzaFc0Yan8HoKk7ns
+	 8AXGVwnzIYdraHelrhEUTJGV91iOeS6C35waLJfFIuRLjcfmyb1NNpByfJdnCAuVvWU62DaPEIGk
+	 AUh01mLntvNUjxa+AewQEFU6IloDwYfqI0LYYDWQTMnZrcX48BioLewn7ajen/jfLOpIMY0pYVLD
+	 bu1MwjO39J3uIqEYz4ZsmLGwy1NLEn6nb6T9VaW0qO9v8Xu7ukGrph+Jp7gK99KbyvBZpbLw==
+X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+From: wjjsn <wjjsn@qq.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	wjjsn <wjjsn@qq.com>
+Subject: [PATCH] loongarch: boot: dts: Add Loongson-2K0300 support
+Date: Sun, 22 Mar 2026 12:54:32 +0800
+X-OQ-MSGID: <20260322045432.1280912-1-wjjsn@qq.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 21 2026 at 16:59, Icenowy Zheng wrote:
-> =E5=9C=A8 2026-03-18=E4=B8=89=E7=9A=84 21:57 +0800=EF=BC=8CHuacai Chen=E5=
-=86=99=E9=81=93=EF=BC=9A
-> I'm going to change this for your preference, but please note that
-> there's no requirement of using upper case for `summary phrase` in the
-> Documentation/process/submitting-patches.rst document.
+Signed-off-by: wjjsn <wjjsn@qq.com>
+---
+ arch/loongarch/boot/dts/Makefile              |  2 +-
+ .../boot/dts/loongson-2k0300-ref.dts          | 34 +++++++
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 95 +++++++++++++++++++
+ 3 files changed, 130 insertions(+), 1 deletion(-)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
 
-Interrupt chip code is maintained in the tip tree and that tree has a
-supplementary document, which explicitely requests this:
+diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
+index 15d5e14fe418..4a096608cfad 100644
+--- a/arch/loongarch/boot/dts/Makefile
++++ b/arch/loongarch/boot/dts/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
++dtb-y = loongson-2k0300-ref.dtb loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ref.dts b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+new file mode 100644
+index 000000000000..f85d2caa94b0
+--- /dev/null
++++ b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Loongson Technology Corporation Limited
++ */
++
++/dts-v1/;
++
++#include "loongson-2k0300.dtsi"
++
++/ {
++	compatible = "loongson,ls2k0300-ref", "loongson,ls2k0300";
++	model = "Loongson-2K0300 Reference Board";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@200000 {
++		device_type = "memory";
++		reg = <0x0 0x00200000 0x0 0x0ee00000>,
++			  <0x0 0x90000000 0x0 0x10000000>;
++	};
++
++};
++
++
++&uart0 {
++	status = "okay";
++};
++
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+new file mode 100644
+index 000000000000..91062b388e77
+--- /dev/null
++++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Loongson Technology Corporation Limited
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/loongson,ls2k-clk.h>
++
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	interrupt-parent = <&cpuintc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "loongson,la264";
++			device_type = "cpu";
++			reg = <0x0>;
++			clocks = <&clk LS2K0300_CLK_NODE_DIV>;
++		};
++	};
++
++	ref_120m: clock-ref-120m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <120000000>;
++		clock-output-names = "ref_120m";
++	};
++
++	cpuintc: interrupt-controller {
++		compatible = "loongson,cpu-interrupt-controller";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++	};
++
++	liointc0: interrupt-controller@16001400 {
++		compatible = "loongson,liointc-2.0";
++		reg = <0x0 0x16001400 0x0 0x40>,
++				<0x0 0x16001040 0x0 0x8>;
++		reg-names = "main", "isr0";
++
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++		interrupt-names = "int0";
++
++		loongson,parent_int_map = <0xffffffff>, /* int0 */
++						<0x00000000>, /* int1 */
++						<0x00000000>, /* int2 */
++						<0x00000000>; /* int3 */
++	};
++	liointc1: interrupt-controller@16001440 {
++		compatible = "loongson,liointc-2.0";
++		reg = <0x0 0x16001440 0x0 0x40>,
++				<0x0 0x16001048 0x0 0x8>;
++		reg-names = "main", "isr0";
++
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&cpuintc>;
++		interrupts = <4>;
++		interrupt-names = "int2";
++
++		loongson,parent_int_map = <0x00000000>, /* int0 */
++						<0x00000000>, /* int1 */
++						<0xffffffff>, /* int2 */
++						<0x00000000>; /* int3 */
++	};
++	clk: clock-controller@16000400 {
++		compatible = "loongson,ls2k0300-clk";
++		reg = <0x0 0x16000400 0x0 0x2c>;
++		#clock-cells = <1>;
++		clocks = <&ref_120m>;
++		clock-names = "ref_120m";
++	};
++
++	uart0: serial@16100000 {
++		compatible = "ns16550a";
++		reg = <0x0 0x16100000 0x0 0x10>;
++		clocks = <&clk LS2K0300_CLK_APB_GATE>;
++		interrupt-parent = <&liointc0>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++		no-loopback-test;
++		status = "disabled";
++	};
++};
+-- 
+2.43.0
 
-  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-=
-subject
