@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739A7281525;
-	Sun, 22 Mar 2026 08:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626033128CF;
+	Sun, 22 Mar 2026 08:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774169586; cv=none; b=RNYX3Xr5yO21wp6M/pE53xdY54BplaCl9Kzwkr4bALMck6hvGIPvvwfflqJtoV8MvWxvSm4J0fOWuDhw3NlMY9eaLlRbugusVJ98OaVbLPtz1FHsIrLNZ6xUmTwBrYpLgJ9qP0HIwGN/kpcfFGBLNJHLJwsZfAwBXtDJCD3RWyU=
+	t=1774169623; cv=none; b=uCHS+H09+qcv1VGtlvUS1BOALbuujUu1Bi9jAGd40v0D34EnLZT3LDmDk01UT2C81+NHf+JaNUtKbC8i4Arv3J/i9/C09GTdTTisUhD3dEWHggfcDfd71Do7bmCTRYF7UQXdZzY6MrXFv5cEUYoq5Wvxzqp3B8729Tf+HDG22OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774169586; c=relaxed/simple;
-	bh=Va0U52DqCKKaVRH0WESCP+nzlnU8n221flnex2Rx3pg=;
+	s=arc-20240116; t=1774169623; c=relaxed/simple;
+	bh=VWTVgwIT7ZTc9mK7V9vNnO4fCOJGOHGLqzp53axEXSw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dmsqTj0BzA6GVUxG+4UtPXw+SOosX+zMR4LH163AFsvNI/9RhFJwxewkE0PlwV75UbpJFt6+f6iiaQMAOqVJIBoiDkFbd0+lT6/219hsqQ0kt3lZfJfmDIYpjYSc407kqwo08JgYtxFslpqk6CItbCJGPu71gBljpBT1VeGG04Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDN16Wj+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tg79lcZT9CyUR5Be4T5MfCEQw/pIpKbnecpG+G5pi4CTyYhRdxm2jv/gQGQMd+88Bj29vClFH0w+8xE6A+Qt/9SAQaHVt2uHF/vvLbetNE5TMFla7cR9D6gHq8E0sjZLCX2ffhDY6MhVnkLZTvIG9/8k4EVFv6smjujkUcER+cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifwMJNj3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDN16Wj+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A03C19424;
-	Sun, 22 Mar 2026 08:53:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifwMJNj3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC82AC2BC9E;
+	Sun, 22 Mar 2026 08:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774169586;
-	bh=Va0U52DqCKKaVRH0WESCP+nzlnU8n221flnex2Rx3pg=;
+	s=k20201202; t=1774169623;
+	bh=VWTVgwIT7ZTc9mK7V9vNnO4fCOJGOHGLqzp53axEXSw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jDN16Wj+2W8NKjCk+fuquGOTFFAiBzJaBv/evcnEZDYzHKz/xmWgf9eT92YMk+5OR
-	 Ob2hPkM/aPOowiTDhJiWiqn9Cc75fg6B+S9jvkPVKhVFdvQNLAA0d60yanJftyLYfY
-	 k3/5UNZIzhogNYN5JxyWn3ddhBVTc2dYonB0jD7v+M8Hk1+5Y7kbajyi2hyKoGH5UP
-	 E+NNKbOr9UI/31xFtqkEXHk8XVMZomoZga2wp+AHUFGjRP2SZsu2RLrBvYfiivVErX
-	 F9dzngGPw6h3fJGklv4s3WnZY34HeAaOqEi7KuSJcXLAI1TEU095i2yh5wD8ozA9/1
-	 khr3tYHYzZBeQ==
-Message-ID: <c26f35ce-6d15-4f6d-8ac9-e52a0aa0b44f@kernel.org>
-Date: Sun, 22 Mar 2026 09:53:01 +0100
+	b=ifwMJNj3/juw4K0xxYusiE4EWoQk9s4y2GaLgYdoUZ/8XzH6zNCcQyhOw4c98MBev
+	 fEwI1kNlxDTc8uMtMdmmdJXreXrSDt2iFM0330EUHAlVgFmPe8QtZ6Rj+eqp9rg/oG
+	 QI4Lb3bKvdIdPxcT9mDPv6jmZy8U1jUqnobeFmBcLCak7yBs+EuFOYOHusR/o8mTlW
+	 wTd5MU/GisnKGV2tLjXfEtNy4TSPlCyPCsfzYKgoyK5o21Sa2hNKfYWd1s1RxcuOxh
+	 SnMYWz9c6iUXLzz8QCz+hRZBwD8jfZgz3kWAyFR9r78PTt9laRsWXdvaDVPB+1BF+i
+	 RTgtpZJPhXaYQ==
+Message-ID: <58a4ee0d-5473-469c-9cce-a6888353c846@kernel.org>
+Date: Sun, 22 Mar 2026 09:53:39 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] loongarch: boot: dts: Add Loongson-2K0300 support
+Subject: Re: [PATCH v3 2/2] loongarch: boot: dts: Add Loongson-2K0300 support
 To: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org,
  conor+dt@kernel.org, chenhuacai@kernel.org
 Cc: kernel@xen0n.name, devicetree@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, wjjsn <2858482031@qq.com>
-References: <20260322071316.1537953-1-wjjsn@qq.com>
- <tencent_6C692FE25219A76D5F73D250006D543B6709@qq.com>
+ linux-kernel@vger.kernel.org
+References: <20260322060246.1375569-1-wjjsn@qq.com>
+ <tencent_6034EC6B5DDA04A0956AEDECE445442AE406@qq.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,81 +87,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <tencent_6C692FE25219A76D5F73D250006D543B6709@qq.com>
+In-Reply-To: <tencent_6034EC6B5DDA04A0956AEDECE445442AE406@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/03/2026 08:13, wjjsn wrote:
-> From: wjjsn <2858482031@qq.com>
-> 
-> Signed-off-by: wjjsn <2858482031@qq.com>
-
-I don't understand what is happening here. You sent bunch of unthreaded
-patches, empty commit msgs, some are being duplicated (seems at least?)...
-
+On 22/03/2026 07:02, wjjsn wrote:
+> Signed-off-by: wjjsn <wjjsn@qq.com>
 > ---
+>  .../bindings/loongarch/loongson.yaml          |  2 +-
 >  arch/loongarch/boot/dts/Makefile              |  2 +-
 >  .../boot/dts/loongson-2k0300-ref.dts          | 34 +++++++
->  arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 94 +++++++++++++++++++
->  3 files changed, 129 insertions(+), 1 deletion(-)
+>  arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 95 +++++++++++++++++++
+
+Random posting.
+
+>  4 files changed, 131 insertions(+), 2 deletions(-)
 >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ref.dts
 >  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
 > 
-> diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
-> index 15d5e14fe418..4a096608cfad 100644
-> --- a/arch/loongarch/boot/dts/Makefile
-> +++ b/arch/loongarch/boot/dts/Makefile
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
-> -dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
-> +dtb-y = loongson-2k0300-ref.dtb loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
-> diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ref.dts b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
-> new file mode 100644
-> index 000000000000..f85d2caa94b0
-> --- /dev/null
-> +++ b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2023 Loongson Technology Corporation Limited
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "loongson-2k0300.dtsi"
-> +
-> +/ {
-> +	compatible = "loongson,ls2k0300-ref", "loongson,ls2k0300";
-> +	model = "Loongson-2K0300 Reference Board";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@200000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00200000 0x0 0x0ee00000>,
-> +			  <0x0 0x90000000 0x0 0x10000000>;
-> +	};
-> +
-> +};
-> +
-> +
+> diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> index 8bea8b9f75b1..8e0a917ffc01 100644
+> --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
+> @@ -16,7 +16,7 @@ properties:
+>      oneOf:
+>        - description: Loongson-2K0300 processor based boards
+>          items:
+> -          - const: loongson,99pi
 
-This code has many white space issues. Please clean it up everywhere.
+But this is obviously NAK without explanation.
 
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-
-And here
-
+> +          - const: loongson,ls2k0300-ref
 
 
 Best regards,
