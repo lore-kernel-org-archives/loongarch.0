@@ -1,114 +1,92 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9E9175A9A
-	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 12:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774184076; cv=pass; b=Lum777zrQgzlqw8WIINcwAMajuC3CN1ylIqY65vhDrjTkM/KcwOGUcKRSxjdkw1L+twGeh0RFuG01roJeOGk0VLrMoFIFAJbXsWjUoSCEAaWXl3PlqMgwcBPjwlonZNmSwWGLExixJb3moJkn68sFV8DS62RRcEnt8MLtvvWEYI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774184076; c=relaxed/simple;
-	bh=kK8YmrNobKxYA3KUUj6T5vQZMaKkS94DHt4c/CNipck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pt1bv6hxvo1Y48j/0NrMXLmBT/HeKN7MLmKQ2bteYmxLApCb7klYSNZuT4CR3Ok/cgdjrcVzqePPSwgw/BdDQnEiHFcp11OEFnSbnmw8zM28hj50d/I+dvXHTyGPHDxSTQv40xLtkPjUEKRLY7jy/V5iDPMe+37E0eDMGceAS2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=SmjsFG73; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F1432AABC
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 13:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774185349; cv=none; b=hFjyEWWv3rlp91XaWxzCjIda9FAtQGn7KIBU5ELYR3XbQIVOTlY/SfTmiv7zSC1N+6fmsed2rlFAQ3RUuUjbR6HYWD++eQ3D8FSeehsN0ZbB+8L3Nt4HFCTdTV2F5a/B+0yDfoDo3Hm3nsSgNvo6nj+2FaAZsL8JcwUPDXqz1Y8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774185349; c=relaxed/simple;
+	bh=XgIurM27+yuPnraUNcace74O0DzcA/FNq83Lf7ACMtQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C65enw3WJg5BfmC9RhrcsPBsesdJjYvjbZXk1y/Ys0HR2ss4FS8hhHx1Bq6Np62Y3GgVVKUqgcMm88mq2G1VBJWohml55AWCxH6DeeL0xhkPLVNmKGFcVGnFVvqQ6g7En9NUuyckDfCTV6chFo+Iqr2cTq0Uak+k5qVZkVBP4U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABj+hewg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="SmjsFG73"
-ARC-Seal: i=1; a=rsa-sha256; t=1774184061; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eXPqSucoXJsTOL/gq9TzCD3uy/NKgNQz+BIi6zjT+gRPjZtROtqxxoBFPpnpfAjFyWTJnrXXyiGQcAE8rS8ank5dxcreaPqlCXlfy1t0V2kouRrv00ZdfMgtGDHsQeZt5OTX0B7NO/5g+kUxavBhNBc6Hx51NTkPfrpMkdOoehw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1774184061; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SAZ/XZ7+svKGJe8JsDFrKqgEYqASCcKqQxqvSqGACmE=; 
-	b=lcR04uVX7YnSgBsega3pT3aezhhDcj3SzRoKW3DeUVKNNqdRm4apJkFKsAYCbNiPTlwQN1M7Ji601yTugIkkQWMtVtXMTa77cO+3KmykZAU6f1QawlhMEG/002ZYm1bZMuLFenDrXOuXg2Rj+fzca0nrPoFJv5mp0LGrk/oFYU8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ziyao.cc;
-	spf=pass  smtp.mailfrom=me@ziyao.cc;
-	dmarc=pass header.from=<me@ziyao.cc>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774184061;
-	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=SAZ/XZ7+svKGJe8JsDFrKqgEYqASCcKqQxqvSqGACmE=;
-	b=SmjsFG73xr9Vl4p0jEt20RC4Eyq1O6Ew9qyhPNdW+0m5us9gd9kIP4mEVq7DA83g
-	q8ectuVkUtjZX1f5ccPByFHwuJ1Gtq4/t9MpRWthmxgK1OFq23GMd5JZtWHhTnhKzST
-	QJc+tlDLAlAtXW/HXnF2xowN3FOOufEQGGVf9nIo=
-Received: by mx.zohomail.com with SMTPS id 17741840598081005.9843335790677;
-	Sun, 22 Mar 2026 05:54:19 -0700 (PDT)
-Date: Sun, 22 Mar 2026 12:54:05 +0000
-From: Yao Zi <me@ziyao.cc>
-To: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, chenhuacai@kernel.org, zhuyinbo@loongson.cn,
-	mturquette@baylibre.com, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, kernel@xen0n.name,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: loongson,ls2k: add ls2k1000
- compatible
-Message-ID: <ab_mbVVQ9Nf7pTRt@pie>
-References: <20260322081915.1626723-1-wjjsn@qq.com>
- <tencent_1EA9B7D351AF8169F880BAAA49B37E178A08@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABj+hewg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 613EFC2BCB4
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 13:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774185349;
+	bh=XgIurM27+yuPnraUNcace74O0DzcA/FNq83Lf7ACMtQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ABj+hewgDocJHq2qPbVtB5Hf0qCPM8h/2O6Fx7HMdCwkKp/kEbM7Mak96E3KxzQfg
+	 sx2lXqdnkWQo0Rpy4SX3PHDkd0Wt4EYXytGHm71xEtlFJ/HPCXUAn4QDOSvFh3pHFt
+	 z0gr/kBsQIpPP8gIK2wdvJxCX0mpmIMgfQT7GM+T0gLt2eVabIEw18iMhQcjwMPsDQ
+	 fb0yLsVNcj64a7cpz7Tl/A6XZ4F49YVzmPYmtlJyizDusNS5/fzliC4M/pf+1j0aHT
+	 Kl4ED8TP5ec+WOsLSk2MOA2z0hUd8TGULmYWF8vCskFUa5kJHF09yxTbgoNlgadSrj
+	 wu4BbfLD/jSmA==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b886fc047d5so560693366b.3
+        for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 06:15:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXJj9EnbbT+Dhcp7PsL6nr4czucgK0N6SFcktyrtCjbDPaJznPGmNZfpujU/B025wRCBKHTv+NHFTc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyCSkV0DdkItlsj1vheJRBMB89zEOLJQSo6qQLdwCNNNmfDVCvW
+	R/lEjMPyB2fmOKYja6gBIkjdCyerKHnE8GOiZsbME6ZADanxoCbqJdjw6JyaGjxEHe3+PRAawWi
+	KwGflzlTbCI8jj6ArtbEvh/maGAem9H8=
+X-Received: by 2002:a17:906:eb46:b0:b93:89cd:2bbc with SMTP id
+ a640c23a62f3a-b982f50de73mr503440366b.56.1774185347917; Sun, 22 Mar 2026
+ 06:15:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_1EA9B7D351AF8169F880BAAA49B37E178A08@qq.com>
-X-ZohoMailClient: External
+References: <tencent_325FB1D2C600CD55E367332EC453E5A64B09@qq.com> <ab_iF2hjZRfp16HP@pie>
+In-Reply-To: <ab_iF2hjZRfp16HP@pie>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 22 Mar 2026 21:15:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+X-Gm-Features: AaiRm50PppF1EV4HWBhOscL6VJ6mdhxpTPfiBfUVbEHaqZXVEmFXdeP5eO9o5j0
+Message-ID: <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] Add Loongson-2K0300 processor support
+To: Yao Zi <me@ziyao.cc>
+Cc: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	kernel@xen0n.name, devicetree@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, wjjsn <2858482031@qq.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 22, 2026 at 04:19:14PM +0800, wjjsn wrote:
-> Add a SoC-specific "loongson,ls2k1000-clk" compatible.
-> Retain the existing "loongson,ls2k-clk" as a deprecated fallback
-> for backward compatibility.
-> 
-> Signed-off-by: wjjsn <wjjsn@qq.com>
-> ---
->  .../devicetree/bindings/clock/loongson,ls2k-clk.yaml        | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> index c07ad1f85857..4d70bc4e7a13 100644
-> --- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> +++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
-> @@ -13,12 +13,16 @@ description: |
->    Loongson-2 SoC clock control module is an integrated clock controller, which
->    generates and supplies to all modules.
->  
-> +  The "loongson,ls2k1000-clk" string should be used for Loongson-2K1000.
-> +  The "loongson,ls2k-clk" string is kept as a fallback for backward compatibility for Loongson-2K1000.
-> +
->  properties:
->    compatible:
->      enum:
->        - loongson,ls2k0300-clk
->        - loongson,ls2k0500-clk
-> -      - loongson,ls2k-clk  # This is for Loongson-2K1000
-> +      - loongson,ls2k-clk
-> +      - loongson,ls2k1000-clk
+On Sun, Mar 22, 2026 at 8:36=E2=80=AFPM Yao Zi <me@ziyao.cc> wrote:
+>
+> On Sun, Mar 22, 2026 at 03:13:14PM +0800, wjjsn wrote:
+> > From: wjjsn <2858482031@qq.com>
+> >
+> > The first patch adds the necessary DT binding documentation,
+> > and the second patch adds the DTS and DTSI files for the SoC
+> > and the board.
+>
+> Please note I'm working on basic drivers/devicetree for 2K0300
+> platform[1][2][3], though the series haven't been updated for some
+> time... I've re-written the pinctrl part, and will try to re-spin all of
+> them next weekend.
+>
+> Also, previously Huacai expressed preference on delaying devicetree
+> changes until basic drivers are ready[4], so anyway we should probably
+> get driver patches merged first.
+Yes, I confirm that.
 
-If you want to deprecate loongson,ls2k-clk, you should probably mark
-it as "deprecated: true", instead of describing such situation in human
-language.
+Huacai
 
-I don't have a strong opinion on the change, but I don't think it
-improves the situation much. We still need to document the historical
-compatible in bindings and support it in driver, the only thing gets
-improved is a slightly more clear compatible name in devicetree.
-
-However, even if someone is confused by the current compatible, they
-could have a look in the binding and get an explanation quickly.
-
-Regards,
-Yao Zi
-
->        - loongson,ls2k2000-clk
->  
->    reg:
-> -- 
-> 2.43.0
-> 
-> 
+>
+> Regards,
+> Yao Zi
+>
+> [1]: https://lore.kernel.org/all/20250523095408.25919-4-ziyao@disroot.org=
+/
+> [2]: https://lore.kernel.org/all/20250811163749.47028-2-ziyao@disroot.org=
+/
+> [3]: https://lore.kernel.org/all/20250816033327.11359-2-ziyao@disroot.org=
+/
+> [4]: https://lore.kernel.org/all/CAAhV-H6EDEf3U6w5KY3R3HCAdAbqDefqpE3ktCQ=
+eQtFbDK2Ypg@mail.gmail.com/
+>
