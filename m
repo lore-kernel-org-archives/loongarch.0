@@ -1,49 +1,48 @@
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.49])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A88A3B7A8
-	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 06:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772EE29B8CF
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 06:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774159378; cv=none; b=dJKP3w+Xrq+GhVK3Sb8XjdWMcYjRE4dltDaaqAqP3VOGvD7K04wXid/z2+A8KJkUbgsZvvnPNwugJVv0x/7KC7QDcmdYkavSlCNwVtm3hZsNtHSFTqY/buDPrw+TEOu4mbo4rv/cVL0FYy/VIE0K6aSwOpFc/IOa2z1LR5W947k=
+	t=1774159379; cv=none; b=soelBr3vOUPecGNWhh4lB8ptsaf5VpevilFqyPEajf0/iho1XSH4z9ASX9ee4ydayUxXDQrvguE46GLQeQKY8yr+tOxn6PBRsVk5caSa6PHNDc6oQJG8mr6jAqwkSW4O40TkwhzTNYaLVtxBrHH4TqeeiUB0vbm+z9krB0d+MoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774159378; c=relaxed/simple;
-	bh=XPf328qGFEw1pVlLXZ5y8Tx2mnF8Iq/bSTQuF6C/VYw=;
+	s=arc-20240116; t=1774159379; c=relaxed/simple;
+	bh=Y16L4YWfMtrtEeDwZHUWJGXpVi/Sysz16cUHYqp+wtE=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=MVJQTPKuaWq/dZadMdSzMceAbslD8AifM+Y2kmDYTwh/MRSPKinsz0jZfKglKV/cO3G/ml/p3NumV7rdPKSQQ4pUrPxwqju5ADywMPznK6rmbZgMrCVoNfNXlnG+Ex1KO1Ex01WH8/BeN03fMl2Izkf+TEEngHfXybR8lQBqGKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Fd2eF4qx; arc=none smtp.client-ip=43.163.128.49
+	 MIME-Version; b=Vk6JL9nOQguQ3Ws87p+y2EwNJ9oQqezuplGigNeFgyNxxlvTDMc8MR71AiE/eW9/3pqfCFYWLohaOBwmh4ZPYwPk83uxnaddkba2mOGM807WYp5TU3At8BuGzcZV8q8vrz69w3YtgU0Mh9DJwHKIPSOoajtX3zArH8WsEfmXwBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ag6YcsI3; arc=none smtp.client-ip=203.205.221.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Fd2eF4qx"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ag6YcsI3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1774159373; bh=Cmi5rfP0n2HgPLfCpAiQMoYzVU4WPdtQAl7hGiIhsV0=;
+	t=1774159375; bh=AFRhODcyolPF+/xi57Usj9+pP7A9X3Ey62Q+xbQxuRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Fd2eF4qxgRN5HfAnoSgoBXX5YxdT6KhCTBPcvmDAus1dy3MGG8C+9dDiaeb4k8O6u
-	 zS2SdWm9mcys26KTeGg7aePxwQNShJhyyjiv+3B7P/E0ZqekjhYpmaFGI1pMGfOgy1
-	 iEr31syH2UT0cxwGXJcwWhJ7dTSz7nVfSWJm0WJk=
+	b=ag6YcsI3iIg2KZrVnoMjSwVWk94Qv/KykWACkwzukqr+p099b3myn7pSHENbY+9LQ
+	 JbFkx27Mhm7AQ2wZGJqfeNlRpmTm+WIlDMNTUd5jtyQ2jy+BiKp6UWCoMKGl99qKCv
+	 7fzpcj3tr3th32tE5LUV1QSizQ9YPcs560XWWbJM=
 Received: from MYJGMC.tail4697e5.ts.net ([122.195.139.226])
 	by newxmesmtplogicsvrsza53-0.qq.com (NewEsmtp) with SMTP
 	id B100A4A; Sun, 22 Mar 2026 14:02:49 +0800
-X-QQ-mid: xmsmtpt1774159370t6jbvixgv
-Message-ID: <tencent_C610B05A3579D6EC823515607AE5F526CD05@qq.com>
-X-QQ-XMAILINFO: NbgegmlEc3JuoJxuK2QvNBF6dVvvdBNzVBF8svnHLOBI/qpbL1Hcn5V4SoWv5A
-	 MEkiZGSmOu4R8sK33uqFkcJ/dWUZdvoGtHiPfumrSmRjj8zsIJ+7vs7pwOpbTrtHxqvJC1BP8S8F
-	 2TDI6FkffK2dHqs0kyA7YKPbYScy52SU5Ur2wn5hxR39RN22jOw/T0eCeJcds5+QQszjJp8SeATK
-	 MUK1rEoV/oU/8bIjHeRMJvwFV1RYQF4qhgIMb7mQhRNzfxTJamGfrRM4w+2SNWtfmwdBVzsXvE1d
-	 JDNHY+93WREPTjoqypnGH1nFk7p1QiCmKd8C4T9k//6Q4rrnaf1Ci5rhz9xrodJCxkt2ELK63p9p
-	 7Vkv2k8cYw0Ujr4JtwZ72tKDz8xSplDfLH173QUrNB9jsZvUA2B8ZtDGqNFnmNGgecRjXZjEQze8
-	 zom89Wj+5CV8MorY+yXo36JGB7ts/C3tuZhOmCBb5YJB5q8YLfU3eelr1S3Oktsm/Mc9IZNoZlGh
-	 ITAWsgRKyw5dw/pDvWiRd4mQhxzgEtnYQ+0mup5OCKgw/Wthn4U1ikhBKqN/SxlN46vyVF9eCr5J
-	 gzVBYTlIEpwLsO9OTdoWfS5g+txcQlwZgf5sE9/yaYCBe6cqH2pLfDJldE1geKOhGxybgH4J4Nif
-	 fLzU2QtTdjO47rLjpcGiaX1jhuFn4/fyQKMqFnzcxMXYQJ0REAP4FbW1PLyX+X9j77ir0CB255oj
-	 NBAMzY1p+aig88Q4RkKlVB61oQ9cFJaCCCwLh4Mt7Sg0yDAvJNYdbmuBV/1Z633ls/2yAdZB1LAl
-	 aDL6sm/4ls4XGf3vIYRKdLpk4g+6/OGtj+i5tG35+bagBxRfheP8Z5HJ7r/SfJBoPifqs5P3wXHF
-	 Mjr6qh9YFRm15ebzGfkVLFVV4TAQO19534+Xa3H4couM7G3SuqCnD9F7U6vWHaif/AgptFs6Ycx1
-	 O/dZGGSV9wHrzQ8O5JObuZYz2pmr+o4DIA4+jJZV37VIz4o6yI6YjphLwezZz3mCIPao3X86SZ0n
-	 GxPlCz4IG/IDQj7mvl8YSslBbSK9e4etQPmVhmGyXUDGzt9achfaV5VqOmNIVjOUdPgmmhDTpLBf
-	 sww28CiORydsaZBpM9nQIwKBy0/g==
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-mid: xmsmtpt1774159372tee2dm8ec
+Message-ID: <tencent_6034EC6B5DDA04A0956AEDECE445442AE406@qq.com>
+X-QQ-XMAILINFO: MuMd8wcAiX0qCTYxO+T5kobr0Siz7f5NvRFLqAmK3DJIOnl9i8Yo0W6TOgSmhG
+	 u8aKrbyeHcMuhGIsTF91d/fiYAzJocSUtr84x/n2wPMmKMiS09DpsBqb5iarolXm/PdzDHuXXOOu
+	 V3fYZQAJjgdWVTSX+fVfwGk0JpZpKz14hsJ10IPmZCaluoMoiRyIUeb0vV5HI/DqFVgTJTRP5zFL
+	 u5jtxo7U25hWpLnibUsByGkB8gz2olgUuIMYmrunBCiFabJW0vaVS05SLOXiadHWWAreLS8Va/E9
+	 +ue7OGUvyFRZKa1OSx9uwV5ZnslLuxQrn3UtQ1hnQ0kt5ePuqIAWRO7PZuJYZXAtw7zJT3Dno/lN
+	 RWI37z/Fd28LSTvj/EMK0b+LByrvD8ODdjXU8HFz4zeER0KKhX205GXA7DkaAVKl1oVAo7LXmssG
+	 Ou8b09goBtRzS7Qm56bFcEB3dmg6BXjHt90k9ycD7+QCAVaNJwYPBTPT1b2pX7Y3EaQrT+aqYc8r
+	 /yxrMmuglMuEIR2mOUTbDyrFOrMB4vcDdEwlsZdY95k5iRYqhVh7nsZ1TtkeSZ7cUthJqoe7BqLC
+	 uv24M3Yq0mLIveVtN3RQgwgCg1a5QrPYvsjfYk8eouihuudLLnM3yY+71xT6t7VGb6bfVcMf+ced
+	 IbqzD7KO5c2hixMnM9Cp74JTr2umAIDnwqm/m29ZqxJmvORTfoS5a6zIBABZjf8mdbx9rrhjp8ei
+	 y4jq9VJZ/JIqrZ6/5ptPibgMLfOpiw7N++k5cfMJBj/qn1+r6SxDJU4pXFNj42+G4/XXZUaXd5pQ
+	 Mbm6BsGqj9JU7aqxVxVZgwnFsj4wtCshTpdtz8TtfjksyJqjfmSU17n9uQtVVwe0wLTOfskrAsNE
+	 blH0nlHGtk0CTUSvFR26DSTrlxSrOTtPIBfnR0D4lcEx2LbqTpQ3KE5nwnTXm2sm36gNfZQDEeRy
+	 LIQMMDRf10gvDjOzzIL4b8mRc36rUp3TnGc7iyATrwsQ505Cc7Q4vPg4zUcnmxeN6M4Dg/k7ymN3
+	 G2dpYXeQlEfrzSZg20w34mrOOVF9M=
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
 From: wjjsn <wjjsn@qq.com>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -54,9 +53,9 @@ Cc: kernel@xen0n.name,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	wjjsn <wjjsn@qq.com>
-Subject: [PATCH v3 1/2] dt-bindings: loongarch: Add Loongson-2K0300
-Date: Sun, 22 Mar 2026 14:02:45 +0800
-X-OQ-MSGID: <20260322060246.1375569-2-wjjsn@qq.com>
+Subject: [PATCH v3 2/2] loongarch: boot: dts: Add Loongson-2K0300 support
+Date: Sun, 22 Mar 2026 14:02:46 +0800
+X-OQ-MSGID: <20260322060246.1375569-3-wjjsn@qq.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260322060246.1375569-1-wjjsn@qq.com>
 References: <20260322060246.1375569-1-wjjsn@qq.com>
@@ -70,24 +69,177 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: wjjsn <wjjsn@qq.com>
 ---
- Documentation/devicetree/bindings/loongarch/loongson.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/loongarch/loongson.yaml          |  2 +-
+ arch/loongarch/boot/dts/Makefile              |  2 +-
+ .../boot/dts/loongson-2k0300-ref.dts          | 34 +++++++
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 95 +++++++++++++++++++
+ 4 files changed, 131 insertions(+), 2 deletions(-)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
 
 diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-index e1a4a97b7576..8bea8b9f75b1 100644
+index 8bea8b9f75b1..8e0a917ffc01 100644
 --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
 +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-@@ -14,6 +14,10 @@ properties:
-     const: '/'
-   compatible:
+@@ -16,7 +16,7 @@ properties:
      oneOf:
-+      - description: Loongson-2K0300 processor based boards
-+        items:
-+          - const: loongson,99pi
-+          - const: loongson,ls2k0300
+       - description: Loongson-2K0300 processor based boards
+         items:
+-          - const: loongson,99pi
++          - const: loongson,ls2k0300-ref
+           - const: loongson,ls2k0300
        - description: Loongson-2K0500 processor based boards
          items:
-           - const: loongson,ls2k0500-ref
+diff --git a/arch/loongarch/boot/dts/Makefile b/arch/loongarch/boot/dts/Makefile
+index 15d5e14fe418..4a096608cfad 100644
+--- a/arch/loongarch/boot/dts/Makefile
++++ b/arch/loongarch/boot/dts/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-dtb-y = loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
++dtb-y = loongson-2k0300-ref.dtb loongson-2k0500-ref.dtb loongson-2k1000-ref.dtb loongson-2k2000-ref.dtb
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ref.dts b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+new file mode 100644
+index 000000000000..f85d2caa94b0
+--- /dev/null
++++ b/arch/loongarch/boot/dts/loongson-2k0300-ref.dts
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Loongson Technology Corporation Limited
++ */
++
++/dts-v1/;
++
++#include "loongson-2k0300.dtsi"
++
++/ {
++	compatible = "loongson,ls2k0300-ref", "loongson,ls2k0300";
++	model = "Loongson-2K0300 Reference Board";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@200000 {
++		device_type = "memory";
++		reg = <0x0 0x00200000 0x0 0x0ee00000>,
++			  <0x0 0x90000000 0x0 0x10000000>;
++	};
++
++};
++
++
++&uart0 {
++	status = "okay";
++};
++
+diff --git a/arch/loongarch/boot/dts/loongson-2k0300.dtsi b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+new file mode 100644
+index 000000000000..91062b388e77
+--- /dev/null
++++ b/arch/loongarch/boot/dts/loongson-2k0300.dtsi
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Loongson Technology Corporation Limited
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/loongson,ls2k-clk.h>
++
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	interrupt-parent = <&cpuintc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "loongson,la264";
++			device_type = "cpu";
++			reg = <0x0>;
++			clocks = <&clk LS2K0300_CLK_NODE_DIV>;
++		};
++	};
++
++	ref_120m: clock-ref-120m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <120000000>;
++		clock-output-names = "ref_120m";
++	};
++
++	cpuintc: interrupt-controller {
++		compatible = "loongson,cpu-interrupt-controller";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++	};
++
++	liointc0: interrupt-controller@16001400 {
++		compatible = "loongson,liointc-2.0";
++		reg = <0x0 0x16001400 0x0 0x40>,
++				<0x0 0x16001040 0x0 0x8>;
++		reg-names = "main", "isr0";
++
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++		interrupt-names = "int0";
++
++		loongson,parent_int_map = <0xffffffff>, /* int0 */
++						<0x00000000>, /* int1 */
++						<0x00000000>, /* int2 */
++						<0x00000000>; /* int3 */
++	};
++	liointc1: interrupt-controller@16001440 {
++		compatible = "loongson,liointc-2.0";
++		reg = <0x0 0x16001440 0x0 0x40>,
++				<0x0 0x16001048 0x0 0x8>;
++		reg-names = "main", "isr0";
++
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&cpuintc>;
++		interrupts = <4>;
++		interrupt-names = "int2";
++
++		loongson,parent_int_map = <0x00000000>, /* int0 */
++						<0x00000000>, /* int1 */
++						<0xffffffff>, /* int2 */
++						<0x00000000>; /* int3 */
++	};
++	clk: clock-controller@16000400 {
++		compatible = "loongson,ls2k0300-clk";
++		reg = <0x0 0x16000400 0x0 0x2c>;
++		#clock-cells = <1>;
++		clocks = <&ref_120m>;
++		clock-names = "ref_120m";
++	};
++
++	uart0: serial@16100000 {
++		compatible = "ns16550a";
++		reg = <0x0 0x16100000 0x0 0x10>;
++		clocks = <&clk LS2K0300_CLK_APB_GATE>;
++		interrupt-parent = <&liointc0>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++		no-loopback-test;
++		status = "disabled";
++	};
++};
 -- 
 2.43.0
 
