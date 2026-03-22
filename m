@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626033128CF;
-	Sun, 22 Mar 2026 08:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E189221FBD;
+	Sun, 22 Mar 2026 08:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774169623; cv=none; b=uCHS+H09+qcv1VGtlvUS1BOALbuujUu1Bi9jAGd40v0D34EnLZT3LDmDk01UT2C81+NHf+JaNUtKbC8i4Arv3J/i9/C09GTdTTisUhD3dEWHggfcDfd71Do7bmCTRYF7UQXdZzY6MrXFv5cEUYoq5Wvxzqp3B8729Tf+HDG22OE=
+	t=1774169737; cv=none; b=sTCEsdpKebpn+qTSoCLS9kYRHYIYdTlBsoOEDq60bwiIBhj/FKRSJoPEuopbJZROM/PhfbSJRvdwOJZxyxxgVX+9X4fDWtGva88UkfiyNtohhZzcAaPSgnBKePAa+gfENEAaLFmASIrTx0GMtcK/yLBd+uUJu9cMQkvDlmDp3zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774169623; c=relaxed/simple;
-	bh=VWTVgwIT7ZTc9mK7V9vNnO4fCOJGOHGLqzp53axEXSw=;
+	s=arc-20240116; t=1774169737; c=relaxed/simple;
+	bh=NQfFwxBc3n5Lmt/kvNF54o/UqadTepG6z61Dd0RjFTs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tg79lcZT9CyUR5Be4T5MfCEQw/pIpKbnecpG+G5pi4CTyYhRdxm2jv/gQGQMd+88Bj29vClFH0w+8xE6A+Qt/9SAQaHVt2uHF/vvLbetNE5TMFla7cR9D6gHq8E0sjZLCX2ffhDY6MhVnkLZTvIG9/8k4EVFv6smjujkUcER+cE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifwMJNj3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aKk05U9NaxK5Dg4PmQINkIWZh14sCJ/L4K4YvUMnjDZKb62VjJwjNZSyE0KGOhD+xXN9xNv/8t0ijmaTb57Qy6Vi8VhlpjIGzjpzPWKNoNfIem1sySlVIm+jh5JAUfnCt2dH4fo2gXYL7sNnXSbG07MoIpGXgK7mNnQDRU/oDTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvjSe20c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifwMJNj3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC82AC2BC9E;
-	Sun, 22 Mar 2026 08:53:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvjSe20c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245BFC19424;
+	Sun, 22 Mar 2026 08:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774169623;
-	bh=VWTVgwIT7ZTc9mK7V9vNnO4fCOJGOHGLqzp53axEXSw=;
+	s=k20201202; t=1774169737;
+	bh=NQfFwxBc3n5Lmt/kvNF54o/UqadTepG6z61Dd0RjFTs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ifwMJNj3/juw4K0xxYusiE4EWoQk9s4y2GaLgYdoUZ/8XzH6zNCcQyhOw4c98MBev
-	 fEwI1kNlxDTc8uMtMdmmdJXreXrSDt2iFM0330EUHAlVgFmPe8QtZ6Rj+eqp9rg/oG
-	 QI4Lb3bKvdIdPxcT9mDPv6jmZy8U1jUqnobeFmBcLCak7yBs+EuFOYOHusR/o8mTlW
-	 wTd5MU/GisnKGV2tLjXfEtNy4TSPlCyPCsfzYKgoyK5o21Sa2hNKfYWd1s1RxcuOxh
-	 SnMYWz9c6iUXLzz8QCz+hRZBwD8jfZgz3kWAyFR9r78PTt9laRsWXdvaDVPB+1BF+i
-	 RTgtpZJPhXaYQ==
-Message-ID: <58a4ee0d-5473-469c-9cce-a6888353c846@kernel.org>
-Date: Sun, 22 Mar 2026 09:53:39 +0100
+	b=WvjSe20cA/0Su7tSkF3kIbPRASw2txORaTfrK03PMrx6A6TYxeWFsERqXasv3rmfL
+	 ZjlYRUyX+0oDYk+o/dlAEm80GxaCJNSNy53YXXoCDSGrJ6sqi7uQT7Cz4SX8SDUxUC
+	 lHX7NkQ4W4L2eHECUkflkDY/QgGHXuS3ekcwipdTIHbLu+z1Q/KR2Z7zHI8kYYqWxP
+	 kC0OktjXkmWsEqIEYukBP7R+etPr+IZXHvryGvntP0Xo+M0QVVvfny7UPG4/RO/jgN
+	 AuEgSWwqVzTq5XvNhGPICkV4LWZkgtEQsiGozOT9l/vujS8ICsy9k8v8KsEv4dbGfp
+	 vES7WTPfxO5PA==
+Message-ID: <8cb8ec5d-770e-477d-af5b-efaef8a3973a@kernel.org>
+Date: Sun, 22 Mar 2026 09:55:32 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] loongarch: boot: dts: Add Loongson-2K0300 support
+Subject: Re: [PATCH 2/2] clk: loongson2: add support for ls2k1000 compatible
 To: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, chenhuacai@kernel.org
-Cc: kernel@xen0n.name, devicetree@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260322060246.1375569-1-wjjsn@qq.com>
- <tencent_6034EC6B5DDA04A0956AEDECE445442AE406@qq.com>
+ conor+dt@kernel.org, chenhuacai@kernel.org, zhuyinbo@loongson.cn,
+ mturquette@baylibre.com, sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, kernel@xen0n.name, devicetree@vger.kernel.org,
+ wjjsn <2858482031@qq.com>
+References: <20260322080327.1606799-1-wjjsn@qq.com>
+ <tencent_19D06CEA85762ACE74DF6B745A2EE0BCAA06@qq.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,37 +89,62 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <tencent_6034EC6B5DDA04A0956AEDECE445442AE406@qq.com>
+In-Reply-To: <tencent_19D06CEA85762ACE74DF6B745A2EE0BCAA06@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/03/2026 07:02, wjjsn wrote:
+On 22/03/2026 09:03, wjjsn wrote:
+> From: wjjsn <2858482031@qq.com>
+> 
+> Add driver support for the "loongson,ls2k1000-clk" compatible
+> and update the Loongson-2K1000 DTS to use it while retaining
+> "loongson,ls2k-clk" as a fallback.
+> 
 > Signed-off-by: wjjsn <wjjsn@qq.com>
 > ---
->  .../bindings/loongarch/loongson.yaml          |  2 +-
->  arch/loongarch/boot/dts/Makefile              |  2 +-
->  .../boot/dts/loongson-2k0300-ref.dts          | 34 +++++++
->  arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 95 +++++++++++++++++++
+>  arch/loongarch/boot/dts/loongson-2k1000.dtsi | 2 +-
 
-Random posting.
+This is not driver.
 
->  4 files changed, 131 insertions(+), 2 deletions(-)
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300-ref.dts
->  create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+>  drivers/clk/clk-loongson2.c                  | 1 +
+
+Why are you combining these? Please read submitting patches in DT and
+maintainer-soc profile to understand. Then read submitting patches and
+split your code in logical chunks.
+
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/loongarch/loongson.yaml b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> index 8bea8b9f75b1..8e0a917ffc01 100644
-> --- a/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> +++ b/Documentation/devicetree/bindings/loongarch/loongson.yaml
-> @@ -16,7 +16,7 @@ properties:
->      oneOf:
->        - description: Loongson-2K0300 processor based boards
->          items:
-> -          - const: loongson,99pi
+> diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+> index ab6a55937e9e..61cdae438cb0 100644
+> --- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+> +++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+> @@ -156,7 +156,7 @@ pctrl: pinctrl@1fe00420 {
+>  		};
+>  
+>  		clk: clock-controller@1fe00480 {
+> -			compatible = "loongson,ls2k-clk";
+> +			compatible = "loongson,ls2k1000-clk", "loongson,ls2k-clk";
 
-But this is obviously NAK without explanation.
+You never tested your code. You have warning here.
 
-> +          - const: loongson,ls2k0300-ref
+>  			reg = <0x0 0x1fe00480 0x0 0x58>;
+>  			#clock-cells = <1>;
+>  			clocks = <&ref_100m>;
+> diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
+> index 9c4c6c99db3e..48d00578b26f 100644
+> --- a/drivers/clk/clk-loongson2.c
+> +++ b/drivers/clk/clk-loongson2.c
+> @@ -441,6 +441,7 @@ static const struct of_device_id loongson2_clk_match_table[] = {
+>  	{ .compatible = "loongson,ls2k0300-clk", .data = &ls2k0300_clks },
+>  	{ .compatible = "loongson,ls2k0500-clk", .data = &ls2k0500_clks },
+>  	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
+> +	{ .compatible = "loongson,ls2k1000-clk", .data = &ls2k1000_clks },
+
+What is the point of this change? It's redundant.
+
+>  	{ .compatible = "loongson,ls2k2000-clk", .data = &ls2k2000_clks },
+>  	{ }
+>  };
 
 
 Best regards,
