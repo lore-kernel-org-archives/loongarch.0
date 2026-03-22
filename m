@@ -1,42 +1,68 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D70C358369
-	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 13:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21B43126BF
+	for <loongarch@lists.linux.dev>; Sun, 22 Mar 2026 15:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774187658; cv=none; b=BoL8fY/84ua9+wQeBId6PPLaVc+DYZGvSCzQr0f5Qf+7CqtDYc66e90BkA+o+l0To1lWTIXP3ZfYSSdrnFG9IemUnapejHWVhJgBGC0AAnsDGSGPD/zkUevkEjdnylHtheShnnJ5HQfm6q18sQ22ZQXQrZk/jT8ceSXYgcmz6Ds=
+	t=1774192126; cv=none; b=ShkalhQGLXY7ETXVONrL3vpyJkqqtxKmkTIwzdLCZ5LA4wE0DaiPwjjb28KD0JUQ30lN+qZhFyRaVVcxK+2e0//Jugm/lOonHAM6vRw7REtgOxaumMkdloX7rgrrbGhh2Ps/y612eXMDA+s58BAxVkr8y7g1VO2mwDY9MtZ8bv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774187658; c=relaxed/simple;
-	bh=yk2/iPYEy+ynM7ehu4Ubr2FwrKv8PEKe91/P/QkZhqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oUK01DcN5RbTI85KFQFLHkkDOT4Q19Msv8ehorCH1Bj30Vocp3goGkeR4RlmJaiGoU/0K8oQ7n+fb09cvFfAeyl/4MWEcEEBWXKMXUvhC4tswlvwdLNHDCPGYqvM1vMYqkZSql9fP2U03WD5tRugSocYCijpqhy4TyzRdRK01d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.17])
-	by gateway (Coremail) with SMTP id _____8AxScKC9L9pj4sdAA--.20074S3;
-	Sun, 22 Mar 2026 21:54:10 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.17])
-	by front1 (Coremail) with SMTP id qMiowJAxIMNw9L9pDsVaAA--.39100S3;
-	Sun, 22 Mar 2026 21:54:09 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1774192126; c=relaxed/simple;
+	bh=cls8doY6FMHuYzYhNkcMpXWFBl3PhyiUg7+F+EhHP4g=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=UAM+0nSsfYX6qdkbljMGne7ka+a/rfdIBk+YVqoE+CC0iRgM9wPZ1ziqAWf8O71k7erDFzud/ICin4jDLSlabBySPo0mg1Upc97Ma6C5rodSS5/eXwTrg8jUpPDxmugP7sJI3X+0NwCc7RdOEcTQihnTgRatTulbQaSDNkCEAfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HlRPOsjy; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HlRPOsjy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1774192122; bh=11RYZrnd+R+xAKxcT2ifOg/oO8QJFkt3BN/QwdD92DE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HlRPOsjysmDSv4knhc5c1mUQgtpQ4CyruINFYDh3HNbpxLJ/WpJgkQ2Wv+S4p3zB6
+	 3NZXgKdJ58JxDXpP5+EA0XXpSLKWQ0A+xZpr6fssK6zWxq0tJ0MWZ/gWlH8CS2fx3u
+	 Bxbw/OImoEbsaEFA9svaC++2ytsKuo62TNbZIa84=
+Received: from MYJGMC.lan ([122.195.139.226])
+	by newxmesmtplogicsvrszc56-0.qq.com (NewEsmtp) with SMTP
+	id 2259A43D; Sun, 22 Mar 2026 23:08:37 +0800
+X-QQ-mid: xmsmtpt1774192119tacdc51vz
+Message-ID: <tencent_C35FFFD2C601DB54E967312ED852DDA70F09@qq.com>
+X-QQ-XMAILINFO: Nr4sKL92GIu+t4q8r0kflekmSEvtS1q1Wfq3Bsg2iXi7VUvNmKIvivp4r0yrgF
+	 DI2iViy5K7qxJYi3a0xC59wURCbs6d10q7NKQOq9JAJGAGvFSeNi1lfB4t5TBddn6PfIutTay7ih
+	 +i5a3JvsXBvLkxa1Nb2brTxyrHjIQWwYrdyImSodXF58fhR/ciDTgOD4ZsFyQSW2Y9Mt6KqCg6xi
+	 7j3SKtKEMDQ+4S4XnXLINbx+CQViYOteBZQMJEoP9JmujJXvFVUkgKHdo9uqMm2rdgt0pLgTiupn
+	 8HOwJQP5mt9QAzAj216atecyV4NA/cY7XqwnSm5O20oFt2OpG8LFCZEfBy2SpySZVognKiq0hc7/
+	 UE92WSF0DSdLFz/0Gfyq8TF3lG2kTHHT5VfFAUZLseK7FxcHEJTZ/gAPjSuA8xzJ1WfMK6sh0hgw
+	 Ewu/5eU9nIzOrE0O0rKKkWZgM01G8a5rf0JjpHaB6lSYCNBIydM1bx1d2IXuq6sTYA1qWHfTp3oo
+	 nbuIz2yTj903RPzwO0LfeSkcqj6We1qB0IvqWleQGSUfYbUxbZRnURvbBB0eKREgD7THMpWEGNZT
+	 m2dPW18XBYZAucahM4EQ4VYDfiM2XKj0uvIiybo6S4OxT3Uln37siFThbZ19JBVK1zrhFcRT8sbG
+	 /Qlja3hPjMTvPeAlPYgkSUrLS/h2PQtObpDFrGA8wvoCtP+Hb0C6r+xq/kEHRDA0z33+ZarNwA40
+	 YKMeK5/lATHDt18p4VSxSLTL+W1BlQGNxqiMKm5jJhDkFUR3LU8r1ziy/lQE6r4cgi1q8RzITol+
+	 jRis7lObX+PXk2FRZUz+BSbMuTBzXPGNy+3R2HqS39y+6cQFOuieWae6xI8TlOGkxk0O3170mw8d
+	 Kdr7I5VQfZYArCSCh9t/SwrrKtE/Whgukpf+gZtya/NmADUHijVYeqclio27c/iYA8D8ozZH4jaA
+	 bFFTXWggXlnSw6y0tivpgnmbGiROo5xWwX8nhSvYzcAl3QZFxuCgVF1bpTBjJoRqdNYZG2ZE9Fip
+	 h6gc/23Q8ikpY9WIK0Db7Q3og3/AaBXc2V964A9mJ6voJmN89y6Q34r0VBrQUNaR4KK26HNA==
+X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+From: wjjsn <wjjsn@qq.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	chenhuacai@kernel.org,
+	zhuyinbo@loongson.cn,
+	mturquette@baylibre.com,
+	sboyd@kernel.org
+Cc: linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Aurelien Jarno <aurel32@debian.org>
-Subject: [PATCH 2/2] LoongArch: KVM: Handle the case that EIOINTC's coremap is empty
-Date: Sun, 22 Mar 2026 21:53:46 +0800
-Message-ID: <20260322135346.3720577-2-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260322135346.3720577-1-chenhuacai@loongson.cn>
-References: <20260322135346.3720577-1-chenhuacai@loongson.cn>
+	loongarch@lists.linux.dev,
+	kernel@xen0n.name,
+	devicetree@vger.kernel.org,
+	wjjsn <wjjsn@qq.com>
+Subject: [PATCH v2 1/2] dt-bindings: clock: loongson,ls2k: Add ls2k1000 compatible and deprecate legacy
+Date: Sun, 22 Mar 2026 23:08:35 +0800
+X-OQ-MSGID: <20260322150836.55196-2-wjjsn@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260322150836.55196-1-wjjsn@qq.com>
+References: <20260322150836.55196-1-wjjsn@qq.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -44,54 +70,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxIMNw9L9pDsVaAA--.39100S3
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7XFyUCr4DCry5KrW8AF1kWFX_yoW8Jr1kpF
-	W7C39ak3y5GFy3Xa4vqayfWF47Ar95Wr1IqF1UKFyUAFn8XF1rZrWrZr4DXFn0k34rGr40
-	qr1xKw1Fva1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8EeHDUUUUU==
 
-EIOINTC's coremap in eiointc_update_sw_coremap() can be empty, currently
-we get a cpuid with -1 in this case, but we actually need 0 because it's
-similar as the case that cpuid >= 4.
+Add a SoC-specific compatible string "loongson,ls2k1000-clk" for
+Loongson-2K1000.
 
-This fix an out-of-bounds access to kvm_arch::phyid_map::phys_map[].
+Mark the legacy "loongson,ls2k-clk" compatible as deprecated using
+the structured "deprecated: true" property instead of relying on
+textual description.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 3956a52bc05bd81 ("LoongArch: KVM: Add EIOINTC read and write functions")
-Reported-by: Aurelien Jarno <aurel32@debian.org>
-Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1131431
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Update the example to use the new compatible.
+
+Signed-off-by: wjjsn <wjjsn@qq.com>
 ---
- arch/loongarch/kvm/intc/eiointc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/clock/loongson,ls2k-clk.yaml         | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index d2acb4d09e73..c7badc813923 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -83,7 +83,7 @@ static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
+diff --git a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+index c07ad1f85857..b0ef5cd5af32 100644
+--- a/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
++++ b/Documentation/devicetree/bindings/clock/loongson,ls2k-clk.yaml
+@@ -15,11 +15,14 @@ description: |
  
- 		if (!(s->status & BIT(EIOINTC_ENABLE_CPU_ENCODE))) {
- 			cpuid = ffs(cpuid) - 1;
--			cpuid = (cpuid >= 4) ? 0 : cpuid;
-+			cpuid = ((cpuid < 0) || (cpuid >= 4)) ? 0 : cpuid;
- 		}
+ properties:
+   compatible:
+-    enum:
+-      - loongson,ls2k0300-clk
+-      - loongson,ls2k0500-clk
+-      - loongson,ls2k-clk  # This is for Loongson-2K1000
+-      - loongson,ls2k2000-clk
++    oneOf:
++      - enum:
++          - loongson,ls2k0300-clk
++          - loongson,ls2k0500-clk
++          - loongson,ls2k1000-clk
++          - loongson,ls2k2000-clk
++      - const: loongson,ls2k-clk
++        deprecated: true
  
- 		vcpu = kvm_get_vcpu_by_cpuid(s->kvm, cpuid);
+   reg:
+     maxItems: 1
+@@ -69,7 +72,7 @@ examples:
+     };
+ 
+     clk: clock-controller@1fe00480 {
+-        compatible = "loongson,ls2k-clk";
++        compatible = "loongson,ls2k1000-clk";
+         reg = <0x1fe00480 0x58>;
+         #clock-cells = <1>;
+         clocks = <&ref_100m>;
 -- 
-2.52.0
+2.43.0
 
