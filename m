@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F14C37268A;
-	Sun, 22 Mar 2026 20:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB4532F764;
+	Sun, 22 Mar 2026 20:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774211337; cv=none; b=ubV58UU9OxPeqEsL+e52MRV+LaRQnkgOaezlEeEHVpxUaH1Q6RPKH3mXyLxx1NjLUGXY67kelx7SR42AqFFyKJNAtI2whFfYUX9TJHW85nZPvueDhkyEJhGxyBhPW2rO84tA/kBJ8HizyxtWqYyc2G7B4q5yb4puZ/nvYYE/4Ig=
+	t=1774211441; cv=none; b=Wh6cQXSI17P6SS6cIaJqh2eYYrbcqKC6gdbwI6ChaQaqBF2kp1tBtQ2Lmwri/WrVZmdUqV3epocaYOi0DeVo0+IC385OdOViN8Z9k18xpTvxgOn0cn7NW/hqG6dkmDoBbXkuUkm3v8DhA75L9HB8bZ1nLtw4q/L7PMoMv7mYeE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774211337; c=relaxed/simple;
-	bh=a8u3d+2Q9SN390gmXGFefZ1g6XSCEiZIqnbCBwRZtLg=;
+	s=arc-20240116; t=1774211441; c=relaxed/simple;
+	bh=vR5mr4TdTNviXSNxi68F0/B1xQtNO/FlpylBUgMFZXo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVVbgp7l0zUXShTmKe+aI1M++mNpBdQviLGAuK3drCR2Ei3JJ/CqHRWZUbjYs32nMMliA2/AlwC4vwPxqppZpgODc5J2X2vOukRh3SDOWqopo2zBotH2ZQIhblgd0AFk4IFnrt39d8Z6FP6CUb2NlIHjjHLTi+rNm1NTf02z3oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJaQ/EOK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=K9ncdNAxhoERtflrEsAlJnkBLjMio8b7zwzOcuthcCaF0gghdangBQjbWnx/44xLt72ciAwGEeE+ZVJZIYzHQgqQAasdGnMTGA2TeHfkHHUcw22XfWe2XRg04/l5eZPAX8385yIYd6ht47LB4RtLWx+SqpmiBACGccTBiq1ZEUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6RZTScE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJaQ/EOK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADF8C19424;
-	Sun, 22 Mar 2026 20:28:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6RZTScE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D200C19424;
+	Sun, 22 Mar 2026 20:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774211337;
-	bh=a8u3d+2Q9SN390gmXGFefZ1g6XSCEiZIqnbCBwRZtLg=;
+	s=k20201202; t=1774211440;
+	bh=vR5mr4TdTNviXSNxi68F0/B1xQtNO/FlpylBUgMFZXo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HJaQ/EOKa1foteW/PfBk9A4jVDk0OmdmJERJi1sG1mGmUmp+wfaEjjGFB/Sqo/flM
-	 XLRLfUn/RybHLh64Ep375hQsUsrJrl5j7MKs4CsEjobzjevieAuNoxApOWgYCSEnQC
-	 O3h69wb9m+X8AdVoPboWscJGQ8OHyxip/Ov+aYurU54tnSbd80azn55HtB1PfPWliU
-	 Frxbb87iGA47+aloiufWd04L1jNL+5S4zoNzblhhEuwaeG8C0mfSJkzZK+qvfySHGe
-	 23eVLxfqipIsYH2yqNvDuIzKCM1fk+KvinopVJiKh7lBl9FXVRtkqRhW1StFg+QLwf
-	 nEzmXYdLIIUuA==
-Message-ID: <acaf9cb6-842c-44d0-a20f-fe3880130de2@kernel.org>
-Date: Sun, 22 Mar 2026 21:28:52 +0100
+	b=n6RZTScEzG7LFwSS083/Lrz5FlRixABpLoRhXzrmJZzRXcKR6j9YXqTf79SROlQgh
+	 ISSi9Lqa+bdXgdo2WlMIwxcLvTB6BGYzM7MCMN3nL+7mf9bkIpjmPux17kLNOclOAc
+	 IRUXAuLlucQSxqX/PmmiSZjoJRb54scA1yuosR4ztvXOWwVgTceEmgYKjf/5ML7OxT
+	 4oV++LXi6NL0xNJlzdgB8krjnqwQsI6qTagzHYVlNbIktvAoHJGGgd0msQ7sBwEFuN
+	 gocM6ku/bcMKb8nvnOq83IDWY+R7rXKBA7xIusX3WF5BpaVrXv7LXiUwzFBnBU0hpd
+	 ZRM5BU7HzLE3g==
+Message-ID: <1d8def7c-bc9d-46c0-8584-67848bf12ef4@kernel.org>
+Date: Sun, 22 Mar 2026 21:30:36 +0100
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,15 +35,18 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: loongson,ls2k: Add ls2k1000
- compatible and deprecate legacy
-To: wjjsn <wjjsn@qq.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, chenhuacai@kernel.org, zhuyinbo@loongson.cn,
- mturquette@baylibre.com, sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, kernel@xen0n.name, devicetree@vger.kernel.org
-References: <20260322150836.55196-1-wjjsn@qq.com>
- <tencent_C35FFFD2C601DB54E967312ED852DDA70F09@qq.com>
+Subject: Re: [PATCH v2 0/2] loongson2 clk: introduce ls2k1000 specific
+ compatible
+To: wjjsn@qq.com, robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>,
+ conor+dt <conor+dt@kernel.org>, chenhuacai <chenhuacai@kernel.org>,
+ zhuyinbo <zhuyinbo@loongson.cn>, mturquette <mturquette@baylibre.com>,
+ sboyd <sboyd@kernel.org>
+Cc: linux-clk <linux-clk@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ loongarch <loongarch@lists.linux.dev>, kernel <kernel@xen0n.name>,
+ devicetree <devicetree@vger.kernel.org>
+References: <tencent_AC8D0BB5D4C7698A57A6B42D4038559E5907@qq.com>
+ <tencent_78A85ECCF65F70A7A24D63BF52A6BD03320A@qq.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,21 +92,16 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <tencent_C35FFFD2C601DB54E967312ED852DDA70F09@qq.com>
+In-Reply-To: <tencent_78A85ECCF65F70A7A24D63BF52A6BD03320A@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22/03/2026 16:08, wjjsn wrote:
-> Add a SoC-specific compatible string "loongson,ls2k1000-clk" for
-> Loongson-2K1000.
+On 22/03/2026 16:27, wjjsn@qq.com wrote:
+> Please ignore this series. I mistakenly labeled it as v2 (again). I have just sent out v3 which supersedes this one. Sorry for the noise.
 > 
-> Mark the legacy "loongson,ls2k-clk" compatible as deprecated using
-> the structured "deprecated: true" property instead of relying on
-> textual description.
 > 
-> Update the example to use the new compatible.
 
-NAK, for reasons already explained in other threads.
+Can you slow down and read the feedback you received?
 
 Best regards,
 Krzysztof
