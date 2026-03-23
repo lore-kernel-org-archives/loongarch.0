@@ -1,170 +1,78 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98513C198A;
-	Mon, 23 Mar 2026 16:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C633C0622;
+	Mon, 23 Mar 2026 16:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774284276; cv=none; b=XmOS0eUCy55CmzflKpUAqJ1U+tJBExYabonf/KZfZc9oiDs97TqrHluK0OWBPCmuxiRflCTuG8d05mzIgqY07/01qakNbVJRqBQbrS/uODKDwgIu46F6tYwHIkWyX1RcQQek6rcu3ligQetYwf5RIGB8VFeGLyIHt2SWTyeRZEA=
+	t=1774284951; cv=none; b=bKY+J6G7TPsJnh0hRGzZiUE9os3S9I6jy1ejYJPYOxB/KbOmELyEivPL06LaIxvDPggaKPsblyB8VpndGZ0GO6RjRmTDrQOSll5edwQjX4jG6SP7iXx9TsD0q0PxevnvgZNYZXXuezVQEt9ixgUDKfNs0CCD43Y7e/bAbWa0vm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774284276; c=relaxed/simple;
-	bh=rDr6NT1Sv35coLIThTn5ymCPYQNnEGzN4OhDYsaf3R8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iC9zjGIcV/38d8pbvFTogYGedhIb8St5QE+6wev6kqyh9Kr1/bQP8QDSJZLUrpcIQPBaJXO45uZN46WSkxUE5BKll9gsAbq526rpz/6b833moRcuCZl3+MtiyRZus55ozv6AqEN5Vd29RKGXXs/irS3Mjsr1lTYB0jmq7Wwit9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=dlZIzt5Y; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1774284951; c=relaxed/simple;
+	bh=0LuJYoTQTDvWV9NTWOPFuNPtv2UN3kOMEh+jhXWnc2s=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=p1PF/ywELsynI3c5BcuLLm81rzOaq/lc+qmjFPvPT0P5Z3sGlr5EhzO0X7bpvkHTmeP6/NX7FqpEkpy8GbqZnv4G/QI6aG76LuXBy+DFmU3O466nJbp+X9ItwaZpUprzTZjNzjyItOw3zDrcp25z0GClQVwuAIZRRBgayfVeMqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=qgGXTep1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="dlZIzt5Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=u646cOHMJ/zTHL9+VZ4W7Ux0q5cDJeWhhX/W1yOam3I=; b=dlZIzt5YzevTl4QnSJxxDuhppU
-	q2WiFtssembwHpot97e7p66yyqpF3dN8xA6eo3mU9Y5cs77fG/ib/E0pmR2yPSYUbOk1yB04ldCYA
-	8ZSzKzhPXOJ2uxLAeNtLzVEnC72HyX/Da0COA18pwxZ18OR3/xTPzoczvd+eOfdbXU+oe4D6zXNln
-	RL3AID6EDlGZkPD4dqQGcVL8hyyuo84fScfgh1+HpHr0th+N7IyqowEsgziGLLV0rZFhpAPGgdSUN
-	uSgV3My9CRMDXuTe1oUCC4dNUN3U7nThOJTD+Dmv8QRP2jO2Jg1/VT/h7vj784PI985iF8yh77g2G
-	eh4Qqoxg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1w4iMe-007fRI-16; Mon, 23 Mar 2026 16:42:50 +0000
-Date: Mon, 23 Mar 2026 09:42:38 -0700
-From: Breno Leitao <leitao@debian.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="qgGXTep1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F2FC2BC9E;
+	Mon, 23 Mar 2026 16:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1774284951;
+	bh=0LuJYoTQTDvWV9NTWOPFuNPtv2UN3kOMEh+jhXWnc2s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qgGXTep1YmJrPSvqa0ycQRzl2NPgm4AaiOcjYyoeytss6axGtvgS0EzKKZIBsxxsA
+	 V6fyRWqr/ZIWLg5r94g6isrv7Lul5Ery6vKJi/XjccJ0tkvgqlQUYmdi/KPsKX+oSy
+	 WOcrfjFCALXA7q5Zf2q/7NKZNQeM2jvJT0tXbqY8=
+Date: Mon, 23 Mar 2026 09:55:48 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
-	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, peterz@infradead.org, 
-	feng.tang@linux.alibaba.com, pawan.kumar.gupta@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	kees@kernel.org, elver@google.com, paulmck@kernel.org, lirongqing@baidu.com, 
-	safinaskar@gmail.com, rppt@kernel.org, ardb@kernel.org, jbohac@suse.cz, 
-	cfsworks@gmail.com, osandov@fb.com, tangyouling@kylinos.cn, 
-	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, eajames@linux.ibm.com, 
-	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, samuel.holland@sifive.com, 
-	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com, liaoyuanhong@vivo.com, 
-	fuqiang.wang@easystack.cn, x86@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v9 4/5] arm64: kexec: Add support for crashkernel CMA
+Cc: <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
+ <kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+ <npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+ <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+ <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+ <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
+ <saravanak@kernel.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+ <dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
+ <feng.tang@linux.alibaba.com>, <pawan.kumar.gupta@linux.intel.com>,
+ <dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+ <paulmck@kernel.org>, <lirongqing@baidu.com>, <safinaskar@gmail.com>,
+ <rppt@kernel.org>, <ardb@kernel.org>, <leitao@debian.org>,
+ <jbohac@suse.cz>, <cfsworks@gmail.com>, <osandov@fb.com>,
+ <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+ <ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
+ <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+ <samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+ <junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
+ <fuqiang.wang@easystack.cn>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <kexec@lists.infradead.org>
+Subject: Re: [PATCH v9 0/5] arm64/riscv: Add support for crashkernel CMA
  reservation
-Message-ID: <acFtMLyCWbYOyFZT@gmail.com>
+Message-Id: <20260323095548.fa4e13d6e8ae5005ae585e13@linux-foundation.org>
+In-Reply-To: <20260323072745.2481719-1-ruanjinjie@huawei.com>
 References: <20260323072745.2481719-1-ruanjinjie@huawei.com>
- <20260323072745.2481719-5-ruanjinjie@huawei.com>
- <acETyW3FYaWCShUc@gmail.com>
- <a5694ee0-7a95-4c15-6775-990d70c8d77b@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a5694ee0-7a95-4c15-6775-990d70c8d77b@huawei.com>
-X-Debian-User: leitao
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 23, 2026 at 07:17:21PM +0800, Jinjie Ruan wrote:
-> 
-> 
-> On 2026/3/23 18:20, Breno Leitao wrote:
-> > On Mon, Mar 23, 2026 at 03:27:44PM +0800, Jinjie Ruan wrote:
-> >> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-> >> crashkernel= command line option") and commit ab475510e042 ("kdump:
-> >> implement reserve_crashkernel_cma") added CMA support for kdump
-> >> crashkernel reservation.
-> >>
-> >> Crash kernel memory reservation wastes production resources if too
-> >> large, risks kdump failure if too small, and faces allocation difficulties
-> >> on fragmented systems due to contiguous block constraints. The new
-> >> CMA-based crashkernel reservation scheme splits the "large fixed
-> >> reservation" into a "small fixed region + large CMA dynamic region": the
-> >> CMA memory is available to userspace during normal operation to avoid
-> >> waste, and is reclaimed for kdump upon crash—saving memory while
-> >> improving reliability.
-> >>
-> >> So extend crashkernel CMA reservation support to arm64. The following
-> >> changes are made to enable CMA reservation:
-> >>
-> >> - Parse and obtain the CMA reservation size along with other crashkernel
-> >>   parameters.
-> >> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-> >> - Include the CMA-reserved ranges for kdump kernel to use.
-> >> - Exclude the CMA-reserved ranges from the crash kernel memory to
-> >>   prevent them from being exported through /proc/vmcore, which is already
-> >>   done in the crash core.
-> >>
-> >> Update kernel-parameters.txt to document CMA support for crashkernel on
-> >> arm64 architecture.
-> >>
-> >> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> >> Acked-by: Baoquan He <bhe@redhat.com>
-> >> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> >> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> >> ---
-> >> v7:
-> >> - Correct the inclusion of CMA-reserved ranges for kdump
-> >>   kernel in of/kexec.
-> >> v3:
-> >> - Add Acked-by.
-> >> v2:
-> >> - Free cmem in prepare_elf_headers()
-> >> - Add the mtivation.
-> >> ---
-> >>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
-> >>  arch/arm64/kernel/machine_kexec_file.c          | 2 +-
-> >>  arch/arm64/mm/init.c                            | 5 +++--
-> >>  drivers/of/fdt.c                                | 9 +++++----
-> >>  drivers/of/kexec.c                              | 9 +++++++++
-> >>  5 files changed, 19 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >> index cb850e5290c2..afb3112510f7 100644
-> >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >> @@ -1121,7 +1121,7 @@ Kernel parameters
-> >>  			It will be ignored when crashkernel=X,high is not used
-> >>  			or memory reserved is below 4G.
-> >>  	crashkernel=size[KMG],cma
-> >> -			[KNL, X86, ppc] Reserve additional crash kernel memory from
-> >> +			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
-> >>  			CMA. This reservation is usable by the first system's
-> >>  			userspace memory and kernel movable allocations (memory
-> >>  			balloon, zswap). Pages allocated from this memory range
-> >> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> >> index c338506a580b..cc577d77df00 100644
-> >> --- a/arch/arm64/kernel/machine_kexec_file.c
-> >> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> >> @@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >>  #ifdef CONFIG_CRASH_DUMP
-> >>  unsigned int arch_get_system_nr_ranges(void)
-> >>  {
-> >> -	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
-> >> +	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
-> > 
-> > You update arch_get_system_nr_ranges() to account for CMA ranges, but
-> > prepare_elf_headers() in the same file (line 51) still has the
-> > hardcoded:
-> > 
-> >         nr_ranges = 2; /* for exclusion of crashkernel region */
-> 
-> I don't see any logic related to prepare_elf_headers() or hardcoded
-> nr_ranges = 2 in the arm64 implementation.
+On Mon, 23 Mar 2026 15:27:40 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 
-Just ignore me here, I've mis applied the patch, and then I got
-arch_get_system_nr_ranges() and prepare_elf_headers(), but, they are the
-same thing at in here.
+> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+> and crashk_cma memory are almost identical across different architectures,
+> This patch set handle them in crash core in a general way, which eliminate
+> a lot of duplication code.
+> 
+> And add support for crashkernel CMA reservation for arm64 and riscv.
 
-> > 
-> > and does not exclude CMA ranges from cmem. If the generic crash core
-> > handles CMA exclusion from vmcore, then shouldn't
-> > arch_get_system_nr_ranges() also not need this change?
-> > 
+Thanks.  AI review has completed and it asks questions:
+	https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie@huawei.com
