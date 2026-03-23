@@ -1,179 +1,91 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C9A2AD00
-	for <loongarch@lists.linux.dev>; Mon, 23 Mar 2026 03:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C55C32C15AA
+	for <loongarch@lists.linux.dev>; Mon, 23 Mar 2026 06:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774237240; cv=none; b=MiVpMGC1WCusTQCAFrDIvwu/5MHTMa6WLmCK8mMTI0PH5EBvnS/F5vysqvwtKqu81gM/QLQK6mBd9dZgHx5jyqaETE7J+xVko/fZ9ix4qTyNuTK2CIQ/u9WtXAqi0/S9LerPg03KmPfqopoYDJBD8zT3mMlt0uPbu7Ps1N1OiHI=
+	t=1774246590; cv=none; b=K7qh7s+19IB+Bwh6HeBqrqx3W4xBCCLZNukV/dDbz4/NSmgzWoEUlgxzqFbWfvePWPq3ms3GrHdHb7BhSeaDqHYLmz//+zr1dwklOcMVTStrMrF+Qz3n4FjbfuNzkqjJ0E8yNBFEqgF/EWkFTJ/BAxZ+E3CBdmecqEuVfYfv6ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774237240; c=relaxed/simple;
-	bh=2GilZkAoeozT1RpSJYGejiwFN6C6fjf+USga5J6Xx/U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jLJvjW/FnAequJY3hjO5O5AGFF6xvQFaymIG3ULMLhdHDY9JVZbVInRL52e44KcVMU8+Ve/EThJL6fgwK3JvWGY9zIO6bs/VCEPUA77iv0+hbycEimHu4ibfu6LfuWnaMriXpORubKq43GNJ3gtg1MKpBIUb3GeWMmvC5rnSomc=
+	s=arc-20240116; t=1774246590; c=relaxed/simple;
+	bh=odcJ/r+/o/ITLUuE+GI1sf8oIQWWIJ7knVY7pIjmkr8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IpBJdN/VT4jlzUzGtfY7AJ9+PUzLjbVWz8Na7zAxLd1M5cK9wam4LQJqfODyIYGkVYU6ITgUMDR+XXikH6kONGOulvrjHHZ0Guyc7G+JrpGv2S3xf+EIxSRuqwFO+YAXCNCzvCbh+FGwr10RybNpfyEIusGpQWdoY8bU/t8RIPc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxvsMztsBpKakdAA--.19680S3;
-	Mon, 23 Mar 2026 11:40:35 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDxaeAytsBpOBRbAA--.43922S2;
-	Mon, 23 Mar 2026 11:40:35 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Set max used FPU type with FPU exception
-Date: Mon, 23 Mar 2026 11:40:34 +0800
-Message-Id: <20260323034034.3465072-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+Received: from loongson.cn (unknown [10.180.13.167])
+	by gateway (Coremail) with SMTP id _____8DxccC02sBpKq8dAA--.26150S3;
+	Mon, 23 Mar 2026 14:16:21 +0800 (CST)
+Received: from [0.0.0.0] (unknown [10.180.13.167])
+	by front1 (Coremail) with SMTP id qMiowJBxiuCy2sBpmSNbAA--.39116S2;
+	Mon, 23 Mar 2026 14:16:19 +0800 (CST)
+Message-ID: <7d602b85-1436-40b7-88f3-7f3eadfb43f7@loongson.cn>
+Date: Mon, 23 Mar 2026 14:16:18 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Increase MAX_MEMORY_RANGES to 1024
+From: Ming Wang <wangming01@loongson.cn>
+To: kexec@lists.infradead.org
+Cc: horms@kernel.org, loongarch@lists.linux.dev, chenhuacai@kernel.org
+References: <20260304011914.880120-1-wangming01@loongson.cn>
+Content-Language: en-US
+In-Reply-To: <20260304011914.880120-1-wangming01@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeAytsBpOBRbAA--.43922S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowJBxiuCy2sBpmSNbAA--.39116S2
+X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEPEmm-hMQJnQABse
+X-Coremail-Antispam: 1Uk129KBj93XoWrtr1xuw1xXw4xAr17tF4kKrX_yoW8Jr1xpr
+	W7AF1DGrWrWrs7tw1kt39xXwn3G343KF1xWFya9ryxCr4DXr1Iv3WDWrZ8XFWUXw4rKryI
+	grn0g34FqFWDXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjx
+	CEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAF
+	wI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1GQ6JUU
+	UUU==
 
-With FPU save and restore flow, the cost is the same with different
-FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
+Just a gentle ping.
 
-Here is to enable FPU with max used type, for example if application
-ever uses LASX instrction, enable FPU with LASX type even with FPU
-exeception. So it can avoid possible LSX/LASX exception in future.
-
-With context switch microbench which may touch FPU and LASX, there is 9%
-improvement when halt_poll_ns is disabled. The command is
-"./context --test=pipe" and source code located at:
-  https://github.com/bibo-mao/context_switch/blob/main/context.c
-
-Original     Wih patch      improvement
-75232        82440          9%
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  1 +
- arch/loongarch/kvm/exit.c             |  6 +++---
- arch/loongarch/kvm/vcpu.c             | 25 ++++++++++---------------
- 3 files changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 19eb5e5c3984..7d739fd5cda6 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -203,6 +203,7 @@ struct kvm_vcpu_arch {
- 	/* Which auxiliary state is loaded (KVM_LARCH_*) */
- 	unsigned int aux_inuse;
- 	unsigned int aux_ldtype;
-+	unsigned int aux_used;
- 
- 	/* FPU state */
- 	struct loongarch_fpu fpu FPU_ALIGN;
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index da0ad89f2eb7..da8e330c8b20 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -754,7 +754,7 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
- 		return RESUME_HOST;
- 	}
- 
--	vcpu->arch.aux_ldtype = KVM_LARCH_FPU;
-+	vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_FPU;
- 	kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
- 
- 	return RESUME_GUEST;
-@@ -796,7 +796,7 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
- 	if (!kvm_guest_has_lsx(&vcpu->arch))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
- 	else {
--		vcpu->arch.aux_ldtype = KVM_LARCH_LSX;
-+		vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_LSX;
- 		kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
- 	}
- 
-@@ -816,7 +816,7 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
- 	if (!kvm_guest_has_lasx(&vcpu->arch))
- 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
- 	else {
--		vcpu->arch.aux_ldtype = KVM_LARCH_LASX;
-+		vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_LASX;
- 		kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
- 	}
- 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 8810fcd7e26e..0a111c74a330 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -239,23 +239,14 @@ static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
- 		}
- 
- 	if (kvm_check_request(KVM_REQ_AUX_LOAD, vcpu)) {
--		switch (vcpu->arch.aux_ldtype) {
--		case KVM_LARCH_FPU:
--			kvm_own_fpu(vcpu);
--			break;
--		case KVM_LARCH_LSX:
--			kvm_own_lsx(vcpu);
--			break;
--		case KVM_LARCH_LASX:
-+		if (vcpu->arch.aux_ldtype & KVM_LARCH_LASX)
- 			kvm_own_lasx(vcpu);
--			break;
--		case KVM_LARCH_LBT:
-+		else if (vcpu->arch.aux_ldtype & KVM_LARCH_LSX)
-+			kvm_own_lsx(vcpu);
-+		else if (vcpu->arch.aux_ldtype & KVM_LARCH_FPU)
-+			kvm_own_fpu(vcpu);
-+		else if (vcpu->arch.aux_ldtype == KVM_LARCH_LBT)
- 			kvm_own_lbt(vcpu);
--			break;
--		default:
--			break;
--		}
--
- 		vcpu->arch.aux_ldtype = 0;
- 	}
- }
-@@ -956,6 +947,7 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
- 			break;
- 		case KVM_REG_LOONGARCH_VCPU_RESET:
- 			vcpu->arch.st.guest_addr = 0;
-+			vcpu->arch.aux_used = 0;
- 			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
- 			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
- 
-@@ -1384,6 +1376,7 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
- 
- 	kvm_restore_fpu(&vcpu->arch.fpu);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-+	vcpu->arch.aux_used |= KVM_LARCH_FPU;
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
- }
- 
-@@ -1412,6 +1405,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
-+	vcpu->arch.aux_used |= KVM_LARCH_LSX | KVM_LARCH_FPU;
- 
- 	return 0;
- }
-@@ -1442,6 +1436,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
- 	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
-+	vcpu->arch.aux_used |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
- 
- 	return 0;
- }
-
-base-commit: c369299895a591d96745d6492d4888259b004a9e
--- 
-2.39.3
+在 2026/3/4 09:19, Ming Wang 写道:
+> On some LoongArch systems, especially multi-socket machines like 3D6000,
+> the current limit of MAX_MEMORY_RANGES (64) is too small to accommodate
+> all memory range entries in /proc/iomem.
+> 
+> When the limit is reached, get_memory_ranges() stops parsing, which causes
+> kexec to fail with "locate_hole failed" because it cannot correctly identify
+> the crash kernel reserved memory or necessary RAM segments.
+> 
+> Increase MAX_MEMORY_RANGES to 1024 to support systems with complex
+> memory layouts.
+> 
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> ---
+>   kexec/arch/loongarch/kexec-loongarch.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/loongarch/kexec-loongarch.h b/kexec/arch/loongarch/kexec-loongarch.h
+> index 2e65eb0..895809c 100644
+> --- a/kexec/arch/loongarch/kexec-loongarch.h
+> +++ b/kexec/arch/loongarch/kexec-loongarch.h
+> @@ -8,7 +8,7 @@
+>   #define BOOT_BLOCK_VERSION 17
+>   #define BOOT_BLOCK_LAST_COMP_VERSION 16
+>   
+> -#define MAX_MEMORY_RANGES 64
+> +#define MAX_MEMORY_RANGES 1024
+>   #define MAX_LINE 160
+>   
+>   #define CORE_TYPE_ELF64 1
 
