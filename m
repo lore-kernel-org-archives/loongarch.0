@@ -1,199 +1,155 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887E4386C3B
-	for <loongarch@lists.linux.dev>; Mon, 23 Mar 2026 09:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3C42BEC3F;
+	Mon, 23 Mar 2026 10:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774259029; cv=none; b=MWu2TQ65ohRXkIk199pr6WUJ9Z2v6uQZtWH/sIIpAqGSF6kkhv8eYmcplAEbdxbRzAsDPQfvKi/oQWYrNiELts0RrWRdeYhep2zSYawvg1NzsI5e0oHdEl/SL9lysm/GPAugj6XmL5MRk/nvdGn9gR7n6okZP13Y9erig6eOTYQ=
+	t=1774261365; cv=none; b=b/eis2JZMvc2K09Gz/JySRLhjsdkLnnj/hi+C9onpsz8SiKq9RCTRa6B1gHANvmh34UmBEcgSTzpNpFdtLIuZxiFWwvgRekM+acj/DqXJeVJKE49C5Qc9/0AIjWWukhtQknBz0ILCYCA8XKUQjVN3cQ+OCquEPfYm9LbXzxn2OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774259029; c=relaxed/simple;
-	bh=7KYvyCCikdDKG4hHpc4BcGJc8BqrgUaiJZNMZuspKIA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=mFNpDJetC3MFgeDizVdBuZtrG9poIJIzNdi+vztJt6qaRu6CIMTjfAjEmssKTxnktQs61a5I9+F3/WyQlFWd1JTMGjLpzep2XZAHHW/7xu5zo7mZPZnVsZYl+jG7FhbQEaAt+k1nvkAAfF4Dw46xPvKZEuEoGPNlkFp85DDF4wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxJMFQC8Fplb8dAA--.38401S3;
-	Mon, 23 Mar 2026 17:43:44 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxGMFEC8FpmUJbAA--.29160S3;
-	Mon, 23 Mar 2026 17:43:34 +0800 (CST)
-Subject: Re: [PATCH 1/2] LoongArch: KVM: Make kvm_get_vcpu_by_cpuid() more
- robust
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Paolo Bonzini
- <pbonzini@redhat.com>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
- Aurelien Jarno <aurel32@debian.org>
-References: <20260322135346.3720577-1-chenhuacai@loongson.cn>
- <676198e5-78e4-ab41-e447-4a9d24655890@loongson.cn>
- <CAAhV-H7rFtju3k=NYkAy6-O7f8U=CTNiryu2_Kr57pScjeH-yQ@mail.gmail.com>
- <696c5177-4a89-f0d0-c305-c1581e72aa3d@loongson.cn>
- <CAAhV-H43BrbWseejgrmtsBRbkbsMVOX0FaHvYOXfr-R9Y2g1Fw@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <40a172b3-1b8c-3cd6-97dd-64abb7502555@loongson.cn>
-Date: Mon, 23 Mar 2026 17:40:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1774261365; c=relaxed/simple;
+	bh=F0Nb0sJhJbVn6r2FesonC+O/5NMRBAs5RhQ19B0t10k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KSoie2G1gfBfddyASFNclRNxKnYeyneXl1w0aUlqUJWITQwmvvnC09ZgdJzs9R9c2le0DODjq/W/1JQF8VG7Xi24cbrw99nXBEOgyH1lz655c1MlBqf067OFnNThVzj8EBha1gkK60ejZ2lJKK6y46ChhgBzzNrA9/TkDsiJYGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=cOELZ+Gz; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="cOELZ+Gz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=DH+iNz08X6EuAL3xC9z+JByLMXFyPiPYDRa6C8Lo498=; b=cOELZ+GzPUk5kjUi33kxf6Lu7p
+	GY3nwOVi920GJ9UbvJXatjMBuQEPT0FOX4okImlD8Vj3T4hBJwuD4uVDmjAO+AoxU+1owP1yMDUJv
+	6jIqukt9sJv843ocVhBm8CQf/EgCYlBeY70qonTJ07RkEANn/O90EI9F2qKxX/Ruiw+ig35xTfySr
+	TCQUi13ye1jWvFFXVEayi3gPh6rq4OrCVTXd3UdB4U39KNNRni9xgjm24sZzkklawm4ICVKu9C6Bt
+	6iaiADnz4fz5s6LsXVZRgEIBNtVWG99q9re5mqluxiVD7HtUILcAbo0RaYSXFH39nUpc6WAzPyJnG
+	O3Zbf8gA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w4cP7-007SfO-16; Mon, 23 Mar 2026 10:20:59 +0000
+Date: Mon, 23 Mar 2026 03:20:48 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
+	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
+	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, peterz@infradead.org, 
+	feng.tang@linux.alibaba.com, pawan.kumar.gupta@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	kees@kernel.org, elver@google.com, paulmck@kernel.org, lirongqing@baidu.com, 
+	safinaskar@gmail.com, rppt@kernel.org, ardb@kernel.org, jbohac@suse.cz, 
+	cfsworks@gmail.com, osandov@fb.com, tangyouling@kylinos.cn, 
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, eajames@linux.ibm.com, 
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, samuel.holland@sifive.com, 
+	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com, liaoyuanhong@vivo.com, 
+	fuqiang.wang@easystack.cn, x86@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v9 4/5] arm64: kexec: Add support for crashkernel CMA
+ reservation
+Message-ID: <acETyW3FYaWCShUc@gmail.com>
+References: <20260323072745.2481719-1-ruanjinjie@huawei.com>
+ <20260323072745.2481719-5-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H43BrbWseejgrmtsBRbkbsMVOX0FaHvYOXfr-R9Y2g1Fw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxGMFEC8FpmUJbAA--.29160S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWrWUtr4fKFWrAFyfur1UXFc_yoWrCFy8p3
-	yjyayDArWrKr4IgrW0q3WkXF4aqrnrWr1kZF1Yga4Fyr1qvw1rAr1kAr1DCFyUuw1qkF40
-	gF15Jw1avF1UXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
-	SoJUUUUU=
+In-Reply-To: <20260323072745.2481719-5-ruanjinjie@huawei.com>
+X-Debian-User: leitao
 
-
-
-On 2026/3/23 下午4:14, Huacai Chen wrote:
-> On Mon, Mar 23, 2026 at 3:59 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2026/3/23 下午3:08, Huacai Chen wrote:
->>> On Mon, Mar 23, 2026 at 11:16 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2026/3/22 下午9:53, Huacai Chen wrote:
->>>>> kvm_get_vcpu_by_cpuid() takes a cpuid parameter whose type is int, so
->>>>> cpuid can be negative. Let kvm_get_vcpu_by_cpuid() return NULL for this
->>>>> case so as to make it more robust.
->>>>>
->>>>> This fix an out-of-bounds access to kvm_arch::phyid_map::phys_map[].
->>>>>
->>>>> Cc: <stable@vger.kernel.org>
->>>>> Fixes: 73516e9da512adc ("LoongArch: KVM: Add vcpu mapping from physical cpuid")
->>>>> Reported-by: Aurelien Jarno <aurel32@debian.org>
->>>>> Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1131431
->>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>>>> ---
->>>>>     arch/loongarch/kvm/vcpu.c | 3 +++
->>>>>     1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
->>>>> index 8ffd50a470e6..831f381a8fd1 100644
->>>>> --- a/arch/loongarch/kvm/vcpu.c
->>>>> +++ b/arch/loongarch/kvm/vcpu.c
->>>>> @@ -588,6 +588,9 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
->>>>>     {
->>>>>         struct kvm_phyid_map *map;
->>>>>
->>>>> +     if (cpuid < 0)
->>>>> +             return NULL;
->>>>> +
->>>>>         if (cpuid >= KVM_MAX_PHYID)
->>>>>                 return NULL;
->>>>>
->>>>>
->>>>
->>>> if (cpuid < 0 || cpuid >= KVM_MAX_PHYID)?
->>>> however both are OK for me.
->>> I use a similar style as kvm_get_vcpu_by_id(). :)
->>>
->>> But there is another warning which can't be solved by this series (and
->>> I doubt whether it can be solved unless revert 01a8e68396a6d51f5b).
->>> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1131431
->>
->> what is the kernel config file with bug
->>      https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1131431
-> I don't know exactly, but it needs CONFIG_FORTIFY_SOURCE.
-With CONFIG_FORTIFY_SOURCE enabled, this bug can be reproduced. It seems 
-that it actually need be converted to void * before arithmetic operation.
-
-Regards
-Bibo Mao
+On Mon, Mar 23, 2026 at 03:27:44PM +0800, Jinjie Ruan wrote:
+> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+> crashkernel= command line option") and commit ab475510e042 ("kdump:
+> implement reserve_crashkernel_cma") added CMA support for kdump
+> crashkernel reservation.
 > 
-> Huacai
+> Crash kernel memory reservation wastes production resources if too
+> large, risks kdump failure if too small, and faces allocation difficulties
+> on fragmented systems due to contiguous block constraints. The new
+> CMA-based crashkernel reservation scheme splits the "large fixed
+> reservation" into a "small fixed region + large CMA dynamic region": the
+> CMA memory is available to userspace during normal operation to avoid
+> waste, and is reclaimed for kdump upon crash—saving memory while
+> improving reliability.
 > 
->>
->> kvm_eiointc_regs_access() seems has problem, it need convert to void *
->> before arithmetic operation. I do not know whether this patch can solve
->> this bug.
->>
->> diff --git a/arch/loongarch/kvm/intc/eiointc.c
->> b/arch/loongarch/kvm/intc/eiointc.c
->> index d2acb4d09e73..71bd67b57338 100644
->> --- a/arch/loongarch/kvm/intc/eiointc.c
->> +++ b/arch/loongarch/kvm/intc/eiointc.c
->> @@ -472,34 +472,34 @@ static int kvm_eiointc_regs_access(struct
->> kvm_device *dev,
->>           switch (addr) {
->>           case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
->>                   offset = (addr - EIOINTC_NODETYPE_START) / 4;
->> -               p = s->nodetype + offset * 4;
->> +               p = (void *)s->nodetype + offset * 4;
->>                   break;
->>           case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
->>                   offset = (addr - EIOINTC_IPMAP_START) / 4;
->> -               p = &s->ipmap + offset * 4;
->> +               p = (void *)&s->ipmap + offset * 4;
->>                   break;
->>           case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
->>                   offset = (addr - EIOINTC_ENABLE_START) / 4;
->> -               p = s->enable + offset * 4;
->> +               p = (void *)s->enable + offset * 4;
->>                   break;
->>           case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
->>                   offset = (addr - EIOINTC_BOUNCE_START) / 4;
->> -               p = s->bounce + offset * 4;
->> +               p = (void *)s->bounce + offset * 4;
->>                   break;
->>           case EIOINTC_ISR_START ... EIOINTC_ISR_END:
->>                   offset = (addr - EIOINTC_ISR_START) / 4;
->> -               p = s->isr + offset * 4;
->> +               p = (void *)s->isr + offset * 4;
->>                   break;
->>           case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
->>                   if (cpu >= s->num_cpu)
->>                           return -EINVAL;
->>
->>                   offset = (addr - EIOINTC_COREISR_START) / 4;
->> -               p = s->coreisr[cpu] + offset * 4;
->> +               p = (void *)s->coreisr[cpu] + offset * 4;
->>                   break;
->>           case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
->>                   offset = (addr - EIOINTC_COREMAP_START) / 4;
->> -               p = s->coremap + offset * 4;
->> +               p = (void *)s->coremap + offset * 4;
->>                   break;
->>           default:
->>                   kvm_err("%s: unknown eiointc register, addr = %d\n",
->> __func__, addr);
->>
->>
->> Regards
->> Bibo Mao
->>>
->>> Huacai
->>>
->>>>
->>>> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
->>>>
->>
->>
+> So extend crashkernel CMA reservation support to arm64. The following
+> changes are made to enable CMA reservation:
+> 
+> - Parse and obtain the CMA reservation size along with other crashkernel
+>   parameters.
+> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
+> - Include the CMA-reserved ranges for kdump kernel to use.
+> - Exclude the CMA-reserved ranges from the crash kernel memory to
+>   prevent them from being exported through /proc/vmcore, which is already
+>   done in the crash core.
+> 
+> Update kernel-parameters.txt to document CMA support for crashkernel on
+> arm64 architecture.
+> 
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+> v7:
+> - Correct the inclusion of CMA-reserved ranges for kdump
+>   kernel in of/kexec.
+> v3:
+> - Add Acked-by.
+> v2:
+> - Free cmem in prepare_elf_headers()
+> - Add the mtivation.
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+>  arch/arm64/kernel/machine_kexec_file.c          | 2 +-
+>  arch/arm64/mm/init.c                            | 5 +++--
+>  drivers/of/fdt.c                                | 9 +++++----
+>  drivers/of/kexec.c                              | 9 +++++++++
+>  5 files changed, 19 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index cb850e5290c2..afb3112510f7 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1121,7 +1121,7 @@ Kernel parameters
+>  			It will be ignored when crashkernel=X,high is not used
+>  			or memory reserved is below 4G.
+>  	crashkernel=size[KMG],cma
+> -			[KNL, X86, ppc] Reserve additional crash kernel memory from
+> +			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
+>  			CMA. This reservation is usable by the first system's
+>  			userspace memory and kernel movable allocations (memory
+>  			balloon, zswap). Pages allocated from this memory range
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index c338506a580b..cc577d77df00 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  #ifdef CONFIG_CRASH_DUMP
+>  unsigned int arch_get_system_nr_ranges(void)
+>  {
+> -	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
+> +	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
 
+You update arch_get_system_nr_ranges() to account for CMA ranges, but
+prepare_elf_headers() in the same file (line 51) still has the
+hardcoded:
+
+        nr_ranges = 2; /* for exclusion of crashkernel region */
+
+and does not exclude CMA ranges from cmem. If the generic crash core
+handles CMA exclusion from vmcore, then shouldn't
+arch_get_system_nr_ranges() also not need this change?
