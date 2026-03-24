@@ -1,113 +1,135 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4143EF644
-	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 13:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564D8405AB2
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 15:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774357858; cv=none; b=IIC2jmJrcf4CJFDA2fqTociZzcHp97QLRogWabvERzf2ba+mpmHgSN18Q88zfV3YRC2dslEOpM6Kdr1554+Mj0VTa0DpQkn6O5vT8h2OqwuUCV/+yRgTWXvzV87OoT1swqJZvf2/nCzS4EqJJqI3Zntd1os1S+wj33aN+QUSLc8=
+	t=1774364973; cv=none; b=NjHmQ7HAJphIFZVE7C3B3d82GGc7i3fiH+fxvQGu81Quy0Zrd01AAcuYvVn/9iXB3j//pnarQzCc1nFUoBzEUIF+GUCDUf5uBU1+L06nYntXJqbOBuuS2ClWpKmGl7/LJrUmGk5XQUrgBHjhPxR6yyG5qViLgxcRaOj97J69zc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774357858; c=relaxed/simple;
-	bh=YCVNfVgIpBzJm2Hd4TTEJx5VB5I3bYj3Ow25o7DzAgo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GyQ3ZWgapv+NqwKe3LCz/XAB0u6FWkRAei4Qb2bzKL4Rvw6IGeGzQiE8ylkjHqRq4lZ/fmIOi0xCdANO3Cpd2O3PJFkmD3rHW7rG9/DX9hXYmDt2KMa2tnYARZcYvukt44V/+3+l+wJ3uRIAenp4b3JkwiQZtO7bZBc54p2Wzq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axz6tdjcJptC8eAA--.27471S3;
-	Tue, 24 Mar 2026 21:10:53 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCx98BcjcJpajVcAA--.31199S3;
-	Tue, 24 Mar 2026 21:10:52 +0800 (CST)
-Subject: Re: [RFC PATCH 6/7] LoongArch: BPF: Add load-acquire and
- store-release instructions
-To: bot+bpf-ci@kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org
-Cc: ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
- martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
- clm@meta.com, ihor.solodrai@linux.dev, WANG Rui <wangrui@loongson.cn>
-References: <20260324090106.13527-7-yangtiezhu@loongson.cn>
- <5a2cfd2c3dddef83de46ea9b0f02bb5b90c29937c9b9d348542838fde1e29a93@mail.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <bbb797cd-c6ea-f61c-d99c-66908e4e5f68@loongson.cn>
-Date: Tue, 24 Mar 2026 21:10:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1774364973; c=relaxed/simple;
+	bh=PthYN7ZDHdFN5gfjhbdxfUe6mL8LcV94U3JEbrUoojA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BBmLYefvTKjqCcQSiOrtf83zGxgrjRDayAy2lze9vjgOz5F1A+nTD5QrBLKpPAOJFk7Ef2kAiXw9ALf0/0jkOt377Jrj3kBVqEiyUoo1zq+py652XGwnknPLX7w3/I/Dh5ORM3ZW3oIB+SmocFhbfTK3JKdWjVa3As4ArD0C9Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=EkUEwjFR; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="EkUEwjFR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1774364959; bh=e9xnOTqNCRvXtxsnWHt12COZRGCZXi00fDF44qtgmso=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=EkUEwjFRMpEBF2UfsWT8Q5JazP6WRKz9L5ul+ei5mPZNBAK4XHOlycJ+2YNrrhUup
+	 i3deVLnjw96OnD96EXJNnsTxIQqF3yb4A8Xi0mYbCWlt2vK+eP5wCK4xReGyKr/F9Q
+	 mWKj1X6+vHe3CY0ll2zvpZ+6fk6qkthYfsoNQoh8=
+Received: from [198.18.0.1] ([122.195.139.226])
+	by newxmesmtplogicsvrsza53-0.qq.com (NewEsmtp) with SMTP
+	id 2508FC67; Tue, 24 Mar 2026 23:09:16 +0800
+X-QQ-mid: xmsmtpt1774364956tdve4h219
+Message-ID: <tencent_414FBFBEE2A4510232AB52CE665C04A6C20A@qq.com>
+X-QQ-XMAILINFO: N/WmRbclY25GeQclGkH9eitL8lbyOBv7J4IRM8kAAGVi5JQRFwlvdUtT1qFu8E
+	 bTAxcj9h0QEMyUT0l6OYmqZJrRpV7QjwPNqTWORIu/+QRCwS4iJhil0i9qPoPP0nBNzZjercPHJ9
+	 f6CV/HAyQ0cDxnyqFHheZuc4YUmzrxXC7hTR68FPmm8eVqiZ+sY3CzuT1qm0vsKMsZTdD/RAM7JT
+	 +94/PsFodquVzFqEz6USf+Q14jVxoGLlw7cYsPv/uBSbpGv8834wAehKR+xMks6owF8A9kWtE+Ng
+	 afL/fSKU+QYRcm5LbVOGT/yUO92KKC8h0msqTEMuo7EXXtRU3Hf2sB+lt0ZlQlNswk4P/EbJz8xc
+	 vUlOV70Vecv56f5QSxiEqtQCN6WMt8nJEVkVcgqWK7a4QeruVLTnp0PZtuQcQ08aLRP0KKahuBNR
+	 n5XfgjL1+t34RIYndU7WwgreX76+PSEofJbVoi9DlC+ml6lhyScLdgIrtDN+pAcaAByUG00WmqEc
+	 qqtTmcYcqxSYEbgkKfXB71IJ32LfuTsCQ9ji6wR2R6kX2LL0j1alEYG2zuD84DB3JNGq6RVC2+JA
+	 cgdQab6uNDb3g1WKCj7EQzzmF4QEsQAG9j054uNlrRQ7d5OOAsU23HQiVKPPLDjryW5Gv48cNp3/
+	 q/UUvoiq4z5hZ9Gdzqk00FKon+GY/iivqvowW0SFiYPKyJ5KtD5RwFjsnowZjOCurDk5NCWhn/+b
+	 2900LErc380U9ih9A0/SUyxiSDbwXu1CXRCfSW9YzjFwKm/rq3f/dUUbrfO5KQnOJv+C2rwFB5ZJ
+	 KmOGYlTq76QvTxhea8H9bm5OT1JgZiHzDw+H/r1XhM5a/Z5jQp7jDT2fbplHucBOCVrlZCyCKW4T
+	 aQyew0h4Sx/47j4fePcAinXHTBXIuavR6OxqwH7rYMHXgc7ibmMEVqjNbOiqsxjcMzoNtt67m8IY
+	 CDjxutMfRKbHiQK60uwF4vPpQR7ylFqut5YTaDmOgB5JxfnOt4j2hvxRaNVEb1RjHIPpJUzcfkcG
+	 dfbBqhTGmDxhqoZ+vNkwH+AU4ND8ctgm2oUPMG4gtGiEB35o3cygO9j2v43ng=
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-OQ-MSGID: <c3f679a3-8916-4fee-9042-3ef0c5ae0590@qq.com>
+Date: Tue, 24 Mar 2026 23:09:16 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <5a2cfd2c3dddef83de46ea9b0f02bb5b90c29937c9b9d348542838fde1e29a93@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] Add Loongson-2K0300 processor support
+To: Yao Zi <me@ziyao.cc>, Huacai Chen <chenhuacai@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ kernel@xen0n.name, devicetree@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, wjjsn <2858482031@qq.com>
+References: <tencent_325FB1D2C600CD55E367332EC453E5A64B09@qq.com>
+ <ab_iF2hjZRfp16HP@pie>
+ <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+ <tencent_CA7176E8823B957F1AEB15254D17904D5505@qq.com> <acCoo_ZrTmZGZH5d@pie>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx98BcjcJpajVcAA--.31199S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kr48Kry5ZF1UAry7Gw1fKrX_yoW8Ar45pF
-	ZFy3Z5CrWvgryDZF97Ja18ZFyxtF4fKF13WF1UJrWSgr15Wr1SqFn5K3WYva98Gw4kCr40
-	9ryYywnIvFyDZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
-	SoJUUUUU=
+From: wjjsn <wjjsn@qq.com>
+In-Reply-To: <acCoo_ZrTmZGZH5d@pie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2026/3/24 下午5:42, bot+bpf-ci@kernel.org wrote:
->> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
->> index c9a32f124f5e..d1e9866911dd 100644
->> --- a/arch/loongarch/net/bpf_jit.c
->> +++ b/arch/loongarch/net/bpf_jit.c
+On 3/23/26 10:42, Yao Zi wrote:
+> On Mon, Mar 23, 2026 at 12:33:31AM +0800, wjjsn wrote:
+>> On 3/22/26 21:15, Huacai Chen wrote:
+>> 1. The current clock driver in mainline has some problems.
+>>    The pll_ddr is lower than the user_manual,
 > 
-> [ ... ]
+> I'm not sure what do you mean. Do you observe lower clock frequency of
+> pll_ddr than the frequency specified in TRM (1GHz)? And if so, how?
 > 
->> +	/* store_release(dst_reg + off16, src_reg) */
->> +	case BPF_STORE_REL:
->> +		switch (BPF_SIZE(insn->code)) {
+> clk-loongson2 doesn't have the ability to reclock hardware, but only
+> read out the frequency. PLL frequencies are all up to the bootloader.
+> So as long as you could confirm the values returned by recalc_rate()
+> match the register settings, there's nothing wrong in the clock driver.
 > 
-> [ ... ]
-> 
->> +		case BPF_W:
->> +			if (cpu_has_llacq_screl) {
->> +				move_imm(ctx, t1, off, false);
->> +				emit_insn(ctx, addd, t2, dst, t1);
->> +				emit_insn(ctx, screlw, src, t2);
-> 
-> SCREL.W is a store-conditional instruction, not a plain store-release.
-> It checks LLbit and then overwrites rd with the success indicator
-> (1 or 0), which would clobber the BPF source register.
-> 
-> Looking at emit_atomic_rmw() in the same file for BPF_CMPXCHG, the
-> existing LL/SC usage carefully avoids this:
-> 
->      move_reg(ctx, t3, src);
->      emit_insn(ctx, scw, t3, t1, 0);
->      emit_insn(ctx, beq, t3, LOONGARCH_GPR_ZERO, -6);
-> 
-> Here SC.W is applied to the temp register t3 rather than the BPF
-> register, and t3 is then checked for 0 to retry the loop. This
-> confirms that SC-family instructions clobber their rd operand on
-> LoongArch.
-> 
-> Is SCREL.W/D the right instruction for a standalone store-release?
-> The other architectures use plain stores with ordering guarantees
-> for BPF_STORE_REL:
+> Reclocking functionality could be introduced later. But even with
+> reclocking code, I doubt whether the DDR clock could be reclocked
+> at runtime since it supplies the memory controller.
 
-Indeed, I misunderstood the instructions before, thanks Wang Rui and
-bot+bpf-ci. I did some changes locally and tested again, the related
-testcases passed.
+I observed that 'clk_ddr_div' operates at 800MHz instead of the 1GHz 
+specified in the manual, and 'clk_dev_div' operates at 100MHz instead of 
+the 200MHz specified in the manual. However, you mentioned that these 
+settings are determined by the bootloader, so everything now makes sense
 
-I will use the common memory access instruction with the barrier dbar
-to support load-acquire and store-release in the next version.
+>>    the clk_apb_gate will
+>>    turn off by kernel while booting,though 16100000.serial is using
+> 
+> This is unlikely an issue in the clock driver, but rather the consumer
+> is doing something wrong, though I haven't seen similar issues when
+> working on the clock driver.
+> 
+> Please try booting the kernel with clk_ignore_unused, and check
+> /sys/kernel/debug/clk/clk_summary to see whether the serial correctly
+> acquires the apb gate clock. If not, one (and the most possible) reason
+> is both clock-frequency and clocks properties are specified in its
+> devicetree node, where 8250 driver would ignore the latter.
+>
 
-Thanks,
-Tiezhu
+  When I use 'clocks = <&clk LS2K0300_CLK_DEV_DIV>;', the system log 
+gets stuck at the message about closing unused clocks, and there are no 
+further logs. It seems like the clock for the serial port is being 
+closed. However, if I set the parameter to not close unused clocks as a 
+startup parameter, the serial port can continue to be used. If I use 
+'clocks = <&clk LS2K0300_CLK_APB_GATE>;', then the clock for the serial 
+port is not closed and can start normally. I have not specified the 
+clock frequency in the device tree
+
+>> 2. eiointc support for 2k0300 is missing.
+> 
+> This is expected. IOCSRs found on 2K0300 have a quite different layout
+> than previous generations of Loongson SoCs, and EIOINTC is in fact a
+> device located in IOCSR addressing space. We need to come up with a
+> better way to model the IOCSRs in devicetree, and it hasn't been done
+> yet.
+> 
+>> Is there any WIP (Work In Progress) tree I can follow?
+>> I'm happy to help with the development or testing.
+> 
+> Sorry there isn't one for now. I'm currently out of my lab, and could
+> only get things updated this weekend. Sorry for the inconvenience.
+
+Okay, if you have a public repository, please let me know. If I have 
+time, I would be happy to help with testing
+
+Regards,
+wjjsn
 
