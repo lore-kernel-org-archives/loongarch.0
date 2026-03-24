@@ -1,85 +1,32 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8B33C455C;
-	Tue, 24 Mar 2026 06:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 675573D9055
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 09:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774334737; cv=none; b=Mgk2+vOiRaPoPYcW16d9/1SR8V8PBMbIl41K4MZmW/mof5b+OXkcDBaowCBJtI8L9Xkg11yFgc8tVQWeC0VSjcrzb0B+a1Hu46syBalFihSXEN7sMdiuy2wyPGcN2zGe8COn03xKWwoovpQY24i6FHjpwFzhsCNCEJsCZol8Ep0=
+	t=1774342875; cv=none; b=NAP0zd8purgzZDDugaD/9gJfduQA7AryJm90xNSqZ4RumLiTdN9i/PjQUn4Ega3+UDyxmfnMK3x+U4coKHQu8XvkBNVd49XzWFLf6fXK01qtH5vIcNUefNYGY4cIAwAQeXt25OX+AeSOd6iZyrQ1QMY5LLRIIASrosDObXbYHfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774334737; c=relaxed/simple;
-	bh=CFAcjcScsp2g4fjSxF44fdt4KC8QQnf9IITIdFdVqOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZCe7W8jfcolgWCaS4kAWB4qkgDrGA6SRjOh+oCl/f8PopQHPZucEgSYmjYaRM97v3rVnamTbnvqEX4FAW4jAkc4nS1EQTAu/S8tvNlyvnbOFDJm3ESOc6qtaCPs3DgrgqNoDoeisrv0ZS0z2LDgV16l6+WaOoYNM4k8dwjQ95IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wWaNxRrO; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wWaNxRrO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=fStmksvtywXlbYrMkIeKxeAAlIJznjKfNiH+KK7VUOE=; b=wWaNxRrOViqWgkXgzwE3PuRFrQ
-	i8mHjv7VOSwIX44k5K6uDhsre5gMrDijW1+tOGBqNJkz/L8CmDTt5Oe1nX89uuTzAY/OTddOo/KXD
-	tj6Zpmgjo/EIo3QWSvzHn8E9aByAqhWQ2Ar9WNj8sUMv1IxuS1Z+4lpZpOLnHm6L/jhfa6nE63bIY
-	TLAC+Jka7xbYGKBnp51Lp+mQKHtgpxVgQ0RGk94LVjNlQRgkFQhLbkwj/Soa9R6gV9Teginqx7bvt
-	CdoWt5MHqrTkalyJV0T8y/NabV12EwJbJB0zGrR3rKXgswDMG1mHKpZlYR3pDWbWv7rp5A00ose/l
-	kRJ8Z4OA==;
-Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vVt-00000000ovK-05zE;
-	Tue, 24 Mar 2026 06:45:17 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: [PATCH 17/17] raid6_kunit: randomize buffer alignment
-Date: Tue, 24 Mar 2026 07:40:52 +0100
-Message-ID: <20260324064115.3217136-18-hch@lst.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260324064115.3217136-1-hch@lst.de>
-References: <20260324064115.3217136-1-hch@lst.de>
+	s=arc-20240116; t=1774342875; c=relaxed/simple;
+	bh=gflZGwX5A73py29S5DGQ+A/Bt9FXLv90xRTT8UrHOzY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KBx3TNgUsTEm5VRgp4ok8RHILMMTawxhEu9LU+0V+MuyPgRIuYK0Fm1JauO4Xg+scdZuYWKyXcDIvCpNNg12zLMszrX+SdjfjOcSYUtjj9KqMIk8Nd2RpwS2ksTDAtJcaSF4vodV5WHjmT1aCl+PREWVjdG9SysDiSd+78Iq7IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxHMPWUsJpjyAeAA--.20273S3;
+	Tue, 24 Mar 2026 17:01:10 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxC8LTUsJpmxVcAA--.43301S3;
+	Tue, 24 Mar 2026 17:01:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org
+Subject: [RFC PATCH 1/7] LoongArch: Add some code related with AM{SWAP/ADD}.{B/H}
+Date: Tue, 24 Mar 2026 17:01:00 +0800
+Message-ID: <20260324090106.13527-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260324090106.13527-1-yangtiezhu@loongson.cn>
+References: <20260324090106.13527-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -87,119 +34,129 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-CM-TRANSID:qMiowJDxC8LTUsJpmxVcAA--.43301S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw1rKFy5uw1fCrW8uw17urX_yoWrtFyDpF
+	1qyrs7WrWrWF1Skas0q3Wa9r4UJa1kCry2qF17Aa92yFW7XFy8Xw18KFnxuFs8Jan8Za4F
+	9rn5uw1Yva45J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
 
-Add code to add random alignment to the buffers to test the case where
-they are not page aligned, and to move the buffers to the end of the
-allocation so that they are next to the vmalloc guard page.
+The 8-bit and 16-bit atomic instructions amadd.{b/h} and amswap.{b/h} were
+newly added in the latest LoongArch Reference Manual, add some definitions
+of the instruction code and also check whether support these instructions.
 
-This does not include the recovery buffers as the recovery requires
-page alignment.
+This is preparation for later patch.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- lib/raid/raid6/tests/raid6_kunit.c | 41 +++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 6 deletions(-)
+ arch/loongarch/include/asm/cpu-features.h | 1 +
+ arch/loongarch/include/asm/cpu.h          | 2 ++
+ arch/loongarch/include/asm/inst.h         | 8 ++++++++
+ arch/loongarch/include/uapi/asm/hwcap.h   | 1 +
+ arch/loongarch/kernel/cpu-probe.c         | 4 ++++
+ 5 files changed, 16 insertions(+)
 
-diff --git a/lib/raid/raid6/tests/raid6_kunit.c b/lib/raid/raid6/tests/raid6_kunit.c
-index a0a473643e91..d2fd4a9b74d4 100644
---- a/lib/raid/raid6/tests/raid6_kunit.c
-+++ b/lib/raid/raid6/tests/raid6_kunit.c
-@@ -20,6 +20,7 @@ MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
+diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/include/asm/cpu-features.h
+index 8eefe7a2098b..f9d3188accfc 100644
+--- a/arch/loongarch/include/asm/cpu-features.h
++++ b/arch/loongarch/include/asm/cpu-features.h
+@@ -68,5 +68,6 @@
+ #define cpu_has_msgint		cpu_opt(LOONGARCH_CPU_MSGINT)
+ #define cpu_has_avecint		cpu_opt(LOONGARCH_CPU_AVECINT)
+ #define cpu_has_redirectint	cpu_opt(LOONGARCH_CPU_REDIRECTINT)
++#define cpu_has_lam_bh		cpu_opt(LOONGARCH_CPU_LAM_BH)
  
- static struct rnd_state rng;
- static void *test_buffers[RAID6_KUNIT_MAX_BUFFERS];
-+static void *aligned_buffers[RAID6_KUNIT_MAX_BUFFERS];
- static void *test_recov_buffers[RAID6_KUNIT_MAX_FAILURES];
- static size_t test_buflen;
+ #endif /* __ASM_CPU_FEATURES_H */
+diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/asm/cpu.h
+index 1e60ab264cd0..b423b1f41145 100644
+--- a/arch/loongarch/include/asm/cpu.h
++++ b/arch/loongarch/include/asm/cpu.h
+@@ -126,6 +126,7 @@ static inline char *id_to_core_name(unsigned int id)
+ #define CPU_FEATURE_MSGINT		30	/* CPU has MSG interrupt */
+ #define CPU_FEATURE_AVECINT		31	/* CPU has AVEC interrupt */
+ #define CPU_FEATURE_REDIRECTINT		32	/* CPU has interrupt remapping */
++#define CPU_FEATURE_LAM_BH		33	/* CPU has AM{SWAP/ADD}[_DB].{B/H} instructions */
  
-@@ -43,6 +44,14 @@ static unsigned int random_length(unsigned int max_length)
- 	return (rand32() % (max_length + 1)) & ~511;
- }
+ #define LOONGARCH_CPU_CPUCFG		BIT_ULL(CPU_FEATURE_CPUCFG)
+ #define LOONGARCH_CPU_LAM		BIT_ULL(CPU_FEATURE_LAM)
+@@ -160,5 +161,6 @@ static inline char *id_to_core_name(unsigned int id)
+ #define LOONGARCH_CPU_MSGINT		BIT_ULL(CPU_FEATURE_MSGINT)
+ #define LOONGARCH_CPU_AVECINT		BIT_ULL(CPU_FEATURE_AVECINT)
+ #define LOONGARCH_CPU_REDIRECTINT	BIT_ULL(CPU_FEATURE_REDIRECTINT)
++#define LOONGARCH_CPU_LAM_BH		BIT_ULL(CPU_FEATURE_LAM_BH)
  
-+/* Generate a random alignment that is a multiple of 64. */
-+static unsigned int random_alignment(unsigned int max_alignment)
-+{
-+	if (max_alignment == 0)
-+		return 0;
-+	return (rand32() % (max_alignment + 1)) & ~63;
-+}
-+
- static void makedata(int start, int stop)
- {
- 	int i;
-@@ -73,7 +82,7 @@ static void test_recover_one(struct kunit *test, unsigned int nr_buffers,
- 	for (i = 0; i < RAID6_KUNIT_MAX_FAILURES; i++)
- 		memset(test_recov_buffers[i], 0xf0, test_buflen);
+ #endif /* _ASM_CPU_H */
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index f9f207082d0e..2dc7f9d78f2b 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -194,6 +194,10 @@ enum reg3_op {
+ 	fstxs_op	= 0x7070,
+ 	fstxd_op	= 0x7078,
+ 	scq_op		= 0x70ae,
++	amswapb_op	= 0x70b8,
++	amswaph_op	= 0x70b9,
++	amaddb_op	= 0x70ba,
++	amaddh_op	= 0x70bb,
+ 	amswapw_op	= 0x70c0,
+ 	amswapd_op	= 0x70c1,
+ 	amaddw_op	= 0x70c2,
+@@ -763,6 +767,8 @@ DEF_EMIT_REG3_FORMAT(stxb, stxb_op)
+ DEF_EMIT_REG3_FORMAT(stxh, stxh_op)
+ DEF_EMIT_REG3_FORMAT(stxw, stxw_op)
+ DEF_EMIT_REG3_FORMAT(stxd, stxd_op)
++DEF_EMIT_REG3_FORMAT(amaddb, amaddb_op)
++DEF_EMIT_REG3_FORMAT(amaddh, amaddh_op)
+ DEF_EMIT_REG3_FORMAT(amaddw, amaddw_op)
+ DEF_EMIT_REG3_FORMAT(amaddd, amaddd_op)
+ DEF_EMIT_REG3_FORMAT(amandw, amandw_op)
+@@ -771,6 +777,8 @@ DEF_EMIT_REG3_FORMAT(amorw, amorw_op)
+ DEF_EMIT_REG3_FORMAT(amord, amord_op)
+ DEF_EMIT_REG3_FORMAT(amxorw, amxorw_op)
+ DEF_EMIT_REG3_FORMAT(amxord, amxord_op)
++DEF_EMIT_REG3_FORMAT(amswapb, amswapb_op)
++DEF_EMIT_REG3_FORMAT(amswaph, amswaph_op)
+ DEF_EMIT_REG3_FORMAT(amswapw, amswapw_op)
+ DEF_EMIT_REG3_FORMAT(amswapd, amswapd_op)
  
--	memcpy(dataptrs, test_buffers, sizeof(dataptrs));
-+	memcpy(dataptrs, aligned_buffers, sizeof(dataptrs));
- 	dataptrs[faila] = test_recov_buffers[0];
- 	dataptrs[failb] = test_recov_buffers[1];
+diff --git a/arch/loongarch/include/uapi/asm/hwcap.h b/arch/loongarch/include/uapi/asm/hwcap.h
+index 49519b4362c6..90e96113ba51 100644
+--- a/arch/loongarch/include/uapi/asm/hwcap.h
++++ b/arch/loongarch/include/uapi/asm/hwcap.h
+@@ -19,5 +19,6 @@
+ #define HWCAP_LOONGARCH_PTW		(1 << 13)
+ #define HWCAP_LOONGARCH_LSPW		(1 << 14)
+ #define HWCAP_LOONGARCH_SCQ		(1 << 15)
++#define HWCAP_LOONGARCH_LAM_BH		(1 << 16)
  
-@@ -95,13 +104,13 @@ static void test_recover_one(struct kunit *test, unsigned int nr_buffers,
- 		ta->recov->data2(nr_buffers, len, faila, failb, dataptrs);
+ #endif /* _UAPI_ASM_HWCAP_H */
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 657bbae6c1c7..93466fc7d33d 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -177,6 +177,10 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+ 		c->options |= LOONGARCH_CPU_LAM;
+ 		elf_hwcap |= HWCAP_LOONGARCH_LAM;
  	}
- 
--	KUNIT_EXPECT_MEMEQ_MSG(test, test_buffers[faila], test_recov_buffers[0],
-+	KUNIT_EXPECT_MEMEQ_MSG(test, aligned_buffers[faila], dataptrs[faila],
- 			len,
- 			"faila miscompared: %3d[%c] buffers %u len %u (failb=%3d[%c])\n",
- 			faila, member_type(nr_buffers, faila),
- 			nr_buffers, len,
- 			failb, member_type(nr_buffers, failb));
--	KUNIT_EXPECT_MEMEQ_MSG(test, test_buffers[failb], test_recov_buffers[1],
-+	KUNIT_EXPECT_MEMEQ_MSG(test, aligned_buffers[failb], dataptrs[failb],
- 			len,
- 			"failb miscompared: %3d[%c] buffers %u len %u (faila=%3d[%c])\n",
- 			failb, member_type(nr_buffers, failb),
-@@ -140,9 +149,9 @@ static void test_rmw_one(struct kunit *test, unsigned int nr_buffers,
- {
- 	const struct test_args *ta = test->param_value;
- 
--	ta->gen->xor_syndrome(nr_buffers, p1, p2, len, test_buffers);
-+	ta->gen->xor_syndrome(nr_buffers, p1, p2, len, aligned_buffers);
- 	makedata(p1, p2);
--	ta->gen->xor_syndrome(nr_buffers, p1, p2, len, test_buffers);
-+	ta->gen->xor_syndrome(nr_buffers, p1, p2, len, aligned_buffers);
- 	test_recover(test, nr_buffers, len);
- }
- 
-@@ -168,13 +177,33 @@ static void raid6_test_one(struct kunit *test)
- 	unsigned int nr_buffers =
- 		(rand32() % (RAID6_KUNIT_MAX_BUFFERS - 2)) + 3;
- 	unsigned int len = random_length(RAID6_KUNIT_MAX_BYTES);
-+	unsigned int max_alignment;
-+	int i;
- 
- 	/* Nuke syndromes */
- 	memset(test_buffers[nr_buffers - 2], 0xee, test_buflen);
- 	memset(test_buffers[nr_buffers - 1], 0xee, test_buflen);
- 
-+	/*
-+	 * If we're not using the entire buffer size, inject randomize alignment
-+	 * into the buffer.
-+	 */
-+	max_alignment = RAID6_KUNIT_MAX_BYTES - len;
-+	if (rand32() % 2 == 0) {
-+		/* Use random alignments mod 64 */
-+		for (i = 0; i < nr_buffers; i++)
-+			aligned_buffers[i] = test_buffers[i] +
-+				random_alignment(max_alignment);
-+	} else {
-+		/* Go up to the guard page, to catch buffer overreads */
-+		unsigned int align = test_buflen - len;
-+
-+		for (i = 0; i < nr_buffers; i++)
-+			aligned_buffers[i] = test_buffers[i] + align;
++	if (config & CPUCFG2_LAM_BH) {
++		c->options |= LOONGARCH_CPU_LAM_BH;
++		elf_hwcap |= HWCAP_LOONGARCH_LAM_BH;
 +	}
-+
- 	/* Generate assumed good syndrome */
--	ta->gen->gen_syndrome(nr_buffers, len, test_buffers);
-+	ta->gen->gen_syndrome(nr_buffers, len, aligned_buffers);
- 
- 	test_recover(test, nr_buffers, len);
- 
+ 	if (config & CPUCFG2_SCQ) {
+ 		c->options |= LOONGARCH_CPU_SCQ;
+ 		elf_hwcap |= HWCAP_LOONGARCH_SCQ;
 -- 
-2.47.3
+2.42.0
 
