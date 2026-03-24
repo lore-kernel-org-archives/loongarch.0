@@ -1,29 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA8B1DC985
-	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 09:01:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8620F389446
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 09:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774342875; cv=none; b=d/XL+xktpQg3ZhDt2ro4Atg4qp8QbhL0j+Kzsw0paFK2XinXauOYRkNOU7Tvvf5GJFN26vHfKgJnp8WRqsEA5oGE5SsyMfEgnmRTq+rDyNWuYNp8RJovDaOscXKhZIeG28gL/1f47vD6eCkkzpp8l4ZMb60uQ3KIBAz18J1zR1g=
+	t=1774342876; cv=none; b=mtyJ/I2mAvK7qkuFMudnrYSXSTzDQAy3lE05j2bs4wd0H0YcApAPVMijY/Vfh2sJtZvsR7yHAiFgvxw0EF96VdFZoJDWH0H86/xO3otkw3r6DPzmmKApY68LdXgH1eLbIroohcKrgpmbJ5O2BU1SE3y7xuP/R5zY8ZLAi6dAtuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774342875; c=relaxed/simple;
-	bh=MBZ5Pksx3ywHeI8WLR0p9zZBYpYkNr8ya9vKlQBoo90=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=meh3OT3yHqMkFnjwECJ754/I/MwCsVYOq76RdbIJMkuZVh0MoulR2g25wkp7V6tNhJfAs8kUhCkysGjz3pGN0Goml9vbVmbjfivpEnw+Kcbcrg9yMaZ4HGxA+sA+hW8Yz7RjXm3ZRaAAtKFQnfG4MtwldViYm6PJy8bdHq0EzPo=
+	s=arc-20240116; t=1774342876; c=relaxed/simple;
+	bh=aJcQLd0YA10w+zM0yAeipLN7pP4LXhFA5BKVjKuW+Lk=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ukD0U8K6icCjzlntnDvCVCWZ4sHdr+WlzjQfgTnOluaAUYh/OsBXpS3uhrdZFq3B7DVlZHX7jXIXqXqhJ+ExjZLb3YMv07COf8/Xvhms+6BJE5CFM6dUCkGdqNptZEqHbYc9NQz0imlMzzsNinfrxG7se7gj+bKyWSCQqQujv0k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxL6rTUsJpjCAeAA--.27210S3;
-	Tue, 24 Mar 2026 17:01:08 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxMMDZUsJplSAeAA--.27149S3;
+	Tue, 24 Mar 2026 17:01:13 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxC8LTUsJpmxVcAA--.43301S2;
-	Tue, 24 Mar 2026 17:01:07 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDxC8LTUsJpmxVcAA--.43301S5;
+	Tue, 24 Mar 2026 17:01:12 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org
-Subject: [RFC PATCH 0/7] LoongArch: BPF: Support more atomic instructions
-Date: Tue, 24 Mar 2026 17:00:59 +0800
-Message-ID: <20260324090106.13527-1-yangtiezhu@loongson.cn>
+Subject: [RFC PATCH 3/7] LoongArch: BPF: Rename emit_atomic() to emit_atomic_rmw()
+Date: Tue, 24 Mar 2026 17:01:02 +0800
+Message-ID: <20260324090106.13527-4-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260324090106.13527-1-yangtiezhu@loongson.cn>
+References: <20260324090106.13527-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -31,155 +34,57 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxC8LTUsJpmxVcAA--.43301S2
+X-CM-TRANSID:qMiowJDxC8LTUsJpmxVcAA--.43301S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XFyfGF1rJw45Jr1DJw4xuFX_yoW3Jry8pr
-	s29an8JF1DA3ZF9asFyFy8uFyv93Zaqr43Gr1Fkw1fAF1rGF1vyr47WFnIvFZ8Jw4kAw4F
-	vw1j9w1UX3s8ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7Jw4DZryUtr17Xw4rXF1rKrX_yoW8JF1Dpr
+	s5ZwsYkrWrXw1DWa4DJay7ur13KFsYy3yaqF4UZ3yfXanIgr1DWF1rK3WDGFy5A3y8Xr1f
+	XrnYkryj93W8A3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
 	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
 	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
 	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
 	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcUUUUU=
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1LvtUUUUU=
 
-This series is based on 7.0-rc5, the aim is to support more atomic
-instructions: (1) 8-bit and 16-bit read-modify-write instructions,
-(2) 32-bit and 64-bit load-acquire and store-release instructions.
+All of the instructions in emit_atomic() are only read-modify-write
+instructions, rename emit_atomic() to emit_atomic_rmw() to make it
+clear because there will be a new function emit_atomic_ld_st() for
+load-acquire or store-release instructions in the later patch.
 
-When compiling, please set CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-and unset CONFIG_BPF_UNPRIV_DEFAULT_OFF.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Most related testcases passed and no regressions for bpf selftests.
-The testcase "verifier_store_release/store-release, 64-bit @unpriv"
-failed for unprivileged BPF, but the other corresponding testcase
-"verifier_store_release/store-release, 64-bit" passed for privileged
-BPF, I do not know what is the root cause for now, so just RFC.
-
-Any comments will be much appreciated, I will address the comments
-and send a formal series once there are no problems.
-
-Here are the test results on LoongArch:
-
-  $ sudo ./test_progs -t verifier_load_acquire
-  #577/1   verifier_load_acquire/load-acquire, 8-bit:OK
-  #577/2   verifier_load_acquire/load-acquire, 8-bit @unpriv:OK
-  #577/3   verifier_load_acquire/load-acquire, 16-bit:OK
-  #577/4   verifier_load_acquire/load-acquire, 16-bit @unpriv:OK
-  #577/5   verifier_load_acquire/load-acquire, 32-bit:OK
-  #577/6   verifier_load_acquire/load-acquire, 32-bit @unpriv:OK
-  #577/7   verifier_load_acquire/load-acquire, 64-bit:OK
-  #577/8   verifier_load_acquire/load-acquire, 64-bit @unpriv:OK
-  #577/9   verifier_load_acquire/load-acquire with uninitialized src_reg:OK
-  #577/10  verifier_load_acquire/load-acquire with uninitialized src_reg @unpriv:OK
-  #577/11  verifier_load_acquire/load-acquire with non-pointer src_reg:OK
-  #577/12  verifier_load_acquire/load-acquire with non-pointer src_reg @unpriv:OK
-  #577/13  verifier_load_acquire/misaligned load-acquire:OK
-  #577/14  verifier_load_acquire/misaligned load-acquire @unpriv:OK
-  #577/15  verifier_load_acquire/load-acquire from ctx pointer:OK
-  #577/16  verifier_load_acquire/load-acquire from ctx pointer @unpriv:OK
-  #577/17  verifier_load_acquire/load-acquire with invalid register R15:OK
-  #577/18  verifier_load_acquire/load-acquire with invalid register R15 @unpriv:OK
-  #577/19  verifier_load_acquire/load-acquire from pkt pointer:OK
-  #577/20  verifier_load_acquire/load-acquire from flow_keys pointer:OK
-  #577/21  verifier_load_acquire/load-acquire from sock pointer:OK
-  #577     verifier_load_acquire:OK
-  Summary: 1/21 PASSED, 0 SKIPPED, 0 FAILED
-
-  $ sudo ./test_progs -t verifier_store_release
-  tester_init:PASS:tester_log_buf 0 nsec
-  process_subtest:PASS:obj_open_mem 0 nsec
-  process_subtest:PASS:specs_alloc 0 nsec
-  #615/1   verifier_store_release/store-release, 8-bit:OK
-  #615/2   verifier_store_release/store-release, 8-bit @unpriv:OK
-  #615/3   verifier_store_release/store-release, 16-bit:OK
-  #615/4   verifier_store_release/store-release, 16-bit @unpriv:OK
-  #615/5   verifier_store_release/store-release, 32-bit:OK
-  #615/6   verifier_store_release/store-release, 32-bit @unpriv:OK
-  #615/7   verifier_store_release/store-release, 64-bit:OK
-  run_subtest:PASS:obj_open_mem 0 nsec
-  libbpf: BTF loading error: -EPERM
-  libbpf: Error loading .BTF into kernel: -EPERM. BTF is optional, ignoring.
-  run_subtest:PASS:unexpected_load_failure 0 nsec
-  do_prog_test_run:PASS:bpf_prog_test_run 0 nsec
-  run_subtest:FAIL:1299 Unexpected retval: 1 != 0
-  #615/8   verifier_store_release/store-release, 64-bit @unpriv:FAIL
-  #615/9   verifier_store_release/store-release with uninitialized src_reg:OK
-  #615/10  verifier_store_release/store-release with uninitialized src_reg @unpriv:OK
-  #615/11  verifier_store_release/store-release with uninitialized dst_reg:OK
-  #615/12  verifier_store_release/store-release with uninitialized dst_reg @unpriv:OK
-  #615/13  verifier_store_release/store-release with non-pointer dst_reg:OK
-  #615/14  verifier_store_release/store-release with non-pointer dst_reg @unpriv:OK
-  #615/15  verifier_store_release/misaligned store-release:OK
-  #615/16  verifier_store_release/misaligned store-release @unpriv:OK
-  #615/17  verifier_store_release/store-release to ctx pointer:OK
-  #615/18  verifier_store_release/store-release to ctx pointer @unpriv:OK
-  #615/19  verifier_store_release/store-release, leak pointer to stack:OK
-  #615/20  verifier_store_release/store-release, leak pointer to stack @unpriv:OK
-  #615/21  verifier_store_release/store-release, leak pointer to map:OK
-  #615/22  verifier_store_release/store-release, leak pointer to map @unpriv:OK
-  #615/23  verifier_store_release/store-release with invalid register R15:OK
-  #615/24  verifier_store_release/store-release with invalid register R15 @unpriv:OK
-  #615/25  verifier_store_release/store-release to pkt pointer:OK
-  #615/26  verifier_store_release/store-release to flow_keys pointer:OK
-  #615/27  verifier_store_release/store-release to sock pointer:OK
-  #615     verifier_store_release:FAIL
-
-  All error logs:
-  tester_init:PASS:tester_log_buf 0 nsec
-  process_subtest:PASS:obj_open_mem 0 nsec
-  process_subtest:PASS:specs_alloc 0 nsec
-  run_subtest:PASS:obj_open_mem 0 nsec
-  libbpf: BTF loading error: -EPERM
-  libbpf: Error loading .BTF into kernel: -EPERM. BTF is optional, ignoring.
-  run_subtest:PASS:unexpected_load_failure 0 nsec
-  do_prog_test_run:PASS:bpf_prog_test_run 0 nsec
-  run_subtest:FAIL:1299 Unexpected retval: 1 != 0
-  #615/8   verifier_store_release/store-release, 64-bit @unpriv:FAIL
-  #615     verifier_store_release:FAIL
-  Summary: 0/26 PASSED, 0 SKIPPED, 1 FAILED
-
-  $ sudo ./test_progs -t verifier_precision/bpf_load_acquire
-  #596/5   verifier_precision/bpf_load_acquire:OK
-  #596     verifier_precision:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-
-  $ sudo ./test_progs -t verifier_precision/bpf_store_release
-  #596/6   verifier_precision/bpf_store_release:OK
-  #596     verifier_precision:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-
-  $ sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
-  #80/7    compute_live_registers/atomic_load_acq_store_rel:OK
-  #80      compute_live_registers:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-
-Tiezhu Yang (7):
-  LoongArch: Add some code related with AM{SWAP/ADD}.{B/H}
-  LoongArch: Add some code related with {LLACQ/SCREL}.{W/D}
-  LoongArch: BPF: Rename emit_atomic() to emit_atomic_rmw()
-  LoongArch: BPF: Add the default case in emit_atomic_rmw()
-  LoongArch: BPF: Add {8,16}-bit read-modify-write instructions
-  LoongArch: BPF: Add load-acquire and store-release instructions
-  selftests/bpf: Enable CAN_USE_LOAD_ACQ_STORE_REL for LoongArch
-
- arch/loongarch/include/asm/cpu-features.h     |   2 +
- arch/loongarch/include/asm/cpu.h              |   4 +
- arch/loongarch/include/asm/inst.h             |  12 ++
- arch/loongarch/include/uapi/asm/hwcap.h       |   2 +
- arch/loongarch/kernel/cpu-probe.c             |   8 +
- arch/loongarch/net/bpf_jit.c                  | 178 ++++++++++++++++--
- tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +-
- .../selftests/bpf/progs/verifier_precision.c  |   4 +-
- 8 files changed, 199 insertions(+), 15 deletions(-)
-
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 9cb796e16379..b734989b648b 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -344,7 +344,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ #undef jmp_offset
+ }
+ 
+-static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
++static void emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ {
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+ 	const u8 t2 = LOONGARCH_GPR_T2;
+@@ -1256,7 +1256,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+ 	case BPF_STX | BPF_ATOMIC | BPF_DW:
+-		emit_atomic(insn, ctx);
++		emit_atomic_rmw(insn, ctx);
+ 		break;
+ 
+ 	/* Speculation barrier */
 -- 
 2.42.0
 
