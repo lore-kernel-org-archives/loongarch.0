@@ -1,93 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0455639B498;
-	Tue, 24 Mar 2026 16:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774370543; cv=none; b=Nuh0JhSSlQCpAlPltz42D5WtRAPm50gmR/VrNv/Z0AwwI+HREHARp/mYbp31UDojx+3rAj3BjnclYd/sv5AxOmMjP36Fa1YsC3BVvYN5ZpS0B9EAjVtvX2AFB/0HC+K13YwIi8S/5LntMf/VrNrBDEfseIH9hE9mW2GFuxNXxjs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774370543; c=relaxed/simple;
-	bh=TDgLcRhij5JQVZa60QmaxqOx203j51xbjV/q4WkoTac=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XCHgQHGrHJAvm7GGtO77OFoXFntIc6XnX5lYMs/laTYSpgSLcAjccCpizO6dDhkIKBb224kzVCezwJH9t4RtXBnLGRWDAEKQYhTRntwXlQEtiVe0nA5OkyVuaoyupVS1WqDgBnjDOsHuzC9OcJBXYZt/+41EO5OCllAFLqHT+V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=DQOwZZrw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46CB3EE1C8
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 16:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774371367; cv=pass; b=XRsaHrzdKQyU2ATBk7EJRJ4CZqqwCWiSPZqzVr31NBkimaCRp2/OEMtaMayPCwY/h38mQHwKDGtvD1cSP2W9u4wbvlNiLYw29zKbcG5iKx0kZNdxTDk0KLoNodvjd8R3w3pbiiVF7L7v3t0X6xr8wfOigyMEr40NXmKOUSRkTug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774371367; c=relaxed/simple;
+	bh=ce5KgZpNqQXpdfz+fCZfMY2AY+7fq0BiWHSfcjJHws0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzsEqc+RSm8tMGWeRtqY3uHIwFgLldM2cPqExitvJoZOg0/S9r2UqplytMLj/joSYLfht+/Kd3n73zjN2gnJDLSjm0H+0rVPrrvJ3TK2NRQ7ItXqiPb/4lDSnMfd9rYnty5vl6RafJx2mIqOmNaNwRzDU9b0mfmuYNRe0uBUJIc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=T+rLzfT6; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DQOwZZrw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44B6C19424;
-	Tue, 24 Mar 2026 16:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1774370542;
-	bh=TDgLcRhij5JQVZa60QmaxqOx203j51xbjV/q4WkoTac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DQOwZZrwl+GxIARWYI809PrjYZgIC0xfeubUvTNhKKAudWXflkBkHkOQxqHhcKfI5
-	 YEd8AoepFJifaDz0cIKUFkW85RTTMclmIhV4gfAqh3VY34KIx4Pm4UqjUG6y+A3vml
-	 FWjY7pXOdRDrlwOVcmMMkatFHeB/Fbf82T5tVjrs=
-Date: Tue, 24 Mar 2026 09:42:20 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner
- <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, Andreas
- Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton
- Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
- <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
- <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
- <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
- <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library v3
-Message-Id: <20260324094220.09e6eb90afc7f55937847f22@linux-foundation.org>
-In-Reply-To: <20260324062211.3216301-1-hch@lst.de>
-References: <20260324062211.3216301-1-hch@lst.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="T+rLzfT6"
+ARC-Seal: i=1; a=rsa-sha256; t=1774371363; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WDaP5f4TUhtcoSFuDnk3D3GgbpPqY3U0w/BSQBhwQMxJoQn2FPNITKn+oKydoBn+MGjHNXcfrowNjya/Us6Ehb6c4syEyFXNTKRenPDltf3RAch6pEOBDUa6brD4myndBQEFFVWen0hoYXpnbaGyyKtJeVbAaKSte1ONTaaHvkQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1774371363; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Jiy7RO9txASLPqZYKrGArRewWy+3t2WyQyeCTuVmXy4=; 
+	b=apLOPBX6Wp9f1EaqyKjyBYRazZdqSmGQGIqvIJ125nOyFnZYydxZ9USnkO1FeFOzS4O8D0VdJ8Ul5apRTXH11rOCkPF/VgYHzE6jUHCq0Q/ctJ6+QEPoe/mBcr5R0GmEJiqeZgC1LBHw7GwjBk/D6smJh1TmqT92ueyvXjVfffo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774371363;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=Jiy7RO9txASLPqZYKrGArRewWy+3t2WyQyeCTuVmXy4=;
+	b=T+rLzfT6sCf/pqDn1dxCrg3R1bNkfSReYXzi6M+pmTImhA87l+LmTyvTFzOlRiUH
+	wQgGyLTF1yXAWy0KWb4NBS3Ks7X7WhYc0E1PNn8XK9JYG5APTkcQ3JTIJC/cKXIQp+1
+	wmAvh2lUPtu33ypCQ3XRNSH6bzNrh48esF697qik=
+Received: by mx.zohomail.com with SMTPS id 1774371361201648.8428770573439;
+	Tue, 24 Mar 2026 09:56:01 -0700 (PDT)
+Date: Tue, 24 Mar 2026 16:55:40 +0000
+From: Yao Zi <me@ziyao.cc>
+To: wjjsn <wjjsn@qq.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	kernel@xen0n.name, devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	wjjsn <2858482031@qq.com>
+Subject: Re: [PATCH v5 0/2] Add Loongson-2K0300 processor support
+Message-ID: <acLCDL_nJom8AzjK@pie>
+References: <tencent_325FB1D2C600CD55E367332EC453E5A64B09@qq.com>
+ <ab_iF2hjZRfp16HP@pie>
+ <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
+ <tencent_CA7176E8823B957F1AEB15254D17904D5505@qq.com>
+ <acCoo_ZrTmZGZH5d@pie>
+ <tencent_414FBFBEE2A4510232AB52CE665C04A6C20A@qq.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_414FBFBEE2A4510232AB52CE665C04A6C20A@qq.com>
+X-ZohoMailClient: External
 
-On Tue, 24 Mar 2026 07:21:36 +0100 Christoph Hellwig <hch@lst.de> wrote:
+On Tue, Mar 24, 2026 at 11:09:16PM +0800, wjjsn wrote:
+> On 3/23/26 10:42, Yao Zi wrote:
+> > On Mon, Mar 23, 2026 at 12:33:31AM +0800, wjjsn wrote:
 
-> the XOR library used for the RAID5 parity is a bit of a mess right now.
-> The main file sits in crypto/ despite not being cryptography and not
-> using the crypto API, with the generic implementations sitting in
-> include/asm-generic and the arch implementations sitting in an asm/
-> header in theory.  The latter doesn't work for many cases, so
-> architectures often build the code directly into the core kernel, or
-> create another module for the architecture code.
+...
+
+> > >    the clk_apb_gate will
+> > >    turn off by kernel while booting,though 16100000.serial is using
+> > 
+> > This is unlikely an issue in the clock driver, but rather the consumer
+> > is doing something wrong, though I haven't seen similar issues when
+> > working on the clock driver.
+> > 
+> > Please try booting the kernel with clk_ignore_unused, and check
+> > /sys/kernel/debug/clk/clk_summary to see whether the serial correctly
+> > acquires the apb gate clock. If not, one (and the most possible) reason
+> > is both clock-frequency and clocks properties are specified in its
+> > devicetree node, where 8250 driver would ignore the latter.
+> > 
 > 
-> Changes this to a single module in lib/ that also contains the
-> architecture optimizations, similar to the library work Eric Biggers
-> has done for the CRC and crypto libraries later.  After that it changes
-> to better calling conventions that allow for smarter architecture
-> implementations (although none is contained here yet), and uses
-> static_call to avoid indirection function call overhead.
+>  When I use 'clocks = <&clk LS2K0300_CLK_DEV_DIV>;', the system log gets
+> stuck at the message about closing unused clocks, and there are no further
+> logs. It seems like the clock for the serial port is being closed. However,
+> if I set the parameter to not close unused clocks as a startup parameter,
+> the serial port can continue to be used. If I use 'clocks = <&clk
+> LS2K0300_CLK_APB_GATE>;', then the clock for the serial port is not closed
+> and can start normally. I have not specified the clock frequency in the
 
-Thanks, I've updated mm.git's mm-nonmm-unstable branch to this version
-of the patchset.
+This is the expected behavior, because LS2K0300_CLK_APB_GATE takes
+LS2K0300_CLK_APB_DIV as parent, and unused clocks would be automatically
+disabled by kernel.
 
+It's intended to let consumers take the GATE clock instead of the DIV
+clock, just like what you have done in your patch.
 
+> Regards,
+> wjjsn
+
+Regards,
+Yao Zi
