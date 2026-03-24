@@ -1,205 +1,233 @@
-Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930363A758A
-	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 06:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC703B27EF;
+	Tue, 24 Mar 2026 06:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774332870; cv=none; b=lSxfu2o6j0ZTIVtW/2OeI35hIzRaCfezG+6+GylpEDOheufeeqJ7HhYGyokTHWmi3iGpblUxBe51PfJjbAg6lp67KgeE9WrmJqeMZIpU8y65dSSzWcmsvELlDj/MaDytMizJ66/UbJaO/N+Q08q73hQKRVM4cTK3af+yCo/s0js=
+	t=1774333384; cv=none; b=hnpLnicD5XRH6ESyfLDbmoemI7nWnKoOlQ54bLHMk1qqujwUkGmpSOO0wHs9sxytM4vyPpJBoWZ4CWu4MXB1aen/EOTAmpcMLN/F8EoCl4EI6PVBbjg3vuRtonCgWVpsDzWO+E1wH4tQIGff9qmS8c59Iqpl60GkbhYQUO1AjGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774332870; c=relaxed/simple;
-	bh=kNeCzHN9m3XWkpbevz8LJ6DnLZ6XMrA3XVh7yVPFY4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MdHBbJjtwKo2u+2A9k5f8n1u+9kThYzdje53Mx0Go4xIIN2TrJKIEMLKg/0U/omYWuI5egEG2e86rXeXewi0NbVTXHBH10hYmZlJYBDCyrJdU2Ewkn3F1SCskXfEluAE4Hysh0H6wTxQaMuJ+xze9h5txxOI67v2wGnQR+CzcpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=jpV0OS8P; arc=none smtp.client-ip=113.46.200.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1774333384; c=relaxed/simple;
+	bh=nGZJLjOe5iO4iOeruhTpM3hRiw+N7ndt3b9PtwZc2ko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bR05x8olluLJzuMb2e1F0F8J4Kcl9mz2lzggyNMQkB0Jwnuq6QMVuSNV3OSB/Q1d81kQmeOw1tC4xs4uvJCL8e3d2FKmFTu7lgiOTcoxfHnZYW7GwzlkN1KPEIWIhz6hCw975wFw4KvCirNVOp8PRAkQiKv0WbRoICA4bEUCMvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c65a7z7Q; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="jpV0OS8P"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=qfaMojy4YCJI6x7hn3yLKKO+h1WPTwEnl4yVpQYK7UQ=;
-	b=jpV0OS8P669YME8Q51wZE1sJYxg0mWoQB30y8MPrPMbvQ22ehAAXuIqteUT/3sIxyL1MmSP7h
-	RbyG9KeFJGYgssJdZyGAsROKKri5Ypb8c7977na6j8YwpXxHoqMP1oXnnOWDxdKrCxthN2TlvfT
-	lJ1A1OOOgmTlVrMeRWDFqEE=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fg02m0NPjz1prkX;
-	Tue, 24 Mar 2026 14:08:16 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7AF22012A;
-	Tue, 24 Mar 2026 14:14:23 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Mar 2026 14:14:20 +0800
-Message-ID: <e51d5a5d-40d4-950b-274f-229e1d72e60d@huawei.com>
-Date: Tue, 24 Mar 2026 14:14:18 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c65a7z7Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=llZo5AuQgKfnTDSRj0qABwj+a0z1LvEOtH9cegApi48=; b=c65a7z7QGulg3ZLt9fovvHDcTw
+	ZbNOrHtwwGpRemcCz9CWHiJ3Ei2dTofnWWPUL3uUXteeZ8o4CHqd3da+QlqLH8NFQL7+6DxGYY7x/
+	ISh83YpgQoFnaMoWYlk1wLHj1Op7kAZwuQikkXrMfcuGzOKD62v6gHZ+2Uxzk4wjwUmL55wqdwWGr
+	IUkEuJt/x9DI3icLegpslpm2STLooEogQ9Js9TWsnJBxhBFyaFyZMs/6zvfKcL4tEJRvDHxUd8kBd
+	vu03BtS4rMfzdxhHi3ti00AmlupX42OVlGsUDyVcj2JfI7viG3M60ZNS78+dMo3Z7I2Ah04DFsGUu
+	c5dVM7YA==;
+Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w4v9l-00000000ggz-358i;
+	Tue, 24 Mar 2026 06:22:26 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>,
+	Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>,
+	"Theodore Ts'o" <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-crypto@vger.kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: cleanup the RAID5 XOR library v3
+Date: Tue, 24 Mar 2026 07:21:36 +0100
+Message-ID: <20260324062211.3216301-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v9 0/5] arm64/riscv: Add support for crashkernel CMA
- reservation
-Content-Language: en-US
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>, <bhe@redhat.com>,
-	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
-	<peterz@infradead.org>, <feng.tang@linux.alibaba.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <dapeng1.mi@linux.intel.com>,
-	<kees@kernel.org>, <elver@google.com>, <paulmck@kernel.org>,
-	<lirongqing@baidu.com>, <safinaskar@gmail.com>, <rppt@kernel.org>,
-	<ardb@kernel.org>, <leitao@debian.org>, <jbohac@suse.cz>,
-	<cfsworks@gmail.com>, <osandov@fb.com>, <tangyouling@kylinos.cn>,
-	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
-	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
-	<fuqiang.wang@easystack.cn>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260323072745.2481719-1-ruanjinjie@huawei.com>
- <20260323095548.fa4e13d6e8ae5005ae585e13@linux-foundation.org>
- <4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com>
- <595e793d-adc3-4acb-af18-f0a3cf2d5e73@linux.ibm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <595e793d-adc3-4acb-af18-f0a3cf2d5e73@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+Hi all,
 
+the XOR library used for the RAID5 parity is a bit of a mess right now.
+The main file sits in crypto/ despite not being cryptography and not
+using the crypto API, with the generic implementations sitting in
+include/asm-generic and the arch implementations sitting in an asm/
+header in theory.  The latter doesn't work for many cases, so
+architectures often build the code directly into the core kernel, or
+create another module for the architecture code.
 
-On 2026/3/24 12:29, Sourabh Jain wrote:
-> 
-> 
-> On 24/03/26 09:32, Jinjie Ruan wrote:
->>
->> On 2026/3/24 0:55, Andrew Morton wrote:
->>> On Mon, 23 Mar 2026 15:27:40 +0800 Jinjie Ruan
->>> <ruanjinjie@huawei.com> wrote:
->>>
->>>> The crash memory allocation, and the exclude of crashk_res,
->>>> crashk_low_res
->>>> and crashk_cma memory are almost identical across different
->>>> architectures,
->>>> This patch set handle them in crash core in a general way, which
->>>> eliminate
->>>> a lot of duplication code.
->>>>
->>>> And add support for crashkernel CMA reservation for arm64 and riscv.
->>> Thanks.  AI review has completed and it asks questions:
->>>     https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie@huawei.com
->> I believe it identified 4 valid issues:
->>
->> - The already discovered crashk_low_res not excluded bug in the existing
->> RISC-V code.
->>
->> - An existing memory leak issue in the existing PowerPC code.
-> 
-> Yes and suggested approach to fix the issue looks good.
-> Which is basically replace return with goto out.
-> 
-> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-> index 898742a5205c..1426d2099bad 100644
-> --- a/arch/powerpc/kexec/crash.c
-> +++ b/arch/powerpc/kexec/crash.c
-> @@ -440,7 +440,7 @@ static void update_crash_elfcorehdr(struct kimage
-> *image, struct memory_notify *
->         ret = get_crash_memory_ranges(&cmem);
->         if (ret) {
->                 pr_err("Failed to get crash mem range\n");
-> -               return;
-> +               goto out;
->         }
-> 
->         /*
-> 
-> Are you planning to handle this in this patch series? Or do you want me
-> to send a separate fix patch?
+Changes this to a single module in lib/ that also contains the
+architecture optimizations, similar to the library work Eric Biggers
+has done for the CRC and crypto libraries later.  After that it changes
+to better calling conventions that allow for smarter architecture
+implementations (although none is contained here yet), and uses
+static_call to avoid indirection function call overhead.
 
-Yes, will fix it in v10, thanks for the clarification.
+A git tree is also available here:
 
-Best regards,
-Jinjie
+    git://git.infradead.org/users/hch/misc.git xor-improvements
 
-> 
-> 
->>
->> - The ordering issue of adding CMA ranges to "linux,usable-memory-range".
->>
->> - An existing concurrency issue. A Concurrent memory hotplug may occur
->> between reading memblock and attempting to fill cmem during kexec_load()
->> for almost all existing architectures，I'm not sure if this is a
->> practical issue in reality..
+Gitweb:
 
-What are your thoughts on this concurrency issue?
+    https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/xor-improvements
 
->>
->>   Race Condition Scenario
->>
->>    Timeline:
->>    ---------------------------------------------------------------------
->>    T1: kexec_load() syscall starts
->>    T2: kexec_trylock() acquires kexec_lock
->>    T3: crash_prepare_headers() is called
->>    T4: arch_get_system_nr_ranges() queries memblock → finds 100 memory
->> ranges
->>    T5: cmem = alloc_cmem(100) allocates buffer for 100 ranges
->>    T6: [RACE WINDOW] Another process triggers memory hotplug
->>    T7: add_memory() → lock_device_hotplug() → memblock_add_node()
->>    T8: New memory region added to memblock
->>    T9: arch_crash_populate_cmem() iterates: now finds 102 ranges
->>    T10: cmem->ranges[100] → OUT OF BOUNDS WRITE!
->>    T11: cmem->ranges[101] → OUT OF BOUNDS WRITE!
->>    T12: Kernel crash or memory corruption
->>
->>    Why This Happens
->>
->>    1. Different locks used:
->>      - kexec_load() uses kexec_trylock (atomic_t)
->>      - Memory hotplug uses device_hotplug_lock (mutex)
->>    2. No synchronization between these two operations
->>    3. Time-of-check to time-of-use (TOCTOU) issue:
->>      - Step T4-T5: We query the number of ranges and allocate buffer
->>      - Step T6-T9: Memory hotplug adds new ranges between query and
->> population
->>
->>
->>
->> Any comments or suggestions on the following approach?
->>
->>
->> int crash_prepare_headers(...)
->>    {
->>        unsigned int max_nr_ranges;
->>        struct crash_mem *cmem;
->>        int ret;
->>
->>        lock_device_hotplug();
->>
->>        max_nr_ranges = arch_get_system_nr_ranges();
->>        // ...
->>        ret = arch_crash_populate_cmem(cmem);
->>        // ...
->>
->>        unlock_device_hotplug();
->>        return ret;
->>    }
->>
->>
-> 
+Changes since v2:
+ - drop use of CONFIG_KERNEL_MODE_NEON for arm64
+ - drop the new __limit_random_u32_below for the unit test
+ - require 64-bit alignment because sparc64 requires it
+ - use DEFINE_STATIC_CALL_NULL to avoid exposing a specific xor_gen
+   routine
+ - keep CONFIG_XOR_BLOCKS_ARCH self-contained in lib/raid/
+ - don't select library option from kunit test and add a .kunitconfig
+   instead
+ - fix the module description for the kunit test
+ - add a case where buffers are at the end of the allocation in the kunit test
+ - use separate src/dst alignment in the kunit test
+ - fix and improve the kunit assert message
+
+Changes since v1:
+ - use lockdep_assert_preemption_enabled()
+ - improve the commit message for the initial um xor.h cleanup
+ - further clean up the um arch specific header
+ - add SPDX identifier to the new build system files
+ - use bool for xor_forced
+ - fix an incorrect printk level conversion from warn to info
+ - include xor_impl.h in xor-neon.c
+ - remove unused exports for riscv
+ - simply move the sparc code instead of splititng it
+ - simplify the makefile for the x86-specific implementations
+ - remove stray references to xor_blocks in crypto/async_tx
+ - rework __DO_XOR_BLOCKS to avoid (theoretical) out of bounds references
+ - improve the kerneldoc API documentration for xor_gen()
+ - spell the name of the srcs argument to xor_gen correctly in xor.h
+ - add a kunit test, and a new random helper for it.
+
+Diffstat:
+ arch/arm64/include/asm/xor.h              |   73 --
+ arch/loongarch/include/asm/xor.h          |   68 --
+ arch/loongarch/include/asm/xor_simd.h     |   34 -
+ arch/loongarch/lib/xor_simd_glue.c        |   72 --
+ arch/powerpc/include/asm/xor.h            |   47 -
+ arch/powerpc/include/asm/xor_altivec.h    |   22 
+ arch/powerpc/lib/xor_vmx.h                |   22 
+ arch/powerpc/lib/xor_vmx_glue.c           |   63 --
+ arch/riscv/include/asm/xor.h              |   68 --
+ arch/s390/include/asm/xor.h               |   21 
+ arch/sparc/include/asm/xor.h              |    9 
+ arch/um/include/asm/xor.h                 |   24 
+ arch/x86/include/asm/xor_64.h             |   28 -
+ b/arch/arm/lib/Makefile                   |    5 
+ b/arch/arm64/lib/Makefile                 |    6 
+ b/arch/loongarch/lib/Makefile             |    2 
+ b/arch/powerpc/lib/Makefile               |    5 
+ b/arch/riscv/lib/Makefile                 |    1 
+ b/arch/s390/lib/Makefile                  |    2 
+ b/arch/sparc/include/asm/asm-prototypes.h |    1 
+ b/arch/sparc/lib/Makefile                 |    2 
+ b/crypto/Kconfig                          |    2 
+ b/crypto/Makefile                         |    1 
+ b/crypto/async_tx/async_xor.c             |   34 -
+ b/fs/btrfs/raid56.c                       |   27 -
+ b/include/asm-generic/Kbuild              |    1 
+ b/include/linux/raid/xor.h                |   27 -
+ b/lib/Kconfig                             |    1 
+ b/lib/Makefile                            |    2 
+ b/lib/raid/.kunitconfig                   |    3 
+ b/lib/raid/Kconfig                        |   30 +
+ b/lib/raid/Makefile                       |    3 
+ b/lib/raid/xor/Makefile                   |   42 +
+ b/lib/raid/xor/alpha/xor.c                |   46 -
+ b/lib/raid/xor/alpha/xor_arch.h           |   22 
+ b/lib/raid/xor/arm/xor-neon-glue.c        |   19 
+ b/lib/raid/xor/arm/xor-neon.c             |   22 
+ b/lib/raid/xor/arm/xor.c                  |  105 ----
+ b/lib/raid/xor/arm/xor_arch.h             |   22 
+ b/lib/raid/xor/arm64/xor-neon-glue.c      |   26 +
+ b/lib/raid/xor/arm64/xor-neon.c           |   94 +--
+ b/lib/raid/xor/arm64/xor-neon.h           |    6 
+ b/lib/raid/xor/arm64/xor_arch.h           |   21 
+ b/lib/raid/xor/loongarch/xor_arch.h       |   33 +
+ b/lib/raid/xor/loongarch/xor_simd_glue.c  |   37 +
+ b/lib/raid/xor/powerpc/xor_arch.h         |   22 
+ b/lib/raid/xor/powerpc/xor_vmx.c          |   40 -
+ b/lib/raid/xor/powerpc/xor_vmx.h          |   10 
+ b/lib/raid/xor/powerpc/xor_vmx_glue.c     |   28 +
+ b/lib/raid/xor/riscv/xor-glue.c           |   25 +
+ b/lib/raid/xor/riscv/xor.S                |    4 
+ b/lib/raid/xor/riscv/xor_arch.h           |   17 
+ b/lib/raid/xor/s390/xor.c                 |   15 
+ b/lib/raid/xor/s390/xor_arch.h            |   13 
+ b/lib/raid/xor/sparc/xor-sparc32.c        |   32 -
+ b/lib/raid/xor/sparc/xor-sparc64-glue.c   |   48 -
+ b/lib/raid/xor/sparc/xor-sparc64.S        |   10 
+ b/lib/raid/xor/sparc/xor_arch.h           |   35 +
+ b/lib/raid/xor/tests/Makefile             |    3 
+ b/lib/raid/xor/tests/xor_kunit.c          |  187 +++++++
+ b/lib/raid/xor/um/xor_arch.h              |    2 
+ b/lib/raid/xor/x86/xor-avx.c              |   52 --
+ b/lib/raid/xor/x86/xor-mmx.c              |  120 +---
+ b/lib/raid/xor/x86/xor-sse.c              |  105 +---
+ b/lib/raid/xor/x86/xor_arch.h             |   36 +
+ b/lib/raid/xor/xor-32regs-prefetch.c      |  267 ++++++++++
+ b/lib/raid/xor/xor-32regs.c               |  217 ++++++++
+ b/lib/raid/xor/xor-8regs-prefetch.c       |  146 +++++
+ b/lib/raid/xor/xor-8regs.c                |  103 ++++
+ b/lib/raid/xor/xor-core.c                 |  192 +++++++
+ b/lib/raid/xor/xor_impl.h                 |   56 ++
+ crypto/xor.c                              |  174 -------
+ include/asm-generic/xor.h                 |  738 ------------------------------
+ 73 files changed, 1831 insertions(+), 2067 deletions(-)
