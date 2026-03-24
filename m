@@ -1,93 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAA929D265;
-	Tue, 24 Mar 2026 12:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4143EF644
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 13:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774357151; cv=none; b=NfSMl1JneZ8M0vINpNxv5+8vLRcVtcPKqLKAGAbJjtpCBogB4geWi0hxvxw066zao1fGeSKTUkxNyBiYxdu3yuEA75B1cZ1ldR32mbsl5BOTCKPhSJzgM3HTSJ6OkytMzYJJRILtZ/YC1P+kQkgUTco/B8iJvs2z14mhpi3NqGQ=
+	t=1774357858; cv=none; b=IIC2jmJrcf4CJFDA2fqTociZzcHp97QLRogWabvERzf2ba+mpmHgSN18Q88zfV3YRC2dslEOpM6Kdr1554+Mj0VTa0DpQkn6O5vT8h2OqwuUCV/+yRgTWXvzV87OoT1swqJZvf2/nCzS4EqJJqI3Zntd1os1S+wj33aN+QUSLc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774357151; c=relaxed/simple;
-	bh=DNZLnRzh+CvM88p8pkAqUjgyo33nZndxuNt19jJaIc0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=a7NWM/UUwwIuu9pvztKNhYMjGzrgkCYF+zTHxrtBlHM4KE5b98GawHMCJhScTpw/Ys4cziL8lYCKjh89AJ5bOQZEhIp/uF6S8b4USRVtPgX/3fBJo5XQV5nmYb3dVmnbCwYCuVeZPGY27HT2lBeEqtLN06JfJNKfiPZv8rGWZZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L2bpOAmA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L2bpOAmA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 928E0C19424;
-	Tue, 24 Mar 2026 12:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1774357150;
-	bh=DNZLnRzh+CvM88p8pkAqUjgyo33nZndxuNt19jJaIc0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L2bpOAmA8emgVd/ZYEB/zrSuE9jofQHFZ27BdcP53YODoh57XV9LR2CPX59ADyD0z
-	 q7r1taKZSMDWKO39Sv/SPts3ItWTubPfixNB+/Y98emGdt7nlHO096btK1O0vCkoQ1
-	 6OtPOaaEWYgTpw6T6Z7ovs8Hs1s7B0CHbZRMoxPo=
-Date: Tue, 24 Mar 2026 05:59:07 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner
- <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, Andreas
- Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton
- Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
- <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
- <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
- <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
- <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library v3
-Message-Id: <20260324055907.52f2304d0be85c1087e0b9f1@linux-foundation.org>
-In-Reply-To: <20260324062211.3216301-1-hch@lst.de>
-References: <20260324062211.3216301-1-hch@lst.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1774357858; c=relaxed/simple;
+	bh=YCVNfVgIpBzJm2Hd4TTEJx5VB5I3bYj3Ow25o7DzAgo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=GyQ3ZWgapv+NqwKe3LCz/XAB0u6FWkRAei4Qb2bzKL4Rvw6IGeGzQiE8ylkjHqRq4lZ/fmIOi0xCdANO3Cpd2O3PJFkmD3rHW7rG9/DX9hXYmDt2KMa2tnYARZcYvukt44V/+3+l+wJ3uRIAenp4b3JkwiQZtO7bZBc54p2Wzq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Axz6tdjcJptC8eAA--.27471S3;
+	Tue, 24 Mar 2026 21:10:53 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCx98BcjcJpajVcAA--.31199S3;
+	Tue, 24 Mar 2026 21:10:52 +0800 (CST)
+Subject: Re: [RFC PATCH 6/7] LoongArch: BPF: Add load-acquire and
+ store-release instructions
+To: bot+bpf-ci@kernel.org, loongarch@lists.linux.dev, bpf@vger.kernel.org
+Cc: ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
+ martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev,
+ clm@meta.com, ihor.solodrai@linux.dev, WANG Rui <wangrui@loongson.cn>
+References: <20260324090106.13527-7-yangtiezhu@loongson.cn>
+ <5a2cfd2c3dddef83de46ea9b0f02bb5b90c29937c9b9d348542838fde1e29a93@mail.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <bbb797cd-c6ea-f61c-d99c-66908e4e5f68@loongson.cn>
+Date: Tue, 24 Mar 2026 21:10:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+In-Reply-To: <5a2cfd2c3dddef83de46ea9b0f02bb5b90c29937c9b9d348542838fde1e29a93@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx98BcjcJpajVcAA--.31199S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kr48Kry5ZF1UAry7Gw1fKrX_yoW8Ar45pF
+	ZFy3Z5CrWvgryDZF97Ja18ZFyxtF4fKF13WF1UJrWSgr15Wr1SqFn5K3WYva98Gw4kCr40
+	9ryYywnIvFyDZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
+	SoJUUUUU=
 
-On Tue, 24 Mar 2026 07:21:36 +0100 Christoph Hellwig <hch@lst.de> wrote:
-
-> the XOR library used for the RAID5 parity is a bit of a mess right now.
-> The main file sits in crypto/ despite not being cryptography and not
-> using the crypto API, with the generic implementations sitting in
-> include/asm-generic and the arch implementations sitting in an asm/
-> header in theory.  The latter doesn't work for many cases, so
-> architectures often build the code directly into the core kernel, or
-> create another module for the architecture code.
+On 2026/3/24 下午5:42, bot+bpf-ci@kernel.org wrote:
+>> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+>> index c9a32f124f5e..d1e9866911dd 100644
+>> --- a/arch/loongarch/net/bpf_jit.c
+>> +++ b/arch/loongarch/net/bpf_jit.c
 > 
-> Changes this to a single module in lib/ that also contains the
-> architecture optimizations, similar to the library work Eric Biggers
-> has done for the CRC and crypto libraries later.  After that it changes
-> to better calling conventions that allow for smarter architecture
-> implementations (although none is contained here yet), and uses
-> static_call to avoid indirection function call overhead.
+> [ ... ]
+> 
+>> +	/* store_release(dst_reg + off16, src_reg) */
+>> +	case BPF_STORE_REL:
+>> +		switch (BPF_SIZE(insn->code)) {
+> 
+> [ ... ]
+> 
+>> +		case BPF_W:
+>> +			if (cpu_has_llacq_screl) {
+>> +				move_imm(ctx, t1, off, false);
+>> +				emit_insn(ctx, addd, t2, dst, t1);
+>> +				emit_insn(ctx, screlw, src, t2);
+> 
+> SCREL.W is a store-conditional instruction, not a plain store-release.
+> It checks LLbit and then overwrites rd with the success indicator
+> (1 or 0), which would clobber the BPF source register.
+> 
+> Looking at emit_atomic_rmw() in the same file for BPF_CMPXCHG, the
+> existing LL/SC usage carefully avoids this:
+> 
+>      move_reg(ctx, t3, src);
+>      emit_insn(ctx, scw, t3, t1, 0);
+>      emit_insn(ctx, beq, t3, LOONGARCH_GPR_ZERO, -6);
+> 
+> Here SC.W is applied to the temp register t3 rather than the BPF
+> register, and t3 is then checked for 0 to retry the loop. This
+> confirms that SC-family instructions clobber their rd operand on
+> LoongArch.
+> 
+> Is SCREL.W/D the right instruction for a standalone store-release?
+> The other architectures use plain stores with ordering guarantees
+> for BPF_STORE_REL:
 
-Thanks, I'll update mm.git to this version.
+Indeed, I misunderstood the instructions before, thanks Wang Rui and
+bot+bpf-ci. I did some changes locally and tested again, the related
+testcases passed.
 
-It looks like AI review has found a few things:
-	https://sashiko.dev/#/patchset/20260324062211.3216301-1-hch@lst.de
+I will use the common memory access instruction with the barrier dbar
+to support load-acquire and store-release in the next version.
+
+Thanks,
+Tiezhu
+
