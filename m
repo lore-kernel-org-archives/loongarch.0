@@ -1,275 +1,77 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 442913D6465
-	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 09:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5D973DE458
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 09:41:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774345260; cv=none; b=NPZ3zZGFhPwLVkFX4JxICjHP2uSJt+RIgQeK4vfCkoymGf1NZW8ZyULngXX+ZKZpTlRKz5m/ZbcqMh+NqjP0F797xOe6lUd8tbuWaQtOS7o1AwSj3CCe0zKIH+zoE42ufjDz2hPMI3zMHGF+U3Ma+PiuIiY/g0PTWU5g1KUdQYY=
+	t=1774345287; cv=none; b=rKhfW9hgBAHf7TX7Uq8c+LVGn4wf4qX4H8Dy1hi/v5ZRtrjFlN+M8KHPre0KxoCzGYfMbP3Kcpum5xd+XXSl15aqNfBFfDCK+JCsPd2r81td/4DONWA59FpiklqcnSSEcnnk+3wPiTa4Z+b+J6V9rN9ypuSfUSjAyMBzJnydv9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774345260; c=relaxed/simple;
-	bh=tVAyIhJxm903FQuL8Ves+oTv9mJIHG66IWbnkVvxc0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kCyI+EHuqN5AEcMyKeNqBuBwvArLefZSDqiUwFpTKV2yNsIiVxguUCIMuTsUJq95sWwJ+cM3AZBCZrKiechro5RSWnEbl7+pmZchgQVPhKKYdtqth7HbGaVo25ck0i5QPPd9lWpYrdeAJTs4/okmKJg4GWGQ3rQCR9sNO/vAKKs=
+	s=arc-20240116; t=1774345287; c=relaxed/simple;
+	bh=mw51Y/ppZX++/P8IPt+DaSPiMBccEE9fSs97az1KnjE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QGtyqJ0C4z+w6aqpCcrm7S4/VcPea5U4Tx4hyxWEO7iNWdvEbVA4YbYo4leZBqlt3HyZNFjdpGuaQeIuQ4XO9OnJgJ3u03lK/BrNK03fCPuhXeySULL6p5AJ+8ObhF92caMGMAb/4pnZSDDzQX7SCtfqe+nPAMvDPwwZpCjTdtE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8AxQcAnXMJpdSMeAA--.27198S3;
-	Tue, 24 Mar 2026 17:40:55 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJCxfcIhXMJpnxtcAA--.43027S4;
-	Tue, 24 Mar 2026 17:40:55 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: maobibo@loongson.cn,
-	chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	lixianglai@loongson.cn
-Subject: [PATCH v8 2/2] LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
-Date: Tue, 24 Mar 2026 17:15:21 +0800
-Message-Id: <20260324091521.2338235-3-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20260324091521.2338235-1-gaosong@loongson.cn>
-References: <20260324091521.2338235-1-gaosong@loongson.cn>
+Received: from loongson.cn (unknown [209.85.210.171])
+	by gateway (Coremail) with SMTP id _____8AxgsBCXMJpeyMeAA--.27182S3;
+	Tue, 24 Mar 2026 17:41:23 +0800 (CST)
+Received: from mail-pf1-f171.google.com (unknown [209.85.210.171])
+	by front1 (Coremail) with SMTP id qMiowJCxecFBXMJprhtcAA--.35655S2;
+	Tue, 24 Mar 2026 17:41:22 +0800 (CST)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-829ac4670c4so3897792b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 02:41:22 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyBsnTF3fUc6q50ccQ0Yryy9DMwRwQxeludtl89EfY+Q5a+cNq+
+	ZhtQ3eFcrEBGgr9gja5DuI5Y6aDjo8Kg/9845QMUhOVnajL2rd3BMXw7p9kaVSV9MjHFkmlZie5
+	o8LjYUSeWf5u/gcGHiTO/vU9a3WB5KWlfWwRNTbxepg==
+X-Received: by 2002:a53:d911:0:b0:64e:8748:38a2 with SMTP id
+ 956f58d0204a3-64eaa833467mr11980889d50.78.1774344805952; Tue, 24 Mar 2026
+ 02:33:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxfcIhXMJpnxtcAA--.43027S4
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+References: <20260324090106.13527-1-yangtiezhu@loongson.cn> <20260324090106.13527-7-yangtiezhu@loongson.cn>
+In-Reply-To: <20260324090106.13527-7-yangtiezhu@loongson.cn>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Tue, 24 Mar 2026 17:33:15 +0800
+X-Gmail-Original-Message-ID: <CAHirt9gFWm+MKYFuz=936bODjmyeONNtmCmwfo=6RcVKixjiWQ@mail.gmail.com>
+X-Gm-Features: AaiRm518iICwgwOODgittoMslb9abb3rZMwPuj8NnsMq8NgfAnSheiAHWBmzh30
+Message-ID: <CAHirt9gFWm+MKYFuz=936bODjmyeONNtmCmwfo=6RcVKixjiWQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/7] LoongArch: BPF: Add load-acquire and
+ store-release instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:qMiowJCxecFBXMJprhtcAA--.35655S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
 
-Implement irqfd deliver msi to vcpu and vcpu dmsintc inject irq.
-Add irqfd choice dmsintc to set msi irq by the msg_addr and
-implement dmsintc set msi irq.
+On Tue, Mar 24, 2026 at 5:12=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> Use the native instructions LLACQ.{W/D} and SCREL.{W/D} to support the BP=
+F
+> load-acquire (BPF_LOAD_ACQ) and store-release (BPF_STORE_REL) instruction=
+s
+> in the JIT compiler.
+>
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
----
- arch/loongarch/include/asm/kvm_dmsintc.h |  5 ++
- arch/loongarch/include/asm/kvm_pch_pic.h |  4 +-
- arch/loongarch/kvm/intc/dmsintc.c        | 73 ++++++++++++++++++++++++
- arch/loongarch/kvm/intc/pch_pic.c        | 16 +++++-
- arch/loongarch/kvm/interrupt.c           |  2 +
- arch/loongarch/kvm/irqfd.c               | 11 ++--
- 6 files changed, 102 insertions(+), 9 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/include/asm/kvm_dmsintc.h
-index b04b89dd2a35..081ec8a7b874 100644
---- a/arch/loongarch/include/asm/kvm_dmsintc.h
-+++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-@@ -11,11 +11,16 @@ struct loongarch_dmsintc {
- 	struct kvm *kvm;
- 	uint64_t msg_addr_base;
- 	uint64_t msg_addr_size;
-+	uint32_t cpu_mask;
- };
- 
- struct dmsintc_state {
- 	atomic64_t  vector_map[4];
- };
- 
-+void dmsintc_inject_irq(struct kvm_vcpu *vcpu);
-+int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm, struct kvm_vcpu *vcpu,
-+				u32 vector, int level);
-+int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int level);
- int kvm_loongarch_register_dmsintc_device(void);
- #endif
-diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
-index 7f33a3039272..5f49b1f82c56 100644
---- a/arch/loongarch/include/asm/kvm_pch_pic.h
-+++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-@@ -70,6 +70,8 @@ struct loongarch_pch_pic {
- 
- int kvm_loongarch_register_pch_pic_device(void);
- void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level);
--void pch_msi_set_irq(struct kvm *kvm, int irq, int level);
-+struct kvm_kernel_irq_routing_entry;
-+int pch_msi_set_irq(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e, int level);
- 
- #endif /* __ASM_KVM_PCH_PIC_H */
-diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-index 1bb61e55d061..6837ccbb4473 100644
---- a/arch/loongarch/kvm/intc/dmsintc.c
-+++ b/arch/loongarch/kvm/intc/dmsintc.c
-@@ -4,9 +4,82 @@
-  */
- 
- #include <linux/kvm_host.h>
-+#include <asm/kvm_csr.h>
- #include <asm/kvm_dmsintc.h>
- #include <asm/kvm_vcpu.h>
- 
-+int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
-+				struct kvm_vcpu *vcpu,
-+				u32 vector, int level)
-+{
-+	struct kvm_interrupt vcpu_irq;
-+	struct dmsintc_state *ds;
-+
-+	if (!level)
-+		return 0;
-+	if (!vcpu || vector >= 256)
-+		return -EINVAL;
-+	ds = &vcpu->arch.dmsintc_state;
-+	if (!ds)
-+		return -ENODEV;
-+	set_bit(vector, (unsigned long *)&ds->vector_map);
-+	vcpu_irq.irq = INT_AVEC;
-+	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	kvm_vcpu_kick(vcpu);
-+	return 0;
-+}
-+
-+int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int level)
-+{
-+	unsigned int virq, dest;
-+	struct kvm_vcpu *vcpu;
-+
-+	virq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
-+	dest = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
-+	if (dest > KVM_MAX_VCPUS)
-+		return -EINVAL;
-+	vcpu = kvm_get_vcpu_by_cpuid(kvm, dest);
-+	if (!vcpu)
-+		return -EINVAL;
-+	return dmsintc_deliver_msi_to_vcpu(kvm, vcpu, virq, level);
-+}
-+
-+void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
-+{
-+	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
-+	unsigned int i;
-+	unsigned long temp[4], old;
-+
-+	if (!ds)
-+		return;
-+
-+	for (i = 0; i < 4; i++) {
-+		old = atomic64_read(&(ds->vector_map[i]));
-+		if (old)
-+			temp[i] = atomic64_xchg(&(ds->vector_map[i]), 0);
-+	}
-+
-+	if (temp[0]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR0);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR0, temp[0]|old);
-+	}
-+
-+	if (temp[1]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR1);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR1, temp[1]|old);
-+	}
-+
-+	if (temp[2]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR2);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR2, temp[2]|old);
-+	}
-+
-+	if (temp[3]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR3);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR3, temp[3]|old);
-+	}
-+}
-+
- static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
- 				struct kvm_device_attr *attr,
- 				bool is_write)
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index dd7e7f8d53db..1c0ed0665736 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <asm/kvm_eiointc.h>
-+#include <asm/kvm_dmsintc.h>
- #include <asm/kvm_pch_pic.h>
- #include <asm/kvm_vcpu.h>
- #include <linux/count_zeros.h>
-@@ -67,9 +68,20 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
- }
- 
- /* msi irq handler */
--void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
-+int pch_msi_set_irq(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e, int level)
- {
--	eiointc_set_irq(kvm->arch.eiointc, irq, level);
-+	u64 msg_addr;
-+
-+	msg_addr = (((u64)e->msi.address_hi) << 32) | e->msi.address_lo;
-+	if (cpu_has_msgint && kvm->arch.dmsintc &&
-+		msg_addr >= kvm->arch.dmsintc->msg_addr_base &&
-+		msg_addr < (kvm->arch.dmsintc->msg_addr_base  + kvm->arch.dmsintc->msg_addr_size)) {
-+		return kvm_dmsintc_set_msi_irq(kvm, msg_addr, e->msi.data, level);
-+	}
-+
-+	eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
-+	return 0;
- }
- 
- static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index fb704f4c8ac5..32930959f7c2 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -7,6 +7,7 @@
- #include <linux/errno.h>
- #include <asm/kvm_csr.h>
- #include <asm/kvm_vcpu.h>
-+#include <asm/kvm_dmsintc.h>
- 
- static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
- 	[INT_TI]	= CPU_TIMER,
-@@ -33,6 +34,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
- 		irq = priority_to_irq[priority];
- 
- 	if (kvm_guest_has_msgint(&vcpu->arch) && (priority == INT_AVEC)) {
-+		dmsintc_inject_irq(vcpu);
- 		set_gcsr_estat(irq);
- 		return 1;
- 	}
-diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-index 9a39627aecf0..308ef08b634c 100644
---- a/arch/loongarch/kvm/irqfd.c
-+++ b/arch/loongarch/kvm/irqfd.c
-@@ -28,10 +28,7 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
- {
- 	if (!level)
- 		return -1;
--
--	pch_msi_set_irq(kvm, e->msi.data, level);
--
--	return 0;
-+	return pch_msi_set_irq(kvm, e, level);
- }
- 
- /*
-@@ -71,13 +68,15 @@ int kvm_set_routing_entry(struct kvm *kvm,
- int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
- 		struct kvm *kvm, int irq_source_id, int level, bool line_status)
- {
-+	if (!level)
-+		return -EWOULDBLOCK;
-+
- 	switch (e->type) {
- 	case KVM_IRQ_ROUTING_IRQCHIP:
- 		pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, level);
- 		return 0;
- 	case KVM_IRQ_ROUTING_MSI:
--		pch_msi_set_irq(kvm, e->msi.data, level);
--		return 0;
-+		return pch_msi_set_irq(kvm, e, level);
- 	default:
- 		return -EWOULDBLOCK;
- 	}
--- 
-2.39.3
+LLACQ/SCREL are LL/SC primitives rather than plain
+load-acquire/store-release instructions.
 
