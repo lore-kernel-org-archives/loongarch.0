@@ -1,250 +1,108 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E913793B3
-	for <loongarch@lists.linux.dev>; Mon, 23 Mar 2026 21:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774300528; cv=pass; b=UcBQAB7CkBOmV/w0zQYLzARfJ9bb/RFOv/vH9dI8MbrKjHA+s7u6ENQNhcnBbdN+FGddc3iQzHVkyCsYLplimQnsiA54jxnUxVlTRctieFdwLQn2+6HztXU8A0kIp5u6BWhd2QZbnab8DT0bymLCHt+TjIJjQYi8iGjkm/rxTOE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774300528; c=relaxed/simple;
-	bh=SND86V77+KDMJcamkZKPvEg9WAFvOkbzniGBXqw9BCs=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ffGl9BrOims/9vuNP5RTChC5VF0+MxywVYIGZeodtAG59j+/qili/hLiFf7zAeUM2Nq9K6J59NLrnw7HZsIxUlQBUdY/6Fw7Qu70Y6KnAlkJ06PiVDFS4a1V+tEDhlWX/nrRTJ08P/LFgXpmTqH1dXGbgtSn26nHMJeZwrBBy24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hsi4UiRw; arc=pass smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hsi4UiRw"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-94ac8cbf3feso301870241.0
-        for <loongarch@lists.linux.dev>; Mon, 23 Mar 2026 14:15:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774300526; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HLORAj8kp03Bhd7y4NWrqRVctB/uSBqowgHa5UUJdTqwUFzI3Wc3NTcd8gFZZoDHR1
-         xbwTglAZMQAgai9pOvo8pijMug25VlEnOs0jN4p5yCbQfxYPCKHWGI+t9tP44NGFCYad
-         wpKxpLvBK431+M8+zPq+tkibKpy2Zh25STlhYULPQdxprM9/Vs3BTYwlzezBCLIitDmU
-         N468wYdG8klYRr+JeAamU/JHq30fmkw/8IZQI4dLbBeTOfVG967duO90NRA9PxwYthwN
-         OibVDVp14rogTjJOoE9k3gAQnRjzTWYjh7wZckVyNb9d+7N3pZDdXPtTf3NxrroiUpRc
-         5DTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=eOYudi6RRVXGeHCIabojBlAXxTWtuPC09s4XfPfEePE=;
-        fh=y9Abz8Sie0jJ64VAxcpS9T2sYbpmJoYv9HcFV/CNmsM=;
-        b=crfqXEaZaalkteOh/D8yCqert50sqcMhVkrvB7aNWFYVcYq3IzJ8gKhIOg8ZWvwwVl
-         8vsWx18kjEyTb9RbgVvSgr3HBjYXITvfPrDLlKFj6ty+6hIH8k8RGUnSJSOrOZgG4la/
-         ev0X1840yf0E1Dk5OHa5bxR/pKTfmoT1t9PKkFGGFocoHrLGq2FyCwXoaBfEaW2sVYjz
-         7mX4VphcuPO2QQVC754KysORolEbCV1+pFrtx9XZrBy0jy3btHYrT+vK0QwC1tgKiqIb
-         Q+u14WcZfoA48aWRZnDQiMzWOgo4e7RQUYoFnu0F/Bel5rTFkoRmAo67iEIoZF6wZ6+p
-         DR8w==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774300526; x=1774905326; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eOYudi6RRVXGeHCIabojBlAXxTWtuPC09s4XfPfEePE=;
-        b=Hsi4UiRw3t0XSHPTZn3tr+Hyc0xhFUEsJLgPWjVv68eCVrCeKse9WU6RYCgpAe6bYW
-         K3Fd96YQth8Iqvr9FuGYsrl966diDJpSOZ0mf2D3g3++scmAizA7bHFdZ7YEkXd/aeji
-         skfxNhWvbQvNCQB4iZInxhm0K/2VwYLDDRJ4qU5mCp2I+29yUYOvaycxLdSIMRLtwQQv
-         GtfpP+Qp6TQGNL6aclG7e5+VijcoelmuNe2iaQuGn7U5BKVlAOSBIp4QoMaqHqSx5heB
-         Aw8JGvHx6UVsx7+ysSwl7fOTQF5CiL0Kzgo7SYZyhEHrisClwkEVMUiTW17/v56NV3J8
-         YiBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774300526; x=1774905326;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eOYudi6RRVXGeHCIabojBlAXxTWtuPC09s4XfPfEePE=;
-        b=Z9No35TLCKPxXb5ibr15eVTgK2qFTEwgnqfLYLNOj9O06ZJ7k82n0k6ApELHf7BNRJ
-         lXYTywJyo6+6wmiqTba2WBM+snbYgrHw2MLTs1DUanfwEGD2mBQWw2HoEHS65DUA+Mzh
-         cfKCF2CvaDk+8N2DMLwG5t39VRXfHdNxJqrwb8zLO8cwhtJYczPqMjBHXcs26+ZML+1d
-         nMTlX3bF3xuWy/wmp4NWtJK4jI7EwaOkDi9EBA7mgoE2Jj6aPw5S1epdlLz38TK7iule
-         +EN3BNcstA0TOihEPlIQ9RsZV+kg/R5GGzfcmLgKxAs2wMGTLtqAdEDyi0Fxyas3gyEV
-         BmOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKeW3pJvFOumqS8rPHreay0AVTIqimbDg80lIOWrq/rZDV5g6htKauSCAzbfEOQ00SX49+mfIbgkQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxSnnZKNMQ2z/rY86ffoMgwFf6zSvi8Pw7s17Qe/ulkRxN8FmyM
-	2cP2d3b26OKy1It4EzBoZ1WgviKP26Lbelm/8UnGxaYs0EX7FglLiwhggP9jEOM9pTx63cmk0OX
-	Vyt560ziUp/BfeAcu9D1y33WKm2l1TC00aQ/p36rM
-X-Gm-Gg: ATEYQzy2Gd759a3YOr3Lv27ibiU7xfI/kZMI5AFrO+mgdsp93iihYOtNkDSSfPR7L3E
-	S5Ij3pMGk5RGqf/dY2g1Has/8BgOB85fMT4odvxRP6FqtSwCHIR4bFkSXFVupVex4Kk58VT1Cgb
-	eC66keuuy1RSLC4yWm/ar7kRzq34CG9HA/fqTuL9kNAjPeKE/PmkpUAvEMlrW0knrLddLbb1/ep
-	rtjSwEZDIz6Vt2MEw36wkK4kE/fYyjkxxJ+/c8o4aOVNRCywwCffhHkR3onfYkEYdr7m9ufjruJ
-	gotpjfSUgk4Bwbss1idvmqPDzYCg52KrDQWsuNFFUvLZN09cgYR02tn5XLKQ4X72nUVzAg==
-X-Received: by 2002:a05:6102:c86:b0:602:8894:b770 with SMTP id
- ada2fe7eead31-602aead01admr6510052137.4.1774300525553; Mon, 23 Mar 2026
- 14:15:25 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 23 Mar 2026 14:15:24 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 23 Mar 2026 14:15:24 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <20260317141031.514-11-kalyazin@amazon.com>
-References: <20260317141031.514-1-kalyazin@amazon.com> <20260317141031.514-11-kalyazin@amazon.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4A72236F2
+	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 03:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774322130; cv=none; b=riX7W8oAXeUT2uSbZ3juysRiqrbPsQpdxJgnLf+6QfxIRIiymZ1+HzySVyWDRan9jtP8nWkXGJHh38jlsc1yhr8HZnghV1RMYwiCOVkBA5SNIY5Gcsc4aVndBrnFTyOSoysVd7OZnKfQwGrux4o8yBcjWacE/2nrUb+QiShXMh0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774322130; c=relaxed/simple;
+	bh=9PulvccSPZ5qAmAiTFw7xCH66q4XDgzcFpA7ueFojxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qJIZBB9iXFkWcKIssCWOVjt5yi0xLGpTJVu02CAZMtAAC8CfyHbe5voh4Xf/IoAlTLwE5bbIGD0wQp9qqUbP2kcLgK7pU57TJ/iVlp8CVEFjMS0WBWE7oFmsb3zx69T77sRMxsFsOThWeia5lp1KAZZUrD/5iQa1f7PHYhc+vSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxXcPFAcJpNBAeAA--.20698S3;
+	Tue, 24 Mar 2026 11:15:17 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxXcLCAcJpPOdbAA--.41620S2;
+	Tue, 24 Mar 2026 11:15:14 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Aurelien Jarno <aurel32@debian.org>,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: Fix base address calculation problem in kvm_eiointc_regs_access()
+Date: Tue, 24 Mar 2026 11:15:06 +0800
+Message-Id: <20260324031506.264062-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 23 Mar 2026 14:15:24 -0700
-X-Gm-Features: AQROBzCF2PwLv08LGPIvZtVRv2cQA-zzDMITL8yo-SXZFcfoxiXCsTVqhJQCkhk
-Message-ID: <CAEvNRgGb95C3uRxPy2_Uj7SmTW45hNNdJxi5RR209s5KYcHgBw@mail.gmail.com>
-Subject: Re: [PATCH v11 10/16] KVM: guest_memfd: Add flag to remove from
- direct map
-To: "Kalyazin, Nikita" <kalyazin@amazon.co.uk>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>, 
-	"maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
-	"will@kernel.org" <will@kernel.org>, "seanjc@google.com" <seanjc@google.com>, "tglx@kernel.org" <tglx@kernel.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "vbabka@kernel.org" <vbabka@kernel.org>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
-	"skhan@linuxfoundation.org" <skhan@linuxfoundation.org>, "riel@surriel.com" <riel@surriel.com>, 
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
-	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
-	"coxu@redhat.com" <coxu@redhat.com>, "kevin.brodsky@arm.com" <kevin.brodsky@arm.com>, 
-	"yosry@kernel.org" <yosry@kernel.org>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>, 
-	"maobibo@loongson.cn" <maobibo@loongson.cn>, "tabba@google.com" <tabba@google.com>, 
-	"prsampat@amd.com" <prsampat@amd.com>, "wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>, 
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
-	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
-	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"dev.jain@arm.com" <dev.jain@arm.com>, "gor@linux.ibm.com" <gor@linux.ibm.com>, 
-	"hca@linux.ibm.com" <hca@linux.ibm.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"pjw@kernel.org" <pjw@kernel.org>, 
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
-	"thuth@redhat.com" <thuth@redhat.com>, "wyihan@google.com" <wyihan@google.com>, 
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
-	"Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, 
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "urezki@gmail.com" <urezki@gmail.com>, 
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>, 
-	"gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>, 
-	"jiayuan.chen@shopee.com" <jiayuan.chen@shopee.com>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"osalvador@suse.de" <osalvador@suse.de>, "pavel@kernel.org" <pavel@kernel.org>, 
-	"rafael@kernel.org" <rafael@kernel.org>, "vannapurve@google.com" <vannapurve@google.com>, 
-	"jackmanb@google.com" <jackmanb@google.com>, "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>, 
-	"patrick.roy@linux.dev" <patrick.roy@linux.dev>, "Thomson, Jack" <jackabt@amazon.co.uk>, 
-	"Itazuri, Takahiro" <itazur@amazon.co.uk>, "Manwaring, Derek" <derekmn@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxXcLCAcJpPOdbAA--.41620S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-"Kalyazin, Nikita" <kalyazin@amazon.co.uk> writes:
+In function kvm_eiointc_regs_access(), register base address is caculated
+from array base address plus offset, the offset is absolute value from base
+address. The data type of array base address is u64, it should be converted
+into void * type and then plus the offset.
 
->
-> [...snip...]
->
->  static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
->  {
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
->  	struct folio *folio;
->  	vm_fault_t ret = VM_FAULT_LOCKED;
-> +	int err;
->
->  	if (((loff_t)vmf->pgoff << PAGE_SHIFT) >= i_size_read(inode))
->  		return VM_FAULT_SIGBUS;
-> @@ -418,6 +454,14 @@ static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
->  		folio_mark_uptodate(folio);
->  	}
->
-> +	if (kvm_gmem_no_direct_map(folio_inode(folio))) {
-> +		err = kvm_gmem_folio_zap_direct_map(folio);
-> +		if (err) {
-> +			ret = vmf_error(err);
-> +			goto out_folio;
-> +		}
-> +	}
-> +
->  	vmf->page = folio_file_page(folio, vmf->pgoff);
->
+Cc: <stable@vger.kernel.org>
+Fixes: d3e43a1f34ac ("LoongArch: KVM: Use 64-bit register definition for EIOINTC").
+Reported-by: Aurelien Jarno <aurel32@debian.org>
+Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1131431
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/intc/eiointc.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Sashiko pointed out that kvm_gmem_populate() might try and write to
-direct-map-removed folios, but I think that's handled because populate
-will first try and GUP folios, which is already blocked for
-direct-map-removed folios.
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index d2acb4d09e73..71bd67b57338 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -472,34 +472,34 @@ static int kvm_eiointc_regs_access(struct kvm_device *dev,
+ 	switch (addr) {
+ 	case EIOINTC_NODETYPE_START ... EIOINTC_NODETYPE_END:
+ 		offset = (addr - EIOINTC_NODETYPE_START) / 4;
+-		p = s->nodetype + offset * 4;
++		p = (void *)s->nodetype + offset * 4;
+ 		break;
+ 	case EIOINTC_IPMAP_START ... EIOINTC_IPMAP_END:
+ 		offset = (addr - EIOINTC_IPMAP_START) / 4;
+-		p = &s->ipmap + offset * 4;
++		p = (void *)&s->ipmap + offset * 4;
+ 		break;
+ 	case EIOINTC_ENABLE_START ... EIOINTC_ENABLE_END:
+ 		offset = (addr - EIOINTC_ENABLE_START) / 4;
+-		p = s->enable + offset * 4;
++		p = (void *)s->enable + offset * 4;
+ 		break;
+ 	case EIOINTC_BOUNCE_START ... EIOINTC_BOUNCE_END:
+ 		offset = (addr - EIOINTC_BOUNCE_START) / 4;
+-		p = s->bounce + offset * 4;
++		p = (void *)s->bounce + offset * 4;
+ 		break;
+ 	case EIOINTC_ISR_START ... EIOINTC_ISR_END:
+ 		offset = (addr - EIOINTC_ISR_START) / 4;
+-		p = s->isr + offset * 4;
++		p = (void *)s->isr + offset * 4;
+ 		break;
+ 	case EIOINTC_COREISR_START ... EIOINTC_COREISR_END:
+ 		if (cpu >= s->num_cpu)
+ 			return -EINVAL;
+ 
+ 		offset = (addr - EIOINTC_COREISR_START) / 4;
+-		p = s->coreisr[cpu] + offset * 4;
++		p = (void *)s->coreisr[cpu] + offset * 4;
+ 		break;
+ 	case EIOINTC_COREMAP_START ... EIOINTC_COREMAP_END:
+ 		offset = (addr - EIOINTC_COREMAP_START) / 4;
+-		p = s->coremap + offset * 4;
++		p = (void *)s->coremap + offset * 4;
+ 		break;
+ 	default:
+ 		kvm_err("%s: unknown eiointc register, addr = %d\n", __func__, addr);
 
->  out_folio:
-> @@ -528,6 +572,9 @@ static void kvm_gmem_free_folio(struct folio *folio)
->  	kvm_pfn_t pfn = page_to_pfn(page);
->  	int order = folio_order(folio);
->
-> +	if (kvm_gmem_folio_no_direct_map(folio))
-> +		kvm_gmem_folio_restore_direct_map(folio);
-> +
->  	kvm_arch_gmem_invalidate(pfn, pfn + (1ul << order));
->  }
->
+base-commit: c369299895a591d96745d6492d4888259b004a9e
+-- 
+2.39.3
 
-Sashiko says to invalidate then restore direct map, I think in this case
-it doesn't matter since if the folio needed invalidation, it must be
-private, and the host shouldn't be writing to the private pages anyway.
-
-One benefit of retaining this order (restore, invalidate) is that it
-opens the invalidate hook to possibly do something regarding memory
-contents?
-
-Or perhaps we should just take the suggestion (invalidate, restore) and
-align that invalidate should not touch memory contents.
-
-> @@ -591,6 +638,9 @@ static int __kvm_gmem_create(struct kvm *kvm, loff_t size, u64 flags)
->  	/* Unmovable mappings are supposed to be marked unevictable as well. */
->  	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->
-> +	if (flags & GUEST_MEMFD_FLAG_NO_DIRECT_MAP)
-> +		mapping_set_no_direct_map(inode->i_mapping);
-> +
->  	GMEM_I(inode)->flags = flags;
->
->  	file = alloc_file_pseudo(inode, kvm_gmem_mnt, name, O_RDWR, &kvm_gmem_fops);
-> @@ -803,13 +853,22 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->  	}
->
->  	r = kvm_gmem_prepare_folio(kvm, slot, gfn, folio);
-> +	if (r)
-> +		goto out_unlock;
->
-> +	if (kvm_gmem_no_direct_map(folio_inode(folio))) {
-> +		r = kvm_gmem_folio_zap_direct_map(folio);
-> +		if (r)
-> +			goto out_unlock;
-> +	}
-> +
->
-> [...snip...]
->
-
-Preparing a folio used to involve zeroing, but that has since been
-refactored out, so I believe zapping can come before preparing.
-
-Similar to the above point on invalidation: perhaps we should take the
-suggestion to zap then prepare
-
-+ And align that preparation should not touch memory contents
-+ Avoid needing to undo the preparation on zapping failure (.free_folio
-  is not called on folio_put(), it is only called folio on removal from
-  filemap).
