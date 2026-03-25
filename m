@@ -1,38 +1,38 @@
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EBF2EACEF
-	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 02:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648942D7DF1
+	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 02:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774407470; cv=none; b=r9rblI8VXg8BaEUlifa38U/Tktw6JNailx27L6n05jBnbznYE6KnmYRsXPvk9x9J2gONxb1t0Dd9EPU7Y2HJRY8KjTeclN+QIHq+E9SCRCQQ6u8Sh6ZccvX3iJvFHA6BHBz9arCq8MQG5g3huVAvf6DlYJfnPvej8ufiZplTYls=
+	t=1774407473; cv=none; b=DSMez4BRM6zb8rqlu+lF1SIqWf+S77RsL4IioT4l1zl67t1GUFVZC7wZdUN5N4d//t76hun+ofRsrZ7lP9HkDkYYyq1zjkDi+tLgovm1aIYOijgNa94vIAEgj3fkNp0k6P6yhMiUQRShqA+oSip1Gawr2Csqb6mKIV2NFQJnIKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774407470; c=relaxed/simple;
-	bh=QBavwZW/p9znSX6y6VtnsJRb8P2WU8VAQxUE0PvFgDg=;
+	s=arc-20240116; t=1774407473; c=relaxed/simple;
+	bh=DNdoWnaS9CtSg7NxGcAVzWZ4l5rrpnnF03tB35hq5Io=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L5Lq3Pz8uC4FXoKWCAmXqZE79dkbGAuB/UHte/dNWDfBi/p6TOV5x+lXpAmR10eMmsQOFrz1oAelSI3L4Gbb53GHYaT2+MaJnXNdfUe1f1eCfAJ6fkv/SuxWq9uZpVrkmHq8ZO4HUSnAz2XXBlVawGv2jKZLceV7g3Hkpm1ITDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=jalwOBFF; arc=none smtp.client-ip=113.46.200.216
+	 MIME-Version:Content-Type; b=TfAFQYH5/z6NCHV7U9DYzUG1X6kgCTGiM55sHS52pqk3wa4Wf1XQZtC0mrVD7eOlYvN1RfAUXKkkJknq56Ie8TiMVcqSqsQ8PuqxT+5ErDAt/xIzRw146MOvXmak57i1GVNNrEy8qG+te1x18upOk8h2F47VqCa5GiwhHPVM0v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=xqNJJTRY; arc=none smtp.client-ip=113.46.200.217
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="jalwOBFF"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="xqNJJTRY"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=EiAToEbQc+0QGRueXUNwue4E/1MxF0hiaZRljtmVaoY=;
-	b=jalwOBFFW+a2pGH0Z+95cVOGTVTsjUuAKryDkE7W4vVxmJ/n1pFl1pUjVc7V9yIxPYCTk9xfJ
-	Y0RGYjbLxJYtH8qX/Isxb/NO6uYPnn9dr7wEK0sMKLXdCBvqQSyuGUZchUhzIYnJ5K7kAczAGTb
-	oej9sc6+VmRgvhN6mYT+6Ns=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4fgWf73PPqz1T4gQ;
-	Wed, 25 Mar 2026 10:52:15 +0800 (CST)
+	bh=8E4spcrmYqVzYUlBqOGzHHrelMM+VkOSD8iaO6+byhw=;
+	b=xqNJJTRYyggCzXZzuIVa391GmVhP2M1AywiTzUCVIdevfMWk2W0+G2iNIudjPzgYPiCgaIuhE
+	5THdqWRaQk7mWGN7AJ7Xy8EnMOPizyjjR001GpeKPLFi3V5PkCr2VJzvHZC7VITILAKNTbQjTE4
+	da7qaeuWWHQjW0U1XLO75kc=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4fgWdn6WXHzcb0r;
+	Wed, 25 Mar 2026 10:51:57 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2B1BC4056A;
-	Wed, 25 Mar 2026 10:57:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3FA2840561;
+	Wed, 25 Mar 2026 10:57:49 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Mar
- 2026 10:57:43 +0800
+ 2026 10:57:46 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -59,9 +59,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
-Subject: [PATCH v10 7/8] riscv: kexec: Add support for crashkernel CMA reservation
-Date: Wed, 25 Mar 2026 10:59:03 +0800
-Message-ID: <20260325025904.2811960-8-ruanjinjie@huawei.com>
+Subject: [PATCH v10 8/8] crash: Fix race condition between crash kernel loading and memory hotplug
+Date: Wed, 25 Mar 2026 10:59:04 +0800
+Message-ID: <20260325025904.2811960-9-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260325025904.2811960-1-ruanjinjie@huawei.com>
 References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
@@ -76,105 +76,83 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
-Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-crashkernel= command line option") and commit ab475510e042 ("kdump:
-implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation. This allows the kernel to dynamically allocate
-contiguous memory for crash dumping when needed, rather than permanently
-reserving a fixed region at boot time.
+There is a race condition between the kexec_load() system call
+(crash kernel loading path) and memory hotplug operations that can lead
+to buffer overflow and potential kernel crash.
 
-So extend crashkernel CMA reservation support to riscv. The following
-changes are made to enable CMA reservation:
+During crash_prepare_headers(), the following steps occur:
+1. arch_get_system_nr_ranges() queries current memory ranges from memblock
+2. alloc_cmem() allocates buffer based on queried count
+3. arch_crash_populate_cmem() populates ranges from memblock
 
-- Parse and obtain the CMA reservation size along with other crashkernel
-  parameters.
-- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use, which was
-  already done in of_kexec_alloc_and_setup_fdt().
-- Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which was
-  already done in the crash core.
+If memory hotplug occurs between step 1 and step 3, the number of ranges
+can increase, causing out-of-bounds write when populating cmem->ranges[].
 
-Update kernel-parameters.txt to document CMA support for crashkernel on
-riscv architecture.
+This happens because kexec_load() uses kexec_trylock (atomic_t) while
+memory hotplug uses device_hotplug_lock (mutex), so they don't serialize
+with each other.
 
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+Fix by adding lock_device_hotplug()/unlock_device_hotplug() around the
+critical section in crash_prepare_headers(). The lock is only acquired
+when CONFIG_MEMORY_HOTPLUG is enabled to avoid overhead on systems without
+hotplug support.
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
+Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++--------
- arch/riscv/kernel/machine_kexec_file.c          |  2 +-
- arch/riscv/mm/init.c                            |  5 +++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
+ kernel/crash_core.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index afb3112510f7..3fe5724d6e39 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1121,14 +1121,14 @@ Kernel parameters
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
--			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
--			CMA. This reservation is usable by the first system's
--			userspace memory and kernel movable allocations (memory
--			balloon, zswap). Pages allocated from this memory range
--			will not be included in the vmcore so this should not
--			be used if dumping of userspace memory is intended and
--			it has to be expected that some movable kernel pages
--			may be missing from the dump.
-+			[KNL, X86, ARM64, RISCV, PPC] Reserve additional crash
-+			kernel memory from CMA. This reservation is usable by
-+			the first system's userspace memory and kernel movable
-+			allocations (memory balloon, zswap). Pages allocated
-+			from this memory range will not be included in the vmcore
-+			so this should not be used if dumping of userspace memory
-+			is intended and it has to be expected that some movable
-+			kernel pages may be missing from the dump.
- 
- 			A standard crashkernel reservation, as described above,
- 			is still needed to hold the crash kernel and initrd.
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index 5a91bdfae162..12a6263b01e7 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -46,7 +46,7 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- 
- unsigned int arch_get_system_nr_ranges(void)
- {
--	unsigned int nr_ranges = 2; /* For exclusion of crashkernel region */
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
- 
- 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
- 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 811e03786c56..4cd49afa9077 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1398,7 +1398,7 @@ static inline void setup_vm_final(void)
-  */
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long low_size = 0;
-+	unsigned long long low_size = 0, cma_size = 0;
- 	unsigned long long crash_base, crash_size;
- 	bool high = false;
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 300d44ad5471..f01d03d42c67 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -326,15 +326,25 @@ int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+ 	struct crash_mem *cmem;
  	int ret;
-@@ -1408,11 +1408,12 @@ static void __init arch_reserve_crashkernel(void)
  
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
++	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
++		lock_device_hotplug();
++
+ 	max_nr_ranges = arch_get_system_nr_ranges();
+-	if (!max_nr_ranges)
+-		return -ENOMEM;
++	if (!max_nr_ranges) {
++		ret = -ENOMEM;
++		goto unlock;
++	}
+ 
+ 	cmem = alloc_cmem(max_nr_ranges);
+-	if (!cmem)
+-		return -ENOMEM;
++	if (!cmem) {
++		ret = -ENOMEM;
++		goto unlock;
++	}
+ 
+ 	ret = arch_crash_populate_cmem(cmem);
++	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
++		unlock_device_hotplug();
++
  	if (ret)
- 		return;
+ 		goto out;
  
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
+@@ -355,6 +365,12 @@ int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
+ out:
+ 	kvfree(cmem);
+ 	return ret;
++
++unlock:
++	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
++		unlock_device_hotplug();
++
++	return ret;
  }
  
- void __init paging_init(void)
+ /**
 -- 
 2.34.1
 
