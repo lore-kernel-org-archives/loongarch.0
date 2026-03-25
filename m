@@ -1,100 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C5F4CB5B;
-	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA8639A7F2;
+	Wed, 25 Mar 2026 08:53:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774412075; cv=none; b=RKwkyl2PD8rKYp05npurwgtqA+Ud3UZLklsnh8keOhSKr5WysVvFuGCX3ypNkQ02KPsHLk0Vpowtos4xhedoaj/WvXdIl0yUQq2AqTEZnPhRnTe4AMDWAKbiHZPoxQXEmMsV6YBEm8FsoTR8TlPcvKoRWJ6PIe2rI0SOsCkeNiE=
+	t=1774428813; cv=none; b=ezUQBaLXcN56GRskI6K9zmG0dR0yq7rE/eo+jwGFMyaHlpOeDgLCmrXG8PJnDdxmEhdzhnayHImqazy7CI8o/h9nO+Pn8ocA4k+eXoEceEcHHm4RQt7rb9/JoA7LhaBdkQeA86otTWduBeanlt+KsOp7LeqsNNTgHO2a14BZvME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774412075; c=relaxed/simple;
-	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pGFUZfjjOEIPwpIhRsVc1T8o1RNbKmi7tbxhN/CbU2TBBcXyNZcAduKA/GAq8QGoV86BQtTUUDm3i+7sde0HuT8E3Gx4+9EHQDcM3DmhQKyL/cKa49VUyOPhvST7LAWkPIF9efhowmwymaXBmNQ6L+TDMSsB9xoEZpgEru2alIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRN8ph0p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774428813; c=relaxed/simple;
+	bh=jjBuEWFC0C5Y7B+a0sd2j8L/RIjE1T+l+8+9jmEglRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sddl6B/p9+hhAN3sdgcEwB0sTPQndk/Wqzl93CCQeKJQltW/iUHzihJAyu2nebI6EMi+Epw/AOOueQYxi/KQu+hjeiAbpD5hdAJM0pCNstcwsK40ZQSQaZwZGqUyOeXDN1+iZ4LrkiMkJq2nISn47ZCdN0ZHBCwhAELJQW/Tvws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VgIKSPZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRN8ph0p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C4AC4CEF7;
-	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774412074;
-	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SRN8ph0pe1XZdbFseT7tE70r/KjEUXruc5OYrwNk9RqqxCpNBz3lKttBmjvyR/V+F
-	 LtJrTZ+7anfXtgnic7l5VIoLbzWClqhGy86LYc5jTJ5WiLlspuvWPVcH7tVEo3bTZQ
-	 B3/V2PjFQujB3TmjH/YZDXYjGSvefpMLSF6ujW4kNal6dqlrgdyZy3xe5uuN8qioVt
-	 C5T8kZxf9GojeAa9XddOx6PZakiiMDHaZ25yl5D3ZSoIxAugmHnvVJo6l2b5/Lv/S0
-	 upiARQ+JCWrFKrTEs9313xFN7iKFbUBGQMZ2Z6A7i8ktSdEYDHgVOSA3WjPwRHv5Xc
-	 ZaeMKZnXKgm0Q==
-From: Kees Cook <kees@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Cc: Kees Cook <kees@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset randomisation
-Date: Tue, 24 Mar 2026 21:14:20 -0700
-Message-Id: <177441205756.1333400.7749975219620417508.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
-References: <20260303150840.3789438-1-ryan.roberts@arm.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VgIKSPZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FC7C4CEF7;
+	Wed, 25 Mar 2026 08:53:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1774428812;
+	bh=jjBuEWFC0C5Y7B+a0sd2j8L/RIjE1T+l+8+9jmEglRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VgIKSPZyw4u8+NRiAkCJ/Y7OlderFlBgEzKZVUSw3dz80/YbNzNKdy4R//uYfTCtk
+	 OEh5/QVUZcAGEZE7UPPA7BI1XH63deuFW6+5Vde5VhOFn+ROCCuBwcscbYA2sENZ9C
+	 eX7JxzMW1HpkfDJhRCBfeZT9EM9J0OjvbNNbpiWM=
+Date: Wed, 25 Mar 2026 09:53:09 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: loongarch@lists.linux.dev, arnd@arndb.de, jiaxun.yang@flygoat.com,
+	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, stable <stable@kernel.org>
+Subject: Re: [PATCH] LoongArch: add spectre boundry for syscall dispatch table
+Message-ID: <2026032541-rental-sizably-48bd@gregkh>
+References: <2026032456-crinkle-washable-96ea@gregkh>
+ <f59de81b411d1a48f9f0fa4f8c9c553a92076817.camel@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f59de81b411d1a48f9f0fa4f8c9c553a92076817.camel@xry111.site>
 
-On Tue, 03 Mar 2026 15:08:37 +0000, Ryan Roberts wrote:
-> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
-> good to get some linux-next testing.]
+On Wed, Mar 25, 2026 at 11:26:29AM +0800, Xi Ruoyao wrote:
+> On Tue, 2026-03-24 at 17:30 +0100, Greg Kroah-Hartman wrote:
+> > The LoongArch syscall number is directly controlled by userspace, but
+> > does not have a array_index_nospec() boundry to prevent access past
+> > the
+> > syscall function pointer tables.
+> > 
+> > Cc: Huacai Chen <chenhuacai@kernel.org>
+> > Cc: WANG Xuerui <kernel@xen0n.name>
+> > Assisted-by: gkh_clanker_2000
+> > Cc: stable <stable@kernel.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> > My scripts caught this as I think LoongArch is vulnerable to the
 > 
-> Hi All,
-> 
-> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
-> and, on arm64 at least, the performance is poor. This series attempts to fix
-> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
-> proposes a performance improvement approach.
-> 
-> [...]
+> There's no evidence.  The kernel currently report all LoongArch
+> processors invulnerable to spectre V1 via cpuinfo.
 
-Sorry for the delay! Applied to for-next/hardening, thanks. :)
+Where is that?  In the sysfs files, or in the actual silicon testing?
 
-[1/2] randomize_kstack: Maintain kstack_offset per task
-      https://git.kernel.org/kees/c/37beb4256016
-[2/2] randomize_kstack: Unify random source across arches
-      https://git.kernel.org/kees/c/a96ef5848cb0
+> So NAK unless there's a reproducer of spectre V1 on LoongArch.  If so
+> we'd also need to adjust the cpuinfo output.
 
-Take care,
+I really thought this cpu was vulnerable to this, but if the companies
+say it isn't, then great, but reports like this:
+	https://cc-sw.com/chinese-loongarch-architecture-evaluation-part-3-of-3/
+say that the silicon is vulnerable.  So, which is it?
 
--- 
-Kees Cook
+confused,
 
+greg k-h
