@@ -1,76 +1,100 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866F1218845
-	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 03:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C5F4CB5B;
+	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774409205; cv=none; b=G8lcnARpYK2wkOTQQc4HjNVIV9hG/DAXztElU1m4CKvC3GZTKCDshjmnxknNnCzUXYttz+XBkST7sieWLc3N6hVMtft+c4/iOwZ4/CnuuoBCjy8tHR26BFPoCKXVB90mbXDrjYxs86MogaRvdw5ZgN72emliYaali2Yl+uWZtIQ=
+	t=1774412075; cv=none; b=RKwkyl2PD8rKYp05npurwgtqA+Ud3UZLklsnh8keOhSKr5WysVvFuGCX3ypNkQ02KPsHLk0Vpowtos4xhedoaj/WvXdIl0yUQq2AqTEZnPhRnTe4AMDWAKbiHZPoxQXEmMsV6YBEm8FsoTR8TlPcvKoRWJ6PIe2rI0SOsCkeNiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774409205; c=relaxed/simple;
-	bh=6bAVPZN1mZgsk2TdUJZeP9VpieVDxb9weRrdrNnebDI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lD8lT1NBUo97nlhXCUpKPiCo2iWsPuF2RSyxjw/DTUkQFZyZXWORPYkDPW721qQ7WdIQtX3fqYc9QMDHM9CPg0fYlECvGlgPnERDVVFH0vupe1wrYl38EMhi9Z3WVWd/YKvDzfcFO4UMBEUtAo+z4njYWM2fsypgnqcjpvz+gUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=bMHbPdys; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1774412075; c=relaxed/simple;
+	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pGFUZfjjOEIPwpIhRsVc1T8o1RNbKmi7tbxhN/CbU2TBBcXyNZcAduKA/GAq8QGoV86BQtTUUDm3i+7sde0HuT8E3Gx4+9EHQDcM3DmhQKyL/cKa49VUyOPhvST7LAWkPIF9efhowmwymaXBmNQ6L+TDMSsB9xoEZpgEru2alIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRN8ph0p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="bMHbPdys"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1774409196;
-	bh=zZo58Go2tAecbMRj3oz2F/GuCV3eMntZ3HaMMfS6Z/M=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=bMHbPdysRYSWlloHqwdsmY3SQKZauvck6S7Dv6adhMlkIzg9xnOdsw9C4ofoavqIk
-	 O92kCi/sf96q65ejlOYcwVcxHeN2sBvQH3djl/6Wm6VcIzPe7Z0H48U9/XW5A1ByNZ
-	 bGpJXSp5AA3OOnHM+eNEF1iEzBatThRpwyV0PIeE=
-Received: from [IPv6:240e:469:20a:7e7b:f432:5571:7278:2f40] (unknown [IPv6:240e:469:20a:7e7b:f432:5571:7278:2f40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D2D371A43D9;
-	Tue, 24 Mar 2026 23:26:33 -0400 (EDT)
-Message-ID: <f59de81b411d1a48f9f0fa4f8c9c553a92076817.camel@xry111.site>
-Subject: Re: [PATCH] LoongArch: add spectre boundry for syscall dispatch
- table
-From: Xi Ruoyao <xry111@xry111.site>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	loongarch@lists.linux.dev
-Cc: arnd@arndb.de, jiaxun.yang@flygoat.com, linux-kernel@vger.kernel.org, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- stable <stable@kernel.org>
-Date: Wed, 25 Mar 2026 11:26:29 +0800
-In-Reply-To: <2026032456-crinkle-washable-96ea@gregkh>
-References: <2026032456-crinkle-washable-96ea@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRN8ph0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C4AC4CEF7;
+	Wed, 25 Mar 2026 04:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774412074;
+	bh=DjQNBELJeTo8/+IvhIZ195gGXomNRX+U9eI4gj1CDvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SRN8ph0pe1XZdbFseT7tE70r/KjEUXruc5OYrwNk9RqqxCpNBz3lKttBmjvyR/V+F
+	 LtJrTZ+7anfXtgnic7l5VIoLbzWClqhGy86LYc5jTJ5WiLlspuvWPVcH7tVEo3bTZQ
+	 B3/V2PjFQujB3TmjH/YZDXYjGSvefpMLSF6ujW4kNal6dqlrgdyZy3xe5uuN8qioVt
+	 C5T8kZxf9GojeAa9XddOx6PZakiiMDHaZ25yl5D3ZSoIxAugmHnvVJo6l2b5/Lv/S0
+	 upiARQ+JCWrFKrTEs9313xFN7iKFbUBGQMZ2Z6A7i8ktSdEYDHgVOSA3WjPwRHv5Xc
+	 ZaeMKZnXKgm0Q==
+From: Kees Cook <kees@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset randomisation
+Date: Tue, 24 Mar 2026 21:14:20 -0700
+Message-Id: <177441205756.1333400.7749975219620417508.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
+References: <20260303150840.3789438-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-03-24 at 17:30 +0100, Greg Kroah-Hartman wrote:
-> The LoongArch syscall number is directly controlled by userspace, but
-> does not have a array_index_nospec() boundry to prevent access past
-> the
-> syscall function pointer tables.
->=20
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: WANG Xuerui <kernel@xen0n.name>
-> Assisted-by: gkh_clanker_2000
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> My scripts caught this as I think LoongArch is vulnerable to the
+On Tue, 03 Mar 2026 15:08:37 +0000, Ryan Roberts wrote:
+> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+> good to get some linux-next testing.]
+> 
+> Hi All,
+> 
+> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> and, on arm64 at least, the performance is poor. This series attempts to fix
+> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+> proposes a performance improvement approach.
+> 
+> [...]
 
-There's no evidence.  The kernel currently report all LoongArch
-processors invulnerable to spectre V1 via cpuinfo.
+Sorry for the delay! Applied to for-next/hardening, thanks. :)
 
-So NAK unless there's a reproducer of spectre V1 on LoongArch.  If so
-we'd also need to adjust the cpuinfo output.
+[1/2] randomize_kstack: Maintain kstack_offset per task
+      https://git.kernel.org/kees/c/37beb4256016
+[2/2] randomize_kstack: Unify random source across arches
+      https://git.kernel.org/kees/c/a96ef5848cb0
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+Take care,
+
+-- 
+Kees Cook
+
