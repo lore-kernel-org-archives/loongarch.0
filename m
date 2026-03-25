@@ -1,206 +1,126 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AA7270EDF
-	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 01:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77654CA5A
+	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 02:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774403689; cv=none; b=udY4GbPfNOckKwwwttx0jnzevYm0AqvmWEXEhu9ZKL+1EoH2jlc6aUkwfC0nPzz1S+yYO4dvhk8DwcchY074yS7bxpcBmTtEUThMGUouAAH/2zBbk4BrpJPFcyZYLJkadsbsI9uYMQcd7GhxnPG76nqKO4IyO7o2po88HIEwZFs=
+	t=1774407452; cv=none; b=ErLFukSVW+ZvsbvOB4UAwKZOVU1pLVSzvbbrX2oqnBA5LUJ1TBdPVCZOWi8C/Mi65PnS55cjJnG5wwpKV1LuilZZ1XsVaY0qEF3O26uPG3GV5mYtaA0dwtmYfIF48aDDFi77Jfti7NzjCRMN7nRe7KiLwblQupSXpdU5U+2vWZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774403689; c=relaxed/simple;
-	bh=8WDJIl5koT0xHhXStj1ZYPgZEEfG0k5hGGAeiv0JGk0=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=QAk7vb2aw65CANTPG9u9axlXuiGu/llPCi0i4coZ3T877xYPfKOHIkwn+65U7V0xgn7xP3+QWSaTpIz0/46V6zXHjdjwC1LqarhR5D/20jZZ06POBjQ7AXG9VjYWzd3SMvsZ9UMq6xBFLRLUaMnAZ6iDPWCaOOiFrC2pwPzjXPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxMMBjQMNpGmweAA--.27958S3;
-	Wed, 25 Mar 2026 09:54:43 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx_8JhQMNp5LJcAA--.46288S3;
-	Wed, 25 Mar 2026 09:54:42 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Set max used FPU type with FPU exception
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260323034034.3465072-1-maobibo@loongson.cn>
-Message-ID: <d539cf62-c541-ba2e-7810-38ed85c12a62@loongson.cn>
-Date: Wed, 25 Mar 2026 09:51:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1774407452; c=relaxed/simple;
+	bh=fDiLZ4GmFEZNtaerBgkIiFGyWQOXGVmaW8bqgJA9x70=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P+2qGUlhVmRTPmogo4pufdW/5rp/mfO9nRm9Y0G+guTnoTncb0T2HlcZPcRXzzlC1EDpFBtWMNRo5woC4Dsh4n3lMGKgB0lCMWQ5vFb0hJhIvqZi9LHV9JwUvnUgwqeu2x8SoD4Y+hgHuyQ7C2cOOhMoXRiQaEi2Xanmy124XXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=iCkzBLrS; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="iCkzBLrS"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=2Q4CR3Fphr0hE5VGI6zMiTLsP2xzExEfm5Tbf2JZqn0=;
+	b=iCkzBLrS46T0TadfXUFsQTSKmzG2UN5/zKl9tguYeg7ZNmH34UQz5V17ksKG3wutq/KYbLE8l
+	18+V8pRlk8XEab+DlLEEGZEIWehVudZyjDDzzeazOC+s0Y4WuiilGENU3oYBsJJ0XMaFzzVl9rx
+	+NlHjrR5SLPC6aIoZww8y/Y=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fgWd46sQ8zmVXk;
+	Wed, 25 Mar 2026 10:51:20 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id C369740539;
+	Wed, 25 Mar 2026 10:57:27 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Mar
+ 2026 10:57:24 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
+	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <ruanjinjie@huawei.com>,
+	<rppt@kernel.org>, <ardb@kernel.org>, <leitao@debian.org>, <osandov@fb.com>,
+	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
+	<jbohac@suse.cz>, <fuqiang.wang@easystack.cn>, <guoren@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>, <james.morse@arm.com>,
+	<takahiro.akashi@linaro.org>, <lizhengyu3@huawei.com>, <x86@kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
+Subject: [PATCH v10 1/8] riscv: kexec_file: Fix crashk_low_res not exclude bug
+Date: Wed, 25 Mar 2026 10:58:57 +0800
+Message-ID: <20260325025904.2811960-2-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260325025904.2811960-1-ruanjinjie@huawei.com>
+References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260323034034.3465072-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx_8JhQMNp5LJcAA--.46288S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Wr4xWw1UJw17Aw15GF4kGrX_yoW7XFW7pF
-	Wxuw4DZa1rGF1Skw17Kw1q9r1jvrZ7WryxXFyava4fGrn0q34rZr40kr98uF98Jw1Fya92
-	qFyrury5Cay8JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-another more proactive method is to enabled FPU type with max VM 
-supported, rather than ever used.
+As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
+and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+crashkres_low.") for arm64, while implementing crashkernel=X,[high,low],
+riscv should have excluded the "crashk_low_res" reserved ranges from
+the crash kernel memory to prevent them from being exported through
+/proc/vmcore, and the exclusion would need an extra crash_mem range.
 
-It is more direct and simpler, FPU none --> LASX, no middle state FPU 
---> LASX or LSX --> LASX.
+Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=X,[high,low]")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Regards
-Bibo Mao
-
-On 2026/3/23 上午11:40, Bibo Mao wrote:
-> With FPU save and restore flow, the cost is the same with different
-> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
-> 
-> Here is to enable FPU with max used type, for example if application
-> ever uses LASX instrction, enable FPU with LASX type even with FPU
-> exeception. So it can avoid possible LSX/LASX exception in future.
-> 
-> With context switch microbench which may touch FPU and LASX, there is 9%
-> improvement when halt_poll_ns is disabled. The command is
-> "./context --test=pipe" and source code located at:
->    https://github.com/bibo-mao/context_switch/blob/main/context.c
-> 
-> Original     Wih patch      improvement
-> 75232        82440          9%
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/include/asm/kvm_host.h |  1 +
->   arch/loongarch/kvm/exit.c             |  6 +++---
->   arch/loongarch/kvm/vcpu.c             | 25 ++++++++++---------------
->   3 files changed, 14 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 19eb5e5c3984..7d739fd5cda6 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -203,6 +203,7 @@ struct kvm_vcpu_arch {
->   	/* Which auxiliary state is loaded (KVM_LARCH_*) */
->   	unsigned int aux_inuse;
->   	unsigned int aux_ldtype;
-> +	unsigned int aux_used;
->   
->   	/* FPU state */
->   	struct loongarch_fpu fpu FPU_ALIGN;
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index da0ad89f2eb7..da8e330c8b20 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -754,7 +754,7 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
->   		return RESUME_HOST;
->   	}
->   
-> -	vcpu->arch.aux_ldtype = KVM_LARCH_FPU;
-> +	vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_FPU;
->   	kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
->   
->   	return RESUME_GUEST;
-> @@ -796,7 +796,7 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
->   	if (!kvm_guest_has_lsx(&vcpu->arch))
->   		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
->   	else {
-> -		vcpu->arch.aux_ldtype = KVM_LARCH_LSX;
-> +		vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_LSX;
->   		kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
->   	}
->   
-> @@ -816,7 +816,7 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
->   	if (!kvm_guest_has_lasx(&vcpu->arch))
->   		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
->   	else {
-> -		vcpu->arch.aux_ldtype = KVM_LARCH_LASX;
-> +		vcpu->arch.aux_ldtype = vcpu->arch.aux_used | KVM_LARCH_LASX;
->   		kvm_make_request(KVM_REQ_AUX_LOAD, vcpu);
->   	}
->   
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 8810fcd7e26e..0a111c74a330 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -239,23 +239,14 @@ static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
->   		}
->   
->   	if (kvm_check_request(KVM_REQ_AUX_LOAD, vcpu)) {
-> -		switch (vcpu->arch.aux_ldtype) {
-> -		case KVM_LARCH_FPU:
-> -			kvm_own_fpu(vcpu);
-> -			break;
-> -		case KVM_LARCH_LSX:
-> -			kvm_own_lsx(vcpu);
-> -			break;
-> -		case KVM_LARCH_LASX:
-> +		if (vcpu->arch.aux_ldtype & KVM_LARCH_LASX)
->   			kvm_own_lasx(vcpu);
-> -			break;
-> -		case KVM_LARCH_LBT:
-> +		else if (vcpu->arch.aux_ldtype & KVM_LARCH_LSX)
-> +			kvm_own_lsx(vcpu);
-> +		else if (vcpu->arch.aux_ldtype & KVM_LARCH_FPU)
-> +			kvm_own_fpu(vcpu);
-> +		else if (vcpu->arch.aux_ldtype == KVM_LARCH_LBT)
->   			kvm_own_lbt(vcpu);
-> -			break;
-> -		default:
-> -			break;
-> -		}
-> -
->   		vcpu->arch.aux_ldtype = 0;
->   	}
->   }
-> @@ -956,6 +947,7 @@ static int kvm_set_one_reg(struct kvm_vcpu *vcpu,
->   			break;
->   		case KVM_REG_LOONGARCH_VCPU_RESET:
->   			vcpu->arch.st.guest_addr = 0;
-> +			vcpu->arch.aux_used = 0;
->   			memset(&vcpu->arch.irq_pending, 0, sizeof(vcpu->arch.irq_pending));
->   			memset(&vcpu->arch.irq_clear, 0, sizeof(vcpu->arch.irq_clear));
->   
-> @@ -1384,6 +1376,7 @@ void kvm_own_fpu(struct kvm_vcpu *vcpu)
->   
->   	kvm_restore_fpu(&vcpu->arch.fpu);
->   	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
-> +	vcpu->arch.aux_used |= KVM_LARCH_FPU;
->   	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_FPU);
->   }
->   
-> @@ -1412,6 +1405,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
->   
->   	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
->   	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
-> +	vcpu->arch.aux_used |= KVM_LARCH_LSX | KVM_LARCH_FPU;
->   
->   	return 0;
->   }
-> @@ -1442,6 +1436,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
->   
->   	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
->   	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
-> +	vcpu->arch.aux_used |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
->   
->   	return 0;
->   }
-> 
-> base-commit: c369299895a591d96745d6492d4888259b004a9e
-> 
+diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+index 54e2d9552e93..3f7766057cac 100644
+--- a/arch/riscv/kernel/machine_kexec_file.c
++++ b/arch/riscv/kernel/machine_kexec_file.c
+@@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	unsigned int nr_ranges;
+ 	int ret;
+ 
+-	nr_ranges = 1; /* For exclusion of crashkernel region */
++	nr_ranges = 2; /* For exclusion of crashkernel region */
+ 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+ 
+ 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+@@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 
+ 	/* Exclude crashkernel region */
+ 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+-	if (!ret)
+-		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++	if (ret)
++		goto out;
++
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			goto out;
++	}
++
++	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+ 
+ out:
+ 	kfree(cmem);
+-- 
+2.34.1
 
