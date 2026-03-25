@@ -1,145 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE253CCFD1;
-	Wed, 25 Mar 2026 11:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257293D0912;
+	Wed, 25 Mar 2026 11:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774438335; cv=none; b=Tk4iWPaY3VOyLg7IJYq/0Lz81+jTwh18EwSHwsEoJ+1UkCd/Uw64d/31xiiToW7oJEOUF08Ju8aSzLFN7AgEuq7tp27ODhIr+9b6a1oki897s1zMX1nMPRQ4ncWBJug4/Db3a9qQUkaJr8kHt9Gprl6f1ViFqmyiOfglfJyOfpw=
+	t=1774438930; cv=none; b=ggfIw2yKVHf/9vyjAInqgB7C48X4HkCjII2MzCjOG+r2jskWbrY/CYuxX7Oe/VAOa8aqLjsQijTIhHWjwEczMn7RoHGbGWCppsz/+Wpy6dS/xe13i3lELJiU0kbw+M15LpQHZmc/0RJ/fwd0aM8qcRsx59Znxu5s5BetBBEahIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774438335; c=relaxed/simple;
-	bh=UHl6aIxvtuzZoFfPKn0m6HqE+Ix+jQLwOiO6mcxm7gc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r/MHjWRkdtB3HlJsVGzTjCsQ2nTkPwdbSRzxdz+/6YRgx4EsoL9qM2Gjm1sloHJbFjAN2dwVxjHrmFln+SOv4o37S8fILinUaiO0t6qSZb4/Y1+fGPRk440hgLd+MEs23SeXxLkcIg+OUsWsJWTLnzHy7cBnd7i8fDbVzWqen5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9xj+yQr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774438930; c=relaxed/simple;
+	bh=kh/jN1CdwNi69t1+cwpmuuAb4JNtpOguKFh6kGpw2Uc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOp0WyZhlnzaTmcsslp7EhHAoyYEX7iT2kvFl1oupQww659X7pxfOFQ530Y3r92bRJikEoszWr9FrHNGRhRiNRdb7c52g8nPvoU3uK5tk/E+tO9Q8/aQF01ZXdPTdc5A5cG2+ctUjr7ohyDjC9gGUQHq9k9dcfcEN1+aY1o3ck0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJcFw+Jv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9xj+yQr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35258C2BC9E;
-	Wed, 25 Mar 2026 11:31:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJcFw+Jv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A515C2BC9E;
+	Wed, 25 Mar 2026 11:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774438335;
-	bh=UHl6aIxvtuzZoFfPKn0m6HqE+Ix+jQLwOiO6mcxm7gc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p9xj+yQrGXkpoAF0fY9H5IaPcoHqI+j6qFDwyvc4yO1C747biO/reuY8t3d94mmup
-	 yQMdUZgPvj2v9edGgjvwa44Pe6FwmdZ43t/G8cYYldfmo7YsAt7eQsYUOQchWN8tEp
-	 lxT4aSMwTa3Lg9zV/TmzInC2IVkU8yAXXMuWflmPLvFoKuR5BI2SX5CUo5rJVYT1a9
-	 QJSXMoguTPIulqY0xz7WbsLHtpKTLSiyneymYrRj8U6WWUrJxGfwFv6fjWC6LeaTQu
-	 meTzpjdQXm6htU8OLApZ7jlovVUK4NVBzdOcUYZm4Uly3jpcZL4fYc0zooZuxOTQqt
-	 7cnUszMPYt6sQ==
-Message-ID: <d7ba53bd-e484-4ea1-b90b-e44321eef4c3@kernel.org>
-Date: Wed, 25 Mar 2026 12:31:51 +0100
+	s=k20201202; t=1774438929;
+	bh=kh/jN1CdwNi69t1+cwpmuuAb4JNtpOguKFh6kGpw2Uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HJcFw+JvdsUBf0RVDXtcG5Y6yVzGc3mFiYDZXTiyu2rmomGVGatjk8TOdhfZpxVVy
+	 AKcah/k9lznxdVfZ8G1itUwWMCPLzrPHKaNj+FxPdcfpbsJEAs0fY/2N5gdaBUO/On
+	 8aRyzkIuZW5/RfTBhnMOEpBI6YO8Tpp4sbzBKHqfD5Y0yXLG9k12jHUj6VtXGJtdp2
+	 QIwFhmyqCLMQ1cFFR0A93j1JkO2kzOi8GUsqZ6c/rKZ0QesWOm0liC48Cq1piVGDtG
+	 DCUQ+0T96fgGNhtEa24bPgoaTzfNfjAgRjwZ+3y+vY9pxPXIoKfvguZt0ugAMuA1l5
+	 x6qtw0SslL60A==
+Date: Wed, 25 Mar 2026 12:42:06 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+Message-ID: <20260325-qualified-hairy-rattlesnake-b1ffe1@quoll>
+References: <20260325011852.19079-1-wanghongliang@loongson.cn>
+ <20260325011852.19079-2-wanghongliang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] arm64: defconfig: remove obsolete assignment to
- SLIM_QCOM_CTRL
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Alexandre Gonzalo <alexandre.gonzalo@arm.com>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-sh@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev,
- linux-renesas-soc@vger.kernel.org, linux-parisc@vger.kernel.org,
- openbmc@lists.ozlabs.org, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nsc@kernel.org>, Mikko Rapeli <mikko.rapeli@linaro.org>,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Aaro Koskinen <aaro.koskinen@iki.fi>,
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>,
- Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Pablo Neira Ayuso <pablo@netfilter.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Frank Li <Frank.Li@nxp.com>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
- =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
- Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>,
- Heiko Stuebner <heiko@sntech.de>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Mark Brown <broonie@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Guenter Roeck <linux@roeck-us.net>,
- Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Anna Schumaker <anna.schumaker@oracle.com>
-References: <20260317-arm_defconf_cleanup-v1-0-8eecb7fdd24d@kernel.org>
- <20260317-arm_defconf_cleanup-v1-9-8eecb7fdd24d@kernel.org>
- <9545b66c-f223-48a3-96fe-c906d2307654@kernel.org>
-From: "Vincent Mailhol (Arm)" <mailhol@kernel.org>
-Content-Language: en-US
-In-Reply-To: <9545b66c-f223-48a3-96fe-c906d2307654@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260325011852.19079-2-wanghongliang@loongson.cn>
 
-On 3/17/26 12:35, Krzysztof Kozlowski wrote:
-> On 17/03/2026 10:13, Vincent Mailhol (Arm) wrote:
->> The Qcom Slimbus controller driver is not in the kernel tree
->> anymore. Clean-up the leftover reference to CONFIG_SLIM_QCOM_CTRL
->> which was left in the defconfig.
->>
->> Fixes: 7cbba32a2d62 ("slimbus: qcom: remove unused qcom controller driver")
->> Signed-off-by: Vincent Mailhol (Arm) <mailhol@kernel.org>
->> ---
->>  arch/arm64/configs/defconfig | 1 -
->>  1 file changed, 1 deletion(-)
+On Wed, Mar 25, 2026 at 09:18:51AM +0800, Hongliang Wang wrote:
+> From: wanghongliang <wanghongliang@loongson.cn>
 > 
-> https://lore.kernel.org/all/20251223140645.3545658-1-mikko.rapeli@linaro.org/
-
-I will add that this was initially reported by Mikko.
-
-> I even asked there to send it to qcom maintainers :/
+> Add clock-input and clock-div properties.
 > 
-> Exactly that case also encouraged me to document this, since we do not
-> know how to fix get_maintainers. See commit
-> 6efe5322f060099c8bc51aaee83b857394e42dd5
-I read the thread in which you posted that patch. Thanks for updating
-the documentation, but as people anticipated, as long as the tool
-doesn't do the right thing, there will be people like me who will mess
-up the recipient list.
+> clock-input describes the input clock of i2c controller.
 
-Anyway, sorry for that.
+No, it does not.
 
 
-Yours sincerely,
-Vincent Mailhol
+> clock-div describes the clock divisor of the input clock
+> of i2c controller.
 
+No, it does not.
+
+Write proper explanations, instead of justyfing your code with
+tautology.
+
+> 
+> Prcescale = (clock-input * 10) / (clock-div * t->bus_freq_hz) - 1
+> 
+> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> ---
+>  .../devicetree/bindings/i2c/loongson,ls2x-i2c.yaml  | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> index 67882ec6e06a..4659d7012bce 100644
+> --- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> @@ -24,6 +24,16 @@ properties:
+>    interrupts:
+>      maxItems: 1
+>  
+> +  clock-input:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Describes the input clock of i2c controller in HZ.
+
+"clocks" property describes the clock input. And it is not in Hz (not
+HZ! It is coming from a person's name) but phandle already defined.
+
+> +
+> +  clock-div:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Describes the divisor of the input clock of i2c controller.
+
+Use clock framework.
+
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -40,6 +50,9 @@ examples:
+>          reg = <0x1fe21000 0x8>;
+>          interrupt-parent = <&extioiic>;
+>          interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
+> +        clock-frequency = <100000>;
+> +        clock-input = <100000000>;
+> +        clock-div = <40>;
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>  
+> -- 
+> 2.47.2
+> 
