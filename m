@@ -1,104 +1,89 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46CB3EE1C8
-	for <loongarch@lists.linux.dev>; Tue, 24 Mar 2026 16:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774371367; cv=pass; b=XRsaHrzdKQyU2ATBk7EJRJ4CZqqwCWiSPZqzVr31NBkimaCRp2/OEMtaMayPCwY/h38mQHwKDGtvD1cSP2W9u4wbvlNiLYw29zKbcG5iKx0kZNdxTDk0KLoNodvjd8R3w3pbiiVF7L7v3t0X6xr8wfOigyMEr40NXmKOUSRkTug=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774371367; c=relaxed/simple;
-	bh=ce5KgZpNqQXpdfz+fCZfMY2AY+7fq0BiWHSfcjJHws0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YzsEqc+RSm8tMGWeRtqY3uHIwFgLldM2cPqExitvJoZOg0/S9r2UqplytMLj/joSYLfht+/Kd3n73zjN2gnJDLSjm0H+0rVPrrvJ3TK2NRQ7ItXqiPb/4lDSnMfd9rYnty5vl6RafJx2mIqOmNaNwRzDU9b0mfmuYNRe0uBUJIc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=T+rLzfT6; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="T+rLzfT6"
-ARC-Seal: i=1; a=rsa-sha256; t=1774371363; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=WDaP5f4TUhtcoSFuDnk3D3GgbpPqY3U0w/BSQBhwQMxJoQn2FPNITKn+oKydoBn+MGjHNXcfrowNjya/Us6Ehb6c4syEyFXNTKRenPDltf3RAch6pEOBDUa6brD4myndBQEFFVWen0hoYXpnbaGyyKtJeVbAaKSte1ONTaaHvkQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1774371363; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Jiy7RO9txASLPqZYKrGArRewWy+3t2WyQyeCTuVmXy4=; 
-	b=apLOPBX6Wp9f1EaqyKjyBYRazZdqSmGQGIqvIJ125nOyFnZYydxZ9USnkO1FeFOzS4O8D0VdJ8Ul5apRTXH11rOCkPF/VgYHzE6jUHCq0Q/ctJ6+QEPoe/mBcr5R0GmEJiqeZgC1LBHw7GwjBk/D6smJh1TmqT92ueyvXjVfffo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ziyao.cc;
-	spf=pass  smtp.mailfrom=me@ziyao.cc;
-	dmarc=pass header.from=<me@ziyao.cc>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774371363;
-	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=Jiy7RO9txASLPqZYKrGArRewWy+3t2WyQyeCTuVmXy4=;
-	b=T+rLzfT6sCf/pqDn1dxCrg3R1bNkfSReYXzi6M+pmTImhA87l+LmTyvTFzOlRiUH
-	wQgGyLTF1yXAWy0KWb4NBS3Ks7X7WhYc0E1PNn8XK9JYG5APTkcQ3JTIJC/cKXIQp+1
-	wmAvh2lUPtu33ypCQ3XRNSH6bzNrh48esF697qik=
-Received: by mx.zohomail.com with SMTPS id 1774371361201648.8428770573439;
-	Tue, 24 Mar 2026 09:56:01 -0700 (PDT)
-Date: Tue, 24 Mar 2026 16:55:40 +0000
-From: Yao Zi <me@ziyao.cc>
-To: wjjsn <wjjsn@qq.com>, Huacai Chen <chenhuacai@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	kernel@xen0n.name, devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-	wjjsn <2858482031@qq.com>
-Subject: Re: [PATCH v5 0/2] Add Loongson-2K0300 processor support
-Message-ID: <acLCDL_nJom8AzjK@pie>
-References: <tencent_325FB1D2C600CD55E367332EC453E5A64B09@qq.com>
- <ab_iF2hjZRfp16HP@pie>
- <CAAhV-H7FZ65D9mHgW8_-_QiZ2Kv2cxVo5P72AJhc3JptviFpNA@mail.gmail.com>
- <tencent_CA7176E8823B957F1AEB15254D17904D5505@qq.com>
- <acCoo_ZrTmZGZH5d@pie>
- <tencent_414FBFBEE2A4510232AB52CE665C04A6C20A@qq.com>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC844202C48
+	for <loongarch@lists.linux.dev>; Wed, 25 Mar 2026 01:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774401551; cv=none; b=oM78Gme8n0w30CWi0JJF6jZ1amzyWmnp8fWDHx+Y/2s5SyWThbxkyRzgvVun0pee4VQ55E2Z1+eYHxv75ZpO/9nOaSkjqPVH6RMY9TsQxyo66N6YNc6NTaaHIE5kP8vLLrbJank6//582zVkey0BoYZmn7ArHf1ov5HPk7eSy80=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774401551; c=relaxed/simple;
+	bh=xP0nkKINC3/gyblFT29SEm+ETNn3fGaYihFyUg+2H7E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K7w0R42HkZIqZKadRU9tIt/EwQt1dOHcN5P7gEmw8efdL/GKgR4qD8QRP3iWpdw4w18r4xnyVMzbYsF7gIJ/YDAtpG+2AjSQYfm1rlhP7+QTKqtH2O3uqcemw6Oox6ktHSmF4xVqOLUp2ikpmYv23EAVgMD00lrl8y4D1GGtlsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8BxHMMJOMNpumkeAA--.21002S3;
+	Wed, 25 Mar 2026 09:19:06 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJBxLMIIOMNpi6xcAA--.44576S2;
+	Wed, 25 Mar 2026 09:19:04 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Cc: linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v2 0/2] i2c: ls2x: Add clock- related properties and parsing
+Date: Wed, 25 Mar 2026 09:18:50 +0800
+Message-Id: <20260325011852.19079-1-wanghongliang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_414FBFBEE2A4510232AB52CE665C04A6C20A@qq.com>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxLMIIOMNpi6xcAA--.44576S2
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GrWDKF47GF4xGr4kuw1Utwc_yoWDGrc_Z3
+	4vk34kJ3s2yFZagF9Fqr4fAr90v3yUGryUAF15ArySkFy3Gw15CF9Fqr98Xr18JF42g3s5
+	Kwn2kF1xA3W7CosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxV
+	WUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8VwZ7UU
+	UUU==
 
-On Tue, Mar 24, 2026 at 11:09:16PM +0800, wjjsn wrote:
-> On 3/23/26 10:42, Yao Zi wrote:
-> > On Mon, Mar 23, 2026 at 12:33:31AM +0800, wjjsn wrote:
+From: wanghongliang <wanghongliang@loongson.cn>
 
-...
+Hi all,
 
-> > >    the clk_apb_gate will
-> > >    turn off by kernel while booting,though 16100000.serial is using
-> > 
-> > This is unlikely an issue in the clock driver, but rather the consumer
-> > is doing something wrong, though I haven't seen similar issues when
-> > working on the clock driver.
-> > 
-> > Please try booting the kernel with clk_ignore_unused, and check
-> > /sys/kernel/debug/clk/clk_summary to see whether the serial correctly
-> > acquires the apb gate clock. If not, one (and the most possible) reason
-> > is both clock-frequency and clocks properties are specified in its
-> > devicetree node, where 8250 driver would ignore the latter.
-> > 
-> 
->  When I use 'clocks = <&clk LS2K0300_CLK_DEV_DIV>;', the system log gets
-> stuck at the message about closing unused clocks, and there are no further
-> logs. It seems like the clock for the serial port is being closed. However,
-> if I set the parameter to not close unused clocks as a startup parameter,
-> the serial port can continue to be used. If I use 'clocks = <&clk
-> LS2K0300_CLK_APB_GATE>;', then the clock for the serial port is not closed
-> and can start normally. I have not specified the clock frequency in the
+On 3A/7A/2K platform, the input clock of i2c controller and the divisor of
+input clock maybe different, so define the clock-input and clock-div properties
+in i2c controller node description of dts or acpi. clock-input describes the
+input clock of i2c controller and clock-div describes the clock divisor of the
+input clock.
 
-This is the expected behavior, because LS2K0300_CLK_APB_GATE takes
-LS2K0300_CLK_APB_DIV as parent, and unused clocks would be automatically
-disabled by kernel.
+Compared to v1, v2 modified the following content:
+1. Add dt-bindings
+2. In i2c-ls2x driver, the definition of pclk and div variables is placed on
+one line
+3. list the different value of clock-input and clock-div on different platforms
 
-It's intended to let consumers take the GATE clock instead of the DIV
-clock, just like what you have done in your patch.
+Thanks.
 
-> Regards,
-> wjjsn
+wanghongliang (2):
+  dt-bindings: i2c: ls2x-i2c: Add clock- related properties
+  i2c: ls2x: Add clock-input and clock-div properties parsing
 
-Regards,
-Yao Zi
+ .../devicetree/bindings/i2c/loongson,ls2x-i2c.yaml  | 13 +++++++++++++
+ drivers/i2c/busses/i2c-ls2x.c                       |  7 ++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+-- 
+2.47.2
+
