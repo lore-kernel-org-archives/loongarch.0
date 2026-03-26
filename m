@@ -1,206 +1,155 @@
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E194AEE2
-	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 13:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18183976B3
+	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 21:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774530576; cv=none; b=f5q7+2+m7pc37hVyaz0mRngvMg8cl/awh7YwbDhP2nyejGePfI/fC5DL3xKgjxo/2roVg9n1dXXagrlO7PAuBhZH000jAZIs0ULg6GS8Xf0rrSoXpkiWkjmmURD08wqRbtQcqAGDHQNxr+opuK5B4Zb/xKbM+H8XimxI7dywUr8=
+	t=1774561240; cv=none; b=hvnCOX/lA3Q9yJBxetryxtpQSv3guN51EyWbZCVT2OpERhafagOCuwKEzpFVE/yY3FjvKqTH9stzzW3zxs6jxN6RBlUxzF2pC8w5Poiigrrf4Q5Rbe/6DaWKpfMEPdlmULp4c9DhQpBaO7RmhYMGJ6wIHJWpimmSJK/Ei8YCMiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774530576; c=relaxed/simple;
-	bh=cJ+6s4wtZuyu1fPN5SKZQHdBVTRbaK7BNHXrHI3+FsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G4YGbperMlaImw5Wb8lUfzSjB0jfLa22ULi4EXBWrRdLglqmk7BUV7EuYlKsprP43W6bX2ktrSJ1leVxstKVA7JuEdOIH0IbTQ+SMcPH5HXHUlMY2DbcD1kw47d7JPgU125Rn0IrmkunxchmGT7sMywYkp4WPKYU2lH4CUyVSVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=r27NhnWJ; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1774561240; c=relaxed/simple;
+	bh=Yk5ElyoUqD59NqrI+Foi14c0QkBGwkvf9Lpl4xfDuUs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=QQCp3H/PsZMN/MpCSWRSdDPyeiypbMaIQkdty7dRhZPtHv61TmY+ybm+kSj/z7X4i5BDz+VfUS2Tk+zkl+R1Ga11PObqfIbmuodxULZMZOt9bc83im7kIJbEGTpGSP/60sh5EVzm30HSImr9RuWVfK9Qo5envyVFE5Wi8AVhDF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=Q3UaVvdH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vldQ95RZ; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="r27NhnWJ"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=jLyfKSEzGPeE1dJtR15Kc0eOwoYz6wTxdsqltUK1s+8=;
-	b=r27NhnWJDoBRU0BLviPWrzC48eoWH2aXc39RU0NNg9RfVmkYMPQAakNbwupG9o1vLSlUZgi3I
-	9q6pjI1LWhogcfA3FIhnuqdaqvSt3N0ef5hNY4GTFUKrfjR9jw+KWWzREvNA4nYdsjVC61P8MMl
-	7eCWHr3D/yJXJKgUr+I5ku0=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fhP8m1T9zzRhQP;
-	Thu, 26 Mar 2026 21:03:20 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 757E14056A;
-	Thu, 26 Mar 2026 21:09:26 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 26 Mar 2026 21:09:22 +0800
-Message-ID: <b82f26e6-adac-e921-6547-94d3284d2678@huawei.com>
-Date: Thu, 26 Mar 2026 21:09:16 +0800
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Q3UaVvdH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vldQ95RZ"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 77A477A026B;
+	Thu, 26 Mar 2026 17:40:32 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-03.internal (MEProxy); Thu, 26 Mar 2026 17:40:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1774561232;
+	 x=1774647632; bh=53kzqvS35Tfpdk+d6POicHdXAb503grGqmPn4kNmz+8=; b=
+	Q3UaVvdHTUK/SfHgTAp+Sc9vyJYZXDqk3D7bsHIa0bH4pBJzszB39Ztg8JAGjheT
+	lZi8iyI6XS1wkN4Sl6Y67K2sfuK/3U6l8VL2Qzn3+bIhELKs73CTIaBKIu7evB4a
+	SEXrXMyAGn7U9YMPKCHTvrtJewA0x7T8TiRQ+qXzWrxPg1OtisaYJEimD7MsHbA8
+	RBrvKrkdzkgfYHKNnekBJrB0IvwABIoHbGCkK4L7cU+bCpqEbIZtvkgZ7JwLQeRi
+	DWDHnBEh9TT/p05J8gbIMZ0mysUjTCXb7VUVF4cQm3jWnCNirKX5Pj3PVnHLiyB2
+	vkPPM851+MZSgR9C2kc8Zw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1774561232; x=
+	1774647632; bh=53kzqvS35Tfpdk+d6POicHdXAb503grGqmPn4kNmz+8=; b=v
+	ldQ95RZ4lBty++sb/ZWl2ojEEzXeI5Vzno2Fp1dkf8h8WNjm/a7rX+RNFxMUoZRY
+	/syfUCtfa+oRXVDwRh+c3HRm9lMQYDK4J+V2oH4PZrgnKjTPMC7LeTMhn40TwSI/
+	MW8GC3Y738o9xQw71WDy1vl06U3TRVsiq/t3S49ICqw5LTv5MExb5Odx11doi0GB
+	JrODFz+HTnlj7b51vyl6Pi1H51NFCtO0C/S6j9Ni6hOiMpqGvc52RLXp9lRD6rUF
+	msNQj3k66me3b7/ih6m82jDX9eEx/QVzcgAP6r4k78QCr/hqU/KI6PnzAY8S6Zfm
+	z6BOjmhwpoJ1vwMxUYU/Q==
+X-ME-Sender: <xms:zqfFaXvb6PMhn0-OiY5cd0lalVAmd064Fp25RLQYlElTFlBNgTt_Jg>
+    <xme:zqfFaTTJSOoN_iu6alYqfc8eqoOusWfwCefTWQRN8mZhIEg9r-97Mc5kRGDRt9twS
+    CSPVGuuLQCFSzyfPjpq1Ni6MTMAC3V-AbrliDdS-n5nYKIG_WRXyy8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefvdekgeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedflfhirgig
+    uhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhephfethfdutdeigeelueeitddtheehudevffejtedtkedvueei
+    tddujeefieejieefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdpnhgspghrtghp
+    thhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtshgsohhgvghnug
+    esrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepuhifuhesihgtvghnohif
+    hidrmhgvpdhrtghpthhtohepiihhvghnghigihhnghgurgesihhstggrshdrrggtrdgtnh
+    dprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoug
+    htsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepthhglhigsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhonh
+    hgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:zqfFaTNkgBJRd4mDe8-QGTvCcbuls3msixJEA1P3aHQdduZBGVPYcA>
+    <xmx:zqfFaenrlzTkFQci_KmFnGYOfaii1ZRCAneiXWTK9GskKjAiw5QwZQ>
+    <xmx:zqfFadaXAMK5jAPsCyMdzuRC2l5TR6GGT6npzpltIpwNalaih1uUKA>
+    <xmx:zqfFacT0ncrPkbsMLKcyjComvjY60tNFpJgIpCRc-KwEXZSP5C9bJg>
+    <xmx:0KfFadVOFyBuTlfIqnZw3TUxdjjo5ccBMs3kbSmqPEGLetrF5r6LxhTe>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 53D312CE0072; Thu, 26 Mar 2026 17:40:30 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v10 0/8] arm64/riscv: Add support for crashkernel CMA
- reservation
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>, <bhe@redhat.com>,
-	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
-	<peterz@infradead.org>, <pawan.kumar.gupta@linux.intel.com>,
-	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
-	<kees@kernel.org>, <elver@google.com>, <paulmck@kernel.org>,
-	<lirongqing@baidu.com>, <rppt@kernel.org>, <ardb@kernel.org>,
-	<leitao@debian.org>, <osandov@fb.com>, <cfsworks@gmail.com>,
-	<tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
-	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
-	<jbohac@suse.cz>, <fuqiang.wang@easystack.cn>, <guoren@kernel.org>,
-	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>, <james.morse@arm.com>,
-	<takahiro.akashi@linaro.org>, <lizhengyu3@huawei.com>, <x86@kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
-References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
- <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: ABKrElPPawS7
+Date: Thu, 26 Mar 2026 21:40:09 +0000
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Icenowy Zheng" <zhengxingda@iscas.ac.cn>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+Cc: "Icenowy Zheng" <uwu@icenowy.me>, "Yao Zi" <me@ziyao.cc>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ "Xuerui Wang" <kernel@xen0n.name>, "Thomas Gleixner" <tglx@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>
+Message-Id: <a8cb7352-2d1e-46e9-b526-de4d4dd7b460@app.fastmail.com>
+In-Reply-To: <20260321092032.3502701-2-zhengxingda@iscas.ac.cn>
+References: <20260321092032.3502701-1-zhengxingda@iscas.ac.cn>
+ <20260321092032.3502701-2-zhengxingda@iscas.ac.cn>
+Subject: Re: [PATCH v4 1/6] MIPS: loongson64: Override arch_dynirq_lower_bound to
+ reserve LPC IRQs
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500011.china.huawei.com (7.185.36.131)
 
 
 
-On 2026/3/26 12:00, Andrew Morton wrote:
-> On Wed, 25 Mar 2026 10:58:56 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
-> 
->> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
->> and crashk_cma memory are almost identical across different architectures,
->> This patch set handle them in crash core in a general way, which eliminate
->> a lot of duplication code.
->>
->> And add support for crashkernel CMA reservation for arm64 and riscv.
-> 
-> So who is patchmonkey for this.
-> 
->>  .../admin-guide/kernel-parameters.txt         |  16 +--
->>  arch/arm64/kernel/machine_kexec_file.c        |  39 ++-----
->>  arch/arm64/mm/init.c                          |   5 +-
->>  arch/loongarch/kernel/machine_kexec_file.c    |  39 ++-----
->>  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
->>  arch/powerpc/kexec/crash.c                    |   7 +-
->>  arch/powerpc/kexec/ranges.c                   | 101 +----------------
->>  arch/riscv/kernel/machine_kexec_file.c        |  38 ++-----
->>  arch/riscv/mm/init.c                          |   5 +-
->>  arch/x86/kernel/crash.c                       |  89 ++-------------
->>  drivers/of/fdt.c                              |   9 +-
->>  drivers/of/kexec.c                            |   9 ++
->>  include/linux/crash_core.h                    |   9 ++
->>  kernel/crash_core.c                           | 105 +++++++++++++++++-
-> 
-> Me, I guess, with as many arch acks as I can gather, please.
-> 
-> I'm seriously trying to slow things down now, but I guess I can make an
-> exception for non-MM material.
-> 
-> AI review asks a few questions:
-> 	https://sashiko.dev/#/patchset/20260325025904.2811960-1-ruanjinjie@huawei.com
-> 
-> Can you please check these?  And I'm interested in learning how many of
-> these are valid.  Thanks.
-
-Thanks for the feedback. At the very least, the issue highlighted below
-remains valid and needs to be addressed, which can be fixed with below
-fixed number usable ranges.
-
-+#define MAX_USABLE_RANGES		(6)
-
-"
-> */
-> -#define MAX_USABLE_RANGES		2
-> +#define MAX_USABLE_RANGES		(2 + CRASHKERNEL_CMA_RANGES_MAX)
-Could this silently drop crash memory if the crash kernel is built without
-CONFIG_CMA?
-If the main kernel is compiled with CONFIG_CMA, it might append up to 6
-regions to the linux,usable-memory-range property (2 standard + 4 CMA).
-If the crash kernel is compiled without CONFIG_CMA,
-CRASHKERNEL_CMA_RANGES_MAX
-evaluates to 0. During boot, the crash kernel's FDT parsing logic limits the
-ranges to MAX_USABLE_RANGES (which would be 2). This truncates the ranges
-and drops all the CMA-backed crash memory.
-Since the crash kernel only registers these regions as normal RAM, it
-doesn't
-require CONFIG_CMA to use them. Should MAX_USABLE_RANGES unconditionally
-accommodate the maximum possible ranges any sender might provide?"
-
-
-
-Regarding the concurrency issue mentioned below, as noted in my v9
-response, could we confirm if this is indeed a bug? If so, I believe
-each affected architecture might need a separate fix, as this issue
-already exists in the current code and likely requires a more
-comprehensive solution. Does anyone have thoughts on whether this is a
-valid concern or suggestions on how to address it?
-
-
-Link:
-https://lore.kernel.org/all/4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com/
-
-
-"
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -326,15 +326,25 @@ int crash_prepare_headers(int need_kernel_map,
-void **addr, unsigned long *sz,
->  	struct crash_mem *cmem;
->  	int ret;
+On Sat, 21 Mar 2026, at 9:20 AM, Icenowy Zheng wrote:
+> On some Loongson 3A devices, a LPC bus is present and some legacy
+> devices (e.g. 8259) on it expect hardcoded low interrupt numbers. However
+> currently the expected low range interrupt numbers are not exempted from
+> the dynamic allocation, which leads to confliction when registering LPC
+> interrupts in the fixed range.
 >
-> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> +		lock_device_hotplug();
-Can this cause a self-deadlock during memory hotplug?
-When memory is onlined or offlined via sysfs (for example, in state_store()
-calling lock_device_hotplug_sysfs()), the device_hotplug_lock is already
-acquired before initiating the hotplug sequence.
-Since crash_prepare_headers() can be invoked by the crash_memhp_notifier
-during these memory hotplug operations, acquiring device_hotplug_lock again
-here would cause a recursive mutex acquisition.
+> Override arch_dynirq_lower_bound() to reserve these low range interrupt
+> numbers and prevent them from being dynamically allocated.
+>
+> Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+
+Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+
+@Thomas Bogendoerfer, do you mind picking this over MIPS tree?
+
+Thanks
+Jiaxun
+
+> ---
+>  arch/mips/loongson64/init.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+> index 5f73f8663ab2d..c7cc5a3d7817f 100644
+> --- a/arch/mips/loongson64/init.c
+> +++ b/arch/mips/loongson64/init.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/irqchip.h>
+>  #include <linux/logic_pio.h>
+>  #include <linux/memblock.h>
+> +#include <linux/minmax.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <asm/bootinfo.h>
+> @@ -227,3 +228,8 @@ void __init arch_init_irq(void)
+>  	reserve_pio_range();
+>  	irqchip_init();
+>  }
 > +
->  	max_nr_ranges = arch_get_system_nr_ranges();
-> -	if (!max_nr_ranges)
-> -		return -ENOMEM;
-> +	if (!max_nr_ranges) {
-> +		ret = -ENOMEM;
-> +		goto unlock;
-> +	}
->
->  	cmem = alloc_cmem(max_nr_ranges);
-> -	if (!cmem)
-> -		return -ENOMEM;
-> +	if (!cmem) {
-> +		ret = -ENOMEM;
-> +		goto unlock;
-> +	}
->
->  	ret = arch_crash_populate_cmem(cmem);
-While the locking attempts to address the race, is it possible that the
-architecture specific population callbacks could still write out of bounds?
-The callbacks appear to unconditionally write to
-cmem->ranges[cmem->nr_ranges]
-without verifying if cmem->nr_ranges >= cmem->max_nr_ranges.
-Would it be safer to also add explicit bounds checking inside the populate
-callbacks to return an error like -ENOMEM when the array capacity is
-exceeded?"
+> +unsigned int arch_dynirq_lower_bound(unsigned int from)
+> +{
+> +	return MAX(from, NR_IRQS_LEGACY);
+> +}
+> -- 
+> 2.52.0
 
-> 
+-- 
+- Jiaxun
