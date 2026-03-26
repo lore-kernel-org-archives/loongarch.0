@@ -1,119 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56E933A9C3;
-	Wed, 25 Mar 2026 19:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8AE923E334
+	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 02:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774468705; cv=none; b=Ihy1fJT7MjVF3zDnDheKe0WGJLY5/UGv4tJt+FIcLmP0QMAPncyCPVeGDAxxCVFg4fpbhSZ3h66o3XL91Ukpa8WXzT79/IbGJyZJYmtV6JxZi/5XcPBjFLzC+nvVCy72+IRf2qtDIO58YQayx7FbRyEjiBMzT8EYDpZmtkSROPk=
+	t=1774491158; cv=none; b=IUczDqHJw1oJHcwFqEXk1M8Te/CHyCeKzJvsNKaw2lmJ3FIgSqOs4DMLDJWv6cH/DeWJ0dMSzCGetf2JiierIfDEZgU72yOegqP52SAVA2V1mJQjGKtX9vJ9Ko8CcGyM54Vq08GuqbeEpJWS71VQXFqsnSLeL/6j22L4Ah7jZR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774468705; c=relaxed/simple;
-	bh=sejDKf3P8sESG5dibTCxwy1iyZIw53jwzdWcE7qNmpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MbUAQ8+jDn66HyUdjylptDhCBYYnOquDfNw4B64z9c8QHqaQ6UzKZML6E4rEvn/MF44AyF39hG8JrCPW1yOM+xgIudsXi1k7TxjUB/Owhz5CwG6aW9+SJe2IPNhdXggv/waTAqq0WMEVh6Fhi5BoRTfsUCM1sfhpq5w/DMB+Cuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ge5aalab; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ge5aalab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D017C4CEF7;
-	Wed, 25 Mar 2026 19:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774468705;
-	bh=sejDKf3P8sESG5dibTCxwy1iyZIw53jwzdWcE7qNmpE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ge5aalabCqZpp2QV5kqs/vYycoJuqkRoa8OBOAkbF709CENIyaMYwhDvGA5ZmhPZt
-	 uwKdRiC3Cl5ZK3d5Un9FUbs9cKXxNKCY6gkKzPEXJOUXDaqwkeVNlPxvdAJwqG7YKW
-	 lIYxvZcgfmDmflgygmhJEUImKL9vwBOfEzSiOFGHgfj3Klvy6w4NQMdlJgbR9hMqrG
-	 H4++cneHOvL+Ujzn+CcEgc7qA05317D8Q9rBGN3xJLw1p1s1oXuLQklwmmcYGJXV2A
-	 FM+3W2mqWxh2TwuA4BQio+NeDp+0q0ezZAW3u3LQYmFQINgb4M2bbIWWEdcCh46Isa
-	 Z617FMBDSIq2Q==
-Date: Wed, 25 Mar 2026 12:58:21 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
-	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: Re: [PATCH 02/17] raid6: remove __KERNEL__ ifdefs
-Message-ID: <20260325195821.GD2305@quark>
-References: <20260324064115.3217136-1-hch@lst.de>
- <20260324064115.3217136-3-hch@lst.de>
- <59d1d178-c141-4229-81e9-a6c23fa81f2f@zytor.com>
- <fa11e4d3-1c70-4fa7-9f03-8772c002be6a@zytor.com>
+	s=arc-20240116; t=1774491158; c=relaxed/simple;
+	bh=dOfo0Atrong7Sgc1T7KnrLH7bcjyIUA8oVN9P0B0pEQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dI/sUX6PCf8zE0TAtGdbzCzLZGXNUvqb8VHj+8SaTxWY9/oqBzRfZNEmWUk/M61QHlKNHh00KdBoz7va1Atnwld2J2yO4cu0tPOwY4KAC80xvE8e+Sq9GWeFNJabWxyqiNCUPeFtr9FfTMaDHumuGSzcAW2/xXlXWdkdqihX5T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8CxJMERlsRpo8ceAA--.41004S3;
+	Thu, 26 Mar 2026 10:12:33 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJCxPMIPlsRpfY9dAA--.46396S3;
+	Thu, 26 Mar 2026 10:12:32 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20260325011852.19079-1-wanghongliang@loongson.cn>
+ <20260325011852.19079-2-wanghongliang@loongson.cn>
+ <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Message-ID: <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
+Date: Thu, 26 Mar 2026 10:12:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa11e4d3-1c70-4fa7-9f03-8772c002be6a@zytor.com>
+In-Reply-To: <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxPMIPlsRpfY9dAA--.46396S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Xw4rKry5WFWrWr45Gr13Jrc_yoWkurg_ZF
+	yvy3WDt3s2kF9xGrnaqF45J3Waq34UG3yqgr1DAF1SgasxtF4Du3Z2vw1xWF4jqrWa9w1f
+	Cw1vkw1xCr1avosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Wed, Mar 25, 2026 at 09:13:16AM -0700, H. Peter Anvin wrote:
-> On 2026-03-25 08:13, H. Peter Anvin wrote:
-> > On 2026-03-23 23:40, Christoph Hellwig wrote:
-> >> With the test code ported to kernel space, none of this is required.
-> > 
-> > I really *really* don't like this.
-> > 
-> > The ability of running in user space is really useful when it comes to
-> > developing new code for new platforms, which happens often enough for this code.
-> > 
-> 
-> That being said -- and I do say this as the original author of this code --
-> this should be reduced to the maximum extent possible to a (minimal) set of
-> #ifndef __KERNEL__, which should be localized as much as possible. The actual
-> user space components, even such a thing as a simple #include, should be moved
-> to a separate user space header.
-> 
-> But pretty please do leave the ability to debug the algorithms in user space.
-> This is hard code to write and debug; it is not just about regression testing.
+Hi Krzysztof,
 
-While I do like developing code in userspace as well, I've been doing it
-less over time as the kernel's tests and benchmarks have been improved.
-Running the KUnit tests is pretty straightforward and fast.
+Consider the clock framework relies on the device tree, and can only be 
+used on
+Loongson 2K platform with dts parameter mechanism, It cannot be used on 
+Loongson
+3A+7A platform with the acpi parameter mechanism.
+The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A 
+platform, parse
+the same parameters regardless of dts or acpi parameter passing, So 
+clock-input
+and clock-div attributes are defined to describe input clock of i2c 
+controller and
+divisor of input clock. It can be used on both 2K and 3A+7A platform.
 
-The issues with providing userspace build support in the tree are that:
+Thanks
 
-- It has to be maintained.
-- It's fundamentally a bit of a hack that is used only by developers
-  (who always have the option of doing something locally that is
-  tailored to the specific function they're working on)
-- It diverts effort from the kernel's actual test and benchmark.
+Hongliang Wang
 
-So while the faster iteration speed that userspace development enables
-is definitely nice, I do think we should be cautious with committing to
-maintain it in the kernel tree.  If it's causing problems for the
-ongoing refactoring, dropping it for now seems reasonable to me.
+On 2026/3/25 下午7:43, Krzysztof Kozlowski wrote:
+> On Wed, Mar 25, 2026 at 09:18:51AM +0800, Hongliang Wang wrote:
+>> From: wanghongliang <wanghongliang@loongson.cn>
+>>
+>> Add clock-input and clock-div properties.
+>>
+>> clock-input describes the input clock of i2c controller.
+>> clock-div describes the clock divisor of the input clock
+>> of i2c controller.
+>>
+>> Prcescale = (clock-input * 10) / (clock-div * t->bus_freq_hz) - 1
+>>
+>> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> Also, why are you using inconsistent identities?
+>
+> Best regards,
+> Krzysztof
 
-I would suggest adding a benchmark to the KUnit test similar to the
-crypto and CRC ones, though.
-
-- Eric
