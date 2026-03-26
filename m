@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 769CE186E58
-	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 10:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B51934C9B7
+	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 10:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774522409; cv=none; b=n1zgUzOrTLKhnFiLE1qEmnqzgnlRkEAk+WO26cdqwEdudDxDl7ov1/xBc36toWCb/1NXV6mAdcU0xY+YF1SPLGufkZv0ShFDEXl+CqYo7MKa92iWLkwnr7iLMHaAz/DrGGFNo54DN4ettuJZb2LAECHOLEcdTCLx/aofc4nlrrg=
+	t=1774522454; cv=none; b=jAxbjOiaMC5xyeVDuive1hx5SPDVXlxB7mERxgdnJcByMZ0YljpzdUeXb9hlYPE2hEjD1/6AAxMc+eDGqG9Oq3JIboVdAZy/A4SqHO5LYscMcXIZ7dBsqxtP6gfPSJPg1oWibeBVXxSEZplVpHuq76FgwQJC33Tv2b61c4cFAIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774522409; c=relaxed/simple;
-	bh=TbxaIif3p8WQ6+e44Bzl22FNO5C/zwaxFLGv4rhnrAI=;
+	s=arc-20240116; t=1774522454; c=relaxed/simple;
+	bh=8IXmdtIFEytfMHYy2/zN6eUVEhDW6CUJvZu3Mba6/Z0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACFB1BXf+AC92LjPauiF7ngPURuBmB3W+a0tlS/b9MGbz3WdC9AR3ge1ScLMhTnKk99ppEPcvZPRIHbUH0k6aPMultvmjELIcw7zv1PvtnR2Vjx5CjFQXsRkCU3Yw+pSXm+vfrDCr2rkGlat1BO3B25b4ICkrHOzhxxX+CBvzMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=b4O8r4Jq; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=WxATvVncPFqx6blXy22WJX5gCF6NoiverdYElTn99OQbkujlff7OMaQ1J0XuqR14c7bY1mEHm6rGsfYxn0W0zZM/oCDvCvYK42UduDnq6LUxe1vy8E3FPTHEP3LzSnDD41NK3hnxkdzBBPbW9RpPw92F32AdCs0IepJMPQFKS0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=YVuxS70w; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="b4O8r4Jq"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="YVuxS70w"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9604175A;
-	Thu, 26 Mar 2026 03:53:20 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7625D175A;
+	Thu, 26 Mar 2026 03:54:06 -0700 (PDT)
 Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BEE03FB90;
-	Thu, 26 Mar 2026 03:53:19 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E50D13FB90;
+	Thu, 26 Mar 2026 03:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1774522406; bh=TbxaIif3p8WQ6+e44Bzl22FNO5C/zwaxFLGv4rhnrAI=;
+	t=1774522452; bh=8IXmdtIFEytfMHYy2/zN6eUVEhDW6CUJvZu3Mba6/Z0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b4O8r4Jq2CFcar+ykaYubGzY5y5qXmjwpctKmzjtCbYrCy7ZWRYDuVV6rw/K5YRYE
-	 cFU8FIDuxcRiwzgg6ypdQsF6ZJHHAtZPQCtyFE9nn5+FJpKL3uUn2slYkKqObCNZpl
-	 vTALvEOciub+LB3zvVDl3q8MoMa8BSfaYZ27RjFc=
-Date: Thu, 26 Mar 2026 10:53:16 +0000
+	b=YVuxS70wtA+CNyc+9Yfuu8kLdwGx0hAOW4qIgVCCdqd3eWV81ySjZ1drGGhP2OXoL
+	 +ZNCcv/2wvx0wEMhP2Dp3UCFRMfOF2SBHpPH29ZkEJibdsvI0zy0/8alDG7Ivbi7i4
+	 oE7duHHNhvv6uUVGYqsXoDVURWRztrpZN8osSmlg=
+Date: Thu, 26 Mar 2026 10:54:01 +0000
 From: Catalin Marinas <catalin.marinas@arm.com>
 To: Jinjie Ruan <ruanjinjie@huawei.com>
 Cc: corbet@lwn.net, skhan@linuxfoundation.org, will@kernel.org,
@@ -55,42 +55,55 @@ Cc: corbet@lwn.net, skhan@linuxfoundation.org, will@kernel.org,
 	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
 	kexec@lists.infradead.org
-Subject: Re: [PATCH v10 4/8] crash: Exclude crash kernel memory in crash core
-Message-ID: <acUQHCETMXaEtdK5@arm.com>
+Subject: Re: [PATCH v10 6/8] arm64: kexec: Add support for crashkernel CMA
+ reservation
+Message-ID: <acUQSSNgxCCK5LnI@arm.com>
 References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
- <20260325025904.2811960-5-ruanjinjie@huawei.com>
+ <20260325025904.2811960-7-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260325025904.2811960-5-ruanjinjie@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260325025904.2811960-7-ruanjinjie@huawei.com>
 
-On Wed, Mar 25, 2026 at 10:59:00AM +0800, Jinjie Ruan wrote:
-> The crash memory alloc, and the exclude of crashk_res, crashk_low_res
-> and crashk_cma memory are almost identical across different architectures,
-> handling them in the crash core would eliminate a lot of duplication, so
-> do them in the common code.
+On Wed, Mar 25, 2026 at 10:59:02AM +0800, Jinjie Ruan wrote:
+> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+> crashkernel= command line option") and commit ab475510e042 ("kdump:
+> implement reserve_crashkernel_cma") added CMA support for kdump
+> crashkernel reservation.
 > 
-> To achieve the above goal, three architecture-specific functions are
-> introduced:
+> Crash kernel memory reservation wastes production resources if too
+> large, risks kdump failure if too small, and faces allocation difficulties
+> on fragmented systems due to contiguous block constraints. The new
+> CMA-based crashkernel reservation scheme splits the "large fixed
+> reservation" into a "small fixed region + large CMA dynamic region": the
+> CMA memory is available to userspace during normal operation to avoid
+> waste, and is reclaimed for kdump upon crash—saving memory while
+> improving reliability.
 > 
-> - arch_get_system_nr_ranges(). Pre-counts the max number of memory ranges.
+> So extend crashkernel CMA reservation support to arm64. The following
+> changes are made to enable CMA reservation:
 > 
-> - arch_crash_populate_cmem(). Collects the memory ranges and fills them
->   into cmem.
+> - Parse and obtain the CMA reservation size along with other crashkernel
+>   parameters.
+> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
+> - Include the CMA-reserved ranges for kdump kernel to use.
+> - Exclude the CMA-reserved ranges from the crash kernel memory to
+>   prevent them from being exported through /proc/vmcore, which is already
+>   done in the crash core.
 > 
-> - arch_crash_exclude_ranges(). Architecture's additional crash memory
->   ranges exclusion, defaulting to empty.
+> Update kernel-parameters.txt to document CMA support for crashkernel on
+> arm64 architecture.
 > 
-> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 > Acked-by: Baoquan He <bhe@redhat.com>
 > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-
-For arm64:
 
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
