@@ -1,341 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C033F8DF5
-	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 12:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E194AEE2
+	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 13:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774528816; cv=none; b=pE7qTieSM5NWutHICM0M+vlZuZJdC4uXGYYSszpsMRBHOWsAAx33aBxiZZWZ5diG/5Ct2bdEnD9pJKqxIN4ZKESWbfyH606q301PnyPH5JQdqLlLHZ4v9kuD14At9Nbi7Cmcg2YBCpRVp7a18mpLa+7Bjb9Hv3gUZSboBqsEpQY=
+	t=1774530576; cv=none; b=f5q7+2+m7pc37hVyaz0mRngvMg8cl/awh7YwbDhP2nyejGePfI/fC5DL3xKgjxo/2roVg9n1dXXagrlO7PAuBhZH000jAZIs0ULg6GS8Xf0rrSoXpkiWkjmmURD08wqRbtQcqAGDHQNxr+opuK5B4Zb/xKbM+H8XimxI7dywUr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774528816; c=relaxed/simple;
-	bh=XdwLuOs+MOooUYSe+ks/VcJ4OJqU9KOmfrBBGbeAzf0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B3fVTo//lkUvlrw7vdWfFPSHh/mkr9oqSmsZ8Ly2ugRNaDpfhTzTA5txvD+E6T+KCOAkmpPfQuUMwnQjdiLBv+AgD7NSJvuq6xFxP4XYGs3tPW73cywZIX9TFVrqOkF1INBS7w6vRDo5c22DRd98xwsxRSQyd3BoJCJ/21xUDes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mE1dIbpR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774530576; c=relaxed/simple;
+	bh=cJ+6s4wtZuyu1fPN5SKZQHdBVTRbaK7BNHXrHI3+FsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=G4YGbperMlaImw5Wb8lUfzSjB0jfLa22ULi4EXBWrRdLglqmk7BUV7EuYlKsprP43W6bX2ktrSJ1leVxstKVA7JuEdOIH0IbTQ+SMcPH5HXHUlMY2DbcD1kw47d7JPgU125Rn0IrmkunxchmGT7sMywYkp4WPKYU2lH4CUyVSVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=r27NhnWJ; arc=none smtp.client-ip=113.46.200.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mE1dIbpR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CDFC2BC87
-	for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 12:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774528816;
-	bh=XdwLuOs+MOooUYSe+ks/VcJ4OJqU9KOmfrBBGbeAzf0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mE1dIbpRP8k3il7XHOI3zIwSueN6/qnZtimTF08TLzeOpd+3hLj2eO+Ul9gFrGEv8
-	 lIewo+Z1dncCPDDjtLASZUvUqqtJwEQypM41f77uVYlBbqeL/YLEM0NMMgImxaPMYE
-	 /DSUCPFeBQMkp14vjJImlgwGDA9TSis6dtkmrT9GwEDMDPnFZ79t2XhxD49j/2kGbw
-	 EJV+zxsvBsl5Qd0XhnxXWEpS2XgoMN0amQ5CuwfRRNyqQg1OSY5vfD4C8DmOacOEZa
-	 dZXW+ZP5Ui4GUm1bcLEuj+l4TPVX1S4a6m7OKiLvrU4jtw/sT8Y4jKW+AUEzONNqPi
-	 CJ4ajRRYnN8UA==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b976536806cso138960866b.0
-        for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 05:40:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXtGKL5nibdW4szwX5XcEVuJFTIxZXqcZ9ichwUbPF7pk9RJw6jC6XrUbFK2qa+7txqwhcZqAqbJns=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz7CG2pVPc4DnNLp0G/cR9Gxo+nhsVUC/o5yam1XB1KFfSwcmcG
-	StdbdMuKRemQedfatWRtaumt4vCNBreZ9XipvbSNVq9eY5Ps37cXV15Aykz0cNnMh0/kskhino3
-	ejPDVXRIpFijdUxts+3KRIEIkEO7Nu3Q=
-X-Received: by 2002:a17:906:a2d8:b0:b98:4c58:f499 with SMTP id
- a640c23a62f3a-b9a54253a96mr407705266b.28.1774528814483; Thu, 26 Mar 2026
- 05:40:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="r27NhnWJ"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=jLyfKSEzGPeE1dJtR15Kc0eOwoYz6wTxdsqltUK1s+8=;
+	b=r27NhnWJDoBRU0BLviPWrzC48eoWH2aXc39RU0NNg9RfVmkYMPQAakNbwupG9o1vLSlUZgi3I
+	9q6pjI1LWhogcfA3FIhnuqdaqvSt3N0ef5hNY4GTFUKrfjR9jw+KWWzREvNA4nYdsjVC61P8MMl
+	7eCWHr3D/yJXJKgUr+I5ku0=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fhP8m1T9zzRhQP;
+	Thu, 26 Mar 2026 21:03:20 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 757E14056A;
+	Thu, 26 Mar 2026 21:09:26 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 26 Mar 2026 21:09:22 +0800
+Message-ID: <b82f26e6-adac-e921-6547-94d3284d2678@huawei.com>
+Date: Thu, 26 Mar 2026 21:09:16 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260324091521.2338235-1-gaosong@loongson.cn> <20260324091521.2338235-3-gaosong@loongson.cn>
- <CAAhV-H7y8S6G+kh+qZ_q7Ug4JtzoGQ-ehUuA3uE63=gCpXyCGQ@mail.gmail.com> <ee4faccb-5a46-93a9-edcd-4c2544d614b3@loongson.cn>
-In-Reply-To: <ee4faccb-5a46-93a9-edcd-4c2544d614b3@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 26 Mar 2026 20:40:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H42ZD8jWq4QdEHcq31X0iHM8EwjWbSs8gobGMZ8YuGpyw@mail.gmail.com>
-X-Gm-Features: AQROBzAfwfHNpsbS8OMB2muFvAZrxOGaKQcZlPdMsOvsr5CVDm6pWTxjiJe7fd0
-Message-ID: <CAAhV-H42ZD8jWq4QdEHcq31X0iHM8EwjWbSs8gobGMZ8YuGpyw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
-To: gaosong <gaosong@loongson.cn>
-Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kernel@xen0n.name, linux-kernel@vger.kernel.org, lixianglai@loongson.cn
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v10 0/8] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>, <bhe@redhat.com>,
+	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
+	<peterz@infradead.org>, <pawan.kumar.gupta@linux.intel.com>,
+	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <paulmck@kernel.org>,
+	<lirongqing@baidu.com>, <rppt@kernel.org>, <ardb@kernel.org>,
+	<leitao@debian.org>, <osandov@fb.com>, <cfsworks@gmail.com>,
+	<tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
+	<jbohac@suse.cz>, <fuqiang.wang@easystack.cn>, <guoren@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>, <james.morse@arm.com>,
+	<takahiro.akashi@linaro.org>, <lizhengyu3@huawei.com>, <x86@kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
+References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
+ <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Thu, Mar 26, 2026 at 8:26=E2=80=AFPM gaosong <gaosong@loongson.cn> wrote=
-:
->
-> =E5=9C=A8 2026/3/26 =E4=B8=8B=E5=8D=883:52, Huacai Chen =E5=86=99=E9=81=
-=93:
-> > Hi, Song,
-> >
-> > I'm sorry but it seems there are still bugs...
-> >
-> > On Tue, Mar 24, 2026 at 5:41=E2=80=AFPM Song Gao <gaosong@loongson.cn> =
-wrote:
-> >> Implement irqfd deliver msi to vcpu and vcpu dmsintc inject irq.
-> >> Add irqfd choice dmsintc to set msi irq by the msg_addr and
-> >> implement dmsintc set msi irq.
-> >>
-> >> Signed-off-by: Song Gao <gaosong@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/kvm_dmsintc.h |  5 ++
-> >>   arch/loongarch/include/asm/kvm_pch_pic.h |  4 +-
-> >>   arch/loongarch/kvm/intc/dmsintc.c        | 73 ++++++++++++++++++++++=
-++
-> >>   arch/loongarch/kvm/intc/pch_pic.c        | 16 +++++-
-> >>   arch/loongarch/kvm/interrupt.c           |  2 +
-> >>   arch/loongarch/kvm/irqfd.c               | 11 ++--
-> >>   6 files changed, 102 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch=
-/include/asm/kvm_dmsintc.h
-> >> index b04b89dd2a35..081ec8a7b874 100644
-> >> --- a/arch/loongarch/include/asm/kvm_dmsintc.h
-> >> +++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-> >> @@ -11,11 +11,16 @@ struct loongarch_dmsintc {
-> >>          struct kvm *kvm;
-> >>          uint64_t msg_addr_base;
-> >>          uint64_t msg_addr_size;
-> >> +       uint32_t cpu_mask;
-> >>   };
-> >>
-> >>   struct dmsintc_state {
-> >>          atomic64_t  vector_map[4];
-> >>   };
-> >>
-> >> +void dmsintc_inject_irq(struct kvm_vcpu *vcpu);
-> >> +int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm, struct kvm_vcpu *vcp=
-u,
-> >> +                               u32 vector, int level);
-> >> +int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int =
-level);
-> > I think addr should be u64.
-> Got it.
-> >>   int kvm_loongarch_register_dmsintc_device(void);
-> >>   #endif
-> >> diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch=
-/include/asm/kvm_pch_pic.h
-> >> index 7f33a3039272..5f49b1f82c56 100644
-> >> --- a/arch/loongarch/include/asm/kvm_pch_pic.h
-> >> +++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-> >> @@ -70,6 +70,8 @@ struct loongarch_pch_pic {
-> >>
-> >>   int kvm_loongarch_register_pch_pic_device(void);
-> >>   void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level=
-);
-> >> -void pch_msi_set_irq(struct kvm *kvm, int irq, int level);
-> >> +struct kvm_kernel_irq_routing_entry;
-> >> +int pch_msi_set_irq(struct kvm *kvm,
-> >> +               struct kvm_kernel_irq_routing_entry *e, int level);
-> >>
-> >>   #endif /* __ASM_KVM_PCH_PIC_H */
-> >> diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/in=
-tc/dmsintc.c
-> >> index 1bb61e55d061..6837ccbb4473 100644
-> >> --- a/arch/loongarch/kvm/intc/dmsintc.c
-> >> +++ b/arch/loongarch/kvm/intc/dmsintc.c
-> >> @@ -4,9 +4,82 @@
-> >>    */
-> >>
-> >>   #include <linux/kvm_host.h>
-> >> +#include <asm/kvm_csr.h>
-> >>   #include <asm/kvm_dmsintc.h>
-> >>   #include <asm/kvm_vcpu.h>
-> >>
-> >> +int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
-> >> +                               struct kvm_vcpu *vcpu,
-> >> +                               u32 vector, int level)
-> >> +{
-> >> +       struct kvm_interrupt vcpu_irq;
-> >> +       struct dmsintc_state *ds;
-> >> +
-> >> +       if (!level)
-> >> +               return 0;
-> >> +       if (!vcpu || vector >=3D 256)
-> >> +               return -EINVAL;
-> >> +       ds =3D &vcpu->arch.dmsintc_state;
-> >> +       if (!ds)
-> >> +               return -ENODEV;
-> >> +       set_bit(vector, (unsigned long *)&ds->vector_map);
-> >> +       vcpu_irq.irq =3D INT_AVEC;
-> >> +       kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-> >> +       kvm_vcpu_kick(vcpu);
-> >> +       return 0;
-> >> +}
-> >> +
-> >> +int kvm_dmsintc_set_msi_irq(struct kvm *kvm, u32 addr, int data, int =
-level)
-> > The kvm_ prefix can be removed.
-> I will remove it.
-> >> +{
-> >> +       unsigned int virq, dest;
-> >> +       struct kvm_vcpu *vcpu;
-> >> +
-> >> +       virq =3D (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
-> >> +       dest =3D (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mas=
-k;
-> >> +       if (dest > KVM_MAX_VCPUS)
-> > I think it should be "if (dest > KVM_MAX_VCPUS)".
-> hmm.I'm not quite sure about here ,   or  ">=3D" ?
-Yes, I mean it should be  ">=3D".
 
-Huacai
 
-> >> +               return -EINVAL;
-> >> +       vcpu =3D kvm_get_vcpu_by_cpuid(kvm, dest);
-> >> +       if (!vcpu)
-> >> +               return -EINVAL;
-> >> +       return dmsintc_deliver_msi_to_vcpu(kvm, vcpu, virq, level);
-> >> +}
-> >> +
-> >> +void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
-> >> +{
-> >> +       struct dmsintc_state *ds =3D &vcpu->arch.dmsintc_state;
-> >> +       unsigned int i;
-> >> +       unsigned long temp[4], old;
-> >> +
-> >> +       if (!ds)
-> >> +               return;
-> >> +
-> >> +       for (i =3D 0; i < 4; i++) {
-> >> +               old =3D atomic64_read(&(ds->vector_map[i]));
-> >> +               if (old)
-> >> +                       temp[i] =3D atomic64_xchg(&(ds->vector_map[i])=
-, 0);
-> >> +       }
-> >> +
-> >> +       if (temp[0]) {
-> >> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR0);
-> >> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR0, temp[0]|old);
-> >> +       }
-> >> +
-> >> +       if (temp[1]) {
-> >> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR1);
-> >> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR1, temp[1]|old);
-> >> +       }
-> >> +
-> >> +       if (temp[2]) {
-> >> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR2);
-> >> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR2, temp[2]|old);
-> >> +       }
-> >> +
-> >> +       if (temp[3]) {
-> >> +               old =3D kvm_read_hw_gcsr(LOONGARCH_CSR_ISR3);
-> >> +               kvm_write_hw_gcsr(LOONGARCH_CSR_ISR3, temp[3]|old);
-> >> +       }
-> >> +}
-> >> +
-> >>   static int kvm_dmsintc_ctrl_access(struct kvm_device *dev,
-> >>                                  struct kvm_device_attr *attr,
-> >>                                  bool is_write)
-> >> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/in=
-tc/pch_pic.c
-> >> index dd7e7f8d53db..1c0ed0665736 100644
-> >> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> >> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> >> @@ -4,6 +4,7 @@
-> >>    */
-> >>
-> >>   #include <asm/kvm_eiointc.h>
-> >> +#include <asm/kvm_dmsintc.h>
-> >>   #include <asm/kvm_pch_pic.h>
-> >>   #include <asm/kvm_vcpu.h>
-> >>   #include <linux/count_zeros.h>
-> >> @@ -67,9 +68,20 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, i=
-nt irq, int level)
-> >>   }
-> >>
-> >>   /* msi irq handler */
-> >> -void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
-> >> +int pch_msi_set_irq(struct kvm *kvm,
-> >> +               struct kvm_kernel_irq_routing_entry *e, int level)
-> >>   {
-> >> -       eiointc_set_irq(kvm->arch.eiointc, irq, level);
-> >> +       u64 msg_addr;
-> >> +
-> >> +       msg_addr =3D (((u64)e->msi.address_hi) << 32) | e->msi.address=
-_lo;
-> > Define and evaluate at the same time.
-> >
-> Got it .
+On 2026/3/26 12:00, Andrew Morton wrote:
+> On Wed, 25 Mar 2026 10:58:56 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+> 
+>> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+>> and crashk_cma memory are almost identical across different architectures,
+>> This patch set handle them in crash core in a general way, which eliminate
+>> a lot of duplication code.
+>>
+>> And add support for crashkernel CMA reservation for arm64 and riscv.
+> 
+> So who is patchmonkey for this.
+> 
+>>  .../admin-guide/kernel-parameters.txt         |  16 +--
+>>  arch/arm64/kernel/machine_kexec_file.c        |  39 ++-----
+>>  arch/arm64/mm/init.c                          |   5 +-
+>>  arch/loongarch/kernel/machine_kexec_file.c    |  39 ++-----
+>>  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
+>>  arch/powerpc/kexec/crash.c                    |   7 +-
+>>  arch/powerpc/kexec/ranges.c                   | 101 +----------------
+>>  arch/riscv/kernel/machine_kexec_file.c        |  38 ++-----
+>>  arch/riscv/mm/init.c                          |   5 +-
+>>  arch/x86/kernel/crash.c                       |  89 ++-------------
+>>  drivers/of/fdt.c                              |   9 +-
+>>  drivers/of/kexec.c                            |   9 ++
+>>  include/linux/crash_core.h                    |   9 ++
+>>  kernel/crash_core.c                           | 105 +++++++++++++++++-
+> 
+> Me, I guess, with as many arch acks as I can gather, please.
+> 
+> I'm seriously trying to slow things down now, but I guess I can make an
+> exception for non-MM material.
+> 
+> AI review asks a few questions:
+> 	https://sashiko.dev/#/patchset/20260325025904.2811960-1-ruanjinjie@huawei.com
+> 
+> Can you please check these?  And I'm interested in learning how many of
+> these are valid.  Thanks.
+
+Thanks for the feedback. At the very least, the issue highlighted below
+remains valid and needs to be addressed, which can be fixed with below
+fixed number usable ranges.
+
++#define MAX_USABLE_RANGES		(6)
+
+"
+> */
+> -#define MAX_USABLE_RANGES		2
+> +#define MAX_USABLE_RANGES		(2 + CRASHKERNEL_CMA_RANGES_MAX)
+Could this silently drop crash memory if the crash kernel is built without
+CONFIG_CMA?
+If the main kernel is compiled with CONFIG_CMA, it might append up to 6
+regions to the linux,usable-memory-range property (2 standard + 4 CMA).
+If the crash kernel is compiled without CONFIG_CMA,
+CRASHKERNEL_CMA_RANGES_MAX
+evaluates to 0. During boot, the crash kernel's FDT parsing logic limits the
+ranges to MAX_USABLE_RANGES (which would be 2). This truncates the ranges
+and drops all the CMA-backed crash memory.
+Since the crash kernel only registers these regions as normal RAM, it
+doesn't
+require CONFIG_CMA to use them. Should MAX_USABLE_RANGES unconditionally
+accommodate the maximum possible ranges any sender might provide?"
+
+
+
+Regarding the concurrency issue mentioned below, as noted in my v9
+response, could we confirm if this is indeed a bug? If so, I believe
+each affected architecture might need a separate fix, as this issue
+already exists in the current code and likely requires a more
+comprehensive solution. Does anyone have thoughts on whether this is a
+valid concern or suggestions on how to address it?
+
+
+Link:
+https://lore.kernel.org/all/4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com/
+
+
+"
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -326,15 +326,25 @@ int crash_prepare_headers(int need_kernel_map,
+void **addr, unsigned long *sz,
+>  	struct crash_mem *cmem;
+>  	int ret;
 >
-> Thanks.
-> Song Gao
-> > Huacai
-> >
-> >> +       if (cpu_has_msgint && kvm->arch.dmsintc &&
-> >> +               msg_addr >=3D kvm->arch.dmsintc->msg_addr_base &&
-> >> +               msg_addr < (kvm->arch.dmsintc->msg_addr_base  + kvm->a=
-rch.dmsintc->msg_addr_size)) {
-> >> +               return kvm_dmsintc_set_msi_irq(kvm, msg_addr, e->msi.d=
-ata, level);
-> >> +       }
-> >> +
-> >> +       eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
-> >> +       return 0;
-> >>   }
-> >>
-> >>   static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t=
- addr, int len, void *val)
-> >> diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/inter=
-rupt.c
-> >> index fb704f4c8ac5..32930959f7c2 100644
-> >> --- a/arch/loongarch/kvm/interrupt.c
-> >> +++ b/arch/loongarch/kvm/interrupt.c
-> >> @@ -7,6 +7,7 @@
-> >>   #include <linux/errno.h>
-> >>   #include <asm/kvm_csr.h>
-> >>   #include <asm/kvm_vcpu.h>
-> >> +#include <asm/kvm_dmsintc.h>
-> >>
-> >>   static unsigned int priority_to_irq[EXCCODE_INT_NUM] =3D {
-> >>          [INT_TI]        =3D CPU_TIMER,
-> >> @@ -33,6 +34,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, un=
-signed int priority)
-> >>                  irq =3D priority_to_irq[priority];
-> >>
-> >>          if (kvm_guest_has_msgint(&vcpu->arch) && (priority =3D=3D INT=
-_AVEC)) {
-> >> +               dmsintc_inject_irq(vcpu);
-> >>                  set_gcsr_estat(irq);
-> >>                  return 1;
-> >>          }
-> >> diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-> >> index 9a39627aecf0..308ef08b634c 100644
-> >> --- a/arch/loongarch/kvm/irqfd.c
-> >> +++ b/arch/loongarch/kvm/irqfd.c
-> >> @@ -28,10 +28,7 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry=
- *e,
-> >>   {
-> >>          if (!level)
-> >>                  return -1;
-> >> -
-> >> -       pch_msi_set_irq(kvm, e->msi.data, level);
-> >> -
-> >> -       return 0;
-> >> +       return pch_msi_set_irq(kvm, e, level);
-> >>   }
-> >>
-> >>   /*
-> >> @@ -71,13 +68,15 @@ int kvm_set_routing_entry(struct kvm *kvm,
-> >>   int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e=
-,
-> >>                  struct kvm *kvm, int irq_source_id, int level, bool l=
-ine_status)
-> >>   {
-> >> +       if (!level)
-> >> +               return -EWOULDBLOCK;
-> >> +
-> >>          switch (e->type) {
-> >>          case KVM_IRQ_ROUTING_IRQCHIP:
-> >>                  pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, le=
-vel);
-> >>                  return 0;
-> >>          case KVM_IRQ_ROUTING_MSI:
-> >> -               pch_msi_set_irq(kvm, e->msi.data, level);
-> >> -               return 0;
-> >> +               return pch_msi_set_irq(kvm, e, level);
-> >>          default:
-> >>                  return -EWOULDBLOCK;
-> >>          }
-> >> --
-> >> 2.39.3
-> >>
-> >>
+> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> +		lock_device_hotplug();
+Can this cause a self-deadlock during memory hotplug?
+When memory is onlined or offlined via sysfs (for example, in state_store()
+calling lock_device_hotplug_sysfs()), the device_hotplug_lock is already
+acquired before initiating the hotplug sequence.
+Since crash_prepare_headers() can be invoked by the crash_memhp_notifier
+during these memory hotplug operations, acquiring device_hotplug_lock again
+here would cause a recursive mutex acquisition.
+> +
+>  	max_nr_ranges = arch_get_system_nr_ranges();
+> -	if (!max_nr_ranges)
+> -		return -ENOMEM;
+> +	if (!max_nr_ranges) {
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
 >
+>  	cmem = alloc_cmem(max_nr_ranges);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> +	if (!cmem) {
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
 >
+>  	ret = arch_crash_populate_cmem(cmem);
+While the locking attempts to address the race, is it possible that the
+architecture specific population callbacks could still write out of bounds?
+The callbacks appear to unconditionally write to
+cmem->ranges[cmem->nr_ranges]
+without verifying if cmem->nr_ranges >= cmem->max_nr_ranges.
+Would it be safer to also add explicit bounds checking inside the populate
+callbacks to return an error like -ENOMEM when the array capacity is
+exceeded?"
+
+> 
