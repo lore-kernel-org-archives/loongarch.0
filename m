@@ -1,86 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4A73FE368;
-	Fri, 27 Mar 2026 17:51:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5953451C1;
+	Fri, 27 Mar 2026 23:32:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774633889; cv=none; b=qUl0lhQYiZNPf4q9V0a28Ai4zVAa9NhgutYTk+RV6fNyxGsAb6C8k+tp1FjefCvtn3d+Tx+49GrkMA+4Y5C3CMJ47WInoHobZ6GhoGFtQ8xRmzfyn0hffP5e5aLdr0qotHWpc6akhikA5es/D8cvuWhMvwz0KslzICLa8LGTeBk=
+	t=1774654368; cv=none; b=ivYCp5FglhLeErRlWXVi/C12aLgA40u+d+Q/u1uZMB/7Irsabp091uPpwLMxbUcQuyiiU4pk/WhP90cguMspNsZNtKdv6jl5PK06CmmnBMXTUT9U9l8gGINeuCWQH1O6cbl78WZvgI4hZM4TShT4otpheKVFNPjDrqwmdQht7WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774633889; c=relaxed/simple;
-	bh=ut3C5Oibhu02lZBarl5gtLhPMmjWlwAPsAficDpw9oU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=L/ypn8uEVlhBbYyTZCWBaskHKV25xUD6CYFd5TOk11oR/L2ElQC3Y3Sm0wn9iFwjl+tynTZgenBF409FCzx8K+sGZSnXcJZIO1fPCm5IhJ7sONKbA5a8f5+a14whZ+pgaUN+boCxHNRvt4BpX4Zrpzifbte1cbmgNV39wWdn3J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=tDB0MgLH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774654368; c=relaxed/simple;
+	bh=3nLVGQfFnxHLbTudoHSZzDJlg1jo4j83vUTs5gif1LQ=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WopAKmfvXumZQcENbwOHN6YwEiPpIAj861mMHEH/c3uUYTU68YniX+AOSgSvfb59x2ilUlipqlQgc0fasWbNwN8gUoEmjZjYkTYvtPJa/cTTL6hOuk5dI8q4W9npRB05ZRbK9oKD+DPl0ANiFeK5T5RcXlkOSm6AmC16XYch5oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6WONTNT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="tDB0MgLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF370C19423;
-	Fri, 27 Mar 2026 17:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1774633889;
-	bh=ut3C5Oibhu02lZBarl5gtLhPMmjWlwAPsAficDpw9oU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tDB0MgLHz5uhVLWEaFReNs99y5u/YY74Iml33dpseoOBD0A8VJRFFQYeU9FvqxCuP
-	 nyqAUmYCNk1T74zARlT1dAb3bA7OmvIjh9mNwh7l1JQENaDWThwxkEsSuzSKK+Qc4+
-	 obJODpvlMAd7z/q0AZNLNKGt9R6dV77UeQmuFqzk=
-Date: Fri, 27 Mar 2026 10:51:27 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner
- <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)"
- <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, Andreas
- Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton
- Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
- <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
- <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
- <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
- <linan122@huawei.com>, "Theodore Ts'o" <tytso@mit.edu>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: [PATCH 23/28] xor: add a better public API
-Message-Id: <20260327105127.1a1f3895adb14681141a0a30@linux-foundation.org>
-In-Reply-To: <20260327061704.3707577-24-hch@lst.de>
-References: <20260327061704.3707577-1-hch@lst.de>
-	<20260327061704.3707577-24-hch@lst.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6WONTNT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19EF9C19423;
+	Fri, 27 Mar 2026 23:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774654368;
+	bh=3nLVGQfFnxHLbTudoHSZzDJlg1jo4j83vUTs5gif1LQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=p6WONTNT79NrcTY32VNV0AVGlpN/Q6b0pWjnzu4fhc+pYDHK4whqhXWoHNYkP7k04
+	 VBGOJbhthZz14lDttGska0J2b3dxhwDWRFPQjc5k+c/k6gbNeo0D10LD6KqGg6z/3y
+	 wmY+umvNH1TJqnHAk5tPRUcyLttS2Lq146w91bYqkH3Gzee5raX0YXZ46/ym1aXD7D
+	 /Lxo4/gesJUmHf2FmfOhfTnpRt9FtxdDZ/5KBXdljc4uzQ4dL/gJzqJB21yDjmO2GD
+	 JVlc9oDrdVdNsS8KOXvRzCLDBbsj6slehe7cwnNp1wP/jOOT/Oa/IQcBc2MR2orsD1
+	 ZB+30+AznV7Aw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 0EC9F39301F5;
+	Fri, 27 Mar 2026 23:32:35 +0000 (UTC)
+Subject: Re: [GIT PULL] LoongArch fixes for v7.0-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260327150016.3076455-1-chenhuacai@loongson.cn>
+References: <20260327150016.3076455-1-chenhuacai@loongson.cn>
+X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
+X-PR-Tracked-Message-Id: <20260327150016.3076455-1-chenhuacai@loongson.cn>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.0-2
+X-PR-Tracked-Commit-Id: 6bcfb7f46d667b04bd1a1169ccedf5fb699c60df
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a361474ba3b3c6bdca7bad72dfd2ffb4f11e8e1d
+Message-Id: <177465435388.4116696.15904085599092908956.pr-tracker-bot@kernel.org>
+Date: Fri, 27 Mar 2026 23:32:33 +0000
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 27 Mar 2026 07:16:55 +0100 Christoph Hellwig <hch@lst.de> wrote:
+The pull request you sent on Fri, 27 Mar 2026 23:00:16 +0800:
 
-> xor_blocks is very annoying to use, because it is limited to 4 + 1
-> sources / destinations, has an odd argument order and is completely
-> undocumented.
-> 
-> Lift the code that loops around it from btrfs and async_tx/async_xor into
-> common code under the name xor_gen and properly document it.
+> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.0-2
 
-Something funny here - two different patches with the same title and
-changelog.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a361474ba3b3c6bdca7bad72dfd2ffb4f11e8e1d
 
-If you can send over new versions of title&changelog I can paste that in.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
