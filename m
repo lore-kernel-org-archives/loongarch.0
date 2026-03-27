@@ -1,117 +1,84 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE75C35AC0B
-	for <loongarch@lists.linux.dev>; Fri, 27 Mar 2026 03:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC0627C84B;
+	Fri, 27 Mar 2026 05:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774580988; cv=none; b=QPGlCodEkIoQGT8Fw1+34rhDL9G+t8X6Yoc8BrMc86x/ueUkw6HjDiA/HvX5LXgbYbJNNP4uFoOFGQRhCPsOewCd3b+RIAsh9BbeJpYEDAw6mRB46JxPR8OZcZN2o1D9lFcJx40InJ6qK3CfgVj319VVlSN9LaUNsOajEwfVMQw=
+	t=1774590633; cv=none; b=ZjN2SYGB/rTjiNWvZBGoEqNPKuyW+PLfmCRrOAwgxiBKzhgHZL8FxtQQTWb2/iM/CQbM0WMuZNmHkeRjLwpE8/Z9vpm5495b2ipas9RBfDyx0LfovHtTmeeHFz56ua7UOJ2RFpbQJo5yDm1HUDor9WPn8/MAUMhet1sAZAhl1bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774580988; c=relaxed/simple;
-	bh=6CqUy1ahP56uVL6L/51s/75TrI6QOS61b0Vx4kFmThk=;
-	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hIMJNiQJiaKqpYBUly99LkaSNzaw6I3PHm+PZPqE0BDj7QN/0JF0AAk0hbJD39u/Z931EaehpoyDUhrJhNpSjauzV1J13k5sJLgfzKv5eje14ifJii3e/7rTFSrbyYX9q2V7etCtaL95kVlDb84gaum/L+dud1Sav/uUU1jsqe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8CxIMD29MVpbCkfAA--.29473S3;
-	Fri, 27 Mar 2026 11:09:42 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJDxTMLr9MVp+4BeAA--.47142S3;
-	Fri, 27 Mar 2026 11:09:33 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
- properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260325011852.19079-1-wanghongliang@loongson.cn>
- <20260325011852.19079-2-wanghongliang@loongson.cn>
- <20260325-outstanding-weasel-of-fruition-89db37@quoll>
- <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
- <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
- <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
-Message-ID: <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
-Date: Fri, 27 Mar 2026 11:09:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1774590633; c=relaxed/simple;
+	bh=dlWPsRZ5eg4ebr0CP6MSk8XH8PhzWTV6BknR665dbRI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nIxwP5nt/GeJpBHe7jWr4Pc2vUcliXLKVK5NGh2abZw4RarQjtCLa9aJ+nYXuHEJOKJ0fesvGkN1gBVNqrXMPOwRc72D2ojhuRQ1lb/IeFbTnnW8eK+SR0UDhsw2HcPrYCLB02uFCG3wL7cVpRhNwEIG/wWfdRZx4ZlN/AEeGBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Z1oPSHRy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Z1oPSHRy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF49C2BCB1;
+	Fri, 27 Mar 2026 05:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1774590633;
+	bh=dlWPsRZ5eg4ebr0CP6MSk8XH8PhzWTV6BknR665dbRI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z1oPSHRysMy+6wXBJFXG9mFzlDuQc+AG+9J9n6b3eqNtsV8pZVMQ81vG2zjJgE3r9
+	 Vwk8DGJTLM5wMJYNlTCMV3P4HxBM5Fzh2kN4K4FctjtR5IEakY8OgdYhQKEYI2Hecn
+	 asywffkE1Ac9oHnjQ0d+0ALgtZqNzZ21R6Hlrgko=
+Date: Thu, 26 Mar 2026 22:50:31 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lorenzo Stoakes (Oracle)" <ljs@kernel.org>
+Cc: David Hildenbrand <david@kernel.org>, "Liam R . Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@kernel.org>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Kees Cook
+ <kees@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, Vineet
+ Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian
+ Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Dinh
+ Nguyen <dinguyen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <chleroy@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin"
+ <hpa@zytor.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>, Johannes Berg
+ <johannes@sipsolutions.net>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Xu Xin
+ <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Michal
+ Hocko <mhocko@suse.com>, Paul Moore <paul@paul-moore.com>, Stephen Smalley
+ <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>,
+ linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ selinux@vger.kernel.org
+Subject: Re: [PATCH v4 00/25] mm/vma: convert vm_flags_t to vma_flags_t in
+ vma code
+Message-Id: <20260326225031.87e04d2c652923bc10aef0ee@linux-foundation.org>
+In-Reply-To: <cover.1774034900.git.ljs@kernel.org>
+References: <cover.1774034900.git.ljs@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJDxTMLr9MVp+4BeAA--.47142S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Zr1DXFWrurWxCr1kJr4rCrX_yoW8Cr1xpF
-	WfKF9rJFs0kr4S9w12vw4xXrnxZw43Jw13Jr4jgF15Z3yrurySyFZ3GFW5ZrZ5X34fC3yj
-	vF45GaykGFZrZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
-	UUUU=
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 20 Mar 2026 19:38:17 +0000 "Lorenzo Stoakes (Oracle)" <ljs@kernel.org> wrote:
 
-On 2026/3/26 下午3:49, Krzysztof Kozlowski wrote:
-> On 26/03/2026 08:02, Krzysztof Kozlowski wrote:
->> On 26/03/2026 03:12, Hongliang Wang wrote:
->>> Hi Krzysztof,
->>>
->>> Consider the clock framework relies on the device tree, and can only be
->>> used on
->>> Loongson 2K platform with dts parameter mechanism, It cannot be used on
->>> Loongson
->> Don't top post or request read receipts.
-OK
->>> 3A+7A platform with the acpi parameter mechanism.
->> And this patch is for ACPI? Then we finish discussion here, because
->> dt-bindings is not for ACPI.
->>
-The initial idea was that this patch could be used for both ACPI and DTS.
->>> The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
->>> platform, parse
->>> the same parameters regardless of dts or acpi parameter passing, So
->>> clock-input
->>> and clock-div attributes are defined to describe input clock of i2c
->>> controller and
->>> divisor of input clock. It can be used on both 2K and 3A+7A platform.
->> And you cannot use them in DTS.
-OK
-> I need to keep guessing what you want to achieve, because neither your
-> message nor commit text was explicit
-What I want to achieve is to describe the input clock and divisor of I2C 
-controller
-through parameters passing, and the parameters can be used in both ACPI 
-and DTS.
-because clock framework cannot be used for ACPI, So I defined two new 
-properties.
->   - if you need properties for ACPI
-> and you want to be sure that DTS does not have them, then you could
-> define them as "foo:false" with a comment why (you always explain WHY
-> you are doing things). We don't have such convention so far, but I think
-> it will be useful when Rob finishes the ABI checker.
->
-> *Otherwise* minimum would be a comment in the driver that these are not
-> allowed in DTS.
->
-> Best regards,
-> Krzysztof
+> This series converts a lot of the existing use of the legacy vm_flags_t
+> data type to the new vma_flags_t type which replaces it.
 
-Best regards,
-Hongliang Wang
+Series has nine unreviewed patches.
 
+Again, I plan to upstream this as-is - lots of Lorenzopatches remain
+unreviewed and I'm OK with that.
