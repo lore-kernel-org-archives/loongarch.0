@@ -1,158 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26402848A1
-	for <loongarch@lists.linux.dev>; Fri, 27 Mar 2026 02:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE75C35AC0B
+	for <loongarch@lists.linux.dev>; Fri, 27 Mar 2026 03:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774579815; cv=none; b=k5XLuGj06r+mZnOtLgX5AJ4FKMxomQXlRrtduTwG8C9CiDAkBTa3WNqaRA9jXQlUCdDFRAgrUxRaYyAcYqGjHSS0eua20qPOjfn/VMNxexKxCNH2ZTB3EGuH0+stuIlbde+euixs9kMxz+U8OTmelUNsew9trsoXhkPcBfF89bs=
+	t=1774580988; cv=none; b=QPGlCodEkIoQGT8Fw1+34rhDL9G+t8X6Yoc8BrMc86x/ueUkw6HjDiA/HvX5LXgbYbJNNP4uFoOFGQRhCPsOewCd3b+RIAsh9BbeJpYEDAw6mRB46JxPR8OZcZN2o1D9lFcJx40InJ6qK3CfgVj319VVlSN9LaUNsOajEwfVMQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774579815; c=relaxed/simple;
-	bh=EeR2ghfQJW+Im1ogJ1DveL3qKBLXf5xwwrhzVm92TwM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rTrviXN50KWzC44kO7Lfm+BO/nl8DYY3N19lJAH4RhYbcR5X1gwAU9iFjOj/bV8cqLnw/jvQTgXTNBacWM7gfi26gCW5BNuifc4p6d0QlmmLe9di58qEHcPHX9TzfCKi2ZBGyyjbo2+/D0lamX77WuufKI4wVJT7pjo8/dncCrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQqSUPlh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQqSUPlh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E858C116C6
-	for <loongarch@lists.linux.dev>; Fri, 27 Mar 2026 02:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774579814;
-	bh=EeR2ghfQJW+Im1ogJ1DveL3qKBLXf5xwwrhzVm92TwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aQqSUPlhKnKTufTllpwSEQ08jG9hc8kHYX7eOulcmajI34kwCHmiAs/iM9ugsiBOz
-	 Ze69PAlguKgMxt2t+gLAihwaQGYBFSHX52o2r+UPZS1QVmpdH7t0sw4C4le+YMj/qI
-	 bkNTEqZz7w8PxYMKAOUBpO9ZHsC+lnSA6iJubqhD/0aNKFkr4ApohjolKcPQio+vPA
-	 wAErcRIaKL9cjzJ/lvnjCALofjUFaaP//soE/T2AhBoJ4VWYYl+YVVbEJrjfRgulHq
-	 phN56rEIiHy2ZwaVdvFep2xyVsXwUczLrP4JzmcUtPkwRnLkRzYMKjXgt5vmR4Uod8
-	 X2tam9Yndiqlg==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-66a87eb232bso2682348a12.2
-        for <loongarch@lists.linux.dev>; Thu, 26 Mar 2026 19:50:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnxIQrd7NSfs779zJsRJC3n3wUDMEWSAIryLznAdj0qn6csv7M8E4l8VSoq0BIdPRQoswfBOPSirA=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5auyRMgiKKiYW52hGVVO4Z/UejYe/XTjB4YoODBfwOh5NpN29
-	m/g8IzO/8+bIZeQPuai00QbqXifhOOtkXcifWRqQaaaDw/Q5Vv2vspzFaNKgvDRCJRgQRK6eXBF
-	jrtzZQg3gSa1JGmauvPKf55DBTB8CpzQ=
-X-Received: by 2002:a17:907:960e:b0:b98:6c41:a77f with SMTP id
- a640c23a62f3a-b9b50360c1bmr41758066b.20.1774579813141; Thu, 26 Mar 2026
- 19:50:13 -0700 (PDT)
+	s=arc-20240116; t=1774580988; c=relaxed/simple;
+	bh=6CqUy1ahP56uVL6L/51s/75TrI6QOS61b0Vx4kFmThk=;
+	h=From:Subject:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hIMJNiQJiaKqpYBUly99LkaSNzaw6I3PHm+PZPqE0BDj7QN/0JF0AAk0hbJD39u/Z931EaehpoyDUhrJhNpSjauzV1J13k5sJLgfzKv5eje14ifJii3e/7rTFSrbyYX9q2V7etCtaL95kVlDb84gaum/L+dud1Sav/uUU1jsqe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8CxIMD29MVpbCkfAA--.29473S3;
+	Fri, 27 Mar 2026 11:09:42 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJDxTMLr9MVp+4BeAA--.47142S3;
+	Fri, 27 Mar 2026 11:09:33 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20260325011852.19079-1-wanghongliang@loongson.cn>
+ <20260325011852.19079-2-wanghongliang@loongson.cn>
+ <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+ <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
+ <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
+ <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
+Message-ID: <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
+Date: Fri, 27 Mar 2026 11:09:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1773991081.git.zhoubinbin@loongson.cn>
-In-Reply-To: <cover.1773991081.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 27 Mar 2026 10:50:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7VYjdAxEpC48k6kLO8zva35ZBwHdEXZ0fwrcbpBN8dZQ@mail.gmail.com>
-X-Gm-Features: AQROBzBu9j-t6TF29c5qqk7L_3HlwULFXFLlCYEI3RHQk_QGfgebXI10G_BgZOk
-Message-ID: <CAAhV-H7VYjdAxEpC48k6kLO8zva35ZBwHdEXZ0fwrcbpBN8dZQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] i2c: Add Loongson-2K0300 I2C controller support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxTMLr9MVp+4BeAA--.47142S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr1DXFWrurWxCr1kJr4rCrX_yoW8Cr1xpF
+	WfKF9rJFs0kr4S9w12vw4xXrnxZw43Jw13Jr4jgF15Z3yrurySyFZ3GFW5ZrZ5X34fC3yj
+	vF45GaykGFZrZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXU
+	UUUU=
 
-For the whole series:
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+On 2026/3/26 下午3:49, Krzysztof Kozlowski wrote:
+> On 26/03/2026 08:02, Krzysztof Kozlowski wrote:
+>> On 26/03/2026 03:12, Hongliang Wang wrote:
+>>> Hi Krzysztof,
+>>>
+>>> Consider the clock framework relies on the device tree, and can only be
+>>> used on
+>>> Loongson 2K platform with dts parameter mechanism, It cannot be used on
+>>> Loongson
+>> Don't top post or request read receipts.
+OK
+>>> 3A+7A platform with the acpi parameter mechanism.
+>> And this patch is for ACPI? Then we finish discussion here, because
+>> dt-bindings is not for ACPI.
+>>
+The initial idea was that this patch could be used for both ACPI and DTS.
+>>> The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
+>>> platform, parse
+>>> the same parameters regardless of dts or acpi parameter passing, So
+>>> clock-input
+>>> and clock-div attributes are defined to describe input clock of i2c
+>>> controller and
+>>> divisor of input clock. It can be used on both 2K and 3A+7A platform.
+>> And you cannot use them in DTS.
+OK
+> I need to keep guessing what you want to achieve, because neither your
+> message nor commit text was explicit
+What I want to achieve is to describe the input clock and divisor of I2C 
+controller
+through parameters passing, and the parameters can be used in both ACPI 
+and DTS.
+because clock framework cannot be used for ACPI, So I defined two new 
+properties.
+>   - if you need properties for ACPI
+> and you want to be sure that DTS does not have them, then you could
+> define them as "foo:false" with a comment why (you always explain WHY
+> you are doing things). We don't have such convention so far, but I think
+> it will be useful when Rob finishes the ABI checker.
+>
+> *Otherwise* minimum would be a comment in the driver that these are not
+> allowed in DTS.
+>
+> Best regards,
+> Krzysztof
 
-On Fri, Mar 20, 2026 at 3:26=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Hi all:
->
-> This patch set describes the I2C controller integrated the
-> Loongson-2K0300 chip.
->
-> It has a significantly different design from the previous I2C
-> controller(i2c-ls2x), such as support for master-slave transfer mode,
-> and  DMA transfers (implementation in progress), etc. Therefore, we try
-> to name it i2c-ls2x-v2.
->
-> Thanks.
->
-> =3D=3D=3D=3D=3D=3D
-> V6:
-> - Rebase on linux-i2c/i2c-next;
-> Patch (2/2):
->   - Update comment;
->   - Use regmap_get_device();
->
-> Link to V5:
-> https://lore.kernel.org/all/cover.1773142933.git.zhoubinbin@loongson.cn/
->
-> V5:
-> - Rebase on linux-i2c/i2c-next;
-> Patch (2/2):
->   - Add time.h header file;
->   - Add the `MHz` suffix to `parent_rate` and `freq`;
->   - Define an iterator within the for loop, with its type being
->     `unsigned int`;
->   - Use dev_err_probe() in loongson2_i2c_adjust_bus_speed();
->   - i2c_adapter_set_node()->device_set_node().
->
-> Link to V4:
-> https://lore.kernel.org/all/cover.1772714348.git.zhoubinbin@loongson.cn/
->
-> V4:
-> - Rebase on linux-i2c/i2c-next;
-> Patch (2/2):
->  - The parent_rate parameter type should be `unsigned long`;
->  - Drop fallthrough and add missing break;
->  - device_set_node()->i2c_adapter_set_node();
->  - Use i2c_parse_fw_timings();
->  - Use i2c_t.bus_freq_hz instead of priv->speed;
->  - Sperate loongson2_i2c_handle_read() into loongson2_i2c_handle_read()
->    and loongson2_i2c_handle_rx_done().
->
-> Link to V3:
-> https://lore.kernel.org/all/cover.1772001073.git.zhoubinbin@loongson.cn/
->
-> V3:
-> - Rebase on linux-i2c/i2c-next;
-> Patch (2/2):
->  - Reorder header file follow IWYU principle;
->  - Better indentation and coding style;
->  - Use generic macro definitions;
->  - Amend *all* struct data types;
->  - Correct unreasonable variable type definitions;
->  - Refact loongson2_i2c_isr_error();
->  - of_property_read_u32()->device_property_read_u32();
->  - Remove meaningless blank lines and output.
->
-> Link to V2:
-> https://lore.kernel.org/all/cover.1769476820.git.zhoubinbin@loongson.cn/
->
-> V2:
-> Patch (1/2):
->  - Add Acked-by tag from Conor, thanks.
->
-> Patch (2/2):
->  - Reorder the definitions of read() and write();
->  - Adjust the calculation method for bus speed.
->
-> Link to V1:
-> https://lore.kernel.org/all/cover.1763018288.git.zhoubinbin@loongson.cn/
->
-> Binbin Zhou (2):
->   dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c compatible
->   i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
->
->  .../bindings/i2c/loongson,ls2x-i2c.yaml       |   4 +
->  MAINTAINERS                                   |   1 +
->  drivers/i2c/busses/Kconfig                    |  10 +
->  drivers/i2c/busses/Makefile                   |   1 +
->  drivers/i2c/busses/i2c-ls2x-v2.c              | 544 ++++++++++++++++++
->  5 files changed, 560 insertions(+)
->  create mode 100644 drivers/i2c/busses/i2c-ls2x-v2.c
->
->
-> base-commit: e9b13580b334040da0184a9f32106d808acd7fd5
-> --
-> 2.52.0
->
+Best regards,
+Hongliang Wang
+
