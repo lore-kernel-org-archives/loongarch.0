@@ -1,159 +1,102 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F35737D126
-	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 07:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D962F39EF17
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 07:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774854691; cv=none; b=Z6mL/3LZGjBlAO1TDjlrFlEyVY8Re9OacoQRFGkiqwVyCadccVAAqjQpCn/Z8aRiM1TJuOVhWl6kD2FoltrhU20FHdtCIO2ikfDAskJ7WhWKo4cmeuUZH6CaWX+sSYQaC6JWV41Worz3EYz6CESf+KkFde7B4idnHdZMbyCenQ8=
+	t=1774855148; cv=none; b=rK71K7qnGkwuXwG1ooOCNpNAzEwehMESYwXABS+Va1Oe/PDiVaidEOJcLdBeAsCAi5OuGhFamSaP7YbY0qN6LSAK6MWR77En/M2Tj5skjPwbOddwIXJZTuiokDPrBXQVQOUGZf4zUD3ObkqDAxOb9DmNSjEU6iS9tHNZKaEdJSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774854691; c=relaxed/simple;
-	bh=tH2S5P8dR69sJzEISlKn9G8QgvuVGrtWVb10/3dnr0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=J+X2wdus9z6qF2twkdo7t9l7Xq6RJqbnsEV2kPn0fXMw4WQ9k0JdpRYqCHq3gHp0xRNu86uiOb6W9Og6mNfxBAmhXxGu430cD5ZUroGWlV0Tgi4QLImpKL3Epdel9/WsDGhSGT9nprid4qBMS7yXs1uDy5HTD/xEVbWywc5Sj2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=REz6lrKf; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="REz6lrKf"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=dtxKLBtxeK7WnTNaRuRN6wjCIkUS/712dvNiyCme+dM=;
-	b=REz6lrKfLnmTbZnTSrloA8Qxl9ytOsPa/OKwvl5w3Tr9CHfmTc48CSuaquXePwoPkmMac2rJ+
-	Ia8doJegFbzncelLLc+WY8AD1bp7J4dS8mfObdEHsZoC3f0vux4WUTdBtkywh/SHtrYyCW4VUbm
-	dhD5rc1J2Q4kAhnpMA6VL/8=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4fkj2Z2x0tz12LDJ;
-	Mon, 30 Mar 2026 15:05:58 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id E15B240537;
-	Mon, 30 Mar 2026 15:11:22 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 30 Mar 2026 15:11:17 +0800
-Message-ID: <baa90080-9e6e-c1e5-13a1-b17496c690b4@huawei.com>
-Date: Mon, 30 Mar 2026 15:11:13 +0800
+	s=arc-20240116; t=1774855148; c=relaxed/simple;
+	bh=hyYfLWivSbr1GppGoqqzdr+sTJwkv37dXKOHBxYBOHY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gNizmkGUPFzgMoBG5dp6tJ4KwyOmzYqn8ftte5ZNw4a2PMsQ36OztUL5S7Sx5RIGFUkU021rs1VtIoWb+zhJUuXq5oQtUCLuvtfULndVhY+wh7+orMG1KQPwZBJyYCHFrS8h5TZX30SlaqFO0qwLT4u/mU21W4WW00HWH+j9AUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8Dx_8PmI8ppCd4fAA--.25414S3;
+	Mon, 30 Mar 2026 15:19:02 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJCx+8HlI8ppPJBgAA--.53085S3;
+	Mon, 30 Mar 2026 15:19:01 +0800 (CST)
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20260325011852.19079-1-wanghongliang@loongson.cn>
+ <20260325011852.19079-2-wanghongliang@loongson.cn>
+ <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+ <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
+ <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
+ <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
+ <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
+ <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Message-ID: <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
+Date: Mon, 30 Mar 2026 15:18:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v11 01/11] riscv: kexec_file: Fix crashk_low_res not
- exclude bug
-Content-Language: en-US
-To: Guo Ren <guoren@kernel.org>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
-	<feng.tang@linux.alibaba.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
-	<leitao@debian.org>, <ardb@kernel.org>, <cfsworks@gmail.com>,
-	<osandov@fb.com>, <jbohac@suse.cz>, <tangyouling@kylinos.cn>,
-	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
-	<eajames@linux.ibm.com>, <songshuaishuai@tinylab.org>,
-	<kevin.brodsky@arm.com>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <fuqiang.wang@easystack.cn>,
-	<liaoyuanhong@vivo.com>, <chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260328074013.3589544-1-ruanjinjie@huawei.com>
- <20260328074013.3589544-2-ruanjinjie@huawei.com>
- <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCx+8HlI8ppPJBgAA--.53085S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWrKF4xCr48WrW7Ww4UXw4DZFc_yoW8JryDpF
+	93Ka4Dtr4DJr1Sqw1jqw1xXFn0qws8Jw1UJry8GF1agws8uw1IyFn3CrWUC3yrWw4fA3yj
+	yF45J397JFZrZacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
+	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU24So
+	DUUUU
 
 
+On 2026/3/27 下午2:39, Krzysztof Kozlowski wrote:
+> On 27/03/2026 04:09, Hongliang Wang wrote:
+>> The initial idea was that this patch could be used for both ACPI and DTS.
+>>>>> The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
+>>>>> platform, parse
+>>>>> the same parameters regardless of dts or acpi parameter passing, So
+>>>>> clock-input
+>>>>> and clock-div attributes are defined to describe input clock of i2c
+>>>>> controller and
+>>>>> divisor of input clock. It can be used on both 2K and 3A+7A platform.
+>>>> And you cannot use them in DTS.
+>> OK
+>>> I need to keep guessing what you want to achieve, because neither your
+>>> message nor commit text was explicit
+>> What I want to achieve is to describe the input clock and divisor of I2C
+>> controller
+> Input clocks are defined as clock inputs obviously in DT, not as
+> integers. Bindings need to describe the hardware, so start with that.
+I can describe the hardware in loongson,ls2x-i2c.yaml, and I would like to
+confirm with you what final implementation plan you agree to? clock 
+framework
+or custom clock-input an clock-div attributes? if clock framework, how 
+can it
+also be used for ACPI?
+>
+> Best regards,
+> Krzysztof
 
-On 2026/3/30 11:49, Guo Ren wrote:
-> On Sat, Mar 28, 2026 at 3:41 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
->>
->> As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
->> and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
->> crashkres_low.") for arm64, while implementing crashkernel=X,[high,low],
->> riscv should have excluded the "crashk_low_res" reserved ranges from
->> the crash kernel memory to prevent them from being exported through
->> /proc/vmcore, and the exclusion would need an extra crash_mem range.
->>
->> Cc: Guo Ren <guoren@kernel.org>
->> Cc: Baoquan He <bhe@redhat.com>
->> Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=X,[high,low]")
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>  arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
->>  1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
->> index 54e2d9552e93..3f7766057cac 100644
->> --- a/arch/riscv/kernel/machine_kexec_file.c
->> +++ b/arch/riscv/kernel/machine_kexec_file.c
->> @@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->>         unsigned int nr_ranges;
->>         int ret;
->>
->> -       nr_ranges = 1; /* For exclusion of crashkernel region */
->> +       nr_ranges = 2; /* For exclusion of crashkernel region */
->>         walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
->>
->>         cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
->> @@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->>
->>         /* Exclude crashkernel region */
->>         ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
->> -       if (!ret)
->> -               ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
->> +       if (ret)
->> +               goto out;
->> +
->> +       if (crashk_low_res.end) {
->> +               ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
-> Exclude crashk_low_res is reasonable, but have you tested this?
+Best regards,
+Hongliang Wang
 
-Just simply tested on qemu with crashkernel=4G with following kexec
-mentioned in
-https://lore.kernel.org/all/20230726175000.2536220-1-chenjiahao16@huawei.com/.
-And the second kernel can be started normally.
-
-https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
-
-# dmesg | grep crash
-[    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000
-(128 MB)
-[    0.000000] crashkernel reserved: 0x000000017fe00000 -
-0x000000027fe00000 (4096 MB)
-
-
-
-> 
->> +               if (ret)
->> +                       goto out;
->> +       }
->> +
->> +       ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
->>
->>  out:
->>         kfree(cmem);
->> --
->> 2.34.1
->>
-> 
-> 
