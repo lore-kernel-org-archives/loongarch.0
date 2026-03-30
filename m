@@ -1,110 +1,103 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC713815C0;
-	Mon, 30 Mar 2026 09:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD3D3AF67A
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 09:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774862152; cv=none; b=PLTk+PFgh2ybrS9A3jIttQmNewOOqxxKDZflY2R8zjUuYn41iZxZghv7492poZT7of7SjlaRPLgDxHU6H743wp2NLL0//kg8WIUg3IgoHXvjRVlULyPG3xRNmUBZAxzaQ7kMdUnTPOn2YUqFCMFUu9aWjuCPROd3/5Bq4OIli0o=
+	t=1774864141; cv=none; b=QHT2DQrbSQy3qAxWUwWc57ZowPgJSlCoLR7IqCs61cl3ADFjPhDUwPMDsFnjhrKnk9O6xuRORFpw7F48qEHkPi7gL/WFopQEt4HF1Cf2ce3aU3VijH7OMLhXJfVQUxqWo6BcomfTKMylcbYqMQ50z7Bn0XbhDmVQJv5cGpERo3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774862152; c=relaxed/simple;
-	bh=nSAMhAy2NHmQUPSXPLIcBAWN1McDpN+/e2HfgQZTDIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lDsyslaMDVAkgZhZMCA/zgu/F/nXgiNLh/6SrqYxAvkPjXfL1rKVdqEvQRbvHcEI4zTSyAJHx9UqHewG1HjANEDNNJu1dA9cITtofRWcY9wO0TNMUmmlS6l1Bp7Iwc6ze+ObGYSQguVd7d/oEVw+gjjUNcQMcRO45yzsvU+Zips=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=IjoUdYg7; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1774864141; c=relaxed/simple;
+	bh=HeXNwKwYM29o+fqhMXbHgeU1wyBL/MZizFR5K0TzCZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nD9GS/Xm3nJp7LQW0W/un6DvfN/f/Tia6FO60Byybr02b8SDnum9AfUKQAztzjZNXQwJnY+f29QuTd2sL743AhmxXdfKPzKB6hkFTw5ovp4H/8Vql5w7y7kw3BMV22z+FxpTaiwEgoShEDE8Cz1Z36HMZa2P3LhmrTLgh9thoMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space; spf=pass smtp.mailfrom=bytefly.space; dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b=JuqsQH8V; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bytefly.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytefly.space
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="IjoUdYg7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=WO1vn6Tln5KFquM2TJaKxzbEqp7cPSRmlLOOnQm4DBk=; b=IjoUdYg7H5HjzhmD9Ya8KzCZED
-	MOdt/f/iybG0j7ZLGmiC7aJOgf9EGEZ5AT6v30A7lr8C+eX+qUGhl5lLwhUy7Ag2vW87+rI4cKgR0
-	IreKmv/ogatlCLSyoDgJQL/Bm0oZPTC3Ph6N6bEB8K2FbqIE9a2RJzwF5rC3QyiVtqaFsRExlbFnq
-	w6kBr9fPUeAdfZ2RsOnmOj6jLS7FgdEY+TwNyaPu3c4DAiLI7ICVb5EP/dox4qH2GHtCEzV9jz6MU
-	LmEcDrV31BMlEKYMm8KfrbhCwKfgUBdd6N399NiMCtz+aDHCvorriy5EW4hCaA9xT6qUKgk0TT0qt
-	Qm7u5jxA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1w78hH-001L8R-10;
-	Mon, 30 Mar 2026 09:14:10 +0000
-Date: Mon, 30 Mar 2026 02:13:57 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
-	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, peterz@infradead.org, 
-	feng.tang@linux.alibaba.com, pawan.kumar.gupta@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	kees@kernel.org, elver@google.com, paulmck@kernel.org, lirongqing@baidu.com, 
-	rppt@kernel.org, ardb@kernel.org, cfsworks@gmail.com, osandov@fb.com, 
-	jbohac@suse.cz, tangyouling@kylinos.cn, sourabhjain@linux.ibm.com, 
-	ritesh.list@gmail.com, eajames@linux.ibm.com, songshuaishuai@tinylab.org, 
-	kevin.brodsky@arm.com, vishal.moola@gmail.com, junhui.liu@pigmoral.tech, 
-	coxu@redhat.com, fuqiang.wang@easystack.cn, liaoyuanhong@vivo.com, 
-	guoren@kernel.org, chenjiahao16@huawei.com, hbathini@linux.ibm.com, 
-	takahiro.akashi@linaro.org, james.morse@arm.com, lizhengyu3@huawei.com, x86@kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH v11 10/11] arm64: kexec: Add support for crashkernel CMA
- reservation
-Message-ID: <aco-v4BuRSiZx7yy@gmail.com>
-References: <20260328074013.3589544-1-ruanjinjie@huawei.com>
- <20260328074013.3589544-11-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=bytefly-space.20230601.gappssmtp.com header.i=@bytefly-space.20230601.gappssmtp.com header.b="JuqsQH8V"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-82418b0178cso2036842b3a.1
+        for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 02:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytefly-space.20230601.gappssmtp.com; s=20230601; t=1774864138; x=1775468938; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZnID34Go+g2KnNZbh0BK6ZRqYtzkBkjxAb6FB8NCtD0=;
+        b=JuqsQH8V0VSb8zaO0G78p+2EsIB7HVQv6WdEijmgft9e103hxrSMbBq3pKuT49Wt8b
+         kgOD22AF2hrR4vAdMm3lbk7BUdun/mml0/dQX/3RkqfiMZZ0h60EDzA883yVCUJSaVU0
+         4OEZFtTxCdI8sX+nofFIi+aY1VB9fff2tMigN+lQk6bOGJ5Fg713fB6U6MB4O2HypP01
+         O/Ysb+L6KTSq4FxyUnxg2EfY6RhpJ+PrCXFl7CC6oVKz4NtlGF3ZZ2GDs4jysyaCHxBq
+         OI6p72Fazh5Hn80fIYOegNMQw16GMmhGaZCxzovdZi/XX9x+LNF6nRkKn2t34Wi8lTYz
+         aEWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774864138; x=1775468938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZnID34Go+g2KnNZbh0BK6ZRqYtzkBkjxAb6FB8NCtD0=;
+        b=VvQXdS+ulwOC5Nlk76IRx848eBoF1y5ENgPInM4K984izPZFyh1P0swDjrNR5SsKiJ
+         q8NUVTSA5VJWIIQBKav4x1z6REvfzqPgppajp3eZIHK0KobseAeHrEcFfKfNQAV7vbJS
+         q1PyPUMOQM7fbF4BPIe8MUWm8hP+xINJgqUlxBrbmGOu2kxu5rlIWjqwrYb6s/+8jdA6
+         YCc/4zuyutozNcAYhj5ElH5mDWjGOGRC2/TdSBIc8BnlnN8vdPPvDLY1bE5TvrowWUuZ
+         mAbI5lICsyT5qFPtQ8NerKZmRBJ3ZnuCAPWsqFcU5Zf1PYItZ+fB9iY4gE5ADRljYNhb
+         lA8A==
+X-Gm-Message-State: AOJu0YzgaSbk69ea5z5qxHRB9sSZUxQgp7tCqNtfDocNYVNwSc+V+10/
+	Csy2FsEd7F3XsFCc55wwdo33/DACrzQMDR+/dRTCmRFU6q5PLwfUSaVd6epuHYx5GvA=
+X-Gm-Gg: ATEYQzxwZ9qc0mAOwRQr/wiZvyuk3yKx5PYW4tuedBs7Wcbpg3IGL/gIeN4vUslf3Wn
+	oq0sS4D+pfb1Z7lOzmd294uHQtkkdA9UhgaRuMe3URoHfxtQzOUS4qy35si7oSx6ACmIdL7sZ9q
+	rq/no/j3mgzbKSndz1Pv2pHNQ/MLKp1Eco2bpp1/9ydA6BnCxW7J6vLUPDPJ1qxPuswKB03t9nu
+	vorDb1D+F6zYph5PnERbUkwR5yUGO1dQxE92Eh9u9Qj5wY1JEJQVubUR/pvep/V91kMJtk/RpXV
+	YkxiEE3flSEnJUjNJGzqB1DOv7o4eamIyNJwM8qvO0W/gQ6zeRaqKHl0USfAWOGnbZ+rIev9Krs
+	e9+Rw5Coqcf8kKle5QuDJLG20pa3KY118hsgAclEr8Tj5bI0B157hSzDVAlVCM3J2fvE0I1Y/Pd
+	MSzrIZJvUpKIqD9FY2nxKyYg==
+X-Received: by 2002:a05:6a00:1bc8:b0:827:32de:d197 with SMTP id d2e1a72fcca58-82c95ee606cmr10315928b3a.40.1774864138373;
+        Mon, 30 Mar 2026 02:48:58 -0700 (PDT)
+Received: from bytednace ([2400:8902:e002:dee4:4f47:94b4:9ada:f58c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca85fcb84sm6401991b3a.49.2026.03.30.02.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 02:48:58 -0700 (PDT)
+From: Lisa Robinson <lisa@bytefly.space>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lisa Robinson <lisa@bytefly.space>
+Subject: [PATCH] LoongArch: Align FPU register state to 32 bytes
+Date: Mon, 30 Mar 2026 17:48:45 +0800
+Message-ID: <20260330094845.39-1-lisa@bytefly.space>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260328074013.3589544-11-ruanjinjie@huawei.com>
-X-Debian-User: leitao
 
-On Sat, Mar 28, 2026 at 03:40:12PM +0800, Jinjie Ruan wrote:
-> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-> crashkernel= command line option") and commit ab475510e042 ("kdump:
-> implement reserve_crashkernel_cma") added CMA support for kdump
-> crashkernel reservation.
-> 
-> Crash kernel memory reservation wastes production resources if too
-> large, risks kdump failure if too small, and faces allocation difficulties
-> on fragmented systems due to contiguous block constraints. The new
-> CMA-based crashkernel reservation scheme splits the "large fixed
-> reservation" into a "small fixed region + large CMA dynamic region": the
-> CMA memory is available to userspace during normal operation to avoid
-> waste, and is reclaimed for kdump upon crash—saving memory while
-> improving reliability.
-> 
-> So extend crashkernel CMA reservation support to arm64. The following
-> changes are made to enable CMA reservation:
-> 
-> - Parse and obtain the CMA reservation size along with other crashkernel
->   parameters.
-> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-> - Include the CMA-reserved ranges for kdump kernel to use.
-> - Exclude the CMA-reserved ranges from the crash kernel memory to
->   prevent them from being exported through /proc/vmcore, which is already
->   done in the crash core.
-> 
-> Update kernel-parameters.txt to document CMA support for crashkernel on
-> arm64 architecture.
-> 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Move fpr to the beginning of struct loongarch_fpu so it is naturally
+aligned to FPU_ALIGN (32 bytes), improving 256-bit SIMD (LASX) context
+switch performance.
 
-Tested-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Lisa Robinson <lisa@bytefly.space>
+---
+ arch/loongarch/include/asm/processor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/include/asm/processor.h
+index c3bc44b5f5b3..ce8b953f8c79 100644
+--- a/arch/loongarch/include/asm/processor.h
++++ b/arch/loongarch/include/asm/processor.h
+@@ -80,10 +80,10 @@ BUILD_FPR_ACCESS(32)
+ BUILD_FPR_ACCESS(64)
+ 
+ struct loongarch_fpu {
++	union fpureg	fpr[NUM_FPU_REGS];
+ 	uint64_t	fcc;	/* 8x8 */
+ 	uint32_t	fcsr;
+ 	uint32_t	ftop;
+-	union fpureg	fpr[NUM_FPU_REGS];
+ };
+ 
+ struct loongarch_lbt {
+-- 
+2.53.0
+
