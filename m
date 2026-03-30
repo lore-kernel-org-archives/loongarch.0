@@ -1,135 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7323815FF;
-	Mon, 30 Mar 2026 07:23:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9F93A7F4C
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 07:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774855411; cv=none; b=Y2Tg2Y62elvDT9BrDLfrICybYyztVVT5jOLicWxPXkuyMiY7ed4XB5pcRHj9z+7tLmmlCKq7xfOC+dEJ3TDT+BdLoriXP6foWMnUUpy6nyvMTglibiRRek3azs3dQiNw4kAUIVdBcF85qOHmhRf+AAqXYGyK7REDZoG//ED50Hk=
+	t=1774857003; cv=none; b=geeZa9Ej03M6IyT3aPziRzN+lrfDbx8LEnIz05Sgtx5f5KW/x8/9v8JsI/3LYbWh3Cwg6EvhjXIuiXMLv7S87BVKoh8RZG74wpBS4T/C+y1qPo5aul3zv0NJHftfR5wiBWm46QLO/aN+UYmLdn3x5MLjHVbqjz+OZVUmV6teGHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774855411; c=relaxed/simple;
-	bh=kwNDRT9OrPmFc/hILh1ysWYBh5D2F0Zu0uy0zV4cgoY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f3rwTI2vtLawrGA2lDppGv0dg4lkO5W8X2F3pYW6DAxkFrBGR1FQZyx1owLXoXytAQQ4WzW6Ic++zD5cuUe5nUSW3YHjhK0Mu2YJBtAq1iZphLpxOeDWdhBVXlUz1LCtCuqb5L1OWfgCyL5NEoEDKin60cWP70EdpXUU7Raimro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDvOM0cN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774857003; c=relaxed/simple;
+	bh=6kNN1RP6hfrxfLPYE0OI9tP3SvLOgSwkQmqyXhzTfyQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r2Cz97mmfpEznwhRr/IbOG40lZih94+zERuhib1icLg++Q/zxIsgUpVSvkgQCdyjDbYa2AqhrslZAF+Ep14M7zryVfDcEm9+rqdwAd3BoHglGGjAFG2DynHajs0/IiB9o/L9/JhxGjX37tprbo24N4quIVe1v2yPy4O/rYzPcFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMeYBS8X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDvOM0cN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F765C4CEF7;
-	Mon, 30 Mar 2026 07:23:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMeYBS8X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E58C2BCB6
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 07:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774855411;
-	bh=kwNDRT9OrPmFc/hILh1ysWYBh5D2F0Zu0uy0zV4cgoY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qDvOM0cNhw0b4IKaKQzJoOS5AJawBLxv3ayv6ZH4+d1bqMZNPzgyVHn6Jo4lse2Q6
-	 F1OANWizgJTVAkhIYNTV8A8Mza6QArHTTBpVPsZRGYd3xiNkBWlCZm772KQMM/GKdv
-	 rW/pEyKyC9u9L1JNd2lnqgiJI+Mx04hSu34fHpee3BTwfqfsiar7BhxiPqa2zaYYtZ
-	 saoJ/+XdeqWQx2LaOK+S+2esvDtqioswiqZIK4rTYeQfjXuDInTzMubAwPnWsI2Lxf
-	 OcrjRmgZPI9dTppwMwDNLY59LHDUU26jTQIiMO/jhfBe6lf0TS8J83mhnBrrAXXNmE
-	 cgM+b6r6jZnvw==
-Message-ID: <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
-Date: Mon, 30 Mar 2026 09:23:27 +0200
+	s=k20201202; t=1774857002;
+	bh=6kNN1RP6hfrxfLPYE0OI9tP3SvLOgSwkQmqyXhzTfyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VMeYBS8XLiSnozY/+PyQikDS+OlJeUWp1quu4k7DkInQORau+6oGY+rz/2Kb8Wlob
+	 T2NLtM1Yql2DrEg0eExqOZQpa90OuxhHq/9DY3NCj7RPKCjwoNBfWR19oq0jvFAPVR
+	 MfEi17ra8AoooMVEgRc9f3vRilbrvmdVeD1YtKp8CFdZ3W6wHMwVxuvPWSlPPVt/Rv
+	 mukTs3pjTnzIFeCNpofgLM31M/VzIErLMHX+mWYsdu06+bfRvO+FTQhaRgHmwJkXZx
+	 KH5WMUVmvn9eRV/qrNnBPBHCQp1fMyfXZf1IksNij4wcbG3AX6FZWFzWHmBERdybK9
+	 /jAuHLcEVrzkg==
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-43d01d6b50cso289482f8f.1
+        for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 00:50:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVksDtpvpPm3jNHKOaZuLLXOHDCzVFVh/5CvUOhjiCTtTVIDpYbzd+RxrwNC3WHRqkgBqv+kQ6xVeE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwhnhYhV7sS9XU0PZtCoSI9jHSz0nJtRwLPLAUBstQ4BeP+2jED
+	X/6tm2AIeDCxlify17++A1fek8p4+ot50mRdCccanDULOjNthKJJia8O5qjusWE17U9biNZvJ9b
+	2tegeVEIAkRxaOEXTjdfqGvyKLonEB/A=
+X-Received: by 2002:a05:6000:2409:b0:43b:447a:11b8 with SMTP id
+ ffacd0b85a97d-43b9e9d6050mr19116932f8f.6.1774857000398; Mon, 30 Mar 2026
+ 00:50:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
- properties
-To: Hongliang Wang <wanghongliang@loongson.cn>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260325011852.19079-1-wanghongliang@loongson.cn>
- <20260325011852.19079-2-wanghongliang@loongson.cn>
- <20260325-outstanding-weasel-of-fruition-89db37@quoll>
- <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
- <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
- <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
- <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
- <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
- <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260328074013.3589544-1-ruanjinjie@huawei.com>
+ <20260328074013.3589544-2-ruanjinjie@huawei.com> <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
+ <baa90080-9e6e-c1e5-13a1-b17496c690b4@huawei.com>
+In-Reply-To: <baa90080-9e6e-c1e5-13a1-b17496c690b4@huawei.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 30 Mar 2026 15:49:48 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQE58ooXwyPSztDHbrxMRWCWhJNMKcRJZJsmKznBD12wA@mail.gmail.com>
+X-Gm-Features: AQROBzBd-gKOewl3PX_5GW7wfDT6ZMEcMbV186WYHO9lbJECvy1QYs-DBc7P3MM
+Message-ID: <CAJF2gTQE58ooXwyPSztDHbrxMRWCWhJNMKcRJZJsmKznBD12wA@mail.gmail.com>
+Subject: Re: [PATCH v11 01/11] riscv: kexec_file: Fix crashk_low_res not
+ exclude bug
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org, 
+	saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
+	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, 
+	peterz@infradead.org, feng.tang@linux.alibaba.com, 
+	pawan.kumar.gupta@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	kees@kernel.org, elver@google.com, paulmck@kernel.org, lirongqing@baidu.com, 
+	rppt@kernel.org, leitao@debian.org, ardb@kernel.org, cfsworks@gmail.com, 
+	osandov@fb.com, jbohac@suse.cz, tangyouling@kylinos.cn, 
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, eajames@linux.ibm.com, 
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, vishal.moola@gmail.com, 
+	junhui.liu@pigmoral.tech, coxu@redhat.com, fuqiang.wang@easystack.cn, 
+	liaoyuanhong@vivo.com, chenjiahao16@huawei.com, hbathini@linux.ibm.com, 
+	takahiro.akashi@linaro.org, james.morse@arm.com, lizhengyu3@huawei.com, 
+	x86@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/03/2026 09:18, Hongliang Wang wrote:
-> 
-> On 2026/3/27 下午2:39, Krzysztof Kozlowski wrote:
->> On 27/03/2026 04:09, Hongliang Wang wrote:
->>> The initial idea was that this patch could be used for both ACPI and DTS.
->>>>>> The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
->>>>>> platform, parse
->>>>>> the same parameters regardless of dts or acpi parameter passing, So
->>>>>> clock-input
->>>>>> and clock-div attributes are defined to describe input clock of i2c
->>>>>> controller and
->>>>>> divisor of input clock. It can be used on both 2K and 3A+7A platform.
->>>>> And you cannot use them in DTS.
->>> OK
->>>> I need to keep guessing what you want to achieve, because neither your
->>>> message nor commit text was explicit
->>> What I want to achieve is to describe the input clock and divisor of I2C
->>> controller
->> Input clocks are defined as clock inputs obviously in DT, not as
->> integers. Bindings need to describe the hardware, so start with that.
-> I can describe the hardware in loongson,ls2x-i2c.yaml, and I would like to
-> confirm with you what final implementation plan you agree to? clock 
-> framework
-> or custom clock-input an clock-div attributes? if clock framework, how 
-> can it
-> also be used for ACPI?
+On Mon, Mar 30, 2026 at 3:11=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
+>
+>
+>
+> On 2026/3/30 11:49, Guo Ren wrote:
+> > On Sat, Mar 28, 2026 at 3:41=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.=
+com> wrote:
+> >>
+> >> As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=
+=3DX")
+> >> and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+> >> crashkres_low.") for arm64, while implementing crashkernel=3DX,[high,l=
+ow],
+> >> riscv should have excluded the "crashk_low_res" reserved ranges from
+> >> the crash kernel memory to prevent them from being exported through
+> >> /proc/vmcore, and the exclusion would need an extra crash_mem range.
+> >>
+> >> Cc: Guo Ren <guoren@kernel.org>
+> >> Cc: Baoquan He <bhe@redhat.com>
+> >> Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=3DX,[high,lo=
+w]")
+> >> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> >> ---
+> >>  arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+> >>  1 file changed, 11 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kerne=
+l/machine_kexec_file.c
+> >> index 54e2d9552e93..3f7766057cac 100644
+> >> --- a/arch/riscv/kernel/machine_kexec_file.c
+> >> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> >> @@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned=
+ long *sz)
+> >>         unsigned int nr_ranges;
+> >>         int ret;
+> >>
+> >> -       nr_ranges =3D 1; /* For exclusion of crashkernel region */
+> >> +       nr_ranges =3D 2; /* For exclusion of crashkernel region */
+> >>         walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callb=
+ack);
+> >>
+> >>         cmem =3D kmalloc_flex(*cmem, ranges, nr_ranges);
+> >> @@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigne=
+d long *sz)
+> >>
+> >>         /* Exclude crashkernel region */
+> >>         ret =3D crash_exclude_mem_range(cmem, crashk_res.start, crashk=
+_res.end);
+> >> -       if (!ret)
+> >> -               ret =3D crash_prepare_elf64_headers(cmem, true, addr, =
+sz);
+> >> +       if (ret)
+> >> +               goto out;
+> >> +
+> >> +       if (crashk_low_res.end) {
+> >> +               ret =3D crash_exclude_mem_range(cmem, crashk_low_res.s=
+tart, crashk_low_res.end);
+> > Exclude crashk_low_res is reasonable, but have you tested this?
+>
+> Just simply tested on qemu with crashkernel=3D4G with following kexec
+> mentioned in
+> https://lore.kernel.org/all/20230726175000.2536220-1-chenjiahao16@huawei.=
+com/.
+> And the second kernel can be started normally.
+>
+> https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
+>
+> # dmesg | grep crash
+> [    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000
+> (128 MB)
+> [    0.000000] crashkernel reserved: 0x000000017fe00000 -
+> 0x000000027fe00000 (4096 MB)
+Adding a test log to the commit log makes the patch more trustworthy.
 
-And you ask DT maintainer for that? It's not relevant. You sent DT
-bindings patch, so this patch must be correct and we discuss this patch
-here.
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-Best regards,
-Krzysztof
+>
+>
+>
+> >
+> >> +               if (ret)
+> >> +                       goto out;
+> >> +       }
+> >> +
+> >> +       ret =3D crash_prepare_elf64_headers(cmem, true, addr, sz);
+> >>
+> >>  out:
+> >>         kfree(cmem);
+> >> --
+> >> 2.34.1
+> >>
+> >
+> >
+
+
+
+--=20
+Best Regards
+ Guo Ren
