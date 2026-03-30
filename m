@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81831396B8E
-	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 10:01:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AFCC2D0C97
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 10:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774864893; cv=none; b=rvdjnwZFVl+wTI+UzZ2vG091O6glJhHt+zqTxOUOvb1U9wZp7EmO8rrmMBqDQ+dWRp6zFbRsJEGQV8GMbEvdFhJfjjFTN+3CXBy42leugipy3YTfuAUwXGHSfiL8S/epb5W6pnsGoC2ZA5RClEpBXbjkcThPlO9v8G4rYzzgxB8=
+	t=1774864911; cv=none; b=RwMZqNstX1ecKrLqctsaTc1NfNLBYlDYoNzL5Q0eiY6bseFuIl5zuMt+CwhReO1tg25sfHpHd1LXqCqnFf6S63k2cOhn08i9YXo8uiaEzBsx6c+w+gYoLCKSPJ9E49ckYB91Ih2Z+EwH4C73jQhVyZTybUEcGymGKaL1+r+Efn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774864893; c=relaxed/simple;
-	bh=mZg7sSFakgU3u8dUZmQAVzozp6h719RiydOmTEs15AI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s8UG4FX6h6kB4CTcjyi5cL8n46Da3R3XMjxr8JRpw1bRgGnuHQhJeVZGYOQw0B5e/8DYujxBvfz4vXfourQzudo0f8x57CW3zoBJ58w+QkNtwnid8ceW1bgRlL8MjoVZ8j2R2IMkoLPbsWrX55I4/mgI2dh1mo/BbdaBcfpkNzI=
+	s=arc-20240116; t=1774864911; c=relaxed/simple;
+	bh=Maa/+LvJZf9P3s5n1IYEuKVEAuKb9pzQUnIVaWVvLwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=agJlkK/dwsrtHjj4vnHUAg2iuAuTJwNMsXiSop5nu3AvIfREOLM7mtjPK7TPZhdYWVmzcBzZ+KKf7Pi0KUmOTkluJFcb/vDjgRWpQhq17oBoeHEAQzsaL5S6fLCnuezxdhP7khBnedLLuhVJiDIKX8XYq/Zm+BdxHIYDPx9UPKM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.17])
-	by gateway (Coremail) with SMTP id _____8DxNMH1ScppMu0fAA--.43337S3;
-	Mon, 30 Mar 2026 18:01:25 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxDMMLSsppQO0fAA--.25462S3;
+	Mon, 30 Mar 2026 18:01:47 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.17])
-	by front1 (Coremail) with SMTP id qMiowJBxxuLuScpptK9gAA--.41618S2;
-	Mon, 30 Mar 2026 18:01:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxrsIDSsppwa9gAA--.42578S2;
+	Mon, 30 Mar 2026 18:01:47 +0800 (CST)
 From: Huacai Chen <chenhuacai@loongson.cn>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
@@ -27,9 +27,9 @@ Cc: Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Xi Ruoyao <xry111@xry111.site>,
 	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for 6.12] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-Date: Mon, 30 Mar 2026 18:01:07 +0800
-Message-ID: <20260330100107.3955340-1-chenhuacai@loongson.cn>
+Subject: [PATCH for 6.6] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
+Date: Mon, 30 Mar 2026 18:01:33 +0800
+Message-ID: <20260330100133.3955364-1-chenhuacai@loongson.cn>
 X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -38,24 +38,25 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxxuLuScpptK9gAA--.41618S2
+X-CM-TRANSID:qMiowJBxrsIDSsppwa9gAA--.42578S2
 X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWxXry3ZFWrKF15AFWUGFX_yoWfXrWrpF
-	n8Zrn5GrZ8WFyI9ryDtw4rZrZ0yFn7Gr129ayqka4UCryYgr1xWF4vyrs0qF1kJw4kCrWI
-	gF90qay5uF45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3WFWxXry3ZFWrKF15AFWUGFX_yoWfXr15pF
+	n8Zrs5GrZ5WFyI9ryDtw4rurZ8AFn7Gr1j9ayqka48CryYgr1xWF4vyrs0qF1kJw4kCryI
+	gF90qay5uF45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jUsqXUUUUU=
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8XTm3UUUUU==
 
 From: Xi Ruoyao <xry111@xry111.site>
 
@@ -186,18 +187,18 @@ index 000000000000..109298b8d7e0
 +	struct ucontext rs_uctx;
 +};
 diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 73954aa22664..3f3d22f0b94a 100644
+index 110afd3cc8f3..10c66ec95fa1 100644
 --- a/arch/loongarch/kernel/asm-offsets.c
 +++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -16,6 +16,7 @@
+@@ -15,6 +15,7 @@
  #include <asm/ptrace.h>
  #include <asm/processor.h>
  #include <asm/ftrace.h>
 +#include <asm/sigframe.h>
  
- static void __used output_ptreg_defines(void)
+ void output_ptreg_defines(void)
  {
-@@ -219,6 +220,7 @@ static void __used output_sc_defines(void)
+@@ -218,6 +219,7 @@ void output_sc_defines(void)
  	COMMENT("Linux sigcontext offsets.");
  	OFFSET(SC_REGS, sigcontext, sc_regs);
  	OFFSET(SC_PC, sigcontext, sc_pc);
@@ -206,10 +207,10 @@ index 73954aa22664..3f3d22f0b94a 100644
  }
  
 diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index c9f7ca778364..d4151d2fb82e 100644
+index 635eb1f606c5..21d2979ebf95 100644
 --- a/arch/loongarch/kernel/signal.c
 +++ b/arch/loongarch/kernel/signal.c
-@@ -35,6 +35,7 @@
+@@ -34,6 +34,7 @@
  #include <asm/cpu-features.h>
  #include <asm/fpu.h>
  #include <asm/lbt.h>
@@ -217,7 +218,7 @@ index c9f7ca778364..d4151d2fb82e 100644
  #include <asm/ucontext.h>
  #include <asm/vdso.h>
  
-@@ -51,11 +52,6 @@
+@@ -50,11 +51,6 @@
  #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
  #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
  
@@ -230,10 +231,10 @@ index c9f7ca778364..d4151d2fb82e 100644
  	struct sctx_info *addr;
  	unsigned int size;
 diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 49af37f781bb..b37cda634644 100644
+index 28cfc3861215..884584d661d2 100644
 --- a/arch/loongarch/vdso/Makefile
 +++ b/arch/loongarch/vdso/Makefile
-@@ -21,7 +21,7 @@ cflags-vdso := $(ccflags-vdso) \
+@@ -25,7 +25,7 @@ cflags-vdso := $(ccflags-vdso) \
  	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
  	-std=gnu11 -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
  	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
@@ -249,8 +250,8 @@ index 49af37f781bb..b37cda634644 100644
 -	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
 +	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr -T
  
- #
- # Shared build commands.
+ GCOV_PROFILE := n
+ 
 diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigreturn.S
 index 9cb3c58fad03..59f940d928de 100644
 --- a/arch/loongarch/vdso/sigreturn.S
