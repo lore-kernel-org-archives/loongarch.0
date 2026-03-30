@@ -1,278 +1,228 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E75F274B46
-	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 10:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A61F3C0624
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 10:13:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774864939; cv=none; b=OfLgHRr2xKlYx7XRKXCmAEijwHnBTjqMdg8j/mvIimO8Bg0LHTAmE8OjhDjtrP2H71/p306VbztdFub9iIXuQZiukLZ6DV/6QkJl45eGFlGMlsXP/FGqqwpwu2bM4xiuCxE+SU7y8A996vfqF8QpKMMjv6PhjvTHWlKIKHeTYPA=
+	t=1774865610; cv=none; b=nRqcnaNS/Bad0mbpGvOo0XGsf/XCTN4LCEa5rOzU0+qMrywn46Mry1jxdlVEar0Y26SGQhtK+ZkyEOv2bsUDcEEXL6YheqFvaHM1XDarjQxiZcf1HExBZJIf/QsotmlYjYN7uwwtXjzJoSud/1VE+oqdu5at6tdLe8Au+JUX/oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774864939; c=relaxed/simple;
-	bh=PT1MnQFwYg8nLEG1NpO2SdeOpVGSVxY+69ymot30nM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nnG+H9Xe2iAHYUgEtKQhIb2qiQ04az/gMLvGTkuH1ZwBSsaj+fWAGP/toGAnvRXWQup1QhVI7owHz4gQ3xvgGAZeTL67hxeUXC0WsHgLuKlikc4Q0BHP2M6dkrpJrKh8AlHMj9jBoQQBlSW1aw9HgrBsvwHxb8uWzqfSYb2+RE0=
+	s=arc-20240116; t=1774865610; c=relaxed/simple;
+	bh=02iaw6UdM2pgji2fbxQdTw6RH+O3+yK4hzLaQ0plBWE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=LxBxMEeOVkg5WZq4j0Symndf6Oz04NiiEvZVVAUMSj895U40mX0HOao/uzb1QTn2clfbWCL91iYXdfRar3mt9a1cVcSAGUOCuG/nK1vlDPQSztZuHTFREyBhSiUdF5yB8Igk4R58t72CSIKsu+Fy2FAPVrrzKcJt6sFGVDY/atw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.17])
-	by gateway (Coremail) with SMTP id _____8BxD6onSsppVu0fAA--.31710S3;
-	Mon, 30 Mar 2026 18:02:15 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.17])
-	by front1 (Coremail) with SMTP id qMiowJCxdcAkSspp5a9gAA--.31486S2;
-	Mon, 30 Mar 2026 18:02:14 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Xi Ruoyao <xry111@xry111.site>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH for 6.1] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-Date: Mon, 30 Mar 2026 18:02:05 +0800
-Message-ID: <20260330100205.3955389-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxvsPDTMpp2u4fAA--.25286S3;
+	Mon, 30 Mar 2026 18:13:23 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDx6+DATMppZrJgAA--.54687S3;
+	Mon, 30 Mar 2026 18:13:22 +0800 (CST)
+Subject: Re: [PATCH v2 3/3] LoongArch: KVM: Set vcpu_is_preempted() macro
+ rather than function
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, kernel@xen0n.name,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>
+References: <20260317092911.1400248-1-maobibo@loongson.cn>
+ <20260317092911.1400248-4-maobibo@loongson.cn>
+ <CAAhV-H5aKoTTdjwzco6Yv84SJgtt0Eq9xXNp6PkcDaxM+H9gZw@mail.gmail.com>
+ <6118cbb5-f895-e04d-7b76-91f9e9ad3b05@loongson.cn>
+ <CAAhV-H5J-jaej47xSq6F8_Y6nTSJW3pJ=kd9sTAUxdKegmG+Yw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <ab101f57-39d5-fb3e-f8a7-612838c1fbe5@loongson.cn>
+Date: Mon, 30 Mar 2026 18:10:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5J-jaej47xSq6F8_Y6nTSJW3pJ=kd9sTAUxdKegmG+Yw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxdcAkSspp5a9gAA--.31486S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW3WFWxXry3ZFWrKF15AFWUGFX_yoWfXr48pF
-	n8Zrn5GrZ5WFyI9ryDtw4rZrZ0yFn7Gr1j9ayqka4UCryYgr18WF4vyrs0qF1DJw4kCrWI
-	gF90qa15uF45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUJ529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJDx6+DATMppZrJgAA--.54687S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw4xAw1DZF1kXw1ftr48Zrc_yoW7CrWUpr
+	yUCFnYyF48Ww1xG3y2qw4jkrn0vwn7GFn7X3W3Ga4rAa1DtFnrJr1UtrWj9Fy0qw1kKF10
+	qF95Xr4xuFyaywcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU0HSoPUUUUU==
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C2
+	67AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI
+	8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWU
+	CwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r
+	1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
+	vfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-From: Xi Ruoyao <xry111@xry111.site>
 
-commit e4878c37f6679fdea91b27a0f4e60a871f0b7bad upstream.
 
-With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
-of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
-empty.  This is not valid, as the current DWARF specification mandates
-the first byte of the EH frame to be the version number 1.  It causes
-some unwinders to complain, for example the ClickHouse query profiler
-spams the log with messages:
+On 2026/3/30 下午6:00, Huacai Chen wrote:
+> On Fri, Mar 20, 2026 at 11:01 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/3/19 下午8:48, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Tue, Mar 17, 2026 at 5:29 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> vcpu_is_preempted() is performance sensitive called in function
+>>>> osq_lock(), here set it as macro. So that parameter is not parsed
+>>>> at most time, it can avoid cache line thrashing across numa node.
+>>>>
+>>>> Here is part of unixbench result on 3C5000 DualWay machine with 32
+>>>> Cores and 2 Numa node.
+>>>>             origin    with patch    CONFIG_PARAVIRT disabled
+>>>> execl     6871.9    7134.2        7190.8
+>>>> fstime    425.5     959.9         956.1
+>>>>
+>>>>   From the test result, with macro method it is almost the same with
+>>>> CONFIG_PARAVIRT disabled, and there is some improvment compared with
+>>>> function method.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/qspinlock.h | 27 +++++++++++++++++++++-----
+>>>>    arch/loongarch/kernel/paravirt.c       | 15 ++------------
+>>>>    2 files changed, 24 insertions(+), 18 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+>>>> index 66244801db67..b5d7a038faf1 100644
+>>>> --- a/arch/loongarch/include/asm/qspinlock.h
+>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
+>>>> @@ -5,8 +5,10 @@
+>>>>    #include <linux/jump_label.h>
+>>>>
+>>>>    #ifdef CONFIG_PARAVIRT
+>>>> -
+>>>> +#include <asm/kvm_para.h>
+>>>>    DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+>>>> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>>>>
+>>>>    #define virt_spin_lock virt_spin_lock
+>>>>
+>>>> @@ -34,10 +36,25 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+>>>>           return true;
+>>>>    }
+>>>>
+>>>> -#define vcpu_is_preempted vcpu_is_preempted
+>>>> -
+>>>> -bool vcpu_is_preempted(int cpu);
+>>>> -
+>>>> +/*
+>>>> + * Macro is better than inline function here
+>>>> + * With inline function, parameter cpu is parsed even though it is not used.
+>>>> + * This may cause cache line thrashing across NUMA node.
+>>>> + * With macro method, parameter cpu is parsed only when it is used.
+>>> What is the test result with inline function? If it isn't
+>>> significantly worse than with macro, we usually prefer inline
+>>> functions.
+>> In the beginning, I had the similar thoughts. And inline function is
+>> better to maintain, however here is obvious performance gap between
+>> inline and macro method.
+> Strange, try __always_inline to replace inline? Maybe inline fails for
+> some cases?
+__always_inline is the same with inline.
 
-    clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
-    version: 127 at 7ffffffb0000
+With the following sentences in osq_lock(). With inline method, 
+parameter node_cpu(node->prev) will be parsed and put in temp register 
+in the beginning before the inline function is called, so that there 
+will be one memory access.
 
-Here "127" is just the byte located at the p_vaddr (0, i.e. the
-beginning of the vDSO) of the empty GNU_EH_FRAME segment. Cross-
-checking with /proc/365854/maps has also proven 7ffffffb0000 is the
-start of vDSO in the process VM image.
+And I ask with LLVM guys, they say that LLVM framework does this, not 
+LLVM arch specified. inline is different with macro actually.
 
-In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
-"genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
-use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
-limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
-we can simply flip it over to -fasynchronous-unwind-tables and pass
---eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
-stack for statistics even if the sample point is taken when the PC is in
-the vDSO.
+However with marcro method, parameter node_cpu(node->prev) will not be 
+parsed until virt_preempt_key() is set with true.
 
-However simply adjusting the options above would exploit an issue: when
-the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
-falled back to a machine-specific routine to match the code pattern of
-rt_sigreturn() and extract the registers saved in the sigframe if the
-code pattern is matched.  As unwinding from signal handlers is vital for
-libgcc to support pthread cancellation etc., the fall-back routine had
-been silently keeping the LoongArch Linux systems functioning since
-Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
-format, fall-back routine will no longer be used and libgcc will fail
-to unwind the sigframe, and unwinding from signal handlers will no
-longer work, causing dozens of glibc test failures.  To make it possible
-to unwind from signal handlers again, it's necessary to code the unwind
-info in __vdso_rt_sigreturn via .cfi_* directives.
+if (smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
+                                vcpu_is_preempted(node_cpu(node->prev))))
 
-The offsets in the .cfi_* directives depend on the layout of struct
-sigframe, notably the offset of sigcontext in the sigframe.  To use the
-offset in the assembly file, factor out struct sigframe into a header to
-allow asm-offsets.c to output the offset for assembly.
-
-To work around a long-term issue in the libgcc unwinder (the pc is
-unconditionally substracted by 1: doing so is technically incorrect for
-a signal frame), a nop instruction is included with the two real
-instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
-hack has been used on x86 for a long time.
-
-Cc: stable@vger.kernel.org
-Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/linkage.h  | 36 +++++++++++++++++++++++++++
- arch/loongarch/include/asm/sigframe.h |  9 +++++++
- arch/loongarch/kernel/asm-offsets.c   |  2 ++
- arch/loongarch/kernel/signal.c        |  6 +----
- arch/loongarch/vdso/Makefile          |  4 +--
- arch/loongarch/vdso/sigreturn.S       |  6 ++---
- 6 files changed, 53 insertions(+), 10 deletions(-)
- create mode 100644 arch/loongarch/include/asm/sigframe.h
-
-diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
-index e2eca1a25b4e..a1bd6a3ee03a 100644
---- a/arch/loongarch/include/asm/linkage.h
-+++ b/arch/loongarch/include/asm/linkage.h
-@@ -41,4 +41,40 @@
- 	.cfi_endproc;					\
- 	SYM_END(name, SYM_T_NONE)
- 
-+/*
-+ * This is for the signal handler trampoline, which is used as the return
-+ * address of the signal handlers in userspace instead of called normally.
-+ * The long standing libgcc bug https://gcc.gnu.org/PR124050 requires a
-+ * nop between .cfi_startproc and the actual address of the trampoline, so
-+ * we cannot simply use SYM_FUNC_START.
-+ *
-+ * This wrapper also contains all the .cfi_* directives for recovering
-+ * the content of the GPRs and the "return address" (where the rt_sigreturn
-+ * syscall will jump to), assuming there is a struct rt_sigframe (where
-+ * a struct sigcontext containing those information we need to recover) at
-+ * $sp.  The "DWARF for the LoongArch(TM) Architecture" manual states
-+ * column 0 is for $zero, but it does not make too much sense to
-+ * save/restore the hardware zero register.  Repurpose this column here
-+ * for the return address (here it's not the content of $ra we cannot use
-+ * the default column 3).
-+ */
-+#define SYM_SIGFUNC_START(name)				\
-+	.cfi_startproc;					\
-+	.cfi_signal_frame;				\
-+	.cfi_def_cfa 3, RT_SIGFRAME_SC;			\
-+	.cfi_return_column 0;				\
-+	.cfi_offset 0, SC_PC;				\
-+							\
-+	.irp num, 1,  2,  3,  4,  5,  6,  7,  8, 	\
-+		  9,  10, 11, 12, 13, 14, 15, 16,	\
-+		  17, 18, 19, 20, 21, 22, 23, 24,	\
-+		  25, 26, 27, 28, 29, 30, 31;		\
-+	.cfi_offset \num, SC_REGS + \num * SZREG;	\
-+	.endr;						\
-+							\
-+	nop;						\
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-+
-+#define SYM_SIGFUNC_END(name) SYM_FUNC_END(name)
-+
- #endif
-diff --git a/arch/loongarch/include/asm/sigframe.h b/arch/loongarch/include/asm/sigframe.h
-new file mode 100644
-index 000000000000..109298b8d7e0
---- /dev/null
-+++ b/arch/loongarch/include/asm/sigframe.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#include <asm/siginfo.h>
-+#include <asm/ucontext.h>
-+
-+struct rt_sigframe {
-+	struct siginfo rs_info;
-+	struct ucontext rs_uctx;
-+};
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 548885a591ae..b0c5090fcdcb 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -14,6 +14,7 @@
- #include <asm/cpu-info.h>
- #include <asm/ptrace.h>
- #include <asm/processor.h>
-+#include <asm/sigframe.h>
- 
- void output_ptreg_defines(void)
- {
-@@ -213,6 +214,7 @@ void output_sc_defines(void)
- 	COMMENT("Linux sigcontext offsets.");
- 	OFFSET(SC_REGS, sigcontext, sc_regs);
- 	OFFSET(SC_PC, sigcontext, sc_pc);
-+	OFFSET(RT_SIGFRAME_SC, rt_sigframe, rs_uctx.uc_mcontext);
- 	BLANK();
- }
- 
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 2662e5dc3828..47e405985968 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -33,6 +33,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cpu-features.h>
- #include <asm/fpu.h>
-+#include <asm/sigframe.h>
- #include <asm/ucontext.h>
- #include <asm/vdso.h>
- 
-@@ -46,11 +47,6 @@
- #define lock_fpu_owner()	({ preempt_disable(); pagefault_disable(); })
- #define unlock_fpu_owner()	({ pagefault_enable(); preempt_enable(); })
- 
--struct rt_sigframe {
--	struct siginfo rs_info;
--	struct ucontext rs_uctx;
--};
--
- struct _ctx_layout {
- 	struct sctx_info *addr;
- 	unsigned int size;
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index 24d6b31f4dfa..6bafdf4780d3 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -25,7 +25,7 @@ cflags-vdso := $(ccflags-vdso) \
- 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
- 	-std=gnu11 -O2 -g -fno-strict-aliasing -fno-common -fno-builtin \
- 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
--	$(call cc-option, -fno-asynchronous-unwind-tables) \
-+	$(call cc-option, -fasynchronous-unwind-tables) \
- 	$(call cc-option, -fno-stack-protector)
- aflags-vdso := $(ccflags-vdso) \
- 	-D__ASSEMBLY__ -Wa,-gdwarf-2
-@@ -36,7 +36,7 @@ endif
- 
- # VDSO linker flags.
- ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
--	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id -T
-+	$(filter -E%,$(KBUILD_CFLAGS)) -shared --build-id --eh-frame-hdr -T
- 
- GCOV_PROFILE := n
- 
-diff --git a/arch/loongarch/vdso/sigreturn.S b/arch/loongarch/vdso/sigreturn.S
-index 9cb3c58fad03..59f940d928de 100644
---- a/arch/loongarch/vdso/sigreturn.S
-+++ b/arch/loongarch/vdso/sigreturn.S
-@@ -12,13 +12,13 @@
- 
- #include <asm/regdef.h>
- #include <asm/asm.h>
-+#include <asm/asm-offsets.h>
- 
- 	.section	.text
--	.cfi_sections	.debug_frame
- 
--SYM_FUNC_START(__vdso_rt_sigreturn)
-+SYM_SIGFUNC_START(__vdso_rt_sigreturn)
- 
- 	li.w	a7, __NR_rt_sigreturn
- 	syscall	0
- 
--SYM_FUNC_END(__vdso_rt_sigreturn)
-+SYM_SIGFUNC_END(__vdso_rt_sigreturn)
--- 
-2.52.0
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> Here is part of unixbench result on 3C5000 DualWay machine with 32
+>> Cores and 2 Numa node, based on 7.0.0-rc4 kernel version.
+>> vcpu_is_preempted() is implemented with different methods.
+>>            origin (function)   inline        macro
+>> execl     7025.7             6991.2        7242.3
+>> fstime    474.6              703.1         1071.1
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>>
+>>> Huacai
+>>>
+>>>> + */
+>>>> +#define vcpu_is_preempted(cpu)                                                 \
+>>>> +({                                                                             \
+>>>> +       bool __val;                                                             \
+>>>> +                                                                               \
+>>>> +       if (!static_branch_unlikely(&virt_preempt_key))                         \
+>>>> +               __val = false;                                                  \
+>>>> +       else {                                                                  \
+>>>> +               struct kvm_steal_time *src;                                     \
+>>>> +               src = &per_cpu(steal_time, cpu);                                \
+>>>> +               __val = !!(READ_ONCE(src->preempted) & KVM_VCPU_PREEMPTED);     \
+>>>> +       }                                                                       \
+>>>> +       __val;                                                                  \
+>>>> +})
+>>>>    #endif /* CONFIG_PARAVIRT */
+>>>>
+>>>>    #include <asm-generic/qspinlock.h>
+>>>> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+>>>> index b74fe6db49ab..2d1206e486e2 100644
+>>>> --- a/arch/loongarch/kernel/paravirt.c
+>>>> +++ b/arch/loongarch/kernel/paravirt.c
+>>>> @@ -10,8 +10,8 @@
+>>>>    #include <asm/paravirt.h>
+>>>>
+>>>>    static int has_steal_clock;
+>>>> -static DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+>>>> -static DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>> +DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+>>>> +DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>>>>    DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
+>>>>
+>>>>    static bool steal_acc = true;
+>>>> @@ -261,17 +261,6 @@ static int pv_time_cpu_down_prepare(unsigned int cpu)
+>>>>           return 0;
+>>>>    }
+>>>>
+>>>> -bool vcpu_is_preempted(int cpu)
+>>>> -{
+>>>> -       struct kvm_steal_time *src;
+>>>> -
+>>>> -       if (!static_branch_unlikely(&virt_preempt_key))
+>>>> -               return false;
+>>>> -
+>>>> -       src = &per_cpu(steal_time, cpu);
+>>>> -       return !!(src->preempted & KVM_VCPU_PREEMPTED);
+>>>> -}
+>>>> -EXPORT_SYMBOL(vcpu_is_preempted);
+>>>>    #endif
+>>>>
+>>>>    static void pv_cpu_reboot(void *unused)
+>>>> --
+>>>> 2.39.3
+>>>>
+>>
+>>
 
