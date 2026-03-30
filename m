@@ -1,84 +1,159 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12D11EFFB7
-	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 05:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F35737D126
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 07:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774848429; cv=none; b=eOnyDmO/HYUxhGM/FR2ybv5UKsN8QtQeR6HVsukz3MEgWg5Pu5eftcKd2kaDFciuUdy/3Hxq92jilHnGNgXL+KcWYFXpX4t9tAaGzjiykotyOyUDCozu8RpdPHp5SrdCxYaq1uXNEiKfOeYh/FB012z37CmaqyPfa/z0TrtJWuo=
+	t=1774854691; cv=none; b=Z6mL/3LZGjBlAO1TDjlrFlEyVY8Re9OacoQRFGkiqwVyCadccVAAqjQpCn/Z8aRiM1TJuOVhWl6kD2FoltrhU20FHdtCIO2ikfDAskJ7WhWKo4cmeuUZH6CaWX+sSYQaC6JWV41Worz3EYz6CESf+KkFde7B4idnHdZMbyCenQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774848429; c=relaxed/simple;
-	bh=GpPfrbO8ZObn0n6Rf8KY0Ma52KsUrpz3vk6UtR7SLOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MjuYgrDp2tF54oOqaUPXmbq0WWtE0tNdX01cYfuZijZc9VjTpD7kTFuy+bVHC84GGDdgTX0EWX0K2oAziF18hGfACc6dlm+yj+okgPqi59JBvpfMB6GHsVDM7nlrQB97w9p3iP6amzQ6U08uNPXfOtgPeraipg4vIpEHAjdXopY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6E3C268B05; Mon, 30 Mar 2026 07:26:55 +0200 (CEST)
-Date: Mon, 30 Mar 2026 07:26:55 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Magnus Lindholm <linmag7@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library v4
-Message-ID: <20260330052655.GA4592@lst.de>
-References: <20260327061704.3707577-1-hch@lst.de> <20260329213119.GA2106@quark>
+	s=arc-20240116; t=1774854691; c=relaxed/simple;
+	bh=tH2S5P8dR69sJzEISlKn9G8QgvuVGrtWVb10/3dnr0k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=J+X2wdus9z6qF2twkdo7t9l7Xq6RJqbnsEV2kPn0fXMw4WQ9k0JdpRYqCHq3gHp0xRNu86uiOb6W9Og6mNfxBAmhXxGu430cD5ZUroGWlV0Tgi4QLImpKL3Epdel9/WsDGhSGT9nprid4qBMS7yXs1uDy5HTD/xEVbWywc5Sj2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=REz6lrKf; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="REz6lrKf"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=dtxKLBtxeK7WnTNaRuRN6wjCIkUS/712dvNiyCme+dM=;
+	b=REz6lrKfLnmTbZnTSrloA8Qxl9ytOsPa/OKwvl5w3Tr9CHfmTc48CSuaquXePwoPkmMac2rJ+
+	Ia8doJegFbzncelLLc+WY8AD1bp7J4dS8mfObdEHsZoC3f0vux4WUTdBtkywh/SHtrYyCW4VUbm
+	dhD5rc1J2Q4kAhnpMA6VL/8=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4fkj2Z2x0tz12LDJ;
+	Mon, 30 Mar 2026 15:05:58 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id E15B240537;
+	Mon, 30 Mar 2026 15:11:22 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 30 Mar 2026 15:11:17 +0800
+Message-ID: <baa90080-9e6e-c1e5-13a1-b17496c690b4@huawei.com>
+Date: Mon, 30 Mar 2026 15:11:13 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260329213119.GA2106@quark>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v11 01/11] riscv: kexec_file: Fix crashk_low_res not
+ exclude bug
+Content-Language: en-US
+To: Guo Ren <guoren@kernel.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
+	<feng.tang@linux.alibaba.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
+	<leitao@debian.org>, <ardb@kernel.org>, <cfsworks@gmail.com>,
+	<osandov@fb.com>, <jbohac@suse.cz>, <tangyouling@kylinos.cn>,
+	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
+	<eajames@linux.ibm.com>, <songshuaishuai@tinylab.org>,
+	<kevin.brodsky@arm.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <fuqiang.wang@easystack.cn>,
+	<liaoyuanhong@vivo.com>, <chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260328074013.3589544-1-ruanjinjie@huawei.com>
+ <20260328074013.3589544-2-ruanjinjie@huawei.com>
+ <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Sun, Mar 29, 2026 at 02:31:19PM -0700, Eric Biggers wrote:
-> But yes, as Andrew mentioned there are two "xor: add a better public
-> API" patches.  They should be folded together.
 
-Yes.  This is the ages old git bug of creating duplicate commits when
-a rebase has conflicts biting again, sorry.
 
+On 2026/3/30 11:49, Guo Ren wrote:
+> On Sat, Mar 28, 2026 at 3:41 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+>>
+>> As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
+>> and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+>> crashkres_low.") for arm64, while implementing crashkernel=X,[high,low],
+>> riscv should have excluded the "crashk_low_res" reserved ranges from
+>> the crash kernel memory to prevent them from being exported through
+>> /proc/vmcore, and the exclusion would need an extra crash_mem range.
+>>
+>> Cc: Guo Ren <guoren@kernel.org>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=X,[high,low]")
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>  arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+>>  1 file changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+>> index 54e2d9552e93..3f7766057cac 100644
+>> --- a/arch/riscv/kernel/machine_kexec_file.c
+>> +++ b/arch/riscv/kernel/machine_kexec_file.c
+>> @@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>>         unsigned int nr_ranges;
+>>         int ret;
+>>
+>> -       nr_ranges = 1; /* For exclusion of crashkernel region */
+>> +       nr_ranges = 2; /* For exclusion of crashkernel region */
+>>         walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+>>
+>>         cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+>> @@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>>
+>>         /* Exclude crashkernel region */
+>>         ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+>> -       if (!ret)
+>> -               ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+>> +       if (ret)
+>> +               goto out;
+>> +
+>> +       if (crashk_low_res.end) {
+>> +               ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+> Exclude crashk_low_res is reasonable, but have you tested this?
+
+Just simply tested on qemu with crashkernel=4G with following kexec
+mentioned in
+https://lore.kernel.org/all/20230726175000.2536220-1-chenjiahao16@huawei.com/.
+And the second kernel can be started normally.
+
+https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
+
+# dmesg | grep crash
+[    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000
+(128 MB)
+[    0.000000] crashkernel reserved: 0x000000017fe00000 -
+0x000000027fe00000 (4096 MB)
+
+
+
+> 
+>> +               if (ret)
+>> +                       goto out;
+>> +       }
+>> +
+>> +       ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+>>
+>>  out:
+>>         kfree(cmem);
+>> --
+>> 2.34.1
+>>
+> 
+> 
