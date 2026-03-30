@@ -1,133 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9212DC783;
-	Sun, 29 Mar 2026 22:51:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06626E71E
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 03:47:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774824689; cv=none; b=GnbDZlA28CCFddDI3F4KEm5zhRkG9CEI/JNKnlCYa1QVJRAarZfRD6T7rc+ndRyJCti8ButS3QfKBcJb+KGhy/KGn4NqWeQkTtdP1g3zZW0MRHGq+KSK95lxjyrcPztywVFUsjH7vuhwOwwfgONvnwFYtImpnQgTb3ykUZ4CLFE=
+	t=1774842465; cv=none; b=kfi9rh3SlcyQ+90QH4XBKQK6y6d1qTbmPy1AWT7bQDBwU0XOnNXgDOZ2zRtzCFH7xoGeKOFgnVj9sC8uMUI2uV1kOi6B5X33+YuZzZ1ydfU08Ba1NJsltk+SDFohsWqd6wgKp0zvVtUagwNpf9zlXyOG7B68h4OqhiEGLGs4u5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774824689; c=relaxed/simple;
-	bh=xC03r/4dJ8Us44QpgIA9Ngu2zy8kWGCxh9mj0ZxoTHs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fqrqqKaXvnhzdC0BRQQLzxs/gm28moRvcuycOdomRqiY6n+57guD02b4B0yrL41IvG5bG01PjVmkhVeMu+08z3lqNo/8dol0W4j0w/tTKwFxHNtVwXDbAmUpT6U99dywNm2X/vQy8uJaJkWPX4b4R8CQQE/bGLBv8nZ4PGWtW1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JBtLNNMx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774842465; c=relaxed/simple;
+	bh=nbn+1wU01z27PHPiB6pyjlcWzi6QRevgboBAEreZK0g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aAMNGm86Oa0rDbrMOC0jJ7bqf/PBQLLCwsEPoeV842V38yA5fM03u943ExqiKH0maPOZzIneOQW0XHlWqPTH8LF40Fw9q/p/JLb1C6Fc8gKPXafHkOBxpeOOzLPq/AseaMblxja63aG+38XHtZ+WjGwTXPoSm8vtQH3A82G8mQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Scb0MZjy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JBtLNNMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6B6C116C6;
-	Sun, 29 Mar 2026 22:51:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1774824688;
-	bh=xC03r/4dJ8Us44QpgIA9Ngu2zy8kWGCxh9mj0ZxoTHs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JBtLNNMxkC+Qck2+BGDNaaVFR64izaAKQJSJUR3TFGlVL+zj0esYpoV9thVBYizo5
-	 2LdTKTg4q97XSRSKSMqWeByHX3v4Kwd3ip5W8A7e9SWOk90u7h9T0PIyI9/hHuozRw
-	 xIxWNYXda49DMygxwfzePxOY5aQGe8Krgc64/5fY=
-Date: Sun, 29 Mar 2026 15:51:26 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Richard Henderson
- <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, Magnus
- Lindholm <linmag7@gmail.com>, Russell King <linux@armlinux.org.uk>, Catalin
- Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard
- Biesheuvel <ardb@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Paul Walmsley
- <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- "David S. Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, Thomas Gleixner <tglx@kernel.org>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Herbert Xu <herbert@gondor.apana.org.au>, Dan Williams
- <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>, David Sterba
- <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>, Song Liu
- <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>, Li Nan
- <linan122@huawei.com>, Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld"
- <Jason@zx2c4.com>, linux-alpha@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
- linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID5 XOR library v4
-Message-Id: <20260329155126.a01a5729b7d8376712182851@linux-foundation.org>
-In-Reply-To: <20260329213119.GA2106@quark>
-References: <20260327061704.3707577-1-hch@lst.de>
-	<20260329213119.GA2106@quark>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Scb0MZjy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CDD5C2BCB7
+	for <loongarch@lists.linux.dev>; Mon, 30 Mar 2026 03:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774842465;
+	bh=nbn+1wU01z27PHPiB6pyjlcWzi6QRevgboBAEreZK0g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Scb0MZjy9cW04DoU9XXgbCQXHVOKa8DZVHDYfIiIKz2Fqgl3FbLxeTL5wH1FsnBpY
+	 bDiVv31JMHV56ZOzGCkfJIHGhtdSgwDDoOdmQZHEVQJr0OiUIlyPhAzciiHFsWHUE5
+	 yOl5buCFMT8PBAhOjjBMBO9ikE5Iebn/0Ej0dSz4tPpx94aoiMHtf1yBtqO3rFwQOq
+	 7F3RSd6YK57Ou0xLcJTTjr8bkmKSvHsISlzMFKdyUGKweTQfm0r1NvzqhVLExwzHGA
+	 TF+qUuaMfIQSuIAcVONoEBik/na74YLUlofcP75mpWWxJS29GiNl6QhjqFIjVRgmQm
+	 EvkNHCPAr+0FQ==
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43ccda008cdso977008f8f.0
+        for <loongarch@lists.linux.dev>; Sun, 29 Mar 2026 20:47:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWk5pv+QBF1J+safImby4BMD3WOdvplUPnxENbZib5/ZgMTXVKgB9T/zR3/5ZowgTawJtPEXF8F4W0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxwNLOSEejbkyLVhIl3nm0WU5JL1IUNeSGPNDSBJrUbeNupjkfn
+	crymhHwJHISg6OOozcmo+2AWks06H9IX1oW2qFK0EmvnEJbpylGqxZizRxCRNZKo41DanttwtIk
+	rcMaq3Goav4CdCaWwTEgeBo6SEnN2qL8=
+X-Received: by 2002:a05:6000:1a8e:b0:43b:45c6:7ad with SMTP id
+ ffacd0b85a97d-43b97a90decmr23305904f8f.29.1774842462488; Sun, 29 Mar 2026
+ 20:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20260328074013.3589544-1-ruanjinjie@huawei.com> <20260328074013.3589544-6-ruanjinjie@huawei.com>
+In-Reply-To: <20260328074013.3589544-6-ruanjinjie@huawei.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 30 Mar 2026 11:47:30 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQu0ekP6Emz=F3uEhPsyqNvH_PwwJU5yOADbR9poQ4noQ@mail.gmail.com>
+X-Gm-Features: AQROBzBPJeJ2Q-LIGCNdFWKdGbP9VQWOujey1zE68GwImpeUgj1lBD6fgh2uH4Y
+Message-ID: <CAJF2gTQu0ekP6Emz=F3uEhPsyqNvH_PwwJU5yOADbR9poQ4noQ@mail.gmail.com>
+Subject: Re: [PATCH v11 05/11] riscv: kexec_file: Fix potential buffer
+ overflow in prepare_elf_headers()
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org, 
+	saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
+	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, 
+	peterz@infradead.org, feng.tang@linux.alibaba.com, 
+	pawan.kumar.gupta@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	kees@kernel.org, elver@google.com, paulmck@kernel.org, lirongqing@baidu.com, 
+	rppt@kernel.org, leitao@debian.org, ardb@kernel.org, cfsworks@gmail.com, 
+	osandov@fb.com, jbohac@suse.cz, tangyouling@kylinos.cn, 
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, eajames@linux.ibm.com, 
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, vishal.moola@gmail.com, 
+	junhui.liu@pigmoral.tech, coxu@redhat.com, fuqiang.wang@easystack.cn, 
+	liaoyuanhong@vivo.com, chenjiahao16@huawei.com, hbathini@linux.ibm.com, 
+	takahiro.akashi@linaro.org, james.morse@arm.com, lizhengyu3@huawei.com, 
+	x86@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 29 Mar 2026 14:31:19 -0700 Eric Biggers <ebiggers@kernel.org> wrote:
+On Sat, Mar 28, 2026 at 3:41=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
+>
+> There is a race condition between the kexec_load() system call
+> (crash kernel loading path) and memory hotplug operations that can lead
+> to buffer overflow and potential kernel crash.
+riscv left no margin for hotplug in prepare_elf_headers(). Actually,
+this check has been in crash_exclude_mem_range(); this patch makes it
+happen earlier.
 
-> On Fri, Mar 27, 2026 at 07:16:32AM +0100, Christoph Hellwig wrote:
-> > Hi all,
-> > 
-> > the XOR library used for the RAID5 parity is a bit of a mess right now.
-> > The main file sits in crypto/ despite not being cryptography and not
-> > using the crypto API, with the generic implementations sitting in
-> > include/asm-generic and the arch implementations sitting in an asm/
-> > header in theory.  The latter doesn't work for many cases, so
-> > architectures often build the code directly into the core kernel, or
-> > create another module for the architecture code.
-> > 
-> > Changes this to a single module in lib/ that also contains the
-> > architecture optimizations, similar to the library work Eric Biggers
-> > has done for the CRC and crypto libraries later.  After that it changes
-> > to better calling conventions that allow for smarter architecture
-> > implementations (although none is contained here yet), and uses
-> > static_call to avoid indirection function call overhead.
-> > 
-> > A git tree is also available here:
-> > 
-> >     git://git.infradead.org/users/hch/misc.git xor-improvements
-> > 
-> > Gitweb:
-> > 
-> >     https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/xor-improvements
-> > 
-> > Changes since v3:
-> >  - switch away from lockdep_assert_preemption_enabled() again
-> >  - fix a @ reference in a kerneldoc comment.
-> >  - build the arm4regs implementation also without kernel-mode neon
-> >    support
-> >  - fix a pre-existing issue about mismatched attributes on arm64's
-> >    xor_block_inner_neon
-> >  - reject 0-sized xor request and adjust the kunit test case to not
-> >    generate them
-> 
-> Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Although this patch has no real effect for riscv for the current. I
+still give an acked-by, because it's a proper check step in this
+callback.
 
-Great, thanks, added to all changelogs.
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-> But yes, as Andrew mentioned there are two "xor: add a better public
-> API" patches.  They should be folded together.
-
-I folded them.
-
-I'm a bit wobbly about upstreaming all this for 7.1-rc1.  It hits on a
-lot of stuff and I don't think we've heard a lot from the affected
-maintainers.
-
-otoh, we're unlikely to learn much from an additional nine weeks in
-linux-next so at some point one has to forge ahead and rely on seven
-weeks of -rc to address any remaining niggles.  And I'm confident that
-Christoph will support his work well.
-
-But still, hearing some reassuring words about this would be
-appreciated ;)
-
+--=20
+Best Regards
+ Guo Ren
