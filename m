@@ -1,117 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7A83A8734
-	for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3067936655C
+	for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 17:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774959880; cv=none; b=Uc6MFX9F8ZSwbbhOtwRgbsWoQRLJzy4WS/pOWLom0taGg836+y23xaKDYtyvPuqd4lNK+FdjdXepNICDZ7SP+HEg06I1RdcBjdrhYQI6d+vURpPnS1lvo2cpK38M7eKRrOptCtShG5p8qBupJ0HLPw70bJ2fW+dQ69Doo5bzHlg=
+	t=1774978305; cv=none; b=sY1vweNPCLT15i8FzG/TNOazxAqoI+s3IODawlGqYcbjE9hPjK/z6eAyIoAh8FSayiZ+9cDTrKN90aKC06YG9wbn9unVwORbp/rfuNoMx3ymD7h39P9+cj93NOTqO8Eu98lzRGvkPcL1VmAo6FFudfzLStqq7Y+gjFq+ia7UBiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774959880; c=relaxed/simple;
-	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r7nFIa/BlFwGuy/BkleI2ZF6lIeEeFktIHX0sqB6RSTzSJlzvIE5JcnPvIPY/rY4Q73lICKZrhRivy+x2v0snXj8tx//Ltx1Y00xH1LNu8IdGZNZoso4XeQMb/YjFMzUFfExjyVYP0iYGhIiPqxskA7hCXtD6NtnC8uMcfVfJkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJZmO7Tv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774978305; c=relaxed/simple;
+	bh=3i1Gq4JAIizBknxjSLlecxNj8YdouZQOldf/Gi8SPcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uI2WBVD1KNj/vbWPOt8JZdWy1rES0FBPi4tnEWCPjHrzq+upMhOBFbT8Hn5pL0uUW9iz98AFvjVbiqTVIPCTdyUQt3VLIVJZFvYpCk32uiZnjAywTHiQjzgStwt7DukC5Xk5ARGF/9TEUdbbGB9K8gwv23WpnwYMa/uA95+wD+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WDzivK/a; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJZmO7Tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFB7C2BCC7
-	for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774959880;
-	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RJZmO7TvhY88kQe3eU7xRIwnSJdkZvyh60WN8MrF2rST5eqYT7Si7twWZg/DT2ZoX
-	 YzqUgPxfYDwdo0IEdVVzbGnpMkc2xEIEQWtZG/kOBKnlwvP5OBf9k5ABA9qJOS+Ukj
-	 eOekVrlTQVDRLMnCElfoE+fONsncPPw1jhKXxukkxEyJi7dEXS+heu/pZUzPng526Q
-	 fQrEJ4DiG53+M4yOJk7Zh135J6HBPJuwoHDZrzQcHd3EDgZteWUMcAVKR5sOaepyV5
-	 f2xbf4yCO62QwUTSWKNB376JIzJj0sbMnh6R7hTd0WRb04t6xyHnCnYuuXajw89d5X
-	 Ti2a3xJRDsK2w==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-415c8a4d2e6so2323794fac.0
-        for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 05:24:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2FQ49bkRvLPqyep4jlLg21fJWqZmcJ+gQrBm7JEUB1Kx6Su5f09JUGX16G1E0j8Cs2Zq95IDu138=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyx+M89RbcwXFz2nvvY6sL2zh5WFJ6wRDfloUK3FSu4B86Tj0UI
-	omuQBQ56u3XaBV4vBn1cvDHmyDIbRiHXvHYHyDlSnjYavOUk4XJCV64bhb/iqESBqQuQFCf5czR
-	pGPpzu5Jslp3Pw+ymXZzjuXkTDgsgYTs=
-X-Received: by 2002:a05:6870:3212:b0:41c:5212:2c7e with SMTP id
- 586e51a60fabf-41cec149624mr8736242fac.20.1774959878527; Tue, 31 Mar 2026
- 05:24:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="WDzivK/a"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FA1C1E5E;
+	Tue, 31 Mar 2026 10:31:36 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDE373F915;
+	Tue, 31 Mar 2026 10:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1774978302; bh=3i1Gq4JAIizBknxjSLlecxNj8YdouZQOldf/Gi8SPcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDzivK/ay0BT4/Mfila47ssOCUKcoC8mcE1OJ3YzJDm9s79Zs686E4kzJf4HRuKB6
+	 lpHJ/DyPCzQqdZR0SBq1PcmDDq9UF0avGeThJW47JsQ4fAL+D9oqkCMCvB+7zuGSCf
+	 u5jO9aDk1QLnYCQi+3kmjhvfmGJUmFBpQyUk3kzE=
+Date: Tue, 31 Mar 2026 18:31:33 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Chengwen Feng <fengchengwen@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <will@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Zheyun Shen <szy0127@sjtu.edu.cn>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Xin Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Wei Huang <wei.huang2@amd.com>,
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>,
+	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com,
+	suzuki.poulose@arm.com, ryan.roberts@arm.com,
+	chenl311@chinatelecom.cn, masahiroy@kernel.org,
+	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com,
+	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com,
+	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com,
+	liuyonglong@huawei.com, linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v10 0/8] ACPI: Unify CPU UID interface and fix ARM64 TPH
+ steer-tag issue
+Message-ID: <acwE9V-r63-W2wby@arm.com>
+References: <20260320031737.35048-1-fengchengwen@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260320031737.35048-1-fengchengwen@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 31 Mar 2026 14:24:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
-X-Gm-Features: AQROBzDL-JtY7QC0BpuyBPGCuLquO5-Gf9GrQy5Yvy_4yGsymDKEHbc8tb9l0x0
-Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
-Subject: Re: [PATCH v10 0/8] ACPI: Unify CPU UID interface and fix ARM64 TPH
- steer-tag issue
-To: Chengwen Feng <fengchengwen@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, 
-	Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, 
-	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
-	James Clark <james.clark@linaro.org>, Besar Wicaksono <bwicaksono@nvidia.com>, 
-	Ma Ke <make24@iscas.ac.cn>, Wei Huang <wei.huang2@amd.com>, 
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
-	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com, suzuki.poulose@arm.com, 
-	ryan.roberts@arm.com, chenl311@chinatelecom.cn, masahiroy@kernel.org, 
-	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com, 
-	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com, 
-	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com, liuyonglong@huawei.com, 
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 4:17=E2=80=AFAM Chengwen Feng <fengchengwen@huawei.=
-com> wrote:
->
+On Fri, Mar 20, 2026 at 11:17:29AM +0800, Chengwen Feng wrote:
 > This patchset unifies ACPI Processor UID retrieval across
 > arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
 > and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
->
+> 
 > 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
 >      respective users)
 > 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
 > 6: Clean up perf/arm_cspmu
 > 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
 > 8: Pass ACPI Processor UID to Cache Locality _DSM
->
+> 
 > The interface refactor ensures consistent CPU UID retrieval across
 > architectures (no functional changes for valid inputs) and provides the
 > unified interface required for the ARM64 TPH fix.
->
+> 
 > ---
 > Changes in v10:
 > - Refine commit header&log according to Punit's and Bjorn's review
 > - Split perf/arm_cspmu as a separate commit which address Punit's
 >   review
->
+> 
 > Changes in v9:
 > - Address Bjorn's review: split commits to each platform so that make
 >   them easy to review
->
+> 
 > Changes in v8:
 > - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
 >   Jeremy's review
->
+> 
 > Chengwen Feng (8):
 >   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
 >   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
@@ -124,32 +125,11 @@ com> wrote:
 >     get_acpi_id_for_cpu()
 >   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
 >   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
->
+> 
 >  Documentation/PCI/tph.rst          |  4 +--
 >  arch/arm64/include/asm/acpi.h      | 17 +---------
 >  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
->  arch/loongarch/include/asm/acpi.h  |  5 ---
->  arch/loongarch/kernel/acpi.c       |  9 ++++++
->  arch/riscv/include/asm/acpi.h      |  4 ---
->  arch/riscv/kernel/acpi.c           | 16 ++++++++++
->  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
->  arch/x86/include/asm/cpu.h         |  1 -
->  arch/x86/include/asm/smp.h         |  1 -
->  arch/x86/kernel/acpi/boot.c        | 20 ++++++++++++
->  arch/x86/xen/enlighten_hvm.c       |  5 +--
->  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
->  drivers/acpi/riscv/rhct.c          |  7 ++++-
->  drivers/pci/tph.c                  | 16 +++++++---
->  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
->  include/linux/acpi.h               | 11 +++++++
->  include/linux/pci-tph.h            |  4 +--
->  18 files changed, 158 insertions(+), 57 deletions(-)
->
-> --
 
-It doesn't look like anyone has a particular heartburn related to this
-series, so I could apply it in principle, but I'd appreciate some ACKs
-from arch maintainers.
+For the arm64 bits:
 
-Why don't you resend it with all of the tags collected so far (and
-please add x86@kernel.org to the CC list)?
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
