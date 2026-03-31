@@ -1,136 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09543AA1B3;
-	Tue, 31 Mar 2026 12:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7A83A8734
+	for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774958726; cv=none; b=FMZmgjuxwZ+xCZd0zITXfa8hWbVLnJGOsBv0LYg4QpHaGQXmr60MF/aDftylzf05DyaGF3NcU95qDpD1TDcnAcrezsGvgF+vBTrtdb9gIM9jf/jiynWSaPDF9vPot3yCPHNGSn5X3KvegUmpbYbkG8MMjWP7OZ4kQzhVPQtIPJA=
+	t=1774959880; cv=none; b=Uc6MFX9F8ZSwbbhOtwRgbsWoQRLJzy4WS/pOWLom0taGg836+y23xaKDYtyvPuqd4lNK+FdjdXepNICDZ7SP+HEg06I1RdcBjdrhYQI6d+vURpPnS1lvo2cpK38M7eKRrOptCtShG5p8qBupJ0HLPw70bJ2fW+dQ69Doo5bzHlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774958726; c=relaxed/simple;
-	bh=ZnYn9SXB+cSuaLtUlp0PUYQKlgEkBtGwy2wu2MkfQTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgsR/FN54WY22K34d2lBHV4w1dvGrwxFW+Jiz1SROhidPIgk43nDJyCuKCz0lm/SWcqETnHaAPlJCCw9dxBI/arFcpe/+qFXNzxGEm9dLIUKv8Xo3SRyNCXJF89JgHCyMU9x/HCtZXyZFEc6SXvcyONmI+ZulQx++3zsjMWdZhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=t1IJid3X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774959880; c=relaxed/simple;
+	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r7nFIa/BlFwGuy/BkleI2ZF6lIeEeFktIHX0sqB6RSTzSJlzvIE5JcnPvIPY/rY4Q73lICKZrhRivy+x2v0snXj8tx//Ltx1Y00xH1LNu8IdGZNZoso4XeQMb/YjFMzUFfExjyVYP0iYGhIiPqxskA7hCXtD6NtnC8uMcfVfJkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJZmO7Tv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="t1IJid3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A695FC19423;
-	Tue, 31 Mar 2026 12:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1774958726;
-	bh=ZnYn9SXB+cSuaLtUlp0PUYQKlgEkBtGwy2wu2MkfQTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t1IJid3Xwd0N876DcLM2okNrLAUhqms9HAdy0mUzbIY7cAxXdwrWywmDqqCH+MruW
-	 xPRJqL5uNW6PQJtUV5nMdK1d6N1kTAbGbxAQYqRVsnT8pFXLhzc+EMtJuEoCtF416/
-	 sF2aFkZ3C7JxW+nZTtvNhnX8oqOQYhvFCAlRaFH0=
-Date: Tue, 31 Mar 2026 14:05:23 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH for 6.6] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-Message-ID: <2026033143-gumball-handcraft-5656@gregkh>
-References: <20260330100133.3955364-1-chenhuacai@loongson.cn>
- <2026033148-expletive-many-cd82@gregkh>
- <42ab19d20e572c61587728350b5f1ca900632322.camel@xry111.site>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJZmO7Tv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFB7C2BCC7
+	for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 12:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774959880;
+	bh=+v0lsG31lmz9yOKp4sThWdLD00iDG9mSDxn4BdCze+s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RJZmO7TvhY88kQe3eU7xRIwnSJdkZvyh60WN8MrF2rST5eqYT7Si7twWZg/DT2ZoX
+	 YzqUgPxfYDwdo0IEdVVzbGnpMkc2xEIEQWtZG/kOBKnlwvP5OBf9k5ABA9qJOS+Ukj
+	 eOekVrlTQVDRLMnCElfoE+fONsncPPw1jhKXxukkxEyJi7dEXS+heu/pZUzPng526Q
+	 fQrEJ4DiG53+M4yOJk7Zh135J6HBPJuwoHDZrzQcHd3EDgZteWUMcAVKR5sOaepyV5
+	 f2xbf4yCO62QwUTSWKNB376JIzJj0sbMnh6R7hTd0WRb04t6xyHnCnYuuXajw89d5X
+	 Ti2a3xJRDsK2w==
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-415c8a4d2e6so2323794fac.0
+        for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 05:24:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2FQ49bkRvLPqyep4jlLg21fJWqZmcJ+gQrBm7JEUB1Kx6Su5f09JUGX16G1E0j8Cs2Zq95IDu138=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyx+M89RbcwXFz2nvvY6sL2zh5WFJ6wRDfloUK3FSu4B86Tj0UI
+	omuQBQ56u3XaBV4vBn1cvDHmyDIbRiHXvHYHyDlSnjYavOUk4XJCV64bhb/iqESBqQuQFCf5czR
+	pGPpzu5Jslp3Pw+ymXZzjuXkTDgsgYTs=
+X-Received: by 2002:a05:6870:3212:b0:41c:5212:2c7e with SMTP id
+ 586e51a60fabf-41cec149624mr8736242fac.20.1774959878527; Tue, 31 Mar 2026
+ 05:24:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42ab19d20e572c61587728350b5f1ca900632322.camel@xry111.site>
+References: <20260320031737.35048-1-fengchengwen@huawei.com>
+In-Reply-To: <20260320031737.35048-1-fengchengwen@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 31 Mar 2026 14:24:26 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
+X-Gm-Features: AQROBzDL-JtY7QC0BpuyBPGCuLquO5-Gf9GrQy5Yvy_4yGsymDKEHbc8tb9l0x0
+Message-ID: <CAJZ5v0gO1VSPs58JeupaiTZBkP3i_-H2bEQpfU-6k2TXjdiaOQ@mail.gmail.com>
+Subject: Re: [PATCH v10 0/8] ACPI: Unify CPU UID interface and fix ARM64 TPH
+ steer-tag issue
+To: Chengwen Feng <fengchengwen@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, 
+	Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, 
+	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
+	James Clark <james.clark@linaro.org>, Besar Wicaksono <bwicaksono@nvidia.com>, 
+	Ma Ke <make24@iscas.ac.cn>, Wei Huang <wei.huang2@amd.com>, 
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
+	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com, suzuki.poulose@arm.com, 
+	ryan.roberts@arm.com, chenl311@chinatelecom.cn, masahiroy@kernel.org, 
+	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com, 
+	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com, 
+	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com, liuyonglong@huawei.com, 
+	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 31, 2026 at 07:58:15PM +0800, Xi Ruoyao wrote:
-> On Tue, 2026-03-31 at 13:10 +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Mar 30, 2026 at 06:01:33PM +0800, Huacai Chen wrote:
-> > > From: Xi Ruoyao <xry111@xry111.site>
-> > > 
-> > > commit e4878c37f6679fdea91b27a0f4e60a871f0b7bad upstream.
-> > > 
-> > > With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
-> > > of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
-> > > empty.  This is not valid, as the current DWARF specification mandates
-> > > the first byte of the EH frame to be the version number 1.  It causes
-> > > some unwinders to complain, for example the ClickHouse query profiler
-> > > spams the log with messages:
-> > > 
-> > >     clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
-> > >     version: 127 at 7ffffffb0000
-> > > 
-> > > Here "127" is just the byte located at the p_vaddr (0, i.e. the
-> > > beginning of the vDSO) of the empty GNU_EH_FRAME segment. Cross-
-> > > checking with /proc/365854/maps has also proven 7ffffffb0000 is the
-> > > start of vDSO in the process VM image.
-> > > 
-> > > In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-> > > MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
-> > > "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
-> > > use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
-> > > limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
-> > > we can simply flip it over to -fasynchronous-unwind-tables and pass
-> > > --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
-> > > stack for statistics even if the sample point is taken when the PC is in
-> > > the vDSO.
-> > > 
-> > > However simply adjusting the options above would exploit an issue: when
-> > > the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
-> > > falled back to a machine-specific routine to match the code pattern of
-> > > rt_sigreturn() and extract the registers saved in the sigframe if the
-> > > code pattern is matched.  As unwinding from signal handlers is vital for
-> > > libgcc to support pthread cancellation etc., the fall-back routine had
-> > > been silently keeping the LoongArch Linux systems functioning since
-> > > Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
-> > > format, fall-back routine will no longer be used and libgcc will fail
-> > > to unwind the sigframe, and unwinding from signal handlers will no
-> > > longer work, causing dozens of glibc test failures.  To make it possible
-> > > to unwind from signal handlers again, it's necessary to code the unwind
-> > > info in __vdso_rt_sigreturn via .cfi_* directives.
-> > > 
-> > > The offsets in the .cfi_* directives depend on the layout of struct
-> > > sigframe, notably the offset of sigcontext in the sigframe.  To use the
-> > > offset in the assembly file, factor out struct sigframe into a header to
-> > > allow asm-offsets.c to output the offset for assembly.
-> > > 
-> > > To work around a long-term issue in the libgcc unwinder (the pc is
-> > > unconditionally substracted by 1: doing so is technically incorrect for
-> > > a signal frame), a nop instruction is included with the two real
-> > > instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
-> > > hack has been used on x86 for a long time.
-> > > 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> > > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > 
-> > Does not apply cleanly on the latest 6.12.y queue :(
-> 
-> This is for 6.6.  Maybe your agent is malfunctioning?
+On Fri, Mar 20, 2026 at 4:17=E2=80=AFAM Chengwen Feng <fengchengwen@huawei.=
+com> wrote:
+>
+> This patchset unifies ACPI Processor UID retrieval across
+> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
+> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
+>
+> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
+>      respective users)
+> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+> 6: Clean up perf/arm_cspmu
+> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
+> 8: Pass ACPI Processor UID to Cache Locality _DSM
+>
+> The interface refactor ensures consistent CPU UID retrieval across
+> architectures (no functional changes for valid inputs) and provides the
+> unified interface required for the ARM64 TPH fix.
+>
+> ---
+> Changes in v10:
+> - Refine commit header&log according to Punit's and Bjorn's review
+> - Split perf/arm_cspmu as a separate commit which address Punit's
+>   review
+>
+> Changes in v9:
+> - Address Bjorn's review: split commits to each platform so that make
+>   them easy to review
+>
+> Changes in v8:
+> - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
+>   Jeremy's review
+>
+> Chengwen Feng (8):
+>   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID
+>     retrieval
+>   x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   ACPI: Centralize acpi_get_cpu_uid() declaration in
+>     include/linux/acpi.h
+>   perf: arm_cspmu: Switch to acpi_get_cpu_uid() from
+>     get_acpi_id_for_cpu()
+>   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
+>   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+>
+>  Documentation/PCI/tph.rst          |  4 +--
+>  arch/arm64/include/asm/acpi.h      | 17 +---------
+>  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
+>  arch/loongarch/include/asm/acpi.h  |  5 ---
+>  arch/loongarch/kernel/acpi.c       |  9 ++++++
+>  arch/riscv/include/asm/acpi.h      |  4 ---
+>  arch/riscv/kernel/acpi.c           | 16 ++++++++++
+>  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
+>  arch/x86/include/asm/cpu.h         |  1 -
+>  arch/x86/include/asm/smp.h         |  1 -
+>  arch/x86/kernel/acpi/boot.c        | 20 ++++++++++++
+>  arch/x86/xen/enlighten_hvm.c       |  5 +--
+>  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
+>  drivers/acpi/riscv/rhct.c          |  7 ++++-
+>  drivers/pci/tph.c                  | 16 +++++++---
+>  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
+>  include/linux/acpi.h               | 11 +++++++
+>  include/linux/pci-tph.h            |  4 +--
+>  18 files changed, 158 insertions(+), 57 deletions(-)
+>
+> --
 
-Sorry, that was me malfunctioning, I meant to say this failed for 6.6.y:
+It doesn't look like anyone has a particular heartburn related to this
+series, so I could apply it in principle, but I'd appreciate some ACKs
+from arch maintainers.
 
-	Applying loongarch-vdso-emit-gnu_eh_frame-correctly.patch to linux-6.6.y
-	Applying patch loongarch-vdso-emit-gnu_eh_frame-correctly.patch
-	patching file arch/loongarch/include/asm/linkage.h
-	patching file arch/loongarch/include/asm/sigframe.h
-	patching file arch/loongarch/kernel/asm-offsets.c
-	patching file arch/loongarch/kernel/signal.c
-	Hunk #2 succeeded at 72 with fuzz 2 (offset 21 lines).
-	patching file arch/loongarch/vdso/Makefile
-	Hunk #1 succeeded at 24 (offset -1 lines).
-	Hunk #2 FAILED at 36.
-	1 out of 2 hunks FAILED -- rejects in file arch/loongarch/vdso/Makefile
-	patching file arch/loongarch/vdso/sigreturn.S
-	Patch loongarch-vdso-emit-gnu_eh_frame-correctly.patch does not apply (enforce with -f)
-
-too many kernel branches...
-
-thanks,
-
-greg k-h
+Why don't you resend it with all of the tags collected so far (and
+please add x86@kernel.org to the CC list)?
