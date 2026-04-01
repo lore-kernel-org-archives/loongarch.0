@@ -1,76 +1,35 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8F1BC2A
-	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 04:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6AA3262A6
+	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 07:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775017024; cv=none; b=ZjmjuTqFRTOY5qEZEnb7QfGttmbw1kH3pLdwYIMKz3YgV4DhF83NKCydGDksr/4mzRqLfeMfLp5LlzvxxqhPnWQHKMlC2tWAU9uWaTH2gSR+BTQbh998bvqq7K4lmIFC2sm6FBdonUyAVd6bSp6zjzSSEOkSP2xsKi9oJ3VyBPc=
+	t=1775027543; cv=none; b=rihPRNch0NihL2GiI5eU1NONZ1uDWAA2bLlBDSH1i4mMEmymWYHibB+XjXbbJaPbWhvu79r+rLjLHjTxhZJuHFcTFPrNRm8onicmZKgvguVMoD4NrMjTIaFCxoq8lRBycJhbF1oPOFYA2gG7GPrGL2c/3TA2TPORTH6mFpEqk8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775017024; c=relaxed/simple;
-	bh=l922fxZJdN52S5EP0tbBncX83A4BDpblw6Wg3p8iUu0=;
+	s=arc-20240116; t=1775027543; c=relaxed/simple;
+	bh=XQ4Vez+4fynTr5VWS/XpBbVcpmlTMr1JImr1B/hJwLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CW5qWzAjw87+fcJxgO07U7TeaLUMXKUeVZDdD4Yv9heJKmwk//ToCedHvVq3ERycBFOKVHd6q25AZqEZBLYuL+jBc38tiQKNinjmnuTgOufrk7rA5NucAa9IgJFd5FIMxHosODL/l4nBkjRrD+H5xkx1ManZaptyeuwMGoUYk7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7eFu0mZ; arc=none smtp.client-ip=74.125.82.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7eFu0mZ"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2b6b0500e06so8678713eec.1
-        for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 21:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775017022; x=1775621822; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9uvuJacAw3jMb0IWkn6pjnEJfWKbd9mokrTdkvUS1kE=;
-        b=i7eFu0mZOMW/WX788kUwNTxaGeAthDldfYHnLzb64zYf5n+x6CAQVxULV2TJ1DM3tH
-         BcYd2TD7EZ9g201n78oMPeskGFCpYUKY9k35OSLZVjHBZkbJYsL84tW8LjPVpoqvxwRx
-         W0wIt03lC/bn6SsdnVM18xGwJtcJAX8jROb7xJiY9FPwXZfwdyE42w7NQWl18XKmCLsn
-         TLuMuSYFK/wcC1WH9puN7KMc7VqLpDg/RkkifvDl/69cZ1qhk8q1OQLwoTZcRqNAcJS6
-         iA6PhesJ5CoJ4DuM2Z15x4Aukk93K+9qQ2XXHzYP886gRqiTQculh4Io8hbVPN05Jj+C
-         GP6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775017022; x=1775621822;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9uvuJacAw3jMb0IWkn6pjnEJfWKbd9mokrTdkvUS1kE=;
-        b=RUxQ8Upq6PdDQGv2cxnGO+yiCJ9Ie8hi3yL7/1e58enoC1cRfLhguyprNETOKN7ihI
-         PJW19/R0v5CagP2KfeVM7/uCYktlXRQKIERpokGuCZZOzxmMqzwvNmXNUMfpKUoLenKx
-         bIgGp9grZFup0knXrcCjnYeYaLMJU1X3N5g4j2s6f3QUjSiLRv4rujXV0ek36FzwC5sp
-         XtxG41z249k7fdOAC/HSq8uu3hz+HlyXATOiAuX1yqgNkFgilttP9VDS7fFPw1fVhGHZ
-         W0IGwrIoJgL+zPGDNUEgbW2VzUDR3C6HwDJk1rA5JBPSjtdQUYKdVgc/ke3sIt0/oOPc
-         KEdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkiuU6aeXgPn8nRRsCMUlDFd5XwN+4wk/mc7r3R0dK8ZnKNMyZLDsbBijojFKFm2iZhMcTNM4Gp/A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzhHPs1FREKoRXDVRzwUCRcn9qJggZDDqXCWYpk5WnWRMeGbTqW
-	tPfFkwZIwLxkTfnC1pQoauiU34qedrabBcOvDgD+UNWBZ8WyLlIH1FpJ
-X-Gm-Gg: ATEYQzzLq8ileADwKMuxkU3fQVioqHS6CrLnqn7APWu037N8YCezBG/OPeSOSdMZhWw
-	Qy4EpywtDX5Uz65CQPpW74PPY8HciuEOsWYS06VRcz4kPI56upleXawxgtcXyLBD5OQHYjoY0wV
-	qn0L23G5d2VpdAwM+kp8WRgWX8xdyHVZLgnQkAyWygVHmk4TXsK9z3HTA8FeVTKNtc/RKxYWSo+
-	qdMBNn/OQp71O4n2OqjVirOCsRb1V0BZlBfswKnj5Rc9Lgzykz8tZ4/Gg8ULzyQLndKLnARqQ3e
-	Ufp0L4Dp27GZQT+nC31kRt4dXX6HCKgJ3hw1n9pVeyub0OOErGaeC6ALRqfoz19pXMvHxMW1B9y
-	9tWMoJfiA26wJ809dqi7k/yGD9Cupr05p7wi5stg9hM2ucAur88SWKDf/AXK1urAlN5W2NE25CL
-	YRqUQWSkb/UGVoxa0=
-X-Received: by 2002:a05:7300:2213:b0:2ba:6978:2b4 with SMTP id 5a478bee46e88-2c9321b5d9cmr1075299eec.20.1775017022050;
-        Tue, 31 Mar 2026 21:17:02 -0700 (PDT)
-Received: from gmail.com ([52.161.55.196])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c45dfcc95fsm9876945eec.29.2026.03.31.21.17.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 21:17:01 -0700 (PDT)
-From: Ethan Yang <ethan.yang.kernel@gmail.com>
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	akpm@linux-foundation.org
-Subject: [PATCH v2] LoongArch: mm: fix FLATMEM ARCH_PFN_OFFSET for non-zero DRAM base
-Date: Wed,  1 Apr 2026 04:17:00 +0000
-Message-ID: <20260401041700.3260-1-ethan.yang.kernel@gmail.com>
-X-Mailer: git-send-email @GIT_VERSION@
-In-Reply-To: <CAKeWACY11_1JL_OagfxUhQckW4rkAjhwXxUnVHNPdHF60Uc81w@mail.gmail.com>
-References: <CAKeWACY11_1JL_OagfxUhQckW4rkAjhwXxUnVHNPdHF60Uc81w@mail.gmail.com>
+	 MIME-Version; b=GrYVAZO13ZcVVSV3TfO7auDe/dx1Ljh/f4K6fmfJekiMuZ5iRMr6q1BQwuRFnRKcFpM+ym6gDabJ/Lp2xCJ7403N5QMhSUUruskjR6fxUoCtTiO8n/BQbIXrCbDcmmVyaYEfd/0/VYzhqfcSqf3gd1Qsm6TWde/jDF8t2nZL29o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxksBUxcxpH7YgAA--.33132S3;
+	Wed, 01 Apr 2026 15:12:20 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxHMJHxcxppFpiAA--.55591S4;
+	Wed, 01 Apr 2026 15:12:19 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 2/5] LoongArch: BPF: Add the default case in emit_atomic() and rename it
+Date: Wed,  1 Apr 2026 15:12:03 +0800
+Message-ID: <20260401071206.5506-3-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260401071206.5506-1-yangtiezhu@loongson.cn>
+References: <20260401071206.5506-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -78,76 +37,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxHMJHxcxppFpiAA--.55591S4
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tFWrWr17WF43Jr4UAr1fAFc_yoW8Cr1Dpr
+	s8AwsYkrZ3XwnYga4DJa9ruw13KFs5tay3JF4UZ3yxXwsIqr1DWF1rt3WqqFy5A3y8Wr1f
+	XrsYkFyUu3W8J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8CztUUUUU=
 
-With CONFIG_FLATMEM, pfn_to_page() is computed as:
+Like the other archs such as x86 and riscv, add the default case
+in emit_atomic() to print an error message for the invalid opcode
+and return -EINVAL , then make its return type as int.
 
-  mem_map + (pfn - ARCH_PFN_OFFSET)
+While at it, given that all of the instructions in emit_atomic()
+are only read-modify-write instructions, rename emit_atomic() to
+emit_atomic_rmw() to make it clear, because there will be a new
+function emit_atomic_ld_st() for load-acquire and store-release
+instructions in the later patch.
 
-LoongArch currently derives ARCH_PFN_OFFSET from PFN_UP(PHYS_OFFSET),
-while PHYS_OFFSET defaults to 0. On systems whose first DRAM range does
-not start at physical address 0, ARCH_PFN_OFFSET becomes smaller than
-the real RAM base PFN.
-
-As a result, pfn_to_page() points past the intended mem_map base during
-early memmap initialization. This causes struct page initialization to
-touch wrong entries and can lead to early boot failures in the
-memmap_init_range() path.
-
-Fix this by deriving ARCH_PFN_OFFSET from min_low_pfn, and initialize/
-recalculate min_low_pfn from memblock_start_of_DRAM() in LoongArch
-memory init so PFN-to-page translation matches the actual DRAM base.
-
-This change only fixes the FLATMEM PFN base and does not alter the
-existing VA/PA linear mapping scheme.
-
-Signed-off-by: Ethan Yang <ethan.yang.kernel@gmail.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-v2:
-  - Fixed tab-to-space formatting.
----
- arch/loongarch/include/asm/page.h | 3 ++-
- arch/loongarch/kernel/mem.c       | 1 +
- arch/loongarch/kernel/setup.c     | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ arch/loongarch/net/bpf_jit.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
-index 327bf0bc9..80aea8b51 100644
---- a/arch/loongarch/include/asm/page.h
-+++ b/arch/loongarch/include/asm/page.h
-@@ -25,7 +25,8 @@
-  * used in our early mem init code for all memory models.
-  * So always define it.
-  */
--#define ARCH_PFN_OFFSET	PFN_UP(PHYS_OFFSET)
-+extern unsigned long min_low_pfn;
-+#define ARCH_PFN_OFFSET	min_low_pfn
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 9cb796e16379..fefda4050a20 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -344,7 +344,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ #undef jmp_offset
+ }
  
- extern void clear_page(void *page);
- extern void copy_page(void *to, void *from);
-diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
-index 8ab1ffedc..03835f8cb 100644
---- a/arch/loongarch/kernel/mem.c
-+++ b/arch/loongarch/kernel/mem.c
-@@ -46,6 +46,7 @@ void __init memblock_init(void)
- 		}
- 	}
- 
-+	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
- 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
- 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 839b23ede..625be2494 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -394,6 +394,7 @@ static void __init check_kernel_sections_mem(void)
- static void __init arch_mem_init(char **cmdline_p)
+-static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
++static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
  {
- 	/* Recalculate max_low_pfn for "mem=xxx" */
-+	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
- 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 	const u8 t1 = LOONGARCH_GPR_T1;
+ 	const u8 t2 = LOONGARCH_GPR_T2;
+@@ -448,7 +448,12 @@ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 			emit_zext_32(ctx, r0, true);
+ 		}
+ 		break;
++	default:
++		pr_err_once("bpf-jit: invalid atomic read-modify-write opcode %02x\n", imm);
++		return -EINVAL;
+ 	}
++
++	return 0;
+ }
  
+ static bool is_signed_bpf_cond(u8 cond)
+@@ -1256,7 +1261,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+ 	case BPF_STX | BPF_ATOMIC | BPF_DW:
+-		emit_atomic(insn, ctx);
++		ret = emit_atomic_rmw(insn, ctx);
++		if (ret)
++			return ret;
+ 		break;
+ 
+ 	/* Speculation barrier */
 -- 
-2.47.3
+2.42.0
 
