@@ -1,96 +1,83 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BCA361DBF
-	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 02:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775010827; cv=pass; b=kVSW0zqA7CgqXLUYF0BOziTsBKDRAUYs2ozdoy/1L/l72v4mZCOfIamX1QkKO5OiCuk2TrdJ6jRTcWZ8wxE5d01cC79Y2ZWEuFUhKW6YFsmLmY3B3wFXbE4Xeu0+TkiFuRJTUJv1iZUWT+rwfKujDgGmUkrEius1TlnDGzv4aMk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775010827; c=relaxed/simple;
-	bh=essh2sxorikDa1Eh63RIs85oK9LyJHLj/1JIi04CxUo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GdTzGXMQyg0NwZRlPMLThQu1cV7bFo+zbzJZLju86o6iu0BEivMWR2QHeqZsX9X+M/CPtqv1HGUokJV9Ou00eEZN3fDmww4jzgKBWiU6AQzoQ4KMl1OENQ2TCB1/9H0eo3I/qA1OPYWNzyYxJzKopWOzTUv6HqnbERH1DZhxCbI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUNmaM6d; arc=pass smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA8F1BC2A
+	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 04:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775017024; cv=none; b=ZjmjuTqFRTOY5qEZEnb7QfGttmbw1kH3pLdwYIMKz3YgV4DhF83NKCydGDksr/4mzRqLfeMfLp5LlzvxxqhPnWQHKMlC2tWAU9uWaTH2gSR+BTQbh998bvqq7K4lmIFC2sm6FBdonUyAVd6bSp6zjzSSEOkSP2xsKi9oJ3VyBPc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775017024; c=relaxed/simple;
+	bh=l922fxZJdN52S5EP0tbBncX83A4BDpblw6Wg3p8iUu0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CW5qWzAjw87+fcJxgO07U7TeaLUMXKUeVZDdD4Yv9heJKmwk//ToCedHvVq3ERycBFOKVHd6q25AZqEZBLYuL+jBc38tiQKNinjmnuTgOufrk7rA5NucAa9IgJFd5FIMxHosODL/l4nBkjRrD+H5xkx1ManZaptyeuwMGoUYk7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7eFu0mZ; arc=none smtp.client-ip=74.125.82.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUNmaM6d"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5a2b542cbaaso3297881e87.0
-        for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 19:33:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775010812; cv=none;
-        d=google.com; s=arc-20240605;
-        b=K1vp2HD5eLAttcmlmXVwpA/dnVZx64jD/qCNlrsCC6DEb2qgBXmF59whv3+cL8RNZD
-         aZMU2oDfNGC4alzZs3bOp0bntqgSZc3aNDhDdyDm1RR0xSBaThjLSWEfcSbXkfL1vPNG
-         MQY8CGrpjBGODcaxa5EE5o6aMn81wKjaA2iCE9N06/i+l4XmbXEGPG4raIeWwuJnKUaJ
-         KHOqYZPZ5kzYDUxONp1X6mIgz9im02sukslPwtdiBL7Axomz5VVooZyebqQfN3OOHS+2
-         /rF70eHz5uOGJgwuLds82tqPWJuqPlGUnEx/nmEDTW3fkaV7Q17QDwsvwZLD0XbiCmDS
-         A1LQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=3oo7dkEhtHT7VYXAhK0i4yVbZSa70g5LexsTV6nJgOA=;
-        fh=U0DohHTzBYwyJrgDlsZdVSdkxcnDp0eRyRI8QGRA0lc=;
-        b=Gt+i9rAfQaTHD5OadN7Aa/Gs8ymj6rHWmdfttZigEOoFz2NPZ47MWJ0g7+w2frjUFL
-         Ilzp0TlZ4Q2OkAJkDrUZLUDsSyBDjZe31+tWQPcbV0hP2sMnAZxPAssaUSwXzIFQU/CM
-         icpW5/F4frwMp6V8tgSHRRQ29GgEAP3yCNLwXUEg/cHbqO8RpRDS81Rt0mNkor3sxZQo
-         eqrr4Xd2umkEkTjgT2qBT6WW36nre8lBVsUI16fUyXggtgT7270SYPbN7DCjb4PcmOiw
-         1bUR0PenEgLo/AyRNe+8en8Lm3t/Av9ysCpxz2aSm1LLQbaCxh9/uWIrOXE7GXhepgMp
-         o/mw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7eFu0mZ"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2b6b0500e06so8678713eec.1
+        for <loongarch@lists.linux.dev>; Tue, 31 Mar 2026 21:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775010812; x=1775615612; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3oo7dkEhtHT7VYXAhK0i4yVbZSa70g5LexsTV6nJgOA=;
-        b=WUNmaM6dwqf9G4b6ubClVX8RwazperchvfLoInONeUXeyqdS088FfuqfzttWS6V9Ja
-         SGngYDtNUr9ijzh8zUxPPD2QULHzk2npQHPurQloYrEVjyI3wGQ12W/5DKEx82BbpZLi
-         LWnHcdOnid7rixTgn6kBJ6TbwII9rgfcLbWt2bnelwq8svDh6z0BmrW3aCgLywKd8VBQ
-         0Sy8xltB7luk8puE0tJWFrM+CAMw1WQgXtTFz07pJMrKYyXAWtMW0g1Cb2GJ2pXSl5xo
-         ZbRpDUa/Rc2ai3xUqqhMzlmFBLp6VANHTksua/xmNgYgMpv90GAMl7Ytjzd6WrUHGHfU
-         ukow==
+        d=gmail.com; s=20251104; t=1775017022; x=1775621822; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9uvuJacAw3jMb0IWkn6pjnEJfWKbd9mokrTdkvUS1kE=;
+        b=i7eFu0mZOMW/WX788kUwNTxaGeAthDldfYHnLzb64zYf5n+x6CAQVxULV2TJ1DM3tH
+         BcYd2TD7EZ9g201n78oMPeskGFCpYUKY9k35OSLZVjHBZkbJYsL84tW8LjPVpoqvxwRx
+         W0wIt03lC/bn6SsdnVM18xGwJtcJAX8jROb7xJiY9FPwXZfwdyE42w7NQWl18XKmCLsn
+         TLuMuSYFK/wcC1WH9puN7KMc7VqLpDg/RkkifvDl/69cZ1qhk8q1OQLwoTZcRqNAcJS6
+         iA6PhesJ5CoJ4DuM2Z15x4Aukk93K+9qQ2XXHzYP886gRqiTQculh4Io8hbVPN05Jj+C
+         GP6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775010812; x=1775615612;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3oo7dkEhtHT7VYXAhK0i4yVbZSa70g5LexsTV6nJgOA=;
-        b=EpA2sD0pNmr2+FOCcIzDuS5GgRCBS/rlhIhjQfhAu6F4/FiVybrH8jsf6ZKACJcmMJ
-         kJcUjKaCQi0Js3QD69oqV5OE7u92w8+14lzq5cjMUSEjlztB4JDOkgur3Mt4gFH1IrzK
-         rXSgHjv3AQeOPeoEQTfZo7XUwnO3uk0gmcW9qGO96cp6wMdjjhvTr/jajx9q7FSSygCW
-         BngONhsEZcUblGw0ECM6UygPK9l4ZnnQh0CfcBjL2gNvpELdrKjXLosUuQFqwyE83bSI
-         e+DAVMbvyCtlh0pr5oJAWa5s9q6+BKdIo2nEJIJxnz9ECqgrsWJaB9HarAozJp3gXusG
-         lyKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/sUThHmaWl76g4FYW6bF+j/sA1brM/J+JKw++ji9wyLi4c3dfRtBpwCFnMkhs2/EazJt4xwap9A0=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw58cGvE6QBMHkbLUWaI3yMBcnHvtOHJf91WFzKxwqEXY3YtFgN
-	stDAWnLrqqt71UrYyGcK9S13DE89IkdmRjeQUPjG7JjvW6MQ8f9LlVushkZAmqSbhjsAMgO5TAE
-	z4mJVj3kITfYAZYR7At9Iof1u2ulDUQQ=
-X-Gm-Gg: ATEYQzyTqJt3tt+FSxFhPMzoI1xNc/fA5a/G7fUFCYATT0g0Oi0XJx1VinWZORsOyqE
-	INUhCT1O3oC9dCgaqkrfyjbyewr96eF0hTG6KicPz1QLZKLe6W5p4T/uKRsm2a7MfpeeDbx/mBU
-	ZNtM/XNkUKkpzyK8g0PfRkPOH3iokAHQ3edDn/MKaeeiMFRnXP3K5RAKhSUkRdOr1rJ987hb17l
-	c6+sTWP2WGwUkourgmiEOZ4JzaVfCqpvYE+qD2ZY7DChEQz0xKUQoOyc+GZIxLai60=
-X-Received: by 2002:a05:6512:2308:b0:5a2:c0cf:451c with SMTP id
- 2adb3069b0e04-5a2c1f23dd0mr689913e87.24.1775010811374; Tue, 31 Mar 2026
- 19:33:31 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775017022; x=1775621822;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9uvuJacAw3jMb0IWkn6pjnEJfWKbd9mokrTdkvUS1kE=;
+        b=RUxQ8Upq6PdDQGv2cxnGO+yiCJ9Ie8hi3yL7/1e58enoC1cRfLhguyprNETOKN7ihI
+         PJW19/R0v5CagP2KfeVM7/uCYktlXRQKIERpokGuCZZOzxmMqzwvNmXNUMfpKUoLenKx
+         bIgGp9grZFup0knXrcCjnYeYaLMJU1X3N5g4j2s6f3QUjSiLRv4rujXV0ek36FzwC5sp
+         XtxG41z249k7fdOAC/HSq8uu3hz+HlyXATOiAuX1yqgNkFgilttP9VDS7fFPw1fVhGHZ
+         W0IGwrIoJgL+zPGDNUEgbW2VzUDR3C6HwDJk1rA5JBPSjtdQUYKdVgc/ke3sIt0/oOPc
+         KEdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkiuU6aeXgPn8nRRsCMUlDFd5XwN+4wk/mc7r3R0dK8ZnKNMyZLDsbBijojFKFm2iZhMcTNM4Gp/A=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhHPs1FREKoRXDVRzwUCRcn9qJggZDDqXCWYpk5WnWRMeGbTqW
+	tPfFkwZIwLxkTfnC1pQoauiU34qedrabBcOvDgD+UNWBZ8WyLlIH1FpJ
+X-Gm-Gg: ATEYQzzLq8ileADwKMuxkU3fQVioqHS6CrLnqn7APWu037N8YCezBG/OPeSOSdMZhWw
+	Qy4EpywtDX5Uz65CQPpW74PPY8HciuEOsWYS06VRcz4kPI56upleXawxgtcXyLBD5OQHYjoY0wV
+	qn0L23G5d2VpdAwM+kp8WRgWX8xdyHVZLgnQkAyWygVHmk4TXsK9z3HTA8FeVTKNtc/RKxYWSo+
+	qdMBNn/OQp71O4n2OqjVirOCsRb1V0BZlBfswKnj5Rc9Lgzykz8tZ4/Gg8ULzyQLndKLnARqQ3e
+	Ufp0L4Dp27GZQT+nC31kRt4dXX6HCKgJ3hw1n9pVeyub0OOErGaeC6ALRqfoz19pXMvHxMW1B9y
+	9tWMoJfiA26wJ809dqi7k/yGD9Cupr05p7wi5stg9hM2ucAur88SWKDf/AXK1urAlN5W2NE25CL
+	YRqUQWSkb/UGVoxa0=
+X-Received: by 2002:a05:7300:2213:b0:2ba:6978:2b4 with SMTP id 5a478bee46e88-2c9321b5d9cmr1075299eec.20.1775017022050;
+        Tue, 31 Mar 2026 21:17:02 -0700 (PDT)
+Received: from gmail.com ([52.161.55.196])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c45dfcc95fsm9876945eec.29.2026.03.31.21.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 21:17:01 -0700 (PDT)
+From: Ethan Yang <ethan.yang.kernel@gmail.com>
+To: chenhuacai@kernel.org
+Cc: kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org
+Subject: [PATCH v2] LoongArch: mm: fix FLATMEM ARCH_PFN_OFFSET for non-zero DRAM base
+Date: Wed,  1 Apr 2026 04:17:00 +0000
+Message-ID: <20260401041700.3260-1-ethan.yang.kernel@gmail.com>
+X-Mailer: git-send-email @GIT_VERSION@
+In-Reply-To: <CAKeWACY11_1JL_OagfxUhQckW4rkAjhwXxUnVHNPdHF60Uc81w@mail.gmail.com>
+References: <CAKeWACY11_1JL_OagfxUhQckW4rkAjhwXxUnVHNPdHF60Uc81w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Ethan Yang <ethan.yang.kernel@gmail.com>
-Date: Wed, 1 Apr 2026 10:33:19 +0800
-X-Gm-Features: AQROBzA9KQDCoKz5kKkfvNz3IJ9AlhJH5Qkpot3vhbFR9ZDzxPncYWR5-rTeLmQ
-Message-ID: <CAKeWACY11_1JL_OagfxUhQckW4rkAjhwXxUnVHNPdHF60Uc81w@mail.gmail.com>
-Subject: [PATCH] LoongArch: mm: fix FLATMEM ARCH_PFN_OFFSET for non-zero DRAM base
-To: chenhuacai@kernel.org
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, 
-	Ethan Yang <ethan.yang.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-
-From: Ethan Yang <ethan.yang.kernel@gmail.com>
-Date: Tue, 31 Mar 2026 21:02:26 +0800
-Subject: [PATCH] LoongArch: mm: fix FLATMEM ARCH_PFN_OFFSET for
-non-zero DRAM base
+Content-Transfer-Encoding: 8bit
 
 With CONFIG_FLATMEM, pfn_to_page() is computed as:
 
@@ -115,13 +102,15 @@ existing VA/PA linear mapping scheme.
 
 Signed-off-by: Ethan Yang <ethan.yang.kernel@gmail.com>
 ---
+v2:
+  - Fixed tab-to-space formatting.
+---
  arch/loongarch/include/asm/page.h | 3 ++-
  arch/loongarch/kernel/mem.c       | 1 +
  arch/loongarch/kernel/setup.c     | 1 +
  3 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/page.h
-b/arch/loongarch/include/asm/page.h
+diff --git a/arch/loongarch/include/asm/page.h b/arch/loongarch/include/asm/page.h
 index 327bf0bc9..80aea8b51 100644
 --- a/arch/loongarch/include/asm/page.h
 +++ b/arch/loongarch/include/asm/page.h
@@ -129,10 +118,10 @@ index 327bf0bc9..80aea8b51 100644
   * used in our early mem init code for all memory models.
   * So always define it.
   */
--#define ARCH_PFN_OFFSET PFN_UP(PHYS_OFFSET)
+-#define ARCH_PFN_OFFSET	PFN_UP(PHYS_OFFSET)
 +extern unsigned long min_low_pfn;
-+#define ARCH_PFN_OFFSET min_low_pfn
-
++#define ARCH_PFN_OFFSET	min_low_pfn
+ 
  extern void clear_page(void *page);
  extern void copy_page(void *to, void *from);
 diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
@@ -140,13 +129,13 @@ index 8ab1ffedc..03835f8cb 100644
 --- a/arch/loongarch/kernel/mem.c
 +++ b/arch/loongarch/kernel/mem.c
 @@ -46,6 +46,7 @@ void __init memblock_init(void)
-  }
-  }
-
-+ min_low_pfn = PFN_UP(memblock_start_of_DRAM());
-  max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-  max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
-  memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+ 		}
+ 	}
+ 
++	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
+ 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 	memblock_set_current_limit(PFN_PHYS(max_low_pfn));
 diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
 index 839b23ede..625be2494 100644
 --- a/arch/loongarch/kernel/setup.c
@@ -154,10 +143,11 @@ index 839b23ede..625be2494 100644
 @@ -394,6 +394,7 @@ static void __init check_kernel_sections_mem(void)
  static void __init arch_mem_init(char **cmdline_p)
  {
-  /* Recalculate max_low_pfn for "mem=xxx" */
-+ min_low_pfn = PFN_UP(memblock_start_of_DRAM());
-  max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-  max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
-
+ 	/* Recalculate max_low_pfn for "mem=xxx" */
++	min_low_pfn = PFN_UP(memblock_start_of_DRAM());
+ 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 	max_low_pfn = min(PFN_DOWN(HIGHMEM_START), max_pfn);
+ 
 -- 
 2.47.3
+
