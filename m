@@ -1,221 +1,129 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26BA5379971
-	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 07:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFBC3AA50F
+	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 08:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775027553; cv=none; b=DPw0ITTvmvVm7Nm/YEAjnRwAm+xWKzNr0YdVRjGek1cJL50WPhdMxnmildo4i607i87MVuHV2moYGmPo9m/Dz5xf+b7ho3lztkjb12eIzUygnIeD/s3ak9JmXQq3YeKMYXwx1vqItSJEmoTbA5RF8UjyaO2AK60kbPGBWO3RdKY=
+	t=1775031416; cv=none; b=uSNJw9NtuSqeD9g8F7lijnos5+kf19r9KDtDVE8HFFCdrQIdLvQJAHxKJTiq4uznP1U/yB+p7cbrwfiPmuzjxdWpqPcGUXVLPh6RoLJo4GrKUihIipHXoOieiNawMEym7H5+1+f+ihsXdLyAzax9E6Pf0mnWcqp/kYrFiSYTU+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775027553; c=relaxed/simple;
-	bh=MnkpGkoDttMr6Jy9w/iGNeSHHSyYY/5k7m8ZY+YQ3LA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mehY6BIec+GbnHSuPAksPxRhEdV26qOmDMO/vBjIGAljiRgGWxp75D5cZt1IF8U2Jwd6OXewLN4YcdbS+vEpBlcnk2nc9+KscqxXatpqSulkA6lO6aCJZM18JLqm45SedZM/+bZTJ6r4lGslsASmkWMqm+wawh4NlwicBXRQWEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxAfFWxcxpJrYgAA--.27137S3;
-	Wed, 01 Apr 2026 15:12:22 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxHMJHxcxppFpiAA--.55591S6;
-	Wed, 01 Apr 2026 15:12:21 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/5] LoongArch: BPF: Support load-acquire and store-release instructions
-Date: Wed,  1 Apr 2026 15:12:05 +0800
-Message-ID: <20260401071206.5506-5-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260401071206.5506-1-yangtiezhu@loongson.cn>
-References: <20260401071206.5506-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1775031416; c=relaxed/simple;
+	bh=fEGzW0HQ9aaEqblExMt3fAmEGfMNM+rKetFSxjUPWu8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J/LZwKuvTlaZSTOgYWBH3Zoyxh8Ch4FsXfwGu/Hjnj7lptsOOozq/7+QU/jytIBLYJzj9qXYzkKrjaO8AImA1EQ7VQDYGQ52cnnU6ljz54KV13AVQ5XcpSUJ7t+2yK4BdFTZxSs8DNXGznH5HTB0h0ZuPOPeED3HNpN76GOZLGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0iNno9Ks; arc=none smtp.client-ip=113.46.200.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0iNno9Ks"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=BAu9Jx0jggsoB9DdjhBMDzv6GW2fgZQZhQIfabnTV1w=;
+	b=0iNno9KssbzJIwOx46kM6OnZNBBxZqavG7rHHC5bdLxsRgIt4sx/XNjUZTTVDZXEoVFcegx0c
+	Yif2aSgMI7B+vjuMbgqzpMuvUrJW1SQ8yRstGcNtfNLWFUMM/xjzPhZAjZffDLNoeTFLUbEByDb
+	+8fyvzP5gn6CQVDmf4awY48=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4flyPC3klwz12LG4;
+	Wed,  1 Apr 2026 16:11:27 +0800 (CST)
+Received: from kwepemk500009.china.huawei.com (unknown [7.202.194.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id CEA0F40537;
+	Wed,  1 Apr 2026 16:16:50 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ kwepemk500009.china.huawei.com (7.202.194.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 1 Apr 2026 16:16:48 +0800
+From: Chengwen Feng <fengchengwen@huawei.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, "Rafael J .
+ Wysocki" <rafael@kernel.org>
+CC: Jonathan Corbet <corbet@lwn.net>, WANG Xuerui <kernel@xen0n.name>, Thomas
+ Gleixner <tglx@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
+ Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Boris
+ Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, Sunil V
+ L <sunilvl@ventanamicro.com>, Mark Rutland <mark.rutland@arm.com>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Kees Cook <kees@kernel.org>, Yanteng
+ Si <si.yanteng@linux.dev>, Sean Christopherson <seanjc@google.com>, Kai Huang
+	<kai.huang@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth
+	<thuth@redhat.com>, Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin
+	<kevinloughlin@google.com>, Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra
+	<peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin
+ Li <xin@zytor.com>, "Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta
+	<sohil.mehta@intel.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin
+ Murphy <robin.murphy@arm.com>, James Clark <james.clark@linaro.org>, Besar
+ Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Wei Huang
+	<wei.huang2@amd.com>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
+	Somnath Kotur <somnath.kotur@broadcom.com>, <punit.agrawal@oss.qualcomm.com>,
+	<guohanjun@huawei.com>, <suzuki.poulose@arm.com>, <ryan.roberts@arm.com>,
+	<chenl311@chinatelecom.cn>, <masahiroy@kernel.org>,
+	<wangyuquan1236@phytium.com.cn>, <anshuman.khandual@arm.com>,
+	<heinrich.schuchardt@canonical.com>, <Eric.VanTassell@amd.com>,
+	<wangzhou1@hisilicon.com>, <wanghuiqiang@huawei.com>,
+	<liuyonglong@huawei.com>, <fengchengwen@huawei.com>,
+	<linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linux-riscv@lists.infradead.org>,
+	<xen-devel@lists.xenproject.org>, <linux-acpi@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <stable@vger.kernel.org>,
+	<x86@kernel.org>
+Subject: [PATCH RESEND v10 2/8] LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+Date: Wed, 1 Apr 2026 16:16:34 +0800
+Message-ID: <20260401081640.26875-3-fengchengwen@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260401081640.26875-1-fengchengwen@huawei.com>
+References: <20260401081640.26875-1-fengchengwen@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHMJHxcxppFpiAA--.55591S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGF47Ww4xuw45GrWkZw17twc_yoWrtw4rpr
-	nrCrsYkr48Aa4SgF97JFW7WFyrKFs3Kr1UX3W7t393X3y3X345WF1rKF1avFy5G3ykXrs3
-	WFZYvFy29a4UGrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8CztUUUUU=
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemk500009.china.huawei.com (7.202.194.94)
 
-Use the LoongArch common memory access instructions with the barrier dbar
-to support the BPF load-acquire and store-release instructions.
+As a step towards unifying the interface for retrieving ACPI CPU UID
+across architectures, introduce a new function acpi_get_cpu_uid() for
+loongarch. While at it, add input validation to make the code more
+robust.
 
-With this patch, the following testcases passed on LoongArch if the macro
-CAN_USE_LOAD_ACQ_STORE_REL is usable in bpf selftests:
-
-  sudo ./test_progs -t verifier_load_acquire
-  sudo ./test_progs -t verifier_store_release
-  sudo ./test_progs -t verifier_precision/bpf_load_acquire
-  sudo ./test_progs -t verifier_precision/bpf_store_release
-  sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: stable@vger.kernel.org
+Signed-off-by: Chengwen Feng <fengchengwen@huawei.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 ---
- arch/loongarch/net/bpf_jit.c | 101 ++++++++++++++++++++++++++++++++++-
- arch/loongarch/net/bpf_jit.h |  12 +++++
- 2 files changed, 112 insertions(+), 1 deletion(-)
+ arch/loongarch/include/asm/acpi.h | 1 +
+ arch/loongarch/kernel/acpi.c      | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index c9a32f124f5e..f18a2858123f 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -344,6 +344,102 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- #undef jmp_offset
+diff --git a/arch/loongarch/include/asm/acpi.h b/arch/loongarch/include/asm/acpi.h
+index 7376840fa9f7..8bb101b4557e 100644
+--- a/arch/loongarch/include/asm/acpi.h
++++ b/arch/loongarch/include/asm/acpi.h
+@@ -44,6 +44,7 @@ static inline u32 get_acpi_id_for_cpu(unsigned int cpu)
+ {
+ 	return acpi_core_pic[cpu_logical_map(cpu)].processor_id;
  }
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid);
  
-+static int emit_atomic_ld_st(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ #endif /* !CONFIG_ACPI */
+ 
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 1367ca759468..058f0dbe8e8f 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -385,3 +385,12 @@ int acpi_unmap_cpu(int cpu)
+ EXPORT_SYMBOL(acpi_unmap_cpu);
+ 
+ #endif /* CONFIG_ACPI_HOTPLUG_CPU */
++
++int acpi_get_cpu_uid(unsigned int cpu, u32 *uid)
 +{
-+	const u8 t1 = LOONGARCH_GPR_T1;
-+	const u8 src = regmap[insn->src_reg];
-+	const u8 dst = regmap[insn->dst_reg];
-+	const s16 off = insn->off;
-+	const s32 imm = insn->imm;
-+
-+	switch (imm) {
-+	/* dst_reg = load_acquire(src_reg + off16) */
-+	case BPF_LOAD_ACQ:
-+		switch (BPF_SIZE(insn->code)) {
-+		case BPF_B:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, ldb, dst, src, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, ldxb, dst, src, t1);
-+			}
-+			emit_zext_8(ctx, dst);
-+			break;
-+		case BPF_H:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, ldh, dst, src, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, ldxh, dst, src, t1);
-+			}
-+			emit_zext_16(ctx, dst);
-+			break;
-+		case BPF_W:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, ldw, dst, src, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, ldxw, dst, src, t1);
-+			}
-+			emit_zext_32(ctx, dst, true);
-+			break;
-+		case BPF_DW:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, ldd, dst, src, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, ldxd, dst, src, t1);
-+			}
-+			break;
-+		}
-+		emit_insn(ctx, dbar, 0b10100);
-+		break;
-+	/* store_release(dst_reg + off16, src_reg) */
-+	case BPF_STORE_REL:
-+		emit_insn(ctx, dbar, 0b10010);
-+		switch (BPF_SIZE(insn->code)) {
-+		case BPF_B:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, stb, src, dst, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, stxb, src, dst, t1);
-+			}
-+			break;
-+		case BPF_H:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, sth, src, dst, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, stxh, src, dst, t1);
-+			}
-+			break;
-+		case BPF_W:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, stw, src, dst, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, stxw, src, dst, t1);
-+			}
-+			break;
-+		case BPF_DW:
-+			if (is_signed_imm12(off)) {
-+				emit_insn(ctx, std, src, dst, off);
-+			} else {
-+				move_imm(ctx, t1, off, false);
-+				emit_insn(ctx, stxd, src, dst, t1);
-+			}
-+			break;
-+		}
-+		break;
-+	default:
-+		pr_err_once("bpf-jit: invalid atomic load/store opcode %02x\n", imm);
++	if (cpu >= nr_cpu_ids)
 +		return -EINVAL;
-+	}
-+
++	*uid = acpi_core_pic[cpu_logical_map(cpu)].processor_id;
 +	return 0;
 +}
-+
- static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- {
- 	const u8 t1 = LOONGARCH_GPR_T1;
-@@ -1326,7 +1422,10 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 	case BPF_STX | BPF_ATOMIC | BPF_H:
- 	case BPF_STX | BPF_ATOMIC | BPF_W:
- 	case BPF_STX | BPF_ATOMIC | BPF_DW:
--		ret = emit_atomic_rmw(insn, ctx);
-+		if (bpf_atomic_is_load_store(insn))
-+			ret = emit_atomic_ld_st(insn, ctx);
-+		else
-+			ret = emit_atomic_rmw(insn, ctx);
- 		if (ret)
- 			return ret;
- 		break;
-diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-index a8e29be35fa8..9150de94ac60 100644
---- a/arch/loongarch/net/bpf_jit.h
-+++ b/arch/loongarch/net/bpf_jit.h
-@@ -72,6 +72,18 @@ static inline int epilogue_offset(const struct jit_ctx *ctx)
- 	return (to - from);
- }
- 
-+/* Zero-extend 8 bits into 64 bits */
-+static inline void emit_zext_8(struct jit_ctx *ctx, enum loongarch_gpr reg)
-+{
-+	emit_insn(ctx, bstrinsd, reg, LOONGARCH_GPR_ZERO, 63, 8);
-+}
-+
-+/* Zero-extend 16 bits into 64 bits */
-+static inline void emit_zext_16(struct jit_ctx *ctx, enum loongarch_gpr reg)
-+{
-+	emit_insn(ctx, bstrinsd, reg, LOONGARCH_GPR_ZERO, 63, 16);
-+}
-+
- /* Zero-extend 32 bits into 64 bits */
- static inline void emit_zext_32(struct jit_ctx *ctx, enum loongarch_gpr reg, bool is32)
- {
++EXPORT_SYMBOL_GPL(acpi_get_cpu_uid);
 -- 
-2.42.0
+2.17.1
 
