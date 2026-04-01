@@ -1,89 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4461F3F7E8E
-	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 10:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from xry111.site (xry111.site [89.208.246.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE5540757F
+	for <loongarch@lists.linux.dev>; Wed,  1 Apr 2026 13:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775040936; cv=none; b=QckL4Em5oIb91VrJD61fweNnlfDb5LfsX8s0x2HW9qpiPIfojGnzke2d1Aa0TGaem5aVOgAqlcgm+kOVZgynTUrWuyL12LHRA6DmMaXe2wRCCxhnCKJbwSJtyE5d27i6YLzZNxnc9P2/dntEb2xDH5mILWdr/q2U77xJDYNzsxc=
+	t=1775051717; cv=none; b=Wog9xNQjH9O4m53qo+wpqOhQO7BE+yeYGl8Bsr79dRWaQMCrujdjCixEMG1Ms2pF4uH2ydlJnLIiqOi39pVZLFCo3FnYe5tpAtDmCXoPdqKMOdA0HXztEy0phvLv++H/xslGzs4j968g/5tlSzSi1PQCWzR2opxgiwp5VY7xuhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775040936; c=relaxed/simple;
-	bh=2UQIkCCHHnYMJL08xGfBrcE6awkfKjIUqvN58fjiAvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ji9aJa/RIVRjVlimrwnLPPnpG6LyR4/k7coqahSkT/Gt7GQHfKDrgQL2g5iojCDsTe4bzEXN05mlqhjhmx6z6mtrQTMMoWWj4wPvrpnAquZJZEQpJwxSARAPVwAyHtppCKE96oO7s7MMdhLIS0kcKbZuKNYHilmo24K2evoPSoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TRSFkRwV; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1775051717; c=relaxed/simple;
+	bh=NFB41pPA6f/7A5PHWNbQqqX5PlPZtLdTFWoDq9pGwK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AquwtrSHictlAVxkJIESoQYuBnF5eL7YpnWf+Ysyh8c1yzyRV8GOcQdoXCFAqU+XoyQ3rS39cIexeAxPeo2C8joFBzUsbs5FYDkM+NsmQz1M2FQfuRm1NPwFDwHnH7WIgyomd4LH+zPIpwANqXYogod1wWvMgnCpdvh8aubCOi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=OZQvlxJ4; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TRSFkRwV"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43486288E;
-	Wed,  1 Apr 2026 03:55:22 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B90D3F915;
-	Wed,  1 Apr 2026 03:55:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775040928; bh=2UQIkCCHHnYMJL08xGfBrcE6awkfKjIUqvN58fjiAvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TRSFkRwVSzNZv1EfCfPXSKYVmxX06QSVIiXB2oC0ctF9sgb4BPVkTz4/bL14wnBvP
-	 tl/+mjzRctRS3PPkAAMR8vWfJH17iSvGYZ9S6iCow39/5NMpdbDUSVX7JsWwj0Vlqi
-	 NDVqY+hrLmqDreFqsDGT4UNSUnA0+gRm1bAfF/Nk=
-Date: Wed, 1 Apr 2026 11:55:20 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-	hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, oleg@redhat.com,
-	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, arnd@arndb.de,
-	shuah@kernel.org, kevin.brodsky@arm.com, yeoreum.yun@arm.com,
-	anshuman.khandual@arm.com, thuth@redhat.com, ryan.roberts@arm.com,
-	mark.rutland@arm.com, song@kernel.org, ziyao@disroot.org,
-	linusw@kernel.org, schuster.simon@siemens-energy.com,
-	jremus@linux.ibm.com, akpm@linux-foundation.org,
-	mathieu.desnoyers@efficios.com, kmal@cock.li, dvyukov@google.com,
-	reddybalavignesh9979@gmail.com, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v14 3/4] arm64: Use generic TIF bits for common thread
- flags
-Message-ID: <acz5mOrm6_E1UBwV@arm.com>
-References: <20260320104222.1381274-1-ruanjinjie@huawei.com>
- <20260320104222.1381274-4-ruanjinjie@huawei.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="OZQvlxJ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1775051708;
+	bh=I1lUWlzYdB/I2mHyptMNDzuVUsdBLK/NaYGXjCfmnCM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OZQvlxJ4i408VRhdBVoDSOZjrwpuYFDbpOMzEsyTRW2fF8rI0ebhmURHbqOodFASC
+	 H4TYHG8mo/8uUM3a+uBbOiAiFU6AxT+mhmEh0vEmUide/Ws+KzAr6K8GV4mzcEEadY
+	 Jv0xI0zIHCl9XjSav1ro3YB2GyjamYfFEQf9L3zE=
+Received: from stargazer (unknown [IPv6:2409:8a4c:e10:180:5633:9efb:acb8:d769])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 2B6B765992;
+	Wed,  1 Apr 2026 09:55:04 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev,
+	Zixing Liu <liushuyu@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Xi Ruoyao <xry111@xry111.site>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: Enable FPDT on LoongArch
+Date: Wed,  1 Apr 2026 21:53:12 +0800
+Message-ID: <20260401135311.1737958-2-xry111@xry111.site>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320104222.1381274-4-ruanjinjie@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 20, 2026 at 06:42:21PM +0800, Jinjie Ruan wrote:
-> Use the generic TIF bits defined in <asm-generic/thread_info_tif.h> for
-> standard thread flags (TIF_SIGPENDING, TIF_NEED_RESCHED, TIF_NOTIFY_RESUME,
-> TIF_RESTORE_SIGMASK, TIF_SINGLESTEP, etc.) instead of defining
-> them locally.
-> 
-> Arm64-specific bits (TIF_FOREIGN_FPSTATE, TIF_MTE_ASYNC_FAULT, TIF_SVE,
-> TIF_SSBD, etc.) are renumbered to start at bit 16 to avoid conflicts.
-> 
-> This enables RSEQ optimizations which require CONFIG_HAVE_GENERIC_TIF_BITS
-> combined with the generic entry infrastructure (already used by arm64).
-> 
-> By the way, remove TIF_FREEZE because this flag became unused since
-> commit d88e4cb67197 ("freezer: remove now unused TIF_FREEZE").
-> 
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+FPDT provides system- and application-readable performance statistics,
+useful for profiling and analyzing boot-time performance. FPDT table
+support is now available as a pending patch at the EDK II upstream [1]
+and has been tested on real hardware such as Loongson XA61200_V1.1 and
+XB612B0_V1.2 with patched firmware.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+We have also cross checked systemd-analyze(1) against a stop watch and
+the `dp' command in EFI Shell to see that the timing information are
+correct.
 
-Given that it's touching multiple trees, I guess it's a series for
-Andrew?
+Now that the functionality of FPDT is verified on LoongArch hardware,
+list LOONGARCH as a possible dependency, allowing it to be enabled.
 
+Link: https://github.com/tianocore/edk2/pull/12378 [1]
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ drivers/acpi/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index 6f4b545f7377..f165d14cf61a 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -96,7 +96,7 @@ config ACPI_SPCR_TABLE
+ 
+ config ACPI_FPDT
+ 	bool "ACPI Firmware Performance Data Table (FPDT) support"
+-	depends on X86_64 || ARM64
++	depends on X86_64 || ARM64 || LOONGARCH
+ 	help
+ 	  Enable support for the Firmware Performance Data Table (FPDT).
+ 	  This table provides information on the timing of the system
 -- 
-Catalin
+2.53.0
+
