@@ -1,184 +1,93 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A908389108
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 07:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A53038E5CA
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 08:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775114795; cv=none; b=EPxH8571OtprS2xLc5KgliVlXc3jUYz8H1C1yasSLvU4Zxy4kZbj2fXOcsaColn+xhWaSrFxxD+r6xqeaI10o7dVf/nXFV7RRRqlBS5y9uqThPLYKiiUo6Yso5uSrLeYe/ynDj3FFE/1d+MnY40uR8YkDhra7XE5TuUgqieXPtw=
+	t=1775117114; cv=none; b=HC1rHYZNAnZbsl4vcPt6u11AjbmiB/B37NPHfX0IK1VZOUNgHd4heGVPv0pV1c7AJ+ylEbLMxZAQ8UmKjvrWelI+u5mTKZD6FRXnEtinogsqfLlU1rkM0QLjX4lZm8SnH1ULDfkTQldPpAI0Q3N8Wn9eZgGWGEzhhCnjiczpLso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775114795; c=relaxed/simple;
-	bh=N1y2onTjOuUNUA2WShqrni1d80bsFe5QHnBqQhczUKk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBHE57t8Fnr296hZ92AVw8Nd4vZlYHI6W7wObsbxguDr/5bSH0RFC7Vm+PknZttCmVJqiKGjKXbd+wluTQU00D8t8wIyRh/EaV2WfLIT84zISVDnbWGLoSzNjWXiOn1DYBiCPmuil20i7K9XPfN9uZae/QoglNDzLEoCFCpn9ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=XG5yIWzK; arc=none smtp.client-ip=113.46.200.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1775117114; c=relaxed/simple;
+	bh=IC6qBL6DkDLm5/qrWSyyQom+nACvaG0j+gFDEdORCp8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qKCXH5YfAjrYPYVsIq46ILEvlFHlgABD0a4z2Epq1YXpHRvROfGW6by739hKM36zNIeZG2HSBq5L8lNJ8ZAxiixWrecx1FPsgQ5CmL+rpEEmc93piE5JU3ORvuneY6tetb6XwVpV8pj60wpizvpchPWWmO7Gi6V0CV/CSiWv/5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=MkXtbAQV; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="XG5yIWzK"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=HnOZBoE7o/6/IAIFfJRvYly50aiP5r33Q2nsL/6jnAk=;
-	b=XG5yIWzKdNW6ZIUY1IeNuIEmda+qjNe0mzM2RASvpMLKA0VQyQ/lc6+rvBeGvBX+PHLq0rmN8
-	6maPKZC3t1oDwPlnVH2scDHAWSypKM/eoZXO8x2x3aPMSOnuwmoXvUB0FMtVLUEM+QRz81W/Ad+
-	TQceOxVP8w3Sk+4wK8jsbiM=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fmYCl5YhYzmVWr;
-	Thu,  2 Apr 2026 15:20:19 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 906E84056D;
-	Thu,  2 Apr 2026 15:26:31 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 2 Apr
- 2026 15:26:28 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
-	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
-	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v12 15/15] riscv: kexec: Add support for crashkernel CMA reservation
-Date: Thu, 2 Apr 2026 15:27:01 +0800
-Message-ID: <20260402072701.628293-16-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260402072701.628293-1-ruanjinjie@huawei.com>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="MkXtbAQV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1775117110;
+	bh=LYEjOQEqMDRgy4MTlRPRj1NDOwr2T5DSOpjTKMJbock=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MkXtbAQVFrZfPn8ac4MwZJLBbsGeGGjyDBsY8Dor0ZhpL9W3KZRiNnsTg8+t1VSqc
+	 dgkFL+BO+Y0knCw7lLNGEmpCByivLIAx8xzeSo0We+2nQDkiC1YQFkheMC2R4rp/jW
+	 nDYI7g7Nk1OgoUdeh95SpkgwBbHbbcZeH89dkxbE=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id F101965992;
+	Thu,  2 Apr 2026 04:05:07 -0400 (EDT)
+Message-ID: <6c9662c0f45131d8aa607d6962cb4237d3c7f129.camel@xry111.site>
+Subject: Re: [PATCH] LoongArch: detect and disable sc.q if erratic
+From: Xi Ruoyao <xry111@xry111.site>
+To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>, Mingcong Bai
+	 <jeffbai@aosc.io>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Arnd Bergmann
+	 <arnd@arndb.de>, Yangyang Lian <lianyangyang@kylinos.cn>, Yawei Li
+	 <liyawei@loongson.cn>, George Guo <dongtai.guo@linux.dev>, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 02 Apr 2026 16:05:05 +0800
+In-Reply-To: <b484cc9e-3582-41bf-bf5e-0a432e74a8f4@t-8ch.de>
+References: <20260402044732.164294-2-xry111@xry111.site>
+	 <b484cc9e-3582-41bf-bf5e-0a432e74a8f4@t-8ch.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- dggpemf500011.china.huawei.com (7.185.36.131)
 
-Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-crashkernel= command line option") and commit ab475510e042 ("kdump:
-implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation. This allows the kernel to dynamically allocate
-contiguous memory for crash dumping when needed, rather than permanently
-reserving a fixed region at boot time.
+On Thu, 2026-04-02 at 08:39 +0200, Thomas Wei=C3=9Fschuh wrote:
+> On 2026-04-02 12:47:30+0800, Xi Ruoyao wrote:
+>=20
+> (...)
+>=20
+> > +/*
+> > + * Some LoongArch has broken sc.q which incorrectly handles the upper =
+word
+> > + * when the lower word is zero. Newer firmware versions (such as the 2=
+02602
+> > + * release from Loongson) seem to contain a workaround for this issue.
+> > + *
+> > + * Disable sc.q if erratic to ensure reliability and compatibility.
+> > + */
+> > +static bool sc_q_is_sane(void)
+> > +{
+> > +	struct {
+> > +		long word[2];
+> > +	} __aligned(16) mem;
+> > +	register long tmp;
+> > +
+> > +	asm (
+> > +		"1:ll.d\t$r0, %[mem]\n\t"
+> > +		"move\t%[tmp], $r0\n\t"
+> > +		"sc.q\t%[tmp], %[one], %[mem]\n\t"
+>=20
+> This probably needs to be gated behind CONFIG_AS_HAS_SCQ_EXTENSION to
+> avoid errors on older toolchains.
 
-So extend crashkernel CMA reservation support to riscv. The following
-changes are made to enable CMA reservation:
+I guess I'd code the insn with .word instead...
 
-- Parse and obtain the CMA reservation size along with other crashkernel
-  parameters.
-- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use, which was
-  already done in of_kexec_alloc_and_setup_fdt().
-- Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which was
-  already done in the crash core.
+This also affects HWCAP, and I don't want the userspace to see neither a
+false positive nor a false negative simply because the kernel was built
+with an old toolchain.
 
-Update kernel-parameters.txt to document CMA support for crashkernel on
-riscv architecture.
-
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++--------
- arch/riscv/kernel/machine_kexec_file.c          |  2 +-
- arch/riscv/mm/init.c                            |  5 +++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a7055cead40f..13ced9ea42f4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1122,14 +1122,14 @@ Kernel parameters
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
--			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
--			CMA. This reservation is usable by the first system's
--			userspace memory and kernel movable allocations (memory
--			balloon, zswap). Pages allocated from this memory range
--			will not be included in the vmcore so this should not
--			be used if dumping of userspace memory is intended and
--			it has to be expected that some movable kernel pages
--			may be missing from the dump.
-+			[KNL, X86, ARM64, RISCV, PPC] Reserve additional crash
-+			kernel memory from CMA. This reservation is usable by
-+			the first system's userspace memory and kernel movable
-+			allocations (memory balloon, zswap). Pages allocated
-+			from this memory range will not be included in the vmcore
-+			so this should not be used if dumping of userspace memory
-+			is intended and it has to be expected that some movable
-+			kernel pages may be missing from the dump.
- 
- 			A standard crashkernel reservation, as described above,
- 			is still needed to hold the crash kernel and initrd.
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index bea818f75dd6..c79cd86d5713 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -46,7 +46,7 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- 
- unsigned int arch_get_system_nr_ranges(void)
- {
--	unsigned int nr_ranges = 2; /* For exclusion of crashkernel region */
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
- 
- 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
- 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 811e03786c56..4cd49afa9077 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1398,7 +1398,7 @@ static inline void setup_vm_final(void)
-  */
- static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long low_size = 0;
-+	unsigned long long low_size = 0, cma_size = 0;
- 	unsigned long long crash_base, crash_size;
- 	bool high = false;
- 	int ret;
-@@ -1408,11 +1408,12 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- void __init paging_init(void)
--- 
-2.34.1
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
