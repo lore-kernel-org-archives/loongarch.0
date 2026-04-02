@@ -1,140 +1,105 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE9E3E3C44
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 13:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4B730B50D
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 13:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775135372; cv=none; b=dIiAqke5fnPZsA7o65wXNUqq08nkffEphIeUb0rcjYkQpg22Yjog/WwW/b+CyQVTlbxEeA/YDVcZS84jUTlDP41H/PuXM2BQHUOnJSO/o7F0PgQU0OCMQMFKIv/qkpCH/Z9WBGgJ/TVLL28V44oI1+rqk4/c76R0tc0kE61dWz8=
+	t=1775137085; cv=none; b=IQN+w90c9eq8FcelUxlIT+wsujx2kGj6RvIUAv3S6rcVP9OZEyLbsa62/EJV+WXdqcNycy/xEvTmnO1H3lCuKiVis0RWuPkMpDpDM04jLaZ4kIWHXQ+wB8lWN/Pn4yJkikhNTQV4JS1DX+VlDXehF1EZXADeyHfo+79iERNcpvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775135372; c=relaxed/simple;
-	bh=+IvFOuVs28xANyS/ogfV1Pq/Sq/UwTNttO7Vn4bEkv0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=W9nR6uctYgYphut0tFkRxs4iPWOIbhBLB1ckvZSAZH4oSe99zUdH/fYUOG0njlmeh+u+1KM2oG3jxG4FZPbumQ+aSmtSLHW/nG7k+VhD57W3K88xCmx04V2Cs3b72pE+aoXUPVTw2PDDAopKJtHrXapn5eKZYOFA1xVEWRP0tEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FBxYlgk5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=agPYXQIZ; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1775137085; c=relaxed/simple;
+	bh=bq0TF4RnqiidM1cV3rqx3snJ+Hzj+u9hvrZVbBcoz0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yh0OCqH3pwLsp4vo2AtVD+imaNyFckjcOCu19CFvuqRG3/dKNafwOJCriGDeZK2hJKImacY4VtcftsP+M3izlK4+EM17Pi+pg+uWsRKV3rWKv2xTddVwwrf6sHpepZZncgJ4WbrP0dmzxRzxa+STSGfpn2ew4AZhoSa4c+ErklM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bCQgimxv; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FBxYlgk5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="agPYXQIZ"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 4567A7A011F;
-	Thu,  2 Apr 2026 09:09:26 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Thu, 02 Apr 2026 09:09:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1775135366;
-	 x=1775221766; bh=44e76YJxkd5q+hgUlWAXtOLYIJKiZNYp0nUsEzVCRk0=; b=
-	FBxYlgk5LwTbC6Hd0pYsekY+cj/43xfDic3Nq5KUYXIuAByjWcQC/4MynK8EvGyv
-	Uexk61LrbgEEKfXkfTlK/shMDYl5tyAn5shj5yTVpfPkur7h2UHMqxssu5nPxFoa
-	8vRfS2ciCetboKjFIxSqY/FCKB4xHDco2m54AOjrLpQIp74wqvRjCB/NWCddnFbT
-	0OTw/HpU2+VuBssb4bSjrLHtUqxuTg6rsGhW5fhjLiN2JmVBTYGLY7+coU3dR9Xh
-	kqkSyJqdDab0AXssZVE+URd2eVr0yDCGcxJxKLmiq6mHj7HSPdlt4CCQUxUTgVUD
-	sPIHM0gA5KivuyxhzN/y+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775135366; x=
-	1775221766; bh=44e76YJxkd5q+hgUlWAXtOLYIJKiZNYp0nUsEzVCRk0=; b=a
-	gPYXQIZnT60HzAt2D0PVne9tKUzCK0FsozqUq7cu6ndYiCt4Z/zV7H3GR6snL8YH
-	Nia8I0kaiAnShNcTT/6fGyjj95fpYvgUCc2AH+6xSurhsnlZ0/6xukuewVctmEsx
-	caolHX6d3alkzc44sfHAEk/0YOY+sjm4Ulbwnunt1Z9c/aHUj2GGIQ5OaUk7ZUqB
-	qY8rSjZg92tjU6RaPqkWQnkAXLL5Jlys5BzrZH/DGIlwyuvhzujN3faH5snylGiP
-	c8fS9Rb3CO+ArMxP1zOFsIDznAp7cTRsV6Szkag3nisaBKJyi+L/Guz8OyI468i/
-	XwUvWnLeDj7G6x+YHKoMg==
-X-ME-Sender: <xms:hWrOacBTCxdDYIcJJmzYbVFEnnKq3VZJ2svW2EbxtuMV_IEV78GleA>
-    <xme:hWrOaZX8n43r1AuPAp20ZIPd-3JBc8md8Q2lCb8q6ld8xW__eIdTD4wKGkj2WLlkC
-    RaGDhtaQ6b9vmBnJwRoYLO0DM2MVb-fENcE3LIWtDZK0VG9hguYe8wA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeiudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
-    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
-    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
-    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdp
-    rhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghirhhlih
-    gvugesghhmrghilhdrtghomhdprhgtphhtthhopeguvghllhgvrhesghhmgidruggvpdhr
-    tghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhgvnhhhuh
-    grtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtohepfigvihdrlhhiuheskhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtohepihhlihgrshdrrghprghlohguihhmrghssehlihhnrghrohdrohhrghdprhgt
-    phhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrd
-    gtohhm
-X-ME-Proxy: <xmx:hWrOaRJECYk7puPdfEJsTZFmLUHJ2_Z9AuyoEdU1gXrkS-yMyi0yeQ>
-    <xmx:hWrOaYk5-wfc0FB5RtkxmKUuvjk5TSISjWQ-QCF72nf8aIeKlC4K2A>
-    <xmx:hWrOaYa75UPVpD3coPM_gSmGfD7moZUk6STsXIaichwb1GQ5apWUDA>
-    <xmx:hWrOafhqdbusxY3d9sJNkItrflm8nihdTYsks40u3x14gzVAeZ__yw>
-    <xmx:hmrOaavXLi6cH6_83S9pbfjqCQNQGiA5wxCo72vsfMgeAep0jKjdGOSp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 462A2700065; Thu,  2 Apr 2026 09:09:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bCQgimxv"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AFFAA40E0176;
+	Thu,  2 Apr 2026 13:37:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id oTdXorvwZNA8; Thu,  2 Apr 2026 13:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1775137075; bh=JXSTWyXJ+TnyRw0WBxA8l+YYXyO0fVka0N6NTBeoq8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bCQgimxvGmerirQlClnnYZmqi+uWMoqL95VwwSjtIF+Vf5UgtTcb7MS8LHreRfpek
+	 GoKJE6bZ4mED1jv5T74akOqGqj6cVX0+gMq4JPJ5IXhW1g4caBQiG82F44yKCaUpHB
+	 JKWGY6mrqIRGR7O4FfRKFTim4d0LlcNUNCcKJP5mrqJnhW7Zn6VsSiEjgSCPhKlRdY
+	 Vz5bw9JgpcSP6iZZbF2pLqppz547O8r9pCTuwtdspA8PUUwCXcWPbXdcKb8H+KtEnA
+	 vYV5UH9kk2R5DT86KkZXWL5/mET7B7l3QZkYztBFJ7a0PvDzmo/YIDl+Eg84lF8N0f
+	 cXFNcJJV2IRYckfYEkZhkVrhIiorIFlejmBkiW959HnGweu56QSzj2gTTWdAAaJrrS
+	 sh9Pp0D8Htj2up7P8oufGTYxoz9qRnLmpXA57NNz0RGrJXhZpOkLL3aR1nA9urPhxQ
+	 tbt47maHxAeQaYmg6AyhXHj67cdIJvhQE/sb9BqBhp83IhtTGVjXBGdkhdgPdJ185q
+	 K69pAch9YdpEB836VpaYWFh+Ip6YTtKtLGaP4i3L7l4LcOjBagTb6CrVT7jaRTwuHJ
+	 Al4nQrXZYlR6lYI26Sosm0aZwIokhEkI8od4RIJbjj59kdoSLsB5B75aVXY5ViEq95
+	 e1RjUlJ3M2nuatbtPJRqSTio=
+Received: from zn.tnic (p5de8e020.dip0.t-ipconnect.de [93.232.224.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 59DDE40E0031;
+	Thu,  2 Apr 2026 13:36:50 +0000 (UTC)
+Date: Thu, 2 Apr 2026 15:36:44 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
+	rdunlap@infradead.org, peterz@infradead.org,
+	pawan.kumar.gupta@linux.intel.com, feng.tang@linux.alibaba.com,
+	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
+	paulmck@kernel.org, lirongqing@baidu.com, rppt@kernel.org,
+	leitao@debian.org, ardb@kernel.org, jbohac@suse.cz,
+	cfsworks@gmail.com, tangyouling@kylinos.cn,
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com,
+	hbathini@linux.ibm.com, eajames@linux.ibm.com, guoren@kernel.org,
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
+	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com,
+	fuqiang.wang@easystack.cn, liaoyuanhong@vivo.com,
+	takahiro.akashi@linaro.org, james.morse@arm.com,
+	lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Message-ID: <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+ <20260402113137.GAac5Tmc5b7SL98KdY@fat_crate.local>
+ <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: ATYY62_w4Fts
-Date: Thu, 02 Apr 2026 15:08:43 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thomas Zimmermann" <tzimmermann@suse.de>,
- "Javier Martinez Canillas" <javierm@redhat.com>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "K. Y. Srinivasan" <kys@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "Dexuan Cui" <decui@microsoft.com>, longli@microsoft.com,
- "Helge Deller" <deller@gmx.de>
-Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-Message-Id: <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
-In-Reply-To: <20260402092305.208728-4-tzimmermann@suse.de>
-References: <20260402092305.208728-1-tzimmermann@suse.de>
- <20260402092305.208728-4-tzimmermann@suse.de>
-Subject: Re: [PATCH 3/8] firmware: sysfb: Make CONFIG_SYSFB a user-selectable option
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
 
-On Thu, Apr 2, 2026, at 11:09, Thomas Zimmermann wrote:
-> Add a descriptive string and help text to CONFIG_SYSFB, so that users
-> can modify it. Flip all implicit selects in the Kconfig options into
-> dependencies. This avoids cyclic dependencies in the config.
->
-> Enabling CONFIG_SYSFB makes the kernel provide a device for the firmware
-> framebuffer. As this can (slightly) affect system behavior, having a
-> user-facing option seems preferable. Some users might also want to set
-> every detail of their kernel config.
->
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+On Thu, Apr 02, 2026 at 07:47:53PM +0800, Jinjie Ruan wrote:
+> Thank you for the reminder and for your patience. I apologize for the
+> frequent updates; I am becoming more familiar with the community's
+> workflow.
 
-I don't really like this part of the series and would prefer
-to keep CONFIG_SYSFB hidden as much as possible as an x86
-(and EFI) specific implementation detail, with the hope
-of eventually seperating out the x86 bits from the EFI ones.
+Yap, and you can use that time while waiting to learn about it:
 
-In general, I am always in favor of properly using Kconfig
-dependencies over 'select' statements, for the same reasons
-you describe, but I don't want the the x86 logic for
-the legacy VESA and VGA console handling to leak into more
-architectures than necessary.
+Documentation/process/
 
-Do you think we could instead move the sysfb_init()
-function into the same two places that contain the
-sysfb_primary_display definition (arch/x86/kernel/setup.c,
-drivers/firmware/efi/efi-init.c) and simplify the efi version
-to take out the x86 bits? That would reduce the rest
-of sysfb-primary.c to the logic to unregister the device,
-and that could then be selected by both x86 and EFI.
+-- 
+Regards/Gruss,
+    Boris.
 
-      Arnd
+https://people.kernel.org/tglx/notes-about-netiquette
