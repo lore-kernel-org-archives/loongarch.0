@@ -1,37 +1,78 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5509F38E5DA
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 09:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E8838B7B1
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 09:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775121827; cv=none; b=mHK/e0/N6f7+7l78RGPga4ct5i3Hmwt0spmhIqCk/YcUuXG1FBAao0Zx6JNIvrnL9vUjCsziCrJRYAfxENN5RQZCl4fH3t78BumY2FWLn9k4l8j5cNzsvd3xLmvzygvs5gtze8hf/ELH51o3yTg5akVS4VEivWDOZoJvNyEW/fw=
+	t=1775121833; cv=none; b=n0M+pC9X+ovNVYWJeFnjY9kXEN/oNg390aEf2HeLhTO45CsxCA2J5p+Vhw3emSzg3SLiX0l2QRdr/gXyQitI13jRjGgG/QWVqlLO/2iE8fUTEy4XTfmRqCz8oJ1NXjya/q9PN8sDsAFnt9YzbEX4vRwVlfmprUmtI9wrXhwG8bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775121827; c=relaxed/simple;
-	bh=JkJPwWLIYV8toDRaNAt4TvmkdF8oDTNenYKJL3mBPmk=;
+	s=arc-20240116; t=1775121833; c=relaxed/simple;
+	bh=LY8tDdfC9tmW4VeQ+wRrAf1JhUIqvuwytx+ZFRGtaQ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FoVLgP7Xr/ydCb0oVg00K76TLsGppzJiqL45oagwIoYKamalZ76J8EoLJzjiClCYuc4t1HXB+Vy9gybGHjFkAHMJAZMg40bSAthJGa8UGPQb8S/mIom4EPBEyHEzC7L1k5i27CJS+RJwK6QoQRA1KspGh+m/vYiYVda1YV1wIvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=VGVTN2U5qze7c8AvmJFyZmM2nH7EFZrIwuZdr5JBKWXZiHNTxOUJJqk5PyxcPTzgd2jd8SiG2WwetscqJ43VbsmFsCcTqTX5S/0K4liCQOsD7AIxNoMQFTxP23Rf2NRvko9AfVwPIgOnXCRczYTrRT8Ll6qlKZPMYCPp+WFHHaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0js1rDWn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Tyx81et7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0js1rDWn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Tyx81et7; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0js1rDWn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Tyx81et7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0js1rDWn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Tyx81et7"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E71FA4D320;
-	Thu,  2 Apr 2026 09:23:14 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BCFC65BDAC;
+	Thu,  2 Apr 2026 09:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1775121793; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YPCEYbiGOCpx2zUalDos08LGZhiPvMU5VsFjS8QK76U=;
+	b=0js1rDWnH9smqDqLDvIAKHV8/eXXpqQLMMmO2TI8gDpO96XoYOJ31GNYVGDIhbudXFZi9G
+	RQ/O7aJULE82Ey6TA6L6DSH8P2yEi8bpC87AmYkQUvPUMU9qrvfDUU3Q8uptTAtDg3jYPP
+	Io9AeuySbfgnMZqPfHt6jtJYVMlHoo0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1775121793;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YPCEYbiGOCpx2zUalDos08LGZhiPvMU5VsFjS8QK76U=;
+	b=Tyx81et7F7PdaU5+qsAtZ653DbZ7+SrFuesp7ACsEj//SHAzWobwR7Yrj7KdApo1hOLQaG
+	JiNq8qBG9bZiwyDQ==
+Authentication-Results: smtp-out2.suse.de;
 	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1775121793; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YPCEYbiGOCpx2zUalDos08LGZhiPvMU5VsFjS8QK76U=;
+	b=0js1rDWnH9smqDqLDvIAKHV8/eXXpqQLMMmO2TI8gDpO96XoYOJ31GNYVGDIhbudXFZi9G
+	RQ/O7aJULE82Ey6TA6L6DSH8P2yEi8bpC87AmYkQUvPUMU9qrvfDUU3Q8uptTAtDg3jYPP
+	Io9AeuySbfgnMZqPfHt6jtJYVMlHoo0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1775121793;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YPCEYbiGOCpx2zUalDos08LGZhiPvMU5VsFjS8QK76U=;
+	b=Tyx81et7F7PdaU5+qsAtZ653DbZ7+SrFuesp7ACsEj//SHAzWobwR7Yrj7KdApo1hOLQaG
+	JiNq8qBG9bZiwyDQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5DBBA4A0B1;
-	Thu,  2 Apr 2026 09:23:14 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C4C74A0B1;
+	Thu,  2 Apr 2026 09:23:13 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KHStFYI1zmlVYAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 02 Apr 2026 09:23:14 +0000
+	id oLbDCIE1zmlVYAAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 02 Apr 2026 09:23:13 +0000
 From: Thomas Zimmermann <tzimmermann@suse.de>
 To: javierm@redhat.com,
 	arnd@arndb.de,
@@ -57,9 +98,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-hyperv@vger.kernel.org,
 	linux-fbdev@vger.kernel.org,
 	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 7/8] firmware: efi: Make CONFIG_EFI_EARLYCON depend on CONFIG_SYSFB; clean up
-Date: Thu,  2 Apr 2026 11:09:21 +0200
-Message-ID: <20260402092305.208728-8-tzimmermann@suse.de>
+Subject: [PATCH 5/8] firmware: sysfb: Implement screen_info relocation for primary display
+Date: Thu,  2 Apr 2026 11:09:19 +0200
+Message-ID: <20260402092305.208728-6-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260402092305.208728-1-tzimmermann@suse.de>
 References: <20260402092305.208728-1-tzimmermann@suse.de>
@@ -70,154 +111,372 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Queue-Id: E71FA4D320
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Spam-Score: -4.00
-X-Spam-Level: 
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.995];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[redhat.com,arndb.de,kernel.org,linaro.org,xen0n.name,linux.intel.com,gmail.com,ffwll.ch,microsoft.com,gmx.de];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLykjg6e7ifkwtw7jmpw7b9yio)];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de]
 X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -6.80
+X-Spam-Level: 
 
-Efi-earlycon uses sysfb_primary_display. Therefore make it depend on
-the corresponding config symbol. With this in place, go through the
-source files and reduce tests to CONFIG_SYSFB. Efi-earlycon is now
-just another regular user of sysfb.
+Move the relocation tracking for screen_info from the screen_info
+helpers to sysfb. The relocation code operates on sysfb_primary_display,
+which belongs to sysfb. The remaining screen_info helpers are now free
+from global state.
 
-This also enables the screen_info relocation feature for efi-earlycon.
-Systems might move the framebuffer aperture while booting the kernel. PCI
-bridges sometimes do this as part of relocating the sub-bus aperture.
+Adapt some symbol names. Now prefer early returns in the helper
+sysfb_apply_screen_info_fixup() over nested branching. Also return an
+errno code from sysfb_apply_screen_info_fixup() if the relocation
+failed. In this case, do not create a device for the framebuffer.
+The original code advertised this behavior in a comment but never
+implemented it.
+
+Framebuffer aperture relocation can happen during boot if the PCI
+graphics device is located behind a PCI bridge. If the bridge's sub-
+bus gets relocated, the framebuffer aperture moves accordingly. The
+helper for tracking these relocations fixes up the values stored in
+sysfb_primary_display so that they refer to the correct address range
+again. Generic system-framebuffer drivers would not work otherwise.
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- arch/arm64/kernel/image-vars.h                | 2 +-
- arch/loongarch/kernel/efi.c                   | 4 ++--
- arch/loongarch/kernel/image-vars.h            | 2 +-
- arch/riscv/kernel/image-vars.h                | 2 +-
- drivers/firmware/efi/Kconfig                  | 3 ++-
- drivers/firmware/efi/efi-init.c               | 6 ++----
- drivers/firmware/efi/libstub/efi-stub-entry.c | 4 +---
- 7 files changed, 10 insertions(+), 13 deletions(-)
+ drivers/firmware/sysfb.h         |   5 ++
+ drivers/firmware/sysfb_pci.c     | 111 +++++++++++++++++++++++++++++++
+ drivers/firmware/sysfb_primary.c |   9 ++-
+ drivers/video/screen_info_pci.c  | 110 ------------------------------
+ include/linux/screen_info.h      |   3 -
+ 5 files changed, 123 insertions(+), 115 deletions(-)
 
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index d7b0d12b1015..7e0e61385286 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -37,7 +37,7 @@ PROVIDE(__efistub__text			= _text);
- PROVIDE(__efistub__end			= _end);
- PROVIDE(__efistub___inittext_end       	= __inittext_end);
- PROVIDE(__efistub__edata		= _edata);
--#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
-+#if defined(CONFIG_SYSFB)
- PROVIDE(__efistub_sysfb_primary_display	= sysfb_primary_display);
- #endif
- PROVIDE(__efistub__ctype		= _ctype);
-diff --git a/arch/loongarch/kernel/efi.c b/arch/loongarch/kernel/efi.c
-index 69dd83f8082f..6c25e2ecf45f 100644
---- a/arch/loongarch/kernel/efi.c
-+++ b/arch/loongarch/kernel/efi.c
-@@ -74,7 +74,7 @@ bool efi_poweroff_required(void)
+diff --git a/drivers/firmware/sysfb.h b/drivers/firmware/sysfb.h
+index 9f7fe2e03f68..1eaa3b0fa364 100644
+--- a/drivers/firmware/sysfb.h
++++ b/drivers/firmware/sysfb.h
+@@ -8,8 +8,13 @@
+ struct pci_dev;
  
- unsigned long __initdata primary_display_table = EFI_INVALID_TABLE_ADDR;
+ #ifdef CONFIG_PCI
++int sysfb_apply_screen_info_fixups(void);
+ bool sysfb_pci_dev_is_enabled(struct pci_dev *pdev);
+ #else
++static inline int sysfb_apply_screen_info_fixups(void)
++{
++	return 0;
++}
+ static inline bool sysfb_pci_dev_is_enabled(struct pci_dev *pdev)
+ {
+ 	return false;
+diff --git a/drivers/firmware/sysfb_pci.c b/drivers/firmware/sysfb_pci.c
+index 8f3adeef4fb1..d972750c6bc6 100644
+--- a/drivers/firmware/sysfb_pci.c
++++ b/drivers/firmware/sysfb_pci.c
+@@ -1,9 +1,120 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
  
--#if defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON)
-+#if defined(CONFIG_SYSFB)
- struct sysfb_display_info sysfb_primary_display __section(".data");
- EXPORT_SYMBOL_GPL(sysfb_primary_display);
- #endif
-@@ -129,7 +129,7 @@ void __init efi_init(void)
+ #include <linux/pci.h>
++#include <linux/printk.h>
++#include <linux/screen_info.h>
++#include <linux/sysfb.h>
  
- 	set_bit(EFI_CONFIG_TABLES, &efi.flags);
+ #include "sysfb.h"
  
--	if (IS_ENABLED(CONFIG_EFI_EARLYCON) || IS_ENABLED(CONFIG_SYSFB))
-+	if (IS_ENABLED(CONFIG_SYSFB))
- 		init_primary_display();
++static struct pci_dev *sysfb_lfb_pdev;
++static size_t sysfb_lfb_bar;
++static resource_size_t sysfb_lfb_res_start; // original start of resource
++static resource_size_t sysfb_lfb_offset; // framebuffer offset within resource
++
++static bool __sysfb_relocation_is_valid(const struct screen_info *si, struct resource *pr)
++{
++	u64 size = __screen_info_lfb_size(si, screen_info_video_type(si));
++
++	if (sysfb_lfb_offset > resource_size(pr))
++		return false;
++	if (size > resource_size(pr))
++		return false;
++	if (resource_size(pr) - size < sysfb_lfb_offset)
++		return false;
++
++	return true;
++}
++
++int sysfb_apply_screen_info_fixups(void)
++{
++	struct screen_info *si = &sysfb_primary_display.screen;
++	struct resource *pr;
++
++	if (!sysfb_lfb_pdev)
++		return 0; /* primary display is not on a PCI device */
++
++	pr = &sysfb_lfb_pdev->resource[sysfb_lfb_bar];
++
++	if (pr->start == sysfb_lfb_res_start)
++		return 0; /* no relocation took place */
++
++	if (!__sysfb_relocation_is_valid(si, pr))
++		return -ENXIO;
++
++	/*
++	 * Only update base if we have an actual relocation to a valid I/O range.
++	 */
++	__screen_info_set_lfb_base(si, pr->start + sysfb_lfb_offset);
++	pr_info("Relocating firmware framebuffer to offset %pa[d] within %pr\n",
++		&sysfb_lfb_offset, pr);
++
++	return 0;
++}
++
++static int __screen_info_lfb_pci_bus_region(const struct screen_info *si, unsigned int type,
++					    struct pci_bus_region *r)
++{
++	u64 base, size;
++
++	base = __screen_info_lfb_base(si);
++	if (!base)
++		return -EINVAL;
++
++	size = __screen_info_lfb_size(si, type);
++	if (!size)
++		return -EINVAL;
++
++	r->start = base;
++	r->end = base + size - 1;
++
++	return 0;
++}
++
++static void sysfb_fixup_lfb(struct pci_dev *pdev)
++{
++	unsigned int type;
++	struct pci_bus_region bus_region;
++	int ret;
++	struct resource r = {
++		.flags = IORESOURCE_MEM,
++	};
++	const struct resource *pr;
++	const struct screen_info *si = &sysfb_primary_display.screen;
++
++	if (sysfb_lfb_pdev)
++		return; // already found
++
++	type = screen_info_video_type(si);
++	if (!__screen_info_has_lfb(type))
++		return; // only applies to EFI; maybe VESA
++
++	ret = __screen_info_lfb_pci_bus_region(si, type, &bus_region);
++	if (ret < 0)
++		return;
++
++	/*
++	 * Translate the PCI bus address to resource. Account for an offset if
++	 * the framebuffer is behind a PCI host bridge.
++	 */
++	pcibios_bus_to_resource(pdev->bus, &r, &bus_region);
++
++	pr = pci_find_resource(pdev, &r);
++	if (!pr)
++		return;
++
++	/*
++	 * We've found a PCI device with the framebuffer resource. Store away
++	 * the parameters to track relocation of the framebuffer aperture.
++	 */
++	sysfb_lfb_pdev = pdev;
++	sysfb_lfb_bar = pr - pdev->resource;
++	sysfb_lfb_offset = r.start - pr->start;
++	sysfb_lfb_res_start = bus_region.start;
++}
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_BASE_CLASS_DISPLAY, 16,
++			       sysfb_fixup_lfb);
++
+ bool sysfb_pci_dev_is_enabled(struct pci_dev *pdev)
+ {
+ 	/*
+diff --git a/drivers/firmware/sysfb_primary.c b/drivers/firmware/sysfb_primary.c
+index ab8d7fc468bb..298f87a43a7e 100644
+--- a/drivers/firmware/sysfb_primary.c
++++ b/drivers/firmware/sysfb_primary.c
+@@ -32,6 +32,7 @@
+ #include <linux/pci.h>
+ #include <linux/platform_data/simplefb.h>
+ #include <linux/platform_device.h>
++#include <linux/printk.h>
+ #include <linux/screen_info.h>
+ #include <linux/sysfb.h>
  
- 	if (boot_memmap == EFI_INVALID_TABLE_ADDR)
-diff --git a/arch/loongarch/kernel/image-vars.h b/arch/loongarch/kernel/image-vars.h
-index e557ebd46c2b..c43f9326f344 100644
---- a/arch/loongarch/kernel/image-vars.h
-+++ b/arch/loongarch/kernel/image-vars.h
-@@ -11,7 +11,7 @@ __efistub_strcmp		= strcmp;
- __efistub_kernel_entry		= kernel_entry;
- __efistub_kernel_asize		= kernel_asize;
- __efistub_kernel_fsize		= kernel_fsize;
--#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
-+#if defined(CONFIG_SYSFB)
- __efistub_sysfb_primary_display	= sysfb_primary_display;
- #endif
+@@ -127,11 +128,15 @@ static __init int sysfb_init(void)
+ 	struct simplefb_platform_data mode;
+ 	const char *name;
+ 	bool compatible;
+-	int ret = 0;
++	int ret;
  
-diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-index 3bd9d06a8b8f..3ab2529c4154 100644
---- a/arch/riscv/kernel/image-vars.h
-+++ b/arch/riscv/kernel/image-vars.h
-@@ -28,7 +28,7 @@ __efistub__start_kernel		= _start_kernel;
- __efistub__end			= _end;
- __efistub__edata		= _edata;
- __efistub___init_text_end	= __init_text_end;
--#if defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_SYSFB)
-+#if defined(CONFIG_SYSFB)
- __efistub_sysfb_primary_display	= sysfb_primary_display;
- #endif
+-	screen_info_apply_fixups();
++	ret = sysfb_apply_screen_info_fixups();
  
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 29e0729299f5..925ded080eb4 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -219,8 +219,9 @@ config EFI_DISABLE_PCI_DMA
- config EFI_EARLYCON
- 	def_bool y
- 	depends on SERIAL_EARLYCON && !ARM
--	select FONT_SUPPORT
-+	depends on SYSFB
- 	select ARCH_USE_MEMREMAP_PROT
-+	select FONT_SUPPORT
+ 	mutex_lock(&disable_lock);
++	if (ret) {
++		pr_warn("Invalid relocation, disabling system framebuffer\n");
++		disabled = true; /* screen_info relocation failed */
++	}
+ 	if (disabled)
+ 		goto unlock_mutex;
  
- config EFI_CUSTOM_SSDT_OVERLAYS
- 	bool "Load custom ACPI SSDT overlay from an EFI variable"
-diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
-index 6103b1a082d2..002518b642ed 100644
---- a/drivers/firmware/efi/efi-init.c
-+++ b/drivers/firmware/efi/efi-init.c
-@@ -60,7 +60,7 @@ extern __weak const efi_config_table_type_t efi_arch_tables[];
-  * x86 defines its own instance of sysfb_primary_display and uses
-  * it even without EFI, everything else can get them from here.
-  */
--#if !defined(CONFIG_X86) && (defined(CONFIG_SYSFB) || defined(CONFIG_EFI_EARLYCON) || defined(CONFIG_FIRMWARE_EDID))
-+#if !defined(CONFIG_X86) && (defined(CONFIG_SYSFB) || defined(CONFIG_FIRMWARE_EDID))
- struct sysfb_display_info sysfb_primary_display __section(".data");
- EXPORT_SYMBOL_GPL(sysfb_primary_display);
- #endif
-@@ -271,8 +271,6 @@ void __init efi_init(void)
- 	memblock_reserve(data.phys_map & PAGE_MASK,
- 			 PAGE_ALIGN(data.size + (data.phys_map & ~PAGE_MASK)));
+diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
+index 8f34d8a74f09..d8985a54ce71 100644
+--- a/drivers/video/screen_info_pci.c
++++ b/drivers/video/screen_info_pci.c
+@@ -1,117 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
--	if (IS_ENABLED(CONFIG_X86) ||
--	    IS_ENABLED(CONFIG_SYSFB) ||
--	    IS_ENABLED(CONFIG_EFI_EARLYCON))
-+	if (IS_ENABLED(CONFIG_X86) || IS_ENABLED(CONFIG_SYSFB))
- 		init_primary_display();
- }
-diff --git a/drivers/firmware/efi/libstub/efi-stub-entry.c b/drivers/firmware/efi/libstub/efi-stub-entry.c
-index aa85e910fe59..214fa4d84df0 100644
---- a/drivers/firmware/efi/libstub/efi-stub-entry.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-entry.c
-@@ -19,9 +19,7 @@ struct sysfb_display_info *alloc_primary_display(void)
- 	if (IS_ENABLED(CONFIG_ARM))
- 		return __alloc_primary_display();
+ #include <linux/pci.h>
+-#include <linux/printk.h>
+ #include <linux/screen_info.h>
+-#include <linux/string.h>
+-#include <linux/sysfb.h>
+-
+-static struct pci_dev *screen_info_lfb_pdev;
+-static size_t screen_info_lfb_bar;
+-static resource_size_t screen_info_lfb_res_start; // original start of resource
+-static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
+-
+-static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
+-{
+-	u64 size = __screen_info_lfb_size(si, screen_info_video_type(si));
+-
+-	if (screen_info_lfb_offset > resource_size(pr))
+-		return false;
+-	if (size > resource_size(pr))
+-		return false;
+-	if (resource_size(pr) - size < screen_info_lfb_offset)
+-		return false;
+-
+-	return true;
+-}
+-
+-void screen_info_apply_fixups(void)
+-{
+-	struct screen_info *si = &sysfb_primary_display.screen;
+-
+-	if (screen_info_lfb_pdev) {
+-		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
+-
+-		if (pr->start != screen_info_lfb_res_start) {
+-			if (__screen_info_relocation_is_valid(si, pr)) {
+-				/*
+-				 * Only update base if we have an actual
+-				 * relocation to a valid I/O range.
+-				 */
+-				__screen_info_set_lfb_base(si, pr->start + screen_info_lfb_offset);
+-				pr_info("Relocating firmware framebuffer to offset %pa[d] within %pr\n",
+-					&screen_info_lfb_offset, pr);
+-			} else {
+-				pr_warn("Invalid relocating, disabling firmware framebuffer\n");
+-			}
+-		}
+-	}
+-}
+-
+-static int __screen_info_lfb_pci_bus_region(const struct screen_info *si, unsigned int type,
+-					    struct pci_bus_region *r)
+-{
+-	u64 base, size;
+-
+-	base = __screen_info_lfb_base(si);
+-	if (!base)
+-		return -EINVAL;
+-
+-	size = __screen_info_lfb_size(si, type);
+-	if (!size)
+-		return -EINVAL;
+-
+-	r->start = base;
+-	r->end = base + size - 1;
+-
+-	return 0;
+-}
+-
+-static void screen_info_fixup_lfb(struct pci_dev *pdev)
+-{
+-	unsigned int type;
+-	struct pci_bus_region bus_region;
+-	int ret;
+-	struct resource r = {
+-		.flags = IORESOURCE_MEM,
+-	};
+-	const struct resource *pr;
+-	const struct screen_info *si = &sysfb_primary_display.screen;
+-
+-	if (screen_info_lfb_pdev)
+-		return; // already found
+-
+-	type = screen_info_video_type(si);
+-	if (!__screen_info_has_lfb(type))
+-		return; // only applies to EFI; maybe VESA
+-
+-	ret = __screen_info_lfb_pci_bus_region(si, type, &bus_region);
+-	if (ret < 0)
+-		return;
+-
+-	/*
+-	 * Translate the PCI bus address to resource. Account
+-	 * for an offset if the framebuffer is behind a PCI host
+-	 * bridge.
+-	 */
+-	pcibios_bus_to_resource(pdev->bus, &r, &bus_region);
+-
+-	pr = pci_find_resource(pdev, &r);
+-	if (!pr)
+-		return;
+-
+-	/*
+-	 * We've found a PCI device with the framebuffer
+-	 * resource. Store away the parameters to track
+-	 * relocation of the framebuffer aperture.
+-	 */
+-	screen_info_lfb_pdev = pdev;
+-	screen_info_lfb_bar = pr - pdev->resource;
+-	screen_info_lfb_offset = r.start - pr->start;
+-	screen_info_lfb_res_start = bus_region.start;
+-}
+-DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID, PCI_BASE_CLASS_DISPLAY, 16,
+-			       screen_info_fixup_lfb);
  
--	if (IS_ENABLED(CONFIG_X86) ||
--	    IS_ENABLED(CONFIG_EFI_EARLYCON) ||
--	    IS_ENABLED(CONFIG_SYSFB))
-+	if (IS_ENABLED(CONFIG_X86) || IS_ENABLED(CONFIG_SYSFB))
- 		return kernel_image_addr(&sysfb_primary_display);
+ static struct pci_dev *__screen_info_pci_dev(struct resource *res)
+ {
+diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
+index c022403c599a..2adbe25b88d8 100644
+--- a/include/linux/screen_info.h
++++ b/include/linux/screen_info.h
+@@ -140,11 +140,8 @@ u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
+ int screen_info_pixel_format(const struct screen_info *si, struct pixel_format *f);
  
+ #if defined(CONFIG_PCI)
+-void screen_info_apply_fixups(void);
+ struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
+ #else
+-static inline void screen_info_apply_fixups(void)
+-{ }
+ static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
+ {
  	return NULL;
 -- 
 2.53.0
