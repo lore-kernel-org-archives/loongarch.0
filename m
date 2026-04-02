@@ -1,105 +1,229 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4B730B50D
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 13:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4A93E51F0
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 14:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775137085; cv=none; b=IQN+w90c9eq8FcelUxlIT+wsujx2kGj6RvIUAv3S6rcVP9OZEyLbsa62/EJV+WXdqcNycy/xEvTmnO1H3lCuKiVis0RWuPkMpDpDM04jLaZ4kIWHXQ+wB8lWN/Pn4yJkikhNTQV4JS1DX+VlDXehF1EZXADeyHfo+79iERNcpvQ=
+	t=1775139046; cv=none; b=MWDu3o/iN5O4hVacWnLHGPDyNC6NOwGOzBBoftbCSW6UDYeYAenFp9VZJuTCZTutVxEIgGh+SjPsGGaF5BuJ4nHfWNs+lIn1zDomWtIqehpBT9F8sSJHGLpLlW4zf2EusjAP0bn4dA1SULUOJcQT1fKEF1kZIN4737C3XRpfOE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775137085; c=relaxed/simple;
-	bh=bq0TF4RnqiidM1cV3rqx3snJ+Hzj+u9hvrZVbBcoz0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yh0OCqH3pwLsp4vo2AtVD+imaNyFckjcOCu19CFvuqRG3/dKNafwOJCriGDeZK2hJKImacY4VtcftsP+M3izlK4+EM17Pi+pg+uWsRKV3rWKv2xTddVwwrf6sHpepZZncgJ4WbrP0dmzxRzxa+STSGfpn2ew4AZhoSa4c+ErklM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bCQgimxv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1775139046; c=relaxed/simple;
+	bh=sh7adPjoKuBw0rYrtOtbsT1hgquzG5sX30f2Pt2JEoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dsz14dNmpUPjk0k5HJ6GHFgJ3fdG0SipFrlehKPrNpy8lyC0b3XG5QjB1Vf0+fhg+piTz8TRqtO87wvr2oLFc2K5XYtwdgAXAwiy9ad8N8sqF5u4aa4lMaOoFaIXtIE/qALmpUt6QqUs2GLJvxqEhzlNLDYMR9FxNKG2g0wosIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ghmTCk2l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AdSg+hiN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ghmTCk2l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AdSg+hiN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bCQgimxv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id AFFAA40E0176;
-	Thu,  2 Apr 2026 13:37:59 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id oTdXorvwZNA8; Thu,  2 Apr 2026 13:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1775137075; bh=JXSTWyXJ+TnyRw0WBxA8l+YYXyO0fVka0N6NTBeoq8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bCQgimxvGmerirQlClnnYZmqi+uWMoqL95VwwSjtIF+Vf5UgtTcb7MS8LHreRfpek
-	 GoKJE6bZ4mED1jv5T74akOqGqj6cVX0+gMq4JPJ5IXhW1g4caBQiG82F44yKCaUpHB
-	 JKWGY6mrqIRGR7O4FfRKFTim4d0LlcNUNCcKJP5mrqJnhW7Zn6VsSiEjgSCPhKlRdY
-	 Vz5bw9JgpcSP6iZZbF2pLqppz547O8r9pCTuwtdspA8PUUwCXcWPbXdcKb8H+KtEnA
-	 vYV5UH9kk2R5DT86KkZXWL5/mET7B7l3QZkYztBFJ7a0PvDzmo/YIDl+Eg84lF8N0f
-	 cXFNcJJV2IRYckfYEkZhkVrhIiorIFlejmBkiW959HnGweu56QSzj2gTTWdAAaJrrS
-	 sh9Pp0D8Htj2up7P8oufGTYxoz9qRnLmpXA57NNz0RGrJXhZpOkLL3aR1nA9urPhxQ
-	 tbt47maHxAeQaYmg6AyhXHj67cdIJvhQE/sb9BqBhp83IhtTGVjXBGdkhdgPdJ185q
-	 K69pAch9YdpEB836VpaYWFh+Ip6YTtKtLGaP4i3L7l4LcOjBagTb6CrVT7jaRTwuHJ
-	 Al4nQrXZYlR6lYI26Sosm0aZwIokhEkI8od4RIJbjj59kdoSLsB5B75aVXY5ViEq95
-	 e1RjUlJ3M2nuatbtPJRqSTio=
-Received: from zn.tnic (p5de8e020.dip0.t-ipconnect.de [93.232.224.32])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ghmTCk2l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AdSg+hiN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ghmTCk2l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AdSg+hiN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 59DDE40E0031;
-	Thu,  2 Apr 2026 13:36:50 +0000 (UTC)
-Date: Thu, 2 Apr 2026 15:36:44 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
-	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
-	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
-	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
-	rdunlap@infradead.org, peterz@infradead.org,
-	pawan.kumar.gupta@linux.intel.com, feng.tang@linux.alibaba.com,
-	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
-	paulmck@kernel.org, lirongqing@baidu.com, rppt@kernel.org,
-	leitao@debian.org, ardb@kernel.org, jbohac@suse.cz,
-	cfsworks@gmail.com, tangyouling@kylinos.cn,
-	sourabhjain@linux.ibm.com, ritesh.list@gmail.com,
-	hbathini@linux.ibm.com, eajames@linux.ibm.com, guoren@kernel.org,
-	songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
-	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com,
-	fuqiang.wang@easystack.cn, liaoyuanhong@vivo.com,
-	takahiro.akashi@linaro.org, james.morse@arm.com,
-	lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-ID: <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
- <20260402113137.GAac5Tmc5b7SL98KdY@fat_crate.local>
- <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C9A994D34D;
+	Thu,  2 Apr 2026 14:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1775139041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ATIJ2JvCqHvnjxC2zyn8h0bvReSf5DUv55srIKdqy/4=;
+	b=ghmTCk2lxbNH98lYvz6tJH1dU3F3OuYSLO4M53l2lcvJjYjE9T+DydC+s7tDr0jsLsFz8a
+	6JBS04HYJcWpK7ShUP3ZXyXt0SvnEQOzCyINVRi7RMOQH/p2mmD0V89ks5MZ91hVHIy6sr
+	dKnnxR/gk5tFxNMkKRY+2YfECcgSd4w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1775139041;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ATIJ2JvCqHvnjxC2zyn8h0bvReSf5DUv55srIKdqy/4=;
+	b=AdSg+hiNNCy/NCHR9ueIRcJIk0qYOYToQKtIbfNFJX05e3E4ijc4tznQTYASBbTyTjZCp2
+	mV3qUgSp+3LOOqBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ghmTCk2l;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AdSg+hiN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1775139041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ATIJ2JvCqHvnjxC2zyn8h0bvReSf5DUv55srIKdqy/4=;
+	b=ghmTCk2lxbNH98lYvz6tJH1dU3F3OuYSLO4M53l2lcvJjYjE9T+DydC+s7tDr0jsLsFz8a
+	6JBS04HYJcWpK7ShUP3ZXyXt0SvnEQOzCyINVRi7RMOQH/p2mmD0V89ks5MZ91hVHIy6sr
+	dKnnxR/gk5tFxNMkKRY+2YfECcgSd4w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1775139041;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ATIJ2JvCqHvnjxC2zyn8h0bvReSf5DUv55srIKdqy/4=;
+	b=AdSg+hiNNCy/NCHR9ueIRcJIk0qYOYToQKtIbfNFJX05e3E4ijc4tznQTYASBbTyTjZCp2
+	mV3qUgSp+3LOOqBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 31D374A0B0;
+	Thu,  2 Apr 2026 14:10:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7zb4CuF4zmlFBgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 02 Apr 2026 14:10:41 +0000
+Message-ID: <3e466158-c2e5-4e23-934f-dcdbb71ad41f@suse.de>
+Date: Thu, 2 Apr 2026 16:10:40 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] firmware: sysfb: Make CONFIG_SYSFB a user-selectable
+ option
+To: Arnd Bergmann <arnd@arndb.de>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, longli@microsoft.com,
+ Helge Deller <deller@gmx.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+ <20260402092305.208728-4-tzimmermann@suse.de>
+ <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[arndb.de,redhat.com,kernel.org,linaro.org,xen0n.name,linux.intel.com,gmail.com,ffwll.ch,microsoft.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Queue-Id: C9A994D34D
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Thu, Apr 02, 2026 at 07:47:53PM +0800, Jinjie Ruan wrote:
-> Thank you for the reminder and for your patience. I apologize for the
-> frequent updates; I am becoming more familiar with the community's
-> workflow.
+Hi
 
-Yap, and you can use that time while waiting to learn about it:
+Am 02.04.26 um 15:08 schrieb Arnd Bergmann:
+> On Thu, Apr 2, 2026, at 11:09, Thomas Zimmermann wrote:
+>> Add a descriptive string and help text to CONFIG_SYSFB, so that users
+>> can modify it. Flip all implicit selects in the Kconfig options into
+>> dependencies. This avoids cyclic dependencies in the config.
+>>
+>> Enabling CONFIG_SYSFB makes the kernel provide a device for the firmware
+>> framebuffer. As this can (slightly) affect system behavior, having a
+>> user-facing option seems preferable. Some users might also want to set
+>> every detail of their kernel config.
+>>
+>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> I don't really like this part of the series and would prefer
+> to keep CONFIG_SYSFB hidden as much as possible as an x86
+> (and EFI) specific implementation detail, with the hope
+> of eventually seperating out the x86 bits from the EFI ones.
 
-Documentation/process/
+You mean, you want to use the EFI-provided framebuffers without the 
+intermediate step of going through sysfb_primary_display?
+
+In that case, CONFIG_SYSFB would become an x86-internal thing, right?
+
+>
+> In general, I am always in favor of properly using Kconfig
+> dependencies over 'select' statements, for the same reasons
+> you describe, but I don't want the the x86 logic for
+> the legacy VESA and VGA console handling to leak into more
+> architectures than necessary.
+>
+> Do you think we could instead move the sysfb_init()
+> function into the same two places that contain the
+> sysfb_primary_display definition (arch/x86/kernel/setup.c,
+> drivers/firmware/efi/efi-init.c) and simplify the efi version
+> to take out the x86 bits? That would reduce the rest
+> of sysfb-primary.c to the logic to unregister the device,
+> and that could then be selected by both x86 and EFI.
+
+No, I'm more than happy that sysfb finally consolidates all the 
+init-framebuffer setup and detection that floated around in the kernel. 
+I would not want it to be duplicated again.
+
+For now, we could certainly keep CONFIG_SYSFB hidden and autoselected. 
+Although I think this will require soem sort of solution at a later point.
+
+Best regards
+Thomas
+
+>
+>        Arnd
 
 -- 
-Regards/Gruss,
-    Boris.
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
