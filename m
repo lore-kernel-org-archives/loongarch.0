@@ -1,161 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F9A2D3ED2
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 10:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AF43DB64D
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 11:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775127521; cv=none; b=EyJ+GiNCkp6+t+ri8LHseTWbUbPNKDb5Dx3CMuhG290obZhMQVq0WbZjaqAOixAI6ElmuyejwP3ZgwfgbAQoYCOd7IbgvKFNIH575gjqqrDp+HucCZbp+W/A/aStY0d4eHXVHRJ0sz0DSMBEWLEuhVfWt2D1rYZ93GM4CNs6aN8=
+	t=1775129594; cv=none; b=Gt1BxKd9UFPP3YEER3aTdB8LZ/rOtPqhQPHvnfpnjHPcEmANmlXZmqx6cZna/d2BvwQUUh+qcin+OFWXp/OIzv5QO3ukfds/b3LPZo568BOocCeycDItnEpigWuwxSTjX2nRj2EEVM60g2+Vrqu1veLl46w2j7pyMcNIwqkItNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775127521; c=relaxed/simple;
-	bh=/rZ7A/l+t9TWlhL4/OfagkK4beiX1NefmzMNzH9R7uU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TozkaFNj7LKfcXI4n+6LAefRhM8eU0SyLEEcth6IL/BpZqLdckD4+B7odybBuuyeByUoDAVgtR7nXA0Bp4lSkIBIZ0Ti63uU7BC65p4NbZKWpT/9HojYTn5ixJKUh1Sx5uVxy9QOwAMZ9TroBaUziCIWalSby+vOUT9E98VSlT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ojGOrxnC; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1775129594; c=relaxed/simple;
+	bh=+qCmeRcN0lH7/WEeWONO2iaEoZjzeQsgUxCVOjL3jkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rJz7IRl+dnTmyE3UeD6KUEVKHMZ71j/7xyLSHJ78QXplxX/7fHZNjwXvPsBEMcfowrmIvz0ZcsURhRGdMuuoNFZlyTEw6tP3Clukqjwjy+DNw3A4Cy0r8p3PPZfMIXa1zUlLN35TBINhZHqWN41jdJwfbVS2uIgP1xj4rUZUxK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=akAPieEE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ojGOrxnC"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632AtPbk3747399;
-	Thu, 2 Apr 2026 10:58:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=0gFINy
-	0J7hWuSvPyF4Me4RwxZxrtep5gKamQFyCNyNA=; b=ojGOrxnCUvdzydYHvSVTnA
-	aCREMJ1+dHb6lGYgjcl+9JLNDbp6kXiIk3LVupebs8lBF9FbGRzard4JbrcKnIEa
-	X8QYs6M6pLmM8eru24rmv3oIwoMOpfSwd4tTEYkis9zKhhWAx/PePPRgmx2HA3aQ
-	0OkV3SKLULF74dQ0KXQ9phYk9MZX19fLFD6phVwN/dWFKH2RFT8y0ogAydf2Xqsj
-	ilWshU4BzEGaBjitQBz5UIOWHA7brAkhA0QBpx9cw7AXF63RHml6nNzqfuckqgKD
-	I36vdi8CYXhm0j5wlLdjPb47elLDBuh2SB6F8M8Bbw8ZeZKQAeY0cWMWfGgcdoyQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66msbg4c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 10:58:11 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6325kFcn022227;
-	Thu, 2 Apr 2026 10:58:10 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tan9prq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 02 Apr 2026 10:58:10 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632Aw6Iw45023654
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 2 Apr 2026 10:58:06 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3140520043;
-	Thu,  2 Apr 2026 10:58:06 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D8D1220040;
-	Thu,  2 Apr 2026 10:57:52 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  2 Apr 2026 10:57:52 +0000 (GMT)
-Message-ID: <cd9fc3a0-701a-45f9-a218-86a846b091fc@linux.ibm.com>
-Date: Thu, 2 Apr 2026 16:27:51 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="akAPieEE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4B00540E0176;
+	Thu,  2 Apr 2026 11:32:55 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jw2z8pECY3z7; Thu,  2 Apr 2026 11:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1775129569; bh=TIDAGUq2ox58mNj8RAJDIO3jke+fJLSXCQUmSvSgvp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=akAPieEEczl8U7UBUYzKWZHF1yo8GWIbNtqvDnuU2xvWpQOTrCJvcM5YJXF/dlYab
+	 YMHcN0kOoA9PaeZnalKe3TvEQU1ba12c6CK4GXE3QzR6fDCbiJXz/9OcwPZGYsD48b
+	 7pWAUdwhCHC15+ODwz9YQ8+jBPuGHlaUTU3+7GD5IOP7QpdaSdOBVzpkcEajUVKe0v
+	 7IMQq9XXEz3i+9pW3Hm1PSVtRqVDSivVNRcd2mBotzDLx2HlFQ43hQbYKH+hg/AkLO
+	 uH1dugwlsst3UbYPenADA3Fgpugf7XfpWVmzZWNT/LuGUn9zNqKSWlwP3inH1kH9+F
+	 ZduzT3zD4Ko7hOfXj0k+tQfDczDNNOcmMtQH4Snlh/wpwrTHZHlmGjmdk469rI2Cbb
+	 BxBk3megOkdnJ/Kxe+EIeFcvWANIoV5ElsZoz0AEl9W5Huuonsjm2xnvtDa1Umr2rv
+	 eBlXfEfKXFM1F5VEoXOGA6AJgTkAkHfHHKhDEgI/DgERCha6jNmVJ2OXGpjZUuxn0j
+	 F887snfYoARdSYw6ag7tbwdSz5idvDgTWGRJX8ciczfA0ccLSB43HzSjNzVE+ftdMz
+	 vcgwLZdAi/8xzDeOc6eIboCqt6HmYZJ9Jts/xsnL0CZrD8i8WSz9YYkCdLYoAXQzEK
+	 Kz4yU1iMV/H/FkYlB1wYbzNU=
+Received: from zn.tnic (p5de8e020.dip0.t-ipconnect.de [93.232.224.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 68A3940E0031;
+	Thu,  2 Apr 2026 11:31:44 +0000 (UTC)
+Date: Thu, 2 Apr 2026 13:31:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
+	rdunlap@infradead.org, peterz@infradead.org,
+	pawan.kumar.gupta@linux.intel.com, feng.tang@linux.alibaba.com,
+	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
+	paulmck@kernel.org, lirongqing@baidu.com, rppt@kernel.org,
+	leitao@debian.org, ardb@kernel.org, jbohac@suse.cz,
+	cfsworks@gmail.com, tangyouling@kylinos.cn,
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com,
+	hbathini@linux.ibm.com, eajames@linux.ibm.com, guoren@kernel.org,
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
+	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com,
+	fuqiang.wang@easystack.cn, liaoyuanhong@vivo.com,
+	takahiro.akashi@linaro.org, james.morse@arm.com,
+	lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Message-ID: <20260402113137.GAac5Tmc5b7SL98KdY@fat_crate.local>
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 02/15] powerpc/crash: Fix possible memory leak in
- update_crash_elfcorehdr()
-To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
-        skhan@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org,
-        chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
-        mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-        pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
-        saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org,
-        peterz@infradead.org, pawan.kumar.gupta@linux.intel.com,
-        feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com,
-        kees@kernel.org, elver@google.com, paulmck@kernel.org,
-        lirongqing@baidu.com, rppt@kernel.org, leitao@debian.org,
-        ardb@kernel.org, jbohac@suse.cz, cfsworks@gmail.com,
-        tangyouling@kylinos.cn, ritesh.list@gmail.com, hbathini@linux.ibm.com,
-        eajames@linux.ibm.com, guoren@kernel.org, songshuaishuai@tinylab.org,
-        kevin.brodsky@arm.com, vishal.moola@gmail.com,
-        junhui.liu@pigmoral.tech, coxu@redhat.com, fuqiang.wang@easystack.cn,
-        liaoyuanhong@vivo.com, takahiro.akashi@linaro.org, james.morse@arm.com,
-        lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        kexec@lists.infradead.org
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
- <20260402072701.628293-3-ruanjinjie@huawei.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260402072701.628293-3-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69ce4bc4 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
- a=i0EeH86SAAAA:8 a=VlouDxB3MAwdfIDnmSwA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDA5NyBTYWx0ZWRfX7sTiPpQy79zU
- K27F0Aadqv20eVmWi70LMSBPyFOePevJ8HXyavRnK2TMzHBaqSwuLuxWghuZlrQko5p05QNG2B+
- 9Bgt6FzwoOQe968GS2CqUCWPF85d/PVlPRIHZxewHdS/5BZRUaIOvRMExp1EA0wnq/FfmfkRbml
- xUoUXHVAC39mqNXXBSfHbajz0Jy/x3ZUV/ETZpslbrsNw6IuxYsEP9fksyG6DmoBcTvr0vzUs7p
- +NMUSXiYvqxVsqVr2xYwpkjuI4M8zrAJ9QmTnvurotV7fIoCBsSulbmEh6HFEQfxV+LhGIu+pD3
- ZkhK78O/fbw0C/N0oaillpJX3t5VHm7NQrh0Rt1lDmpLs33W+LZxzNIlnrJzPTtWD6qTBPjbzCv
- THCMfLanh5h1/u6vlboXEIhI/aKd0Ic+FIzYIGcrqQgvJfN9B4u08rwVs/g8A7mVn8Dgt16cloJ
- 0Db6BgmrWybcSycnenw==
-X-Proofpoint-GUID: y-dDzylxSChSlhSY3DLcHWQcfmdGadgb
-X-Proofpoint-ORIG-GUID: qB0ckh-l6XGO78PdLdPfSeeapsEZWdAu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-02_01,2026-04-02_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1011 adultscore=0 priorityscore=1501 bulkscore=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020097
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260402072701.628293-1-ruanjinjie@huawei.com>
 
+On Thu, Apr 02, 2026 at 03:26:46PM +0800, Jinjie Ruan wrote:
+> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+> and crashk_cma memory are almost identical across different architectures,
+> This patch set handle them in crash core in a general way, which eliminate
+> a lot of duplication code.
 
+From: Documentation/process/submitting-patches.rst
 
-On 02/04/26 12:56, Jinjie Ruan wrote:
-> In get_crash_memory_ranges(), if crash_exclude_mem_range() failed
-> after realloc_mem_ranges() has successfully allocated the cmem
-> memory, it just returns an error but leaves cmem pointing to
-> the allocated memory, nor is it freed in the caller
-> update_crash_elfcorehdr(), which cause a memory leak, goto out
-> to free the cmem.
->
-> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Fixes: 849599b702ef ("powerpc/crash: add crash memory hotplug support")
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->   arch/powerpc/kexec/crash.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-> index a325c1c02f96..1d12cef8e1e0 100644
-> --- a/arch/powerpc/kexec/crash.c
-> +++ b/arch/powerpc/kexec/crash.c
-> @@ -440,7 +440,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
->   	ret = get_crash_memory_ranges(&cmem);
->   	if (ret) {
->   		pr_err("Failed to get crash mem range\n");
-> -		return;
-> +		goto out;
->   	}
->   
->   	/*
-Thanks for fixing this Jinjie.
+"Don't get discouraged - or impatient
+------------------------------------
 
-Feel free to add:
-Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+After you have submitted your change, be patient and wait.  Reviewers are
+busy people and may not get to your patch right away.
 
-- Sourabh Jain
+Once upon a time, patches used to disappear into the void without comment,
+but the development process works more smoothly than that now.  You should
+receive comments within a week or so; if that does not happen, make sure
+that you have sent your patches to the right place.  Wait for a minimum of
+						     ^^^^^^^^^^^^^^^^^^^^^
+
+one week before resubmitting or pinging reviewers - possibly longer during
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+busy times like merge windows."
+
+You need to be patient and send once a week and not spam people:
+
+Feb 04 Jinjie Ruan ( :1.0K|) [PATCH v3 0/3] arm64/riscv: Add support for crashkernel CMA reservation
+Feb 09 Jinjie Ruan ( :1.5K|) [PATCH v4 0/3] arm64/riscv: Add support for crashkernel CMA reservation
+Feb 12 Jinjie Ruan ( :2.1K|) [PATCH v5 0/4] arm64/riscv: Add support for crashkernel CMA reservation
+Feb 24 Jinjie Ruan ( :2.3K|) [PATCH v6 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Feb 26 Jinjie Ruan ( :2.5K|) [PATCH v7 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Mar 02 Jinjie Ruan ( :2.8K|) [PATCH v8 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Mar 23 Jinjie Ruan ( :2.9K|) [PATCH v9 0/5] arm64/riscv: Add support for crashkernel CMA reservation
+Mar 25 Jinjie Ruan ( :3.7K|) [PATCH v10 0/8] arm64/riscv: Add support for crashkernel CMA reservation
+Mar 28 Jinjie Ruan ( :4.3K|) [PATCH v11 00/11] arm64/riscv: Add support for crashkernel CMA reservation
+Apr 02 Jinjie Ruan ( :4.5K|) [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA reservation
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
