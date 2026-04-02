@@ -1,111 +1,101 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897A322689C
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 01:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 976642DAFDF
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 02:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775094084; cv=none; b=T3EksVWQK2gfkLcqnEg5M+ZPIzWU5B/pzlETNinru/A+qj58irVQ2Vztw7+68VNQN9p9BnrMXnXTSK2KOe6IizXN5vdMR3BhaMAdPRt9IiCMBBHR/TZ1ZFM8khh4MNm66S+qYlbdFq+hiIedQrUvb5x6JzKt7dLA0n05MBP/aVY=
+	t=1775098141; cv=none; b=rxfR1Sb2rFu54hyzMVMSbbFud75tw2U452hf/VbSHucJDmhqUvh3rIuxMYxSHV88rsDyTQjeiJliVt1SA/3nC8myEqtUKogHWQ35s6tRQUGqxAgNYEGPSbs9TTtel/rld4yIn71l7q/fey2qEE+2T/V/7NfF4v+KEDbtrqcrKlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775094084; c=relaxed/simple;
-	bh=BzANNX+XCdxr/liDOmc+KLPcWYuqzJ1vlYE/EVAGvEg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TZ1yeKWuB20zyWqvPOql/kpS61xgKA5nKs0JbfjNkdXA7b2z/R5iH36QzrNe/445kCEB7un5zuObIqRaZvugwaISPdwAW3JtAMEl8fI+kxKvfbfZQK3HeD2+rrw6Iex25MD9Ok2F3q5g1a4DbVsKguzMyguUxE48AZaQn91w8do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=i0naMR9w; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="i0naMR9w"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=cLdczJYdweiDTR4k8RfWxcCkbFm9C4zs52yHWSQ3P04=;
-	b=i0naMR9w04jGCrCibz1QpTYUhPTuY7iux05gGMK9OFaMfxlmSa7ATYNv3hCbz5tRSIo6iRQcu
-	XVq9K1Etj+PvKfocDXdznvishGbYpJDXYsTaKic+8y9AKj0FIbaMo2KSJwzioj8ZvT/E3OzEr5d
-	1qXQG41oOqb5dstsqF+2Qws=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4fmPY40Wncz12LJV;
-	Thu,  2 Apr 2026 09:34:48 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id B11FC40569;
-	Thu,  2 Apr 2026 09:41:13 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 2 Apr 2026 09:41:10 +0800
-Message-ID: <adf2b4a8-27d6-59ad-74f3-ea43e07fe84f@huawei.com>
-Date: Thu, 2 Apr 2026 09:41:01 +0800
+	s=arc-20240116; t=1775098141; c=relaxed/simple;
+	bh=nvdPCKZmii8Q5beKHgefCNimY7ElhJYekIGNQA4QKCM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=NaAg9QlvQ+OPAC9P6G7MzVtRcqICQKgTix+e0BRDfYjEqPbsa4aYaOShODTP+343LtFkvU3ly1rIrJNd0zkVtXVXwnD2/56LXgUmijsvH0BQSVZ+m9v9KnIVqbUhQNh1jNZV6GUer5WAP7HwrvGXyCoZHHYNFM7zTV2cKfHc/Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx58EQ2c1p4xAhAA--.15729S3;
+	Thu, 02 Apr 2026 10:48:48 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxGMEH2c1p4CRjAA--.44258S3;
+	Thu, 02 Apr 2026 10:48:39 +0800 (CST)
+Subject: Re: [PATCH v1 1/5] LoongArch: Define format for AM{SWAP/ADD}.{B/H},
+ DBAR and BSTRINS.D
+To: bot+bpf-ci@kernel.org, chenhuacai@kernel.org, hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
+ daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
+ yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
+References: <20260401071206.5506-2-yangtiezhu@loongson.cn>
+ <6089c3c90bd2f2cf2848a39fc0d30219d0f3f95f9c74257a19d01de053eb1c44@mail.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <3b8ef23a-e324-4ad8-430c-e02adca44a1c@loongson.cn>
+Date: Thu, 2 Apr 2026 10:48:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v14 3/4] arm64: Use generic TIF bits for common thread
- flags
+In-Reply-To: <6089c3c90bd2f2cf2848a39fc0d30219d0f3f95f9c74257a19d01de053eb1c44@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: <will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<hca@linux.ibm.com>, <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-	<borntraeger@linux.ibm.com>, <svens@linux.ibm.com>, <oleg@redhat.com>,
-	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
-	<shuah@kernel.org>, <kevin.brodsky@arm.com>, <yeoreum.yun@arm.com>,
-	<anshuman.khandual@arm.com>, <thuth@redhat.com>, <ryan.roberts@arm.com>,
-	<mark.rutland@arm.com>, <song@kernel.org>, <ziyao@disroot.org>,
-	<linusw@kernel.org>, <schuster.simon@siemens-energy.com>,
-	<jremus@linux.ibm.com>, <akpm@linux-foundation.org>,
-	<mathieu.desnoyers@efficios.com>, <kmal@cock.li>, <dvyukov@google.com>,
-	<reddybalavignesh9979@gmail.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-s390@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20260320104222.1381274-1-ruanjinjie@huawei.com>
- <20260320104222.1381274-4-ruanjinjie@huawei.com> <acz5mOrm6_E1UBwV@arm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <acz5mOrm6_E1UBwV@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxGMEH2c1p4CRjAA--.44258S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF48Jr4ruF1rZF4fJF1DJwc_yoWkCrc_Cw
+	sFgFy5Gr48AanYvw1DG3Z5Xr45Aa1fKFnaya4DK39rAFy5Xr13twsxJa4fAryYqF1ftFZa
+	yw4xZFnF9w12qosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUba8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8aZX5UUUUU==
 
-
-
-On 2026/4/1 18:55, Catalin Marinas wrote:
-> On Fri, Mar 20, 2026 at 06:42:21PM +0800, Jinjie Ruan wrote:
->> Use the generic TIF bits defined in <asm-generic/thread_info_tif.h> for
->> standard thread flags (TIF_SIGPENDING, TIF_NEED_RESCHED, TIF_NOTIFY_RESUME,
->> TIF_RESTORE_SIGMASK, TIF_SINGLESTEP, etc.) instead of defining
->> them locally.
->>
->> Arm64-specific bits (TIF_FOREIGN_FPSTATE, TIF_MTE_ASYNC_FAULT, TIF_SVE,
->> TIF_SSBD, etc.) are renumbered to start at bit 16 to avoid conflicts.
->>
->> This enables RSEQ optimizations which require CONFIG_HAVE_GENERIC_TIF_BITS
->> combined with the generic entry infrastructure (already used by arm64).
->>
->> By the way, remove TIF_FREEZE because this flag became unused since
->> commit d88e4cb67197 ("freezer: remove now unused TIF_FREEZE").
->>
->> Cc: Thomas Gleixner <tglx@kernel.org>
->> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
->> Reviewed-by: Linus Walleij <linusw@kernel.org>
->> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+On 2026/4/1 下午4:23, bot+bpf-ci@kernel.org wrote:
+>> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+>> index 657bbae6c1c7..93466fc7d33d 100644
+>> --- a/arch/loongarch/kernel/cpu-probe.c
+>> +++ b/arch/loongarch/kernel/cpu-probe.c
+>> @@ -177,6 +177,10 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
+>>   		c->options |= LOONGARCH_CPU_LAM;
+>>   		elf_hwcap |= HWCAP_LOONGARCH_LAM;
+>>   	}
+>> +	if (config & CPUCFG2_LAM_BH) {
+>> +		c->options |= LOONGARCH_CPU_LAM_BH;
+>> +		elf_hwcap |= HWCAP_LOONGARCH_LAM_BH;
+>> +	}
 > 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Should there be a corresponding entry in the "Features" line of
+> /proc/cpuinfo for the new lam_bh capability?
 > 
-> Given that it's touching multiple trees, I guess it's a series for
-> Andrew?
-
-Yes, this series touches x86, arm64, s390 and loongarch. It's best for
-Andrew to help merge this in the -mm tree.
-
-Moreover, the latter two arm64-related patches depend on patch serise
-"arm64:
-entry: Convert to Generic Entry" v14 being merged first, while the first
-two patches can be merged in advance.
-
+> Every other feature that sets elf_hwcap in cpu_probe_common() also
+> has a matching seq_puts() in show_cpuinfo() in proc.c:
 > 
+> arch/loongarch/kernel/proc.c:show_cpuinfo() {
+>      ...
+>      if (cpu_has_lam)
+>              seq_puts(m, " lam");
+>      if (cpu_has_scq)
+>              seq_puts(m, " scq");
+>      ...
+> }
+> 
+> The new cpu_has_lam_bh is missing from this list.
+
+Yes, I think so, thank you.
+I will wait for more comments before sending v2.
+
+Thanks,
+Tiezhu
+
