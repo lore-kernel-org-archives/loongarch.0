@@ -1,190 +1,161 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023093.outbound.protection.outlook.com [40.107.44.93])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305E2390992
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 10:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.93
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775127065; cv=fail; b=jsHWLA8eihO2DXBnZpKI14NOh+zwhKcpdGuhLnhN3E45gQrl7Ng/0ehdQ8sR1FQHk0up3gQXOulVqNQJ9E69t7mh2QSG8SScK9reMUJTLvzDr6k58k2VEuJoF1BQ9az83VlU/dhorZBWo8ujobO5Et2Io/K6XZ9K8FPjEQof3tY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775127065; c=relaxed/simple;
-	bh=4blnxIV+4i0UG9Uh1AXZdp5HNm4s98kbu1FDjh1T94g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jsqKf7nmJ4LiRKhtjkSw0YoSvKsJne9z2YA1iyo+yv/hnLNDJDR+w68399V5uxhoPirbOVyDYIHl7JgAUquo8jWFhYFlQ9p2L2zsXZdRmKnKAukbmP3ZUKIGYEGFTsw1JhcE83TSRSn7Mk0N0Nwr060WVOIkv25wTk9bFwtt99E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=CFJ+T+BT; arc=fail smtp.client-ip=40.107.44.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F9A2D3ED2
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 10:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775127521; cv=none; b=EyJ+GiNCkp6+t+ri8LHseTWbUbPNKDb5Dx3CMuhG290obZhMQVq0WbZjaqAOixAI6ElmuyejwP3ZgwfgbAQoYCOd7IbgvKFNIH575gjqqrDp+HucCZbp+W/A/aStY0d4eHXVHRJ0sz0DSMBEWLEuhVfWt2D1rYZ93GM4CNs6aN8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775127521; c=relaxed/simple;
+	bh=/rZ7A/l+t9TWlhL4/OfagkK4beiX1NefmzMNzH9R7uU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TozkaFNj7LKfcXI4n+6LAefRhM8eU0SyLEEcth6IL/BpZqLdckD4+B7odybBuuyeByUoDAVgtR7nXA0Bp4lSkIBIZ0Ti63uU7BC65p4NbZKWpT/9HojYTn5ixJKUh1Sx5uVxy9QOwAMZ9TroBaUziCIWalSby+vOUT9E98VSlT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ojGOrxnC; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="CFJ+T+BT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MkFixaGDdw+uTFKzwxSY9Kb5aELrFTcs03Wy3+L1SdHtduivZEJYA8bMEvKzK9qd+iL9P6jhIm13DeUKAM1pCArW1pNiUFsYeJx6Kj/wqkmPa+BLK+DpNGNLL5YgZRvWRrdyc5Ht54bXXyGJtdVKBOOU09rAFNcCERD5M9cXO2OrMXQmTDeV9hM1cPwoF4pI2ftIxhNSgjUuWxe48BBXq7I4LHIdf0iuKwxwlafnsuwhh9S+Bf7KK9yPhyGupK+GktIDMnxMyGLVFnHbHjY3HCjsss47mWyzdICP5dTKS2P7dWYXX87ISn6lXco5remSHPjCDh4wd9DHziFPSgNCSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VI2MSTo9zpN6C28iFiXOn3n95MKHT5Mpuz7NBG5gLPA=;
- b=mxTkHIR6+cI+0veIwg27GEDYlL5PRwYNGHRlt9hEno3+7gOgAthQTVF6JDhMFCMlAxQb7FyBEsVwQ3JogqaF7xk+ZOl15o14WotdmWRJSX0W6zhA6LRnOX15gxH6N526FWvdcPPwdL2IO9U9G2BTocvm4BvTvzItBs3iJP2YoxjMYxzt0fXMvlWXKtd8r8R4M8k06VUjUf3LLCH7znHOGNOWyTObhLFYdg1LaCMIU7Hi6/wuan3c8V8UpMdcBzLJUgX+37IdeRf0V5oSfquYu2VGyuZwL93KROTEtr70LiBNfM/v0SLugL/23U1TnVnw0yDdHusnPDgcIZ4cqlttxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VI2MSTo9zpN6C28iFiXOn3n95MKHT5Mpuz7NBG5gLPA=;
- b=CFJ+T+BTM4FykVb9JcpOI5xDujnEFWsvvScrbLjFSqrEILRWAL60CWNxv7HT2NraEnWE5nw+bqfnwLUyKWaDyCQOLByqvITSnu6ARD0wX2LLtuxR5UKvNPfzRc/PJmoFET8RXxEuGva13ZUNyv+ayNMxtxHdA6hjmhc5f1kXm1A=
-Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM (2603:1096:d10:36::22)
- by SEZP153MB0695.APCP153.PROD.OUTLOOK.COM (2603:1096:101:92::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Thu, 2 Apr
- 2026 10:50:56 +0000
-Received: from KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
- ([fe80::c9fa:b931:702:dbac]) by KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
- ([fe80::c9fa:b931:702:dbac%5]) with mapi id 15.20.9791.007; Thu, 2 Apr 2026
- 10:50:56 +0000
-From: Saurabh Singh Sengar <ssengar@microsoft.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, "javierm@redhat.com"
-	<javierm@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "ardb@kernel.org"
-	<ardb@kernel.org>, "ilias.apalodimas@linaro.org"
-	<ilias.apalodimas@linaro.org>, "chenhuacai@kernel.org"
-	<chenhuacai@kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "airlied@gmail.com"
-	<airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>, KY Srinivasan
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
-	Long Li <longli@microsoft.com>, "deller@gmx.de" <deller@gmx.de>
-CC: "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "loongarch@lists.linux.dev"
-	<loongarch@lists.linux.dev>, "linux-efi@vger.kernel.org"
-	<linux-efi@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-fbdev@vger.kernel.org"
-	<linux-fbdev@vger.kernel.org>, Michael Kelley <mhklinux@outlook.com>, Saurabh
- Sengar <ssengar@linux.microsoft.com>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>
-Subject: RE: [PATCH 1/8] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
-Thread-Topic: [PATCH 1/8] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
-Thread-Index: AQHcwo6UUBvHYaEr8EK6Q8BbiI9woQ==
-Date: Thu, 2 Apr 2026 10:50:55 +0000
-Message-ID:
- <KUZP153MB14449BBE44CBAEEA7621A4A0BE51A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
-References: <20260402092305.208728-1-tzimmermann@suse.de>
- <20260402092305.208728-2-tzimmermann@suse.de>
-In-Reply-To: <20260402092305.208728-2-tzimmermann@suse.de>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=18bb24b4-8011-4e12-840f-c00cb01f033d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2026-04-02T10:50:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: KUZP153MB1444:EE_|SEZP153MB0695:EE_
-x-ms-office365-filtering-correlation-id: e877716d-0112-41b9-009e-08de90a5b777
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|18002099003|22082099003|56012099003|38070700021|921020;
-x-microsoft-antispam-message-info:
- SdvUNrGWjKzVIi0jcfhE88EgvkVPpvZjp5M7KULTg6vT9b35NBZ8AEqaVT0Tkk9vdyBpCxmtOkwcKfVkbWXdN0PUsAMIQOp640wFoCk+Og76/j5cs7ZPp2v2w7ZtiLMhXYKek4MDOVpMHs7ua+YHuDZxbfPyjxDwnipZIj+ViN+owrZF6iP5IlqmV9DrfOdW9LDK+lW1yaE3w5TkN6HbFBW8XdMoHU39a+ayo7Bojgl2kY2sRXZGOFSTr6cCMbaWhxDmUKUnhYhIvfF1Wnw74jGG52tnYxibb6x1jc3PFli1lS0tTOkRgDWg7cQfX3cKhHnDORsARR7xsc4cVAeBpk6WfqVtpU6pQOPr5G72mNnRr5IbaSYX4pXnkfdvUuT6+bkDE9+eQqadNQ5/SC/AsJ5nbr1eTyD/iYNzDNb55B3a4kKrEMOFbKiQIh1xFSYmwKJX2uBhMFacJJ3Zk3/ReUegHjUEX54zd+YEIO46Yh7NEP6HJ9FbVpPT5zmgrs84FCqs9iuuYaxHCEdano71Z5sTZofNhusZHi0SQXz4HgKfR+eK06Pq1NGOXO6iz6B3jl6X64jDqszQBtGWLj0xikzq57buLHyioV0rjB4KNj9/rNqptMQHWIbLit57pAGhm1ibyYBM+KsXSdIcutrAmSFXAUIxTVmsqG8SghYp+CT5Gjyj3FCZMye1gQX36+OsQwQHIP0xO9qdjmMR4aWKbh+K16NgPy/XGIuiJjnN5Eh54yE7MWsX8f12uyCujmwNXj8ZDk5kCJ+LxH9nEBdmn59YJ/dyrYEKhLYTOhSd/iqy9g+4Pxv57b7o6tQIVPhh
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KUZP153MB1444.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(18002099003)(22082099003)(56012099003)(38070700021)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?iSJG7Ki3w/6dKAPOpBCKrVR/kp2H/0uLYC04t5WwHmON41CSLhBEJjwbX7yc?=
- =?us-ascii?Q?AgzW9ZOP4ZJuKXfWVwmLd5ypp2jYq90uWNGza+TbZ7d8BnP9lnJqYW7KfLXF?=
- =?us-ascii?Q?meDgY/tMXVEG9kwG5vHWqSWwSUU40BJUjsxFdKz7dlQq/raMld3rxijHFUiN?=
- =?us-ascii?Q?OoyniSC+OyPvmXU7sHkqp6PNnOFzusH25mIzlMh54x0hAE5b3KKAVg5Euv7/?=
- =?us-ascii?Q?uaBpStNA8Ma2KwxN8e4sy2b44NzZz+RR4wXU33LiyHmiP3zjAwznw044MgdA?=
- =?us-ascii?Q?aYFst3K1AA2vtZffdDzFqJQ4qcF+WslTiOffOS4/e8cUtjIx9YdWKjBpWPw5?=
- =?us-ascii?Q?lcZz3J1cA9c3+HAyRCueoO2BOvVVN4n1bk2jq644hA7ZDOfRkJZ1lun59JkD?=
- =?us-ascii?Q?90rbaJGH7yoeV2N15LYFJLPIFgb/bI4tjfSFbJfe/5DCaNhYnDDXcA1nsu5w?=
- =?us-ascii?Q?4Q7o9f2LxdLjfEyKGpfOCmuyU3KnAmU5Di413oMjdZEZFju77tnpfgO29MSE?=
- =?us-ascii?Q?09+L0M4HWrX5NgzFKxlN8gOaUX2ShqhHj66fz9R4y64+Cs0KJ5nDzy8rNn/8?=
- =?us-ascii?Q?y0erizoNJ7DjX+YbU9kJyyu1K0mHx+zzmxAYxeVTL34uWn2B7lxma3prBgOy?=
- =?us-ascii?Q?yLUV1krIAalsVm7Z58q21aYrNYR6ORwhScAzEDkuE/L3En3wz8leHMq5luiK?=
- =?us-ascii?Q?xKfcrv0RVxGHq4+xfDkS+j18SV2z242itwOfJTuxehsTktAjKKd/nsa5TMSB?=
- =?us-ascii?Q?SfpgQyL/j46qm8DXgyismp84cqn5QXSt04d82FvcOdOIyEBNz8ZwuuoIl1kD?=
- =?us-ascii?Q?Eca/8YgO81o4mo9lrmAOlLONhPTyrpkcJQfqZHzcoxwKfr//tHnFWz8FLmMb?=
- =?us-ascii?Q?wyzrus7RIwpaa5+l4d7P0oopfUyI+l0JlyTC3aUPSt9GWxRi3YJ5oAHrfWoB?=
- =?us-ascii?Q?ncy7f2ruU3K6EJFdaS8Zxn12FnIahFlHZtLZDowRxgm1pBJjivKeWUaJHY1b?=
- =?us-ascii?Q?biEk6vKep1X2Gw6Nia22TpfuRJKRvCi2ZlFnUBM1PZ3qEJi9emB4if3Xw49/?=
- =?us-ascii?Q?vhDX2yj9YvtdvTSpQG9nQD4WZLkdTcCkF2Q1qLLmW+Fl7gqjmAcdumGcFVjn?=
- =?us-ascii?Q?L/6kdohQWqUe5/uihCnl3kaejbZZ/WgiW6smK13ETt5KQiGl+RWLFoRsUhji?=
- =?us-ascii?Q?DiMnVR5ZdmLYMtEYAKJGOBoCL8V+cjzzOe/ytyLHxsd/tUvogGqQlSSNR2Ma?=
- =?us-ascii?Q?0R9kEVP1Ajy0vEkwYyEjiLKPjm+kZibnmxm30Gyrh8StJ14VncvMaE49FuYE?=
- =?us-ascii?Q?G+Ff6z5b0INzFNBNpktu1ST2Je3UYL7Vkzl4rIt52cklVc18IgSyI8omSRZr?=
- =?us-ascii?Q?9JUwTCeDmXx2KkeKB2BimaMA+XJGDhrLVjHhuVDEEEQhiG7DsYSxodL3TrBm?=
- =?us-ascii?Q?WOLxye8t9fyh7B1nCHg3/+2B3zvJv3Lb7+JzhbWyWfUaeBUwtSzybGz9QCor?=
- =?us-ascii?Q?KSaJskktcf/eWSe2hKA+RPndW4NZNPJj/GQrMpHnRwBZOl+WivaVNbCo/XZ9?=
- =?us-ascii?Q?oK+y/EkdnJM0yE0/2ZmV9c7iZu0sL/9oWBzEcCmp+8w1NV/QZX3ziKtUAFOC?=
- =?us-ascii?Q?rL5hAV0Fhn+ObMf+C1I9nzWxozBclwuSH+c876KnyuDP?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ojGOrxnC"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632AtPbk3747399;
+	Thu, 2 Apr 2026 10:58:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0gFINy
+	0J7hWuSvPyF4Me4RwxZxrtep5gKamQFyCNyNA=; b=ojGOrxnCUvdzydYHvSVTnA
+	aCREMJ1+dHb6lGYgjcl+9JLNDbp6kXiIk3LVupebs8lBF9FbGRzard4JbrcKnIEa
+	X8QYs6M6pLmM8eru24rmv3oIwoMOpfSwd4tTEYkis9zKhhWAx/PePPRgmx2HA3aQ
+	0OkV3SKLULF74dQ0KXQ9phYk9MZX19fLFD6phVwN/dWFKH2RFT8y0ogAydf2Xqsj
+	ilWshU4BzEGaBjitQBz5UIOWHA7brAkhA0QBpx9cw7AXF63RHml6nNzqfuckqgKD
+	I36vdi8CYXhm0j5wlLdjPb47elLDBuh2SB6F8M8Bbw8ZeZKQAeY0cWMWfGgcdoyQ
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d66msbg4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Apr 2026 10:58:11 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6325kFcn022227;
+	Thu, 2 Apr 2026 10:58:10 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4d6tan9prq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Apr 2026 10:58:10 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 632Aw6Iw45023654
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Apr 2026 10:58:06 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3140520043;
+	Thu,  2 Apr 2026 10:58:06 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D8D1220040;
+	Thu,  2 Apr 2026 10:57:52 +0000 (GMT)
+Received: from [9.123.14.142] (unknown [9.123.14.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  2 Apr 2026 10:57:52 +0000 (GMT)
+Message-ID: <cd9fc3a0-701a-45f9-a218-86a846b091fc@linux.ibm.com>
+Date: Thu, 2 Apr 2026 16:27:51 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KUZP153MB1444.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e877716d-0112-41b9-009e-08de90a5b777
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2026 10:50:55.5076
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DIiXXMppZYPpOHdRHZ+nRFdZXYEpZs5V01ntxE7smqq1+dJGbx3NWf0fQz1aklgukmKcm3EdTfP6h0Aoox3ycg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZP153MB0695
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 02/15] powerpc/crash: Fix possible memory leak in
+ update_crash_elfcorehdr()
+To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
+        skhan@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org,
+        chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
+        mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
+        pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
+        saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org,
+        peterz@infradead.org, pawan.kumar.gupta@linux.intel.com,
+        feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com,
+        kees@kernel.org, elver@google.com, paulmck@kernel.org,
+        lirongqing@baidu.com, rppt@kernel.org, leitao@debian.org,
+        ardb@kernel.org, jbohac@suse.cz, cfsworks@gmail.com,
+        tangyouling@kylinos.cn, ritesh.list@gmail.com, hbathini@linux.ibm.com,
+        eajames@linux.ibm.com, guoren@kernel.org, songshuaishuai@tinylab.org,
+        kevin.brodsky@arm.com, vishal.moola@gmail.com,
+        junhui.liu@pigmoral.tech, coxu@redhat.com, fuqiang.wang@easystack.cn,
+        liaoyuanhong@vivo.com, takahiro.akashi@linaro.org, james.morse@arm.com,
+        lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        kexec@lists.infradead.org
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+ <20260402072701.628293-3-ruanjinjie@huawei.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20260402072701.628293-3-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=J6enLQnS c=1 sm=1 tr=0 ts=69ce4bc4 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
+ a=i0EeH86SAAAA:8 a=VlouDxB3MAwdfIDnmSwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDA5NyBTYWx0ZWRfX7sTiPpQy79zU
+ K27F0Aadqv20eVmWi70LMSBPyFOePevJ8HXyavRnK2TMzHBaqSwuLuxWghuZlrQko5p05QNG2B+
+ 9Bgt6FzwoOQe968GS2CqUCWPF85d/PVlPRIHZxewHdS/5BZRUaIOvRMExp1EA0wnq/FfmfkRbml
+ xUoUXHVAC39mqNXXBSfHbajz0Jy/x3ZUV/ETZpslbrsNw6IuxYsEP9fksyG6DmoBcTvr0vzUs7p
+ +NMUSXiYvqxVsqVr2xYwpkjuI4M8zrAJ9QmTnvurotV7fIoCBsSulbmEh6HFEQfxV+LhGIu+pD3
+ ZkhK78O/fbw0C/N0oaillpJX3t5VHm7NQrh0Rt1lDmpLs33W+LZxzNIlnrJzPTtWD6qTBPjbzCv
+ THCMfLanh5h1/u6vlboXEIhI/aKd0Ic+FIzYIGcrqQgvJfN9B4u08rwVs/g8A7mVn8Dgt16cloJ
+ 0Db6BgmrWybcSycnenw==
+X-Proofpoint-GUID: y-dDzylxSChSlhSY3DLcHWQcfmdGadgb
+X-Proofpoint-ORIG-GUID: qB0ckh-l6XGO78PdLdPfSeeapsEZWdAu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-02_01,2026-04-02_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1011 adultscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604020097
 
-> Hyperv's sysfb access only exists in the VMBUS support. Therefore only se=
-lect
-> CONFIG_SYSFB for CONFIG_HYPERV_VMBUS. Avoids sysfb code on systems
-> that don't need it.
->=20
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 96959283a58d ("Drivers: hv: Always select CONFIG_SYSFB for Hyper-V
-> guests")
-> Cc: Michael Kelley <mhklinux@outlook.com>
-> Cc: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: Long Li <longli@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: <stable@vger.kernel.org> # v6.16+
+
+
+On 02/04/26 12:56, Jinjie Ruan wrote:
+> In get_crash_memory_ranges(), if crash_exclude_mem_range() failed
+> after realloc_mem_ranges() has successfully allocated the cmem
+> memory, it just returns an error but leaves cmem pointing to
+> the allocated memory, nor is it freed in the caller
+> update_crash_elfcorehdr(), which cause a memory leak, goto out
+> to free the cmem.
+>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Fixes: 849599b702ef ("powerpc/crash: add crash memory hotplug support")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 > ---
->  drivers/hv/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig index
-> 7937ac0cbd0f..2d0b3fcb0ff8 100644
-> --- a/drivers/hv/Kconfig
-> +++ b/drivers/hv/Kconfig
-> @@ -9,7 +9,6 @@ config HYPERV
->  	select PARAVIRT
->  	select X86_HV_CALLBACK_VECTOR if X86
->  	select OF_EARLY_FLATTREE if OF
-> -	select SYSFB if EFI && !HYPERV_VTL_MODE
->  	select IRQ_MSI_LIB if X86
->  	help
->  	  Select this option to run Linux as a Hyper-V client operating @@ -62,=
-6
-> +61,7 @@ config HYPERV_VMBUS
->  	tristate "Microsoft Hyper-V VMBus driver"
->  	depends on HYPERV
->  	default HYPERV
-> +	select SYSFB if EFI && !HYPERV_VTL_MODE
->  	help
->  	  Select this option to enable Hyper-V Vmbus driver.
->=20
-> --
-> 2.53.0
+>   arch/powerpc/kexec/crash.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index a325c1c02f96..1d12cef8e1e0 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -440,7 +440,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
+>   	ret = get_crash_memory_ranges(&cmem);
+>   	if (ret) {
+>   		pr_err("Failed to get crash mem range\n");
+> -		return;
+> +		goto out;
+>   	}
+>   
+>   	/*
+Thanks for fixing this Jinjie.
 
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Feel free to add:
+Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
+- Sourabh Jain
