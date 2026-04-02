@@ -1,269 +1,140 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220163E3DBA
-	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 13:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE9E3E3C44
+	for <loongarch@lists.linux.dev>; Thu,  2 Apr 2026 13:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775135313; cv=none; b=KQ+aiNUVNF20+SUbZF1sNgOB07pHPFQdXJS+cK1wMxb388gNPDBxx3TKZB+bQZKCZxIuMh5UIbrP+zmVGEU29ZO0774I0+lePeBrEodH8hFIHCchByXdwwBlOEyW307D788fuusZKc1lOpXaam8roPBDgL3znJBpGfq949Zban0=
+	t=1775135372; cv=none; b=dIiAqke5fnPZsA7o65wXNUqq08nkffEphIeUb0rcjYkQpg22Yjog/WwW/b+CyQVTlbxEeA/YDVcZS84jUTlDP41H/PuXM2BQHUOnJSO/o7F0PgQU0OCMQMFKIv/qkpCH/Z9WBGgJ/TVLL28V44oI1+rqk4/c76R0tc0kE61dWz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775135313; c=relaxed/simple;
-	bh=bvczBY/WyeuBZmp33DGd9oyyd3hhtrefGoU6v+iCB+Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dV7xOUwS8foP5W9LlT2iZOtEPZQAbHtbHNYWHL0iJXlYGxbuB1YUlJvMNWj0WWr8WVexdKTD4+/YQr890TYk4Pa+CuGHi7qPNeBbICneGk/u27sgfp2XmhFer0uiVFmYfEm7tv21ixhREtjmKZJe2/KFrJwoo0UzhaTc6XuR1UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8BxVcE_as5pSzchAA--.46327S3;
-	Thu, 02 Apr 2026 21:08:15 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by front1 (Coremail) with SMTP id qMiowJCx+8E6as5p6oJjAA--.58940S4;
-	Thu, 02 Apr 2026 21:08:15 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: maobibo@loongson.cn,
-	chenhuacai@kernel.org
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	lixianglai@loongson.cn
-Subject: [PATCH v9 2/2] LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
-Date: Thu,  2 Apr 2026 20:42:37 +0800
-Message-Id: <20260402124237.4174550-3-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20260402124237.4174550-1-gaosong@loongson.cn>
-References: <20260402124237.4174550-1-gaosong@loongson.cn>
+	s=arc-20240116; t=1775135372; c=relaxed/simple;
+	bh=+IvFOuVs28xANyS/ogfV1Pq/Sq/UwTNttO7Vn4bEkv0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=W9nR6uctYgYphut0tFkRxs4iPWOIbhBLB1ckvZSAZH4oSe99zUdH/fYUOG0njlmeh+u+1KM2oG3jxG4FZPbumQ+aSmtSLHW/nG7k+VhD57W3K88xCmx04V2Cs3b72pE+aoXUPVTw2PDDAopKJtHrXapn5eKZYOFA1xVEWRP0tEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FBxYlgk5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=agPYXQIZ; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FBxYlgk5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="agPYXQIZ"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 4567A7A011F;
+	Thu,  2 Apr 2026 09:09:26 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Thu, 02 Apr 2026 09:09:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1775135366;
+	 x=1775221766; bh=44e76YJxkd5q+hgUlWAXtOLYIJKiZNYp0nUsEzVCRk0=; b=
+	FBxYlgk5LwTbC6Hd0pYsekY+cj/43xfDic3Nq5KUYXIuAByjWcQC/4MynK8EvGyv
+	Uexk61LrbgEEKfXkfTlK/shMDYl5tyAn5shj5yTVpfPkur7h2UHMqxssu5nPxFoa
+	8vRfS2ciCetboKjFIxSqY/FCKB4xHDco2m54AOjrLpQIp74wqvRjCB/NWCddnFbT
+	0OTw/HpU2+VuBssb4bSjrLHtUqxuTg6rsGhW5fhjLiN2JmVBTYGLY7+coU3dR9Xh
+	kqkSyJqdDab0AXssZVE+URd2eVr0yDCGcxJxKLmiq6mHj7HSPdlt4CCQUxUTgVUD
+	sPIHM0gA5KivuyxhzN/y+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1775135366; x=
+	1775221766; bh=44e76YJxkd5q+hgUlWAXtOLYIJKiZNYp0nUsEzVCRk0=; b=a
+	gPYXQIZnT60HzAt2D0PVne9tKUzCK0FsozqUq7cu6ndYiCt4Z/zV7H3GR6snL8YH
+	Nia8I0kaiAnShNcTT/6fGyjj95fpYvgUCc2AH+6xSurhsnlZ0/6xukuewVctmEsx
+	caolHX6d3alkzc44sfHAEk/0YOY+sjm4Ulbwnunt1Z9c/aHUj2GGIQ5OaUk7ZUqB
+	qY8rSjZg92tjU6RaPqkWQnkAXLL5Jlys5BzrZH/DGIlwyuvhzujN3faH5snylGiP
+	c8fS9Rb3CO+ArMxP1zOFsIDznAp7cTRsV6Szkag3nisaBKJyi+L/Guz8OyI468i/
+	XwUvWnLeDj7G6x+YHKoMg==
+X-ME-Sender: <xms:hWrOacBTCxdDYIcJJmzYbVFEnnKq3VZJ2svW2EbxtuMV_IEV78GleA>
+    <xme:hWrOaZX8n43r1AuPAp20ZIPd-3JBc8md8Q2lCb8q6ld8xW__eIdTD4wKGkj2WLlkC
+    RaGDhtaQ6b9vmBnJwRoYLO0DM2MVb-fENcE3LIWtDZK0VG9hguYe8wA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeiudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceu
+    vghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnh
+    ephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguse
+    grrhhnuggsrdguvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdp
+    rhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghirhhlih
+    gvugesghhmrghilhdrtghomhdprhgtphhtthhopeguvghllhgvrhesghhmgidruggvpdhr
+    tghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhgvnhhhuh
+    grtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtohepfigvihdrlhhiuheskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtohepihhlihgrshdrrghprghlohguihhmrghssehlihhnrghrohdrohhrghdprhgt
+    phhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrd
+    gtohhm
+X-ME-Proxy: <xmx:hWrOaRJECYk7puPdfEJsTZFmLUHJ2_Z9AuyoEdU1gXrkS-yMyi0yeQ>
+    <xmx:hWrOaYk5-wfc0FB5RtkxmKUuvjk5TSISjWQ-QCF72nf8aIeKlC4K2A>
+    <xmx:hWrOaYa75UPVpD3coPM_gSmGfD7moZUk6STsXIaichwb1GQ5apWUDA>
+    <xmx:hWrOafhqdbusxY3d9sJNkItrflm8nihdTYsks40u3x14gzVAeZ__yw>
+    <xmx:hmrOaavXLi6cH6_83S9pbfjqCQNQGiA5wxCo72vsfMgeAep0jKjdGOSp>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 462A2700065; Thu,  2 Apr 2026 09:09:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx+8E6as5p6oJjAA--.58940S4
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-ThreadId: ATYY62_w4Fts
+Date: Thu, 02 Apr 2026 15:08:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
+ "Dexuan Cui" <decui@microsoft.com>, longli@microsoft.com,
+ "Helge Deller" <deller@gmx.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+Message-Id: <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
+In-Reply-To: <20260402092305.208728-4-tzimmermann@suse.de>
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+ <20260402092305.208728-4-tzimmermann@suse.de>
+Subject: Re: [PATCH 3/8] firmware: sysfb: Make CONFIG_SYSFB a user-selectable option
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Implement irqfd deliver msi to vcpu and vcpu dmsintc inject irq.
-Add irqfd choice dmsintc to set msi irq by the msg_addr and
-implement dmsintc set msi irq.
+On Thu, Apr 2, 2026, at 11:09, Thomas Zimmermann wrote:
+> Add a descriptive string and help text to CONFIG_SYSFB, so that users
+> can modify it. Flip all implicit selects in the Kconfig options into
+> dependencies. This avoids cyclic dependencies in the config.
+>
+> Enabling CONFIG_SYSFB makes the kernel provide a device for the firmware
+> framebuffer. As this can (slightly) affect system behavior, having a
+> user-facing option seems preferable. Some users might also want to set
+> every detail of their kernel config.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
----
- arch/loongarch/include/asm/kvm_dmsintc.h |  2 +
- arch/loongarch/include/asm/kvm_pch_pic.h |  4 +-
- arch/loongarch/kvm/intc/pch_pic.c        | 15 +++++++-
- arch/loongarch/kvm/interrupt.c           | 37 ++++++++++++++++++
- arch/loongarch/kvm/irqfd.c               | 48 +++++++++++++++++++++---
- 5 files changed, 97 insertions(+), 9 deletions(-)
+I don't really like this part of the series and would prefer
+to keep CONFIG_SYSFB hidden as much as possible as an x86
+(and EFI) specific implementation detail, with the hope
+of eventually seperating out the x86 bits from the EFI ones.
 
-diff --git a/arch/loongarch/include/asm/kvm_dmsintc.h b/arch/loongarch/include/asm/kvm_dmsintc.h
-index b04b89dd2a35..3f6a22f5a4ee 100644
---- a/arch/loongarch/include/asm/kvm_dmsintc.h
-+++ b/arch/loongarch/include/asm/kvm_dmsintc.h
-@@ -11,11 +11,13 @@ struct loongarch_dmsintc {
- 	struct kvm *kvm;
- 	uint64_t msg_addr_base;
- 	uint64_t msg_addr_size;
-+	uint32_t cpu_mask;
- };
- 
- struct dmsintc_state {
- 	atomic64_t  vector_map[4];
- };
- 
-+int dmsintc_set_msi_irq(struct kvm *kvm, u64 addr, int data, int level);
- int kvm_loongarch_register_dmsintc_device(void);
- #endif
-diff --git a/arch/loongarch/include/asm/kvm_pch_pic.h b/arch/loongarch/include/asm/kvm_pch_pic.h
-index 7f33a3039272..5f49b1f82c56 100644
---- a/arch/loongarch/include/asm/kvm_pch_pic.h
-+++ b/arch/loongarch/include/asm/kvm_pch_pic.h
-@@ -70,6 +70,8 @@ struct loongarch_pch_pic {
- 
- int kvm_loongarch_register_pch_pic_device(void);
- void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level);
--void pch_msi_set_irq(struct kvm *kvm, int irq, int level);
-+struct kvm_kernel_irq_routing_entry;
-+int pch_msi_set_irq(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e, int level);
- 
- #endif /* __ASM_KVM_PCH_PIC_H */
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index dd7e7f8d53db..875420f8c6ab 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <asm/kvm_eiointc.h>
-+#include <asm/kvm_dmsintc.h>
- #include <asm/kvm_pch_pic.h>
- #include <asm/kvm_vcpu.h>
- #include <linux/count_zeros.h>
-@@ -67,9 +68,19 @@ void pch_pic_set_irq(struct loongarch_pch_pic *s, int irq, int level)
- }
- 
- /* msi irq handler */
--void pch_msi_set_irq(struct kvm *kvm, int irq, int level)
-+int pch_msi_set_irq(struct kvm *kvm,
-+		struct kvm_kernel_irq_routing_entry *e, int level)
- {
--	eiointc_set_irq(kvm->arch.eiointc, irq, level);
-+	u64 msg_addr = (((u64)e->msi.address_hi) << 32) | e->msi.address_lo;
-+
-+	if (cpu_has_msgint && kvm->arch.dmsintc &&
-+		msg_addr >= kvm->arch.dmsintc->msg_addr_base &&
-+		msg_addr < (kvm->arch.dmsintc->msg_addr_base  + kvm->arch.dmsintc->msg_addr_size)) {
-+		return dmsintc_set_msi_irq(kvm, msg_addr, e->msi.data, level);
-+	}
-+
-+	eiointc_set_irq(kvm->arch.eiointc, e->msi.data, level);
-+	return 0;
- }
- 
- static int loongarch_pch_pic_read(struct loongarch_pch_pic *s, gpa_t addr, int len, void *val)
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index fb704f4c8ac5..76a133adedc2 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -8,6 +8,42 @@
- #include <asm/kvm_csr.h>
- #include <asm/kvm_vcpu.h>
- 
-+static void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
-+{
-+	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
-+	unsigned int i;
-+	unsigned long temp[4], old;
-+
-+	if (!ds)
-+		return;
-+
-+	for (i = 0; i < 4; i++) {
-+		old = atomic64_read(&(ds->vector_map[i]));
-+		if (old)
-+			temp[i] = atomic64_xchg(&(ds->vector_map[i]), 0);
-+	}
-+
-+	if (temp[0]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR0);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR0, temp[0]|old);
-+	}
-+
-+	if (temp[1]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR1);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR1, temp[1]|old);
-+	}
-+
-+	if (temp[2]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR2);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR2, temp[2]|old);
-+	}
-+
-+	if (temp[3]) {
-+		old = kvm_read_hw_gcsr(LOONGARCH_CSR_ISR3);
-+		kvm_write_hw_gcsr(LOONGARCH_CSR_ISR3, temp[3]|old);
-+	}
-+}
-+
- static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
- 	[INT_TI]	= CPU_TIMER,
- 	[INT_IPI]	= CPU_IPI,
-@@ -33,6 +69,7 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
- 		irq = priority_to_irq[priority];
- 
- 	if (kvm_guest_has_msgint(&vcpu->arch) && (priority == INT_AVEC)) {
-+		dmsintc_inject_irq(vcpu);
- 		set_gcsr_estat(irq);
- 		return 1;
- 	}
-diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-index 9a39627aecf0..18df75c78de8 100644
---- a/arch/loongarch/kvm/irqfd.c
-+++ b/arch/loongarch/kvm/irqfd.c
-@@ -6,6 +6,28 @@
- #include <linux/kvm_host.h>
- #include <trace/events/kvm.h>
- #include <asm/kvm_pch_pic.h>
-+#include <asm/kvm_vcpu.h>
-+
-+static int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
-+				struct kvm_vcpu *vcpu,
-+				u32 vector, int level)
-+{
-+	struct kvm_interrupt vcpu_irq;
-+	struct dmsintc_state *ds;
-+
-+	if (!level)
-+		return 0;
-+	if (!vcpu || vector >= 256)
-+		return -EINVAL;
-+	ds = &vcpu->arch.dmsintc_state;
-+	if (!ds)
-+		return -ENODEV;
-+	set_bit(vector, (unsigned long *)&ds->vector_map);
-+	vcpu_irq.irq = INT_AVEC;
-+	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	kvm_vcpu_kick(vcpu);
-+	return 0;
-+}
- 
- static int kvm_set_pic_irq(struct kvm_kernel_irq_routing_entry *e,
- 		struct kvm *kvm, int irq_source_id, int level, bool line_status)
-@@ -16,6 +38,21 @@ static int kvm_set_pic_irq(struct kvm_kernel_irq_routing_entry *e,
- 	return 0;
- }
- 
-+int dmsintc_set_msi_irq(struct kvm *kvm, u64 addr, int data, int level)
-+{
-+	unsigned int virq, dest;
-+	struct kvm_vcpu *vcpu;
-+
-+	virq = (addr >> AVEC_IRQ_SHIFT) & AVEC_IRQ_MASK;
-+	dest = (addr >> AVEC_CPU_SHIFT) & kvm->arch.dmsintc->cpu_mask;
-+	if (dest >= KVM_MAX_VCPUS)
-+		return -EINVAL;
-+	vcpu = kvm_get_vcpu_by_cpuid(kvm, dest);
-+	if (!vcpu)
-+		return -EINVAL;
-+	return dmsintc_deliver_msi_to_vcpu(kvm, vcpu, virq, level);
-+}
-+
- /*
-  * kvm_set_msi: inject the MSI corresponding to the
-  * MSI routing entry
-@@ -28,10 +65,7 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
- {
- 	if (!level)
- 		return -1;
--
--	pch_msi_set_irq(kvm, e->msi.data, level);
--
--	return 0;
-+	return pch_msi_set_irq(kvm, e, level);
- }
- 
- /*
-@@ -71,13 +105,15 @@ int kvm_set_routing_entry(struct kvm *kvm,
- int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
- 		struct kvm *kvm, int irq_source_id, int level, bool line_status)
- {
-+	if (!level)
-+		return -EWOULDBLOCK;
-+
- 	switch (e->type) {
- 	case KVM_IRQ_ROUTING_IRQCHIP:
- 		pch_pic_set_irq(kvm->arch.pch_pic, e->irqchip.pin, level);
- 		return 0;
- 	case KVM_IRQ_ROUTING_MSI:
--		pch_msi_set_irq(kvm, e->msi.data, level);
--		return 0;
-+		return pch_msi_set_irq(kvm, e, level);
- 	default:
- 		return -EWOULDBLOCK;
- 	}
--- 
-2.39.3
+In general, I am always in favor of properly using Kconfig
+dependencies over 'select' statements, for the same reasons
+you describe, but I don't want the the x86 logic for
+the legacy VESA and VGA console handling to leak into more
+architectures than necessary.
 
+Do you think we could instead move the sysfb_init()
+function into the same two places that contain the
+sysfb_primary_display definition (arch/x86/kernel/setup.c,
+drivers/firmware/efi/efi-init.c) and simplify the efi version
+to take out the x86 bits? That would reduce the rest
+of sysfb-primary.c to the logic to unregister the device,
+and that could then be selected by both x86 and EFI.
+
+      Arnd
