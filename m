@@ -1,136 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A39438237A;
-	Thu,  2 Apr 2026 21:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C7A330D2A
+	for <loongarch@lists.linux.dev>; Fri,  3 Apr 2026 06:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775166741; cv=none; b=jrV8Wi4AL68755IDZGL/yvQkqblhMeOnBa95fmp0I8w7p0a+uBoxSxj3J6eaoz4aFvMAKWADFJG7LiMFA8FQ10bL+nM+fnIZX/UBI/oHyJ4QKORoBCcrmrMw0TbDiEI/BOg37+sLVarolpZZYBD6zW5L5nS0hv6LyxQrIj04efY=
+	t=1775197879; cv=none; b=kX289vYuB85S+ZgNsiMgAZRHWEUqHjbxo/YTFpytA/1zxmCfUBw555wTW5bVhFMb7XAyTBwsqHcnf3nkFrjgpixUIxk0mZGHBLiu4qJ+sGZmldyQhAX/oMySeq8CuaJM5v4tzTB883MZDsyUnosspo2dFdpFRBeFZdq/x+I3PWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775166741; c=relaxed/simple;
-	bh=v9zJEeNVmz7NcsMkpOPkdYk7q2EoPoCfcmjxBRbg/Gw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kST9lBUpPAwcUljsn4/TDzTuqhzA0G7DHv178sWvx+ViQBDLJO58/07ikIzQQjU7egA4SB5DqziBWqmHlR58m6mdSsrdMsMpnaSly7Ru75MvO01yTwSt7kca/3vGaN7p+nO3bbmHMeP/JdwSXwwPtl9wEgzczEUOXKquKdJzfnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTB78iuK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775197879; c=relaxed/simple;
+	bh=u6vJhMRukMYQuAFdtZphiPWA2L7LV4Z0duj1VTqx6uc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e/OOaeWm2KgOYy7FT3ApODj0cDlthKN6MSfo8tbEnneE21dpDqMa+wXj8zsj8FDP1+7rf//jgLeDAy9IeU1qUlmP77wznz2DGGevT1MiHB8X6Fu5RuMh0xyGkpL6uZ98mCQBu/7IujKqz5vgwvd/g9cNJS1x4vX/fnztvGFrO/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=cKFZjGWT; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTB78iuK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9D9C116C6;
-	Thu,  2 Apr 2026 21:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775166740;
-	bh=v9zJEeNVmz7NcsMkpOPkdYk7q2EoPoCfcmjxBRbg/Gw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=PTB78iuKGtB1jnCLkrdAAEbFdUBu6bIVdFt5Wka6j9T73o4DOPCGZwiNrnq4PiEr6
-	 mBFN0TFFR6noe6wbi63LOXrgXpdD106UW3pCqKSxrNzj8GxdtV8MQyp2Vy1SAsdp3d
-	 M6xKXlZbCh0YABGR2JZ5uus7RZzPqgGZDTd9cRTDxhbH89DrUCD35i7ucql2BdpP2E
-	 7ULjB46nbQkz0boFssqZvNz1786uWfD+aGTkjAGmooYiXv+ruQ7/oxb1SnuN7wMHKS
-	 dZy72w3QSkA4WUNCLllLtT+k1bSnFq6cedLa+/KrtjYL9V2SlHZOhBUsWcX1NjRLrv
-	 DcESm7m/FmPPA==
-Date: Thu, 2 Apr 2026 15:52:15 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: "Vincent Mailhol (Arm)" <mailhol@kernel.org>
-cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-    Mikko Rapeli <mikko.rapeli@linaro.org>, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
-    Russell King <linux@armlinux.org.uk>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
-    Andreas Kemnade <andreas@kemnade.info>, 
-    Kevin Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, 
-    Tony Lindgren <tony@atomide.com>, Huacai Chen <chenhuacai@kernel.org>, 
-    WANG Xuerui <kernel@xen0n.name>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-    "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-    Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-    Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, 
-    Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-    Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-    Clark Williams <clrkwllms@kernel.org>, 
-    Steven Rostedt <rostedt@goodmis.org>, 
-    Pablo Neira Ayuso <pablo@netfilter.org>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Alim Akhtar <alim.akhtar@samsung.com>, Frank Li <Frank.Li@nxp.com>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, 
-    Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
-    Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@kernel.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    Geert Uytterhoeven <geert+renesas@glider.be>, 
-    Magnus Damm <magnus.damm@gmail.com>, 
-    Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-    Gregory CLEMENT <gregory.clement@bootlin.com>, 
-    =?ISO-8859-15?Q?Th=E9o_Lebrun?= <theo.lebrun@bootlin.com>, 
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    Helge Deller <deller@gmx.de>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-    =?ISO-8859-15?Q?Jonathan_Neusch=E4fer?= <j.neuschaefer@gmx.net>, 
-    Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>, 
-    Heiko Stuebner <heiko@sntech.de>, 
-    Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-    Mark Brown <broonie@kernel.org>, Eric Biggers <ebiggers@kernel.org>, 
-    Ard Biesheuvel <ardb@kernel.org>, 
-    Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
-    Bjorn Andersson <andersson@kernel.org>, Michael Walle <mwalle@kernel.org>, 
-    Guenter Roeck <linux@roeck-us.net>, 
-    Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>, 
-    "Rob Herring (Arm)" <robh@kernel.org>, 
-    Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Anna Schumaker <anna.schumaker@oracle.com>, 
-    Alexandre Gonzalo <alexandre.gonzalo@arm.com>, 
-    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    linux-omap@vger.kernel.org, loongarch@lists.linux.dev, 
-    linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-    linux-sh@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-    linux-samsung-soc@vger.kernel.org, imx@lists.linux.dev, 
-    linux-renesas-soc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-    openbmc@lists.ozlabs.org
-Subject: Re: [PATCH 3/9] configs: remove obsolete assignments to
- CONFIG_NFS_V4_1
-In-Reply-To: <20260317-arm_defconf_cleanup-v1-3-8eecb7fdd24d@kernel.org>
-Message-ID: <2a5bb9cf-3f0c-6069-6412-cd4c5c4e8b78@kernel.org>
-References: <20260317-arm_defconf_cleanup-v1-0-8eecb7fdd24d@kernel.org> <20260317-arm_defconf_cleanup-v1-3-8eecb7fdd24d@kernel.org>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="cKFZjGWT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1775197861;
+	bh=7cYDA48xJh8paeNIt+lHccZEVM1lwmj1+slaoNvtG3I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=cKFZjGWTRM8l5AIOQxbJ+KHi1jIyj4YY5fjDo9s7G4jwY3nfqfH+RFCl1dT5rZhOd
+	 o3TJB9U872a1VKedV/N5Zb8KOpn4hTaDpBZMzZgmX1gzgyrzNeEqCGKsLue3W+MnFs
+	 CmfrmG5eBanmJ7k5yLwp1dFgk3W4BPlNP+4fj7Cg=
+X-QQ-mid: zesmtpip2t1775197817t1eb7c37b
+X-QQ-Originating-IP: XTgIyY/p7Zhx9sdgwi9YS0h7XLBELD4A3z5BLYHffGk=
+Received: from yangyuqian ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 03 Apr 2026 14:30:10 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4404439308809355893
+EX-QQ-RecipientCnt: 8
+From: Yuqian Yang <yangyuqian@uniontech.com>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Cheng Nie <niecheng1@uniontech.com>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Dandan Zhang <zhangdandan@uniontech.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yuqian Yang <yangyuqian@uniontech.com>
+Subject: [PATCH] loongarch: improve logging of disabling KASLR.
+Date: Fri,  3 Apr 2026 14:30:08 +0800
+Message-ID: <E4B91143DC525DC6+20260403063008.94237-1-yangyuqian@uniontech.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
+X-QQ-XMAILINFO: MM51ngjmpkNsdMWVMMlgcLUcFX4G1b3SzsVX9BMjAYmmkstZqo39/7n9
+	WB326+NfltofPuFsuyaZspgA0bS6Tx+pmvEnZWpQDB3GkZdVRoMtDFx40fZzezFHvlnk/ft
+	dd3t4ourSN4ATvy/KFrgFJ2oP5XIXqM2MKt5f/uFk+746Wzzpp3EFuRriVRKe1BqQC3fYen
+	SWSgKx1GHuA080IQseC8m5unuWiCSkJcW5F8MuvjRL6L9U4CQUQAIQ4o0PCAq9zqJ3cOSYi
+	n0rbCy/SGyl9purB82MZvFYff0s5AM6gL62JE2Ql2WghPezAD8opVh8T4vOh5t4dNtisWQI
+	kjhqoZGpcaMkUG19DQ5fMUhzmuhd7BO14q1CGHC9M5q+rUh1VoCklkXgyso+qRxVIludgpR
+	gynMDaluUKxvlIhKUKA5eEPp1yBrm74K1PQxJPFtPn3VUI8eewDyWNOt63JLvYv265v5WnX
+	rjsDSjyNWwA/sowVKdthAUNkvrqS7z4hRcc8JDHw2a0ZWn2/XIu93AEfEHvP+3SX2kGPHOk
+	NJW6TS7ckdIjkvBE1jn+s36XzB+xfTYVSOZZzfiE7CJ0O3wSnFx8IOIj44GwwZQIckebyCn
+	qGlCNOA3qQ5AhdE3jX8QMqN6sLEsqCdaILUV8hcz/ICnq9zUkm0P5JHNPGcLxYRB3+5sChv
+	KVWxCbLtDQ4ZhtyvHI+Bh9FgbB8TgK/av41l+Pkomsf0dAx4g5f6BHxXzYTkN/kmArnIC47
+	Tvx3zASydHaiPICb5Mp3AdeSXj3podZJQ7JfEfo5f6nfW2EwqwPoDo4AKKzwqPpdyPOGXIr
+	ocpQ1+NSl6clY4AINLyyi8aMui8Ir2GoMGRs3YKzQoZh7lkjByMi1rt35LpcZCtD4SfIthb
+	ifY9hCJuXV4xxSF4lCQQY+BhFMp+px3qXaBprGUKBHEFoYjU1majZWBMnvZsRoVSybDjrUu
+	dVjxBUGZeNwobCYCa8etbnN8hy77IBq3ENkKBTQVHB8tqn0QI2hT/FitT2gktc4y9N3OQ2U
+	ve+VJjcnH2Hrwi+SC9lXtUW+kRAij79tCDfzfE9x8ZwMtdB2ng+aYdsovdDXDyFVzOG688W
+	oHR9p1Nq3gA2TCSLgh6gYH5LnTkldAQCQ==
+X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+X-QQ-RECHKSPAM: 0
 
-On Tue, 17 Mar 2026, Vincent Mailhol (Arm) wrote:
+Whether KASLR is disabled is not handled in nokaslr (early param
+"nokaslr" setup function) but in kaslr_disabled. However, the logging
+was done in nokaslr previously. So we move the logging to the right
+place and add more specific info about why it's disabled.
 
-> CONFIG_NFS_V4_1 was revomed in commit 7537db24806f ("NFS: Merge
-> CONFIG_NFS_V4_1 with CONFIG_NFS_V4"). However, some defconfigs are
-> still referring the old configuration.
-> 
-> Clean-up all the leftover references to CONFIG_NFS_V4_1.
-> 
-> FYI, the suppressions were done using:
-> 
->   git grep -z -l '^CONFIG_NFS_V4=' -- 'arch/*/configs/*defconfig' |\
->     xargs -0 sed -i -E '/^CONFIG_NFS_V4_1=/d'
-> 
-> CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN and CONFIG_NFS_V4_1_MIGRATION
-> were not in scope of the renaming and still use V4_1 in their name, so
-> keep those two untouched.
-> 
-> Fixes: 7537db24806f ("NFS: Merge CONFIG_NFS_V4_1 with CONFIG_NFS_V4")
-> Signed-off-by: Vincent Mailhol (Arm) <mailhol@kernel.org>
+Suggested-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuqian Yang <yangyuqian@uniontech.com>
+---
+ arch/loongarch/kernel/relocate.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
+index 82aa3f0359278..be11096c3c009 100644
+--- a/arch/loongarch/kernel/relocate.c
++++ b/arch/loongarch/kernel/relocate.c
+@@ -128,9 +128,8 @@ static inline __init unsigned long get_random_boot(void)
+ 
+ static int __init nokaslr(char *p)
+ {
+-	pr_info("KASLR is disabled.\n");
+-
+-	return 0; /* Print a notice and silence the boot warning */
++	/* The real check is handled in kaslr_disabled() below. */
++	return 0;
+ }
+ early_param("nokaslr", nokaslr);
+ 
+@@ -138,14 +137,19 @@ static inline __init bool kaslr_disabled(void)
+ {
+ 	char *str;
+ 	const char *builtin_cmdline = CONFIG_CMDLINE;
++	const char *const message = "KASLR is disabled by %s in %s cmdline.\n";
+ 
+ 	str = strstr(builtin_cmdline, "nokaslr");
+-	if (str == builtin_cmdline || (str > builtin_cmdline && *(str - 1) == ' '))
++	if (str == builtin_cmdline || (str > builtin_cmdline && *(str - 1) == ' ')) {
++		pr_info(message, "nokaslr", "built-in");
+ 		return true;
++	}
+ 
+ 	str = strstr(boot_command_line, "nokaslr");
+-	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' '))
++	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' ')) {
++		pr_info(message, "nokaslr", "boot");
+ 		return true;
++	}
+ 
+ #ifdef CONFIG_HIBERNATION
+ 	str = strstr(builtin_cmdline, "nohibernate");
+@@ -165,17 +169,23 @@ static inline __init bool kaslr_disabled(void)
+ 		return false;
+ 
+ 	str = strstr(builtin_cmdline, "resume=");
+-	if (str == builtin_cmdline || (str > builtin_cmdline && *(str - 1) == ' '))
++	if (str == builtin_cmdline || (str > builtin_cmdline && *(str - 1) == ' ')) {
++		pr_info(message, "resume=", "built-in");
+ 		return true;
++	}
+ 
+ 	str = strstr(boot_command_line, "resume=");
+-	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' '))
++	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' ')) {
++		pr_info(message, "resume=", "boot");
+ 		return true;
++	}
+ #endif
+ 
+ 	str = strstr(boot_command_line, "kexec_file");
+-	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' '))
++	if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' ')) {
++		pr_info(message, "kexec_file", "boot");
+ 		return true;
++	}
+ 
+ 	return false;
+ }
+-- 
+2.50.1
 
-
-- Paul
