@@ -1,71 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1A13845B1;
-	Fri,  3 Apr 2026 08:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE997259CB2
+	for <loongarch@lists.linux.dev>; Fri,  3 Apr 2026 09:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775206090; cv=none; b=ANSQTfRL1pMfl9L6RHADEzPqLF38vupDKaoFgXewQl4MrljsiHR3aZk+xkKuCfreM2ZtBW7K4ieG5BfUBp8hd7vANIfHLaiSzgZ7nNuUE81fo/DKnNJ1Z3xvTRX2Ze+uPIZf/9rz6sv2IvwwcFAIug/092i5V5OOHZtxjXiiMuI=
+	t=1775207715; cv=none; b=MAzPbXtiLgasQwoELdTVnal8Eal7JlOQId1LTAG1Q98rWluHeBHf8QfjkNWlTcBAZ+Qq7yx+b/yebuiZbfxHxispelbV7yxwPkRI4YNBPGAzWqsf18tjInn8ezMbZfETLgsbbv5PP64pGLqMpFH2Iw4SB2YAOxoI73NqEir6lkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775206090; c=relaxed/simple;
-	bh=06cSFbB6Pd8/6jNNaiACu6E5Rd6wULxB8jLFZ7TA/XA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KYOe0+SrvbBoS9BwkBwyoEn5eHpsMwaedltGflrK4dR8h5Nitm4zGCmN1rsfBTByniNJB65CCQakY48RdNRYTvr66VG0HBANEZCRc9tPyegwk6yp1DMBswsHxqIvRq4S394RhxDRP7dA3h/pkHDiRTX/inTZhZ+iNkw02sEB4iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LDnk7S/p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775207715; c=relaxed/simple;
+	bh=Qh3ffqlIFxz7tQq3QhuKOsjMiTfg6RnjpCUIwVk5E7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jVluotGwXmIsYSk/PFF9qCh1fDe1QEEjffQ2t/aAP8jlLBAQTzn1/xTVy1//bdDGmi3Ex/mTKNDw1mYCHridqiv4Xybp/7EQolz0+eRjC7D6nkbN/0TX4mfyZyCoTDejlOf4R66yowyZPUjLwhJ7sx1fh/FE2OjFjp8ItIDgM6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Ng5I2f7+; arc=none smtp.client-ip=113.46.200.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LDnk7S/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5078CC2BCB0;
-	Fri,  3 Apr 2026 08:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1775206089;
-	bh=06cSFbB6Pd8/6jNNaiACu6E5Rd6wULxB8jLFZ7TA/XA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LDnk7S/pNFohQ10dX4/nYUt5Jgi6pqvcaG/5+Z17/3TfF57gHIwm+IPPm3DCcIV4K
-	 1m0r3PW3Qgh1rqa/Fi6GDMYw2CM5NqZ69Ab0CSIQ8tkafCEEca6ZkEU13ibl4g+pP6
-	 xtgPq9tl41QLyNGGkg0C6MVpppASUZa43AqTncHA=
-Date: Fri, 3 Apr 2026 10:48:06 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
-	jes@trained-monkey.org, chenhuacai@kernel.org, kernel@xen0n.name,
-	tsbogend@alpha.franken.de, James.Bottomley@hansenpartnership.com,
-	deller@gmx.de, maddy@linux.ibm.com, mpe@ellerman.id.au,
-	npiggin@gmail.com, chleroy@kernel.org, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com, svens@linux.ibm.com, bhelgaas@google.com,
-	dakr@kernel.org, kwilczynski@kernel.org, ojeda@kernel.org,
-	boqun@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, ebiggers@google.com, ardb@kernel.org,
-	tiwai@suse.de, tytso@mit.edu, enelsonmoore@gmail.com,
-	martin.petersen@oracle.com, jirislaby@kernel.org,
-	geert@linux-m68k.org, herbert@gondor.apana.org.au,
-	vineethr@linux.ibm.com, lirongqing@baidu.com, kshk@linux.ibm.com,
-	vadim.fedorenko@linux.dev, dong100@mucse.com,
-	wangruikang@iscas.ac.cn, hkallweit1@gmail.com, kees@kernel.org,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH net-next] eth: remove the driver for acenic / tigon1&2
-Message-ID: <2026040357-flick-coil-0c5d@gregkh>
-References: <20260402183029.1236713-1-kuba@kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Ng5I2f7+"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=1u/gaQ+oVmmKaoGhJfA0lv+PgPfetH5Z+BotMjq1x2M=;
+	b=Ng5I2f7+M26BlWo+f15W4F3KICwNL5iu3h39vY8J/Yh43OjddzRD1MsWnEf25APCV36pJ7jaV
+	E+dS9RuezRSZ5OUSyATrJYym/oMSq0Q/fgtStWYYumuP16zq8mKRFCRw0duIgZtaeNEb1yxvcFU
+	83ODrCmyuPyUV05deMYPVP0=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fnCZW0jdKz1prlD;
+	Fri,  3 Apr 2026 17:08:51 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id E56E540571;
+	Fri,  3 Apr 2026 17:15:04 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 3 Apr 2026 17:15:01 +0800
+Message-ID: <c5ee66fe-ecc4-2eb4-4b58-44f7d292d221@huawei.com>
+Date: Fri, 3 Apr 2026 17:14:58 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260402183029.1236713-1-kuba@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+	<robh@kernel.org>, <saravanak@kernel.org>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<rdunlap@infradead.org>, <peterz@infradead.org>,
+	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
+	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
+	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
+	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+ <20260402113137.GAac5Tmc5b7SL98KdY@fat_crate.local>
+ <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
+ <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Thu, Apr 02, 2026 at 11:30:29AM -0700, Jakub Kicinski wrote:
-> The entire git history for this driver looks like tree-wide
-> and automated cleanups. There's even more coming now with
-> AI, so let's try to delete it instead.
+
+
+On 2026/4/2 21:36, Borislav Petkov wrote:
+> On Thu, Apr 02, 2026 at 07:47:53PM +0800, Jinjie Ruan wrote:
+>> Thank you for the reminder and for your patience. I apologize for the
+>> frequent updates; I am becoming more familiar with the community's
+>> workflow.
 > 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Yap, and you can use that time while waiting to learn about it:
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks for the pointer! I'm using the wait time to dive into the process
+docs. Definitely a lot to learn about the workflow, but I'm getting there.
+
+> 
+> Documentation/process/
+> 
