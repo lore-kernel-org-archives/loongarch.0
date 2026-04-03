@@ -1,79 +1,90 @@
-Received: from sender-op-o18.zoho.eu (sender-op-o18.zoho.eu [136.143.169.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785073B95F0
-	for <loongarch@lists.linux.dev>; Fri,  3 Apr 2026 14:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775226138; cv=pass; b=rVtmmoI5/9TO3SiQO9WBZvdBfR+G19b7v4v5ZzwA88I96GnvGfis4cTwhLTdShfQuH8xHr+4oKoinPuXoPlaNGMOgkc+fH2WFhvXXifNrAZqzsiHEUQhgxfvD3YYJ2XWM6EqRN95W6l1ex8ph73layaBgm+6mXVPhGHl1ywAs+Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775226138; c=relaxed/simple;
-	bh=5XfZLHW917GPeLmoi8RTcOFMV7PSrf1WdMyL1/K92YM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c9MIti/Sd/Le0CfJvya9qh6dq9mMAWiBem2V6nvVWKKsbJVG0QNCjryXUGpLZixl+nARATT859Dua79Uz+Ts8PwghzvfbrF9gI4vFPaUxTBs5RohuCeFn2KYg2AGGDEhVfw581OrnNu+6G+g32fPBcnCQ8WH7FmC/s7xkbtSSvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trained-monkey.org; spf=pass smtp.mailfrom=trained-monkey.org; arc=pass smtp.client-ip=136.143.169.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trained-monkey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trained-monkey.org
-ARC-Seal: i=1; a=rsa-sha256; t=1775223288; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=XsFx4p5VgwLYs8/vuiRIhFYYY7BZEtsdweYoyutsI5s268xHDZNE+1aosDKf5tOhWsVRislQ2rdBSUSa3fCzPaXhQ7Jdtd14qGY8D0s0mK+KI8/ZOgGLtIlFsNetysymzkEm9B+sJUcbGoymfigIjm3FIkkIgaoeHQH/4ENLOjY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1775223288; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=InLCCKin5kc31jhHqJ2/xj58R/AdCjuyS3cbeNCAucg=; 
-	b=lR3dFmcub3ObCAdL18l5iaak8Gdiovaq3Tlv5KCFP7EBHANgryMrZkVOEJB8fSUW5MlwFmvffcCYzAUr4kG8Ob5saqKe5ZMxR7XXQMzbCi79zRQMOFW+87zJDova5JdrpCtyj2UlIF+m1T9nJVioaY+neqHcxDVDkzKGLqW3R6o=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	spf=pass  smtp.mailfrom=jes@trained-monkey.org;
-	dmarc=pass header.from=<jes@trained-monkey.org>
-Received: by mx.zoho.eu with SMTPS id 1775223284898804.3284909269775;
-	Fri, 3 Apr 2026 15:34:44 +0200 (CEST)
-Message-ID: <ec7e71f6-7e95-4f22-8b80-d0925d5bd9c8@trained-monkey.org>
-Date: Fri, 3 Apr 2026 09:34:38 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C033BE145;
+	Fri,  3 Apr 2026 15:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775230812; cv=none; b=D975rd7jiuBO7FKNiu8eiNc+BAn3NTwGDKg09KWfrIuRBwCl3MV8FeEyUxNGPoYT87FnsKQ0PfeXLR7qdKzNLlK8FeRSwTnPnJLua/atocDq/z0Ki8ruffJLgp1JMqzFjB/oTSyXvgqnz/JYuJH3zx2EpSdpttsSuZMzfR3/OBY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775230812; c=relaxed/simple;
+	bh=yWko4zVzCCAWynSjp/vVAZSdx+z+fWAaf2R5l3ZiPuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RGjAdP+AcblMzwZZSsXiiix9kf5Wb62EyyGKNLaEbuYyT2etG8pkG2Gj1BLawMEWlnuCLKjLSoL89yYuBQqIC/nSc/GqIbfpu02p3QToW9D57T39kKlT6NiLIN/56S4fmido8Qpbr8Y3xU/OkAJ/GB9FUHWgW/nz3dm4eqBL5eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjvMUx4l; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjvMUx4l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F20C4CEF7;
+	Fri,  3 Apr 2026 15:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775230812;
+	bh=yWko4zVzCCAWynSjp/vVAZSdx+z+fWAaf2R5l3ZiPuA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=hjvMUx4lf3sd+/gDlfQLmiRx5snEoHkgPiH5lf/5ptZo9cDFe1xDojgFNmCi7cnk1
+	 PFbUbeQvKtO8q5aDzlMCAu7k7+Eiv3YaX2SPLAX+NmSEmy2HzTM+1z0FCu3NSTIDDq
+	 u34GrXS7Kkv4v+Uk8la0WnKNGZ1NDlin0qdyDxYdYrBKWgc9J8Ah5Hb5OA3Y4TCt+i
+	 FTUsWbqBMVsRBNI/sS/84EisFl14G7KVv1CM4nTigP4w59xVYchXVBZJxroFPFlNh5
+	 aps6TryG2jequWFoX4yJbR38ZMgCAE8OWpnvg4EZXo0vcp1dO13i8TOUcogejw3GDM
+	 YBBhrPcypgaGg==
+Date: Fri, 3 Apr 2026 10:40:10 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Gary Guo <gary@garyguo.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net,
+	netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org, jes@trained-monkey.org,
+	chenhuacai@kernel.org, kernel@xen0n.name, tsbogend@alpha.franken.de,
+	James.Bottomley@hansenpartnership.com, deller@gmx.de,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+	agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+	svens@linux.ibm.com, bhelgaas@google.com, dakr@kernel.org,
+	kwilczynski@kernel.org, ojeda@kernel.org, boqun@kernel.org,
+	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, ebiggers@google.com,
+	ardb@kernel.org, tiwai@suse.de, tytso@mit.edu,
+	enelsonmoore@gmail.com, martin.petersen@oracle.com,
+	jirislaby@kernel.org, gregkh@linuxfoundation.org,
+	geert@linux-m68k.org, herbert@gondor.apana.org.au,
+	vineethr@linux.ibm.com, lirongqing@baidu.com, kshk@linux.ibm.com,
+	vadim.fedorenko@linux.dev, dong100@mucse.com,
+	wangruikang@iscas.ac.cn, hkallweit1@gmail.com, kees@kernel.org,
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH net-next] eth: remove the driver for acenic / tigon1&2
+Message-ID: <20260403154010.GA335042@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] eth: remove the driver for acenic / tigon1&2
-To: Greg KH <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, tsbogend@alpha.franken.de,
- James.Bottomley@hansenpartnership.com, deller@gmx.de, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, bhelgaas@google.com,
- dakr@kernel.org, kwilczynski@kernel.org, ojeda@kernel.org, boqun@kernel.org,
- gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org,
- a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
- ebiggers@google.com, ardb@kernel.org, tiwai@suse.de, tytso@mit.edu,
- enelsonmoore@gmail.com, martin.petersen@oracle.com, jirislaby@kernel.org,
- geert@linux-m68k.org, herbert@gondor.apana.org.au, vineethr@linux.ibm.com,
- lirongqing@baidu.com, kshk@linux.ibm.com, vadim.fedorenko@linux.dev,
- dong100@mucse.com, wangruikang@iscas.ac.cn, hkallweit1@gmail.com,
- kees@kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-References: <20260402183029.1236713-1-kuba@kernel.org>
- <2026040357-flick-coil-0c5d@gregkh>
-Content-Language: en-US
-From: Jes Sorensen <jes@trained-monkey.org>
-In-Reply-To: <2026040357-flick-coil-0c5d@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DHJKGY0F52GL.14FQPOWWO0F77@garyguo.net>
 
-On 4/3/26 4:48 AM, Greg KH wrote:
-> On Thu, Apr 02, 2026 at 11:30:29AM -0700, Jakub Kicinski wrote:
->> The entire git history for this driver looks like tree-wide
->> and automated cleanups. There's even more coming now with
->> AI, so let's try to delete it instead.
->>
->> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Fri, Apr 03, 2026 at 02:50:32PM +0100, Gary Guo wrote:
+> On Thu Apr 2, 2026 at 7:30 PM BST, Jakub Kicinski wrote:
+> > The entire git history for this driver looks like tree-wide
+> > and automated cleanups. There's even more coming now with
+> > AI, so let's try to delete it instead.
 
-Acked-by: Jes Sorensen <jes@trained-monkey.org>
+> > +++ b/include/linux/pci_ids.h
+> > @@ -1809,8 +1809,6 @@
+> >  /* formerly Platform Tech */
+> >  #define PCI_DEVICE_ID_ESS_ESS0100	0x0100
+> >  
+> > -#define PCI_VENDOR_ID_ALTEON		0x12ae
+> > -
+> >  #define PCI_SUBVENDOR_ID_CONNECT_TECH			0x12c4
+> >  #define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_232		0x0001
+> >  #define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_232		0x0002
 
+> Does the PCI ID needs to be removed? There was a similar change that
+> I recalled and the discussion eventually leads to ID not being
+> removed.
+> https://lore.kernel.org/all/20260123033233.16906-1-enelsonmoore@gmail.com/
+
+I don't think there is value in removing the PCI_VENDOR_ID_ALTEON
+definition.
