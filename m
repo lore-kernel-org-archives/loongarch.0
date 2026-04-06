@@ -1,97 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3123845D1
-	for <loongarch@lists.linux.dev>; Mon,  6 Apr 2026 14:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D283859CF
+	for <loongarch@lists.linux.dev>; Mon,  6 Apr 2026 14:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775486682; cv=none; b=QLEZETbfkF5U89P3ZqnJLNT/NyRctLAtNjQ6+LGIstUNhpNGR+trCCJg131McjTeXz/YnUkTIQHCbyGeULI17KB426Dfk8xa2vvyKNsyarHOit7mGzjnQudzfWcmCylGOGZOOFsTJJmtfhjwG4EOtFQj048kS4Ap/x1Iz08NbJE=
+	t=1775487555; cv=none; b=tmyvtVznYUP17Y0lWmzN6pz5JFGiFGPvx9aek30Y5q9YtScXEx/KkYz/Uixqbd4Lcr0p4DXGPZ6XLCXNxX0iA7DcfqF/5iaJfPuTMMt0iWaKYhpLbxrgio5q0kFtNA3hwhRrY/2bsvW8oG2vth+gM4O4uOJWapFej1i7JjD3d6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775486682; c=relaxed/simple;
-	bh=v3Irs1NIPTFYJcSHAF9iC7cgfpGgGTjEhxGID1fhyuk=;
+	s=arc-20240116; t=1775487555; c=relaxed/simple;
+	bh=xQ7o66TtbbwulQnJW5l2ZtOfYQA79hhGSfn9VhPlO6U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gUYjczYAj2gEXnDGs+QxWWYR9gRivvQ+nbeki8Yncj4EnCkTAOxLZDoTwKYlfZBqU0MhfBoUqk00mWcVgRJ1GR+oToCk3VaaBELZiyCx601ypbZ6Jt3IlWJT3TMk9CAgV/reDPiOla9JM/5AoesuSP9dZR5WPqdbWvEFeiX6ho8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOfKdZBb; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=JWShkTYwuBIUXK4z4M+EX9aiAMNbu57KHoOBaZXU6WkFUp5qYt/suoiw2/WN7+OgY2G8aeZx+zUmDxQ6AunjFCBtD8craXEIzfwXab6DkBy3A3UwuZ3vydbaggng2/f/3i6F31Ae1g7loBzoUe3xWZzCMt1+5YN093QnGWMA6c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLkaENd1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOfKdZBb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEE46C2BCB2
-	for <loongarch@lists.linux.dev>; Mon,  6 Apr 2026 14:44:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLkaENd1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41FBC2BCB3
+	for <loongarch@lists.linux.dev>; Mon,  6 Apr 2026 14:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775486682;
-	bh=v3Irs1NIPTFYJcSHAF9iC7cgfpGgGTjEhxGID1fhyuk=;
+	s=k20201202; t=1775487555;
+	bh=xQ7o66TtbbwulQnJW5l2ZtOfYQA79hhGSfn9VhPlO6U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GOfKdZBbv4S66syU6dhoHPXzX8cX4iKWHXyNW5ItaX6XXNvuMkN/lXQkBvyj1BkxQ
-	 KEKHtyHOa5pHl+GVJQCsXR+1L5NnI1/m+rQTGC/o/ZGIrox2aKzW7jYmZQue7P77Xr
-	 Hyb11FfJUsY1enoLF9j4h5wqqSv4xTDUGJx0CyVgTcvx0sgVFX2A7K3gxGilABj655
-	 91K92Vu3eXRLSvWNHIkjrrXc+s67sJS969GdkKaK503EEMFrAvCdGrQvz8NnvpX/gt
-	 1ajMXjjjPi/BSu+9tI8glwcisB7xvXr9ByPINqoxEhVm9M47Le287ETqdkKQMsBaIa
-	 UyzO/pznaDrfw==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-68481c9e067so476500eaf.0
-        for <loongarch@lists.linux.dev>; Mon, 06 Apr 2026 07:44:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMD7N5P3HugntenND8k4pbWrkuoNa9/yK34esHrLzGHaVLiZ/Bh3M7oVzH6HQh0NeiTLDK8fe86p8=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy02/fbJu7g8l9Kki4FYMiNRuyZp4kSI3BTzgW26rR+zv66myFO
-	pVBqHsNVwd7aKCgyNNgXYaBOPMEzhDGTWUVj33bXaU22GaOHPJm3lqJfOhXV3djtckKSzgXXFYW
-	Sjh4kZ7Am8q1e1GXXb1JT62yWQxCsvWk=
-X-Received: by 2002:a05:6820:174e:b0:67e:cc7:ccf5 with SMTP id
- 006d021491bc7-6821e869e70mr6882008eaf.9.1775486681131; Mon, 06 Apr 2026
- 07:44:41 -0700 (PDT)
+	b=MLkaENd1y02jG6YsphOhuZTp0iQI96L6WFY5DEmo/DZ6WCfvoSBDZJV2ohYZSu1N9
+	 ac4WV6CKVr3vtjWO5PyYEkAdXK0hp0G+RobW161z0dcu3s/VU0gY22kCs+MYXqUHBH
+	 Liz1EHAuKjE4fTRx4+YsiI+t4vTTDKeLdDI2YZy0dAHG/YzL3nR/Rt8+yoiTCr6Y7R
+	 31IDqYUjMqFbupJ1fx/4xFWsQpHeFVPqQZdMM9fWEudaIkvMRtjafaQw7H2b7xvoYg
+	 xYFQlwgI/yUaOmD2NLJlqgiOeQ45VmSMD64YK+4sRFnv7nXs5NX2dbzF574dvLBFqO
+	 XtniXv49RXROw==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-46fc5b8a068so728940b6e.3
+        for <loongarch@lists.linux.dev>; Mon, 06 Apr 2026 07:59:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUALew59y/5/agRlbsK8+Zmz9hVmUAD84mbhzxrlSNRuvvODAIUAo5nfx5jHuWckVRsAmMxWXa6kMU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwKGJbrLTULTDNmkcElGTk0WOvn+U0kbBtm69CFrgqHb97yFSQK
+	/q1u7AbkGBiK0utiYWnhYXiaz6P1WfJWzZEK4Mb99c95jSNQJ5N6NxRqM/bFEyCd2wAvP/ooeoC
+	2IQHriYBusRwcp7edghl79L+WJN/HV5Q=
+X-Received: by 2002:a05:6808:1910:b0:468:776:1ead with SMTP id
+ 5614622812f47-46ef5af739fmr6450744b6e.21.1775487554002; Mon, 06 Apr 2026
+ 07:59:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260401135311.1737958-2-xry111@xry111.site>
-In-Reply-To: <20260401135311.1737958-2-xry111@xry111.site>
+References: <20260401081640.26875-1-fengchengwen@huawei.com>
+In-Reply-To: <20260401081640.26875-1-fengchengwen@huawei.com>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 6 Apr 2026 16:44:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iL-XZaUwgan-j6ctG=r461BTyGc6cTBAK=Mr0v12WwgA@mail.gmail.com>
-X-Gm-Features: AQROBzDsZRUsUtASikqhmQYyvIbvNieZ4PnJ2nc1p7aEvrgNQ_ZD3EbS3dZpXdc
-Message-ID: <CAJZ5v0iL-XZaUwgan-j6ctG=r461BTyGc6cTBAK=Mr0v12WwgA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Enable FPDT on LoongArch
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	Zixing Liu <liushuyu@aosc.io>, Mingcong Bai <jeffbai@aosc.io>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 6 Apr 2026 16:58:58 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gE9jLbaGy0yJhNZdpQJTR9stE-ABNQVvP5jqss3LQpFw@mail.gmail.com>
+X-Gm-Features: AQROBzDy996ma1a9twY_5lJC3Avr9hchzSyUdEAhSG92k1NHCBaaPp2eIIIoft4
+Message-ID: <CAJZ5v0gE9jLbaGy0yJhNZdpQJTR9stE-ABNQVvP5jqss3LQpFw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v10 0/8] ACPI: Unify CPU UID interface and fix
+ ARM64 TPH steer-tag issue
+To: Chengwen Feng <fengchengwen@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Kees Cook <kees@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+	Sean Christopherson <seanjc@google.com>, Kai Huang <kai.huang@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Huth <thuth@redhat.com>, 
+	Thorsten Blum <thorsten.blum@linux.dev>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Zheyun Shen <szy0127@sjtu.edu.cn>, Peter Zijlstra <peterz@infradead.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Xin Li <xin@zytor.com>, 
+	"Ahmed S . Darwish" <darwi@linutronix.de>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Robin Murphy <robin.murphy@arm.com>, 
+	James Clark <james.clark@linaro.org>, Besar Wicaksono <bwicaksono@nvidia.com>, 
+	Ma Ke <make24@iscas.ac.cn>, Wei Huang <wei.huang2@amd.com>, 
+	Andy Gospodarek <andrew.gospodarek@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
+	punit.agrawal@oss.qualcomm.com, guohanjun@huawei.com, suzuki.poulose@arm.com, 
+	ryan.roberts@arm.com, chenl311@chinatelecom.cn, masahiroy@kernel.org, 
+	wangyuquan1236@phytium.com.cn, anshuman.khandual@arm.com, 
+	heinrich.schuchardt@canonical.com, Eric.VanTassell@amd.com, 
+	wangzhou1@hisilicon.com, wanghuiqiang@huawei.com, liuyonglong@huawei.com, 
+	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, stable@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 1, 2026 at 3:55=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
-:
+On Wed, Apr 1, 2026 at 10:16=E2=80=AFAM Chengwen Feng <fengchengwen@huawei.=
+com> wrote:
 >
-> FPDT provides system- and application-readable performance statistics,
-> useful for profiling and analyzing boot-time performance. FPDT table
-> support is now available as a pending patch at the EDK II upstream [1]
-> and has been tested on real hardware such as Loongson XA61200_V1.1 and
-> XB612B0_V1.2 with patched firmware.
+> This patchset unifies ACPI Processor UID retrieval across
+> arm64/loongarch/riscv/x86 via acpi_get_cpu_uid() (with input validation)
+> and fixes ARM64 CPU steer-tag retrieval failure in PCI/TPH:
 >
-> We have also cross checked systemd-analyze(1) against a stop watch and
-> the `dp' command in EFI Shell to see that the timing information are
-> correct.
+> 1-4: Add acpi_get_cpu_uid() for arm64/loongarch/riscv/x86 (update
+>      respective users)
+> 5: Centralize acpi_get_cpu_uid() declaration in include/linux/acpi.h
+> 6: Clean up perf/arm_cspmu
+> 7: Clean up ACPI/PPTT and remove unused get_acpi_id_for_cpu()
+> 8: Pass ACPI Processor UID to Cache Locality _DSM
 >
-> Now that the functionality of FPDT is verified on LoongArch hardware,
-> list LOONGARCH as a possible dependency, allowing it to be enabled.
+> The interface refactor ensures consistent CPU UID retrieval across
+> architectures (no functional changes for valid inputs) and provides the
+> unified interface required for the ARM64 TPH fix
 >
-> Link: https://github.com/tianocore/edk2/pull/12378 [1]
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
->  drivers/acpi/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v10-resend:
+> - Add Catalin's ack-by for arm64 commit
+> - Add CC to x86@kernel.org
 >
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index 6f4b545f7377..f165d14cf61a 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -96,7 +96,7 @@ config ACPI_SPCR_TABLE
+> Changes in v10:
+> - Refine commit header&log according to Punit's and Bjorn's review
+> - Split perf/arm_cspmu as a separate commit which address Punit's
+>   review
 >
->  config ACPI_FPDT
->         bool "ACPI Firmware Performance Data Table (FPDT) support"
-> -       depends on X86_64 || ARM64
-> +       depends on X86_64 || ARM64 || LOONGARCH
->         help
->           Enable support for the Firmware Performance Data Table (FPDT).
->           This table provides information on the timing of the system
+> Changes in v9:
+> - Address Bjorn's review: split commits to each platform so that make
+>   them easy to review
+>
+> Changes in v8:
+> - Moving arm64's get_cpu_for_acpi_id() to kernel/acpi.c which address
+>   Jeremy's review
+>
+> Chengwen Feng (8):
+>   arm64: acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   LoongArch: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   RISC-V: ACPI: Add acpi_get_cpu_uid() for unified ACPI CPU UID
+>     retrieval
+>   x86/acpi: Add acpi_get_cpu_uid() for unified ACPI CPU UID retrieval
+>   ACPI: Centralize acpi_get_cpu_uid() declaration in
+>     include/linux/acpi.h
+>   perf: arm_cspmu: Switch to acpi_get_cpu_uid() from
+>     get_acpi_id_for_cpu()
+>   ACPI: PPTT: Use acpi_get_cpu_uid() and remove get_acpi_id_for_cpu()
+>   PCI/TPH: Pass ACPI Processor UID to Cache Locality _DSM
+>
+>  Documentation/PCI/tph.rst          |  4 +--
+>  arch/arm64/include/asm/acpi.h      | 17 +---------
+>  arch/arm64/kernel/acpi.c           | 30 ++++++++++++++++++
+>  arch/loongarch/include/asm/acpi.h  |  5 ---
+>  arch/loongarch/kernel/acpi.c       |  9 ++++++
+>  arch/riscv/include/asm/acpi.h      |  4 ---
+>  arch/riscv/kernel/acpi.c           | 16 ++++++++++
+>  arch/riscv/kernel/acpi_numa.c      |  9 ++++--
+>  arch/x86/include/asm/cpu.h         |  1 -
+>  arch/x86/include/asm/smp.h         |  1 -
+>  arch/x86/kernel/acpi/boot.c        | 20 ++++++++++++
+>  arch/x86/xen/enlighten_hvm.c       |  5 +--
+>  drivers/acpi/pptt.c                | 50 ++++++++++++++++++++++--------
+>  drivers/acpi/riscv/rhct.c          |  7 ++++-
+>  drivers/pci/tph.c                  | 16 +++++++---
+>  drivers/perf/arm_cspmu/arm_cspmu.c |  6 ++--
+>  include/linux/acpi.h               | 11 +++++++
+>  include/linux/pci-tph.h            |  4 +--
+>  18 files changed, 158 insertions(+), 57 deletions(-)
+>
 > --
 
-Applied as 7.1 material, thanks!
+Applied as 7.1 material, but please note that I haven't tagged it
+explicitly for "stable".
+
+The last patch carries a Fixes: tag which should be suitable for
+"stable" to pick it up and you may as well request the whole series to
+be picked up by "stable" when it hits the mainline.
+
+Thanks!
