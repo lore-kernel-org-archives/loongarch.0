@@ -1,35 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2F91EA7CE;
-	Tue,  7 Apr 2026 02:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5683822AF
+	for <loongarch@lists.linux.dev>; Tue,  7 Apr 2026 06:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775527832; cv=none; b=LFCZ8pdFEniNvcP61BuVEbZ6Fxjm4We+gB4uGgQkOZEHjv7DsEUREKzQE1ao/InRojAQk70hNz3ttYaDDzPz8X2lyXSKtvxFKiHVDB3mWiLouAzQnfgWQe9UAwGDYR9QUQ9nWOWu/VBWCDpfYlJbYmbzG2sISsJFvwoq4EISu+g=
+	t=1775543002; cv=none; b=sxUbGDGH7Ul3UoktGOvokKyK2Z+lP0EUuMHKVz/UKiElH6YEqIw0wl9LBvFP30efeGEosxVX5wIf5MrPzgrcQ0JMrDgWcJEF3Ux0DNNjrrGLWr6qzc31qfXGEzqSPEY/K/Qz0Udy9Odj2NA+X4Xg8kiWsPYAVabrDh/oPE7OdmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775527832; c=relaxed/simple;
-	bh=NUrupb/CF97DyehgDM1bR3YngtCbCXQcoCVeKQ2GbB4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=aJOQ1vr0uyhNqg2EcdN/RZRMVak633DM7lBB/UMTw5PiqjEpSGhyUHHHS/U4S/v9xLT9or9GW4e1n78isfAnUL36Vc4nN1/1FBmjcSLdLcsQYzLo9UBi7mFv42rdsgF3cbPVABB03ouN3gTi4L/q27LMRgObfcNQu07vPU4gyo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2wlu8lJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2wlu8lJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB12C4CEF7;
-	Tue,  7 Apr 2026 02:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775527832;
-	bh=NUrupb/CF97DyehgDM1bR3YngtCbCXQcoCVeKQ2GbB4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=s2wlu8lJlZOw0FDnuFEbb1GIYBBpLFRmBCOwF42KTyNk+9QKJhFGELVg47XWRSkUp
-	 VCwBD9vMkxe0JrC3ionEMbNtZ7rcN4qYPiL842Bqon5zJlQS/4MGH42pP0wgzJnulc
-	 qUY5dxPpk3U5LtvBnHO5cajhh2Toib8iE/1nK3kqWegr6V6WDqPDANtSlJcNcvZKrt
-	 n0BxwclZpplISYN2ZWCorIbmg1+cjijdgDztRpFvfYbKVDh3gm5qTz0uKnaMUUOBlL
-	 BLtNwSE51BS7xdRHIoxvwGsTft8alJ6kvE2VZF7s/XEPVVMsiAQXfWcVv3i6HT/PJj
-	 cp0Z8SZ36lTUg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7CCB83809A28;
-	Tue,  7 Apr 2026 02:10:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1775543002; c=relaxed/simple;
+	bh=8UTl0XC2kOUL6OyLfakMpUNxbSJ7OAL9PKnPUb1bifg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M0MSSyDJvXCGsbuerGcAa5Z5wMeUB9xoVMqugCY3TICXSy50DSZDN2lUEAOD+QDurYWbLCxrcbiCx45FdWFASxW3d1rleOMwVUI9+Q3eClSH+sQnNNVdteYOfP0iwAnilwLj7oU/2IGMWLeerDIKyQr1cbKXTD9+mSFBuPPhFMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dx88DVotRpvaUiAA--.37460S3;
+	Tue, 07 Apr 2026 14:23:17 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCx_8LLotRpYh5nAA--.54S5;
+	Tue, 07 Apr 2026 14:23:15 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/5] LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
+Date: Tue,  7 Apr 2026 14:23:04 +0800
+Message-ID: <20260407062306.8915-4-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20260407062306.8915-1-yangtiezhu@loongson.cn>
+References: <20260407062306.8915-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,53 +37,154 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] eth: remove the driver for acenic / tigon1&2
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <177552781030.3342975.4848886248762600181.git-patchwork-notify@kernel.org>
-Date: Tue, 07 Apr 2026 02:10:10 +0000
-References: <20260403220501.2263835-1-kuba@kernel.org>
-In-Reply-To: <20260403220501.2263835-1-kuba@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
- jes@trained-monkey.org, gregkh@linuxfoundation.org, helgaas@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, tsbogend@alpha.franken.de,
- James.Bottomley@HansenPartnership.com, deller@gmx.de, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
- svens@linux.ibm.com, ebiggers@google.com, ardb@kernel.org, tiwai@suse.de,
- tytso@mit.edu, enelsonmoore@gmail.com, martin.petersen@oracle.com,
- jirislaby@kernel.org, geert@linux-m68k.org, vineethr@linux.ibm.com,
- lirongqing@baidu.com, kshk@linux.ibm.com, vadim.fedorenko@linux.dev,
- wangruikang@iscas.ac.cn, dong100@mucse.com, hkallweit1@gmail.com,
- kees@kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org
+X-CM-TRANSID:qMiowJCx_8LLotRpYh5nAA--.54S5
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZFWxtFW5Cr4Utr13KF1Dtwc_yoW5KF1Dpr
+	srWrZ5KaykJF4agas3Jr97JFW3Kr4xJ3srWF13J395W3yaqF13GF1kKF1fZFy5Cr97Cr4f
+	W3s3ZFyq93W7AFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-Hello:
+The 8 and 16 bit read-modify-write instructions {amadd/amswap}.{b/h}
+were newly added in the latest LoongArch Reference Manual, use them
+to avoid the error of unknown opcode if possible.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 83 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 74 insertions(+), 9 deletions(-)
 
-On Fri,  3 Apr 2026 15:05:01 -0700 you wrote:
-> The entire git history for this driver looks like tree-wide
-> and automated cleanups. There's even more coming now with
-> AI, so let's try to delete it instead.
-> 
-> Acked-by: Jes Sorensen <jes@trained-monkey.org>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v2] eth: remove the driver for acenic / tigon1&2
-    https://git.kernel.org/netdev/net-next/c/e6b7e1a10cba
-
-You are awesome, thank you!
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index fefda4050a20..c9a32f124f5e 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -363,10 +363,30 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 	switch (imm) {
+ 	/* lock *(size *)(dst + off) <op>= src */
+ 	case BPF_ADD:
+-		if (isdw)
+-			emit_insn(ctx, amaddd, t2, t1, src);
+-		else
++		switch (BPF_SIZE(insn->code)) {
++		case BPF_B:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amaddb, t2, t1, src);
++			} else {
++				pr_err_once("bpf-jit: amadd.b instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_H:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amaddh, t2, t1, src);
++			} else {
++				pr_err_once("bpf-jit: amadd.h instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_W:
+ 			emit_insn(ctx, amaddw, t2, t1, src);
++			break;
++		case BPF_DW:
++			emit_insn(ctx, amaddd, t2, t1, src);
++			break;
++		}
+ 		break;
+ 	case BPF_AND:
+ 		if (isdw)
+@@ -388,11 +408,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		break;
+ 	/* src = atomic_fetch_<op>(dst + off, src) */
+ 	case BPF_ADD | BPF_FETCH:
+-		if (isdw) {
+-			emit_insn(ctx, amaddd, src, t1, t3);
+-		} else {
++		switch (BPF_SIZE(insn->code)) {
++		case BPF_B:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amaddb, src, t1, t3);
++				emit_zext_32(ctx, src, true);
++			} else {
++				pr_err_once("bpf-jit: amadd.b instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_H:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amaddh, src, t1, t3);
++				emit_zext_32(ctx, src, true);
++			} else {
++				pr_err_once("bpf-jit: amadd.h instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_W:
+ 			emit_insn(ctx, amaddw, src, t1, t3);
+ 			emit_zext_32(ctx, src, true);
++			break;
++		case BPF_DW:
++			emit_insn(ctx, amaddd, src, t1, t3);
++			break;
+ 		}
+ 		break;
+ 	case BPF_AND | BPF_FETCH:
+@@ -421,11 +462,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 		break;
+ 	/* src = atomic_xchg(dst + off, src); */
+ 	case BPF_XCHG:
+-		if (isdw) {
+-			emit_insn(ctx, amswapd, src, t1, t3);
+-		} else {
++		switch (BPF_SIZE(insn->code)) {
++		case BPF_B:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amswapb, src, t1, t3);
++				emit_zext_32(ctx, src, true);
++			} else {
++				pr_err_once("bpf-jit: amswap.b instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_H:
++			if (cpu_has_lam_bh) {
++				emit_insn(ctx, amswaph, src, t1, t3);
++				emit_zext_32(ctx, src, true);
++			} else {
++				pr_err_once("bpf-jit: amswap.h instruction is not supported\n");
++				return -EINVAL;
++			}
++			break;
++		case BPF_W:
+ 			emit_insn(ctx, amswapw, src, t1, t3);
+ 			emit_zext_32(ctx, src, true);
++			break;
++		case BPF_DW:
++			emit_insn(ctx, amswapd, src, t1, t3);
++			break;
+ 		}
+ 		break;
+ 	/* r0 = atomic_cmpxchg(dst + off, r0, src); */
+@@ -1259,6 +1321,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			return ret;
+ 		break;
+ 
++	/* Atomics */
++	case BPF_STX | BPF_ATOMIC | BPF_B:
++	case BPF_STX | BPF_ATOMIC | BPF_H:
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+ 	case BPF_STX | BPF_ATOMIC | BPF_DW:
+ 		ret = emit_atomic_rmw(insn, ctx);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.42.0
 
