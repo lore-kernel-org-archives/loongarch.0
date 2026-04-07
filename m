@@ -1,152 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683883A9637
-	for <loongarch@lists.linux.dev>; Tue,  7 Apr 2026 12:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A335D39FCA5;
+	Tue,  7 Apr 2026 15:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775565997; cv=none; b=Bn8XQe0gif12aPKY39ZecAVZNq/EGnMJ8tlFRKrwbacWv3FuO166g7/gt/CZOiOagdLF2fZEanyBCnkwAjlfHFJ1oBmETNvOZTd7xfLME51OT6UQPQ2T5VjvUrUtNA3ehkNXmwsnfBkAJAdAkYyXKmWgobhNMFIbgwzTDTUXOnM=
+	t=1775575345; cv=none; b=odz51jksSs08aMuydID0HLwj4IQ6xrGlGHghzuDfWpAOZU9sS/8HmE1h5oJvACYQsdAbnZkEw2xyQLQhvdPmNt0TpYtqN7kmRFPrXDtUGP2j7dXxcKYMnEuFtLZOOSfGH7NAkPK7WP/6QqOebfa26ran1lfvJq+VFHiy/OzqP7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775565997; c=relaxed/simple;
-	bh=PlWLD5qNONSjz5uDAptenV1FUyAly/9GdpSuevkw+Cc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rRdax+OImGyZnXoXRVbyiOlnyC9pazbI9x7Yx2hE0H20MChOB7zGQ7K6LdVAq/h5JiLHgHifZDPRQXmSphnkvNiKTXP0gm73bk5cqQTMIVCvdLhEubQ2K2BPA1U7GAedWkUWZxyhnXyy4C78GkChlntmSgn9EiPeVcUmSuarvpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfeF99jU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775575345; c=relaxed/simple;
+	bh=1tJVwajwStaJiW35ZoXT6KUci38I5ZYjNFoqJGCE/po=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9LBBgBsQDg7hjt6vWr+AeYCP/6lGWsT/KB3r72nuK8eQgUFs/nurqAVp5XCJ4B+fKpKtMjwwSsVDFSL+t5RJQi5amFrCewVG+viMtTQz4bEvWttS5JzEKzCETeodTHcYkL3zCwITSeNIXeafiOtcj4SNCWMXEpKtRyw1ue81n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UKXvwq+A; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfeF99jU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12ED2C19421
-	for <loongarch@lists.linux.dev>; Tue,  7 Apr 2026 12:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775565997;
-	bh=PlWLD5qNONSjz5uDAptenV1FUyAly/9GdpSuevkw+Cc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YfeF99jUKM5TBG4FLKjTfH9VO6JWho2Srhg2x0FtLZwn5yIZrZRKZo/3dgJNOBUzA
-	 6xoYJ/00O+uQ3NetjsYFKWiPD2/60O2tjoYBUuxaNakpt1C0XzPjrnbu5p4LqFrECG
-	 HMlW38KEChoQZFjf05DGtSJqkCfQ5JpTh14GjJA5SBa/5abknKxncQox0d5IitvNsi
-	 HggBZN9tIDEAUvRXbCtW0ZoXORsatiSAXXDs5yNHrdZiqmQwXxwcy3kKMR0r33Ugx4
-	 7POsVWb8cnkaLubYn15pBDmqOwem99xpukNFACaPY1eyJveCHO0wRXL9xuzTyFL+/n
-	 uswYjP82Q3vdg==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b9841aecf72so716047366b.2
-        for <loongarch@lists.linux.dev>; Tue, 07 Apr 2026 05:46:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVh2H3TRPi9bbpT4cQ/IH1PTDh7jmKthuf3buahr30XQywcqh5leicGlTmg03C7/a7PHhHAE4D0M9k=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyVujyGmkvmfCCi57B5+U5SWvjWGuQT9JiPfkKWW47ltoUddzlk
-	9tasDNhkSpOcoJSIP8bmMxnw3Fu+t+Ig3Lysc3NGmhY9NsoCACMWIHR9IkcZtWMOCSkreDBBhLN
-	i61zGwtae5xh8rw0tStRxtoLTvuopCTc=
-X-Received: by 2002:a17:907:c310:b0:b9b:fa57:d5bb with SMTP id
- a640c23a62f3a-b9c67b497demr869862366b.46.1775565995561; Tue, 07 Apr 2026
- 05:46:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UKXvwq+A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775575337; x=1807111337;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1tJVwajwStaJiW35ZoXT6KUci38I5ZYjNFoqJGCE/po=;
+  b=UKXvwq+AHCS3xqhxueSmQp6wnGf1mwHViJebVYoR1kIzx7fxOdIDJuDt
+   YLuVpHYpVpjMcYKXv6PiARL8RNBZxBQqm0/eB9Qfs75dwywBtTCAX8rzk
+   w7JuUebpDJptRyjcGmxcHmTtJHQa115UnqOZZjLs00q3bXq2UOTvjXDKE
+   pGd4sMYs+es+/rVXmKX3pYnNN80FfsYD9iDYAY0ccVWSy2VMHNQKk9140
+   0A8F8LCYnQW4KYzbi/uIZ/s6njsZanBsJaVEleTsOv9rgGtjoUW5V0nlV
+   nY534aGYqa9XPNbJdjAdKL76MQY9TmSTf45L6iZ1frI2RYaNKCcxjcBnr
+   g==;
+X-CSE-ConnectionGUID: L8/m3eH4RM+45GiDiCWc2w==
+X-CSE-MsgGUID: seCH/zBjTCCoK3O1zc0ESQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76505939"
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="76505939"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 08:22:12 -0700
+X-CSE-ConnectionGUID: GFvaF7A4SAiTO1Hp3csw9w==
+X-CSE-MsgGUID: ATKRYI8HSh25TYy1tIwZFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="227187059"
+Received: from lkp-server01.sh.intel.com (HELO d00eb8a6782a) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 07 Apr 2026 08:22:09 -0700
+Received: from kbuild by d00eb8a6782a with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wA8Fh-000000000jV-3hQl;
+	Tue, 07 Apr 2026 15:22:05 +0000
+Date: Tue, 7 Apr 2026 23:21:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>, Xi Ruoyao <xry111@xry111.site>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yangyang Lian <lianyangyang@kylinos.cn>,
+	Yawei Li <liyawei@loongson.cn>, George Guo <dongtai.guo@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] LoongArch: detect and disable sc.q if erratic
+Message-ID: <202604072314.9J2SQEFo-lkp@intel.com>
+References: <20260402044732.164294-2-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260312201018.128816016@linuxfoundation.org> <20260312201022.504112831@linuxfoundation.org>
- <28a3e1fc-b6e7-4d92-b949-7218a74b7231@oracle.com>
-In-Reply-To: <28a3e1fc-b6e7-4d92-b949-7218a74b7231@oracle.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 7 Apr 2026 20:46:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Jihemh01mXx1wWU4QBw2-x5XwV=a7rUD5ZoJiQ56FDw@mail.gmail.com>
-X-Gm-Features: AQROBzAP6hJ8KuGViv2hx3W2KUVZdWbArqdBMdfBoMgxA0YiwPyuVoOaYFasGdo
-Message-ID: <CAAhV-H6Jihemh01mXx1wWU4QBw2-x5XwV=a7rUD5ZoJiQ56FDw@mail.gmail.com>
-Subject: Re: [PATCH 6.12 118/265] LoongArch/orc: Use RCU in all users of __module_address().
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Sasha Levin <sashal@kernel.org>, patches@lists.linux.dev, 
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Vegard Nossum <vegard.nossum@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260402044732.164294-2-xry111@xry111.site>
 
-On Mon, Apr 6, 2026 at 8:28=E2=80=AFPM Harshit Mogalapalli
-<harshit.m.mogalapalli@oracle.com> wrote:
->
-> Hi all,
->
-> On 13/03/26 01:38, Greg Kroah-Hartman wrote:
-> > 6.12-stable review patch.  If anyone has any objections, please let me =
-know.
-> >
-> > ------------------
-> >
-> > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> >
-> > [ Upstream commit f99d27d9feb755aee9350fc89f57814d7e1b4880 ]
-> >
-> > __module_address() can be invoked within a RCU section, there is no
-> > requirement to have preemption disabled.
-> >
-> > Replace the preempt_disable() section around __module_address() with
-> > RCU.
-> >
-> > Cc: Huacai Chen <chenhuacai@kernel.org>
-> > Cc: WANG Xuerui <kernel@xen0n.name>
-> > Cc: loongarch@lists.linux.dev
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Link: https://lore.kernel.org/r/20250108090457.512198-19-bigeasy@linutr=
-onix.de
-> > Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-> > Stable-dep-of: 055c7e75190e ("LoongArch: Handle percpu handler address =
-for ORC unwinder")
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >   arch/loongarch/kernel/unwind_orc.c | 4 +---
-> >   1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel=
-/unwind_orc.c
-> > index 471652c0c8653..59809c3406c03 100644
-> > --- a/arch/loongarch/kernel/unwind_orc.c
-> > +++ b/arch/loongarch/kernel/unwind_orc.c
-> > @@ -399,7 +399,7 @@ bool unwind_next_frame(struct unwind_state *state)
-> >               return false;
-> >
-> >       /* Don't let modules unload while we're reading their ORC data. *=
-/
-> > -     preempt_disable();
-> > +     guard(rcu)();
-> >
-> >       if (is_entry_func(state->pc))
-> >               goto end;
-> > @@ -514,14 +514,12 @@ bool unwind_next_frame(struct unwind_state *state=
-)
-> >       if (!__kernel_text_address(state->pc))
-> >               goto err;
-> >
-> > -     preempt_enable();
-> >       return true;
-> >
->
->
-> Looks like this is dependent on commit: 7d9dda6f628f ("module: Allow
-> __module_address() to be called from RCU section."), so I feel pulling
-> in this patch without the mentioned missing prerequisite is wrong. Can
-> you please help review this ?
->
-> This is also part of a feature series in
-> https://lore.kernel.org/all/20250108090457.512198-13-bigeasy@linutronix.d=
-e/
-Yes, I have also asked about this:
-https://lore.kernel.org/stable/CAAhV-H7GxtWRZyAT=3DkedLEMu=3DC5wH--NUzRjwi3=
-DKXzUq+QZjA@mail.gmail.com/
+Hi Xi,
 
-However, no answer and no action for this. I don't know what happened
-to Greg and Sasha. Recently, similar accidents happen again and again.
+kernel test robot noticed the following build errors:
 
-Huacai
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v7.0-rc7 next-20260406]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> Thanks,
-> Harshit
->
-> >   err:
-> >       state->error =3D true;
-> >
-> >   end:
-> > -     preempt_enable();
-> >       state->stack_info.type =3D STACK_TYPE_UNKNOWN;
-> >       return false;
-> >   }
->
+url:    https://github.com/intel-lab-lkp/linux/commits/Xi-Ruoyao/LoongArch-detect-and-disable-sc-q-if-erratic/20260407-193425
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20260402044732.164294-2-xry111%40xry111.site
+patch subject: [PATCH] LoongArch: detect and disable sc.q if erratic
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20260407/202604072314.9J2SQEFo-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project c80443cd37b2e2788cba67ffa180a6331e5f0791)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260407/202604072314.9J2SQEFo-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604072314.9J2SQEFo-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> arch/loongarch/kernel/cpu-probe.c:151:23: error: invalid operand for instruction
+     151 |                 "move\t%[tmp], $r0\n\t"
+         |                                     ^
+   <inline asm>:3:22: note: instantiated into assembly here
+       3 |         sc.q    $a2, $a0, $a1, 0
+         |                                ^
+   1 error generated.
+
+
+vim +151 arch/loongarch/kernel/cpu-probe.c
+
+   134	
+   135	/*
+   136	 * Some LoongArch has broken sc.q which incorrectly handles the upper word
+   137	 * when the lower word is zero. Newer firmware versions (such as the 202602
+   138	 * release from Loongson) seem to contain a workaround for this issue.
+   139	 *
+   140	 * Disable sc.q if erratic to ensure reliability and compatibility.
+   141	 */
+   142	static bool sc_q_is_sane(void)
+   143	{
+   144		struct {
+   145			long word[2];
+   146		} __aligned(16) mem;
+   147		register long tmp;
+   148	
+   149		asm (
+   150			"1:ll.d\t$r0, %[mem]\n\t"
+ > 151			"move\t%[tmp], $r0\n\t"
+   152			"sc.q\t%[tmp], %[one], %[mem]\n\t"
+   153			"beqz\t%[tmp], 1b"
+   154			: [mem] "=ZB" (mem), [tmp] "=&r" (tmp)
+   155			: [one] "r" (1));
+   156	
+   157		if (mem.word[1] != 1) {
+   158			pr_warn_once("Warning: sc.q is erratic on this platform, disabling for both kernel and HWCAP. Please try a firmware update.");
+   159			return false;
+   160		}
+   161	
+   162		return true;
+   163	}
+   164	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
