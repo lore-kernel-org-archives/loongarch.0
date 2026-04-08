@@ -1,115 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F743B8D7E;
-	Wed,  8 Apr 2026 13:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9875F3D091D
+	for <loongarch@lists.linux.dev>; Wed,  8 Apr 2026 13:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775655027; cv=none; b=LEPlSJOaA7Upgiy5G+XPMohhJq/kt/G+N+DM+5m8ZezcBO8LVaPgETQzd8mJHY64+DTCkGb6bxcQe3487i13v3j911rNjVS/w96JGNth7+gA/xGF1sOzp/A+VKpxZ3I7hGzldNHwgXH5uD7ATifQzlt87+Q1pXZ9MnCiDJf6Jw0=
+	t=1775655971; cv=none; b=Hl2bjJvm/xSAvUCTj7LgBw77wvE3XcStCawYFi8oqKnWCHCEfC46WUhZNbdrH/r1wScGpoKLPbKhXJzk0hH3OZ0ezuQvJGic78ZHi1qfQ11eNPgt8DTzMyZ9+j2ING/gUiufGFbz8Va4MSXn87tQtzFE4A1QRddhoMqLtt32iOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775655027; c=relaxed/simple;
-	bh=gWnLM12LSVMcTwFvGt4Fq3BcuLWqVA9N2Y5OmDY4wak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IOC45Som3TwoaU3obUShEI5tKCNp4jtQUgFWXNKRYv9ISvrhglGlQopAD+BDhA9EMJip4w4CnFkk9g4OSQXqLsDKuV+B+Fy2ElKQflvnXckDkaLx2tpbUFpY41dv7MIo3iRvP52KsmBFflgrNGc73Y1H49kqfZPdDOA/hUvFZOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=W+HlFzxk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775655971; c=relaxed/simple;
+	bh=YHXEtl2oP+cV8K2Sx7ZVkKvy3aol+D7ON1x6VTixXeE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ISQKOdeX3jEfzXuXbiyLHIBBRhwAUu3d37Er8MUd4NoBhBoFtW5DkxLifIKkKtf2PhSr6/aa1G0IvSQb+imDbWOGRhOMqKY45T9/43yfQmHs4t4jxGmBfseAWnJsQcQQa0PTn4tMG33J+/t36qPw74FAwKwavdSwsNNrWiLX/JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBkMBPLS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="W+HlFzxk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5588C19421;
-	Wed,  8 Apr 2026 13:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1775655027;
-	bh=gWnLM12LSVMcTwFvGt4Fq3BcuLWqVA9N2Y5OmDY4wak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W+HlFzxk9KF6qgMzwG5BepaAa1pyhjiF9Cflg75Mo/cUfrUG/+BcKcbOQgcIPqBsT
-	 BOqT2FhWBzTs46E3IJfzYhyia72c9tTDiW3p4t1qv6NEfpCGdTkpvVIZ9cRSVD4lOL
-	 dHXUe8QiaTjVPzkckO0Su79o39HN9USyXiLq4w1s=
-Date: Wed, 8 Apr 2026 15:30:24 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH for 6.1] LoongArch: vDSO: Emit GNU_EH_FRAME correctly
-Message-ID: <2026040816-yapping-gonad-2248@gregkh>
-References: <20260330100205.3955389-1-chenhuacai@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBkMBPLS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB4AC19424;
+	Wed,  8 Apr 2026 13:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775655971;
+	bh=YHXEtl2oP+cV8K2Sx7ZVkKvy3aol+D7ON1x6VTixXeE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=dBkMBPLSwNn5Oz4u9q3bGUCkZ+SspH2Ijjj38IvisJBYF9sksjdgH+mtTTO+AR+zU
+	 o7GqqJOqTVvf+63hMJIqTDO6ZtjBBZ1KWW/WEM1jq/pC8roF6HkoAjxBzye3QvgmX6
+	 4AU1uBSTwtvFJ8ioX3WFVljd5WPvCr6heCscIHLQwkujU6jTc4f3oFecfcfmyVlc3G
+	 il4BSPfgpM0ptAu9TXPBLy4NxtakufGYa9keUdDXNo/h6qwtRIAN2hRUTCZaTqSTbl
+	 cJHZ7FKTJtflrQmamStLcBH/HK2RYMbakCEqi1EyriG8h+O1UHlasySLyATodXywVQ
+	 1V+omoKGXWyew==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9F0F3F40088;
+	Wed,  8 Apr 2026 09:46:09 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Wed, 08 Apr 2026 09:46:09 -0400
+X-ME-Sender: <xms:IVzWaQ4gcC0NrhVrSbE7q39Jy8Zs90inCIjRlTv77A8Mp_4oLiEC8A>
+    <xme:IVzWacsNAaKM24d1q05XDE15sD7k6VfQ_JONTPYalB4YNSwmfOvkNTkt__f5WDfEU
+    UpSgwn1kHJ8hjhgwf2_iTuG7ncqzDYTAqrFEJhGfenOEcLHND357SbL>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvfeejfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhguuceu
+    ihgvshhhvghuvhgvlhdfuceorghruggssehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepvdeuheeitdevtdelkeduudetgffftdelteefteevjeevjeeiheefhfejieej
+    fedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijedthedttdejledq
+    feefvdduieegudehqdgrrhgusgeppehkvghrnhgvlhdrohhrghesfihorhhkohhfrghrug
+    drtghomhdpnhgspghrtghpthhtohepvdegpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepshhimhhonhgrsehffhiflh
+    hlrdgthhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepuggvlhhlvghrsehgmhigrdguvgdprhgtphhtthhopehlkhhpsehinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhlih
+    husehkvghrnhgvlhdrohhrghdprhgtphhtthhopehilhhirghsrdgrphgrlhhoughimhgr
+    sheslhhinhgrrhhordhorhhg
+X-ME-Proxy: <xmx:IVzWaTohtTCLTzK5RuZnM8D9Itdv2WHQBKKyNoyMaFKu0eapZJVl7w>
+    <xmx:IVzWaWs34L-eVayQRFMw-hmGQqMr3RyX_a4_YGEVpp9P84QMCxjuZQ>
+    <xmx:IVzWaZQXUgl4XDOWrkZg1fghcJu5vqZKe8oRI_jSFT21hz53vxmb1A>
+    <xmx:IVzWaSqBde724jlvJJubSeIH38atd9oljibiK1xBTJLWwuwC1KTrIQ>
+    <xmx:IVzWacLBo-9hqk7SC2t5E8zD_ydnfSqJl57bKu4NkiP__s0nMKrMx48d>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 67B23700069; Wed,  8 Apr 2026 09:46:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260330100205.3955389-1-chenhuacai@loongson.cn>
+X-ThreadId: AXf1VD975dY-
+Date: Wed, 08 Apr 2026 15:45:49 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Arnd Bergmann" <arnd@arndb.de>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ kys@microsoft.com, haiyangz@microsoft.com, "Wei Liu" <wei.liu@kernel.org>,
+ decui@microsoft.com, "Long Li" <longli@microsoft.com>,
+ "Helge Deller" <deller@gmx.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, "kernel test robot" <lkp@intel.com>
+Message-Id: <d0624a61-b96b-4b2f-89c2-029e8671039d@app.fastmail.com>
+In-Reply-To: <20260402092305.208728-3-tzimmermann@suse.de>
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+ <20260402092305.208728-3-tzimmermann@suse.de>
+Subject: Re: [PATCH 2/8] firmware: efi: Never declare sysfb_primary_display on x86
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 30, 2026 at 06:02:05PM +0800, Huacai Chen wrote:
-> From: Xi Ruoyao <xry111@xry111.site>
-> 
-> commit e4878c37f6679fdea91b27a0f4e60a871f0b7bad upstream.
-> 
-> With -fno-asynchronous-unwind-tables and --no-eh-frame-hdr (the default
-> of the linker), the GNU_EH_FRAME segment (specified by vdso.lds.S) is
-> empty.  This is not valid, as the current DWARF specification mandates
-> the first byte of the EH frame to be the version number 1.  It causes
-> some unwinders to complain, for example the ClickHouse query profiler
-> spams the log with messages:
-> 
->     clickhouse-server[365854]: libunwind: unsupported .eh_frame_hdr
->     version: 127 at 7ffffffb0000
-> 
-> Here "127" is just the byte located at the p_vaddr (0, i.e. the
-> beginning of the vDSO) of the empty GNU_EH_FRAME segment. Cross-
-> checking with /proc/365854/maps has also proven 7ffffffb0000 is the
-> start of vDSO in the process VM image.
-> 
-> In LoongArch the -fno-asynchronous-unwind-tables option seems just a
-> MIPS legacy, and MIPS only uses this option to satisfy the MIPS-specific
-> "genvdso" program, per the commit cfd75c2db17e ("MIPS: VDSO: Explicitly
-> use -fno-asynchronous-unwind-tables").  IIRC it indicates some inherent
-> limitation of the MIPS ELF ABI and has nothing to do with LoongArch.  So
-> we can simply flip it over to -fasynchronous-unwind-tables and pass
-> --eh-frame-hdr for linking the vDSO, allowing the profilers to unwind the
-> stack for statistics even if the sample point is taken when the PC is in
-> the vDSO.
-> 
-> However simply adjusting the options above would exploit an issue: when
-> the libgcc unwinder saw the invalid GNU_EH_FRAME segment, it silently
-> falled back to a machine-specific routine to match the code pattern of
-> rt_sigreturn() and extract the registers saved in the sigframe if the
-> code pattern is matched.  As unwinding from signal handlers is vital for
-> libgcc to support pthread cancellation etc., the fall-back routine had
-> been silently keeping the LoongArch Linux systems functioning since
-> Linux 5.19.  But when we start to emit GNU_EH_FRAME with the correct
-> format, fall-back routine will no longer be used and libgcc will fail
-> to unwind the sigframe, and unwinding from signal handlers will no
-> longer work, causing dozens of glibc test failures.  To make it possible
-> to unwind from signal handlers again, it's necessary to code the unwind
-> info in __vdso_rt_sigreturn via .cfi_* directives.
-> 
-> The offsets in the .cfi_* directives depend on the layout of struct
-> sigframe, notably the offset of sigcontext in the sigframe.  To use the
-> offset in the assembly file, factor out struct sigframe into a header to
-> allow asm-offsets.c to output the offset for assembly.
-> 
-> To work around a long-term issue in the libgcc unwinder (the pc is
-> unconditionally substracted by 1: doing so is technically incorrect for
-> a signal frame), a nop instruction is included with the two real
-> instructions in __vdso_rt_sigreturn in the same FDE PC range.  The same
-> hack has been used on x86 for a long time.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: c6b99bed6b8f ("LoongArch: Add VDSO and VSYSCALL support")
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Hi Thomas,
+
+On Thu, 2 Apr 2026, at 11:09, Thomas Zimmermann wrote:
+> The x86 architecture comes with its own instance of the global
+> state variable sysfb_primary_display. Never declare it in the EFI
+> subsystem. Fix the test for CONFIG_FIRMWARE_EDID accordingly.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: e65ca1646311 ("efi: export sysfb_primary_display for EDID")
+> Cc: kernel test robot <lkp@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Cc: linux-efi@vger.kernel.org
 > ---
->  arch/loongarch/include/asm/linkage.h  | 36 +++++++++++++++++++++++++++
->  arch/loongarch/include/asm/sigframe.h |  9 +++++++
->  arch/loongarch/kernel/asm-offsets.c   |  2 ++
->  arch/loongarch/kernel/signal.c        |  6 +----
->  arch/loongarch/vdso/Makefile          |  4 +--
->  arch/loongarch/vdso/sigreturn.S       |  6 ++---
->  6 files changed, 53 insertions(+), 10 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/sigframe.h
+>  drivers/firmware/efi/efi-init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-Does not apply to the 6.1.y queue :(
+Should this be sent out as a fix?
