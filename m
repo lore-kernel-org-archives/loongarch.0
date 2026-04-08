@@ -1,93 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD17919D8A8;
-	Wed,  8 Apr 2026 05:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A24396577
+	for <loongarch@lists.linux.dev>; Wed,  8 Apr 2026 07:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775626007; cv=none; b=d/Hw3tUo/LKHTegr009zisTC1JoQYl/DA2aT+zduD2Sgzj5ou5TDHxbFSdEJc60i5DPD/NA6l8zkbDfvClu4KiBcIVqSAKd5vNVRMAIZWiJkpwmrc3fkg9JWbgYcqejTysxbkYWFykx6eep6k1WVbHRDIwvSYQJGJlIPYkE7WrA=
+	t=1775634446; cv=none; b=lDNLEJTyM7fUSpQaLRUQhzPe1tM6jrtnrHmPUR2cxU5R8OIjIWpNBXhXphOvUbKFqx5LofITtf5YvY2psO1jT5gKuVZAaYnCn2lpuENE9nHBMoP44IdJgyrAQ5b2gariWXJbga6/aQQlQLZspz49IXu7B6ASylaCo3PEdIo/FpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775626007; c=relaxed/simple;
-	bh=XsU6WhozryYy7v1DY8CC3XtjtWyaqGZUOVMrTW8OyQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5eJcNcbcoEz1WwBhRExpDiZfbTaJ1ncH5WdVGFoUfCWLPP57c/RNRqKIDH9LjWdA7dDehkJwQq6aR3/h1jyhye5JjzZbuFj6HGAT4Pi/yBb4H8J98Dg+SfYcueTtFvoLQjynaF/Sj15XYBtb8lQVVdzZcQD/4Ir1gy/nhrQjT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mTg/MKx9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775634446; c=relaxed/simple;
+	bh=f1aGC2+c5jz12rmqttFu31vbeJclnJIJ3Fw26Vwh6Lw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SJN8qz5sIxorNCeWuVE8OiOCrUzPCF0PfUD1WoePQmqUKafHRsGKXEB/6m7Qxjyfv50qyBfoRZjrCXRn5eBfnmaUNuS175VY2SLxkOfGEgd8V7mj967oLtdg42CgXHCsHSQtjF3rYBCFJqTEQgM1Qtu/RsbTpHjxFldGdRHRiUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMEpzw/+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mTg/MKx9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DCAC19424;
-	Wed,  8 Apr 2026 05:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1775626007;
-	bh=XsU6WhozryYy7v1DY8CC3XtjtWyaqGZUOVMrTW8OyQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mTg/MKx9sMhGOnAl5gaB4xQZy2Aql9qi+PLwxiiGnC3APChcS4LGkMXS1WiQtgCSd
-	 F5MIzYAPk0AbNj11kGDjpGoejp9lyU0flAyKn3NvV2GTe7cAx8Q9DOMHV2RhiXInj6
-	 DkyI4lGAibFNgSHdtgeeLecAQWk09BCrLPKuoV2I=
-Date: Wed, 8 Apr 2026 07:26:45 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Xi Ruoyao <xry111@xry111.site>, loongarch@lists.linux.dev,
-	arnd@arndb.de, jiaxun.yang@flygoat.com,
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, stable <stable@kernel.org>
-Subject: Re: [PATCH] LoongArch: add spectre boundry for syscall dispatch table
-Message-ID: <2026040814-console-curvy-fd6f@gregkh>
-References: <2026032456-crinkle-washable-96ea@gregkh>
- <f59de81b411d1a48f9f0fa4f8c9c553a92076817.camel@xry111.site>
- <2026032541-rental-sizably-48bd@gregkh>
- <2026040259-landowner-chamomile-f581@gregkh>
- <60f0307f-0c44-4f14-0185-4f0a16cf3a9c@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMEpzw/+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86229C19424
+	for <loongarch@lists.linux.dev>; Wed,  8 Apr 2026 07:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775634446;
+	bh=f1aGC2+c5jz12rmqttFu31vbeJclnJIJ3Fw26Vwh6Lw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iMEpzw/+ZB+K3oWmTQjLRU3yNPtpj2PxCgVA6O7ccUnirVIePMoma94cUV3Ita8Ax
+	 sW9yD40silRGQ300bJ7t6z6Bxb3sLQ0odcpiLBhshewNl+Bx5go/u9aR0dFXlDZQ0O
+	 zsYQKfC2kjtVyFENnLuhWPcmEKHCQObxo2gQ/9ttXODU0TPj1KUEjIeh1/V44SCd5r
+	 gcKA9RjAEgliYdmKE9h2QlsXxPbD8mr49ZSyaN0ECJXsFODrMD6LiI8rqGXtXgb5mS
+	 CDhGgiHjoK7PToD/P24R9jT9OsDDLyp2ESoSvxAlN2PnQFczPu0AbkdWUeA2zv9VDR
+	 fpg2jShy5SoXQ==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-65c0891f4e9so5959267a12.1
+        for <loongarch@lists.linux.dev>; Wed, 08 Apr 2026 00:47:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUF8+zj0EWbdEXvfemqSkXVse9c5shEfqKAsxxLZxUo7rKB9Wr60S/MRJC2MHb9Xg/rqKRkV8EL8mY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwEc2kVSbGISC0AD+FFIZU2Ze9qRyd3sFnq+Mh6Pg4fA1tnoWRP
+	dkJwIp2ivOQ7xH5DG2xZNWhLNGJJsRnbk4TIZxZsJ5tUWVXZiGrqku2sGZNl+EVmjWA1O+/5rRp
+	ASeebxHZ/aCdkR6xeoQPkffhX6SuGM7s=
+X-Received: by 2002:a17:907:ea8:b0:b98:695:ec53 with SMTP id
+ a640c23a62f3a-b9c676881bemr1020033866b.18.1775634445108; Wed, 08 Apr 2026
+ 00:47:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <60f0307f-0c44-4f14-0185-4f0a16cf3a9c@loongson.cn>
+References: <20260330035832.2204720-1-maobibo@loongson.cn> <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
+ <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com> <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
+In-Reply-To: <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 8 Apr 2026 15:47:32 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
+X-Gm-Features: AQROBzA28K1m8zlIxxkJUyCejsYe9Z6_RBp9qxpvPmb7Ma_0xO7zqtxyHDgRyKg
+Message-ID: <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
+ FPU exception
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 08, 2026 at 09:17:07AM +0800, Bibo Mao wrote:
-> 
-> 
-> On 2026/4/2 下午10:36, Greg Kroah-Hartman wrote:
-> > On Wed, Mar 25, 2026 at 09:53:09AM +0100, Greg Kroah-Hartman wrote:
-> > > On Wed, Mar 25, 2026 at 11:26:29AM +0800, Xi Ruoyao wrote:
-> > > > On Tue, 2026-03-24 at 17:30 +0100, Greg Kroah-Hartman wrote:
-> > > > > The LoongArch syscall number is directly controlled by userspace, but
-> > > > > does not have a array_index_nospec() boundry to prevent access past
-> > > > > the
-> > > > > syscall function pointer tables.
-> > > > > 
-> > > > > Cc: Huacai Chen <chenhuacai@kernel.org>
-> > > > > Cc: WANG Xuerui <kernel@xen0n.name>
-> > > > > Assisted-by: gkh_clanker_2000
-> > > > > Cc: stable <stable@kernel.org>
-> > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > ---
-> > > > > My scripts caught this as I think LoongArch is vulnerable to the
-> > > > 
-> > > > There's no evidence.  The kernel currently report all LoongArch
-> > > > processors invulnerable to spectre V1 via cpuinfo.
-> > > 
-> > > Where is that?  In the sysfs files, or in the actual silicon testing?
-> > > 
-> > > > So NAK unless there's a reproducer of spectre V1 on LoongArch.  If so
-> > > > we'd also need to adjust the cpuinfo output.
-> > > 
-> > > I really thought this cpu was vulnerable to this, but if the companies
-> > > say it isn't, then great, but reports like this:
-> > > 	https://cc-sw.com/chinese-loongarch-architecture-evaluation-part-3-of-3/
-> > > say that the silicon is vulnerable.  So, which is it?
-> > 
-> > Any thoughts about this?
-> co-ask though it is hard to decide :(
+On Wed, Apr 8, 2026 at 9:04=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/4/7 =E4=B8=8B=E5=8D=888:41, Huacai Chen wrote:
+> > On Mon, Mar 30, 2026 at 6:00=E2=80=AFPM Huacai Chen <chenhuacai@kernel.=
+org> wrote:
+> >>
+> >> Hi, Bibo,
+> >>
+> >>
+> >> On Mon, Mar 30, 2026 at 11:58=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
+> wrote:
+> >>>
+> >>> With FPU save and restore flow, the cost is the same with different
+> >>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impac=
+tion.
+> >>>
+> >>> Here is to enable FPU with max VM supported type, for example if
+> >>> VM supports LASX instrction, enable FPU with LASX type even with FPU
+> >>> exeception. So it can avoid possible LSX/LASX exception in future.
+> >>>
+> >>> With context switch microbench which may touch FPU and LASX, there is=
+ 9%
+> >>> improvement when halt_poll_ns is disabled. The command is
+> >>> "./context --test=3Dpipe" and source code located at:
+> >>>    https://github.com/bibo-mao/context_switch/blob/main/context.c
+> >>>
+> >>> Original     Wih patch      improvement
+> >>> 75232        82440          9%
+> >>>
+> >>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>> ---
+> >>> v1 ... v2:
+> >>>    1. Enable FPU with max VM supported FPU type, rather than max used=
+ type.
+> >>>    2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
+> >>>    3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+> >>>    3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
+> >>>    4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_l=
+asx(),
+> >>>       directly enable LSX or LASX from FPU none state.
+> >>> ---
+> >>> Bibo Mao (6):
+> >>>    LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
+> >>>    LoongArch: KVM: Enable FPU with max VM supported FPU type
+> >>>    LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+> >> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
+> >> so I think Patch-3 should be squashed into Patch-1.
+> >>
+> >>>    LoongArch: KVM: Remove some middle FPU states
+> >>>    LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
+> >>>    LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
+> >> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX and
+> >> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, so
+> >> I think Patch-6 should be squashed into Patch-5, too.
+> > And could you please test the power consumption where there are many
+> > VMs that only use FPU rather than LSX/LASX? As far as I know, the
+> Hi Huacai,
+>
+> Thanks for reviewing this patch
+> Could you help me to test the power consumption with this patch?
+> > power consumption of LASX is significantly more than FPU, which is a
+> Could the describe the detail scenery wheree LASX instruction is
+> frequently used by application or LASX  EUEN enabled?
+The purpose is to evaluate power consumption before and after this series.
 
-Can't you all run the reproducers on your platform to determine this?
-There should be some basic ones around somewhere, this is a very old bug
-:)
+So we can run 10 VMs (suppose there are 4 cores), and there is a
+workload run in every VM, the workload only uses FPU, no LSX and LASX.
+Before this series, KVM only save/restore FPU context; after this
+series, KVM will save/restore LASX context.
 
-thanks,
+If the power consumptions are similar, then this series is perfect.
 
-greg k-h
+Huacai
+
+>
+> Regards
+> Bibo Mao
+> > little similar to AVX512 (Linus said it is a power virus).
+> >
+> > Huacai
+> >
+> >>
+> >>
+> >> Huacai
+> >>
+> >>>
+> >>>   arch/loongarch/include/asm/kvm_host.h |  6 +--
+> >>>   arch/loongarch/kvm/exit.c             | 21 +++-----
+> >>>   arch/loongarch/kvm/vcpu.c             | 78 ++++++++----------------=
+---
+> >>>   3 files changed, 30 insertions(+), 75 deletions(-)
+> >>>
+> >>>
+> >>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+> >>> --
+> >>> 2.39.3
+> >>>
+> >>>
+>
+>
