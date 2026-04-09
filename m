@@ -1,193 +1,164 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF2D3B6C07
-	for <loongarch@lists.linux.dev>; Wed,  8 Apr 2026 14:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F302FD1C2
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 01:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775657274; cv=none; b=Z7PerQG8t2n8deB0t5tFH7RQ55sv7Z51y0S7AZ5mY8GQ+ywTqXni8QaJYTtJcrDjVidpDqtew+m3jwUbMrq53yXhPKaLUCIpbajfjLIrNFKkZppgiZL2p+pqfViMf7MwXSeWlPW5aZoh0Hp3EKb6BAdw2FB/VYVYC7jxzElfzMQ=
+	t=1775698313; cv=none; b=uxMhXzEx9OsCRxk/DwWhWN6uXCzo48hgtso8sG4I5R9JhPFHxJ853FkRtoLt4PHkonnWINTantztdxKd0JICUNSAKmrmiVeL7J3Odnh2ihxaLDwiZZY+7fHnw9iB4B7evUxyhQWsXY4tSji0jFyGACHz3wul9cHmt+OxHQ3FPoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775657274; c=relaxed/simple;
-	bh=vifCC4U+ujhVWQuBmpKGQKVOnSnJtO7gU0fTZutv+Hk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lLRW7n1HQkTG2PCHu713HhKGTYUrClDgX/3Abw2Kw9aYO/VjMARMo6a0vwZC1U7/naqvMXWG7zn6HjDCszwE0YM6vKngkRL/izVj5175APL4LMxU4N8iffcuB41TL/gIR9+eIBUxm7501SUpNGBt3yUxv29DPEZ2R8FpnqWTgCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=chExnYNH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdGis38r; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=chExnYNH; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdGis38r; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="chExnYNH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdGis38r";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="chExnYNH";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdGis38r"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1A9F15BCC1;
-	Wed,  8 Apr 2026 14:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1775657271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xBsJJwq3aAo0fN1L2VfiJuBT66sNDAZYxUUPKQMoEU0=;
-	b=chExnYNHZVd6FlMm0KVTdGdxr1iOqTnYs0eOmqY/NDE+R7ASlx9be4QtcQm322Cx/L1lnF
-	FmjbE976ZWnbCqGsd6hxWjpTHM+4afD1EJdbuCeDWVUXEH+Dkrs832GrkcKjWInszBYj0d
-	6YfdjLuwRTRKUsAeKFrjNb+iBIrrPNU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1775657271;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xBsJJwq3aAo0fN1L2VfiJuBT66sNDAZYxUUPKQMoEU0=;
-	b=xdGis38rNXjq+3iIGU6GIiIqi/CK8kNi603q2wpt0k7FkCarq0ixd58TiSzXRlaXxA1qW7
-	TZK1Pug7lR8WK4Dw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1775657271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xBsJJwq3aAo0fN1L2VfiJuBT66sNDAZYxUUPKQMoEU0=;
-	b=chExnYNHZVd6FlMm0KVTdGdxr1iOqTnYs0eOmqY/NDE+R7ASlx9be4QtcQm322Cx/L1lnF
-	FmjbE976ZWnbCqGsd6hxWjpTHM+4afD1EJdbuCeDWVUXEH+Dkrs832GrkcKjWInszBYj0d
-	6YfdjLuwRTRKUsAeKFrjNb+iBIrrPNU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1775657271;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xBsJJwq3aAo0fN1L2VfiJuBT66sNDAZYxUUPKQMoEU0=;
-	b=xdGis38rNXjq+3iIGU6GIiIqi/CK8kNi603q2wpt0k7FkCarq0ixd58TiSzXRlaXxA1qW7
-	TZK1Pug7lR8WK4Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 80E424A0B3;
-	Wed,  8 Apr 2026 14:07:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Bj9EHjZh1mn1TQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Wed, 08 Apr 2026 14:07:50 +0000
-Message-ID: <5b08f041-b820-4c63-8e1b-b4348909bf0f@suse.de>
-Date: Wed, 8 Apr 2026 16:07:50 +0200
+	s=arc-20240116; t=1775698313; c=relaxed/simple;
+	bh=UgT2PBRqcyg8lzKcJVb70st1Pmbe2Vl/Rym9Mm4vEac=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ix1ipfR3wO6AU89pStWhYIlh/kjHOGy75RgAY84ZZCH1hxHKSDivxrr0gSa7AG8tVHeTxWl7+ZLpBdHT9K/sHPSq5kQ2Jp8rvc2ukRMjPRu0DoiPPr6RdkaIg46Ud2tZhKfvbnWLdCD9+K9OpzKTNWHb/Kn9CLecfM8DAWMPBcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8Axz6t8AddpM2QjAA--.39318S3;
+	Thu, 09 Apr 2026 09:31:40 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by front1 (Coremail) with SMTP id qMiowJDxD8N3AddpAAxpAA--.3801S3;
+	Thu, 09 Apr 2026 09:31:38 +0800 (CST)
+Subject: Re: [PATCH v9 0/2] LoongArch: KVM: Add DMSINTC support irqchip in
+ kernel
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kernel@xen0n.name, linux-kernel@vger.kernel.org, lixianglai@loongson.cn
+References: <20260402124237.4174550-1-gaosong@loongson.cn>
+ <CAAhV-H7K8ayLGFMhPwp8uqr3JHdpL1dWOvo2zuVj_3fB2CWPeA@mail.gmail.com>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <0f0f10e6-11bf-9052-b541-4061d46fa046@loongson.cn>
+Date: Thu, 9 Apr 2026 09:32:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] firmware: efi: Never declare sysfb_primary_display on
- x86
-To: Ard Biesheuvel <ardb@kernel.org>,
- Javier Martinez Canillas <javierm@redhat.com>, Arnd Bergmann
- <arnd@arndb.de>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- kys@microsoft.com, haiyangz@microsoft.com, Wei Liu <wei.liu@kernel.org>,
- decui@microsoft.com, Long Li <longli@microsoft.com>,
- Helge Deller <deller@gmx.de>
-Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-fbdev@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20260402092305.208728-1-tzimmermann@suse.de>
- <20260402092305.208728-3-tzimmermann@suse.de>
- <d0624a61-b96b-4b2f-89c2-029e8671039d@app.fastmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <d0624a61-b96b-4b2f-89c2-029e8671039d@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAAhV-H7K8ayLGFMhPwp8uqr3JHdpL1dWOvo2zuVj_3fB2CWPeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FREEMAIL_TO(0.00)[kernel.org,redhat.com,arndb.de,linaro.org,xen0n.name,linux.intel.com,gmail.com,ffwll.ch,microsoft.com,gmx.de];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo,suse.com:url]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxD8N3AddpAAxpAA--.3801S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXFy5WF17Ary3Ary8WFWfJFc_yoW5Cr4xpa
+	y3u3Z0kr48Gr13ArsI93Wqgr45Arn3Jr1IgasIga47CrsxZr18Xrn5Gr9FyF9rWayrGF1I
+	qw1fW34Y93WUJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUU
+	UUU==
 
-Hi
+Hi, Huacai.
 
-Am 08.04.26 um 15:45 schrieb Ard Biesheuvel:
-> Hi Thomas,
+在 2026/4/7 下午8:34, Huacai Chen 写道:
+> Hi, Song,
 >
-> On Thu, 2 Apr 2026, at 11:09, Thomas Zimmermann wrote:
->> The x86 architecture comes with its own instance of the global
->> state variable sysfb_primary_display. Never declare it in the EFI
->> subsystem. Fix the test for CONFIG_FIRMWARE_EDID accordingly.
+> On Thu, Apr 2, 2026 at 9:08 PM Song Gao <gaosong@loongson.cn> wrote:
+>> Hi,
 >>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Fixes: e65ca1646311 ("efi: export sysfb_primary_display for EDID")
->> Cc: kernel test robot <lkp@intel.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Thomas Zimmermann <tzimmermann@suse.de>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->> Cc: linux-efi@vger.kernel.org
->> ---
->>   drivers/firmware/efi/efi-init.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> This series  implements the DMSINTC in-kernel irqchip device,
+>> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI interrupts
+>> to the target vCPU.
+>> applied this series.  use netperf test.
+>> VM with one CPU and start netserver, host run netperf.
+>> disable dmsintc
+>> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
 >>
-> Should this be sent out as a fix?
+>> 212992 212992 1        1       36000.00   27107.36
+>>
+>> enable dmsintc
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
+>>
+>> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
+>>
+>> v9:
+>>   *Correct the incorrect parameter type and remove the function prefix;
+>>   *Fix a boundary value check.
+> It seems your V9 is changed from V7 rather than V8, why?
+>
+> Huacai
 
-Yes, please.
+I'm sorry, it was my mistake—V7 and V8 look so similar.
+I'll correct is as soon as possible.
 
+Thanks.
+Song Gao
 
-
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
-
+>> v8:
+>>    *Move dmsintc_inject_irq(),dmsintc_deliver_msi_to_vcpu()and
+>> dmsintc_set_msi_irq to dmsintc.c.
+>>    *Rebase.
+>>
+>> v7:
+>>    *Rebase;
+>>    *Fix a typo error;
+>>    *Drop an extra space;
+>>    *Move some code from patch2 to patch1.
+>>    *Rename loongarch_dmsintc_inject_irq() to dmsintc_inject_irq() and move
+>> it to interrupt.c;
+>>    *Rename kvm_loongarch_deliver_msi_to_vcpu() to
+>> dmsintc_deliver_msi_to_vcpu() and move it to irqfd.c;
+>>    *Drop loongarch_set_msi() and dispatch the dmsintc/eiointc
+>> paths in pch_msi_set_irq().
+>>
+>> v6:
+>>    Fix kvm_device leak in kvm_dmsintc_destroy().
+>>
+>> v5:
+>>    Combine patch2 and patch3
+>>    Add check msgint feature when register DMSINT device.
+>>
+>> V4: Rebase and R-b;
+>>     replace DINTC to DMSINTC.
+>>
+>> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
+>>
+>> V2:
+>> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
+>>
+>> Thanks.
+>> Song Gao
+>>
+>>
+>> Song Gao (2):
+>>    LoongArch: KVM: Add DMSINTC device support
+>>    LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
+>>
+>>   arch/loongarch/include/asm/kvm_dmsintc.h |  23 +++++
+>>   arch/loongarch/include/asm/kvm_host.h    |   3 +
+>>   arch/loongarch/include/asm/kvm_pch_pic.h |   4 +-
+>>   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
+>>   arch/loongarch/kvm/Makefile              |   1 +
+>>   arch/loongarch/kvm/intc/dmsintc.c        | 117 +++++++++++++++++++++++
+>>   arch/loongarch/kvm/intc/pch_pic.c        |  15 ++-
+>>   arch/loongarch/kvm/interrupt.c           |  37 +++++++
+>>   arch/loongarch/kvm/irqfd.c               |  48 ++++++++--
+>>   arch/loongarch/kvm/main.c                |   6 ++
+>>   include/uapi/linux/kvm.h                 |   2 +
+>>   11 files changed, 251 insertions(+), 9 deletions(-)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
+>>   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+>>
+>> --
+>> 2.39.3
+>>
 
