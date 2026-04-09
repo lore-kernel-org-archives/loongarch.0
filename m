@@ -1,50 +1,36 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4E837996B
-	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA13C3803CF
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775737213; cv=none; b=IaeyVpjRuLp+ANwsuXZMQ0CAETr4EAxCq+gYaWSdj5Bhay/eEnykiY2jsfLvi9jOU3WHlWxHXfONTOWS2wX47552T1JQ8gPUwRhcf8JCtL8ntP7yTTpnC10Pe8oxIShXJd55IE/Tm/Q0gJlf/b7CisvxlhQoQ+si5SHDkbaA/Dg=
+	t=1775737456; cv=none; b=eqoGWnaX+SydJkpRaSIanC2xtRCdF79RRCtPN5sw2jI9k3vVYM4wX8662ZzoCZuK0Io48i0rK1WRj80X7q39J8SHYe2axPAsZBMZoY3MRl97NZ82xsu7Md51ljzwG0Eri5gW9LPyHyW6rnRMvc1y5tLujLGxHDSQ3ojD25Kx97I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775737213; c=relaxed/simple;
-	bh=/UHkqcK+CDc6x5qAm5VSMvQGRc3kdJ2fymBfyxlD4NU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=etU2cpZhVdfo1kUCcrwOlj5UGt69YlpTk1Exb8seAxMZks2U6j6b6bjPoRP36sq4DkhuhqwdexbB7Utn2H3P9PYs8wF3xNoJr2paUDxo490TRTx3XMJriNdoeg8JMTlG3VP+Bg3gN/FxF+Tec4ZFKr2kmdAhV3fPsRkbREHA+7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ltO9OhuU; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ltO9OhuU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1775737203;
-	bh=7HPLgZaVAXKWBpXgEoNUTsMht1vFm0t3+42DjDwUhqU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ltO9OhuURiAWfHCvCRRfv1QX09vcM+QFFphHnPJoA/EIKKHFqQiWcGWzR5xI5nsbo
-	 riS9+nYESDwaJW96JugN6gFb7qM5jlL2tIMh0gDFj+B0RcnI3RpFoiAng70QL2UxjS
-	 UGmKkRa5Zytp7pfGH3hJeoVoVDyMzpSsi2uB+ItQ=
-Received: from stargazer (unknown [IPv6:2409:8a4c:e10:9f70:826e:a0d5:6bcd:5ab7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id DF71D65992;
-	Thu,  9 Apr 2026 08:19:59 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	loongarch@lists.linux.dev,
-	Zixing Liu <liushuyu@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Xi Ruoyao <xry111@xry111.site>,
-	Arnd Bergmann <arnd@arndb.de>,
+	s=arc-20240116; t=1775737456; c=relaxed/simple;
+	bh=HNKw14P66FJvMNLzibCqRaymfR78xd/McgonVN6rCLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gzl047QtD8DUccdi6oo4upTLNlLn5XQnjss7xy2UABAEtbiQqYEORTnn0trQ3YslXTT48sijO5gKq33++4GPLtn4ozFooU990e+6HfSQxdB56sZIjhFuIK1yYwrVbRd4RhBgcErYr0I9yBeqBx+e0ygh2t1OOj4yQSmR8lEdsFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.17])
+	by gateway (Coremail) with SMTP id _____8BxcfBnmtdp_YsjAA--.33403S3;
+	Thu, 09 Apr 2026 20:24:07 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.17])
+	by front1 (Coremail) with SMTP id qMiowJBxxuJdmtdpXX9pAA--.46632S2;
+	Thu, 09 Apr 2026 20:24:03 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	George Guo <dongtai.guo@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: detect and disable sc.q if erratic
-Date: Thu,  9 Apr 2026 20:19:34 +0800
-Message-ID: <20260409121936.871418-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.53.0
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Show CPU vulnerabilites correctly
+Date: Thu,  9 Apr 2026 20:23:48 +0800
+Message-ID: <20260409122348.2438400-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -52,82 +38,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxxuJdmtdpXX9pAA--.46632S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKryrZr4DWry7Ary3Cw13ZFc_yoWkCFb_u3
+	ZIqrW5Gr4xA3Wqq3Z0vrsYqrnIyw48KF9Y9r92yw47Aw17J34UXr4S9w15Arn3KF10grZx
+	J34vqa1qvF13tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-We've observed that, on some Loongson 2K3000/3B6000M systems with earlier
-firmware revisions, the sc.q instruction may write incorrect data into
-the upper half of the written 128-bit datum.
+Most LoongArch processors are vulnerable to Spectre-V1 Proof-of-Concept
+(PoC). And the generic mechanism, __user pointer sanitization, can be
+used as a mitigation. This means to use array_index_nospec() to prevent
+out of boundry access in syscall and other critical paths.
 
-It seems upgrading the firmware (for example, the 202602 release from
-Loongson [1]) will resolve the issue. But since not all systems may be
-running the most up-to-date firmware, based on firmware update avail-
-ability and the environment in which they are running in.
+Implement the arch-specific cpu_show_spectre_v1() to show CPU Spectre-V1
+vulnerabilites correctly.
 
-To help with system compatibility and ensure correct behavior, check if
-sc.q behaves erratically and disable if so.
-
-Link: https://github.com/loongson/Firmware/pull/156 [1]
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+Cc: stable@vger.kernel.org
+Link: https://cc-sw.com/chinese-loongarch-architecture-evaluation-part-3-of-3/
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/cpu-probe.c | 39 ++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/cpu-probe.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 657bbae6c1c7..5fcf2672172f 100644
+index 8654a1eff834..c8947c798195 100644
 --- a/arch/loongarch/kernel/cpu-probe.c
 +++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -132,6 +132,43 @@ static void set_isa(struct cpuinfo_loongarch *c, unsigned int isa)
- 	}
- }
+@@ -402,3 +402,9 @@ void cpu_probe(void)
  
-+/*
-+ * Some LoongArch has broken sc.q which incorrectly handles the upper word
-+ * when the lower word is zero. Newer firmware versions (such as the 202602
-+ * release from Loongson) seem to contain a workaround for this issue.
-+ *
-+ * Disable sc.q if erratic to ensure reliability and compatibility.
-+ */
-+static bool sc_q_is_sane(void)
+ 	cpu_report();
+ }
++
++ssize_t cpu_show_spectre_v1(struct device *dev,
++			    struct device_attribute *attr, char *buf)
 +{
-+	struct {
-+		long word[2];
-+	} __aligned(16) mem;
-+	register long tmp asm("t0");
-+	register long one asm("t1") = 1;
-+	register long *ptr asm("t2") = &mem.word[0];
-+
-+	/*
-+	 * The sc.q instruction is hard coded with .word so the HWCAP bit
-+	 * exported to the userspace won't depend on the assembler version
-+	 * used to build the kernel.
-+	 */
-+	asm (
-+		"1:ll.d\t$r0, %[ptr], 0\n\t"
-+		"move\t%[tmp], $r0\n\t"
-+		".word\t0x385735cc\n\t" /* sc.q %[tmp], %[one], %[ptr]*/
-+		"beqz\t%[tmp], 1b"
-+		: [tmp] "=&r" (tmp), "=m" (mem)
-+		: [ptr] "r" (ptr), [one] "r" (one));
-+
-+	if (mem.word[1] != 1) {
-+		pr_warn_once("Warning: sc.q is erratic on this platform, disabling for both kernel and HWCAP. Please try a firmware update.");
-+		return false;
-+	}
-+
-+	return true;
++	return sysfs_emit(buf, "Mitigation: __user pointer sanitization\n");
 +}
-+
- static void cpu_probe_common(struct cpuinfo_loongarch *c)
- {
- 	unsigned int config;
-@@ -177,7 +214,7 @@ static void cpu_probe_common(struct cpuinfo_loongarch *c)
- 		c->options |= LOONGARCH_CPU_LAM;
- 		elf_hwcap |= HWCAP_LOONGARCH_LAM;
- 	}
--	if (config & CPUCFG2_SCQ) {
-+	if ((config & CPUCFG2_SCQ) && sc_q_is_sane()) {
- 		c->options |= LOONGARCH_CPU_SCQ;
- 		elf_hwcap |= HWCAP_LOONGARCH_SCQ;
- 	}
 -- 
-2.53.0
+2.52.0
 
