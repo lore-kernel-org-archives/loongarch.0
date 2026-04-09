@@ -1,91 +1,93 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA13C3803CF
-	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB17437FF57
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775737456; cv=none; b=eqoGWnaX+SydJkpRaSIanC2xtRCdF79RRCtPN5sw2jI9k3vVYM4wX8662ZzoCZuK0Io48i0rK1WRj80X7q39J8SHYe2axPAsZBMZoY3MRl97NZ82xsu7Md51ljzwG0Eri5gW9LPyHyW6rnRMvc1y5tLujLGxHDSQ3ojD25Kx97I=
+	t=1775738019; cv=none; b=KYmZrWYdOQP14McxyLl3B7ahR0uQc527yk3u1Fb8NoFyWsWbwpo9QC4Dc6GxgDs86oZ1CJqR0sY3b6397/+CvFykN/mX/yX7AHx0xWwmPrMqDJWFxZUYTMo84dMufkuMKwINg8ATzkJ0oJ25js+HElDLidJcu3l1qjbkyx0OoSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775737456; c=relaxed/simple;
-	bh=HNKw14P66FJvMNLzibCqRaymfR78xd/McgonVN6rCLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gzl047QtD8DUccdi6oo4upTLNlLn5XQnjss7xy2UABAEtbiQqYEORTnn0trQ3YslXTT48sijO5gKq33++4GPLtn4ozFooU990e+6HfSQxdB56sZIjhFuIK1yYwrVbRd4RhBgcErYr0I9yBeqBx+e0ygh2t1OOj4yQSmR8lEdsFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.17])
-	by gateway (Coremail) with SMTP id _____8BxcfBnmtdp_YsjAA--.33403S3;
-	Thu, 09 Apr 2026 20:24:07 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.17])
-	by front1 (Coremail) with SMTP id qMiowJBxxuJdmtdpXX9pAA--.46632S2;
-	Thu, 09 Apr 2026 20:24:03 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Show CPU vulnerabilites correctly
-Date: Thu,  9 Apr 2026 20:23:48 +0800
-Message-ID: <20260409122348.2438400-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1775738019; c=relaxed/simple;
+	bh=dZhY8zCfUZtD/49b1gW38xFYGfUfE4+bIqm7BrGAsjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PPvqqOs9HsliBBUiDDiY2inMUB+LsesCDJesbO3s2cPdR60CxdXMITK8bRSUdKwwtEwOSO5ueydR5vC3RPeF5guEgMH6AgbU+KkUgZyp5FuHbmZAcGo8zNVtIq5FQL4+Xbv3+yEiZMcdknxFp6ZfzNPduvMakUfP+zf/GulhzWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ri1NgnNp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ri1NgnNp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B789C4CEF7
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775738019;
+	bh=dZhY8zCfUZtD/49b1gW38xFYGfUfE4+bIqm7BrGAsjw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ri1NgnNp8/YcYDHcjCc6kbv7HJJp9tQvqjy+PysJqgTkBjuY0izf8nSnWaL0T2mn+
+	 NtdbBGtAlFhu+MgCo0WWGMWzEySPatuJqWs3V/QCn4/NL8CmBOKJpdVzQbBBBIlM+j
+	 z5vrkYQLAr2hCB1QV+xLdzB75dZ/EglOHuWIwODBeYleH9bUV53ioiAY6D3AwnQgxv
+	 g3LeiwsHjtFU6UK/eQ5V5/kN0QpXj46dglVAE80UOGaSXUf9wdxB8LZ6LplutnWeY/
+	 9WGg3kc1D79BRU05386OLQSu5mjzCmKb26aOuM7tCEzmKFaNi1971bMm6hvyF/W7Jy
+	 d++chM0/wz/3g==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b97f9587e6eso118497766b.3
+        for <loongarch@lists.linux.dev>; Thu, 09 Apr 2026 05:33:39 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxho/jpY/8nTcVh1LL5JOkbSnwLUlb8cEL5xKtXx3l1lcgnR3f5
+	uFPZRnClT2tmgpVcIYxHHmoV0YUtzK0YoisVOmoizbhQ0cDeo1axHY/xF/XB40KCdPWE9n3s2uy
+	ZSOV8/Np3wBzQ9vsSAAXqu9QSsh6iV5c=
+X-Received: by 2002:a17:907:93c7:b0:b9c:1a5:acb4 with SMTP id
+ a640c23a62f3a-b9c67b46e89mr945787666b.45.1775738018031; Thu, 09 Apr 2026
+ 05:33:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxxuJdmtdpXX9pAA--.46632S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKryrZr4DWry7Ary3Cw13ZFc_yoWkCFb_u3
-	ZIqrW5Gr4xA3Wqq3Z0vrsYqrnIyw48KF9Y9r92yw47Aw17J34UXr4S9w15Arn3KF10grZx
-	J34vqa1qvF13tosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+References: <20260407063350.12479-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20260407063350.12479-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 9 Apr 2026 20:33:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5GkEgec+aO84x+juh149sy2f-=8SA6cTrTwUtpsgP8qA@mail.gmail.com>
+X-Gm-Features: AQROBzAOR3DmHQr88ieQHmRNzRDDyKl9m3CobhDQegryXIWQE3Bv9BaRro7e8f8
+Message-ID: <CAAhV-H5GkEgec+aO84x+juh149sy2f-=8SA6cTrTwUtpsgP8qA@mail.gmail.com>
+Subject: Re: [PATCH v1] LoongArch: Handle CONFIG_32BIT in syscall_get_arch()
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Most LoongArch processors are vulnerable to Spectre-V1 Proof-of-Concept
-(PoC). And the generic mechanism, __user pointer sanitization, can be
-used as a mitigation. This means to use array_index_nospec() to prevent
-out of boundry access in syscall and other critical paths.
+Applied, thanks.
 
-Implement the arch-specific cpu_show_spectre_v1() to show CPU Spectre-V1
-vulnerabilites correctly.
+Huacai
 
-Cc: stable@vger.kernel.org
-Link: https://cc-sw.com/chinese-loongarch-architecture-evaluation-part-3-of-3/
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/cpu-probe.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-index 8654a1eff834..c8947c798195 100644
---- a/arch/loongarch/kernel/cpu-probe.c
-+++ b/arch/loongarch/kernel/cpu-probe.c
-@@ -402,3 +402,9 @@ void cpu_probe(void)
- 
- 	cpu_report();
- }
-+
-+ssize_t cpu_show_spectre_v1(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "Mitigation: __user pointer sanitization\n");
-+}
--- 
-2.52.0
-
+On Tue, Apr 7, 2026 at 2:33=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
+ wrote:
+>
+> If CONFIG_32BIT is set, it should return AUDIT_ARCH_LOONGARCH32 instead o=
+f
+> AUDIT_ARCH_LOONGARCH64 in syscall_get_arch().
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/syscall.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/loongarch/include/asm/syscall.h b/arch/loongarch/includ=
+e/asm/syscall.h
+> index 81d2733f7b94..8b5f3a1598af 100644
+> --- a/arch/loongarch/include/asm/syscall.h
+> +++ b/arch/loongarch/include/asm/syscall.h
+> @@ -78,7 +78,11 @@ static inline void syscall_set_arguments(struct task_s=
+truct *task,
+>
+>  static inline int syscall_get_arch(struct task_struct *task)
+>  {
+> +#ifdef CONFIG_64BIT
+>         return AUDIT_ARCH_LOONGARCH64;
+> +#else
+> +       return AUDIT_ARCH_LOONGARCH32;
+> +#endif
+>  }
+>
+>  static inline bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs)
+> --
+> 2.42.0
+>
+>
