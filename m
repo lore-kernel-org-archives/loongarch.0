@@ -1,162 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6289023536B
-	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775738365; cv=none; b=MFQN8RqcbPpGz+kIAGtqnwksohT+wjB2Ip8YSwJQDmU3b/dWKLXKNU3CFCEJjyhyYzev8oV1NsVMOnwc9vvtZY4bOxtyo+RkoiI4GjvQrWL0ycGtj0mP5PD0L+rpEQipPxVhQJ2Ji/S2SZ7SmGdCLFumvIyTeRRvrixgB5Z3zZA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775738365; c=relaxed/simple;
-	bh=UwUhPjfmMZI9iLFHnFNzoObxJb+TzTAtGkD9V574OcI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f6XeZ+ObWhsFYBL/3wr+mbDFf/OhlUAw2aCv/xm6e/WwuKSy4E3apW/NPaukDElWlSmKQ+/IkmG/NRqPEQ+rljaoszk890EXOgdfapOWFdfUt6LbGA0ZpmICbmzND/BrMhIrKVUilxDiyN3b37y35CwzKNZb/jU8MQgAlTr5+M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7HN2ea1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B2A348453
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 15:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775748612; cv=pass; b=WKXJB5Az2GDGODex4Ur4mEVDfCQi8sF7DARQdeiyKGOUAf6s1/uRnHirLhRFzcEjYMleAxMwlyTkALXXTo2cf7ffzkc7n+CmbUle05mu5rxafLS3J0sX+1DxL+WRgY6L+v4+22U7mXxttyxD+JijJzKuW69GGaxEx4eVRJ7So8k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775748612; c=relaxed/simple;
+	bh=wKginzGFYQPFTtlx1CLpJLs55vMmg7QEbB/XjbKRUYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHslU2RxZ/qvN6y4aIRbSUF4mQimob6T5ZRbhfaXXjyjC8LLFkuf4+laGBC+TvIKVuCkZ48nhQyH3rJSXPKda+enby3gfQcolo9jPRf3dnmh9e8kufYJ3Ux9Hk7Mno0Ex8ufCsWumBIHKcei/e/wCDYXhnEY0pWah1fXLoFg55E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=JWm8pXqT; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7HN2ea1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F7EDC4CEF7
-	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 12:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775738365;
-	bh=UwUhPjfmMZI9iLFHnFNzoObxJb+TzTAtGkD9V574OcI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l7HN2ea1MLuNdXDAht+TXgBfL7JSSUQEmfcGOnX8gRVN7H2Rh+jQEYfNYJ57f87ya
-	 q6jFodHCNuQ1lF5QHCvQHkQaGFs1MBzcjvUkKuYk7zPTa2huB208s3x6PH6C0qHfMK
-	 UtMqD2wkpTZ1Vx84FkQhLB/sinFahrhJ8P310DCOwAZBbgFjKU3nA3WVxG26cvVR9n
-	 NBXFHfxA+VhNBvihiGKGRuiccUAmG1zF+8y3OUTmueoKYao823beba9it8qRJxY1iB
-	 llJ2ogWlHc4FoYrRPPXMshQGEx9scdSKrLMf88WEQ9kmYnXBzsSLSErZaeXaOzvJQB
-	 9RAr6BNUjuB3w==
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b9c280322e0so98117166b.0
-        for <loongarch@lists.linux.dev>; Thu, 09 Apr 2026 05:39:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU3Pp47aOeHEXWombw/92Ogc1xaN4J0AiPYSwsv1/O37EqN3pVCuhc5bZdZIILI2Oau+rpI11iqnK8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwNtHmcSwtztwS/LPh8d9qpQE3VF/FQjbJSeMMTKVon7kjE8yZL
-	pfi8OxLoyAC9J09m50dfAoBo8OeLuaQoioshgvjRh6J+5e9VrGBHZ87WO/mB+rMqXD8R8lhBtxG
-	qZs216o9sDEhM4cBS2vOlXeRk5IYCTq4=
-X-Received: by 2002:a17:907:9496:b0:b9c:cdd7:c8a8 with SMTP id
- a640c23a62f3a-b9ccdd7c8b1mr830640066b.48.1775738363718; Thu, 09 Apr 2026
- 05:39:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="JWm8pXqT"
+ARC-Seal: i=1; a=rsa-sha256; t=1775748597; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KvYYKnZ4sWid9eJd6a4NadjFH2Yers/pfsaDopCmFWcoGi6m864hqPIMjCJBb0F+QDu6NlrqDKrhtXGQyeBYRbWr2XyYk0f2/KnwhKPjbLE6BfdTZt8cHC3XrKBn5k2HAZzf7dv/IYHiEQ6i0Dl+jFw7EuURShwWfGEQFbvneC4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1775748597; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XCya6/6p3ziVwMnzXoPmALEmoD5fx0FpV857lpJXWNs=; 
+	b=bozhboJIxIHkg35R1iNwS6wjvgAMqwHYow3vDKGjL7qHhvNW6LFWxnTKPKhfkK9sF5R5r+MO4EryTtCDTacrF7S+3DPgbZs2ELUwBaV0tspRhkrZ8eMl2xyxJ76xb2LVCfrSsviNEvkhSNFp6I5EMD0cDwfBLiCyj1a1287jnyk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775748597;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:Message-Id:Reply-To;
+	bh=XCya6/6p3ziVwMnzXoPmALEmoD5fx0FpV857lpJXWNs=;
+	b=JWm8pXqTnBaB57137gws6Fr3UOvlD+NbKU6bWzwpad5lAe/5HYaj8cNTfH2qCuVM
+	SfUSGUglFXECKhZgfgbB2256R5VgxaRCrfmJcI3TyhqJOOLDSEofni0yeARI02adMNr
+	MYLMlYU76/XiCbpA81NvaKv3dOFj9vkkF2w/Xp4c=
+Received: by mx.zohomail.com with SMTPS id 1775748595549628.0734936657127;
+	Thu, 9 Apr 2026 08:29:55 -0700 (PDT)
+Date: Thu, 9 Apr 2026 15:29:39 +0000
+From: Yao Zi <me@ziyao.cc>
+To: Hongliang Wang <wanghongliang@loongson.cn>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+Message-ID: <adfF4y8_GhtExZMf@pie>
+References: <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+ <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
+ <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
+ <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
+ <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
+ <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
+ <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
+ <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
+ <a08ac3f9-a770-df48-a95b-4b07cd2c0d58@loongson.cn>
+ <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260409024215.136932-1-gaosong@loongson.cn>
-In-Reply-To: <20260409024215.136932-1-gaosong@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 9 Apr 2026 20:39:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7JcTV9aBChaYnR4irFt8O3C_9cOu_q4Krc6Q1c7Xwquw@mail.gmail.com>
-X-Gm-Features: AQROBzDTnYABuAC0gEs8s3rtk0L7CCCibPKg-MVoYAIBuFH7Xuoc13TO2pNT7Bk
-Message-ID: <CAAhV-H7JcTV9aBChaYnR4irFt8O3C_9cOu_q4Krc6Q1c7Xwquw@mail.gmail.com>
-Subject: Re: [PATCH v10 0/2] LoongArch: KVM: Add DMSINTC support irqchip in kernel
-To: Song Gao <gaosong@loongson.cn>
-Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kernel@xen0n.name, linux-kernel@vger.kernel.org, lixianglai@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn>
+X-ZohoMailClient: External
 
-Applied with small modifications, thanks.
+On Thu, Apr 09, 2026 at 08:03:47PM +0800, Hongliang Wang wrote:
+> Hi, Krzysztof
+> 
+> On 2026/3/31 下午3:11, Hongliang Wang wrote:
+> > 
+> > On 2026/3/30 下午3:23, Krzysztof Kozlowski wrote:
+> > > On 30/03/2026 09:18, Hongliang Wang wrote:
+> > > > On 2026/3/27 下午2:39, Krzysztof Kozlowski wrote:
+> > > > > On 27/03/2026 04:09, Hongliang Wang wrote:
+> > > > > > The initial idea was that this patch could be used for
+> > > > > > both ACPI and DTS.
+> > > > > > > > > The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
+> > > > > > > > > platform, parse
+> > > > > > > > > the same parameters regardless of dts or
+> > > > > > > > > acpi parameter passing, So
+> > > > > > > > > clock-input
+> > > > > > > > > and clock-div attributes are defined to
+> > > > > > > > > describe input clock of i2c
+> > > > > > > > > controller and
+> > > > > > > > > divisor of input clock. It can be used on
+> > > > > > > > > both 2K and 3A+7A platform.
+> > > > > > > > And you cannot use them in DTS.
+> > > > > > OK
+> > > > > > > I need to keep guessing what you want to achieve,
+> > > > > > > because neither your
+> > > > > > > message nor commit text was explicit
+> > > > > > What I want to achieve is to describe the input clock
+> > > > > > and divisor of I2C
+> > > > > > controller
+> > > > > Input clocks are defined as clock inputs obviously in DT, not as
+> > > > > integers. Bindings need to describe the hardware, so start with that.
+> > > > I can describe the hardware in loongson,ls2x-i2c.yaml, and I
+> > > > would like to
+> > > > confirm with you what final implementation plan you agree to? clock
+> > > > framework
+> > > > or custom clock-input an clock-div attributes? if clock framework, how
+> > > > can it
+> > > > also be used for ACPI?
+> > > And you ask DT maintainer for that? It's not relevant. You sent DT
+> > > bindings patch, so this patch must be correct and we discuss this patch
+> > > here.
+> > I don't. My idea is that if the clock input attribute can't be used for
+> > both
+> > dts and acpi, then clock framework will be used for dts and new define
+> > attribute
+> > will be used for acpi. I will first implement the hardware description
+> > and clock
+> > framework in Bindings.
+> > > Best regards,
+> > > Krzysztof
+> > 
+> > Best regards,
+> > Hongliang Wang
+> > 
+> 
+> I have a question, the input clock of i2c controller can be described by
+> "clocks",
+> but there is no existing attribute can describe the divisor of the input
+> clock,
 
-Now all KVM patches for 7.1 are applied here:
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/log/?h=3Dloongarch-kvm
+From the description of 7A1000's user manual (section 2.3
+"时钟功能描述"), it seems the divider isn't part of the I2C controller,
+but instead is an on-chip divider with fixed 1/2 factor, feeding both
+"MISC" block (including I2C) and SPI.
 
-Please ensure that everything works well.
+> Can I define a new attribute named "clock-div" to describe it in DT
+> bindings?
+> or do you have any standard solutions for the divisor problem? Thank you.
 
+If these devicetree-based Loongson platforms follow a similar pattern as
+the bridge chip, then the divisor shouldn't be described in the I2C
+controller node. You may want to include a "fixed-factor-clock" node to
+match the hardware.
 
-Huacai
+> Best regards,
+> Hongliang Wang
+> 
+> 
+> 
 
-On Thu, Apr 9, 2026 at 11:08=E2=80=AFAM Song Gao <gaosong@loongson.cn> wrot=
-e:
->
-> Hi,
->
-> This series  implements the DMSINTC in-kernel irqchip device,
-> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI inter=
-rupts
-> to the target vCPU.
-> applied this series.  use netperf test.
-> VM with one CPU and start netserver, host run netperf.
-> disable dmsintc
-> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
-> Local /Remote
-> Socket Size   Request  Resp.   Elapsed  Trans.
-> Send   Recv   Size     Size    Time     Rate
-> bytes  Bytes  bytes    bytes   secs.    per sec
->
-> 212992 212992 1        1       36000.00   27107.36
->
-> enable dmsintc
-> Local /Remote
-> Socket Size   Request  Resp.   Elapsed  Trans.
-> Send   Recv   Size     Size    Time     Rate
-> bytes  Bytes  bytes    bytes   secs.    per sec
->
-> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
->
-> v10:
->   *Changed from v8;
->   *Rebase.
->
-> v9:
->  *Correct the incorrect parameter type and remove the function prefix;
->  *Fix a boundary value check.
->
-> v8:
->   *Move dmsintc_inject_irq(),dmsintc_deliver_msi_to_vcpu()and
-> dmsintc_set_msi_irq to dmsintc.c.
->   *Rebase.
->
-> v7:
->   *Rebase;
->   *Fix a typo error;
->   *Drop an extra space;
->   *Move some code from patch2 to patch1.
->   *Rename loongarch_dmsintc_inject_irq() to dmsintc_inject_irq() and move
-> it to interrupt.c;
->   *Rename kvm_loongarch_deliver_msi_to_vcpu() to
-> dmsintc_deliver_msi_to_vcpu() and move it to irqfd.c;
->   *Drop loongarch_set_msi() and dispatch the dmsintc/eiointc
-> paths in pch_msi_set_irq().
->
-> v6:
->   Fix kvm_device leak in kvm_dmsintc_destroy().
->
-> v5:
->   Combine patch2 and patch3
->   Add check msgint feature when register DMSINT device.
->
-> V4: Rebase and R-b;
->    replace DINTC to DMSINTC.
->
-> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
->
-> V2:
-> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
->
-> Thanks.
-> Song Gao
->
->
-> Song Gao (2):
->   LoongArch: KVM: Add DMSINTC device support
->   LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
->
->  arch/loongarch/include/asm/kvm_dmsintc.h |  26 ++++
->  arch/loongarch/include/asm/kvm_host.h    |   3 +
->  arch/loongarch/include/asm/kvm_pch_pic.h |   4 +-
->  arch/loongarch/include/uapi/asm/kvm.h    |   4 +
->  arch/loongarch/kvm/Makefile              |   1 +
->  arch/loongarch/kvm/intc/dmsintc.c        | 190 +++++++++++++++++++++++
->  arch/loongarch/kvm/intc/pch_pic.c        |  15 +-
->  arch/loongarch/kvm/interrupt.c           |   2 +
->  arch/loongarch/kvm/irqfd.c               |  11 +-
->  arch/loongarch/kvm/main.c                |   6 +
->  include/uapi/linux/kvm.h                 |   2 +
->  11 files changed, 255 insertions(+), 9 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
->  create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
->
-> --
-> 2.39.3
->
+Regards,
+Yao Zi
