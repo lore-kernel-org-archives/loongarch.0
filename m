@@ -1,210 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF43737C939
-	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 07:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775720570; cv=none; b=CMTDiFD5/uahr65/olhlw7nxB1yZp+tXHGec7tOnXROmiP0tcfdMMcVclHpJoO78lTACxlCyaMmo+3StvVkS7mYa8iIR90JRzKF07++Sk3fx8u52jK7N0MQ2ZuTNsiT0/Jq3v8RDkfUqS3D5y6e7nEDVbDVMhfEj2zp4+vQ+VTs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775720570; c=relaxed/simple;
-	bh=1WW7kSn9WxA8RcNQPxCAbLe2xCMWLXrH3wMCxgS7DNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SpgZp1ZpSzDVPBnfBRAqhtnz7zqU76Ey7/i9FQjlPNMoHl8NCM2hU8B7xuI3sqyLeSQIIIaR5QW/aY0PXBvRz7UA438HmjuLDD4vIg6PQ+DCzaRO4qn4sT3Tid+ycpqJ6IaUAF5Thn9uIi0mMgg/7cjoe6DUpZSSyOqycB5iFbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=d8GUs/B3; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC6C3A3E9E
+	for <loongarch@lists.linux.dev>; Thu,  9 Apr 2026 08:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775722763; cv=pass; b=gqAMfJ0U4FXnHgT4Js9ekq79wU8pwApza50VAZ7klvjsLj/VdMiBRZeqMXZxjxxUdNrqH1tA9yjqB/IV6JPczE7/aNlaRE0QEWZQk2u0oNdBeTr/q2gW9r09Kgrq/b5PDWpgebrxxa8UCSvHvvkQ2wo90VWe4lptIdQpzBOhtiA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775722763; c=relaxed/simple;
+	bh=jHS0ilS7g1CMN5ZK8zes++7dn1FRimCJWBs7yUa4Lxg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cDRvJVp/Bl4Vc15iEOs40PpaejXv8PmTeFbHEZpmVrPAegsPkNfW17bjuGYoTSOwALRXtlrPiJHkmqlGLyTDPE/6x43qYvZTo1qwXUTM0w8Sq2oVfjUhtpaeMNKaijpoQrTpoSNOSOOb9+x7c2BTv37PafIKpBkJK5OQm2+QcWU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyNERO07; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="d8GUs/B3"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 020763561;
-	Thu,  9 Apr 2026 00:42:40 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2BFD3F632;
-	Thu,  9 Apr 2026 00:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1775720565; bh=1WW7kSn9WxA8RcNQPxCAbLe2xCMWLXrH3wMCxgS7DNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d8GUs/B3jDW2frdZiV8QPiYbk9v18VZd7X15RxiS1RqB+79dOyj9M/gsATt3nMdbo
-	 sfUtUYCcV+gEJlbpIFOxTu0F6+OEFgVqJOQyRKt9wK39FJm3q0cUrfDwdmVVz7kTRT
-	 6fWMWLO4tHky73CtIu7mYttYuuLUx2FUb47JuCq0=
-Date: Thu, 9 Apr 2026 08:42:37 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
-	agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-	svens@linux.ibm.com, oleg@redhat.com, tglx@kernel.org,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, arnd@arndb.de, shuah@kernel.org,
-	kevin.brodsky@arm.com, yeoreum.yun@arm.com,
-	anshuman.khandual@arm.com, thuth@redhat.com, ryan.roberts@arm.com,
-	song@kernel.org, ziyao@disroot.org, linusw@kernel.org,
-	schuster.simon@siemens-energy.com, jremus@linux.ibm.com,
-	akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-	kmal@cock.li, dvyukov@google.com, reddybalavignesh9979@gmail.com,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v14 2/4] asm-generic: Move TIF_SINGLESTEP to generic TIF
- bits
-Message-ID: <addYbV3_9eFZg_b4@J2N7QTR9R3>
-References: <20260320104222.1381274-1-ruanjinjie@huawei.com>
- <20260320104222.1381274-3-ruanjinjie@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyNERO07"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-66bf6aa4858so1008193a12.2
+        for <loongarch@lists.linux.dev>; Thu, 09 Apr 2026 01:19:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775722761; cv=none;
+        d=google.com; s=arc-20240605;
+        b=RW1fsBscADz5EJnAkvuY5n/jXKBGp1T4S5sCNqdQYWajYV3j7bKXvavuuKOGXH9JG/
+         ySvAaCLVw3DNrN3eicLra3CM1+oHas3I6Bf1siqCvBN07fQ7FHxgArDv1MTzJCQCd+X9
+         u44c52N/u8512LltCKVBH218lTvwyuOnVw2XFe6dStOiQnkOMDmbcaTWR6Ue8sYqgO9S
+         hm1k0C2N6Uu0P8iD+stM4lTrNKUaNuqdhgi515WUfb8YOKYcY3RR4GXBN4I+3z1XpYlv
+         MbRZn1f4oV7BLhU1r1RWCq3qG98Q/OhnU594WHIu08s8jdOkB+9T1kV8ShypunfqDNMo
+         8weQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=TAxmTNbRbQNg/gEU9ThdCz2lz4k+tx2ML5iFc0liaHs=;
+        fh=WOH/MZEeJaaw9fAH/Ll77IaGzPvFQ4Ybxhfugjv8IME=;
+        b=F2N90OQu8fDpCxtxVdqr5WWDFO7Z63W6OkjmW0Ms8zPIdJ/OALGmz6d0Yy7s++SXwl
+         4CSM8rBfpj04/QNzW8NZeitGII3dQxHuEDZzzcUch/zYCD1CfOptPLfr37/2WN1q5aTH
+         RKm3mvIFmYx/cOqDmxiwn5NeILWCLdHQPCRcwOfLM37S0268qRfGI/mFMh2KaSgaN2qx
+         GV1/YfyyzxZ7nDORTMjCONmoDNnJuHxKu3/t3gUKkRPaKOtYMZYSYM2Peo6gaaQKBKoa
+         HQ8+G3t1cSHQqus0dVusY1wkRxj2Mnr4ecsGo/mhWz6sve6Z1TCYX+F802dRWGkonXvD
+         ENhg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775722761; x=1776327561; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TAxmTNbRbQNg/gEU9ThdCz2lz4k+tx2ML5iFc0liaHs=;
+        b=jyNERO07F78QnnF1vez8XoM0uzFj+Wc0UWUTA9GFp0PU2g+jDwyd8pr0TPtFynCJe3
+         BcHuYcOCxr/HZVAp+OZjP4+g8KLst2awCzoa+Lt4AScK0c18x3eJTNz601IDzB3f/jh7
+         SdpMNpQCqDsBcVhpLe0JuNr6+zC6+U5raabL/CR/f8ZWCbOodmVzjck4cKqMYAkKmE4F
+         4f/+ictkOwJQteO9uI6sk8kNkLzrRJoT05/hMC/5UwbfTq7BmSPOn27qxnxjX9azWx+X
+         099ZATXSfT81NHt7RmARvjMNAuPuXnt2tUUMMEaMmjrkbB1zNsZLM4p2u2SzKkFQ8zvQ
+         eozQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775722761; x=1776327561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=TAxmTNbRbQNg/gEU9ThdCz2lz4k+tx2ML5iFc0liaHs=;
+        b=bnh0ov3YQcG/3rG3Fqh4x1ActOg4NBrAOFzPtodjtib8B0Ly1tBwxjoQdyiqxkADI9
+         UwE0EjuiW4OEghY14d8nLznfsEvvPcohePObJ2Z8TWZROEBqGLqSTrWdDkdgEEiUiHEP
+         M7GEImPDyP7xLCAN7nHBp5fcvYkahDq3snOLO0tfJg2K8lGN2J/fFIHtKKSFvgx2WlOB
+         FQEfCVRBmALG/WW1cCsBto9eiN/Gauf43ObpRT75yVjqwBemX0xwNJnSb7DHvh1FZj/R
+         wScz7ZWqwhshJgRtV/CgpX2O/8fsMoKbcerTbibr7xXbiwmw0Yve+kQDSKsZdu8YKYSW
+         HZHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIgcT1vLKG3cmdoXE/hm2Hb5BtWzSAd58jLxm8uWdJtz7SAeiU4UtA4s6seZnUjpGj/DWt0j9LkR4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxUAcpBlR+rnPO3ZO/WAGxltJIAf0JW3ZrhcoyQPk8ZwiQOzzgN
+	FcRrj9ljoeXg2J6G6SNTIJW47QLGobXm3SDQZF0IF/sMHKoSqGuietioDiSc3JfIsEWfEEdtRZq
+	mUoHiuaeBHGv8ZIDg9VUr0BX0/NC6RFo=
+X-Gm-Gg: AeBDieuzFOSyU+5Eqjmp94CHbHXXyOLEWKS2zpuYEGehU9fIAKFNjqBbH/xvYDiXSrZ
+	2lyLmdVWpCsxWKfHyCxjJC9JNUASBr/6szlJ9p8RWpB/jvjiJlE0vHl5HWb6OPVxzOfx0MPcLsB
+	6m4zX8u7lvwhe6KvqF09hPDJJNBuJSTxUmSozxKV4jLXfA312C6SmHCKweZyAH1g7VETbb7i/cE
+	ftREM1t1LDANJjqZH6Gu3eZ112qcKZY692gR2RM8unBQMknMyl+asSNQjd5BFkfF/uAMelvDOip
+	Yjb40DOm
+X-Received: by 2002:a05:6402:4403:b0:66e:aca0:7c28 with SMTP id
+ 4fb4d7f45d1cf-67003fed4d5mr1344317a12.10.1775722760369; Thu, 09 Apr 2026
+ 01:19:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320104222.1381274-3-ruanjinjie@huawei.com>
+References: <cover.1773991081.git.zhoubinbin@loongson.cn>
+In-Reply-To: <cover.1773991081.git.zhoubinbin@loongson.cn>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Thu, 9 Apr 2026 16:19:08 +0800
+X-Gm-Features: AQROBzBKuMNrIJGz8GW32I5rwsJFCx0e5ZCnixWxt1QzwEvhaZPhGrsPHuZHB30
+Message-ID: <CAMpQs4KTMKrH3ARzM7iwY6tbQ6Zugyw1AfJAXWRMHk=86ufR5Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] i2c: Add Loongson-2K0300 I2C controller support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-i2c@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 20, 2026 at 06:42:20PM +0800, Jinjie Ruan wrote:
-> Currently, x86, ARM64, s390, and LoongArch all define and use
-> TIF_SINGLESTEP to track single-stepping state.
+Hi all:
 
-Do the architectures actually use the flag in the same way?
+On Fri, Mar 20, 2026 at 3:26=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> Hi all:
+>
+> This patch set describes the I2C controller integrated the
+> Loongson-2K0300 chip.
+>
+> It has a significantly different design from the previous I2C
+> controller(i2c-ls2x), such as support for master-slave transfer mode,
+> and  DMA transfers (implementation in progress), etc. Therefore, we try
+> to name it i2c-ls2x-v2.
+>
+> Thanks.
+>
+> =3D=3D=3D=3D=3D=3D
+> V6:
+> - Rebase on linux-i2c/i2c-next;
+> Patch (2/2):
+>   - Update comment;
+>   - Use regmap_get_device();
+>
+> Link to V5:
+> https://lore.kernel.org/all/cover.1773142933.git.zhoubinbin@loongson.cn/
 
-I'd expect that this is used subtly differently across those
-architectures, and so isn't necessarily generic.
+Gentle ping.
+Any comments about this patchset ?
 
-> Since this flag is shared across multiple major architectures and serves
-> a common purpose in the generic entry/exit paths, move TIF_SINGLESTEP
-> into the generic Thread Information Flags (TIF) infrastructure.
-> 
-> This consolidation reduces architecture-specific boilerplate code and
-> ensures consistency for generic features that rely on single-step
-> state tracking.
-
-Is it necessary to make this generic in order to move to generic irq
-flags? I'd expect that generic code cannot make use of this due to the
-different semantics across architectures, as noted abobve.
-
-I think it's probably better to keep this architecture-specific for now,
-where architectures can clearly define how they're using this bit.
-
-Am I missing some reason why it's necessary to make this generic?
-
-Mark.
-
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
->  arch/loongarch/include/asm/thread_info.h | 11 +++++------
->  arch/s390/include/asm/thread_info.h      |  7 +++----
->  arch/x86/include/asm/thread_info.h       |  6 ++----
->  include/asm-generic/thread_info_tif.h    |  5 +++++
->  4 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-> index 4d7117fcdc78..a2ec87f18e1d 100644
-> --- a/arch/loongarch/include/asm/thread_info.h
-> +++ b/arch/loongarch/include/asm/thread_info.h
-> @@ -70,6 +70,7 @@ register unsigned long current_stack_pointer __asm__("$sp");
->   */
->  #define HAVE_TIF_NEED_RESCHED_LAZY
->  #define HAVE_TIF_RESTORE_SIGMASK
-> +#define HAVE_TIF_SINGLESTEP
->  
->  #include <asm-generic/thread_info_tif.h>
->  
-> @@ -82,11 +83,10 @@ register unsigned long current_stack_pointer __asm__("$sp");
->  #define TIF_32BIT_REGS		21	/* 32-bit general purpose registers */
->  #define TIF_32BIT_ADDR		22	/* 32-bit address space */
->  #define TIF_LOAD_WATCH		23	/* If set, load watch registers */
-> -#define TIF_SINGLESTEP		24	/* Single Step */
-> -#define TIF_LSX_CTX_LIVE	25	/* LSX context must be preserved */
-> -#define TIF_LASX_CTX_LIVE	26	/* LASX context must be preserved */
-> -#define TIF_USEDLBT		27	/* LBT was used by this task this quantum (SMP) */
-> -#define TIF_LBT_CTX_LIVE	28	/* LBT context must be preserved */
-> +#define TIF_LSX_CTX_LIVE	24	/* LSX context must be preserved */
-> +#define TIF_LASX_CTX_LIVE	25	/* LASX context must be preserved */
-> +#define TIF_USEDLBT		26	/* LBT was used by this task this quantum (SMP) */
-> +#define TIF_LBT_CTX_LIVE	27	/* LBT context must be preserved */
->  
->  #define _TIF_NOHZ		BIT(TIF_NOHZ)
->  #define _TIF_USEDFPU		BIT(TIF_USEDFPU)
-> @@ -96,7 +96,6 @@ register unsigned long current_stack_pointer __asm__("$sp");
->  #define _TIF_32BIT_REGS		BIT(TIF_32BIT_REGS)
->  #define _TIF_32BIT_ADDR		BIT(TIF_32BIT_ADDR)
->  #define _TIF_LOAD_WATCH		BIT(TIF_LOAD_WATCH)
-> -#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
->  #define _TIF_LSX_CTX_LIVE	BIT(TIF_LSX_CTX_LIVE)
->  #define _TIF_LASX_CTX_LIVE	BIT(TIF_LASX_CTX_LIVE)
->  #define _TIF_USEDLBT		BIT(TIF_USEDLBT)
-> diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
-> index 1bcd42614e41..95be5258a422 100644
-> --- a/arch/s390/include/asm/thread_info.h
-> +++ b/arch/s390/include/asm/thread_info.h
-> @@ -61,6 +61,7 @@ void arch_setup_new_exec(void);
->   */
->  #define HAVE_TIF_NEED_RESCHED_LAZY
->  #define HAVE_TIF_RESTORE_SIGMASK
-> +#define HAVE_TIF_SINGLESTEP
->  
->  #include <asm-generic/thread_info_tif.h>
->  
-> @@ -69,15 +70,13 @@ void arch_setup_new_exec(void);
->  #define TIF_GUARDED_STORAGE	17	/* load guarded storage control block */
->  #define TIF_ISOLATE_BP_GUEST	18	/* Run KVM guests with isolated BP */
->  #define TIF_PER_TRAP		19	/* Need to handle PER trap on exit to usermode */
-> -#define TIF_SINGLESTEP		21	/* This task is single stepped */
-> -#define TIF_BLOCK_STEP		22	/* This task is block stepped */
-> -#define TIF_UPROBE_SINGLESTEP	23	/* This task is uprobe single stepped */
-> +#define TIF_BLOCK_STEP		20	/* This task is block stepped */
-> +#define TIF_UPROBE_SINGLESTEP	21	/* This task is uprobe single stepped */
->  
->  #define _TIF_ASCE_PRIMARY	BIT(TIF_ASCE_PRIMARY)
->  #define _TIF_GUARDED_STORAGE	BIT(TIF_GUARDED_STORAGE)
->  #define _TIF_ISOLATE_BP_GUEST	BIT(TIF_ISOLATE_BP_GUEST)
->  #define _TIF_PER_TRAP		BIT(TIF_PER_TRAP)
-> -#define _TIF_SINGLESTEP	BIT(TIF_SINGLESTEP)
->  #define _TIF_BLOCK_STEP		BIT(TIF_BLOCK_STEP)
->  #define _TIF_UPROBE_SINGLESTEP	BIT(TIF_UPROBE_SINGLESTEP)
->  
-> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-> index 0067684afb5b..f59072ba1473 100644
-> --- a/arch/x86/include/asm/thread_info.h
-> +++ b/arch/x86/include/asm/thread_info.h
-> @@ -98,9 +98,8 @@ struct thread_info {
->  #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
->  #define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
->  #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
-> -#define TIF_SINGLESTEP		25	/* reenable singlestep on user return*/
-> -#define TIF_BLOCKSTEP		26	/* set when we want DEBUGCTLMSR_BTF */
-> -#define TIF_ADDR32		27	/* 32-bit address space on 64 bits */
-> +#define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
-> +#define TIF_ADDR32		26	/* 32-bit address space on 64 bits */
->  
->  #define _TIF_SSBD		BIT(TIF_SSBD)
->  #define _TIF_SPEC_IB		BIT(TIF_SPEC_IB)
-> @@ -112,7 +111,6 @@ struct thread_info {
->  #define _TIF_SPEC_FORCE_UPDATE	BIT(TIF_SPEC_FORCE_UPDATE)
->  #define _TIF_FORCED_TF		BIT(TIF_FORCED_TF)
->  #define _TIF_BLOCKSTEP		BIT(TIF_BLOCKSTEP)
-> -#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
->  #define _TIF_ADDR32		BIT(TIF_ADDR32)
->  
->  /* flags to check in __switch_to() */
-> diff --git a/include/asm-generic/thread_info_tif.h b/include/asm-generic/thread_info_tif.h
-> index da1610a78f92..b277fe06aee3 100644
-> --- a/include/asm-generic/thread_info_tif.h
-> +++ b/include/asm-generic/thread_info_tif.h
-> @@ -48,4 +48,9 @@
->  #define TIF_RSEQ		11	// Run RSEQ fast path
->  #define _TIF_RSEQ		BIT(TIF_RSEQ)
->  
-> +#ifdef HAVE_TIF_SINGLESTEP
-> +#define TIF_SINGLESTEP		12	/* reenable singlestep on user return*/
-> +#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
-> +#endif
-> +
->  #endif /* _ASM_GENERIC_THREAD_INFO_TIF_H_ */
-> -- 
-> 2.34.1
-> 
+>
+> V5:
+> - Rebase on linux-i2c/i2c-next;
+> Patch (2/2):
+>   - Add time.h header file;
+>   - Add the `MHz` suffix to `parent_rate` and `freq`;
+>   - Define an iterator within the for loop, with its type being
+>     `unsigned int`;
+>   - Use dev_err_probe() in loongson2_i2c_adjust_bus_speed();
+>   - i2c_adapter_set_node()->device_set_node().
+>
+> Link to V4:
+> https://lore.kernel.org/all/cover.1772714348.git.zhoubinbin@loongson.cn/
+>
+> V4:
+> - Rebase on linux-i2c/i2c-next;
+> Patch (2/2):
+>  - The parent_rate parameter type should be `unsigned long`;
+>  - Drop fallthrough and add missing break;
+>  - device_set_node()->i2c_adapter_set_node();
+>  - Use i2c_parse_fw_timings();
+>  - Use i2c_t.bus_freq_hz instead of priv->speed;
+>  - Sperate loongson2_i2c_handle_read() into loongson2_i2c_handle_read()
+>    and loongson2_i2c_handle_rx_done().
+>
+> Link to V3:
+> https://lore.kernel.org/all/cover.1772001073.git.zhoubinbin@loongson.cn/
+>
+> V3:
+> - Rebase on linux-i2c/i2c-next;
+> Patch (2/2):
+>  - Reorder header file follow IWYU principle;
+>  - Better indentation and coding style;
+>  - Use generic macro definitions;
+>  - Amend *all* struct data types;
+>  - Correct unreasonable variable type definitions;
+>  - Refact loongson2_i2c_isr_error();
+>  - of_property_read_u32()->device_property_read_u32();
+>  - Remove meaningless blank lines and output.
+>
+> Link to V2:
+> https://lore.kernel.org/all/cover.1769476820.git.zhoubinbin@loongson.cn/
+>
+> V2:
+> Patch (1/2):
+>  - Add Acked-by tag from Conor, thanks.
+>
+> Patch (2/2):
+>  - Reorder the definitions of read() and write();
+>  - Adjust the calculation method for bus speed.
+>
+> Link to V1:
+> https://lore.kernel.org/all/cover.1763018288.git.zhoubinbin@loongson.cn/
+>
+> Binbin Zhou (2):
+>   dt-bindings: i2c: loongson,ls2x: Add ls2k0300-i2c compatible
+>   i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
+>
+>  .../bindings/i2c/loongson,ls2x-i2c.yaml       |   4 +
+>  MAINTAINERS                                   |   1 +
+>  drivers/i2c/busses/Kconfig                    |  10 +
+>  drivers/i2c/busses/Makefile                   |   1 +
+>  drivers/i2c/busses/i2c-ls2x-v2.c              | 544 ++++++++++++++++++
+>  5 files changed, 560 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-ls2x-v2.c
+>
+>
+> base-commit: e9b13580b334040da0184a9f32106d808acd7fd5
+> --
+> 2.52.0
+>
+--
+Thanks.
+Binbin
