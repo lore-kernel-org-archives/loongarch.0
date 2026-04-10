@@ -1,255 +1,143 @@
-Received: from canpmsgout10.his.huawei.com (canpmsgout10.his.huawei.com [113.46.200.225])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723F5319847
-	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 03:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBA127CB02;
+	Fri, 10 Apr 2026 06:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775792395; cv=none; b=lY5II0xeedo0Al4SvTeqDmgey1zTcIft+glHHgXlVWEkH5VeKmOp9uMqriiNz22A6ZViy4eLDAfYiLjjsR0rcQ5dxsIDGNCzBYU5FOZIJIqnB/+cPUr1lCIYe19LOOg+MEnfyoHpDQ2TYlNRKbSjJuQWKIo5LY2OiadqEzzD7Lk=
+	t=1775803358; cv=none; b=OhF09kqoiX2fc3V9Zq4zboJg2a8qf/tg0TQGfipbfrDvV7zqocj181uBMEgpY1P93wZwp8TjNrdZe/d7vtWyYzJndBBEqGLkUlxRJ/IDNPdlaNNBVDjfiJEJjCIjfIRpK4770/O7SkJl9R8weGTQzSHjTrGYlgqOiHXNoCMeq+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775792395; c=relaxed/simple;
-	bh=Luva0RKt6+1q6BxL1l8fksEpnuWf4hC0r+/4GslVpcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n6ykQsYj5ZILB56L90wxEdqX1yIPlp0sLH5noOoLMg9gNDjA8bBaDd3a0Gdq8qZG0kwqpeYes8KsRdbeAjOVtyYUF1yrZcO7j5i9pEzqKZ/KZswRL/f0et576IlVr6+3r2xycvwFIF4YnH7BIxPJ+QAT3qLruQcUJtAEboU5QTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Z5Q4uKAU; arc=none smtp.client-ip=113.46.200.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1775803358; c=relaxed/simple;
+	bh=ExP5iXPCuPkzUAktsanQk4yh+OIzhkbhOeospQVTklo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QhbBNZb4utwbUJg6/2M9DLlXMVgJWyRMfXaT/lg+YOLqiOk6uvM5+nhS7giDweI7SsVgHKsCJ4094lO/KqI2xqJX6Ky5gn7POF8oO7oRdUwATZHSyt+JSqWMBlDPONZOkKVGz9V/2OZnvkmEpLmLxOInil3fpe/2MdsWfRKatOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpBB+v52; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Z5Q4uKAU"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=atwTW2sF/xt8n6uLhSlHA/c+wRjPdZV9aJAWAZYP3rs=;
-	b=Z5Q4uKAUUcCz5eb9Pn5HrY4TU5BcEAvwteS8re84wU6O2L9PDCrQvRaO3FliJjSHa2c2SL2CE
-	XRlyC2JXtwZ3lLlCiz3KsnEz/WH6bLb0koQG570iVTOGvqgLIoaCRROqol3KGMHmCG+beXnwyta
-	ZlPsxaIHbFH/VbOrtFPR1Eo=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4fsMpT0DM8z1K99S;
-	Fri, 10 Apr 2026 11:33:37 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id E140E402AB;
-	Fri, 10 Apr 2026 11:39:49 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 10 Apr 2026 11:39:47 +0800
-Message-ID: <f890ed5b-3ac2-4a3b-7d26-103ea110936d@huawei.com>
-Date: Fri, 10 Apr 2026 11:39:46 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpBB+v52"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60703C2BCAF;
+	Fri, 10 Apr 2026 06:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775803358;
+	bh=ExP5iXPCuPkzUAktsanQk4yh+OIzhkbhOeospQVTklo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GpBB+v52wHv6pnVOrEy7VUhesQqeQpIwCBiFmFVHF8b1WPyMttGH/gWjGM5bzf99y
+	 +onPiDoVmCxXsGH9LWZGzx6M5LUTuq5r3OPu9ZQa1oveMHvDLnaNLGB3/VdrcCgM2m
+	 ZmMtonRKKKnODWEZqrKw0Wnxa0C7zgrnRGnuPfYv8MC+hA5gTRtfXcnFcV8rvqMB/D
+	 RpG59gn05m/c2Tf6R39RbaAo1s/2+xHKdJAS1yIYiLBs1iBLComo68K80MnIPyN+CP
+	 HRcBAnoXd9OnNmamnC3B/Suf6s2zBHa3B2OHR7oroPGarK9+BlPLMw/DAjZXs0NbjD
+	 XvMeBOZ39c7EQ==
+Message-ID: <3c57275e-0574-46e5-9893-053ae5cc22cb@kernel.org>
+Date: Fri, 10 Apr 2026 08:42:34 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v14 2/4] asm-generic: Move TIF_SINGLESTEP to generic TIF
- bits
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
+ properties
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20260325011852.19079-1-wanghongliang@loongson.cn>
+ <20260325011852.19079-2-wanghongliang@loongson.cn>
+ <20260325-outstanding-weasel-of-fruition-89db37@quoll>
+ <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
+ <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
+ <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
+ <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
+ <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
+ <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
+ <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
+ <a08ac3f9-a770-df48-a95b-4b07cd2c0d58@loongson.cn>
+ <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn>
+ <dc1c0b6d-b6e6-4a88-8e50-e8316e3dcf5e@kernel.org>
+ <0f560e80-3fbb-c24f-51f9-b4425db17867@loongson.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Mark Rutland <mark.rutland@arm.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
-	<kernel@xen0n.name>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
-	<agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-	<oleg@redhat.com>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <arnd@arndb.de>,
-	<shuah@kernel.org>, <kevin.brodsky@arm.com>, <yeoreum.yun@arm.com>,
-	<anshuman.khandual@arm.com>, <thuth@redhat.com>, <ryan.roberts@arm.com>,
-	<song@kernel.org>, <ziyao@disroot.org>, <linusw@kernel.org>,
-	<schuster.simon@siemens-energy.com>, <jremus@linux.ibm.com>,
-	<akpm@linux-foundation.org>, <mathieu.desnoyers@efficios.com>,
-	<kmal@cock.li>, <dvyukov@google.com>, <reddybalavignesh9979@gmail.com>,
-	<x86@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
-	<linux-s390@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-References: <20260320104222.1381274-1-ruanjinjie@huawei.com>
- <20260320104222.1381274-3-ruanjinjie@huawei.com>
- <addYbV3_9eFZg_b4@J2N7QTR9R3>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <addYbV3_9eFZg_b4@J2N7QTR9R3>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <0f560e80-3fbb-c24f-51f9-b4425db17867@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2026/4/9 15:42, Mark Rutland wrote:
-> On Fri, Mar 20, 2026 at 06:42:20PM +0800, Jinjie Ruan wrote:
->> Currently, x86, ARM64, s390, and LoongArch all define and use
->> TIF_SINGLESTEP to track single-stepping state.
+On 10/04/2026 05:04, Hongliang Wang wrote:
+> Hi, Krzysztof
 > 
-> Do the architectures actually use the flag in the same way?
-
-As far as I know, the behavior of setting and clearing the
-TIF_SINGLESTEP flag is consistent across these architectures, at least
-within the ptrace handling logic of user_enable_single_step() and
-user_disable_single_step().
-
+> On 2026/4/9 下午8:11, Krzysztof Kozlowski wrote:
+>> On 09/04/2026 14:03, Hongliang Wang wrote:
+>>> I have a question, the input clock of i2c controller can be described by
+>>> "clocks",
+>>> but there is no existing attribute can describe the divisor of the input
+>>> clock,
+>>> Can I define a new attribute named "clock-div" to describe it in DT
+>>> bindings?
+>>> or do you have any standard solutions for the divisor problem? Thank you.
+>>>
+>> You should determine/calculate the divisor in the driver code, depending
+>> on clocks and bus frequencies. You don't need a property for that, usually.
 > 
-> I'd expect that this is used subtly differently across those
-> architectures, and so isn't necessarily generic.
+> Not only clocks and bus frequencies, but also a third property is required.
 > 
->> Since this flag is shared across multiple major architectures and serves
->> a common purpose in the generic entry/exit paths, move TIF_SINGLESTEP
->> into the generic Thread Information Flags (TIF) infrastructure.
->>
->> This consolidation reduces architecture-specific boilerplate code and
->> ensures consistency for generic features that rely on single-step
->> state tracking.
+> The frequency divison calculation formula of i2c is
+> Prcescale = clock_a/(clock_div*clock_s)-1
 > 
-> Is it necessary to make this generic in order to move to generic irq
-> flags? I'd expect that generic code cannot make use of this due to the
-> different semantics across architectures, as noted abobve.
-> 
-> I think it's probably better to keep this architecture-specific for now,
-> where architectures can clearly define how they're using this bit.
+> There is three parameters in this formula:
+> clock_a represents the input clock, which is described by "clocks",
+> clock_s represents the i2c bus frequency, which is described by 
+> "clock-frequency",
+> but there is no existing property to describe clock_div, which has 
+> different value
+> on different platform (for example, it is 5 on 7a1000/7a2000, 4 on 
+> 2K1000/2K2000,
+> 5.5 on 2K3000.), So I need a property to describe clock_div in this formula.
 
-Hi Mark,
-
-Thank you for the feedback. You are maybe right, and your concern aligns
-with the original intent behind the generic TIF infrastructure.
-
-I noticed that when the generic TIF infrastructure was first introduced
-(see commit 29589343488e: "asm-generic: Provide generic TIF
-infrastructure"), it explicitly mentioned:
-"This could probably be extended by TIF_SINGLESTEP and BLOCKSTEP, but
-those are only used in architecture specific code. So leave them alone
-for now."
-
-It seems that moving TIF_SINGLESTEP to generic TIF bits at this stage is
-indeed premature. Furthermore, in the generic entry implementation, the
-single-step exit handling is actually managed by
-SYSCALL_WORK_SYSCALL_EXIT_TRAP rather than directly relying on a generic
-TIF_SINGLESTEP flag.
+So it is fixed per compatible? Then you do not need.
 
 
 Best regards,
-Jinjie
-
-> 
-> Am I missing some reason why it's necessary to make this generic?
-> 
-> Mark.
-> 
->> Cc: Thomas Gleixner <tglx@kernel.org>
->> Reviewed-by: Kevin Brodsky <kevin.brodsky@arm.com>
->> Reviewed-by: Linus Walleij <linusw@kernel.org>
->> Reviewed-by: Yeoreum Yun <yeoreum.yun@arm.com>
->> Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>  arch/loongarch/include/asm/thread_info.h | 11 +++++------
->>  arch/s390/include/asm/thread_info.h      |  7 +++----
->>  arch/x86/include/asm/thread_info.h       |  6 ++----
->>  include/asm-generic/thread_info_tif.h    |  5 +++++
->>  4 files changed, 15 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
->> index 4d7117fcdc78..a2ec87f18e1d 100644
->> --- a/arch/loongarch/include/asm/thread_info.h
->> +++ b/arch/loongarch/include/asm/thread_info.h
->> @@ -70,6 +70,7 @@ register unsigned long current_stack_pointer __asm__("$sp");
->>   */
->>  #define HAVE_TIF_NEED_RESCHED_LAZY
->>  #define HAVE_TIF_RESTORE_SIGMASK
->> +#define HAVE_TIF_SINGLESTEP
->>  
->>  #include <asm-generic/thread_info_tif.h>
->>  
->> @@ -82,11 +83,10 @@ register unsigned long current_stack_pointer __asm__("$sp");
->>  #define TIF_32BIT_REGS		21	/* 32-bit general purpose registers */
->>  #define TIF_32BIT_ADDR		22	/* 32-bit address space */
->>  #define TIF_LOAD_WATCH		23	/* If set, load watch registers */
->> -#define TIF_SINGLESTEP		24	/* Single Step */
->> -#define TIF_LSX_CTX_LIVE	25	/* LSX context must be preserved */
->> -#define TIF_LASX_CTX_LIVE	26	/* LASX context must be preserved */
->> -#define TIF_USEDLBT		27	/* LBT was used by this task this quantum (SMP) */
->> -#define TIF_LBT_CTX_LIVE	28	/* LBT context must be preserved */
->> +#define TIF_LSX_CTX_LIVE	24	/* LSX context must be preserved */
->> +#define TIF_LASX_CTX_LIVE	25	/* LASX context must be preserved */
->> +#define TIF_USEDLBT		26	/* LBT was used by this task this quantum (SMP) */
->> +#define TIF_LBT_CTX_LIVE	27	/* LBT context must be preserved */
->>  
->>  #define _TIF_NOHZ		BIT(TIF_NOHZ)
->>  #define _TIF_USEDFPU		BIT(TIF_USEDFPU)
->> @@ -96,7 +96,6 @@ register unsigned long current_stack_pointer __asm__("$sp");
->>  #define _TIF_32BIT_REGS		BIT(TIF_32BIT_REGS)
->>  #define _TIF_32BIT_ADDR		BIT(TIF_32BIT_ADDR)
->>  #define _TIF_LOAD_WATCH		BIT(TIF_LOAD_WATCH)
->> -#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
->>  #define _TIF_LSX_CTX_LIVE	BIT(TIF_LSX_CTX_LIVE)
->>  #define _TIF_LASX_CTX_LIVE	BIT(TIF_LASX_CTX_LIVE)
->>  #define _TIF_USEDLBT		BIT(TIF_USEDLBT)
->> diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
->> index 1bcd42614e41..95be5258a422 100644
->> --- a/arch/s390/include/asm/thread_info.h
->> +++ b/arch/s390/include/asm/thread_info.h
->> @@ -61,6 +61,7 @@ void arch_setup_new_exec(void);
->>   */
->>  #define HAVE_TIF_NEED_RESCHED_LAZY
->>  #define HAVE_TIF_RESTORE_SIGMASK
->> +#define HAVE_TIF_SINGLESTEP
->>  
->>  #include <asm-generic/thread_info_tif.h>
->>  
->> @@ -69,15 +70,13 @@ void arch_setup_new_exec(void);
->>  #define TIF_GUARDED_STORAGE	17	/* load guarded storage control block */
->>  #define TIF_ISOLATE_BP_GUEST	18	/* Run KVM guests with isolated BP */
->>  #define TIF_PER_TRAP		19	/* Need to handle PER trap on exit to usermode */
->> -#define TIF_SINGLESTEP		21	/* This task is single stepped */
->> -#define TIF_BLOCK_STEP		22	/* This task is block stepped */
->> -#define TIF_UPROBE_SINGLESTEP	23	/* This task is uprobe single stepped */
->> +#define TIF_BLOCK_STEP		20	/* This task is block stepped */
->> +#define TIF_UPROBE_SINGLESTEP	21	/* This task is uprobe single stepped */
->>  
->>  #define _TIF_ASCE_PRIMARY	BIT(TIF_ASCE_PRIMARY)
->>  #define _TIF_GUARDED_STORAGE	BIT(TIF_GUARDED_STORAGE)
->>  #define _TIF_ISOLATE_BP_GUEST	BIT(TIF_ISOLATE_BP_GUEST)
->>  #define _TIF_PER_TRAP		BIT(TIF_PER_TRAP)
->> -#define _TIF_SINGLESTEP	BIT(TIF_SINGLESTEP)
->>  #define _TIF_BLOCK_STEP		BIT(TIF_BLOCK_STEP)
->>  #define _TIF_UPROBE_SINGLESTEP	BIT(TIF_UPROBE_SINGLESTEP)
->>  
->> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
->> index 0067684afb5b..f59072ba1473 100644
->> --- a/arch/x86/include/asm/thread_info.h
->> +++ b/arch/x86/include/asm/thread_info.h
->> @@ -98,9 +98,8 @@ struct thread_info {
->>  #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
->>  #define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
->>  #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
->> -#define TIF_SINGLESTEP		25	/* reenable singlestep on user return*/
->> -#define TIF_BLOCKSTEP		26	/* set when we want DEBUGCTLMSR_BTF */
->> -#define TIF_ADDR32		27	/* 32-bit address space on 64 bits */
->> +#define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
->> +#define TIF_ADDR32		26	/* 32-bit address space on 64 bits */
->>  
->>  #define _TIF_SSBD		BIT(TIF_SSBD)
->>  #define _TIF_SPEC_IB		BIT(TIF_SPEC_IB)
->> @@ -112,7 +111,6 @@ struct thread_info {
->>  #define _TIF_SPEC_FORCE_UPDATE	BIT(TIF_SPEC_FORCE_UPDATE)
->>  #define _TIF_FORCED_TF		BIT(TIF_FORCED_TF)
->>  #define _TIF_BLOCKSTEP		BIT(TIF_BLOCKSTEP)
->> -#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
->>  #define _TIF_ADDR32		BIT(TIF_ADDR32)
->>  
->>  /* flags to check in __switch_to() */
->> diff --git a/include/asm-generic/thread_info_tif.h b/include/asm-generic/thread_info_tif.h
->> index da1610a78f92..b277fe06aee3 100644
->> --- a/include/asm-generic/thread_info_tif.h
->> +++ b/include/asm-generic/thread_info_tif.h
->> @@ -48,4 +48,9 @@
->>  #define TIF_RSEQ		11	// Run RSEQ fast path
->>  #define _TIF_RSEQ		BIT(TIF_RSEQ)
->>  
->> +#ifdef HAVE_TIF_SINGLESTEP
->> +#define TIF_SINGLESTEP		12	/* reenable singlestep on user return*/
->> +#define _TIF_SINGLESTEP		BIT(TIF_SINGLESTEP)
->> +#endif
->> +
->>  #endif /* _ASM_GENERIC_THREAD_INFO_TIF_H_ */
->> -- 
->> 2.34.1
->>
-> 
+Krzysztof
