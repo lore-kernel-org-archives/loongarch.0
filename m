@@ -1,143 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBA127CB02;
-	Fri, 10 Apr 2026 06:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B6FB39E184
+	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 07:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775803358; cv=none; b=OhF09kqoiX2fc3V9Zq4zboJg2a8qf/tg0TQGfipbfrDvV7zqocj181uBMEgpY1P93wZwp8TjNrdZe/d7vtWyYzJndBBEqGLkUlxRJ/IDNPdlaNNBVDjfiJEJjCIjfIRpK4770/O7SkJl9R8weGTQzSHjTrGYlgqOiHXNoCMeq+k=
+	t=1775806252; cv=none; b=M+Amxa+3q/M/z/IsNFgbrroLTCxBsHVqOWm+XWC4Ve4mTsnTchDnU2MQTdkXn9XMQm1uDrARimB8bvQZ9slxXL5oIQLVhvZYLudcEkmJ4+4O1lls4GKWQkGoIZrnXohkwb1g2gAIhbxBlLWFsRsTMX/y4OXTNEtjcmwr/xMb5SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775803358; c=relaxed/simple;
-	bh=ExP5iXPCuPkzUAktsanQk4yh+OIzhkbhOeospQVTklo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QhbBNZb4utwbUJg6/2M9DLlXMVgJWyRMfXaT/lg+YOLqiOk6uvM5+nhS7giDweI7SsVgHKsCJ4094lO/KqI2xqJX6Ky5gn7POF8oO7oRdUwATZHSyt+JSqWMBlDPONZOkKVGz9V/2OZnvkmEpLmLxOInil3fpe/2MdsWfRKatOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpBB+v52; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpBB+v52"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60703C2BCAF;
-	Fri, 10 Apr 2026 06:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775803358;
-	bh=ExP5iXPCuPkzUAktsanQk4yh+OIzhkbhOeospQVTklo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GpBB+v52wHv6pnVOrEy7VUhesQqeQpIwCBiFmFVHF8b1WPyMttGH/gWjGM5bzf99y
-	 +onPiDoVmCxXsGH9LWZGzx6M5LUTuq5r3OPu9ZQa1oveMHvDLnaNLGB3/VdrcCgM2m
-	 ZmMtonRKKKnODWEZqrKw0Wnxa0C7zgrnRGnuPfYv8MC+hA5gTRtfXcnFcV8rvqMB/D
-	 RpG59gn05m/c2Tf6R39RbaAo1s/2+xHKdJAS1yIYiLBs1iBLComo68K80MnIPyN+CP
-	 HRcBAnoXd9OnNmamnC3B/Suf6s2zBHa3B2OHR7oroPGarK9+BlPLMw/DAjZXs0NbjD
-	 XvMeBOZ39c7EQ==
-Message-ID: <3c57275e-0574-46e5-9893-053ae5cc22cb@kernel.org>
-Date: Fri, 10 Apr 2026 08:42:34 +0200
+	s=arc-20240116; t=1775806252; c=relaxed/simple;
+	bh=0lj4b1z4MAkM8HA1oTgCaRteLCdv8SRSr32wvbP198E=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nBzmx1kZNYWyy8Ua71yRlpHmEaDjeirPL1NC6qYEE50R1JK+KIM8An8ISNOuDORbAEzBYTXe6Gz+zDXY1br09WOiNasEBH+YNKulpcpSrYH7SYPZMhXoHv54uoMYxS7WcfkkD5LAbIi4yup7Zwz6xzu9ycnS+ms6cbSMq8NCVYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8BxD6okp9hpWegjAA--.40411S3;
+	Fri, 10 Apr 2026 15:30:45 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by front1 (Coremail) with SMTP id qMiowJCxfcIdp9hpYDJqAA--.3805S3;
+	Fri, 10 Apr 2026 15:30:41 +0800 (CST)
+Subject: Re: [PATCH v10 0/2] LoongArch: KVM: Add DMSINTC support irqchip in
+ kernel
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: maobibo@loongson.cn, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kernel@xen0n.name, linux-kernel@vger.kernel.org, lixianglai@loongson.cn
+References: <20260409024215.136932-1-gaosong@loongson.cn>
+ <CAAhV-H7JcTV9aBChaYnR4irFt8O3C_9cOu_q4Krc6Q1c7Xwquw@mail.gmail.com>
+From: gaosong <gaosong@loongson.cn>
+Message-ID: <45b93b94-fceb-c41e-9b3a-c2b3187eecae@loongson.cn>
+Date: Fri, 10 Apr 2026 15:31:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
- properties
-To: Hongliang Wang <wanghongliang@loongson.cn>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260325011852.19079-1-wanghongliang@loongson.cn>
- <20260325011852.19079-2-wanghongliang@loongson.cn>
- <20260325-outstanding-weasel-of-fruition-89db37@quoll>
- <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
- <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
- <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
- <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
- <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
- <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
- <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
- <a08ac3f9-a770-df48-a95b-4b07cd2c0d58@loongson.cn>
- <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn>
- <dc1c0b6d-b6e6-4a88-8e50-e8316e3dcf5e@kernel.org>
- <0f560e80-3fbb-c24f-51f9-b4425db17867@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <0f560e80-3fbb-c24f-51f9-b4425db17867@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAAhV-H7JcTV9aBChaYnR4irFt8O3C_9cOu_q4Krc6Q1c7Xwquw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxfcIdp9hpYDJqAA--.3805S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAF1fuFy7GrW7CFWDtF4UWrX_yoW5Zw1rpF
+	W3u3Z0kr48Jr13ArsF93Wvvr4UAr93Jr12ga4aga47CrsIqF18Xrn5GrZFyF9Fg3yrGF10
+	qa4fW34a93WUJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
 
-On 10/04/2026 05:04, Hongliang Wang wrote:
-> Hi, Krzysztof
-> 
-> On 2026/4/9 下午8:11, Krzysztof Kozlowski wrote:
->> On 09/04/2026 14:03, Hongliang Wang wrote:
->>> I have a question, the input clock of i2c controller can be described by
->>> "clocks",
->>> but there is no existing attribute can describe the divisor of the input
->>> clock,
->>> Can I define a new attribute named "clock-div" to describe it in DT
->>> bindings?
->>> or do you have any standard solutions for the divisor problem? Thank you.
->>>
->> You should determine/calculate the divisor in the driver code, depending
->> on clocks and bus frequencies. You don't need a property for that, usually.
-> 
-> Not only clocks and bus frequencies, but also a third property is required.
-> 
-> The frequency divison calculation formula of i2c is
-> Prcescale = clock_a/(clock_div*clock_s)-1
-> 
-> There is three parameters in this formula:
-> clock_a represents the input clock, which is described by "clocks",
-> clock_s represents the i2c bus frequency, which is described by 
-> "clock-frequency",
-> but there is no existing property to describe clock_div, which has 
-> different value
-> on different platform (for example, it is 5 on 7a1000/7a2000, 4 on 
-> 2K1000/2K2000,
-> 5.5 on 2K3000.), So I need a property to describe clock_div in this formula.
+在 2026/4/9 下午8:39, Huacai Chen 写道:
+> Applied with small modifications, thanks.
+>
+> Now all KVM patches for 7.1 are applied here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-kvm
+>
+> Please ensure that everything works well.
+>
+After some basic testing, the functionality is working properly. Compatibility is fine.
 
-So it is fixed per compatible? Then you do not need.
+Thanks.
+Song Gao
 
+> Huacai
+>
+> On Thu, Apr 9, 2026 at 11:08 AM Song Gao <gaosong@loongson.cn> wrote:
+>> Hi,
+>>
+>> This series  implements the DMSINTC in-kernel irqchip device,
+>> enables irqfd to deliver MSI to DMSINTC, and supports injecting MSI interrupts
+>> to the target vCPU.
+>> applied this series.  use netperf test.
+>> VM with one CPU and start netserver, host run netperf.
+>> disable dmsintc
+>> taskset 0x2f  netperf -H 192.168.122.204 -t UDP_RR  -l 36000
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
+>>
+>> 212992 212992 1        1       36000.00   27107.36
+>>
+>> enable dmsintc
+>> Local /Remote
+>> Socket Size   Request  Resp.   Elapsed  Trans.
+>> Send   Recv   Size     Size    Time     Rate
+>> bytes  Bytes  bytes    bytes   secs.    per sec
+>>
+>> 212992 212992 1        1       36000.00   28831.14  (+6.3%)
+>>
+>> v10:
+>>    *Changed from v8;
+>>    *Rebase.
+>>
+>> v9:
+>>   *Correct the incorrect parameter type and remove the function prefix;
+>>   *Fix a boundary value check.
+>>
+>> v8:
+>>    *Move dmsintc_inject_irq(),dmsintc_deliver_msi_to_vcpu()and
+>> dmsintc_set_msi_irq to dmsintc.c.
+>>    *Rebase.
+>>
+>> v7:
+>>    *Rebase;
+>>    *Fix a typo error;
+>>    *Drop an extra space;
+>>    *Move some code from patch2 to patch1.
+>>    *Rename loongarch_dmsintc_inject_irq() to dmsintc_inject_irq() and move
+>> it to interrupt.c;
+>>    *Rename kvm_loongarch_deliver_msi_to_vcpu() to
+>> dmsintc_deliver_msi_to_vcpu() and move it to irqfd.c;
+>>    *Drop loongarch_set_msi() and dispatch the dmsintc/eiointc
+>> paths in pch_msi_set_irq().
+>>
+>> v6:
+>>    Fix kvm_device leak in kvm_dmsintc_destroy().
+>>
+>> v5:
+>>    Combine patch2 and patch3
+>>    Add check msgint feature when register DMSINT device.
+>>
+>> V4: Rebase and R-b;
+>>     replace DINTC to DMSINTC.
+>>
+>> V3: Fix kvm_arch_set_irq_inatomic() missing dmsintc set msi.(patch3)
+>>
+>> V2:
+>> https://patchew.org/linux/20251128091125.2720148-1-gaosong@loongson.cn/
+>>
+>> Thanks.
+>> Song Gao
+>>
+>>
+>> Song Gao (2):
+>>    LoongArch: KVM: Add DMSINTC device support
+>>    LoongArch: KVM: Add dmsintc inject msi to the dest vcpu
+>>
+>>   arch/loongarch/include/asm/kvm_dmsintc.h |  26 ++++
+>>   arch/loongarch/include/asm/kvm_host.h    |   3 +
+>>   arch/loongarch/include/asm/kvm_pch_pic.h |   4 +-
+>>   arch/loongarch/include/uapi/asm/kvm.h    |   4 +
+>>   arch/loongarch/kvm/Makefile              |   1 +
+>>   arch/loongarch/kvm/intc/dmsintc.c        | 190 +++++++++++++++++++++++
+>>   arch/loongarch/kvm/intc/pch_pic.c        |  15 +-
+>>   arch/loongarch/kvm/interrupt.c           |   2 +
+>>   arch/loongarch/kvm/irqfd.c               |  11 +-
+>>   arch/loongarch/kvm/main.c                |   6 +
+>>   include/uapi/linux/kvm.h                 |   2 +
+>>   11 files changed, 255 insertions(+), 9 deletions(-)
+>>   create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
+>>   create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+>>
+>> --
+>> 2.39.3
+>>
 
-Best regards,
-Krzysztof
