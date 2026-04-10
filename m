@@ -1,116 +1,122 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1556C3AD51A
-	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 08:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C9EC37DEA0
+	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 10:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775809259; cv=none; b=Hf2jKH6kTbazl0qEUlx4xRudxqhpxiWgi8+Pknnd3Iw0taDciTQEOX9mLiJ97I9S84K8cEFg0qSAESfNQFs6vXIfaNPdvbPTOHB6hfwNF2if38HPLQmk7PVylL/AjOm3Liz2VlDM6I9tXgRq7HK7RvD6JejZ4nCRmADdnMugzyg=
+	t=1775816607; cv=none; b=ov0bfGkfR4WdDY3VwYbUzfyBiIF7srCadc8LfAWmvco9tgQqXsdR6oBmZopWChfTc2/aR3gnZXCiWbMlUYC328kwYdDJAUPiVsvkTujSfT99TznyDMJaiiX0raVQOKDa8pEVMs6bqp0PBHoc1iHGnnzimGRPh7c5HWt/Ix1XO5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775809259; c=relaxed/simple;
-	bh=OFHEx486+doBb6U2ENiOcMTUx2zJFUWYJ5DRPbM5rb0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=IJdXLKU22WC41Pd12PSF4/s/3MxqTHtJRAfi2mmY7C5oEA+DBYaCfhDzxvyP0W2kVdoo2SLfv25kjWBA4gKYRtEM4tFv1KmGjVb+B/QUcYVZSYyFkte4o2HFgcEb4vsfNbGjOuhsiOf2kv0BDD+z0GG5nSfAzrzWD3pseinYKeU=
+	s=arc-20240116; t=1775816607; c=relaxed/simple;
+	bh=yBZaykq8NceUyGXJ09ciRntxCq5vrz2Gky5gYr1KgLY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X68fVAwvS9uuyBHHZS5WcuS0C+MOv57yxdVtttG6hlVtz6m2nJGlCNRK/J4e8S3NLEbj4TR3q3FtvsfIEINjG0Zwb7D6A9WPT0l7ngP0wmHRdu8OVAbNiu/1duu40sipDNZSV/THiB49TZto1H35L8X7Gdhs5QWDLbNHoDMPc/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8BxWcLmsthpd+wjAA--.34409S3;
-	Fri, 10 Apr 2026 16:20:54 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJCxHOHlsthp9zhqAA--.5473S3;
-	Fri, 10 Apr 2026 16:20:53 +0800 (CST)
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
- properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260325011852.19079-1-wanghongliang@loongson.cn>
- <20260325011852.19079-2-wanghongliang@loongson.cn>
- <20260325-outstanding-weasel-of-fruition-89db37@quoll>
- <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
- <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
- <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
- <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
- <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
- <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
- <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
- <a08ac3f9-a770-df48-a95b-4b07cd2c0d58@loongson.cn>
- <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn>
- <dc1c0b6d-b6e6-4a88-8e50-e8316e3dcf5e@kernel.org>
- <0f560e80-3fbb-c24f-51f9-b4425db17867@loongson.cn>
- <3c57275e-0574-46e5-9893-053ae5cc22cb@kernel.org>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <991204c6-6710-e62c-69ab-d7db91325013@loongson.cn>
-Date: Fri, 10 Apr 2026 16:20:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [223.64.68.17])
+	by gateway (Coremail) with SMTP id _____8Bx28KPz9hpH_YjAA--.33798S3;
+	Fri, 10 Apr 2026 18:23:13 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.17])
+	by front1 (Coremail) with SMTP id qMiowJCxdcCEz9hpUkpqAA--.37300S2;
+	Fri, 10 Apr 2026 18:23:10 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v7.1
+Date: Fri, 10 Apr 2026 18:22:45 +0800
+Message-ID: <20260410102245.2749691-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <3c57275e-0574-46e5-9893-053ae5cc22cb@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJCxHOHlsthp9zhqAA--.5473S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kw4rWFy5Wr1fXr1DXw4UWrX_yoW8Wr13pF
-	Z3KF1qyrZ8Aryvv397Kw1xZr1Yyws8Cr4rJry8KryUZw45ZryrtF1fArZ5Wr9Y9r1fA3yj
-	va1kGa4DurZxZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxdcCEz9hpUkpqAA--.37300S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGw1DArWDXr4DCFWxtFyfKrX_yoW5WF4kpF
+	W3urn3Gr48GFyfJrn7Ka4DurnrJF1xGr1IqF1ayFy8Ar42vF18Xry8GrykXFy5Gay8Jr1F
+	vr1fG3WYgF1UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GF
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
-	yCJUUUUU=
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UNvtZUUUUU=
 
+The following changes since commit 591cd656a1bf5ea94a222af5ef2ee76df029c1d2:
 
-On 2026/4/10 下午2:42, Krzysztof Kozlowski wrote:
-> On 10/04/2026 05:04, Hongliang Wang wrote:
->> Hi, Krzysztof
->>
->> On 2026/4/9 下午8:11, Krzysztof Kozlowski wrote:
->>> On 09/04/2026 14:03, Hongliang Wang wrote:
->>>> I have a question, the input clock of i2c controller can be described by
->>>> "clocks",
->>>> but there is no existing attribute can describe the divisor of the input
->>>> clock,
->>>> Can I define a new attribute named "clock-div" to describe it in DT
->>>> bindings?
->>>> or do you have any standard solutions for the divisor problem? Thank you.
->>>>
->>> You should determine/calculate the divisor in the driver code, depending
->>> on clocks and bus frequencies. You don't need a property for that, usually.
->> Not only clocks and bus frequencies, but also a third property is required.
->>
->> The frequency divison calculation formula of i2c is
->> Prcescale = clock_a/(clock_div*clock_s)-1
->>
->> There is three parameters in this formula:
->> clock_a represents the input clock, which is described by "clocks",
->> clock_s represents the i2c bus frequency, which is described by
->> "clock-frequency",
->> but there is no existing property to describe clock_div, which has
->> different value
->> on different platform (for example, it is 5 on 7a1000/7a2000, 4 on
->> 2K1000/2K2000,
->> 5.5 on 2K3000.), So I need a property to describe clock_div in this formula.
-> So it is fixed per compatible? Then you do not need.
->
-OK, I will fix the clock_div based on per compatible. thank you.
-> Best regards,
-> Krzysztof
-Best regards,
-Hongliang Wang
+  Linux 7.0-rc7 (2026-04-05 15:26:23 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-7.1
+
+for you to fetch changes up to e47b8e1db9a9bbef6765e85b11e87f48e6b56846:
+
+  KVM: LoongArch: selftests: Add PMU overflow interrupt test (2026-04-09 18:56:38 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v7.1
+
+1. Use CSR_CRMD_PLV in kvm_arch_vcpu_in_kernel().
+2. Let vcpu_is_preempted() a macro & some enhanments.
+3. Add DMSINTC irqchip in kernel support.
+4. Add KVM PMU test cases for tools/selftests.
+
+----------------------------------------------------------------
+Bibo Mao (4):
+      LoongArch: KVM: Check kvm_request_pending() in kvm_late_check_requests()
+      LoongArch: KVM: Move host CSR_EENTRY save and restore in context switch
+      LoongArch: KVM: Move host CSR_GSTAT save and restore in context switch
+      LoongArch: KVM: Make vcpu_is_preempted() as a macro rather than function
+
+Song Gao (5):
+      LoongArch: KVM: Add DMSINTC device support
+      LoongArch: KVM: Add DMSINTC inject msi to vCPU
+      KVM: LoongArch: selftests: Add cpucfg read/write helpers
+      KVM: LoongArch: selftests: Add basic PMU event counting test
+      KVM: LoongArch: selftests: Add PMU overflow interrupt test
+
+Tao Cui (1):
+      LoongArch: KVM: Use CSR_CRMD_PLV in kvm_arch_vcpu_in_kernel()
+
+ arch/loongarch/include/asm/kvm_dmsintc.h           |  27 +++
+ arch/loongarch/include/asm/kvm_host.h              |   3 +
+ arch/loongarch/include/asm/kvm_pch_pic.h           |   3 +-
+ arch/loongarch/include/asm/qspinlock.h             |  26 ++-
+ arch/loongarch/include/uapi/asm/kvm.h              |   4 +
+ arch/loongarch/kernel/paravirt.c                   |  16 +-
+ arch/loongarch/kvm/Makefile                        |   1 +
+ arch/loongarch/kvm/intc/dmsintc.c                  | 182 ++++++++++++++++++
+ arch/loongarch/kvm/intc/pch_pic.c                  |  15 +-
+ arch/loongarch/kvm/interrupt.c                     |   2 +
+ arch/loongarch/kvm/irqfd.c                         |  10 +-
+ arch/loongarch/kvm/main.c                          |  14 +-
+ arch/loongarch/kvm/vcpu.c                          |  29 +--
+ include/uapi/linux/kvm.h                           |   2 +
+ tools/testing/selftests/kvm/Makefile.kvm           |   3 +-
+ .../testing/selftests/kvm/include/loongarch/pmu.h  |  66 +++++++
+ .../selftests/kvm/include/loongarch/processor.h    |  15 ++
+ .../selftests/kvm/lib/loongarch/processor.c        |  15 +-
+ tools/testing/selftests/kvm/loongarch/pmu_test.c   | 205 +++++++++++++++++++++
+ 19 files changed, 593 insertions(+), 45 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
+ create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
+ create mode 100644 tools/testing/selftests/kvm/include/loongarch/pmu.h
+ create mode 100644 tools/testing/selftests/kvm/loongarch/pmu_test.c
 
