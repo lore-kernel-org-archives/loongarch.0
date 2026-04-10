@@ -1,128 +1,129 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B211A3172
-	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 01:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775784807; cv=pass; b=I88s+LfFANN20QPkyX4tZCqFoEVYQHBT0OJBKC9Z5JBPR+ug6RbD0GIngBkeuCimKouvBd8nc4E1chOcVXNmSBzGOIs8HTUb+faP/2QH0uM1KLiCH/UjFOFl21PemjkUlkEFCnKnbc+zlGv0WLDANo2ASbeK4ZuelS3bTIoGtR8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775784807; c=relaxed/simple;
-	bh=v0RxlfXW3Yt4r9QqOZBaKvi8zTLZ/zaxLSOp6ntgf+M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WZm5hS8u9NnjVD8zdsLw5H0fgbm+TULX8ChmC0HeFUjLTJogA8mhQJqLNI0gA3g2ygzew9gqmYW3KwXaDep2pmqBvDOVLKDB+JaAUqbY3s4031BOxEfJhbTnBIFd6BUGp54gqLlK44N+uTKBAjYLhDHwSP22CkqRDt/yLbY5+Bc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bl4fTFmS; arc=pass smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE838634C;
+	Fri, 10 Apr 2026 03:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775790237; cv=none; b=SHApuX8mJS9IEWO2xEouqW9f1YF23K8LF7WFHRXun+FofcVmI5RS/nFhnkeQDV2kEbppN9A8vQ+cUHZkRVHrOpB3Vazt9BDY/lsB8x+h4FM17K8SKuX8PgJDYPXbVEXSMupuGKGeEVAw5tGykezx1IC1qqUEXcdUKwOle6BcH0E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775790237; c=relaxed/simple;
+	bh=Nwk8dytVxtAcRGL5pp2fXfwnyG0rAc7e4uC2d6AAYRg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=bEA7o13cZaNLq0NXlXs5TrIlGBpyrDRzOKf4gM673yw2bDTY5d/2mdFnfUeRCbRd3vlqh4Ehs8BNTvuHrCsyfQLqJ+s24QbBYpxcksCZyIjZIyIfl8VtdV050ZHkKwxle131xwrILbSFd+7VSLrwoYFbrVmt4QSouqYB3u6PEw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/D7P0On; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bl4fTFmS"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9bfcbaa81eso242146966b.1
-        for <loongarch@lists.linux.dev>; Thu, 09 Apr 2026 18:33:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775784805; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OvEXL8x25Kuo9kHDBuHV9PChX6IkDPFQPvXmyF0Z9y//Rizba6H1NsEB7PMqzJQyqe
-         lgnn4UQ9svzb+MkhmhuZvuMxmWahAEeacVMoZ6ciFe9BVAxeivXZC0cJtqQtm7IX47u6
-         jLgjkw+pDkcNgEky7T+QBzgpr1wnIEzc1H98SbXrt5tYpFdOB005SlCbvuOrIdUj1j7D
-         lFlKyHi4TQ7K0V12e+N4HfX1iBb+ItzKlXqJUuQoJ5LDZbY0V9d3Acan1UcnaDlZ3fZg
-         ZLS9dVa0Ny+R2njfeTsWbuuQc9A6pSiqRruk1pTTK/Zqy3JsI1wl5vDoCF3Z3zHxHbw3
-         PYrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=TAZr5maqNwb2p7O3QeXeUeWJQwU2bOpGNhJioqUYzWw=;
-        fh=N8p9/gbacb54Ye0cfgQKohtpqZEkqNWzs7CU+iOyYXE=;
-        b=US0GOTycpKLsOt9tD45El3F9ot+YC7ToXt52dt6XjEeszR232EPwTxXNQHfQXlbfDp
-         NuZeptWvI7rOKN1+cSYJBdo4/jYrqDGv4hK1dDj5t4dX9JHj/TVquzCg6o46KkD3xUld
-         AD9Rh/Y7s6iaHKKeTn0F7wRIPjPzdjG2xP15Xlbsi0yntDku4v1POJ3vVDNOPDKQ866Y
-         K3Zyz0qNE4P3i5t5fO2xP1AySFzeqR75EAQuTOoe7y3riQfOm7+4IykKxdU4ZCqjphpy
-         R2ELrb++gYO9QCcR7Mk3w3rbbR2qYWM7bbKOxoM8DszPY7ws+uoVpyXzWBhiYFqsoO9G
-         Raxw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775784805; x=1776389605; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TAZr5maqNwb2p7O3QeXeUeWJQwU2bOpGNhJioqUYzWw=;
-        b=Bl4fTFmS+NDQNbcUVD0BBPbBH6faPUFrSPQxJgehlFj8OZGPmg4BU/7OFmiXkOwXnM
-         fMsk3e0MYmNNtKJ5nswgQMO3+uNcGYT2//R2k6HzBRPNLqZsGDaFrcRu4T3OxzdYONdF
-         ONW1ZYHwnndmtd7jlMC1ypY8X7egSUKiU5QLx5kafQrwcRXUHkB0IaZyxYaPEY9yJSAP
-         66Ft3J+tQvwtAyLgaGsFHQ2ycxaGxEo+DJtkHr0CfesUB9+jrdgOMrz8uk6YRExI0bFL
-         j2q3o9F3y7pxBDRUXK+Bg8O68duZAfTXUA+egYx42ByFXY2jqUMMEfE/ynzyaTBm5V2G
-         31hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775784805; x=1776389605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=TAZr5maqNwb2p7O3QeXeUeWJQwU2bOpGNhJioqUYzWw=;
-        b=kGsfmaWJ/YkcKNyd9e3XDIOzC/BIVzBx2pU8xvYUPKzuybAaYm6HGk8nXGQtNRBqia
-         zCpgnptuDrgbtfV9+h/0a5QHbHuqC6bLjKCtxW63IZmJQX0gHyy7tyzxRDL5lZEZHs5p
-         IHH/DQZDJBMi8782L1Jeo0gSnH4aCqg5cvY+eim3FNaRe31lCSBLxa44mCrNH4sj/o/l
-         PNMYCxF+PInhL6t1Z4j6PUyJqRvhmiyjIEve93ljPqm/kGyGy1ezQ6gO4qXfNvA/V1Tn
-         rtaC/huCqe/s7Fs+CC75Pbl7WWliningv2zdlejYaEHASKbxuCnzEU3d+3R2DdtCddCJ
-         9jpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQHbsGy2X2llJYqfM89/MDhlWKUzkn0Qe4+v6j9HWHJRXbage0pKKMDQVCh09sv7l3nzc5BOBdcu8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxcC+ko0ei6i8YuvdxhU09Qg6KYsvHbT8z0Yml+2fCU/2i39Kqb
-	aWdHLzMTuMa5rU7wGT5y7cy5we1EF5lz1UGf4HhGoa/HJa66kdoZvhTxATsga0Lm03f6xwqWSyq
-	SP5q3TL6xQ5nXuF32zZHEfeMAFfhEsq8=
-X-Gm-Gg: AeBDiesg8VilLPRetMEQHNDPSrE6myyxuyW/hizFA3W48aCVLJMINJkW5O66/UBaVYs
-	X41KRhk9G5iTZHGWZaWivwgXDrSHhWCSMThLwt5mJLcMmeD408pgXoiTnrbSVGSdCjnQXAE4iif
-	SvTcXFQyE5fZ0Fa+BsCV42ekPCc6t+7oVakYKEeN8e092s9ngPvghOu3WzPUQqAzwKYoI/FFIlc
-	dLTwqmuV9EnKdOK8+ufaV5qCxWrE4+QihCq20Zp3xSsaUYsxD6GQgcUaS3IDzIRW+x7PN52h42m
-	IgGUYdhB
-X-Received: by 2002:a17:906:33c8:b0:b9c:8da:15ab with SMTP id
- a640c23a62f3a-b9d72ad229amr50444266b.44.1775784804564; Thu, 09 Apr 2026
- 18:33:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/D7P0On"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C90C4AF09;
+	Fri, 10 Apr 2026 03:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775790237;
+	bh=Nwk8dytVxtAcRGL5pp2fXfwnyG0rAc7e4uC2d6AAYRg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=T/D7P0OnXqHBDeQqj0h+GFE/3Xub3uNWD/H6IQFMt2AY/bVaKy+WmWuJnHHHPs4te
+	 hV9xrnF3uDTri3QzZLfx5iXWWOJjOHraM49yvjYlNU4idQTQ+/Sm3e0QBl2DI93SWn
+	 lV68Gq3HrDHSYteo85CoZZEXlSJugMUTCVv+QbvJPDu34f6X/8VLyYV6FTPQEDtclJ
+	 ajyD2uqb/ZTUnOgDwjdDTl+pyVgJHVqYiR+gAIfeeejGfdPS8EzWxC8Kd1fe1Qw6HU
+	 n0zDG+/IH8P7jUAey0rb5m9iJQ+QpVGqPHl1+NZdXdiwtZ0yCDj1wYJccYYpDVlwtg
+	 segn4CgTD+0SQ==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 1DD50F4006C;
+	Thu,  9 Apr 2026 23:03:55 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 09 Apr 2026 23:03:55 -0400
+X-ME-Sender: <xms:m2jYaVvuNB5v6GdnqhWjXHPrj-Xs1ai94wK3KRNupkgFhOqQzZzC3g>
+    <xme:m2jYaUkpyJyCUCNgE74bnGCIbxEU2FOGFeTlPUTKpeQlSmmrwZCpKgaYK17P95KFr
+    nEzX-ncsYgUTkO6FZme_rDCXDG2CwOa1VyCDjvXXLNAOHNJiDm0VQ>
+X-ME-Received: <xmr:m2jYabd6-O1qxrmkpOxlYl4FVsVLLTtlO0FUgeKGKnisk32YMxXKA6ajLjBSsi4OwpBieBXg5XNaIMpiNH287KhulUeaVDZHAno>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvkedviecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpeffrghnucghihhl
+    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    elhfeiudfgvdeijedtleeltdduueekffejjedvjefhgeevjeefueejledtleetjeenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomh
+    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeel
+    gedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpd
+    hnsggprhgtphhtthhopeehjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephhgt
+    hheslhhsthdruggvpdhrtghpthhtoheprhhitghhrghrugdrhhgvnhguvghrshhonheslh
+    hinhgrrhhordhorhhgpdhrtghpthhtohepmhgrthhtshhtkeeksehgmhgrihhlrdgtohhm
+    pdhrtghpthhtoheplhhinhhmrghgjeesghhmrghilhdrtghomhdprhgtphhtthhopehlih
+    hnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheptggrthgrlhhinhdr
+    mhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegt
+    hhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:m2jYaaC4G7STwDvUR7CS2sxLuhd9_4NTIflnGuzCDX01-Jgs4uT14w>
+    <xmx:m2jYabFJVBuKmgUrK5OxBUlDqAvsZl1v-KMAzmE5eUIfVrz_tB9pMg>
+    <xmx:m2jYaaX7R7qnh6LbNHm0_HED8Pa2kjuIJjs5gCHCF1o3NoJmwEhrDw>
+    <xmx:m2jYaRZOO7FN7nulMEWiPxFetgPeGu3izX4XOgb9ubOxzrqmygE-lA>
+    <xmx:m2jYaUDJMWByc2-YkX4kdjvhaEqEcInJJMajfYWN-Sgm8d1ZFIpInjBP>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 9 Apr 2026 23:03:53 -0400 (EDT)
+Date: Thu, 09 Apr 2026 20:03:52 -0700
+From: Dan Williams <djbw@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Richard Henderson <richard.henderson@linaro.org>,
+  Matt Turner <mattst88@gmail.com>,  Magnus Lindholm <linmag7@gmail.com>,
+  Russell King <linux@armlinux.org.uk>,
+  Catalin Marinas <catalin.marinas@arm.com>,
+  Will Deacon <will@kernel.org>,  Ard Biesheuvel <ardb@kernel.org>,
+  Huacai Chen <chenhuacai@kernel.org>,  WANG Xuerui <kernel@xen0n.name>,
+  Madhavan Srinivasan <maddy@linux.ibm.com>,
+  Michael Ellerman <mpe@ellerman.id.au>,
+  Nicholas Piggin <npiggin@gmail.com>,
+  "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+  Paul Walmsley <pjw@kernel.org>,  Palmer Dabbelt <palmer@dabbelt.com>,
+  Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,
+  Heiko Carstens <hca@linux.ibm.com>,  Vasily Gorbik <gor@linux.ibm.com>,
+  Alexander Gordeev <agordeev@linux.ibm.com>,
+  Christian Borntraeger <borntraeger@linux.ibm.com>,
+  Sven Schnelle <svens@linux.ibm.com>,
+  "David S. Miller" <davem@davemloft.net>,
+  Andreas Larsson <andreas@gaisler.com>,
+  Richard Weinberger <richard@nod.at>,
+  Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+  Johannes Berg <johannes@sipsolutions.net>,
+  Thomas Gleixner <tglx@kernel.org>,  Ingo Molnar <mingo@redhat.com>,
+  Borislav Petkov <bp@alien8.de>,
+  Dave Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org,
+  "H. Peter Anvin" <hpa@zytor.com>,
+  Herbert Xu <herbert@gondor.apana.org.au>,
+  Dan Williams <djbw@kernel.org>,  Chris Mason <clm@fb.com>,
+  David Sterba <dsterba@suse.com>,  Arnd Bergmann <arnd@arndb.de>,
+  Song Liu <song@kernel.org>,  Yu Kuai <yukuai@fnnas.com>,
+  Li Nan <linan122@huawei.com>,  Theodore Ts'o <tytso@mit.edu>,
+  "Jason A. Donenfeld" <Jason@zx2c4.com>,  linux-alpha@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+  loongarch@lists.linux.dev,  linuxppc-dev@lists.ozlabs.org,
+  linux-riscv@lists.infradead.org,  linux-s390@vger.kernel.org,
+  sparclinux@vger.kernel.org,  linux-um@lists.infradead.org,
+  linux-crypto@vger.kernel.org,  linux-btrfs@vger.kernel.org,
+  linux-arch@vger.kernel.org,  linux-raid@vger.kernel.org
+Message-ID: <69d86898b666c_2b31100cd@djbw-dev.notmuch>
+In-Reply-To: <20260327061704.3707577-23-hch@lst.de>
+References: <20260327061704.3707577-1-hch@lst.de>
+ <20260327061704.3707577-23-hch@lst.de>
+Subject: Re: [PATCH 22/28] xor: add a better public API
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <cover.1773991081.git.zhoubinbin@loongson.cn> <4236113143cc88b45062c1b8a34a1f840f29a0ac.1773991081.git.zhoubinbin@loongson.cn>
- <adfMBWyDh27NRe0T@zenone.zhora.eu>
-In-Reply-To: <adfMBWyDh27NRe0T@zenone.zhora.eu>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Fri, 10 Apr 2026 09:33:12 +0800
-X-Gm-Features: AQROBzAlSa5JEpCh7UCmcjzWRk8bSKAVEwCcV1FA_1Ptmw1ZcZ9lnGSVxWuLbF8
-Message-ID: <CAMpQs4KYDVJnok5UfPJb3b=WR6u3OTdps+976YOox9dAFKkEcg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] i2c: ls2x-v2: Add driver for Loongson-2K0300 I2C controller
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Andy Shevchenko <andy@kernel.org>, 
-	linux-i2c@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andi:
+Christoph Hellwig wrote:
+> xor_blocks is very annoying to use, because it is limited to 4 + 1
+> sources / destinations, has an odd argument order and is completely
+> undocumented.
+> 
+> Lift the code that loops around it from btrfs and async_tx/async_xor into
+> common code under the name xor_gen and properly document it.
 
-Thanks for your review.
+Apologies for the latency on taking a look at this set from me. This and
+the touch to async_xor() look good.
 
-On Thu, Apr 9, 2026 at 11:57=E2=80=AFPM Andi Shyti <andi.shyti@kernel.org> =
-wrote:
->
-> Hi Binbin,
->
-> > +config I2C_LS2X_V2
-> > +     tristate "Loongson-2 Fast Speed I2C adapter"
-> > +     depends on LOONGARCH || COMPILE_TEST
-> > +     help
->
-> I'm getting a compile error here, I guess you also need
-> REGMAP_MMIO here, right?
-
-Yes, that is indeed necessary. I=E2=80=99ll double-check to see if there ar=
-e
-any other omissions.
-It seems my other driver has a similar omission as well. Thank you very muc=
-h.
-
->
-> Andi
-
---=20
-Thanks.
-Binbin
+Reviewed-by: Dan Williams <djbw@kernel.org>
