@@ -1,172 +1,113 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60242175A75
-	for <loongarch@lists.linux.dev>; Fri, 10 Apr 2026 03:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7442DF13F;
+	Fri, 10 Apr 2026 03:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775790387; cv=none; b=p3+UO5kA9zyrNok6hrvqoEGsIJFJpGKXk1Nf7/LV/W/sv/h1ZPU3P+uZi6Q/uphND4rdXCLbwx2oO2EIqNzfMCuwxr+l5MX3cU1F6f6hL7R+Et1ItNXZ7YekRtr5cRvQ4VfMr0UCLLwt26OvfKCzCh53T9OtDkTm/6zFZZ0//ZM=
+	t=1775790389; cv=none; b=G1ZI8tGsDxkTnYMvxERbhfjZdIC3jbxsV/ULcsfBPzLoHXW2+2TICWVDWNaKEmyJs7Yx1n0Or1owuOka47ngpr2t9RyJF+eUuwsxqR1kXIFTwh6VxRQnY5fEBW4fp/gIAdIEbUdRFLY/B+0xQzcGIkDkSoDFX+JQlIySBGWO5I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775790387; c=relaxed/simple;
-	bh=Ta1dGj9Uk90qAxgKt8w/tcpneI6cqiDPS95714G+5yw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PFLh1JKzq8AQ8NKoCwrfu+D90/qRm/7TJPYoGBm1scdnfUeMo2Qlj8/Jsm/2o9bfxsWUrJPVWTWwBUJgp9Jq0WvjtJqwLe3IqXYVjv01PlGv4e8+mwvUV7eqa1E5kYj4E+0v2ZRNcNYDjLdPi+zeJVg2caB2DgZg9Ft+J2K+/jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8Axz8Mnadhpx9ojAA--.1006S3;
-	Fri, 10 Apr 2026 11:06:15 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJAxXcImadhp+xBqAA--.2537S3;
-	Fri, 10 Apr 2026 11:06:14 +0800 (CST)
-Subject: Re: [PATCH v1 1/2] dt-bindings: i2c: ls2x-i2c: Add clock- related
- properties
-To: Yao Zi <me@ziyao.cc>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260325-outstanding-weasel-of-fruition-89db37@quoll>
- <1b5283d8-294c-86de-c3d8-bf205ac24216@loongson.cn>
- <0d7dfe5b-5e2d-4850-8922-16eb6bd9bcae@kernel.org>
- <900dc1a4-66ab-411f-8a32-4c6cf339e8ec@kernel.org>
- <bc22bad4-9825-829d-1df0-a801ebd933d6@loongson.cn>
- <ca984be0-e7a6-4897-bf9f-db9465942c6e@kernel.org>
- <ac62e280-1099-c0bc-f322-ba8b65307053@loongson.cn>
- <2388acbc-a927-4727-a23c-5ecd7c33a926@kernel.org>
- <a08ac3f9-a770-df48-a95b-4b07cd2c0d58@loongson.cn>
- <e10017ce-cda0-5b5e-8cd8-3488aef4cdb0@loongson.cn> <adfF4y8_GhtExZMf@pie>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <815c5f0f-5dbb-677a-9fb2-9cf49d71408f@loongson.cn>
-Date: Fri, 10 Apr 2026 11:06:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1775790389; c=relaxed/simple;
+	bh=Tf8vCgldFUBRr9Xt5B+9qq6kfVEzE04QacFG7bCoGFE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lv3NfJM3URlHcvMl+3jhaXGb6bj8PVySMhLDY78bd9dOdrY57KEFCOclGBnJBprsVK4N5yPjYmHkAPyxxQBtB0J0Dh7eQx4SS4Z64M26leFRyR1JKgP4mukwPZny8HFjpc0SVdknXdHFl1kjuOm/rZkpc45mkYS6vJk5/SflQHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l1oJ2TKm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l1oJ2TKm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF09AC4CEF7;
+	Fri, 10 Apr 2026 03:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775790389;
+	bh=Tf8vCgldFUBRr9Xt5B+9qq6kfVEzE04QacFG7bCoGFE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=l1oJ2TKmq0qshfhrFhFWA40LRRNBn8qvWLYrIqsxmR9ww82hBGV29HIOjOp6Ru/Zf
+	 HSs3rnxcHa+KntGbTXym6NkG81piXT64XWSqjln+Nf4UdG7s2ZgM4yZrud9Jpay25O
+	 PgG9FtyXm+xByp6FNWuaIDCEGZygzfnuBQhUnJdTquT3tm89KlmLyPK8yD4gFEr4C5
+	 /HiV1N3avL7oLXur714EyF4DmDq8x7PbQY0qdxPBS8P4TGOPoPYx2RqK2zU0hvNJ0w
+	 HPjNIhkkqXeVyHVk53/wxGJVzBE6TIxe34PnxIAahuDCtRt2DBs2v68z2gd1PujvKj
+	 A5RHL4aI4zh3g==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: achill@achill.org,
+	akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@nabladev.com,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	sr@sladewatkins.com,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Benno Lossin <lossin@kernel.org>
+Subject: Re: [PATCH 6.12 000/241] 6.12.81-rc2 review
+Date: Fri, 10 Apr 2026 05:06:03 +0200
+Message-ID: <20260410030603.70733-1-ojeda@kernel.org>
+In-Reply-To: <20260409091733.126574279@linuxfoundation.org>
+References: <20260409091733.126574279@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <adfF4y8_GhtExZMf@pie>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJAxXcImadhp+xBqAA--.2537S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWF18WF47Jw13CFW7XF4fZwc_yoWrXr15pF
-	Z3KF97JFWDJr1Svr1Iqw1xXF1jva15JF45Xry8Wr13Wws0vw1SvF1fJrWUWFyDWr15C3yj
-	yF1Uta97ZrW7ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
-	wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
-	xhVjvjDU0xZFpf9x07j1YL9UUUUU=
 
-Hi, Yao Zi
-
-On 2026/4/9 下午11:29, Yao Zi wrote:
-> On Thu, Apr 09, 2026 at 08:03:47PM +0800, Hongliang Wang wrote:
->> Hi, Krzysztof
->>
->> On 2026/3/31 下午3:11, Hongliang Wang wrote:
->>> On 2026/3/30 下午3:23, Krzysztof Kozlowski wrote:
->>>> On 30/03/2026 09:18, Hongliang Wang wrote:
->>>>> On 2026/3/27 下午2:39, Krzysztof Kozlowski wrote:
->>>>>> On 27/03/2026 04:09, Hongliang Wang wrote:
->>>>>>> The initial idea was that this patch could be used for
->>>>>>> both ACPI and DTS.
->>>>>>>>>> The i2c-ls2x driver is compatible with both Loongson 2K and 3A+7A
->>>>>>>>>> platform, parse
->>>>>>>>>> the same parameters regardless of dts or
->>>>>>>>>> acpi parameter passing, So
->>>>>>>>>> clock-input
->>>>>>>>>> and clock-div attributes are defined to
->>>>>>>>>> describe input clock of i2c
->>>>>>>>>> controller and
->>>>>>>>>> divisor of input clock. It can be used on
->>>>>>>>>> both 2K and 3A+7A platform.
->>>>>>>>> And you cannot use them in DTS.
->>>>>>> OK
->>>>>>>> I need to keep guessing what you want to achieve,
->>>>>>>> because neither your
->>>>>>>> message nor commit text was explicit
->>>>>>> What I want to achieve is to describe the input clock
->>>>>>> and divisor of I2C
->>>>>>> controller
->>>>>> Input clocks are defined as clock inputs obviously in DT, not as
->>>>>> integers. Bindings need to describe the hardware, so start with that.
->>>>> I can describe the hardware in loongson,ls2x-i2c.yaml, and I
->>>>> would like to
->>>>> confirm with you what final implementation plan you agree to? clock
->>>>> framework
->>>>> or custom clock-input an clock-div attributes? if clock framework, how
->>>>> can it
->>>>> also be used for ACPI?
->>>> And you ask DT maintainer for that? It's not relevant. You sent DT
->>>> bindings patch, so this patch must be correct and we discuss this patch
->>>> here.
->>> I don't. My idea is that if the clock input attribute can't be used for
->>> both
->>> dts and acpi, then clock framework will be used for dts and new define
->>> attribute
->>> will be used for acpi. I will first implement the hardware description
->>> and clock
->>> framework in Bindings.
->>>> Best regards,
->>>> Krzysztof
->>> Best regards,
->>> Hongliang Wang
->>>
->> I have a question, the input clock of i2c controller can be described by
->> "clocks",
->> but there is no existing attribute can describe the divisor of the input
->> clock,
->  From the description of 7A1000's user manual (section 2.3
-> "时钟功能描述"), it seems the divider isn't part of the I2C controller,
-> but instead is an on-chip divider with fixed 1/2 factor, feeding both
-> "MISC" block (including I2C) and SPI.
+On Thu, 09 Apr 2026 11:25:21 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
->> Can I define a new attribute named "clock-div" to describe it in DT
->> bindings?
->> or do you have any standard solutions for the divisor problem? Thank you.
-> If these devicetree-based Loongson platforms follow a similar pattern as
-> the bridge chip, then the divisor shouldn't be described in the I2C
-> controller node. You may want to include a "fixed-factor-clock" node to
-> match the hardware.
+> This is the start of the stable review cycle for the 6.12.81 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-Sorry, I didn't describe it clearly, The divisor I described doesn't 
-refer to
-the fixed 1/2 factor feeding MISC block(including I2C). What I have 
-described
-is included in the formula in section 10.2 of the 7a1000 user manual.
+> Responses should be made by Sat, 11 Apr 2026 09:16:49 +0000.
+> Anything received after that time might be too late.
 
-Prcescale = clock_a/(clock_div*clock_s)-1
+Boot-tested under QEMU for Rust x86_64, arm64 and riscv64:
 
-clock_a represents the input clock(it is the fixed 1/2 factor feeding 
-MISC block
-(including I2C), 50M on 7a1000), which is described by "clocks",
-clock_s represents the i2c bus frequency, which is described by 
-"clock-frequency",
-The divisor I described is clock_div in formula. which has different 
-value on
-different platform. for example, it is 5 on 7a1000/7a2000, 4 on 
-2K1000/2K2000,
-5.5 on 2K3000. I need a property to describe clock_div in this formula.
->> Best regards,
->> Hongliang Wang
->>
->>
->>
-> Regards,
-> Yao Zi
-Best regards,
-Hongliang Wang
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
+
+In loongarch64 I am seeing:
+
+    arch/loongarch/mm/tlb.c:292:19: error: use of undeclared identifier 'exception_handlers'; did you mean 'exception_table'?
+      292 |                 vec_sz = sizeof(exception_handlers);
+          |                                 ^~~~~~~~~~~~~~~~~~
+          |                                 exception_table
+    ./arch/loongarch/include/asm/exception.h:9:14: note: 'exception_table' declared here
+        9 | extern void *exception_table[];
+          |              ^
+    arch/loongarch/mm/tlb.c:292:18: error: invalid application of 'sizeof' to an incomplete type 'void *[]'
+      292 |                 vec_sz = sizeof(exception_handlers);
+          |                                ^~~~~~~~~~~~~~~~~~~~
+
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+
+
+And then the many missing safety comments Clippy warnings we expected,
+i.e. the ones that we discussed recently, e.g.:
+
+    warning: unsafe block missing a safety comment
+        --> rust/kernel/init/macros.rs:1015:25
+
+Cc: Benno Lossin <lossin@kernel.org>
+
+I hope this helps!
+
+
+Cheers,
+Miguel
