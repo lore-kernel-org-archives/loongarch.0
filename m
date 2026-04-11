@@ -1,55 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D83B8635D
-	for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 13:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9251DD0EF
+	for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 13:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775913055; cv=none; b=Vt7sMo/7zcTd37VhIEreifzeS/1Y3e1n2cbrLchno+v/nCUVZwl0NBGksDKX1CwWpgTMFsbMZNmfJKGcPmyEKz9oxVqzmO6uDMaKd2Bu41H4nmbrSsXEIpsc+Dd/CIGQwZ0tRRZko6+AJMukLB3uO2hAtv420u2ijoNPD97LuIA=
+	t=1775913171; cv=none; b=BGNV+3KMmrcQCDsoE3GR4BRONijw6eaTGY9lqcUIC2XUjWJN/nqztl+f4LPVHQy6IHSLhQrfylVXBvgqCC4B+0lh9jWUCHhhD29ipii8Q5HPjgipHBjhp5WjH6nkFaG4pA/MhDyHn9ozhA1i8NtQJwSE31ffjnYVKT/QnxMMLpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775913055; c=relaxed/simple;
-	bh=oyftcjDd0K774t0puJOjWtCuWRZuAU0/vZGuniuEmk8=;
+	s=arc-20240116; t=1775913171; c=relaxed/simple;
+	bh=caaSZwvctMQv/TLUmlatIUJSJoYOCJ+vv67M+DQoqlE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZXJldKzGpARvn3Yt0lTXg94ezDnaQKdhEkX+ot4zAeQa0DFndzIgmAY23h4stdakjHo7d8aPHrT5oWlfLhAo3CYAFX3tQaHShQaxMxvw2nvIyJEM/VkaSqQXipaOl3l4VnZpkYtYpdmlRuTaH3J8rCp7BcnUVWkeLt7c5ZC4Shk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jz5q8l4u; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=J7YhYR3l1okyVqDU7bG6q9vyWXB4xvfAOdI20/FQH4xrcnS/oHdniUhTfaUjGRlhlQotgyNzXDqPftlHuEHKRqj8jIb1vi1+m7nljqpGdwoYhgexP2uysHx2lymVkGl33YA3E1Mimds49GuZ5eBe0rjh0tP0DLcUS7YqoZgo5CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NztXxBtp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jz5q8l4u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA90C2BCB0
-	for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 13:10:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NztXxBtp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCE8C2BCAF
+	for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 13:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775913055;
-	bh=oyftcjDd0K774t0puJOjWtCuWRZuAU0/vZGuniuEmk8=;
+	s=k20201202; t=1775913171;
+	bh=caaSZwvctMQv/TLUmlatIUJSJoYOCJ+vv67M+DQoqlE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jz5q8l4uWx8QHO/vRv67Ka3l4DB1+O3S8rFPdNcqglAPhKfin68cZSmpaap5pLaLk
-	 AIxH+6KMwJKLEAhs6kHYS2m+YVc3f4orLnVdvxzrXJnuqsVnYWqDJPQ4h5UvUxbQIs
-	 BAmEErLNHlQJrcVA5rslCjFfhHoRhx1hp9DGaYUQGbkzlxx1NEgGeiFOKlpAALuCAL
-	 YZcviXggp5S9PHDprZDWGhbTHQ6ktto6ZQNnICqH2Fm/z7tTrJqLKrndz8fAkSzhz+
-	 xh70z3z5Kn7RUcViBQBTLUlAkUy2ZUzlsFpK7vlEkYtv1S+3DUCIbiR/dJfzAkO7Ih
-	 tbmGoAoa7jpbg==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9b1ffbb9f5so419813566b.2
-        for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 06:10:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7YsfaGmdXKA3WbxxamNy9PxSKT61BCoOPLnWtCLA/3XoCSuHtJPaLNCkLP8VC7+UVFYJ7vyR1BRw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx6b1aGcfZ5GLlWOTrNutQF6u/cC4twy3p7gLII3SqRSjs/WWIN
-	+djcpuoi6zTuGtkdjixmgoxQAmGizSooCfpYgqSLqH/yRufcgRKo+NHGN3EPt5bcUj8PuyibmsP
-	VoyiYm57Yx9saFL1/grlotEWOs4fgRAo=
-X-Received: by 2002:a17:907:25cc:b0:b98:56b0:dc96 with SMTP id
- a640c23a62f3a-b9d724ded77mr379403366b.21.1775913053643; Sat, 11 Apr 2026
- 06:10:53 -0700 (PDT)
+	b=NztXxBtpeovX8CqxpVgXVpJk5ej+m7yC8bmW5ISVUfbqaRLXCDbMUlXu2bFSYP3Hq
+	 CbWrBh0TsFEGt4agJsZvvwIn3UNfuUDk6wnA6w5iy0vHBWerFv5p5iGUmiKM3/2s62
+	 tcN8dw1AbOnovH1SAcyTaKjTXEHiL1o+mExgAtHttryfKg+Xk5d37O5CPMNscBY/eV
+	 nE4rymbJ+oamtg37054Q16Kjh5sHbwidCt/dRCqSdd7dozwY8Qk6IJMsKS+twKDeT+
+	 3puSvuKwks1p5KWMAYwgRZvv9BW7ec6AbpcUVd9Ij4/fyUJ21BHnT8YVOouOyZ01OM
+	 sm3sLUN0HeeMg==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-66fb5f2183fso5269681a12.3
+        for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 06:12:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXX7WnAeH7Jaob/vDKWVr1dVcHxeC1xbNaIkU3/ByGuE7iijEOipRP/nTfYw17eUuhs7k7iP5Jldgs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwaBuHkA1aRMPfCRUIq5LCm4GMBs0CBJS2e5JhwWbLsL5wyOpXZ
+	liXQ1owvGz/hj6SbQiUpLpridi97muR29Ieb6pkj1LG1EdohuRDXe7PppKeiWvtiPtWR4246fwv
+	nUZm7mT01u/26Gmly+pKD+UBey7/IhwA=
+X-Received: by 2002:a17:907:a807:b0:b9d:6cec:23b9 with SMTP id
+ a640c23a62f3a-b9d729c06ecmr394026166b.41.1775913170139; Sat, 11 Apr 2026
+ 06:12:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260330094845.39-1-lisa@bytefly.space>
-In-Reply-To: <20260330094845.39-1-lisa@bytefly.space>
+References: <599CB656808E9EE5+20260409073356.1476812-1-luoqiu@kylinsec.com.cn>
+In-Reply-To: <599CB656808E9EE5+20260409073356.1476812-1-luoqiu@kylinsec.com.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 11 Apr 2026 21:10:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Ur5RFRkhX8PGp2gfJuFBptnr9V_UuLGueqF1Uzj-GTA@mail.gmail.com>
-X-Gm-Features: AQROBzD-TQGf__cFeUXF9nVF8BHyQCr2vCPi_nSO7HgIaxi0p5obgD1pNPIHUl4
-Message-ID: <CAAhV-H6Ur5RFRkhX8PGp2gfJuFBptnr9V_UuLGueqF1Uzj-GTA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Align FPU register state to 32 bytes
-To: Lisa Robinson <lisa@bytefly.space>
+Date: Sat, 11 Apr 2026 21:12:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5SfXa3b--PMK8qfPkLxCbxNP_pkanwQrn6V-bqy8=o5Q@mail.gmail.com>
+X-Gm-Features: AQROBzB6919qtiMWkHxsALWxzK7b_ZmrNoO0YgbxdPKd_butFt0lWcCx0MfM-nk
+Message-ID: <CAAhV-H5SfXa3b--PMK8qfPkLxCbxNP_pkanwQrn6V-bqy8=o5Q@mail.gmail.com>
+Subject: Re: [PATCH] loongarch: stackprotector: Use get_random_canary() for
+ stack canary init
+To: Luo Qiu <luoqiu@kylinsec.com.cn>
 Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -59,35 +60,46 @@ Applied, thanks.
 
 Huacai
 
-On Mon, Mar 30, 2026 at 5:49=E2=80=AFPM Lisa Robinson <lisa@bytefly.space> =
-wrote:
+On Thu, Apr 9, 2026 at 3:35=E2=80=AFPM Luo Qiu <luoqiu@kylinsec.com.cn> wro=
+te:
 >
-> Move fpr to the beginning of struct loongarch_fpu so it is naturally
-> aligned to FPU_ALIGN (32 bytes), improving 256-bit SIMD (LASX) context
-> switch performance.
+> Replace the custom stack canary initialization with the
+> get_random_canary() helper, following the pattern established in commit
+> 622754e84b10 ("stackprotector: actually use get_random_canary()").
 >
-> Signed-off-by: Lisa Robinson <lisa@bytefly.space>
+> Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
 > ---
->  arch/loongarch/include/asm/processor.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/loongarch/include/asm/stackprotector.h | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/incl=
-ude/asm/processor.h
-> index c3bc44b5f5b3..ce8b953f8c79 100644
-> --- a/arch/loongarch/include/asm/processor.h
-> +++ b/arch/loongarch/include/asm/processor.h
-> @@ -80,10 +80,10 @@ BUILD_FPR_ACCESS(32)
->  BUILD_FPR_ACCESS(64)
+> diff --git a/arch/loongarch/include/asm/stackprotector.h b/arch/loongarch=
+/include/asm/stackprotector.h
+> index a1a965751a7b..42f6c3f69115 100644
+> --- a/arch/loongarch/include/asm/stackprotector.h
+> +++ b/arch/loongarch/include/asm/stackprotector.h
+> @@ -12,9 +12,6 @@
+>  #ifndef _ASM_STACKPROTECTOR_H
+>  #define _ASM_STACKPROTECTOR_H
 >
->  struct loongarch_fpu {
-> +       union fpureg    fpr[NUM_FPU_REGS];
->         uint64_t        fcc;    /* 8x8 */
->         uint32_t        fcsr;
->         uint32_t        ftop;
-> -       union fpureg    fpr[NUM_FPU_REGS];
->  };
+> -#include <linux/random.h>
+> -#include <linux/version.h>
+> -
+>  extern unsigned long __stack_chk_guard;
 >
->  struct loongarch_lbt {
+>  /*
+> @@ -25,11 +22,7 @@ extern unsigned long __stack_chk_guard;
+>   */
+>  static __always_inline void boot_init_stack_canary(void)
+>  {
+> -       unsigned long canary;
+> -
+> -       /* Try to get a semi random initial value. */
+> -       get_random_bytes(&canary, sizeof(canary));
+> -       canary ^=3D LINUX_VERSION_CODE;
+> +       unsigned long canary =3D get_random_canary();
+>
+>         current->stack_canary =3D canary;
+>         __stack_chk_guard =3D current->stack_canary;
 > --
 > 2.53.0
 >
