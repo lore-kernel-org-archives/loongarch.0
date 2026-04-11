@@ -1,113 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A33A2D7DCE;
-	Sat, 11 Apr 2026 00:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5928B242D97
+	for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 02:05:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775867503; cv=none; b=QiA2fHwDkdwm/zvInRMByJZ2oYlzecwSm6YBHcPrkL/gOUcbRvX+rJR4ydsjxkJnt3MOET5i8bR0kJJ05f50hxLumeVOp4nUvqI8gEzAAoKc8kogZNhthjEgxt3XgB/ankF2X0uoyiKD3j5X2OKxW0JXd7O68qKbYFjOfuPZG6g=
+	t=1775873146; cv=none; b=tgfkodaU1LRfb5dQF68zIYKoswemmBTVOmXndwCv0cEdwKpQ6mV56H+syw5fwza/F0s2WlfXr5VLkdqpP2zWZ94/B1+5nfuv4yYReeFV4kl61rmGoqlEuz34bTfjuaCQU+5ghePSmgqd0ZMzYGE2xHmYHpxtUh40BGugjjIBMJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775867503; c=relaxed/simple;
-	bh=dVDQNOGwtDFVlDJtIVCvFSoT4S89W4qmZQOGM/EHZxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O3fMwTfmZLz/edgRGvWcd8ITExbRox4QlUCms4qW811f7HEzUFinDdGgNrz7REdGO1wTbZGcvFkTR8T/eYYyhiNeBdiO3IHmapILIIBwGNrKqxSndIl8LG7hEYVDP20oZmeYWfMSOu2xCPoSuZ/9RBs7r3Qa97CeL9SIIlq29MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZWuo4Njl; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZWuo4Njl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775867502; x=1807403502;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dVDQNOGwtDFVlDJtIVCvFSoT4S89W4qmZQOGM/EHZxE=;
-  b=ZWuo4NjlQaCJqyAzix2Z5Zzm0Zt+ZSJUWzw2OqNV+FNC41q9Zt/gycK8
-   zh/eG3TPX08eUiEy/0ZRqrDxgpJrIopaYqO2V0BP5XXIPzn2yKgbuTZCb
-   IeUFKfOI3um6AxvzJVjE+hmm101CCVx8fNrcHZZvrfey+i1E4bBRtR1Vy
-   Ns0vxPQks4y1tThp3S08Acq1cK8VjgwMu+A9N4vx3v1IHrMA8qz3usctd
-   LrAc3w6NROAPpuT290vx+j5iNuvOInXN49/QtDCB5b/8IlbxXTaBzQg28
-   wNT+5BS04QWyOawcOU7E3cM3kEftt2/szylQ8jQ70eveG3P/6JupHLJkc
-   Q==;
-X-CSE-ConnectionGUID: swfqCQy/TkmHRMxq9b5phw==
-X-CSE-MsgGUID: BCY8vuWQSI+1GequY4jf+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="94467957"
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="94467957"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 17:31:40 -0700
-X-CSE-ConnectionGUID: mfdpzJpeQdW45ctNkNwMTQ==
-X-CSE-MsgGUID: JTzVCBYWS++fDNQuxIrmOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="226524924"
-Received: from lkp-server01.sh.intel.com (HELO 3eaaf1a74b89) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 10 Apr 2026 17:31:38 -0700
-Received: from kbuild by 3eaaf1a74b89 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wBMG7-000000000UL-1RBI;
-	Sat, 11 Apr 2026 00:31:35 +0000
-Date: Sat, 11 Apr 2026 08:31:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huacai Chen <chenhuacai@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	s=arc-20240116; t=1775873146; c=relaxed/simple;
+	bh=A8T+0KyOzB5wMeVORzGGrHba9n+in8xjS4BOAhubVXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bg9T/5yd5r4fk22kc1nRgYtcmTAJyGy4kYDjCQuGyoWsZ+ts7+fEFSRQdQn3+fKNn6NFtBBlYrKCiH9dPeNmnv4arItvilwsHd6e/PrThIXdbsgCGoqF5LZWMiEPKAsG1MGmy2+rsbMQ7JOydG44h3fsDciFVKwmMJV1L4HtjIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.17])
+	by gateway (Coremail) with SMTP id _____8BxcfBurNlpKzYkAA--.34884S3;
+	Sat, 11 Apr 2026 10:05:34 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.17])
+	by front1 (Coremail) with SMTP id qMiowJDxhcBprNlpZ8FqAA--.37055S2;
+	Sat, 11 Apr 2026 10:05:32 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
 	stable@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Show CPU vulnerabilites correctly
-Message-ID: <202604110810.YFUm5KE1-lkp@intel.com>
-References: <20260409122348.2438400-1-chenhuacai@loongson.cn>
+Subject: [PATCH V2] LoongArch: Show CPU vulnerabilites correctly
+Date: Sat, 11 Apr 2026 10:05:22 +0800
+Message-ID: <20260411020522.2779250-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260409122348.2438400-1-chenhuacai@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxhcBprNlpZ8FqAA--.37055S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJr15JF1kZr1DCr1xAF4fZwc_yoW8WrWkpF
+	Wqywn5Xr4rCF1DtasFvF129ryDX3WkGw13Wa4akFykAF12vr1DXr1v93yDXF1jvw47KayF
+	gF98G3s3KFW7Z3cCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-Hi Huacai,
+Most LoongArch processors are vulnerable to Spectre-V1 Proof-of-Concept
+(PoC). And the generic mechanism, __user pointer sanitization, can be
+used as a mitigation. This means to use array_index_nospec() to prevent
+out of boundry access in syscall and other critical paths.
 
-kernel test robot noticed the following build warnings:
+Implement the arch-specific cpu_show_spectre_v1() to show CPU Spectre-V1
+vulnerabilites correctly.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v7.0-rc7 next-20260410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Cc: stable@vger.kernel.org
+Link: https://cc-sw.com/chinese-loongarch-architecture-evaluation-part-3-of-3/
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+V2: Fix build warnings.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Huacai-Chen/LoongArch-Show-CPU-vulnerabilites-correctly/20260411-011556
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20260409122348.2438400-1-chenhuacai%40loongson.cn
-patch subject: [PATCH] LoongArch: Show CPU vulnerabilites correctly
-config: loongarch-randconfig-001-20260411 (https://download.01.org/0day-ci/archive/20260411/202604110810.YFUm5KE1-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260411/202604110810.YFUm5KE1-lkp@intel.com/reproduce)
+ arch/loongarch/kernel/cpu-probe.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604110810.YFUm5KE1-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> arch/loongarch/kernel/cpu-probe.c:407:36: warning: 'struct device_attribute' declared inside parameter list will not be visible outside of this definition or declaration
-     407 |                             struct device_attribute *attr, char *buf)
-         |                                    ^~~~~~~~~~~~~~~~
->> arch/loongarch/kernel/cpu-probe.c:406:9: warning: no previous prototype for 'cpu_show_spectre_v1' [-Wmissing-prototypes]
-     406 | ssize_t cpu_show_spectre_v1(struct device *dev,
-         |         ^~~~~~~~~~~~~~~~~~~
-
-
-vim +407 arch/loongarch/kernel/cpu-probe.c
-
-   405	
- > 406	ssize_t cpu_show_spectre_v1(struct device *dev,
- > 407				    struct device_attribute *attr, char *buf)
-
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index 8654a1eff834..c8947c798195 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -402,3 +402,9 @@ void cpu_probe(void)
+ 
+ 	cpu_report();
+ }
++
++ssize_t cpu_show_spectre_v1(struct device *dev,
++			    struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "Mitigation: __user pointer sanitization\n");
++}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.52.0
+
+diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+index c8947c798195..52f36ef19897 100644
+--- a/arch/loongarch/kernel/cpu-probe.c
++++ b/arch/loongarch/kernel/cpu-probe.c
+@@ -7,6 +7,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/ptrace.h>
++#include <linux/cpu.h>
+ #include <linux/smp.h>
+ #include <linux/stddef.h>
+ #include <linux/export.h>
+
