@@ -1,186 +1,227 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA534299A82
-	for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 03:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96328263F4A;
+	Sun, 12 Apr 2026 04:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775966146; cv=none; b=UytCe+D22eSQturSqr+5ArY3AkkIpoxaWkMlioBvKKVRmLdKD5xZyCJs4dWg9vd2d95NViYL7J/TRkIFDqA5toR6AwESUCydRLoMDPQpUXoZZkInRXx+TOS+6D6tumt2fa6p9rOMVJmFTAReezT7HFMmY+n3ObOej8Vzc9AyNKM=
+	t=1775969010; cv=none; b=IYHic1V3lmG2GjeKXq1tZLxlnjWbNsujZpv9CJO1eq3I4+TwDKqerwaR0m0S3Nnd4lFA+EVJ0lu9aGVUANO2HXGkQOXCLf1RzfklRw7z0QqW7+XvERi72IbauVu1UQd4JqPYYJg8YeA3vArfynbw0CKJTaTIL+T1gDwUFafUVcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775966146; c=relaxed/simple;
-	bh=Lu/oDFkatQ9quS801rXI3qRhnOm4VKKPcBwuO3QoAts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fezRBizC/qgGrQwi0slYws38Bn57A+AoQKGja+qnNj35tKHokvLDTvt2W6j8LSOlljN6Ys5jJe6mOFeDCHkW8FFm3tE8n2VOtY4veStQdTfbVngrThVopk0KCJx5vJK5y0+gmhiIShO0nfG+XrVQnivH1odJDrlLe0ifQFT5M5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.167.169])
-	by gateway (Coremail) with SMTP id _____8Cx68K+F9tpTGkkAA--.34443S3;
-	Sun, 12 Apr 2026 11:55:43 +0800 (CST)
-Received: from mail-oi1-f169.google.com (unknown [209.85.167.169])
-	by front1 (Coremail) with SMTP id qMiowJCxmuC8F9tplFZrAA--.47824S2;
-	Sun, 12 Apr 2026 11:55:41 +0800 (CST)
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-4756e74f8edso2344575b6e.1
-        for <loongarch@lists.linux.dev>; Sat, 11 Apr 2026 20:55:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnPnwcJz8JnTtJHCXwMrVrT27CqKcKVz6DxNZV0Bih7JBdnTbY7D4H4+88W0PKgVV1Qopbvv8PfxM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyzrxrZlyelhZ8Avd1EDwu+6RG4f6eYIW9LUIsCYDIW+lWm4cK6
-	cE6ULFsAl1VN+gkJz+kNUBsyzYo3RQNwsSz3oSkGMKYQTa6CBOFLwAr/ldtyc+ZwzFfd2iyvhcf
-	VPTahjgVNT/Cco0gapYN3rw8i32fjc4YPPjUHpJDPwg==
-X-Received: by 2002:a53:d018:0:b0:651:b73b:251a with SMTP id
- 956f58d0204a3-651b73b3411mr2397588d50.0.1775965599212; Sat, 11 Apr 2026
- 20:46:39 -0700 (PDT)
+	s=arc-20240116; t=1775969010; c=relaxed/simple;
+	bh=t2e6GoeBZxAdwRTYjOc+qKQ5MV3GG9O7pTKbTqQPnlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkiWhC8cClXwWgS3Urs/yJvcNJlvYFj9PJMY6ZipyHvWQuOiMh8pUgUb+QWAf/FrmiOH2q/7toYTy1tQr+YujaqkK0y87RwHLBZNaKLJkntbR7o64GkS8fFhocBlC4zhPT/A8jR8zJmyVzyhBnJM2eiebtMR29TpOFAvT09esEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BpA2EEh7; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BpA2EEh7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775969009; x=1807505009;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=t2e6GoeBZxAdwRTYjOc+qKQ5MV3GG9O7pTKbTqQPnlc=;
+  b=BpA2EEh7uFmYCv277us6v50IqjdHKx39Smf0uRYAj8t9do8jZCG0hP/v
+   iGS6nLYag7Hf/B7GEM8Vj+/F9HdVsMfyD0Air9iRQW9xqhx5+0HgYZCXX
+   lg88I5/vciWXSh+8998AG59KxI5TdhA9joc5yHNY1/A6c0XNoJCugf4H4
+   JP5ZdsyylLHiSZ2r0hovhRtVhjcbuEx65Vw0bfh9WxR9wzfcVkJ230J1U
+   Y22DEZVfdVb+zsFjj5thiZBpKBEMs+Nx1QRN44mnk0yRQjlQ8AYQSxHb3
+   x7RFxY7DFaKsHxJw4KXurpxbnHjxx3QBYTfbdmwRQjzPgsr3W3hOGyZX5
+   g==;
+X-CSE-ConnectionGUID: tke1Xmh/SZOLCVo5qoJ6SQ==
+X-CSE-MsgGUID: Z8lso2NSTz21gWK+GV+mPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="77010637"
+X-IronPort-AV: E=Sophos;i="6.23,174,1770624000"; 
+   d="scan'208";a="77010637"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2026 21:43:28 -0700
+X-CSE-ConnectionGUID: AhHCkktOQKuM4yW0Y3P6lw==
+X-CSE-MsgGUID: s5cpn+QbQUmRo0Fi0vGZ6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,174,1770624000"; 
+   d="scan'208";a="229726387"
+Received: from lkp-server01.sh.intel.com (HELO 3eaaf1a74b89) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 11 Apr 2026 21:43:25 -0700
+Received: from kbuild by 3eaaf1a74b89 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wBmfL-000000001s5-0G8g;
+	Sun, 12 Apr 2026 04:43:23 +0000
+Date: Sun, 12 Apr 2026 12:42:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yuqian Yang <yangyuqian@uniontech.com>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>,
+	Cheng Nie <niecheng1@uniontech.com>,
+	Wentao Guan <guanwentao@uniontech.com>,
+	Dandan Zhang <zhangdandan@uniontech.com>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Yuqian Yang <yangyuqian@uniontech.com>
+Subject: Re: [PATCH] loongarch: improve logging of disabling KASLR.
+Message-ID: <202604121225.WqIkc3ZK-lkp@intel.com>
+References: <E4B91143DC525DC6+20260403063008.94237-1-yangyuqian@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260407062306.8915-1-yangtiezhu@loongson.cn> <20260407062306.8915-5-yangtiezhu@loongson.cn>
-In-Reply-To: <20260407062306.8915-5-yangtiezhu@loongson.cn>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Sun, 12 Apr 2026 11:46:27 +0800
-X-Gmail-Original-Message-ID: <CAHirt9jnveJCgCt2TsuyQrJV0tCB+FJStgP6OaCiH8eJWLfpvw@mail.gmail.com>
-X-Gm-Features: AQROBzD5i-4b6QMIxNy530j08dclbLPpFeIac85R-xUvjzsf53IoZemseVKWL6k
-Message-ID: <CAHirt9jnveJCgCt2TsuyQrJV0tCB+FJStgP6OaCiH8eJWLfpvw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] LoongArch: BPF: Support load-acquire and
- store-release instructions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qMiowJCxmuC8F9tplFZrAA--.47824S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAryUWFW7Zw4DZr48XF1kZwc_yoW5tFW8pw
-	srCFs5CrW8AasxWF9xJF4UWr4FkFsagr13WF12yrZ3GrsxX34UCr18KFnIvFZ5G3ykXFs3
-	XFn0vw1293WUGrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Cb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Jr0_Gr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l
-	4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-	WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-	wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j
-	6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jb6pPUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E4B91143DC525DC6+20260403063008.94237-1-yangyuqian@uniontech.com>
 
-On Tue, Apr 7, 2026 at 2:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn>=
- wrote:
->
-> Use the LoongArch common memory access instructions with the barrier dbar
-> to support the BPF load-acquire and store-release instructions.
->
-> With this patch, the following testcases passed on LoongArch if the macro
-> CAN_USE_LOAD_ACQ_STORE_REL is usable in bpf selftests:
->
->   sudo ./test_progs -t verifier_load_acquire
->   sudo ./test_progs -t verifier_store_release
->   sudo ./test_progs -t verifier_precision/bpf_load_acquire
->   sudo ./test_progs -t verifier_precision/bpf_store_release
->   sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/loongarch/net/bpf_jit.c | 101 ++++++++++++++++++++++++++++++++++-
->  arch/loongarch/net/bpf_jit.h |  12 +++++
->  2 files changed, 112 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index c9a32f124f5e..f18a2858123f 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -344,6 +344,102 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, =
-int insn)
->  #undef jmp_offset
->  }
->
-> +static int emit_atomic_ld_st(const struct bpf_insn *insn, struct jit_ctx=
- *ctx)
-> +{
-> +       const u8 t1 =3D LOONGARCH_GPR_T1;
-> +       const u8 src =3D regmap[insn->src_reg];
-> +       const u8 dst =3D regmap[insn->dst_reg];
-> +       const s16 off =3D insn->off;
-> +       const s32 imm =3D insn->imm;
-> +
-> +       switch (imm) {
-> +       /* dst_reg =3D load_acquire(src_reg + off16) */
-> +       case BPF_LOAD_ACQ:
-> +               switch (BPF_SIZE(insn->code)) {
-> +               case BPF_B:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldb, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxb, dst, src, t1);
-> +                       }
-> +                       emit_zext_8(ctx, dst);
+Hi Yuqian,
 
-Could we use ld[x].{bu,hu,wu} here to simplify this?
+kernel test robot noticed the following build warnings:
 
-> +                       break;
-> +               case BPF_H:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldh, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxh, dst, src, t1);
-> +                       }
-> +                       emit_zext_16(ctx, dst);
-> +                       break;
-> +               case BPF_W:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldw, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxw, dst, src, t1);
-> +                       }
-> +                       emit_zext_32(ctx, dst, true);
-> +                       break;
-> +               case BPF_DW:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldd, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxd, dst, src, t1);
-> +                       }
-> +                       break;
-> +               }
-> +               emit_insn(ctx, dbar, 0b10100);
-> +               break;
-> [ ... ]
-> diff --git a/arch/loongarch/net/bpf_jit.h b/arch/loongarch/net/bpf_jit.h
-> index a8e29be35fa8..9150de94ac60 100644
-> --- a/arch/loongarch/net/bpf_jit.h
-> +++ b/arch/loongarch/net/bpf_jit.h
-> @@ -72,6 +72,18 @@ static inline int epilogue_offset(const struct jit_ctx=
- *ctx)
->         return (to - from);
->  }
->
-> +/* Zero-extend 8 bits into 64 bits */
-> +static inline void emit_zext_8(struct jit_ctx *ctx, enum loongarch_gpr r=
-eg)
-> +{
-> +       emit_insn(ctx, bstrinsd, reg, LOONGARCH_GPR_ZERO, 63, 8);
-> +}
-> +
-> +/* Zero-extend 16 bits into 64 bits */
-> +static inline void emit_zext_16(struct jit_ctx *ctx, enum loongarch_gpr =
-reg)
-> +{
-> +       emit_insn(ctx, bstrinsd, reg, LOONGARCH_GPR_ZERO, 63, 16);
-> +}
-> +
->  /* Zero-extend 32 bits into 64 bits */
->  static inline void emit_zext_32(struct jit_ctx *ctx, enum loongarch_gpr =
-reg, bool is32)
->  {
-> --
-> 2.42.0
->
->
+[auto build test WARNING on linus/master]
+[also build test WARNING on v7.0-rc7 next-20260410]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Yuqian-Yang/loongarch-improve-logging-of-disabling-KASLR/20260412-053808
+base:   linus/master
+patch link:    https://lore.kernel.org/r/E4B91143DC525DC6%2B20260403063008.94237-1-yangyuqian%40uniontech.com
+patch subject: [PATCH] loongarch: improve logging of disabling KASLR.
+config: loongarch-randconfig-002-20260412 (https://download.01.org/0day-ci/archive/20260412/202604121225.WqIkc3ZK-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260412/202604121225.WqIkc3ZK-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604121225.WqIkc3ZK-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/asm-generic/bug.h:31,
+                    from arch/loongarch/include/asm/bug.h:60,
+                    from include/linux/bug.h:5,
+                    from include/linux/instrumented.h:10,
+                    from include/linux/atomic/atomic-instrumented.h:17,
+                    from include/linux/atomic.h:82,
+                    from include/asm-generic/bitops/atomic.h:5,
+                    from arch/loongarch/include/asm/bitops.h:38,
+                    from include/linux/bitops.h:67,
+                    from include/linux/bitmap.h:8,
+                    from include/linux/nodemask.h:91,
+                    from include/linux/list_lru.h:12,
+                    from include/linux/fs/super_types.h:7,
+                    from include/linux/fs/super.h:5,
+                    from include/linux/fs.h:5,
+                    from arch/loongarch/include/asm/elf.h:9,
+                    from include/linux/elf.h:6,
+                    from arch/loongarch/kernel/relocate.c:8:
+   arch/loongarch/kernel/relocate.c: In function 'kaslr_disabled':
+   arch/loongarch/kernel/relocate.c:144:25: error: expected ')' before 'message'
+     144 |                 pr_info(message, "nokaslr", "built-in");
+         |                         ^~~~~~~
+   include/linux/printk.h:483:25: note: in definition of macro 'printk_index_wrap'
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ^~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   include/linux/printk.h:584:26: note: in expansion of macro 'pr_fmt'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |                          ^~~~~~
+   arch/loongarch/kernel/relocate.c:144:17: note: in expansion of macro 'pr_info'
+     144 |                 pr_info(message, "nokaslr", "built-in");
+         |                 ^~~~~~~
+   include/linux/printk.h:483:24: note: to match this '('
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                        ^
+   include/linux/printk.h:511:26: note: in expansion of macro 'printk_index_wrap'
+     511 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                          ^~~~~~~~~~~~~~~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   arch/loongarch/kernel/relocate.c:144:17: note: in expansion of macro 'pr_info'
+     144 |                 pr_info(message, "nokaslr", "built-in");
+         |                 ^~~~~~~
+   arch/loongarch/kernel/relocate.c:150:25: error: expected ')' before 'message'
+     150 |                 pr_info(message, "nokaslr", "boot");
+         |                         ^~~~~~~
+   include/linux/printk.h:483:25: note: in definition of macro 'printk_index_wrap'
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ^~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   include/linux/printk.h:584:26: note: in expansion of macro 'pr_fmt'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |                          ^~~~~~
+   arch/loongarch/kernel/relocate.c:150:17: note: in expansion of macro 'pr_info'
+     150 |                 pr_info(message, "nokaslr", "boot");
+         |                 ^~~~~~~
+   include/linux/printk.h:483:24: note: to match this '('
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                        ^
+   include/linux/printk.h:511:26: note: in expansion of macro 'printk_index_wrap'
+     511 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                          ^~~~~~~~~~~~~~~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   arch/loongarch/kernel/relocate.c:150:17: note: in expansion of macro 'pr_info'
+     150 |                 pr_info(message, "nokaslr", "boot");
+         |                 ^~~~~~~
+   arch/loongarch/kernel/relocate.c:186:25: error: expected ')' before 'message'
+     186 |                 pr_info(message, "kexec_file", "boot");
+         |                         ^~~~~~~
+   include/linux/printk.h:483:25: note: in definition of macro 'printk_index_wrap'
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ^~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   include/linux/printk.h:584:26: note: in expansion of macro 'pr_fmt'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |                          ^~~~~~
+   arch/loongarch/kernel/relocate.c:186:17: note: in expansion of macro 'pr_info'
+     186 |                 pr_info(message, "kexec_file", "boot");
+         |                 ^~~~~~~
+   include/linux/printk.h:483:24: note: to match this '('
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                        ^
+   include/linux/printk.h:511:26: note: in expansion of macro 'printk_index_wrap'
+     511 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                          ^~~~~~~~~~~~~~~~~
+   include/linux/printk.h:584:9: note: in expansion of macro 'printk'
+     584 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   arch/loongarch/kernel/relocate.c:186:17: note: in expansion of macro 'pr_info'
+     186 |                 pr_info(message, "kexec_file", "boot");
+         |                 ^~~~~~~
+>> arch/loongarch/kernel/relocate.c:140:27: warning: unused variable 'message' [-Wunused-variable]
+     140 |         const char *const message = "KASLR is disabled by %s in %s cmdline.\n";
+         |                           ^~~~~~~
+
+
+vim +/message +140 arch/loongarch/kernel/relocate.c
+
+   135	
+   136	static inline __init bool kaslr_disabled(void)
+   137	{
+   138		char *str;
+   139		const char *builtin_cmdline = CONFIG_CMDLINE;
+ > 140		const char *const message = "KASLR is disabled by %s in %s cmdline.\n";
+   141	
+   142		str = strstr(builtin_cmdline, "nokaslr");
+   143		if (str == builtin_cmdline || (str > builtin_cmdline && *(str - 1) == ' ')) {
+   144			pr_info(message, "nokaslr", "built-in");
+   145			return true;
+   146		}
+   147	
+   148		str = strstr(boot_command_line, "nokaslr");
+   149		if (str == boot_command_line || (str > boot_command_line && *(str - 1) == ' ')) {
+   150			pr_info(message, "nokaslr", "boot");
+   151			return true;
+   152		}
+   153	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
