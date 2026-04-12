@@ -1,173 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ECF272E61
-	for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 12:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775997737; cv=none; b=abUifx/yla2zqxIpRDQvk4q2JE+fPoOG5UPJlKTpveArYM589SzyUoUh+wsw8+eb9PtaMc22bBwlBrG1sqdDsfEaJ855eDYXp4wVMpq2c++JmSOUttB5Hi7+gA47P6AI27lKTPliV1qgdT9MLL6zQ/R46SmWZrmrIYiM9MoF0Ks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775997737; c=relaxed/simple;
-	bh=suedbXptsOlQGrDgCAx5H7QIpu5l3FKacvSKi2ZU4zU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6137C917
+	for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 13:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776000186; cv=pass; b=P9bOTN2W0ZUTfIjfr61rPh4R9tCSGvbzsSmlzwTe4lsxgo3RPocqaDZcLJstwGvDjJB1vMWr24Eh2IQP4uaGPSjl+nNYicGec0Du/TteVlgn0WCMofPST6VwWFd4me/vjqrqTbCWbqOMiyE7sobnguan21zpRKfaaCOmH/l5lgg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776000186; c=relaxed/simple;
+	bh=1p6x7PvyQL+5PGqdAnx23TY8v0cVXdqCOnUZdmPD2Po=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kWQuY83NgPkJEs13j78S2qpmKH+59INxAXNLZdFDi0U6gcZ7rHJe4iC8t8AACf6g8XkkmfaFeDItYKK/sV3k536vYEzHbzsACSnEtusb7WyzVjxrxy5qTL6sbpWAzlweFfz5NEctDeBDqNI8SevLXNW6+QFIIJtU/VvLXgJzdMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=biKsXHWN; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=lSPq1Z8/fHxarQ8dip4s6M3AIHb3v5FPCwpjj7UPOA9tk+zMAlfQuYxN1fU3GXqGOPflLR6paLHXdB4R11veCwXlE5wHkjpjvCDV2N/pgjy9cLqAJKjOUdislADP465nJLbfUyDHo0HtHTX5P4m0swRi3tCxMb5cK8oF2HkM4zg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5/cDF1v; arc=pass smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="biKsXHWN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECEC0C2BCB0
-	for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 12:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775997737;
-	bh=suedbXptsOlQGrDgCAx5H7QIpu5l3FKacvSKi2ZU4zU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=biKsXHWNe9lXrVsuOqMAP32+oa00WbQpRcAEtmdikgQN+RiCgIq7ybsvYlKBv3sAQ
-	 IQ683zm/xl193fCJiNTSJ2S7yvuAn1hrvX3L1zwE/Q9ZVXJsi7bf4Z3/au0q1dRTKh
-	 JHMedszb7y8EdWxSH06bZpFYekoyJo0tVNcxlJc0Oy/XhEj6dVssb3wXbL2RhY3gx3
-	 iWVsMuQ+brhvPPQz0OlYNAjT9Ls0IplJcnNsNY7fWBh8WWxIoFKALS2//izmVvVDjA
-	 Xz7RQOUYsacOOdundTLzLjk/6gOUwzSYFhLxE6m+lUITDAk80z4X2xnHjvNgq9YjFL
-	 aGQiY3ajiW5Jg==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b982b0889d8so473785166b.2
-        for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 05:42:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXf0gLKAfjxlCJkVuF6Z+WXPXXamMa6kKoYYhNl05eHu3onGJIpjLhaOKclYN4++z7JwQiCbp69MyY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzSERwLov91U2Juf27VqIbcx6XSi8hbEhChci3tSVRsl3Z7TEMd
-	AbyYblhijFveJaK3ffyTFkOW9+oQQYPJ4OR1pcBVX9MjzdvoQhcPanEo88FKkAWaeP7Vp+WAKDm
-	iFmKKlWV7dmGYYTA8NoUgWy/o0IbhYfo=
-X-Received: by 2002:a17:907:7284:b0:b9d:9741:4ef5 with SMTP id
- a640c23a62f3a-b9d97415fb0mr317500566b.6.1775997735394; Sun, 12 Apr 2026
- 05:42:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5/cDF1v"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b9c1da7ac63so541556766b.0
+        for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 06:23:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776000183; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kXrq63kfbKfJTqSLVtJiEDNvJPCz7HpTfsxMBMokZkioy63llZ6k5knscteLp+3lJY
+         Odu8cNHlwdQJ5PdshaEZGvYcxW8dHVMkIplwBZ+sy8rUxSoLqoIJT9rs0W3AwAkl28ee
+         kVuEDfAo1Von/XZ8cNSG+4LvfOZDCFG65bhDcs7DhEN0Xf7H3ZEU7Nhe8ap0Lk7+sTz4
+         OmgzU5lIbioUJdQITZaelRsGQ1RhfiLMxEdzGMecxScFGRnnY5PrpCoTw1rYWDgqSwBS
+         w1J3AjUPQCAKaPwGmEqxkzUobt/n36JkhyAmjFJ9RMIB6TIGqXVD/IzqDExrpNQF6EGU
+         vkjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gDdA9vu4Fz00bgurrj0mXlyC2hJ8rRfiuCUxuR8xwe8=;
+        fh=XLf4NR7bx18+RFrcAQAZNqxbu0q2sYFipEkthEObp5A=;
+        b=BP87NmAMa2Fz7ao0gmSUDfwbALFbMnaR//Ra6HNkFsNkM4MU7+7v6j2Z1+xcLRYuaR
+         CbFppPhbs4Jvb9XD+fTVnnEFSnnj6p3y9H6l43i/xUv+Zj5I34EhHtQ5ZPjmMpd6QINa
+         amGR3z1vtCWySoqyKBk/SSuqRQ1UGUDCAO2sYmqx8tWVwijUhWWhAS/gHXJSCQoiRPRU
+         oLleR6Wiqxa/nRvJpAOylbowu0+YL6g/ATcnx0x+53IE+VzK3d4Wxi5BdeSGvu7+ZfYo
+         gETGR1vm6pdtbjb9Y0Grq5+OVovhu/EZuOrX95LEG5o+5jtGFEoszZWEzjbBypz8tyfx
+         90Og==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776000183; x=1776604983; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDdA9vu4Fz00bgurrj0mXlyC2hJ8rRfiuCUxuR8xwe8=;
+        b=X5/cDF1vlPO3SRArCCvdx9L191BAbqdDJW/GnFDOwD8F6oyzeqRAZdo9dTWXlUlEHF
+         +xNxJtujaNqf51jGhTv0i5MHpVMtm88KUy/HeKH6C2vRbMtkAhSAZPtQTDT6xNPTkROk
+         MCO/GJU96foyd16u630qrjayud9Nw+OizbVW6f3v5wCnF43kQxqTjLtHiuxGsHSg88Zi
+         UpFHMHn4AsbCPAiSCSkic8/ClkyvXOBfuO1oRE77K41NTlP8fQUApaoJjqnCQTWJj2nf
+         BDyPwAWpsC2bWF41cmztu4V2Wc+TyI8gjb04/K8gZcUMBeyEjFEucd3ajlboWd2/Qxor
+         HIkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776000183; x=1776604983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gDdA9vu4Fz00bgurrj0mXlyC2hJ8rRfiuCUxuR8xwe8=;
+        b=Etxyk2Wj3jSB00AHvFpmmoNbw+K9MowEibuTpRYUGvVnyWF0uvPvsbQSI7u0S+xCjk
+         7rq4wcMDcqARmxYAG+puWSoag+Kl0CJH62DXVN2g3VadPZ1mcIXSnlT1gspQG584WNWZ
+         7pNElqj/LZVw+kQrVNwlXy9zwuE2VJHSyfmAKpmLmZsg+UHd5urfp0PvaJKpORDtBrT+
+         tLB+GfVyO0IrHfUxWHM+resr1R+8cp5oHGBIeNMZj8HqbPl1ubJeeRMbHU2ubmxfyvA8
+         Es3yrUqEgmwyu9x4GnMqJOn0h07z5nkCH1eBUppGb28Z1AAXuRno1Ko74rfSBC+qGUHu
+         Ck5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXxbsnTnsKEXufc+AECSz0mT328y240OfTkoihX5RyM4+IIHNaXEfd8yJ6nNgFYmlGgRigByu3TCJ4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyNaAzCpiFyBEheJhwW28N7XWRQ0pnPGrfTyr3sf6gnkAxTUuaO
+	34G6B3A7wQBRVVYlPxfhOPPHzDkPpt4w3YMmONlQRVH4rB5d0zxgRtu3ETDuHQVW+DtA8ui+yX5
+	iDShwt3cTVP1OaMxStTBSACe0AysrYpU=
+X-Gm-Gg: AeBDieuceHGoxq9Iu0UkT29iVigLkianttF0ho42asY4KpVme56HWin6hs6GVenxeT+
+	Abr2yxy9tQ4wSMjwYaikPvCWeZl95YqjEfLXihSlgx6NvNx/t41mGMXLqOxSHPbaiZIZA+qX5jV
+	XxtdamwmpY8ZyysNSr0n/Bc6NVZX8i2qwN7PvVlSj4vq+SHWeWyS55rPjAZGnqzwKTqSYvHfmvL
+	Mw7fLwo1HqsZ8KiQxBqvkHfYkoLkYFiO5ZiZ6ZAnrI1uSpcB4OugPa3+7WDTwt0yMSFKH4h9YDD
+	TG9u0C3zEuZvuUOLyriQauuqez0UPAp5V5kHf/0+
+X-Received: by 2002:a17:907:e113:b0:b9c:6ef1:ed18 with SMTP id
+ a640c23a62f3a-b9d727aa4fdmr352963766b.25.1776000183133; Sun, 12 Apr 2026
+ 06:23:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260328225916.51802-2-xtex@envs.net> <CAAhV-H5Y=iPfS5FLN92eL+KauSfuLsPtiSajfFnjaQqXOtuYdA@mail.gmail.com>
- <4731624.LvFx2qVVIh@xtex1> <CAAhV-H5ShNQBo1+CZQjPH_pFvnH4x6Xn8xdP6ayBGVNqAQmieA@mail.gmail.com>
- <3c60383dc05bfebc3fe3b641622d66d68d867757.camel@xry111.site> <b04efb5af4f5019adbb0adb8543bd84b8157e8e1.camel@xry111.site>
-In-Reply-To: <b04efb5af4f5019adbb0adb8543bd84b8157e8e1.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 12 Apr 2026 20:42:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H61JWBx90NWEK=Jf=iNA-MatfuJ8sO=k07Z0Eqt0E34CA@mail.gmail.com>
-X-Gm-Features: AQROBzBvcZ_sn4LxFgq4yPFu7y6oBws5MzcuRmAPaSmEYOxjlTbIzH4gQ7ar6qc
-Message-ID: <CAAhV-H61JWBx90NWEK=Jf=iNA-MatfuJ8sO=k07Z0Eqt0E34CA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Increase default mmap randomization bits
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Bingwu Zhang <xtex@envs.net>, WANG Xuerui <kernel@xen0n.name>, Guo Ren <guoren@kernel.org>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Bingwu Zhang <xtex@astrafall.org>
+References: <20260410120044.031381086@kernel.org> <20260410120319.131582521@kernel.org>
+In-Reply-To: <20260410120319.131582521@kernel.org>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Sun, 12 Apr 2026 15:22:51 +0200
+X-Gm-Features: AQROBzAeMsaeSVePCJ__tEd4f2rWAY6MixXzp_fii2b8vyUpLt4xjSbtYzENFaw
+Message-ID: <CA+=Fv5S68wZQapeaYTspOfsuGk=nBj60sx-ojHBSqrxV59Q+ZA@mail.gmail.com>
+Subject: Re: [patch 23/38] alpha: Select ARCH_HAS_RANDOM_ENTROPY
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>, 
+	iommu@lists.linux.dev, Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+	linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org, 
+	David Woodhouse <dwmw2@infradead.org>, Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, 
+	Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Thomas Sailer <t.sailer@alumni.ethz.ch>, 
+	linux-hams@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+	Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
+	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	loongarch@lists.linux.dev, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	linux-m68k@lists.linux-m68k.org, Dinh Nguyen <dinguyen@kernel.org>, 
+	Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, 
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, 
+	Paul Walmsley <pjw@kernel.org>, linux-riscv@lists.infradead.org, 
+	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 12, 2026 at 8:37=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+On Fri, Apr 10, 2026 at 2:36=E2=80=AFPM Thomas Gleixner <tglx@kernel.org> w=
+rote:
 >
-> On Sun, 2026-04-12 at 20:32 +0800, Xi Ruoyao wrote:
-> > On Sun, 2026-04-12 at 20:24 +0800, Huacai Chen wrote:
-> > > On Sun, Apr 12, 2026 at 11:49=E2=80=AFAM Bingwu Zhang <xtex@envs.net>=
- wrote:
-> > > >
-> > > > On Sunday, March 29, 2026 11:48:02=E2=80=AFAM China Standard Time H=
-uacai
-> > > > Chen wrote:
-> > > > > Hi, Bingwu,
-> > > > >
-> > > > > On Sun, Mar 29, 2026 at 6:59=E2=80=AFAM Bingwu Zhang <xtex@envs.n=
-et>
-> > > > > wrote:
-> > > > > > From: Bingwu Zhang <xtex@astrafall.org>
-> > > > > >
-> > > > > > Increase default mmap randomization bits from 12 to 18 on 64-
-> > > > > > bit
-> > > > > > platforms for better strength.
-> > > > > >
-> > > > > > The original default, 12, means that ASLR offset has only (1
-> > > > > > << 12) =3D
-> > > > > > 4096 possibilities. On average, it can be brute-forced in 2048
-> > > > > > attempts.
-> > > > > > If a service is configured to restart automatically or can be
-> > > > > > started
-> > > > > > easily (e.g. execve a suid program), then trying for 4k times
-> > > > > > can be
-> > > > > > done in one day even when each attempt takes 20s.
-> > > > > > Increasing it to 18 makes brute-force much more difficult and
-> > > > > > leaves
-> > > > > > more time for operators to find out attacks.
-> > > > > >
-> > > > > > On 64-bit platforms, virtual address space is cheap, so the
-> > > > > > randomization bits can be increased safely without disturbing
-> > > > > > userland
-> > > > > > much and security comes first instead of availability.
-> > > > >
-> > > > > Don't change ARCH_MMAP_RND_BITS_MIN because it may compact
-> > > > > performance, and you cannot blindly increase
-> > > > > ARCH_MMAP_RND_BITS_MAX
-> > > > > because it should no more than "VA_BITS - PAGE_SHIFT - 3" (see
-> > > > > arch/riscv/Kconfig and arch/csky/Kconfig). For LoongArch,
-> > > > > VA_BITS can
-> > > > > be 39 (half of VA40), PAGE_SHIFT can be 16 (64KB page), so
-> > > > > ARCH_MMAP_RND_BITS_MAX can only increase up to 20 (39 - 16 - 3
-> > > > > =3D20).
-> > > >
-> > > > Sorry for the late reply.
-> > > >
-> > > > It was my mistake that I didn't notice the upper bound of MAX.
-> > > > Thank you for
-> > > > pointing out!
-> > > >
-> > > > However, I didn't get where increasing MIN could compact
-> > > > performance.
-> > > > Theoretically, the only difference is that the gap between heaps
-> > > > and stacks
-> > > > are larger, from [128, 128+64]M to [128, 128+4096]M. This
-> > > > shouldn't affect
-> > > > performance much. MIPS once used MIN=3D16, RISC-V 64 and PowerPC an=
-d
-> > > > ARM 64 are
-> > > > using 18, and x86-64 is using 28, but I hadn't heard anyone
-> > > > complaining about
-> > > > the performance.
-> > > >
-> > > > I ran some benchmarks last weekend using the LLVM build benchmark
-> > > > of AOSC OS
-> > > > https://github.com/AOSC-Dev/buildbot-benchmark/blob/master/buildbot=
--benchmark.bash
-> > > > and here are the results
-> > > >
-> > > > Processor       Rand bits       Time/secs
-> > > > Average Variance        Range
-> > > > 3C6000/S        18      612.927 614.394 614.513 613.343 614.76
-> > > > 613.9874        0.515637840000006       1.83299999999997
-> > > > 3C6000/S        12      614.322 613.93  614.825 613.859
-> > > > 615.875 614.5622        0.548874160000007       2.01599999999996
-> > > > 3A5000  18      3547.165        3548.764        3552.192
-> > > > 3545.697
-> > > > 3547.567        3548.277        4.79228759999993
-> > > > 6.49499999999989
-> > > > 3A5000  12      3549.029        3551.894        3549.191
-> > > > 3567.869
-> > > > 3587.409        3561.0784       222.052853440003
-> > > > 38.3800000000001
-> > > >
-> > > > I didn't see any statistically meaningful performance defect.
-> > > OK, then we can increase ARCH_MMAP_RND_BITS_MIN, but the range 18~20
-> > > seems too small and then useless, can we consider using 15~20?
-> >
-> > IMO ARCH_MMAP_RND_BITS_MIN should be just the minimal that the
-> > architecture can support, not related to security.  If you want to
-> > recommend a value for increasing security you'd set
-> > ARCH_MMAP_RND_BITS_DEFAULT a larger value instead.
+> The only remaining usage of get_cycles() is to provide
+> random_get_entropy().
 >
-> I.e. for example if someone is building a distro running on an embedded
-> system where avoiding addr space fragmentation is more important than
-> security we shouldn't be stopping him to decrease ARCH_MMAP_RND_BITS
-> unless he reaches the architecture minimum.  Instead we should increase
-> ARCH_MMAP_RND_BITS_DEFAULT so the "typical" systems get a larger
-> ARCH_MMAP_RND_BITS.
-Hmm, ARCH_MMAP_RND_BITS is visible and configurable, so just keep
-ARCH_MMAP_RND_BITS_MIN as 12.
+> Switch alpha over to the new scheme of selecting ARCH_HAS_RANDOM_ENTROPY
+> and providing random_get_entropy() in asm/random.h.
+>
+> Remove asm/timex.h as it has no functionality anymore.
+>
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Richard Henderson <richard.henderson@linaro.org>
+> Cc: linux-alpha@vger.kernel.org
+> ---
+>  arch/alpha/Kconfig              |    1 +
+>  arch/alpha/include/asm/random.h |   14 ++++++++++++++
+>  arch/alpha/include/asm/timex.h  |   26 --------------------------
+>  3 files changed, 15 insertions(+), 26 deletions(-)
 
-Huacai
+Hi,
 
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
+The Alpha side looks fine to me.
+
+I've applied this patch on top of v7.0-rc7, built a kernel successfully,
+boot-tested it on an Alpha UP2000+ (SMP) without issues.
+
+Acked-by: Magnus Lindholm <linmag7@gmail.com>
+Tested-by: Magnus Lindholm <linmag7@gmail.com>
