@@ -1,197 +1,192 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE75284693;
-	Sun, 12 Apr 2026 06:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CB1313543
+	for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 08:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775976565; cv=none; b=INlCpvCaNn/f/Jn5crOG0xxdBu/WX8kZOiKZ4oY6nmsOd53QZtM9YWDneBIA8klizpssUU6Mu+f4EVRojg5L8djLp+i9JKv2yhkzbEe0Y9Y5uVV4PF16TmqLramFjWO1ezyd8e/QVPrUKnLqt2t5nYxdVsgO8vhyu9W+/MuyYms=
+	t=1775984199; cv=none; b=kDC7SsXk5wra1AMqeFkIt3hHD+ZGcqWLQ/1+sH3nU0R/p72PXJuoEnJ4uUUYVXOVOFXcEgrWL3oJh9cIt4ydQMLbo1jbwhh+CbkFHmFKtv9bnVsVG+PylkAyAXAbqfpAd7QhuCQ84eZtWJsmf8h9c/UEko7KFUYRfOotErD5rh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775976565; c=relaxed/simple;
-	bh=EAh/E2u/DE+syhU1hV2eNJ1OFxXh6YEQ8VHYcCZTJXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=saLrAOG+DvgHkZzXMFpURavw975MzLz9gvF/bvYdW1Gi83KlD95rvfVO3Ih5bQ0dV0vqsMAi3We3W6jgPGHEncx2VTfJzbnzJY7l7V6F0nhMcQGXOgY041iyQ0CktxNaRg85+C3seucB2tByUghup6ZKXt95AQpqucR+I+xDauM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=L0Jzfi4w; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=BotqNdbM; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	s=arc-20240116; t=1775984199; c=relaxed/simple;
+	bh=XZtsBYJ+xUzK/w66hhh7L4ep5/Nv3d9zyXSTiNiHtzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBob1VLEdl1atvMzGDs0etxC244oFJtMYX1AdWgnFihD+AU7zegupmZAjnW6yk8Pa0oXr+P+fvoPGSzBxbhbyptXAd3G69clAMaue5FC9LCNVY9Hh9qoIEcAOZoNYKmifZkdt++NpAeeKNnTcQmQ5owvfkSjLT7qbYWa0X7k/5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmMcTnV1; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="L0Jzfi4w";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="BotqNdbM"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pCBuahhqYxLO4y077kLFV+DwODh86Np+XQ6YWVVD59E=; t=1775976564; x=1776581364; 
-	b=L0Jzfi4wely+tO2QFn5aMd4iNMfefj7mgGzXQUcMjKlWZIPNxH9N5OBN9e7G13o80QDEkjvDbzF
-	4TAMMA1RGAw==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pCBuahhqYxLO4y077kLFV+DwODh86Np+XQ6YWVVD59E=; t=1775976564; x=1776581364; 
-	b=BotqNdbMiec0Mtz1ccMNc7r/fdw0WIoK2fe0/18qMrmAs0RdY8Y5uALzjMpjORcGzufMU9M13s2
-	MbfSozY1Nr6NctmdJugoB8BBddci6wblFnIBsQMd3M0RxvGvFSYX4D8K7TcUr9kJlC+1QRjG3wZjx
-	W/TEsG4Iukm62F5ZR6xM0RiP23e4aIR8rGrjXzANg642joyAuQl6RluA/RzBSCNrcoYUcA19tdSnH
-	ryRksUH+hob+vl7wgm2TY1xrocgQEXxpcDR14YC0zMCD6cNu019Vun/VCRDmGxJQSf2S1ZhkjJbxo
-	hkHTWGnp39WZ+TP5UuCASeAPa2ierfrjTYum7zFKUiP/HxYsI8NkO+vYVYuH40hAZ92ojqVSq+jFn
-	YCy7GzBjtHA64n2YTxAKnWxtbzTNyBZ04pi5yKHdUlaecaH1FxYjobzPN5qKcgZbm+pvDNVf4WCHo
-	OHvoxL9RH0oQhHDS/nPGkOXIBntu8o271XjtpJE5uBfIRcM4KuJl;
-Received: from [47.76.78.191] (helo=loongcatbox)
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wBoJG-00000000b9i-0Fcp;
-	Sun, 12 Apr 2026 14:28:42 +0800
-From: Rong Bao <rong.bao@csmantle.top>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Rong Bao <rong.bao@csmantle.top>,
-	stable@vger.kernel.org,
-	WANG Rui <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Sun, 12 Apr 2026 14:28:11 +0800
-Message-ID: <20260412062828.1734637-1-rong.bao@csmantle.top>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmMcTnV1"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-488b8efed61so31603495e9.1
+        for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 01:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775984196; x=1776588996; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbDgrbrkQIZIzHMqS4zyFwb8jbE/7QCDRz8zhtNheE4=;
+        b=BmMcTnV1OowlZqbZ1jrfd98WJphSxWy5+lBeGqwecH8euKBjY4tFO0fQHQTkJRIZ7w
+         pWnkNg9AnO/PL9hOQgGXOjyiiRrRYM2UIuQG8eSMEeVKlHlHuIMjyqA97ASczbe+hnKs
+         FbqazQ1Q1ySH4XwT1wrqQaMu2BUSrc0RoN3VZ4QqSPuZnnBQnJ6R6UCvI/SpdZ6xm2aj
+         BCO1iktwBXd1krkdeTlXoTdqvfQsdgof72VbJkP+bmp4bTPH/DmsfwPtEIENYaR7FQ4c
+         nt+J9lzzOYKvA3eBoaa8sed5Ql4ueHYFP3QnePmfv9+xw6yrcDgaeFpiVSKT8CAGDynV
+         G1Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775984196; x=1776588996;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EbDgrbrkQIZIzHMqS4zyFwb8jbE/7QCDRz8zhtNheE4=;
+        b=kd9xDhyQFtVMqxvx5ZfOU9uK8hZokJtuyjDrYw1gSXlRe3UvHgocR5EQnx/ptjF9T8
+         ntKL1Hhiu6zkWAiAivHpt7HkkiS+ura6hCbc6GyOCFbb3nzWIxlkdrg+8yDkUIVY8Cw5
+         10w0N4XfnzLWE5MWSF606lNQVasovYfguuw6CdshC4JPsw6XfmGsMrEKdoPqIIf7p2kY
+         bBAZiIH3eZvSNeAi2QLWGdm4/cvcWzRYc4wZrJapdzLIet9fPjux5bH3M1rA/Amh+eeC
+         5ylPsOBEKXLCl9g1qPGuGeFePx5MvGNsodNlyirumHrBo9btxeWKVLIEuTfVXHBP3wzO
+         ECQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWWjRoOU+YMOLu4tw3glBrc5f9X3F4RX4HqyoDLnl3BfsAOejKqxYP0byzt7VdxAx5N2vGJL5H5COc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/Phl8lzRhel1sGlZfcZ6+wy3KbbHLT/d3uMSQDxd4ulHfztNj
+	uoahe7oiZBMYG85CMOzMO86+zOwWPzZKfa8sj9IRoUJvx04tnKMt4PCK
+X-Gm-Gg: AeBDievAil3yMzRJzD/c09ePVGExumO+FJtIjH2fCWhAG8GwsOemOvCYBZgkDjf2cZ+
+	W+O9t8WYldt1bziW3irEaIRaa+ZtYILkEgjjoTEkMKW4XNzLfw3ZAEEq42Qtj0+I692lkKOpmJr
+	KxdabTnNjM3JyS4NBObmdh2YoFLp8jSdjTb4A5Ciq8jOxvYD3t785BabGoKdkctECHObSEfCyy7
+	BdeRA89ZDt5fqnQ2mTUQSo3sKi+3XomKgbRaQjq3+Y8/lHgf2HGaK2lXvLnNzKapKMccHhXcZLP
+	BYYx+DXBt4OkPCvnmE4WbQiLZYkcOHYB/pj0PikjSr4X0P1h6VSVRLC+GCK4BpewjPuQv2vGYhv
+	wjwKCeyT+E2FBKw55BjSIjlFoASF495LwPd4HQ8lCYt2UypaV+C1Zf0Y62vv050ImlSiL5jqnZ+
+	tMOHytjm677yK7OTviAV/U7E8TTi3wCciXIHL3xXNhVL/3kR2GRH4H/p0kAYfDQOIXJkhjORIVZ
+	9QjTQ==
+X-Received: by 2002:a05:600c:698d:b0:487:22ad:403e with SMTP id 5b1f17b1804b1-488d6ac9ce5mr126951995e9.14.1775984195334;
+        Sun, 12 Apr 2026 01:56:35 -0700 (PDT)
+Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d532ed4dsm197923925e9.4.2026.04.12.01.56.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Apr 2026 01:56:34 -0700 (PDT)
+Date: Sun, 12 Apr 2026 09:56:33 +0100
+From: Stafford Horne <shorne@gmail.com>
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Jonas Bonn <jonas@southpole.se>,
+	linux-openrisc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+	iommu@lists.linux.dev,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>,
+	linux-mm@kvack.org, David Woodhouse <dwmw2@infradead.org>,
+	Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
+	Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	linux-alpha@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org, Dinh Nguyen <dinguyen@kernel.org>,
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
+	linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+	linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	sparclinux@vger.kernel.org
+Subject: Re: [patch 30/38] openrisc: Select ARCH_HAS_RANDOM_ENTROPY
+Message-ID: <adteQSw8c65MtX5l@antec>
+References: <20260410120044.031381086@kernel.org>
+ <20260410120319.593798781@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260410120319.593798781@kernel.org>
 
-Currently, the initialization of loongarch_jump_ops does not contain an
-assignment to its .free field. This causes disasm_line__free() to fall
-through to ins_ops__delete() for LoongArch jump instructions.
+On Fri, Apr 10, 2026 at 02:20:55PM +0200, Thomas Gleixner wrote:
+> The only remaining non-architecture usage of get_cycles() is to provide
+> random_get_entropy().
+> 
+> Switch openrisc over to the new scheme of selecting ARCH_HAS_RANDOM_ENTROPY
+> and providing random_get_entropy() in asm/random.h.
+> 
+> Add 'asm/timex.h' includes to the relevant files, so the global include can
+> be removed once all architectures are converted over.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Jonas Bonn <jonas@southpole.se>
+> Cc: linux-openrisc@vger.kernel.org
 
-ins_ops__delete() will free ins_operands.source.raw and
-ins_operands.source.name, and these fields overlaps with
-ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
-Since in loongarch_jump__parse(), these two fields are populated by
-strchr()-ing the same buffer, trying to free them will lead to undefined
-behavior.
+This looks good to me.
 
-This invalid free usually leads to crashes:
+Acked-by: Stafford Horne <shorne@gmail.com>
 
-        Process 1712902 (perf) of user 1000 dumped core.
-        Stack trace of thread 1712902:
-        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
-        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
-        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
-        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
-        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
-        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
-        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
-        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
-        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
-        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
-        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
-        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
-        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
-        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
-        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
-        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
-        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
-        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
-        ELF object binary architecture: LoongArch
-
-... and it can be confirmed with Valgrind:
-
-        ==1721834== Invalid free() / delete / delete[] / realloc()
-        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
-        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
-        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
-        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-
-This patch adds the missing free() specialization in loongarch_jump_ops,
-which prevents disasm_line__free() from invoking the default cleanup
-function.
-
-Fixes: 4ca0d340ce206 ("perf annotate: Fix instruction association and parsing for LoongArch")
-Cc: stable@vger.kernel.org
-Cc: WANG Rui <wangrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
----
- tools/perf/util/annotate-arch/annotate-loongarch.c | 1 +
- tools/perf/util/disasm.c                           | 2 +-
- tools/perf/util/disasm.h                           | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
-index 950f34e59e5cd..c2addca77320b 100644
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *o
- }
- 
- static const struct ins_ops loongarch_jump_ops = {
-+	.free	   = jump__delete,
- 	.parse	   = loongarch_jump__parse,
- 	.scnprintf = jump__scnprintf,
- 	.is_jump   = true,
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 9e0420e14be19..62bd8c3e53051 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
- 			 ops->target.offset);
- }
- 
--static void jump__delete(struct ins_operands *ops __maybe_unused)
-+void jump__delete(struct ins_operands *ops __maybe_unused)
- {
- 	/*
- 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index a6e478caf61a9..6b7fef3bbc42f 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -158,6 +158,7 @@ int call__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		    struct ins_operands *ops, int max_ins_name);
- int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		    struct ins_operands *ops, int max_ins_name);
-+void jump__delete(struct ins_operands *ops);
- int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
-
-base-commit: f5459048c38a00fc583658d6dcd0f894aff6df8f
--- 
-2.53.0
-
+> ---
+>  arch/openrisc/Kconfig              |    1 +
+>  arch/openrisc/include/asm/random.h |   12 ++++++++++++
+>  arch/openrisc/include/asm/timex.h  |    5 -----
+>  arch/openrisc/lib/delay.c          |    1 +
+>  4 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> --- a/arch/openrisc/Kconfig
+> +++ b/arch/openrisc/Kconfig
+> @@ -10,6 +10,7 @@ config OPENRISC
+>  	select ARCH_HAS_DELAY_TIMER
+>  	select ARCH_HAS_DMA_SET_UNCACHED
+>  	select ARCH_HAS_DMA_CLEAR_UNCACHED
+> +	select ARCH_HAS_RANDOM_ENTROPY
+>  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>  	select GENERIC_BUILTIN_DTB
+>  	select COMMON_CLK
+> --- /dev/null
+> +++ b/arch/openrisc/include/asm/random.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +#ifndef __ASM_OPENRISC_RANDOM_H
+> +#define __ASM_OPENRISC_RANDOM_H
+> +
+> +#include <asm/timex.h>
+> +
+> +static inline unsigned long random_get_entropy(void)
+> +{
+> +	return get_cycles();
+> +}
+> +
+> +#endif
+> --- a/arch/openrisc/include/asm/timex.h
+> +++ b/arch/openrisc/include/asm/timex.h
+> @@ -9,13 +9,9 @@
+>   * OpenRISC implementation:
+>   * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
+>   */
+> -
+>  #ifndef __ASM_OPENRISC_TIMEX_H
+>  #define __ASM_OPENRISC_TIMEX_H
+>  
+> -#define get_cycles get_cycles
+> -
+> -#include <asm-generic/timex.h>
+>  #include <asm/spr.h>
+>  #include <asm/spr_defs.h>
+>  
+> @@ -23,6 +19,5 @@ static inline cycles_t get_cycles(void)
+>  {
+>  	return mfspr(SPR_TTCR);
+>  }
+> -#define get_cycles get_cycles
+>  
+>  #endif
+> --- a/arch/openrisc/lib/delay.c
+> +++ b/arch/openrisc/lib/delay.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/init.h>
+>  
+>  #include <asm/param.h>
+> +#include <asm/timex.h>
+>  #include <asm/processor.h>
+>  
+>  bool delay_read_timer(unsigned long *timer_value)
+> 
+> 
