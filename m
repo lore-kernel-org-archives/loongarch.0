@@ -1,125 +1,88 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06203ACF18;
-	Mon, 13 Apr 2026 08:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC6C3AB29F;
+	Mon, 13 Apr 2026 09:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776070185; cv=none; b=n4L2gJwvtfjeX0WPMNIGYmninAovSnEJYVzUGDS+VrWWyQu3bKfRvSBz0/sc75Srkhsyyuu0P8t5jTjkskxBwetslZSpppUt0icsYcZoQbajybOyG3UguslR+BI88sPv3z3tkaJrzAbOrfFKEF9DDURBFlLUQdDLnTXYDu39Adg=
+	t=1776070869; cv=none; b=sz8or/idaWNXS0ZdAI5vWWdJvimix8yif1vkPpD7F4ERQkjLY70T7L7FNW2KsTYCQIRJ7W0DrWqK1caziNzZvnfU3ZFU3XK0I1tkcXed+E076WiOp8fHPFGYOSdtPXrANXRSucDHV1fntpNaZ6t2yAYJxQYjCTupPDZLv5bZT2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776070185; c=relaxed/simple;
-	bh=bdMEH6BffjYxwN/uwZveM6rAFybUgLDXqVkJob6/B/E=;
+	s=arc-20240116; t=1776070869; c=relaxed/simple;
+	bh=NmWTXdFZa2PXaXxihxiBwP6/fcqhMPMR8Odd5UUj3qI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F8Sm0nTnhlVTi1wkcb3x8AUK1pxS6QzKYAO9N6DOUvkaOFUaMGcbCx3KYDZKvYvInmBgcVN5hAvWpgIOfMBN6WU1juXi1B2envEuLjJVV90DojwHgjmp9TZj2M3NVlWalkfaoh0J491ZnPVReZP7IYAbUWq+9FclSnEyTuWe1qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=59OnR8mh; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=ZimjZvxp; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	 In-Reply-To:Content-Type; b=pogm6Dfb4hUByDnqPXpZyHDFnFKFNSi6VrhjpQH4WlgmrMIYXn5GzHNty6rZNKOHDT8LBJgXxDBoz9+wMojxmdok9I81MwuPv2nz5QmkBVJtmrU0/8QcC2MEITRQaqBA2LjfdECNZjtleXn2UiDBu9yegOwk/YnV+/KkNFvalUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfyW73rE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="59OnR8mh";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="ZimjZvxp"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:
-	References:BIMI-Selector; bh=6OrlQu4O57XEr1X3XLOvXNQM3/Z2iT8i6M9UMgn5zyc=;
-	t=1776070183; x=1776674983; b=59OnR8mhatYWey7D+KYQTQsB8vvpeAdPwqYms0ooeuu32Lc
-	wV63Jw7Z82GFtqKxUPyS0Xu6tpPjLrOVZJyuyBg==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:
-	References:BIMI-Selector; bh=6OrlQu4O57XEr1X3XLOvXNQM3/Z2iT8i6M9UMgn5zyc=;
-	t=1776070183; x=1776674983; b=ZimjZvxph+fbSdCj3U8j264HQ2GU+KfMq1j0vmnuvpUleg2
-	aYh3gALBIGqjqzXpRGMB3qP+bWTP/gSktdfixrqh2amHJJmJ3OwnbYghdaN3rdGl/L3WSgbqBObjh
-	98XnI2Q2Fr7Ey0Os9QcUuk/Bzw4eH8Zt9npzK/mkj3kddgs59M/xBjEkheXXwLR0rJl5MvqnylzvV
-	JxD9moZaasCA2GsNZL3U9C3TMU1EjuNy2Ifc3TCRl7XvmzfumHTSZEGsoZCbKHxZj6wviuV6XTX/i
-	DZ5E5ZJcL1bVqn8LY2bQasjdnblBXoRIeugM0y9MIzNb+oPW5vuoLBAuECZw4LfqvXNiIGTS6Xv0L
-	/CjKwhXo5vWXfSeSfZrDmjpdHeeWFxuhy/EziePczxG+6401mW1kU98yXEsumuzYS0MVuews3q/nU
-	F9Yb83CwUpFrN8KUqdvPjqejkSyjrWQPjVbYqmuIFxofmmqpiJgTuQxuXc17elZgOWcsldacDyjnI
-	Mys;
-Received: from [47.76.78.191] (helo=[172.16.23.20])
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wCCz7-00000000cn8-1TS6;
-	Mon, 13 Apr 2026 16:49:33 +0800
-Message-ID: <0160f8e5-56f5-4024-8e4f-a72c4ab19f97@csmantle.top>
-Date: Mon, 13 Apr 2026 16:49:28 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfyW73rE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57513C116C6;
+	Mon, 13 Apr 2026 09:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776070868;
+	bh=NmWTXdFZa2PXaXxihxiBwP6/fcqhMPMR8Odd5UUj3qI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bfyW73rEx6WunGZVvr1kdbuQhIZW0auQdr185ZFOdqezYfVI8EqIl4RV+jZMHErnf
+	 HHqywW91vp7CVLzZ8tl9LuEsJL2nKmijW0OQ98WRnNBsFsW1LYo4ZFpZLLA1RAeRqi
+	 fLF9xsDW37jcs+y2EAiBEgZnfjWYwDz/hvRsB2Ow2oVioAmoaeXLVkxbmWKx3ILDyy
+	 OFKArZB3La00uc7rhVgunFkOn3bZFgPE1fuUov3rdMuNp+wqIMsO2YWxMIl1vusQFL
+	 bBAU79v+8ddAl2Ytb2JX6K5ckn/0H32ur+wYUjKyGCCdFu1O+cEC54vJcUyB4ZJ+rF
+	 y0fFboG7dTA8g==
+Message-ID: <67c579d4-4e7e-4b3a-a2b9-7ba669664bdf@kernel.org>
+Date: Mon, 13 Apr 2026 11:00:57 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] perf annotate: Use jump__delete when freeing LoongArch
- jumps
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, stable@vger.kernel.org,
- WANG Rui <wangrui@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260412062828.1734637-1-rong.bao@csmantle.top>
- <CAAhV-H4NHEo_JnnDYkWAYdTwiNuyVGNYymyOLL89ZxQVrqRjuA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [patch 14/38] slub: Use prandom instead of get_cycles()
 Content-Language: en-US
-From: Rong Bao <rong.bao@csmantle.top>
-In-Reply-To: <CAAhV-H4NHEo_JnnDYkWAYdTwiNuyVGNYymyOLL89ZxQVrqRjuA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+To: Thomas Gleixner <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+ Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
+ Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+ linux-crypto@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
+ Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ linux-alpha@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+ Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org,
+ Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
+ linux-openrisc@vger.kernel.org, Helge Deller <deller@gmx.de>,
+ linux-parisc@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+ linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
+ linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
+ linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ sparclinux@vger.kernel.org, "Harry Yoo (Oracle)" <harry@kernel.org>,
+ Hao Li <hao.li@linux.dev>
+References: <20260410120044.031381086@kernel.org>
+ <20260410120318.525653921@kernel.org>
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <20260410120318.525653921@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Huacai,
-
-On 2026-04-13 16:33, Huacai Chen wrote:
-> Hi, Rong,
+On 4/10/26 14:19, Thomas Gleixner wrote:
+> The decision whether to scan remote nodes is based on a 'random' number
+> retrieved via get_cycles(). get_cycles() is about to be removed.
 > 
-> On Sun, Apr 12, 2026 at 2:28 PM Rong Bao <rong.bao@csmantle.top> wrote:
->> [...]
->> This patch adds the missing free() specialization in loongarch_jump_ops,
->> which prevents disasm_line__free() from invoking the default cleanup
->> function.
->>
->> Fixes: 4ca0d340ce206 ("perf annotate: Fix instruction association and parsing for LoongArch")
-> The original code works well, you are really fixing fb7fd2a14a503b9a
-> ("perf annotate: Move raw_comment and raw_func_start fields out of
-> 'struct ins_operands'").
-
-Thanks, I'll fix the reference in v2.
-
-> And LTS branches (6.12, 6.18) need different fixes because the code
-> has been restructed.
-
-I locally have a version based on the linux-6.19.y branch. Would you 
-mind providing me some pointers to the standard approach to submitting 
-this rebased version? I'm new to the process.
->> [...]
->> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
->> index a6e478caf61a9..6b7fef3bbc42f 100644
->> --- a/tools/perf/util/disasm.h
->> +++ b/tools/perf/util/disasm.h
->> @@ -158,6 +158,7 @@ int call__scnprintf(const struct ins *ins, char *bf, size_t size,
->>                      struct ins_operands *ops, int max_ins_name);
->>   int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
->>                      struct ins_operands *ops, int max_ins_name);
->> +void jump__delete(struct ins_operands *ops);
-> Don't put it among ***_scnprintf(), put it before ins__raw_scnprintf()
-> or after mov__scnprintf(), and add a blank line.
-
-Sure. This will be fixed in v2.
-
+> There is already prandom state in the code, so use that instead.
 > 
-> Huacai
-> 
->> [...]
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: Vlastimil Babka <vbabka@kernel.org>
+> Cc: linux-mm@kvack.org
 
--- 
-Regards,
-Rong Bao
+LGTM.
+
+Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+
