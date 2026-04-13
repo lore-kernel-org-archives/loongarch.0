@@ -1,193 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60217396B73;
-	Mon, 13 Apr 2026 07:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767271DD525
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 08:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776067142; cv=none; b=mwl5JWeertl0/gsLkuJhUFiD/4pFkMbuu1YAx66BnaaHh0xM3vW7B5nuvKYeeYycgQhrlECdYiSPDDUvTjCjz8WGBdJ5FQqMHmDPfWm68Dc/tEiKj9zaFJVmHJMdTkXt2Y46jn+qRWPpKQ36tlP8aPz+KqPZMazxYVK287sR45E=
+	t=1776067577; cv=none; b=gI7pyWTxVgrdbwNyNXgj0qYP944YgNujHqsUbAQy0WHImBwrqRMjyJcZHHTKS4w4+5JR5u7jJhU6wxlP7DgLNAhzsqqyiirDl1xCPzmaOlX9mSFASLppb7jX0yjOQc4BEAfwH/X/+IICwYz5kpVqXNeyExi8/SyMnayqdFHwpQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776067142; c=relaxed/simple;
-	bh=XHj3Sl5zLIaiozQdeiIMCMFRZIyOS3dN0hw7WTARA40=;
-	h=Date:From:To:Cc:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=o5Yy4LGd4QYVJp16vTLLNEu6pFIPQOqsaBE/s5GlxjBieSH7nqN5V9DzN1lBKj+ARWJKEd8uIs8XnYd/tS3ePR3atwpKF9Z0HERwePpnYoHD+JiCxf9IsiRsr8b002FusBcBkCZgtcc6Kvv8W9mqLm7JvCKukmzXI7KK/zz/3lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aInXVTZD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aInXVTZD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E82C2BCB1;
-	Mon, 13 Apr 2026 07:59:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776067142;
-	bh=XHj3Sl5zLIaiozQdeiIMCMFRZIyOS3dN0hw7WTARA40=;
-	h=Date:From:To:Cc:From;
-	b=aInXVTZDoMoSfHiM/ZTxpP0dqJp8rPTOhRsc0Vuegjf9eP1zvaDTJ+apxlgIuhj5m
-	 uymEbEu/UHOJWJ6lw7U0YrRJbLNQJR/o8436sUmQyyIJnGd5I57C1MKi19QSG24eX9
-	 h2iGOBKURBUQkPE+zITLtqcSezi5jonPS8m9wlnnrbrXoKcavVutGZS3YzVK/HoBVS
-	 ZTBks8Urt9YUD0fN0O3n/+VePDQcDLPvpr8M3UALf3YN6/WXTllw86HLQ5q1c3ADYE
-	 YbRf8iuI5QEq4lS/pfjIFvTCKsJMm3+e/VB0lwWLoC4lQj8qW8Sg2xkFLYg/qNqpkL
-	 OEuPIqPS+wyIg==
-Date: Mon, 13 Apr 2026 16:58:59 +0900
-From: "Harry Yoo (Oracle)" <harry@kernel.org>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org,
-	Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-crypto@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-	Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
-	Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	linux-alpha@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org, Dinh Nguyen <dinguyen@kernel.org>,
-	Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org,
-	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
-	linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>,
-	linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	sparclinux@vger.kernel.org, Hao Li <hao.li@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shengming Hu <hu.shengming@zte.com.cn>
-Message-ID: <adyiQy_DP_vldg1r@hyeyoo>
+	s=arc-20240116; t=1776067577; c=relaxed/simple;
+	bh=ntJPW3F9wCH+bnd+CBHM4WQZ6U/QVcZiqScx2Aax40s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l+fNWFN5WoRjKPUkmqrLPwxrxXfWqjt3MbzOtF/IDDEppIZ6dCRhFW+Jfx4qxMK6Mt9FQuKh2d1KXW8Jo4ccxHQ6tUNfkJmpcv1ZhX4qanxXmO9zP/NEgPtlt999+DeoDxxM3ps0A1XE+p86wTMWuj7vokqSmC6u1ZeiW47gMdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.128.181])
+	by gateway (Coremail) with SMTP id _____8CxX+rzo9xplBMAAA--.64S3;
+	Mon, 13 Apr 2026 16:06:12 +0800 (CST)
+Received: from mail-yw1-f181.google.com (unknown [209.85.128.181])
+	by front1 (Coremail) with SMTP id qMiowJCxmuDxo9xpgvlrAA--.48229S2;
+	Mon, 13 Apr 2026 16:06:10 +0800 (CST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-797ab169454so47322747b3.3
+        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 01:06:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/R7S8l6INKeYUdYvxaUMYKQYgjS0jzeu7Cfp9WE174LJzpUydcgSBigLt8kxy7f7dKD1i0aT5jnpg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/BdxC6P49xQbjIOe0ByVg7Fqgr4dngp4UCraphTSYdF+BI+SJ
+	3KHoOZUeiPKQITH9IrnyIzGU0jSLtPt4fVwbsy0H1pd+ShzI/e0j+Z3v4FlWyRP0ValERElp2VZ
+	BzHU0OaSwdRXCiCHLL10OLABl3MVHc3PDf3HHzJpG+Q==
+X-Received: by 2002:a53:d007:0:b0:651:c047:f094 with SMTP id
+ 956f58d0204a3-651c047f43amr3893314d50.31.1776067568854; Mon, 13 Apr 2026
+ 01:06:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20260413040506.26640-4-yangtiezhu@loongson.cn> <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
+In-Reply-To: <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Mon, 13 Apr 2026 16:05:57 +0800
+X-Gmail-Original-Message-ID: <CAHirt9gy=HETVpi6bOrUOw65N0wuVVSMG-0usMSAQKm7G4OQww@mail.gmail.com>
+X-Gm-Features: AQROBzDo6XriASiqA6WQWtAVhetXPEwhLVNnHT93SmV1NrOhpV5lBoAQTMbGKwU
+Message-ID: <CAHirt9gy=HETVpi6bOrUOw65N0wuVVSMG-0usMSAQKm7G4OQww@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Support 8 and 16 bit
+ read-modify-write instructions
+To: bot+bpf-ci@kernel.org
+Cc: yangtiezhu@loongson.cn, chenhuacai@kernel.org, hengqi.chen@gmail.com, 
+	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net, 
+	martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	clm@meta.com, ihor.solodrai@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:qMiowJCxmuDxo9xpgvlrAA--.48229S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWr18Zw18GrWUXr1fGFykJFc_yoWrXF4kpr
+	y8Wrs5Cr4kJFyqv3s7Ja17JrWUKr4ay3W7Wr1UXrWYyayYvF98JF10kF17XFW5urZYyFWa
+	vF4q9w12va1UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-Bcc: 
-Subject: Re: [patch 14/38] slub: Use prandom instead of get_cycles()
-Reply-To: 
-In-Reply-To: <20260410120318.525653921@kernel.org>
+On Mon, Apr 13, 2026 at 12:49=E2=80=AFPM <bot+bpf-ci@kernel.org> wrote:
+>
+> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
+c
+> > index fefda4050a20..c9a32f124f5e 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+>
+> [ ... ]
+>
+> > @@ -388,11 +408,32 @@ static int emit_atomic_rmw(const struct bpf_insn =
+*insn, struct jit_ctx *ctx)
+> >       /* src =3D atomic_fetch_<op>(dst + off, src) */
+> >       case BPF_ADD | BPF_FETCH:
+> > +             switch (BPF_SIZE(insn->code)) {
+> > +             case BPF_B:
+> > +                     if (cpu_has_lam_bh) {
+> > +                             emit_insn(ctx, amaddb, src, t1, t3);
+> > +                             emit_zext_32(ctx, src, true);
+>
+> Is emit_zext_32() sufficient for zero-extending an 8-bit value here?
+>
+> emit_zext_32() uses lu32id to clear bits [63:32], but for a byte-width
+> atomic fetch the returned value needs bits [63:8] zeroed. If amadd.b
+> follows the LoongArch convention of sign-extending sub-word results
+> (as amadd.w does for 32-bit values), then a byte value like 0x80 would
+> produce 0x00000000ffffff80 after emit_zext_32() instead of the expected
+> 0x0000000000000080.
+>
+> Elsewhere in this file, 16-bit zero-extension already uses bstrpickd:
+>
+>     emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
+>
+> Should the BPF_B and BPF_H cases here use bstrpickd with the
+> appropriate bit range (7,0 for bytes and 15,0 for halfwords) instead
+> of emit_zext_32()?
 
-On Fri, Apr 10, 2026 at 02:19:37PM +0200, Thomas Gleixner wrote:
-> The decision whether to scan remote nodes is based on a 'random' number
-> retrieved via get_cycles(). get_cycles() is about to be removed.
-> 
-> There is already prandom state in the code, so use that instead.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Vlastimil Babka <vbabka@kernel.org>
-> Cc: linux-mm@kvack.org
+I don't think truncating byte and sub-word results to only the low 8
+or 16 bits is the right model here. The current behavior intentionally
+keeps the low 32 bits of the computed value in the register, because
+all uses explicitly extend from 32 bits to 64 bits when feeding
+instructions that require 64-bit operands. The same reasoning should
+apply to byte and sub-word types as well.
+
+For example:
+
+Def:
+int8 a =3D amadd.b
+int8 b =3D amadd.b
+
+Use:
+t1 =3D sext32 a
+t2 =3D sext32 b
+blt t1, t2   // a < b
+
+Take a =3D -1 and b =3D 0. In the 64-bit registers:
+
+If we keep the low 32 bits:
+a: 0x0000_0000_ffff_ffff
+b: 0x0000_0000_0000_0000
+
+then:
+t1: 0xffff_ffff_ffff_ffff
+t2: 0x0000_0000_0000_0000
+
+So a < b evaluates to true, as expected.
+
+But if we only keep the low 8 bits:
+a: 0x0000_0000_0000_00ff
+b: 0x0000_0000_0000_0000
+
+then:
+t1: 0x0000_0000_0000_00ff
+t2: 0x0000_0000_0000_0000
+
+Now a < b becomes false, which is clearly not the intended result.
+
+In other words, narrowing the result to 8 or 16 bits here would break
+the existing 32-bit canonicalization rule for sub-word values.
+
+More generally, the "always explicitly extend" pattern doesn't map
+particularly well to the LoongArch ISA. In the long run, it would be
+preferable if we could eliminate these explicit extensions altogether
+rather than relying on them as part of the semantic model.
+
+Thanks,
+Rui
+
+
+>
+> > +             case BPF_H:
+> > +                     if (cpu_has_lam_bh) {
+> > +                             emit_insn(ctx, amaddh, src, t1, t3);
+> > +                             emit_zext_32(ctx, src, true);
+>
+> Same concern for the halfword case -- emit_zext_32() would leave
+> bits [31:16] with sign-extended values if amadd.h sign-extends.
+>
+> [ ... ]
+>
+> > @@ -421,11 +462,32 @@ static int emit_atomic_rmw(const struct bpf_insn =
+*insn, struct jit_ctx *ctx)
+> >       /* src =3D atomic_xchg(dst + off, src); */
+> >       case BPF_XCHG:
+> > +             switch (BPF_SIZE(insn->code)) {
+> > +             case BPF_B:
+> > +                     if (cpu_has_lam_bh) {
+> > +                             emit_insn(ctx, amswapb, src, t1, t3);
+> > +                             emit_zext_32(ctx, src, true);
+>
+> Same question applies to the exchange path -- amswap.b and amswap.h
+> return the old value and would need proper sub-word zero-extension
+> rather than the 32-bit emit_zext_32().
+>
+> > +             case BPF_H:
+> > +                     if (cpu_has_lam_bh) {
+> > +                             emit_insn(ctx, amswaph, src, t1, t3);
+> > +                             emit_zext_32(ctx, src, true);
+>
+> Same here for amswap.h.
+>
+>
 > ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a =
+bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/READM=
+E.md
+>
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/243253=
+84786
 
-Acked-by: Harry Yoo (Oracle) <harry@kernel.org>
-
-Is this for this merge window?
-
-This may conflict with upcoming changes on freelist shuffling [1]
-(not queued for slab/for-next yet though), but it should be easy to
-resolve.
-
-[Cc'ing Shengming and SLAB ALLOCATOR folks]
-
-[1] https://lore.kernel.org/linux-mm/20260409204352095kKWVYKtZImN59ybO6iRNj@zte.com.cn
-
--- 
-Cheers,
-Harry / Hyeonggon
-
->  mm/slub.c |   37 +++++++++++++++++++++++--------------
->  1 file changed, 23 insertions(+), 14 deletions(-)
-> 
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -3302,6 +3302,25 @@ static inline struct slab *alloc_slab_pa
->  	return slab;
->  }
->  
-> +#if defined(CONFIG_SLAB_FREELIST_RANDOM) || defined(CONFIG_NUMA)
-> +static DEFINE_PER_CPU(struct rnd_state, slab_rnd_state);
-> +
-> +static unsigned int slab_get_prandom_state(unsigned int limit)
-> +{
-> +	struct rnd_state *state;
-> +	unsigned int res;
-> +
-> +	/*
-> +	 * An interrupt or NMI handler might interrupt and change
-> +	 * the state in the middle, but that's safe.
-> +	 */
-> +	state = &get_cpu_var(slab_rnd_state);
-> +	res = prandom_u32_state(state) % limit;
-> +	put_cpu_var(slab_rnd_state);
-> +	return res;
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_SLAB_FREELIST_RANDOM
->  /* Pre-initialize the random sequence cache */
->  static int init_cache_random_seq(struct kmem_cache *s)
-> @@ -3365,8 +3384,6 @@ static void *next_freelist_entry(struct
->  	return (char *)start + idx;
->  }
->  
-> -static DEFINE_PER_CPU(struct rnd_state, slab_rnd_state);
-> -
->  /* Shuffle the single linked freelist based on a random pre-computed sequence */
->  static bool shuffle_freelist(struct kmem_cache *s, struct slab *slab,
->  			     bool allow_spin)
-> @@ -3383,15 +3400,7 @@ static bool shuffle_freelist(struct kmem
->  	if (allow_spin) {
->  		pos = get_random_u32_below(freelist_count);
->  	} else {
-> -		struct rnd_state *state;
-> -
-> -		/*
-> -		 * An interrupt or NMI handler might interrupt and change
-> -		 * the state in the middle, but that's safe.
-> -		 */
-> -		state = &get_cpu_var(slab_rnd_state);
-> -		pos = prandom_u32_state(state) % freelist_count;
-> -		put_cpu_var(slab_rnd_state);
-> +		pos = slab_get_prandom_state(freelist_count);
->  	}
->  
->  	page_limit = slab->objects * s->size;
-> @@ -3882,7 +3891,7 @@ static void *get_from_any_partial(struct
->  	 * with available objects.
->  	 */
->  	if (!s->remote_node_defrag_ratio ||
-> -			get_cycles() % 1024 > s->remote_node_defrag_ratio)
-> +	    slab_get_prandom_state(1024) > s->remote_node_defrag_ratio)
->  		return NULL;
->  
->  	do {
-> @@ -7102,7 +7111,7 @@ static unsigned int
->  
->  	/* see get_from_any_partial() for the defrag ratio description */
->  	if (!s->remote_node_defrag_ratio ||
-> -			get_cycles() % 1024 > s->remote_node_defrag_ratio)
-> +	    slab_get_prandom_state(1024) > s->remote_node_defrag_ratio)
->  		return 0;
->  
->  	do {
-> @@ -8421,7 +8430,7 @@ void __init kmem_cache_init_late(void)
->  	flushwq = alloc_workqueue("slub_flushwq", WQ_MEM_RECLAIM | WQ_PERCPU,
->  				  0);
->  	WARN_ON(!flushwq);
-> -#ifdef CONFIG_SLAB_FREELIST_RANDOM
-> +#if defined(CONFIG_SLAB_FREELIST_RANDOM) || defined(CONFIG_NUMA)
->  	prandom_init_once(&slab_rnd_state);
->  #endif
->  }
-> 
-> 
