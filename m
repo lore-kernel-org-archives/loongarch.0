@@ -1,166 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281A42BEC2B
-	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 09:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3050835A3BF;
+	Mon, 13 Apr 2026 10:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776073609; cv=none; b=UuKTPyBY8kC69EuqwvPwIAXnozfwDQNoud/5fsz1g4j8J2mMuTFL5CoBBXnquME15CL7L93Up6vy3O7iQ0Wj8r9YwYvk69NE5Y9iCzYO62rsnsYXqRs7cB2Z6tyc8wvBp80RnDFJ5rnA1F4q3xgcyiTvN8XXo1Ja5wy61KlEur8=
+	t=1776074738; cv=none; b=e0Yrjar2pV7naV9kA2NGKiTCdI1UjaPMprw6UJCARbmFGizgDsbcgzQHordvvu10QctxslDnt4N9qb5BSJowiqBrquwUg/KQhtxtqmAX5TVZj73ecwbVHx6+818JYt48tp+A4nHxJ46xgbWPK73Z0Qz7/im9+S3WbJhojAPp0kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776073609; c=relaxed/simple;
-	bh=6Kvd5k21t20YtvqeCZelB9p2q5tUgS1BCP/iDrVjDPM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=frg+9VcOymJ6y5xRZzuHCFO7SHmfdobACYx/fJEWx5hEcc6k6mcQMCWkChxTObZyXX7jNbQ4PzorWrAkVWKIyIScmlYHPsGBi7JIN69viAJHKe5PmbmUVx8HUvOfB8Y7vuy3gZ4ThcpjsA5BIySwGSkw0g37tn3SyRDPWms7VMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DuIpNUfW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1776074738; c=relaxed/simple;
+	bh=JSEUchAya0y+73XV9yDFcJ2NoXS9xU+kE5EAs/knHJo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GOoH1E4NNLNDp6L6gIrItXPHXrmPXbGpOrSjkvVThF5PC7kmga4RF59FVvA2lzCi+5KUjSnqa9f2I7M/r10zUpjkUl3lqnkufBDh4k9JSEbWCjui4lYMcAUHbfWGhr938ahKqM8kcxL4MB9n7g97FxsD9Ni0B7h8nftaT70r8hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=CBtIKUKp; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=BuiosNpQ; arc=none smtp.client-ip=77.93.157.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DuIpNUfW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776073607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pqOOpFXr472jplXX81IjB0fG69DkhTvRYkUZqOIVbjg=;
-	b=DuIpNUfWMt96E/RP76APnXWTaLHK7Mlej+qMJtiAT/+yW8BTyervBBNIjdZBg9QPJC/GMS
-	Tdjgo5+oohvAxc6U9OJufvU6J3ZCIWfFdSbLX6NWt+U9m20SRoNZSe08eRjoILLIlNy1Sk
-	VnpeoZAeW19ihr98JM4YkQfVH59+Sac=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-639-jjgK4W-lO0GPeGbp0LHWeg-1; Mon, 13 Apr 2026 05:46:45 -0400
-X-MC-Unique: jjgK4W-lO0GPeGbp0LHWeg-1
-X-Mimecast-MFC-AGG-ID: jjgK4W-lO0GPeGbp0LHWeg_1776073605
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-43d780757eeso541847f8f.1
-        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:46:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776073605; x=1776678405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pqOOpFXr472jplXX81IjB0fG69DkhTvRYkUZqOIVbjg=;
-        b=JZ0DmT4Zrm/zlyK0BXrR025J/4ajHQmGHCgRcWjp+Lnn4mTdf9ZtTHr5G0zJYd7K1i
-         Skp4PQjh5gJfV0bltSWOPQMJsJxgeVq5UYzRTqx9SOU386qjQ6zv5EQ+eBmMwSsfmzYv
-         R52x86ciGjbR5shvgJOl+FhrCJmjcRzHGW9ca2pYN99MerW7Z+8RCpt750QKYmpLffLg
-         JUUq51oMAeFy2osRIHjb7pnKfeJvtzA7Q3VI89FVvp0v2IeGbKsvb4tlp6xyURSUzKwA
-         6AwuS4wEOCXYQr83lD1bMOE5l8/LOaMrDAK2AysPWc2LAm2Z3B8MCLwoGfdsgp8OJVvE
-         mUhA==
-X-Forwarded-Encrypted: i=1; AFNElJ/pFR3v9psFxAMTBGSQ9t0+hcZPuOGINEpw2IvTeUewe47iN5eV1l25jtlkVc/qvz7A3U4sShJidqY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/wkN6R6vWHg2q0TfHW0IYscOKUz752s7Yt324SWJtfDB2VD1x
-	ElbmNBLH5+rSdN2FGmjfzcLjbT5OvoIgTefIGmt/T2ZZ5PkP3Nl/o8J65xeiBjlcqe2tu72haY/
-	PHhX4Dh8YJD8Vz6lm5M7VmV5dZ3jlQ5ceSMcIE65pZUb/eA0JtXE8n8xxHW3Vp/E4Q0ssYn44Z6
-	+B81eay0l5UwEJwH4+PFVTb9bNcIuB0JMtLlkm
-X-Gm-Gg: AeBDietGPCCAqR1fDIaSnrwFNQkQwCDygjJJHEpU68BQbRk3/43uLpbIA3WXQxdGvn8
-	02PoJzJDck+pOKV1gjayU3eh0PTXRpoNFkLDtf5PawhYN8iq1aWeYhT1yl1kUYQDUdh61NTgtN0
-	sU4j+R1C5Ll6heH6Mx0/UqM/chpgtpH8s1QzRNmGNRRLcFn3lgH2XXpUPRGbCuAce8ChNzvUPNA
-	8kzW4XtcVLsPegu+TZVJdmSIruAmARNRnekbJw/ybXtMZxcepjDuPVHzc5Wp+XDM9+WR+J3rc5/
-	0v7n
-X-Received: by 2002:a05:6000:178b:b0:43d:78ae:b785 with SMTP id ffacd0b85a97d-43d78aeba0emr4286956f8f.21.1776073604608;
-        Mon, 13 Apr 2026 02:46:44 -0700 (PDT)
-X-Received: by 2002:a05:6000:178b:b0:43d:78ae:b785 with SMTP id
- ffacd0b85a97d-43d78aeba0emr4286905f8f.21.1776073604121; Mon, 13 Apr 2026
- 02:46:44 -0700 (PDT)
+	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="CBtIKUKp";
+	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="BuiosNpQ"
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
+	bh=0sa+/AiGfM+Bwi4P2uoBP8amjVYAN6KuVseFVbPjgOs=; t=1776074736; x=1776679536; 
+	b=CBtIKUKpMRVkaLDd4aFZzHI7z5VHm8CwGyfbhtqkTIR/vAjal792g0j04dyf/WM9UFL0lFdtvoF
+	BcGIV4MIYAQ==;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
+	bh=0sa+/AiGfM+Bwi4P2uoBP8amjVYAN6KuVseFVbPjgOs=; t=1776074736; x=1776679536; 
+	b=BuiosNpQrTE+6UfmqFZZdkOaOuJVGsPD7bPMNuXf57Rg7pYLzJwW9El7bWa5w83aIS+LXiAeso5
+	qElNrs+yLYoYDHKXu5ZIIsOjZu33OBBoJPawsbjHRikDplfrtzBKCh5bO/U0Cn9YPBKPFvmp+lyF8
+	WDH1+HqBmV6BtRt65buP79UQYJMa+Ab/pmEWJlRK5CCBX9WSNMwNyBv6TYTyQ1gdqsNcFy9ErVFUL
+	/M4W5HWkYVzKMxBsZX8OWmqzkdOQQOJttMy+q2b2O1amgGzXeVmx8+S5BGcKY4yr6p4tRyRdepDsB
+	afmQXs+JPQpAfrb5uiL9STnIW6Ea4te7eZ++DEa4A5LVNeNtTJ5RQc55Oia6zFI0cMQOgQpc4QGWj
+	oxqs4XATGlEMmKcnIEAvD0JijxyV8qZj6SAcFKzS8GZ2kYMqVwKdT8fw17+MQevgFjR6WWCz/bTJ9
+	Z8uA5MNunYDsg1D1iIBhnjGsDBGz4ueLJ0JXd9Dwk9ZyxeK+fQWM;
+Received: from [47.76.78.191] (helo=loongcatbox)
+	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <rong.bao@csmantle.top>)
+	id 1wCEAd-00000000crG-060m;
+	Mon, 13 Apr 2026 18:05:31 +0800
+From: Rong Bao <rong.bao@csmantle.top>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Rong Bao <rong.bao@csmantle.top>,
+	stable@vger.kernel.org,
+	WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Mon, 13 Apr 2026 18:03:55 +0800
+Message-ID: <20260413100412.2313688-1-rong.bao@csmantle.top>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260410102245.2749691-1-chenhuacai@loongson.cn>
-In-Reply-To: <20260410102245.2749691-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Mon, 13 Apr 2026 11:46:31 +0200
-X-Gm-Features: AQROBzBCxZ_O2q5gvgr11sGkXKrARbdo_rIJ09vTpuizMA__mmpaLs_IJqSTAh8
-Message-ID: <CABgObfapzrFmCndV1HVk02rvTwvx4n1WvQ4AW0cySV6mZvWF7w@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v7.1
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: p0edzigahXWvUA6NqsE9R6vj2RvZzG1KXqw3T46kPRM_1776073605
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Rcpt-Check: Accepted by authentication
+X-42: Don't panic! 
+BIMI-Selector: v=BIMI1; s=me
 
-On Fri, Apr 10, 2026 at 12:23=E2=80=AFPM Huacai Chen <chenhuacai@loongson.c=
-n> wrote:
->
-> The following changes since commit 591cd656a1bf5ea94a222af5ef2ee76df029c1=
-d2:
->
->   Linux 7.0-rc7 (2026-04-05 15:26:23 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-7.1
->
-> for you to fetch changes up to e47b8e1db9a9bbef6765e85b11e87f48e6b56846:
->
->   KVM: LoongArch: selftests: Add PMU overflow interrupt test (2026-04-09 =
-18:56:38 +0800)
->
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v7.1
->
-> 1. Use CSR_CRMD_PLV in kvm_arch_vcpu_in_kernel().
-> 2. Let vcpu_is_preempted() a macro & some enhanments.
-> 3. Add DMSINTC irqchip in kernel support.
-> 4. Add KVM PMU test cases for tools/selftests.
+Currently, the initialization of loongarch_jump_ops does not contain an
+assignment to its .free field. This causes disasm_line__free() to fall
+through to ins_ops__delete() for LoongArch jump instructions.
 
-Pulled, thanks.
+ins_ops__delete() will free ins_operands.source.raw and
+ins_operands.source.name, and these fields overlaps with
+ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
+Since in loongarch_jump__parse(), these two fields are populated by
+strchr()-ing the same buffer, trying to free them will lead to undefined
+behavior.
 
-Paolo
+This invalid free usually leads to crashes:
 
-> ----------------------------------------------------------------
-> Bibo Mao (4):
->       LoongArch: KVM: Check kvm_request_pending() in kvm_late_check_reque=
-sts()
->       LoongArch: KVM: Move host CSR_EENTRY save and restore in context sw=
-itch
->       LoongArch: KVM: Move host CSR_GSTAT save and restore in context swi=
-tch
->       LoongArch: KVM: Make vcpu_is_preempted() as a macro rather than fun=
-ction
->
-> Song Gao (5):
->       LoongArch: KVM: Add DMSINTC device support
->       LoongArch: KVM: Add DMSINTC inject msi to vCPU
->       KVM: LoongArch: selftests: Add cpucfg read/write helpers
->       KVM: LoongArch: selftests: Add basic PMU event counting test
->       KVM: LoongArch: selftests: Add PMU overflow interrupt test
->
-> Tao Cui (1):
->       LoongArch: KVM: Use CSR_CRMD_PLV in kvm_arch_vcpu_in_kernel()
->
->  arch/loongarch/include/asm/kvm_dmsintc.h           |  27 +++
->  arch/loongarch/include/asm/kvm_host.h              |   3 +
->  arch/loongarch/include/asm/kvm_pch_pic.h           |   3 +-
->  arch/loongarch/include/asm/qspinlock.h             |  26 ++-
->  arch/loongarch/include/uapi/asm/kvm.h              |   4 +
->  arch/loongarch/kernel/paravirt.c                   |  16 +-
->  arch/loongarch/kvm/Makefile                        |   1 +
->  arch/loongarch/kvm/intc/dmsintc.c                  | 182 +++++++++++++++=
-+++
->  arch/loongarch/kvm/intc/pch_pic.c                  |  15 +-
->  arch/loongarch/kvm/interrupt.c                     |   2 +
->  arch/loongarch/kvm/irqfd.c                         |  10 +-
->  arch/loongarch/kvm/main.c                          |  14 +-
->  arch/loongarch/kvm/vcpu.c                          |  29 +--
->  include/uapi/linux/kvm.h                           |   2 +
->  tools/testing/selftests/kvm/Makefile.kvm           |   3 +-
->  .../testing/selftests/kvm/include/loongarch/pmu.h  |  66 +++++++
->  .../selftests/kvm/include/loongarch/processor.h    |  15 ++
->  .../selftests/kvm/lib/loongarch/processor.c        |  15 +-
->  tools/testing/selftests/kvm/loongarch/pmu_test.c   | 205 +++++++++++++++=
-++++++
->  19 files changed, 593 insertions(+), 45 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kvm_dmsintc.h
->  create mode 100644 arch/loongarch/kvm/intc/dmsintc.c
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/pmu.h
->  create mode 100644 tools/testing/selftests/kvm/loongarch/pmu_test.c
->
+        Process 1712902 (perf) of user 1000 dumped core.
+        Stack trace of thread 1712902:
+        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
+        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
+        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
+        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
+        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
+        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
+        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
+        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
+        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
+        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
+        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
+        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
+        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
+        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
+        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
+        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
+        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
+        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
+        ELF object binary architecture: LoongArch
+
+... and it can be confirmed with Valgrind:
+
+        ==1721834== Invalid free() / delete / delete[] / realloc()
+        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
+        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
+        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
+        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+
+This patch adds the missing free() specialization in loongarch_jump_ops,
+which prevents disasm_line__free() from invoking the default cleanup
+function.
+
+Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
+Cc: stable@vger.kernel.org
+Cc: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+---
+v1 -> v2: Correct "Fixes:" tag and move declaration of jump__delete()
+          per comments.
+
+v1: https://lore.kernel.org/lkml/20260412062828.1734637-1-rong.bao@csmantle.top
+
+ tools/perf/util/annotate-arch/annotate-loongarch.c | 1 +
+ tools/perf/util/disasm.c                           | 2 +-
+ tools/perf/util/disasm.h                           | 2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
+index 950f34e59e5cd..c2addca77320b 100644
+--- a/tools/perf/util/annotate-arch/annotate-loongarch.c
++++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *o
+ }
+ 
+ static const struct ins_ops loongarch_jump_ops = {
++	.free	   = jump__delete,
+ 	.parse	   = loongarch_jump__parse,
+ 	.scnprintf = jump__scnprintf,
+ 	.is_jump   = true,
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 9e0420e14be19..62bd8c3e53051 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
+ 			 ops->target.offset);
+ }
+ 
+-static void jump__delete(struct ins_operands *ops __maybe_unused)
++void jump__delete(struct ins_operands *ops __maybe_unused)
+ {
+ 	/*
+ 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index a6e478caf61a9..25756e3f47e47 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
+ int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
+ 		   struct ins_operands *ops, int max_ins_name);
+ 
++void jump__delete(struct ins_operands *ops);
++
+ int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
+ 
+ char *expand_tabs(char *line, char **storage, size_t *storage_len);
+
+base-commit: 028ef9c96e96197026887c0f092424679298aae8
+-- 
+2.53.0
 
