@@ -1,202 +1,150 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767271DD525
-	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 08:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776067577; cv=none; b=gI7pyWTxVgrdbwNyNXgj0qYP944YgNujHqsUbAQy0WHImBwrqRMjyJcZHHTKS4w4+5JR5u7jJhU6wxlP7DgLNAhzsqqyiirDl1xCPzmaOlX9mSFASLppb7jX0yjOQc4BEAfwH/X/+IICwYz5kpVqXNeyExi8/SyMnayqdFHwpQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776067577; c=relaxed/simple;
-	bh=ntJPW3F9wCH+bnd+CBHM4WQZ6U/QVcZiqScx2Aax40s=;
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8262D396D1C
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 08:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776067712; cv=pass; b=bl23G/53mjZmp7E5Zr49dKJZnFF3cxiYUp7a2HObjlwRoaBl5Aee8ws6b9imBjEVUj5xnL4BXIA2CEAUACgjKaFN+lp1+dZ+O9y7wVdgTExvP074R5p8AfoJm0VRfjuxhkZZzfUiDkQRzVZ9tW8OyBiQglE5y5vYK7iYZctXqic=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776067712; c=relaxed/simple;
+	bh=8VnhIoj02WULflqqgWqAu3E/FZcCIYMP+zvbnxKj2aI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l+fNWFN5WoRjKPUkmqrLPwxrxXfWqjt3MbzOtF/IDDEppIZ6dCRhFW+Jfx4qxMK6Mt9FQuKh2d1KXW8Jo4ccxHQ6tUNfkJmpcv1ZhX4qanxXmO9zP/NEgPtlt999+DeoDxxM3ps0A1XE+p86wTMWuj7vokqSmC6u1ZeiW47gMdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.128.181])
-	by gateway (Coremail) with SMTP id _____8CxX+rzo9xplBMAAA--.64S3;
-	Mon, 13 Apr 2026 16:06:12 +0800 (CST)
-Received: from mail-yw1-f181.google.com (unknown [209.85.128.181])
-	by front1 (Coremail) with SMTP id qMiowJCxmuDxo9xpgvlrAA--.48229S2;
-	Mon, 13 Apr 2026 16:06:10 +0800 (CST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-797ab169454so47322747b3.3
-        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 01:06:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/R7S8l6INKeYUdYvxaUMYKQYgjS0jzeu7Cfp9WE174LJzpUydcgSBigLt8kxy7f7dKD1i0aT5jnpg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/BdxC6P49xQbjIOe0ByVg7Fqgr4dngp4UCraphTSYdF+BI+SJ
-	3KHoOZUeiPKQITH9IrnyIzGU0jSLtPt4fVwbsy0H1pd+ShzI/e0j+Z3v4FlWyRP0ValERElp2VZ
-	BzHU0OaSwdRXCiCHLL10OLABl3MVHc3PDf3HHzJpG+Q==
-X-Received: by 2002:a53:d007:0:b0:651:c047:f094 with SMTP id
- 956f58d0204a3-651c047f43amr3893314d50.31.1776067568854; Mon, 13 Apr 2026
- 01:06:08 -0700 (PDT)
+	 To:Cc:Content-Type; b=kuJG4bbjtPX87ROx1wNtJWJpObhjd2PkNwSN706KL+Xw222LcVdfIMI45vTpX5+5XvzRieIhYnAgXN4Wegkmo0LeBU0FO1r2CLRIaozM1LHRDOGA2Tufhr+efe7B4HmMoNXigWGwGbWG3xwjkUdAq7qK2r+HH1HP+c3EIwsMnig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dpnlsd9E; arc=pass smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpnlsd9E"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9c6680aaf8so690152766b.3
+        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 01:08:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776067709; cv=none;
+        d=google.com; s=arc-20240605;
+        b=B8DmLyF7hnvk9c2xdEtx6FxJSawincMDiDuDMX0H9dbuJCLJkz2oX5IMqHJCFbMmAi
+         u0C6HFfiNdDNyH0PuwMj64mihMm1AmNuaEgUvQ3Ftd1PrllINePOhPhppnoVrREMTEOC
+         ucT9M/1y2j4aGtmtI618QSEy0u+7sKz6KRnDLIjMwILZLWbQEEKWnrIWSOFuvfcr8EfN
+         etIKqHuQu6flWmudo5V+U0Mj1kSgrHCxyj1QteZVjhjT0vsfy9MYvtqbtukenTziIYKY
+         PbjSwOysVeUrdS5Z8d3YNV8Bw4eMWSAD+pKMXBMIMKJYpp1zdtUEXO8wf2BEiGeVPBHZ
+         ksVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=fvkP8KzDKek7CehUY4JTh8N+6Hv3yrPu4Ys2u/4PdPc=;
+        fh=nU2j1ZNdoqEoA/23e+OrKJ7olxm9CgfHDGHAw6mWJP0=;
+        b=jFLBgKw8fxB45NX7cIy//4b2YPSbPyMOFcAm136O7h6s2G737giVUewzxUqAwJjMs2
+         P+8HzGfvMsdHs7HVW5Ge08jq/sH8NlaOOklRkBLxlYiirro27ja0f+NNwqiKlir1rUN9
+         G/VXEAAfpDFlUYiMcDtXC+27wvYFqa1/qZW7LuHYYW+9hOB9UhT7ZiOoOsxELSc/FAVF
+         DtERAiNV33SG5cs3HcP0cSiDurKt50bNVNNIKO9CViffwBb5moczkTPc5Z/HJaPrQlCh
+         jMl1nXMV/4W8IQqOGKLQyWVqhqaf00yQdLygsdmWAZkCdfz5KRou2MY9hC1hWTd++WrO
+         +npQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776067709; x=1776672509; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fvkP8KzDKek7CehUY4JTh8N+6Hv3yrPu4Ys2u/4PdPc=;
+        b=dpnlsd9EGbkujCtaDWKsecc4loMFN2yPQO4k8l4engySuH9zciYxTZfY9gaVZHDuf2
+         /qGIGrH/3WpMjJFsO79rJsApT23seFIr6+oLcZO5Cam5YFAGtooGPuq3+Y+ks+lq7Kur
+         Qr/2+rsMD+mJnt0aok/qt5K+rn/XLTv45fVAXvxaBgjfjxODF2Fqnfq0r8tZY/Y2XdV4
+         T4KiEaSqjCtZHAkrPFfONvvS/ItEha0NVrjE+DX7JAZsagary62nJGkXWAU8z+p1up/a
+         vpQ6dPO9X9kzaO5ymwFeJhp9KvQZYOxLPWaNJWYk2g0FTZohLmsFWnbHK3Xj6LkECz5j
+         crlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776067709; x=1776672509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fvkP8KzDKek7CehUY4JTh8N+6Hv3yrPu4Ys2u/4PdPc=;
+        b=ClifWCsRjQsJKqhW5UQBtRa+120TUzuCoutFiM7mLLj7X2vMawGs4v1uJSsLk8R1Tc
+         56I6qmsR5ana5eZYnHWy6AGxuDrMlYNfG+L5h5iXK3/Xu51PotbAZCyD2fkP89q2pdYj
+         /EzwBnhNvQC+0K6tkoJLHQok20cJm46DTknQaOKq1Doc5Tkw4wM6pPues2tdtimhdZto
+         5xT6cC0VjDuTD/Uo5iWV3T7Z43AHchzsI2OvsVxnlz8rXRb5pP+6RljSRzEE7j2xUsW1
+         39eLe7GJ7nix7X0BY5jC5MHQRW+HdVcUQ4kgL2vtUnGFBpOGMxahO92V3o2TGNPFyUzu
+         /6ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUA3FctnrHil/95u8QceAPtF+gt2qKLkljWrHCWr5kbbVX/rqpS0+8eNwrkRfXx5lwETfZ132cpZ7o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwEEj5PPoaVxPZLqqlneQ0LfxIQbHZd3vFGHXddKXWZqlm1nErN
+	5z9wCscJe8yQCnzBl0NXYrAiydeGBtimEvdlgMsoJWgOwWYRtY9Vw+mQmUdkW0OvLqJCCsFnZ8h
+	oJaxksghJ5mPnZBviSJ05cNl36k40nFU=
+X-Gm-Gg: AeBDieuDwJq+n41qYh5wlizkiewUad8sGz4kq2mtEWINswFoP5fROpTsVY77/HQhUTQ
+	TcyQEOX0HvgawHQ/tIe95uTYJ6MuNzD1KXmDamVUpA67nt44Aljw5FPva7w5ngJduCFukqBo3uf
+	qEx6X0mLgP9VwJjaOASA44+b3h5XFum9SbV8LrSGBLt00JrAtrBsIzYGhvck2w4X3cK6rg7NppP
+	PYAovRfh6thkg8Fd9a6GjJwzzPiBa+OKax+0WY9UBrMmjVq3qALchRo949badPyt+jsOZELEp8i
+	mwPLxuJ/7B211lGGfpg=
+X-Received: by 2002:a17:907:7281:b0:b9c:eede:adba with SMTP id
+ a640c23a62f3a-b9d7248aa85mr708424466b.13.1776067708140; Mon, 13 Apr 2026
+ 01:08:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260413040506.26640-4-yangtiezhu@loongson.cn> <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
-In-Reply-To: <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Mon, 13 Apr 2026 16:05:57 +0800
-X-Gmail-Original-Message-ID: <CAHirt9gy=HETVpi6bOrUOw65N0wuVVSMG-0usMSAQKm7G4OQww@mail.gmail.com>
-X-Gm-Features: AQROBzDo6XriASiqA6WQWtAVhetXPEwhLVNnHT93SmV1NrOhpV5lBoAQTMbGKwU
-Message-ID: <CAHirt9gy=HETVpi6bOrUOw65N0wuVVSMG-0usMSAQKm7G4OQww@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Support 8 and 16 bit
- read-modify-write instructions
-To: bot+bpf-ci@kernel.org
-Cc: yangtiezhu@loongson.cn, chenhuacai@kernel.org, hengqi.chen@gmail.com, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net, 
-	martin.lau@kernel.org, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	clm@meta.com, ihor.solodrai@linux.dev
+References: <cover.1775900045.git.zhoubinbin@loongson.cn> <CAHp75Ve59GPAFvKM6yOkPmr=kmHBjVL-Vz78X0WDikiWd+2arQ@mail.gmail.com>
+In-Reply-To: <CAHp75Ve59GPAFvKM6yOkPmr=kmHBjVL-Vz78X0WDikiWd+2arQ@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 13 Apr 2026 16:08:14 +0800
+X-Gm-Features: AQROBzBp1_1f83xVVf78iSav36n4yOfOrZ9Vhqu0U5oqBm33LFFYkL6t-qaEFjA
+Message-ID: <CAMpQs4+QmyAObvCcJOFnfTuufG8=M0q5m+XMkaP6-SOp-8wq9w@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] i2c: Add Loongson-2K0300 I2C controller support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:qMiowJCxmuDxo9xpgvlrAA--.48229S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWr18Zw18GrWUXr1fGFykJFc_yoWrXF4kpr
-	y8Wrs5Cr4kJFyqv3s7Ja17JrWUKr4ay3W7Wr1UXrWYyayYvF98JF10kF17XFW5urZYyFWa
-	vF4q9w12va1UtagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
 
-On Mon, Apr 13, 2026 at 12:49=E2=80=AFPM <bot+bpf-ci@kernel.org> wrote:
+Hi Andy:
+
+On Mon, Apr 13, 2026 at 3:52=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> > diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.=
-c
-> > index fefda4050a20..c9a32f124f5e 100644
-> > --- a/arch/loongarch/net/bpf_jit.c
-> > +++ b/arch/loongarch/net/bpf_jit.c
+> On Sat, Apr 11, 2026 at 12:58=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson=
+.cn> wrote:
 >
-> [ ... ]
+> > This patch set describes the I2C controller integrated the
+> > Loongson-2K0300 chip.
+> >
+> > It has a significantly different design from the previous I2C
+> > controller(i2c-ls2x), such as support for master-slave transfer mode,
+> > and  DMA transfers (implementation in progress), etc. Therefore, we try
+> > to name it i2c-ls2x-v2.
 >
-> > @@ -388,11 +408,32 @@ static int emit_atomic_rmw(const struct bpf_insn =
-*insn, struct jit_ctx *ctx)
-> >       /* src =3D atomic_fetch_<op>(dst + off, src) */
-> >       case BPF_ADD | BPF_FETCH:
-> > +             switch (BPF_SIZE(insn->code)) {
-> > +             case BPF_B:
-> > +                     if (cpu_has_lam_bh) {
-> > +                             emit_insn(ctx, amaddb, src, t1, t3);
-> > +                             emit_zext_32(ctx, src, true);
+> ...
 >
-> Is emit_zext_32() sufficient for zero-extending an 8-bit value here?
+> >  - parent_rate_MHz -> parent_rate_mhz to avoid CamelCase.
 >
-> emit_zext_32() uses lu32id to clear bits [63:32], but for a byte-width
-> atomic fetch the returned value needs bits [63:8] zeroed. If amadd.b
-> follows the LoongArch convention of sign-extending sub-word results
-> (as amadd.w does for 32-bit values), then a byte value like 0x80 would
-> produce 0x00000000ffffff80 after emit_zext_32() instead of the expected
-> 0x0000000000000080.
->
-> Elsewhere in this file, 16-bit zero-extension already uses bstrpickd:
->
->     emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
->
-> Should the BPF_B and BPF_H cases here use bstrpickd with the
-> appropriate bit range (7,0 for bytes and 15,0 for halfwords) instead
-> of emit_zext_32()?
+> Was it a special requirement from maintainers?
 
-I don't think truncating byte and sub-word results to only the low 8
-or 16 bits is the right model here. The current behavior intentionally
-keeps the low 32 bits of the computed value in the register, because
-all uses explicitly extend from 32 bits to 64 bits when feeding
-instructions that require 64-bit operands. The same reasoning should
-apply to byte and sub-word types as well.
+I=E2=80=99m actually a bit confused, because when I submitted the v6 patchs=
+et,
+checkpatch didn=E2=80=99t issue this warning.
+But now, it produces the following output:
 
-For example:
+scripts/checkpatch.pl --strict i2c-ls2k0300-v6/v6-0002*
+CHECK: Avoid CamelCase: <parent_rate_MHz>
+#512: FILE: drivers/i2c/busses/i2c-ls2x-v2.c:437:
++       priv->parent_rate_MHz =3D clk_get_rate(priv->clk);
 
-Def:
-int8 a =3D amadd.b
-int8 b =3D amadd.b
+total: 0 errors, 0 warnings, 1 checks, 574 lines checked
 
-Use:
-t1 =3D sext32 a
-t2 =3D sext32 b
-blt t1, t2   // a < b
-
-Take a =3D -1 and b =3D 0. In the 64-bit registers:
-
-If we keep the low 32 bits:
-a: 0x0000_0000_ffff_ffff
-b: 0x0000_0000_0000_0000
-
-then:
-t1: 0xffff_ffff_ffff_ffff
-t2: 0x0000_0000_0000_0000
-
-So a < b evaluates to true, as expected.
-
-But if we only keep the low 8 bits:
-a: 0x0000_0000_0000_00ff
-b: 0x0000_0000_0000_0000
-
-then:
-t1: 0x0000_0000_0000_00ff
-t2: 0x0000_0000_0000_0000
-
-Now a < b becomes false, which is clearly not the intended result.
-
-In other words, narrowing the result to 8 or 16 bits here would break
-the existing 32-bit canonicalization rule for sub-word values.
-
-More generally, the "always explicitly extend" pattern doesn't map
-particularly well to the LoongArch ISA. In the long run, it would be
-preferable if we could eliminate these explicit extensions altogether
-rather than relying on them as part of the semantic model.
-
-Thanks,
-Rui
-
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplac=
+e
 
 >
-> > +             case BPF_H:
-> > +                     if (cpu_has_lam_bh) {
-> > +                             emit_insn(ctx, amaddh, src, t1, t3);
-> > +                             emit_zext_32(ctx, src, true);
+> Note, the physical units are special. The m and M have quite a
+> different multiplier value. So, even if asked by somebody I think it's
+> still arguably should be kept as MHz.
 >
-> Same concern for the halfword case -- emit_zext_32() would leave
-> bits [31:16] with sign-extended values if amadd.h sign-extends.
->
-> [ ... ]
->
-> > @@ -421,11 +462,32 @@ static int emit_atomic_rmw(const struct bpf_insn =
-*insn, struct jit_ctx *ctx)
-> >       /* src =3D atomic_xchg(dst + off, src); */
-> >       case BPF_XCHG:
-> > +             switch (BPF_SIZE(insn->code)) {
-> > +             case BPF_B:
-> > +                     if (cpu_has_lam_bh) {
-> > +                             emit_insn(ctx, amswapb, src, t1, t3);
-> > +                             emit_zext_32(ctx, src, true);
->
-> Same question applies to the exchange path -- amswap.b and amswap.h
-> return the old value and would need proper sub-word zero-extension
-> rather than the 32-bit emit_zext_32().
->
-> > +             case BPF_H:
-> > +                     if (cpu_has_lam_bh) {
-> > +                             emit_insn(ctx, amswaph, src, t1, t3);
-> > +                             emit_zext_32(ctx, src, true);
->
-> Same here for amswap.h.
->
->
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a =
-bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/READM=
-E.md
->
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/243253=
-84786
+> --
+> With Best Regards,
+> Andy Shevchenko
 
+--=20
+Thanks.
+Binbin
