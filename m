@@ -1,113 +1,119 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7412E37CD5D
-	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 04:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C225837FF54;
+	Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776053132; cv=none; b=F9ulozhcfd2g1nLASQf3pvdlhSVhfPCFnjQ/5mIcnIJgIc4tQlV4rP8/ur1IIwxGIjUM1JuKZ3fz8y+jZ76tFY17M6vuLs/gIJEL3BqjPl1QAztWP+P10X4PTHEzR4YPXGS2o33YlLR82+TXFZ8Zu9duN+sD81eB/MkdrxUWhRA=
+	t=1776055760; cv=none; b=Ch11xOvLkd/u4CHyhVY8FHpARrXEuHmalArgO5ntOCC7jY+KcnnK0c3Sks7aTwr5ebYF5t2dSfOPhjKX5+LRkPLEGLMYOerkfmHYIz9DYRp63ugnjS9rcfbfqYaoPkaPf3JRWSU8Tzw6hMTkSqB4GcNOWgUuVx85v1IeoY5v4KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776053132; c=relaxed/simple;
-	bh=XQ4Vez+4fynTr5VWS/XpBbVcpmlTMr1JImr1B/hJwLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=epXc63A9LXb5feOFFNbBGlN1tJRVXiBWKHxI2cJ70LEpy9kfqmJ6bmxc9IK+XEy09+Df5OMvgqvcyvoinSYVGgsBa4OdkP1cDaRs2iLFXSaJJ+LWmQpdxjWTAJ8q9yJdD3LV69SXGfBN2OFIEDqhXFDYetyUst8RyOeaZtOmaMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxI_B8a9xpqwIAAA--.84S3;
-	Mon, 13 Apr 2026 12:05:17 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxaeBya9xpD91rAA--.9793S4;
-	Mon, 13 Apr 2026 12:05:16 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/5] LoongArch: BPF: Add the default case in emit_atomic() and rename it
-Date: Mon, 13 Apr 2026 12:05:03 +0800
-Message-ID: <20260413040506.26640-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260413040506.26640-1-yangtiezhu@loongson.cn>
-References: <20260413040506.26640-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1776055760; c=relaxed/simple;
+	bh=50BPTvIj3kIA/KT5yv3UiM2at1LwHEHbBZXiESSyABI=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=tL4lBdt/uf15xbAWTy5UG3mJxtJ2A4AZvTo4havA/SBxEVuMgnf598+2EAwFiHB4UgWnPrehBJII4UWPmsAq2KSpH6LzxlDZi3+6Oy0/JCS+5tOnqTkc3Yp3NSlj+AvXWfd1PHGku9NgtrUsVav6CIs2WWmwJ1Oy3FJiIGB4NyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lX0aU+l6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lX0aU+l6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485B5C116C6;
+	Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776055760;
+	bh=50BPTvIj3kIA/KT5yv3UiM2at1LwHEHbBZXiESSyABI=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=lX0aU+l6QiwDflFjf28iaDRPoBPl8lTZ4rHGYOQ+NocZLkv0CuwjsEzw0uINnN4Nl
+	 5zG8yh9cAv17/Xni1dIQjXYg3UTkgoI2dZsv1Dl9PYD8h6VlC4DwpOaqQo0MPDsaMy
+	 Js2Wb4kW9t1DA77fA8KRNGVx78edMQymzAv/GrOe4kbcw3SbALxrlP0EG57nn6plC5
+	 Sb4NCca8dQsu5EdZhgbqUUn+LWscwcsWz00xqFhMTeQCu8pLd+BYvC2cmUnW1IIIF0
+	 0DtOUVkAIZ0TWL2IMjG6jqNaaF94qKU09p4Ra/MWnrcpxUkTyO+SftDFqrxfTfr+En
+	 v/mvfsDjq+DPQ==
+Content-Type: multipart/mixed; boundary="===============7323906579465492613=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeBya9xpD91rAA--.9793S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tFWrWr17WF43Jr4UAr1fAFc_yoW8Cr1Dpr
-	s8AwsYkrZ3XwnYga4DJa9ruw13KFs5tay3JF4UZ3yxXwsIqr1DWF1rt3WqqFy5A3y8Wr1f
-	XrsYkFyUu3W8J3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
+Message-Id: <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
+In-Reply-To: <20260413040506.26640-4-yangtiezhu@loongson.cn>
+References: <20260413040506.26640-4-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
 
-Like the other archs such as x86 and riscv, add the default case
-in emit_atomic() to print an error message for the invalid opcode
-and return -EINVAL , then make its return type as int.
+--===============7323906579465492613==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-While at it, given that all of the instructions in emit_atomic()
-are only read-modify-write instructions, rename emit_atomic() to
-emit_atomic_rmw() to make it clear, because there will be a new
-function emit_atomic_ld_st() for load-acquire and store-release
-instructions in the later patch.
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index fefda4050a20..c9a32f124f5e 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+[ ... ]
+
+> @@ -388,11 +408,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+>  	/* src = atomic_fetch_<op>(dst + off, src) */
+>  	case BPF_ADD | BPF_FETCH:
+> +		switch (BPF_SIZE(insn->code)) {
+> +		case BPF_B:
+> +			if (cpu_has_lam_bh) {
+> +				emit_insn(ctx, amaddb, src, t1, t3);
+> +				emit_zext_32(ctx, src, true);
+
+Is emit_zext_32() sufficient for zero-extending an 8-bit value here?
+
+emit_zext_32() uses lu32id to clear bits [63:32], but for a byte-width
+atomic fetch the returned value needs bits [63:8] zeroed. If amadd.b
+follows the LoongArch convention of sign-extending sub-word results
+(as amadd.w does for 32-bit values), then a byte value like 0x80 would
+produce 0x00000000ffffff80 after emit_zext_32() instead of the expected
+0x0000000000000080.
+
+Elsewhere in this file, 16-bit zero-extension already uses bstrpickd:
+
+    emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
+
+Should the BPF_B and BPF_H cases here use bstrpickd with the
+appropriate bit range (7,0 for bytes and 15,0 for halfwords) instead
+of emit_zext_32()?
+
+> +		case BPF_H:
+> +			if (cpu_has_lam_bh) {
+> +				emit_insn(ctx, amaddh, src, t1, t3);
+> +				emit_zext_32(ctx, src, true);
+
+Same concern for the halfword case -- emit_zext_32() would leave
+bits [31:16] with sign-extended values if amadd.h sign-extends.
+
+[ ... ]
+
+> @@ -421,11 +462,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+>  	/* src = atomic_xchg(dst + off, src); */
+>  	case BPF_XCHG:
+> +		switch (BPF_SIZE(insn->code)) {
+> +		case BPF_B:
+> +			if (cpu_has_lam_bh) {
+> +				emit_insn(ctx, amswapb, src, t1, t3);
+> +				emit_zext_32(ctx, src, true);
+
+Same question applies to the exchange path -- amswap.b and amswap.h
+return the old value and would need proper sub-word zero-extension
+rather than the 32-bit emit_zext_32().
+
+> +		case BPF_H:
+> +			if (cpu_has_lam_bh) {
+> +				emit_insn(ctx, amswaph, src, t1, t3);
+> +				emit_zext_32(ctx, src, true);
+
+Same here for amswap.h.
+
+
 ---
- arch/loongarch/net/bpf_jit.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 9cb796e16379..fefda4050a20 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -344,7 +344,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- #undef jmp_offset
- }
- 
--static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
-+static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- {
- 	const u8 t1 = LOONGARCH_GPR_T1;
- 	const u8 t2 = LOONGARCH_GPR_T2;
-@@ -448,7 +448,12 @@ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 			emit_zext_32(ctx, r0, true);
- 		}
- 		break;
-+	default:
-+		pr_err_once("bpf-jit: invalid atomic read-modify-write opcode %02x\n", imm);
-+		return -EINVAL;
- 	}
-+
-+	return 0;
- }
- 
- static bool is_signed_bpf_cond(u8 cond)
-@@ -1256,7 +1261,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 
- 	case BPF_STX | BPF_ATOMIC | BPF_W:
- 	case BPF_STX | BPF_ATOMIC | BPF_DW:
--		emit_atomic(insn, ctx);
-+		ret = emit_atomic_rmw(insn, ctx);
-+		if (ret)
-+			return ret;
- 		break;
- 
- 	/* Speculation barrier */
--- 
-2.42.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/24325384786
+--===============7323906579465492613==--
