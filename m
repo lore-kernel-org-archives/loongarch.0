@@ -1,199 +1,153 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3050835A3BF;
-	Mon, 13 Apr 2026 10:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D444B33EB13;
+	Mon, 13 Apr 2026 11:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776074738; cv=none; b=e0Yrjar2pV7naV9kA2NGKiTCdI1UjaPMprw6UJCARbmFGizgDsbcgzQHordvvu10QctxslDnt4N9qb5BSJowiqBrquwUg/KQhtxtqmAX5TVZj73ecwbVHx6+818JYt48tp+A4nHxJ46xgbWPK73Z0Qz7/im9+S3WbJhojAPp0kI=
+	t=1776081144; cv=none; b=NBJZUNL2ybKJGkWW36zS+VcnJdvO01YzKCji7a1juzyO2NaBycLq4hIQW/SosuVRG+czJONRvw30yqe7sgYnx82/B33MKdLdxpSdIF2v3AfU7/cA1iV8y6ATeXTNosDH3FBIBNrAiFV6VLL4FclN1ri0kQRj1T5/tBmh36eodZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776074738; c=relaxed/simple;
-	bh=JSEUchAya0y+73XV9yDFcJ2NoXS9xU+kE5EAs/knHJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GOoH1E4NNLNDp6L6gIrItXPHXrmPXbGpOrSjkvVThF5PC7kmga4RF59FVvA2lzCi+5KUjSnqa9f2I7M/r10zUpjkUl3lqnkufBDh4k9JSEbWCjui4lYMcAUHbfWGhr938ahKqM8kcxL4MB9n7g97FxsD9Ni0B7h8nftaT70r8hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=CBtIKUKp; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=BuiosNpQ; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	s=arc-20240116; t=1776081144; c=relaxed/simple;
+	bh=eRwcGs2EX///Ot1O0jD8R/I4gqB2MhFaBv5TfbRxSQk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=AeFVguvK8575B+bnAIldjnvUi46EQ4QnTFZh6WHlOsAyoNwt9WIi+/W7hhN+aBMoF3aOVLmgYtRf3HqlA3kWZiDVmhHZEG931hLsAvJVxsYNRJP0/EB65xxLBy3h6txP+AZBoun7/ZtpLJrnyczdoWrPU1vX8Ti2Nz4nAHk5na4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=k6REadS1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="CBtIKUKp";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="BuiosNpQ"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=0sa+/AiGfM+Bwi4P2uoBP8amjVYAN6KuVseFVbPjgOs=; t=1776074736; x=1776679536; 
-	b=CBtIKUKpMRVkaLDd4aFZzHI7z5VHm8CwGyfbhtqkTIR/vAjal792g0j04dyf/WM9UFL0lFdtvoF
-	BcGIV4MIYAQ==;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:In-Reply-To:References:BIMI-Selector;
-	bh=0sa+/AiGfM+Bwi4P2uoBP8amjVYAN6KuVseFVbPjgOs=; t=1776074736; x=1776679536; 
-	b=BuiosNpQrTE+6UfmqFZZdkOaOuJVGsPD7bPMNuXf57Rg7pYLzJwW9El7bWa5w83aIS+LXiAeso5
-	qElNrs+yLYoYDHKXu5ZIIsOjZu33OBBoJPawsbjHRikDplfrtzBKCh5bO/U0Cn9YPBKPFvmp+lyF8
-	WDH1+HqBmV6BtRt65buP79UQYJMa+Ab/pmEWJlRK5CCBX9WSNMwNyBv6TYTyQ1gdqsNcFy9ErVFUL
-	/M4W5HWkYVzKMxBsZX8OWmqzkdOQQOJttMy+q2b2O1amgGzXeVmx8+S5BGcKY4yr6p4tRyRdepDsB
-	afmQXs+JPQpAfrb5uiL9STnIW6Ea4te7eZ++DEa4A5LVNeNtTJ5RQc55Oia6zFI0cMQOgQpc4QGWj
-	oxqs4XATGlEMmKcnIEAvD0JijxyV8qZj6SAcFKzS8GZ2kYMqVwKdT8fw17+MQevgFjR6WWCz/bTJ9
-	Z8uA5MNunYDsg1D1iIBhnjGsDBGz4ueLJ0JXd9Dwk9ZyxeK+fQWM;
-Received: from [47.76.78.191] (helo=loongcatbox)
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wCEAd-00000000crG-060m;
-	Mon, 13 Apr 2026 18:05:31 +0800
-From: Rong Bao <rong.bao@csmantle.top>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Rong Bao <rong.bao@csmantle.top>,
-	stable@vger.kernel.org,
-	WANG Rui <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Mon, 13 Apr 2026 18:03:55 +0800
-Message-ID: <20260413100412.2313688-1-rong.bao@csmantle.top>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="k6REadS1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFFCC116C6;
+	Mon, 13 Apr 2026 11:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1776081144;
+	bh=eRwcGs2EX///Ot1O0jD8R/I4gqB2MhFaBv5TfbRxSQk=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=k6REadS1ZkuDjC7Ti88YakK0H88cGNYr7BO4w3c48frCo0B6QQk4qwpBcuKi9+C3k
+	 PoUkXKKbYuGAeCTJZVJVByop69c/F02AvxSn7eNFevuQkIZ++JwvEdLafeLnpYeK5+
+	 ETlS8/cTzUtcb+ozBZ++GzMFbJ3zc0Oexhm0quIo=
+Subject: Patch "LoongArch: Handle percpu handler address for ORC unwinder" has been added to the 6.12-stable tree
+To: chenhuacai@kernel.org,chenhuacai@loongson.cn,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,sashal@kernel.org,yangtiezhu@loongson.cn
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 13 Apr 2026 13:52:22 +0200
+In-Reply-To: <20260413023647.1368051-1-chenhuacai@loongson.cn>
+Message-ID: <2026041322-pauper-vigorous-c43d@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-Currently, the initialization of loongarch_jump_ops does not contain an
-assignment to its .free field. This causes disasm_line__free() to fall
-through to ins_ops__delete() for LoongArch jump instructions.
 
-ins_ops__delete() will free ins_operands.source.raw and
-ins_operands.source.name, and these fields overlaps with
-ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
-Since in loongarch_jump__parse(), these two fields are populated by
-strchr()-ing the same buffer, trying to free them will lead to undefined
-behavior.
+This is a note to let you know that I've just added the patch titled
 
-This invalid free usually leads to crashes:
+    LoongArch: Handle percpu handler address for ORC unwinder
 
-        Process 1712902 (perf) of user 1000 dumped core.
-        Stack trace of thread 1712902:
-        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
-        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
-        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
-        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
-        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
-        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
-        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
-        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
-        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
-        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
-        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
-        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
-        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
-        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
-        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
-        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
-        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
-        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
-        ELF object binary architecture: LoongArch
+to the 6.12-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-... and it can be confirmed with Valgrind:
+The filename of the patch is:
+     loongarch-handle-percpu-handler-address-for-orc-unwinder.patch
+and it can be found in the queue-6.12 subdirectory.
 
-        ==1721834== Invalid free() / delete / delete[] / realloc()
-        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
-        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
-        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
-        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-This patch adds the missing free() specialization in loongarch_jump_ops,
-which prevents disasm_line__free() from invoking the default cleanup
-function.
 
-Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
+From stable+bounces-235878-greg=kroah.com@vger.kernel.org Mon Apr 13 04:37:07 2026
+From: Huacai Chen <chenhuacai@loongson.cn>
+Date: Mon, 13 Apr 2026 10:36:47 +0800
+Subject: LoongArch: Handle percpu handler address for ORC unwinder
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Message-ID: <20260413023647.1368051-1-chenhuacai@loongson.cn>
+
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+[ Upstream commit 055c7e75190e0be43037bd663a3f6aced194416e ]
+
+After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for ORC
+unwinder"), the system can not boot normally under some configs (such as
+enable KASAN), there are many error messages "cannot find unwind pc".
+
+The kernel boots normally with the defconfig, so no problem found out at
+the first time. Here is one way to reproduce:
+
+  cd linux
+  make mrproper defconfig -j"$(nproc)"
+  scripts/config -e KASAN
+  make olddefconfig all -j"$(nproc)"
+  sudo make modules_install
+  sudo make install
+  sudo reboot
+
+The address that can not unwind is not a valid kernel address which is
+between "pcpu_handlers[cpu]" and "pcpu_handlers[cpu] + vec_sz" due to
+the code of eentry was copied to the new area of pcpu_handlers[cpu] in
+setup_tlb_handler(), handle this special case to get the valid address
+to unwind normally.
+
 Cc: stable@vger.kernel.org
-Cc: WANG Rui <wangrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v1 -> v2: Correct "Fixes:" tag and move declaration of jump__delete()
-          per comments.
+V2: Add upstream commit ID.
 
-v1: https://lore.kernel.org/lkml/20260412062828.1734637-1-rong.bao@csmantle.top
+ arch/loongarch/include/asm/setup.h |    3 +++
+ arch/loongarch/kernel/unwind_orc.c |   16 ++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
- tools/perf/util/annotate-arch/annotate-loongarch.c | 1 +
- tools/perf/util/disasm.c                           | 2 +-
- tools/perf/util/disasm.h                           | 2 ++
- 3 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/perf/util/annotate-arch/annotate-loongarch.c
-index 950f34e59e5cd..c2addca77320b 100644
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const struct arch *arch, struct ins_operands *o
- }
+--- a/arch/loongarch/include/asm/setup.h
++++ b/arch/loongarch/include/asm/setup.h
+@@ -7,6 +7,7 @@
+ #define _LOONGARCH_SETUP_H
  
- static const struct ins_ops loongarch_jump_ops = {
-+	.free	   = jump__delete,
- 	.parse	   = loongarch_jump__parse,
- 	.scnprintf = jump__scnprintf,
- 	.is_jump   = true,
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 9e0420e14be19..62bd8c3e53051 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
- 			 ops->target.offset);
- }
+ #include <linux/types.h>
++#include <linux/threads.h>
+ #include <asm/sections.h>
+ #include <uapi/asm/setup.h>
  
--static void jump__delete(struct ins_operands *ops __maybe_unused)
-+void jump__delete(struct ins_operands *ops __maybe_unused)
+@@ -14,6 +15,8 @@
+ 
+ extern unsigned long eentry;
+ extern unsigned long tlbrentry;
++extern unsigned long pcpu_handlers[NR_CPUS];
++extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
+ extern char init_command_line[COMMAND_LINE_SIZE];
+ extern void tlb_init(int cpu);
+ extern void cpu_cache_init(void);
+--- a/arch/loongarch/kernel/unwind_orc.c
++++ b/arch/loongarch/kernel/unwind_orc.c
+@@ -359,6 +359,22 @@ static inline unsigned long bt_address(u
  {
- 	/*
- 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index a6e478caf61a9..25756e3f47e47 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *ins, char *bf, size_t size,
- int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
+ 	extern unsigned long eentry;
  
-+void jump__delete(struct ins_operands *ops);
++#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
++	int cpu;
++	int vec_sz = sizeof(exception_handlers);
 +
- int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
- 
- char *expand_tabs(char *line, char **storage, size_t *storage_len);
++	for_each_possible_cpu(cpu) {
++		if (!pcpu_handlers[cpu])
++			continue;
++
++		if (ra >= pcpu_handlers[cpu] &&
++		    ra < pcpu_handlers[cpu] + vec_sz) {
++			ra = ra + eentry - pcpu_handlers[cpu];
++			break;
++		}
++	}
++#endif
++
+ 	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
+ 		unsigned long func;
+ 		unsigned long type = (ra - eentry) / VECSIZE;
 
-base-commit: 028ef9c96e96197026887c0f092424679298aae8
--- 
-2.53.0
 
+Patches currently in stable-queue which might be from chenhuacai@loongson.cn are
+
+queue-6.12/loongarch-remove-unnecessary-checks-for-orc-unwinder.patch
+queue-6.12/loongarch-handle-percpu-handler-address-for-orc-unwinder.patch
