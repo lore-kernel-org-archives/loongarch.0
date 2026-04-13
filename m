@@ -1,119 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C225837FF54;
-	Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CAE1299A8F;
+	Mon, 13 Apr 2026 05:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776055760; cv=none; b=Ch11xOvLkd/u4CHyhVY8FHpARrXEuHmalArgO5ntOCC7jY+KcnnK0c3Sks7aTwr5ebYF5t2dSfOPhjKX5+LRkPLEGLMYOerkfmHYIz9DYRp63ugnjS9rcfbfqYaoPkaPf3JRWSU8Tzw6hMTkSqB4GcNOWgUuVx85v1IeoY5v4KM=
+	t=1776059269; cv=none; b=QeSSnTQ5WCx2Uj3fQdKD5vClqnMl+kAXwHmoQSJ7Xs9dksD57pMKsWjzf8ew395QnU6gG7A8xHfQ/5HRlSo+Ooelzk2PAceFZkBb0WVjZnWcwVm+2JFeL9NF5PCSnBjDXXtyzGERfi8IpNVFQRf0vUsE4RLqWnt795LtRmapbk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776055760; c=relaxed/simple;
-	bh=50BPTvIj3kIA/KT5yv3UiM2at1LwHEHbBZXiESSyABI=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=tL4lBdt/uf15xbAWTy5UG3mJxtJ2A4AZvTo4havA/SBxEVuMgnf598+2EAwFiHB4UgWnPrehBJII4UWPmsAq2KSpH6LzxlDZi3+6Oy0/JCS+5tOnqTkc3Yp3NSlj+AvXWfd1PHGku9NgtrUsVav6CIs2WWmwJ1Oy3FJiIGB4NyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lX0aU+l6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lX0aU+l6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485B5C116C6;
-	Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776055760;
-	bh=50BPTvIj3kIA/KT5yv3UiM2at1LwHEHbBZXiESSyABI=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=lX0aU+l6QiwDflFjf28iaDRPoBPl8lTZ4rHGYOQ+NocZLkv0CuwjsEzw0uINnN4Nl
-	 5zG8yh9cAv17/Xni1dIQjXYg3UTkgoI2dZsv1Dl9PYD8h6VlC4DwpOaqQo0MPDsaMy
-	 Js2Wb4kW9t1DA77fA8KRNGVx78edMQymzAv/GrOe4kbcw3SbALxrlP0EG57nn6plC5
-	 Sb4NCca8dQsu5EdZhgbqUUn+LWscwcsWz00xqFhMTeQCu8pLd+BYvC2cmUnW1IIIF0
-	 0DtOUVkAIZ0TWL2IMjG6jqNaaF94qKU09p4Ra/MWnrcpxUkTyO+SftDFqrxfTfr+En
-	 v/mvfsDjq+DPQ==
-Content-Type: multipart/mixed; boundary="===============7323906579465492613=="
+	s=arc-20240116; t=1776059269; c=relaxed/simple;
+	bh=YxepDZzylg7DLxJ1UuKV5wvO8y/p14MplYX7PzmcQ08=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MWbOo9tARfrBcn9eCmjchtLcu1r1J5lRuBc0zX4vTTkBRHjrM005QWIXYzagKgVmbOA1+vcY/1KRpr+8fALLgx5V8fd5yZ9xvRcO92MT2JFxDdxJKKXegRxQ3RbBl/dgtmtyV2UHqPH0cPMUsH8IqkMp1AyutpAbh+2ZqvUfQSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 2FA4892009C; Mon, 13 Apr 2026 07:47:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 283D292009B;
+	Mon, 13 Apr 2026 06:47:45 +0100 (BST)
+Date: Mon, 13 Apr 2026 06:47:45 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Thomas Gleixner <tglx@kernel.org>
+cc: LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+    x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, 
+    Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, 
+    linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+    linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>, 
+    linux-mm@kvack.org, David Woodhouse <dwmw2@infradead.org>, 
+    Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, 
+    Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>, 
+    Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+    Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+    Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org, 
+    "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+    Richard Henderson <richard.henderson@linaro.org>, 
+    linux-alpha@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+    linux-arm-kernel@lists.infradead.org, 
+    Catalin Marinas <catalin.marinas@arm.com>, 
+    Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
+    Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
+    Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+    linux-openrisc@vger.kernel.org, Helge Deller <deller@gmx.de>, 
+    linux-parisc@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+    linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>, 
+    linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>, 
+    linux-s390@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+    sparclinux@vger.kernel.org
+Subject: Re: [patch 28/38] mips: Select ARCH_HAS_RANDOM_ENTROPY
+In-Reply-To: <20260410120319.462206386@kernel.org>
+Message-ID: <alpine.DEB.2.21.2604130638270.29980@angie.orcam.me.uk>
+References: <20260410120044.031381086@kernel.org> <20260410120319.462206386@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <8822e0eb47985fc0bcb8bc6c9b0fcdfb55566144517d90a8e77f2690c44ee8df@mail.kernel.org>
-In-Reply-To: <20260413040506.26640-4-yangtiezhu@loongson.cn>
-References: <20260413040506.26640-4-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v3 3/5] LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
-From: bot+bpf-ci@kernel.org
-To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
-Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 13 Apr 2026 04:49:20 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 
---===============7323906579465492613==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Fri, 10 Apr 2026, Thomas Gleixner wrote:
 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fefda4050a20..c9a32f124f5e 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
+> The only solution for now is to uninline random_get_entropy().  Fix up all
+> other dependencies on the content of asm/timex.h in those files which
+> really depend on it.
 
-[ ... ]
+ Oh dear!  I'd yet have to fully evaluate the consequences, but offhand 
+this has clearly turned what compiles to a single CPU instruction on the 
+vast majority of MIPS platforms into an expensive function call, possibly 
+also changing the caller from a leaf to a nested function with all the 
+associated execution penalty.  Is there no other way?
 
-> @@ -388,11 +408,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
->  	/* src = atomic_fetch_<op>(dst + off, src) */
->  	case BPF_ADD | BPF_FETCH:
-> +		switch (BPF_SIZE(insn->code)) {
-> +		case BPF_B:
-> +			if (cpu_has_lam_bh) {
-> +				emit_insn(ctx, amaddb, src, t1, t3);
-> +				emit_zext_32(ctx, src, true);
+ Cf. commit 06947aaaf9bf ("MIPS: Implement random_get_entropy with CP0 
+Random").
 
-Is emit_zext_32() sufficient for zero-extending an 8-bit value here?
-
-emit_zext_32() uses lu32id to clear bits [63:32], but for a byte-width
-atomic fetch the returned value needs bits [63:8] zeroed. If amadd.b
-follows the LoongArch convention of sign-extending sub-word results
-(as amadd.w does for 32-bit values), then a byte value like 0x80 would
-produce 0x00000000ffffff80 after emit_zext_32() instead of the expected
-0x0000000000000080.
-
-Elsewhere in this file, 16-bit zero-extension already uses bstrpickd:
-
-    emit_insn(ctx, bstrpickd, dst, dst, 15, 0);
-
-Should the BPF_B and BPF_H cases here use bstrpickd with the
-appropriate bit range (7,0 for bytes and 15,0 for halfwords) instead
-of emit_zext_32()?
-
-> +		case BPF_H:
-> +			if (cpu_has_lam_bh) {
-> +				emit_insn(ctx, amaddh, src, t1, t3);
-> +				emit_zext_32(ctx, src, true);
-
-Same concern for the halfword case -- emit_zext_32() would leave
-bits [31:16] with sign-extended values if amadd.h sign-extends.
-
-[ ... ]
-
-> @@ -421,11 +462,32 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
->  	/* src = atomic_xchg(dst + off, src); */
->  	case BPF_XCHG:
-> +		switch (BPF_SIZE(insn->code)) {
-> +		case BPF_B:
-> +			if (cpu_has_lam_bh) {
-> +				emit_insn(ctx, amswapb, src, t1, t3);
-> +				emit_zext_32(ctx, src, true);
-
-Same question applies to the exchange path -- amswap.b and amswap.h
-return the old value and would need proper sub-word zero-extension
-rather than the 32-bit emit_zext_32().
-
-> +		case BPF_H:
-> +			if (cpu_has_lam_bh) {
-> +				emit_insn(ctx, amswaph, src, t1, t3);
-> +				emit_zext_32(ctx, src, true);
-
-Same here for amswap.h.
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/24325384786
---===============7323906579465492613==--
+  Maciej
