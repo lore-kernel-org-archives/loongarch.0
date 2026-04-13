@@ -1,492 +1,175 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687A140DFD5
-	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 01:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.envs.net (mail.envs.net [157.180.15.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6EDD1CFBA
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.180.15.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776042090; cv=none; b=E/IOFFmHicGiUaRZduLW+jTrkG7A6PXz3qHi69Y8AqMjusLg6y/+A57eZNUk49vJ4PNRPSYf5v/J7fK9GwksQJhYKa0nLkI4rtuEdvCqUMrJAtt4jCGDS2C37Amf++s1TJmkARC8ifZ//Kk5aDDbTYqq7m6wzbvrIwGY30PSDlY=
+	t=1776045940; cv=none; b=NXSt+O5ApMud6alZ5jvbYxVSXE9wlpCtoY/rjHbUao9+HeTcimByPPRI8XxIAo8w2dtfgTI/1oonTZuUXpw9N/Yxq5RG2TOK1Lh7DL3FB8wscq5u5q00LgUWUgoUJOapDN+f2BGznyxAmWiLCPUOZKNx9scNjReSbYPoC3VVEws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776042090; c=relaxed/simple;
-	bh=vKF6TCqNu7oG1zMGdJxQ46aitRxG3/TzI+4KEAME/os=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CBZ5k3rMF0ISOJwh+DlbHnURCSg8GMKOiRGcajqr0I5qol2UA05TgOGz8AkjBJ9kYJmxN1b17dJM8RbMP6fJNbdcHUsh/7PqFvDcZne6n6zX5sCnHTlBE2rp2XlNo5mR1lDYv7uqsE222jpaq/VlKxzwUWvuUBpdwKfecEpGWKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxWcJeQNxpAZUkAA--.35919S3;
-	Mon, 13 Apr 2026 09:01:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxaeBdQNxpVcdrAA--.9647S3;
-	Mon, 13 Apr 2026 09:01:17 +0800 (CST)
-Subject: Re: [PATCH V3 2/2] LoongArch: KVM: fix "unreliable stack" issue
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jinyang He <hejinyang@loongson.cn>, lixianglai <lixianglai@loongson.cn>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, stable@vger.kernel.org,
- WANG Xuerui <kernel@xen0n.name>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Charlie Jenkins <charlie@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>
-References: <20251227012712.2921408-1-lixianglai@loongson.cn>
- <20251227012712.2921408-3-lixianglai@loongson.cn>
- <08143343-cb10-9376-e7df-68ad854b9275@loongson.cn>
- <9e1a8d4f-251f-f78e-01a3-5c483249fac8@loongson.cn>
- <dec5cb06-6858-20f2-facb-d5e7f44f5d16@loongson.cn>
- <df8f52e3-fea5-763a-d5fd-629308dc6fcc@loongson.cn>
- <a1009e1e-34de-68b4-7680-d2a99a06a71c@loongson.cn>
- <efa4ef2d-aef7-0f64-07bc-55d0c4d1d6d2@loongson.cn>
- <ebd5a137-1bee-8fab-71bf-5f359dabe5d8@loongson.cn>
- <4ad5180d-cb4d-b916-3872-b24c5a2cd1d8@loongson.cn>
- <aeb75309-61eb-a3fa-fdaa-544978d2534a@loongson.cn>
- <f6d9b67f-451f-6881-cfc0-c37df96de087@loongson.cn>
- <CAAhV-H4xPKOYqH+=4A+NpWraF7SkuVN7FUBsNZfxgCBFLDNO_Q@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <698b1746-b6d5-e234-65f0-30ee22d7e81b@loongson.cn>
-Date: Mon, 13 Apr 2026 08:58:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1776045940; c=relaxed/simple;
+	bh=SnbHAobkQmOdD4TXDbAeAcRyxMt6vfBSkx7DgZ5dZYM=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID:
+	 References:In-Reply-To; b=Vat54br0mzxvLWnCtboLzqO3ffDhuKP92thpcO9Yk8iWW5JagApOQLvW9u/8BalNXtSRctvrOsrCd4Y6e+2NCLDM4JYJts6aRh1gCz97fuJ701cCUJKJkTtduRz/+wtsbGEvO1iKJ9ULA2LNPShlHzpJDRyaQE7AwnKE7o7NpRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; spf=pass smtp.mailfrom=envs.net; dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b=cuiqh4iO; arc=none smtp.client-ip=157.180.15.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=envs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=envs.net header.i=@envs.net header.b="cuiqh4iO"
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id DF8221C00CC;
+	Mon, 13 Apr 2026 02:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1776045934; bh=YvF1kw3b/r0OeHsZoIjDXuEBKtohoXiGA3Lcd4AU+SM=;
+	h=Subject:From:To:Cc:Date:References:In-Reply-To:From;
+	b=cuiqh4iOeXrLY2c6FGfqOXZuEEmevnvR24rLnWXnXZ4LBOz0odsK9CT+rxQG/3KAO
+	 NMnAaVtkbezRbZ3dDUS3iu8+O/bRTikDwDFpf3miYTw7ruWckewih6O2vIpEpYI2QB
+	 IZ1SqGNQQyNS+tOIdxS+d2JWIIrS7hqLu3HWnfPu8E8/zBnWtdOoX66wm9CRZK1Kii
+	 f7gFvfIiqx+ssR3S+OuAvCFXY9gIlwrCsHGSO6N3ScXcWwPUs8ND3DdBQuFMzzc/AN
+	 9SXTQyH4x3ZeoXI9SePsSbr4YAtRbemPpfklC299GPTaN/6m0tYbI92z0WUPm2X6vU
+	 quxxhyEq5ZuB1Qygf7RchCNCXDpj/XandXTPWki+bh2IQ7lF/HjeP7fq6+0Yk9IMSH
+	 Ci+WrYjaf9dBHTfXIGjN1rHTJO/27qQ5j72cRB+5Ytc/hlprTg8YywwqQsntzhJj/T
+	 Jw41OTyuvQHY/CZx0arXgTER9PNED2BeHjfU5nNUgBHcOIBn6UA7Cs99ckEYzDn/xS
+	 yK9zpoA6ZlJ5oVYIPq7CK+VAsm5OTddcvNPdXc06r6rUHWOaC1orHaotYF3mBiGPMn
+	 Pl6VgKgjGE2y5+z7qurM74wdei5djPtewwqL0cKIfeWCQy8z/xynPncM8nXNhSeoMl
+	 VMb5kQBF2lvZPTFOqZ4NsxGg=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BHP7SLDqFX2l; Mon, 13 Apr 2026 02:05:26 +0000 (UTC)
+Received: from mail.envs.net (mail.envs.net [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Mon, 13 Apr 2026 02:05:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H4xPKOYqH+=4A+NpWraF7SkuVN7FUBsNZfxgCBFLDNO_Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeBdQNxpVcdrAA--.9647S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoW3uw1xCFW7ZrWxAFy8JF4kZrc_yoW8ArWDZo
-	W5Zr12yr1xJr1UJr1UJw1Dtr1UJw18Jr1UJryUJr1UGr1Ut3WUJr1UJr1UGF45trn8Gr1U
-	Jry3Jr1jyFyUJr1Ul-sFpf9Il3svdjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYc7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8Zw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70Pf
-	DUUUU
+Subject: Re: [PATCH] LoongArch: Increase default mmap randomization bits
+From: "xtex" <xtex@envs.net>
+To: xry111@xry111.site
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, guoren@kernel.org,
+ jiaxun.yang@flygoat.com, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, xtex@astrafall.org
+Date: Mon, 13 Apr 2026 02:05:26 -0000
+Message-ID: <177604592650.1255.8930268562622890190@mail.envs.net>
+User-Agent: Modoboa 2.2.4
+References: <b04efb5af4f5019adbb0adb8543bd84b8157e8e1.camel@xry111.site>
+In-Reply-To: <b04efb5af4f5019adbb0adb8543bd84b8157e8e1.camel@xry111.site>
 
+Xi Ruoyao <xry111@xry111.site> wrote:
+>On Sun, 2026-04-12 at 20:32 +0800, Xi Ruoyao wrote:
+>&gt; On Sun, 2026-04-12 at 20:24 +0800, Huacai Chen wrote:
+>&gt; &gt; On Sun, Apr 12, 2026 at 11:49 AM Bingwu Zhang &lt;xtex@envs.net&gt; wrote:
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; On Sunday, March 29, 2026 11:48:02 AM China Standard Time Huacai
+>&gt; &gt; &gt; Chen wrote:
+>&gt; &gt; &gt; &gt; Hi, Bingwu,
+>&gt; &gt; &gt; &gt; 
+>&gt; &gt; &gt; &gt; On Sun, Mar 29, 2026 at 6:59 AM Bingwu Zhang &lt;xtex@envs.net&gt;
+>&gt; &gt; &gt; &gt; wrote:
+>&gt; &gt; &gt; &gt; &gt; From: Bingwu Zhang &lt;xtex@astrafall.org&gt;
+>&gt; &gt; &gt; &gt; &gt; 
+>&gt; &gt; &gt; &gt; &gt; Increase default mmap randomization bits from 12 to 18 on 64-
+>&gt; &gt; &gt; &gt; &gt; bit
+>&gt; &gt; &gt; &gt; &gt; platforms for better strength.
+>&gt; &gt; &gt; &gt; &gt; 
+>&gt; &gt; &gt; &gt; &gt; The original default, 12, means that ASLR offset has only (1
+>&gt; &gt; &gt; &gt; &gt; &lt;&lt; 12) =
+>&gt; &gt; &gt; &gt; &gt; 4096 possibilities. On average, it can be brute-forced in 2048
+>&gt; &gt; &gt; &gt; &gt; attempts.
+>&gt; &gt; &gt; &gt; &gt; If a service is configured to restart automatically or can be
+>&gt; &gt; &gt; &gt; &gt; started
+>&gt; &gt; &gt; &gt; &gt; easily (e.g. execve a suid program), then trying for 4k times
+>&gt; &gt; &gt; &gt; &gt; can be
+>&gt; &gt; &gt; &gt; &gt; done in one day even when each attempt takes 20s.
+>&gt; &gt; &gt; &gt; &gt; Increasing it to 18 makes brute-force much more difficult and
+>&gt; &gt; &gt; &gt; &gt; leaves
+>&gt; &gt; &gt; &gt; &gt; more time for operators to find out attacks.
+>&gt; &gt; &gt; &gt; &gt; 
+>&gt; &gt; &gt; &gt; &gt; On 64-bit platforms, virtual address space is cheap, so the
+>&gt; &gt; &gt; &gt; &gt; randomization bits can be increased safely without disturbing
+>&gt; &gt; &gt; &gt; &gt; userland
+>&gt; &gt; &gt; &gt; &gt; much and security comes first instead of availability.
+>&gt; &gt; &gt; &gt; 
+>&gt; &gt; &gt; &gt; Don&#x27;t change ARCH_MMAP_RND_BITS_MIN because it may compact
+>&gt; &gt; &gt; &gt; performance, and you cannot blindly increase
+>&gt; &gt; &gt; &gt; ARCH_MMAP_RND_BITS_MAX
+>&gt; &gt; &gt; &gt; because it should no more than &quot;VA_BITS - PAGE_SHIFT - 3&quot; (see
+>&gt; &gt; &gt; &gt; arch/riscv/Kconfig and arch/csky/Kconfig). For LoongArch,
+>&gt; &gt; &gt; &gt; VA_BITS can
+>&gt; &gt; &gt; &gt; be 39 (half of VA40), PAGE_SHIFT can be 16 (64KB page), so
+>&gt; &gt; &gt; &gt; ARCH_MMAP_RND_BITS_MAX can only increase up to 20 (39 - 16 - 3
+>&gt; &gt; &gt; &gt; =20).
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; Sorry for the late reply.
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; It was my mistake that I didn&#x27;t notice the upper bound of MAX.
+>&gt; &gt; &gt; Thank you for
+>&gt; &gt; &gt; pointing out!
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; However, I didn&#x27;t get where increasing MIN could compact
+>&gt; &gt; &gt; performance.
+>&gt; &gt; &gt; Theoretically, the only difference is that the gap between heaps
+>&gt; &gt; &gt; and stacks
+>&gt; &gt; &gt; are larger, from [128, 128+64]M to [128, 128+4096]M. This
+>&gt; &gt; &gt; shouldn&#x27;t affect
+>&gt; &gt; &gt; performance much. MIPS once used MIN=16, RISC-V 64 and PowerPC and
+>&gt; &gt; &gt; ARM 64 are
+>&gt; &gt; &gt; using 18, and x86-64 is using 28, but I hadn&#x27;t heard anyone
+>&gt; &gt; &gt; complaining about
+>&gt; &gt; &gt; the performance.
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; I ran some benchmarks last weekend using the LLVM build benchmark
+>&gt; &gt; &gt; of AOSC OS
+>&gt; &gt; &gt; https://github.com/AOSC-Dev/buildbot-benchmark/blob/master/buildbot-benchmark.bash
+>&gt; &gt; &gt; and here are the results
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; Processor       Rand bits       Time/secs
+>&gt; &gt; &gt; Average Variance        Range
+>&gt; &gt; &gt; 3C6000/S        18      612.927 614.394 614.513 613.343 614.76
+>&gt; &gt; &gt; 613.9874        0.515637840000006       1.83299999999997
+>&gt; &gt; &gt; 3C6000/S        12      614.322 613.93  614.825 613.859
+>&gt; &gt; &gt; 615.875 614.5622        0.548874160000007       2.01599999999996
+>&gt; &gt; &gt; 3A5000  18      3547.165        3548.764        3552.192       
+>&gt; &gt; &gt; 3545.697
+>&gt; &gt; &gt; 3547.567        3548.277        4.79228759999993       
+>&gt; &gt; &gt; 6.49499999999989
+>&gt; &gt; &gt; 3A5000  12      3549.029        3551.894        3549.191       
+>&gt; &gt; &gt; 3567.869
+>&gt; &gt; &gt; 3587.409        3561.0784       222.052853440003       
+>&gt; &gt; &gt; 38.3800000000001
+>&gt; &gt; &gt; 
+>&gt; &gt; &gt; I didn&#x27;t see any statistically meaningful performance defect.
+>&gt; &gt; OK, then we can increase ARCH_MMAP_RND_BITS_MIN, but the range 18~20
+>&gt; &gt; seems too small and then useless, can we consider using 15~20?
+>&gt; 
+>&gt; IMO ARCH_MMAP_RND_BITS_MIN should be just the minimal that the
+>&gt; architecture can support, not related to security.  If you want to
+>&gt; recommend a value for increasing security you&#x27;d set
+>&gt; ARCH_MMAP_RND_BITS_DEFAULT a larger value instead.
 
+okay, I agree to abandon this patch. But,
+Isn't the minimum supported value 0 (i.e. mmap ASLR disabled)? There is always a fixed 128M gap between heaps and stack tops so 0 should work.
 
-On 2026/4/11 下午10:24, Huacai Chen wrote:
-> On Wed, Apr 8, 2026 at 9:26 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2025/12/30 下午1:53, Jinyang He wrote:
->>> On 2025-12-30 12:03, Bibo Mao wrote:
->>>
->>>>
->>>>
->>>> On 2025/12/30 上午11:36, Jinyang He wrote:
->>>>> On 2025-12-30 10:24, Bibo Mao wrote:
->>>>>
->>>>>>
->>>>>>
->>>>>> On 2025/12/29 下午6:41, Jinyang He wrote:
->>>>>>> On 2025-12-29 18:11, lixianglai wrote:
->>>>>>>
->>>>>>>> Hi Jinyang:
->>>>>>>>>
->>>>>>>>> On 2025-12-29 11:53, lixianglai wrote:
->>>>>>>>>> Hi Jinyang:
->>>>>>>>>>> On 2025-12-27 09:27, Xianglai Li wrote:
->>>>>>>>>>>
->>>>>>>>>>>> Insert the appropriate UNWIND macro definition into the
->>>>>>>>>>>> kvm_exc_entry in
->>>>>>>>>>>> the assembly function to guide the generation of correct ORC
->>>>>>>>>>>> table entries,
->>>>>>>>>>>> thereby solving the timeout problem of loading the
->>>>>>>>>>>> livepatch-sample module
->>>>>>>>>>>> on a physical machine running multiple vcpus virtual machines.
->>>>>>>>>>>>
->>>>>>>>>>>> While solving the above problems, we have gained an additional
->>>>>>>>>>>> benefit,
->>>>>>>>>>>> that is, we can obtain more call stack information
->>>>>>>>>>>>
->>>>>>>>>>>> Stack information that can be obtained before the problem is
->>>>>>>>>>>> fixed:
->>>>>>>>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>>>> [<0>] kvm_exc_entry+0x100/0x1e0
->>>>>>>>>>>>
->>>>>>>>>>>> Stack information that can be obtained after the problem is
->>>>>>>>>>>> fixed:
->>>>>>>>>>>> [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>>>> [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>>>> [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>>>> [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>>>> [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>>>> [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>>>>>>> [<0>] kvm_enter_guest+0x38/0x11c
->>>>>>>>>>>> [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
->>>>>>>>>>>> [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
->>>>>>>>>>>> [<0>] sys_ioctl+0x498/0xf00
->>>>>>>>>>>> [<0>] do_syscall+0x98/0x1d0
->>>>>>>>>>>> [<0>] handle_syscall+0xb8/0x158
->>>>>>>>>>>>
->>>>>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>>>> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
->>>>>>>>>>>> ---
->>>>>>>>>>>> Cc: Huacai Chen <chenhuacai@kernel.org>
->>>>>>>>>>>> Cc: WANG Xuerui <kernel@xen0n.name>
->>>>>>>>>>>> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
->>>>>>>>>>>> Cc: Bibo Mao <maobibo@loongson.cn>
->>>>>>>>>>>> Cc: Charlie Jenkins <charlie@rivosinc.com>
->>>>>>>>>>>> Cc: Xianglai Li <lixianglai@loongson.cn>
->>>>>>>>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>>>>>>>>>> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>>>>>>>>>
->>>>>>>>>>>>    arch/loongarch/kvm/switch.S | 28 +++++++++++++++++++---------
->>>>>>>>>>>>    1 file changed, 19 insertions(+), 9 deletions(-)
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/arch/loongarch/kvm/switch.S
->>>>>>>>>>>> b/arch/loongarch/kvm/switch.S
->>>>>>>>>>>> index 93845ce53651..a3ea9567dbe5 100644
->>>>>>>>>>>> --- a/arch/loongarch/kvm/switch.S
->>>>>>>>>>>> +++ b/arch/loongarch/kvm/switch.S
->>>>>>>>>>>> @@ -10,6 +10,7 @@
->>>>>>>>>>>>    #include <asm/loongarch.h>
->>>>>>>>>>>>    #include <asm/regdef.h>
->>>>>>>>>>>>    #include <asm/unwind_hints.h>
->>>>>>>>>>>> +#include <linux/kvm_types.h>
->>>>>>>>>>>>      #define HGPR_OFFSET(x)        (PT_R0 + 8*x)
->>>>>>>>>>>>    #define GGPR_OFFSET(x)        (KVM_ARCH_GGPR + 8*x)
->>>>>>>>>>>> @@ -110,9 +111,9 @@
->>>>>>>>>>>>         * need to copy world switch code to DMW area.
->>>>>>>>>>>>         */
->>>>>>>>>>>>        .text
->>>>>>>>>>>> +    .p2align PAGE_SHIFT
->>>>>>>>>>>>        .cfi_sections    .debug_frame
->>>>>>>>>>>>    SYM_CODE_START(kvm_exc_entry)
->>>>>>>>>>>> -    .p2align PAGE_SHIFT
->>>>>>>>>>>>        UNWIND_HINT_UNDEFINED
->>>>>>>>>>>>        csrwr    a2,   KVM_TEMP_KS
->>>>>>>>>>>>        csrrd    a2,   KVM_VCPU_KS
->>>>>>>>>>>> @@ -170,6 +171,7 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>>>>>>>>        /* restore per cpu register */
->>>>>>>>>>>>        ld.d    u0, a2, KVM_ARCH_HPERCPU
->>>>>>>>>>>>        addi.d    sp, sp, -PT_SIZE
->>>>>>>>>>>> +    UNWIND_HINT_REGS
->>>>>>>>>>>>          /* Prepare handle exception */
->>>>>>>>>>>>        or    a0, s0, zero
->>>>>>>>>>>> @@ -200,7 +202,7 @@ ret_to_host:
->>>>>>>>>>>>        jr      ra
->>>>>>>>>>>>      SYM_CODE_END(kvm_exc_entry)
->>>>>>>>>>>> -EXPORT_SYMBOL(kvm_exc_entry)
->>>>>>>>>>>> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
->>>>>>>>>>>>      /*
->>>>>>>>>>>>     * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu
->>>>>>>>>>>> *vcpu)
->>>>>>>>>>>> @@ -215,6 +217,14 @@ SYM_FUNC_START(kvm_enter_guest)
->>>>>>>>>>>>        /* Save host GPRs */
->>>>>>>>>>>>        kvm_save_host_gpr a2
->>>>>>>>>>>>    +    /*
->>>>>>>>>>>> +     * The csr_era member variable of the pt_regs structure
->>>>>>>>>>>> is required
->>>>>>>>>>>> +     * for unwinding orc to perform stack traceback, so we
->>>>>>>>>>>> need to put
->>>>>>>>>>>> +     * pc into csr_era member variable here.
->>>>>>>>>>>> +     */
->>>>>>>>>>>> +    pcaddi    t0, 0
->>>>>>>>>>>> +    st.d    t0, a2, PT_ERA
->>>>>>>>>>> Hi, Xianglai,
->>>>>>>>>>>
->>>>>>>>>>> It should use `SYM_CODE_START` to mark the `kvm_enter_guest`
->>>>>>>>>>> rather than
->>>>>>>>>>> `SYM_FUNC_START`, since the `SYM_FUNC_START` is used to mark
->>>>>>>>>>> "C-likely"
->>>>>>>>>>> asm functionw.
->>>>>>>>>>
->>>>>>>>>> Ok, I will use SYM_CODE_START to mark kvm_enter_guest in the
->>>>>>>>>> next version.
->>>>>>>>>>
->>>>>>>>>>> I guess the kvm_enter_guest is something like exception
->>>>>>>>>>> handler becuase the last instruction is "ertn". So usually it
->>>>>>>>>>> should
->>>>>>>>>>> mark UNWIND_HINT_REGS where can find last frame info by "$sp".
->>>>>>>>>>> However, all info is store to "$a2", this mark should be
->>>>>>>>>>>    `UNWIND_HINT sp_reg=ORC_REG_A2(???) type=UNWIND_HINT_TYPE_REGS`.
->>>>>>>>>>> I don't konw why save this function internal PC here by `pcaddi
->>>>>>>>>>> t0, 0`,
->>>>>>>>>>> and I think it is no meaning(, for exception handler, they save
->>>>>>>>>>> last PC
->>>>>>>>>>> by read CSR.ERA). The `kvm_enter_guest` saves registers by
->>>>>>>>>>> "$a2"("$sp" - PT_REGS) beyond stack ("$sp"), it is dangerous if IE
->>>>>>>>>>> is enable. So I wonder if there is really a stacktrace through
->>>>>>>>>>> this function?
->>>>>>>>>>>
->>>>>>>>>> The stack backtracking issue in switch.S is rather complex
->>>>>>>>>> because it involves the switching between cpu root-mode and
->>>>>>>>>> guest-mode:
->>>>>>>>>> Real stack backtracking should be divided into two parts:
->>>>>>>>>> part 1:
->>>>>>>>>>      [<0>] kvm_enter_guest+0x38/0x11c
->>>>>>>>>>      [<0>] kvm_arch_vcpu_ioctl_run+0x26c/0x498 [kvm]
->>>>>>>>>>      [<0>] kvm_vcpu_ioctl+0x200/0xcf8 [kvm]
->>>>>>>>>>      [<0>] sys_ioctl+0x498/0xf00
->>>>>>>>>>      [<0>] do_syscall+0x98/0x1d0
->>>>>>>>>>      [<0>] handle_syscall+0xb8/0x158
->>>>>>>>>>
->>>>>>>>>> part 2:
->>>>>>>>>>      [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>>      [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>>      [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>>      [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>>      [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>>      [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> In "part 1", after executing kvm_enter_guest, the cpu switches
->>>>>>>>>> from root-mode to guest-mode.
->>>>>>>>>> In this case, stack backtracking is indeed very rare.
->>>>>>>>>>
->>>>>>>>>> In "part 2", the cpu switches from the guest-mode to the root-mode,
->>>>>>>>>> and most of the stack backtracking occurs during this phase.
->>>>>>>>>>
->>>>>>>>>> To obtain the longest call chain, we save pc in kvm_enter_guest
->>>>>>>>>> to pt_regs.csr_era,
->>>>>>>>>> and after restoring the sp of the root-mode cpu in kvm_exc_entry,
->>>>>>>>>> The ORC entry was re-established using "UNWIND_HINT_REGS",
->>>>>>>>>>   and then we obtained the following stack backtrace as we wanted:
->>>>>>>>>>
->>>>>>>>>>      [<0>] kvm_vcpu_block+0x88/0x120 [kvm]
->>>>>>>>>>      [<0>] kvm_vcpu_halt+0x68/0x580 [kvm]
->>>>>>>>>>      [<0>] kvm_emu_idle+0xd4/0xf0 [kvm]
->>>>>>>>>>      [<0>] kvm_handle_gspr+0x7c/0x700 [kvm]
->>>>>>>>>>      [<0>] kvm_handle_exit+0x160/0x270 [kvm]
->>>>>>>>>>      [<0>] kvm_exc_entry+0x104/0x1e4
->>>>>>>>> I found this might be a coincidence—correct behavior due to the
->>>>>>>>> incorrect
->>>>>>>>> UNWIND_HINT_REGS mark and unusual stack adjustment.
->>>>>>>>>
->>>>>>>>> First, the kvm_enter_guest contains only a single branch
->>>>>>>>> instruction, ertn.
->>>>>>>>> It hardware-jump to the CSR.ERA address directly, jump into
->>>>>>>>> kvm_exc_entry.
->>>>>>>>>
->>>>>>>>> At this point, the stack layout looks like this:
->>>>>>>>> -------------------------------
->>>>>>>>>    frame from call to `kvm_enter_guest`
->>>>>>>>> -------------------------------  <- $sp
->>>>>>>>>    PT_REGS
->>>>>>>>> -------------------------------  <- $a2
->>>>>>>>>
->>>>>>>>> Then kvm_exc_entry adjust stack without save any register (e.g.
->>>>>>>>> $ra, $sp)
->>>>>>>>> but still marked UNWIND_HINT_REGS.
->>>>>>>>> After the adjustment:
->>>>>>>>> -------------------------------
->>>>>>>>>    frame from call to `kvm_enter_guest`
->>>>>>>>> -------------------------------
->>>>>>>>>    PT_REGS
->>>>>>>>> -------------------------------  <- $a2, new $sp
->>>>>>>>>
->>>>>>>>> During unwinding, when the unwinder reaches kvm_exc_entry,
->>>>>>>>> it meets the mark of PT_REGS and correctly recovers
->>>>>>>>>   pc = regs.csr_era, sp = regs.sp, ra = regs.ra
->>>>>>>>>
->>>>>>>> Yes, here unwinder does work as you say.
->>>>>>>>
->>>>>>>>> a) Can we avoid "ertn" rather than `jr reg (or jirl ra, reg, 0)`
->>>>>>>>> instead, like call?
->>>>>>>> No,  we need to rely on the 'ertn instruction return PIE to CRMD IE,
->>>>>>>> at the same time to ensure that its atomic,
->>>>>>>> there should be no other instruction than' ertn 'more appropriate
->>>>>>>> here.
->>>>>>> You are right! I got it.
->>>>>>>>
->>>>>>>>> The kvm_exc_entry cannot back to kvm_enter_guest
->>>>>>>>> if we use "ertn", so should the kvm_enter_guest appear on the
->>>>>>>>> stacktrace?
->>>>>>>>>
->>>>>>>>
->>>>>>>> It is flexible. As I mentioned above, the cpu completes the switch
->>>>>>>> from host-mode to guest mode through kvm_enter_guest,
->>>>>>>> and then the switch from guest mode to host-mode through
->>>>>>>> kvm_exc_entry. When we ignore the details of the host-mode
->>>>>>>> and guest-mode switching in the middle, we can understand that the
->>>>>>>> host cpu has completed kvm_enter_guest->kvm_exc_entry.
->>>>>>>>  From this perspective, I think it can exist in the call stack, and
->>>>>>>> at the same time, we have obtained the maximum call stack
->>>>>>>> information.
->>>>>>>>
->>>>>>>>
->>>>>>>>> b) Can we adjust $sp before entering kvm_exc_entry? Then we can mark
->>>>>>>>> UNWIND_HINT_REGS at the beginning of kvm_exc_entry, which something
->>>>>>>>> like ret_from_kernel_thread_asm.
->>>>>>>>>
->>>>>>>> The following command can be used to dump the orc entries of the
->>>>>>>> kernel:
->>>>>>>> ./tools/objtool/objtool --dump vmlinux
->>>>>>>>
->>>>>>>> You can observe that not all orc entries are generated at the
->>>>>>>> beginning of the function.
->>>>>>>> For example:
->>>>>>>> handle_tlb_protect
->>>>>>>> ftrace_stub
->>>>>>>> handle_reserved
->>>>>>>>
->>>>>>>> So, is it unnecessary for us to modify UNWIND_HINT_REGS in order
->>>>>>>> to place it at the beginning of the function.
->>>>>>>>
->>>>>>>> If you have a better solution, could you provide an example of the
->>>>>>>> modification?
->>>>>>>> I can test the feasibility of the solution.
->>>>>>>>
->>>>>>> The expression at the beginning of the function is incorrect
->>>>>>> (feeling sorry).
->>>>>>> It should be marked where have all stacktrace info.
->>>>>>> Thanks for all the explaining, since I'm unfamiliar with kvm, I
->>>>>>> need these to help my understanding.
->>>>>>>
->>>>>>> Can you try with follows, with save regs by $sp, set more precise
->>>>>>> era to pt_regs, and more unwind hint.
->>>>>>>
->>>>>>>
->>>>>>> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
->>>>>>> index f1768b7a6194..8ed1d7b72c54 100644
->>>>>>> --- a/arch/loongarch/kvm/switch.S
->>>>>>> +++ b/arch/loongarch/kvm/switch.S
->>>>>>> @@ -14,13 +14,13 @@
->>>>>>>    #define GGPR_OFFSET(x)        (KVM_ARCH_GGPR + 8*x)
->>>>>>>
->>>>>>>    .macro kvm_save_host_gpr base
->>>>>>> -    .irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
->>>>>>> +    .irp n,1,2,22,23,24,25,26,27,28,29,30,31
->>>>>>>        st.d    $r\n, \base, HGPR_OFFSET(\n)
->>>>>>>        .endr
->>>>>>>    .endm
->>>>>>>
->>>>>>>    .macro kvm_restore_host_gpr base
->>>>>>> -    .irp n,1,2,3,22,23,24,25,26,27,28,29,30,31
->>>>>>> +    .irp n,1,2,22,23,24,25,26,27,28,29,30,31
->>>>>>>        ld.d    $r\n, \base, HGPR_OFFSET(\n)
->>>>>>>        .endr
->>>>>>>    .endm
->>>>>>> @@ -88,6 +88,7 @@
->>>>>>>        /* Load KVM_ARCH register */
->>>>>>>        ld.d    a2, a2,    (KVM_ARCH_GGPR + 8 * REG_A2)
->>>>>>>
->>>>>>> +111:
->>>>>>>        ertn /* Switch to guest: GSTAT.PGM = 1, ERRCTL.ISERR = 0,
->>>>>>> TLBRPRMD.ISTLBR = 0 */
->>>>>>>    .endm
->>>>>>>
->>>>>>> @@ -158,9 +159,10 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>>>        csrwr    t0, LOONGARCH_CSR_GTLBC
->>>>>>>        ld.d    tp, a2, KVM_ARCH_HTP
->>>>>>>        ld.d    sp, a2, KVM_ARCH_HSP
->>>>>>> +    UNWIND_HINT_REGS
->>>>>>> +
->>>>>>>        /* restore per cpu register */
->>>>>>>        ld.d    u0, a2, KVM_ARCH_HPERCPU
->>>>>>> -    addi.d    sp, sp, -PT_SIZE
->>>>>>>
->>>>>>>        /* Prepare handle exception */
->>>>>>>        or    a0, s0, zero
->>>>>>> @@ -184,10 +186,11 @@ SYM_CODE_START(kvm_exc_entry)
->>>>>>>        csrwr    s1, KVM_VCPU_KS
->>>>>>>        kvm_switch_to_guest
->>>>>>>
->>>>>>> +    UNWIND_HINT_UNDEFINED
->>>>>>>    ret_to_host:
->>>>>>> -    ld.d    a2, a2, KVM_ARCH_HSP
->>>>>>> -    addi.d  a2, a2, -PT_SIZE
->>>>>>> -    kvm_restore_host_gpr    a2
->>>>>>> +    ld.d    sp, a2, KVM_ARCH_HSP
->>>>>>> +    kvm_restore_host_gpr    sp
->>>>>>> +    addi.d    sp, sp, PT_SIZE
->>>>>>>        jr      ra
->>>>>>>
->>>>>>>    SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
->>>>>>> @@ -200,11 +203,15 @@ SYM_CODE_END(kvm_exc_entry)
->>>>>>>     *  a0: kvm_run* run
->>>>>>>     *  a1: kvm_vcpu* vcpu
->>>>>>>     */
->>>>>>> -SYM_FUNC_START(kvm_enter_guest)
->>>>>>> +SYM_CODE_START(kvm_enter_guest)
->>>>>>> +    UNWIND_HINT_UNDEFINED
->>>>>>>        /* Allocate space in stack bottom */
->>>>>>> -    addi.d    a2, sp, -PT_SIZE
->>>>>>> +    addi.d    sp, sp, -PT_SIZE
->>>>>>>        /* Save host GPRs */
->>>>>>> -    kvm_save_host_gpr a2
->>>>>>> +    kvm_save_host_gpr sp
->>>>>>> +    la.pcrel a2, 111f
->>>>>>> +    st.d     a2, sp, PT_ERA
->>>>>>> +    UNWIND_HINT_REGS
->>>>>>>
->>>>>> why the label 111f is more accurate?  Supposing there is hw
->>>>>> breakpoint here and backtrace is called, what is the call trace
->>>>>> stack then? obvious label 111f is not executed instead.
->>>>> Xianglai said marking it as regs can get more stack infos, so I use
->>>>> UNWIND_HINT_REGS marked here, though it not called. Remove
->>>>> UNWIND_HINT_REGS thenforbid unwind from here.
->>>>> This function is called and should usually be marked as "call",
->>>>> but it is complex by switching the stack and use `ertn` calls
->>>>> another function.
->>>>>
->>>>>
->>>>>>
->>>>>> UNWIND_HINT_REGS is used for nested kernel stack, is that right?
->>>>>> With nested interrupt and exception handlers on LoongArch kernel, is
->>>>>> UNWIND_HINT_REGS used?
->>>>>>
->>>>>> SYM_CODE_START(ret_from_fork_asm)
->>>>>>          UNWIND_HINT_REGS
->>>>>>          move            a1, sp
->>>>>>          bl              ret_from_fork
->>>>>>          STACKLEAK_ERASE
->>>>>>          RESTORE_STATIC
->>>>>>          RESTORE_SOME
->>>>>>          RESTORE_SP_AND_RET
->>>>>> SYM_CODE_END(ret_from_fork_asm)
->>>>>> With this piece of code, what is contents of pt_regs? In generic it
->>>>>> is called from sys_clone, era is user PC address, is that right? If so,
->>>>>> what is detailed usage in the beginning of ret_from_fork_asm?
->>>>> The stacktrace shows the control flow where the PC will go back, so
->>>>> it is right because when PC is in ret_from_fork_asm, it is already
->>>>> another thread. The era means it will go back user mode.
->>>> The problem is that user mode era shows unwind with error, and
->>>> user_mode(regs) is not accurate. here is piece of code.
->>>>                  pc = regs->csr_era;
->>>>                  if (!__kernel_text_address(pc))
->>>>                          goto err;
->>>> will UNWIND_HINT_END_OF_STACK be better than UNWIND_HINT_REGS?
->>>
->>> You are right. And the reason why current the unwinder does not cause
->>> error is in case ORC_TYPE_REGS we process it by user_mode(regs).
->> Any process about UNWIND_HINT_REGS usage, is nested exception unwind
->> supported now?
->>
->> Talking without any actions seems not be style of Loongson :)
->  From my point of view, Tiezhu's simple solution is acceptable...
-is nested exception/interrupt unwind supported now?  IIRC only nested 
-interrupt with stack switch is supported, nested exception/interrupt 
-unwind without stack switch is not supported. Is that right?
+>
+>I.e. for example if someone is building a distro running on an embedded
+>system where avoiding addr space fragmentation is more important than
+>security we shouldn&#x27;t be stopping him to decrease ARCH_MMAP_RND_BITS
+>unless he reaches the architecture minimum.  Instead we should increase
+>ARCH_MMAP_RND_BITS_DEFAULT so the &quot;typical&quot; systems get a larger
+>ARCH_MMAP_RND_BITS.
 
-Regards
-Bibo Mao
+Is address space fragmentation that important on embedded systems? Isn't it obvious that you will never have 300G RAM on embedded systems?
 
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>> Jinyang
->>>
->>
+>
+>-- 
+>Xi Ruoyao &lt;xry111@xry111.site&gt;
 
+Bingwu Zhang
