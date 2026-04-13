@@ -1,145 +1,210 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A033221FCD
-	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573F1175A70
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776047822; cv=none; b=KYAtlbCLUmihrM4AqofYQyB1dokuyqwIkbF+D4QKZFFvI5KQEhAfUuNthAzlMpgKvyoc7BPrh1OhbgLlwVQstRL8/Uy3nq0/IBQZgDfsxyj3P7dhTYNkoRfpXYJ/vNefITv8kaJPGarC0XNjN8KYa20jg+nIUg4G/kj6CU8PvdY=
+	t=1776047916; cv=none; b=h32gFhL5nHPMkbA4NQURkflTvrRKWd2YbCxEZR3v6UgKYBnRDM0iw6cv0RaBgqsVm+6vkgIVpLlHYgOhGC9jHX2c3pBdfKU8OVNhQ1A1lPlDyEk2J8MOI18Zw4wb3WJ3+Qfgl8/QDgUDTXNKtofJWvARrScv0/YhhBIahF8MP4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776047822; c=relaxed/simple;
-	bh=PsL5db0nM1bEblz0+wTpxO7dvW4KkqmM588z1vTLkaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OdXZC5HQtEHAvdUGBcq+nzYnIfrm889GwtiBAXkpal9boS4PHE4tC5b2hOVTx0Mlp7QBKSoKW2mNnbYzLbz40z8Yy2PM3YYDNwNI1XzWW8ebygaL/ywLMi3tfhmTudvLqBw/yl4keUKCFRmHTYG/nBnJneaSJa+3GOXQNdOXnt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.8])
-	by gateway (Coremail) with SMTP id _____8Ax_6nKVtxpAZwkAA--.41756S3;
-	Mon, 13 Apr 2026 10:36:58 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.8])
-	by front1 (Coremail) with SMTP id qMiowJBx58DGVtxpGNJrAA--.42849S2;
-	Mon, 13 Apr 2026 10:36:58 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH V2 for 6.12] LoongArch: Handle percpu handler address for ORC unwinder
-Date: Mon, 13 Apr 2026 10:36:47 +0800
-Message-ID: <20260413023647.1368051-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1776047916; c=relaxed/simple;
+	bh=ItSYeWnWCiPb0Aeom0Qhy8GcVn6DQdrjAJ0cfpcOJhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PaDDXp26ipeOMAWsN0V8riVlfUGiSpUDn1h6AllsjxeGlEc9fEciVvEVo7qiYGatSIp/79ItJdpRj66jljUGtaQSL/uooTCl50C1lvfJLCGCuvg71pxMJ3ywN1gMytQeycFEM7rRh3LHOvTW7zO4GF0QYAzMZr47a/h2lJopAp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpLZ1pgi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpLZ1pgi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1379EC19424
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776047916;
+	bh=ItSYeWnWCiPb0Aeom0Qhy8GcVn6DQdrjAJ0cfpcOJhI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SpLZ1pgiYmOUOg7wO1VetTSrL21O4JB9zShO8xGC/V+83M8xTmghdfHTtRoJUjnLX
+	 kUAe73chzufuQEeOcpv9ZZXMATgueB8jP+WXWCC1SuoDcVnXNmrcGcNc6OH8T7WAcZ
+	 /8tpS17mX8cSE/UkRKoDbp8XwP8lAQ6yw47cFEpqZrqsfL3JK+4wMh8r1DBfJVvL0O
+	 wMrMXHCqCD8X1JplVLJHDXqO1/2jH+5BIp+sX5ZcA8efUe1ZmX+6BvBFvL07c4u4f4
+	 OiWuExWkpKnTw85DRzlqcVrEPBsFrM3lYnTwjilFkvny+Tjkx6j3yHYO/OaTQTdaKG
+	 RXhuuaDliJkjw==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b9c6f1d1282so513944266b.3
+        for <loongarch@lists.linux.dev>; Sun, 12 Apr 2026 19:38:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9fawdJpvHhG/aD5blkYBa0R9Qg8VrS/o1yJvsRuXvowEAMbbYqX70DXNkI7E4LbFWHlPZJZfq+NUo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxLTkIO8DQ+ywMVkbIZrGHn8ZqOazBhM3WeyRBcExS+U0uFvSo8
+	baSuv4MNTnmVLyMz9UJwnSxhEl/Nhj0ELj74yI0JUcvu6/yV88PfXOLlUPtDf+lvUtqGwjYnidG
+	sjOn5UdNseXOgF77kIzGpabtr/K+gSw8=
+X-Received: by 2002:a17:907:1c07:b0:b9d:4652:2f75 with SMTP id
+ a640c23a62f3a-b9d722f6b43mr603600466b.0.1776047914555; Sun, 12 Apr 2026
+ 19:38:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx58DGVtxpGNJrAA--.42849S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJF17AFW8Zr18Kw43WF1xWFX_yoW5WryxpF
-	9Fkr4DKrW8Wryvva4qyFyj9r98Awn3Gw12qFWag34ruF12qa4fCrs2vrnFgFyDJ3y8XF1r
-	Xas5G34Y9F45AagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
+References: <b04efb5af4f5019adbb0adb8543bd84b8157e8e1.camel@xry111.site> <177604593472.1254.15849043200496555555@mail.envs.net>
+In-Reply-To: <177604593472.1254.15849043200496555555@mail.envs.net>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 13 Apr 2026 10:38:18 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6x=YjutHSobvKi2Fq+-sD_8aOZoj-Ba-PFuQQ6hp=HMQ@mail.gmail.com>
+X-Gm-Features: AQROBzB4UuZFs6ivBz-O2jDQtocIHzhTUpfkgwUBMIMjTInUtq5-kustKGT--O8
+Message-ID: <CAAhV-H6x=YjutHSobvKi2Fq+-sD_8aOZoj-Ba-PFuQQ6hp=HMQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Increase default mmap randomization bits
+To: xtex <xtex@envs.net>
+Cc: xry111@xry111.site, kernel@xen0n.name, guoren@kernel.org, 
+	jiaxun.yang@flygoat.com, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, xtex@astrafall.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+On Mon, Apr 13, 2026 at 10:05=E2=80=AFAM xtex <xtex@envs.net> wrote:
+>
+> Xi Ruoyao <xry111@xry111.site> wrote:
+> >On Sun, 2026-04-12 at 20:32 +0800, Xi Ruoyao wrote:
+> >&gt; On Sun, 2026-04-12 at 20:24 +0800, Huacai Chen wrote:
+> >&gt; &gt; On Sun, Apr 12, 2026 at 11:49=E2=80=AFAM Bingwu Zhang &lt;xtex=
+@envs.net&gt; wrote:
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; On Sunday, March 29, 2026 11:48:02=E2=80=AFAM China Stand=
+ard Time Huacai
+> >&gt; &gt; &gt; Chen wrote:
+> >&gt; &gt; &gt; &gt; Hi, Bingwu,
+> >&gt; &gt; &gt; &gt;
+> >&gt; &gt; &gt; &gt; On Sun, Mar 29, 2026 at 6:59=E2=80=AFAM Bingwu Zhang=
+ &lt;xtex@envs.net&gt;
+> >&gt; &gt; &gt; &gt; wrote:
+> >&gt; &gt; &gt; &gt; &gt; From: Bingwu Zhang &lt;xtex@astrafall.org&gt;
+> >&gt; &gt; &gt; &gt; &gt;
+> >&gt; &gt; &gt; &gt; &gt; Increase default mmap randomization bits from 1=
+2 to 18 on 64-
+> >&gt; &gt; &gt; &gt; &gt; bit
+> >&gt; &gt; &gt; &gt; &gt; platforms for better strength.
+> >&gt; &gt; &gt; &gt; &gt;
+> >&gt; &gt; &gt; &gt; &gt; The original default, 12, means that ASLR offse=
+t has only (1
+> >&gt; &gt; &gt; &gt; &gt; &lt;&lt; 12) =3D
+> >&gt; &gt; &gt; &gt; &gt; 4096 possibilities. On average, it can be brute=
+-forced in 2048
+> >&gt; &gt; &gt; &gt; &gt; attempts.
+> >&gt; &gt; &gt; &gt; &gt; If a service is configured to restart automatic=
+ally or can be
+> >&gt; &gt; &gt; &gt; &gt; started
+> >&gt; &gt; &gt; &gt; &gt; easily (e.g. execve a suid program), then tryin=
+g for 4k times
+> >&gt; &gt; &gt; &gt; &gt; can be
+> >&gt; &gt; &gt; &gt; &gt; done in one day even when each attempt takes 20=
+s.
+> >&gt; &gt; &gt; &gt; &gt; Increasing it to 18 makes brute-force much more=
+ difficult and
+> >&gt; &gt; &gt; &gt; &gt; leaves
+> >&gt; &gt; &gt; &gt; &gt; more time for operators to find out attacks.
+> >&gt; &gt; &gt; &gt; &gt;
+> >&gt; &gt; &gt; &gt; &gt; On 64-bit platforms, virtual address space is c=
+heap, so the
+> >&gt; &gt; &gt; &gt; &gt; randomization bits can be increased safely with=
+out disturbing
+> >&gt; &gt; &gt; &gt; &gt; userland
+> >&gt; &gt; &gt; &gt; &gt; much and security comes first instead of availa=
+bility.
+> >&gt; &gt; &gt; &gt;
+> >&gt; &gt; &gt; &gt; Don&#x27;t change ARCH_MMAP_RND_BITS_MIN because it =
+may compact
+> >&gt; &gt; &gt; &gt; performance, and you cannot blindly increase
+> >&gt; &gt; &gt; &gt; ARCH_MMAP_RND_BITS_MAX
+> >&gt; &gt; &gt; &gt; because it should no more than &quot;VA_BITS - PAGE_=
+SHIFT - 3&quot; (see
+> >&gt; &gt; &gt; &gt; arch/riscv/Kconfig and arch/csky/Kconfig). For Loong=
+Arch,
+> >&gt; &gt; &gt; &gt; VA_BITS can
+> >&gt; &gt; &gt; &gt; be 39 (half of VA40), PAGE_SHIFT can be 16 (64KB pag=
+e), so
+> >&gt; &gt; &gt; &gt; ARCH_MMAP_RND_BITS_MAX can only increase up to 20 (3=
+9 - 16 - 3
+> >&gt; &gt; &gt; &gt; =3D20).
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; Sorry for the late reply.
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; It was my mistake that I didn&#x27;t notice the upper bou=
+nd of MAX.
+> >&gt; &gt; &gt; Thank you for
+> >&gt; &gt; &gt; pointing out!
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; However, I didn&#x27;t get where increasing MIN could com=
+pact
+> >&gt; &gt; &gt; performance.
+> >&gt; &gt; &gt; Theoretically, the only difference is that the gap betwee=
+n heaps
+> >&gt; &gt; &gt; and stacks
+> >&gt; &gt; &gt; are larger, from [128, 128+64]M to [128, 128+4096]M. This
+> >&gt; &gt; &gt; shouldn&#x27;t affect
+> >&gt; &gt; &gt; performance much. MIPS once used MIN=3D16, RISC-V 64 and =
+PowerPC and
+> >&gt; &gt; &gt; ARM 64 are
+> >&gt; &gt; &gt; using 18, and x86-64 is using 28, but I hadn&#x27;t heard=
+ anyone
+> >&gt; &gt; &gt; complaining about
+> >&gt; &gt; &gt; the performance.
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; I ran some benchmarks last weekend using the LLVM build b=
+enchmark
+> >&gt; &gt; &gt; of AOSC OS
+> >&gt; &gt; &gt; https://github.com/AOSC-Dev/buildbot-benchmark/blob/maste=
+r/buildbot-benchmark.bash
+> >&gt; &gt; &gt; and here are the results
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; Processor       Rand bits       Time/secs
+> >&gt; &gt; &gt; Average Variance        Range
+> >&gt; &gt; &gt; 3C6000/S        18      612.927 614.394 614.513 613.343 6=
+14.76
+> >&gt; &gt; &gt; 613.9874        0.515637840000006       1.83299999999997
+> >&gt; &gt; &gt; 3C6000/S        12      614.322 613.93  614.825 613.859
+> >&gt; &gt; &gt; 615.875 614.5622        0.548874160000007       2.0159999=
+9999996
+> >&gt; &gt; &gt; 3A5000  18      3547.165        3548.764        3552.192
+> >&gt; &gt; &gt; 3545.697
+> >&gt; &gt; &gt; 3547.567        3548.277        4.79228759999993
+> >&gt; &gt; &gt; 6.49499999999989
+> >&gt; &gt; &gt; 3A5000  12      3549.029        3551.894        3549.191
+> >&gt; &gt; &gt; 3567.869
+> >&gt; &gt; &gt; 3587.409        3561.0784       222.052853440003
+> >&gt; &gt; &gt; 38.3800000000001
+> >&gt; &gt; &gt;
+> >&gt; &gt; &gt; I didn&#x27;t see any statistically meaningful performanc=
+e defect.
+> >&gt; &gt; OK, then we can increase ARCH_MMAP_RND_BITS_MIN, but the range=
+ 18~20
+> >&gt; &gt; seems too small and then useless, can we consider using 15~20?
+> >&gt;
+> >&gt; IMO ARCH_MMAP_RND_BITS_MIN should be just the minimal that the
+> >&gt; architecture can support, not related to security.  If you want to
+> >&gt; recommend a value for increasing security you&#x27;d set
+> >&gt; ARCH_MMAP_RND_BITS_DEFAULT a larger value instead.
+>
+> okay, I agree to abandon this patch. But,
+> Isn't the minimum supported value 0 (i.e. mmap ASLR disabled)? There is a=
+lways a fixed 128M gap between heaps and stack tops so 0 should work.
+Maybe it should be 0, but keeping the old value is better because I
+think there are some historic reasons.
 
-[ Upstream commit 055c7e75190e0be43037bd663a3f6aced194416e ]
 
-After commit 4cd641a79e69 ("LoongArch: Remove unnecessary checks for ORC
-unwinder"), the system can not boot normally under some configs (such as
-enable KASAN), there are many error messages "cannot find unwind pc".
+Huacai
 
-The kernel boots normally with the defconfig, so no problem found out at
-the first time. Here is one way to reproduce:
-
-  cd linux
-  make mrproper defconfig -j"$(nproc)"
-  scripts/config -e KASAN
-  make olddefconfig all -j"$(nproc)"
-  sudo make modules_install
-  sudo make install
-  sudo reboot
-
-The address that can not unwind is not a valid kernel address which is
-between "pcpu_handlers[cpu]" and "pcpu_handlers[cpu] + vec_sz" due to
-the code of eentry was copied to the new area of pcpu_handlers[cpu] in
-setup_tlb_handler(), handle this special case to get the valid address
-to unwind normally.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
-V2: Add upstream commit ID.
-
- arch/loongarch/include/asm/setup.h |  3 +++
- arch/loongarch/kernel/unwind_orc.c | 16 ++++++++++++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/arch/loongarch/include/asm/setup.h b/arch/loongarch/include/asm/setup.h
-index 3c2fb16b11b6..f81375e5e89c 100644
---- a/arch/loongarch/include/asm/setup.h
-+++ b/arch/loongarch/include/asm/setup.h
-@@ -7,6 +7,7 @@
- #define _LOONGARCH_SETUP_H
- 
- #include <linux/types.h>
-+#include <linux/threads.h>
- #include <asm/sections.h>
- #include <uapi/asm/setup.h>
- 
-@@ -14,6 +15,8 @@
- 
- extern unsigned long eentry;
- extern unsigned long tlbrentry;
-+extern unsigned long pcpu_handlers[NR_CPUS];
-+extern long exception_handlers[VECSIZE * 128 / sizeof(long)];
- extern char init_command_line[COMMAND_LINE_SIZE];
- extern void tlb_init(int cpu);
- extern void cpu_cache_init(void);
-diff --git a/arch/loongarch/kernel/unwind_orc.c b/arch/loongarch/kernel/unwind_orc.c
-index 5f256d75ab1e..7a9bc4754474 100644
---- a/arch/loongarch/kernel/unwind_orc.c
-+++ b/arch/loongarch/kernel/unwind_orc.c
-@@ -351,6 +351,22 @@ static inline unsigned long bt_address(unsigned long ra)
- {
- 	extern unsigned long eentry;
- 
-+#if defined(CONFIG_NUMA) && !defined(CONFIG_PREEMPT_RT)
-+	int cpu;
-+	int vec_sz = sizeof(exception_handlers);
-+
-+	for_each_possible_cpu(cpu) {
-+		if (!pcpu_handlers[cpu])
-+			continue;
-+
-+		if (ra >= pcpu_handlers[cpu] &&
-+		    ra < pcpu_handlers[cpu] + vec_sz) {
-+			ra = ra + eentry - pcpu_handlers[cpu];
-+			break;
-+		}
-+	}
-+#endif
-+
- 	if (ra >= eentry && ra < eentry +  EXCCODE_INT_END * VECSIZE) {
- 		unsigned long func;
- 		unsigned long type = (ra - eentry) / VECSIZE;
--- 
-2.52.0
-
+>
+> >
+> >I.e. for example if someone is building a distro running on an embedded
+> >system where avoiding addr space fragmentation is more important than
+> >security we shouldn&#x27;t be stopping him to decrease ARCH_MMAP_RND_BIT=
+S
+> >unless he reaches the architecture minimum.  Instead we should increase
+> >ARCH_MMAP_RND_BITS_DEFAULT so the &quot;typical&quot; systems get a larg=
+er
+> >ARCH_MMAP_RND_BITS.
+>
+> Is address space fragmentation that important on embedded systems? Isn't =
+it obvious that you will never have 300G RAM on embedded systems?
+>
+> >
+> >--
+> >Xi Ruoyao &lt;xry111@xry111.site&gt;
+>
+> Bingwu Zhang
+>
