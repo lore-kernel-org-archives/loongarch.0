@@ -1,183 +1,154 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4895F30E83A;
-	Mon, 13 Apr 2026 09:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776071762; cv=none; b=Qhv7bYxaF/vurpDN9NkcvusmxUfocDCLzKQ8a4NuSkU6nF6XrupP43vPNiTg82BlOodJ8Ua00/Jxc1iXbjkgZVeySxMx/icckwQdqnwqi54d9sgxPaUNdfNn6awaCVZBJEP2G/rvrSZL/sR8XXqemIXWbIXowj/gTZB6zAOeqks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776071762; c=relaxed/simple;
-	bh=j/tYEurlHNq5kx1yV6D47wbOZhhwgvOxlSSa1P5IOeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hmr5I0ESWyLiNV/S5/HX7YQrswH+BaH3DQctPWMa7kYfhRhG5n+SpLEAgPUZi8xOSePbICZE0jN47bhbTrEvhuC+QOdyhqK3DkTz1tG6be91nJa7Dscqayvtt1hJvYjQMRnHorz7EJAeKNzd92inY190VEidVJDmdF05earYIEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oY+vEH1n; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011613AB26B
+	for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 09:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776072386; cv=pass; b=B7FvUfdeUW2Zae+J6Hf9kV1KnrI5u4lxfMRapDTI1iPf46Stfa49hkF7Ygl0HJhekLKBJmpQbbW3p/fsRU9p5dmwSwKQWyAAgV1+V2dCxuMIvjXjMVJ1ZElrsDCWieHiOfkJKNOMkIdwj0Njhed1Tqzgj4TQ5p74ykkrME60lSM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776072386; c=relaxed/simple;
+	bh=AIj8v0Hi8sQvxNr/C2OEW3Yh01lDZBaIZhuDD3/FUIw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D+SE/czMh8FgjbYhl7CyVMXMffpDCECXL897UPyrMiWY2pNSOrpXQzrZ2m3AA/FiCpPXKWS9UDdQLlXhtJKqXQPBJuxELtTD0jqDpuYnnSNPX/SIwx2iwlEYqjJzoCfpfd9siMjjkR+3SSAAFI+KCk22RfC5kyBz4intZE/leBU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9Xmhx8G; arc=pass smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oY+vEH1n"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63CNQ6Rp3649347;
-	Mon, 13 Apr 2026 09:15:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=3hYK9Ei+d9kVH0VV/CR68CUDnV5UVC
-	rS18XI/2Q3GjY=; b=oY+vEH1nHYm21zR7dKdG+rMVbiAs+2M4pSYJYH25H3Q/WQ
-	S5pbibNxKHXRtCU5RA4BZpoAC/CsLV14kYSk9HD7BI83gpVLqIVXm+N3/UD3mtFb
-	VGL3bfwkoS+MFSXp/7ksAXz/d/43BdzYyNe+WU94qMB7+oTAY5jMdy/aC1rg5QU1
-	UhBzNrX2r1ZHEsamBr6j/bYRaaLxasa1WWuLDHkVDfa2K6RkMY6wizvw26f4v3Pw
-	kdUQa11kKa0O4lHqHX35TBGaxo9cfSk8h/UtwhMbDVaUgMt8SMltIpECwIrRGVKB
-	KeirN6PqfMTEor0kXcjWPcrhlHvR883P23ApPmxw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dfdt3px1j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Apr 2026 09:15:17 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 63D80WMC015153;
-	Mon, 13 Apr 2026 09:15:16 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dg0mscku7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Apr 2026 09:15:16 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63D9FEC727328866
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 Apr 2026 09:15:14 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 70F6620043;
-	Mon, 13 Apr 2026 09:15:14 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B712A2004F;
-	Mon, 13 Apr 2026 09:15:04 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.123.13.2])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 13 Apr 2026 09:15:04 +0000 (GMT)
-Date: Mon, 13 Apr 2026 14:45:02 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux.dev, Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
-        Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
-        Theodore Tso <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        linux-alpha@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, Dinh Nguyen <dinguyen@kernel.org>,
-        Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
-        Paul Walmsley <pjw@kernel.org>, linux-riscv@lists.infradead.org,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: Re: [patch 07/38] treewide: Consolidate cycles_t
-Message-ID: <ady0Ft_tDrbGlu2o@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <20260410120044.031381086@kernel.org>
- <20260410120318.045532623@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9Xmhx8G"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-670c6c6e64dso4181021a12.2
+        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 02:26:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776072383; cv=none;
+        d=google.com; s=arc-20240605;
+        b=a0PGIqoi2Eu7gZINa9JN5yL3cOaFebsvC/9K42tVtnml887+Gt0CXMfEnPRjRXrmSr
+         zpaS2+QtMZGxNLlvJ5oM5XBj1gi3sgOPyglCCdJZNqgIaYfLrfUcc6vEi7HipmLrQBX5
+         1T+q2z4tL8GFI4BKQ+dE/9uz4OoDCl282ds/WIrEdz+VmAenE2/06yI+FNDN7fxH0rpH
+         /WdLBQBd7wS2OE0/oZBV1CFPy43HtnA0eCxxC9ERG5IapzEm8Y50zy+G2cCelnOE44zl
+         6UQS1gbC7babUkzXKNiu4VAuJxYTAXRg3pD3NkFJjhcHmDwxNZd2v4dkQitj71MLEf4S
+         Oi4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=n3iu2/uJJ+f3nvEEkeX9hHnOtEpFD7REsnR2pQwo48Y=;
+        fh=PJ1/S8UL09GzT/74hK4Tb7/NnDtHmkB3m9LBNS/7apo=;
+        b=ls6PY5KivUXqKQXVsLvQmvTwJTwCfAshA1XCl+cHJa1CKeBXlTnJHNeEf2f1bkAeLq
+         1Ftp62w+pXloVAemrbxL0eCB3/grDKQ+YfkdAbV64p4XJxqQnM8GorshmPygAaa3Tbrw
+         kbB07zNLO6RAALTlF6elweeAdSRhwqCh+uF5Ork4oKMoqYofWP0+fMoqprCC1HGvS995
+         kmMnQ83LvYRToQ3DT9zKbSIQAQyBl8P+A19ppPSB79nJVANZTsWDaQDuSZF95lCb2jkr
+         m6R7T6R2G9NOO/nlsO1At6rWJWqEQBB5oP81o5SaVQzEpnzgHr6SkFLdcm6Ps8beUN7p
+         HelA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776072383; x=1776677183; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n3iu2/uJJ+f3nvEEkeX9hHnOtEpFD7REsnR2pQwo48Y=;
+        b=k9Xmhx8GC4RiF/RyGQGD89RLSxzefMRboCkZupYmXYEcKi8ybWZHvfFpCC/oywdOcz
+         XWaTCDf4EVfJ57Ebw95je5DvcFrZJwV/nIfXidkp84RKzmJD8uXw1NfuawvUgdIZwbgf
+         WrC2JBb4fu/eT25cA1zgUsgyg326EEAn3ocBfepeZmxwu1npE0AEG3IMZhNPl/jW27Ip
+         qNuDMIrcHzIJu1t4vpFt/jfwk12HlZp6r9OfeYDQpmRscvEEB3h/igWGMtrQ+ko0m4Wp
+         SWZtUMryTjJPs7juDDh/xvcnjS1Hpt09D1OLGESh6028otG98+iMA8u0z4AfpysUsFD+
+         nPKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776072383; x=1776677183;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=n3iu2/uJJ+f3nvEEkeX9hHnOtEpFD7REsnR2pQwo48Y=;
+        b=ZMyI6ByiP1fqPune+FST3qktvAz8ZQyrcHFW1cD4+aJbyKUFk+ym1LmFSfE5/J/olf
+         yLPoQjVL8Jt89mzSm+DzceHLbj2nAtD3xGQTyat4RNspy2vehB42vgoeiaRGnx0sM+S5
+         HxeS+tpBwntmM+pbpAnE/u7Xvhj0CkIqVSrvfEjedNnFsstc+9HdYWm1mNu8z6uKBG/2
+         Vfzh3rBPuIgazhpf292iwOgztqBzj8idf0TCQCFKeYy8UnrrkrLyKwwSgUFuzES8f7na
+         iG6BPTDE87ZWB64w+j98ab+x1BozDkLFzHABvhjnN7ue0Okre0Xqj7iKCGqKFUI6Yd3H
+         t04A==
+X-Forwarded-Encrypted: i=1; AFNElJ+EcTBcbzNj7cz4+7IX+09kKVjdraGIAG8neqfku/wR8yTD6yvbOdmPU5miMD/jZf4LWtarNWPxCyQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYrOIkyp58kI0hGcoBdeYjVzLqgdY4f4lbS7qjO0MrCPrzN/HC
+	E/vnqo2O+Qn0w6/ImlJAz+yH2hVoGVrwYBY+xP8VZ3Uoga8VG66i3Gip8koMoHge11itfUav5NM
+	cNtQubqt3Cs0pejo3PFT/YeMvxUuuU4Y=
+X-Gm-Gg: AeBDietZzCk9qUWh/pPvo6t4/qI9K6jIFT/GWwwAYHPdq6kC7+XrzDgFPegqu/1dT9Q
+	aTGEZXfGqLBlWu+X9nbLHfgVB/0PF1Ppa6OXEeogk15ZL8KusbC2n1x+taeUm/5C4jAvGC7wSCC
+	GoG6/65zm37QHQFVsBYtOvzCAbVYs9y5nztLuUTyNmUA9E0hzdhjDFq7m/c62COKLI1gTqw9LtD
+	L84fKKzoa+YIIA/EK1ZE7M6Qqlzmug6EmAaMHcBaPab00unPvAJv51b0XupZ4gvpsck6fUUe1rj
+	tu5m/exMw65mSnm8tmw=
+X-Received: by 2002:a05:6402:34cc:b0:670:8d21:dcb with SMTP id
+ 4fb4d7f45d1cf-6708d2110cbmr6408870a12.19.1776072382964; Mon, 13 Apr 2026
+ 02:26:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260410120318.045532623@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: r6KN03kK1HZaoam71kVl5aHZm9BfgAQ4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDA4NSBTYWx0ZWRfX+Gwbo0yddZP/
- ED3CWrVQNFFw/TECS1M9+tSS57FYBZnMmG79KmJVnAwBWc3o5BgyeadFZ9maSHI4Tv+/+VHQiXF
- uu6/EAbMsVnRYIXugjj6TyQBBqRyeSoPbLxIVX8tqr0goumkz0lPJ9Y4Y3a3ECfM9WbzUtOSm5u
- eNbyrRMw+nuwi0Afz/QuxwA0FuazktkFPrSziYKfNEV92tR6ksCbhLbdKwZfOQ6IaUNAK3mHh04
- Z9ZuJvFG4+5R/DIJQ8v5H1fE5bYExgqIL1hC1HoekBef4/UHL3Jav5jU5Ty8ib2gAESLlopFcCb
- VttV6mxWXomhvrcFDBgGSdweqIiLio3UyKWRaxfdCdf1K3UdP0nDdx3LiWp/XKSUCxaso/02xav
- PADy/jEsrag0vsgcCLG1/jcBcJ3bFL3cNcYlDCC6JXFySGCPKTcpDMOtfvLh9vv4Vg7VR02ItSs
- a0USozVz3do3GTBrHkA==
-X-Proofpoint-GUID: iwEVNX-0n_YmGG6iAARt9TRRoEhRuwqE
-X-Authority-Analysis: v=2.4 cv=WpEb99fv c=1 sm=1 tr=0 ts=69dcb426 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=9Pz4rRoAHiK5H5RfW9YA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-13_02,2026-04-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 bulkscore=0 adultscore=0 spamscore=0
- malwarescore=0 clxscore=1011 lowpriorityscore=0 suspectscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604010000
- definitions=main-2604130085
+References: <cover.1775900045.git.zhoubinbin@loongson.cn> <CAHp75Ve59GPAFvKM6yOkPmr=kmHBjVL-Vz78X0WDikiWd+2arQ@mail.gmail.com>
+ <CAMpQs4+QmyAObvCcJOFnfTuufG8=M0q5m+XMkaP6-SOp-8wq9w@mail.gmail.com> <CAHp75Veymi3z2atMuSeDyrhyx-HLHgCMzJF5EgpJZzTGgpcD3Q@mail.gmail.com>
+In-Reply-To: <CAHp75Veymi3z2atMuSeDyrhyx-HLHgCMzJF5EgpJZzTGgpcD3Q@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Mon, 13 Apr 2026 17:26:09 +0800
+X-Gm-Features: AQROBzBh6eBs7REn1Qv9IV594bWuIgt_mTQzWy_FshpZ6l48Ew5CqcVKTNMWbYw
+Message-ID: <CAMpQs4LaQ27ZQhyv-s1OVcBF=4DR=_SiDTrpoB7F4qPRHEWB1w@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] i2c: Add Loongson-2K0300 I2C controller support
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-i2c@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 10, 2026 at 02:19:03PM +0200, Thomas Gleixner wrote:
-> Most architectures define cycles_t as unsigned long execpt:
-> 
->  - x86 requires it to be 64-bit independent of the 32-bit/64-bit build.
-> 
->  - parisc and mips define it as unsigned int
-> 
->    parisc has no real reason to do so as there are only a few usage sites
->    which either expand it to a 64-bit value or utilize only the lower
->    32bits.
-> 
->    mips has no real requirement either.
-> 
-> Move the typedef to types.h and provide a config switch to enforce the
-> 64-bit type for x86.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> ---
->  arch/Kconfig                       |    4 ++++
->  arch/alpha/include/asm/timex.h     |    3 ---
->  arch/arm/include/asm/timex.h       |    1 -
->  arch/loongarch/include/asm/timex.h |    2 --
->  arch/m68k/include/asm/timex.h      |    2 --
->  arch/mips/include/asm/timex.h      |    2 --
->  arch/nios2/include/asm/timex.h     |    2 --
->  arch/parisc/include/asm/timex.h    |    2 --
->  arch/powerpc/include/asm/timex.h   |    4 +---
->  arch/riscv/include/asm/timex.h     |    2 --
->  arch/s390/include/asm/timex.h      |    2 --
->  arch/sparc/include/asm/timex_64.h  |    1 -
->  arch/x86/Kconfig                   |    1 +
->  arch/x86/include/asm/tsc.h         |    2 --
->  include/asm-generic/timex.h        |    1 -
->  include/linux/types.h              |    6 ++++++
->  16 files changed, 12 insertions(+), 25 deletions(-)
-> 
-<...>
+On Mon, Apr 13, 2026 at 4:18=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Apr 13, 2026 at 11:08=E2=80=AFAM Binbin Zhou <zhoubb.aaron@gmail.=
+com> wrote:
+> > On Mon, Apr 13, 2026 at 3:52=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Sat, Apr 11, 2026 at 12:58=E2=80=AFPM Binbin Zhou <zhoubinbin@loon=
+gson.cn> wrote:
+>
+> ...
+>
+> > > >  - parent_rate_MHz -> parent_rate_mhz to avoid CamelCase.
+> > >
+> > > Was it a special requirement from maintainers?
+> >
+> > I=E2=80=99m actually a bit confused, because when I submitted the v6 pa=
+tchset,
+> > checkpatch didn=E2=80=99t issue this warning.
+> > But now, it produces the following output:
+> >
+> > scripts/checkpatch.pl --strict i2c-ls2k0300-v6/v6-0002*
+> > CHECK: Avoid CamelCase: <parent_rate_MHz>
+>
+> It's a false positive of the checkpatch.
 
-> --- a/arch/powerpc/include/asm/timex.h
-> +++ b/arch/powerpc/include/asm/timex.h
-> @@ -11,9 +11,7 @@
->  #include <asm/cputable.h>
->  #include <asm/vdso/timebase.h>
->  
-> -typedef unsigned long cycles_t;
-> -
-> -static inline cycles_t get_cycles(void)
-> +ostatic inline cycles_t get_cycles(void)
+OK, I will revert this change.
+>
+> > #512: FILE: drivers/i2c/busses/i2c-ls2x-v2.c:437:
+> > +       priv->parent_rate_MHz =3D clk_get_rate(priv->clk);
+> >
+> > total: 0 errors, 0 warnings, 1 checks, 574 lines checked
+> >
+> > NOTE: For some of the reported defects, checkpatch may be able to
+> >       mechanically convert to the typical style using --fix or --fix-in=
+place
+> >
+> > > Note, the physical units are special. The m and M have quite a
+> > > different multiplier value. So, even if asked by somebody I think it'=
+s
+> > > still arguably should be kept as MHz.
+>
+> See above why.
 
-Hi Thomas, I'm in middle of testing this series on powerpc. In the meantime I
-noticed that there's probably a small typo here (althrough this is fixed
-later)
+I see, thanks.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Regards,
-ojaswin
->  {
->  	return mftb();
->  }
+--=20
+Thanks.
+Binbin
