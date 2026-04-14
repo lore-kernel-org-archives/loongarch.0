@@ -1,112 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8FA1DF254
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 13:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CF03E7157
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 14:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776171736; cv=none; b=WfUQhkYXLvh/xo8XwVbO/xRKT9ZXMFajux96up16VpIrD0JCcBta9/511ogtr7yk3Jo4o2OqhVhID1hvVqjBj42FUPRWFJMAh0LiLJPzgZCbPpcM68ZZbN4dWT0hJw9ddqw+F+Ln63tAKQWzjXxJN5Cpuxnjtj6lK0QxjbBhUFA=
+	t=1776175421; cv=none; b=WKoANaPjwXSzYDsemcQMIAQtknquXmycx5lQhhjb1iDo844QWJMoOuKmR/dfm7f6Lg/Jzl197dkzDHF1QqINWPFZNgCKHtlYnt1PmdW3R04x5P2flB2slReYiZT+D4Jjy72sabznkuU2jNfVHNrmFLSSOj+1zeLU/FB9vcPJOAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776171736; c=relaxed/simple;
-	bh=u4TJHo+YjHnslthEruJo9GDBxeCUvBTQYDfL4pQBbjY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QuhwZiM/3G4fIrWC57mhVbsIqlB7jDEH69dHMVJMhlaNis1Cbfj/CJeZNSfz8FpsNJGSk7mlCJz0pDH8fiQZvKEyacXGHg/N0AbI7JD9fvhGntAgazhCnpXzsPMZnMuVhzIcQ48e7nLykqPeOwzsinvImQml20ftwCqDqBoVmiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AnH//2Kb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776175421; c=relaxed/simple;
+	bh=dn7cwF6qtgGFLiqp0cvEjfsbZaGhIy7LmJ2lctcWX4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9OcDgaseO/e9CiLa7NZFMWR6dD25zGdSJ23ML8An54z7SrkgAgMf7jaXFQ+fC4IDDKN9S+D8RGF3R526bgJFziUknndhHNDxrDPPG4bqbsLGWvrX8ZLKSdWGtx/I/zt0ff998G6vzQgkt6/XmC3W2Pvo4KM4RNmTuebqIh97yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PVsEFisz; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AnH//2Kb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C808C4AF09
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 13:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776171736;
-	bh=u4TJHo+YjHnslthEruJo9GDBxeCUvBTQYDfL4pQBbjY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AnH//2KbF3PvpjSxSPs5eXAlpniBjIX1/0z2XqTsFqjdc/7IgISBasicDrXq6hpB6
-	 hkZpIzZ7+QKRWs+VbmW0F3q5nFhQVTPqoBEgmH7urPK31aKREKnWfTtjWRUB4eGJ2G
-	 6CFfb/q0amesQcfzNEwawHDvYx4Li48N1KVKnpiHeIbYV0nm8Loce+1iX22BoQ0G1V
-	 c7wJzfWeE47VCR/f19oLIYqPTtXpm1HxoKyvhm6VEA1D9j571hU0gWTzek0/kvn75T
-	 /Qk7ZqcZbYhgiZCWLAPK8g+zYcXkRBDEnERE62+XB5FjNcXOHZFEP+91y6jw25kzI+
-	 hsQnZxvAazRWw==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-66e129e457dso5692447a12.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 06:02:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+z1zO6pEUUTCf69ZvkiwmtPqUpnsN/1tBocgSzAouF1iq+N0J5cp3p+Wkwdx8abAfEWvRhknnzBiM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyvahPIM8Aio0QXfiWYja0np6mFpP6aNw7c8ZB69RMYTGtUBuWf
-	Pqm3KcQx0SxrFuQ9yK0pwtFI1cX2pGKwPSet5dECDAQvs12h/PXYGgYOoyh6LIbuElyfTkwYqRs
-	Tg2fTHMj5sTyia1z6RALAVCUsXN3IQk8=
-X-Received: by 2002:a17:907:e981:b0:b97:1d24:bfed with SMTP id
- a640c23a62f3a-b9d72991f8dmr1023073166b.41.1776171734952; Tue, 14 Apr 2026
- 06:02:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVsEFisz"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b941762394aso694628466b.1
+        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 07:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776175418; x=1776780218; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wAO2a8iejOd3UMUmzAscWYPPXFzcVg9pYpLVhKBtzBc=;
+        b=PVsEFisz4BvCEeo9Fng6Ht8eZA9T8QDc8iGo/ImL3aWIk1i/iwv9djGS8TKI94ptGY
+         RNQYIM31o4oYF8y+F1TyUuJh+5EbgKxHP9gps70dJnw+sF9bSperXQgD5rWJwBNs7gHP
+         QXjfigfFy+gD26/itJKvNsKCR40piPn8R/I6biNce00fnLA0pYcAAgIazKgfqt3IxcAY
+         moKcDmRhZknWuij9acapt2NIRnha92F8kLKXkxvrbNHv8zKtPL9LxOaxCP28ZXQNAGZH
+         Xrm+lkoKNLL/1Y5BDN/IFQEKDUCEngPRcr2qzj2Rpycaou52ixAkyrW66zKTlYZCqoKS
+         VJVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776175418; x=1776780218;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wAO2a8iejOd3UMUmzAscWYPPXFzcVg9pYpLVhKBtzBc=;
+        b=LZX21QjlnFpWVErnHRSAY+GBbGSy6pq2cpOUc5RvKR0KUflZZVFo+o8qW0Az1Ab4PD
+         9HxQs94uBfzCZDzqw4j25VLXc9XlDc9U9UGL5tlu+qifsygzyEADr1gUq+QEJDYEJhYm
+         hJKfD12AcegQaI2PhGNwwGCqTAUm/daTN52YZjfRpuCRBQUbiU6Qk0jP3NX0UO5k38hW
+         jOcuqGV9UVKUfW9uRDCL0zXFeZk89Hek45pvd/3sZ3ruRnm4Be3vlyJvIbUogI4ECy0N
+         IULR0+a5BkNFiXTp9UWNSFv715XycApLD0fld34+18O9QHP5jtbHUAg5fCpQp/8cEWtU
+         2enQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9snnVQMNax06y7/S2uuwUUoFGbbPUHgUpYHPSEMJ2huYN9FJAk3go7Stuv0af3u5HuQyhBYXK/LQo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2jAtH/axr0wDfouhY1IWpZiHHq14I2/7EZa0V/BKwyAUrgkHI
+	dGXDKK9I54PvkRgm1NQPt+EP9E7GSQl3266qB2hR/2VYreqzoJ9QRlwI
+X-Gm-Gg: AeBDieu/njqqkTQs9fyByVQV+VDEMFOTE2QMbBb0pu71Gm5grUNxAw7ukAvEnhdDlUW
+	u+WiNbcKFY8AFlpalspS1uM/mQQ6pUYsQ3BMKfLEcIpVI+usQsH41BXDLZI7EeDhdESQ9LrH6eF
+	QTJpAWIO5pHBdBnwOKFtSe85XsX6WlmbY7Wvt7KiGmOE1cuZHxfiUf4SJzFvf6FS3Nl1Mb98413
+	Bfr6aA6fDfras8zTNRl3vWxHmfxmoZ5td40rj9wJ94qqNqQLwhZ0zB3QeKlWX4SgUzX/m34l3fi
+	pBNhmxthBXhIEbMhKYGxss20YBySeKnhT+OSJS7Pct56P+aDoDi54IpjakstvMR0OK1XH8pAZ01
+	rfTXPYbowZl97aKwXWYSKHSkSJ+XqhsWawJhSgpRDw3Lcp9sk/IK352mxoaKGJ3JeeTdStmxyzh
+	esi1iszw6Q+fRybfBsefEZWbIRtoD+W4P8L/gKqfFF6R0nmtTLGsr4Lm9vl0cqTtE4ZgZjw8tQM
+	veDHgCw+EKTFe9brm27OwvqC+Fg6Ff0JUDuCkUH6bE8L6h2ut7UGYqg1G4=
+X-Received: by 2002:a17:907:1ca5:b0:b9c:b3b5:bbf0 with SMTP id a640c23a62f3a-b9d724995a8mr1009594866b.6.1776175417496;
+        Tue, 14 Apr 2026 07:03:37 -0700 (PDT)
+Received: from ddolgov-thinkpadt14sgen1.rmtde.csb (dslb-084-056-106-044.084.056.pools.vodafone-ip.de. [84.56.106.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9d6dffcd7bsm384122866b.27.2026.04.14.07.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2026 07:03:36 -0700 (PDT)
+Date: Tue, 14 Apr 2026 16:03:32 +0200
+From: Dmitry Dolgov <9erthalion6@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: WANG Rui <r@hev.cc>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, loongarch@lists.linux.dev, 
+	Haiyong Sun <sunhaiyong@loongson.cn>
+Subject: Re: [PATCH] perf build: Add clang and rust target flags for loongarch
+Message-ID: <63jg2bzhv3udm6meehux5ssxcd5gfdksamuzhjw6cnxptztbph@wtwbe56az2vi>
+References: <20260414080500.320095-1-r@hev.cc>
+ <CANiq72=c2wniA2piByZNUVzSUA2YPhRPKBq7e_bBP-69Lo+wCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260330094845.39-1-lisa@bytefly.space> <CAAhV-H6Ur5RFRkhX8PGp2gfJuFBptnr9V_UuLGueqF1Uzj-GTA@mail.gmail.com>
- <CAAhV-H68O-Wz-HAma1SpPzbhcp7BQ-1UspaLSPMr4EqGODrhvQ@mail.gmail.com>
-In-Reply-To: <CAAhV-H68O-Wz-HAma1SpPzbhcp7BQ-1UspaLSPMr4EqGODrhvQ@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Apr 2026 21:02:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4NnPTX+ov7NhwiTo7bqCBgFv-RvsodsZ_cc==N0Sd7UA@mail.gmail.com>
-X-Gm-Features: AQROBzDr5Y6mV-w1AlzgpRhNJFL84mEEY5BS6HeG8SIhgAT17GHgHp1Ia3Fv5cM
-Message-ID: <CAAhV-H4NnPTX+ov7NhwiTo7bqCBgFv-RvsodsZ_cc==N0Sd7UA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Align FPU register state to 32 bytes
-To: Lisa Robinson <lisa@bytefly.space>
-Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72=c2wniA2piByZNUVzSUA2YPhRPKBq7e_bBP-69Lo+wCw@mail.gmail.com>
 
-On Tue, Apr 14, 2026 at 4:20=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> On Sat, Apr 11, 2026 at 9:10=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
-> >
-> > Applied, thanks.
-> I'm sorry, I reverted this patch because it breaks the partial copy
-> optimization in arch_dup_task_struct().
-Fixed as this:
-https://github.com/chenhuacai/linux/commit/c1365bc97d609438809d5d44d338adfc=
-09767d6f
+> On Tue, Apr 14, 2026 at 12:03:31PM +0200, Miguel Ojeda wrote:
+> 
+> FWIW, sounds good. I guess the commit that added the list should have
+> had it to begin with? Cc Dmitrii.
 
-Huacai
+Yep, it should have -- as far as I can tell perf supports loongarch in
+all the other ways. Unfortunately I based my patch on
+CLANG_TARGET_FLAGS, which turned out to be missing this arch as well.
 
->
-> Huacai
->
-> >
-> > Huacai
-> >
-> > On Mon, Mar 30, 2026 at 5:49=E2=80=AFPM Lisa Robinson <lisa@bytefly.spa=
-ce> wrote:
-> > >
-> > > Move fpr to the beginning of struct loongarch_fpu so it is naturally
-> > > aligned to FPU_ALIGN (32 bytes), improving 256-bit SIMD (LASX) contex=
-t
-> > > switch performance.
-> > >
-> > > Signed-off-by: Lisa Robinson <lisa@bytefly.space>
-> > > ---
-> > >  arch/loongarch/include/asm/processor.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/loongarch/include/asm/processor.h b/arch/loongarch/=
-include/asm/processor.h
-> > > index c3bc44b5f5b3..ce8b953f8c79 100644
-> > > --- a/arch/loongarch/include/asm/processor.h
-> > > +++ b/arch/loongarch/include/asm/processor.h
-> > > @@ -80,10 +80,10 @@ BUILD_FPR_ACCESS(32)
-> > >  BUILD_FPR_ACCESS(64)
-> > >
-> > >  struct loongarch_fpu {
-> > > +       union fpureg    fpr[NUM_FPU_REGS];
-> > >         uint64_t        fcc;    /* 8x8 */
-> > >         uint32_t        fcsr;
-> > >         uint32_t        ftop;
-> > > -       union fpureg    fpr[NUM_FPU_REGS];
-> > >  };
-> > >
-> > >  struct loongarch_lbt {
-> > > --
-> > > 2.53.0
-> > >
+Acked-by: Dmitrii Dolgov <9erthalion6@gmail.com>
