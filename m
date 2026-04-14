@@ -1,90 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5023B365A03
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 07:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2443B36E47F
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 07:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776150752; cv=none; b=c9GKs+1rGDs4z/e1HQciIUH74h2Z1zk/uV6339jO99mwYgLS5pw8TBqtTv4tV4A7m2xHtU1NFq9vm7hsKm5DzK9bUoy2PBYKl9A0v0iNL/X1SGOcn26ggethSCdybPg2Yj/2rVweZaaHw9xcf47Na1p9EFX7RgKkyW2XS+uh9ek=
+	t=1776151399; cv=none; b=Nw8Crf0rxHuesVwBYq9JFAeDoKqsJaBGhHG49EHXqY+TWT1CPg2V58LMVUNLZRq/byCADduMc+ezOBfs9qi+/bM8CNsE6oLh3N+7CS0tTo56a+22ibx0geDKqUbdmG3E4h31uam4HfPFx1qqUuWXdnTad8h3J2MRB3KUwLdweYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776150752; c=relaxed/simple;
-	bh=7e7/qkPenvrl5SHxOd+nOJ9XiE9voHDzEHIXRcpng7k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G4UyhAJ/N2TX8ads4emEmcIsANJAclKlLOhncJPQu5PRGD7cvZXcjBU7Cs5biJquHLdbFnuCXIMwjyHoW3dDNZs9e3ChdHKp9PO9QwsK5u0sJCI8y+a7NWO3aLNZ8eaTwt6EXKIV8GM9FYK0nzBHyTghnASkJfS0Fj6NaUChYPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sd0tPW9l; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sd0tPW9l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFDB1C2BCC7
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 07:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776150751;
-	bh=7e7/qkPenvrl5SHxOd+nOJ9XiE9voHDzEHIXRcpng7k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sd0tPW9l6YabFbRlpxUZx3Q7m4Pxs6dDcdW5xSVHS32VURvRXcJAZqTeIUTFwwxHI
-	 ZjqQJfLQZeDlJYmfK6GeKqauGc8bP3lT7cmULhuxkWgIfi75W+OIxRIx6+cATeRwfd
-	 4iQAXrbBzy+4vITL8/WSG+mqU8X2jThnffSrQ4I4WJfqsZVTbR3kbRjjjIJqELPd0R
-	 q98oLT1JkXo4rOqs1cJXddXQqr8oCYMLn3Wsiz5pNVKjbiDGQdGFXgeWrspXBwEE6l
-	 /GKKb4gmPadPEN9HVKvygLK3ZLVOOjkelv6iyw3NNOptVBl0/z6KHb8W75xVFoKRkS
-	 1Jv12dDXOCxtw==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b9c745e18a0so710532566b.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 00:12:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/GA+F5Ah/A94M3Vs0QeO1PPV7JlDdM5BEdjIDF3zDZQE1mFtrM6K3jryxj2pK/p14g9BOKHHxNMMw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx2HViEWfzyykfhxOmeOhdj4mWQKnM0zF8j/cVJ7GwQSjgOSi3h
-	9xCmuBb3S87V931dDUTTKTw+AcR8TsoHtGKh8Zs25rIwVycDG+KynLL9gLqeTDGgBNCsIqE7SmL
-	PSBFl4713Y1kfBsLmPqpHpgP4Ux3du2E=
-X-Received: by 2002:a17:907:fdcb:b0:b9c:11ee:3c2f with SMTP id
- a640c23a62f3a-b9d4600c3e6mr1019204066b.1.1776150750183; Tue, 14 Apr 2026
- 00:12:30 -0700 (PDT)
+	s=arc-20240116; t=1776151399; c=relaxed/simple;
+	bh=6OwoWi3A8k3b/KkbcUtNnpH2rSGHe5KH+JPXTIUafSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MyKIt72NXw36ainP5xrwdpx0/21u5Rfqi6g0N0MLAOPpq4LcacUJrWUhBwq8IEJLgy/LGgfMZn5n7BKdV0Q36nqsSmox/KkLLARL/qMaifSixFrdJ3FcYdXaocMm5oMPWiCWqBZyGK3vbV5zcqc6O/xKSfhrQR/zx7Dl6nbnKZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Bxb+tk691p7WkAAA--.1986S3;
+	Tue, 14 Apr 2026 15:23:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxfcJi691pErxsAA--.8539S2;
+	Tue, 14 Apr 2026 15:23:15 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] LoongArch: KVM: Small enhancement about timer
+Date: Tue, 14 Apr 2026 15:23:10 +0800
+Message-Id: <20260414072313.3801110-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260414005152.10550-1-r@hev.cc>
-In-Reply-To: <20260414005152.10550-1-r@hev.cc>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Apr 2026 15:12:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6fo4WzpNPckOK28PXFPzuhMbteCXCFS3dZ0JoO4kBg_g@mail.gmail.com>
-X-Gm-Features: AQROBzDCkDOhGwZDCutYcSxP-6C7pt5y-8aREcpE04Ti_HC1hFjxRTk35DOgh40
-Message-ID: <CAAhV-H6fo4WzpNPckOK28PXFPzuhMbteCXCFS3dZ0JoO4kBg_g@mail.gmail.com>
-Subject: Re: [PATCH] perf loongarch: Fix build failure with CONFIG_LIBDW_DWARF_UNWIND
-To: WANG Rui <r@hev.cc>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxfcJi691pErxsAA--.8539S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, Apr 14, 2026 at 8:52=E2=80=AFAM WANG Rui <r@hev.cc> wrote:
->
-> Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
-> enabled because unwind-libdw.o is still referenced in
-> arch/loongarch/util/Build.
->
-> Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
-> Signed-off-by: WANG Rui <r@hev.cc>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+By running LTP stress test cases on VM, there is an RCU timeout issue on
+some vCPUs recently. The problem is that there is HW timer interrupt lost
+issue when injecting SIP0/IPI interrupt from KVM hypervisor, this problem
+is hidden because the KVM hypervisor will inject spurious timer interrupt
+if emulated timer is expired. In late the spurious timer interrupt is
+clear if old TI bit of ESTAT register is not set, so there will be RCU
+timeout issue with LTP stress test.
 
-> ---
->  tools/perf/arch/loongarch/util/Build | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loong=
-arch/util/Build
-> index 3ad73d0289f3..8d91e78d31c9 100644
-> --- a/tools/perf/arch/loongarch/util/Build
-> +++ b/tools/perf/arch/loongarch/util/Build
-> @@ -1,4 +1,3 @@
->  perf-util-y +=3D header.o
->
->  perf-util-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
-> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> --
-> 2.53.0
->
->
+This patch set fixes the HW timer interrupt lost issue, also this patch
+moves unconditional delay in timer interrupt clear scenery, which happens
+seldomly; mostly the timer interrupt bit is set when it expires.
+
+Bibo Mao (3):
+  LoongArch: KVM: Move AVEC interrupt injection in switch loop
+  LoongArch: KVM: Fix HW timer interrupt lost when inject interrupt from
+    software
+  LoongArch: KVM: Move unconditional delay in timer clear scenery
+
+ arch/loongarch/kvm/interrupt.c | 37 +++++++++++++++++++++++++---------
+ arch/loongarch/kvm/timer.c     | 16 +++++++++++++--
+ 2 files changed, 41 insertions(+), 12 deletions(-)
+
+
+base-commit: d568788baab24875604c231f723dbb72387fb081
+-- 
+2.39.3
+
