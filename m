@@ -1,32 +1,31 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C52DA285066
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 01:42:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28BA12E612E
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 01:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776130970; cv=none; b=TLo5deJboqDnuoTUiOuOQCDuCfnqlWFCRYnHAQQeuks9ZiNlj6YZs4PvRg5kx5qpfjvdxxw0UfQpjE48Y3/G2S0GQxuztCeSHWDt1sLubLGrLMq8Zpaxx1ooDdo+PItKlys8KyUBVndAyVIVp8E+liqSqO/8Q1nBkp5d9FAGhqY=
+	t=1776131611; cv=none; b=SoM/5ErO7i/4EdMEA8jjAHH7aLk7mbDdE0opHKkq413knI02MBHvNUEGSCxwArPw75iWc/Db1Oz39ZaNJpICTXygrSf8cddLHV3pFO26xv9qzCDquGZUr0g/X6ycUvGcPSE8XM3D/Zam3+OYSEYCxpOClsaSocISCeeaC8CkjoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776130970; c=relaxed/simple;
-	bh=jtyLwFa+aMGqPO8L2J32ipne6EHTcsYWvXSSkOgcV7E=;
+	s=arc-20240116; t=1776131611; c=relaxed/simple;
+	bh=zp5z0MM84fEKdhf7zjmzZEP0DI3jUfbshHlO29hr1hY=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WkPGWbi3YAgvQrxz4JwbLga4uK+bXamjRy4+5akkD1txNiHq7HR3PZsSiIo5ZftiFqyhqyiBSFhQUGRUw5xnumwkXVpy7dFXijZOP41mTOpMFifYwTcg9F6J8q2grO3a98DA+7mmmu8ZgUHqJdsF+bScmCJqITiSRZeRe92E2aw=
+	 In-Reply-To:Content-Type; b=AXHW8KJO6M3A5i9lg896TAoG32C7SS1FXR+tX06Y2GPLL6n2vTWbK0tdjjVQ+PxctjeY+ureg4+RfLN/IZQVShRksBwZ4IiTx41M98mQ74UnqxsNX/PO8emJKfdMydwvsGM8LdgJvEazUurcq5Uc4EvlbTf/aRMS0eEZBya3U3U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxhumUm91pmloAAA--.1786S3;
-	Tue, 14 Apr 2026 09:42:44 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxAusVnt1p_loAAA--.1877S3;
+	Tue, 14 Apr 2026 09:53:25 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAxXcKRm91p6IxsAA--.7315S3;
-	Tue, 14 Apr 2026 09:42:43 +0800 (CST)
-Subject: Re: [PATCH] LoongArch/KVM: Fix missing EMULATE_FAIL in ldptr default
- case of kvm_emu_mmio_read
+	by front1 (Coremail) with SMTP id qMiowJCx_8ISnt1pYI5sAA--.10083S3;
+	Tue, 14 Apr 2026 09:53:25 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Fix data race in kvm_ipi_regs_access
 To: cuitao <cuitao@kylinos.cn>, zhaotianrui@loongson.cn,
  chenhuacai@kernel.org, loongarch@lists.linux.dev
 Cc: kernel@xen0n.name
-References: <20260414013114.306033-1-cuitao@kylinos.cn>
+References: <20260414013316.306075-1-cuitao@kylinos.cn>
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <9c1462c5-85ff-4de3-bee4-d394ffdfb63f@loongson.cn>
-Date: Tue, 14 Apr 2026 09:39:52 +0800
+Message-ID: <ce3d170a-56a4-9343-49fa-2d8b3cbc9ebe@loongson.cn>
+Date: Tue, 14 Apr 2026 09:50:33 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -35,59 +34,80 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260414013114.306033-1-cuitao@kylinos.cn>
+In-Reply-To: <20260414013316.306075-1-cuitao@kylinos.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxXcKRm91p6IxsAA--.7315S3
+X-CM-TRANSID:qMiowJCx_8ISnt1pYI5sAA--.10083S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XFyktFW7WFWDKFy5Kw4Dtrc_yoWDuFXEgr
-	y7trWUWrWrJ3yUJ3WvgF45Wwn3Kw4UJFs5ZryDCr1rWrykA398WrZYg3Z5ur1DKrZ7GF4F
-	vrZYq3Z8CwnF9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUU
-	U
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur1UKr1xKF4DGFWDAw18Zwc_yoW8CrWDpF
+	y2kan3uryrXr48ZrnxWw1UZFZF93s2qryjga97JFyrAF1Yvr9YkFWFkrZxZa1UXw1fZrs3
+	Xa1qyF98Z3yDu3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g43UU
+	UUU==
 
-On 2026/4/14 上午9:31, cuitao wrote:
-> In the ldptr (0x24...0x27) opcode decoding path, the default case
-> only breaks out without setting ret to EMULATE_FAIL. This leaves
-> run->mmio.len uninitialized (stale from a previous MMIO operation)
-> while ret remains EMULATE_DO_MMIO, causing the code to proceed with
-> an incorrect MMIO length.
-> 
-> Add ret = EMULATE_FAIL to match the other default branches in the
-> same function (e.g. the 0x28...0x2e and 0x38 cases).
+
+
+On 2026/4/14 上午9:33, cuitao wrote:
+> Add spin_lock protection around ipi_state field accesses in
+> kvm_ipi_regs_access(). get_user/put_user are performed
+> outside the lock since they may sleep on page faults.
 > 
 > Signed-off-by: cuitao <cuitao@kylinos.cn>
 > ---
->   arch/loongarch/kvm/exit.c | 1 +
->   1 file changed, 1 insertion(+)
+>   arch/loongarch/kvm/intc/ipi.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index da0ad89f2eb7..3b95cd0f989b 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -390,6 +390,7 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
->   			run->mmio.len = 8;
->   			break;
->   		default:
-> +			ret = EMULATE_FAIL;
->   			break;
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+> index 1f6ebbd0af5c..e6a4a461a0c8 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -348,18 +348,26 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
+>   		if (len == 4) {
+>   			if (get_user(val, (uint32_t __user *)attr->addr))
+>   				return -EFAULT;
+> +			spin_lock(&vcpu->arch.ipi_state.lock);
+>   			*(uint32_t *)p = (uint32_t)val;
+> +			spin_unlock(&vcpu->arch.ipi_state.lock);
+>   		} else if (len == 8) {
+>   			if (get_user(val, (uint64_t __user *)attr->addr))
+>   				return -EFAULT;
+> +			spin_lock(&vcpu->arch.ipi_state.lock);
+>   			*(uint64_t *)p = val;
+> +			spin_unlock(&vcpu->arch.ipi_state.lock);
 >   		}
->   		break;
+>   	} else {
+>   		if (len == 4) {
+> +			spin_lock(&vcpu->arch.ipi_state.lock);
+>   			val = *(uint32_t *)p;
+> +			spin_unlock(&vcpu->arch.ipi_state.lock);
+>   			return put_user(val, (uint32_t __user *)attr->addr);
+>   		} else if (len == 8) {
+> +			spin_lock(&vcpu->arch.ipi_state.lock);
+>   			val = *(uint64_t *)p;
+> +			spin_unlock(&vcpu->arch.ipi_state.lock);
+>   			return put_user(val, (uint64_t __user *)attr->addr);
+>   		}
+>   	}
 > 
-Good catch, thanks for doing this.
+I am not sure whether spinlock need be added here. When get/set ipi 
+register of vCPU from VMM side, the vCPU should be kicked out at safe 
+state by VMM; Otherwise even if lock is added, VMM will get one register 
+at a time and vCPU may write these registers at the same time, part of 
+registers acquired by VMM still are stale.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+Regards
+Bibo Mao
 
