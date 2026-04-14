@@ -1,160 +1,107 @@
-Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC703191BA;
-	Mon, 13 Apr 2026 19:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD7A23C4F2
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 00:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776108701; cv=none; b=Wwv7ysAI3pZa7lDmJhUWwipeGdvAQG/VIJHrVKio0YixISKcp4kFNSwJuI+cF04dMmLnjN1bNEPjAkhySfUuWAhcnMaTFdQW1GsQGiGI9UDDxNJUYgMSU4d/m+xnPPgy4QL812kozcop5wedzTQxfknEW7TYLwA7uUfBdYGk1b0=
+	t=1776127960; cv=none; b=JN+BsxJ9zsjDJzMxbWceipaGnEnBsL3sWOQIZtzhVRSvxlEeGMttHz+cPGZ/Iy/zntDOObxCv7M9ByZJ5dArYk3rjt/QJkYM5BLKMXnsZLrLptZJysVBNOSFmQsR4/rZ6IaauGSfBHCM3KgmZDvt/FDYEv61GduSRsCuUn7Ywl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776108701; c=relaxed/simple;
-	bh=WrrLF4ZuZDSSPdaipSZzrKXRH2qtrS74BAAAonCIRps=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=n7g1Yx5W6plpXKy+rkozQ6xEgTTaO1xCblNw3ix8fDOKnFfVL16O7SZh497soJj3f4zqp/zSWU+KxfR5iG2eT19N4YiEsFirX1mWgV9neXuPLaq+B1XzLfWKQzwRina3cMiqA4CdgmYDmme3QAv4sOaeHSA6ZSdvV11+Z0V8qUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eBEb3+z4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fK2XbJ97; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1776127960; c=relaxed/simple;
+	bh=QWpq9riX/z5vABZSqFL2iQ5ORl/fWBZU5VsGZXFuyZ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q07azdFEZs/4s7F1xkaWTqW6zdfUGBd0+0Q+bqGJmN+kQlXp6TToNacBgYGOWxbwXWrujwaVHeWZD0IWkmQTczGugwMKjHEeT/EA4uDNN5YY+3piQNsLPEcx7GsK32lCVR8paANkRN1FWUYyL92qGjxEBAAXGCdovfPF+id9/AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=LzRPOmaZ; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eBEb3+z4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fK2XbJ97"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.phl.internal (Postfix) with ESMTP id 9BAA81380415;
-	Mon, 13 Apr 2026 15:31:38 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Mon, 13 Apr 2026 15:31:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1776108698;
-	 x=1776115898; bh=oF7+4SGRAImH9WMGSId2dJm+4RdrBt2YGrt25aFUZUA=; b=
-	eBEb3+z4uCJ5XpVJfmMDtd+Hz4pTmn4rIKoszU8vf+435LUmCEc3EJdi4K0/oVv8
-	C+yjXVYuraejFdA/rcQOSN6Zfi5pNlS43GslApllsudgHnK44npvkIwaUHWVTtuh
-	Dw/4I/j/UNeqyr1LQlKmH5vdXZciz/2GPqFtFHFDNoaInKEsvm7hwh9DYdVnGoah
-	lMAIbVhEjH95sryDmrUzci3AfaiCDHHYDZH3oXJ/R4+VlvsfKJPopXWx0JE7CxaE
-	ognvTjwa06PAMT31z/DBGKMGBcoGUsjb6Y3k+6cm618rMbyQ7yCpT6T6pE5XH3Hf
-	w2SGXNdq7Abx7TrcOF+CrA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1776108698; x=
-	1776115898; bh=oF7+4SGRAImH9WMGSId2dJm+4RdrBt2YGrt25aFUZUA=; b=f
-	K2XbJ97Y0jsbU1s6LswXOEcaT2AuIJQsZKTCiqB2bsDjsavXFxXjXN24HUjqmHPV
-	30lUfZzPVJ0GZrRSLZsyTrPlhAwj+oOp7rzHIcW4Q+ggBxcGWjNT+roTWJQkS80p
-	muhmPfZao8pyrAslQS6xE9YgbnnrpBmxpEViK0VuBn5kyHZfCSLFSApLiy8hZEkj
-	X3o7U4xt3roWjYEf/0QsKGiNqeP3myXk/e3+BEa4KYIE59wmYsrhudiDwV46CB5d
-	E8K4OFv0fHuOdK14nnUUxfff3rCPKj8vJw3X7p6M4i0BpN1E8RSwySIEaUf5sCqK
-	alHtK1Rc5jgsKIF8k3s0A==
-X-ME-Sender: <xms:l0TdaRMQ1ovC5UjXw9wB_riUJbJZBZQ47VcEC4ozPMlWVwTWyL-hPg>
-    <xme:l0Tdaey9qAPkMkkSsq5ZowyLiVSaVZg3Aabqq1QUbhdAX-Y8VC29U600TE9HTIGWj
-    W-h6ka_l-N0bKYGG_W-3bzXlHGY0ZcjcSbZR_zuoL-6Ds0X7Q55CQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdefledtkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpedvhfdvkeeuudevfffftefgvdevfedvleehvddvgeejvdefhedtgeegveehfeeljeen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeegkedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepthdrshgrihhlvghrsegrlhhumhhnihdrvghthhiirdgthhdprhgtph
-    htthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohep
-    lhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmse
-    gurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepmhhpvgesvghllhgvrhhmrghnrdhi
-    ugdrrghupdhrtghpthhtoheprhihrggsihhnihhnrdgrrdgrsehgmhgrihhlrdgtohhmpd
-    hrtghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvlhhl
-    vghrsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehgohhnughorhdrrghprg
-    hnrgdrohhrghdrrghu
-X-ME-Proxy: <xmx:l0TdaTelOssYXt15-FK9p6saYLM_nmrvIO6c-_F3ZyF6_xfZywmCYA>
-    <xmx:l0TdaUxOkh6ozfKMIVT4v_qdW_i5Tss0CLMqkf2F01TBmahdCnZo_w>
-    <xmx:l0TdaUWn-LdWx2_7oUHRu6zzNshE3wCLw-aFKzbUUXN26D6Q-_6vLw>
-    <xmx:l0TdacTwYVtUWJnf_Fdh14nt-sYvlNq7AaQbOTvOw2Uu221fQyzEjQ>
-    <xmx:mkTdaTH5uGiAlbaAI17-uSN6CKxYeQsdeWCm3ruscf_j0l2LK_Chakad>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 04818700069; Mon, 13 Apr 2026 15:31:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="LzRPOmaZ"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso3631132a91.0
+        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 17:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1776127959; x=1776732759; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
+        b=LzRPOmaZnyLTWxbQyc05U1WhkP+wTgDdYV0yv74QfOwek86Uz1FYb2DTs4Kuwd0AX8
+         3C20mBEoW/24+lYj+jghdlYl9Jg3hDNPBaXmnQVccbyXoRCozAdjX4O4Ed2AQWZcPB1H
+         Di6r+eymFSV/ffkESTr+LsZZZZnCN9OE3/3Py2bK1chwjWjw86kjVPnLY5THy+kZ3DIT
+         wuONZy/C0di3hZ2Hub1ysppfgvvFx6QjWKGrNTYK8rJHZg/iCc+Hk4kUvPNiueX/9VF8
+         6MzT4NxHSIAJY3d7IbMgNKUAiR9RVOVAy3B8YfHPHRUTFLKluCgesyr8BLsbAfC3Rg7e
+         gt7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776127959; x=1776732759;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
+        b=U+00oUfKeYabhRw4OMnNtvFq5ki/Dhy8FMXfh8yGm98eOdxV4b2t9HrmR7pbiFVttW
+         tLhDaf/EQs7wcHmxehYj/9nr1/igb/NuQicBUnl2OTfct+H4Xa7QDMC8mCH5KHWDYvz5
+         emx3JyYYOyQVIZo8FT0fVMt4JflwXklXe3DQKjOsyN9Yq85wIrYrK/yr/K4zRnp8+tJP
+         3FBw/pA7KjX4X00w6XPyaIvuHpBUCenY6I/NDyuTDXYjUi7AWIbb2O8ekJbOX65wXC+x
+         kSqbA1QcCpNb+Ue9uYuYGioJZcqcRs+zeoWBWKZfMOdZLJtL3rJiX0YQNdCq8JV2YYgo
+         NrTA==
+X-Forwarded-Encrypted: i=1; AFNElJ/WnAxru7mGTLi3w8E0ZxNKPefSYQ2DFZgu0C60rAodfqye0VDF1y80iLJGncMmzGYOKXBll7bLtUc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxG9T02YKB3nOq+Mdt7J3WUpevDP0g5wdLt6MuMtbDDObdDs4J4
+	J+oeeuVZRHacqa+7B9VLivKMUan0ZYBobDywRQO8UdvbjSIUXnHCbVXOBKMJu41LTjU=
+X-Gm-Gg: AeBDies7lBczf0yCs4fTsfhxVvTC9fvL9lRI5M2vanvC801VnXcIfX+86O4vPOETvkD
+	23XvUQBApYDSw1cPpTeGU3vUyobHEwUxAfZpbQkKxMOLD/cR7uz+3WyoEAJPDweJK1vFKP2Iq5q
+	eFKsl54mKT9qp0vbMdb7OMFSbuMEVLyYR354w4J/VRcI3K7O7pp0dQwZNNHEVsG3lMtSFWbl34k
+	trzqM14zs9cc90CThCH06O3cL56wR4PuIdF2EmkSpWsrzAnWoWQ5KEmyink1TXSX28M0xAMqCVT
+	m8WKEv/GSbY85QmwFcoBG94YkkQe/E0LH9s8EEu+fBk3XBhxFrMMEd3sqBGd8h4ZWBb6igjbuKg
+	eeKBh/H55DrAbIwIfBem7RX8tR8KbjJbc14golZKNWpQo1DayWdLX5hH8MuSPriT+QM2utNpimt
+	5/obqBjra5i94=
+X-Received: by 2002:a17:90b:2dc8:b0:35c:a8f:5c5f with SMTP id 98e67ed59e1d1-35e427708acmr16148191a91.8.1776127958859;
+        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
+Received: from gpc ([2400:8902:e002:dea1:c507:1213:2c85:ae99])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e41bba7bfsm5906431a91.0.2026.04.13.17.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	WANG Rui <r@hev.cc>
+Subject: [PATCH] perf loongarch: Fix build failure with CONFIG_LIBDW_DWARF_UNWIND
+Date: Tue, 14 Apr 2026 08:51:52 +0800
+Message-ID: <20260414005152.10550-1-r@hev.cc>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AMdy4yCH1GcR
-Date: Mon, 13 Apr 2026 21:30:11 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "David Woodhouse" <dwmw2@infradead.org>,
- "Thomas Gleixner" <tglx@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org, "Baolu Lu" <baolu.lu@linux.intel.com>,
- iommu@lists.linux.dev, "Michael Grzeschik" <m.grzeschik@pengutronix.de>,
- Netdev <netdev@vger.kernel.org>, linux-wireless@vger.kernel.org,
- "Herbert Xu" <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, linux-mm@kvack.org,
- "Bernie Thompson" <bernie@plugable.com>, linux-fbdev@vger.kernel.org,
- "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
- "Marco Elver" <elver@google.com>, "Dmitry Vyukov" <dvyukov@google.com>,
- kasan-dev@googlegroups.com, "Andrey Ryabinin" <ryabinin.a.a@gmail.com>,
- "Thomas Sailer" <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
- "Jason A . Donenfeld" <Jason@zx2c4.com>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- linux-alpha@vger.kernel.org, "Russell King" <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- linux-m68k@lists.linux-m68k.org, "Dinh Nguyen" <dinguyen@kernel.org>,
- "Jonas Bonn" <jonas@southpole.se>,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- "Helge Deller" <deller@gmx.de>, linux-parisc@vger.kernel.org,
- "Michael Ellerman" <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- "Paul Walmsley" <pjw@kernel.org>, linux-riscv@lists.infradead.org,
- "Heiko Carstens" <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
- "David S . Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Message-Id: <07df88e5-208d-4aac-9668-a3b0c65ae529@app.fastmail.com>
-In-Reply-To: <7a48b636cb3146f4f7134c6d4fe42070ac2edb43.camel@infradead.org>
-References: <20260410120044.031381086@kernel.org>
- <20260410120318.592237447@kernel.org>
- <7a48b636cb3146f4f7134c6d4fe42070ac2edb43.camel@infradead.org>
-Subject: Re: [patch 15/38] ptp: ptp_vmclock: Replace get_cycles() usage
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 13, 2026, at 17:33, David Woodhouse wrote:
-> On Fri, 2026-04-10 at 14:19 +0200, Thomas Gleixner wrote:
->
-> ... depend on TSC_RELIABLE=C2=B9, since if the guest doesn't believe t=
-hat it
-> is, then the guest shouldn't be trying to use it as the basis for
-> precise timing.
->
-> =C2=B9 (Or... one of the other zoo of TSC flags for the gradually redu=
-cing
-> brokenness over the years...)
+Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
+enabled because unwind-libdw.o is still referenced in
+arch/loongarch/util/Build.
 
-It looks like this is sufficiently handled in the caller:
+Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
+Signed-off-by: WANG Rui <r@hev.cc>
+---
+ tools/perf/arch/loongarch/util/Build | 1 -
+ 1 file changed, 1 deletion(-)
 
-static int vmclock_get_crosststamp(struct vmclock_state *st,
-                                   struct ptp_system_timestamp *sts,
-                                   struct system_counterval_t *system_co=
-unter,
-                                   struct timespec64 *tspec)
-{
-....
-#ifdef CONFIG_X86
-        /*
-         * We'd expect the hypervisor to know this and to report the clo=
-ck
-         * status as VMCLOCK_STATUS_UNRELIABLE. But be paranoid.
-         */
-        if (check_tsc_unstable())
-                return -EINVAL;
-#endif
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+index 3ad73d0289f3..8d91e78d31c9 100644
+--- a/tools/perf/arch/loongarch/util/Build
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -1,4 +1,3 @@
+ perf-util-y += header.o
+ 
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+-perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+-- 
+2.53.0
 
-With 486 and ELAN out of the way, Winchip6 seems to be the only
-one without X86_FEATURE_TSC, so I think the next logical step would
-be to turn off Winchip6 as well and remove all X86_FEATURE_TSC
-and CONFIG_X86_TSC checks.
-
-      Arnd
