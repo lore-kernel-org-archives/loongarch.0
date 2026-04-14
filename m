@@ -1,113 +1,69 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28BA12E612E
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 01:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3062469D
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 02:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776131611; cv=none; b=SoM/5ErO7i/4EdMEA8jjAHH7aLk7mbDdE0opHKkq413knI02MBHvNUEGSCxwArPw75iWc/Db1Oz39ZaNJpICTXygrSf8cddLHV3pFO26xv9qzCDquGZUr0g/X6ycUvGcPSE8XM3D/Zam3+OYSEYCxpOClsaSocISCeeaC8CkjoU=
+	t=1776134088; cv=none; b=JRrvrt8SKLJrcoWp+3gRQOzHO2wSOU8IWM2ZoiNzCzHZRsPsk11qnezoCth8kgB12WJO/sr2r4zuerH+60AiIQXeOKjZDo9LYnd8SYEhNpnEkNP8NDxePb5zKGlsscafzSnBGomsVQ/CiQoqoiGoGjx980UY56F6oOn6znSlbcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776131611; c=relaxed/simple;
-	bh=zp5z0MM84fEKdhf7zjmzZEP0DI3jUfbshHlO29hr1hY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=AXHW8KJO6M3A5i9lg896TAoG32C7SS1FXR+tX06Y2GPLL6n2vTWbK0tdjjVQ+PxctjeY+ureg4+RfLN/IZQVShRksBwZ4IiTx41M98mQ74UnqxsNX/PO8emJKfdMydwvsGM8LdgJvEazUurcq5Uc4EvlbTf/aRMS0eEZBya3U3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxAusVnt1p_loAAA--.1877S3;
-	Tue, 14 Apr 2026 09:53:25 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx_8ISnt1pYI5sAA--.10083S3;
-	Tue, 14 Apr 2026 09:53:25 +0800 (CST)
+	s=arc-20240116; t=1776134088; c=relaxed/simple;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CfZ26uRQr6htKwspWfryltfafE8Fw3BhOsuSGEfx/hpx1MiTzPyhmYfLr7bkzQZXR125nsBxmHCAClC8dH3CW7iMM3QAUnb2dcncBakGuvZ9+bkzo3CRaDXn1jSQnJM19Ut6pJE0oZNYz66RuTWmtWtg5G0im6RE6GzoGhVkZt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7c5bb89a37aa11f1aa26b74ffac11d73-20260414
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
+	ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:c0ebd4ad-1839-4c32-bc1f-9bdb333d4f4a,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:15
+X-CID-INFO: VERSION:1.3.12,REQID:c0ebd4ad-1839-4c32-bc1f-9bdb333d4f4a,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:15
+X-CID-META: VersionHash:e7bac3a,CLOUDID:f42b4b9bb229a046d379f9c9bf983c44,BulkI
+	D:2604141034401UO5DLWB,BulkQuantity:0,Recheck:0,SF:17|19|66|78|81|82|83|10
+	2|127|817|898,TC:nil,Content:-10|-8|-5|14|50,EDM:-3,IP:-2,URL:0,File:nil,R
+	T:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DK
+	P:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 7c5bb89a37aa11f1aa26b74ffac11d73-20260414
+X-User: cuitao@kylinos.cn
+Received: from ctao-book.. [(183.242.174.21)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1313930159; Tue, 14 Apr 2026 10:34:39 +0800
+From: cuitao <cuitao@kylinos.cn>
+To: maobibo@loongson.cn
+Cc: chenhuacai@kernel.org,
+	cuitao@kylinos.cn,
+	kernel@xen0n.name,
+	loongarch@lists.linux.dev,
+	zhaotianrui@loongson.cn
 Subject: Re: [PATCH] LoongArch: KVM: Fix data race in kvm_ipi_regs_access
-To: cuitao <cuitao@kylinos.cn>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-Cc: kernel@xen0n.name
-References: <20260414013316.306075-1-cuitao@kylinos.cn>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <ce3d170a-56a4-9343-49fa-2d8b3cbc9ebe@loongson.cn>
-Date: Tue, 14 Apr 2026 09:50:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Date: Tue, 14 Apr 2026 10:34:22 +0800
+Message-ID: <20260414023422.308022-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ce3d170a-56a4-9343-49fa-2d8b3cbc9ebe@loongson.cn>
+References: <ce3d170a-56a4-9343-49fa-2d8b3cbc9ebe@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260414013316.306075-1-cuitao@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx_8ISnt1pYI5sAA--.10083S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur1UKr1xKF4DGFWDAw18Zwc_yoW8CrWDpF
-	y2kan3uryrXr48ZrnxWw1UZFZF93s2qryjga97JFyrAF1Yvr9YkFWFkrZxZa1UXw1fZrs3
-	Xa1qyF98Z3yDu3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU82g43UU
-	UUU==
-
-
-
-On 2026/4/14 上午9:33, cuitao wrote:
-> Add spin_lock protection around ipi_state field accesses in
-> kvm_ipi_regs_access(). get_user/put_user are performed
-> outside the lock since they may sleep on page faults.
-> 
-> Signed-off-by: cuitao <cuitao@kylinos.cn>
-> ---
->   arch/loongarch/kvm/intc/ipi.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-> index 1f6ebbd0af5c..e6a4a461a0c8 100644
-> --- a/arch/loongarch/kvm/intc/ipi.c
-> +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -348,18 +348,26 @@ static int kvm_ipi_regs_access(struct kvm_device *dev,
->   		if (len == 4) {
->   			if (get_user(val, (uint32_t __user *)attr->addr))
->   				return -EFAULT;
-> +			spin_lock(&vcpu->arch.ipi_state.lock);
->   			*(uint32_t *)p = (uint32_t)val;
-> +			spin_unlock(&vcpu->arch.ipi_state.lock);
->   		} else if (len == 8) {
->   			if (get_user(val, (uint64_t __user *)attr->addr))
->   				return -EFAULT;
-> +			spin_lock(&vcpu->arch.ipi_state.lock);
->   			*(uint64_t *)p = val;
-> +			spin_unlock(&vcpu->arch.ipi_state.lock);
->   		}
->   	} else {
->   		if (len == 4) {
-> +			spin_lock(&vcpu->arch.ipi_state.lock);
->   			val = *(uint32_t *)p;
-> +			spin_unlock(&vcpu->arch.ipi_state.lock);
->   			return put_user(val, (uint32_t __user *)attr->addr);
->   		} else if (len == 8) {
-> +			spin_lock(&vcpu->arch.ipi_state.lock);
->   			val = *(uint64_t *)p;
-> +			spin_unlock(&vcpu->arch.ipi_state.lock);
->   			return put_user(val, (uint64_t __user *)attr->addr);
->   		}
->   	}
-> 
-I am not sure whether spinlock need be added here. When get/set ipi 
-register of vCPU from VMM side, the vCPU should be kicked out at safe 
-state by VMM; Otherwise even if lock is added, VMM will get one register 
-at a time and vCPU may write these registers at the same time, part of 
-registers acquired by VMM still are stale.
-
-Regards
-Bibo Mao
 
