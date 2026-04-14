@@ -1,103 +1,117 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D861237D13E
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 07:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D4838BF68
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 08:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776151404; cv=none; b=USPuSkjDPnVZPwsowU8Tvap+CuCVI3CZSfCVkLPrBxY8YYqpo3OviP7PXFNTOe4oFGrM0yvTLeY7Ire4dZikuv4eDQfF8tWljDnOjjVcdzinlTWGmEv8CuL6CpXIJvFf2rlmLNggcrB04EBzPXEhGARorIDnNNf5c+QUIqweFLI=
+	t=1776153886; cv=none; b=u+zt1S2QXjnX8b6E9noI/yAfziQON7xTZ0AHR89S9M1BcTtAx2/Tno5Vc1dO8tgHC6mDHxfT8XSLOx8levEU7FlsIOXwtu7ZVkPnWrArZvZTCBRK8aTaRsCD4r4Ihgyak9IWFCfz6OV1paRnQSIhUrIHEOKrsITI1UxUUocSxhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776151404; c=relaxed/simple;
-	bh=Z+bwjUhmShsgv2GqX9EsdR4Sma3va+gfYpHzP5mkAU4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rrrcYNitoELLdAUhzD5I0c1d0qcI9G30+7knYNHt9gL60iEBHXXL8wZSyTP50Fmv4bIv5pnisCPlTuL+HsIJ+IemcVGfpzi18C6l1B+uWKWWLqTFJGfEv+dCABrlFguMbH0TVxY4vWqYY/wtDwXdAKGHjaCtq42kE2R4a1e5MsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxoOpn691p_mkAAA--.2057S3;
-	Tue, 14 Apr 2026 15:23:19 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxfcJi691pErxsAA--.8539S5;
-	Tue, 14 Apr 2026 15:23:19 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
+	s=arc-20240116; t=1776153886; c=relaxed/simple;
+	bh=Ec6D8ghiJod3XJD1Pjf1H4xYLvALUzxMeT73/KuO6I8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ipAjprL6wwGJICUzVJbr3yS3ENDr9zKZ3u8+UlPfzSgkFVikLiiBf3zfbbtSxxbUifhIgeavAlUo66zgkrMEI7e5AAV7pxq9jsFVej7XyaxFlAGn7KwoxCj8Bx5+mKsnY0XTIJV/kMSzivXbUoCmyM1SPVSzifYwVUkP/l0Rc38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=pqfcGQe9; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="pqfcGQe9"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-358d80f60ccso3494051a91.3
+        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 01:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1776153884; x=1776758684; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cv7zAPMflcyGHNeP1lrJ+83AUW2Bg3mHm0koPEfVDwQ=;
+        b=pqfcGQe93zAPW5gWh4Vozv0ZeP4JAFYHC9wXdggY+WfNzXg7OH+KpkrDACUGotulKH
+         cB+LK1fklO5oGHbrs1FMun+whN6Lx3a3QluuCgOYC9OdPbwQ0NGXx0jeTPcYRYXtj0hu
+         vJ/opTs4c4vwOLDBbUilyyXeAdvLfFIAzYUeJZi4aHwppxLZwrGvVC09GmdUNC6j+Kub
+         opA3Uykiev2BQ9yixI8hZu8OScBW446/+NyZashuNp/lEfr2VcRE19oT6fWtEifWMf0t
+         vxfiydU0VExjiWGd69dbN2DX2aOAfS36oE5AobWhTV93HRPt+JR0utXr6xcs9mqWSz3b
+         d6VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776153884; x=1776758684;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cv7zAPMflcyGHNeP1lrJ+83AUW2Bg3mHm0koPEfVDwQ=;
+        b=TMriFPkhm4/1xOS2UpEF57e+k4sbct15pTiCgseHvHauHcqIwQI6qcV/P4Zq/3cQet
+         +7EKCbQoGJ8236OEhzCgduC9cB7LDgenOK0D9Y5GC9YAZ3qzbw0u7LGA7U1yXsfqmpYD
+         XIp894iEoSFkXLRUJT53pWx5te5IVNWlFXzwvnPxx2AB7Ig6pJ3k5+3J1CnZYqnisCbW
+         iFJ2zNSKWPUQR24Z9i7EjWkqOtBjjjV1M5vBbq5GhZyYXaStkL1+6BJryGv3TAljarjx
+         V+N4LgHKbifrkImEALL8g9obGQOtLxPoAvJM4vihyxJspVZ2t3s3EVWRLMDjC/wqJDOz
+         W6mw==
+X-Forwarded-Encrypted: i=1; AFNElJ9ux6UOA0K5M+jk8uQIuk0C6roES+aFUUw54xjbQ2TwkIv56f2PxQy+pXqys7gNRIQbH5YTMPIHDio=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw2fIn5C9WKsPq65kuhGI5Lh2wVLndLUONrMD6hH4373qr2MR1E
+	HgtbU0LB+f82P6PbPcQ62zxQ3+zf/kiYWBwx611ARXg71vNsvpmMPKjF93RhNxVZ10E=
+X-Gm-Gg: AeBDievFlCOywHgHTdyyhLw2cufKbN7EU7GLdyfU2UiCDRgRuCODnGKXmihylgetGTB
+	NzcR1NTDecQ8DhhgRMX5l/j2cJargWPxeRiZ9EEiuE5hVgpLLPhhzVtsPddZh490UJLJQrpEGkw
+	A5qjYAvX2Z6Xxy+RbxaX+BKKkdpYyCiDmgHdhD9ox4h4YjBL3fb2DeyU0Bo+BAf7gFM9s66nO05
+	EfVHD/9vl2T8/4XCdhDW69PI59bAK+2+JU0jJ5gKIk73SrDx0HWMBPFLzGt9oxpyPNmC6gRlie8
+	hzdr4GDvqC/jKCc5SWFW5u/JwWW/xI91dc8vKyAlpiWdYqsN0MLNwJ4xK6bsctj+gtkZ+Aw34Xk
+	f3HaEgCcR5sZW3Phzul0Xn8Lk2K1lo+KpFQZxlHgzi7RT2XnF9GVdWtdZRtwaFANvnpLCjpD+qM
+	BSGIw8YaquQA==
+X-Received: by 2002:a17:902:7607:b0:2b2:49a7:a5ca with SMTP id d9443c01a7336-2b2d59411admr109194875ad.5.1776153884528;
+        Tue, 14 Apr 2026 01:04:44 -0700 (PDT)
+Received: from xpc ([2400:8902:e002:de21:a5e:ca8a:49d9:fb8a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2d4e04e20sm136683025ad.32.2026.04.14.01.04.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2026 01:04:43 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] LoongArch: KVM: Move unconditional delay in timer clear scenery
-Date: Tue, 14 Apr 2026 15:23:13 +0800
-Message-Id: <20260414072313.3801110-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260414072313.3801110-1-maobibo@loongson.cn>
-References: <20260414072313.3801110-1-maobibo@loongson.cn>
+	Haiyong Sun <sunhaiyong@loongson.cn>,
+	WANG Rui <r@hev.cc>
+Subject: [PATCH] perf loongarch: Fix discarded-qualifiers warning in _get_field()
+Date: Tue, 14 Apr 2026 16:04:24 +0800
+Message-ID: <20260414080424.320060-1-r@hev.cc>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxfcJi691pErxsAA--.8539S5
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When timer interrupt arrives in guest kernel, guest kernel clears
-the timer interrupt and program timer with the next incoming event.
+From: Haiyong Sun <sunhaiyong@loongson.cn>
 
-During this stage, timer tick is -1 and timer interrupt status is
-disabled in ESTAT register. KVM hypervisor need write zero with timer
-tick register and wait timer interrupt injection from HW side, and
-then clear timer interrupt.
+arch/loongarch/util/header.c: In function ‘_get_field’:
+arch/loongarch/util/header.c:31:15: warning: assignment discards ‘const’
+qualifier from pointer target type
+arch/loongarch/util/header.c:36:12: warning: assignment discards ‘const’
+qualifier from pointer target type
 
-So there is 2 cycle delay in KVM hypervisor to emulate such scenery,
-and the delay is unnecessary if there is no need to clear timer
-interrupt.
-
-Here move 2 timer cycle delay in timer clear scenery and add timer
-estat checking after delay, and set max timer expire value if timer
-interrupt does not arrive still.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Haiyong Sun <sunhaiyong@loongson.cn>
+Signed-off-by: WANG Rui <r@hev.cc>
 ---
- arch/loongarch/kvm/timer.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ tools/perf/arch/loongarch/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/kvm/timer.c b/arch/loongarch/kvm/timer.c
-index 29c2aaba63c3..c83f72a7c746 100644
---- a/arch/loongarch/kvm/timer.c
-+++ b/arch/loongarch/kvm/timer.c
-@@ -96,15 +96,27 @@ void kvm_restore_timer(struct kvm_vcpu *vcpu)
- 		 * and set CSR TVAL with -1
- 		 */
- 		write_gcsr_timertick(0);
--		__delay(2); /* Wait cycles until timer interrupt injected */
+diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arch/loongarch/util/header.c
+index 0c6d82333..46f53a74f 100644
+--- a/tools/perf/arch/loongarch/util/header.c
++++ b/tools/perf/arch/loongarch/util/header.c
+@@ -26,7 +26,7 @@
  
- 		/*
- 		 * Writing CSR_TINTCLR_TI to LOONGARCH_CSR_TINTCLR will clear
- 		 * timer interrupt, and CSR TVAL keeps unchanged with -1, it
- 		 * avoids spurious timer interrupt
- 		 */
--		if (!(estat & CPU_TIMER))
-+		if (!(estat & CPU_TIMER)) {
-+			__delay(2); /* Wait cycles until timer interrupt injected */
-+
-+			/*
-+			 * Fail to restore timer with timer tick == -1 and
-+			 * timer interrupt disabled.
-+			 *
-+			 * Write timer tick with max value, timer will go
-+			 * down from max tick value
-+			 */
-+			estat = kvm_read_hw_gcsr(LOONGARCH_CSR_ESTAT);
-+			if (!(estat & CPU_TIMER))
-+				write_gcsr_timertick(CSR_TCFG_VAL);
- 			gcsr_write(CSR_TINTCLR_TI, LOONGARCH_CSR_TINTCLR);
-+		}
- 		return;
- 	}
+ static char *_get_field(const char *line)
+ {
+-	char *line2, *nl;
++	const char *line2, *nl;
  
+ 	line2 = strrchr(line, ' ');
+ 	if (!line2)
 -- 
-2.39.3
+2.53.0
 
