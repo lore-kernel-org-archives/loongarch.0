@@ -1,87 +1,99 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CECAB42AA6
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 06:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58B22472B6;
+	Tue, 14 Apr 2026 06:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776148507; cv=none; b=iY/QRiAy9TKvCfcsEousg3ZZHcfjhIPiaySgVERQ/rssyZn8Aq0UfhC0MpXtoMV7L4q/Z5JcWjmjYpla/ye/3q+pXmUiJnkHtwAgTAj7/ACIuwH7m7R1NxpSCXL5sAUkk3jS8CkBWjYunaXFl/uKTpu0zBM6/sCn7fqZVc/tpw8=
+	t=1776149232; cv=none; b=XSFcEr+rUrwKAmY3z9HLichO91uM6oWFNJ3M9iv66/XFlmo8WxyiD7vd5/3RpQK25R0c0C5ZV681OzlwFT0Nc38MYrHmsQlKRJkJWhrNAaueGWfEDYiTAqspHRuJjD1i3dXowOrWkxhbf+LHtvHEyXOSUfUYl5HXDviSuhEGOII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776148507; c=relaxed/simple;
-	bh=5Upy9Isyn7Z0Ptc1XbzgaDsNctpVc//8+xCHjTF6cAA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U/9a3wEGbswfgzMUPK+9vuhHeFnAK0fobpgI06QUpl2j0zEuV69R0BiuW0j0BU5UmF1WEEC2GtewQPiax89OB4Tox3TWDd9RsptLcKylLQ9Hvk/fZzVOqjoX+8NGGkzYjumDI8IYfCm6a2yGQo4M+Db7xSDVM0aQq+sIMDiyKV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.8])
-	by gateway (Coremail) with SMTP id _____8AxI_AY4N1pXmcAAA--.1966S3;
-	Tue, 14 Apr 2026 14:35:04 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.8])
-	by front1 (Coremail) with SMTP id qMiowJBxiuAT4N1p5rNsAA--.49024S2;
-	Tue, 14 Apr 2026 14:35:03 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH] LoongArch: Make arch_irq_work_has_interrupt() true only if IPI HW exist
-Date: Tue, 14 Apr 2026 14:34:50 +0800
-Message-ID: <20260414063450.102805-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1776149232; c=relaxed/simple;
+	bh=N5DCDhmnbzPdPldZuGutjm0yIfpUxBb3KiiBiuLAWyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7V5aM03rfzDt/POnLS2Uyhu2S/Lb6mWGhTbaYQhw5LmqD2aMHmdvGvmxQHUne4/Ee2xZ8+0pW67O6CFxRgTchO7eYFi6DpSqydo4QoONEo8BpYDHzdKOSEIPc3xX7GlwbsA7qXFIdiocjuHlh5razCpUPDR4hS+D4gTmctOnhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IvPjg6JQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IvPjg6JQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC99EC19425;
+	Tue, 14 Apr 2026 06:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776149232;
+	bh=N5DCDhmnbzPdPldZuGutjm0yIfpUxBb3KiiBiuLAWyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IvPjg6JQHGgkdYUHXWuyEjkOSLMevEcaZ9MP3w+fOmrxofb+yokOH0eeU8tfOe122
+	 RHT7mNTAX+OhENJ+6/4RnAespbRO1gtTYTG1LATu3uTp3WfFD3SKq06WlDcvR8WdjW
+	 sU+eBkPhM0w8R8YmZs0g23pdGrcQqXU3w+vHGWecVKVwzdiIGhDhyd+bd+JGdV1KS1
+	 V914boZZj7OuRaYMNAQv+pACoyVUMgIS1P58mWPzkntufTW7KjyY5JxuvQOXQHEseZ
+	 Qe4IWHMHFX6Eq7pVh9GbjME2D595hUKBxORaHzl4VGYAVKatzzIhgzcnHn0koyyaGT
+	 dMB+6EQNX3kSA==
+Date: Mon, 13 Apr 2026 23:47:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: hev <r@hev.cc>
+Cc: jiny L <leeavianna3@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH] perf loongarch: Fix build failure with
+ CONFIG_LIBDW_DWARF_UNWIND
+Message-ID: <ad3i7q62HSEYT1up@google.com>
+References: <20260414005152.10550-1-r@hev.cc>
+ <CANVb8WZXZj1Yqd7foqHBLSHjO73r0Kg62bMbrb--aE8wR3G2hg@mail.gmail.com>
+ <CAHirt9jA3G5kRjJbmosttEDkvZhKfx3U6oa63JZOnpEx4Cqb2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxiuAT4N1p5rNsAA--.49024S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Gr1DAr4DZF4xCr4fJrW7Jrc_yoWDWrb_ua
-	s7Xw48Ww4kXrW3Jw1Iqas5JasrCa1rGFn0kr1vqa17AFy5tr13X3yDZw1kZryYk3ykur4f
-	Ca9FgrZ3CrnFkosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8QJ57UUUUU==
+In-Reply-To: <CAHirt9jA3G5kRjJbmosttEDkvZhKfx3U6oa63JZOnpEx4Cqb2g@mail.gmail.com>
 
-After commit 7c405fb3279b3924 ("rcu: Use an intermediate irq_work to
-start process_srcu()"), Loongson-2K0300/2K0500 fail to boot. Because
-IRQ_WORK need IPI but Loongson-2K0300/2K0500 don't have IPI HW.
+On Tue, Apr 14, 2026 at 09:18:18AM +0800, hev wrote:
+> On Tue, Apr 14, 2026 at 9:13 AM jiny L <leeavianna3@gmail.com> wrote:
+> >
+> >
+> >
+> > On Mon, Apr 13, 2026 at 5:52 PM WANG Rui <r@hev.cc> wrote:
+> >>
+> >> Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
+> >> enabled because unwind-libdw.o is still referenced in
+> >> arch/loongarch/util/Build.
+> >>
+> >> Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
+> >> Signed-off-by: WANG Rui <r@hev.cc>
+> >> ---
+> >>  tools/perf/arch/loongarch/util/Build | 1 -
+> >>  1 file changed, 1 deletion(-)
+> >>
+> >> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+> >> index 3ad73d0289f3..8d91e78d31c9 100644
+> >> --- a/tools/perf/arch/loongarch/util/Build
+> >> +++ b/tools/perf/arch/loongarch/util/Build
+> >> @@ -1,4 +1,3 @@
+> >>  perf-util-y += header.o
+> >>
+> >>  perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+> >> -perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> >> --
+> >> 2.53.0
+> >>
+> >>
+> >
+> > I happened to have the same build issue on linux 7.0 and I found there is already a patch fixing this  https://lore.kernel.org/lkml/20260413024805.1316480-3-irogers@google.com/
+> 
+> Thanks for the reference.
+> Rui
 
-So make arch_irq_work_has_interrupt() return true only if IPI HW exist.
+As the Ian's series is still under review, I'd pick this one instead.
 
-Reported-by: Binbin Zhou <zhoubinbin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/irq_work.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/loongarch/include/asm/irq_work.h b/arch/loongarch/include/asm/irq_work.h
-index d63076e9160d..63aee0335d1a 100644
---- a/arch/loongarch/include/asm/irq_work.h
-+++ b/arch/loongarch/include/asm/irq_work.h
-@@ -4,7 +4,7 @@
- 
- static inline bool arch_irq_work_has_interrupt(void)
- {
--	return IS_ENABLED(CONFIG_SMP);
-+	return IS_ENABLED(CONFIG_SMP) && cpu_opt(LOONGARCH_CPU_CSRIPI);
- }
- 
- #endif /* _ASM_LOONGARCH_IRQ_WORK_H */
--- 
-2.52.0
+Thanks,
+Namhyung
 
