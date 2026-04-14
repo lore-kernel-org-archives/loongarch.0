@@ -1,107 +1,240 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD7A23C4F2
-	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 00:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9FF23909C
+	for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 00:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776127960; cv=none; b=JN+BsxJ9zsjDJzMxbWceipaGnEnBsL3sWOQIZtzhVRSvxlEeGMttHz+cPGZ/Iy/zntDOObxCv7M9ByZJ5dArYk3rjt/QJkYM5BLKMXnsZLrLptZJysVBNOSFmQsR4/rZ6IaauGSfBHCM3KgmZDvt/FDYEv61GduSRsCuUn7Ywl8=
+	t=1776128367; cv=none; b=AqfJU/dp/KQr4kAA/bzvVRmLFbzrjmEuakPQ9RZ2a836JMmiVYMO/9KwNMYosSr28F0IsDm3CtirdhQ/+ImZQ1Ix4mChzbsin/f7fCmn35viDiHNgbQwz+dNck0dA/kNARu41stnwfz77Qge75hTxyKkns8QR0hKveRkNcFsj78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776127960; c=relaxed/simple;
-	bh=QWpq9riX/z5vABZSqFL2iQ5ORl/fWBZU5VsGZXFuyZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q07azdFEZs/4s7F1xkaWTqW6zdfUGBd0+0Q+bqGJmN+kQlXp6TToNacBgYGOWxbwXWrujwaVHeWZD0IWkmQTczGugwMKjHEeT/EA4uDNN5YY+3piQNsLPEcx7GsK32lCVR8paANkRN1FWUYyL92qGjxEBAAXGCdovfPF+id9/AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=LzRPOmaZ; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="LzRPOmaZ"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-35da2d35eccso3631132a91.0
-        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 17:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1776127959; x=1776732759; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
-        b=LzRPOmaZnyLTWxbQyc05U1WhkP+wTgDdYV0yv74QfOwek86Uz1FYb2DTs4Kuwd0AX8
-         3C20mBEoW/24+lYj+jghdlYl9Jg3hDNPBaXmnQVccbyXoRCozAdjX4O4Ed2AQWZcPB1H
-         Di6r+eymFSV/ffkESTr+LsZZZZnCN9OE3/3Py2bK1chwjWjw86kjVPnLY5THy+kZ3DIT
-         wuONZy/C0di3hZ2Hub1ysppfgvvFx6QjWKGrNTYK8rJHZg/iCc+Hk4kUvPNiueX/9VF8
-         6MzT4NxHSIAJY3d7IbMgNKUAiR9RVOVAy3B8YfHPHRUTFLKluCgesyr8BLsbAfC3Rg7e
-         gt7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776127959; x=1776732759;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QCQwPo5vrqxa+fHlqgB+lkktJCKNc/eQZ81js5sS64=;
-        b=U+00oUfKeYabhRw4OMnNtvFq5ki/Dhy8FMXfh8yGm98eOdxV4b2t9HrmR7pbiFVttW
-         tLhDaf/EQs7wcHmxehYj/9nr1/igb/NuQicBUnl2OTfct+H4Xa7QDMC8mCH5KHWDYvz5
-         emx3JyYYOyQVIZo8FT0fVMt4JflwXklXe3DQKjOsyN9Yq85wIrYrK/yr/K4zRnp8+tJP
-         3FBw/pA7KjX4X00w6XPyaIvuHpBUCenY6I/NDyuTDXYjUi7AWIbb2O8ekJbOX65wXC+x
-         kSqbA1QcCpNb+Ue9uYuYGioJZcqcRs+zeoWBWKZfMOdZLJtL3rJiX0YQNdCq8JV2YYgo
-         NrTA==
-X-Forwarded-Encrypted: i=1; AFNElJ/WnAxru7mGTLi3w8E0ZxNKPefSYQ2DFZgu0C60rAodfqye0VDF1y80iLJGncMmzGYOKXBll7bLtUc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxG9T02YKB3nOq+Mdt7J3WUpevDP0g5wdLt6MuMtbDDObdDs4J4
-	J+oeeuVZRHacqa+7B9VLivKMUan0ZYBobDywRQO8UdvbjSIUXnHCbVXOBKMJu41LTjU=
-X-Gm-Gg: AeBDies7lBczf0yCs4fTsfhxVvTC9fvL9lRI5M2vanvC801VnXcIfX+86O4vPOETvkD
-	23XvUQBApYDSw1cPpTeGU3vUyobHEwUxAfZpbQkKxMOLD/cR7uz+3WyoEAJPDweJK1vFKP2Iq5q
-	eFKsl54mKT9qp0vbMdb7OMFSbuMEVLyYR354w4J/VRcI3K7O7pp0dQwZNNHEVsG3lMtSFWbl34k
-	trzqM14zs9cc90CThCH06O3cL56wR4PuIdF2EmkSpWsrzAnWoWQ5KEmyink1TXSX28M0xAMqCVT
-	m8WKEv/GSbY85QmwFcoBG94YkkQe/E0LH9s8EEu+fBk3XBhxFrMMEd3sqBGd8h4ZWBb6igjbuKg
-	eeKBh/H55DrAbIwIfBem7RX8tR8KbjJbc14golZKNWpQo1DayWdLX5hH8MuSPriT+QM2utNpimt
-	5/obqBjra5i94=
-X-Received: by 2002:a17:90b:2dc8:b0:35c:a8f:5c5f with SMTP id 98e67ed59e1d1-35e427708acmr16148191a91.8.1776127958859;
-        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
-Received: from gpc ([2400:8902:e002:dea1:c507:1213:2c85:ae99])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35e41bba7bfsm5906431a91.0.2026.04.13.17.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 17:52:38 -0700 (PDT)
-From: WANG Rui <r@hev.cc>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	WANG Rui <r@hev.cc>
-Subject: [PATCH] perf loongarch: Fix build failure with CONFIG_LIBDW_DWARF_UNWIND
-Date: Tue, 14 Apr 2026 08:51:52 +0800
-Message-ID: <20260414005152.10550-1-r@hev.cc>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1776128367; c=relaxed/simple;
+	bh=Ihx9oGwx/J886HAj3QOwLuigDqYt3I78wkQUSf6TvRo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PVrc0mDqRs5tTheZ+8dmXXLjIQlhQBSCzXhbPLr5I81l+HZK+4+vJXk262ClhVFdwlQEkypyB6pbJpugQLq+xzeteUdntnjRkuTkmSzyDOTwgO1TcUTr1DDLCbn3BiOEBqRegAOH2jVFbL7VbvzbVJSIJ9lbKoCRWkcbU17bsSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.128.176])
+	by gateway (Coremail) with SMTP id _____8DxEvBpkd1pbVYAAA--.1744S3;
+	Tue, 14 Apr 2026 08:59:22 +0800 (CST)
+Received: from mail-yw1-f176.google.com (unknown [209.85.128.176])
+	by front1 (Coremail) with SMTP id qMiowJCxdcBlkd1piYZsAA--.38520S2;
+	Tue, 14 Apr 2026 08:59:18 +0800 (CST)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-79495b1aaa7so51311717b3.1
+        for <loongarch@lists.linux.dev>; Mon, 13 Apr 2026 17:59:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+OAf7e8FO0QBP7WVAv5h+agaLRKGlwJdu3Fe3xAeCQBRU6xeOGd40W8AbmREChw8WCe/3ud3yazkk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz9BGu0E0XWZBUrq/uRGHl2xjmC3luiSrH0SEkDyFkF3O41FiHY
+	XB70EK5hLj09orgVPz1U51NULUMwKE/i3AcGbzM/EXXy4AL6XlFGNN+ucLDZsl5jLYhNHsQHkHz
+	opJni24hwzabUuZhNImJcsPWVDzJgsWDC89E6cIWdOw==
+X-Received: by 2002:a05:690c:389:b0:79e:b3aa:b352 with SMTP id
+ 00721157ae682-7af7108b32emr162464617b3.31.1776128356699; Mon, 13 Apr 2026
+ 17:59:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260413100412.2313688-1-rong.bao@csmantle.top>
+In-Reply-To: <20260413100412.2313688-1-rong.bao@csmantle.top>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Tue, 14 Apr 2026 08:59:04 +0800
+X-Gmail-Original-Message-ID: <CAHirt9g7BncuBWsbBT-DpOVyueCb-ut_xyTCKdw_7sMNVznQ6Q@mail.gmail.com>
+X-Gm-Features: AQROBzCpdm_echH82j4AKS5BRrFrPP1qbcOjqO98FlGPHAR20FWHC3bU1SgK5yM
+Message-ID: <CAHirt9g7BncuBWsbBT-DpOVyueCb-ut_xyTCKdw_7sMNVznQ6Q@mail.gmail.com>
+Subject: Re: [PATCH v2] perf annotate: Use jump__delete when freeing LoongArch jumps
+To: Rong Bao <rong.bao@csmantle.top>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, stable@vger.kernel.org, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:qMiowJCxdcBlkd1piYZsAA--.38520S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKr4UuF4DKF13Aw1rXr4DKFX_yoWxKF48pr
+	Wq9ryUtw1rGF10gwsxJFWI9Fy5Xr4IvFWF9FyftrZFvr13Xrn2qr97CF9I9FsrXF9Iy3W8
+	ZF1vgrs8KFW8J3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Kb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+	GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	kF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWU
+	JVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7BMNUUUUU
 
-Building perf for LoongArch fails when CONFIG_LIBDW_DWARF_UNWIND is
-enabled because unwind-libdw.o is still referenced in
-arch/loongarch/util/Build.
+On Mon, Apr 13, 2026 at 6:11=E2=80=AFPM Rong Bao <rong.bao@csmantle.top> wr=
+ote:
+>
+> Currently, the initialization of loongarch_jump_ops does not contain an
+> assignment to its .free field. This causes disasm_line__free() to fall
+> through to ins_ops__delete() for LoongArch jump instructions.
+>
+> ins_ops__delete() will free ins_operands.source.raw and
+> ins_operands.source.name, and these fields overlaps with
+> ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
+> Since in loongarch_jump__parse(), these two fields are populated by
+> strchr()-ing the same buffer, trying to free them will lead to undefined
+> behavior.
+>
+> This invalid free usually leads to crashes:
+>
+>         Process 1712902 (perf) of user 1000 dumped core.
+>         Stack trace of thread 1712902:
+>         #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
+>         #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
+>         #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
+>         #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
+>         #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
+>         #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
+>         #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/to=
+ols/perf/perf + 0x106764)
+>         #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/lin=
+ux-arch/tools/perf/perf + 0x2afb70)
+>         #8  0x000055555853d618 annotated_source__purge (/home/csmantle/di=
+st/linux-arch/tools/perf/perf + 0x29d618)
+>         #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle=
+/dist/linux-arch/tools/perf/perf + 0x28300c)
+>         #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arc=
+h/tools/perf/perf + 0x286718)
+>         #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/l=
+inux-arch/tools/perf/perf + 0x28ed94)
+>         #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch=
+/tools/perf/perf + 0x7fdd0)
+>         #13 0x000055555839b644 handle_internal_command (/home/csmantle/di=
+st/linux-arch/tools/perf/perf + 0xfb644)
+>         #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools=
+/perf/perf + 0x5e6ac)
+>         #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
+>         #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
+>         #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/too=
+ls/perf/perf + 0x5ed10)
+>         ELF object binary architecture: LoongArch
+>
+> ... and it can be confirmed with Valgrind:
+>
+>         =3D=3D1721834=3D=3D Invalid free() / delete / delete[] / realloc(=
+)
+>         =3D=3D1721834=3D=3D    at 0x4EA9014: free (in /usr/lib/valgrind/v=
+gpreload_memcheck-loongarch64-linux.so)
+>         =3D=3D1721834=3D=3D    by 0x4106287: __zfree (zalloc.c:13)
+>         =3D=3D1721834=3D=3D    by 0x42ADC8F: disasm_line__free (in /home/=
+csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x429B737: annotated_source__purge (in =
+/home/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42811EB: __hist_entry__tui_annotate (=
+in /home/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42848D7: do_annotate (in /home/csmant=
+le/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x428CF33: evsel__hists_browse (in /hom=
+e/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D  Address 0x7d34303 is 35 bytes inside a block=
+ of size 62 alloc'd
+>         =3D=3D1721834=3D=3D    at 0x4EA59B8: malloc (in /usr/lib/valgrind=
+/vgpreload_memcheck-loongarch64-linux.so)
+>         =3D=3D1721834=3D=3D    by 0x6B80B6F: strdup (strdup.c:42)
+>         =3D=3D1721834=3D=3D    by 0x42AD917: disasm_line__new (in /home/c=
+smantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42AE5A3: symbol__disassemble_objdump =
+(in /home/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42AF0A7: symbol__disassemble (in /hom=
+e/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x429B3CF: symbol__annotate (in /home/c=
+smantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x429C233: symbol__annotate2 (in /home/=
+csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42804D3: __hist_entry__tui_annotate (=
+in /home/csmantle/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x42848D7: do_annotate (in /home/csmant=
+le/dist/linux-arch/tools/perf/perf)
+>         =3D=3D1721834=3D=3D    by 0x428CF33: evsel__hists_browse (in /hom=
+e/csmantle/dist/linux-arch/tools/perf/perf)
+>
+> This patch adds the missing free() specialization in loongarch_jump_ops,
+> which prevents disasm_line__free() from invoking the default cleanup
+> function.
+>
+> Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_st=
+art fields out of 'struct ins_operands'")
+> Cc: stable@vger.kernel.org
+> Cc: WANG Rui <wangrui@loongson.cn>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: loongarch@lists.linux.dev
+> Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+> ---
+> v1 -> v2: Correct "Fixes:" tag and move declaration of jump__delete()
+>           per comments.
+>
+> v1: https://lore.kernel.org/lkml/20260412062828.1734637-1-rong.bao@csmant=
+le.top
+>
+>  tools/perf/util/annotate-arch/annotate-loongarch.c | 1 +
+>  tools/perf/util/disasm.c                           | 2 +-
+>  tools/perf/util/disasm.h                           | 2 ++
+>  3 files changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/annotate-arch/annotate-loongarch.c b/tools/p=
+erf/util/annotate-arch/annotate-loongarch.c
+> index 950f34e59e5cd..c2addca77320b 100644
+> --- a/tools/perf/util/annotate-arch/annotate-loongarch.c
+> +++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+> @@ -110,6 +110,7 @@ static int loongarch_jump__parse(const struct arch *a=
+rch, struct ins_operands *o
+>  }
+>
+>  static const struct ins_ops loongarch_jump_ops =3D {
+> +       .free      =3D jump__delete,
+>         .parse     =3D loongarch_jump__parse,
+>         .scnprintf =3D jump__scnprintf,
+>         .is_jump   =3D true,
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 9e0420e14be19..62bd8c3e53051 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *ins, char *bf, =
+size_t size,
+>                          ops->target.offset);
+>  }
+>
+> -static void jump__delete(struct ins_operands *ops __maybe_unused)
+> +void jump__delete(struct ins_operands *ops __maybe_unused)
+>  {
+>         /*
+>          * The ops->jump.raw_comment and ops->jump.raw_func_start belong =
+to the
+> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+> index a6e478caf61a9..25756e3f47e47 100644
+> --- a/tools/perf/util/disasm.h
+> +++ b/tools/perf/util/disasm.h
+> @@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *ins, char *bf, =
+size_t size,
+>  int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
+>                    struct ins_operands *ops, int max_ins_name);
+>
+> +void jump__delete(struct ins_operands *ops);
+> +
+>  int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
+>
+>  char *expand_tabs(char *line, char **storage, size_t *storage_len);
+>
+> base-commit: 028ef9c96e96197026887c0f092424679298aae8
+> --
+> 2.53.0
+>
+>
 
-Fixes: e62fae9d9e8 ("perf unwind-libdw: Fix a cross-arch unwinding bug")
-Signed-off-by: WANG Rui <r@hev.cc>
----
- tools/perf/arch/loongarch/util/Build | 1 -
- 1 file changed, 1 deletion(-)
+Tested-by: WANG Rui <wangrui@loongson.cn>
 
-diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
-index 3ad73d0289f3..8d91e78d31c9 100644
---- a/tools/perf/arch/loongarch/util/Build
-+++ b/tools/perf/arch/loongarch/util/Build
-@@ -1,4 +1,3 @@
- perf-util-y += header.o
- 
- perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
--perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
--- 
-2.53.0
+Thanks,
+Rui
 
