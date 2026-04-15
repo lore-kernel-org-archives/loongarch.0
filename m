@@ -1,94 +1,94 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0559304BB3
-	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 02:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65843126C0
+	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 02:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776219965; cv=pass; b=NT6MFAYb1zq0R44lttdGJO6Qxz7fCclnXsEfwKxv3H0tqeMYdBTA9rcsp+prCI1U5jjPYwHsgAFXqBMaf5L0cyG9aAcHwOuUv7kbdHbMy9HEdGKL1DOqBCnelKF558r85ljuu2CdMSdK3shiez1GlkzZD72ij7wiam6dELZde2M=
+	t=1776220071; cv=pass; b=Qa3TtsePA9hBU05hK7TjYBNDp1Ua4xtPt0bopgbaqS1i/ijK3bwqXyvW6eY1RGgixHlT54XhITTgPjff/pu0GCcvsByMeGz+1s6uLADyzEwDWAx9huBg8UNtgVUGZnIsQmJ9NWNhjWOs6tqf5c9KrLkGm1Wi7Do+/wSbi+E56Mg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776219965; c=relaxed/simple;
-	bh=MRxcm7Tt46pg3Kzyyf0G+uZbnfC1nYlRE224oNDetjQ=;
+	s=arc-20240116; t=1776220071; c=relaxed/simple;
+	bh=Rg3JlwOrlQ5XbvGJDFfZ8rC8vvU78IBNAeleJd26Fm0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H1IEE6x06h7D9Xr6UC1gHkJJJXp7wwWx2Pw/yEnF3950Ezud6qSf6dvIv6TCck7RIcegZxdpsb4roaB1GsXFlIR1lY259n6nFN7IrIDxSDIlgofSEHk1Wxy57E3Kr3KfSN3eZFNAddhJIe2gX/nZBYQwdGC9G4VCybA9oYFAz5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rsueyk95; arc=pass smtp.client-ip=209.85.161.43
+	 To:Cc:Content-Type; b=U6IL+M5fFKjOGOnT/jusZSjORuhMMgXQPLe09w3y3XBVCwwT00sUhZorDSYsHgbJ+iba/z9e1DZEwDWF3vVMLnfidgyxsxPt/Rt2MxY0AVrvmkdGdasmkepwb10r1s38EcqwrZLMy85Z41RSyGgoSBUzMlmDcuNbTo/7Sesy8Iw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hd6mVKvO; arc=pass smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsueyk95"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-685013eb590so3931676eaf.1
-        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 19:26:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776219963; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hd6mVKvO"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-470145d7e6fso2258806b6e.2
+        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 19:27:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776220068; cv=none;
         d=google.com; s=arc-20240605;
-        b=MdI6fH0V6N4fWRXk9jAXhKMftfmIkfMMrqDg1bzk8Bnn6GK88IgAQkn5vHxnp+2kLh
-         Y3ENcb7TEmIfwhsuWaVFQwxTCKW8xdxDpAWc0YO0NCWk84G0U9y1IDwFRb5IWE+9U7TX
-         5GKf9nWhZ+Ag7WbRy5jLhISO8Suuygf1OEJIX0aDzqnszb7k1OF6fBJyaPIpcamHmVML
-         7bMYyBN/LDPnjeMy5OU1Pkbd6Ofw5c8Vy0l+7J2M5BUsE5RF7hfbJFkpu+mUEEJG9yS4
-         zUcEGOjIGqDIhdGu5rOeIpypW/1CWIMhd09TkRzFu7emkIJ0FSScHQTWJdMQBFB37q5k
-         hpog==
+        b=PN0gYneko5lL7+uopnv3Lc3xkjvYfSE9Xy5eMzQdHMPeRIsAqJUw+ZvHvbkZ9shdq4
+         3Us1P0VAoDVxAn7296k2IHi8kTjznQwZTq1vbrbtbKQX7Rl7OjGHR+LLv6zj3qSQuM27
+         DQ1yLaobdb4XKBBHn/As96LqKeXkDh132ThxcJu6JYdI45R9VV7AlFgj4IZYYgEuoAeG
+         W+1gAXckaglx0gQYSxel0SY1lSIqS+0GHWGGcOmCTkqdbbZIWK6FnIGA1dSvcl45ehAt
+         JBtv9sDS7z3PXFm7CE1SxqH/pzWAWHFQQYmDF5FfIsjRGOyOzLEtYcayF0jJbFaRTMaq
+         Yklg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=gp8opaCO4NhzR0MzPaxnczut02ydEKc5TESqHBl8R9A=;
-        fh=JbZ/KZSUBWctt7fRw0K+nFqj7a7//hICYVTuttDjsEU=;
-        b=d+rySu5cQ4fwKmD1BSqcHEMJqf2+oEEhGxBK+SGm4VRAH8mzIplH7FzXBYyWBWud71
-         r2WjNFUtYSAanrJ8xZOkV7pzwWOfnDdsVwmj3nujqqvGcAcqZln21eUq8Y1AEvzdT5PC
-         BKQnJeNecdfucizm5CyC+jUhxbsMePrMtTJu5bXvl87eBRabxPkRi1SqX2siDjF1Cig3
-         R8zxGT9mKAtlfQYXDv6ug1XAxsVhyAH7rYmT356czs4vK7hJESDm8FlbItgAw/U0dQYV
-         9yHTFcNgmPKjsjqCMErExCGGBbKz+83gOu1ZmLODpVh6E9PeQk/8sdL3oMY/pIMGt0Wh
-         p+Yw==;
+        bh=P9QwzqZ+lHxRLuVTrCD+/Bo3+jO92j08BnbVftYHz5s=;
+        fh=Q+5VSsfsVZglqTg3iWDGKaxqTRPb9hYIxke3oP0+rw4=;
+        b=VmzDjMvDwPtZq4GDJ4kwo4g6UddfJHVOWGm84NLURtbJLYqUUzO6eHP09gcu44/FfB
+         K5VXOJq9YJEA0KGHmWmjaJm/fUXZMHnINwznFv5g6YQOEsrzABQz4IpeCDNBOZNRd2a9
+         4L4xenic3EIGMJhPJx9ze7SRfBIGpLL7NBvBPUBjdgHKJOX6nnKnnpRIByHCacJr6shH
+         A3kzM12pRMJ7bHRwrLZWGmkvHRsueT9RbY3BjyuNHaELRzoTZeShAf/jTF7cUTTvYEfY
+         N3GEUGktgiPuS4TqV5/OK8T+m9rXf1urBFockOLS3Erxnm6s1fUcX21pnE9oaZmghlF4
+         kEvw==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776219963; x=1776824763; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1776220068; x=1776824868; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gp8opaCO4NhzR0MzPaxnczut02ydEKc5TESqHBl8R9A=;
-        b=rsueyk95iMEtqgjvE3M2n6lUPqs9mq8tnm5GxE6uTwbsLhotxJ84QbUZNQw2rZ8qQg
-         BDmYZ/zivzZH7qSQdU61bJT0xRl6e+1NlHL+ecO4yb9BIpsq5r+8iYeotkNMaz137nLW
-         KDPXkc4ENmiR+0VgxPh4G1V5uK5p0Fnv79SyLe0qvJJspNTq4JaRQyyTXDP1jb2u6Xsl
-         ASNBwyWQb49EKudD3Kv2pPQUU8ZO49TKcMpHR9PvR5fFJI3DXKVbSSjdlzbAW76s+tyW
-         T5+oYFRmAz3FfbPCLGA2aFyrYp8COYQsEAGMinZ46SUqq9YG13RXRIlrKiLW4aBSNUid
-         hONw==
+        bh=P9QwzqZ+lHxRLuVTrCD+/Bo3+jO92j08BnbVftYHz5s=;
+        b=hd6mVKvOuIzhIiIgkUQ3aJqKQYm1DUph7LvnuISXbT+4F1mecA87tO3CbgxoqWu1X6
+         KXZCvumapFaxr+zn6+MM/UvUPLvgUE0BcCZdzpO7dUh944wveczYWOQMG4c+BWcJ2FoG
+         7yhcZpINIJlIQ4PXinUKTWflL/tyloVG2buKjsCXwH2XcKnzHf3jEYY1Mk3H4elhaQDr
+         uIO7s31QiJ/BdabPtx/NN0IggNaIaoLBvj1mkp8PioGerTEYyEHFRCc9qHIFv/jZThQb
+         1Felkf27pWXyiI69NbDtYOxVtrQdbhwONzRKLnkfNYkJsJVL1NFG8RYJsEJqQHkQraOO
+         AhFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776219963; x=1776824763;
+        d=1e100.net; s=20251104; t=1776220068; x=1776824868;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gp8opaCO4NhzR0MzPaxnczut02ydEKc5TESqHBl8R9A=;
-        b=eDARoY3XqmG9WVO6P6J8+x/GJe1HcjLKDZqnnLLQ+9BTkLjUuHDDRFpamCOWIrry2I
-         9oVbItPyFD4mBJV2YlVqd+90OLh+mJUUyHav19KJEebrpEccyBZJvXTbfg8NFqjOALku
-         o8CBVjKqsTSIszf6mrEfZf4FoB7OxtEIk/oq6F9A3GraCBrr2AstzzW0WmN7Sy6cQIt7
-         Ek5m4VLg135s8E0hBFO/69UEFA2Fb4tYa2MydCrtmjcjWDo/F5n420Q+/dKnxcXd/GQb
-         /yOEeIFftvngnGYbu63i6fbaW5GpWIkw9G3ANr7kimGG9IuA6f7vABPSrwqarSD9sRjR
-         0gcw==
-X-Forwarded-Encrypted: i=1; AFNElJ8+PTp0PPoKKo9MioXwCyfu7U3iWLMkN7DVwC2537dDPiUzgmIUJCd+K0gBjhs9hFi9IEJt0z4dX00=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyXzJsbjGMynSvN3tUKMnToeR5fNGdlNsED+pxGAesLAPJu5Gm2
-	3Lq/wEzafPiBE71T1gv9FqJbk88cW747FqBuRUgN0sRjhXf2dEx8PgGAzvTTpmmuqNQroLgXhLF
-	HX9S11c2VKUfLWw+jTS6oGrX75e9nhmY=
-X-Gm-Gg: AeBDiesUAez0WssA07ejKKMmifbdSfbxaKbx7dN6eNnXv7dduTXpPVouy1KOuInbfyr
-	dUo4f+sje+3/Zy0YleiEv/UYi8x0HthJAPH+v3NDoYLcMSAp8MNLjE2SHH7m63bC5lMFuPBtNDY
-	g1orgMoYFecZHtGIFGvQ2kErNhshfMNRJtNFL4Ozmcw5hITcfsXCjxbGSrprr21QcdQnfRJe8Rq
-	OyTLiGfmFzWJZEJHKgi4axaXxTT13/fsNBVjnjOdp6sluUqUksdmdnNy/RMcK0Q5CsqrlCDxN3i
-	BqUwn3XOlbBJvDq7XQ==
-X-Received: by 2002:a05:6820:4a19:b0:68d:bb0e:9c97 with SMTP id
- 006d021491bc7-68dbb0eababmr6173327eaf.7.1776219962919; Tue, 14 Apr 2026
- 19:26:02 -0700 (PDT)
+        bh=P9QwzqZ+lHxRLuVTrCD+/Bo3+jO92j08BnbVftYHz5s=;
+        b=O5jf4DNxaTsi6nE9CXYFFb9rSgJH80C4BZErTB3KwZ656CWPJ/uuKk9PkuCsjXVXyM
+         gvdOC6Tf1ip0TGWg37Vp2LLXonPQDI7nkemhdjTapdST7aqUy6Se7CkSJ7Hy++12nubU
+         fquPiwDa52sYVrh6PeTSQjjoEUZQmBPeA0A0N3VtxON0y03N/VCI/0KsvpKRUXANHqOs
+         Onz/xQqzD3DZoeQjhjX//5jpa/94WDeq91wWQ1TYUqCbnhXuKEjKrtbc/OBPrRcPqh/L
+         ndS9Up0liOMgzqrqc9G5L+G045NKqUtuc37LawL2maBJcRRQSkmQ/WWN5aJMe6vI+ETB
+         o8aA==
+X-Forwarded-Encrypted: i=1; AFNElJ8LY8MfB7fs8m5QPspvp6zeXKEk2/rtePDpDwAeCHUp04TDLKWNlYB54cqVgm7mpdHced/MOJtSMhM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyW6nb3KaQxKPjb/+75g7f/jTVN+NNCXoee2f1/iDMrgsFyeD8b
+	pBMW5Mvc9ePEo5+AMrQI97fo3o/Ahw4fmKUzjv6M7owxEzH0zTXbpIFOP4MWs4wRrLpGup8EZhq
+	IavhU045Gt8GseMyhqYqfYwhM8l2ZLPM=
+X-Gm-Gg: AeBDievDISCYtTGDI0fjqlw+gkGld/SgNJpFObmRjRRvyOvdWXdOS0KkHcLZQSYypkt
+	XS8DkdJhzfSfACetXhhE3s1/Sc5yNvVCAf2eiJtEiMRkZyk2gJizxDIcTDWSc6gsBO7R+if1zKG
+	RU6OOJcS9wBoQ71eNx33sh76a49GRzz2Q4CJiUWe3eq1Hvmp3E0NCVzC+TX/8aGnIOY4Tna+j3v
+	cWe1s4u8jsgHxIt+KzFGNaI9yRnaJp+ISVtaNRLIy6Olte5q/2jQWyQXv+HeIimWQOCDOwhG8Rh
+	oENZGS/yg8u4sU0NHw==
+X-Received: by 2002:a05:6808:1c0d:b0:46a:6d33:65a8 with SMTP id
+ 5614622812f47-4789fb11b45mr9672786b6e.32.1776220068530; Tue, 14 Apr 2026
+ 19:27:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260413040506.26640-1-yangtiezhu@loongson.cn> <20260413040506.26640-5-yangtiezhu@loongson.cn>
-In-Reply-To: <20260413040506.26640-5-yangtiezhu@loongson.cn>
+References: <20260413040506.26640-1-yangtiezhu@loongson.cn> <20260413040506.26640-6-yangtiezhu@loongson.cn>
+In-Reply-To: <20260413040506.26640-6-yangtiezhu@loongson.cn>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 15 Apr 2026 10:25:50 +0800
-X-Gm-Features: AQROBzAYMUwwbM_D7VxSXaSrDZ-TdfqCtp088Lx3Nk63PjxURNHrlxO41NLFNU4
-Message-ID: <CAEyhmHShzVtNg-ct0PGXGfMuF_4i7-BG-bfXvPrwS1wbCcKmZw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LoongArch: BPF: Support load-acquire and
- store-release instructions
+Date: Wed, 15 Apr 2026 10:27:37 +0800
+X-Gm-Features: AQROBzCWeMr501FjNgFKBxyyGLNQVfp1RmcgcvkIqZvV0x5R_9jReZCjhCbJTzw
+Message-ID: <CAEyhmHSoY9Pd+XMdKCUmv_P9xUm6A9VeY1UnXJNQnGwz8Rhfvw@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] selftests/bpf: Make CAN_USE_LOAD_ACQ_STORE_REL
+ usable for LoongArch
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
@@ -98,11 +98,8 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Apr 13, 2026 at 12:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
 n> wrote:
 >
-> Use the LoongArch common memory access instructions with the barrier dbar
-> to support the BPF load-acquire and store-release instructions.
->
-> With this patch, the following testcases passed on LoongArch if the macro
-> CAN_USE_LOAD_ACQ_STORE_REL is usable in bpf selftests:
+> In order to do the following load-acquire and store-release tests
+> on LoongArch:
 >
 >   sudo ./test_progs -t verifier_load_acquire
 >   sudo ./test_progs -t verifier_store_release
@@ -110,136 +107,56 @@ n> wrote:
 >   sudo ./test_progs -t verifier_precision/bpf_store_release
 >   sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
 >
+> it needs to make CAN_USE_LOAD_ACQ_STORE_REL usable for LoongArch.
+>
+
+rephrase it as enable for LoongArch ?
+
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  arch/loongarch/net/bpf_jit.c | 98 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 97 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index c9a32f124f5e..805f95cbe798 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -344,6 +344,99 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, i=
-nt insn)
->  #undef jmp_offset
->  }
->
-> +static int emit_atomic_ld_st(const struct bpf_insn *insn, struct jit_ctx=
- *ctx)
-> +{
-> +       const u8 t1 =3D LOONGARCH_GPR_T1;
-> +       const u8 src =3D regmap[insn->src_reg];
-> +       const u8 dst =3D regmap[insn->dst_reg];
-> +       const s16 off =3D insn->off;
-> +       const s32 imm =3D insn->imm;
-> +
-> +       switch (imm) {
-> +       /* dst_reg =3D load_acquire(src_reg + off16) */
-> +       case BPF_LOAD_ACQ:
-> +               switch (BPF_SIZE(insn->code)) {
-> +               case BPF_B:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldbu, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxbu, dst, src, t1);
-> +                       }
-> +                       break;
-> +               case BPF_H:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldhu, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxhu, dst, src, t1);
-> +                       }
-> +                       break;
-> +               case BPF_W:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldwu, dst, src, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxwu, dst, src, t1);
-> +                       }
-> +                       break;
-> +               case BPF_DW:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, ldd, dst, src, off);
 
-See commit fe5757553bf9ebe45ae8ecab5922f6937c8d8dfc, need double check here=
-.
+Other than that,
 
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, ldxd, dst, src, t1);
-> +                       }
-> +                       break;
-> +               }
-> +               emit_insn(ctx, dbar, 0b10100);
-> +               break;
-> +       /* store_release(dst_reg + off16, src_reg) */
-> +       case BPF_STORE_REL:
-> +               emit_insn(ctx, dbar, 0b10010);
-> +               switch (BPF_SIZE(insn->code)) {
-> +               case BPF_B:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, stb, src, dst, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, stxb, src, dst, t1);
-> +                       }
-> +                       break;
-> +               case BPF_H:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, sth, src, dst, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, stxh, src, dst, t1);
-> +                       }
-> +                       break;
-> +               case BPF_W:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, stw, src, dst, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, stxw, src, dst, t1);
-> +                       }
-> +                       break;
-> +               case BPF_DW:
-> +                       if (is_signed_imm12(off)) {
-> +                               emit_insn(ctx, std, src, dst, off);
-> +                       } else {
-> +                               move_imm(ctx, t1, off, false);
-> +                               emit_insn(ctx, stxd, src, dst, t1);
-> +                       }
-> +                       break;
-> +               }
-> +               break;
-> +       default:
-> +               pr_err_once("bpf-jit: invalid atomic load/store opcode %0=
-2x\n", imm);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *=
-ctx)
->  {
->         const u8 t1 =3D LOONGARCH_GPR_T1;
-> @@ -1326,7 +1419,10 @@ static int build_insn(const struct bpf_insn *insn,=
- struct jit_ctx *ctx, bool ext
->         case BPF_STX | BPF_ATOMIC | BPF_H:
->         case BPF_STX | BPF_ATOMIC | BPF_W:
->         case BPF_STX | BPF_ATOMIC | BPF_DW:
-> -               ret =3D emit_atomic_rmw(insn, ctx);
-> +               if (bpf_atomic_is_load_store(insn))
-> +                       ret =3D emit_atomic_ld_st(insn, ctx);
-> +               else
-> +                       ret =3D emit_atomic_rmw(insn, ctx);
->                 if (ret)
->                         return ret;
->                 break;
+Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+
+>  tools/testing/selftests/bpf/progs/bpf_misc.h           | 4 ++--
+>  tools/testing/selftests/bpf/progs/verifier_precision.c | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/progs/bpf_misc.h b/tools/testing=
+/selftests/bpf/progs/bpf_misc.h
+> index c9bfbe1bafc1..19f0bf44a9e1 100644
+> --- a/tools/testing/selftests/bpf/progs/bpf_misc.h
+> +++ b/tools/testing/selftests/bpf/progs/bpf_misc.h
+> @@ -257,8 +257,8 @@
+>
+>  #if __clang_major__ >=3D 18 && defined(ENABLE_ATOMICS_TESTS) &&         =
+ \
+>         (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) ||  \
+> -        (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64)) || \
+> -         (defined(__TARGET_ARCH_powerpc))
+> +       (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> +       defined(__TARGET_ARCH_powerpc) || defined(__TARGET_ARCH_loongarch=
+))
+>  #define CAN_USE_LOAD_ACQ_STORE_REL
+>  #endif
+>
+> diff --git a/tools/testing/selftests/bpf/progs/verifier_precision.c b/too=
+ls/testing/selftests/bpf/progs/verifier_precision.c
+> index 4794903aec8e..6f325876efdd 100644
+> --- a/tools/testing/selftests/bpf/progs/verifier_precision.c
+> +++ b/tools/testing/selftests/bpf/progs/verifier_precision.c
+> @@ -75,8 +75,8 @@ __naked int bpf_end_to_be(void)
+>
+>  #if (defined(__TARGET_ARCH_arm64) || defined(__TARGET_ARCH_x86) || \
+>         (defined(__TARGET_ARCH_riscv) && __riscv_xlen =3D=3D 64) || \
+> -       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390)) && \
+> -       __clang_major__ >=3D 18
+> +       defined(__TARGET_ARCH_arm) || defined(__TARGET_ARCH_s390) || \
+> +       defined(__TARGET_ARCH_loongarch)) && __clang_major__ >=3D 18
+>
+>  SEC("?raw_tp")
+>  __success __log_level(2)
 > --
 > 2.42.0
 >
