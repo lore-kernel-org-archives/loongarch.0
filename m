@@ -1,94 +1,94 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7324C2DB78C
-	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 02:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E992DB78C
+	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 02:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.43
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776219883; cv=pass; b=p4ja3jNdQFXsJL4kLXZQjRFoMH9AKF9whcczJI2lPYIa3KmOc+M8em0FPTWxqyeLJumo4xKFl+RtyqcCR58stYfVC8XAT5lTs5l4OjVavp3sKYzDxTWbEHUFpCq143AqE3yVFrQHb3r19cL2nyAnoIeS0ja+elBdtUkwdUGdH8M=
+	t=1776219903; cv=pass; b=k3YAONA3asU/TA0VmMVzH6ERrrk/Rc4nlJJGzh4dS+3wYTbIyx0kNmFhXdVcCfSXxGmKYlYhaonfZrIrKzqsguCDi29/l5i+fDLJOqd0zQ8oBBIbS0BG/+FVNnV/1ygiSrFVCmd1bmumq8Nvohjw6S4JCGVmKM0PvzDM/kxjoGc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776219883; c=relaxed/simple;
-	bh=UWfwp+MsLObrA5DXDZcWrRQds+drx65djGxTh7vqpUg=;
+	s=arc-20240116; t=1776219903; c=relaxed/simple;
+	bh=T5bPmxtrwr5CPFUcZhjltMGhNlJziA7tH+wj1zrYKec=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=guJJjU9LIHtTEC30ovkxe9cyAi12V6u42zhS3nApkII1OCF93j3V+BcYSdqKCCM//cNOYv/3RLxVthWwneL5+YSHbWpSy7xh7EFSpIvSWBoTufQwV2nbW2GzbCfb+8wMKakFPVut0q2bWu/8Jw0rneKEOssGcbrnyTyKlMVgzRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r8SY4Hxm; arc=pass smtp.client-ip=209.85.160.41
+	 To:Cc:Content-Type; b=qLmF8u1AVCIpkuN+f7+vFLz6au9sSoKkEF7Vyg2dxc77BCzlIVpO7IrTMXjP6xJLd1ZafAAnvzNZfWIJd38GFZo2SsWdsalFahgbVuY8ZekGimki4iXesrDh2OpI1Ks+3OpJ7CAoX9gJ+JQQBQ17F6bTufiGmYwG734ugoCVk/k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QtLtb7Rc; arc=pass smtp.client-ip=209.85.160.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r8SY4Hxm"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-41576c5c01cso4781078fac.3
-        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 19:24:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776219881; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtLtb7Rc"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-41576c5c01cso4781278fac.3
+        for <loongarch@lists.linux.dev>; Tue, 14 Apr 2026 19:25:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776219901; cv=none;
         d=google.com; s=arc-20240605;
-        b=WXpgRj3AQWDc1zUmeT5VDnVtMLq2Ds2HYZIGLitXaDBwmSPcPPCNwqNmgx8eo0EKXg
-         XN3pkaZg509CyJP2wnTAw9fq+U4VZNISrK+SOoP6iwYcefJl3B9T8cx/bTt/R/KlYUIc
-         O8n/dRigL0uBiJvdm0L+E/q++JleqituHPttYDrg+ArMCmn/yk/aII6Fwsb67JXwr81J
-         GbsRvX4eWDEvQ8TUxGyY89YORIS64i52/4d2zDM31JDkELjynA7Waw07mkHwqFNFNjJf
-         vgo2yd0Z4wRP2KS9Atu+IMJF3aJJ+Tw/O4m8HbBm7WOf9ey4tU6OxDYZMgXwTwt/Asyv
-         Z2Sg==
+        b=YLqCd3utEiIbzrYb7Cw+TgfP+4RBnwEQiBu2+rqpjIVJV/Fm6Ig3LWCzbj8w3+hpu2
+         2uWXgB05O2MHmCgjP6M5Z2xP3N8VO+V6GE1opuLBM/v+sIxtjN51zTUtpp+Pb6o34BUq
+         rg5o2wZGN7PGHnxWLkdgBpz6WRuIK5JA2b+bZ3V6eMgqsHySXLRlQBYRtOsXwFN3Fr74
+         Bocw9CxkwapkQfAUkIqPnLCVUhiiNcTNSNeC64cB7kHWAW+fAf1GGOhbMBGT6JplB9i5
+         L5nMRjEjXSnU0R+l1HHFoJkTrU7RBq02MwriNWyuKeNdY6Qa2tbQEL/mT1wMW1JI9hcw
+         Rjkw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=IJilSYQVRtHj9Uy3sgn/sow7EaaBHExHVWk6iwVjy0Y=;
-        fh=qCL6wiUnN86As4JiZ2d83oqtrGa6aEpNkMCdgGqARfM=;
-        b=j5qx9sycYDGtWz1YY4xsYmEfxKn1mKNs+96n9vzbXkql50Mk0UZ1wzBABhl4f4tq9y
-         SJ90C7kM2kI/y847aWCqccW7CCZq924d7MuotvXLWUiT84i5xQ//oqMaEkBoFhbxbw67
-         EJVYDLlAXilVQyUH7uP/0U+yWo7UYmAv9HfJ4+DFYdYgsqw7DyEl6fGu0HwqexS4aoFK
-         +DOLrVxDjSWoVAe7byKd0EJhA44PfPl/eUHBp+tzqAEst3tJMlEI5ngZ4evQ3hOKWWw4
-         LT8D+lPv12xhhGMxn0s6M4DSc7mekFNUPchxosL0cjMfSvlXkHRL0EAQgfufrvHZSdzl
-         zw4A==;
+        bh=jttgu4B43bPxLujJofIdsu6iWI/oDg34v0H1xOsCRr4=;
+        fh=gjTgBXSHYF9ZeoTWHasG85LHNGLUPlvxkeu43ops4HU=;
+        b=A9ds+5S55gtX8h23skn45j79mJtnH7KC9GdaERCZpbgKguB5KxQA1AdMl50m+Q9lRl
+         iB4ZTKQOajwyiVf3kZGOM0GFZgrJVQFzTyBBxIJFApNluf7h2bcOkXQ98QgIQWvvyPaJ
+         VdyvTE+MdNIOfJNuPZykb5zR32uAtqPNIaCKRsLPHahlkH9DYfBOuqs+/2kkWLac00aH
+         jDNDnTOyzkWIlNrmHp+GZTz4dDWHDs7ej7GK14HYU46x5HdochCV2Fn+3rZbdfAKu68x
+         LVJoOKJwJ58mvBXoIvyRDDtzxNFp8Gkrb/9z5vNWb8dh2UMGLCODFL42qf7v967c0m1D
+         BqTA==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776219881; x=1776824681; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1776219901; x=1776824701; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IJilSYQVRtHj9Uy3sgn/sow7EaaBHExHVWk6iwVjy0Y=;
-        b=r8SY4HxmGOgJ1nO3iG0FJt8iHNRCefltBX2Bv3YJlg0yuYo01YP6h0WN73nsImOAOC
-         nUxCqw+8TDwtcHazogDbXSBnI+4vgUqirxYuIMtRqnS6CZ2nwSAmT63jK/AeYs91HyXJ
-         q+3MhMb1kLUP5OlS5sB9yGfsb2mZXEv1o7aPz2s9tEm5c4/cXdKEQVaGx3T37ftq/Iu2
-         YIS5X2USbQW5UvXiHli9IflZdsh3WtXNdJj/AXzRgfGVvr0515eQgUET12L0AGX0xDcO
-         /QNEbxvRI16L7kBLBH1S1TGOIj3PLDr2TiuVccc5rOkPpbgrxk8WW5+pjFiMmQZJk0K6
-         GBKQ==
+        bh=jttgu4B43bPxLujJofIdsu6iWI/oDg34v0H1xOsCRr4=;
+        b=QtLtb7RcoTto0P29zDhELj/xXjZVNGUQxeaussUmyNZkeVdwaM0dCGVSqjdVGtzm8Q
+         CP7iWtBPMYCW6zlfglD8JjlyrWb64XvRfDpnLGNKzMaF+q//FdyHUuBhIPnX0YhB8msM
+         CJvx3ou+rbJkw6ohUrSgrOajXd3mcNtnGOwsZs/MiVnf8XntzSzyRuZV8cscrg1NgoCd
+         CHvraoIx0O1vvVfb3b2TsBZxu7Q6DiAu48wTt2pZiRwiSInqprI+0trg60Z0m4Zf8ieb
+         r/30MX+aqg8uVnNoSVUeOs2wJujEXLrXwx0OaM/lPLrg32YKheNdGHPlYGElh44RMlIV
+         vl6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776219881; x=1776824681;
+        d=1e100.net; s=20251104; t=1776219901; x=1776824701;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=IJilSYQVRtHj9Uy3sgn/sow7EaaBHExHVWk6iwVjy0Y=;
-        b=jRhuG4WhW1oQeoah1vUIBdLC6ZXFOpnHIBum/lVTY5KDrPNuAGI4+OWmJUwxNXmzFi
-         8X90kqyuAwALpk+Duffxzn4uF/pHdlPTx/SQWkRIPeg7hnCU0h7PJduBserdSsoFlssD
-         P/YqueOG/+t2QaRDmUWWMYj8VJgeu/VPpgoeFJinI7IMKF0EnyMXzgc+xVc6GBvnI5Sp
-         4hXgNJTfGxGhzawHriP4AFltoeGLlPp5w4rZZ93NmD6ca/zO2CKsNViB3pDbYBT92eW4
-         q4WYvhS1UazvlGC3rGy7n4VKu9Nx45pdYv1tf9Sp+AZ6Lo4+VhLVszTMR0m+JYBaBFgA
-         jI8Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+wHJjil6Egn/eHMW607lxBTbbLAHgReJUZFN86x75PMt0ibXIUPjBS5eYTLJhv9Q66i35RqiNGX+M=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw/KxPHzdQi0Fu2HN/dc801qBH+TDcjlFzJGMrl6Mhr4jO08aMS
-	yGnbRN3gLmd+mxQpNgR8gfZYH58alukjH3MMnaZi0YDoV0H/aA4ax4P4UbmJGjc7kaQRo975ktd
-	uvin8BGP566T8aPq35ue+tsSBb5Gk8g4=
-X-Gm-Gg: AeBDiesh48ApRWkgqVTjPA+iYvEEnaW0FzsNNifo9vtEDyVWwwRpFdyatbcT+DVMatl
-	Kly9C9G+DEjUexj3YSDIW4S+FZ+aQs9d5ZLQ/lZdvutS64fOujGjZEnRR6dWP8WQBW6la9IWeH1
-	9DQLz+48BM6Ml23+TxlJPYPjgJ1ctfBdUO/xgi3PDTWtGLe8NUraH2qP3Rr4ZUrQhUoaFHq2RJR
-	PFC2bUWsNR9NPuBvob2Dx/Np6y67LokkF8KOvcb4m9EGxTA20RxcVD2RoR6uiENNSKofyrHvBVw
-	1mGK4qwqYjfR8VKNQQ==
-X-Received: by 2002:a05:6871:5209:b0:424:6bb7:7c71 with SMTP id
- 586e51a60fabf-4246bb78b0fmr1714256fac.25.1776219881271; Tue, 14 Apr 2026
- 19:24:41 -0700 (PDT)
+        bh=jttgu4B43bPxLujJofIdsu6iWI/oDg34v0H1xOsCRr4=;
+        b=HaBhhRtbtA9acB+WQkgYTw86rWA8YqnwC6tB0zRwMT78IERdQrGXcVFMzk9Qu1XQAe
+         YfDsotQAkGh/TPQS5oNbjdTh8kL61jW0KxwN9y5ZOKHlFoFiYFjNhIDLcbDGcwBWuNgX
+         YfPmt+3j3oZfpFbaaVSL8Jy5+V6vLkG2eS0z6asFwLvwotUaM6/FY/aoMDgb2iPUsaET
+         5ns+UU86Ha7EqN2fZX8xUoyAgkkQ8i1bn2kk2bZaO+pWU8Y39g0ce3pfNpYAG4W7RiOn
+         +u7hg2wOKohWDM/bGlxVs1SOtFJLIrOlcaH5llNLcWaNAmVM64dVhAxdMOdSy4uTz0R0
+         Zmeg==
+X-Forwarded-Encrypted: i=1; AFNElJ9UT53W1ffOrowlx2ipVI47WAlf9xkhOqBaheUrZOuV6ip3XRuBZRpMuIsPFDIXWVmwr6jqNV0Ohvc=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz/VN/Ox4klY5d33RGJ5ZcVRsovpCdR7ChorIMPf1JtjrapoiDI
+	pIBxS2Lzt+V4XOcTjoUBKh1SDtXV8Xq1VIUoJEx4Kq/VFeMWb1c/b4LMf0SDiafQ9LSKvSL08pP
+	PrJ2gykKsp+Wg26sRtVszVX4pvFsX6JLWdJc+4kY=
+X-Gm-Gg: AeBDieuC760f4teXBdr+t2uv0G4YlYpbqucOGqh1v3RKacrFIURV9QJNzqXqFPqZ8va
+	BOi8VeyGmW54lQvDmjYpukv45L5yuinUc81ViRNWosWyXVpNArRFzx/+PCBR8ouvuqYLggvZO9H
+	AdBOId6gvP0C/CAQW/Y61zSUU6TKAXmIhfC81j2p875iYUrJ5S3s8k68JLHDOHojjxmWSU5l3lG
+	Xtgmu3Q56Hs6b2YXk3kv+x0uBvJZDEZ0lDqbwO0LGaDlD1mniwfaA35gtyhY6ziuNy85IMhzsvh
+	yJHk5uraR3OH6XLNkA==
+X-Received: by 2002:a05:6871:2ee7:b0:41c:dd:9e13 with SMTP id
+ 586e51a60fabf-423e11e69d5mr11767935fac.39.1776219900892; Tue, 14 Apr 2026
+ 19:25:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260413040506.26640-1-yangtiezhu@loongson.cn> <20260413040506.26640-2-yangtiezhu@loongson.cn>
-In-Reply-To: <20260413040506.26640-2-yangtiezhu@loongson.cn>
+References: <20260413040506.26640-1-yangtiezhu@loongson.cn> <20260413040506.26640-3-yangtiezhu@loongson.cn>
+In-Reply-To: <20260413040506.26640-3-yangtiezhu@loongson.cn>
 From: Hengqi Chen <hengqi.chen@gmail.com>
-Date: Wed, 15 Apr 2026 10:24:30 +0800
-X-Gm-Features: AQROBzDpJH47XKFw6kmUmaX-OosWEpJHltr2ni0L6hYYkkYko-HDnJrmfTL26CQ
-Message-ID: <CAEyhmHS7xC1=3GrZLqf-u9+2-vg0BNu2hKE+y3bHNUQPD6yvow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] LoongArch: Define instruction formats for
- AM{SWAP/ADD}.{B/H} and DBAR
+Date: Wed, 15 Apr 2026 10:24:50 +0800
+X-Gm-Features: AQROBzApEWzUWVYCnCJW51fFV79nskrsS9_jMRIB5MMaHw0XS7Bobt8tSYuCALc
+Message-ID: <CAEyhmHSAHv5PcW+_FZd5EAivJWE+0nRKN3tAjiK7pS594nu8aA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] LoongArch: BPF: Add the default case in
+ emit_atomic() and rename it
 To: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
@@ -98,157 +98,67 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Apr 13, 2026 at 12:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
 n> wrote:
 >
-> The 8 and 16 bit read-modify-write atomic instructions amadd.{b/h} and
-> amswap.{b/h} were newly added in the latest LoongArch Reference Manual,
-> define the instruction format and check whether support via cpucfg.
+> Like the other archs such as x86 and riscv, add the default case
+> in emit_atomic() to print an error message for the invalid opcode
+> and return -EINVAL , then make its return type as int.
 >
-> Furthermore, define the instruction format for DBAR which will be used
-> to support BPF load-acquire and store-release instructions.
->
-> This is preparation for later patch.
+> While at it, given that all of the instructions in emit_atomic()
+> are only read-modify-write instructions, rename emit_atomic() to
+> emit_atomic_rmw() to make it clear, because there will be a new
+> function emit_atomic_ld_st() for load-acquire and store-release
+> instructions in the later patch.
 >
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
 
 Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
 
->  arch/loongarch/include/asm/cpu-features.h |  1 +
->  arch/loongarch/include/asm/cpu.h          |  2 ++
->  arch/loongarch/include/asm/inst.h         | 10 ++++++++++
->  arch/loongarch/include/uapi/asm/hwcap.h   |  1 +
->  arch/loongarch/kernel/cpu-probe.c         |  4 ++++
->  arch/loongarch/kernel/proc.c              |  2 ++
->  6 files changed, 20 insertions(+)
+>  arch/loongarch/net/bpf_jit.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/loongarch/include/asm/cpu-features.h b/arch/loongarch/i=
-nclude/asm/cpu-features.h
-> index 8eefe7a2098b..f9d3188accfc 100644
-> --- a/arch/loongarch/include/asm/cpu-features.h
-> +++ b/arch/loongarch/include/asm/cpu-features.h
-> @@ -68,5 +68,6 @@
->  #define cpu_has_msgint         cpu_opt(LOONGARCH_CPU_MSGINT)
->  #define cpu_has_avecint                cpu_opt(LOONGARCH_CPU_AVECINT)
->  #define cpu_has_redirectint    cpu_opt(LOONGARCH_CPU_REDIRECTINT)
-> +#define cpu_has_lam_bh         cpu_opt(LOONGARCH_CPU_LAM_BH)
->
->  #endif /* __ASM_CPU_FEATURES_H */
-> diff --git a/arch/loongarch/include/asm/cpu.h b/arch/loongarch/include/as=
-m/cpu.h
-> index 1e60ab264cd0..b423b1f41145 100644
-> --- a/arch/loongarch/include/asm/cpu.h
-> +++ b/arch/loongarch/include/asm/cpu.h
-> @@ -126,6 +126,7 @@ static inline char *id_to_core_name(unsigned int id)
->  #define CPU_FEATURE_MSGINT             30      /* CPU has MSG interrupt =
-*/
->  #define CPU_FEATURE_AVECINT            31      /* CPU has AVEC interrupt=
- */
->  #define CPU_FEATURE_REDIRECTINT                32      /* CPU has interr=
-upt remapping */
-> +#define CPU_FEATURE_LAM_BH             33      /* CPU has AM{SWAP/ADD}[_=
-DB].{B/H} instructions */
->
->  #define LOONGARCH_CPU_CPUCFG           BIT_ULL(CPU_FEATURE_CPUCFG)
->  #define LOONGARCH_CPU_LAM              BIT_ULL(CPU_FEATURE_LAM)
-> @@ -160,5 +161,6 @@ static inline char *id_to_core_name(unsigned int id)
->  #define LOONGARCH_CPU_MSGINT           BIT_ULL(CPU_FEATURE_MSGINT)
->  #define LOONGARCH_CPU_AVECINT          BIT_ULL(CPU_FEATURE_AVECINT)
->  #define LOONGARCH_CPU_REDIRECTINT      BIT_ULL(CPU_FEATURE_REDIRECTINT)
-> +#define LOONGARCH_CPU_LAM_BH           BIT_ULL(CPU_FEATURE_LAM_BH)
->
->  #endif /* _ASM_CPU_H */
-> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/a=
-sm/inst.h
-> index f9f207082d0e..76b723590023 100644
-> --- a/arch/loongarch/include/asm/inst.h
-> +++ b/arch/loongarch/include/asm/inst.h
-> @@ -36,6 +36,7 @@
->
->  enum reg0i15_op {
->         break_op        =3D 0x54,
-> +       dbar_op         =3D 0x70e4,
->  };
->
->  enum reg0i26_op {
-> @@ -194,6 +195,10 @@ enum reg3_op {
->         fstxs_op        =3D 0x7070,
->         fstxd_op        =3D 0x7078,
->         scq_op          =3D 0x70ae,
-> +       amswapb_op      =3D 0x70b8,
-> +       amswaph_op      =3D 0x70b9,
-> +       amaddb_op       =3D 0x70ba,
-> +       amaddh_op       =3D 0x70bb,
->         amswapw_op      =3D 0x70c0,
->         amswapd_op      =3D 0x70c1,
->         amaddw_op       =3D 0x70c2,
-> @@ -543,6 +548,7 @@ static inline void emit_##NAME(union loongarch_instru=
-ction *insn,   \
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 9cb796e16379..fefda4050a20 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -344,7 +344,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, in=
+t insn)
+>  #undef jmp_offset
 >  }
 >
->  DEF_EMIT_REG0I15_FORMAT(break, break_op)
-> +DEF_EMIT_REG0I15_FORMAT(dbar, dbar_op)
->
->  /* like emit_break(imm) but returns a constant expression */
->  #define __emit_break(imm)      ((u32)((imm) | (break_op << 15)))
-> @@ -763,6 +769,8 @@ DEF_EMIT_REG3_FORMAT(stxb, stxb_op)
->  DEF_EMIT_REG3_FORMAT(stxh, stxh_op)
->  DEF_EMIT_REG3_FORMAT(stxw, stxw_op)
->  DEF_EMIT_REG3_FORMAT(stxd, stxd_op)
-> +DEF_EMIT_REG3_FORMAT(amaddb, amaddb_op)
-> +DEF_EMIT_REG3_FORMAT(amaddh, amaddh_op)
->  DEF_EMIT_REG3_FORMAT(amaddw, amaddw_op)
->  DEF_EMIT_REG3_FORMAT(amaddd, amaddd_op)
->  DEF_EMIT_REG3_FORMAT(amandw, amandw_op)
-> @@ -771,6 +779,8 @@ DEF_EMIT_REG3_FORMAT(amorw, amorw_op)
->  DEF_EMIT_REG3_FORMAT(amord, amord_op)
->  DEF_EMIT_REG3_FORMAT(amxorw, amxorw_op)
->  DEF_EMIT_REG3_FORMAT(amxord, amxord_op)
-> +DEF_EMIT_REG3_FORMAT(amswapb, amswapb_op)
-> +DEF_EMIT_REG3_FORMAT(amswaph, amswaph_op)
->  DEF_EMIT_REG3_FORMAT(amswapw, amswapw_op)
->  DEF_EMIT_REG3_FORMAT(amswapd, amswapd_op)
->
-> diff --git a/arch/loongarch/include/uapi/asm/hwcap.h b/arch/loongarch/inc=
-lude/uapi/asm/hwcap.h
-> index 49519b4362c6..90e96113ba51 100644
-> --- a/arch/loongarch/include/uapi/asm/hwcap.h
-> +++ b/arch/loongarch/include/uapi/asm/hwcap.h
-> @@ -19,5 +19,6 @@
->  #define HWCAP_LOONGARCH_PTW            (1 << 13)
->  #define HWCAP_LOONGARCH_LSPW           (1 << 14)
->  #define HWCAP_LOONGARCH_SCQ            (1 << 15)
-> +#define HWCAP_LOONGARCH_LAM_BH         (1 << 16)
->
->  #endif /* _UAPI_ASM_HWCAP_H */
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
-u-probe.c
-> index 657bbae6c1c7..93466fc7d33d 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -177,6 +177,10 @@ static void cpu_probe_common(struct cpuinfo_loongarc=
-h *c)
->                 c->options |=3D LOONGARCH_CPU_LAM;
->                 elf_hwcap |=3D HWCAP_LOONGARCH_LAM;
+> -static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx=
+)
+> +static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *=
+ctx)
+>  {
+>         const u8 t1 =3D LOONGARCH_GPR_T1;
+>         const u8 t2 =3D LOONGARCH_GPR_T2;
+> @@ -448,7 +448,12 @@ static void emit_atomic(const struct bpf_insn *insn,=
+ struct jit_ctx *ctx)
+>                         emit_zext_32(ctx, r0, true);
+>                 }
+>                 break;
+> +       default:
+> +               pr_err_once("bpf-jit: invalid atomic read-modify-write op=
+code %02x\n", imm);
+> +               return -EINVAL;
 >         }
-> +       if (config & CPUCFG2_LAM_BH) {
-> +               c->options |=3D LOONGARCH_CPU_LAM_BH;
-> +               elf_hwcap |=3D HWCAP_LOONGARCH_LAM_BH;
-> +       }
->         if (config & CPUCFG2_SCQ) {
->                 c->options |=3D LOONGARCH_CPU_SCQ;
->                 elf_hwcap |=3D HWCAP_LOONGARCH_SCQ;
-> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-> index a8127e83da65..d4ce5b585453 100644
-> --- a/arch/loongarch/kernel/proc.c
-> +++ b/arch/loongarch/kernel/proc.c
-> @@ -64,6 +64,8 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->                 seq_puts(m, " cpucfg");
->         if (cpu_has_lam)
->                 seq_puts(m, " lam");
-> +       if (cpu_has_lam_bh)
-> +               seq_puts(m, " lam_bh");
->         if (cpu_has_scq)
->                 seq_puts(m, " scq");
->         if (cpu_has_ual)
+> +
+> +       return 0;
+>  }
+>
+>  static bool is_signed_bpf_cond(u8 cond)
+> @@ -1256,7 +1261,9 @@ static int build_insn(const struct bpf_insn *insn, =
+struct jit_ctx *ctx, bool ext
+>
+>         case BPF_STX | BPF_ATOMIC | BPF_W:
+>         case BPF_STX | BPF_ATOMIC | BPF_DW:
+> -               emit_atomic(insn, ctx);
+> +               ret =3D emit_atomic_rmw(insn, ctx);
+> +               if (ret)
+> +                       return ret;
+>                 break;
+>
+>         /* Speculation barrier */
 > --
 > 2.42.0
 >
