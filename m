@@ -1,40 +1,81 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A527335566
-	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 10:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FFC3ACA7C
+	for <loongarch@lists.linux.dev>; Wed, 15 Apr 2026 13:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776247479; cv=none; b=STc4+/N47M9vsgCm29roRmNcqiBhFp8VnxZ2mhpupdJ0YHSvLY9Bgha9Y9kEJUr3hyINH/VyF3SMqD4SrnpSjzYSFG1/jjXxia7qumEdAvJ+ehR05eJgogKvxaFU3/OJaGZj31caszC7h0NCz9liWiVdQZSp94Q23131W2NRPsI=
+	t=1776260547; cv=none; b=V0isH0ZsOW/K7EOVLmzS3LPBqG+UBhH+tMzLeBFD0AMn6Hj0/mw2VO81QESLBFYKkQug412wPbKHBgq+GuR1s3oth6to2CLL8Aewrin6v0sHTqCpp0HpIx4QDpJufm4YVIRfHM5OyW7WIUUBN+T9pD+eL8Rj4uxqHcvsc0avFKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776247479; c=relaxed/simple;
-	bh=DUzPuCMw86QkIrftZ76FgQw8nEgDjJ7QsQ79mi5Jl8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E1qzd54DJBuYk/b1zmhN8ua7rkgd+MROYcpAX99vtgBPDtB2bPi5HvaxdUTMfKSWdYvBuwsLpl1MR0+NIkxvMSFK3o1uYpDiYOkbJn4WOeoOcb+k2sAK+FO6BVV8cGaL6hgJ1GUif5v1hTRuF2CUz8aPXSgUXreXs/3TOAry7uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=XwGRhLne; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1776260547; c=relaxed/simple;
+	bh=XK5UTiny25FGYoW1LPQsjrWTyTn77fTqIzWRjSCzRWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RPc+El6ahkOv6MxBIbkff7iB6CUNZGuj5soukhlwwbPdvFh3cF6SC7GQIUtAAODgBr7k123rGma23IertWAQV9qWyaLo960rZkpXtzr0OuKSKJifyxuEMhOH3xbEQ2Y17Yw/2Grf1JqXb0vWYndunmWvfOEXCVABuCpncJp9/Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0XdKdzmZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GP4N0pWp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0aTtfnJ+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=laFsjYPY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="XwGRhLne"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ECSSlTyhJvtyzyV12bRiciUTZEMt5lG0F0BW5PZ9epA=;
-	b=XwGRhLne6TgIRHTpnVjff9jL3j2nEOUg/4fZqohVv7IVECo3hpMZzFAeQRSYPfQpZazp8xLIF
-	L4BvOv/i1ejypeY+N7Bw7ro/40TcmqZH93SdaTwdtLVozGchElPUhdWYant6q56kDs/Fs1058fD
-	SLf1DVLYrM2j/JVPi7gaTBc=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fwc651DVGzpSyb;
-	Wed, 15 Apr 2026 17:58:21 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD24820104;
-	Wed, 15 Apr 2026 18:04:33 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 15 Apr 2026 18:04:30 +0800
-Message-ID: <3e861ad2-a57d-45a5-94d0-0a8c4d58f7b6@huawei.com>
-Date: Wed, 15 Apr 2026 18:04:26 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0XdKdzmZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GP4N0pWp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0aTtfnJ+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="laFsjYPY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C2DBB5BE18;
+	Wed, 15 Apr 2026 13:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1776260543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xbakwLiR2rEnKTxBn3FzwQHM7RC+vsanmKRXbj1/ojc=;
+	b=0XdKdzmZdtGaH98pzEzXN+IJopXEUlm+O8wDvA7gvlyIEGk1cc9QfJFTuc+t990CRZkQsd
+	wxcCnuuffogRR6+I9INIIJ4Yhgu9Mbfb3tN9y7EkwPjLRX1xe52YVLcLlZj6X+aJblwmfE
+	fwivYf6DBT40A6/MBxioY+Ah20mCbag=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1776260543;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xbakwLiR2rEnKTxBn3FzwQHM7RC+vsanmKRXbj1/ojc=;
+	b=GP4N0pWp/u1QV2T2DgOQYsIaDizfUqSdXquMQyMhFUgHjd1jKookSCTUketMHB/xpTmwe0
+	S8+k9XsdI7orUmDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0aTtfnJ+;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=laFsjYPY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1776260542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xbakwLiR2rEnKTxBn3FzwQHM7RC+vsanmKRXbj1/ojc=;
+	b=0aTtfnJ+FTXjwqAhJIlHLwkVOF3TWgA7RXczO/zw88HsxOZFuOnLg8vaUfHhZljH5ydJBo
+	YQ1IHVJO9QrIjDAkb7Ms4vpIap8LQXZdE9gXXvnUdGwh9P54FSv6NyhywnvPwIM4zix+vb
+	THfXDaz9alRjAKXxnN4pEuYGkMAeud4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1776260542;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xbakwLiR2rEnKTxBn3FzwQHM7RC+vsanmKRXbj1/ojc=;
+	b=laFsjYPYz7BI0pLBvTDj/X3IVwQapH0JijVv0dSi2g0JDOnWlyzXkGni6k0IqTOwdRFS/m
+	2ErdJEzqAoW8RQCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 14C884BA2F;
+	Wed, 15 Apr 2026 13:42:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3/PmA76V32kUcgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 15 Apr 2026 13:42:22 +0000
+Message-ID: <90667815-b914-46fa-acfa-f5aa79689c2f@suse.de>
+Date: Wed, 15 Apr 2026 15:42:21 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,147 +83,128 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
-	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
-	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260402072701.628293-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Subject: Re: [EXTERNAL] Re: [PATCH 1/8] hv: Select CONFIG_SYSFB only for
+ CONFIG_HYPERV_VMBUS
+To: Saurabh Singh Sengar <ssengar@microsoft.com>,
+ "javierm@redhat.com" <javierm@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "ardb@kernel.org" <ardb@kernel.org>,
+ "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+ "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+ "kernel@xen0n.name" <kernel@xen0n.name>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, KY Srinivasan <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui <DECUI@microsoft.com>,
+ Long Li <longli@microsoft.com>, "deller@gmx.de" <deller@gmx.de>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+ "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+ Michael Kelley <mhklinux@outlook.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+ <20260402092305.208728-2-tzimmermann@suse.de>
+ <KUZP153MB14449BBE44CBAEEA7621A4A0BE51A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <2fe8ce91-2dc5-4cf2-b7cf-d495e5cff14b@suse.de>
+ <KUZP153MB1444885C302B353C02C2FA2FBE242@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <KUZP153MB1444885C302B353C02C2FA2FBE242@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:url];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[microsoft.com,redhat.com,arndb.de,kernel.org,linaro.org,xen0n.name,linux.intel.com,gmail.com,ffwll.ch,gmx.de];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de,outlook.com];
+	FREEMAIL_CC(0.00)[lists.infradead.org,lists.linux.dev,vger.kernel.org,lists.freedesktop.org,outlook.com,linux.microsoft.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLtfyjk8sg4x43ngtem9djprcp)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.com:url,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: C2DBB5BE18
 
 
 
-On 4/2/2026 3:26 PM, Jinjie Ruan wrote:
-> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-> and crashk_cma memory are almost identical across different architectures,
-> This patch set handle them in crash core in a general way, which eliminate
-> a lot of duplication code.
-> 
-> And add support for crashkernel CMA reservation for arm64 and riscv.
-> 
-> Rebased on v7.0-rc1.
-> 
-> Basic second kernel boot test were performed on QEMU platforms for x86,
-> ARM64, and RISC-V architectures with the following parameters:
-> 
-> 	"cma=256M crashkernel=256M crashkernel=64M,cma"
-> 
-> Changes in v12:
-> - Remove the unused "nr_mem_ranges" for x86.
-> - Add "Fix crashk_low_res not exclude bug" test log.
-> - Provide a separate patch for each architecture for using
->   crash_prepare_headers(), which will make the review more convenient.
-> - Add Reviewed-by and Tested-by.
-> - Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-> 
-> Changes in v11:
-> - Avoid silently drop crash memory if the crash kernel is built without
->   CONFIG_CMA.
-> - Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
->   as we use kvzalloc().
-> - Provide a separate patch for each architecture to fix the existing
->   buffer overflow issue.
+Am 13.04.26 um 10:22 schrieb Saurabh Singh Sengar:
+[...]
+>>
+>>> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>> This fix is independent from the rest of the series. Do you want to merge it or
+>> can I take it into DRM trees?
+> Please feel free to take it via DRM tree.
 
-Are there any further review comments? Especially regarding the patch
-for fixing out-of-bounds access (suggested by the AI review), as well as
-the changes for LoongArch, x86 and riscv architectures.
+Done now. Thanks a lot.
 
-> - Add Acked-bys for arm64.
-> 
-> Changes in v10:
-> - Fix crashk_low_res not excluded bug in the existing
->   RISC-V code.
-> - Fix an existing memory leak issue in the existing PowerPC code.
-> - Fix the ordering issue of adding CMA ranges to
->   "linux,usable-memory-range".
-> - Fix an existing concurrency issue. A Concurrent memory hotplug may occur
->   between reading memblock and attempting to fill cmem during kexec_load()
->   for almost all existing architectures.
-> - Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-> 
-> Changes in v9:
-> - Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-> - Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-> 
-> Changes in v8:
-> - Fix the build issues reported by kernel test robot and Sourabh.
-> - Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-> 
-> Changes in v7:
-> - Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
->   for arm64 and riscv.
-> - Add Acked-by.
-> - Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-> 
-> Changes in v6:
-> - Update the crash core exclude code as Mike suggested.
-> - Rebased on v7.0-rc1.
-> - Add acked-by.
-> - Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-> 
-> Jinjie Ruan (14):
->   riscv: kexec_file: Fix crashk_low_res not exclude bug
->   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
->   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
->   arm64: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   riscv: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   LoongArch: kexec: Fix potential buffer overflow in
->     prepare_elf_headers()
->   crash: Add crash_prepare_headers() to exclude crash kernel memory
->   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
->   x86/kexec: Use crash_prepare_headers() helper to simplify code
->   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
->   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
->   crash: Use crash_exclude_core_ranges() on powerpc
->   arm64: kexec: Add support for crashkernel CMA reservation
->   riscv: kexec: Add support for crashkernel CMA reservation
-> 
-> Sourabh Jain (1):
->   powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-> 
->  .../admin-guide/kernel-parameters.txt         |  16 +--
->  arch/arm64/kernel/machine_kexec_file.c        |  43 +++-----
->  arch/arm64/mm/init.c                          |   5 +-
->  arch/loongarch/kernel/machine_kexec_file.c    |  43 +++-----
->  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
->  arch/powerpc/kexec/crash.c                    |   7 +-
->  arch/powerpc/kexec/ranges.c                   | 101 +-----------------
->  arch/riscv/kernel/machine_kexec_file.c        |  42 +++-----
->  arch/riscv/mm/init.c                          |   5 +-
->  arch/x86/kernel/crash.c                       |  92 +++-------------
->  drivers/of/fdt.c                              |   9 +-
->  drivers/of/kexec.c                            |   9 ++
->  include/linux/crash_core.h                    |   9 ++
->  include/linux/crash_reserve.h                 |   4 +-
->  kernel/crash_core.c                           |  89 ++++++++++++++-
->  15 files changed, 193 insertions(+), 282 deletions(-)
-> 
+> CC : Wei Liu
+>
+> - Saurabh
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
+GF: Jochen Jaser, Andrew McDonald, Werner Knoblich, (HRB 36809, AG Nürnberg)
+
 
