@@ -1,79 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598E13815F5;
-	Thu, 16 Apr 2026 19:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7A2282F05
+	for <loongarch@lists.linux.dev>; Fri, 17 Apr 2026 03:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776367969; cv=none; b=mJgvB5HoJocH0W6lg7G0i6CoMNqKQ58k+mqwgI9Y2ptNK8IYowac/UY5rF9KYybph0clkQgGW2k5LU+Gfvt+UQioUnBxVvu5lIdj36LSWEMfVXdpHTUgzujv1YimMqq2zF4x3CrhscbIuUUEdeyLko+6nK8H42sVUb7Uzitnrv8=
+	t=1776395728; cv=none; b=i+lD9jOuqsWpQNC1M6ubcSajEJVOqPSaQtCGOfgoHo2YPqYuo+kZ6AQa3TD3FZJ3CzYXjYSdOdnihWcCo4nbRsC64/mqLAPRbrJ0gySVoVlKLIdB833ZGPsHg66At7+bTa8o38Tpgqkerf5tIRwD1ZuHDBTh7NIjemApFkJDXGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776367969; c=relaxed/simple;
-	bh=92ERkl7IqZ3D3ZBskV2Dg9cLo0xCsyjyPbt0J7jJ1bo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Scxh1NkGaNsvnzbXZfibAYa+946n0CpefIf5Mgu+BOTisye8zhAzeCYGYYEL4DGIfd+Rpn8MaAuu0f9hnQrF0yvb2EJxnZnDdkH1PsESrffjsIwKWgqDiUvrNejj+dAn9N5JuKRIeBnRtrWzT17kYU6QBi2SDM3STPHXpLMXQQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rw1vIfWy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776395728; c=relaxed/simple;
+	bh=KyhBDN9h5sQlkpf72nrWY01K84qeR6aao2bsr9KywHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IkPDZEyc2UPW+a/aUZJdBUP1xpH41N1EUfoWGPam4BtNfcVo3TyQ9jWHn95MD9cMLvbhnic8KVpgreHrbrJJDAFDFaMhQLX8/gC1OXVJYlFRhz8qMS/+YuP6V7WkK7yTfV4iE/fq3LrYreHMo7Qt/hQaCx52iCrXgzzFVVPwm3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0m0dN8u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rw1vIfWy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E8AC2BCB0;
-	Thu, 16 Apr 2026 19:32:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0m0dN8u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59B6C4AF09
+	for <loongarch@lists.linux.dev>; Fri, 17 Apr 2026 03:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776367969;
-	bh=92ERkl7IqZ3D3ZBskV2Dg9cLo0xCsyjyPbt0J7jJ1bo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Rw1vIfWy5g39RTrQBVfk7P8+0yZErGWNG5UA9/vEtpQjlFkvwDTSfy9DcHen7/CI1
-	 yvB26rPsstyEixHeRP2kRFTYsbED9hoqdAx8pp9JCjVGtqsECj0BmLbEADz/j0Ea1z
-	 cuKaCVwjWLvXDg/CryubhnWhKyfuiuUjmH8fhvqeL/w/0cvoWWHyuhgdCpeuqDPtkC
-	 KhOKnJGX3lMBUei6zDvHwn/e429dg5HpUaKZZFagDf5a9Cwpgy1mEmtIvUBtm2UV8a
-	 d3rsfZkg4WL5nt8ssrtLumcRxpUUuH7CR13mk1NCsH3yKQQbT7v7wh+ISgR1TJLd7z
-	 vH5LnF1y8pygA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, x86@kernel.org, Lu Baolu
- <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, Michael Grzeschik
- <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
- linux-crypto@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>,
- linux-mm@kvack.org, David Woodhouse <dwmw2@infradead.org>, Bernie Thompson
- <bernie@plugable.com>, linux-fbdev@vger.kernel.org, Theodore Tso
- <tytso@mit.edu>, linux-ext4@vger.kernel.org, Andrew Morton
- <akpm@linux-foundation.org>, Uladzislau Rezki <urezki@gmail.com>, Marco
- Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
- kasan-dev@googlegroups.com, Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Thomas Sailer <t.sailer@alumni.ethz.ch>, linux-hams@vger.kernel.org,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, Richard Henderson
- <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, Russell King
- <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Catalin
- Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev, Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-m68k@lists.linux-m68k.org, Dinh Nguyen <dinguyen@kernel.org>, Jonas
- Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, Helge Deller
- <deller@gmx.de>, linux-parisc@vger.kernel.org, Michael Ellerman
- <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Paul Walmsley
- <pjw@kernel.org>, linux-riscv@lists.infradead.org, Heiko Carstens
- <hca@linux.ibm.com>, linux-s390@vger.kernel.org, "David S. Miller"
- <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: Re: [patch 07/38] treewide: Consolidate cycles_t
-In-Reply-To: <0758843e-8f75-4c82-b9c0-25fab502e62f@kernel.org>
-References: <20260410120044.031381086@kernel.org>
- <20260410120318.045532623@kernel.org>
- <0758843e-8f75-4c82-b9c0-25fab502e62f@kernel.org>
-Date: Thu, 16 Apr 2026 21:32:45 +0200
-Message-ID: <87v7dqem5e.ffs@tglx>
+	s=k20201202; t=1776395727;
+	bh=KyhBDN9h5sQlkpf72nrWY01K84qeR6aao2bsr9KywHM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b0m0dN8u5UNNLg4NPVYOy/jYJTFxAONK+D2PuWpsAXaW28C0pxKINZcxYqtoJLdfy
+	 VgkHgWmK7eChqe3V3mSs9GqVIsRcpKFpT5X1PoGFhaHeaT536JIwDn6dri6gMrX8ka
+	 T2Z3oyQxvyklPyFf0psKU1nxAd8XW026HaodklX/3t4kPJj4JMDsOjgQ2Iji/dgF/S
+	 iFvTSKkePqumRcK8MSqXXMRuZXWLA0jDwGvTCN4NCYndeiWaIIyL42Z8y0JZ5dOjnU
+	 8LKGUqMxmZ6KsBSpiYr7heoHjk/pzGgmxdTvcYCmaA+OvHxfwoKwv2FzhmNgztuOiI
+	 ZGM9VEQTJMrig==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b9358bc9c50so35153866b.1
+        for <loongarch@lists.linux.dev>; Thu, 16 Apr 2026 20:15:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9lo/aLTC8Yd3B/MivIoAoc3senPcr15VG3lSan5kwpFEo/OHShZYOkaAfUQUouQJ+aGGmI5EWwgB8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyVqtzACZNWY8zQj02qlRyHjftATVk9Nur8evn6eAUgGfwG64dI
+	gUa7HZqZ4jeGqHT62aDY4pYIkW4Ys5h2pJIGsAQ6FjwyXwMGxt1L0Ms0dfYQQzxpLe2tCk2F96W
+	jvb1djj1GcKY+LIpn904QWiXQiFgKEbE=
+X-Received: by 2002:a17:907:7f8a:b0:b9d:498d:cffd with SMTP id
+ a640c23a62f3a-ba41b3de282mr49426866b.35.1776395726202; Thu, 16 Apr 2026
+ 20:15:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <80CA78395583F396+20260413031236.2512416-1-yangyuqian@uniontech.com>
+In-Reply-To: <80CA78395583F396+20260413031236.2512416-1-yangyuqian@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 17 Apr 2026 11:15:13 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5TmQUjcqCn6b_fXo+Fi9ovtkJNENpRh9ekqbc4xOJA9g@mail.gmail.com>
+X-Gm-Features: AQROBzAxqbhmC9VWqjZmZaV8zW5hDDvOrYbhr4TNOsKAUhMfPUVp-0T-iM09anE
+Message-ID: <CAAhV-H5TmQUjcqCn6b_fXo+Fi9ovtkJNENpRh9ekqbc4xOJA9g@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: improve logging of disabling KASLR
+To: Yuqian Yang <yangyuqian@uniontech.com>
+Cc: WANG Xuerui <kernel@xen0n.name>, Cheng Nie <niecheng1@uniontech.com>, 
+	Wentao Guan <guanwentao@uniontech.com>, Dandan Zhang <zhangdandan@uniontech.com>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 15 2026 at 08:43, Christophe Leroy wrote:
->> -typedef unsigned long cycles_t;
->> -
->> -static inline cycles_t get_cycles(void)
->> +ostatic inline cycles_t get_cycles(void)
+Applied with some modifications, thanks.
+
+Huacai
+
+On Mon, Apr 13, 2026 at 11:13=E2=80=AFAM Yuqian Yang <yangyuqian@uniontech.=
+com> wrote:
 >
-> What is 'ostatic' ?
-
-That's a really good question :)
+> Whether KASLR is disabled is not handled in nokaslr (early param
+> "nokaslr" setup function) but in kaslr_disabled. However, the logging
+> was done in nokaslr previously. So we move the logging to the right
+> place and add more specific info about why it's disabled.
+>
+> Suggested-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Yuqian Yang <yangyuqian@uniontech.com>
+> ---
+>
+> Changes since v1:
+>   * update commit title, loongarch -> LoongArch, remove trailing period.
+>   * use macro instead of const variable as log message to avoid build err=
+or.
+>
+>  arch/loongarch/kernel/relocate.c | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/rel=
+ocate.c
+> index 82aa3f0359278..80720175c89dc 100644
+> --- a/arch/loongarch/kernel/relocate.c
+> +++ b/arch/loongarch/kernel/relocate.c
+> @@ -128,9 +128,8 @@ static inline __init unsigned long get_random_boot(vo=
+id)
+>
+>  static int __init nokaslr(char *p)
+>  {
+> -       pr_info("KASLR is disabled.\n");
+> -
+> -       return 0; /* Print a notice and silence the boot warning */
+> +       /* The real check is handled in kaslr_disabled() below. */
+> +       return 0;
+>  }
+>  early_param("nokaslr", nokaslr);
+>
+> @@ -138,14 +137,19 @@ static inline __init bool kaslr_disabled(void)
+>  {
+>         char *str;
+>         const char *builtin_cmdline =3D CONFIG_CMDLINE;
+> +#define LOONGARCH_KASLR_DISABLED_MESSAGE "KASLR is disabled by %s in %s =
+cmdline.\n"
+>
+>         str =3D strstr(builtin_cmdline, "nokaslr");
+> -       if (str =3D=3D builtin_cmdline || (str > builtin_cmdline && *(str=
+ - 1) =3D=3D ' '))
+> +       if (str =3D=3D builtin_cmdline || (str > builtin_cmdline && *(str=
+ - 1) =3D=3D ' ')) {
+> +               pr_info(LOONGARCH_KASLR_DISABLED_MESSAGE, "nokaslr", "bui=
+lt-in");
+>                 return true;
+> +       }
+>
+>         str =3D strstr(boot_command_line, "nokaslr");
+> -       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' '))
+> +       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' ')) {
+> +               pr_info(LOONGARCH_KASLR_DISABLED_MESSAGE, "nokaslr", "boo=
+t");
+>                 return true;
+> +       }
+>
+>  #ifdef CONFIG_HIBERNATION
+>         str =3D strstr(builtin_cmdline, "nohibernate");
+> @@ -165,19 +169,26 @@ static inline __init bool kaslr_disabled(void)
+>                 return false;
+>
+>         str =3D strstr(builtin_cmdline, "resume=3D");
+> -       if (str =3D=3D builtin_cmdline || (str > builtin_cmdline && *(str=
+ - 1) =3D=3D ' '))
+> +       if (str =3D=3D builtin_cmdline || (str > builtin_cmdline && *(str=
+ - 1) =3D=3D ' ')) {
+> +               pr_info(LOONGARCH_KASLR_DISABLED_MESSAGE, "resume=3D", "b=
+uilt-in");
+>                 return true;
+> +       }
+>
+>         str =3D strstr(boot_command_line, "resume=3D");
+> -       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' '))
+> +       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' ')) {
+> +               pr_info(LOONGARCH_KASLR_DISABLED_MESSAGE, "resume=3D", "b=
+oot");
+>                 return true;
+> +       }
+>  #endif
+>
+>         str =3D strstr(boot_command_line, "kexec_file");
+> -       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' '))
+> +       if (str =3D=3D boot_command_line || (str > boot_command_line && *=
+(str - 1) =3D=3D ' ')) {
+> +               pr_info(LOONGARCH_KASLR_DISABLED_MESSAGE, "kexec_file", "=
+boot");
+>                 return true;
+> +       }
+>
+>         return false;
+> +#undef LOONGARCH_KASLR_DISABLED_MESSAGE
+>  }
+>
+>  /* Choose a new address for the kernel */
+>
+> base-commit: e774d5f1bc27a85f858bce7688509e866f8e8a4e
+> --
+> 2.50.1
+>
