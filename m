@@ -1,175 +1,188 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F0E3BE630
-	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 11:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4833CFF5A
+	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 12:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776770576; cv=none; b=Sv+wJ/bn7cZ+3lFIM2zqbUnGdkyQ4cr/v2Te5SNSkadpDO5auTIH+HRR6VJbUWhT6jhifMNqYdfeCiLAM3kyKp1vSzgLHIgzWnLSKEV0GTtygtanqVrNVogDlHPmV2LR9NmPjizjh7WkCLrOSDkIM0DP/mbw/CieMu6AiZHb/5Q=
+	t=1776775117; cv=none; b=S2JdI6QDNt00t1EdMHj5oY5lD1Ymrd0Vvn3SPbYzyuyy+g/aUPk7xpGQtx3OOHqK3cBhkHGT5KxOMMB1KDM0SdiOEOluykLBp6RUiXG9w+AYLrPv/D4iBZJD2wjHTxZuJoIZ5i97CoF3npptBL8iwBHB8136H5ZwcORjVg13/5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776770576; c=relaxed/simple;
-	bh=7J5sLUyTcEtZ5b/o54KJz2TjlXrWGH0W+oigsdVGJYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qkAwih4ysMmyabH1mUakM68Sfs7EtZcIJFZ/xeIIFFBE4/c0ZVxKisXG9qTDiusO5uNhdZWvBqa9CMB+sPSm8Iyr72F/1UcDktnpb8aKlDiv4TevaOxe+XfLpQKBCuc7O03VSmEf3VPz8rNOHmRJbxoMPbrQB8OpLLPfezRvmUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qt5tYEHs; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1776775117; c=relaxed/simple;
+	bh=rymoPHn2ZlMaUEiTXgcbEStbTLSOtezUfdAss9Zk0rw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cEUs8j6u9cQC1xZ4UBIETLCh6ipv2pDF5aRaiB6zjfjPcRxsfef8mPRuM5Ye/wyj49BKBFcrsP76aULtDEyv80k4Zq1Ij/+50iH2soKu/PbHnifF/jHU2f7gwuyQhO9qffNO+IecrwgfobZy7dkl39oG2BlUMyqV/Nc8qhcCR3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjJaVEnv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qt5tYEHs"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-82f33d28c1dso2248099b3a.3
-        for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 04:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776770574; x=1777375374; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pbepvZoiaQHnY8ojgGndHUN0tqRJnJo2KRx8HLgDgUI=;
-        b=Qt5tYEHsZVMsVADO5g2oK6XlFXsGr3FzRRPhYPG4oIGd443zerq+6ihtJV+Ke67qd5
-         K7q9KpnwT2VI61yZ85yHOQHu9wHdNv5orMPh7nZW4WiRveCSqkVe3jabuksJPJE39j2L
-         JTQPHw8uTCL30IrpWghB6+nJ5nwUuKLUXDK4NrooFT+rENWXZKMIxsmg+yNkC4TXEVJJ
-         1hws5n0Vgjv/Go1vlznQwHoEy73Lqelz4gH8RYDIAYGTOJ8WJ5yB/KLd2psWU/iIWNOv
-         4rz/TEn4hJ9YmBNzxgYhDC/1Rr6heZWkyZ9/d41PasihBhzClTeGDdU8Ma2c4OPMoi2D
-         /YLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776770574; x=1777375374;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pbepvZoiaQHnY8ojgGndHUN0tqRJnJo2KRx8HLgDgUI=;
-        b=r5/A0KcMBbh8qKd0Umck0uO40veujgzTHh1EWWaWHGFCyWaUgPhWXfDRQky138KK0O
-         ERXlsz1dU5a4ZLrD9MqcXcsOp8vPnE7W74P7mFs4354f7llZl/KmOZG2ev+Az67j1uHO
-         GKUX83RWK4BFpp4cL2q32jec4kmjTIK3h88d+rQDoS5QFQ4KrUgrDxwOodkFy/Xqpa+A
-         TYUbjMqECaYl6I6bd9Ks4Pj7d2zcTC74TZwTSq9GeM3PIMym61NE/Cs/DfBWG/toltMN
-         aoeVOXQB94vtBbt/uufT8vlZxfyYzWGPQEyUdyQEJN3SarKBIgjzzUCHCPC9O89Qn7ic
-         lAqw==
-X-Forwarded-Encrypted: i=1; AFNElJ/zrDPJLxyu8Lrx75bBnxAniGd8ScYRW67Nzc157CTk95ioER1j13+Q/WxNrXvrm6fhb8D3yFhRWvE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnHvJqPEVrqCdskBv+QYYQg+nEZ3EFeE4jtTj2QUUynDcH/4fn
-	MIsE/HYBl/6/yPQLrT+fDe2XW7gJdfbHs0uZePMsra5eRFnPYvr0ZW7j
-X-Gm-Gg: AeBDiesRjD28+rWwGfnXna/VT4jZTsX0mnEVpX1EEmpexAbhOrimkN2gafpVOVyNoYU
-	D0E2W6DoOMlQm6bevdClGHUJEQEVDx8xjE7fqgq4NEXCYODwlbqYJ8T7NeKjSQtDcl6QuZ8ArfB
-	cIWvhWWMntVXJikP/ijp5pBydbgH+jm6srKt/Yit7p/Oq1XPQcjJQ9Q5/UNFZd7WFL4UKnpa56L
-	nRGH0Mg+tPhmyCadugwuKkMJHetqDCePMdAyHiOjk179G90IRzynj5EyyZhSBigsL/laEY9ohe+
-	298LrSUdDWki7a+rF4LkXaPz7OHgGHkBGZAI6xWPevK8cZe57pWYC2OQqO7NUbAeBznV6eXfWOq
-	mpd3H0br6ngNPQbG5337O6UAzTEHCE23W5TIM1OHATyuJ1E5Q5kvSQPwlyG9zf9GtEH4EJ0tRpK
-	EZ4PpZSBfAsNZQEaX/MIumDn/7h2WCnaqI0mJtwNrrzEMmQffulGiyxdUtnM7X8ogSZHIsxooej
-	wyyng==
-X-Received: by 2002:a05:6a00:6988:b0:82f:aae5:c7a9 with SMTP id d2e1a72fcca58-82faae5d438mr7228492b3a.27.1776770573719;
-        Tue, 21 Apr 2026 04:22:53 -0700 (PDT)
-Received: from li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com ([129.41.58.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8e981a0asm14155014b3a.3.2026.04.21.04.22.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 04:22:53 -0700 (PDT)
-Date: Tue, 21 Apr 2026 16:52:37 +0530
-From: Mukesh Kumar Chaurasiya <mkchauras@gmail.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, 
-	x86@kernel.org, Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev, 
-	Michael Grzeschik <m.grzeschik@pengutronix.de>, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, 
-	Vlastimil Babka <vbabka@kernel.org>, linux-mm@kvack.org, David Woodhouse <dwmw2@infradead.org>, 
-	Bernie Thompson <bernie@plugable.com>, linux-fbdev@vger.kernel.org, Theodore Tso <tytso@mit.edu>, 
-	linux-ext4@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Uladzislau Rezki <urezki@gmail.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Thomas Sailer <t.sailer@alumni.ethz.ch>, 
-	linux-hams@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, linux-alpha@vger.kernel.org, 
-	Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, linux-openrisc@vger.kernel.org, 
-	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, Paul Walmsley <pjw@kernel.org>, 
-	linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
-Subject: Re: [patch 33/38] powerpc: Select ARCH_HAS_RANDOM_ENTROPY
-Message-ID: <aedc9UddBSYXzrAj@li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com>
-References: <20260410120044.031381086@kernel.org>
- <20260410120319.789114053@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjJaVEnv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0818C2BCB8
+	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 12:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776775116;
+	bh=rymoPHn2ZlMaUEiTXgcbEStbTLSOtezUfdAss9Zk0rw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hjJaVEnvGi4hNkXCDYHQJQ9AQs7/aHZEiK+1jFjc4LgsDwwDxLghXcpYqWNCw1qoI
+	 XcYiDaftGsteARgvZqapVdk0sHNu0TqVLEk5XwzdEAZj24gX2lztTYy6903tjgt+Vo
+	 6DYOQG5FwGusBm52+Iv2aPaaxUK9FiQokj138KqBiD3av2VaTeYXk+gpEvg+lY/oWr
+	 H4MIlnzLOTC4hPyWq+5ReVq7oEk0+We8EMcNLZDx+lFU5nWMrxd/DSMXppm9W/FtWT
+	 RTZRLrrWkPQ2vAK1xaixV4U01owReC5ddpKIxKzhkQFzL3Q6xW4MLTzTqtSrEMOIL5
+	 YBR2mgN9wXSaQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b936331786dso533545766b.3
+        for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 05:38:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+7km9f/oqcjVoVyEByXwkrr7w1EIeY4NoK+SuIHMZ0G2KxtMPA6t9BKMV0tRZgWG5sFlsKMoGgUHE=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwtOKl5cAD1T7TQkL+a73peyr2C6h2fQPmsA1Ea4LltrPiEKoR8
+	oqd2N+b4jBjB4sO9IhNQR1kgMajE3LBujkOryEd9lDTHlqSKwDid9ypbWYQwvR+6CWiw7LdDd58
+	nezZbfOJM/DHHz6i4NhKUvDObgRxOi3c=
+X-Received: by 2002:a17:906:fd86:b0:baa:2e75:8cd5 with SMTP id
+ a640c23a62f3a-baa2e759062mr72406166b.15.1776775115362; Tue, 21 Apr 2026
+ 05:38:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260410120319.789114053@kernel.org>
+References: <20260413040506.26640-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20260413040506.26640-1-yangtiezhu@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 21 Apr 2026 20:38:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
+X-Gm-Features: AQROBzBRpNGWipl724BOAylylJwoy0i6v0jh76onHkLo_f7Xi2JBiw7tmbrgnFU
+Message-ID: <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] LoongArch: BPF: Support more atomic instructions
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 10, 2026 at 02:21:09PM +0200, Thomas Gleixner wrote:
-> The only remaining usage of get_cycles() is to provide random_get_entropy().
-> 
-> Switch powerpc over to the new scheme of selecting ARCH_HAS_RANDOM_ENTROPY
-> and providing random_get_entropy() in asm/random.h.
-> 
-> Remove asm/timex.h as it has no functionality anymore.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> ---
->  arch/powerpc/Kconfig              |    1 +
->  arch/powerpc/include/asm/random.h |   13 +++++++++++++
->  arch/powerpc/include/asm/timex.h  |   21 ---------------------
->  3 files changed, 14 insertions(+), 21 deletions(-)
-> 
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -150,6 +150,7 @@ config PPC
->  	select ARCH_HAS_PREEMPT_LAZY
->  	select ARCH_HAS_PTDUMP
->  	select ARCH_HAS_PTE_SPECIAL
-> +	select ARCH_HAS_RANDOM_ENTROPY
->  	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
->  	select ARCH_HAS_SET_MEMORY
->  	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC_BOOK3S || PPC_8xx) && !HIBERNATION
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/random.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_POWERPC_RANDOM_H
-> +#define _ASM_POWERPC_RANDOM_H
-> +
-> +#include <asm/cputable.h>
-> +#include <asm/vdso/timebase.h>
-> +
-> +static inline unsigned long random_get_entropy(void)
-> +{
-> +	return mftb();
-> +}
-> +
-> +#endif	/* _ASM_POWERPC_RANDOM_H */
-> --- a/arch/powerpc/include/asm/timex.h
-> +++ b/arch/powerpc/include/asm/timex.h
-> @@ -1,21 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef _ASM_POWERPC_TIMEX_H
-> -#define _ASM_POWERPC_TIMEX_H
-> -
-> -#ifdef __KERNEL__
-> -
-> -/*
-> - * PowerPC architecture timex specifications
-> - */
-> -
-> -#include <asm/cputable.h>
-> -#include <asm/vdso/timebase.h>
-> -
-> -ostatic inline cycles_t get_cycles(void)
-> -{
-R> -	return mftb();
-> -}
-> -#define get_cycles get_cycles
-> -
-> -#endif	/* __KERNEL__ */
-> -#endif	/* _ASM_POWERPC_TIMEX_H */
-> 
-Build tested for this series with allmodconfig and allyesconfig on ppc64le
-machine for ppc64le.
-tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git getcycles-v1
+Hi, Tiezhu,
 
-Boot tested for this series on powernv9 qemu, powernv10 qemu and pSeries
-power11 hardware.
+Maybe we need V4? If so, please submit as soon as possible.
 
-Tested-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
-Reviewed-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
 
+Huacai
+
+On Mon, Apr 13, 2026 at 12:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
+>
+> v3: Modify emit_atomic_ld_st() to use ld[x].{bu,hu,wu} instructions.
+>
+> v2: Modify show_cpuinfo() to add lam_bh capability, no other changes.
+>
+> This series is based on 7.0, the aim is to support more instructions:
+> (1) 8 and 16 bit read-modify-write instructions,
+> (2) load-acquire and store-release instructions.
+>
+> When compiling, please set CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and
+> unset CONFIG_BPF_UNPRIV_DEFAULT_OFF.
+>
+> All of the related testcases passed and no regressions for bpf selftests.
+> Here are the test results on LoongArch:
+>
+>   $ sudo ./test_progs -t verifier_load_acquire
+>   #577/1   verifier_load_acquire/load-acquire, 8-bit:OK
+>   #577/2   verifier_load_acquire/load-acquire, 8-bit @unpriv:OK
+>   #577/3   verifier_load_acquire/load-acquire, 16-bit:OK
+>   #577/4   verifier_load_acquire/load-acquire, 16-bit @unpriv:OK
+>   #577/5   verifier_load_acquire/load-acquire, 32-bit:OK
+>   #577/6   verifier_load_acquire/load-acquire, 32-bit @unpriv:OK
+>   #577/7   verifier_load_acquire/load-acquire, 64-bit:OK
+>   #577/8   verifier_load_acquire/load-acquire, 64-bit @unpriv:OK
+>   #577/9   verifier_load_acquire/load-acquire with uninitialized src_reg:=
+OK
+>   #577/10  verifier_load_acquire/load-acquire with uninitialized src_reg =
+@unpriv:OK
+>   #577/11  verifier_load_acquire/load-acquire with non-pointer src_reg:OK
+>   #577/12  verifier_load_acquire/load-acquire with non-pointer src_reg @u=
+npriv:OK
+>   #577/13  verifier_load_acquire/misaligned load-acquire:OK
+>   #577/14  verifier_load_acquire/misaligned load-acquire @unpriv:OK
+>   #577/15  verifier_load_acquire/load-acquire from ctx pointer:OK
+>   #577/16  verifier_load_acquire/load-acquire from ctx pointer @unpriv:OK
+>   #577/17  verifier_load_acquire/load-acquire with invalid register R15:O=
+K
+>   #577/18  verifier_load_acquire/load-acquire with invalid register R15 @=
+unpriv:OK
+>   #577/19  verifier_load_acquire/load-acquire from pkt pointer:OK
+>   #577/20  verifier_load_acquire/load-acquire from flow_keys pointer:OK
+>   #577/21  verifier_load_acquire/load-acquire from sock pointer:OK
+>   #577     verifier_load_acquire:OK
+>   Summary: 1/21 PASSED, 0 SKIPPED, 0 FAILED
+>
+>   $ sudo ./test_progs -t verifier_store_release
+>   #615/1   verifier_store_release/store-release, 8-bit:OK
+>   #615/2   verifier_store_release/store-release, 8-bit @unpriv:OK
+>   #615/3   verifier_store_release/store-release, 16-bit:OK
+>   #615/4   verifier_store_release/store-release, 16-bit @unpriv:OK
+>   #615/5   verifier_store_release/store-release, 32-bit:OK
+>   #615/6   verifier_store_release/store-release, 32-bit @unpriv:OK
+>   #615/7   verifier_store_release/store-release, 64-bit:OK
+>   #615/8   verifier_store_release/store-release, 64-bit @unpriv:OK
+>   #615/9   verifier_store_release/store-release with uninitialized src_re=
+g:OK
+>   #615/10  verifier_store_release/store-release with uninitialized src_re=
+g @unpriv:OK
+>   #615/11  verifier_store_release/store-release with uninitialized dst_re=
+g:OK
+>   #615/12  verifier_store_release/store-release with uninitialized dst_re=
+g @unpriv:OK
+>   #615/13  verifier_store_release/store-release with non-pointer dst_reg:=
+OK
+>   #615/14  verifier_store_release/store-release with non-pointer dst_reg =
+@unpriv:OK
+>   #615/15  verifier_store_release/misaligned store-release:OK
+>   #615/16  verifier_store_release/misaligned store-release @unpriv:OK
+>   #615/17  verifier_store_release/store-release to ctx pointer:OK
+>   #615/18  verifier_store_release/store-release to ctx pointer @unpriv:OK
+>   #615/19  verifier_store_release/store-release, leak pointer to stack:OK
+>   #615/20  verifier_store_release/store-release, leak pointer to stack @u=
+npriv:OK
+>   #615/21  verifier_store_release/store-release, leak pointer to map:OK
+>   #615/22  verifier_store_release/store-release, leak pointer to map @unp=
+riv:OK
+>   #615/23  verifier_store_release/store-release with invalid register R15=
+:OK
+>   #615/24  verifier_store_release/store-release with invalid register R15=
+ @unpriv:OK
+>   #615/25  verifier_store_release/store-release to pkt pointer:OK
+>   #615/26  verifier_store_release/store-release to flow_keys pointer:OK
+>   #615/27  verifier_store_release/store-release to sock pointer:OK
+>   #615     verifier_store_release:OK
+>   Summary: 1/27 PASSED, 0 SKIPPED, 0 FAILED
+>
+>   $ sudo ./test_progs -t verifier_precision/bpf_load_acquire
+>   #596/5   verifier_precision/bpf_load_acquire:OK
+>   #596     verifier_precision:OK
+>   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+>
+>   $ sudo ./test_progs -t verifier_precision/bpf_store_release
+>   #596/6   verifier_precision/bpf_store_release:OK
+>   #596     verifier_precision:OK
+>   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+>
+>   $ sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
+>   #80/7    compute_live_registers/atomic_load_acq_store_rel:OK
+>   #80      compute_live_registers:OK
+>   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+>
+> Tiezhu Yang (5):
+>   LoongArch: Define instruction formats for AM{SWAP/ADD}.{B/H} and DBAR
+>   LoongArch: BPF: Add the default case in emit_atomic() and rename it
+>   LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
+>   LoongArch: BPF: Support load-acquire and store-release instructions
+>   selftests/bpf: Make CAN_USE_LOAD_ACQ_STORE_REL usable for LoongArch
+>
+>  arch/loongarch/include/asm/cpu-features.h     |   1 +
+>  arch/loongarch/include/asm/cpu.h              |   2 +
+>  arch/loongarch/include/asm/inst.h             |  10 +
+>  arch/loongarch/include/uapi/asm/hwcap.h       |   1 +
+>  arch/loongarch/kernel/cpu-probe.c             |   4 +
+>  arch/loongarch/kernel/proc.c                  |   2 +
+>  arch/loongarch/net/bpf_jit.c                  | 190 +++++++++++++++++-
+>  tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +-
+>  .../selftests/bpf/progs/verifier_precision.c  |   4 +-
+>  9 files changed, 203 insertions(+), 15 deletions(-)
+>
+> --
+> 2.42.0
+>
