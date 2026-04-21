@@ -1,188 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4833CFF5A
-	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 12:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB503D6CCD
+	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776775117; cv=none; b=S2JdI6QDNt00t1EdMHj5oY5lD1Ymrd0Vvn3SPbYzyuyy+g/aUPk7xpGQtx3OOHqK3cBhkHGT5KxOMMB1KDM0SdiOEOluykLBp6RUiXG9w+AYLrPv/D4iBZJD2wjHTxZuJoIZ5i97CoF3npptBL8iwBHB8136H5ZwcORjVg13/5k=
+	t=1776777881; cv=none; b=tIYNzE+YaitUNh0zjrduZBlO8IBlVCf35sHl+GlmcUDJD1Unb4vFmpOlFr6kzBhCkbtDrEIF7EwdNDkcwsZG07bLqygMJrFCUXMoDA1wd9pcrQGI8kk102+xdOnPwKxbxSGomsotrGX/yE2VA79RXyotBHWjmet3J5sTdE1TS7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776775117; c=relaxed/simple;
-	bh=rymoPHn2ZlMaUEiTXgcbEStbTLSOtezUfdAss9Zk0rw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cEUs8j6u9cQC1xZ4UBIETLCh6ipv2pDF5aRaiB6zjfjPcRxsfef8mPRuM5Ye/wyj49BKBFcrsP76aULtDEyv80k4Zq1Ij/+50iH2soKu/PbHnifF/jHU2f7gwuyQhO9qffNO+IecrwgfobZy7dkl39oG2BlUMyqV/Nc8qhcCR3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjJaVEnv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjJaVEnv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0818C2BCB8
-	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 12:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776775116;
-	bh=rymoPHn2ZlMaUEiTXgcbEStbTLSOtezUfdAss9Zk0rw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hjJaVEnvGi4hNkXCDYHQJQ9AQs7/aHZEiK+1jFjc4LgsDwwDxLghXcpYqWNCw1qoI
-	 XcYiDaftGsteARgvZqapVdk0sHNu0TqVLEk5XwzdEAZj24gX2lztTYy6903tjgt+Vo
-	 6DYOQG5FwGusBm52+Iv2aPaaxUK9FiQokj138KqBiD3av2VaTeYXk+gpEvg+lY/oWr
-	 H4MIlnzLOTC4hPyWq+5ReVq7oEk0+We8EMcNLZDx+lFU5nWMrxd/DSMXppm9W/FtWT
-	 RTZRLrrWkPQ2vAK1xaixV4U01owReC5ddpKIxKzhkQFzL3Q6xW4MLTzTqtSrEMOIL5
-	 YBR2mgN9wXSaQ==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b936331786dso533545766b.3
-        for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 05:38:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+7km9f/oqcjVoVyEByXwkrr7w1EIeY4NoK+SuIHMZ0G2KxtMPA6t9BKMV0tRZgWG5sFlsKMoGgUHE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwtOKl5cAD1T7TQkL+a73peyr2C6h2fQPmsA1Ea4LltrPiEKoR8
-	oqd2N+b4jBjB4sO9IhNQR1kgMajE3LBujkOryEd9lDTHlqSKwDid9ypbWYQwvR+6CWiw7LdDd58
-	nezZbfOJM/DHHz6i4NhKUvDObgRxOi3c=
-X-Received: by 2002:a17:906:fd86:b0:baa:2e75:8cd5 with SMTP id
- a640c23a62f3a-baa2e759062mr72406166b.15.1776775115362; Tue, 21 Apr 2026
- 05:38:35 -0700 (PDT)
+	s=arc-20240116; t=1776777881; c=relaxed/simple;
+	bh=nKXqCfcmgI/4F53LIA4YsI1i1dRcu3SCWL74z0ilyuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AjgsC88uO/FlaNWSXKsDYb6lSeWRINvFZczzWEEcWffhC9SGpgos0Xe+8FEBrs8FJuwAs1xFbbs59npGeNADAvc577CxnX45O6yuYGZKg3tgMZY10KFf3bAU+/TRdST1XVvBkwZT4u5U64LU/90OVBwhlZ8Vi6jfVpBdzMYUfOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [117.22.85.157])
+	by gateway (Coremail) with SMTP id _____8BxEuuLeudpenwCAA--.9318S3;
+	Tue, 21 Apr 2026 21:24:27 +0800 (CST)
+Received: from [192.168.0.111] (unknown [117.22.85.157])
+	by front1 (Coremail) with SMTP id qMiowJCx_8KGeudpkf1xAA--.20229S3;
+	Tue, 21 Apr 2026 21:24:26 +0800 (CST)
+Message-ID: <4a6c89b6-72a8-a80b-1f7c-9a620ed24505@loongson.cn>
+Date: Tue, 21 Apr 2026 21:25:19 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260413040506.26640-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260413040506.26640-1-yangtiezhu@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 21 Apr 2026 20:38:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
-X-Gm-Features: AQROBzBRpNGWipl724BOAylylJwoy0i6v0jh76onHkLo_f7Xi2JBiw7tmbrgnFU
-Message-ID: <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
 Subject: Re: [PATCH v3 0/5] LoongArch: BPF: Support more atomic instructions
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260413040506.26640-1-yangtiezhu@loongson.cn>
+ <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <CAAhV-H59RuXDEqLe7UNDYssvMFXqZ2YZuW4gOUqdscPQZpqibg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJCx_8KGeudpkf1xAA--.20229S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E
+	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF
+	0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8czVUUUUUU==
 
-Hi, Tiezhu,
+On 4/21/26 20:38, Huacai Chen wrote:
+> Hi, Tiezhu,
+> 
+> Maybe we need V4? If so, please submit as soon as possible.
 
-Maybe we need V4? If so, please submit as soon as possible.
+For now, TBH, I do not want to do that.
 
+Patch #1 is OK.
 
-Huacai
+Patch #2 is OK.
 
-On Mon, Apr 13, 2026 at 12:05=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> v3: Modify emit_atomic_ld_st() to use ld[x].{bu,hu,wu} instructions.
->
-> v2: Modify show_cpuinfo() to add lam_bh capability, no other changes.
->
-> This series is based on 7.0, the aim is to support more instructions:
-> (1) 8 and 16 bit read-modify-write instructions,
-> (2) load-acquire and store-release instructions.
->
-> When compiling, please set CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS and
-> unset CONFIG_BPF_UNPRIV_DEFAULT_OFF.
->
-> All of the related testcases passed and no regressions for bpf selftests.
-> Here are the test results on LoongArch:
->
->   $ sudo ./test_progs -t verifier_load_acquire
->   #577/1   verifier_load_acquire/load-acquire, 8-bit:OK
->   #577/2   verifier_load_acquire/load-acquire, 8-bit @unpriv:OK
->   #577/3   verifier_load_acquire/load-acquire, 16-bit:OK
->   #577/4   verifier_load_acquire/load-acquire, 16-bit @unpriv:OK
->   #577/5   verifier_load_acquire/load-acquire, 32-bit:OK
->   #577/6   verifier_load_acquire/load-acquire, 32-bit @unpriv:OK
->   #577/7   verifier_load_acquire/load-acquire, 64-bit:OK
->   #577/8   verifier_load_acquire/load-acquire, 64-bit @unpriv:OK
->   #577/9   verifier_load_acquire/load-acquire with uninitialized src_reg:=
-OK
->   #577/10  verifier_load_acquire/load-acquire with uninitialized src_reg =
-@unpriv:OK
->   #577/11  verifier_load_acquire/load-acquire with non-pointer src_reg:OK
->   #577/12  verifier_load_acquire/load-acquire with non-pointer src_reg @u=
-npriv:OK
->   #577/13  verifier_load_acquire/misaligned load-acquire:OK
->   #577/14  verifier_load_acquire/misaligned load-acquire @unpriv:OK
->   #577/15  verifier_load_acquire/load-acquire from ctx pointer:OK
->   #577/16  verifier_load_acquire/load-acquire from ctx pointer @unpriv:OK
->   #577/17  verifier_load_acquire/load-acquire with invalid register R15:O=
-K
->   #577/18  verifier_load_acquire/load-acquire with invalid register R15 @=
-unpriv:OK
->   #577/19  verifier_load_acquire/load-acquire from pkt pointer:OK
->   #577/20  verifier_load_acquire/load-acquire from flow_keys pointer:OK
->   #577/21  verifier_load_acquire/load-acquire from sock pointer:OK
->   #577     verifier_load_acquire:OK
->   Summary: 1/21 PASSED, 0 SKIPPED, 0 FAILED
->
->   $ sudo ./test_progs -t verifier_store_release
->   #615/1   verifier_store_release/store-release, 8-bit:OK
->   #615/2   verifier_store_release/store-release, 8-bit @unpriv:OK
->   #615/3   verifier_store_release/store-release, 16-bit:OK
->   #615/4   verifier_store_release/store-release, 16-bit @unpriv:OK
->   #615/5   verifier_store_release/store-release, 32-bit:OK
->   #615/6   verifier_store_release/store-release, 32-bit @unpriv:OK
->   #615/7   verifier_store_release/store-release, 64-bit:OK
->   #615/8   verifier_store_release/store-release, 64-bit @unpriv:OK
->   #615/9   verifier_store_release/store-release with uninitialized src_re=
-g:OK
->   #615/10  verifier_store_release/store-release with uninitialized src_re=
-g @unpriv:OK
->   #615/11  verifier_store_release/store-release with uninitialized dst_re=
-g:OK
->   #615/12  verifier_store_release/store-release with uninitialized dst_re=
-g @unpriv:OK
->   #615/13  verifier_store_release/store-release with non-pointer dst_reg:=
-OK
->   #615/14  verifier_store_release/store-release with non-pointer dst_reg =
-@unpriv:OK
->   #615/15  verifier_store_release/misaligned store-release:OK
->   #615/16  verifier_store_release/misaligned store-release @unpriv:OK
->   #615/17  verifier_store_release/store-release to ctx pointer:OK
->   #615/18  verifier_store_release/store-release to ctx pointer @unpriv:OK
->   #615/19  verifier_store_release/store-release, leak pointer to stack:OK
->   #615/20  verifier_store_release/store-release, leak pointer to stack @u=
-npriv:OK
->   #615/21  verifier_store_release/store-release, leak pointer to map:OK
->   #615/22  verifier_store_release/store-release, leak pointer to map @unp=
-riv:OK
->   #615/23  verifier_store_release/store-release with invalid register R15=
-:OK
->   #615/24  verifier_store_release/store-release with invalid register R15=
- @unpriv:OK
->   #615/25  verifier_store_release/store-release to pkt pointer:OK
->   #615/26  verifier_store_release/store-release to flow_keys pointer:OK
->   #615/27  verifier_store_release/store-release to sock pointer:OK
->   #615     verifier_store_release:OK
->   Summary: 1/27 PASSED, 0 SKIPPED, 0 FAILED
->
->   $ sudo ./test_progs -t verifier_precision/bpf_load_acquire
->   #596/5   verifier_precision/bpf_load_acquire:OK
->   #596     verifier_precision:OK
->   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
->   $ sudo ./test_progs -t verifier_precision/bpf_store_release
->   #596/6   verifier_precision/bpf_store_release:OK
->   #596     verifier_precision:OK
->   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
->   $ sudo ./test_progs -t compute_live_registers/atomic_load_acq_store_rel
->   #80/7    compute_live_registers/atomic_load_acq_store_rel:OK
->   #80      compute_live_registers:OK
->   Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
->
-> Tiezhu Yang (5):
->   LoongArch: Define instruction formats for AM{SWAP/ADD}.{B/H} and DBAR
->   LoongArch: BPF: Add the default case in emit_atomic() and rename it
->   LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
->   LoongArch: BPF: Support load-acquire and store-release instructions
->   selftests/bpf: Make CAN_USE_LOAD_ACQ_STORE_REL usable for LoongArch
->
->  arch/loongarch/include/asm/cpu-features.h     |   1 +
->  arch/loongarch/include/asm/cpu.h              |   2 +
->  arch/loongarch/include/asm/inst.h             |  10 +
->  arch/loongarch/include/uapi/asm/hwcap.h       |   1 +
->  arch/loongarch/kernel/cpu-probe.c             |   4 +
->  arch/loongarch/kernel/proc.c                  |   2 +
->  arch/loongarch/net/bpf_jit.c                  | 190 +++++++++++++++++-
->  tools/testing/selftests/bpf/progs/bpf_misc.h  |   4 +-
->  .../selftests/bpf/progs/verifier_precision.c  |   4 +-
->  9 files changed, 203 insertions(+), 15 deletions(-)
->
-> --
-> 2.42.0
->
+Patch #3 is OK according to Wang Rui's reply.
+
+Patch #4 has no big problems, the current testcases passed,
+I am not sure whether it has problem, I can fix it if there
+is a real problem, maybe it needs to update the testcase first.
+
+patch #5 is OK, hope you can replace "usable" with "enable" in
+the patch subject and commit message when applying.
+
+Thanks,
+Tiezhu
+
