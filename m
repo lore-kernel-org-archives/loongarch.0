@@ -1,287 +1,99 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFC738423D
-	for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 17:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776791344; cv=pass; b=G+b4npU80cT6qR9r29jv8LMRwOgdtxNCJYEBadQc4H+bEB98SrEVTzr0IRBRwcbbR5afOAZeEfC/UbdErWGKcMRQj7HEoy00UuZGDzxeMrykCr9TCPAfEOvUvbe2nG3RsQoiCLi6BtG6IQuS0rZiWDAjZwek/UOCTeolngOKsJ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776791344; c=relaxed/simple;
-	bh=fX/Sz0zC6ezU75jh9T36eNVptRuVVrhH7wuRuIMNVVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YvLdi6opXZYsm53TmIDkZSXNa3qj6hD3Qg2hyuWYOxGLF7V1ocHbTtfo8ZpORF2srubGe7NV/Z4/272d7ctCyuChE+dgH4WJBLWnWT0MENeMgd2IAZc0emaprW7d7au8SIKqpjWBnf2kfSDQdgYANc2GRQ77l1p75nHFOb2bXEo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GTvsS5QU; arc=pass smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0E5372EDB
+	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 07:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776843920; cv=none; b=L1SxkE9DiB2Fzd8vl1V6cYRAp8Z/Yqq0EcqupadcuCxaYnYNqpdzIoLuBuOTgM2+a1ZWVfnQfiZjIOIbmirgggsAK78i1sT2dW3hOHd8QxOKjbe4iQ8f88N/Jcu6CyC6ckHxo5xdEuOlCa/x91jmPxij2J4RvXK0wZEPEVlFaFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776843920; c=relaxed/simple;
+	bh=9n+kGFDCUAI2oVsDOLiljIgRBuHErHdE5+lB1yJo880=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dfUgUQcWIFfrzI0tB9/Ta9OhiGxN1ShTe4jIccjQNb6oMXOjMeXm35VBiovO6VU+Tifjtemo/cBKPKzA7gTKDysdmr5CKV7OyLGHNKwYg6TX3h+ceITxHQK54B11b7PtU+plEnO34sV3g66+YPP/e6IPAN9GIYbVKDrpVJbIcI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UDXicEBt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8uLYcbIJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GTvsS5QU"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4891ca4ce02so264765e9.1
-        for <loongarch@lists.linux.dev>; Tue, 21 Apr 2026 10:09:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776791340; cv=none;
-        d=google.com; s=arc-20240605;
-        b=TukpeJesiihhgWQMb/O75hxhG8Issfo2c0PKBhPrhorJWulXCECW4SrUVzi2KW2Z4O
-         gZRiKluQ+lYe24q3toTNMEqKzOnV+yDDYg3VCmoA3+2/rlW5uPIK/FLP5bELP8hIAJcZ
-         aMiY6RXzSMu9rTBya0vUn8GFyHNrMA041QFeKyO0Ni/VSDEPvvbud/g4LAkp9Upjnlu7
-         x+lz9HZiUB9wxTKU4r50YIZV0zOADncOsQdgBOsSUAgL024s3FfEHOjN834/RUfLFWZp
-         ieZ42KwxY2KLPHoVfVPyz8dzX4CwFWcpAzd+tWX+yX2Coz2+CCY8eiC6C5VDsGMOzQqs
-         0y6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=HFQ8wxNql59DNKoY4m4ShNnIhY0FuV9hRkmF8YGbPEM=;
-        fh=VX9X5lcDcGqiL+xupudhxUqGC3JTwawusPqfNV6nLts=;
-        b=DGBkGNNWudAN7Pr+2X0cKdoXDV5+QImYLOltGSoKaHrhEKyo3iSpy76HONmQ+QI4AK
-         8Eh7GH93OaLLNoVJGJ1+fPKoaId/RzC6wZyjjd5nhqC/jNQtIoWxnxuQJDScPzxL/9Ms
-         eaJvYBHcq9CZDdoXY2kEeaDYoXclzCbLWDzt9lElN4YYveRtsbRbPCNXJVNf6SIKIXiK
-         s9eUE5ryNxvpApDiog7jeztUIcDtt7mZ1uCp2oD7W/G8M/2nS2ZdvwT+eaOOSSD6lKQJ
-         tJuZy7xB9kJ2eBIdv3Ab17KDQkOnXI3paDpgELraXW1GPE5ao/k6zW5ooj/jjFYhu9jS
-         +ySQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776791340; x=1777396140; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFQ8wxNql59DNKoY4m4ShNnIhY0FuV9hRkmF8YGbPEM=;
-        b=GTvsS5QU0MYKj2Dn0NTDBw3WGPaizB8hn+c+t/1kOSuaRnc4Q7k0uU9Eb1SxbWQGwM
-         9M+2pVG7ZG9dECBTyRhyeWvwFzMxPXBKmwF5ITktDxna+/Y0kcjYZbHVlbDz+JEenSvw
-         VBB24IBR5uli13mPWu9aF5dUR33IAFmdmnlEouf6NX7cBZEQu4bbkx0qo1BSi8VqSGIw
-         NgavzYMgXwEo6cn61ig1I1IAkjRzmTJmb5iqJDn9DNaLABjYWQFpJCsNbfbCt/WdpdJo
-         JWfbtleeijK7R/VnqrGDcVYyniUG3dfqy3DH8sCr9MbzODC0NbP2LZQJHx/XFOlyu7bA
-         juRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776791340; x=1777396140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HFQ8wxNql59DNKoY4m4ShNnIhY0FuV9hRkmF8YGbPEM=;
-        b=b68fu181inbe/KDgf1u9i5kU/FvUxv61cf9N8J5DZ+e2zE2x8SOfuG9HVP5ZrsNy9K
-         Gp76rNq7ps7FR/WolgPmL0JC32RYrEswxPycYLYAZIYw63pqOFRboIwAtMNScQmqDPZH
-         zH8qbEog7ZPt4CyPtwMKC34ncQoB8VI/Vnokrl6pzTh0O7T/PxUPhzUgu4JxPFKSnckP
-         0ai5mxE7z9Xj5VoJvW7gig8jahbwTydSJlWHUVpbRs+ORd83e+SAjQxpWKUH4h9q2h75
-         1ezelGEWpW2sv+qazActaG2PzuJ9AznEV8Gz3v6zTGTAE3oACqCzzcSs435Pgfi/lib7
-         nKpg==
-X-Forwarded-Encrypted: i=1; AFNElJ/zgTuuCecuWw47lcmks0a+oyHH8Mj5rugDQxIo8n33NsscRN7v/3VcdNCkLTIbD31NrWfdPbzBub4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyx16c/KWg5+I4P+tyeXujcY/XfClxj+Zb8lOuC5XnUHdrGIW8r
-	NfZ896rHgrfZILUkrnYVzw4c9ut5itcamDl9vAzMLvPzS2AuISmiSMNjmGyh+ZnybsIqnKspM92
-	rJZrvN1OebIeKJvHaLQDyN/iPWkh5+toWtblSpWUT
-X-Gm-Gg: AeBDieumeFy2rx1KjycdxgBzpIq9pxHbndB+AL4nq/mNFylhNigHHw0xbfvW5MJQKPj
-	gJf0KEKRlTSPrejOaZLN1VNlaSf4dj3p7ndNEoMGBNDyDc9w1DSuCAbHfV40a28dZ1TMBLmX+l6
-	6VX8YS7n6utjiDG3bppzBShBEo3qUjlEUFjN6/hXL0Ev3z9SszxqliKXzakJyGuxC2bw29hMZRK
-	pin8DT830X9XsLCs/ubjXqq473UwpIUY0GuEyaCLlSylYCfVBULp/07Hck0LCoLJbGTHTscc6Ue
-	qhlzZwZ1fbvxIC9QbWb5yPFKI97Kd1b9urwNtAw=
-X-Received: by 2002:a05:600d:6443:10b0:488:c4b2:e832 with SMTP id
- 5b1f17b1804b1-489013bd895mr2808755e9.3.1776791339707; Tue, 21 Apr 2026
- 10:08:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UDXicEBt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8uLYcbIJ"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1776843915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fGZi1OfhYcx0jHsSgr3PB+M6Ux+Iq3Y6s/sdiIk3dcA=;
+	b=UDXicEBtAL+yCmOf0LjykzyXxfiD38x7r1oK29v0s68UgqMQXbhNnboK3Vo/D8yprq32mi
+	nq6Fdps7PXuDtAbHXRIgxsVqOa/87yFPuRKCZacJHNjTLlV4QqXuR4gnZAY3SkVcVM8ivA
+	5TR/fzET4qb70t8OZ+70Az1d7DlHO60kSFtADBGNKVgM5Ua+Gtga34KabZssUpcN0H+4jV
+	hxYzExLu5eWhtaXEvT2v5AVY66RwF5xWwEpG1iiZbyqwfRxiRBl+dDiIqOkqvcWxfNl0OX
+	QsqXqninWFNz9ppW2rwVrdJLtZXxxZ7DbdVNthqvfBnGj9Qg5kjHmSVOWavpQQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1776843915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fGZi1OfhYcx0jHsSgr3PB+M6Ux+Iq3Y6s/sdiIk3dcA=;
+	b=8uLYcbIJ5rnuaUUh/m4aolMSak0PgBYFOSefVJY06zYmuYqQ4x/GwuC9Rj8ng+OuRTb31Z
+	0nrS++HxliVqWeBw==
+Date: Wed, 22 Apr 2026 09:45:15 +0200
+Subject: [PATCH] LoongArch: vDSO: Drop custom __arch_vdso_hres_capable()
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260410151746.61150-1-kalyazin@amazon.com> <20260410151746.61150-11-kalyazin@amazon.com>
- <aeemS2wm38Cm4qAf@google.com>
-In-Reply-To: <aeemS2wm38Cm4qAf@google.com>
-From: Frank van der Linden <fvdl@google.com>
-Date: Tue, 21 Apr 2026 10:08:48 -0700
-X-Gm-Features: AQROBzBifkAsQzS0X3Z1RL6hHFJu96bsJJpCRfOrgFmfYjKrDR-uZJ-l8nIAe34
-Message-ID: <CAPTztWb67XZvfcMVnbegDNNW0LJa9UsaTGx3M898xJUJrekk0w@mail.gmail.com>
-Subject: Re: [PATCH v12 10/16] KVM: guest_memfd: Add flag to remove from
- direct map
-To: Sean Christopherson <seanjc@google.com>
-Cc: Nikita Kalyazin <kalyazin@amazon.co.uk>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "kernel@xen0n.name" <kernel@xen0n.name>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"corbet@lwn.net" <corbet@lwn.net>, "maz@kernel.org" <maz@kernel.org>, "oupton@kernel.org" <oupton@kernel.org>, 
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
-	"will@kernel.org" <will@kernel.org>, "tglx@kernel.org" <tglx@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "willy@infradead.org" <willy@infradead.org>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "david@kernel.org" <david@kernel.org>, 
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>, "vbabka@kernel.org" <vbabka@kernel.org>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "surenb@google.com" <surenb@google.com>, "mhocko@suse.com" <mhocko@suse.com>, 
-	"ast@kernel.org" <ast@kernel.org>, "daniel@iogearbox.net" <daniel@iogearbox.net>, 
-	"andrii@kernel.org" <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>, 
-	"eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org" <song@kernel.org>, 
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"sdf@fomichev.me" <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"jannh@google.com" <jannh@google.com>, "pfalcato@suse.de" <pfalcato@suse.de>, 
-	"skhan@linuxfoundation.org" <skhan@linuxfoundation.org>, "riel@surriel.com" <riel@surriel.com>, 
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>, "jgross@suse.com" <jgross@suse.com>, 
-	"yu-cheng.yu@intel.com" <yu-cheng.yu@intel.com>, "kas@kernel.org" <kas@kernel.org>, 
-	"coxu@redhat.com" <coxu@redhat.com>, "ackerleytng@google.com" <ackerleytng@google.com>, 
-	"yosry@kernel.org" <yosry@kernel.org>, "ajones@ventanamicro.com" <ajones@ventanamicro.com>, 
-	"maobibo@loongson.cn" <maobibo@loongson.cn>, "tabba@google.com" <tabba@google.com>, 
-	"prsampat@amd.com" <prsampat@amd.com>, "wu.fei9@sanechips.com.cn" <wu.fei9@sanechips.com.cn>, 
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "jmattson@google.com" <jmattson@google.com>, 
-	"jthoughton@google.com" <jthoughton@google.com>, "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>, 
-	"alex@ghiti.fr" <alex@ghiti.fr>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
-	"borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "dev.jain@arm.com" <dev.jain@arm.com>, 
-	"gor@linux.ibm.com" <gor@linux.ibm.com>, "hca@linux.ibm.com" <hca@linux.ibm.com>, 
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "pjw@kernel.org" <pjw@kernel.org>, 
-	"shijie@os.amperecomputing.com" <shijie@os.amperecomputing.com>, "svens@linux.ibm.com" <svens@linux.ibm.com>, 
-	"thuth@redhat.com" <thuth@redhat.com>, 
-	"yang@os.amperecomputing.com" <yang@os.amperecomputing.com>, 
-	"Liam.Howlett@oracle.com" <Liam.Howlett@oracle.com>, "urezki@gmail.com" <urezki@gmail.com>, 
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>, 
-	"gerald.schaefer@linux.ibm.com" <gerald.schaefer@linux.ibm.com>, 
-	"jiayuan.chen@shopee.com" <jiayuan.chen@shopee.com>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"pavel@kernel.org" <pavel@kernel.org>, "rafael@kernel.org" <rafael@kernel.org>, 
-	"yangyicong@hisilicon.com" <yangyicong@hisilicon.com>, "vannapurve@google.com" <vannapurve@google.com>, 
-	"jackmanb@google.com" <jackmanb@google.com>, "patrick.roy@linux.dev" <patrick.roy@linux.dev>, 
-	Jack Thomson <jackabt@amazon.co.uk>, Takahiro Itazuri <itazur@amazon.co.uk>, 
-	Derek Manwaring <derekmn@amazon.com>, Nikita Kalyazin <nikita.kalyazin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260422-vdso-loongarch-cleanup-v1-1-1fef08f07614@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2MQQqAMAzAviI9W5hFFP2KeBhb1YJ0sqEIY393e
+ AwkyZA4CieYmwyRH0kStELXNuAOqzuj+MpAhgbTE+HjU8AzBN1tdAe6k63eF/puYDPyRNWBGl+
+ RN3n/8bKW8gEcrkIHaAAAAA==
+X-Change-ID: 20260422-vdso-loongarch-cleanup-d16e07e92422
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776843915; l=1033;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=9n+kGFDCUAI2oVsDOLiljIgRBuHErHdE5+lB1yJo880=;
+ b=1vS+RZWFoA2+xpt7wWgyhUDiitcXGjv1VxDqCuGfOLTYV1h44Wbs5mRro2dlxA+G5K291up7B
+ Pv7zDMo+BQiAi3+jzYrKJTQCD9PDBfyLznO/AILcvZJ9nyo69oleSMm
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Tue, Apr 21, 2026 at 9:31=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Fri, Apr 10, 2026, Nikita Kalyazin wrote:
-> > From: Patrick Roy <patrick.roy@linux.dev>
-> >
-> > Add GUEST_MEMFD_FLAG_NO_DIRECT_MAP flag for KVM_CREATE_GUEST_MEMFD()
-> > ioctl. When set, guest_memfd folios will be removed from the direct map
-> > after preparation, with direct map entries only restored when the folio=
-s
-> > are freed.
-> >
-> > To ensure these folios do not end up in places where the kernel cannot
-> > deal with them, set AS_NO_DIRECT_MAP on the guest_memfd's struct
-> > address_space if GUEST_MEMFD_FLAG_NO_DIRECT_MAP is requested.
-> >
-> > Note that this flag causes removal of direct map entries for all
-> > guest_memfd folios independent of whether they are "shared" or "private=
-"
-> > (although current guest_memfd only supports either all folios in the
-> > "shared" state, or all folios in the "private" state if
-> > GUEST_MEMFD_FLAG_MMAP is not set). The usecase for removing direct map
-> > entries of also the shared parts of guest_memfd are a special type of
-> > non-CoCo VM where, host userspace is trusted to have access to all of
-> > guest memory, but where Spectre-style transient execution attacks
-> > through the host kernel's direct map should still be mitigated.  In thi=
-s
-> > setup, KVM retains access to guest memory via userspace mappings of
-> > guest_memfd, which are reflected back into KVM's memslots via
-> > userspace_addr. This is needed for things like MMIO emulation on x86_64
-> > to work.
-> >
-> > Direct map entries are zapped right before guest or userspace mappings
-> > of gmem folios are set up, e.g. in kvm_gmem_fault_user_mapping() or
-> > kvm_gmem_get_pfn() [called from the KVM MMU code].
->
-> ...
->
-> > +#define KVM_GMEM_FOLIO_NO_DIRECT_MAP BIT(0)
-> > +
-> > +static bool kvm_gmem_folio_no_direct_map(struct folio *folio)
-> > +{
-> > +     return ((u64)folio->private) & KVM_GMEM_FOLIO_NO_DIRECT_MAP;
-> > +}
-> > +
-> > +static int kvm_gmem_folio_zap_direct_map(struct folio *folio)
-> > +{
-> > +     int r =3D 0;
-> > +
-> > +     VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
-> > +
-> > +     if (WARN_ON_ONCE(!(GMEM_I(folio_inode(folio))->flags & GUEST_MEMF=
-D_FLAG_NO_DIRECT_MAP)))
-> > +             return -EINVAL;
-> > +
-> > +     if (kvm_gmem_folio_no_direct_map(folio))
-> > +             goto out;
-> > +
-> > +     r =3D folio_zap_direct_map(folio);
-> > +     if (!r)
-> > +             folio->private =3D (void *)((u64)folio->private | KVM_GME=
-M_FOLIO_NO_DIRECT_MAP);
-> > +
-> > +out:
-> > +     return r;
-> > +}
-> > +
-> > +static void kvm_gmem_folio_restore_direct_map(struct folio *folio)
-> > +{
-> > +     folio_restore_direct_map(folio);
-> > +     folio->private =3D (void *)((u64)folio->private & ~KVM_GMEM_FOLIO=
-_NO_DIRECT_MAP);
-> > +}
->
-> Making guest_memfd responsible for zapping and restoring the direct map o=
-n a per-
-> folio basis feels wrong given the addition of AS_NO_DIRECT_MAP.  I especi=
-ally don't
-> like that the "rules" for when an AS_NO_DIRECT_MAP folio has a direct map=
- will vary
-> based on the owner, and even within an owner (e.g. guest_memfd) will be a=
-d hoc.
->
-> E.g. as per the series to add guest_memfd write() support[*]:
->
->   When direct map removal is implemented [2]
->    - write() will not be allowed to access pages that have already
->      been removed from direct map
->    - on completion, write() will remove the populated pages from
->      direct map
->
-> That's pretty gross ABI, because with KVM_GMEM_FOLIO_NO_DIRECT_MAP, users=
-pace can
-> write() exactly once.  To re-write memory, I assume userspace would need =
-to do a
-> PUNCH_HOLE or truncate.
->
-> What's preventing us from handling this automagically in e.g. filemap_add=
-_folio()
-> and filemap_remove_folio()?  Then the usage rules are pretty straightforw=
-ard: the
-> kernel must *always* assume the direct map is invalid for folios from
-> AS_NO_DIRECT_MAP mappings.
->
-> Then if KVM needs to utilize a kernel mapping, e.g. in kvm_gmem_populate(=
-), KVM
-> could use dedicated variants of kmap_local_xxx() to deal with a local map=
-ping for
-> a folio/page without a direct map.  Or, KVM could simply disallow the spe=
-cific
-> sequence that would require KVM to do the memcpy (I'm pretty sure we can =
-do that
-> with in-place shared=3D>private conversion support).
->
-> I realize that could throw a big wrench into write() performance, but IMO=
-, before
-> merging either series, we need a complete story for exactly how this will=
- all fit
-> together, in a maintainable fashion and with sane ABI.
->
-> [*] https://lore.kernel.org/all/20251114151828.98165-1-kalyazin@amazon.co=
-m
->
+The custom definition is identical to the generic fallback one.
 
-I agree with this - this approach would also allow for memory that was
-never in the direct map to begin with, or has been taken out already
-(for which I happen to have a use case :-)). guest_memfd and other
-code can then assume that AS_NO_DIRECT_MAP means they have to take
-explicit action to map it if needed. It's a clean, simple ABI.
+Remove it.
 
-With the current set of patches, it seems like this couldn't be done
-in a clean manner.
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ arch/loongarch/include/asm/vdso/gettimeofday.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-- Frank
+diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loongarch/include/asm/vdso/gettimeofday.h
+index bae76767c693..18ba403e1ed9 100644
+--- a/arch/loongarch/include/asm/vdso/gettimeofday.h
++++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
+@@ -85,12 +85,6 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
+ 	return count;
+ }
+ 
+-static inline bool loongarch_vdso_hres_capable(void)
+-{
+-	return true;
+-}
+-#define __arch_vdso_hres_capable loongarch_vdso_hres_capable
+-
+ #endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+ 
+ #endif /* !__ASSEMBLER__ */
+
+---
+base-commit: 6596a02b207886e9e00bb0161c7fd59fea53c081
+change-id: 20260422-vdso-loongarch-cleanup-d16e07e92422
+
+Best regards,
+--  
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
