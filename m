@@ -1,99 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0E5372EDB
-	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 07:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE5C382376
+	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 08:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776843920; cv=none; b=L1SxkE9DiB2Fzd8vl1V6cYRAp8Z/Yqq0EcqupadcuCxaYnYNqpdzIoLuBuOTgM2+a1ZWVfnQfiZjIOIbmirgggsAK78i1sT2dW3hOHd8QxOKjbe4iQ8f88N/Jcu6CyC6ckHxo5xdEuOlCa/x91jmPxij2J4RvXK0wZEPEVlFaFs=
+	t=1776845209; cv=none; b=XgmbRhzvf2prcwciipBdrhLukw5LZSLHMPeJCFVhlPOIpLPxJw/nkZ0yWUkLGUKVtAPczEe0rPOVqzgYWbVuDsGU1kn9sky799H5jgmMifcqVWQJha785S/ZV103NA002jAZ5DshuxfHsBoexTzDobd0eUowkkvWz9o3veqZ/iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776843920; c=relaxed/simple;
-	bh=9n+kGFDCUAI2oVsDOLiljIgRBuHErHdE5+lB1yJo880=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dfUgUQcWIFfrzI0tB9/Ta9OhiGxN1ShTe4jIccjQNb6oMXOjMeXm35VBiovO6VU+Tifjtemo/cBKPKzA7gTKDysdmr5CKV7OyLGHNKwYg6TX3h+ceITxHQK54B11b7PtU+plEnO34sV3g66+YPP/e6IPAN9GIYbVKDrpVJbIcI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UDXicEBt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8uLYcbIJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1776845209; c=relaxed/simple;
+	bh=xGdXSbBjTf15y6ybsKmPKKU0hCILADX3goOTyjY5gxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hIBqxw0CPIOlgDCfmY7vV1EtYThLN90+nfgtVhvFY8KETO7h3nWGrFzqTlse189Nn822dS+DuuYbenZ7QZMIfYWvcXCQBRNrQSUe2uOKLvseW3YMfN6dkI6cGEnp0iubyB5XRneIxE4YWXWpy5HipgegQl3uOZDm+b/PJ7linzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=si4BJJeq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UDXicEBt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8uLYcbIJ"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1776843915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fGZi1OfhYcx0jHsSgr3PB+M6Ux+Iq3Y6s/sdiIk3dcA=;
-	b=UDXicEBtAL+yCmOf0LjykzyXxfiD38x7r1oK29v0s68UgqMQXbhNnboK3Vo/D8yprq32mi
-	nq6Fdps7PXuDtAbHXRIgxsVqOa/87yFPuRKCZacJHNjTLlV4QqXuR4gnZAY3SkVcVM8ivA
-	5TR/fzET4qb70t8OZ+70Az1d7DlHO60kSFtADBGNKVgM5Ua+Gtga34KabZssUpcN0H+4jV
-	hxYzExLu5eWhtaXEvT2v5AVY66RwF5xWwEpG1iiZbyqwfRxiRBl+dDiIqOkqvcWxfNl0OX
-	QsqXqninWFNz9ppW2rwVrdJLtZXxxZ7DbdVNthqvfBnGj9Qg5kjHmSVOWavpQQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1776843915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fGZi1OfhYcx0jHsSgr3PB+M6Ux+Iq3Y6s/sdiIk3dcA=;
-	b=8uLYcbIJ5rnuaUUh/m4aolMSak0PgBYFOSefVJY06zYmuYqQ4x/GwuC9Rj8ng+OuRTb31Z
-	0nrS++HxliVqWeBw==
-Date: Wed, 22 Apr 2026 09:45:15 +0200
-Subject: [PATCH] LoongArch: vDSO: Drop custom __arch_vdso_hres_capable()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="si4BJJeq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF8EC2BCB7
+	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 08:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776845209;
+	bh=xGdXSbBjTf15y6ybsKmPKKU0hCILADX3goOTyjY5gxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=si4BJJeqOXBvd4cwIJR75+oBlvuZRysfK3065bBsIvvPP0ycUho2pF7xliovJ6e42
+	 OYsYbI2qnNM6DBft7/V1XatWHPBQf5zcYrULXcA4pgF3splBjS9e4dRLmIP8T1LjPq
+	 Lnm+lnB+XquI7uye1DC6SIqri6DOdXSzS2tmHuRZroA6B9Og8QgE/kYlAz4wEW1SgB
+	 VxNnYAVGSrqwzKfTZWQymJuyzmMFLhgGue1r0EpxLP7LPGrH1HmRtqWe0U2STUHc4H
+	 at4HZUYxASKWdto0YWE85gJeI84teFAqEWl+uTetS4dsiXwIIAK2fCIdRBigHRcWsn
+	 x0JdNicm1rBow==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-b932fe2e1a7so714882166b.1
+        for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 01:06:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9rcrusSUw+8DgbRS0zbbHuFH6oKjKqt3N8JPMdQ/3VHjB2HLuIE0wNQIVdDHTZ1eZFquRErNyEqnU=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxLxedjUeTy3xmGzpFXCkg4/lMDVgQDwvVijl20cnCF4aW2UttN
+	35hMqIT4iseCVQC4R2oI04ww/ld8FnXrAMCfyDhHDoP3KQeagAiqkHFr4SMAPNDTA+HsKY9Dy0H
+	Ns38LH6d3VXcJouAZVPNyA1vC/fsFN+Y=
+X-Received: by 2002:a17:907:9342:b0:b9d:e301:20db with SMTP id
+ a640c23a62f3a-ba41de2e49amr1039184066b.25.1776845208106; Wed, 22 Apr 2026
+ 01:06:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260422-vdso-loongarch-cleanup-v1-1-1fef08f07614@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2MQQqAMAzAviI9W5hFFP2KeBhb1YJ0sqEIY393e
- AwkyZA4CieYmwyRH0kStELXNuAOqzuj+MpAhgbTE+HjU8AzBN1tdAe6k63eF/puYDPyRNWBGl+
- RN3n/8bKW8gEcrkIHaAAAAA==
-X-Change-ID: 20260422-vdso-loongarch-cleanup-d16e07e92422
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776843915; l=1033;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=9n+kGFDCUAI2oVsDOLiljIgRBuHErHdE5+lB1yJo880=;
- b=1vS+RZWFoA2+xpt7wWgyhUDiitcXGjv1VxDqCuGfOLTYV1h44Wbs5mRro2dlxA+G5K291up7B
- Pv7zDMo+BQiAi3+jzYrKJTQCD9PDBfyLznO/AILcvZJ9nyo69oleSMm
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <20260224073515.1273-1-yangtiezhu@loongson.cn> <CAEyhmHQVTzOohJUAL5FfP39pY=8q=ui7LYE3Z4+n1s71GK3Shw@mail.gmail.com>
+In-Reply-To: <CAEyhmHQVTzOohJUAL5FfP39pY=8q=ui7LYE3Z4+n1s71GK3Shw@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 22 Apr 2026 16:06:59 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7PXGyTotvTnw6PKYUdVYzeWVHf5CxP_WxvC5cAdtqBFw@mail.gmail.com>
+X-Gm-Features: AQROBzCGMhCXwTFrM0gvqE-GLzjI99mAClONjTv_9kWrMnRqLJTDgPda4rEYdJw
+Message-ID: <CAAhV-H7PXGyTotvTnw6PKYUdVYzeWVHf5CxP_WxvC5cAdtqBFw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] LoongArch: BPF: Support more features for trampoline
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The custom definition is identical to the generic fallback one.
+On Fri, Feb 27, 2026 at 5:55=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> On Tue, Feb 24, 2026 at 3:35=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
+cn> wrote:
+> >
+> > This series is based on Linux 7.0-rc1, tested on Loongson-3A6000,
+> > the main aim is to support small struct arguments and 12 function
+> > arguments for LoongArch BPF trampoline.
+> >
+> > Tiezhu Yang (3):
+> >   LoongArch: BPF: Open code and remove invoke_bpf_mod_ret()
+> >   LoongArch: BPF: Support small struct arguments for trampoline
+> >   LoongArch: BPF: support 12 function arguments for trampoline
+> >
+>
+> For the series:
+> Acked-by: Hengqi Chen <hengqi.chen@gmail.com>
+> Tested-by: Hengqi Chen <hengqi.chen@gmail.com>
+Applied, thanks.
 
-Remove it.
+Huacai
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- arch/loongarch/include/asm/vdso/gettimeofday.h | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loongarch/include/asm/vdso/gettimeofday.h
-index bae76767c693..18ba403e1ed9 100644
---- a/arch/loongarch/include/asm/vdso/gettimeofday.h
-+++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
-@@ -85,12 +85,6 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
- 	return count;
- }
- 
--static inline bool loongarch_vdso_hres_capable(void)
--{
--	return true;
--}
--#define __arch_vdso_hres_capable loongarch_vdso_hres_capable
--
- #endif /* CONFIG_GENERIC_GETTIMEOFDAY */
- 
- #endif /* !__ASSEMBLER__ */
-
----
-base-commit: 6596a02b207886e9e00bb0161c7fd59fea53c081
-change-id: 20260422-vdso-loongarch-cleanup-d16e07e92422
-
-Best regards,
---  
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+>
+> >  arch/loongarch/net/bpf_jit.c | 109 +++++++++++++++++++++++------------
+> >  1 file changed, 71 insertions(+), 38 deletions(-)
+> >
+> > --
+> > 2.42.0
+> >
