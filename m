@@ -1,60 +1,62 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D5A352FA5
-	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 23:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D7A352FA5
+	for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 23:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776900262; cv=none; b=PihEUuO3kCwokk0KlyscNVUcjdmO1ETuRQRNMQgoPsfJ+DgGvH1LbpXa2dwIIT3hY0muKNS5vcVU58Mho5Yqb4u2BGilsOcbqsfVgbDnKA05G0qq5u2kIhs5eE6RR/RtRCzC1a+0iNMjwJwy4C0jK0dH4Px04whAriCrRTHro1c=
+	t=1776900266; cv=none; b=cR6/GD+l/ukVycNw3SV2WaPsLqAWTfXhkreJsTtQrvCJBvL42OGoBrDZc1MxKahZnvfeRLtiOdQMRHOQYZZhEoNmf8gCmmvI7u3lg/8MUgOHAsUJRFZdf5y8zC0jG4DxfIVpCvEwzpFKC69I9Pz6mOrEiprHrPuOq5Us1Iu/rgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776900262; c=relaxed/simple;
-	bh=dO5ceCHRyFcG9tsPv/Uy5m+t2oSiu8qdhOWY0CG+Ixc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PLmP84cSkrVs3tie03cHW3DS9pJHOHIkJiDS6yV7/FecOQSujyBOx29ll/THVPa0bJVhA4udp4QUZEmk3CGvs6jOg1pp6ObpyjnvSR0vhxUBzv/kOlyKYxGI6wQAADnZowT+mlJyae13D37BcxIjLy/fF+O6DqWSe8wvBVEoaNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A/1CIW5B; arc=none smtp.client-ip=209.85.215.176
+	s=arc-20240116; t=1776900266; c=relaxed/simple;
+	bh=JwpPiWcxvNYKN4lMFNrdi3d/uL9NCRLy0XsGhPfvJ9k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=prSc5SmAasDSMqU5SqkkZrD5ukfSbamXHHLuD+CRVNtu79mVMpNarcINArQuod6jGcyP+GPY/k+D1pjuo8lzJTKTgsVPuMaG0nguo+Y8QQQnsoxzOux3FqGlkwSXHOsle94fx7F/1Agd5+h6GTwP3vYTjVCLEwJwVVyCeWDOYJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSl5PBvE; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A/1CIW5B"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c79662668bbso2287700a12.1
-        for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 16:24:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSl5PBvE"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-36146ae9dd4so4771894a91.3
+        for <loongarch@lists.linux.dev>; Wed, 22 Apr 2026 16:24:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776900261; x=1777505061; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=20Hp+mzF4LGGtn1pS9b/voWfhrJdUMGJ7yQHT8sztDA=;
-        b=A/1CIW5B8vHZ2/3tpnA0/+Zp17jRAgzGsBYUvGtRULuLNEJvlz/tfkS8ZAgXZaDxC/
-         6/P+8n6Dt1R5caQs4C9vzh5+/Ke8Fme5nb+y4RGRuu3rXZooDtmFdYoNaaJ1S5RAd+7J
-         TJxo60UmTk/qj534AAeYzFXtT+BTkzWMBAUCz7hfiylkulGQPOT7bI3fxFvzObxOhsij
-         LaflwY7jxYKcsJbb0O20KQSkJVcQf3txxYzSbRVV2kLnt0znu2lWxjYJqCuannCA/F3J
-         1FeUfwVU8tB/asNuq+fulZ5Cptlm4rfafiY7y6DYHkOczhiNte4MZwGZ8Kqi6l+1Zy72
-         YohA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776900261; x=1777505061;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1776900265; x=1777505065; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=20Hp+mzF4LGGtn1pS9b/voWfhrJdUMGJ7yQHT8sztDA=;
-        b=j2DLganYydf27z/JnPfqjKYGE6uaW6fW0jsOFZncrPtkzwqNXvIfBxF0LWlbrAdwqD
-         1sF4QL9vWEk9VoDcWUmKY+iiqzSkhi8H02ztMiZVXTSp4RVKjHZrV4CA6dZxHjbg9d3+
-         ajzqUkVtR7rsY9c9z8XuaRVGEebZ8IXMAerzxUOkFwEBOzLYVe7YkcJ+GSwENUqSyAcd
-         VUF9g7ysSW/XExN7KQ5qvEqPpaWZ3twIBRdbpTRx9K1sPTy1cDMXZOpnzXY0lGssU52Q
-         ex3VMCrTDQBdJkJ5JS0Zs/qRYmEDWXCzXAxfXQsrozaY4+qYgX2hO136X3med1znUSHk
-         MhXQ==
-X-Gm-Message-State: AOJu0YzU32PAkItja9OXF4wwmQygOWYwlgmRzHIyBdaUKtTCDnVZjVbP
-	RCVDktsnpgc++NHwcFKM/1zFHA8MtyqW9PohKXra/mMxMXMv9bxghCtJ
-X-Gm-Gg: AeBDietB0KhuqtAkdcXGEMuz9KUzLqmir7TzrtBbvskmdZYT5z3KLhd2p8EgfcppkcC
-	2AzBws1KHPBEr48lhwF4nLVsAGWVyyG7xifSn/oeu0MlEN2qlXwKjkZnkZbPHIkVH/ZkWnY2+S+
-	aWdwUfItcP+73N1Wt7brXQcxXEryzzos/rENXrt+H8MyxjTD9fD7SwiHPlnHY3AJ2c39SBsiYLK
-	kuBN4Y8KgOlUDqSWupmhXcNC9xMy7scu9Zi98i9qCcY8RL0KDeagShk3ZdKgRJz3VXo6jcf5Gqm
-	ZnXfUtICBSJcGyDVCeHfukzpaY5S23fCRyh9+J+JFtG8K5jXCOHxEMRs2pqUMbh+K4btkgspGJS
-	8M/ewXgUV92bnM4NfYqz6sCgGO7V9Bc9V0e+ZIDQJ3shRt7n2DvsRaqVbpJR5xy9yhtCbeNLsgv
-	Po9XDI//z1T+4KdHPsCf8o6DZZnDHF2mioSjNqGogMKSsp6lXi1ytQ
-X-Received: by 2002:a05:6a20:2591:b0:398:c0ba:9ceb with SMTP id adf61e73a8af0-3a08d6eb0a9mr27188226637.12.1776900260501;
-        Wed, 22 Apr 2026 16:24:20 -0700 (PDT)
+        bh=sTdBaz5QYX32iuAyyTR0YlGvwz+tmN7qZW8Yt7w0+5s=;
+        b=QSl5PBvETAQOr0ZM60dUKAKRdVEaS9BCByXch1caI0P5H31qFyBo7CowA/DOJLHwX2
+         ec5PC5+DryBeL7OEZ072724p4CFIQzqZjhOHKCzdZMf7Ijhirlr+8COumujJDbmzbRvJ
+         vhn8EpNIvHM6TcRajFC3LlOqmApOaAC3YcwKa54/zm2m9R8n/8CyKb+kD5bx0/rcAzM0
+         gDSxAdB5SSOKbpPLBTAZAgUBWFeVRXA2sJmJMMJ/9mqDe2Jzv7MdY8r7zfL2zGjgli83
+         o8ITUMlZk7zpUxC7DpgcWPlNKyePJRNJ6f4s/1J3rVrCeuyd0ZVzmks8Sm51EfHOVDiA
+         zZOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776900265; x=1777505065;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sTdBaz5QYX32iuAyyTR0YlGvwz+tmN7qZW8Yt7w0+5s=;
+        b=F8Y/98WleB8G5UF5OrMDzVugeC2bnQdwGEUx+9dCR1Y2H38fkXxlVyNTDydCLIZjGw
+         EGDoH1KFQwuBOBFwxL61h1Df6O+2p/iselY4SKEb7gLsnjPowaAhaqLo2WdCZvKba4B0
+         5Ofu6nMEdpLyCC9MDQra7g3RyYnLIbOvG4l7A6UyxcFaF2czS18KQT6uH7DHmLoj45M6
+         Xrivoau+QnCi6uTV9YFoZ13SGNEfdXeaF8GqyyHQTZ2PaS42rhDvhF8BafBP5qNGSjve
+         UcBooQLgIa7sR7i4cB6azMdOZcmnxIYiXwaFGcu8jCew5lHGXhEqLDYDRKes2QEshPeU
+         5xNQ==
+X-Gm-Message-State: AOJu0YyQf7PfwHjz0GxjnfgjAFjlr35qGNzuqqUPEzH1NE4CtmkqknAL
+	KoKcaNUbDChUHl3/yD3Yl2VTDSZGGACtd43s8jS1PrpazDZSX5V/o8+d
+X-Gm-Gg: AeBDievzHmbcMYV8ukZRAKetZYXqrdib7m8mPMGho+6rTRyBrVpNZTwnDhWIhWxke21
+	xIYLwTEbKt6eoxCnvIDjjms0T+zQTSE5jtTsCTfjbj5sFKGjwS6Z0hx9LpKFzt3pXd7q6UYOL22
+	wv144vGkYrG+7vX4i0KmFukYmy5+PZhROkV0DYOrP7b5fk1n6zcy5AdMP6+k6Hs0gigArdTHqdB
+	b/ALGAQri6xlCT2nNox2ljVWBYa6dYwngs4sY0rX0KP06Mp5LMsnUNatr8gbgZBAEDqqgNg7BEJ
+	UFandyVmM477NBu2l/D44gzsPkGuOVvCJG79sunxPCblG7g7Y/zeKiVfpFY3/279FUx8JGS4uDY
+	OrsfPhXtMQtqrphjZKK/f6yUOH+7JElHSfm7g7f929FJEMS/JN+oiacx+GGq85NxRcY+OUPXLjc
+	QMlAk42hoZ7R3OCIkQaDkn5nczkU2aVcB6z43WMJbEcA==
+X-Received: by 2002:a17:90b:1809:b0:35d:a3b4:2f00 with SMTP id 98e67ed59e1d1-361403d53bdmr24978742a91.8.1776900265019;
+        Wed, 22 Apr 2026 16:24:25 -0700 (PDT)
 Received: from VM-0-17-ubuntu.. ([119.28.83.143])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7976f920e1sm13776248a12.2.2026.04.22.16.24.18
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7976f920e1sm13776248a12.2.2026.04.22.16.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 16:24:19 -0700 (PDT)
+        Wed, 22 Apr 2026 16:24:24 -0700 (PDT)
 From: Hengqi Chen <hengqi.chen@gmail.com>
 X-Google-Original-From: Hengqi Chen <chenhengqi@outlook.com>
 To: chenhuacai@kernel.org,
@@ -64,10 +66,12 @@ To: chenhuacai@kernel.org,
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	Hengqi Chen <hengqi.chen@gmail.com>
-Subject: [PATCH v2 0/2] bpf: fsession support for LoongArch
-Date: Thu, 23 Apr 2026 07:24:05 +0800
-Message-Id: <20260422232407.3862942-1-chenhengqi@outlook.com>
+Subject: [PATCH v2 1/2] LoongArch: BPF: Introduce emit_store_stack_imm64() helper
+Date: Thu, 23 Apr 2026 07:24:06 +0800
+Message-Id: <20260422232407.3862942-2-chenhengqi@outlook.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260422232407.3862942-1-chenhengqi@outlook.com>
+References: <20260422232407.3862942-1-chenhengqi@outlook.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -78,23 +82,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Hengqi Chen <hengqi.chen@gmail.com>
 
-This small set implements fsession support for LoongArch.
+Introduce a helper to store 64-bit immediate on the trampoline stack.
+The helper will be used in the next patch. Also refactor the existing
+code to use this helper.
 
-Patch 1 introduces a helper named emit_store_stack_imm64().
-Patch 2 implements fsession support.
+Reviewed-by: Menglong Dong <menglong8.dong@gmail.com>
+Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+---
+ arch/loongarch/net/bpf_jit.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-changelog:
-v1->v2:
-  * rebase against latest loongarch-next branch
-  * drop patch 3, selftest is enabled by default
-  * add Reviewed-by tag
-
-Hengqi Chen (2):
-  LoongArch: BPF: Introduce emit_store_stack_imm64() helper
-  LoongArch: BPF: Add fsession support for trampolines
-
- arch/loongarch/net/bpf_jit.c | 99 ++++++++++++++++++++++++++++--------
- 1 file changed, 79 insertions(+), 20 deletions(-)
-
---
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 215c5fb339b0..49dd3e1fedfe 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -1668,6 +1668,12 @@ static void restore_stk_args(struct jit_ctx *ctx, int nr_stk_args, int args_off,
+ 	}
+ }
+ 
++static void emit_store_stack_imm64(struct jit_ctx *ctx, int reg, int stack_off, u64 imm64)
++{
++	move_imm(ctx, reg, imm64, false);
++	emit_insn(ctx, std, reg, LOONGARCH_GPR_FP, stack_off);
++}
++
+ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+ 			   int args_off, int retval_off, int run_ctx_off, bool save_ret)
+ {
+@@ -1676,12 +1682,11 @@ static int invoke_bpf_prog(struct jit_ctx *ctx, struct bpf_tramp_link *l,
+ 	struct bpf_prog *p = l->link.prog;
+ 	int cookie_off = offsetof(struct bpf_tramp_run_ctx, bpf_cookie);
+ 
+-	if (l->cookie) {
+-		move_imm(ctx, LOONGARCH_GPR_T1, l->cookie, false);
+-		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
+-	} else {
++	if (l->cookie)
++		emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1,
++				      -run_ctx_off + cookie_off, l->cookie);
++	else
+ 		emit_insn(ctx, std, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_FP, -run_ctx_off + cookie_off);
+-	}
+ 
+ 	/* arg1: prog */
+ 	move_imm(ctx, LOONGARCH_GPR_A0, (const s64)p, false);
+@@ -1920,14 +1925,11 @@ static int __arch_prepare_bpf_trampoline(struct jit_ctx *ctx, struct bpf_tramp_i
+ 	emit_insn(ctx, std, LOONGARCH_GPR_S1, LOONGARCH_GPR_FP, -sreg_off);
+ 
+ 	/* store ip address of the traced function */
+-	if (flags & BPF_TRAMP_F_IP_ARG) {
+-		move_imm(ctx, LOONGARCH_GPR_T1, (const s64)func_addr, false);
+-		emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -ip_off);
+-	}
++	if (flags & BPF_TRAMP_F_IP_ARG)
++		emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1, -ip_off, (u64)func_addr);
+ 
+ 	/* store arg regs count */
+-	move_imm(ctx, LOONGARCH_GPR_T1, nr_arg_slots, false);
+-	emit_insn(ctx, std, LOONGARCH_GPR_T1, LOONGARCH_GPR_FP, -nregs_off);
++	emit_store_stack_imm64(ctx, LOONGARCH_GPR_T1, -nregs_off, nr_arg_slots);
+ 
+ 	store_args(ctx, nr_arg_slots, args_off);
+ 
+-- 
 2.43.5
+
