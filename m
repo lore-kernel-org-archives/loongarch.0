@@ -1,86 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78B6378812
-	for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 10:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0791F3A9631
+	for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 18:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776938712; cv=none; b=hxNS5HS5Kfup4MSobeU5NxgEBN2L+0Sntjld73tYUfnukPWnACfOuJqB+OLUC5Wz30qGSnRxgQO5XvHRjvbbZFa79NkpIxNk7zcQUSOm53GjqFd2fqDYQa5V2rW8IySCVrZUUwyWNSm+Wh1VTzvwvmRxTAlKGAcNvmgQcaeBZ2E=
+	t=1776969285; cv=none; b=IMNI7MiimltPZGDF7ZLsS9SlBNN+5p2N46zBqnH47DlvTmKtq9nSxHhO0FvpkCOtG69/XjeZpz78EPbO4xUHitBfq6d8rXD3u4wYLDYdMgeGhjOkAz9iLouR1NziznESJniPXAZ/kQjG60UpIR97O3pO9BsHrNvKN8+K91x6zJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776938712; c=relaxed/simple;
-	bh=i1zkuOfK2oa60zamft2ydH2wOZPL7jVwfZn3W8QrczY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=onwX8EvrhQU4hrmhEoV9CZSh+5c6c0kT/NcHLsmyGN2CRiow+aou4C+LDfa0uAFCAtQ0sIaN1ETTkqNgAQmCqlrj3ozaugEC/kW/3Qq5FQwS8JWgRxOVPYaqE243uq3n/++OxqzbXPcstFeacsHTpFplRahBwVcuRKpcZhxtM6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI56fI0J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776969285; c=relaxed/simple;
+	bh=NVz1Kr0qE63FsLDj/oNYi6IFrc3n87HfsCTK8W+L2s8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mm5XTTZZ1I3xzvKh+PA6JMOdWCN7pxKCiMqKxML704Xaw6L7fYNfAjWFFfoIOHPt9aQ0/LT3SIS7HGF3V06XL4CrUmOzkOIOeoyQSo334bI0PGTtOpz6aNR3arbNYVRh7N6boEClR5tnS964oWOz+FegmstamL3DUByI3QsyFpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rFt0OqY5; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI56fI0J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87711C2BCB8
-	for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 10:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776938712;
-	bh=i1zkuOfK2oa60zamft2ydH2wOZPL7jVwfZn3W8QrczY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BI56fI0JWqhYIOV4jr6a4CGNeLHtGRYeaJtvSzU2IdPkmYCt4JhOzd+glu41b1gV6
-	 47LdApGPFXc7XbYOcGFNMW4iUtDmGUrdNPKPoWyMRT7B1KYeoiYasMK5YKQZpoq/F9
-	 TJraiW8L3CDESN8eTRx/u6f/PHkDo0N84gogsP9Kwpgc/swS0cizcTi2QHWpBKa+3c
-	 1FoUbCMw3k6MtUF8zlhAMPbAUp6qw5PXRHg0Sz5oFi1McglZMTu/6UUR0IRHzCcFNX
-	 2kaX0IV719INEInrVNAwoM5WwtX2arTflxZvSCMpOqQeuWdNDuvVTPAOoTSg1bD/Q6
-	 4ZsuiwHQXP4xA==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ba61a0a2d26so753781866b.2
-        for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 03:05:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ88tKp4qSxEuKv5WvLTOc33CCkgRHUV1ZPQWWvXtTTU/1PKb+c+sdHYMno63p215OzpQNzR01oKB7w=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzS/ChhOl+tdQYFvnr31lLbz82zXTJ8anHat7QPOi3enNXOMy60
-	gbrbMMmTG/vozujVaE/k6etCTImRmnGqiT3lo2JDvOzTxJ8DNpUv77GljCDUlVytRBkO3VtC+p8
-	R/qMkwT6esxqS1IF9cRlZsYLU1rt4bhA=
-X-Received: by 2002:a17:907:9484:b0:bac:6b01:8925 with SMTP id
- a640c23a62f3a-bac6b018b2bmr96646266b.22.1776938711131; Thu, 23 Apr 2026
- 03:05:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rFt0OqY5"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-82f6b0a7164so9588951b3a.0
+        for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 11:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776969283; x=1777574083; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NxrUD6qTbjo1W4xW1U0cuK75GKmXClrYS1Ro/7xiFY0=;
+        b=rFt0OqY5AihKIW4uta6XW++c9SYfsF3k91vBbFDBamplaC9h8LrZ0vuE5a+wQW/MAP
+         2HdVm4tz0t9cqOKAHZJv9M6zHweZj40RCiAhGpG3Raz+IeHY33BsrgErVBWWd/b+t50C
+         8oTM1Ndt5+lmqkwmYe9bKBnGrBRfx9nIhkKwkfFQtYxc8V8en3Cr1DUtwme+jF91RA5T
+         cdUuWE8R5+5B2OGe7O0NUTUCKArB0PkQlN5XoECjcLw0BXqaU6dZZ4chd1Y/mb7sQNOD
+         +6JGcs1P8bzUlqQ++u6PYdwVnXCh5AzxCb+BAzGsZ6+HQsHGHm4nUWlfpI/oieZ2OuII
+         oD3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776969283; x=1777574083;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NxrUD6qTbjo1W4xW1U0cuK75GKmXClrYS1Ro/7xiFY0=;
+        b=ipepME+DFn+KxFwAiPGPi8xf0sW1DpBGQo4nTZo4hFUUQPKpARe+E5ruKhdUZr3VMW
+         xf/h/Rf0YNsNQBaDPzCN4v5achwNWml5lC37EWnTfRaDL/3tWzQn4T63Pmx33i0OzzVw
+         Nz771ddiHaqlqNqwwHHk51uoeTOcIKxXHDvHkBmus62iUH20nsx8k5rekdITxatavL6U
+         IXwpzQQ8kcyBet21PmPRdHUOti8C3Gg47UTxK2LHN9jI2FkeYVRhOPmXQN3GhYC9o0R5
+         fZhoDwp6h9brlNar/1Xwkp27vHGC4BPNl6FGRSsfWw7MK7XCWer93Xeyj+I+V0sP8rkp
+         Fj2g==
+X-Forwarded-Encrypted: i=1; AFNElJ9hp+FBqXyeggnJzz/FFAcrgq5plD9m/ylQGIlWKEQHxeoYKeOs68RblngsdaSsDmETQe4EDkIpMz0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwvqVFIB0JXPOSfL7Cr5RzB8xYLo7YUvtZQFzKwOpRTanLVyKg4
+	n0Z2A+PZmaEI0Zu3EbudnkoBAdloHDnLVKkp72IDpPotAQxn7axpbd6soTU3naKxIRy9hiETYUx
+	VhLuQjA==
+X-Received: from pfbif1.prod.google.com ([2002:a05:6a00:8b01:b0:82f:a396:2229])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d16:b0:82a:79b8:2049
+ with SMTP id d2e1a72fcca58-82f8c8c2a97mr30979563b3a.25.1776969282975; Thu, 23
+ Apr 2026 11:34:42 -0700 (PDT)
+Date: Thu, 23 Apr 2026 11:34:39 -0700
+In-Reply-To: <20260420212004.3938325-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20260422232407.3862942-1-chenhengqi@outlook.com>
-In-Reply-To: <20260422232407.3862942-1-chenhengqi@outlook.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 23 Apr 2026 18:05:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6sL7xO4+rLpWphuBkwoChMDb-7RiFuFaWmK62QeXbD7Q@mail.gmail.com>
-X-Gm-Features: AQROBzAVHDkmi1gh8ADEhpZiygd4AOvh3N2wjkUzubnaYiehT2gnF4DtSTbc45U
-Message-ID: <CAAhV-H6sL7xO4+rLpWphuBkwoChMDb-7RiFuFaWmK62QeXbD7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] bpf: fsession support for LoongArch
-To: Hengqi Chen <hengqi.chen@gmail.com>
-Cc: yangtiezhu@loongson.cn, vincent.mc.li@gmail.com, menglong8.dong@gmail.com, 
-	loongarch@lists.linux.dev, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20260420212004.3938325-1-seanjc@google.com>
+X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+Message-ID: <177696924512.540717.6991894985950292004.b4-ty@google.com>
+Subject: Re: [PATCH v3 00/19] KVM: selftests: Use kernel-style integer and
+ g[vp]a_t types
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Applied with small modifications, hope it still works well.
+On Mon, 20 Apr 2026 14:19:45 -0700, Sean Christopherson wrote:
+> David's series to renames types across all KVM selftests.  I'm going to apply
+> this ~now in order to get it into -next ASAP.  Unless someone screams in the
+> next few days, I'm going to send a pull request on Thursday, with the goal of
+> getting this into -rc1 so that all architectures (and developers) can use the
+> new types straightaway.
+> 
+> Fully tested on x86, and I verified a handful of tests generate identical
+> code.  I tried to do the same for other architectures, but gcc at least doesn't
+> seem to provide reproducible builds for other architectures.  E.g. on arm64 and
+> LoongArch, a completely benign vaddr_t => gva_t rename would sometimes result
+> in different offsets in the generated code.  But based on manual diffs from
+> objdump, I'm fairly confident in the result.
+> 
+> [...]
 
-Huacai
+Applied to kvm-x86 selftests_kernel_types (a few days ago, spaced on sending
+"thanks").
 
-On Thu, Apr 23, 2026 at 7:24=E2=80=AFAM Hengqi Chen <hengqi.chen@gmail.com>=
- wrote:
->
-> From: Hengqi Chen <hengqi.chen@gmail.com>
->
-> This small set implements fsession support for LoongArch.
->
-> Patch 1 introduces a helper named emit_store_stack_imm64().
-> Patch 2 implements fsession support.
->
-> changelog:
-> v1->v2:
->   * rebase against latest loongarch-next branch
->   * drop patch 3, selftest is enabled by default
->   * add Reviewed-by tag
->
-> Hengqi Chen (2):
->   LoongArch: BPF: Introduce emit_store_stack_imm64() helper
->   LoongArch: BPF: Add fsession support for trampolines
->
->  arch/loongarch/net/bpf_jit.c | 99 ++++++++++++++++++++++++++++--------
->  1 file changed, 79 insertions(+), 20 deletions(-)
->
-> --
-> 2.43.5
+[01/19] KVM: selftests: Use gva_t instead of vm_vaddr_t
+        https://github.com/kvm-x86/linux/commit/5567fc9dcd7e
+[02/19] KVM: selftests: Use gpa_t instead of vm_paddr_t
+        https://github.com/kvm-x86/linux/commit/97dcda3fdce5
+[03/19] KVM: selftests: Use gpa_t for GPAs in Hyper-V selftests
+        https://github.com/kvm-x86/linux/commit/6d3494255ac0
+[04/19] KVM: selftests: Use u64 instead of uint64_t
+        https://github.com/kvm-x86/linux/commit/26f8453288d4
+[05/19] KVM: selftests: Use s64 instead of int64_t
+        https://github.com/kvm-x86/linux/commit/286e8903aed1
+[06/19] KVM: selftests: Use u32 instead of uint32_t
+        https://github.com/kvm-x86/linux/commit/0c3a8774692a
+[07/19] KVM: selftests: Use s32 instead of int32_t
+        https://github.com/kvm-x86/linux/commit/7b609187684d
+[08/19] KVM: selftests: Use u16 instead of uint16_t
+        https://github.com/kvm-x86/linux/commit/19d091492004
+[09/19] KVM: selftests: Use s16 instead of int16_t
+        https://github.com/kvm-x86/linux/commit/2540ebd60349
+[10/19] KVM: selftests: Use u8 instead of uint8_t
+        https://github.com/kvm-x86/linux/commit/6ec982b5a2c7
+[11/19] KVM: selftests: Drop "vaddr_" from APIs that allocate memory for a given VM
+        https://github.com/kvm-x86/linux/commit/85819fa0e3b9
+[12/19] KVM: selftests: Rename vm_vaddr_unused_gap() => vm_unused_gva_gap()
+        https://github.com/kvm-x86/linux/commit/48321f609a73
+[13/19] KVM: selftests: Rename vm_vaddr_populate_bitmap() => vm_populate_gva_bitmap()
+        https://github.com/kvm-x86/linux/commit/3fd995905b71
+[14/19] KVM: selftests: Rename translate_to_host_paddr() => translate_hva_to_hpa()
+        https://github.com/kvm-x86/linux/commit/4babae4ca10a
+[15/19] KVM: selftests: Clarify that arm64's inject_uer() takes a host PA, not a guest PA
+        https://github.com/kvm-x86/linux/commit/a662c4e03853
+[16/19] KVM: selftests: Replace "vaddr" with "gva" throughout
+        https://github.com/kvm-x86/linux/commit/014dfb7b9bf3
+[17/19] KVM: selftests: Replace "u64 gpa" with "gpa_t" throughout
+        https://github.com/kvm-x86/linux/commit/df079910f981
+[18/19] KVM: selftests: Replace "u64 nested_paddr" with "gpa_t l2_gpa"
+        https://github.com/kvm-x86/linux/commit/abc374191dc2
+[19/19] KVM: selftests: Replace "paddr" with "gpa" throughout
+        https://github.com/kvm-x86/linux/commit/dfd2a8b07c6c
+
+--
+https://github.com/kvm-x86/linux/tree/next
