@@ -1,137 +1,138 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0791F3A9631
-	for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 18:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB041E5724;
+	Thu, 23 Apr 2026 22:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776969285; cv=none; b=IMNI7MiimltPZGDF7ZLsS9SlBNN+5p2N46zBqnH47DlvTmKtq9nSxHhO0FvpkCOtG69/XjeZpz78EPbO4xUHitBfq6d8rXD3u4wYLDYdMgeGhjOkAz9iLouR1NziznESJniPXAZ/kQjG60UpIR97O3pO9BsHrNvKN8+K91x6zJY=
+	t=1776982012; cv=none; b=bw69v4TlDj6IHcPFufZU7dMqLVhnCbj/nl/i38UYRRhBGU7Y9C6jgFPmmeKI3CbJNpOAXqHdBJZGYgX9vWXMV07yE9/H6KkzXUl1mTIh0uGiGa7q6+FZhLN6VUhZ5gp2fGa92MXUWe1HOP0k2qe4zdqXwh1bh9UAsHk851R0iuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776969285; c=relaxed/simple;
-	bh=NVz1Kr0qE63FsLDj/oNYi6IFrc3n87HfsCTK8W+L2s8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mm5XTTZZ1I3xzvKh+PA6JMOdWCN7pxKCiMqKxML704Xaw6L7fYNfAjWFFfoIOHPt9aQ0/LT3SIS7HGF3V06XL4CrUmOzkOIOeoyQSo334bI0PGTtOpz6aNR3arbNYVRh7N6boEClR5tnS964oWOz+FegmstamL3DUByI3QsyFpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rFt0OqY5; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1776982012; c=relaxed/simple;
+	bh=xScWSgCaj1n1EFvBbdk54t0SvcqR3SuacR2YS7d54T4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFSqqrKiOh/nm75UeOjX9ZMMaNTOFUebcjJrGoAU+l0hTcXcCcBPPT1+euy/RWUcmc9BhxFAFG5KCJ1ZUR3Qkm1DBQ7Zwz85sVd9kGaW04lfckngDAdZSO2/WNg+3GqGmqWmgKf3X95vezhraPUwBaXEtOOk+cIB6pCI6UJO+gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJ3CVlgM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rFt0OqY5"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-82f6b0a7164so9588951b3a.0
-        for <loongarch@lists.linux.dev>; Thu, 23 Apr 2026 11:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776969283; x=1777574083; darn=lists.linux.dev;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NxrUD6qTbjo1W4xW1U0cuK75GKmXClrYS1Ro/7xiFY0=;
-        b=rFt0OqY5AihKIW4uta6XW++c9SYfsF3k91vBbFDBamplaC9h8LrZ0vuE5a+wQW/MAP
-         2HdVm4tz0t9cqOKAHZJv9M6zHweZj40RCiAhGpG3Raz+IeHY33BsrgErVBWWd/b+t50C
-         8oTM1Ndt5+lmqkwmYe9bKBnGrBRfx9nIhkKwkfFQtYxc8V8en3Cr1DUtwme+jF91RA5T
-         cdUuWE8R5+5B2OGe7O0NUTUCKArB0PkQlN5XoECjcLw0BXqaU6dZZ4chd1Y/mb7sQNOD
-         +6JGcs1P8bzUlqQ++u6PYdwVnXCh5AzxCb+BAzGsZ6+HQsHGHm4nUWlfpI/oieZ2OuII
-         oD3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776969283; x=1777574083;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NxrUD6qTbjo1W4xW1U0cuK75GKmXClrYS1Ro/7xiFY0=;
-        b=ipepME+DFn+KxFwAiPGPi8xf0sW1DpBGQo4nTZo4hFUUQPKpARe+E5ruKhdUZr3VMW
-         xf/h/Rf0YNsNQBaDPzCN4v5achwNWml5lC37EWnTfRaDL/3tWzQn4T63Pmx33i0OzzVw
-         Nz771ddiHaqlqNqwwHHk51uoeTOcIKxXHDvHkBmus62iUH20nsx8k5rekdITxatavL6U
-         IXwpzQQ8kcyBet21PmPRdHUOti8C3Gg47UTxK2LHN9jI2FkeYVRhOPmXQN3GhYC9o0R5
-         fZhoDwp6h9brlNar/1Xwkp27vHGC4BPNl6FGRSsfWw7MK7XCWer93Xeyj+I+V0sP8rkp
-         Fj2g==
-X-Forwarded-Encrypted: i=1; AFNElJ9hp+FBqXyeggnJzz/FFAcrgq5plD9m/ylQGIlWKEQHxeoYKeOs68RblngsdaSsDmETQe4EDkIpMz0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwvqVFIB0JXPOSfL7Cr5RzB8xYLo7YUvtZQFzKwOpRTanLVyKg4
-	n0Z2A+PZmaEI0Zu3EbudnkoBAdloHDnLVKkp72IDpPotAQxn7axpbd6soTU3naKxIRy9hiETYUx
-	VhLuQjA==
-X-Received: from pfbif1.prod.google.com ([2002:a05:6a00:8b01:b0:82f:a396:2229])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3d16:b0:82a:79b8:2049
- with SMTP id d2e1a72fcca58-82f8c8c2a97mr30979563b3a.25.1776969282975; Thu, 23
- Apr 2026 11:34:42 -0700 (PDT)
-Date: Thu, 23 Apr 2026 11:34:39 -0700
-In-Reply-To: <20260420212004.3938325-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJ3CVlgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F0C6C2BCAF;
+	Thu, 23 Apr 2026 22:06:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776982012;
+	bh=xScWSgCaj1n1EFvBbdk54t0SvcqR3SuacR2YS7d54T4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RJ3CVlgMLozZYkp5PjQVd/71un9iI/NIvrVTfS6yL3K35FdmIofyVLouZP22Jkszq
+	 7w2cLgiOMbYjEZ/I0+PuGYym8p6cNl1JjXOpBMwRvcH7LC4HHgAsE8pGhEUxie4h8o
+	 s3ykLE3rkg1Hn7U6ThhlTi5o3O+XNdTFcE9j8ZKIZ5qS0NTWE90qBRwY/UrbVPJ/F3
+	 6B9I6fLuVxl3cpYEZr2B92PV9nrDW+1X6ibQn4p2LBNdsWR6Dw21uktAw380ueJ/vf
+	 9AlXRc72v2bTnEHXDTbTwqGOa/GiiyRgr/o2Zegg3FVdmXZXmUhNP5cqqU6a3ZsYrV
+	 4vD9jQirjQmag==
+Date: Thu, 23 Apr 2026 15:06:47 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 14/14] LoongArch: Adjust build infrastructure for
+ 32BIT/64BIT
+Message-ID: <20260423220647.GA3447678@ax162>
+References: <20251127154832.137925-1-chenhuacai@loongson.cn>
+ <20251127154832.137925-15-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20260420212004.3938325-1-seanjc@google.com>
-X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
-Message-ID: <177696924512.540717.6991894985950292004.b4-ty@google.com>
-Subject: Re: [PATCH v3 00/19] KVM: selftests: Use kernel-style integer and
- g[vp]a_t types
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251127154832.137925-15-chenhuacai@loongson.cn>
 
-On Mon, 20 Apr 2026 14:19:45 -0700, Sean Christopherson wrote:
-> David's series to renames types across all KVM selftests.  I'm going to apply
-> this ~now in order to get it into -next ASAP.  Unless someone screams in the
-> next few days, I'm going to send a pull request on Thursday, with the goal of
-> getting this into -rc1 so that all architectures (and developers) can use the
-> new types straightaway.
-> 
-> Fully tested on x86, and I verified a handful of tests generate identical
-> code.  I tried to do the same for other architectures, but gcc at least doesn't
-> seem to provide reproducible builds for other architectures.  E.g. on arm64 and
-> LoongArch, a completely benign vaddr_t => gva_t rename would sometimes result
-> in different offsets in the generated code.  But based on manual diffs from
-> objdump, I'm fairly confident in the result.
-> 
-> [...]
+Hi Huacai,
 
-Applied to kvm-x86 selftests_kernel_types (a few days ago, spaced on sending
-"thanks").
+Now that this is in -next as commit 3d9aba6618d1 ("LoongArch: Adjust
+build infrastructure for 32BIT/64BIT"), I am seeing two issues:
 
-[01/19] KVM: selftests: Use gva_t instead of vm_vaddr_t
-        https://github.com/kvm-x86/linux/commit/5567fc9dcd7e
-[02/19] KVM: selftests: Use gpa_t instead of vm_paddr_t
-        https://github.com/kvm-x86/linux/commit/97dcda3fdce5
-[03/19] KVM: selftests: Use gpa_t for GPAs in Hyper-V selftests
-        https://github.com/kvm-x86/linux/commit/6d3494255ac0
-[04/19] KVM: selftests: Use u64 instead of uint64_t
-        https://github.com/kvm-x86/linux/commit/26f8453288d4
-[05/19] KVM: selftests: Use s64 instead of int64_t
-        https://github.com/kvm-x86/linux/commit/286e8903aed1
-[06/19] KVM: selftests: Use u32 instead of uint32_t
-        https://github.com/kvm-x86/linux/commit/0c3a8774692a
-[07/19] KVM: selftests: Use s32 instead of int32_t
-        https://github.com/kvm-x86/linux/commit/7b609187684d
-[08/19] KVM: selftests: Use u16 instead of uint16_t
-        https://github.com/kvm-x86/linux/commit/19d091492004
-[09/19] KVM: selftests: Use s16 instead of int16_t
-        https://github.com/kvm-x86/linux/commit/2540ebd60349
-[10/19] KVM: selftests: Use u8 instead of uint8_t
-        https://github.com/kvm-x86/linux/commit/6ec982b5a2c7
-[11/19] KVM: selftests: Drop "vaddr_" from APIs that allocate memory for a given VM
-        https://github.com/kvm-x86/linux/commit/85819fa0e3b9
-[12/19] KVM: selftests: Rename vm_vaddr_unused_gap() => vm_unused_gva_gap()
-        https://github.com/kvm-x86/linux/commit/48321f609a73
-[13/19] KVM: selftests: Rename vm_vaddr_populate_bitmap() => vm_populate_gva_bitmap()
-        https://github.com/kvm-x86/linux/commit/3fd995905b71
-[14/19] KVM: selftests: Rename translate_to_host_paddr() => translate_hva_to_hpa()
-        https://github.com/kvm-x86/linux/commit/4babae4ca10a
-[15/19] KVM: selftests: Clarify that arm64's inject_uer() takes a host PA, not a guest PA
-        https://github.com/kvm-x86/linux/commit/a662c4e03853
-[16/19] KVM: selftests: Replace "vaddr" with "gva" throughout
-        https://github.com/kvm-x86/linux/commit/014dfb7b9bf3
-[17/19] KVM: selftests: Replace "u64 gpa" with "gpa_t" throughout
-        https://github.com/kvm-x86/linux/commit/df079910f981
-[18/19] KVM: selftests: Replace "u64 nested_paddr" with "gpa_t l2_gpa"
-        https://github.com/kvm-x86/linux/commit/abc374191dc2
-[19/19] KVM: selftests: Replace "paddr" with "gpa" throughout
-        https://github.com/kvm-x86/linux/commit/dfd2a8b07c6c
+On Thu, Nov 27, 2025 at 11:48:32PM +0800, Huacai Chen wrote:
+> Adjust build infrastructure (Kconfig, Makefile and ld scripts) to let
+> us enable both 32BIT/64BIT kernel build.
+...
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 730f34214519..4bacde9f46d1 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> +menu "Kernel type and options"
+> +
+> +choice
+> +	prompt "Kernel type"
+>  
+>  config 32BIT
+> -	bool
+> +	bool "32-bit kernel"
+> +	help
+> +	  Select this option if you want to build a 32-bit kernel.
+>  
+>  config 64BIT
+> -	def_bool y
+> +	bool "64-bit kernel"
+> +	help
+> +	  Select this option if you want to build a 64-bit kernel.
+> +
+> +endchoice
 
+The way this is written results in a 32-bit kernel when building
+ARCH=loongarch allmodconfig or having a previously 64-bit configuration
+and running olddefconfig on it, which seems surprising to me. I think it
+would be good to either adjust the ordering such that 64BIT is first or
+include an explicit default statement like so:
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 3b042dbb2c41..3addd06b3f5a 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -220,6 +220,7 @@ menu "Kernel type and options"
+ 
+ choice
+ 	prompt "Kernel type"
++	default 64BIT
+ 
+ config 32BIT
+ 	bool "32-bit kernel"
 --
-https://github.com/kvm-x86/linux/tree/next
+
+> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> index 8d45b860fe56..47516aeea9d2 100644
+> --- a/arch/loongarch/Makefile
+> +++ b/arch/loongarch/Makefile
+...
+> @@ -62,9 +66,19 @@ ifneq ($(SUBARCH),$(ARCH))
+>    endif
+>  endif
+>  
+> +ifdef CONFIG_32BIT
+> +ifdef CONFIG_32BIT_STANDARD
+> +ld-emul			= $(32bit-emul)
+> +cflags-y		+= -march=la32v1.0 -mabi=ilp32s -mcmodel=normal
+> +else  # CONFIG_32BIT_REDUCED
+> +ld-emul			= $(32bit-emul)
+> +cflags-y		+= -march=la32rv1.0 -mabi=ilp32s -mcmodel=normal
+> +endif
+> +endif
+
+As a result of the above problem, I see
+
+  clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+  clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+  clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+
+when building configurations that I expected to be 64-bit but had been
+turned into 32-bit ones with LLVM. This was also reported by the test
+robot with allnoconfig.
+
+  https://lore.kernel.org/202604232041.ESJDwVG4-lkp@intel.com/
+
+Maybe some change is needed on the LLVM side?
+
+Cheers,
+Nathan
