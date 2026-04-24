@@ -1,147 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EF3DC4A2
-	for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 16:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC07B3EFD06;
+	Fri, 24 Apr 2026 18:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777047860; cv=none; b=hqskWWKcA61JLaGA5h1GuCxZom2OqI0wmkh/tLWDFr7H6JON2L33WTzCKUhdO5Rdr9APUzGU/rujyqD+/nqzfk4O7kS4CmejbxCH6aFm6Qexj+dc/HgSecq5f99XDOb42FA6JKXmyCnNZqs2MTdQLW41F6hgpXWwKfpzM11vHJM=
+	t=1777054797; cv=none; b=okpr78ruMvERgfadO3v/cc6YTqlcHv5Cpqdl7XQh8Bf6XTwJvzzoSsMEA8wNey6XmhBZmAnzGeFR1dPzpXreYVeUqIPqZmctSsfyVcI/RkftmUY3XsykRePFfuYlUARZh7w/S5CNIXMLWRRbuaM9jkd9f2hgKsRMwI2y4HyBzeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777047860; c=relaxed/simple;
-	bh=WGeiHUHtLNR3bIDnkcA7YuMVHwYC8v+r8hhmRXVRhBU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=b4ablRFhjp9ETJ+CPZC2V1Tg6gf65pr1nYoWV8/FP5h+W/eiOjh971sXVTwVFx0H411eTiHFk+7XBXZqv0cOXRcDNSOhYEB/UJ6xP+6LSEGUCF2n/9KQWp41g7zyQ+vjP4A9fNGFM8rxghFAtxnSxoW8XmXxAEQQ4T/HRQbvvHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eZl25zDn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777054797; c=relaxed/simple;
+	bh=7EzJWOO5kLUgIR9LJQskmJCztK7/4SKiDtytU0KpJMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPxYhyJifMlftmJKCY030QXqbHozlE6Wn2iCgPqQzCYK2WKQ2ys4YbchUCvMe5GJ7NR8tTQu+eWrn73afsxbPgMN3jz9dTBM5mfznFNlnA0YbYW0THfDnTaaEN4EWbkiK0ILP83Ggy2REFQ4iVMwqrFhdjtDNwUEkFp0U9CCdVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkAAFyHJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eZl25zDn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777047858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bkHBfOVa4bz/wCbZfmwZYYdZCO/tCYPxae+JQxak4Yg=;
-	b=eZl25zDnldI79cy46T99uOTd673DqSE3j2FysmQbJamPpWT1+bYhnhXu0ciAPPgimA2OcG
-	Lwjqbk1m/+Fj2iobSg00wB8ywT39ue32rH3MCPB5qWPhjYtAyDBWfS9dESKDAbPzROkNcc
-	HyPxpHf9CxQ494ziriMuyR2fcay6u+w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-300-lDGYzzM6N6axvBXGns-UPg-1; Fri, 24 Apr 2026 12:24:16 -0400
-X-MC-Unique: lDGYzzM6N6axvBXGns-UPg-1
-X-Mimecast-MFC-AGG-ID: lDGYzzM6N6axvBXGns-UPg_1777047855
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-48a5adc141cso21313095e9.0
-        for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 09:24:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777047855; x=1777652655;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bkHBfOVa4bz/wCbZfmwZYYdZCO/tCYPxae+JQxak4Yg=;
-        b=S3mzIYW3MleCNQVsUzNhqldtKtBi95A2bqoqMLij8ZJhCve+RMVHyu/4sJ6219PVVV
-         APeIbsvk/BK+Q7PZ8mQtwZ9Ezaq+/dyDvUN2KPE5ULijLHmHuvaA5jSy/zp6qXpW3uR7
-         NGo6SLvkAfvlCNeIRfn0VmSWaFi+45VIV/hktVDr8/p5HWOP1zsC1RYuZTAaFabYnrY9
-         wE7WRsqh3/2jPefqX8j5t2bYIomRTALdGAS2ybFR4l9QU5Kf2oWB6UynZtfZ5m6087K1
-         YTZ0jg3ovX00Vp/JqGTfPGuklMSj3ydxj3Z9L6sSqoBpkKh817w3PtI3qiWPfBHwUfRZ
-         aNWA==
-X-Forwarded-Encrypted: i=1; AFNElJ/oK8OccHSalS2bhKda0bmGx1A9nsbo66XQD+xdpgJ6KAVSGSL0/26QqgGO8UfL7yBnP4CmE7eV5tc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyKnCCG1cNamJvSpGuX8gm34ccDXpH2rHoMphUt4xqIviYZD0XO
-	/f3imR64yJ1h5XYJJkxh2yX2x22Uarti5trcHWsdI/dLcUUrHMcbmZ7MK2CIpsYOQ5p4CPNGwpz
-	akn/DjrS+iTbKZi8PtN9XFQHgaBmY54NPxEoFlsHHa54bNzhwfPEK2/HJ7F/aFA==
-X-Gm-Gg: AeBDiesQjK9oSvw8fUhZScUigVIJ246HnRfMaWX6Ia2aFURZ8GYjvpkDnkZA9OhNq0p
-	CNSkdevTkveECZqr6GkCiNmKMCWcjK3sbFa/n4mNBZHjpG0s2JS62QxRO0ym4KMG4Hd9WGJrR/a
-	YwBqaagmVaLFZN0BkmfBtyosxN5rijAfSIRBTRfFMNGyWAdSrVQ2FP68vBnpA3LBxgMGiP1Kv9O
-	RwPN0xw+ehqv/SHjZqgLwmWvfVUpFu8MnhZNZtKOoMKokQrP4HsEMnXMWFpGlY9/V5sgPhudSH6
-	EOMmSTlk2wFg9zMLqXkCRIUWKVfajlDGS54TFyXawzmZs8hBn91cZGyQX8bYio7XXJBafj2wsU9
-	H1LVAjET4c1rv5dke5orNlmqQuWM+gk+hW/9tYnq8ObkjXG5yCACpwLJvri2LvZIrtUtgPg1v5F
-	O/h6Ft1vi4jOurcIM=
-X-Received: by 2002:a05:600c:8b6b:b0:485:3c2e:60d5 with SMTP id 5b1f17b1804b1-488fb8859ddmr427762265e9.2.1777047855247;
-        Fri, 24 Apr 2026 09:24:15 -0700 (PDT)
-X-Received: by 2002:a05:600c:8b6b:b0:485:3c2e:60d5 with SMTP id 5b1f17b1804b1-488fb8859ddmr427761525e9.2.1777047854742;
-        Fri, 24 Apr 2026 09:24:14 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a682588f8sm6272915e9.10.2026.04.24.09.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 09:24:13 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>,
- Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
- <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
- Xuerui <kernel@xen0n.name>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- longli@microsoft.com, Helge Deller <deller@gmx.de>
-Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 3/8] firmware: sysfb: Make CONFIG_SYSFB a
- user-selectable option
-In-Reply-To: <0156562f-5fcf-47ce-8fea-03345f2c3fe6@suse.de>
-References: <20260402092305.208728-1-tzimmermann@suse.de>
- <20260402092305.208728-4-tzimmermann@suse.de>
- <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
- <3e466158-c2e5-4e23-934f-dcdbb71ad41f@suse.de>
- <d3d7c545-3b07-4881-a16d-45b6f039de19@app.fastmail.com>
- <001efe27-9cbb-4a89-8d2d-a1f3ae15e505@suse.de>
- <295a43ce-92fb-435d-a82f-d1cfa8f4f28d@app.fastmail.com>
- <0156562f-5fcf-47ce-8fea-03345f2c3fe6@suse.de>
-Date: Fri, 24 Apr 2026 18:24:07 +0200
-Message-ID: <87se8kjpi0.fsf@ocarina.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkAAFyHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38584C19425;
+	Fri, 24 Apr 2026 18:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777054796;
+	bh=7EzJWOO5kLUgIR9LJQskmJCztK7/4SKiDtytU0KpJMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rkAAFyHJGwW99S9+Wf4J9Ex8pzbkzaD1pCbg8QIBCJ9S0Y2AOCCQaSssfpc7Jcqfg
+	 YG69XSuVuOUCa8hiOqJ2mssgJtVUe8FGm44mQPfntXAA4fBUKd1vJ0YqszHooQ1v6K
+	 UxwUeYLI/Zsc71QH7wsPvVWbJi4FH2WiwPa4ie3P5cu6j3kgP1Ta9hNFqPRprluLLa
+	 /1JRvXSUV8znWMDxLR3GponRZecHMTroODQqFymvnfRjpOj7WLD6h7QQitTv78v3gk
+	 erjnZ0ktUX0tJb17Qkd9EOsAe8buQctW/ZM8D7LPUPKV5Hlc9pONjKEWCPBBzSYcFc
+	 R1BgXU/841eLA==
+Date: Fri, 24 Apr 2026 11:19:51 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: WANG Rui <r@hev.cc>
+Cc: arnd@arndb.de, chenhuacai@kernel.org, chenhuacai@loongson.cn,
+	guoren@kernel.org, jiaxun.yang@flygoat.com, kernel@xen0n.name,
+	linux-kernel@vger.kernel.org, lixuefeng@loongson.cn,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH V4 14/14] LoongArch: Adjust build infrastructure for
+ 32BIT/64BIT
+Message-ID: <20260424181951.GA813908@ax162>
+References: <20260423220647.GA3447678@ax162>
+ <20260424110624.48510-1-r@hev.cc>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uRIQW_NWX6ZPXgz15n7S9PIrfKA-9gD4goon-5OOfrw_1777047855
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260424110624.48510-1-r@hev.cc>
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+Hi Rui,
 
-Hello,
+On Fri, Apr 24, 2026 at 07:06:23PM +0800, WANG Rui wrote:
+> > As a result of the above problem, I see
+> > 
+> >   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+> >   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+> >   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+> > 
+> > when building configurations that I expected to be 64-bit but had been
+> > turned into 32-bit ones with LLVM. This was also reported by the test
+> > robot with allnoconfig.
+> > 
+> >   https://lore.kernel.org/202604232041.ESJDwVG4-lkp@intel.com/
+> > 
+> > Maybe some change is needed on the LLVM side?
+> 
+> The root cause is that scripts/Makefile.clang unconditionally sets
+> CLANG_TARGET_FLAGS_loongarch to loongarch64-linux-gnusf.
+> However, Clang with --target=loongarch64 does not support a 32-bit ABI.
+> LLVM clearly separates loongarch32 and loongarch64 targets.
+> 
+> Since CLANG_TARGET_FLAGS gets initialized before CONFIG is available, the
+> current setup effectively assumes that a 64-bit target must also handle
+> a 32-bit ABI. That assumption may not hold for LLVM, which models 32-bit
+> and 64-bit LoongArch as separate targets.
 
-[...]
+Hmmm, okay, that definitely explains it. As the comment at the top of
+scripts/Makefile.clang states, we rely on targets supporting switching
+their word size via '-m32' / '-m64' so that we can use a 64-bit triple
+but still get a 32-bit one if necessary. For example:
 
->>>>>> On Thu, Apr 2, 2026, at 11:09, Thomas Zimmermann wrote:
->>>>>> I don't really like this part of the series and would prefer
->>>>>> to keep CONFIG_SYSFB hidden as much as possible as an x86
+  --target=x86_64-linux-gnu -m32
 
-I tend to agree with Arnd here, I'm also not seeing that much value on
-making this symbol user selectable. For now I would just keep it hidden.
+effectively becomes
 
-[...]
+  --target=i386-linux-gnu
 
->> Yes, I saw that as well and don't have an immediate idea for how
->> to best do it. I saw that you already abstracted the access to
->> the screen_info members in drm_sysfb_screen_info.c, which I think
->> is a step in that direction.
->>
->> I also noticed that efidrm is mostly a subset of vesadrm, so
->> in theory they could be merged back into an x86 drm driver
->> along with the drm_sysfb_screen_info helpers, and have a non-x86
->> driver that constructs a drm_sysfb_device directly from the
->> EFI structures.
->
-> I would not want to have a unifed driver for all-things-screen_info. The 
-> code that can easily be shared is already in the sysfb helpers. But I 
-> don't mind adding a separate driver for EFI's Graphics Output Protocol.
+It seems like this works for LoongArch in clang as well?
 
-I agree. It is much more maintainable if we have dedicated DRM drivers that
-use shared helpers, than attempting to have a driver for different platforms.
+diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+index 47516aeea9d2..2837004d0d75 100644
+--- a/arch/loongarch/Makefile
++++ b/arch/loongarch/Makefile
+@@ -67,6 +67,9 @@ ifneq ($(SUBARCH),$(ARCH))
+ endif
+ 
+ ifdef CONFIG_32BIT
++ifdef CONFIG_CC_IS_CLANG
++cflags-y		+= -m32
++endif
+ ifdef CONFIG_32BIT_STANDARD
+ ld-emul			= $(32bit-emul)
+ cflags-y		+= -march=la32v1.0 -mabi=ilp32s -mcmodel=normal
+diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+index 42aa96249828..eeda13ecb711 100644
+--- a/arch/loongarch/vdso/Makefile
++++ b/arch/loongarch/vdso/Makefile
+@@ -14,6 +14,7 @@ ccflags-vdso := \
+ 	$(filter -E%,$(KBUILD_CFLAGS)) \
+ 	$(filter -march=%,$(KBUILD_CFLAGS)) \
+ 	$(filter -m%-float,$(KBUILD_CFLAGS)) \
++	$(filter -m32,$(KBUILD_CFLAGS)) \
+ 	$(CLANG_FLAGS) \
+ 	-D__VDSO__
+ 
+--
 
-As Thomas explained, the maintance effort is small on the DRM side and he has
-done a lot of work to split simpledrm in efidrm, vesadrm and ofdrm.
+appears to do the right thing?
 
--- 
-Best regards,
+  $ make -skj"$(nproc)" ARCH=loongarch LLVM=1 mrproper loongarch32_defconfig all
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+  $ file vmlinux arch/loongarch/boot/vmlinux.efi
+  vmlinux:                         ELF 32-bit LSB executable, LoongArch, version 1 (SYSV), statically linked, BuildID[sha1]=26b4af26bb14c923270429f4ccdc66a519c059b1, not stripped
+  arch/loongarch/boot/vmlinux.efi: PE32+ executable for EFI (application), LoongArch 32-bit (stripped to external PDB), 2 section
 
+Cheers,
+Nathan
