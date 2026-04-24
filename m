@@ -1,165 +1,170 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C90C21A6810
-	for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 04:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA0139A7F8
+	for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 11:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777004380; cv=none; b=midJlxUEBxiMFF0qVbLX+BR52SCqt9aDkYH4naLsXbYeXFp87a/47fJczg4qP6uHfM3eO8Q3VCZkJRxKQmQ2D+7thHa5bmGTlD0EUGPxH06dQs6tL3o6qdfaAHC3ArMVjIgtQBJ9xFVfmFNDsg3x182sm52mMGuQGUZs+iXdjHA=
+	t=1777028796; cv=none; b=g0G39JDjAV32JmaGACWFBmil82MOsNwPPqOOq8oyJiaTBcnuD3z41sOpr+heo9ZhOF4aplgtCJUbvMsY7EIUDfHYrIPCrNHKW4RD1jM746vGTUVv7lvG7+nXtuH5XbqKHJApCxf1UR70hhS/5Zb9ssK2WnSYpwYYgvnAka3dAmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777004380; c=relaxed/simple;
-	bh=seXi2X/+knpbUBnFlZPBBulXv4W29BwHLvU5AN59HmI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dZOQeNHAsdh3yHNIdP6mKtE0iBbxA1m3vCiLsLd2twGo/jNeT7uzH5l6ychw1ksO6X60VOQifMy6j0FS8HcDblMmFLamcRk7DIo9pFFj+U+6xLORQi+0OAK5V7b2yT6SLFiWhW4fZ2yAORQUBlOyrCCAhhj+SlD/zMCygi8Qf+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.8])
-	by gateway (Coremail) with SMTP id _____8CxRehQ7+ppqIkDAA--.6480S3;
-	Fri, 24 Apr 2026 12:19:28 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.8])
-	by front1 (Coremail) with SMTP id qMiowJBxiuBL7+ppnc1zAA--.52682S2;
-	Fri, 24 Apr 2026 12:19:26 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
+	s=arc-20240116; t=1777028796; c=relaxed/simple;
+	bh=N4Z9CTh5ZlzdtCFtBp8F5n/nUs8lkwIgEc7rauaLOBo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WP2ohl46N3BNpPL4KBfAQLtlhMJ+wARZnBScl7WJzl7FD1OUfqUevpIpSPIa5DIwTT1f+KBC6nEwR/4Cq8YHJpjQK58U5ZGLO9qXclSoybw+RtaxL9Di+6jIinf6Cc+1b1xvOkkKiyyFEwOb9r9fEbiPDxmPtkbrXg4LbMI6Qp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=BoO4ueYk; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="BoO4ueYk"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b788a98557so30380985ad.2
+        for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 04:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1777028794; x=1777633594; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LDIZFW/CQm971bNIO9ritpIw0PqXgfmFxiIFHhRqUmo=;
+        b=BoO4ueYkLL/Z/OR/w+ktDfAnlTzEU0V6aSQeU7fHC28ndAi+ZnXqpmkbdgS20/iDyA
+         enoVtDECWdzw0GHY8LPKl/Gb0Iy1r9Dmc6w7qze12FAHjEUbrdBmobGWTk7g7Ph1G50I
+         6UrYZt1hqTkzMm+M59B7QsBX+XrW/37G1pip/lpJZcrEjeYKTKCIqJQ5pvoedokSYHZh
+         AZDW6aFMq8+UGki6PGUh86IR+vZ5eUlyWAmwQxhrxp2p/HwiXrAErSV+POCRAtomlyPh
+         /k8GetzzGy6bLviFu2Y/mSU1wqV1cB+9Ldr+yruvS6I1bVDU32dLB2vPCA3g3tunBTON
+         Vgsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777028794; x=1777633594;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LDIZFW/CQm971bNIO9ritpIw0PqXgfmFxiIFHhRqUmo=;
+        b=mBhh6v3eJb1gieWQj4t8IMhldjc73/i2X2L8VRU8Pu0PHPMRftXuAEBnhRr5K7XyGx
+         9EmL15plzUvj/o7jU4uQNWOTs9dTFAHIsDkY7KPtafqJqRB+8JVv+QjuYh025Ueaimsj
+         exTctGzOkuNjCYi9VCkINTAsQNyFxN7nvRmVTH1uNPy7hU7IAC2xuQmz7rsplTZ8huPN
+         0hTLyT1oU0eRDE3uBM1OkxK5P/uEmihHsB93tP/zmPJWUTx94jWu/ZcXmWrTGm9ArGSX
+         83KFgTGHialtWVKOqiup8fCjqxb03rqtd37SPaxSabTFO2wSKVX/Sae2TAMiZ6R5aL2W
+         xVzA==
+X-Forwarded-Encrypted: i=1; AFNElJ8BWUi90K+CtCdzSrU2zGvYiHfvxYa9VzS3RMZUu7BzUpT2iq5EPCQ5Ssn5zz2XPj1uXCfQI1N4Pxg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx1hQ7oSz1gNJ5Ex1tZdN2GvcCM4yUqL94IJpCgmGLsRCGD7Gkj
+	KBGz1C/nEVL/UmYywy2WeYIWli9RsisaxzSTdPbmIfGLoO1MiNZQ8RbC9VO4VgbYwxY=
+X-Gm-Gg: AeBDietLQv5ljQqmt8mA32C8xg05wSoY0gPwCBjJLUGD5sJP1TBBQIdZARe2LIrpD/2
+	wwWifA8W8qoDibKJc+eh4hi6hhSxAAkeI4zbKLDmOJ6AzC0icLjIhlwdxcgzlCNvICUcSGVVICy
+	KWogcFX0eOOysvZvA8NPgNZUM+TyP2aBKnLCfrro2p5tGlDKfGLu2MZKZRt1UMLWIzmL9+5IW+T
+	xY7eqlwEwNNUdE6jieXGRIW1veT9M3/snCwED9wfcTZ3tlJUF0Cu3uEIX1w3c7V/z0y4smh3rQo
+	EyOWB6XIKdgcV1NEa3m7yL+NacY9AXmgSQXG6RvjYvPDI3gkMKAgBT54EPULRhLGNx4wJ+qSt7z
+	sLrIGoMv469ASeogvEEUXjlVWkdhaiy3NXaCfHj1Bh3dwkIxbdG/URmHVfrblKYfXsyuM+UOL7t
+	5gkml3GZsjszQ=
+X-Received: by 2002:a17:902:8211:b0:2b2:ed0d:3f47 with SMTP id d9443c01a7336-2b5f9fd5bf9mr231926145ad.39.1777028794151;
+        Fri, 24 Apr 2026 04:06:34 -0700 (PDT)
+Received: from xpc ([2400:8902:e002:de3c:3085:4d80:3614:2212])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab20ae4sm276880115ad.61.2026.04.24.04.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2026 04:06:33 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: nathan@kernel.org
+Cc: arnd@arndb.de,
+	chenhuacai@kernel.org,
+	chenhuacai@loongson.cn,
+	guoren@kernel.org,
+	jiaxun.yang@flygoat.com,
+	kernel@xen0n.name,
 	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch changes for v7.1
-Date: Fri, 24 Apr 2026 12:19:13 +0800
-Message-ID: <20260424041913.3035241-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	lixuefeng@loongson.cn,
+	loongarch@lists.linux.dev,
+	WANG Rui <r@hev.cc>
+Subject: Re: [PATCH V4 14/14] LoongArch: Adjust build infrastructure for 32BIT/64BIT
+Date: Fri, 24 Apr 2026 19:06:23 +0800
+Message-ID: <20260424110624.48510-1-r@hev.cc>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260423220647.GA3447678@ax162>
+References: <20260423220647.GA3447678@ax162>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxiuBL7+ppnc1zAA--.52682S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAFWrXr4fZF4fXr4fXrWfCrX_yoWrur1fpF
-	9xZrnxGF48Gr93Ar1Dt34Uur1Dtr1xGry2q3WYy348CF15Zr1UXr1xWFykZFyUt3yrJrW0
-	qr1fGw1aqF4UJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-The following changes since commit 028ef9c96e96197026887c0f092424679298aae8:
+Hi Nathan,
 
-  Linux 7.0 (2026-04-12 13:48:06 -0700)
+>> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+>> index 8d45b860fe56..47516aeea9d2 100644
+>> --- a/arch/loongarch/Makefile
+>> +++ b/arch/loongarch/Makefile
+>...
+>> @@ -62,9 +66,19 @@ ifneq ($(SUBARCH),$(ARCH))
+>>    endif
+>>  endif
+>>  
+>> +ifdef CONFIG_32BIT
+>> +ifdef CONFIG_32BIT_STANDARD
+>> +ld-emul			= $(32bit-emul)
+>> +cflags-y		+= -march=la32v1.0 -mabi=ilp32s -mcmodel=normal
+>> +else  # CONFIG_32BIT_REDUCED
+>> +ld-emul			= $(32bit-emul)
+>> +cflags-y		+= -march=la32rv1.0 -mabi=ilp32s -mcmodel=normal
+>> +endif
+>> +endif
+> 
+> As a result of the above problem, I see
+> 
+>   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+>   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+>   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
+> 
+> when building configurations that I expected to be 64-bit but had been
+> turned into 32-bit ones with LLVM. This was also reported by the test
+> robot with allnoconfig.
+> 
+>   https://lore.kernel.org/202604232041.ESJDwVG4-lkp@intel.com/
+> 
+> Maybe some change is needed on the LLVM side?
 
-are available in the Git repository at:
+The root cause is that scripts/Makefile.clang unconditionally sets
+CLANG_TARGET_FLAGS_loongarch to loongarch64-linux-gnusf.
+However, Clang with --target=loongarch64 does not support a 32-bit ABI.
+LLVM clearly separates loongarch32 and loongarch64 targets.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-7.1
+Since CLANG_TARGET_FLAGS gets initialized before CONFIG is available, the
+current setup effectively assumes that a 64-bit target must also handle
+a 32-bit ABI. That assumption may not hold for LLVM, which models 32-bit
+and 64-bit LoongArch as separate targets.
 
-for you to fetch changes up to 7939f96f26e96b69db1fe4e7c18537a679696358:
+I have a workaround patch for now, though I’d appreciate suggestions if
+there’s a cleaner fix.
 
-  selftests/bpf: Enable CAN_USE_LOAD_ACQ_STORE_REL for LoongArch (2026-04-23 12:49:46 +0800)
+diff --git a/Makefile b/Makefile
+index 54e1ae602000..f03ff854014a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -725,6 +725,10 @@ CC_VERSION_TEXT = $(subst $(pound),,$(shell LC_ALL=C $(CC) --version 2>/dev/null
+ RUSTC_VERSION_TEXT = $(subst $(pound),,$(shell $(RUSTC) --version 2>/dev/null))
+ PAHOLE_VERSION = $(shell $(srctree)/scripts/pahole-version.sh $(PAHOLE))
 
-----------------------------------------------------------------
-LoongArch changes for v7.1
++ifdef need-config
++-include $(objtree)/include/config/auto.conf
++endif
++
+ ifneq ($(findstring clang,$(CC_VERSION_TEXT)),)
+ include $(srctree)/scripts/Makefile.clang
+ endif
+diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
+index b67636b28c35..1c4db2f6543e 100644
+--- a/scripts/Makefile.clang
++++ b/scripts/Makefile.clang
+@@ -4,7 +4,11 @@
+ CLANG_TARGET_FLAGS_arm         := arm-linux-gnueabi
+ CLANG_TARGET_FLAGS_arm64       := aarch64-linux-gnu
+ CLANG_TARGET_FLAGS_hexagon     := hexagon-linux-musl
++ifdef CONFIG_32BIT
++CLANG_TARGET_FLAGS_loongarch   := loongarch32-linux-gnusf
++else
+ CLANG_TARGET_FLAGS_loongarch   := loongarch64-linux-gnusf
++endif
+ CLANG_TARGET_FLAGS_m68k                := m68k-linux-gnu
+ CLANG_TARGET_FLAGS_mips                := mipsel-linux-gnu
+ CLANG_TARGET_FLAGS_powerpc     := powerpc64le-linux-gnu
 
-1, Adjust build infrastructure for 32BIT/64BIT;
-2, Add HIGHMEM (PKMAP and FIX_KMAP) support;
-3, Show and handle CPU vulnerabilites correctly;
-4, Batch the icache maintenance for jump_label;
-5, Add more atomic instructions support for BPF JIT;
-6, Add more features (e.g. fsession) support for BPF trampoline;
-7, Some bug fixes and other small changes.
-
-Note: There is a conflict in arch/loongarch/mm/init.c but can be
-simply fixed by adjusting context.
-
-----------------------------------------------------------------
-Greg Kroah-Hartman (1):
-      LoongArch: Add spectre boundry for syscall dispatch table
-
-Hengqi Chen (2):
-      LoongArch: BPF: Introduce emit_store_stack_imm64() helper
-      LoongArch: BPF: Add fsession support for trampolines
-
-Huacai Chen (4):
-      LoongArch: Adjust build infrastructure for 32BIT/64BIT
-      LoongArch: Add HIGHMEM (PKMAP and FIX_KMAP) support
-      LoongArch: Make arch_irq_work_has_interrupt() true only if IPI HW exist
-      LoongArch: Show CPU vulnerabilites correctly
-
-Lisa Robinson (1):
-      LoongArch: Align FPU register state to 32 bytes
-
-Luo Qiu (1):
-      LoongArch: Use get_random_canary() for stack canary init
-
-Tiezhu Yang (9):
-      LoongArch: Handle CONFIG_32BIT in syscall_get_arch()
-      LoongArch: Define instruction formats for AM{SWAP/ADD}.{B/H} and DBAR
-      LoongArch: BPF: Add the default case in emit_atomic() and rename it
-      LoongArch: BPF: Support 8 and 16 bit read-modify-write instructions
-      LoongArch: BPF: Support load-acquire and store-release instructions
-      LoongArch: BPF: Open code and remove invoke_bpf_mod_ret()
-      LoongArch: BPF: Support small struct arguments for trampoline
-      LoongArch: BPF: Support up to 12 function arguments for trampoline
-      selftests/bpf: Enable CAN_USE_LOAD_ACQ_STORE_REL for LoongArch
-
-Youling Tang (2):
-      LoongArch: Add flush_icache_all()/local_flush_icache_all()
-      LoongArch: Batch the icache maintenance for jump_label
-
-Yuqian Yang (1):
-      LoongArch: Improve the logging of disabling KASLR
-
- arch/loongarch/Kconfig                             | 120 +++++--
- arch/loongarch/Makefile                            |  23 +-
- arch/loongarch/boot/Makefile                       |   6 +
- arch/loongarch/include/asm/cacheflush.h            |  16 +-
- arch/loongarch/include/asm/cpu-features.h          |   1 +
- arch/loongarch/include/asm/cpu.h                   |  64 ++--
- arch/loongarch/include/asm/fixmap.h                |  14 +
- arch/loongarch/include/asm/highmem.h               |  43 +++
- arch/loongarch/include/asm/inst.h                  |  10 +
- arch/loongarch/include/asm/irq_work.h              |   2 +-
- arch/loongarch/include/asm/jump_label.h            |   2 +
- arch/loongarch/include/asm/page.h                  |   4 -
- arch/loongarch/include/asm/pgtable.h               |  12 +
- arch/loongarch/include/asm/processor.h             |   2 +-
- arch/loongarch/include/asm/stackprotector.h        |   9 +-
- arch/loongarch/include/asm/syscall.h               |   4 +
- arch/loongarch/include/uapi/asm/hwcap.h            |   1 +
- arch/loongarch/kernel/cpu-probe.c                  |  11 +
- arch/loongarch/kernel/fpu.S                        |  12 +-
- arch/loongarch/kernel/inst.c                       |   6 +-
- arch/loongarch/kernel/jump_label.c                 |  12 +-
- arch/loongarch/kernel/proc.c                       |   2 +
- arch/loongarch/kernel/process.c                    |   2 +
- arch/loongarch/kernel/relocate.c                   |  26 +-
- arch/loongarch/kernel/syscall.c                    |   3 +-
- arch/loongarch/kernel/vmlinux.lds.S                |   7 +-
- arch/loongarch/kvm/Kconfig                         |   2 +-
- arch/loongarch/lib/Makefile                        |   6 +-
- arch/loongarch/mm/Makefile                         |   1 +
- arch/loongarch/mm/cache.c                          |  10 -
- arch/loongarch/mm/highmem.c                        |  12 +
- arch/loongarch/mm/init.c                           |  61 +++-
- arch/loongarch/mm/pgtable.c                        |  27 ++
- arch/loongarch/net/bpf_jit.c                       | 381 +++++++++++++++++----
- drivers/firmware/efi/libstub/Makefile              |   1 +
- drivers/pci/controller/Kconfig                     |   2 +-
- lib/crc/Kconfig                                    |   2 +-
- tools/testing/selftests/bpf/progs/bpf_misc.h       |   4 +-
- .../selftests/bpf/progs/verifier_precision.c       |   4 +-
- 39 files changed, 726 insertions(+), 201 deletions(-)
- create mode 100644 arch/loongarch/include/asm/highmem.h
- create mode 100644 arch/loongarch/mm/highmem.c
-
+--
+Thanks,
+Rui
