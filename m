@@ -1,170 +1,147 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA0139A7F8
-	for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 11:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129EF3DC4A2
+	for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 16:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777028796; cv=none; b=g0G39JDjAV32JmaGACWFBmil82MOsNwPPqOOq8oyJiaTBcnuD3z41sOpr+heo9ZhOF4aplgtCJUbvMsY7EIUDfHYrIPCrNHKW4RD1jM746vGTUVv7lvG7+nXtuH5XbqKHJApCxf1UR70hhS/5Zb9ssK2WnSYpwYYgvnAka3dAmE=
+	t=1777047860; cv=none; b=hqskWWKcA61JLaGA5h1GuCxZom2OqI0wmkh/tLWDFr7H6JON2L33WTzCKUhdO5Rdr9APUzGU/rujyqD+/nqzfk4O7kS4CmejbxCH6aFm6Qexj+dc/HgSecq5f99XDOb42FA6JKXmyCnNZqs2MTdQLW41F6hgpXWwKfpzM11vHJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777028796; c=relaxed/simple;
-	bh=N4Z9CTh5ZlzdtCFtBp8F5n/nUs8lkwIgEc7rauaLOBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WP2ohl46N3BNpPL4KBfAQLtlhMJ+wARZnBScl7WJzl7FD1OUfqUevpIpSPIa5DIwTT1f+KBC6nEwR/4Cq8YHJpjQK58U5ZGLO9qXclSoybw+RtaxL9Di+6jIinf6Cc+1b1xvOkkKiyyFEwOb9r9fEbiPDxmPtkbrXg4LbMI6Qp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=BoO4ueYk; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1777047860; c=relaxed/simple;
+	bh=WGeiHUHtLNR3bIDnkcA7YuMVHwYC8v+r8hhmRXVRhBU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=b4ablRFhjp9ETJ+CPZC2V1Tg6gf65pr1nYoWV8/FP5h+W/eiOjh971sXVTwVFx0H411eTiHFk+7XBXZqv0cOXRcDNSOhYEB/UJ6xP+6LSEGUCF2n/9KQWp41g7zyQ+vjP4A9fNGFM8rxghFAtxnSxoW8XmXxAEQQ4T/HRQbvvHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eZl25zDn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="BoO4ueYk"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2b788a98557so30380985ad.2
-        for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 04:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1777028794; x=1777633594; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LDIZFW/CQm971bNIO9ritpIw0PqXgfmFxiIFHhRqUmo=;
-        b=BoO4ueYkLL/Z/OR/w+ktDfAnlTzEU0V6aSQeU7fHC28ndAi+ZnXqpmkbdgS20/iDyA
-         enoVtDECWdzw0GHY8LPKl/Gb0Iy1r9Dmc6w7qze12FAHjEUbrdBmobGWTk7g7Ph1G50I
-         6UrYZt1hqTkzMm+M59B7QsBX+XrW/37G1pip/lpJZcrEjeYKTKCIqJQ5pvoedokSYHZh
-         AZDW6aFMq8+UGki6PGUh86IR+vZ5eUlyWAmwQxhrxp2p/HwiXrAErSV+POCRAtomlyPh
-         /k8GetzzGy6bLviFu2Y/mSU1wqV1cB+9Ldr+yruvS6I1bVDU32dLB2vPCA3g3tunBTON
-         Vgsw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eZl25zDn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777047858;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bkHBfOVa4bz/wCbZfmwZYYdZCO/tCYPxae+JQxak4Yg=;
+	b=eZl25zDnldI79cy46T99uOTd673DqSE3j2FysmQbJamPpWT1+bYhnhXu0ciAPPgimA2OcG
+	Lwjqbk1m/+Fj2iobSg00wB8ywT39ue32rH3MCPB5qWPhjYtAyDBWfS9dESKDAbPzROkNcc
+	HyPxpHf9CxQ494ziriMuyR2fcay6u+w=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-300-lDGYzzM6N6axvBXGns-UPg-1; Fri, 24 Apr 2026 12:24:16 -0400
+X-MC-Unique: lDGYzzM6N6axvBXGns-UPg-1
+X-Mimecast-MFC-AGG-ID: lDGYzzM6N6axvBXGns-UPg_1777047855
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-48a5adc141cso21313095e9.0
+        for <loongarch@lists.linux.dev>; Fri, 24 Apr 2026 09:24:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777028794; x=1777633594;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LDIZFW/CQm971bNIO9ritpIw0PqXgfmFxiIFHhRqUmo=;
-        b=mBhh6v3eJb1gieWQj4t8IMhldjc73/i2X2L8VRU8Pu0PHPMRftXuAEBnhRr5K7XyGx
-         9EmL15plzUvj/o7jU4uQNWOTs9dTFAHIsDkY7KPtafqJqRB+8JVv+QjuYh025Ueaimsj
-         exTctGzOkuNjCYi9VCkINTAsQNyFxN7nvRmVTH1uNPy7hU7IAC2xuQmz7rsplTZ8huPN
-         0hTLyT1oU0eRDE3uBM1OkxK5P/uEmihHsB93tP/zmPJWUTx94jWu/ZcXmWrTGm9ArGSX
-         83KFgTGHialtWVKOqiup8fCjqxb03rqtd37SPaxSabTFO2wSKVX/Sae2TAMiZ6R5aL2W
-         xVzA==
-X-Forwarded-Encrypted: i=1; AFNElJ8BWUi90K+CtCdzSrU2zGvYiHfvxYa9VzS3RMZUu7BzUpT2iq5EPCQ5Ssn5zz2XPj1uXCfQI1N4Pxg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx1hQ7oSz1gNJ5Ex1tZdN2GvcCM4yUqL94IJpCgmGLsRCGD7Gkj
-	KBGz1C/nEVL/UmYywy2WeYIWli9RsisaxzSTdPbmIfGLoO1MiNZQ8RbC9VO4VgbYwxY=
-X-Gm-Gg: AeBDietLQv5ljQqmt8mA32C8xg05wSoY0gPwCBjJLUGD5sJP1TBBQIdZARe2LIrpD/2
-	wwWifA8W8qoDibKJc+eh4hi6hhSxAAkeI4zbKLDmOJ6AzC0icLjIhlwdxcgzlCNvICUcSGVVICy
-	KWogcFX0eOOysvZvA8NPgNZUM+TyP2aBKnLCfrro2p5tGlDKfGLu2MZKZRt1UMLWIzmL9+5IW+T
-	xY7eqlwEwNNUdE6jieXGRIW1veT9M3/snCwED9wfcTZ3tlJUF0Cu3uEIX1w3c7V/z0y4smh3rQo
-	EyOWB6XIKdgcV1NEa3m7yL+NacY9AXmgSQXG6RvjYvPDI3gkMKAgBT54EPULRhLGNx4wJ+qSt7z
-	sLrIGoMv469ASeogvEEUXjlVWkdhaiy3NXaCfHj1Bh3dwkIxbdG/URmHVfrblKYfXsyuM+UOL7t
-	5gkml3GZsjszQ=
-X-Received: by 2002:a17:902:8211:b0:2b2:ed0d:3f47 with SMTP id d9443c01a7336-2b5f9fd5bf9mr231926145ad.39.1777028794151;
-        Fri, 24 Apr 2026 04:06:34 -0700 (PDT)
-Received: from xpc ([2400:8902:e002:de3c:3085:4d80:3614:2212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab20ae4sm276880115ad.61.2026.04.24.04.06.30
+        d=1e100.net; s=20251104; t=1777047855; x=1777652655;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bkHBfOVa4bz/wCbZfmwZYYdZCO/tCYPxae+JQxak4Yg=;
+        b=S3mzIYW3MleCNQVsUzNhqldtKtBi95A2bqoqMLij8ZJhCve+RMVHyu/4sJ6219PVVV
+         APeIbsvk/BK+Q7PZ8mQtwZ9Ezaq+/dyDvUN2KPE5ULijLHmHuvaA5jSy/zp6qXpW3uR7
+         NGo6SLvkAfvlCNeIRfn0VmSWaFi+45VIV/hktVDr8/p5HWOP1zsC1RYuZTAaFabYnrY9
+         wE7WRsqh3/2jPefqX8j5t2bYIomRTALdGAS2ybFR4l9QU5Kf2oWB6UynZtfZ5m6087K1
+         YTZ0jg3ovX00Vp/JqGTfPGuklMSj3ydxj3Z9L6sSqoBpkKh817w3PtI3qiWPfBHwUfRZ
+         aNWA==
+X-Forwarded-Encrypted: i=1; AFNElJ/oK8OccHSalS2bhKda0bmGx1A9nsbo66XQD+xdpgJ6KAVSGSL0/26QqgGO8UfL7yBnP4CmE7eV5tc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyKnCCG1cNamJvSpGuX8gm34ccDXpH2rHoMphUt4xqIviYZD0XO
+	/f3imR64yJ1h5XYJJkxh2yX2x22Uarti5trcHWsdI/dLcUUrHMcbmZ7MK2CIpsYOQ5p4CPNGwpz
+	akn/DjrS+iTbKZi8PtN9XFQHgaBmY54NPxEoFlsHHa54bNzhwfPEK2/HJ7F/aFA==
+X-Gm-Gg: AeBDiesQjK9oSvw8fUhZScUigVIJ246HnRfMaWX6Ia2aFURZ8GYjvpkDnkZA9OhNq0p
+	CNSkdevTkveECZqr6GkCiNmKMCWcjK3sbFa/n4mNBZHjpG0s2JS62QxRO0ym4KMG4Hd9WGJrR/a
+	YwBqaagmVaLFZN0BkmfBtyosxN5rijAfSIRBTRfFMNGyWAdSrVQ2FP68vBnpA3LBxgMGiP1Kv9O
+	RwPN0xw+ehqv/SHjZqgLwmWvfVUpFu8MnhZNZtKOoMKokQrP4HsEMnXMWFpGlY9/V5sgPhudSH6
+	EOMmSTlk2wFg9zMLqXkCRIUWKVfajlDGS54TFyXawzmZs8hBn91cZGyQX8bYio7XXJBafj2wsU9
+	H1LVAjET4c1rv5dke5orNlmqQuWM+gk+hW/9tYnq8ObkjXG5yCACpwLJvri2LvZIrtUtgPg1v5F
+	O/h6Ft1vi4jOurcIM=
+X-Received: by 2002:a05:600c:8b6b:b0:485:3c2e:60d5 with SMTP id 5b1f17b1804b1-488fb8859ddmr427762265e9.2.1777047855247;
+        Fri, 24 Apr 2026 09:24:15 -0700 (PDT)
+X-Received: by 2002:a05:600c:8b6b:b0:485:3c2e:60d5 with SMTP id 5b1f17b1804b1-488fb8859ddmr427761525e9.2.1777047854742;
+        Fri, 24 Apr 2026 09:24:14 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a682588f8sm6272915e9.10.2026.04.24.09.24.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 04:06:33 -0700 (PDT)
-From: WANG Rui <r@hev.cc>
-To: nathan@kernel.org
-Cc: arnd@arndb.de,
-	chenhuacai@kernel.org,
-	chenhuacai@loongson.cn,
-	guoren@kernel.org,
-	jiaxun.yang@flygoat.com,
-	kernel@xen0n.name,
-	linux-kernel@vger.kernel.org,
-	lixuefeng@loongson.cn,
-	loongarch@lists.linux.dev,
-	WANG Rui <r@hev.cc>
-Subject: Re: [PATCH V4 14/14] LoongArch: Adjust build infrastructure for 32BIT/64BIT
-Date: Fri, 24 Apr 2026 19:06:23 +0800
-Message-ID: <20260424110624.48510-1-r@hev.cc>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260423220647.GA3447678@ax162>
-References: <20260423220647.GA3447678@ax162>
+        Fri, 24 Apr 2026 09:24:13 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+ Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas
+ <ilias.apalodimas@linaro.org>, Huacai Chen <chenhuacai@kernel.org>, WANG
+ Xuerui <kernel@xen0n.name>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, "K. Y.
+ Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ longli@microsoft.com, Helge Deller <deller@gmx.de>
+Cc: linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-efi@vger.kernel.org, linux-riscv@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 3/8] firmware: sysfb: Make CONFIG_SYSFB a
+ user-selectable option
+In-Reply-To: <0156562f-5fcf-47ce-8fea-03345f2c3fe6@suse.de>
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+ <20260402092305.208728-4-tzimmermann@suse.de>
+ <78f76717-8f1e-41d6-92f7-261df96b84b6@app.fastmail.com>
+ <3e466158-c2e5-4e23-934f-dcdbb71ad41f@suse.de>
+ <d3d7c545-3b07-4881-a16d-45b6f039de19@app.fastmail.com>
+ <001efe27-9cbb-4a89-8d2d-a1f3ae15e505@suse.de>
+ <295a43ce-92fb-435d-a82f-d1cfa8f4f28d@app.fastmail.com>
+ <0156562f-5fcf-47ce-8fea-03345f2c3fe6@suse.de>
+Date: Fri, 24 Apr 2026 18:24:07 +0200
+Message-ID: <87se8kjpi0.fsf@ocarina.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: uRIQW_NWX6ZPXgz15n7S9PIrfKA-9gD4goon-5OOfrw_1777047855
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Hi Nathan,
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
->> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
->> index 8d45b860fe56..47516aeea9d2 100644
->> --- a/arch/loongarch/Makefile
->> +++ b/arch/loongarch/Makefile
->...
->> @@ -62,9 +66,19 @@ ifneq ($(SUBARCH),$(ARCH))
->>    endif
->>  endif
->>  
->> +ifdef CONFIG_32BIT
->> +ifdef CONFIG_32BIT_STANDARD
->> +ld-emul			= $(32bit-emul)
->> +cflags-y		+= -march=la32v1.0 -mabi=ilp32s -mcmodel=normal
->> +else  # CONFIG_32BIT_REDUCED
->> +ld-emul			= $(32bit-emul)
->> +cflags-y		+= -march=la32rv1.0 -mabi=ilp32s -mcmodel=normal
->> +endif
->> +endif
-> 
-> As a result of the above problem, I see
-> 
->   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
->   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
->   clang: error: ignoring '-mabi=ilp32s' as it conflicts with that implied by '-msoft-float' (lp64s) [-Werror,-Woption-ignored]
-> 
-> when building configurations that I expected to be 64-bit but had been
-> turned into 32-bit ones with LLVM. This was also reported by the test
-> robot with allnoconfig.
-> 
->   https://lore.kernel.org/202604232041.ESJDwVG4-lkp@intel.com/
-> 
-> Maybe some change is needed on the LLVM side?
+Hello,
 
-The root cause is that scripts/Makefile.clang unconditionally sets
-CLANG_TARGET_FLAGS_loongarch to loongarch64-linux-gnusf.
-However, Clang with --target=loongarch64 does not support a 32-bit ABI.
-LLVM clearly separates loongarch32 and loongarch64 targets.
+[...]
 
-Since CLANG_TARGET_FLAGS gets initialized before CONFIG is available, the
-current setup effectively assumes that a 64-bit target must also handle
-a 32-bit ABI. That assumption may not hold for LLVM, which models 32-bit
-and 64-bit LoongArch as separate targets.
+>>>>>> On Thu, Apr 2, 2026, at 11:09, Thomas Zimmermann wrote:
+>>>>>> I don't really like this part of the series and would prefer
+>>>>>> to keep CONFIG_SYSFB hidden as much as possible as an x86
 
-I have a workaround patch for now, though I’d appreciate suggestions if
-there’s a cleaner fix.
+I tend to agree with Arnd here, I'm also not seeing that much value on
+making this symbol user selectable. For now I would just keep it hidden.
 
-diff --git a/Makefile b/Makefile
-index 54e1ae602000..f03ff854014a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -725,6 +725,10 @@ CC_VERSION_TEXT = $(subst $(pound),,$(shell LC_ALL=C $(CC) --version 2>/dev/null
- RUSTC_VERSION_TEXT = $(subst $(pound),,$(shell $(RUSTC) --version 2>/dev/null))
- PAHOLE_VERSION = $(shell $(srctree)/scripts/pahole-version.sh $(PAHOLE))
+[...]
 
-+ifdef need-config
-+-include $(objtree)/include/config/auto.conf
-+endif
-+
- ifneq ($(findstring clang,$(CC_VERSION_TEXT)),)
- include $(srctree)/scripts/Makefile.clang
- endif
-diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-index b67636b28c35..1c4db2f6543e 100644
---- a/scripts/Makefile.clang
-+++ b/scripts/Makefile.clang
-@@ -4,7 +4,11 @@
- CLANG_TARGET_FLAGS_arm         := arm-linux-gnueabi
- CLANG_TARGET_FLAGS_arm64       := aarch64-linux-gnu
- CLANG_TARGET_FLAGS_hexagon     := hexagon-linux-musl
-+ifdef CONFIG_32BIT
-+CLANG_TARGET_FLAGS_loongarch   := loongarch32-linux-gnusf
-+else
- CLANG_TARGET_FLAGS_loongarch   := loongarch64-linux-gnusf
-+endif
- CLANG_TARGET_FLAGS_m68k                := m68k-linux-gnu
- CLANG_TARGET_FLAGS_mips                := mipsel-linux-gnu
- CLANG_TARGET_FLAGS_powerpc     := powerpc64le-linux-gnu
+>> Yes, I saw that as well and don't have an immediate idea for how
+>> to best do it. I saw that you already abstracted the access to
+>> the screen_info members in drm_sysfb_screen_info.c, which I think
+>> is a step in that direction.
+>>
+>> I also noticed that efidrm is mostly a subset of vesadrm, so
+>> in theory they could be merged back into an x86 drm driver
+>> along with the drm_sysfb_screen_info helpers, and have a non-x86
+>> driver that constructs a drm_sysfb_device directly from the
+>> EFI structures.
+>
+> I would not want to have a unifed driver for all-things-screen_info. The 
+> code that can easily be shared is already in the sysfb helpers. But I 
+> don't mind adding a separate driver for EFI's Graphics Output Protocol.
 
---
-Thanks,
-Rui
+I agree. It is much more maintainable if we have dedicated DRM drivers that
+use shared helpers, than attempting to have a driver for different platforms.
+
+As Thomas explained, the maintance effort is small on the DRM side and he has
+done a lot of work to split simpledrm in efidrm, vesadrm and ofdrm.
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
