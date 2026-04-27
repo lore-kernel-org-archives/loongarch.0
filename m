@@ -1,286 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F83002BD
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB02F3B2FF4
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 10:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777284125; cv=none; b=YYxLHjnhrJc/UipzLtLttYNX9bmqP5TTdbYVLAfqEMTjlrKmvrrqyDuvUy3fpE0+lXsXwg5zlM7MiUrcVTKdQpgGPapom8H9unC1I7ofwZgFMPBYmkPzMmEqY9960bTQx8rVt2YarLvUIzWhxiucQPQKBS9uYZmk0bLIZbu9KoE=
+	t=1777286860; cv=none; b=g/5S2JxSF3exk4vjnygSewDmUFcOIoHW+rXeioypUiF0rYw7ECDcV+bA11EbaOtmMNQ7JEM/VhuKSxWx4x1TeboNPrkjako5/s6wj1XNWg1cYykp+tpwmZ5lP2LH1bQkF0oCAGpx60it1aswg9l46UBqC4NBXfxaJJUw1zQnHiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777284125; c=relaxed/simple;
-	bh=OdOCIqAL9B52XtUj9SuFxp9CkA/uvVVcMKqPDROTwzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ri6togAzgHotE9kBMbPIySgpsozCHYRRdC4p5PCPu0ZUVC73DYfvwTXDNd9QANGlvElB5Ua81t35xfD4cQJcwBeKP8XYPQ4ScQCWO2xKD+VI6bVe552bCoZzmpS/zLr8/m+AJz2o0gSXT/FqstPxruIOGxT/p4DrXhc8vfA8zUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyA7n5B5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777286860; c=relaxed/simple;
+	bh=kcLRKUt6VV+0E3c3aZ/Ze6zUJANaEPNPvyoBX7yqlW8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FX4ak92y5F3N7KLtHMYze81/xpZDXEerX7Arq9VnvVwpehV3sA+WB6276m/NNBglSGXvMxw5W+LqiQJx/Cxkm9Kw9sAHOzgGRoG3GQX1Zn9XxeG0Ee4sbzWFu03PMOCmQgl+R5jtyKqgQspy9J5hT5NTs/NZWPUMshoOqIWbr8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=T8shyFmr; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyA7n5B5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9D9C2BCB9
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 10:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777284125;
-	bh=OdOCIqAL9B52XtUj9SuFxp9CkA/uvVVcMKqPDROTwzE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GyA7n5B5atHuEw68Ew5ilUBhV8v8U7tZiUWSsLLb+LHiNZ+Y7V89BWKOGUFPu5CT1
-	 Hi/iYps/GwhnrnrlA+cgjjQC2jBKVE/9Ly2R78sM3Hzk31q3EokpIsY8qmhtX3RVxi
-	 IVZJRo2J0Agd6GIjFT4+jXq02ljqOCZDpYPNelD6ezYELX/ckxQ8O7M8S2eyGiYvIo
-	 Rlz4BN03mWOlan6RF8toVA0Diz5X5Qihl5qISgGJJYNakII2nKyZDr3eLHCeuWEBTa
-	 VyiZXRFJaSUMOYClahUUtCNE4QNDTni2YKGLc1IQEA2v6pW6/8BlGK5v2KC4XNnkRq
-	 ocW2rCXg835Wg==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9c603ec2dfso1265442966b.1
-        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 03:02:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ++SX+fqXKQ/7ZKKAkyeStTCwJvFcj+7OBql4wLJfN09bSZNJEYb+M4u3kYlQu+nsI1l5Pb9yszOLE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzGFNqqLTtE0uKltYAH02puQmTeLAlHtUOQI6mBShQmD0gOobiW
-	CY+O8mwIpM5DqqAPL6S+Bl4CZRBZBKJyQehK3PkS9EtKxvfiir5CHhObWY69sIkaDVM+9TtV5Fj
-	2alZn8NCKb5E2jC8UohET3XyqReY1dkM=
-X-Received: by 2002:a17:906:f583:b0:bac:8445:78df with SMTP id
- a640c23a62f3a-bac84457c1emr933524866b.2.1777284123850; Mon, 27 Apr 2026
- 03:02:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="T8shyFmr"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-362bb3260f1so4525773a91.2
+        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 03:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1777286858; x=1777891658; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qBaDcbNtNJIr+4BqFmEontn2SIWukKG96vRmR4j4yIo=;
+        b=T8shyFmr9Ya3xJM3Cx0opd/QoTnwO/AiK4AL1vYIo/2JC5b1w4mzm7sxb7N+vSX3i3
+         HnHOwHmBM3ktl0UnV7OkfbsPLPHs1pd/n2w1vKQDmFLy+EV1fDEZlsMuXuvgRfdoZ7dl
+         BPCQ9AleMxaTYXry9gBzfcvJYVLAa5dBwz2iwEWAyGzhrfTNrp+nV3W67b5WLPueWKhf
+         CHsULhxwFiDOnmL1OZ4LwQJJWBaFKDVRLV6suHn7zlKDJzO5aLkxsDOligWZfd4Y9uki
+         zL3MZ8JTpRud82J6TgDEbSXC5EEO82HxTj3Ys3d6TMQmmN4ow0QLNVr0IXA5CLbmn1Eo
+         ExrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777286858; x=1777891658;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qBaDcbNtNJIr+4BqFmEontn2SIWukKG96vRmR4j4yIo=;
+        b=ZBxV1swmzfIYmGQEpV1urcCSBiLAIJo1NeOc7gkl4NAGVg5FzbokgZ1yAIGxB1PRWl
+         jQhbc+A3qs3dRMyvP0WtdtykHsf8dGw8zlvjO+xzJbKu2Z9Q/zJyzUk3xBopaqbXfqlO
+         zEimmq9im/Dtla2hKevw1Uc4MCdJT/MoJHCkeVFj+0wZjff7uG7uksqQUr97Y7vnp2jY
+         uuqY8m/6Qp48v5sz+1QBxTNlugl0kYb5ZgE2GQz12mLlG0n+P1+erxQQiWx/TPlg0L8N
+         sAGq3H6ebagjsb/soTU87YErpqKQDlcfbmbhT/papdpnhTObufYs5WtybheOFzd8wkMR
+         Ry2Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9ceqi48QmheQfBjoxMZF1QADllIw+6z0N90VWySZUfLm4wEUYLvmpV+xyRqJjb8qH4GpK87y9K/Qs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx97lqNxMneG8xVahQ+SRRRqZaPyE/m4sN4bnAo5hHavUCml4+5
+	ahlhKOIRKXFujDStM+/USzebg7NKpowgKKrKsuwRMpUgji0qHMiI1tiXGc3p0IW8uBI=
+X-Gm-Gg: AeBDieui1KWaR3JG7Yv7oZbed7C98GwSdeBAygd1TgDiaSHM9VOxGrNbZnur1/GXDfF
+	UxEA7CrMvb2gI9/8uSK3HeLhpjQlrgDto0cMtcP0FjgzjAQeeiQD7JjBKecfvSSL6a74LtS2uCd
+	nfsA/wLjFpvd7e20vttGMvuz9ohVcLiVuBVuD4ZnIyGqm2xEi/etrKpQ07nGox2GuVxROYK8XOU
+	WIKE7iP6uQe1HnmcwfWkF2ie8qy/IQ248U/hBknUisXtAo0fBOmekihc6zd2lTkj8EPqVfTgK+S
+	BJpBxaKey3Yb/vMewZ6ADEnThkvorrvvK6Iv8RykihWc/lko5Ab/4tuhCMC4dTbIo3c9dIm0g/y
+	fNh5GF+ji8yxNnhvEHQ2tcPyFTqh6Fg5BbV4dhnRr9kiYeWJ1TBHz5GTWGbFK+oIqxOPhnvwjiN
+	+3XRKK41Y8Mm8=
+X-Received: by 2002:a17:90b:1846:b0:35f:c796:ca5f with SMTP id 98e67ed59e1d1-3614047a264mr45414490a91.19.1777286858194;
+        Mon, 27 Apr 2026 03:47:38 -0700 (PDT)
+Received: from xpc ([2400:8902:e002:def5:7882:53a7:6a48:4d11])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-362dde4ccbfsm16227029a91.1.2026.04.27.03.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 03:47:37 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	loongarch@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	WANG Rui <r@hev.cc>
+Subject: [PATCH 0/3] LoongArch: Move KASLR to EFI stub to avoid initrd overlap
+Date: Mon, 27 Apr 2026 18:47:18 +0800
+Message-ID: <20260427104721.47724-1-r@hev.cc>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260427165133.23350-1-zhaoqunqin@loongson.cn>
- <CAAhV-H7cYTW+6aHHtA9c77XMOhnUrAC_rW25s9d6+xED2oGyAw@mail.gmail.com>
- <586ee1d1-c1c4-06fe-992f-c8e43cd9c778@loongson.cn> <CAAhV-H7nbnLcYs=74pub6SXXrRRv-xPWTXN78wxaRPyGodUaxg@mail.gmail.com>
- <9fd34867-9b1d-e097-f800-875efc6c44bd@loongson.cn>
-In-Reply-To: <9fd34867-9b1d-e097-f800-875efc6c44bd@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 27 Apr 2026 18:02:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7SYoN49ZoFi+4V=qyctdzJG0hD=WUBBozewkQzKYia5w@mail.gmail.com>
-X-Gm-Features: AVHnY4L6tmaCLvZ4OJISfl3Sc4qYxNurMkske6xszaYjGwPCK5KxwVlptr4iMu8
-Message-ID: <CAAhV-H7SYoN49ZoFi+4V=qyctdzJG0hD=WUBBozewkQzKYia5w@mail.gmail.com>
-Subject: Re: [PATCH v2] mfd: loongson-se: Add multi-node support
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 27, 2026 at 5:52=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2026/4/27 =E4=B8=8B=E5=8D=885:37, Huacai Chen =E5=86=99=E9=81=
-=93:
-> > On Mon, Apr 27, 2026 at 5:24=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongso=
-n.cn> wrote:
-> >>
-> >> =E5=9C=A8 2026/4/27 =E4=B8=8B=E5=8D=885:02, Huacai Chen =E5=86=99=E9=
-=81=93:
-> >>> Hi, Qunqin,
-> >>>
-> >>> On Mon, Apr 27, 2026 at 4:55=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loong=
-son.cn> wrote:
-> >>>> On the Loongson platform, each node is equipped with a security engi=
-ne
-> >>>> device. However, due to a hardware flaw, only the device on node 0 c=
-an
-> >>>> trigger interrupts. Therefore, interrupts from other nodes are forwa=
-rded
-> >>>> by node 0. We need to check in the interrupt handler of node 0 wheth=
-er
-> >>>> this interrupt is intended for other nodes.
-> >>> Multi-node or multi-package? In my opinion SE has no relationship wit=
-h
-> >>> NUMA node, so maybe package?
-> >> Here is the output of lscpu from my machine:
-> >>
-> >> [loongson@localhost ~]$ lscpu
-> >> Architecture:          loongarch64
-> >>     CPU op-mode(s):      32-bit, 64-bit
-> >>     Address sizes:       48 bits physical, 48 bits virtual
-> >>     Byte Order:          Little Endian
-> >> CPU(s):                128
-> >>     On-line CPU(s) list: 0-127
-> >> Model name:            Loongson-3C6000/D
-> >>     CPU family:          Loongson-64bit
-> >>     Model:               0x11
-> >>     Thread(s) per core:  2
-> >>     Core(s) per socket:  32
-> >>     Socket(s):           2
-> >>     BogoMIPS:            4200.00
-> >>     Flags:               cpucfg lam ual fpu lsx lasx crc32 complex cry=
-pto
-> >> lvz lbt_x86 lbt_arm lbt_mips
-> >> Caches (sum of all):
-> >>     L1d:                 4 MiB (64 instances)
-> >>     L1i:                 4 MiB (64 instances)
-> >>     L2:                  16 MiB (64 instances)
-> >>     L3:                  128 MiB (4 instances)
-> >> NUMA:
-> >>     NUMA node(s):        4
-> >>     NUMA node0 CPU(s):   0-31
-> >>     NUMA node1 CPU(s):   32-63
-> >>     NUMA node2 CPU(s):   64-95
-> >>     NUMA node3 CPU(s):   96-127
-> >>
-> >> There are four SE devices in my system, one for each NUMA node.
-> > For Loongson-3C6000 node is the same as package. You should consider
-> > Loongson-3C5000L, one package contains four nodes.
->
-> I am not familiar with the SE-related components on the 3C5000L, and
-> this driver is not compatible with the 5000 series.
-Whether it is compatible to Loongson-3C5000L is not important. The
-importance is package is not always equal to node, and we should
-consider whether SE is per-node or per-package.
+This series addresses a potential overlap issue between the kernel
+image and the initrd when KASLR is enabled.
 
-Huacai
+In the normal boot flow, the bootloader is responsible for loading
+both vmlinux and the initrd, and it can guarantee that the two do
+not overlap in memory. However, this assumption only holds as long
+as neither image changes its location afterwards.
 
->
-> Qunqin,
->
-> Thanks.
->
-> >
-> > Huacai
-> >
-> >> Qunqin,
-> >>
-> >> Thanks
-> >>
-> >>> Huacai
-> >>>
-> >>>> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> >>>> ---
-> >>>> Changes in v2:
-> >>>>           -Resending due to no feedback for one month.
-> >>>>           -Rebased on top of latest mainline (7.1-rc1) to ensure the=
- patch
-> >>>>            applies cleanly.
-> >>>>           -No functional changes since the previous submission.
-> >>>>
-> >>>> Link to v1:
-> >>>> https://lore.kernel.org/all/20260226102225.19516-1-zhaoqunqin@loongs=
-on.cn/#t
-> >>>>
-> >>>>    drivers/mfd/loongson-se.c       | 38 +++++++++++++++++++++++++++-=
------
-> >>>>    include/linux/mfd/loongson-se.h |  3 +++
-> >>>>    2 files changed, 35 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-> >>>> index 3902ba377d6..40e18c21268 100644
-> >>>> --- a/drivers/mfd/loongson-se.c
-> >>>> +++ b/drivers/mfd/loongson-se.c
-> >>>> @@ -37,6 +37,9 @@ struct loongson_se_controller_cmd {
-> >>>>           u32 info[7];
-> >>>>    };
-> >>>>
-> >>>> +static DECLARE_COMPLETION(node0);
-> >>>> +static struct loongson_se *se_node[SE_MAX_NODES];
-> >>>> +
-> >>>>    static int loongson_se_poll(struct loongson_se *se, u32 int_bit)
-> >>>>    {
-> >>>>           u32 status;
-> >>>> @@ -133,8 +136,8 @@ EXPORT_SYMBOL_GPL(loongson_se_init_engine);
-> >>>>    static irqreturn_t se_irq_handler(int irq, void *dev_id)
-> >>>>    {
-> >>>>           struct loongson_se *se =3D dev_id;
-> >>>> -       u32 int_status;
-> >>>> -       int id;
-> >>>> +       u32 int_status, node_irq =3D 0;
-> >>>> +       int id, node;
-> >>>>
-> >>>>           spin_lock(&se->dev_lock);
-> >>>>
-> >>>> @@ -147,6 +150,11 @@ static irqreturn_t se_irq_handler(int irq, void=
- *dev_id)
-> >>>>                   writel(SE_INT_CONTROLLER, se->base + SE_S2LINT_CL)=
-;
-> >>>>           }
-> >>>>
-> >>>> +       if (int_status & SE_INT_OTHER_NODE) {
-> >>>> +               int_status &=3D ~SE_INT_OTHER_NODE;
-> >>>> +               node_irq =3D 1;
-> >>>> +       }
-> >>>> +
-> >>>>           /* For engines */
-> >>>>           while (int_status) {
-> >>>>                   id =3D __ffs(int_status);
-> >>>> @@ -157,6 +165,14 @@ static irqreturn_t se_irq_handler(int irq, void=
- *dev_id)
-> >>>>
-> >>>>           spin_unlock(&se->dev_lock);
-> >>>>
-> >>>> +       if (node_irq) {
-> >>>> +               writel(SE_INT_OTHER_NODE, se->base + SE_S2LINT_CL);
-> >>>> +               for (node =3D 1; node < SE_MAX_NODES; node++) {
-> >>>> +                       if (se_node[node])
-> >>>> +                               se_irq_handler(irq, se_node[node]);
-> >>>> +               }
-> >>>> +       }
-> >>>> +
-> >>>>           return IRQ_HANDLED;
-> >>>>    }
-> >>>>
-> >>>> @@ -189,6 +205,7 @@ static int loongson_se_probe(struct platform_dev=
-ice *pdev)
-> >>>>           struct loongson_se *se;
-> >>>>           int nr_irq, irq, err, i;
-> >>>>           dma_addr_t paddr;
-> >>>> +       int node =3D dev_to_node(dev);
-> >>>>
-> >>>>           se =3D devm_kmalloc(dev, sizeof(*se), GFP_KERNEL);
-> >>>>           if (!se)
-> >>>> @@ -213,9 +230,16 @@ static int loongson_se_probe(struct platform_de=
-vice *pdev)
-> >>>>
-> >>>>           writel(SE_INT_ALL, se->base + SE_S2LINT_EN);
-> >>>>
-> >>>> -       nr_irq =3D platform_irq_count(pdev);
-> >>>> -       if (nr_irq <=3D 0)
-> >>>> -               return -ENODEV;
-> >>>> +       if (node =3D=3D 0 || node =3D=3D NUMA_NO_NODE) {
-> >>>> +               nr_irq =3D platform_irq_count(pdev);
-> >>>> +               if (nr_irq <=3D 0)
-> >>>> +                       return -ENODEV;
-> >>>> +       } else {
-> >>>> +               /* Only the device on node 0 can trigger interrupts =
-*/
-> >>>> +               nr_irq =3D 0;
-> >>>> +               wait_for_completion_interruptible(&node0);
-> >>>> +               se_node[node] =3D se;
-> >>>> +       }
-> >>>>
-> >>>>           for (i =3D 0; i < nr_irq; i++) {
-> >>>>                   irq =3D platform_get_irq(pdev, i);
-> >>>> @@ -228,7 +252,9 @@ static int loongson_se_probe(struct platform_dev=
-ice *pdev)
-> >>>>           if (err)
-> >>>>                   return err;
-> >>>>
-> >>>> -       return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engine=
-s,
-> >>>> +       complete_all(&node0);
-> >>>> +
-> >>>> +       return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engine=
-s,
-> >>>>                                       ARRAY_SIZE(engines), NULL, 0, =
-NULL);
-> >>>>    }
-> >>>>
-> >>>> diff --git a/include/linux/mfd/loongson-se.h b/include/linux/mfd/loo=
-ngson-se.h
-> >>>> index 07afa0c2524..a80e06eb017 100644
-> >>>> --- a/include/linux/mfd/loongson-se.h
-> >>>> +++ b/include/linux/mfd/loongson-se.h
-> >>>> @@ -20,6 +20,9 @@
-> >>>>
-> >>>>    #define SE_INT_ALL                     0xffffffff
-> >>>>    #define SE_INT_CONTROLLER              BIT(0)
-> >>>> +#define SE_INT_OTHER_NODE              BIT(31)
-> >>>> +
-> >>>> +#define SE_MAX_NODES                   8
-> >>>>
-> >>>>    #define SE_ENGINE_MAX                  16
-> >>>>    #define SE_ENGINE_RNG                  1
-> >>>>
-> >>>> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-> >>>> --
-> >>>> 2.47.2
-> >>>>
-> >>>>
-> >>
->
+The in-kernel KASLR implementation breaks that assumption. When the
+initrd is placed close to the kernel image, randomizing the kernel
+location at runtime may move it into the initrd region, leading to
+memory corruption early during boot.
+
+To fix this, this series moves the KASLR logic out of the kernel
+proper and into the EFI stub. With this change, the final placement
+of both the kernel image and the initrd is determined by the EFI
+memory allocator. This ensures that the two allocations are
+coordinated and cannot overlap.
+
+Functionally, the kernel still supports KASLR as before, but the
+randomization now happens before the kernel is entered, rather than
+during early kernel relocation.
+
+WANG Rui (3):
+  LoongArch: Allow rdtime_h() and rdtime_l() in 64-bit builds
+  efi/loongarch: Randomize kernel preferred address for KASLR
+  LoongArch: Skip relocation-time KASLR if it has already been applied
+
+ arch/loongarch/Kconfig                   |  2 +-
+ arch/loongarch/include/asm/efi.h         |  4 +++-
+ arch/loongarch/include/asm/loongarch.h   |  6 ------
+ arch/loongarch/kernel/relocate.c         |  4 ++++
+ drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++++++++++
+ 5 files changed, 24 insertions(+), 8 deletions(-)
+
+-- 
+2.54.0
+
