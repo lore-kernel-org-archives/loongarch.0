@@ -1,150 +1,370 @@
-Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0BF356A12
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 07:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777276176; cv=pass; b=qph25YMR+XV9zlmR+ardohdaAFZvJqlr9DHyd/5qJ4xXCCf8PfiX6wL4YECMsQROjknBosCLZ3qQRuYlOL425Vs7vf3VeaDjneVViWWKFy3Wiy6j7qFjZ9x7taQpprkxbA1/7K7IurWDqtxM/wNuXfi3zo8q+gpJYezVZqrPyNk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777276176; c=relaxed/simple;
-	bh=wkYbww2o5xmCP3bgyEgxz6IUQJUNogIt6RMdvCb7Ykw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797DE382F15
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 07:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777276552; cv=none; b=JTxNvSs1hvBh8zXjFFYXW5FSjaWxuLBfiQq0YM9xE7ZOGUFAxyxyHvg9Wp+IY3W7OWSzgup/9yIOKJGhk9CK+U/olGTfChITmYTwhVnpiOTH2/dMnCg8snRKwiVi7+XJMIk8vvE/jYqQd3amJX5O2cU4GvQ6iJQCZxI93EZR8zk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777276552; c=relaxed/simple;
+	bh=AA97YxQ92X1wowII0q7zfF7kp5Gbnl4LF6jl/AHc7hE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qvgOJhne1393FxQwow9ha+gaZ/R9VQ2YXFypEaeQ2hYQL+G9aTKiO2F9H7m3fejPwuzb0ai/oEMGRE02yJAQstieLj81e2un/L3wwNVKOsY09SsUbDyoFyA32A9HAwzu1NG2zp+bi7wL8+9cc57E2nwZUYn/ZoROx4fsp6EqwMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=FIJmXdx2; arc=pass smtp.client-ip=74.125.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	 To:Cc:Content-Type; b=lSj4svbYFLhMQLOQa8HQKznVTbhdESlacFjWyhwIFEZ0XZk57hu364Z7j8Ad4ET0gwsW+xbKJsi5+jsbvcjLtoVoG13pe1Zf4VG/YZ8m2fIBasNE/TeT9Hs/PVknuUKBtDXC96pS/xhtp8pQheLZrLa5vBxf5E/1tlSsGwJtDl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+uF/I0b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="FIJmXdx2"
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64937edbc9eso8389596d50.2
-        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 00:49:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777276174; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Dsog9Q6uYadCewbiTOdOcqG3bR3JL9C7Q9NDdFhyzWnx4Kzm6hc/u2+bv19z9d2Bt6
-         iz8RFTVqUXe+O6GFpdmofPJhMsnswXQfX8zgWcqjn10rekiq9b+dt0UraayCHqVUVRjQ
-         piqIFEci+JBPAg4ESKU40lv/JZB3SiYpncgAF7uyMrptRq6/PZuUKlSdRu3AhCodlsKQ
-         pWXHmwkUL2RJ4DUtnC177rlazSsq+RWsNOX4OytMFYPxY+7sl9nBqL/xtDpZrNN3jo1b
-         wrJKGyp9RoNoj2iNw6Ma217Y3W2g9kV9jtZ1hE/nBWfOWSBuNNtfwTg1jdT8EhyFf3YQ
-         nyuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ek9ChqVeqeA30OwQ3fqBFJmD6gbZl8V4G3Ph/Tn1DBw=;
-        fh=c8GhnynQObM8V2tOc9ZT3cWk9AbWmuf3WLBQCRXvNWA=;
-        b=HzScZ0TAzSXjrAu6biBmhwIWnz9fw2XiWyJ+Q643crqKjUforiLSgnmTTcqqqVLbam
-         gsgUesgCDjQHsboVhwCuCizIgvqJopQwNHEG6A80V2aioTsQIU5g5xfdr6j8CiPOprwz
-         RJOU1e5/cT81bq6THFtMXwitYFiMD2fbJGdfPyu86Nz3PTwkpU9caVS5WeeidBwE3Q3p
-         nKLfUElymfioBIHLljkeoqykKrm/e487fAK18+j0Gl5OMJhcwzfOzcBEJbgJH81xp9sU
-         MX1ju//mdzcEkXHLV4MlllJUZVkROmgNG9u4b0Le+0lH3sJN5SqfxltOb/baHsCOAPvv
-         d+OA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1777276174; x=1777880974; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ek9ChqVeqeA30OwQ3fqBFJmD6gbZl8V4G3Ph/Tn1DBw=;
-        b=FIJmXdx2EP18dEaL/SKXqid/RmFaA8upCa/ey7EGCiTUXQVND7RnOfVZQRzZgKnyCL
-         ozqlkwiYo315A+i1iV2tQXC6AZrJ70ZwhO/55cc7Ci86C4yUjyE5nwWs2ODcw+FLbl32
-         AvFypWK0p2OnKIaWdu8EdirCpwFfzFAnFo+Zhp7r2EFzVE17HCofgCg8qW+/AAp7Hw0f
-         AHOVtCfqi0GwpKgsvS7aoKwqFvcPH9D+EfJGxNmABtR3QvIC1TTK/XyOrf0JYXnR+U6a
-         QNeFFp2zyL6/sdWlEBWXc0vWCO7HmgXBPqtJK9g15py6GRXcEMMCbECAuJHAAIRi7fHW
-         eueQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777276174; x=1777880974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ek9ChqVeqeA30OwQ3fqBFJmD6gbZl8V4G3Ph/Tn1DBw=;
-        b=fHkEJ8EtPYf+eEXe7DYlkT3kyjZTlcUX8tVvo1Mv7673GpuF81O/3ClY0FJcg8x2Rv
-         NyDurKfL/5JccaGuBJoVU2xe5nrBcyWU5CajGm7SI5E2OscwpsPesVpM3QQQkGh7hXFa
-         JUi2E7mbFBhyA0FtWje7jUxzIgyct0Kdu5pu4vsgTky0mXbu0amZQTsaiWkNo0L5UMxr
-         RRYNPb0ymMagp8NRzb4QjSNkdjRnHK80znMgEJkp60IPZ1TQRr9bKaWe+s3868KJ99A6
-         ei4A0g0b+4C4sCflYOADyIr9v4vSRUQPgD5rlN28hG6n9RsCLHbw3VIGJxaE2B+V5XSf
-         h4Yw==
-X-Forwarded-Encrypted: i=1; AFNElJ9Z9HoaPW9cen0Pnw4Isuqo4b14oKeNztcSY004g8B3Hk1mTCfmVvGMxMRomjY/IAZ2YAIRymw791Q=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxtLJR9IDTz2HkAGoyFSBjIXjN8Hc40jQezfaxFeqdhLLnKmUR+
-	oAIoXGKoYGL2VUAEIw1ZsQoW9sg6PoUMyF3Szi6pw2ChlZgzGqGhGpMQmDbHtJrzogF8XLIAPGU
-	eIO/M2f5yJeE2npB88unK9PpMzOYdxRymXaef7m6syA==
-X-Gm-Gg: AeBDiev1movCAl1SckqxxFyNGFQ5sgnOjhKtrC1wmoddUAQnDlrEbA9VxRVKNDlfJMK
-	7GZ3ahDmGCv5WCxDuPdoSz0gxdvQ9qD8Rcz6oVTYSl2Qjg1MYmOQ4/S5o4lTM3t6Fdph2mMR4Eb
-	U6CXDCygrQQIJRGSnDqBrTJlPj5AzDCO2aZ6gfh4cQYHzIN1Q3uY6b1LhaETRkyr73yhy5GAzRh
-	rtVgyL1mM3oByLSf+nZ6kU9gourDY8h3XAOXu8phvnPjqoJI51qfKg/CEkIldqPs411FCIoCIBH
-	J8uvxtWAjMi/M+cFkrEwZjXRLxUTAL2l+3/T/QtojGeUWq6/vWbt
-X-Received: by 2002:a05:690e:4192:b0:64e:a335:95cd with SMTP id
- 956f58d0204a3-65310a427edmr30609822d50.41.1777276173956; Mon, 27 Apr 2026
- 00:49:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+uF/I0b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DD5C19425
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 07:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777276552;
+	bh=AA97YxQ92X1wowII0q7zfF7kp5Gbnl4LF6jl/AHc7hE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B+uF/I0b1dPNTaEd5wQAqw/mpYlsYpFAmjPAEvMRM88DzIME/P9MNqoopdrRI0uOn
+	 VS+/M1trM0aTnOoQMNzgALMiIyuEjnrFF7EzCwH/14jmLeJOKCWG7cSdMyxB4Ku6Zd
+	 Yd2MuU9742uniIWb9Eu2h9YcJ6Vj646LG4cxEmJLlrLjqVolPEkZKFr0BBRmZwg+nj
+	 p+gpVNwLHJl5zQ9hGh35D6RgRmh2m5exqRcirqv3p+N1K7xD5oICJRA5CcsKAcPrEM
+	 SBZltKxLJwR5DeWEi//BA1vKqjNzq31BM5Cf97qqsDQOZpxPH5TmrZoXAQJbFydJOw
+	 ZWIVpdkncNugQ==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b9358dd7f79so578417166b.1
+        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 00:55:52 -0700 (PDT)
+X-Gm-Message-State: AOJu0YyxBIg+W5ZDO06LY1kdonIu+bcBWwmMrsfGgYA0OCXq3wtrI2jo
+	cl/9ndj60LQal+ZW6ranVR3dNLCat7RQM5otuqpamctYVRBMFOftuQSITdVCGgVaaFue3Cni+3I
+	I0cqsNkLe5CuuzKNMg2gM91sgW3vJed8=
+X-Received: by 2002:a17:906:ef07:b0:ba7:e3ee:47a1 with SMTP id
+ a640c23a62f3a-ba7e3fd9970mr1680449066b.4.1777276550695; Mon, 27 Apr 2026
+ 00:55:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260426120231.532644-3-r@hev.cc> <20260427050735.3410-1-lisa@bytefly.space>
-In-Reply-To: <20260427050735.3410-1-lisa@bytefly.space>
-From: hev <r@hev.cc>
-Date: Mon, 27 Apr 2026 15:49:21 +0800
-X-Gm-Features: AVHnY4LBFt0fuBq3TwLhwZHYG4J8y27cuFb-KgWDFe-BpI0G6t-52Sf-oj0Bl4A
-Message-ID: <CAHirt9jfnSFQfRHEANGeNGE2JowTcPV1Tz8L4cX=boJ6vSOa7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] efi/loongarch: Randomize kernel preferred address
- for KASLR
-To: Lisa Robinson <lisa@bytefly.space>
-Cc: ardb@kernel.org, chenhuacai@kernel.org, ilias.apalodimas@linaro.org, 
-	kernel@xen0n.name, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
+References: <20260414113111.2997864-1-lixianglai@loongson.cn> <20260414113111.2997864-2-lixianglai@loongson.cn>
+In-Reply-To: <20260414113111.2997864-2-lixianglai@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 27 Apr 2026 15:56:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6g41ah0xUxKJfe1=+xSMeaBcAbGnYya-xMAT3NtFUbgg@mail.gmail.com>
+X-Gm-Features: AVHnY4LKvjWWwTd1Y2Flfj2PhKKKue-_vW1WftHRXP-uqm6HKW7q6rfpxi0NF6M
+Message-ID: <CAAhV-H6g41ah0xUxKJfe1=+xSMeaBcAbGnYya-xMAT3NtFUbgg@mail.gmail.com>
+Subject: Re: [PATCH V4 1/2] LoongArch: KVM: Compile the switch.S file directly
+ into the kernel
+To: Xianglai Li <lixianglai@loongson.cn>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lisa,
+Hi, Xianglai,
 
-On Mon, Apr 27, 2026 at 1:08=E2=80=AFPM Lisa Robinson <lisa@bytefly.space> =
-wrote:
+After this patch I get:
+arch/loongarch/kvm/switch.o: warning: objtool: kvm_enter_guest+0x0:
+unreachable instruction
+
+But if I restore SYM_FUNC_START/SYM_FUNC_END for kvm_enter_guest, the
+warning disappear. So please make sure which one is correct.
+
+Huacai
+
+On Tue, Apr 14, 2026 at 7:57=E2=80=AFPM Xianglai Li <lixianglai@loongson.cn=
+> wrote:
 >
-> Hi Rui
+> If we directly compile the switch.S file into the kernel, the address of
+> the kvm_exc_entry function will definitely be within the DMW memory area.
+> Therefore, we will no longer need to perform a copy relocation of
+> kvm_exc_entry.
 >
-> > diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmwar=
-e/efi/libstub/loongarch.c
-> > index 9825f5218137..80ba7d69e1b3 100644
-> > --- a/drivers/firmware/efi/libstub/loongarch.c
-> > +++ b/drivers/firmware/efi/libstub/loongarch.c
-> > @@ -38,6 +38,21 @@ static efi_status_t exit_boot_func(struct efi_boot_m=
-emmap *map, void *priv)
-> >       return EFI_SUCCESS;
-> >  }
-> >
-> > +unsigned long efi_get_kimg_kaslr_address(void)
-> > +{
-> > +     unsigned int random_offset =3D 0;
-> > +
-> > +#ifdef CONFIG_RANDOMIZE_BASE
-> > +     if (!efi_nokaslr) {
-> > +             efi_get_random_bytes(sizeof(random_offset), (u8 *)&random=
-_offset);
-> > +             random_offset ^=3D (rdtime_l() << 16);
+> Based on the above description, compile switch.S directly into the kernel=
+,
+> and then remove the copy relocation execution logic for the kvm_exc_entry
+> function.
 >
-> random_offset &=3D ~(efi_get_kimg_min_align() - 1);
-
-Thanks for pointing that out.
-
-Aligning to 64K here seems preferable. Otherwise, it reduces the entropy.
-
-Thanks,
-Rui
-
-
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> ---
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: Tianrui Zhao <zhaotianrui@loongson.cn>
+> Cc: Bibo Mao <maobibo@loongson.cn>
 >
-> > +             random_offset &=3D (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1)=
-;
-> > +     }
-> > +#endif
-> > +
-> > +     return PHYSADDR(VMLINUX_LOAD_ADDRESS) + random_offset;
-> > +}
-> > +
-> >  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
-> >               efi_loaded_image_t *image)
-> >  {
+>  arch/loongarch/Kbuild                       |  2 +-
+>  arch/loongarch/include/asm/asm-prototypes.h | 21 +++++++++++++
+>  arch/loongarch/include/asm/kvm_host.h       |  3 --
+>  arch/loongarch/kvm/Makefile                 |  2 +-
+>  arch/loongarch/kvm/main.c                   | 35 ++-------------------
+>  arch/loongarch/kvm/switch.S                 | 27 +++++++++++-----
+>  6 files changed, 46 insertions(+), 44 deletions(-)
 >
+> diff --git a/arch/loongarch/Kbuild b/arch/loongarch/Kbuild
+> index beb8499dd8ed..1c7a0dbe5e72 100644
+> --- a/arch/loongarch/Kbuild
+> +++ b/arch/loongarch/Kbuild
+> @@ -3,7 +3,7 @@ obj-y +=3D mm/
+>  obj-y +=3D net/
+>  obj-y +=3D vdso/
+>
+> -obj-$(CONFIG_KVM) +=3D kvm/
+> +obj-$(subst m,y,$(CONFIG_KVM)) +=3D kvm/
+>
+>  # for cleaning
+>  subdir- +=3D boot
+> diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch=
+/include/asm/asm-prototypes.h
+> index 704066b4f736..e8ce153691e5 100644
+> --- a/arch/loongarch/include/asm/asm-prototypes.h
+> +++ b/arch/loongarch/include/asm/asm-prototypes.h
+> @@ -20,3 +20,24 @@ asmlinkage void noinstr __no_stack_protector ret_from_=
+kernel_thread(struct task_
+>                                                                     struc=
+t pt_regs *regs,
+>                                                                     int (=
+*fn)(void *),
+>                                                                     void =
+*fn_arg);
+> +
+> +struct kvm_run;
+> +struct kvm_vcpu;
+> +
+> +void kvm_exc_entry(void);
+> +int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
+> +
+> +struct loongarch_fpu;
+> +
+> +#ifdef CONFIG_CPU_HAS_LSX
+> +void kvm_save_lsx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lsx(struct loongarch_fpu *fpu);
+> +#endif
+> +
+> +#ifdef CONFIG_CPU_HAS_LASX
+> +void kvm_save_lasx(struct loongarch_fpu *fpu);
+> +void kvm_restore_lasx(struct loongarch_fpu *fpu);
+> +#endif
+> +
+> +void kvm_save_fpu(struct loongarch_fpu *fpu);
+> +void kvm_restore_fpu(struct loongarch_fpu *fpu);
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/inclu=
+de/asm/kvm_host.h
+> index 19eb5e5c3984..0bcdffc14c5f 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -86,7 +86,6 @@ struct kvm_context {
+>  struct kvm_world_switch {
+>         int (*exc_entry)(void);
+>         int (*enter_guest)(struct kvm_run *run, struct kvm_vcpu *vcpu);
+> -       unsigned long page_order;
+>  };
+>
+>  #define MAX_PGTABLE_LEVELS     4
+> @@ -356,8 +355,6 @@ void kvm_exc_entry(void);
+>  int  kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu);
+>
+>  extern unsigned long vpid_mask;
+> -extern const unsigned long kvm_exception_size;
+> -extern const unsigned long kvm_enter_guest_size;
+>  extern struct kvm_world_switch *kvm_loongarch_ops;
+>
+>  #define SW_GCSR                (1 << 0)
+> diff --git a/arch/loongarch/kvm/Makefile b/arch/loongarch/kvm/Makefile
+> index cb41d9265662..fe665054f824 100644
+> --- a/arch/loongarch/kvm/Makefile
+> +++ b/arch/loongarch/kvm/Makefile
+> @@ -11,7 +11,7 @@ kvm-y +=3D exit.o
+>  kvm-y +=3D interrupt.o
+>  kvm-y +=3D main.o
+>  kvm-y +=3D mmu.o
+> -kvm-y +=3D switch.o
+> +obj-y +=3D switch.o
+>  kvm-y +=3D timer.o
+>  kvm-y +=3D tlb.o
+>  kvm-y +=3D vcpu.o
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 2c593ac7892f..18800a38b150 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -348,8 +348,7 @@ void kvm_arch_disable_virtualization_cpu(void)
+>
+>  static int kvm_loongarch_env_init(void)
+>  {
+> -       int cpu, order, ret;
+> -       void *addr;
+> +       int cpu, ret;
+>         struct kvm_context *context;
+>
+>         vmcs =3D alloc_percpu(struct kvm_context);
+> @@ -365,30 +364,8 @@ static int kvm_loongarch_env_init(void)
+>                 return -ENOMEM;
+>         }
+>
+> -       /*
+> -        * PGD register is shared between root kernel and kvm hypervisor.
+> -        * So world switch entry should be in DMW area rather than TLB ar=
+ea
+> -        * to avoid page fault reenter.
+> -        *
+> -        * In future if hardware pagetable walking is supported, we won't
+> -        * need to copy world switch code to DMW area.
+> -        */
+> -       order =3D get_order(kvm_exception_size + kvm_enter_guest_size);
+> -       addr =3D (void *)__get_free_pages(GFP_KERNEL, order);
+> -       if (!addr) {
+> -               free_percpu(vmcs);
+> -               vmcs =3D NULL;
+> -               kfree(kvm_loongarch_ops);
+> -               kvm_loongarch_ops =3D NULL;
+> -               return -ENOMEM;
+> -       }
+> -
+> -       memcpy(addr, kvm_exc_entry, kvm_exception_size);
+> -       memcpy(addr + kvm_exception_size, kvm_enter_guest, kvm_enter_gues=
+t_size);
+> -       flush_icache_range((unsigned long)addr, (unsigned long)addr + kvm=
+_exception_size + kvm_enter_guest_size);
+> -       kvm_loongarch_ops->exc_entry =3D addr;
+> -       kvm_loongarch_ops->enter_guest =3D addr + kvm_exception_size;
+> -       kvm_loongarch_ops->page_order =3D order;
+> +       kvm_loongarch_ops->exc_entry =3D (void *)kvm_exc_entry;
+> +       kvm_loongarch_ops->enter_guest =3D (void *)kvm_enter_guest;
+>
+>         vpid_mask =3D read_csr_gstat();
+>         vpid_mask =3D (vpid_mask & CSR_GSTAT_GIDBIT) >> CSR_GSTAT_GIDBIT_=
+SHIFT;
+> @@ -422,16 +399,10 @@ static int kvm_loongarch_env_init(void)
+>
+>  static void kvm_loongarch_env_exit(void)
+>  {
+> -       unsigned long addr;
+> -
+>         if (vmcs)
+>                 free_percpu(vmcs);
+>
+>         if (kvm_loongarch_ops) {
+> -               if (kvm_loongarch_ops->exc_entry) {
+> -                       addr =3D (unsigned long)kvm_loongarch_ops->exc_en=
+try;
+> -                       free_pages(addr, kvm_loongarch_ops->page_order);
+> -               }
+>                 kfree(kvm_loongarch_ops);
+>         }
+>
+> diff --git a/arch/loongarch/kvm/switch.S b/arch/loongarch/kvm/switch.S
+> index f1768b7a6194..1a5636790ef9 100644
+> --- a/arch/loongarch/kvm/switch.S
+> +++ b/arch/loongarch/kvm/switch.S
+> @@ -5,10 +5,12 @@
+>
+>  #include <linux/linkage.h>
+>  #include <asm/asm.h>
+> +#include <asm/page.h>
+>  #include <asm/asmmacro.h>
+>  #include <asm/loongarch.h>
+>  #include <asm/regdef.h>
+>  #include <asm/unwind_hints.h>
+> +#include <linux/kvm_types.h>
+>
+>  #define HGPR_OFFSET(x)         (PT_R0 + 8*x)
+>  #define GGPR_OFFSET(x)         (KVM_ARCH_GGPR + 8*x)
+> @@ -100,8 +102,16 @@
+>          *  -        is still in guest mode, such as pgd table/vmid regis=
+ters etc,
+>          *  -        will fix with hw page walk enabled in future
+>          * load kvm_vcpu from reserved CSR KVM_VCPU_KS, and save a2 to KV=
+M_TEMP_KS
+> +        *
+> +        * PGD register is shared between root kernel and kvm hypervisor.
+> +        * So world switch entry should be in DMW area rather than TLB ar=
+ea
+> +        * to avoid page fault reenter.
+> +        *
+> +        * In future if hardware pagetable walking is supported, we won't
+> +        * need to copy world switch code to DMW area.
+>          */
+>         .text
+> +       .p2align PAGE_SHIFT
+>         .cfi_sections   .debug_frame
+>  SYM_CODE_START(kvm_exc_entry)
+>         UNWIND_HINT_UNDEFINED
+> @@ -190,8 +200,8 @@ ret_to_host:
+>         kvm_restore_host_gpr    a2
+>         jr      ra
+>
+> -SYM_INNER_LABEL(kvm_exc_entry_end, SYM_L_LOCAL)
+>  SYM_CODE_END(kvm_exc_entry)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
+>
+>  /*
+>   * int kvm_enter_guest(struct kvm_run *run, struct kvm_vcpu *vcpu)
+> @@ -200,7 +210,7 @@ SYM_CODE_END(kvm_exc_entry)
+>   *  a0: kvm_run* run
+>   *  a1: kvm_vcpu* vcpu
+>   */
+> -SYM_FUNC_START(kvm_enter_guest)
+> +SYM_CODE_START(kvm_enter_guest)
+>         /* Allocate space in stack bottom */
+>         addi.d  a2, sp, -PT_SIZE
+>         /* Save host GPRs */
+> @@ -215,8 +225,8 @@ SYM_FUNC_START(kvm_enter_guest)
+>         /* Save kvm_vcpu to kscratch */
+>         csrwr   a1, KVM_VCPU_KS
+>         kvm_switch_to_guest
+> -SYM_INNER_LABEL(kvm_enter_guest_end, SYM_L_LOCAL)
+> -SYM_FUNC_END(kvm_enter_guest)
+> +SYM_CODE_END(kvm_enter_guest)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_enter_guest)
+>
+>  SYM_FUNC_START(kvm_save_fpu)
+>         fpu_save_csr    a0 t1
+> @@ -224,6 +234,7 @@ SYM_FUNC_START(kvm_save_fpu)
+>         fpu_save_cc     a0 t1 t2
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_fpu)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_fpu)
+>
+>  SYM_FUNC_START(kvm_restore_fpu)
+>         fpu_restore_double a0 t1
+> @@ -231,6 +242,7 @@ SYM_FUNC_START(kvm_restore_fpu)
+>         fpu_restore_cc     a0 t1 t2
+>         jr                 ra
+>  SYM_FUNC_END(kvm_restore_fpu)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_fpu)
+>
+>  #ifdef CONFIG_CPU_HAS_LSX
+>  SYM_FUNC_START(kvm_save_lsx)
+> @@ -239,6 +251,7 @@ SYM_FUNC_START(kvm_save_lsx)
+>         lsx_save_data   a0 t1
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_lsx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lsx)
+>
+>  SYM_FUNC_START(kvm_restore_lsx)
+>         lsx_restore_data a0 t1
+> @@ -246,6 +259,7 @@ SYM_FUNC_START(kvm_restore_lsx)
+>         fpu_restore_csr  a0 t1 t2
+>         jr               ra
+>  SYM_FUNC_END(kvm_restore_lsx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lsx)
+>  #endif
+>
+>  #ifdef CONFIG_CPU_HAS_LASX
+> @@ -255,6 +269,7 @@ SYM_FUNC_START(kvm_save_lasx)
+>         lasx_save_data  a0 t1
+>         jr              ra
+>  SYM_FUNC_END(kvm_save_lasx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_save_lasx)
+>
+>  SYM_FUNC_START(kvm_restore_lasx)
+>         lasx_restore_data a0 t1
+> @@ -262,10 +277,8 @@ SYM_FUNC_START(kvm_restore_lasx)
+>         fpu_restore_csr   a0 t1 t2
+>         jr                ra
+>  SYM_FUNC_END(kvm_restore_lasx)
+> +EXPORT_SYMBOL_FOR_KVM(kvm_restore_lasx)
+>  #endif
+> -       .section ".rodata"
+> -SYM_DATA(kvm_exception_size, .quad kvm_exc_entry_end - kvm_exc_entry)
+> -SYM_DATA(kvm_enter_guest_size, .quad kvm_enter_guest_end - kvm_enter_gue=
+st)
+>
+>  #ifdef CONFIG_CPU_HAS_LBT
+>  STACK_FRAME_NON_STANDARD kvm_restore_fpu
 > --
-> Lisa
+> 2.39.1
+>
