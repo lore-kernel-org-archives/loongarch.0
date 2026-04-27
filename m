@@ -1,47 +1,54 @@
 Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476AF317715
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 02:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA13258EF9
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 02:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777256276; cv=none; b=Jkn9qz6frpz103ZlCThxSIJJF60qLoSLucCbSj5ct+00Y7gk/Gvqe1QeLlcV5hswZlsr48yMeeSq7DC+PBFy2hNf/VGigR+bJazWTk069xqBUEreQlW1k2vXp/rddie5pNSTah2k7Nw6hSEHwJmwNL/3UC9oPbfBrg4jyN4pubc=
+	t=1777256653; cv=none; b=NV7DsRRNAZBlCIrlu+3SMQnotTLqJ9VtlD9Qh9Ld50WUkqG2pV0QkRKlZH/z7leoCZlJC/JGgL4DE15/GoO8S5rRddXnWcamqVGmGoDqIyDWGnW80Hs78bQvxkaBBawKp+VDTl4i0A6UIZQFE3DUUhhPr/UfqcSoMchBQuA44BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777256276; c=relaxed/simple;
-	bh=ksJMFRGbnH+gw97nFmhZow6+AiF/QRcWVG2VBQx4Z7s=;
+	s=arc-20240116; t=1777256653; c=relaxed/simple;
+	bh=tBvJL95sFLic+Nj5r26PFFmPBTJB6fNdLbQxxKlYB0Y=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=q8rHo9UQ9v5eCSJplwb/XGsgoaB4RWI4xqhz1F16HlbW0sC5CNA1/L0/XoLJRdXs8nRpHtoQvVGvTb55RBDgyG44MXdpIPDmSq30y38XNxrzhlIjnSijnKAy+voZEAuFK8hFBumT5PJvM4BquL0O8l1gx5xiEd+KOKeXpd4H0mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=F1Jg7Fqx; arc=none smtp.client-ip=89.208.246.23
+	 Content-Type:MIME-Version; b=AFzwe8LHAi2dyqW0HSx5hEWjdYsArSLE49FB6CalFi9lsmdCs3vXj1PPbpGroy4PIeIoho/pnEOCpAXS/JuNaHZDjqrpAs2o9cnD8GkD1odP2Cjz1QSrg4k7pcnXOKCuCLXsIYcLWrJXYMwWs/n477yUXl0MlkDXmxsK2xWocQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=UTvn1ma1; arc=none smtp.client-ip=89.208.246.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="F1Jg7Fqx"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="UTvn1ma1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1777256272;
-	bh=+HW95JT08RXAY64sa/fHE5bmpe9N9qPhDrlrBfUWB7k=;
+	s=default; t=1777256247;
+	bh=528vr2AkUjMKWg88iUbPWVy7Vntp/tP5Nh4tc1Xl3pE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=F1Jg7FqxIz4oB5sm2ETItfdhsdbJq76bdd9TU6e8iIK3WWNEs2d7/teZ6Sl7GWh4t
-	 iixAoyBjpsoFN9bIQH0kOj2UC6Fjw7UPS0adAFUELB1+kLVPKG6rsu9mnOjIrCky/r
-	 9jiB54qY8Yylss/EUPfetqXEl3DlTEHVRfEN25Vg=
+	b=UTvn1ma1ujvwO8jT1rdxBsJNTvq4tecuJr9o7x/hykzuA5Ta4f/PtAPO5zBQG7rKX
+	 TURoB4r+I6Vi2iLlpw9IOe8PwKgvvIeiWVz24CdZslw3B2Uh3yOciEf6m0kLp42Av/
+	 pctL/dZFXZvWSFqt8G0ukUkpOYwAXTvdpTsmTLtk=
 Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1))
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
 	(Client did not present a certificate)
 	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 0966F65A96;
-	Sun, 26 Apr 2026 22:17:49 -0400 (EDT)
-Message-ID: <de142a5e34f9158500361e51d5a025bf3366699e.camel@xry111.site>
-Subject: Ping: [PATCH v2] LoongArch: detect and disable sc.q if erratic
+	by xry111.site (Postfix) with ESMTPSA id 04E3F65992;
+	Sun, 26 Apr 2026 22:17:22 -0400 (EDT)
+Message-ID: <6d2f0e3659659bece726a90810e3aacb0a4d75b6.camel@xry111.site>
+Subject: Ping: [PATCH v8] PCI: loongson: Override PCIe bridge supported
+ speeds for Loongson-3C6000 series
 From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>, 
-	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>, Mingcong Bai
-	 <jeffbai@aosc.io>, Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang
-	 <jiaxun.yang@flygoat.com>, George Guo <dongtai.guo@linux.dev>, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 27 Apr 2026 10:17:48 +0800
-In-Reply-To: <20260409121936.871418-1-xry111@xry111.site>
-References: <20260409121936.871418-1-xry111@xry111.site>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
+ =?gb2312?Q?Wilczy=A8=BDski?=	 <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Rob Herring	 <robh@kernel.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Ziyao Li	 <liziyao@uniontech.com>
+Cc: niecheng1@uniontech.com, zhanjun@uniontech.com,
+ guanwentao@uniontech.com,  Kexy Biscuit <kexybiscuit@aosc.io>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, kernel@uniontech.com, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Lain
+ Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>,  Mingcong
+ Bai <jeffbai@aosc.io>, stable@vger.kernel.org, Huacai Chen
+ <chenhuacai@kernel.org>, Huacai Chen	 <chenhuacai@loongson.cn>
+Date: Mon, 27 Apr 2026 10:17:20 +0800
+In-Reply-To: <20260412101731.107059-1-xry111@xry111.site>
+References: <20260412101731.107059-1-xry111@xry111.site>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.60.1 
@@ -54,89 +61,181 @@ MIME-Version: 1.0
 
 Ping.
 
-On Thu, 2026-04-09 at 20:19 +0800, Xi Ruoyao wrote:
-> We've observed that, on some Loongson 2K3000/3B6000M systems with earlier
-> firmware revisions, the sc.q instruction may write incorrect data into
-> the upper half of the written 128-bit datum.
+On Sun, 2026-04-12 at 18:17 +0800, Xi Ruoyao wrote:
+> From: Ziyao Li <liziyao@uniontech.com>
 >=20
-> It seems upgrading the firmware (for example, the 202602 release from
-> Loongson [1]) will resolve the issue. But since not all systems may be
-> running the most up-to-date firmware, based on firmware update avail-
-> ability and the environment in which they are running in.
+> Older steppings of the Loongson-3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 0x3c19,
+> 0x3c29)
+> as only 2.5 GT/s, despite the upstream bus supporting speeds from
+> 2.5 GT/s up to 16 GT/s.
 >=20
-> To help with system compatibility and ensure correct behavior, check if
-> sc.q behaves erratically and disable if so.
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if
+> more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
 >=20
-> Link: https://github.com/loongson/Firmware/pull/156=C2=A0[1]
+> Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
+> amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
+> clocks and lanes in power management. We hope this patch can prevent
+> similar problems in future driver changes (similar checks may be
+> implemented in other GPU, storage controller, NIC, etc. drivers).
+>=20
+> Manually override the `supported_speeds` field for affected PCIe
+> bridges
+> with those found on the upstream bus to correctly reflect the
+> supported
+> link speeds.
+>=20
+> This patch was originally found from AOSC OS[1].
+>=20
+> Link: https://github.com/AOSC-Tracking/linux/pull/2=C2=A0#1
+> Tested-by: Lain Fearyncess Yang <fsf@live.com>
+> Tested-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> Link:
+> https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73=
+175a17f493454
+> [Ziyao Li: move from drivers/pci/quirks.c to
+> drivers/pci/controller/pci-loongson.c]
+> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+> Tested-by: Mingcong Bai <jeffbai@aosc.io>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> [Xi Ruoyao: Fix falling through logic and add kernel log output;
+> =C2=A0add Fixes tag and rebase to 7.0-rc7]
+> Cc: stable@vger.kernel.org
+> Fixes: cd89edda4002 ("PCI: loongson: Add ACPI init support")
 > Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
-> =C2=A0arch/loongarch/kernel/cpu-probe.c | 39 ++++++++++++++++++++++++++++=
-++-
-> =C2=A01 file changed, 38 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cp=
-u-probe.c
-> index 657bbae6c1c7..5fcf2672172f 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -132,6 +132,43 @@ static void set_isa(struct cpuinfo_loongarch *c, uns=
-igned int isa)
-> =C2=A0	}
+> Changes in v8:
+> - Add the Fixes tag.
+> - Link to v7:
+> https://lore.kernel.org/all/20260121-loongson-pci1-v7-1-fc79c85a574d@unio=
+ntech.com/
+>=20
+> Ziyao Li's original commentary message follows below:
+>=20
+> The reason of not just copying pdev->bus->self->supported_speeds is
+> that we're concerned that this approach assumes the upstream port
+> reports the same capabilities as bridge, which may not always be the
+> case in future silicon revisions.
+>=20
+> Our current conservative approach ensures we only enable speeds that
+> are physically supported by checking the actual max_bus_speed. For
+> example, if there's a future Loongson-3C9999 where the virtual bridge
+> reports Gen4 support but the physical bridge only supports Gen3.
+>=20
+> In this scenario, directly copying the upstream port's
+> supported_speeds
+> would incorrectly report Gen4 support for the downstream bridge. The
+> current patch ensures we only set speed bits up to what the hardware
+> actually supports, based on the measured max_bus_speed. This seems
+> safer for future silicon.
+>=20
+> Changes in v7:
+> - adjust commit message
+> - Link to v6:
+> https://lore.kernel.org/r/20260114-loongson-pci1-v6-1-ee8a18f5d242@uniont=
+ech.com
+>=20
+> Changes in v6:
+> - adjust commit message
+> - Link to v5:
+> https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniont=
+ech.com
+>=20
+> Changes in v5:
+> - style adjust
+> - Link to v4:
+> https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniont=
+ech.com
+>=20
+> Changes in v4:
+> - rename subject
+> - use 0x3c19/0x3c29 instead of 3c19/3c29
+> - Link to v3:
+> https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniont=
+ech.com
+>=20
+> Changes in v3:
+> - Adjust commit message
+> - Make the program flow more intuitive
+> - Link to v2:
+> https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniont=
+ech.com
+>=20
+> Changes in v2:
+> - Link to v1:
+> https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniont=
+ech.com
+> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-
+> loongson.c
+> - Fix falling through logic and add kernel log output by Xi Ruoyao
+>=20
+> =C2=A0drivers/pci/controller/pci-loongson.c | 36
+> +++++++++++++++++++++++++++
+> =C2=A01 file changed, 36 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/pci-loongson.c
+> b/drivers/pci/controller/pci-loongson.c
+> index bc630ab8a283..a4250d7af1bf 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev
+> *dev)
 > =C2=A0}
+> =C2=A0DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5=
+,
+> loongson_pci_msi_quirk);
 > =C2=A0
 > +/*
-> + * Some LoongArch has broken sc.q which incorrectly handles the upper wo=
-rd
-> + * when the lower word is zero. Newer firmware versions (such as the 202=
-602
-> + * release from Loongson) seem to contain a workaround for this issue.
-> + *
-> + * Disable sc.q if erratic to ensure reliability and compatibility.
+> + * Older steppings of the Loongson-3C6000 series incorrectly report
+> the
+> + * supported link speeds on their PCIe bridges (device IDs 0x3c19,
+> + * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting
+> speeds
+> + * from 2.5 GT/s up to 16 GT/s.
 > + */
-> +static bool sc_q_is_sane(void)
+> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
 > +{
-> +	struct {
-> +		long word[2];
-> +	} __aligned(16) mem;
-> +	register long tmp asm("t0");
-> +	register long one asm("t1") =3D 1;
-> +	register long *ptr asm("t2") =3D &mem.word[0];
+> +	u8 old_supported_speeds =3D pdev->supported_speeds;
 > +
-> +	/*
-> +	 * The sc.q instruction is hard coded with .word so the HWCAP bit
-> +	 * exported to the userspace won't depend on the assembler version
-> +	 * used to build the kernel.
-> +	 */
-> +	asm (
-> +		"1:ll.d\t$r0, %[ptr], 0\n\t"
-> +		"move\t%[tmp], $r0\n\t"
-> +		".word\t0x385735cc\n\t" /* sc.q %[tmp], %[one], %[ptr]*/
-> +		"beqz\t%[tmp], 1b"
-> +		: [tmp] "=3D&r" (tmp), "=3Dm" (mem)
-> +		: [ptr] "r" (ptr), [one] "r" (one));
+> +	switch (pdev->bus->max_bus_speed) {
+> +	case PCIE_SPEED_16_0GT:
+> +		pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_16_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_8_0GT:
+> +		pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_8_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_5_0GT:
+> +		pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_5_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_2_5GT:
+> +		pdev->supported_speeds |=3D PCI_EXP_LNKCAP2_SLS_2_5GB;
+> +		break;
+> +	default:
+> +		pci_warn(pdev, "unexpected max bus speed");
 > +
-> +	if (mem.word[1] !=3D 1) {
-> +		pr_warn_once("Warning: sc.q is erratic on this platform, disabling for=
- both kernel and HWCAP. Please try a firmware update.");
-> +		return false;
+> +		return;
 > +	}
 > +
-> +	return true;
+> +	if (pdev->supported_speeds !=3D old_supported_speeds)
+> +		pci_info(pdev, "fixing up supported link speeds: 0x%x
+> =3D> 0x%x",
+> +			 old_supported_speeds, pdev-
+> >supported_speeds);
 > +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19,
+> loongson_pci_bridge_speed_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29,
+> loongson_pci_bridge_speed_quirk);
 > +
-> =C2=A0static void cpu_probe_common(struct cpuinfo_loongarch *c)
+> =C2=A0static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus
+> *bus)
 > =C2=A0{
-> =C2=A0	unsigned int config;
-> @@ -177,7 +214,7 @@ static void cpu_probe_common(struct cpuinfo_loongarch=
- *c)
-> =C2=A0		c->options |=3D LOONGARCH_CPU_LAM;
-> =C2=A0		elf_hwcap |=3D HWCAP_LOONGARCH_LAM;
-> =C2=A0	}
-> -	if (config & CPUCFG2_SCQ) {
-> +	if ((config & CPUCFG2_SCQ) && sc_q_is_sane()) {
-> =C2=A0		c->options |=3D LOONGARCH_CPU_SCQ;
-> =C2=A0		elf_hwcap |=3D HWCAP_LOONGARCH_SCQ;
-> =C2=A0	}
+> =C2=A0	struct pci_config_window *cfg;
 
 --=20
 Xi Ruoyao <xry111@xry111.site>
