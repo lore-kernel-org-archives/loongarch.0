@@ -1,94 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E6739903A
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0158526CE2D
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777277353; cv=none; b=BN8cbztwjjejoLeNKZ6Y+0oIgZmms53YlZHDC8fAIPvwQzXbREaDkkvBE1tBvfousAsWFqBFs7F2ZJTtARdMqchAvjLJVM2fkxEOeRXu0iAShuCs07/CvAjq67oRqOiXI5ZknLNoJ/Iaa6hYgCJCSPzMOQB1md/nPwc4P/4bbRI=
+	t=1777278944; cv=none; b=FOSSJ/a7NfODZyzneigAKsFdjvU1nYgHxZ+EUqH6wEieGoC3QjyKGQEOyjiH/9UptKlNa7u5D07Cwv5n3N8okFGQL32eL1sHSuT5BliZL7QOTlEEPpKScEpOidiFmdNI/QG5ntFHgTcxEQmbQaqcf2WYIXUM4gBsRDhLq66tDho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777277353; c=relaxed/simple;
-	bh=tlDJUHAv3bs4YHGfPiJQCEtb2tmHcIfreZyo2SAVGJo=;
+	s=arc-20240116; t=1777278944; c=relaxed/simple;
+	bh=Zv+TO29QHFMwpQXCUDa54CnjJjHfs+jaGILg50uTD6k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cRCq3VqlH+lJvLij7HHFc6IsaOYApMOWDb+aLrayXAVfRPBgoJP1IcNp5bWsMdgBkjyjJ5gyQo3OgNVBM+05joMuSC2Xtm/SjaNNtaPe/6+CxohtasVlJpjLsl/XiVcR30rRF3JGSFpNgPp4E8SzSOy5dYgk1Lc/AVb5roZhRFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DlUmEC+M; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=AOk/6+iNuN67Km0tCoMjoGuhZndBYX+fjuj0n/y4VoaYy/pN6YoW8sPEegXe5GxJLEUHhve2jiLGMXVavjgF+BrtTh+W+IvlgHmavxnkiaUz/0YJTkGr/3ilJDApVCd17C/BufnL9md/kQ0d/qWKRgs/ZyfP4VkIjt5xCsRqskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDHqct81; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DlUmEC+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EB8C2BCF6
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDHqct81"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90588C2BCB4
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777277353;
-	bh=tlDJUHAv3bs4YHGfPiJQCEtb2tmHcIfreZyo2SAVGJo=;
+	s=k20201202; t=1777278943;
+	bh=Zv+TO29QHFMwpQXCUDa54CnjJjHfs+jaGILg50uTD6k=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DlUmEC+MI8XlyPw86HvuPF4QVJj5d3CVEzic4tHTM41mV3JQI4x/vFswwZxKrtpZx
-	 F/aUwIHvvHaFTIbn/0D6bnnG4x25ifsEsQwqekKWIJBnAs5HuhcaLHmmPXyqwF3R9w
-	 WDuaC67ZajYRN541t+n2OOugMxwgw7r/MC1s/HVfPHEACD0a3J1igX3Ziy+clQ3tQx
-	 vjtP+oAzRZ7ubsYj3Nbw1iQWVlnSW1o4SQjp9xdO+4tC8lEDpEifxg9/uKUckgFpr8
-	 AERnbO7NZtqCwBdXKgPSDSRhA/AHx2LIQFnAYp7itoDw7IEI5osUC99KDYVNTEXuCA
-	 bh6bVn8K45rZQ==
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ba6b39871a3so1202309566b.0
-        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 01:09:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9iwV0swUX1MI2qQRMDZrx5boxx46KFXNOkVDjsZBP595YImrNANqkpjI31jvxIIROOXuvMQTLpNGI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YybtNLHbXS3yGwLdmOWOUSiZAp61OBYWIjngpB7ou6zWRDT+1nQ
-	fdcZdHQtaxDnEhs7OMXJwGQwNCeOsCXMcF8tH510VAOWJHuhQFZviBErRApdrso/AHQ4yGofMBk
-	aktdVqx43s1cmQXtXk67lgMB8pFEXT0U=
-X-Received: by 2002:a17:907:9495:b0:ba9:30a4:537b with SMTP id
- a640c23a62f3a-ba930a45439mr1289288266b.18.1777277351461; Mon, 27 Apr 2026
- 01:09:11 -0700 (PDT)
+	b=JDHqct81a0Su+ezG1QIxcYrckQXilQiz8wvFdO34WPS/qGMtGk4I39zHeCiwfH6Bv
+	 sKrafirNcu0D7dInm8I3HB0E/mv73GaTscrXHBD5I7aSmlETYsay/QQ2/VVpJToLRF
+	 ljfLkQodoA5WEK9JcDFykHJQEkpd46d6RQHP7O95tzX5dF9CgII2F9eArXXg9buL+F
+	 c9Fg09IGkqS+lWRTCmGnqzuvPjzvvddkS3xd0d7+WjaIuFYKdFEVMgGghdoMIcKLl+
+	 Y1yx0QhFhePaKvZEnumu3HjWKhyIhknBA3+ir7QwMtYtexoq/4pDOF5y62khJ8QI/N
+	 zgHTyV+2eQdaQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b9c745e18a0so1696090166b.1
+        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 01:35:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+15+34TrfdK2q4UPxymyoxGSqbbb9Sj32SLh6euNJMOL3co3blHCTzQgs04Kvi0L98/w3HKvmr9kw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwbRYr9kByxNV0U2roWw/h2Hvdmz6H0lOSEo7ItCpqVTlEXqgFk
+	BCGVCdfGGaUflPx87AaBBA0CovrUyS8cLMmpEyNgSQSwFFikl8xTdQWjbGoHaigyFaDWfMCg4/A
+	KL6p0J+V7NboAW9/n8oQvzaTzd4nHbLo=
+X-Received: by 2002:a17:907:6d08:b0:ba2:5314:f979 with SMTP id
+ a640c23a62f3a-ba42140793bmr1848583566b.6.1777278942094; Mon, 27 Apr 2026
+ 01:35:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260427034451.717817-1-r@hev.cc> <20260427034451.717817-3-r@hev.cc>
-In-Reply-To: <20260427034451.717817-3-r@hev.cc>
+References: <20260422-vdso-loongarch-cleanup-v1-1-1fef08f07614@linutronix.de>
+In-Reply-To: <20260422-vdso-loongarch-cleanup-v1-1-1fef08f07614@linutronix.de>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 27 Apr 2026 16:09:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7zGFjzBTCLMZvE+etd2J9Te1+9Xr9GwtjvBSXgGYfQEw@mail.gmail.com>
-X-Gm-Features: AVHnY4KCB1-pOIIrSQIlFfTO5n7_wXLFN1dkGTAo14tPjpI2E_CYUoJmYTC11UQ
-Message-ID: <CAAhV-H7zGFjzBTCLMZvE+etd2J9Te1+9Xr9GwtjvBSXgGYfQEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] efi/libstub: Synchronize instruction cache after
- kernel relocation
-To: WANG Rui <r@hev.cc>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev
+Date: Mon, 27 Apr 2026 16:35:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4DP-kTKxbPwfP_mmX7kqmvNZFA5dT2s2YcMPkKeEkn=A@mail.gmail.com>
+X-Gm-Features: AVHnY4LucrCaCluBMek6ff3jqwjBLMQvQB4VJw7qsuiKrPvgqNILZjlsUCQdDao
+Message-ID: <CAAhV-H4DP-kTKxbPwfP_mmX7kqmvNZFA5dT2s2YcMPkKeEkn=A@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: vDSO: Drop custom __arch_vdso_hres_capable()
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 27, 2026 at 11:45=E2=80=AFAM WANG Rui <r@hev.cc> wrote:
->
-> The relocated kernel image is copied to its new location using memcpy().
-> On architectures with separate instruction and data caches, the copied
-> instructions may remain stale in the instruction cache, leading to the
-> execution of outdated contents.
->
-> Call efi_cache_sync_image() after the relocation copy to ensure the
-> instruction cache is synchronized with the updated memory contents before
-> control is transferred to the relocated kernel.
->
-> Signed-off-by: WANG Rui <r@hev.cc>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Applied, thanks.
 
+Huacai
+
+On Wed, Apr 22, 2026 at 3:45=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> The custom definition is identical to the generic fallback one.
+>
+> Remove it.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
->  drivers/firmware/efi/libstub/relocate.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/loongarch/include/asm/vdso/gettimeofday.h | 6 ------
+>  1 file changed, 6 deletions(-)
 >
-> diff --git a/drivers/firmware/efi/libstub/relocate.c b/drivers/firmware/e=
-fi/libstub/relocate.c
-> index d4264bfb6dc1..913b425d089d 100644
-> --- a/drivers/firmware/efi/libstub/relocate.c
-> +++ b/drivers/firmware/efi/libstub/relocate.c
-> @@ -158,6 +158,7 @@ efi_status_t efi_relocate_kernel(unsigned long *image=
-_addr,
->          * have been allocated by UEFI, so we can safely use memcpy.
->          */
->         memcpy((void *)new_addr, (void *)cur_image_addr, image_size);
-> +       efi_cache_sync_image(new_addr, image_size);
+> diff --git a/arch/loongarch/include/asm/vdso/gettimeofday.h b/arch/loonga=
+rch/include/asm/vdso/gettimeofday.h
+> index bae76767c693..18ba403e1ed9 100644
+> --- a/arch/loongarch/include/asm/vdso/gettimeofday.h
+> +++ b/arch/loongarch/include/asm/vdso/gettimeofday.h
+> @@ -85,12 +85,6 @@ static __always_inline u64 __arch_get_hw_counter(s32 c=
+lock_mode,
+>         return count;
+>  }
 >
->         /* Return the new address of the relocated image. */
->         *image_addr =3D new_addr;
+> -static inline bool loongarch_vdso_hres_capable(void)
+> -{
+> -       return true;
+> -}
+> -#define __arch_vdso_hres_capable loongarch_vdso_hres_capable
+> -
+>  #endif /* CONFIG_GENERIC_GETTIMEOFDAY */
+>
+>  #endif /* !__ASSEMBLER__ */
+>
+> ---
+> base-commit: 6596a02b207886e9e00bb0161c7fd59fea53c081
+> change-id: 20260422-vdso-loongarch-cleanup-d16e07e92422
+>
+> Best regards,
 > --
-> 2.54.0
+> Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+>
 >
