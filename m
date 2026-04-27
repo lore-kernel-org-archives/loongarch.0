@@ -1,64 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE1534AAE3
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 16:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A39434A3DB
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 16:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777305736; cv=none; b=vDFYm7eBsj948hPXC9+/6PhJQe7hWhCMdsQmVinjtBn+A0FOHwv/UFCKAegy5qLBKMv8OiLV75/OWpN6tWQHSbTZ8hVY4vLzVbxN8pq/VJNsacXZ9Ai8SUMt6FRnshGi9of87G0BvU3BwVwYI17+0NsvV0U2Xi1SaovHO2JZeTw=
+	t=1777306339; cv=none; b=SFvJnJBDTjg3ay4FHtsh28sWRXWvc0Ra40X2SxzGRSrRgl67SYIYvCPpVzN4jp/k7Qc531JL3NKLvZqef1CjgotFUE01/3u/KjbUaBeNZpUWH3ID57T+MkBUXa/5bE5Cs2mT3+bbKfS5PCGVYOebOU5GKDdsOw3ewXJf/kSlIfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777305736; c=relaxed/simple;
-	bh=888yAmMb+2bkYxMtzzPRo5jdCa2Khba/ny+n5sOcH1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNLOI632S+RZuba71UMXjwOxgCmpfytzc4WFu/rssfa+gkTeHuSCYNV6y1Ma5+CbihudhguD0yXKGcTfWP2GFe5b8Y3XEuot22kyRTYRt445biSTSV8ryjvLQbENc6bzqIAJdQbt5Ygu3sxhMB/EI5e8WD80AUM4le3SSOjeJYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2jFVvzD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777306339; c=relaxed/simple;
+	bh=1nULXbFIw3Osbf+VK6+O2ffVIezdHJ8OBpXhfIbc/mY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=gHHHt+nmJzD1ZYPVFN0h5QGW/RKsn+dlKJSVrM7l1q5KOw0Fpk5KRd3vN+F6g54cIMHStCLjKXv+9JiVBE9goyJYIaot5Fx4U3q/te5AtSApYqCzy2ADGcx88Xd1xEc51OpYR4pIGkiDNxRdpZKy9Rho1i1ehw91rrMFbFsJaPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+/gufN0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2jFVvzD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D7EC19425;
-	Mon, 27 Apr 2026 16:02:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+/gufN0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6463FC19425
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 16:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777305735;
-	bh=888yAmMb+2bkYxMtzzPRo5jdCa2Khba/ny+n5sOcH1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K2jFVvzDGkCAZLiFdhTVgdqL5mRB2PfHUXgOIXxoROLAeYVwV+Qaj6/yDu1egBPM2
-	 cZt/kAcDiKTpGhOPkF8zq/0qyLcvci/blGBbirW6zknFEWzesTY2UHGU0g4FMa9ZUe
-	 1Q8UF+g6Qy0I0gvWIwSg27Ihs6vHkjDEiFJSAhoUMkDu/ljyynr9clzWycroan2YzH
-	 MTTnon0jwYNnES9kYm5Wmws53DQKnTM6JzKuk5QELUTSwmzi3rFCZB0H+shzzcP8SH
-	 XMTgXgLVHgcQsdylWQ4tMODuixTcOKB4/3dP2GVOGR7Fe3tB6gKIm0QEwqgkhydgxI
-	 +0fAlJzOnBwhQ==
-Date: Mon, 27 Apr 2026 17:02:12 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ming Wang <wangming01@loongson.cn>
-Cc: kexec@lists.infradead.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH] LoongArch: Increase MAX_MEMORY_RANGES to 1024
-Message-ID: <20260427160212.GA612626@horms.kernel.org>
-References: <20260304011914.880120-1-wangming01@loongson.cn>
+	s=k20201202; t=1777306339;
+	bh=1nULXbFIw3Osbf+VK6+O2ffVIezdHJ8OBpXhfIbc/mY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=S+/gufN0fzLU42M46yz18n9XlEWfPO3BqRI7HZYAoHDT/V9N7ZnU2f7VKMzC6HYsW
+	 I6H4Muccn41sGfbXa8cCcZZZ7f94n0XDOAgKAVRFwwk/4opaJJOv79i1dnFHMJ+AGz
+	 fL6/6wBSrhsLQbl0I8HazXgmmD9QDIyEtoJrnfZjeFZdohIRwLWq/yoAHyjs1D2shi
+	 otVA5WpgLMyNoIExyXeQwIIAayuCZxlC2U0WNV1/hww8tqXRVxh1DKDiAOznHMFz8H
+	 QHXW+3Gt8rA7ZJpoXtPznUXP5U5gWstDzlfSFQTFjW9lJ0XmP0T87wJrrYqxY+RcHz
+	 SASOye6dUzq4Q==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 7BC1DF40070;
+	Mon, 27 Apr 2026 12:12:18 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Mon, 27 Apr 2026 12:12:18 -0400
+X-ME-Sender: <xms:4orvaTD3yp50_ZGxO8aqwZtOeYuFby8Dlozy5E65q2aUtO7Y6II3nQ>
+    <xme:4orvaUUzT1L0Yk0HHgWLg21iyBnCocRza7wbwXgu1XZwBAui7ZuYBa9ZpoAhY-J8u
+    Fpiwv4Y1S9j6CQoKpVKm6UTFQSJtlLIiJDY-ZVBN2SO4nPoPVU51w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdejledugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhguuceu
+    ihgvshhhvghuvhgvlhdfuceorghruggssehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepkedvffekhffggeevkeeftdeifffhleegteeivdeifffhkeefieekteeugeet
+    teetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhguodhmvghsmhhtphgruhhthhhpvghr
+    shhonhgrlhhithihqdduieejtdehtddtjeelqdeffedvudeigeduhedqrghruggspeepkh
+    gvrhhnvghlrdhorhhgseifohhrkhhofhgrrhgurdgtohhmpdhnsggprhgtphhtthhopeej
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrsehhvghvrdgttgdprhgtphhtth
+    hopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhlihgr
+    shdrrghprghlohguihhmrghssehlihhnrghrohdrohhrghdprhgtphhtthhopehlohhonh
+    hgrghrtghhsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidq
+    vghfihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhes
+    gigvnhdtnhdrnhgrmhgv
+X-ME-Proxy: <xmx:4orvadFbQ9t4bJnw0uzp_8KlH8U-p375n74icQ5uVqavUixK_LBvYQ>
+    <xmx:4orvaRbZQFEEuPuAgtRnSzj5QTwJGjEDMWSTY7sZPYfVcqwSsh_dyA>
+    <xmx:4orvaVXweqNjDt471yid6gOKOLFK9UdTztAOOpjiqyNc0LpX0-KtNA>
+    <xmx:4orvafnPici49MeZnCwY3DhGL-oHKclRRTfNFppHdbcjl_sUkt7ZWA>
+    <xmx:4orvaYDRUQOpZhTJ2s_eQk5yo3dsp7KC2AE2Pi1rYHqt8HlvrToN45Ju>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 60CE8700069; Mon, 27 Apr 2026 12:12:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304011914.880120-1-wangming01@loongson.cn>
+Date: Mon, 27 Apr 2026 18:11:48 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "WANG Rui" <r@hev.cc>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "WANG Xuerui" <kernel@xen0n.name>, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Message-Id: <d7197b01-9b7e-4f0a-bcd2-9d6d894e8cd9@app.fastmail.com>
+In-Reply-To: <20260427084721.40535-1-r@hev.cc>
+References: <20260427084721.40535-1-r@hev.cc>
+Subject: Re: [RESEND PATCH v2 0/2] efi/libstub: Ensure instruction cache coherency
+ after kernel relocation
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 04, 2026 at 09:19:14AM +0800, Ming Wang wrote:
-> On some LoongArch systems, especially multi-socket machines like 3D6000,
-> the current limit of MAX_MEMORY_RANGES (64) is too small to accommodate
-> all memory range entries in /proc/iomem.
-> 
-> When the limit is reached, get_memory_ranges() stops parsing, which causes
-> kexec to fail with "locate_hole failed" because it cannot correctly identify
-> the crash kernel reserved memory or necessary RAM segments.
-> 
-> Increase MAX_MEMORY_RANGES to 1024 to support systems with complex
-> memory layouts.
-> 
-> Signed-off-by: Ming Wang <wangming01@loongson.cn>
 
-Thanks, and sorry for the delay.
 
-Applied:
-- LoongArch: Increase MAX_MEMORY_RANGES to 1024
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=677dd2f8bcf7
+On Mon, 27 Apr 2026, at 10:47, WANG Rui wrote:
+> Changes since [v1]:
+>   * Move efi_cache_sync_image() after check_platform_features(), matching arm64.
+>   * Add "()" after function name in the subject.
+>
+> The EFI stub relocates the kernel image by copying it to a new memory
+> location using memcpy(). On architectures where the instruction and data
+> caches are not automatically coherent, the copied instructions may not be
+> visible to the instruction fetch unit without explicit cache maintenance.
+>
+> This series adds the missing call to efi_cache_sync_image() in the generic
+> relocation path, and provides a LoongArch implementation using the ibar
+> instruction to ensure instruction fetches observe the updated contents.
+>
+> [v1]: https://lore.kernel.org/loongarch/20260427034451.717817-1-r@hev.cc
+>
+> WANG Rui (2):
+>   efi/loongarch: Implement efi_cache_sync_image
+>   efi/libstub: Synchronize instruction cache after kernel relocation
+>
+
+Queued up in efi/urgent - thanks.
+
+
+>  drivers/firmware/efi/libstub/loongarch.c | 5 +++++
+>  drivers/firmware/efi/libstub/relocate.c  | 1 +
+>  2 files changed, 6 insertions(+)
+>
+> -- 
+> 2.54.0
