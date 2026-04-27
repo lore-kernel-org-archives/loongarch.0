@@ -1,96 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11032D9481
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 07:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7812339890C
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:08:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777276632; cv=none; b=SqiaJmf3rb6/4xakWjkLcmrZklTUCMhHhxLMQHTPCIoCdoYEFb/xPXLdrsnJ1hCEkPojSjgdafWWBn+P4WO3cEigkHto7AWxL0RvCu+sDr2BmyjFZAzrzrFk2XAYMuFdgnUja9PG2GlxouXRCbPH4DcwBkM66DVicnYPHHeGMcE=
+	t=1777277337; cv=none; b=M8T0yUMcIYWuLz0oFtJ1j5g1CdLlDAo/mGFw0GDVVu0CxWDAilwB0rvNHk0hXgFP1edTEEl71TITkAZIV+5GqlYZSi3o7R2Re3AJS8x6KCPbPLHTY+p3EZtV+IbUbsoYEB+XU1NlNX5DKA7STyhClq+6HQKuurCU4AD4soeuEk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777276632; c=relaxed/simple;
-	bh=h4nZoesTb6kiRbf7ldm39YHpiQ8BeQFf+a6IkRInlRE=;
+	s=arc-20240116; t=1777277337; c=relaxed/simple;
+	bh=/JfDdt2I4oLiU/EdbMCnMPt7jdZem/h5K6P8QdniN28=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=okNqFkWsJa/xJI4IdeKkOstca/pBw/6PbWlL+IB/SzSTaN6xlHJpFqLA/Eiog3/8YRX0YsuMVMRO+SIXbQrqUKFtZKFv6Cy04fXkE4pv+870HpssnunOCD8BGl2hVwz2GVunzkPaeTbAh1rQ3Fg3RE0qFUnp7qsjTLHOZX0BJfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+Ir40ba; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=E0Ypa5WCrgNmlQ3bWp+jZThyZU2ljUT9W4jzHeL8sAxzuVUgN8Ex4LyoQUfQifEWjyjs/75XaXEwxYtnJtscVotfmZK7uITX+/RM5tyA0T0euUpaCz9383WDx2QenfFejj6swR2Hi7vvRHF68YhnfQgV+ODReAG5wUuiF8OPSns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aoi1Phd9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+Ir40ba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B958C2BCB8
-	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 07:57:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aoi1Phd9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27A9CC19425
+	for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 08:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777276632;
-	bh=h4nZoesTb6kiRbf7ldm39YHpiQ8BeQFf+a6IkRInlRE=;
+	s=k20201202; t=1777277337;
+	bh=/JfDdt2I4oLiU/EdbMCnMPt7jdZem/h5K6P8QdniN28=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M+Ir40baVRq+OyXuYePdvY/lWtKj1jsOmna+vgVVyuffxI0+LEbiWG963VZje8eiZ
-	 AP0Bq/YMTU9WaCAPYXBgJtPSo4oBBp9M8jbHXHrJGTcrH+kSShzaShH7mJwa4MDmiC
-	 AhyMhjN6BCaJs+75SA/dfhBhi6wTn/hVtrLsK+3SroOY6QWlOUFI2kjSJlneR8pIRv
-	 rha/68YEXygX00+2Vqv4nF/Er15int/jd4/3vtJ6syvFiq/aiV1ePOOMLv9lYzZoDU
-	 5p6acI15VTSUk5o2wQ1qgjOoX+O9cd2abZQEmTtpC9luEPPA5lGdCN8+trr+FqtAhT
-	 FBJNuh2rBTo1A==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ba9ad0fbc3aso868748766b.1
-        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 00:57:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+OVDtYtkgtcVGyUO5++8vu3eGCcz8HHxMFnZh+7o+9zh4e76qA6DdfbLN7TRZIEuqNQ4o9sTwUcXc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyWFVJXU4TVeUenAyUb103TEh5CcdNunf+KxOsxPp8BbTZOCXJr
-	xNN1Y+Sh77uXaI2bw/u0N5+ZfnTENhnHQeO3aMQo0W7rEvATcaY1jjhtO19L5V3PYc94OgDPg22
-	cnq2CJ40WIgI1rcF15QJ2wV0OFuUjT+s=
-X-Received: by 2002:a17:907:d40e:b0:ba2:e022:c146 with SMTP id
- a640c23a62f3a-ba41b3e451amr2080435766b.43.1777276630945; Mon, 27 Apr 2026
- 00:57:10 -0700 (PDT)
+	b=Aoi1Phd9conYWXfCjAjEUY/MEj0P1llM8Hbhkn7NIfRqrivk//0sUwbdL1V5d1iW4
+	 0l0iTI6q+hBw/R93g1xhXIuFPMNDrM9fAVqBF0G6l+tw/MyZu4UaVTP82wAGH/U7dS
+	 dJmu+K+nYtABLEw7aMMK051erGhpWs2nKZZw9pf4gLscHkWn3cf1bgdmQ9e1Z/bNYk
+	 /q4afWR5rJpiWKBmnp+4zLIupo85DJAaZS34RYs8bhBrgA0Xk6n2Ld2SltOTufl3ko
+	 Zup4zjiduaTURFGdsvX/X5tUwEomXiKxmWygeQOHYQtXNDPpnamAS1pBnKGlTYN5Pw
+	 NeSAQE5zA2IEA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ba5b107eaa2so997538266b.3
+        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 01:08:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/HMnspZXXoyMIKTee9Q7gw4gVqNK8ccV8G9SOisES/edmGA4zt0g2YLV76hvB5YbzerVX3WiqNZgQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxzEH9djON6T4hyKTZEs5DW+/ggtZPXnNsgLKbmh/MGuocVNXBo
+	lF+aOZ3t4WpjtcHvpNiUzAOBxn7OR/PazsEUef/aRbWvEaB9N8oHEpn3xGYlbet36Rd07xXszfD
+	CKgZFnZh654FAN2Tl+icMe8+CL4M/NJ8=
+X-Received: by 2002:a17:907:a0d:b0:bae:c57e:d192 with SMTP id
+ a640c23a62f3a-baec57ed203mr406565466b.41.1777277335671; Mon, 27 Apr 2026
+ 01:08:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260414013114.306033-1-cuitao@kylinos.cn> <9c1462c5-85ff-4de3-bee4-d394ffdfb63f@loongson.cn>
-In-Reply-To: <9c1462c5-85ff-4de3-bee4-d394ffdfb63f@loongson.cn>
+References: <20260427034451.717817-1-r@hev.cc> <20260427034451.717817-2-r@hev.cc>
+In-Reply-To: <20260427034451.717817-2-r@hev.cc>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 27 Apr 2026 15:57:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7fgS6YPSLd6NrOG0YcFayQw-wNjKk4iQD0a_Cx1oJaNA@mail.gmail.com>
-X-Gm-Features: AVHnY4IFzRdlQ8L62sPmeGGb_y6sy1OiBPRZVkdZoTH0J33rpx6X5LdKplM7Xcg
-Message-ID: <CAAhV-H7fgS6YPSLd6NrOG0YcFayQw-wNjKk4iQD0a_Cx1oJaNA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch/KVM: Fix missing EMULATE_FAIL in ldptr default
- case of kvm_emu_mmio_read
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: cuitao <cuitao@kylinos.cn>, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
-	kernel@xen0n.name
+Date: Mon, 27 Apr 2026 16:09:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ggC8c=KGOZ4Fo5v-CnWpKUP47nXY9OgD6iLD+dnQTBA@mail.gmail.com>
+X-Gm-Features: AVHnY4JvjsXBWK7RINWAsh9GOr5AKrv8meFZUzZQD_0QmJFHtg2mB39HC39y7Cs
+Message-ID: <CAAhV-H6ggC8c=KGOZ4Fo5v-CnWpKUP47nXY9OgD6iLD+dnQTBA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi/loongarch: Implement efi_cache_sync_image
+To: WANG Rui <r@hev.cc>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	WANG Xuerui <kernel@xen0n.name>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 14, 2026 at 9:42=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> On 2026/4/14 =E4=B8=8A=E5=8D=889:31, cuitao wrote:
-> > In the ldptr (0x24...0x27) opcode decoding path, the default case
-> > only breaks out without setting ret to EMULATE_FAIL. This leaves
-> > run->mmio.len uninitialized (stale from a previous MMIO operation)
-> > while ret remains EMULATE_DO_MMIO, causing the code to proceed with
-> > an incorrect MMIO length.
-> >
-> > Add ret =3D EMULATE_FAIL to match the other default branches in the
-> > same function (e.g. the 0x28...0x2e and 0x38 cases).
-> >
-> > Signed-off-by: cuitao <cuitao@kylinos.cn>
-> > ---
-> >   arch/loongarch/kvm/exit.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> > index da0ad89f2eb7..3b95cd0f989b 100644
-> > --- a/arch/loongarch/kvm/exit.c
-> > +++ b/arch/loongarch/kvm/exit.c
-> > @@ -390,6 +390,7 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_=
-inst inst)
-> >                       run->mmio.len =3D 8;
-> >                       break;
-> >               default:
-> > +                     ret =3D EMULATE_FAIL;
-> >                       break;
-> >               }
-> >               break;
-> >
-> Good catch, thanks for doing this.
->
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-Applied, thanks.
+Hi, Rui,
 
-Huacai
+On Mon, Apr 27, 2026 at 11:45=E2=80=AFAM WANG Rui <r@hev.cc> wrote:
+>
+> Provide a LoongArch implementation of efi_cache_sync_image() to ensure
+> instruction cache coherency after the kernel image is relocated.
+Please also add "()" after function name in the subject.
+
+>
+> Signed-off-by: WANG Rui <r@hev.cc>
+> ---
+>  drivers/firmware/efi/libstub/loongarch.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/=
+efi/libstub/loongarch.c
+> index 9825f5218137..26495747f69f 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -82,3 +82,8 @@ efi_status_t efi_boot_kernel(void *handle, efi_loaded_i=
+mage_t *image,
+>         real_kernel_entry(true, (unsigned long)cmdline_ptr,
+>                           (unsigned long)efi_system_table);
+>  }
+> +
+> +void efi_cache_sync_image(unsigned long image_base, unsigned long alloc_=
+size)
+> +{
+> +       asm volatile ("ibar 0" ::: "memory");
+> +}
+Please move it after check_platform_features(), which is the same as arm64.
+
+Others look good to me.
+
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> --
+> 2.54.0
+>
+>
