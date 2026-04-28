@@ -1,190 +1,122 @@
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43F92DF6F4
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 03:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3F840DFD3
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 04:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777347028; cv=none; b=qsz2Is7kd9T1rg23dJoU4AiI0LGPeICaPHVTdWZiDPqMT8qYbpbqTdbA/QNVS0fAoNRaZeA7zssb9DM7fb4bBhponnH+BcPc+w64vm0KfvkVpGwQG9A7M9ErjX1gvaviwj2surdEhKdDZ/tBG//YNNDvVw7CX/0GZyL8NPrV7BA=
+	t=1777348949; cv=none; b=f7kj3X5B1w7DCdjNeu+uqYO7pBH03EMTuInRuQtp82RlxNpm/8hnwREnIfI9vfG+Rmejvt28l+2zSjwWAH2EmeyKkpg38+5pLn9oO8vPhD1trq4MuzdCu7wbSZGszFvup29PNZTU/RxcdXsNXU6AXIZ8jVgxyJ7oOpZdoRv6ev8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777347028; c=relaxed/simple;
-	bh=DcJ+UKIOigb3Vcrq6OMlHY7VBWT9vE4zAdc3++oY6+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gxERq81FoqrjwjBvCDnoZgiNHavFxcNMFRF4by0D7+fMt8ndJeiX5352YWlMZNywIOf8YqbfGQ5US4XT1N/YOOBK8TEdbFoRcuqGASkV74Sr/ObMRNGNK4E4kGhjGTaCWHkpO/dU1N+FvCepcyCULeLqG6z5MME0XGpq//QRzuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Ax7zlBnD; arc=none smtp.client-ip=113.46.200.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1777348949; c=relaxed/simple;
+	bh=Hhiz7YXIt0m1DU+IaREY7k8p2d/aCJr7MC1uza7rXvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C7xuIZXK1uW//iyjSEMpm07w/XcCMltjNQbSBoCRFHte+wKPWEtBHCyVjZ1pRSWwhoAdnhWShvElDooKN2a+GopYB6jJ2eP6Lkq7gr/wog0jdWPxAZO0OY/QhMD0YMiulsAakhTOoNDHQrmMFS1AniZPRohGguQoqVLgR9BEmks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=PRc8vaIQ; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Ax7zlBnD"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=53v80o50pdZvZamiU87690P2YfIvRYFux+/+SYSB+8A=;
-	b=Ax7zlBnDvsHBrG11SUZ1Pks+cdQ09GMnJHUeJDFPnJ+emSKulfDm5/phFAybcSONUZOz7Zmdk
-	JuXPr9JubkLETkbEhoVW7TASFkDw2eI7slX9Rgg90k2o6zU9Md1T0fRV5pJf4I+L2IYefJy2p2S
-	PTql3k7K5Kbuffhny79gszs=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4g4Qks3tnTzmV7c;
-	Tue, 28 Apr 2026 11:23:49 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 25E5F40562;
-	Tue, 28 Apr 2026 11:30:17 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 28 Apr 2026 11:30:14 +0800
-Message-ID: <dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
-Date: Tue, 28 Apr 2026 11:30:13 +0800
+	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="PRc8vaIQ"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-c7ec83fff7fso645789a12.1
+        for <loongarch@lists.linux.dev>; Mon, 27 Apr 2026 21:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1777348947; x=1777953747; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bd1hgbTBVVdcDcX9ve5H/qCUgL6eJ7XhwuWBwZRmwfQ=;
+        b=PRc8vaIQRDUugTLIkCgX4Cvi7IORfW4IuVEIHuFsxeVDfz4k1ugN7c1kbQyaFbOUww
+         dQoOoDxzdKgUqA9uWXgF5ReI0yt0OlLgdAY8HXdPJ3ntllmnTLegOwB2vp/wLsjqQEj3
+         igrLnQAPw8wSZDB1wR0fJ6lNh1Dg+2KeJUxqFirAydMooBV3/YCFWhkFpV62hXrny9vb
+         IwZMBLo4QqQrO6ATtv9/OBl8C9DKIOGFNE7S5e0oHqjoz5WLvfnXD4pmaKgr/5yapIW0
+         rCavWZynb72egpKtuDYktJBAVl2tBvImar7rWjDvR8clye/NwA8t1BQQA7dvYXy8/biP
+         JDXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777348947; x=1777953747;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bd1hgbTBVVdcDcX9ve5H/qCUgL6eJ7XhwuWBwZRmwfQ=;
+        b=iVeK18NZXzlWC9u2SUR7hr0SDK4v91xOPpanh8xaLQ1jgFaQZ+ptZzzzMrApLSDyfE
+         ewJxqDViWWg90gi6L83nvnEfh4VYi/9XRIDBlrQEE4pfTPil6GnV1uaYgPWSjZZpl6J1
+         vR1i66Serrbn5GV9nn5Ou4MhVLz5FnQnCV9/v7OibprCn8rc3G+KqvZYYT21Rwy7XgLi
+         0jqMwIFArJnqO7VLsqp8yb/kJV/FBT5n5VK9RhszHteARTvFqMWIeR3fq+k5MxsAAptf
+         bnES0WWq0RBGar9tgfNjuNCdyaHsXca/nn6AGmv8Yfouu7hJ6y5QckVNgxp994wNxjuh
+         Crdg==
+X-Forwarded-Encrypted: i=1; AFNElJ/albo86HvSAYrVZwjv+S/jQmw3ASaiBUOJxLYGW/N+2Nxs8O16s5Qx31gbdHD/8BCPzY3m4Z9FH6o=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyxnnTkFCAIiY+T7SF2OLuvCVW3RMlMkom9LDnXj6U+FSZpG3QU
+	ZM73lQuHM7snVD2sbHR0lGc8Dp1dFXBEU1UE3hkiAORfOPhVXxsN5au9q+yH9YcVDSU=
+X-Gm-Gg: AeBDies/LPmZsujuc8AGWLAKXZ58qrH/mD0v3rpvrMiejWSXT+V+uAHBaWBgk/4pJWG
+	hpijwLUY2b/Qw3JU7HvWoRBst0/jGncff1svJnbPfnmqCIxAAdf3oSdEMHVxVjZAJyt8vyIKq5H
+	gicquDE5HxuLJcY1hhkpSMKRdlPFrsphNQ/rh7NVhNHhl/d+0SykLSWRwB8L8OtK2srpgqtNt/k
+	AIkVsfiOlSKyxo0MtbpnV+jhz/qd2uVg9+eNQ3fykPa9RSsEE48JQHlxuM8mD8rIQt5M/myue0B
+	IHDfJwiB5c/3dWo6aGx7rkTBuZmPAfrjuuztKyFptWCZRFFMPkDAjOt7CV5NTmf3Q83jkjdIPaQ
+	sWzUY/Iv8yQs7TSP4ys/82EcHQUWzukLk6fyZDtmrH4s41kAL2SjlaVwVdWQeC2Bub9pQ7L4qqO
+	kYNDlVnoHRmbCq8k+z9FhObPsUdkS3
+X-Received: by 2002:a17:902:f542:b0:2b2:53f5:461f with SMTP id d9443c01a7336-2b97be3deeemr12458925ad.25.1777348947328;
+        Mon, 27 Apr 2026 21:02:27 -0700 (PDT)
+Received: from localhost ([2400:8902:e002:de33:3dbd:69cf:4a22:309])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b97ac8cd29sm10131365ad.61.2026.04.27.21.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 21:02:26 -0700 (PDT)
+From: WANG Rui <r@hev.cc>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Lisa Robinson <lisa@bytefly.space>,
+	loongarch@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	WANG Rui <r@hev.cc>
+Subject: [PATCH v2 0/2] LoongArch: Move KASLR to EFI stub to avoid initrd overlap
+Date: Tue, 28 Apr 2026 12:01:57 +0800
+Message-ID: <20260428040159.1065822-1-r@hev.cc>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
-	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
-	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260402072701.628293-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Transfer-Encoding: 8bit
 
+Changes since [v1]:
+  * Drop the patch "LoongArch: Allow rdtime_h() and rdtime_l() in 64-bit builds".
+  * Use random_get_entropy() instead of rdtime_l().
 
+This series addresses a potential overlap issue between the kernel
+image and the initrd when KASLR is enabled.
 
-On 4/2/2026 3:26 PM, Jinjie Ruan wrote:
-> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-> and crashk_cma memory are almost identical across different architectures,
-> This patch set handle them in crash core in a general way, which eliminate
-> a lot of duplication code.
-> 
-> And add support for crashkernel CMA reservation for arm64 and riscv.
-> 
-> Rebased on v7.0-rc1.
-> 
-> Basic second kernel boot test were performed on QEMU platforms for x86,
-> ARM64, and RISC-V architectures with the following parameters:
-> 
-> 	"cma=256M crashkernel=256M crashkernel=64M,cma"
-> 
-> Changes in v12:
-> - Remove the unused "nr_mem_ranges" for x86.
-> - Add "Fix crashk_low_res not exclude bug" test log.
-> - Provide a separate patch for each architecture for using
->   crash_prepare_headers(), which will make the review more convenient.
-> - Add Reviewed-by and Tested-by.
-> - Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-> 
-> Changes in v11:
-> - Avoid silently drop crash memory if the crash kernel is built without
->   CONFIG_CMA.
-> - Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
->   as we use kvzalloc().
-> - Provide a separate patch for each architecture to fix the existing
->   buffer overflow issue.
-> - Add Acked-bys for arm64.
-> 
-> Changes in v10:
-> - Fix crashk_low_res not excluded bug in the existing
->   RISC-V code.
-> - Fix an existing memory leak issue in the existing PowerPC code.
-> - Fix the ordering issue of adding CMA ranges to
->   "linux,usable-memory-range".
-> - Fix an existing concurrency issue. A Concurrent memory hotplug may occur
->   between reading memblock and attempting to fill cmem during kexec_load()
->   for almost all existing architectures.
-> - Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-> 
-> Changes in v9:
-> - Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-> - Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-> 
-> Changes in v8:
-> - Fix the build issues reported by kernel test robot and Sourabh.
-> - Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-> 
-> Changes in v7:
-> - Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
->   for arm64 and riscv.
-> - Add Acked-by.
-> - Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-> 
-> Changes in v6:
-> - Update the crash core exclude code as Mike suggested.
-> - Rebased on v7.0-rc1.
-> - Add acked-by.
-> - Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-> 
-> Jinjie Ruan (14):
->   riscv: kexec_file: Fix crashk_low_res not exclude bug
->   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
->   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
->   arm64: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   riscv: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   LoongArch: kexec: Fix potential buffer overflow in
->     prepare_elf_headers()
->   crash: Add crash_prepare_headers() to exclude crash kernel memory
->   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
->   x86/kexec: Use crash_prepare_headers() helper to simplify code
->   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
->   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
->   crash: Use crash_exclude_core_ranges() on powerpc
->   arm64: kexec: Add support for crashkernel CMA reservation
->   riscv: kexec: Add support for crashkernel CMA reservation
+In the normal boot flow, the bootloader is responsible for loading
+both vmlinux and the initrd, and it can guarantee that the two do
+not overlap in memory. However, this assumption only holds as long
+as neither image changes its location afterwards.
 
-Hi, every one,
+The in-kernel KASLR implementation breaks that assumption. When the
+initrd is placed close to the kernel image, randomizing the kernel
+location at runtime may move it into the initrd region, leading to
+memory corruption early during boot.
 
-It seems the patches for crash core rework, powerpc, riscv, and arm64
-are mostly ready to be merged. Could any maintainer help pick these up,
-or should I rebase the entire series against v7.1-rc1?
+To fix this, this series moves the KASLR logic out of the kernel
+proper and into the EFI stub. With this change, the final placement
+of both the kernel image and the initrd is determined by the EFI
+memory allocator. This ensures that the two allocations are
+coordinated and cannot overlap.
 
-> 
-> Sourabh Jain (1):
->   powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-> 
->  .../admin-guide/kernel-parameters.txt         |  16 +--
->  arch/arm64/kernel/machine_kexec_file.c        |  43 +++-----
->  arch/arm64/mm/init.c                          |   5 +-
->  arch/loongarch/kernel/machine_kexec_file.c    |  43 +++-----
->  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
->  arch/powerpc/kexec/crash.c                    |   7 +-
->  arch/powerpc/kexec/ranges.c                   | 101 +-----------------
->  arch/riscv/kernel/machine_kexec_file.c        |  42 +++-----
->  arch/riscv/mm/init.c                          |   5 +-
->  arch/x86/kernel/crash.c                       |  92 +++-------------
->  drivers/of/fdt.c                              |   9 +-
->  drivers/of/kexec.c                            |   9 ++
->  include/linux/crash_core.h                    |   9 ++
->  include/linux/crash_reserve.h                 |   4 +-
->  kernel/crash_core.c                           |  89 ++++++++++++++-
->  15 files changed, 193 insertions(+), 282 deletions(-)
-> 
+Functionally, the kernel still supports KASLR as before, but the
+randomization now happens before the kernel is entered, rather than
+during early kernel relocation.
+
+[v1]: https://lore.kernel.org/loongarch/20260427104721.47724-1-r@hev.cc
+
+WANG Rui (2):
+  efi/loongarch: Randomize kernel preferred address for KASLR
+  LoongArch: Skip relocation-time KASLR if it has already been applied
+
+ arch/loongarch/Kconfig                   |  2 +-
+ arch/loongarch/include/asm/efi.h         |  4 +++-
+ arch/loongarch/kernel/relocate.c         |  4 ++++
+ drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++++++++++
+ 4 files changed, 24 insertions(+), 2 deletions(-)
+
+-- 
+2.54.0
 
