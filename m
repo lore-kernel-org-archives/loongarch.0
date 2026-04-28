@@ -1,99 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED7F3F7894;
-	Tue, 28 Apr 2026 10:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041253F1655
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 11:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777373579; cv=none; b=mZVmfltO+PXBcJwyP2QJi/c3zbcBitb7PSGA9dMbvwrdAnXInWjTYzLAcsWG6x253qC6Cit9zfUArTf3/q9uDNV92aTTxPJFaTIN1ym1XhX4je5TY2ElA2eMfHvaMcnK/kYpBSFj5urbvEdPIoaxaRG7NtSy5DoSl1u9jPB0Cu8=
+	t=1777374227; cv=none; b=IAqPuAdbwX5OPQaBJpNv+sWOYJ6pazEb5pH91gVhliUYUVf6SHQ34IsTxv+YG0H+WITwHQNfiPkf9LC7ZmFtIDagwioTo60rKb+dNUAHSdyYedZ7iH62SmMWB69FHbwWNFceGWrlErXKtcWgrbHBdDs7AbWgMV2OuGHS60vTYnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777373579; c=relaxed/simple;
-	bh=FAkK0ftN7gWUbuk+HZ/TnP99n+RR4S9QM3ioJ/hUWvI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lhhNaJWyHyRdAMzHDoJkcW2uHwsAFkSDyDUHaFmxWgtZLIkwUjgKJOCuGtO8Qw+EdWggAuDbhw8PxyOkx5ZXvLIScP971AIrbGy9dR+VhA5d6SsBCDr2yiSQumlZBT3KpibsVexQzWYYauESZicFJ0l4GOTh9/JYB2O8AvPNmlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qsqv6r1l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777374227; c=relaxed/simple;
+	bh=fjvxRcKbli7RGFErzVcF74bDN8UhECeQps0EaQ8C+ag=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OJBU9mQdx6VSQ97r6mLk9TkwU2Plj8dNFYBJSo2dICpe2NiPHHt35FJNaKkcojxvTvYkpP8cs6VI110si83wSPNMzZgTR4ZwtpcPTSqwijvUDQfE+v6wc/qrg3oqpaPZ9U6qD11at6Qy5k4YVLk3C/tN1SAOIq+zCLuyPpHG1LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=OMOsyyel; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qsqv6r1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CEE5C2BCAF;
-	Tue, 28 Apr 2026 10:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1777373579;
-	bh=FAkK0ftN7gWUbuk+HZ/TnP99n+RR4S9QM3ioJ/hUWvI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qsqv6r1lJZq/c7ZPtIt0sZl/DuaHenFFdJWV+kUZfKy9lze4sbNHOT4ldBEvZsMcI
-	 IzA4ewciHKUUGkWs11knSBEVXzjvVrxdGd/P9JBd6VWThd9m0HhwDsNHUrAT8OtKfZ
-	 vkIpz9kt+ca77YyWoiGiskB7TOq8ICE0RWcWLVHM=
-Date: Tue, 28 Apr 2026 03:52:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
- <kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
- <npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
- <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
- <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
- <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
- <saravanak@kernel.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
- <dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
- <pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
- <dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
- <paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
- <leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
- <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
- <sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
- <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>, <guoren@kernel.org>,
- <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
- <vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
- <fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
- <takahiro.akashi@linaro.org>, <james.morse@arm.com>,
- <lizhengyu3@huawei.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <kexec@lists.infradead.org>
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-Id: <20260428035256.cbb3ac77c4bbb89bb7efcc19@linux-foundation.org>
-In-Reply-To: <dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
-	<dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="OMOsyyel"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1777374195;
+	bh=NcpB6DsedQeN7huW4GFJu6x4I9ZVYhIKYjyKK8n9UjM=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=OMOsyyel/hYWmO0Y0z3e2Tj6eyGGKpy8P6cNpkH7NNuFScBAuQdVRc2X8PcQV+658
+	 O/36qGYn9Eb9aspeob4zn5hn5bVgToFFW55+jZzSmhAJ2KYs0oxXZjefXojZCfus6E
+	 FGab64OKjUHKjZ9XrqNzFh/vem+sGHpVty+iIZb0=
+X-QQ-mid: zesmtpip4t1777374189tde82a193
+X-QQ-Originating-IP: 5j8XwmLT/517hcBuz7wwNgVFm0LqEmmTzlKTwE09oAw=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 28 Apr 2026 19:03:07 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 18271188560912060629
+EX-QQ-RecipientCnt: 8
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: wuqianhai@loongson.cn,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v4] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
+Date: Tue, 28 Apr 2026 19:01:55 +0800
+Message-Id: <20260428110155.754875-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: M2/pHHQMvdcbfVmv4Zv7s6sGGy1Ftqbjb9BtlTUOqRuQV8eQeRx1ud3j
+	XeBE8RmpMKJjxXoAN7EKO3BnvsaURCJ5klQXgJx4UknUI3UJoIDDLdOtIXVZ9SReLnt8tgN
+	Q3TURG204y+bUeS/9hVV3PQKe/j3p5YQd8J5dcYL3zjnT3x1+TzHXARxya8xPY+T2blIlwB
+	zqPbV1wFwjg/c8mE/y626Ai0nBKQnS4EJodx9rP/YopD+2WQpJQK3cZftnjLnNMD4pclrMv
+	s20RP6tZI4CZfOthgLW2Y0+BoEvlzRhp0SoSOeIPY7dZ5ef2g5W1K26seRHGszUyry25gzE
+	QDNCku5ZhiVsquS5FR8CbFFp97+tdJb7/+c5ed0KpjPiMywSBpyGf15xk4TthhoRbQwBm4H
+	CMYAkjyWNWIjGkfa9eNS4FRPNSr+3owQSdgMLXrlyfRQiWQq/moP2ly+XCVnGa/mmbpPUw6
+	63RTMFvlf3EmN1it4AnMSfyEKmRpa929KsjbJwRhmAJCQpwMLDPTHA+lK/U54OzAjrsPJHY
+	8Gc8HlcyXliqzBZVV0kkKpCGzjc2wQiFADfxzPo0vt3JRuFZqtX4U3D90pZEHdENJYisIIU
+	av3UQePZbO7/9SMvyADT1iU5srHlZzVY9YhJwkAcGES1FC94+ItYDcMiR6Q0PLnUgfblF1X
+	tm17wSN7GEkMDpYq+KHmnVR1UMEhuZNRnvyilGp9Krc7T3ipvuHU7iVzMf9GTXQBMgaY5pE
+	UIZp490BjA1YOvbNt62gI8YDOpSfar8E3BYdZuIFrB3wpXUJl8djyp0J72f7IRVKLdGqWIj
+	4OADje1OMkbQ4EeujeXQy5mh5oowAdCcxC2IjTKtAdL7cqBWqnlDfBvIzRmB3xauR/32WQp
+	1kKqbxzcYwkRFVNyoMM2Vqdc9OmVrTbrB2q5HsvQXtQtuIhq3vHmod9YyYzHUh7HwfWM+m8
+	gnimIT5rxXJ6guAMxfz7RAqnVqggt0P9rK2uhJfQvv2QayMXqEMlC98ck2cFznfoBPBFHNT
+	YHvVmgySidwigyudzkKzTUvuI4ujqz7IWOPqFOzaAaablEVg5Si/Yuoax+zsefSOeCO1AOs
+	0r5fc4kRHFYXWCngrBWExo=
+X-QQ-XMRINFO: M/715EihBoGS47X28/vv4NpnfpeBLnr4Qg==
+X-QQ-RECHKSPAM: 0
 
-On Tue, 28 Apr 2026 11:30:13 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+The switch case in loongson_gpu_fixup_dma_hang() may not DC2 or DC3,
+and readl(crtc_reg) will access with random address,
+because device is from base+PCI_DEVICE_ID, base is from pdev->devfn+1,
+it is wrong when my platform inserts a gpu:
+lspci -tv
+-[0000:00]-+-00.0  Loongson Technology LLC Hyper Transport Bridge Controller
+...
+           +-06.0  Loongson Technology LLC LG100 GPU
+           +-06.2  Loongson Technology LLC Device 7a37
+...
 
-> It seems the patches for crash core rework, powerpc, riscv, and arm64
-> are mostly ready to be merged. Could any maintainer help pick these up,
-> or should I rebase the entire series against v7.1-rc1?
+Add a default switch case to fix it.
 
-April 2 is prehistoric ;)
+It not a issue in v7.1-rc1, but stil cause the problem in v6.6.136.
+In v7.1-rc1:
+[    0.817545] pci 0000:00:06.0: Failed to ioremap()
+[    0.822215] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000 conventional PCI endpoint
+[    0.830434] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
+[    0.837350] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
+[    0.844267] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
+[    0.851214] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300 conventional PCI endpoint
+[    0.859433] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
 
-Yes, refresh, retest, resend.  Note that there have been maintainership
-shuffles in this area.  
+In v6.6.136 before:
+[    0.807099] Kernel ade access[#1]:
+[    0.810472] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.6.136-loong64-desktop-hwe+ #4
+[    0.818252] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
+[    0.831992] pc 90000000017e5534 ra 90000000017e54c0 tp 90000001002f8000 sp 90000001002fb6c0
+[    0.840289] a0 80000efe00003100 a1 0000000000003100 a2 0000000000000000 a3 0000000000000002
+[    0.848585] a4 90000001002fb6b4 a5 900000087cdb58fd a6 90000000027af000 a7 0000000000000001
+[    0.856882] t0 00000000000085b9 t1 000000000000ffff t2 0000000000000000 t3 0000000000000000
+[    0.865179] t4 fffffffffffffffd t5 00000000fffb6d9c t6 0000000000083b00 t7 00000000000070c0
+[    0.873475] t8 900000087cdb4d94 u0 900000087cdb58fd s9 90000001002fb826 s0 90000000031c12c8
+[    0.881771] s1 7fffffffffffff00 s2 90000000031c12d0 s3 0000000000002710 s4 0000000000000000
+[    0.890067] s5 0000000000000000 s6 9000000100053000 s7 7fffffffffffff00 s8 90000000030d4000
+[    0.898364]    ra: 90000000017e54c0 loongson_gpu_fixup_dma_hang+0x40/0x210
+[    0.905195]   ERA: 90000000017e5534 loongson_gpu_fixup_dma_hang+0xb4/0x210
+[    0.912023]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+[    0.918165]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+[    0.922489]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+[    0.927246]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
+[    0.932002] ESTAT: 00480000 [ADEM] (IS= ECode=8 EsubCode=1)
+[    0.937535]  BADV: 7fffffffffffff00
+[    0.940992]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
+[    0.946956] Modules linked in:
+[    0.949982] Process swapper/0 (pid: 1, threadinfo=(____ptrval____), task=(____ptrval____))
+[    0.958193] Stack : 0000000000000006 90000001002fb778 90000001002fb704 0000000000000007
+[    0.966147]         0000000016a65700 90000000017e5690 000000000000ffff ffffffffffffffff
+[    0.974100]         900000000209f7c0 9000000100053000 900000000209f7a8 9000000000eebc08
+[    0.982053]         0000000000000000 0000000000000000 0000000000000006 90000001002fb778
+[    0.990006]         90000001000530b8 90000000027af000 0000000000000000 9000000100054000
+[    0.997959]         9000000100053000 9000000000ebb70c 9000000100004c00 9000000004000001
+[    1.005913]         90000001002fb7e4 bae765461f31cb12 0000000000000000 0000000000000000
+[    1.013866]         0000000000000006 90000000027af000 0000000000000030 90000000027af000
+[    1.021819]         900000087cd6f800 9000000100053000 0000000000000000 9000000000ebc560
+[    1.029772]         7a2500147cdaf720 bae765461f31cb12 0000000000000001 0000000000000030
+[    1.037725]         ...
+[    1.040146] Call Trace:
+[    1.040148] [<90000000017e5534>] loongson_gpu_fixup_dma_hang+0xb4/0x210
+[    1.049138] [<9000000000eebc08>] pci_fixup_device+0x108/0x280
+[    1.054846] [<9000000000ebb70c>] pci_setup_device+0x24c/0x690
+[    1.060551] [<9000000000ebc560>] pci_scan_single_device+0xe0/0x140
+[    1.066688] [<9000000000ebc684>] pci_scan_slot+0xc4/0x280
+[    1.072048] [<9000000000ebdd00>] pci_scan_child_bus_extend+0x60/0x3f0
+[    1.078444] [<9000000000f5bc94>] acpi_pci_root_create+0x2b4/0x420
+[    1.084498] [<90000000017e5e74>] pci_acpi_scan_root+0x2d4/0x440
+[    1.090376] [<9000000000f5b02c>] acpi_pci_root_add+0x21c/0x3a0
+[    1.096168] [<9000000000f4ee54>] acpi_bus_attach+0x1a4/0x3c0
+[    1.101788] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
+[    1.107755] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
+[    1.113892] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
+[    1.119511] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
+[    1.125476] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
+[    1.131612] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
+[    1.137231] [<9000000000f5211c>] acpi_bus_scan+0x6c/0x280
+[    1.142591] [<900000000189c028>] acpi_scan_init+0x194/0x310
+[    1.148125] [<900000000189bc6c>] acpi_init+0xcc/0x140
+[    1.153139] [<9000000000220cdc>] do_one_initcall+0x4c/0x310
+[    1.158672] [<90000000018618fc>] kernel_init_freeable+0x258/0x2d4
+[    1.164726] [<900000000184326c>] kernel_init+0x28/0x13c
+[    1.169914] [<9000000000222008>] ret_from_kernel_thread+0xc/0xa4
+[    1.175878]
+[    1.177349] Code: 0015001b  02c022f9  0010efd8 <2400030c> 0040818c  38720005  40006380  240002ed  034401ad
+[    1.187034]
 
-KDUMP
-M:	Andrew Morton <akpm@linux-foundation.org>
-M:	Baoquan He <bhe@redhat.com>
-M:	Mike Rapoport <rppt@kernel.org>
-M:	Pasha Tatashin <pasha.tatashin@soleen.com>
-M:	Pratyush Yadav <pratyush@kernel.org>
-R:	Dave Young <ruirui.yang@linux.dev>
-L:	kexec@lists.infradead.org
-S:	Maintained
-F:	Documentation/admin-guide/kdump/
-F:	fs/proc/vmcore.c
-F:	include/linux/crash_core.h
-F:	include/linux/crash_dump.h
-F:	include/uapi/linux/vmcore.h
-F:	kernel/crash_*.c
+After:
+[    0.813002] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000
+[    0.818970] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
+[    0.825887] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
+[    0.832804] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
+[    0.839750] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300
+[    0.845718] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
 
-I believe that Pasha/Mike/Pratyush are setting up a git tree, but there
-isn't one listed here?
+Cc: stable@vger.kernel.org
+Fixes: 95db0c9f526d ("LoongArch: Workaround LS2K/LS7A GPU DMA hang bug")
+Link: https://gist.github.com/opsiff/ebf2dac51b4013d22462f2124c55f807
+Link: https://gist.github.com/opsiff/a62f2a73db0492b3c49bf223a339b133
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+---
+changelog v4:
+rollback to v2, because need the regbase in switch-case.
+changelog v3:
+test in v7.1-rc1 and remove unused print for it can be read from lspci -tv.
+changelog v2:
+reformat commit msg and add a full dmesg log link to it.
+---
+---
+ arch/loongarch/pci/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+index d233ea2218fe0..f33c7ea1443d9 100644
+--- a/arch/loongarch/pci/pci.c
++++ b/arch/loongarch/pci/pci.c
+@@ -132,6 +132,9 @@ static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
+ 		crtc_reg = regbase;
+ 		crtc_offset = 0x400;
+ 		break;
++	default:
++		iounmap(regbase);
++		return;
+ 	}
+ 
+ 	for (i = 0; i < CRTC_NUM_MAX; i++, crtc_reg += crtc_offset) {
+-- 
+2.30.2
 
