@@ -1,48 +1,45 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828AE3F0746
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 12:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E40942982D
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 12:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777378739; cv=none; b=hexSdSrSgnx9tgtzYxZCZ4tzreSNFxn06gjH6vUZa0tq2Lhm8H1+W15nlnnE6vPpzR9Zru8ZLfAw1KnTBdN7lBq5gN1/GEDjOF3j8p4y6OhCYJC0xzygoO0+x+NQZMLaXp7/slefeUTgi+zOR2cizQ4Juln1qwxBjAItDgaAipE=
+	t=1777379781; cv=none; b=g3IQb3WJhaNqxkK6EuaTXY+8b6bAPtLS5F1tGaCdarMdH6aC5RdJGzJgkseb58No3l3mJGcc/e4laoEcVPfQ+rX9W93ecPg7NtQaOZEraDfqV97ABiUqzAzl3GqHWZBKEb9rxuvDj0NqyE5vbEbtMjzfh7zfzuayaK9CEeB5JgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777378739; c=relaxed/simple;
-	bh=sfKTaLfzwXfWIcTTsG28baPo+gAhiR1sLiN+NEiwZl0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Syi7Kpi/KsRd+C1oJd0k94kBCi5W9UeHUuaMneFDD25q0Jmo/+XtvjvyfQynexlTGTWUAO2uTwnsebmmQlw9I0npVA+fCb13GFx9b92Gy5TcEvbjKJHlJ28EL9U7BvzzqhqOXqy9YfqDV4AVk5BhQrLpN5T9d2mXgwnUr1L5+EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bNQYgDaF; arc=none smtp.client-ip=18.194.254.142
+	s=arc-20240116; t=1777379781; c=relaxed/simple;
+	bh=X69l9GghCzig84VzbrMm2BHPRPeJRxO6G7/IsnAkSek=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p9uoFbtYEu0SIwWzwsGkinxrr5WoYpNkj7K/NFWvhdFexRh/dW2y3HhhzLn1tfrsrdmUtzo/uT6ros128cB+qxO1ox5JALHQl+CurEIP6M3aP7kVuAxjRMjRrROgsbTy77xBe706XXER8RpABOo0+/TZbSn7z9g1hkhd07jwUpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=pb3B+j0P; arc=none smtp.client-ip=54.92.39.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bNQYgDaF"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="pb3B+j0P"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1777378710;
-	bh=sJclKYEsHRVPM6t5Pr0swhz6IvHM0TzAOaXQaeMdxCM=;
+	s=onoh2408; t=1777379751;
+	bh=jqvh4srVGRadazk/+w8FbEbQRHWlZ1QuWcMXIf5AGJE=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=bNQYgDaFRB41/aAiSHd8AEQrRdQ0cz1sAaMlAmesOuCnW2Gp/90ruRfz6jFoygtiW
-	 q7Ksf5JJ8nVV/4/DH+6PDWavV54H9c5AC1azixPifzc4JOl52L17rPf5WDvjhWlu9V
-	 wCI8SYsKIfjOMYI8utavu8hHscr+IcdgcA0bO1EM=
-X-QQ-mid: esmtpsz11t1777378704t0ce20d58
-X-QQ-Originating-IP: RIBOKZVcy4kvYwe88UrGP7vtAwSvlsOg6gkyUUCpWfM=
+	b=pb3B+j0PjpdQYZs0oZSTB6i7kVtq4VxtA4N/2fVS7mOqnKMJ2ZO39MJvDEzzKcNxu
+	 uIYWYrgzTxml/GVMfoM01kbblHuaObjfNYssxCY7qBfGSNM6dx/xbSgyosRXbJuWHm
+	 nu5leO5RT7jymKuQzyAtSavmcDbHt+oRtWgbIMIM=
+X-QQ-mid: zesmtpgz8t1777379735t8d51d75d
+X-QQ-Originating-IP: sP5TpiXpiBmu6fGbARsmywNirNY2Xvzl9z7te2Nxs9Q=
 Received: from localhost.localdomain ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 28 Apr 2026 20:18:21 +0800 (CST)
+	id ; Tue, 28 Apr 2026 20:35:33 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 5879521332131796442
-EX-QQ-RecipientCnt: 8
+X-BIZMAIL-ID: 14028482282847407414
+EX-QQ-RecipientCnt: 5
 From: Qiang Ma <maqianga@uniontech.com>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
-	chenhuacai@kernel.org,
+To: chenhuacai@kernel.org,
 	kernel@xen0n.name
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH v2] LoongArch: KVM: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
-Date: Tue, 28 Apr 2026 20:18:13 +0800
-Message-Id: <20260428121813.296781-1-maqianga@uniontech.com>
+Subject: [PATCH] LoongArch: Correct the definitions related to CSR_CPUID_COREID{_WIDTH}
+Date: Tue, 28 Apr 2026 20:35:10 +0800
+Message-Id: <20260428123510.314073-1-maqianga@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -52,50 +49,53 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: M5aCtjAndv5OIlH2F1wOFwZKxL/SK7BIKEwte6og6JuoOA/RFtNGjG/3
-	scKDspQa0+g0DZN4HFgo6gM99d54ALv2ZvHDFzmKLCBGF0ydVyU7laYy8GuMoJw/nadASfL
-	dzFG5xuUKeoAh3YNoDgW3yaFfnhGHBYTd+qL4fHnV5Ii7lbX820lk9FsaIfQjRFMNaePjLg
-	RbepqFX/OXLtgp5ApDMfhvCcE1OLj0WxxeepF1wjijfiNwUeIhSGHchyPX9tTreCalM+DHy
-	LvV7oTGoT59KzWeJqXmfDdT0IOKsCj2wtKFOLJTTp8Y4bb0ZolIgjdWhEn3opu0hHmBYMVR
-	R0gEYdX74RQKR9moNtlq/fAohAEUrtuiqrRXDkmWea96+ZVXPrU4BLTIMwXgk7+8WVAqojj
-	GstSNNEEktEqNX9AJ3Zb9B6EBHyKgC/PURifqL4lWCZlDz+F6sUFbE8lDBwSfuZlhFJu4od
-	bJDCmptsgjeCscvaxika8Ab9oy6dBG7FgZYE6JS5IBnDEb9q/aGWYDkejHRXLfmNd6Y/6sp
-	yqc9VmBeGww3aWEeuB5GnvjDKinuZHa86FhRiyxWX/mXHv0gjZ8l8UUwnvvtLE1ztNOX5c7
-	dBYJa1TpxoKEGroUXshtkesMCwjZ7PZopD+hq3G32CrSnvaA3Fg9NDK/qAP2dw5D9ct86Fv
-	OYJNC01Q244OazQniEJ3HjLIrBVFmj4BEVEKpczBAGmc/Iqje5T4x/CAtMDAqBIlX6+F8Ss
-	+bBzEv49rmKr4BRmt+7eFBbOLKJa760kPyYeur/3dqF8hsNAUk0UXySz/Sev/cbI73/XJAm
-	mVH5OtdPG148g8ysUbYVSYltAKwfsmxPZEIDJ2FzYkI2V2YjkOyTS7jTwN567rDx0M/zWk8
-	s53Y65qmJBYUlYz0V8x8J2SlKdiLhxun35Ze4tHwQN1MafwWxAb3Ll4zug42PD1+oF7vL4t
-	Qam/SVQxPNHR+NmEq6gQG6gC4P9Bdixsf375lIkVPjepkfteVqzUN9rpU3GX9+2MCJCPKHb
-	szUFOVhyvsKPDDNrrMhMwGp1MJ3W4CfoYOoMKtEZiVSJ/yNwLn
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: Nui917t5cXLH/p6JLAuQjfnzC3471IrposUY41V8er/Mh4VHJNwtAZq4
+	+RFb2QnR14TLlrsjUl9zgDnplTUrMj18C1Yi8B8Ycm0yfN/RMOyvqKiNEfUmS6vGQ91oiPf
+	QAI8eVDlZ0MQINu4Y3gBjoLUFC7DG7LqHUjP57pdo4AYPhRaeF77fXMuh019Ky/VkzmyUsM
+	5uslsgYxlPn9qrksYmPiiNWfEmJrordr8+incqcp07JJPguit8TUDcRMwAAQh52UKEiXaVs
+	MO+uD9181HC30UnClHTiar4UtowI5l6vcTTMTDouZgcIGWyIUUheU92kQgNsMyCCgbp3xVS
+	V3va6phJ90MxMXBTzO283Pi5dUebWxDmXUcF5aphFy8ProLJ9CCxGdVyjwwA0zIQ7+nVnFj
+	HTV2IZ7HDCS8axuq29rriUgI+x97wnrIIjqcjiubDOzt8PXZuI073bBsb2NitTFcc3JBuZg
+	n+iEGlSowXnFX0+nh3r515mPpnqQ9+/BkyW2OPA2izMyoFwRKjCn/EaW6luwE/vrK+ZMH4z
+	z9eLOJskh60YO0JMv4DIxXSXXsUeKdKxFHD/D1tMyM8ijOC84b5eqMBNSjzIGwe9NmoW3K8
+	8CQks1m1JHQIaMwNvirhNqsI688gHivaxQlnoMfvD/aFEBSUDeDBAr+5dCM7SoW4KbzVVUw
+	bQG41sIJE2JwROcu4sEIhI8y57LqtXvcZ5Qi78Hdz98CBEOjXuL5uA3jMNP3fWrZGs2+Qwn
+	TmNVoah5tS5BNJ0WfKKAmX51dOIRx2S6k95QFqy8BxfwGxCbsKS+QlKXWPbHiiyQvviRxv7
+	0VDJ4c4KLDUe60lEgCOJ0M8LWfQQJhWRRcvzU/BTeewEuhYivCVE3qJ/1e7pL07q4dCOZPV
+	ZEB3GSMl2kk8+YZRiN/LYZqZGBoZz0OFZ+SPXXYX0OLTlR4GzcAJnnAce1a3Te3Zvg49Ah3
+	EwV+y7Hozz3K6XnaVU82AZRptHnZQxgW24F5tKA4E1jj5SODuGZLrT/Sf2mWORDzk8Nk35s
+	sHs8B2b5rzQUakpDl51nN6HM3elmn4p0ywBgwOraD9ucrstAHhNQyNzHMx1jxf7aNO2Zwmv
+	DGW3AudxQ+G
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
 X-QQ-RECHKSPAM: 0
 
-It doesn't make sense to return the recommended maximum number of
-vCPUs which exceeds the maximum possible number of vCPUs.
+The valid bits of CPU Identity (CPUID) are 0 to 8
+according to LoongArch Reference Manual, so change
+11 to 9 for the related code.
 
-Other architectures have already done this, such as Commit
-57a2e13ebdda ("KVM: MIPS: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS")
+Link: https://loongson.github.io/LoongArch-Documentation/LoongArch-Vol1-EN.html#cpu-identity
 
 Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 ---
- arch/loongarch/kvm/vm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/loongarch/include/asm/loongarch.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 8cc5ee1c53ef..1317c718f896 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -125,7 +125,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		r = 1;
- 		break;
- 	case KVM_CAP_NR_VCPUS:
--		r = num_online_cpus();
-+		r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
- 		break;
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
+diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
+index 2a6bc99177d8..bc47df90fee6 100644
+--- a/arch/loongarch/include/asm/loongarch.h
++++ b/arch/loongarch/include/asm/loongarch.h
+@@ -429,8 +429,8 @@
+ 
+ /* Config CSR registers */
+ #define LOONGARCH_CSR_CPUID		0x20	/* CPU core id */
+-#define  CSR_CPUID_COREID_WIDTH		11
+-#define  CSR_CPUID_COREID		_ULCAST_(0x7ff)
++#define  CSR_CPUID_COREID_WIDTH		9
++#define  CSR_CPUID_COREID		_ULCAST_(0x1ff)
+ 
+ #define LOONGARCH_CSR_PRCFG1		0x21	/* Config1 */
+ #define  CSR_CONF1_VSMAX_SHIFT		12
 -- 
 2.20.1
 
