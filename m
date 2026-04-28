@@ -1,218 +1,104 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067E33D9DD4
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 09:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1AD382287
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 09:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777369963; cv=none; b=gYo2+lmx5Q7BLH2L4DHV8pP/wkhym9IycIV6zJwzto9s5B6bigEqj2o+zZ3iJ5Xhso7LfNsjLdYaY2sCJ5G2I6t6/c5+AHJ68DEBkp0dHPvo3gV74mg6Y9t1ULpnYplN5y/K8I9S9GC8S7qm+wU8LZNQkUSsNkWXqiYYNDbzRaw=
+	t=1777370022; cv=none; b=B6jMgLe5a1KGollgXozOPUVDaabV4by4OLBw/aYj4Fx4ILwOFXjAV9b3d2h33fkAzq7zF8fSt5eE/0ye63FTQRTs6RGis+brb81P9TC2OZTyX3Qd41d1XHqOcOzA8bI+oDBDscpHTFYZZGbN3wU1JQdzZAcUlns7R8dz2S4H/tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777369963; c=relaxed/simple;
-	bh=c3JDPxAWy3lnhJjkheFC/1L8wJrzL+F7rcQkeHWVXJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eCIUfWIGnsvg+u3HGEzsqstVWqpz0k0qf3DnBDTp5yRdECj+go6v3c3xnX54H8LuXd81uvBTqWN6b5xzz/Hqhe3ikadmcULpWbVGCuUD6wvRHlvkwjLs81RQRVkOZAhxjZsigq3AqbcIfPh/SvL41Y6i4DZxL12EAUe5BeIMxh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=L7bAnKXT; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="L7bAnKXT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1777369933;
-	bh=mSSg5bzhiX63/wqCc1ILTDNA1j/3fA7EsNrNG/H0zTY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=L7bAnKXTxkwb5YCjc6lYoinUp7xVNqJrWeiKbTjTudgwyyx1C/58Yhi7enQSVOsV+
-	 h4kobNlqkVJ+qFGeubx2FttYIizhbPGTK7XOWcME532S3P2c109vgWfhYAfRnZd0F5
-	 6c/bkjVaRxKUP7eB4W/2hQGxPP0bUqpOqYfX+J1M=
-X-QQ-mid: zesmtpgz4t1777369926t7a4aa15a
-X-QQ-Originating-IP: s4kNFmjUzEWVNyW5Lvf7D1QOItRuplFSKEu2Xf9PT8M=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 28 Apr 2026 17:52:05 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 7052952009120483806
-EX-QQ-RecipientCnt: 8
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: wuqianhai@loongson.cn,
-	kernel@xen0n.name,
-	jiaxun.yang@flygoat.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Wentao Guan <guanwentao@uniontech.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
-Date: Tue, 28 Apr 2026 17:50:51 +0800
-Message-Id: <20260428095051.746295-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1777370022; c=relaxed/simple;
+	bh=KNBThQdX/1sMmn5AxkdbTKL4cyR01I3xziXqQPTdjsY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TeebaJLKNYFDKJW+Eax/iB6emiHlnoQ4XZBN19bnTbIs/uaZL/rpQrtULqNJmY3gBM57DRVzzFlSQ4UYbdlcgo8yDEsi9sDpTBsFuGr+VLgOhoP0RP7kQIjMBxGf1J29XhLLg+D2C9cHFN5+u1ATIzigrB2fXCRyqgOlGFa3orQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxNeigg_Bp9bYEAA--.10120S3;
+	Tue, 28 Apr 2026 17:53:36 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDx6+Cfg_Bp83t2AA--.29591S3;
+	Tue, 28 Apr 2026 17:53:35 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
+To: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, kernel@xen0n.name
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260428074742.2274610-1-maqianga@uniontech.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <2074ae0a-5a3a-c0b5-cd09-040696679715@loongson.cn>
+Date: Tue, 28 Apr 2026 17:50:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260428074742.2274610-1-maqianga@uniontech.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MVrK4IcE115af7IUyotUFasrjeR+YNRhE0dW37y8MergVG6CaBoh42ed
-	NWlGoIAV8elp01Ojn5Tv7722hdckqnP6AK7K88mVwYXu1o67dFyHhJacbi7KHeRXrkrz63M
-	sC0eF0hpsHRrHbnxTr4zek5VXAJEt6van1ZVtbWDTOHLdIHGUZ9WPyhE7nr4xqS7jkj0BqN
-	nvjgZOfg28exAHeW6FjJF4vUZnHIy5AIhz259sycWFaZ6vaUdMgfmfuDqHhmv4DwAFYIwix
-	wmzpYpl9U30C5zl8Yx56kSz5qaEmzD8CXFzroPCuTBgmBiCYp2egGJeerIkR1rhcgHlN0qP
-	PmrEjymuSoQd21/FBTDRvS+IM950bdK8/SKnqsr90McBwePI0VupK1SXmEjHrbstBme9fnf
-	u6MLOqfYwXZuTw3jYBPisX44Nmc//MI5NaK3hTFm/b+V8TVTYmAv/1G7llicunCEAok+8i0
-	qxts+XT4IzobB65nV/cd3EUnulvwK8xJxIzD3jJA8KKG1ERa7MuWzHQyFLQ5Sg38+bxCz6o
-	XYQ7bOyIsGh6YFMeMoqPrnfViWTlNwEIGsBslpHET93Wv1AI29JEnhbGwLkT1WuaQT9k8j4
-	Mbd7dLAIeu+yCLH9cdWIjPOL6CZvHfyY2Cbjhwx3ne/lyL/AoIvgzU+WGhBnVx1JzwpHkxc
-	tVe7n8zzKX484cdg3VBZDNuPeXSGD73dzm/0z+pRbb0+z29n0zLTsIWjeNXtGkwiKU/Lyge
-	Bk7RctBvp4bGGbhPdeiSnA8i9HPt43+AikeKOuysoF2EOyHr1k6rTYlnkQAqeoTgs6zY0pu
-	6JJIp27YrGNrDNmuJrdFPmJCOe5MuFno4FHk6sIF8CzkWbzO+pbSHvexjaV14zvDgOHuXCQ
-	2mBcfCuef+4JjRMA+Zise75oYFOONIUxTuqv9jNIn3nxiWC9qax5NuPQSNgrceMiwlwxLk+
-	RMgK98/k7Pvk2b56L3agNqqeqka+0ulzktIjqcMi9/X969Zm6AAgd/Z67KOclyUNd00sMLM
-	WgvlnCdODmoiTjWeZ1ibUeanBUdaugSqwtj/bfHFFKwobOBU3jcu2BavzGlWM6IBDJemak0
-	w1Ft/idjkH5zvAYksOCVZcubOBmqSCCpjPvPfPw3iWb
-X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:qMiowJDx6+Cfg_Bp83t2AA--.29591S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uryrWw18tFyxWF1fGrWkZrc_yoW8GFW3pr
+	ZrCa4qqr45Grn2kry8J3y3ur12kr97WrySqa4a9Fy7Ar4DXryrXFyUKrZ0qF13Gw4rCrW0
+	q3WFqwnYga90yacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
+	VUUUUUU==
 
-The switch case in loongson_gpu_fixup_dma_hang() may not DC2 or DC3,
-and readl(crtc_reg) will access with random address,
-because device is from base+PCI_DEVICE_ID, base is from pdev->devfn+1,
-it is wrong when my platform inserts a gpu:
-lspci -tv
--[0000:00]-+-00.0  Loongson Technology LLC Hyper Transport Bridge Controller
-...
-           +-06.0  Loongson Technology LLC LG100 GPU
-           +-06.2  Loongson Technology LLC Device 7a37
-...
 
-Check device early and add a default switch case to fix it.
 
-In v7.0-rc1 before:
-[    0.817545] pci 0000:00:06.0: Failed to ioremap()
-[    0.822215] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000 conventional PCI endpoint
-[    0.830434] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
-[    0.837350] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
-[    0.844267] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
-[    0.851214] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300 conventional PCI endpoint
-[    0.859433] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
+On 2026/4/28 下午3:47, Qiang Ma wrote:
+> It doesn't make sense to return the recommended maximum number of
+> vCPUs which exceeds the maximum possible number of vCPUs.
+> 
+> Other architectures have already done this, such as Commit
+> 57a2e13ebdda ("KVM: MIPS: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS")
+> 
+> Fixes: 482795cb62aa ("LoongArch: KVM: Implement VM related functions")
+> 
+> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> ---
+>   arch/loongarch/kvm/vm.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index 8cc5ee1c53ef..1317c718f896 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -125,7 +125,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>   		r = 1;
+>   		break;
+>   	case KVM_CAP_NR_VCPUS:
+> -		r = num_online_cpus();
+> +		r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
+>   		break;
+>   	case KVM_CAP_MAX_VCPUS:
+>   		r = KVM_MAX_VCPUS;
+> 
+Hi Qiang,
 
-In v6.6.136 before:
-[    0.807099] Kernel ade access[#1]:
-[    0.810472] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.6.136-loong64-desktop-hwe+ #4
-[    0.818252] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
-[    0.831992] pc 90000000017e5534 ra 90000000017e54c0 tp 90000001002f8000 sp 90000001002fb6c0
-[    0.840289] a0 80000efe00003100 a1 0000000000003100 a2 0000000000000000 a3 0000000000000002
-[    0.848585] a4 90000001002fb6b4 a5 900000087cdb58fd a6 90000000027af000 a7 0000000000000001
-[    0.856882] t0 00000000000085b9 t1 000000000000ffff t2 0000000000000000 t3 0000000000000000
-[    0.865179] t4 fffffffffffffffd t5 00000000fffb6d9c t6 0000000000083b00 t7 00000000000070c0
-[    0.873475] t8 900000087cdb4d94 u0 900000087cdb58fd s9 90000001002fb826 s0 90000000031c12c8
-[    0.881771] s1 7fffffffffffff00 s2 90000000031c12d0 s3 0000000000002710 s4 0000000000000000
-[    0.890067] s5 0000000000000000 s6 9000000100053000 s7 7fffffffffffff00 s8 90000000030d4000
-[    0.898364]    ra: 90000000017e54c0 loongson_gpu_fixup_dma_hang+0x40/0x210
-[    0.905195]   ERA: 90000000017e5534 loongson_gpu_fixup_dma_hang+0xb4/0x210
-[    0.912023]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-[    0.918165]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[    0.922489]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[    0.927246]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
-[    0.932002] ESTAT: 00480000 [ADEM] (IS= ECode=8 EsubCode=1)
-[    0.937535]  BADV: 7fffffffffffff00
-[    0.940992]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
-[    0.946956] Modules linked in:
-[    0.949982] Process swapper/0 (pid: 1, threadinfo=(____ptrval____), task=(____ptrval____))
-[    0.958193] Stack : 0000000000000006 90000001002fb778 90000001002fb704 0000000000000007
-[    0.966147]         0000000016a65700 90000000017e5690 000000000000ffff ffffffffffffffff
-[    0.974100]         900000000209f7c0 9000000100053000 900000000209f7a8 9000000000eebc08
-[    0.982053]         0000000000000000 0000000000000000 0000000000000006 90000001002fb778
-[    0.990006]         90000001000530b8 90000000027af000 0000000000000000 9000000100054000
-[    0.997959]         9000000100053000 9000000000ebb70c 9000000100004c00 9000000004000001
-[    1.005913]         90000001002fb7e4 bae765461f31cb12 0000000000000000 0000000000000000
-[    1.013866]         0000000000000006 90000000027af000 0000000000000030 90000000027af000
-[    1.021819]         900000087cd6f800 9000000100053000 0000000000000000 9000000000ebc560
-[    1.029772]         7a2500147cdaf720 bae765461f31cb12 0000000000000001 0000000000000030
-[    1.037725]         ...
-[    1.040146] Call Trace:
-[    1.040148] [<90000000017e5534>] loongson_gpu_fixup_dma_hang+0xb4/0x210
-[    1.049138] [<9000000000eebc08>] pci_fixup_device+0x108/0x280
-[    1.054846] [<9000000000ebb70c>] pci_setup_device+0x24c/0x690
-[    1.060551] [<9000000000ebc560>] pci_scan_single_device+0xe0/0x140
-[    1.066688] [<9000000000ebc684>] pci_scan_slot+0xc4/0x280
-[    1.072048] [<9000000000ebdd00>] pci_scan_child_bus_extend+0x60/0x3f0
-[    1.078444] [<9000000000f5bc94>] acpi_pci_root_create+0x2b4/0x420
-[    1.084498] [<90000000017e5e74>] pci_acpi_scan_root+0x2d4/0x440
-[    1.090376] [<9000000000f5b02c>] acpi_pci_root_add+0x21c/0x3a0
-[    1.096168] [<9000000000f4ee54>] acpi_bus_attach+0x1a4/0x3c0
-[    1.101788] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
-[    1.107755] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
-[    1.113892] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
-[    1.119511] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
-[    1.125476] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
-[    1.131612] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
-[    1.137231] [<9000000000f5211c>] acpi_bus_scan+0x6c/0x280
-[    1.142591] [<900000000189c028>] acpi_scan_init+0x194/0x310
-[    1.148125] [<900000000189bc6c>] acpi_init+0xcc/0x140
-[    1.153139] [<9000000000220cdc>] do_one_initcall+0x4c/0x310
-[    1.158672] [<90000000018618fc>] kernel_init_freeable+0x258/0x2d4
-[    1.164726] [<900000000184326c>] kernel_init+0x28/0x13c
-[    1.169914] [<9000000000222008>] ret_from_kernel_thread+0xc/0xa4
-[    1.175878]
-[    1.177349] Code: 0015001b  02c022f9  0010efd8 <2400030c> 0040818c  38720005  40006380  240002ed  034401ad
-[    1.187034]
+yes, this is better.
 
-After:
-[    0.813002] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000
-[    0.818970] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
-[    0.825887] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
-[    0.832804] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
-[    0.839750] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300
-[    0.845718] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
+Though value of CONFIG_NR_CPUS is 2048, currently max CPU number of host 
+hardware is 256 still because of limitation of AVEC and extioi HW irqchip.
 
-Cc: stable@vger.kernel.org
-Fixes: 95db0c9f526d ("LoongArch: Workaround LS2K/LS7A GPU DMA hang bug")
-Link: https://gist.github.com/opsiff/ebf2dac51b4013d22462f2124c55f807
-Link: https://gist.github.com/opsiff/a62f2a73db0492b3c49bf223a339b133
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
-changelog v3:
-test in v7.1-rc1 and remove unused print for it can be read from lspci -tv
-changelog v2:
-reformat commit msg and add a full dmesg log link to it.
+If there is HW machine in future which supports more than 256 CPUs, the 
+max online CPU is no more than 256 with existing kernel version. So I 
+think that the "Fixes" tag is not necessary.
 
----
----
- arch/loongarch/pci/pci.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-index d233ea2218fe0..bda1c3c748da6 100644
---- a/arch/loongarch/pci/pci.c
-+++ b/arch/loongarch/pci/pci.c
-@@ -117,12 +117,6 @@ static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
- 	base = pdev->bus->ops->map_bus(pdev->bus, pdev->devfn + 1, 0);
- 	device = readw(base + PCI_DEVICE_ID);
- 
--	regbase = ioremap(readq(base + PCI_BASE_ADDRESS_0) & ~0xffull, SZ_64K);
--	if (!regbase) {
--		pci_err(pdev, "Failed to ioremap()\n");
--		return;
--	}
--
- 	switch (device) {
- 	case PCI_DEVICE_ID_LOONGSON_DC2:
- 		crtc_reg = regbase + 0x1240;
-@@ -132,6 +126,14 @@ static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
- 		crtc_reg = regbase;
- 		crtc_offset = 0x400;
- 		break;
-+	default:
-+		return;
-+	}
-+
-+	regbase = ioremap(readq(base + PCI_BASE_ADDRESS_0) & ~0xffull, SZ_64K);
-+	if (!regbase) {
-+		pci_err(pdev, "Failed to ioremap()\n");
-+		return;
- 	}
- 
- 	for (i = 0; i < CRTC_NUM_MAX; i++, crtc_reg += crtc_offset) {
--- 
-2.30.2
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
