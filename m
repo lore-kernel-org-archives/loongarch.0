@@ -1,104 +1,196 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1AD382287
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 09:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7925B3E274B
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 10:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777370022; cv=none; b=B6jMgLe5a1KGollgXozOPUVDaabV4by4OLBw/aYj4Fx4ILwOFXjAV9b3d2h33fkAzq7zF8fSt5eE/0ye63FTQRTs6RGis+brb81P9TC2OZTyX3Qd41d1XHqOcOzA8bI+oDBDscpHTFYZZGbN3wU1JQdzZAcUlns7R8dz2S4H/tY=
+	t=1777370960; cv=none; b=AbXRGG7e1fAosIhlba64SfCVxewUYb0MZyXrzb6AW6LQ7bvI93roI5VLBfWK5I/YWTdvReiUz5LOC43DpmFpp0dx0tyGPoo6VyNhBmYlW7NV/Ly2NLvkTX6LQQKtYlXxM5k0+at3dQj2Atg138j3E5MGMZcXDaLpbRH9HCU011w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777370022; c=relaxed/simple;
-	bh=KNBThQdX/1sMmn5AxkdbTKL4cyR01I3xziXqQPTdjsY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TeebaJLKNYFDKJW+Eax/iB6emiHlnoQ4XZBN19bnTbIs/uaZL/rpQrtULqNJmY3gBM57DRVzzFlSQ4UYbdlcgo8yDEsi9sDpTBsFuGr+VLgOhoP0RP7kQIjMBxGf1J29XhLLg+D2C9cHFN5+u1ATIzigrB2fXCRyqgOlGFa3orQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxNeigg_Bp9bYEAA--.10120S3;
-	Tue, 28 Apr 2026 17:53:36 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDx6+Cfg_Bp83t2AA--.29591S3;
-	Tue, 28 Apr 2026 17:53:35 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
-To: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260428074742.2274610-1-maqianga@uniontech.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <2074ae0a-5a3a-c0b5-cd09-040696679715@loongson.cn>
-Date: Tue, 28 Apr 2026 17:50:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1777370960; c=relaxed/simple;
+	bh=sOR6gsJL7r5rOSL8x52mZWfcCwvsBn48HjGOk8jdykE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XK2LdSJCnP/aw5+WO2zXRkQYRhPqm1tI2JPJAUzl7WYKxjbxi41BKx+Qwtid0x20OIlXsInc7voEJryhl1OUVZ+eNHO3nyNtCWAHQtzKWgytnxyXis5I4v18XcSjBhNT9O43HUXQMhqXOUg/MP8R7/Ax4lEiN8Pq6klDolEaxBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Ayc9ILpq; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Ayc9ILpq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1777370924;
+	bh=l3ZItNC4ZEE7HINfmOiQ+2CZX7SHKa/qFf/oCQ9+rMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Ayc9ILpq5ox+EpXYZ6kjVdqiVMxPfYIlLImoQbPttvbw9HwFwErHcRmKxTpM5Lu83
+	 7cfMW98WPkzJuICiat4IYLqmJhRkxNQhIC2pGUK+NdByqaFW3zr+0MiOrqCJk2Menr
+	 k6qwj0APP5F4LSkuHwYniRj8Bgz+72+7cSKrpo+o=
+X-QQ-mid: zesmtpgz4t1777370917tb218b79b
+X-QQ-Originating-IP: pB0d/s3ztDnIwxWmmjZWYBo12UVJupMeUO76AEYke1M=
+Received: from [10.10.73.115] ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 28 Apr 2026 18:08:36 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 9400796753880945299
+Message-ID: <31529056B7CF466A+6fc02cf2-cb43-4047-90ec-cd5e412ca5f7@uniontech.com>
+Date: Tue, 28 Apr 2026 18:08:36 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260428074742.2274610-1-maqianga@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Refactor the Features output in show_cpuinfo()
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260428075231.2283151-1-maqianga@uniontech.com>
+ <CAAhV-H4i-0-yTsb9UZh3M0rr_bd-FO66wK9Q85RuDmH8M2ZArQ@mail.gmail.com>
 Content-Language: en-US
+From: Qiang Ma <maqianga@uniontech.com>
+In-Reply-To: <CAAhV-H4i-0-yTsb9UZh3M0rr_bd-FO66wK9Q85RuDmH8M2ZArQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx6+Cfg_Bp83t2AA--.29591S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uryrWw18tFyxWF1fGrWkZrc_yoW8GFW3pr
-	ZrCa4qqr45Grn2kry8J3y3ur12kr97WrySqa4a9Fy7Ar4DXryrXFyUKrZ0qF13Gw4rCrW0
-	q3WFqwnYga90yacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8cz
-	VUUUUUU==
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: NFNrK8KlcSCR4UAMP4NBwSFmy8GXlTLGonVRp6MSEkCsMxI48qdd/xeD
+	1rMyW7d9nHSRJbsHzXyPNly2v+UzBr7SqR6EEHBG1nuBKSLE9lybkOHoAwlNlFIUaTpnx5o
+	9Sq/fvSTzgG+W9LVYErvopfsuYdNdE6TtFObuMMIps5VlZgdd4iE0s3xw8AJOqXuN5J9h+s
+	APZ4XKocj6yLaSkLZK/pg4c5Mlpr+t2p0GU2JL7vFURvMHeY7zxi9d8ws85n2LwLU+P42IG
+	ptbJrP8mAG+niw+PqIwmJGPdHZqMN7CMaEcVQ6xQW9P6b+30KY+FC23vzOPtLkQyk01jcF/
+	b4uuGObeCRC8P5zCjUB6X/Mf5hJVKKepFFUO86pmFAPP77QAcqYRl5wFmrtSokMo3ZaXjqU
+	foKEOUOtZrKhUhGAooM5NrI71Z0/c1xGDtEs7mzkTHIWIimtW4IA8dJZNIeU4/PGFyh+dcX
+	d7AufbTDxN5hnBmQECuR9VojMBU8wEWccIGe2FOdX2QrrRgI/jIOhSrboBS2rcLG+1atJGP
+	8xY5udGj8tYQYi/Q8ZOebwzT8at+dztis3+sE/Q4qNYUMwAJmzpIB3RGUGS2uvBUhTz+B8d
+	omtePriHBRiIC2hb9qzDrpTqdn6joTYMEiYv6KBfExYdCT4NPvgqzxzkp60GWE4FcntQViN
+	n+45t3/zjw9SsyxD7SR2AvyxVOxGt5p+IcDGafJVZbCMwCw6sKw5kFUCX6Ia3gOPpnTDwVh
+	AixtAbgJ+cGkMz0EIAU7vLd4eNzre/IHoOSg/DcC+r3Nwu2q5NHLG6oo5B+DFrG8K93oqWk
+	VcbCfZgCxr83T7fZIsn8N9T09L0wYmAmjsizsSYlEZpx60OJnegJ51syDU3o7ahP9Pr8bit
+	1m2uqeCJYbnGadmu4cChC65RLa4uy7veG+yhryaBmwYizN8GlJMVPtGzEveqcydbxoFhBH9
+	nBCrekhipFKuN3OIh1HxULCb7VoQf4APqNQyxcETkFXwShCMMLXARyjS1SDpWFsz+GZ1tzr
+	JNvvWgt9vgmWdE6Iugx8uQFgWB0VEk5JHNZctpu+a5njllFDmLxBpnmjkdHemmxnp8MzbGl
+	Q==
+X-QQ-XMRINFO: MSVp+SPm3vtS3p2ntzY1PNspv37mS5ZT3g==
+X-QQ-RECHKSPAM: 0
 
 
+在 2026/4/28 17:37, Huacai Chen 写道:
+> https://lore.kernel.org/loongarch/20260228102946.4045-1-dongtai.guo@linux.dev/
+> https://lore.kernel.org/loongarch/20260428075231.2283151-1-maqianga@uniontech.com/T/#u
+>
+> What make you modify here again and again?
+Sorry, I didn't notice that the relevant patch had already been submitted.
+> Is this function ugly?
+> Is this function has bugs?
+No
+> Or for some other reasons?
 
-On 2026/4/28 下午3:47, Qiang Ma wrote:
-> It doesn't make sense to return the recommended maximum number of
-> vCPUs which exceeds the maximum possible number of vCPUs.
-> 
-> Other architectures have already done this, such as Commit
-> 57a2e13ebdda ("KVM: MIPS: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS")
-> 
-> Fixes: 482795cb62aa ("LoongArch: KVM: Implement VM related functions")
-> 
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> ---
->   arch/loongarch/kvm/vm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 8cc5ee1c53ef..1317c718f896 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -125,7 +125,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   		r = 1;
->   		break;
->   	case KVM_CAP_NR_VCPUS:
-> -		r = num_online_cpus();
-> +		r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
->   		break;
->   	case KVM_CAP_MAX_VCPUS:
->   		r = KVM_MAX_VCPUS;
-> 
-Hi Qiang,
+I noticed that with the addition of new features to the LoongArch 
+architecture,
 
-yes, this is better.
+new features can be conveniently added without constantly needing to add 
+if statements, keeping the code concise.
 
-Though value of CONFIG_NR_CPUS is 2048, currently max CPU number of host 
-hardware is 256 still because of limitation of AVEC and extioi HW irqchip.
-
-If there is HW machine in future which supports more than 256 CPUs, the 
-max online CPU is no more than 256 with existing kernel version. So I 
-think that the "Fixes" tag is not necessary.
-
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-
+>
+>
+> Huacai
+>
+> On Tue, Apr 28, 2026 at 3:53 PM Qiang Ma <maqianga@uniontech.com> wrote:
+>> 1. Adds an hwcap_str[] mapping table, using KERNEL_HWCAP(x)
+>> (i.e., const_ilog2(HWCAP_LOONGARCH_x)) to map HWCAP bits
+>> to corresponding strings;
+>> 2. In show_cpuinfo(), iterates through hwcap_str in a loop,
+>> checks the bitmap of elf_hwcap, and prints the corresponding
+>> feature names;
+>> 3. Maintains the original output semantics (still printing
+>> the same feature names) to facilitate adding new CPU features
+>> in the future.
+>>
+>> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+>> ---
+>>   arch/loongarch/kernel/proc.c | 60 ++++++++++++++++--------------------
+>>   1 file changed, 26 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+>> index d4ce5b585453..1188bffd66b6 100644
+>> --- a/arch/loongarch/kernel/proc.c
+>> +++ b/arch/loongarch/kernel/proc.c
+>> @@ -12,9 +12,32 @@
+>>   #include <asm/idle.h>
+>>   #include <asm/processor.h>
+>>   #include <asm/time.h>
+>> +#include <asm/cpufeature.h>
+>> +
+>> +#define KERNEL_HWCAP(x)  const_ilog2(HWCAP_LOONGARCH_ ## x)
+>> +static const char *const hwcap_str[] = {
+>> +       [KERNEL_HWCAP(CPUCFG)]          = "cpucfg",
+>> +       [KERNEL_HWCAP(LAM)]             = "lam",
+>> +       [KERNEL_HWCAP(LAM_BH)]          = "lam_bh",
+>> +       [KERNEL_HWCAP(UAL)]             = "ual",
+>> +       [KERNEL_HWCAP(FPU)]             = "fpu",
+>> +       [KERNEL_HWCAP(LSX)]             = "lsx",
+>> +       [KERNEL_HWCAP(LASX)]            = "lasx",
+>> +       [KERNEL_HWCAP(CRC32)]           = "crc32",
+>> +       [KERNEL_HWCAP(COMPLEX)]         = "complex",
+>> +       [KERNEL_HWCAP(CRYPTO)]          = "crypto",
+>> +       [KERNEL_HWCAP(LVZ)]             = "lvz",
+>> +       [KERNEL_HWCAP(LBT_X86)]         = "lbt_x86",
+>> +       [KERNEL_HWCAP(LBT_ARM)]         = "lbt_arm",
+>> +       [KERNEL_HWCAP(LBT_MIPS)]        = "lbt_mips",
+>> +       [KERNEL_HWCAP(PTW)]             = "ptw",
+>> +       [KERNEL_HWCAP(LSPW)]            = "lspw",
+>> +       [KERNEL_HWCAP(SCQ)]             = "scq",
+>> +};
+>>
+>>   static int show_cpuinfo(struct seq_file *m, void *v)
+>>   {
+>> +       unsigned int i;
+>>          unsigned long n = (unsigned long) v - 1;
+>>          unsigned int isa = cpu_data[n].isa_level;
+>>          unsigned int prid = cpu_data[n].processor_id;
+>> @@ -60,40 +83,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+>>          seq_puts(m, "\n");
+>>
+>>          seq_puts(m, "Features\t\t:");
+>> -       if (cpu_has_cpucfg)
+>> -               seq_puts(m, " cpucfg");
+>> -       if (cpu_has_lam)
+>> -               seq_puts(m, " lam");
+>> -       if (cpu_has_lam_bh)
+>> -               seq_puts(m, " lam_bh");
+>> -       if (cpu_has_scq)
+>> -               seq_puts(m, " scq");
+>> -       if (cpu_has_ual)
+>> -               seq_puts(m, " ual");
+>> -       if (cpu_has_fpu)
+>> -               seq_puts(m, " fpu");
+>> -       if (cpu_has_lsx)
+>> -               seq_puts(m, " lsx");
+>> -       if (cpu_has_lasx)
+>> -               seq_puts(m, " lasx");
+>> -       if (cpu_has_crc32)
+>> -               seq_puts(m, " crc32");
+>> -       if (cpu_has_complex)
+>> -               seq_puts(m, " complex");
+>> -       if (cpu_has_crypto)
+>> -               seq_puts(m, " crypto");
+>> -       if (cpu_has_ptw)
+>> -               seq_puts(m, " ptw");
+>> -       if (cpu_has_lspw)
+>> -               seq_puts(m, " lspw");
+>> -       if (cpu_has_lvz)
+>> -               seq_puts(m, " lvz");
+>> -       if (cpu_has_lbt_x86)
+>> -               seq_puts(m, " lbt_x86");
+>> -       if (cpu_has_lbt_arm)
+>> -               seq_puts(m, " lbt_arm");
+>> -       if (cpu_has_lbt_mips)
+>> -               seq_puts(m, " lbt_mips");
+>> +       for (i = 0; i < ARRAY_SIZE(hwcap_str); i++)
+>> +               if (elf_hwcap & (1 << i))
+>> +                       seq_printf(m, " %s", hwcap_str[i]);
+>>          seq_puts(m, "\n");
+>>
+>>          seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+>> --
+>> 2.20.1
+>>
