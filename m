@@ -1,81 +1,118 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3125443635D
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 15:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777391384; cv=none; b=Ou3ryKehz6CL8mMvWcBeYvINRuuRzryq8mZ6gMrCigs+uxvNmxpUS8Y7wv5jL+xGLjprupeBdvazU+K97jen3uV2gFl9z/pvw4rbc/N2k9zHeps6GOY44hbBbPMqM5kflpDgCMDLHV4+5vf19hPPfeldrKb/I4Uk5Ab597bM1PE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777391384; c=relaxed/simple;
-	bh=hww34gezLX5SXww78rRJceJbzwSkvYyreEUZD0SA6lw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h6x5LRPlB4Vi24qLRBY7ELWZJsxFtCJ7YJ++bt3rGLPLHUlW1rD56OfhQ1qSKTmDsBWQofxCLXBh6yS6ZR1+pFdu6Og/EEr6A75kFtVkvKh83ax7yyoH2wDF9/HyONMHzOlQFRnK/n2aJi2pnbMNcRN6MDYenhaFjLnpfnMnfdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=LHBOgV2R; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0803783B5
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 18:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777402082; cv=pass; b=j4TWbqcH8VgC6ftsvvsSjFM8hdLYXMCWj2mBDHZohdYCcPd40rtJrelDfTA8TzpWL7wduLlbFPAiTRUKOjaugj8WaiEvib4wZZ803LLjcG0VjLMhhlmLjaBPSZYnbijB+9q7IKOhdo/j4oeTa6taWVkWS7n8IVkqvx9L80yF4fw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777402082; c=relaxed/simple;
+	bh=KxlMKlWXMXD/QxlLWK7SzmusmJ4d9EUL+FwWEpZau7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6vHgH2FUUOJ4Dz0nlyRtyfWCBW7M7COeGOLQcMh1jNE8f+h3eULNB4wLN+D0Z9pl8hdgOTGuivVcdg4Yyu2vgLYA9+Czn7J4qLBlOilQAYfKLHgxCw6hRZam7j/Wdw8XlgCdYCvQPy6Qb+IklGPSZRbEKav2ez831aM1ceT+DA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=geuHyxJ5; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="LHBOgV2R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1777391382;
-	bh=cArcjWCpQjLhfqvalRJtm0OUzcg81/IF2RLxxMoEE3Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LHBOgV2Rnf4WMoWA3P20pGtppQZraZM7uMWpzGk4d1OZANNqaGVv8/dQTLJhh9nIf
-	 eUlfMnxMkjydDEZYDJwQCvp7Vx9icApqbYVfTf9Y93URUwt8PS7idYMxESlPyNpQRR
-	 652qzgSjliREnRFtif4COQMXsH3+ceZMUAwqjFtI=
-Received: from [IPv6:2408:824e:304:a151:7a8a:a6f3:c5da:fb7] (unknown [IPv6:2408:824e:304:a151:7a8a:a6f3:c5da:fb7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id B034865992;
-	Tue, 28 Apr 2026 11:49:37 -0400 (EDT)
-Message-ID: <f71d329c66c873cf756623037d1e5806a9c94898.camel@xry111.site>
-Subject: Re: Ping: [PATCH v2] LoongArch: detect and disable sc.q if erratic
-From: Xi Ruoyao <xry111@xry111.site>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=	
- <linux@weissschuh.net>, loongarch@lists.linux.dev, Zixing Liu
- <liushuyu@aosc.io>,  Mingcong Bai <jeffbai@aosc.io>, Arnd Bergmann
- <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>,  George Guo
- <dongtai.guo@linux.dev>, linux-kernel@vger.kernel.org
-Date: Tue, 28 Apr 2026 23:49:23 +0800
-In-Reply-To: <CAAhV-H4kxm-yfgxkxo+8NTvcRtz=uc8G0iTuKEbynkB6pMBSwQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="geuHyxJ5"
+ARC-Seal: i=1; a=rsa-sha256; t=1777402075; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=a6peDCZCr9nr2ooNsefUPxl9AVagOmaXuW5aB3yf9cLqBgJtBHOvp57FGJN5d+3idAxWKof4RkJlK0z87b3otCvvjEa2AIVC4q1OnR7/yyvbTWWkIf182ZurMYpjFcxhEE2fAa+OeUfPvA9a9u1ul0s4pMPckOB4C/0JZaiXIjY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1777402075; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/7wD1ACDUlmlwoUxPlUP6qXdhL+gRIQ7RT39Md36xEc=; 
+	b=RBQ16mGP94B2TDA3MzEitVfNp4wVwMfVMI7WmFL9oePA7wg/iRI1clHqYEhNgH+2vip8BKL8xdi+cfq1e39Nng1jhEnSjpV4AeVwgQ7FJ0Ch1UAPl1VXC5RQh+UNaZDDDJzauu5rbqImQVupSqXMjUxtzaj/xd9D3hE5QD3jNlc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=ziyao.cc;
+	spf=pass  smtp.mailfrom=me@ziyao.cc;
+	dmarc=pass header.from=<me@ziyao.cc>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777402075;
+	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=/7wD1ACDUlmlwoUxPlUP6qXdhL+gRIQ7RT39Md36xEc=;
+	b=geuHyxJ5Mq6BbbZDABk4j9OK2AQB4OZD4NCtRQ2vnvjL+TJpWCZWRA6aWjeJddw1
+	Faxq1L44LIDxi+kyheSrwGTrIOUtf4jQw3t6gSHvdyKgcfm27LwmawLVIs/kjA1GpJZ
+	RZ65awHeM/8OvAzTGEamRxvUN3OLAQifhc8C+W00=
+Received: by mx.zohomail.com with SMTPS id 1777402073328220.35480737728676;
+	Tue, 28 Apr 2026 11:47:53 -0700 (PDT)
+Date: Tue, 28 Apr 2026 18:47:40 +0000
+From: Yao Zi <me@ziyao.cc>
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>, Arnd Bergmann <arnd@arndb.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	George Guo <dongtai.guo@linux.dev>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] LoongArch: detect and disable sc.q if erratic
+Message-ID: <afEAzG-k3MwazO8W@pie>
 References: <20260409121936.871418-1-xry111@xry111.site>
-	 <de142a5e34f9158500361e51d5a025bf3366699e.camel@xry111.site>
-	 <CAAhV-H4kxm-yfgxkxo+8NTvcRtz=uc8G0iTuKEbynkB6pMBSwQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260409121936.871418-1-xry111@xry111.site>
+X-ZohoMailClient: External
 
-On Mon, 2026-04-27 at 16:43 +0800, Huacai Chen wrote:
-> Hi, Ruoyao,
->=20
-> On Mon, Apr 27, 2026 at 10:17=E2=80=AFAM Xi Ruoyao <xry111@xry111.site> w=
-rote:
-> >=20
-> > Ping.
-> Can we keep this as an out-of-tree patch? It's a bit ugly and I think
-> the corrct way is update firmware.
+On Thu, Apr 09, 2026 at 08:19:34PM +0800, Xi Ruoyao wrote:
+> We've observed that, on some Loongson 2K3000/3B6000M systems with earlier
+> firmware revisions, the sc.q instruction may write incorrect data into
+> the upper half of the written 128-bit datum.
+> 
+> It seems upgrading the firmware (for example, the 202602 release from
+> Loongson [1]) will resolve the issue. But since not all systems may be
+> running the most up-to-date firmware, based on firmware update avail-
+> ability and the environment in which they are running in.
+> 
+> To help with system compatibility and ensure correct behavior, check if
+> sc.q behaves erratically and disable if so.
+> 
+> Link: https://github.com/loongson/Firmware/pull/156 [1]
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>  arch/loongarch/kernel/cpu-probe.c | 39 ++++++++++++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
+> index 657bbae6c1c7..5fcf2672172f 100644
+> --- a/arch/loongarch/kernel/cpu-probe.c
+> +++ b/arch/loongarch/kernel/cpu-probe.c
+> @@ -132,6 +132,43 @@ static void set_isa(struct cpuinfo_loongarch *c, unsigned int isa)
+>  	}
+>  }
+>  
+> +/*
+> + * Some LoongArch has broken sc.q which incorrectly handles the upper word
+> + * when the lower word is zero. Newer firmware versions (such as the 202602
+> + * release from Loongson) seem to contain a workaround for this issue.
+> + *
+> + * Disable sc.q if erratic to ensure reliability and compatibility.
+> + */
+> +static bool sc_q_is_sane(void)
+> +{
+> +	struct {
+> +		long word[2];
+> +	} __aligned(16) mem;
 
-We can try harder urging the vendors to release the firmware update
-(there are other firmware bugs those the kernel cannot deal with anyway)
-but in many cases the users just complain "hey your distro doesn't boot"
-to the distro maintainers.  And some rogue ODM/OEM tend to ignore any
-reports relayed by the distro maintainers unless the distro pays some
-thousands of dollar.
+Isn't this equivalent to
 
-Thus IMO it's better to make the system at least bootable with a message
-(the pr_warn_once line in the patch) to clearly indicate the users that
-they need a firmware update, and the vendors may become motivated a
-little with more users complaining directly.
->=20
+	long word[2] __aligned(16);
 
---=20
-Xi Ruoyao <xry111@xry111.site>
+with which we could eliminate the outer structure?
+
+And should we introduce Kconfig options like ARM64_ERRATUM_* (arm64) or
+ERRATA_MIPS_P8700_PAUSE_OPCODE (RISC-V) to conditionally compile these
+work arounds? This might not be an emergency, but might be useful when
+there are more quirks like this coming in the future.
+
+Otherwise this patch looks good to me,
+
+Reviewed-by: Yao Zi <me@ziyao.cc>
+
+Regards,
+Yao Zi
