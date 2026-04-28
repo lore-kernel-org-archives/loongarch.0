@@ -1,53 +1,63 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0803783B5
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 18:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777402082; cv=pass; b=j4TWbqcH8VgC6ftsvvsSjFM8hdLYXMCWj2mBDHZohdYCcPd40rtJrelDfTA8TzpWL7wduLlbFPAiTRUKOjaugj8WaiEvib4wZZ803LLjcG0VjLMhhlmLjaBPSZYnbijB+9q7IKOhdo/j4oeTa6taWVkWS7n8IVkqvx9L80yF4fw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777402082; c=relaxed/simple;
-	bh=KxlMKlWXMXD/QxlLWK7SzmusmJ4d9EUL+FwWEpZau7M=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56E5366823;
+	Tue, 28 Apr 2026 22:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777415201; cv=none; b=X7rN4C49rIfw+hQcaMctZqsFjaAGEpFI9ihSFLEkumRQJ+FOLF2EYzIFQd2Z9Ce2LDz7OLkXCSMbUCJGEPrU2P5s7WpI3ITDOh+HZD84YX/XMFdEwNOk9frAJVYNJ2F3vxNogPcd1VpowOPHuHUbT+TraZfGqqAhfyDhK1t46Ag=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777415201; c=relaxed/simple;
+	bh=+ZMMz1Azx4YiMaUbzhvU1xkhQVlg/rYUrZYBIyZYrao=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P6vHgH2FUUOJ4Dz0nlyRtyfWCBW7M7COeGOLQcMh1jNE8f+h3eULNB4wLN+D0Z9pl8hdgOTGuivVcdg4Yyu2vgLYA9+Czn7J4qLBlOilQAYfKLHgxCw6hRZam7j/Wdw8XlgCdYCvQPy6Qb+IklGPSZRbEKav2ez831aM1ceT+DA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b=geuHyxJ5; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
+	 Content-Type:Content-Disposition:In-Reply-To; b=oggcvS9yO0RUyPK95/sfkl5JBlktQibNh3LuqjU75wTx3C+KAzw7PQyDrgx6eovZtKxwOZT+bkFUQ/oDGNEV80wmigrx8FqXn3j2Mvqo/wy2qKGztMfLHxDxWnPTXoWKqCTp/XkG+o3GNtzS3KDL+O+iZQdgg4J/6aNlNdjovDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c7tZ/4h5; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=me@ziyao.cc header.b="geuHyxJ5"
-ARC-Seal: i=1; a=rsa-sha256; t=1777402075; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=a6peDCZCr9nr2ooNsefUPxl9AVagOmaXuW5aB3yf9cLqBgJtBHOvp57FGJN5d+3idAxWKof4RkJlK0z87b3otCvvjEa2AIVC4q1OnR7/yyvbTWWkIf182ZurMYpjFcxhEE2fAa+OeUfPvA9a9u1ul0s4pMPckOB4C/0JZaiXIjY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777402075; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/7wD1ACDUlmlwoUxPlUP6qXdhL+gRIQ7RT39Md36xEc=; 
-	b=RBQ16mGP94B2TDA3MzEitVfNp4wVwMfVMI7WmFL9oePA7wg/iRI1clHqYEhNgH+2vip8BKL8xdi+cfq1e39Nng1jhEnSjpV4AeVwgQ7FJ0Ch1UAPl1VXC5RQh+UNaZDDDJzauu5rbqImQVupSqXMjUxtzaj/xd9D3hE5QD3jNlc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=ziyao.cc;
-	spf=pass  smtp.mailfrom=me@ziyao.cc;
-	dmarc=pass header.from=<me@ziyao.cc>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777402075;
-	s=zmail; d=ziyao.cc; i=me@ziyao.cc;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=/7wD1ACDUlmlwoUxPlUP6qXdhL+gRIQ7RT39Md36xEc=;
-	b=geuHyxJ5Mq6BbbZDABk4j9OK2AQB4OZD4NCtRQ2vnvjL+TJpWCZWRA6aWjeJddw1
-	Faxq1L44LIDxi+kyheSrwGTrIOUtf4jQw3t6gSHvdyKgcfm27LwmawLVIs/kjA1GpJZ
-	RZ65awHeM/8OvAzTGEamRxvUN3OLAQifhc8C+W00=
-Received: by mx.zohomail.com with SMTPS id 1777402073328220.35480737728676;
-	Tue, 28 Apr 2026 11:47:53 -0700 (PDT)
-Date: Tue, 28 Apr 2026 18:47:40 +0000
-From: Yao Zi <me@ziyao.cc>
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>,
-	Mingcong Bai <jeffbai@aosc.io>, Arnd Bergmann <arnd@arndb.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	George Guo <dongtai.guo@linux.dev>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] LoongArch: detect and disable sc.q if erratic
-Message-ID: <afEAzG-k3MwazO8W@pie>
-References: <20260409121936.871418-1-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c7tZ/4h5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777415200; x=1808951200;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+ZMMz1Azx4YiMaUbzhvU1xkhQVlg/rYUrZYBIyZYrao=;
+  b=c7tZ/4h5sDfTDhuTJmGN1HqfswFL3fQaAN6riXjmhE8vds2miBjT9WT/
+   UEkEoeSNxiJSQEBHUzDV95Nt/G1/9tfvMrz1c7h85zt2yfqfnA65JF4WF
+   xOzqhFwODaHmO6gDaF8IMQUB+VWACbHGJl05ljS0Vihdv7e9nzlgjDACF
+   FARcdn8i5QfMyy0vP7wMz510+65zp95W8eNb6bYIo23KGBVW3aSW5D/r0
+   gCT2VRFb2Yg3mnQcHTiZjlEBneCJkDh2k7/g/gO8CS4UPk939lMM1cMMl
+   ajOByTrxEkRHK5eHtzmZgHObWhMRkFnz92NzyOMbVvhQeWnpAFs9JsBGd
+   g==;
+X-CSE-ConnectionGUID: wTBCRfJUSmqL3Jtf7wqgbQ==
+X-CSE-MsgGUID: Ruzp1+g9QLON77gulOZC8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="89035812"
+X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
+   d="scan'208";a="89035812"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 15:26:39 -0700
+X-CSE-ConnectionGUID: Vld6TlSiTkyuFnolSu64xQ==
+X-CSE-MsgGUID: ii8X8X3WSf+bZExeBPVHng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
+   d="scan'208";a="230939066"
+Received: from lkp-server01.sh.intel.com (HELO aa799cca880d) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 28 Apr 2026 15:26:36 -0700
+Received: from kbuild by aa799cca880d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wHqsz-00000000AJo-3SuK;
+	Tue, 28 Apr 2026 22:26:33 +0000
+Date: Wed, 29 Apr 2026 06:26:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Guan <guanwentao@uniontech.com>, chenhuacai@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	wuqianhai@loongson.cn, kernel@xen0n.name, jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v3] LoongArch: Fix potential ade in
+ loongson_gpu_fixup_dma_hang()
+Message-ID: <202604290645.yU3tIquW-lkp@intel.com>
+References: <20260428095051.746295-1-guanwentao@uniontech.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -56,63 +66,107 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260409121936.871418-1-xry111@xry111.site>
-X-ZohoMailClient: External
+In-Reply-To: <20260428095051.746295-1-guanwentao@uniontech.com>
 
-On Thu, Apr 09, 2026 at 08:19:34PM +0800, Xi Ruoyao wrote:
-> We've observed that, on some Loongson 2K3000/3B6000M systems with earlier
-> firmware revisions, the sc.q instruction may write incorrect data into
-> the upper half of the written 128-bit datum.
-> 
-> It seems upgrading the firmware (for example, the 202602 release from
-> Loongson [1]) will resolve the issue. But since not all systems may be
-> running the most up-to-date firmware, based on firmware update avail-
-> ability and the environment in which they are running in.
-> 
-> To help with system compatibility and ensure correct behavior, check if
-> sc.q behaves erratically and disable if so.
-> 
-> Link: https://github.com/loongson/Firmware/pull/156 [1]
-> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
-> ---
->  arch/loongarch/kernel/cpu-probe.c | 39 ++++++++++++++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-> index 657bbae6c1c7..5fcf2672172f 100644
-> --- a/arch/loongarch/kernel/cpu-probe.c
-> +++ b/arch/loongarch/kernel/cpu-probe.c
-> @@ -132,6 +132,43 @@ static void set_isa(struct cpuinfo_loongarch *c, unsigned int isa)
->  	}
->  }
->  
-> +/*
-> + * Some LoongArch has broken sc.q which incorrectly handles the upper word
-> + * when the lower word is zero. Newer firmware versions (such as the 202602
-> + * release from Loongson) seem to contain a workaround for this issue.
-> + *
-> + * Disable sc.q if erratic to ensure reliability and compatibility.
-> + */
-> +static bool sc_q_is_sane(void)
-> +{
-> +	struct {
-> +		long word[2];
-> +	} __aligned(16) mem;
+Hi Wentao,
 
-Isn't this equivalent to
+kernel test robot noticed the following build warnings:
 
-	long word[2] __aligned(16);
+[auto build test WARNING on chenhuacai-loongson/loongarch-fixes]
+[also build test WARNING on linus/master v7.1-rc1 next-20260428]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-with which we could eliminate the outer structure?
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Guan/LoongArch-Fix-potential-ade-in-loongson_gpu_fixup_dma_hang/20260428-222642
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git loongarch-fixes
+patch link:    https://lore.kernel.org/r/20260428095051.746295-1-guanwentao%40uniontech.com
+patch subject: [PATCH v3] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
+config: loongarch-allnoconfig (https://download.01.org/0day-ci/archive/20260429/202604290645.yU3tIquW-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260429/202604290645.yU3tIquW-lkp@intel.com/reproduce)
 
-And should we introduce Kconfig options like ARM64_ERRATUM_* (arm64) or
-ERRATA_MIPS_P8700_PAUSE_OPCODE (RISC-V) to conditionally compile these
-work arounds? This might not be an emergency, but might be useful when
-there are more quirks like this coming in the future.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604290645.yU3tIquW-lkp@intel.com/
 
-Otherwise this patch looks good to me,
+All warnings (new ones prefixed by >>):
 
-Reviewed-by: Yao Zi <me@ziyao.cc>
+>> arch/loongarch/pci/pci.c:122:14: warning: variable 'regbase' is uninitialized when used here [-Wuninitialized]
+     122 |                 crtc_reg = regbase + 0x1240;
+         |                            ^~~~~~~
+   arch/loongarch/pci/pci.c:114:41: note: initialize the variable 'regbase' to silence this warning
+     114 |         void __iomem *crtc_reg, *base, *regbase;
+         |                                                ^
+         |                                                 = NULL
+   1 warning generated.
 
-Regards,
-Yao Zi
+
+vim +/regbase +122 arch/loongarch/pci/pci.c
+
+95db0c9f526d58 Huacai Chen 2026-03-26  110  
+95db0c9f526d58 Huacai Chen 2026-03-26  111  static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
+95db0c9f526d58 Huacai Chen 2026-03-26  112  {
+95db0c9f526d58 Huacai Chen 2026-03-26  113  	u32 i, val, count, crtc_offset, device;
+95db0c9f526d58 Huacai Chen 2026-03-26  114  	void __iomem *crtc_reg, *base, *regbase;
+95db0c9f526d58 Huacai Chen 2026-03-26  115  	static u32 crtc_status[CRTC_NUM_MAX] = { 0 };
+95db0c9f526d58 Huacai Chen 2026-03-26  116  
+95db0c9f526d58 Huacai Chen 2026-03-26  117  	base = pdev->bus->ops->map_bus(pdev->bus, pdev->devfn + 1, 0);
+95db0c9f526d58 Huacai Chen 2026-03-26  118  	device = readw(base + PCI_DEVICE_ID);
+95db0c9f526d58 Huacai Chen 2026-03-26  119  
+95db0c9f526d58 Huacai Chen 2026-03-26  120  	switch (device) {
+95db0c9f526d58 Huacai Chen 2026-03-26  121  	case PCI_DEVICE_ID_LOONGSON_DC2:
+95db0c9f526d58 Huacai Chen 2026-03-26 @122  		crtc_reg = regbase + 0x1240;
+95db0c9f526d58 Huacai Chen 2026-03-26  123  		crtc_offset = 0x10;
+95db0c9f526d58 Huacai Chen 2026-03-26  124  		break;
+95db0c9f526d58 Huacai Chen 2026-03-26  125  	case PCI_DEVICE_ID_LOONGSON_DC3:
+95db0c9f526d58 Huacai Chen 2026-03-26  126  		crtc_reg = regbase;
+95db0c9f526d58 Huacai Chen 2026-03-26  127  		crtc_offset = 0x400;
+95db0c9f526d58 Huacai Chen 2026-03-26  128  		break;
+c2fa5cb09709c4 Wentao Guan 2026-04-28  129  	default:
+c2fa5cb09709c4 Wentao Guan 2026-04-28  130  		return;
+c2fa5cb09709c4 Wentao Guan 2026-04-28  131  	}
+c2fa5cb09709c4 Wentao Guan 2026-04-28  132  
+c2fa5cb09709c4 Wentao Guan 2026-04-28  133  	regbase = ioremap(readq(base + PCI_BASE_ADDRESS_0) & ~0xffull, SZ_64K);
+c2fa5cb09709c4 Wentao Guan 2026-04-28  134  	if (!regbase) {
+c2fa5cb09709c4 Wentao Guan 2026-04-28  135  		pci_err(pdev, "Failed to ioremap()\n");
+c2fa5cb09709c4 Wentao Guan 2026-04-28  136  		return;
+95db0c9f526d58 Huacai Chen 2026-03-26  137  	}
+95db0c9f526d58 Huacai Chen 2026-03-26  138  
+95db0c9f526d58 Huacai Chen 2026-03-26  139  	for (i = 0; i < CRTC_NUM_MAX; i++, crtc_reg += crtc_offset) {
+95db0c9f526d58 Huacai Chen 2026-03-26  140  		val = readl(crtc_reg);
+95db0c9f526d58 Huacai Chen 2026-03-26  141  
+95db0c9f526d58 Huacai Chen 2026-03-26  142  		if (!on)
+95db0c9f526d58 Huacai Chen 2026-03-26  143  			crtc_status[i] = val;
+95db0c9f526d58 Huacai Chen 2026-03-26  144  
+95db0c9f526d58 Huacai Chen 2026-03-26  145  		/* No need to fixup if the status is off at startup. */
+95db0c9f526d58 Huacai Chen 2026-03-26  146  		if (!(crtc_status[i] & CRTC_OUTPUT_ENABLE))
+95db0c9f526d58 Huacai Chen 2026-03-26  147  			continue;
+95db0c9f526d58 Huacai Chen 2026-03-26  148  
+95db0c9f526d58 Huacai Chen 2026-03-26  149  		if (on)
+95db0c9f526d58 Huacai Chen 2026-03-26  150  			val |= CRTC_OUTPUT_ENABLE;
+95db0c9f526d58 Huacai Chen 2026-03-26  151  		else
+95db0c9f526d58 Huacai Chen 2026-03-26  152  			val &= ~CRTC_OUTPUT_ENABLE;
+95db0c9f526d58 Huacai Chen 2026-03-26  153  
+95db0c9f526d58 Huacai Chen 2026-03-26  154  		mb();
+95db0c9f526d58 Huacai Chen 2026-03-26  155  		writel(val, crtc_reg);
+95db0c9f526d58 Huacai Chen 2026-03-26  156  
+95db0c9f526d58 Huacai Chen 2026-03-26  157  		for (count = 0; count < 40; count++) {
+95db0c9f526d58 Huacai Chen 2026-03-26  158  			val = readl(crtc_reg) & CRTC_OUTPUT_ENABLE;
+95db0c9f526d58 Huacai Chen 2026-03-26  159  			if ((on && val) || (!on && !val))
+95db0c9f526d58 Huacai Chen 2026-03-26  160  				break;
+95db0c9f526d58 Huacai Chen 2026-03-26  161  			udelay(1000);
+95db0c9f526d58 Huacai Chen 2026-03-26  162  		}
+95db0c9f526d58 Huacai Chen 2026-03-26  163  
+95db0c9f526d58 Huacai Chen 2026-03-26  164  		pci_info(pdev, "DMA hang fixup at reg[0x%lx]: 0x%x\n",
+95db0c9f526d58 Huacai Chen 2026-03-26  165  				(unsigned long)crtc_reg & 0xffff, readl(crtc_reg));
+95db0c9f526d58 Huacai Chen 2026-03-26  166  	}
+95db0c9f526d58 Huacai Chen 2026-03-26  167  
+95db0c9f526d58 Huacai Chen 2026-03-26  168  	iounmap(regbase);
+95db0c9f526d58 Huacai Chen 2026-03-26  169  }
+95db0c9f526d58 Huacai Chen 2026-03-26  170  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
