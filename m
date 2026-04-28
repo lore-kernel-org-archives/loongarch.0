@@ -1,33 +1,49 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE8C22DF3F2
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 08:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1810256C6C
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 08:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777363262; cv=none; b=JjD5T3j5JdTI5uSWBvhQ0ZbxK4/CI+bYWU5fcRF4LYv/VJY96V5Kig2Vtj9AA81gf1665Tmfqi+xHl1VBXqKQCt82+oT07p+ID354GEEETCxoD27R5jQhKaPA5IAg9doAeF+vPFWLLCSfA2mP/SxxAevj7sBCvDn7koEJr8un4s=
+	t=1777365840; cv=none; b=D/MEFv5pu6Ll4d0Dm1d4Be9+D1/41FAxFaqVb44uHEZJT3TwH28S7ZMSagdh38gK2j4cxDEkK+07oIoL+4W2azRxUL0fsIpDhx5y8n3orq+L029pWJioHKsz5D3UXScIx4Kn8yfe4XzyVPABx/Vja5STYN0uEMKgHb8/v8vnzCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777363262; c=relaxed/simple;
-	bh=GdZbgUj2QRiknFpRHXo8OJb+ATv1Li/oaUZb06UqX2Q=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tfdMgTEC0FUYRKbZAbbgfm2I24A4MeWBME3Xpwvxf8FLwljcBp2UhH8Lf02nlBjvliv8Sn0zmovW8R90jTMt4pQmKFyDFjEKhFLpX7lf3isHk1WDGpn9iZbN2XiLFbPhqkOFrQEzKq9l0lh7opOWnMqyii/YGQJuczTs2zwc3SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxsOo7afBpFK0EAA--.15979S3;
-	Tue, 28 Apr 2026 16:00:59 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAx38I1afBpmWt2AA--.27930S5;
-	Tue, 28 Apr 2026 16:00:59 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC bpf-next 3/3] selftests/bpf: Test jited inline of bpf_get_smp_processor_id()
-Date: Tue, 28 Apr 2026 16:00:51 +0800
-Message-ID: <20260428080051.20938-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260428080051.20938-1-yangtiezhu@loongson.cn>
-References: <20260428080051.20938-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1777365840; c=relaxed/simple;
+	bh=4NW243t3fTVXITg+HuQlCuRN8e++wdGsyLxls9Fkl1E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LU+sL2bT0qeEqN3qJeec4fvSzRu4KDngOOc4u0oCM+YFu4OH8XXMblGK+STpmbTD4ogVt1MGLCnWzp8nzTZks4mXawtCOc+FPfE0PutBgWoHl8tyHekdvWHw+O0utGGKG42Het9gXqR+4tpkYDweKrFJoGgjDT+HejbfRN5SnQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hPMiOmzB; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hPMiOmzB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1777365806;
+	bh=uErscxhcrWE4/zEy6GPp05vUfYq6JKbDS5OtEDke/bw=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=hPMiOmzBgMoDvmVN8qvRXMbebjR/koWLJuEPgDewnFTqldDMRvRKVXjcrKoAXDWPH
+	 y+c0kE9thP7zIeeb6t6+lidLRX0nFAlmhiSSqkxXL+09c/SBvsRfCqCutHOtw7Y/3S
+	 WV68wglNC6fAl8KBB7ElXXwYxtBN/bjGxkpqQy5I=
+X-QQ-mid: zesmtpip2t1777365800t80f1655a
+X-QQ-Originating-IP: IVUzWfqBy83q77y2Za7qfjbLPCuGhO4gpK99nPqos3U=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 28 Apr 2026 16:43:18 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10069428977569428492
+EX-QQ-RecipientCnt: 8
+From: Wentao Guan <guanwentao@uniontech.com>
+To: chenhuacai@kernel.org
+Cc: wuqianhai@loongson.cn,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Wentao Guan <guanwentao@uniontech.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
+Date: Tue, 28 Apr 2026 16:42:04 +0800
+Message-Id: <20260428084204.731000-1-guanwentao@uniontech.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,67 +51,134 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx38I1afBpmWt2AA--.27930S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KFWrAr1fZFW7XFWkKFW5twc_yoW8Xw13pF
-	Wku3sxtry8GFy2gayxCF4rXFy5XFn5Z3yrAr1Fk3yDCF18Jr1DJr93Kr13AFy5WrZY93s5
-	Z3W2gF45Ga4UXabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcsjjDUUUU
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: MnjX5lBozTaWndF89ZrvvOqIcvDtEq+QYg3zkJfYdkau70a9WRo2dkb2
+	5x2t7RntYIqrlWhjB0SrjM8B3RXFN25mfzFlBRNMHmxNkkX8ILkmQ1d2QrFzvjiOqjcEUaz
+	Z88naCLwat/2IblJc5j66REMBUxPY9/TOY2b7j1rYm7/0LW7FXaCzs4e51jhw3Jt7qFitGR
+	xxKK3YCbbR4sNpUqOJ6dSj65TKMrcC2esR9RBbgO7ZOcQj0BSYgqQDk6OAfrDaBB2VilZty
+	XcolyNlxkwB4JXaowyY8MUNyNT5Qok+/HVuz+5kwRjszDqNb8M3L/M9Mfm0Nr+yNzDZW+xH
+	oA4kMUiuhEgl0xERGJOlcmV872tEgb34jIw2gJv1UIjeg7wJmdLTC+sOpwlG3Rtqm7PyZII
+	2ZiI/8WjMBzpG3i5nZPjNk/ies57DmQ1fK0jrgZUiGNCbFZBJbK55wFJ8HQ6l2Xnlays8VO
+	uvx51T1fiJK2o+XKPB8A3KQSfukK6zFcWG5esuhuH9ZWdfkytbIxDe9veZyhMlPkp4OJaeL
+	1NuNiyFBuFxNEmvYvwLL1q1qORV2XO4VuTR5TgTOoUKPJQM3a8sQWe0eWA7whgRu958+10V
+	/SMCe+6x6d3XpqEUG/AVyXR2af5QnuMnpFETDlPXyHSHgMJ6N//0mXUqU1HNH+ywAzKSdM+
+	iynlieqp4PTFJIXT55nNySS9euzhyYhhcLaiFlQwOoqfdbqx1pdqTnMAPwKznuSo+LNOiTE
+	1xJfIFVEsKw0Dy35EUfHxs86dUIyeOZP6OTaKQq1TzT7eEAm+o/87vyGdhH0ZeG0w3GkuTj
+	t/Tt3PBJtnWHR8fFdsILbAt9itaE0alJ874b7aBlcqI5+J7QxJvP9salKBZYuL9Tk2NBeeo
+	hyKixRyqHHWa2RNZ9D35ASRu7k+3BMO6hD8r9Qt07iolG9QVCIROwBmUdhMUF5bJ1Vif3XS
+	I7DiB+zztk8OHKXUVr+xKUjOt6VQVjcq1/h6uTOUoqTSSrvxAIvPa+IfnSTPMMwxi0WqaY+
+	EZtCD+BJg96aodM784fiQANtVuxB7+0NvTtSwLstKic3PZZM5T
+X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
+X-QQ-RECHKSPAM: 0
 
-Add the testcase for the jited inline of bpf_get_smp_processor_id(),
-only for LoongArch currently.
+The swich case in loongson_gpu_fixup_dma_hang() will be other value,
+because device is from base+PCI_DEVICE_ID, base is from pdev->devfn+1,
+it is wrong when my platform inserts a gpu:
+lspci -tv
+-[0000:00]-+-00.0  Loongson Technology LLC Hyper Transport Bridge Controller
+...
+           +-06.0  Loongson Technology LLC LG100 GPU
+           +-06.2  Loongson Technology LLC Device 7a37
+...
 
-Here is the test result on LoongArch:
+In the case, device in switch case will be not DC2 or DC3,
+and readl(crtc_reg) will access with random address,
+fix it by adding a default case.
 
-  $ sudo ./test_progs -t verifier_jit_inline
-  #570/1   verifier_jit_inline/inline_bpf_get_current_task:OK
-  #570/2   verifier_jit_inline/inline_bpf_get_smp_processor_id:OK
-  #570     verifier_jit_inline:OK
-  Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+Before:
+[    0.807099] Kernel ade access[#1]:
+[    0.810472] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.6.136-loong64-desktop-hwe+ #4
+[    0.818252] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
+[    0.831992] pc 90000000017e5534 ra 90000000017e54c0 tp 90000001002f8000 sp 90000001002fb6c0
+[    0.840289] a0 80000efe00003100 a1 0000000000003100 a2 0000000000000000 a3 0000000000000002
+[    0.848585] a4 90000001002fb6b4 a5 900000087cdb58fd a6 90000000027af000 a7 0000000000000001
+[    0.856882] t0 00000000000085b9 t1 000000000000ffff t2 0000000000000000 t3 0000000000000000
+[    0.865179] t4 fffffffffffffffd t5 00000000fffb6d9c t6 0000000000083b00 t7 00000000000070c0
+[    0.873475] t8 900000087cdb4d94 u0 900000087cdb58fd s9 90000001002fb826 s0 90000000031c12c8
+[    0.881771] s1 7fffffffffffff00 s2 90000000031c12d0 s3 0000000000002710 s4 0000000000000000
+[    0.890067] s5 0000000000000000 s6 9000000100053000 s7 7fffffffffffff00 s8 90000000030d4000
+[    0.898364]    ra: 90000000017e54c0 loongson_gpu_fixup_dma_hang+0x40/0x210
+[    0.905195]   ERA: 90000000017e5534 loongson_gpu_fixup_dma_hang+0xb4/0x210
+[    0.912023]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+[    0.918165]  PRMD: 00000004 (PPLV0 +PIE -PWE)
+[    0.922489]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+[    0.927246]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
+[    0.932002] ESTAT: 00480000 [ADEM] (IS= ECode=8 EsubCode=1)
+[    0.937535]  BADV: 7fffffffffffff00
+[    0.940992]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
+[    0.946956] Modules linked in:
+[    0.949982] Process swapper/0 (pid: 1, threadinfo=(____ptrval____), task=(____ptrval____))
+[    0.958193] Stack : 0000000000000006 90000001002fb778 90000001002fb704 0000000000000007
+[    0.966147]         0000000016a65700 90000000017e5690 000000000000ffff ffffffffffffffff
+[    0.974100]         900000000209f7c0 9000000100053000 900000000209f7a8 9000000000eebc08
+[    0.982053]         0000000000000000 0000000000000000 0000000000000006 90000001002fb778
+[    0.990006]         90000001000530b8 90000000027af000 0000000000000000 9000000100054000
+[    0.997959]         9000000100053000 9000000000ebb70c 9000000100004c00 9000000004000001
+[    1.005913]         90000001002fb7e4 bae765461f31cb12 0000000000000000 0000000000000000
+[    1.013866]         0000000000000006 90000000027af000 0000000000000030 90000000027af000
+[    1.021819]         900000087cd6f800 9000000100053000 0000000000000000 9000000000ebc560
+[    1.029772]         7a2500147cdaf720 bae765461f31cb12 0000000000000001 0000000000000030
+[    1.037725]         ...
+[    1.040146] Call Trace:
+[    1.040148] [<90000000017e5534>] loongson_gpu_fixup_dma_hang+0xb4/0x210
+[    1.049138] [<9000000000eebc08>] pci_fixup_device+0x108/0x280
+[    1.054846] [<9000000000ebb70c>] pci_setup_device+0x24c/0x690
+[    1.060551] [<9000000000ebc560>] pci_scan_single_device+0xe0/0x140
+[    1.066688] [<9000000000ebc684>] pci_scan_slot+0xc4/0x280
+[    1.072048] [<9000000000ebdd00>] pci_scan_child_bus_extend+0x60/0x3f0
+[    1.078444] [<9000000000f5bc94>] acpi_pci_root_create+0x2b4/0x420
+[    1.084498] [<90000000017e5e74>] pci_acpi_scan_root+0x2d4/0x440
+[    1.090376] [<9000000000f5b02c>] acpi_pci_root_add+0x21c/0x3a0
+[    1.096168] [<9000000000f4ee54>] acpi_bus_attach+0x1a4/0x3c0
+[    1.101788] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
+[    1.107755] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
+[    1.113892] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
+[    1.119511] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
+[    1.125476] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
+[    1.131612] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
+[    1.137231] [<9000000000f5211c>] acpi_bus_scan+0x6c/0x280
+[    1.142591] [<900000000189c028>] acpi_scan_init+0x194/0x310
+[    1.148125] [<900000000189bc6c>] acpi_init+0xcc/0x140
+[    1.153139] [<9000000000220cdc>] do_one_initcall+0x4c/0x310
+[    1.158672] [<90000000018618fc>] kernel_init_freeable+0x258/0x2d4
+[    1.164726] [<900000000184326c>] kernel_init+0x28/0x13c
+[    1.169914] [<9000000000222008>] ret_from_kernel_thread+0xc/0xa4
+[    1.175878]
+[    1.177349] Code: 0015001b  02c022f9  0010efd8 <2400030c> 0040818c  38720005  40006380  240002ed  034401ad
+[    1.187034]
 
-Note that this test will pass only after the JIT inline support for
-bpf_get_smp_processor_id is merged. While the JIT inlining is still
-in the pipeline, adding the changes now will not introduce any build
-regressions. It serves to define the expected JIT output for future
-validation.
+After:
+[    0.808160] pci 0000:00:06.0: Not find match device
+[    0.813002] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000
+[    0.818970] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
+[    0.825887] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
+[    0.832804] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
+[    0.839750] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300
+[    0.845718] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: stable@vger.kernel.org
+Fixes: 95db0c9f526d ("LoongArch: Workaround LS2K/LS7A GPU DMA hang bug")
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
 ---
- .../testing/selftests/bpf/progs/verifier_jit_inline.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/loongarch/pci/pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-index 913a1699e42b..e4d683c8cb06 100644
---- a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-@@ -19,4 +19,15 @@ int inline_bpf_get_current_task(void)
- 	return 0;
- }
+diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
+index d233ea2218fe0..9420d484f1f82 100644
+--- a/arch/loongarch/pci/pci.c
++++ b/arch/loongarch/pci/pci.c
+@@ -132,6 +132,10 @@ static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
+ 		crtc_reg = regbase;
+ 		crtc_offset = 0x400;
+ 		break;
++	default:
++		iounmap(regbase);
++		pci_info(pdev, "Not find match device\n");
++		return;
+ 	}
  
-+SEC("fentry/bpf_fentry_test2")
-+__success __retval(0)
-+__arch_loongarch
-+__jited("	ld.w	$a5, $tp, 8")
-+int inline_bpf_get_smp_processor_id(void)
-+{
-+	bpf_get_smp_processor_id();
-+
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
+ 	for (i = 0; i < CRTC_NUM_MAX; i++, crtc_reg += crtc_offset) {
 -- 
-2.42.0
+2.30.2
 
