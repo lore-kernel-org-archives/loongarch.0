@@ -1,35 +1,35 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1810256C6C
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 08:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A283D7D96
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 08:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777365840; cv=none; b=D/MEFv5pu6Ll4d0Dm1d4Be9+D1/41FAxFaqVb44uHEZJT3TwH28S7ZMSagdh38gK2j4cxDEkK+07oIoL+4W2azRxUL0fsIpDhx5y8n3orq+L029pWJioHKsz5D3UXScIx4Kn8yfe4XzyVPABx/Vja5STYN0uEMKgHb8/v8vnzCU=
+	t=1777366541; cv=none; b=SNSrsrB+1ys8OsxfYZMfDcZDuVh48coN6vzC1fPrNKNULjliSsCdb7bTxlUu2RiS4PEclCOkHJpSGaRjNMvZ5Jl1IYdgmWqtdUCA5oQVPJ5oEpj0r6vZzd2p59UPjOD9W77gLqahS1EFAo6ychj3Dwg6kaz+52a80dbp/0Wlpz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777365840; c=relaxed/simple;
-	bh=4NW243t3fTVXITg+HuQlCuRN8e++wdGsyLxls9Fkl1E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LU+sL2bT0qeEqN3qJeec4fvSzRu4KDngOOc4u0oCM+YFu4OH8XXMblGK+STpmbTD4ogVt1MGLCnWzp8nzTZks4mXawtCOc+FPfE0PutBgWoHl8tyHekdvWHw+O0utGGKG42Het9gXqR+4tpkYDweKrFJoGgjDT+HejbfRN5SnQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hPMiOmzB; arc=none smtp.client-ip=54.254.200.92
+	s=arc-20240116; t=1777366541; c=relaxed/simple;
+	bh=XRO9hXcczpCZqlHFjdAi+OnFIEA43cdaykte4Y+3IYI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YGZAwLvkE5+dZx7hGT6IHNWtoCXIQasMu/alyX9DwmfxYdeJ0zLibho72DZWkUnzTSHUmjrP4BlHpGCHrW98dqJ3qclkjFXSQayAYF65VQHEpnZaI/z+/c9qWyCFzc3iyjzToDl2mC7Bi9PdSVdUtgWPpv6WgD7jKLnz5VesY5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YBPPTAOG; arc=none smtp.client-ip=18.169.211.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hPMiOmzB"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YBPPTAOG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1777365806;
-	bh=uErscxhcrWE4/zEy6GPp05vUfYq6JKbDS5OtEDke/bw=;
+	s=onoh2408; t=1777366514;
+	bh=3QwZDcr6pQcVlMKJBUB30W9/vQj8+plvXfE3JnlR0vM=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=hPMiOmzBgMoDvmVN8qvRXMbebjR/koWLJuEPgDewnFTqldDMRvRKVXjcrKoAXDWPH
-	 y+c0kE9thP7zIeeb6t6+lidLRX0nFAlmhiSSqkxXL+09c/SBvsRfCqCutHOtw7Y/3S
-	 WV68wglNC6fAl8KBB7ElXXwYxtBN/bjGxkpqQy5I=
-X-QQ-mid: zesmtpip2t1777365800t80f1655a
-X-QQ-Originating-IP: IVUzWfqBy83q77y2Za7qfjbLPCuGhO4gpK99nPqos3U=
+	b=YBPPTAOGqgtmT1oeYWdKaaPuQNdK6IZvlAlmIdSH0iDZBPMhD2jm7tIwKVf94/Gwt
+	 mylbJO6e22MTCYNcTnNBdP+VDFQwEuV/+hCOIluIhOxtTKLby8dthGHbV/crFCS8CY
+	 Y4nCDtoITVgTtIAlr4a+0sfPv80JD4VIHoab1DJs=
+X-QQ-mid: zesmtpip3t1777366509t4fb2f33c
+X-QQ-Originating-IP: j3DMtfU36SbtAUqzSdc8kUfsuWEevpxWeyHzqNC9dqc=
 Received: from localhost.localdomain ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 28 Apr 2026 16:43:18 +0800 (CST)
+	id ; Tue, 28 Apr 2026 16:55:07 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10069428977569428492
+X-BIZMAIL-ID: 2491099973822844762
 EX-QQ-RecipientCnt: 8
 From: Wentao Guan <guanwentao@uniontech.com>
 To: chenhuacai@kernel.org
@@ -40,9 +40,9 @@ Cc: wuqianhai@loongson.cn,
 	linux-kernel@vger.kernel.org,
 	Wentao Guan <guanwentao@uniontech.com>,
 	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
-Date: Tue, 28 Apr 2026 16:42:04 +0800
-Message-Id: <20260428084204.731000-1-guanwentao@uniontech.com>
+Subject: [PATCH v2] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
+Date: Tue, 28 Apr 2026 16:53:55 +0800
+Message-Id: <20260428085355.735827-1-guanwentao@uniontech.com>
 X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -53,26 +53,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MnjX5lBozTaWndF89ZrvvOqIcvDtEq+QYg3zkJfYdkau70a9WRo2dkb2
-	5x2t7RntYIqrlWhjB0SrjM8B3RXFN25mfzFlBRNMHmxNkkX8ILkmQ1d2QrFzvjiOqjcEUaz
-	Z88naCLwat/2IblJc5j66REMBUxPY9/TOY2b7j1rYm7/0LW7FXaCzs4e51jhw3Jt7qFitGR
-	xxKK3YCbbR4sNpUqOJ6dSj65TKMrcC2esR9RBbgO7ZOcQj0BSYgqQDk6OAfrDaBB2VilZty
-	XcolyNlxkwB4JXaowyY8MUNyNT5Qok+/HVuz+5kwRjszDqNb8M3L/M9Mfm0Nr+yNzDZW+xH
-	oA4kMUiuhEgl0xERGJOlcmV872tEgb34jIw2gJv1UIjeg7wJmdLTC+sOpwlG3Rtqm7PyZII
-	2ZiI/8WjMBzpG3i5nZPjNk/ies57DmQ1fK0jrgZUiGNCbFZBJbK55wFJ8HQ6l2Xnlays8VO
-	uvx51T1fiJK2o+XKPB8A3KQSfukK6zFcWG5esuhuH9ZWdfkytbIxDe9veZyhMlPkp4OJaeL
-	1NuNiyFBuFxNEmvYvwLL1q1qORV2XO4VuTR5TgTOoUKPJQM3a8sQWe0eWA7whgRu958+10V
-	/SMCe+6x6d3XpqEUG/AVyXR2af5QnuMnpFETDlPXyHSHgMJ6N//0mXUqU1HNH+ywAzKSdM+
-	iynlieqp4PTFJIXT55nNySS9euzhyYhhcLaiFlQwOoqfdbqx1pdqTnMAPwKznuSo+LNOiTE
-	1xJfIFVEsKw0Dy35EUfHxs86dUIyeOZP6OTaKQq1TzT7eEAm+o/87vyGdhH0ZeG0w3GkuTj
-	t/Tt3PBJtnWHR8fFdsILbAt9itaE0alJ874b7aBlcqI5+J7QxJvP9salKBZYuL9Tk2NBeeo
-	hyKixRyqHHWa2RNZ9D35ASRu7k+3BMO6hD8r9Qt07iolG9QVCIROwBmUdhMUF5bJ1Vif3XS
-	I7DiB+zztk8OHKXUVr+xKUjOt6VQVjcq1/h6uTOUoqTSSrvxAIvPa+IfnSTPMMwxi0WqaY+
-	EZtCD+BJg96aodM784fiQANtVuxB7+0NvTtSwLstKic3PZZM5T
-X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
+X-QQ-XMAILINFO: M+EijflIknTq/j7GT1tvbBWQBth+SsMUFhaC33GuHb2nRsCWakImoP9f
+	90jFi8ozwkYsmMHgT0saBBFcVvFgfwBhnEyHggBXtoggzDymwQJgOzDGSLztePOMLSlvEIP
+	04KJHBbS1QPvS1MLwWplKdDlQTxDEMkGC8tIUNGm5Lips57wa7TjCvwtl2hksM58Xdz9vQT
+	FNNXctGVU5OsXZdKdgPEyKH/1e1ugN4ZfU+T6DmnCwJpombNdNb4rV5kH3ux29y+YmqG3F3
+	WqKSpsPQpEIcxnn2ESXWCRwYg+mnY9Z5R4AP5a9I0rDlsXjtYiDylIb98jTP+0QJt7sx9Sz
+	Zz7hh3ORCOjmq4P7eEZfCIjb5as4nxQIC1Bve3aaHyy14aTC0iE0so1uhBychIE5FiMKM/r
+	Q3a2CgQqfapQvFw4dmofF68xhmeyHfLduXc4CsG8OejMaqfa8o3p1jKMuk72zg1Eznn5g8B
+	OnLo0yM6jH6ehWExXyHZZaET/7DUq/lRAlohu7c3nWM1n5I6lCrNSEyMOVZTXyC+/Qm0pQO
+	G1X3g2W/lFqKeI2s9x1YwwyzQ0v5thDQKJbHrWQ/O+ewdUO7e2btx0Big8WAL4cY19a5XWV
+	7wV8GI0T5w4YhiD5MMhH/EjaBumeDWyZIa49DHgEFKGHg8rIWPxIwQHGZ3EY1zIBv8KQAlR
+	te8tQuyj1NU5W9TMji2/pRAvFCRoXBSzWy73GtY2eq8gfeKx3hw8rMgy7d+lPvbmXOWoetj
+	pyFeuIxE0ioFWe2Gw4iz+hJFWCBwTLX2nmpOG3BsSpr0qojGlrc4Ge1w92FIEum5FSzv4KQ
+	wTddh2IsOOi+WwkyHc32JjHl1MaLrBKfKWTWGHmP85/e2sKT6rxXaWhB/WuqiorqfMSI6EM
+	w3UrZvy/medqRzeeoTWaXpmN5vlZ1l7wJAIOp9MzttQRgKbHW107mvbLJ/h3BMiquM9nJNk
+	vzS3s6zjHJ4ud2Z0rHXsOvlG9Q/S/fgPdLL1s5EsngqJH3lQWIo488KlxDpu6hWkvxyWvSe
+	fihQ/69oDO2RoxPTD2ZJNGX7eDgtkxS+WX9VnP0yQxbZrpww+sBYl7Ns6cMZ85ikhLYDL0C
+	A==
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
 X-QQ-RECHKSPAM: 0
 
-The swich case in loongson_gpu_fixup_dma_hang() will be other value,
+The switch case in loongson_gpu_fixup_dma_hang() may not DC2 or DC3,
+and readl(crtc_reg) will access with random address,
 because device is from base+PCI_DEVICE_ID, base is from pdev->devfn+1,
 it is wrong when my platform inserts a gpu:
 lspci -tv
@@ -82,9 +84,7 @@ lspci -tv
            +-06.2  Loongson Technology LLC Device 7a37
 ...
 
-In the case, device in switch case will be not DC2 or DC3,
-and readl(crtc_reg) will access with random address,
-fix it by adding a default case.
+Add a default switch case to fix it.
 
 Before:
 [    0.807099] Kernel ade access[#1]:
@@ -159,7 +159,13 @@ After:
 
 Cc: stable@vger.kernel.org
 Fixes: 95db0c9f526d ("LoongArch: Workaround LS2K/LS7A GPU DMA hang bug")
+Link: https://gist.github.com/opsiff/ebf2dac51b4013d22462f2124c55f807
 Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+---
+changelog v2:
+reformat commit msg and add a full dmesg log link to it.
+
+---
 ---
  arch/loongarch/pci/pci.c | 4 ++++
  1 file changed, 4 insertions(+)
