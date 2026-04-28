@@ -1,90 +1,93 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B8143CECD
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 12:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD53423A9F
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 13:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777381182; cv=none; b=ICe9TaE0RzY1HpDhryxjiw8WD/39BGk0bx8095zze1Cf1DIxIEI7PxQqnPB/8i7vP0E7DlmraC+t3AYhNHK0COLvrhsH7w7KgiRI8O2H3N5He+q/K2Ec1hsMpvQ5nwiHhoN3cdF61bz7Hi3LwV9ALIPY2erfk39LJIQHT2QA2OM=
+	t=1777381261; cv=none; b=RyncKIgfAxy8/T42zPRT5nLgbKFPmg+natGWCheE9r25RN7ETZU2/13Ny8kWS1aVG4AFRtXSvu6OKvvpY7vLCw/vO2IkANh578W1pmLcBt9PiFJQBAo1ZjFM4hJjXxmFnGay4px2GdgqcaX5/A1UxP0dVxy4hutrYiaxf8zoPn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777381182; c=relaxed/simple;
-	bh=2TXeI4uza2yiAl404XMONMb9qZBCxAkKly4i8bsSAxc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Cq34lCXI2GKzPI360Uu4+YGNnAOT0SvUJi7CEVgSednWw6JXkDr6KAGm1Q7GSl5lYSGuoUcKVVrQ68afZMkIYYvIhcZVIQVq2AmEacd83wtHQRw9OsPeSwyXlPT6EHe3FC79BOHnGYXW8Th69DmhFoyVYKr71tmvSo5nr8YBwm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxQ_A0r_BpuMIEAA--.16342S3;
-	Tue, 28 Apr 2026 20:59:32 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJAx38Ixr_BpapJ2AA--.28242S3;
-	Tue, 28 Apr 2026 20:59:31 +0800 (CST)
-Subject: Re: [PATCH v2] LoongArch: KVM: Cap KVM_CAP_NR_VCPUS by
- KVM_CAP_MAX_VCPUS
-To: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260428121813.296781-1-maqianga@uniontech.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <0b8db33a-6c26-d9f5-b78f-d9249dd02c1c@loongson.cn>
-Date: Tue, 28 Apr 2026 20:56:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1777381261; c=relaxed/simple;
+	bh=EXBQ8LxA8ytAI4JBqp9KxDEK2TNG4UGQLhZYOZxAzCQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h/P9vkg6ihRksiqycMRs4XqFSLN8OzSAv/MosDV9LNZsreyWLXj62MCow5p1LI5MAAFgvqzADGMxcUK4DOwxgH/yt32jzds+WozI88QompfGYLdHyDo9UBWYI0DsULJMqhXtQMd0QZIN1EGX5rmCK+T1dOGUjfegXpytLMkI8WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 458b39fe430211f1aa26b74ffac11d73-20260428
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD
+	ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:f4ac297d-c798-40bd-9817-301e6a656532,IP:15,
+	URL:0,TC:0,Content:0,EDM:-20,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-10
+X-CID-INFO: VERSION:1.3.12,REQID:f4ac297d-c798-40bd-9817-301e6a656532,IP:15,UR
+	L:0,TC:0,Content:0,EDM:-20,RT:0,SF:-5,FILE:0,BULK:0,RULE:EDM_GE969F26,ACTI
+	ON:release,TS:-10
+X-CID-META: VersionHash:e7bac3a,CLOUDID:274da5740be13c1415f4b36df5f9af5d,BulkI
+	D:2604282100484J0QURVB,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	898,TC:nil,Content:0|15|50,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:n
+	il,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC
+	:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_AEC,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 458b39fe430211f1aa26b74ffac11d73-20260428
+X-User: cuitao@kylinos.cn
+Received: from ctao-book.. [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 499511498; Tue, 28 Apr 2026 21:00:46 +0800
+From: Tao Cui <cuitao@kylinos.cn>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH] LoongArch/KVM: Use kvm_set_pte() in kvm_flush_pte
+Date: Tue, 28 Apr 2026 21:00:31 +0800
+Message-ID: <20260428130031.409066-1-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260428121813.296781-1-maqianga@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx38Ixr_BpapJ2AA--.28242S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF15Jr4DtF4rGrWrXF4kXwc_yoWDGrg_Ww
-	1Ivwn8WrWkJan7Xr1jqryfG3Z3X3W8XFZ0vFn3AF17Wa45XrW5Zrn3Was8Ary8trWrur45
-	ArZ8trZ0v3sFvosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
-	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
-	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
-	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
-	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr
-	0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU25Ef
-	UUUUU
 
-On 2026/4/28 下午8:18, Qiang Ma wrote:
-> It doesn't make sense to return the recommended maximum number of
-> vCPUs which exceeds the maximum possible number of vCPUs.
-> 
-> Other architectures have already done this, such as Commit
-> 57a2e13ebdda ("KVM: MIPS: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS")
-> 
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> ---
->   arch/loongarch/kvm/vm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 8cc5ee1c53ef..1317c718f896 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -125,7 +125,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   		r = 1;
->   		break;
->   	case KVM_CAP_NR_VCPUS:
-> -		r = num_online_cpus();
-> +		r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
->   		break;
->   	case KVM_CAP_MAX_VCPUS:
->   		r = KVM_MAX_VCPUS;
-> 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+kvm_flush_pte() is the only caller that directly assigns *pte instead
+of using the kvm_set_pte() wrapper. Use the wrapper for consistency
+with the rest of the file.
+
+No functional change intended.
+
+Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+---
+ arch/loongarch/kvm/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+index a7fa458e3360..e104897aa532 100644
+--- a/arch/loongarch/kvm/mmu.c
++++ b/arch/loongarch/kvm/mmu.c
+@@ -95,7 +95,7 @@ static int kvm_flush_pte(kvm_pte_t *pte, phys_addr_t addr, kvm_ptw_ctx *ctx)
+ 	else
+ 		kvm->stat.pages--;
+ 
+-	*pte = ctx->invalid_entry;
++	kvm_set_pte(pte, ctx->invalid_entry);
+ 
+ 	return 1;
+ }
+-- 
+2.43.0
 
