@@ -1,194 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3153ED113
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 10:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED7F3F7894;
+	Tue, 28 Apr 2026 10:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777372199; cv=none; b=puzEZw62QWnsUKsbNMsjpdaMWts8ibzhHcDTdk2tdCdDg5W0xze+hYu7QArTfiJ9XvXKjthNpHH9dNh4e5+ZqmJ1nasTjma+Bg/2wYT++WdTbRHsV4HWmzt8Ck17qY1zMujSm4JtINOqtXKvv7G3PMn674LrzSmHMgybn233ZHk=
+	t=1777373579; cv=none; b=mZVmfltO+PXBcJwyP2QJi/c3zbcBitb7PSGA9dMbvwrdAnXInWjTYzLAcsWG6x253qC6Cit9zfUArTf3/q9uDNV92aTTxPJFaTIN1ym1XhX4je5TY2ElA2eMfHvaMcnK/kYpBSFj5urbvEdPIoaxaRG7NtSy5DoSl1u9jPB0Cu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777372199; c=relaxed/simple;
-	bh=9o5wPyff6tzhKrGGB+GM5v55e5yo5DeWFklj9yIHuag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dboz/9CIUeObOjHi3YP/t8I95vECk0vubpQy4GdzYGaylnWotMENSvqc24tl3e3bilQ4RHz/NBpbCnKDBWwSgepbF7QxJTswwfW9BeKMJwhNX43TW709BL5Ji0GcrEzPfZJ+ekD2HEXNqRaDdVHyemU1AnjHBBrx4gNx1Lnb8ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDiWJiz5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777373579; c=relaxed/simple;
+	bh=FAkK0ftN7gWUbuk+HZ/TnP99n+RR4S9QM3ioJ/hUWvI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lhhNaJWyHyRdAMzHDoJkcW2uHwsAFkSDyDUHaFmxWgtZLIkwUjgKJOCuGtO8Qw+EdWggAuDbhw8PxyOkx5ZXvLIScP971AIrbGy9dR+VhA5d6SsBCDr2yiSQumlZBT3KpibsVexQzWYYauESZicFJ0l4GOTh9/JYB2O8AvPNmlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qsqv6r1l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDiWJiz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0006C2BCAF
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 10:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777372198;
-	bh=9o5wPyff6tzhKrGGB+GM5v55e5yo5DeWFklj9yIHuag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZDiWJiz5ReasGMXjDSpfkNNLTCUvJ+UWhagiFxztt/DxeRHQ/nAgLbUBUE/Lhc0Jk
-	 NBTqrpqfXRYRUX4NqDiVLe461uWePfZ25CqX/2V+2XF0jmqscDOqpCM04EKdExKyAP
-	 AuUY0XRkIRFffaFTTKcjEkELT2yJqkvehJlllPCOAKQiMvYyDgPc5mMYNijCt2VAHN
-	 WSSgpsxPof0468/ui2kbNotNO6wgF0y56il6g71gUvnWE0SiypcULEh/6bIdstJKs+
-	 3EFrlZY1Z41WEKm1/KkyOzOpoSaZzKe/Z5MBDoxSgal70af8wjD35LNOYkCcw7caJj
-	 HkVv+RrcWnxXQ==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-67785ef88feso9070460a12.1
-        for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 03:29:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+RBeBarvoKICaB23YbTpBLyN4Vzc6p/cHubOofix438IPScHWqL+fBCERRGxHF5RK/t6YX0TY4xPA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzgMzWtWUsySQiDpg+gzbB/EHPLa1HCB+Qc2QRlwDwV+Q4PtirR
-	Q6yF90KeEMFsmJsr3JoL5WaCicqjbdbo/t+UaWY6GUZLwfbmNE1qfQJHNmj9e5mO5qE5wUoyDVb
-	cczHtyAlKzkonbOopHhP3fUMuqxYiH3I=
-X-Received: by 2002:a17:907:7295:b0:ba8:ca25:e6ab with SMTP id
- a640c23a62f3a-bb801ad6b78mr170299166b.11.1777372197399; Tue, 28 Apr 2026
- 03:29:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qsqv6r1l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CEE5C2BCAF;
+	Tue, 28 Apr 2026 10:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1777373579;
+	bh=FAkK0ftN7gWUbuk+HZ/TnP99n+RR4S9QM3ioJ/hUWvI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Qsqv6r1lJZq/c7ZPtIt0sZl/DuaHenFFdJWV+kUZfKy9lze4sbNHOT4ldBEvZsMcI
+	 IzA4ewciHKUUGkWs11knSBEVXzjvVrxdGd/P9JBd6VWThd9m0HhwDsNHUrAT8OtKfZ
+	 vkIpz9kt+ca77YyWoiGiskB7TOq8ICE0RWcWLVHM=
+Date: Tue, 28 Apr 2026 03:52:56 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
+ <kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+ <npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+ <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+ <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+ <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
+ <saravanak@kernel.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
+ <dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
+ <pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
+ <dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+ <paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
+ <leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
+ <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
+ <sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
+ <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>, <guoren@kernel.org>,
+ <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+ <vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+ <fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
+ <takahiro.akashi@linaro.org>, <james.morse@arm.com>,
+ <lizhengyu3@huawei.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <kexec@lists.infradead.org>
+Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Message-Id: <20260428035256.cbb3ac77c4bbb89bb7efcc19@linux-foundation.org>
+In-Reply-To: <dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+	<dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20260428075231.2283151-1-maqianga@uniontech.com>
- <CAAhV-H4i-0-yTsb9UZh3M0rr_bd-FO66wK9Q85RuDmH8M2ZArQ@mail.gmail.com> <31529056B7CF466A+6fc02cf2-cb43-4047-90ec-cd5e412ca5f7@uniontech.com>
-In-Reply-To: <31529056B7CF466A+6fc02cf2-cb43-4047-90ec-cd5e412ca5f7@uniontech.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 28 Apr 2026 18:30:12 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7mY47EVcrLA08NRWbjM87G66F0P-W9UPDrL3=t276T8Q@mail.gmail.com>
-X-Gm-Features: AVHnY4JNpxWZTuujL23BQQmDQtn0CZd91SSMT0IN4Gp1Vg3J2zVlFLeAaO8C680
-Message-ID: <CAAhV-H7mY47EVcrLA08NRWbjM87G66F0P-W9UPDrL3=t276T8Q@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Refactor the Features output in show_cpuinfo()
-To: Qiang Ma <maqianga@uniontech.com>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 28, 2026 at 6:08=E2=80=AFPM Qiang Ma <maqianga@uniontech.com> w=
-rote:
->
->
-> =E5=9C=A8 2026/4/28 17:37, Huacai Chen =E5=86=99=E9=81=93:
-> > https://lore.kernel.org/loongarch/20260228102946.4045-1-dongtai.guo@lin=
-ux.dev/
-> > https://lore.kernel.org/loongarch/20260428075231.2283151-1-maqianga@uni=
-ontech.com/T/#u
-> >
-> > What make you modify here again and again?
-> Sorry, I didn't notice that the relevant patch had already been submitted=
-.
-> > Is this function ugly?
-> > Is this function has bugs?
-> No
-> > Or for some other reasons?
->
-> I noticed that with the addition of new features to the LoongArch
-> architecture,
->
-> new features can be conveniently added without constantly needing to add
-> if statements, keeping the code concise.
-cpuinfo are not always the same as hwcaps, stop please.
+On Tue, 28 Apr 2026 11:30:13 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 
-Huacai
+> It seems the patches for crash core rework, powerpc, riscv, and arm64
+> are mostly ready to be merged. Could any maintainer help pick these up,
+> or should I rebase the entire series against v7.1-rc1?
 
->
-> >
-> >
-> > Huacai
-> >
-> > On Tue, Apr 28, 2026 at 3:53=E2=80=AFPM Qiang Ma <maqianga@uniontech.co=
-m> wrote:
-> >> 1. Adds an hwcap_str[] mapping table, using KERNEL_HWCAP(x)
-> >> (i.e., const_ilog2(HWCAP_LOONGARCH_x)) to map HWCAP bits
-> >> to corresponding strings;
-> >> 2. In show_cpuinfo(), iterates through hwcap_str in a loop,
-> >> checks the bitmap of elf_hwcap, and prints the corresponding
-> >> feature names;
-> >> 3. Maintains the original output semantics (still printing
-> >> the same feature names) to facilitate adding new CPU features
-> >> in the future.
-> >>
-> >> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> >> ---
-> >>   arch/loongarch/kernel/proc.c | 60 ++++++++++++++++------------------=
---
-> >>   1 file changed, 26 insertions(+), 34 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc=
-.c
-> >> index d4ce5b585453..1188bffd66b6 100644
-> >> --- a/arch/loongarch/kernel/proc.c
-> >> +++ b/arch/loongarch/kernel/proc.c
-> >> @@ -12,9 +12,32 @@
-> >>   #include <asm/idle.h>
-> >>   #include <asm/processor.h>
-> >>   #include <asm/time.h>
-> >> +#include <asm/cpufeature.h>
-> >> +
-> >> +#define KERNEL_HWCAP(x)  const_ilog2(HWCAP_LOONGARCH_ ## x)
-> >> +static const char *const hwcap_str[] =3D {
-> >> +       [KERNEL_HWCAP(CPUCFG)]          =3D "cpucfg",
-> >> +       [KERNEL_HWCAP(LAM)]             =3D "lam",
-> >> +       [KERNEL_HWCAP(LAM_BH)]          =3D "lam_bh",
-> >> +       [KERNEL_HWCAP(UAL)]             =3D "ual",
-> >> +       [KERNEL_HWCAP(FPU)]             =3D "fpu",
-> >> +       [KERNEL_HWCAP(LSX)]             =3D "lsx",
-> >> +       [KERNEL_HWCAP(LASX)]            =3D "lasx",
-> >> +       [KERNEL_HWCAP(CRC32)]           =3D "crc32",
-> >> +       [KERNEL_HWCAP(COMPLEX)]         =3D "complex",
-> >> +       [KERNEL_HWCAP(CRYPTO)]          =3D "crypto",
-> >> +       [KERNEL_HWCAP(LVZ)]             =3D "lvz",
-> >> +       [KERNEL_HWCAP(LBT_X86)]         =3D "lbt_x86",
-> >> +       [KERNEL_HWCAP(LBT_ARM)]         =3D "lbt_arm",
-> >> +       [KERNEL_HWCAP(LBT_MIPS)]        =3D "lbt_mips",
-> >> +       [KERNEL_HWCAP(PTW)]             =3D "ptw",
-> >> +       [KERNEL_HWCAP(LSPW)]            =3D "lspw",
-> >> +       [KERNEL_HWCAP(SCQ)]             =3D "scq",
-> >> +};
-> >>
-> >>   static int show_cpuinfo(struct seq_file *m, void *v)
-> >>   {
-> >> +       unsigned int i;
-> >>          unsigned long n =3D (unsigned long) v - 1;
-> >>          unsigned int isa =3D cpu_data[n].isa_level;
-> >>          unsigned int prid =3D cpu_data[n].processor_id;
-> >> @@ -60,40 +83,9 @@ static int show_cpuinfo(struct seq_file *m, void *v=
-)
-> >>          seq_puts(m, "\n");
-> >>
-> >>          seq_puts(m, "Features\t\t:");
-> >> -       if (cpu_has_cpucfg)
-> >> -               seq_puts(m, " cpucfg");
-> >> -       if (cpu_has_lam)
-> >> -               seq_puts(m, " lam");
-> >> -       if (cpu_has_lam_bh)
-> >> -               seq_puts(m, " lam_bh");
-> >> -       if (cpu_has_scq)
-> >> -               seq_puts(m, " scq");
-> >> -       if (cpu_has_ual)
-> >> -               seq_puts(m, " ual");
-> >> -       if (cpu_has_fpu)
-> >> -               seq_puts(m, " fpu");
-> >> -       if (cpu_has_lsx)
-> >> -               seq_puts(m, " lsx");
-> >> -       if (cpu_has_lasx)
-> >> -               seq_puts(m, " lasx");
-> >> -       if (cpu_has_crc32)
-> >> -               seq_puts(m, " crc32");
-> >> -       if (cpu_has_complex)
-> >> -               seq_puts(m, " complex");
-> >> -       if (cpu_has_crypto)
-> >> -               seq_puts(m, " crypto");
-> >> -       if (cpu_has_ptw)
-> >> -               seq_puts(m, " ptw");
-> >> -       if (cpu_has_lspw)
-> >> -               seq_puts(m, " lspw");
-> >> -       if (cpu_has_lvz)
-> >> -               seq_puts(m, " lvz");
-> >> -       if (cpu_has_lbt_x86)
-> >> -               seq_puts(m, " lbt_x86");
-> >> -       if (cpu_has_lbt_arm)
-> >> -               seq_puts(m, " lbt_arm");
-> >> -       if (cpu_has_lbt_mips)
-> >> -               seq_puts(m, " lbt_mips");
-> >> +       for (i =3D 0; i < ARRAY_SIZE(hwcap_str); i++)
-> >> +               if (elf_hwcap & (1 << i))
-> >> +                       seq_printf(m, " %s", hwcap_str[i]);
-> >>          seq_puts(m, "\n");
-> >>
-> >>          seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has=
-_watch));
-> >> --
-> >> 2.20.1
-> >>
+April 2 is prehistoric ;)
+
+Yes, refresh, retest, resend.  Note that there have been maintainership
+shuffles in this area.  
+
+KDUMP
+M:	Andrew Morton <akpm@linux-foundation.org>
+M:	Baoquan He <bhe@redhat.com>
+M:	Mike Rapoport <rppt@kernel.org>
+M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+M:	Pratyush Yadav <pratyush@kernel.org>
+R:	Dave Young <ruirui.yang@linux.dev>
+L:	kexec@lists.infradead.org
+S:	Maintained
+F:	Documentation/admin-guide/kdump/
+F:	fs/proc/vmcore.c
+F:	include/linux/crash_core.h
+F:	include/linux/crash_dump.h
+F:	include/uapi/linux/vmcore.h
+F:	kernel/crash_*.c
+
+I believe that Pasha/Mike/Pratyush are setting up a git tree, but there
+isn't one listed here?
+
