@@ -1,112 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C41B238D27;
-	Tue, 28 Apr 2026 12:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B8442EEA1
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 12:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777380807; cv=none; b=Ph6pweTpy1uBoqS8xWFjABzUFMrW5AZyK0qJnMhsuvGYvbbJKRLShmocpdRkRhi01G9InhqxrYBhk8JiqSqcbHMjiMcJIQy7S8oXP6ePohEOaTWZvbOqREfkhj2zPmKiGKwwMRlJl7R98oLLaHgyoZ11HglNgDF6E8AdWAovWt8=
+	t=1777380976; cv=none; b=qiEDiSceL03FiY0/vLXieO6Fja0XhiHftAj7UtqBXwwDf7CHBT3xrCqPDe/P2Lt/l4koUj0GdknrgUTC2vuAI0XX127G7EKwibM3V6ZYERpiE0LxkOcaTtg7HU1mxPlzAWIW9Mh41i9RIM/DxPalJmrrO7KP/SExAf0+kUwDeFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777380807; c=relaxed/simple;
-	bh=MFTHBWIVPPds/6umCo+/GsrLJiT9dmnX5t+TJKOu5mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDYGS8RbJPrlRDAhl9FPqv0jQtkj1Fx4tsWu0ZCvlkjyfGDl9sthea/EMaoEMYRy1YY4ejmdI7KhLYJ563nD8Fv46cxW+Iw6DmQAiCak0hsdzsRJcwNj/HtMC7r7JnMJn7Gq921udEcXkjalJDGqVNZqdgO9qShVtBdxAfS9moI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2H9r0W1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777380976; c=relaxed/simple;
+	bh=3LZCtvQyQQ4G9qvBdWsxGvE48csnHu6g4bVvkSdatkg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hD/wt+OI5+WuKV59a3vYH9CmFMv17a1H/Nmvl8vZSCZsL2vKjUjaU+f5/iOMMgHRtyz0rju1WeznGgJZD+qfxPQuZzO/hPkw//kbg+Ewj3b1DIhUpqDaq1J+mumM/kT/R6sOdvsDFSI/Trr6W6p5Avm/cROqQp1ikpOfY9//OlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=RH9Kh2bI; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2H9r0W1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3A7C2BCB7;
-	Tue, 28 Apr 2026 12:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777380805;
-	bh=MFTHBWIVPPds/6umCo+/GsrLJiT9dmnX5t+TJKOu5mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q2H9r0W1pFFOcIVTMHsruFr/GMxPujb4LuXdLrJe3uKYcZNxQlHL325YdzeYIaqGb
-	 YgUJCml9iD59Ml9MwxFlDl8g45HE5SHDfQGNKeas7kf1pYmKZ8jVqRDzf6HHicsR74
-	 sZhFSzs8Ra8AOxlyR0j8SYeZmmbjYyl+cqItSnBMh0HfeU971hN2OffDpUKu+aAFBj
-	 GLEtiSpFA8P4RWzmvn81yKRR+hygNgh10efvXltfAPPC4wXMVhE51Jp4/oUrhxxohi
-	 717FMNQI5CLuRE78CHCswC/iUhsYlDYFPjyu26ZyBg3OTRsdTyrq/yecTvXuGJxsmB
-	 j+0ksBK4wyZcg==
-Date: Tue, 28 Apr 2026 14:53:01 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
-	skhan@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org,
-	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
-	saravanak@kernel.org, bhe@redhat.com, vgoyal@redhat.com,
-	dyoung@redhat.com, rdunlap@infradead.org, peterz@infradead.org,
-	pawan.kumar.gupta@linux.intel.com, feng.tang@linux.alibaba.com,
-	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
-	paulmck@kernel.org, lirongqing@baidu.com, leitao@debian.org,
-	ardb@kernel.org, jbohac@suse.cz, cfsworks@gmail.com,
-	tangyouling@kylinos.cn, sourabhjain@linux.ibm.com,
-	ritesh.list@gmail.com, hbathini@linux.ibm.com,
-	eajames@linux.ibm.com, guoren@kernel.org,
-	songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
-	vishal.moola@gmail.com, junhui.liu@pigmoral.tech, coxu@redhat.com,
-	fuqiang.wang@easystack.cn, liaoyuanhong@vivo.com,
-	takahiro.akashi@linaro.org, james.morse@arm.com,
-	lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-ID: <afCtrXaUAGDcseq3@kernel.org>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
- <dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
- <20260428035256.cbb3ac77c4bbb89bb7efcc19@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="RH9Kh2bI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1777380959;
+	bh=3LZCtvQyQQ4G9qvBdWsxGvE48csnHu6g4bVvkSdatkg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=RH9Kh2bIgrRUVjMbXmABLFO+Oasyqmsd+cuNpKkwPZYUql3B/uQYIrNt/2R0it3+l
+	 KczNBXtbIbn4L3wWejQuDnYB5pp+EjwA2uAyBG1E3DUZm387ZjO5EH4dsft8lVDfW6
+	 C044ohcZLZ0T6gjVLhnlmfcIqiyrB6e/YtQLElBA=
+Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 60AB565992;
+	Tue, 28 Apr 2026 08:55:58 -0400 (EDT)
+Message-ID: <197d8afc8c6afe165e60c219b0a08ce6b6698ff9.camel@xry111.site>
+Subject: Re: [PATCH v2] mfd: loongson-se: Add multi-node support
+From: Xi Ruoyao <xry111@xry111.site>
+To: Huacai Chen <chenhuacai@kernel.org>, Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ 	linux-crypto@vger.kernel.org
+Date: Tue, 28 Apr 2026 20:55:56 +0800
+In-Reply-To: <CAAhV-H7SYoN49ZoFi+4V=qyctdzJG0hD=WUBBozewkQzKYia5w@mail.gmail.com>
+References: <20260427165133.23350-1-zhaoqunqin@loongson.cn>
+	 <CAAhV-H7cYTW+6aHHtA9c77XMOhnUrAC_rW25s9d6+xED2oGyAw@mail.gmail.com>
+	 <586ee1d1-c1c4-06fe-992f-c8e43cd9c778@loongson.cn>
+	 <CAAhV-H7nbnLcYs=74pub6SXXrRRv-xPWTXN78wxaRPyGodUaxg@mail.gmail.com>
+	 <9fd34867-9b1d-e097-f800-875efc6c44bd@loongson.cn>
+	 <CAAhV-H7SYoN49ZoFi+4V=qyctdzJG0hD=WUBBozewkQzKYia5w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.60.1 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260428035256.cbb3ac77c4bbb89bb7efcc19@linux-foundation.org>
 
-(added new Baoquan's email)
+T24gTW9uLCAyMDI2LTA0LTI3IGF0IDE4OjAyICswODAwLCBIdWFjYWkgQ2hlbiB3cm90ZToKPiBP
+biBNb24sIEFwciAyNywgMjAyNiBhdCA1OjUy4oCvUE0gUXVucWluIFpoYW8gPHpoYW9xdW5xaW5A
+bG9vbmdzb24uY24+IHdyb3RlOgo+ID4gCj4gPiAKPiA+IOWcqCAyMDI2LzQvMjcg5LiL5Y2INToz
+NywgSHVhY2FpIENoZW4g5YaZ6YGTOgo+ID4gPiBPbiBNb24sIEFwciAyNywgMjAyNiBhdCA1OjI0
+4oCvUE0gUXVucWluIFpoYW8gPHpoYW9xdW5xaW5AbG9vbmdzb24uY24+IHdyb3RlOgo+ID4gPiA+
+IAo+ID4gPiA+IOWcqCAyMDI2LzQvMjcg5LiL5Y2INTowMiwgSHVhY2FpIENoZW4g5YaZ6YGTOgo+
+ID4gPiA+ID4gSGksIFF1bnFpbiwKPiA+ID4gPiA+IAo+ID4gPiA+ID4gT24gTW9uLCBBcHIgMjcs
+IDIwMjYgYXQgNDo1NeKAr1BNIFF1bnFpbiBaaGFvCj4gPiA+ID4gPiA8emhhb3F1bnFpbkBsb29u
+Z3Nvbi5jbj4gd3JvdGU6Cj4gPiA+ID4gPiA+IE9uIHRoZSBMb29uZ3NvbiBwbGF0Zm9ybSwgZWFj
+aCBub2RlIGlzIGVxdWlwcGVkIHdpdGggYQo+ID4gPiA+ID4gPiBzZWN1cml0eSBlbmdpbmUKPiA+
+ID4gPiA+ID4gZGV2aWNlLiBIb3dldmVyLCBkdWUgdG8gYSBoYXJkd2FyZSBmbGF3LCBvbmx5IHRo
+ZSBkZXZpY2Ugb24KPiA+ID4gPiA+ID4gbm9kZSAwIGNhbgo+ID4gPiA+ID4gPiB0cmlnZ2VyIGlu
+dGVycnVwdHMuIFRoZXJlZm9yZSwgaW50ZXJydXB0cyBmcm9tIG90aGVyIG5vZGVzCj4gPiA+ID4g
+PiA+IGFyZSBmb3J3YXJkZWQKPiA+ID4gPiA+ID4gYnkgbm9kZSAwLiBXZSBuZWVkIHRvIGNoZWNr
+IGluIHRoZSBpbnRlcnJ1cHQgaGFuZGxlciBvZiBub2RlCj4gPiA+ID4gPiA+IDAgd2hldGhlcgo+
+ID4gPiA+ID4gPiB0aGlzIGludGVycnVwdCBpcyBpbnRlbmRlZCBmb3Igb3RoZXIgbm9kZXMuCj4g
+PiA+ID4gPiBNdWx0aS1ub2RlIG9yIG11bHRpLXBhY2thZ2U/IEluIG15IG9waW5pb24gU0UgaGFz
+IG5vCj4gPiA+ID4gPiByZWxhdGlvbnNoaXAgd2l0aAo+ID4gPiA+ID4gTlVNQSBub2RlLCBzbyBt
+YXliZSBwYWNrYWdlPwo+ID4gPiA+IEhlcmUgaXMgdGhlIG91dHB1dCBvZiBsc2NwdSBmcm9tIG15
+IG1hY2hpbmU6Cj4gPiA+ID4gCj4gPiA+ID4gW2xvb25nc29uQGxvY2FsaG9zdCB+XSQgbHNjcHUK
+PiA+ID4gPiBBcmNoaXRlY3R1cmU6wqDCoMKgwqDCoMKgwqDCoMKgIGxvb25nYXJjaDY0Cj4gPiA+
+ID4gwqDCoMKgIENQVSBvcC1tb2RlKHMpOsKgwqDCoMKgwqAgMzItYml0LCA2NC1iaXQKPiA+ID4g
+PiDCoMKgwqAgQWRkcmVzcyBzaXplczrCoMKgwqDCoMKgwqAgNDggYml0cyBwaHlzaWNhbCwgNDgg
+Yml0cyB2aXJ0dWFsCj4gPiA+ID4gwqDCoMKgIEJ5dGUgT3JkZXI6wqDCoMKgwqDCoMKgwqDCoMKg
+IExpdHRsZSBFbmRpYW4KPiA+ID4gPiBDUFUocyk6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIDEyOAo+ID4gPiA+IMKgwqDCoCBPbi1saW5lIENQVShzKSBsaXN0OiAwLTEyNwo+ID4gPiA+
+IE1vZGVsIG5hbWU6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMb29uZ3Nvbi0zQzYwMDAvRAo+ID4g
+PiA+IMKgwqDCoCBDUFUgZmFtaWx5OsKgwqDCoMKgwqDCoMKgwqDCoCBMb29uZ3Nvbi02NGJpdAo+
+ID4gPiA+IMKgwqDCoCBNb2RlbDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MTEKPiA+
+ID4gPiDCoMKgwqAgVGhyZWFkKHMpIHBlciBjb3JlOsKgIDIKPiA+ID4gPiDCoMKgwqAgQ29yZShz
+KSBwZXIgc29ja2V0OsKgIDMyCj4gPiA+ID4gwqDCoMKgIFNvY2tldChzKTrCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAyCj4gPiA+ID4gwqDCoMKgIEJvZ29NSVBTOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+NDIwMC4wMAo+ID4gPiA+IMKgwqDCoCBGbGFnczrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IGNwdWNmZyBsYW0gdWFsIGZwdSBsc3ggbGFzeCBjcmMzMgo+ID4gPiA+IGNvbXBsZXggY3J5cHRv
+Cj4gPiA+ID4gbHZ6IGxidF94ODYgbGJ0X2FybSBsYnRfbWlwcwo+ID4gPiA+IENhY2hlcyAoc3Vt
+IG9mIGFsbCk6Cj4gPiA+ID4gwqDCoMKgIEwxZDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCA0IE1pQiAoNjQgaW5zdGFuY2VzKQo+ID4gPiA+IMKgwqDCoCBMMWk6wqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgNCBNaUIgKDY0IGluc3RhbmNlcykKPiA+ID4gPiDCoMKgwqAg
+TDI6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAxNiBNaUIgKDY0IGluc3RhbmNl
+cykKPiA+ID4gPiDCoMKgwqAgTDM6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAx
+MjggTWlCICg0IGluc3RhbmNlcykKPiA+ID4gPiBOVU1BOgo+ID4gPiA+IMKgwqDCoCBOVU1BIG5v
+ZGUocyk6wqDCoMKgwqDCoMKgwqAgNAo+ID4gPiA+IMKgwqDCoCBOVU1BIG5vZGUwIENQVShzKTrC
+oMKgIDAtMzEKPiA+ID4gPiDCoMKgwqAgTlVNQSBub2RlMSBDUFUocyk6wqDCoCAzMi02Mwo+ID4g
+PiA+IMKgwqDCoCBOVU1BIG5vZGUyIENQVShzKTrCoMKgIDY0LTk1Cj4gPiA+ID4gwqDCoMKgIE5V
+TUEgbm9kZTMgQ1BVKHMpOsKgwqAgOTYtMTI3Cj4gPiA+ID4gCj4gPiA+ID4gVGhlcmUgYXJlIGZv
+dXIgU0UgZGV2aWNlcyBpbiBteSBzeXN0ZW0sIG9uZSBmb3IgZWFjaCBOVU1BIG5vZGUuCj4gPiA+
+IEZvciBMb29uZ3Nvbi0zQzYwMDAgbm9kZSBpcyB0aGUgc2FtZSBhcyBwYWNrYWdlLiBZb3Ugc2hv
+dWxkCj4gPiA+IGNvbnNpZGVyCj4gPiA+IExvb25nc29uLTNDNTAwMEwsIG9uZSBwYWNrYWdlIGNv
+bnRhaW5zIGZvdXIgbm9kZXMuCj4gPiAKPiA+IEkgYW0gbm90IGZhbWlsaWFyIHdpdGggdGhlIFNF
+LXJlbGF0ZWQgY29tcG9uZW50cyBvbiB0aGUgM0M1MDAwTCwgYW5kCj4gPiB0aGlzIGRyaXZlciBp
+cyBub3QgY29tcGF0aWJsZSB3aXRoIHRoZSA1MDAwIHNlcmllcy4KPiBXaGV0aGVyIGl0IGlzIGNv
+bXBhdGlibGUgdG8gTG9vbmdzb24tM0M1MDAwTCBpcyBub3QgaW1wb3J0YW50LiBUaGUKPiBpbXBv
+cnRhbmNlIGlzIHBhY2thZ2UgaXMgbm90IGFsd2F5cyBlcXVhbCB0byBub2RlLCBhbmQgd2Ugc2hv
+dWxkCj4gY29uc2lkZXIgd2hldGhlciBTRSBpcyBwZXItbm9kZSBvciBwZXItcGFja2FnZS4KCkZv
+ciBhICJjb21wYXRpYmxlIiBleGFtcGxlLCAzQzYwMDAvRCBoYXMgdHdvIG5vZGVzIGluIGEgcGFj
+a2FnZS4KCi0tIApYaSBSdW95YW8gPHhyeTExMUB4cnkxMTEuc2l0ZT4K
 
-On Tue, Apr 28, 2026 at 03:52:56AM -0700, Andrew Morton wrote:
-> On Tue, 28 Apr 2026 11:30:13 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
-> 
-> > It seems the patches for crash core rework, powerpc, riscv, and arm64
-> > are mostly ready to be merged. Could any maintainer help pick these up,
-> > or should I rebase the entire series against v7.1-rc1?
-> 
-> April 2 is prehistoric ;)
-> 
-> Yes, refresh, retest, resend.  Note that there have been maintainership
-> shuffles in this area.  
-> 
-> KDUMP
-> M:	Andrew Morton <akpm@linux-foundation.org>
-> M:	Baoquan He <bhe@redhat.com>
-> M:	Mike Rapoport <rppt@kernel.org>
-> M:	Pasha Tatashin <pasha.tatashin@soleen.com>
-> M:	Pratyush Yadav <pratyush@kernel.org>
-> R:	Dave Young <ruirui.yang@linux.dev>
-> L:	kexec@lists.infradead.org
-> S:	Maintained
-> F:	Documentation/admin-guide/kdump/
-> F:	fs/proc/vmcore.c
-> F:	include/linux/crash_core.h
-> F:	include/linux/crash_dump.h
-> F:	include/uapi/linux/vmcore.h
-> F:	kernel/crash_*.c
-> 
-> I believe that Pasha/Mike/Pratyush are setting up a git tree, but there
-> isn't one listed here?
-
-On it:
-https://lore.kernel.org/all/20260428124833.1903302-1-rppt@kernel.org/
-https://lore.kernel.org/all/20260428124325.4189486-1-pratyush@kernel.org/
-
--- 
-Sincerely yours,
-Mike.
