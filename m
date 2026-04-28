@@ -1,190 +1,134 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A283D7D96
-	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 08:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A213381B12
+	for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 09:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777366541; cv=none; b=SNSrsrB+1ys8OsxfYZMfDcZDuVh48coN6vzC1fPrNKNULjliSsCdb7bTxlUu2RiS4PEclCOkHJpSGaRjNMvZ5Jl1IYdgmWqtdUCA5oQVPJ5oEpj0r6vZzd2p59UPjOD9W77gLqahS1EFAo6ychj3Dwg6kaz+52a80dbp/0Wlpz0=
+	t=1777368337; cv=none; b=sUceb3O2HEoO0NRnq/WQ+tU372ZmpASHpqFNHmJ/YOTDW+Fg1OwO7LrV0gnCyClkvvGTwIYHb9D8GnQ08VdBKe6imgvxLrMzCBU1f1d4Ziau51yZ4O2PrJ8aMgHiUv04FC7FaRkZ8EHs6DGh8MbYF80UQ0VTDCdoceisBsX2+8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777366541; c=relaxed/simple;
-	bh=XRO9hXcczpCZqlHFjdAi+OnFIEA43cdaykte4Y+3IYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YGZAwLvkE5+dZx7hGT6IHNWtoCXIQasMu/alyX9DwmfxYdeJ0zLibho72DZWkUnzTSHUmjrP4BlHpGCHrW98dqJ3qclkjFXSQayAYF65VQHEpnZaI/z+/c9qWyCFzc3iyjzToDl2mC7Bi9PdSVdUtgWPpv6WgD7jKLnz5VesY5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YBPPTAOG; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YBPPTAOG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1777366514;
-	bh=3QwZDcr6pQcVlMKJBUB30W9/vQj8+plvXfE3JnlR0vM=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=YBPPTAOGqgtmT1oeYWdKaaPuQNdK6IZvlAlmIdSH0iDZBPMhD2jm7tIwKVf94/Gwt
-	 mylbJO6e22MTCYNcTnNBdP+VDFQwEuV/+hCOIluIhOxtTKLby8dthGHbV/crFCS8CY
-	 Y4nCDtoITVgTtIAlr4a+0sfPv80JD4VIHoab1DJs=
-X-QQ-mid: zesmtpip3t1777366509t4fb2f33c
-X-QQ-Originating-IP: j3DMtfU36SbtAUqzSdc8kUfsuWEevpxWeyHzqNC9dqc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 28 Apr 2026 16:55:07 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2491099973822844762
-EX-QQ-RecipientCnt: 8
-From: Wentao Guan <guanwentao@uniontech.com>
-To: chenhuacai@kernel.org
-Cc: wuqianhai@loongson.cn,
-	kernel@xen0n.name,
-	jiaxun.yang@flygoat.com,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Wentao Guan <guanwentao@uniontech.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Fix potential ade in loongson_gpu_fixup_dma_hang()
-Date: Tue, 28 Apr 2026 16:53:55 +0800
-Message-Id: <20260428085355.735827-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1777368337; c=relaxed/simple;
+	bh=WZ0dv++aH+AeLwkvbNXxLqu7wJ3mA6GpS63WG1N27Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HPDdSb3CXLIxV+uuYth0emTLQroHzajfXG22vzh1syWsxfaSx9rSZ/BrwSn4M6r+4zrG0VHIYfIJbGEbDMVbIb1wZP4HjMzmAyVpr2dsvoWUzgoKzBOgvT0WSy2/Jpj+QxQhiJl4+iY4p0BxGCe3ceVzM24zXUff6rXAt0o06cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-65c4152313fso15343093a12.1
+        for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 02:25:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777368328; x=1777973128;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Al22kA6RCf7FSEzj29cZLSkjdM9EgXxihmBX7/SeSVI=;
+        b=e6ppQogVYk46z9c9e+QQ9zGlZmO89UIgrQ8Z7kkvhzI92aVVk/Sk2NG6jkLqQlco4P
+         vW3FTBE1U6cozv5Ji90JmCiEDEl99z1D/BaXH6rxZNg3J8jXh7D2z9PERgjGA1UkvwRV
+         uynebSUsI00bH2/dc9GfK1UZWduOcMJ9ZE6sIhS/g59QrkYhY37sC2tg4tbRDFcSMVnh
+         z/B72uFMs6Roc1g3CAAYaW43IwbFiGpEaGcB9L+J+wEi36G/AiqD7+HAgH1BTMHcXXEi
+         RKqsE+swmFhwTm29k1jthdwr0fNKiX+MKGQmnHrDijZQva1ANFfQkUlGphd/crj75LW+
+         kuaA==
+X-Forwarded-Encrypted: i=1; AFNElJ8A3EjBL6qB2agMoaoTE2cGqw/MgTVxzwvyGtcC5/P3RSrssQKA8BiMJgN4/Sf3HInlRspaxv3lQa0=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywrsag7aQ+pG1X45Km4/YLDj22G7ADReFgXsE1/AV/dxkBTjD5s
+	0hVdypftV1TpZykrEqBpXtE+YD1wZrRKlQnEWk6zEvUNnjVHPnOew5KUZdAlkLwB5Gg=
+X-Gm-Gg: AeBDieu6lslNjIR8Tri5IYIDId9X3iRO5eRX4vVdM0jiFUCz28NhaBxmekLDihlz34R
+	YuLCp4vcBsdRRhyIaRq2VfJQ4Hk5LhqT9B/oNOl3bCnwdZe8qnXxdcPqIJUTNb73a4jgfVqvKnu
+	pe12NMGA8LM9P6wfC/SP1PFZ7MfwpsX+m4LfqDzWihcRxbE/4K74aLmvhdO6uT0GV+QfL7aZ2B5
+	UGB1sqnvD7E6T9oOTsiU0IOmqocVDPCxy4/j/25ElDCbUI0TYkkA8aSmH+p47ISKHpn+jH0OzVq
+	77bJo9mA3eheil9mDh4aEaHUtuGf149WRe90UTI6bVpqRxXRa/o9Gtndxx+8ttFufAIOXxUjcnA
+	h8HZjbbrfPAz9Q8kudei815bm4ITWqGBWKpJ/BmpjPgRmh3QoHz43XewN/6oIe2GWxbM7i9f3Pj
+	eIxJ0wjKsE7t3Lwr2Omd0svs3K7fOFaA3VuWxUICposj8t0ygwwWVQ99wyWCq9BCSJQUTt+VY=
+X-Received: by 2002:a17:906:4796:b0:ba8:1647:3b7b with SMTP id a640c23a62f3a-bb804727ff6mr140070766b.30.1777368327944;
+        Tue, 28 Apr 2026 02:25:27 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bb80b2adef5sm72609566b.40.2026.04.28.02.25.24
+        for <loongarch@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Apr 2026 02:25:24 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-678a526f374so7365037a12.0
+        for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 02:25:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9Y5i2uUGGGr9hwtPjsSLMnN9Zgllmv0flQJRucQr7iuJU+Xo07TPdzs4JW/EXLRs6Dc2R9/oZfB84=@lists.linux.dev
+X-Received: by 2002:a05:6402:5056:b0:676:d8a1:7a04 with SMTP id
+ 4fb4d7f45d1cf-679bb09a4admr915149a12.23.1777368324094; Tue, 28 Apr 2026
+ 02:25:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: M+EijflIknTq/j7GT1tvbBWQBth+SsMUFhaC33GuHb2nRsCWakImoP9f
-	90jFi8ozwkYsmMHgT0saBBFcVvFgfwBhnEyHggBXtoggzDymwQJgOzDGSLztePOMLSlvEIP
-	04KJHBbS1QPvS1MLwWplKdDlQTxDEMkGC8tIUNGm5Lips57wa7TjCvwtl2hksM58Xdz9vQT
-	FNNXctGVU5OsXZdKdgPEyKH/1e1ugN4ZfU+T6DmnCwJpombNdNb4rV5kH3ux29y+YmqG3F3
-	WqKSpsPQpEIcxnn2ESXWCRwYg+mnY9Z5R4AP5a9I0rDlsXjtYiDylIb98jTP+0QJt7sx9Sz
-	Zz7hh3ORCOjmq4P7eEZfCIjb5as4nxQIC1Bve3aaHyy14aTC0iE0so1uhBychIE5FiMKM/r
-	Q3a2CgQqfapQvFw4dmofF68xhmeyHfLduXc4CsG8OejMaqfa8o3p1jKMuk72zg1Eznn5g8B
-	OnLo0yM6jH6ehWExXyHZZaET/7DUq/lRAlohu7c3nWM1n5I6lCrNSEyMOVZTXyC+/Qm0pQO
-	G1X3g2W/lFqKeI2s9x1YwwyzQ0v5thDQKJbHrWQ/O+ewdUO7e2btx0Big8WAL4cY19a5XWV
-	7wV8GI0T5w4YhiD5MMhH/EjaBumeDWyZIa49DHgEFKGHg8rIWPxIwQHGZ3EY1zIBv8KQAlR
-	te8tQuyj1NU5W9TMji2/pRAvFCRoXBSzWy73GtY2eq8gfeKx3hw8rMgy7d+lPvbmXOWoetj
-	pyFeuIxE0ioFWe2Gw4iz+hJFWCBwTLX2nmpOG3BsSpr0qojGlrc4Ge1w92FIEum5FSzv4KQ
-	wTddh2IsOOi+WwkyHc32JjHl1MaLrBKfKWTWGHmP85/e2sKT6rxXaWhB/WuqiorqfMSI6EM
-	w3UrZvy/medqRzeeoTWaXpmN5vlZ1l7wJAIOp9MzttQRgKbHW107mvbLJ/h3BMiquM9nJNk
-	vzS3s6zjHJ4ud2Z0rHXsOvlG9Q/S/fgPdLL1s5EsngqJH3lQWIo488KlxDpu6hWkvxyWvSe
-	fihQ/69oDO2RoxPTD2ZJNGX7eDgtkxS+WX9VnP0yQxbZrpww+sBYl7Ns6cMZ85ikhLYDL0C
-	A==
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
+References: <cover.1777306795.git.chleroy@kernel.org> <c73b90236f2810edd47c84edd2a8d8e8e0c816da.1777306795.git.chleroy@kernel.org>
+In-Reply-To: <c73b90236f2810edd47c84edd2a8d8e8e0c816da.1777306795.git.chleroy@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 28 Apr 2026 11:25:11 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUvTBWoDN_wUo2n8-gkoheJ+-rbwew53OvoAwo8G5n1qg@mail.gmail.com>
+X-Gm-Features: AVHnY4JEWBVPw4tSjHgbQTia8gZd2WGJ1sv6qLdKJbtvs4hms1blpvc35yb0VWw
+Message-ID: <CAMuHMdUvTBWoDN_wUo2n8-gkoheJ+-rbwew53OvoAwo8G5n1qg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 4/9] uaccess: Introduce copy_{to/from}_user_partial()
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Yury Norov <ynorov@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, David Laight <david.laight.linux@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-alpha@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-um@lists.infradead.org, 
+	dmaengine@vger.kernel.org, linux-efi@vger.kernel.org, 
+	linux-fsi@lists.ozlabs.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	linux-wpan@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, bpf@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-mm@kvack.org, linux-x25@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-sound@vger.kernel.org, sound-open-firmware@alsa-project.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-sh@vger.kernel.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The switch case in loongson_gpu_fixup_dma_hang() may not DC2 or DC3,
-and readl(crtc_reg) will access with random address,
-because device is from base+PCI_DEVICE_ID, base is from pdev->devfn+1,
-it is wrong when my platform inserts a gpu:
-lspci -tv
--[0000:00]-+-00.0  Loongson Technology LLC Hyper Transport Bridge Controller
-...
-           +-06.0  Loongson Technology LLC LG100 GPU
-           +-06.2  Loongson Technology LLC Device 7a37
-...
+Hi Christophe,
 
-Add a default switch case to fix it.
+Thanks for your patch!
 
-Before:
-[    0.807099] Kernel ade access[#1]:
-[    0.810472] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.6.136-loong64-desktop-hwe+ #4
-[    0.818252] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
-[    0.831992] pc 90000000017e5534 ra 90000000017e54c0 tp 90000001002f8000 sp 90000001002fb6c0
-[    0.840289] a0 80000efe00003100 a1 0000000000003100 a2 0000000000000000 a3 0000000000000002
-[    0.848585] a4 90000001002fb6b4 a5 900000087cdb58fd a6 90000000027af000 a7 0000000000000001
-[    0.856882] t0 00000000000085b9 t1 000000000000ffff t2 0000000000000000 t3 0000000000000000
-[    0.865179] t4 fffffffffffffffd t5 00000000fffb6d9c t6 0000000000083b00 t7 00000000000070c0
-[    0.873475] t8 900000087cdb4d94 u0 900000087cdb58fd s9 90000001002fb826 s0 90000000031c12c8
-[    0.881771] s1 7fffffffffffff00 s2 90000000031c12d0 s3 0000000000002710 s4 0000000000000000
-[    0.890067] s5 0000000000000000 s6 9000000100053000 s7 7fffffffffffff00 s8 90000000030d4000
-[    0.898364]    ra: 90000000017e54c0 loongson_gpu_fixup_dma_hang+0x40/0x210
-[    0.905195]   ERA: 90000000017e5534 loongson_gpu_fixup_dma_hang+0xb4/0x210
-[    0.912023]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-[    0.918165]  PRMD: 00000004 (PPLV0 +PIE -PWE)
-[    0.922489]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-[    0.927246]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
-[    0.932002] ESTAT: 00480000 [ADEM] (IS= ECode=8 EsubCode=1)
-[    0.937535]  BADV: 7fffffffffffff00
-[    0.940992]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
-[    0.946956] Modules linked in:
-[    0.949982] Process swapper/0 (pid: 1, threadinfo=(____ptrval____), task=(____ptrval____))
-[    0.958193] Stack : 0000000000000006 90000001002fb778 90000001002fb704 0000000000000007
-[    0.966147]         0000000016a65700 90000000017e5690 000000000000ffff ffffffffffffffff
-[    0.974100]         900000000209f7c0 9000000100053000 900000000209f7a8 9000000000eebc08
-[    0.982053]         0000000000000000 0000000000000000 0000000000000006 90000001002fb778
-[    0.990006]         90000001000530b8 90000000027af000 0000000000000000 9000000100054000
-[    0.997959]         9000000100053000 9000000000ebb70c 9000000100004c00 9000000004000001
-[    1.005913]         90000001002fb7e4 bae765461f31cb12 0000000000000000 0000000000000000
-[    1.013866]         0000000000000006 90000000027af000 0000000000000030 90000000027af000
-[    1.021819]         900000087cd6f800 9000000100053000 0000000000000000 9000000000ebc560
-[    1.029772]         7a2500147cdaf720 bae765461f31cb12 0000000000000001 0000000000000030
-[    1.037725]         ...
-[    1.040146] Call Trace:
-[    1.040148] [<90000000017e5534>] loongson_gpu_fixup_dma_hang+0xb4/0x210
-[    1.049138] [<9000000000eebc08>] pci_fixup_device+0x108/0x280
-[    1.054846] [<9000000000ebb70c>] pci_setup_device+0x24c/0x690
-[    1.060551] [<9000000000ebc560>] pci_scan_single_device+0xe0/0x140
-[    1.066688] [<9000000000ebc684>] pci_scan_slot+0xc4/0x280
-[    1.072048] [<9000000000ebdd00>] pci_scan_child_bus_extend+0x60/0x3f0
-[    1.078444] [<9000000000f5bc94>] acpi_pci_root_create+0x2b4/0x420
-[    1.084498] [<90000000017e5e74>] pci_acpi_scan_root+0x2d4/0x440
-[    1.090376] [<9000000000f5b02c>] acpi_pci_root_add+0x21c/0x3a0
-[    1.096168] [<9000000000f4ee54>] acpi_bus_attach+0x1a4/0x3c0
-[    1.101788] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
-[    1.107755] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
-[    1.113892] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
-[    1.119511] [<90000000010e200c>] device_for_each_child+0x6c/0xe0
-[    1.125476] [<9000000000f4bbf4>] acpi_dev_for_each_child+0x44/0x70
-[    1.131612] [<9000000000f4ef40>] acpi_bus_attach+0x290/0x3c0
-[    1.137231] [<9000000000f5211c>] acpi_bus_scan+0x6c/0x280
-[    1.142591] [<900000000189c028>] acpi_scan_init+0x194/0x310
-[    1.148125] [<900000000189bc6c>] acpi_init+0xcc/0x140
-[    1.153139] [<9000000000220cdc>] do_one_initcall+0x4c/0x310
-[    1.158672] [<90000000018618fc>] kernel_init_freeable+0x258/0x2d4
-[    1.164726] [<900000000184326c>] kernel_init+0x28/0x13c
-[    1.169914] [<9000000000222008>] ret_from_kernel_thread+0xc/0xa4
-[    1.175878]
-[    1.177349] Code: 0015001b  02c022f9  0010efd8 <2400030c> 0040818c  38720005  40006380  240002ed  034401ad
-[    1.187034]
+On Mon, 27 Apr 2026 at 19:18, Christophe Leroy (CS GROUP)
+<chleroy@kernel.org> wrote:
+> Today there are approximately 3000 calls for copy_to_user() and
+> 3000 calls to copy_from_user().
+>
+> The majority of callers of copy_{to/from}_user() don't care about the
+> return value, they only check whether it is 0 or not, and when it is
+> not 0 they handle it as a -EACCES.
 
-After:
-[    0.808160] pci 0000:00:06.0: Not find match device
-[    0.813002] pci 0000:00:06.0: [0014:7a25] type 00 class 0x040000
-[    0.818970] pci 0000:00:06.0: BAR 0 [mem 0xe8025162000-0xe80251620ff 64bit]
-[    0.825887] pci 0000:00:06.0: BAR 2 [mem 0xe8010000000-0xe801fffffff 64bit]
-[    0.832804] pci 0000:00:06.0: BAR 4 [mem 0xe8025120000-0xe802512ffff 64bit]
-[    0.839750] pci 0000:00:06.2: [0014:7a37] type 00 class 0x040300
-[    0.845718] pci 0000:00:06.2: BAR 0 [mem 0xe8025110000-0xe802511ffff 64bit]
+I think the "a" can be dropped.
 
-Cc: stable@vger.kernel.org
-Fixes: 95db0c9f526d ("LoongArch: Workaround LS2K/LS7A GPU DMA hang bug")
-Link: https://gist.github.com/opsiff/ebf2dac51b4013d22462f2124c55f807
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
-changelog v2:
-reformat commit msg and add a full dmesg log link to it.
+> In order to allow better optimisation of copy_{to/from}_user() when
+> the size of the copy is known at build time, create new fonctions
 
----
----
- arch/loongarch/pci/pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+functions
 
-diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-index d233ea2218fe0..9420d484f1f82 100644
---- a/arch/loongarch/pci/pci.c
-+++ b/arch/loongarch/pci/pci.c
-@@ -132,6 +132,10 @@ static void loongson_gpu_fixup_dma_hang(struct pci_dev *pdev, bool on)
- 		crtc_reg = regbase;
- 		crtc_offset = 0x400;
- 		break;
-+	default:
-+		iounmap(regbase);
-+		pci_info(pdev, "Not find match device\n");
-+		return;
- 	}
- 
- 	for (i = 0; i < CRTC_NUM_MAX; i++, crtc_reg += crtc_offset) {
+> named copy_{to/from}_user_partial() to be used by the few callers
+> that are interested in partial copies and need to now how many
+
+know
+
+> bytes remain at the end of the copy.
+>
+> For the time being it is just the same as copy_{to/from}_user().
+>
+> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.30.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
