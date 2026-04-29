@@ -1,78 +1,153 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA89A347537
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 08:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A842C388E5C
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 08:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777451009; cv=none; b=XMvljOjInUUPAEejANHRSH9JXsPfImYbTkugKEzBO1xv9l60KLAs4NA122UM935nVtGfKYl81tBgvrEEQdzZmCW2H1M8+tiaCBJ6ahHdGOYzfqQlfn7jB1CrLHwir08SWj+ROgB0Jz0mWNysew5MQqOFyBZ7l/h8iVL9+Uuyr5o=
+	t=1777452954; cv=none; b=sW8QiEj1SYVh9XApVOCPCpPGNZaB1as7JIDmCapZXFBWR6cKb2vgM/M4ARC0F/wZnpq2tgNJRzfSCdG3UuC2V7Y25udoLwLN2vWNeH9WqS5JdW7pMYB6GoHuDCHLc5YuCxPpS/prwNzZix5LDhCGDmP0EV2ngGMhMk9A0h4PPo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777451009; c=relaxed/simple;
-	bh=eRNRyNdidZRxIOcsxwtVWH6uNMEaN1rVXKzz2RrTKP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ehtECAAwGIy1N/DDz/nohUOC2URDoGglVY3BBYDw1w8Uz+rDcWjQu/op6h6Y6AF3OAQfSe7WAsj+ndNcfsDGLXUpfM+iKsZCPCzNUd1s3ggSk1LOyNFMMQgE3B8VCTyptVepbillsl0Yb/qSxtT1Ua2gxH8HLNHx+GCxSci30Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ab21a42243a411f1aa26b74ffac11d73-20260429
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:4d4166f6-496d-448f-ae46-fd6abee5db6c,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:7
-X-CID-INFO: VERSION:1.3.12,REQID:4d4166f6-496d-448f-ae46-fd6abee5db6c,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:7
-X-CID-META: VersionHash:e7bac3a,CLOUDID:7cfc717089355e2558956236c985aa7e,BulkI
-	D:260429154131KCWQ9OGE,BulkQuantity:1,Recheck:0,SF:17|19|38|64|66|78|80|81
-	|82|83|101|102|127|817|841|898,TC:nil,Content:-10|-8|-5|15|50,EDM:-3,IP:-2
-	,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1
-	,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: ab21a42243a411f1aa26b74ffac11d73-20260429
-X-User: cuitao@kylinos.cn
-Received: from [192.168.108.130] [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <cuitao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 1719461692; Wed, 29 Apr 2026 16:23:15 +0800
-Message-ID: <08049275-494f-46e1-8f74-5c5451f1fd17@kylinos.cn>
-Date: Wed, 29 Apr 2026 16:23:11 +0800
+	s=arc-20240116; t=1777452954; c=relaxed/simple;
+	bh=O/GSs85hzvhIPvia2rR93WkBMTqT8ZjtriJwaDoYRSE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VsbQ6IcAB1/kM/MtK08507tvGNw3xlxYBDbjGeTF5lbt0kADe5dwht2977xSTmi08t+LbyUl8Cyjzf0FrdIB3CXnd3TY3vD6U+WZt/b//Vy4oxGqmLHm76jvtwhC6zhKo0QpQb/4JUn1PL/rsg8xM9A8A3fZE1D+dpnasqjhmIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao+pO9gi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao+pO9gi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E364C2BCB3
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 08:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777452954;
+	bh=O/GSs85hzvhIPvia2rR93WkBMTqT8ZjtriJwaDoYRSE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Ao+pO9gi/I3imCbNIy5j+uLyA/XLQrE2+a2fYp0glFV1aTonAYK1hF/q3WMwazKm3
+	 /37N5d3uRKpIFHuQ9zQGOoepvkdPlt8ObKdTxUgaeZs7tjz732rYw+2WDvmmEFv8US
+	 Qa9I1thHu9VubGRAwcKLoxotRR+MgpNGZBkvXAud/KKQ8OQPEiAn42v5O63EaopNCY
+	 D9WQ8KI4iHH/caz6IZ/27HHvxkdEJpYTQP4E2acwEgocxUzO0ODKQrB8+PIW9aiJgR
+	 ssfaAtUVeFn1wPO6AKIH4wfQLwA3h8jXWXpPklzSThokvEq/y6n9F9yXRolZShDtNF
+	 2382vloSwownQ==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 39C0EF4006F;
+	Wed, 29 Apr 2026 04:55:53 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Wed, 29 Apr 2026 04:55:53 -0400
+X-ME-Sender: <xms:mcfxaa8r7iLLvvCaQaNA2J_zX2XcLROJ8T-qnCliDuMPGYQ3yXsOcg>
+    <xme:mcfxaVinir3A7wgq6jssaVlXkWC988F_OvC4622_Vw3GcJhbDLiJYpd-JHw6kvVUN
+    1mMM7jKG6w1Qsv65LaQG0MB887iXohz8XnVZi-o4qnhB6dPIneyAG4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekgedtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhguuceu
+    ihgvshhhvghuvhgvlhdfuceorghruggssehkvghrnhgvlhdrohhrgheqnecuggftrfgrth
+    htvghrnhepvdeuheeitdevtdelkeduudetgffftdelteefteevjeevjeeiheefhfejieej
+    fedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudeijedthedttdejledq
+    feefvdduieegudehqdgrrhgusgeppehkvghrnhgvlhdrohhrghesfihorhhkohhfrghrug
+    drtghomhdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
+    oheplhhishgrsegshihtvghflhihrdhsphgrtggvpdhrtghpthhtoheprheshhgvvhdrtg
+    gtpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehilhhirghsrdgrphgrlhhoughimhgrsheslhhinhgrrhhordhorhhgpdhrtghpth
+    htoheplhhoohhnghgrrhgthheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthho
+    pehsuhhnhhgrihihohhngheslhhoohhnghhsohhnrdgtnhdprhgtphhtthhopehlihhnuh
+    igqdgvfhhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvg
+    hlseigvghntdhnrdhnrghmvg
+X-ME-Proxy: <xmx:mcfxac_YUM7RMumUvrTuQ7hKTLoUgmX3wwmjgevCuWWDwjHx1ziqkQ>
+    <xmx:mcfxaRQx1lNUfZl-OD7IF3hBXKoLYIp6dk0pDqvNCXbz9kXQC_CstQ>
+    <xmx:mcfxaWcWYSytjBvK2bIJe5YO_BD2Frpbb8-7RgB2zRliNm90g-ATWQ>
+    <xmx:mcfxaTQV4EhZwOQxmqOKHO8-XM58Mc56aY_80zNHIyjegez2u9caHQ>
+    <xmx:mcfxaSKXg1rxLP9ifMuDo7uRRunsfJUeH-sGomB9LDrXyY1LleKP8Ctp>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 172DB700065; Wed, 29 Apr 2026 04:55:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch/KVM: Simplify _kvm_pte_init with memset64
-To: Huacai Chen <chenhuacai@kernel.org>, Bibo Mao <maobibo@loongson.cn>
-Cc: zhaotianrui@loongson.cn, loongarch@lists.linux.dev, kernel@xen0n.name
-References: <20260428131138.409698-1-cuitao@kylinos.cn>
- <be0a5d0c-b2c9-67f5-7497-977acc6fa1f9@loongson.cn>
- <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
-From: Tao Cui <cuitao@kylinos.cn>
-In-Reply-To: <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 29 Apr 2026 10:55:32 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "WANG Rui" <r@hev.cc>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: "WANG Xuerui" <kernel@xen0n.name>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "Haiyong Sun" <sunhaiyong@loongson.cn>, "Lisa Robinson" <lisa@bytefly.space>,
+ loongarch@lists.linux.dev, linux-efi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <cdbbe14e-c677-4c32-b7e6-19e76a716171@app.fastmail.com>
+In-Reply-To: <20260429051318.1581350-2-r@hev.cc>
+References: <20260429051318.1581350-1-r@hev.cc>
+ <20260429051318.1581350-2-r@hev.cc>
+Subject: Re: [PATCH v3 1/3] efi/loongarch: Randomize kernel preferred address for KASLR
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
 
->>>
->> what is the benefit of memset64() here? I think that 8x loop unrolling
->> is better from performance side. The page size is 16K or 4K and buffer
->> is large enough, unrolling seems to be better.
-> I agree.
+
+On Wed, 29 Apr 2026, at 07:13, WANG Rui wrote:
+> Introduce efi_get_kimg_kaslr_address() to compute the preferred
+> kernel image address dynamically when CONFIG_RANDOMIZE_BASE is
+> enabled. The function derives a random offset using EFI-provided
+> randomness combined with the timer value, and constrains it within
+> CONFIG_RANDOMIZE_BASE_MAX_OFFSET.
+>
+> Update EFI_KIMG_PREFERRED_ADDRESS to call this helper so that the
+> EFI stub can select a randomized load address when KASLR is active,
+> while preserving the original base address behavior when KASLR is
+> disabled or nokaslr is specified.
+>
+> Signed-off-by: WANG Rui <r@hev.cc>
+> ---
+>  arch/loongarch/include/asm/efi.h         |  4 +++-
+>  drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++++++++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/asm/efi.h
+> index eddc8e79b3fa..f831320efd41 100644
+> --- a/arch/loongarch/include/asm/efi.h
+> +++ b/arch/loongarch/include/asm/efi.h
+> @@ -30,6 +30,8 @@ static inline unsigned long efi_get_kimg_min_align(void)
+>  	return SZ_2M;
+>  }
 > 
-> Huacai
->>
->> Regards
->> Bibo Mao
->>
+> -#define EFI_KIMG_PREFERRED_ADDRESS	PHYSADDR(VMLINUX_LOAD_ADDRESS)
+> +unsigned long efi_get_kimg_kaslr_address(void);
+> +
 
-Thanks a lot for your review, Bibo and Huacai.
-You are absolutely right. When I looked at the usage of this function, I only intended to make the implementation functionally simpler, but overlooked the performance benefits of the loop unrolling. With PTRS_PER_PTE = 2048, the generic implementation is indeed less performant than the current version with 8-fold loop unrolling.
+Where is the call to this function being added?
 
-Thanks.
---
-Tao Cui
+> +#define EFI_KIMG_PREFERRED_ADDRESS	efi_get_kimg_kaslr_address()
+> 
+>  #endif /* _ASM_LOONGARCH_EFI_H */
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c 
+> b/drivers/firmware/efi/libstub/loongarch.c
+> index 9825f5218137..51997a0e83bd 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -38,6 +38,22 @@ static efi_status_t exit_boot_func(struct 
+> efi_boot_memmap *map, void *priv)
+>  	return EFI_SUCCESS;
+>  }
+> 
+> +unsigned long efi_get_kimg_kaslr_address(void)
+> +{
+> +	unsigned int random_offset = 0;
+> +
+> +#ifdef CONFIG_RANDOMIZE_BASE
+> +	if (!efi_nokaslr) {
+> +		efi_get_random_bytes(sizeof(random_offset), (u8 *)&random_offset);
+> +		random_offset ^= (random_get_entropy() << 16);
+> +		random_offset &= (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1);
+> +		random_offset = ALIGN(random_offset + SZ_64K, SZ_64K);
+> +	}
+> +#endif
+> +
+> +	return PHYSADDR(VMLINUX_LOAD_ADDRESS) + random_offset;
+> +}
+> +
+>  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
+>  		efi_loaded_image_t *image)
+>  {
+> -- 
+> 2.54.0
