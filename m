@@ -1,109 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B05396B8C
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3424824A07C
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777448484; cv=none; b=dqd8AHxCL/eGcvr5xN8VuFDzMol2FKiv/jxcn4nJ3nvzRuk6WLqcqHA7aeSwvjf37h6GhvX1or+X81ir2qM6gW1e/MuQXnZqL37Z/qFwx/AOV6Zhy0Vx8C55eM0IyXkEheNXqz0umBEHRVK0YSo5owshG89eE7to2uEGW1d5+/0=
+	t=1777449132; cv=none; b=LBFDo2ir4Wi6uFvDhS2vkCbheBuEWoWDQ3BRQzRPbPalRcp5UdR95Bi+zfGX5gSZvVIwGusSyVFfdnRAgHxz07CPczhJ487Clvyl6k8ntHIK/yvdhN/88T511Tua98jn7RGG5SIGzIO+rVN5TqSLGVDgBU9wnvQzqSldtOtsBiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777448484; c=relaxed/simple;
-	bh=tfgltojnPARN6P2pY2wDnIJyy7vczKs8oP43rS2BJ5k=;
+	s=arc-20240116; t=1777449132; c=relaxed/simple;
+	bh=P+uO0jmXBfzlb55uzSAkZvd5lXOzZiIUwbZcV3ztWeM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dEZKmgNPc9jPhhVa0mTfFTMHGevUL9LGwi+d1oJXim5hrGvB7L9mONTG+54WpksBYM0RqN4jpo+BjH0Por+rZzJTOGwMQuQyQGFoqlgIdccEXG8bHmqzSqKPtG9VTcX2uLASealzy78g8oi0eCI/9g91ZLJIGoutL9fuROP7X80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyJEEuZK; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=eZc3ZKUKH8RmV4laLkmyzQvng6kDbROiPwavDbBF8lt9ssNDCrHjsjX4nJIkQtDHlasNwLL25fHsdRvQIdnmGOxSNSJyXyQNgu2DPyKuY3NZbef7iAS7RJHF9nF+wJzJi75yYefGaWbUCHfAPm37jk+lIRuEtcVcyqutiE2Z4ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNmUpk24; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyJEEuZK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19340C2BCC6
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNmUpk24"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6320C2BCC9
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777448484;
-	bh=tfgltojnPARN6P2pY2wDnIJyy7vczKs8oP43rS2BJ5k=;
+	s=k20201202; t=1777449131;
+	bh=P+uO0jmXBfzlb55uzSAkZvd5lXOzZiIUwbZcV3ztWeM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uyJEEuZKjxH4ZN2DxKHt2uYNlk9wW/z1JpdRIFsGPqYBN4LcSoLrLWWan8VWN7QYm
-	 S8RvyqqViRP4sbouAaOeMIoCYyKUC+zJ35U8v/99sbIBzTSzpPx1rwV7xQ+CaptWbG
-	 G9yYMaPLogtu94iMiMpAZQJ30s2teORQUeXWG9ierXLstzssuXK7DE5X4sz96bEzQB
-	 y3aHnJdK30Mwd+St+yqBhO2Fe5pyj3I42he7zudCDPEoUhINbKzoMCxxBzkIYNC+NI
-	 HBs9PB8zuJimeQ1845lj8Y6TAEWFa64bNGNyU1nfSVuWurWpsPQu0/VYPKsC5QoNAO
-	 YObq9jamcfrzA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-678adefbd26so8175535a12.3
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:41:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9Ui6HZiThJaj/Cnj6NfjJj2Keag/5usFiYYg7cfK/jDLf8nG7RLQwvlsM1+k4IntQ/IURx8TGfaKI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyrs4WYEfq6CyhcC8V3sBxvqPdlTrEAkXFZNHADjFLey+UBluYK
-	PKM/HMSzpeIFXFztDSfp1jZcvsYAoxpTeGgPDwll0Bu5+3nVG2Fk0us2Ywlx7YMey27OKn3KEqj
-	NbGGd1WVErVp+Tj3lbk8VcBbAI3hzzu0=
-X-Received: by 2002:a17:907:6d19:b0:bab:14bc:165c with SMTP id
- a640c23a62f3a-bb80472760dmr372932866b.29.1777448482612; Wed, 29 Apr 2026
- 00:41:22 -0700 (PDT)
+	b=UNmUpk24wwiLOUY94+cXrISZUm5JTcRjZ46K9nk2x6SLkYrmZ6zwec98Uv6aFT7Hf
+	 rRLT12dViD5IrV7RRiOQH5a5jxxFifC+s9vDTbjOfNLkBJ2QhuZSDUbhku7lZnEjA2
+	 Dm4jjP+SS/chINGTLbIqM58dgu7VTgrNBlstxBPAcZ3ux+mk2f9QHuQVZaKPf+W8Ts
+	 7YTzwC2ZDNm0wRfcQUTyQGBFst6QluLeG25+mI35MU6Nza0GhRkxRz7ZrWglgVNfHj
+	 ESdXFknZOsCjg21qavhuMI5dALWKMcIH7CrgZaEKUB8htmriLqaLkw/MbVz8Bz1/rM
+	 rWyw4riDdIo8w==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ba92146cc86so1404892866b.1
+        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:52:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9NwIiT4SCugvaRH21tdARyYW0L5zuMMN0fLvpLfUAXCFLspJkmlWt3SCsp/v0wWeebB3rJp75EPZw=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyRppaGQJRxNbdcMuSQyg21Xl3f/OLg09VJrmyPMnEYTYsxDyN2
+	7/Q81odZg8iZisbMvdaBSyD+rakS3bKi3JJnyaEGTrJkcV/TgSb3b+zUrWWcFpUL7rzYjXYDFLF
+	5zF88HVKb4CEWDa5Tf+YJoMETqmF2FGs=
+X-Received: by 2002:a17:907:3c84:b0:bae:2adb:1461 with SMTP id
+ a640c23a62f3a-bb80100e70emr397819266b.9.1777449130365; Wed, 29 Apr 2026
+ 00:52:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260428131138.409698-1-cuitao@kylinos.cn> <be0a5d0c-b2c9-67f5-7497-977acc6fa1f9@loongson.cn>
-In-Reply-To: <be0a5d0c-b2c9-67f5-7497-977acc6fa1f9@loongson.cn>
+References: <20260429051318.1581350-1-r@hev.cc> <20260429051318.1581350-2-r@hev.cc>
+In-Reply-To: <20260429051318.1581350-2-r@hev.cc>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 15:41:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
-X-Gm-Features: AVHnY4Il1GlXcRvABafIK1RFhH35GTOWvNzS9_44Kofd646fhU6We0zY17F8xNc
-Message-ID: <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch/KVM: Simplify _kvm_pte_init with memset64
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Tao Cui <cuitao@kylinos.cn>, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
-	kernel@xen0n.name
+Date: Wed, 29 Apr 2026 15:51:56 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H76sdWQ02S=jTKJWFviZ0HHGXSWPT9Nwh9b4QFj1v9wpQ@mail.gmail.com>
+X-Gm-Features: AVHnY4Ki22xNhThmDFd37k_0EleXB43gBpiP61uVcWv-C6prgKNU2qiVxWIUcV0
+Message-ID: <CAAhV-H76sdWQ02S=jTKJWFviZ0HHGXSWPT9Nwh9b4QFj1v9wpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] efi/loongarch: Randomize kernel preferred address
+ for KASLR
+To: WANG Rui <r@hev.cc>
+Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Haiyong Sun <sunhaiyong@loongson.cn>, 
+	Lisa Robinson <lisa@bytefly.space>, loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 29, 2026 at 3:34=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
+Hi, Ard,
+
+On Wed, Apr 29, 2026 at 1:14=E2=80=AFPM WANG Rui <r@hev.cc> wrote:
 >
+> Introduce efi_get_kimg_kaslr_address() to compute the preferred
+> kernel image address dynamically when CONFIG_RANDOMIZE_BASE is
+> enabled. The function derives a random offset using EFI-provided
+> randomness combined with the timer value, and constrains it within
+> CONFIG_RANDOMIZE_BASE_MAX_OFFSET.
 >
+> Update EFI_KIMG_PREFERRED_ADDRESS to call this helper so that the
+> EFI stub can select a randomized load address when KASLR is active,
+> while preserving the original base address behavior when KASLR is
+> disabled or nokaslr is specified.
 >
-> On 2026/4/28 =E4=B8=8B=E5=8D=889:11, Tao Cui wrote:
-> > Replace the manual 8x loop unrolling in _kvm_pte_init() with a single
-> > memset64() call.
-> >
-> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> > ---
-> >   arch/loongarch/kvm/mmu.c | 16 +---------------
-> >   1 file changed, 1 insertion(+), 15 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-> > index e104897aa532..5a56dd5dcd4a 100644
-> > --- a/arch/loongarch/kvm/mmu.c
-> > +++ b/arch/loongarch/kvm/mmu.c
-> > @@ -122,21 +122,7 @@ kvm_pte_t *kvm_pgd_alloc(void)
-> >
-> >   static void _kvm_pte_init(void *addr, unsigned long val)
-> >   {
-> > -     unsigned long *p, *end;
-> > -
-> > -     p =3D (unsigned long *)addr;
-> > -     end =3D p + PTRS_PER_PTE;
-> > -     do {
-> > -             p[0] =3D val;
-> > -             p[1] =3D val;
-> > -             p[2] =3D val;
-> > -             p[3] =3D val;
-> > -             p[4] =3D val;
-> > -             p +=3D 8;
-> > -             p[-3] =3D val;
-> > -             p[-2] =3D val;
-> > -             p[-1] =3D val;
-> > -     } while (p !=3D end);
-> > +     memset64(addr, val, PTRS_PER_PTE);
-> >   }
-> >
-> >   /*
-> >
-> what is the benefit of memset64() here? I think that 8x loop unrolling
-> is better from performance side. The page size is 16K or 4K and buffer
-> is large enough, unrolling seems to be better.
-I agree.
+> Signed-off-by: WANG Rui <r@hev.cc>
+If you have no objections, can you give an Acked-by? I thinks this
+series should go to loongarch tree.
 
 Huacai
+
+> ---
+>  arch/loongarch/include/asm/efi.h         |  4 +++-
+>  drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++++++++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
 >
-> Regards
-> Bibo Mao
+> diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/as=
+m/efi.h
+> index eddc8e79b3fa..f831320efd41 100644
+> --- a/arch/loongarch/include/asm/efi.h
+> +++ b/arch/loongarch/include/asm/efi.h
+> @@ -30,6 +30,8 @@ static inline unsigned long efi_get_kimg_min_align(void=
+)
+>         return SZ_2M;
+>  }
+>
+> -#define EFI_KIMG_PREFERRED_ADDRESS     PHYSADDR(VMLINUX_LOAD_ADDRESS)
+> +unsigned long efi_get_kimg_kaslr_address(void);
+> +
+> +#define EFI_KIMG_PREFERRED_ADDRESS     efi_get_kimg_kaslr_address()
+>
+>  #endif /* _ASM_LOONGARCH_EFI_H */
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/=
+efi/libstub/loongarch.c
+> index 9825f5218137..51997a0e83bd 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -38,6 +38,22 @@ static efi_status_t exit_boot_func(struct efi_boot_mem=
+map *map, void *priv)
+>         return EFI_SUCCESS;
+>  }
+>
+> +unsigned long efi_get_kimg_kaslr_address(void)
+> +{
+> +       unsigned int random_offset =3D 0;
+> +
+> +#ifdef CONFIG_RANDOMIZE_BASE
+> +       if (!efi_nokaslr) {
+> +               efi_get_random_bytes(sizeof(random_offset), (u8 *)&random=
+_offset);
+> +               random_offset ^=3D (random_get_entropy() << 16);
+> +               random_offset &=3D (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1)=
+;
+> +               random_offset =3D ALIGN(random_offset + SZ_64K, SZ_64K);
+> +       }
+> +#endif
+> +
+> +       return PHYSADDR(VMLINUX_LOAD_ADDRESS) + random_offset;
+> +}
+> +
+>  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
+>                 efi_loaded_image_t *image)
+>  {
+> --
+> 2.54.0
 >
