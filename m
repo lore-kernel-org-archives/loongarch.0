@@ -1,93 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E2137AA75
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 02:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 233A654652
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 03:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777428816; cv=none; b=ZhaRwmBfSe8PfG2pBuWYTtQAYaG1hTlo6h1ucw41mGMdf/c/4DYxeUWuBvpB8B9SRd3+3caVfRuwtB0kV1xmBuWtZFW4TPz9Y6iYLo32V5nzTmp0+H5mhCZI0GTgxReRkZ99nwxrHzYADxvAjfQne0YBf47Yve8gsnsISayinjc=
+	t=1777433138; cv=none; b=W5Yh7WoMVWOqZKEJAuim9OYSiIvrSD5ZKcE2dOB1HVq32XlBPMtT5aJlTEzyz9o8A8YMdznioias1bpdexhSfXFNcXkMuS9J1lr18GEZGsmfRoh31tlDnQZEtVn0hRrIzLQaduu5GkE39mp3WEzqkpA8b2N3Tr2lvuXagh+2eTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777428816; c=relaxed/simple;
-	bh=CZhZjA/V8YQXHozPRSRl9vZB3SD/37d7jA6HK8SoGBk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HJJptG0Xwxp8q1efGTOWxQ7JIA2ms9EwIdj6muRiJr2IhwYOsDR3bCLAF0kR9hfT9JMDjsBBkRNp/AoIwv7xRTyJ6qzjWdWIWpk19Fj/TirDkkJl53ZD89V6/O4V2RcOd0cYo98kFZDI4dvGRiiFg5wBm6iHjK19x0L+mSFnGHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koUxL+2X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koUxL+2X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E0FAC2BCF4
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 02:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777428815;
-	bh=CZhZjA/V8YQXHozPRSRl9vZB3SD/37d7jA6HK8SoGBk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=koUxL+2X9LqzxRYuy85jPIHNw6xM8uzk8F6rZmFnwHzYhxk+2+3hJAzjDaPbPGTpC
-	 O3LCCjf7Rj4TBL23OYk/CsJqePoO6XF0OhKHOEzp2EW6UlyLIaZQf3mPW52WVpbgoD
-	 cDzqgqoy5ENsdZtyvOaj9K7W1RufTG1LXObuFjsQDJfrBRKoiLXKgjAgkbnqmZ8v3j
-	 LKpehk/I0p5rN/ja/pKkOUl0s4jJaospNt/e9MmUO4QrIICUSaJFNLhEdM2BBLNFBr
-	 KjGaIQ0cEKLX8PAPg1JtcTrmFZMFF6LOOkV3787sJDDxMQEbwGmMeEMAioeuocipzY
-	 HZYvYTc5k2j+w==
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6794b8699b8so4699105a12.1
-        for <loongarch@lists.linux.dev>; Tue, 28 Apr 2026 19:13:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/8zKEniWt6jiqiedmHS5hH8FR1cLmjbMZ5jI6iYnRT1MxA5bxbKaA+QDu8WVCQ2a9rqjaYFsrgcyQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyd+mpxB0iAQ5TF/L1gi13Bu09ensAeVu8DNhGmNKnt/6r/4wXO
-	SprXImiISx7Vh5j7eBFhFEQKyum2wwH7KG5gHYZMzDfYhrdHLYPC/3a6+B3ua890dKJ2wg8t3py
-	obb7MqszOIcwu4q7guVC8dxrjmHKwyRg=
-X-Received: by 2002:a17:907:3f98:b0:bb8:b525:cf18 with SMTP id
- a640c23a62f3a-bb8b525d1b1mr248834566b.30.1777428814033; Tue, 28 Apr 2026
- 19:13:34 -0700 (PDT)
+	s=arc-20240116; t=1777433138; c=relaxed/simple;
+	bh=YUBO2JR/kQ1Ey1X/WalGnrkNqXt5MRZAAa22BgZ9UQo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mOa3f7ghkhNI6eqY6BJv/uM7SwILoUaTark1zTfROSl3Uv06v6NlAzxK/AelJzIi1FAqHgQ57lCns8ZRb1RyaFknwOVmwVumj0+Eh8gZ2UxwEVKXh1J8ggEMzcb8FOCqj/H2nPzrQ3vw3WPW+oklAec8c5LuRG3xXjCZTgwchYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxAussevFpiAEFAA--.16921S3;
+	Wed, 29 Apr 2026 11:25:32 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCx98AkevFp+gl3AA--.15944S3;
+	Wed, 29 Apr 2026 11:25:31 +0800 (CST)
+Subject: Re: [PATCH] LoongArch/KVM: Use kvm_set_pte() in kvm_flush_pte
+To: Tao Cui <cuitao@kylinos.cn>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, loongarch@lists.linux.dev
+Cc: kernel@xen0n.name
+References: <20260428130031.409066-1-cuitao@kylinos.cn>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <bdfd9d8a-7614-420f-0ef3-fddc694fe9e4@loongson.cn>
+Date: Wed, 29 Apr 2026 11:22:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260409121936.871418-1-xry111@xry111.site> <de142a5e34f9158500361e51d5a025bf3366699e.camel@xry111.site>
- <CAAhV-H4kxm-yfgxkxo+8NTvcRtz=uc8G0iTuKEbynkB6pMBSwQ@mail.gmail.com> <f71d329c66c873cf756623037d1e5806a9c94898.camel@xry111.site>
-In-Reply-To: <f71d329c66c873cf756623037d1e5806a9c94898.camel@xry111.site>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 10:13:22 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5z0EHrC5i_VvGBpX4v5tHVmkeHd8Z=zUMrKzvX0w3+4Q@mail.gmail.com>
-X-Gm-Features: AVHnY4JJie16xkb0bTaIeGUOCgGQM96tBgmHr8Mn2KKPEMZ4RbhQLesqo-qbfZ4
-Message-ID: <CAAhV-H5z0EHrC5i_VvGBpX4v5tHVmkeHd8Z=zUMrKzvX0w3+4Q@mail.gmail.com>
-Subject: Re: Ping: [PATCH v2] LoongArch: detect and disable sc.q if erratic
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	loongarch@lists.linux.dev, Zixing Liu <liushuyu@aosc.io>, 
-	Mingcong Bai <jeffbai@aosc.io>, Arnd Bergmann <arnd@arndb.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	George Guo <dongtai.guo@linux.dev>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260428130031.409066-1-cuitao@kylinos.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCx98AkevFp+gl3AA--.15944S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZF4fKrW5Xw48ur4DKF4kGrX_yoWfGFc_XF
+	4xt3WUurW8Ja4vv3Wjva98CryfWw1UJFZYvF93Zr1xXas8tr45ArsYqan5AryjgrWjkFWr
+	ArZ5tasakr1IyosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Tue, Apr 28, 2026 at 11:49=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wro=
-te:
->
-> On Mon, 2026-04-27 at 16:43 +0800, Huacai Chen wrote:
-> > Hi, Ruoyao,
-> >
-> > On Mon, Apr 27, 2026 at 10:17=E2=80=AFAM Xi Ruoyao <xry111@xry111.site>=
- wrote:
-> > >
-> > > Ping.
-> > Can we keep this as an out-of-tree patch? It's a bit ugly and I think
-> > the corrct way is update firmware.
->
-> We can try harder urging the vendors to release the firmware update
-> (there are other firmware bugs those the kernel cannot deal with anyway)
-> but in many cases the users just complain "hey your distro doesn't boot"
-> to the distro maintainers.  And some rogue ODM/OEM tend to ignore any
-> reports relayed by the distro maintainers unless the distro pays some
-> thousands of dollar.
-I know, but distro kernels usually carry out-of-tree patches, this is
-not the only one, right?
 
-Huacai
 
->
-> Thus IMO it's better to make the system at least bootable with a message
-> (the pr_warn_once line in the patch) to clearly indicate the users that
-> they need a firmware update, and the vendors may become motivated a
-> little with more users complaining directly.
-> >
->
-> --
-> Xi Ruoyao <xry111@xry111.site>
+On 2026/4/28 下午9:00, Tao Cui wrote:
+> kvm_flush_pte() is the only caller that directly assigns *pte instead
+> of using the kvm_set_pte() wrapper. Use the wrapper for consistency
+> with the rest of the file.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>   arch/loongarch/kvm/mmu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> index a7fa458e3360..e104897aa532 100644
+> --- a/arch/loongarch/kvm/mmu.c
+> +++ b/arch/loongarch/kvm/mmu.c
+> @@ -95,7 +95,7 @@ static int kvm_flush_pte(kvm_pte_t *pte, phys_addr_t addr, kvm_ptw_ctx *ctx)
+>   	else
+>   		kvm->stat.pages--;
+>   
+> -	*pte = ctx->invalid_entry;
+> +	kvm_set_pte(pte, ctx->invalid_entry);
+>   
+>   	return 1;
+>   }
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+
