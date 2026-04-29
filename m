@@ -1,93 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4310D3B38B8
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 09:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF783B8955
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 09:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777456295; cv=none; b=PQbyDoY4xXLBKk9lsiV7hNZXTr1r22DeNVi5XP5udQhRhvIY13xsRzk/qqMxrDsH335X5B0VeaHqF4nol0JNyvu9bdOQmtDvzq7/U6ZD5BCGXgTCAN7qEnKF7n0cFJXfVqUQ4qys2P0ffEQk1T9X6cxJOd+fbGUzXI5VFDm0tWk=
+	t=1777456384; cv=none; b=ozhF2YPD4ikuTU7BWsUEmUhuSyXEmSoc9lyLBmzXHCFMBzUYFBDlL0WGCHrYnJ6Jc1h6ENlqSADOWzpCvkwR0yX2H0tUnmxdW8DN6anReTf9L/r4mqe1xjURb/H69CKATMwcwFwQXqei1Ld9Gf6YBIsH1AQCCIcmF48v9QfDJSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777456295; c=relaxed/simple;
-	bh=rIKmiPZH+xJuZhZOOa5gB26GovqjLJ7l2NrhyuJwVQM=;
+	s=arc-20240116; t=1777456384; c=relaxed/simple;
+	bh=SfAe5z76KpyTy+2Tz85r4N7KkagN59Wf81GU2C4jSKA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ugy/P4926wsp0eHtt1Nx3ayL19DNnUHadqgDyH/RVMHQUUqCySgR4q4+bguVn+QtYAzxAUEe/Nk+kIl7BZIwYZTZgR5KUEZdPQKdNS9xJ8Tiou30uxtC5p6aKJ4BU90YT2CS8pnfw+4YYNowlRxodpALGNP2YBU3btUZQjIkWyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVhNvmYV; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=MdFN7bqawlF9GWpOwX7hq0L65pHEIUUE2Q0dZv88u9S752LOLm3fTm7dkEQ8wbOLPIFer3Cj/5RLgqNClomvmni1XzKJe4PUq4FrgvN6fJZeldStS1T0pN78wTNE4xVmHGSWQR1PGwYmlIQTUonSJ8w90UWCeMP9B72HadK2MmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp3WE6Rx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVhNvmYV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ACEFC2BCC4
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 09:51:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp3WE6Rx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03881C2BCC4
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 09:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777456295;
-	bh=rIKmiPZH+xJuZhZOOa5gB26GovqjLJ7l2NrhyuJwVQM=;
+	s=k20201202; t=1777456384;
+	bh=SfAe5z76KpyTy+2Tz85r4N7KkagN59Wf81GU2C4jSKA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MVhNvmYVtRYjfHVevrKB59NWofXv49pNxvJWFGx4NE/3w6tq6+ZyreQp8W3oHLEOP
-	 OlcqdfD/cUxO4easr2Qf68pflHOHz+8oXwm9RP3BPlm/3rZyotta62fjpBUmTo5mds
-	 ut1JMZ1MRlsvJn4VC+C6N9eh/z8qNCT5BC6CG0069H97pZ29kxBYInJyqTIMZ9ANQm
-	 tGSwliuK+FUUMXZr4pU+r/uEZ++OCt+0EAUCwWsBhRds/DEST8v/kiMZ3LEmpXGSta
-	 uWu6ujVXapyLIQIy/UCoe5EiNuU9ot1VQSZXeD32MOE5gjNdZv0acvvZkPExl2vFA0
-	 +acmrfbCFhNNA==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b936331786dso1621869166b.3
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 02:51:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+wlMkkTkTNJtHgUIod0zYW914g01ZOnQahwvRNGroVmukufLY+E1xKEZaFWu9dkENy68OVzx3yJk4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxBuOkLZjxBncndxXqC6fW/f8heGuUnsqNUAX5mmlnDPM+NB3X+
-	zUPDI5+D/IaA+HaQLxXfGRMwe6iHhH0pfqM2ZAMWMdKQvZvUlpmdO1VrZBTYj4XSZlOfi2ZUJjO
-	7bEyHNeltUti6kZ7zbhDF3Gbw5r4tFDY=
-X-Received: by 2002:a17:906:5194:10b0:ba2:3f1b:1314 with SMTP id
- a640c23a62f3a-bb8045375f5mr284382766b.33.1777456293613; Wed, 29 Apr 2026
- 02:51:33 -0700 (PDT)
+	b=dp3WE6Rxf2XR3ZbuTdAPePacw+1B8hGLP7OTFQEmiZRxspdQA9yTpFsbZehRK80dp
+	 eHWuUoM7aeKeqgL4hR6pz3WLUd+8/QpDm3gqcSS6+BV5g6IakCU92E3GSD/EWsUaVM
+	 ni8QzkoVTdPOY8d+7kWX63o9myQwSZinT4GVLYUJx0Ltqh13M0oVD+8MN3JT8xH3st
+	 DJxIqEYAqCU+AvlWX6jN6DLltLLnWkRX+SvTthgo/VAISLu4bNqKpYm7M3647UAwBy
+	 YEdjjnji0Zo8BaYUpap6e3/jMo0EUUX8HSeorSpggEFuljQQnhBpB2/WuUihCXmdiI
+	 j3LuHQxgzGHzA==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ba922426c5cso1078993166b.3
+        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 02:53:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9SGHHIzQc1+UH5vlHHI3WkWOeXuVbMaB+3l5oyLDHMIkMzu4ECu/ha3ZOahAcxzgjX95jv/Jjjkhs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzAaDiqTKWyPHF2nl4y1rBf7jnv05LMe075l0CHL4a2SI3p7jwv
+	fABMrK1pBi9TupT1/M0bEcPXv17aXu+oZxJymy4xM/m1M+L/bNrfMbkSmPEO5L2/ssdeLx+yPyy
+	SUDb7Fh16F04wTTQBqfzyh/V/jkbab8A=
+X-Received: by 2002:a17:907:c48a:b0:bb2:71a9:37d7 with SMTP id
+ a640c23a62f3a-bb803e5d204mr421956866b.39.1777456382555; Wed, 29 Apr 2026
+ 02:53:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260428121813.296781-1-maqianga@uniontech.com> <0b8db33a-6c26-d9f5-b78f-d9249dd02c1c@loongson.cn>
-In-Reply-To: <0b8db33a-6c26-d9f5-b78f-d9249dd02c1c@loongson.cn>
+References: <20260428130031.409066-1-cuitao@kylinos.cn> <bdfd9d8a-7614-420f-0ef3-fddc694fe9e4@loongson.cn>
+In-Reply-To: <bdfd9d8a-7614-420f-0ef3-fddc694fe9e4@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 17:51:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7FH0Woxh4fvgZoL8LQKzNh4fkMvC3qzdpHFiRsZH=yJA@mail.gmail.com>
-X-Gm-Features: AVHnY4JFcELWysuRIi0rMPkOf97VQsUzXI3ZG2R3SP-Rmv1WXieBdpiM2-QqrFs
-Message-ID: <CAAhV-H7FH0Woxh4fvgZoL8LQKzNh4fkMvC3qzdpHFiRsZH=yJA@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: KVM: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
+Date: Wed, 29 Apr 2026 17:53:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6xGgm2mRLZFOMmqKZr503YnSKGsBssoVceTrfDs0hPKQ@mail.gmail.com>
+X-Gm-Features: AVHnY4LfV4T4m2LwmYaA05vZX2XAfwUBxhR4gE7ZK1a1f5K_TQi5WlHZrQjPbko
+Message-ID: <CAAhV-H6xGgm2mRLZFOMmqKZr503YnSKGsBssoVceTrfDs0hPKQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch/KVM: Use kvm_set_pte() in kvm_flush_pte
 To: Bibo Mao <maobibo@loongson.cn>
-Cc: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn, kernel@xen0n.name, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: Tao Cui <cuitao@kylinos.cn>, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 28, 2026 at 8:59=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
+On Wed, Apr 29, 2026 at 11:25=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wro=
+te:
 >
-> On 2026/4/28 =E4=B8=8B=E5=8D=888:18, Qiang Ma wrote:
-> > It doesn't make sense to return the recommended maximum number of
-> > vCPUs which exceeds the maximum possible number of vCPUs.
+>
+>
+> On 2026/4/28 =E4=B8=8B=E5=8D=889:00, Tao Cui wrote:
+> > kvm_flush_pte() is the only caller that directly assigns *pte instead
+> > of using the kvm_set_pte() wrapper. Use the wrapper for consistency
+> > with the rest of the file.
 > >
-> > Other architectures have already done this, such as Commit
-> > 57a2e13ebdda ("KVM: MIPS: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS")
+> > No functional change intended.
 > >
-> > Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 > > ---
-> >   arch/loongarch/kvm/vm.c | 2 +-
+> >   arch/loongarch/kvm/mmu.c | 2 +-
 > >   1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> > index 8cc5ee1c53ef..1317c718f896 100644
-> > --- a/arch/loongarch/kvm/vm.c
-> > +++ b/arch/loongarch/kvm/vm.c
-> > @@ -125,7 +125,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
-ong ext)
-> >               r =3D 1;
-> >               break;
-> >       case KVM_CAP_NR_VCPUS:
-> > -             r =3D num_online_cpus();
-> > +             r =3D min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPU=
-S);
-> >               break;
-> >       case KVM_CAP_MAX_VCPUS:
-> >               r =3D KVM_MAX_VCPUS;
+> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> > index a7fa458e3360..e104897aa532 100644
+> > --- a/arch/loongarch/kvm/mmu.c
+> > +++ b/arch/loongarch/kvm/mmu.c
+> > @@ -95,7 +95,7 @@ static int kvm_flush_pte(kvm_pte_t *pte, phys_addr_t =
+addr, kvm_ptw_ctx *ctx)
+> >       else
+> >               kvm->stat.pages--;
+> >
+> > -     *pte =3D ctx->invalid_entry;
+> > +     kvm_set_pte(pte, ctx->invalid_entry);
+> >
+> >       return 1;
+> >   }
 > >
 > Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 Applied, thanks.
 
 Huacai
+>
 >
