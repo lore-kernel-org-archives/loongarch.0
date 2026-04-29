@@ -1,136 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3424824A07C
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26233A5E87
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 08:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777449132; cv=none; b=LBFDo2ir4Wi6uFvDhS2vkCbheBuEWoWDQ3BRQzRPbPalRcp5UdR95Bi+zfGX5gSZvVIwGusSyVFfdnRAgHxz07CPczhJ487Clvyl6k8ntHIK/yvdhN/88T511Tua98jn7RGG5SIGzIO+rVN5TqSLGVDgBU9wnvQzqSldtOtsBiQ=
+	t=1777450023; cv=none; b=kHLwRm7ZMabvuolUuIMRtg+0CRiFxwj5S8u3De00HIVUy/ldEDbce0JOshG8AKmOkCDjpB9ZetjHIFMMgv21+xwjG/3B4FnaMQn7JVWTEY2/ShH/LaBJKfIiKsIlccxtk8ZCuLyiYzODK6PAvrHz3XjPVnk2l/2CqygXEr9ykkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777449132; c=relaxed/simple;
-	bh=P+uO0jmXBfzlb55uzSAkZvd5lXOzZiIUwbZcV3ztWeM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eZc3ZKUKH8RmV4laLkmyzQvng6kDbROiPwavDbBF8lt9ssNDCrHjsjX4nJIkQtDHlasNwLL25fHsdRvQIdnmGOxSNSJyXyQNgu2DPyKuY3NZbef7iAS7RJHF9nF+wJzJi75yYefGaWbUCHfAPm37jk+lIRuEtcVcyqutiE2Z4ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNmUpk24; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNmUpk24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6320C2BCC9
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777449131;
-	bh=P+uO0jmXBfzlb55uzSAkZvd5lXOzZiIUwbZcV3ztWeM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UNmUpk24wwiLOUY94+cXrISZUm5JTcRjZ46K9nk2x6SLkYrmZ6zwec98Uv6aFT7Hf
-	 rRLT12dViD5IrV7RRiOQH5a5jxxFifC+s9vDTbjOfNLkBJ2QhuZSDUbhku7lZnEjA2
-	 Dm4jjP+SS/chINGTLbIqM58dgu7VTgrNBlstxBPAcZ3ux+mk2f9QHuQVZaKPf+W8Ts
-	 7YTzwC2ZDNm0wRfcQUTyQGBFst6QluLeG25+mI35MU6Nza0GhRkxRz7ZrWglgVNfHj
-	 ESdXFknZOsCjg21qavhuMI5dALWKMcIH7CrgZaEKUB8htmriLqaLkw/MbVz8Bz1/rM
-	 rWyw4riDdIo8w==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ba92146cc86so1404892866b.1
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:52:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9NwIiT4SCugvaRH21tdARyYW0L5zuMMN0fLvpLfUAXCFLspJkmlWt3SCsp/v0wWeebB3rJp75EPZw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyRppaGQJRxNbdcMuSQyg21Xl3f/OLg09VJrmyPMnEYTYsxDyN2
-	7/Q81odZg8iZisbMvdaBSyD+rakS3bKi3JJnyaEGTrJkcV/TgSb3b+zUrWWcFpUL7rzYjXYDFLF
-	5zF88HVKb4CEWDa5Tf+YJoMETqmF2FGs=
-X-Received: by 2002:a17:907:3c84:b0:bae:2adb:1461 with SMTP id
- a640c23a62f3a-bb80100e70emr397819266b.9.1777449130365; Wed, 29 Apr 2026
- 00:52:10 -0700 (PDT)
+	s=arc-20240116; t=1777450023; c=relaxed/simple;
+	bh=7YF+lDBamvqbz3kcDUw12iz+lbUM18kDStsGLO7TGko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kkMz/cKzTnv74ofpmEz8jcpILVN/vkzKWjCr1wmt2pfY30cB8i4aSlTDyZJq1cbEmHpCg+s6nye5+0N7NvdQi5Mi7yHURo4sMBeRs4CUkk/6j/UKevLV+cDLUCKNtRrT5RZpcufTbv5qHtV2d8gYcb22DpFaTapUPk7PYPNyX0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.8])
+	by gateway (Coremail) with SMTP id _____8CxRegivPFpQxAFAA--.11129S3;
+	Wed, 29 Apr 2026 16:06:58 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.8])
+	by front1 (Coremail) with SMTP id qMiowJBxxuIcvPFp3yx3AA--.53647S2;
+	Wed, 29 Apr 2026 16:06:58 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] LoongArch: Fix SYM_SIGFUNC_START definition for 32BIT
+Date: Wed, 29 Apr 2026 16:06:44 +0800
+Message-ID: <20260429080644.2425166-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260429051318.1581350-1-r@hev.cc> <20260429051318.1581350-2-r@hev.cc>
-In-Reply-To: <20260429051318.1581350-2-r@hev.cc>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 15:51:56 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76sdWQ02S=jTKJWFviZ0HHGXSWPT9Nwh9b4QFj1v9wpQ@mail.gmail.com>
-X-Gm-Features: AVHnY4Ki22xNhThmDFd37k_0EleXB43gBpiP61uVcWv-C6prgKNU2qiVxWIUcV0
-Message-ID: <CAAhV-H76sdWQ02S=jTKJWFviZ0HHGXSWPT9Nwh9b4QFj1v9wpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] efi/loongarch: Randomize kernel preferred address
- for KASLR
-To: WANG Rui <r@hev.cc>
-Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Haiyong Sun <sunhaiyong@loongson.cn>, 
-	Lisa Robinson <lisa@bytefly.space>, loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxxuIcvPFp3yx3AA--.53647S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrtF47Jw1kuFy8tw1kWFWrXrc_yoWfuwb_X3
+	WxJw4ku3ykXFW7CwnIvFyrA3WYv3WrAFnIkr1kXr17Zas0vw15Gr1kAw13ArWjk39rGF4f
+	ZFW8t3s8Ary2yosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2nYFDUUUU
 
-Hi, Ard,
+The SYM_SIGFUNC_START definition should match sigcontext that the length
+of GPRs are 8 bytes for both 32BIT and 64BIT. So replace SZREG with 8 to
+fix it.
 
-On Wed, Apr 29, 2026 at 1:14=E2=80=AFPM WANG Rui <r@hev.cc> wrote:
->
-> Introduce efi_get_kimg_kaslr_address() to compute the preferred
-> kernel image address dynamically when CONFIG_RANDOMIZE_BASE is
-> enabled. The function derives a random offset using EFI-provided
-> randomness combined with the timer value, and constrains it within
-> CONFIG_RANDOMIZE_BASE_MAX_OFFSET.
->
-> Update EFI_KIMG_PREFERRED_ADDRESS to call this helper so that the
-> EFI stub can select a randomized load address when KASLR is active,
-> while preserving the original base address behavior when KASLR is
-> disabled or nokaslr is specified.
->
-> Signed-off-by: WANG Rui <r@hev.cc>
-If you have no objections, can you give an Acked-by? I thinks this
-series should go to loongarch tree.
+Cc: stable@vger.kernel.org
+Fixes: e4878c37f6679fde ("LoongArch: vDSO: Emit GNU_EH_FRAME correctly")
+Suggested-by: Xi Ruoyao <xry111@xry111.site>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/include/asm/linkage.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Huacai
+diff --git a/arch/loongarch/include/asm/linkage.h b/arch/loongarch/include/asm/linkage.h
+index a1bd6a3ee03a..ae937d1708b2 100644
+--- a/arch/loongarch/include/asm/linkage.h
++++ b/arch/loongarch/include/asm/linkage.h
+@@ -69,7 +69,7 @@
+ 		  9,  10, 11, 12, 13, 14, 15, 16,	\
+ 		  17, 18, 19, 20, 21, 22, 23, 24,	\
+ 		  25, 26, 27, 28, 29, 30, 31;		\
+-	.cfi_offset \num, SC_REGS + \num * SZREG;	\
++	.cfi_offset \num, SC_REGS + \num * 8;		\
+ 	.endr;						\
+ 							\
+ 	nop;						\
+-- 
+2.52.0
 
-> ---
->  arch/loongarch/include/asm/efi.h         |  4 +++-
->  drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++++++++++
->  2 files changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/include/asm/efi.h b/arch/loongarch/include/as=
-m/efi.h
-> index eddc8e79b3fa..f831320efd41 100644
-> --- a/arch/loongarch/include/asm/efi.h
-> +++ b/arch/loongarch/include/asm/efi.h
-> @@ -30,6 +30,8 @@ static inline unsigned long efi_get_kimg_min_align(void=
-)
->         return SZ_2M;
->  }
->
-> -#define EFI_KIMG_PREFERRED_ADDRESS     PHYSADDR(VMLINUX_LOAD_ADDRESS)
-> +unsigned long efi_get_kimg_kaslr_address(void);
-> +
-> +#define EFI_KIMG_PREFERRED_ADDRESS     efi_get_kimg_kaslr_address()
->
->  #endif /* _ASM_LOONGARCH_EFI_H */
-> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/=
-efi/libstub/loongarch.c
-> index 9825f5218137..51997a0e83bd 100644
-> --- a/drivers/firmware/efi/libstub/loongarch.c
-> +++ b/drivers/firmware/efi/libstub/loongarch.c
-> @@ -38,6 +38,22 @@ static efi_status_t exit_boot_func(struct efi_boot_mem=
-map *map, void *priv)
->         return EFI_SUCCESS;
->  }
->
-> +unsigned long efi_get_kimg_kaslr_address(void)
-> +{
-> +       unsigned int random_offset =3D 0;
-> +
-> +#ifdef CONFIG_RANDOMIZE_BASE
-> +       if (!efi_nokaslr) {
-> +               efi_get_random_bytes(sizeof(random_offset), (u8 *)&random=
-_offset);
-> +               random_offset ^=3D (random_get_entropy() << 16);
-> +               random_offset &=3D (CONFIG_RANDOMIZE_BASE_MAX_OFFSET - 1)=
-;
-> +               random_offset =3D ALIGN(random_offset + SZ_64K, SZ_64K);
-> +       }
-> +#endif
-> +
-> +       return PHYSADDR(VMLINUX_LOAD_ADDRESS) + random_offset;
-> +}
-> +
->  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
->                 efi_loaded_image_t *image)
->  {
-> --
-> 2.54.0
->
