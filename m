@@ -1,151 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F833A3807
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B05396B8C
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777448410; cv=none; b=IZPD92PqJza+5kEMhZxXl3mOkOST9neXz/X/yAbGRjWc4CeG9iEfQDUbB+YvTR/gKAQSt53Y+Te6xirD/ZQejK8mftwM5SnlU8V36kBLUABc58ZdOJ4MSrHVzjvilbnSGIEcCwhXYAh6nF8Q5B50no+vWE4JSzi4SFp0zxmw9Gg=
+	t=1777448484; cv=none; b=dqd8AHxCL/eGcvr5xN8VuFDzMol2FKiv/jxcn4nJ3nvzRuk6WLqcqHA7aeSwvjf37h6GhvX1or+X81ir2qM6gW1e/MuQXnZqL37Z/qFwx/AOV6Zhy0Vx8C55eM0IyXkEheNXqz0umBEHRVK0YSo5owshG89eE7to2uEGW1d5+/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777448410; c=relaxed/simple;
-	bh=UCqsery7FiA6RyPiYCqQcY4Ghv9kx/WIcmT3SR6KMc4=;
+	s=arc-20240116; t=1777448484; c=relaxed/simple;
+	bh=tfgltojnPARN6P2pY2wDnIJyy7vczKs8oP43rS2BJ5k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PsS6Xeze3dLg+gxld46jzdmijTmDghm1DJ+cI6xnkhLqGYslUiNKlJ9b4sA5H5mjEAF7MOrGytRA4WTns+QB2RzTuFmOCnm6kmpzxRdvt5nXPQPujChlw4J0bWrVGykPbj0spySUAxFA6QQ1uqHASCHgqtuzDle3JSfjoDUxdSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNyLMWtH; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=dEZKmgNPc9jPhhVa0mTfFTMHGevUL9LGwi+d1oJXim5hrGvB7L9mONTG+54WpksBYM0RqN4jpo+BjH0Por+rZzJTOGwMQuQyQGFoqlgIdccEXG8bHmqzSqKPtG9VTcX2uLASealzy78g8oi0eCI/9g91ZLJIGoutL9fuROP7X80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyJEEuZK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNyLMWtH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C28DC2BCC7
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:40:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyJEEuZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19340C2BCC6
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777448410;
-	bh=UCqsery7FiA6RyPiYCqQcY4Ghv9kx/WIcmT3SR6KMc4=;
+	s=k20201202; t=1777448484;
+	bh=tfgltojnPARN6P2pY2wDnIJyy7vczKs8oP43rS2BJ5k=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tNyLMWtHHxMX32wH1sr1JsGiWopTNVvc58Cd7+44xWtaWt/lijjJLcWQYbiDOBkTh
-	 he4jsJM+MM6revtzKLrcUBznAXfZdF0dQ/KOkUkO1rB4WcwTkyq1R415JbZIiKDlS2
-	 IRIy4l+xblvKm/lcXYt6VnySx3KENAmdTOyRW1InQwZcc6jBb6tWL5po5m/QIam1er
-	 mehDGDrfGWOap0PG93oZdE3zAsfMwr78jSuXlDRcBz1HLHKdEzmE6jD++LS4LIYYLf
-	 JlnfvMnsxuchz2ouk1prM1Cbdei9+EJv8GSxIHVzIaXEyQpXF3pD6IYHzj/CawiX75
-	 L/nSWXicbhKrA==
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ba6838e76f2so1289046566b.2
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:40:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/QtIBmmchhWuEUOT0mimYMEJ1ICaB4ySK5iJfKnNCWs6zWSjVafQWWxakq55wrxDG9ddtlXVGBz4I=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwcoJzPbTr4K/C8b6v+zmOCopbzaFM/IOnvFhaW9YU63qDsoHn/
-	SlcO+/ZCONW3WZioXMcD8APnrUCpuPUNrlgesi6x9kis1z0JiQTfIUTwSg8thVmww8zKExykqhX
-	oigSz25HhqiC6kDeMUKmcDKbmb7A7ynY=
-X-Received: by 2002:a17:907:d40c:b0:ba4:a7a3:d03f with SMTP id
- a640c23a62f3a-bb93e066d64mr163199066b.27.1777448409166; Wed, 29 Apr 2026
- 00:40:09 -0700 (PDT)
+	b=uyJEEuZKjxH4ZN2DxKHt2uYNlk9wW/z1JpdRIFsGPqYBN4LcSoLrLWWan8VWN7QYm
+	 S8RvyqqViRP4sbouAaOeMIoCYyKUC+zJ35U8v/99sbIBzTSzpPx1rwV7xQ+CaptWbG
+	 G9yYMaPLogtu94iMiMpAZQJ30s2teORQUeXWG9ierXLstzssuXK7DE5X4sz96bEzQB
+	 y3aHnJdK30Mwd+St+yqBhO2Fe5pyj3I42he7zudCDPEoUhINbKzoMCxxBzkIYNC+NI
+	 HBs9PB8zuJimeQ1845lj8Y6TAEWFa64bNGNyU1nfSVuWurWpsPQu0/VYPKsC5QoNAO
+	 YObq9jamcfrzA==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-678adefbd26so8175535a12.3
+        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:41:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9Ui6HZiThJaj/Cnj6NfjJj2Keag/5usFiYYg7cfK/jDLf8nG7RLQwvlsM1+k4IntQ/IURx8TGfaKI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyrs4WYEfq6CyhcC8V3sBxvqPdlTrEAkXFZNHADjFLey+UBluYK
+	PKM/HMSzpeIFXFztDSfp1jZcvsYAoxpTeGgPDwll0Bu5+3nVG2Fk0us2Ywlx7YMey27OKn3KEqj
+	NbGGd1WVErVp+Tj3lbk8VcBbAI3hzzu0=
+X-Received: by 2002:a17:907:6d19:b0:bab:14bc:165c with SMTP id
+ a640c23a62f3a-bb80472760dmr372932866b.29.1777448482612; Wed, 29 Apr 2026
+ 00:41:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260429051318.1581350-1-r@hev.cc> <20260429051318.1581350-4-r@hev.cc>
-In-Reply-To: <20260429051318.1581350-4-r@hev.cc>
+References: <20260428131138.409698-1-cuitao@kylinos.cn> <be0a5d0c-b2c9-67f5-7497-977acc6fa1f9@loongson.cn>
+In-Reply-To: <be0a5d0c-b2c9-67f5-7497-977acc6fa1f9@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 15:39:55 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H60vUx8PyT6nhxbog3=sYFL+E5Hgt1aS+7HWHddtLdb7w@mail.gmail.com>
-X-Gm-Features: AVHnY4JLOsGG2e8iu-uwVAKmkVo3T34CT_mm_oxUmbiwGZfxGaocSNq5NAMJOMc
-Message-ID: <CAAhV-H60vUx8PyT6nhxbog3=sYFL+E5Hgt1aS+7HWHddtLdb7w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] LoongArch: Avoid initrd overlap during kernel relocation
-To: WANG Rui <r@hev.cc>
-Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Haiyong Sun <sunhaiyong@loongson.cn>, 
-	Lisa Robinson <lisa@bytefly.space>, loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 29 Apr 2026 15:41:10 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
+X-Gm-Features: AVHnY4Il1GlXcRvABafIK1RFhH35GTOWvNzS9_44Kofd646fhU6We0zY17F8xNc
+Message-ID: <CAAhV-H5Hat1rJywzw2CoLZYf=+hXea35zsvT+xyBOxPVk0z0ZA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch/KVM: Simplify _kvm_pte_init with memset64
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Tao Cui <cuitao@kylinos.cn>, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
+	kernel@xen0n.name
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Rui,
-
-On Wed, Apr 29, 2026 at 1:14=E2=80=AFPM WANG Rui <r@hev.cc> wrote:
+On Wed, Apr 29, 2026 at 3:34=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
-> Validate the relocation address against the initrd region specified
-> via "initrd=3D" or "initrdmem=3D" on the command line. Reject relocation
-> targets that overlap the initrd to prevent memory corruption during
-> early boot.
 >
-> Signed-off-by: WANG Rui <r@hev.cc>
-> ---
->  arch/loongarch/kernel/relocate.c | 45 ++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
 >
-> diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/rel=
-ocate.c
-> index c36604a81d08..c303c0be8f06 100644
-> --- a/arch/loongarch/kernel/relocate.c
-> +++ b/arch/loongarch/kernel/relocate.c
-> @@ -214,14 +214,59 @@ static inline void __init *determine_relocation_add=
-ress(void)
->         return RELOCATED_KASLR(destination);
->  }
->
-> +static unsigned long __init try_get_initrd(unsigned long *size)
-Rename to determine_initrd_address() can keep consistency.
-
-> +{
-> +       unsigned long start =3D 0;
-> +       unsigned int key_length;
-It's type should be "unsigned long" because strstr() returns "unsigned long=
-".
+> On 2026/4/28 =E4=B8=8B=E5=8D=889:11, Tao Cui wrote:
+> > Replace the manual 8x loop unrolling in _kvm_pte_init() with a single
+> > memset64() call.
+> >
+> > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> > ---
+> >   arch/loongarch/kvm/mmu.c | 16 +---------------
+> >   1 file changed, 1 insertion(+), 15 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
+> > index e104897aa532..5a56dd5dcd4a 100644
+> > --- a/arch/loongarch/kvm/mmu.c
+> > +++ b/arch/loongarch/kvm/mmu.c
+> > @@ -122,21 +122,7 @@ kvm_pte_t *kvm_pgd_alloc(void)
+> >
+> >   static void _kvm_pte_init(void *addr, unsigned long val)
+> >   {
+> > -     unsigned long *p, *end;
+> > -
+> > -     p =3D (unsigned long *)addr;
+> > -     end =3D p + PTRS_PER_PTE;
+> > -     do {
+> > -             p[0] =3D val;
+> > -             p[1] =3D val;
+> > -             p[2] =3D val;
+> > -             p[3] =3D val;
+> > -             p[4] =3D val;
+> > -             p +=3D 8;
+> > -             p[-3] =3D val;
+> > -             p[-2] =3D val;
+> > -             p[-1] =3D val;
+> > -     } while (p !=3D end);
+> > +     memset64(addr, val, PTRS_PER_PTE);
+> >   }
+> >
+> >   /*
+> >
+> what is the benefit of memset64() here? I think that 8x loop unrolling
+> is better from performance side. The page size is 16K or 4K and buffer
+> is large enough, unrolling seems to be better.
+I agree.
 
 Huacai
-
-> +       const char *key;
-> +       char *p;
-> +
-> +       key =3D "initrd=3D";
-> +       key_length =3D strlen(key);
-> +       p =3D strstr(boot_command_line, key);
-> +
-> +       if (!p) {
-> +               key =3D "initrdmem=3D";
-> +               key_length =3D strlen(key);
-> +               p =3D strstr(boot_command_line, key);
-> +       }
-> +
-> +       if (p =3D=3D boot_command_line || (p > boot_command_line && *(p -=
- 1) =3D=3D ' ')) {
-> +               char *endp;
-> +
-> +               p +=3D key_length;
-> +               start =3D memparse(p, &endp);
-> +               if (*endp =3D=3D ',')
-> +                       *size =3D memparse(endp + 1, NULL);
-> +       }
-> +
-> +       return start;
-> +}
-> +
->  static inline int __init relocation_addr_valid(void *location_new)
->  {
-> +       unsigned long initrd_start;
-> +       unsigned long initrd_size =3D 0;
-> +
->         if ((unsigned long)location_new & 0x00000ffff)
->                 return 0; /* Inappropriately aligned new location */
 >
->         if ((unsigned long)location_new < (unsigned long)_end)
->                 return 0; /* New location overlaps original kernel */
->
-> +       initrd_start =3D try_get_initrd(&initrd_size);
-> +       if (initrd_start && initrd_size) {
-> +               unsigned long kernel_start;
-> +               unsigned long kernel_size;
-> +
-> +               kernel_start =3D PHYSADDR(location_new);
-> +               kernel_size =3D (unsigned long)_end - (unsigned long)_tex=
-t;
-> +
-> +               if (kernel_start < (initrd_start + initrd_size) &&
-> +                       initrd_start < (kernel_start + kernel_size))
-> +                       return 0; /* Initrd overlaps kernel */
-> +       }
-> +
->         return 1;
->  }
->  #endif
-> --
-> 2.54.0
+> Regards
+> Bibo Mao
 >
