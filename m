@@ -1,63 +1,63 @@
-Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1B339EF34
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B00A3A1A2D
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 07:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777446024; cv=none; b=H+aAN2ns7kpZSUw7SzcJlPiA6es2nZuNAbfY3WfFGcft2BmrGbA5/nTeNfNUXhO3/eX7thKl0xqr8W9GHSXRivTYF+CMWqHaSKVLQM4ezlWfyzvya81DUSFQheJF2kYHUClYWmaGqjpGKT0+DVrohQw7DvJi473gZ8aurnO/9SU=
+	t=1777446034; cv=none; b=j+rOC8wwLUIuZIDAHtXQ1gXHLK7rBZL9QMSKpVLMyFYWEpoC2vv4BLYuu7zZGfUVSiJNkumqckq2KhIQ+zNKNfINyzDPX96qNLWihaINHttrsJfvNAq1xdVY99HPVNqrr9sUcx6mthszrPoCy8blV7UAi+JAN++vc/idYPNxc18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777446024; c=relaxed/simple;
-	bh=t/lgmsImXNg9vJwTMjsNuwxZoj6hoQlo/Fb9w/nVF60=;
+	s=arc-20240116; t=1777446034; c=relaxed/simple;
+	bh=GlzyRXhW7BOFU2J58m5FlsVsMQJSPP8T+AYIfqJL/UM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=id98NwYvPY+aVuImDvbruNrvq874YKR+lyFZkIw+Da+uaybbX4ixBO1I/neMoVyj/J9EFuPjew3wrsNPV5V0Nxt42fpuKvtBZcn5cAbQsvr0/yJ8QCU/Iy6UlUPKz90dUYkAfmP1yolK34r6daYMa7U+mNVxRFl3YicM2f6bJM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dWTKxFff; arc=none smtp.client-ip=209.85.210.195
+	 MIME-Version; b=csit3E6IY94fcUKbPbIBd9iJhi3dL6NegufpB1VtGHt0STLHtA0dq/LKC8wwUytqEgMsGi1YwdW2wWqNjNjkkPtDvNY8az70M6HODOrLjAMufPlYcYo5jdrsRVr2g/kU6JEi3NGg7IqTjMuImbnLnzApsiPV2seaLC/6CFEAb3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEa7xhhY; arc=none smtp.client-ip=209.85.210.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWTKxFff"
-Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-82f8893bff3so5739619b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:00:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEa7xhhY"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-82f431c0ab6so5699512b3a.0
+        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 00:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777446023; x=1778050823; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1777446033; x=1778050833; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R4Zhc8gGgRynhB3pjFfj0bHF1QgAjZt+4XAvOQyKioc=;
-        b=dWTKxFffhuQZYVTMBJVyPHyE0o5HxeXp1PyfndcRz4eU9gxtnoCTLNs7lGqOiI7zt+
-         pDZhoZzQ4z3Ok10QUmwEod10mxRQnG1c7AdZGLsgoCBnPpQ59hHkPNZtsbprzKJVD59l
-         GFQ+BEji6f5I+ZebH2nrBE6e5Lyq1/jagONUvrnr5ABbjY4b2gLJNYfsyniWQfHwj9+O
-         FROuv+PDAAzUymRmJdhVyZTeY2KWPpyFmjguA4oApA5R2ay4AgdNyzjVNd0iRxrXQ79p
-         d4dOPuGloijIhqBT2Ix/qTVZKecZwioAE+GVThpnJNByL2Yg/FA3TDky9MTHQbtWtiQK
-         3fvQ==
+        bh=ZWH07l9RWm03Oah+cccPH78bmOCX+VwKmCZ1Y6ji5X8=;
+        b=NEa7xhhYx0emo6VZO02QU6pXZlPVO4OhWhwWaob4H1UxaiCvM8/wrXKe5hQUsdG5t0
+         zNqg8sSq+PYz6+eUXJHOb8TErChdII/0svVTjm+iYyToFGZBA/ATyrpEmm3DRBc66pLP
+         ASnUmmud94+fzzS1zaKoBs9MxmXRZbe5IGWW5ksR6i0dQpx3OoXabeX7U+S84YQtIMWd
+         3bYCfOrY/DGwtCVWk+bdO4+ko7ewCDvFKc68bvphMjMO7t+GSCXncgDQSZlPLccQiEWz
+         0poNryWhJDARpJ7QNgfKVJnxSbPLbshzDFTl4Z+HDQ4kJfhi1S3JODQkjOypHLdmcBjd
+         1pxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777446023; x=1778050823;
+        d=1e100.net; s=20251104; t=1777446033; x=1778050833;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=R4Zhc8gGgRynhB3pjFfj0bHF1QgAjZt+4XAvOQyKioc=;
-        b=SKGkrOqONpgey99GgxyowXKLJz/rNmccxChliu8EivbigF4B6EYWWQojwI/dwmyISJ
-         c6A7SOdyZg77KfEpCKTWVjyIl/wXFofmWvfnqAOpnbh0xCDxzWJjkDgJq1zV5YV+6fGA
-         q+E6f/MAtLFiUkeUd3VoMhtG5LBxOItD2Th8wgd+VYO0CZth0MVdLW39v7dNfLNWYVIr
-         aoBWFgaNy2ECiGpAYvjhAXsiSUZFC1Zyu0gWVs+aKnnUoSn3B/UUzzP0/gqUIASWQWMi
-         6khTLw4gGtn/j5R/7XazdpHp8l/liTKmxdcfLC1ubyjRmBvdZunygpTWDKWJ/rMtdFl2
-         balA==
-X-Forwarded-Encrypted: i=1; AFNElJ9GNqS0EF1LPUtawh9iPImQ8uNvXOzrUxSBdOavLitL2dRdnCSdmhe5KoFkze3LhOEczAzRFzbVR2I=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxVOWXN6DgRbQcJi4VILIltWOUF2dBi1Zd7z5V1SbrcGRI8v8MS
-	tpWlioqhpTLYlV+F7+iPF2GsKu+5xrJN45i4KUxCF/bVNQPfMKmvNmTH
-X-Gm-Gg: AeBDietVA6Ie77c/v63cPWmWPjNrEWSFmloPIfr3h85O09VygF9iNIKwOZ/RHvQdY+E
-	M2w9Zd9Xr5HFHZVlj+TSe//YreXrWbh99v3dPRU1v1qDn9gkORkqPpUz64r2L/o+KR2+ZVnth2k
-	Z6P/TBS7vBNY7LJwZllyN+kUBMsdu3PRwjYKscCZhEZYXgskxMPKuGax7HHVtt8rUQQDsstTwuO
-	coDhnI+7if3SDIXzafQ1HNUvgcWtJRHzeBY9V5T0N3g8sXOJ1mbXFnt1X6WDMuggbCRvZufS59Q
-	9N75pALTx3DAXq/5Vz37xJzxIpLNhQVE/BANTooUFnv7bEGNfUknK6EjngMEvDg44yosHEaJmbK
-	NY2DKk4A46Mr0ormBjrHldNgVb1FexoDVi882c0vfIFKmJQuA4SC1EJddTx1Zatm2EdXFObiK3V
-	3daJHAwCeeI6DAnszJU4ysZe9suZ1vcoJqtvEv6jwm+DVGGB65
-X-Received: by 2002:aa7:88c9:0:b0:82f:b519:a5cb with SMTP id d2e1a72fcca58-834ddc50c40mr6750211b3a.37.1777446022861;
-        Wed, 29 Apr 2026 00:00:22 -0700 (PDT)
+        bh=ZWH07l9RWm03Oah+cccPH78bmOCX+VwKmCZ1Y6ji5X8=;
+        b=WhauacHxHc6LiD1+t/mjYYp3ToIgdfSDf0RhB4iMofxqupCJEYZD2iB1OBOZNfZLR6
+         z/+DVcrqXQbYM/afNvC6jzTAJf9jU88qDz+rUOOZsssID7ow6SfJwK8cWQmQvEJhXWDn
+         98IB55zClwHFYzY9cCIy4AGgAimjOCQv4Ru/KUlJD/PRdquVcPR58XIBM4pF2xlr826L
+         aycJ02kCm2iDGgdsID7zJOMhySa8S6HRwsk/Q29y1BDHvsfnPZUCAf4t8B3RMHKRabER
+         GjjHvl1B2MhNyUbtLRsw0CGKS1FxHDgm8LOV/JAqWt/1dLN0nPXeoC7IWyjBpA9D2qdV
+         RF/w==
+X-Forwarded-Encrypted: i=1; AFNElJ8mzN769H+GC6MKaKWrFkBxXGrVe37hm8u4F4PdHxjZiKuR6UBVuZPkbT5+xSOFdYCZwd0RzSs2ReE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz5PGh1j4JlItX4fjvsj51a20/N5jXqWKCNXmrh/blUXz1NjXG3
+	ftNia1wbEHGM/IVQEWKAUREF7a7V+DP2aK4bwBKmDKdVkus15o6fyZV6
+X-Gm-Gg: AeBDievoWsNji29HzDQ+3jV50rhFt//XrvPSY9QrMvMsPXK8AuLyPuTViIvt1HzZaiL
+	MsJ6HuNXyS8j/sNe93pEbJy58bASyBtSzMfZdSLXMxomz7cBSTPAb9Y1Go5hbteP8h4mZctTTjC
+	8+EWD+3qEXzsiybNBW8Rt/lIB1O6i6LjKJ2jvYkCMJqYUrvpmEvPWnJWaVj78zPZliwfEApG6q6
+	21Zfd7mJh3JyErsvl6lezmMV7NeTYZxNoRIA0K8nD49nFAGloxp24OYuAaM1iahIgeTagOuZ+Db
+	geEdtwrHfzHDry+KOb1rRtlc7YZhDCHpXyjIeAOvoSOMOcjdRNJjLZOqDi1DXx38r/pvESIRKaX
+	oD2JpdkzO+hWRlzjoKwwhSAmCdjNXNO1HedjNOHkXEhfqWSlDiieC+N9mA1uaAhBAyEdmvy+vVf
+	nvZ9PN8gn42PcXPcyuFSfIh6ha4Z3ks1bNIlbP3H6LqoOksQYQ
+X-Received: by 2002:a05:6a00:a14:b0:82f:9985:d4a1 with SMTP id d2e1a72fcca58-834ddc14f4emr6920159b3a.24.1777446032715;
+        Wed, 29 Apr 2026 00:00:32 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834ed7eaf93sm1043146b3a.40.2026.04.29.00.00.13
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834ed7eaf93sm1043146b3a.40.2026.04.29.00.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 00:00:22 -0700 (PDT)
+        Wed, 29 Apr 2026 00:00:32 -0700 (PDT)
 From: Chen Wandun <chenwandun1@gmail.com>
 X-Google-Original-From: Chen Wandun <chenwandun@lixiang.com>
 To: kexec@lists.infradead.org,
@@ -87,9 +87,9 @@ Cc: akpm@linux-foundation.org,
 	chenwandun@lixiang.com,
 	zhaomeijing@lixiang.com,
 	everyzhao@126.com
-Subject: [PATCH 10/11] loongarch: kdump: exclude no-dump reserved memory regions from vmcore
-Date: Wed, 29 Apr 2026 14:58:30 +0800
-Message-ID: <20260429065831.1510858-11-chenwandun@lixiang.com>
+Subject: [PATCH 11/11] Documentation: admin-guide: kdump: document linux,no-dump DT property
+Date: Wed, 29 Apr 2026 14:58:31 +0800
+Message-ID: <20260429065831.1510858-12-chenwandun@lixiang.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260429065831.1510858-1-chenwandun@lixiang.com>
 References: <20260429065831.1510858-1-chenwandun@lixiang.com>
@@ -101,47 +101,97 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Apply the same no-dump reserved memory filtering to LoongArch kdump as
-was done for arm64. Use of_reserved_mem_exclude_no_dump() to drop
-flagged regions from the elfcorehdr PT_LOAD segments, and
-of_reserved_mem_no_dump_nr_ranges() to pre-size the crash_mem array.
+Describe the new 'linux,no-dump' reserved-memory device tree property
+and the automatic exclusion of /memreserve/ entries from the kdump
+vmcore.
+
+The section covers:
+
+ - The two mechanisms that exclude reserved memory from the vmcore
+   (firmware /memreserve/ entries and linux,no-dump child nodes).
+ - Intended use cases (firmware-owned GPU, DSP and modem carveouts).
+ - Interaction with the existing 'no-map' and 'reusable' flags, with
+   the silent-ignore precedence implemented by the kernel.
+ - Architectures honouring the hint (arm64, riscv, loongarch).
+ - An illustrative reserved-memory DTS snippet.
+
+The DT binding for the property itself is maintained in dt-schema.
 
 Signed-off-by: Chen Wandun <chenwandun@lixiang.com>
 ---
- arch/loongarch/kernel/machine_kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/admin-guide/kdump/kdump.rst | 59 +++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..742fb9affcb9 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/memblock.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -67,6 +68,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	nr_ranges = 2; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
-+	nr_ranges += of_reserved_mem_no_dump_nr_ranges();
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 7587caadbae1..c2246888e84d 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -600,6 +600,65 @@ with /sys/kernel/config/crash_dm_crypt_keys for setup,
+ 3. After the dump-capture kerne get booted, restore the keys to user keyring
+    echo yes > /sys/kernel/crash_dm_crypt_keys/restore
  
- 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
- 	if (!cmem)
-@@ -91,6 +93,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 			goto out;
- 	}
- 
-+	ret = of_reserved_mem_exclude_no_dump(cmem);
-+	if (ret < 0)
-+		goto out;
++Excluding reserved memory regions from the vmcore (device tree)
++===============================================================
 +
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++On architectures that boot from a device tree and use kexec_file for
++kdump (arm64, riscv, loongarch), specific reserved memory regions can
++be excluded from the ELF PT_LOAD segments of the crash dump.
++
++Two mechanisms contribute to the exclusion:
++
++1) /memreserve/ entries from the FDT header.
++
++   These are firmware-level memory reservations with no associated
++   device tree node and therefore no driver-level description. Their
++   contents are typically firmware scratch areas that carry no value
++   for kernel crash analysis, so they are excluded from the vmcore
++   automatically.
++
++2) Reserved-memory nodes carrying the 'linux,no-dump' property.
++
++   Device tree authors can add this boolean hint to any
++   /reserved-memory child node to request that the kernel skip that
++   region when constructing the elfcorehdr. This is intended for
++   firmware-owned carveouts such as GPU, DSP and modem memory, whose
++   contents tend to significantly inflate the vmcore without aiding
++   kernel crash analysis.
++
++   Example::
++
++       reserved-memory {
++               #address-cells = <2>;
++               #size-cells = <2>;
++               ranges;
++
++               gpu_fw@a0000000 {
++                       reg = <0x0 0xa0000000 0x0 0x01000000>;
++                       no-map;
++                       linux,no-dump;
++               };
++
++               modem_fw@b0000000 {
++                       reg = <0x0 0xb0000000 0x0 0x02000000>;
++                       linux,no-dump;
++               };
++       };
++
++Interaction with other reserved-memory flags:
++
++- 'no-map': the region is already absent from the kernel linear map,
++  so it does not appear in the vmcore to begin with. Combining
++  'linux,no-dump' with 'no-map' is harmless but redundant.
++
++- 'reusable': the region is actively used by the kernel for movable
++  page allocations (CMA) and its contents are relevant to crash
++  analysis. 'linux,no-dump' is silently ignored on a reusable region.
++
++The property is an operating-system hint; DTBs that do not set it
++retain the legacy behaviour (all memory is dumped). Architectures
++that do not honour the hint simply ignore it.
++
+ Contact
+ =======
  
- out:
 -- 
 2.43.0
 
