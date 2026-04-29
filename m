@@ -1,96 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BED03BADAA
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 10:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C703D1701
+	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 10:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777457572; cv=none; b=JPlRwuTmIFZnXyk78pDJMeqJlBcwyLnZxdzkrNVTcD+dPs/HFeiUjSoVGDJHcwDJpBTzLVxy3MhqjPb49l5RYgg4yLcqjvEGvjXGv3WUrxaBfXllQuPtuUk1+/ngyEIyyAVoccfwnaQ3W8p66nVGM0TkNiYWcO6+w1fRPBZRa0I=
+	t=1777458337; cv=none; b=JsZLzw1xZq6rUL5MYbOaiTsNaDMw+uWwAhSvuscwsaHAwaqRkFv889Iv71RhzP23HwxwDWRJgmFpPy6qVFzBjQNxQgWCQa9hgodLy24AarBcm8CGLDGBHlSBdt08fNnTDK+WJBHsn88f1laGBhyzomcuQtcxthkDmha3QPfbFQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777457572; c=relaxed/simple;
-	bh=WmBRG7ybVpEVt5f1Yz8SeR7dvYo1ePWwV4o7bJ6Ib3I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MjjpBazXofOZZWZ8i83VzS4ZKgBRAnWkl1kMMTX4UHq9j7Cl6RQehr0U0TBTTXcryFrRnB/ZpV/tbqtpqtYI4HWlNHMzRD6krinOD3D6cecdpzLfDiMfI6YarpK6ZHsFOfWCR/NhvYZ5Qc/O794JUcEuiLndF7NkKJQ3bTGkYAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EQ1zh1QG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777458337; c=relaxed/simple;
+	bh=uKx2BLK4SWtORQ3Y1X9QU+u3JmhryAfpmr007sf8OrM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dK9wY684v7bCX1I/X5xn578C9r+DP/ygT1hmsvdNACxzGeKGhtxUZbGBZv8Zt7Wu26Hh9sWLckV9w8g+88NsbEge+VjNdxPvoqv3cIRuSZGbKXvpPRnWON6Yhcw7BRcsfCx7aPBgdnVtk8a6dFLheKsRJdab8j2Rl5EOc9ENiDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=syDuJ2eb; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EQ1zh1QG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EC1C19425
-	for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 10:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777457571;
-	bh=WmBRG7ybVpEVt5f1Yz8SeR7dvYo1ePWwV4o7bJ6Ib3I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EQ1zh1QGvUftl+owdFJu/U9dsHc5j4rXdlhtb6Mt704Mzn38Pymwmvr/gZTciQkr7
-	 kJ2Be4eTVFTtGKGUJbUdsDWFD+zxz7+Qx8MoE7yNhQxDXG58Zshts0tT+H28uo+F/c
-	 ooi2MEIQ9isAKNR7bKHgx+66PzWH9eQqSMkclKm/zYWPEANn4IDKwqMTE9JCEIv/is
-	 9AzpO2Pf2/rUqF/Wfsf/9rt6MTuj+fuc5lU+IVcUTaXWpA9WQiZFtxY7aI2CNOwukt
-	 U4PkXEGr/MrbnMJLFHN6V2qzVg4GZu9mZCqB1zUwubrkOLYUkrK/O6gwqkpPp/y7Oc
-	 3J8HPUnezDfUg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-671dad7cac8so17855993a12.0
-        for <loongarch@lists.linux.dev>; Wed, 29 Apr 2026 03:12:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8SpmhQINVLIxFw9WNJN+Oek/22G6TQEeBl6JhdqExEGPdMRwNsmS8BIjMi98TxrCz6kw6vy8H6tKU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzjtzsTMgWm81r/2g/JP6RRXJnD0Hs5tlhuNx/zBTMnu83p/DtZ
-	f2RfoMeuxxvj7r2thHDJL4C7HTF2Iq6qgS0EGqQ+Zg4Jjy2nk1SgfobH2DvzAoaGFyYZEke24ml
-	RFwcglRW5hQ9ZaBH9oiV9DpNi/fgiRBk=
-X-Received: by 2002:a17:907:874b:b0:ba6:8a6c:f91d with SMTP id
- a640c23a62f3a-bb804537cffmr412174666b.36.1777457570525; Wed, 29 Apr 2026
- 03:12:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="syDuJ2eb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777458333;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0ubnPqyEuUH+bb9tWP9+TOUp+n6C5onOR58LCuBDEiw=;
+	b=syDuJ2ebh9z2sjffREH58o0aT6Ajjew8W5I8ReEUtvp2EQkdghmYv8iT9JcU1iX87oMIbX
+	D+xmbMoFNHgWVKDoL6XEe6kPFjJgAeA5FQrv1tK/6uUbSyjmFqItMdxDS/n3eJA5ihtrWC
+	pDy1LXDxeyfrSgRVjezaD0bM6Fa+Scc=
+From: Usama Arif <usama.arif@linux.dev>
+To: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Usama Arif <usama.arif@linux.dev>,
+	Yury Norov <ynorov@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	David Laight <david.laight.linux@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-fsi@lists.ozlabs.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-wpan@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	linux-fsdevel@vger.kernel.org,
+	ocfs2-devel@lists.linux.dev,
+	bpf@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-mm@kvack.org,
+	linux-x25@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	sound-open-firmware@alsa-project.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org,
+	linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH v1 7/9] x86: Add unsafe_copy_from_user()
+Date: Wed, 29 Apr 2026 03:25:19 -0700
+Message-ID: <20260429102520.1617327-1-usama.arif@linux.dev>
+In-Reply-To: <0ee46bb228d97163fbdc14f2a7c52b93d8bc34ce.1777306795.git.chleroy@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260414072313.3801110-1-maobibo@loongson.cn>
-In-Reply-To: <20260414072313.3801110-1-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 29 Apr 2026 18:13:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5+mR5gnd6x6yUEFK7ZnWyYQVTiE6C=enk7bHxe2Mo2Sg@mail.gmail.com>
-X-Gm-Features: AVHnY4IE7b_uD3Pu012Z-8FrM3vF54CDje-BOBCpe2XN_WV3r3i-oCnlJyOGEcE
-Message-ID: <CAAhV-H5+mR5gnd6x6yUEFK7ZnWyYQVTiE6C=enk7bHxe2Mo2Sg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] LoongArch: KVM: Small enhancement about timer
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The first patch cannot be applied cleanly, I adjusted it and applied,
-hope it is correct.
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/log/?h=3Dloongarch-next
+On Mon, 27 Apr 2026 19:13:48 +0200 "Christophe Leroy (CS GROUP)" <chleroy@kernel.org> wrote:
 
+> At the time being, x86 and arm64 are missing unsafe_copy_from_user().
+> 
+> Add it.
+> 
+> Signed-off-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+> ---
+>  arch/x86/include/asm/uaccess.h | 29 ++++++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+> index 3a0dd3c2b233..10c458ffa399 100644
+> --- a/arch/x86/include/asm/uaccess.h
+> +++ b/arch/x86/include/asm/uaccess.h
+> @@ -598,7 +598,7 @@ _label:									\
+>   * We want the unsafe accessors to always be inlined and use
+>   * the error labels - thus the macro games.
+>   */
+> -#define unsafe_copy_loop(dst, src, len, type, label)				\
+> +#define unsafe_put_loop(dst, src, len, type, label)				\
+>  	while (len >= sizeof(type)) {						\
+>  		unsafe_put_user(*(type *)(src),(type __user *)(dst),label);	\
+>  		dst += sizeof(type);						\
+> @@ -611,10 +611,29 @@ do {									\
+>  	char __user *__ucu_dst = (_dst);				\
+>  	const char *__ucu_src = (_src);					\
+>  	size_t __ucu_len = (_len);					\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> -	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> +	unsafe_put_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+> +} while (0)
+> +
+> +#define unsafe_get_loop(dst, src, len, type, label)				\
+> +	while (len >= sizeof(type)) {						\
+> +		unsafe_get_user(*(type __user *)(src),(type *)(dst),label);	\
 
-Huacai
+Hi,
 
-On Tue, Apr 14, 2026 at 3:23=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> By running LTP stress test cases on VM, there is an RCU timeout issue on
-> some vCPUs recently. The problem is that there is HW timer interrupt lost
-> issue when injecting SIP0/IPI interrupt from KVM hypervisor, this problem
-> is hidden because the KVM hypervisor will inject spurious timer interrupt
-> if emulated timer is expired. In late the spurious timer interrupt is
-> clear if old TI bit of ESTAT register is not set, so there will be RCU
-> timeout issue with LTP stress test.
->
-> This patch set fixes the HW timer interrupt lost issue, also this patch
-> moves unconditional delay in timer interrupt clear scenery, which happens
-> seldomly; mostly the timer interrupt bit is set when it expires.
->
-> Bibo Mao (3):
->   LoongArch: KVM: Move AVEC interrupt injection in switch loop
->   LoongArch: KVM: Fix HW timer interrupt lost when inject interrupt from
->     software
->   LoongArch: KVM: Move unconditional delay in timer clear scenery
->
->  arch/loongarch/kvm/interrupt.c | 37 +++++++++++++++++++++++++---------
->  arch/loongarch/kvm/timer.c     | 16 +++++++++++++--
->  2 files changed, 41 insertions(+), 12 deletions(-)
->
->
-> base-commit: d568788baab24875604c231f723dbb72387fb081
-> --
-> 2.39.3
->
->
+Just wanted to check if src and dst need to be swapped? Same for arm64 patch.
+
+> +		dst += sizeof(type);						\
+> +		src += sizeof(type);						\
+> +		len -= sizeof(type);						\
+> +	}
+> +
+> +#define unsafe_copy_from_user(_dst,_src,_len,label)			\
+> +do {									\
+> +	char *__ucu_dst = (_dst);					\
+> +	const char __user *__ucu_src = (_src);				\
+> +	size_t __ucu_len = (_len);					\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+> +	unsafe_get_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
+>  } while (0)
+>  
+>  #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+> -- 
+> 2.49.0
+> 
+> 
