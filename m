@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BA8388E70;
-	Thu, 30 Apr 2026 03:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CB638F927;
+	Thu, 30 Apr 2026 03:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777519594; cv=none; b=exWTL26IzvbUe1ffrHy+JfMPTCWkU4vhH3sBVC/q1S2vr1hcP4css1N2HTqfSd7Dh0dUlVWnQAOxuSZWlBdIrCLEdZgOCxRqzQbrbOIE3eEoigpC/JD4JN1ZytFh+vduQUBJ1ewHYbnu+h7TL3q99JBjR1YTn4eq0mlnaQzpqhQ=
+	t=1777519597; cv=none; b=k+T9OyfhNj//1ZNcMcEas26hpGS6678jnq5cWXiIjqmPT/jk7BiAATOlPR4qyf5qCmHTYibMtChvN2esII0q2FKp3onU1Uqf5XYlKF+2iiYmcdL+DHiakTTp14daq7etrxsmMJs/6ROacQoRmBuIfQLh0zSyfxZ3w/SNJnA0OoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777519594; c=relaxed/simple;
-	bh=NX3tUbayE/lMyAJb6o3+e820TWiqNMgOixMjRLbyqAw=;
+	s=arc-20240116; t=1777519597; c=relaxed/simple;
+	bh=bc+dg0Bc8LDaQ9OEb5RjsesIcFKeDCO/6xovARLSG30=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LABXAxhHV0WKcRE6eg7wVlWTtA+ccOUlgtpUNueWinkON1VBGVioa9kNZqc+JqmHWDA8QXY0yOAmeuo526foxfYP9ozlp3rYJSuz3tVOcOp74WkZTJ4RGBqB6nx7SRLDIvbpkaWKdqY3GC9bcalN+Zfnkn3y0Vr03MHP4gQ6FoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mP65EIKs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=e2gzOzooa4ruTjvRVN+Ji3VZpVOa0daBGeS5ExFUSmf58lHK7TEYNwjhFayXJjR5t35lhCaeYFaHTs+md58RwmVJlyfkTVVC7Ax+EoWDnCQ4GFCPMpRmtl54uQ73t8zz9b7z+H98MeUpb/L8foZk+H/BIjxo1DmpQzozXV6FvNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geUpuuDM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mP65EIKs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D76E4C2BCB9;
-	Thu, 30 Apr 2026 03:26:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geUpuuDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF135C2BCB9;
+	Thu, 30 Apr 2026 03:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777519593;
-	bh=NX3tUbayE/lMyAJb6o3+e820TWiqNMgOixMjRLbyqAw=;
+	s=k20201202; t=1777519596;
+	bh=bc+dg0Bc8LDaQ9OEb5RjsesIcFKeDCO/6xovARLSG30=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mP65EIKsJxlWVdg+ZdXsnteOQuTT9vum2+qioBLuE0frnQQRT+QScmlJYMF4r2rSI
-	 vRnOVIKGyMypZxqAJx34gvszIqHVXmR+QkkjPihM/bdH5nsCqw/IomU2lfLTIO3qaV
-	 fvUnaxQNW+/G2HtGg5iLLamjVYA7JPeh8wZvmVHDfu5iMSPTt1nLar5p0412CtWDgK
-	 lyGF9LgaCB6elDJvdu74+k3vsoWGMlR2V3nAuZBmKoikIMpqHRujdbYpu6ZuyNybOl
-	 b62emfrFlXYc+v3w4ssHP5Gk2/SwOXz6mEx13YBbE2tukLYy+rUTQphw0/yGbP59MZ
-	 ojfVmdQYoJ7+Q==
+	b=geUpuuDMCyhCp6bEdcbfN0LxnZCUCG0dgvu3qA/x+vL21nkrLzZ8fbVpg72WGZE28
+	 GW58cY5htqwvpdHnIBBxusd/QaNcLFa+lj440eecLAww3/Tl672LYNkzLLEjf/tTSC
+	 BpJ/B2ryHel/66TKXqJYyWj2hlvJjZgUYAyyblpCJqEkiH+W7IzZtgCsm05BvXOqTC
+	 7UXOUp/0g8nuPuEp/UKXTadmyETa8KxH8Ey5ukE8RHBtYyFcXm2Y2LcaUH2nkGobnw
+	 UofVwlyT6LtPYOcYzQrW4VSyZ9ncKX38Ij7OlcUNxKwM+79KdZnCJOFbQp/inSmfSd
+	 OIy8h9cqLZpvQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FD903809A07;
-	Thu, 30 Apr 2026 03:25:50 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FDD13809A07;
+	Thu, 30 Apr 2026 03:25:53 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,13 +37,13 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv7 01/18] mm: Move MAX_FOLIO_ORDER definition to mmzone.h
+Subject: Re: [PATCHv7 12/18] mm/hugetlb: Remove fake head pages
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177751954879.2274119.13489551409469223831.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 03:25:48 +0000
-References: <20260227193030.272078-1-kas@kernel.org>
-In-Reply-To: <20260227193030.272078-1-kas@kernel.org>
+ <177751955179.2274119.2481489263486900849.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:51 +0000
+References: <20260227193030.272078-12-kas@kernel.org>
+In-Reply-To: <20260227193030.272078-12-kas@kernel.org>
 To: Kiryl Shutsemau (Meta) <kas@kernel.org>
 Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
  muchun.song@linux.dev, david@redhat.com, willy@infradead.org,
@@ -53,26 +53,30 @@ Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
  kernel@xen0n.name, palmer@dabbelt.com, paul.walmsley@sifive.com,
  aou@eecs.berkeley.edu, alex@ghiti.fr, kernel-team@meta.com,
  linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, david@kernel.org
+ loongarch@lists.linux.dev
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Fri, 27 Feb 2026 19:30:02 +0000 you wrote:
+On Fri, 27 Feb 2026 19:30:13 +0000 you wrote:
 > From: Kiryl Shutsemau <kas@kernel.org>
 > 
-> Move MAX_FOLIO_ORDER definition from mm.h to mmzone.h.
+> HugeTLB Vmemmap Optimization (HVO) reduces memory usage by freeing most
+> vmemmap pages for huge pages and remapping the freed range to a single
+> page containing the struct page metadata.
 > 
-> This is preparation for adding the vmemmap_tails array to struct
-> zone, which requires MAX_FOLIO_ORDER to be available in mmzone.h.
+> With the new mask-based compound_info encoding (for power-of-2 struct
+> page sizes), all tail pages of the same order are now identical
+> regardless of which compound page they belong to. This means the tail
+> pages can be truly shared without fake heads.
 > 
 > [...]
 
 Here is the summary with links:
-  - [PATCHv7,01/18] mm: Move MAX_FOLIO_ORDER definition to mmzone.h
-    https://git.kernel.org/riscv/c/a2c77ec320a9
+  - [PATCHv7,12/18] mm/hugetlb: Remove fake head pages
+    https://git.kernel.org/riscv/c/622026e87c40
 
 You are awesome, thank you!
 -- 
