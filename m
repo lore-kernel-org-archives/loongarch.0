@@ -1,107 +1,150 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CE0258CE7
-	for <loongarch@lists.linux.dev>; Thu, 30 Apr 2026 01:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD6C33A70E;
+	Thu, 30 Apr 2026 03:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777512057; cv=none; b=QnFPWLpn4O6ARZ5E8NOeDyImMgfVZJ1+8y9i2B7+mJRxdy29CO0OnheHmgczbvM9XqakVssqIZZNkjE+tDbRPZDhqfiPrAsSpp0AuSLdsgtmCCnHql/WgtrZhPKfgm+IbtTMqgEV1uxbxNnRpWXJk102vDl+uR/4Zxdw4JH2tOY=
+	t=1777519544; cv=none; b=OzeGNLfqR2Wyw0s0vlX8nqiEgg8NHeRkdAqbBGRXhZrvZ0IQOJcE/uPbQX5lwwmlIRva10hGuTF6OP1CzGDELcN4ALXUbsU9xKqxu/7BIr3gL09lO5Sc8Z4/iCd8AcHvkd8u4cs+ESsrQkKymRag3gv89yhOWnEU/kBcsfrMl3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777512057; c=relaxed/simple;
-	bh=4WMlS+6nNoILyYGEsTdq0dsFvBtHEN+h2tbgANLOzb4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=kEBotG/P3WEcw8xWTBO/lQ41bsWhfdRiIZz2cZS2BfT9qWwEo9lmH5T9raunjwsIRA6o4seyMrWAhs5t3KIS4efMxZFs9HjRxmuMXD9P77ax5EVFA/HuFMR36C6gUBOTVIQURKuCGGWG+VImCim4cAq1p3xpcqSX094OK3UFy1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Dx7elzrvJpK1YFAA--.17407S3;
-	Thu, 30 Apr 2026 09:20:52 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxvsJxrvJpCsB3AA--.31058S3;
-	Thu, 30 Apr 2026 09:20:49 +0800 (CST)
-Subject: Re: [PATCH 0/3] LoongArch: KVM: Small enhancement about timer
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260414072313.3801110-1-maobibo@loongson.cn>
- <CAAhV-H5+mR5gnd6x6yUEFK7ZnWyYQVTiE6C=enk7bHxe2Mo2Sg@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <b876bfe6-4a47-559a-1f33-00e363cb62de@loongson.cn>
-Date: Thu, 30 Apr 2026 09:17:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1777519544; c=relaxed/simple;
+	bh=wBz7OM7TlHLm2WIVihmJBmiohjoSXyxgTPPi2XUGXGY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pv5PBTPYzaa9+eYPjyqxzPwEdlz4tO71YYGwHouilj5OJVsF1b4Ou7XoAYor1LlMcUFFgzSpBX13kLPL71kFV6zeRKyz0HD0KYgeAetSufzLVmgDFV54KAOT+n/GPA70DpQES/jQDlKZ7vSeB8fNsQlXNqXNbcDxckpwpL0NYl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTpJPZRC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTpJPZRC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD70C2BCB9;
+	Thu, 30 Apr 2026 03:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777519544;
+	bh=wBz7OM7TlHLm2WIVihmJBmiohjoSXyxgTPPi2XUGXGY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uTpJPZRCgWp5AfDjLmVTacGdTqRQtgMVXovLDOgY5LJHM1kRJTcTAjAjlzCgBpZvp
+	 PVuwPlNReHlcJ1FQ9PgNdCrqANSuP5dIHOg1WFVE1UPqOFQrLsNyEaAv1TIimY3yJ6
+	 dNLJ1aTEBqXG6wIIAe+hTTilZEZmiRBioNt3vpRgGA7/f1YWR+zd1uAs2cIdkGAHSF
+	 MZVBM6p+H1jvCofKth5JZ3lRO/w2r49uSYovI3hCogvHxcTwqsMRM3nY6Ct3vVu9oR
+	 CmYp2PZ4xwBzwNein821COzMLGD6YCZFeFgtsAQGoLKs2+1jduSB39tglFke+SexZz
+	 n/9KGgA7orfhA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7D0473809A07;
+	Thu, 30 Apr 2026 03:25:00 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5+mR5gnd6x6yUEFK7ZnWyYQVTiE6C=enk7bHxe2Mo2Sg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxvsJxrvJpCsB3AA--.31058S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw15ZF1fAFykZF4UGrWDZFc_yoW8Ww18pF
-	WI93ZIgr4kCr47Jw1av3Wqywn8AryrGr13W3Wxt3y8ArZIyryjqr47WFWFyF9xGrWrAF10
-	gF1rKrZ0g3WUJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
+Subject: Re: [PATCH 01/28] xor: assert that xor_blocks is not call from
+ interrupt
+ context
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <177751949930.2274119.9590297379331785751.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:24:59 +0000
+References: <20260327061704.3707577-2-hch@lst.de>
+In-Reply-To: <20260327061704.3707577-2-hch@lst.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
+ richard.henderson@linaro.org, mattst88@gmail.com, linmag7@gmail.com,
+ linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+ ardb@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+ maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+ chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, hca@linux.ibm.com, gor@linux.ibm.com,
+ agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ davem@davemloft.net, andreas@gaisler.com, richard@nod.at,
+ anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, tglx@kernel.org,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, herbert@gondor.apana.org.au, dan.j.williams@intel.com,
+ clm@fb.com, dsterba@suse.com, arnd@arndb.de, song@kernel.org,
+ yukuai@fnnas.com, linan122@huawei.com, tytso@mit.edu, Jason@zx2c4.com,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-raid@vger.kernel.org
 
+Hello:
 
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-On 2026/4/29 下午6:13, Huacai Chen wrote:
-> The first patch cannot be applied cleanly, I adjusted it and applied,
-> hope it is correct.
-> https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git/log/?h=loongarch-next
-yes, that is correct.
-And thanks for your modification.
-
-Regards
-Bibo Mao
+On Fri, 27 Mar 2026 07:16:33 +0100 you wrote:
+> Most of the optimized xor_blocks versions require FPU/vector registers,
+> which generally are not supported in interrupt context.
 > 
+> Both callers already are in user context, so enforce this at the highest
+> level.
 > 
-> Huacai
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > 
-> On Tue, Apr 14, 2026 at 3:23 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> By running LTP stress test cases on VM, there is an RCU timeout issue on
->> some vCPUs recently. The problem is that there is HW timer interrupt lost
->> issue when injecting SIP0/IPI interrupt from KVM hypervisor, this problem
->> is hidden because the KVM hypervisor will inject spurious timer interrupt
->> if emulated timer is expired. In late the spurious timer interrupt is
->> clear if old TI bit of ESTAT register is not set, so there will be RCU
->> timeout issue with LTP stress test.
->>
->> This patch set fixes the HW timer interrupt lost issue, also this patch
->> moves unconditional delay in timer interrupt clear scenery, which happens
->> seldomly; mostly the timer interrupt bit is set when it expires.
->>
->> Bibo Mao (3):
->>    LoongArch: KVM: Move AVEC interrupt injection in switch loop
->>    LoongArch: KVM: Fix HW timer interrupt lost when inject interrupt from
->>      software
->>    LoongArch: KVM: Move unconditional delay in timer clear scenery
->>
->>   arch/loongarch/kvm/interrupt.c | 37 +++++++++++++++++++++++++---------
->>   arch/loongarch/kvm/timer.c     | 16 +++++++++++++--
->>   2 files changed, 41 insertions(+), 12 deletions(-)
->>
->>
->> base-commit: d568788baab24875604c231f723dbb72387fb081
->> --
->> 2.39.3
->>
->>
+> [...]
+
+Here is the summary with links:
+  - [01/28] xor: assert that xor_blocks is not call from interrupt context
+    https://git.kernel.org/riscv/c/d8593b8f9354
+  - [02/28] arm/xor: remove in_interrupt() handling
+    https://git.kernel.org/riscv/c/b7ca705758b9
+  - [03/28] arm64/xor: fix conflicting attributes for xor_block_template
+    https://git.kernel.org/riscv/c/675a0dd596e7
+  - [04/28] um/xor: cleanup xor.h
+    https://git.kernel.org/riscv/c/3ea16a98518a
+  - [05/28] xor: move to lib/raid/
+    https://git.kernel.org/riscv/c/9e229025e247
+  - [06/28] xor: small cleanups
+    https://git.kernel.org/riscv/c/7c6e6b2b48e8
+  - [07/28] xor: cleanup registration and probing
+    https://git.kernel.org/riscv/c/0471415f3fd6
+  - [08/28] xor: split xor.h
+    https://git.kernel.org/riscv/c/54e20be48fd4
+  - [09/28] xor: remove macro abuse for XOR implementation registrations
+    https://git.kernel.org/riscv/c/35ebc4de1059
+  - [10/28] xor: move generic implementations out of asm-generic/xor.h
+    https://git.kernel.org/riscv/c/c46928fdcfa0
+  - [11/28] alpha: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/503793b1340e
+  - [12/28] arm: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/0d64a24ec0c0
+  - [13/28] arm64: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/3786f2ad0095
+  - [14/28] loongarch: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/033bee3e4963
+  - [15/28] powerpc: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/3f276cece4dd
+  - [16/28] riscv: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/5265d55b2146
+  - [17/28] sparc: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/7f96362396ee
+  - [18/28] s390: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/95c104cc5571
+  - [19/28] x86: move the XOR code to lib/raid/
+    https://git.kernel.org/riscv/c/77fd47e57a09
+  - [20/28] xor: avoid indirect calls for arm64-optimized ops
+    https://git.kernel.org/riscv/c/352ebd066b62
+  - [21/28] xor: make xor.ko self-contained in lib/raid/
+    https://git.kernel.org/riscv/c/e20043b4765c
+  - [22/28] xor: add a better public API
+    (no matching commit)
+  - [23/28] xor: add a better public API
+    (no matching commit)
+  - [24/28] async_xor: use xor_gen
+    https://git.kernel.org/riscv/c/7c12c32b9f73
+  - [25/28] btrfs: use xor_gen
+    https://git.kernel.org/riscv/c/0f629e7283ad
+  - [26/28] xor: pass the entire operation to the low-level ops
+    https://git.kernel.org/riscv/c/80dcf0a7832a
+  - [27/28] xor: use static_call for xor_gen
+    https://git.kernel.org/riscv/c/a21921dd02d3
+  - [28/28] xor: add a kunit test case
+    https://git.kernel.org/riscv/c/af53e85ef797
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
