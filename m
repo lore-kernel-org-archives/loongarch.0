@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94C1340DA6;
-	Thu, 30 Apr 2026 03:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8501535B64B;
+	Thu, 30 Apr 2026 03:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777519554; cv=none; b=SVtXiLJVEmUEVP+fmRVBydYvuzF8wccaPo6dMxrO5xNlr7zZE1qbPvC3g4n9AqwZJ/liK5uR2cO7M6q+jdCY4V19NkObgT5vbOR2EejEk2r5Bi4vYPQFSgRkQQjPzLnHrJ0fJmUJjmKIfNKAT8b7vpKepzBX2OlxNmRGBD6qovI=
+	t=1777519557; cv=none; b=A+lom9SgvoC5ZutrwzL9Cb/YD/v6g8lpWMKOWJQqz3FRZAdvndnLaRS4gciOqVFnkAL44fesL6rEq2NwB/vwqx0bK72aP7AZnnUGJW0xynaG8GU8i6pfXFN0SFQ1BGH/xDa4R9lPkPMH/2LWMvcrNo7LzynjJMgKDAK319SwdRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777519554; c=relaxed/simple;
-	bh=7DUN2QuqQEe+BONI1ESG4SkIz1fzsjbqa3ckTuuKON0=;
+	s=arc-20240116; t=1777519557; c=relaxed/simple;
+	bh=3A9sSPpTFnTSwNLnH2RiVekzHJbPnUK+mXyDzY4bjyk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=IEas1vT90gxtI1lPUrCSKfLn3neEyilN64FRKY7RTMK1LCD78B72sjJXOmrbj0TZdyM9NL5XFxDeRr6RA0JXPdGCjFVur4PZdsZIPhwFEY6s7F7g6g3ZkzJKgxmwIVBhucu/zZcWCwg3FQpewWbrqf4zNtzW48uHStQS7D6SxNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3K5G1Xo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hF4DQanB7nDIEnHKKWDnEcpT+BENzAjwoqCaVd1mQ0xaGdYKylFl+e73pRv07/uykrx+Iqk1nvHsAmen6d0vgyX/t5CsMVSdHWTvxGr3pfrjkym2h0s7USs5zHr3h+rdUVJ+a6ewTVhC1onsmnhQS9vcqxPteOcC8v1Zf82vAhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvM8my1I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3K5G1Xo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F0EC2BCB8;
-	Thu, 30 Apr 2026 03:25:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvM8my1I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 662B9C2BCB8;
+	Thu, 30 Apr 2026 03:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777519554;
-	bh=7DUN2QuqQEe+BONI1ESG4SkIz1fzsjbqa3ckTuuKON0=;
+	s=k20201202; t=1777519557;
+	bh=3A9sSPpTFnTSwNLnH2RiVekzHJbPnUK+mXyDzY4bjyk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S3K5G1XovhD07R5O5Cfcy7lVvTxvdUAegkMVL4L8Mtzf9fKcNC7CadGfDm94ncYW3
-	 /b3gcg0/YcLg9Als2F8ssWaUxHQUhQMOrsInNGp23YyNVEoZesnW9na1KfzAJGwADp
-	 KTU1UQLuwoaLC0FxYgCBT9ErRd1+nqtKD6J1vJmiEmkbMPNMtG+lgotURJHsePS61S
-	 RLCqfSNYiEnZojyCuQbicPLDo3ywac2PmflqikQdR6Ir9LNvsPRYjNWI6Ol8jDiw5K
-	 s6K1opc7+K/SSJ8ToRvLUcMAZC9t1wDEJ2EBfwZ5oF2rytHLJHY/YtizCxlNq2AgJI
-	 UMoMxqu7YBolw==
+	b=PvM8my1IW2Yjwupoq66vKLJIr1YZ/KioPkhJQkE7eo14dAk8o2H6RNfUatGZ2Au9S
+	 91HQM/8YvYPRiw98kHgqVpZmSf7VnKX3GtzG7tbbozHcDgaRlvxBU0lZAMm+aj7cPh
+	 qT6q1tde0FqSYSPt0N2fidtUIF1aUhoMl4reQhuruOMGgj3cRRvZeoBRiI4AEgorg0
+	 StaKda1S6UYGl5kKlqXb2yBN8WQ8cq7wMowo/Uy/ler0ew/dVewdsp0hCgMvA54aza
+	 CunUoeLgN5/VA34GkpqJiUE2zYwO5PBQl4g1nYfrAsGa+cekkOMHiB31Rm0HDxSQeo
+	 il5OF8PZWn6WQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA0123809A07;
-	Thu, 30 Apr 2026 03:25:10 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA3583809A07;
+	Thu, 30 Apr 2026 03:25:13 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,61 +37,43 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/4] arch, mm: consolidate empty_zero_page
+Subject: Re: [PATCHv7 16/18] mm: Remove the branch from compound_head()
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177751950929.2274119.3965174046465654804.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 03:25:09 +0000
-References: <20260211103141.3215197-1-rppt@kernel.org>
-In-Reply-To: <20260211103141.3215197-1-rppt@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
+ <177751951229.2274119.12563342067361093997.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:12 +0000
+References: <20260227193030.272078-16-kas@kernel.org>
+In-Reply-To: <20260227193030.272078-16-kas@kernel.org>
+To: Kiryl Shutsemau (Meta) <kas@kernel.org>
 Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- andreas@gaisler.com, bp@alien8.de, bcain@kernel.org, catalin.marinas@arm.com,
- chleroy@kernel.org, davem@davemloft.net, dave.hansen@linux.intel.com,
- david@kernel.org, dinguyen@kernel.org, geert@linux-m68k.org,
- guoren@kernel.org, deller@gmx.de, chenhuacai@kernel.org, mingo@redhat.com,
- johannes@sipsolutions.net, glaubitz@physik.fu-berlin.de,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, maddy@linux.ibm.com,
- linmag7@gmail.com, mattst88@gmail.com, jcmvbkbc@gmail.com,
- mpe@ellerman.id.au, mhocko@suse.com, monstr@monstr.eu, palmer@dabbelt.com,
- richard@nod.at, linux@armlinux.org.uk, shorne@gmail.com, surenb@google.com,
- tglx@kernel.org, vgupta@kernel.org, vbabka@suse.cz, will@kernel.org,
- linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
- loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
- linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org,
- x86@kernel.org
+ muchun.song@linux.dev, david@redhat.com, willy@infradead.org,
+ usamaarif642@gmail.com, fvdl@google.com, osalvador@suse.de, rppt@kernel.org,
+ vbabka@suse.cz, lorenzo.stoakes@oracle.com, ziy@nvidia.com, bhe@redhat.com,
+ mhocko@suse.com, hannes@cmpxchg.org, corbet@lwn.net, chenhuacai@kernel.org,
+ kernel@xen0n.name, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, kernel-team@meta.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ loongarch@lists.linux.dev, david@kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
+This patch was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Wed, 11 Feb 2026 12:31:37 +0200 you wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Fri, 27 Feb 2026 19:30:17 +0000 you wrote:
+> From: Kiryl Shutsemau <kas@kernel.org>
 > 
-> Hi,
+> The compound_head() function is a hot path. For example, the zap path
+> calls it for every leaf page table entry.
 > 
-> These patches cleanup handling of ZERO_PAGE() and zero_pfn.
-> 
-> v3 changes:
-> * move zero_page_pfn extern declaration back inside the helpers
-> * add tags, thanks all!
+> Rewrite the helper function in a branchless manner to eliminate the risk
+> of CPU branch misprediction.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v3,1/4] mm: don't special case !MMU for is_zero_pfn() and my_zero_pfn()
-    https://git.kernel.org/riscv/c/652d12bc74a0
-  - [v3,2/4] mm: rename my_zero_pfn() to zero_pfn()
-    https://git.kernel.org/riscv/c/9a1d0c738b45
-  - [v3,3/4] arch, mm: consolidate empty_zero_page
-    https://git.kernel.org/riscv/c/6215d9f4470f
-  - [v3,4/4] mm: cache struct page for empty_zero_page and return it from ZERO_PAGE()
-    https://git.kernel.org/riscv/c/26513781d1b3
+  - [PATCHv7,16/18] mm: Remove the branch from compound_head()
+    https://git.kernel.org/riscv/c/66b2a3d9ae46
 
 You are awesome, thank you!
 -- 
