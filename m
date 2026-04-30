@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BD334D4CC;
-	Thu, 30 Apr 2026 03:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3697333F5A8;
+	Thu, 30 Apr 2026 03:26:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777519569; cv=none; b=iyThELC4aHRqtiWd+bHzbqSgfqAODfSONylAMd7VxNPl9CbsfsWYf4JCfWsJyJ/LRup7fljvfqcQ/qvwkjRhzCZOKl5s68GxdU1c+Sn/29DY+KQPXDIZF0FVdpbS2nGHdP6oG1lQ7IjV7uvGpPGjXAkt7Pl7K9cnProOl23Njho=
+	t=1777519574; cv=none; b=dlEUWH9hrnbUWjeTrZV1w/tMtGnUZVMMYKhUdXRal7PbMupKFCZv+hL/UyQBayP7pca03FGv3ZsxRhIAKYP3tQb3SG/r/Bw4+zuwz2K3MmcyUsF68w6CCARw2/mqU5O+DeisSfFHLHNOvbXFTPfgZhdoHin5YNYVzBP/TLw3gkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777519569; c=relaxed/simple;
-	bh=Mv9m+6QFE5X2BSGU25QtTcnJE8P+nH7SNS4s/QHDQxg=;
+	s=arc-20240116; t=1777519574; c=relaxed/simple;
+	bh=THrrdSGjgRzaSbCrGespfxo5C/AWLl4KlIEGbaUs1N8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UC8RnCo5ERYdU0tkQW/c/QHq2qKhEob4EeXR8i0xn7T1Zo8gY3NWCunYv7zXDYfNDEShq4bGKqp0F4UfO3WAj6kXYj3aNiudYjmGGVuG8BKoSmSXtPZ9FRZGHpMjHJZnKePH2fx92SLO2vY+daJetgagBQg4HjuaEVQSQtwJQ/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juZ89lUU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=i8IugMoAHLoazn4827waPdWmbGSaPzBCJ0XqoEQ+nBFvhFI33fjkcrKEAHNcfhbGvAbycjT6wHMoCG4nUuYZv7j2+uDESNIixSvnAw/bs6vqSMiLh/ozQG59cxfD2XTQuoeUc34qkSpkn3GEW9TQ9wXJ8YwiWabEc3F9YpOp1z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzTbqLo/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juZ89lUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A64A6C2BCC7;
-	Thu, 30 Apr 2026 03:26:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzTbqLo/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB14C2BCB9;
+	Thu, 30 Apr 2026 03:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777519568;
-	bh=Mv9m+6QFE5X2BSGU25QtTcnJE8P+nH7SNS4s/QHDQxg=;
+	s=k20201202; t=1777519573;
+	bh=THrrdSGjgRzaSbCrGespfxo5C/AWLl4KlIEGbaUs1N8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=juZ89lUUjlVInyNLudhGL6gKUdYypOgVutLeQYu7+Zv9S1ojQMn1fsbg4/q8HA9kf
-	 uytXyHEjScBl37xivNSPE4ryJhsH6K+fNiVEE3Tibqd01DfSHLLdV6DIGHiyfLM0j1
-	 7lINbKqurIbK3kXn8ov3jBGtqjt9zr1HJOqGLUPQmNjzT4ay7v/AFZ6L1jO6UnQ4rh
-	 0keCg/YHJh/PxXoT6xU3vqXVkdyYSyavz0pn2sGolZ+WXuho12ORsn1aVio9mo8Pvg
-	 7/PlMZGkUL4uMfmMsq6/Hm8MqMlXxt9gGwLkoqjr+NZqDNUWGsEQTi8myDrLsVuFeA
-	 HFH46Dai3te4g==
+	b=UzTbqLo/5B2o+wNCv7hc433OYzKq4siikxTyngUKDMF3HAeUjhBhAk77XupcxRUvU
+	 8AQeEfOAPdqCa9Uxdu60usplkxVCGl2lAhF6QZOdLWIjERQA7vDLeINPZy/5ERe7Wc
+	 ghiINRi89Td2t+djUJI7HVkMnXuK1rdp0d0YYVr2nHuJNC05bQejhStGEvFx6LEv4v
+	 Q0foheq2svz+12OFi+UHX6I/M6rycHRVU+nwE7Bew/REJdDDUJFX4jYb42DVn24wgZ
+	 Adw0Roiy4+syrE/ThlZQ2sCXbjShOe4cVpKtA73HBp9XxbgCtMQ6+9J8F7NCLPpp9Q
+	 EzM7rlb9XVxGg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 02CFE3809A07;
-	Thu, 30 Apr 2026 03:25:25 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FE533809A07;
+	Thu, 30 Apr 2026 03:25:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,46 +37,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv7 03/18] mm: Rename the 'compound_head' field in the
- 'struct
- page' to 'compound_info'
+Subject: Re: [PATCH v5 0/2] Fix bugs and performance of kstack offset
+ randomisation
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177751952355.2274119.4433106526683678449.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 03:25:23 +0000
-References: <20260227193030.272078-3-kas@kernel.org>
-In-Reply-To: <20260227193030.272078-3-kas@kernel.org>
-To: Kiryl Shutsemau (Meta) <kas@kernel.org>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- muchun.song@linux.dev, david@redhat.com, willy@infradead.org,
- usamaarif642@gmail.com, fvdl@google.com, osalvador@suse.de, rppt@kernel.org,
- vbabka@suse.cz, lorenzo.stoakes@oracle.com, ziy@nvidia.com, bhe@redhat.com,
- mhocko@suse.com, hannes@cmpxchg.org, corbet@lwn.net, chenhuacai@kernel.org,
- kernel@xen0n.name, palmer@dabbelt.com, paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, kernel-team@meta.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev, david@kernel.org
+ <177751952875.2274119.16398594062786998071.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:28 +0000
+References: <20260303150840.3789438-1-ryan.roberts@arm.com>
+In-Reply-To: <20260303150840.3789438-1-ryan.roberts@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-riscv@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, maddy@linux.ibm.com, mpe@ellerman.id.au,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, kees@kernel.org,
+ gustavoars@kernel.org, arnd@arndb.de, mark.rutland@arm.com, Jason@zx2c4.com,
+ ardb@kernel.org, jeremy.linton@arm.com, david.laight.linux@gmail.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+This series was applied to riscv/linux.git (fixes)
+by Kees Cook <kees@kernel.org>:
 
-On Fri, 27 Feb 2026 19:30:04 +0000 you wrote:
-> From: Kiryl Shutsemau <kas@kernel.org>
+On Tue,  3 Mar 2026 15:08:37 +0000 you wrote:
+> [Kees; I'm hoping this is now good-to-go via your hardening tree? It would be
+> good to get some linux-next testing.]
 > 
-> The 'compound_head' field in the 'struct page' encodes whether the page
-> is a tail and where to locate the head page. Bit 0 is set if the page is
-> a tail, and the remaining bits in the field point to the head page.
+> Hi All,
 > 
-> As preparation for changing how the field encodes information about the
-> head page, rename the field to 'compound_info'.
+> As I reported at [1], kstack offset randomisation suffers from a couple of bugs
+> and, on arm64 at least, the performance is poor. This series attempts to fix
+> both; patch 1 provides back-portable fixes for the functional bugs. Patch 2
+> proposes a performance improvement approach.
 > 
 > [...]
 
 Here is the summary with links:
-  - [PATCHv7,03/18] mm: Rename the 'compound_head' field in the 'struct page' to 'compound_info'
-    https://git.kernel.org/riscv/c/d50569612c29
+  - [v5,1/2] randomize_kstack: Maintain kstack_offset per task
+    https://git.kernel.org/riscv/c/37beb4256016
+  - [v5,2/2] randomize_kstack: Unify random source across arches
+    https://git.kernel.org/riscv/c/a96ef5848cb0
 
 You are awesome, thank you!
 -- 
