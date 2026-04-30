@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CB638F927;
-	Thu, 30 Apr 2026 03:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DAC3939C9;
+	Thu, 30 Apr 2026 03:26:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777519597; cv=none; b=k+T9OyfhNj//1ZNcMcEas26hpGS6678jnq5cWXiIjqmPT/jk7BiAATOlPR4qyf5qCmHTYibMtChvN2esII0q2FKp3onU1Uqf5XYlKF+2iiYmcdL+DHiakTTp14daq7etrxsmMJs/6ROacQoRmBuIfQLh0zSyfxZ3w/SNJnA0OoA=
+	t=1777519598; cv=none; b=sAq3dsw2ONxWvsR/vsb+Fq16CVhmrcbRlaJJTht4oevy/91xXQP+jSq7HOPOY/NAglTfe37VYOAifC3Q3H279XeCpHVUJR2GXFrXLX0xALuDghLzKKLvEjZDrgZtL3pWVHzz+AfWkgXKLfrgvQbD2fRUOjfg9iCln9lNkCQWHQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777519597; c=relaxed/simple;
-	bh=bc+dg0Bc8LDaQ9OEb5RjsesIcFKeDCO/6xovARLSG30=;
+	s=arc-20240116; t=1777519598; c=relaxed/simple;
+	bh=l9exXaykMZZr58ApvA3wgjdBqbjJXmcg2LD51E1L2d8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=e2gzOzooa4ruTjvRVN+Ji3VZpVOa0daBGeS5ExFUSmf58lHK7TEYNwjhFayXJjR5t35lhCaeYFaHTs+md58RwmVJlyfkTVVC7Ax+EoWDnCQ4GFCPMpRmtl54uQ73t8zz9b7z+H98MeUpb/L8foZk+H/BIjxo1DmpQzozXV6FvNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geUpuuDM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fHRh6fOO7W95GgKPTjcVjtirDJIml6iMBeUMVNOGZj5zvcj07ltbJpuXMmQrHHUYOpU5+oVHS1EdvrrCDrrhR9I4tPgRVo48z3oYhJj+9TrZEVJ5NVXJGYeljLkjw4YqrdRquQsSOc9Z7wixpouDQGRwmJO2gbnrMqLtI1PlIfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQ5fUnGV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geUpuuDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF135C2BCB9;
-	Thu, 30 Apr 2026 03:26:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQ5fUnGV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3B0C2BCC6;
+	Thu, 30 Apr 2026 03:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777519596;
-	bh=bc+dg0Bc8LDaQ9OEb5RjsesIcFKeDCO/6xovARLSG30=;
+	s=k20201202; t=1777519598;
+	bh=l9exXaykMZZr58ApvA3wgjdBqbjJXmcg2LD51E1L2d8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=geUpuuDMCyhCp6bEdcbfN0LxnZCUCG0dgvu3qA/x+vL21nkrLzZ8fbVpg72WGZE28
-	 GW58cY5htqwvpdHnIBBxusd/QaNcLFa+lj440eecLAww3/Tl672LYNkzLLEjf/tTSC
-	 BpJ/B2ryHel/66TKXqJYyWj2hlvJjZgUYAyyblpCJqEkiH+W7IzZtgCsm05BvXOqTC
-	 7UXOUp/0g8nuPuEp/UKXTadmyETa8KxH8Ey5ukE8RHBtYyFcXm2Y2LcaUH2nkGobnw
-	 UofVwlyT6LtPYOcYzQrW4VSyZ9ncKX38Ij7OlcUNxKwM+79KdZnCJOFbQp/inSmfSd
-	 OIy8h9cqLZpvQ==
+	b=VQ5fUnGVnOy9olGba/PpFhmIOWwrvE63bg7wf8QD1oVMBU1BxMtz5Q5sq/JwQ9xtx
+	 FBCndWX7NJpcwHQS2uh8ZRD+UwKJS8Nf/xOjB7kKUPQy858zCbkge2oAV6lxAQf625
+	 gG1qodBE+N3L2UtwgzEs5J0HoMAeFALuJQm6hAGuvkiAJgkXb28kjlalsRs3n3a2TF
+	 29IamRcKDsnYhlWjglq3Ko8zPoEuXsWpPSgFQW5Uw0WEZ3PhmG1Et2p+yJY2KivWmR
+	 Vv+BDgeCmlfDBpvBGUWuK6vk0BLhwJE3vHWgs2Tf1Bq4zcCUvorNfflKfJA4kV/UO2
+	 SQxIDV5JK1LdQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FDD13809A07;
-	Thu, 30 Apr 2026 03:25:53 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9F3C3809A07;
+	Thu, 30 Apr 2026 03:25:54 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
@@ -37,46 +37,59 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv7 12/18] mm/hugetlb: Remove fake head pages
+Subject: Re: [PATCH 0/8] firmware: sysfb: Consolidate config/code wrt.
+ sysfb_primary_screen
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <177751955179.2274119.2481489263486900849.git-patchwork-notify@kernel.org>
-Date: Thu, 30 Apr 2026 03:25:51 +0000
-References: <20260227193030.272078-12-kas@kernel.org>
-In-Reply-To: <20260227193030.272078-12-kas@kernel.org>
-To: Kiryl Shutsemau (Meta) <kas@kernel.org>
-Cc: linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- muchun.song@linux.dev, david@redhat.com, willy@infradead.org,
- usamaarif642@gmail.com, fvdl@google.com, osalvador@suse.de, rppt@kernel.org,
- vbabka@suse.cz, lorenzo.stoakes@oracle.com, ziy@nvidia.com, bhe@redhat.com,
- mhocko@suse.com, hannes@cmpxchg.org, corbet@lwn.net, chenhuacai@kernel.org,
- kernel@xen0n.name, palmer@dabbelt.com, paul.walmsley@sifive.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr, kernel-team@meta.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- loongarch@lists.linux.dev
+ <177751955329.2274119.12779807302343885295.git-patchwork-notify@kernel.org>
+Date: Thu, 30 Apr 2026 03:25:53 +0000
+References: <20260402092305.208728-1-tzimmermann@suse.de>
+In-Reply-To: <20260402092305.208728-1-tzimmermann@suse.de>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: linux-riscv@lists.infradead.org, javierm@redhat.com, arnd@arndb.de,
+ ardb@kernel.org, ilias.apalodimas@linaro.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ airlied@gmail.com, simona@ffwll.ch, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ longli@microsoft.com, deller@gmx.de, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-efi@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
-by Andrew Morton <akpm@linux-foundation.org>:
+This series was applied to riscv/linux.git (fixes)
+by Ard Biesheuvel <ardb@kernel.org>:
 
-On Fri, 27 Feb 2026 19:30:13 +0000 you wrote:
-> From: Kiryl Shutsemau <kas@kernel.org>
+On Thu,  2 Apr 2026 11:09:14 +0200 you wrote:
+> The global state sysfb_primary_screen holds information about the
+> framebuffer provided by EFI/BIOS systems. It is part of the sysfb
+> module, but used in several places without direct connection to
+> sysfb. Fix this by making users of sysfb_primary_screen depend on
+> CONFIG_SYSFB. Fix a few issues in the process.
 > 
-> HugeTLB Vmemmap Optimization (HVO) reduces memory usage by freeing most
-> vmemmap pages for huge pages and remapping the freed range to a single
-> page containing the struct page metadata.
-> 
-> With the new mask-based compound_info encoding (for power-of-2 struct
-> page sizes), all tail pages of the same order are now identical
-> regardless of which compound page they belong to. This means the tail
-> pages can be truly shared without fake heads.
+> Patches 1 and 2 fix general errors in the Kconfig rules. In any case,
+> these patches should be considered even without the rest of the series.
 > 
 > [...]
 
 Here is the summary with links:
-  - [PATCHv7,12/18] mm/hugetlb: Remove fake head pages
-    https://git.kernel.org/riscv/c/622026e87c40
+  - [1/8] hv: Select CONFIG_SYSFB only for CONFIG_HYPERV_VMBUS
+    https://git.kernel.org/riscv/c/d33db956c961
+  - [2/8] firmware: efi: Never declare sysfb_primary_display on x86
+    https://git.kernel.org/riscv/c/5241c2ca33bb
+  - [3/8] firmware: sysfb: Make CONFIG_SYSFB a user-selectable option
+    (no matching commit)
+  - [4/8] firmware: sysfb: Split sysfb.c into sysfb_primary.c and sysfb_pci.c
+    (no matching commit)
+  - [5/8] firmware: sysfb: Implement screen_info relocation for primary display
+    (no matching commit)
+  - [6/8] firmware: sysfb: Avoid forward-declaring sysfb_parent_dev()
+    (no matching commit)
+  - [7/8] firmware: efi: Make CONFIG_EFI_EARLYCON depend on CONFIG_SYSFB; clean up
+    (no matching commit)
+  - [8/8] firmware: sysfb: Move CONFIG_FIRMWARE_EDID to firmware options
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
