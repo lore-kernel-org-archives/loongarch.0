@@ -1,68 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C375C363C74;
-	Fri,  1 May 2026 11:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125073126CA;
+	Fri,  1 May 2026 12:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777635785; cv=none; b=KN/6CzSMJzPCC/PkT/tQgvGrSSvt6QPZiE81uSmyruJuCkS2Xv+r/r37STVrzE+St94LBnb+1ofiToEO4+R+Y94o/QIKYILSjFYcsFPuiNsLz9FbHPJRqj9ttFPEgZVAh1PxugcUVtQAcktgRtVcg0Z/5JrxKSVy/YADjH4nOI8=
+	t=1777639052; cv=none; b=pvMBwJYBBCE6M3xkwz8PipIqzfylmoy8mP5me1umCXbyUq47bKXVpH1MBgmy5HYHSIT2FI2YucfeisLXMl0Km9+UcDPVbaE1fCVRxIfV7UnIxDhI97U8BAApBWD9iR/Df/RKHA+vuV0Zx0Fx0DIv9Xx4oFLpslWV//08Ine4kJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777635785; c=relaxed/simple;
-	bh=MjXnLLmFvmholljuRUsvlhGN6dNSerIkOv+PYpeduPM=;
-	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=KxOjk5qnjMdiHbrGn1Nhk3o9zrQjIUgL6GvJ58pytXyS5dI8DHVdePk9mQecPd5+sEhrvEbBs0OwkDHiXd/UaOMcoEWxhRmgckLzsOeXDf66jYlXw2+q3l1MFV/e/V8uDm38xuE7LSUi7nqPYsZleIYnkRgf+loozJRJVWoYHlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rDvy10tW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777639052; c=relaxed/simple;
+	bh=5kGuaadnKaNCqcERUi2XASSCSHrAJYx2iRIUpEEl5NI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A44WDV4vXXewW0SM0/dXnCKko52ZK+/syaYVk8vt8c0yWnRvldgHjTwnl/mH/5aGLEaObEUszthi8YCJzSiI6RFgwpiuz4eyx44XlwWEJagqgn8k59a49ksf8IHCL0p1f1oUnt2y1le5EgqZBGLtEEmmO4YGYGwMNDQAWeEPu2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=jTJDn/wC; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=AiMtY3qu; arc=none smtp.client-ip=77.93.157.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rDvy10tW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 576A9C2BCB4;
-	Fri,  1 May 2026 11:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1777635785;
-	bh=MjXnLLmFvmholljuRUsvlhGN6dNSerIkOv+PYpeduPM=;
-	h=Subject:To:Cc:From:Date:From;
-	b=rDvy10tWleQ9jgFlQKn5tA+N5YGDJWil96C3Jhl7qkVUpkzF4fRaJrT8Ba5BFvkKF
-	 RBP2tYGaoZlomyHPup7/2xhUzPcqL3IUf7zmHT8KLOZN7D/n9j6070urmvg9JGio69
-	 YfpdXHX/HTdcoMK4kNYlz6sK4WO5Xd0qTdfwg5LA=
-Subject: Patch "perf annotate: Use jump__delete when freeing LoongArch jumps" has been added to the 7.0-stable tree
-To: chenhuacai@kernel.org,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,namhyung@kernel.org,rong.bao@csmantle.top,wangrui@loongson.cn
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 01 May 2026 13:41:47 +0200
-Message-ID: <2026050147-unlikable-deforest-52e0@gregkh>
+	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="jTJDn/wC";
+	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="AiMtY3qu"
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
+	BIMI-Selector; bh=ei/Rqey5K8WLehrvUaPvgFF5Zx4OF1SUe1rmU4V+CwU=; t=1777639051;
+	x=1778243851; b=jTJDn/wCLJN9R6l856r80TE+qovQgDmpt5LMHOaKB8LdqZjsEsS7MZ9eTUa5B
+	zw9tSXP2AIAsuRnznI95qlQDw==;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
+	BIMI-Selector; bh=ei/Rqey5K8WLehrvUaPvgFF5Zx4OF1SUe1rmU4V+CwU=; t=1777639051;
+	x=1778243851; b=AiMtY3qucr/PR9jipuMyB8Duo4HXEyfE6cVlujQgk/BsSGPdXRtLZhDgMCYy+
+	ZjSYhUTF4I+Ho7zFUOhB9s5aSHOwFYgZJb9L6QzrBRXfDz/3pM++TEkCWuu4C3HuT7zp5ggCMykzD
+	6XWstHgGHAkmCfyXObF8tOjoDs8rjcF/XwkyrIXuPeSzMXatb7ceoIR4FXnA0jGgjy5uwaI84rE2i
+	xEZUroLZEo3sSNg4e59GHOt/51FSVPhLjO9n7Z9QNBPOTx+MVMY9mp3JmZFxDT/1LLiiBXewPRGit
+	EowoMqUzQ4Kf/Gyy5jatVmMmWW75wSRkxuSNsUMlw4fbmC5YRmrxLRNAn9ImDeW6+BYieXPwVkbvS
+	6ko0Wufu6qpTZIzZVHl+83JNmjQsG9+duO1x+JjsAZUyKOCINOcpEipAB7jVyakrfrh9Yv8F12HZc
+	IvRSSc102YTMndlu/xQMZoEFJtBSzxyrNmMJpIy+9loM+QCpnSlEXK3nabMEUdKOjh;
+Received: from [199.15.77.47] (helo=loongcatbox)
+	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <rong.bao@csmantle.top>)
+	id 1wIn7Y-00000000LGl-0Ls4;
+	Fri, 01 May 2026 20:37:28 +0800
+From: Rong Bao <rong.bao@csmantle.top>
+To: stable@vger.kernel.org
+Cc: Rong Bao <rong.bao@csmantle.top>,
+	WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 6.12.y] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Fri,  1 May 2026 20:37:17 +0800
+Message-ID: <20260501123717.4109458-1-rong.bao@csmantle.top>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <2026050116-judo-challenge-3a9d@gregkh>
+References: <2026050116-judo-challenge-3a9d@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+X-Rcpt-Check: Accepted by authentication
+X-42: Don't panic! 
+BIMI-Selector: v=BIMI1; s=me
 
-
-This is a note to let you know that I've just added the patch titled
-
-    perf annotate: Use jump__delete when freeing LoongArch jumps
-
-to the 7.0-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     perf-annotate-use-jump__delete-when-freeing-loongarch-jumps.patch
-and it can be found in the queue-7.0 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From a355eefc36c4481188249b067832b40a2c45fa5c Mon Sep 17 00:00:00 2001
-From: Rong Bao <rong.bao@csmantle.top>
-Date: Mon, 13 Apr 2026 18:03:55 +0800
-Subject: perf annotate: Use jump__delete when freeing LoongArch jumps
-
-From: Rong Bao <rong.bao@csmantle.top>
-
-commit a355eefc36c4481188249b067832b40a2c45fa5c upstream.
+[ Upstream commit a355eefc36c4481188249b067832b40a2c45fa5c ]
 
 Currently, the initialization of loongarch_jump_ops does not contain an
 assignment to its .free field. This causes disasm_line__free() to fall
@@ -134,47 +139,37 @@ Cc: loongarch@lists.linux.dev
 Signed-off-by: Rong Bao <rong.bao@csmantle.top>
 Tested-by: WANG Rui <wangrui@loongson.cn>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/perf/util/annotate-arch/annotate-loongarch.c |    1 +
- tools/perf/util/disasm.c                           |    2 +-
- tools/perf/util/disasm.h                           |    2 ++
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/arch/loongarch/annotate/instructions.c | 1 +
+ tools/perf/util/disasm.c                          | 1 +
+ 2 files changed, 2 insertions(+)
 
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const s
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+index ab43b1ab51e3ba989d5d2864b3fe5205a1620916..e16350155bf1d3625e3e7fb68609f3859fb7e344 100644
+--- a/tools/perf/arch/loongarch/annotate/instructions.c
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -95,6 +95,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
  }
  
- static const struct ins_ops loongarch_jump_ops = {
+ static struct ins_ops loongarch_jump_ops = {
 +	.free	   = jump__delete,
  	.parse	   = loongarch_jump__parse,
  	.scnprintf = jump__scnprintf,
- 	.is_jump   = true,
+ };
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 8a6f450c6f8e77c12ac9129c2beba4f026b3e374..8f35232f7f22c742f3a002dddbffb8611b66ff75 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *in
- 			 ops->target.offset);
- }
+@@ -44,6 +44,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+ 			   struct ins_operands *ops, int max_ins_name);
+ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+ 			   struct ins_operands *ops, int max_ins_name);
++static void jump__delete(struct ins_operands *ops);
  
--static void jump__delete(struct ins_operands *ops __maybe_unused)
-+void jump__delete(struct ins_operands *ops __maybe_unused)
- {
- 	/*
- 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *in
- int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
-+void jump__delete(struct ins_operands *ops);
-+
- int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
- 
- char *expand_tabs(char *line, char **storage, size_t *storage_len);
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
 
+base-commit: 18cd79ce247a35c2938698145d1834a09b5f7777
+-- 
+2.54.0
 
-Patches currently in stable-queue which might be from rong.bao@csmantle.top are
-
-queue-7.0/perf-annotate-use-jump__delete-when-freeing-loongarch-jumps.patch
