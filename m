@@ -1,175 +1,73 @@
-Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5073921D8;
-	Fri,  1 May 2026 12:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18D42E173B;
+	Fri,  1 May 2026 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777639237; cv=none; b=UeWAtFubK5EKPchQh48tzu6Ybg0baa73tjYGt+XGBgCOIi/gCKiIzT65LyP5TC4p9nxPgmOPURIa825EVxAJRux7J2bquCapyWXTh8GFF40AWgmGAJ/+Ca666vZpAdP8mUvNl4fWNeTD1ZpOw9YManKHeV5xBxd3ZjUGz5ZZF08=
+	t=1777647436; cv=none; b=NlF3vnCEnFhzSe+QDJS/yhgHpzjBR//UcPidoPv+eA7NPT3KH0efs9APmeueny5tVAwlzdioqDY/SzSiRz8OljpcNWjrWYjZuNUojEXVR76wbBcFvwTkA1geFhAg+3raqI9jfglvtc/lkyiLRGIsT52G/p1dnWnZL2cO61zgPhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777639237; c=relaxed/simple;
-	bh=fdNEXmNvBb0fLlg1T5UQffKpl7utvUmlADoT7QiM01o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BvW/wzq6KIxYFoytyj4OiW+tTqrf2Mv6iMj+fhIg0abb3eCDb+jxeqXdJ95jMe+qRwLu41Q3HqAFYLRDazLRDyaJ4cSHzzXtViW6ol+G5VLw/H13B1lsnoCOn7brMTZyjH//F94iF1JS7YzoVBuiY6pfb+qq78fgctdCSx6EQZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=LBDq3vDq; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=nu3AVgBh; arc=none smtp.client-ip=77.93.157.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
+	s=arc-20240116; t=1777647436; c=relaxed/simple;
+	bh=ds5qEdrw885QHRjvKKYO1xHswqo7gHLI9viitfcmqVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rzoIG24mBrbEDvp2oAM1L6B1F/8lFiWczTQXqxBTIkW/cNAc31BcqWvdDG9yRbEYhfNHFDhBgfLyBKolDmbneq/3tZE/9Q0KGWE/QMXOMx/WWDUktNh7pWPircSdRlW98AhasbGyy6QjXWIP1FoB9jclHXRUtFgCnyux2lYHFmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Er8GF8z4; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="LBDq3vDq";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="nu3AVgBh"
-DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
-	BIMI-Selector; bh=ynKYvQ+XTvbrh45g38hs0XCGPrBgqG8ni13XOi0ZQao=; t=1777639236;
-	x=1778244036; b=LBDq3vDqhwMRuXZnIRusQM6+9N+E+wY5Akv9GRT5lNzrbEqDFL7Klw1MhpXw9
-	0RNzEyPDnoj5ALjI+9tPpsKCA==;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Er8GF8z4"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
-	BIMI-Selector; bh=ynKYvQ+XTvbrh45g38hs0XCGPrBgqG8ni13XOi0ZQao=; t=1777639236;
-	x=1778244036; b=nu3AVgBhQUWbOafU5QXbDyqhK2vJ5LSajti/SVOqx9Yc3NfQLz++uhmUtqB3F
-	vwwj/nQG2FQ7xo2l/2La8pq7y8hA8ioxsJxkCjCLD3m/C+x7gsDleY0vbrcW+juZJz8t1P/q53niK
-	o5bDKvfW7yVqsr2zsqaCz7RyfdmaE1RScV42mMl1r8xFsQxoIfhjRmpyqrU9GAQOPnW4aJb7sZJI5
-	DxWTyPUhSa3xKrgTuTksevJ5rwW7QYpNa02vqL9PMGr5EJmbmsLP/vEdGwpLyGpay3TwmYDiL3VE9
-	moRYeRghHoQni3omF1vF9EOdn00aMZml4QcIZtHEFiRKBkcUhy1ydoRYMsEM0JBc3h22/gsTnUaUh
-	M0kkLOyt+Exws5oFOUOlVHvEqX2/8w4EMg6IyeeB6lxwtYifplB8AmGsMg7ETlehciAfcERdtk6qt
-	Ik5f6Pykkd0Uim0qDAjT/Tt7ZAgRQmUnpNr6oJWqKv7REfLUi2xakzSlQ6AZTiRubh;
-Received: from [199.15.77.47] (helo=loongcatbox)
-	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <rong.bao@csmantle.top>)
-	id 1wImsy-00000000LDq-33ou;
-	Fri, 01 May 2026 20:22:25 +0800
-From: Rong Bao <rong.bao@csmantle.top>
-To: stable@vger.kernel.org
-Cc: Rong Bao <rong.bao@csmantle.top>,
-	WANG Rui <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 6.18.y] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Fri,  1 May 2026 20:22:05 +0800
-Message-ID: <20260501122205.4089260-1-rong.bao@csmantle.top>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <2026050115-composed-stand-38e1@gregkh>
-References: <2026050115-composed-stand-38e1@gregkh>
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GWaEOZ6T8RZshC5VNeX+VR+c38seOstsZgFtVZK1Yb0=; b=Er8GF8z4i4fcdoqldcSz6UdIrK
+	0uV2fMmb401OPsbWUDQlEgY0WImYvRoaOS/51Kt7cci4PwM0IwWZmDRUbGXw7O9IkTUTcXx4Dq2Om
+	1ySnKP5ZPsmA0cdTKwQEUsbejJKOkDxp+xsnqOc9et7bCG9WzZFKFYNxcz4UjijcH9lNIaYGg9axV
+	D8CvZuRnVnBvGs0WeFCpwaRxMrcj+ZmM+kVA2Q+aDmR35tDfpqtDlNjfzVDU0ieNT7dT3nkuFY8KO
+	oBaeuIlQkfSbM8D3+gtqA/Kl4BULEQcG2OPtDBswRpN88NbjoIlZE7bl29JItAlrzNVWRNazfWERT
+	lB1uWyaw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wIpIN-00000008wbR-3iIK;
+	Fri, 01 May 2026 14:56:48 +0000
+Date: Fri, 1 May 2026 15:56:47 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Barry Song <baohua@kernel.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org,
+	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, jack@suse.cz,
+	pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn,
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com,
+	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com,
+	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <afS_L-5XeWIldTXA@casper.infradead.org>
+References: <20260430040427.4672-1-baohua@kernel.org>
+ <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rcpt-Check: Accepted by authentication
-X-42: Don't panic! 
-BIMI-Selector: v=BIMI1; s=me
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
 
-[ Upstream commit a355eefc36c4481188249b067832b40a2c45fa5c ]
+On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
+> 1. There is no deterministic latency for I/O completion. It depends on
+> both the hardware and the software stack (bio/request queues and the
+> block scheduler). Sometimes the latency is short; at other times it can
+> be quite long. In such cases, a high-priority thread performing operations
+> such as mprotect, unmap, prctl_set_vma, or madvise may be forced to wait
+> for an unpredictable amount of time.
 
-Currently, the initialization of loongarch_jump_ops does not contain an
-assignment to its .free field. This causes disasm_line__free() to fall
-through to ins_ops__delete() for LoongArch jump instructions.
-
-ins_ops__delete() will free ins_operands.source.raw and
-ins_operands.source.name, and these fields overlaps with
-ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
-Since in loongarch_jump__parse(), these two fields are populated by
-strchr()-ing the same buffer, trying to free them will lead to undefined
-behavior.
-
-This invalid free usually leads to crashes:
-
-        Process 1712902 (perf) of user 1000 dumped core.
-        Stack trace of thread 1712902:
-        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
-        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
-        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
-        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
-        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
-        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
-        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
-        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
-        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
-        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
-        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
-        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
-        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
-        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
-        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
-        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
-        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
-        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
-        ELF object binary architecture: LoongArch
-
-... and it can be confirmed with Valgrind:
-
-        ==1721834== Invalid free() / delete / delete[] / realloc()
-        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
-        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
-        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
-        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-
-This patch adds the missing free() specialization in loongarch_jump_ops,
-which prevents disasm_line__free() from invoking the default cleanup
-function.
-
-Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
-Cc: stable@vger.kernel.org
-Cc: WANG Rui <wangrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
-Tested-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/arch/loongarch/annotate/instructions.c | 1 +
- tools/perf/util/disasm.c                          | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
-index 1c3abb43c8d72197dbc8b13f5c42dfad79787e2e..1a0a1dacebc30c72e916815f872eeb45561b533f 100644
---- a/tools/perf/arch/loongarch/annotate/instructions.c
-+++ b/tools/perf/arch/loongarch/annotate/instructions.c
-@@ -97,6 +97,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
- }
- 
- static struct ins_ops loongarch_jump_ops = {
-+	.free	   = jump__delete,
- 	.parse	   = loongarch_jump__parse,
- 	.scnprintf = jump__scnprintf,
- };
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index b1be847446fea0279043cbf19b42ff817615a5b1..c513db41137fa414aab8afe191dd209ae01508d4 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -47,6 +47,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
-+static void jump__delete(struct ins_operands *ops);
- 
- static void ins__sort(struct arch *arch);
- static int disasm_line__parse(char *line, const char **namep, char **rawp);
-
-base-commit: 1fe06068166d4fc16722201f267b1fe19efad639
--- 
-2.54.0
+But does that actually happen?  I find it hard to believe that thread A
+unmaps a VMA while thread B is in the middle of taking a page fault in
+that same VMA.  mprotect() and madvise() are more likely to happen, but
+it still seems really unlikely to me.
 
