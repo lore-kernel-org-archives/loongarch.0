@@ -1,90 +1,62 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDA6214A9B;
-	Fri,  1 May 2026 19:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE19316197;
+	Fri,  1 May 2026 21:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777664373; cv=none; b=eTIthslF2fRBDNaxu4D4FWihbt7eDM3yD4OMbEd8BQ51RTm8siTawlMC+gfXVQT/e134PToa5IYikRI9M4wtVyctT6M7/LzSssCUQMBncstF2MkmSDWCZT51YTXdJvwhVtJC7hLNz0gPXcOxL2PtTWB8/WEFWS6nJwZo+Iu6Ino=
+	t=1777669864; cv=none; b=gf4ew6O/OoDf3vNY9MkzUkSGjERSPc3hQlkBkrGO2bbrTfLGz0oMZv+1LVhxC7R9GcfW4XYeqeTDXoFrG8KLCWCP0zW8N9399uKvCYBOxCUB5U4RPXsVFX2u7IKvdRkC2AaI55ZVX6oPmy4BZorLKKX0Qy6J9MHjMHCifJ/KmB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777664373; c=relaxed/simple;
-	bh=w1+UajOyjTTGaFHm76vcGt07GcQBpJdXIpMH/yU8BUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gYAjKUHZd/kVRZ1Q9ItKGLTu3ID1ujTghw9hI+v/pdlXI7tisZdZlDNZk+A+rtQ2pA8OJb187U5wi0am6ux5C++Ylj3reGbXy/KFNcDcDc3IClyLf3h879Ognr9yo/vVbBYu5ovlXcOFQ915hsHQuyWxS6TEUtU9WtHVt7ohtpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uHjHrPPD; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1777669864; c=relaxed/simple;
+	bh=pwK0cKnbrke4wl7ygUciECKQPNSG1oPGsGcCARLHQOs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bHNIi76HOCqpYS8D01MnbDk4hLwnTBxCbNP4QbzXX3HqN79kN5mwxhrSDSql39/RbHghrVPAYSeP9gG9gHBcOceQ4Co6wG3obnNLamXZEjsdj6UVxNPeD6WDtWXNKk7phIk/gv66VI3ukk75RlbY11eKhBwCZdrvDHqrbTNNlJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HE1gDgix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uHjHrPPD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=rp8f/WeQia8QAD+YJmPABxXPXrvHyOM5hZfBchCKMDA=; b=uHjHrPPD2LeDk5mLziBh3YyqEj
-	pfhR1tJpiKuUsooCkGqL2JZsb+D6vXBCRLBIbK0Q44xOCZOqwgtOj5wLR1q5KX9Q3NvcP0rciSd+G
-	ckgC0Zlz14TMgm+JsN7ZyOCt1Uvx4cReuGP0X3rwHMIqy2VNYPteQIn4/oeQedWAMeFvYDZOK+5J9
-	gMu8Q18KidiWTxvlLNVjdpduJUbW8ext7a3iuodZcXYJM4buozO5xWvugDSnEUtY1AeZRzE+j32qI
-	9Rxm90eK24xcN0FvxD+xBCl3zDGmbqcxwWSaplpXlbRREhdZ7Fj4povFbiHlxELsrOySKt4514WFP
-	5emRWH6A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIthf-00000009F6Q-0jSu;
-	Fri, 01 May 2026 19:39:11 +0000
-Date: Fri, 1 May 2026 20:39:10 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Barry Song <baohua@kernel.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org,
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, jack@suse.cz,
-	pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn,
-	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com,
-	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com,
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-Message-ID: <afUBXnPVnt7Jt5hh@casper.infradead.org>
-References: <20260430040427.4672-1-baohua@kernel.org>
- <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org>
- <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org>
- <CAGsJ_4x8sNtgv7Y198Gh9NSY+SE2o_JPFAxG9aWE+xXsB9vwGg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HE1gDgix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6C3C2BCB4;
+	Fri,  1 May 2026 21:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777669863;
+	bh=pwK0cKnbrke4wl7ygUciECKQPNSG1oPGsGcCARLHQOs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HE1gDgixaTJAPQMMRfjOGc/LY2Jj07Qs9uhRZrbJXn48ZlTT9TLG27AGeeLoxzzlF
+	 y3iuOIRilQ2XrWGoBSQOKA7MKIoxjjVe3Vev01jMFWpeeCj8BuVTiG9YxWt1wyRSfb
+	 dKtdN3Dt4ECu5rX9rFX7a43vpBETrWhmu1ZhmEJIVqJQqBk1zNbYr4AM8l8HF8v4k2
+	 joY8zpHI8WwgEUBgUg7b/SuZHdXmI+O/I25v1AiX0DaFzhKMhi26C2CFn14pp3Gf+2
+	 0RBTC28cCGUpeuvV3WyqhkMeNZiI0PktgHHQv7HVFrenYhcIamNspVzgqzQXkPjqNS
+	 8hLkmiX4yZoBw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Rong Bao <rong.bao@csmantle.top>,
+	WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 6.18.y] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Fri,  1 May 2026 17:10:59 -0400
+Message-ID: <20260501200000.item004-6.18@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260501122205.4089260-1-rong.bao@csmantle.top>
+References: <20260501122205.4089260-1-rong.bao@csmantle.top>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGsJ_4x8sNtgv7Y198Gh9NSY+SE2o_JPFAxG9aWE+xXsB9vwGg@mail.gmail.com>
 
-On Sat, May 02, 2026 at 02:25:37AM +0800, Barry Song wrote:
-> On Sat, May 2, 2026 at 1:58 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > Yes, but that still fails to answer "does this actually happen".  How much
-> > performance is all this complexity in the page fault handler buying us?
-> > If you don't answer this question, I'm just going to go in and rip it
-> > all out.
-> 
-> I’m getting quite confused. In patch 4/5, you suggest a more
-> restrictive condition using
-> if (folio_test_uptodate(folio) && !folio_test_writeback(folio))
-> rather than if (folio_test_uptodate(folio)), before we decide to skip
-> retrying the page fault [1].
-> That seems to suggest we should be more cautious about when we can skip
-> retrying the page fault.
-> 
-> However, in the cover letter, you suggest removing all retry code entirely.
-> Does this suggestion apply only to file-backed page faults?
+On Fri, 01 May 2026 20:22:05 +0800, Rong Bao wrote:
+> [ Upstream commit a355eefc36c4481188249b067832b40a2c45fa5c ]
+>
+> The forward-declaration of jump__delete() is added because the older
+> stable layout still has jump__delete static-only and the header export
+> from upstream c2addca77320 is not present.
 
-I'm making sure that if Andrew decides to override me he at least sees
-that there are other problems with this patchset beyond "I don't like
-the additional complexity".
+Thanks, queued for 6.18.y.
 
-And maybe we decide to do the fallback for anon-mm but not file memory.
-Or maybe it's just something somebody happens upon when reading the
-mailing list (or more likely it's just grist for an AI).
+--
+Thanks,
+Sasha
