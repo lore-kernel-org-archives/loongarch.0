@@ -1,47 +1,47 @@
 Received: from mail.srv.csmantle.top (mail.srv.csmantle.top [77.93.157.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125073126CA;
-	Fri,  1 May 2026 12:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5073921D8;
+	Fri,  1 May 2026 12:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.93.157.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777639052; cv=none; b=pvMBwJYBBCE6M3xkwz8PipIqzfylmoy8mP5me1umCXbyUq47bKXVpH1MBgmy5HYHSIT2FI2YucfeisLXMl0Km9+UcDPVbaE1fCVRxIfV7UnIxDhI97U8BAApBWD9iR/Df/RKHA+vuV0Zx0Fx0DIv9Xx4oFLpslWV//08Ine4kJw=
+	t=1777639237; cv=none; b=UeWAtFubK5EKPchQh48tzu6Ybg0baa73tjYGt+XGBgCOIi/gCKiIzT65LyP5TC4p9nxPgmOPURIa825EVxAJRux7J2bquCapyWXTh8GFF40AWgmGAJ/+Ca666vZpAdP8mUvNl4fWNeTD1ZpOw9YManKHeV5xBxd3ZjUGz5ZZF08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777639052; c=relaxed/simple;
-	bh=5kGuaadnKaNCqcERUi2XASSCSHrAJYx2iRIUpEEl5NI=;
+	s=arc-20240116; t=1777639237; c=relaxed/simple;
+	bh=fdNEXmNvBb0fLlg1T5UQffKpl7utvUmlADoT7QiM01o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A44WDV4vXXewW0SM0/dXnCKko52ZK+/syaYVk8vt8c0yWnRvldgHjTwnl/mH/5aGLEaObEUszthi8YCJzSiI6RFgwpiuz4eyx44XlwWEJagqgn8k59a49ksf8IHCL0p1f1oUnt2y1le5EgqZBGLtEEmmO4YGYGwMNDQAWeEPu2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=jTJDn/wC; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=AiMtY3qu; arc=none smtp.client-ip=77.93.157.103
+	 MIME-Version; b=BvW/wzq6KIxYFoytyj4OiW+tTqrf2Mv6iMj+fhIg0abb3eCDb+jxeqXdJ95jMe+qRwLu41Q3HqAFYLRDazLRDyaJ4cSHzzXtViW6ol+G5VLw/H13B1lsnoCOn7brMTZyjH//F94iF1JS7YzoVBuiY6pfb+qq78fgctdCSx6EQZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top; spf=pass smtp.mailfrom=csmantle.top; dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=LBDq3vDq; dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b=nu3AVgBh; arc=none smtp.client-ip=77.93.157.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csmantle.top
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csmantle.top
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="jTJDn/wC";
-	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="AiMtY3qu"
+	dkim=permerror (0-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="LBDq3vDq";
+	dkim=pass (3072-bit key) header.d=csmantle.top header.i=@csmantle.top header.b="nu3AVgBh"
 DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=csmantle.top; s=self-ed25519; h=BIMI-Selector:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
-	BIMI-Selector; bh=ei/Rqey5K8WLehrvUaPvgFF5Zx4OF1SUe1rmU4V+CwU=; t=1777639051;
-	x=1778243851; b=jTJDn/wCLJN9R6l856r80TE+qovQgDmpt5LMHOaKB8LdqZjsEsS7MZ9eTUa5B
-	zw9tSXP2AIAsuRnznI95qlQDw==;
+	BIMI-Selector; bh=ynKYvQ+XTvbrh45g38hs0XCGPrBgqG8ni13XOi0ZQao=; t=1777639236;
+	x=1778244036; b=LBDq3vDqhwMRuXZnIRusQM6+9N+E+wY5Akv9GRT5lNzrbEqDFL7Klw1MhpXw9
+	0RNzEyPDnoj5ALjI+9tPpsKCA==;
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=csmantle.top; s=self-rsa3072; h=BIMI-Selector:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:In-Reply-To:References:
-	BIMI-Selector; bh=ei/Rqey5K8WLehrvUaPvgFF5Zx4OF1SUe1rmU4V+CwU=; t=1777639051;
-	x=1778243851; b=AiMtY3qucr/PR9jipuMyB8Duo4HXEyfE6cVlujQgk/BsSGPdXRtLZhDgMCYy+
-	ZjSYhUTF4I+Ho7zFUOhB9s5aSHOwFYgZJb9L6QzrBRXfDz/3pM++TEkCWuu4C3HuT7zp5ggCMykzD
-	6XWstHgGHAkmCfyXObF8tOjoDs8rjcF/XwkyrIXuPeSzMXatb7ceoIR4FXnA0jGgjy5uwaI84rE2i
-	xEZUroLZEo3sSNg4e59GHOt/51FSVPhLjO9n7Z9QNBPOTx+MVMY9mp3JmZFxDT/1LLiiBXewPRGit
-	EowoMqUzQ4Kf/Gyy5jatVmMmWW75wSRkxuSNsUMlw4fbmC5YRmrxLRNAn9ImDeW6+BYieXPwVkbvS
-	6ko0Wufu6qpTZIzZVHl+83JNmjQsG9+duO1x+JjsAZUyKOCINOcpEipAB7jVyakrfrh9Yv8F12HZc
-	IvRSSc102YTMndlu/xQMZoEFJtBSzxyrNmMJpIy+9loM+QCpnSlEXK3nabMEUdKOjh;
+	BIMI-Selector; bh=ynKYvQ+XTvbrh45g38hs0XCGPrBgqG8ni13XOi0ZQao=; t=1777639236;
+	x=1778244036; b=nu3AVgBhQUWbOafU5QXbDyqhK2vJ5LSajti/SVOqx9Yc3NfQLz++uhmUtqB3F
+	vwwj/nQG2FQ7xo2l/2La8pq7y8hA8ioxsJxkCjCLD3m/C+x7gsDleY0vbrcW+juZJz8t1P/q53niK
+	o5bDKvfW7yVqsr2zsqaCz7RyfdmaE1RScV42mMl1r8xFsQxoIfhjRmpyqrU9GAQOPnW4aJb7sZJI5
+	DxWTyPUhSa3xKrgTuTksevJ5rwW7QYpNa02vqL9PMGr5EJmbmsLP/vEdGwpLyGpay3TwmYDiL3VE9
+	moRYeRghHoQni3omF1vF9EOdn00aMZml4QcIZtHEFiRKBkcUhy1ydoRYMsEM0JBc3h22/gsTnUaUh
+	M0kkLOyt+Exws5oFOUOlVHvEqX2/8w4EMg6IyeeB6lxwtYifplB8AmGsMg7ETlehciAfcERdtk6qt
+	Ik5f6Pykkd0Uim0qDAjT/Tt7ZAgRQmUnpNr6oJWqKv7REfLUi2xakzSlQ6AZTiRubh;
 Received: from [199.15.77.47] (helo=loongcatbox)
 	by mail.srv.csmantle.top with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.98.2)
 	(envelope-from <rong.bao@csmantle.top>)
-	id 1wIn7Y-00000000LGl-0Ls4;
-	Fri, 01 May 2026 20:37:28 +0800
+	id 1wImsy-00000000LDq-33ou;
+	Fri, 01 May 2026 20:22:25 +0800
 From: Rong Bao <rong.bao@csmantle.top>
 To: stable@vger.kernel.org
 Cc: Rong Bao <rong.bao@csmantle.top>,
@@ -50,12 +50,12 @@ Cc: Rong Bao <rong.bao@csmantle.top>,
 	WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 6.12.y] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Fri,  1 May 2026 20:37:17 +0800
-Message-ID: <20260501123717.4109458-1-rong.bao@csmantle.top>
+Subject: [PATCH 6.18.y] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Fri,  1 May 2026 20:22:05 +0800
+Message-ID: <20260501122205.4089260-1-rong.bao@csmantle.top>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <2026050116-judo-challenge-3a9d@gregkh>
-References: <2026050116-judo-challenge-3a9d@gregkh>
+In-Reply-To: <2026050115-composed-stand-38e1@gregkh>
+References: <2026050115-composed-stand-38e1@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -145,10 +145,10 @@ Signed-off-by: Namhyung Kim <namhyung@kernel.org>
  2 files changed, 2 insertions(+)
 
 diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
-index ab43b1ab51e3ba989d5d2864b3fe5205a1620916..e16350155bf1d3625e3e7fb68609f3859fb7e344 100644
+index 1c3abb43c8d72197dbc8b13f5c42dfad79787e2e..1a0a1dacebc30c72e916815f872eeb45561b533f 100644
 --- a/tools/perf/arch/loongarch/annotate/instructions.c
 +++ b/tools/perf/arch/loongarch/annotate/instructions.c
-@@ -95,6 +95,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
+@@ -97,6 +97,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
  }
  
  static struct ins_ops loongarch_jump_ops = {
@@ -157,10 +157,10 @@ index ab43b1ab51e3ba989d5d2864b3fe5205a1620916..e16350155bf1d3625e3e7fb68609f385
  	.scnprintf = jump__scnprintf,
  };
 diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 8a6f450c6f8e77c12ac9129c2beba4f026b3e374..8f35232f7f22c742f3a002dddbffb8611b66ff75 100644
+index b1be847446fea0279043cbf19b42ff817615a5b1..c513db41137fa414aab8afe191dd209ae01508d4 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -44,6 +44,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+@@ -47,6 +47,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
  			   struct ins_operands *ops, int max_ins_name);
  static int call__scnprintf(struct ins *ins, char *bf, size_t size,
  			   struct ins_operands *ops, int max_ins_name);
@@ -169,7 +169,7 @@ index 8a6f450c6f8e77c12ac9129c2beba4f026b3e374..8f35232f7f22c742f3a002dddbffb861
  static void ins__sort(struct arch *arch);
  static int disasm_line__parse(char *line, const char **namep, char **rawp);
 
-base-commit: 18cd79ce247a35c2938698145d1834a09b5f7777
+base-commit: 1fe06068166d4fc16722201f267b1fe19efad639
 -- 
 2.54.0
 
