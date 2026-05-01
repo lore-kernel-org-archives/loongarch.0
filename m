@@ -1,142 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477A92EE262
-	for <loongarch@lists.linux.dev>; Thu, 30 Apr 2026 22:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C375C363C74;
+	Fri,  1 May 2026 11:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777589412; cv=none; b=IxpF6nM5esZtlWszUXFAPCaFgIL1ivnxMJ4txGbwntcHaA/G225p3getPn8UfLo5d1GKN2mgq8geR0XchJVCqTmtRm3jXQZ7J3eMmsASC8wbAijx1XTWxy/T0Zl5ybl6M8K92R3Ss3rthAbgghIJy4zEdid2DtUxvQRDkkvZ+3A=
+	t=1777635785; cv=none; b=KN/6CzSMJzPCC/PkT/tQgvGrSSvt6QPZiE81uSmyruJuCkS2Xv+r/r37STVrzE+St94LBnb+1ofiToEO4+R+Y94o/QIKYILSjFYcsFPuiNsLz9FbHPJRqj9ttFPEgZVAh1PxugcUVtQAcktgRtVcg0Z/5JrxKSVy/YADjH4nOI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777589412; c=relaxed/simple;
-	bh=EwR29NH5HVcLbVvA5ViI57mAmHT3DBCHHsLg0gf7Cic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rP+kNup/hYARgVAfe7LwDVxmQ4QWOd8ESQbd6v4nIwYrSeNrhbJ6/rYnzzjyPCi1NrOsC40FDcMutdz6Jfo1KoNtRVVB9Px1rU4l5/p+261K3xZsCVg1x9cpgLWy88VLhlm9bRVS4X/YVLlPodBD4xqPnt+SwuU7NDpzLZbQ4d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBXZ2oY8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777635785; c=relaxed/simple;
+	bh=MjXnLLmFvmholljuRUsvlhGN6dNSerIkOv+PYpeduPM=;
+	h=Subject:To:Cc:From:Date:Message-ID:MIME-Version:Content-Type; b=KxOjk5qnjMdiHbrGn1Nhk3o9zrQjIUgL6GvJ58pytXyS5dI8DHVdePk9mQecPd5+sEhrvEbBs0OwkDHiXd/UaOMcoEWxhRmgckLzsOeXDf66jYlXw2+q3l1MFV/e/V8uDm38xuE7LSUi7nqPYsZleIYnkRgf+loozJRJVWoYHlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rDvy10tW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBXZ2oY8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03754C2BCC6
-	for <loongarch@lists.linux.dev>; Thu, 30 Apr 2026 22:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777589412;
-	bh=EwR29NH5HVcLbVvA5ViI57mAmHT3DBCHHsLg0gf7Cic=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dBXZ2oY8bPD0T7Gd4Of7GUZOb84hKrxvQlNnKxyNarxinIUzFHyBM9s+qDR4U9LPp
-	 +Hc8F8WFDCZQqqo+npT5fUj0txmJKGzK48NWf+a5HFI0nv9pWEpw/7Z7MiE/1dYHmC
-	 B12UZdt6YCq68u/rqEbIGy9P6FZiNurFRNlp3PZg9yOU7Gob8iSTSCXSUBOt2JbkAC
-	 Fwp47SUVHvHazO57YaIALODnh+Wg6M0vRWtAdK9btMOZWw3UF7+id1X74wqvWjE3jS
-	 uK3gMgeJ00mb08GoZiRN6AIHhiPzdeZPoa0S7aYZkNoWzKQDPWrMHLEaBFdV5I1od5
-	 XDQUtFcs0lleA==
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8a093c784b0so12551896d6.3
-        for <loongarch@lists.linux.dev>; Thu, 30 Apr 2026 15:50:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8dP287YmkgT3vocLSIUvOOYbd5Ix6PIKBfK9VBRNWTgw2pvdb1gDiduQCOk4Tt5FOMEEg5SHJX8b4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxm3WiMOlQcim2wjGtMyxZOg4aBbLZELYp1aqRu7R5TzJ1xgjmc
-	n6b0ArY6EPAiXBpm65mZbT3BEC7zJNzc6fZVrQynqxx9fqTrAsuD3WJpgBNmh9YIGuIlwHZAbk1
-	/zBzCLUm9g7Jp/vUnejiDJy09BxVivOY=
-X-Received: by 2002:a05:6214:3f81:b0:899:f092:9da with SMTP id
- 6a1803df08f44-8b3fe7bd179mr81439146d6.28.1777589410935; Thu, 30 Apr 2026
- 15:50:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rDvy10tW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 576A9C2BCB4;
+	Fri,  1 May 2026 11:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1777635785;
+	bh=MjXnLLmFvmholljuRUsvlhGN6dNSerIkOv+PYpeduPM=;
+	h=Subject:To:Cc:From:Date:From;
+	b=rDvy10tWleQ9jgFlQKn5tA+N5YGDJWil96C3Jhl7qkVUpkzF4fRaJrT8Ba5BFvkKF
+	 RBP2tYGaoZlomyHPup7/2xhUzPcqL3IUf7zmHT8KLOZN7D/n9j6070urmvg9JGio69
+	 YfpdXHX/HTdcoMK4kNYlz6sK4WO5Xd0qTdfwg5LA=
+Subject: Patch "perf annotate: Use jump__delete when freeing LoongArch jumps" has been added to the 7.0-stable tree
+To: chenhuacai@kernel.org,gregkh@linuxfoundation.org,kernel@xen0n.name,loongarch@lists.linux.dev,namhyung@kernel.org,rong.bao@csmantle.top,wangrui@loongson.cn
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Fri, 01 May 2026 13:41:47 +0200
+Message-ID: <2026050147-unlikable-deforest-52e0@gregkh>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
-In-Reply-To: <afNM-gIqxpyJ6ro7@casper.infradead.org>
-From: Barry Song <baohua@kernel.org>
-Date: Fri, 1 May 2026 06:49:58 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
-X-Gm-Features: AVHnY4LNqeENq1Hu8yfE3Ha6l6qy4pcPzLhOvHSM0QbVepERNdbmRODWwcwvH-c
-Message-ID: <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
-	surenb@google.com, mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, 
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, 
-	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, 
-	bhe@redhat.com, youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-On Thu, Apr 30, 2026 at 8:37=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Thu, Apr 30, 2026 at 12:04:22PM +0800, Barry Song (Xiaomi) wrote:
-> > (1) If we need to wait for I/O completion, we still drop the per-VMA lo=
-ck, as
-> > current page fault handling already does. Holding it for too long may i=
-ntroduce
-> > various priority inversion issues on mobile devices. After I/O complete=
-s, we
-> > retry the page fault with the per-VMA lock, rather than falling back to
-> > mmap_lock.
->
-> You're going to have to do better than that.  You know I hate the
-> additional complexity you're adding.  You need to explain why my idea of
-> ripping out all the complexity now that we have per-VMA locks doesn't
-> work.
 
-Yep, I know you don=E2=80=99t like the added complexity, but I would rather=
- prioritize
-user experience over simplicity. Let me try to explain in more detail.
+This is a note to let you know that I've just added the patch titled
 
-1. There is no deterministic latency for I/O completion. It depends on
-both the hardware and the software stack (bio/request queues and the
-block scheduler). Sometimes the latency is short; at other times it can
-be quite long. In such cases, a high-priority thread performing operations
-such as mprotect, unmap, prctl_set_vma, or madvise may be forced to wait
-for an unpredictable amount of time. For example, if low-priority tasks
-trigger page faults and issue low-priority I/O, a high-priority task
-requiring the write lock may end up waiting for an unknown amount of time,
-depending on the block layer and filesystem behavior.
+    perf annotate: Use jump__delete when freeing LoongArch jumps
 
-As a result, high-priority tasks are exposed to unpredictable I/O latency
-introduced by many low-priority tasks that may generate a large number of
-page faults.
+to the 7.0-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-On Android, latency in certain tasks can significantly affect user experien=
-ce,
-such as interactive threads. Priority inversion is particularly problematic=
- and
-should be avoided, especially since we have no clear bound on how long we m=
-ay
-have to wait for I/O from other tasks.
+The filename of the patch is:
+     perf-annotate-use-jump__delete-when-freeing-loongarch-jumps.patch
+and it can be found in the queue-7.0 subdirectory.
 
-Meanwhile, priority inversion can propagate through a long chain: a writer
-waiting on I/O from multiple concurrent page faults may end up blocking oth=
-er
-writers and readers as well. A long-waiting writer can also amplify
-mmap_lock contention, which we still rely on in many cases.
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-2. VMA sizes can be highly uneven: some VMAs may be very large while others=
- are
-small. We used to have many reasons to release mmap_lock when we did not ha=
-ve a
-per-VMA lock. Since VMA sizes are not uniform, those same considerations ma=
-y
-still apply to the per-VMA lock when a small number of VMAs account for mos=
-t
-of a process=E2=80=99s address space. I recall that Suren also mentioned th=
-is[1].
 
-So I would prefer that we hold only the per-VMA lock and avoid retrying the
-page fault when we are reasonably sure that I/O has already completed and w=
-e
-are only waiting for short-lived conditions. Uncertainties in the block lay=
-er,
-filesystem, and GC behavior, as well as latency-induced priority inversion
-chains and potentially amplified mmap_lock contention, can significantly hu=
-rt
-Android user experience.
+From a355eefc36c4481188249b067832b40a2c45fa5c Mon Sep 17 00:00:00 2001
+From: Rong Bao <rong.bao@csmantle.top>
+Date: Mon, 13 Apr 2026 18:03:55 +0800
+Subject: perf annotate: Use jump__delete when freeing LoongArch jumps
 
-[1] https://lore.kernel.org/linux-mm/CAJuCfpFVQJtvbj5fV2fmm4APhNZDL1qPg-YEx=
-w7gO1pmngC3Rw@mail.gmail.com/
+From: Rong Bao <rong.bao@csmantle.top>
 
-Thanks
-Barry
+commit a355eefc36c4481188249b067832b40a2c45fa5c upstream.
+
+Currently, the initialization of loongarch_jump_ops does not contain an
+assignment to its .free field. This causes disasm_line__free() to fall
+through to ins_ops__delete() for LoongArch jump instructions.
+
+ins_ops__delete() will free ins_operands.source.raw and
+ins_operands.source.name, and these fields overlaps with
+ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
+Since in loongarch_jump__parse(), these two fields are populated by
+strchr()-ing the same buffer, trying to free them will lead to undefined
+behavior.
+
+This invalid free usually leads to crashes:
+
+        Process 1712902 (perf) of user 1000 dumped core.
+        Stack trace of thread 1712902:
+        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
+        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
+        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
+        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
+        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
+        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
+        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
+        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
+        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
+        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
+        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
+        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
+        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
+        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
+        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
+        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
+        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
+        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
+        ELF object binary architecture: LoongArch
+
+... and it can be confirmed with Valgrind:
+
+        ==1721834== Invalid free() / delete / delete[] / realloc()
+        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
+        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
+        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
+        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+
+This patch adds the missing free() specialization in loongarch_jump_ops,
+which prevents disasm_line__free() from invoking the default cleanup
+function.
+
+Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
+Cc: stable@vger.kernel.org
+Cc: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+Tested-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/util/annotate-arch/annotate-loongarch.c |    1 +
+ tools/perf/util/disasm.c                           |    2 +-
+ tools/perf/util/disasm.h                           |    2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+--- a/tools/perf/util/annotate-arch/annotate-loongarch.c
++++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const s
+ }
+ 
+ static const struct ins_ops loongarch_jump_ops = {
++	.free	   = jump__delete,
+ 	.parse	   = loongarch_jump__parse,
+ 	.scnprintf = jump__scnprintf,
+ 	.is_jump   = true,
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *in
+ 			 ops->target.offset);
+ }
+ 
+-static void jump__delete(struct ins_operands *ops __maybe_unused)
++void jump__delete(struct ins_operands *ops __maybe_unused)
+ {
+ 	/*
+ 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *in
+ int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
+ 		   struct ins_operands *ops, int max_ins_name);
+ 
++void jump__delete(struct ins_operands *ops);
++
+ int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
+ 
+ char *expand_tabs(char *line, char **storage, size_t *storage_len);
+
+
+Patches currently in stable-queue which might be from rong.bao@csmantle.top are
+
+queue-7.0/perf-annotate-use-jump__delete-when-freeing-loongarch-jumps.patch
