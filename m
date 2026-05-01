@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6953232A3DA
-	for <loongarch@lists.linux.dev>; Fri,  1 May 2026 17:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E0D40F8D6
+	for <loongarch@lists.linux.dev>; Fri,  1 May 2026 18:25:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777658366; cv=none; b=WT9dDjyMA146Ttus2H/hvFnRjJSKN4tr0oz8KGl4gVxkIpPwSwSWfYphh6NE3KKvFS9qk+m9JkhoEYfV/hC3NNbtNlNavNL7NlbBGwUHS/yn8SKe4CXchXU3k7k4tzfRARGpP5v9LQNKUvROXhgQ9xJ0tgqTtRf6WnR+hiI3nGk=
+	t=1777659949; cv=none; b=U1GxgRGaM3ZHX+W7a4z47zBFHzMrJOte0itG44ONeHASJ+/qCrO+Ilsfwar7RCyjJ+Yn5Lu2gwXK7kbJajLaIR4dFdwdCXEGbGph87o0Sz7ALcC5FdMOpJ+FJ/b/qilVo9D5RPWfujuVebVBYF+Axy8EdIj1mZL2leV7Jfkg0Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777658366; c=relaxed/simple;
-	bh=q/vvVmaTofrvdifxLcOjX8owb4zQpccO2C7Xr55syLA=;
+	s=arc-20240116; t=1777659949; c=relaxed/simple;
+	bh=lT/rPel9FmT35iq3NDhHuchj5jXwn6oKumOJ4dCsmXc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qj2UzOQ5H2tk0lFEI3XWGFjj8F8A26eL1gxRp4OFDcV2mMfFH4zKLCN66XHpWf7+3ASMuAby2oZE2pEBQzqjw0zhpX+UNmLxxHTJzwshpS9XdbJ08lsaIzB/4LyU4RueLBE2kEInegIhYQz1Gof+9IJMNgy82Wjwxfg2EZe8oMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbTv8Nf1; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=tD95RXd6kWs0czIVOX2wS6mbrDd8XpvLDi0Klv5ygdjH9HQhYcg1k6irImfAdeMdzwlxP6Pz43uDa8+/HAitcb48I0u/EJK1Yr6F5KuuYKsSELcN2nB13pBszVcP8Bc7BaccXulIek3B7L1xbpQFGaNWgIw5MRmPv9sp+9O6uJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIVeO3aI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbTv8Nf1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98AEC2BD04
-	for <loongarch@lists.linux.dev>; Fri,  1 May 2026 17:59:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIVeO3aI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98AD4C2BCFA
+	for <loongarch@lists.linux.dev>; Fri,  1 May 2026 18:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777658365;
-	bh=q/vvVmaTofrvdifxLcOjX8owb4zQpccO2C7Xr55syLA=;
+	s=k20201202; t=1777659949;
+	bh=lT/rPel9FmT35iq3NDhHuchj5jXwn6oKumOJ4dCsmXc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JbTv8Nf1y3JWuLvIXZgUs1p4s5+B1GUlld0WRZbXF6rHJnF7FXG1rC3Vd4wOH+FWf
-	 /lu8+oad1AE755FSug1ZcbNt0IQc1USHsGef5ccGfcxzq95KtuLoC1nLMlrSQKzgi+
-	 tTiQMMhrfbld8ymAgyQwEiY7I8BtqZz3pZGkD9sFmJ46nTjfdLk01RnECNuTHbUx0N
-	 /o9MUrK9GRGCK4V7AJo9DxsUNN94FU6bSe/lBLB3HEZbgoDtdPCtJ4BLITTZoIcrFs
-	 HYAyPtyGq9f56cLDbdFj9zzu20514g+BkK1RgtuqirVOywKHAzhsojpDQjUdjBms4R
-	 0K/BQ+D5iTcCQ==
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8b1f2b7f1bcso29857776d6.1
-        for <loongarch@lists.linux.dev>; Fri, 01 May 2026 10:59:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9054CLBhVF+qKrczDj6S6Uw7V9l4We6CkdDVO3HaaiGVVpZibLL9w/kvGz1U7n56iyhp+dAjobQxA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZG3H91pgThwuEPBrDcG2oGBuQNsBf9GrIjwY0n/VNpxDGVwrk
-	WM/P/Lq0CAMm+yFx7k9dxEyhktF2IEQ5PB81FHEyjPkZxMrSnaBWSfKa5zZ8y23FgViT6TykRWw
-	NWO0Fx4h+why7ArPW9HvIMBd+Ep2WRl8=
-X-Received: by 2002:a05:6214:3113:b0:89c:7bf8:c564 with SMTP id
- 6a1803df08f44-8b4000bc68amr106932516d6.27.1777658364833; Fri, 01 May 2026
- 10:59:24 -0700 (PDT)
+	b=FIVeO3aI7z+jFqDqXITJ+jWsf7lknsacv1Vzwcn4Qsr6jBLZMM2APApvdOADED8Ln
+	 tAIwXt9R3qywh7SwzohMPLV0t1vg1LPT7kOq55TgbdDGfwhWLLAjfL+brTf/OPCywN
+	 jEfUkX05+1k8ouTnvv+GA9F+JEnzTnf5Oa3U2Pt8IrB7QbY20FMPALZdtczL2ANGRj
+	 CrACi6wIjjOv4ftAgLt74Gg2ts3YaDODuAFLoaOg1uLSZtNISIx6WZBJZfcCC4lqXH
+	 2KD3b4Y7/PA6fAAoCZuEsL9/UflhQWvEAIT7FBdFCoa8CcfRc5UKFiKNKCX0uHRqoY
+	 UbCOWCsY8mKUw==
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-50d6ab4476eso19984661cf.2
+        for <loongarch@lists.linux.dev>; Fri, 01 May 2026 11:25:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8PigTRU+Q7tgB7L8PWmdoYTvITw3dfZhvWlv+0K4S2IUk6GeEp1Mbrf7x+QEc4rs0TNbwME4mS/oc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwM+HSB0EDLMEasPwT29tmmCcsRAmNk0R7cFYhwu71OIsGZ37vA
+	Gpb9xu3Sy8p5WZWXFT6wJwjhPnejeYDQngJ6BeNDJAewy6lb59kSITFobAS35Op5nvb8I/dwPCl
+	/akwZuE+slqaojOl78x6R1kblyVvxTS0=
+X-Received: by 2002:ac8:7dce:0:b0:509:2455:2b53 with SMTP id
+ d75a77b69052e-5104bf755a7mr5248631cf.49.1777659948730; Fri, 01 May 2026
+ 11:25:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,18 +42,20 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <afTKsSj0i-ZkRZN5@lucifer>
-In-Reply-To: <afTKsSj0i-ZkRZN5@lucifer>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+In-Reply-To: <afTpoL3FklpQZNMM@casper.infradead.org>
 From: Barry Song <baohua@kernel.org>
-Date: Sat, 2 May 2026 01:59:13 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4w4jyQTzvPSzGtv1r5G35kARHrf4WgDvEiOAw8k5AAABg@mail.gmail.com>
-X-Gm-Features: AVHnY4IozGRsOfIFCBuTWYpA9lpafQxUB9l3oBl_1mgfquoOdt6gfYLqIWFbDj8
-Message-ID: <CAGsJ_4w4jyQTzvPSzGtv1r5G35kARHrf4WgDvEiOAw8k5AAABg@mail.gmail.com>
+Date: Sat, 2 May 2026 02:25:37 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4x8sNtgv7Y198Gh9NSY+SE2o_JPFAxG9aWE+xXsB9vwGg@mail.gmail.com>
+X-Gm-Features: AVHnY4Jc3ag1bUQ2844h_SA5sVSne-TN_r5pli71-jMQXFzkdxM1Ig0IdK36GUU
+Message-ID: <CAGsJ_4x8sNtgv7Y198Gh9NSY+SE2o_JPFAxG9aWE+xXsB9vwGg@mail.gmail.com>
 Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
  fault performance
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	david@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
 	surenb@google.com, mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, 
 	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, 
 	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
@@ -65,62 +67,55 @@ Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kv
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 1, 2026 at 11:52=E2=80=AFPM Lorenzo Stoakes <ljs@kernel.org> wr=
-ote:
+On Sat, May 2, 2026 at 1:58=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
+ wrote:
 >
-> On Thu, Apr 30, 2026 at 01:37:14PM +0100, Matthew Wilcox wrote:
-> > On Thu, Apr 30, 2026 at 12:04:22PM +0800, Barry Song (Xiaomi) wrote:
-> > > (1) If we need to wait for I/O completion, we still drop the per-VMA =
-lock, as
-> > > current page fault handling already does. Holding it for too long may=
- introduce
-> > > various priority inversion issues on mobile devices. After I/O comple=
-tes, we
-> > > retry the page fault with the per-VMA lock, rather than falling back =
-to
-> > > mmap_lock.
+> On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
+> > On Fri, May 1, 2026 at 10:57=E2=80=AFPM Matthew Wilcox <willy@infradead=
+.org> wrote:
+> > >
+> > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
+> > > > 1. There is no deterministic latency for I/O completion. It depends=
+ on
+> > > > both the hardware and the software stack (bio/request queues and th=
+e
+> > > > block scheduler). Sometimes the latency is short; at other times it=
+ can
+> > > > be quite long. In such cases, a high-priority thread performing ope=
+rations
+> > > > such as mprotect, unmap, prctl_set_vma, or madvise may be forced to=
+ wait
+> > > > for an unpredictable amount of time.
+> > >
+> > > But does that actually happen?  I find it hard to believe that thread=
+ A
+> > > unmaps a VMA while thread B is in the middle of taking a page fault i=
+n
+> > > that same VMA.  mprotect() and madvise() are more likely to happen, b=
+ut
+> > > it still seems really unlikely to me.
 > >
-> > You're going to have to do better than that.  You know I hate the
-> > additional complexity you're adding.  You need to explain why my idea o=
-f
-> > ripping out all the complexity now that we have per-VMA locks doesn't
-> > work.
+> > It doesn=E2=80=99t have to involve unmapping or applying mprotect to
+> > the entire VMA=E2=80=94just a portion of it is sufficient.
 >
-> After a brief eyeball I share Matthew's assessment, I really don't like t=
-his
-> series, it's piling on complexity for what seem like niche cases.
+> Yes, but that still fails to answer "does this actually happen".  How muc=
+h
+> performance is all this complexity in the page fault handler buying us?
+> If you don't answer this question, I'm just going to go in and rip it
+> all out.
 
-I=E2=80=99d really appreciate it if you could point out the specific parts =
-you
-dislike, rather than the whole series=E2=80=94I don=E2=80=99t think that=E2=
-=80=99s a fair
-assessment.
+I=E2=80=99m getting quite confused. In patch 4/5, you suggest a more
+restrictive condition using
+if (folio_test_uptodate(folio) && !folio_test_writeback(folio))
+rather than if (folio_test_uptodate(folio)), before we decide to skip
+retrying the page fault [1].
+That seems to suggest we should be more cautious about when we can skip
+retrying the page fault.
 
-I=E2=80=99m not sure what you mean by =E2=80=9Cniche cases.=E2=80=9D Do you=
- mean avoiding taking
-mmap_lock for major page faults, or releasing the per-VMA lock and retrying
-the page fault?
+However, in the cover letter, you suggest removing all retry code entirely.
+Does this suggestion apply only to file-backed page faults?
 
-Right now, major page faults always fall back to mmap_lock, which is a
-significant source of lock contention. I assume we agree that this fallback
-should be eliminated. Or is there still no agreement on this point either?
-
-Where we may differ is whether to hold the per-VMA lock and
-avoid retrying the page fault, or to rely on retrying the
-fault while using the per-VMA lock (with the current
-mainline approach using mmap_lock instead) ?
-
->
-> We already have enough weirdness in fault code honestly.
->
-> Let's maybe discuss at LSF if you're attending?
-
-Sure :-)
-
->
-> I will try to have a more thorough look through when I get a chance.
-
-Thank you, much appreciated.
+[1] https://lore.kernel.org/linux-mm/afTQl12XcXVnku9J@casper.infradead.org/
 
 Best Regards
 Barry
