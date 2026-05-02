@@ -1,113 +1,101 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from smtp.xn--rombobjrn-67a.se (nestor.xn--rombobjrn-67a.se [188.126.83.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74190336EF8
-	for <loongarch@lists.linux.dev>; Sat,  2 May 2026 11:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6B7176FB1
+	for <loongarch@lists.linux.dev>; Sat,  2 May 2026 11:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.126.83.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777720768; cv=none; b=UI/ceKr8ZpdKNF/g7thnadoqbenSnlZv0HwEfdD/IjP00lLXCX/k0hXaOdPBurr+6suvUTfE/qzfIpbdIJ+lG0FJ0bPLuonHW1FK24WZ7uMGas0UVW77r9KSDlg+xHdrDxibjzCWxV5eyX5M4vdimX9ICdKjwFlgfvaUp0iLFYY=
+	t=1777722356; cv=none; b=eC+q2cLmivTCgplyYJ+nkpE6gAqaEnOuV5uAoNVcpstZtXhg6VC3KimbanvHxTEKeXz/WtF5046xGX+/vLwYUTBGvLyikOPNL1KhEGGZcKe++UEKrTVQCrjGgDBGuPiZ9J2VWrg0thSnS4aBf4TbGgiq5Es+MBQXk9LEhhW1dyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777720768; c=relaxed/simple;
-	bh=kot9EcZkqya3bNn90ZsGro7iAS4rkv0vasM61bUcOTM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=rA6oZjQ3EvV2PSZDm1p7jLd3XV5hoSbNWf9iYYqJ8RxpbDLjv6FpKxyFsF/zbljFGoqpovFp+cBxPO7Sq4r2Nb4tmNW/znOvFTbVQL+/wRoxQkXvigBZZ1elucxaJQIs/GijJSzpfASvjtjLr8qWd5zd0h6Y3czNPkN1cm5pBjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=omQmEfnN; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1777722356; c=relaxed/simple;
+	bh=WAxh7NIxIRfdSPNOcNeAK16za/CAfyD89M84k9A6dcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DvB02thZbJMOYZbLgPvIk+hSvFNihdOp88SRvKajJdrnE1dZtomoNI+GZgbxe0fzZLNZnqvRPtoJnhm8UriFqudrJlHwD/2sUGiBtGLgLWtoIXsDLYM2/6z9g38WuJ1YK46ri/YPAxjN8dcXCil0yIC0Ocwm+VNOsXUj++g/NWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xn--rombobjrn-67a.se; spf=pass smtp.mailfrom=xn--rombobjrn-67a.se; dkim=pass (2048-bit key) header.d=xn--rombobjrn-67a.se header.i=@xn--rombobjrn-67a.se header.b=i211gjQm; arc=none smtp.client-ip=188.126.83.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xn--rombobjrn-67a.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xn--rombobjrn-67a.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="omQmEfnN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1777720756; bh=vlBpe8xOmP21cCjyDWJLXr5pIey0kkllLTvVSDzxoVY=;
-	h=From:To:Cc:Subject:Date;
-	b=omQmEfnNQKSdCa2w4NE4WUaC3tOq+zrGBBm7PWL+D3439wL1jqocMPwtOVWKw5OXR
-	 uEcS9/qgFIxqGraitG+tZrqEQlQOEDuM8Hmc+mwtKFTvnQXSxWEqhvhQy2T5Ep/PTM
-	 QGvAfshQPNZ5zbces+9uExTFyx4oOFpCLNPwPBT8=
-Received: from Lang.smartont.net ([2409:8a44:2312:14e1:56d8:1e1e:3f0b:d0f3])
-	by newxmesmtplogicsvrszc56-0.qq.com (NewEsmtp) with SMTP
-	id 4CC3A646; Sat, 02 May 2026 19:19:12 +0800
-X-QQ-mid: xmsmtpt1777720752t1ckfyps2
-Message-ID: <tencent_ADC4AD99CFC8EFB26D25889B11D4864B9B05@qq.com>
-X-QQ-XMAILINFO: M1rD3f8svNznjPfiY4MuRVBcJ6etABYNKUM2juKBeQxK3TeEEgi3L8cacZYHZT
-	 aFBqwtUy1ktDlyqLYd3urhIhOraDdeXMUWk5oCHgxCiQ0OleG+PDdwRwfjT64DcHDAGuRC8Qf2Pc
-	 KDADfJHSmeQCDKkav3LMoz8XF0eGGC+rfg6Z2FxOuZC+gd6E0S3eErUXJLzJsolxnAOGjSxQDULM
-	 FNNNXxpBbRGe3bPtXzBw6V5feHnLaUZN7bn9Jxi9eewNSTppcJX6itbF31suiTT8NWp6uAbz+9u4
-	 wZMdpN3ms/tyAf0rH/av6+JJV8bKNCWo53csxT+0G47TntXRfJGv9z0kOca5ZbPrrN0uR3HrEmVe
-	 wVt3QjKL2wTPqXI5RGeKRhsmWIUqDl/gW9Bk/aRk16FeH0PQ3G3DrAuP1xYxecJlvhqk4n9Le14g
-	 RXABeX1FF2Yr3s26ZD1K/Of2xDAW30C62STPkq9TMdfpMurbn2GgJR0HegsLR4Ak7rcb75qYctf6
-	 zvk7LwOhcP+YAzXuIDMWx9obSN0PwJGObR4eBHo/Ww9JFWTuhwuZIHFnCGl+2eP951r+xn9+qVu+
-	 as6/dq6/ZaMplTuatRxj9ZytVzHcGG9juDhtM8BCSLA4Y0AKEEpXtTcsiShDZHcgrMt0o88ctujq
-	 /dD3Gxi80VjQfl4XVhtR+W3F+oYSRC5Dul4O7672KPIom7Pjtwd0ev42STmJ7QCn+LGcRfu/k+VT
-	 WjkAYgjUFFMkCSGszQ05RTHbjCqM+ft9QDWT/0stfyjmsAYjNLve/iezLjuTDo6d5V8SdYg5UiM/
-	 LmenzJJbPIGCZd/CwigiSGpso3Rd0R4pAPwGjhCxm99j8SLn8+NVF4TqKzsaVUOmq0Pgoisu5fgv
-	 F2CIZNNlM1MebDUkXY5XDs+QKrbR5jIPWDmWObYXDbyJERonmSCGxR3ATF7qaaCfOF9SnxiDqhCy
-	 GQwmiSPnnZbKtbgC9DWVm22bBsFN6eeWhHd4v6eo3Cv23msgZal6DoJyFYO6i+TFaGnTWMKENqfd
-	 QyXzk8OR+zvAh1QzaZ2aA3fFnK6g+KgCwafs137WYaLgB02hBk/OqhrlksA6XPiQldvwBaWUiJC2
-	 ij9KYE
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
-From: Wang Zihan <3772548978@qq.com>
-To: loongarch@lists.linux.dev
-Cc: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	alexs@kernel.org,
-	si.yanteng@linux.dev,
-	dzm91@hust.edu.cn,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org,
-	2023002089@link.tyut.edu.cn,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wang Zihan <3772548978@qq.com>
-Subject: [PATCH] Documentation: loongarch: Fix typo "eXtention" -> "Extension"
-Date: Sat,  2 May 2026 19:19:12 +0800
-X-OQ-MSGID: <20260502111912.143743-1-3772548978@qq.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=xn--rombobjrn-67a.se header.i=@xn--rombobjrn-67a.se header.b="i211gjQm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xn--rombobjrn-67a.se;
+	s=a; t=1777722353; bh=WAxh7NIxIRfdSPNOcNeAK16za/CAfyD89M84k9A6dcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:From:Sender:Reply-To:Original-From:
+	 Organization:To:CC:Subject:Original-Subject:Date:Message-ID:
+	 In-Reply-To:References:Original-Message-ID:
+	 Disposition-Notification-To:Disposition-Notification-Options:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type:
+	 Content-Features:Content-Alternative:Content-Location:
+	 TLS-Report-Domain:TLS-Report-Submitter:MT-Priority;
+	b=i211gjQmX9aX1Lad+MPHhhFbJbprtSDVSEi7Ji6uSS31GsvJb3RxGhDp73zlV7N11
+	 oesG3jkL5cr/Tk2vDEcMChpBaBTpKVT57mBuu8dO1tk25PIvgAEiBWZX7fhL+7TZkr
+	 a63AWlQo+aMJPlSEtImfdHrs8486QMDNZYCd+qAE3vMCY0diVZTM9DExnGphonHT9Y
+	 vNWRfQdnBLkIPSIal1g/qtH0EzU+VVjwNzcjm4+If0FQaeHoNbrT+/BKzAKmcgk2lB
+	 ugmKowh18KyGYZc1kEHyR9ZyGsqhkwf5FU5AmWIfNFbdGNe4Fn2xY7/h3GVta7foZo
+	 /dsmFjlBYkVTQ==
+Received: from tag.xn--rombobjrn-67a.se (tag.xn--rombobjrn-67a.se [192.168.72.9])
+	by smtp.xn--rombobjrn-67a.se (Postfix) with ESMTPSA id B504E407BE00;
+	Sat,  2 May 2026 13:45:53 +0200 (CEST)
+Date: Sat, 2 May 2026 13:45:29 +0200
+From: =?UTF-8?B?QmrDtnJu?= Persson <Bjorn@xn--rombobjrn-67a.se>
+To: Wang Zihan <3772548978@qq.com>
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, alexs@kernel.org,
+ si.yanteng@linux.dev, dzm91@hust.edu.cn, corbet@lwn.net,
+ skhan@linuxfoundation.org, 2023002089@link.tyut.edu.cn,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+Subject: Re: [PATCH] Documentation: loongarch: Fix typo "eXtention" ->
+ "Extension"
+Message-ID: <20260502134529.0cdcd4d9@tag.xn--rombobjrn-67a.se>
+In-Reply-To: <tencent_ADC4AD99CFC8EFB26D25889B11D4864B9B05@qq.com>
+References: <tencent_ADC4AD99CFC8EFB26D25889B11D4864B9B05@qq.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Dgi1PPZDUSSxcrnozuKmCye";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+
+--Sig_/Dgi1PPZDUSSxcrnozuKmCye
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-Fix the spelling of SIMD Extension in Chinese documentation
-(both Simplified and Traditional).
+Wang Zihan wrote:
+> -- 128=E4=BD=8D=E5=90=91=E9=87=8F=E6=93=B4=E5=B1=95LSX=EF=BC=88=E5=85=A8=
+=E7=A8=B1Loongson SIMD eXtention=EF=BC=89=EF=BC=8C
+> -- 256=E4=BD=8D=E5=90=91=E9=87=8F=E6=93=B4=E5=B1=95LASX=EF=BC=88=E5=85=A8=
+=E7=A8=B1Loongson Advanced SIMD eXtention=EF=BC=89=E3=80=82
+> +- 128=E4=BD=8D=E5=90=91=E9=87=8F=E6=93=B4=E5=B1=95LSX=EF=BC=88=E5=85=A8=
+=E7=A8=B1Loongson SIMD Extension=EF=BC=89=EF=BC=8C
+> +- 256=E4=BD=8D=E5=90=91=E9=87=8F=E6=93=B4=E5=B1=95LASX=EF=BC=88=E5=85=A8=
+=E7=A8=B1Loongson Advanced SIMD Extension=EF=BC=89=E3=80=82
 
-Signed-off-by: Wang Zihan <3772548978@qq.com>
----
- .../translations/zh_CN/arch/loongarch/introduction.rst        | 4 ++--
- .../translations/zh_TW/arch/loongarch/introduction.rst        | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+That's obviously done intentionally to highlight the X. Like it or
+dislike it, but it's not a mistake.
 
-diff --git a/Documentation/translations/zh_CN/arch/loongarch/introduction.rst b/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-index bf463c5a4..7cd88dfac 100644
---- a/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-+++ b/Documentation/translations/zh_CN/arch/loongarch/introduction.rst
-@@ -79,8 +79,8 @@ LA64中每个寄存器为64位宽。 ``$r0`` 的内容总是固定为0，而其
- 
- LoongArch现有两种向量扩展：
- 
--- 128位向量扩展LSX（全称Loongson SIMD eXtention），
--- 256位向量扩展LASX（全称Loongson Advanced SIMD eXtention）。
-+- 128位向量扩展LSX（全称Loongson SIMD Extension），
-+- 256位向量扩展LASX（全称Loongson Advanced SIMD Extension）。
- 
- LSX使用 ``$v0`` ~ ``$v31`` 向量寄存器，而LASX则使用 ``$x0`` ~ ``$x31`` 。
- 
-diff --git a/Documentation/translations/zh_TW/arch/loongarch/introduction.rst b/Documentation/translations/zh_TW/arch/loongarch/introduction.rst
-index a5603f9b0..9e4a96f1a 100644
---- a/Documentation/translations/zh_TW/arch/loongarch/introduction.rst
-+++ b/Documentation/translations/zh_TW/arch/loongarch/introduction.rst
-@@ -79,8 +79,8 @@ LA64中每個寄存器爲64位寬。 ``$r0`` 的內容總是固定爲0，而其
- 
- LoongArch現有兩種向量擴展：
- 
--- 128位向量擴展LSX（全稱Loongson SIMD eXtention），
--- 256位向量擴展LASX（全稱Loongson Advanced SIMD eXtention）。
-+- 128位向量擴展LSX（全稱Loongson SIMD Extension），
-+- 256位向量擴展LASX（全稱Loongson Advanced SIMD Extension）。
- 
- LSX使用 ``$v0`` ~ ``$v31`` 向量寄存器，而LASX則使用 ``$x0`` ~ ``$x31`` 。
- 
--- 
-2.54.0
+Bj=C3=B6rn Persson
 
+--Sig_/Dgi1PPZDUSSxcrnozuKmCye
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signatur
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE52SginNFTPmg+iBb4Tha3NZK5j8FAmn149kACgkQ4Tha3NZK
+5j9IDhAAjo1g9UUfWJHHi0VOS0XX7JYT3cl00sa7qT1uDSBQt3yyraXzSJndj4Je
+fspQplk0PB3/gPC1IP3L0LVfa0Vqcxe0q8EHk5ZY22uB+uaKZRrNAwoYP1cf7qN5
+zQaU1eWcnihvbkYceMBue0pCKRORY5oBn6TXeJTdgNiNiGiewKYwn/9xpl0Yw0gg
+fS/3CEgeYmZuEEdkOoNJNokNlYrAeFleoPlo1mbLDQc3t46zdKywFbz3yCNnMt1K
+zJhuugRdcG8/Ed6cE+PALPBU2EXbzhc6B96fi19DELbpbUjWkEfi0A3NNfFVjzpr
+t3pjg5r+9k0IWplZf4tY5eS147IesGkugm+cSezDsNG5U/ovT6qVU4SpYqsQ6001
+3WdHs0gNSuvJ6Spm+XZq4EFHzkk5Kwhn48XWwcZbMNz5/hOydROeFr4Ex2N2PccX
+fWywmsqrGv/KXVV3ORaWGENxTIaPZfJAk/dmwukWltbUHr+fefzYqgqE4soOjn3y
+xBfdHjZZPr+AEh2B1VBZ3o27AUOdlMAsmRlveOZ8XoxB6xmqGoY/KpFcZ1WeCZrq
+CSUzUtfOQnHCfR5Ee31kpTGBd84Umu/ZCj/X6OsCFiyGMdFs85iYs77XSb8ic2mj
++Rn1zAeTD7B4wY7xTBgIMEMjszkBydMYpmS/KjmitpqNJCJ8TXg=
+=M/2g
+-----END PGP SIGNATURE-----
+
+--Sig_/Dgi1PPZDUSSxcrnozuKmCye--
