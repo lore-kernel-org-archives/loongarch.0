@@ -1,111 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA9135A388
-	for <loongarch@lists.linux.dev>; Mon,  4 May 2026 13:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F493DDDD7;
+	Mon,  4 May 2026 13:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777901751; cv=none; b=eBaddDYYi2g8ia29FuIPKbMVci9l4V7Q0LxeOXiDtIpJn0NAzrhMTi8IlOju2Jvc1PcZCn6c6Y2b6N2bVIHbFN+WDE3+YxfUiSbGPKbj/zJyhoI4ssnUnkX8AC39Z9Fpky0bLYz2QTMrmjq+f49olYkNWFnetMqayB5g1TK02vs=
+	t=1777903074; cv=none; b=VWCXXZdZ4C8XFwwEfgwheKxvflKAJDyzud6TrfIC547D7Lssvk/6ToQJQvKo3kk9F5+J9crfPcbzvSJS1imkaFbyhi/+aQGcVRI1QGvR21/Hdqkm1SbNiZYLVdmyIgtBxNRTCU5dRW53BYcc/jn50U31etQF4rI74E7vK+xiLBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777901751; c=relaxed/simple;
-	bh=anAXTn2WVNJfQBijdvlVjx89L+KjLxZQUrMBMBAvn58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oYboyvhiTMD/X8Z3gq4RhzcsWMXDwfzk2beHyBWk/uMwLBeyI0PQUDAGynjWYo0hftr+eyJJKo2nrxitHVWLOq1vX1va49aLvI89JuU0QmAsC/fy8IbIXW6vOqUxqcCyZzkaiP/jFSTS5bjClzXIvdVcxXZeKx4m6tZX/rRAf5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lm8czak3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777903074; c=relaxed/simple;
+	bh=pkoqiXWBKPs5iVQ4mNASCFmV0IiOFJW86OVG4eKzF6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P9DlCgK5A/OaLip+ZmCNV4g+9RfgqzQ2XpwQOV+kLtpUjSUp9ccn4fIN/RukxBU0VA59VxzSf2oXYB0rl8pwPIROs/SoR/haEJb3dprLBL6vgmf6fm69VOPhaPkeYbCR5EHzVfd55+NQVhYfXw7dbBQ9jsSGUsv42U0ZSL7T39g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dKxWthsg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lm8czak3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834BAC2BCF7
-	for <loongarch@lists.linux.dev>; Mon,  4 May 2026 13:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777901751;
-	bh=anAXTn2WVNJfQBijdvlVjx89L+KjLxZQUrMBMBAvn58=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lm8czak3ojKL/iSeFyCXKqI7NTDydVsOyB2+Hmt8nIK2EusB+d4Z4frGvii94dCYM
-	 jWu0DSEVVN+bGYmtnqjUZ613RrBl279QTX5Q4GXGY/7uhrANxd69oXqVhg4v9RhlDr
-	 j0Bf6ACKU0YROCTpFS5awmkcjdKqVuM+Cdbkq4OknL3HDQb1DpvjyXBC7KufyhvzqD
-	 7zI8a4XUxzPdXMbnVIlJrXSGL14ML23Gg2KG7zpTnsaZSKWHibluTUhcKe4kIIwY+6
-	 YESTlho5Ct6TbII6iOg1nmDm+rg+TnF6JT9MWtZidEiRLMooEyQHzB5HaaV3YK9SH9
-	 zy3fy169eVGyw==
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8b62ca1d28eso24892996d6.2
-        for <loongarch@lists.linux.dev>; Mon, 04 May 2026 06:35:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/pvmr854g/xjIJL5GPC4ZVpKjt88GysISllVEugoIpeM8ri1jPYDtS9OBEvdHJ4TAG9QarbcNsRmI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxD0lxlHP5yreUCIz0KoqYgde0/q3jLKUCFCz8z/A7w0Xri0mlp
-	h5zgH4Yv0viQ7JeHqhFJdqlIQHz4ALYhaw4Gatpe7QjNeMAMWOjJF7gJG4GIGkW7JJTvpR0XEuq
-	J7yvvNtNUisx0TlLtxAoY4MurMchUOvo=
-X-Received: by 2002:a05:6214:260a:b0:8ac:4fd1:2d4a with SMTP id
- 6a1803df08f44-8b668a259e6mr167277966d6.33.1777901750649; Mon, 04 May 2026
- 06:35:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dKxWthsg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B9BC2BCF5;
+	Mon,  4 May 2026 13:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1777903074;
+	bh=pkoqiXWBKPs5iVQ4mNASCFmV0IiOFJW86OVG4eKzF6o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dKxWthsg5yMG/jr3JJtpZtCqopiCz4hiTTEVLAqoee8Mwow9UTZ+x816U9yoWMVXq
+	 N+1dF17s6hjHXgFaPYjHkdcorOjYuFGqkeGs3uBskE6i+3haGxLyVTV9AEsJYTMlh4
+	 B8ywm6cxciFqX7z6vAifpwjrkVumod5+qyPy8IdY=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	WANG Rui <wangrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	Rong Bao <rong.bao@csmantle.top>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 7.0 092/307] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Mon,  4 May 2026 15:49:37 +0200
+Message-ID: <20260504135146.275021893@linuxfoundation.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260504135142.814938198@linuxfoundation.org>
+References: <20260504135142.814938198@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org> <yezmezj26xntushmylductlmytfgvwsnbnzlhffkfwugfxkt6m@gleq22spziyk>
- <CAGsJ_4y8JtCxEy9hVxVd8eaf8D9WC8BcRQp9afUVu=FJA1-awA@mail.gmail.com> <n5vsmp6ingbhfztl6wzcwmrz56gkkfbpzardk43scr7rcgqsw5@evtnov34c5bt>
-In-Reply-To: <n5vsmp6ingbhfztl6wzcwmrz56gkkfbpzardk43scr7rcgqsw5@evtnov34c5bt>
-From: Barry Song <baohua@kernel.org>
-Date: Mon, 4 May 2026 21:35:38 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4zBiRTttf1nR0Ni9BRT3Cv5XFZhyYP8oipFodpS7saGwQ@mail.gmail.com>
-X-Gm-Features: AVHnY4I0u-Qbkg0vrggpRHSUVs_cQpUa3gydJwrEbvTBOzz3MxeuFlaWucVZXHg
-Message-ID: <CAGsJ_4zBiRTttf1nR0Ni9BRT3Cv5XFZhyYP8oipFodpS7saGwQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Jan Kara <jack@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, pfalcato@suse.de, 
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, 
-	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, 
-	bhe@redhat.com, youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 4, 2026 at 9:04=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
-[...]
->
-> > > BTW I'm not sure I quite understand Barry's priority inversion proble=
-m
-> > > since I'd expect all threads of a task to generally be treated with t=
-he
-> > > same priority...
-> >
-> > Exactly not. Maybe these slides[2] and this project[3] can give
-> > you a hint=E2=80=94they aim to standardize things on Linux by
-> > learning from Apple OS. Basically, tasks are classified
-> > into five types:
-> >
-> > USER_INTERACTIVE: Requires immediate response.
-> > USER_INITIATED: Tolerates a short delay, but must respond quickly still=
-.
-> > UTILITY: Tolerates long delays, but not prolonged ones.
-> > BACKGROUND: Doesn=E2=80=99t mind prolonged delays.
-> > DEFAULT: System default behavior.
->
-> Again, this is a clasification of tasks but not really of threads in a ta=
-sk
-> so at least for VMA lock there's no inversion so have?
+7.0-stable review patch.  If anyone has any objections, please let me know.
 
-I=E2=80=99m specifically referring to a task (i.e., a thread) when
-discussing scheduler context. It may be clearer to use the
-terms process and thread explicitly.
+------------------
 
-In a typical process sharing an mm_struct, each thread can
-have a different priority.
+From: Rong Bao <rong.bao@csmantle.top>
 
-In an Android app, some threads handle the UI and require
-higher priority, such as the main thread and RenderThread;
-otherwise, frame drops may occur.
+commit a355eefc36c4481188249b067832b40a2c45fa5c upstream.
 
-The Linux scheduler can control scheduling policy and
-priority for each thread.
+Currently, the initialization of loongarch_jump_ops does not contain an
+assignment to its .free field. This causes disasm_line__free() to fall
+through to ins_ops__delete() for LoongArch jump instructions.
 
-Thanks
-Barry
+ins_ops__delete() will free ins_operands.source.raw and
+ins_operands.source.name, and these fields overlaps with
+ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
+Since in loongarch_jump__parse(), these two fields are populated by
+strchr()-ing the same buffer, trying to free them will lead to undefined
+behavior.
+
+This invalid free usually leads to crashes:
+
+        Process 1712902 (perf) of user 1000 dumped core.
+        Stack trace of thread 1712902:
+        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
+        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
+        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
+        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
+        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
+        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
+        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
+        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
+        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
+        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
+        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
+        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
+        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
+        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
+        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
+        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
+        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
+        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
+        ELF object binary architecture: LoongArch
+
+... and it can be confirmed with Valgrind:
+
+        ==1721834== Invalid free() / delete / delete[] / realloc()
+        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
+        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
+        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
+        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
+        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+
+This patch adds the missing free() specialization in loongarch_jump_ops,
+which prevents disasm_line__free() from invoking the default cleanup
+function.
+
+Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
+Cc: stable@vger.kernel.org
+Cc: WANG Rui <wangrui@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: loongarch@lists.linux.dev
+Signed-off-by: Rong Bao <rong.bao@csmantle.top>
+Tested-by: WANG Rui <wangrui@loongson.cn>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/perf/util/annotate-arch/annotate-loongarch.c |    1 +
+ tools/perf/util/disasm.c                           |    2 +-
+ tools/perf/util/disasm.h                           |    2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+--- a/tools/perf/util/annotate-arch/annotate-loongarch.c
++++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
+@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const s
+ }
+ 
+ static const struct ins_ops loongarch_jump_ops = {
++	.free	   = jump__delete,
+ 	.parse	   = loongarch_jump__parse,
+ 	.scnprintf = jump__scnprintf,
+ 	.is_jump   = true,
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *in
+ 			 ops->target.offset);
+ }
+ 
+-static void jump__delete(struct ins_operands *ops __maybe_unused)
++void jump__delete(struct ins_operands *ops __maybe_unused)
+ {
+ 	/*
+ 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *in
+ int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
+ 		   struct ins_operands *ops, int max_ins_name);
+ 
++void jump__delete(struct ins_operands *ops);
++
+ int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
+ 
+ char *expand_tabs(char *line, char **storage, size_t *storage_len);
+
+
