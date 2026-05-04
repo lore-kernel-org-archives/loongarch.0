@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F493DDDD7;
-	Mon,  4 May 2026 13:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21F11A6827;
+	Mon,  4 May 2026 14:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777903074; cv=none; b=VWCXXZdZ4C8XFwwEfgwheKxvflKAJDyzud6TrfIC547D7Lssvk/6ToQJQvKo3kk9F5+J9crfPcbzvSJS1imkaFbyhi/+aQGcVRI1QGvR21/Hdqkm1SbNiZYLVdmyIgtBxNRTCU5dRW53BYcc/jn50U31etQF4rI74E7vK+xiLBs=
+	t=1777904147; cv=none; b=hruSJHie7V67Zcpg3MyocGqz6pGz7NGlKOj0B5K0jB9Ex/yAPyJANrucSPCG1ynGcQQujj7DC56uaoLgNCdYOgIUtgEqhe4M3ihcLt+YHQ94D0463vaSW86L1E+q3dSheh49p7lQ4/AXpxzVCa0UzxjkP72vOSwmRxBt8U9i8ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777903074; c=relaxed/simple;
-	bh=pkoqiXWBKPs5iVQ4mNASCFmV0IiOFJW86OVG4eKzF6o=;
+	s=arc-20240116; t=1777904147; c=relaxed/simple;
+	bh=Da2ZdHruZTDgEPidCdanSaAch0vLLQSLQJMzJHPTI2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P9DlCgK5A/OaLip+ZmCNV4g+9RfgqzQ2XpwQOV+kLtpUjSUp9ccn4fIN/RukxBU0VA59VxzSf2oXYB0rl8pwPIROs/SoR/haEJb3dprLBL6vgmf6fm69VOPhaPkeYbCR5EHzVfd55+NQVhYfXw7dbBQ9jsSGUsv42U0ZSL7T39g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dKxWthsg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oJmOm9OE2bkiAn46gqrKJiAAPh+uiei4TlxZyXVzlefTibS3Zn2SH0wkzh1vo6pJqBkkUnObo6EfwhweEyASHBK/huN0J7NiiHlMd+8Fmkn+TtjugTsmeZryewrdxpWxhPhD+1IE/To70wJIbe/qBZh6vnZm/FdwaAC1nSChKNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wFfQV+7v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dKxWthsg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B9BC2BCF5;
-	Mon,  4 May 2026 13:57:53 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wFfQV+7v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA41C2BCB8;
+	Mon,  4 May 2026 14:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1777903074;
-	bh=pkoqiXWBKPs5iVQ4mNASCFmV0IiOFJW86OVG4eKzF6o=;
+	s=korg; t=1777904146;
+	bh=Da2ZdHruZTDgEPidCdanSaAch0vLLQSLQJMzJHPTI2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dKxWthsg5yMG/jr3JJtpZtCqopiCz4hiTTEVLAqoee8Mwow9UTZ+x816U9yoWMVXq
-	 N+1dF17s6hjHXgFaPYjHkdcorOjYuFGqkeGs3uBskE6i+3haGxLyVTV9AEsJYTMlh4
-	 B8ywm6cxciFqX7z6vAifpwjrkVumod5+qyPy8IdY=
+	b=wFfQV+7vq09HCxAv/0AbGeuhTa3+/DWWZvLyTr2+0D9L3kPNKMizDSVd8nX4hbaVn
+	 pjADnn1pGJBZFj8Ja9aSYzR+qTD1iSjxFRPaxqkXra1SoSCkOn5NcJwMxU17RPYK5g
+	 cg+UQvXppy3LeE3j6y5s393yixY4OEgcFYSTYw8A=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -32,13 +32,14 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	WANG Xuerui <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	Rong Bao <rong.bao@csmantle.top>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 7.0 092/307] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Mon,  4 May 2026 15:49:37 +0200
-Message-ID: <20260504135146.275021893@linuxfoundation.org>
+	Namhyung Kim <namhyung@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.18 194/275] perf annotate: Use jump__delete when freeing LoongArch jumps
+Date: Mon,  4 May 2026 15:52:14 +0200
+Message-ID: <20260504135150.284875128@linuxfoundation.org>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260504135142.814938198@linuxfoundation.org>
-References: <20260504135142.814938198@linuxfoundation.org>
+In-Reply-To: <20260504135142.929052779@linuxfoundation.org>
+References: <20260504135142.929052779@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -50,13 +51,13 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-7.0-stable review patch.  If anyone has any objections, please let me know.
+6.18-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
 From: Rong Bao <rong.bao@csmantle.top>
 
-commit a355eefc36c4481188249b067832b40a2c45fa5c upstream.
+[ Upstream commit a355eefc36c4481188249b067832b40a2c45fa5c ]
 
 Currently, the initialization of loongarch_jump_ops does not contain an
 assignment to its .free field. This causes disasm_line__free() to fall
@@ -128,44 +129,38 @@ Cc: loongarch@lists.linux.dev
 Signed-off-by: Rong Bao <rong.bao@csmantle.top>
 Tested-by: WANG Rui <wangrui@loongson.cn>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/annotate-arch/annotate-loongarch.c |    1 +
- tools/perf/util/disasm.c                           |    2 +-
- tools/perf/util/disasm.h                           |    2 ++
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/arch/loongarch/annotate/instructions.c | 1 +
+ tools/perf/util/disasm.c                          | 1 +
+ 2 files changed, 2 insertions(+)
 
---- a/tools/perf/util/annotate-arch/annotate-loongarch.c
-+++ b/tools/perf/util/annotate-arch/annotate-loongarch.c
-@@ -110,6 +110,7 @@ static int loongarch_jump__parse(const s
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+index 1c3abb43c8d72..1a0a1dacebc30 100644
+--- a/tools/perf/arch/loongarch/annotate/instructions.c
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -97,6 +97,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
  }
  
- static const struct ins_ops loongarch_jump_ops = {
+ static struct ins_ops loongarch_jump_ops = {
 +	.free	   = jump__delete,
  	.parse	   = loongarch_jump__parse,
  	.scnprintf = jump__scnprintf,
- 	.is_jump   = true,
+ };
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index b1be847446fea..c513db41137fa 100644
 --- a/tools/perf/util/disasm.c
 +++ b/tools/perf/util/disasm.c
-@@ -451,7 +451,7 @@ int jump__scnprintf(const struct ins *in
- 			 ops->target.offset);
- }
+@@ -47,6 +47,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+ 			   struct ins_operands *ops, int max_ins_name);
+ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+ 			   struct ins_operands *ops, int max_ins_name);
++static void jump__delete(struct ins_operands *ops);
  
--static void jump__delete(struct ins_operands *ops __maybe_unused)
-+void jump__delete(struct ins_operands *ops __maybe_unused)
- {
- 	/*
- 	 * The ops->jump.raw_comment and ops->jump.raw_func_start belong to the
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -161,6 +161,8 @@ int jump__scnprintf(const struct ins *in
- int mov__scnprintf(const struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
-+void jump__delete(struct ins_operands *ops);
-+
- int symbol__disassemble(struct symbol *sym, struct annotate_args *args);
- 
- char *expand_tabs(char *line, char **storage, size_t *storage_len);
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
+-- 
+2.53.0
+
 
 
