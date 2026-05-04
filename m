@@ -1,166 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143043DF01A;
-	Mon,  4 May 2026 14:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C27386C20
+	for <loongarch@lists.linux.dev>; Mon,  4 May 2026 22:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777904706; cv=none; b=cUTYethy2IgjSeaSnqj/BHJnPwuEbWt1iZh+rCkEPeF+FGU6fbmXEGrc2gPEjigqeE9qWlWZd0eQh64yGCw8Dqgc1JxpqvbDmXK4P3ribos6aaCPzv/z9PxGgrdC4O7UCq0E0OBifMqQx8uj2o8LO7cTshNeZNgiNApUBiT3Pgs=
+	t=1777934552; cv=none; b=bNRWIuf7gbNXmvhyutQ6t/Xo+DIb3ae5+z5c4n1H2SkyXdzoSGtFupoodb8xYnl8fwXBjycmPS1vj3ZAnG1PqvbQoJ5AYdRjscMUmAHQ4hb2My0dDSWLoBISL/LDnSHDom01zkgjYXNYYx0y79Is6WxVABHQeURnYBdUhb/x9+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777904706; c=relaxed/simple;
-	bh=J9ahSR4Ftis2LFwUexMr3cydvP4sqCLQwyv+X60Prqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jO83EkzT8l4EMC4IQM79Py30RiFswMMzevPzEL9IoKMFTM4BMLxeGZDYIkAGY6JAXDN63ncAguBKyCYqANS9JOVBWD6/IoxXBrtDxoIaVBORLHkFid8rUKo6Ysc5VK+shx55oby3HYWnEtydeoF1+01yHL4H7qeB0G27ED/cg9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lkFkfGuL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777934552; c=relaxed/simple;
+	bh=a6LAKe8ovUnasAZFDeUefPCWvqT60LXkBEdqdXAd5Mc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cPbOGAemU2Ns/T37EGl33qH8JMo9tGZm6zahNEmIjdNI6pBDQXfU2tCf7cXHB6NZzByVIsIBvDidyYbEjze1MIH6G6LqeAJ/J8yUr7tZwpFbyeEayKnVduL+/vZeJ/ukjD7zspRRgX00no4rOWpKDaVnBTIkxv4YX6usVO+mLLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ksdeilwo; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lkFkfGuL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A8FEC2BCB8;
-	Mon,  4 May 2026 14:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1777904705;
-	bh=J9ahSR4Ftis2LFwUexMr3cydvP4sqCLQwyv+X60Prqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lkFkfGuLhR+bM1T+ongnpUiKPZNRH8muWfDaarrGgMcUEZvEiXeJyhNvdjvr+uccP
-	 BL/my/Mb6QWXgPcsYBXOgZE2T7rKRiBQEpz4/PCwfk0grIlBIt9Xt6eUhz9ALn9oMU
-	 bwL4ChrSgtXuqZoG2c7YFxk3SIihLLEiA74WBfY0=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	WANG Rui <wangrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	Rong Bao <rong.bao@csmantle.top>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.12 135/215] perf annotate: Use jump__delete when freeing LoongArch jumps
-Date: Mon,  4 May 2026 15:52:34 +0200
-Message-ID: <20260504135135.084370958@linuxfoundation.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260504135130.169210693@linuxfoundation.org>
-References: <20260504135130.169210693@linuxfoundation.org>
-User-Agent: quilt/0.69
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ksdeilwo"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-82fd55bf6cdso3230894b3a.3
+        for <loongarch@lists.linux.dev>; Mon, 04 May 2026 15:42:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777934549; x=1778539349; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GreUyu/PwGDkwAAEFHxYx5rSO95cp1lrcmL4UWkbrcg=;
+        b=Ksdeilwo7cv78EhIaBwBWS8c8eNJ/Jf6+621JiOxZVPZT3i4yoE+zw37UqCtwgChyi
+         breODgqsmDdVM9wm7lkGkG5OQGM6h0pCBTl231ogKF166cZdkyRLAV4c+q4AG9YLvooQ
+         XDCGD+N0hMSkiQ/SCaV9/icjonMw64Xa9jpQqHq8M4Fe1K940a0GBNmhCF+V3Dq0aV9v
+         eogo5UpZ5oDiI1IF5l/QHMCUHmZx+jCguPz3hHyV4mmhGOpLS/X364sXDgcBmwEoJzJd
+         aN+X1yALR7wYmg6qqBmXqDeRUwqxvwdUqUuDgy4H/3HGT2S9PG2i0nSI+qlE0nlrTSpg
+         IIRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777934549; x=1778539349;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GreUyu/PwGDkwAAEFHxYx5rSO95cp1lrcmL4UWkbrcg=;
+        b=h/NaUl+Tudrt9bOOmOij2qfj+188RuxGLobebiy0V7r3c9tWa4Sp1vSSD2JyG3m++j
+         +MyLCQ1GiQT156hru1WhkQjFDBzUGUjDozyOe8YFo4oRv4C2Ae7fT9SmHZm7IUIu+2Gx
+         GuO8a9K6zVdSD9SgplVAwuQ6fwU5sbzDAOxRiY12CRDuE2AN+DmJUUVKpByfrXNJNzvZ
+         juQfHS5bWqz24XQCBHE6f8VL77CzW0QQmpj1VHP+PBRgDkbz6AYHAWjwbG9REXNZ3Csa
+         ghxLxvo1T6IqltAPEcDikWkBy/e7/y2JXYCIGTIV3qtFlZo8j3h2RxRSRJOUQLvxLgqZ
+         lDWw==
+X-Forwarded-Encrypted: i=1; AFNElJ+LI9k6amW5Z25lSdbbAmLha5KfMXiV4sctWat5wDYEoJagY3Z1Q9l2lUMLlem9FlkPY6jrmyte1YY=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw21ESqpwU+wgRfTxtKtv6jPtg0ZYgDxlf94exw0zu7awcEkfri
+	UQn04tnWS3mwhLkFs/Sz8k8Z8vs0D8BeAVeRO/nRAyjiDDrK106iO1z6z1worLXf/rVsbUjfSi+
+	GAkOG5nR6EHTdKgEucdS/zQ==
+X-Received: from pfbhm13.prod.google.com ([2002:a05:6a00:670d:b0:82f:7bc:70a9])
+ (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:4c96:b0:82c:ded1:261f with SMTP id d2e1a72fcca58-8352d22c289mr10958941b3a.27.1777934549232;
+ Mon, 04 May 2026 15:42:29 -0700 (PDT)
+Date: Mon,  4 May 2026 22:42:07 +0000
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Message-ID: <20260504224213.1049426-1-jthoughton@google.com>
+Subject: [PATCH 0/5] KVM: Fix race conditions in kvm_arch_flush_shadow_all()
+From: James Houghton <jthoughton@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Sean Christopherson <seanjc@google.com>, Gavin Shan <gshan@redhat.com>, 
+	Shaoqin Huang <shahuang@redhat.com>, Ricardo Koller <ricarkol@google.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, James Hogan <jhogan@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	loongarch@lists.linux.dev, linux-mips@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, James Houghton <jthoughton@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-6.12-stable review patch.  If anyone has any objections, please let me know.
+Hi Paolo,
 
-------------------
+syzbot running on Google production kernels ran into a double-free on
+KVM/arm64 in kvm_mmu_free_memory_cache(). It turns out that loongarch
+and mips also have a similar problem.
 
-From: Rong Bao <rong.bao@csmantle.top>
+kvm_arch_flush_shadow_all() can be called on the same memslot
+concurrently, leading to double-freeing in arm64 and mips. loongarch
+is also affected: it can at least underflow some counters; I'm not sure
+what else can break.
 
-[ Upstream commit a355eefc36c4481188249b067832b40a2c45fa5c ]
+To get into this scenario, we need to have a process (P1) share an open
+VM with another process (P2). If P1 closes its VM to leave P2 holding
+the last reference, then there is a race between P1 exiting (exit_mm)
+and P2 dropping its last reference to the VM.
 
-Currently, the initialization of loongarch_jump_ops does not contain an
-assignment to its .free field. This causes disasm_line__free() to fall
-through to ins_ops__delete() for LoongArch jump instructions.
+exit_mm() and kvm_vm_release() both call kvm_mmu_notifier_release() on
+the same KVM, and the only locks held are the KVM srcu lock and the MMU
+notifier srcu lock.
 
-ins_ops__delete() will free ins_operands.source.raw and
-ins_operands.source.name, and these fields overlaps with
-ins_operands.jump.raw_comment and ins_operands.jump.raw_func_start.
-Since in loongarch_jump__parse(), these two fields are populated by
-strchr()-ing the same buffer, trying to free them will lead to undefined
-behavior.
+Please see the arm64 patch for another description of the same race with
+more context on the ensuing double-free in KVM/arm64.
 
-This invalid free usually leads to crashes:
+The first three patches fix each broken architecture; each of those
+patches have stable CCed with what I think are the appropriate Fixes.
 
-        Process 1712902 (perf) of user 1000 dumped core.
-        Stack trace of thread 1712902:
-        #0  0x00007fffef155c58 n/a (libc.so.6 + 0x95c58)
-        #1  0x00007fffef0f7a94 raise (libc.so.6 + 0x37a94)
-        #2  0x00007fffef0dd6a8 abort (libc.so.6 + 0x1d6a8)
-        #3  0x00007fffef145490 n/a (libc.so.6 + 0x85490)
-        #4  0x00007fffef1646f4 n/a (libc.so.6 + 0xa46f4)
-        #5  0x00007fffef164718 n/a (libc.so.6 + 0xa4718)
-        #6  0x00005555583a6764 __zfree (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x106764)
-        #7  0x000055555854fb70 disasm_line__free (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x2afb70)
-        #8  0x000055555853d618 annotated_source__purge (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x29d618)
-        #9  0x000055555852300c __hist_entry__tui_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28300c)
-        #10 0x0000555558526718 do_annotate (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x286718)
-        #11 0x000055555852ed94 evsel__hists_browse (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x28ed94)
-        #12 0x000055555831fdd0 cmd_report (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x7fdd0)
-        #13 0x000055555839b644 handle_internal_command (/home/csmantle/dist/linux-arch/tools/perf/perf + 0xfb644)
-        #14 0x00005555582fe6ac main (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5e6ac)
-        #15 0x00007fffef0ddd90 n/a (libc.so.6 + 0x1dd90)
-        #16 0x00007fffef0ddf0c __libc_start_main (libc.so.6 + 0x1df0c)
-        #17 0x00005555582fed10 _start (/home/csmantle/dist/linux-arch/tools/perf/perf + 0x5ed10)
-        ELF object binary architecture: LoongArch
+After patching the locking for the broken architectures, it seems better
+simply to have KVM take the MMU lock exclusively before calling
+kvm_arch_flush_shadow_all() so that architectures don't need to worry
+about it. Feel free to drop that patch, the fourth one, if you disagree
+with it.
 
-... and it can be confirmed with Valgrind:
+The fifth patch provides a repro (with a crude kernel patch to reliably
+demonstrate the double-free). Please do not merge this.
 
-        ==1721834== Invalid free() / delete / delete[] / realloc()
-        ==1721834==    at 0x4EA9014: free (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x4106287: __zfree (zalloc.c:13)
-        ==1721834==    by 0x42ADC8F: disasm_line__free (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B737: annotated_source__purge (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42811EB: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==  Address 0x7d34303 is 35 bytes inside a block of size 62 alloc'd
-        ==1721834==    at 0x4EA59B8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-loongarch64-linux.so)
-        ==1721834==    by 0x6B80B6F: strdup (strdup.c:42)
-        ==1721834==    by 0x42AD917: disasm_line__new (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AE5A3: symbol__disassemble_objdump (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42AF0A7: symbol__disassemble (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429B3CF: symbol__annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x429C233: symbol__annotate2 (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42804D3: __hist_entry__tui_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x42848D7: do_annotate (in /home/csmantle/dist/linux-arch/tools/perf/perf)
-        ==1721834==    by 0x428CF33: evsel__hists_browse (in /home/csmantle/dist/linux-arch/tools/perf/perf)
+The arm64 patch has been tested with the repro. The loongarch and mips
+patches have been compile-tested only.
 
-This patch adds the missing free() specialization in loongarch_jump_ops,
-which prevents disasm_line__free() from invoking the default cleanup
-function.
+kvm_arch_guest_memory_reclaimed() is only implemented by one
+architecture: x86. Its implementation does not need the KVM MMU lock to
+be held.
 
-Fixes: fb7fd2a14a503b9a ("perf annotate: Move raw_comment and raw_func_start fields out of 'struct ins_operands'")
-Cc: stable@vger.kernel.org
-Cc: WANG Rui <wangrui@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Rong Bao <rong.bao@csmantle.top>
-Tested-by: WANG Rui <wangrui@loongson.cn>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/arch/loongarch/annotate/instructions.c | 1 +
- tools/perf/util/disasm.c                          | 1 +
- 2 files changed, 2 insertions(+)
+This series is based on 7.1-rc2.
 
-diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
-index ab43b1ab51e3b..e16350155bf1d 100644
---- a/tools/perf/arch/loongarch/annotate/instructions.c
-+++ b/tools/perf/arch/loongarch/annotate/instructions.c
-@@ -95,6 +95,7 @@ static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, st
- }
- 
- static struct ins_ops loongarch_jump_ops = {
-+	.free	   = jump__delete,
- 	.parse	   = loongarch_jump__parse,
- 	.scnprintf = jump__scnprintf,
- };
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 8a6f450c6f8e7..8f35232f7f22c 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -44,6 +44,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
-+static void jump__delete(struct ins_operands *ops);
- 
- static void ins__sort(struct arch *arch);
- static int disasm_line__parse(char *line, const char **namep, char **rawp);
+James Houghton (5):
+  KVM: arm64: Grab KVM MMU write lock in kvm_arch_flush_shadow_all()
+  KVM: loongarch: Grab MMU lock in kvm_arch_flush_shadow_all()
+  KVM: mips: Grab MMU lock in kvm_arch_flush_shadow_all()
+  KVM: Hold MMU lock exclusively when calling
+    kvm_arch_flush_shadow_all()
+  DO NOT MERGE: KVM: selftests: Reproducer for arm64 double-free
+
+ arch/arm64/include/asm/kvm_host.h             |   1 +
+ arch/arm64/include/asm/kvm_mmu.h              |   1 +
+ arch/arm64/kvm/mmu.c                          |  39 +++++-
+ arch/arm64/kvm/nested.c                       |   4 +-
+ arch/loongarch/kvm/mmu.c                      |   2 +
+ arch/mips/kvm/mips.c                          |   2 +
+ arch/mips/kvm/mmu.c                           |   2 +
+ arch/riscv/kvm/mmu.c                          |   4 +-
+ arch/riscv/kvm/vm.c                           |   2 +
+ arch/x86/kvm/mmu/mmu.c                        |   4 +-
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../testing/selftests/kvm/transfer_fd_test.c  | 129 ++++++++++++++++++
+ virt/kvm/kvm_main.c                           |   3 +
+ 13 files changed, 184 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/transfer_fd_test.c
+
+base-commit: 6d35786de28116ecf78797a62b84e6bf3c45aa5a
 -- 
-2.53.0
-
-
+2.54.0.545.g6539524ca2-goog
 
