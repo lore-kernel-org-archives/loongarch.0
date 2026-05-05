@@ -1,210 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB42D38C427;
-	Tue,  5 May 2026 08:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9BB3AE1B9
+	for <loongarch@lists.linux.dev>; Tue,  5 May 2026 17:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777970915; cv=none; b=eJ+zoh5Lyk5ETf/c53fqgvF76+Z7w637LKF3c3psU6dj78nWrb0uzWLkNAJglM2dR4mSf1Oppd/S9UL9C9rkut/4FuYdSqadsLOcmixe8p8aCwqXXyaB4XgJjapJyG5ciGgYw0K+AikkLFhc1TaYQMqE3luvIRguDwYYhhvq0ak=
+	t=1778000721; cv=none; b=ED6YOXCbam19M1uU3u0wBekczrkeH3Tp2z3YV0wJQxpKFm4rqN9bMiLXH78jJL24qkfbh1p/teM7dRDDb5Q0dB0RCcMMoVE+7PAwlRPK3wLF8MyZXfUYsjNbcoa0UHhojBtK0yd2p3OmQEcb6Tu9EgXlrHKds+nrzBclkYCfwKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777970915; c=relaxed/simple;
-	bh=VoLG4om3LpMu6n/Rm19I44/U7HtIxq4nWFHci0mVcJQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M1aiZNfOAmXOwGwlkRnqW70audTLv1w6EKwJtudhKEKj5XMM4v9H5dD2B/WErRsI4SA+cLfIRz3FQ4LGItdBKP2RTnUR4aD8CRVDPd3Gg0q82MVLsLK0zf8T63jJki04wVVhm00r5CSL4G2gQdF73XCLyPld3OWsRjfaX7pdaIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlAvh5mx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778000721; c=relaxed/simple;
+	bh=LlXGiT8km7O3+s8Me6WlqDhDtU9jqmDQ3ztOup/45zg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Nt07LqCDqV3SNiC1sasCHjXV1bV5KbAlRfoBvSP0zWcTjlYNiAZu0QD/yUQO1a7+DQWHadbK7AXqu7NytMf85HAqzzVWB97cZTANVoEgqOz9Seu+kOH8hpqYthHqO93BzV328vMExvvH6BPnLSNmE/aolgWniU0WKBy5z33idGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UoONguXk; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlAvh5mx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C344FC2BCB4;
-	Tue,  5 May 2026 08:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777970915;
-	bh=VoLG4om3LpMu6n/Rm19I44/U7HtIxq4nWFHci0mVcJQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OlAvh5mxETVWeOeQOP0cx2TPuQdar1Qo63oUGsyjgHBoL8WbHY9STto/vJjpy/WCm
-	 MJ6hVp22pb6rw8eQMJdkyVvaLjSb77BnI2zyIYpKhAFjR66FvOTu6r+2etEWAlvHna
-	 uFzHV6JVPdqW4vngVY8VZcih5KwShRRN87GSKxW/LqkYXkrKBh6K+eqNh/YnREUIWT
-	 57s88b8/yrGPTgoRkp6pAAmPAcMy7/pgpadPwCKn25i4b3T2EB/m1RcUY4o5kI91h8
-	 jdY9ReXyeitMWjG21T3Dz5By7JyUgK2wPIaTK7ReASdZGf3H3Y3BI6044rhduJ0m4j
-	 Q1xl4tcE8RfLw==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Tue, 05 May 2026 10:48:04 +0200
-Subject: [PATCH 2/2] irqchip/gic-v5: Add IWB to ACPI probe dependency
- control
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UoONguXk"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-837cc5bc6deso1437559b3a.3
+        for <loongarch@lists.linux.dev>; Tue, 05 May 2026 10:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778000718; x=1778605518; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m3ZWo/jJEgMHbppCM8fWNjqKfThN79PtinobDbAzSRU=;
+        b=UoONguXkG2Fw5pMdG0qhE6hzzRRh/Q3sn7TOZXoipoI6veJ8032oVNOpCiXUIuEZoi
+         RD4O7Acxwul40/AHEOPmMTkZtZtKp/G+kai+m5IZVqsya+ZD5FNYBfsKWTEp4hr6s6fq
+         kw8Nhr+heo3tpoVFV53JlShHsSHS9GAon3V7qfaVaG93pvu8dao73z3VaggNWLhOvSTE
+         K53ezCYzW/EvNV6/qaSVefFWU5cFPG5+No9prb1SOm2rzN7PKiE0VsBcbAxyRL82iekv
+         AWEMxhYF+01y0jyzFmUjhR7lLSdLexxhts2UhTHIzOiN7jGCHAfkdusRz/juJAZMEFq0
+         1xAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778000718; x=1778605518;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m3ZWo/jJEgMHbppCM8fWNjqKfThN79PtinobDbAzSRU=;
+        b=nKnG0dB/1E4CjTPnB+sVHCynUeUJJ4V2BDMNrKYyzzUE9IIV8+pWW0cBr2ejLULWn2
+         4A1eIUTAZJUhXY2rsuE6NJ/hhEfdcvNd2zcVuQfLkAofnuUSylqk8YP+n5WYLVMnHbWQ
+         UTauPnumaQQDYW85km4MYz/VbQXsFLxVlagPhMxFKkLzZlaKBN/gpOZasO9wL6/b8tBY
+         LsoSsLc7pF9pUdJY5dQnHO4DOouumo1rPIEWxiysMFIAp9kwWmuNynsT1lO8+JL6zCXK
+         WTpoiaMRucCAuYgT4KbUevU5P/7otqnjLNTmzxJa539BINcNImL01q9fQ/QvBCjwEkzR
+         cvsQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8gQTFHDZ6tqLgHSkbyZggsPYEA5V0dDgmx78kJ5NxUHOJjm9W0W/26IZNof7AntbUSA5oYbCB2NN4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy9UPn2RNoSJrm2kJwCz+PQTeoOlvO/3w7O9lTJdX2dSH/pxRhy
+	ZkiLxfXbf1i/5yl5MzlgY8T1RnfqsTPIsi2Burta3WkYc4QrQpdWM/TCuI4STZQ4ykZOFGDjeEv
+	6pv9VMQ==
+X-Received: from pfblm11.prod.google.com ([2002:a05:6a00:3c8b:b0:82c:e899:f089])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:368c:b0:82c:e1a3:986f
+ with SMTP id d2e1a72fcca58-839247bfb7bmr3652379b3a.43.1778000717292; Tue, 05
+ May 2026 10:05:17 -0700 (PDT)
+Date: Tue, 5 May 2026 10:05:15 -0700
+In-Reply-To: <20260504231048.1184273-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20260504224213.1049426-2-jthoughton@google.com> <20260504231048.1184273-1-jthoughton@google.com>
+Message-ID: <afohshVlK9YcBk-f@google.com>
+Subject: Re: [PATCH 1/5] KVM: arm64: Grab KVM MMU write lock in kvm_arch_flush_shadow_all()
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: chenhuacai@kernel.org, gshan@redhat.com, jhogan@kernel.org, 
+	joey.gouly@arm.com, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mips@vger.kernel.org, loongarch@lists.linux.dev, maobibo@loongson.cn, 
+	maz@kernel.org, oupton@kernel.org, pbonzini@redhat.com, ricarkol@google.com, 
+	shahuang@redhat.com, stable@vger.kernel.org, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, zhaotianrui@loongson.cn
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260505-gic-v5-acpi-iwb-probe-deferral-v1-2-b37b85998362@kernel.org>
-References: <20260505-gic-v5-acpi-iwb-probe-deferral-v1-0-b37b85998362@kernel.org>
-In-Reply-To: <20260505-gic-v5-acpi-iwb-probe-deferral-v1-0-b37b85998362@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
- Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
- Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
- Sudeep Holla <sudeep.holla@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.15.2
+Content-Transfer-Encoding: quoted-printable
 
-On Arm GICv5 systems, wired IRQs routed to an IWB may require resolving
-probe dependencies to make sure drivers for devices whose IRQs are routed
-to an IWB are probed after the IWB interrupt controller driver for the IWB
-they are routed to has probed.
+On Mon, May 04, 2026, James Houghton wrote:
+> On Mon, May 4, 2026 at 3:42=E2=80=AFPM James Houghton <jthoughton@google.=
+com> wrote:
+> >
+> > kvm_arch_flush_shadow_all() may sometimes be called on the same `kvm`
+> > concurrently in the event that the KVM's `mm` is __mmput() at the
+> > same time that last reference to the KVM is being dropped.
+> >
+> > T1              T2
+> > KVM_CREATE_VM
+> >                 Get VM file from T1
+> > close VM
+> > exit_mm()       close VM
+> >
+> > T1: exit_mm() -> kvm_mmu_notifier_release() -> kvm_flush_shadow_all(),
+> >     with only the KVM srcu read lock held.
+> >
+> > T2: kvm_vm_release() ---> mmu_notifier_unregister() ->
+> >     kvm_mmu_notifier_release() -> kvm_flush_shadow_all(),
+> >     again, with only the KVM srcu read lock held.
+> >
+> > This leads to a potential double-free of
+> > kvm->arch.kvm_mmu_free_memory_cache and now with NV
+> > kvm->arch.nested_mmus.
 
-Implement an ACPI hook to retrieve an acpi_handle for a specific GSI (if
-any, on GICv5 systems only the IWB is represented in firmware with an
-ACPI device object), hook it into ACPI IRQ core (updating
-acpi_set_irq_model()) and add the IWB to the list of devices whose
-dependencies can be detected (and cleared) in ACPI core to guarantee that
-probe dependencies for the IWB are satisfied.
+...
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Sudeep Holla <sudeep.holla@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/acpi/arm64/iort.c        | 22 +++++++++++++++++++---
- drivers/acpi/scan.c              |  1 +
- drivers/irqchip/irq-gic-v5-iwb.c |  5 +++++
- drivers/irqchip/irq-gic-v5.c     | 13 +++++++++++--
- include/linux/acpi_iort.h        |  3 ++-
- 5 files changed, 38 insertions(+), 6 deletions(-)
+> >  void kvm_uninit_stage2_mmu(struct kvm *kvm)
+> >  {
+> > -       kvm_free_stage2_pgd(&kvm->arch.mmu);
+> > +       lockdep_assert_held_write(&kvm->mmu_lock);
+>=20
+> *facepalm*.... this doesn't account for the other callers of
+> kvm_uninit_stage2_mmu(). They will get lockdep warnings.
+>=20
+> I've attached a diff to the bottom of this reply that *does* deal with th=
+em.
+> :( Sorry.
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index af7a9b2fd5bc..34412cd697d8 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -789,11 +789,9 @@ struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
- 	return irq_find_matching_fwnode(handle, bus_token);
- }
- 
--struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
-+acpi_handle iort_iwb_handle(u32 iwb_id)
- {
--	struct fwnode_handle *fwnode;
- 	struct acpi_iort_node *node;
--	struct acpi_device *device;
- 	struct acpi_iort_iwb *iwb;
- 	acpi_status status;
- 	acpi_handle handle;
-@@ -808,6 +806,19 @@ struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
- 	if (ACPI_FAILURE(status))
- 		return NULL;
- 
-+	return handle;
-+}
-+
-+struct fwnode_handle *iort_iwb_handle_fwnode(u32 iwb_id)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct acpi_device *device;
-+	acpi_handle handle;
-+
-+	handle = iort_iwb_handle(iwb_id);
-+	if (!handle)
-+		return NULL;
-+
- 	device = acpi_get_acpi_dev(handle);
- 	if (!device)
- 		return NULL;
-@@ -2090,6 +2101,11 @@ static void __init iort_init_platform_devices(void)
- 	}
- }
- 
-+u32 arch_acpi_add_auto_dep(acpi_handle handle)
-+{
-+	return acpi_irq_add_auto_dep(handle);
-+}
-+
- void __init acpi_iort_init(void)
- {
- 	acpi_status status;
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 530547cda8b2..ba15da9058dc 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -856,6 +856,7 @@ static const char * const acpi_ignore_dep_ids[] = {
- 
- /* List of HIDs for which we honor deps of matching ACPI devs, when checking _DEP lists. */
- static const char * const acpi_honor_dep_ids[] = {
-+	"ARMH0003", /* ARM GICv5 IWB */
- 	"INT3472", /* Camera sensor PMIC / clk and regulator info */
- 	"INTC1059", /* IVSC (TGL) driver must be loaded to allow i2c access to camera sensors */
- 	"INTC1095", /* IVSC (ADL) driver must be loaded to allow i2c access to camera sensors */
-diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-index 9103feb70ce8..a02cb9537b15 100644
---- a/drivers/irqchip/irq-gic-v5-iwb.c
-+++ b/drivers/irqchip/irq-gic-v5-iwb.c
-@@ -269,6 +269,11 @@ static int gicv5_iwb_device_probe(struct platform_device *pdev)
- 	if (IS_ERR(iwb_node))
- 		return PTR_ERR(iwb_node);
- 
-+#ifdef CONFIG_ACPI
-+	if (has_acpi_companion(&pdev->dev))
-+		acpi_dev_clear_dependencies(ACPI_COMPANION(&pdev->dev));
-+#endif
-+
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-index 03cc2830b260..26cfaea1af41 100644
---- a/drivers/irqchip/irq-gic-v5.c
-+++ b/drivers/irqchip/irq-gic-v5.c
-@@ -1217,11 +1217,19 @@ static struct fwnode_handle *gsi_domain_handle;
- static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
- {
- 	if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
--		return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-+		return iort_iwb_handle_fwnode(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
- 
- 	return gsi_domain_handle;
- }
- 
-+static acpi_handle gic_v5_get_gsi_handle(u32 gsi)
-+{
-+	if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-+		return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-+
-+	return NULL;
-+}
-+
- static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
- {
- 	struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-@@ -1242,7 +1250,8 @@ static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsig
- 	if (ret)
- 		goto out_irs;
- 
--	acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id, NULL);
-+	acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id,
-+			   gic_v5_get_gsi_handle);
- 
- 	return 0;
- 
-diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-index 17bb3374f4ca..931eaa7bbf6a 100644
---- a/include/linux/acpi_iort.h
-+++ b/include/linux/acpi_iort.h
-@@ -27,7 +27,8 @@ int iort_register_domain_token(int trans_id, phys_addr_t base,
- 			       struct fwnode_handle *fw_node);
- void iort_deregister_domain_token(int trans_id);
- struct fwnode_handle *iort_find_domain_token(int trans_id);
--struct fwnode_handle *iort_iwb_handle(u32 iwb_id);
-+acpi_handle iort_iwb_handle(u32 iwb_id);
-+struct fwnode_handle *iort_iwb_handle_fwnode(u32 iwb_id);
- 
- #ifdef CONFIG_ACPI_IORT
- u32 iort_msi_map_id(struct device *dev, u32 id);
+...
 
--- 
-2.54.0
+> > diff --git a/arch/arm64/kvm/nested.c b/arch/arm64/kvm/nested.c
+> > index 883b6c1008fb..977598bff5e6 100644
+> > --- a/arch/arm64/kvm/nested.c
+> > +++ b/arch/arm64/kvm/nested.c
+> > @@ -1190,11 +1190,13 @@ void kvm_arch_flush_shadow_all(struct kvm *kvm)
+> >  {
+> >         int i;
+> >
+> > +       guard(write_lock)(&kvm->mmu_lock);
+> > +
+> >         for (i =3D 0; i < kvm->arch.nested_mmus_size; i++) {
+> >                 struct kvm_s2_mmu *mmu =3D &kvm->arch.nested_mmus[i];
+> >
+> >                 if (!WARN_ON(atomic_read(&mmu->refcnt)))
+> > -                       kvm_free_stage2_pgd(mmu);
+> > +                       kvm_free_stage2_pgd_locked(mmu);
+> >         }
+> >         kvfree(kvm->arch.nested_mmus);
+> >         kvm->arch.nested_mmus =3D NULL;
+> > --
+> > 2.54.0.545.g6539524ca2-goog
+>=20
+> And here is the diff that should fix this patch. (Sorry!!)
 
+There are more issues.  kvm->arch.mmu.split_page_cache can be freed by
+kvm_arch_commit_memory_region(), which holds slots_lock and slots_arch_lock=
+,
+but not mmu_lock.
+
+IMO, the handling of kvm->arch.mmu.split_page_cache should be reworked.  I =
+don't
+entirely get the motivation for aggressively freeing the cache.  The cache =
+will
+only be filled if KVM actually does eager page splitting, so it's not like =
+KVM is
+burning pages for setups that will never use the cache.
+
+Maybe I'm underestimating how many pages arm64 needs in the worst case scen=
+ario?
+(I can't follow the math, too many macros).  But if KVM is configuring the =
+cache
+with a capacity that's _so_ high that the "wasted" memory is problematic, t=
+hen we
+probably should we revisit the capacity and algorithm.  E.g. if KVM is spli=
+tting
+from 1GiB =3D> 4KiB in a single pass (I can't tell if KVM does this on arm6=
+4), then
+we could break that into a 1GiB =3D> 2MiB =3D> 4KiB sequence.
