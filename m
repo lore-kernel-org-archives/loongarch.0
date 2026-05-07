@@ -1,66 +1,66 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CC6377EAF
-	for <loongarch@lists.linux.dev>; Thu,  7 May 2026 08:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E28C39903E
+	for <loongarch@lists.linux.dev>; Thu,  7 May 2026 08:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778143296; cv=none; b=YrBzWOQSJbz/dnja8WO/4RggLnb4ZsCqQDhXza0D8J+2tifvNIkjXE/U77JBzr5tJmGdRX4Ex/QaPyDEiOpmdu04aRpcOfpEI29Ot9h+rGAo9fHL90i+kH+HIFoG0+kkEuPNj4nJ8AaIkBcH9sVjsHazE+fYq91Gt3cBs0CdQJU=
+	t=1778143712; cv=none; b=jgDVPJjUkuNXuzDV4lOexbH/BvRdU/l7eip98lSEKq0ZZgrO5+Ege0ue62yGVcAXupFLFAh0WjioN1OvzBHaHpRf409S2nNH9VV3wc8PFm+lvI9QHb2UgCfk6kucGOfG4X7x0h6SDe6s7x/bpYm/KVUAPBq/7dG95+DdNFIsJ2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778143296; c=relaxed/simple;
-	bh=pJgf/8K6i1UqZ4sD9tXxKWjDKHpurXxLzcy/xPBEzko=;
+	s=arc-20240116; t=1778143712; c=relaxed/simple;
+	bh=JIGuETpivY+tMqhUXN4t4Bny+zQtYhvsCkl/N+OUQDc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IH1bWENmbAMPmZ9w0+0wM/f4sUTkDOqcdmxwwyZmip6DkgCgi9lI1NgN5OgulMhRIvJGSEk2hBPJrACSuNgLU1F3sIWn8tqPhNw7rVWtnxjOoBwT5T+gi8Zh0LmRCru+g1xNLi4RMgFydmQfy+zUXSWfTv4Wb/kseiUkWo+6t58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NydWttOD; arc=none smtp.client-ip=209.85.215.194
+	 In-Reply-To:Content-Type; b=BbPVq+RApM9KWl9+KTnkrwvEcexGAja6A3fLjWqW9/GAkl4Cv0W9B7mtqYJicrRmf4dnaYLOZLq5BMbM9plazg2ZPAjzFwiildK6XZ8dSTV/Y6U0PNtnKR5I4dvp+hvpZRBZwubxfhgbDrD+dKmb9rQeim4nFs2kF3eJ9k8qOxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hduZsI6K; arc=none smtp.client-ip=209.85.214.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NydWttOD"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-c822652f82aso377266a12.3
-        for <loongarch@lists.linux.dev>; Thu, 07 May 2026 01:41:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hduZsI6K"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2aaed195901so2970465ad.0
+        for <loongarch@lists.linux.dev>; Thu, 07 May 2026 01:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778143288; x=1778748088; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1778143700; x=1778748500; darn=lists.linux.dev;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=tYLd8a4rOgJ0HgA5aFHjScXvqopFgzBf/Pbs3wYF8a8=;
-        b=NydWttODJYmESTOUmH0a7vvmsf7KVaOcwDnT7Yy8KGiN/oTMfnvqH7EklmoDrMEHKV
-         mS2H7DqS2e9Jq+c8pDiDf51RFr13b+Lj2tJwzsa14OX7o9L77mAwt+YDCE5qW+hFEHIP
-         gJxRzvdeBRVfbvY87aObYu3bmxQqR9QjxPmawTJMm7ttVNcGe8t0UEpkRDpe5+lIRpHB
-         I3QOro6kUHUUHacdPAefYpbpTmIbGNsRUGwR5cS8s6isSdnB9RNMxSLqgNIfY0+yQK2r
-         ZF7goUuSHrHUv1jC+WnAaZoojme8Ju309S/DtjVf7rJBhuTNMaYXsgT7ZMA+pO/Oo1Fj
-         Jhvg==
+        bh=2g4HOatV1Ssugu2qkDT6I/dNGmnk+MzQNypIG54pufk=;
+        b=hduZsI6KedAW3W71pQsp6Yr+WOUQzjWla36aHY+ijG+dExmzOQBvFdGWcRt7q+pyPR
+         Kfn+fRNogOtb1nq9DuYJ5quxNhs2xcdpAozICZQH4FheRzvVotV4XCFM+SCd5YS+ysCm
+         vZjZCOeuSRtq/xN0nk4Ldys9PmchHRAJ/PiWwlWntBFQ+4D/TwfRguo9/ks3lU9DFpLV
+         nb5dfSkDA8KJKt4IlcUkHmeSP11Vjjp2Pj4qNCfGdM3ScQdDKYVVA147tKaE0DpQbcCk
+         B5t6ojOvyv7OdGdEgMLQ0F+TyqZf2yGZ3mx0PZYQs8EsWHZHlJez6Eg+1l8tmSjzkSCz
+         BOGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778143288; x=1778748088;
+        d=1e100.net; s=20251104; t=1778143700; x=1778748500;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tYLd8a4rOgJ0HgA5aFHjScXvqopFgzBf/Pbs3wYF8a8=;
-        b=qXS9t6VjgFxxz98iJWkplMDIJAI2+DODdjcjBg2SJ1LgHqNwll/oxf2tMK7eUhe5I0
-         FXjepo7bx486vtTW6OuUvOiHlvoXAfk2JDXIb1Fi/FZOkJ7Wka/eJ4q1ZmBiEoVVt4Qe
-         CPMxRjWqPAfnplETCeDUt9pbigH9k0JHBKet91A1Kg+hCzpyHQEw1NRUmgUFn8ArEIFq
-         QpNEJykDHfjSU9ZelqwJF16VpGZcGHETSRvkeZo85HYhux9R/4BAIcjB4pHQ8Psa5pkJ
-         hCYrdxYXtJvbszKHcQo9O9UtwGO+VeAsQUmiTvMey4ortoyomm3cKbGUQkTodAclCygN
-         jjTQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8oZGWxMF5l3dM1nGzfyOY1q1hjIRePgEMRrfoYlQFPU+/CKoi6po1lI58nKtwZWQRC1O6GDflI4kM=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzcQQsRa8jPelLJKFjXefAzCxRsL/7DuIPGOE4xydRAZXnvqWTj
-	Ztl3hg68CuXEsn+Z64ktnW+0s/yYK4BzLQwqyes0i6OVNkI4cuYQz12c
-X-Gm-Gg: AeBDievpHbi+/l6mjWtdxB+izo02VJiF78iA76p/ielg2/BYimpDh217ejFMyn2T5dN
-	DZNrHDiEeJkdUL13sIzCfEA6S0I1/t85/3IzqBpTKLsho6O91xUVT+oblr2i0aGPAYHKnqaVgdJ
-	QzHOMKJlueCzsfGqjNDeuuX5d3N9cg808+Pcd45lc8x1wCs+ErHOangfW/xFrY1jtZu9JsWehdW
-	miAFvIi9dlGhmUdqxUsVtc6MhpEWTzj299yoDt2G4GznJBurZD03+wxmckKFmh40wvhTnha2Bev
-	NUENXgDliN/SqQbfUk2IPVp0Gl1U2T5W6HW8DyWJfntCRtOyBzCS/cWlXYfg94EQMGR894tfZD6
-	zql9e8yku5OFY3oQrxCG7AcUCQBK/yeF94Cc9JPjmb4gnKj28dQOIQmabzZJUZhSrbuwsNDrukq
-	mmh1mT/Mrv2qzAmZP1qdrgHRA3k/ZflrIpOVFutEhpHA==
-X-Received: by 2002:a05:6a20:a106:b0:3a2:dc51:445 with SMTP id adf61e73a8af0-3aa5ab6853cmr7732684637.36.1778143287552;
-        Thu, 07 May 2026 01:41:27 -0700 (PDT)
+        bh=2g4HOatV1Ssugu2qkDT6I/dNGmnk+MzQNypIG54pufk=;
+        b=j9W6tDSM3AONXevsJjKo1v6/pO7kU5ECbZJQPygtvWaZdYuw0UdhswnsNLok7gBBUh
+         jmAXFF2+jaLWaa6jAjDmfSi1f36BTy0ApURN6lYPjlJ65dDb07uURUAOn8gVnfujoc32
+         CNGQUKHjFqL3AjqQzkPGbrwPolPEwXsIp50MXGVT5E0UMA1FvlFAmVdAlGFsF8QQZwrZ
+         DZ8T42nyGs4/w0AaqqRibTaQN7eBEYlnLhPYpwyIXEosSO8ueC14obm595LeSGJgBn/c
+         BdCJLI1XbAgI7XSIbZoWb4t+Jh/ilb7gBfhuhqB+n66SPY/OpgSt1b6J8Yqar/MWKClB
+         IUKw==
+X-Forwarded-Encrypted: i=1; AFNElJ+uW5btC77qbzRBpYUr748m5UWkC67EZxa9VPnEzzChHVQ+u//XKhbb2Z9Oy0ZOA7SRIjY1bhcuPuM=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzvuE6z3YXEEqAnWTiZYF8fXjuyxHoo3IWHEIlzZB5dpWRegXEA
+	gPE+RT1XH60cMUf6ukmFAvmXL3PASD3SkbpoNsvlSoO9XQemftgR1Nb6
+X-Gm-Gg: AeBDieuxo5quMlzlv5RDlwKAQyi5qxRmytFAV7ftDiPsx7grmUhU3Gib6dWH9cJfcG0
+	Ph+MPW2vo6HbBwzAuJP/4dcJ6YAk84tnxpcwYp0Rc7XXncQIKvnIiOW3XclO0js50qUpYQsGcJ+
+	+F5KivQyfItAeSkZLw3aPzJNQ0R7Y7+FzjztYfeyq6ix/HJeWsnPzJuLX/4CViOFXe8VcHCGhKL
+	B2cVHcqRWquLSAxgEmuM987TEmC/NJlI6kVa3xVVxoqNPokDnok8QlQW7G5+kvNjIcdemCvEbTW
+	L0deI/OThsmpVAuI3QFykm0+OrC/iID7TP19V6do8qhbOc9a8g+o9oUDVRgy9m6plK68r3n7z4E
+	W1QqydOLXJz+gSvfiJ6b8PnDFFgjXIBbuBKwFT5FbFCH2qPoX/jT+jwlAm9HPWQLeeynksr7xgt
+	Xl2lybLfEHUCeL/ts4Qwzc5F3Dbth7tLzDFK5IjTAzpw==
+X-Received: by 2002:a17:903:903:b0:2b0:5d60:7f3f with SMTP id d9443c01a7336-2ba78f7320amr72637805ad.16.1778143700446;
+        Thu, 07 May 2026 01:48:20 -0700 (PDT)
 Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8253586c6asm1305583a12.4.2026.05.07.01.41.18
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2babab0152csm19143165ad.35.2026.05.07.01.48.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 May 2026 01:41:26 -0700 (PDT)
-Message-ID: <126f4fd0-0a1c-41e0-8746-fa7ab85d6773@gmail.com>
-Date: Thu, 7 May 2026 16:41:15 +0800
+        Thu, 07 May 2026 01:48:19 -0700 (PDT)
+Message-ID: <6056bd1f-3998-44ff-8c4f-972704e0b896@gmail.com>
+Date: Thu, 7 May 2026 16:48:09 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -68,8 +68,8 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/11] of: reserved_mem: fix region count for nodes with
- multiple reg entries
+Subject: Re: [PATCH 07/11] of: reserved_mem: add no-dump crash_mem exclusion
+ helpers
 To: Rob Herring <robh@kernel.org>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -82,64 +82,112 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
  aou@eecs.berkeley.edu, saravanak@kernel.org, chenwandun@lixiang.com,
  zhaomeijing@lixiang.com, everyzhao@126.com
 References: <20260429065831.1510858-1-chenwandun@lixiang.com>
- <20260429065831.1510858-2-chenwandun@lixiang.com>
- <20260506014752.GA280279-robh@kernel.org>
+ <20260429065831.1510858-8-chenwandun@lixiang.com>
+ <20260506145022.GA2084721-robh@kernel.org>
 Content-Language: en-US
 From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <20260506014752.GA280279-robh@kernel.org>
+In-Reply-To: <20260506145022.GA2084721-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-在 2026/5/6 09:47, Rob Herring 写道:
-> On Wed, Apr 29, 2026 at 02:58:21PM +0800, Chen Wandun wrote:
->> When a reserved-memory node contains multiple reg entries (e.g.,
->> reg = <base1 size1>, <base2 size2>), the count used for
->> total_reserved_mem_cnt is wrong in two places:
+On 5/6/26 22:50, Rob Herring wrote:
+> On Wed, Apr 29, 2026 at 02:58:27PM +0800, Chen Wandun wrote:
+>> Provide two kdump-oriented helpers so that arch kexec_file code does
+>> not have to open-code the no-dump filtering loop:
 >>
->> 1) __reserved_mem_reserve_reg() returns 0 on success regardless of how
->>     many regions it reserved in memblock. The caller in
->>     fdt_scan_reserved_mem() then increments count by just 1.
-> Just to make sure, more than 1 worked before the referenced commits? It
-> would be easier to just define we only expect/support 1 entry.
-Looking at the pre-8a6e02d0c00e code, __reserved_mem_reserve_reg()
-reserved memblock memory for all reg entries, but only called
-fdt_reserved_mem_save_node() for the first one (guarded by an 'if 
-(first)' flag).
-
-So multiple reg entries were never fully supported: subsequent entries
-got their memory reserved in memblock, but their metadata was lost
-and driver-specific init callbacks were never invoked for them.
-
-The referenced commits made this worse by also breaking the count
-tracking, but the root limitation predates them.
-
-I support documenting "only 1 entry supported" based on the
-following reasons:
-
-   - of_reserved_mem_lookup() does a name-based linear scan and returns
-     the *first* matching entry. A node with N reg entries would create
-     N entries with identical names; entries [1..N-1] are permanently
-     unreachable via lookup.
-
-   - Drivers like CMA and DMA coherent are designed to initialize a
-     single contiguous pool per node_init call. Calling node_init
-     multiple times with the same FDT node is not a supported usage.
-
-
+>>   - of_reserved_mem_no_dump_nr_ranges() returns the number of reserved
+>>     regions flagged with linux,no-dump. Each exclusion may split one
+>>     existing crash_mem range into two, so callers use this count to
+>>     pre-size their crash_mem allocation.
+>>
+>>   - of_reserved_mem_exclude_no_dump() walks the reserved_mem[] array
+>>     and calls crash_exclude_mem_range() for each no-dump region.
+>>
+>> Both helpers are guarded by CONFIG_KEXEC_FILE; empty inline stubs are
+>> provided for the !KEXEC_FILE case so architecture code can call them
+>> unconditionally.
+>>
+>> The consumers are added in the following arm64, riscv and loongarch
+>> patches in this series.
+>>
+>> Signed-off-by: Chen Wandun <chenwandun@lixiang.com>
+>> Tested-by: Zhao Meijing <zhaomeijing@lixiang.com>
+>> ---
+>>   drivers/of/of_reserved_mem.c    | 54 +++++++++++++++++++++++++++++++++
+>>   include/linux/of_reserved_mem.h | 15 +++++++++
+>>   2 files changed, 69 insertions(+)
+>>
+>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+>> index 4b80420da2d2..038056a6408a 100644
+>> --- a/drivers/of/of_reserved_mem.c
+>> +++ b/drivers/of/of_reserved_mem.c
+>> @@ -27,6 +27,10 @@
+>>   
+>>   #include "of_private.h"
+>>   
+>> +#ifdef CONFIG_KEXEC_FILE
+>> +#include <linux/crash_core.h>
+>> +#endif
+> You shouldn't need ifdef around includes.
 >
->> 2) fdt_scan_reserved_mem_late() uses of_flat_dt_get_addr_size() which
->>     only reads the first reg entry. Subsequent entries are never
->>     initialized via fdt_init_reserved_mem_node(), so their metadata is
->>     lost.
->>
->> Fix both issues:
->>   - Make __reserved_mem_reserve_reg() return the actual number of
->>     regions successfully reserved. Update the caller to accumulate
->>     the returned count.
->>   - Rewrite fdt_scan_reserved_mem_late() to use
->>     of_flat_dt_get_addr_size_prop() and iterate all reg entries,
->>     initializing each one via fdt_init_reserved_mem_node().
->>
->> Fixes: 8a6e02d0c00e ("of: reserved_mem: Restructure how the reserved memory regions are processed")
->> Fixes: 00c9a452a235 ("of: reserved_mem: Add code to dynamically allocate reserved_mem array")
+>> +
+>>   static struct reserved_mem reserved_mem_array[MAX_RESERVED_REGIONS] __initdata;
+>>   static struct reserved_mem *reserved_mem __refdata = reserved_mem_array;
+>>   static int total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
+>> @@ -916,6 +920,56 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+>>   }
+>>   EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
+>>   
+>> +#ifdef CONFIG_KEXEC_FILE
+> Use 'if (IS_ENABLED())' within the function.
+Get it, thanks.
+>
+>> +/**
+>> + * of_reserved_mem_no_dump_nr_ranges() - count reserved regions flagged
+>> + * with the linux,no-dump property.
+>> + *
+>> + * Each such region may split an existing crash_mem range into two when
+>> + * it is excluded, so callers can use this count to pre-size their
+>> + * crash_mem allocation.
+>> + */
+>> +unsigned int of_reserved_mem_no_dump_nr_ranges(void)
+>> +{
+>> +	unsigned int i, n = 0;
+>> +
+>> +	for (i = 0; i < reserved_mem_count; i++)
+>> +		if (reserved_mem[i].no_dump)
+>> +			n++;
+>> +	return n;
+>> +}
+>> +
+>> +/**
+>> + * of_reserved_mem_exclude_no_dump() - exclude no-dump reserved regions
+>> + * from a crash_mem list.
+>> + * @cmem: crash memory list to modify
+>> + *
+>> + * Walks the reserved_mem[] array and calls crash_exclude_mem_range() for
+>> + * every region with no_dump set. Intended to be called from arch kdump
+>> + * code when constructing the elfcorehdr.
+>> + *
+>> + * Returns 0 on success, or a negative error returned by
+>> + * crash_exclude_mem_range() on the first failure.
+>> + */
+>> +int of_reserved_mem_exclude_no_dump(struct crash_mem *cmem)
+>> +{
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	for (i = 0; i < reserved_mem_count; i++) {
+>> +		struct reserved_mem *r = &reserved_mem[i];
+>> +
+>> +		if (!r->no_dump || !r->size)
+>> +			continue;
+>> +		ret = crash_exclude_mem_range(cmem, r->base,
+>> +					      r->base + r->size - 1);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +	return 0;
+>> +}
+>> +#endif /* CONFIG_KEXEC_FILE */
