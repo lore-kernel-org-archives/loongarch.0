@@ -1,141 +1,92 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 944464502F;
-	Thu,  7 May 2026 01:43:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94756339B3D
+	for <loongarch@lists.linux.dev>; Thu,  7 May 2026 08:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778118197; cv=none; b=mg2BbZjAQRwCIhcCc6HpM6KPWhO2A217yZn0R5N2NDQtGwDZfh3oNbaZcyip4tmeCsvVv5dK8do49K+tyy386jVB8eay3uE7oRyD7lAaThKAz3r+8KYPROSBwsI+FiLn5q8OvLbfKUFbENUQoAq0hreZkRlJyaKozLi0QqU00HU=
+	t=1778141495; cv=none; b=MsFBqZctxcffZBsuOGBck06r352b4Vh+KwRCucXNhDuuuingTCB5zxUA1VHRXOSg1V6B//3fwP9HxP3KomMBwew+MXDTm38+wFHdikjgiqxpUWIOmtqbz08X69OdrOtsmcVpOIqOE4VYF7TwAx7KXx2oOqCh2SgzrBhDKNWBs0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778118197; c=relaxed/simple;
-	bh=wfkzn5vEOdAO4CItueKY05cY1KoUngcW2ziIYm3VPMY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RLNSmp2Nh1l0MQkKigGHxg8QWnei6PzW2LjVakV0grH2uDsLg4kiaHy22LT/sfjY7LGhIFUorKayY445do69QSubocATAq/a/dfRiPAMWmFoVZ69lIvPdXm69lj4g+XG1ddvfl532g0pXTUgbVaFm+k2Oln31Y97guWvYR3EqO8=
+	s=arc-20240116; t=1778141495; c=relaxed/simple;
+	bh=iat2BungkSJorLGPQ6vTXR2vubaLdM7rlijKwZgCRfs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pwvznraIMsqLshkZme1H/JaaBBdKIdSFz7r7OanH345LuCvKAfcsXxYBoTKW+0wrh35K/7yUVPdXbx02yvsQcgGlVryQbfqKv6muVlTsp/gO82EfCgaLZ0/eLbupsTucD8YaQQGAL/aD3ZrVoG/Awb53Qw/9ZHmYC+xS36A3FPw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Bx0eov7vtpGVUHAA--.24061S3;
-	Thu, 07 May 2026 09:43:11 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxacEo7vtpjfx7AA--.25500S3;
-	Thu, 07 May 2026 09:43:05 +0800 (CST)
-Subject: Re: [PATCH 1/5] KVM: arm64: Grab KVM MMU write lock in
- kvm_arch_flush_shadow_all()
-To: Sean Christopherson <seanjc@google.com>
-Cc: James Houghton <jthoughton@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oupton@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Gavin Shan <gshan@redhat.com>,
- Shaoqin Huang <shahuang@redhat.com>, Ricardo Koller <ricarkol@google.com>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- James Hogan <jhogan@kernel.org>, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20260504224213.1049426-1-jthoughton@google.com>
- <20260504224213.1049426-2-jthoughton@google.com>
- <25838e74-01dd-d085-395b-676266dc9a9a@loongson.cn>
- <aftIbW9G4RfoTuXh@google.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <833b7f62-5e9f-26e7-f60d-2ac1dd24c031@loongson.cn>
-Date: Thu, 7 May 2026 09:40:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8DxrOkmSfxpxWkHAA--.22304S3;
+	Thu, 07 May 2026 16:11:19 +0800 (CST)
+Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJBxSeAkSfxpvyd8AA--.39544S2;
+	Thu, 07 May 2026 16:11:17 +0800 (CST)
+From: Hongliang Wang <wanghongliang@loongson.cn>
+To: Binbin Zhou <zhoubinbin@loongson.cn>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Hongliang Wang <wanghongliang@loongson.cn>
+Cc: linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and clock-frequency properties
+Date: Thu,  7 May 2026 16:10:09 +0800
+Message-Id: <20260507081010.12810-1-wanghongliang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <aftIbW9G4RfoTuXh@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxacEo7vtpjfx7AA--.25500S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr1rJF1DJFWxtw1UKw43twc_yoW5GFyxpF
-	WUC3WqgrWDA340kw4kZ3WkWw1FyaykGr4UJw1Ygry5urs8Gwn3KF4SyFy0kFZ7ZrZ7GFWq
-	qF45tr95Zas8ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2-VyUUUUU
+X-CM-TRANSID:qMiowJBxSeAkSfxpvyd8AA--.39544S2
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7GrWDZrWrZFy7Cw15Zr4UKFX_yoWkurX_Aa
+	4xAr18GrnxAF1Fg34qvF4xArW3Xa42ya1kC3W7AF10ya4jyw13GF97J343Ar4rur43u3Wr
+	uF4kKrZIva17KosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1tC7UUUUU=
 
+From: wanghongliang <wanghongliang@loongson.cn>
 
+clocks property describes the i2c bus reference clock from APB clock.
+clock-frequency property describes i2c bus speed.
 
-On 2026/5/6 下午9:55, Sean Christopherson wrote:
-> On Wed, May 06, 2026, Bibo Mao wrote:
->> On 2026/5/5 上午6:42, James Houghton wrote:
->>> kvm_arch_flush_shadow_all() may sometimes be called on the same `kvm`
->>> concurrently in the event that the KVM's `mm` is __mmput() at the
->>> same time that last reference to the KVM is being dropped.
->>>
->>> T1              T2
->>> KVM_CREATE_VM
->>>                   Get VM file from T1
->>> close VM
->>> exit_mm()       close VM
->>>
->>> T1: exit_mm() -> kvm_mmu_notifier_release() -> kvm_flush_shadow_all(),
->>>       with only the KVM srcu read lock held.
->>>
->>> T2: kvm_vm_release() ---> mmu_notifier_unregister() ->
->>>       kvm_mmu_notifier_release() -> kvm_flush_shadow_all(),
->>>       again, with only the KVM srcu read lock held.
->> By looking through the code, kvm_arch_destroy_vm() will free PGD page only,
->> page table walking is executing in deleting memslot or exit_mm().
->>
->> With normal code, life cycle of VM is something like this:
-> 
-> Not necessarily.  Abruptly closing the VM, as described below, is also "normal"
-> (though likely uncommon).
-> 
->>    KVM_CREATE_VM
->>      Create_VCPUs
->>      Create memslots
->>      Destroy_VCPUs
-> 
-> This is incorrect.  KVM doesn't provide any way for userspace to destroy vCPUs.
-> Userspace can fully release every vCPU fd, but the vCPU object within KVM stays
-> alive (and indirectly reachable) until the VM is destroyed.
-yes, that is so. For users, there is vCPU fd release interface. As for 
-vCPU object release, it is kind of internal implementation in KVM.
-> 
->>      Destroy memslots
->>    close VM
->>    exit_mm()
-> 
-> Note, exit_mm() may or may not be called.  E.g. there are VMMs that will destroy
-> a VM and start a new one (perhaps even the same conceptual virtual machine) in
-> the same process / mm_struct / address space.
-> 
->> And there is kvm_get_kvm()/kvm_put_kvm() function call with creating/destroy
->> vCPUs, however no such operations with memslot operation. Is it possible
->> that VM is destroyed without removing memslots, such as the following
->> operation.
->>    KVM_CREATE_VM
->>      Create memslots
->>    close VM
->>    exit_mm()
-> 
-> Yep.  KVM cannot make any assumptions when it comes to userspace-initiated
-> operations.  Even a VMM that super strictly follows the first approach may exit
-> abruptly, without destroying memslots, e.g. if it's OOM-killed.
-oh, I see. If so, the implementation about kvm_arch_destroy_vm() on 
-Loongarch is problematic, it needs consider this kind of abnormal VM 
-destroy, take page table walk and free page tables. I had thought that 
-memslots create/destroy should call kvm_get_kvm()/kvm_put_kvm() :(
+Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+---
+ Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Regards
-Bibo Mao
+diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+index ee09c6d9c5f0..4bf89bb97e7d 100644
+--- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+@@ -38,10 +38,13 @@ unevaluatedProperties: false
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+ 
+     i2c0: i2c@1fe21000 {
+         compatible = "loongson,ls2k-i2c";
+         reg = <0x1fe21000 0x8>;
++        clock-frequency = <100000>;
++        clocks = <&clk LOONGSON2_APB_CLK>;
+         interrupt-parent = <&extioiic>;
+         interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
+         #address-cells = <1>;
+-- 
+2.47.2
 
