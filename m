@@ -1,119 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B57451069;
-	Thu,  7 May 2026 17:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2621B85F8
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 01:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778174980; cv=none; b=AlQVZJHjo2TN64jCmaIlIbGiZV8gm4JeH/aizRvAhmzKgal6gdSN1bt1xn6mqFx6FRqdJ2e7LLUKlaRByy3Sd1iX5N3sQNV4gf/y47t0UjJRdRSQ41mUIvE0DrvQNpZgycjdzgXLCZ2WgXPSPXwUtWE7spIqz7bJ9v2JM3nv+Bc=
+	t=1778203819; cv=none; b=DZE2d6R0V3CRJIPZ6B5BN3PyBSjgT3+CLBqZRQXwFQQhuSDnngRTVZc/O8j3rDUrZ/QjZMT5Mf8IJvolI9JybatYEzWo+siFzzanD1UKH4fvEDS1KBD8Nvrp8jjOxx4ta5oLicrD8KqVlcOrm6a7DaTzvgc5zqBx4JnbYKZtD+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778174980; c=relaxed/simple;
-	bh=HwcUWd5Z347Rn8ztkGok7XGUDgbVHQKaR/odO55H61o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OZTyE8NVMWgZLTkiGw9DjoDRfDIlSXOvV+1Cjn7+iclm2sQQWV+ra5HEXX2m6S1tn+uBSHFZEl0xVvJN4/AG/tZuq423wQ8ODPmvjbk9BU1TuKw22otYtKzBHM7THBTUt5SYftqgLX+d8LyqDzjDa8WwVoaGp1Pm2C4WPIRxBDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDVWgYcs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDVWgYcs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98489C2BCB2;
-	Thu,  7 May 2026 17:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778174979;
-	bh=HwcUWd5Z347Rn8ztkGok7XGUDgbVHQKaR/odO55H61o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MDVWgYcsBH0SS+oNaKZbb9Krk4sPdRcUCA8wrSLD4A/UHXrObYWGHj9bOMIs0XeDs
-	 n78w1HNrABrWLYbXVGe+yrFh4IFKY+mc4iw+gU+Udsw6x47CG6Ybb0oVjRggBbtkBl
-	 wyqONQKUx4xtD6ORHX+ZDmsnjDVeJD3HpsJHlaS8FwzSrC0BF8K4H+feUETcxyshJC
-	 kVT2rDdS0CPQYJuMsePHtirp5p2JRbCS02yKaiv7OVBZ6of3H+o+JvX4013eDLDmQ0
-	 00MUumEHKkuro/wlaQzOLsnCp222DPSKkEzlhE2SawInpELnSVrnlUFvkyz2gwz9+X
-	 /JbXekgDsBDgQ==
-Date: Thu, 7 May 2026 18:29:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Hongliang Wang <wanghongliang@loongson.cn>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
+	s=arc-20240116; t=1778203819; c=relaxed/simple;
+	bh=T6A5vRZ8MOTTsYn5xOYgD4nkYbHCZB5sZBxvdYoiwpo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MJzPLAggD6b2hJxzpyQosXw2U0etT00M9nUPG9HI4vVGBPMRycZVZZtU7xffrrOKtJQ8JkQCRJqt6i2iyXhgwdmYHvC9iztdRFWE9Olh0dGcTbN6EwI8ScFzZU8Q7t3uw9TOe9W78lNcVwPBKzeEwZs+I55fBwIdU+gPLx6YiA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8Bxt3iiPP1pt70HAA--.208S3;
+	Fri, 08 May 2026 09:30:11 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJDxB8GePP1pIZ58AA--.26821S3;
+	Fri, 08 May 2026 09:30:06 +0800 (CST)
 Subject: Re: [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and
  clock-frequency properties
-Message-ID: <20260507-idealize-occultist-916fd07fc235@spud>
+To: Conor Dooley <conor@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
 References: <20260507081010.12810-1-wanghongliang@loongson.cn>
+ <20260507-idealize-occultist-916fd07fc235@spud>
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Message-ID: <84c37ac1-3a9c-b0d2-f86a-90712b45b806@loongson.cn>
+Date: Fri, 8 May 2026 09:29:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HSgsAmc7yUE2rqAQ"
-Content-Disposition: inline
-In-Reply-To: <20260507081010.12810-1-wanghongliang@loongson.cn>
+In-Reply-To: <20260507-idealize-occultist-916fd07fc235@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxB8GePP1pIZ58AA--.26821S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tw4UXFW5Jr48JF48GFyUJwc_yoW8tr1DpF
+	nrCF1UGF4jvF17W395ta4UCF1Fvr9xAws7GFZrJFy7KF9rXw1vqr1akFyDuF1rCr4rZFW2
+	9FW0gw4j9FyDZabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU1RBT5UUUUU==
 
 
---HSgsAmc7yUE2rqAQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2026/5/8 上午1:29, Conor Dooley wrote:
+> On Thu, May 07, 2026 at 04:10:09PM +0800, Hongliang Wang wrote:
+>> From: wanghongliang <wanghongliang@loongson.cn>
+>>
+>> clocks property describes the i2c bus reference clock from APB clock.
+>> clock-frequency property describes i2c bus speed.
+>>
+>> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+>> ---
+>>   Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+>> index ee09c6d9c5f0..4bf89bb97e7d 100644
+>> --- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+>> +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+>> @@ -38,10 +38,13 @@ unevaluatedProperties: false
+>>   examples:
+>>     - |
+>>       #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+>>   
+>>       i2c0: i2c@1fe21000 {
+>>           compatible = "loongson,ls2k-i2c";
+>>           reg = <0x1fe21000 0x8>;
+>> +        clock-frequency = <100000>;
+>> +        clocks = <&clk LOONGSON2_APB_CLK>;
+> /stuff/linux-dt/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.example.dtb: i2c@1fe21000 (loongson,ls2k-i2c): Unevaluated properties are not allowed ('clocks' was unexpected)
+> 	from schema $id: http://devicetree.org/schemas/i2c/loongson,ls2x-i2c.yaml
+>
+>
+> Please test your patches before sending them.
+The error is becasue there is no clocks property in loongson,ls2x-i2c.yaml.
+The patch is based on the following repository and uses the 
+i2c-host-next branch.
+I found the clocks property already exist in loongson,ls2x-i2c.yaml, so 
+I didn't
+add it in my patch
 
-On Thu, May 07, 2026 at 04:10:09PM +0800, Hongliang Wang wrote:
-> From: wanghongliang <wanghongliang@loongson.cn>
->=20
-> clocks property describes the i2c bus reference clock from APB clock.
-> clock-frequency property describes i2c bus speed.
->=20
-> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-> ---
->  Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml=
- b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-> index ee09c6d9c5f0..4bf89bb97e7d 100644
-> --- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
-> @@ -38,10 +38,13 @@ unevaluatedProperties: false
->  examples:
->    - |
->      #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
-> =20
->      i2c0: i2c@1fe21000 {
->          compatible =3D "loongson,ls2k-i2c";
->          reg =3D <0x1fe21000 0x8>;
-> +        clock-frequency =3D <100000>;
-> +        clocks =3D <&clk LOONGSON2_APB_CLK>;
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+>
+> Does this device actually have a clock or not?
+Yes,  the clock actually exists.
+>
+> Cheers,
+> Conor.
+>
+>>           interrupt-parent = <&extioiic>;
+>>           interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
+>>           #address-cells = <1>;
+>> -- 
+>> 2.47.2
+>>
+Best regards,
+Hongliang Wang
 
-/stuff/linux-dt/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.exa=
-mple.dtb: i2c@1fe21000 (loongson,ls2k-i2c): Unevaluated properties are not =
-allowed ('clocks' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/loongson,ls2x-i2c.yaml
-
-
-Please test your patches before sending them.
-
-Does this device actually have a clock or not?
-
-Cheers,
-Conor.
-
->          interrupt-parent =3D <&extioiic>;
->          interrupts =3D <22 IRQ_TYPE_LEVEL_LOW>;
->          #address-cells =3D <1>;
-> --=20
-> 2.47.2
->=20
-
---HSgsAmc7yUE2rqAQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCafzL/wAKCRB4tDGHoIJi
-0qB6AP9db4UG3vb1kSPxyMgugIqmMYBQjY2RD9X7BU/0j17MVAEA0f5IO+ppIza/
-FGsjkIhn+fgNB8jTqIZHdlxvNJ2AOwU=
-=O/Kh
------END PGP SIGNATURE-----
-
---HSgsAmc7yUE2rqAQ--
