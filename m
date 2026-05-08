@@ -1,98 +1,130 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42FA2F8E8E
-	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 01:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FACA25A357
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 02:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778203829; cv=none; b=uFrP7dR4RQO30d/qQVs87sPlxNCjRJTkDiqBfr/pgfrYKl79cYxQt4/OsP3d3R8n1+jAEaPr+NvmZyWiR1f8NiblW2qatXa8CF7soHmniB6JybXdwlTiOilM3kYgKP+Lmd5Tt5AXh3Th5mmlcAZgDtjRUkwK/9UVvND1Wcq7Ddk=
+	t=1778209012; cv=none; b=EFeJ2mFn3V/uyoyhcfYXZWCP7/O07C0TR+ZTWn/Ch2XrP0qUS31I3FAZHcTZyDzId/FH+TfNGy9YUk+fmu5eK9v33A1UMwEjiUGked3Vm5MtbmOroDwByeXaKYxd83iDCDTfMbM2hJED5deV40aIsqdC7MqcFKVYY4y33XmBOyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778203829; c=relaxed/simple;
-	bh=rosrgjCoS4Pt78WRamvOnY/gD6U1/ThqnUnsKICg+KI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OENTbxLuxV9z9izvww/BJSOmrnKkFgtqfl28qwVZ7rLrE+ESSYuiObZByNoA201pBCsE+ZdYZxIKU0RWmYAz//H01cBLVPzAhjEWEyliZFsq/mjPbjyLay8yPGp20vJrypavmbuoSuPSpyjzLvf7riaFRHMmb/0K9o70VVFhV/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxQ_CpPP1pwb0HAA--.25057S3;
-	Fri, 08 May 2026 09:30:17 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxWeClPP1pIp58AA--.40861S2;
-	Fri, 08 May 2026 09:30:15 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
-Date: Fri,  8 May 2026 09:30:01 +0800
-Message-Id: <20260508013001.4107737-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1778209012; c=relaxed/simple;
+	bh=K5SSG1r/BsdsaivSjHxhbXYZLBwuM6XJhtPZHjT+pbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L7Xobiq+pYn68YhCH0NobmQ816lATsfchRdM06WjFi7/rrN/ZBcvfKmt2R9N0MciPmQQSmwZOUCDxNeYVIVVrVYwksc5A4krXu7cwfB1pwDW8a7pDTrzRcWlytjTBkIhiKQ+FmaX+yZu6qV+8ac4iMgLfEECmpz0U9fX64cuZRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFzCTqfK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFzCTqfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1D5C2BCF5
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 02:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778209011;
+	bh=K5SSG1r/BsdsaivSjHxhbXYZLBwuM6XJhtPZHjT+pbg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AFzCTqfK2q+Kh2OClPz8s5upXtFdeY1cPOKZJE2cRrx+iNvmH/ZSTZbAzPD+p1BBa
+	 lJfxr30PZCt2OXdnYop1XF1NjvAs3Fz/EEhfbafTsQrgG0YH2ks2HuTHw6PdEGskBQ
+	 66gcim2/k/SuxZmWl+juAThDfcxEBJwBAawHyZhZZ2ODWDVViPx8nqYYB0UJeWEnZw
+	 DM80ESUcsP43Oh5IiSIZlUYaZJIRDY3ts5BQxoxLnFidsG+qKGGCHhpEjPzlzlEnX7
+	 JjXE5O1Pvo8uAe/O17H068MQuD/XUyhBEiTmIsfONkB27C0BDbWRcMZIMIPY6gBTti
+	 ilensTBb7sqbA==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ba545100a13so261786566b.2
+        for <loongarch@lists.linux.dev>; Thu, 07 May 2026 19:56:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9knvsJNha76UapBfTaW5d7yXxKn7tWqWafGzVGaqMVJXYCglzB4ExBfK8jN16q+MPjUHVjEOLdop8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzJ+05N4YQbeZ3Wingdi1b2DjLGA4S3rRw8XO/MjMTw4Zj7wSSD
+	WbUane/pfCAZEP7mPaZg7BB44I4IqPF69HuPWbaOtdaI1f7bYvL9BVGvmzG4YV40hLoQrBAcBJL
+	1RA2G7+y3eYXb77Q/qEOYCE0R1fo/F/E=
+X-Received: by 2002:a17:907:9806:b0:bc3:8580:f32d with SMTP id
+ a640c23a62f3a-bc56af26040mr584492966b.5.1778209010316; Thu, 07 May 2026
+ 19:56:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxWeClPP1pIp58AA--.40861S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+References: <20260508013001.4107737-1-maobibo@loongson.cn>
+In-Reply-To: <20260508013001.4107737-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 8 May 2026 10:56:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
+X-Gm-Features: AVHnY4KlCMTgyX8DMjVigyMUUcEj42nQ6DiQI3nyLBWnE9rjigduPUtkcxymLas
+Message-ID: <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some variables relative with paravirt feature are declared in header file
-asm/qspinlock.h, however this file can be included only when option
-CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off since
-it is not declared.
+Hi, Bibo,
 
-Move these variable declaration to header file asm/paravirt.h to avoid
-compiling warning.
+On Fri, May 8, 2026 at 9:30=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+> Some variables relative with paravirt feature are declared in header file
+> asm/qspinlock.h, however this file can be included only when option
+> CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off since
+> it is not declared.
+>
+> Move these variable declaration to header file asm/paravirt.h to avoid
+> compiling warning.
+Have you reproduced the warning? I cannot reproduce it in my
+environment with the config file from lkp report, so I also cannot
+confirm whether it is fixed.
 
-Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as a macro rather than function")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2b-lkp@intel.com/
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/paravirt.h  | 4 ++++
- arch/loongarch/include/asm/qspinlock.h | 5 +----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+Another question:
+Is paravirt.h a better place than kvm_para.h?
 
-diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-index 0111f0ad5f73..dbc64908017f 100644
---- a/arch/loongarch/include/asm/paravirt.h
-+++ b/arch/loongarch/include/asm/paravirt.h
-@@ -3,6 +3,10 @@
- #define _ASM_LOONGARCH_PARAVIRT_H
- 
- #ifdef CONFIG_PARAVIRT
-+#include <linux/jump_label.h>
-+DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-+DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-+DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
- 
- int __init pv_ipi_init(void);
- int __init pv_time_init(void);
-diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
-index 0ee15b3b3937..fbfc6be82f26 100644
---- a/arch/loongarch/include/asm/qspinlock.h
-+++ b/arch/loongarch/include/asm/qspinlock.h
-@@ -3,12 +3,9 @@
- #define _ASM_LOONGARCH_QSPINLOCK_H
- 
- #include <asm/kvm_para.h>
--#include <linux/jump_label.h>
-+#include <asm/paravirt.h>
- 
- #ifdef CONFIG_PARAVIRT
--DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
--DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
--DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
- 
- #define virt_spin_lock virt_spin_lock
- 
+Huacai
 
-base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
--- 
-2.39.3
-
+>
+> Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as a macro=
+ rather than function")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2b-lkp@i=
+ntel.com/
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  arch/loongarch/include/asm/paravirt.h  | 4 ++++
+>  arch/loongarch/include/asm/qspinlock.h | 5 +----
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/inclu=
+de/asm/paravirt.h
+> index 0111f0ad5f73..dbc64908017f 100644
+> --- a/arch/loongarch/include/asm/paravirt.h
+> +++ b/arch/loongarch/include/asm/paravirt.h
+> @@ -3,6 +3,10 @@
+>  #define _ASM_LOONGARCH_PARAVIRT_H
+>
+>  #ifdef CONFIG_PARAVIRT
+> +#include <linux/jump_label.h>
+> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+> +DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>
+>  int __init pv_ipi_init(void);
+>  int __init pv_time_init(void);
+> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/incl=
+ude/asm/qspinlock.h
+> index 0ee15b3b3937..fbfc6be82f26 100644
+> --- a/arch/loongarch/include/asm/qspinlock.h
+> +++ b/arch/loongarch/include/asm/qspinlock.h
+> @@ -3,12 +3,9 @@
+>  #define _ASM_LOONGARCH_QSPINLOCK_H
+>
+>  #include <asm/kvm_para.h>
+> -#include <linux/jump_label.h>
+> +#include <asm/paravirt.h>
+>
+>  #ifdef CONFIG_PARAVIRT
+> -DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+> -DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> -DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>
+>  #define virt_spin_lock virt_spin_lock
+>
+>
+> base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
+> --
+> 2.39.3
+>
