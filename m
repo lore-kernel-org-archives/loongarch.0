@@ -1,130 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FACA25A357
-	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 02:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DFC248896
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 03:06:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778209012; cv=none; b=EFeJ2mFn3V/uyoyhcfYXZWCP7/O07C0TR+ZTWn/Ch2XrP0qUS31I3FAZHcTZyDzId/FH+TfNGy9YUk+fmu5eK9v33A1UMwEjiUGked3Vm5MtbmOroDwByeXaKYxd83iDCDTfMbM2hJED5deV40aIsqdC7MqcFKVYY4y33XmBOyc=
+	t=1778209603; cv=none; b=hMS6UxPGkBjailxFpr/1tvOMMABrnolGxUp8rhJ8KxGj7VOlxZU7bLmE72usX56jMYZxnFotHqJ2WvSbHGNysKYTSBz2Mvo86xse7GYLV8QZiQE5/oVS4V/53Yjlfk4MF8mt9xAF/meWWZMVvlaY9A/vBjVLr51dZB7ZaGPUqQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778209012; c=relaxed/simple;
-	bh=K5SSG1r/BsdsaivSjHxhbXYZLBwuM6XJhtPZHjT+pbg=;
+	s=arc-20240116; t=1778209603; c=relaxed/simple;
+	bh=HOaLBVwOi2SeNx/rpT5yplhV+BCsdrhoEmKfmE8GNP0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L7Xobiq+pYn68YhCH0NobmQ816lATsfchRdM06WjFi7/rrN/ZBcvfKmt2R9N0MciPmQQSmwZOUCDxNeYVIVVrVYwksc5A4krXu7cwfB1pwDW8a7pDTrzRcWlytjTBkIhiKQ+FmaX+yZu6qV+8ac4iMgLfEECmpz0U9fX64cuZRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AFzCTqfK; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=PjG3R4BgxITcmNZDrIxeDE11RzqSm1XWDAe/3Bhq4BtTyFPXlkbd45EnKwknvfZJlB0EkZHsQcstTfI+WsXt5t55rwnqiLGuODAi+mmzOYvi1Bdjufg4foLZ/gQUs9Tzj2YaSdviT/NHX7LcmkGb3q3fxfkh4ddpF1ntHuOVUD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+8xwZry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AFzCTqfK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1D5C2BCF5
-	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 02:56:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+8xwZry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6B2CC2BCF5
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 03:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778209011;
-	bh=K5SSG1r/BsdsaivSjHxhbXYZLBwuM6XJhtPZHjT+pbg=;
+	s=k20201202; t=1778209602;
+	bh=HOaLBVwOi2SeNx/rpT5yplhV+BCsdrhoEmKfmE8GNP0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AFzCTqfK2q+Kh2OClPz8s5upXtFdeY1cPOKZJE2cRrx+iNvmH/ZSTZbAzPD+p1BBa
-	 lJfxr30PZCt2OXdnYop1XF1NjvAs3Fz/EEhfbafTsQrgG0YH2ks2HuTHw6PdEGskBQ
-	 66gcim2/k/SuxZmWl+juAThDfcxEBJwBAawHyZhZZ2ODWDVViPx8nqYYB0UJeWEnZw
-	 DM80ESUcsP43Oh5IiSIZlUYaZJIRDY3ts5BQxoxLnFidsG+qKGGCHhpEjPzlzlEnX7
-	 JjXE5O1Pvo8uAe/O17H068MQuD/XUyhBEiTmIsfONkB27C0BDbWRcMZIMIPY6gBTti
-	 ilensTBb7sqbA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ba545100a13so261786566b.2
-        for <loongarch@lists.linux.dev>; Thu, 07 May 2026 19:56:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9knvsJNha76UapBfTaW5d7yXxKn7tWqWafGzVGaqMVJXYCglzB4ExBfK8jN16q+MPjUHVjEOLdop8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJ+05N4YQbeZ3Wingdi1b2DjLGA4S3rRw8XO/MjMTw4Zj7wSSD
-	WbUane/pfCAZEP7mPaZg7BB44I4IqPF69HuPWbaOtdaI1f7bYvL9BVGvmzG4YV40hLoQrBAcBJL
-	1RA2G7+y3eYXb77Q/qEOYCE0R1fo/F/E=
-X-Received: by 2002:a17:907:9806:b0:bc3:8580:f32d with SMTP id
- a640c23a62f3a-bc56af26040mr584492966b.5.1778209010316; Thu, 07 May 2026
- 19:56:50 -0700 (PDT)
+	b=O+8xwZryG4b8MwVM4FROcBwwzUmjbTd0s6mA2lFZZss2Wck1yvTmHLiQa1GjBGqDz
+	 lKZ7ntYMBEpDixBGpNFLETAyW9EXD0hMXzfCc3sP6ed2pNBfjU2U/bzoxssJZBsR1+
+	 x3MusTroJqb9FsDaAP/DScmeV4m4zlNMxCJ1lms412OEX/cqU71iLpu+9Yw4LoHy3p
+	 rCg4h5D9VoPDMsFRVnQH3rEXYxbcB1KAjizpLSd8+ZacaiM8aFxcURRTByQMx8sVVg
+	 qPN+jjbsxXii5T2pTYCyxWRWZiz/srnkm3wpb2kvsLGlOaIqAPkY3BebaWf5zjBcXw
+	 bFsbDfPltGKlA==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-bca0ff2f8dfso136564066b.1
+        for <loongarch@lists.linux.dev>; Thu, 07 May 2026 20:06:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+iumBV+AMcmSBj4BJCt7CS5Gjc7xa5q4hWyJUd321X/bYDuCpv6Ij52CXKVmY8rAuc6Ik10Wq05Wo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywlgu5McRxh9nyI/JFhs7m8UPBXwr7dvxcmaN5sbVfUKikuGagN
+	AhNzyXX3mPo+MY6k5PKzPkGQGj8yQDfGkHBrWlnZcNDu32jClUg/K/sAGtYOak5Y9J56CAWFFcN
+	9ks+k9v+CzoSD5ur6nwsTCrJg2/EFJQo=
+X-Received: by 2002:a17:906:5187:10b0:bc4:9acf:f53 with SMTP id
+ a640c23a62f3a-bc56c62c6d8mr554913966b.20.1778209601248; Thu, 07 May 2026
+ 20:06:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260508013001.4107737-1-maobibo@loongson.cn>
-In-Reply-To: <20260508013001.4107737-1-maobibo@loongson.cn>
+References: <20260507081010.12810-1-wanghongliang@loongson.cn> <20260507081010.12810-2-wanghongliang@loongson.cn>
+In-Reply-To: <20260507081010.12810-2-wanghongliang@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 8 May 2026 10:56:38 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
-X-Gm-Features: AVHnY4KlCMTgyX8DMjVigyMUUcEj42nQ6DiQI3nyLBWnE9rjigduPUtkcxymLas
-Message-ID: <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Date: Fri, 8 May 2026 11:06:29 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H46sOPPAoH31DijWYK+v5fEzgq7ZVucCuoyRTwTgUHYxA@mail.gmail.com>
+X-Gm-Features: AVHnY4J_-aYxSREAluBXlm9Bi9SsaJaacOWMVK_KUGdF5m_vVZ-0b_vQKA1iI84
+Message-ID: <CAAhV-H46sOPPAoH31DijWYK+v5fEzgq7ZVucCuoyRTwTgUHYxA@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: ls2x: Add clocks property parsing and adjust bus speed
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Bibo,
+Hi, Hongliang,
 
-On Fri, May 8, 2026 at 9:30=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
+On Thu, May 7, 2026 at 4:11=E2=80=AFPM Hongliang Wang <wanghongliang@loongs=
+on.cn> wrote:
 >
-> Some variables relative with paravirt feature are declared in header file
-> asm/qspinlock.h, however this file can be included only when option
-> CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off since
-> it is not declared.
+> From: wanghongliang <wanghongliang@loongson.cn>
 >
-> Move these variable declaration to header file asm/paravirt.h to avoid
-> compiling warning.
-Have you reproduced the warning? I cannot reproduce it in my
-environment with the config file from lkp report, so I also cannot
-confirm whether it is fixed.
+> The i2c-ls2x driver supports dts and acpi parameter passing.
+> In dts, uses clock framework, by parsing clocks property to
+> get i2c bus reference clock, and define factor by device data.
+> In acpi, by passing clocks property to describe i2c bus reference
+> clock and clock-div property to describe factor.
+> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
+> and factor, calculate the prcescale of i2c divider register.
+> The calculation formula is
+> prcescale =3D clock_a/(factor*clock_s)-1
+>
+> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> ---
+>  drivers/i2c/busses/i2c-ls2x.c | 42 ++++++++++++++++++++++++++++++++---
+>  1 file changed, 39 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.=
+c
+> index b475dd27b7af..7db91e7a5d78 100644
+> --- a/drivers/i2c/busses/i2c-ls2x.c
+> +++ b/drivers/i2c/busses/i2c-ls2x.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/completion.h>
+> +#include <linux/clk.h>
+This should be before completion.h.
 
-Another question:
-Is paravirt.h a better place than kvm_para.h?
+>  #include <linux/device.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/i2c.h>
+> @@ -63,11 +64,16 @@
+>  /* The default bus frequency, which is an empirical value */
+>  #define LS2X_I2C_FREQ_STD      (33 * HZ_PER_KHZ)
+>
+> +struct ls2x_i2c_chip_data {
+> +       unsigned int    factor;
+> +};
+> +
+>  struct ls2x_i2c_priv {
+>         struct i2c_adapter      adapter;
+>         void __iomem            *base;
+>         struct i2c_timings      i2c_t;
+>         struct completion       cmd_complete;
+> +       const struct ls2x_i2c_chip_data *chip_data;
+Use "unsigned int    factor" directly?
+
+>  };
+>
+>  /*
+> @@ -96,6 +102,8 @@ static irqreturn_t ls2x_i2c_isr(int this_irq, void *de=
+v_id)
+>  static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
+>  {
+>         u16 val;
+> +       u32 pclk, factor;
+factor or div? If factor is better, then rename clock-div to
+clock-factor; if div is better, then rename factor to div.
+
+> +       struct clk *clk;
+>         struct i2c_timings *t =3D &priv->i2c_t;
+>         struct device *dev =3D priv->adapter.dev.parent;
+>         u32 acpi_speed =3D i2c_acpi_find_bus_speed(dev);
+> @@ -107,12 +115,30 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i=
+2c_priv *priv)
+>         else
+>                 t->bus_freq_hz =3D LS2X_I2C_FREQ_STD;
+>
+> +       if (dev_of_node(dev)) {
+> +               clk =3D devm_clk_get_optional_enabled(dev, NULL);
+> +               if (IS_ERR(clk) || !clk)
+> +                       pclk =3D LS2X_I2C_PCLK_FREQ;
+> +               else
+> +                       pclk =3D clk_get_rate(clk);
+Reverse the "if & else" so the default case will be the last one, this
+is also the same as the ACPI case below.
 
 Huacai
 
+> +
+> +               factor =3D priv->chip_data->factor;
+> +
+> +               val =3D (pclk * 10) / (factor * t->bus_freq_hz) - 1;
+> +       } else {
+> +               if (!device_property_read_u32(dev, "clocks", &pclk) &&
+> +                   !device_property_read_u32(dev, "clock-div", &factor) =
+&&
+> +                   factor !=3D 0)
+> +                       val =3D (pclk * 10) / (factor * t->bus_freq_hz) -=
+ 1;
+> +               else
+> +                       val =3D LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz)=
+ - 1;
+> +       }
+> +
+>         /*
+>          * According to the chip manual, we can only access the registers=
+ as bytes,
+>          * otherwise the high bits will be truncated.
+>          * So set the I2C frequency with a sequential writeb() instead of=
+ writew().
+>          */
+> -       val =3D LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
+>         writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_=
+LO);
+>         writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER=
+_HI);
+>  }
+> @@ -295,6 +321,8 @@ static int ls2x_i2c_probe(struct platform_device *pde=
+v)
+>         if (!priv)
+>                 return -ENOMEM;
 >
-> Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as a macro=
- rather than function")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2b-lkp@i=
-ntel.com/
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/loongarch/include/asm/paravirt.h  | 4 ++++
->  arch/loongarch/include/asm/qspinlock.h | 5 +----
->  2 files changed, 5 insertions(+), 4 deletions(-)
+> +       priv->chip_data =3D device_get_match_data(dev);
+> +
+>         /* Map hardware registers */
+>         priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(priv->base))
+> @@ -348,9 +376,17 @@ static int ls2x_i2c_resume(struct device *dev)
+>  static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
+>                                  ls2x_i2c_suspend, ls2x_i2c_resume, NULL)=
+;
 >
-> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/inclu=
-de/asm/paravirt.h
-> index 0111f0ad5f73..dbc64908017f 100644
-> --- a/arch/loongarch/include/asm/paravirt.h
-> +++ b/arch/loongarch/include/asm/paravirt.h
-> @@ -3,6 +3,10 @@
->  #define _ASM_LOONGARCH_PARAVIRT_H
->
->  #ifdef CONFIG_PARAVIRT
-> +#include <linux/jump_label.h>
-> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-> +DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
->
->  int __init pv_ipi_init(void);
->  int __init pv_time_init(void);
-> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/incl=
-ude/asm/qspinlock.h
-> index 0ee15b3b3937..fbfc6be82f26 100644
-> --- a/arch/loongarch/include/asm/qspinlock.h
-> +++ b/arch/loongarch/include/asm/qspinlock.h
-> @@ -3,12 +3,9 @@
->  #define _ASM_LOONGARCH_QSPINLOCK_H
->
->  #include <asm/kvm_para.h>
-> -#include <linux/jump_label.h>
-> +#include <asm/paravirt.h>
->
->  #ifdef CONFIG_PARAVIRT
-> -DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-> -DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> -DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
->
->  #define virt_spin_lock virt_spin_lock
->
->
-> base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
+> +static const struct ls2x_i2c_chip_data ls2x_i2c_2k_data =3D {
+> +       .factor =3D 4,
+> +};
+> +
+> +static const struct ls2x_i2c_chip_data ls2x_i2c_7a_data =3D {
+> +       .factor =3D 5,
+> +};
+> +
+>  static const struct of_device_id ls2x_i2c_id_table[] =3D {
+> -       { .compatible =3D "loongson,ls2k-i2c" },
+> -       { .compatible =3D "loongson,ls7a-i2c" },
+> +       { .compatible =3D "loongson,ls2k-i2c", .data =3D &ls2x_i2c_2k_dat=
+a, },
+> +       { .compatible =3D "loongson,ls7a-i2c", .data =3D &ls2x_i2c_7a_dat=
+a, },
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
 > --
-> 2.39.3
+> 2.47.2
+>
 >
