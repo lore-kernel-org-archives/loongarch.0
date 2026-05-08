@@ -1,122 +1,98 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2621B85F8
-	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 01:30:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42FA2F8E8E
+	for <loongarch@lists.linux.dev>; Fri,  8 May 2026 01:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778203819; cv=none; b=DZE2d6R0V3CRJIPZ6B5BN3PyBSjgT3+CLBqZRQXwFQQhuSDnngRTVZc/O8j3rDUrZ/QjZMT5Mf8IJvolI9JybatYEzWo+siFzzanD1UKH4fvEDS1KBD8Nvrp8jjOxx4ta5oLicrD8KqVlcOrm6a7DaTzvgc5zqBx4JnbYKZtD+w=
+	t=1778203829; cv=none; b=uFrP7dR4RQO30d/qQVs87sPlxNCjRJTkDiqBfr/pgfrYKl79cYxQt4/OsP3d3R8n1+jAEaPr+NvmZyWiR1f8NiblW2qatXa8CF7soHmniB6JybXdwlTiOilM3kYgKP+Lmd5Tt5AXh3Th5mmlcAZgDtjRUkwK/9UVvND1Wcq7Ddk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778203819; c=relaxed/simple;
-	bh=T6A5vRZ8MOTTsYn5xOYgD4nkYbHCZB5sZBxvdYoiwpo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=MJzPLAggD6b2hJxzpyQosXw2U0etT00M9nUPG9HI4vVGBPMRycZVZZtU7xffrrOKtJQ8JkQCRJqt6i2iyXhgwdmYHvC9iztdRFWE9Olh0dGcTbN6EwI8ScFzZU8Q7t3uw9TOe9W78lNcVwPBKzeEwZs+I55fBwIdU+gPLx6YiA0=
+	s=arc-20240116; t=1778203829; c=relaxed/simple;
+	bh=rosrgjCoS4Pt78WRamvOnY/gD6U1/ThqnUnsKICg+KI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OENTbxLuxV9z9izvww/BJSOmrnKkFgtqfl28qwVZ7rLrE+ESSYuiObZByNoA201pBCsE+ZdYZxIKU0RWmYAz//H01cBLVPzAhjEWEyliZFsq/mjPbjyLay8yPGp20vJrypavmbuoSuPSpyjzLvf7riaFRHMmb/0K9o70VVFhV/w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8Bxt3iiPP1pt70HAA--.208S3;
-	Fri, 08 May 2026 09:30:11 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJDxB8GePP1pIZ58AA--.26821S3;
-	Fri, 08 May 2026 09:30:06 +0800 (CST)
-Subject: Re: [PATCH v2] dt-bindings: i2c: ls2x-i2c: Add clocks and
- clock-frequency properties
-To: Conor Dooley <conor@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260507081010.12810-1-wanghongliang@loongson.cn>
- <20260507-idealize-occultist-916fd07fc235@spud>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <84c37ac1-3a9c-b0d2-f86a-90712b45b806@loongson.cn>
-Date: Fri, 8 May 2026 09:29:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxQ_CpPP1pwb0HAA--.25057S3;
+	Fri, 08 May 2026 09:30:17 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxWeClPP1pIp58AA--.40861S2;
+	Fri, 08 May 2026 09:30:15 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
+Date: Fri,  8 May 2026 09:30:01 +0800
+Message-Id: <20260508013001.4107737-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260507-idealize-occultist-916fd07fc235@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowJDxB8GePP1pIZ58AA--.26821S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tw4UXFW5Jr48JF48GFyUJwc_yoW8tr1DpF
-	nrCF1UGF4jvF17W395ta4UCF1Fvr9xAws7GFZrJFy7KF9rXw1vqr1akFyDuF1rCr4rZFW2
-	9FW0gw4j9FyDZabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1RBT5UUUUU==
+X-CM-TRANSID:qMiowJCxWeClPP1pIp58AA--.40861S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+Some variables relative with paravirt feature are declared in header file
+asm/qspinlock.h, however this file can be included only when option
+CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off since
+it is not declared.
 
-On 2026/5/8 上午1:29, Conor Dooley wrote:
-> On Thu, May 07, 2026 at 04:10:09PM +0800, Hongliang Wang wrote:
->> From: wanghongliang <wanghongliang@loongson.cn>
->>
->> clocks property describes the i2c bus reference clock from APB clock.
->> clock-frequency property describes i2c bus speed.
->>
->> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
->> ---
->>   Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
->> index ee09c6d9c5f0..4bf89bb97e7d 100644
->> --- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
->> +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
->> @@ -38,10 +38,13 @@ unevaluatedProperties: false
->>   examples:
->>     - |
->>       #include <dt-bindings/interrupt-controller/irq.h>
->> +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
->>   
->>       i2c0: i2c@1fe21000 {
->>           compatible = "loongson,ls2k-i2c";
->>           reg = <0x1fe21000 0x8>;
->> +        clock-frequency = <100000>;
->> +        clocks = <&clk LOONGSON2_APB_CLK>;
-> /stuff/linux-dt/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.example.dtb: i2c@1fe21000 (loongson,ls2k-i2c): Unevaluated properties are not allowed ('clocks' was unexpected)
-> 	from schema $id: http://devicetree.org/schemas/i2c/loongson,ls2x-i2c.yaml
->
->
-> Please test your patches before sending them.
-The error is becasue there is no clocks property in loongson,ls2x-i2c.yaml.
-The patch is based on the following repository and uses the 
-i2c-host-next branch.
-I found the clocks property already exist in loongson,ls2x-i2c.yaml, so 
-I didn't
-add it in my patch
+Move these variable declaration to header file asm/paravirt.h to avoid
+compiling warning.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
->
-> Does this device actually have a clock or not?
-Yes,  the clock actually exists.
->
-> Cheers,
-> Conor.
->
->>           interrupt-parent = <&extioiic>;
->>           interrupts = <22 IRQ_TYPE_LEVEL_LOW>;
->>           #address-cells = <1>;
->> -- 
->> 2.47.2
->>
-Best regards,
-Hongliang Wang
+Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as a macro rather than function")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2b-lkp@intel.com/
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/paravirt.h  | 4 ++++
+ arch/loongarch/include/asm/qspinlock.h | 5 +----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+index 0111f0ad5f73..dbc64908017f 100644
+--- a/arch/loongarch/include/asm/paravirt.h
++++ b/arch/loongarch/include/asm/paravirt.h
+@@ -3,6 +3,10 @@
+ #define _ASM_LOONGARCH_PARAVIRT_H
+ 
+ #ifdef CONFIG_PARAVIRT
++#include <linux/jump_label.h>
++DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
++DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
++DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+ 
+ int __init pv_ipi_init(void);
+ int __init pv_time_init(void);
+diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongarch/include/asm/qspinlock.h
+index 0ee15b3b3937..fbfc6be82f26 100644
+--- a/arch/loongarch/include/asm/qspinlock.h
++++ b/arch/loongarch/include/asm/qspinlock.h
+@@ -3,12 +3,9 @@
+ #define _ASM_LOONGARCH_QSPINLOCK_H
+ 
+ #include <asm/kvm_para.h>
+-#include <linux/jump_label.h>
++#include <asm/paravirt.h>
+ 
+ #ifdef CONFIG_PARAVIRT
+-DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+-DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+-DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+ 
+ #define virt_spin_lock virt_spin_lock
+ 
+
+base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
+-- 
+2.39.3
 
