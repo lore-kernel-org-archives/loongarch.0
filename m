@@ -1,118 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EBD3932E1
-	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A6E38C414
+	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778335853; cv=none; b=gQvgTD/Rrk68LnbrlMBsZ7tpwdkg0aqahFu1LDDE0dfclN55HOICYL7rbxw1xX0cDZoBuoXc9JZBN41IBUaIlm948ATl0If/meHLApldnCOoMZ9kL+01Ydfq2AzTbA38gfPhKBjKyKGgNgIgYpHqB6fzCQo502usJ2juxAORO3A=
+	t=1778335887; cv=none; b=OQXFS+kMDS7W8pHKQOc8Jcwv0G5eIqzOPzHvPlmE5fXXjYtt9+8tlhw8lt37IAbXb4wr1lhaeY7nVEfxklc00FCSXfTkZQxb+Kil444PcOrE/2aFhsTOX1XJX1lnPK8lj8KGRJNgEmutz1l2aBnsRvXY+4nk2enc/N/AkahckRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778335853; c=relaxed/simple;
-	bh=UeQXTH2Hl6E7ZPb1ttdaJuQX0gSzaAcJcdC0k2iGNI4=;
+	s=arc-20240116; t=1778335887; c=relaxed/simple;
+	bh=++fkJcl9vcz0uZyCJnAl6KXcCRI8tvPw7VCGiP5Bbm4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M6BWMOnshcu9+z6exW1hLy3IBPuWNOlNgLZOGU/1VaQ7zvoNm9KtBiLOWuRiSgAkdq5Bmem8Wz3poPfxyedUo+OFn/+vpVGm3YMKi9hjNDLg9vpvaWZ+hQ18gli+bQPqfumokED9Cmj/iaSlSPsuICdf61biWuqQsmtfQUdDeYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TItH15u/; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=WxHO6aEOEg80zIa/kEwXTBIqSoxXnxJRAO+h9tSf7O229yjr5Dtcv7cmCqD4TQQ96o7cya1fx4sm9uClI8ymMe5Ib9MiCItfUYDiqCm6yqVtWTuLl8sHtLNOnV+XupyJBQgMRLFOUJhSRZ5MifLQb9dnjQwgbvRxDSlspAwaBEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHKz6piI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TItH15u/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62247C2BCF4
-	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHKz6piI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB36C2BCB4
+	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778335853;
-	bh=UeQXTH2Hl6E7ZPb1ttdaJuQX0gSzaAcJcdC0k2iGNI4=;
+	s=k20201202; t=1778335887;
+	bh=++fkJcl9vcz0uZyCJnAl6KXcCRI8tvPw7VCGiP5Bbm4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TItH15u/YYbNaiKC00+xtaMoZ+Qq+yK/BRS5in/vSxPMW+HV1ubm3zLJoluaFIDd7
-	 ncDd552pM3epY0ZJzqMOumbrB91rZeJzndA3OVoc2IVyox9IkGQGMH0S4Kg2lkgE8W
-	 ucyJo6RYUZW0NpzM1ABQ1C2cEbVQTwBf+sIVORzW8U/wcaOH+tKkDYnIv53+mlt4aL
-	 iOOTnmmmk8EzGDhXI5qwJaf4GcU4GzJ46eT7xvHq0iSZqWq3G08TG3jLWko4J07fls
-	 AkklqWN+Jnos6mmQzHb7HXNVHZXYgfC8BQAW9emwZDJpdoq9IPENdTE9/dDX4ebvKU
-	 FI7lIhi093xrw==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-67c2b4809baso5552066a12.3
-        for <loongarch@lists.linux.dev>; Sat, 09 May 2026 07:10:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9NLyyyJGsyvvl3dQ+dsJbY5coAuB9rMP2rhRhtoSfee2xQzvEWDd+SW4Hfw1zq5p3v0ipP8bpOOk8=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzhFDEm2016LntEa/KtUtD6awxcKmt7vgb9E7lVJIEERhI0xO4x
-	er7Ywg94c/7OArKasjfggK+Yvj67RfXqmGYYe7tiFebya1NKma+STnvOLh+5IZtlDTo0L1LxApM
-	/CSUwUbsiZqZBDPXUmRDeugBVE93V+uo=
-X-Received: by 2002:a05:6402:540c:b0:66e:43ef:2951 with SMTP id
- 4fb4d7f45d1cf-67d638ae7d5mr8896993a12.4.1778335851883; Sat, 09 May 2026
- 07:10:51 -0700 (PDT)
+	b=lHKz6piIvaVYWLx/R3sYqGyLTJgdtt22723ikkrS1OOumQxaRA6azHi6E70oA4vup
+	 FGGEPUC9maiAzaGEZyhjq/T/gpK+QhMyvxyBkfBvyTnES+W3qP3BPyt1Vlhca35llW
+	 soKhczJmyQeqQFNc1FBod4CpwN8fNM8EBHm8scNzdNJHb85A9GgEhCT7taX0Ve0eMY
+	 y6Ma1M0o9gbFdR/L44o1qWAN0zdrxmJpRdMtQNpH9JQcl6AaYbsVAgFdsbQHBTAm/4
+	 1/77fDIHDf+yC0DW3wV2zGOfHZY2xZhj/36KrF65elViI/kLe+psO4iTD//pTXuq7f
+	 bH4VWFKRGFRiQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bc3582acc23so440313866b.3
+        for <loongarch@lists.linux.dev>; Sat, 09 May 2026 07:11:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9N3HkOk4k1122h/6cbaNgLYedn5fv/Fv0/q0saEqvL5NM/CZryCtdtitfMGFsggEQF6DVPoszDchs=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxAeLJ+Ldq8G/wa2rIhZrEqey+Dab5i3oMIXPbQjmkCBIDfpVwL
+	l12a2MfepZfax62l9NdQszi78iP6ljXYc5GYMnMaZDRK8H7kp5hx/DFj6w7xlnAXqfxjhE66fm+
+	JbVXuC4mecVvZX0gtZHZj1f37ORSgNpE=
+X-Received: by 2002:a17:907:c27:b0:bcb:8984:15ec with SMTP id
+ a640c23a62f3a-bcb89842ed0mr240730966b.29.1778335886073; Sat, 09 May 2026
+ 07:11:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260429120300.1786210-1-r@hev.cc>
-In-Reply-To: <20260429120300.1786210-1-r@hev.cc>
+References: <20260508013001.4107737-1-maobibo@loongson.cn> <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
+ <3d3bb8ea-34b7-b4da-deac-677ac272dd76@loongson.cn> <CAAhV-H44v2TcSAeq+mDiHy26k=mE4ykqjrvPsNurgpw4OhnNTg@mail.gmail.com>
+ <076bc4bc-54da-efb6-b1d4-e5e754bb580a@loongson.cn> <CAAhV-H7vCF0=_EdahXSeQBu8r65SJ6t3-FCiWh4TxhoaRnXnMg@mail.gmail.com>
+ <3df8e39d-1692-07d2-222c-a68fbfd6ab5a@loongson.cn>
+In-Reply-To: <3df8e39d-1692-07d2-222c-a68fbfd6ab5a@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 9 May 2026 22:10:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7yU4Vf6K+f164_QWBkvNn4MzyzFDrCXsOmS=NnA9YmqA@mail.gmail.com>
-X-Gm-Features: AVHnY4LXCZn7F2RcOp_hxC3GcHBxrmo2RdvstXmHYlz8-c1bcgasMesHiyy5XJs
-Message-ID: <CAAhV-H7yU4Vf6K+f164_QWBkvNn4MzyzFDrCXsOmS=NnA9YmqA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] LoongArch: Move KASLR to EFI stub to avoid initrd overlap
-To: WANG Rui <r@hev.cc>
-Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Haiyong Sun <sunhaiyong@loongson.cn>, 
-	Lisa Robinson <lisa@bytefly.space>, loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Sat, 9 May 2026 22:11:16 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4W4z+BXm_hREk+ZSZzK=9UAOav7itAvD6ohYPy0fAsDg@mail.gmail.com>
+X-Gm-Features: AVHnY4JN0veX4hzftGEtE4xPuLDbneVcownbdzUjsM6-g9vbmTQOorwPZ45Sabs
+Message-ID: <CAAhV-H4W4z+BXm_hREk+ZSZzK=9UAOav7itAvD6ohYPy0fAsDg@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Sat, May 9, 2026 at 9:34=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/5/8 =E4=B8=8B=E5=8D=889:04, Huacai Chen wrote:
+> > On Fri, May 8, 2026 at 11:19=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >>
+> >>
+> >> On 2026/5/8 =E4=B8=8A=E5=8D=8811:11, Huacai Chen wrote:
+> >>> On Fri, May 8, 2026 at 11:08=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
+> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2026/5/8 =E4=B8=8A=E5=8D=8810:56, Huacai Chen wrote:
+> >>>>> Hi, Bibo,
+> >>>>>
+> >>>>> On Fri, May 8, 2026 at 9:30=E2=80=AFAM Bibo Mao <maobibo@loongson.c=
+n> wrote:
+> >>>>>>
+> >>>>>> Some variables relative with paravirt feature are declared in head=
+er file
+> >>>>>> asm/qspinlock.h, however this file can be included only when optio=
+n
+> >>>>>> CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off =
+since
+> >>>>>> it is not declared.
+> >>>>>>
+> >>>>>> Move these variable declaration to header file asm/paravirt.h to a=
+void
+> >>>>>> compiling warning.
+> >>>>> Have you reproduced the warning? I cannot reproduce it in my
+> >>>>> environment with the config file from lkp report, so I also cannot
+> >>>>> confirm whether it is fixed.
+> >>>> yes, I can reproduce this and it is fixed. The warning is reported f=
+rom
+> >>>> sparse tool, rather than LLVM.
+> >>>>>
+> >>>>> Another question:
+> >>>>> Is paravirt.h a better place than kvm_para.h?
+> >>>> en, here kvm_para.h seems better, will send V2 version in next time.
+> >>> Frankly, I don't know the difference between the two files. kvm_para.=
+h
+> >>> is kvm specific and paravirt.h is generic? Or kvm_para.h is the
+> >>> hypervisor side and paravirt.h is the guest side?
+> >> kvm_para.h is shared by hypervisor and guest kernel, paravirt.h is onl=
+y
+> >> used by guest kernel. And option CONFIG_PARAVIRT is useful with guest
+> >> kernel, CONFIG_PARAVIRT has no much meaning with hypervisor.
+> > If so, paravirt.h seems better to declare these variables.
+> yes, paravirt.h seems better than kvm_para.h :)
 Applied, thanks.
 
 Huacai
-
-On Wed, Apr 29, 2026 at 8:03=E2=80=AFPM WANG Rui <r@hev.cc> wrote:
 >
-> Changes since [v3]:
->   * Minor cleanups based on review comments.
->
-> Changes since [v2]:
->   * Add a new patch to prevent initrd overlap during relocation.
->   * Revert changes to the CONFIG_RANDOMIZE_BASE_MAX_OFFSET range.
->
-> Changes since [v1]:
->   * Drop the patch "LoongArch: Allow rdtime_h() and rdtime_l() in 64-bit =
-builds".
->   * Use random_get_entropy() instead of rdtime_l().
->
-> This series addresses a potential overlap issue between the kernel
-> image and the initrd when KASLR is enabled.
->
-> In the normal boot flow, the bootloader is responsible for loading
-> both vmlinux and the initrd, and it can guarantee that the two do
-> not overlap in memory. However, this assumption only holds as long
-> as neither image changes its location afterwards.
->
-> The in-kernel KASLR implementation breaks that assumption. When the
-> initrd is placed close to the kernel image, randomizing the kernel
-> location at runtime may move it into the initrd region, leading to
-> memory corruption early during boot.
->
-> To fix this, this series moves the KASLR logic out of the kernel
-> proper and into the EFI stub. With this change, the final placement
-> of both the kernel image and the initrd is determined by the EFI
-> memory allocator. This ensures that the two allocations are
-> coordinated and cannot overlap.
->
-> Functionally, the kernel still supports KASLR as before, but the
-> randomization now happens before the kernel is entered, rather than
-> during early kernel relocation.
->
-> [v3]: https://lore.kernel.org/loongarch/20260429051318.1581350-1-r@hev.cc
-> [v2]: https://lore.kernel.org/loongarch/20260428040159.1065822-1-r@hev.cc
-> [v1]: https://lore.kernel.org/loongarch/20260427104721.47724-1-r@hev.cc
->
-> WANG Rui (3):
->   efi/loongarch: Randomize kernel preferred address for KASLR
->   LoongArch: Skip relocation-time KASLR if it has already been applied
->   LoongArch: Avoid initrd overlap during kernel relocation
->
->  arch/loongarch/include/asm/efi.h         |  4 +-
->  arch/loongarch/kernel/relocate.c         | 49 ++++++++++++++++++++++++
->  drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++
->  3 files changed, 68 insertions(+), 1 deletion(-)
->
-> --
-> 2.54.0
+> Regards
+> Bibo Mao
+> >
+> > Huacai
+> >
+> >>
+> >> Regards
+> >> Bibo Mao
+> >>>
+> >>> Huacai
+> >>>
+> >>>>
+> >>>> Regards
+> >>>> Bibo Mao
+> >>>>
+> >>>>>
+> >>>>> Huacai
+> >>>>>
+> >>>>>>
+> >>>>>> Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as =
+a macro rather than function")
+> >>>>>> Reported-by: kernel test robot <lkp@intel.com>
+> >>>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2=
+b-lkp@intel.com/
+> >>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>>>> ---
+> >>>>>>     arch/loongarch/include/asm/paravirt.h  | 4 ++++
+> >>>>>>     arch/loongarch/include/asm/qspinlock.h | 5 +----
+> >>>>>>     2 files changed, 5 insertions(+), 4 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarc=
+h/include/asm/paravirt.h
+> >>>>>> index 0111f0ad5f73..dbc64908017f 100644
+> >>>>>> --- a/arch/loongarch/include/asm/paravirt.h
+> >>>>>> +++ b/arch/loongarch/include/asm/paravirt.h
+> >>>>>> @@ -3,6 +3,10 @@
+> >>>>>>     #define _ASM_LOONGARCH_PARAVIRT_H
+> >>>>>>
+> >>>>>>     #ifdef CONFIG_PARAVIRT
+> >>>>>> +#include <linux/jump_label.h>
+> >>>>>> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+> >>>>>> +DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> >>>>>> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+> >>>>>>
+> >>>>>>     int __init pv_ipi_init(void);
+> >>>>>>     int __init pv_time_init(void);
+> >>>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongar=
+ch/include/asm/qspinlock.h
+> >>>>>> index 0ee15b3b3937..fbfc6be82f26 100644
+> >>>>>> --- a/arch/loongarch/include/asm/qspinlock.h
+> >>>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
+> >>>>>> @@ -3,12 +3,9 @@
+> >>>>>>     #define _ASM_LOONGARCH_QSPINLOCK_H
+> >>>>>>
+> >>>>>>     #include <asm/kvm_para.h>
+> >>>>>> -#include <linux/jump_label.h>
+> >>>>>> +#include <asm/paravirt.h>
+> >>>>>>
+> >>>>>>     #ifdef CONFIG_PARAVIRT
+> >>>>>> -DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+> >>>>>> -DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> >>>>>> -DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+> >>>>>>
+> >>>>>>     #define virt_spin_lock virt_spin_lock
+> >>>>>>
+> >>>>>>
+> >>>>>> base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
+> >>>>>> --
+> >>>>>> 2.39.3
+> >>>>>>
+> >>>>
+> >>
 >
 >
