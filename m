@@ -1,176 +1,118 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1416A285CBC
-	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 08:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EBD3932E1
+	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778315384; cv=none; b=JAyXlf9csxKQsJPXVRRJYv1vhcH3BE+bLm2X6QF9MBP6NFiIkyDuiK1iNWjiMPaoO6SUW0+h8Tw+UMnucZOsnSzhuBRP7PIJLQVCuK7mt1+gaPBolhD8XBeZyG2PpWI1gZEJOC0UwVSOk3EPqgMHVlNaHtg8uO3zBjM8hASmDoY=
+	t=1778335853; cv=none; b=gQvgTD/Rrk68LnbrlMBsZ7tpwdkg0aqahFu1LDDE0dfclN55HOICYL7rbxw1xX0cDZoBuoXc9JZBN41IBUaIlm948ATl0If/meHLApldnCOoMZ9kL+01Ydfq2AzTbA38gfPhKBjKyKGgNgIgYpHqB6fzCQo502usJ2juxAORO3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778315384; c=relaxed/simple;
-	bh=z3o91oPJZWzKTXniebv/fBIDyQhyV8YOnNOxrAqvJ3g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dMj/J3v72jb9Y0yu5T9nJu0oxeOaXCmKpVzsIVQPgawXQpEZNxxBMKZvRe8IbOH+8pKTA4be1EgMJGa6PAcMtIsMphblFSGm14f0d0Oc4NOH78T5sQGli9+qCaKYQTExGqUk5bYNO56FPeyJuXxj9B/BeJTeTotSelmLFeYp/MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8DxLupx8P5p5SUIAA--.25169S3;
-	Sat, 09 May 2026 16:29:37 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJBx78Jx8P5pMYl9AA--.42882S2;
-	Sat, 09 May 2026 16:29:37 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Hongliang Wang <wanghongliang@loongson.cn>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: [PATCH v3] i2c: ls2x: Add clocks property parsing and adjust bus speed
-Date: Sat,  9 May 2026 16:28:37 +0800
-Message-Id: <20260509082837.28778-1-wanghongliang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1778335853; c=relaxed/simple;
+	bh=UeQXTH2Hl6E7ZPb1ttdaJuQX0gSzaAcJcdC0k2iGNI4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M6BWMOnshcu9+z6exW1hLy3IBPuWNOlNgLZOGU/1VaQ7zvoNm9KtBiLOWuRiSgAkdq5Bmem8Wz3poPfxyedUo+OFn/+vpVGm3YMKi9hjNDLg9vpvaWZ+hQ18gli+bQPqfumokED9Cmj/iaSlSPsuICdf61biWuqQsmtfQUdDeYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TItH15u/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TItH15u/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62247C2BCF4
+	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778335853;
+	bh=UeQXTH2Hl6E7ZPb1ttdaJuQX0gSzaAcJcdC0k2iGNI4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TItH15u/YYbNaiKC00+xtaMoZ+Qq+yK/BRS5in/vSxPMW+HV1ubm3zLJoluaFIDd7
+	 ncDd552pM3epY0ZJzqMOumbrB91rZeJzndA3OVoc2IVyox9IkGQGMH0S4Kg2lkgE8W
+	 ucyJo6RYUZW0NpzM1ABQ1C2cEbVQTwBf+sIVORzW8U/wcaOH+tKkDYnIv53+mlt4aL
+	 iOOTnmmmk8EzGDhXI5qwJaf4GcU4GzJ46eT7xvHq0iSZqWq3G08TG3jLWko4J07fls
+	 AkklqWN+Jnos6mmQzHb7HXNVHZXYgfC8BQAW9emwZDJpdoq9IPENdTE9/dDX4ebvKU
+	 FI7lIhi093xrw==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-67c2b4809baso5552066a12.3
+        for <loongarch@lists.linux.dev>; Sat, 09 May 2026 07:10:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9NLyyyJGsyvvl3dQ+dsJbY5coAuB9rMP2rhRhtoSfee2xQzvEWDd+SW4Hfw1zq5p3v0ipP8bpOOk8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzhFDEm2016LntEa/KtUtD6awxcKmt7vgb9E7lVJIEERhI0xO4x
+	er7Ywg94c/7OArKasjfggK+Yvj67RfXqmGYYe7tiFebya1NKma+STnvOLh+5IZtlDTo0L1LxApM
+	/CSUwUbsiZqZBDPXUmRDeugBVE93V+uo=
+X-Received: by 2002:a05:6402:540c:b0:66e:43ef:2951 with SMTP id
+ 4fb4d7f45d1cf-67d638ae7d5mr8896993a12.4.1778335851883; Sat, 09 May 2026
+ 07:10:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx78Jx8P5pMYl9AA--.42882S2
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJFW8Ar4Duw1xJry5Wry3trc_yoWrXry7pF
-	WUCFZ5Gr4qqF42grsIq3W7ZFyayws5Jay8CFy7tw1xW3Z3Xr98Za4ftFn0kF4kWF97uayU
-	XayDGr45uFyUZrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUUUUU==
+References: <20260429120300.1786210-1-r@hev.cc>
+In-Reply-To: <20260429120300.1786210-1-r@hev.cc>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 9 May 2026 22:10:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7yU4Vf6K+f164_QWBkvNn4MzyzFDrCXsOmS=NnA9YmqA@mail.gmail.com>
+X-Gm-Features: AVHnY4LXCZn7F2RcOp_hxC3GcHBxrmo2RdvstXmHYlz8-c1bcgasMesHiyy5XJs
+Message-ID: <CAAhV-H7yU4Vf6K+f164_QWBkvNn4MzyzFDrCXsOmS=NnA9YmqA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] LoongArch: Move KASLR to EFI stub to avoid initrd overlap
+To: WANG Rui <r@hev.cc>
+Cc: Ard Biesheuvel <ardb@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Haiyong Sun <sunhaiyong@loongson.cn>, 
+	Lisa Robinson <lisa@bytefly.space>, loongarch@lists.linux.dev, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: wanghongliang <wanghongliang@loongson.cn>
+Applied, thanks.
 
-The i2c-ls2x driver supports dts and acpi parameter passing.
+Huacai
 
-In dts, uses clock framework, by parsing clocks property to
-get i2c bus reference clock, and define the div of reference
-clock by device data.
-
-In acpi, by passing clocks property to describe i2c bus reference
-clock and clock-div property to describe the div of reference clock.
-
-Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
-and div, calculate the prcescale of i2c divider register. The
-calculation formula is
-
-prcescale = (clock_a*10)/(div*clock_s)-1
-
-Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
----
- drivers/i2c/busses/i2c-ls2x.c | 35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.c
-index b475dd27b7af..6d332e59452d 100644
---- a/drivers/i2c/busses/i2c-ls2x.c
-+++ b/drivers/i2c/busses/i2c-ls2x.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/iopoll.h>
-@@ -63,11 +64,18 @@
- /* The default bus frequency, which is an empirical value */
- #define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
- 
-+/* The div of i2c reference clock on 2K0500/2K1000/2K2000 */
-+#define LS2X_I2C_2K_CLOCK_DIV	40
-+
-+/* The div of i2c reference clock on 7A1000/7A2000 */
-+#define LS2X_I2C_7A_CLOCK_DIV	50
-+
- struct ls2x_i2c_priv {
- 	struct i2c_adapter	adapter;
- 	void __iomem		*base;
- 	struct i2c_timings	i2c_t;
- 	struct completion	cmd_complete;
-+	unsigned int		div;
- };
- 
- /*
-@@ -96,6 +104,8 @@ static irqreturn_t ls2x_i2c_isr(int this_irq, void *dev_id)
- static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
- {
- 	u16 val;
-+	u32 pclk, div;
-+	struct clk *clk;
- 	struct i2c_timings *t = &priv->i2c_t;
- 	struct device *dev = priv->adapter.dev.parent;
- 	u32 acpi_speed = i2c_acpi_find_bus_speed(dev);
-@@ -107,12 +117,29 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
- 	else
- 		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
- 
-+	if (dev_of_node(dev)) {
-+		clk = devm_clk_get_optional_enabled(dev, NULL);
-+		if (clk && !IS_ERR(clk))
-+			pclk = clk_get_rate(clk);
-+		else
-+			pclk = LS2X_I2C_PCLK_FREQ;
-+
-+		div = priv->div;
-+
-+		val = (pclk * 10) / (div * t->bus_freq_hz) - 1;
-+	} else {
-+		if (!device_property_read_u32(dev, "clocks", &pclk) &&
-+		    !device_property_read_u32(dev, "clock-div", &div))
-+			val = (pclk * 10) / (div * t->bus_freq_hz) - 1;
-+		else
-+			val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
-+	}
-+
- 	/*
- 	 * According to the chip manual, we can only access the registers as bytes,
- 	 * otherwise the high bits will be truncated.
- 	 * So set the I2C frequency with a sequential writeb() instead of writew().
- 	 */
--	val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
- 	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_LO);
- 	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_HI);
- }
-@@ -295,6 +322,8 @@ static int ls2x_i2c_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->div = (unsigned int)(unsigned long)device_get_match_data(dev);
-+
- 	/* Map hardware registers */
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
-@@ -349,8 +378,8 @@ static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
- 				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
- 
- static const struct of_device_id ls2x_i2c_id_table[] = {
--	{ .compatible = "loongson,ls2k-i2c" },
--	{ .compatible = "loongson,ls7a-i2c" },
-+	{ .compatible = "loongson,ls2k-i2c", .data = (void *)LS2X_I2C_2K_CLOCK_DIV, },
-+	{ .compatible = "loongson,ls7a-i2c", .data = (void *)LS2X_I2C_7A_CLOCK_DIV, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
--- 
-2.47.2
-
+On Wed, Apr 29, 2026 at 8:03=E2=80=AFPM WANG Rui <r@hev.cc> wrote:
+>
+> Changes since [v3]:
+>   * Minor cleanups based on review comments.
+>
+> Changes since [v2]:
+>   * Add a new patch to prevent initrd overlap during relocation.
+>   * Revert changes to the CONFIG_RANDOMIZE_BASE_MAX_OFFSET range.
+>
+> Changes since [v1]:
+>   * Drop the patch "LoongArch: Allow rdtime_h() and rdtime_l() in 64-bit =
+builds".
+>   * Use random_get_entropy() instead of rdtime_l().
+>
+> This series addresses a potential overlap issue between the kernel
+> image and the initrd when KASLR is enabled.
+>
+> In the normal boot flow, the bootloader is responsible for loading
+> both vmlinux and the initrd, and it can guarantee that the two do
+> not overlap in memory. However, this assumption only holds as long
+> as neither image changes its location afterwards.
+>
+> The in-kernel KASLR implementation breaks that assumption. When the
+> initrd is placed close to the kernel image, randomizing the kernel
+> location at runtime may move it into the initrd region, leading to
+> memory corruption early during boot.
+>
+> To fix this, this series moves the KASLR logic out of the kernel
+> proper and into the EFI stub. With this change, the final placement
+> of both the kernel image and the initrd is determined by the EFI
+> memory allocator. This ensures that the two allocations are
+> coordinated and cannot overlap.
+>
+> Functionally, the kernel still supports KASLR as before, but the
+> randomization now happens before the kernel is entered, rather than
+> during early kernel relocation.
+>
+> [v3]: https://lore.kernel.org/loongarch/20260429051318.1581350-1-r@hev.cc
+> [v2]: https://lore.kernel.org/loongarch/20260428040159.1065822-1-r@hev.cc
+> [v1]: https://lore.kernel.org/loongarch/20260427104721.47724-1-r@hev.cc
+>
+> WANG Rui (3):
+>   efi/loongarch: Randomize kernel preferred address for KASLR
+>   LoongArch: Skip relocation-time KASLR if it has already been applied
+>   LoongArch: Avoid initrd overlap during kernel relocation
+>
+>  arch/loongarch/include/asm/efi.h         |  4 +-
+>  arch/loongarch/kernel/relocate.c         | 49 ++++++++++++++++++++++++
+>  drivers/firmware/efi/libstub/loongarch.c | 16 ++++++++
+>  3 files changed, 68 insertions(+), 1 deletion(-)
+>
+> --
+> 2.54.0
+>
+>
