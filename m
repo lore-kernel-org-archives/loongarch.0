@@ -1,192 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A6E38C414
-	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B5C79CD
+	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778335887; cv=none; b=OQXFS+kMDS7W8pHKQOc8Jcwv0G5eIqzOPzHvPlmE5fXXjYtt9+8tlhw8lt37IAbXb4wr1lhaeY7nVEfxklc00FCSXfTkZQxb+Kil444PcOrE/2aFhsTOX1XJX1lnPK8lj8KGRJNgEmutz1l2aBnsRvXY+4nk2enc/N/AkahckRc=
+	t=1778468757; cv=none; b=SdZgBwjyOV+vyVZi1V+GIGxTxLpgD7Dx3ecLCS5/mFP6SpMqO94CNxX7raD2wWlQApqcHL180NeL+ArzhjsRAhZgbZS0QvZ4GJyYEsM+hOXgX6EYu5RbEuzytriF6+AXck5e/0jF1KzUER9c0OeePIWBZEozKB8gcxeBzBlMIBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778335887; c=relaxed/simple;
-	bh=++fkJcl9vcz0uZyCJnAl6KXcCRI8tvPw7VCGiP5Bbm4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxHO6aEOEg80zIa/kEwXTBIqSoxXnxJRAO+h9tSf7O229yjr5Dtcv7cmCqD4TQQ96o7cya1fx4sm9uClI8ymMe5Ib9MiCItfUYDiqCm6yqVtWTuLl8sHtLNOnV+XupyJBQgMRLFOUJhSRZ5MifLQb9dnjQwgbvRxDSlspAwaBEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHKz6piI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778468757; c=relaxed/simple;
+	bh=FWfgq6XQNeXzZV3HHGVllPtb+9d8M4Wcucdv11Aki04=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ATjTc/pJsi2EgjRSB9jL3Uys9xnpMVamLPUhhD7uJp5xW3GIbh43wgVzT2vZF5YnqDpjLqIpBbg1OWFhoc2RPeLLAaBuHPrC0eLg8Lbq2dmYj5CNpdBNR1mvuMtXV53UbO17IxXuMB74B3rrhPQhBhmgtYXeTUv6zMwXJdT77xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=QsX3YgPs; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHKz6piI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB36C2BCB4
-	for <loongarch@lists.linux.dev>; Sat,  9 May 2026 14:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778335887;
-	bh=++fkJcl9vcz0uZyCJnAl6KXcCRI8tvPw7VCGiP5Bbm4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lHKz6piIvaVYWLx/R3sYqGyLTJgdtt22723ikkrS1OOumQxaRA6azHi6E70oA4vup
-	 FGGEPUC9maiAzaGEZyhjq/T/gpK+QhMyvxyBkfBvyTnES+W3qP3BPyt1Vlhca35llW
-	 soKhczJmyQeqQFNc1FBod4CpwN8fNM8EBHm8scNzdNJHb85A9GgEhCT7taX0Ve0eMY
-	 y6Ma1M0o9gbFdR/L44o1qWAN0zdrxmJpRdMtQNpH9JQcl6AaYbsVAgFdsbQHBTAm/4
-	 1/77fDIHDf+yC0DW3wV2zGOfHZY2xZhj/36KrF65elViI/kLe+psO4iTD//pTXuq7f
-	 bH4VWFKRGFRiQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bc3582acc23so440313866b.3
-        for <loongarch@lists.linux.dev>; Sat, 09 May 2026 07:11:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9N3HkOk4k1122h/6cbaNgLYedn5fv/Fv0/q0saEqvL5NM/CZryCtdtitfMGFsggEQF6DVPoszDchs=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxAeLJ+Ldq8G/wa2rIhZrEqey+Dab5i3oMIXPbQjmkCBIDfpVwL
-	l12a2MfepZfax62l9NdQszi78iP6ljXYc5GYMnMaZDRK8H7kp5hx/DFj6w7xlnAXqfxjhE66fm+
-	JbVXuC4mecVvZX0gtZHZj1f37ORSgNpE=
-X-Received: by 2002:a17:907:c27:b0:bcb:8984:15ec with SMTP id
- a640c23a62f3a-bcb89842ed0mr240730966b.29.1778335886073; Sat, 09 May 2026
- 07:11:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="QsX3YgPs"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=WZbejJz9IzXhSi2FwZ3FOLXtXYE/8lEFJ1Ev2AmcWeA=;
+	b=QsX3YgPsZ5+8XqwZyY62LqFrLmo9SzriLDrgIFBD7djm0IXFQfPf23OTml7t1XA19m+cZHjKm
+	XqTyC5tS5D3vdaYLNxPGT9IN47WI4WIAenxjLf3fhK6H/STxVdEMc3tr/zVo4ZgmZ3Xv2BBvDAt
+	unpbIlmk6arw8lTkKwT2jc8=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYz0rZZzpStP;
+	Mon, 11 May 2026 10:58:47 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 93CAB40576;
+	Mon, 11 May 2026 11:05:44 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 May
+ 2026 11:05:41 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <pmladek@suse.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <paulmck@kernel.org>,
+	<ruanjinjie@huawei.com>, <sourabhjain@linux.ibm.com>, <coxu@redhat.com>,
+	<leitao@debian.org>, <jbohac@suse.cz>, <ryan.roberts@arm.com>,
+	<osandov@fb.com>, <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
+	<ritesh.list@gmail.com>, <adityag@linux.ibm.com>, <guoren@kernel.org>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>,
+	<wangruikang@iscas.ac.cn>, <namcao@linutronix.de>, <chao.gao@intel.com>,
+	<seanjc@google.com>, <fuqiang.wang@easystack.cn>, <ardb@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+Subject: [PATCH v13 00/15] arm64/riscv: Add support for crashkernel CMA reservation
+Date: Mon, 11 May 2026 11:04:39 +0800
+Message-ID: <20260511030454.1730881-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260508013001.4107737-1-maobibo@loongson.cn> <CAAhV-H6dHM0GBFCh-6-q0fM3VSa49RTXSDz+YUvM0j7u_was1g@mail.gmail.com>
- <3d3bb8ea-34b7-b4da-deac-677ac272dd76@loongson.cn> <CAAhV-H44v2TcSAeq+mDiHy26k=mE4ykqjrvPsNurgpw4OhnNTg@mail.gmail.com>
- <076bc4bc-54da-efb6-b1d4-e5e754bb580a@loongson.cn> <CAAhV-H7vCF0=_EdahXSeQBu8r65SJ6t3-FCiWh4TxhoaRnXnMg@mail.gmail.com>
- <3df8e39d-1692-07d2-222c-a68fbfd6ab5a@loongson.cn>
-In-Reply-To: <3df8e39d-1692-07d2-222c-a68fbfd6ab5a@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 9 May 2026 22:11:16 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4W4z+BXm_hREk+ZSZzK=9UAOav7itAvD6ohYPy0fAsDg@mail.gmail.com>
-X-Gm-Features: AVHnY4JN0veX4hzftGEtE4xPuLDbneVcownbdzUjsM6-g9vbmTQOorwPZ45Sabs
-Message-ID: <CAAhV-H4W4z+BXm_hREk+ZSZzK=9UAOav7itAvD6ohYPy0fAsDg@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: KVM: Move some variable declaration to file paravirt.h
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-On Sat, May 9, 2026 at 9:34=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2026/5/8 =E4=B8=8B=E5=8D=889:04, Huacai Chen wrote:
-> > On Fri, May 8, 2026 at 11:19=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 2026/5/8 =E4=B8=8A=E5=8D=8811:11, Huacai Chen wrote:
-> >>> On Fri, May 8, 2026 at 11:08=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2026/5/8 =E4=B8=8A=E5=8D=8810:56, Huacai Chen wrote:
-> >>>>> Hi, Bibo,
-> >>>>>
-> >>>>> On Fri, May 8, 2026 at 9:30=E2=80=AFAM Bibo Mao <maobibo@loongson.c=
-n> wrote:
-> >>>>>>
-> >>>>>> Some variables relative with paravirt feature are declared in head=
-er file
-> >>>>>> asm/qspinlock.h, however this file can be included only when optio=
-n
-> >>>>>> CONFIG_SMP is on. There is compiling warning if CONFIG_SMP is off =
-since
-> >>>>>> it is not declared.
-> >>>>>>
-> >>>>>> Move these variable declaration to header file asm/paravirt.h to a=
-void
-> >>>>>> compiling warning.
-> >>>>> Have you reproduced the warning? I cannot reproduce it in my
-> >>>>> environment with the config file from lkp report, so I also cannot
-> >>>>> confirm whether it is fixed.
-> >>>> yes, I can reproduce this and it is fixed. The warning is reported f=
-rom
-> >>>> sparse tool, rather than LLVM.
-> >>>>>
-> >>>>> Another question:
-> >>>>> Is paravirt.h a better place than kvm_para.h?
-> >>>> en, here kvm_para.h seems better, will send V2 version in next time.
-> >>> Frankly, I don't know the difference between the two files. kvm_para.=
-h
-> >>> is kvm specific and paravirt.h is generic? Or kvm_para.h is the
-> >>> hypervisor side and paravirt.h is the guest side?
-> >> kvm_para.h is shared by hypervisor and guest kernel, paravirt.h is onl=
-y
-> >> used by guest kernel. And option CONFIG_PARAVIRT is useful with guest
-> >> kernel, CONFIG_PARAVIRT has no much meaning with hypervisor.
-> > If so, paravirt.h seems better to declare these variables.
-> yes, paravirt.h seems better than kvm_para.h :)
-Applied, thanks.
+The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+and crashk_cma memory are almost identical across different architectures,
+This patch set handle them in crash core in a general way, which eliminate
+a lot of duplication code.
 
-Huacai
->
-> Regards
-> Bibo Mao
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>>
-> >>>>>> Fixes: c43dce6f13fb ("LoongArch: KVM: Make vcpu_is_preempted() as =
-a macro rather than function")
-> >>>>>> Reported-by: kernel test robot <lkp@intel.com>
-> >>>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202605061313.O8Hswm2=
-b-lkp@intel.com/
-> >>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>> ---
-> >>>>>>     arch/loongarch/include/asm/paravirt.h  | 4 ++++
-> >>>>>>     arch/loongarch/include/asm/qspinlock.h | 5 +----
-> >>>>>>     2 files changed, 5 insertions(+), 4 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarc=
-h/include/asm/paravirt.h
-> >>>>>> index 0111f0ad5f73..dbc64908017f 100644
-> >>>>>> --- a/arch/loongarch/include/asm/paravirt.h
-> >>>>>> +++ b/arch/loongarch/include/asm/paravirt.h
-> >>>>>> @@ -3,6 +3,10 @@
-> >>>>>>     #define _ASM_LOONGARCH_PARAVIRT_H
-> >>>>>>
-> >>>>>>     #ifdef CONFIG_PARAVIRT
-> >>>>>> +#include <linux/jump_label.h>
-> >>>>>> +DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-> >>>>>> +DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> >>>>>> +DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
-> >>>>>>
-> >>>>>>     int __init pv_ipi_init(void);
-> >>>>>>     int __init pv_time_init(void);
-> >>>>>> diff --git a/arch/loongarch/include/asm/qspinlock.h b/arch/loongar=
-ch/include/asm/qspinlock.h
-> >>>>>> index 0ee15b3b3937..fbfc6be82f26 100644
-> >>>>>> --- a/arch/loongarch/include/asm/qspinlock.h
-> >>>>>> +++ b/arch/loongarch/include/asm/qspinlock.h
-> >>>>>> @@ -3,12 +3,9 @@
-> >>>>>>     #define _ASM_LOONGARCH_QSPINLOCK_H
-> >>>>>>
-> >>>>>>     #include <asm/kvm_para.h>
-> >>>>>> -#include <linux/jump_label.h>
-> >>>>>> +#include <asm/paravirt.h>
-> >>>>>>
-> >>>>>>     #ifdef CONFIG_PARAVIRT
-> >>>>>> -DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
-> >>>>>> -DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> >>>>>> -DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
-> >>>>>>
-> >>>>>>     #define virt_spin_lock virt_spin_lock
-> >>>>>>
-> >>>>>>
-> >>>>>> base-commit: 74fe02ce122a6103f207d29fafc8b3a53de6abaf
-> >>>>>> --
-> >>>>>> 2.39.3
-> >>>>>>
-> >>>>
-> >>
->
->
+And add support for crashkernel CMA reservation for arm64 and riscv.
+
+Rebased on v7.1-rc1.
+
+Basic second kernel boot test were performed on QEMU platforms for x86,
+ARM64 and RISC-V architectures with the following parameters:
+
+	"cma=256M crashkernel=4G crashkernel=64M,cma"
+
+For first kernel, there will be such log:
+
+	# dmesg | grep crash
+	[    0.000000] crashkernel low memory reserved: 0xe8000000 - 0xf0000000 (128 MB)
+	[    0.000000] crashkernel reserved: 0x000000023e600000 - 0x000000033e600000 (4096 MB)
+	[    0.000000] crashkernel CMA reserved: 64 MB in 1 ranges
+
+	# dmesg | grep cma
+	[    0.000000] cma: Reserved 256 MiB at 0x00000000f0000000
+	[    0.000000] cma: Reserved 64 MiB at 0x0000000100000000
+
+For second kernel, there will be such log:
+
+	[    0.000000] OF: fdt: Looking for usable-memory-range property...
+	[    0.000000] OF: fdt: cap_mem_regions[0]: base=0x000000023e600000, size=0x0000000100000000
+	[    0.000000] OF: fdt: cap_mem_regions[1]: base=0x00000000e8000000, size=0x0000000008000000
+	[    0.000000] OF: fdt: cap_mem_regions[2]: base=0x0000000100000000, size=0x0000000004000000
+
+Changes in v13:
+- Rebased on v7.1-rc1.
+- Update the commit message.
+- Add Reviewed-by.
+- Link to v12: https://lore.kernel.org/all/20260402072701.628293-1-ruanjinjie@huawei.com/
+
+Changes in v12:
+- Remove the unused "nr_mem_ranges" for x86.
+- Add "Fix crashk_low_res not exclude bug" test log.
+- Provide a separate patch for each architecture for using
+  crash_prepare_headers(), which will make the review more convenient.
+- Add Reviewed-by and Tested-by.
+- Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
+
+Changes in v11:
+- Avoid silently drop crash memory if the crash kernel is built without
+  CONFIG_CMA.
+- Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
+  as we use kvzalloc().
+- Provide a separate patch for each architecture to fix the existing
+  buffer overflow issue.
+- Add Acked-bys for arm64.
+
+Changes in v10:
+- Fix crashk_low_res not excluded bug in the existing
+  RISC-V code.
+- Fix an existing memory leak issue in the existing PowerPC code.
+- Fix the ordering issue of adding CMA ranges to
+  "linux,usable-memory-range".
+- Fix an existing concurrency issue. A Concurrent memory hotplug may occur
+  between reading memblock and attempting to fill cmem during kexec_load()
+  for almost all existing architectures.
+- Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
+
+Changes in v9:
+- Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
+- Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
+
+Changes in v8:
+- Fix the build issues reported by kernel test robot and Sourabh.
+- Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
+
+Changes in v7:
+- Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
+  for arm64 and riscv.
+- Add Acked-by.
+- Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
+
+Changes in v6:
+- Update the crash core exclude code as Mike suggested.
+- Rebased on v7.0-rc1.
+- Add acked-by.
+- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
+
+Jinjie Ruan (14):
+  riscv: kexec_file: Fix crashk_low_res not exclude bug
+  powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
+  x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
+  arm64: kexec_file: Fix potential buffer overflow in
+    prepare_elf_headers()
+  riscv: kexec_file: Fix potential buffer overflow in
+    prepare_elf_headers()
+  LoongArch: kexec: Fix potential buffer overflow in
+    prepare_elf_headers()
+  crash: Add crash_prepare_headers() to exclude crash kernel memory
+  arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
+  x86/kexec: Use crash_prepare_headers() helper to simplify code
+  riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
+  LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
+  crash: Use crash_exclude_core_ranges() on powerpc
+  arm64: kexec: Add support for crashkernel CMA reservation
+  riscv: kexec: Add support for crashkernel CMA reservation
+
+Sourabh Jain (1):
+  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+
+ .../admin-guide/kernel-parameters.txt         |  16 +--
+ arch/arm64/kernel/machine_kexec_file.c        |  43 +++-----
+ arch/arm64/mm/init.c                          |   5 +-
+ arch/loongarch/kernel/machine_kexec_file.c    |  43 +++-----
+ arch/powerpc/include/asm/kexec_ranges.h       |   1 -
+ arch/powerpc/kexec/crash.c                    |   7 +-
+ arch/powerpc/kexec/ranges.c                   | 101 +-----------------
+ arch/riscv/kernel/machine_kexec_file.c        |  42 +++-----
+ arch/riscv/mm/init.c                          |   5 +-
+ arch/x86/kernel/crash.c                       |  92 +++-------------
+ drivers/of/fdt.c                              |   9 +-
+ drivers/of/kexec.c                            |   9 ++
+ include/linux/crash_core.h                    |   9 ++
+ include/linux/crash_reserve.h                 |   4 +-
+ kernel/crash_core.c                           |  98 ++++++++++++++++-
+ 15 files changed, 202 insertions(+), 282 deletions(-)
+
+-- 
+2.34.1
+
