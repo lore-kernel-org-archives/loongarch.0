@@ -1,158 +1,169 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3D03DA7E5
-	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 10:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C24374E6C
+	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 11:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778496408; cv=none; b=BIihl7wEBJdkWeZ6cs1AG+ypyUcHEDpDb3Diw1so7cU0KjwsakVRfg+Ntl5V/oRHmzmmSJJzIYvfa3Zxe1S1xRJEEOqvBzipbvv8qDRKXJ9FUfICoQ36nurjQFW6ZMF6uBlF1CKHsXSOJtApRxS6LeDVhgh8Vr5Y/DkW7nu3nuY=
+	t=1778499055; cv=none; b=bx7Pmn6+OwZ8FmXeNIO5IKCLRY0x971ZiMk4gVnIultIta5oGHG+HhKt19um1pmrrij4qKmn35tH85juir0Rb9Si9VD8jvaOcIq3RouMcjiXj8lAo3mMSSSvIx6suDzt9EfsPnrWxAoEG6sSDbw5d1z7ha/0SidnOHS8rVHgegM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778496408; c=relaxed/simple;
-	bh=4SXmfcgX9Xc7X+ECU2pGHF0IxLYkgbYx4JOLZXPQsjA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fsADssUIhMy0xeHJ02qWmQywMcJoMPT+YSFW5xpRu9DFC4oaAXu582oOLdg6Xj8ip2NTVvbkcNgo+PIXZbwiU8v+I7nmBi4XzAjec4RR17HnwT3pyfMYPeeIaVVeptoW3MmDE5TB3NapJdhBw5AKPbb4TAOQSCMQ6gTdZlmFTl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc; spf=pass smtp.mailfrom=hev.cc; dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b=pE71mqUz; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hev.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hev.cc
+	s=arc-20240116; t=1778499055; c=relaxed/simple;
+	bh=+yjkn4HBuA/UyhKfR+d394Bjxs+3MnkK17zGluVy8hs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=klLv4zuXof1+dtjf/UM91z+9PzX3k699ZwwYWaj1LCeh/090lQLq2zLY86+ya0CfhFRV8g0NC4JWt6o2+CUTmhMjHVFgnEK3TZLnuGy7NqAT1L2/qwnS87hLGfBL1gU6FuR+uA1P01UP593EV18KUxkunE9gXcBuGm5ZegT067I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=A7gfGf9I; arc=none smtp.client-ip=113.46.200.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20251104.gappssmtp.com header.i=@hev-cc.20251104.gappssmtp.com header.b="pE71mqUz"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c798fc1a28cso1759674a12.3
-        for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20251104.gappssmtp.com; s=20251104; t=1778496406; x=1779101206; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KGeGGvDHlwPJP9DOo96cEsEK7mSKv8XkYQ47F+mLwRA=;
-        b=pE71mqUzvokw1GF4vFhOVfNMezF9KuHfXhdQsuQlINfqQ3vc4GCshnrmvLb5Rr1MMg
-         sBnWuPOoXtQTzcy1Se2x6wVt4NTASR7kSynATJzRXE6mK354jRWtHQkQEEBhtAtOyr9S
-         bCNNPfNeLdBEx9hKPZ+qpWjwzhW+NG39SoqeCNeY7drhiQYGgoervrdAOn1Fh8thlH/n
-         4koEAJMDnLjw1MuHXD05JA7lgt4LJjesIRKAty/t5dYyZ+22lGcHfzaaIoX5GSU/HD9W
-         qV15mViEPUKBqch+rJ//KUVTvD2VpsH/jcOqDcYr0n16QUoNdFBkS9ZUlvCX4bc7lyuJ
-         TpRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778496406; x=1779101206;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KGeGGvDHlwPJP9DOo96cEsEK7mSKv8XkYQ47F+mLwRA=;
-        b=S6xU5JX95zxSmTkF1ENei7ZyMH9+aqPOKtOGiJXOzh8ILbNICv5nAYjCroSHLZgbDL
-         nYFhWjF0CQPteqkkvu9q76gcCHFlt5i/LBsz4nuKmfC+lhuioNmkHhYAefMaMPi2kINk
-         bSGtOtrVwCiiMuHwJXp6ayb8rRhVQNWn/DOYa7jR0PtqVUuLOlfnw60qr/RWvkh/XGH2
-         T3WaJryL5X2+UUeUSKlwF5Gd+HGXNPJPt1PkpmkE6KUnIXVQjJQP/rP8QtYg7Yb2JbhE
-         cGF7Gcarmt2T/Q3HJ+10sR0O4fz6xoWHej0SsyA+r2DcFwbpbuvb61+/SwRWnIFmv1MW
-         Mm3Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+OPaF3le89XdW7VYM8RZjogpVcrb952rsKOmHLFnIK+LGjcnLdkuuGWT8rMhLeBJxxd8bjK6PMyxk=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx+z1h2xPjF0olftQGuc7u/YR5fc+OcdWLZQP89i3lp0lAJugWU
-	Lb4Ap0S/su0NmvKkuYHlcgEDymN5z3Gzen4b3oKvej3bHrQ/eq9wM2CxrBFLqctcZe4=
-X-Gm-Gg: Acq92OEg/aKcaeNf4RREIw7PZ7jngzqymu069ssDanYunz+VuweZ4Gi5kly/1L3maZ+
-	HNKrvuDdTdc6tEkF1Q/ywxbpugtN4KFU2VrDYaTXqBbKl8da5HbppBI31Jdb4l7RJjfrgytJLXs
-	UsYUNasmE+7sIIQaC+LdtuZC0H3YvG3Cru+PJHr+0ZnKsdth8OOnwJHTIUsZ4W4NRYOUx5PzV7V
-	ZDuJQy8M3NS4auu9F1kx1zS/KEkQc0pz1sxruWtqqsdTNIiTzuSD7kCvlpJ8+qD98H74N1684E3
-	1InFrEGasZXNj1pAV1Qml+MQOVtj5CiUGZnIDkluDw4VLUewBImsgx9xtuZZm7jZwmw+Tv0puiv
-	/pefezkpM0DFnlWsrKBIxuBoWVMZJVspoMZ0uyXgUzZomJ/jLnPTUTlZAd7YBRqTa6+fu0qKGiN
-	b5XSCeHJBg
-X-Received: by 2002:a05:6a21:3390:b0:39f:94cb:1bc with SMTP id adf61e73a8af0-3aa5a901f0amr27108324637.1.1778496406048;
-        Mon, 11 May 2026 03:46:46 -0700 (PDT)
-Received: from localhost ([2400:8902:e002:de3f:344e:4435:2c77:3920])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-839679c861esm24927599b3a.30.2026.05.11.03.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 03:46:45 -0700 (PDT)
-From: WANG Rui <r@hev.cc>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Haiyong Sun <sunhaiyong@loongson.cn>,
-	Lisa Robinson <lisa@bytefly.space>,
-	loongarch@lists.linux.dev,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	WANG Rui <r@hev.cc>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v5 3/3] LoongArch: Avoid initrd overlap during kernel relocation
-Date: Mon, 11 May 2026 18:45:55 +0800
-Message-ID: <20260511104555.196270-4-r@hev.cc>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260511104555.196270-1-r@hev.cc>
-References: <20260511104555.196270-1-r@hev.cc>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="A7gfGf9I"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=hZY77WY1R4lZKqkiJYVx90NM7cypXm7b/K/Dl6ostWU=;
+	b=A7gfGf9I2mWtoGk1twpeKdsTWxHRCoqkxK6h8sqAufJacFPxPk7J5UV8oj4BBjTyooxVD2Cki
+	IZBX0lyWqVPhijn1Ra4jjJgWV2oQvMFsHXLFq2R6ycKWvoUQXNa+lNIZBbmfXSzS+9wfOLM4NXI
+	bc1oxF4bSdMbsjNUg+iYH3U=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4gDcm00dzbzmV6w;
+	Mon, 11 May 2026 19:23:12 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2B9494048B;
+	Mon, 11 May 2026 19:30:49 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 11 May 2026 19:30:44 +0800
+Message-ID: <79c14bee-b1f5-4d70-8345-6582d6cf0128@huawei.com>
+Date: Mon, 11 May 2026 19:30:44 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 04/15] arm64: kexec_file: Fix potential buffer
+ overflow in prepare_elf_headers()
+To: Breno Leitao <leitao@debian.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <pmladek@suse.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <paulmck@kernel.org>,
+	<sourabhjain@linux.ibm.com>, <coxu@redhat.com>, <jbohac@suse.cz>,
+	<ryan.roberts@arm.com>, <osandov@fb.com>, <cfsworks@gmail.com>,
+	<tangyouling@kylinos.cn>, <ritesh.list@gmail.com>, <adityag@linux.ibm.com>,
+	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>,
+	<wangruikang@iscas.ac.cn>, <namcao@linutronix.de>, <chao.gao@intel.com>,
+	<seanjc@google.com>, <fuqiang.wang@easystack.cn>, <ardb@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
+ <20260511030454.1730881-5-ruanjinjie@huawei.com> <agGkvrg06KNDNfDi@gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <agGkvrg06KNDNfDi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-Validate the relocation address against the initrd region specified via
-"initrd=" or "initrdmem=" on the command line. Reject relocation targets
-that overlap the initrd to prevent memory corruption during early boot.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Co-authored-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: WANG Rui <r@hev.cc>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/kernel/relocate.c | 38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
 
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index 0a045964fad5..4b61a9632a98 100644
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -222,14 +222,52 @@ static inline void __init *determine_relocation_address(void)
- 	return RELOCATED_KASLR(destination);
- }
- 
-+static unsigned long __init determine_initrd_address(unsigned long *size)
-+{
-+	unsigned long start = 0;
-+	unsigned long key_length;
-+	char *p, *endp, *key = "initrd=";
-+
-+	key_length = strlen(key);
-+	p = strstr(boot_command_line, key);
-+
-+	if (!p) {
-+		key = "initrdmem=";
-+		key_length = strlen(key);
-+		p = strstr(boot_command_line, key);
-+	}
-+
-+	if (p == boot_command_line || (p > boot_command_line && *(p - 1) == ' ')) {
-+		p += key_length;
-+		start = memparse(p, &endp);
-+		if (*endp == ',')
-+			*size = memparse(endp + 1, NULL);
-+	}
-+
-+	return start;
-+}
-+
- static inline int __init relocation_addr_valid(void *location_new)
- {
-+	unsigned long kernel_start, kernel_size;
-+	unsigned long initrd_start, initrd_size = 0;
-+
- 	if ((unsigned long)location_new & 0x00000ffff)
- 		return 0; /* Inappropriately aligned new location */
- 
- 	if ((unsigned long)location_new < (unsigned long)_end)
- 		return 0; /* New location overlaps original kernel */
- 
-+	initrd_start = determine_initrd_address(&initrd_size);
-+	if (initrd_start && initrd_size) {
-+		kernel_start = PHYSADDR(location_new);
-+		kernel_size = (unsigned long)_end - (unsigned long)_text;
-+
-+		if (kernel_start < (initrd_start + initrd_size) &&
-+			initrd_start < (kernel_start + kernel_size))
-+			return 0; /* initrd/initramfs overlaps kernel */
-+	}
-+
- 	return 1;
- }
- #endif
--- 
-2.54.0
+On 5/11/2026 5:46 PM, Breno Leitao wrote:
+> On Mon, May 11, 2026 at 11:04:43AM +0800, Jinjie Ruan wrote:
+>> There is a race condition between the kexec_load() system call
+>> (crash kernel loading path) and memory hotplug operations that can
+>> lead to buffer overflow and potential kernel crash.
+>>
+>> During prepare_elf_headers(), the following steps occur:
+>> 1. The first for_each_mem_range() queries current System RAM memory ranges
+>> 2. Allocates buffer based on queried count
+>> 3. The 2st for_each_mem_range() populates ranges from memblock
+>>
+>> If memory hotplug occurs between step 1 and step 3, the number of ranges
+>> can increase, causing out-of-bounds write when populating cmem->ranges[].
+>>
+>> This happens because kexec_load() uses kexec_trylock (atomic_t) while
+>> memory hotplug uses device_hotplug_lock (mutex), so they don't serialize
+>> with each other.
+>>
+>> Add the explicit bounds checking to prevent out-of-bounds access.
+> 
+> It seems you have a TOCTOU type of issue, and this seems to be shrinking
+> the window, but not fully solving it?
+
+Hi Breno,
+
+Thanks for your comments regarding the TOCTOU issue.
+
+You are correct that the current bounds checking only "shrinks the
+window" and prevents a kernel crash, but doesn't fully guarantee header
+consistency if a race occurs.
+
+In my local environment, this race is extremely difficult to reproduce,
+but it is theoretically possible.
+
+To address this properly for arm64, I am considering two steps:
+
+- For this patch: I will change the return value to -EAGAIN and keep the
+bounds check. This ensures that even if a race happens, the kernel
+remains safe (no OOB access), and user-space is notified to retry.
+
+- Long-term solution: A better way to solve this is to implement ARM64
+CRASH_HOTPLUG support (similar to x86). With crash hotplug, the kernel
+will automatically re-generate the crash headers whenever a memory
+hotplug event occurs. This makes the TOCTOU during the initial
+kexec_load less critical, as any transient inconsistency will be
+immediately corrected by the subsequent hotplug handler.
+
+Does it make sense to you to use this patch as a safety guard first, and
+then I (or someone else) follow up with the full CRASH_HOTPLUG support
+for arm64 as [1]?
+
+[1]:
+https://lore.kernel.org/all/20260402081459.635022-1-ruanjinjie@huawei.com/
+
+Best regards,
+Jinjie
+
+> 
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Breno Leitao <leitao@debian.org>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+>> Closes: https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie%40huawei.com
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>  arch/arm64/kernel/machine_kexec_file.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+>> index e31fabed378a..a67e7b1abbab 100644
+>> --- a/arch/arm64/kernel/machine_kexec_file.c
+>> +++ b/arch/arm64/kernel/machine_kexec_file.c
+>> @@ -59,6 +59,11 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>>  	cmem->max_nr_ranges = nr_ranges;
+>>  	cmem->nr_ranges = 0;
+>>  	for_each_mem_range(i, &start, &end) {
+>> +		if (cmem->nr_ranges >= cmem->max_nr_ranges) {
+>> +			ret = -ENOMEM;
+> 
+> -ENOMEM seems to be the the wrong errno. This isn't an allocation
+> failure; it's a transient race. -EBUSY or -EAGAIN would be more honest
 
