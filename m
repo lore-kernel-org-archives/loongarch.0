@@ -1,49 +1,38 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0ED8377EB0
-	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB0374178
+	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778468772; cv=none; b=iAvtBkeZFkYdBuIChEX5Xc91XcZULy8ob1ZVI4S++4WDBWrhUd2Yod09kjXfWq475FB/ZuXB2464lEeN9e9s4QR35vxf0VFfyfXmP8Ebwn8aOawyTB/yRds32hkiFwDq6wZ5nxbvgEIaEB0quc6iWT9UrsqvwhRqb8bBUVwlwN0=
+	t=1778468772; cv=none; b=t1mJO+BTJRJS6SIdFhOkmIoSDBlwIMTP5hQi/oxK5YO6zCB9bktISSH8AYbZlOce83JHl2z47CJ8vjc3y9ap3EedKpmOsF8JS2OWJfuo/vpGUC/u5n5m0czCE0lwaH8rvQRRncuf46zoPbrgDWI7uhgudOGmFKafcpjz2kh3W6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778468772; c=relaxed/simple;
-	bh=4JrklAuaL71xs8Fh7DT8STuKEGBgW1Q8EtKabMapkzA=;
+	bh=FiLmb0ktyuFj82jUP3DSd9QlfB9R+oBKh5Ws3ikvYQM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fzeI82WjrQ5H5hYrQISYu3xfuIlMa7tx+VHwkH9wLl0f00ghLqwzXJZL2MNfKsXhxj0ahRmmDZqkxE03DkHEUwKiYdcr+ZIjov2YGOdC4F15uGg70OIH281BiTrRROLKW1xj/5AdNPvyvulp9V6zCVHUd0rI199SWHZPjnx1UU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0MGx/T1E; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=0MGx/T1E; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=UgLwBnkpkx7dJ3+8Mc8dmONapdwxmNLY0mviNYH9jjJ5gI8Ag8+wBoTfwgWj6PLmtEwPWd7z5Ugbp/lQFI0TVGQlXTTzirRHcnGk4voQLfCrTCU2HrxZ0tRiMLKLFLRGA5jQXfUqbPnvMy7pSac1uLGQV/t/Y03zkS8zuaMZWjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=sPOsEoEr; arc=none smtp.client-ip=113.46.200.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0MGx/T1E";
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="0MGx/T1E"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="sPOsEoEr"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=+4ILLVBcCmgg2fmuluXGQIe+Wa8wvQwZl0q7wZ0b1wA=;
-	b=0MGx/T1EiFcOPTEH6lF1r992tIy/Q8e3PhaNOPVs5akFPcfXgZZ6oaexT4tzvH4ZpP20dlPf9
-	KVcFbe/8vDwYApyATtOgB5vKBU16tI0ouoHUG/USqZ07jxw5xL2PErsfNCNc1oomEwZaMLb35ce
-	K6f4ZiCeAlhnlGSH+5OhQ6U=
-Received: from canpmsgout06.his.huawei.com (unknown [172.19.92.157])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTPS id 4gDPjp3tp1z1BGKH
-	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 11:05:34 +0800 (CST)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=+4ILLVBcCmgg2fmuluXGQIe+Wa8wvQwZl0q7wZ0b1wA=;
-	b=0MGx/T1EiFcOPTEH6lF1r992tIy/Q8e3PhaNOPVs5akFPcfXgZZ6oaexT4tzvH4ZpP20dlPf9
-	KVcFbe/8vDwYApyATtOgB5vKBU16tI0ouoHUG/USqZ07jxw5xL2PErsfNCNc1oomEwZaMLb35ce
-	K6f4ZiCeAlhnlGSH+5OhQ6U=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYM1ZrqzRhSf;
-	Mon, 11 May 2026 10:58:15 +0800 (CST)
+	bh=/Z8pSXRPzgFbDuL6GrhVOKi8FQUjYKB06M0JUN2M3+4=;
+	b=sPOsEoErWK5rzBoDWe8ea8ZkE87/O3kOGzjrTg9xtwYmBf0RJI27gLreHOVi6bwmN7TCiAYjB
+	4swPogecu7WxgmwCrca9O/Pwb9vcQXQ4fMB4pN6cW59sNLhzn2AlCLH/o+yRAlRa3hl1USGh271
+	xhRqrYZ5eg0RYGlI/fvU2Jo=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYj2yTgzRhWv;
+	Mon, 11 May 2026 10:58:33 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 91B6C40537;
-	Mon, 11 May 2026 11:05:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BF3F740572;
+	Mon, 11 May 2026 11:06:08 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 May
- 2026 11:05:47 +0800
+ 2026 11:06:05 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -72,9 +61,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v13 02/15] powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
-Date: Mon, 11 May 2026 11:04:41 +0800
-Message-ID: <20260511030454.1730881-3-ruanjinjie@huawei.com>
+Subject: [PATCH v13 08/15] crash: Add crash_prepare_headers() to exclude crash kernel memory
+Date: Mon, 11 May 2026 11:04:47 +0800
+Message-ID: <20260511030454.1730881-9-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260511030454.1730881-1-ruanjinjie@huawei.com>
 References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
@@ -89,36 +78,170 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
-In get_crash_memory_ranges(), if crash_exclude_mem_range() failed
-after realloc_mem_ranges() has successfully allocated the cmem
-memory, it just returns an error but leaves cmem pointing to
-the allocated memory, nor is it freed in the caller
-update_crash_elfcorehdr(), which cause a memory leak, goto out
-to free the cmem.
+The crash memory alloc, and the exclude of crashk_res, crashk_low_res
+and crashk_cma memory are almost identical across different architectures,
+handling them in the crash core would eliminate a lot of duplication, so
+add crash_prepare_headers() helper to handle them in the common code.
 
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Fixes: 849599b702ef ("powerpc/crash: add crash memory hotplug support")
+To achieve the above goal, three architecture-specific functions are
+introduced:
+
+- arch_get_system_nr_ranges(). Pre-counts the max number of memory ranges.
+
+- arch_crash_populate_cmem(). Collects the memory ranges and fills them
+  into cmem.
+
+- arch_crash_exclude_ranges(). Architecture's additional crash memory
+  ranges exclusion, defaulting to empty.
+
 Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/powerpc/kexec/crash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/crash_core.h |  5 +++
+ kernel/crash_core.c        | 91 ++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 93 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index e6539f213b3d..a520f851c3a6 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -502,7 +502,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	ret = get_crash_memory_ranges(&cmem);
- 	if (ret) {
- 		pr_err("Failed to get crash mem range\n");
--		return;
-+		goto out;
- 	}
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index c1dee3f971a9..583ffcc703d4 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -59,6 +59,8 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mend);
+ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 				       void **addr, unsigned long *sz);
++extern int crash_prepare_headers(int need_kernel_map, void **addr,
++				 unsigned long *sz, unsigned long *nr_mem_ranges);
  
- 	/*
+ struct kimage;
+ struct kexec_segment;
+@@ -76,6 +78,9 @@ int kexec_should_crash(struct task_struct *p);
+ int kexec_crash_loaded(void);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
++extern unsigned int arch_get_system_nr_ranges(void);
++extern int arch_crash_populate_cmem(struct crash_mem *cmem);
++extern int arch_crash_exclude_ranges(struct crash_mem *cmem);
+ 
+ #else /* !CONFIG_CRASH_DUMP*/
+ struct pt_regs;
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 4f21fc3b108b..d28be3890efb 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -16,6 +16,7 @@
+ #include <linux/mm.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/memblock.h>
++#include <linux/memory_hotplug.h>
+ #include <linux/kmemleak.h>
+ #include <linux/crash_core.h>
+ #include <linux/reboot.h>
+@@ -168,9 +169,6 @@ static inline resource_size_t crash_resource_size(const struct resource *res)
+ 	return !res->end ? 0 : resource_size(res);
+ }
+ 
+-
+-
+-
+ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 			  void **addr, unsigned long *sz)
+ {
+@@ -272,6 +270,93 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 	return 0;
+ }
+ 
++static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
++{
++	struct crash_mem *cmem;
++
++	cmem = kvzalloc_flex(*cmem, ranges, nr_ranges);
++	if (!cmem)
++		return NULL;
++
++	cmem->max_nr_ranges = nr_ranges;
++	return cmem;
++}
++
++unsigned int __weak arch_get_system_nr_ranges(void) { return 0; }
++int __weak arch_crash_populate_cmem(struct crash_mem *cmem) { return -1; }
++int __weak arch_crash_exclude_ranges(struct crash_mem *cmem) { return 0; }
++
++static int crash_exclude_core_ranges(struct crash_mem *cmem)
++{
++	int ret, i;
++
++	/* Exclude crashkernel region */
++	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
++	if (ret)
++		return ret;
++
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			return ret;
++	}
++
++	for (i = 0; i < crashk_cma_cnt; ++i) {
++		ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
++					      crashk_cma_ranges[i].end);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++int crash_prepare_headers(int need_kernel_map, void **addr, unsigned long *sz,
++			  unsigned long *nr_mem_ranges)
++{
++	unsigned int max_nr_ranges;
++	struct crash_mem *cmem;
++	int ret;
++
++	get_online_mems();
++	max_nr_ranges = arch_get_system_nr_ranges();
++	if (!max_nr_ranges) {
++		put_online_mems();
++		return -ENOMEM;
++	}
++
++	cmem = alloc_cmem(max_nr_ranges);
++	if (!cmem) {
++		put_online_mems();
++		return -ENOMEM;
++	}
++
++	ret = arch_crash_populate_cmem(cmem);
++	if (ret) {
++		put_online_mems();
++		goto out;
++	}
++
++	put_online_mems();
++	ret = crash_exclude_core_ranges(cmem);
++	if (ret)
++		goto out;
++
++	ret = arch_crash_exclude_ranges(cmem);
++	if (ret)
++		goto out;
++
++	/* Return the computed number of memory ranges, for hotplug usage */
++	if (nr_mem_ranges)
++		*nr_mem_ranges = cmem->nr_ranges;
++
++	ret = crash_prepare_elf64_headers(cmem, need_kernel_map, addr, sz);
++
++out:
++	kvfree(cmem);
++	return ret;
++}
++
+ /**
+  * crash_exclude_mem_range - exclude a mem range for existing ranges
+  * @mem: mem->range contains an array of ranges sorted in ascending order
 -- 
 2.34.1
 
