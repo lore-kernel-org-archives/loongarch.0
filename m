@@ -1,89 +1,122 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41A8630BF68
-	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 07:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B947C3A5430;
+	Mon, 11 May 2026 09:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778483215; cv=none; b=dxmmeCxBZ+mm29E4iFIBVwxLWT31vmKI43pjJGhaMEmJG0iswvm0KduvHrCIOxHHPKIGcFSFUo+2ABebOUZIt8FurYgcnCu3MsRSclIo5z+kO4x/Ikoix9j4JiR0TqX7BMYflS8PTkk4C34WotDGIMRORFRq00Otv4g7rNb6vcI=
+	t=1778492956; cv=none; b=Zrgn4YwP81zycy2MUBZ9yDE0PdPO/RocHO+9/GThLVmnajJOf1Y9T7SZv3ZytA9Hn2lC+OelVsnR3tLDH62OkRT9uMzyPynFall6/MqiDwZaOge/2i7N8U7zyh5Z8j9u4G34UdX9TqZY81SDHscLhM/8VwMNyR1kjyWDDggfNww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778483215; c=relaxed/simple;
-	bh=DzY3vVqr/7DSs0lBAsbK1QIH9OFYtM3cIXdiQty5+AM=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=etLzHFcJ487KLbdxo7UL4dH+qiMcFheM6W+j3Sf8RrJX9nFFoh1RY8wV3L5zkrhbgIedgf+yIYZwNgJ8xXjAPIv/QfWKVqmqQK6T1aHw8CtF3Vj8W9LAR5DUgxLoweezFKMtHmS0y86C7e5gYHflIWIUmGtIxFsZSwKkhCeu/Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxVegJgAFqdo4IAA--.20626S3;
-	Mon, 11 May 2026 15:06:51 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDx6+AJgAFqk+p+AA--.45507S3;
-	Mon, 11 May 2026 15:06:49 +0800 (CST)
-Subject: Re: [PATCH 0/5] Small enhancement about interrupt injection
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260511065146.680650-1-maobibo@loongson.cn>
-Message-ID: <96f15a3c-5401-d654-6a4a-0a5d41a1bafa@loongson.cn>
-Date: Mon, 11 May 2026 15:03:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1778492956; c=relaxed/simple;
+	bh=d15KOSaKBGpASg8GNtNb5Q4aDGvFAlqSQ2wlcRvSVRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KzRHZTikVUxIKFXRpi6Oza6DAC+RWLGZj+oVvEBi6jexrb8/mW7JRtvXOjpL1hmV3q1KKw6rygMQRSAEg0NPj6ZNfuMP2kZnrCORmzd5R00sKA8DdGqJJHVtfS4mxPvo4mIt96tzSFhSyZMR5LaXSfDGN+4JulGBwUQBBu/2XYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=iJ89i0F6; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="iJ89i0F6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TE+A8gVsi33ADWPRsTq1jFWiY76eVCOBjR9gXM5fMfY=; b=iJ89i0F6NFZsu5G0fxn0HLYT+r
+	l0SLLEDLG/yPloRHV0v1HlL5Yc01WpUF7lWffNA1KFgex0k3+bKbm0zzSupULh+T5t4eluweHQo9j
+	KONzV42jkP7COLxrhglXtoOrqeqKupykQcuDBWXlXTFdmgrp/0e6EKUyXkYNAaPD5wqH7A75PO6XF
+	yxQ5UuXHCKGt/3yK7FkKYGJo+BpAX/OGsR6mPO0bp/LCIi37AD//k/7owe+QOGFpJx+fFlLJM7FPy
+	Gn4D99g4S4bjwfYMkgC9jwdc9OCVfhBC8G4M6jOz+mJb7qKKoa9+ZukNTqJvhkRjgX4s1RX0VDpnX
+	fPtEV+WQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wMNE5-001VdZ-2m;
+	Mon, 11 May 2026 09:47:02 +0000
+Date: Mon, 11 May 2026 02:46:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
+	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
+	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	ruirui.yang@linux.dev, rdunlap@infradead.org, pmladek@suse.com, 
+	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com, kuba@kernel.org, 
+	ebiggers@kernel.org, lirongqing@baidu.com, paulmck@kernel.org, 
+	sourabhjain@linux.ibm.com, coxu@redhat.com, jbohac@suse.cz, ryan.roberts@arm.com, 
+	osandov@fb.com, cfsworks@gmail.com, tangyouling@kylinos.cn, 
+	ritesh.list@gmail.com, adityag@linux.ibm.com, guoren@kernel.org, 
+	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, vishal.moola@gmail.com, 
+	junhui.liu@pigmoral.tech, wangruikang@iscas.ac.cn, namcao@linutronix.de, 
+	chao.gao@intel.com, seanjc@google.com, fuqiang.wang@easystack.cn, ardb@kernel.org, 
+	chenjiahao16@huawei.com, hbathini@linux.ibm.com, takahiro.akashi@linaro.org, 
+	james.morse@arm.com, lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v13 04/15] arm64: kexec_file: Fix potential buffer
+ overflow in prepare_elf_headers()
+Message-ID: <agGkvrg06KNDNfDi@gmail.com>
+References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
+ <20260511030454.1730881-5-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260511065146.680650-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx6+AJgAFqk+p+AA--.45507S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF1fAFy8Kr1DXF1kuFyfAFc_yoWDurc_WF
-	1Iya45uw48GF4UtFyFvr9ay34DGr48XrWftanF9r4xWwnrAr93GF1DZF13ZryS9rWUJrs8
-	JrZ8tr1fZry2gosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbfxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260511030454.1730881-5-ruanjinjie@huawei.com>
+X-Debian-User: leitao
 
-Soryy, that is too quick.
-The tile of this patchset should add "LoongArch: KVM:"
+On Mon, May 11, 2026 at 11:04:43AM +0800, Jinjie Ruan wrote:
+> There is a race condition between the kexec_load() system call
+> (crash kernel loading path) and memory hotplug operations that can
+> lead to buffer overflow and potential kernel crash.
+> 
+> During prepare_elf_headers(), the following steps occur:
+> 1. The first for_each_mem_range() queries current System RAM memory ranges
+> 2. Allocates buffer based on queried count
+> 3. The 2st for_each_mem_range() populates ranges from memblock
+> 
+> If memory hotplug occurs between step 1 and step 3, the number of ranges
+> can increase, causing out-of-bounds write when populating cmem->ranges[].
+> 
+> This happens because kexec_load() uses kexec_trylock (atomic_t) while
+> memory hotplug uses device_hotplug_lock (mutex), so they don't serialize
+> with each other.
+> 
+> Add the explicit bounds checking to prevent out-of-bounds access.
 
-Regards
-Bibo Mao
+It seems you have a TOCTOU type of issue, and this seems to be shrinking
+the window, but not fully solving it?
 
-On 2026/5/11 下午2:51, Bibo Mao wrote:
-> Here make intterupt status acquire interface simpler, add new interface
-> kvm_vcpu_sync_intr() to sync pending interrupt to software ESTAT
-> register, and remove expensive vcpu_load() and vcpu_put() function call.
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: stable@vger.kernel.org
+> Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+> Closes: https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie%40huawei.com
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Also interrupt inject is handled with batch method, rather one by one.
-> 
-> Bibo Mao (5):
->    LoongArch: KVM: Check msgint feature in interrupt post
->    LoongArch: KVM: Use existing macro about interrupt bit mask
->    LoongArch: KVM: Clear interrupt with batch mode
->    LoongArch: KVM: Deliver interrupt with batch method
->    LoongArch: KVM: Simple interrupt status acquire interface
-> 
->   arch/loongarch/include/asm/kvm_vcpu.h |  40 +++++---
->   arch/loongarch/kvm/interrupt.c        | 140 +++++++++++++-------------
->   arch/loongarch/kvm/vcpu.c             |  22 ++--
->   3 files changed, 106 insertions(+), 96 deletions(-)
-> 
-> 
-> base-commit: 917719c412c48687d4a176965d1fa35320ec457c
-> 
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index e31fabed378a..a67e7b1abbab 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -59,6 +59,11 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>  	cmem->max_nr_ranges = nr_ranges;
+>  	cmem->nr_ranges = 0;
+>  	for_each_mem_range(i, &start, &end) {
+> +		if (cmem->nr_ranges >= cmem->max_nr_ranges) {
+> +			ret = -ENOMEM;
 
+-ENOMEM seems to be the the wrong errno. This isn't an allocation
+failure; it's a transient race. -EBUSY or -EAGAIN would be more honest
