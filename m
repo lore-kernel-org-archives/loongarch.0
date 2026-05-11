@@ -1,38 +1,38 @@
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5766937AA98
-	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988F437AA98
+	for <loongarch@lists.linux.dev>; Mon, 11 May 2026 03:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778468794; cv=none; b=uBNM9RH276aM/XM/qfGbw2fPtncij/tyzIvmkkxMiwZl3mqVD6ilK70hTYJq16klLFzNqAmmIg7GDiMrcvT3SQKKtE+U3q5JwJsFJNtId8UE/s16rtCzhVxwaQtaz87w2Fw99tT4nElYIvvHUgBFXEcw99H7g6Helss0XgJ3h/E=
+	t=1778468796; cv=none; b=HmrfTaHMhhtAZsr5nPR7cLbfi55PJPCR7tB5R8hOitle/EJyS3vuHZWNWyqS0cVRV/eZbxphp6z5BCmxDdsgDFSTWEmnePslRgB93NBv5pXzGCLUWxN9T1IisO+uv9+FSJr5dUdZcf10VWwHcEWMr5l2xiXYn0fUvFW2LizWYFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778468794; c=relaxed/simple;
-	bh=+gXZLpVp2vrXl9lg3cmUa3M70H3ghbrhj8OGPkDK+QI=;
+	s=arc-20240116; t=1778468796; c=relaxed/simple;
+	bh=YpsvKLz2zraBzmN6TGfzaWbuD2WiSbed3cMjJQAU2Kg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qSdKmxohsPwi/XHMTiqzAZlRA8uqYjzV451Z8diZMtg/gONxzUaoQmUvh5o7EisFgV+9Ab0mQzBDZY6U5b8J8asU0J2HTLbt+KvvNtgMAoNNs2xarW8TK0ljxctFp+6qR76pavgOgOQ4bLXwxbrzzoIv5CTV/rZybGTJ7mmFXVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=peLaBv9G; arc=none smtp.client-ip=113.46.200.224
+	 MIME-Version:Content-Type; b=BOdbRspahKCGrEgH+OgasUH2j5CcQSdm9A9MGH63PkzdvzGF2zX7R2kjsv13ygv/fVYLnDzVebk2mNEJWy4Xq1Uy5v3QwwMV1V9p97vwoe8UFgVkbr6bYm0U0nvOunXYoo6cP1O+K2IepkbR04rwxLj+CyqpMGTGZ6m6dUoJY70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=TigCqAoX; arc=none smtp.client-ip=113.46.200.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="peLaBv9G"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="TigCqAoX"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=pSS8z5ePfPujmR3EaZYR+81djN5DZlHfawlFjVUvFbE=;
-	b=peLaBv9Gj0Ycvya8xNQgJAkiN8nF7ptADM2WsH3T6DM/SjwEDq/nW3hgOG9Hu0NihAz+yPzqE
-	Qhbtq9qoOK+YPGSLWt9CqlfDLsfQ9BSxJ+KJf+jkhZun2RB2C6paikmAY0UhFpcAMcW8eZyhqwq
-	qSU7JbGB2kdn6kPia7XVYBA=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4gDPZ742zgz1cynh;
-	Mon, 11 May 2026 10:58:55 +0800 (CST)
+	bh=0CuFlZQc1cwGlvwjDkqLt39tUaTnNhvMmSgjeaod5RM=;
+	b=TigCqAoXJO/+LtKNrOtRVMIDeLRfZBOgrlEMbM/LwZ6+q8oj20SFVy9wRNhEn7OraBVBItoPY
+	XFne+liXrVUTW8d/9j6rk3EySKMupbg3sAInQFcHwSKUH/NYE1Rmu5+FfnWS18yagF1dqRImHMr
+	aaVfl+jL52YKL60859QK/wc=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4gDPZ20W05zmVBx;
+	Mon, 11 May 2026 10:58:50 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id F2FE04056C;
-	Mon, 11 May 2026 11:06:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E4D6140573;
+	Mon, 11 May 2026 11:06:26 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 May
- 2026 11:06:26 +0800
+ 2026 11:06:23 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -61,9 +61,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v13 15/15] riscv: kexec: Add support for crashkernel CMA reservation
-Date: Mon, 11 May 2026 11:04:54 +0800
-Message-ID: <20260511030454.1730881-16-ruanjinjie@huawei.com>
+Subject: [PATCH v13 14/15] arm64: kexec: Add support for crashkernel CMA reservation
+Date: Mon, 11 May 2026 11:04:53 +0800
+Message-ID: <20260511030454.1730881-15-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260511030454.1730881-1-ruanjinjie@huawei.com>
 References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
@@ -73,101 +73,105 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 
 Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
 crashkernel= command line option") and commit ab475510e042 ("kdump:
 implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation. This allows the kernel to dynamically allocate
-contiguous memory for crash dumping when needed, rather than permanently
-reserving a fixed region at boot time.
+crashkernel reservation.
 
-So extend crashkernel CMA reservation support to riscv. The following
+Crash kernel memory reservation wastes production resources if too
+large, risks kdump failure if too small, and faces allocation difficulties
+on fragmented systems due to contiguous block constraints. The new
+CMA-based crashkernel reservation scheme splits the "large fixed
+reservation" into a "small fixed region + large CMA dynamic region": the
+CMA memory is available to userspace during normal operation to avoid
+waste, and is reclaimed for kdump upon crash—saving memory while
+improving reliability.
+
+So extend crashkernel CMA reservation support to arm64. The following
 changes are made to enable CMA reservation:
 
 - Parse and obtain the CMA reservation size along with other crashkernel
   parameters.
 - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use, which was
-  already done in of_kexec_alloc_and_setup_fdt().
+- Include the CMA-reserved ranges for kdump kernel to use.
 - Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which was
-  already done in the crash core.
+  prevent them from being exported through /proc/vmcore, which is already
+  done in the crash core.
 
 Update kernel-parameters.txt to document CMA support for crashkernel on
-riscv architecture.
+arm64 architecture.
 
-Cc: Paul Walmsley <pjw@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
+Tested-by: Breno Leitao <leitao@debian.org>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Baoquan He <bhe@redhat.com>
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 16 ++++++++--------
- arch/riscv/kernel/machine_kexec_file.c          |  2 +-
- arch/riscv/mm/init.c                            |  5 +++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
+v7:
+- Correct the inclusion of CMA-reserved ranges for kdump
+  kernel in of/kexec.
+v3:
+- Add Acked-by.
+v2:
+- Free cmem in prepare_elf_headers()
+- Add the mtivation.
+---
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ arch/arm64/kernel/machine_kexec_file.c          | 2 +-
+ arch/arm64/mm/init.c                            | 5 +++--
+ drivers/of/fdt.c                                | 9 +++++----
+ drivers/of/kexec.c                              | 9 +++++++++
+ include/linux/crash_reserve.h                   | 4 +++-
+ 6 files changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 52742fab49a9..3ff3ddd516cf 100644
+index 4d0f545fb3ec..52742fab49a9 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1119,14 +1119,14 @@ Kernel parameters
+@@ -1119,7 +1119,7 @@ Kernel parameters
  			It will be ignored when crashkernel=X,high is not used
  			or memory reserved is below 4G.
  	crashkernel=size[KMG],cma
--			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
--			CMA. This reservation is usable by the first system's
--			userspace memory and kernel movable allocations (memory
--			balloon, zswap). Pages allocated from this memory range
--			will not be included in the vmcore so this should not
--			be used if dumping of userspace memory is intended and
--			it has to be expected that some movable kernel pages
--			may be missing from the dump.
-+			[KNL, X86, ARM64, RISCV, PPC] Reserve additional crash
-+			kernel memory from CMA. This reservation is usable by
-+			the first system's userspace memory and kernel movable
-+			allocations (memory balloon, zswap). Pages allocated
-+			from this memory range will not be included in the vmcore
-+			so this should not be used if dumping of userspace memory
-+			is intended and it has to be expected that some movable
-+			kernel pages may be missing from the dump.
- 
- 			A standard crashkernel reservation, as described above,
- 			is still needed to hold the crash kernel and initrd.
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index bea818f75dd6..c79cd86d5713 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -46,7 +46,7 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- 
+-			[KNL, X86, ppc] Reserve additional crash kernel memory from
++			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
+ 			CMA. This reservation is usable by the first system's
+ 			userspace memory and kernel movable allocations (memory
+ 			balloon, zswap). Pages allocated from this memory range
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 8d72038f206d..0590ff9eeab4 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ #ifdef CONFIG_CRASH_DUMP
  unsigned int arch_get_system_nr_ranges(void)
  {
--	unsigned int nr_ranges = 2; /* For exclusion of crashkernel region */
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
+-	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
++	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
+ 	phys_addr_t start, end;
+ 	u64 i;
  
- 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 97987f850a33..227f58522dad 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
  
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index decd7df40fa4..c848454b8349 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1295,7 +1295,7 @@ static inline void setup_vm_final(void)
-  */
  static void __init arch_reserve_crashkernel(void)
  {
--	unsigned long long low_size = 0;
-+	unsigned long long low_size = 0, cma_size = 0;
- 	unsigned long long crash_base, crash_size;
++	unsigned long long crash_base, crash_size, cma_size = 0;
+ 	unsigned long long low_size = 0;
+-	unsigned long long crash_base, crash_size;
  	bool high = false;
  	int ret;
-@@ -1305,11 +1305,12 @@ static void __init arch_reserve_crashkernel(void)
+ 
+@@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
  
  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
  				&crash_size, &crash_base,
@@ -180,7 +184,65 @@ index decd7df40fa4..c848454b8349 100644
 +	reserve_crashkernel_cma(cma_size);
  }
  
- void __init paging_init(void)
+ static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 82f7327c59ea..0470acbd1fcf 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -880,11 +880,12 @@ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
+ /*
+  * The main usage of linux,usable-memory-range is for crash dump kernel.
+  * Originally, the number of usable-memory regions is one. Now there may
+- * be two regions, low region and high region.
+- * To make compatibility with existing user-space and older kdump, the low
+- * region is always the last range of linux,usable-memory-range if exist.
++ * be 2 + CRASHK_CMA_RANGES_MAX regions, low region, high region and cma
++ * regions. To make compatibility with existing user-space and older kdump,
++ * the high and low region are always the first two ranges of
++ * linux,usable-memory-range if exist.
+  */
+-#define MAX_USABLE_RANGES		2
++#define MAX_USABLE_RANGES		(2 + CRASHK_CMA_RANGES_MAX)
+ 
+ /**
+  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index b6837e299e7f..029903b986cb 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -458,6 +458,15 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 			if (ret)
+ 				goto out;
+ 		}
++
++		for (int i = 0; i < crashk_cma_cnt; i++) {
++			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
++					"linux,usable-memory-range",
++					crashk_cma_ranges[i].start,
++					crashk_cma_ranges[i].end - crashk_cma_ranges[i].start + 1);
++			if (ret)
++				goto out;
++		}
+ #endif
+ 	}
+ 
+diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
+index f0dc03d94ca2..30864d90d7f5 100644
+--- a/include/linux/crash_reserve.h
++++ b/include/linux/crash_reserve.h
+@@ -14,9 +14,11 @@
+ extern struct resource crashk_res;
+ extern struct resource crashk_low_res;
+ extern struct range crashk_cma_ranges[];
++
++#define CRASHK_CMA_RANGES_MAX 4
+ #if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
+ #define CRASHKERNEL_CMA
+-#define CRASHKERNEL_CMA_RANGES_MAX 4
++#define CRASHKERNEL_CMA_RANGES_MAX (CRASHK_CMA_RANGES_MAX)
+ extern int crashk_cma_cnt;
+ #else
+ #define crashk_cma_cnt 0
 -- 
 2.34.1
 
