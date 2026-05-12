@@ -1,555 +1,157 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE914C6EFF
-	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 10:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778580442; cv=pass; b=Re1l47q1QgCMLgCIShklcdA+UltAOrliv5d9WPdHltAR7xkhCwYTNwYpA/gbTJUA20cqK5W9WP3Zi/7rdH0FXoO1ej4GqBwks9dtvZD1gh7zPi+Q+NQ7+JksweHBnfUSJaBZSeSsHG+4lDrWk/WExLSKE3v7ALWz4XczF+pM6ks=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778580442; c=relaxed/simple;
-	bh=TJ3VzpnsDR9+okAebtzJ578WGb/pwkP3it3lhC4rtrA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mwYMkZ44bsk7kuwAxatqaLasE239X2WBEC2ou4mpY4FpIsUy+1BUoRBPwVz1MhlO4vqjpwlt0e1biE9UcG9ea9nxv/Ug/8se97uupVs02GyAKyGd8bzn60qE7kpUCgGzfvBgCpwlgebNQMwEdI7z42rrIhUROfJrEt5CUbwVwqE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dYXSk9E/; arc=pass smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E925E368D67
+	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 11:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778585822; cv=none; b=c9WaOC93KFxbrJb4wMBthkOUBCKXDDUTWWlrLQk0pTE8JtT2SmBnhe2tNE5UTzTj/fi6GVEPaqhB6G2OnllGGVOrQadaYD/v9nFjXDzQmRVjQE17KKB8ur8q5he8SL3dgrkmwiW3ogV64ID2PyVq43cB2owOFHIx5lZLlCnL5yI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778585822; c=relaxed/simple;
+	bh=8U1Ja8P+VJXeTYjM2KI07QBXve6dg9X7VaRLyfyRjQQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IbTSPtc+bDTxPc72NKsMhPUWOYL4m8FIigb0OyXnRxFtsPKlifryz1gUw3VWYCJcvNal7ycTDwE0yPKMBeI3mSzCBV/GgSLWnp1tWIWl71ww1Y8XWn7oM1IKZofusa4yaIBYdYjoZNWn2DAzikxN1x3vzY2M6gOeNJpLg2nHoew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E1WfPUjP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TMvwJviA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYXSk9E/"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6802f9c5debso2684327a12.3
-        for <loongarch@lists.linux.dev>; Tue, 12 May 2026 03:07:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778580433; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kXsGdHD4gNFdJzDqq9gW3QFi4PK0J0X5oVIaB+xNWbbJiml20a0HeQvKJhbbXQv34c
-         HS5MR7jRMUQFxP9Aed0FpbQpJ0XzD1zLY17IIZLVZ8wXMM/tAVD6t/DU1ECzV1IuR7mQ
-         +rbZecex6QHM0VjLkxVoo3PCdffqDekcYXXbNaSqTfNQcrwVkHrguOqi0qUlxwHR5KcT
-         Cf0EB/cNp0pI/ieu1WEN+7NOTvvZwV0uT6l5ur3ewT2l3wBVj5wXCbw4SRoFhgy9JRYC
-         J8rJLwYGGCaG4Ami8SpUWsjimrDaVugieabWHeBhct5sPrTENRbxkokzJZUng2nZyoCI
-         N/Nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tX7ywuewMGw3Ld3p25pdc9W6MqhJu/knbiI0jlAqXJM=;
-        fh=Pl+txXQormS0VVabCg7mf02w+EGHOWEsenPJBeOWATo=;
-        b=jOKcJ8KVwko4uIrHWj4zkHzS2t3n56gikQ5eskGADq6iDfhsWE8mT+RXR+YRTvgn4j
-         F29HWjdF1wO6r6GlI6v+zIItSO3/FFYnTl92nfNQhqSOrGvT1nyNnBPEPirwoOxBhdOS
-         IA/xh1BMOwP8Uij+qBR4xHv99J9teqRag/Gu2WkFMF/POaVgCaJI5c+f9xPm+QccyJ7t
-         aaC9j0ulZQo8O4U/O93H26ZZfJ+ifatGOY6guFazvpprdy9E7MAf29q4kAdkDymuAtj5
-         9s05B8zVtGTrpZlMSDQNWyedi+GToOMOH5FAWECoO2eQ4Vb7L+UTWJHAsZqehse1e6Bd
-         vErA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E1WfPUjP";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TMvwJviA"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64CB3iHI2186676
+	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 11:37:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3cBTDDbsITV08dA6vkggPs2KMXQ9klD2DkmQBC22iek=; b=E1WfPUjP8ZtMxZ3D
+	YxwAq8EBI2Bo4lE/2GMs8Sf5KYGFXvg7CwKkbv0pmegVAqtxu03mFyaXJethDD/b
+	JgT069pLF2ukFFA/mz+X0H3bL7XkR7ZdrWakwnM4+TAlh41UG7AwEaPmx4YoPzHG
+	JVgE+qBYWmTtPJPnd3gUO3VH1mMn8pgPacGMV3kkeJ0B8P1OOLVYW844chuDNQB9
+	WVHwsZOz5Ha3imG/TgcUpAa5fbdtY6fMM+2XTY0JEKgE9idEuNLEoYqzvHSiZ97G
+	y0tmeAv6HUEhYr6X3GK6HZys32GekpDTNYBbcBBdaDaRm668NHOMqALwXIkX32Xj
+	jSxi8Q==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e3nv0ty0j-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 11:37:00 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-82f74bcfb86so5537936b3a.0
+        for <loongarch@lists.linux.dev>; Tue, 12 May 2026 04:37:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778580433; x=1779185233; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=oss.qualcomm.com; s=google; t=1778585819; x=1779190619; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tX7ywuewMGw3Ld3p25pdc9W6MqhJu/knbiI0jlAqXJM=;
-        b=dYXSk9E/lO8M38CyQ5qDhYXISFVlQIr54yJlNonwGqfOgNkrh5iXuvfLxggjQXp7k+
-         3okf6z7enaErPm/A4E9ZOf1LjylESkCzi2zljcqAfQgsC7yqF0ORq1WV84MVQGi1PRsc
-         ZQTKoTx31wkT7Ig2LBhjUHx1P9gCNv1guaSak8cKI9EUobzaRSwNWDZOKdorSg59/cR9
-         +EAF2ranctFVhigT0f3L4aax0Nack5LrjLeQvVQiV8haxWLXqcauulZi82seiPAvOr9J
-         bM++nYkpyN2gcKCWMkuhTOFd6pGSii6WCIr7/bhm+yL4G/qypSegjGTP5atxSw5jZd9y
-         CF3g==
+        bh=3cBTDDbsITV08dA6vkggPs2KMXQ9klD2DkmQBC22iek=;
+        b=TMvwJviAibnjlGesP6EazQNAWBs06pOR40qNWNw1ffb37wvwbslkMhntvgkmOHP6/d
+         X0zHSwKrX0AW+e62uy13QZE+w3xC9prMoharm9FDR0J7h+jY8yRA2SuOGBj1TdYV8o2X
+         Y7x7EphsceLHQ/Yd8nCrHlYU0t+ugJFUnmY7z50UmfinQTjieakCWHInycPmpZlpER7K
+         Ac6CbHHHpP11qTOTPDBKPNHSC/hWfYHEePDwA45PgeECi3QrvsW7faKUM3ECJjANjlqT
+         EI+K/uaB3znGRuuGfb73JFdlJRp8tNCU5mzPkWa+5Xo7g/c19HGHccMpZjl3Yy78HE9S
+         dixA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778580433; x=1779185233;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1778585819; x=1779190619;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tX7ywuewMGw3Ld3p25pdc9W6MqhJu/knbiI0jlAqXJM=;
-        b=XnmQe05r3FVMXv6y3AqR0SuQ0iflLuJxvTNYaeJkYb17P6WC/2JJKHqFiGsTR5XHO/
-         US5HRJtw3s3IQbSF8HcZcECQKXjg3o1sQzg9prAm4KCY4paIg2I4AdMMFXTonVstbzyS
-         xrCtHKZX8vRQgWe3hR/3mtD4XrBoxLHFp/HvIZuxQ5+ZH1XzL2x2iapgWj6YPXSSy3aJ
-         iE9FzV96/dxKg7+/ZJfA/9EA/ByFShckZKoVvJRXyvy9u3MceueuCruXqrR2O487F014
-         b7xHU629n6zlLiWAciT5BvpA2AZLs9CcVqdsf/kCgz5yRZspOl8t7/vNHM+4gut2wQYc
-         sEeg==
-X-Forwarded-Encrypted: i=1; AFNElJ8qPbdJ00D8B7XDVBAiD0QUrilEWtWQcoNaSpHFIpystK1neU5wrhaD2PyKLQV8T49/hrYW7UuebNI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx4vE4pZe5KIoNaOjNVbTgC+eJNcg3KcRrG42d1LQF1SiOOQOx7
-	FDXQhnawKZlpQpz+BqQvql83/RIgDJ+zrcB4X0NVKhU/h4FlzUKFI/cZQxz4pp7JsAm6gSZ6vl+
-	77ns9d9050EHdUvcYglLLdUBp967zAaU=
-X-Gm-Gg: Acq92OH+jwbuKG+5hiyP6dXssss+X+52HHe5lwD/ijK4mZqlXDS0rdBO50NzmYpiUOC
-	AMeqSjhj25SoUygaBi9EolH5TKSXDx2xWyPdfu8HNh93XRo+O2nShyzpEL8R29yaP10xYZEHJSs
-	6vLCzNv8T6sBc9U+/IBeSWodKexsVLi9qk3QL0S9IXYXCbEGwhJhtewIRrvhYxHFu/w5eOC7QDk
-	ZxtwQUcLojMqmEqK3tbUuupLfjpsVxGSwOjVI652MwgF1dW8BVC4E7ahoeHlYKNFqKmyZgR0oe5
-	Di4CkYNP
-X-Received: by 2002:a05:6402:3908:b0:678:a507:e82d with SMTP id
- 4fb4d7f45d1cf-67f718da6b0mr6982993a12.25.1778580432581; Tue, 12 May 2026
- 03:07:12 -0700 (PDT)
+        bh=3cBTDDbsITV08dA6vkggPs2KMXQ9klD2DkmQBC22iek=;
+        b=FTl3Fl8JojtblDk9kHlIPynjsF5MgahaRDprr2dH/kGRiE4ADT/eAlCu0hx+NrEgYE
+         PFm2r3Y0Awd0b9y10n8waqVWk6xsY8PKPxCC2LSKQgkXo0XfrY4iZTxTN68BfeIPrtkP
+         OTws7+lCFJj2hJlg9imvfDu464cYL6r2HAAl9XwHaZxfmu6XsUCJsAjUZzIEFhL8n/kq
+         EVmz4+5Pckpzlvczn2xfOeL6XyScGT1x/b/SAUq0QTwhZRDnbJCxGCFmJ+mIrZpNE7KM
+         1VxGbvn9S+LITdaa8LY8GRkilJ541en3Hz2f3XThZTKhEXYJapP0Ls1Ooowvshf1Was6
+         E2Ww==
+X-Forwarded-Encrypted: i=1; AFNElJ+qXwrCeWdgYFrikEwx2gGj/72Yrrl786l+kvNMHYAomOJp94qE2r2qqaKTTVNDwzmSzVYrdK4TJl4=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywgkvi57qVFnlp8Q1TwdVi6xVI1N+jegaf84zZwctHlDKsal6q2
+	PYoTz/bHvbdpBLdpunbTg9HNylU5Nx4WFgKTlejQasPZlJtMvjJgNdFPjzCh+SVWCcBRhcExaUy
+	IBc4vrHbXlEdmL62PjUSPlg5hllakW45lZe7wSB2Xj0Zk1F0WGkKidz5/ZoDKktm/aZhz708=
+X-Gm-Gg: Acq92OEo23B7BPE5I8e7G/XqPi2nKFyQuEjDblMsZvYpZTy+DqQyqK3WRCFDsp2CKV5
+	iN/WBDRmQEODfhBtpYDt1cj1sEOINSnzC7/3gOoc1awQbd/RrMilSil37OAKpchV7YrMHgCjRQJ
+	gmCF2IB/q9+/Ibu1j7Zitf9EAlTRSEvuqHi6/ECW8kpPgbYt+33ZwELUkp5oqLivYo/IcnoQX1Q
+	JNp/QxhnD0mdLdEvaH7DOq85uiiP7txt0S71mA/d/x/ZzSU9GvB3/Lrnj/rB4YRqh3gJD7nbpDC
+	JI4cAufjZdp27BnI9OIZ4r2Iv5U7REQVpWpDF4XTSSWrOforKa8bVi+A1Qu690mVE9MgLVAqm5B
+	VncYAdrwav8kyBO+ol+UV
+X-Received: by 2002:a05:6a00:3309:b0:82d:162c:581f with SMTP id d2e1a72fcca58-83e3bf8f281mr15611642b3a.48.1778585819178;
+        Tue, 12 May 2026 04:36:59 -0700 (PDT)
+X-Received: by 2002:a05:6a00:3309:b0:82d:162c:581f with SMTP id d2e1a72fcca58-83e3bf8f281mr15611600b3a.48.1778585818664;
+        Tue, 12 May 2026 04:36:58 -0700 (PDT)
+Received: from [192.168.1.102] ([120.56.206.29])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8396563f38fsm22544280b3a.8.2026.05.12.04.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2026 04:36:58 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Ziyao Li <liziyao@uniontech.com>, Xi Ruoyao <xry111@xry111.site>
+Cc: niecheng1@uniontech.com, zhanjun@uniontech.com, guanwentao@uniontech.com,
+        Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        kernel@uniontech.com,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Lain Fearyncess Yang <fsf@live.com>, Ayden Meng <aydenmeng@yeah.net>,
+        Mingcong Bai <jeffbai@aosc.io>, stable@vger.kernel.org,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>
+In-Reply-To: <20260412101731.107059-1-xry111@xry111.site>
+References: <20260412101731.107059-1-xry111@xry111.site>
+Subject: Re: [PATCH v8] PCI: loongson: Override PCIe bridge supported
+ speeds for Loongson-3C6000 series
+Message-Id: <177858581215.17835.9314837252988039944.b4-ty@b4>
+Date: Tue, 12 May 2026 17:06:52 +0530
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1777273055.git.zhoubinbin@loongson.cn> <ee7e4e0d968428761b0fc50e56560165b4020161.1777273055.git.zhoubinbin@loongson.cn>
- <10ea6570-56d7-47ab-9082-3fc8f96d989d@kernel.org>
-In-Reply-To: <10ea6570-56d7-47ab-9082-3fc8f96d989d@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Tue, 12 May 2026 18:06:59 +0800
-X-Gm-Features: AVHnY4KxWvpskvfK3qMQJqeTPL21k_bfRauoUJtKE5PG4fLBozGrId3dhtQRyqU
-Message-ID: <CAMpQs4J068sWWDmU5Dgn3SfMo5cTQvJwhguKbdQ9WghOSVS4zQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] can: loongson_canfd: Add RXDMA support
-To: Vincent Mailhol <mailhol@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Bingxiong Li <libingxiong@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-can@vger.kernel.org, jeffbai@aosc.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTEyMDEyMCBTYWx0ZWRfX4zkvA7qdgN27
+ cbOjhaHB+WsWt96jlEMG68c2KSWDVYxQBrqAmJU1xVoN61qaRqgwuBfdoTdutT1qfbcoWei101/
+ JuFFAC7DaeRmHbMntJqoSSWv8okI17d090bzNnO81SBnI6Px4PfZwcPN2P8vSbWmE7eusfRFYqi
+ elx/eHHmMXLrDnaIbQQRu0JBh9ODYmwUM5tBR+/c05/4ntGxTXOq35ZgBEmX7hg8mXOmMv14L+Z
+ arhPQY/apq6cpC6l+LgtiRaDwJ+pGcimRzS2aZQ46U7lL7wSBlEs3jdjyzkM4ecPczY0DjAT3E6
+ KIrJi3BaZ9xVgJ2GFxf2QKQYxnUVkgVB8aI5NQxpCwybpXAhB0i42oz3oS6jC/bi5OKiO5iF5qf
+ Ju3Rl4i99PKRSHrtYEMK6r6+aJNYc+W5XpW2xQr7hJYoCg907fr08hVH+41Y0Oa9NN7gbxbZa38
+ POMZVwVp9ihD/X3Dk8g==
+X-Authority-Analysis: v=2.4 cv=bpB8wkai c=1 sm=1 tr=0 ts=6a0310dc cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=QuRtzvr4xB5J0le8HPcEzQ==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=VwQbUJbxAAAA:8 a=P1rAUm4iSsRH5tYQsiAA:9 a=QEXdDO2ut3YA:10
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-GUID: DcRfKTM4_3u7EX-P0JoS6mxEajauL3yl
+X-Proofpoint-ORIG-GUID: DcRfKTM4_3u7EX-P0JoS6mxEajauL3yl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-11_05,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 clxscore=1011 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605050000 definitions=main-2605120120
 
-Hi Vincent:
 
-Thanks so much for your thorough review.
+On Sun, 12 Apr 2026 18:17:31 +0800, Xi Ruoyao wrote:
+> Older steppings of the Loongson-3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+> as only 2.5 GT/s, despite the upstream bus supporting speeds from
+> 2.5 GT/s up to 16 GT/s.
+> 
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
+> 
+> [...]
 
-On Thu, May 7, 2026 at 1:51=E2=80=AFAM Vincent Mailhol <mailhol@kernel.org>=
- wrote:
->
-> On 27/04/2026 at 09:18, Binbin Zhou wrote:
-> > Add optional DMA support for RX path using the Loongson APB CMC DMA
-> > engine. When a DMA channel is successfully requested, the driver:
-> >
-> > - Uses DMA cyclic transfers to write incoming CAN frames directly to
-> >   a coherent DMA buffer
-> > - Replaces RXBNEI (RX buffer not empty interrupt) with DMADI (DMA
-> >   done interrupt)
-> > - Dynamically switches between DMA and PIO modes based on channel
-> >   availability
-> >
-> > This significantly reduces CPU intervention under high RX load,
-> > especially beneficial for CAN FD at higher data rates.
-> >
-> > Co-developed-by: Bingxiong Li <libingxiong@loongson.cn>
-> > Signed-off-by: Bingxiong Li <libingxiong@loongson.cn>
-> > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> > ---
-> >  drivers/net/can/loongson_canfd/Kconfig        |   2 +-
-> >  .../net/can/loongson_canfd/loongson_canfd.c   | 179 ++++++++++++++++--
-> >  2 files changed, 160 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/net/can/loongson_canfd/Kconfig b/drivers/net/can/l=
-oongson_canfd/Kconfig
-> > index 5a2540bb5410..8fe44b804991 100644
-> > --- a/drivers/net/can/loongson_canfd/Kconfig
-> > +++ b/drivers/net/can/loongson_canfd/Kconfig
-> > @@ -5,7 +5,7 @@
-> >  #
-> >  config CAN_LOONGSON_CANFD
-> >       tristate "Loongson CAN-FD driver"
-> > -     depends on HAS_IOMEM
-> > +     depends on HAS_IOMEM && LOONGSON2_APB_CMC_DMA
->
-> Allow people to compile test your driver:
->
->         depends on HAS_IOMEM && (LOONGSON2_APB_CMC_DMA || COMPILE_TEST)
+Applied, thanks!
 
-OK, I will add COMPILE_TEST in patch-1.
->
-> >       select REGMAP_MMIO
-> >       help
-> >         This is a canfd driver switch for the Loongson platform,
-> > diff --git a/drivers/net/can/loongson_canfd/loongson_canfd.c b/drivers/=
-net/can/loongson_canfd/loongson_canfd.c
-> > index 20ac95dc528d..ba9570c34c94 100644
-> > --- a/drivers/net/can/loongson_canfd/loongson_canfd.c
-> > +++ b/drivers/net/can/loongson_canfd/loongson_canfd.c
-> > @@ -6,10 +6,14 @@
-> >   */
-> >
-> >  #include <linux/acpi.h>
-> > +#include <linux/acpi_dma.h>
-> >  #include <linux/bitfield.h>
-> >  #include <linux/bits.h>
-> >  #include <linux/can/dev.h>
-> >  #include <linux/can/error.h>
-> > +#include <linux/dmaengine.h>
-> > +#include <linux/dma-direction.h>
-> > +#include <linux/dma-mapping.h>
-> >  #include <linux/io.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> > @@ -26,13 +30,21 @@
-> >  #define DEV_NAME                     "loongson_canfd"
-> >  #define LOONGSON_CANFD_TXBUF_NUM     8
-> >  #define LOONGSON_CANFD_ID            0xBABE
-> > +#define RX_BUF_SIZE                  SZ_1K
-> > +#define LOONGSON_CANFD_DMA_RXDATA_NUM        (RX_BUF_SIZE / DMA_SLAVE_=
-BUSWIDTH_4_BYTES)
-> >
-> >  struct loongson_canfd_priv {
-> >       struct can_priv         can;            /* must be first member! =
-*/
-> >       struct napi_struct      napi;
-> >       struct regmap           *regmap;
-> >       struct resource         *res;
-> > +     struct dma_chan         *rx_ch;
-> > +     dma_addr_t              rx_dma_buf;     /* dma rx buffer bus addr=
-ess */
-> > +     unsigned int            *rx_buf;        /* dma rx buffer cpu addr=
-ess */
-> > +     u16                     last_res;
-> >       spinlock_t              tx_lock;        /* protect the sending qu=
-eue */
-> > +     u32 (*get_rx_data)(struct loongson_canfd_priv *priv);
-> > +     bool (*get_rx_pending)(struct loongson_canfd_priv *priv);
-> >  };
-> >
-> >  enum loongson_canfd_tx_bs {
-> > @@ -137,6 +149,54 @@ static int loongson_canfd_reset(struct net_device =
-*ndev)
-> >       return 0;
-> >  }
-> >
-> > +static u32 loongson_canfd_get_rxdma_data(struct loongson_canfd_priv *p=
-riv)
-> > +{
-> > +     u32 c =3D 0;
-> > +
-> > +     c =3D priv->rx_buf[LOONGSON_CANFD_DMA_RXDATA_NUM - priv->last_res=
---];
-> > +     if (priv->last_res =3D=3D 0)
-> > +             priv->last_res =3D LOONGSON_CANFD_DMA_RXDATA_NUM;
-> > +
-> > +     return c;
-> > +}
-> > +
-> > +static bool loongson_canfd_rxdma_pending(struct loongson_canfd_priv *p=
-riv)
-> > +{
-> > +     enum dma_status status;
-> > +     struct dma_tx_state state;
-> > +
-> > +     status =3D dmaengine_tx_status(priv->rx_ch, priv->rx_ch->cookie, =
-&state);
-> > +
-> > +     if (priv->last_res !=3D (state.residue / DMA_SLAVE_BUSWIDTH_4_BYT=
-ES) &&
-> > +         status =3D=3D DMA_IN_PROGRESS)
-> > +             return true;
-> > +
-> > +     return false;
->
->   return priv->last_res !=3D (state.residue / DMA_SLAVE_BUSWIDTH_4_BYTES)
-> && status =3D=3D DMA_IN_PROGRESS
->
-> > +}
-> > +
-> > +static u32 loongson_canfd_get_poll_data(struct loongson_canfd_priv *pr=
-iv)
-> > +{
-> > +     u32 data;
-> > +
-> > +     regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, &data);
-> > +
-> > +     return data;
-> > +}
-> > +
-> > +static bool loongson_canfd_rxpoll_pending(struct loongson_canfd_priv *=
-priv)
-> > +{
-> > +     u32 rx_sts;
-> > +
-> > +     regmap_read(priv->regmap, LOONGSON_CANFD_RX_STAT, &rx_sts);
-> > +
-> > +     return FIELD_GET(REG_RX_STAT_RXFRC, rx_sts) ? true : false;
-> > +}
-> > +
-> > +static void loongson_canfd_rxdma_remove(struct loongson_canfd_priv *pr=
-iv, struct device *dev)
-> > +{
-> > +     dma_free_coherent(dev, RX_BUF_SIZE, priv->rx_buf, priv->rx_dma_bu=
-f);
-> > +}
-> > +
-> >  static int loongson_canfd_set_btr(struct net_device *ndev, struct can_=
-bittiming *bt, bool nominal)
-> >  {
-> >       struct loongson_canfd_priv *priv =3D netdev_priv(ndev);
-> > @@ -308,7 +368,9 @@ static int loongson_canfd_chip_start(struct net_dev=
-ice *ndev)
-> >       if (priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING)
-> >               int_ena |=3D REG_INT_STAT_ALI | REG_INT_STAT_BEI;
-> >
-> > -     int_ena =3D REG_INT_STAT_TXBHCI | REG_INT_STAT_EWLI | REG_INT_STA=
-T_FCSI | REG_INT_STAT_RBNEI;
-> > +     int_ena =3D REG_INT_STAT_TXBHCI | REG_INT_STAT_EWLI | REG_INT_STA=
-T_FCSI;
-> > +     int_ena |=3D priv->rx_ch ? REG_INT_STAT_DMADI : REG_INT_STAT_RBNE=
-I;
-> > +
-> >       int_msk =3D ~int_ena; /* Mask all disabled interrupts */
-> >
-> >       /* It's after reset, so there is no need to clear anything */
-> > @@ -514,12 +576,12 @@ static void loongson_canfd_read_rx_frame(struct l=
-oongson_canfd_priv *priv, struc
-> >
-> >       /* Data */
-> >       for (i =3D 0; i < len; i +=3D 4) {
-> > -             regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, &data);
-> > +             data =3D priv->get_rx_data(priv);
-> >               *(__le32 *)(cf->data + i) =3D cpu_to_le32(data);
-> >       }
-> >
-> >       while (unlikely(i < wc * 4)) {
-> > -             regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, &data);
-> > +             data =3D priv->get_rx_data(priv);
-> >               i +=3D 4;
-> >       }
-> >  }
-> > @@ -532,8 +594,8 @@ static int loongson_canfd_rx(struct net_device *nde=
-v)
-> >       struct sk_buff *skb;
-> >       u32 meta0, meta1;
-> >
-> > -     regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, &meta0);
-> > -     regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, &meta1);
-> > +     meta0 =3D priv->get_rx_data(priv);
-> > +     meta1 =3D priv->get_rx_data(priv);
-> >
-> >       /* Number of characters received */
-> >       if (!FIELD_GET(REG_FRAME_FORMAT_W_RWCNT, meta1))
-> > @@ -718,16 +780,16 @@ static int loongson_canfd_rx_napi(struct napi_str=
-uct *napi, int quota)
-> >       struct net_device *ndev =3D napi->dev;
-> >       struct loongson_canfd_priv *priv =3D netdev_priv(ndev);
-> >       int work_done =3D 0, res =3D 1;
-> > -     u32 sts, rx_frc, rx_sts;
-> > +     int int_ena =3D priv->rx_ch ? REG_INT_STAT_DMADI : REG_INT_STAT_R=
-BNEI;
-> > +     u32 sts;
-> > +     bool rx_frc;
-> >
-> > -     regmap_read(priv->regmap, LOONGSON_CANFD_RX_STAT, &rx_sts);
-> > -     rx_frc =3D FIELD_GET(REG_RX_STAT_RXFRC, rx_sts);
-> > +     rx_frc =3D priv->get_rx_pending(priv);
-> >
-> >       while (rx_frc && work_done < quota && res > 0) {
-> >               res =3D loongson_canfd_rx(ndev);
-> >               work_done++;
-> > -             regmap_read(priv->regmap, LOONGSON_CANFD_RX_STAT, &rx_sts=
-);
-> > -             rx_frc =3D FIELD_GET(REG_RX_STAT_RXFRC, rx_sts);
-> > +             rx_frc =3D priv->get_rx_pending(priv);
-> >       }
-> >
-> >       /* Check for RX FIFO Overflow */
-> > @@ -757,13 +819,11 @@ static int loongson_canfd_rx_napi(struct napi_str=
-uct *napi, int quota)
-> >       if (!rx_frc && res !=3D 0) {
-> >               if (napi_complete_done(napi, work_done)) {
-> >                       /*
-> > -                      * Clear and enable RBNEI. It is level-triggered,=
- so
-> > +                      * Clear and enable RBNEI/DMADI. It is level-trig=
-gered, so
-> >                        * there is no race condition.
-> >                        */
-> > -                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_STA=
-T,
-> > -                                  REG_INT_STAT_RBNEI);
-> > -                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_MAS=
-K,
-> > -                                  (REG_INT_STAT_RBNEI << 16));
-> > +                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_STA=
-T, int_ena);
-> > +                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_MAS=
-K, (int_ena << 16));
-> >               }
-> >       }
-> >
-> > @@ -855,7 +915,7 @@ static irqreturn_t loongson_canfd_interrupt(int irq=
-, void *dev_id)
-> >       struct net_device *ndev =3D (struct net_device *)dev_id;
-> >       struct loongson_canfd_priv *priv =3D netdev_priv(ndev);
-> >       int irq_loops;
-> > -     u32 isr;
-> > +     u32 isr, mask;
-> >       u16 icr;
-> >
-> >       for (irq_loops =3D 0; irq_loops < 10000; irq_loops++) {
-> > @@ -864,14 +924,16 @@ static irqreturn_t loongson_canfd_interrupt(int i=
-rq, void *dev_id)
-> >               if (!isr)
-> >                       return irq_loops ? IRQ_HANDLED : IRQ_NONE;
-> >
-> > +             mask =3D priv->rx_ch ? REG_INT_STAT_DMADI : REG_INT_STAT_=
-RBNEI;
-> > +
-> >               /* Receive Buffer Not Empty Interrupt */
-> > -             if (FIELD_GET(REG_INT_STAT_RBNEI, isr)) {
-> > +             if (isr & mask) {
-> >                       /*
-> >                        * Mask RXBNEI the first, then clear interrupt an=
-d schedule NAPI.
-> >                        * Even if another IRQ fires, RBNEI will always b=
-e 0 (masked).
-> >                        */
-> > -                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_MAS=
-K, REG_INT_STAT_RBNEI);
-> > -                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_STA=
-T, REG_INT_STAT_RBNEI);
-> > +                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_MAS=
-K, mask);
-> > +                     regmap_write(priv->regmap, LOONGSON_CANFD_INT_STA=
-T, mask);
-> >                       napi_schedule(&priv->napi);
-> >               }
-> >
-> > @@ -1054,11 +1116,56 @@ static const struct regmap_config loongson_cang=
-fd_regmap =3D {
-> >       .cache_type     =3D REGCACHE_MAPLE,
-> >  };
-> >
-> > +static int loongson_canfd_rxdma_init(struct loongson_canfd_priv *priv,=
- struct device *dev)
-> > +{
-> > +     struct dma_slave_config config;
-> > +     struct dma_async_tx_descriptor *desc =3D NULL;
-> > +     int ret;
-> > +
-> > +     priv->rx_buf =3D dma_alloc_coherent(dev, RX_BUF_SIZE, &priv->rx_d=
-ma_buf, GFP_KERNEL);
-> > +     if (!priv->rx_buf)
-> > +             return -ENOMEM;
-> > +
-> > +     /* Configure DMA channel */
-> > +     memset(&config, 0, sizeof(config));
-> > +     config.src_addr =3D priv->res->start + LOONGSON_CANFD_RX_DATA;
-> > +     config.src_addr_width =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
-> > +
-> > +     ret =3D dmaengine_slave_config(priv->rx_ch, &config);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "rx dma channel config failed\n");
-> > +             goto err_config;
-> > +     }
-> > +
-> > +     /* Prepare a DMA cyclic transaction */
-> > +     desc =3D dmaengine_prep_dma_cyclic(priv->rx_ch, priv->rx_dma_buf,
-> > +                                      RX_BUF_SIZE, RX_BUF_SIZE,
-> > +                                      DMA_DEV_TO_MEM, DMA_PREP_INTERRU=
-PT);
-> > +     if (!desc) {
-> > +             dev_err(dev, "rx dma prep cyclic failed\n");
-> > +             ret =3D -EBUSY;
-> > +             goto err_config;
-> > +     }
-> > +
-> > +     /* Push current DMA transaction in the pending queue */
-> > +     dmaengine_submit(desc);
-> > +
-> > +     /* Issue pending DMA requests */
-> > +     dma_async_issue_pending(priv->rx_ch);
-> > +
-> > +     return 0;
-> > +
-> > +err_config:
-> > +     loongson_canfd_rxdma_remove(priv, dev);
-> > +     return ret;
-> > +}
-> > +
-> >  static int loongson_canfd_probe(struct platform_device *pdev)
-> >  {
-> >       struct device *dev =3D &pdev->dev;
-> >       struct loongson_canfd_priv *priv;
-> >       struct net_device *ndev;
-> > +     struct dma_chan *rx_ch;
-> >       struct regmap *regmap;
-> >       struct resource *res;
-> >       void __iomem *base;
-> > @@ -1079,14 +1186,24 @@ static int loongson_canfd_probe(struct platform=
-_device *pdev)
-> >       if (irq < 0)
-> >               return irq;
-> >
-> > +     rx_ch =3D dma_request_chan(dev, "rx");
-> > +     if (PTR_ERR(rx_ch) =3D=3D -EPROBE_DEFER)
-> > +             return -EPROBE_DEFER;
-> > +
-> > +     if (IS_ERR(rx_ch)) {
-> > +             dev_warn(dev, "Fall back in poll mode for any non-deferra=
-l error.\n");
-> > +             rx_ch =3D NULL;
-> > +     }
-> > +
-> >       /* Create a CAN device instance */
-> >       ndev =3D alloc_candev(sizeof(*priv), LOONGSON_CANFD_TXBUF_NUM);
-> >       if (!ndev)
-> > -             return -ENOMEM;
-> > +             goto err_dma_rx;
-> >
-> >       priv =3D netdev_priv(ndev);
-> >       spin_lock_init(&priv->tx_lock);
-> >       priv->regmap =3D regmap;
-> > +     priv->rx_ch =3D rx_ch;
-> >       priv->res =3D res;
-> >
-> >       priv->can.clock.freq =3D clk_rate;
-> > @@ -1111,6 +1228,19 @@ static int loongson_canfd_probe(struct platform_=
-device *pdev)
-> >       if (ret < 0)
-> >               goto err_candev_free;
-> >
-> > +     if (priv->rx_ch) {
-> > +             priv->get_rx_data =3D loongson_canfd_get_rxdma_data;
-> > +             priv->get_rx_pending =3D loongson_canfd_rxdma_pending;
-> > +             priv->last_res =3D LOONGSON_CANFD_DMA_RXDATA_NUM;
-> > +             ret =3D loongson_canfd_rxdma_init(priv, dev);
-> > +             if (ret) {
-> > +                     dev_err(dev, "interrupt mode used for rx (no dma)=
-\n");
-> > +                     goto err_candev_free;
-> > +             }
-> > +     } else {
-> > +             priv->get_rx_data =3D loongson_canfd_get_poll_data;
-> > +             priv->get_rx_pending =3D loongson_canfd_rxpoll_pending;
-> > +     }
-> >       netif_napi_add(ndev, &priv->napi, loongson_canfd_rx_napi);
-> >
-> >       ret =3D register_candev(ndev);
-> > @@ -1123,6 +1253,9 @@ static int loongson_canfd_probe(struct platform_d=
-evice *pdev)
-> >
-> >  err_candev_free:
-> >       free_candev(ndev);
-> > +err_dma_rx:
-> > +     if (rx_ch)
-> > +             dma_release_channel(rx_ch);
-> >       return ret;
-> >  }
-> >
-> > @@ -1133,6 +1266,11 @@ static void loongson_canfd_remove(struct platfor=
-m_device *pdev)
-> >
-> >       netdev_dbg(ndev, "loongson_canfd_remove");
-> >
-> > +     if (priv->rx_ch) {
-> > +             loongson_canfd_rxdma_remove(priv, &pdev->dev);
-> > +             dma_release_channel(priv->rx_ch);
-> > +     }
-> > +
-> >       unregister_candev(ndev);
-> >       netif_napi_del(&priv->napi);
-> >       free_candev(ndev);
-> > @@ -1154,6 +1292,7 @@ static struct platform_driver loongson_canfd_driv=
-er =3D {
-> >  };
-> >  module_platform_driver(loongson_canfd_driver);
-> >
-> > +MODULE_SOFTDEP("pre: loongson2-apb-cmc-dma");
->
-> Is this really needed? Isn't it enough to just put the
-> LOONGSON2_APB_CMC_DMA dependency in Kconfig?
+[1/1] PCI: loongson: Override PCIe bridge supported speeds for Loongson-3C6000 series
+      commit: 72644ef266d2d7c679d1c8d8dd7ff5a7ab2171e9
 
-It is required; otherwise, the DMA data transfer will fail immediately.
->
-> >  MODULE_AUTHOR("Loongson Technology Corporation Limited");
-> >  MODULE_DESCRIPTION("Loongson CAN-FD Controller driver");
-> >  MODULE_LICENSE("GPL");
->
->
-> Yours sincerely,
-> Vincent Mailhol
->
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
 
---
-Thanks.
-Binbin
