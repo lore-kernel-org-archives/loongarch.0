@@ -1,167 +1,93 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7B9360EC1
-	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 11:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EF83655CE;
+	Tue, 12 May 2026 20:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778586164; cv=none; b=ECQS4zXW+fIujUrD+ZdCiJ+vz37C/kNgs/xCaBDU9Mg87NX7xs4zP9AHrGR3dxltA+CPVXOi6oHt6dgVhAPNcx/Vl7/S2vtX/hT31SIBFXkVKRpkQ0JDWIY/LaTZp2fp9OYFbw3ZQBEPKKIcCGXUbrScvvWmYC1fCGO9m/CrZf4=
+	t=1778619191; cv=none; b=eRjnzGxm9N8VVw7uK85XOoNf9KGHdSEHHsHJaFYF1CGZZf0zNQgA2Xku9H96BI+0yyp6E86pPO0mgSy8pFjnJ1Co83oCTJP+x0vYuofqNYsoL+oBRS2k45dqyrluCfQz+FjKg4j+EeuirR8Jy3O5Ks/h8No1TQY5h4Rj5Mko5pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778586164; c=relaxed/simple;
-	bh=HOKkDeeqlSpCzlTTBisOlKHbEWYFncII5EuW97xNlKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i5C6ljuZJ+cEsyHV7tmAygT13w4zQKVZNcTOkx8VZg8mT6VWkm73sVCa14FvXiT6DgJ04FzgFjVnS8V2AERaQldpfgB1uPVkwdmCBRbHuwpw4s0JH4WBUjg9bdGS1kyug5SFIyegt3LJAaToffO57UyPAhCA8pSXf9XP3k4Lxd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KEweNcFX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0J342uiq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KEweNcFX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0J342uiq; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1778619191; c=relaxed/simple;
+	bh=eKZnOJPC5HlN+wwGap3r99knl65QeE5KI0dZYEYrjF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HJFuDcVGf+ARND0z+eOM1VlMGwFn4N9lxAYX+sZfe35hV+ie0J4wHicGqcrxB8KVdSifv1Q5Hk/GAL7efuFous0xghJj6b3/Pat1UpWEojkycX65LK4VT4tzRlvCNLMqh/BTSGnKKaJfi0NNYaso+q+u2qICOHCDm14BmTZyQr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VnG1blq9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KEweNcFX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0J342uiq";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KEweNcFX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0J342uiq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 34B7376120;
-	Tue, 12 May 2026 11:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1778586161;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QLgB5RUZcid9XLsWsmXqzit5YR0tRKGHMrKjGe72tnI=;
-	b=KEweNcFXbI/4awwwikZwQpLsJhqdcKP/ND/eEIHZpMVZYswHjsmnrwZiU2bxaD8n1OK0IS
-	Kc6YjC0sw7nAn6qO/p47INirDH4cevpavEC2j0COzrDVxJtWpDOoi9k2FZAGtUc4QSsWyH
-	YY7KnSMmVLtonjV5smZq449Ls/XSOCc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1778586161;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QLgB5RUZcid9XLsWsmXqzit5YR0tRKGHMrKjGe72tnI=;
-	b=0J342uiqkSfyW8DZyH8r4hsv6i4foe07KIq12qtoXRLRS5m/d+XbyypVqVX3QbmZPnqRJi
-	sxhM5qcbrx7pPCAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1778586161;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QLgB5RUZcid9XLsWsmXqzit5YR0tRKGHMrKjGe72tnI=;
-	b=KEweNcFXbI/4awwwikZwQpLsJhqdcKP/ND/eEIHZpMVZYswHjsmnrwZiU2bxaD8n1OK0IS
-	Kc6YjC0sw7nAn6qO/p47INirDH4cevpavEC2j0COzrDVxJtWpDOoi9k2FZAGtUc4QSsWyH
-	YY7KnSMmVLtonjV5smZq449Ls/XSOCc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1778586161;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QLgB5RUZcid9XLsWsmXqzit5YR0tRKGHMrKjGe72tnI=;
-	b=0J342uiqkSfyW8DZyH8r4hsv6i4foe07KIq12qtoXRLRS5m/d+XbyypVqVX3QbmZPnqRJi
-	sxhM5qcbrx7pPCAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 08727593A9;
-	Tue, 12 May 2026 11:42:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rkjQATESA2rLPQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 12 May 2026 11:42:41 +0000
-Date: Tue, 12 May 2026 13:42:31 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
-Message-ID: <20260512114231.GG2558453@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20260512052230.2947683-1-hch@lst.de>
- <20260512052230.2947683-2-hch@lst.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VnG1blq9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA78C2BCB0;
+	Tue, 12 May 2026 20:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778619191;
+	bh=eKZnOJPC5HlN+wwGap3r99knl65QeE5KI0dZYEYrjF0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VnG1blq9ybJDVcDxjyOyzZjsYQJG/rOcELBKgDDsCgbMP2mt4Q4uuzdWZe0zR4IGq
+	 outGioQjV9Ayvy/XfrNROoqC9c8FJRmgYtFn8TMTeL+KeF5NVje7QwXP7GO9SBCkIp
+	 ldr+fDY+oya7fV444rGJX0T5msUCGcXNFTq3ie/Uz/MgF/vLU0sAnHIQFFHRL7RahS
+	 fTBDnA27E9vhF3XPe2UJhcg99XZvZX14WgwWTk5ioEUGqSPd6mev2a7yLZ+I8KrP36
+	 1uqXcV4sStz+OKydmF9MciaLcJVUMG7uBRl8ZnqIJzyL1jNhs4Z15O/YHlApwQ3TUJ
+	 YWSBp2XWCcupg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Sean Christopherson <seanjc@google.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	chenhuacai@loongson.cn,
+	lixianglai@loongson.cn,
+	patches@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 6.18 091/270] LoongArch: KVM: Compile switch.S directly into the kernel
+Date: Tue, 12 May 2026 22:52:50 +0200
+Message-ID: <20260512205250.313933-1-ojeda@kernel.org>
+In-Reply-To: <20260512173940.376401154@linuxfoundation.org>
+References: <20260512173940.376401154@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512052230.2947683-2-hch@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -8.00
-X-Spamd-Result: default: False [-8.00 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLj13sa47em33kcomko4xd63ai)];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,arm.com,kernel.org,xen0n.name,linux.ibm.com,ellerman.id.au,gmail.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,redhat.com,alien8.de,linux.intel.com,zytor.com,gondor.apana.org.au,intel.com,fb.com,suse.com,arndb.de,fnnas.com,huawei.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,lists.ozlabs.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:replyto];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 12, 2026 at 07:20:41AM +0200, Christoph Hellwig wrote:
-> While the RAID6 algorithm could in theory support 3 devices by just
-> copying the data disk to the two parity disks, this version is not only
-> useless because it is a suboptimal version of 3-way mirroring, but also
-> broken with various crashes and incorrect parity generation in various
-> architecture-optimized implementations.  Disallow it similar to mdraid
-> which requires at least 4 devices for RAID 6.
-> 
-> Fixes: 53b381b3abeb ("Btrfs: RAID5 and RAID6")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Tue, 12 May 2026 19:38:12 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> 6.18-stable review patch.  If anyone has any objections, please let me know.
+>
+> ------------------
+>
+> From: Xianglai Li <lixianglai@loongson.cn>
+>
+> commit 5203012fa6045aac4b69d4e7c212e16dcf38ef10 upstream.
+>
+> If we directly compile the switch.S file into the kernel, the address of
+> the kvm_exc_entry function will definitely be within the DMW memory area.
+> Therefore, we will no longer need to perform a copy relocation of the
+> kvm_exc_entry.
+>
+> So this patch compiles switch.S directly into the kernel, and then remove
+> the copy relocation execution logic for the kvm_exc_entry function.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This patch should have been sent separately as it has user visible
-impact and can potentially break some setups. The degenerate modes of
-raid0, 5, or 6 are explicit as a possible middle step when converting
-profiles.  We can use a fallback implementation for this case if the
-accelerated implementations cannot do it.
+For loongarch64, I am seeing a bunch of errors like:
+
+    arch/loongarch/kvm/switch.S:201:1: error: unrecognized instruction mnemonic
+    EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
+    ^
+
+`EXPORT_SYMBOL_FOR_KVM` does not exist in 6.18. Does this need a subset
+of commit 6276c67f2bc4 ("x86: Restrict KVM-induced symbol exports to KVM
+modules where obvious/possible")?
+
+Cc'ing a few folks...
+
+Thanks!
+
+Cheers,
+Miguel
