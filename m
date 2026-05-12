@@ -1,124 +1,151 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DB2236F8E9
-	for <loongarch@lists.linux.dev>; Tue, 12 May 2026 08:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EC449250D;
+	Tue, 12 May 2026 09:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778574049; cv=none; b=QwM9G2p8+aqq8Y2l3UE9YVRBZnxUPei9SQKsxDd3vH6O+znOGuCKJUk/rHDRY5oneaHuw0GA++kkYpwa7+Ii+RMX9nHcUz2kNopEVzHemqX8ikqkcE4cgqdSA2dVbnqjocrpj0w7Q80udRk69Ni0K4WiD5TDWnrLE0uapVW66vA=
+	t=1778579438; cv=none; b=LZK8fkvRk/dFZAkO9G/xced0hT5FWewK2Adblrbj56UhN5hkuIS9egXbMJ2jqM7UXjn4J/wx7t4vm2oAGI8xjWSQWfXtq2Np9CusecHTev6UN1s1JvJ0iaWp0zN8YS2Kml0IruAiESqZ8vz9xHpIZLcZGU8RxzXnZ+PQ0VQpOt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778574049; c=relaxed/simple;
-	bh=m0pjb+lFxwODsmHUtZbhrvJuChOfG2RNq0/7PzBItJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YnGxT4GegWpE8awm7IF2vUmwPTOdAgNTckOjr607Xg01SjNwgyjPf4Dt2B/ji5I0cBzokCydD4SX9+WAT51Wbjpjt+znEqD/y2rgLZEqdlHtidRMoC64DBD6V6U6ypb7qRCWGQYs05D7H5ZIp86gzcYcsEIEUTf9NUzliLsQfdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Dx13jd4gJqdwsJAA--.3181S3;
-	Tue, 12 May 2026 16:20:45 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAxGMHO4gJqAwKAAA--.32306S6;
-	Tue, 12 May 2026 16:20:37 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/4] LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
-Date: Tue, 12 May 2026 16:20:29 +0800
-Message-ID: <20260512082029.2131-5-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260512082029.2131-1-yangtiezhu@loongson.cn>
-References: <20260512082029.2131-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1778579438; c=relaxed/simple;
+	bh=iodQUQY7CnisbRWz7ZX1kdnUrHJlSwk4Axa8QKYq830=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Uy2VUqZKm8UTXT513Dfcv5Ygz1flKPozBxk4LqqKZM80+vpjYEnHtsmIoT3OYbB0+6kb+0ChFzC0scTrPXRgpUEsWhWs/uDV6Cg6AMf7l7ENROt+tU2pmrNvQC4pVqIeSv/67U/vLY7xMfTQJcEC3gdh1fiHtKFvEfvpB7P24/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFOgFHvn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFOgFHvn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F87C4AF0B;
+	Tue, 12 May 2026 09:50:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778579438;
+	bh=iodQUQY7CnisbRWz7ZX1kdnUrHJlSwk4Axa8QKYq830=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=XFOgFHvn9mBF2xBvRAZWYN4FsdnnUCfPsyFwGq5E9zA90qIOCobVdiEX9IjRuOO7A
+	 a4koWchkllcAIttf8zp8nn4DNgAVrP9LdSX7c7Wd2O/Ip/XWfV7tEV0OA9U7Udc+UE
+	 fEBu5x2ef3P1zVecOZKVBZrnFtNm/j8jBWssv5lVpyaW+nKCdX9FnSHkuv+MOahJJE
+	 QNDdbgoh7OoscH495SUEFI0BJnaKehG0YhHRaOpuk7FVyVPOsRcJRVWd+JLcdYAR9J
+	 Mh1IFQ3qEmNBYLJIOPrHNmKAZ1ztNQxjTy4SJZikX6wyepAIsQBzQb9nb5w/at5zDd
+	 CFzv2hvfalSuw==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 69211F4007E;
+	Tue, 12 May 2026 05:50:36 -0400 (EDT)
+Received: from phl-imap-14 ([10.202.2.87])
+  by phl-compute-01.internal (MEProxy); Tue, 12 May 2026 05:50:36 -0400
+X-ME-Sender: <xms:7PcCam9YJOHuCSkFlDq4ISbUnfEsy1OEjiwfu2I0G97RJXn0Y9Qj3Q>
+    <xme:7PcCahg10CcdO5ywOYNj_MoUADdtr56c-r9bHz7tueJKnmE7BlO5CNe34OWAHP6O0
+    K2ZP7MTmRqCKNmM6To0iTGAEXW_mzbRu-_Ppobim0hC3yvVCtlniA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvddugeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
+    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeetgedvtddttdeuffegvdefgffgteeiueejuefhjefhvdekkeelkeduteej
+    tdetheenucffohhmrghinhepihhnfhhrrgguvggrugdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhguodhmvghsmhhtphgruhht
+    hhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeelqdeffedvudeigeduhedqrghrug
+    gspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrhgurdgtohhmpdhnsggprhgtphht
+    thhopeegfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnke
+    druggvpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdp
+    rhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepphgrlhhmvghrse
+    gurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgv
+    hidrvgguuhdprhgtphhtthhopehmphgvsegvlhhlvghrmhgrnhdrihgurdgruhdprhgtph
+    htthhopegtlhhmsehfsgdrtghomhdprhgtphhtthhopeihuhhkuhgrihesfhhnnhgrshdr
+    tghomhdprhgtphhtthhopegrlhgvgiesghhhihhtihdrfhhr
+X-ME-Proxy: <xmx:7PcCalktau1ceeO9LVmwrvdgtBQqFGLkbXstpSg8yybS685IYcHORw>
+    <xmx:7PcCasmugZGdftyVI7SsXjAnPbfXZESq-0jgJf5WHEk-4Op-5tihhg>
+    <xmx:7PcCakOBuua_a1L3B6_7D8BIKwPWLDsIB0zTRk7q4odJEd-XR7f0rg>
+    <xmx:7PcCamtx3Q0fvbGtW41fj2F_sqDaICjJw47CJSybFMv4EVU0bnkNFA>
+    <xmx:7PcCauA9QdM04AOLLlOCDA53c0jW-oZSzKQywL6_3ngSclabTlPoqQSc>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 38C50C4006F; Tue, 12 May 2026 05:50:36 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxGMHO4gJqAwKAAA--.32306S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWr1kGrW3Xr1xWrWkuF48AFc_yoW5WF1DpF
-	WkAws0qrs5Ga18Za4qyw4UZrWFka1DArW7Gw4rAa4Yy3W5GF47tryxKrWUtFyrCr95Kw4I
-	vFnYkrW0gFW7ArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcHUqUUUUU
+Date: Tue, 12 May 2026 11:50:15 +0200
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Christoph Hellwig" <hch@lst.de>,
+ "Andrew Morton" <akpm@linux-foundation.org>
+Cc: "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>,
+ "WANG Xuerui" <kernel@xen0n.name>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ "Paul Walmsley" <pjw@kernel.org>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Dan Williams" <dan.j.williams@intel.com>, "Chris Mason" <clm@fb.com>,
+ "David Sterba" <dsterba@suse.com>, "Arnd Bergmann" <arnd@arndb.de>,
+ "Song Liu" <song@kernel.org>, "Yu Kuai" <yukuai@fnnas.com>,
+ "Li Nan" <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-raid@vger.kernel.org
+Message-Id: <d40e984f-7dec-425c-bf80-a255980c7457@app.fastmail.com>
+In-Reply-To: <20260512052230.2947683-1-hch@lst.de>
+References: <20260512052230.2947683-1-hch@lst.de>
+Subject: Re: cleanup the RAID6 P/Q library v2
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-KPROBE_HIT_SS and KPROBE_REENTER are two types of fatal recursions
-that can not be safely recovered in kprobes.
 
-KPROBE_HIT_SS means that a kprobe is hit during single-stepping.
-At this point, the architecture-specific single-step context is
-already active. Nested single-stepping would corrupt the state,
-as the kprobe control block (kcb) and hardware registers cannot
-safely store multiple levels of stepping state.
+On Tue, 12 May 2026, at 07:20, Christoph Hellwig wrote:
+> Hi all,
+>
+> this series cleans up the RAID6 P/Q library to match the recent updates
+> to the RAID 5 XOR library and other CRC/crypto libraries.  This includes
+> providing properly documented external interfaces, hiding the internals,
+> using static_call instead of indirect calls and turning the user space
+> test suite into an in-kernel kunit test which is also extended to
+> improve coverage.
+>
+> Note that this changes registration so that non-priority algorithms are
+> not registered, which greatly helps with the benchmark time at boot time.
+> I'd like to encourage all architecture maintainers to see if they can
+> further optimized this by registering as few as possible algorithms when
+> there is a clear benefit in optimized or more unrolled implementations.
+>
+> This series sits on top of the "cleanup the RAID5 XOR library v3" series.
+>
+> A git tree is also available here:
+>
+>     git://git.infradead.org/users/hch/misc.git lib-raid6
+>
+> Gitweb:
+>
+>     
+> https://git.infradead.org/?p=users/hch/misc.git;a=shortlog;h=refs/heads/lib-raid6
+>
+> Changes since v1:
+>  - fix arm64 objdir != srcdir builds
+>  - call the kunit module raid6_kunit.ko from the beginning
+>  - update MAINTAINERS
+>  - don't require preemptible context and apply the same restrictions as
+>    the merged version of the XOR API
+>  - fix the arm64 default in Kconfig
+>  - pick the last registered (and presumably most optimized) algorithm when
+>    benchmarking is disabled
+>  - port over the randomization fixes from the XOR series
+>  - misc other kunit cleanups
+>  - require at least 4 devices for RAID6 to skip broken special cases
+>
 
-KPROBE_REENTER means that a third-level recursion occurs when a
-probe is hit while the system is already handling a nested probe
-(second-level). The kcb only provides a single slot (prev_kprobe)
-to backup the state. When a third probe is hit, there is no more
-space to save the state without corrupting the first-level backup.
-
-Kprobes work by replacing instructions with breakpoints. In order
-to execute the original instruction and continue, it must be moved
-to a temporary "single-step" slot. Since there is no backup space
-left to set up this slot safely, the CPU would be forced to return
-to the same original breakpoint address, triggering an endless loop.
-
-Currently, the code only prints a warning and returns. This leads
-to an infinite re-entry loop as the CPU repeatedly hits the same
-trap and a "stuck" CPU core because preemption was disabled at the
-start of the handler and never re-enabled in this early return path.
-
-Fix the logic by:
-1. Merging KPROBE_HIT_SS and KPROBE_REENTER cases, as both represent
-   fatal recursions that cannot be safely recovered.
-2. Balancing the preemption count with preempt_enable_no_resched() to
-   maintain preemption balance before the system halts.
-3. Replacing WARN_ON_ONCE() with BUG() to terminate the system. This
-   aligns LoongArch with other architectures (x86, arm64, riscv) and
-   prevents stack overflow while providing diagnostic information.
-
-Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/kernel/kprobes.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-index 8e1b7a87c897..e6395a9dbaec 100644
---- a/arch/loongarch/kernel/kprobes.c
-+++ b/arch/loongarch/kernel/kprobes.c
-@@ -186,16 +186,17 @@ static bool reenter_kprobe(struct kprobe *p, struct pt_regs *regs,
- 			   struct kprobe_ctlblk *kcb)
- {
- 	switch (kcb->kprobe_status) {
--	case KPROBE_HIT_SS:
- 	case KPROBE_HIT_SSDONE:
- 	case KPROBE_HIT_ACTIVE:
- 		kprobes_inc_nmissed_count(p);
- 		setup_singlestep(p, regs, kcb, 1);
- 		break;
-+	case KPROBE_HIT_SS:
- 	case KPROBE_REENTER:
-+		preempt_enable_no_resched();
- 		pr_warn("Failed to recover from reentered kprobes.\n");
- 		dump_kprobe(p);
--		WARN_ON_ONCE(1);
-+		BUG();
- 		break;
- 	default:
- 		WARN_ON(1);
--- 
-2.42.0
-
+Tested-by: Ard Biesheuvel <ardb@kernel.org> # kunit only on arm64
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
