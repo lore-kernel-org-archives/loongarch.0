@@ -1,149 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD7B3932CA
-	for <loongarch@lists.linux.dev>; Wed, 13 May 2026 03:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B628C3803D3
+	for <loongarch@lists.linux.dev>; Wed, 13 May 2026 05:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778641594; cv=none; b=TtqWgfbgRslpxbcpIOjPwZkcikEiQbpEOawqDyZzGSzPUZsqHKJBPTEGQAgwshfGhzqUtaLfq2ZsVDay+ivqZg1O2pr7YEQPp9x4jhX+GKpwTdNYBDphu/3YVJYuQk4I+CX9/KJvWJBBnWq92jfqjXjLeGlc4ycaezimlVmrN14=
+	t=1778651271; cv=none; b=tPftFmw24zxcsRvwIePzOv3XVC106kYQ8eV+bScS/vIeRRI9cfSZLGwIMdOA3snY0eAhs6YzdV3YyTn9/dG1J2ptnckbHwEWRZPtiEwS5c4am8spcMyF4b7gC/VjHaNjcBRkPcsVumaRXANdSuVMvxKR5+Bh/LXIo0+6LkuF3bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778641594; c=relaxed/simple;
-	bh=2FYu66EO6vVTIr4kxrE0IOHu6oZkI5WGpQMrpxngQ/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qPFiZ7KADr6oEJ0JGV4OwOZIEshVC4IRyu0kDXP8W9JxsVK8YYqm7GvdjmGhdE73eAvvrly5a06CmrEonO3RlALc8F0ezEsUMj806cC4va5ZVkznZYa87grN/fTA37MmVqnReFB5JqzVaSL9uRQtAOhUv+rcUpfZOS4L5zefjsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKH/ADQU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKH/ADQU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7B4C2BCFD
-	for <loongarch@lists.linux.dev>; Wed, 13 May 2026 03:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778641594;
-	bh=2FYu66EO6vVTIr4kxrE0IOHu6oZkI5WGpQMrpxngQ/k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qKH/ADQUWT4OpC0s44qwsKkp9Q+rL4BS1brg1sSt0mC27D+9BKV/hR+ZcfJM2Z4YX
-	 60zE9GbP5P1IO9oo08IOYFnkpmiKapp1ifo1eqQkawI/14P2ty80e1d3YeP37bBGE/
-	 MDiLeGW1/mElUaB7VOxBb704iMEpkJ/pBIqL/sTLQaab//0HnpQ8OIwSoTmBx/sJ1i
-	 YHtev/4v2a8YaQ606ePAdfGek3Fny4WQBttb1rjAYUVibM8KpA1Cdmw3ts4vnxEaIE
-	 b7lLmBJJmJmnIMaBY7+voM6DjD4+EkXFBajFPJCwxteWdVrRLCH41Xa3cYW5ozlxuV
-	 tmegyxYbj8XJA==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-67179ed133dso7389787a12.2
-        for <loongarch@lists.linux.dev>; Tue, 12 May 2026 20:06:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8h90DA6agX0Bt5eakv4MUmwE1WnZY8rhHUA+dMLho+4CSdglaMW40pIABFOxISvEkA8TH5NZacMPE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxCLEve3G2JxfJdBayp2szuqPuZrTsFJtg78Uh9HylTyBkbrOUn
-	P7xxhnRTV8ZWzzTArDk4oRvqkXSNDghJIDh3Mte69sbSiSxKPR4EVGTWwosYBLPqzDg4tIoPr3M
-	cGt8OfG44tDd0KaVHCyCwSePrl0fzS3A=
-X-Received: by 2002:a17:906:4786:b0:bd3:2b8a:2164 with SMTP id
- a640c23a62f3a-bd3bfb9f635mr84611266b.16.1778641592860; Tue, 12 May 2026
- 20:06:32 -0700 (PDT)
+	s=arc-20240116; t=1778651271; c=relaxed/simple;
+	bh=gLgo4WQ3hzDs13tL91Gp16GFz3W0lr9TsHhf12nzTgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G09e5YId/F0nMZWuSjaEdCCaPCN6fFR2ovs7PY8Pg6sSSwOqqFf7ZUP9p/Az5/7K78ON/VQiMvkCa+LVg8+ydO5NcmCVZpbcDDUuuDF63NhpY14I/euYia/WgU6t5gPqJYLeLjZ/v03anoaHAJJmuKOCMmYsHrs5vpdpfOqqo3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id B404568B05; Wed, 13 May 2026 07:47:42 +0200 (CEST)
+Date: Wed, 13 May 2026 07:47:42 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: David Sterba <dsterba@suse.cz>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
+Message-ID: <20260513054742.GA1018@lst.de>
+References: <20260512052230.2947683-1-hch@lst.de> <20260512052230.2947683-2-hch@lst.de> <20260512114231.GG2558453@suse.cz>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260512173940.376401154@linuxfoundation.org> <20260512205250.313933-1-ojeda@kernel.org>
- <agOhSMXZGSv0bPhX@google.com>
-In-Reply-To: <agOhSMXZGSv0bPhX@google.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 13 May 2026 11:06:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6GFmKrJpVgaShCzUigZByvQkXQy_2qGcyaJ089Q6chWg@mail.gmail.com>
-X-Gm-Features: AVHnY4JhLdvfmwJivpMfBvuNwmW2QV0KoWSoIRaMnLuYY6_EF5PB2geRX9XhU-I
-Message-ID: <CAAhV-H6GFmKrJpVgaShCzUigZByvQkXQy_2qGcyaJ089Q6chWg@mail.gmail.com>
-Subject: Re: [PATCH 6.18 091/270] LoongArch: KVM: Compile switch.S directly
- into the kernel
-To: Sean Christopherson <seanjc@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, gregkh@linuxfoundation.org, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev, Dave Hansen <dave.hansen@linux.intel.com>, 
-	chenhuacai@loongson.cn, lixianglai@loongson.cn, patches@lists.linux.dev, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260512114231.GG2558453@suse.cz>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, May 13, 2026 at 5:53=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Tue, May 12, 2026, Miguel Ojeda wrote:
-> > On Tue, 12 May 2026 19:38:12 +0200 Greg Kroah-Hartman <gregkh@linuxfoun=
-dation.org> wrote:
-> > >
-> > > 6.18-stable review patch.  If anyone has any objections, please let m=
-e know.
-> > >
-> > > ------------------
-> > >
-> > > From: Xianglai Li <lixianglai@loongson.cn>
-> > >
-> > > commit 5203012fa6045aac4b69d4e7c212e16dcf38ef10 upstream.
-> > >
-> > > If we directly compile the switch.S file into the kernel, the address=
- of
-> > > the kvm_exc_entry function will definitely be within the DMW memory a=
-rea.
-> > > Therefore, we will no longer need to perform a copy relocation of the
-> > > kvm_exc_entry.
-> > >
-> > > So this patch compiles switch.S directly into the kernel, and then re=
-move
-> > > the copy relocation execution logic for the kvm_exc_entry function.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > For loongarch64, I am seeing a bunch of errors like:
-> >
-> >     arch/loongarch/kvm/switch.S:201:1: error: unrecognized instruction =
-mnemonic
-> >     EXPORT_SYMBOL_FOR_KVM(kvm_exc_entry)
-> >     ^
-> >
-> > `EXPORT_SYMBOL_FOR_KVM` does not exist in 6.18. Does this need a subset
-> > of commit 6276c67f2bc4 ("x86: Restrict KVM-induced symbol exports to KV=
-M
-> > modules where obvious/possible")?
->
-> Either that or just convert EXPORT_SYMBOL_FOR_KVM() =3D> EXPORT_SYMBOL_GP=
-L().  If
-> that's somewhat scriptable for ongoing LTS backports, that's probably the=
- best
-> option.  EXPORT_SYMBOL_FOR_KVM() will only work for 6.18, and the list of=
- backports
-> needed to get EXPORT_SYMBOL_FOR_MODULES() working on older LTS kernels lo=
-oks to
-> be non-trivial
->
-> If we do end up backporting EXPORT_SYMBOL_FOR_KVM() and others, we might =
-as well
-> also grab a subset of 01122b89361e ("perf: Use EXPORT_SYMBOL_FOR_KVM() fo=
-r the
-> mediated APIs") to ensure a kvm_types.h stub is present on all archs.  Th=
-at way
-> EXPORT_SYMBOL_FOR_KVM() usage in arch-neutral code will also work.
-I have already noticed Greg about this before.
+On Tue, May 12, 2026 at 01:42:31PM +0200, David Sterba wrote:
+> On Tue, May 12, 2026 at 07:20:41AM +0200, Christoph Hellwig wrote:
+> > While the RAID6 algorithm could in theory support 3 devices by just
+> > copying the data disk to the two parity disks, this version is not only
+> > useless because it is a suboptimal version of 3-way mirroring, but also
+> > broken with various crashes and incorrect parity generation in various
+> > architecture-optimized implementations.  Disallow it similar to mdraid
+> > which requires at least 4 devices for RAID 6.
+> > 
+> > Fixes: 53b381b3abeb ("Btrfs: RAID5 and RAID6")
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> This patch should have been sent separately as it has user visible
+> impact and can potentially break some setups.
 
-And I think the best solution is to use EXPORT_SYMBOL_GPL().
+It _is_ sent out separate.
 
-If Greg doesn't want to adjust manually, please drop this patch and I
-will send one.
+> The degenerate modes of
+> raid0, 5, or 6 are explicit as a possible middle step when converting
+> profiles.  We can use a fallback implementation for this case if the
+> accelerated implementations cannot do it.
 
-
-
-Huacai
-
->
-> diff --git include/asm-generic/Kbuild include/asm-generic/Kbuild
-> index 295c94a3ccc1..9aff61e7b8f2 100644
-> --- include/asm-generic/Kbuild
-> +++ include/asm-generic/Kbuild
-> @@ -32,6 +32,7 @@ mandatory-y +=3D irq_work.h
->  mandatory-y +=3D kdebug.h
->  mandatory-y +=3D kmap_size.h
->  mandatory-y +=3D kprobes.h
-> +mandatory-y +=3D kvm_types.h
->  mandatory-y +=3D linkage.h
->  mandatory-y +=3D local.h
->  mandatory-y +=3D local64.h
->
->
+This is not about a degenerated mode.  For a degenerated RAID 6, parity
+generation uses the RAID 5 XOR routines as the second parity will be
+missing.  This is about generating two parities for a single data disk,
+which must be explicitly selected.
