@@ -1,134 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818043ADB8F
-	for <loongarch@lists.linux.dev>; Wed, 13 May 2026 20:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC4D3C4553
+	for <loongarch@lists.linux.dev>; Thu, 14 May 2026 06:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778703573; cv=none; b=eSXPFZ1T1JjQv5TWOi77Hs6yoHqyyZcmQvNJ5AH69IVDI62URMe9FDyt1tgFYj8XyrSjvC5r6ajFK4lGXz5+X+IF/ixDtb+ADUSeVIq4mkNV19rjtTzI8Ggi9G9xtx6wkSGlJwPW9mFSVL53Kak47Ws9TIpOhD6Yels1hzV+pc0=
+	t=1778740111; cv=none; b=rqmB+muf771LLM2vWcHZhfZrz2pmT7r6rXb2bKlrwZLueFHOYmKATEUd3vTRI9BYWyx7IeiCTs+AY0j90jF9QcLA6KqbFR/JnXqao/a2FfR3YFBELS1oBxFeEVC3ld9LupSoPfxaXigpXpWytDl6owhoftrvzoO8rSb3DYvjy7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778703573; c=relaxed/simple;
-	bh=EDn4odiH74H3ifCfhNGOCtR8TgiezO1EVoWQXBXXRIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=upM2Mzka5UA5fl6w7LJvwa8o8d/mJq66d2W414gUmYQ1SICeeP4zL/f2yLbTzfpH5EKygr4RF0B4LeLBqBbEfHEXeJCN3EmcHiMSEG8gHv9ydPqbNJYHisJrwpITFv6ibaabvw52XTwqSU2BVQw+k9nITithWhbHcRr4zZJa+e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ED6E36B0F3;
-	Wed, 13 May 2026 20:19:29 +0000 (UTC)
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A5E0E593A9;
-	Wed, 13 May 2026 20:19:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id G7fLJ9HcBGpwcwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 13 May 2026 20:19:29 +0000
-Date: Wed, 13 May 2026 22:19:28 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
-Message-ID: <20260513201928.GO2558453@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20260512052230.2947683-1-hch@lst.de>
- <20260512052230.2947683-2-hch@lst.de>
- <20260512114231.GG2558453@suse.cz>
- <20260513054742.GA1018@lst.de>
+	s=arc-20240116; t=1778740111; c=relaxed/simple;
+	bh=YISmOzW69R6NywwnUrgH9R9rYD/Lmn+RBVgzyh/G060=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dIKwWqZGQipcWT6MkMc+ELAN9vuxIQ+AHQShD4NdjChBBaC5cOZn4Hc5Z8g58+LcKjTwsTZEA1yKJsme5JePb5fqxN0bSp598/tBXkfWXeIU0m/yrTA3iXln8JPAeq4Y1cmNSDGkVR+IqjK1qzVvcpy3twTIplXALS1LVvT61Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxI_CKawVqTbwJAA--.29421S3;
+	Thu, 14 May 2026 14:28:26 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJCxfcKJawVqIQqCAA--.48503S4;
+	Thu, 14 May 2026 14:28:26 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/5] LoongArch: KVM: Use existing macro about interrupt bit mask
+Date: Thu, 14 May 2026 14:28:21 +0800
+Message-Id: <20260514062824.1378373-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260514062824.1378373-1-maobibo@loongson.cn>
+References: <20260514062824.1378373-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260513054742.GA1018@lst.de>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: ED6E36B0F3
-X-Spam-Score: -4.00
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxfcKJawVqIQqCAA--.48503S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Wed, May 13, 2026 at 07:47:42AM +0200, Christoph Hellwig wrote:
-> On Tue, May 12, 2026 at 01:42:31PM +0200, David Sterba wrote:
-> > On Tue, May 12, 2026 at 07:20:41AM +0200, Christoph Hellwig wrote:
-> > > While the RAID6 algorithm could in theory support 3 devices by just
-> > > copying the data disk to the two parity disks, this version is not only
-> > > useless because it is a suboptimal version of 3-way mirroring, but also
-> > > broken with various crashes and incorrect parity generation in various
-> > > architecture-optimized implementations.  Disallow it similar to mdraid
-> > > which requires at least 4 devices for RAID 6.
-> > > 
-> > > Fixes: 53b381b3abeb ("Btrfs: RAID5 and RAID6")
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > 
-> > This patch should have been sent separately as it has user visible
-> > impact and can potentially break some setups.
-> 
-> It _is_ sent out separate.
+With interrupt post, register CSR_GINTC and CSR_GSTAT is used, and
+CSR_GSTAT is used for percpu interrupt injection and CSR_GINTC is for
+external hardware interrupt injection.
 
-It's public interface change of btrfs but in a patch series cleaning
-up some library code, I noticed it by accident.
+Here use existing macro about interrupt bit of register CSR_GINTC and
+CSR_GSTAT, rather than hard coded constant value.
 
-> > The degenerate modes of
-> > raid0, 5, or 6 are explicit as a possible middle step when converting
-> > profiles.  We can use a fallback implementation for this case if the
-> > accelerated implementations cannot do it.
-> 
-> This is not about a degenerated mode.  For a degenerated RAID 6, parity
-> generation uses the RAID 5 XOR routines as the second parity will be
-> missing.  This is about generating two parities for a single data disk,
-> which must be explicitly selected.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
 
-The calcuation is a different than what I'm concened about, changing
-minimum devices from 3 to 4 is a breaking change. If the library won't
-provide the xor/parity functions then we'll have to add a fallback for
-this special case.
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index 3784ab4ccdb5..efe26b04b35f 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -10,22 +10,37 @@
+ #include <asm/loongarch.h>
+ 
+ /* Controlled by 0x5 guest estat */
+-#define CPU_SIP0			(_ULCAST_(1))
+-#define CPU_SIP1			(_ULCAST_(1) << 1)
+-#define CPU_PMU				(_ULCAST_(1) << 10)
+-#define CPU_TIMER			(_ULCAST_(1) << 11)
+-#define CPU_IPI				(_ULCAST_(1) << 12)
+-#define CPU_AVEC                        (_ULCAST_(1) << 14)
++#define CPU_SIP0			BIT(INT_SWI0)
++#define CPU_SIP1			BIT(INT_SWI1)
++#define CPU_HWI0			BIT(INT_HWI0)
++#define CPU_HWI1			BIT(INT_HWI1)
++#define CPU_HWI2			BIT(INT_HWI2)
++#define CPU_HWI3			BIT(INT_HWI3)
++#define CPU_HWI4			BIT(INT_HWI4)
++#define CPU_HWI5			BIT(INT_HWI5)
++#define CPU_HWI6			BIT(INT_HWI6)
++#define CPU_HWI7			BIT(INT_HWI7)
++#define CPU_PMU				BIT(INT_PCOV)
++#define CPU_TIMER			BIT(INT_TI)
++#define CPU_IPI				BIT(INT_IPI)
++#define CPU_AVEC			BIT(INT_AVEC)
++#define KVM_ESTAT_IRQ_MASK		(CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
++						| CPU_IPI | CPU_AVEC)
++#define KVM_ESTAT_HWI_MASK		(CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
++						| CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
+ 
+ /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+-#define CPU_IP0				(_ULCAST_(1))
+-#define CPU_IP1				(_ULCAST_(1) << 1)
+-#define CPU_IP2				(_ULCAST_(1) << 2)
+-#define CPU_IP3				(_ULCAST_(1) << 3)
+-#define CPU_IP4				(_ULCAST_(1) << 4)
+-#define CPU_IP5				(_ULCAST_(1) << 5)
+-#define CPU_IP6				(_ULCAST_(1) << 6)
+-#define CPU_IP7				(_ULCAST_(1) << 7)
++#define GINTC_VIP_DELTA			(INT_HWI0 - CSR_GINTC_VIP_SHIFT)
++#define CPU_IP0				BIT(INT_HWI0 - GINTC_VIP_DELTA)
++#define CPU_IP1				BIT(INT_HWI1 - GINTC_VIP_DELTA)
++#define CPU_IP2				BIT(INT_HWI2 - GINTC_VIP_DELTA)
++#define CPU_IP3				BIT(INT_HWI3 - GINTC_VIP_DELTA)
++#define CPU_IP4				BIT(INT_HWI4 - GINTC_VIP_DELTA)
++#define CPU_IP5				BIT(INT_HWI5 - GINTC_VIP_DELTA)
++#define CPU_IP6				BIT(INT_HWI6 - GINTC_VIP_DELTA)
++#define CPU_IP7				BIT(INT_HWI7 - GINTC_VIP_DELTA)
++#define KVM_GINTC_IRQ_MASK		(CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
++						| CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
+ 
+ #define MNSEC_PER_SEC			(NSEC_PER_SEC >> 20)
+ 
+-- 
+2.39.3
+
