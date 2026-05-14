@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 987E03C4553
-	for <loongarch@lists.linux.dev>; Thu, 14 May 2026 06:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8893C140E
+	for <loongarch@lists.linux.dev>; Thu, 14 May 2026 06:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778740113; cv=none; b=o2y8jMyuG1zatinmDSEfV0cdxfZl/9/4l5RQGdTH9IP0wTEi06/HEnpNv/ofrVTg1a7Wn8oWDXMRDyqXHbSXVcPabaHm2fbeoSylgU4aXXRDQs03vlPpr0PP1KtCkaPeCiex9qFQgq6pBjQYnpQzZWGMk5m//lqcRn1cN2mLZbM=
+	t=1778740113; cv=none; b=Nmb45wxxydg0F6FksrdCCxzsukfMqw2FrARZ8DGR/cdJoH4XwOstJ+VdgTBtFNYvqLnBqna/dGa6/0YyySPu5nevDW6DhgCN5cYYGGVLJDQd5MWiD5CLuMdtfIWTFz0wN8Nytp/VP5e2q7JrFI7uly/v0zjlWyJGI4YhqkfLp98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1778740113; c=relaxed/simple;
-	bh=hkh36XRsen/JnuQoDrHsOoB+jd9jICKmgtz0Og7gyEY=;
+	bh=YhjnOYMa/9tgKeawi7kAJ7iHfJj/jWCQwkIAZ+JxuIg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pXCw5U/3VQNIbSMlAoBQ4+02i9tN8krRU1QrWT2bIkRNKGCfhu8NLe9Nkb9vgapLcr/W131hOls+sgHFTQU/CHmktFnrAmSrizAJPm/oMnhq5npx68AHSIDwYHY7vq2p9RSF4tnjhsNogwwKpwXYxfnRu/ctNcduNbH7TxSAwTI=
+	 MIME-Version; b=a+ZUpB2uY8rF1ZZSzvh/B0Ong+ldftZg56cfXmrEloLrxk5vACsZ0SgKvdyWOMZiv02AJighI6Ly/hcDy3d6KCAq3ARMM9izQx3ak3KvskaHUaikGmeKIX8DE9nBOiFtPF4nibzTwcXa83rD+7t5xOScodIrSICrzh4LwpeFATQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxFOiNawVqW7wJAA--.23519S3;
+	by gateway (Coremail) with SMTP id _____8Bx+HiNawVqV7wJAA--.4995S3;
 	Thu, 14 May 2026 14:28:29 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxHMKMawVqJAqCAA--.49521S3;
-	Thu, 14 May 2026 14:28:29 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxHMKMawVqJAqCAA--.49521S2;
+	Thu, 14 May 2026 14:28:28 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] LoongArch: KVM: Simple interrupt status acquire interface
-Date: Thu, 14 May 2026 14:28:24 +0800
-Message-Id: <20260514062824.1378373-6-maobibo@loongson.cn>
+Subject: [PATCH v2 4/5] LoongArch: KVM: Add valid bit check when set ESTAT CSR register
+Date: Thu, 14 May 2026 14:28:23 +0800
+Message-Id: <20260514062824.1378373-5-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20260514062824.1378373-1-maobibo@loongson.cn>
 References: <20260514062824.1378373-1-maobibo@loongson.cn>
@@ -37,137 +37,74 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHMKMawVqJAqCAA--.49521S3
+X-CM-TRANSID:qMiowJAxHMKMawVqJAqCAA--.49521S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When VM is migrating, interrupts status are stored in software CSR estat
-register, also new injected interrupts are cached in
-vcpu::arch::irq_pending.
-
-With interrupt status acquire interface, there is expensive vcpu_load()
-and vcpu_put() function call to sync cached vcpu::arch::irq_pending.
-Here new internal API kvm_vcpu_sync_intr() is added to sync cached
-pending irq to software CSR estat register.
+When set ESTAT CSR register in function _kvm_setcsr(), valid bit check
+is added here. Also interrupt CPU_AVEC is checked by msgint feature.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/kvm_vcpu.h |  1 +
- arch/loongarch/kvm/interrupt.c        | 42 +++++++++++++++++++++++++++
- arch/loongarch/kvm/vcpu.c             | 15 ++++++----
- 3 files changed, 52 insertions(+), 6 deletions(-)
+ arch/loongarch/kvm/vcpu.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index efe26b04b35f..e78bb2527329 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -64,6 +64,7 @@ int  kvm_emu_idle(struct kvm_vcpu *vcpu);
- int  kvm_pending_timer(struct kvm_vcpu *vcpu);
- int  kvm_handle_fault(struct kvm_vcpu *vcpu, int fault);
- void kvm_deliver_intr(struct kvm_vcpu *vcpu);
-+void kvm_vcpu_sync_intr(struct kvm_vcpu *vcpu);
- void kvm_deliver_exception(struct kvm_vcpu *vcpu);
- 
- void kvm_own_fpu(struct kvm_vcpu *vcpu);
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index 380aabb3d4d0..24925c238a65 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -71,6 +71,48 @@ void kvm_deliver_intr(struct kvm_vcpu *vcpu)
- 	}
- }
- 
-+void kvm_vcpu_sync_intr(struct kvm_vcpu *vcpu)
-+{
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	unsigned long mask, val;
-+
-+	if (!csr)
-+		return;
-+
-+	mask = READ_ONCE(vcpu->arch.irq_clear);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_clear, 0);
-+
-+		/*
-+		 * sync cached irq_clear to sw state
-+		 *
-+		 * When VM is migrated to other physical machines or
-+		 * snapshot is created, cached irq pending state should
-+		 * be synced
-+		 */
-+		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+		val &= ~(mask & KVM_ESTAT_IRQ_MASK);
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, val);
-+
-+		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC);
-+		val &= ~((mask >> 2) & KVM_GINTC_IRQ_MASK);
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, val);
-+	}
-+
-+	mask = READ_ONCE(vcpu->arch.irq_pending);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_pending, 0);
-+		/* sync cached irq_pending to sw state */
-+		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+		val |= (mask & KVM_ESTAT_IRQ_MASK);
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, val);
-+
-+		val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC);
-+		val |= (mask >> 2) & KVM_GINTC_IRQ_MASK;
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, val);
-+	}
-+}
-+
- int kvm_pending_timer(struct kvm_vcpu *vcpu)
- {
- 	return test_bit(INT_TI, &vcpu->arch.irq_pending);
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 2f4fd6fa5b0e..5f94360e8a4b 100644
+index dc2a1f56650b..2f4fd6fa5b0e 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -610,14 +610,11 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+@@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
  
- 	if (id == LOONGARCH_CSR_ESTAT) {
- 		preempt_disable();
--		vcpu_load(vcpu);
- 		/*
- 		 * Sync pending interrupts into ESTAT so that interrupt
- 		 * remains during VM migration stage
- 		 */
--		kvm_deliver_intr(vcpu);
--		vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
--		vcpu_put(vcpu);
-+		kvm_vcpu_sync_intr(vcpu);
+ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+ {
+-	unsigned long gintc;
++	unsigned long gintc, estat;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
+ 
+ 	if (get_gcsr_flag(id) & INVALID_GCSR)
+@@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
  		preempt_enable();
  
  		/* ESTAT IP0~IP7 get from GINTC */
-@@ -1649,6 +1646,14 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 	/* Restore timer state regardless */
- 	kvm_restore_timer(vcpu);
-+
-+	/*
-+	 * Restore Root.GINTC from unused Guest.GINTC register
-+	 *
-+	 * SW state about LOONGARCH_CSR_GINTC is updated with get_csr()
-+	 * ioctl command only. Update HW state from changed SW state.
-+	 */
-+	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
- 	kvm_make_request(KVM_REQ_STEAL_UPDATE, vcpu);
- 
- 	/* Don't bother restoring registers multiple times unless necessary */
-@@ -1711,8 +1716,6 @@ static int _kvm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 		kvm_restore_hw_gcsr(csr, LOONGARCH_CSR_ISR3);
+-		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
+-		*val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) | (gintc << 2);
++		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
++		estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_HWI_MASK;
++		*val = estat | (gintc << 2);
+ 		return 0;
  	}
  
--	/* Restore Root.GINTC from unused Guest.GINTC register */
--	write_csr_gintc(csr->csrs[LOONGARCH_CSR_GINTC]);
- 	write_csr_gstat(csr->csrs[LOONGARCH_CSR_GSTAT]);
+@@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
  
- 	/*
+ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ {
+-	int ret = 0, gintc;
++	int ret = 0;
++	unsigned long gintc, estat;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
+ 
+ 	if (get_gcsr_flag(id) & INVALID_GCSR)
+@@ -648,11 +650,15 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 
+ 	if (id == LOONGARCH_CSR_ESTAT) {
+ 		/* ESTAT IP0~IP7 inject through GINTC */
+-		gintc = (val >> 2) & 0xff;
++		gintc = (val >> 2) & KVM_GINTC_IRQ_MASK;
+ 		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+ 
+-		gintc = val & ~(0xffUL << 2);
+-		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
++		/* only set valid ESTAT bits */
++		estat = val & ~KVM_ESTAT_HWI_MASK;
++		estat &= CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE;
++		if (!kvm_guest_has_msgint(&vcpu->arch))
++			estat &= ~CPU_AVEC;
++		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
+ 
+ 		return ret;
+ 	}
 -- 
 2.39.3
 
