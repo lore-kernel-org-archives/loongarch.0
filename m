@@ -1,95 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13AE3D412C
-	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 04:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B2D1DE8BE
+	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 04:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778819389; cv=none; b=lRHe4hyDVARiajO+O26cjidzeLznsjvdfm6+QtOvouZ0iS5af7RUQuGZwMLYNWZumq0h/2l3EgWKPJcgCW4D1X4wc2qHogsGVpj4JoJUgM2Qn0ENn9qij3j6ANWJc1DZUkaBbqX3JX+hUCtADQ5knQCOG4R+x1LjcbicJPmn5ns=
+	t=1778819832; cv=none; b=pBj2lr3AzeMokUTXfs7dBx6x05zQE4J3cwFDMudlPxEke8ZSCvCadZsUiaI/f1hNGKWUFeVygVbDTdXDMDu2/UHK+Xke39yx+ES3mwPftc/YQNFTgXp9TKt2aTwP+bq8swDlJBddd2xlIEaE4V/CCxj8VeKa+/ZyRxbqL7cJykY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778819389; c=relaxed/simple;
-	bh=977TUyUUO0sJRJj8yDYIuzP6B7yMCuyIyr7y1e9rzUQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oMQ6QkzkEQW+e1ArxU2DFFJnUMjSZ9vBP1q9j/G0IRs5YYI4KkZ6SsbyoaBsDxEWfi6PbswpVUfSdEqwuWj/gd3njQ8YNbsQKvXwTGUSR19/rxqHBQ37+DhFFRO/VAJZTyncf9tYdSLADiFVYF3rSgNH36Jr+BLthMD1rFV0Kcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLGh6xcn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLGh6xcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4A1C2BCF5
-	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 04:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778819388;
-	bh=977TUyUUO0sJRJj8yDYIuzP6B7yMCuyIyr7y1e9rzUQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SLGh6xcnqn4Ix0onVGt+BotA9LIGkP0fHjcg2MjkkTexXAkKkwM3Utppey/n41pw4
-	 Tkt2oc/SFlRfURI2o5vJYlZo8z8lQvvYclOnqIz06qB4w9yDclzMHZHvP1Fn3MPn+s
-	 n40jFZBsTN+uewu1ma9pdo1LxsF6qpyg+xIa3jBSwSc4HF1CX9pwvhUEqdSYH+HQO1
-	 CuMFtbwUn8ZZd4IwChYwFmSX41idlxt6V9pWtdrZFI35WMbR9e8MRvmt5JxrNM1o5T
-	 sMiqrsDXico2+GnNBsIw6LvAo//h494npNAAlzbuqyUK7/mSEK82YjHZ55+SJ3xsV8
-	 zi82Uq5xXdu4g==
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-bd2087858c4so669872966b.0
-        for <loongarch@lists.linux.dev>; Thu, 14 May 2026 21:29:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9JI5G94iE1H7OFCqzdSezEFNilgZsF0s/7ZkIjGX1o0loduaJ2YmPdjLjnUlv1qJHUBFQhhW9oaYs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy+rOpEBKH2GGWZ4ak+VUgquCiyq1gnzKQh5md4nLd0AOyViGVM
-	iY9ctpKcRbbTRH+KxnQ0A0vKDXBADJPLltv6TKcZh492C5pFirabcX/dCWQXc/C0zDGDMr2/bB1
-	LkIqHyNaRV28wOKNrWwe2nwEybI58AE4=
-X-Received: by 2002:a17:907:97d2:b0:bce:80db:77ef with SMTP id
- a640c23a62f3a-bd517970663mr108233666b.43.1778819387263; Thu, 14 May 2026
- 21:29:47 -0700 (PDT)
+	s=arc-20240116; t=1778819832; c=relaxed/simple;
+	bh=75CeoD1WQf9By9GVdjaBm7kKQlw2et/QDjrTd7m9s38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmmqUWywd7yemazT2oFxSD0CArs68k4x7Ze979lgYWOTOYOXCJS82UDdMYcZRY9zLBXcjtB49YxxH9uCP30vOufkizyh8+7LPXzWUCLsWVLRPm5vHA/VBMjRrhe7xlrEGQvYPyPxJp1OVBGoLI7APNJ32hd9pT8xEA4lthsGPG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 1B35A6732A; Fri, 15 May 2026 06:37:06 +0200 (CEST)
+Date: Fri, 15 May 2026 06:37:05 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: kreijack@inwind.it
+Cc: Christoph Hellwig <hch@lst.de>, David Sterba <dsterba@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
+	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-raid@vger.kernel.org
+Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
+Message-ID: <20260515043705.GA3855@lst.de>
+References: <20260512052230.2947683-1-hch@lst.de> <20260512052230.2947683-2-hch@lst.de> <20260512114231.GG2558453@suse.cz> <20260513054742.GA1018@lst.de> <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260512082029.2131-1-yangtiezhu@loongson.cn> <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
-In-Reply-To: <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 15 May 2026 12:29:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
-X-Gm-Features: AVHnY4JApl1D0el-Yea2XuiA2EIRgNUVonLTV5spNFvVXUyWALhIcgqPZOaot7Q
-Message-ID: <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Lisa Robinson <lisa@bytefly.space>, WANG Rui <r@hev.cc>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, May 15, 2026 at 10:52=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> On 2026/5/12 =E4=B8=8B=E5=8D=884:20, Tiezhu Yang wrote:
-> > This series addresses ftrace and kprobes issues observed under heavy
-> > tracing loads.
-> >
-> > Tiezhu Yang (4):
-> >    LoongArch: ftrace: Fix stale per-CPU kprobe state after task migrati=
-on
-> >    LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
-> >    LoongArch: kprobes: Fix single-stepping instruction slot preparation
-> >    LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
->
-> Hi Lisa and Rui,
->
-> You are right, please ignore the patch #3.
-I think Patch#3 is OK, but you need to remove the introduction about atomic=
-ity.
+On Thu, May 14, 2026 at 09:51:59PM +0200, Goffredo Baroncelli wrote:
+> I think that the David concern is : "what happens for an already
+> existing btrfs raid6 3 disks filesystem when the user upgrade the kernel ?"
+> (I am thinking when a new BG needs to be allocated)...
 
-Huacai
+Then it will cleanly fail to mount instead of constantly corrupting data
+and memory with every write, yes.  Which clearly suggest that such
+file systems don't exist in the wild.
 
->
-> Hi Huacai,
->
-> Please disregard the patch #1 and focus on the patch #2 and #4.
->
-> After thinking it through, it is better to avoid calling functions that
-> might sleep in the probe handler. We have modified the test module with
-> a proper way, there is no problem thereafter.
->
-> The right way is to prevent the problem at the root instead of trying to
-> fix it after the fact.
->
-> Thanks,
-> Tiezhu
->
->
+But if btrfs wants to keep supporting this I'll just add a _unsafe
+version without the check in the core library.
