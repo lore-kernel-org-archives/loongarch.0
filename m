@@ -1,88 +1,95 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCC8C36A030
-	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 02:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13AE3D412C
+	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 04:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778813541; cv=none; b=Se/ZB2MSQz2ZPfDKuXdn6dbdwSeaiQWVBf8jjQBRvaQLEUPeu9yFtfxQJWy4tBK9Cge1E8OI3DxtYqLXdw8df0EEMc9zbc+Kx8ZF4ZrX7M8fuDclHJuN/5QOHmDVccvD08gG15rv3f7u03fzDAF8wkqrFcbrPi9niCBhB6CG/dE=
+	t=1778819389; cv=none; b=lRHe4hyDVARiajO+O26cjidzeLznsjvdfm6+QtOvouZ0iS5af7RUQuGZwMLYNWZumq0h/2l3EgWKPJcgCW4D1X4wc2qHogsGVpj4JoJUgM2Qn0ENn9qij3j6ANWJc1DZUkaBbqX3JX+hUCtADQ5knQCOG4R+x1LjcbicJPmn5ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778813541; c=relaxed/simple;
-	bh=cXXl1Tvpa3tdUbD1ZB1smegsPoHqw63mQRHvC4Xi6e8=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PQfffZ1T8VadeJ43NjYlDD3POBefqBP4bFRQdo9e8ELl0s6rcGId0Qt4SGljlB1vjcitB1CG6IOsIjLA6om1IFKdLAfRmOvYz1U3OwAoBo87a174cIxoFvWnLN2LT+7EKuMOUAZjpT21YCOKjlOr4XrSGpMYnxOxakfj6ACGVxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxrcBaigZqZ_oJAA--.6497S3;
-	Fri, 15 May 2026 10:52:10 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxLMJVigZqpvKCAA--.51038S3;
-	Fri, 15 May 2026 10:52:06 +0800 (CST)
-Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>, Lisa Robinson <lisa@bytefly.space>,
- WANG Rui <r@hev.cc>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20260512082029.2131-1-yangtiezhu@loongson.cn>
-Message-ID: <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
-Date: Fri, 15 May 2026 10:52:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1778819389; c=relaxed/simple;
+	bh=977TUyUUO0sJRJj8yDYIuzP6B7yMCuyIyr7y1e9rzUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oMQ6QkzkEQW+e1ArxU2DFFJnUMjSZ9vBP1q9j/G0IRs5YYI4KkZ6SsbyoaBsDxEWfi6PbswpVUfSdEqwuWj/gd3njQ8YNbsQKvXwTGUSR19/rxqHBQ37+DhFFRO/VAJZTyncf9tYdSLADiFVYF3rSgNH36Jr+BLthMD1rFV0Kcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLGh6xcn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLGh6xcn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4A1C2BCF5
+	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 04:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778819388;
+	bh=977TUyUUO0sJRJj8yDYIuzP6B7yMCuyIyr7y1e9rzUQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SLGh6xcnqn4Ix0onVGt+BotA9LIGkP0fHjcg2MjkkTexXAkKkwM3Utppey/n41pw4
+	 Tkt2oc/SFlRfURI2o5vJYlZo8z8lQvvYclOnqIz06qB4w9yDclzMHZHvP1Fn3MPn+s
+	 n40jFZBsTN+uewu1ma9pdo1LxsF6qpyg+xIa3jBSwSc4HF1CX9pwvhUEqdSYH+HQO1
+	 CuMFtbwUn8ZZd4IwChYwFmSX41idlxt6V9pWtdrZFI35WMbR9e8MRvmt5JxrNM1o5T
+	 sMiqrsDXico2+GnNBsIw6LvAo//h494npNAAlzbuqyUK7/mSEK82YjHZ55+SJ3xsV8
+	 zi82Uq5xXdu4g==
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-bd2087858c4so669872966b.0
+        for <loongarch@lists.linux.dev>; Thu, 14 May 2026 21:29:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9JI5G94iE1H7OFCqzdSezEFNilgZsF0s/7ZkIjGX1o0loduaJ2YmPdjLjnUlv1qJHUBFQhhW9oaYs=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy+rOpEBKH2GGWZ4ak+VUgquCiyq1gnzKQh5md4nLd0AOyViGVM
+	iY9ctpKcRbbTRH+KxnQ0A0vKDXBADJPLltv6TKcZh492C5pFirabcX/dCWQXc/C0zDGDMr2/bB1
+	LkIqHyNaRV28wOKNrWwe2nwEybI58AE4=
+X-Received: by 2002:a17:907:97d2:b0:bce:80db:77ef with SMTP id
+ a640c23a62f3a-bd517970663mr108233666b.43.1778819387263; Thu, 14 May 2026
+ 21:29:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260512082029.2131-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxLMJVigZqpvKCAA--.51038S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JrWfJw13ZrW3GrWrGF17Jwc_yoWfWwc_ua
-	9Fk348C3y8CwsYya1xKFy5XrZ7GrZru3yUKrW8WF92g3sYgrZrZFZ7Wrn3Zw18WrZ5XFnx
-	GrsFgF45ZF12gosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
-	U
+References: <20260512082029.2131-1-yangtiezhu@loongson.cn> <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
+In-Reply-To: <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 15 May 2026 12:29:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
+X-Gm-Features: AVHnY4JApl1D0el-Yea2XuiA2EIRgNUVonLTV5spNFvVXUyWALhIcgqPZOaot7Q
+Message-ID: <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Lisa Robinson <lisa@bytefly.space>, WANG Rui <r@hev.cc>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026/5/12 下午4:20, Tiezhu Yang wrote:
-> This series addresses ftrace and kprobes issues observed under heavy
-> tracing loads.
-> 
-> Tiezhu Yang (4):
->    LoongArch: ftrace: Fix stale per-CPU kprobe state after task migration
->    LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
->    LoongArch: kprobes: Fix single-stepping instruction slot preparation
->    LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
+On Fri, May 15, 2026 at 10:52=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
+n> wrote:
+>
+> On 2026/5/12 =E4=B8=8B=E5=8D=884:20, Tiezhu Yang wrote:
+> > This series addresses ftrace and kprobes issues observed under heavy
+> > tracing loads.
+> >
+> > Tiezhu Yang (4):
+> >    LoongArch: ftrace: Fix stale per-CPU kprobe state after task migrati=
+on
+> >    LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
+> >    LoongArch: kprobes: Fix single-stepping instruction slot preparation
+> >    LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
+>
+> Hi Lisa and Rui,
+>
+> You are right, please ignore the patch #3.
+I think Patch#3 is OK, but you need to remove the introduction about atomic=
+ity.
 
-Hi Lisa and Rui,
+Huacai
 
-You are right, please ignore the patch #3.
-
-Hi Huacai,
-
-Please disregard the patch #1 and focus on the patch #2 and #4.
-
-After thinking it through, it is better to avoid calling functions that
-might sleep in the probe handler. We have modified the test module with
-a proper way, there is no problem thereafter.
-
-The right way is to prevent the problem at the root instead of trying to
-fix it after the fact.
-
-Thanks,
-Tiezhu
-
+>
+> Hi Huacai,
+>
+> Please disregard the patch #1 and focus on the patch #2 and #4.
+>
+> After thinking it through, it is better to avoid calling functions that
+> might sleep in the probe handler. We have modified the test module with
+> a proper way, there is no problem thereafter.
+>
+> The right way is to prevent the problem at the root instead of trying to
+> fix it after the fact.
+>
+> Thanks,
+> Tiezhu
+>
+>
