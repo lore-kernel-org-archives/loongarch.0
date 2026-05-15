@@ -1,110 +1,88 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E6833F58A
-	for <loongarch@lists.linux.dev>; Thu, 14 May 2026 20:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCC8C36A030
+	for <loongarch@lists.linux.dev>; Fri, 15 May 2026 02:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778789449; cv=none; b=RxusMThmZdfcKyFf5i7+FlNYROqbPa8cK7psylG6g4CS7WQOUczerPjd1t3kZnRXf0ONuwODhzHL4FgPFIo1/lhytyRHnwAxFe8ANxj2h7i11eiDiqGuFOTFKMnPSB1QOAE8mAtfxjOBBgHflsT7VcyBJEpSCcFxAF0xDLUN+WI=
+	t=1778813541; cv=none; b=Se/ZB2MSQz2ZPfDKuXdn6dbdwSeaiQWVBf8jjQBRvaQLEUPeu9yFtfxQJWy4tBK9Cge1E8OI3DxtYqLXdw8df0EEMc9zbc+Kx8ZF4ZrX7M8fuDclHJuN/5QOHmDVccvD08gG15rv3f7u03fzDAF8wkqrFcbrPi9niCBhB6CG/dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778789449; c=relaxed/simple;
-	bh=JJUyJ3nN1jAla23wfkD6/9LaCidK8nPRv54si1Hc+Ko=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KuBt3ZeGgtoM1KR8hZp11po+YwfB2Mx10GR1muv7aGidy3xM9wfzPQZbsdesAeDo3jvnDCVi4xLSPHNVu51L7Os6KK+C8/9Rc+LeBBgQBIz5F7VpZYPyCnJu6QIOR+yHw3byT4a5UZqL6vBxgFxKtHv09mcZ9N19xlQwhf2xGD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=TMJRrv8q; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TMJRrv8q"
-Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 64EJvxqM1443783
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 14 May 2026 12:58:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 64EJvxqM1443783
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026042601; t=1778788682;
-	bh=xeBHge+llXOwbb4JcAn9Da3zKsJCWrqg8YV6SgfLoXo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=TMJRrv8qsGR2DCztL/jIBPGQO28wsQqHTK/NveRi2zk0+LzcLKFnn8Iviy502ok9i
-	 5OPdaLnKd7D98poTZNiOmU0cpqecXLRAlMLlzcNAcqmYAOBC161NH9p9vqagHz1Xzp
-	 BPHAozGQd8pC11kLXAzXk4hpCEC4Qm5nr3r8fLBpDaXFU6ItVDJJC6CoKBpExDsJpx
-	 SBUnV+538SZRyCwQ4LxXbvqDNKSQfPPT+pqoR4zWD30U5xD3yvUXZOrx9md0+xwCLQ
-	 k9df5Yhe3oajwADOBTxx2BUJt+DFl3mJhhVx9sGvHpXM1M36RT8sI9kIAAkr7iTx6O
-	 TigG32CPWMUsQ==
-Date: Thu, 14 May 2026 12:57:53 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: kreijack@inwind.it, Goffredo Baroncelli <kreijack@libero.it>,
-        Christoph Hellwig <hch@lst.de>, David Sterba <dsterba@suse.cz>
-CC: Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        Song Liu <song@kernel.org>,
-        Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
-        Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
-User-Agent: K-9 Mail for Android
-In-Reply-To: <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it>
-References: <20260512052230.2947683-1-hch@lst.de> <20260512052230.2947683-2-hch@lst.de> <20260512114231.GG2558453@suse.cz> <20260513054742.GA1018@lst.de> <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it>
-Message-ID: <0507CCEF-0548-442F-8703-1D006B5E068B@zytor.com>
+	s=arc-20240116; t=1778813541; c=relaxed/simple;
+	bh=cXXl1Tvpa3tdUbD1ZB1smegsPoHqw63mQRHvC4Xi6e8=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PQfffZ1T8VadeJ43NjYlDD3POBefqBP4bFRQdo9e8ELl0s6rcGId0Qt4SGljlB1vjcitB1CG6IOsIjLA6om1IFKdLAfRmOvYz1U3OwAoBo87a174cIxoFvWnLN2LT+7EKuMOUAZjpT21YCOKjlOr4XrSGpMYnxOxakfj6ACGVxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxrcBaigZqZ_oJAA--.6497S3;
+	Fri, 15 May 2026 10:52:10 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxLMJVigZqpvKCAA--.51038S3;
+	Fri, 15 May 2026 10:52:06 +0800 (CST)
+Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>, Lisa Robinson <lisa@bytefly.space>,
+ WANG Rui <r@hev.cc>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260512082029.2131-1-yangtiezhu@loongson.cn>
+Message-ID: <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
+Date: Fri, 15 May 2026 10:52:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260512082029.2131-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxLMJVigZqpvKCAA--.51038S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JrWfJw13ZrW3GrWrGF17Jwc_yoWfWwc_ua
+	9Fk348C3y8CwsYya1xKFy5XrZ7GrZru3yUKrW8WF92g3sYgrZrZFZ7Wrn3Zw18WrZ5XFnx
+	GrsFgF45ZF12gosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUU
+	U
 
-On May 14, 2026 12:51:59 PM PDT, Goffredo Baroncelli <kreijack@libero=2Eit>=
- wrote:
->On 13/05/2026 07=2E47, Christoph Hellwig wrote:
->> On Tue, May 12, 2026 at 01:42:31PM +0200, David Sterba wrote:
->
->>=20
->>> The degenerate modes of
->>> raid0, 5, or 6 are explicit as a possible middle step when converting
->>> profiles=2E  We can use a fallback implementation for this case if the
->>> accelerated implementations cannot do it=2E
->>=20
->> This is not about a degenerated mode=2E  For a degenerated RAID 6, pari=
-ty
->> generation uses the RAID 5 XOR routines as the second parity will be
->> missing=2E  This is about generating two parities for a single data dis=
-k,
->> which must be explicitly selected=2E
->>=20
->
->I think that the David concern is : "what happens for an already
->existing btrfs raid6 3 disks filesystem when the user upgrade the kernel =
-?"
->(I am thinking when a new BG needs to be allocated)=2E=2E=2E
->
->BR
->GB
->
+On 2026/5/12 下午4:20, Tiezhu Yang wrote:
+> This series addresses ftrace and kprobes issues observed under heavy
+> tracing loads.
+> 
+> Tiezhu Yang (4):
+>    LoongArch: ftrace: Fix stale per-CPU kprobe state after task migration
+>    LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
+>    LoongArch: kprobes: Fix single-stepping instruction slot preparation
+>    LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
 
-That's what I'm saying =E2=80=93 it should invoke the RAID-1 code under th=
-e cover (as with 3 disks, D =3D P =3D Q=2E)
+Hi Lisa and Rui,
+
+You are right, please ignore the patch #3.
+
+Hi Huacai,
+
+Please disregard the patch #1 and focus on the patch #2 and #4.
+
+After thinking it through, it is better to avoid calling functions that
+might sleep in the probe handler. We have modified the test module with
+a proper way, there is no problem thereafter.
+
+The right way is to prevent the problem at the root instead of trying to
+fix it after the fact.
+
+Thanks,
+Tiezhu
+
