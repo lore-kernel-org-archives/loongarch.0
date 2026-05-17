@@ -1,145 +1,169 @@
-Received: from mail-dy1-f193.google.com (mail-dy1-f193.google.com [74.125.82.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB0020CCDC
-	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 03:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295D134B661
+	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 08:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778987691; cv=none; b=oam8VUowECXVf3NvPfDYeSTX6he/Du1aYlqbIpwwBv3ZiQGHFnV7Ck0kfnnUHhx+dsUSDcgWR3xo0RjQrW6afN/GhHB1ZMDs+lcvkqawJ+dqwMb6DDbQxAhMl5S2SVNxPKBkW+E3WUS9PytIe4wM+JHik+NHgNrY8ITHSDeoj1I=
+	t=1779007528; cv=none; b=sB/3Tt5SxjUNbfUn9x+VGaHMyZhOR6rZgFsFnEEs0DTaOTaEO0qJLCZfea6WVvUZ/S82I5KZkY8l7wxmg0PBxkgOg2O7dyBkHvox4SGnFIz0/RetPsUIouPtuc9Is9DDXcdHEHP4dZTOw2LqrLnebxkAaZtz+3PBygu1gSMmii8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778987691; c=relaxed/simple;
-	bh=ri/eJlHC7UN2zyssXhADK+SFuDdKeaElhRa8H7tTz+8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KovDDqkj4GEVfTFI1koLgzzbumY7jLxya7w9z4weUvRc8CaEdd4HgmtQ9sJywQKzwOB8R/D1VlDB+AOjFrLdyxkibmDlsfCuWZKjGzx9po5ONKLT3Ph6i3UGNSELRmIwjsjGkmZzDua7M/JEfPRqTgHg3P+aRVUnBSgZX0Qdszg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H++ysfyt; arc=none smtp.client-ip=74.125.82.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779007528; c=relaxed/simple;
+	bh=p/9AJiwpH9htKz1qH1Sl1BuAo/sVquMqqj2hIHE2j60=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eWOn0COsKH2fDi3Qj63IzQfE6JN6pbuzd0WbAM0S1NUmNe7c367Oy7Trl7J9/MIBtGzUe4UafMb2EK696+yFaeNMlI8fz2z6fQMm8HHtGSFp54MxVpdZYw2jC9pryiUUnNAzsf6u/yLdE1dj7lEHxFlqJKFKqiQBSSJlC9gUtaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcZT9tUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H++ysfyt"
-Received: by mail-dy1-f193.google.com with SMTP id 5a478bee46e88-2f03d6cf77bso1116900eec.0
-        for <loongarch@lists.linux.dev>; Sat, 16 May 2026 20:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778987689; x=1779592489; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hfq3wqL8gmrW8nePp5k7jramHiXYMDBLkPO5KDqKpBo=;
-        b=H++ysfytx8N7c1Wha3Zicd6GXqPH+L94MG2CEuKqM5xKUGR/0PsH23n80t03m9roLt
-         CzOS8OUN93ZOd0lEG1fKO5WA7/1iqqxD+2SVHTHJ2kqF6hKBjvVfia/U1SGIbaO2n7ol
-         wQRxIhNwLbdgzVD/smmtguTejtZSBZ654/nCcx7ELzeV6G4Iq5pZCbJgKMNh5DjXLtSD
-         LmY/up0h8BfsoY8MjVsd4/mhp4C6X1WdrRkyDPqBDFXcYrKIiHDHhLXrn9qQVGg2u4CP
-         c99ymLEAVEzGiMZL6kxGsm3Ekh7pK498YO4KM7FG/XEi67fkqzGRM2jYg1JmF3VIxVJY
-         robg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778987689; x=1779592489;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hfq3wqL8gmrW8nePp5k7jramHiXYMDBLkPO5KDqKpBo=;
-        b=SEnEVKgs2vSOimq/1ClRuwpk2TyjYvIdfzJkoczjWW9QxbHybVav7C00Z9IEo+6X6N
-         bPmRXbRQZgTrxV/Y2fCBBIs+edvL/wHFiUyrXBR/bJsvyR3y0BjpXKwpUxOMvZjHVR3L
-         BEFXudUfk/9WUANywzrO0V7z6hV+pJDUDEWnhZiBrnqDkW8Y0HjAjg99UIOS4qqOLS6E
-         UA4QRNw4gms+5O8eyCWyCjsK5pZY4EQLVQ3DJXAAizDeZc+TwXy41SjRGaam0f2XmmQo
-         JZO5ki9cHmR8fMuaMMav7Tr9fB2brajwlJG+8Lsh0mxfg2q+bHUSKE6PrZj6v8B0fVVh
-         TlWQ==
-X-Gm-Message-State: AOJu0Yzs6znzxrH5fKYV/vtgVZ5eRP8gWaM9IkncGGuk0Qm/wWwGTSUx
-	Yutyo0hXqFlZh0xHgthkX75Ys7DQsM4q6q9d3ptCIgAFmn0KytPWwMuoEbjM8iEdFFk=
-X-Gm-Gg: Acq92OFICQ0ufhoSkLY0t4NrvpC56gA0n0lxvocLlEboinKFZd+Wyi90EWr7M0o1+Z0
-	4Wj6Tja8bmr5JMzi2XllkgeX4LwMiUKr67yk3cosQRAVM4ebyV7lbjm+KLaUQrhW+BL6QfpD9IO
-	qq5JtjdBxEGVN1bUZ5E/7aCiC5dJngcKxhJ6tJSCQ32EyQmrbTLcyzRhb592VsbBgcfG2AcSiu5
-	hrrW8ZZnyeMJyFoTCfw44C+I9uhHOLpq2BzuRlJZ7vGN9cd2LHWw5yRj4sxcpegmBjTNxefX8m7
-	3aW2oY1bxPjPe1mdfeJJYUFMKxsOnDgRpzEBaCnDRr/pJDcaVvQlzFSLPGWdVXM5hqct08LMTEK
-	e3k+izMJeW/4ePezTG2ypz1HPzdr1jBO1i5EWTTuVoEBdU1OWvwwTiyVmptzdEK5UFUCViL+cZq
-	/dvxz4m3Vxt8aZw2Q+0GOHHirKa1T9T2RujjXyAlJr8iveu97uezWo5072ui3iRjMCJ+wsowAe1
-	sff6d71OTHF0wuSDLHzSEDxOdkkp2w96iRa6TNrh3g0xpjrOEFy/TwXOboDA1CNYETonD4Ta+RZ
-	lVAEKsjVMnaynNZlUA==
-X-Received: by 2002:a05:7300:fb83:b0:2de:cc07:e8b with SMTP id 5a478bee46e88-3039818afa7mr4753610eec.1.1778987688926;
-        Sat, 16 May 2026 20:14:48 -0700 (PDT)
-Received: from ethan-latitude5420.. (host-127-24.cafrjco.fresno.ca.us.clients.pavlovmedia.net. [68.180.127.24])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2ea78sm10868372eec.6.2026.05.16.20.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2026 20:14:48 -0700 (PDT)
-From: Ethan Nelson-Moore <enelsonmoore@gmail.com>
-To: loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org
-Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Subject: [PATCH] LoongArch: Remove unused arch/loongarch/crypto directory
-Date: Sat, 16 May 2026 20:14:26 -0700
-Message-ID: <20260517031430.102984-1-enelsonmoore@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcZT9tUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78A5C2BCC9
+	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 08:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779007527;
+	bh=p/9AJiwpH9htKz1qH1Sl1BuAo/sVquMqqj2hIHE2j60=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IcZT9tUolcrkwWW0g0RY9HTDkbfvMUWKMC+4fxz9cOlxN5nLUbfxb37rlEv77K6Yz
+	 91/W8a+pD9VIXpnwYL9jbGNNe64gmPI7/gmARH/LrsqxjAESIXXbB0hoqlAI/eOVyA
+	 71yxBQAqlF7qQVourMYDTKkIlJOEhH+OOJG8NyQvxKt+Jkv+ZeuvJZZuT8Uv72hHKe
+	 5Uy2D1EisdI1IXy6U24mBXVmBUDot+lzpFzHE4Dt6atMPLsp/jew4RZqdckHNc2wLr
+	 FmqGPcBeg679dY+2flLU2OkyQdSmrf0RqKFym7/EfEyCQaoVLB61fYxtlxJ1BqzoTE
+	 TcjhzGKbClSVA==
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8c9166b26b4so18535346d6.0
+        for <loongarch@lists.linux.dev>; Sun, 17 May 2026 01:45:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+UkUBSiwlVjthywI/VcFqt8G/elbrtGv6XUmHAnXjLeaU2HBwl8RP4T5RwIGMYnLAPPY9d/EECzcA=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzM189VCtwZdp4ISG5gh+Gu3kM362SKOt9hcnJXqNysyrx7MJiH
+	ZbCU43YAncCxmR5/GcOLjUpPHmRIptoOGc6kwvhvckq0arx8/P0GnsLO2zieAON2kCPqZ1T9Xc5
+	HEpQo2BXXDuzhiNle5PbNNxu9OnWfL6k=
+X-Received: by 2002:a05:6214:1c82:b0:8be:7ed5:477b with SMTP id
+ 6a1803df08f44-8ca0f6b95a0mr188510036d6.22.1779007526681; Sun, 17 May 2026
+ 01:45:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+In-Reply-To: <afTpoL3FklpQZNMM@casper.infradead.org>
+From: Barry Song <baohua@kernel.org>
+Date: Sun, 17 May 2026 16:45:15 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+X-Gm-Features: AVHnY4ICHad0vRrEOEwJ7DjNSE1jL9epFkBx0OBK2sLJbi9Nv2hHU65J8Z0HpVM
+Message-ID: <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+To: Matthew Wilcox <willy@infradead.org>, surenb@google.com
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
+	mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, 
+	chentao@kylinos.cn, lianux.mm@gmail.com, kunwu.chan@gmail.com, 
+	liyangouwen1@oppo.com, chrisl@kernel.org, kasong@tencent.com, 
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-All LoongArch crypto code was moved to arch/loongarch/lib in
-commit 72f51a4f4b07 ("loongarch/crc32: expose CRC32 functions through
-lib"). However, arch/loongarch/crypto still contains stub Kconfig and
-Makefile files. Remove these unnecessary files.
+On Sat, May 2, 2026 at 1:58=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
+ wrote:
+>
+> On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
+> > On Fri, May 1, 2026 at 10:57=E2=80=AFPM Matthew Wilcox <willy@infradead=
+.org> wrote:
+> > >
+> > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
+> > > > 1. There is no deterministic latency for I/O completion. It depends=
+ on
+> > > > both the hardware and the software stack (bio/request queues and th=
+e
+> > > > block scheduler). Sometimes the latency is short; at other times it=
+ can
+> > > > be quite long. In such cases, a high-priority thread performing ope=
+rations
+> > > > such as mprotect, unmap, prctl_set_vma, or madvise may be forced to=
+ wait
+> > > > for an unpredictable amount of time.
+> > >
+> > > But does that actually happen?  I find it hard to believe that thread=
+ A
+> > > unmaps a VMA while thread B is in the middle of taking a page fault i=
+n
+> > > that same VMA.  mprotect() and madvise() are more likely to happen, b=
+ut
+> > > it still seems really unlikely to me.
+> >
+> > It doesn=E2=80=99t have to involve unmapping or applying mprotect to
+> > the entire VMA=E2=80=94just a portion of it is sufficient.
+>
+> Yes, but that still fails to answer "does this actually happen".  How muc=
+h
+> performance is all this complexity in the page fault handler buying us?
+> If you don't answer this question, I'm just going to go in and rip it
+> all out.
+>
 
-Signed-off-by: Ethan Nelson-Moore <enelsonmoore@gmail.com>
----
- arch/loongarch/Makefile        | 2 --
- arch/loongarch/crypto/Kconfig  | 5 -----
- arch/loongarch/crypto/Makefile | 4 ----
- crypto/Kconfig                 | 3 ---
- 4 files changed, 14 deletions(-)
- delete mode 100644 arch/loongarch/crypto/Kconfig
- delete mode 100644 arch/loongarch/crypto/Makefile
+Hi Matthew (and Lorenzo, Jan, and anyone else who may be
+waiting for answers),
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 54fcfa1eac1f..4b22f95aaafb 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -197,8 +197,6 @@ endif
- libs-y += arch/loongarch/lib/
- libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
- 
--drivers-y		+= arch/loongarch/crypto/
--
- # suspend and hibernation support
- drivers-$(CONFIG_PM)	+= arch/loongarch/power/
- 
-diff --git a/arch/loongarch/crypto/Kconfig b/arch/loongarch/crypto/Kconfig
-deleted file mode 100644
-index a0270b3e5b30..000000000000
---- a/arch/loongarch/crypto/Kconfig
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--
--menu "Accelerated Cryptographic Algorithms for CPU (loongarch)"
--
--endmenu
-diff --git a/arch/loongarch/crypto/Makefile b/arch/loongarch/crypto/Makefile
-deleted file mode 100644
-index ba83755dde2b..000000000000
---- a/arch/loongarch/crypto/Makefile
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--#
--# Makefile for LoongArch crypto files..
--#
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 103d1f58cb7c..62221507f2b9 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -1361,9 +1361,6 @@ endif
- if ARM64
- source "arch/arm64/crypto/Kconfig"
- endif
--if LOONGARCH
--source "arch/loongarch/crypto/Kconfig"
--endif
- if MIPS
- source "arch/mips/crypto/Kconfig"
- endif
--- 
-2.43.0
+As promised during LSF/MM/BPF, we conducted thorough
+testing on Android phones to determine whether performing
+I/O in `filemap_fault()` can block `vma_start_write()`.
+I wanted to give a quick update on this question.
 
+Nanzhe at Xiaomi created tracing scripts and ran various
+applications on Android devices with I/O performed under
+the VMA lock in `filemap_fault()`. We found that:
+
+1. There are very few cases where unmap() is blocked by
+   page faults. I assume this is due to buggy user code
+   or poor synchronization between reads and unmap().
+So I assume it is not a problem.
+
+2. We observed many cases where `vma_start_write()`
+   is blocked by page-fault I/O in some applications.
+   The blocking occurs in the `dup_mmap()` path during
+   fork().
+
+With Suren's commit fb49c455323ff ("fork: lock VMAs of
+the parent process when forking"), we now always hold
+`vma_write_lock()` for each VMA. Note that the
+`mmap_lock` write lock is also held, which could lead to
+chained waiting if page-fault I/O is performed without
+releasing the VMA lock.
+
+My gut feeling is that Suren's commit may be overshooting,
+so my rough idea is that we might want to do something like
+the following (we haven't tested it yet and it might be
+wrong):
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 2311ae7c2ff4..5ddaf297f31a 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1762,7 +1762,13 @@ __latent_entropy int dup_mmap(struct mm_struct
+*mm, struct mm_struct *oldmm)
+        for_each_vma(vmi, mpnt) {
+                struct file *file;
+
+-               retval =3D vma_start_write_killable(mpnt);
++               /*
++                * For anonymous or writable private VMAs, prevent
++                * concurrent CoW faults.
++                */
++               if (!mpnt->vm_file || (!(mpnt->vm_flags & VM_SHARED) &&
++                                       (mpnt->vm_flags & VM_WRITE)))
++                       retval =3D vma_start_write_killable(mpnt);
+                if (retval < 0)
+                        goto loop_out;
+                if (mpnt->vm_flags & VM_DONTCOPY) {
+
+Based on the above, we may want to re-check whether fork()
+can be blocked by page faults. At the same time, if Suren,
+you, or anyone else has any comments, please feel free to
+share them.
+
+Best Regards
+Barry
