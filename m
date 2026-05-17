@@ -1,169 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295D134B661
-	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 08:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33891357739
+	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 09:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779007528; cv=none; b=sB/3Tt5SxjUNbfUn9x+VGaHMyZhOR6rZgFsFnEEs0DTaOTaEO0qJLCZfea6WVvUZ/S82I5KZkY8l7wxmg0PBxkgOg2O7dyBkHvox4SGnFIz0/RetPsUIouPtuc9Is9DDXcdHEHP4dZTOw2LqrLnebxkAaZtz+3PBygu1gSMmii8=
+	t=1779009910; cv=none; b=BdYv+BKI6jcp/V2foozIpvPxPGuy0SEPpRhtXnFwDhTQaj4w/ZO5RPgwhNdEYgJv+lORWp7XvKLps0sJcqemzgawUapmYO0JwrLSZXbS70clyGLshYUQn1Cd5keYPr9OXCP7YwO59iuzxLFVC3Cd/OsZeWeHbE2lI6itiJDPfxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779007528; c=relaxed/simple;
-	bh=p/9AJiwpH9htKz1qH1Sl1BuAo/sVquMqqj2hIHE2j60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWOn0COsKH2fDi3Qj63IzQfE6JN6pbuzd0WbAM0S1NUmNe7c367Oy7Trl7J9/MIBtGzUe4UafMb2EK696+yFaeNMlI8fz2z6fQMm8HHtGSFp54MxVpdZYw2jC9pryiUUnNAzsf6u/yLdE1dj7lEHxFlqJKFKqiQBSSJlC9gUtaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcZT9tUo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcZT9tUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78A5C2BCC9
-	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 08:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779007527;
-	bh=p/9AJiwpH9htKz1qH1Sl1BuAo/sVquMqqj2hIHE2j60=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IcZT9tUolcrkwWW0g0RY9HTDkbfvMUWKMC+4fxz9cOlxN5nLUbfxb37rlEv77K6Yz
-	 91/W8a+pD9VIXpnwYL9jbGNNe64gmPI7/gmARH/LrsqxjAESIXXbB0hoqlAI/eOVyA
-	 71yxBQAqlF7qQVourMYDTKkIlJOEhH+OOJG8NyQvxKt+Jkv+ZeuvJZZuT8Uv72hHKe
-	 5Uy2D1EisdI1IXy6U24mBXVmBUDot+lzpFzHE4Dt6atMPLsp/jew4RZqdckHNc2wLr
-	 FmqGPcBeg679dY+2flLU2OkyQdSmrf0RqKFym7/EfEyCQaoVLB61fYxtlxJ1BqzoTE
-	 TcjhzGKbClSVA==
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-8c9166b26b4so18535346d6.0
-        for <loongarch@lists.linux.dev>; Sun, 17 May 2026 01:45:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+UkUBSiwlVjthywI/VcFqt8G/elbrtGv6XUmHAnXjLeaU2HBwl8RP4T5RwIGMYnLAPPY9d/EECzcA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzM189VCtwZdp4ISG5gh+Gu3kM362SKOt9hcnJXqNysyrx7MJiH
-	ZbCU43YAncCxmR5/GcOLjUpPHmRIptoOGc6kwvhvckq0arx8/P0GnsLO2zieAON2kCPqZ1T9Xc5
-	HEpQo2BXXDuzhiNle5PbNNxu9OnWfL6k=
-X-Received: by 2002:a05:6214:1c82:b0:8be:7ed5:477b with SMTP id
- 6a1803df08f44-8ca0f6b95a0mr188510036d6.22.1779007526681; Sun, 17 May 2026
- 01:45:26 -0700 (PDT)
+	s=arc-20240116; t=1779009910; c=relaxed/simple;
+	bh=7y2WJ62VHjFjcC0W10A0Ibwi3RZr+dSmPhL4fXoUHjU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e5VADQQG88kMxRgYqlRqjJ3BQq6YUwdzMCgPswuceIrUZcQQ+Yq9Q4rVp4wvAcaKGzieIjNM0HmZQPvMkUvCVGka/NXYb33fo29IzANQ272Uhb/r68SQKrAuuUyf3zaSHU84aSZe1mWjfIKCHS8RYu9/BQYbRM12k4pZ7+B47SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.59])
+	by gateway (Coremail) with SMTP id _____8DxBOlwiQlqiIUKAA--.25447S3;
+	Sun, 17 May 2026 17:25:04 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.59])
+	by front1 (Coremail) with SMTP id qMiowJAxlsBXiQlqD0KFAA--.49892S2;
+	Sun, 17 May 2026 17:24:43 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: Remove unused code to avoid build warning
+Date: Sun, 17 May 2026 17:24:32 +0800
+Message-ID: <20260517092432.1025008-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org>
-In-Reply-To: <afTpoL3FklpQZNMM@casper.infradead.org>
-From: Barry Song <baohua@kernel.org>
-Date: Sun, 17 May 2026 16:45:15 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
-X-Gm-Features: AVHnY4ICHad0vRrEOEwJ7DjNSE1jL9epFkBx0OBK2sLJbi9Nv2hHU65J8Z0HpVM
-Message-ID: <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Matthew Wilcox <willy@infradead.org>, surenb@google.com
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
-	mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, 
-	chentao@kylinos.cn, lianux.mm@gmail.com, kunwu.chan@gmail.com, 
-	liyangouwen1@oppo.com, chrisl@kernel.org, kasong@tencent.com, 
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
-	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxlsBXiQlqD0KFAA--.49892S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWrtryDZr47WrWxXryUJFW8AFc_yoW8JF1kpr
+	W8Zwn5Kr4UWr17Zws7tr9Y9rnxJ3Z7KF42qFsIkF9xWF17Xr109r1ft3ZFqFy5J3yrGFWI
+	vr4ktr13Wa1jkacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UMpBfUUUUU=
 
-On Sat, May 2, 2026 at 1:58=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
- wrote:
->
-> On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
-> > On Fri, May 1, 2026 at 10:57=E2=80=AFPM Matthew Wilcox <willy@infradead=
-.org> wrote:
-> > >
-> > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
-> > > > 1. There is no deterministic latency for I/O completion. It depends=
- on
-> > > > both the hardware and the software stack (bio/request queues and th=
-e
-> > > > block scheduler). Sometimes the latency is short; at other times it=
- can
-> > > > be quite long. In such cases, a high-priority thread performing ope=
-rations
-> > > > such as mprotect, unmap, prctl_set_vma, or madvise may be forced to=
- wait
-> > > > for an unpredictable amount of time.
-> > >
-> > > But does that actually happen?  I find it hard to believe that thread=
- A
-> > > unmaps a VMA while thread B is in the middle of taking a page fault i=
-n
-> > > that same VMA.  mprotect() and madvise() are more likely to happen, b=
-ut
-> > > it still seems really unlikely to me.
-> >
-> > It doesn=E2=80=99t have to involve unmapping or applying mprotect to
-> > the entire VMA=E2=80=94just a portion of it is sufficient.
->
-> Yes, but that still fails to answer "does this actually happen".  How muc=
-h
-> performance is all this complexity in the page fault handler buying us?
-> If you don't answer this question, I'm just going to go in and rip it
-> all out.
->
+After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones when
+offlining memory"), __remove_pages() doesn't need the "zone" parameter
+so the "page" variable is also unused. Remove the unused code to avoid
+such build warning:
 
-Hi Matthew (and Lorenzo, Jan, and anyone else who may be
-waiting for answers),
+arch/loongarch/mm/init.c: In function 'arch_remove_memory':
+arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but not used [-Wunused-but-set-variable=]
+  134 |         struct page *page = pfn_to_page(start_pfn);
 
-As promised during LSF/MM/BPF, we conducted thorough
-testing on Android phones to determine whether performing
-I/O in `filemap_fault()` can block `vma_start_write()`.
-I wanted to give a quick update on this question.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/mm/init.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Nanzhe at Xiaomi created tracing scripts and ran various
-applications on Android devices with I/O performed under
-the VMA lock in `filemap_fault()`. We found that:
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index 3f9ab54114c5..031b39eb081c 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+-	struct page *page = pfn_to_page(start_pfn);
+ 
+-	/* With altmap the first mapped page is offset from @start */
+-	if (altmap)
+-		page += vmem_altmap_offset(altmap);
+ 	__remove_pages(start_pfn, nr_pages, altmap);
+ }
+ #endif
+-- 
+2.52.0
 
-1. There are very few cases where unmap() is blocked by
-   page faults. I assume this is due to buggy user code
-   or poor synchronization between reads and unmap().
-So I assume it is not a problem.
-
-2. We observed many cases where `vma_start_write()`
-   is blocked by page-fault I/O in some applications.
-   The blocking occurs in the `dup_mmap()` path during
-   fork().
-
-With Suren's commit fb49c455323ff ("fork: lock VMAs of
-the parent process when forking"), we now always hold
-`vma_write_lock()` for each VMA. Note that the
-`mmap_lock` write lock is also held, which could lead to
-chained waiting if page-fault I/O is performed without
-releasing the VMA lock.
-
-My gut feeling is that Suren's commit may be overshooting,
-so my rough idea is that we might want to do something like
-the following (we haven't tested it yet and it might be
-wrong):
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 2311ae7c2ff4..5ddaf297f31a 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1762,7 +1762,13 @@ __latent_entropy int dup_mmap(struct mm_struct
-*mm, struct mm_struct *oldmm)
-        for_each_vma(vmi, mpnt) {
-                struct file *file;
-
--               retval =3D vma_start_write_killable(mpnt);
-+               /*
-+                * For anonymous or writable private VMAs, prevent
-+                * concurrent CoW faults.
-+                */
-+               if (!mpnt->vm_file || (!(mpnt->vm_flags & VM_SHARED) &&
-+                                       (mpnt->vm_flags & VM_WRITE)))
-+                       retval =3D vma_start_write_killable(mpnt);
-                if (retval < 0)
-                        goto loop_out;
-                if (mpnt->vm_flags & VM_DONTCOPY) {
-
-Based on the above, we may want to re-check whether fork()
-can be blocked by page faults. At the same time, if Suren,
-you, or anyone else has any comments, please feel free to
-share them.
-
-Best Regards
-Barry
