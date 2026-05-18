@@ -1,80 +1,80 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC073E00BC
-	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 08:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD359377558
+	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 09:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779091954; cv=pass; b=RBGveICOL0hwhOd0pZVe9x2UG8d4c5kK7lTHLhOuivz2/WzNCzk2YpMqUGJLBpzdWj7dkjuZsEl0xTF7k/X/JQJywFmB/mDR+dpUZA2qj1GQlPZUSuZmdxeByur9SmoLpo6yeubXaJVh9of+Gif/9olicswmdcrAmJBh9Rnx9Ds=
+	t=1779095965; cv=pass; b=VV1TLge3HLACn6pHx9RsBPCsC2XVfFt6BKx/FKy0ui1hVHLvIurJMTSOsAMYEJBV02owvF6c+OJWPD6KfSROmMcjI3+2JDAxOzjHQ+v45EXsabi0alJrn2U9ldklDBYyYgAPy0P8cqyxzBkiDTRR90NiSn0HlKoxLP7qTzE3VN8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779091954; c=relaxed/simple;
-	bh=vch7RoAtdQnSpIPyEiy931DDp8Zl4PDdbA8n+oHAg8Q=;
+	s=arc-20240116; t=1779095965; c=relaxed/simple;
+	bh=00KNN50oshPyOm1tnSY7JpJdR2sJlzhZxLS8I2d7zy8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LPcA8ktxVkNbM0ARxFEllbGmA9JL6mzIc3jJmjq+c32Cmh0oj1NfIPOwhHlCiYE3JyFtl3GSMt4thBLYY9SpWZGIyDos7AQDQI/Im7mHjM11zVpIBTzQKZnpqCQdCl6vDma5etqoWcDhLRVPGFF9Bpcb91S8/9zd5dwfpesLrLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SEyHNXMo; arc=pass smtp.client-ip=209.85.208.43
+	 To:Cc:Content-Type; b=aUrPi+j0oP5Oe4gHhGV+A0dYYDVwHtAZpmPgbaXCq7B99ctqspG3H7rxydINas4jLZYCpta28r9v2xyBSVyhaVrh5Phwg75mcI8mNT/arDyAa72TaeYtJsw4VwzB3JYBVUi7A88uZIXlo11gWZd0jDBQMd3W0+wS/Vfavvu5ZvI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q7wPBlYm; arc=pass smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEyHNXMo"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-67c3cb1433cso4419815a12.0
-        for <loongarch@lists.linux.dev>; Mon, 18 May 2026 01:12:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779091948; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7wPBlYm"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-67389cf78b0so4903224a12.2
+        for <loongarch@lists.linux.dev>; Mon, 18 May 2026 02:19:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779095953; cv=none;
         d=google.com; s=arc-20240605;
-        b=hSnQlXmF6Hfhr8/Ez2/Z0/S/cakSsLT803u+Bx1cLg2qBJ4IMtJ/Sjpttt3tb5yMMn
-         9ex61nJ6eUYX4Zl8H1CixHmhUFUe6d/AicUG53l/dHPvUz854I+VZWOaQuY135HQrBiC
-         B9r0TcNed5rxez1dmWK1B5wJjYNxSwiuDASE6Fosr6lRcHYa+nFH7kPWBTAfF5QoeZFu
-         VsctvBnnPgOuSVw3RyKB4GnaKGmfYiDnOVILQlMTwe/AWIZ/sWqGVWHzm1wpZFInMBH0
-         b5qMVSaO7t5wGnXMIqp9WY9ywG7pBH9GiDFVZzrPBX3Ds43/OfHuUxP5YK3WhSZJctQP
-         jBIQ==
+        b=OzWPo4bnAqDW2BlkeA+Lm+uQpi4gclkLj07+jGTnzG7mIZGF+lAamyzsOReTzVvLia
+         Ikf0fd1wBwsmvDbyiZ0TkIrVDTBZ7feFlYkQLSrjxLmzyegGAfOqky5tLloEyh0YeWK/
+         p4iY4Y15TZ+iMkR+panDKwhh/0QpE18SyY1NQd8c20E8Lac61ZGFFLLDskfSQtPY8tru
+         51RxPgpX6YvC/WKH3s3C1NwMVP2h2UNJ7ir0/ztNQSeTya9KCLToFHFOxmSTOc6S2K16
+         DPJv+wDkt6+bhN9iNxLmKbu+/Y7xcuVLrKtQues1SuxNmQgNLiwJROcT77rtlL3Wc6+a
+         wtNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Vyq8MRX1t/3pEvmCy9T0VJ9Zml3naxYg5duBlE2VYU8=;
-        fh=xaTP7QYuGDVKwUoDUIwvZ2AS9huHPqQbG/ECGqJrgi4=;
-        b=MrUQxJptrrsbTvySYOhCbUi8NliIgxXah7VDqMFVanVq6e4DwIupFpxLfdXBQQraVu
-         xkOowqQWT5vH3KCx7BbPOkCRXAqPl6iwAvlZDVFAKDlj0GCOHILRwk/yMDlBe+1a0AoU
-         a7JIVXQwgOKafGuqcWmLZnxIwn0d8WESA8yyv/2OirhiwtxhBagRYNU96kcxeF3eeUj3
-         eyH18gbWmkpcktx4bIopP8vv5mHdfjaU2GvhcRYujm11yPSclxB6LnurU1MwLcolSsHc
-         1CWy+VjBTIoKsjHdPOsxQuYl8zWy+qC6DmOj999/a1Gok3kaHgf2bCJQDkabooi7G9Zc
-         ODEg==;
+        bh=cCNyd8eSjoGGhiQrBwaf91ul1aFY0f7DOw/EgcEGiXo=;
+        fh=WVRZkQ22jqezmOPOboiMcd+60REwot3x+0GOv/Z9MPM=;
+        b=CvqU9e5B+6mDJ5PHlK+I96rkMwR92ui8MT04XjgMe+y36wzUbHi1zjQon5f0rXTuaB
+         CnOhvOChzhi1Ns/10U2AwYkmReues+jddzKd+csNX299kiFl3Mpitg1jHwMUPmJna9VL
+         /qQmV654Fw/6mWmK385KOzYikqZDDrinUj7gxETeq5ESMcEVMPVfEvm8HRvUIYWa4u5d
+         xEXDbtey5q6OcRQlts7AcTd9/2OvFRCPWv1le3n0QY4bgHc3q20fSi3h+3PltHR9VlKc
+         6JjCh0byZQ9kBBedG8qwg0YSIsfzIRRi4nNIdhIj8/vOXKbAWwFdh0+oFgtIRCrDsr5R
+         /VWw==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779091948; x=1779696748; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1779095953; x=1779700753; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vyq8MRX1t/3pEvmCy9T0VJ9Zml3naxYg5duBlE2VYU8=;
-        b=SEyHNXMoVcN2NQz1ccs3NFrnGRIsYyfG0iq/08NYvAUxFI+6PCCNlt8K5x3YqV+BNe
-         KI18zCJDB2CYNXmp4qaaRw8akwLgWSUmPM6XN60KAAtY4VOp1LdOQY9P6AgWQ3ZKTbUp
-         zN620uMSnyYG3HAB/o4qZWt+VTw3VkMSWGVYg9OtTQY1lUhlf02aiLdOCQW7jt+MthKK
-         EOTNWcg7RaJ6lm10TmrVSqRdcCymR9QcH3t+H+6mxIIBD2K4PygrXRfhVMGMSfBWS90m
-         uUvz/qGltX1jvlhOphJBZ5QytTfSQwl2868bmxVI8eHIXhu59bxl+pFFg+R5XMy/Uo78
-         pflQ==
+        bh=cCNyd8eSjoGGhiQrBwaf91ul1aFY0f7DOw/EgcEGiXo=;
+        b=Q7wPBlYmRsLMxgp6tV0caHgY8QEn4CEUScowBolav9uPDvd4Uv//ecRtSHn2OTQsBW
+         8HGdJiNTQfnfVbk2Y7brW68XDPJi6xGe73h96VpfFDesyiEwc4r1DG43KFQdkVWaIlF3
+         2UUAFLf+KRZnwkObjd9yad4n7s8rdMcwgGyElIyNNhYXTQKvguV/cMCLobtpv0x/yFwU
+         z0irQscFODH5FsPlG+HTL4FL54bdwpegvG8xkXnnmySIBB+LBbHjilIouytXI2aZiTv2
+         /Cb4sGvqwbVxn1qTVdIj+128Gok23cruzsJymf9f1hnIFIb2pm3gCahVImKFPnu2/bo8
+         3QIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779091948; x=1779696748;
+        d=1e100.net; s=20251104; t=1779095953; x=1779700753;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Vyq8MRX1t/3pEvmCy9T0VJ9Zml3naxYg5duBlE2VYU8=;
-        b=Mc5prA0z8qV/dF7bnr66DMNZ93Qm9SiEIYIlZMG83ZEnqehng3vvMXm14y7frcqJLn
-         IaegQfkjwn9MIHGuM2DlcVc8ZY4VDxYoimW52PU/hy/ur/RX0SHLXz7WukbVRZH8V0sn
-         QGkusS2IulVprwJwc0eDYA13ENYta1J0iwHmtpogny6sjkyKWQHiCtwoheJyMHvfm6ur
-         2L3qAkSkXJq9Yxa7Z/yzJQZbbkL9jtPNZ3Tnm6XdeQUdAFfnq9r86uFm/MBS7g3xVyg3
-         oCNuchMYWjcy0Goma+V+nz1uZCnxO2VtpvsBoi9QBLFxYUDXVOExwwSRoF7jMHDcDGr0
-         67aw==
-X-Forwarded-Encrypted: i=1; AFNElJ9muBltjGtCT7FTh3NZwDOQZzU2Pu+XEPar2SDJsrlrcuIBsRJBsaRZ+FWQsxZLAcWY1l4HU8IWXQo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywo0OsyMlhT1/umv3ws2F7e3UBdXI+7EF4088aSoamYcTPtf/Ck
-	EpCUZU+/iCUI5psEljqOZ9Kug7U5uw1myXbtfilDr3z84mmt5tHMCeK/0VE4cyY6RXDq6IljY7K
-	QdvKpcBb3Zu8unEwdtAN0iEct328CWjE=
-X-Gm-Gg: Acq92OHpqcwe728GHba0X2bMWuSUl4k2hjnB+h1NvPioBBvS75K2nSi6SmzX4CGK9Pm
-	xLKybXE8qKytCOSuuDzdsUr3EOadHB0cOyfjOrblxsggvtIauvQh74fY8PY8u1EnGGiW10k7JiO
-	T3I35wKuHaXTSZ5L3e+8cpJTST90/eCRo38mSV1BF78gejj7RvAIud5gqu+nSIYXkXS/9s7aX7T
-	lDEV51Al2mPyYpS5/gOz9hkTONVY3hu23/VOlQPK1Lnc797B5LsnAxSG//L9adAtMjojBqg0HEz
-	00hA4SLTDA==
-X-Received: by 2002:a05:6402:428e:b0:683:e394:cc0c with SMTP id
- 4fb4d7f45d1cf-683e394ce69mr6064316a12.4.1779091947657; Mon, 18 May 2026
- 01:12:27 -0700 (PDT)
+        bh=cCNyd8eSjoGGhiQrBwaf91ul1aFY0f7DOw/EgcEGiXo=;
+        b=sCYkG8XVSmcdc4EUV7zc+em7XzGcKt5oKTZ841Eyjh+mCT0mc/rcXdybEONmo1cquB
+         RvnLr0gYJKK4ZXoGE4YMkDKib5tsdCocnT3Bq+btAl7YHbx8VVUMLfWtwMTuO8NGIKlS
+         Q+zmraZhtHiIT4hmwBobjSIrVazJf/Vg/2ZYwtzCS/PyYdszTnZ27J17eRtN4tPvp0PP
+         uzhwXYHdlrTDaP6BDPYHYDtcQJHppNwrs6oUqPT5mZHf4K6NqhwP3w0TeHUxX9Opc9T7
+         ioCvs5cWNVejHwY+JR2gQx4Y5WSzZMuyjbNuFpUMvcHnB0H6fL3gQ/Sbr57S/eRm9ust
+         83Nw==
+X-Forwarded-Encrypted: i=1; AFNElJ+emb2KpUHi4xNrKVg8Z2PqxCTnnh/sfVbEklk7ho1GWD59rKrTvBv7wSuw5y5VK3AZhusS4TyLaRU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw7J2nzYQHaMvUAUbMM6Zm/EQPBY8SZk2glLkcEwPqHg+7qBuwr
+	C0x3hrzZZelvv64ToMxtXNq6B+PNjQeOiu5AoQGQnEqJWwLej0AHpIJRL6IQ3hJDylzome6DoJe
+	1X3rxDesGAiglaY0qM46yk4R/j0jpfG0=
+X-Gm-Gg: Acq92OELmIj4kZTs5R+MUfhjfd9KlknpiUM9H2qiaRrs/EOWT9QRRpCSCTy8du9V9GV
+	9yE/0LWhklkDOkN0kJ8b4SaRyanLE3GHuuKUdsMNHxRaBoifz6zO+ZWEfpP+7EmjzEw8AlGNDuB
+	W4z2nr3H5HrKdjmZjf023eP15nVi+gn6NzAzziA0DYC0OLzPgYE0cX0gcWD5L5PL4rET8n+A4Ji
+	TpZWVu1BmcM5UD04GxS/9qL1HQKULSWDW3ru3Hb6GpDOpIVXWPIdhSYWdDH2gW9/qSsVeCqpMfm
+	qeAnXNSmJA==
+X-Received: by 2002:a05:6402:4250:10b0:676:9c6d:5c4d with SMTP id
+ 4fb4d7f45d1cf-683bd28cafemr5089891a12.17.1779095952550; Mon, 18 May 2026
+ 02:19:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -86,9 +86,9 @@ References: <cover.1777273055.git.zhoubinbin@loongson.cn> <d7b19f6c1e634ffe44548
  <02151c63-48dd-43f4-8df4-498af696f230@kernel.org>
 In-Reply-To: <02151c63-48dd-43f4-8df4-498af696f230@kernel.org>
 From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Mon, 18 May 2026 16:12:13 +0800
-X-Gm-Features: AVHnY4Lz59yYZN5Py0V5eqk21cmSM0DAPukkv-Tnul1iOtrmu5IULTIfFw_e4OM
-Message-ID: <CAMpQs4LO1KMThtc927RbjiVD5hnftEOBNuEW=Y_oV68ERC0wiw@mail.gmail.com>
+Date: Mon, 18 May 2026 17:18:59 +0800
+X-Gm-Features: AVHnY4JK2fUTFcEp827nImRXeEyANKbaRnnWTgLdlCtxUta0i7WNoOi-i1P8kvc
+Message-ID: <CAMpQs4+fsd+EdrEKSPvc=a0ya4Fth+0qOP_GJhj+cUbLFR6ORQ@mail.gmail.com>
 Subject: Re: [PATCH 1/2] can: Add Loongson CAN-FD controller support
 To: Vincent Mailhol <mailhol@kernel.org>
 Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
@@ -97,6 +97,10 @@ Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>,
 	linux-can@vger.kernel.org, jeffbai@aosc.io
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+
+Hi Vincent:
+
+Sorry, please disregard the previous email; I sent it by mistake.
 
 On Fri, May 15, 2026 at 8:27=E2=80=AFPM Vincent Mailhol <mailhol@kernel.org=
 > wrote:
@@ -179,7 +183,7 @@ ning all the
 > way). Once the remove the #define which you are not using, I don't
 > think to resulting file will be too big.
 
-ok. I will put it in one file.  About 1770 lines.
+ok. I will put all in one file.  About 1770 lines.
 >
 > >>> diff --git a/MAINTAINERS b/MAINTAINERS
 > >>> index 7a2ffd9d37d5..5534db894cdc 100644
@@ -466,24 +470,7 @@ false;
 > may just have one operation to modify bs as needed and then pass it to
 > regmap_test_bits().
 
-About this part, I have tried 2 ways:
-
-One way:
-
-loongson_canfd_get_tx_status():
-        regmap_read(priv->regmap, LOONGSON_CANFD_TX_STAT, &sts);
-        bs =3D FIELD_GET(REG_TX_STAT_BS, sts);
-
-        return (bs >> (buf_id * 2)) & 0x3;
-
-loongson_canfd_is_txtbuf_writable():
-        regmap_read(priv->regmap, LOONGSON_CANFD_TX_STAT, &sts);
-        if ((sts >> buf_id) & 0x1)
-                return false;
-
-        return true;
-
-The other way, use marcos and regmap_test_bits()
+I tried again. How about this:
 
 loongson_canfd_get_tx_status():
 
@@ -521,6 +508,10 @@ loongson_canfd_get_tx_status():
 
         return field_get(mask, sts);
 
+loongson_canfd_is_txtbuf_writable():
+
+       !regmap_test_bits(priv->regmap, LOONGSON_CANFD_TX_STAT, BIT(buf_id))=
+;
 >
 > >>> +     return true;
 > >>> +}
@@ -707,6 +698,8 @@ n");
 > > retransmissions.
 >
 > OK. Add a macro to give a memorable name to that mask.
+
+ok. I will do it.
 >
 > Generally speaking, try to avoid the magic numbers.
 >
@@ -898,6 +891,8 @@ ruct net_device *ndev)
 >
 > Use which one you think is the best, but at first glance, the guard()
 > looked more appropriate to me here.
+
+Emm,  indeed, guard() is enough.
 >
 > >>> +     regmap_read(priv->regmap, LOONGSON_CANFD_TX_STAT, &tx_stat);
 > >>> +     tx_brp =3D FIELD_GET(REG_TX_STAT_BRP, tx_stat);
@@ -927,6 +922,8 @@ XBUF_NUM) {
 >         }
 >
 > Isn't this equivalent to your code (but more readable)?
+
+ok, I will do it.
 >
 > >>> +             if ((((tx_brp >> i) & 0x1) =3D=3D 0) &&
 > >>> +                 ((tx_bs >> (i * 2) & 0x3) =3D=3D 0)) {
@@ -1261,6 +1258,8 @@ te,
 >
 > Link: https://www.kernel.org/doc/html/latest/process/coding-style.html#pr=
 inting-kernel-messages
+
+ok, I will check others.
 >
 > >>> +                     break;
 > >>> +             }
@@ -2348,7 +2347,6 @@ fer Selection Register */
 > >>> +#define REG_TX_CMD_BCR                       GENMASK(15, 8)
 > >>> +#define REG_TX_CMD_BSC                       GENMASK(23, 16)
 > >>> +
-
 > >>> +/* Bitfields of Transmit Buffer Selection register */
 > >>> +#define REG_TX_SEL_BUF_SEL           GENMASK(3, 0)
 > >>> +#define REG_TX_SEL_BUF_CNT           GENMASK(7, 4)
@@ -2358,8 +2356,6 @@ fer Selection Register */
 >
 > Yours sincerely,
 > Vincent Mailhol
-
-
 
 --
 Thanks.
