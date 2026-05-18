@@ -1,93 +1,112 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33891357739
-	for <loongarch@lists.linux.dev>; Sun, 17 May 2026 09:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EAF37BE9A
+	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 02:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779009910; cv=none; b=BdYv+BKI6jcp/V2foozIpvPxPGuy0SEPpRhtXnFwDhTQaj4w/ZO5RPgwhNdEYgJv+lORWp7XvKLps0sJcqemzgawUapmYO0JwrLSZXbS70clyGLshYUQn1Cd5keYPr9OXCP7YwO59iuzxLFVC3Cd/OsZeWeHbE2lI6itiJDPfxg=
+	t=1779073112; cv=none; b=VgjXCmVfTIcNc0c19wN1IkiJjCdfUZU9kJvul7zi04VydhyyV/u6Q/IeMeXQxq7IiWb8xQjA41hcp3RaprL4CDRZQUy8Du8t6gNRSdyCD0jcsPlWXDgy2gNoWkpQHqnxM+H+juyg8HGQs4iYSaFQIKkh9b9dzvMtEiEJDamCpV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779009910; c=relaxed/simple;
-	bh=7y2WJ62VHjFjcC0W10A0Ibwi3RZr+dSmPhL4fXoUHjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e5VADQQG88kMxRgYqlRqjJ3BQq6YUwdzMCgPswuceIrUZcQQ+Yq9Q4rVp4wvAcaKGzieIjNM0HmZQPvMkUvCVGka/NXYb33fo29IzANQ272Uhb/r68SQKrAuuUyf3zaSHU84aSZe1mWjfIKCHS8RYu9/BQYbRM12k4pZ7+B47SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.59])
-	by gateway (Coremail) with SMTP id _____8DxBOlwiQlqiIUKAA--.25447S3;
-	Sun, 17 May 2026 17:25:04 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.59])
-	by front1 (Coremail) with SMTP id qMiowJAxlsBXiQlqD0KFAA--.49892S2;
-	Sun, 17 May 2026 17:24:43 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Remove unused code to avoid build warning
-Date: Sun, 17 May 2026 17:24:32 +0800
-Message-ID: <20260517092432.1025008-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1779073112; c=relaxed/simple;
+	bh=vWvEcAPRpUrI5RQk5fEbio9KQQHm1uMZbGz43aBrKdY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UeOSkowteX3gOwiZUKN2K83i3l4MEFuUHooRQZT2voy6pz2Aj9RRRsZBMN89ixKvnx875C6WdNdDBYNNZqT5AGFUTZHzcf6V0nzd4/K+MM2oFYeAHrMGIbY6vCizcj7CJ+SDAXZxsH72oDp4lNMzr6m3fB/MGmYDjSVtRxdXxBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rp+HOm4S; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rp+HOm4S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08FC5C2BCC9
+	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 02:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779073112;
+	bh=vWvEcAPRpUrI5RQk5fEbio9KQQHm1uMZbGz43aBrKdY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Rp+HOm4SOKROhuwDRqFqNGajLMF7ovpI15zTzxBD1xnwduCPv4zPzCcBZkLqCyI4A
+	 qIKV+biW+SdTmKgtBjpYUTmPyDSIqjei7oLKIPoFi0atAX+3jRrRPwJUY2kkrSQxmL
+	 zpVg0ShhUpyPzPONr9P9YA7gja/jNYlVp4DE29cFWY4OiZjvxe3vqv6GPUCYEVO1V5
+	 vREf8mZwGOlznA/9f85vJZbmvjwQctfGhmWlM9WmKYUwSkNRksWvT0iyO+xK7dxdMc
+	 IuGilp+8W8f6k66rQVxl3A3DByrP9VK2Oy1Z5Wp0CZF18dE6hmiC0kv1I2CY3MUsKi
+	 OUDKkucpGa5XQ==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6763cc8775cso6250353a12.0
+        for <loongarch@lists.linux.dev>; Sun, 17 May 2026 19:58:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9w+X21sc7sISa6xEtwb4ltVu2IAxRd0kqADYmH81+toTHTHc4fl0t9OtpVA0NY6449v66LflJRnzo=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywo+nOwaGlT21Hl61ReU97ofl42rtt0JHotAjpXffNIo4zcw3DX
+	TGizvxJEdhRxPG0OKiiAV2HycOttv4SaIqC9LmRoUxT8RJlZfByf5tszqgj7fcZgQc9gH3iSPtH
+	Br5R6XIdW4emHiBRGFpsr9Mjvpmr+1Ik=
+X-Received: by 2002:a17:907:940d:b0:bd4:f2c7:25e2 with SMTP id
+ a640c23a62f3a-bd51534c830mr562537066b.5.1779073110685; Sun, 17 May 2026
+ 19:58:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxlsBXiQlqD0KFAA--.49892S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWrtryDZr47WrWxXryUJFW8AFc_yoW8JF1kpr
-	W8Zwn5Kr4UWr17Zws7tr9Y9rnxJ3Z7KF42qFsIkF9xWF17Xr109r1ft3ZFqFy5J3yrGFWI
-	vr4ktr13Wa1jkacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UMpBfUUUUU=
+References: <20260517092432.1025008-1-chenhuacai@loongson.cn> <CAJF2gTSn-44So=SdVYxvF5ihJjWs9R7vFAyuPNpeLBwBpJrY9Q@mail.gmail.com>
+In-Reply-To: <CAJF2gTSn-44So=SdVYxvF5ihJjWs9R7vFAyuPNpeLBwBpJrY9Q@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 18 May 2026 10:58:50 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com>
+X-Gm-Features: AVHnY4LGjaT_QdnD3nKcKvz3-lg9nRWT0Y2Sjfi2bQJMcSLBogKzGmXduJtJea4
+Message-ID: <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Remove unused code to avoid build warning
+To: Guo Ren <guoren@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones when
-offlining memory"), __remove_pages() doesn't need the "zone" parameter
-so the "page" variable is also unused. Remove the unused code to avoid
-such build warning:
+On Mon, May 18, 2026 at 9:42=E2=80=AFAM Guo Ren <guoren@kernel.org> wrote:
+>
+>
+>
+> On Sun, May 17, 2026 at 5:25=E2=80=AFPM Huacai Chen <chenhuacai@loongson.=
+cn> wrote:
+> >
+> > After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones when
+> > offlining memory"), __remove_pages() doesn't need the "zone" parameter
+> > so the "page" variable is also unused. Remove the unused code to avoid
+> > such build warning:
+> >
+> > arch/loongarch/mm/init.c: In function 'arch_remove_memory':
+> > arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but not u=
+sed [-Wunused-but-set-variable=3D]
+> >   134 |         struct page *page =3D pfn_to_page(start_pfn);
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  arch/loongarch/mm/init.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> > index 3f9ab54114c5..031b39eb081c 100644
+> > --- a/arch/loongarch/mm/init.c
+> > +++ b/arch/loongarch/mm/init.c
+> > @@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size, struc=
+t vmem_altmap *altmap)
+> >  {
+> >         unsigned long start_pfn =3D start >> PAGE_SHIFT;
+> >         unsigned long nr_pages =3D size >> PAGE_SHIFT;
+> > -       struct page *page =3D pfn_to_page(start_pfn);
+> >
+> > -       /* With altmap the first mapped page is offset from @start */
+> > -       if (altmap)
+> > -               page +=3D vmem_altmap_offset(altmap);
+> >         __remove_pages(start_pfn, nr_pages, altmap);
+>
+> Good cleanup, but does LoongArch forget to remove the linear mapping? If =
+the memory is unplugged, the mapping is still there. How does the core fetc=
+h data from there?
+LoongArch's linear mapping is based on DMW rather than TLB, so
+removing linear mapping is unnecessary.
 
-arch/loongarch/mm/init.c: In function 'arch_remove_memory':
-arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but not used [-Wunused-but-set-variable=]
-  134 |         struct page *page = pfn_to_page(start_pfn);
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/mm/init.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 3f9ab54114c5..031b39eb081c 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	struct page *page = pfn_to_page(start_pfn);
- 
--	/* With altmap the first mapped page is offset from @start */
--	if (altmap)
--		page += vmem_altmap_offset(altmap);
- 	__remove_pages(start_pfn, nr_pages, altmap);
- }
- #endif
--- 
-2.52.0
-
+Huacai
+>
+> --
+>
+> Best Regards
+>
+>   GUO Ren
