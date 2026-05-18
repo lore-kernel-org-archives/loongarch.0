@@ -1,61 +1,52 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0073FCB22;
-	Mon, 18 May 2026 16:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9AB3F23C5;
+	Mon, 18 May 2026 17:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779121085; cv=none; b=YuLEmAjD2PCUtFyAQz6wkehCmTA3KxMAgf/Jlhn00cWgcXhx3T4SXfQRFDa0lREKLHYpqqANGD8w1kgKg2c5pq786mRtoh38DjjWCZ7FOU+kTTY/Ys1Bk9Pl1Tv62FlV39zvgnpCr+cZMxxPvXitdAvbB3Ytb7g4z016Wpaq/7c=
+	t=1779124899; cv=none; b=oM/+V2NaT6cZKmTjr6hmzjKsFh468Amfru6B0Hojr0XNc6kJ27n0smN+7DXwgDW/nV5+yXrrRK4/PUbKVlZWnJg6IVNOGoE6JQeYz0UCT9neJ+LJEmAyPBD3axNLMp5QdGs9E4jACh/VQbepQYeaI1DXp+BXENWJBILQ9Ie6U2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779121085; c=relaxed/simple;
-	bh=o1rptViwTTP1to40Twvuxj4BvWWDX0i69HpeZZvzhrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnwUvLITNLq4NNc4IPgWFB2bLxh8DZXj3SofZAFBYhFuM/muEp2WkmTw2aP5SjjJbroI2IAlq7iNUvkwvBvQKA7chLjXQiOJom/zT2f8gxXH+VFqBvUSS82MVcX03NjWURMPE7ZqLYHfOQi4ThZkD32f72+6xIVh+0/46pMlzcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fU3+SCOF; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1779124899; c=relaxed/simple;
+	bh=hIOrwk8nMqzi1Jicdm7EzZqWF9d2MWMkE53LnZPkOiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=bSqNE/D9gBydMov5uagqc5h0CzKzjifKDEeHAtk2ZsHFnMZkk2xRYB9oGXmO0s17WOoQAsGjEEjIYo1cDwONOs8trE833GERf9XERq8AweSUTHjeDRZJZLh2XcE0psvcweialLWEhCphqjwu1CC9/PdedlQIELKHaw53l/7dPbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CQtFIYDR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fU3+SCOF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GQ3AyNwcHkDwyotJKfmaIM16qng3evSu5qPs3Xeesp0=; b=fU3+SCOFfUUlkOUmyIuTsbnywe
-	89kqfFg93eDsIn1f4q6CEtRQBpKAuBqXFwczvVeUyK1MqiAmO/Is7GNS6SQajMkq/Ou4EEPXO5gjd
-	QG3X5RgIMMIHaZt2k6X7tQJKlMJUiidUWjRLLsCK96ufITmHS/etRFdCcKGXPu9m3Y/9455P1VY+7
-	yI95TKqa8/ath+SxD9IFOJNLaKt8Sstckq3piVjXElv/WkNhCMR7wKydSnX4sVdCnnWMjLyWBjQ2b
-	4vkZR2poj4v3QZS8BJi9xbkgnOoh2L9CaUbogqrM9GJMbxKImRWLaIAgDeo+jPw7Sed1HBtUwdBx+
-	aOLN/sjA==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wP0em-00000004wNm-3PR8;
-	Mon, 18 May 2026 16:17:28 +0000
-Date: Mon, 18 May 2026 17:17:28 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Barry Song <baohua@kernel.org>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, surenb@google.com,
-	akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org,
-	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
-	mhocko@suse.com, jack@suse.cz, pfalcato@suse.de,
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com,
-	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, youngjun.park@lge.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	Nanzhe Zhao <nzzhao@126.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-Message-ID: <ags7mPK7Ong0ZsBf@casper.infradead.org>
-References: <20260430040427.4672-1-baohua@kernel.org>
- <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org>
- <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org>
- <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
- <agrWuDNGddNmvMFD@lucifer>
- <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CQtFIYDR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC0BC2BCF5;
+	Mon, 18 May 2026 17:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779124899;
+	bh=hIOrwk8nMqzi1Jicdm7EzZqWF9d2MWMkE53LnZPkOiA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CQtFIYDRrLkkZ9EyWmPtOrbgZLhv8KME3e+Lnl5WrAnQnDOgDI0tUcgDiwLg008Ni
+	 hyDSodZLHpaYrj0Aesg2QKmzD1Sa9stC8GjTz96uqwwkO1ZR1ATZCKFvL18xOR/Ovb
+	 dpLWwiN1tzsOMvLbyqZWFI0bfWTdIApanPeZsuDf8s4rK1dcmSkuyVTIl9ZvTY0mjx
+	 cOm/KxOaabW5DHgXWeaQsPkqvhc6JeMsOmX73nV+1Cmj9ylzVZyLzo0tFieA0skFpe
+	 7OnM0TipugrlG8GUYbJpG8b9mEpUmetRZrUDI99MFiG3h0NfBgmnmFCPwNXX2Kq8QE
+	 Ygw1XSie2XS4w==
+Date: Mon, 18 May 2026 12:21:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Ziyao Li <liziyao@uniontech.com>, niecheng1@uniontech.com,
+	zhanjun@uniontech.com, guanwentao@uniontech.com,
+	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	kernel@uniontech.com,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lain Fearyncess Yang <fsf@live.com>,
+	Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>,
+	stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v8] PCI: loongson: Override PCIe bridge supported speeds
+ for Loongson-3C6000 series
+Message-ID: <20260518172138.GA626799@bhelgaas>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -64,23 +55,166 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+In-Reply-To: <20260412101731.107059-1-xry111@xry111.site>
 
-On Mon, May 18, 2026 at 07:25:54PM +0800, Barry Song wrote:
-> We have clearly observed that the `fork()` operations of many
-> popular Android apps, such as iQiyi, Baidu Tieba, and 10086,
-> end up waiting on page-fault (PF) I/O when the VMA lock is
-> held during I/O operations. This has already become a
-> practical issue. I also believe this can lead to chained
-> waiting, since the global `mmap_lock` blocks all threads that
-> need to acquire it.
+[+cc Mario]
 
-It's always been a terrible idea to call fork() from a multithreaded
-application.  For example, this question:
+On Sun, Apr 12, 2026 at 06:17:31PM +0800, Xi Ruoyao wrote:
+> From: Ziyao Li <liziyao@uniontech.com>
+> 
+> Older steppings of the Loongson-3C6000 series incorrectly report the
+> supported link speeds on their PCIe bridges (device IDs 0x3c19, 0x3c29)
+> as only 2.5 GT/s, despite the upstream bus supporting speeds from
+> 2.5 GT/s up to 16 GT/s.
+> 
+> As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
+> than one speed is supported"), bwctrl will be disabled if there's only
+> one 2.5 GT/s value in vector `supported_speeds`.
+> 
+> Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
+> amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
+> clocks and lanes in power management. We hope this patch can prevent
+> similar problems in future driver changes (similar checks may be
+> implemented in other GPU, storage controller, NIC, etc. drivers).
 
-https://stackoverflow.com/questions/53601200/calling-fork-on-a-multithreaded-process
+Why is this paragraph here?  Is there code in
+amdgpu_device_partner_bandwidth() that wouldn't be needed after this
+patch?
 
-or this lwn thread: https://lwn.net/Articles/674660/
+This patch updates pdev->supported_speeds, which is used by
+pcie_get_speed_cap(), which is in turn used by
+amdgpu_device_partner_bandwidth().
 
-Do we have any insight into why these applications are doing this
-horrible thing?
+Is the point just that users of pcie_get_speed_cap() (currently just
+amdgpu, radeon, and sysfs) will now see the correct maximum link speed
+for Loongson-3C6000 bridges?
+
+And the "checks" you refer to would be the tests in
+amdgpu_device_get_pcie_info() that use the results of
+pcie_get_speed_cap()?
+
+> Manually override the `supported_speeds` field for affected PCIe bridges
+> with those found on the upstream bus to correctly reflect the supported
+> link speeds.
+> 
+> This patch was originally found from AOSC OS[1].
+> 
+> Link: https://github.com/AOSC-Tracking/linux/pull/2 #1
+> Tested-by: Lain Fearyncess Yang <fsf@live.com>
+> Tested-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Ayden Meng <aydenmeng@yeah.net>
+> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+> Link: https://github.com/AOSC-Tracking/linux/commit/4392f441363abdf6fa0a0433d73175a17f493454
+> [Ziyao Li: move from drivers/pci/quirks.c to drivers/pci/controller/pci-loongson.c]
+> Signed-off-by: Ziyao Li <liziyao@uniontech.com>
+> Tested-by: Mingcong Bai <jeffbai@aosc.io>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> [Xi Ruoyao: Fix falling through logic and add kernel log output;
+>  add Fixes tag and rebase to 7.0-rc7]
+> Cc: stable@vger.kernel.org
+> Fixes: cd89edda4002 ("PCI: loongson: Add ACPI init support")
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+> 
+> Changes in v8:
+> - Add the Fixes tag.
+> - Link to v7: https://lore.kernel.org/all/20260121-loongson-pci1-v7-1-fc79c85a574d@uniontech.com/
+> 
+> Ziyao Li's original commentary message follows below:
+> 
+> The reason of not just copying pdev->bus->self->supported_speeds is
+> that we're concerned that this approach assumes the upstream port
+> reports the same capabilities as bridge, which may not always be the
+> case in future silicon revisions.
+> 
+> Our current conservative approach ensures we only enable speeds that
+> are physically supported by checking the actual max_bus_speed. For
+> example, if there's a future Loongson-3C9999 where the virtual bridge
+> reports Gen4 support but the physical bridge only supports Gen3.
+> 
+> In this scenario, directly copying the upstream port's supported_speeds
+> would incorrectly report Gen4 support for the downstream bridge. The
+> current patch ensures we only set speed bits up to what the hardware
+> actually supports, based on the measured max_bus_speed. This seems
+> safer for future silicon.
+> 
+> Changes in v7:
+> - adjust commit message
+> - Link to v6: https://lore.kernel.org/r/20260114-loongson-pci1-v6-1-ee8a18f5d242@uniontech.com
+> 
+> Changes in v6:
+> - adjust commit message
+> - Link to v5: https://lore.kernel.org/r/20260113-loongson-pci1-v5-1-264c9b4a90ab@uniontech.com
+> 
+> Changes in v5:
+> - style adjust
+> - Link to v4: https://lore.kernel.org/r/20260113-loongson-pci1-v4-1-1921d6479fe4@uniontech.com
+> 
+> Changes in v4:
+> - rename subject
+> - use 0x3c19/0x3c29 instead of 3c19/3c29
+> - Link to v3: https://lore.kernel.org/r/20260109-loongson-pci1-v3-1-5ddc5ae3ba93@uniontech.com
+> 
+> Changes in v3:
+> - Adjust commit message
+> - Make the program flow more intuitive
+> - Link to v2: https://lore.kernel.org/r/20260104-loongson-pci1-v2-1-d151e57b6ef8@uniontech.com
+> 
+> Changes in v2:
+> - Link to v1: https://lore.kernel.org/r/20250822-loongson-pci1-v1-1-39aabbd11fbd@uniontech.com
+> - Move from arch/loongarch/pci/pci.c to drivers/pci/controller/pci-loongson.c
+> - Fix falling through logic and add kernel log output by Xi Ruoyao
+> 
+>  drivers/pci/controller/pci-loongson.c | 36 +++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> index bc630ab8a283..a4250d7af1bf 100644
+> --- a/drivers/pci/controller/pci-loongson.c
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -176,6 +176,42 @@ static void loongson_pci_msi_quirk(struct pci_dev *dev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_PCIE_PORT5, loongson_pci_msi_quirk);
+>  
+> +/*
+> + * Older steppings of the Loongson-3C6000 series incorrectly report the
+> + * supported link speeds on their PCIe bridges (device IDs 0x3c19,
+> + * 0x3c29) as only 2.5 GT/s, despite the upstream bus supporting speeds
+> + * from 2.5 GT/s up to 16 GT/s.
+> + */
+> +static void loongson_pci_bridge_speed_quirk(struct pci_dev *pdev)
+> +{
+> +	u8 old_supported_speeds = pdev->supported_speeds;
+> +
+> +	switch (pdev->bus->max_bus_speed) {
+> +	case PCIE_SPEED_16_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_16_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_8_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_8_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_5_0GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_5_0GB;
+> +		fallthrough;
+> +	case PCIE_SPEED_2_5GT:
+> +		pdev->supported_speeds |= PCI_EXP_LNKCAP2_SLS_2_5GB;
+> +		break;
+> +	default:
+> +		pci_warn(pdev, "unexpected max bus speed");
+> +
+> +		return;
+> +	}
+> +
+> +	if (pdev->supported_speeds != old_supported_speeds)
+> +		pci_info(pdev, "fixing up supported link speeds: 0x%x => 0x%x",
+> +			 old_supported_speeds, pdev->supported_speeds);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c19, loongson_pci_bridge_speed_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON, 0x3c29, loongson_pci_bridge_speed_quirk);
+> +
+>  static struct loongson_pci *pci_bus_to_loongson_pci(struct pci_bus *bus)
+>  {
+>  	struct pci_config_window *cfg;
+> -- 
+> 2.53.0
+> 
