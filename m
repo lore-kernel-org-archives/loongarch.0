@@ -1,130 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD133EF0C8
-	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 11:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0073FCB22;
+	Mon, 18 May 2026 16:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779103752; cv=none; b=ja9aV0G7NSLFVaL+swrf7wkZJ5VArPwJVW9ox9rjss84o5Wk9VV2rSt4ioq9gCGHp0uUiB9t0ACMWknRiEg46qbKwwov493uk9IfpmBLlqJFgOVMF020LOXdW2c4Abxhrs9XFORx6Mz9XPlRUxVx5/e/ir5pwcugjKTQ4lwptE8=
+	t=1779121085; cv=none; b=YuLEmAjD2PCUtFyAQz6wkehCmTA3KxMAgf/Jlhn00cWgcXhx3T4SXfQRFDa0lREKLHYpqqANGD8w1kgKg2c5pq786mRtoh38DjjWCZ7FOU+kTTY/Ys1Bk9Pl1Tv62FlV39zvgnpCr+cZMxxPvXitdAvbB3Ytb7g4z016Wpaq/7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779103752; c=relaxed/simple;
-	bh=KbabBor54xBK33nwMtrMqpUI7sK9R/iILVn+vEiaIFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iq9c7YWEPTd2iAAs+0cp05jl07iNu8Rsk9+PU0K1YtWO6wYz40DgRb4f7ucX+BaYIc/il/FQ//yqTYewsbjY2CvC8Nnd8o0jqDAv7lEVV6QR1AthhJWziZs4vwG6InKcYdiywhre7yE1lUF1cY3g0pe+fbH8Z/UA0ICgRr11+uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlK7TH9Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779121085; c=relaxed/simple;
+	bh=o1rptViwTTP1to40Twvuxj4BvWWDX0i69HpeZZvzhrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnwUvLITNLq4NNc4IPgWFB2bLxh8DZXj3SofZAFBYhFuM/muEp2WkmTw2aP5SjjJbroI2IAlq7iNUvkwvBvQKA7chLjXQiOJom/zT2f8gxXH+VFqBvUSS82MVcX03NjWURMPE7ZqLYHfOQi4ThZkD32f72+6xIVh+0/46pMlzcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fU3+SCOF; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlK7TH9Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76E1CC2BCB7
-	for <loongarch@lists.linux.dev>; Mon, 18 May 2026 11:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779103752;
-	bh=KbabBor54xBK33nwMtrMqpUI7sK9R/iILVn+vEiaIFQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WlK7TH9QHxRAYFQsczwkbhsr3fu+Q3vBmWcGhHj6YhXFM4kt7I72A7OpHSEhORvmj
-	 n05FUAsMY2Xf8DN3z77DZf4te57v/EXINNOPSJPOqZkHA4YsFpI4u4VPKXbr9ZnB9V
-	 hSZm/KQ7gJy/JyPne2iJJzvpXZEHj8Koy7XK3aj5laTmrHmQRuoFITRUhDp9TmjKDL
-	 TIVA9sXS3nm8hsaMJn9OqL5UPb+46tFZFF5Z8nLYyUJrw/btv9kdQTGQOAWjW8ZaxD
-	 99KO8Truf+m8Rn15NlB2uLeIMlHg9qLjPJidSi50vvutVa9aq+KRipostTCUJKq86i
-	 V7GmMZ+MYf51g==
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-44a74032ff8so1467650f8f.1
-        for <loongarch@lists.linux.dev>; Mon, 18 May 2026 04:29:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8ndo6Ed+F9chsWVNFSIl3dSeb2y+fNbXrtWl3t6yG3BtHG5h80tJnYaWSe0UXdt6aIGwGfDjak/pM=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy1NOK/dkNt1mUcB8L47QkLD7+T0hgNT4zA1TEj6zWpgbuDbdky
-	Ab5RzowSygUn/iGkGr+uU3ic9uhbJj5acF/d81iBwCB7dJuqyv0hXmUP3RF7oKeBRMPgdekPuZs
-	3Y/fi+9etYjYcwXVqoUUcI03QrbRbCNs=
-X-Received: by 2002:a05:6000:2383:b0:449:9aee:4575 with SMTP id
- ffacd0b85a97d-45e5c5ccbf6mr23525653f8f.30.1779103751090; Mon, 18 May 2026
- 04:29:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fU3+SCOF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GQ3AyNwcHkDwyotJKfmaIM16qng3evSu5qPs3Xeesp0=; b=fU3+SCOFfUUlkOUmyIuTsbnywe
+	89kqfFg93eDsIn1f4q6CEtRQBpKAuBqXFwczvVeUyK1MqiAmO/Is7GNS6SQajMkq/Ou4EEPXO5gjd
+	QG3X5RgIMMIHaZt2k6X7tQJKlMJUiidUWjRLLsCK96ufITmHS/etRFdCcKGXPu9m3Y/9455P1VY+7
+	yI95TKqa8/ath+SxD9IFOJNLaKt8Sstckq3piVjXElv/WkNhCMR7wKydSnX4sVdCnnWMjLyWBjQ2b
+	4vkZR2poj4v3QZS8BJi9xbkgnOoh2L9CaUbogqrM9GJMbxKImRWLaIAgDeo+jPw7Sed1HBtUwdBx+
+	aOLN/sjA==;
+Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wP0em-00000004wNm-3PR8;
+	Mon, 18 May 2026 16:17:28 +0000
+Date: Mon, 18 May 2026 17:17:28 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Barry Song <baohua@kernel.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>, surenb@google.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org,
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
+	mhocko@suse.com, jack@suse.cz, pfalcato@suse.de,
+	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com,
+	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, youngjun.park@lge.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ags7mPK7Ong0ZsBf@casper.infradead.org>
+References: <20260430040427.4672-1-baohua@kernel.org>
+ <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org>
+ <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <agrWuDNGddNmvMFD@lucifer>
+ <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260517092432.1025008-1-chenhuacai@loongson.cn>
- <CAJF2gTSn-44So=SdVYxvF5ihJjWs9R7vFAyuPNpeLBwBpJrY9Q@mail.gmail.com> <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com>
-In-Reply-To: <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 18 May 2026 19:28:57 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSAWP4X19t10f8kgd3xdufDEdyc_z4aiaLCmOieMd2ipQ@mail.gmail.com>
-X-Gm-Features: AVHnY4I8JVtIkj6eFcO1hPldyVb7fH2I0uNTYz-q65m2QrRT3MN7DuJpfsss4TA
-Message-ID: <CAJF2gTSAWP4X19t10f8kgd3xdufDEdyc_z4aiaLCmOieMd2ipQ@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Remove unused code to avoid build warning
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
-	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
 
-On Mon, May 18, 2026 at 10:58=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
-> On Mon, May 18, 2026 at 9:42=E2=80=AFAM Guo Ren <guoren@kernel.org> wrote=
-:
-> >
-> >
-> >
-> > On Sun, May 17, 2026 at 5:25=E2=80=AFPM Huacai Chen <chenhuacai@loongso=
-n.cn> wrote:
-> > >
-> > > After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones whe=
-n
-> > > offlining memory"), __remove_pages() doesn't need the "zone" paramete=
-r
-> > > so the "page" variable is also unused. Remove the unused code to avoi=
-d
-> > > such build warning:
-> > >
-> > > arch/loongarch/mm/init.c: In function 'arch_remove_memory':
-> > > arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but not=
- used [-Wunused-but-set-variable=3D]
-> > >   134 |         struct page *page =3D pfn_to_page(start_pfn);
-> > >
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  arch/loongarch/mm/init.c | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> > >
-> > > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-> > > index 3f9ab54114c5..031b39eb081c 100644
-> > > --- a/arch/loongarch/mm/init.c
-> > > +++ b/arch/loongarch/mm/init.c
-> > > @@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size, str=
-uct vmem_altmap *altmap)
-> > >  {
-> > >         unsigned long start_pfn =3D start >> PAGE_SHIFT;
-> > >         unsigned long nr_pages =3D size >> PAGE_SHIFT;
-> > > -       struct page *page =3D pfn_to_page(start_pfn);
-> > >
-> > > -       /* With altmap the first mapped page is offset from @start */
-> > > -       if (altmap)
-> > > -               page +=3D vmem_altmap_offset(altmap);
-> > >         __remove_pages(start_pfn, nr_pages, altmap);
-> >
-> > Good cleanup, but does LoongArch forget to remove the linear mapping? I=
-f the memory is unplugged, the mapping is still there. How does the core fe=
-tch data from there?
-> LoongArch's linear mapping is based on DMW rather than TLB, so
-> removing linear mapping is unnecessary.
-Do you mean SSEG tech? mips & csky also have that. But my question is:
-how does the core fetch data/instructions from an unplugged memory
-region, given that the mapping is established by DMW?
+On Mon, May 18, 2026 at 07:25:54PM +0800, Barry Song wrote:
+> We have clearly observed that the `fork()` operations of many
+> popular Android apps, such as iQiyi, Baidu Tieba, and 10086,
+> end up waiting on page-fault (PF) I/O when the VMA lock is
+> held during I/O operations. This has already become a
+> practical issue. I also believe this can lead to chained
+> waiting, since the global `mmap_lock` blocks all threads that
+> need to acquire it.
 
->
->
-> Huacai
-> >
-> > --
-> >
-> > Best Regards
-> >
-> >   GUO Ren
+It's always been a terrible idea to call fork() from a multithreaded
+application.  For example, this question:
 
+https://stackoverflow.com/questions/53601200/calling-fork-on-a-multithreaded-process
 
+or this lwn thread: https://lwn.net/Articles/674660/
 
---=20
-Best Regards
- Guo Ren
+Do we have any insight into why these applications are doing this
+horrible thing?
