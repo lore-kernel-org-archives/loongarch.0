@@ -1,243 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2478480DFC
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 11:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CC24A340B
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 12:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188870; cv=none; b=MPt29zcAUHSvBFF2YIFtTPcbMd2mvoaoyU5FCKgntHnMohxY2kUA17EV56cNOyr2IR92N0yKarwJykc5YjH3nf9m/T9lfnS/zZQfobqKXgDTE0R84Oyy2FTs1ktLKIwtXqwFuQFk+DTkh9Ga3hLngR46cokA3OgokOjvOwxWjlM=
+	t=1779194530; cv=none; b=ufe4uJQp230od7+1Fa9yg0xrE40HjrFyOBHBz9e754SdUGXq3n+H+DK6ABoj/cxHAqx+k8rdWR+QmqjOJ0lnaYdSsegCcZXWO9acX8nlm2ZMd7ZbGYmlub+86blXMj/i4o3LWF2ZeQ8hOzslmsmp4S1hw5NrfYIgsTuOD4JMr4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188870; c=relaxed/simple;
-	bh=AC6EG7Qy5QFar1m8+wNeC36/N8InyfKesUcYtXC1ZRw=;
+	s=arc-20240116; t=1779194530; c=relaxed/simple;
+	bh=DXoDL5wbX+53q/PO+mVk1bAErki3tsddN3QF3kPdHCE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OkbYGG4S0qk2qZrbFnVt+RVAQd9fiPxyT0B3g+6ni/8E4frceXoPxi+Qd2N2saq1a3AP8BFZmwErfYhY2HSi5nenTE69SBme8hAQu02wZ9ReXW1O2mSF2BRl/n82RCivV/uUV0ISiy1Dmq10JjLBaJpnFCmNsimw3kc8KkwFSWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6HZC9pC; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=DKKSVp49e1mswUnsZuPFvZD9T+qW5PggP/Mf+hIYu5RD9N2aBX5EuidCk1UmxAzIGa1DmWfDE3anj/A5PNqDFuCrV7hBs/Mfq8INdf7W7vDYV2do0GvOujky+MIhZHzfR6PttrtfNgL+FMG2mbrmFwKh7CRSCi5Q7RNgzFB18L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctDSdFNy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6HZC9pC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FC6C4AF09
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 11:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctDSdFNy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F603C2BCC7
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 12:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779188869;
-	bh=AC6EG7Qy5QFar1m8+wNeC36/N8InyfKesUcYtXC1ZRw=;
+	s=k20201202; t=1779194530;
+	bh=DXoDL5wbX+53q/PO+mVk1bAErki3tsddN3QF3kPdHCE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=J6HZC9pCBVvKkq/Wxm2hTVYY1qvrimcGxO52O+8iIijmU2YZ84Y/Nc2nNJqOsODAB
-	 BA153SFiXfqJ0byR+6nV06yKp5+ucb39ErHO8HSupUS3liO24LSCSsqMNzOBPIwVoi
-	 Lj/QT11bmTYBhC1rPctv2NgtLGQ6M57TL4Ux01hnPIvSSr9n8bGcnZ7B7nD2N5Hij/
-	 T4MsexjvZRBhtKuWOI85twHBDHISBIjKE06XdV+Jy/d8X9knosht2r3HRGxpwV1E+u
-	 MMB1SzIwyBJD1C4Ps5JFTz0Sb1cRzaFig/nC4peanMKuuvQeAhTOmAPAIQoZYUPmXG
-	 PWDiK6Slkc3iw==
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-911af978bf2so408174785a.1
-        for <loongarch@lists.linux.dev>; Tue, 19 May 2026 04:07:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8EH/zAH+PY94Ggc/ECcSVsKOj8WkPuSimzxnb4afpc5l2OEyO7md3qTNUCq7HkqnyaalUQ8Yzh75o=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx2M7RduEK2yO7VCukNLuk/0mdTdAFV6bG0qjbzRysBBGeB+7vo
-	n+Ria3kOFn/LMDtkAazjjPjY7oO/iJCbIquxOVj1i8qbxxuxvJNXMNoN1tOiWNtPWGHqtpZvCFA
-	uMAgSo0v83ph82xPQS9Tf5XSM4W849Fw=
-X-Received: by 2002:a05:620a:25cd:b0:8ca:123e:819b with SMTP id
- af79cd13be357-911ccd8bbe7mr2716864885a.13.1779188868655; Tue, 19 May 2026
- 04:07:48 -0700 (PDT)
+	b=ctDSdFNyBOHqz6CAcgo9qhEP778cxGNNTgEMvl19T62JurnnLSI9g57UDJnrjqqiE
+	 /30JtgjILFNxj5eqC6hxZA6XjSMkF1u7abXrxTZcles4TG7bxxBKY8uRwqE6x9CYLm
+	 ZZkUGqDW2uCIYfQb3xTMGCxQQHAnWjMHEdERf7fIPd4HHLGZQ03tmjxXGWznpWqvvX
+	 y0/J+dkNtg8zp9NpYjkuO6sQbS5E5YT8+5qq+FxBKK0vFBB3K9yPZtRIxQHGJDJLtm
+	 5OqeUOwDQf19fd/ZjKRd5GjPEbGpmhtp91GbX6rIC+x7G4nbhKPSXxQOilfazDlaen
+	 Fva94Ni9CGpVg==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-bd85ebb368fso431303766b.1
+        for <loongarch@lists.linux.dev>; Tue, 19 May 2026 05:42:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+9E5azoYrVOIVAhA+nhDOFpf/Lggw1IjgxBRyYVJQKv+sSj2mydDTX+6YD/3DV1EEjakGpKyU327U=@lists.linux.dev
+X-Gm-Message-State: AOJu0YySYbWk40iSCGU5XFEuucRcq6MK5dM61J4cnF+yZ30ghauj9e9a
+	atmR3+eEnl2ICEPZL9uhaVR7F14PJQhZIVNeZJ1UwVrfIDrG23eAz/1z8v4qCAq+qxeVxymsU2d
+	+61gBpyDyq2fr3t2AbzDSMfYckZzi0vg=
+X-Received: by 2002:a17:907:97cb:b0:bd6:6f5e:ea6f with SMTP id
+ a640c23a62f3a-bd66f5efe1cmr680395766b.19.1779194528935; Tue, 19 May 2026
+ 05:42:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
- <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
-In-Reply-To: <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
-From: Barry Song <baohua@kernel.org>
-Date: Tue, 19 May 2026 19:07:37 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4w_-Y8qNLDeLX9OWpLpK01YG2bF-N6_mGypgsauvfCvkA@mail.gmail.com>
-X-Gm-Features: AVHnY4IMRz_ZQFDJjmEiieX1rlV8P0ieusFoUXzddUcOWyGa62kJgu1G0wGZ0I0
-Message-ID: <CAGsJ_4w_-Y8qNLDeLX9OWpLpK01YG2bF-N6_mGypgsauvfCvkA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Yang Shi <shy828301@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, surenb@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, jack@suse.cz, 
-	pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
-	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
-	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>
+References: <20260517092432.1025008-1-chenhuacai@loongson.cn>
+ <CAJF2gTSn-44So=SdVYxvF5ihJjWs9R7vFAyuPNpeLBwBpJrY9Q@mail.gmail.com>
+ <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com> <CAJF2gTSAWP4X19t10f8kgd3xdufDEdyc_z4aiaLCmOieMd2ipQ@mail.gmail.com>
+In-Reply-To: <CAJF2gTSAWP4X19t10f8kgd3xdufDEdyc_z4aiaLCmOieMd2ipQ@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 19 May 2026 20:42:26 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6jKR-i3w3u9CJMLmzteZURQnazuBEtp9k2UkKRxUrOmQ@mail.gmail.com>
+X-Gm-Features: AVHnY4IV41hqOor1MsAuVKl_i-pFwmthCfjFjC_j4Q1cDdRW_i6CJ0nLrPoP7zU
+Message-ID: <CAAhV-H6jKR-i3w3u9CJMLmzteZURQnazuBEtp9k2UkKRxUrOmQ@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Remove unused code to avoid build warning
+To: Guo Ren <guoren@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026 at 5:21=E2=80=AFAM Yang Shi <shy828301@gmail.com> wrot=
-e:
+On Mon, May 18, 2026 at 7:29=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote:
 >
-> On Sun, May 17, 2026 at 1:45=E2=80=AFAM Barry Song <baohua@kernel.org> wr=
-ote:
+> On Mon, May 18, 2026 at 10:58=E2=80=AFAM Huacai Chen <chenhuacai@kernel.o=
+rg> wrote:
 > >
-> > On Sat, May 2, 2026 at 1:58=E2=80=AFAM Matthew Wilcox <willy@infradead.=
-org> wrote:
+> > On Mon, May 18, 2026 at 9:42=E2=80=AFAM Guo Ren <guoren@kernel.org> wro=
+te:
 > > >
-> > > On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
-> > > > On Fri, May 1, 2026 at 10:57=E2=80=AFPM Matthew Wilcox <willy@infra=
-dead.org> wrote:
-> > > > >
-> > > > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
-> > > > > > 1. There is no deterministic latency for I/O completion. It dep=
-ends on
-> > > > > > both the hardware and the software stack (bio/request queues an=
-d the
-> > > > > > block scheduler). Sometimes the latency is short; at other time=
-s it can
-> > > > > > be quite long. In such cases, a high-priority thread performing=
- operations
-> > > > > > such as mprotect, unmap, prctl_set_vma, or madvise may be force=
-d to wait
-> > > > > > for an unpredictable amount of time.
-> > > > >
-> > > > > But does that actually happen?  I find it hard to believe that th=
-read A
-> > > > > unmaps a VMA while thread B is in the middle of taking a page fau=
-lt in
-> > > > > that same VMA.  mprotect() and madvise() are more likely to happe=
-n, but
-> > > > > it still seems really unlikely to me.
+> > >
+> > >
+> > > On Sun, May 17, 2026 at 5:25=E2=80=AFPM Huacai Chen <chenhuacai@loong=
+son.cn> wrote:
 > > > >
-> > > > It doesn=E2=80=99t have to involve unmapping or applying mprotect t=
-o
-> > > > the entire VMA=E2=80=94just a portion of it is sufficient.
+> > > > After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones w=
+hen
+> > > > offlining memory"), __remove_pages() doesn't need the "zone" parame=
+ter
+> > > > so the "page" variable is also unused. Remove the unused code to av=
+oid
+> > > > such build warning:
+> > > >
+> > > > arch/loongarch/mm/init.c: In function 'arch_remove_memory':
+> > > > arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but n=
+ot used [-Wunused-but-set-variable=3D]
+> > > >   134 |         struct page *page =3D pfn_to_page(start_pfn);
+> > > >
+> > > > Cc: <stable@vger.kernel.org>
+> > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > ---
+> > > >  arch/loongarch/mm/init.c | 4 ----
+> > > >  1 file changed, 4 deletions(-)
+> > > >
+> > > > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> > > > index 3f9ab54114c5..031b39eb081c 100644
+> > > > --- a/arch/loongarch/mm/init.c
+> > > > +++ b/arch/loongarch/mm/init.c
+> > > > @@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size, s=
+truct vmem_altmap *altmap)
+> > > >  {
+> > > >         unsigned long start_pfn =3D start >> PAGE_SHIFT;
+> > > >         unsigned long nr_pages =3D size >> PAGE_SHIFT;
+> > > > -       struct page *page =3D pfn_to_page(start_pfn);
+> > > >
+> > > > -       /* With altmap the first mapped page is offset from @start =
+*/
+> > > > -       if (altmap)
+> > > > -               page +=3D vmem_altmap_offset(altmap);
+> > > >         __remove_pages(start_pfn, nr_pages, altmap);
 > > >
-> > > Yes, but that still fails to answer "does this actually happen".  How=
- much
-> > > performance is all this complexity in the page fault handler buying u=
-s?
-> > > If you don't answer this question, I'm just going to go in and rip it
-> > > all out.
+> > > Good cleanup, but does LoongArch forget to remove the linear mapping?=
+ If the memory is unplugged, the mapping is still there. How does the core =
+fetch data from there?
+> > LoongArch's linear mapping is based on DMW rather than TLB, so
+> > removing linear mapping is unnecessary.
+> Do you mean SSEG tech? mips & csky also have that. But my question is:
+> how does the core fetch data/instructions from an unplugged memory
+> region, given that the mapping is established by DMW?
+Access unplugged memory region will cause ADE exception.
+
+Huacai
+>
+> >
+> >
+> > Huacai
 > > >
-> >
-> > Hi Matthew (and Lorenzo, Jan, and anyone else who may be
-> > waiting for answers),
-> >
-> > As promised during LSF/MM/BPF, we conducted thorough
-> > testing on Android phones to determine whether performing
-> > I/O in `filemap_fault()` can block `vma_start_write()`.
-> > I wanted to give a quick update on this question.
-> >
-> > Nanzhe at Xiaomi created tracing scripts and ran various
-> > applications on Android devices with I/O performed under
-> > the VMA lock in `filemap_fault()`. We found that:
-> >
-> > 1. There are very few cases where unmap() is blocked by
-> >    page faults. I assume this is due to buggy user code
-> >    or poor synchronization between reads and unmap().
-> > So I assume it is not a problem.
-> >
-> > 2. We observed many cases where `vma_start_write()`
-> >    is blocked by page-fault I/O in some applications.
-> >    The blocking occurs in the `dup_mmap()` path during
-> >    fork().
-> >
-> > With Suren's commit fb49c455323ff ("fork: lock VMAs of
-> > the parent process when forking"), we now always hold
-> > `vma_write_lock()` for each VMA. Note that the
-> > `mmap_lock` write lock is also held, which could lead to
-> > chained waiting if page-fault I/O is performed without
-> > releasing the VMA lock.
-> >
-> > My gut feeling is that Suren's commit may be overshooting,
-> > so my rough idea is that we might want to do something like
-> > the following (we haven't tested it yet and it might be
-> > wrong):
-> >
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 2311ae7c2ff4..5ddaf297f31a 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -1762,7 +1762,13 @@ __latent_entropy int dup_mmap(struct mm_struct
-> > *mm, struct mm_struct *oldmm)
-> >         for_each_vma(vmi, mpnt) {
-> >                 struct file *file;
-> >
-> > -               retval =3D vma_start_write_killable(mpnt);
-> > +               /*
-> > +                * For anonymous or writable private VMAs, prevent
-> > +                * concurrent CoW faults.
-> > +                */
-> > +               if (!mpnt->vm_file || (!(mpnt->vm_flags & VM_SHARED) &&
-> > +                                       (mpnt->vm_flags & VM_WRITE)))
-> > +                       retval =3D vma_start_write_killable(mpnt);
-> >                 if (retval < 0)
-> >                         goto loop_out;
-> >                 if (mpnt->vm_flags & VM_DONTCOPY) {
+> > > --
+> > >
+> > > Best Regards
+> > >
+> > >   GUO Ren
 >
-> Maybe a little bit off topic. This is an interesting idea. It seems
-> possible we don't have to take vma write lock unconditionally. IIUC
-> the write lock is mainly used to serialize against page fault and
-> madvise, right? I got a crazy idea off the top of my head. We may be
-> able to just take vma write lock iff vma->anon_vma is not NULL.
 >
-> First of all, write mmap_lock is held, so the vma can't go or be
-> changed under us.
 >
-> Secondly, if vma->anon_vma is NULL, it basically means either no page
-> fault happened or no cow happened, so there is no page table to copy,
-> this is also what copy_page_range() does currently. So we can shrink
-> the critical section to:
->
-> if (vma->anon_vma) {
->     vma_start_write_killable(src_vma);
->     anon_vma_fork(dst_vma, src_vma);
->     copy_page_range(dst_vma, src_vma);
-> }
->
-> But page fault can happen before write mmap_lock is taken, when we
-> check vma->anon_vma, it is possible it has not been set up yet. But it
-> seems to be equivalent to page fault after fork and won't break the
-> semantic.
-
-Re-reading Suren's commit log for fb49c455323ff8
-("fork: lock VMAs of the parent process when forking"),
-it seems that vm_start_write() is used to protect
-against a race where anon_vma changes from NULL to
-non-NULL during fork. In that scenario, we hold the
-mmap_lock write lock, but not vma_start_write(), so a
-concurrent anon_vma_prepare() could still install an
-anon_vma.
-
-"    A concurrent page fault on a page newly marked read-only by the page
-    copy might trigger wp_page_copy() and a anon_vma_prepare(vma) on the
-    source vma, defeating the anon_vma_clone() that wasn't done because the
-    parent vma originally didn't have an anon_vma, but we now might end up
-    copying a pte entry for a page that has one.
-"
-
-If that is the case, then your change does not work.
-
-Nowadays, nobody calls anon_vma_prepare(vma) directly.
-Instead, vmf_anon_prepare() is used, and we always
-require the mmap_lock read lock before calling
-__anon_vma_prepare(). As a result, anon_vma cannot
-transition from NULL to non-NULL during fork.
-
-So the original race condition has effectively
-disappeared.
-
-You also mentioned the madvise() case. If I understand
-correctly, madvise() should take mmap_lock before
-modifying anon_vma. Only some parts of madvise() can
-support per-VMA locking. Therefore, we probably do not
-need:
-
-if (vma->anon_vma) {
-vma_start_write_killable(src_vma);
-...
-}
-
->
-> Anyway, just a crazy idea, I may miss some corner cases.
-
-To me, it seems that we could remove vma_start_write()
-entirely now. Or is that an even crazier idea?
-
-Thanks
-Barry
+> --
+> Best Regards
+>  Guo Ren
