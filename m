@@ -1,127 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2DF3EE1E5;
-	Tue, 19 May 2026 12:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB542B2D7
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 13:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779195226; cv=none; b=OgU6aknKTY6sDnFloADf/zaec9n4LjmiJ0E++HzRzBurKJJ0o7U5ldiUws9lLOugjzVnIbi7bXGws+APjy1XugtqvtdSeqvyw3FNYPcnRRaICVq+t0qboAWhOogrCQLF1ofw7vHN/YGXPg3C+Kpo5ccwQe1lQaMoJl8HXdHxyy0=
+	t=1779195630; cv=none; b=AUT0ySOfFPEgrYLDNjjxJHlXdTqgF6G7FHDCkTJjKcediKXK5X1OaStwHNeheZENwYHrtBmnZESNTqd/GIHgXw0y5lHrwgkIcAMePPuS3ZYegyTKNYtwC83ZmDkXrqpo92f1qLLeZJ+YqL2iq1Hn+EOhSaB4y+K172muBPz+rW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779195226; c=relaxed/simple;
-	bh=TWIr4MBWXFvB87XL0FdioP0FNTIlJtiR/wiwlQFXNPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofwZnK3MDS2aCPW3K+uRwKr5jntBVPqY/jtn+wfSOGZ+dtkFml6z9LMo8VPrm/lbrJ1mbs5N7ox05r6Ttl9A3e05DYcog/qXsUjv5rKCJs1u5lMH95sTH0o6kCilgxYjw2rfc498UliQonJvsvwJIUpSsglsUj+TkG8trpiTOLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLI0FZjw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLI0FZjw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C81C2BCB3;
-	Tue, 19 May 2026 12:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779195226;
-	bh=TWIr4MBWXFvB87XL0FdioP0FNTIlJtiR/wiwlQFXNPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MLI0FZjwvoL5JToMb00i26zGbDKR5eFTRY9x7LCaeGUN+sYUX8fzz+RnEI5gPwclG
-	 94gIHQBg5cOT7eMp2oQzs8eGOxkU1JO1Kcb+sxUNWdlfQYLhFP9l/TwBAiy20kt84O
-	 II+rfpB4Co8rMtxuvCVJIOREAlO6IJ8YUAuKE7eYLlErSw63NgBTZSC12q0IgIdIFV
-	 yyM5qbUtJcli+VfLGIS8ETLLylKZavBDZX7hHEAiuwPsjuPIavN0UPjxGKNCNPRKJl
-	 BlwtrnFUq9/ePp3NnvDShqo/+UYXBFU69SGJ0VF2IQoRPjHMIREZ4zRu4MIgZ6ZSoW
-	 N/xrCUg0I4CsA==
-Date: Tue, 19 May 2026 13:53:36 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Barry Song <baohua@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, 
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, kunwu.chan@gmail.com, 
-	liyangouwen1@oppo.com, chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-Message-ID: <agxbq1TxJdniMQT3@lucifer>
-References: <20260430040427.4672-1-baohua@kernel.org>
- <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org>
- <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org>
- <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
- <agrWuDNGddNmvMFD@lucifer>
- <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
- <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+	s=arc-20240116; t=1779195630; c=relaxed/simple;
+	bh=3WlavuYFyG826CqF8Gc3U83JaaU7/hj7idobD7tgd5g=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fVRPt9q6xEG39a6NX55Q91W4enI2ZaAVg9+1Ri69mLLqMzvnQDqLwTyXFg6nFeW2/PEuJBf6+69xc+eUcDKlHwMpT8WK2jN31wd1PRVlJmryjQla4qVezNL25011GyZ6hgn926TiymStNETRVbrLquAyBYDByJQj+uQvPtl7W+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8AxX+viXgxqFzoLAA--.32901S3;
+	Tue, 19 May 2026 21:00:18 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxTMLgXgxqjGSIAA--.59686S3;
+	Tue, 19 May 2026 21:00:16 +0800 (CST)
+Subject: Re: [PATCH v3 1/6] LoongArch: KVM: Check irq validility in
+ kvm_vcpu_ioctl_interrupt()
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20260519094308.3983046-1-maobibo@loongson.cn>
+ <20260519094308.3983046-2-maobibo@loongson.cn>
+Message-ID: <786dda77-1fda-7741-c20f-bafbaacd6fd2@loongson.cn>
+Date: Tue, 19 May 2026 20:57:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
-
-On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
-
-> >
-> > I think we either need to fix `fork()`, or keep the current
-> > behavior of dropping the VMA lock before performing I/O.
->
-> I see. So, this problem arises from the fact that we are changing the
-> pagefaults requiring I/O operation to hold VMA lock...
-> And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
-> is_cow_mapping(vma->vm_flags). So, we will be blocking page faults for
-> anonymous and COW VMAs only while holding mmap_write_lock, preventing
-> any VMA modification. On the surface, that looks ok to me but I might
-> be missing some corner cases. If nobody sees any obvious issues, I
-> think it's worth a try.
-
-Not sure if you noticed but I did raise concerns ;)
-
-I wonder if you've confused the fault path and fork here, as I think Barry has
-been a little unclear on that.
-
-What's being suggested in this thread is to fundamentally change fork behaviour
-so it's different from the entire history of the kernel (or - presumably - at
-least recent history :) and permit concurrent page faults to occur on a forking
-process.
-
-I absolutely object to this for being pretty crazy. I mean I'm not sure we
-really want to be simultaneously modifying page tables while invoking
-copy_page_range()? No?
-
-OK you cover anon and MAP_PRIVATE file-backed but hang on there's
-VM_COPY_ON_FORK too.. so PFN mapped, mixed map and (the accursed) UFFD W/P as
-well as possibly-guard region containing VMAs now can have page tables raced.
-
-That's not to mention anything else that relies on serialisation here (this
-would be changing how forking has been done in general) that we may or may not
-know about.
-
-The risk level is high, for what amounts to a hack to work around the fault
-issue.
-
-I suggest that if we have a problem with the fault path, let's look at the fault
-path :)
-
-So yeah I'm very opposed to this unless I'm somehow horribly mistaken here or a
-very convincing argument is made.
+In-Reply-To: <20260519094308.3983046-2-maobibo@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTMLgXgxqjGSIAA--.59686S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Jw48XFy5CrWfWFW7ur1UCFX_yoW8JrWDpr
+	9rCF1DX3yrGrnrKw1xXayv9wsIvrykKr1I9asrJa4rAr9Iyr1YqFWxCrW29Fy7Gw1rJF4I
+	qr1ft3Wj9as8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CP
+	fJUUUUU==
 
 
->
->
->
->
-> >
-> > >
-> > > I'd also like to get Suren's input, however.
-> >
-> > Yes. of course.
-> >
-> > >
-> > > Thanks, Lorenzo
-> >
-> > Best Regards
-> > Barry
 
-Cheers, Lorenzo
+On 2026/5/19 下午5:43, Bibo Mao wrote:
+> Function kvm_vcpu_ioctl_interrupt() can be called from userspace, here
+> add irq validility cheking in kvm_vcpu_ioctl_interrupt().
+> 
+> Fixes: f45ad5b8aa93 ("LoongArch: KVM: Implement vcpu interrupt operations")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>   arch/loongarch/kvm/vcpu.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index e28084c49e68..673977a25138 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1486,7 +1486,14 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
+>   
+>   int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
+>   {
+> -	int intr = (int)irq->irq;
+> +	int vector, intr = (int)irq->irq;
+> +
+> +	vector = intr;
+> +	if (intr < 0)
+> +		vector = -intr;
+By AI review, there is still problem if the value of intr is 0x8000000. 
+I should notice this earlier :(
+
+http://sashiko.dev/#/patchset/20260519094308.3983046-1-maobibo%40loongson.cn
+
+Regards
+Bibo Mao
+> +
+> +	if (vector >= EXCCODE_INT_NUM)
+> +		return -EINVAL;
+>   
+>   	if (intr > 0)
+>   		kvm_queue_irq(vcpu, intr);
+> 
+
