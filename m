@@ -1,119 +1,79 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F4C3E123F
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 08:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7353E40315E
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 09:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779179085; cv=none; b=eVys5bSSiUZXtV2eFezDePoFdIGeC24sug5w2hPcCKsuIGx6bwi/88XrgvEynmx8GnQPLdQykZ44CLgj+KAUw+kO2IkAb0gXVbmUNwfuShAWHPlquDycxyY4IeRxaZBrR60BeUoqMUjhYsaDTy5RCdW74gNAbsE+vNiY2fuDG8U=
+	t=1779183795; cv=none; b=CiS3jzcm6LfwJtFD7vMYjigBmD63yC/x+qE7Gpv7JzVQSm/l+aswDNvBiBNJyQUpekEZASfiz3YB4QCdTajSdF4AS9rFDVBP+1viuKP11IgYMDowKMlfhwQrNfX+3JYpF43+dt4HKLAQA4m2wseQYjMc4YgZRPIx8YJUzybkAvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779179085; c=relaxed/simple;
-	bh=WddjLMCxE2Qnvqhi02yA5fGkqdgfSy+rWBfhjD3zYLU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ffVmsY3u488uWwQsZF0gA998U/S3rsNlaOe18NBS1m+yIwvwh9AdSYP89xRhyyQomQwyBVs3KDdIl4uqb6e9+eRhZVayUMDVnctYY6Z7BS6zmCY6WGhd6Ocd6if1YCqbK8Wy5TxlWkdhcUQJYq8O+IZ4D8izLHZk5sTAZhoEIJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C9A0568D0D; Tue, 19 May 2026 10:24:33 +0200 (CEST)
-Date: Tue, 19 May 2026 10:24:32 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
-	David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fnnas.com>,
-	Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-raid@vger.kernel.org
-Subject: Re: cleanup the RAID6 P/Q library v3
-Message-ID: <20260519082432.GA14956@lst.de>
-References: <20260518051804.462141-1-hch@lst.de> <20260518141205.c100f76eec5f58e78bbbf7af@linux-foundation.org>
+	s=arc-20240116; t=1779183795; c=relaxed/simple;
+	bh=jRgxzR5R5e3osofRZx8RtxmKw2RC7rx8wLXzJD6MlwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dIZ0J29huGbB17P+/Nzsh4ZrJ3utnrzTI23D+UTB9J8b71ycRPFPKR5Wn7CQhOyQhQkyDr5yohqPe/8yKamsHS4OnDuowjMl0CLpaE25f+fgm8QSAz31XHIGWTQ24aTYPfjmjmYtdb3KrrSWfRBYAEdRjsZuK8vGRl1jip8jM5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8BxdnivMAxqXC0LAA--.8402S3;
+	Tue, 19 May 2026 17:43:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxHMKtMAxqjD6IAA--.61010S3;
+	Tue, 19 May 2026 17:43:11 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3 1/6] LoongArch: KVM: Check irq validility in kvm_vcpu_ioctl_interrupt()
+Date: Tue, 19 May 2026 17:43:03 +0800
+Message-Id: <20260519094308.3983046-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260519094308.3983046-1-maobibo@loongson.cn>
+References: <20260519094308.3983046-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260518141205.c100f76eec5f58e78bbbf7af@linux-foundation.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxHMKtMAxqjD6IAA--.61010S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Mon, May 18, 2026 at 02:12:05PM -0700, Andrew Morton wrote:
-> Cool, I'll add this to mm.git's mm-nonmm-unstable branch for some
-> linux-next testing.
-> 
-> AI review found quite a lot to talk about:
-> 	https://sashiko.dev/#/patchset/20260518051804.462141-1-hch@lst.de
+Function kvm_vcpu_ioctl_interrupt() can be called from userspace, here
+add irq validility cheking in kvm_vcpu_ioctl_interrupt().
 
-Not a lot of it is very useful, though:
+Fixes: f45ad5b8aa93 ("LoongArch: KVM: Implement vcpu interrupt operations")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/vcpu.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-raid6: turn the userspace test harness into a kunit test
-
- - complains about basically adding need_resched, which we've decided
-   we won't do now that we have lazy preempt.  This is probably going
-   to come up in lots of places because of the old training data
-
-raid6: use named initializers for struct raid6_calls
-
- - whining about keeping totally pointless comments
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index e28084c49e68..673977a25138 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1486,7 +1486,14 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
  
-raid6: warn when using less than four devices
+ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
+ {
+-	int intr = (int)irq->irq;
++	int vector, intr = (int)irq->irq;
++
++	vector = intr;
++	if (intr < 0)
++		vector = -intr;
++
++	if (vector >= EXCCODE_INT_NUM)
++		return -EINVAL;
+ 
+ 	if (intr > 0)
+ 		kvm_queue_irq(vcpu, intr);
+-- 
+2.39.3
 
- - complains about warning for btrfs which is clearly documented as the
-   outcome in the commit log
- - and also complaining that the enforcement isn't hard enough, but the
-   WARN_ON is the best we can do here
-
-raid6: rework registration of optimized algorithms
-
- - less registration causing less kunit coverage:  that's intentional
-   as it keeps testing time down and similar to other arch optimized
-   tests in crc and crypto code.  It also doesn't really reduce
-   coverage as before this series there was none.
-
-raid6: use static_call for gen_syndrom and xor_syndrom
-
- - doesn't seem to know that bool fails when an initcall fails
-
-raid6_kunit: use KUNIT_CASE_PARAM
-
- - whining about the code style.  I don't really like it either,
-   but the kunit case stuff is a mess
-
-There are a few somewhat useful things, though.
-
-raid6: hide internals
-
- - yes, the -I is duplicate and should be fixed
-
-raid6: rework registration of optimized algorithms
-
- - avx2 instead of avx512 is probably the right thing for no
-   benchmarking, but if it was intentional (it wasn't), that should
-   be document.  So I'll just switch back to the previous version to
-   keep the state of the art
