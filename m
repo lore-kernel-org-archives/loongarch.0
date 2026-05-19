@@ -1,122 +1,209 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2120395DAA;
-	Tue, 19 May 2026 21:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743BD3E8357
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 22:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779227545; cv=none; b=c+b6+9R5HJAQdWJk3G6mhWCusZD/xV2EDlmHRDA/QbT9bDtvbljn/Wh0IE+6S1NS+/bonXxosNbpth0X3Tw9RXaLex/81+S/CTP8LNhLW2Q+SiP+YO4m3XSxBGJ7NSXRW+fp9LOxhx+RfwO/ZlY4SI/yEptkh6twrrxNUMvMl/k=
+	t=1779228130; cv=none; b=jmV0id8JjIwXyo1KmbRb4btYNywemC4Yi1yLIYEAffVlSbODnaSVpbO/qMmgtsa8R26JQI2gMSNUPWnmOW35psy3+rEU0VcBv8MBjQy6+Vm8HHx1kAM/UEcfof2aTEItE9ArlBvY2HfHwr9jlfz7mgcCpAgflUQ+TMJwTzDYFdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779227545; c=relaxed/simple;
-	bh=MoZsOmuW47OYpJJ4yLCIUL/ufJHjeBhhRzuIUGeNSOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Ke5U1sa4TDe5Bo66ty1Nipy5DaI6qEV+Rerfg0sAmiaL7/w7LDA44Gy+/DMtCKGYUY5xU6UoZJ4UEBT0DNOzqC79ZImK24Hy1VD/fl7bdowD2K2UdL8FFZYBvw4Z5nzDuocc6in6pHTlo61/bgGk8VkjoE49SGkUEx4IX/S5Sb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYZb0aeK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779228130; c=relaxed/simple;
+	bh=71vBNelhgIF/xhYgDkUv7qlNsN619m9AzEFmnaaN3QI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PCPfYJ0N+5HVQtsHTdl/CRgxrRU2d+J2ebiZ/nz5BZYt6CxGSqRBnEwdY9emqnMI3ruWwFX8P5n568wJD7HxY0db2SAUQlWDxt3KY/N2lLBwZLJk6CpMpU/hlDdlpyBlzK3I7rjn1w+UAvdHWmE34XuhBJAs33ge2LCC8GSqzY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEiINEmV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYZb0aeK"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 3EA941F000E9;
-	Tue, 19 May 2026 21:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEiINEmV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3746E1F00899
+	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 22:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779227544;
-	bh=+EgRr6uYLBJZxjzag9UjRODPlRA2X3MbxClA5xBAP9I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=gYZb0aeKE/0pnEJTfpGwR3qnpY5m+HTsmRpPjDfuVZSexD9Ru+n4DHo8hPLbait5f
-	 6oAldMXsPpCmxnhoqcwAx8SJfRQ2fhVnTUlyY8MFd9Gc9LkjncJnM8iUrdtD/KNM88
-	 ikupHvJaNUmqlatrAADCo2ArtGSlWQ2h2b9PfuCg5EAhmPzOvLif4R+9VipButX3RD
-	 ZSz4wMmKEbbuJl2e7iWWwkMZYDbt7Q7uy/ZPoxUuxCQ/okmcNgClpUt+Vs968arwQz
-	 rn6piz0kgael8HP8NWHC85wGUVeXFa8cNCRA6Zrl64MW309lo1RWpxHV0tYAU3MHZU
-	 cP6gYoU7TvD3A==
-Date: Tue, 19 May 2026 16:52:22 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Ziyao Li <liziyao@uniontech.com>, niecheng1@uniontech.com,
-	zhanjun@uniontech.com, guanwentao@uniontech.com,
-	Kexy Biscuit <kexybiscuit@aosc.io>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	kernel@uniontech.com,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lain Fearyncess Yang <fsf@live.com>,
-	Ayden Meng <aydenmeng@yeah.net>, Mingcong Bai <jeffbai@aosc.io>,
-	stable@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v8] PCI: loongson: Override PCIe bridge supported speeds
- for Loongson-3C6000 series
-Message-ID: <20260519215222.GA18171@bhelgaas>
+	s=k20260515; t=1779228129;
+	bh=RrgSUFMhpGIkWoOChuhQyLYVDUdtSZljRgOJt705GjA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=EEiINEmV/ttnXkHREkmSNrg22w/pd85GQ24kGDom/qX0DitA92kwK7imrN1F7tfHP
+	 /WClIpIcz37rNq9FOtLY4huZKlhKLtBg/gq5tOO1/IYaKENgHCq8w5+Lnv5OFXdXSL
+	 2sIuISEhYHzkbmfjMHN6eKzTUmO8K/tDIrzQnMmRv3D90x14h5TzWDmjPA+zx7T0oZ
+	 IE8SbeYeLv8dhtCTOAuISA3eqbujACiE+Q9q0u8nfuITSR5e6vuWcd5Iclq1d5zdAT
+	 HF4oRjC7RA3KX6/I4zDoQ5jAmNSGhxJ1QKqkbIZT/JE9UU3XCdU3Y9b3mu/a4r3yR1
+	 lk/+recZ8aGvQ==
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7bd9f61458eso28517597b3.0
+        for <loongarch@lists.linux.dev>; Tue, 19 May 2026 15:02:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8McAz1HPGUUXkvkD4HDTbHuVzINjR5u2Np9zkbi7KHx5oT3BGlm+HEerx9ofkbFWcmQgxbeq+TvuY=@lists.linux.dev
+X-Gm-Message-State: AOJu0YypL/boZgawlVC6RMFVcW2rCTtr3/KEVWp8fLYKm3EsMkDkz5tK
+	x9ScYRlaw1YToV6If2f/GylDV32JfZ1ccxx3pFlBQ3h7dBj1Oma9Q/L8trovgv07aMYZAI9iHk/
+	Y/2bf69vD9wcN450qPrKAl6La2cOnTLs=
+X-Received: by 2002:a05:690c:38a:b0:7bd:9899:f904 with SMTP id
+ 00721157ae682-7c95c7ede6bmr245611007b3.39.1779228128311; Tue, 19 May 2026
+ 15:02:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d815df3b33a63223112b97440c01247935363c1.camel@xry111.site>
+References: <afNM-gIqxpyJ6ro7@casper.infradead.org> <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <agrWuDNGddNmvMFD@lucifer> <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+ <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+ <CAGsJ_4zgeE3ebEJ+j7GJFzWVoVYHeiOn4dOoOsmWCLA6s=oECQ@mail.gmail.com> <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
+In-Reply-To: <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
+From: Barry Song <baohua@kernel.org>
+Date: Wed, 20 May 2026 06:01:56 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
+X-Gm-Features: AVHnY4KXMvR35lLgRvdk-7E8dkEjtOPBxVO6EaEmgpy8kErjRkXyQizjBsuo3fM
+Message-ID: <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+To: "Liam R. Howlett" <liam@infradead.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, Lorenzo Stoakes <ljs@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	david@kernel.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
+	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
+	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Nanzhe Zhao <nzzhao@126.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026 at 10:23:22AM +0800, Xi Ruoyao wrote:
-> On Mon, 2026-05-18 at 13:53 -0500, Mario Limonciello wrote:
-> > > > Also, the amdgpu driver reads the value by pcie_get_speed_cap() in
-> > > > amdgpu_device_partner_bandwidth(), for its dynamic adjustment of PCIe
-> > > > clocks and lanes in power management. We hope this patch can prevent
-> > > > similar problems in future driver changes (similar checks may be
-> > > > implemented in other GPU, storage controller, NIC, etc. drivers).
-> > > 
-> > > Why is this paragraph here?  Is there code in
-> > > amdgpu_device_partner_bandwidth() that wouldn't be needed after this
-> > > patch?
-> > 
-> > I don't think that would be the case as this patch is a pure quirk for
-> > one device.
-> > 
-> > The policy we have in amdgpu_device_partner_bandwidth() takes into 
-> > account specifically the topology of dGPUs that have integrated PCI 
-> > switches.
-> > 
-> > We need to look at the speed and width of the link partner connected to 
-> > the switch not between the switch and the GPU PCI device.
-> 
-> Yes, the paragraph was intended to explain why the lower speed only
-> manifests on some (not all) PCIe devices, for example amdgpu, with the
-> incorrect LinkCap2 from hardware.
-> 
-> > > This patch updates pdev->supported_speeds, which is used by
-> > > pcie_get_speed_cap(), which is in turn used by
-> > > amdgpu_device_partner_bandwidth().
-> > > 
-> > > Is the point just that users of pcie_get_speed_cap() (currently just
-> > > amdgpu, radeon, and sysfs) will now see the correct maximum link speed
-> > > for Loongson-3C6000 bridges?
-> > > 
-> > > And the "checks" you refer to would be the tests in
-> > > amdgpu_device_get_pcie_info() that use the results of
-> > > pcie_get_speed_cap()?
-> > 
-> > I think I agree with Bjorn to drop the paragraph, it just adds confusion 
-> > to the reader.
-> > 
-> > You can have a sentence along the lines of "Updating the speeds to the
-> > correct actual support of the hardware avoids quirks in drivers 
-> > consuming the speed information".
-> 
-> Yes, it will seem better.
-> 
-> Bjorn: do you need a v9 or would you just amend the message in your
-> tree?
+On Tue, May 19, 2026 at 10:17=E2=80=AFPM Liam R. Howlett <liam@infradead.or=
+g> wrote:
+>
+> On 26/05/19 05:14AM, Barry Song wrote:
+> > On Tue, May 19, 2026 at 3:57=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Mon, May 18, 2026 at 4:26=E2=80=AFAM Barry Song <baohua@kernel.org=
+> wrote:
+> > > >
+> > > > On Mon, May 18, 2026 at 5:47=E2=80=AFPM Lorenzo Stoakes <ljs@kernel=
+.org> wrote:
+> > > > >
+> > > > > On Sun, May 17, 2026 at 04:45:15PM +0800, Barry Song wrote:
+> > [...]
+> > > >
+> > > > I think we either need to fix `fork()`, or keep the current
+> > > > behavior of dropping the VMA lock before performing I/O.
+> > >
+> > > I see. So, this problem arises from the fact that we are changing the
+> > > pagefaults requiring I/O operation to hold VMA lock...
+> > > And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
+> > > is_cow_mapping(vma->vm_flags). So, we will be blocking page faults fo=
+r
+> > > anonymous and COW VMAs only while holding mmap_write_lock, preventing
+> > > any VMA modification. On the surface, that looks ok to me but I might
+> > > be missing some corner cases. If nobody sees any obvious issues, I
+> > > think it's worth a try.
+>
+> From Barry's description, I think what he is saying is that the vma
+> locking has caused the mmap_lock to become unfair?  I think what is
 
-I amended the commit log:
+For now, we do not have this problem. Before per-VMA
+locks, we dropped mmap_lock before doing I/O in the
+page-fault path and then retried the page fault. After
+per-VMA locks, we dropped the VMA lock before doing I/O in
+the page-fault path and then retried the page fault.
 
-  ...
+The problem only starts to exist if we decide to perform
+I/O without releasing the VMA lock =E2=80=94 which is what Matthew
+is suggesting, because it would allow us to rip out a large
+amount of page-fault retry code.
 
-  As a result, since commit 774c71c52aa4 ("PCI/bwctrl: Enable only if more
-  than one speed is supported"), bwctrl will be disabled if there's only
-  one 2.5 GT/s value in vector 'supported_speeds'.
+> implied is that the per-vma locking may stall mmap_lock writes for
+> longer than if the mmap_lock was taken in read mode?  Barry, is that
+> correct?
 
-  Manually override the 'supported_speeds' field for affected PCIe bridges
-  with those found on the upstream bus to correctly reflect the supported
-  link speeds.  Updating the speeds to reflect what the hardware actually
-  supports avoids quirks in drivers consuming the speed information.
+Not the case =E2=80=94 the actual situation is (if we modify the
+current kernel to perform I/O without releasing VMA read locks):
+
+thread 1 PF: lock vma1 read ----  IO ----- ;
+thread 2 PF: lock vma2 read ----- IO ----- ;
+thread 3 PF:  lock vma3 read ---- IO ----- ;
+thread 4 fork:  mmap_lock_write ---- lock vma1, vma2, vma3 write ;
+thread 5 :  take mmap_lock for any read/write reason
+
+Now you can see that thread 4 has to wait for the I/O of
+VMA1, VMA2, and VMA3 to complete, and thread 5 then has to
+wait for thread 4 to release mmap_lock. Both thread 4 and
+thread 5 can become extremely slow, because I/O may be stuck
+anywhere in the bio/request queue or filesystem GC.
+
+So now we have two choices:
+
+1. Change fork() to avoid taking the vma write lock for vma1/2/3 where poss=
+ible;
+2. Keep the current kernel behavior and drop the VMA lock before I/O:
+
+thread 1 PF: lock vma1 read; drop vma1 read_lock ----  IO ----- retry PF
+thread 2 PF: lock vma2 read; drop vma2 read_lock ----- IO ----- retry PF
+thread 3 PF:  lock vma3 read; drop vma3 read_lock ---- IO ----- retry PF
+
+Option 2 is what mainline is currently doing, and what this
+patchset also follows. The only difference in this patchset is
+that page faults are retried under the VMA read lock, rather
+than under mmap_lock as in the current kernel, which is causing
+mmap_lock contention.
+
+>
+> Since Android is doing something (according to Barry) that should not be
+> done (according to Willy), both of these together are causing slow down?
+
+The only thing that would cause slowdown is holding the VMA
+lock while performing I/O in the page-fault path, which is not
+happening today. It would only happen if we insist on doing I/O
+under the VMA lock without changing fork().
+
+>
+> >
+> > Thanks. Besides the creation of processes via fork(), I
+> > am also beginning to worry about the death of processes.
+> >
+> > One thing that came to my mind this morning
+> > is that when lowmemorykiller decides to kill an app, we
+> > want the memory to be released as quickly as possible so
+> > the new app or user scenario can get memory sooner.
+> >
+> > In that case, if the app being killed is performing I/O
+> > while holding the VMA lock, the unmapping procedure
+> > could end up being blocked as well.
+> >
+> > If we release the VMA lock as we currently do, we allow
+> > process exit to proceed.
+> >
+> > I haven't thought it through very clearly yet, and I
+> > may be wrong. I'd like to do more investigation. I hope
+> > the apps being killed stay very still, but who knows=E2=80=94we
+> > have so many applications in the market.
+> >
+> > Meanwhile, if you have any comments regarding the death
+> > of processes, they would be very welcome.
+>
+> The oom killer only cleans out anon/not shared vmas [1].  So, what this
+> would hold up would be the actual process exit path.  Although that
+> would have resources associated with it, the amount of resources should
+> be relatively low compared to the amount freed by the oom reaper, right?
+>
+> The other entry point that's mostly to do with android,
+> process_mrelease() [2] will end up in the same  __oom_reap_task_mm()
+> function.
+>
+> So, for the most part, the memory will be freed while the file backed
+> vma completes IO and that sounds like the right thing to do anyways.
+
+Thanks very much for your valuable input!
+I=E2=80=99m going to run more experiments to dig deeper into this.
+
+>
+> Thanks,
+> Liam
+>
+> [1]. https://elixir.bootlin.com/linux/v7.1-rc4/source/mm/oom_kill.c#L547
+> [2]. https://elixir.bootlin.com/linux/v6.18.6/source/mm/oom_kill.c#L1210
+>
+
+Best Regards
+Barry
