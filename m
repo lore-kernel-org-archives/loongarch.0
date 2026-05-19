@@ -1,104 +1,237 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB542B2D7
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 13:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1BF34041F;
+	Tue, 19 May 2026 13:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779195630; cv=none; b=AUT0ySOfFPEgrYLDNjjxJHlXdTqgF6G7FHDCkTJjKcediKXK5X1OaStwHNeheZENwYHrtBmnZESNTqd/GIHgXw0y5lHrwgkIcAMePPuS3ZYegyTKNYtwC83ZmDkXrqpo92f1qLLeZJ+YqL2iq1Hn+EOhSaB4y+K172muBPz+rW0=
+	t=1779196330; cv=none; b=L6zR79K0ZQeb4Hpwu/CNR2tx2RcrYmngXE5JfscPALCjceCcjckwwV02xwFkf3yX2C+W/gcMdQI2SqlwYKVh/mebsM/AEUSD96RQ1wgpJ4FRYGPlxI1rge5xiiuAKAsilWuwCULcub07L9EIXedRtgLALK3UMKowohQKjD7kzt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779195630; c=relaxed/simple;
-	bh=3WlavuYFyG826CqF8Gc3U83JaaU7/hj7idobD7tgd5g=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fVRPt9q6xEG39a6NX55Q91W4enI2ZaAVg9+1Ri69mLLqMzvnQDqLwTyXFg6nFeW2/PEuJBf6+69xc+eUcDKlHwMpT8WK2jN31wd1PRVlJmryjQla4qVezNL25011GyZ6hgn926TiymStNETRVbrLquAyBYDByJQj+uQvPtl7W+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxX+viXgxqFzoLAA--.32901S3;
-	Tue, 19 May 2026 21:00:18 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxTMLgXgxqjGSIAA--.59686S3;
-	Tue, 19 May 2026 21:00:16 +0800 (CST)
-Subject: Re: [PATCH v3 1/6] LoongArch: KVM: Check irq validility in
- kvm_vcpu_ioctl_interrupt()
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20260519094308.3983046-1-maobibo@loongson.cn>
- <20260519094308.3983046-2-maobibo@loongson.cn>
-Message-ID: <786dda77-1fda-7741-c20f-bafbaacd6fd2@loongson.cn>
-Date: Tue, 19 May 2026 20:57:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1779196330; c=relaxed/simple;
+	bh=sJ8oiAvqmhr7uHBQf9pYBhQP+kTq5NdeaE/VXHC2rqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G6Zid+/pgUX6vOgaTFmqt8wv+qAKdUDIrMGwdYGyp7f/cymm8cBGUajujAofm2mx+3LN+fw84ncg00HDv3QhSjaf0hgDmFCRpeYNIIknsiueE/zG8eJ2h5k0sRrt3Yy6t6Z4LWQbX9P+BdKDrwu+O2Y3WtD5WFI01OkUkrcO07U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSGPE6UN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSGPE6UN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4764BC2BCB3;
+	Tue, 19 May 2026 13:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779196330;
+	bh=sJ8oiAvqmhr7uHBQf9pYBhQP+kTq5NdeaE/VXHC2rqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YSGPE6UN5Qmce16ldLx9NKEWS+Et8MZjoQPtOf59P5nkhc8U2lrZGD8JkDxEHS0w+
+	 jmmMI6+gtKWvDpALbh1cbwf4TAObuSvXatbUzcJkwup0oefI+MAyALMqPabU8jsEVy
+	 o3SyWVoBrJpJUBQZ8O+WCJXIGAuAdZa15ZTa4vV/Z5WyNvz77F6F/2+C10LuVJSSFj
+	 lZkaneaf1fdSE0EGWCsZZNXbeZR9y51LQPA0IEloovoGevsLaeOHToqEwaUoMlq3z2
+	 GXR9n8QZ5VYTJzXhHzeyp2ncWhm/filX4zLxr0FaNcgJ0UEFKIolD9obziY7jvEIAS
+	 jmPLXidQ+Gx2Q==
+Date: Tue, 19 May 2026 14:12:00 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Yang Shi <shy828301@gmail.com>
+Cc: Barry Song <baohua@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	surenb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <agxfLNuLCAT3F4cW@lucifer>
+References: <20260430040427.4672-1-baohua@kernel.org>
+ <afNM-gIqxpyJ6ro7@casper.infradead.org>
+ <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org>
+ <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260519094308.3983046-2-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxTMLgXgxqjGSIAA--.59686S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Jw48XFy5CrWfWFW7ur1UCFX_yoW8JrWDpr
-	9rCF1DX3yrGrnrKw1xXayv9wsIvrykKr1I9asrJa4rAr9Iyr1YqFWxCrW29Fy7Gw1rJF4I
-	qr1ft3Wj9as8A3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CP
-	fJUUUUU==
+In-Reply-To: <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
 
+On Mon, May 18, 2026 at 02:21:14PM -0700, Yang Shi wrote:
+> On Sun, May 17, 2026 at 1:45 AM Barry Song <baohua@kernel.org> wrote:
+> >
+> > On Sat, May 2, 2026 at 1:58 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Sat, May 02, 2026 at 01:44:34AM +0800, Barry Song wrote:
+> > > > On Fri, May 1, 2026 at 10:57 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > > > >
+> > > > > On Fri, May 01, 2026 at 06:49:58AM +0800, Barry Song wrote:
+> > > > > > 1. There is no deterministic latency for I/O completion. It depends on
+> > > > > > both the hardware and the software stack (bio/request queues and the
+> > > > > > block scheduler). Sometimes the latency is short; at other times it can
+> > > > > > be quite long. In such cases, a high-priority thread performing operations
+> > > > > > such as mprotect, unmap, prctl_set_vma, or madvise may be forced to wait
+> > > > > > for an unpredictable amount of time.
+> > > > >
+> > > > > But does that actually happen?  I find it hard to believe that thread A
+> > > > > unmaps a VMA while thread B is in the middle of taking a page fault in
+> > > > > that same VMA.  mprotect() and madvise() are more likely to happen, but
+> > > > > it still seems really unlikely to me.
+> > > >
+> > > > It doesn’t have to involve unmapping or applying mprotect to
+> > > > the entire VMA—just a portion of it is sufficient.
+> > >
+> > > Yes, but that still fails to answer "does this actually happen".  How much
+> > > performance is all this complexity in the page fault handler buying us?
+> > > If you don't answer this question, I'm just going to go in and rip it
+> > > all out.
+> > >
+> >
+> > Hi Matthew (and Lorenzo, Jan, and anyone else who may be
+> > waiting for answers),
+> >
+> > As promised during LSF/MM/BPF, we conducted thorough
+> > testing on Android phones to determine whether performing
+> > I/O in `filemap_fault()` can block `vma_start_write()`.
+> > I wanted to give a quick update on this question.
+> >
+> > Nanzhe at Xiaomi created tracing scripts and ran various
+> > applications on Android devices with I/O performed under
+> > the VMA lock in `filemap_fault()`. We found that:
+> >
+> > 1. There are very few cases where unmap() is blocked by
+> >    page faults. I assume this is due to buggy user code
+> >    or poor synchronization between reads and unmap().
+> > So I assume it is not a problem.
+> >
+> > 2. We observed many cases where `vma_start_write()`
+> >    is blocked by page-fault I/O in some applications.
+> >    The blocking occurs in the `dup_mmap()` path during
+> >    fork().
+> >
+> > With Suren's commit fb49c455323ff ("fork: lock VMAs of
+> > the parent process when forking"), we now always hold
+> > `vma_write_lock()` for each VMA. Note that the
+> > `mmap_lock` write lock is also held, which could lead to
+> > chained waiting if page-fault I/O is performed without
+> > releasing the VMA lock.
+> >
+> > My gut feeling is that Suren's commit may be overshooting,
+> > so my rough idea is that we might want to do something like
+> > the following (we haven't tested it yet and it might be
+> > wrong):
+> >
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 2311ae7c2ff4..5ddaf297f31a 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -1762,7 +1762,13 @@ __latent_entropy int dup_mmap(struct mm_struct
+> > *mm, struct mm_struct *oldmm)
+> >         for_each_vma(vmi, mpnt) {
+> >                 struct file *file;
+> >
+> > -               retval = vma_start_write_killable(mpnt);
+> > +               /*
+> > +                * For anonymous or writable private VMAs, prevent
+> > +                * concurrent CoW faults.
+> > +                */
+> > +               if (!mpnt->vm_file || (!(mpnt->vm_flags & VM_SHARED) &&
+> > +                                       (mpnt->vm_flags & VM_WRITE)))
+> > +                       retval = vma_start_write_killable(mpnt);
+> >                 if (retval < 0)
+> >                         goto loop_out;
+> >                 if (mpnt->vm_flags & VM_DONTCOPY) {
+>
+> Maybe a little bit off topic. This is an interesting idea. It seems
+> possible we don't have to take vma write lock unconditionally. IIUC
+> the write lock is mainly used to serialize against page fault and
+> madvise, right? I got a crazy idea off the top of my head. We may be
 
+Err no, it serialises against literally any modification or read of any
+characteristic of VMAs.
 
-On 2026/5/19 下午5:43, Bibo Mao wrote:
-> Function kvm_vcpu_ioctl_interrupt() can be called from userspace, here
-> add irq validility cheking in kvm_vcpu_ioctl_interrupt().
-> 
-> Fixes: f45ad5b8aa93 ("LoongArch: KVM: Implement vcpu interrupt operations")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/kvm/vcpu.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index e28084c49e68..673977a25138 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1486,7 +1486,14 @@ void kvm_lose_fpu(struct kvm_vcpu *vcpu)
->   
->   int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
->   {
-> -	int intr = (int)irq->irq;
-> +	int vector, intr = (int)irq->irq;
-> +
-> +	vector = intr;
-> +	if (intr < 0)
-> +		vector = -intr;
-By AI review, there is still problem if the value of intr is 0x8000000. 
-I should notice this earlier :(
+> able to just take vma write lock iff vma->anon_vma is not NULL.
 
-http://sashiko.dev/#/patchset/20260519094308.3983046-1-maobibo%40loongson.cn
+Except if we don't take it and vma->anon_vma is NULL, then somebody can
+anon_vma_prepare() and change vma->anon_vma midway through a fork and completely
+screw up the anon_vma fork hierarchy.
 
-Regards
-Bibo Mao
-> +
-> +	if (vector >= EXCCODE_INT_NUM)
-> +		return -EINVAL;
->   
->   	if (intr > 0)
->   		kvm_queue_irq(vcpu, intr);
-> 
+So no.
 
+>
+> First of all, write mmap_lock is held, so the vma can't go or be
+> changed under us.
+
+vma->anon_vma can be changed.
+
+>
+> Secondly, if vma->anon_vma is NULL, it basically means either no page
+> fault happened or no cow happened, so there is no page table to copy,
+> this is also what copy_page_range() does currently. So we can shrink
+> the critical section to:
+
+Firstly, with no VMA write lock, !vma->anon_vma means a fault can race and
+secondly copy_page_range() checks vma_needs_copy(), there are other cases - PFN
+maps, mixed maps, UFFD W/P (ugh), guard regions.
+
+So yeah this isn't sufficient.
+
+>
+> if (vma->anon_vma) {
+>     vma_start_write_killable(src_vma);
+>     anon_vma_fork(dst_vma, src_vma);
+>     copy_page_range(dst_vma, src_vma);
+> }
+
+Yeah that's totally broken fo reasons above as I said :)
+
+>
+> But page fault can happen before write mmap_lock is taken, when we
+> check vma->anon_vma, it is possible it has not been set up yet. But it
+> seems to be equivalent to page fault after fork and won't break the
+> semantic.
+
+It will totally break how the anon_vma hierarchy works :) See the links at the
+top of https://ljs.io/talks for a link to various slides on anon_vma behaviour
+(it's really a pain to think about because it's a super broken abstraction).
+
+You could end up with a CoW mapping that's unreachable from rmap and you could
+get some nasty issues with page table entries pointing at freed folios :)
+
+>
+> Anyway, just a crazy idea, I may miss some corner cases.
+
+Yeah sorry to push back here but this is just not a viable approach.
+
+And this is forgetting that we have relied on page faults being blocked by fork
+_forever_, who knows what else has baked in assumptions about that
+serialisation.
+
+Forking is one of the nastiest parts of mm and has had multiple, subtle, corner
+case breakages that have been a nightmare to deal with.
+
+So I'm very much against changing this behaviour to try to fix something in the
+fault path.
+
+We should address the fault path issues in the fault path :)
+
+>
+> Thanks,
+> Yang
+>
+> }
+>
+> >
+> > Based on the above, we may want to re-check whether fork()
+> > can be blocked by page faults. At the same time, if Suren,
+> > you, or anyone else has any comments, please feel free to
+> > share them.
+> >
+> > Best Regards
+> > Barry
+> >
+
+Cheers, Lorenzo
