@@ -1,129 +1,182 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171F83D0BE4;
-	Wed, 20 May 2026 09:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4913BE64B;
+	Wed, 20 May 2026 10:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779270846; cv=none; b=cqQO72Q+r79eoRI70XAaYKfJrpVQo4Iek2sU1hyKdrlnG/4knLuGWGRs3O5P0eFYItd0hXDbxDlsLzdmQbQxQQribh2QRTFgCs08fHZ02kghC6hVyresLmMYBRNbP5P9Zv2pE0wzmjZY7N46ltJavI096pxkSkHVWk+9gWTkLyQ=
+	t=1779271651; cv=none; b=skWO2SqfLCTacfxyfRO7khZA58oKhCuTukwuqvxdQpEomPMkRogtFH/HZgpFD7scULi4+3v1hG0fkV0tvIcvbjLIFnuE3QDrFqVkWq/3qed7SHjlsc+86QPshHzft/OVJu7IEHWodZ5fpcV3a+nvquM7Vlc3S5zBIvw3obIQki4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779270846; c=relaxed/simple;
-	bh=SvyTkewuCAYgva/MIbZ/Ixj5tmrW8fAv79jIjNwvUzQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=BRdZw9UMgbJYPn3NXjT6cGgdT0QDBUwOS2B8Na281uz0ZPWfJ9ZJIYDGj0xCTAX+vtYAPJC3PcQwGpRj7PrnlJfMXolRDP/9TyDg8x8CKiNDi95DVrjT/ClbDFrnHJwhb1nDMwmY6qQg1z74Y0+ClXl2TpUw0DZa3iv/ukglnNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XF5eoO6i; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1779271651; c=relaxed/simple;
+	bh=5uTpCdf27XDZ7rU8VT2nSx6sZs8Bwa/a+nJN9dsTFZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PEuKW2U3+vl4GLlDeHbupwv3nuLqRd1/RhR27kOa7nW+dOU+reg7vTfl2lWIzGNmi66LS9ruervxGqD4oC6MIju+YGzAJW52RsPMAnjhgaft5RgVlAQ8/+nCHJZdD1qkUVb8P8kfXSYEkVOAc7xKpxvnNfw6jO39gAx3RWwrYcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bX7QZvvd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XF5eoO6i"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260520095359euoutp0198bcd0d30eb407a19ba86b2e2a0aa636~xPWbGPRHZ2283822838euoutp01G;
-	Wed, 20 May 2026 09:53:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260520095359euoutp0198bcd0d30eb407a19ba86b2e2a0aa636~xPWbGPRHZ2283822838euoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1779270839;
-	bh=ROuDJc1ckmzsUK3GQqF5RpUdIt3rHpwnZ651Dx4KTEU=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=XF5eoO6iIyP+yCtpP3A8TGvh7GdDuyqBUt33HERHmy0S7JjHZU25lGEQBRo1uI7yM
-	 xKjGjzOAnuX9sNbzBHZjYTMarbQoPJA/rfU7eI7SVQCO27LQ49kvWSeFQnoBkjwSrS
-	 lCkUYQMv8ZgGaOQMZ5JVsI8vM6NOOrcWXVPUsv64=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260520095358eucas1p1d5ec8fc83da4c9969214d9dbd4e59061~xPWajlDwS0908909089eucas1p1b;
-	Wed, 20 May 2026 09:53:58 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260520095357eusmtip1a47766f5000651b2ff2398051841ce3f~xPWZFRiKV1382913829eusmtip1U;
-	Wed, 20 May 2026 09:53:57 +0000 (GMT)
-Message-ID: <e5dbe092-1c28-4799-b7c6-a78f84065dd2@samsung.com>
-Date: Wed, 20 May 2026 11:53:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bX7QZvvd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8006B1F000E9;
+	Wed, 20 May 2026 10:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779271647;
+	bh=5uTpCdf27XDZ7rU8VT2nSx6sZs8Bwa/a+nJN9dsTFZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bX7QZvvdTxa3YSpPgJR/CpVIiAr4LsFJHToqBiUpqQ7OjAJ3JKFYFh8HzISIXKnFl
+	 1E+J/2n87sXxTBfiFUF8qRdzuKZRCrbEiW5rd6ddSTbKXsJZyMjM1T70x1mbw9v0iy
+	 YXZDa7aQwxVF+CY8701SKVnLs7kwSt8WRsZCkxc6xexoxRufJyztW+awoUYKcSOR3V
+	 ZphoL6Dwc5cIDbOia4oI1lg7iHirtApfH1lnEv5WUDqQL/WaQSKARD2Sz4E/mNZ0i/
+	 CCS5/OgWZ5wmRKzFA5XnlGREVMcvJ2weIMSEG1wzLcm4yLFjdP3cRCAdnhnZwf44/+
+	 wOJEQPBG/nIXg==
+Date: Wed, 20 May 2026 11:07:18 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Barry Song <baohua@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ag2GKrvRHzP4KhOl@lucifer>
+References: <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <agrWuDNGddNmvMFD@lucifer>
+ <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+ <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+ <agxbq1TxJdniMQT3@lucifer>
+ <CAGsJ_4zxyZP_xkFCGWfLyXkqomrX6DNqyMVirk=aggtwB1zExw@mail.gmail.com>
+ <ag1mk2DSJsiORaxK@lucifer>
+ <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH v2 3/8] of: reserved_mem: add dumpable flag to opt-in
- vmcore
-To: Wandun Chen <chenwandun1@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	iommu@lists.linux.dev, zhaomeijing@lixiang.com
-Cc: catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, robh@kernel.org, saravanak@kernel.org,
-	akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
-	robin.murphy@arm.com, leitao@debian.org, kees@kernel.org, coxu@redhat.com,
-	tangyouling@kylinos.cn, songshuaishuai@tinylab.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20260520091844.592753-4-chenwandun@lixiang.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260520095358eucas1p1d5ec8fc83da4c9969214d9dbd4e59061
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260520091935eucas1p1e3bd0cd7a5d2229acf937de3439571c7
-X-EPHeader: CA
-X-CMS-RootMailID: 20260520091935eucas1p1e3bd0cd7a5d2229acf937de3439571c7
-References: <20260520091844.592753-1-chenwandun@lixiang.com>
-	<CGME20260520091935eucas1p1e3bd0cd7a5d2229acf937de3439571c7@eucas1p1.samsung.com>
-	<20260520091844.592753-4-chenwandun@lixiang.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
 
-On 20.05.2026 11:18, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun1@gmail.com>
+On Wed, May 20, 2026 at 05:07:16PM +0800, Barry Song wrote:
+> On Wed, May 20, 2026 at 3:50 PM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> >
+> > On Wed, May 20, 2026 at 05:18:52AM +0800, Barry Song wrote:
+> > > On Tue, May 19, 2026 at 8:53 PM Lorenzo Stoakes <ljs@kernel.org> wrote:
+> > > >
+> > > > On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
+> > > >
+> > > > > >
+> > > > > > I think we either need to fix `fork()`, or keep the current
+> > > > > > behavior of dropping the VMA lock before performing I/O.
+> > > > >
+> > > > > I see. So, this problem arises from the fact that we are changing the
+> > > > > pagefaults requiring I/O operation to hold VMA lock...
+> > > > > And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
+> > > > > is_cow_mapping(vma->vm_flags). So, we will be blocking page faults for
+> > > > > anonymous and COW VMAs only while holding mmap_write_lock, preventing
+> > > > > any VMA modification. On the surface, that looks ok to me but I might
+> > > > > be missing some corner cases. If nobody sees any obvious issues, I
+> > > > > think it's worth a try.
+> > > >
+> > > > Not sure if you noticed but I did raise concerns ;)
+> > > >
+> > > > I wonder if you've confused the fault path and fork here, as I think Barry has
+> > > > been a little unclear on that.
+> > >
+> > > I think I’ve been absolutely clear :-)
+> >
+> > On this point sure, I would argue less so around the fork stuff but I responded
+> > on that specifically elsewhere so let's keep things moving :>)
+> >
+> > > We should either stick to the current behavior - drop
+> > > the VMA lock before doing I/O, or change fork() so that it
+> > > does not wait on vma_start_write().
+> >
+> > Again, as I said elsewhere, I think there might be a 3rd way possibly. It's a
+> > big mistake to assume that there are only specific solutions to problems in the
+> > kernel then to present a false dichotomy.
 >
-> From: Wandun Chen <chenwandun@lixiang.com>
+> I recalled that when we discussed this part in my slides:
 >
-> Add a 'dumpable' flag to struct reserved_mem so the kernel can decide
-> whether a reserved area should be included in the kdump vmcore. Most
-> reserved regions are owned by devices and do not contain data useful
-> for kernel crash analysis, so excluding them by default is the right
-> behaviour.
->
-> Reusable CMA regions are different: pages in a CMA region are handed
-> back to the buddy allocator and may contain key data for crash
-> analysis, so set dumpable to true in rmem_cma_setup().
->
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-> Link: https://lore.kernel.org/all/20260506144542.GA2072596-robh@kernel.org/
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  include/linux/of_reserved_mem.h | 1 +
->  kernel/dma/contiguous.c         | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-> index e8b20b29fa68..55a67cee41ea 100644
-> --- a/include/linux/of_reserved_mem.h
-> +++ b/include/linux/of_reserved_mem.h
-> @@ -15,6 +15,7 @@ struct reserved_mem {
->  	phys_addr_t			base;
->  	phys_addr_t			size;
->  	void				*priv;
-> +	bool				dumpable;
->  };
->  
->  struct reserved_mem_ops {
-> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> index 03f52bd17120..eddec89eb414 100644
-> --- a/kernel/dma/contiguous.c
-> +++ b/kernel/dma/contiguous.c
-> @@ -579,6 +579,7 @@ static int __init rmem_cma_setup(unsigned long node, struct reserved_mem *rmem)
->  		dma_contiguous_default_area = cma;
->  
->  	rmem->priv = cma;
-> +	rmem->dumpable = true;
->  
->  	pr_info("Reserved memory: created CMA memory pool at %pa, size %ld MiB\n",
->  		&rmem->base, (unsigned long)rmem->size / SZ_1M);
+> ‘For simplicity, rather than using a whitelist mechanism for
+> per-VMA retry, we could use a blacklist instead: default to
+> always retry via the VMA lock, and only allow mmap_lock-based
+> page-fault retry for specific cases such as
+> __vmf_anon_prepare().’
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Yeah that's an itneresting approach actually, sorry if I missed that.
 
+>
+> Suren mentioned introducing a FALLBACK flag. With the
+> FALLBACK flag, we would retry via mmap_lock; with the RETRY
+> flag, we would retry via the VMA lock.
+
+Yeah, and honestly I'm beginning to wonder if we don't just have to pay the
+complexity tax anyway and eat the fact we have to deal with that.
+
+But as per Josef's comment re: this whole mechanism, simply not waiting for
+file-backed I think is another option (but I don't recall where we left that
+conversation actually?)
+
+Anyway I want to make sure any complexity we add is necessary so will take a
+look through patches and have a think (and obviously others will have their own
+opinions!)
+
+>
+> Not sure whether this could really be called a ‘third way,’
+> but it seems more like a shift from a whitelist model to a
+> blacklist model, without changing the fundamental design, but
+> it does change where we would need to touch the source code.
+
+Right yeah, good to have more options.
+
+>
+> >
+> > We absolutely hear you on this being a problem and it WILL be addressed one way
+> > or another.
+>
+> Thanks. This is a bit of light in what has felt like a fairly
+> dark situation. I really appreciate your thoughtful and
+> responsible approach.
+
+Yes, sorry, I maybe was a bit too harsh in my tone here, I didn't really intend
+to be negative as to addresisng the problem as a whole.
+
+Moreso I've been concerned about the fork approach, and that is what's led to me
+being shall we say 'emphatic' about it :)
+
+But of course I sometimes make mistakes in quite how my tone comes across, so
+apologies if it came across overly negatively - I am negative (on a technical
+level) about the fork approach, but not the fact we should address this.
+
+To be clear - I'm very glad you've brought this up, it's important, as much as
+it's painful that we have this issue in the first place! :)
+
+>
+> >
+> > Of the two approaches, as I said elsewhere, I prefer what you've done in this
+> > series to anything touching fork.
+> >
+> > But give me time to look through the series please (I'd also suggest RFC'ing
+> > when it's something kinda fundamental that might generate converastion, makes
+> > life a bit easier on the review side :)
+>
+> Thanks! Sure, I’m happy to wait and there’s no urgency.
+>
+> Last year you made quite a significant contribution to the work
+> when I tried to remove mmap_lock in madvise. I really
+> appreciated it. Now we’re back to the same lock again, just in
+> different places.
+
+Yeah :) one day maybe we can get rid of it altogether (maybe I'm dreaming :)
+
+>
+> Best Regards
+> Barry
+
+Cheers, Lorenzo
