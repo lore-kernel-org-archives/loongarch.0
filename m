@@ -1,166 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AF3BADB2
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8293B27E3
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779268055; cv=none; b=matM5SwqHudS6av3DScX3F+R87NUDuUpDk9fOD+uHh6jv/25cX5r/DKbCyvXVNjMYxhaHgJpFeIQ3H4PfFPQNEI6ebgwsJlVQYY4hLyVF7ZzOtAiHuwKjIf/4W0+OsjJPe0tNcTA+627Xn4FIhoNMQQRcWGn5jNhl53G5M/ujCI=
+	t=1779268742; cv=none; b=cqelvwxmQ864jFtpyRSNtDxuJntv+J01anzVfdW4mgyxMEuIJy37tALSfzDfZA1Mc5tDd6FOYQLjE/M2hSX86jeGcwntTjeDRzEObu5meMRDyFf4/9Y+cKYv1uIzXxaMy7Il1lVmjRHrdZrmdE760FGJfDwPgNAk7TQzA8KOR9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779268055; c=relaxed/simple;
-	bh=v4NWBagxYzHasGGEcU79T5ijVXX4z2pUOQ5qYXZ7jJc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jBAE7DF1Nn6RWSMpmyUqSK+HIds7mV6Mi6ggf53CxFOLVaRu6WmZ6Ri20jXV7M8Do4PIksQWFiH1OZupnpExGV1Y/gItyXRZJVyrk1Idhq0s0SvDdEXBlNqpp7MvOm3A6xU/BXak5UughSCPq49DUoISGKVue8qNxR2wqqk5O+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBpj2TO2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779268742; c=relaxed/simple;
+	bh=VdYMZfmdWGinCscf69KLX3fpX4Qe2QiLkBtyEy1U2/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UZGsavPr60WtOnelktzU5tKab4agOZGr92HOmNQiHUugJ4nP3wkYtasuMF/yL6f+ioh0m3FzfEpnexiEltcJ+JanOA/oTY/eQZbg2zniKPFjvf2mKO9KDRn3eHKlTZdH4hFRg4MuuyXce/0VLKsTFzf7M7mHsjOt1lBN2gHI0fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s5bcefgy; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBpj2TO2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22A51F00898
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779268051;
-	bh=v4NWBagxYzHasGGEcU79T5ijVXX4z2pUOQ5qYXZ7jJc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=HBpj2TO2qA5Oor7OHt5Ye/pMrVKsAa+tgR47UAhIhwI3yvvVE0YC6Uki3M1ZSwg9X
-	 asyERscZ397Lo+0XizKdIs72Miu1IMnt3PRJZo3ougkZdBCWhlygkHaiUNzohh15IR
-	 vAhXqfXC3iF2RbQvfZPdWAgx6KAPH7jkop0CvuXrEWN21u49pHn8RQZD1BwA27fuvq
-	 Bt1H1Lj4ObEpuYoP93W/mda/nuhZ48Up1nhVyCOwnVaQZ1CLCPdw5a+spdcD5TWEp6
-	 0QGlED+uyIsjRv5jN30SuEcKCOlN+lu8whLsgH/GtAV5SFLkN7eCCxHzB79FTYk8Yj
-	 HlaNDYyigSwqA==
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8c92737a8d3so29657796d6.1
-        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:07:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+vKoXft63wgJ+6zg+3hWqPmkPlRld2zrKgcRS18oJlQcCGCV1StLrU/lS27L8UgUHWgX2TnJh7VVI=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwsUhvSy4dmI/rK+vUYllezr33ftw68HgapFDsiARlYYRaoVgyS
-	R90GVbx3G3PCRWZd+iX1YOu116temCoDUiSgc+teq7RdpJoMN0B1jVal96WMhz/vDZdj0FU82as
-	qDkqP7bYChP/lAAlze9aCYyDbn20+e7o=
-X-Received: by 2002:a05:6214:29e1:b0:8cb:fd76:e904 with SMTP id
- 6a1803df08f44-8cbfd76eac8mr35985186d6.17.1779268050694; Wed, 20 May 2026
- 02:07:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5bcefgy"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-82f8893bff3so2117245b3a.2
+        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:19:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779268740; x=1779873540; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
+        b=s5bcefgy5cHU3TnsAR51TCBfc1g5wXGMLmuVywASn7nSXruBoGkxhNbilzCwq3yHME
+         6onJycYOx/47H2olDkTg1083xSeMHTCkWjYFurEKzoRbbiF0EAQg29qpS1aAiANxkK8y
+         Ppt9qjx5HpfvwljWTZosmSyCmza83hSKJcE+ALNhsGdbiDxcQMD5fmB5MM+MZxHeuUAx
+         yZ0Cgfqy2Ale9PTnkX26W3cKcs9Hc3958QLdn2nG7IifYTqx0PFSgRPVQYmMAwnpxEw+
+         TwFpvcfj7CgTEuW8N56Zi5zoURA+YKn/+LYiHIXCdnmeI31TSSrnLTeyZkCHDvXnbx87
+         QaIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779268740; x=1779873540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
+        b=cIN5UN5W3Y65XtpfAwMVAWc0teR2JzoNDQXfq+tFLS/fXQYknoEBP2PRWw7/NwmsPQ
+         OSjRvBnah3CIQDLJq3RnuPKnb7Nm4XZBaRdwATxRyGalg67sbPvcNTGLspgozDfmNSEy
+         t8RxCNWiCz8Wmu4k0yYjzSJ6xiww+FjV3AfM7wM0K0TTKNVaoNToZIad7zyr2X/ieMNQ
+         pW5xgyWdcSXg0Iv0DsumN9NzjRajFV75FIpCgRP7V56sgXVm0QJtCI0HaW5q/HI5Q9Bo
+         FfFpkx7JfleaHRaAxSf+YJx3tlsfp1Gpin32NqTEQVNlBVm+O7iwGQyWRIrFHOKdEodG
+         w4Iw==
+X-Forwarded-Encrypted: i=1; AFNElJ/AW7kMXiN4aRkYLBD9LjcoE+WXeEgFCBpbzhLkHkKe5/UfYx7nzU5Q7DeTn8n4E833so/ZazaH/dg=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw8tjTAkt4rqFKXamGIckZ8F6CLnZI4lO3UkMvHNTsvZpwpEXKm
+	GR4EKObJ5pZzjdEUzFTlQaVBV1NroNVPNCQm7p9z9BnrGNIICvoaiXmG
+X-Gm-Gg: Acq92OGd1EGSxumvCIPtst5pYq4Ni5lUxbsrmWELbafU7UxAK8b22keuCOR54kp3Ifr
+	Jg1VmO/pfzaxtY/AFBy0JkJ+NwW5w1bNoLth705o1DVfyxnajjljASoM6BPJAEpxIU58nyDqlqU
+	gz+dEt3xQ6Tydf2sOBbYog3y3jtWs0mrOdguyPJcBzVEW0zMCAkTBxO9pbx9EzzZtliZWXgu6R6
+	yli6pjA16mleLpl7cRhuh0xGt2w/uDNnKhLMqr339hlfT81ynIziSmeljMtUPEXo4uWjTJ1OsZp
+	FtwlZKPqOq9X3P5YWmiF5ukex/lxzuVw/nCxzswj1bNy2XWo6r7LcjFnTdW/JTx/UoMbdTb5LBF
+	mScMAwNl4zSytxHo4TDxm/C8XlLwaxLJyT9iNHC8/rLbn8MYi5txJUXty/HPNI4Qzyyhg536g1A
+	SNoHvJG34fXjYEKxOTcIyu8vnX5CJWJyiikL62wQ==
+X-Received: by 2002:a05:6a00:2c95:b0:82c:e816:4135 with SMTP id d2e1a72fcca58-83f33de9724mr22532227b3a.47.1779268740373;
+        Wed, 20 May 2026 02:19:00 -0700 (PDT)
+Received: from intel.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2026 02:18:59 -0700 (PDT)
+From: Wandun Chen <chenwandun1@gmail.com>
+X-Google-Original-From: Wandun Chen <chenwandun@lixiang.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	iommu@lists.linux.dev,
+	zhaomeijing@lixiang.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	robh@kernel.org,
+	saravanak@kernel.org,
+	akpm@linux-foundation.org,
+	bhe@redhat.com,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com,
+	leitao@debian.org,
+	kees@kernel.org,
+	coxu@redhat.com,
+	tangyouling@kylinos.cn,
+	songshuaishuai@tinylab.org
+Subject: [PATCH v2 0/8] kdump: reduce vmcore size and capture time
+Date: Wed, 20 May 2026 17:18:36 +0800
+Message-ID: <20260520091844.592753-1-chenwandun@lixiang.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
- <agrWuDNGddNmvMFD@lucifer> <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
- <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
- <agxbq1TxJdniMQT3@lucifer> <CAGsJ_4zxyZP_xkFCGWfLyXkqomrX6DNqyMVirk=aggtwB1zExw@mail.gmail.com>
- <ag1mk2DSJsiORaxK@lucifer>
-In-Reply-To: <ag1mk2DSJsiORaxK@lucifer>
-From: Barry Song <baohua@kernel.org>
-Date: Wed, 20 May 2026 17:07:16 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
-X-Gm-Features: AVHnY4JPJjfMfRWu5irKuds8oTQCJquviUDQwK-7Iye_Xeif_N9I88YUISr9aq8
-Message-ID: <CAGsJ_4zN5ezh9vvvQDQdMF2KuuDGvkhNjTZWc0y0Lsa-P4Aahw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, david@kernel.org, liam@infradead.org, vbabka@kernel.org, 
-	rppt@kernel.org, mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, 
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, 
-	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, 
-	bhe@redhat.com, youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 20, 2026 at 3:50=E2=80=AFPM Lorenzo Stoakes <ljs@kernel.org> wr=
-ote:
->
-> On Wed, May 20, 2026 at 05:18:52AM +0800, Barry Song wrote:
-> > On Tue, May 19, 2026 at 8:53=E2=80=AFPM Lorenzo Stoakes <ljs@kernel.org=
-> wrote:
-> > >
-> > > On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
-> > >
-> > > > >
-> > > > > I think we either need to fix `fork()`, or keep the current
-> > > > > behavior of dropping the VMA lock before performing I/O.
-> > > >
-> > > > I see. So, this problem arises from the fact that we are changing t=
-he
-> > > > pagefaults requiring I/O operation to hold VMA lock...
-> > > > And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
-> > > > is_cow_mapping(vma->vm_flags). So, we will be blocking page faults =
-for
-> > > > anonymous and COW VMAs only while holding mmap_write_lock, preventi=
-ng
-> > > > any VMA modification. On the surface, that looks ok to me but I mig=
-ht
-> > > > be missing some corner cases. If nobody sees any obvious issues, I
-> > > > think it's worth a try.
-> > >
-> > > Not sure if you noticed but I did raise concerns ;)
-> > >
-> > > I wonder if you've confused the fault path and fork here, as I think =
-Barry has
-> > > been a little unclear on that.
-> >
-> > I think I=E2=80=99ve been absolutely clear :-)
->
-> On this point sure, I would argue less so around the fork stuff but I res=
-ponded
-> on that specifically elsewhere so let's keep things moving :>)
->
-> > We should either stick to the current behavior - drop
-> > the VMA lock before doing I/O, or change fork() so that it
-> > does not wait on vma_start_write().
->
-> Again, as I said elsewhere, I think there might be a 3rd way possibly. It=
-'s a
-> big mistake to assume that there are only specific solutions to problems =
-in the
-> kernel then to present a false dichotomy.
+This is v2 of the vmcore size optimization series.
 
-I recalled that when we discussed this part in my slides:
+The original v1 [1] contains two parts of work:
+ - Bug fixes and small cleanups about reserved memory.
+ - A vmcore size optimization that excludes reserved memory out of
+   vmcore.
 
-=E2=80=98For simplicity, rather than using a whitelist mechanism for
-per-VMA retry, we could use a blacklist instead: default to
-always retry via the VMA lock, and only allow mmap_lock-based
-page-fault retry for specific cases such as
-__vmf_anon_prepare().=E2=80=99
+For the convenience of review, I have split it into two independent
+patchsets. This patchset focuses on the vmcore size optimization.
 
-Suren mentioned introducing a FALLBACK flag. With the
-FALLBACK flag, we would retry via mmap_lock; with the RETRY
-flag, we would retry via the VMA lock.
+Motivation
+==========
 
-Not sure whether this could really be called a =E2=80=98third way,=E2=80=99
-but it seems more like a shift from a whitelist model to a
-blacklist model, without changing the fundamental design, but
-it does change where we would need to touch the source code.
+On SoCs that carve out large firmware-owned reserved memory (GPU
+firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+those carveouts as part of system RAM even though their contents are
+firmware state that is not useful for kernel crash analysis.
 
->
-> We absolutely hear you on this being a problem and it WILL be addressed o=
-ne way
-> or another.
+This series excludes /reserved-memory regions from vmcore by default,
+and also for /memreserve/ firmware regions. The corresponding kdump
+time has decreased, and the vmcore size has become smaller.
 
-Thanks. This is a bit of light in what has felt like a fairly
-dark situation. I really appreciate your thoughtful and
-responsible approach.
+v1 --> v2:
+1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+   feedback [2], v2 drop that property and exclude reserve memory
+   by default.
+2. Split some prepared patches from the original patches.
+3. Address coding-style comments on patch 5 from Rob.
 
->
-> Of the two approaches, as I said elsewhere, I prefer what you've done in =
-this
-> series to anything touching fork.
->
-> But give me time to look through the series please (I'd also suggest RFC'=
-ing
-> when it's something kinda fundamental that might generate converastion, m=
-akes
-> life a bit easier on the review side :)
+[1] https://lore.kernel.org/lkml/20260429065831.1510858-1-chenwandun@lixiang.com/
+[2] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
 
-Thanks! Sure, I=E2=80=99m happy to wait and there=E2=80=99s no urgency.
+Wandun Chen (8):
+  of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+  kexec/crash: provide crash_exclude_mem_range() stub when
+    CONFIG_CRASH_DUMP=n
+  of: reserved_mem: add dumpable flag to opt-in vmcore
+  of: reserved_mem: save /memreserve/ entries into the reserved_mem
+    array
+  of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+  arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+  riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+  loongarch: kdump: exclude non-dumpable reserved memory regions from
+    vmcore
 
-Last year you made quite a significant contribution to the work
-when I tried to remove mmap_lock in madvise. I really
-appreciated it. Now we=E2=80=99re back to the same lock again, just in
-different places.
+ arch/arm64/kernel/machine_kexec_file.c     |  6 ++
+ arch/loongarch/kernel/machine_kexec_file.c |  6 ++
+ arch/riscv/kernel/machine_kexec_file.c     |  4 +
+ drivers/of/fdt.c                           |  5 ++
+ drivers/of/of_private.h                    |  2 +
+ drivers/of/of_reserved_mem.c               | 92 +++++++++++++++++++++-
+ include/linux/crash_core.h                 |  6 ++
+ include/linux/of_reserved_mem.h            | 15 ++++
+ kernel/dma/contiguous.c                    |  1 +
+ 9 files changed, 136 insertions(+), 1 deletion(-)
 
-Best Regards
-Barry
+-- 
+2.43.0
+
