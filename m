@@ -1,107 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CFE3A16AB
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 07:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F4636EA84;
+	Wed, 20 May 2026 08:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779263899; cv=none; b=ivGYtt2GlxxtTzxqOZh9YCjOtqFFEQfM6mlHOzdbWzwmcW+X/qMx9OvdjQ+r/By7QGeZeIXYvcvsqj7GZJhUCO2H7ipwUcbaI/E3AO9cibJY29qinEOAjp0dFOfqHyq6fi2tzuudpmHJwIRa163xs9+7kD9B3ABmm8m4syIvOeM=
+	t=1779264694; cv=none; b=mTar5QIxbNeFl2mWwW/K5SEpBvVDlhtIvafSHZ1tMSvXjrQi8plBhqCOX0HsNRnyfGMkRh8e6CJlo7ETYR+z9izWlpZUNlF4qpbuShZ/0XpkXTfq4D4+2tkbS/8QwQRXcRqoVCE/lxa9Q/JlOiZ7cC9mtd8axckfkRfSMJS/8I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779263899; c=relaxed/simple;
-	bh=N62nCYm7Ehd8BWGl+uNovCHAIKA/q2wXjoz2Wpfrk58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TGGpO0oYYDECWmG+iWz3fmRP6GXEeNTf0W6LrouuNQaG8m47+0c5k+41CBtu/fzm/PGxKxp/jrYRI+5bFiVB8JlF7+tB1gp7uEf5pPjzL6EotpAXp7PetGLL9ZCtIyWJDCWLSp+7Qb3wcSGeI/V6Hn/nFpe0PJmzZWGJ9WU4tu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+dA5jpH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779264694; c=relaxed/simple;
+	bh=x6tDiusKRz5rYh2YAwfbYhcbwARlCfAQDDayZ2k5yPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrLc2TOPd7/N0uSBocUCOTrCz8jHafYQKOijK3z7jcXMeav1xqb1hvOSSoWghwcl23ylHx2m3Z60PIj6rxzhXF5yfM8HsVd72u7nOUy8y1eM9RJu2oFtJUXX4FZPvSj05YN3mxWFexOGw9+Mwcg1V/W3iuxOAQQbpC9O53IEGh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnkpa3Fz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+dA5jpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 361741F00897
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 07:58:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnkpa3Fz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B3F1F000E9;
+	Wed, 20 May 2026 08:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779263894;
-	bh=1XrxY/GcpS7mxJBwM+VDAZuClbSQkw9iCeVdOSwaCPI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=G+dA5jpHOSyQxS0R6+xNLuNcsaX7r+GeifhWN9xpztQ8FW5oy0Z5/lK1ZfTsB86hL
-	 fM7k5rgdPjYBwpgqhgPYylvGkKYQHLJz7kurCQqxL2hzMeL6cmopmDeWMs/NfIt2UY
-	 mGVcFO8XTPiZ1oLLMk8gWRCMqjNwbndcReuCDFYaIBqQS1eRKYELNBwKmN8uDuc3EK
-	 AvXmmMhYmj9oM70dTPBNmwGGLyZdT6Eh/OOy0na9jhNmmHQ60qaZEW5jVduMDHjVwM
-	 /JZd+HtoYRUwhKghSYSMPnUlMEYgZHF38oiU+QWWv9QP0QNcnS9ZQtN9lZvFhzSP3R
-	 dyaYKXyzHL0uQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-67b32c695efso10946208a12.1
-        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 00:58:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/ppwIZ5HJRB3YE4MPWgi4FX1puLYBNfFN0mp+sDcxWoc0vRE2jDT13fCOOBfnRWfurXF6pp2faqW4=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw5Q3Mz/om9CDu+8gCek1HPnkhyoFMneZf1Gqj5dmrW3xozaxEi
-	r2DGAJO4QiH/FF4Sr/ernRa2AkqtjlsHBn7M5sP89l97j9hJHRHO8++Ag2rh4RX94pIlBE5YAOx
-	lh1pE3Rn4A335nHRmn52bGHZTV0Mc4vY=
-X-Received: by 2002:a17:907:9627:b0:bd3:7514:14f3 with SMTP id
- a640c23a62f3a-bd4f333f84bmr1393090666b.11.1779263892883; Wed, 20 May 2026
- 00:58:12 -0700 (PDT)
+	s=k20260515; t=1779264690;
+	bh=CXxzzbCeNo3sDfk3dzWGFhN8IehnqsFdAWbxh92ducY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bnkpa3FzKkUUdWFG0smRQZfU40dk46M5NgdqdIyfXEPD1h20NL7bKr72VFJoHgNPK
+	 Zpt0f97bM5yOlAFtMWk1oRJvIjsf1+ECrk3QzWUIz/BWNXDJW0ZYJ2FFouGZZmuMrM
+	 Wo4p0Vkb6/RLl4doyo6ixLI4oE7LpahGy1KRkeyMwou5u+LN+Sw4rNKaJQ+5yI6oFf
+	 vB2uTeyCpF+Vdg78uiOeOk2xvyBn7mhcgugFMKCdMzmjrO0Fwf6NwhxUTUhIuawNn+
+	 NrJZl4Ke/LYbTbo3EkZd4QjkXwxp4OdeRjoSgwxJx/swz4bFwcKMo8A4KVWXBu3sjy
+	 W937Gs5yLpfaw==
+Date: Wed, 20 May 2026 09:11:20 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Yang Shi <shy828301@gmail.com>
+Cc: Barry Song <baohua@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	surenb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org, david@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ag1qo0q_bfePgOzx@lucifer>
+References: <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
+ <afS_L-5XeWIldTXA@casper.infradead.org>
+ <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <CAHbLzkrOSoh-jmR=uaNvx73n_wn+vExoKY0UzH5zGcfdAiDbNg@mail.gmail.com>
+ <agxfLNuLCAT3F4cW@lucifer>
+ <agxnJ8R-G3CRjeTR@lucifer>
+ <CAHbLzkpjOLrdRSUF3-G4d9uz6tn6QYwgB66UU9bud5WHr5FWEw@mail.gmail.com>
+ <CAHbLzkrTF7w+T5mGsQuDRuhnTk6evTKBNRcH4oS=nRcUg2zpsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260512082029.2131-1-yangtiezhu@loongson.cn> <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
- <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
-In-Reply-To: <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 20 May 2026 15:58:30 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7LcrUY0rKV7Q6XZs2U6K_DEo0ammbiEBf=YsJ1-tVfYw@mail.gmail.com>
-X-Gm-Features: AVHnY4JUF3fnjFZQOWow2f8bu4ZbydD6aQEm0RaHL2wi4OxF8RdM3OYESyBO1Cw
-Message-ID: <CAAhV-H7LcrUY0rKV7Q6XZs2U6K_DEo0ammbiEBf=YsJ1-tVfYw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Lisa Robinson <lisa@bytefly.space>, WANG Rui <r@hev.cc>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHbLzkrTF7w+T5mGsQuDRuhnTk6evTKBNRcH4oS=nRcUg2zpsg@mail.gmail.com>
 
-Hi, Tiezhu,
-
-On Fri, May 15, 2026 at 12:29=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
-> On Fri, May 15, 2026 at 10:52=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson=
-.cn> wrote:
-> >
-> > On 2026/5/12 =E4=B8=8B=E5=8D=884:20, Tiezhu Yang wrote:
-> > > This series addresses ftrace and kprobes issues observed under heavy
-> > > tracing loads.
+On Tue, May 19, 2026 at 02:02:09PM -0700, Yang Shi wrote:
+> On Tue, May 19, 2026 at 11:41 AM Yang Shi <shy828301@gmail.com> wrote:
 > > >
-> > > Tiezhu Yang (4):
-> > >    LoongArch: ftrace: Fix stale per-CPU kprobe state after task migra=
-tion
-> > >    LoongArch: kprobes: Use larch_insn_text_copy() to patch instructio=
-ns
-> > >    LoongArch: kprobes: Fix single-stepping instruction slot preparati=
-on
-> > >    LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
+> > > >
+> > > > >
+> > > > > Secondly, if vma->anon_vma is NULL, it basically means either no page
+> > > > > fault happened or no cow happened, so there is no page table to copy,
+> > > > > this is also what copy_page_range() does currently. So we can shrink
+> > > > > the critical section to:
+> > > >
+> > > > Firstly, with no VMA write lock, !vma->anon_vma means a fault can race and
+> > > > secondly copy_page_range() checks vma_needs_copy(), there are other cases - PFN
+> > > > maps, mixed maps, UFFD W/P (ugh), guard regions.
+> > > >
+> > > > So yeah this isn't sufficient.
+> > >
+> > > However this is true...
 > >
-> > Hi Lisa and Rui,
-> >
-> > You are right, please ignore the patch #3.
-> I think Patch#3 is OK, but you need to remove the introduction about atom=
-icity.
-Will you resend V2? Or just ignore Patch#3?
+> > Yes, fault can race with fork. Basically this is actually the purpose
+> > of this idea. We can have improved page fault scalability. In my
+> > proposal (take write vma lock if vma->anon_vma is not NULL), the race
+> > just happens on the VMAs which page fault has not happened on before.
+>
+> Sorry, this is incorrect. Page fault can't happen on those VMAs
+> because page fault needs to create anon_vma, but it requires taking
+> mmap_lock.
+> If anon_vma is not NULL, vma write lock will serialize against page
+> fault. So there should be no race with page fault. Removing vma write
+> lock suggested by Barry may increase race.
 
-Huacai
+Firstly, let's none of us be worried about making mistakes here, the anon_vma
+stuff is confusing, and I've stared at it more than mostly, and even so I
+managed to make mistakes (as corrected here) and forget details :))
+
+It's a sign it all needs simplifying, but hey that's what my scalable CoW
+project is (partly) about :)
+
+Removing the VMA write lock would cause races with page fault which can result
+in page tables being installed which are then not correctly duplicated for
+ranges that must be.
+
+And again I think the underlying thing here overall I think is:
+
+1. Clearly many cases require serialisation (any that cause copy_page_range() to
+   fire).
+
+2. If we were to decide not to take a lock with concurrent page faults, that
+   lays a trap for any future change that (reasonably) assumes that page tables
+   cannot be simultaneously copied while being accessible to page fault
+   handlers, which is bug prone.
+
+3. As per 2, even if we were to only take the lock when we felt we absolutely
+   needed to, we still cause risk through adding yet another 'you just have to
+   know' risk to this part of mm.
+
+4. The serialisation is quite likely relied upon by other things, this is often
+   the case in mm, and we may only realise that such serialisation is critical
+   at the point a subtle issue arises out of it.
+
+5. Fork is one of the most sensitive, intuation-defying, complicated, and
+   corner- case-problem-baiting areas of mm and I really oppose us changing
+   fundamental behaviour here unless incredibly well justified.
+
+On this basis, let's let the sleeping dogs lie and leave fork alone I think :)
+
+I think I am far more inclined to take Barry's fault approach (as I've said to
+him) vs. changing fork behaviour.
+
+But I want to make sure there's not a 'third way' that could avoid either!
+
+I am going to have a look through Barry's series in detail so we can have some
+movement on this one way or another :)
+
 >
-> Huacai
+> Thanks,
+> Yang
 >
-> >
-> > Hi Huacai,
-> >
-> > Please disregard the patch #1 and focus on the patch #2 and #4.
-> >
-> > After thinking it through, it is better to avoid calling functions that
-> > might sleep in the probe handler. We have modified the test module with
-> > a proper way, there is no problem thereafter.
-> >
-> > The right way is to prevent the problem at the root instead of trying t=
-o
-> > fix it after the fact.
-> >
-> > Thanks,
-> > Tiezhu
-> >
-> >
+
+Cheers, Lorenzo
