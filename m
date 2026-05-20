@@ -1,63 +1,63 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C3F3BCD13
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11D73BE165
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779268753; cv=none; b=h+xO1GNIHbzahzWf319kYTEnPPf7J2xE4GfWVv9R3/PCSexj/PXewYVrt1Skrk9a3dbRs+xz1khrF8fXzj/gAe+TkdiFimIzOUx8DSH2othPPHpc4TJectQSGSggpkW1+lJzXN6EsPjwcZC7yjO14OKTfVdC8zZ5+EHzSM+TKWQ=
+	t=1779268762; cv=none; b=glGVROWCVATKGBj06bxtBrD3vJ9ij8AghiIMWT39iPaHy/aGwnRZiLBHDBiQ7ltGcRs8doMwRPZU56/eKciXs3M2fDiNPAGeuVbSTe1EagucltSIA+peT7EOLdasTtdAm7ttqMUpGhzoA6PqrNbD2yVWp13fOCKbO5fLtZ2+AhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779268753; c=relaxed/simple;
-	bh=hg5xbWLp3AkSvJFbtRJektVz3soiPhwBudcg+chCZNQ=;
+	s=arc-20240116; t=1779268762; c=relaxed/simple;
+	bh=1mrJpHLdgZoQ9z8hnMeKjo6Nk1qat8gxfyVXkzyrD20=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uogq8XKOjQxlQIgMmUuNutgk6Ta551P2YpDvj3Ist7bdGDE1OudPOikV1DIMnGiMAWONJg6tTkMH0IFQ4QyX4tg3vOQdWBslZ/W3rF/QmCzslpFhcCinupKSA7Kwa8tVoryuafpI41ZGCGbzOBYg1ydAeRhgHPGvAhAoEZG7H58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ou9pmjuc; arc=none smtp.client-ip=209.85.215.193
+	 MIME-Version; b=mUVHRM0xiTz7S+rf82IV6B0HuusCCHO4lfl4nUHDC9HkKS7f0qiCwcSkfKqOCd8aJgaMXDhGWyVi8kBylOm2HY2d0mhRP814RGWOd6384xi/12Nz2yFru/kZv517ZdBkPCDRwJlgs4ircwQW9ti91Mq3u3PwWu+Myw1bg7D8vj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IW7TwHst; arc=none smtp.client-ip=209.85.210.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ou9pmjuc"
-Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-c8025500cc7so3533765a12.1
-        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW7TwHst"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-837b39eb078so3141323b3a.2
+        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779268751; x=1779873551; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1779268761; x=1779873561; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tlJTNnuSEkuOFcK//QE/3Ty9SdRnFwE8BVFotGGF+Qo=;
-        b=Ou9pmjucm1isECljPDh7LMfIDC4q4xinneeJ6NATloQidXUFaJ7L97R2QYMkgOHU2Y
-         Ic5j3+JSeNXpBUOei/sUT1j6KGtWl/HN5D/FlWoInyGHNEbgAPk0bYmx5NHeQTU2/ZxT
-         udWRwCh3O0EdSm9EEAf2osV05jdwoe4cwpIJrW137jtFTlkUaDz4WaX0qHDLo3Or0UIc
-         8KxHP79alfbX4F0lPtrqpwIc0CrNAURLEP7QKKG4nplx/vxJeuk6e5XkGLYjidpOBt6i
-         VbutXzrF00+xEJl+nri9PwhdmzzeYo/MMubLdJkwaGzkHsCJGxqaRsFzbkmE9X5WKQnx
-         2wXA==
+        bh=9oyw9vanLGG7tQ9dBSW9pJHSWXBGqZj5GxnQmef6pVg=;
+        b=IW7TwHstsLxD5PX7oqIcKK4mYMTQRV7+gHNRLF7ptJI3fF0vyd6hlSEGfE+EkhYu7Z
+         UdBbxlntS8gGBNfSnH3i/nU7CVM0oWs0EHQpSy3vIgU3rZeo6MHPKR+JKRNj8JDoXC6Z
+         q+4wevnI5MhRRAU5FlMdZaSuRrOQF/idA7Z8MX+58mzkOMhpG7bNbRWlKKUZ2xizC2Ru
+         XQ9QOg7px4Zncno/RP1xGmsWlT6PxH2r/xk99otTqE1iE7AHYZ7ByVSSKQQYbwMe5I7c
+         upSHjXrJuWPULjTRO+WXjPoyFZwcWobTxFEpd4J6CcaVSOK7cT7KwQrlicxzXZsYXCp9
+         ATpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779268751; x=1779873551;
+        d=1e100.net; s=20251104; t=1779268761; x=1779873561;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tlJTNnuSEkuOFcK//QE/3Ty9SdRnFwE8BVFotGGF+Qo=;
-        b=cci68SSblmUvKPo11WjlJ6oGvXOBtmU/l+NpRpm+RdJH8q5jfRvHyiVTFy9P53DZJW
-         6Dz0kIXZNdy5a00TCPm9jV8auA/H3wq5fh6w5lzMNjnqNicHUwcNMSCEjRDvOjt+y7P+
-         QU5+Q0BSK9EX+Za+nrqmhDICvVYy0bgmAly5MAzypuioVsALlAObnZaa+39+PK+Hpkul
-         1qRTJUrOz1dcrmGPeUXx7gyqg3VyKJnAs8oj5Dd5eJBz9tivjqmwYVKF/p6qJHBIKxgK
-         0xypV/jT+57q2nSw3Qen7BcviiYlU5gshyjUR/yBcmGsUUpSJhT6EeKgdJfaroUw4SSV
-         wTkg==
-X-Forwarded-Encrypted: i=1; AFNElJ/6ofaOafzEGaOOeiUCs3cOED/lmKEiPttkTGHH68NojZb/RJerABOqe7hgUv5vxDTwDe7XUglKJoY=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx31+59GZt/cplFUHMllSmNVrcL5XGgU1EDZhYnVfjQkbnmFlvT
-	vbFC2aTG8C70jRlLq+fx1d5YXURy+EkhzTwWEIlMvWCNQVFK5RBNWf+M
-X-Gm-Gg: Acq92OG0UmXzGJ3tjp914+YTsJgDhItBVvomOKLEpVDmrJAxAMsmvvAGsK5s8T05umA
-	cVdngoag6vn/AWPJFINBxT9MGAkEYhN0UqGHVAKs8FOZFG0gzrKbDxtCwPnS2dAl0iRTR0jM2gu
-	ih/rzT/COJ779PfVtmmOCl0TeGzVydMxo/gQ0xk5c6iOyC+JrFwmHMR1Txy899yOXOrAKGxRgxS
-	RsgSEl5tVozemFaBhOcoZ53O4QR4FJfKvAyM0UuCs1EbbH7EgEniXy422nrEzl5IPwD8MtQ3U3H
-	AuhtBNwTgnL8D06SHk2sikqe0vEtVPPAgqaGS5rKtS+k8f0QRZcMOyZWLpLu0omnaWrLmjt200k
-	Nst903rqxcyjfZb8rvql/gALNTNbyAXloV7XHoaclYOmI2HdL3copDoYUwynQHS2yInsPCihYUI
-	qaEOh0ogXu2M8ZUaNN5SehvJ6Ir6mICZND4fesdA==
-X-Received: by 2002:a05:6a20:2454:b0:3aa:ec28:edc6 with SMTP id adf61e73a8af0-3b22ec63eaamr26158763637.39.1779268750848;
-        Wed, 20 May 2026 02:19:10 -0700 (PDT)
+        bh=9oyw9vanLGG7tQ9dBSW9pJHSWXBGqZj5GxnQmef6pVg=;
+        b=cyBEnWE2yAyqebVgfumtHRA8viVDpvS/WOCbIy1oSfoaNonStoiA9L3h2Pct+Y9yhJ
+         BE9NKvhOAcugpRr98CSchBRI/rMkOEhTQ4bwEQeQV4W7/tNUI7ra/khbAkFG8qNS1DTr
+         C/MOK7Dz7ZAd1/yKhAHpmBC3+VOpbOc4mnBMnzcAYjuvBPJxOqAI81EWmmENQJNsh9d1
+         OmGIkm4LoVpm72w248xVnWSr849XFVTg4Nx+ogndzRFmZ2j2+tjCh2o72WWdYagDvJl7
+         DR87oGPp0131YjOo+7F5R6NBWOYpn5NbZsyYbtqZiDtptqfBIDH8Y06ORzMeWxoweDfy
+         czhA==
+X-Forwarded-Encrypted: i=1; AFNElJ8k/TbetaZqYxA8mqGbHzJNpR4IEdmM9z1unAgMHer9mM9YEzQM8mosbjyrVVXLWCuaaRn5Yk288mk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YztXiaLXdo+JX/PPHTCfAYVyC7B0ZrgNmViY4jpA4ghjzzYrIx9
+	RKCjjUEq8V7L1q9DRfpHlDoLaoh/0EWOKISR7OrarBnTZuTTYJ8G/J8D
+X-Gm-Gg: Acq92OEeQ9GggrTKFzUZWE8gW/hrwm4ZxnQJLR471RgQKzAerqkWpqEUueGM7d0Smzk
+	XJ+2EcMR3UlHHzcWlx58wnryoD1ZyoUchuCZzAyEONRxw72KifnA0PZWs9gmnKEFjWZgyPYoTZn
+	vpOSGkQME993+F9wQYUU1yGUh4ZtkbWFOQZZwUWThYfhx15SuVd+YAyemu70Nw/8jaI+2TH+Gj4
+	wi3oKXl/Fhi6bS+EWtHnnFJl3qRRih/64MtvOdo5QpDPD2zM8XWzgmIlZKxe7Pc2L/8XgkXIJ5n
+	jEpXQRkExbT2d8Yb0wXZida1uVKvWcInQHjL+2mlvdqp5abn8dTTCya+wwwIrq/pOeYOFTcnKIj
+	2Au++jm2I3aoferz3t+UOu0kbwKeXzBUxn71opRWvUBtgCH14j6U9PYa43k+fxMzanA4WgvzjDy
+	BtmVamvDXDneNhS05ruTEfibfN0b0XADaXm4YNiw==
+X-Received: by 2002:a05:6a00:3289:b0:82a:7aa3:a2fb with SMTP id d2e1a72fcca58-83f33c9b2dcmr22248125b3a.37.1779268761111;
+        Wed, 20 May 2026 02:19:21 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.19.00
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 02:19:10 -0700 (PDT)
+        Wed, 20 May 2026 02:19:20 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 X-Google-Original-From: Wandun Chen <chenwandun@lixiang.com>
 To: linux-arm-kernel@lists.infradead.org,
@@ -91,9 +91,9 @@ Cc: catalin.marinas@arm.com,
 	coxu@redhat.com,
 	tangyouling@kylinos.cn,
 	songshuaishuai@tinylab.org
-Subject: [PATCH v2 1/8] of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
-Date: Wed, 20 May 2026 17:18:37 +0800
-Message-ID: <20260520091844.592753-2-chenwandun@lixiang.com>
+Subject: [PATCH v2 2/8] kexec/crash: provide crash_exclude_mem_range() stub when CONFIG_CRASH_DUMP=n
+Date: Wed, 20 May 2026 17:18:38 +0800
+Message-ID: <20260520091844.592753-3-chenwandun@lixiang.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260520091844.592753-1-chenwandun@lixiang.com>
 References: <20260520091844.592753-1-chenwandun@lixiang.com>
@@ -109,30 +109,34 @@ From: Wandun Chen <chenwandun1@gmail.com>
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-Prepare for an upcoming change that appends /memreserve/ entries to
-reserved_mem[]; such entries have no name.
+Prepare for an upcoming change that excludes non-dumpable reserved
+regions from the kdump vmcore and will call crash_exclude_mem_range()
+from generic, non-arch code.
 
 No functional change.
 
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 ---
- drivers/of/of_reserved_mem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/crash_core.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 8d5777cb5d1b..313cbc57aa45 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -788,7 +788,8 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index c1dee3f971a9..0033d4777648 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -87,6 +87,12 @@ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
+ static inline void crash_save_cpu(struct pt_regs *regs, int cpu) {};
+ static inline int kimage_crash_copy_vmcoreinfo(struct kimage *image) { return 0; };
++static inline int crash_exclude_mem_range(struct crash_mem *mem,
++					  unsigned long long mstart,
++					  unsigned long long mend)
++{
++	return 0;
++}
+ #endif /* CONFIG_CRASH_DUMP*/
  
- 	name = kbasename(np->full_name);
- 	for (i = 0; i < reserved_mem_count; i++)
--		if (!strcmp(reserved_mem[i].name, name))
-+		if (reserved_mem[i].name &&
-+		    !strcmp(reserved_mem[i].name, name))
- 			return &reserved_mem[i];
- 
- 	return NULL;
+ #ifdef CONFIG_CRASH_DM_CRYPT
 -- 
 2.43.0
 
