@@ -1,209 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743BD3E8357
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 22:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327C51BD9D0
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 03:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779228130; cv=none; b=jmV0id8JjIwXyo1KmbRb4btYNywemC4Yi1yLIYEAffVlSbODnaSVpbO/qMmgtsa8R26JQI2gMSNUPWnmOW35psy3+rEU0VcBv8MBjQy6+Vm8HHx1kAM/UEcfof2aTEItE9ArlBvY2HfHwr9jlfz7mgcCpAgflUQ+TMJwTzDYFdA=
+	t=1779247000; cv=none; b=TBGd2UczJM3XNEx1jrJi1pLnogyFBKx3BWBrVXAkf+yVPTKEPv8gz0SJjs86JpSvQZrfCoG1m3buqRumNxjE5o5x67W2NWT92senmkKd84XM0lRW1TFrKUCxg1inQpQQvg2QvWU0WmAPcNF2png52aKi+o3SFGCl+CYNIQOyXnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779228130; c=relaxed/simple;
-	bh=71vBNelhgIF/xhYgDkUv7qlNsN619m9AzEFmnaaN3QI=;
+	s=arc-20240116; t=1779247000; c=relaxed/simple;
+	bh=xthBu8gxp0UE5mwNzRPmM8wXltMSpnPvtDh3L1NwPho=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PCPfYJ0N+5HVQtsHTdl/CRgxrRU2d+J2ebiZ/nz5BZYt6CxGSqRBnEwdY9emqnMI3ruWwFX8P5n568wJD7HxY0db2SAUQlWDxt3KY/N2lLBwZLJk6CpMpU/hlDdlpyBlzK3I7rjn1w+UAvdHWmE34XuhBJAs33ge2LCC8GSqzY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEiINEmV; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=VYBDDnsnIenGJ074kYBgDLYDzYVsZs+29woN0/XWhH4tjXXZg3CSw+5pg1DdzW23PJA1043WjsmZ+T2CcWt5t9MNL/VpmssqfJ25OkIg+yRrREmZ52/bqwaT8iY8lbCUX93/ALKf/srNcxyDvE7+SzOJVH4i3sSm6RfHa+XHj4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izY0XCev; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEiINEmV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3746E1F00899
-	for <loongarch@lists.linux.dev>; Tue, 19 May 2026 22:02:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izY0XCev"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E069B1F00896
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 03:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779228129;
-	bh=RrgSUFMhpGIkWoOChuhQyLYVDUdtSZljRgOJt705GjA=;
+	s=k20260515; t=1779246998;
+	bh=hFi454T6jkN3Y3X6t2PdAB5T9v4vTCofDs0Mti0/+5o=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=EEiINEmV/ttnXkHREkmSNrg22w/pd85GQ24kGDom/qX0DitA92kwK7imrN1F7tfHP
-	 /WClIpIcz37rNq9FOtLY4huZKlhKLtBg/gq5tOO1/IYaKENgHCq8w5+Lnv5OFXdXSL
-	 2sIuISEhYHzkbmfjMHN6eKzTUmO8K/tDIrzQnMmRv3D90x14h5TzWDmjPA+zx7T0oZ
-	 IE8SbeYeLv8dhtCTOAuISA3eqbujACiE+Q9q0u8nfuITSR5e6vuWcd5Iclq1d5zdAT
-	 HF4oRjC7RA3KX6/I4zDoQ5jAmNSGhxJ1QKqkbIZT/JE9UU3XCdU3Y9b3mu/a4r3yR1
-	 lk/+recZ8aGvQ==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7bd9f61458eso28517597b3.0
-        for <loongarch@lists.linux.dev>; Tue, 19 May 2026 15:02:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8McAz1HPGUUXkvkD4HDTbHuVzINjR5u2Np9zkbi7KHx5oT3BGlm+HEerx9ofkbFWcmQgxbeq+TvuY=@lists.linux.dev
-X-Gm-Message-State: AOJu0YypL/boZgawlVC6RMFVcW2rCTtr3/KEVWp8fLYKm3EsMkDkz5tK
-	x9ScYRlaw1YToV6If2f/GylDV32JfZ1ccxx3pFlBQ3h7dBj1Oma9Q/L8trovgv07aMYZAI9iHk/
-	Y/2bf69vD9wcN450qPrKAl6La2cOnTLs=
-X-Received: by 2002:a05:690c:38a:b0:7bd:9899:f904 with SMTP id
- 00721157ae682-7c95c7ede6bmr245611007b3.39.1779228128311; Tue, 19 May 2026
- 15:02:08 -0700 (PDT)
+	b=izY0XCevpqb3o1cDMk+j/bkKXotSj9MSBwRWBgIorE29ztklO6skZCdSJ0W0j5CN9
+	 OxenjITQmNokKxFBG3hKEBV7NlW6ntOHzbFznXtL1FIV+AIvafj88IyGoEkZL8IjCK
+	 IcEh0gkBCqnjoXnhGwxh8XUyl4gTpu4GCnPVI34kMfMRyTyVTx4sPlGqjq1OAF0i7H
+	 LQkZ4lAjfUNhy8uB2pj8uvyqL807krgiiLl+grhns2R5KXLSdgJ9DNC6XKo/Epxbrb
+	 vrw5I5X6X6tmQMNxLII4RG3at2eRXF/qgSFc6+VFjNxHs2Lk1/YbopopX8VC8UUrNu
+	 Thi/yubAk3/IA==
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-45d96d21e82so2485597f8f.0
+        for <loongarch@lists.linux.dev>; Tue, 19 May 2026 20:16:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8e3yuDnR/mICjDjLfzBMKRJLC261sfOxIRQasM0vojVcj4Av8ODxI6aFzMU56h6xOcRFFYGof7iSo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwbC7qaZxzeIujOnHGqPdPpC6/ws95ZLafef+9brDMLUJT5R5P5
+	1wXdocAaJBvDPlASGUPKKpiKuXlP7HjX/zHyLiXAkNIFZwW8PbUVc/Qavi8+3v9pP5roq1c6LJI
+	ANtlYJZQUJBKjw5RKlNNKXWIielF+kKI=
+X-Received: by 2002:a05:6000:2209:b0:45e:7418:a3f2 with SMTP id
+ ffacd0b85a97d-45e7418a468mr22920987f8f.26.1779246997603; Tue, 19 May 2026
+ 20:16:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <afNM-gIqxpyJ6ro7@casper.infradead.org> <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
- <agrWuDNGddNmvMFD@lucifer> <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
- <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
- <CAGsJ_4zgeE3ebEJ+j7GJFzWVoVYHeiOn4dOoOsmWCLA6s=oECQ@mail.gmail.com> <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
-In-Reply-To: <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
-From: Barry Song <baohua@kernel.org>
-Date: Wed, 20 May 2026 06:01:56 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
-X-Gm-Features: AVHnY4KXMvR35lLgRvdk-7E8dkEjtOPBxVO6EaEmgpy8kErjRkXyQizjBsuo3fM
-Message-ID: <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: "Liam R. Howlett" <liam@infradead.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, Lorenzo Stoakes <ljs@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	david@kernel.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
-	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
-	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
-	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>
+References: <20260517092432.1025008-1-chenhuacai@loongson.cn>
+ <CAJF2gTSn-44So=SdVYxvF5ihJjWs9R7vFAyuPNpeLBwBpJrY9Q@mail.gmail.com>
+ <CAAhV-H4Zvqvb_Crx-cpunZV8tGcFu=2T6x0aG9iV31BPcO5xng@mail.gmail.com>
+ <CAJF2gTSAWP4X19t10f8kgd3xdufDEdyc_z4aiaLCmOieMd2ipQ@mail.gmail.com> <CAAhV-H6jKR-i3w3u9CJMLmzteZURQnazuBEtp9k2UkKRxUrOmQ@mail.gmail.com>
+In-Reply-To: <CAAhV-H6jKR-i3w3u9CJMLmzteZURQnazuBEtp9k2UkKRxUrOmQ@mail.gmail.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Wed, 20 May 2026 11:16:25 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSivSs-3Bd7xCU4mXtVd=8wtuYP+RyF=1jcLpa1CtvF8Q@mail.gmail.com>
+X-Gm-Features: AVHnY4IpF_1uRly8kew-C2OgcM9u7PrRTY5U8N38_QM1DmMMob4lNmJxwtn1kxQ
+Message-ID: <CAJF2gTSivSs-3Bd7xCU4mXtVd=8wtuYP+RyF=1jcLpa1CtvF8Q@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Remove unused code to avoid build warning
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	Xuefeng Li <lixuefeng@loongson.cn>, Xuerui Wang <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 19, 2026 at 10:17=E2=80=AFPM Liam R. Howlett <liam@infradead.or=
-g> wrote:
+On Tue, May 19, 2026 at 8:42=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
 >
-> On 26/05/19 05:14AM, Barry Song wrote:
-> > On Tue, May 19, 2026 at 3:57=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Mon, May 18, 2026 at 4:26=E2=80=AFAM Barry Song <baohua@kernel.org=
-> wrote:
-> > > >
-> > > > On Mon, May 18, 2026 at 5:47=E2=80=AFPM Lorenzo Stoakes <ljs@kernel=
+> On Mon, May 18, 2026 at 7:29=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote=
+:
+> >
+> > On Mon, May 18, 2026 at 10:58=E2=80=AFAM Huacai Chen <chenhuacai@kernel=
 .org> wrote:
-> > > > >
-> > > > > On Sun, May 17, 2026 at 04:45:15PM +0800, Barry Song wrote:
-> > [...]
-> > > >
-> > > > I think we either need to fix `fork()`, or keep the current
-> > > > behavior of dropping the VMA lock before performing I/O.
 > > >
-> > > I see. So, this problem arises from the fact that we are changing the
-> > > pagefaults requiring I/O operation to hold VMA lock...
-> > > And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
-> > > is_cow_mapping(vma->vm_flags). So, we will be blocking page faults fo=
-r
-> > > anonymous and COW VMAs only while holding mmap_write_lock, preventing
-> > > any VMA modification. On the surface, that looks ok to me but I might
-> > > be missing some corner cases. If nobody sees any obvious issues, I
-> > > think it's worth a try.
->
-> From Barry's description, I think what he is saying is that the vma
-> locking has caused the mmap_lock to become unfair?  I think what is
+> > > On Mon, May 18, 2026 at 9:42=E2=80=AFAM Guo Ren <guoren@kernel.org> w=
+rote:
+> > > >
+> > > >
+> > > >
+> > > > On Sun, May 17, 2026 at 5:25=E2=80=AFPM Huacai Chen <chenhuacai@loo=
+ngson.cn> wrote:
+> > > > >
+> > > > > After commit feee6b2989165631b1 ("mm/memory_hotplug: shrink zones=
+ when
+> > > > > offlining memory"), __remove_pages() doesn't need the "zone" para=
+meter
+> > > > > so the "page" variable is also unused. Remove the unused code to =
+avoid
+> > > > > such build warning:
+> > > > >
+> > > > > arch/loongarch/mm/init.c: In function 'arch_remove_memory':
+> > > > > arch/loongarch/mm/init.c:134:22: warning: variable 'page' set but=
+ not used [-Wunused-but-set-variable=3D]
+> > > > >   134 |         struct page *page =3D pfn_to_page(start_pfn);
+> > > > >
+> > > > > Cc: <stable@vger.kernel.org>
+> > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > ---
+> > > > >  arch/loongarch/mm/init.c | 4 ----
+> > > > >  1 file changed, 4 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+> > > > > index 3f9ab54114c5..031b39eb081c 100644
+> > > > > --- a/arch/loongarch/mm/init.c
+> > > > > +++ b/arch/loongarch/mm/init.c
+> > > > > @@ -123,11 +123,7 @@ void arch_remove_memory(u64 start, u64 size,=
+ struct vmem_altmap *altmap)
+> > > > >  {
+> > > > >         unsigned long start_pfn =3D start >> PAGE_SHIFT;
+> > > > >         unsigned long nr_pages =3D size >> PAGE_SHIFT;
+> > > > > -       struct page *page =3D pfn_to_page(start_pfn);
+> > > > >
+> > > > > -       /* With altmap the first mapped page is offset from @star=
+t */
+> > > > > -       if (altmap)
+> > > > > -               page +=3D vmem_altmap_offset(altmap);
+> > > > >         __remove_pages(start_pfn, nr_pages, altmap);
+> > > >
+> > > > Good cleanup, but does LoongArch forget to remove the linear mappin=
+g? If the memory is unplugged, the mapping is still there. How does the cor=
+e fetch data from there?
+> > > LoongArch's linear mapping is based on DMW rather than TLB, so
+> > > removing linear mapping is unnecessary.
+> > Do you mean SSEG tech? mips & csky also have that. But my question is:
+> > how does the core fetch data/instructions from an unplugged memory
+> > region, given that the mapping is established by DMW?
+> Access unplugged memory region will cause ADE exception.
+Thx for the answer.
 
-For now, we do not have this problem. Before per-VMA
-locks, we dropped mmap_lock before doing I/O in the
-page-fault path and then retried the page fault. After
-per-VMA locks, we dropped the VMA lock before doing I/O in
-the page-fault path and then retried the page fault.
-
-The problem only starts to exist if we decide to perform
-I/O without releasing the VMA lock =E2=80=94 which is what Matthew
-is suggesting, because it would allow us to rip out a large
-amount of page-fault retry code.
-
-> implied is that the per-vma locking may stall mmap_lock writes for
-> longer than if the mmap_lock was taken in read mode?  Barry, is that
-> correct?
-
-Not the case =E2=80=94 the actual situation is (if we modify the
-current kernel to perform I/O without releasing VMA read locks):
-
-thread 1 PF: lock vma1 read ----  IO ----- ;
-thread 2 PF: lock vma2 read ----- IO ----- ;
-thread 3 PF:  lock vma3 read ---- IO ----- ;
-thread 4 fork:  mmap_lock_write ---- lock vma1, vma2, vma3 write ;
-thread 5 :  take mmap_lock for any read/write reason
-
-Now you can see that thread 4 has to wait for the I/O of
-VMA1, VMA2, and VMA3 to complete, and thread 5 then has to
-wait for thread 4 to release mmap_lock. Both thread 4 and
-thread 5 can become extremely slow, because I/O may be stuck
-anywhere in the bio/request queue or filesystem GC.
-
-So now we have two choices:
-
-1. Change fork() to avoid taking the vma write lock for vma1/2/3 where poss=
-ible;
-2. Keep the current kernel behavior and drop the VMA lock before I/O:
-
-thread 1 PF: lock vma1 read; drop vma1 read_lock ----  IO ----- retry PF
-thread 2 PF: lock vma2 read; drop vma2 read_lock ----- IO ----- retry PF
-thread 3 PF:  lock vma3 read; drop vma3 read_lock ---- IO ----- retry PF
-
-Option 2 is what mainline is currently doing, and what this
-patchset also follows. The only difference in this patchset is
-that page faults are retried under the VMA read lock, rather
-than under mmap_lock as in the current kernel, which is causing
-mmap_lock contention.
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
 >
-> Since Android is doing something (according to Barry) that should not be
-> done (according to Willy), both of these together are causing slow down?
-
-The only thing that would cause slowdown is holding the VMA
-lock while performing I/O in the page-fault path, which is not
-happening today. It would only happen if we insist on doing I/O
-under the VMA lock without changing fork().
-
->
+> Huacai
 > >
-> > Thanks. Besides the creation of processes via fork(), I
-> > am also beginning to worry about the death of processes.
+> > >
+> > >
+> > > Huacai
+> > > >
+> > > > --
+> > > >
+> > > > Best Regards
+> > > >
+> > > >   GUO Ren
 > >
-> > One thing that came to my mind this morning
-> > is that when lowmemorykiller decides to kill an app, we
-> > want the memory to be released as quickly as possible so
-> > the new app or user scenario can get memory sooner.
 > >
-> > In that case, if the app being killed is performing I/O
-> > while holding the VMA lock, the unmapping procedure
-> > could end up being blocked as well.
 > >
-> > If we release the VMA lock as we currently do, we allow
-> > process exit to proceed.
-> >
-> > I haven't thought it through very clearly yet, and I
-> > may be wrong. I'd like to do more investigation. I hope
-> > the apps being killed stay very still, but who knows=E2=80=94we
-> > have so many applications in the market.
-> >
-> > Meanwhile, if you have any comments regarding the death
-> > of processes, they would be very welcome.
->
-> The oom killer only cleans out anon/not shared vmas [1].  So, what this
-> would hold up would be the actual process exit path.  Although that
-> would have resources associated with it, the amount of resources should
-> be relatively low compared to the amount freed by the oom reaper, right?
->
-> The other entry point that's mostly to do with android,
-> process_mrelease() [2] will end up in the same  __oom_reap_task_mm()
-> function.
->
-> So, for the most part, the memory will be freed while the file backed
-> vma completes IO and that sounds like the right thing to do anyways.
+> > --
+> > Best Regards
+> >  Guo Ren
 
-Thanks very much for your valuable input!
-I=E2=80=99m going to run more experiments to dig deeper into this.
 
->
-> Thanks,
-> Liam
->
-> [1]. https://elixir.bootlin.com/linux/v7.1-rc4/source/mm/oom_kill.c#L547
-> [2]. https://elixir.bootlin.com/linux/v6.18.6/source/mm/oom_kill.c#L1210
->
 
+--=20
 Best Regards
-Barry
+ Guo Ren
