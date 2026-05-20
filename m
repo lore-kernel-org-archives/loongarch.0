@@ -1,61 +1,63 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8293B27E3
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C3F3BCD13
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 09:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779268742; cv=none; b=cqelvwxmQ864jFtpyRSNtDxuJntv+J01anzVfdW4mgyxMEuIJy37tALSfzDfZA1Mc5tDd6FOYQLjE/M2hSX86jeGcwntTjeDRzEObu5meMRDyFf4/9Y+cKYv1uIzXxaMy7Il1lVmjRHrdZrmdE760FGJfDwPgNAk7TQzA8KOR9w=
+	t=1779268753; cv=none; b=h+xO1GNIHbzahzWf319kYTEnPPf7J2xE4GfWVv9R3/PCSexj/PXewYVrt1Skrk9a3dbRs+xz1khrF8fXzj/gAe+TkdiFimIzOUx8DSH2othPPHpc4TJectQSGSggpkW1+lJzXN6EsPjwcZC7yjO14OKTfVdC8zZ5+EHzSM+TKWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779268742; c=relaxed/simple;
-	bh=VdYMZfmdWGinCscf69KLX3fpX4Qe2QiLkBtyEy1U2/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UZGsavPr60WtOnelktzU5tKab4agOZGr92HOmNQiHUugJ4nP3wkYtasuMF/yL6f+ioh0m3FzfEpnexiEltcJ+JanOA/oTY/eQZbg2zniKPFjvf2mKO9KDRn3eHKlTZdH4hFRg4MuuyXce/0VLKsTFzf7M7mHsjOt1lBN2gHI0fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s5bcefgy; arc=none smtp.client-ip=209.85.210.193
+	s=arc-20240116; t=1779268753; c=relaxed/simple;
+	bh=hg5xbWLp3AkSvJFbtRJektVz3soiPhwBudcg+chCZNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uogq8XKOjQxlQIgMmUuNutgk6Ta551P2YpDvj3Ist7bdGDE1OudPOikV1DIMnGiMAWONJg6tTkMH0IFQ4QyX4tg3vOQdWBslZ/W3rF/QmCzslpFhcCinupKSA7Kwa8tVoryuafpI41ZGCGbzOBYg1ydAeRhgHPGvAhAoEZG7H58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ou9pmjuc; arc=none smtp.client-ip=209.85.215.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5bcefgy"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-82f8893bff3so2117245b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:19:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ou9pmjuc"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-c8025500cc7so3533765a12.1
+        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 02:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779268740; x=1779873540; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
-        b=s5bcefgy5cHU3TnsAR51TCBfc1g5wXGMLmuVywASn7nSXruBoGkxhNbilzCwq3yHME
-         6onJycYOx/47H2olDkTg1083xSeMHTCkWjYFurEKzoRbbiF0EAQg29qpS1aAiANxkK8y
-         Ppt9qjx5HpfvwljWTZosmSyCmza83hSKJcE+ALNhsGdbiDxcQMD5fmB5MM+MZxHeuUAx
-         yZ0Cgfqy2Ale9PTnkX26W3cKcs9Hc3958QLdn2nG7IifYTqx0PFSgRPVQYmMAwnpxEw+
-         TwFpvcfj7CgTEuW8N56Zi5zoURA+YKn/+LYiHIXCdnmeI31TSSrnLTeyZkCHDvXnbx87
-         QaIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779268740; x=1779873540;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779268751; x=1779873551; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
-        b=cIN5UN5W3Y65XtpfAwMVAWc0teR2JzoNDQXfq+tFLS/fXQYknoEBP2PRWw7/NwmsPQ
-         OSjRvBnah3CIQDLJq3RnuPKnb7Nm4XZBaRdwATxRyGalg67sbPvcNTGLspgozDfmNSEy
-         t8RxCNWiCz8Wmu4k0yYjzSJ6xiww+FjV3AfM7wM0K0TTKNVaoNToZIad7zyr2X/ieMNQ
-         pW5xgyWdcSXg0Iv0DsumN9NzjRajFV75FIpCgRP7V56sgXVm0QJtCI0HaW5q/HI5Q9Bo
-         FfFpkx7JfleaHRaAxSf+YJx3tlsfp1Gpin32NqTEQVNlBVm+O7iwGQyWRIrFHOKdEodG
-         w4Iw==
-X-Forwarded-Encrypted: i=1; AFNElJ/AW7kMXiN4aRkYLBD9LjcoE+WXeEgFCBpbzhLkHkKe5/UfYx7nzU5Q7DeTn8n4E833so/ZazaH/dg=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw8tjTAkt4rqFKXamGIckZ8F6CLnZI4lO3UkMvHNTsvZpwpEXKm
-	GR4EKObJ5pZzjdEUzFTlQaVBV1NroNVPNCQm7p9z9BnrGNIICvoaiXmG
-X-Gm-Gg: Acq92OGd1EGSxumvCIPtst5pYq4Ni5lUxbsrmWELbafU7UxAK8b22keuCOR54kp3Ifr
-	Jg1VmO/pfzaxtY/AFBy0JkJ+NwW5w1bNoLth705o1DVfyxnajjljASoM6BPJAEpxIU58nyDqlqU
-	gz+dEt3xQ6Tydf2sOBbYog3y3jtWs0mrOdguyPJcBzVEW0zMCAkTBxO9pbx9EzzZtliZWXgu6R6
-	yli6pjA16mleLpl7cRhuh0xGt2w/uDNnKhLMqr339hlfT81ynIziSmeljMtUPEXo4uWjTJ1OsZp
-	FtwlZKPqOq9X3P5YWmiF5ukex/lxzuVw/nCxzswj1bNy2XWo6r7LcjFnTdW/JTx/UoMbdTb5LBF
-	mScMAwNl4zSytxHo4TDxm/C8XlLwaxLJyT9iNHC8/rLbn8MYi5txJUXty/HPNI4Qzyyhg536g1A
-	SNoHvJG34fXjYEKxOTcIyu8vnX5CJWJyiikL62wQ==
-X-Received: by 2002:a05:6a00:2c95:b0:82c:e816:4135 with SMTP id d2e1a72fcca58-83f33de9724mr22532227b3a.47.1779268740373;
-        Wed, 20 May 2026 02:19:00 -0700 (PDT)
+        bh=tlJTNnuSEkuOFcK//QE/3Ty9SdRnFwE8BVFotGGF+Qo=;
+        b=Ou9pmjucm1isECljPDh7LMfIDC4q4xinneeJ6NATloQidXUFaJ7L97R2QYMkgOHU2Y
+         Ic5j3+JSeNXpBUOei/sUT1j6KGtWl/HN5D/FlWoInyGHNEbgAPk0bYmx5NHeQTU2/ZxT
+         udWRwCh3O0EdSm9EEAf2osV05jdwoe4cwpIJrW137jtFTlkUaDz4WaX0qHDLo3Or0UIc
+         8KxHP79alfbX4F0lPtrqpwIc0CrNAURLEP7QKKG4nplx/vxJeuk6e5XkGLYjidpOBt6i
+         VbutXzrF00+xEJl+nri9PwhdmzzeYo/MMubLdJkwaGzkHsCJGxqaRsFzbkmE9X5WKQnx
+         2wXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779268751; x=1779873551;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tlJTNnuSEkuOFcK//QE/3Ty9SdRnFwE8BVFotGGF+Qo=;
+        b=cci68SSblmUvKPo11WjlJ6oGvXOBtmU/l+NpRpm+RdJH8q5jfRvHyiVTFy9P53DZJW
+         6Dz0kIXZNdy5a00TCPm9jV8auA/H3wq5fh6w5lzMNjnqNicHUwcNMSCEjRDvOjt+y7P+
+         QU5+Q0BSK9EX+Za+nrqmhDICvVYy0bgmAly5MAzypuioVsALlAObnZaa+39+PK+Hpkul
+         1qRTJUrOz1dcrmGPeUXx7gyqg3VyKJnAs8oj5Dd5eJBz9tivjqmwYVKF/p6qJHBIKxgK
+         0xypV/jT+57q2nSw3Qen7BcviiYlU5gshyjUR/yBcmGsUUpSJhT6EeKgdJfaroUw4SSV
+         wTkg==
+X-Forwarded-Encrypted: i=1; AFNElJ/6ofaOafzEGaOOeiUCs3cOED/lmKEiPttkTGHH68NojZb/RJerABOqe7hgUv5vxDTwDe7XUglKJoY=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx31+59GZt/cplFUHMllSmNVrcL5XGgU1EDZhYnVfjQkbnmFlvT
+	vbFC2aTG8C70jRlLq+fx1d5YXURy+EkhzTwWEIlMvWCNQVFK5RBNWf+M
+X-Gm-Gg: Acq92OG0UmXzGJ3tjp914+YTsJgDhItBVvomOKLEpVDmrJAxAMsmvvAGsK5s8T05umA
+	cVdngoag6vn/AWPJFINBxT9MGAkEYhN0UqGHVAKs8FOZFG0gzrKbDxtCwPnS2dAl0iRTR0jM2gu
+	ih/rzT/COJ779PfVtmmOCl0TeGzVydMxo/gQ0xk5c6iOyC+JrFwmHMR1Txy899yOXOrAKGxRgxS
+	RsgSEl5tVozemFaBhOcoZ53O4QR4FJfKvAyM0UuCs1EbbH7EgEniXy422nrEzl5IPwD8MtQ3U3H
+	AuhtBNwTgnL8D06SHk2sikqe0vEtVPPAgqaGS5rKtS+k8f0QRZcMOyZWLpLu0omnaWrLmjt200k
+	Nst903rqxcyjfZb8rvql/gALNTNbyAXloV7XHoaclYOmI2HdL3copDoYUwynQHS2yInsPCihYUI
+	qaEOh0ogXu2M8ZUaNN5SehvJ6Ir6mICZND4fesdA==
+X-Received: by 2002:a05:6a20:2454:b0:3aa:ec28:edc6 with SMTP id adf61e73a8af0-3b22ec63eaamr26158763637.39.1779268750848;
+        Wed, 20 May 2026 02:19:10 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.18.50
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.19.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 02:18:59 -0700 (PDT)
+        Wed, 20 May 2026 02:19:10 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 X-Google-Original-From: Wandun Chen <chenwandun@lixiang.com>
 To: linux-arm-kernel@lists.infradead.org,
@@ -89,10 +91,12 @@ Cc: catalin.marinas@arm.com,
 	coxu@redhat.com,
 	tangyouling@kylinos.cn,
 	songshuaishuai@tinylab.org
-Subject: [PATCH v2 0/8] kdump: reduce vmcore size and capture time
-Date: Wed, 20 May 2026 17:18:36 +0800
-Message-ID: <20260520091844.592753-1-chenwandun@lixiang.com>
+Subject: [PATCH v2 1/8] of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+Date: Wed, 20 May 2026 17:18:37 +0800
+Message-ID: <20260520091844.592753-2-chenwandun@lixiang.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260520091844.592753-1-chenwandun@lixiang.com>
+References: <20260520091844.592753-1-chenwandun@lixiang.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -101,62 +105,34 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is v2 of the vmcore size optimization series.
+From: Wandun Chen <chenwandun1@gmail.com>
 
-The original v1 [1] contains two parts of work:
- - Bug fixes and small cleanups about reserved memory.
- - A vmcore size optimization that excludes reserved memory out of
-   vmcore.
+From: Wandun Chen <chenwandun@lixiang.com>
 
-For the convenience of review, I have split it into two independent
-patchsets. This patchset focuses on the vmcore size optimization.
+Prepare for an upcoming change that appends /memreserve/ entries to
+reserved_mem[]; such entries have no name.
 
-Motivation
-==========
+No functional change.
 
-On SoCs that carve out large firmware-owned reserved memory (GPU
-firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
-those carveouts as part of system RAM even though their contents are
-firmware state that is not useful for kernel crash analysis.
+Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+---
+ drivers/of/of_reserved_mem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This series excludes /reserved-memory regions from vmcore by default,
-and also for /memreserve/ firmware regions. The corresponding kdump
-time has decreased, and the vmcore size has become smaller.
-
-v1 --> v2:
-1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
-   feedback [2], v2 drop that property and exclude reserve memory
-   by default.
-2. Split some prepared patches from the original patches.
-3. Address coding-style comments on patch 5 from Rob.
-
-[1] https://lore.kernel.org/lkml/20260429065831.1510858-1-chenwandun@lixiang.com/
-[2] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-
-Wandun Chen (8):
-  of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
-  kexec/crash: provide crash_exclude_mem_range() stub when
-    CONFIG_CRASH_DUMP=n
-  of: reserved_mem: add dumpable flag to opt-in vmcore
-  of: reserved_mem: save /memreserve/ entries into the reserved_mem
-    array
-  of: reserved_mem: add kdump helpers to exclude non-dumpable regions
-  arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
-  riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
-  loongarch: kdump: exclude non-dumpable reserved memory regions from
-    vmcore
-
- arch/arm64/kernel/machine_kexec_file.c     |  6 ++
- arch/loongarch/kernel/machine_kexec_file.c |  6 ++
- arch/riscv/kernel/machine_kexec_file.c     |  4 +
- drivers/of/fdt.c                           |  5 ++
- drivers/of/of_private.h                    |  2 +
- drivers/of/of_reserved_mem.c               | 92 +++++++++++++++++++++-
- include/linux/crash_core.h                 |  6 ++
- include/linux/of_reserved_mem.h            | 15 ++++
- kernel/dma/contiguous.c                    |  1 +
- 9 files changed, 136 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 8d5777cb5d1b..313cbc57aa45 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -788,7 +788,8 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+ 
+ 	name = kbasename(np->full_name);
+ 	for (i = 0; i < reserved_mem_count; i++)
+-		if (!strcmp(reserved_mem[i].name, name))
++		if (reserved_mem[i].name &&
++		    !strcmp(reserved_mem[i].name, name))
+ 			return &reserved_mem[i];
+ 
+ 	return NULL;
 -- 
 2.43.0
 
