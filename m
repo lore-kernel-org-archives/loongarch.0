@@ -1,104 +1,66 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F85374192
-	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 21:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779313204; cv=pass; b=VuF2/AJpd8spXfceMsy6BbS/QF7NLroGYjTGSjNbtofATirLaHr7hI+0eexLl0gCDUptJJNb3GfzjIThc6l0aezWeT+bxuAcXrFM0VcVrEYFg49U6IjJui+r2xroUkJEC91AyUIewRcu5NfDjAKFJWuyIZ0LpAUXPWT13z7VoMw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779313204; c=relaxed/simple;
-	bh=DBcXYzm6PYo0SCpYp3YKktE43c9Y4VDK8dmgRvqZUAs=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31ADE3CAE97
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 23:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779320292; cv=none; b=kt/Y3xFhs7bSXtknJ5Q2L7CF32VUx5SNvs4tF8hkqvjSBw+bgc0/R1XBKpfe1/q6PiwWOMxdwpP8g9/3FJvclnSh04cfSkw10sK5nSu+zrU4b6nBh4F0xaSg5HEYlccLFFlBAwYI0dbsrp2EVU/0OqvwlTwIG/0xD65HNVdg8JI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779320292; c=relaxed/simple;
+	bh=8/q15zH28mDu1hXhICrVjtbcwOJfbz3pGVvvXZMiZds=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g7Y0bvBWE2sV6rAht5HWHOLPJstWftxJi4VshZ0C5rTX+QDSjmtWs+EP71hYVlQqtSggJGNgj0LvK2T0jR5wWCLD+TT6ki4Jxm9fItp7A/qvHNF32iRiwq0atiqV7Iuwv1EkBYzPxr+AO6KeKakjne1kjnV5FLrPUclJcjsj6VA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LP77Z8pb; arc=pass smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=CrqiqGdlKD/yG8qV3iLxGkea32Nxe0a0Et5CQ8jlAaFPRkCv6D2M98D4l6nwbzT5ZX5TJtVbd4j4AYgT+85Hzy6FWHkebiZxsaXJ5KBBLoUW2f3BAww419uFJiBySj8Dg4Qjj06FtZItVhsVUtPJPVNrd8mYAhF2rANrZe/iHJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohUWzsQy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LP77Z8pb"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-67f7caa33easo11536904a12.1
-        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 14:40:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779313201; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kyMLoUou8iGsO1O4dj7IDf3p31ZCvQsvJCs4kksb8doTgem8Um2N/YVLA1cFQ43k0h
-         jw8ExwQDLM4ol+pObaT35pY4xX+Ya8dOanj9VzqDC5gxC5kodeC+xtfuDlUaazqY3g8x
-         EBDWMQOPRPACXIKPdRih0+1PmMMLf4ESEx6ov2yeZW1OAuTvqcQfHSWGazTAoTGOeU9f
-         n451IXvtRWOsFnbaUOyVEuWF2AC679eIe2h/GPOeCrFtboPSBeo4N7Y4a5tlA7pIfVPG
-         RgQZEngSoMd8cPx8fnG72+6CSRSDCdr3Xduy3y2RLpOdiFOOXHKyKD8aO562lydV61lZ
-         waoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FmdK4vbjUWnyTBEm67qsNClqg8Ylwzn73Ycp8tLb8QQ=;
-        fh=EZEMxFaGEJrO1//+VZnRicIXz2oFbgXx2/tuQqJ9MTA=;
-        b=iAJ2YFTOwQ/uO2kme4J6b5OuhyJbpQOZwrxvYH1AF1tsLEq90G2SlF5L7KnvBXPu4O
-         AWV98dZFORR8HwcDmjMGFRXo2otbyDgHY8ThaOt9U1wvZjrwS1YI6uFcSvq//GyEIZdV
-         JXLDXkdpgCF3HFUA11iu51T3g5W1yvVCKUMBX+7IATtBi//OWmtfrxk+6AKeInOOIH+a
-         ch6WdjEyjNlKPce97a1QtnCIub69fAmbrCMABD++2Zobt+rcAOtBBfWbMn4m9xcCtfkn
-         RoKWGp6/4YqeGgFnWm+ehF5OwzmgQFcEwzk79jJL5RN/KtMqjxLLKLElFoJGTwD8vyhi
-         /LhA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779313201; x=1779918001; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FmdK4vbjUWnyTBEm67qsNClqg8Ylwzn73Ycp8tLb8QQ=;
-        b=LP77Z8pbZv2IcdO5nhuEtXyKKbh8enZWUqNmGBuH3aPWIpgguw2MQWT1iBvn3m5yWf
-         ZtD3ycl0DXQlC7AUp46mYkd7x70NQ1ykSUc4l6qkFM5Qtz6Nn0g24xiBu/G1C8VhQzxt
-         XHzLvvHpqSgX0iBBF+2saMYdlhhN1Qz7B+ImuYZPItOUk0uxalhl42Amm64A4lSNBevH
-         mWfDkMoKYsxCAduGrMLS0SmKQU5W5jO6j3wWs8vNCtwTkhKTvOgkvBaTLdZbByPBrVht
-         UQLv6OZeXYoe2bHMPxHEnyZqvik2Ul7EIrKt/KqM8yAmhFqsdJ33MJsshZX6WX9ERgmE
-         V5Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779313201; x=1779918001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FmdK4vbjUWnyTBEm67qsNClqg8Ylwzn73Ycp8tLb8QQ=;
-        b=cX0NBKPBJfa6moz2ocNBVSswNOpcpvcvDbqMC6VP/N+FIfFIhr4A540BurDvT5PSRO
-         nuspuNgaWA/buXOuaWJI7+2WtueDqhaRrUbIWELvjZ+zyHd1XjRYJVrGHB5cfQ9tCAjX
-         C40NPa8Xi/SRtB/EfDrYiGfVbJwGX1R0h0TBagGS0gHSIbUFl/0vxFtUll2Bvy3RcT4c
-         0zdDHm0df48KzIEwuIdnjMFILKjuWaFiIMzZ5wieYpRCAI4OfUqSc19fkvKWzGP8SQV9
-         /NsMgqd37IkDjFctS9X1wBQsD1IwewAj4qwvb0uJE3f7Ncqd8a8hqaUZs2kgEJVLYaLh
-         3Pow==
-X-Forwarded-Encrypted: i=1; AFNElJ8rHBv47P9faI5w9feB/rTWcRRjT2ojBlhZB3ScE/L1YVQ9Xa/3yPmzA9Y7fdk5HzL5u+2OLDZghqo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxVTgtG6duLy9bzwv91JCpv15Rk7wAHznaIdkVnHoQ9+NS6sd/C
-	kDz83pHav1tF5Y6+KzP2BRQYW/4OewukQDK/mOaUZVXFyOm1uE3RlnGeTKUPLBWQ9L3Jb+dG35U
-	b3btORVJUNqHtXI0r/X38RZA7+LBw/wA=
-X-Gm-Gg: Acq92OG53nMB9riKSP2GsIiXw+q4MqD8TvxHPqqqiABtolV/k5wVb75P6DtJ8yofRwk
-	FwUzoGzhHyWBUrWUlLvTXeg4mhI8+d5zp1msNlPznjRe3Wn0yS61hFMwSyG0l8RPz2ZrnP4NrLU
-	i+vgoFOF86TgFgqaZXJkItmQd/VJXHm193hSeIGraRaTRudlEcS+TIbp3bUoC2iwgeV3dWpmsGD
-	jmHAqDEFOIQbtHxpYg8uGsiQI8MerN0SZnyIy1cbdRpv4W6x3Rp5eeCJ2pbaKpzZmxlICVWtnHF
-	nw6VAeEwUDFXoA==
-X-Received: by 2002:a17:907:e14b:10b0:bd5:151d:2d31 with SMTP id
- a640c23a62f3a-bd51781106dmr1121316766b.13.1779313200765; Wed, 20 May 2026
- 14:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohUWzsQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090BE1F00ADE
+	for <loongarch@lists.linux.dev>; Wed, 20 May 2026 23:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779320291;
+	bh=+XojcX+cBNMxauV3CDSL9gXTCmD6yueQSzdQP2DbJ+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=ohUWzsQy12Lp2RUlEnBLUpIu54GIgmODDx+dWdarhAtmeIMNmwk6cNzdcGmgo4qIy
+	 Yaxse71rD9idF+ShHyVaV8B0pHsH11PYbLqqfEkB9dNAR0UokviE7D6k10N3Z6WRem
+	 IGHDaZzmoZwKnkhoquW1BSE0oowVqnkbFZQYLDdom4mO561qefmVCsJbTRHVN35kiv
+	 5hfXjkPjvlQyXGVGO+RXBVSDUEbDPfAF4ii2XnvJHsz56+jMEHNQwX3fW/QMN8Kn8w
+	 q+Xc2FMz78D+TRp/bAFobADWyZ4RPxaYocop4r+YdQN5Pwig7z9KRZfJjMDpHnQM70
+	 BChD9ozPtWbug==
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-5165195c8b0so62097191cf.0
+        for <loongarch@lists.linux.dev>; Wed, 20 May 2026 16:38:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/PshlLTQ3P+baKtw0YseJg1uk05JQTmbrRX76WUsaxzVj6NJVH7lDTCpe31Nfu55IU2mtZ1LgrywE=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2svElzlMGbDro0v+WYxttDz8LyYpTPRDZ2wpqUdWiOvU4IHaE
+	wED++UWDTBiifHOmBkSUfvonYK7y2iTrWNPYfh0PpkKWoNqp6LmOFBpXJtxyPDh2ILktVIZt8LU
+	6YTuagxRbfuQEO8QDc4DgTnDFg0m2CtM=
+X-Received: by 2002:a05:622a:17c7:b0:50d:b0f9:1a66 with SMTP id
+ d75a77b69052e-516c55ce180mr9639641cf.42.1779320290158; Wed, 20 May 2026
+ 16:38:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260430040427.4672-1-baohua@kernel.org> <afNM-gIqxpyJ6ro7@casper.infradead.org>
- <CAGsJ_4w0qcYmukHqsyRd0jomoyYkJjOt8b-Cgp53BgP-8QQghw@mail.gmail.com>
- <afS_L-5XeWIldTXA@casper.infradead.org> <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
- <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+References: <afTpoL3FklpQZNMM@casper.infradead.org> <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
  <agrWuDNGddNmvMFD@lucifer> <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
  <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
- <agxbq1TxJdniMQT3@lucifer> <e6d1017a-e4c5-493e-bfca-932c6d64eaac@kernel.org>
-In-Reply-To: <e6d1017a-e4c5-493e-bfca-932c6d64eaac@kernel.org>
-From: Yang Shi <shy828301@gmail.com>
-Date: Wed, 20 May 2026 14:39:49 -0700
-X-Gm-Features: AVHnY4IxXAq80R4nUJKOoKG85hi3I-EgpsftnPlc019PI3pxbjgBD4oSC5VrWsM
-Message-ID: <CAHbLzkq3S7NDYe4LXjurKNQU+40-wtqrD_PT18YcyHbAcNxiRQ@mail.gmail.com>
+ <CAGsJ_4zgeE3ebEJ+j7GJFzWVoVYHeiOn4dOoOsmWCLA6s=oECQ@mail.gmail.com>
+ <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
+ <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
+ <ag4h87CBd-gph9zX@casper.infradead.org> <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
+ <ag4kj84EcKqamdB-@casper.infradead.org> <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
+In-Reply-To: <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
+From: Barry Song <baohua@kernel.org>
+Date: Thu, 21 May 2026 07:37:58 +0800
+X-Gmail-Original-Message-ID: <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
+X-Gm-Features: AVHnY4LEan2jPUL-UnPeql1qwutuRGUCiZMo1ZXEi3On484A8O-Avt_P3lSUuSE
+Message-ID: <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
 Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
  fault performance
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Lorenzo Stoakes <ljs@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Barry Song <baohua@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+Cc: Matthew Wilcox <willy@infradead.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Lorenzo Stoakes <ljs@kernel.org>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
 	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
 	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
 	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
@@ -110,89 +72,182 @@ Cc: Lorenzo Stoakes <ljs@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Ba
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 20, 2026 at 3:34=E2=80=AFAM David Hildenbrand (Arm)
+On Thu, May 21, 2026 at 5:35=E2=80=AFAM David Hildenbrand (Arm)
 <david@kernel.org> wrote:
 >
-> On 5/19/26 14:53, Lorenzo Stoakes wrote:
-> > On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
+> On 5/20/26 23:15, Matthew Wilcox wrote:
+> > On Thu, May 21, 2026 at 05:14:20AM +0800, Barry Song wrote:
+> >> My understanding is that we should not blame applications here. This i=
+s 2026:
+> >> there are basically only two kinds of applications =E2=80=94 single-th=
+readed and
+> >> multi-threaded =E2=80=94 and single-threaded applications are nearly e=
+xtinct.
 > >
-> >>>
-> >>> I think we either need to fix `fork()`, or keep the current
-> >>> behavior of dropping the VMA lock before performing I/O.
-> >>
-> >> I see. So, this problem arises from the fact that we are changing the
-> >> pagefaults requiring I/O operation to hold VMA lock...
-> >> And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
-> >> is_cow_mapping(vma->vm_flags). So, we will be blocking page faults for
-> >> anonymous and COW VMAs only while holding mmap_write_lock, preventing
-> >> any VMA modification. On the surface, that looks ok to me but I might
-> >> be missing some corner cases. If nobody sees any obvious issues, I
-> >> think it's worth a try.
-> >
-> > Not sure if you noticed but I did raise concerns ;)
-> >
-> > I wonder if you've confused the fault path and fork here, as I think Ba=
-rry has
-> > been a little unclear on that.
-> >
-> > What's being suggested in this thread is to fundamentally change fork b=
-ehaviour
-> > so it's different from the entire history of the kernel (or - presumabl=
-y - at
-> > least recent history :)
-> I don't want fork() to become different in that regard.
+> > all of the applications i run are either single threaded or don't fork.
+> > what multithreaded applications call fork?
 >
-> There is already a slight difference with vs. without per-VMA locks, beca=
-use
-> there is a window in-between us taking the write mmap_lock and all the pe=
-r-VMA
-> locks. I raised that previously [1] and assumed that it is probably fine.
+> Traditionally the problem was random libraries using fork+execve to launc=
+h other
+> programs ... instead of using alternatives like posix_spwan (some use cas=
+es
+> require more work done before execve and cannot yet switch to that). I'd =
+hope
+> that that is less of a problem on Android.
 >
-> I also raised in the past why I think we must not allow concurrent page f=
-aults,
-> at least as soon as anonymous memory is involved [2].
+> I assume Android zygote might be multi threaded? Maybe sshd as well? Syst=
+emd?
+> But I'd be surprised if there are really performance implications.
 
-Thanks for sharing the context, it is quite helpful to understand the
-race conditions. Because Lorenzo also raised the concern about page
-fault race, I will reply to all the concerns regarding page fault race
-together in this thread.
+I am trying to answer the question above:
 
-IIUC, there is already some sort of race with per vma lock. Before per
-vma lock, mmap_lock did lock everything. So page fault happened either
-before fork or after fork. But page fault can happen on other VMAs
-which have not been lock'ed yet during fork with per vma lock. For
-example, we have 3 VMAs, we lock the first VMA, but page fault still
-can happen on the other 2 VMAs during fork if they already have
-anon_vma. This is the status quo now, but it seems not harmful.
+1. zygote, multi-threaded on my phone using Android13.
+/ # ls /proc/`pidof zygote64`/task/
+1359  22728  22729  22730  22731  22732
 
-The bad race shared by David is caused by racing with copy page. So it
-seems like it will be fine as long as we serialize copy page against
-page fault if I don't miss anything. Since we decide whether to copy
-page or not by checking vma->anon_vma, so it seems fine to not take
-vma lock if vma->anon_vma is NULL. This will not introduce more race
-either because setting up a new  anon_vma in page fault or madvise
-requires taking mmap_lock according to the earlier discussions.
+/proc/1359/task # cat 22728/comm
+Jit thread pool
+/proc/1359/task # cat 22730/comm
+ReferenceQueueD
+/proc/1359/task # cat 22731/comm
+FinalizerDaemon
+/proc/1359/task # cat 22732/comm
+FinalizerWatchd
+/proc/1359/task # cat 1359/comm
+main
 
-Thanks,
-Yang
+But on another phone of mine running Android 16, zygote64 is
+single-threaded.
+Not sure if it is due to the Android team making some changes
+related to threads from Android 13 to Android 16.
+
+2. sshd, multi-processes instead of multi-threads:
+$ ps aux | grep sshd
+root        1192  0.0  0.0  15444  9032 ?        Ss   09:42   0:00
+sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+root        2465  0.0  0.0  17164 10760 ?        Ss   09:42   0:00
+sshd: barry [priv]
+barry       2632  0.0  0.0  17164  7852 ?        S    09:42   0:00
+sshd: barry@pts/0
+root        3305  2.5  0.0  17164 10772 ?        Ss   09:44   0:00
+sshd: barry [priv]
+barry       3406  0.0  0.0  17164  7940 ?        S    09:44   0:00
+sshd: barry@pts/1
+
+3. systemd, also multi-processes
+
+$ ps ax | grep systemd
+    350 ?        S<s    0:00 /lib/systemd/systemd-journald
+    387 ?        Ss     0:00 /lib/systemd/systemd-udevd
+    666 ?        Ss     0:00 /lib/systemd/systemd-oomd
+    667 ?        Ss     0:00 /lib/systemd/systemd-resolved
+    728 ?        Ss     0:00 @dbus-daemon --system --address=3Dsystemd:
+--nofork --nopidfile --systemd-activation --syslog-only
+    751 ?        Ss     0:00 /lib/systemd/systemd-logind
+    753 ?        Ssl    0:00 /usr/sbin/thermald --systemd
+--dbus-enable --adaptive
+   1350 ?        Ss     0:00 /lib/systemd/systemd --user
+   1428 ?        Ss     0:00 /usr/bin/dbus-daemon --session
+--address=3Dsystemd: --nofork --nopidfile --systemd-activation
+--syslog-only
+   1900 ?        Ssl    0:00 /usr/libexec/gnome-session-binary
+--systemd-service --session=3Dubuntu
+   2141 ?        Ssl    0:00 /lib/systemd/systemd-timesyncd
 
 >
-> ... and I raised that this is pretty much slower by design right now: "We=
-ll, the
-> design decision that CONFIG_PER_VMA_LOCK made for now to make page faults=
- fast
-> and to make blocking any page faults from happening to  be slower ..." [3=
-]
+> Not sure about webbroswers .... I think most of them switched to fork ser=
+vers,
+> where I would assume fork servers would be single-threaded.
+
+On my phone, Chrome is multi-process, but its parent process
+chrome_zygote (10774) is single-threaded:
+
+ ps -A | grep chrome
+u0_i15        9883 10774 321066464 119452 do_epoll_wait     0 S
+com.android.chrome:sandboxed_process0:org.chromium.content.app.SandboxedPro=
+cessService0:15
+u0_a142      10164  1359 35110548 277640 do_epoll_wait      0 S
+com.android.chrome
+u0_a278      10724  1359 9779864 104988 do_epoll_wait       0 S
+com.google.android.apps.chromecast.app
+u0_a142      10774  1359 32803908 64076 do_sys_poll         0 S
+com.android.chrome_zygote
+u0_a142      11173  1359 34208592 142192 do_epoll_wait      0 S
+com.android.chrome:privileged_process0
+
+/proc/10774/task # ls
+10774
+
 >
-> [1] https://lore.kernel.org/all/970295ab-e85d-7af3-76e6-df53a5c52f8b@redh=
-at.com/
-> [2] https://lore.kernel.org/all/7e3f35cc-59b9-bf12-b8b1-4ed78223844a@redh=
-at.com/
-> [3] https://lore.kernel.org/all/2efa2c89-3765-721d-2c3c-00590054aa5b@redh=
-at.com/
->
-> --
-> Cheers,
->
-> David
->
+> So, yeah, getting a clear understanding how this ends up being a problem =
+on
+> Android would be great.
+
+I guess the real issue is that in the Android market, there
+are so many applications that are out of our control=EF=BC=9F
+
+Here are some trace examples from Nanzhe:
+
+iQIYI plugin
+vma reader thread:
+PbMisc-0, pid=3D27183, tgid=3D26444
+
+vma writer thread:
+i.video:plugin1, pid=3D27298, tgid=3D26444
+writer blocked: 440394938 ns (440 ms)
+
+reader stack:
+vma_start_read
+lock_vma_under_rcu
+do_page_fault
+do_translation_fault
+do_mem_abort
+el0_da
+el0t_64_sync_handler
+el0t_64_sync
+
+writer stack:
+__vma_start_write
+dup_mmap
+copy_mm
+copy_process
+kernel_clone
+__arm64_sys_clone
+invoke_syscall
+el0_svc_common
+do_el0_svc
+el0_svc
+
+
+Baidu Tieba
+vma reader thread:
+elastic_pms_pro, pid=3D7731, tgid=3D7575
+
+vma writer thread:
+com.baidu.tieba, pid=3D8005, tgid=3D7575
+writer blocked: 514975545 ns(515 ms)
+
+reader stack:
+vma_start_read
+lock_vma_under_rcu
+do_page_fault
+do_translation_fault
+do_mem_abort
+el0_da
+el0t_64_sync_handler
+el0t_64_sync
+
+writer stack:
+__vma_start_write
+dup_mmap
+copy_mm
+copy_process
+kernel_clone
+__arm64_sys_clone
+invoke_syscall
+el0_svc_common
+do_el0_svc
+el0_svc
+
+Thanks
+Barry
