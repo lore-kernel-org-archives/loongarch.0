@@ -1,128 +1,105 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B01B395AD2
-	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 07:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1EF1FC7C5
+	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 07:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779346899; cv=none; b=R8Cz3sVa0wCp599+wCPaIgEPbFDfUaJgqjDN5Z7z3MdsLNKvW6rCS+jc8fmP+DAb+hkmVbgDbuThTWHCC4xhlTF3IZtmh0+BJiWbj2clN/6uULeCCe/mUEy1Pg5QsaHnDKw7H/YWlgL1xWleIpzQXhoyOHldMM7PSRDEQZMCz2c=
+	t=1779347373; cv=none; b=qaPApkoSdQABAW+hcz1fFjKJLbr4xFiJjOAlmM2xA//M/m/1qnciYEQlvtYGDswgaZ3iT26OZqA5YlQpGLv1EdZBfhMkluX+mtvZMf2bcVTbwMCGWTPtoDwzpwFd1+VHcO4ikDMpvWkmIx7kVcAcydWHGDQeVMi6HtcHIjfHm88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779346899; c=relaxed/simple;
-	bh=PdbZ5ZHXuEILGZDBH/lspiS27yk0X5rxznk0JTFiOYo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hyAsCZRCwtYxrw6jIbVq9W/h0+1nXM5h451OHopfIelP8UpkB1ZPmHOKkC230RDB8H2eax3ENV9I6KKbsdZQTDdyACeiwrsZ0fegk675FkXmgzm5ts4EORLgnSoNHJaBBJMJhg9XB3V+pEVbuedCL7qbEYM70VJP0h0DMFB1z7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxVejOrQ5qV+gLAA--.28858S3;
-	Thu, 21 May 2026 15:01:34 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxaeDJrQ5qureKAA--.1831S5;
-	Thu, 21 May 2026 15:01:33 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] LoongArch: BPF: Fix off-by-one error in tail call
-Date: Thu, 21 May 2026 15:01:28 +0800
-Message-ID: <20260521070128.28086-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260521070128.28086-1-yangtiezhu@loongson.cn>
-References: <20260521070128.28086-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1779347373; c=relaxed/simple;
+	bh=/3gr87xL2Snp1ckqYw8ICoQH4w94eL0K9aCCvJUZrwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VOG1NouNlYMIClqMH8gjbGXQru1II+uYBZIe4SchK56j/TUw0B5awWX/AoOcGosDDAGqg719e2OGr3zt+q9F1soPtQvibWxrLDgT1/icetI+vhGzq55Yq/BKCHANgXZ+hY6bLl9leQIXGGuJKY8f8Ug0g0UfPowi6KOMFuDlHOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQeYxumY; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQeYxumY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A9C11F00A3F
+	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 07:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779347372;
+	bh=DL3k59AvmDgKGPZJsEyuzSgm0PbQI5B1EiOCPjanQ2g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=PQeYxumYa4wG3UsSMDXjbsZkczFItosD7NDEjmpKRiLrSzdH5lMBHJbLLbu4KzwDm
+	 rhtIcIiB8tM4IGi0IrBnOB4vD4pWZzdRPHdwd0ytnxrz6ZSJQBL0ODKLsKQPIrFp+k
+	 /uQHEdd44L5SgWe6WsJ97aT80xCmBfFRTifTQ18elvMvv38A9GZby8bnifAjVQg63O
+	 cOqA+mOiaTQ5nRSfy1Izbeq493Az/Qp3IGCX7NBy6v7X5Zspo/UOhH4QZf1TTli5tp
+	 15CjRVDylXtlLHV2RdoJuIM8THmNcmlhwkt42NYMDsfF5/V08RyhyG/iZpPFGJtvkg
+	 fe0BdYLoY7AGQ==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bcda7765d64so1266732966b.1
+        for <loongarch@lists.linux.dev>; Thu, 21 May 2026 00:09:32 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwYYhjESTAAbR+BUZavc4UY+WCWqwtCt8p0ZUw9UhmTSEcZUL/k
+	8EoXfs95tmg5bSDLrlIVxp7QWcxMFvBDziPr3XQA8uB2zjtCPHPUxOL0UHF+c3NTupTRqtDdY6u
+	qL2emt+HQrOKbMU+IdAtH7wn3IxqcvuE=
+X-Received: by 2002:a17:907:8691:b0:bd4:8286:466d with SMTP id
+ a640c23a62f3a-bdbffc5fe5cmr88596466b.12.1779347371104; Thu, 21 May 2026
+ 00:09:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeDJrQ5qureKAA--.1831S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF47WrW7XF43GFWkKFykJFc_yoW5GF1xpr
-	WkZw4kCrWkX34ayFs7Can7XryYyFZ5Gry7GF1rArZ3Crn3Zry2ga4jk34SgF98KrsYyry8
-	Xr1v934rZ3WkAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+References: <20260521063310.52926-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260521063310.52926-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 21 May 2026 15:09:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6-apTue-3KCe1sh2LzBicL_3TGvOSSwQAWY0jdk4YgMw@mail.gmail.com>
+X-Gm-Features: AVHnY4K2Pw2PhWvEGrn2EcwndvYurJeJ1fYIx2E8utEBKxKCavTh_rnMnZbLUXk
+Message-ID: <CAAhV-H6-apTue-3KCe1sh2LzBicL_3TGvOSSwQAWY0jdk4YgMw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] LoongArch: Add missing linux/mm.h include in asm/io.h
+To: George Guo <dongtai.guo@linux.dev>
+Cc: loongarch@lists.linux.dev, WANG Xuerui <kernel@xen0n.name>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org, 
+	George Guo <guodongtai@kylinos.cn>, Kexin Liu <liukexin@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The current code updates the tail call counter (TCC) using a pre-increment
-approach, it stores the incremented value back to memory before performing
-any boundary or target validation checks.
+On Thu, May 21, 2026 at 2:33=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
+wrote:
+>
+> From: George Guo <guodongtai@kylinos.cn>
+>
+> When CONFIG_KFENCE is enabled, the virt_to_phys() and phys_to_virt()
+> macros in arch/loongarch/include/asm/io.h expand to use offset_in_page()
+> and page_address(), both of which are declared in <linux/mm.h>.
+>
+> Without this include, any translation unit that includes <asm/io.h> and
+> expands these macros with CONFIG_KFENCE=3Dy will fail to build:
+>
+>   asm/io.h: error: implicit declaration of function 'offset_in_page'
+>   asm/io.h: error: implicit declaration of function 'page_address'
+From which .c file the warning is? I can't reproduce it.
 
-This causes two major issues:
-1. When a tail call fails because the target program is NULL, the TCC is
-   incorrectly incremented and saved in memory anyway.
-2. This dummy increment implicitly consumes one slot of the allowed tail
-   call budget. As a result, the subsequent loop reaches the maximum limit
-   prematurely, leading to a test failure where the actual loop count is
-   32 instead of the expected 33.
+Huacai
 
-Fix this by deferring the counter update. Change the branch condition to
-BPF_JSGE (greater or equal) so that we check the boundary first. The TCC
-is only incremented and stored back to memory after the boundary check
-and the NULL-target check both pass.
-
-Before:
-  $ sudo ./test_progs -t tailcalls/tailcall_3
-  ...
-  test_tailcall_count:FAIL:tailcall count unexpected tailcall count: actual 32 != expected 33
-  ...
-  #465/3   tailcalls/tailcall_3:FAIL
-  #465     tailcalls:FAIL
-
-After:
-
-  $ sudo ./test_progs -t tailcalls/tailcall_3
-  #465/3   tailcalls/tailcall_3:OK
-  #465     tailcalls:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-
-Fixes: c0fcc955ff82 ("LoongArch: BPF: Fix the tailcall hierarchy")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/net/bpf_jit.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index a69ece7e62d5..811a6c193656 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -328,12 +328,12 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- 	 */
- 	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
- 	emit_insn(ctx, ldd, t3, REG_TCC, 0);
--	emit_insn(ctx, addid, t3, t3, 1);
--	emit_insn(ctx, std, t3, REG_TCC, 0);
- 	emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
--	if (emit_tailcall_jmp(ctx, BPF_JSGT, t3, t2, jmp_offset) < 0)
-+	if (emit_tailcall_jmp(ctx, BPF_JSGE, t3, t2, jmp_offset) < 0)
- 		goto toofar;
- 
-+	emit_insn(ctx, addid, t3, t3, 1);
-+
- 	/*
- 	 * prog = array->ptrs[index];
- 	 * if (!prog)
-@@ -346,6 +346,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
- 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
- 		goto toofar;
- 
-+	emit_insn(ctx, std, t3, REG_TCC, 0);
-+
- 	/* goto *(prog->bpf_func + 4); */
- 	off = offsetof(struct bpf_prog, bpf_func);
- 	emit_insn(ctx, ldd, t3, t2, off);
--- 
-2.42.0
-
+>
+> Add the missing include to fix these build errors.
+>
+> Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation=
+ work with KFENCE")
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+> ---
+>  arch/loongarch/include/asm/io.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm=
+/io.h
+> index 0130185e0349..7ff4aa72a34a 100644
+> --- a/arch/loongarch/include/asm/io.h
+> +++ b/arch/loongarch/include/asm/io.h
+> @@ -13,6 +13,7 @@
+>  #include <asm/page.h>
+>  #include <asm/pgtable-bits.h>
+>  #include <asm/string.h>
+> +#include <linux/mm.h>
+>
+>  extern void __init __iomem *early_ioremap(phys_addr_t phys_addr, unsigne=
+d long size);
+>  extern void __init early_iounmap(void __iomem *addr, unsigned long size)=
+;
+> --
+> 2.25.1
+>
