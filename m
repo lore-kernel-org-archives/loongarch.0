@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EBE23955C6
-	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 07:01:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B01B395AD2
+	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 07:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779346899; cv=none; b=mGjk9jK+kyUU+Az6PQe8+FkjOoA+Dd4QnIOddwDEL0eAknMKx2BF95/tIDX/+jFU+/lmOb8DMzg/z2TtoZEoS/3O8TCby2xHxNIZ/bn3jie+9PfzI/nfplPItqYfnjeCtZUf/hd4291ytEHD+Ds1mBR1iaVXbKNHWvpOoFsG82E=
+	t=1779346899; cv=none; b=R8Cz3sVa0wCp599+wCPaIgEPbFDfUaJgqjDN5Z7z3MdsLNKvW6rCS+jc8fmP+DAb+hkmVbgDbuThTWHCC4xhlTF3IZtmh0+BJiWbj2clN/6uULeCCe/mUEy1Pg5QsaHnDKw7H/YWlgL1xWleIpzQXhoyOHldMM7PSRDEQZMCz2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779346899; c=relaxed/simple;
-	bh=XPcoe7RIFFX9obHslB4X4fdUMVvltn/0mv8Pj79EqlM=;
+	bh=PdbZ5ZHXuEILGZDBH/lspiS27yk0X5rxznk0JTFiOYo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GAneW7RNttiTOLIG5DUr7cEdKwAAuMClf1VioTbhVJoVe0zgBqOCu5Wh31wDWHAN1rwFllD/20tEwc8pOdexbhd/lvv1ys+JU6ahQH/f8O6h5tYB2W34263wCZ0WYAyfnZPv6Hvn0Nr47pR0SUbkao9EkHb+QXO4yfqI1uQ318Q=
+	 MIME-Version; b=hyAsCZRCwtYxrw6jIbVq9W/h0+1nXM5h451OHopfIelP8UpkB1ZPmHOKkC230RDB8H2eax3ENV9I6KKbsdZQTDdyACeiwrsZ0fegk675FkXmgzm5ts4EORLgnSoNHJaBBJMJhg9XB3V+pEVbuedCL7qbEYM70VJP0h0DMFB1z7g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxRXjNrQ5qUugLAA--.10282S3;
-	Thu, 21 May 2026 15:01:33 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxVejOrQ5qV+gLAA--.28858S3;
+	Thu, 21 May 2026 15:01:34 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxaeDJrQ5qureKAA--.1831S4;
+	by front1 (Coremail) with SMTP id qMiowJDxaeDJrQ5qureKAA--.1831S5;
 	Thu, 21 May 2026 15:01:33 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
@@ -24,9 +24,9 @@ To: Huacai Chen <chenhuacai@kernel.org>,
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/3] LoongArch: BPF: Fix outdated tail call comments
-Date: Thu, 21 May 2026 15:01:27 +0800
-Message-ID: <20260521070128.28086-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v1 3/3] LoongArch: BPF: Fix off-by-one error in tail call
+Date: Thu, 21 May 2026 15:01:28 +0800
+Message-ID: <20260521070128.28086-4-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20260521070128.28086-1-yangtiezhu@loongson.cn>
 References: <20260521070128.28086-1-yangtiezhu@loongson.cn>
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeDJrQ5qureKAA--.1831S4
+X-CM-TRANSID:qMiowJDxaeDJrQ5qureKAA--.1831S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWFy7uF15Cw1DCw4xXry8CrX_yoW5Ar4rpr
-	4qka1rGrWvgw42kF1kJw4j9r1agFs3GrW7ur4UAw48Awn8Z34fK3ZFyr13CF98J3W8Gry8
-	urnYywsI9F1kAwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF47WrW7XF43GFWkKFykJFc_yoW5GF1xpr
+	WkZw4kCrWkX34ayFs7Can7XryYyFZ5Gry7GF1rArZ3Crn3Zry2ga4jk34SgF98KrsYyry8
+	Xr1v934rZ3WkAabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
 	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
@@ -52,79 +52,77 @@ X-Coremail-Antispam: 1Uk129KBj93XoWxWFy7uF15Cw1DCw4xXry8CrX_yoW5Ar4rpr
 	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
 	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
 	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	C0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
 	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5l1kUUUUU=
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
 
-The current LoongArch BPF JIT implementation hardcodes the number of
-prologue instructions skipped during a tail call as a magic number '7'
-in the jirl instruction. However, the accompanying comment explaining
-this offset is completely outdated. It inaccurately states that only
-a single TCC initialization instruction is bypassed, but in reality,
-multiple setup slots are skipped, so fix these outdated comments in
-__build_epilogue().
+The current code updates the tail call counter (TCC) using a pre-increment
+approach, it stores the incremented value back to memory before performing
+any boundary or target validation checks.
 
-While at it, refine the comments in build_prologue() to describe the
-skipped setup slots (RA saving, fentry nops, and the TCC register slot)
-using proper dynamic tracing context. Also, remove the magic number '7'
-by introducing descriptive macros to formally define the prologue layout
-and make the tail call jump offset self-documenting.
+This causes two major issues:
+1. When a tail call fails because the target program is NULL, the TCC is
+   incorrectly incremented and saved in memory anyway.
+2. This dummy increment implicitly consumes one slot of the allowed tail
+   call budget. As a result, the subsequent loop reaches the maximum limit
+   prematurely, leading to a test failure where the actual loop count is
+   32 instead of the expected 33.
 
-Fixes: 61319d15a560 ("LoongArch: BPF: Adjust the jump offset of tail calls")
+Fix this by deferring the counter update. Change the branch condition to
+BPF_JSGE (greater or equal) so that we check the boundary first. The TCC
+is only incremented and stored back to memory after the boundary check
+and the NULL-target check both pass.
+
+Before:
+  $ sudo ./test_progs -t tailcalls/tailcall_3
+  ...
+  test_tailcall_count:FAIL:tailcall count unexpected tailcall count: actual 32 != expected 33
+  ...
+  #465/3   tailcalls/tailcall_3:FAIL
+  #465     tailcalls:FAIL
+
+After:
+
+  $ sudo ./test_progs -t tailcalls/tailcall_3
+  #465/3   tailcalls/tailcall_3:OK
+  #465     tailcalls:OK
+  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+
+Fixes: c0fcc955ff82 ("LoongArch: BPF: Fix the tailcall hierarchy")
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ arch/loongarch/net/bpf_jit.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index aefe5fa1c584..a69ece7e62d5 100644
+index a69ece7e62d5..811a6c193656 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -9,7 +9,14 @@
+@@ -328,12 +328,12 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ 	 */
+ 	emit_insn(ctx, ldd, REG_TCC, LOONGARCH_GPR_SP, tcc_ptr_off);
+ 	emit_insn(ctx, ldd, t3, REG_TCC, 0);
+-	emit_insn(ctx, addid, t3, t3, 1);
+-	emit_insn(ctx, std, t3, REG_TCC, 0);
+ 	emit_insn(ctx, addid, t2, LOONGARCH_GPR_ZERO, MAX_TAIL_CALL_CNT);
+-	if (emit_tailcall_jmp(ctx, BPF_JSGT, t3, t2, jmp_offset) < 0)
++	if (emit_tailcall_jmp(ctx, BPF_JSGE, t3, t2, jmp_offset) < 0)
+ 		goto toofar;
  
- #define LOONGARCH_MAX_REG_ARGS 8
- 
-+#define LOONGARCH_SAVE_RA_NINSNS   1
- #define LOONGARCH_LONG_JUMP_NINSNS 5
-+#define LOONGARCH_TCC_SLOT_NINSNS  1
++	emit_insn(ctx, addid, t3, t3, 1);
 +
-+#define LOONGARCH_PROLOGUE_SKIP_INSNS (LOONGARCH_SAVE_RA_NINSNS + \
-+				       LOONGARCH_LONG_JUMP_NINSNS + \
-+				       LOONGARCH_TCC_SLOT_NINSNS)
+ 	/*
+ 	 * prog = array->ptrs[index];
+ 	 * if (!prog)
+@@ -346,6 +346,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int insn)
+ 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+ 		goto toofar;
+ 
++	emit_insn(ctx, std, t3, REG_TCC, 0);
 +
- #define LOONGARCH_LONG_JUMP_NBYTES (LOONGARCH_LONG_JUMP_NINSNS * 4)
- 
- #define LOONGARCH_FENTRY_NINSNS 2
-@@ -143,8 +150,13 @@ static void build_prologue(struct jit_ctx *ctx)
- 	stack_adjust = round_up(stack_adjust, 16);
- 	stack_adjust += bpf_stack_adjust;
- 
-+	/*
-+	 * Save the original return address to a temporary register to prevent
-+	 * it from being overwritten, then reserve space for the long jump and
-+	 * fentry trampoline slot for dynamically patching by ftrace at runtime.
-+	 * These instructions are bypassed during a tail call invocation.
-+	 */
- 	move_reg(ctx, LOONGARCH_GPR_T0, LOONGARCH_GPR_RA);
--	/* Reserve space for the move_imm + jirl instruction */
- 	for (i = 0; i < LOONGARCH_LONG_JUMP_NINSNS; i++)
- 		emit_insn(ctx, nop);
- 
-@@ -256,10 +268,11 @@ static void __build_epilogue(struct jit_ctx *ctx, bool is_tail_call)
- 		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_RA, 0);
- 	} else {
- 		/*
--		 * Call the next bpf prog and skip the first instruction
--		 * of TCC initialization.
-+		 * Tail call to the next BPF program, passing offset in number
-+		 * of instructions to jirl to bypass the initial setup slots.
- 		 */
--		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3, 7);
-+		emit_insn(ctx, jirl, LOONGARCH_GPR_ZERO, LOONGARCH_GPR_T3,
-+			  LOONGARCH_PROLOGUE_SKIP_INSNS);
- 	}
- }
- 
+ 	/* goto *(prog->bpf_func + 4); */
+ 	off = offsetof(struct bpf_prog, bpf_func);
+ 	emit_insn(ctx, ldd, t3, t2, off);
 -- 
 2.42.0
 
