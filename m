@@ -1,33 +1,30 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFE13806AA
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB313D0919
 	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 12:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779368203; cv=none; b=MUTMcfqoWklPx9DDP/VZLCjW5jy06YBNpJ2ndYgHJhoSiXYyUiNfAkZENbf+8TQpYd0nnUqCLnRLh9m7BUAVJ1Ri+mcQ9/J2bjl2jwwG2e2EpceSZZg9XqIRilxON/JcwmifwzlKvsqk2sv99QsKZZd9GnX0+V83HjkQklg1fII=
+	t=1779368204; cv=none; b=dAuNZWPM3Xj7+4oNCb9OAVxduCQ0cWaPtBsgCXMfh4sZBg0JELF0qh2/KjasZtvBegAfmVabZEvJNO1go/6egJKONiuO30iEwMnFdhBmwnJUjSv5hdR46DaFrD8V29MN2eqj2yKGdZ1IarTSLmMfYhLftL2X1ZTUXSJLwyYoxAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779368203; c=relaxed/simple;
-	bh=/6R93NxMEysDRMXCCzHKnzpYhn1kBnV3ZX9Yk1I1LGU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SQwOmF/xoOYtgrexUSaxk7LW34QKUJHCowZFwOdQn4sgHBZ4WwengdM1pk4OilCKF1eAOSSjXYzuJ87z3g2HJRNR1CAtqr5pvRZA8NanS/MoVs3i1/HCg+PRr6/ucIUSD5JO8BkwwyLlpAumSILNP4/vk7ZZi1OCGlQaqyr8rOE=
+	s=arc-20240116; t=1779368204; c=relaxed/simple;
+	bh=SfEIYi1KNd0mYCLFdUSyMK8PWWSCU93Vq0dwmFVtvC8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=gmT+Hvy+fCEzSVf5+gsgkwyq7BBm9QhwQqo300PSpTkQWrqUJF4DDzN26qv79zZWh3EyJcYKL323vxmfqx61boS6othOwO8wtM67BZhSTRsybi/Oik2kgC6y+eJzsLCyeryppLdBFkkWpzl9aYAi+fylXCfCZwzpJMcFVPE3J90=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxx3gHAQ9qqv4LAA--.10359S3;
-	Thu, 21 May 2026 20:56:39 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCx+8EFAQ9qPBuLAA--.2485S4;
+	by gateway (Coremail) with SMTP id _____8AxFekFAQ9qpv4LAA--.29035S3;
 	Thu, 21 May 2026 20:56:38 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCx+8EFAQ9qPBuLAA--.2485S2;
+	Thu, 21 May 2026 20:56:37 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v1 2/2] selftests/bpf: Add __arch_loongarch to limit test cases
-Date: Thu, 21 May 2026 20:56:36 +0800
-Message-ID: <20260521125636.26744-3-yangtiezhu@loongson.cn>
+Subject: [PATCH bpf-next v1 0/2] selftests/bpf: Add some tests for LoongArch
+Date: Thu, 21 May 2026 20:56:34 +0800
+Message-ID: <20260521125636.26744-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260521125636.26744-1-yangtiezhu@loongson.cn>
-References: <20260521125636.26744-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -35,81 +32,34 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx+8EFAQ9qPBuLAA--.2485S4
+X-CM-TRANSID:qMiowJCx+8EFAQ9qPBuLAA--.2485S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJr4DGr13uFWrGw1xXFyDXFc_yoW8tr4fpa
-	y8AasYkr1xt3W3XF17GrW5uFWxKrn7X3y5XFW8WrW8Zrs8X3s7Jr1xKFW3Gr98XrWrWw45
-	AaykK3Zxu3W8ZFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87
+	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7pnQUUUUU
 
-Make it possible to limit certain tests to loongarch, just like it is
-already done for x86_64, arm64, riscv64, and s390x.
+This series is based on the latest bpf-next tree.
 
-This is a follow up patch of:
+Tiezhu Yang (2):
+  selftests/bpf: Support get_preempt_count() for LoongArch
+  selftests/bpf: Add __arch_loongarch to limit test cases
 
-  commit ee7fe84468b1 ("selftests/bpf: __arch_* macro to limit test cases to specific archs")
-  commit 1e4e6b9e260d ("selftests/bpf: Add __arch_s390x macro")
+ .../testing/selftests/bpf/bpf_experimental.h  | 23 +++++++++++++++++++
+ tools/testing/selftests/bpf/progs/bpf_misc.h  |  1 +
+ tools/testing/selftests/bpf/test_loader.c     |  5 ++++
+ 3 files changed, 29 insertions(+)
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/testing/selftests/bpf/progs/bpf_misc.h | 1 +
- tools/testing/selftests/bpf/test_loader.c    | 5 +++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/progs/bpf_misc.h b/tools/testing/selftests/bpf/progs/bpf_misc.h
-index 9eeb5b0b63d6..b0c441384f20 100644
---- a/tools/testing/selftests/bpf/progs/bpf_misc.h
-+++ b/tools/testing/selftests/bpf/progs/bpf_misc.h
-@@ -158,6 +158,7 @@
- #define __arch_arm64		__arch("ARM64")
- #define __arch_riscv64		__arch("RISCV64")
- #define __arch_s390x		__arch("s390x")
-+#define __arch_loongarch	__arch("LOONGARCH")
- #define __caps_unpriv(caps)	__test_tag("test_caps_unpriv=" EXPAND_QUOTE(caps))
- #define __load_if_JITed()	__test_tag("load_mode=jited")
- #define __load_if_no_JITed()	__test_tag("load_mode=no_jited")
-diff --git a/tools/testing/selftests/bpf/test_loader.c b/tools/testing/selftests/bpf/test_loader.c
-index abdb9e6e3713..3ce32d134e2c 100644
---- a/tools/testing/selftests/bpf/test_loader.c
-+++ b/tools/testing/selftests/bpf/test_loader.c
-@@ -377,6 +377,7 @@ enum arch {
- 	ARCH_ARM64	= 0x4,
- 	ARCH_RISCV64	= 0x8,
- 	ARCH_S390X	= 0x10,
-+	ARCH_LOONGARCH	= 0x20,
- };
- 
- static int get_current_arch(void)
-@@ -389,6 +390,8 @@ static int get_current_arch(void)
- 	return ARCH_RISCV64;
- #elif defined(__s390x__)
- 	return ARCH_S390X;
-+#elif defined(__loongarch__)
-+	return ARCH_LOONGARCH;
- #endif
- 	return ARCH_UNKNOWN;
- }
-@@ -580,6 +583,8 @@ static int parse_test_spec(struct test_loader *tester,
- 				arch = ARCH_RISCV64;
- 			} else if (strcmp(val, "s390x") == 0) {
- 				arch = ARCH_S390X;
-+			} else if (strcmp(val, "LOONGARCH") == 0) {
-+				arch = ARCH_LOONGARCH;
- 			} else {
- 				PRINT_FAIL("bad arch spec: '%s'\n", val);
- 				err = -EINVAL;
 -- 
 2.42.0
 
