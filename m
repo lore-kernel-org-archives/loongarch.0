@@ -1,30 +1,30 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926603812E4
-	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 06:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1922826ED46
+	for <loongarch@lists.linux.dev>; Thu, 21 May 2026 06:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779344807; cv=none; b=K8kkmV/1VS3YzDETGd0J0Lu7C5GZwQMdxqDX72wo4M37u2RGpIyTk0/FCiy2S9TQL8mJBLBuOc3eVd6uSJ22qFT8eZ/8RpLCHyUDOamLJm16+rARXZSuzjVipl8YIDVtuhOW8PLHkQWv5a4Lw4lhuAHftx97myd8YiNvHlbJVDw=
+	t=1779345236; cv=none; b=u1Rp2jhlTgjNNu4MpgI/1uMYt25u48MImmRcsS+Q0ZOeaAYJThtg0siQFLcUEsfru38sJYd1jh1TIXz0B+mVvvOGbDWWcmbULHn+7EmVAtbFet/mrMyWdIdGT2ZScn0cWfy+De4NFvmyCtkRCpn3IydYKBUQfQGLirNPYF4N3/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779344807; c=relaxed/simple;
+	s=arc-20240116; t=1779345236; c=relaxed/simple;
 	bh=52k9hWVIoG0lg2BOay7c/oJnbtIbRhlwpKhfltLrghs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qsq5dOPx/TGNiIEE7KDkglwOAs17hCN72KZPbFHT30KdyRlAtfE3f62VFl38ZjEWsadgYD06YmmvtBuV5ta9k9vZEHK4ZzUMbSCXOPYHTToy1dnzXPeWPgFRQB/NkFfySHoWj77MMcMipb7rPTTfJ2TIrFjo+UKDgeD18ZKuLQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Nd65KAle; arc=none smtp.client-ip=95.215.58.189
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mPxHT/LjexgBdWJRGXhKOJCU/QjvxrAxUS1iJ7k7PEsntBFhYrhQPGpDplMe6NfUrSiC/54tRhYDR0Q2DrbbOOyWN/QUcNbuE3+GC0EKXiYnLPfm8KJLcx/dS26Mz8LTd4fYqg0DFLF0OawAyJhFmRLkf4Gzug4qhg310dNESAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KvwYXsGa; arc=none smtp.client-ip=95.215.58.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Nd65KAle"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KvwYXsGa"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779344803;
+	t=1779345223;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
 	bh=MppCV6/Zn4Jf3ikj5oSLg+V1TZEWQlhrDiHV9yvOb2M=;
-	b=Nd65KAle9ezEInetE8EWIrD7GzXhSZC0U0UCkob2mD68DfEVE+bhF/XNiv/U3c26BMsDbY
-	rDIF7Qo5IsJdAmhYxD80LKv/qz+jPcCytKpdCX4uSWfrNgTKwqVVn8uAxfEM9TMKdx/ckv
-	Gou5SKZebgrTeQ3cnQWmvDqRdd85UGw=
+	b=KvwYXsGaEn8NctG7qb04BM79LlAxX1Zdeqp2YbwoKZJHrn4bfm51yUWlAJKMJ6/Fm6foG8
+	BKWcE/4ygBJpUAssXJXoV4T+LcrQRsBqn2yDFCK1EGmmDVZskt8hdUy6Pc8XUymDLpkE3o
+	1eck3Vc/2IgPjvSbT6VgmgCb0A2hmrg=
 From: George Guo <dongtai.guo@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev
@@ -33,9 +33,9 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	linux-kernel@vger.kernel.org,
 	George Guo <guodongtai@kylinos.cn>,
 	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH 1/8] LoongArch: Add missing linux/mm.h include in asm/io.h
-Date: Thu, 21 May 2026 14:26:31 +0800
-Message-Id: <20260521062631.51517-1-dongtai.guo@linux.dev>
+Subject: [PATCH 1/1] LoongArch: Add missing linux/mm.h include in asm/io.h
+Date: Thu, 21 May 2026 14:33:10 +0800
+Message-Id: <20260521063310.52926-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
