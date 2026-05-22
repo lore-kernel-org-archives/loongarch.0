@@ -1,653 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEF4347535
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 17:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A85349CEC;
+	Fri, 22 May 2026 17:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779471942; cv=none; b=SPpMv5IMe66Sm10HJp1Vhwvz+pAuw97UzSXXVlxkAclNmUuq7tuzBnWl5GmtzpETOghs9pVH2vPPX7QTUglJcM/wCwe72uHSa6Iq6UxQz9SNXwZIXdnzfkpVGVA4z9HhQ9jGgqQo+BGcJFXVf6fKVPB13/6wGQaSVftT941XxPA=
+	t=1779472118; cv=none; b=OJ2Nl1Ya9s72lROpZDPQec4iv11B26n4l0fNFBtHu0fyUtBzca/LklO2paHbqHZguFrgqcqHJarphdcxPBrWTCSYHP4r4IZ7n/DfFwClnEp6ORhIlfM8XoyMv3ddMnMpf4aD9PczkkNZ7Q+GdtbaA9P5r9FniLqre4rQQIAJU0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779471942; c=relaxed/simple;
-	bh=gyoCYPK/lWwJio3wkNmrmZuytn4c0/2gBrFdP7JVTdA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NLI6tDWCvmIdDu4GgLANzz/TqzKOosewmgQOSR9VQiyvBi+BWpMnV9FoHZIeArrbTlt01Of5/CrB7CNB9okTucQhulGGx7FDG7Jso52Wd29kgqwPGRa3rlxR3NItdYFYYjxf0FrCT0yhkapjNn87pCA/0fMu8XwU8uE5Cmg5uG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcV6KBLi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779472118; c=relaxed/simple;
+	bh=jjNc7O/VrGYTOCr8u4dL3WyzelCtlJwXiGmWN4VLCx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6Jowo7xgL1qR8z1ccdG2v4m/DFRO2e78iP3npxxYY7y3ZcGcBLLwHJVFsNArc301JwzVk/gPDuUU4zlHiMBwzFPLzewiQGqSxz6yk4JZ05uZNc44bHqGGklK7G0fDWLFo89bLti4Gj+gYvmgpu4PsynRf13rZ/o3kypB/vlhU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHIgADCS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcV6KBLi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812AC1F00ADF
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 17:45:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHIgADCS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA2C1F000E9;
+	Fri, 22 May 2026 17:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779471940;
-	bh=p9etPNRxTtLqNHsed/+aQAvTPANyPthmLn6k5aM0sMM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=DcV6KBLix6ik4xzN516mTrppxX08eTYB5zXTyiYw41FeeObihvlkavb2dehQ0BzBJ
-	 PLnN3T6YQogqKQDMHiZl9rqiEh+T8qlr8iEboyaMtWzZvMIq1c5QZn9Czn2D7q76He
-	 PgGMZj2xD4yt7PK2l177meFVpf7LGZIMKXcbce5giQmzJFfeh7oCncYHK9xmmwSTAq
-	 mOLYue0oIQlxv4I9aCH12Dd76hhLrnphwTROtbWClAziChM0aUzAPcrvH+chN0geAP
-	 b3hTydfjwaGmHbSTF8X8BA0on3/4aN0Je11dLtfR1gYhbKYWUIO6b9Gk9eoRi8PTAM
-	 S1f3waVw8yvjw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a8891febd2so10379585e87.1
-        for <loongarch@lists.linux.dev>; Fri, 22 May 2026 10:45:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/fA91Rcnd1rtBftrrX2CXvqUlru4l8xNEj0eTvvD1UXAjwJvI1T++LgPQmrGnWejmvrw65f4ynjLU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx0izx/h06sNxTrFctgFtBZDTSuYvwczZWPfJQGqCl/ZKYe/JzD
-	i4d11aw7lVRV1RtY//FGlqP/gBGXuJachOubhXs5qdL6/6NwB5MZmFSSBo8yBICPopGdE98g1JV
-	x7p5WXpvKY9MFpeMPtTVe0wvDfZg5oi4=
-X-Received: by 2002:ac2:494a:0:b0:5a8:7f52:62d1 with SMTP id
- 2adb3069b0e04-5aa3237d52cmr1012255e87.1.1779471938942; Fri, 22 May 2026
- 10:45:38 -0700 (PDT)
+	s=k20260515; t=1779472117;
+	bh=oCFSp9JikkHzvDq1wlGaZyxEcGGgE5UOAkJkMWAY5ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=oHIgADCS/FCvriCsoDzhXlivKNG0DT9dWnfujLqdchEdKOuFmbxSocN/5VMt906MI
+	 KjbLzvLE6QcEJB+WGucFlbOGmWOAypobFMgvqLgnyPXHvRYiLTJ1G4a5TraBdWcwAA
+	 AJehrZFVv89cYM/3oBN8Bic9SoQbUD6sDwAUGH2J+FDC3kvHZxdv6wpfm89kx1n6HN
+	 +EMcHE1/NXipFjl3cgPHXp18Ev6Nl4VXI1TMHRUb5FgFcYjddHtn9BIzQag/bT8oRn
+	 yswv9VxMpfg02xx/wSAduSNjN0dny4KHG1huRoehL+lCnAtUc9lfWTbpZl1bhQGo1b
+	 M2pYDhBQuLDTg==
+Date: Fri, 22 May 2026 17:48:35 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-crypto@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Yinggang Gu <guyinggang@loongson.cn>, Lee Jones <lee@kernel.org>,
+	kernel test robot <lkp@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: loongson - Select CRYPTO_RNG
+Message-ID: <20260522174835.GA1894319@google.com>
+References: <20260522022525.12976-1-ebiggers@kernel.org>
+ <CAAhV-H5cDnWKxBobwRErRyvG8671e6VXsBe6w1RkX9rfn7CVFA@mail.gmail.com>
+ <20260522025722.GD5937@quark>
+ <d71adfa1-8895-e741-b72f-c5e99d5fb9e6@loongson.cn>
+ <20260522040310.GF5937@quark>
+ <bc3acf15-808d-4141-7f1f-4a7a7f856c6c@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260505-gic-v5-acpi-iwb-probe-deferral-v1-0-b37b85998362@kernel.org>
- <20260505-gic-v5-acpi-iwb-probe-deferral-v1-1-b37b85998362@kernel.org>
-In-Reply-To: <20260505-gic-v5-acpi-iwb-probe-deferral-v1-1-b37b85998362@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 22 May 2026 19:45:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g+bjXdghhb-+iRpFif7TURAmyjotY_4wQ5GHu7V2FaTQ@mail.gmail.com>
-X-Gm-Features: AVHnY4JkszNnnq8jv456877M1vWrA-DLGxfBCNm_DNjAu0tK9yAzmyfOzUtXrBA
-Message-ID: <CAJZ5v0g+bjXdghhb-+iRpFif7TURAmyjotY_4wQ5GHu7V2FaTQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drivers/acpi: Move RISC-V interrupt controllers
- autodep to ACPI IRQ code
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
-	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc3acf15-808d-4141-7f1f-4a7a7f856c6c@loongson.cn>
 
-On Tue, May 5, 2026 at 10:48=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
-l.org> wrote:
->
-> RISC-V implements arch code to detect probe dependencies for devices and
-> the interrupt controller the devices GSIs are routed to.
->
-> The code itself is arch agnostic apart from an arch specific helper
-> function required to retrieve the acpi_handle of the interrupt controller
-> that manages the device GSI interrupt.
->
-> In order to enable IRQ probe dependencies detection on other
-> architectures, move RISC-V IRQ probe dependency detection code to
-> generic ACPI IRQ code.
->
-> RISC-V IRQ code detecting IRQ probe dependency has some limitations/laten=
-t
-> bugs:
->
-> - riscv_acpi_irq_get_dep() would force the loop in
->   riscv_acpi_add_irq_dep() to stop at the first IRQ index that does not
->   map to an interrupt controller handle (missing some possible
->   dependencies)
-> - riscv_acpi_add_prt_dep() does not validate acpi_get_handle() output
-> - riscv_acpi_add_prt_dep() logic to handle memory allocation failure is
->   forcing the loop to continue on the same PRT entry
->
-> Fix the above limitations along with the code move.
+On Fri, May 22, 2026 at 02:40:38PM +0800, Qunqin Zhao wrote:
+> 
+> 在 2026/5/22 下午12:03, Eric Biggers 写道:
+> > On Fri, May 22, 2026 at 11:41:15AM +0800, Qunqin Zhao wrote:
+> > > 在 2026/5/22 上午10:57, Eric Biggers 写道:
+> > > > On Fri, May 22, 2026 at 10:52:42AM +0800, Huacai Chen wrote:
+> > > > > On Fri, May 22, 2026 at 10:26 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > > > > This driver registers a rng_alg, so it requires CRYPTO_RNG.
+> > > > > > 
+> > > > > > Fixes: 766b2d724c8d ("crypto: loongson - add Loongson RNG driver support")
+> > > > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > > > Closes: https://lore.kernel.org/oe-kbuild-all/202605201622.qWOiiZTV-lkp@intel.com/
+> > > > > > Cc: stable@vger.kernel.org
+> > > > > > Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> > > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > ---
+> > > > > >    drivers/crypto/loongson/Kconfig | 1 +
+> > > > > >    1 file changed, 1 insertion(+)
+> > > > > > 
+> > > > By the way, do any of the loongson people have any comment on what they
+> > > > think the point of this driver is?  It's not registered with the actual
+> > > To provide an AF_ALG-based random number generation interface for other
+> > > modules and user-space programs.
+> > > 
+> > > Thanks,
+> > > 
+> > > Qunqin
+> > AF_ALG is a userspace interface; it's not available for in-kernel use.
+> > If you mean using crypto_rng directly, note that no kernel code actually
+> > uses it other than the tests, the implementation of AF_ALG, and the
+> > FIPS-specific code which uses drbg.c specifically.
+> > 
+> > So, the first half of your justification doesn't make any sense.
+> > 
+> > As far as the second half: why would a userspace program do that instead
+> > of just using the regular Linux RNG (/dev/urandom)?
 
-I'd rather do the cleanup first, possibly in multiple steps, and then
-move the code separately.
+Could you answer this question?  If there's no answer to this question,
+then there's no use case for this driver as-is.
 
-As it stands, it's quite hard to figure out what's going on and why.
+> > AFAIK, the only reason to use a HW RNG directly is for certification
+> > reasons.
+> > 
+> > However, there's also already an interface for that: /dev/hw_random.
+> > 
+> > So AF_ALG seems completely redundant for this case.
+> 
+> To be honest, I previously assumed that the `hw_random` was designed
+> strictly and exclusively for the TRNG mode.
+> 
+> Is it architecturally acceptable or common practice for a PRNG mode to
+> utilize `hw_random` as well?
+> 
+> Thanks,
 
-> Allow interrupt controller drivers to register an arch specific
-> function to determine the acpi_handle for a specific GSI number to use
-> the mechanism if needed by the respective interrupt controller drivers.
->
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Anup Patel <anup@brainfault.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Sunil V L <sunilvl@ventanamicro.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  arch/riscv/include/asm/acpi.h       |   1 +
->  drivers/acpi/irq.c                  | 172 ++++++++++++++++++++++++++++++=
-+++++-
->  drivers/acpi/riscv/irq.c            | 141 +----------------------------
->  drivers/irqchip/irq-gic-v3.c        |   2 +-
->  drivers/irqchip/irq-gic-v5.c        |   2 +-
->  drivers/irqchip/irq-gic.c           |   2 +-
->  drivers/irqchip/irq-loongarch-cpu.c |   2 +-
->  drivers/irqchip/irq-riscv-intc.c    |   3 +-
->  include/linux/acpi.h                |   5 +-
->  9 files changed, 181 insertions(+), 149 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/acpi.h b/arch/riscv/include/asm/acpi.=
-h
-> index 26ab37c171bc..f598520ac903 100644
-> --- a/arch/riscv/include/asm/acpi.h
-> +++ b/arch/riscv/include/asm/acpi.h
-> @@ -67,6 +67,7 @@ int acpi_get_riscv_isa(struct acpi_table_header *table,
->
->  void acpi_get_cbo_block_size(struct acpi_table_header *table, u32 *cbom_=
-size,
->                              u32 *cboz_size, u32 *cbop_size);
-> +acpi_handle acpi_get_riscv_gsi_handle(u32 gsi);
->  #else
->  static inline void acpi_init_rintc_map(void) { }
->  static inline struct acpi_madt_rintc *acpi_cpu_get_madt_rintc(int cpu)
-> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-> index d1595156c86a..e4293458bf61 100644
-> --- a/drivers/acpi/irq.c
-> +++ b/drivers/acpi/irq.c
-> @@ -13,6 +13,7 @@
->  enum acpi_irq_model_id acpi_irq_model;
->
->  static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
-> +static acpi_gsi_handle_disp_fn acpi_get_gsi_handle;
->  static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
->
->  /**
-> @@ -321,15 +322,19 @@ const struct cpumask *acpi_irq_get_affinity(acpi_ha=
-ndle handle,
->
->  /**
->   * acpi_set_irq_model - Setup the GSI irqdomain information
-> - * @model: the value assigned to acpi_irq_model
-> - * @fn: a dispatcher function that will return the domain fwnode
-> - *     for a given GSI
-> + * @model:     the value assigned to acpi_irq_model
-> + * @fn:                a dispatcher function that will return the domain=
- fwnode
-> + *             for a given GSI
-> + * @gsi_dep_fn: a function to retrieve the acpi_handle a GSI interrupt i=
-s
-> + *             dependent on
-> + *
->   */
->  void __init acpi_set_irq_model(enum acpi_irq_model_id model,
-> -                              acpi_gsi_domain_disp_fn fn)
-> +                              acpi_gsi_domain_disp_fn fn, acpi_gsi_handl=
-e_disp_fn gsi_dep_fn)
->  {
->         acpi_irq_model =3D model;
->         acpi_get_gsi_domain_id =3D fn;
-> +       acpi_get_gsi_handle =3D gsi_dep_fn;
->  }
->
->  /*
-> @@ -385,3 +390,162 @@ struct irq_domain *acpi_irq_create_hierarchy(unsign=
-ed int flags,
->                                            host_data);
->  }
->  EXPORT_SYMBOL_GPL(acpi_irq_create_hierarchy);
-> +
-> +struct acpi_irq_dep_ctx {
-> +       int             rc;
-> +       unsigned int    index;
-> +       acpi_handle     handle;
-> +};
-> +
-> +static acpi_status acpi_irq_get_parent(struct acpi_resource *ares, void =
-*context)
-> +{
-> +       struct acpi_irq_dep_ctx *ctx =3D context;
-> +       struct acpi_resource_irq *irq;
-> +       struct acpi_resource_extended_irq *eirq;
-> +
-> +       switch (ares->type) {
-> +       case ACPI_RESOURCE_TYPE_IRQ:
-> +               irq =3D &ares->data.irq;
-> +               if (ctx->index >=3D irq->interrupt_count) {
-> +                       ctx->index -=3D irq->interrupt_count;
-> +                       return AE_OK;
-> +               }
-> +               ctx->handle =3D acpi_get_gsi_handle(irq->interrupts[ctx->=
-index]);
-> +               ctx->rc =3D 0;
-> +               return AE_CTRL_TERMINATE;
-> +       case ACPI_RESOURCE_TYPE_EXTENDED_IRQ:
-> +               eirq =3D &ares->data.extended_irq;
-> +               if (eirq->producer_consumer =3D=3D ACPI_PRODUCER)
-> +                       return AE_OK;
-> +
-> +               if (ctx->index >=3D eirq->interrupt_count) {
-> +                       ctx->index -=3D eirq->interrupt_count;
-> +                       return AE_OK;
-> +               }
-> +
-> +               /* Support GSIs only */
-> +               if (eirq->resource_source.string_length)
-> +                       return AE_OK;
-> +
-> +               ctx->handle =3D acpi_get_gsi_handle(eirq->interrupts[ctx-=
->index]);
-> +               ctx->rc =3D 0;
-> +               return AE_CTRL_TERMINATE;
-> +       }
-> +
-> +       return AE_OK;
-> +}
-> +
-> +static int acpi_irq_get_dep(acpi_handle handle, unsigned int index, acpi=
-_handle *gsi_handle)
-> +{
-> +       struct acpi_irq_dep_ctx ctx =3D {-EINVAL, index, NULL};
-> +
-> +       if (!gsi_handle)
-> +               return -EINVAL;
-> +
-> +       acpi_walk_resources(handle, METHOD_NAME__CRS, acpi_irq_get_parent=
-, &ctx);
-> +       *gsi_handle =3D ctx.handle;
-> +
-> +       return ctx.rc;
-> +}
-> +
-> +static bool acpi_prt_entry_valid(void *prt_entry)
-> +{
-> +       struct acpi_pci_routing_table *entry =3D prt_entry;
-> +
-> +       return entry && entry->length > 0;
-> +}
-> +
-> +static void *acpi_prt_next_entry(void *prt_entry)
-> +{
-> +       struct acpi_pci_routing_table *entry =3D prt_entry;
-> +
-> +       return prt_entry + entry->length;
-> +}
-> +
-> +static u32 acpi_add_prt_dep(acpi_handle handle)
-> +{
-> +       struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> +       struct acpi_pci_routing_table *entry;
-> +       struct acpi_handle_list dep_devices;
-> +       acpi_handle gsi_handle;
-> +       acpi_handle link_handle;
-> +       acpi_status status;
-> +       u32 count =3D 0;
-> +
-> +       status =3D acpi_get_irq_routing_table(handle, &buffer);
-> +       if (ACPI_FAILURE(status)) {
-> +               acpi_handle_err(handle, "failed to get IRQ routing table\=
-n");
-> +               kfree(buffer.pointer);
-> +               return 0;
-> +       }
-> +
-> +       entry =3D buffer.pointer;
-> +       for (; acpi_prt_entry_valid(entry); entry =3D acpi_prt_next_entry=
-(entry)) {
-> +               if (entry->source[0]) {
-> +                       status =3D acpi_get_handle(handle, entry->source,=
- &link_handle);
-> +                       if (ACPI_FAILURE(status))
-> +                               continue;
-> +                       dep_devices.count =3D 1;
-> +                       dep_devices.handles =3D kcalloc(1, sizeof(*dep_de=
-vices.handles), GFP_KERNEL);
-> +                       if (!dep_devices.handles) {
-> +                               acpi_handle_err(handle, "failed to alloca=
-te memory\n");
-> +                               continue;
-> +                       }
-> +
-> +                       dep_devices.handles[0] =3D link_handle;
-> +                       count +=3D acpi_scan_add_dep(handle, &dep_devices=
-);
-> +               } else {
-> +                       gsi_handle =3D acpi_get_gsi_handle(entry->source_=
-index);
-> +                       if (!gsi_handle)
-> +                               continue;
-> +                       dep_devices.count =3D 1;
-> +                       dep_devices.handles =3D kcalloc(1, sizeof(*dep_de=
-vices.handles), GFP_KERNEL);
-> +                       if (!dep_devices.handles) {
-> +                               acpi_handle_err(handle, "failed to alloca=
-te memory\n");
-> +                               continue;
-> +                       }
-> +
-> +                       dep_devices.handles[0] =3D gsi_handle;
-> +                       count +=3D acpi_scan_add_dep(handle, &dep_devices=
-);
-> +               }
-> +       }
-> +
-> +       kfree(buffer.pointer);
-> +       return count;
-> +}
-> +
-> +static u32 acpi_add_irq_dep(acpi_handle handle)
-> +{
-> +       struct acpi_handle_list dep_devices;
-> +       acpi_handle gsi_handle;
-> +       u32 count =3D 0;
-> +       int i;
-> +
-> +       for (i =3D 0; !acpi_irq_get_dep(handle, i, &gsi_handle); i++) {
-> +               if (!gsi_handle)
-> +                       continue;
-> +
-> +               dep_devices.count =3D 1;
-> +               dep_devices.handles =3D kcalloc(1, sizeof(*dep_devices.ha=
-ndles), GFP_KERNEL);
-> +               if (!dep_devices.handles) {
-> +                       acpi_handle_err(handle, "failed to allocate memor=
-y\n");
-> +                       continue;
-> +               }
-> +
-> +               dep_devices.handles[0] =3D gsi_handle;
-> +               count +=3D acpi_scan_add_dep(handle, &dep_devices);
-> +       }
-> +
-> +       return count;
-> +}
-> +
-> +u32 acpi_irq_add_auto_dep(acpi_handle handle)
-> +{
-> +       if (!acpi_get_gsi_handle)
-> +               return 0;
-> +
-> +       if (acpi_has_method(handle, "_PRT"))
-> +               return acpi_add_prt_dep(handle);
-> +
-> +       return acpi_add_irq_dep(handle);
-> +}
-> diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
-> index 9b88d0993e88..da2c42e0ebfd 100644
-> --- a/drivers/acpi/riscv/irq.c
-> +++ b/drivers/acpi/riscv/irq.c
-> @@ -23,12 +23,6 @@ struct riscv_ext_intc_list {
->         struct list_head        list;
->  };
->
-> -struct acpi_irq_dep_ctx {
-> -       int             rc;
-> -       unsigned int    index;
-> -       acpi_handle     handle;
-> -};
-> -
->  LIST_HEAD(ext_intc_list);
->
->  static int irqchip_cmp_func(const void *in0, const void *in1)
-> @@ -254,7 +248,7 @@ void __init riscv_acpi_init_gsi_mapping(void)
->         acpi_get_devices("RSCV0006", riscv_acpi_create_gsi_map_smsi, NULL=
-, NULL);
->  }
->
-> -static acpi_handle riscv_acpi_get_gsi_handle(u32 gsi)
-> +acpi_handle acpi_get_riscv_gsi_handle(u32 gsi)
->  {
->         struct riscv_ext_intc_list *ext_intc_element;
->         struct list_head *i;
-> @@ -269,138 +263,7 @@ static acpi_handle riscv_acpi_get_gsi_handle(u32 gs=
-i)
->         return NULL;
->  }
->
-> -static acpi_status riscv_acpi_irq_get_parent(struct acpi_resource *ares,=
- void *context)
-> -{
-> -       struct acpi_irq_dep_ctx *ctx =3D context;
-> -       struct acpi_resource_irq *irq;
-> -       struct acpi_resource_extended_irq *eirq;
-> -
-> -       switch (ares->type) {
-> -       case ACPI_RESOURCE_TYPE_IRQ:
-> -               irq =3D &ares->data.irq;
-> -               if (ctx->index >=3D irq->interrupt_count) {
-> -                       ctx->index -=3D irq->interrupt_count;
-> -                       return AE_OK;
-> -               }
-> -               ctx->handle =3D riscv_acpi_get_gsi_handle(irq->interrupts=
-[ctx->index]);
-> -               return AE_CTRL_TERMINATE;
-> -       case ACPI_RESOURCE_TYPE_EXTENDED_IRQ:
-> -               eirq =3D &ares->data.extended_irq;
-> -               if (eirq->producer_consumer =3D=3D ACPI_PRODUCER)
-> -                       return AE_OK;
-> -
-> -               if (ctx->index >=3D eirq->interrupt_count) {
-> -                       ctx->index -=3D eirq->interrupt_count;
-> -                       return AE_OK;
-> -               }
-> -
-> -               /* Support GSIs only */
-> -               if (eirq->resource_source.string_length)
-> -                       return AE_OK;
-> -
-> -               ctx->handle =3D riscv_acpi_get_gsi_handle(eirq->interrupt=
-s[ctx->index]);
-> -               return AE_CTRL_TERMINATE;
-> -       }
-> -
-> -       return AE_OK;
-> -}
-> -
-> -static int riscv_acpi_irq_get_dep(acpi_handle handle, unsigned int index=
-, acpi_handle *gsi_handle)
-> -{
-> -       struct acpi_irq_dep_ctx ctx =3D {-EINVAL, index, NULL};
-> -
-> -       if (!gsi_handle)
-> -               return 0;
-> -
-> -       acpi_walk_resources(handle, METHOD_NAME__CRS, riscv_acpi_irq_get_=
-parent, &ctx);
-> -       *gsi_handle =3D ctx.handle;
-> -       if (*gsi_handle)
-> -               return 1;
-> -
-> -       return 0;
-> -}
-> -
-> -static u32 riscv_acpi_add_prt_dep(acpi_handle handle)
-> -{
-> -       struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> -       struct acpi_pci_routing_table *entry;
-> -       struct acpi_handle_list dep_devices;
-> -       acpi_handle gsi_handle;
-> -       acpi_handle link_handle;
-> -       acpi_status status;
-> -       u32 count =3D 0;
-> -
-> -       status =3D acpi_get_irq_routing_table(handle, &buffer);
-> -       if (ACPI_FAILURE(status)) {
-> -               acpi_handle_err(handle, "failed to get IRQ routing table\=
-n");
-> -               kfree(buffer.pointer);
-> -               return 0;
-> -       }
-> -
-> -       entry =3D buffer.pointer;
-> -       while (entry && (entry->length > 0)) {
-> -               if (entry->source[0]) {
-> -                       acpi_get_handle(handle, entry->source, &link_hand=
-le);
-> -                       dep_devices.count =3D 1;
-> -                       dep_devices.handles =3D kzalloc_objs(*dep_devices=
-.handles,
-> -                                                          1);
-> -                       if (!dep_devices.handles) {
-> -                               acpi_handle_err(handle, "failed to alloca=
-te memory\n");
-> -                               continue;
-> -                       }
-> -
-> -                       dep_devices.handles[0] =3D link_handle;
-> -                       count +=3D acpi_scan_add_dep(handle, &dep_devices=
-);
-> -               } else {
-> -                       gsi_handle =3D riscv_acpi_get_gsi_handle(entry->s=
-ource_index);
-> -                       dep_devices.count =3D 1;
-> -                       dep_devices.handles =3D kzalloc_objs(*dep_devices=
-.handles,
-> -                                                          1);
-> -                       if (!dep_devices.handles) {
-> -                               acpi_handle_err(handle, "failed to alloca=
-te memory\n");
-> -                               continue;
-> -                       }
-> -
-> -                       dep_devices.handles[0] =3D gsi_handle;
-> -                       count +=3D acpi_scan_add_dep(handle, &dep_devices=
-);
-> -               }
-> -
-> -               entry =3D (struct acpi_pci_routing_table *)
-> -                       ((unsigned long)entry + entry->length);
-> -       }
-> -
-> -       kfree(buffer.pointer);
-> -       return count;
-> -}
-> -
-> -static u32 riscv_acpi_add_irq_dep(acpi_handle handle)
-> -{
-> -       struct acpi_handle_list dep_devices;
-> -       acpi_handle gsi_handle;
-> -       u32 count =3D 0;
-> -       int i;
-> -
-> -       for (i =3D 0;
-> -            riscv_acpi_irq_get_dep(handle, i, &gsi_handle);
-> -            i++) {
-> -               dep_devices.count =3D 1;
-> -               dep_devices.handles =3D kzalloc_objs(*dep_devices.handles=
-, 1);
-> -               if (!dep_devices.handles) {
-> -                       acpi_handle_err(handle, "failed to allocate memor=
-y\n");
-> -                       continue;
-> -               }
-> -
-> -               dep_devices.handles[0] =3D gsi_handle;
-> -               count +=3D acpi_scan_add_dep(handle, &dep_devices);
-> -       }
-> -
-> -       return count;
-> -}
-> -
->  u32 arch_acpi_add_auto_dep(acpi_handle handle)
->  {
-> -       if (acpi_has_method(handle, "_PRT"))
-> -               return riscv_acpi_add_prt_dep(handle);
-> -
-> -       return riscv_acpi_add_irq_dep(handle);
-> +       return acpi_irq_add_auto_dep(handle);
->  }
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> index 99444a1b2ffa..2673954d4577 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -2588,7 +2588,7 @@ gic_acpi_init(union acpi_subtable_headers *header, =
-const unsigned long end)
->         if (err)
->                 goto out_fwhandle_free;
->
-> -       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC, gic_v3_get_gsi_domain_id);
-> +       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC, gic_v3_get_gsi_domain_id, =
-NULL);
->
->         if (static_branch_likely(&supports_deactivate_key))
->                 gic_acpi_setup_kvm_info();
-> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> index 6b0903be8ebf..03cc2830b260 100644
-> --- a/drivers/irqchip/irq-gic-v5.c
-> +++ b/drivers/irqchip/irq-gic-v5.c
-> @@ -1242,7 +1242,7 @@ static int __init gic_acpi_init(union acpi_subtable=
-_headers *header, const unsig
->         if (ret)
->                 goto out_irs;
->
-> -       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_i=
-d);
-> +       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_i=
-d, NULL);
->
->         return 0;
->
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index ec70c84e9f91..f6bc29f515fb 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -1690,7 +1690,7 @@ static int __init gic_v2_acpi_init(union acpi_subta=
-ble_headers *header,
->                 return ret;
->         }
->
-> -       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC, gic_v2_get_gsi_domain_id);
-> +       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC, gic_v2_get_gsi_domain_id, =
-NULL);
->
->         if (IS_ENABLED(CONFIG_ARM_GIC_V2M))
->                 gicv2m_init(NULL, gic_data[0].domain);
-> diff --git a/drivers/irqchip/irq-loongarch-cpu.c b/drivers/irqchip/irq-lo=
-ongarch-cpu.c
-> index 950bc087e388..84ce24889488 100644
-> --- a/drivers/irqchip/irq-loongarch-cpu.c
-> +++ b/drivers/irqchip/irq-loongarch-cpu.c
-> @@ -168,7 +168,7 @@ static int __init cpuintc_acpi_init(union acpi_subtab=
-le_headers *header,
->                 panic("Failed to add irqdomain for LoongArch CPU");
->
->         set_handle_irq(&handle_cpu_irq);
-> -       acpi_set_irq_model(ACPI_IRQ_MODEL_LPIC, lpic_get_gsi_domain_id);
-> +       acpi_set_irq_model(ACPI_IRQ_MODEL_LPIC, lpic_get_gsi_domain_id, N=
-ULL);
->         acpi_set_gsi_to_irq_fallback(lpic_gsi_to_irq);
->         ret =3D acpi_cascade_irqdomain_init();
->
-> diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv=
--intc.c
-> index 84418dbd5a27..0595144116e2 100644
-> --- a/drivers/irqchip/irq-riscv-intc.c
-> +++ b/drivers/irqchip/irq-riscv-intc.c
-> @@ -384,7 +384,8 @@ static int __init riscv_intc_acpi_init(union acpi_sub=
-table_headers *header,
->         if (rc)
->                 irq_domain_free_fwnode(fn);
->         else
-> -               acpi_set_irq_model(ACPI_IRQ_MODEL_RINTC, riscv_acpi_get_g=
-si_domain_id);
-> +               acpi_set_irq_model(ACPI_IRQ_MODEL_RINTC, riscv_acpi_get_g=
-si_domain_id,
-> +                                  acpi_get_riscv_gsi_handle);
->
->         return rc;
->  }
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 67effb91fa98..468fc6a54651 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -360,9 +360,10 @@ int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
->  int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
->
->  typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
-> +typedef acpi_handle (*acpi_gsi_handle_disp_fn)(u32);
->
->  void acpi_set_irq_model(enum acpi_irq_model_id model,
-> -                       acpi_gsi_domain_disp_fn fn);
-> +                       acpi_gsi_domain_disp_fn fn, acpi_gsi_handle_disp_=
-fn gsi_dep_fn);
->  acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
->  void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
->
-> @@ -372,6 +373,8 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned=
- int flags,
->                                              const struct irq_domain_ops =
-*ops,
->                                              void *host_data);
->
-> +u32 acpi_irq_add_auto_dep(acpi_handle handle);
-> +
->  #ifdef CONFIG_X86_IO_APIC
->  extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
->  #else
->
-> --
-> 2.54.0
->
+So the Loongson RNG is a PRNG?  Where does it get its entropy from, and
+what is its security strength?
+
+- Eric
