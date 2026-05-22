@@ -1,178 +1,83 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD3B183CC3
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 00:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAFF71A0BF3
+	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 02:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779409642; cv=none; b=fXmrYW3xQUl60OkmTsoL3Ydw5oHt1/sE/T4FjVB+ug6+y0y+7hlPCV/82ocWALTw7HP5mb9QN84xiSxR5PmLzTR5+Tz92m9jhl0BDs0oE4r+gaog4oUViYe26zdMpIKt5CipGbndqhQTDC+IwSDKDNfD47t9nzmYZpMYCzDvhEo=
+	t=1779416221; cv=none; b=PomNGJgYL9fsmrzP5sIjGkR5hDsNv+heGG40ElT0CUSRQ/WN0LGGhiygtx++PV7kwSH7dfVodECcNkGN9x/eBOAuSQsYdiv4zu48cxqVonvuvDjKCLr/pAceDkwbMPJaMEYb190rJ9MWuUMZCQqXBmJ1VssbhFTsfO3F3zVQbKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779409642; c=relaxed/simple;
-	bh=OeaBJnpyh+HO3KMXuAPZK5iYCsIl+yzigcjSPICIOXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cM8bhMaW/V2UvN8umRN9N5gZAyQ1TGhq91qLdq1j03CQ5UQGadOtuJpNKT/rC91FNVxcq4DA0gZa7b19SK5BSkNZQPavyJP3SwWwsWHftJMqzpXFnwGcIrv5bdcKpX1ylT/kCgIGwLRVU5loM8QgPHKsBYqn33cKhxdqaFqZRFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AzSyELu3; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AzSyELu3"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso49321815e9.2
-        for <loongarch@lists.linux.dev>; Thu, 21 May 2026 17:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1779409639; x=1780014439; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Ay5nOcwCJCKL9kJTKSvIioIW4guYTs+JXkN6Y689XM=;
-        b=AzSyELu3VK6W8jR4HkAXI3/zy1XZoLZhSCvfa0xqbxxnIL5f4IRkpOvu3aGMAPUhBU
-         +mLUU3mdvI6zw+uwQQJ0ZqCiRCQXJaiCOE1eNuc+/1+Y9JTsL9DZoU/FI5dWF2kxD7PS
-         D8BpinwrgyDr96K567e9W7rN1jHvX1GxWXsX7byCq6oGBUXMJ1G2NxnwW+gSdlkO0/nu
-         l5RuGZf8go5nYOSOC9/NPIdgy6I55tjq9QXl2iy7XHxRKfm8h1Hfg+4BnbKJO8uwOkVb
-         undaFx1wImYzWqf2s3JOc1z3+uZ0unzhofz36ujWLyEgjh2eCd1G+52o/ImNga7GAhZt
-         XTNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779409639; x=1780014439;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Ay5nOcwCJCKL9kJTKSvIioIW4guYTs+JXkN6Y689XM=;
-        b=SCBDZ+W1L9jWPe/n7JXwR1FsPKLX7kDyiwTDfR6N/OevtU+x8VLqpzmyqpAWb9a+BQ
-         4Yw0zqs27ftplsBl9Dv47X1dB/qWzcHTPRZuvOqtIfrsrMfl+IZABZWNnlLdRGL2rTTH
-         FnwITgJVtOiMopEtAsNmR45e93muJ1k8oMzyb8isfyCVvUX45Dg3RU04FWlxkIqHqvL/
-         gh1U8TAafLlDhBvtcuGjFfIeeWGZkcC+OnoR//UwzMHgmzt7RLrhbtU3HnwbhX48ixuC
-         5kYDDU5eIZLAneO6BWpsgwK8w5VUuNuY9LXqA8W/o4nZeC0lgdl/H9fmX6A+k+3U7Y7F
-         4wBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9gRDuaz22mkCnhAfYljMC5silc4pXk3KH1ny+uwkWOdFolBf0GR/atKW75va08CN0AHKFI2kcyhEo=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyrn+SxNg2oDd88mvbB5HyPYG1wEF3cMvW0yLVIQbLBh3G1Oqfu
-	FM4KfR+Wu6o9ce27ioZtzkHu2UnV/T8JfJ8ihkYLOZ2foTPk0g2Z/26mN8gdaP+zFzQ=
-X-Gm-Gg: Acq92OHF9EAjsC2FrwVwM/13V7JPEBpbq7pO961BoZELGn5EYS0u/HUmcL6cafRGhQo
-	kddWlaZ4kHHuZiJ9+toxyqT24hlI3617FDayzZF+sasWKniczKuxPLuhVpGt8DB7PgDx5aXXWA8
-	qIvm89gBn7QXPZNE9raZWnCTH4z7cuk2qaO9mrw4OoDhTEnzfv+A4BRzjP62O/hitzz17xRvIJC
-	zS1ARfBxPUTzbnEfOYEwUBzXk12sHqWB66RLlJDif3KVnc+v3aUJYCbc13QPxAHAIs9FUBsWXKD
-	MeNu/Oz/dEAdBkGir2T6fUrjG2AgZKCoNc9vGiPVKHuyFZjLyd9x1rTJfpSf8RUf1BnOd4TQGzY
-	qDEzsr4URbXLoYr2MACwyS1BEu+XRsdcG/Ivnu+sjc2Xn/cRDIOwAJBxaJDqK5voJuMl4FT0viZ
-	FG/ouFTSSdfXKdk5uR8gERK+EgaY0oB6fZT6n27PdIkAUqxHFUMGFvlz2ehXQomZVqr1WTMos0V
-	tsuGcOB87HHA4euDDInnqvDU3O+RUD/CSCbuJjuOFOaRRf3Rqn+fFA9ug==
-X-Received: by 2002:a05:600c:4ecc:b0:490:3c90:2cda with SMTP id 5b1f17b1804b1-490426cef73mr10709345e9.20.1779409638952;
-        Thu, 21 May 2026 17:27:18 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1:0:2bb5:f164:6e6a:38d8? (2403-580d-fda1-0-2bb5-f164-6e6a-38d8.ip6.aussiebb.net. [2403:580d:fda1:0:2bb5:f164:6e6a:38d8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb0f91bccsm4187125ad.36.2026.05.21.17.27.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2026 17:27:17 -0700 (PDT)
-Message-ID: <cced8d26-d846-470d-b112-344e53ec1b9c@suse.com>
-Date: Fri, 22 May 2026 09:57:00 +0930
+	s=arc-20240116; t=1779416221; c=relaxed/simple;
+	bh=SAqPZSKPWWu6IIV8iwolK9/SlbXt3OXfz3aMFf+Z3xk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VSv17gohrPWG5wieM96U12NjNqXW3C8pYFqS73YrrXFni1q55StfgEOx3ipTASZUOiysxfop+raMs+XK1B+JhpKucBnH/lO34S3YU3rEfO0fnyXe82fNhCTgumW3HhA/iejVs4Wu1WmCtl4/CZtNig5S+sNmX8WxFLTrU+RiAyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dx13iYvA9qeT0MAA--.11018S3;
+	Fri, 22 May 2026 10:16:56 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDxD8OXvA9qGCyMAA--.3852S3;
+	Fri, 22 May 2026 10:16:56 +0800 (CST)
+Subject: Re: [PATCH v1 0/4] Fix ftrace and kprobes issues for LoongArch
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Lisa Robinson <lisa@bytefly.space>, WANG Rui <r@hev.cc>,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260512082029.2131-1-yangtiezhu@loongson.cn>
+ <e7100f76-01f4-0dce-f774-045163d10f30@loongson.cn>
+ <CAAhV-H7aR3NBpTk8Nbg0bphuXoDXa+xjo=bMLbrApm-SwvJYOw@mail.gmail.com>
+ <CAAhV-H7LcrUY0rKV7Q6XZs2U6K_DEo0ammbiEBf=YsJ1-tVfYw@mail.gmail.com>
+ <dc609ede-d955-c907-fad9-13e3ddb8a784@loongson.cn>
+ <CAAhV-H57233=4Sr+yRDsxp6WaTiDj3OdBqG34WE5dR+HLE_5mg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c4e4cd61-b909-dfb8-c265-437b86d6c2e7@loongson.cn>
+Date: Fri, 22 May 2026 10:16:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/19] btrfs: require at least 4 devices for RAID 6
-To: Andrew Morton <akpm@linux-foundation.org>,
- Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: Christoph Hellwig <hch@lst.de>, "H. Peter Anvin" <hpa@zytor.com>,
- kreijack@inwind.it, David Sterba <dsterba@suse.cz>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Dan Williams <dan.j.williams@intel.com>, Chris Mason <clm@fb.com>,
- David Sterba <dsterba@suse.com>, Arnd Bergmann <arnd@arndb.de>,
- Song Liu <song@kernel.org>,
- Yu Kuai <yukuai@alb-78bjiv52429oh8qptp.cn-shenzhen.alb.aliyuncs.com>,
- Li Nan <linan122@huawei.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-raid@vger.kernel.org
-References: <20260512052230.2947683-1-hch@lst.de>
- <20260512052230.2947683-2-hch@lst.de> <20260512114231.GG2558453@suse.cz>
- <20260513054742.GA1018@lst.de>
- <0a8d1ff4-f5a2-49e9-aa45-d25dbe4ded40@libero.it>
- <20260515043705.GA3855@lst.de>
- <34C16854-1065-4542-8836-DDED58EC1844@zytor.com>
- <20260518051207.GB9374@lst.de> <f46636c8-80ba-4802-a6a0-74cbc35e7bee@gmx.com>
- <20260521171730.7872482df453975cf60ce7dc@linux-foundation.org>
+In-Reply-To: <CAAhV-H57233=4Sr+yRDsxp6WaTiDj3OdBqG34WE5dR+HLE_5mg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20260521171730.7872482df453975cf60ce7dc@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxD8OXvA9qGCyMAA--.3852S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zw
+	Z7UUUUU==
 
+On 2026/5/21 下午8:52, Huacai Chen wrote:
+> On Thu, May 21, 2026 at 10:37 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
+...
 
-在 2026/5/22 09:47, Andrew Morton 写道:
-> On Wed, 20 May 2026 18:11:09 +0930 Qu Wenruo <quwenruo.btrfs@gmx.com> wrote:
-> 
->>
->>
->> 在 2026/5/18 14:42, Christoph Hellwig 写道:
->>> On Fri, May 15, 2026 at 12:59:34PM -0700, H. Peter Anvin wrote:
->>>> I don't think this is a good idea. Error out; it is the btrfs maintainers' job to ensure user data isn't lost.
->>>>
->>>> The RAID-6 code has *never* supported only 3 units, and if it ever worked for *any* of the implementations it was purely by accident. Speaking as the original author I should know; this was deliberate as in some cases the degenerate case (3) would have required extra trays in the code to no user benefit.
->>>>
->>>> I would not be surprised if the kernel crashed or corrupted the page cache in that case.
->>>
->>> It does, that's why I wanted to exclude it.  Anyway, for the about to be
->>> resent version I'll drop this btrfs patch over the stated objection and
->>> will otherwise not change anything.  This means the (IMHO hypothetical)
->>> users of this configuration will get a WARN_ON_ONCE triggered, but
->>> otherwise keep working (or rather not working) as before.
->>>
->>
->> For the btrfs part, I believe I can get the current 2-disk-raid5 and
->> 3-disk-raid6 to fallback to raid1 inside btrfs.
->>
->> I hope the btrfs part can be finished and reach the next merge window,
->> but I'm not 100% sure.
->>
->> What is the planned cycle to merge this raid5/6 cleanup?
-> 
-> At present it's on track for the 7.2-rc1 merge window.  Does that suit?
+> OK, but I want to remove preempt_enable_no_resched() in Patch#4
+> because all other architectures have no.
 
-The current btrfs fix (*) is pretty small, I believe we can get it into 
-the next merge window, as long as we got enough review on it.
+As the commit message said, this is to balance the preemption count.
 
-*: 
-https://lore.kernel.org/linux-btrfs/a1d63733465229936351804f3760803d5894a962.1779274630.git.wqu@suse.com/T/#u
+We don't want to be preempted for the entire duration of kprobe
+processing, preempt_disable() is called at the start of
+kprobe_breakpoint_handler(), so preempt_enable_no_resched()
+should also be called at each exit path.
 
+So, it should keep the code as is.
 
+Thanks,
+Tiezhu
 
