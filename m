@@ -1,194 +1,73 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E66038837C
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 06:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E481B3A3836;
+	Fri, 22 May 2026 12:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779432607; cv=none; b=bpBSRUaPFz9EBXgx2DXVBN0WXMKxkrL/MQGM9mNESpj64Rl237jjuUIRoJ54MiCmsnbNKAE7V21bl3HFvWPtUU/ZyOf1AuGdrSviWKuMe8wMaLhsjdJZxCr2hZC+HP2THnfAQjG/k1g04q4H6K728lY35hKTYO6PjPnq0A4Nu6g=
+	t=1779453310; cv=none; b=rc9EiRnMLhminM6kCk2PGO5HchH+a9Oj2CFZpQV+kPmMNsBAIVo7FNeVdq6mywqQTVGIy3Jp7NwFiZduAc+PB2LOeukrbBD77v8s95wgesWCwrB3m1iag/Excj6b1VSrcRw1x7GdRWzgkiTGHURfkcrt1BON5M9vEPglxB23cxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779432607; c=relaxed/simple;
-	bh=wj/qtmUBFDJXJl+feziJsWCY0e3g91f1/I35t8+55Bk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YKTgC5DGIDcQ3s8xdlPWcSOhhY2TkVSK9yiLeatBC2tUvpDWNkzUeClDkvUT/PDtmdiUazcxx+q4XxWsiMPDapMg1xBFt+XLdSb8fmT0xan0E01kn6BcraIcspqZwkCRaF+RHwc5BZcIEb/wCZBKKA4C6QKN7M/A8THzywvHiFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxBOmS_A9qWUsMAA--.29719S3;
-	Fri, 22 May 2026 14:49:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJDxjcKS_A9qVE6MAA--.1808S2;
-	Fri, 22 May 2026 14:49:54 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/5] LoongArch: KVM: Inject interrupt with batch method
-Date: Fri, 22 May 2026 14:49:44 +0800
-Message-Id: <20260522064945.614486-5-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260522064945.614486-1-maobibo@loongson.cn>
-References: <20260522064945.614486-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1779453310; c=relaxed/simple;
+	bh=TrV2a//xaZxE3+nUb+7gAYEo9oZLcEl4EzddOZi2DbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NTJBXgyYGWFJx0B8FTdF4pq+rFzRkcmJdCL43S9W4IUNHE13ML2yNYIK+P8MUpbjPNbI42JlaVfdsFl+ukQlw2HzYpLCUI3mi4RXFELG/q+nyDNb14YdffJTAq+HQMMnoB91ikxR9oIjirYzxEimPaTfqUcuGsJlZdi9wSIyIRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=Dc+Dck1M; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="Dc+Dck1M"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=hZjt7QJa/u6Dwk+HGvsbdEV499LGYZqKQzTxwEWV1mU=; 
+	b=Dc+Dck1MB3Op6tGcXDR3A9i3puEkq2w4R+tGQgXGR7qAMCjrSCflaj+E04AF/b65d4DqScAa3M4
+	wFp4WVhRy0AWaIfd3Ds5enH4xr5+Cb17Ls2zzHc1LQZkbM06pif+4SrkFh/rF8cT4kRfak0kbJk5s
+	Fw79MyFkJhU/hux6qqNYD2nW6uIXSBIDlvVLroCQfdTmgRadlmbppJAI556Aa9DDyGX6Tdbcyv9jM
+	aQ8Y843cmFhqEnlfSG7OYZ7YjAz0EwH9qABBEIO/u1Hx9arzmMXiNx+Xs8B/DBJeYA20LaldyOGPZ
+	rAj35G45rpWp804l8a5eBjEvHmZ0hgBz8t6g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1wQP5k-00GSTN-38;
+	Fri, 22 May 2026 20:35:06 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 22 May 2026 20:35:04 +0800
+Date: Fri, 22 May 2026 20:35:04 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Ethan Nelson-Moore <enelsonmoore@gmail.com>
+Cc: loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	"David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] LoongArch: Remove unused arch/loongarch/crypto directory
+Message-ID: <ahBNeKRMgUVF7OBi@gondor.apana.org.au>
+References: <20260517031430.102984-1-enelsonmoore@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxjcKS_A9qVE6MAA--.1808S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260517031430.102984-1-enelsonmoore@gmail.com>
 
-With bitmask method, interrupt can be injected with batch mode, rather
-than one by one. Also remove unused array priority_to_irqp[] here.
+On Sat, May 16, 2026 at 08:14:26PM -0700, Ethan Nelson-Moore wrote:
+> All LoongArch crypto code was moved to arch/loongarch/lib in
+> commit 72f51a4f4b07 ("loongarch/crc32: expose CRC32 functions through
+> lib"). However, arch/loongarch/crypto still contains stub Kconfig and
+> Makefile files. Remove these unnecessary files.
+> 
+> Signed-off-by: Ethan Nelson-Moore <enelsonmoore@gmail.com>
+> ---
+>  arch/loongarch/Makefile        | 2 --
+>  arch/loongarch/crypto/Kconfig  | 5 -----
+>  arch/loongarch/crypto/Makefile | 4 ----
+>  crypto/Kconfig                 | 3 ---
+>  4 files changed, 14 deletions(-)
+>  delete mode 100644 arch/loongarch/crypto/Kconfig
+>  delete mode 100644 arch/loongarch/crypto/Makefile
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/interrupt.c | 95 ++++++++++------------------------
- 1 file changed, 28 insertions(+), 67 deletions(-)
-
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index 48dd56aa4dc5..380aabb3d4d0 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -9,39 +9,16 @@
- #include <asm/kvm_vcpu.h>
- #include <asm/kvm_dmsintc.h>
- 
--static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
--	[INT_TI]	= CPU_TIMER,
--	[INT_IPI]	= CPU_IPI,
--	[INT_SWI0]	= CPU_SIP0,
--	[INT_SWI1]	= CPU_SIP1,
--	[INT_HWI0]	= CPU_IP0,
--	[INT_HWI1]	= CPU_IP1,
--	[INT_HWI2]	= CPU_IP2,
--	[INT_HWI3]	= CPU_IP3,
--	[INT_HWI4]	= CPU_IP4,
--	[INT_HWI5]	= CPU_IP5,
--	[INT_HWI6]	= CPU_IP6,
--	[INT_HWI7]	= CPU_IP7,
--	[INT_AVEC]	= CPU_AVEC,
--};
--
--static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-+static void kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned long mask)
- {
--	unsigned int irq = 0;
-+	unsigned long irq;
- 	unsigned long old, new;
- 
--	clear_bit(priority, &vcpu->arch.irq_pending);
--	if (priority < EXCCODE_INT_NUM)
--		irq = priority_to_irq[priority];
--
--	switch (priority) {
--	case INT_AVEC:
--		dmsintc_inject_irq(vcpu);
--		fallthrough;
--	case INT_TI:
--	case INT_IPI:
--	case INT_SWI0:
--	case INT_SWI1:
-+	irq = mask & KVM_ESTAT_IRQ_MASK;
-+	if (irq) {
-+		if (irq & CPU_AVEC)
-+			dmsintc_inject_irq(vcpu);
-+
- 		old = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
- 		set_gcsr_estat(irq);
- 		new = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
-@@ -49,34 +26,20 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
- 		/* Inject TI if TVAL inverted */
- 		if (new > old)
- 			set_gcsr_estat(CPU_TIMER);
--		break;
--
--	case INT_HWI0 ... INT_HWI7:
--		set_csr_gintc(irq);
--		break;
--
--	default:
--		break;
- 	}
- 
--	return 1;
-+	irq = (mask >> 2) & KVM_GINTC_IRQ_MASK;
-+	if (irq)
-+		set_csr_gintc(irq);
- }
- 
--static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+static void kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned long mask)
- {
--	unsigned int irq = 0;
-+	unsigned long irq;
- 	unsigned long old, new;
- 
--	clear_bit(priority, &vcpu->arch.irq_clear);
--	if (priority < EXCCODE_INT_NUM)
--		irq = priority_to_irq[priority];
--
--	switch (priority) {
--	case INT_AVEC:
--	case INT_TI:
--	case INT_IPI:
--	case INT_SWI0:
--	case INT_SWI1:
-+	irq = mask & KVM_ESTAT_IRQ_MASK;
-+	if (irq) {
- 		old = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
- 		clear_gcsr_estat(irq);
- 		new = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
-@@ -84,30 +47,28 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
- 		/* Inject TI if TVAL inverted */
- 		if (new > old)
- 			set_gcsr_estat(CPU_TIMER);
--		break;
--
--	case INT_HWI0 ... INT_HWI7:
--		clear_csr_gintc(irq);
--		break;
--
--	default:
--		break;
- 	}
- 
--	return 1;
-+	irq = (mask >> 2) & KVM_GINTC_IRQ_MASK;
-+	if (irq)
-+		clear_csr_gintc(irq);
- }
- 
- void kvm_deliver_intr(struct kvm_vcpu *vcpu)
- {
--	unsigned int priority;
--	unsigned long *pending = &vcpu->arch.irq_pending;
--	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+	unsigned long mask;
- 
--	for_each_set_bit(priority, pending_clr, EXCCODE_INT_NUM)
--		kvm_irq_clear(vcpu, priority);
-+	mask = READ_ONCE(vcpu->arch.irq_clear);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_clear, 0);
-+		kvm_irq_clear(vcpu, mask);
-+	}
- 
--	for_each_set_bit(priority, pending, EXCCODE_INT_NUM)
--		kvm_irq_deliver(vcpu, priority);
-+	mask = READ_ONCE(vcpu->arch.irq_pending);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_pending, 0);
-+		kvm_irq_deliver(vcpu, mask);
-+	}
- }
- 
- int kvm_pending_timer(struct kvm_vcpu *vcpu)
+Patch applied.  Thanks.
 -- 
-2.39.3
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
