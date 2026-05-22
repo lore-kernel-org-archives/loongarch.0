@@ -1,109 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A89D407570
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 13:48:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5704A42314D;
+	Fri, 22 May 2026 15:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779457730; cv=none; b=PmhBKiFqemSOTqEWw5SMBon82MbrJ+2zaFNGSDDOoL6pGzNRAEFW3Z5P5FDuu0KfaDSOO9YRxTtBdvKlKXrgvBLZnewBw+w+Pe2NqxJ9QHyglUUDV9V6UiKE96KwlKPtZHPJ1Dwuczk9kyAVqwqWAAot4WmADgz4A3dXGEYBEjk=
+	t=1779464286; cv=none; b=QN8tYz/gRjjahU9BqRPZyiLX+18NdSYPedLedUFpDrxSu2eVHcjiVBDRR5lxIvvguRtUK6Gx1WwsOlgyVLbq20pD5XX9uNR7HH7v0y7enMGWIb1ZIYVjrqd7/3oJk4n95HzPM7/VOTgnfTnlNv9w6JojSHbpylj7OsLAUdQFXLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779457730; c=relaxed/simple;
-	bh=XAdkVdHYlcySFUBOB9d60INI0VTqn7iPCNrUckiEfSA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zf8PrtOJNEGhvFt2rldIHoanL0dEWYMMVYPFYAdyaflsO5ILbfNFIM6yTdqxtCzSUV6ie4gnBWrYKJFUGcHpBcM6/VVHlxKQDr0FnBMpnSypqJiKEpWnJbihtS5iCZtGbqLkuorVYf7GAKyo+nztcH4Uq8EIcCeC1X/Np4KqpGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fssRPY20; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779464286; c=relaxed/simple;
+	bh=HS5K7Miq/JgsqmZgZr78cHmi4Na5MhUbV3a81rxKXQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/0SUvfGgq+x0hNmFinKDnTNvbmgGWIb3Apl+POdlStFtzcBBba+o9HKMAs2euJDu5ssDyVn/od6obZHwCN+U+wEuG5daiQedjpc5S4iB1lVOkLJ0bYkzR4a8+F4zMM94tAkeo+blPM3bdCt+MdDuTs4S3rlIHtbOjYjEF7XjTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3S85iit; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fssRPY20"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D25FA1F01567
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 13:48:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3S85iit"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4206E1F000E9;
+	Fri, 22 May 2026 15:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779457727;
-	bh=XAdkVdHYlcySFUBOB9d60INI0VTqn7iPCNrUckiEfSA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=fssRPY20Dyxz/cYAZdo1qxjF95zNf6DPwfqO4+J6MWEGH93cmB3q0+MsnYtIf4mOu
-	 yb2F/LO4bgXDVVZtWJM+4ct2qMqAk527UXL9PHuTUlPYGw8oHZlNwVpv2sEzAnkcrW
-	 rYoPk72XF8cMrkAdvU+bjT79H8QBrkkrFnU3POv8SQ9y83JqXAiA2qGn+LwaCE7CbH
-	 mydY4KMHGknk/wbzPm/k4VXT2aMv/tt5hKvMmQYuGoY0PrpI9XAnuVQcyxvRoLuNWj
-	 8uaBe6X3EksWrohYip6eKCS7TiRDlXSyUEYD1+I0+oxJ/3PXuXltrCZPf7+nmrAZEo
-	 4IW9Ggc3VmhZA==
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-6314d2e31d6so2532871137.0
-        for <loongarch@lists.linux.dev>; Fri, 22 May 2026 06:48:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/rD4CP5taEKphiQO83pUjZuUHXr05URTa0dOPUeQbm0MljU5tkZUlsIoLUxyPfYe3IObCU503ne3M=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzl208Z0F6ghIi0f/3l/Jq9zqxRXUKvuyJv+lcy29PBKFKzJWFG
-	0ZD6W04ynYJo8dkfek8R8DvRfXVPdDoWgyu68vW88ZlcJmxqTYV7z2kxSulbAn3Hnkgymcvh4FO
-	wuIKy9kVUnhUjlKuQRua3vY5Vb1w/luM=
-X-Received: by 2002:a05:6102:3f8e:b0:607:97b7:c283 with SMTP id
- ada2fe7eead31-67c7fff0701mr1602325137.14.1779457727053; Fri, 22 May 2026
- 06:48:47 -0700 (PDT)
+	s=k20260515; t=1779464283;
+	bh=Ue6+BrgA5cCiK29yEQFjVEW/61iWgshQWpISoK0a5mo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=e3S85iit9E//Da14omyK4sSzq5E+5P6CirUlrWrNKkWRCr0gH3q2SRSlfFihqMpFf
+	 lNIJ+Ym6rgTd0CfoB7Pca50HGx7yg/Kc5w/2lEe4qOmRDVIKJHaZ2mwp0lyokkwzMM
+	 6vLSr5NafsQy9TfFAYNw8jc2lOZNyREETBaXhqe0wsF6vVu5L5ph14ppOzYFh+6m+v
+	 gJ/dcbqjjuTKEbZXZCc79Pa0JwpRwFDh/QUW0F5E1DEDjYhtDdgK1JyVd4OtmokLSn
+	 On0u89WSmNioM38n363WRHRzMjaBZLPk3SQhu/mA8NqmleLSnwm2/5ltuBOTzidZnQ
+	 dj5LZD2lAZZXQ==
+Date: Fri, 22 May 2026 16:37:54 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Yang Shi <shy828301@gmail.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Barry Song <baohua@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	youngjun.park@lge.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ahB3DSwipVXw6tmK@lucifer>
+References: <afS_L-5XeWIldTXA@casper.infradead.org>
+ <CAGsJ_4wk=SDtgin+84Ev2TamU-JFfmrg_SUay=-tcYmnFvK6Nw@mail.gmail.com>
+ <afTpoL3FklpQZNMM@casper.infradead.org>
+ <CAGsJ_4ysMcrmDLSOwBkf7qwCQrcDWeEMXkHDajTJFMLKUk0bSQ@mail.gmail.com>
+ <agrWuDNGddNmvMFD@lucifer>
+ <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+ <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+ <agxbq1TxJdniMQT3@lucifer>
+ <e6d1017a-e4c5-493e-bfca-932c6d64eaac@kernel.org>
+ <CAHbLzkq3S7NDYe4LXjurKNQU+40-wtqrD_PT18YcyHbAcNxiRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ag4kj84EcKqamdB-@casper.infradead.org> <20260522023305.98223-1-baohua@kernel.org>
- <ahBVh4NM2uoyhPNm@casper.infradead.org> <CAGsJ_4zQuJx1reJxgV387Gh0AqWF0KdoFn9KahQ1BNLPRm57TQ@mail.gmail.com>
-In-Reply-To: <CAGsJ_4zQuJx1reJxgV387Gh0AqWF0KdoFn9KahQ1BNLPRm57TQ@mail.gmail.com>
-From: Barry Song <baohua@kernel.org>
-Date: Fri, 22 May 2026 21:48:35 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4zrm3sCp8Uz0Gh+sAwRcdtNF8rDLqX250sFVG3rZy9HNw@mail.gmail.com>
-X-Gm-Features: AVHnY4Kzckk2STAPsRlCTXxCXlI9-5Kzu1EhehIrviADTgZ0pSseIwikwC-HrOY
-Message-ID: <CAGsJ_4zrm3sCp8Uz0Gh+sAwRcdtNF8rDLqX250sFVG3rZy9HNw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Matthew Wilcox <willy@infradead.org>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, chentao@kylinos.cn, 
-	chrisl@kernel.org, david@kernel.org, jack@suse.cz, kasong@tencent.com, 
-	kunwu.chan@gmail.com, liam@infradead.org, lianux.mm@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	liyangouwen1@oppo.com, ljs@kernel.org, loongarch@lists.linux.dev, 
-	mhocko@suse.com, nphamcs@gmail.com, nzzhao@126.com, pfalcato@suse.de, 
-	rppt@kernel.org, shikemeng@huaweicloud.com, surenb@google.com, 
-	vbabka@kernel.org, wanglian@kylinos.cn, youngjun.park@lge.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHbLzkq3S7NDYe4LXjurKNQU+40-wtqrD_PT18YcyHbAcNxiRQ@mail.gmail.com>
 
-On Fri, May 22, 2026 at 9:36=E2=80=AFPM Barry Song <baohua@kernel.org> wrot=
-e:
->
-> On Fri, May 22, 2026 at 9:09=E2=80=AFPM Matthew Wilcox <willy@infradead.o=
-rg> wrote:
+On Wed, May 20, 2026 at 02:39:49PM -0700, Yang Shi wrote:
+> On Wed, May 20, 2026 at 3:34 AM David Hildenbrand (Arm)
+> <david@kernel.org> wrote:
 > >
-> > On Fri, May 22, 2026 at 10:33:05AM +0800, Barry Song (Xiaomi) wrote:
-> > > need to touch `filemap.c` at all (probably because you are already
-> > > maintaining `filemap.c` perfectly):
+> > On 5/19/26 14:53, Lorenzo Stoakes wrote:
+> > > On Mon, May 18, 2026 at 12:56:59PM -0700, Suren Baghdasaryan wrote:
+> > >
+> > >>>
+> > >>> I think we either need to fix `fork()`, or keep the current
+> > >>> behavior of dropping the VMA lock before performing I/O.
+> > >>
+> > >> I see. So, this problem arises from the fact that we are changing the
+> > >> pagefaults requiring I/O operation to hold VMA lock...
+> > >> And you want to lock VMA on fork only if vma_is_anonymous(vma) ||
+> > >> is_cow_mapping(vma->vm_flags). So, we will be blocking page faults for
+> > >> anonymous and COW VMAs only while holding mmap_write_lock, preventing
+> > >> any VMA modification. On the surface, that looks ok to me but I might
+> > >> be missing some corner cases. If nobody sees any obvious issues, I
+> > >> think it's worth a try.
+> > >
+> > > Not sure if you noticed but I did raise concerns ;)
+> > >
+> > > I wonder if you've confused the fault path and fork here, as I think Barry has
+> > > been a little unclear on that.
+> > >
+> > > What's being suggested in this thread is to fundamentally change fork behaviour
+> > > so it's different from the entire history of the kernel (or - presumably - at
+> > > least recent history :)
+> > I don't want fork() to become different in that regard.
 > >
-> > I'm going to give you one chance to apologise for that.
+> > There is already a slight difference with vs. without per-VMA locks, because
+> > there is a window in-between us taking the write mmap_lock and all the per-VMA
+> > locks. I raised that previously [1] and assumed that it is probably fine.
+> >
+> > I also raised in the past why I think we must not allow concurrent page faults,
+> > at least as soon as anonymous memory is involved [2].
 >
-> Apologies if my wording caused any misunderstanding.
-> That was not my intention at all.
+> Thanks for sharing the context, it is quite helpful to understand the
+> race conditions. Because Lorenzo also raised the concern about page
+> fault race, I will reply to all the concerns regarding page fault race
+> together in this thread.
 >
-> What I meant is that filemap.c already has a very
-> solid design.
+> IIUC, there is already some sort of race with per vma lock. Before per
+> vma lock, mmap_lock did lock everything. So page fault happened either
+> before fork or after fork. But page fault can happen on other VMAs
+> which have not been lock'ed yet during fork with per vma lock. For
+> example, we have 3 VMAs, we lock the first VMA, but page fault still
+> can happen on the other 2 VMAs during fork if they already have
+> anon_vma. This is the status quo now, but it seems not harmful.
 >
-> For memory.c, I had to touch several places for the
-> blacklist; otherwise, the kernel would hang.
+> The bad race shared by David is caused by racing with copy page. So it
+> seems like it will be fine as long as we serialize copy page against
+> page fault if I don't miss anything. Since we decide whether to copy
+> page or not by checking vma->anon_vma, so it seems fine to not take
+> vma lock if vma->anon_vma is NULL. This will not introduce more race
+> either because setting up a new  anon_vma in page fault or madvise
+> requires taking mmap_lock according to the earlier discussions.
+
+NAK. No.
+
+We're not doing this, we're not changing how fork fundamentally behaves because
+of concerns about the fault path.
+
+I've delineated exactly why I think this is a problem and you're pressing ahead
+without addressing those concerns.
+
+So at this point I'm going to be a grumpy maintainer and just say no, stop
+please :)
+
+Let's fix this in the right place. You don't fix a leak in the roof by repairing
+a shelf next door :)
+
+Thanks, Lorenzo
+
+
 >
-> But for filemap.c, I basically didn't need to touch
-> anything, and preliminary testing shows no issues after
-> moving it from the whitelist to the blacklist. This is
-
-Sorry, I feel I may be causing some misunderstanding
-again.
-
-By "whitelist", I mean I used to allow certain cases
-to use per-vma retry.
-
-By "blacklist", I mean I am now moving to disallow
-certain cases from using per-vma retry.
-
-Right now, I have to add several cases in memory.c
-to the blacklist; otherwise, the kernel would hang.
-
-But it seems that everything in filemap.c is fine so
-far based on testing.
-
-I'm not sure if I've explained things clearly. Please
-let me know if anything is still unclear or insufficient.
+> Thanks,
+> Yang
+>
+> >
+> > ... and I raised that this is pretty much slower by design right now: "Well, the
+> > design decision that CONFIG_PER_VMA_LOCK made for now to make page faults fast
+> > and to make blocking any page faults from happening to  be slower ..." [3]
+> >
+> > [1] https://lore.kernel.org/all/970295ab-e85d-7af3-76e6-df53a5c52f8b@redhat.com/
+> > [2] https://lore.kernel.org/all/7e3f35cc-59b9-bf12-b8b1-4ed78223844a@redhat.com/
+> > [3] https://lore.kernel.org/all/2efa2c89-3765-721d-2c3c-00590054aa5b@redhat.com/
+> >
+> > --
+> > Cheers,
+> >
+> > David
+> >
