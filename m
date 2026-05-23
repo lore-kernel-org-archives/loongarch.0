@@ -1,123 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C47A33E35B
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 21:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C704D231C91
+	for <loongarch@lists.linux.dev>; Sat, 23 May 2026 07:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779485479; cv=none; b=t7S2ytIdqhTmvrhLGhMa58Vx9dWkRZyIIGmZYPNsxKDCLTP/nabh49rixeCdjkxANLg8kyyKh2JOY1Flrg9XLWrXi8B0MVYQHv/4uS30rKK0FfB2KSShK9a+Dvx6whYKvfRoYze/z1bqqRmBEafyfMDbEJGC9J6CFZRubTsQCAI=
+	t=1779521136; cv=none; b=Pala11OlrUktMqXu6bXY2ymUwy11deAj2UFBMB8y8eX/GkXfVq9GaQQdHMZZ+ZjInmkt1Ym2GyvdOq5cKkfXrs4VdSvzUnoSWwzrEqxZGso9CCfJYZW4afHZmDcpsoay7CylddwbQJDalVuHqKQa06aKqTftlGkzE7lZDWSUIZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779485479; c=relaxed/simple;
-	bh=C1JkI15vgeu08xV//dtK9AYlWM5a5o5EUbaFA14ty+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SRsShjMz6q7wtT6jBHUYHmzY6oTp9VcvCu4BoNxUF9JIdOeMW9gigtF4zoV5XV6dj8fbRINZlCAVzEsWEYgiE/LSnNnpT+FqHADcoRB6V2TM2kVjJHPFK4zycca61t/P0QYE6PNupNOoCyArP+yIzev0KfnbHiJlrIp8C5kwHBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZkBhq1d; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZkBhq1d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD811F00A3D
-	for <loongarch@lists.linux.dev>; Fri, 22 May 2026 21:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779485478;
-	bh=C1JkI15vgeu08xV//dtK9AYlWM5a5o5EUbaFA14ty+I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BZkBhq1dEMkxCJHLGd9hHIZUnfovj2cBcOHoma7ZqB1sV0+I2O6Ds5hTpwlWo4Mft
-	 6cZWdkrBC8UapaBAwm7wTsgf6f8+bsxbXBKEVD6N264a0/eS6r2rdb08YfLVaVXRFl
-	 DCfthOwfboPEVZicSPecr1WRFLBuk1+P+LgQEe3wX84so6iEX2i0ZTBrRDglX2hSFx
-	 U8IUrYW8hVgwjP8B7VfqK2I0t+/0+rbDVSJLqQ9PbEvde4WIlEtliG3txUqHXy/bwe
-	 ykb+eAMoCx2v1OrYATTHe26u6dEHYIyLuKR8dX7rGXbs6//A4IoVMdKRjJahE4F5l7
-	 5hZy1XYN8h40Q==
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-90caad2e944so818512685a.2
-        for <loongarch@lists.linux.dev>; Fri, 22 May 2026 14:31:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8Ftopq2J15flUe2O3GCu4YbNUiY1kjw91+UYOF0kuidOoqmF6QA8B3VmeC01VY/GLgG4QFk01HhYI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy2n5cjT5Tl9ERuTigKXZflzo6M60h10Kel9BTjsg92YmV/Mt0Q
-	c3eXK6hEF2WAkBQmybqH1EyKH4hMa4mj+5ULw4gkFB8XBQYnZsIokouQ3n/ZPyFTyzj+5RDgBMf
-	tyL6EpTrQKHFXhmdsf9M72/36EI/VPfE=
-X-Received: by 2002:a05:620a:372a:b0:914:c100:6a0f with SMTP id
- af79cd13be357-914c10072a4mr332092285a.23.1779485477280; Fri, 22 May 2026
- 14:31:17 -0700 (PDT)
+	s=arc-20240116; t=1779521136; c=relaxed/simple;
+	bh=AQ3c4I6eiPitzxoeho0O79rvwCxGC8au2CQKy21qeoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRFs5dStGklj9rzdDlsV7XWPKkOgP9sUjo9AKSlmHAYkpf1QbQ8C4U0V6MHGym87U/jVe7Zw38vmhrrhEK1g1Iiov753r9QkxLXFKiMlQs38jm+MohsI4QglKMb5vNotF0AISzI6P8THTojB3RdvsCgPJrcfV1ekGHcBxeJ28t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.59])
+	by gateway (Coremail) with SMTP id _____8Bxt3hkVhFq0p8MAA--.11998S3;
+	Sat, 23 May 2026 15:25:24 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.59])
+	by front1 (Coremail) with SMTP id qMiowJDxRMBUVhFqoayNAA--.13254S2;
+	Sat, 23 May 2026 15:25:23 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v7.1-rc5
+Date: Sat, 23 May 2026 15:25:01 +0800
+Message-ID: <20260523072501.437301-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
- <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
- <CAGsJ_4zgeE3ebEJ+j7GJFzWVoVYHeiOn4dOoOsmWCLA6s=oECQ@mail.gmail.com>
- <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
- <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
- <ag4h87CBd-gph9zX@casper.infradead.org> <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
- <ag4kj84EcKqamdB-@casper.infradead.org> <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
- <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com> <ahB6QyHgYq8ksj65@lucifer>
-In-Reply-To: <ahB6QyHgYq8ksj65@lucifer>
-From: Barry Song <baohua@kernel.org>
-Date: Sat, 23 May 2026 05:31:05 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
-X-Gm-Features: AVHnY4IqrepDwpGO5qDQsSaxTVFULk1Thk0Uu8QgQ0mfUUrDDRbDPxaWPMcP1VU
-Message-ID: <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
-	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
-	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
-	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxRMBUVhFqoayNAA--.13254S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1fWrW8Cry7ArW5Zw15Jrc_yoW8AFW3pF
+	y3urnxGr4UGrWfJwnxt3y3ur15Jrn7Gr12qF43Kr18A3WUZr1UXry8Kry8XFyUJ3yUKw1v
+	qr18Jw1jgF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
 
->
-> Again this is making me want to sit outside and sip on some lemonade and
-> ice :)
->
-> Yes - android processes are aggressively multi-threaded, sure of course.
->
-> The missing bit here is the forking - what, where, why, when?
->
+The following changes since commit 5200f5f493f79f14bbdc349e402a40dfb32f23c8:
 
-I really want to know the what, where, why, and when
-as well. But since most applications are not
-open-source, it is basically a black hole for anyone
-other than the owners of those apps.
+  Linux 7.1-rc4 (2026-05-17 13:59:58 -0700)
 
-Let me try to do more investigation to understand what
-is going on, although it is really hard.
-To be honest, I would rather the Android framework
-completely prohibit apps from calling fork(), if
-possible.
+are available in the Git repository at:
 
-> And then you say zygote is sometimes multi-threaded but sometimes
-> single-threaded, which is adding a whole bunch of confusion on top of all
-> that.
->
-> I don't find these stack trace dumps all that useful (though thanks of
-> course for taking the time to gather them), I think we'd be better off with
-> specific data on forking, in some _concise_ _summarised_ form, ideally with
-> numbers.
->
-> There's such a thing as too much information :))
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.1-2
 
-This trace shows PF I/O in one thread overlapping
-with a fork() call in another thread.
-But as I explained, I really do not know what kind of
-user behavior is behind it.
+for you to fetch changes up to 4a09f4a23a3003d31f8545dd0770f2b3b0f54d8b:
 
->
-> Anyway, again, please let's see a new _RFC_ with the approach proposed by
-> Suren, with some _succinct_ data demonstrating _exactly_ what the problem
-> is, so we can make some headway here.
+  LoongArch: KVM: Move some variable declarations to paravirt.h (2026-05-22 15:05:12 +0800)
 
-Okay, sure. Thanks for your patience.
+----------------------------------------------------------------
+LoongArch fixes for v7.1-rc5
 
->
-> And now I'm off for a cornetto! :)
+Rework KASLR to avoid initrd overlap, remove some unused code to avoid
+a build warning, fix some bugs about kprobes and KVM.
+----------------------------------------------------------------
+Bibo Mao (1):
+      LoongArch: KVM: Move some variable declarations to paravirt.h
 
-Sounds good :) Enjoy your cornetto!
+Huacai Chen (1):
+      LoongArch: Remove unused code to avoid build warning
 
-Best Regards
-Barry
+Tiezhu Yang (2):
+      LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
+      LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
+
+WANG Rui (3):
+      efi/loongarch: Randomize kernel preferred address for KASLR
+      LoongArch: Skip relocation-time KASLR if already applied
+      LoongArch: Avoid initrd overlap during kernel relocation
+
+ arch/loongarch/include/asm/efi.h               |  4 ++-
+ arch/loongarch/include/asm/paravirt.h          |  6 ++++
+ arch/loongarch/include/asm/qspinlock.h         |  5 +--
+ arch/loongarch/kernel/kprobes.c                | 14 ++++----
+ arch/loongarch/kernel/relocate.c               | 50 ++++++++++++++++++++++++++
+ arch/loongarch/mm/init.c                       |  4 ---
+ drivers/firmware/efi/libstub/efi-stub-helper.c |  4 +++
+ drivers/firmware/efi/libstub/loongarch.c       | 16 +++++++++
+ 8 files changed, 88 insertions(+), 15 deletions(-)
+
