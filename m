@@ -1,101 +1,160 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C704D231C91
-	for <loongarch@lists.linux.dev>; Sat, 23 May 2026 07:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3A8311969
+	for <loongarch@lists.linux.dev>; Sat, 23 May 2026 09:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779521136; cv=none; b=Pala11OlrUktMqXu6bXY2ymUwy11deAj2UFBMB8y8eX/GkXfVq9GaQQdHMZZ+ZjInmkt1Ym2GyvdOq5cKkfXrs4VdSvzUnoSWwzrEqxZGso9CCfJYZW4afHZmDcpsoay7CylddwbQJDalVuHqKQa06aKqTftlGkzE7lZDWSUIZk=
+	t=1779527958; cv=none; b=iKFsdq/6N92uOHVCv8X9+JaAT1LH0n37dMKU7cVi92i7s42PYJrHzXUz5OkQphwUg9trtN1N9ehXIBVfkSplPPrr4zzZOQE/7qSFckyE7KnFUtk72a0DnKtJsB0kksaebYYPK9pV+ypEfgDB1khjMxZb1KszJTPZ407yQtDiD8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779521136; c=relaxed/simple;
-	bh=AQ3c4I6eiPitzxoeho0O79rvwCxGC8au2CQKy21qeoI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRFs5dStGklj9rzdDlsV7XWPKkOgP9sUjo9AKSlmHAYkpf1QbQ8C4U0V6MHGym87U/jVe7Zw38vmhrrhEK1g1Iiov753r9QkxLXFKiMlQs38jm+MohsI4QglKMb5vNotF0AISzI6P8THTojB3RdvsCgPJrcfV1ekGHcBxeJ28t0=
+	s=arc-20240116; t=1779527958; c=relaxed/simple;
+	bh=OcXvGhCIx0gnN9hZgqDI0XkbVbhmCU2xUKZvmj3bmmY=;
+	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=L1xdoAdpy8gFFrMy7pq+D+znFvzsrpa/S2yhnPotV3yAcKQ5xsRRNV6d5m26kan20pKb4LhI0PST+bDvRmsCbGTtRvuDBtuy24T+weghFZRNyU2EfrI+pP9mN4o/Jdq7luEKhO7syjdTM3Qt6gsUls+X869pkWQWjzxelCQfJGU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.59])
-	by gateway (Coremail) with SMTP id _____8Bxt3hkVhFq0p8MAA--.11998S3;
-	Sat, 23 May 2026 15:25:24 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.59])
-	by front1 (Coremail) with SMTP id qMiowJDxRMBUVhFqoayNAA--.13254S2;
-	Sat, 23 May 2026 15:25:23 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [GIT PULL] LoongArch fixes for v7.1-rc5
-Date: Sat, 23 May 2026 15:25:01 +0800
-Message-ID: <20260523072501.437301-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx4eoRcRFqB6MMAA--.36614S3;
+	Sat, 23 May 2026 17:19:14 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJCxfcIPcRFqjbiNAA--.4434S3;
+	Sat, 23 May 2026 17:19:12 +0800 (CST)
+Subject: Re: [PATCH v1 1/3] LoongArch: BPF: Fix tail call prologue alignment
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>, Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260521070128.28086-1-yangtiezhu@loongson.cn>
+ <20260521070128.28086-2-yangtiezhu@loongson.cn>
+Message-ID: <136ca454-80d6-3373-be21-d55a7de61412@loongson.cn>
+Date: Sat, 23 May 2026 17:19:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260521070128.28086-2-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxRMBUVhFqoayNAA--.13254S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr1fWrW8Cry7ArW5Zw15Jrc_yoW8AFW3pF
-	y3urnxGr4UGrWfJwnxt3y3ur15Jrn7Gr12qF43Kr18A3WUZr1UXry8Kry8XFyUJ3yUKw1v
-	qr18Jw1jgF1UJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxfcIPcRFqjbiNAA--.4434S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF47Zry7ur4kWFyrtw4fWFX_yoWrCr45pF
+	Wxuws5CrWvgr17CF17tw48Wr4ayFZ5GrW7WryUZ345Cr43ur92gF1fKay3uF98Ar48AF1F
+	qr1Yyw1Y9F4DA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkUUUUU=
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjwZcUUUUU=
 
-The following changes since commit 5200f5f493f79f14bbdc349e402a40dfb32f23c8:
+On 2026/5/21 下午3:01, Tiezhu Yang wrote:
+> Currently, the LoongArch BPF JIT assumes a fixed number of instructions to
+> skip when performing a tail call, but actually it does not account for the
+> difference between the main programs and the subprograms. The subprograms
+> do not initialize the Tail Call Count (TCC), leading to an incorrect jump
+> offset that skips functional instructions (like stack adjustment).
+> 
+> To fix this issue, add a NOP instruction in the subprogram prologue where
+> the TCC initialization would normally be. This ensures that both the main
+> programs and the subprograms have consistent prologue layouts, allowing
+> tail calls to always land on the correct instruction regardless of the
+> target program type.
+> 
+> Fixes: c0fcc955ff82 ("LoongArch: BPF: Fix the tailcall hierarchy")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   arch/loongarch/net/bpf_jit.c | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 24913dc7f4e8..aefe5fa1c584 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -149,12 +149,15 @@ static void build_prologue(struct jit_ctx *ctx)
+>   		emit_insn(ctx, nop);
+>   
+>   	/*
+> -	 * First instruction initializes the tail call count (TCC)
+> -	 * register to zero. On tail call we skip this instruction,
+> -	 * and the TCC is passed in REG_TCC from the caller.
+> +	 * Initialize or align the TCC register slot.
+> +	 * For main programs, TCC is zeroed. For subprograms, a nop is emitted
+> +	 * to keep the prologue size consistent, ensuring tail calls skip the
+> +	 * correct number of instructions.
+>   	 */
+>   	if (is_main_prog)
+>   		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, 0);
+> +	else
+> +		emit_insn(ctx, nop);
+>   
+>   	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
 
-  Linux 7.1-rc4 (2026-05-17 13:59:58 -0700)
+IMO, the code itself looks good, but the code comment and the commit
+message are not accurate, I will send v2 next week, something like this:
 
-are available in the Git repository at:
+----->8-----
+LoongArch: BPF: Keep prologue size consistent
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.1-2
+The BPF JIT assumes consistent prologue size to preserve text symmetry
+and layout alignment across different function frames. But the current
+JIT implementation emits a shortened prologue for subprograms, because
+it skips the Tail Call Count (TCC) initialization required only by main
+programs, resulting in a layout difference.
 
-for you to fetch changes up to 4a09f4a23a3003d31f8545dd0770f2b3b0f54d8b:
+A tail call can never target a subprogram because the verifier strictly
+prevents subprograms from being inserted into a BPF_MAP_TYPE_PROG_ARRAY.
+Nevertheless, keeping the prologue size consistent is still vital for the
+JIT infrastructure. Without this symmetry, either dynamic text patching
+or reliable stack unwinding can miscalculate instruction boundaries,
+leading to a kernel crash.
 
-  LoongArch: KVM: Move some variable declarations to paravirt.h (2026-05-22 15:05:12 +0800)
+Fix this by emitting a NOP instruction in the subprogram prologue where
+the TCC initialization would normally be. This ensures that both main
+programs and subprograms keep the prologue size consistent, preserving
+text symmetry and layout alignment across all function frames.
 
-----------------------------------------------------------------
-LoongArch fixes for v7.1-rc5
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+  arch/loongarch/net/bpf_jit.c | 9 ++++++---
+  1 file changed, 6 insertions(+), 3 deletions(-)
 
-Rework KASLR to avoid initrd overlap, remove some unused code to avoid
-a build warning, fix some bugs about kprobes and KVM.
-----------------------------------------------------------------
-Bibo Mao (1):
-      LoongArch: KVM: Move some variable declarations to paravirt.h
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 24913dc7f4e8..976383a859e1 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -149,12 +149,15 @@ static void build_prologue(struct jit_ctx *ctx)
+  		emit_insn(ctx, nop);
 
-Huacai Chen (1):
-      LoongArch: Remove unused code to avoid build warning
+  	/*
+-	 * First instruction initializes the tail call count (TCC)
+-	 * register to zero. On tail call we skip this instruction,
+-	 * and the TCC is passed in REG_TCC from the caller.
++	 * Initialize or align the TCC register slot.
++	 * For main programs, TCC is zeroed. For subprograms, a NOP is emitted
++	 * to keep the prologue size consistent, preserving text symmetry and
++	 * layout alignment across different function frames.
+  	 */
+  	if (is_main_prog)
+  		emit_insn(ctx, addid, REG_TCC, LOONGARCH_GPR_ZERO, 0);
++	else
++		emit_insn(ctx, nop);
 
-Tiezhu Yang (2):
-      LoongArch: kprobes: Use larch_insn_text_copy() to patch instructions
-      LoongArch: kprobes: Fix handling of fatal unrecoverable recursions
+  	emit_insn(ctx, addid, LOONGARCH_GPR_SP, LOONGARCH_GPR_SP, -stack_adjust);
 
-WANG Rui (3):
-      efi/loongarch: Randomize kernel preferred address for KASLR
-      LoongArch: Skip relocation-time KASLR if already applied
-      LoongArch: Avoid initrd overlap during kernel relocation
+-- 
 
- arch/loongarch/include/asm/efi.h               |  4 ++-
- arch/loongarch/include/asm/paravirt.h          |  6 ++++
- arch/loongarch/include/asm/qspinlock.h         |  5 +--
- arch/loongarch/kernel/kprobes.c                | 14 ++++----
- arch/loongarch/kernel/relocate.c               | 50 ++++++++++++++++++++++++++
- arch/loongarch/mm/init.c                       |  4 ---
- drivers/firmware/efi/libstub/efi-stub-helper.c |  4 +++
- drivers/firmware/efi/libstub/loongarch.c       | 16 +++++++++
- 8 files changed, 88 insertions(+), 15 deletions(-)
+Thanks,
+Tiezhu
 
