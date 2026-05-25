@@ -1,93 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9589F1EA7CE;
-	Mon, 25 May 2026 03:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A22339A806
+	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 06:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779679210; cv=none; b=rGSuGF9nI+fx8Iv2hHBPUiRRm1pCOj0kOg/rmI9++4yk8vSvz6KzwtfYIhXmbT2ODBtTbv0U15btmDvWmh2ix1UMG3ANrgjirlSVCQpxKbPEe4o8oGGYDHjOtJiAaeyWARslnjwRsAb5bmk538odlC19obetEnPR3pR2hzAFmZQ=
+	t=1779690502; cv=none; b=ci9El3zaaSEh5+4dy/oy/+ffd9OlW4H2YGCw8sg/DgEt7Lcio2HdFjI9dRvd9TgwyYZyv4j9nYIs/PZikF3+JTPcCacWThdS97Wmuebg45nUZ8+KVpNNGyYAx0dVHn6xKanMyrcAIxAUgS7Sf57dcLvW10xkjVhnjO6WbnbiRso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779679210; c=relaxed/simple;
-	bh=dujhx+kNkJj4kNiU/zgoiaK+THB6K/rFBIERBnI7OyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODil4idOV0fve3NyPpy6aTdGsDFpYxGe/mzjZnqBt3yYQCK+YkRrQ3BjiSG4N7ESy0sZBRstwgP9g3XxOMkXjvR031XOSxSOkvCnk+frLpcCfgMTRNtKpeoUo6sIZn+bJ0ZtUM+JT92+opLWrfewOt5j18pFrn1nX430YlOioe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTEABuQH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779690502; c=relaxed/simple;
+	bh=GIOu+GB+XnyDhaPnCV12/4ERanlq1RJsgTIJ0ee2x9c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VVrHOCKQ1WfchVQAoFXxgWAzr9xZeo5LLHjjZYGKhxGIFiPNu0Bo+xpfLej5ZeUVUCXwK6wsdHJmH3H6KaR16bSXqtA+baYA98dVFLzcnt6joagyauXXEiyTuFAuRVWCSHeMac4xDATMYL5BIuET7Y8q/ObneEKnbhJ+GuUZbcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IIr3jMS+; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTEABuQH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1627B1F000E9;
-	Mon, 25 May 2026 03:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779679208;
-	bh=vsyaQijSF17oIUNASElUtqLbJFypQHGCf/EnkeK63AM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DTEABuQH/yQueBer9Vkmn/T1iSsMD8UI+in6nAOPm3PHV/3X+16QGNbPTybv5HxuZ
-	 dS/3SauIYktoOoG7mO8/viXSJ8/dGW0l6P4S4+Ch9QRd26kYIOVnm+B4rjMsaqOblc
-	 25qBnjKyEbh879DofpF6AE20PqZ+fxupDr/Un36ByLY/U0KSlESb8BSTdiKYmHN9j6
-	 H89eBG7DHano0NsDWQWuvYpmv+xM/hxHU/MxG7z6fA47psoBwUOwpKnhFfc4m2j5Nj
-	 YU2qfv9S5aDR3OVxPykdILWnVOqnZfixC1Z95JgU0YuzrOnkXeRu0wR397iFNNuO22
-	 asOgTUNGzlk+Q==
-Date: Sun, 24 May 2026 22:20:06 -0500
-From: Eric Biggers <ebiggers@kernel.org>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, linux-crypto@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	Yinggang Gu <guyinggang@loongson.cn>, Lee Jones <lee@kernel.org>,
-	kernel test robot <lkp@intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] crypto: loongson - Select CRYPTO_RNG
-Message-ID: <20260525032006.GA243157@quark>
-References: <20260522022525.12976-1-ebiggers@kernel.org>
- <CAAhV-H5cDnWKxBobwRErRyvG8671e6VXsBe6w1RkX9rfn7CVFA@mail.gmail.com>
- <20260522025722.GD5937@quark>
- <d71adfa1-8895-e741-b72f-c5e99d5fb9e6@loongson.cn>
- <20260522040310.GF5937@quark>
- <bc3acf15-808d-4141-7f1f-4a7a7f856c6c@loongson.cn>
- <20260522174835.GA1894319@google.com>
- <4501444d-9c17-8d4b-8bfd-bd1d69d77a76@loongson.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IIr3jMS+"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779690497;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hIRi3HO9e8xA8aknZ+Hmyg9qLaGWZHy9zhx8wJx1Ids=;
+	b=IIr3jMS+wd34Awp2PESkNwbtIVAd+PlWxSlG7OC5DEjyjpcqSEGLbiw8523AvvMPLjdbqo
+	CjeS0Nnk6q1Kaqdn0L0rv13USlnXLplGl//9Cqz6+d65uyv5Ei7w9OvQVTRHFhvZmhqxdS
+	/ykMAAqLGv18mjCxo0qCjhE5lwvUY4M=
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org
+Cc: kernel@xen0n.name,
+	graf@amazon.com,
+	shuah@kernel.org,
+	loongarch@lists.linux.dev,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH 0/7] LoongArch: add KHO support and selftests
+Date: Mon, 25 May 2026 14:28:03 +0800
+Message-Id: <20260525062810.103367-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4501444d-9c17-8d4b-8bfd-bd1d69d77a76@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 25, 2026 at 10:45:14AM +0800, Qunqin Zhao wrote:
-> > > To be honest, I previously assumed that the `hw_random` was designed
-> > > strictly and exclusively for the TRNG mode.
-> > > 
-> > > Is it architecturally acceptable or common practice for a PRNG mode to
-> > > utilize `hw_random` as well?
-> > > 
-> > > Thanks,
-> > So the Loongson RNG is a PRNG?  Where does it get its entropy from, and
-> > what is its security strength?
-> 
-> Loongson's hardware supports both TRNG and PRNG simultaneously.
-> 
-> We can locate a reseed function within loongson-rng.c, which clearly
-> indicates that it is a PRNG driver.
+From: George Guo <guodongtai@kylinos.cn>>
 
-That reseed function gets called with entropy from the Linux RNG.  So,
-it seems it's really just a PRNG seeded from the Linux RNG.  What value
-does that provide over just using the Linux RNG directly?
+This series adds Kexec Handover (KHO) support for LoongArch64 and
+extends the KHO selftest infrastructure to run on LoongArch under QEMU.
 
-> So the core issue here is whether a PRNG driver can utilize the crypto
-> interface.
+KHO support (patches 1-2)
+--------------------------
+Patch 1 wires up the three pieces needed for KHO on LoongArch:
+ - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for 64BIT
+ - machine_kexec_file: call cmdline_add_kho() to pass the KHO FDT and
+   scratch buffer addresses via "kho_handover=" on the kernel cmdline
+ - setup: parse "kho_handover=" early and call kho_populate()
 
-If you're asking about crypto_rng, it can.  But the crypto_rng interface
-is also kind of useless.  If you're asking about hwrng, it does look
-like it's designed for TRNGs.  Would it be possible for this driver to
-use the TRNG mode?
+Patch 2 fixes a duplicate-parameter bug when kexec is invoked with
+--reuse-cmdline: the running kernel's cmdline already contains a stale
+kho_handover= from the previous load.  load_other_segments() prepends a
+fresh entry but appends the original cmdline verbatim, so early_param()
+calls kho_populate() twice and the second call overwrites the first with
+a stale FDT pointer, panicking early in mm_core_init().
 
-> If it cannot, does that imply the drivers listed below serve no practical
-> purpose? (7.1-rc1)
-> 
-> loongson@loongson:~/upstream/linux/drivers/crypto$ grep crypto_register_rng
+Bug fixes (patches 3-4)
+------------------------
+Patch 3 fixes a build failure with CONFIG_KFENCE=y: virt_to_phys() and
+phys_to_virt() in asm/io.h expand to use offset_in_page() and
+page_address(), which require <linux/mm.h> that was not included.
 
-Most of the drivers in drivers/crypto/ are added by the hardware
-manufacturer without any regard for whether they're useful or not.
+Patch 4 moves KEXEC_CONTROL_CODE from 0x100000 to 0x180000.  QEMU
+places its machine FDT at 0x100000 when booting with '-kernel'; the
+previous placement silently overwrote the FDT with the relocation
+trampoline, breaking earlycon in the kexec'd kernel.
 
-- Eric
+Selftest support (patches 5-7)
+-------------------------------
+Patch 5 adds loongarch.conf and extends vmtest.sh to recognise
+loongarch64 as a build target.  QEMU's LoongArch virt machine is
+FDT-only (no ACPI), so 'earlycon' must appear on the kernel cmdline or
+the console UART is never discovered and the test log stays empty.
+
+Patch 6 disables SERIO_I8042 and its dependents in the QEMU_KCONFIG
+fragment.  QEMU's LoongArch virt machine has no i8042 controller; the
+fallback port probe hits a page fault on the memory-mapped I/O range and
+panics before reaching userspace.
+
+Patch 7 polls the serial output for the test verdict and kills QEMU once
+it appears.  QEMU provides no EFI runtime services on LoongArch, so
+machine_restart() falls through to an infinite idle loop and QEMU never
+exits after kexec.
+
+
+George Guo (7):
+  LoongArch: Add KHO basic support
+  LoongArch: kho: strip stale kho_handover= from reused cmdline
+  LoongArch: Add missing linux/mm.h include in asm/io.h
+  LoongArch: kexec: avoid overwriting QEMU's machine FDT at 0x100000
+  selftests/kho: add LoongArch vmtest support
+  selftests/kho: LoongArch: disable PS/2 input devices for QEMU virt
+  selftests/kho: handle QEMU not exiting after kexec on LoongArch
+
+ arch/loongarch/Kconfig                     |  3 ++
+ arch/loongarch/include/asm/io.h            |  1 +
+ arch/loongarch/kernel/machine_kexec.c      |  9 +++-
+ arch/loongarch/kernel/machine_kexec_file.c | 57 ++++++++++++++++++++++
+ arch/loongarch/kernel/setup.c              | 27 ++++++++++
+ tools/testing/selftests/kho/loongarch.conf | 10 ++++
+ tools/testing/selftests/kho/vmtest.sh      | 38 ++++++++++++---
+ 7 files changed, 135 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/kho/loongarch.conf
+
+-- 
+2.25.1
+
