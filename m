@@ -1,38 +1,38 @@
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CB73E4C61
-	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 08:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07D73E4C74
+	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 08:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779699038; cv=none; b=sCZsHDW94osj33/LNC4f4AjlzZMPBxo5+zTFDZMVZ1gD68E7s/JWYL4BOMr6+DMees5kFY47FZu/GzfRldphNbB01lGVLT+qXsqBhARWoEDzlo6Wf7gpxU83f011YflIk52NErh/aW7zDv4yan/ZLQYHhpLkVzoKYCQZv+NaD0Y=
+	t=1779699046; cv=none; b=C5fMRUzOqi4tXhOusg4jTLNocvwD5I3fTS9JW9cijgjcADoNVjte1FFyy0SwKjcGXvULe+falJTXPuhMAEVbZ88ekkxZbvucUiIg75RkNkVgBeC/L4mV7Wci0OI1CCwM5+ZUXZ5a029oZLGQ5ribPeMo84CROSS4z1yehwk8t2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779699038; c=relaxed/simple;
-	bh=64kqaRmHSeWf8vFKpYkVd+KZ6MzkooScjWwoxXfPKb0=;
+	s=arc-20240116; t=1779699046; c=relaxed/simple;
+	bh=jLUqXDoFQCpV6rQqj84zCDHL7lrj6oMsyVrZOzrgLY4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qodx6I9AH8VCFjPSIaYw7HrZjuuHNaKppmNZQoEQsP2aVgZ9GFNoHLNs1IcMumPjcXuS8h34vLZzf0yDKBWlan/KjfUT/50PP8vsbRHRujq318l9ASC6Iw+nUcgr+Y6Qz+CFBP9m+lV22VQ8sU6Anc5SdqRYqFUdYKXczKqD/rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=kXF8nwYG; arc=none smtp.client-ip=113.46.200.216
+	 MIME-Version:Content-Type; b=ptAdEwtaFxqQ0kTSOmHHCgoysfGxvhsxpKwBwihLT/oezyXS9aOXWr+7A1qRWMl3HpVyHY9aVnpUTsYg6H1R/3YMKbZnyr4kXhav93wWzKv1Iv2z6dcpbUMC4pw2gEHhBPwTKhx+HqfV9ZaTC9PbvvrnDozn4IRW2WWSo1KysK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=JO3fWs/W; arc=none smtp.client-ip=113.46.200.217
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="kXF8nwYG"
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="JO3fWs/W"
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=KREnohZudRYElg3e3hdfHAZRWPOppD/SLYkuWRfyNA8=;
-	b=kXF8nwYG70ZpsZEcN1FmPVrWQYkcHel7tA8/Nnt//qhS/QCGBo/YqBDsJn+kO/9vyKg/MOHAl
-	zn5OUHHaxXyNjaRYYVJ2u6N2oHr/FOVVBMQjtLICKSSORNAIQfk0oVJxAB9vpqecK/I15mMVB0L
-	RH2WQbPC20KrhqtsexvWXro=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gP8XD2JdHz1T4KL;
-	Mon, 25 May 2026 16:42:36 +0800 (CST)
+	bh=JvtTo5yVQJUszo79qoogTgppaKCyUyd4sKJmJVKzOI4=;
+	b=JO3fWs/WKikI94UfG/E7wBvs+NDCMkeRyhlEXjwph6bX4OEantmFKfyFbq4Dd4Sg4mXJwSLWO
+	QQXB5PxpCPiJnjNe+twq1P8DL3+/vdCEZfaCJ424Zeuiq4oiXFKiTiArjU4M/AqSmWleL+SQ8oU
+	7Le+TI1wFCAQO54OAxSz3/U=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4gP8Xb3KXdzcb0C;
+	Mon, 25 May 2026 16:42:55 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 994374048F;
-	Mon, 25 May 2026 16:50:34 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7655C40561;
+	Mon, 25 May 2026 16:50:38 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 25 May
- 2026 16:50:30 +0800
+ 2026 16:50:34 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -62,9 +62,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v14 06/17] arm64: kexec_file: Fix potential buffer overflow in prepare_elf_headers()
-Date: Mon, 25 May 2026 16:49:21 +0800
-Message-ID: <20260525084932.934910-7-ruanjinjie@huawei.com>
+Subject: [PATCH v14 07/17] riscv: kexec_file: Fix potential buffer overflow in prepare_elf_headers()
+Date: Mon, 25 May 2026 16:49:22 +0800
+Message-ID: <20260525084932.934910-8-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260525084932.934910-1-ruanjinjie@huawei.com>
 References: <20260525084932.934910-1-ruanjinjie@huawei.com>
@@ -99,62 +99,58 @@ approach physically isolates the locking contexts. The system memory ranges
 are forced to be statically frozen during the entire layout generation,
 eradicating the buffer overflow vulnerability.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: stable@vger.kernel.org
-Fixes: 3751e728cef2 ("arm64: kexec_file: add crash dump support")
+Cc: Paul Walmsley <pjw@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
+Cc: songshuaishuai@tinylab.org
+Cc: bjorn@rivosinc.com
+Cc: leitao@debian.org
+Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
+Reviewed-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/arm64/kernel/kexec_image.c        | 4 ++++
- arch/arm64/kernel/machine_kexec_file.c | 5 +++++
- 2 files changed, 9 insertions(+)
+ arch/riscv/kernel/machine_kexec_file.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 79efeaeb71e9..884e446f08e3 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -12,6 +12,7 @@
- #include <linux/errno.h>
- #include <linux/kernel.h>
+diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+index 3f7766057cac..a88362dfbd89 100644
+--- a/arch/riscv/kernel/machine_kexec_file.c
++++ b/arch/riscv/kernel/machine_kexec_file.c
+@@ -8,6 +8,7 @@
+  */
  #include <linux/kexec.h>
+ #include <linux/elf.h>
 +#include <linux/memory_hotplug.h>
- #include <linux/pe.h>
- #include <linux/string.h>
- #include <asm/byteorder.h>
-@@ -96,11 +97,14 @@ static void *image_load(struct kimage *image,
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/libfdt.h>
+@@ -48,6 +49,9 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ {
+ 	struct crash_mem *cmem = arg;
  
- #ifdef CONFIG_CRASH_DUMP
++	if (WARN_ON_ONCE(cmem->nr_ranges >= cmem->max_nr_ranges))
++		return -EAGAIN;
++
+ 	cmem->ranges[cmem->nr_ranges].start = res->start;
+ 	cmem->ranges[cmem->nr_ranges].end = res->end;
+ 	cmem->nr_ranges++;
+@@ -281,12 +285,15 @@ int load_extra_segments(struct kimage *image, unsigned long kernel_start,
  	if (image->type == KEXEC_TYPE_CRASH) {
+ 		void *headers;
+ 		unsigned long headers_sz;
 +		get_online_mems();
  		ret = prepare_elf_headers(&headers, &headers_sz);
  		if (ret) {
- 			pr_err("Preparing elf core header failed\n");
 +			put_online_mems();
- 			return ERR_PTR(ret);
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out;
  		}
+ 
 +		put_online_mems();
- 		image->elf_headers = headers;
- 		image->elf_headers_sz = headers_sz;
- 	}
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index daf81a873bbd..c0ace89ded92 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -59,6 +59,11 @@ int prepare_elf_headers(void **addr, unsigned long *sz)
- 	cmem->max_nr_ranges = nr_ranges;
- 	cmem->nr_ranges = 0;
- 	for_each_mem_range(i, &start, &end) {
-+		if (WARN_ON_ONCE(cmem->nr_ranges >= cmem->max_nr_ranges)) {
-+			ret = -EAGAIN;
-+			goto out;
-+		}
-+
- 		cmem->ranges[cmem->nr_ranges].start = start;
- 		cmem->ranges[cmem->nr_ranges].end = end - 1;
- 		cmem->nr_ranges++;
+ 		kbuf.buffer = headers;
+ 		kbuf.bufsz = headers_sz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
 -- 
 2.34.1
 
