@@ -1,32 +1,32 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCA939A078
-	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 06:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BF639AD55
+	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 06:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779690511; cv=none; b=F/hPluv1Aii1iQs0sgKILmHClmzyBQRSKKPWxpFZ8mqH5duD2c2NAxwwRcKcwo/XMfklElRRkZKX87komr5s1zLCe9I1pNC6RLmfoixEUEjp17oiAHY7kh3JSizz2bbTHgUGlMyZ1eFU0YJY4pmoUuOHd1JFH13QVjvTiWX6/ck=
+	t=1779690514; cv=none; b=hT1+c7e30M45R2Kf9dPVcHIYYbyxFWr+9FTT63fVhz25bIewUZ9UisFanNXoBKUqzkjW7dw3rC2aErT+1X/HIVoTojX/1Q/RzpSfvdnUvysSc+DbkFSiJDeEB3kCjzPvPHPStTYHgs8sPFZ1D5M+dJZDSBxZoj4F+mjb2o39nxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779690511; c=relaxed/simple;
-	bh=9CjF84FJpCHrZRL2IHoyuIePe3hokPwDjhhmVprjElM=;
+	s=arc-20240116; t=1779690514; c=relaxed/simple;
+	bh=l52I/z7XJH2APwRLqgnwRHl+vcigrCoeaI76EFL82KU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KR8Qswm8BFTMR3SaJL5FV6zh6Qyde3XEmUb0/2JBh29V3PJYwdEYc0THsS4ZnJTH1YCk59seb341RUH2fSaj8XF8l+jPBrE/p8HmTKACHQs/eBQnfoy5PkPVjSH3GKp8/VTwUO8VeL6+bw1dmbugz0UXePJp+ZlqRWhyKuSWgRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VuZqun4P; arc=none smtp.client-ip=95.215.58.171
+	 MIME-Version; b=KGS4uMxqSW/VnOMrLV1aNljJ/Cb0xw7Z0kryzGVXVmdIp1ROCmtU7j5ABa9rWAyEX8gHuTjg4KAPXu8RlzZbyCkz4XLH08arTlj3GIu7BbMRccltPnyrMg1Vh+1Vb7jNHS3gcaJsW4ZUol3uweMuE5Fia2xZZlMgTok2QAeycNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vUYWyZ1C; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VuZqun4P"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vUYWyZ1C"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779690507;
+	t=1779690510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=acZ9/LK5EVhAjK8ZnaMSqOtU1DWY9dKNeWMugFjaoLg=;
-	b=VuZqun4Pplkhr1ruJCNhwVyCRlrJ8YN5XTuCHzFwjIcN4On6My5+wO2nuTa2YcDH+R4x6j
-	OjQ+8k237y/C3DS7wVCLCALfIUOCRMwX/WzkA/gCfLrA6MW2xJnKiJbNKOWvZQoDysQxv0
-	8CF/cAFRfIql3lLNEgSTyZ3IVe4HdCo=
+	bh=RpXKe3wAdCVMwU6Llg7SIPesFhMG6uKuOmrHw+vv3aU=;
+	b=vUYWyZ1CdvfZMVBvkgDZVbpei57KgtJs9mNpdIt8reqlu40mKSoS6h5RB2R2LDIOZMvIA3
+	7wD1tTsQvzyaW5cW3fY+xdCoerMSlFATNZAzoiFX+PB+IxAQ6fG/swWTRU8fGQxzBcT63L
+	bQbqgORkRf7hUz3cU/du0doFMLefN78=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	rppt@kernel.org,
@@ -40,11 +40,10 @@ Cc: kernel@xen0n.name,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>,
-	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH 3/7] LoongArch: Add missing linux/mm.h include in asm/io.h
-Date: Mon, 25 May 2026 14:28:06 +0800
-Message-Id: <20260525062810.103367-4-dongtai.guo@linux.dev>
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH 4/7] LoongArch: kexec: avoid overwriting QEMU's machine FDT at 0x100000
+Date: Mon, 25 May 2026 14:28:07 +0800
+Message-Id: <20260525062810.103367-5-dongtai.guo@linux.dev>
 In-Reply-To: <20260525062810.103367-1-dongtai.guo@linux.dev>
 References: <20260525062810.103367-1-dongtai.guo@linux.dev>
 Precedence: bulk
@@ -58,40 +57,44 @@ X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-When CONFIG_KFENCE is enabled, the virt_to_phys() and phys_to_virt()
-macros in arch/loongarch/include/asm/io.h expand to use offset_in_page()
-and page_address(), both of which are declared in <linux/mm.h>.
+QEMU places its machine FDT at physical address 0x100000 when booting
+with '-kernel'.  KEXEC_CONTROL_CODE was defined at the same address, so
+machine_kexec_prepare() overwrites the FDT with the relocation trampoline
+before jumping to the new kernel.
 
-Without this include, any translation unit that includes <asm/io.h> and
-expands these macros with CONFIG_KFENCE=y will fail to build. This was
-observed when building kernel/liveupdate/luo_session.c with
-CONFIG_KFENCE=y:
+The kexec'd kernel's fdt_setup() reads the FDT pointer from the EFI
+config table (FDTPTR = 0x100000) and finds trampoline code instead of a
+valid FDT, so earlycon auto-detection fails and the second kernel boots
+silently with no console output.
 
-  asm/io.h: error: implicit declaration of function 'offset_in_page'
-  asm/io.h: error: implicit declaration of function 'page_address'
+Move KEXEC_CONTROL_CODE to 0x180000, which is still within the first 2MB
+reserved by memblock_init() and does not conflict with the QEMU FDT.
 
-Add the missing include to fix these build errors.
-
-Fixes: 0ca84aeaee15 ("LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE")
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/include/asm/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/loongarch/kernel/machine_kexec.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/io.h b/arch/loongarch/include/asm/io.h
-index 0130185e0349..7ff4aa72a34a 100644
---- a/arch/loongarch/include/asm/io.h
-+++ b/arch/loongarch/include/asm/io.h
-@@ -13,6 +13,7 @@
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index d7fafda1d541..44df7dbd3de5 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -21,8 +21,13 @@
+ #include <asm/cacheflush.h>
  #include <asm/page.h>
- #include <asm/pgtable-bits.h>
- #include <asm/string.h>
-+#include <linux/mm.h>
  
- extern void __init __iomem *early_ioremap(phys_addr_t phys_addr, unsigned long size);
- extern void __init early_iounmap(void __iomem *addr, unsigned long size);
+-/* 0x100000 ~ 0x200000 is safe */
+-#define KEXEC_CONTROL_CODE	TO_CACHE(0x100000UL)
++/*
++ * Both addresses are within the first 2MB which is always reserved by
++ * memblock_init().  Avoid 0x100000 because QEMU places its machine FDT
++ * there when using '-kernel'; overwriting it silences earlycon in the
++ * kexec'd kernel.
++ */
++#define KEXEC_CONTROL_CODE	TO_CACHE(0x180000UL)
+ #define KEXEC_CMDLINE_ADDR	TO_CACHE(0x108000UL)
+ 
+ static unsigned long reboot_code_buffer;
 -- 
 2.25.1
 
