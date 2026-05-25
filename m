@@ -1,63 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B2A31B130;
-	Sat, 23 May 2026 16:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A80A1EE7C6
+	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 02:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779553423; cv=none; b=d1C6DX1/RSOcYDhy4hEUaXfePZeW5ph+DEprhhkdBvX2QdJGxqM/Ad/3bEJfJjLLzsOGL91v0jh1L6NrMLDTq5T8ntZ3gNehwivr6AjVRVEr5b59y/nlmRbvr2ZJiLELh7Bp9y1jtATrcjoWfpmlAmDe4mwsiD05tT1+yFdlRfM=
+	t=1779677436; cv=none; b=KyNGGOAtGDBmzMrfVBQi0GNyGyXDc3jnKBhVeF0lxV3B2Nw4XiecvSGVU1BN2DdTDwe6ULww7l7PLXmlusWtraQWMoQsvEkFQlzmeT5aUgopBgqFwrrxCbj1x7SJQsek5LV1GzP+pvUrD+x7+Kr0VSEKOGEXztjs9ks7k8Yu16g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779553423; c=relaxed/simple;
-	bh=qQtQcmjwJYM31qaZCAAzUF0s58nO7dm3ePezgqsSw94=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HpqolctrtcUw78VDE+8qlDj2hwVYxf6R+9qhV5AEsdCOMugp2bp/QIA2TGMRmQa7/NRI/xLkmEkfKgdjmCTePwjtCdFm5yN6eXLriORmSnCmrLRDW4RcVzGYEoVpTDcn7uJ+F9MIRzJF3V0peV8/BQjsS/giSNfo7UTRLwCJSCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQYuc+4n; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQYuc+4n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E711F00A3A;
-	Sat, 23 May 2026 16:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779553422;
-	bh=lWe8oPEYTfW0y31/YJhks3lEeUrHI+1u8lC2rxAfkU4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=lQYuc+4nOcq5v6j8T1QPAlQA5EgiE6eM3iglcDXCQbL1TnZGcdB7UoMOh67OyBYbO
-	 D+tYEdZebSPCiiGhqY6AyHTFx/v2MTKbSpzgVWip7Nz4ianVbIcVIRKwd5kTLQS6uf
-	 tlHR3KhP2Dw8QPUSnIl/OaIEHv2qOwKwvrQRUvgkQnnvOK/MMyqGOYbyhP4k1rIaqR
-	 Kb3mL2bYsKuQKgh8gItSfedPjF2nXZsQE0Ihwj7CVZjHcQEOS868vOkGyow9I7HuoY
-	 1YhbXEXjI517Rmo4PupJNFNReFWzsC0f9OqYi8EhcLxlQbQjsXzQEPvedPbmwsyqUd
-	 Y0MXuYIrLelZg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 93BB73808205;
-	Sat, 23 May 2026 16:23:51 +0000 (UTC)
-Subject: Re: [GIT PULL] LoongArch fixes for v7.1-rc5
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260523072501.437301-1-chenhuacai@loongson.cn>
-References: <20260523072501.437301-1-chenhuacai@loongson.cn>
-X-PR-Tracked-List-Id: <loongarch.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20260523072501.437301-1-chenhuacai@loongson.cn>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.1-2
-X-PR-Tracked-Commit-Id: 4a09f4a23a3003d31f8545dd0770f2b3b0f54d8b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 95e6d3ba0571330df866911da9dedd83e05417ca
-Message-Id: <177955343015.1611769.12881375851148082291.pr-tracker-bot@kernel.org>
-Date: Sat, 23 May 2026 16:23:50 +0000
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Huacai Chen <chenhuacai@loongson.cn>
+	s=arc-20240116; t=1779677436; c=relaxed/simple;
+	bh=JpEh2ZN0k8eUxzXlir3g3RGyyjHAHoSuyF3ZoZrFcRg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qEl922kn/QjfLvte5zOw4454xwChYS1KleLbZSvajN/XEmBz2UZsV50sViip6hXhv9wdjh3NmA7TzsADa3Eg8AAOdxidjrAK6YuZfvJdE6AObru8EMnXd5XXuTTE2wFsraoFwDe19iMQaVK8haH1CKZPBZLdyyw3nor+yEGjiTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8DxRenvuBNql+0MAA--.30906S3;
+	Mon, 25 May 2026 10:50:23 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowJCxmuDguBNqm9ePAA--.62503S2;
+	Mon, 25 May 2026 10:50:09 +0800 (CST)
+Subject: Re: [PATCH] crypto: loongson - Select CRYPTO_RNG
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-crypto@vger.kernel.org,
+ Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, Yinggang Gu <guyinggang@loongson.cn>,
+ Lee Jones <lee@kernel.org>, kernel test robot <lkp@intel.com>,
+ stable@vger.kernel.org
+References: <20260522022525.12976-1-ebiggers@kernel.org>
+ <CAAhV-H5cDnWKxBobwRErRyvG8671e6VXsBe6w1RkX9rfn7CVFA@mail.gmail.com>
+ <20260522025722.GD5937@quark>
+ <d71adfa1-8895-e741-b72f-c5e99d5fb9e6@loongson.cn>
+ <20260522040310.GF5937@quark>
+ <bc3acf15-808d-4141-7f1f-4a7a7f856c6c@loongson.cn>
+ <20260522174835.GA1894319@google.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <4501444d-9c17-8d4b-8bfd-bd1d69d77a76@loongson.cn>
+Date: Mon, 25 May 2026 10:45:14 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <20260522174835.GA1894319@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCxmuDguBNqm9ePAA--.62503S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCw48Ar18Ar4rJF4UXryxZwc_yoWrWw15pF
+	WrCa4UKFWUJr1F9ayktw1ruFyY9343Xw43Wrs3Ca4fAwn8tr10qr4IqFyq9FyDAr48ur1j
+	vrW8trya93WDAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-The pull request you sent on Sat, 23 May 2026 15:25:01 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-7.1-2
+在 2026/5/23 上午1:48, Eric Biggers 写道:
+> On Fri, May 22, 2026 at 02:40:38PM +0800, Qunqin Zhao wrote:
+>> 在 2026/5/22 下午12:03, Eric Biggers 写道:
+>>> On Fri, May 22, 2026 at 11:41:15AM +0800, Qunqin Zhao wrote:
+>>>> 在 2026/5/22 上午10:57, Eric Biggers 写道:
+>>>>> On Fri, May 22, 2026 at 10:52:42AM +0800, Huacai Chen wrote:
+>>>>>> On Fri, May 22, 2026 at 10:26 AM Eric Biggers <ebiggers@kernel.org> wrote:
+>>>>>>> This driver registers a rng_alg, so it requires CRYPTO_RNG.
+>>>>>>>
+>>>>>>> Fixes: 766b2d724c8d ("crypto: loongson - add Loongson RNG driver support")
+>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>> Closes: https://lore.kernel.org/oe-kbuild-all/202605201622.qWOiiZTV-lkp@intel.com/
+>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+>>>>>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>>>>>>> ---
+>>>>>>>     drivers/crypto/loongson/Kconfig | 1 +
+>>>>>>>     1 file changed, 1 insertion(+)
+>>>>>>>
+>>>>> By the way, do any of the loongson people have any comment on what they
+>>>>> think the point of this driver is?  It's not registered with the actual
+>>>> To provide an AF_ALG-based random number generation interface for other
+>>>> modules and user-space programs.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> Qunqin
+>>> AF_ALG is a userspace interface; it's not available for in-kernel use.
+>>> If you mean using crypto_rng directly, note that no kernel code actually
+>>> uses it other than the tests, the implementation of AF_ALG, and the
+>>> FIPS-specific code which uses drbg.c specifically.
+>>>
+>>> So, the first half of your justification doesn't make any sense.
+>>>
+>>> As far as the second half: why would a userspace program do that instead
+>>> of just using the regular Linux RNG (/dev/urandom)?
+> Could you answer this question?  If there's no answer to this question,
+> then there's no use case for this driver as-is.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/95e6d3ba0571330df866911da9dedd83e05417ca
+While I'm not an expert on the specific application scenarios for these,
 
-Thank you!
+I believe any PRNG driver should utilize the crypto_rng subsystem.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+>>> AFAIK, the only reason to use a HW RNG directly is for certification
+>>> reasons.
+>>>
+>>> However, there's also already an interface for that: /dev/hw_random.
+>>>
+>>> So AF_ALG seems completely redundant for this case.
+>> To be honest, I previously assumed that the `hw_random` was designed
+>> strictly and exclusively for the TRNG mode.
+>>
+>> Is it architecturally acceptable or common practice for a PRNG mode to
+>> utilize `hw_random` as well?
+>>
+>> Thanks,
+> So the Loongson RNG is a PRNG?  Where does it get its entropy from, and
+> what is its security strength?
+
+Loongson's hardware supports both TRNG and PRNG simultaneously.
+
+We can locate a reseed function within loongson-rng.c, which clearly 
+indicates that it is a PRNG driver.
+
+
+So the core issue here is whether a PRNG driver can utilize the crypto 
+interface.
+
+If it cannot, does that imply the drivers listed below serve no 
+practical purpose? (7.1-rc1)
+
+loongson@loongson:~/upstream/linux/drivers/crypto$ grep 
+crypto_register_rng -r *
+allwinner/sun8i-ss/sun8i-ss-core.c:            err = 
+crypto_register_rng(&ss_algs[i].alg.rng);
+allwinner/sun8i-ce/sun8i-ce-core.c:            err = 
+crypto_register_rng(&ce_algs[i].alg.rng);
+allwinner/sun4i-ss/sun4i-ss-core.c:            err = 
+crypto_register_rng(&ss_algs[i].alg.rng);
+amcc/crypto4xx_core.c:            rc = crypto_register_rng(&alg->alg.u.rng);
+caam/caamprng.c:    ret = crypto_register_rng(&caam_prng_alg.rng);
+exynos-rng.c:    ret = crypto_register_rng(&exynos_rng_alg);
+hisilicon/trng/trng.c:        ret = crypto_register_rng(&hisi_trng_alg);
+loongson/loongson-rng.c:        ret = 
+crypto_register_rng(&loongson_rng_alg);
+qcom-rng.c:    ret = crypto_register_rng(&qcom_rng_alg);
+xilinx/xilinx-trng.c:    ret = crypto_register_rng(&xtrng_trng_alg);
+
+
+Thanks,
+
+Qunqin
+
+>
+> - Eric
+
