@@ -1,131 +1,95 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A039DBD4
-	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 06:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABDF2DE6FF
+	for <loongarch@lists.linux.dev>; Mon, 25 May 2026 07:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779690524; cv=none; b=Qesi5vYumqj3P0DfQXTvJ/8g2FIGAPih9igLOLBv0Xw+DkJ2DHiQTv6A1mL2xafo6i1IlNZJokEpA2vOXuTbWTNSWvF2fx9wOLVF2C5XD40ORbCb6T+li77N2NcWTXcX97xrIMCtgPwpmlrwiLeoyRxQRS1kN0Od9fnxP/vr0o8=
+	t=1779692545; cv=none; b=iqGFT0F63Kws1vHs432DzQvCbQ/2c2yn31dbQCIwUxcOXNXjwpizKFW+xNphc1BC0GKz5krloM3kaqkVNqfsSIX6zy4uPRIhj08nF0YonNcwq3czoMvWRW78fWERJjq2uTxYPZnI7khkqaynfIvkv69VoOFxsmIW2iwOk/seunY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779690524; c=relaxed/simple;
-	bh=z+FdkDPJqQMFpQ9S+75bwiqjIcMs1tm3tReEC2FAIug=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iccxEck9bBfSOiGY/V7ls6SjFWK9PX4HNLzlCcJUAS4mIK8yr7u88uOSlw5zNJrASdbsERP0gv7zaKxZ9hHBSuiLjj7AHsZE/GpsdOk1Zzjq6rU5T+fgRjSZfZf4r5HLQzfjVN4gH9MoKFnUIIj/GiY3XdNUw0evjTc+FTbhTdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tapMzdVl; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1779692545; c=relaxed/simple;
+	bh=nVeNCtCxeDva7j1QDt54ZLI4KVS3DgJyxkKmXByYEAw=;
+	h=Subject:Message-Id:Mime-Version:Content-Type:From:Cc:Date:To; b=fUfv02qFdDvNd8KkE0Xa0jCRQTabSFgzflKnI1PmlZDmdRGnDbhVWRWp3HuqOiUMvkXySsBqYME7pQofgqYN0n8c/7cJ+q5VtsZR6zxTCTme4JSd+G9PxFW/dRTtVw3YnKk4/lZ+orUHcXlcnscXkm40q1fC3zf4l7tSzZSoIiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=n8KD4sOS; arc=none smtp.client-ip=209.127.230.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tapMzdVl"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779690520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tYxwosLkp+8p8G15z4kXkSPo4todC1a7rfK+baWf0Ng=;
-	b=tapMzdVlPtDDpbGp9ExBzdrIWJd5Y2uo8fnGLvCqnWZtlCYloM8DKKodK5W+vk8n8kh2zT
-	bfsvelwOgxjow3PTKnfGN1YfC+4DEJwagn4PVMZlpiRhbPSa+9NbkpAWv3FaTpceQHBKZy
-	McUhOyUC4DTF/o7X/PEECcln0mOrJ/Y=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org
-Cc: kernel@xen0n.name,
-	graf@amazon.com,
-	shuah@kernel.org,
-	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH 7/7] selftests/kho: handle QEMU not exiting after kexec on LoongArch
-Date: Mon, 25 May 2026 14:28:10 +0800
-Message-Id: <20260525062810.103367-8-dongtai.guo@linux.dev>
-In-Reply-To: <20260525062810.103367-1-dongtai.guo@linux.dev>
-References: <20260525062810.103367-1-dongtai.guo@linux.dev>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="n8KD4sOS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779692535; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=FSPlzs2arfc5IQb4eW/8WkmdON8YANDuE11YBYOEbL8=;
+ b=n8KD4sOSLz78RhwV62EDGGMUc8UtaywsjsAopjIbOMsrDioHdfebXQzG4eMWm5X1OfNVbi
+ xqhSA4KL8Kt3OGmJVWVm7EqTAmmtXMRPNRx3NeY4vgPas14jlUsF6wUpIkplDNiwoWNG9r
+ CpXHnKOWAD6jLY1NYqasdwQMjclfamR3tUCQ8OrnAbcuSOR9gWvuhZNtnniucOHp7sU0eo
+ x2afAQ6huL+oBF6zq8lKPh+mKvINo9pYQa/mRwrDfQ4xA7auJPZaX3XoIpJwXrb7KFX179
+ lL0Qy+4Dj7TSmINrtt6BOCQbvoMiqXzYy9MM04W7WwOl2G+AKAzF1Or7gtJikQ==
+Subject: [PATCH] KVM: Validate irqchip index for LoongArch and PowerPC
+Message-Id: <20260525070154.495455-1-yanfei.xu@bytedance.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Original-From: Yanfei Xu <yanfei.xu@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+From: "Yanfei Xu" <yanfei.xu@bytedance.com>
+X-Mailer: git-send-email 2.20.1
+Cc: <kvm@vger.kernel.org>, <loongarch@lists.linux.dev>, 
+	<linuxppc-dev@lists.ozlabs.org>, <caixiangfeng@bytedance.com>, 
+	<fangying.tommy@bytedance.com>, <yanfei.xu@bytedance.com>, 
+	<isyanfei.xu@gmail.com>, "Sashiko" <sashiko-bot@kernel.org>
+Date: Mon, 25 May 2026 15:01:54 +0800
+X-Lms-Return-Path: <lba+26a13f3f5+64fe3c+lists.linux.dev+yanfei.xu@bytedance.com>
+To: <zhaotianrui@loongson.cn>, <maobibo@loongson.cn>, 
+	<chenhuacai@kernel.org>, <maddy@linux.ibm.com>, <npiggin@gmail.com>, 
+	<sashiko-reviews@lists.linux.dev>, <seanjc@google.com>, 
+	<pbonzini@redhat.com>
 
-From: George Guo <guodongtai@kylinos.cn>
+Sashiko reported that irqchip index is not validated for LoongArch and
+PowerPC. Add validation and reject out-of-range irqchip indexes to avoid
+indexing past the routing table's chip array.
 
-On LoongArch, QEMU provides only a minimal EFI stub with no runtime
-services and no ACPI tables, so machine_restart() falls through to
-its infinite idle loop and QEMU never exits after kexec.
-
-Poll the serial output for the test verdict and kill QEMU once
-it appears, rather than waiting for QEMU to exit naturally.
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Fixes: de9ba2f36368 ("KVM: PPC: Support irq routing and irqfd for in-kernel MPIC")
+Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/kvm/20260525051714.485D51F000E9@smtp.kernel.org/
+Signed-off-by: Yanfei Xu <yanfei.xu@bytedance.com>
 ---
- tools/testing/selftests/kho/vmtest.sh | 35 +++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 7 deletions(-)
+ arch/loongarch/kvm/irqfd.c | 3 ++-
+ arch/powerpc/kvm/mpic.c    | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
-index a6ae9ac09595..3cb9674e4475 100755
---- a/tools/testing/selftests/kho/vmtest.sh
-+++ b/tools/testing/selftests/kho/vmtest.sh
-@@ -103,16 +103,37 @@ function run_qemu() {
- 	local qemu_cmd=$1
- 	local cmdline=$2
- 	local kernel=$3
-+	local arch=$4
- 	local serial="$tmp_dir/qemu.serial"
+diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
+index f4f953b22419..40ed1081c4b6 100644
+--- a/arch/loongarch/kvm/irqfd.c
++++ b/arch/loongarch/kvm/irqfd.c
+@@ -51,7 +51,8 @@ int kvm_set_routing_entry(struct kvm *kvm,
+ 		e->irqchip.irqchip = ue->u.irqchip.irqchip;
+ 		e->irqchip.pin = ue->u.irqchip.pin;
  
- 	cmdline="$cmdline kho=on panic=-1"
+-		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS)
++		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS ||
++		    e->irqchip.irqchip >= KVM_NR_IRQCHIPS)
+ 			return -EINVAL;
  
--	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
--		  -accel kvm -accel hvf -accel tcg  \
--		  -serial file:"$serial" \
--		  -append "$cmdline" \
--		  -kernel "$kernel" \
--		  -initrd "$initrd"
-+	local qemu_args=(
-+		-m 1G -smp 2 -no-reboot -nographic -nodefaults
-+		-accel kvm -accel hvf -accel tcg
-+		-serial file:"$serial"
-+		-append "$cmdline"
-+		-kernel "$kernel"
-+		-initrd "$initrd"
-+	)
-+
-+	# On LoongArch, EFI runtime services are unavailable after kexec so
-+	# machine_restart() hangs and QEMU never exits on its own.  Run QEMU
-+	# in the background, poll for the test result, then kill it.
-+	if [[ "$arch" == "loongarch" ]]; then
-+		$qemu_cmd "${qemu_args[@]}" &
-+		local qemu_pid=$!
-+		local timeout=100
-+		while ((timeout-- > 0)); do
-+			grep -q "KHO restore succeeded\|KHO restore failed" \
-+				"$serial" 2>/dev/null && break
-+			sleep 1
-+		done
-+		kill "$qemu_pid" 2>/dev/null
-+		wait "$qemu_pid" 2>/dev/null || true
-+	else
-+		$qemu_cmd "${qemu_args[@]}"
-+	fi
- 
- 	grep "KHO restore succeeded" "$serial" &> /dev/null || fail "KHO failed"
- }
-@@ -179,7 +200,7 @@ function main() {
- 	local kernel="$build_dir/arch/$arch/boot/$KERNEL_IMAGE"
- 	mkinitrd "$kernel"
- 
--	run_qemu "$QEMU_CMD" "$KERNEL_CMDLINE" "$kernel"
-+	run_qemu "$QEMU_CMD" "$KERNEL_CMDLINE" "$kernel" "$arch"
- 
- 	ktap_test_pass "KHO succeeded"
- }
+ 		return 0;
+diff --git a/arch/powerpc/kvm/mpic.c b/arch/powerpc/kvm/mpic.c
+index 3070f36d9fb8..fb5f9e65e02e 100644
+--- a/arch/powerpc/kvm/mpic.c
++++ b/arch/powerpc/kvm/mpic.c
+@@ -1833,7 +1833,8 @@ int kvm_set_routing_entry(struct kvm *kvm,
+ 		e->set = mpic_set_irq;
+ 		e->irqchip.irqchip = ue->u.irqchip.irqchip;
+ 		e->irqchip.pin = ue->u.irqchip.pin;
+-		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS)
++		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS ||
++		    e->irqchip.irqchip >= KVM_NR_IRQCHIPS)
+ 			goto out;
+ 		break;
+ 	case KVM_IRQ_ROUTING_MSI:
 -- 
-2.25.1
-
+2.20.1
