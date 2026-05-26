@@ -1,49 +1,64 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382493CC313
-	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 07:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964F23DE450
+	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 11:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779781378; cv=none; b=EDJqQ//vAo6KpU94Cam9V47Lst88M1mRAWavQr3oWT4QkYS7nDgwR5fupO/MG/9DOUSVFWr120WwOgBJnCNtQVl1QvMve2yfQoqhuDSN1IKYzv0oTnfLWmus8L+2y4OQMt34Stu9ytZTkJbzjmAOAUnb2NlXmaQ7p6eBWOiqpEY=
+	t=1779794347; cv=none; b=EZY/iFBnLBLpeBq6ykN2hrH9BS6DXdSw1qhCK1flJUCAccnEd3xOrtN5oqsarcbw0e5+eOshMFhFElz1lLqPCuTm/GWJrKl86FVL9n9wpFb7LmifdxuO1fm9ZZcIXiycCQX5knTcJBXEZ98eEAR2qW8CM2UsdvOiKV5wGyFEZ0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779781378; c=relaxed/simple;
-	bh=LS0JEM2tAJSAT3CsJ5ysDZoAWEkp+8C9WOpgsgpPmt4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aWQ2k55Ei1zmiSpcI6RoIwQmPC2HwYZc3wrSkUa8UsxWrDNm6/7IGL1CnfzegzmB4PVYJIuC2Vv1m5sX4SHiiXn2kc4YZcdng/j7ESAqsdQjP/hK8RGAOsYQpZhBDkwYHKzroT4+k3jlavx2cCB6Oy/cGCXOyLFjGz5OwTjXaok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ZsTKxYxp; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ZsTKxYxp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1779781344;
-	bh=MbiuGqwVnztPNeK56AOQhnIvz1XL9i5qyp7Uojx3a3w=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=ZsTKxYxp6YhXQ16avEqo8Rtb9mdVq+IEFuFXoVp3bJrXyqpOzQXdKqgI6X7RF1B61
-	 Tu7Jb8cX4Vn8XXud6mdpp3patW97cfx+fbQIn28aJWPDfvcnQojRxH0gtfUIThVqsE
-	 SrDSmsO+zZBV+FqBpktMSWEB1079zw8lx6Zc6kLM=
-X-QQ-mid: zesmtpsz7t1779781338tb77f8adb
-X-QQ-Originating-IP: uMkWWbUKhiYh9+DU177NbnHbmLH5b+a22fAuwPNAou4=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 26 May 2026 15:42:15 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10348446116461712637
-EX-QQ-RecipientCnt: 8
-From: Qiang Ma <maqianga@uniontech.com>
-To: zhaotianrui@loongson.cn,
-	maobibo@loongson.cn,
+	s=arc-20240116; t=1779794347; c=relaxed/simple;
+	bh=X+xMF2yGVx9C/DR3w5/Drg3+Kccx+yRcyMhUFGsn6oc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JvzsqRLj+jQbHqlTuTNJnjBvC0rRpw5QBWek334DC2okn6HHoCPV8DukAaWHlv5dutx5+/J5TR1mxKDg2mdFjBOuLxokDtOEUdh5NCq0kPQsqIf9MLVkV63MRBccgKxZV8GYis2vzT7cC1OP7TVN5XezT5UHsP4HlOq0/DgSuLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: afeff30e58f411f1aa26b74ffac11d73-20260526
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:910fc31c-2741-463c-b9bd-54b5ed97ca30,IP:20,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:20
+X-CID-INFO: VERSION:1.3.12,REQID:910fc31c-2741-463c-b9bd-54b5ed97ca30,IP:20,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:20
+X-CID-META: VersionHash:e7bac3a,CLOUDID:40736a2a9833aea76a28b1eacc36c4fb,BulkI
+	D:260526191859W4KD99E2,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
+	2|127|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bu
+	lk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
+	0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: afeff30e58f411f1aa26b74ffac11d73-20260526
+X-User: cuitao@kylinos.cn
+Received: from ctao-book.. [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <cuitao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 878313437; Tue, 26 May 2026 19:18:57 +0800
+From: Tao Cui <cuitao@kylinos.cn>
+To: maobibo@loongson.cn,
+	zhaotianrui@loongson.cn,
 	chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH] LoongArch: KVM: Check return values for put_user
-Date: Tue, 26 May 2026 15:42:02 +0800
-Message-Id: <20260526074202.789799-1-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH 1/4] LoongArch: KVM: Preserve auto-enabled PV features on userspace override
+Date: Tue, 26 May 2026 19:18:34 +0800
+Message-ID: <20260526111837.2090768-2-cuitao@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260526111837.2090768-1-cuitao@kylinos.cn>
+References: <20260526111837.2090768-1-cuitao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -51,49 +66,63 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: OCrOINyfR5I/6l6j9u2Me3DswMrpgtdJG1hgpEBEZV4RmjPc77gvS/qo
-	GLvs2ACii1eoypnx3yzk4m6kyNt1zp6REr6lILWqD0Xr4MjzY5QO9QmOb7Y3RoJoheC6Lmi
-	czUKzOAPlOLkZ0VUu6oBTjhVGegKeRFLZCkdJCDEm1tlrXxpzjqSIJ0E8c9yDL3Qtf33IkG
-	pa++CEYgtm+FXZV0aIlxyKaJ/Aa59dV4fc0qIR/K5ihdXciCqmuAJ+BHXZGw2mLRuoeBi8h
-	7MUVPsOYsITj+Pl8kt/l5uvU/Gs078GNDeA+USabx5k7eaI3Jb60GyfCvT1QgjbkJ6HzYHX
-	7NIZg3z5v8Yi2U/LXJwiXfw4G2F+5QvvIEKmf7f/eeGnfAsoWc9VVrxK8Vh3ivCrHYaYtgD
-	lHEM2RTQscO8++2hu48PViiH+I4rgmf4+93LqaneOorS1VAQPZ6k9UZjfWH4lTyqcAy6hPU
-	BPsXhwqe+AzoxyCSvIMOg3BmFbCWH2cjRVhIJpJIyIVSuwRTo1DOEG+vmZx+CEWAwGcbG84
-	RNm+14uFbJRMnDRThWF1qDxFqqabR4W+AF+Ze77lX7IS+v/T2zvVMWmQDVKubES3dh09ZMz
-	tJ9ym22DM4yy/ibvso/U7UW+iqGp9Mlvg4QDkfOkS6f98Ij0Aslh4ZURCx8HzZcXiUJe2zW
-	jkdXjS0tZrUKtSsZeaQFK25Lwu4R+8/VNS3tpou5K8W4r16jfWKtM8DDn+KOkkL1gazatHh
-	39TStCdF5lINFVY3ZU0aMIjv/Y1fgMjMQcPNBOxjpq5K8ywNMS6p+dsQPK8nDHjr4uQg1qT
-	4oAnwVaZexABm2q5NpcA/De96p18fF6oEoQzHZxEPYQKp1Kqz13FX6B/xKsuqoo+6/viBNC
-	nXHEWJYHL7QEJk8Ifq9HconHtzoTlbVwlC5Bkfolmgexs0zQHXAXf+VrNlMt2+k27AHjuQO
-	WvCmsUmvhPU/BqGbP51XawvSUP97T00Jeum6VdWM16iO1I/HqN3SgnSrYMc3vZ+5AapHpkP
-	wVEk44nsTBzhj5fN9befliHJpXIYs=
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
-X-QQ-RECHKSPAM: 0
 
-put_user() may return -EFAULT, so, when the user space address
-is invalid, it should return -EFAULT.
+When userspace (e.g., QEMU) sets PV features via KVM_SET_DEVICE_ATTR
+with CPUCFG_KVM_FEATURE, it completely replaces the kernel-default
+pv_features. This causes features auto-enabled by the kernel (such as
+KVM_FEATURE_STEAL_TIME) to be lost if userspace doesn't explicitly
+include them.
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+Add a pv_auto_features field to struct kvm_arch that saves the
+kernel-default PV features set during kvm_vm_init_features(). When
+userspace overrides pv_features, OR the saved auto features back
+to preserve them.
+
+Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 ---
- arch/loongarch/kvm/vcpu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/loongarch/include/asm/kvm_host.h | 2 ++
+ arch/loongarch/kvm/vcpu.c             | 2 +-
+ arch/loongarch/kvm/vm.c               | 1 +
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 776bc487a705..903cb67ca817 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -127,6 +127,8 @@ struct kvm_arch {
+ 	struct kvm_phyid_map  *phyid_map;
+ 	/* Enabled PV features */
+ 	unsigned long pv_features;
++	/* PV features auto-enabled by kernel */
++	unsigned long pv_auto_features;
+ 	/* Supported KVM features */
+ 	unsigned long kvm_features;
+ 
 diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 782dc1a36e29..67441edf0e1f 100644
+index e28084c49e68..d82782b90457 100644
 --- a/arch/loongarch/kvm/vcpu.c
 +++ b/arch/loongarch/kvm/vcpu.c
-@@ -1104,7 +1104,8 @@ static int kvm_loongarch_cpucfg_get_attr(struct kvm_vcpu *vcpu,
+@@ -1169,7 +1169,7 @@ static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
+ 		if ((kvm->arch.pv_features & LOONGARCH_PV_FEAT_UPDATED)
+ 				&& ((kvm->arch.pv_features & valid) != val))
+ 			return -EINVAL;
+-		kvm->arch.pv_features = val | LOONGARCH_PV_FEAT_UPDATED;
++		kvm->arch.pv_features = (val | kvm->arch.pv_auto_features) | LOONGARCH_PV_FEAT_UPDATED;
+ 		return 0;
+ 	default:
  		return -ENXIO;
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index 1317c718f896..8af874e0b36b 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -57,6 +57,7 @@ static void kvm_vm_init_features(struct kvm *kvm)
+ 		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_PREEMPT);
+ 		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
  	}
- 
--	put_user(val, uaddr);
-+	if (put_user(val, uaddr))
-+		return -EFAULT;
- 
- 	return ret;
++	kvm->arch.pv_auto_features = kvm->arch.pv_features;
  }
+ 
+ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
 -- 
-2.20.1
+2.43.0
 
