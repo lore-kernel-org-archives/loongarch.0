@@ -1,64 +1,41 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11913DE450
-	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 11:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2ED72DECBA
+	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 11:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779794349; cv=none; b=Oqvsf/KtIGHv1Ylvf1jU8GgpNGsNlSqk+T6n3IWwcvnU/qStf0PnwLJI7hZoEct09DL8QOgFmdE9zlQhS5F6JzmEDz9HN8lXwH78pTfo/tLQq5uGsxGUqHmbsLPDyZX4b2Q+XXKDQMbcPN8bX2ZMCwAmh/vyia8IxT55TLsE7r0=
+	t=1779796585; cv=none; b=AqyWaI1lmMvPhaOQSzoPe1+ebMKVUyz8WvtWcevnPbqRY5cApIZ82V799fMlEm2Tk+e7d+ExK8g9gVG3cC4CAwR1uMdou+Z0Aml7FJ+Kkzwvbqq1fTYLNnKcQewiLDRsHcIAOQN6tgr0uJ63iN5x5w+MZRIsw0EfqXL/aqefdF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779794349; c=relaxed/simple;
-	bh=XWCLMVhvjsGFpwUs5hdzH/SX289mbyQBSf7luJ+kOaE=;
+	s=arc-20240116; t=1779796585; c=relaxed/simple;
+	bh=W6XFj8rwAv9tKzD94HdLIZr0D5x3g/T4/Xljmq6hc8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eJr/RuCq+lq6WeitFWpSgLUhFguds3zIRq6Tf8VDFS3LW1GDlYc+XSFSfiPt7c0lsP2wR3bLeTO1Hq6oKZzg5m63M2XJ5uqkyYE1QNnl9J0QaU3OSwJGGyd6rhzj8jYQoOf+4bMwK9fcRfzosDfPtfZj2cdlU34dLKWdhGNjOsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b34470b658f411f1aa26b74ffac11d73-20260526
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:03dcf0d8-f114-4f46-ac00-e90872581372,IP:20,
-	URL:0,TC:0,Content:0,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.3.12,REQID:03dcf0d8-f114-4f46-ac00-e90872581372,IP:20,UR
-	L:0,TC:0,Content:0,EDM:-20,RT:0,SF:0,FILE:0,BULK:0,RULE:EDM_GE969F26,ACTIO
-	N:release,TS:0
-X-CID-META: VersionHash:e7bac3a,CLOUDID:a45ddc810c96ea29a2b58ca90c506292,BulkI
-	D:260526191905R23R0NB5,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|865|898,TC:nil,Content:0|15|50,EDM:1|19,IP:-2,URL:0,File:nil,RT:nil,
-	Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BR
-	R:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_AEC,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: b34470b658f411f1aa26b74ffac11d73-20260526
-X-User: cuitao@kylinos.cn
-Received: from ctao-book.. [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <cuitao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1270391213; Tue, 26 May 2026 19:19:02 +0800
-From: Tao Cui <cuitao@kylinos.cn>
-To: maobibo@loongson.cn,
-	zhaotianrui@loongson.cn,
-	chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Cc: kernel@xen0n.name,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH 4/4] KVM: selftests: loongarch: Add PV TLB flush performance test
-Date: Tue, 26 May 2026 19:18:37 +0800
-Message-ID: <20260526111837.2090768-5-cuitao@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260526111837.2090768-1-cuitao@kylinos.cn>
-References: <20260526111837.2090768-1-cuitao@kylinos.cn>
+	 MIME-Version; b=EtlHeHB/IxEgUiapSZL/ytgrXVMWQpRROs7cr5hxS3JjDW+Wg/e1jodNuBrK8wUlKndz7CkwRl7bJCE0C6jWdAnUmCKRwJef/LO+gLNH1pPZ3sgkpxRT/MoPsldFRSjtPLeFZQCHlHORO7/jdHuaiZk+YVh0YZUJPNUUazXL9hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.59])
+	by gateway (Coremail) with SMTP id _____8AxX+tgihVqn2MNAA--.38174S3;
+	Tue, 26 May 2026 19:56:16 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.59])
+	by front1 (Coremail) with SMTP id qMiowJCxGOBYihVq04+RAA--.13379S4;
+	Tue, 26 May 2026 19:56:15 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-sound@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 2/5] ASoC: loongson: Combined regmap definitions
+Date: Tue, 26 May 2026 19:56:00 +0800
+Message-ID: <6fd63cc57c112218ae0873b73d8c3a4b24304b80.1779796354.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1779796354.git.zhoubinbin@loongson.cn>
+References: <cover.1779796354.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -66,169 +43,226 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxGOBYihVq04+RAA--.13379S4
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQETCGoVNlwIvQAAs7
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr48tF48JF13Xw4rGw1xJFc_yoW7Kr45pr
+	nxAa97WrW5Jr4ay3ZIyrW8JFy5Cry3Cr93CF47Jw17W3srCw18uF15tF15Aa13uryDGFyI
+	vry8GrW8Ga4UGabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
 
-Add a multi-threaded benchmark to measure PV TLB flush performance
-inside LoongArch KVM guests.
+Previously, the regmap configuration for Loongson I2S controller was
+duplicated in both PCI and platform glue drivers. Move the common
+regmap configuration into the shared loongson_i2s.c to avoid code
+duplication and centralize register access handling.
 
-The test spawns flusher threads that repeatedly mmap/munmap to trigger
-TLB shootdown IPIs, alongside idle threads that either sleep or
-busy-spin. With PV TLB flush enabled, IPIs to preempted vCPUs are
-replaced by deferred flags in the steal-time shared page.
+While moving, adjust the following:
+- Mark only RX_DATA and TX_DATA as volatile registers. The PCI version
+  incorrectly marked CFG/CTRL/CFG1 as volatile, which prevented proper
+  regcache synchronization.
+- Change cache type from REGCACHE_FLAT to REGCACHE_MAPLE. The register
+  map is sparse and the number of registers is small; MAPLE tree provides
+  better scalability and is the recommended cache type for modern
+  regmap users.
 
-Usage (inside guest):
-  ./pv_tlb_flush_test <flushers> <idle> <iterations> <busy_idle>
-  busy_idle=0: idle threads sleep (PV can skip IPIs to preempted vCPUs)
-  busy_idle=1: idle threads spin (all vCPUs active, PV cannot optimize)
+Also, the following warning for the i2s_plat driver will be eliminated:
 
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+loongson-i2s-plat loongson-i2s: using zero-initialized flat cache, this may cause unexpected behavior.
+
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- .../kvm/loongarch/pv_tlb_flush_test.c         | 137 ++++++++++++++++++
- 1 file changed, 137 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
+ sound/soc/loongson/loongson_i2s.c      | 55 +++++++++++++++++++++++++-
+ sound/soc/loongson/loongson_i2s.h      |  1 +
+ sound/soc/loongson/loongson_i2s_pci.c  | 54 -------------------------
+ sound/soc/loongson/loongson_i2s_plat.c |  8 ----
+ 4 files changed, 55 insertions(+), 63 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c b/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
-new file mode 100644
-index 000000000000..9c5e50982367
---- /dev/null
-+++ b/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
-@@ -0,0 +1,137 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * LoongArch PV TLB Flush Performance Test
-+ *
-+ * Measure the overhead of remote TLB flushes in a KVM guest by spawning
-+ * flusher threads that repeatedly mmap/munmap (triggering TLB shootdown
-+ * IPIs) alongside idle threads that either sleep or busy-spin.
-+ *
-+ * With PV TLB flush enabled, IPIs to preempted vCPUs are replaced by
-+ * deferred flags in the steal-time shared page, reducing flush latency.
-+ *
-+ * Usage:
-+ *   Compile on LoongArch guest:
-+ *     gcc -O2 -static -pthread -o pv_tlb_flush_test pv_tlb_flush_test.c
-+ *   Run (inside KVM guest):
-+ *     ./pv_tlb_flush_test <flushers> <idle> <iterations> <busy_idle>
-+ *   Examples:
-+ *     ./pv_tlb_flush_test 1 31 50000 0   # 1 flusher, 31 sleep, PV helps
-+ *     ./pv_tlb_flush_test 1 31 50000 1   # 1 flusher, 31 busy-spin, no PV
-+ *
-+ *   busy_idle=0: idle threads sleep, vCPUs get preempted, PV TLB flush
-+ *                can skip IPIs to them
-+ *   busy_idle=1: idle threads spin, all vCPUs stay active, PV TLB flush
-+ *                cannot optimize (baseline for comparison)
-+ */
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/mman.h>
-+#include <string.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <sched.h>
-+#include <pthread.h>
+diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
+index e336656e13eb..56bb6a85e58b 100644
+--- a/sound/soc/loongson/loongson_i2s.c
++++ b/sound/soc/loongson/loongson_i2s.c
+@@ -254,6 +254,7 @@ static int i2s_suspend(struct device *dev)
+ 	struct loongson_i2s *i2s = dev_get_drvdata(dev);
+ 
+ 	regcache_cache_only(i2s->regmap, true);
++	regcache_mark_dirty(i2s->regmap);
+ 
+ 	return 0;
+ }
+@@ -263,7 +264,7 @@ static int i2s_resume(struct device *dev)
+ 	struct loongson_i2s *i2s = dev_get_drvdata(dev);
+ 
+ 	regcache_cache_only(i2s->regmap, false);
+-	regcache_mark_dirty(i2s->regmap);
 +
-+#define MEM_SIZE (2*1024*1024)
-+#define DEFAULT_ITERS 50000
-+
-+static int nr_iters = DEFAULT_ITERS;
-+static volatile int start_barrier;
-+static volatile int stop_flag;
-+static int busy_idle = 0;
-+
-+static inline unsigned long clock_ns(void) {
-+    struct timespec ts;
-+    clock_gettime(CLOCK_MONOTONIC, &ts);
-+    return (unsigned long)ts.tv_sec * 1000000000UL + ts.tv_nsec;
+ 	return regcache_sync(i2s->regmap);
+ }
+ 
+@@ -272,5 +273,57 @@ const struct dev_pm_ops loongson_i2s_pm = {
+ };
+ EXPORT_SYMBOL_GPL(loongson_i2s_pm);
+ 
++static bool loongson_i2s_rd_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_VER:
++	case LS_I2S_CFG:
++	case LS_I2S_CTRL:
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++	case LS_I2S_CFG1:
++		return true;
++	default:
++		return false;
++	};
 +}
 +
-+static void pin_cpu(int cpu) {
-+    cpu_set_t set;
-+    CPU_ZERO(&set);
-+    CPU_SET(cpu, &set);
-+    sched_setaffinity(0, sizeof(set), &set);
++static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_CFG:
++	case LS_I2S_CTRL:
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++	case LS_I2S_CFG1:
++		return true;
++	default:
++		return false;
++	};
 +}
 +
-+static void *idle_thread(void *arg) {
-+    while (!__atomic_load_n(&start_barrier, __ATOMIC_ACQUIRE));
-+    if (busy_idle) {
-+        volatile long sink = 0;
-+        while (!__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE))
-+            sink++;
-+    } else {
-+        while (!__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE))
-+            usleep(1000);
-+    }
-+    return NULL;
++static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++		return true;
++	default:
++		return false;
++	};
 +}
 +
-+static void *flush_thread(void *arg) {
-+    unsigned long *result = arg;
-+    unsigned long start, end;
-+    int i;
-+    size_t mem_size = MEM_SIZE;
-+    while (!__atomic_load_n(&start_barrier, __ATOMIC_ACQUIRE));
-+    start = clock_ns();
-+    for (i = 0; i < nr_iters && !__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE); i++) {
-+        void *p = mmap(NULL, mem_size, PROT_READ|PROT_WRITE,
-+                       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-+        if (p == MAP_FAILED) break;
-+        for (size_t off = 0; off < mem_size; off += 65536)
-+            ((volatile char*)p)[off] = 0;
-+        munmap(p, mem_size);
-+    }
-+    end = clock_ns();
-+    *result = end - start;
-+    return NULL;
-+}
++const struct regmap_config loongson_i2s_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = LS_I2S_CFG1,
++	.readable_reg = loongson_i2s_rd_reg,
++	.writeable_reg = loongson_i2s_wr_reg,
++	.volatile_reg = loongson_i2s_volatile_reg,
++	.cache_type = REGCACHE_MAPLE,
++};
++EXPORT_SYMBOL_GPL(loongson_i2s_regmap_config);
 +
-+int main(int argc, char **argv) {
-+    int nr_flush = 1, nr_idle = 3, i, run;
-+    if (argc > 1) nr_flush = atoi(argv[1]);
-+    if (argc > 2) nr_idle = atoi(argv[2]);
-+    if (argc > 3) nr_iters = atoi(argv[3]);
-+    if (argc > 4) busy_idle = atoi(argv[4]);
-+
-+    printf("=== TLB Flush Benchmark ===\n");
-+    printf("CPUs: %d  Flushers: %d  Idle: %d  Iters: %d  Mode: %s\n",
-+           (int)sysconf(_SC_NPROCESSORS_ONLN), nr_flush, nr_idle, nr_iters,
-+           busy_idle ? "busy-spin" : "sleep");
-+
-+    for (run = 0; run < 3; run++) {
-+        int total = nr_flush + nr_idle;
-+        pthread_t threads[64];
-+        unsigned long results[64];
-+        start_barrier = 0; stop_flag = 0;
-+
-+        for (i = 0; i < nr_idle; i++) {
-+            pthread_create(&threads[i], NULL, idle_thread, NULL);
-+            if (total <= sysconf(_SC_NPROCESSORS_ONLN))
-+                pin_cpu(nr_flush + i);
-+        }
-+        for (i = 0; i < nr_flush; i++) {
-+            results[nr_idle + i] = 0;
-+            pthread_create(&threads[nr_idle + i], NULL, flush_thread, &results[nr_idle + i]);
-+            if (total <= sysconf(_SC_NPROCESSORS_ONLN))
-+                pin_cpu(i);
-+        }
-+
-+        usleep(10000);
-+        __atomic_store_n(&start_barrier, 1, __ATOMIC_RELEASE);
-+        for (i = 0; i < nr_flush; i++)
-+            pthread_join(threads[nr_idle + i], NULL);
-+        __atomic_store_n(&stop_flag, 1, __ATOMIC_RELEASE);
-+        for (i = 0; i < nr_idle; i++)
-+            pthread_join(threads[i], NULL);
-+
-+        unsigned long total_ns = 0;
-+        for (i = 0; i < nr_flush; i++) {
-+            printf("  Run %d: %lu ns/flush\n", run, results[nr_idle + i] / nr_iters);
-+            total_ns += results[nr_idle + i];
-+        }
-+        printf("  Run %d Avg: %lu ns/flush\n", run,
-+               total_ns / (nr_flush * (unsigned long)nr_iters));
-+    }
-+    return 0;
-+}
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Common functions for loongson I2S controller driver");
+diff --git a/sound/soc/loongson/loongson_i2s.h b/sound/soc/loongson/loongson_i2s.h
+index c8052a762c1b..e73ffa954ec9 100644
+--- a/sound/soc/loongson/loongson_i2s.h
++++ b/sound/soc/loongson/loongson_i2s.h
+@@ -65,6 +65,7 @@ struct loongson_i2s {
+ 	u32 sysclk;
+ };
+ 
++extern const struct regmap_config loongson_i2s_regmap_config;
+ extern const struct dev_pm_ops loongson_i2s_pm;
+ extern struct snd_soc_dai_driver loongson_i2s_dai;
+ 
+diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
+index 1ea5501a97f8..dea1e4ebee29 100644
+--- a/sound/soc/loongson/loongson_i2s_pci.c
++++ b/sound/soc/loongson/loongson_i2s_pci.c
+@@ -18,60 +18,6 @@
+ 
+ #define DRIVER_NAME "loongson-i2s-pci"
+ 
+-static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static bool loongson_i2s_rd_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_VER:
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static const struct regmap_config loongson_i2s_regmap_config = {
+-	.reg_bits = 32,
+-	.reg_stride = 4,
+-	.val_bits = 32,
+-	.max_register = LS_I2S_CFG1,
+-	.writeable_reg = loongson_i2s_wr_reg,
+-	.readable_reg = loongson_i2s_rd_reg,
+-	.volatile_reg = loongson_i2s_volatile_reg,
+-	.cache_type = REGCACHE_FLAT,
+-};
+-
+ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
+ 				  const struct pci_device_id *pid)
+ {
+diff --git a/sound/soc/loongson/loongson_i2s_plat.c b/sound/soc/loongson/loongson_i2s_plat.c
+index fa2e450ff618..f8d7aca8b903 100644
+--- a/sound/soc/loongson/loongson_i2s_plat.c
++++ b/sound/soc/loongson/loongson_i2s_plat.c
+@@ -85,14 +85,6 @@ static const struct snd_soc_component_driver loongson_i2s_component_driver = {
+ 	.open	= loongson_pcm_open,
+ };
+ 
+-static const struct regmap_config loongson_i2s_regmap_config = {
+-	.reg_bits = 32,
+-	.reg_stride = 4,
+-	.val_bits = 32,
+-	.max_register = 0x14,
+-	.cache_type = REGCACHE_FLAT,
+-};
+-
+ static int loongson_i2s_apbdma_config(struct platform_device *pdev)
+ {
+ 	int val;
 -- 
-2.43.0
+2.52.0
 
