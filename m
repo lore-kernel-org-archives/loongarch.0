@@ -1,155 +1,104 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21C12139C9;
-	Tue, 26 May 2026 06:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9940C39732F
+	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 06:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779777204; cv=none; b=fK5q73vqFhxqFFXArDFSx6cy0Bvxbars+VHf8iHl82LwBA8bhV/krxWzfUzM6vWFPev8TmOC2pJ5hyuaJc+rlr7L0pgcBKVjIm/7HRpkU9jP2M8+udoL592KDgTi+Vq4SNTLiSrE3odVoH4OaVTmgD5x64aH5S7bWeOuZLGHv40=
+	t=1779777588; cv=none; b=JxxNWPJQ5dkd4M+q8a2I9D3PuXzVXzYtUXHcTAL7G3L3tZ5EyLzS9hlJPq34LW/i2SCMsaBVYO0vsJPbntoqo8d0PxrC8ZnmOw850uXkeznB0D6uKV8792gCiam23FtZEFqqBf9FXSVgs6q2tGhpAzGO7GOGuTNGEGuZYVlyjro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779777204; c=relaxed/simple;
-	bh=HKAO9maESbKI4Exfss2i7RDbJyHWmkSIKxamB9uJhLA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V6CkiSEPUyAbYJG1LKO5uxEwqwvBcWvxDN1yiudP49AFF6+kRKHs+qbFwsnz2NhjrD3MiyrZNRu2bDNCtJcDOx0tSnwk/DsE+vOCC0pbp/m2E8xuPOHWuPvYHGHWBLLkRSdv4lihJwk0tfLQu0NTLRfav0tqO9o0Zls911qcYSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cpfdUPE5; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cpfdUPE5"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64PN5oCG4112531;
-	Tue, 26 May 2026 06:33:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=lSSTgI
-	JxElpRPZXCwCiqCKzOkrKn0h4qZngFuiv7DgQ=; b=cpfdUPE5GXZtk7jlSz6ZR/
-	9gZW04DexbKzX0Ao2CT9354Iq2VdPZ2LkuXTN020t0l+7B4S649D87v25jlxY+Z1
-	fptQYAGSz4U5aA71XLqZ1+H3eQpa7MDV5OebBvNT3zPJqwCxtO8XZwiyvCKZW5MP
-	vNjZ7GOVmQmOFsP4ubf8V4Him10gnMSvo6Q7A6UvS6mY/vhC/3AqKH1kb7LNpw7O
-	kK7Yapbyl/J5v1llS2nr+NsDqecbtAf9nkMrdYO9JZUk5E+sQenhTiu3kVQOb9oN
-	vN+A7y4ar4YBnHSMpgpwI4Ob/Cor1Wx5MmfeegXRaDOVBfx0sRlOjBwPGHH/R2DA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eb4pd9t75-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 May 2026 06:33:06 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64Q6O35j009870;
-	Tue, 26 May 2026 06:33:06 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ebqjjr3xx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 May 2026 06:33:06 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64Q6X5mr30147200
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 May 2026 06:33:05 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C7D958055;
-	Tue, 26 May 2026 06:33:05 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1FE0558043;
-	Tue, 26 May 2026 06:33:00 +0000 (GMT)
-Received: from [9.123.0.169] (unknown [9.123.0.169])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 26 May 2026 06:32:59 +0000 (GMT)
-Message-ID: <76f82194-9afb-4dfe-ad96-ae338c7db61d@linux.ibm.com>
-Date: Tue, 26 May 2026 12:02:58 +0530
+	s=arc-20240116; t=1779777588; c=relaxed/simple;
+	bh=InmskBsL43DvgxQ4LZbni0cgwDfdI+KD/WkqFlumQJI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OlM5Lpb7Va8/kJ6piybQfeCP9pdMzTyDfgBe6r/Ar4OY/dWaIAUr3WBWDNV9SSABMa/0f4TWWpahjNUXzj/kE5NTj3Ve82+spSa5C2RiiAfcpW6p71BXgfGzAMx9pefR8dSgCyFl7E//rVAPNAqz5/hIbIjXupgcGTt3+GfLAI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8DxRektQBVqYEsNAA--.31803S3;
+	Tue, 26 May 2026 14:39:41 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAxGMEpQBVqHV2RAA--.64236S2;
+	Tue, 26 May 2026 14:39:38 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Cc: loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] libbpf: Add __NR_bpf definition for LoongArch
+Date: Tue, 26 May 2026 14:39:36 +0800
+Message-ID: <20260526063936.16769-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: Validate irqchip index for LoongArch and PowerPC
-Content-Language: en-GB
-To: Yanfei Xu <yanfei.xu@bytedance.com>, zhaotianrui@loongson.cn,
-        maobibo@loongson.cn, chenhuacai@kernel.org, maddy@linux.ibm.com,
-        npiggin@gmail.com, sashiko-reviews@lists.linux.dev, seanjc@google.com,
-        pbonzini@redhat.com
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, caixiangfeng@bytedance.com,
-        fangying.tommy@bytedance.com, isyanfei.xu@gmail.com,
-        Sashiko <sashiko-bot@kernel.org>, stable@vger.kernel.org
-References: <20260525070154.495455-1-yanfei.xu@bytedance.com>
-From: Harsh Prateek Bora <harshpb@linux.ibm.com>
-In-Reply-To: <20260525070154.495455-1-yanfei.xu@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=OdqoyBTY c=1 sm=1 tr=0 ts=6a153ea3 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=f7IdgyKtn90A:10
- a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22
- a=VwQbUJbxAAAA:8 a=968KyxNXAAAA:8 a=VnNF1IyMAAAA:8 a=VhF_hiyGZBDqKw0Zxd0A:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: LRBMiiFu8R_IMzxWSnnQX7_Q9AYoCXuw
-X-Proofpoint-ORIG-GUID: 5_W0oqDVcmHgDExfvwT3FxNm3zkLR1hH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI2MDA1MSBTYWx0ZWRfX90z2vKmC0yAk
- CWSucWXg+h4/Q/KVFzuUyOVTM3Ffn5pOF70e9b6dUfaJEKlTKVS5FhR0ih3lCU5NshKV2HubsWL
- SLfOz2KgQyFTWyDyk2c5VFMWK1WwrBK2V9He1yI9qH2vWFfu8CbOiIp2svrl8Uq45ssuZG3u1Ui
- cuswYiUbKsINKddCpffjDXQZri/svJx49y8R9X0UXJ5QeIaEer68I3nADevAk7o7ZS6KHC7DBh7
- MG28r5i57DGfw6xEXwCLKnf0V7ak8mqhnXdEfVg1oz1XtuJKej7DUYpLPsxWAu1QchEvUJRRzOU
- iv4n2vwDpREmpc8NxtC0O7SgemcbY5bh0qeZ95hhSCXTfhTLcwq9eHdse9QCZxpX66x3iCn1oei
- xB1qrl0z7NgLSMif/uc2QI9feykHP1Y9tJixKyB/lftuVZyDsUVJxUFB8gmLDmtZlH8qNq8mrER
- 2NZy1yKpnBXTVaXu5PQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-26_01,2026-05-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 clxscore=1011 malwarescore=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
- definitions=main-2605260051
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxGMEpQBVqHV2RAA--.64236S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFy7Gw43Kw1DJFy7JF1kZwc_yoW8Ar4xpw
+	4UCa40kr15GFW5Jw10vFsYqw43Grn7tryjqayrCw4xCFs5J3WxJr1qvFZ8ZF1aqw4Fk342
+	kr1Yg3s8Zr18AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUUUUU==
 
-+ cc: stable@vger.kernel.org
+LoongArch uses the generic syscall table, where __NR_bpf is defined
+as 280 in include/uapi/asm-generic/unistd.h.
 
-On 25/05/26 12:31 pm, Yanfei Xu wrote:
-> Sashiko reported that irqchip index is not validated for LoongArch and
-> PowerPC. Add validation and reject out-of-range irqchip indexes to avoid
-> indexing past the routing table's chip array.
-> 
-> Fixes: de9ba2f36368 ("KVM: PPC: Support irq routing and irqfd for in-kernel MPIC")
-> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/kvm/20260525051714.485D51F000E9@smtp.kernel.org/
-> Signed-off-by: Yanfei Xu <yanfei.xu@bytedance.com>
-> ---
->   arch/loongarch/kvm/irqfd.c | 3 ++-
->   arch/powerpc/kvm/mpic.c    | 3 ++-
->   2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-> index f4f953b22419..40ed1081c4b6 100644
-> --- a/arch/loongarch/kvm/irqfd.c
-> +++ b/arch/loongarch/kvm/irqfd.c
-> @@ -51,7 +51,8 @@ int kvm_set_routing_entry(struct kvm *kvm,
->   		e->irqchip.irqchip = ue->u.irqchip.irqchip;
->   		e->irqchip.pin = ue->u.irqchip.pin;
->   
-> -		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS)
-> +		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS ||
-> +		    e->irqchip.irqchip >= KVM_NR_IRQCHIPS)
->   			return -EINVAL;
->   
->   		return 0;
-> diff --git a/arch/powerpc/kvm/mpic.c b/arch/powerpc/kvm/mpic.c
-> index 3070f36d9fb8..fb5f9e65e02e 100644
-> --- a/arch/powerpc/kvm/mpic.c
-> +++ b/arch/powerpc/kvm/mpic.c
-> @@ -1833,7 +1833,8 @@ int kvm_set_routing_entry(struct kvm *kvm,
->   		e->set = mpic_set_irq;
->   		e->irqchip.irqchip = ue->u.irqchip.irqchip;
->   		e->irqchip.pin = ue->u.irqchip.pin;
-> -		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS)
-> +		if (e->irqchip.pin >= KVM_IRQCHIP_NUM_PINS ||
-> +		    e->irqchip.irqchip >= KVM_NR_IRQCHIPS)
+To align with other architectures, add the __NR_bpf definition for
+LoongArch to avoid a potential compilation failure: "error __NR_bpf
+not defined. libbpf does not support your arch."
 
-Reviewed-by: Harsh Prateek Bora <harshpb@linux.ibm.com> # PPC KVM
->   			goto out;
->   		break;
->   	case KVM_IRQ_ROUTING_MSI:
+This is a follow up patch of:
+
+  commit b0c47807d31d ("bpf: Add sparc support to tools and samples.")
+  commit bad1926dd2f6 ("bpf, s390: fix build for libbpf and selftest suite")
+  commit ca31ca8247e2 ("tools/bpf: fix perf build error with uClibc (seen on ARC)")
+  commit e32cb12ff52a ("bpf, mips: Fix build errors about __NR_bpf undeclared")
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/build/feature/test-bpf.c | 2 ++
+ tools/lib/bpf/bpf.c            | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/tools/build/feature/test-bpf.c b/tools/build/feature/test-bpf.c
+index e7a405f83af6..89d59674f39b 100644
+--- a/tools/build/feature/test-bpf.c
++++ b/tools/build/feature/test-bpf.c
+@@ -20,6 +20,8 @@
+ #  define __NR_bpf 6319
+ # elif defined(__mips__) && defined(_ABI64)
+ #  define __NR_bpf 5315
++# elif defined(__loongarch__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 3cd705802330..bc513aa8f404 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -59,6 +59,8 @@
+ #  define __NR_bpf 6319
+ # elif defined(__mips__) && defined(_ABI64)
+ #  define __NR_bpf 5315
++# elif defined(__loongarch__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+-- 
+2.42.0
 
