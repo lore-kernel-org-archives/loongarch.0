@@ -1,126 +1,234 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCAC2DECBA
-	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 11:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27613DD869
+	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 12:25:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779796605; cv=none; b=iWC3Ul9lNDJKn3M44lxOZ71MoFUgVmzS77I57lL5wBuTpx7tS6PhrfgzH2QskVbx/GGhBVH4qkZrX820p7huuNpib0dVYRmT9vJ4TTIM2/KD3z0Z/1k7O+zJMFdTFUlQJblsbnGS7pDHEzt6uerv42FZIkscRMSvLoNcDLBB9iQ=
+	t=1779798360; cv=none; b=Nt56OaeBQFKTvGcQTnS8RSOH0ONOdpFzUIXvegD2C0QJXQRoadZctwPbwMtGPBNNFMYd4feSO4BcXcodEnu5bgm6ZXx1O0q2dEoRwoJhyW0PvoFWFAlpkMDp7DM4FB/jbOIXCrRvLJcXy0XzoQnhqoLC+AXVrW+vsLNWSVzNpPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779796605; c=relaxed/simple;
-	bh=26baxojEQUES+iGTE+rTRbPSPsC97B/hRpT8D4AwdqA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QAHh+5BT55llhCz2VYCcPMhi/mZwcFsBlidS10I42LBx8pVNHz9uDe2j4YNZHCaXNiOlFreKTmG1wwWYOWbo0aoN9OSlsVSeg4bRwS2x9FLO60D+c83K8zA+G7JeyUy9O7kHBLYwCTO198gSqpcTYysM+xMydCFVyO3Z5wQKSpk=
+	s=arc-20240116; t=1779798360; c=relaxed/simple;
+	bh=BLEKH2goSjFPae7TXgdDWhWOuyPOcvGkJQPO5CqO2fI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=S1/7htxpcXQ/s0tAxLr1YI2vY7txn4QvIaVI1ujzj1+IEmM6Ht/o6kf81VdES9AG2IPV8cEXEKtRnrOMmWrCwk0JECvLAJ2tb7gmn5Mj/LNpJNXzqLQ0gL+7E/ov2BVh3Dztl18rjraBU9gE9LC0Umk1la54DwsYD+fHmDyiAHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.59])
-	by gateway (Coremail) with SMTP id _____8CxncB0ihVqxmMNAA--.14377S3;
-	Tue, 26 May 2026 19:56:36 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.59])
-	by front1 (Coremail) with SMTP id qMiowJCxGOBwihVq6I+RAA--.13381S3;
-	Tue, 26 May 2026 19:56:35 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v2 5/5] ASoC: codecs: es8323: Adjust the initialization of certain registers
-Date: Tue, 26 May 2026 19:56:26 +0800
-Message-ID: <738268f7409fafdb65cd25214114fbde4d7e25c5.1779796354.git.zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1779796354.git.zhoubinbin@loongson.cn>
-References: <cover.1779796354.git.zhoubinbin@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Ax_ulTkRVqJWYNAA--.37754S3;
+	Tue, 26 May 2026 20:25:55 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxGOBSkRVq4pORAA--.13422S3;
+	Tue, 26 May 2026 20:25:54 +0800 (CST)
+Subject: Re: [PATCH 2/4] LoongArch: KVM: Add PV TLB flush support via
+ steal-time shared memory
+To: Tao Cui <cuitao@kylinos.cn>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, loongarch@lists.linux.dev
+Cc: kernel@xen0n.name
+References: <20260526111837.2090768-1-cuitao@kylinos.cn>
+ <20260526111837.2090768-3-cuitao@kylinos.cn>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <0cb0ee14-39fb-8814-7230-788071486760@loongson.cn>
+Date: Tue, 26 May 2026 20:22:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260526111837.2090768-3-cuitao@kylinos.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxGOBwihVq6I+RAA--.13381S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgETCGoVNiwIsAAAsF
-X-Coremail-Antispam: 1Uk129KBj93XoWxJF4rXryrAw4kZFWrGFWUKFX_yoW5Gr4kpF
-	Z0va98tF1UuF4rXry5AFWrZr1xJryF9FW7C342g39xJr13Zr9293WFqFy0vryrZFsxtr4D
-	Zr1j93yUJ3WfG3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJCxGOBSkRVq4pORAA--.13422S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtrWxtryDWw1DAFy3trW5Arc_yoWxuw4kpF
+	n2yFn5WF4xGr1fC3Z3t39F9rW5WF4xCr1Iga47urW3AF4agryDurnYkrWDAFyDX3W8XayI
+	gF1Fv34DZF4DX3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsrcTUUUUU
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
+	sqAUUUUU=
 
-A few additional register initializations are required for proper
-operation.
 
-- During hw_params, write ES8323_DACPOWER (0x3c) to ensure DAC power
-  is correctly configured for the selected sample rate.
-- In the probe function, initialize DACCONTROL17, DACCONTROL20,
-  ADCCONTROL10, LOUT1_VOL, and ROUT1_VOL to improve analog output
-  stability and volume level.
-- In set_bias_level, set CHIPPOWER to 0x00 when powering up and
-  to 0xff when powering off, fully controlling the chip's power
-  state.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- sound/soc/codecs/es8323.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 2026/5/26 下午7:18, Tao Cui wrote:
+> Implement paravirtualized TLB flush for LoongArch KVM guests using the
+> existing steal-time shared memory page, following the same design as x86.
+> 
+> The mechanism uses the preempted byte in struct kvm_steal_time with an
+> additional KVM_VCPU_FLUSH_TLB flag bit:
+> 
+> - When a guest vCPU needs remote TLB flush but the target vCPU is
+>    preempted (not running), it atomically sets KVM_VCPU_FLUSH_TLB in
+>    the target's steal-time preempted byte instead of sending an IPI.
+> - When the host re-enters the target vCPU (kvm_update_stolen_time()),
+>    it reads and clears the preempted byte. If KVM_VCPU_FLUSH_TLB was
+>    set, the host drops the vCPU's VPID, which triggers a full TLB
+>    flush on the next VM entry via kvm_check_vpid().
+> - For non-preempted vCPUs, the guest falls back to normal IPI-based
+>    flush, avoiding unnecessary VM exits.
+> 
+> This significantly reduces TLB flush overhead in multi-vCPU workloads
+> where target vCPUs are often idle/preempted.
+> 
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_host.h      |  1 +
+>   arch/loongarch/include/asm/kvm_para.h      |  1 +
+>   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
+>   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+>   arch/loongarch/kvm/trace.h                 | 15 +++++++++++++++
+>   arch/loongarch/kvm/vcpu.c                  | 15 ++++++++++++++-
+>   arch/loongarch/kvm/vm.c                    |  3 +++
+>   7 files changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 903cb67ca817..a379868fb147 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -170,6 +170,7 @@ enum emulation_result {
+>   #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
+>   					 BIT(KVM_FEATURE_PREEMPT) |	\
+>   					 BIT(KVM_FEATURE_STEAL_TIME) |	\
+> +					 BIT(KVM_FEATURE_PV_TLB_FLUSH) |\
+>   					 BIT(KVM_FEATURE_USER_HCALL) |	\
+>   					 BIT(KVM_FEATURE_VIRT_EXTIOI))
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+> index fb17ba0fa101..28e3fa3b4c0e 100644
+> --- a/arch/loongarch/include/asm/kvm_para.h
+> +++ b/arch/loongarch/include/asm/kvm_para.h
+> @@ -41,6 +41,7 @@ struct kvm_steal_time {
+>   	__u8  pad[47];
+>   };
+>   #define KVM_VCPU_PREEMPTED		(1 << 0)
+> +#define KVM_VCPU_FLUSH_TLB		(1 << 1)
+>   
+>   /*
+>    * Hypercall interface for KVM hypervisor
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+> index cd0b5c11ca9c..e4cd4bbf8914 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -106,6 +106,7 @@ struct kvm_fpu {
+>   #define  KVM_LOONGARCH_VM_FEAT_PTW		8
+>   #define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
+>   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT	10
+> +#define  KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH	11
+>   
+>   /* Device Control API on vcpu fd */
+>   #define KVM_LOONGARCH_VCPU_CPUCFG	0
+> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+> index d28cbcadd276..8872839251cc 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+> @@ -16,6 +16,7 @@
+>   #define  KVM_FEATURE_IPI		1
+>   #define  KVM_FEATURE_STEAL_TIME		2
+>   #define  KVM_FEATURE_PREEMPT		3
+> +#define  KVM_FEATURE_PV_TLB_FLUSH	4
+>   /* BIT 24 - 31 are features configurable by user space vmm */
+>   #define  KVM_FEATURE_VIRT_EXTIOI	24
+>   #define  KVM_FEATURE_USER_HCALL		25
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index 3467ee22b704..8556954fa196 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -210,6 +210,21 @@ TRACE_EVENT(kvm_vpid_change,
+>   	    TP_printk("VPID: 0x%08lx", __entry->vpid)
+>   );
+>   
+> +TRACE_EVENT(kvm_pv_tlb_flush,
+> +	TP_PROTO(struct kvm_vcpu *vcpu, bool need_flush),
+> +	TP_ARGS(vcpu, need_flush),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned int, vcpu_id)
+> +		__field(bool, need_flush)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->vcpu_id = vcpu->vcpu_id;
+> +		__entry->need_flush = need_flush;
+> +	),
+> +	TP_printk("vcpu %u need_flush %u", __entry->vcpu_id,
+> +		  __entry->need_flush)
+> +);
+> +
+>   #endif /* _TRACE_KVM_H */
+>   
+>   #undef TRACE_INCLUDE_PATH
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index d82782b90457..7554ed3aa73c 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -173,7 +173,20 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>   	}
+>   
+Hi Tao,
 
-diff --git a/sound/soc/codecs/es8323.c b/sound/soc/codecs/es8323.c
-index d067f7bda03a..be5d9a2dea11 100644
---- a/sound/soc/codecs/es8323.c
-+++ b/sound/soc/codecs/es8323.c
-@@ -613,6 +613,8 @@ static int es8323_pcm_hw_params(struct snd_pcm_substream *substream,
- 	snd_soc_component_write_field(component, ES8323_DACCONTROL1,
- 				      ES8323_DACCONTROL1_DACWL, wl_mode);
- 
-+	snd_soc_component_write(component, ES8323_DACPOWER, 0x3c);
-+
- 	return 0;
- }
- 
-@@ -675,7 +677,12 @@ static int es8323_probe(struct snd_soc_component *component)
- 	}
- 
- 	snd_soc_component_write(component, ES8323_CONTROL2, 0x60);
-+	snd_soc_component_write(component, ES8323_DACCONTROL17, 0xb8);
-+	snd_soc_component_write(component, ES8323_DACCONTROL20, 0xb8);
- 	snd_soc_component_write(component, ES8323_DACCONTROL21, 0x80);
-+	snd_soc_component_write(component, ES8323_ADCCONTROL10, 0xea);
-+	snd_soc_component_write(component, ES8323_LOUT1_VOL, 0x1b);
-+	snd_soc_component_write(component, ES8323_ROUT1_VOL, 0x1b);
- 
- 	return 0;
- }
-@@ -694,6 +701,7 @@ static int es8323_set_bias_level(struct snd_soc_component *component,
- 		if (ret)
- 			return ret;
- 
-+		snd_soc_component_write(component, ES8323_CHIPPOWER, 0x00);
- 		snd_soc_component_write(component, ES8323_CHIPLOPOW1, 0x00);
- 		snd_soc_component_write(component, ES8323_CHIPLOPOW2, 0x00);
- 		snd_soc_component_update_bits(component, ES8323_ADCPOWER,
-@@ -702,6 +710,7 @@ static int es8323_set_bias_level(struct snd_soc_component *component,
- 	case SND_SOC_BIAS_STANDBY:
- 		break;
- 	case SND_SOC_BIAS_OFF:
-+		snd_soc_component_write(component, ES8323_CHIPPOWER, 0xff);
- 		snd_soc_component_write(component, ES8323_CHIPLOPOW1, 0xff);
- 		snd_soc_component_write(component, ES8323_CHIPLOPOW2, 0xff);
- 		clk_disable_unprepare(es8323->mclk);
--- 
-2.52.0
+The idea is wonderful, only that the memory order between LoongArch and 
+X86 is different, there may be some potential issues on LoongArch.
+
+>   	st = (struct kvm_steal_time __user *)ghc->hva;
+> -	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
+> +	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PV_TLB_FLUSH)) {
+> +		u8 preempted = 0;
+> +
+> +		unsafe_get_user(preempted, &st->preempted, out);
+> +		unsafe_put_user(0, &st->preempted, out);
+is it possible that unsafe_put_user() will go to out sentence and skip 
+the following flush tlb? even if value of preempted is 
+KVM_VCPU_FLUSH_TLB | KVM_VCPU_PREEMPTED.
+
+On guest side, try_cmpxchg() atomic instruction is used, however here is 
+non-atomic put_user instruction.
+
+Regards
+Bibo Mao
+> +		vcpu->arch.st.preempted = 0;
+> +
+> +		if (preempted & KVM_VCPU_FLUSH_TLB) {
+> +			vcpu->arch.vpid = 0;	/* Drop vpid to flush TLB */
+> +			trace_kvm_pv_tlb_flush(vcpu, true);
+> +		} else {
+> +			trace_kvm_pv_tlb_flush(vcpu, false);
+> +		}
+> +	} else if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
+>   		unsafe_put_user(0, &st->preempted, out);
+>   		vcpu->arch.st.preempted = 0;
+>   	}
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index 8af874e0b36b..4be70e4f1279 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -54,8 +54,10 @@ static void kvm_vm_init_features(struct kvm *kvm)
+>   	if (kvm_pvtime_supported()) {
+>   		kvm->arch.pv_features |= BIT(KVM_FEATURE_PREEMPT);
+>   		kvm->arch.pv_features |= BIT(KVM_FEATURE_STEAL_TIME);
+> +		kvm->arch.pv_features |= BIT(KVM_FEATURE_PV_TLB_FLUSH);
+>   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_PREEMPT);
+>   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
+> +		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH);
+>   	}
+>   	kvm->arch.pv_auto_features = kvm->arch.pv_features;
+>   }
+> @@ -159,6 +161,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
+>   	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
+>   	case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT:
+>   	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
+> +	case KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH:
+>   		if (kvm_vm_support(&kvm->arch, attr->attr))
+>   			return 0;
+>   		return -ENXIO;
+> 
 
