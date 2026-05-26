@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F7F31E821
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69EA02D1303
 	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 12:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779799992; cv=none; b=CjTa0MZH/nD0Ulx0F4Ur6WN6RFiL4lhTRD8npWCXMlhTVP0+BRJCdfaVLi3J5ZsbmmfX/CXKQ4K/cS5VYpUEg8pwoQ44PzB0WDzy8bJXL9cK+T08h3FuBiLOvAhI7kXlLj2tuPspGNLjGqDFDFSI3T1ut7L2QDnbfZjleP1BAuE=
+	t=1779799993; cv=none; b=G3GrzLsRMBLO5OBAw9R3965/N530jjfHB76N87U/1wOBEcOyNDHfXM+R6Tk2L8cFTqWrrDjxpYnKMEBCdekDpmEZvrbZ7CdYfVz5LtwES/d0QkeqWpaRhx2l4IG80JkKszRUNeru+sRhYib0SlWy/RxS2v3+OAWC2D7NJeG8BiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779799992; c=relaxed/simple;
-	bh=AFs+WNya3mZde7xpB7WAr9WR9Ggo95jUIl2MIL6j13A=;
+	s=arc-20240116; t=1779799993; c=relaxed/simple;
+	bh=AiEVm5E86Hgwhs2FlN6CBUirFybgc1DvnzdIK6J01do=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SktJP4ksE3REpnfwzUM89lcB0Sod9afL5lZ0mziMMIZxYvodhqj2oTLdCBbBjAJTzSjrP3jK/2ekjE9IfQpbe7ZwXFZ72LNf+/sM9SxKYoPFrAePELApXaTayVXz6ie1S+LeGX2cYK2m0V9yCKmufaJPppzzoEnwG0PpEcvbsDg=
+	 MIME-Version; b=hCIKzZXfyzGQ3ROiXZkRPTEfZ4m1IRZ8hJ5ovsoXUH5PSvidXgGGWsnLo9LzYoLhIHUOuGxBVSP9QQhuOxShpnxbWzGPabrllQIf2Q4MZjEDeCT4snFHkTuWTSCY39KtavVKs0Y/jGlg30T7IQtDtL5NMUkHd9LDrROZq7ZDpHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Cxf+uulxVqKGgNAA--.37969S3;
+	by gateway (Coremail) with SMTP id _____8BxT+qvlxVqK2gNAA--.37766S3;
 	Tue, 26 May 2026 20:53:03 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxpsCulxVqb5iRAA--.44615S2;
-	Tue, 26 May 2026 20:53:02 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJBxpsCulxVqb5iRAA--.44615S3;
+	Tue, 26 May 2026 20:53:03 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/6] LoongArch: KVM: Inject interrupt with batch method
-Date: Tue, 26 May 2026 20:52:53 +0800
-Message-Id: <20260526125256.2511876-5-maobibo@loongson.cn>
+Subject: [PATCH v5 5/6] LoongArch: KVM: Add valid bit check when set ESTAT CSR register
+Date: Tue, 26 May 2026 20:52:54 +0800
+Message-Id: <20260526125256.2511876-6-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20260526125256.2511876-1-maobibo@loongson.cn>
 References: <20260526125256.2511876-1-maobibo@loongson.cn>
@@ -37,158 +37,77 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpsCulxVqb5iRAA--.44615S2
+X-CM-TRANSID:qMiowJBxpsCulxVqb5iRAA--.44615S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-With bitmask method, interrupt can be injected with batch mode, rather
-than one by one. Also remove unused array priority_to_irqp[] here.
+When set ESTAT CSR register in function _kvm_setcsr(), valid bit check
+is added here. Also interrupt CPU_AVEC is checked by msgint feature.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/interrupt.c | 95 ++++++++++------------------------
- 1 file changed, 28 insertions(+), 67 deletions(-)
+ arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index 48dd56aa4dc5..50081484336e 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -9,39 +9,16 @@
- #include <asm/kvm_vcpu.h>
- #include <asm/kvm_dmsintc.h>
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index ebd432da3ca4..3c6726e00531 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
  
--static unsigned int priority_to_irq[EXCCODE_INT_NUM] = {
--	[INT_TI]	= CPU_TIMER,
--	[INT_IPI]	= CPU_IPI,
--	[INT_SWI0]	= CPU_SIP0,
--	[INT_SWI1]	= CPU_SIP1,
--	[INT_HWI0]	= CPU_IP0,
--	[INT_HWI1]	= CPU_IP1,
--	[INT_HWI2]	= CPU_IP2,
--	[INT_HWI3]	= CPU_IP3,
--	[INT_HWI4]	= CPU_IP4,
--	[INT_HWI5]	= CPU_IP5,
--	[INT_HWI6]	= CPU_IP6,
--	[INT_HWI7]	= CPU_IP7,
--	[INT_AVEC]	= CPU_AVEC,
--};
--
--static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
-+static void kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned long mask)
+ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
  {
--	unsigned int irq = 0;
-+	unsigned long irq;
- 	unsigned long old, new;
+-	unsigned long gintc;
++	unsigned long gintc, estat;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
  
--	clear_bit(priority, &vcpu->arch.irq_pending);
--	if (priority < EXCCODE_INT_NUM)
--		irq = priority_to_irq[priority];
+ 	if (get_gcsr_flag(id) & INVALID_GCSR)
+@@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+ 		preempt_enable();
+ 
+ 		/* ESTAT IP0~IP7 get from GINTC */
+-		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
+-		*val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) | (gintc << 2);
++		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
++		estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_HWI_MASK;
++		*val = estat | (gintc << GINTC_VIP_DELTA);
+ 		return 0;
+ 	}
+ 
+@@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+ 
+ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ {
+-	int ret = 0, gintc;
++	int ret = 0;
++	unsigned long gintc, estat;
+ 	struct loongarch_csrs *csr = vcpu->arch.csr;
+ 
+ 	if (get_gcsr_flag(id) & INVALID_GCSR)
+@@ -648,11 +650,16 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 
+ 	if (id == LOONGARCH_CSR_ESTAT) {
+ 		/* ESTAT IP0~IP7 inject through GINTC */
+-		gintc = (val >> 2) & 0xff;
+-		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
 -
--	switch (priority) {
--	case INT_AVEC:
--		dmsintc_inject_irq(vcpu);
--		fallthrough;
--	case INT_TI:
--	case INT_IPI:
--	case INT_SWI0:
--	case INT_SWI1:
-+	irq = mask & KVM_ESTAT_IRQ_MASK;
-+	if (irq) {
-+		if (irq & CPU_AVEC)
-+			dmsintc_inject_irq(vcpu);
+-		gintc = val & ~(0xffUL << 2);
+-		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
++		gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & ~KVM_GINTC_IRQ_MASK;
++		gintc |= (val >> GINTC_VIP_DELTA) & KVM_GINTC_IRQ_MASK;
++		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
 +
- 		old = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
- 		set_gcsr_estat(irq);
- 		new = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
-@@ -49,34 +26,20 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
- 		/* Inject TI if TVAL inverted */
- 		if (new > old)
- 			set_gcsr_estat(CPU_TIMER);
--		break;
--
--	case INT_HWI0 ... INT_HWI7:
--		set_csr_gintc(irq);
--		break;
--
--	default:
--		break;
++		/* only set valid ESTAT bits */
++		estat = val & ~KVM_ESTAT_HWI_MASK;
++		estat &= CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE;
++		if (!kvm_guest_has_msgint(&vcpu->arch))
++			estat &= ~CPU_AVEC;
++		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
+ 
+ 		return ret;
  	}
- 
--	return 1;
-+	irq = (mask >> GINTC_VIP_DELTA) & KVM_GINTC_IRQ_MASK;
-+	if (irq)
-+		set_csr_gintc(irq);
- }
- 
--static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
-+static void kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned long mask)
- {
--	unsigned int irq = 0;
-+	unsigned long irq;
- 	unsigned long old, new;
- 
--	clear_bit(priority, &vcpu->arch.irq_clear);
--	if (priority < EXCCODE_INT_NUM)
--		irq = priority_to_irq[priority];
--
--	switch (priority) {
--	case INT_AVEC:
--	case INT_TI:
--	case INT_IPI:
--	case INT_SWI0:
--	case INT_SWI1:
-+	irq = mask & KVM_ESTAT_IRQ_MASK;
-+	if (irq) {
- 		old = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
- 		clear_gcsr_estat(irq);
- 		new = kvm_read_hw_gcsr(LOONGARCH_CSR_TVAL);
-@@ -84,30 +47,28 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
- 		/* Inject TI if TVAL inverted */
- 		if (new > old)
- 			set_gcsr_estat(CPU_TIMER);
--		break;
--
--	case INT_HWI0 ... INT_HWI7:
--		clear_csr_gintc(irq);
--		break;
--
--	default:
--		break;
- 	}
- 
--	return 1;
-+	irq = (mask >> GINTC_VIP_DELTA) & KVM_GINTC_IRQ_MASK;
-+	if (irq)
-+		clear_csr_gintc(irq);
- }
- 
- void kvm_deliver_intr(struct kvm_vcpu *vcpu)
- {
--	unsigned int priority;
--	unsigned long *pending = &vcpu->arch.irq_pending;
--	unsigned long *pending_clr = &vcpu->arch.irq_clear;
-+	unsigned long mask;
- 
--	for_each_set_bit(priority, pending_clr, EXCCODE_INT_NUM)
--		kvm_irq_clear(vcpu, priority);
-+	mask = READ_ONCE(vcpu->arch.irq_clear);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_clear, 0);
-+		kvm_irq_clear(vcpu, mask);
-+	}
- 
--	for_each_set_bit(priority, pending, EXCCODE_INT_NUM)
--		kvm_irq_deliver(vcpu, priority);
-+	mask = READ_ONCE(vcpu->arch.irq_pending);
-+	if (mask) {
-+		mask = xchg_relaxed(&vcpu->arch.irq_pending, 0);
-+		kvm_irq_deliver(vcpu, mask);
-+	}
- }
- 
- int kvm_pending_timer(struct kvm_vcpu *vcpu)
 -- 
 2.39.3
 
