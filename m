@@ -1,142 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764888462;
-	Mon, 25 May 2026 17:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52E82BEC43
+	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 01:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779731373; cv=none; b=dVvjptoGxTWvlhRIyuHfgQ7E7QNSziH3Y0Bi8ZeAqopw+szLK5g4DdXWfp8fY5L+v+9toZKGQhJHx4SwDY0Fm+WZDhNyngl2MB+/7HSWthPtPxBxYzy7UH/fiof5fnkwDKmQGKZKwtF7gqmyjr3gxx6mVx8ns2QuJE3TBS9pSVA=
+	t=1779758944; cv=none; b=Elhm2WJNffaXAqNyCzmLKpXYIgYeEan/N5yKct7ao43L7b4OtYPAugsiLyf8dkW+1NLSXetpiWsUuj55rx0/D5N8VTSH2oxmbB2Di3sGCTVuQKdIWPmHhtwJvOrXRSLejG+JIT8ITfSffNRo3Gtq0IRNrDwME95Nj0pCMqrdNv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779731373; c=relaxed/simple;
-	bh=gEsP+Gq6XxxpksEZqjc5xlVOq8ChQc72ScHgpfpQRH8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QfouOQE744OUKVrBcvj5aUzhilJaGvuI5saNTx1Xp71oAX+WsZn3YMYX3PXJ79d0FMCLq4gSj67tZ/XM/pS82E0xZWPcMEGgGkhbXWxj16AmfakGTFw1dZ9cvyI9TmZ+Vm6/Tk21P2s2QLOirswx2s7YZUL0trTXhHXReesJyu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itXByRbw; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itXByRbw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24B01F000E9;
-	Mon, 25 May 2026 17:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779731372;
-	bh=34eaHJRXGUxn6aCaWNiWQiEzep2YC7iFCHhas4g5QaM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=itXByRbw+mP3n0WYUFSgOvuNWwiQkJMyZndGej1Q+qst31PJZbH6hK5bKQPa8pye+
-	 8z8HSlCAtj0uObcAzFM41I0i1eME3B6Bi8ajwvxrJYfYLrghnHBDvJdiJzElpB6dgx
-	 6udxDWvfBe/N7Wnl4Rg3vu7KbiWdMEYlpoOK3B2DJ+t01suWb5DaAsMMK3B1krviAH
-	 GxhO/AdojFJgoYBSOPNzAhbQgIYy8pkvAB/sTodPhcLgM7fa7Xy/FT1idtC3pqgPAF
-	 zAo5rkvorkJD1JryB7ndb0kXfNlZDrLT21DM1MHfbYKs+V+EtGAisgsYyQwcWj+KKU
-	 ozSnoW+MLfQsA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org,  rppt@kernel.org,  pasha.tatashin@soleen.com,
-  pratyush@kernel.org,  kernel@xen0n.name,  graf@amazon.com,
-  shuah@kernel.org,  loongarch@lists.linux.dev,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kselftest@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  George Guo <guodongtai@kylinos.cn>
-Subject: Re: [PATCH 2/7] LoongArch: kho: strip stale kho_handover= from
- reused cmdline
-In-Reply-To: <20260525062810.103367-3-dongtai.guo@linux.dev> (George Guo's
-	message of "Mon, 25 May 2026 14:28:05 +0800")
-References: <20260525062810.103367-1-dongtai.guo@linux.dev>
-	<20260525062810.103367-3-dongtai.guo@linux.dev>
-Date: Mon, 25 May 2026 19:49:28 +0200
-Message-ID: <2vxzpl2j5qhj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1779758944; c=relaxed/simple;
+	bh=av46I+EnN6jxTorQdzrC4+FQfi9O/sZjXnjHmYq6pfM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=jEZ0oFkpzB2RKCtfxLjg922B4ZlLKFb/y+KZF9R9WL4U31Al6QMkc2Y+aRYI1SLSob8lVrHmQjJSeCOrvsCuLoK7el+ihTUQgC+9UIB1zIJdBX37oHFyHoAm9IIRuN2HseBu9eHzAw1NeUB5B/W3HaWpsYce3tJEL9KlK6mg9wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxRXhZ9xRq5zsNAA--.13474S3;
+	Tue, 26 May 2026 09:28:57 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxTMJW9xRqGS6RAA--.10245S3;
+	Tue, 26 May 2026 09:28:55 +0800 (CST)
+Subject: Re: [PATCH v2 net] LoongArch: KVM: Add missing slots_lock for IO bus
+ device register/unregister
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Zeng Chi <zeng_chi911@163.com>, zhaotianrui@loongson.cn,
+ kernel@xen0n.name, kees@kernel.org, siyanteng@cqsoftware.com.cm,
+ maqianga@uniontech.com, gaosong@loongson.cn, yury.norov@gmail.com,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zengchi@kylinos.cn
+References: <20260518094521.138692-1-zeng_chi911@163.com>
+ <20260525092633.1706633-1-zeng_chi911@163.com>
+ <75a7525a-28d9-fdcb-a696-e56942530e7c@loongson.cn>
+ <CAAhV-H4__A=SQmrijs3OgeSpSFQSrCVL_2CrF0pzwRbvY_MH_Q@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <ea28f5af-cc97-53ac-7191-b7931f897036@loongson.cn>
+Date: Tue, 26 May 2026 09:25:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAAhV-H4__A=SQmrijs3OgeSpSFQSrCVL_2CrF0pzwRbvY_MH_Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxTMJW9xRqGS6RAA--.10245S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJFyDKr15ZFy7Xr1fXryxWFX_yoWrCrykpr
+	W8Ca1q9r4rWrnrXrZ2qF1DWF4jqrs2gw1rur18AFWUKFyqqryftFykAFy5u3Wq93yxuFW0
+	q3W5Gr4avF15AabCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOiSdUUUUU=
 
-On Mon, May 25 2026, George Guo wrote:
 
-> From: George Guo <guodongtai@kylinos.cn>
->
-> When kexec is invoked with --reuse-cmdline after a liveupdate boot, the
-> running kernel's command line already contains a kho_handover= parameter
-> from the previous kexec load.  load_other_segments() prepends a fresh
-> kho_handover= for the new handover FDT but then appends the original
-> cmdline verbatim, resulting in two kho_handover= entries:
->
->   kho_handover=0x4000@<new_fdt>,... kho_handover=0x4000@<stale_fdt>,...
->
-> early_param() calls early_parse_kho() for each occurrence in order, so
-> kho_populate() is invoked twice and the second call overwrites the first
-> with the stale FDT address.  The stale address no longer holds a valid
-> KHO FDT, causing __kho_radix_walk_tree() to dereference a garbage
-> pointer and panic early in mm_core_init().
->
-> Fix this by adding the new kho_handover= to the cmdline prefix first,
-> then stripping any stale kho_handover= tokens from the appended original
-> cmdline portion, so only the freshly generated entry survives.
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/kernel/machine_kexec_file.c | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->
-> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-> index ddf4d0e0e7fd..ffaedd055e62 100644
-> --- a/arch/loongarch/kernel/machine_kexec_file.c
-> +++ b/arch/loongarch/kernel/machine_kexec_file.c
-> @@ -71,6 +71,37 @@ static void cmdline_add_kho(struct kimage *image, unsigned long *cmdline_tmplen,
->  	    image->kho.scratch->bufsz,    (u64)image->kho.scratch->mem);
->  	*cmdline_tmplen += n;
->  }
-> +
-> +/*
-> + * Remove all "kho_handover=..." tokens from cmdline.  Needed when
-> + * --reuse-cmdline is used: the running kernel's cmdline already carries a
-> + * stale kho_handover= from the previous kexec load; without removal the new
-> + * kernel sees two entries and kho_populate() ends up using the wrong (stale)
-> + * FDT address.
-> + */
-> +static void cmdline_remove_kho(char *cmdline)
-> +{
-> +	const char *key = "kho_handover=";
-> +	size_t key_len = strlen(key);
-> +	char *p = cmdline;
-> +
-> +	while ((p = strstr(p, key)) != NULL) {
-> +		char *start = p;
-> +		char *end;
-> +
-> +		/* Only match at a token boundary */
-> +		if (start != cmdline && *(start - 1) != ' ') {
-> +			p += key_len;
-> +			continue;
-> +		}
-> +		end = start + key_len;
-> +		while (*end && *end != ' ')
-> +			end++;
-> +		while (*end == ' ')
-> +			end++;
-> +		memmove(start, end, strlen(end) + 1);
-> +	}
-> +}
 
-Ugh, modifying the commandline supplied by userspace feels odd... Can
-you at all do this via device tree?
+On 2026/5/25 下午5:58, Huacai Chen wrote:
+> On Mon, May 25, 2026 at 5:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/5/25 下午5:26, Zeng Chi wrote:
+>>> From: Zeng Chi <zengchi@kylinos.cn>
+>>>
+>>> kvm_io_bus_register_dev() and kvm_io_bus_unregister_dev() should be
+>>> called under kvm->slots_lock. The unregister calls in ipi.c, pch_pic.c
+>>> and eiointc.c were missing this protection. Add it to match the
+>>> register side.
+>> one small nit, the mail tile is [PATCH v2 net], I think it should be
+>> [PATCH v2] :)
+>>
+>>>
+>>> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+>>> ---
+>>>    arch/loongarch/kvm/intc/eiointc.c | 6 ++++++
+>>>    arch/loongarch/kvm/intc/ipi.c     | 2 ++
+>>>    arch/loongarch/kvm/intc/pch_pic.c | 2 ++
+>>>    3 files changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+>>> index 2ab7fafa86d5..2b14485d14a7 100644
+>>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>>> @@ -645,10 +645,14 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
+>>>
+>>>        device = &s->device_vext;
+>>>        kvm_iodevice_init(device, &kvm_eiointc_virt_ops);
+>>> +     mutex_lock(&kvm->slots_lock);
+>>>        ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS,
+>>>                        EIOINTC_VIRT_BASE, EIOINTC_VIRT_SIZE, device);
+>>> +     mutex_unlock(&kvm->slots_lock);
+>>>        if (ret < 0) {
+>>> +             mutex_lock(&kvm->slots_lock);
+>>>                kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
+>>> +             mutex_unlock(&kvm->slots_lock);
+>>>                kfree(s);
+>>>                return ret;
+>>>        }
+>>
+>> I prefer something like this, however it is only my personal option.
+>> --- a/arch/loongarch/kvm/intc/eiointc.c
+>> +++ b/arch/loongarch/kvm/intc/eiointc.c
+>> @@ -645,13 +645,16 @@ static int kvm_eiointc_create(struct kvm_device
+>> *dev, u32 type)
+>>
+>>           device = &s->device_vext;
+>>           kvm_iodevice_init(device, &kvm_eiointc_virt_ops);
+>> +       mutex_lock(&kvm->slots_lock);
+>>           ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS,
+>>                           EIOINTC_VIRT_BASE, EIOINTC_VIRT_SIZE, device);
+>>           if (ret < 0) {
+>>                   kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
+>> +               mutex_unlock(&kvm->slots_lock);
+>>                   kfree(s);
+>>                   return ret;
+>>           }
+>> +       mutex_unlock(&kvm->slots_lock);
+>>           kvm->arch.eiointc = s;
+>>
+>> @chenhuacai what is your option?
+> Both are OK for me. If we want to minimize the critical section, then
+> this patch is a little better.
+That is fine.
 
-If not, would it make more sense to reject kexec_load if command line
-has kho_handover= and teach kexec-tools to strip it on its side?
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> 
+> Huacai
+>>
+>> The others look good to me.
+>>
+>> Regards
+>> Bibo Mao
+>>> @@ -667,8 +671,10 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+>>>
+>>>        kvm = dev->kvm;
+>>>        eiointc = kvm->arch.eiointc;
+>>> +     mutex_lock(&kvm->slots_lock);
+>>>        kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>>>        kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
+>>> +     mutex_unlock(&kvm->slots_lock);
+>>>        kfree(eiointc);
+>>>        kfree(dev);
+>>>    }
+>>> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+>>> index 1f6ebbd0af5c..4fa0897d7bdb 100644
+>>> --- a/arch/loongarch/kvm/intc/ipi.c
+>>> +++ b/arch/loongarch/kvm/intc/ipi.c
+>>> @@ -447,7 +447,9 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
+>>>
+>>>        kvm = dev->kvm;
+>>>        ipi = kvm->arch.ipi;
+>>> +     mutex_lock(&kvm->slots_lock);
+>>>        kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
+>>> +     mutex_unlock(&kvm->slots_lock);
+>>>        kfree(ipi);
+>>>        kfree(dev);
+>>>    }
+>>> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+>>> index aa0ed59ae8cf..175a630aceb4 100644
+>>> --- a/arch/loongarch/kvm/intc/pch_pic.c
+>>> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+>>> @@ -481,7 +481,9 @@ static void kvm_pch_pic_destroy(struct kvm_device *dev)
+>>>        kvm = dev->kvm;
+>>>        s = kvm->arch.pch_pic;
+>>>        /* unregister pch pic device and free it's memory */
+>>> +     mutex_lock(&kvm->slots_lock);
+>>>        kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS, &s->device);
+>>> +     mutex_unlock(&kvm->slots_lock);
+>>>        kfree(s);
+>>>        kfree(dev);
+>>>    }
+>>>
+>>
 
->  #endif
->  
->  #ifdef CONFIG_CRASH_DUMP
-> @@ -249,6 +280,10 @@ int load_other_segments(struct kimage *image,
->  	}
->  
->  	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	/* Strip stale kho_handover= that --reuse-cmdline may have carried over */
-> +	cmdline_remove_kho(modified_cmdline + cmdline_tmplen);
-> +#endif
->  	cmdline = modified_cmdline;
->  	image->arch.cmdline_ptr = (unsigned long)cmdline;
-
--- 
-Regards,
-Pratyush Yadav
