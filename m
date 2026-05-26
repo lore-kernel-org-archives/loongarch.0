@@ -1,109 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5CE368D69;
-	Tue, 26 May 2026 15:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB53F3B6C0E;
+	Tue, 26 May 2026 16:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779811080; cv=none; b=gtDftM6CxEAL/lZ3MiYd2g+6oWlz4UtB5dSNQONGYRJkA4SjxYuX2lLOUr2ypwiaJsKRXUQ/51A+ZACmMBrTPlPeq8GnaBrLg9lxQU5jOIFxznj52TgtgFqjaHcalDG4NIoRMDyWQ6bleT7yVqHz3th1yL1152hmoKI+y4Dnw7U=
+	t=1779812878; cv=none; b=gSvENQRsrnmu+ScIedX38lLwwjLuVN/MHavzN9v6vsV6zgCC2XLgtgRfDG9tLYmeysjPSv72kfg1BiHu333GNZW8JhK0L0YBevM0rArfjIe1pQ78oV2WRnvwUX2Ib136odM27NPh8nopuyna3oncaKFKYpvjQDccj4tDpbvUltA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779811080; c=relaxed/simple;
-	bh=Ele+E0tQkfHRAao8H64HR6F68ewe7ulRXtIQ8P4KHYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TTTi91qdBxBSXzCpxnVERoEZ30TQbXbOj19GmZF8YECVJ9WnzpR/MEwEdR6btN1MxSnBvlA8qGQ/Sh5A2rJytZinzOosalwLDvo4oraAgvrBbptNgF14baL/4VrSWNPk7GnqQs669shD6bF5/5vgLPyYzOzi1FhC3E1av3oyKDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFHyjCob; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779812878; c=relaxed/simple;
+	bh=uyHF9eg1fNPkQ8bTIFguWMYCPZbh4kpcbqHZpzfY8Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AziRrhsRir8YWeyz42HDuEP+8qUcuQZXagXkwHREyT6bphCInCt+boVrrY8r53bWLbD1giC89oRTsjRrwgzqDqSFPXtFcFAPTs4oXTj9qMhwpQ0vICtcd7j7bM+g+9M1BKQ25mi8XjytkgkI/ZUsnIRDNPUt9lvlQer72yt20cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCPBslFB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFHyjCob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463DD1F000E9;
-	Tue, 26 May 2026 15:57:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCPBslFB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289D31F000E9;
+	Tue, 26 May 2026 16:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779811079;
-	bh=79tFNywJ1ujWM1ngLzbyRJb8vvTvJrlWsQKys4QTyM0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FFHyjCob9W5eGLAeyPyOqWuc32kLdbwtTPW1L/MzM3/PVGFryHJVEVMVKiLONgfh/
-	 eK8by759I2vHyBl63O8aDKG2+3Ot5BqcGF9ytC2kTz07KLzKbDhLPy281kN3JSJ5C2
-	 MRwiHl2VSqc7vfsbI4RO4pZNRI9heBH/c8EUa2nhE02rfuwnV4VU4vuX+HNBwZ7iOv
-	 XT579DOPnVr9hqWv/hIWH4m3JTVUoUrrWWLX94dhehUOahlbM0W3liEORGW2Jv2eqR
-	 pBl2vq4n0MuMQ6GYZrQPe6wJYo0I4HKS+pHwVYvfFrxraDs9H0Ien5xphd0rIsIdAY
-	 pSut3Kzm45Z2w==
-Message-ID: <6ea756bf-d776-4eff-b0ca-eeaa6737e035@kernel.org>
-Date: Tue, 26 May 2026 17:57:55 +0200
+	s=k20260515; t=1779812875;
+	bh=uX6weQ63PycMa+NiIwkaE0lKXtL5D7cf5slQyEH4uVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WCPBslFBHlD18xXQc3r4cfXRi6NRqMWZgpFMn1cIbrapYoU4c4gRwNK1+7uVsqGAy
+	 60v2BCHvTRcdS1tVvGPbqfVfdwwcJp1FHFNfktx1fkX0Wbx1RZrVm0KBNermhINrKf
+	 T9lX4lpoqb8ZTQ988HCILQXzmPKZjen7JnhZ0OVSRmfeZwap0kKaSy4gg8etm5udnf
+	 udcU0Sgi7luz1Cc1OPvSW+2ubz9qCszQO2AwKg/qp69fZ72CdWGJzB5e9f6nHF0uBd
+	 ldc80qXMC/DUvHJCNvAW1ArbfI1EfmFu9YdmZYAerVhlmQZOEcNqDEor/Ir+l9+s8j
+	 e4sx9r+STyxUg==
+Date: Tue, 26 May 2026 17:27:52 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Takahiro Itazuri <itazur@amazon.com>
+Cc: seanjc@google.com, Liam.Howlett@oracle.com, ackerleytng@google.com, 
+	agordeev@linux.ibm.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
+	alex@ghiti.fr, andrii@kernel.org, aou@eecs.berkeley.edu, ast@kernel.org, 
+	baolu.lu@linux.intel.com, borntraeger@linux.ibm.com, bp@alien8.de, bpf@vger.kernel.org, 
+	catalin.marinas@arm.com, chenhuacai@kernel.org, corbet@lwn.net, coxu@redhat.com, 
+	daniel@iogearbox.net, dave.hansen@linux.intel.com, david@kernel.org, 
+	derekmn@amazon.com, dev.jain@arm.com, eddyz87@gmail.com, 
+	gerald.schaefer@linux.ibm.com, gor@linux.ibm.com, haoluo@google.com, hca@linux.ibm.com, 
+	hpa@zytor.com, itazur@amazon.co.uk, jackabt@amazon.co.uk, jackmanb@google.com, 
+	jannh@google.com, jgg@ziepe.ca, jgross@suse.com, jhubbard@nvidia.com, 
+	jiayuan.chen@shopee.com, jmattson@google.com, joey.gouly@arm.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, jthoughton@google.com, kalyazin@amazon.co.uk, 
+	kas@kernel.org, kernel@xen0n.name, kpsingh@kernel.org, kvm@vger.kernel.org, 
+	kvmarm@lists.linux.dev, lenb@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, loongarch@lists.linux.dev, 
+	lorenzo.stoakes@oracle.com, luto@kernel.org, maobibo@loongson.cn, martin.lau@linux.dev, 
+	maz@kernel.org, mhocko@suse.com, mingo@redhat.com, mlevitsk@redhat.com, 
+	nikita.kalyazin@linux.dev, oupton@kernel.org, palmer@dabbelt.com, patrick.roy@linux.dev, 
+	pavel@kernel.org, pbonzini@redhat.com, peterx@redhat.com, peterz@infradead.org, 
+	pfalcato@suse.de, pjw@kernel.org, prsampat@amd.com, rafael@kernel.org, 
+	riel@surriel.com, rppt@kernel.org, ryan.roberts@arm.com, sdf@fomichev.me, 
+	shijie@os.amperecomputing.com, skhan@linuxfoundation.org, song@kernel.org, surenb@google.com, 
+	suzuki.poulose@arm.com, svens@linux.ibm.com, tabba@google.com, tglx@kernel.org, 
+	thuth@redhat.com, urezki@gmail.com, vannapurve@google.com, vbabka@kernel.org, 
+	will@kernel.org, willy@infradead.org, wu.fei9@sanechips.com.cn, x86@kernel.org, 
+	yang@os.amperecomputing.com, yangyicong@hisilicon.com, yonghong.song@linux.dev, 
+	yosry@kernel.org, yu-cheng.yu@intel.com, yuzenghui@huawei.com, 
+	zhengqi.arch@bytedance.com
+Subject: Re: [PATCH v12 00/16] Direct Map Removal Support for guest_memfd
+Message-ID: <ahXJoHNoeCcaupzN@lucifer>
+References: <aeennZlV60k81OBf@google.com>
+ <20260506080753.14517-1-itazur@amazon.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] can: Add Loongson CAN-FD controller support
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
- Bingxiong Li <libingxiong@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-can@vger.kernel.org, jeffbai@aosc.io
-References: <cover.1777273055.git.zhoubinbin@loongson.cn>
- <d7b19f6c1e634ffe4454809e73fb03058e7a1a9d.1777273055.git.zhoubinbin@loongson.cn>
- <709ef711-4af1-413e-9662-08892b18fca5@kernel.org>
- <CAMpQs4K5Q_vC=wnGp3gf=F5RU8t61PLh4dLEmcLMMbM4mR+Wnw@mail.gmail.com>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAMpQs4K5Q_vC=wnGp3gf=F5RU8t61PLh4dLEmcLMMbM4mR+Wnw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260506080753.14517-1-itazur@amazon.com>
 
-On 21/05/2026 at 05:24, Binbin Zhou wrote:
-> Hi Vincent:
-> 
-> On Thu, May 7, 2026 at 1:50 AM Vincent Mailhol <mailhol@kernel.org> wrote:
+On Wed, May 06, 2026 at 08:07:52AM +0000, Takahiro Itazuri wrote:
+> Hi Lorenzo and Sean,
+>
+> Apologies for the delayed reply — Nikita is leaving Amazon, and I'm
+> taking over this series going forward. Thanks for your patience.
 
-(...)
+Hey,
 
->> Use the CAN TDC framework to get the SSP value (c.f. struct can_tdc,
->> struct can_tdc_const and can_fd_tdc_is_enabled())
-> 
-> Last question:
-> 
-> In the general framework, the calculation condition for tdco is
-> (dbt->brp == 1 || dbt->brp == 2), which does not seem to correspond to
-> the current condition (dbt->bitrate > 1000000).
+Thanks for letting us know! And thanks to Nikita for all his work, will
+keep an eye out for the respin!
 
-Where does the current condition comes from? Is it some empirical test?
+Cheers, Lorenzo
 
-FYI, the
-
-  (dbt->brp == 1 || dbt->brp == 2)
-
-check comes from ISO 11898.
-
-> Although for CANFD, rates below 1 Mbit/s would negate the primary
-> advantages of FD, from a controller hardware design perspective, I
-> would still prefer to retain the condition (dbt->bitrate > 1000000).
-> 
-> Do you have any other suggestions?
-
-Using TDC on low bitrates is indeed unstable and can lead to bus errors.
-But the condition which you suggest
-
-  (dbt->bitrate > 1000000)
-
-is indirectly linked with the brp values. That's why the brp check is
-sufficient (and more precise than the empirical 1 Mbit/s threshold value).
-
-Are you able to trigger any bus errors when using TDC with a brp value
-of 1 or 2 and a bitrate below 1 Mbit/sec? If no, there is no reason to
-add this extra check and we can continue to rely on the framework test.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+>
+> On Tue, Apr 21, 2026 at 01:40:00PM +0000, Lorenzo Stoakes wrote:
+> > Hm, given this touches a fair bit of mm, I wonder if we shouldn't try to do this
+> > through the mm tree?
+>
+> On Tue, Apr 21, 2026 at 04:36:00PM +0000, Sean Christopherson wrote:
+> > Yeah, when the time comes, the mm pieces definitely need to go through the mm
+> > tree.  Ideally, I think this would be merged in two separate parts, with all mm
+> > changes going through the mm tree, and then the KVM changes through the KVM tree
+> > using a stable topic branch/tag from Andrew.
+>
+> Thanks for the guidance. The split makes sense to me; I'm planning to
+> follow this approach with patches 1-6 (mm) going through the mm tree
+> and patches 7-16 (KVM) through the KVM tree on top of a stable
+> branch/tag from mm. I'll confirm the exact boundary and coordination
+> details as I prepare the repost.
+>
+> On Tue, Apr 21, 2026 at 01:40:00PM +0000, Lorenzo Stoakes wrote:
+> > In any case, we definitely need a rebase on something not-next :) if not mm then
+> > Linus's tree at least maybe?
+> >
+> > I'm seeing a lot of conflicts against mm-unstable, it can't b4 shazam even patch
+> > 1 and in Linus's tree it's failing at an mm patch (mm: introduce
+> > AS_NO_DIRECT_MAP).
+>
+> I'll rebase onto v7.1-rc1 and resolve the conflicts as part of the split.
+>
+> Takahiro
+>
