@@ -1,85 +1,73 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E70E3264C8
-	for <loongarch@lists.linux.dev>; Tue, 26 May 2026 12:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E32409627;
+	Tue, 26 May 2026 15:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779799996; cv=none; b=qz0elhBrgxFFzYoX//+iM/3O/ld5AFp2pKqLNaxCuJ7pbOLdCPmE1Bc3tTK4zzeUnuTjMJzp6MPb+zNQ3xmp+kdHiOH+DS5+KUwLlzMcNve3lRvDPfTbRHskyRyIPBlUEpz/6Eyaqmex0IJN0pzk4BXHnERD5ok75h6V6K2BK34=
+	t=1779807832; cv=none; b=MZfxZ3VSxvCnrWYIwYSYxoDJJjNogx3JtWpXjMExtF5XafghY2qe8EHm+j2Wvu3hepowFEonj7hAf+mZ2nMMJ/LHF7EvJQVa/xgRTCgLEXB5HhD02cd7xZhhQzQNFyt0zGhZOW0Bk07jpjrCns2X3OPEBzG1vmMqj106uLptEYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779799996; c=relaxed/simple;
-	bh=OhZM1n+w+2YwGw6tdwAp/Kdasbom8NQOMvqLT/bxDE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oeCW4/yBeVL+WA1M5TnboUpS80ipnV53l8BtEm3TmP66m0ok/LxXpPzW99pUPI4AljHIXBDxMs3Drag0xsXNMHphChzEW/OgK/t0SgZtXCB7jslJrgLVR6Xxyyta4Dv/Gt5XFPKDapPRbbxCLHofQgtVv8pODk1Q9twjgK6kdRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxsOqvlxVqMGgNAA--.38295S3;
-	Tue, 26 May 2026 20:53:03 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxpsCulxVqb5iRAA--.44615S4;
-	Tue, 26 May 2026 20:53:03 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] LoongArch: KVM: Deliver interrupt after IN_GUEST_MODE is set
-Date: Tue, 26 May 2026 20:52:55 +0800
-Message-Id: <20260526125256.2511876-7-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260526125256.2511876-1-maobibo@loongson.cn>
-References: <20260526125256.2511876-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1779807832; c=relaxed/simple;
+	bh=7WY9SpLgKNoK6SbB2sNnWTouW3Gpclt2bWosMYonSCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5xizaliv/Fy8RHRisT85KH33KGkq2zXw6g/1uy43w7YpcI/Bk4+Jg/sB6FJmaqp1CxfZ7wW7fJ5VekZvqLZSFseBwrqW9uGJejKjkE9Uq8qy+0rYFiAGnVNDu2uc4w+bOpKhoVlHj9ba/FT9jO0SCzPYb0xMwrGdBDAwqAsnFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cO4b7eaq; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cO4b7eaq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42FDB1F000E9;
+	Tue, 26 May 2026 15:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779807830;
+	bh=+rZSJLBmdmQ5TDTNTam+3vDjLLn8hPQyVj5Ex2NgWpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=cO4b7eaqhuJSwFhFXIFYHnMi76Y8H3sGhZDVaUcsmkOYUyMqBED38lkmdSuEKh3zz
+	 EMWV7LG7KJ7bHCeRYWAZsOeouwNgBKsYICl9VbvcXbVkfvBG2SPey9xrSniSFyFM2n
+	 G9sznW4hAkIXHwTM/4Od3VwZLm989KZ6UNO/GE8n2wUfGOUN/gjjPDm+3kxGAUUxM6
+	 ULZetA2zNTYrQir5+BrLadNXo+HlyPBZDIymhVqrflbROtpmNcYraHwmuuoVQgAlmq
+	 PfxGVWGPnXE6n5MW3gVPYCOP0K+pV0VohphikWECT3t6ho7f8C1BPdtK09I56uQG2/
+	 cCEgaIJORcN1A==
+Date: Tue, 26 May 2026 17:03:47 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 1/2] dt-bindings: i2c: ls2x-i2c: Add clocks and
+ clock-frequency properties
+Message-ID: <20260526-inquisitive-sambar-of-wholeness-22f99d@quoll>
+References: <20260526031021.32662-1-wanghongliang@loongson.cn>
+ <20260526031021.32662-2-wanghongliang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpsCulxVqb5iRAA--.44615S4
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260526031021.32662-2-wanghongliang@loongson.cn>
 
-Interrupt delivery should be called after IN_GUEST_MODE is set. Other
-threads may be posting interrupt however does not send IPI to the
-vCPU, since the vCPU is not in IN_GUEST_MODE.
+On Tue, May 26, 2026 at 11:10:20AM +0800, Hongliang Wang wrote:
+> From: wanghongliang <wanghongliang@loongson.cn>
+> 
+> clocks property describes the i2c bus reference clock from APB clock.
+> clock-frequency property describes i2c bus speed.
 
-here move function call with kvm_deliver_intr() after IN_GUEST_MODE
-is set, and set mode with OUTSIDE_GUEST_MODE with atomic method.
+Not rally relevant to your code. We know what clocks and clock-frequency
+are.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 3c6726e00531..f8ce985dc97b 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -308,10 +308,10 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
- 		 * check vmid before vcpu enter guest
- 		 */
- 		local_irq_disable();
--		kvm_deliver_intr(vcpu);
- 		kvm_deliver_exception(vcpu);
- 		/* Make sure the vcpu mode has been written */
- 		smp_store_mb(vcpu->mode, IN_GUEST_MODE);
-+		kvm_deliver_intr(vcpu);
- 		kvm_check_vpid(vcpu);
- 
- 		/*
-@@ -348,7 +348,7 @@ static int kvm_handle_exit(struct kvm_run *run, struct kvm_vcpu *vcpu)
- 	u32 intr = estat & CSR_ESTAT_IS;
- 	u32 ecode = (estat & CSR_ESTAT_EXC) >> CSR_ESTAT_EXC_SHIFT;
- 
--	vcpu->mode = OUTSIDE_GUEST_MODE;
-+	smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
- 
- 	/* Set a default exit reason */
- 	run->exit_reason = KVM_EXIT_UNKNOWN;
--- 
-2.39.3
+Please do not use login name as actual name. Your email has different
+Latin transcription than above.
+
+> ---
+>  Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+
+Best regards,
+Krzysztof
 
