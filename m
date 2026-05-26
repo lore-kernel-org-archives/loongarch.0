@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C513B0AFA;
-	Tue, 26 May 2026 17:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842493C5DCE;
+	Tue, 26 May 2026 17:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779816976; cv=none; b=YULpa5IsKfZS3UBTiqxiBacLzwn5EFgxPQoJa/HRtiuwLNOv2DcG4hkBG2Gc04NXJRngEzwaH6q9RpFlIxlufRPUaSjx3dCJOqrXpV0UzgB/Ct/tdTs88sS2YimCK4ju4IDwdWZrxixonlpIbMR7tavah+1eVip5FjaOAxC8v0s=
+	t=1779818389; cv=none; b=M8y7uxDu7/opYR2O2GGudoVWm9ouNDhKTCSPNXP+aJi2A6QDvEnkwpwUiRBmARSLHBPOdl3ENpKYZlp/RaM3pQx53VDm3MoTxLXMQle1sYsADprOfAHg1a9+RoovUaF4SOurq2+ow2ZYEzDDL37ajQijKXXVguDtJkfmVM8V43w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779816976; c=relaxed/simple;
-	bh=PBr4DGwMUgDqxCqFEEu/8cc7jeIP2GXoSgHHG9KjuSc=;
+	s=arc-20240116; t=1779818389; c=relaxed/simple;
+	bh=qR/frz80U4Cz1s68xWdh4P1eIuxZxnadNW5ggKtINjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1ct6lYOxWUiefB+idxTtpx8GN9pi8qVKsZjUFNMEhCa/2vmjjUkzQzbpKBFiycI15Bnow+EZLA3WFT/f3Mek71rClvF1akJb1U7TlOxOL7FH6qmOAhTRaRnb+deLmWqS0jWkqSMQCYPYReA9Zj/GvGATP2fniOaMDb8B7tE/U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKYxgi2y; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=tKqDSXJdU2N7Oufj30znkKwszzIP12Ak6uqJyqnSk0aXb1HXAhQYJCKEdq4QAxvMBiiAJvY+O0q8AbQ6NbiFd03RMHY9xwCWeYDNGEXwGrd3eq0Cr7B1eMNTLCtQ5DsFVe4uGgy2wDwgB5xhEgKQAyLSCKKVkRwMKW5JophW7SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8EyFLmt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKYxgi2y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CD81F000E9;
-	Tue, 26 May 2026 17:36:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8EyFLmt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610851F01566;
+	Tue, 26 May 2026 17:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779816975;
-	bh=IvRL+r3Zx7UNMesELbYvDtOy9v2Dbg3TNLP7P8anjPk=;
+	s=k20260515; t=1779818388;
+	bh=8rN+2lZzLMdtYrW7Wu01JcBv6xtTVfubKCqo3jYHmeA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eKYxgi2yrecV/KGkke/5U0XxHq+SP2CPrgy5+6/KmgCedfUqa9SbayK2/mFOlRx/L
-	 sr72RLoQVZPqe3uHse8JgG7ss8jR5kus09Kt/UMgxZncum1ne9NwSjt5o3nKoO6+p0
-	 hmdNUKGRDyNSEGnRCNAbspsHGCroJk2PyiNgj2YHCxy671hNW3zMxQfRN2whLNpuXt
-	 SdoeTImyNC2NG8iaZx5A74ewiMkQKuwrgtw91lQaQiKMe0rIQ9CWvuBNy6ZIrr/Fnf
-	 Uw4DSL+wGmFAb9LPqSxjSYolifmRdM/54fjdZH8h7twnoNZGMnqAIVVJexwH9f7ePG
-	 MAKON7diefNjQ==
-Date: Tue, 26 May 2026 18:36:10 +0100
+	b=P8EyFLmthSGfksCDN5ux7x9ZEHCJjAclPyzGHpbN8dN7ZjDbNg9l0D9/mynUQ6tgW
+	 m/kGYlldCn4IlyPxyx6vq3RGRQ3FSlmwcjZ6QYIOnfDT88lKddJtNrwhzQkqupCSPd
+	 gl0CwaZCxe2Iu2qC79dfsrFnzcBAoaA2Evon33Pa5CQ03yDn0uMrFS3R7NfIGCmZAW
+	 derCmienFiwQS8kv1MG510YoAUXsHZutjsrkXNjjFU3/kcwlZMaH0qcsrxBLLHOWNt
+	 iIWBM07TFpwjKkD3tEQ1vumqJOEl++kXJX0GD9WORuPjY5tA13sIi1ENxSxzumprHW
+	 xKQ3+g527oR1w==
+Date: Tue, 26 May 2026 18:59:43 +0100
 From: Mark Brown <broonie@kernel.org>
 To: Binbin Zhou <zhoubinbin@loongson.cn>
 Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
@@ -36,11 +36,10 @@ Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
 	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
 	linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] ASoC: codecs: es8323: Adjust the initialization
- of certain registers
-Message-ID: <45a5b690-e7ff-454b-9120-1eb906bdd0a2@sirena.org.uk>
+Subject: Re: [PATCH v2 2/5] ASoC: loongson: Combined regmap definitions
+Message-ID: <e45ea3e7-515e-45db-b969-cccdd3f432b5@sirena.org.uk>
 References: <cover.1779796354.git.zhoubinbin@loongson.cn>
- <738268f7409fafdb65cd25214114fbde4d7e25c5.1779796354.git.zhoubinbin@loongson.cn>
+ <6fd63cc57c112218ae0873b73d8c3a4b24304b80.1779796354.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -48,63 +47,40 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g4zeHAPmz0HSRMll"
+	protocol="application/pgp-signature"; boundary="w4LH0YqR6u6AFvkv"
 Content-Disposition: inline
-In-Reply-To: <738268f7409fafdb65cd25214114fbde4d7e25c5.1779796354.git.zhoubinbin@loongson.cn>
+In-Reply-To: <6fd63cc57c112218ae0873b73d8c3a4b24304b80.1779796354.git.zhoubinbin@loongson.cn>
 X-Cookie: You are fairminded, just and loving.
 
 
---g4zeHAPmz0HSRMll
+--w4LH0YqR6u6AFvkv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 26, 2026 at 07:56:26PM +0800, Binbin Zhou wrote:
-> A few additional register initializations are required for proper
-> operation.
+On Tue, May 26, 2026 at 07:56:00PM +0800, Binbin Zhou wrote:
 
-> - During hw_params, write ES8323_DACPOWER (0x3c) to ensure DAC power
->   is correctly configured for the selected sample rate.
+> While moving, adjust the following:
+> - Mark only RX_DATA and TX_DATA as volatile registers. The PCI version
+>   incorrectly marked CFG/CTRL/CFG1 as volatile, which prevented proper
+>   regcache synchronization.
 
-Is it just a write that's needed (even if the DAC is already enabled),
-or is it that we need the DAC to be powered?  If it's the latter should
-this be managed using DAPM?  What does this write actually do?
+The driver also polls LS_I2S_CTRL for MCLK_READY and CLK_READY, either
+we need to bypass the cache when doing that or that register needs to be
+volatile too.
 
-> - In the probe function, initialize DACCONTROL17, DACCONTROL20,
->   ADCCONTROL10, LOUT1_VOL, and ROUT1_VOL to improve analog output
->   stability and volume level.
-
-The volumes should be left at the chip defaults, users can adjust them
-via the existing Output 1 Playback Volume control and UCM can be used to
-provide defaults.  We don't configure this in the kernel because the
-settings needed for different boards can be very different and tweaking
-the configuration in the kernel causes them all to collide with each
-other.  The chip defaults might not always be helpful but at least
-they're a concrete thing that provides a fixed point for configuration.
-
-We also seem to already have volume controls exposed in at least
-DACCONTROL17 and DACCONTROL20.
-
-> - In set_bias_level, set CHIPPOWER to 0x00 when powering up and
->   to 0xff when powering off, fully controlling the chip's power
->   state.
-
-It looks like this register is managed by DAPM already, presumably
-there's some bug or missing configuration there but=20
-
---g4zeHAPmz0HSRMll
+--w4LH0YqR6u6AFvkv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoV2gkACgkQJNaLcl1U
-h9DlJgf+PBu9jNs6K2cEX1bBnkXmXB6gBCaYeU71UZyd4IoLDzX4oYDF6bB8FQXM
-CA7vNV1zSXsDa2mdkIOSFcs6aAIGwOCAQKtqYbwtOq0HQNuyyW7nfWOyGLamiKti
-q/qhPr9cmNqcOiK2xdZlzugdkZlm/8xjiwtSHH30A/b/dFFlmJAt/tI6HMnvxnTh
-Avims6hf8o0PKylzc2hdKdt3x5zMuiFpryDBBlEp7ZTZxbFkapKIgBorgqmDx1nj
-C4kOA4yOD1gmat07BSQ4A15Ywqde5SesxB5bKxy2BC0akUxFwKZ8fhfKHpybJTFj
-vRw2NgVG3wzxcCAlWCU1/SxiTC2Vbg==
-=PnrI
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmoV344ACgkQJNaLcl1U
+h9BfEQf/XrJk5zlpLdiOE30w9sm6LEJ1PgOWWia0Deml2K512ci51NUf0IL2LhiS
+aVu5K7RZfTjeX4qlGXpIpssGf2EZcM7fs/BtmUCYbIC9V7z8THd/190BoaQ+OE2S
+crQOyN1Tm4Jrb9UhJC27CkQaQoe+oppq2rlaENNL6ttdLo/ehxUb0GLcP3KZTiHw
+nM3kvMu1eYY0v+DU7VCRtc/N9QrA0ncJIOikcevOevtfTmEHVFoSXqC291mzQLTO
+EZ9UxbISl1eKqnVP+a62EtskCsKU3lDcQ+YxJRxxuab5YuCBtD0TaVTqHiyV1yxb
+SmMiZFFo3/rSOHfn9ycFx11IS468rQ==
+=n2Ku
 -----END PGP SIGNATURE-----
 
---g4zeHAPmz0HSRMll--
+--w4LH0YqR6u6AFvkv--
