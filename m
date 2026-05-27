@@ -1,37 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5AE30E83F
-	for <loongarch@lists.linux.dev>; Wed, 27 May 2026 06:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF21254739
+	for <loongarch@lists.linux.dev>; Wed, 27 May 2026 06:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779862504; cv=none; b=PizR5fmp5NBmlxjq5O5elbSiS3Zt0UOzXoYz3m24Hn8WnbMBVc7/pUptI7XvSGjx44q9zU/50ENtd1xA895ulDi1LBp7uexjKwsMmCayM7MGBbMbW+AM0/P27sHtI/TtpMxnL6rwxH4IpGNnii0s9EakxgitSNvD4oeW62Lkqj0=
+	t=1779862810; cv=none; b=tyf03TWqrP+7cRM7gSVqVD3mK5Jw4aVRGtOQy1iW55l2mjgYxDbxE7oBjy2Yq1Oj9MVXR9FIkvE4Vyd0BtO/kFEUUX1Kx5VlFgn6ySn/5ibHunf6ru9RxXT32DSweF4CrZjWLr1Mzr62pP15hqNBf2eteCqfTMTRdwVBkCWIkTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779862504; c=relaxed/simple;
-	bh=YiFPYRDMN91GJeH0MRR4xomTzcDL9Jdeh4UjlW+B/04=;
+	s=arc-20240116; t=1779862810; c=relaxed/simple;
+	bh=Dc4bmFMHioCyNUCDB8qvw8hFLzO7OBv/AaO8yAqhk8Y=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=g7fuJmfPsWOKL4+wKM/M3NnTFCTfHjy5apwEOwyxV2pCi4ll9OWqfbn0Da2cwnmqh+BghH+wUiIpvVvxYAYPJGBrkxpMA0ikIvdxRnf+y2QVCqmF+iPcGyNH7g9nfUqtLjTF/F/qJ6HiJ+jxhz9M0BniY69shlkrfQCP1+oxJ7I=
+	 In-Reply-To:Content-Type; b=B75udwg+J1/XBGbG0GYWQp8m/Os3I2GQAnQGdbMcWOMVss8ALc3oUTMLLzmHR1kKA3+2dPLXZoAbj0czUvSXNVEBfkoLi87ExeUfEAYEKtoye8Sucd586gI+LxnXsqIx4+/ier9hLnMU/gHQmJGEkl5gff7onIzDr+Z5KTxEKbk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8DxsOrdixZqcqsNAA--.38962S3;
-	Wed, 27 May 2026 14:14:53 +0800 (CST)
-Received: from [10.20.42.101] (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJDxD8PUixZq7nqSAA--.15419S3;
-	Wed, 27 May 2026 14:14:53 +0800 (CST)
-Subject: Re: [PATCH v4 1/2] dt-bindings: i2c: ls2x-i2c: Add clocks and
- clock-frequency properties
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260526031021.32662-1-wanghongliang@loongson.cn>
- <20260526031021.32662-2-wanghongliang@loongson.cn>
- <20260526-inquisitive-sambar-of-wholeness-22f99d@quoll>
-From: Hongliang Wang <wanghongliang@loongson.cn>
-Message-ID: <bdbabe6f-1756-c812-fe1e-2aaedf925796@loongson.cn>
-Date: Wed, 27 May 2026 14:13:44 +0800
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cxf+sOjRZqIKwNAA--.38617S3;
+	Wed, 27 May 2026 14:19:58 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxKMEHjRZqDHySAA--.1572S3;
+	Wed, 27 May 2026 14:19:52 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Check return values for put_user
+To: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, kernel@xen0n.name
+Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260526074202.789799-1-maqianga@uniontech.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <cd6fa852-5893-2dd9-bff9-2a773ab85cf9@loongson.cn>
+Date: Wed, 27 May 2026 14:16:49 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -40,58 +35,55 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260526-inquisitive-sambar-of-wholeness-22f99d@quoll>
+In-Reply-To: <20260526074202.789799-1-maqianga@uniontech.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-CM-TRANSID:qMiowJDxD8PUixZq7nqSAA--.15419S3
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZrWUZFyrKrW8Jw1rKFykJFc_yoWfKrc_JF
-	Wjyr409r9ayFn5u3s8tF1UZrW2q34DCr4UZF1xAF1SkF98tas8AF9rW3Z5Zw47ZFW2g34f
-	WrnYyw1rC343uosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxKMEHjRZqDHySAA--.1572S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Jw1kKrW3uFy3KFy5JrW3XFc_yoW3Wrg_XF
+	1Skwn3WrW8Ja1DXw1vg34rCry3Jw18JFsY9as8Zr97J3s5Jrsxurs7W3ZxAr1q9rWUCan8
+	GFZ8Cr9xCryYqosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
 	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	cSsGvfJTRUUUbxAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
 	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
 	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUU
-	U
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
+	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erU
+	UUUU=
 
-Hi, Krzysztof
 
-On 2026/5/26 下午11:03, Krzysztof Kozlowski wrote:
-> On Tue, May 26, 2026 at 11:10:20AM +0800, Hongliang Wang wrote:
->> From: wanghongliang <wanghongliang@loongson.cn>
->>
->> clocks property describes the i2c bus reference clock from APB clock.
->> clock-frequency property describes i2c bus speed.
-> Not rally relevant to your code. We know what clocks and clock-frequency
-> are.
 
-OK, I will delete these irrelevant descriptions and add appropriate ones.
-
-The modify is as below:
-
-add clocks and clock-frequency properties to examples.
-
->> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-> Please do not use login name as actual name. Your email has different
-> Latin transcription than above.
-OK, I will modify this issue.
->> ---
->>   Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
->>   1 file changed, 3 insertions(+)
-> Best regards,
-> Krzysztof
-
-Best regards,
-
-Hongliang Wang
+On 2026/5/26 下午3:42, Qiang Ma wrote:
+> put_user() may return -EFAULT, so, when the user space address
+> is invalid, it should return -EFAULT.
+> 
+> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> ---
+>   arch/loongarch/kvm/vcpu.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index 782dc1a36e29..67441edf0e1f 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -1104,7 +1104,8 @@ static int kvm_loongarch_cpucfg_get_attr(struct kvm_vcpu *vcpu,
+>   		return -ENXIO;
+>   	}
+>   
+> -	put_user(val, uaddr);
+> +	if (put_user(val, uaddr))
+> +		return -EFAULT;
+>   
+>   	return ret;
+>   }
+> 
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
 
