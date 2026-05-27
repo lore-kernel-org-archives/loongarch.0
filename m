@@ -1,148 +1,97 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CB7368974
-	for <loongarch@lists.linux.dev>; Wed, 27 May 2026 03:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5AE30E83F
+	for <loongarch@lists.linux.dev>; Wed, 27 May 2026 06:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779852698; cv=none; b=HE8W3BuzC9EAOr7MtuhLMPH/ngpWrEASqUNzo9lA1hmiIpl8rrkn5uLQNQgalxtr7MvcnBFrabsSX96LeS5W1zJm0mM1WLS2aWWghFSwYdr/6yTzVwol+xfM1ifBPp9ZaLKd54oUWJV6eEDR7GVqerG55pcv6AX5VFmC6fdXmLY=
+	t=1779862504; cv=none; b=PizR5fmp5NBmlxjq5O5elbSiS3Zt0UOzXoYz3m24Hn8WnbMBVc7/pUptI7XvSGjx44q9zU/50ENtd1xA895ulDi1LBp7uexjKwsMmCayM7MGBbMbW+AM0/P27sHtI/TtpMxnL6rwxH4IpGNnii0s9EakxgitSNvD4oeW62Lkqj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779852698; c=relaxed/simple;
-	bh=uLOeasSEYWAvpT8ERSE9h3DlJwiheu4obyaLXpGYn9A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ScOD5/iVhuQjpSo7a9EnPawNN1hkKARyp7vgN0BPNoTUchMl/vgRXLuyRMQ+WkKJQmLUckdo/qZN2mGs/PXh+fqRTQm8uLOL9n0bMdI6jdZ/GxgT+qxJ1nR64TW8ZinB2zsM6N5qI+jIH1GSxStKecL5w4M6KNqQX8PF7TgKVBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVoHcR6f; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVoHcR6f"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-83d5bbef760so4689062b3a.1
-        for <loongarch@lists.linux.dev>; Tue, 26 May 2026 20:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779852696; x=1780457496; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=kVoHcR6ftpxL39fREQ/Kwxn4ZtRvbOs9BtCyEfo8qe1nN5Q/BC4gaPwbFDthJb/ps2
-         +d8Xbt2Qk+Dl4utCbcf65fY/cFa9NQuRdBGLwH9wTVB4emD5mkdgP44eoZ/EWiHnq5YT
-         1ZBlA3eniwD5n4tCvqFnFIN4DTqUffOtdFxWojV16oiNp/bojfY3MSHFqnVdfWiFVvbe
-         7ahXxh/+57GrciANcJdMWm1yYJKGC6Jq3tLMAG9cTAtX5AHwnRAQf1h7h2TKDz6rAmwf
-         zati2VFWblQM/Pjtd24L05lwgiD8xvNXRji1CuRT3uFbdq5CMwS0wOAp7nw61PSMoHLB
-         8cKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779852696; x=1780457496;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=hV6p7MtLulJ+Tpd2KERFXCB/ds/1otGtA9RLki0U8hGC0WjVs8OW462aQyzbXpIPgH
-         9GdtWvKJg7oeQ8+2CkDWhuvTTFQtFKgpUjc7dueFa71Vb+LIMTg0MsoZzVPtf6kdxnN1
-         WcsipW0AnQf+a+Lb6DS3f98FseJ8xnT0Yy+20POG91QaB0MV3SwP1eQ1nP/E+fzK8Cqu
-         E7dveS+claPtAWh5tf+xwAR51f2wZmAJ8o8w7M1uMi+1zDUcZDpPo7JvktG7wOiF0Whe
-         xidPR3OM74at2G7aeCvpyIjxwFcNa07w3f8Rrdj7eWjsBZg60NJZdZUOSuhPViHvVbXy
-         oWxQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+rhdzzFwd5nVDYUxco3O+PjJ5FYZMAUZtT4xP0CB8u59sQG8lwz3VU+4oG78qPzDvVHYvfavGi1Rw=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy64dvAvEh2uPAsImduhQnq/jriQQZfbkaTG0dDrF/ZR/CTS3pB
-	ULRYsCtcdI7My57lcsrL3vrVMvRJna8/IgjXk72I9k7Xf2h3RAnochBN
-X-Gm-Gg: Acq92OEfPycvNQGgLmb1CjLAmpnZxWOPeCdnVl90YgHq27n6+V8GmLXMpnOtzN61zRn
-	hRa9V2u+1Fo3yAqggAQqNrw20hnfE/M4JQR5dXvyh94Ohydt4N2rkkPaWSPtPrUfYlF79J3OKoL
-	EQycMHFdtyfgbPZIS/1cmMzPsbTBEkskGJiF2lb5PQKQajYOfKpE0q4Hofg05AWFzSr+YHeHfb9
-	Rhi4AWGcwBqNuEQEZMf9TgbpoJQTPLp9QPsrLGzRMwt/jgICrvTNKjUeqwGyJ1ksR5stBvC6LNG
-	zrsIo+1SrXklwVCG6rUgO1iN7IuZFsciFWuRel9U6oy8uLsf+VqirjMYwblMCJ9fMFFhpqvv+rk
-	Kbrn8Tgpqs0Rci45DZgpqfFnFREavHxywwWco64FGX8HB7aLZEHYy9Cj2t0jjbhBbAN39Tb7w7G
-	TOhDjiJaD29TyxnOkCGP/lFyw5/wkFFOJSbDhAjNqykrATJ2O+dnIKfxF7bA==
-X-Received: by 2002:a05:6a00:3a0d:b0:837:8c8f:8f51 with SMTP id d2e1a72fcca58-8415f3bdb92mr20798104b3a.47.1779852696430;
-        Tue, 26 May 2026 20:31:36 -0700 (PDT)
-Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-841d7307596sm749688b3a.59.2026.05.26.20.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 20:31:35 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	iommu@lists.linux.dev,
-	zhaomeijing@lixiang.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	robh@kernel.org,
-	saravanak@kernel.org,
-	akpm@linux-foundation.org,
-	bhe@redhat.com,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com,
-	quic_obabatun@quicinc.com
-Subject: [PATCH v3 11/11] loongarch: kdump: exclude non-dumpable reserved memory regions from vmcore
-Date: Wed, 27 May 2026 11:29:17 +0800
-Message-ID: <20260527032917.3385849-12-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+	s=arc-20240116; t=1779862504; c=relaxed/simple;
+	bh=YiFPYRDMN91GJeH0MRR4xomTzcDL9Jdeh4UjlW+B/04=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=g7fuJmfPsWOKL4+wKM/M3NnTFCTfHjy5apwEOwyxV2pCi4ll9OWqfbn0Da2cwnmqh+BghH+wUiIpvVvxYAYPJGBrkxpMA0ikIvdxRnf+y2QVCqmF+iPcGyNH7g9nfUqtLjTF/F/qJ6HiJ+jxhz9M0BniY69shlkrfQCP1+oxJ7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8DxsOrdixZqcqsNAA--.38962S3;
+	Wed, 27 May 2026 14:14:53 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJDxD8PUixZq7nqSAA--.15419S3;
+	Wed, 27 May 2026 14:14:53 +0800 (CST)
+Subject: Re: [PATCH v4 1/2] dt-bindings: i2c: ls2x-i2c: Add clocks and
+ clock-frequency properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Andi Shyti <andi.shyti@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, loongarch@lists.linux.dev
+References: <20260526031021.32662-1-wanghongliang@loongson.cn>
+ <20260526031021.32662-2-wanghongliang@loongson.cn>
+ <20260526-inquisitive-sambar-of-wholeness-22f99d@quoll>
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Message-ID: <bdbabe6f-1756-c812-fe1e-2aaedf925796@loongson.cn>
+Date: Wed, 27 May 2026 14:13:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260526-inquisitive-sambar-of-wholeness-22f99d@quoll>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowJDxD8PUixZq7nqSAA--.15419S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZrWUZFyrKrW8Jw1rKFykJFc_yoWfKrc_JF
+	Wjyr409r9ayFn5u3s8tF1UZrW2q34DCr4UZF1xAF1SkF98tas8AF9rW3Z5Zw47ZFW2g34f
+	WrnYyw1rC343uosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUU
+	U
 
-From: Wandun Chen <chenwandun@lixiang.com>
+Hi, Krzysztof
 
-Apply the same non-dumpable reserved memory filtering to LoongArch
-kdump as was done for arm64. Use of_reserved_mem_kdump_exclude() to
-drop flagged regions from the elfcorehdr PT_LOAD segments, and
-of_reserved_mem_kdump_nr_ranges() to pre-size the crash_mem array.
+On 2026/5/26 下午11:03, Krzysztof Kozlowski wrote:
+> On Tue, May 26, 2026 at 11:10:20AM +0800, Hongliang Wang wrote:
+>> From: wanghongliang <wanghongliang@loongson.cn>
+>>
+>> clocks property describes the i2c bus reference clock from APB clock.
+>> clock-frequency property describes i2c bus speed.
+> Not rally relevant to your code. We know what clocks and clock-frequency
+> are.
 
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
----
- arch/loongarch/kernel/machine_kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+OK, I will delete these irrelevant descriptions and add appropriate ones.
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..4b918c3d4a28 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/memblock.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -67,6 +68,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	nr_ranges = 2; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
-+	nr_ranges += of_reserved_mem_kdump_nr_ranges();
- 
- 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
- 	if (!cmem)
-@@ -91,6 +93,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 			goto out;
- 	}
- 
-+	ret = of_reserved_mem_kdump_exclude(cmem);
-+	if (ret)
-+		goto out;
-+
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
- out:
--- 
-2.43.0
+The modify is as below:
+
+add clocks and clock-frequency properties to examples.
+
+>> Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+> Please do not use login name as actual name. Your email has different
+> Latin transcription than above.
+OK, I will modify this issue.
+>> ---
+>>   Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
+>>   1 file changed, 3 insertions(+)
+> Best regards,
+> Krzysztof
+
+Best regards,
+
+Hongliang Wang
 
