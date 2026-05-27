@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CECB42EEDF;
-	Wed, 27 May 2026 15:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7EE43636B;
+	Wed, 27 May 2026 15:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896003; cv=none; b=dKoVtmmcx0gro4oyNm0RBVliEKXmMvcwXEH3BFOJw5L9TJ4ZC5jty7EzzYNysItvYUxJxd3oIIdOVawnjOyT7+CfIlUq8jMDP42zjPPHDg7U2IPuAsEN5dd25zJ13EbXjmRBDKk0E+6mUMdSCj596yb6Fq/HZ3gBaWU+rWuaaJo=
+	t=1779896003; cv=none; b=doP5rFdUWsptRpfDUsMptXiKI8NudCsN1HLZUBZdDKSTVx4kSTTYksOOONzuxjbeRodKtXy/T0eLISEe2X5Pr7qW1J0LqgIJy5FdPBhYDFIojjAshEBioOGvpQdk/kkkovvjdSGPRcnUuxdMVPgdp3ccnW0qLFUYAZOBKCut/d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779896003; c=relaxed/simple;
-	bh=HE/v0i2tFIOZQbBpx1VxOShX/QBPkKvyXiEneo0YBZE=;
+	bh=vV27adI3mRPVfr/4KYQaQlitiyDAtNqd/scHlo4erV0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EVQva++kT3VBTOfITtVTWxHPsUFrK/LIuFg+D4M1BtdpSYIsZg/dFmPudYIC8vTjbOzwQG7GmNvG6eqe2RodoF3e+0yHCMBa6nBzqZVAQw53x3MYPbNuH5WyJeRMQzN65SqFd2j5bZzGhupU50acacpoTZWPigYBvBcHVp0Qlmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzLEmkIE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=cuv/UHelnuqkSLtyz5m8TnZQKXnU5kBb5Vo/s8aHIivuxrh2DfPNjAMG6B+A34DYETld50nM2KAtsJSdHJQSFINYNCI4WoCQpKv1tfBDjlpw9mbA0sku7XCXgUzSrXIe6lD89wse7HotqW5RIYXpHdpeIZhh76uGH/LFWNQbf4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoxBHs0I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzLEmkIE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7BC73C2BCC6;
-	Wed, 27 May 2026 15:33:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoxBHs0I"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B40DC2BCC9;
+	Wed, 27 May 2026 15:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779896002;
-	bh=HE/v0i2tFIOZQbBpx1VxOShX/QBPkKvyXiEneo0YBZE=;
+	s=k20201202; t=1779896003;
+	bh=vV27adI3mRPVfr/4KYQaQlitiyDAtNqd/scHlo4erV0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=CzLEmkIEmaPXWBcOq5XREbns2k0gr1S/4PckKgOu1jaSG/rihF0LOmKtpxEouu57E
-	 ZhgOGt3Dc2cuDKPXH4aKuY8EwuHD3dKuD8FTePc/MwO6kBvhzZ23H2RRqDFW7MM7eE
-	 iZdoOX8cl8E9gQzQhivCrHOxBnMSbppodYd1EqhyEeiB924t2f9CdStFR9cIiv5ufe
-	 ozpBxQa1k5HolT0yVj3J/BW16EbbjmYtiKJqPfyyoRoz9Ugr1t1Lvj2CSD0tVsnx3J
-	 3V9sGthit+sF1ZnWgX878SM9iN+v4HKjsA3+J8Wl/QMqTJ/ldnkXg4/xNcYap9MOP7
-	 aeqvF0fm6zEYQ==
+	b=QoxBHs0I37EAn5nmfw28S+JbCmuHQCWJ+Trqa0V+r5G43t3SX/+IjftyWzp+5EWzH
+	 1yE5K0yZaoAP38uxNdtsy6zbDNJ1zFP0iOscUFxy/t0Uz1nV6GWydGMKUs1xwI7lA4
+	 IQQ1YYlAJDWi3JILliRZ2ge63nXRJknnH6/aN/F7UzfQZYAJhI/NjG/AZOYuuJN661
+	 iDDwExYioGUoePVC+fdoadJlS0xZbGhyZQ8E+u6qQ12zFW0r+irKQlbSGTnMfho+tO
+	 OmrlMiLziHdh3A+8owGmvPmw6kqtsomkUAlFDXvTAb1Xfxxt7X5xn3QuJBujcY08Ea
+	 54GGiEcgsMPLA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73130CD6E46;
-	Wed, 27 May 2026 15:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132AFCD5BD0;
+	Wed, 27 May 2026 15:33:23 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Wed, 27 May 2026 08:33:14 -0700
-Subject: [PATCH RFC 02/12] Documentation: KVM: Consolidate notes about
- cpu_read_lock() and kvm_lock
+Date: Wed, 27 May 2026 08:33:22 -0700
+Subject: [PATCH RFC 10/12] KVM: guest_memfd: Clarify comment about
+ gmem.file vs kvm->srcu
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260527-kvm-locking-docs-v1-2-4fe8b602ff47@google.com>
+Message-Id: <20260527-kvm-locking-docs-v1-10-4fe8b602ff47@google.com>
 References: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
 In-Reply-To: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -56,11 +56,11 @@ Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779896001; l=1641;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779896001; l=1303;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=g71wqImwKNA2W1d9aVPqMV7Uh2kOm/LmCZhr5oX9KEc=;
- b=tp9bB0rR932atLXHEHhRX+PGjo7Pn9ZSpQ3wo1LyHKIYaRGe/jBPOdCQfNdTxOyq8w9lMnUj6
- msk2J3WyEuOBBi3gyIsz2NhLOdOGjuUnCy0Ux1Nd5x9Qy5tyibGzGaj
+ bh=Tom9j4Egg9w53w5LFUq+AuZPef+PZPDtSajFqVBtT2Y=;
+ b=zmWHHdOBn2VUHo/3MFGM+UFpeHWLnLuk5bbX+cVcR6fbgTn96QkVjabkLihMX7tye0SnmS6Tj
+ 4yHcgDc5PfsADjhgoYLEkOnUJTwyvLLyJX53hXSzWi5YZ0QcGrBfAyn
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -70,44 +70,37 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Move the detail about cpu_read_lock() and kvm_lock to where the acquisition
-order is mentioned.
+Clarify the existing comment about synchronize_srcu() and
+kvm_gmem_get_pfn() to provide further context. Explain which
+synchronize_srcu() prevents races with how kvm_gmem_get_pfn() is used.
+
+Also point reader to documentation for better understanding.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- Documentation/virt/kvm/locking.rst | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ virt/kvm/guest_memfd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/virt/kvm/locking.rst b/Documentation/virt/kvm/locking.rst
-index 5564c8b38b9cc..1e8cbbe3ba706 100644
---- a/Documentation/virt/kvm/locking.rst
-+++ b/Documentation/virt/kvm/locking.rst
-@@ -10,6 +10,11 @@ KVM Lock Overview
- The acquisition orders for mutexes are as follows:
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 69c9d6d546b28..f2218db0af980 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -711,8 +711,13 @@ static void __kvm_gmem_unbind(struct kvm_memory_slot *slot, struct gmem_file *f)
+ 	xa_store_range(&f->bindings, start, end - 1, NULL, GFP_KERNEL);
  
- - cpus_read_lock() is taken outside kvm_lock
-+    - Taking cpus_read_lock() outside of kvm_lock is problematic,
-+      despite it being the official ordering, as it is quite easy to
-+      unknowingly trigger cpus_read_lock() while holding kvm_lock.
-+      Use caution when walking vm_list, e.g. avoid complex operations
-+      when possible.
- 
- - kvm_usage_lock is taken outside cpus_read_lock()
- 
-@@ -28,13 +33,6 @@ The acquisition orders for mutexes are as follows:
-   are taken on the waiting side when modifying memslots, so MMU notifiers
-   must not take either kvm->slots_lock or kvm->slots_arch_lock.
- 
--cpus_read_lock() vs kvm_lock:
--
--- Taking cpus_read_lock() outside of kvm_lock is problematic, despite that
--  being the official ordering, as it is quite easy to unknowingly trigger
--  cpus_read_lock() while holding kvm_lock.  Use caution when walking vm_list,
--  e.g. avoid complex operations when possible.
--
- For SRCU:
- 
- - ``synchronize_srcu(&kvm->srcu)`` is called inside critical sections
+ 	/*
+-	 * synchronize_srcu(&kvm->srcu) ensured that kvm_gmem_get_pfn()
+-	 * cannot see this memslot.
++	 * This is called when memslots are updated, after the old
++	 * memslot container is no longer in
++	 * use. synchronize_srcu(&kvm->srcu) was called there, so
++	 * kvm_gmem_get_pfn() from KVM's guest fault handling cannot
++	 * see this memslot. See Documentation/virt/kvm/locking.rst
++	 * for more information about kvm->srcu and the memslots
++	 * container.
+ 	 */
+ 	WRITE_ONCE(slot->gmem.file, NULL);
+ }
 
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
