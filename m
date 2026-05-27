@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627DF3ED12D;
-	Wed, 27 May 2026 15:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F3C3D3D16;
+	Wed, 27 May 2026 15:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896005; cv=none; b=sjn7V2i927jUk9K+lRcwLEx+7iHkKgc86pcgGGX97LFSAmkhv8XtijYODMbmqz+gRXNm1SkPoiIwvZBiGYgPyuP+M0WKFv0h+12ZPps6/o5ZGT5gmCt/jZarlI/xM3wAZVfKriF8bopEwtu76/9A3JcfeUe9x4RnUoEJpV6wMvc=
+	t=1779896004; cv=none; b=QNhrG1KwbdLvLgk4DC3PTtYtg5Yy57ZM4++vgXuAIZ+dGB7/70QDTWkFG0x4WKRTGuYNECBydLP4FCfy8tJwSt5ewzwNcgVorX6J+QJN0A2TIcj8HAicXM63ziNMYywpuHWEQbchBI41HYTxknSGELV65mRgQLaecNeLUMwA94g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896005; c=relaxed/simple;
-	bh=ZO5W64CtWNP+5gC9BrgLSE8kNQUV1QQDwxqRTcg7pnw=;
+	s=arc-20240116; t=1779896004; c=relaxed/simple;
+	bh=SDxYegV3dg2hqetMhwdqeXXQOxrUizjq1F4c00wAdYo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DACHGu6I9lWbVkswjsLPal1LGViydPWatJ6mH9EEzlfYz/2niUQTc64SUYKCD3cRqMJlkdTxg0cy8TcB1FCoPyo6T/SNuebA608ZOcIawUtyQElSHWxrw8kmHmbbPvkfvZIf1aJIfzWkjBTa6N/i5QcKIeQlKFYAkKP9XREYQMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIUu3fEi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=mfTLjbiIpWRcbYR1Y8H3RdkiuYbjp2IcgzzXKMG8NXwzUsJqmxn4qjgOpnB+56tveIwKd5hmbEm5O3BDuYxTgTA2SWKvNSUH4aPmRnsgXrUAF9WzhjbW2KV9ET5SHJCRUT77D+83G2GkEncU5SKTssbkIeRvP5ELeVEirnGZQ3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfETLX8P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIUu3fEi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2EA7DC2BCB3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfETLX8P"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F083C2BCB4;
 	Wed, 27 May 2026 15:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1779896003;
-	bh=ZO5W64CtWNP+5gC9BrgLSE8kNQUV1QQDwxqRTcg7pnw=;
+	bh=SDxYegV3dg2hqetMhwdqeXXQOxrUizjq1F4c00wAdYo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=QIUu3fEiAgxP9/bkAL0f5vClmUKDbY9O4nToSGoBgad7SmS656K4Tc8UiVM3tletV
-	 7XJDLb4H2Q49LXECOgUHe3hrzAU4MmOOVZvKGYT34FtMP+P7F5sc+6tyOhruAkBRMv
-	 axmGyOV89V26ujTC20XVoRhiuPVgQxqdEYOmgrP8fapgHLqDQffjT8c0vQ4l8zWEUv
-	 dNTXYEieRlshzzz4tjqxAYAP7AVCGZPzo8Zn1aGTwJRX6+fcRcszCuzlfZnbS+LkV7
-	 0mZROqmVLAHG0DBIMvyV64GR8NqO0Ux/VZ6PxyH85XSoKjuez0f9qyQvdIvusIRlkS
-	 3Zj5jRRJbhzPA==
+	b=EfETLX8PWPzNlXwhunKu2XOnMLme4YYCL6BQ7GyLGzlBVkXiHJ5p+CPHXS4Vs2/Vt
+	 e0Ea2Fn9zVa/EHLEpmzVQx4lT/7PLUzrW3wg+XlBzml/BEA0zfmc8zP7IwimsC0kZa
+	 zM0afIiLEyTXyl//yByWhVt4N0J3/624sMNnKQCCt+isw8BBRYsjajIKG52j5wKlYE
+	 GlxmP2Pz7m9NuGtzmev9SHLjRx5YBN2eN3GI7uGp1pqH6skHwk06FRD+i3ifLFi0ZS
+	 fuTBr+DSl5UDBs+g0Cm57fvpJAG1Tey44suE2iw8miMzFN0lou9WSnAAbZHsKWrHb1
+	 MPhIwNSaQBmlA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D4DCD6E45;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B67CD4F54;
 	Wed, 27 May 2026 15:33:23 +0000 (UTC)
 From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Wed, 27 May 2026 08:33:23 -0700
-Subject: [PATCH RFC 11/12] KVM: mmu: Point users of
- host_pfn_mapping_level() to docs
+Date: Wed, 27 May 2026 08:33:24 -0700
+Subject: [PATCH RFC 12/12] Documentation: KVM: Focus acquisition order
+ section on preventing deadlocks
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260527-kvm-locking-docs-v1-11-4fe8b602ff47@google.com>
+Message-Id: <20260527-kvm-locking-docs-v1-12-4fe8b602ff47@google.com>
 References: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
 In-Reply-To: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -56,11 +56,11 @@ Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
  Ackerley Tng <ackerleytng@google.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779896001; l=4206;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779896001; l=1268;
  i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=1Iv7rmsthjHBhqlZuqMTaGdIcDmY7dzZBn2M3n/QhfA=;
- b=DbFncF6doMBB+aSot4N9pP3MjdxICCeHux2pefhL0l/IYTSzt+vFHwnY3udE0SyelBPn1PfAQ
- H4IwkJf86J8D18K8SCuU30i5QSn926OUxaY1cKuJTR+oj3QTWScfu5d
+ bh=AsaYP57e05UmB20wkvz2ac8XwGdrnAvpcLv6/4UIzSY=;
+ b=/yniIvnWn4q3kTWgqqaHndF4zOmwJDCk3stxZhB8gkrHCBDyaGRJ5dgMjaI2FXpf3UqwGtqcK
+ qwfmNRwB7dXCwu4GyjoIDe3TPOjN73gTHFFrxKkm4DEZmg1MiFAmPWK
 X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
  pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
 X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
@@ -70,87 +70,34 @@ Reply-To: ackerleytng@google.com
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-After consolidating documentation for host_pfn_mapping_level() in
-Documentation/virt/kvm/locking.rst, point users of function to docs.
+Now that the first sentence is already described in more detail in the new
+section on synchronization while managing guest faults, drop the first
+sentence.
 
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- arch/loongarch/kvm/mmu.c | 24 ++++--------------------
- arch/x86/kvm/mmu/mmu.c   | 24 ++++--------------------
- 2 files changed, 8 insertions(+), 40 deletions(-)
+ Documentation/virt/kvm/locking.rst | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/loongarch/kvm/mmu.c b/arch/loongarch/kvm/mmu.c
-index a7fa458e33605..0313901171a2e 100644
---- a/arch/loongarch/kvm/mmu.c
-+++ b/arch/loongarch/kvm/mmu.c
-@@ -641,27 +641,11 @@ static bool fault_supports_huge_mapping(struct kvm_memory_slot *memslot,
- /*
-  * Lookup the mapping level for @gfn in the current mm.
-  *
-- * WARNING!  Use of host_pfn_mapping_level() requires the caller and the end
-- * consumer to be tied into KVM's handlers for MMU notifier events!
-+ * WARNING!  This derives information from the current state of memslots and
-+ * page mappings and may race with invalidations.
-  *
-- * There are several ways to safely use this helper:
-- *
-- * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, before
-- *   consuming it.  In this case, mmu_lock doesn't need to be held during the
-- *   lookup, but it does need to be held while checking the MMU notifier.
-- *
-- * - Hold mmu_lock AND ensure there is no in-progress MMU notifier invalidation
-- *   event for the hva.  This can be done by explicit checking the MMU notifier
-- *   or by ensuring that KVM already has a valid mapping that covers the hva.
-- *
-- * - Do not use the result to install new mappings, e.g. use the host mapping
-- *   level only to decide whether or not to zap an entry.  In this case, it's
-- *   not required to hold mmu_lock (though it's highly likely the caller will
-- *   want to hold mmu_lock anyways, e.g. to modify SPTEs).
-- *
-- * Note!  The lookup can still race with modifications to host page tables, but
-- * the above "rules" ensure KVM will not _consume_ the result of the walk if a
-- * race with the primary MMU occurs.
-+ * See Documentation/virt/kvm/locking.rst to understand how to consuming the
-+ * result of this lookup safely.
-  */
- static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
- 				const struct kvm_memory_slot *slot)
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index f8aa7eda661ee..20cdcdd20e78d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3214,27 +3214,11 @@ static void direct_pte_prefetch(struct kvm_vcpu *vcpu, u64 *sptep)
- /*
-  * Lookup the mapping level for @gfn in the current mm.
-  *
-- * WARNING!  Use of host_pfn_mapping_level() requires the caller and the end
-- * consumer to be tied into KVM's handlers for MMU notifier events!
-+ * WARNING!  This derives information from the current state of memslots and
-+ * page mappings and may race with invalidations.
-  *
-- * There are several ways to safely use this helper:
-- *
-- * - Check mmu_invalidate_retry_gfn() after grabbing the mapping level, before
-- *   consuming it.  In this case, mmu_lock doesn't need to be held during the
-- *   lookup, but it does need to be held while checking the MMU notifier.
-- *
-- * - Hold mmu_lock AND ensure there is no in-progress MMU notifier invalidation
-- *   event for the hva.  This can be done by explicit checking the MMU notifier
-- *   or by ensuring that KVM already has a valid mapping that covers the hva.
-- *
-- * - Do not use the result to install new mappings, e.g. use the host mapping
-- *   level only to decide whether or not to zap an entry.  In this case, it's
-- *   not required to hold mmu_lock (though it's highly likely the caller will
-- *   want to hold mmu_lock anyways, e.g. to modify SPTEs).
-- *
-- * Note!  The lookup can still race with modifications to host page tables, but
-- * the above "rules" ensure KVM will not _consume_ the result of the walk if a
-- * race with the primary MMU occurs.
-+ * See Documentation/virt/kvm/locking.rst to understand how to consuming the
-+ * result of this lookup safely.
-  */
- static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
- 				  const struct kvm_memory_slot *slot)
+diff --git a/Documentation/virt/kvm/locking.rst b/Documentation/virt/kvm/locking.rst
+index 0663ccfe0633d..f26ea3acd0b70 100644
+--- a/Documentation/virt/kvm/locking.rst
++++ b/Documentation/virt/kvm/locking.rst
+@@ -26,11 +26,9 @@ The acquisition orders for mutexes are as follows:
+ 
+ - vcpu->mutex is taken outside kvm->slots_lock and kvm->slots_arch_lock
+ 
+-- kvm->mn_active_invalidate_count ensures that pairs of
+-  invalidate_range_start() and invalidate_range_end() callbacks
+-  use the same memslots array.  kvm->slots_lock and kvm->slots_arch_lock
+-  are taken on the waiting side when modifying memslots, so MMU notifiers
+-  must not take either kvm->slots_lock or kvm->slots_arch_lock.
++- kvm->slots_lock and kvm->slots_arch_lock are taken on the waiting side when
++  modifying memslots, so MMU notifiers must not take either kvm->slots_lock or
++  kvm->slots_arch_lock.
+ 
+ For SRCU:
+ 
 
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
