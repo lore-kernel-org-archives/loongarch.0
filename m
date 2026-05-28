@@ -1,101 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E3942E006;
-	Wed, 27 May 2026 15:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD65F30C343
+	for <loongarch@lists.linux.dev>; Thu, 28 May 2026 07:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896004; cv=none; b=QYb6f7/3V4cdY5IRep4qA7diP8LzEX6dfZ1qDLcf6RvhVY5nRi+VYKHCf3SvRyvGQ61rft4qhy9WLlbL+kfWEZTcp79NvvSvZSXjk6wVCYeCVKfJaSE8UI7OgDQosfvu5Vc3FPHsrleW0w4ST8JXNS5+OHWkknPVb2Vizf7pzxo=
+	t=1779953925; cv=none; b=F8GodXGW0p6MYVC2IHuj6h2KM3PemOqXZDHlbqu3qMf71coAc/8V9uCwWujYLSj1A7d43BgDudd6hDRwGNxHh1viwjkk60GqX4Fvw8AoZIEAUHQdLH2bFaZpsozxFV+ZHnluRbcZMjcwhfWcIlMHRcKCvU/D1Ve3ntdlU3tcH54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896004; c=relaxed/simple;
-	bh=h01IvEuQZ+K42AKMdxiewPanmZZ8zWWzxrsO2ouqJeY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I4E/0mk5H4vlEL3xpfDQElEItACFHBqxNpaH6UTqtLao3DmL37NJYYRp314G2ttVSJlogswAHUfhcrF0i+nAEjnTcXZVIL4x4w523LxN6R33hlrMPRN6DiqtTC9pVrfPaaf23Kt3kuTNIEGZJ5FeAwliGnu7eUY45HxgfnvJ5o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLxxE+5T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779953925; c=relaxed/simple;
+	bh=Atr0/QMt1j9kli7ZqyWRzOCX7l69bUbXK+rkf7eJhOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=J2p46104kcjW8ECFNS7f/1XJnWZEexJyqKjpVt01q8sEzHiDJK0RT6YMI0uGCesXVZfiyh9UVisGerxh4jXi4JjCOEcQ7A1Lq/gBwwHBnhZ99qLFRw65PRb27huCcIR1o50HJ9ZvojDqkw71h+CKYyeiCTHqc5D58UTklPfqlkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=f8XC3yJN; arc=none smtp.client-ip=113.46.200.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLxxE+5T"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D664EC2BCF5;
-	Wed, 27 May 2026 15:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779896002;
-	bh=h01IvEuQZ+K42AKMdxiewPanmZZ8zWWzxrsO2ouqJeY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NLxxE+5TXWyGmCUriYDo0nlcDjOg11eebRj5wA4VyIXO/DwcAyCiu/c6VM5TPj9Y+
-	 ubHjrvSWgdj+dBSWWKty3gMmxXQALoE0Bjgs5F5tp4BiciDWuZ5EMShKg/TV3rVK3h
-	 AD4XdDoaoSwzej8g3WWBKxYKVVMfdtetinaU7f2fjoYwnxiOgc74gEvV6nrt7nw1Fm
-	 wL6UFXtO+1q0OwnKNf76b1WHozB6JZqrFlzibphhfc06XvZv8gaS00T/uFZNvQBs0n
-	 HIJ9H2ir7VYTw2Ao7ibzAAlh+HDgEQJ3bDO8EDFwLKXJoBHVjX2HwemGr4lk0Lp+xD
-	 oX9QbbpMMpfwQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE42CD5BD0;
-	Wed, 27 May 2026 15:33:22 +0000 (UTC)
-From: Ackerley Tng via B4 Relay <devnull+ackerleytng.google.com@kernel.org>
-Date: Wed, 27 May 2026 08:33:19 -0700
-Subject: [PATCH RFC 07/12] Documentation: KVM: Drop mention of kvm->lock in
- SRCU documentation
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="f8XC3yJN"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=kcfmxoAhvHW1ZhGDwtgqi/DjUNMSbaPMdIrHdQsNguc=;
+	b=f8XC3yJNgC87Lps2UOgSUA93oWaCi71/L5C74Qtkh2xvvB9/wWmNmoUIUb5UVMXIubbWL8933
+	e8h8uZrHE9vRx70zyh+l2grmIqGnOBqJvoqoULa9vBWTYvnrKPHZkSsRAH2oTuA7Ix9baO7kUuW
+	toKQ8NrVfgquDl51K9J1RjY=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gQyp223cczKm5b;
+	Thu, 28 May 2026 15:30:50 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id E7CD840539;
+	Thu, 28 May 2026 15:38:38 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 28 May 2026 15:38:33 +0800
+Message-ID: <7ddab21c-bdb2-4a43-87fa-198b26d82f20@huawei.com>
+Date: Thu, 28 May 2026 15:38:31 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260527-kvm-locking-docs-v1-7-4fe8b602ff47@google.com>
-References: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
-In-Reply-To: <20260527-kvm-locking-docs-v1-0-4fe8b602ff47@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
- vannapurve@google.com, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
- Ackerley Tng <ackerleytng@google.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779896001; l=1115;
- i=ackerleytng@google.com; s=20260225; h=from:subject:message-id;
- bh=AfvnWtgsVpXIKXd9EvhdAVtlR2WiGKaxMZJotHAsjr8=;
- b=q6xZf/5/u1rdMaAEebXfbdUD15CwiaRJEQv8wy+OHzvYq94cMmo+p9Vjs5r6IZMkazcCQ+cOA
- vGzpCQxTs4EDZVCNaYIQXAThy7QIfLWsIT9Wzdwv9O1z6Mi7/54mSVg
-X-Developer-Key: i=ackerleytng@google.com; a=ed25519;
- pk=sAZDYXdm6Iz8FHitpHeFlCMXwabodTm7p8/3/8xUxuU=
-X-Endpoint-Received: by B4 Relay for ackerleytng@google.com/20260225 with
- auth_id=649
-X-Original-From: Ackerley Tng <ackerleytng@google.com>
-Reply-To: ackerleytng@google.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/17] arm64/riscv: Add support for crashkernel CMA
+ reservation
+To: Huacai Chen <chenhuacai@kernel.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<alex@ghiti.fr>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
+	<saravanak@kernel.org>, <akpm@linux-foundation.org>, <bhe@redhat.com>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <rdunlap@infradead.org>, <pmladek@suse.com>,
+	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<lirongqing@baidu.com>, <ebiggers@kernel.org>, <paulmck@kernel.org>,
+	<thuth@redhat.com>, <ardb@kernel.org>, <masahiroy@kernel.org>,
+	<mark.rutland@arm.com>, <maz@kernel.org>, <james.morse@arm.com>,
+	<leitao@debian.org>, <sourabhjain@linux.ibm.com>, <yeoreum.yun@arm.com>,
+	<coxu@redhat.com>, <jbohac@suse.cz>, <ryan.roberts@arm.com>,
+	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
+	<songshuaishuai@tinylab.org>, <junhui.liu@pigmoral.tech>,
+	<vishal.moola@gmail.com>, <kas@kernel.org>, <debug@rivosinc.com>,
+	<namcao@linutronix.de>, <liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
+	<seanjc@google.com>, <guoren@kernel.org>, <chenjiahao16@huawei.com>,
+	<hbathini@linux.ibm.com>, <bgwin@google.com>, <takahiro.akashi@linaro.org>,
+	<lizhengyu3@huawei.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260525084932.934910-1-ruanjinjie@huawei.com>
+ <CAAhV-H4NA7vgyxKnK+N_3C6pWBnwXc2URUyLh_h1m-MO=MnsGQ@mail.gmail.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <CAAhV-H4NA7vgyxKnK+N_3C6pWBnwXc2URUyLh_h1m-MO=MnsGQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-From: Ackerley Tng <ackerleytng@google.com>
 
-The original comment says that synchronize_srcu(&kvm->srcu) is called
-inside critical sections for kvm->lock, vcpu->mutex and
-kvm->slots_lock. Drop mention of kvm->lock since this is no longer true.
 
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
----
- Documentation/virt/kvm/locking.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 5/25/2026 6:14 PM, Huacai Chen wrote:
+> Hi, Jinjie,
+> 
+> On Mon, May 25, 2026 at 4:50 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+>>
+>> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+>> and crashk_cma memory are almost identical across different architectures,
+>> This patch set handle them in crash core in a general way, which eliminate
+>> a lot of duplication code.
+>>
+>> And add support for crashkernel CMA reservation for arm64 and riscv.
+>>
+>> Also add support for arm64 crash hotplug.
+>>
+>> This patch set is rebased on v7.1-rc1.
+>>
+>> Basic second kernel boot test were performed on QEMU platforms for x86,
+>> ARM64 and RISC-V architectures with the following parameters:
+>>
+>>         "cma=256M crashkernel=4G crashkernel=64M,cma"
+>>
+>> For first kernel, there will be such log:
+>>
+>>         # dmesg | grep crash
+>>         [    0.000000] crashkernel low memory reserved: 0xe8000000 - 0xf0000000 (128 MB)
+>>         [    0.000000] crashkernel reserved: 0x000000023e600000 - 0x000000033e600000 (4096 MB)
+>>         [    0.000000] crashkernel CMA reserved: 64 MB in 1 ranges
+>>
+>>         # dmesg | grep cma
+>>         [    0.000000] cma: Reserved 256 MiB at 0x00000000f0000000
+>>         [    0.000000] cma: Reserved 64 MiB at 0x0000000100000000
+>>
+>> For second kernel, there will be such log:
+>>
+>>         [    0.000000] OF: fdt: Looking for usable-memory-range property...
+>>         [    0.000000] OF: fdt: cap_mem_regions[0]: base=0x000000023e600000, size=0x0000000100000000
+>>         [    0.000000] OF: fdt: cap_mem_regions[1]: base=0x00000000e8000000, size=0x0000000008000000
+>>         [    0.000000] OF: fdt: cap_mem_regions[2]: base=0x0000000100000000, size=0x0000000004000000
+>>
+>> Changes in v14:
+>> - Fix image->elf_headers memory leak during retry loop for arm64 as Sashiko
+>>   AI code review pointed out.
+>> - Solve the hotplug notifier arch_crash_handle_hotplug_event() AA
+>>   self-deadlock problem as Sashiko AI code review pointed out.
+>> - Fix the TOCTOU issue in prepare_elf_headers() by get_online_mems().
+>> - -ENOMEM -> -EAGAIN as Breno suggested.
+>> - Add support for arm64 crash hotplug.
+>> - Link to v13: https://lore.kernel.org/all/20260511030454.1730881-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v13:
+>> - Rebased on v7.1-rc1.
+>> - Update the commit message.
+>> - Add Reviewed-by.
+>> - Link to v12: https://lore.kernel.org/all/20260402072701.628293-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v12:
+>> - Remove the unused "nr_mem_ranges" for x86.
+>> - Add "Fix crashk_low_res not exclude bug" test log.
+>> - Provide a separate patch for each architecture for using
+>>   crash_prepare_headers(), which will make the review more convenient.
+>> - Add Reviewed-by and Tested-by.
+>> - Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v11:
+>> - Avoid silently drop crash memory if the crash kernel is built without
+>>   CONFIG_CMA.
+>> - Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
+>>   as we use kvzalloc().
+>> - Provide a separate patch for each architecture to fix the existing
+>>   buffer overflow issue.
+>> - Add Acked-bys for arm64.
+>>
+>> Changes in v10:
+>> - Fix crashk_low_res not excluded bug in the existing
+>>   RISC-V code.
+>> - Fix an existing memory leak issue in the existing PowerPC code.
+>> - Fix the ordering issue of adding CMA ranges to
+>>   "linux,usable-memory-range".
+>> - Fix an existing concurrency issue. A Concurrent memory hotplug may occur
+>>   between reading memblock and attempting to fill cmem during kexec_load()
+>>   for almost all existing architectures.
+>> - Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v9:
+>> - Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
+>> - Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v8:
+>> - Fix the build issues reported by kernel test robot and Sourabh.
+>> - Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v7:
+>> - Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
+>>   for arm64 and riscv.
+>> - Add Acked-by.
+>> - Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
+>>
+>> Changes in v6:
+>> - Update the crash core exclude code as Mike suggested.
+>> - Rebased on v7.0-rc1.
+>> - Add acked-by.
+>> - Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
+>>
+>> Jinjie Ruan (16):
+>>   riscv: kexec_file: Fix crashk_low_res not exclude bug
+>>   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
+>>   arm64: kexec: Fix image->elf_headers memory leak during retry loop
+>>   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
+>>   arm64: kexec_file: Fix potential buffer overflow in
+>>     prepare_elf_headers()
+>>   riscv: kexec_file: Fix potential buffer overflow in
+>>     prepare_elf_headers()
+>>   LoongArch: kexec: Fix potential buffer overflow in
+>>     prepare_elf_headers()
+>>   crash: Add crash_prepare_headers() to exclude crash kernel memory
+>>   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
+>>   x86/kexec: Use crash_prepare_headers() helper to simplify code
+>>   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
+>>   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
+>>   crash: Use crash_exclude_core_ranges() on powerpc
+>>   arm64: kexec: Add support for crashkernel CMA reservation
+>>   riscv: kexec: Add support for crashkernel CMA reservation
+>>   arm64/crash: Add crash hotplug support
+> I have some bikesheedings about the subjects. Can we unify the prefix formats?
+> x86/kexec, arm64: kexec_file, riscv: kexec_file, LoongArch: kexec .....
+> 
+> Huacai
 
-diff --git a/Documentation/virt/kvm/locking.rst b/Documentation/virt/kvm/locking.rst
-index fc4537a7659a9..437dbfa0030b9 100644
---- a/Documentation/virt/kvm/locking.rst
-+++ b/Documentation/virt/kvm/locking.rst
-@@ -35,8 +35,8 @@ The acquisition orders for mutexes are as follows:
- For SRCU:
- 
- - ``synchronize_srcu(&kvm->srcu)`` is called inside critical sections
--  for kvm->lock, vcpu->mutex and kvm->slots_lock.  These locks _cannot_
--  be taken inside a kvm->srcu read-side critical section; that is, the
-+  for vcpu->mutex and kvm->slots_lock.  These locks _cannot_ be taken
-+  inside a kvm->srcu read-side critical section; that is, the
-   following is broken::
- 
-       srcu_read_lock(&kvm->srcu);
+Sure, will update it in next version.
 
--- 
-2.54.0.823.g6e5bcc1fc9-goog
-
+> 
+>>
+>> Sourabh Jain (1):
+>>   powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+>>
+>>  .../admin-guide/kernel-parameters.txt         |  16 +--
+>>  arch/arm64/Kconfig                            |   3 +
+>>  arch/arm64/include/asm/kexec.h                |  14 +-
+>>  arch/arm64/kernel/Makefile                    |   1 +
+>>  arch/arm64/kernel/crash.c                     | 125 ++++++++++++++++++
+>>  arch/arm64/kernel/kexec_image.c               |  22 ++-
+>>  arch/arm64/kernel/machine_kexec_file.c        |  78 ++++++-----
+>>  arch/arm64/mm/init.c                          |   5 +-
+>>  arch/loongarch/kernel/machine_kexec_file.c    |  43 +++---
+>>  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
+>>  arch/powerpc/kexec/crash.c                    |   7 +-
+>>  arch/powerpc/kexec/ranges.c                   | 101 +-------------
+>>  arch/riscv/kernel/machine_kexec_file.c        |  42 +++---
+>>  arch/riscv/mm/init.c                          |   5 +-
+>>  arch/x86/kernel/crash.c                       |  92 ++-----------
+>>  drivers/of/fdt.c                              |   9 +-
+>>  drivers/of/kexec.c                            |   9 ++
+>>  include/linux/crash_core.h                    |  11 ++
+>>  include/linux/crash_reserve.h                 |   4 +-
+>>  kernel/crash_core.c                           | 102 +++++++++++++-
+>>  20 files changed, 392 insertions(+), 298 deletions(-)
+>>  create mode 100644 arch/arm64/kernel/crash.c
+>>
+>> --
+>> 2.34.1
+>>
+> 
 
