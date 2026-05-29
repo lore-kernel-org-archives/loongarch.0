@@ -1,129 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E37E36A351
-	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 04:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A780360751;
+	Fri, 29 May 2026 06:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780028715; cv=none; b=S5TnaqVM7FE+ecNvbq2jw8gzTaM+1h9kxjFIznL3Qm4Hl2/dlVa2wOJsUvphfIPF29zmAyvux3OjSlNgGt4Z+tE8fSEljw0DZkKO1Z3sE/VCs/81yMKZaHriQ9C57+tBaeJYz9J38NgpEmLoRXK/vGAHoXYugcYyd6eKLfh5WB4=
+	t=1780034910; cv=none; b=b3gDPTCD4bSRR21YVk1d9TcJSOuMtbn0DKFou8GUAJvDEyF+8BByMgu1e2Pwq2VXaHBOf3ZsAlgz6U2oGNf8kp2So8I0OiepUj9I60CURkmNPqAMX/EtLPpQXndw75qbOnwMFsE5W9hfpyCpHgU4haoiVld0x9LfNqrRe1WHrI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780028715; c=relaxed/simple;
-	bh=Lo4TIFSmYiHqiN4dotWbLHZrguJVn8UR7mEMLgo6BcE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V9cz0EIf9zpdXTZnnJmkH8xNaH5mvuQ8iYYoL7vkGPIR7m2wxMEpQJwqavMkxZQDybor45XbJ9a1jTGhPSJXnuzTpBjRtzLl3XScWiNDlJveTvvp1hNAWp05G1mp1xgjh868ShtVDpq9kHLrl39FK1/ILCG3q5m04VIQmbGDfJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dT6nK7kh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780034910; c=relaxed/simple;
+	bh=RBz//esfofXvbehmuF8QGKMMslpRvLKFHYYxjIwoPcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAt/nHR68jEl7Cd0ec8JiaexEoEEmi7ilxn16MeiwLsqJXb6PBFeCeyVqc/ileAuDm32Dk7H1Yfjh7sGNmeOV9Swt0IRi264KGbofbdteJSUJiHdGk666nklw+6BSdHm8Qo1BHW2MlrAlwG69W1TNn3isVzqjqiINt1sFTl/dko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=bgYUFCco; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dT6nK7kh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD371F0089A
-	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 04:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780028713;
-	bh=a5SFXwu8A+aI0zODVipwYoc+wNAT2EWiyKCme7a7sBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dT6nK7khxXfZhm08JViGxN2Y0aYimocT9bSIkw3A432i3JCbhvrHNnQYhN82pp1rO
-	 +z0BLUiIftsoPYgR3aX4TmWOqo89NlpootQf/uYqvyZgtxgX5fvqsFyPxcXzA7rLf2
-	 Z4GBY07VaZYQobC4GLhOp71fLwAYhRhhF6amUHUuxzlXVzNpB/1gSVgXvLyvb3/aTA
-	 0HTlZgFVGusIIrXf1asYmOClwL9eP18ri9A2YBIhVImmj4++wbNMt9Oz2ROH9SFbmu
-	 LmhjM8IxZO2kW3ZgX2a/s9dD8Q8l10Van2L7aBvw45Xdr6uWNUNhljcqqkD1HWSonr
-	 o2LcR3pftaCQA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bcc9fdc959cso2301120366b.2
-        for <loongarch@lists.linux.dev>; Thu, 28 May 2026 21:25:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9jpklmlOKuFWaQ2E4lcEMmxZlTU0HZLM4fIijAdQeS4Eh18eIaRBDRrrELH5fqPTTnffAKssosYfE=@lists.linux.dev
-X-Gm-Message-State: AOJu0YywA63cQ1j93uDCShjEk5x9ADdNan1bh3Mj+K8Qm9t845YDkhZu
-	HzCAzio2M+eM8qoSkLgfvMMfRfVH6MFUYC5y0E4Zztz/GA8YhZrWLbiL8lTDFreI52nCQSBefPM
-	/VFLjBSCbBDLXkFdaWKuATYAZPKtpFlU=
-X-Received: by 2002:a17:907:7392:b0:bd4:d0f2:67b4 with SMTP id
- a640c23a62f3a-be9cd65af15mr29984766b.34.1780028712560; Thu, 28 May 2026
- 21:25:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="bgYUFCco"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=bUi6qNPCJHs1zjImKGBpaa0dufszLYZyWbxdSNWETVo=; 
+	b=bgYUFCcoZ/+pBgZ4BgEIM/6U8LBKUang6Ju5OrggXpuoRp0Gl2Nbiyn4wG5RsnyqhC8AFiA2M+z
+	sB8N/V4dAM+cjb6WaAOgMr7dq0Ga6rQjuYv4ZY70/IqBeGkBIbnThJ8AZVneKlygelhQHm+29jPDL
+	BBVLjEXNQEmCJZ+qk7drDf2wpdQjGSMfwQqhqdNQgubnAlquycGI8swLCol7vCqiaflDRpMQQRdft
+	wxutGbwemtSLW+6sUHYC9Z4FpZDr3y/mhpSVpd/7/ni8alW/gTZ54KiBFNNEUe5yQgzrJ9EUotnMm
+	O7VFLG1N5xH8+q7oH35RkZ6wAhN3UgNGxwuQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1wSqOP-000dJI-2C;
+	Fri, 29 May 2026 14:08:26 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 29 May 2026 14:08:25 +0800
+Date: Fri, 29 May 2026 14:08:25 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@kernel.org>,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>,
+	Yinggang Gu <guyinggang@loongson.cn>, Lee Jones <lee@kernel.org>,
+	kernel test robot <lkp@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: loongson - Select CRYPTO_RNG
+Message-ID: <ahktWQCfZYel_0hZ@gondor.apana.org.au>
+References: <20260522022525.12976-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260528135828.196953-1-dongtai.guo@linux.dev>
-In-Reply-To: <20260528135828.196953-1-dongtai.guo@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 29 May 2026 12:25:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5R9bHP+sGcLBQVa3Jw41+UWHehDecB7de8+2fjV+866Q@mail.gmail.com>
-X-Gm-Features: AVHnY4KU-rviRePhyLD0kuiwawDA-6CfRKNFmxpkmS5e-0yWm7timfwUmJXfBtU
-Message-ID: <CAAhV-H5R9bHP+sGcLBQVa3Jw41+UWHehDecB7de8+2fjV+866Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] LoongArch: kexec: avoid overwriting QEMU's machine
- FDT at 0x100000
-To: George Guo <dongtai.guo@linux.dev>
-Cc: kernel@xen0n.name, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	George Guo <guodongtai@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260522022525.12976-1-ebiggers@kernel.org>
 
-Hi, George,
-
-On Thu, May 28, 2026 at 9:58=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
->
-> From: George Guo <guodongtai@kylinos.cn>
->
-> QEMU places its machine FDT at physical address 0x100000 when booting
-> with '-kernel'.  KEXEC_CONTROL_CODE was defined at the same address, so
-> machine_kexec_prepare() overwrites the FDT with the relocation trampoline
-> before jumping to the new kernel.
->
-> The kexec'd kernel's fdt_setup() reads the FDT pointer from the EFI
-> config table (FDTPTR =3D 0x100000) and finds trampoline code instead of a
-> valid FDT, so earlycon auto-detection fails and the second kernel boots
-> silently with no console output.
->
-> Move KEXEC_CONTROL_CODE to 0x180000, which is still within the first 2MB
-> reserved by memblock_init() and does not conflict with the QEMU FDT.
-Modify QEMU seems better.
-
-For kernel, the kexec code is introduced by
-4a03b2ac06a5bcae29371866d9d11f5bfd4c9188 ("LoongArch: Add kexec
-support") at Oct, 12, 2022.
-
-For QEMU, current FDT is introduced by
-6042385149a0fb3f4a51d264fc3dc42775819c79 ("hw/loongarch: Init efi_fdt
-table") at April, 26, 2024.
-And earlier history is 46b21de238c643ea098f2dcffe493abd135f7d89
-("hw/loongarch: Fix loongarch fdt addr confict") which move FDT from
-2MB (0x200000) to 1MB(0x100000).
-And the earliest QEMU FDT  address is 0x1c400000....
-
-QEMU FDT has changed many times while kexec keep the same always, and
-the current FDT address is later than kernel (which means QEMU
-conflict with kexec, not kexec conflict with QEMU). So I suggest to
-move QEMU FDT to 0x180000.
-
-
-Huacai
-
->
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+On Thu, May 21, 2026 at 09:25:25PM -0500, Eric Biggers wrote:
+> This driver registers a rng_alg, so it requires CRYPTO_RNG.
+> 
+> Fixes: 766b2d724c8d ("crypto: loongson - add Loongson RNG driver support")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202605201622.qWOiiZTV-lkp@intel.com/
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
 > ---
->  arch/loongarch/kernel/machine_kexec.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kerne=
-l/machine_kexec.c
-> index d7fafda1d541..44df7dbd3de5 100644
-> --- a/arch/loongarch/kernel/machine_kexec.c
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -21,8 +21,13 @@
->  #include <asm/cacheflush.h>
->  #include <asm/page.h>
->
-> -/* 0x100000 ~ 0x200000 is safe */
-> -#define KEXEC_CONTROL_CODE     TO_CACHE(0x100000UL)
-> +/*
-> + * Both addresses are within the first 2MB which is always reserved by
-> + * memblock_init().  Avoid 0x100000 because QEMU places its machine FDT
-> + * there when using '-kernel'; overwriting it silences earlycon in the
-> + * kexec'd kernel.
-> + */
-> +#define KEXEC_CONTROL_CODE     TO_CACHE(0x180000UL)
->  #define KEXEC_CMDLINE_ADDR     TO_CACHE(0x108000UL)
->
->  static unsigned long reboot_code_buffer;
-> --
-> 2.25.1
->
+>  drivers/crypto/loongson/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
