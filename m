@@ -1,30 +1,32 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC1F33F58C
-	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 14:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB923E5599
+	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 14:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780065201; cv=none; b=T9kJmBIt8xVBIJd4x++mSb4wafPm5Wx/bDF5OrEglMXXApfTPzh3iouTvYJ9ghsca700uVaF31w8guaeAd5kGddcMdkXwFiKArS4cuUnc4mBKwOWODZmjNZx6a48FOxP6LYnp8YzJP/hghRLEZ4g1GD15Igjuebv73zPDb2+rtE=
+	t=1780065204; cv=none; b=bsnfrNYg9EMz/9XjSMDTSOFXl2/O48CZ/tazdIfNoeKy9PGLU7Y1TOBMRiD9iUFRxoIcG2AMHKlEQw3iDxIK4g4XRRNkhu2DPglVo/oM0ssSqx6whsoJkmJAtzVXDOUQhkSrwSWgoxT8+r/gKEGRlXsopvkQxNKa/dTyDMpCopo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780065201; c=relaxed/simple;
-	bh=SjXyUPuAqyq4xe/evwf4lnTr+bkuOPszI8NNSSibzbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nDVOjNkYT3qc+yLCbVflLmNYePYq5mIFh/FX8aiigU6ifySex77xjuj82zfxue5DgIQ7FTohkEkNVCC3sJDYd+qVOHOwnGqhyZNFsEoQW4t1npDrbMmGauafiXAbIelnUs4SpmG0l6UASYAy7t0TslxlIPziEjTC5q30eNYVUJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DZjSulJ9; arc=none smtp.client-ip=91.218.175.184
+	s=arc-20240116; t=1780065204; c=relaxed/simple;
+	bh=YNEJ6Bv0pg5yalmSd2MqdP9Y6vSIIY52XTc0bQ9bu00=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TxwHOQGa0gfGP9x1EbSaedRkfkAJM4YKzWPt/upjwp7Xid7sBg0Sd0/yXTaAp/Qgbn42ns+aNq1tSbWjrNFmcn1tvAHIGmCV5OZwlEYytKHxgY1LHpRXmqBxfxLCnENSGtxRMaVs42epF+0tKinmu/ngKL/CvOJf0BafTCLq1Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LeF5J0Sx; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DZjSulJ9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LeF5J0Sx"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780065197;
+	t=1780065200;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eyl+ehBlxBHsDx62eFKFPSNCgRZqAc+bGbUbiW2nOz8=;
-	b=DZjSulJ961TsPjzS3b+q4BFKgAd2C05gQOdDZlFa763xRuqKnpXByoSAiGELafch2Gl9Kv
-	a95Tb6wB1z6MyzZmazv2suEs0dzCNZXvCgB+d6bqsw3Q1BKGdhe+v4YwAwSUKtgWfvVjVU
-	ZohlUO6R3CXU3BR5GBu46ZASDoyT5Zo=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vtSMl9iP75hamPW1BlPVg98M+VxyBwhIOvWuNPAUfKk=;
+	b=LeF5J0Sx6mHM5+Vq2Rq4vqmOAs6z7rIDMvpuVz2lUTqFomo12Z1iTQeQg9cyskI2iZa+UT
+	SqsWvi8s/sY78ZfCZg0QNwWRUHOZO24qhpntXtjJOXBhDxsWHGy18tX9BgtDr4caG3Ydnm
+	/0mRacf7RWN0P5IsFC5YRs76uidlOis=
 From: George Guo <dongtai.guo@linux.dev>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -38,94 +40,275 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: 
-Date: Fri, 29 May 2026 22:32:34 +0800
-Message-Id: <20260529143238.169169-1-dongtai.guo@linux.dev>
+	George Guo <guodongtai@kylinos.cn>,
+	Kexin Liu <liukexin@kylinos.cn>
+Subject: [PATCH v2 1/4] LoongArch: kexec: add KHO support for FDT-based systems
+Date: Fri, 29 May 2026 22:32:35 +0800
+Message-Id: <20260529143238.169169-2-dongtai.guo@linux.dev>
+In-Reply-To: <20260529143238.169169-1-dongtai.guo@linux.dev>
+References: <20260529143238.169169-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-ERROR: Invalid commit separator - some tools may have problems applying this
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
 From: George Guo <guodongtai@kylinos.cn>
 
-WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
-#26: 
-containing only /chosen with the two KHO properties.  Since DEVICE_TREE_GUID
+Enable Kexec Handover (KHO) on LoongArch64 for FDT-based systems.
 
-ERROR: Invalid commit separator - some tools may have problems applying this
-#34: 
--------------------------------
+- Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for CONFIG_64BIT
+- kexec.h: add fdt/fdt_mem fields to kimage_arch to hold the KHO FDT
+  kexec segment virtual and physical addresses
+- machine_kexec_file.c: add kho_load_fdt() which copies the running
+  kernel's FDT (initial_boot_params), appends linux,kho-fdt and
+  linux,kho-scratch properties to /chosen, and loads the result as a
+  kexec segment; called from load_other_segments().  Returns -EINVAL
+  when initial_boot_params is NULL (ACPI-only boot) since that path
+  requires separate handling.
+- machine_kexec.c: before jumping to the new kernel, update the
+  DEVICE_TREE_GUID entry in the EFI config table to point to the KHO
+  FDT segment so the second kernel finds it via efi_fdt_pointer() and
+  early_init_dt_check_kho() calls kho_populate()
 
-total: 2 errors, 1 warnings, 0 lines checked
->
-Date: Fri, 29 May 2026 21:54:01 +0800
-Subject: [PATCH v2 0/4] LoongArch: add KHO support and selftests
-
-This series adds Kexec Handover (KHO) support for LoongArch and extends
-the KHO selftest infrastructure to run on LoongArch under QEMU.
-
-KHO passes metadata (the KHO state FDT and scratch area addresses) to the
-second kernel via the FDT /chosen node, using the linux,kho-fdt and
-linux,kho-scratch properties that drivers/of/kexec.c:kho_add_chosen()
-writes and drivers/of/fdt.c:early_init_dt_check_kho() reads.
-
-KHO support (patches 1-2):
-
-Patch 1 adds KHO support for FDT-based systems (initial_boot_params !=
-NULL, e.g. QEMU virt without OVMF).  kho_load_fdt() copies the running
-kernel's FDT, appends linux,kho-fdt and linux,kho-scratch to /chosen,
-and loads the result as a kexec segment.  machine_kexec() updates the
-DEVICE_TREE_GUID entry in the EFI config table to point to this segment
-so the second kernel's fdt_setup() can find and parse it.
-
-Patch 2 adds KHO support for ACPI-only systems (initial_boot_params ==
-NULL, e.g. LoongArch servers with UEFI or QEMU with OVMF).  Because no
-system FDT is available, kho_load_fdt() builds a minimal FDT from
-scratch containing only /chosen with the two KHO properties.  Since
-DEVICE_TREE_GUID is absent from the EFI config table on ACPI-only
-systems, a new extended config table is built with the entry appended
-and loaded as a kexec segment; machine_kexec() switches st->tables to
-point to it before jumping.  The second kernel's fdt_setup() calls
-efi_fdt_pointer() to detect the KHO FDT and passes it to
-early_init_dt_check_kho().
-
-Selftest support (patches 3-4):
-
-Patch 3 adds loongarch.conf and extends vmtest.sh to recognise loongarch64
-as a build target.  The LoongArch virt machine is FDT-only (no ACPI), so
-'earlycon' must appear on the kernel cmdline or the console UART is never
-discovered.  PS/2 input devices are also disabled since QEMU's LoongArch
-virt machine has no i8042 controller; the fallback port probe hits a page
-fault and panics before reaching userspace.
-
-Patch 4 handles QEMU not exiting after kexec on LoongArch.  QEMU provides
-no EFI runtime services, so machine_restart() falls through to an infinite
-idle loop.  QEMU_NEEDS_KILL=1 in loongarch.conf signals vmtest.sh to run
-QEMU in the background, poll the serial output for the test verdict, and
-kill QEMU once it appears, so the test completes unattended.
-
-George Guo (4):
-  LoongArch: kexec: add KHO support for FDT-based systems
-  LoongArch: kexec: add KHO support for ACPI-only systems
-  selftests/kho: add LoongArch vmtest support
-  selftests/kho: handle QEMU not exiting after kexec on LoongArch
-
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
  arch/loongarch/Kconfig                     |   3 +
- arch/loongarch/include/asm/kexec.h         |   7 +
- arch/loongarch/kernel/machine_kexec.c      |  38 +++
- arch/loongarch/kernel/machine_kexec_file.c | 256 +++++++++++++++++++++
- arch/loongarch/kernel/setup.c              |  21 +-
- tools/testing/selftests/kho/loongarch.conf |  13 ++
- tools/testing/selftests/kho/vmtest.sh      |  35 ++-
- 7 files changed, 365 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
+ arch/loongarch/include/asm/kexec.h         |   4 +
+ arch/loongarch/kernel/machine_kexec.c      |  27 +++++
+ arch/loongarch/kernel/machine_kexec_file.c | 118 +++++++++++++++++++++
+ 4 files changed, 152 insertions(+)
 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 606597da46b8..d494418545f5 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
+ config ARCH_SUPPORTS_KEXEC_FILE
+ 	def_bool 64BIT
+ 
++config ARCH_SUPPORTS_KEXEC_HANDOVER
++	def_bool 64BIT
++
+ config ARCH_SELECTS_KEXEC_FILE
+ 	def_bool 64BIT
+ 	depends on KEXEC_FILE
+diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
+index 209fa43222e1..adf54bfcdd49 100644
+--- a/arch/loongarch/include/asm/kexec.h
++++ b/arch/loongarch/include/asm/kexec.h
+@@ -39,6 +39,10 @@ struct kimage_arch {
+ 	unsigned long efi_boot;
+ 	unsigned long cmdline_ptr;
+ 	unsigned long systable_ptr;
++#ifdef CONFIG_KEXEC_HANDOVER
++	void *fdt;		/* virtual address of KHO FDT segment buffer */
++	unsigned long fdt_mem;	/* physical address of KHO FDT segment */
++#endif
+ };
+ 
+ #ifdef CONFIG_KEXEC_FILE
+diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+index d7fafda1d541..130f1adfa515 100644
+--- a/arch/loongarch/kernel/machine_kexec.c
++++ b/arch/loongarch/kernel/machine_kexec.c
+@@ -6,6 +6,7 @@
+  */
+ #include <linux/compiler.h>
+ #include <linux/cpu.h>
++#include <linux/efi.h>
+ #include <linux/kexec.h>
+ #include <linux/crash_dump.h>
+ #include <linux/delay.h>
+@@ -284,6 +285,32 @@ void machine_kexec(struct kimage *image)
+ 	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
+ 	pr_notice("Bye ...\n");
+ 
++#ifdef CONFIG_KEXEC_HANDOVER
++	/*
++	 * Point the EFI FDTPTR config table entry at the modified FDT so the
++	 * second kernel picks up the linux,kho-fdt and linux,kho-scratch
++	 * properties via early_init_dt_check_kho().
++	 */
++	if (internal->fdt_mem) {
++		/*
++		 * FDT-based system: DEVICE_TREE_GUID already exists in the EFI
++		 * config table; just update its pointer to our KHO FDT.
++		 */
++		efi_system_table_t *st =
++			(efi_system_table_t *)TO_CACHE(systable_ptr);
++		efi_config_table_t *ct =
++			(efi_config_table_t *)TO_CACHE((unsigned long)st->tables);
++		unsigned long i;
++
++		for (i = 0; i < st->nr_tables; i++) {
++			if (!efi_guidcmp(ct[i].guid, DEVICE_TREE_GUID)) {
++				ct[i].table = (void *)internal->fdt_mem;
++				break;
++			}
++		}
++	}
++#endif
++
+ 	/* Make reboot code buffer available to the boot CPU. */
+ 	flush_cache_all();
+ 
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index 5584b798ba46..bf1e8c1c7e70 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -13,7 +13,9 @@
+ #include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/kexec.h>
++#include <linux/libfdt.h>
+ #include <linux/memblock.h>
++#include <linux/of_fdt.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -32,6 +34,11 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	image->elf_headers = NULL;
+ 	image->elf_headers_sz = 0;
+ 
++#ifdef CONFIG_KEXEC_HANDOVER
++	kvfree(image->arch.fdt);
++	image->arch.fdt = NULL;
++#endif
++
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
+@@ -55,6 +62,111 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
+ 	*cmdline_tmplen += initrd_strlen;
+ }
+ 
++#ifdef CONFIG_KEXEC_HANDOVER
++/*
++ * Add KHO metadata to an FDT /chosen node and load the FDT as a kexec
++ * segment.  The second kernel reads linux,kho-fdt and linux,kho-scratch
++ * from /chosen via early_init_dt_check_kho() and calls kho_populate().
++ *
++ */
++static int kho_load_fdt(struct kimage *image)
++{
++	void *fdt;
++	int ret, chosen_node;
++	size_t fdt_size;
++	struct kexec_buf kbuf = {
++		.image		= image,
++		.buf_min	= 0,
++		.buf_max	= ULONG_MAX,
++		.top_down	= true,
++	};
++
++	if (!image->kho.fdt || !image->kho.scratch)
++		return 0;
++
++	if (initial_boot_params) {
++		/*
++		 * FDT boot: copy the running kernel's FDT and append KHO
++		 * properties to /chosen.
++		 */
++
++		/*
++		 * Only two KHO properties are added to /chosen (linux,kho-fdt
++		 * and linux,kho-scratch), so SZ_1K of extra space is
++		 * sufficient.
++		 */
++		fdt_size = fdt_totalsize(initial_boot_params) + SZ_1K;
++		fdt = kvmalloc(fdt_size, GFP_KERNEL);
++		if (!fdt)
++			return -ENOMEM;
++
++		ret = fdt_open_into(initial_boot_params, fdt, fdt_size);
++		if (ret < 0) {
++			pr_err("Failed to open FDT: %d\n", ret);
++			goto out_free;
++		}
++
++		chosen_node = fdt_path_offset(fdt, "/chosen");
++		if (chosen_node == -FDT_ERR_NOTFOUND) {
++			pr_debug("No /chosen node in FDT, creating one\n");
++			chosen_node = fdt_add_subnode(fdt,
++						      fdt_path_offset(fdt, "/"),
++						      "chosen");
++		}
++		if (chosen_node < 0) {
++			ret = chosen_node;
++			goto out_free;
++		}
++
++		/* Remove stale KHO properties left by a previous kexec load */
++		fdt_delprop(fdt, chosen_node, "linux,kho-fdt");
++		fdt_delprop(fdt, chosen_node, "linux,kho-scratch");
++
++		ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
++					       "linux,kho-fdt",
++					       image->kho.fdt, PAGE_SIZE);
++		if (ret)
++			goto out_free;
++
++		ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
++					       "linux,kho-scratch",
++					       image->kho.scratch->mem,
++					       image->kho.scratch->bufsz);
++		if (ret)
++			goto out_free;
++
++		/*
++		 * Shrink totalsize to the actual data size so the kexec segment
++		 * allocated by kexec_add_buffer() covers only the packed FDT data.
++		 * The slack added above for property insertion is part of the
++		 * kvmalloc'd buffer, which is freed by kimage_file_post_load_cleanup()
++		 * once the kexec image has been loaded.
++		 */
++		fdt_pack(fdt);
++
++		kbuf.buffer	= fdt;
++		kbuf.bufsz	= fdt_totalsize(fdt);
++		kbuf.memsz	= kbuf.bufsz;
++		kbuf.buf_align	= PAGE_SIZE;
++		kbuf.mem	= KEXEC_BUF_MEM_UNKNOWN;
++
++		ret = kexec_add_buffer(&kbuf);
++		if (ret)
++			goto out_free;
++
++		image->arch.fdt     = fdt;
++		image->arch.fdt_mem = kbuf.mem;
++		return 0;
++	} else {
++		return -EINVAL;
++	}
++
++out_free:
++	kvfree(fdt);
++	return ret;
++}
++#endif
++
+ #ifdef CONFIG_CRASH_DUMP
+ 
+ static int prepare_elf_headers(void **addr, unsigned long *sz)
+@@ -230,6 +342,12 @@ int load_other_segments(struct kimage *image,
+ 	cmdline = modified_cmdline;
+ 	image->arch.cmdline_ptr = (unsigned long)cmdline;
+ 
++#ifdef CONFIG_KEXEC_HANDOVER
++	ret = kho_load_fdt(image);
++	if (ret)
++		goto out_err;
++#endif
++
+ 	return 0;
+ 
+ out_err:
 -- 
 2.25.1
 
