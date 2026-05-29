@@ -1,96 +1,131 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A648C33AD9B
-	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 14:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC1F33F58C
+	for <loongarch@lists.linux.dev>; Fri, 29 May 2026 14:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780063586; cv=none; b=eYuUyGXMsY78bhL10whgz1xa6R46aEj0DOTq3mXe41JoJXKYixBV+9kIJpBIzKD+wcD5WvEAvhTm2BQ2l/5svjVPuF7uQ4C6tYhy72U33p/5qZ71it1xqV7wdtvzJNx5DtTAovhfBvBzQzjxdx8v0nABaMviq+rhAbPahE1GlJA=
+	t=1780065201; cv=none; b=T9kJmBIt8xVBIJd4x++mSb4wafPm5Wx/bDF5OrEglMXXApfTPzh3iouTvYJ9ghsca700uVaF31w8guaeAd5kGddcMdkXwFiKArS4cuUnc4mBKwOWODZmjNZx6a48FOxP6LYnp8YzJP/hghRLEZ4g1GD15Igjuebv73zPDb2+rtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780063586; c=relaxed/simple;
-	bh=yHHY+aPkWIbAKYPrgocf26yZ+rcrEiBBFVvIcrfV7aE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MY4gVxEDqP8R86Whtc53JBO+FrNGmlyosdE4+fDsxqr8x5d9cugR1nwiKZxGiXXjLk75uIdfsBUGsT78A+Rg9cfO57JQC2JTOk4NBferdV/+vuO0aC++EeVxKIaEAGwPqZxcquVbbC5ODNFVlr6gwHv8jybwuQ19sPX3nDQRPP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.59])
-	by gateway (Coremail) with SMTP id _____8CxQ_BXnRlqWY8OAA--.41043S3;
-	Fri, 29 May 2026 22:06:15 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.59])
-	by front1 (Coremail) with SMTP id qMiowJBxrsJPnRlqqRKVAA--.64350S2;
-	Fri, 29 May 2026 22:06:14 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Gabriel Somlo <somlo@cmu.edu>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: qemu-devel@nongnu.org,
+	s=arc-20240116; t=1780065201; c=relaxed/simple;
+	bh=SjXyUPuAqyq4xe/evwf4lnTr+bkuOPszI8NNSSibzbo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nDVOjNkYT3qc+yLCbVflLmNYePYq5mIFh/FX8aiigU6ifySex77xjuj82zfxue5DgIQ7FTohkEkNVCC3sJDYd+qVOHOwnGqhyZNFsEoQW4t1npDrbMmGauafiXAbIelnUs4SpmG0l6UASYAy7t0TslxlIPziEjTC5q30eNYVUJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DZjSulJ9; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DZjSulJ9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780065197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eyl+ehBlxBHsDx62eFKFPSNCgRZqAc+bGbUbiW2nOz8=;
+	b=DZjSulJ961TsPjzS3b+q4BFKgAd2C05gQOdDZlFa763xRuqKnpXByoSAiGELafch2Gl9Kv
+	a95Tb6wB1z6MyzZmazv2suEs0dzCNZXvCgB+d6bqsw3Q1BKGdhe+v4YwAwSUKtgWfvVjVU
+	ZohlUO6R3CXU3BR5GBu46ZASDoyT5Zo=
+From: George Guo <dongtai.guo@linux.dev>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Alexander Graf <graf@amazon.com>,
 	loongarch@lists.linux.dev,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] fw_cfg: Add support for LoongArch architecture
-Date: Fri, 29 May 2026 22:05:59 +0800
-Message-ID: <20260529140559.1775511-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>
+Subject: 
+Date: Fri, 29 May 2026 22:32:34 +0800
+Message-Id: <20260529143238.169169-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+ERROR: Invalid commit separator - some tools may have problems applying this
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxrsJPnRlqqRKVAA--.64350S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJrW8Wry8tFW5GFyUGw15trc_yoW8Wry5pr
-	4DXFWjkrWrJa1FgrZrJa1q9r1aqas3JrZrua47Aa1qv3W3A3ykJr98AFW5tFyqvr4vyFWY
-	kF1fKw1a9F1vkagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1YL9UUUUU=
+X-Migadu-Flow: FLOW_OUT
 
-Qemu fw_cfg support was missing for LoongArch, which made some functions
-unusable in virtual machines. So add the missing LoongArch defines.
+From: George Guo <guodongtai@kylinos.cn>
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/firmware/Kconfig       | 2 +-
- drivers/firmware/qemu_fw_cfg.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#26: 
+containing only /chosen with the two KHO properties.  Since DEVICE_TREE_GUID
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index bbd2155d8483..9ec747716389 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -121,7 +121,7 @@ config RASPBERRYPI_FIRMWARE
- 
- config FW_CFG_SYSFS
- 	tristate "QEMU fw_cfg device support in sysfs"
--	depends on SYSFS && (ARM || ARM64 || PARISC || PPC_PMAC || RISCV || SPARC || X86)
-+	depends on SYSFS && (ARM || ARM64 || LOONGARCH || PARISC || PPC_PMAC || RISCV || SPARC || X86)
- 	depends on HAS_IOPORT_MAP
- 	default n
- 	help
-diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-index 87a5421bc7d5..0c51a9df589f 100644
---- a/drivers/firmware/qemu_fw_cfg.c
-+++ b/drivers/firmware/qemu_fw_cfg.c
-@@ -211,7 +211,7 @@ static void fw_cfg_io_cleanup(void)
- 
- /* arch-specific ctrl & data register offsets are not available in ACPI, DT */
- #if !(defined(FW_CFG_CTRL_OFF) && defined(FW_CFG_DATA_OFF))
--# if (defined(CONFIG_ARM) || defined(CONFIG_ARM64) || defined(CONFIG_RISCV))
-+# if (defined(CONFIG_ARM) || defined(CONFIG_ARM64) || defined(CONFIG_LOONGARCH) || defined(CONFIG_RISCV))
- #  define FW_CFG_CTRL_OFF 0x08
- #  define FW_CFG_DATA_OFF 0x00
- #  define FW_CFG_DMA_OFF 0x10
+ERROR: Invalid commit separator - some tools may have problems applying this
+#34: 
+-------------------------------
+
+total: 2 errors, 1 warnings, 0 lines checked
+>
+Date: Fri, 29 May 2026 21:54:01 +0800
+Subject: [PATCH v2 0/4] LoongArch: add KHO support and selftests
+
+This series adds Kexec Handover (KHO) support for LoongArch and extends
+the KHO selftest infrastructure to run on LoongArch under QEMU.
+
+KHO passes metadata (the KHO state FDT and scratch area addresses) to the
+second kernel via the FDT /chosen node, using the linux,kho-fdt and
+linux,kho-scratch properties that drivers/of/kexec.c:kho_add_chosen()
+writes and drivers/of/fdt.c:early_init_dt_check_kho() reads.
+
+KHO support (patches 1-2):
+
+Patch 1 adds KHO support for FDT-based systems (initial_boot_params !=
+NULL, e.g. QEMU virt without OVMF).  kho_load_fdt() copies the running
+kernel's FDT, appends linux,kho-fdt and linux,kho-scratch to /chosen,
+and loads the result as a kexec segment.  machine_kexec() updates the
+DEVICE_TREE_GUID entry in the EFI config table to point to this segment
+so the second kernel's fdt_setup() can find and parse it.
+
+Patch 2 adds KHO support for ACPI-only systems (initial_boot_params ==
+NULL, e.g. LoongArch servers with UEFI or QEMU with OVMF).  Because no
+system FDT is available, kho_load_fdt() builds a minimal FDT from
+scratch containing only /chosen with the two KHO properties.  Since
+DEVICE_TREE_GUID is absent from the EFI config table on ACPI-only
+systems, a new extended config table is built with the entry appended
+and loaded as a kexec segment; machine_kexec() switches st->tables to
+point to it before jumping.  The second kernel's fdt_setup() calls
+efi_fdt_pointer() to detect the KHO FDT and passes it to
+early_init_dt_check_kho().
+
+Selftest support (patches 3-4):
+
+Patch 3 adds loongarch.conf and extends vmtest.sh to recognise loongarch64
+as a build target.  The LoongArch virt machine is FDT-only (no ACPI), so
+'earlycon' must appear on the kernel cmdline or the console UART is never
+discovered.  PS/2 input devices are also disabled since QEMU's LoongArch
+virt machine has no i8042 controller; the fallback port probe hits a page
+fault and panics before reaching userspace.
+
+Patch 4 handles QEMU not exiting after kexec on LoongArch.  QEMU provides
+no EFI runtime services, so machine_restart() falls through to an infinite
+idle loop.  QEMU_NEEDS_KILL=1 in loongarch.conf signals vmtest.sh to run
+QEMU in the background, poll the serial output for the test verdict, and
+kill QEMU once it appears, so the test completes unattended.
+
+George Guo (4):
+  LoongArch: kexec: add KHO support for FDT-based systems
+  LoongArch: kexec: add KHO support for ACPI-only systems
+  selftests/kho: add LoongArch vmtest support
+  selftests/kho: handle QEMU not exiting after kexec on LoongArch
+
+ arch/loongarch/Kconfig                     |   3 +
+ arch/loongarch/include/asm/kexec.h         |   7 +
+ arch/loongarch/kernel/machine_kexec.c      |  38 +++
+ arch/loongarch/kernel/machine_kexec_file.c | 256 +++++++++++++++++++++
+ arch/loongarch/kernel/setup.c              |  21 +-
+ tools/testing/selftests/kho/loongarch.conf |  13 ++
+ tools/testing/selftests/kho/vmtest.sh      |  35 ++-
+ 7 files changed, 365 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/kho/loongarch.conf
+
 -- 
-2.52.0
+2.25.1
 
