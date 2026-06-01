@@ -1,53 +1,78 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A088C285417
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E572139446B
+	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780306789; cv=none; b=MeeSQKR1ub51jjj4W8eYAJInj2GqvEeaZ+Wq9hj8RBuavYmJM/FmO19575qpTkLQ9oOSWGQ7yifLY4k+8G7W8nUXE1AWNyjI2S30Bvz/Y6+qtd5pUKnN6F3wKphw2soN17Uw+HhV2xvu3orf8gfS4YBn69SPKxRZnDVaHPPxjeY=
+	t=1780307334; cv=none; b=hl7n/YK66CK6txyf22dHcR+LVzKK7dnbVH34080anjpCL+5E2sXDXiqUjwqbUx6RV3QaoyMo9eXzbtxjw/3h1pRUb3cqNB4L6V6DqnQArZsXdxCIWQZAbEHnlcQSqWB7N3Ef7Kzmf1WpxXUPoGUSHu+o6uMtNmKayBZa10kKLOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780306789; c=relaxed/simple;
-	bh=fSoail2EkWyGWSi1CWajAIGJN6D4ooirRpWpLF+SObg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fsg7kbjEofCb00D5L4rEndWCIEzTqISCW76+hFnlrJ157cl6eHtTMsiHHqhsGfkPLdMc1pKwRdK0jFIfyvnwmG/ooYAF/eWNl2xRVoRsMNxyh2JYpWqJRkebMzwBgKBdZL0JPYewksoaRXuLZ6X3pm8478LERnxOpxn7wUa6bnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rDt+H9kr; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780307334; c=relaxed/simple;
+	bh=mTUcFKsbwiD0LIrg49RZV6ZL6jdqAvgndaKIqOJxJTc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fcKDipmzmnuxf3KiHrpKt3RrPr/JsBqsF8oDfizABo/a5mc4BP1j8iJijld4vEpvW/NEhuq6TRmVjToD3JHYAUyh7d0/VKPVayw+4ANN4DKWeJ6yjcGo4eokcoIOE9I6bOqzisqH84Gc/xUMlW1CFZZo9qCDjOMfnMfgD59fhZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=xXm5VJ0g; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rDt+H9kr"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780306784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sk4h4g29M85uJUDYWr0m/BnA8wl5x57lY+aGRwoFkNo=;
-	b=rDt+H9kr8vc/k8aVhFk+5C+D1jpOj/mQ8GRN3/YLVVxbF8aNwD5/8wkSuqdu1bi5sbiVph
-	AVKe5+FOFMEChjBYo/sm/96gbBtPlF5+SXkpLC8QQrLn0NjhvHNydpajyRTRohB0uhuAw5
-	sOCCzcCcRHDSOEnmPg9oKaInHdH16ek=
-From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: George Guo <guodongtai@kylinos.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Alexander Graf <graf@amazon.com>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH v3 3/3] selftests/kho: add LoongArch vmtest support
-Date: Mon,  1 Jun 2026 17:39:30 +0800
-Message-Id: <20260601093930.112758-3-dongtai.guo@linux.dev>
-In-Reply-To: <20260601093930.112758-1-dongtai.guo@linux.dev>
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
- <20260601093930.112758-1-dongtai.guo@linux.dev>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="xXm5VJ0g"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=MS+svJjwX+WERXmMYEnQYyI5Mc94faKy2CdWQtmAb8o=;
+	b=xXm5VJ0gzjFo5FI6ifJNt2lYYB9fpiEFwKvKrblrK5cZ5X5QR0VEIsC4iprJlRC3urHXpb75e
+	XRqctvGI7uS/yew73xY6QXp4G2a2n8T+yKdd4nuZDj5kccyoaXIEo3Ic4MOgmKWA5NZ5J2KJg3p
+	VaGi5GtRXJK44kah7P/dE2Q=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4gTTV230jdzcb11;
+	Mon,  1 Jun 2026 17:40:42 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 208C040538;
+	Mon,  1 Jun 2026 17:48:38 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 1 Jun
+ 2026 17:48:34 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <feng.tang@linux.alibaba.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<kuba@kernel.org>, <lirongqing@baidu.com>, <ebiggers@kernel.org>,
+	<paulmck@kernel.org>, <sourabhjain@linux.ibm.com>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <masahiroy@kernel.org>, <gshan@redhat.com>,
+	<james.morse@arm.com>, <maz@kernel.org>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <coxu@redhat.com>, <suzuki.poulose@arm.com>,
+	<cfsworks@gmail.com>, <osandov@fb.com>, <jbohac@suse.cz>,
+	<ryan.roberts@arm.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
+	<adityag@linux.ibm.com>, <hbathini@linux.ibm.com>, <bjorn@rivosinc.com>,
+	<songshuaishuai@tinylab.org>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <djordje.todorovic@htecgroup.com>,
+	<austin.kim@lge.com>, <namcao@linutronix.de>, <djbw@kernel.org>,
+	<chao.gao@intel.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
+	<liaoyuanhong@vivo.com>, <makb@juniper.net>, <graf@amazon.com>,
+	<piliu@redhat.com>, <rafael.j.wysocki@intel.com>,
+	<mario.limonciello@amd.com>, <jbouron@amazon.com>, <chenjiahao16@huawei.com>,
+	<guoren@kernel.org>, <bauerman@linux.ibm.com>, <bgwin@google.com>,
+	<takahiro.akashi@linaro.org>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v15 01/23] riscv: kexec_file: Fix crashk_low_res not exclude bug
+Date: Mon, 1 Jun 2026 17:47:43 +0800
+Message-ID: <20260601094805.2928614-2-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260601094805.2928614-1-ruanjinjie@huawei.com>
+References: <20260601094805.2928614-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -55,121 +80,67 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-From: George Guo <guodongtai@kylinos.cn>
+As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
+and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+crashkres_low.") for arm64, while implementing crashkernel=X,[high,low],
+riscv should have excluded the "crashk_low_res" reserved ranges from
+the crash kernel memory to prevent them from being exported through
+/proc/vmcore, and the exclusion would need an extra crash_mem range.
 
-Add loongarch.conf to configure QEMU's LoongArch virt machine with a
-la464 CPU, enable the 8250 serial console, and set the kernel image
-to vmlinux.efi.  Extend vmtest.sh to recognise loongarch64 as a
-supported target and map it to the 'loongarch' kernel arch name.
+Just simply tested on qemu with crashkernel=4G with kexec in [1] mentioned
+in [2]. And the second kernel can be started normally.
 
-QEMU's LoongArch virt machine provides no ACPI tables and relies on
-FDT to describe hardware.  Without 'earlycon' on the kernel command
-line, the FDT is not scanned for a console UART, no output reaches
-the console, and vmtest.sh's console log stays empty causing the test
-to always fail.  Add 'earlycon' to KERNEL_CMDLINE in loongarch.conf.
+	# dmesg | grep crash
+	[    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000 (128 MB)
+	[    0.000000] crashkernel reserved: 0x000000017fe00000 - 0x000000027fe00000 (4096 MB)
 
-QEMU's LoongArch virt machine has no i8042 PS/2 controller.  When PNP
-detection finds nothing, i8042_init() falls back to probing the ports
-directly.  On LoongArch the I/O ports are memory-mapped, and the i8042
-port addresses are not backed by any device on the virt machine, so
-i8042_flush() takes a page fault and the kernel panics:
-
-  i8042: PNP: No PS/2 controller found.
-  i8042: Probing ports directly.
-  CPU 0 Unable to handle kernel paging request at virtual address ffff800000008064
-  ERA: i8042_flush+0x50/0x198
-   RA: i8042_init+0x2a8/0x35c
-  Kernel panic - not syncing: Attempted to kill init!
-
-Disable SERIO_I8042 and its dependents (KEYBOARD_ATKBD, MOUSE_PS2) in
-the QEMU_KCONFIG fragment to prevent the driver from being built.
-All three options are scoped to loongarch.conf; no other architecture
-is affected.
-
-QEMU provides no EFI runtime services on LoongArch, so machine_restart()
-falls through to an infinite idle loop after kexec.  Set QEMU_TIMEOUT=120
-in loongarch.conf so vmtest.sh wraps the QEMU invocation with timeout(1),
-which terminates QEMU after 120 seconds if it does not exit on its own.
-Architectures that do not set QEMU_TIMEOUT are unaffected.
-
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+[1]: https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
+[2]: https://lore.kernel.org/all/20230726175000.2536220-1-chenjiahao16@huawei.com/
+Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=X,[high,low]")
+Reviewed-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- tools/testing/selftests/kho/loongarch.conf | 13 ++++++++++++
- tools/testing/selftests/kho/vmtest.sh      | 23 +++++++++++++++-------
- 2 files changed, 29 insertions(+), 7 deletions(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
+ arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kho/loongarch.conf b/tools/testing/selftests/kho/loongarch.conf
-new file mode 100644
-index 000000000000..68727654578d
---- /dev/null
-+++ b/tools/testing/selftests/kho/loongarch.conf
-@@ -0,0 +1,13 @@
-+QEMU_CMD="qemu-system-loongarch64 -M virt -cpu la464"
-+QEMU_KCONFIG="
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+# CONFIG_KEYBOARD_ATKBD is not set
-+# CONFIG_MOUSE_PS2 is not set
-+# CONFIG_SERIO_I8042 is not set
-+"
-+KERNEL_IMAGE="vmlinux.efi"
-+KERNEL_CMDLINE="console=ttyS0 earlycon"
-+# QEMU never exits after kexec on LoongArch (no EFI runtime services);
-+# give the test a fixed time limit and let timeout(1) terminate QEMU.
-+QEMU_TIMEOUT=120
-diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
-index 49fdac8e8b15..918698b6dd2a 100755
---- a/tools/testing/selftests/kho/vmtest.sh
-+++ b/tools/testing/selftests/kho/vmtest.sh
-@@ -21,7 +21,7 @@ Options:
- 	-d)	path to the kernel build directory
- 	-j)	number of jobs for compilation, similar to -j in make
- 	-t)	run test for target_arch, requires CROSS_COMPILE set
--		supported targets: aarch64, x86_64
-+		supported targets: aarch64, x86_64, loongarch64
- 	-h)	display this help
- EOF
- }
-@@ -107,12 +107,20 @@ function run_qemu() {
+diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+index 54e2d9552e93..3f7766057cac 100644
+--- a/arch/riscv/kernel/machine_kexec_file.c
++++ b/arch/riscv/kernel/machine_kexec_file.c
+@@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	unsigned int nr_ranges;
+ 	int ret;
  
- 	cmdline="$cmdline kho=on panic=-1"
+-	nr_ranges = 1; /* For exclusion of crashkernel region */
++	nr_ranges = 2; /* For exclusion of crashkernel region */
+ 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
  
--	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
--		  -accel kvm -accel hvf -accel tcg  \
--		  -serial file:"$serial" \
--		  -append "$cmdline" \
--		  -kernel "$kernel" \
--		  -initrd "$initrd"
-+	local qemu_args=(
-+		-m 1G -smp 2 -no-reboot -nographic -nodefaults
-+		-accel kvm -accel hvf -accel tcg
-+		-serial file:"$serial"
-+		-append "$cmdline"
-+		-kernel "$kernel"
-+		-initrd "$initrd"
-+	)
+ 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+@@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 
+ 	/* Exclude crashkernel region */
+ 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+-	if (!ret)
+-		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++	if (ret)
++		goto out;
 +
-+	if [[ -n "${QEMU_TIMEOUT:-}" ]]; then
-+		timeout "$QEMU_TIMEOUT" $qemu_cmd "${qemu_args[@]}" || true
-+	else
-+		$qemu_cmd "${qemu_args[@]}"
-+	fi
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			goto out;
++	}
++
++	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
  
- 	grep "KHO restore succeeded" "$serial" &> /dev/null || fail "KHO failed"
- }
-@@ -123,6 +131,7 @@ function target_to_arch() {
- 	case $target in
- 	     aarch64) echo "arm64" ;;
- 	     x86_64) echo "x86" ;;
-+	     loongarch64) echo "loongarch" ;;
- 	     *) skip "architecture $target is not supported"
- 	esac
- }
+ out:
+ 	kfree(cmem);
 -- 
-2.25.1
+2.34.1
 
