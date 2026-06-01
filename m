@@ -1,63 +1,63 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825AD2045AD
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A82F366DB9
+	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 08:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780303762; cv=none; b=ENnN+qY4JaVoexEUrmyiblrqVfaWE5QP0VaEvw+ckbxS0NaGdXU99Vla6SIz4jdzVqnir9xx+dnAgzRLvenobeeKkXm9hC6wS3BvPOmUZE1k4Kf6acEYwZcxOyr3DubAcin5zRuwqclxiBHH4kq2ga0EYDI/1uIEmcn92B6nANQ=
+	t=1780303769; cv=none; b=A8wv2RxMwt5gXne0sy3dc4jkI+pk64ADBjRoQ+MiyBA4uy2+HCnnfSSSS/ujyAslOwiwjH9WsARsDUIsVLeEoDtMbLevYlB6/6gSorfgHHZRXzlTNPPIOxrlLrl1QDVwCUO7+iQ/DZcyXU1tdOIp8XhEbaxgAezB4dsgJaAm2To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780303762; c=relaxed/simple;
-	bh=hVBoWuTqxj4bitzB4Qyn9047IWyGEV2cC0xTiRzqADs=;
+	s=arc-20240116; t=1780303769; c=relaxed/simple;
+	bh=pwblFY2nzACXWSoP5Rom+zjueIYD5KdpIL15G4qchH4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=taXIg5PfsXJtPnpIHpp0Xa5p48Hqei2LgMAIk7qFn9RGytihDjOzrJasB4kMU9PCLu0aeag135IJWcr2wRLmqQBmUvNJVZmfAaHn3v9WFdLqmnW8/VR/NY/g/UFTErdZbttyGLYU59c55siOmJ/IlWXj3TFjCN9jeIuWzUIE4NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Zx+3ZvI2; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=UBlXJ85O8Sh2zQVb0MeuU8BBJlBPEXD7kfIv5XZjDoNK+cD6el0R+rdhInDM4nedrB/C6+P4tizG6q0bVvhGlNUO4tSAOdOiwzY7X9jIi+DLklXjJV2rbIFdTA3XBpVJRLZY7M8OTeexGMd8toUU/rap10Rqbip4lLXIAkhTNdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GYE8rA5n; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Zx+3ZvI2"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8423f236418so351163b3a.1
-        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 01:49:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GYE8rA5n"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-84230ab8857so579482b3a.1
+        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 01:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1780303761; x=1780908561; darn=lists.linux.dev;
+        d=bytedance.com; s=google; t=1780303768; x=1780908568; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=myBbZVt9pZizoKTbw79TdKlIez+dzWm6VMZTcEDpjws=;
-        b=Zx+3ZvI2Fn+0OYUm8Z0EeAh7Gp95cva5C+1nglgmA0lObav+2MjqsY6v+1T0slBcS0
-         5zHbVvXEIDojEziehOmchIvWtii48G0T0lQXHAMth+c+64lGr5EYG2jtG+woZOxPsKrt
-         /8wyVmfh55dXJjKXlc/cK8ybAg3jJeJiE0sM7/TjPvShbBg+AzFicjbxqcneV3xsfYSt
-         BHa5nbhjiIgF6hJO3EhHnBBAmJvAm7lhM78H1xezC8uGDZGN0wmLI14YIG4222LmdtIP
-         4hovXOvUjLlJHgHBZc9+wBV4mf2TK6rWqbMygkQX/17miXS8Y5vGxcIAbwRsWyEUuml0
-         aD2w==
+        bh=zs9Ftk//Eli+AipH1EmAF2SPdnVVPcjuiC9Ml1N6W44=;
+        b=GYE8rA5nJJF7vq7mDY0lqOyWTif0KubvISPQGCEDgq7z5z83pWFBpUoWlTQYwMFiaA
+         x9eFL1kjxvXpb/8hmiMeFH7w3wZG1HOOXgvyFySlNng7KOkVXjgyUqfndO1b+UG0v/3s
+         gFQ+BHgWTpA11tBjihw4qLTeRSS7Ueezyz8rjmJtSdkeo0HvWrI8vt/Cg+ASwfuTjy2J
+         ARch+BLD2hAaQOCLwkGdI8eCsgZIc74WQP8Xc2by67LEDjQUKN07sXc/92fgO4u0lxVm
+         diKXUAcqanBtfB1fFITq9vkKdi1sIZbYj/jZB+ufDvX5DN7p+aEwRodpp9S2vs+JP0Cj
+         HiLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780303761; x=1780908561;
+        d=1e100.net; s=20251104; t=1780303768; x=1780908568;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=myBbZVt9pZizoKTbw79TdKlIez+dzWm6VMZTcEDpjws=;
-        b=RdogUdCDqUon14Wvzd5aZivD3yqxMHnQIwjZNYP+mfk+7s9ljSawzM0FRdKwskKhaV
-         TIwx1zbc5dv9234HLIfhVZEk4cA0GjJEnjWhOtYNe7VyGvT+6YOOMrrFU5zui9Zmcc4o
-         I9rpCJGy36jwyHqCiKhc20A/Rz7GMM4PdEV3DdsL1wbwKgPu49CbOTXCsvEe2nJAxky1
-         NteY4nmGqrEuIczZdljSqX52AQSO+2WxSsD+aiPVAWJNW8zhRWyBGPP4EU0lS2KvAJRY
-         9FIY25L8ANiIy5dS8MWT3DJ/vtwwi1i2a1b1eSptEuqvTYNQ7zRZ7lYyb10PbZiIeUFC
-         3Czw==
-X-Forwarded-Encrypted: i=1; AFNElJ+A7e8rvd3JTJhT4HA96UT+EZucjSfxUEG08VyKZDXcB2jQh10JIE/VJti47eG+rv9uACUaEbvTvIs=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxi5UyOzv/Ke4m9saXdX3uazD7VsgPKD7/y76lwnSxLLSzDTOFt
-	6vKSv121Pe3dN7UDkSNQUNmB73F4xw3LTJ4R4zIp58tlICNqpuUO0kLd8PNEkvAPGLI=
-X-Gm-Gg: Acq92OFn3NPjSXSrQkC6sNl9+E6S9EsIID34CyuOrd8K+NT38AssTODh23gHrsmSeGW
-	M2XUy4NF4WlG7kjasjZOyLLevo6SqUBW1W+rDYtzxX3Pq4e39JbHgUkSuKq8KNFuoSIkkWcbPGU
-	cIR88l994g2g/qdJozhgE8xC0sVykzMCc0XaA+OROrkE1v7t2eDCqbk09fMEWkCHQcMCh44sA7E
-	iEB7hUSQ4U0Jy+DeTAt42OwN1MRV1PS9qGWJ3Dj9uozkxDYSWfI8Bwj96klWtO9IfmsjYiR1+Kd
-	n0xpOxVYik7ip86qhcws6t741sPDEcmfF9oWWAWcsiRqQzJz+L8tH646303dUmQW7olEy7UKKbH
-	Yo84CMmp4xiLuJee6+b9cW4lb4vxkkIjGeiaUvh3sCHefT0e1Y4BbjukKhOgl6rJCXJVMCzmM08
-	viYwewjmjWu+ze562mNRksfcfQ2KYV3qNFQPi2DY8WZCtLTuSF4qtVOA==
-X-Received: by 2002:a05:6a00:3a0e:b0:838:29b3:9ed1 with SMTP id d2e1a72fcca58-842255c8233mr8977076b3a.41.1780303760714;
-        Mon, 01 Jun 2026 01:49:20 -0700 (PDT)
+        bh=zs9Ftk//Eli+AipH1EmAF2SPdnVVPcjuiC9Ml1N6W44=;
+        b=NVcTOrb41mNsx/qKqmhxU6xrmFwOy5ZkRxlxIbrKFCD+EHIuB+DtG9bccJJVdWKcW0
+         BF6rnhu+oraeT/+GWN3b6dYXYJRIqRpRQCSibSq6a+4FLohQ9rEH3G2yUjM5UW4YC4qM
+         Q7PjvNaxoHuj2U5ux1ZNfZcIS2CKhp8OMF3iCEFl/MH5ooxtstn5cLfDccW+xN8KTdfi
+         9wwOuY7joPhmtdCn6Dyo3eVxBgpsersMCGp5L+kth0tLDvrxu/CNJYxovgcZ3jgMohuK
+         9R1zX9Jki9ey8lxjouaU+JZ1kXyoumVRw2/nsbWr2vFT26aVTO53AEb6bZXfCYplADFp
+         D+7A==
+X-Forwarded-Encrypted: i=1; AFNElJ/B6dOTmwc0FT4H2UFjra0EkucKWf+6VajqnnhKGshF9zdd7r5L6wYeKTvuqcxWAkC4JXrqeVX+O0U=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyE27pRUUJf7nVdS5WfzGg/BbjhHZ9VbIEQy/7uZKwP5GslTwx+
+	a6ZMtdhiZpfJsnBbffz11LVLaDRekRtMGFDMBxiwjA2jMASSkjlykhai9jcbz1RFntE=
+X-Gm-Gg: Acq92OFS3uhcxdSXpsG/qSgx05isRH2aaz8C9lDwW/4WiroaL1MfTd+rHVjugGTrhCs
+	djPgrf+tbQvH2S+sUvRvv37fQdrt4vsTDgmVD+2AL2oFh2nA5IpNuEAmrP37AJ68+JVOyGmxe6v
+	tGVEHC0vE8RXxhRMj57f1pDNQMQbsjle9S6z89NSxPsMHRtMpr+97lNorajKP4Yd3QOQ68+sVHY
+	0/nAzOfs+bzXO5OmBJzquTXhNXSVNEgFnZpfNrS9hkBUD4BGUP7EGmn+AjGosYW7zKfBG9jGghz
+	lbCdW5ia/dQeXTWQIWmyeaxx8gQeLAEEdDSZE1I/u0lafnwfpt1g+sMRHcfNUqvT9E86SrqAr3G
+	EcC2QiulH4YJwQWSxsyI5mv/AJ3jSaRx5skYRL3/hKUSFweQ/CXhWobVxyv6n+gq4GNiKTjIBG8
+	ota2kmQQOznbg713sfpEqzefRpusjwDTHgfH8xOjGjA8mFLDmAzufzJQ==
+X-Received: by 2002:a05:6a00:4c8b:b0:842:43d1:4b41 with SMTP id d2e1a72fcca58-84243d15007mr4884011b3a.47.1780303767463;
+        Mon, 01 Jun 2026 01:49:27 -0700 (PDT)
 Received: from n232-176-004.byted.org ([36.110.163.96])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84232ef8172sm6316230b3a.12.2026.06.01.01.49.14
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84232ef8172sm6316230b3a.12.2026.06.01.01.49.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 01:49:20 -0700 (PDT)
+        Mon, 01 Jun 2026 01:49:26 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -85,9 +85,9 @@ Cc: Muchun Song <muchun.song@linux.dev>,
 	Mike Rapoport <rppt@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>,
 	Michal Hocko <mhocko@suse.com>
-Subject: [PATCH v3 4/5] loongarch/mm: drop vmemmap_check_pmd helper and use generic code
-Date: Mon,  1 Jun 2026 16:48:43 +0800
-Message-ID: <20260601084845.3792171-5-songmuchun@bytedance.com>
+Subject: [PATCH v3 5/5] sparc/mm: drop vmemmap_check_pmd helper and use generic code
+Date: Mon,  1 Jun 2026 16:48:44 +0800
+Message-ID: <20260601084845.3792171-6-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260601084845.3792171-1-songmuchun@bytedance.com>
 References: <20260601084845.3792171-1-songmuchun@bytedance.com>
@@ -99,33 +99,33 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The generic implementations now suffice; remove the loongarch copies.
+The generic implementations now suffice; remove the sparc copies.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- arch/loongarch/mm/init.c | 11 -----------
+ arch/sparc/mm/init_64.c | 11 -----------
  1 file changed, 11 deletions(-)
 
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 687980b6e91f..3407030f3e7a 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -140,17 +140,6 @@ void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
- 	set_pmd_at(&init_mm, addr, pmd, entry);
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index 3b679b1d1d72..103db4683b16 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -2559,17 +2559,6 @@ void __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+ 	pmd_val(*pmd) = pte_base | __pa(p);
  }
  
--int __meminit vmemmap_check_pmd(pmd_t *pmd, int node,
+-int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
 -				unsigned long addr, unsigned long next)
 -{
--	int huge = pmd_val(pmdp_get(pmd)) & _PAGE_HUGE;
+-	int large = pmd_leaf(*pmdp);
 -
--	if (huge)
--		vmemmap_verify((pte_t *)pmd, node, addr, next);
+-	if (large)
+-		vmemmap_verify((pte_t *)pmdp, node, addr, next);
 -
--	return huge;
+-	return large;
 -}
 -
- int __meminit vmemmap_populate(unsigned long start, unsigned long end,
+ int __meminit vmemmap_populate(unsigned long vstart, unsigned long vend,
  			       int node, struct vmem_altmap *altmap)
  {
 -- 
