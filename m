@@ -1,45 +1,45 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4E1157A5A
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 12:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F213750DC
+	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 12:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780316857; cv=none; b=V/f/UTgu1MdYM46jrCRwqeEomjIisQ+OYJBp5dpbT/dO//r91Rm+OXYLR+Kg3bkVsmMLuWaS5txGkuy4f+v8BbqtkdyhdDEuO53GRMjdeKBwvZDhaUuimGR8dugMJNh88S9D8rTt31OCWHZ31dQDim5hnYC5EydraQIIllOPX7E=
+	t=1780317518; cv=none; b=b1Xqus6gj3GHHl37E/oDCYMUuu3cH7It9EBwiUade6mMMLPs56WZGnxQVU/ZfGNhnStda721Z7ywu8YMGl5GmGoiOJfhUXXjUY/lSGxvnj/9A5chkYFYPXpRX4xuxC1wXWgKy/Rr2q49nsv6BRkP7fSeL96AFJwY5I9mfcC5gAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780316857; c=relaxed/simple;
-	bh=i4FBLnKuzW+Ym0q3gycX6R6X/0IDqB6uKgDDGcfJaQ4=;
+	s=arc-20240116; t=1780317518; c=relaxed/simple;
+	bh=3az3TjNqqZkuQgZxxRqhlxK+9Py9j+5itmCceE1yE0k=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=NJZKzxZkesx9I64h+J5FXRBZo2TQr6YicDrlL41il4uYq02tq+Li2el2fGliBdo32D/t+4xHDjGfYRVWbF8i8skQIfh3C8U3izpXi+qq9qwRqhwm0NbrvdFzgd9Y3h8uWJu24ZZwlFSEwjKVKX7xmRE7DjkCtBc4TCNlHg0FW8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=taJxZziK; arc=none smtp.client-ip=95.215.58.183
+	 Message-Id:References:To; b=Q61S58iL1GhLelUQdMmwigCHrtY5sv3MsImHlvyJvx88xOdxz23EWesuiOIvenme/DDq2Njb/ZgNif7mwNYU5wYij5V5yDIAAAHhatEQyPOwAAptidYJxDhdwK39PWUJx+U2ruqK6gnphT6ZWGIUOYby2JnIOv4wJDaIzkbmNfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t9X+k6Pk; arc=none smtp.client-ip=95.215.58.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="taJxZziK"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t9X+k6Pk"
 Content-Type: text/plain;
 	charset=us-ascii
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780316852;
+	t=1780317513;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9SZo5S/dgDqG8hXBhyprQZKAwoZuXhbxuoMvMnMzdUE=;
-	b=taJxZziKn4woYglDXIvNCebPtG3Ett1MjiIFDKupB8/vwlbR/030Sh3VZlm77BCTnpmoG/
-	rKoPBIkFdC9v9EftiInYZUlXr+q/jFF/8okro3ZtUpL84t5w/njL0YRB0TN1eiiMzWl6HF
-	ljUQhnWpMMyGxM8ydCYaS7vcjT7YQjI=
+	bh=Y8Q9MsGaEY5Id3cDoyk/LMPpb+cY3ipFpIzkjqGDFMo=;
+	b=t9X+k6PkHR5WsisChw0O5VpIHYqYLwjr9DFuC/tgFLuN5u0rKS+6y8bhT2MX1ghqTZTr+n
+	DuMVk9niJvJLHdW7PBgKF1COtMWreGWe69fkyAbs03os4PWMGg/jK82UDtSe59liiNNRDy
+	2uJ7I61UVj726QpKC4J0NufWJLLoJoQ=
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
-Subject: Re: [PATCH v3 4/5] loongarch/mm: drop vmemmap_check_pmd helper and
- use generic code
+Subject: Re: [PATCH v3 1/5] mm/sparse-vmemmap: provide generic
+ vmemmap_set_pmd() and vmemmap_check_pmd()
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <8c60f9bb-7a4a-4340-b414-9f7fbef4150c@kernel.org>
-Date: Mon, 1 Jun 2026 20:26:47 +0800
+In-Reply-To: <db8d440d-c8a1-4f77-b5d9-00bab8737f12@kernel.org>
+Date: Mon, 1 Jun 2026 20:37:42 +0800
 Cc: Muchun Song <songmuchun@bytedance.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Catalin Marinas <catalin.marinas@arm.com>,
@@ -64,35 +64,71 @@ Cc: Muchun Song <songmuchun@bytedance.com>,
  Mike Rapoport <rppt@kernel.org>,
  Suren Baghdasaryan <surenb@google.com>,
  Michal Hocko <mhocko@suse.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <0C8C9C2B-2EDA-47DB-AC54-237F2127A6A8@linux.dev>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0D4AF42F-37C5-4A76-9703-44ACC6374C48@linux.dev>
 References: <20260601084845.3792171-1-songmuchun@bytedance.com>
- <20260601084845.3792171-5-songmuchun@bytedance.com>
- <8c60f9bb-7a4a-4340-b414-9f7fbef4150c@kernel.org>
+ <20260601084845.3792171-2-songmuchun@bytedance.com>
+ <db8d440d-c8a1-4f77-b5d9-00bab8737f12@kernel.org>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
 
 
-> On Jun 1, 2026, at 20:24, David Hildenbrand (Arm) <david@kernel.org> wrote:
-> 
+> On Jun 1, 2026, at 20:22, David Hildenbrand (Arm) <david@kernel.org> =
+wrote:
+>=20
 > On 6/1/26 10:48, Muchun Song wrote:
->> The generic implementations now suffice; remove the loongarch copies.
-> 
-> You are only removing a single function? So "copy"
+>> The two weak functions are currently no-ops on every architecture,
+>> forcing each platform that needs them to duplicate the same handful
+>> of lines.  Provide a generic implementation:
+>>=20
+>> - vmemmap_set_pmd() simply sets a huge PMD with PAGE_KERNEL =
+protection.
+>>=20
+>> - vmemmap_check_pmd() verifies that the PMD is present and leaf,
+>>  then calls the existing vmemmap_verify() helper.
+>>=20
+>> Architectures that need special handling can continue to override the
+>> weak symbols; everyone else gets the standard version for free.
+>>=20
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> ---
+>> v2->v3:
+>> - Replace BUG_ON() with WARN_ON_ONCE() in vmemmap_set_pmd()
+>> ---
+>> mm/sparse-vmemmap.c | 7 ++++++-
+>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+>> index 112ccf9c71ca..99e2be39671b 100644
+>> --- a/mm/sparse-vmemmap.c
+>> +++ b/mm/sparse-vmemmap.c
+>> @@ -386,12 +386,17 @@ int __meminit vmemmap_populate_hvo(unsigned =
+long addr, unsigned long end,
+>> void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+>>       unsigned long addr, unsigned long next)
+>> {
+>> + 	WARN_ON_ONCE(!pmd_set_huge(pmd, virt_to_phys(p), PAGE_KERNEL));
+>=20
+>=20
+> Not sure if a VM_WARN_ON_ONCE() would be appropriate. (then, we have =
+to move the
+> pmd_set_huge() out of the statement).
 
-Yes. I copied the commit message from other commit and forgot to update
-accordingly.
+I think it might be better to keep WARN_ON_ONCE here. This way, we can =
+still
+monitor for warnings in production while keeping the code simple.
 
-> 
-> 
-> Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+>=20
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Thanks.
 
-> 
-> -- 
+>=20
+>=20
+> --=20
 > Cheers,
-> 
+>=20
 > David
+
 
