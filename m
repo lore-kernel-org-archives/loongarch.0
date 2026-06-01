@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0A2E3438B4
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB6638F65D
+	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:30:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780306208; cv=none; b=XZMRg4YVWmX9ng5AG+tAscoj0ECDAKmV8W2DO3evRMw18DyrN89fAXibcnXKEnwZKGnFC0/umjsiH6RWElYoKQcxby0w7RmfMxOsCf3gYKZHzwrYg44nGIoaJsK/Tn+LgHQgq6IHWLA7+o86bj9OgVH8kWjo2DOy98IWlQhcbyA=
+	t=1780306209; cv=none; b=PoiOMSHtExfGANc2IpBXTrEtyv0s/M0dY6L2qf3KKAU6gBcgYvWPh9zxaWisCphIW09Elwkd5WcC7jzyygj/l+KbcC5S+NPR4vmTVuDvL/k9b5NWbp8EV4PzOZkAwAvsNf1vFRn1NthHyFUMzGULuSDT0YcCF4ITZ5gcJUoFv0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780306208; c=relaxed/simple;
-	bh=rpZlLGszyZJkpQvhxHmEEk4QyYLGpG2gdguJGZ9ZBDc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lbnC9a371QdQ/LPhBVoGbGwrhFvIyzf5WFBOcqRXpwNl7zQ0FgnjI494dyyF2Br4Ww6Gt0/JzizJdpXtyJcJCPYM43a6XQTC90l2Drq5d5bDwgS3eD6XYsjkI2f3KeFTJAVmtcxa2kuH28oeHzVh0H5za4vuqmRs/l8yLUk+kpQ=
+	s=arc-20240116; t=1780306209; c=relaxed/simple;
+	bh=F2qwso1fDR/7OMLA99rX+URI4V7lNYaa79S0jJD0Zlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GnfLx8MAGgWH3H+PObW7jIvbekWw98fxD4Zb5g5KBzwUhIgIEhojAd+IonhTuVvgVIQYAYhJyv3iSZYwfJK3r4kS+hI+DOWul5Qy/Cym5tg8caKhZdpseLG9URJq0bpRNG9SP8doEZw4piYGfa5Z0DMhgJzmT22se/Y171qmEkQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [223.64.68.59])
-	by gateway (Coremail) with SMTP id _____8BxT+oXUR1qTEsPAA--.42266S3;
-	Mon, 01 Jun 2026 17:29:59 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxCHkQUR1qM0sPAA--.18171S3;
+	Mon, 01 Jun 2026 17:29:52 +0800 (CST)
 Received: from kernelserver (unknown [223.64.68.59])
-	by front1 (Coremail) with SMTP id qMiowJAxXcIJUR1qGOqXAA--.23311S5;
-	Mon, 01 Jun 2026 17:29:58 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxXcIJUR1qGOqXAA--.23311S2;
+	Mon, 01 Jun 2026 17:29:46 +0800 (CST)
 From: Binbin Zhou <zhoubinbin@loongson.cn>
 To: Binbin Zhou <zhoubb.aaron@gmail.com>,
 	Huacai Chen <chenhuacai@loongson.cn>,
@@ -30,12 +29,10 @@ Cc: Huacai Chen <chenhuacai@kernel.org>,
 	loongarch@lists.linux.dev,
 	linux-sound@vger.kernel.org,
 	Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: [PATCH v3 3/4] ASoC: loongson: Use the `idma` identifier for internal DMA variables
-Date: Mon,  1 Jun 2026 17:29:38 +0800
-Message-ID: <58e91c54f2bf658ac9b773741ca2aebc3866e550.1780304703.git.zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/4] ASoC: loongson: Refactor DMA and regmap handling
+Date: Mon,  1 Jun 2026 17:29:35 +0800
+Message-ID: <cover.1780304703.git.zhoubinbin@loongson.cn>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1780304703.git.zhoubinbin@loongson.cn>
-References: <cover.1780304703.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,348 +40,98 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxXcIJUR1qGOqXAA--.23311S5
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEFCGodH18GKAAAsU
-X-Coremail-Antispam: 1Uk129KBj93XoW3uw47KrWDtFy3ur1rKr13WrX_yoWkKw4rpF
-	n3A39Ygr4YqF13ur98Ars5ur1ayryFkrZIga17Z34a9r9rtw1F9Fy8GF10vF4ak34UCrnF
-	vrW0g3y8G3W3G3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJAxXcIJUR1qGOqXAA--.23311S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEFCGodH18GIwAAsf
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr4fWF4DCFWkGF43GryUJwc_yoW5JryDpa
+	n3C393Wr15trW2yrs3Ja4rJFy5ZryrXr9rWF47J34kWr9xu3W2vw1ftF48ZFW7Cry8XryI
+	vry8KFW8uF15uacCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
+	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xuctUUUUU==
 
-The Loongson I2S controller can work with two types of DMA:
-- Internal DMA (iDMA): integrated DMA engine, driven by dedicated
-  registers and interrupts.
-- External DMA (eDMA): generic DMA engine (e.g., dw_dmac), using the
-  standard dmaengine API.
+Hi all:
 
-To distinguish these two distinct implementations, rename all
-internal-DMA-related structures, functions, and the component driver
-to use the "idma" prefix.
+This series refactors the Loongson I2S ASoC drivers, reducing code
+duplication and improving DMA differentiation. It also adds an entry
+in MAINTAINERS and applies a few fixes to the es8323 codec driver.
 
-No functional change intended.
+Patch 1 adds a MAINTAINERS entry to track the Loongson audio drivers.
 
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- sound/soc/loongson/loongson_dma.c     | 89 ++++++++++++++-------------
- sound/soc/loongson/loongson_dma.h     |  4 +-
- sound/soc/loongson/loongson_i2s.h     |  6 +-
- sound/soc/loongson/loongson_i2s_pci.c |  5 +-
- 4 files changed, 52 insertions(+), 52 deletions(-)
+Patch 2 consolidates duplicate regmap configurations from the PCI and
+platform glue drivers into the shared loongson_i2s.c. It also fixes
+volatile register marking and switches from REGCACHE_FLAT to
+REGCACHE_MAPLE.
 
-diff --git a/sound/soc/loongson/loongson_dma.c b/sound/soc/loongson/loongson_dma.c
-index a149b643175c..f51b5b94e3ab 100644
---- a/sound/soc/loongson/loongson_dma.c
-+++ b/sound/soc/loongson/loongson_dma.c
-@@ -4,6 +4,7 @@
- //
- // Copyright (C) 2023 Loongson Technology Corporation Limited
- // Author: Yingkun Meng <mengyingkun@loongson.cn>
-+//         Binbin ZHou <zhoubinbin@loongson.cn>
- //
- 
- #include <linux/module.h>
-@@ -16,7 +17,7 @@
- #include <sound/pcm_params.h>
- #include "loongson_i2s.h"
- 
--/* DMA dma_order Register */
-+/* Internal DMA dma_order Register */
- #define DMA_ORDER_STOP          BIT(4) /* DMA stop */
- #define DMA_ORDER_START         BIT(3) /* DMA start */
- #define DMA_ORDER_ASK_VALID     BIT(2) /* DMA ask valid flag */
-@@ -27,9 +28,9 @@
- #define DMA_ORDER_CTRL_MASK     (0x0fUL)  /* Control mask  */
- 
- /*
-- * DMA registers descriptor.
-+ * Internal DMA registers descriptor.
-  */
--struct loongson_dma_desc {
-+struct loongson_idma_desc {
- 	u32 order;		/* Next descriptor address register */
- 	u32 saddr;		/* Source address register */
- 	u32 daddr;		/* Device address register */
-@@ -44,17 +45,17 @@ struct loongson_dma_desc {
- } __packed;
- 
- struct loongson_runtime_data {
--	struct loongson_dma_data *dma_data;
-+	struct loongson_idma_data *dma_data;
- 
--	struct loongson_dma_desc *dma_desc_arr;
-+	struct loongson_idma_desc *dma_desc_arr;
- 	dma_addr_t dma_desc_arr_phy;
- 	int dma_desc_arr_size;
- 
--	struct loongson_dma_desc *dma_pos_desc;
-+	struct loongson_idma_desc *dma_pos_desc;
- 	dma_addr_t dma_pos_desc_phy;
- };
- 
--static const struct snd_pcm_hardware ls_pcm_hardware = {
-+static const struct snd_pcm_hardware loongson_idma_hardware = {
- 	.info = SNDRV_PCM_INFO_MMAP |
- 		SNDRV_PCM_INFO_INTERLEAVED |
- 		SNDRV_PCM_INFO_MMAP_VALID |
-@@ -67,12 +68,11 @@ static const struct snd_pcm_hardware ls_pcm_hardware = {
- 	.period_bytes_min = 128,
- 	.period_bytes_max = 128 * 1024,
- 	.periods_min = 1,
--	.periods_max = PAGE_SIZE / sizeof(struct loongson_dma_desc),
-+	.periods_max = PAGE_SIZE / sizeof(struct loongson_idma_desc),
- 	.buffer_bytes_max = 1024 * 1024,
- };
- 
--static struct
--loongson_dma_desc *dma_desc_save(struct loongson_runtime_data *prtd)
-+static struct loongson_idma_desc *dma_desc_save(struct loongson_runtime_data *prtd)
- {
- 	void __iomem *order_reg = prtd->dma_data->order_addr;
- 	u64 val;
-@@ -88,8 +88,8 @@ loongson_dma_desc *dma_desc_save(struct loongson_runtime_data *prtd)
- 	return prtd->dma_pos_desc;
- }
- 
--static int loongson_pcm_trigger(struct snd_soc_component *component,
--				struct snd_pcm_substream *substream, int cmd)
-+static int loongson_idma_pcm_trigger(struct snd_soc_component *component,
-+				     struct snd_pcm_substream *substream, int cmd)
- {
- 	struct loongson_runtime_data *prtd = substream->runtime->private_data;
- 	struct device *dev = substream->pcm->card->dev;
-@@ -131,9 +131,9 @@ static int loongson_pcm_trigger(struct snd_soc_component *component,
- 	return 0;
- }
- 
--static int loongson_pcm_hw_params(struct snd_soc_component *component,
--				  struct snd_pcm_substream *substream,
--				  struct snd_pcm_hw_params *params)
-+static int loongson_idma_pcm_hw_params(struct snd_soc_component *component,
-+				       struct snd_pcm_substream *substream,
-+				       struct snd_pcm_hw_params *params)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct device *dev = substream->pcm->card->dev;
-@@ -141,7 +141,7 @@ static int loongson_pcm_hw_params(struct snd_soc_component *component,
- 	size_t buf_len = params_buffer_bytes(params);
- 	size_t period_len = params_period_bytes(params);
- 	dma_addr_t order_addr, mem_addr;
--	struct loongson_dma_desc *desc;
-+	struct loongson_idma_desc *desc;
- 	u32 num_periods;
- 	int i;
- 
-@@ -195,12 +195,12 @@ static int loongson_pcm_hw_params(struct snd_soc_component *component,
- }
- 
- static snd_pcm_uframes_t
--loongson_pcm_pointer(struct snd_soc_component *component,
--		     struct snd_pcm_substream *substream)
-+loongson_idma_pcm_pointer(struct snd_soc_component *component,
-+			  struct snd_pcm_substream *substream)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct loongson_runtime_data *prtd = runtime->private_data;
--	struct loongson_dma_desc *desc;
-+	struct loongson_idma_desc *desc;
- 	snd_pcm_uframes_t x;
- 	u64 addr;
- 
-@@ -213,7 +213,7 @@ loongson_pcm_pointer(struct snd_soc_component *component,
- 	return x;
- }
- 
--static irqreturn_t loongson_pcm_dma_irq(int irq, void *devid)
-+static irqreturn_t loongson_idma_pcm_dma_irq(int irq, void *devid)
- {
- 	struct snd_pcm_substream *substream = devid;
- 
-@@ -221,14 +221,14 @@ static irqreturn_t loongson_pcm_dma_irq(int irq, void *devid)
- 	return IRQ_HANDLED;
- }
- 
--static int loongson_pcm_open(struct snd_soc_component *component,
--			     struct snd_pcm_substream *substream)
-+static int loongson_idma_pcm_open(struct snd_soc_component *component,
-+				  struct snd_pcm_substream *substream)
- {
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
- 	struct snd_card *card = substream->pcm->card;
- 	struct loongson_runtime_data *prtd;
--	struct loongson_dma_data *dma_data;
-+	struct loongson_idma_data *dma_data;
- 
- 	/*
- 	 * For mysterious reasons (and despite what the manual says)
-@@ -241,7 +241,7 @@ static int loongson_pcm_open(struct snd_soc_component *component,
- 				   SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 128);
- 	snd_pcm_hw_constraint_integer(substream->runtime,
- 				      SNDRV_PCM_HW_PARAM_PERIODS);
--	snd_soc_set_runtime_hwparams(substream, &ls_pcm_hardware);
-+	snd_soc_set_runtime_hwparams(substream, &loongson_idma_hardware);
- 
- 	prtd = kzalloc_obj(*prtd);
- 	if (!prtd)
-@@ -277,8 +277,8 @@ static int loongson_pcm_open(struct snd_soc_component *component,
- 	return -ENOMEM;
- }
- 
--static int loongson_pcm_close(struct snd_soc_component *component,
--			      struct snd_pcm_substream *substream)
-+static int loongson_idma_pcm_close(struct snd_soc_component *component,
-+				   struct snd_pcm_substream *substream)
- {
- 	struct snd_card *card = substream->pcm->card;
- 	struct loongson_runtime_data *prtd = substream->runtime->private_data;
-@@ -293,21 +293,21 @@ static int loongson_pcm_close(struct snd_soc_component *component,
- 	return 0;
- }
- 
--static int loongson_pcm_mmap(struct snd_soc_component *component,
--			     struct snd_pcm_substream *substream,
--			     struct vm_area_struct *vma)
-+static int loongson_idma_pcm_mmap(struct snd_soc_component *component,
-+				  struct snd_pcm_substream *substream,
-+				  struct vm_area_struct *vma)
- {
- 	return remap_pfn_range(vma, vma->vm_start,
--			substream->dma_buffer.addr >> PAGE_SHIFT,
--			vma->vm_end - vma->vm_start, vma->vm_page_prot);
-+			       substream->dma_buffer.addr >> PAGE_SHIFT,
-+			       vma->vm_end - vma->vm_start, vma->vm_page_prot);
- }
- 
--static int loongson_pcm_new(struct snd_soc_component *component,
--			    struct snd_soc_pcm_runtime *rtd)
-+static int loongson_idma_pcm_new(struct snd_soc_component *component,
-+				 struct snd_soc_pcm_runtime *rtd)
- {
- 	struct snd_card *card = rtd->card->snd_card;
- 	struct snd_pcm_substream *substream;
--	struct loongson_dma_data *dma_data;
-+	struct loongson_idma_data *dma_data;
- 	unsigned int i;
- 	int ret;
- 
-@@ -319,7 +319,7 @@ static int loongson_pcm_new(struct snd_soc_component *component,
- 		dma_data = snd_soc_dai_get_dma_data(snd_soc_rtd_to_cpu(rtd, 0),
- 						    substream);
- 		ret = devm_request_irq(card->dev, dma_data->irq,
--				       loongson_pcm_dma_irq,
-+				       loongson_idma_pcm_dma_irq,
- 				       IRQF_TRIGGER_HIGH, LS_I2S_DRVNAME,
- 				       substream);
- 		if (ret < 0) {
-@@ -330,16 +330,17 @@ static int loongson_pcm_new(struct snd_soc_component *component,
- 
- 	return snd_pcm_set_fixed_buffer_all(rtd->pcm, SNDRV_DMA_TYPE_DEV,
- 					    card->dev,
--					    ls_pcm_hardware.buffer_bytes_max);
-+					    loongson_idma_hardware.buffer_bytes_max);
- }
- 
--const struct snd_soc_component_driver loongson_i2s_component = {
-+/* Internal DMA component */
-+const struct snd_soc_component_driver loongson_i2s_idma_component = {
- 	.name		= LS_I2S_DRVNAME,
--	.open		= loongson_pcm_open,
--	.close		= loongson_pcm_close,
--	.hw_params	= loongson_pcm_hw_params,
--	.trigger	= loongson_pcm_trigger,
--	.pointer	= loongson_pcm_pointer,
--	.mmap		= loongson_pcm_mmap,
--	.pcm_new	= loongson_pcm_new,
-+	.open		= loongson_idma_pcm_open,
-+	.close		= loongson_idma_pcm_close,
-+	.hw_params	= loongson_idma_pcm_hw_params,
-+	.trigger	= loongson_idma_pcm_trigger,
-+	.pointer	= loongson_idma_pcm_pointer,
-+	.mmap		= loongson_idma_pcm_mmap,
-+	.pcm_new	= loongson_idma_pcm_new,
- };
-diff --git a/sound/soc/loongson/loongson_dma.h b/sound/soc/loongson/loongson_dma.h
-index 073ee8c0c046..8a8fa8abd85a 100644
---- a/sound/soc/loongson/loongson_dma.h
-+++ b/sound/soc/loongson/loongson_dma.h
-@@ -9,8 +9,6 @@
- #ifndef _LOONGSON_DMA_H
- #define _LOONGSON_DMA_H
- 
--#include <sound/soc.h>
--
--extern const struct snd_soc_component_driver loongson_i2s_component;
-+extern const struct snd_soc_component_driver loongson_i2s_idma_component;
- 
- #endif
-diff --git a/sound/soc/loongson/loongson_i2s.h b/sound/soc/loongson/loongson_i2s.h
-index e73ffa954ec9..8b4603c876c5 100644
---- a/sound/soc/loongson/loongson_i2s.h
-+++ b/sound/soc/loongson/loongson_i2s.h
-@@ -42,7 +42,7 @@
- 
- #define LS_I2S_DRVNAME		"loongson-i2s"
- 
--struct loongson_dma_data {
-+struct loongson_idma_data {
- 	dma_addr_t dev_addr;		/* device physical address for DMA */
- 	void __iomem *order_addr;	/* DMA order register */
- 	int irq;			/* DMA irq */
-@@ -52,11 +52,11 @@ struct loongson_i2s {
- 	struct device *dev;
- 	union {
- 		struct snd_dmaengine_dai_dma_data playback_dma_data;
--		struct loongson_dma_data tx_dma_data;
-+		struct loongson_idma_data tx_dma_data;
- 	};
- 	union {
- 		struct snd_dmaengine_dai_dma_data capture_dma_data;
--		struct loongson_dma_data rx_dma_data;
-+		struct loongson_idma_data rx_dma_data;
- 	};
- 	struct regmap *regmap;
- 	void __iomem *reg_base;
-diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
-index dea1e4ebee29..f5b560465706 100644
---- a/sound/soc/loongson/loongson_i2s_pci.c
-+++ b/sound/soc/loongson/loongson_i2s_pci.c
-@@ -13,6 +13,7 @@
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include <sound/soc.h>
-+
- #include "loongson_i2s.h"
- #include "loongson_dma.h"
- 
-@@ -22,7 +23,7 @@ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
- 				  const struct pci_device_id *pid)
- {
- 	const struct fwnode_handle *fwnode = pdev->dev.fwnode;
--	struct loongson_dma_data *tx_data, *rx_data;
-+	struct loongson_idma_data *tx_data, *rx_data;
- 	struct device *dev = &pdev->dev;
- 	struct loongson_i2s *i2s;
- 	int ret;
-@@ -79,7 +80,7 @@ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
- 		udelay(200);
- 	}
- 
--	ret = devm_snd_soc_register_component(dev, &loongson_i2s_component,
-+	ret = devm_snd_soc_register_component(dev, &loongson_i2s_idma_component,
- 					      &loongson_i2s_dai, 1);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "register DAI failed\n");
+Patch 3 renames internal DMA structures and functions with an "idma"
+prefix to clearly distinguish them from external DMA (eDMA) support.
+
+Patch 4 extracts the external DMA logic from the platform driver into
+loongson_dma.c, making it reusable and avoiding duplication with the
+internal DMA implementation.
+
+These changes have been tested on Loongson-2K0300 (platform, eDMA) and
+Loongson-2K2000 (PCI, iDMA) boards.
+
+Thanks.
+Binbin
+
+========
+V3:
+- Drop es8323 patch.
+Patch (2/4):
+ - Add I2S_CTRL as volatile register.
+
+Link to V2:
+https://lore.kernel.org/all/cover.1779796354.git.zhoubinbin@loongson.cn/
+
+V2:
+Patch (2/5):
+  - Fix volatile register handling, and switch from REGCACHE_FLAT to
+    REGCACHE_MAPLE;
+Patch (5/5):
+  - New patch for ES8323 coedc.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1773821115.git.zhoubinbin@loongson.cn/
+
+Change from [1]:
+Patch (2/4):
+  - Reordered the `write` function to follow the `read` function;
+Patch (3/4)/(4/4):
+  - Use `idma` (internal dma) and `edma` (external dma) for short.
+
+[1]:
+https://lore.kernel.org/all/cover.1773107475.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (4):
+  MAINTAINERS: Add entry for Loongson ASoC driver
+  ASoC: loongson: Combined regmap definitions
+  ASoC: loongson: Use the `idma` identifier for internal DMA variables
+  ASoC: loongson: Separate external shared DMA from the platform
+    interface
+
+ MAINTAINERS                            |   9 ++
+ sound/soc/loongson/Makefile            |   4 +-
+ sound/soc/loongson/loongson_dma.c      | 148 +++++++++++++++++--------
+ sound/soc/loongson/loongson_dma.h      |   6 +-
+ sound/soc/loongson/loongson_i2s.c      |  56 +++++++++-
+ sound/soc/loongson/loongson_i2s.h      |   7 +-
+ sound/soc/loongson/loongson_i2s_pci.c  |  59 +---------
+ sound/soc/loongson/loongson_i2s_plat.c |  67 +----------
+ 8 files changed, 182 insertions(+), 174 deletions(-)
+
+
+base-commit: 9617ce6798f8eee61d8068f0ea03a08ce051932e
 -- 
 2.52.0
 
