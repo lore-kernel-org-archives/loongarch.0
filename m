@@ -1,47 +1,41 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF4D346FB3
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2057390CB9
+	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 09:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780306131; cv=none; b=fgQBTwxU2jlYbhxp2EF9SonIct03aPTxllOqSBMneaBwXb4UqyCL50yCUWYoxMEvAum5njk2D9TdA5ljPt272YJUtvk8nX3k2w7MJBAMfv1Nd6enUfoxOAVUd1Gjli0sJLTeZuG6HwxPGG5nj2qTQ4kmZe1sf4EgcEPsg2BbfLo=
+	t=1780306208; cv=none; b=OWw6418oXD+VLZo9kHWPdQsOZyqcuXW8no3UeU1NUp9AvnZiVAaXH6aG91EKizIAB1Rc1P/TzKgMtQV/OUWLT2o7eSU8/JT323e95huAAeU33OaRC1K2ux8uniTt6/Op0zif1Chen7JdPCwUAF1MzLZxyzXMaGOTQ5t2iqrikcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780306131; c=relaxed/simple;
-	bh=CqKfad+2TXBowfjWkNJ/8et34wmy9C6mL+x/1Jr1+Gs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lDhRXwEbyulecpWLFuqSeEUJIG8LIBXfqeBGvDsu6115GYfYD8GF7SKK38fwY2jbwS2o7awDoeHE+4qDuFex0hOCBquY27uO38ahIchnLPPoCpNQAmU2MRAxgHnxgf9bMCI5u/G5hrEfglCh34p8PkhsCVnX+gmqXaAOdTKceCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G1yanIRS; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G1yanIRS"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780306128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g29uDzwGW0NTcSuFfWko8xrjZg7XxEg7NOcp6XGp35E=;
-	b=G1yanIRS6yXPZoIwX1L76zEI/J+Uwmu2iCm4414ti+w1YVL+TEmhRDZxnTfDwVpz4RQ1Ks
-	RgQds/2HYs8jVcZzx93YbUarTOCWkNz5RANvpCjGdcmpwLQstUfaAmlYGrb2E27rjO/Dna
-	OiiPa7ufzdr9fGuygNemUGjCcQ/nspc=
-From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: George Guo <guodongtai@kylinos.cn>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Alexander Graf <graf@amazon.com>,
+	s=arc-20240116; t=1780306208; c=relaxed/simple;
+	bh=iIGKcaK3kySkS/V5wQeU96uUoLwmX84F1kJvaheslas=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PYwUgSNJK8jmT0eS6ujYYzvSOhy3JaKcEHrUI87z6/rmwCgrTBAYwoLE+bjMNbmKVzpPVhCuNAxrPLdRntT31X7L+qXEYJzjiRmUn4baZjjBXsQeA/cYAadqQkfFgE08jnRLhEVkCCiZiZK5FoeLUQ+lMoTWgzOxIkAr/7DwTjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.59])
+	by gateway (Coremail) with SMTP id _____8AxX+sWUR1qQ0sPAA--.42625S3;
+	Mon, 01 Jun 2026 17:29:58 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.59])
+	by front1 (Coremail) with SMTP id qMiowJAxXcIJUR1qGOqXAA--.23311S4;
+	Mon, 01 Jun 2026 17:29:53 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 0/3] LoongArch: add KHO support and selftests
-Date: Mon,  1 Jun 2026 17:28:20 +0800
-Message-Id: <20260601092823.110362-1-dongtai.guo@linux.dev>
+	linux-sound@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 2/4] ASoC: loongson: Combined regmap definitions
+Date: Mon,  1 Jun 2026 17:29:37 +0800
+Message-ID: <e32d24479fc382dc3de6aded6351c13b43b6391d.1780304703.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <cover.1780304703.git.zhoubinbin@loongson.cn>
+References: <cover.1780304703.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -49,70 +43,227 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJAxXcIJUR1qGOqXAA--.23311S4
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEFCGodH18GJgAAsa
+X-Coremail-Antispam: 1Uk129KBj93XoWxtr48tr4UAF4kGr4DWr4kGrX_yoW7Kryfpr
+	nxAa97WrW5Jr4ay3ZIyrW8JFy5Cry3Cr93CF47Jw17u3srCw18uF1rtF15Aa13uryDGFyI
+	vry8GrW8Ga4UGabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
+	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0x
+	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
+	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
 
-From: George Guo <guodongtai@kylinos.cn>
+Previously, the regmap configuration for Loongson I2S controller was
+duplicated in both PCI and platform glue drivers. Move the common
+regmap configuration into the shared loongson_i2s.c to avoid code
+duplication and centralize register access handling.
 
-This series adds Kexec Handover (KHO) support for LoongArch and extends
-the KHO selftest infrastructure to run on LoongArch under QEMU.
+While moving, adjust the following:
+- Mark RX_DATA/TX_DATA/I2S_CTRL as volatile registers. The PCI version
+  incorrectly marked CFG/CFG1 as volatile, which prevented proper
+  regcache synchronization.
+- Change cache type from REGCACHE_FLAT to REGCACHE_MAPLE. The register
+  map is sparse and the number of registers is small; MAPLE tree provides
+  better scalability and is the recommended cache type for modern
+  regmap users.
 
-KHO passes metadata (the KHO state FDT and scratch area addresses) to the
-second kernel via the FDT /chosen node, using the linux,kho-fdt and
-linux,kho-scratch properties that drivers/of/kexec.c:kho_add_chosen()
-writes and drivers/of/fdt.c:early_init_dt_check_kho() reads.
+Also, the following warning for the i2s_plat driver will be eliminated:
 
-KHO support (patches 1-2):
+loongson-i2s-plat loongson-i2s: using zero-initialized flat cache, this may cause unexpected behavior.
 
-Patch 1 adds KHO support for FDT-based systems (initial_boot_params !=
-NULL, e.g. QEMU virt without OVMF).  kho_load_fdt() copies the running
-kernel's FDT, appends linux,kho-fdt and linux,kho-scratch to /chosen,
-and loads the result as a kexec segment.  machine_kexec() updates the
-DEVICE_TREE_GUID entry in the EFI config table to point to this segment
-so the second kernel's fdt_setup() can find and parse it.
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+---
+ sound/soc/loongson/loongson_i2s.c      | 56 +++++++++++++++++++++++++-
+ sound/soc/loongson/loongson_i2s.h      |  1 +
+ sound/soc/loongson/loongson_i2s_pci.c  | 54 -------------------------
+ sound/soc/loongson/loongson_i2s_plat.c |  8 ----
+ 4 files changed, 56 insertions(+), 63 deletions(-)
 
-Patch 2 adds KHO support for ACPI-only systems (initial_boot_params ==
-NULL, e.g. LoongArch servers with UEFI or QEMU with OVMF).  Because no
-system FDT is available, kho_load_fdt() builds a minimal FDT from
-scratch containing only /chosen with the two KHO properties.  Since
-DEVICE_TREE_GUID is absent from the EFI config table on ACPI-only
-systems, a new extended config table is built with the entry appended
-and loaded as a kexec segment; machine_kexec() switches st->tables to
-point to it before jumping.  The second kernel's fdt_setup() calls
-efi_fdt_pointer() to detect the KHO FDT and passes it to
-early_init_dt_check_kho().
-
-Selftest support (patch 3):
-
-Patch 3 adds loongarch.conf and extends vmtest.sh to recognise loongarch64
-as a build target.  The LoongArch virt machine is FDT-only (no ACPI), so
-'earlycon' must appear on the kernel cmdline or the console UART is never
-discovered.  PS/2 input devices are disabled since QEMU's LoongArch virt
-machine has no i8042 controller; the fallback port probe hits a page fault
-and panics before reaching userspace.  QEMU provides no EFI runtime
-services on LoongArch, so machine_restart() falls through to an infinite
-idle loop after kexec; QEMU_TIMEOUT=120 in loongarch.conf lets timeout(1)
-terminate QEMU once the time limit is reached.
-
-Changes in v3:
-- Merge selftest patches 3 and 4 from v2 into a single patch
-- Replace QEMU_NEEDS_KILL/background kill loop with QEMU_TIMEOUT/timeout(1);
-  the timeout value is set per-arch in the conf file.
-
-George Guo (3):
-  LoongArch: kexec: add KHO support for FDT-based systems
-  LoongArch: kexec: add KHO support for ACPI-only systems
-  selftests/kho: add LoongArch vmtest support
-
- arch/loongarch/Kconfig                     |   3 +
- arch/loongarch/include/asm/kexec.h         |   7 +
- arch/loongarch/kernel/machine_kexec.c      |  38 +++
- arch/loongarch/kernel/machine_kexec_file.c | 256 +++++++++++++++++++++
- arch/loongarch/kernel/setup.c              |  21 +-
- tools/testing/selftests/kho/loongarch.conf |  13 ++
- tools/testing/selftests/kho/vmtest.sh      |  23 +-
- 7 files changed, 353 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/kho/loongarch.conf
-
---
-2.25.1
+diff --git a/sound/soc/loongson/loongson_i2s.c b/sound/soc/loongson/loongson_i2s.c
+index e336656e13eb..cfe102a8b604 100644
+--- a/sound/soc/loongson/loongson_i2s.c
++++ b/sound/soc/loongson/loongson_i2s.c
+@@ -254,6 +254,7 @@ static int i2s_suspend(struct device *dev)
+ 	struct loongson_i2s *i2s = dev_get_drvdata(dev);
+ 
+ 	regcache_cache_only(i2s->regmap, true);
++	regcache_mark_dirty(i2s->regmap);
+ 
+ 	return 0;
+ }
+@@ -263,7 +264,7 @@ static int i2s_resume(struct device *dev)
+ 	struct loongson_i2s *i2s = dev_get_drvdata(dev);
+ 
+ 	regcache_cache_only(i2s->regmap, false);
+-	regcache_mark_dirty(i2s->regmap);
++
+ 	return regcache_sync(i2s->regmap);
+ }
+ 
+@@ -272,5 +273,58 @@ const struct dev_pm_ops loongson_i2s_pm = {
+ };
+ EXPORT_SYMBOL_GPL(loongson_i2s_pm);
+ 
++static bool loongson_i2s_rd_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_VER:
++	case LS_I2S_CFG:
++	case LS_I2S_CTRL:
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++	case LS_I2S_CFG1:
++		return true;
++	default:
++		return false;
++	};
++}
++
++static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_CFG:
++	case LS_I2S_CTRL:
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++	case LS_I2S_CFG1:
++		return true;
++	default:
++		return false;
++	};
++}
++
++static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LS_I2S_CTRL:
++	case LS_I2S_RX_DATA:
++	case LS_I2S_TX_DATA:
++		return true;
++	default:
++		return false;
++	};
++}
++
++const struct regmap_config loongson_i2s_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = LS_I2S_CFG1,
++	.readable_reg = loongson_i2s_rd_reg,
++	.writeable_reg = loongson_i2s_wr_reg,
++	.volatile_reg = loongson_i2s_volatile_reg,
++	.cache_type = REGCACHE_MAPLE,
++};
++EXPORT_SYMBOL_GPL(loongson_i2s_regmap_config);
++
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Common functions for loongson I2S controller driver");
+diff --git a/sound/soc/loongson/loongson_i2s.h b/sound/soc/loongson/loongson_i2s.h
+index c8052a762c1b..e73ffa954ec9 100644
+--- a/sound/soc/loongson/loongson_i2s.h
++++ b/sound/soc/loongson/loongson_i2s.h
+@@ -65,6 +65,7 @@ struct loongson_i2s {
+ 	u32 sysclk;
+ };
+ 
++extern const struct regmap_config loongson_i2s_regmap_config;
+ extern const struct dev_pm_ops loongson_i2s_pm;
+ extern struct snd_soc_dai_driver loongson_i2s_dai;
+ 
+diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
+index 1ea5501a97f8..dea1e4ebee29 100644
+--- a/sound/soc/loongson/loongson_i2s_pci.c
++++ b/sound/soc/loongson/loongson_i2s_pci.c
+@@ -18,60 +18,6 @@
+ 
+ #define DRIVER_NAME "loongson-i2s-pci"
+ 
+-static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static bool loongson_i2s_rd_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_VER:
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static bool loongson_i2s_volatile_reg(struct device *dev, unsigned int reg)
+-{
+-	switch (reg) {
+-	case LS_I2S_CFG:
+-	case LS_I2S_CTRL:
+-	case LS_I2S_RX_DATA:
+-	case LS_I2S_TX_DATA:
+-	case LS_I2S_CFG1:
+-		return true;
+-	default:
+-		return false;
+-	};
+-}
+-
+-static const struct regmap_config loongson_i2s_regmap_config = {
+-	.reg_bits = 32,
+-	.reg_stride = 4,
+-	.val_bits = 32,
+-	.max_register = LS_I2S_CFG1,
+-	.writeable_reg = loongson_i2s_wr_reg,
+-	.readable_reg = loongson_i2s_rd_reg,
+-	.volatile_reg = loongson_i2s_volatile_reg,
+-	.cache_type = REGCACHE_FLAT,
+-};
+-
+ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
+ 				  const struct pci_device_id *pid)
+ {
+diff --git a/sound/soc/loongson/loongson_i2s_plat.c b/sound/soc/loongson/loongson_i2s_plat.c
+index fa2e450ff618..f8d7aca8b903 100644
+--- a/sound/soc/loongson/loongson_i2s_plat.c
++++ b/sound/soc/loongson/loongson_i2s_plat.c
+@@ -85,14 +85,6 @@ static const struct snd_soc_component_driver loongson_i2s_component_driver = {
+ 	.open	= loongson_pcm_open,
+ };
+ 
+-static const struct regmap_config loongson_i2s_regmap_config = {
+-	.reg_bits = 32,
+-	.reg_stride = 4,
+-	.val_bits = 32,
+-	.max_register = 0x14,
+-	.cache_type = REGCACHE_FLAT,
+-};
+-
+ static int loongson_i2s_apbdma_config(struct platform_device *pdev)
+ {
+ 	int val;
+-- 
+2.52.0
 
