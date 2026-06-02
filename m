@@ -1,216 +1,184 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C456E29ACC5
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169FB253359
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 05:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780375737; cv=none; b=jevYoVI8WOnFQhCXluIu2yxR+yjtwj7rCgc8WZiOI54ixLedRjihHCEr3ertJiC5XnjZNfvYcklCnyuPRDYd/stRXkCznv1Q8wJbKJnFhVbHoqPmHzh5mNFKd3LNNuHhzXA9EmdF9ZND2zcv5hB9kkoHKRhrq9/NF6DEmfE1jCQ=
+	t=1780376482; cv=none; b=uSKu3ivUQxNxVJtOeV93zqG5eJKu7z2ji4K6PzGanNo6fh6muRfJOkTONr5uMvVQKD0lspxzIbe9etL43WSY2bIMwzVNQEfAKbywMuYWpC21Nhy8If8VoXCbomhX8JVHNzeBXCmCPraStTSD2gtSG7fJnjh4lg3Zz47SwdzMURI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780375737; c=relaxed/simple;
-	bh=KdE1++qvdfYKOTUNCFDoahmM6lKV1lR3RX/VwFrRpWg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dOqOapLi1dL/TZ/T9PAqTgGG4GhSN/PiWnE1CUuI1u3Le+RbQOTsm66oKxd+RozlPxmBaGoHY8wtDhXnX2vDWidq5756pR1dpljQ2haVNmBq2Eu18W1pDQ3ZnjhiMV4w/C4cawJa7hjXCkvRSK6IjyGLNCqbvPNr1Kt2f/4MT0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxhumzYB5qp5sPAA--.43598S3;
-	Tue, 02 Jun 2026 12:48:51 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxOMGxYB5q8PCYAA--.13770S3;
-	Tue, 02 Jun 2026 12:48:49 +0800 (CST)
-Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
- FPU exception
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260330035832.2204720-1-maobibo@loongson.cn>
- <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
- <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
- <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
- <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
- <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
- <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
- <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
- <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <27b6f9ad-367f-d307-0125-cfa1adcf3e11@loongson.cn>
-Date: Tue, 2 Jun 2026 12:45:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1780376482; c=relaxed/simple;
+	bh=i/C4xjZJV7MM7p2F3K5MW/w34S6eVG7fOLjtI39UAog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZW1jGfr/9R02U4IOkiup4bNKiOl8LOGpZ/D3sBWwLU+7DKINXk9FZ8galAKNv5B3loSoHa571pB31/4lxvoFm85spHbgfRe8+w2ZADZkhoP+WEMB767ue4HzypkZnrsG7NMCEoR/CG7bLgakMB6FmH8b2szKOMeNUVkO/y7iluQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M71cJW4s; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M71cJW4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A6E1F0089A
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 05:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780376480;
+	bh=M2DPT80aiI3rpTttNGpRNzV1CyPvL3+pwbi7wf8hZLk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=M71cJW4sEljE0uUvBDFjLZVbYxyXYFkF782s1THQ5Ucyn6gNj34g82DZCvB8V/I8V
+	 PQFEPceau/s1Lnqs60/wNcuO/M3vAR5G2ai+a3uuZq2Z8xT9w6hC2gxF6wMAmuo72b
+	 l30+C6jwmptx159pAGHGSLUZILes6Z0b0R3tsO/e6BqtiOJjYDcxiS/eV8khbskL/D
+	 NpXgEJuznmwckBKDUdpwQKcivVxz7Kz2oEq63tJpuPOMrZKJzig6dCmazopDEFtoaH
+	 LUg12QazGkVi3cZzorScUU4F5bgona9jztix/D5h8OeLCR5X/Ae1ufAakl/QuuP/ne
+	 HNAoVmd9A0Gvw==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-bed19623d6eso264125966b.1
+        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 22:01:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+MKpIu0ksX7ZXVdUM5gmfG9BljabNkzzBURrQ8otnv7YyGbb1KXAchtJJFGuD8Uayz11vPdhGKzy4=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwGSNVr8LpO4AVRQ7oLyWge21nKOu02vdRDWm0CvsclqtiHNZk4
+	xAPICmt/Sr+Y0JJhugdT+nXvut+FZ4SxmNnNYiyqIsQMx0fivHAWNXo5N+WnwiowuyLk0pFsfQ/
+	b4mvfz4Dfcq11eOJgVnDGugLqlw9prjs=
+X-Received: by 2002:a17:907:501f:b0:bee:215e:5484 with SMTP id
+ a640c23a62f3a-bee215eacfcmr209110966b.15.1780376479376; Mon, 01 Jun 2026
+ 22:01:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxOMGxYB5q8PCYAA--.13770S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuw17Jw17Jw1rJr1DZF43Arc_yoW7ZF47pr
-	W7JF1jyF4DJr1xArnrtw1UWr1Yqr1UJr10qrn8Xr1UJr90vry5Jr18tr1Y9FyUJ34rJr1j
-	vrWUtr17XF1UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0sjUU
-	UUUU=
+References: <20260526125256.2511876-1-maobibo@loongson.cn> <20260526125256.2511876-4-maobibo@loongson.cn>
+ <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com> <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
+In-Reply-To: <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 2 Jun 2026 13:01:05 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
+X-Gm-Features: AVHnY4LXl2G9F-N3mKyoPfzwYbgrp4dS5_ZM4uUCvVLK-Vp6RJmru1q9LsbujVA
+Message-ID: <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
+ bit mask
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 2, 2026 at 9:39=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/6/1 =E4=B8=8B=E5=8D=889:50, Huacai Chen wrote:
+> > Hi, Bibo,
+> >
+> > On Tue, May 26, 2026 at 8:53=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
+wrote:
+> >>
+> >> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
+> >> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
+> >> external hardware interrupt injection.
+> >>
+> >> Here use existing macro about interrupt bit of register CSR_GINTC and
+> >> CSR_ESTAT, rather than hard coded constant value.
+> >>
+> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >> ---
+> >>   arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++-------=
+--
+> >>   1 file changed, 29 insertions(+), 14 deletions(-)
+> >>
+> >> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/in=
+clude/asm/kvm_vcpu.h
+> >> index 3784ab4ccdb5..efe26b04b35f 100644
+> >> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+> >> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+> >> @@ -10,22 +10,37 @@
+> >>   #include <asm/loongarch.h>
+> >>
+> >>   /* Controlled by 0x5 guest estat */
+> >> -#define CPU_SIP0                       (_ULCAST_(1))
+> >> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
+> >> -#define CPU_PMU                                (_ULCAST_(1) << 10)
+> >> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
+> >> -#define CPU_IPI                                (_ULCAST_(1) << 12)
+> >> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
+> >> +#define CPU_SIP0                       BIT(INT_SWI0)
+> >> +#define CPU_SIP1                       BIT(INT_SWI1)
+> >> +#define CPU_HWI0                       BIT(INT_HWI0)
+> >> +#define CPU_HWI1                       BIT(INT_HWI1)
+> >> +#define CPU_HWI2                       BIT(INT_HWI2)
+> >> +#define CPU_HWI3                       BIT(INT_HWI3)
+> >> +#define CPU_HWI4                       BIT(INT_HWI4)
+> >> +#define CPU_HWI5                       BIT(INT_HWI5)
+> >> +#define CPU_HWI6                       BIT(INT_HWI6)
+> >> +#define CPU_HWI7                       BIT(INT_HWI7)
+> >> +#define CPU_PMU                                BIT(INT_PCOV)
+> >> +#define CPU_TIMER                      BIT(INT_TI)
+> >> +#define CPU_IPI                                BIT(INT_IPI)
+> >> +#define CPU_AVEC                       BIT(INT_AVEC)
+> >> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU=
+ | CPU_TIMER \
+> >> +                                               | CPU_IPI | CPU_AVEC)
+> >> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI=
+2 | CPU_HWI3 \
+> >> +                                               | CPU_HWI4 | CPU_HWI5 =
+| CPU_HWI6 | CPU_HWI7)
+> >>
+> >>   /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 =
+*/
+> >> -#define CPU_IP0                                (_ULCAST_(1))
+> >> -#define CPU_IP1                                (_ULCAST_(1) << 1)
+> >> -#define CPU_IP2                                (_ULCAST_(1) << 2)
+> >> -#define CPU_IP3                                (_ULCAST_(1) << 3)
+> >> -#define CPU_IP4                                (_ULCAST_(1) << 4)
+> >> -#define CPU_IP5                                (_ULCAST_(1) << 5)
+> >> -#define CPU_IP6                                (_ULCAST_(1) << 6)
+> >> -#define CPU_IP7                                (_ULCAST_(1) << 7)
+> >> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_=
+VIP_SHIFT)
+> > Don't use too many wrappers, just use INT_HWI0 instead of
+> > GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
+> > also used for shifts.
+>
+> The above macro definition is a little complicated, I do not know how to
+> optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
+> #define CPU_IP0                       BIT(INT_HWI0 - 2)
+CSR_GINTC_VIP_SHIFT is 0 and GINTC_VIP_DELTA is equal to INT_HWI0. I
+mean remove the GINTC_VIP_DELTA definition and use INT_HWI0 instead.
 
 
+Huacai
 
-On 2026/6/2 下午12:38, Huacai Chen wrote:
-> On Tue, Jun 2, 2026 at 9:23 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->>
->>
->> On 2026/6/1 下午9:52, Huacai Chen wrote:
->>> On Thu, Apr 9, 2026 at 8:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2026/4/8 下午3:47, Huacai Chen wrote:
->>>>> On Wed, Apr 8, 2026 at 9:04 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2026/4/7 下午8:41, Huacai Chen wrote:
->>>>>>> On Mon, Mar 30, 2026 at 6:00 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->>>>>>>>
->>>>>>>> Hi, Bibo,
->>>>>>>>
->>>>>>>>
->>>>>>>> On Mon, Mar 30, 2026 at 11:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>>>>
->>>>>>>>> With FPU save and restore flow, the cost is the same with different
->>>>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
->>>>>>>>>
->>>>>>>>> Here is to enable FPU with max VM supported type, for example if
->>>>>>>>> VM supports LASX instrction, enable FPU with LASX type even with FPU
->>>>>>>>> exeception. So it can avoid possible LSX/LASX exception in future.
->>>>>>>>>
->>>>>>>>> With context switch microbench which may touch FPU and LASX, there is 9%
->>>>>>>>> improvement when halt_poll_ns is disabled. The command is
->>>>>>>>> "./context --test=pipe" and source code located at:
->>>>>>>>>       https://github.com/bibo-mao/context_switch/blob/main/context.c
->>>>>>>>>
->>>>>>>>> Original     Wih patch      improvement
->>>>>>>>> 75232        82440          9%
->>>>>>>>>
->>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>>>>>>> ---
->>>>>>>>> v1 ... v2:
->>>>>>>>>       1. Enable FPU with max VM supported FPU type, rather than max used type.
->>>>>>>>>       2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
->>>>>>>>>       3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
->>>>>>>>>       3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
->>>>>>>>>       4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
->>>>>>>>>          directly enable LSX or LASX from FPU none state.
->>>>>>>>> ---
->>>>>>>>> Bibo Mao (6):
->>>>>>>>>       LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
->>>>>>>>>       LoongArch: KVM: Enable FPU with max VM supported FPU type
->>>>>>>>>       LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
->>>>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
->>>>>>>> so I think Patch-3 should be squashed into Patch-1.
->>>>>>>>
->>>>>>>>>       LoongArch: KVM: Remove some middle FPU states
->>>>>>>>>       LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
->>>>>>>>>       LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
->>>>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX and
->>>>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, so
->>>>>>>> I think Patch-6 should be squashed into Patch-5, too.
->>>>>>> And could you please test the power consumption where there are many
->>>>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
->>>>>> Hi Huacai,
->>>>>>
->>>>>> Thanks for reviewing this patch
->>>>>> Could you help me to test the power consumption with this patch?
->>>>>>> power consumption of LASX is significantly more than FPU, which is a
->>>>>> Could the describe the detail scenery wheree LASX instruction is
->>>>>> frequently used by application or LASX  EUEN enabled?
->>>>> The purpose is to evaluate power consumption before and after this series.
->>>>>
->>>>> So we can run 10 VMs (suppose there are 4 cores), and there is a
->>>>> workload run in every VM, the workload only uses FPU, no LSX and LASX.
->>>>> Before this series, KVM only save/restore FPU context; after this
->>>>> series, KVM will save/restore LASX context.
->>>> In theory there should be such test, only that it requires special Power
->>>> Management team and testbed. Even if there is such team, maybe they care
->>>> power consumption about DDR and screen, do not want do such experiments
->>>> for this patch.
->>>>
->>>> If someone is volunteer to do this, I do not object, also I want to get
->>>> the result. Just from my guess, there should be no much difference since
->>>> FPU context switch is much smaller than the whole workload, else the
->>>> workload is just FPU context switch.
->>> Any updates?
->> It deeps on Power Management exports.
->>
->> By cyclictest/fpubench test on 3C6000, the context switch cost is 3us,
->> the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost
->> is about 0.25% of the whole context switch. I do not why power
->> consumption is important factor here.
-> I'm talking about this:
-> https://lore.kernel.org/loongarch/b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn/T/#m6da21ae2f4abfba362a2cd189cb4d8d09e33a6d7
-will do in this way.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>
->> Regards
->> Bibo Mao
->>>
->>>
->>> Huacai
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>
->>>>>
->>>>> If the power consumptions are similar, then this series is perfect.
->>>>>
->>>>> Huacai
->>>>>
->>>>>>
->>>>>> Regards
->>>>>> Bibo Mao
->>>>>>> little similar to AVX512 (Linus said it is a power virus).
->>>>>>>
->>>>>>> Huacai
->>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> Huacai
->>>>>>>>
->>>>>>>>>
->>>>>>>>>      arch/loongarch/include/asm/kvm_host.h |  6 +--
->>>>>>>>>      arch/loongarch/kvm/exit.c             | 21 +++-----
->>>>>>>>>      arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
->>>>>>>>>      3 files changed, 30 insertions(+), 75 deletions(-)
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
->>>>>>>>> --
->>>>>>>>> 2.39.3
->>>>>>>>>
->>>>>>>>>
->>>>>>
->>>>>>
->>>>
->>>>
->>
-
+>
+> or something like this:
+> #define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
+>
+> Regards
+> Bibo Mao
+> >
+> >
+> > Huacai
+> >
+> >> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_V=
+IP_DELTA)
+> >> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_V=
+IP_DELTA)
+> >> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 |=
+ CPU_IP3 \
+> >> +                                               | CPU_IP4 | CPU_IP5 | =
+CPU_IP6 | CPU_IP7)
+> >>
+> >>   #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
+> >>
+> >> --
+> >> 2.39.3
+> >>
+> >>
+>
+>
