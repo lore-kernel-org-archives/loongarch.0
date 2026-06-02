@@ -1,38 +1,34 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC6A32E6B8
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:23:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8775713C9C4
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:39:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780363424; cv=none; b=FtuT9m+QhqybDP1Z12/mZ6wewuJX4BNc4Ya0qZXlQq25/0oBUPYwh++bxh/gvEdgwDhcD+Go4pleYpasFcEbw+wGdsvV+T/ZUx+PxMaOGAerUr64o9wUz9leh9+x92146JgI/FF+adKBd/p3E3dRum/P3E8L2iCmrmhbVN7fMPs=
+	t=1780364393; cv=none; b=ShZg7VUu6HmK1iXnpNgLu+1oPincs/bEmRhcaIeLxvMvaumMMyTkGNfXbZql2+SnuwQiYM9N5F59TM99r422kuOHEOzuXRI+hKinzJCf6T6BZjK8nGnF9L/IE3X1E2nYgdy4gXytK8Gc67UJoEmD+fvEnYHWSEqfKUIeqNbg7ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780363424; c=relaxed/simple;
-	bh=D7Xxzh1Sg/hA0giaRO4uE7qhCVv5P3kNgQzjWZEk3c4=;
+	s=arc-20240116; t=1780364393; c=relaxed/simple;
+	bh=VmcIYlZoYPFajcd/yR2kOvmYKBN3ND0KvsxZst/Gwxs=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=cfifk5lnudN3jty/nn7oB5PJ9Lut2kilXQMef1l2arG3B3ksgYbnIUznqw2PRV+hm2jzt82qIUwNl4zQe9p222YUk2YbrwBBxkg3C/hr88gVS5fs5bC9uEQMelG8ovvYfpw1k6C+V2nPfPdtzMcW1Wo47GY6At44EyqJC9YPhUs=
+	 In-Reply-To:Content-Type; b=u66gii9EuoYMd261B8dGPPwkrkdsvmRfpPg0Vj4qBw/gml0z8rGbsJH3EVzyT7yA8yGibSGT/v7eDNrN0Pq9jJ0HyAAQ4EcVYGOHSdHCmbRkcGMMjPqfFy0XsI0VsQkCUNdlkSNfb9nKIp5++kgPczNhN4X7zUPUh8gv84Lbr84=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Axp3iZMB5qH5APAA--.18821S3;
-	Tue, 02 Jun 2026 09:23:38 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxCHlkNB5qu5APAA--.18856S3;
+	Tue, 02 Jun 2026 09:39:48 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCxvsKXMB5qgcGYAA--.27031S3;
-	Tue, 02 Jun 2026 09:23:37 +0800 (CST)
-Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
- FPU exception
+	by front1 (Coremail) with SMTP id qMiowJBxpsBiNB5qnsWYAA--.58591S3;
+	Tue, 02 Jun 2026 09:39:48 +0800 (CST)
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
+ bit mask
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
  linux-kernel@vger.kernel.org
-References: <20260330035832.2204720-1-maobibo@loongson.cn>
- <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
- <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
- <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
- <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
- <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
- <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+References: <20260526125256.2511876-1-maobibo@loongson.cn>
+ <20260526125256.2511876-4-maobibo@loongson.cn>
+ <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
-Date: Tue, 2 Jun 2026 09:20:31 +0800
+Message-ID: <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
+Date: Tue, 2 Jun 2026 09:36:42 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -41,159 +37,124 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+In-Reply-To: <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxvsKXMB5qgcGYAA--.27031S3
+X-CM-TRANSID:qMiowJBxpsBiNB5qnsWYAA--.58591S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur4Dtw1rJr1UXryfurWUKFX_yoW7Gr18pr
-	ZrJF1jkF4DJr1xArnrtw1UWF1Yqr1UJr10q3s8XryUJr90vryrJr1xtr4Y9FyUG34rJr1j
-	vrWUtr9rXFy5ArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWxZFyDWF1fGr4xuF18Xrc_yoW5KrW5pr
+	W8uas8XFW5XF42gw1Sk3Z8K3W7tr4kJr12g3sFgrs8JF9Fgw1Sv3WrKws8A34vq395G34I
+	gr98Z3WYqF9xKrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
 
 
-On 2026/6/1 下午9:52, Huacai Chen wrote:
-> On Thu, Apr 9, 2026 at 8:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+On 2026/6/1 下午9:50, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Tue, May 26, 2026 at 8:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
+>> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
+>> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
+>> external hardware interrupt injection.
 >>
+>> Here use existing macro about interrupt bit of register CSR_GINTC and
+>> CSR_ESTAT, rather than hard coded constant value.
 >>
->> On 2026/4/8 下午3:47, Huacai Chen wrote:
->>> On Wed, Apr 8, 2026 at 9:04 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>
->>>>
->>>>
->>>> On 2026/4/7 下午8:41, Huacai Chen wrote:
->>>>> On Mon, Mar 30, 2026 at 6:00 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->>>>>>
->>>>>> Hi, Bibo,
->>>>>>
->>>>>>
->>>>>> On Mon, Mar 30, 2026 at 11:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>>>>>>
->>>>>>> With FPU save and restore flow, the cost is the same with different
->>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
->>>>>>>
->>>>>>> Here is to enable FPU with max VM supported type, for example if
->>>>>>> VM supports LASX instrction, enable FPU with LASX type even with FPU
->>>>>>> exeception. So it can avoid possible LSX/LASX exception in future.
->>>>>>>
->>>>>>> With context switch microbench which may touch FPU and LASX, there is 9%
->>>>>>> improvement when halt_poll_ns is disabled. The command is
->>>>>>> "./context --test=pipe" and source code located at:
->>>>>>>      https://github.com/bibo-mao/context_switch/blob/main/context.c
->>>>>>>
->>>>>>> Original     Wih patch      improvement
->>>>>>> 75232        82440          9%
->>>>>>>
->>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->>>>>>> ---
->>>>>>> v1 ... v2:
->>>>>>>      1. Enable FPU with max VM supported FPU type, rather than max used type.
->>>>>>>      2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
->>>>>>>      3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
->>>>>>>      3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
->>>>>>>      4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
->>>>>>>         directly enable LSX or LASX from FPU none state.
->>>>>>> ---
->>>>>>> Bibo Mao (6):
->>>>>>>      LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
->>>>>>>      LoongArch: KVM: Enable FPU with max VM supported FPU type
->>>>>>>      LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
->>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
->>>>>> so I think Patch-3 should be squashed into Patch-1.
->>>>>>
->>>>>>>      LoongArch: KVM: Remove some middle FPU states
->>>>>>>      LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
->>>>>>>      LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
->>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX and
->>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, so
->>>>>> I think Patch-6 should be squashed into Patch-5, too.
->>>>> And could you please test the power consumption where there are many
->>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
->>>> Hi Huacai,
->>>>
->>>> Thanks for reviewing this patch
->>>> Could you help me to test the power consumption with this patch?
->>>>> power consumption of LASX is significantly more than FPU, which is a
->>>> Could the describe the detail scenery wheree LASX instruction is
->>>> frequently used by application or LASX  EUEN enabled?
->>> The purpose is to evaluate power consumption before and after this series.
->>>
->>> So we can run 10 VMs (suppose there are 4 cores), and there is a
->>> workload run in every VM, the workload only uses FPU, no LSX and LASX.
->>> Before this series, KVM only save/restore FPU context; after this
->>> series, KVM will save/restore LASX context.
->> In theory there should be such test, only that it requires special Power
->> Management team and testbed. Even if there is such team, maybe they care
->> power consumption about DDR and screen, do not want do such experiments
->> for this patch.
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
+>>   1 file changed, 29 insertions(+), 14 deletions(-)
 >>
->> If someone is volunteer to do this, I do not object, also I want to get
->> the result. Just from my guess, there should be no much difference since
->> FPU context switch is much smaller than the whole workload, else the
->> workload is just FPU context switch.
-> Any updates?
-It deeps on Power Management exports.
+>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>> index 3784ab4ccdb5..efe26b04b35f 100644
+>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>> @@ -10,22 +10,37 @@
+>>   #include <asm/loongarch.h>
+>>
+>>   /* Controlled by 0x5 guest estat */
+>> -#define CPU_SIP0                       (_ULCAST_(1))
+>> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
+>> -#define CPU_PMU                                (_ULCAST_(1) << 10)
+>> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
+>> -#define CPU_IPI                                (_ULCAST_(1) << 12)
+>> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
+>> +#define CPU_SIP0                       BIT(INT_SWI0)
+>> +#define CPU_SIP1                       BIT(INT_SWI1)
+>> +#define CPU_HWI0                       BIT(INT_HWI0)
+>> +#define CPU_HWI1                       BIT(INT_HWI1)
+>> +#define CPU_HWI2                       BIT(INT_HWI2)
+>> +#define CPU_HWI3                       BIT(INT_HWI3)
+>> +#define CPU_HWI4                       BIT(INT_HWI4)
+>> +#define CPU_HWI5                       BIT(INT_HWI5)
+>> +#define CPU_HWI6                       BIT(INT_HWI6)
+>> +#define CPU_HWI7                       BIT(INT_HWI7)
+>> +#define CPU_PMU                                BIT(INT_PCOV)
+>> +#define CPU_TIMER                      BIT(INT_TI)
+>> +#define CPU_IPI                                BIT(INT_IPI)
+>> +#define CPU_AVEC                       BIT(INT_AVEC)
+>> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
+>> +                                               | CPU_IPI | CPU_AVEC)
+>> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
+>> +                                               | CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
+>>
+>>   /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+>> -#define CPU_IP0                                (_ULCAST_(1))
+>> -#define CPU_IP1                                (_ULCAST_(1) << 1)
+>> -#define CPU_IP2                                (_ULCAST_(1) << 2)
+>> -#define CPU_IP3                                (_ULCAST_(1) << 3)
+>> -#define CPU_IP4                                (_ULCAST_(1) << 4)
+>> -#define CPU_IP5                                (_ULCAST_(1) << 5)
+>> -#define CPU_IP6                                (_ULCAST_(1) << 6)
+>> -#define CPU_IP7                                (_ULCAST_(1) << 7)
+>> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_VIP_SHIFT)
+> Don't use too many wrappers, just use INT_HWI0 instead of
+> GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
+> also used for shifts.
 
-By cyclictest/fpubench test on 3C6000, the context switch cost is 3us, 
-the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost 
-is about 0.25% of the whole context switch. I do not why power 
-consumption is important factor here.
+The above macro definition is a little complicated, I do not know how to 
+optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
+#define CPU_IP0                       BIT(INT_HWI0 - 2)
+
+or something like this:
+#define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
 
 Regards
 Bibo Mao
 > 
 > 
 > Huacai
+> 
+>> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_VIP_DELTA)
+>> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_VIP_DELTA)
+>> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_VIP_DELTA)
+>> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_VIP_DELTA)
+>> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_VIP_DELTA)
+>> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_VIP_DELTA)
+>> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_VIP_DELTA)
+>> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_VIP_DELTA)
+>> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
+>> +                                               | CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
 >>
->> Regards
->> Bibo Mao
+>>   #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
 >>
->>>
->>> If the power consumptions are similar, then this series is perfect.
->>>
->>> Huacai
->>>
->>>>
->>>> Regards
->>>> Bibo Mao
->>>>> little similar to AVX512 (Linus said it is a power virus).
->>>>>
->>>>> Huacai
->>>>>
->>>>>>
->>>>>>
->>>>>> Huacai
->>>>>>
->>>>>>>
->>>>>>>     arch/loongarch/include/asm/kvm_host.h |  6 +--
->>>>>>>     arch/loongarch/kvm/exit.c             | 21 +++-----
->>>>>>>     arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
->>>>>>>     3 files changed, 30 insertions(+), 75 deletions(-)
->>>>>>>
->>>>>>>
->>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
->>>>>>> --
->>>>>>> 2.39.3
->>>>>>>
->>>>>>>
->>>>
->>>>
+>> --
+>> 2.39.3
 >>
 >>
 
