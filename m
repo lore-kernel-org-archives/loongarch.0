@@ -1,76 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B280C270ED7;
-	Tue,  2 Jun 2026 04:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C456E29ACC5
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:48:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780375627; cv=none; b=oFP0ldZy+ZivQ7IAV04Rw9TgfLUWp+czH5NKHEg2ng4wTniWq4qFU5R80EJnQCaE0SAm0E6VCSgOB4oASolXsNR2kOizwdcrG3bhXIhz68j8pVJdCoFA6S4RsYjKbNKb5RWnEUNb9d4d5NawW8EXIowqNdo0RKfIb1+BUGNK0Xk=
+	t=1780375737; cv=none; b=jevYoVI8WOnFQhCXluIu2yxR+yjtwj7rCgc8WZiOI54ixLedRjihHCEr3ertJiC5XnjZNfvYcklCnyuPRDYd/stRXkCznv1Q8wJbKJnFhVbHoqPmHzh5mNFKd3LNNuHhzXA9EmdF9ZND2zcv5hB9kkoHKRhrq9/NF6DEmfE1jCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780375627; c=relaxed/simple;
-	bh=ns8vYxbGh6iN5fLcvPFhgTFXp/m3fvEhis8nN+wp/1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lomawnue3rH5pksEpp6ubYsgU8Vh4H2sazcmq+ZEFUkxmO6UGNnwY+s64K8ezqFF/VVxgmhYJGykwTrSquhNYTdmV71z7ouiZdFbn6zrrr965CHQOPhwGpa/nQK8J+bmutiWGnFmUcm0qRwdQuA8N1z9pd85u5nEIUgwWZ+MDSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVUczLjs; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVUczLjs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 867101F00893;
-	Tue,  2 Jun 2026 04:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780375626;
-	bh=w2vFw2b6Dq4kXYpDSqPPl/I2tXbfPjM4tacHe5F7/ME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YVUczLjsw80yEWH3gu3NkaGjxurIFsxviLifgTASl5KmyxzFoZ9D6BRbFnC647FHj
-	 lx/XsyIDDrgeNc880H1ZCzZ6k2GAkGqLt2HPVSKtCr9mjn6m2DCwScX7GkN79pS6Kb
-	 Ybu4ua2edqgSU8v2FiaC7J5DsTHfum101oh9NnXGGFgdKNTpHz803fqOarf2Aq/REj
-	 rrFf4M6W83xFQsgAsvLEXmOIlSUp/imXkfYWMxxsDexeQ3reNFAuz1/La1vSHOW9B9
-	 ecfNlu1N+o672xehcI60o8JlzLchfcXr0Hdq8pu+MVpFykxKhmlLGaQmBsGApTcQm1
-	 IWYYOlv9b/uSQ==
-Date: Tue, 2 Jun 2026 06:46:55 +0200
-From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <pjw@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
-	Albert Ou <aou@eecs.berkeley.edu>, WANG Xuerui <kernel@xen0n.name>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v3 5/5] sparc/mm: drop vmemmap_check_pmd helper and use
- generic code
-Message-ID: <ah5gPx1TuEH1wFzC@localhost.localdomain>
-References: <20260601084845.3792171-1-songmuchun@bytedance.com>
- <20260601084845.3792171-6-songmuchun@bytedance.com>
+	s=arc-20240116; t=1780375737; c=relaxed/simple;
+	bh=KdE1++qvdfYKOTUNCFDoahmM6lKV1lR3RX/VwFrRpWg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dOqOapLi1dL/TZ/T9PAqTgGG4GhSN/PiWnE1CUuI1u3Le+RbQOTsm66oKxd+RozlPxmBaGoHY8wtDhXnX2vDWidq5756pR1dpljQ2haVNmBq2Eu18W1pDQ3ZnjhiMV4w/C4cawJa7hjXCkvRSK6IjyGLNCqbvPNr1Kt2f/4MT0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxhumzYB5qp5sPAA--.43598S3;
+	Tue, 02 Jun 2026 12:48:51 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxOMGxYB5q8PCYAA--.13770S3;
+	Tue, 02 Jun 2026 12:48:49 +0800 (CST)
+Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
+ FPU exception
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260330035832.2204720-1-maobibo@loongson.cn>
+ <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
+ <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
+ <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
+ <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
+ <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
+ <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+ <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
+ <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <27b6f9ad-367f-d307-0125-cfa1adcf3e11@loongson.cn>
+Date: Tue, 2 Jun 2026 12:45:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260601084845.3792171-6-songmuchun@bytedance.com>
+In-Reply-To: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxOMGxYB5q8PCYAA--.13770S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxuw17Jw17Jw1rJr1DZF43Arc_yoW7ZF47pr
+	W7JF1jyF4DJr1xArnrtw1UWr1Yqr1UJr10qrn8Xr1UJr90vry5Jr18tr1Y9FyUJ34rJr1j
+	vrWUtr17XF1UArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0sjUU
+	UUUU=
 
-On Mon, Jun 01, 2026 at 04:48:44PM +0800, Muchun Song wrote:
-> The generic implementations now suffice; remove the sparc copies.
+
+
+On 2026/6/2 下午12:38, Huacai Chen wrote:
+> On Tue, Jun 2, 2026 at 9:23 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/6/1 下午9:52, Huacai Chen wrote:
+>>> On Thu, Apr 9, 2026 at 8:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2026/4/8 下午3:47, Huacai Chen wrote:
+>>>>> On Wed, Apr 8, 2026 at 9:04 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2026/4/7 下午8:41, Huacai Chen wrote:
+>>>>>>> On Mon, Mar 30, 2026 at 6:00 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>>>>>>
+>>>>>>>> Hi, Bibo,
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On Mon, Mar 30, 2026 at 11:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>>>
+>>>>>>>>> With FPU save and restore flow, the cost is the same with different
+>>>>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
+>>>>>>>>>
+>>>>>>>>> Here is to enable FPU with max VM supported type, for example if
+>>>>>>>>> VM supports LASX instrction, enable FPU with LASX type even with FPU
+>>>>>>>>> exeception. So it can avoid possible LSX/LASX exception in future.
+>>>>>>>>>
+>>>>>>>>> With context switch microbench which may touch FPU and LASX, there is 9%
+>>>>>>>>> improvement when halt_poll_ns is disabled. The command is
+>>>>>>>>> "./context --test=pipe" and source code located at:
+>>>>>>>>>       https://github.com/bibo-mao/context_switch/blob/main/context.c
+>>>>>>>>>
+>>>>>>>>> Original     Wih patch      improvement
+>>>>>>>>> 75232        82440          9%
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>>>>> ---
+>>>>>>>>> v1 ... v2:
+>>>>>>>>>       1. Enable FPU with max VM supported FPU type, rather than max used type.
+>>>>>>>>>       2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
+>>>>>>>>>       3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+>>>>>>>>>       3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
+>>>>>>>>>       4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
+>>>>>>>>>          directly enable LSX or LASX from FPU none state.
+>>>>>>>>> ---
+>>>>>>>>> Bibo Mao (6):
+>>>>>>>>>       LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
+>>>>>>>>>       LoongArch: KVM: Enable FPU with max VM supported FPU type
+>>>>>>>>>       LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+>>>>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
+>>>>>>>> so I think Patch-3 should be squashed into Patch-1.
+>>>>>>>>
+>>>>>>>>>       LoongArch: KVM: Remove some middle FPU states
+>>>>>>>>>       LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
+>>>>>>>>>       LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
+>>>>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX and
+>>>>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, so
+>>>>>>>> I think Patch-6 should be squashed into Patch-5, too.
+>>>>>>> And could you please test the power consumption where there are many
+>>>>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
+>>>>>> Hi Huacai,
+>>>>>>
+>>>>>> Thanks for reviewing this patch
+>>>>>> Could you help me to test the power consumption with this patch?
+>>>>>>> power consumption of LASX is significantly more than FPU, which is a
+>>>>>> Could the describe the detail scenery wheree LASX instruction is
+>>>>>> frequently used by application or LASX  EUEN enabled?
+>>>>> The purpose is to evaluate power consumption before and after this series.
+>>>>>
+>>>>> So we can run 10 VMs (suppose there are 4 cores), and there is a
+>>>>> workload run in every VM, the workload only uses FPU, no LSX and LASX.
+>>>>> Before this series, KVM only save/restore FPU context; after this
+>>>>> series, KVM will save/restore LASX context.
+>>>> In theory there should be such test, only that it requires special Power
+>>>> Management team and testbed. Even if there is such team, maybe they care
+>>>> power consumption about DDR and screen, do not want do such experiments
+>>>> for this patch.
+>>>>
+>>>> If someone is volunteer to do this, I do not object, also I want to get
+>>>> the result. Just from my guess, there should be no much difference since
+>>>> FPU context switch is much smaller than the whole workload, else the
+>>>> workload is just FPU context switch.
+>>> Any updates?
+>> It deeps on Power Management exports.
+>>
+>> By cyclictest/fpubench test on 3C6000, the context switch cost is 3us,
+>> the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost
+>> is about 0.25% of the whole context switch. I do not why power
+>> consumption is important factor here.
+> I'm talking about this:
+> https://lore.kernel.org/loongarch/b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn/T/#m6da21ae2f4abfba362a2cd189cb4d8d09e33a6d7
+will do in this way.
+
+Regards
+Bibo Mao
 > 
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>
+>>>>>
+>>>>> If the power consumptions are similar, then this series is perfect.
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>> Regards
+>>>>>> Bibo Mao
+>>>>>>> little similar to AVX512 (Linus said it is a power virus).
+>>>>>>>
+>>>>>>> Huacai
+>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Huacai
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>      arch/loongarch/include/asm/kvm_host.h |  6 +--
+>>>>>>>>>      arch/loongarch/kvm/exit.c             | 21 +++-----
+>>>>>>>>>      arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
+>>>>>>>>>      3 files changed, 30 insertions(+), 75 deletions(-)
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+>>>>>>>>> --
+>>>>>>>>> 2.39.3
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>
+>>>>>>
+>>>>
+>>>>
+>>
 
-Reviewed-by: Oscar Salvador (SUSE) <osalvador@kernel.org>
-
- 
-
--- 
-Oscar Salvador
-SUSE Labs
