@@ -1,134 +1,197 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008BF3822A2
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 07:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B261F3BF676
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 08:13:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780386214; cv=none; b=WKfaBsEERIdA81Joe4kasgN16fUAWlJvi+g0Bb7lS/6lbvxW6mp2F4Yia9T2qufr1aW/hlPul+9jqR+aL/pD2KwID4WA1me5RVUutb6xjzX4b4y76vJnubC1dyQdn55q8KqkO6MbnUbZPKrFwyprwok3HTphQBPaKdNezNiT2kc=
+	t=1780388021; cv=none; b=RDOdqkjKyMi4nES1vPdeyT2dtn3VfLBR2uN9J6cNyE/K6UKqhZcBDpAXg3NMsKFEoa0tRT6N2Azv9JOjEuixRZ4PLUDxtlswUXDp8V/XCtCYFYdmmnDndpJSDsAcst0akG8WnBaJagoBonRc1aWgmB/PCtvgrHzHA3N5BQnbCpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780386214; c=relaxed/simple;
-	bh=oPpanwo20UBbX3AapN1SAoCmU776lNshxPMSSatKfJU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oG8V9NlJ8pMR1qaYricYdMMENdHMG91HgI9+o0EJp44lLACP89Hv/kTMpg9zzEmE0TBI0u6tF8FYd0ux5BYeaLXesYdKi3FCwmyuO076JiJPJQMLT8Sodvwwy/mA97oykcASPi53cT/cQr1IumUp8C0N5GW3SroAantpmVCJ8UA=
+	s=arc-20240116; t=1780388021; c=relaxed/simple;
+	bh=7sLUEwrUFiiDVN7jqCTsPZBOjRwidmga203xP/8jh04=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gtfjkg4dBVKn7ZMLTgEV5xeTQp17s9aPGZrc+anlxjyHYafjACvmWvltTDSzwCuzXLapPwAL3qfb+cBVlS2dAwOjQDHHKSJEsC8o/57slYKI/hDU9ljWZxjUzQdRCv6LioL9DalIbFZQn/UWzyiNU33D2ou/cLaWfHHK+HNp68U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxLuqhiR5q7aYPAA--.43316S3;
-	Tue, 02 Jun 2026 15:43:29 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJBxKMGhiR5qIxCZAA--.13937S2;
-	Tue, 02 Jun 2026 15:43:29 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8DxhumvkB5qWKkPAA--.43733S3;
+	Tue, 02 Jun 2026 16:13:35 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJDxjcKukB5q1RSZAA--.25614S3;
+	Tue, 02 Jun 2026 16:13:34 +0800 (CST)
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
+ bit mask
 To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
-Date: Tue,  2 Jun 2026 15:43:16 +0800
-Message-Id: <20260602074316.1647373-5-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260602074316.1647373-1-maobibo@loongson.cn>
-References: <20260602074316.1647373-1-maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260526125256.2511876-1-maobibo@loongson.cn>
+ <20260526125256.2511876-4-maobibo@loongson.cn>
+ <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
+ <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
+ <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <e228286e-7008-e66b-18b3-1140b2916f0e@loongson.cn>
+Date: Tue, 2 Jun 2026 16:10:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxKMGhiR5qIxCZAA--.13937S2
+X-CM-TRANSID:qMiowJDxjcKukB5q1RSZAA--.25614S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxAF4kZryUJr1xAr45tF1fGrX_yoW7JFyUpr
+	W8Ga4DWF43XF42gw1fK3Z8KFnrtrn7Jr4Igr9FgrW5JF9Fgw1fA3W8Krn8Crn2q395G348
+	Wr98Zw13uF9xKrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU83U
+	UUUUUUU==
 
-In kvm_lose_fpu() FPU state will save in vcpu::arch::fpu, its FPU
-state comes from vcpu->arch.aux_inuse. Instead existing API
-vm_guest_has_xxx() can be used also, and bit KVM_LARCH_LASX and
-KVM_LARCH_LSX in arch.aux_inuse are removed. It makes the logic
-simpler than ever.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  2 --
- arch/loongarch/kvm/vcpu.c             | 17 +++++++++--------
- 2 files changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index bad16c5f963c..aa2000cfb58a 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -158,8 +158,6 @@ enum emulation_result {
- };
- 
- #define KVM_LARCH_FPU		(0x1 << 0)
--#define KVM_LARCH_LSX		(0x1 << 1)
--#define KVM_LARCH_LASX		(0x1 << 2)
- #define KVM_LARCH_LBT		(0x1 << 3)
- #define KVM_LARCH_PMU		(0x1 << 4)
- #define KVM_LARCH_SWCSR_LATEST	(0x1 << 5)
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 53abf7aa61f8..523d4cf88343 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1392,7 +1392,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
- 	kvm_restore_lsx(&vcpu->arch.fpu);
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
--	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
-+	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
- 
- 	return 0;
- }
-@@ -1408,7 +1408,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- 	kvm_restore_lasx(&vcpu->arch.fpu);
- 
- 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
--	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
-+	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
- 
- 	return 0;
- }
-@@ -1417,31 +1417,32 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
- /* Save context and disable FPU */
- void kvm_lose_fpu(struct kvm_vcpu *vcpu)
- {
-+	if (!(vcpu->arch.aux_inuse & KVM_LARCH_FPU))
-+		return;
-+
- 	preempt_disable();
- 
- 	kvm_check_fcsr_alive(vcpu);
--	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
-+	if (kvm_guest_has_lasx(&vcpu->arch)) {
- 		kvm_save_lasx(&vcpu->arch.fpu);
--		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
- 		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LASX);
- 
- 		/* Disable LASX & LSX & FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
--	} else if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
-+	} else if (kvm_guest_has_lsx(&vcpu->arch)) {
- 		kvm_save_lsx(&vcpu->arch.fpu);
--		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU);
- 		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LSX);
- 
- 		/* Disable LSX & FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN);
--	} else if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-+	} else {
- 		kvm_save_fpu(&vcpu->arch.fpu);
--		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
- 		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
- 
- 		/* Disable FPU */
- 		clear_csr_euen(CSR_EUEN_FPEN);
- 	}
-+	vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
- 	kvm_lose_lbt(vcpu);
- 
- 	preempt_enable();
--- 
-2.39.3
+On 2026/6/2 下午1:01, Huacai Chen wrote:
+> On Tue, Jun 2, 2026 at 9:39 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/6/1 下午9:50, Huacai Chen wrote:
+>>> Hi, Bibo,
+>>>
+>>> On Tue, May 26, 2026 at 8:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
+>>>> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
+>>>> external hardware interrupt injection.
+>>>>
+>>>> Here use existing macro about interrupt bit of register CSR_GINTC and
+>>>> CSR_ESTAT, rather than hard coded constant value.
+>>>>
+>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
+>>>>    1 file changed, 29 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> index 3784ab4ccdb5..efe26b04b35f 100644
+>>>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>> @@ -10,22 +10,37 @@
+>>>>    #include <asm/loongarch.h>
+>>>>
+>>>>    /* Controlled by 0x5 guest estat */
+>>>> -#define CPU_SIP0                       (_ULCAST_(1))
+>>>> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
+>>>> -#define CPU_PMU                                (_ULCAST_(1) << 10)
+>>>> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
+>>>> -#define CPU_IPI                                (_ULCAST_(1) << 12)
+>>>> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
+>>>> +#define CPU_SIP0                       BIT(INT_SWI0)
+>>>> +#define CPU_SIP1                       BIT(INT_SWI1)
+>>>> +#define CPU_HWI0                       BIT(INT_HWI0)
+>>>> +#define CPU_HWI1                       BIT(INT_HWI1)
+>>>> +#define CPU_HWI2                       BIT(INT_HWI2)
+>>>> +#define CPU_HWI3                       BIT(INT_HWI3)
+>>>> +#define CPU_HWI4                       BIT(INT_HWI4)
+>>>> +#define CPU_HWI5                       BIT(INT_HWI5)
+>>>> +#define CPU_HWI6                       BIT(INT_HWI6)
+>>>> +#define CPU_HWI7                       BIT(INT_HWI7)
+>>>> +#define CPU_PMU                                BIT(INT_PCOV)
+>>>> +#define CPU_TIMER                      BIT(INT_TI)
+>>>> +#define CPU_IPI                                BIT(INT_IPI)
+>>>> +#define CPU_AVEC                       BIT(INT_AVEC)
+>>>> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
+>>>> +                                               | CPU_IPI | CPU_AVEC)
+>>>> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
+>>>> +                                               | CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
+>>>>
+>>>>    /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+>>>> -#define CPU_IP0                                (_ULCAST_(1))
+>>>> -#define CPU_IP1                                (_ULCAST_(1) << 1)
+>>>> -#define CPU_IP2                                (_ULCAST_(1) << 2)
+>>>> -#define CPU_IP3                                (_ULCAST_(1) << 3)
+>>>> -#define CPU_IP4                                (_ULCAST_(1) << 4)
+>>>> -#define CPU_IP5                                (_ULCAST_(1) << 5)
+>>>> -#define CPU_IP6                                (_ULCAST_(1) << 6)
+>>>> -#define CPU_IP7                                (_ULCAST_(1) << 7)
+>>>> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_VIP_SHIFT)
+>>> Don't use too many wrappers, just use INT_HWI0 instead of
+>>> GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
+>>> also used for shifts.
+>>
+>> The above macro definition is a little complicated, I do not know how to
+>> optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
+>> #define CPU_IP0                       BIT(INT_HWI0 - 2)
+> CSR_GINTC_VIP_SHIFT is 0 and GINTC_VIP_DELTA is equal to INT_HWI0. I
+> mean remove the GINTC_VIP_DELTA definition and use INT_HWI0 instead.
+For macro definition such CPU_IP0, GINTC_VIP_DELTA can be removed. And 
+define it as follows directly.
+#define CPU_IP0                       BIT(0)
+
+However GINTC_VIP_DELTA is still useful, because bitmap with HWI0-HWI7 
+in estat register starts from INT_HWI0, however with register gintc it 
+starts from CSR_GINTC_VIP_SHIFT.
+
+For example with _kvm_getcsr() API, it is to get interrupt status. Here 
+is the example code.
+gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)& KVM_GINTC_IRQ_MASK;
+estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) &~KVM_ESTAT_HWI_MASK;
+*val = estat | (gintc << GINTC_VIP_DELTA);
+
+Remove GINTC_VIP_DELTA and use INT_HWI0 directly, it will be
+*val = estat | (gintc << INT_HWI0);
+
+I do not know what is the meaning about "gintc << INT_HWI0", especially 
+if the value of CSR_GINTC_VIP_SHIFT is no zero.
+
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+> 
+>>
+>> or something like this:
+>> #define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_VIP_DELTA)
+>>>> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_VIP_DELTA)
+>>>> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
+>>>> +                                               | CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
+>>>>
+>>>>    #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
+>>>>
+>>>> --
+>>>> 2.39.3
+>>>>
+>>>>
+>>
+>>
 
