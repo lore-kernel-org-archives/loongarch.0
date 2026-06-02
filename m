@@ -1,229 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A232DA775
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C06A1A681B;
+	Tue,  2 Jun 2026 04:40:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780375112; cv=none; b=HpTTDGt3xI3Vwrdd+eo3oOApo6JsoD9SwTkX5WY1AE0C2B92HL2AeYzOoh/sizFHUYOg9vvsq0q8y47+5a3usopp8AbtW3SIRYjrb4vBKDbSf4bFaUegjakVYS3wBI3lkyUPOkkCFIDdBDRrLsYBTqDH5nwGWehcyRaDLbOfamQ=
+	t=1780375234; cv=none; b=BojTREViXpdCtockFHjLeOVAySGX3VNImTnXifcG32XSRHx/Q25KVUrG954DAU9wmUzKVZBswufDJmrzpYITb82tOTxvJXK8GnT3IEafcaMqiAeC1avlZzTuKTv6ll+Mfr5OQB44rR+2ZrXd5Ya9eCoBuiSrS/LGiCDASUqhlL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780375112; c=relaxed/simple;
-	bh=JuhFkdCGHUTa1Toq2fl6YGpvDgg8h25DT7dj2dhCEh0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kTmnYThPwMQq15Vn3SkkoKCeuMAWxMRm+07Uu2+0+ysw0TxaTAarTw8YFok3Y375u7pGmjmuHeW6CWPVApGwRcYrP8fd0Uw8BstTzCIWG9aq7Neqa0Gj5yJaICe80V+cvuzQ4peXoGmUuhSHl3rUvIWWUefyETJG501gRF6FhbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMGpFS0w; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780375234; c=relaxed/simple;
+	bh=JeBgjr7N+FIND5KIjD+tMMPmCPq9rkF/prcJ+V/O824=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d9iwfaH+zwSqeE7Xj+oxF3Xev/1w2BMm2JXJ6JgBC2ADP0wJfsrJLzCCH76dtSAmZT6Nxb824/EEcvFUCw6DdBWa5WNbrD4h+4iJqIQQAmfB7QsE+o+3XeSB9ee29DPDvez8H45U31xKI1wNiGgkLx5XiUjKUsm4kvBjoeguUFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVxln0DQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMGpFS0w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EFF1F00898
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:38:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVxln0DQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B6F1F00893;
+	Tue,  2 Jun 2026 04:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780375110;
-	bh=gOWcSTxZdBm2fK8HY+nHIvk9NOaM4hUS3N1iZTG+OeA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=bMGpFS0w9MrQGe8YZaVhkeJ1yZDTQbaruewkQrglnDDH5B0oKJzJcUJtLxM2BMAqs
-	 BSRhNBKQuVilD9VhspLgUVr42e5uiHK38hJRF4kjUzh+fuNUky9nEwEntijVM2PIgR
-	 yVe8WxG9A2BEs+jyy+YtETUhIUjnXjTaEJv8ejKIfINBQ9S3sxBklsT9W+3dp5m4wR
-	 wYlset3xeNoMoNiN3OBpoxoBChKMAkAnd4p+QA9lZQDO7AUuno9mO1vY8CaqKMvUTI
-	 t3oCaOvx6e0WbI6NzteLT7Xo8rT3b/ffMZ7BuGsPKU6KX9/fZ3IqKk9Yl5AKCBkrnv
-	 LFulJJC8HYxEA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68bfcf11050so6635043a12.0
-        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 21:38:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+OTCHh9PRNYlYbCHg13gr7N4lVb7+g24ijAPkkPhaUrk/a/D0ljpDrpwlbP48h1vNZOYdZQLuQyXQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwDE4kP2HtuK76G/mv2Ir50HjzpWX1/yB8mxXvKgeHaC1Xjq7+B
-	8Sb3jPlGZKc11gDKwaQySqguSop3kGaOixbEasqQBvYl1e+OkdbBDTgjTGGrC6lA2xlUQHycS4d
-	5p6okxU9DO1RwP66LeGP+aGUJVMUmnuQ=
-X-Received: by 2002:a17:907:d9e:b0:bce:80db:77ef with SMTP id
- a640c23a62f3a-beab3852a00mr805054066b.43.1780375108969; Mon, 01 Jun 2026
- 21:38:28 -0700 (PDT)
+	s=k20260515; t=1780375233;
+	bh=srXwF/yhg+rbIcHkVtsiegnwql9Xlps6nvacpPywWg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AVxln0DQCY1PNRUb9aWahhA0PjWLTKukZTz6gcf/R6ukpUVkqFE8CWcIeAncWYn7N
+	 9SVxYIW6aEFeLIlpyYOFHeaEHecDbIuH3q+g5YLAKEHaNn6ZRrgsqJihYLcXVkdG1x
+	 u8LM5FkmNtBFW2jPuWRqGDHrJbv/cHyD11bDv+X/qQmKmosro2X4Pg0c151+Y8SSAv
+	 hQWSIBG7Hk+uobN/a+cvh066m33eGdPyJnddbAG+dmD9IyBZMt1CDCndeajD7bKPSP
+	 7X0uyZ4JancSZq6PFTUoH3q4q3QPPvxzUudeqGg4m53tr/brD9qU9izIXKAOHQBjPp
+	 P3lcfQWN227kQ==
+Date: Tue, 2 Jun 2026 06:40:24 +0200
+From: "Oscar Salvador (SUSE)" <osalvador@kernel.org>
+To: Muchun Song <muchun.song@linux.dev>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	"David S. Miller" <davem@davemloft.net>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+	Albert Ou <aou@eecs.berkeley.edu>, WANG Xuerui <kernel@xen0n.name>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v3 1/5] mm/sparse-vmemmap: provide generic
+ vmemmap_set_pmd() and vmemmap_check_pmd()
+Message-ID: <ah5euKU9l3pP_8Ty@localhost.localdomain>
+References: <20260601084845.3792171-1-songmuchun@bytedance.com>
+ <20260601084845.3792171-2-songmuchun@bytedance.com>
+ <db8d440d-c8a1-4f77-b5d9-00bab8737f12@kernel.org>
+ <0D4AF42F-37C5-4A76-9703-44ACC6374C48@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260330035832.2204720-1-maobibo@loongson.cn> <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
- <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
- <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn> <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
- <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn> <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
- <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
-In-Reply-To: <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Jun 2026 12:38:14 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
-X-Gm-Features: AVHnY4LrAAW6MCGH2E-nR1_cx1nVZNn4lUsBJYDaAjRKpC9OXk_AgNi0TAUTz_o
-Message-ID: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
- FPU exception
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0D4AF42F-37C5-4A76-9703-44ACC6374C48@linux.dev>
 
-On Tue, Jun 2, 2026 at 9:23=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2026/6/1 =E4=B8=8B=E5=8D=889:52, Huacai Chen wrote:
-> > On Thu, Apr 9, 2026 at 8:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2026/4/8 =E4=B8=8B=E5=8D=883:47, Huacai Chen wrote:
-> >>> On Wed, Apr 8, 2026 at 9:04=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
- wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2026/4/7 =E4=B8=8B=E5=8D=888:41, Huacai Chen wrote:
-> >>>>> On Mon, Mar 30, 2026 at 6:00=E2=80=AFPM Huacai Chen <chenhuacai@ker=
-nel.org> wrote:
-> >>>>>>
-> >>>>>> Hi, Bibo,
-> >>>>>>
-> >>>>>>
-> >>>>>> On Mon, Mar 30, 2026 at 11:58=E2=80=AFAM Bibo Mao <maobibo@loongso=
-n.cn> wrote:
-> >>>>>>>
-> >>>>>>> With FPU save and restore flow, the cost is the same with differe=
-nt
-> >>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line i=
-mpaction.
-> >>>>>>>
-> >>>>>>> Here is to enable FPU with max VM supported type, for example if
-> >>>>>>> VM supports LASX instrction, enable FPU with LASX type even with =
-FPU
-> >>>>>>> exeception. So it can avoid possible LSX/LASX exception in future=
-.
-> >>>>>>>
-> >>>>>>> With context switch microbench which may touch FPU and LASX, ther=
-e is 9%
-> >>>>>>> improvement when halt_poll_ns is disabled. The command is
-> >>>>>>> "./context --test=3Dpipe" and source code located at:
-> >>>>>>>      https://github.com/bibo-mao/context_switch/blob/main/context=
-.c
-> >>>>>>>
-> >>>>>>> Original     Wih patch      improvement
-> >>>>>>> 75232        82440          9%
-> >>>>>>>
-> >>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>>>> ---
-> >>>>>>> v1 ... v2:
-> >>>>>>>      1. Enable FPU with max VM supported FPU type, rather than ma=
-x used type.
-> >>>>>>>      2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
-> >>>>>>>      3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
-> >>>>>>>      3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
-> >>>>>>>      4. Remove middle FPU state handling in kvm_own_lsx() and kvm=
-_own_lasx(),
-> >>>>>>>         directly enable LSX or LASX from FPU none state.
-> >>>>>>> ---
-> >>>>>>> Bibo Mao (6):
-> >>>>>>>      LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
-> >>>>>>>      LoongArch: KVM: Enable FPU with max VM supported FPU type
-> >>>>>>>      LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOA=
-D
-> >>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FP=
-U,
-> >>>>>> so I think Patch-3 should be squashed into Patch-1.
-> >>>>>>
-> >>>>>>>      LoongArch: KVM: Remove some middle FPU states
-> >>>>>>>      LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
-> >>>>>>>      LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
-> >>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX=
- and
-> >>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX=
-, so
-> >>>>>> I think Patch-6 should be squashed into Patch-5, too.
-> >>>>> And could you please test the power consumption where there are man=
-y
-> >>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
-> >>>> Hi Huacai,
-> >>>>
-> >>>> Thanks for reviewing this patch
-> >>>> Could you help me to test the power consumption with this patch?
-> >>>>> power consumption of LASX is significantly more than FPU, which is =
-a
-> >>>> Could the describe the detail scenery wheree LASX instruction is
-> >>>> frequently used by application or LASX  EUEN enabled?
-> >>> The purpose is to evaluate power consumption before and after this se=
-ries.
-> >>>
-> >>> So we can run 10 VMs (suppose there are 4 cores), and there is a
-> >>> workload run in every VM, the workload only uses FPU, no LSX and LASX=
-.
-> >>> Before this series, KVM only save/restore FPU context; after this
-> >>> series, KVM will save/restore LASX context.
-> >> In theory there should be such test, only that it requires special Pow=
-er
-> >> Management team and testbed. Even if there is such team, maybe they ca=
-re
-> >> power consumption about DDR and screen, do not want do such experiment=
-s
-> >> for this patch.
-> >>
-> >> If someone is volunteer to do this, I do not object, also I want to ge=
-t
-> >> the result. Just from my guess, there should be no much difference sin=
-ce
-> >> FPU context switch is much smaller than the whole workload, else the
-> >> workload is just FPU context switch.
-> > Any updates?
-> It deeps on Power Management exports.
->
-> By cyclictest/fpubench test on 3C6000, the context switch cost is 3us,
-> the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost
-> is about 0.25% of the whole context switch. I do not why power
-> consumption is important factor here.
-I'm talking about this:
-https://lore.kernel.org/loongarch/b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loon=
-gson.cn/T/#m6da21ae2f4abfba362a2cd189cb4d8d09e33a6d7
+On Mon, Jun 01, 2026 at 08:37:42PM +0800, Muchun Song wrote:
+> 
+> 
+> > On Jun 1, 2026, at 20:22, David Hildenbrand (Arm) <david@kernel.org> wrote:
+> > 
+> > On 6/1/26 10:48, Muchun Song wrote:
+> >> The two weak functions are currently no-ops on every architecture,
+> >> forcing each platform that needs them to duplicate the same handful
+> >> of lines.  Provide a generic implementation:
+> >> 
+> >> - vmemmap_set_pmd() simply sets a huge PMD with PAGE_KERNEL protection.
+> >> 
+> >> - vmemmap_check_pmd() verifies that the PMD is present and leaf,
+> >>  then calls the existing vmemmap_verify() helper.
+> >> 
+> >> Architectures that need special handling can continue to override the
+> >> weak symbols; everyone else gets the standard version for free.
+> >> 
+> >> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> >> ---
+> >> v2->v3:
+> >> - Replace BUG_ON() with WARN_ON_ONCE() in vmemmap_set_pmd()
+> >> ---
+> >> mm/sparse-vmemmap.c | 7 ++++++-
+> >> 1 file changed, 6 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+> >> index 112ccf9c71ca..99e2be39671b 100644
+> >> --- a/mm/sparse-vmemmap.c
+> >> +++ b/mm/sparse-vmemmap.c
+> >> @@ -386,12 +386,17 @@ int __meminit vmemmap_populate_hvo(unsigned long addr, unsigned long end,
+> >> void __weak __meminit vmemmap_set_pmd(pmd_t *pmd, void *p, int node,
+> >>       unsigned long addr, unsigned long next)
+> >> {
+> >> + 	WARN_ON_ONCE(!pmd_set_huge(pmd, virt_to_phys(p), PAGE_KERNEL));
+> > 
+> > 
+> > Not sure if a VM_WARN_ON_ONCE() would be appropriate. (then, we have to move the
+> > pmd_set_huge() out of the statement).
+> 
+> I think it might be better to keep WARN_ON_ONCE here. This way, we can still
+> monitor for warnings in production while keeping the code simple.
 
-Huacai
+IIRC there was a discussion about this some time ago, given the fact that quite
+some people out there tend to have 'panic_on_warn', but then again, if we fail to
+set a PMD here it means something pretty nasty happened, so I am ok with that.
 
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>
-> >>>
-> >>> If the power consumptions are similar, then this series is perfect.
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>> Regards
-> >>>> Bibo Mao
-> >>>>> little similar to AVX512 (Linus said it is a power virus).
-> >>>>>
-> >>>>> Huacai
-> >>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> Huacai
-> >>>>>>
-> >>>>>>>
-> >>>>>>>     arch/loongarch/include/asm/kvm_host.h |  6 +--
-> >>>>>>>     arch/loongarch/kvm/exit.c             | 21 +++-----
-> >>>>>>>     arch/loongarch/kvm/vcpu.c             | 78 ++++++++----------=
----------
-> >>>>>>>     3 files changed, 30 insertions(+), 75 deletions(-)
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
-> >>>>>>> --
-> >>>>>>> 2.39.3
-> >>>>>>>
-> >>>>>>>
-> >>>>
-> >>>>
-> >>
-> >>
->
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
