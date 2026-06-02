@@ -1,107 +1,89 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 896EB3AD501
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 07:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3D83815D0
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 07:43:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780385385; cv=none; b=auXZg7i43Ph64S+tekOcFso2H/YbnuysjaT6+81hTclOrMvaXnua8/J+2NLXXkh1hltdgJVe7AP9Ksk5ceIg6DzcnpgmJWY8F3ltbv6eKBBI1MrszsN9NOnEK1uTku7ZceMHzuuBoPLBLILzgVnrosfaewB0qZXlX62RrNSHkkc=
+	t=1780386210; cv=none; b=aABKH3nJ/ir0IJ8BM4If8b7jXDqtYhblZFgKL9Bk5AFG9a1ZrtG3U7oA3mjiYHTZUqouppN9IQ26HUhV6NydrG3uzPZXbbJUiXbzwqGoJaDmdrPCwR9xO27ML5c8aXYnunZdeK0V+6y+yw1J9KwYxtGx4GgiDNMIWdiBVL6fWk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780385385; c=relaxed/simple;
-	bh=tpE9iyO18dyU5LG49u/BjwWvRz1UhB72bCoYzFUlDjQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uqj7UL4NwAfMHoKe9HRjnDQY4+GCI9b2heD0vCp6o5xd+P4m7mF5ztkx7zRmCH5E1JHGXD760NTd+u+AW5sM0xfwgZZJsckeui8IhQ1yWDET3F66Zl3VGkfBpy9D2CHC5n3ph4sdJiLBF6NO21EpNbwvZMR1N2SE9X44ejBNXl4=
+	s=arc-20240116; t=1780386210; c=relaxed/simple;
+	bh=H6SS0eNn+lEsqlacp1BnRDW02fJeAgo6cPDewTepxn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tvpwlwsyuUwUSKixQoBdExMjnvfrMtdn/VHUkWNtNY0f7JFVKoTjxzsK0/FiREdVNqS6anMOKCNpXOuqAtI03SN5UjNiO/xfc3+9qQ/r5LdQZ48d/331kNVNg/yoWZYatHGqNdzJ315qqAXUDl32Q8XwT1TJ0IWB0S31uZ/lXWc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxNehghh5qsqUPAA--.37694S3;
-	Tue, 02 Jun 2026 15:29:36 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDx6+BVhh5qOg2ZAA--.29239S3;
-	Tue, 02 Jun 2026 15:29:27 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: bpf: Support kptr xchg inline
-To: Chenguang Zhao <zhaochenguang@kylinos.cn>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- Shuah Khan <shuah@kernel.org>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <80088e78-293c-268c-3539-4e9ce66c4fd3@loongson.cn>
-Date: Tue, 2 Jun 2026 15:29:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8AxvsCdiR5q3aYPAA--.19975S3;
+	Tue, 02 Jun 2026 15:43:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJBxSeCUiR5qGRCZAA--.27953S2;
+	Tue, 02 Jun 2026 15:43:16 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] LoongArch: KVM: Set max VM supported FPU type with FPU exception
+Date: Tue,  2 Jun 2026 15:43:12 +0800
+Message-Id: <20260602074316.1647373-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx6+BVhh5qOg2ZAA--.29239S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KrWUKF4DAw47JF1Utw17XFc_yoW8AF45pr
-	Zavr9xGr4DXFy0kw18Jw4fX3W3Aw45ArWYqryUC34qy3s8Zrn29F93K3409Fs8GFZIva42
-	va1Dt3y3ua1DCFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU866wJUUUU
-	U==
+X-CM-TRANSID:qMiowJBxSeCUiR5qGRCZAA--.27953S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On 2026/6/2 上午10:15, Chenguang Zhao wrote:
-> The BPF verifier can lower a bpf_kptr_xchg() call into a single BPF_XCHG
-> atomic instruction when the JIT advertises support through
-> bpf_jit_supports_ptr_xchg(). This drops the helper call overhead from the
-> kptr exchange fast path.
-> 
-> Such inlining is only safe when the JITed atomic exchange provides the
-> same full memory ordering as the bpf_kptr_xchg() helper. On LoongArch the
-> plain amswap.d instruction carries no barrier semantics, so emit the
-> ordered amswap_db.d variant for 64-bit BPF_XCHG instead. Add the
-> amswapdbw/amswapdbd instruction emit helpers it relies on, and implement
-> bpf_jit_supports_ptr_xchg() to turn the inlining on.
-> 
-> Extend the kptr_xchg_inline selftest to cover LoongArch64, and add a
-> kptr-xchg benchmark to compare the helper and inline paths.
+With FPU save and restore, the cost is the same with different FPU width
+8/16/32 bytes, whatever from CPU cycle and cache line impaction.
 
-If I understand correctly, please split into two parts, one for JIT
-and one for selftest.
+Here is to enable FPU with max VM supported type, for example if
+VM supports LASX instrction, enable FPU with LASX type with all FPU
+exceptions including FPU/LSX/LASX exception. So if LASX is enabled with
+FPU exception, it can avoid potential LSX/LASX exception in future.
 
-1. For the JIT part, there are two logical changes, it is better to
-split into two patches:
-(1) fix the current code.
-(2) add new feature.
+With context switch microbench which touches FPU and LASX, there is 9%
+improvement when halt_poll_ns is disabled. The command is
+"./context --test=pipe" and source code located at:
+  https://github.com/bibo-mao/context_switch/blob/main/context.c
 
-Regardless of whether bpf_jit_supports_ptr_xchg returns true or false,
-amswap_db.b/h/w/d must be used. The LKMM (Linux Kernel Memory Model)
-mandates that all value-returning atomic RMW instructions imply a full
-barrier. Consequently, decoupling the JIT instruction selection from
-the pointer-support state ensures that regular scalar atomic updates
-remain sequentially consistent across multi-core systems.
+Original     Wih patch      improvement
+75232        82440          9%
 
-2. For the selftest part, there are two logical changes, it is better
-to split into two patches:
-(1) enable the functional test "./test_progs -t kptr_xchg_inline".
-(2) add benchmark for kptr-xchg performance.
+---
+v2 ... v3:
+  1. Merge patch 1 and patch 3 together, patch 1 adds KVM_REQ_LBT_LOAD
+     type, patch 3 renames KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD.
+  2. Merge patch 5 and patch 6 together, which remove aux flags
+     KVM_LARCH_LSX and KVM_LARCH_LASX
 
-Thanks,
-Tiezhu
+v1 ... v2:
+  1. Enable FPU with max VM supported FPU type, rather than max used type.
+  2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
+  3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+  3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
+  4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
+     directly enable LSX or LASX from FPU none state.
+---
+Bibo Mao (4):
+  LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
+  LoongArch: KVM: Enable FPU with max VM supported FPU type
+  LoongArch: KVM: Remove some middle FPU states
+  LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
+
+ arch/loongarch/include/asm/kvm_host.h |  6 +--
+ arch/loongarch/kvm/exit.c             | 21 +++-----
+ arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
+ 3 files changed, 30 insertions(+), 75 deletions(-)
+
+
+base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+-- 
+2.39.3
 
