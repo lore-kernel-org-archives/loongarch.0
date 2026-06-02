@@ -1,187 +1,426 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB61513C9C4
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138671FBC8C
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 02:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780364618; cv=none; b=L5IRlXXDCR/ULhDie5oJR+orIJEbxYJfyTTu3IQ4NEJgtUe8efF0fSRG3jjLaMOtCtAfwitYkE6+89y8bZHfqeRhW6tnJMYHhsemh4X1dRLF3dE2pWpE+u7sgptmgKSK/xbQrGRySHbj/JM7G7eLaF7UpeoXhxhw50zHamGHY1s=
+	t=1780366541; cv=none; b=GTNCuiyJ3PInj3rJiXjRr7cyzMAVEwLaRtSWHXZ5h3xrwmKht6unB0GN4EbN1rY1DkkB6FIvrrmys28kLx0F8lRk3cR0M6dMb11LIc6QH/E9pLVxd9BXdR8RWkvaFy+/w4lRH7TpmqQzvu77vKV3YYweV6g213RtThUp0v4v1/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780364618; c=relaxed/simple;
-	bh=Is74unXW3WLzqATS41lpUgNaFD3it4MLsOw3+TT8G4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CljaYJdloAy4eCJgbZIigWiLZyq47Y4v1tQ6pCPtU2LWXCVbj9inIVBgKQGkMlK+LIqdGJD+2zdPP555P6KDqqZe7KwPl6fyDSUl6/HkNrxbTYv8cMSwKM+yclAQuJzgQMbygsm0a3fS0PqdD1fue8V+H8kIFDDhreW5a5AmDMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=rHaZ8PNG; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="rHaZ8PNG"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=lSyN8uzwXhmY7DMOaiH5+32B3ctfvf5QTlFldSqrORg=;
-	b=rHaZ8PNGA+gISgwgik10XoynkWfz7ayOHWp5pYg2DR9+kM7LRE6sFvvbCwY7WZuExcMNMQCQS
-	XuZ/RD3H3jG0SNieTYmEXXudVXbblnFxAcsCDvSXYCJwK6nxFw20KYn+MN8CS9fgZgl4GqZ8Sc9
-	+cBgIb8sYmtBRoiL2hN8lbA=
-Received: from mail.maildlp.com (unknown [172.19.162.223])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gTthC4T77zpStZ;
-	Tue,  2 Jun 2026 09:35:55 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id A94E940561;
-	Tue,  2 Jun 2026 09:43:31 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 2 Jun 2026 09:43:27 +0800
-Message-ID: <1a459706-80db-43d8-b163-76fc09da338d@huawei.com>
-Date: Tue, 2 Jun 2026 09:43:26 +0800
+	s=arc-20240116; t=1780366541; c=relaxed/simple;
+	bh=NBWptHo+Hzm3bev1l+Fo4YZzvE0YvimRgtFKI10yh8k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=SF/hhtYXZlxzsrRSjuVr4l5oJxpXNLhOr4c9vUItqCNo0k8mVJOWGG8EuhsIUBVUl9TSl2hZ0rXCUEsHD732dmLZRnysR7HKA3x6OZasfio3+g5g1aYRtb2ePHliPaIURjImHGyY/Hp63v66dRWQNHlsoRe//ElaF7Bu733wnMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ef814d905e2811f1aa26b74ffac11d73-20260602
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
+	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:f6a32988-e2cc-4cfa-a2de-962875ae84d2,IP:20,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:15
+X-CID-INFO: VERSION:1.3.12,REQID:f6a32988-e2cc-4cfa-a2de-962875ae84d2,IP:20,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:15
+X-CID-META: VersionHash:e7bac3a,CLOUDID:c95bfc276c48dd31b85d258e133a9ac0,BulkI
+	D:26060210153497GLZCF1,BulkQuantity:0,Recheck:0,SF:10|38|66|78|102|127|136
+	|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bul
+	k:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0
+	,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: ef814d905e2811f1aa26b74ffac11d73-20260602
+X-User: zhaochenguang@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <zhaochenguang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 735991183; Tue, 02 Jun 2026 10:15:33 +0800
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Chenguang Zhao <zhaochenguang@kylinos.cn>,
+	Hengqi Chen <hengqi.chen@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] LoongArch: bpf: Support kptr xchg inline
+Date: Tue,  2 Jun 2026 10:15:15 +0800
+Message-Id: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 00/23] arm64/riscv: Add support for crashkernel CMA
- reservation
-To: Baoquan He <baoquan.he@linux.dev>
-CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
-	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
-	<rdunlap@infradead.org>, <feng.tang@linux.alibaba.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<kuba@kernel.org>, <lirongqing@baidu.com>, <ebiggers@kernel.org>,
-	<paulmck@kernel.org>, <sourabhjain@linux.ibm.com>, <thuth@redhat.com>,
-	<ardb@kernel.org>, <masahiroy@kernel.org>, <gshan@redhat.com>,
-	<james.morse@arm.com>, <maz@kernel.org>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <coxu@redhat.com>, <suzuki.poulose@arm.com>,
-	<cfsworks@gmail.com>, <osandov@fb.com>, <jbohac@suse.cz>,
-	<ryan.roberts@arm.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
-	<adityag@linux.ibm.com>, <hbathini@linux.ibm.com>, <bjorn@rivosinc.com>,
-	<songshuaishuai@tinylab.org>, <vishal.moola@gmail.com>,
-	<junhui.liu@pigmoral.tech>, <djordje.todorovic@htecgroup.com>,
-	<austin.kim@lge.com>, <namcao@linutronix.de>, <djbw@kernel.org>,
-	<chao.gao@intel.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
-	<liaoyuanhong@vivo.com>, <makb@juniper.net>, <graf@amazon.com>,
-	<piliu@redhat.com>, <rafael.j.wysocki@intel.com>,
-	<mario.limonciello@amd.com>, <jbouron@amazon.com>, <chenjiahao16@huawei.com>,
-	<guoren@kernel.org>, <bauerman@linux.ibm.com>, <bgwin@google.com>,
-	<takahiro.akashi@linaro.org>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260601094805.2928614-1-ruanjinjie@huawei.com>
- <ah2Lx7KHI60tzd0v@MiWiFi-R3L-srv>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <ah2Lx7KHI60tzd0v@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The BPF verifier can lower a bpf_kptr_xchg() call into a single BPF_XCHG
+atomic instruction when the JIT advertises support through
+bpf_jit_supports_ptr_xchg(). This drops the helper call overhead from the
+kptr exchange fast path.
 
+Such inlining is only safe when the JITed atomic exchange provides the
+same full memory ordering as the bpf_kptr_xchg() helper. On LoongArch the
+plain amswap.d instruction carries no barrier semantics, so emit the
+ordered amswap_db.d variant for 64-bit BPF_XCHG instead. Add the
+amswapdbw/amswapdbd instruction emit helpers it relies on, and implement
+bpf_jit_supports_ptr_xchg() to turn the inlining on.
 
-On 6/1/2026 9:40 PM, Baoquan He wrote:
-> Hi Jinjie,
-> 
-> On 06/01/26 at 05:47pm, Jinjie Ruan wrote:
-> ...snip... 
->> Changes in v15:
->> - Unify the subject prefix formats as Huacai suggested.
->> - Fix powerpc pre-existing NULL pointer dereference [Sashiko [1]]
->> - Fix powerpc pre-existing __merge_memory_ranges() memory range
->>   truncation [Sashiko [1]].
->> - Fix pre-existing arm64 CMA page leaks [Sashiko[2]].
->> - Fix pre-existing crash_load_dm_crypt_keys() Use-After-Free and
->>   Double Free issue [Sashiko[3]].
->> - Fix vfree(headers) and uninitialized variables issue
->>   and simplify the fix [Sashiko[2]].
->> - As walk_system_ram_res() and for_each_mem_range() use different
->>   lock, unify and simplify the fix of TOCTOU buffer overflow via memory
->>   region padding [Sashiko[4]].
->> - Fix the arm64 crash dump issues in Sashiko[5].
->> - Link to v14: https://lore.kernel.org/all/20260525084932.934910-1-ruanjinjie@huawei.com/
-> 
-> Do these Fixes have anything with the main target of this patch series
-> you mentioned in cover-letter:"arm64/riscv: Add support for crashkernel CMA"?
-> The patches become more and more in each new version, I am wondering if
-> it relies on these Fixes patches to implement your adding support for
-> crashkernel CMA on arm64/risc-v.
-> 
-> If not relying on them, could you split them into different patchset
-> on different purpose? 
+Extend the kptr_xchg_inline selftest to cover LoongArch64, and add a
+kptr-xchg benchmark to compare the helper and inline paths.
 
-Hi Baoquan,
+Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
+---
+1.
+ test steps are as follows:
+ cd /root/zcg/linux/tools/testing/selftests/bpf
+ make bench VMLINUX_BTF=/root/zcg/linux/vmlinux -j4
+ ./bench -d 30 -w 5 -p 1 kptr-xchg --nr_loops 256
+ 
+ test results before applying the patch:
+    ./bench -d 30 -w 5 -p 1 kptr-xchg --nr_loops 256
+    Summary: throughput   68.612 ± 0.249 M ops/s ( 68.612M ops/prod), latency   14.575 ns/op
+ 
+ test results after applying the patch:
+    ./bench -d 30 -w 5 -p 1 kptr-xchg --nr_loops 256
+    Summary: throughput   82.983 ± 0.268 M ops/s ( 82.983M ops/prod), latency   12.051 ns/op
+ 
+ Throughput increased by 21%
 
-Thank you for your valuable guidance.
+2.
+ When running the test, the following command can verify that
+ bpf_kptr_xchg gets inlined after applying the patch, eliminating
+ the overhead of invoking the helper function on every execution.
+ 
+ bpftool prog show | grep -A4 -B1 'name benchmark'
+ 	xlated 64B  jited 196B  memlock 16384B
+    46: tracing  name benchmark  tag a9c8498a6197e8db  gpl
+ 	loaded_at 2026-05-29T16:29:47+0800  uid 0
+ 	xlated 232B  jited 380B  memlock 16384B  map_ids 8,10,9
 
-You are absolutely right. Most of these fix patches are indeed not
-strictly related to the core implementation of the crashkernel CMA
-support. They are pre-existing bugs in the surrounding kexec/crash code
-that were flagged during our review.
+ bpftool prog dump xlated id 46 | grep -A6 -B6 -E 'xchg|atomic|call'
+ 
+ Before patch:
+  ; __sync_add_and_fetch(&hits, i);
+    13: (18) r2 = map[id:10][0]+0
+    15: (db) lock *(u64 *)(r2 +0) += r1
+  ; return 0;
+    16: (b4) w0 = 0
+    17: (95) exit
+  ; old = bpf_kptr_xchg(&ptr, NULL);
+    18: (18) r1 = map[id:9][0]+0
+    20: (b7) r2 = 0
+    21: (85) call bpf_kptr_xchg#244684 ------ there call helper function
+  ; if (old)
+    22: (15) if r0 == 0x0 goto pc-16
+  ; bpf_obj_drop(old);
+    23: (bf) r1 = r0
+    24: (18) r2 = 0x0
+    26: (85) call 0x900000000046760c#92204
+    27: (05) goto pc-21
+ 
+ After patch:
+  ; __sync_add_and_fetch(&hits, i);
+   13: (18) r2 = map[id:10][0]+0
+   15: (db) lock *(u64 *)(r2 +0) += r1
+ ; return 0;
+   16: (b4) w0 = 0
+   17: (95) exit
+ ; old = bpf_kptr_xchg(&ptr, NULL);
+   18: (18) r1 = map[id:9][0]+0
+   20: (b7) r2 = 0
+   21: (bf) r0 = r2
+   22: (db) r0 = atomic64_xchg((u64 *)(r1 +0), r0) ---- there inlining 'kptr xchg'
+ ; if (old)
+   23: (15) if r0 == 0x0 goto pc-17
+ ; bpf_obj_drop(old);
+   24: (bf) r1 = r0
+   25: (18) r2 = 0x0
+   27: (85) call 0x900000000046760e#92206
+   28: (05) goto pc-22
+---
+ arch/loongarch/include/asm/inst.h             |  2 +
+ arch/loongarch/net/bpf_jit.c                  |  7 +-
+ tools/testing/selftests/bpf/Makefile          |  2 +
+ tools/testing/selftests/bpf/bench.c           |  2 +
+ .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
+ .../bpf/prog_tests/kptr_xchg_inline.c         |  3 +-
+ .../selftests/bpf/progs/kptr_xchg_bench.c     | 48 ++++++++++
+ 7 files changed, 158 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+ create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
 
-Previously, Andrew suggested taking a look at the code review comments
-from the Sashiko AI system, which is why these fixes kept expanding. I
-completely agree with your advice that there is no need to keep them
-together. I will split them into two completely different patchsets
-based on their purpose:
-
-1. A cleaner version of this series, strictly focused on adding the core
-crashkernel CMA support for arm64/riscv.
-
-2. One standalone bugfix patchset dedicated entirely to fixing these
-pre-existing issues.
-
-By the way, I would also appreciate some advice on how to handle further
-AI reviews. It seems that the more code we touch or refactor to fix
-these pre-existing issues, the more tangential bugs the AI flags in the
-newly exposed areas, making the series extremely difficult to converge.
-
-Should I continue to address all AI-reported bugs associated with the
-surrounding code in this series, or should we draw a strict line
-and only focus on the core CMA logic moving forward?
-
-I will prepare the split patchsets shortly. Thanks again for
-straightening this out!
-
-Best regards,
-Jinjie Ruan
-
-
-> 
-> Thanks
-> Baoquan
-> 
->>
->> [1]: https://lore.kernel.org/all/20260525092207.96B9D1F000E9@smtp.kernel.org/
->> [2]: https://lore.kernel.org/all/20260525091149.1A1E01F00A3D@smtp.kernel.org/
->> [3]: https://lore.kernel.org/all/20260525105227.3C2421F000E9@smtp.kernel.org/
->> [4]: https://lore.kernel.org/all/20260525095447.944E11F000E9@smtp.kernel.org/
->> [5]: https://lore.kernel.org/all/20260525101746.9959D1F000E9@smtp.kernel.org/
->>
->> Changes in v14:
->> - Fix image->elf_headers memory leak during retry loop for arm64 as Sashiko
->>   AI code review pointed out.
->> - Solve the hotplug notifier arch_crash_handle_hotplug_event() AA
->>   self-deadlock problem as Sashiko AI code review pointed out.
->> - Fix the TOCTOU issue in prepare_elf_headers() by get_online_mems().
->> - -ENOMEM -> -EAGAIN as Breno suggested.
->> - Add support for arm64 crash hotplug.
->> - Link to v13: https://lore.kernel.org/all/20260511030454.1730881-1-ruanjinjie@huawei.com/
->>
-
-[...]
->>  24 files changed, 430 insertions(+), 338 deletions(-)
->>  create mode 100644 arch/arm64/kernel/crash.c
->>
->> -- 
->> 2.34.1
->>
+diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+index 76b723590023..636cfc524b02 100644
+--- a/arch/loongarch/include/asm/inst.h
++++ b/arch/loongarch/include/asm/inst.h
+@@ -783,6 +783,8 @@ DEF_EMIT_REG3_FORMAT(amswapb, amswapb_op)
+ DEF_EMIT_REG3_FORMAT(amswaph, amswaph_op)
+ DEF_EMIT_REG3_FORMAT(amswapw, amswapw_op)
+ DEF_EMIT_REG3_FORMAT(amswapd, amswapd_op)
++DEF_EMIT_REG3_FORMAT(amswapdbw, amswapdbw_op)
++DEF_EMIT_REG3_FORMAT(amswapdbd, amswapdbd_op)
+ 
+ #define DEF_EMIT_REG3SA2_FORMAT(NAME, OP)				\
+ static inline void emit_##NAME(union loongarch_instruction *insn,	\
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index 24913dc7f4e8..b2bc54b4ca87 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -486,7 +486,7 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+ 			emit_zext_32(ctx, src, true);
+ 			break;
+ 		case BPF_DW:
+-			emit_insn(ctx, amswapd, src, t1, t3);
++			emit_insn(ctx, amswapdbd, src, t1, t3);
+ 			break;
+ 		}
+ 		break;
+@@ -2362,6 +2362,11 @@ bool bpf_jit_supports_fsession(void)
+ 	return true;
+ }
+ 
++bool bpf_jit_supports_ptr_xchg(void)
++{
++	return true;
++}
++
+ /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
+ bool bpf_jit_supports_subprog_tailcalls(void)
+ {
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 6ef6872adbc3..ea4c22e20f3c 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -866,6 +866,7 @@ $(OUTPUT)/bench_htab_mem.o: $(OUTPUT)/htab_mem_bench.skel.h
+ $(OUTPUT)/bench_bpf_crypto.o: $(OUTPUT)/crypto_bench.skel.h
+ $(OUTPUT)/bench_sockmap.o: $(OUTPUT)/bench_sockmap_prog.skel.h
+ $(OUTPUT)/bench_lpm_trie_map.o: $(OUTPUT)/lpm_trie_bench.skel.h $(OUTPUT)/lpm_trie_map.skel.h
++$(OUTPUT)/bench_kptr_xchg.o: $(OUTPUT)/kptr_xchg_bench.skel.h
+ $(OUTPUT)/bench.o: bench.h testing_helpers.h $(BPFOBJ)
+ $(OUTPUT)/bench: LDLIBS += -lm
+ $(OUTPUT)/bench: $(OUTPUT)/bench.o \
+@@ -888,6 +889,7 @@ $(OUTPUT)/bench: $(OUTPUT)/bench.o \
+ 		 $(OUTPUT)/bench_bpf_crypto.o \
+ 		 $(OUTPUT)/bench_sockmap.o \
+ 		 $(OUTPUT)/bench_lpm_trie_map.o \
++		 $(OUTPUT)/bench_kptr_xchg.o \
+ 		 $(OUTPUT)/usdt_1.o \
+ 		 $(OUTPUT)/usdt_2.o \
+ 		 #
+diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
+index 029b3e21f438..2b6dd8aec282 100644
+--- a/tools/testing/selftests/bpf/bench.c
++++ b/tools/testing/selftests/bpf/bench.c
+@@ -575,6 +575,7 @@ extern const struct bench bench_lpm_trie_insert;
+ extern const struct bench bench_lpm_trie_update;
+ extern const struct bench bench_lpm_trie_delete;
+ extern const struct bench bench_lpm_trie_free;
++extern const struct bench bench_kptr_xchg;
+ 
+ static const struct bench *benchs[] = {
+ 	&bench_count_global,
+@@ -653,6 +654,7 @@ static const struct bench *benchs[] = {
+ 	&bench_lpm_trie_update,
+ 	&bench_lpm_trie_delete,
+ 	&bench_lpm_trie_free,
++	&bench_kptr_xchg,
+ };
+ 
+ static void find_benchmark(void)
+diff --git a/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c b/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+new file mode 100644
+index 000000000000..b8a0d346fda6
+--- /dev/null
++++ b/tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2026. Loongson Technology Corporation Limited */
++#include <argp.h>
++#include "bench.h"
++#include "kptr_xchg_bench.skel.h"
++
++static struct ctx {
++	struct kptr_xchg_bench *skel;
++} ctx;
++
++static struct {
++	__u32 nr_loops;
++} args = {
++	.nr_loops = 256,
++};
++
++enum {
++	ARG_NR_LOOPS = 7000,
++};
++
++static const struct argp_option opts[] = {
++	{ "nr_loops", ARG_NR_LOOPS, "nr_loops", 0,
++	  "Set number of bpf_kptr_xchg() calls per trigger"},
++	{},
++};
++
++static error_t parse_arg(int key, char *arg, struct argp_state *state)
++{
++	switch (key) {
++	case ARG_NR_LOOPS:
++		args.nr_loops = strtol(arg, NULL, 10);
++		break;
++	default:
++		return ARGP_ERR_UNKNOWN;
++	}
++
++	return 0;
++}
++
++static const struct argp bench_kptr_xchg_argp = {
++	.options = opts,
++	.parser = parse_arg,
++};
++
++static void validate(void)
++{
++	if (env.consumer_cnt != 0) {
++		fprintf(stderr, "benchmark doesn't support consumer!\n");
++		exit(1);
++	}
++}
++
++static void *producer(void *input)
++{
++	while (true)
++		syscall(__NR_getpgid);
++
++	return NULL;
++}
++
++static void measure(struct bench_res *res)
++{
++	res->hits = atomic_swap(&ctx.skel->bss->hits, 0);
++}
++
++static void setup(void)
++{
++	struct bpf_link *link;
++
++	setup_libbpf();
++
++	ctx.skel = kptr_xchg_bench__open_and_load();
++	if (!ctx.skel) {
++		fprintf(stderr, "failed to open skeleton\n");
++		exit(1);
++	}
++
++	ctx.skel->data->nr_loops = args.nr_loops;
++
++	link = bpf_program__attach(ctx.skel->progs.benchmark);
++	if (!link) {
++		fprintf(stderr, "failed to attach program!\n");
++		exit(1);
++	}
++}
++
++const struct bench bench_kptr_xchg = {
++	.name = "kptr-xchg",
++	.argp = &bench_kptr_xchg_argp,
++	.validate = validate,
++	.setup = setup,
++	.producer_thread = producer,
++	.measure = measure,
++	.report_progress = ops_report_progress,
++	.report_final = ops_report_final,
++};
+diff --git a/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c b/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
+index 7def158da9eb..8f7b58727416 100644
+--- a/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
++++ b/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
+@@ -14,7 +14,8 @@ void test_kptr_xchg_inline(void)
+ 	int err;
+ 
+ #if !(defined(__x86_64__) || defined(__aarch64__) || \
+-      (defined(__riscv) && __riscv_xlen == 64))
++      (defined(__riscv) && __riscv_xlen == 64) || \
++      (defined(__loongarch__) && __loongarch_grlen == 64))
+ 	test__skip();
+ 	return;
+ #endif
+diff --git a/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c b/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+new file mode 100644
+index 000000000000..ff146e4dcde7
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2026. Loongson Technology Corporation Limited */
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++
++#include "bpf_experimental.h"
++#include "bpf_misc.h"
++
++char _license[] SEC("license") = "GPL";
++
++#define MAX_XCHG_LOOPS 4096
++
++struct bin_data {
++	char blob[32];
++};
++
++#define private(name) SEC(".bss." #name) __hidden __attribute__((aligned(8)))
++
++private(kptr) struct bin_data __kptr *ptr;
++u32 nr_loops = 256;
++long hits;
++
++SEC("fentry/" SYS_PREFIX "sys_getpgid")
++int benchmark(void *ctx)
++{
++	struct bin_data *old;
++	u32 i;
++
++	for (i = 0; i < MAX_XCHG_LOOPS; i++) {
++		if (i >= nr_loops)
++			break;
++
++		old = bpf_kptr_xchg(&ptr, NULL);
++		if (old)
++			bpf_obj_drop(old);
++	}
++
++	__sync_add_and_fetch(&hits, i);
++	return 0;
++}
++
++/* BTF FUNC records are not generated for kfuncs referenced only through
++ * optimized paths. Keep bpf_obj_drop() visible to libbpf's kfunc linker.
++ */
++void __btf_root(void)
++{
++	bpf_obj_drop(NULL);
++}
+-- 
+2.25.1
 
