@@ -1,160 +1,187 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8775713C9C4
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB61513C9C4
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780364393; cv=none; b=ShZg7VUu6HmK1iXnpNgLu+1oPincs/bEmRhcaIeLxvMvaumMMyTkGNfXbZql2+SnuwQiYM9N5F59TM99r422kuOHEOzuXRI+hKinzJCf6T6BZjK8nGnF9L/IE3X1E2nYgdy4gXytK8Gc67UJoEmD+fvEnYHWSEqfKUIeqNbg7ME=
+	t=1780364618; cv=none; b=L5IRlXXDCR/ULhDie5oJR+orIJEbxYJfyTTu3IQ4NEJgtUe8efF0fSRG3jjLaMOtCtAfwitYkE6+89y8bZHfqeRhW6tnJMYHhsemh4X1dRLF3dE2pWpE+u7sgptmgKSK/xbQrGRySHbj/JM7G7eLaF7UpeoXhxhw50zHamGHY1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780364393; c=relaxed/simple;
-	bh=VmcIYlZoYPFajcd/yR2kOvmYKBN3ND0KvsxZst/Gwxs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=u66gii9EuoYMd261B8dGPPwkrkdsvmRfpPg0Vj4qBw/gml0z8rGbsJH3EVzyT7yA8yGibSGT/v7eDNrN0Pq9jJ0HyAAQ4EcVYGOHSdHCmbRkcGMMjPqfFy0XsI0VsQkCUNdlkSNfb9nKIp5++kgPczNhN4X7zUPUh8gv84Lbr84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxCHlkNB5qu5APAA--.18856S3;
-	Tue, 02 Jun 2026 09:39:48 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxpsBiNB5qnsWYAA--.58591S3;
-	Tue, 02 Jun 2026 09:39:48 +0800 (CST)
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
- bit mask
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260526125256.2511876-1-maobibo@loongson.cn>
- <20260526125256.2511876-4-maobibo@loongson.cn>
- <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
-Date: Tue, 2 Jun 2026 09:36:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1780364618; c=relaxed/simple;
+	bh=Is74unXW3WLzqATS41lpUgNaFD3it4MLsOw3+TT8G4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CljaYJdloAy4eCJgbZIigWiLZyq47Y4v1tQ6pCPtU2LWXCVbj9inIVBgKQGkMlK+LIqdGJD+2zdPP555P6KDqqZe7KwPl6fyDSUl6/HkNrxbTYv8cMSwKM+yclAQuJzgQMbygsm0a3fS0PqdD1fue8V+H8kIFDDhreW5a5AmDMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=rHaZ8PNG; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="rHaZ8PNG"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=lSyN8uzwXhmY7DMOaiH5+32B3ctfvf5QTlFldSqrORg=;
+	b=rHaZ8PNGA+gISgwgik10XoynkWfz7ayOHWp5pYg2DR9+kM7LRE6sFvvbCwY7WZuExcMNMQCQS
+	XuZ/RD3H3jG0SNieTYmEXXudVXbblnFxAcsCDvSXYCJwK6nxFw20KYn+MN8CS9fgZgl4GqZ8Sc9
+	+cBgIb8sYmtBRoiL2hN8lbA=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gTthC4T77zpStZ;
+	Tue,  2 Jun 2026 09:35:55 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id A94E940561;
+	Tue,  2 Jun 2026 09:43:31 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 2 Jun 2026 09:43:27 +0800
+Message-ID: <1a459706-80db-43d8-b163-76fc09da338d@huawei.com>
+Date: Tue, 2 Jun 2026 09:43:26 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpsBiNB5qnsWYAA--.58591S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxArWxZFyDWF1fGr4xuF18Xrc_yoW5KrW5pr
-	W8uas8XFW5XF42gw1Sk3Z8K3W7tr4kJr12g3sFgrs8JF9Fgw1Sv3WrKws8A34vq395G34I
-	gr98Z3WYqF9xKrbCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
-	UUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 00/23] arm64/riscv: Add support for crashkernel CMA
+ reservation
+To: Baoquan He <baoquan.he@linux.dev>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <feng.tang@linux.alibaba.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<kuba@kernel.org>, <lirongqing@baidu.com>, <ebiggers@kernel.org>,
+	<paulmck@kernel.org>, <sourabhjain@linux.ibm.com>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <masahiroy@kernel.org>, <gshan@redhat.com>,
+	<james.morse@arm.com>, <maz@kernel.org>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <coxu@redhat.com>, <suzuki.poulose@arm.com>,
+	<cfsworks@gmail.com>, <osandov@fb.com>, <jbohac@suse.cz>,
+	<ryan.roberts@arm.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
+	<adityag@linux.ibm.com>, <hbathini@linux.ibm.com>, <bjorn@rivosinc.com>,
+	<songshuaishuai@tinylab.org>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <djordje.todorovic@htecgroup.com>,
+	<austin.kim@lge.com>, <namcao@linutronix.de>, <djbw@kernel.org>,
+	<chao.gao@intel.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
+	<liaoyuanhong@vivo.com>, <makb@juniper.net>, <graf@amazon.com>,
+	<piliu@redhat.com>, <rafael.j.wysocki@intel.com>,
+	<mario.limonciello@amd.com>, <jbouron@amazon.com>, <chenjiahao16@huawei.com>,
+	<guoren@kernel.org>, <bauerman@linux.ibm.com>, <bgwin@google.com>,
+	<takahiro.akashi@linaro.org>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260601094805.2928614-1-ruanjinjie@huawei.com>
+ <ah2Lx7KHI60tzd0v@MiWiFi-R3L-srv>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <ah2Lx7KHI60tzd0v@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
 
 
-On 2026/6/1 下午9:50, Huacai Chen wrote:
-> Hi, Bibo,
+On 6/1/2026 9:40 PM, Baoquan He wrote:
+> Hi Jinjie,
 > 
-> On Tue, May 26, 2026 at 8:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
->> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
->> external hardware interrupt injection.
->>
->> Here use existing macro about interrupt bit of register CSR_GINTC and
->> CSR_ESTAT, rather than hard coded constant value.
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
->>   1 file changed, 29 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
->> index 3784ab4ccdb5..efe26b04b35f 100644
->> --- a/arch/loongarch/include/asm/kvm_vcpu.h
->> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
->> @@ -10,22 +10,37 @@
->>   #include <asm/loongarch.h>
->>
->>   /* Controlled by 0x5 guest estat */
->> -#define CPU_SIP0                       (_ULCAST_(1))
->> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
->> -#define CPU_PMU                                (_ULCAST_(1) << 10)
->> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
->> -#define CPU_IPI                                (_ULCAST_(1) << 12)
->> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
->> +#define CPU_SIP0                       BIT(INT_SWI0)
->> +#define CPU_SIP1                       BIT(INT_SWI1)
->> +#define CPU_HWI0                       BIT(INT_HWI0)
->> +#define CPU_HWI1                       BIT(INT_HWI1)
->> +#define CPU_HWI2                       BIT(INT_HWI2)
->> +#define CPU_HWI3                       BIT(INT_HWI3)
->> +#define CPU_HWI4                       BIT(INT_HWI4)
->> +#define CPU_HWI5                       BIT(INT_HWI5)
->> +#define CPU_HWI6                       BIT(INT_HWI6)
->> +#define CPU_HWI7                       BIT(INT_HWI7)
->> +#define CPU_PMU                                BIT(INT_PCOV)
->> +#define CPU_TIMER                      BIT(INT_TI)
->> +#define CPU_IPI                                BIT(INT_IPI)
->> +#define CPU_AVEC                       BIT(INT_AVEC)
->> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
->> +                                               | CPU_IPI | CPU_AVEC)
->> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
->> +                                               | CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
->>
->>   /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
->> -#define CPU_IP0                                (_ULCAST_(1))
->> -#define CPU_IP1                                (_ULCAST_(1) << 1)
->> -#define CPU_IP2                                (_ULCAST_(1) << 2)
->> -#define CPU_IP3                                (_ULCAST_(1) << 3)
->> -#define CPU_IP4                                (_ULCAST_(1) << 4)
->> -#define CPU_IP5                                (_ULCAST_(1) << 5)
->> -#define CPU_IP6                                (_ULCAST_(1) << 6)
->> -#define CPU_IP7                                (_ULCAST_(1) << 7)
->> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_VIP_SHIFT)
-> Don't use too many wrappers, just use INT_HWI0 instead of
-> GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
-> also used for shifts.
-
-The above macro definition is a little complicated, I do not know how to 
-optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
-#define CPU_IP0                       BIT(INT_HWI0 - 2)
-
-or something like this:
-#define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
-
-Regards
-Bibo Mao
+> On 06/01/26 at 05:47pm, Jinjie Ruan wrote:
+> ...snip... 
+>> Changes in v15:
+>> - Unify the subject prefix formats as Huacai suggested.
+>> - Fix powerpc pre-existing NULL pointer dereference [Sashiko [1]]
+>> - Fix powerpc pre-existing __merge_memory_ranges() memory range
+>>   truncation [Sashiko [1]].
+>> - Fix pre-existing arm64 CMA page leaks [Sashiko[2]].
+>> - Fix pre-existing crash_load_dm_crypt_keys() Use-After-Free and
+>>   Double Free issue [Sashiko[3]].
+>> - Fix vfree(headers) and uninitialized variables issue
+>>   and simplify the fix [Sashiko[2]].
+>> - As walk_system_ram_res() and for_each_mem_range() use different
+>>   lock, unify and simplify the fix of TOCTOU buffer overflow via memory
+>>   region padding [Sashiko[4]].
+>> - Fix the arm64 crash dump issues in Sashiko[5].
+>> - Link to v14: https://lore.kernel.org/all/20260525084932.934910-1-ruanjinjie@huawei.com/
 > 
+> Do these Fixes have anything with the main target of this patch series
+> you mentioned in cover-letter:"arm64/riscv: Add support for crashkernel CMA"?
+> The patches become more and more in each new version, I am wondering if
+> it relies on these Fixes patches to implement your adding support for
+> crashkernel CMA on arm64/risc-v.
 > 
-> Huacai
+> If not relying on them, could you split them into different patchset
+> on different purpose? 
+
+Hi Baoquan,
+
+Thank you for your valuable guidance.
+
+You are absolutely right. Most of these fix patches are indeed not
+strictly related to the core implementation of the crashkernel CMA
+support. They are pre-existing bugs in the surrounding kexec/crash code
+that were flagged during our review.
+
+Previously, Andrew suggested taking a look at the code review comments
+from the Sashiko AI system, which is why these fixes kept expanding. I
+completely agree with your advice that there is no need to keep them
+together. I will split them into two completely different patchsets
+based on their purpose:
+
+1. A cleaner version of this series, strictly focused on adding the core
+crashkernel CMA support for arm64/riscv.
+
+2. One standalone bugfix patchset dedicated entirely to fixing these
+pre-existing issues.
+
+By the way, I would also appreciate some advice on how to handle further
+AI reviews. It seems that the more code we touch or refactor to fix
+these pre-existing issues, the more tangential bugs the AI flags in the
+newly exposed areas, making the series extremely difficult to converge.
+
+Should I continue to address all AI-reported bugs associated with the
+surrounding code in this series, or should we draw a strict line
+and only focus on the core CMA logic moving forward?
+
+I will prepare the split patchsets shortly. Thanks again for
+straightening this out!
+
+Best regards,
+Jinjie Ruan
+
+
 > 
->> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_VIP_DELTA)
->> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_VIP_DELTA)
->> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_VIP_DELTA)
->> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_VIP_DELTA)
->> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_VIP_DELTA)
->> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_VIP_DELTA)
->> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_VIP_DELTA)
->> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_VIP_DELTA)
->> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
->> +                                               | CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
+> Thanks
+> Baoquan
+> 
 >>
->>   #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
+>> [1]: https://lore.kernel.org/all/20260525092207.96B9D1F000E9@smtp.kernel.org/
+>> [2]: https://lore.kernel.org/all/20260525091149.1A1E01F00A3D@smtp.kernel.org/
+>> [3]: https://lore.kernel.org/all/20260525105227.3C2421F000E9@smtp.kernel.org/
+>> [4]: https://lore.kernel.org/all/20260525095447.944E11F000E9@smtp.kernel.org/
+>> [5]: https://lore.kernel.org/all/20260525101746.9959D1F000E9@smtp.kernel.org/
 >>
->> --
->> 2.39.3
+>> Changes in v14:
+>> - Fix image->elf_headers memory leak during retry loop for arm64 as Sashiko
+>>   AI code review pointed out.
+>> - Solve the hotplug notifier arch_crash_handle_hotplug_event() AA
+>>   self-deadlock problem as Sashiko AI code review pointed out.
+>> - Fix the TOCTOU issue in prepare_elf_headers() by get_online_mems().
+>> - -ENOMEM -> -EAGAIN as Breno suggested.
+>> - Add support for arm64 crash hotplug.
+>> - Link to v13: https://lore.kernel.org/all/20260511030454.1730881-1-ruanjinjie@huawei.com/
 >>
+
+[...]
+>>  24 files changed, 430 insertions(+), 338 deletions(-)
+>>  create mode 100644 arch/arm64/kernel/crash.c
+>>
+>> -- 
+>> 2.34.1
 >>
 
