@@ -1,162 +1,88 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F05D3C81A9
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 08:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCA7380FDA;
+	Tue,  2 Jun 2026 09:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780390506; cv=none; b=oB4CzvUajKYurDFiZxJDfUrWEXp6EK+63oAbg/M1IgkuWaIQF9YLmSBhxNZONC/HeUkxRNXTPC+rzlsCDvL2G6cl6JxyKOGPhsPhunlinzF2Rbk1edwqb6u0hNLFyiOQ4YZBgIQZbhKg5AecUmaFxxeOg19SF3W20Dw+q2FW3Yc=
+	t=1780392852; cv=none; b=c+crEMAxneZp+H3Ljraw9KWBqTL2d5pBWr2X2L0tnZXr7dD8R0u/i+l/egHemI46NAPyIOEFKXKYm4FXLTiuu+Gu/lg4qw9zce35VymFlSpgOFTEacWYDpZJ6bGfIYLo9kw/kt+Co9hrM7+5aR5gWthQ//Q+Jtqb6q21hUs14u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780390506; c=relaxed/simple;
-	bh=SgGEYYww2u/q8UGtG8LRIzibpWQxVJ0lJkjAO05IWF0=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=meSQSeYek3EdyRxp43NARsoVtTTifL8nZEfVLcN59X5KhysBS9Tgnfw55CuRakwNfz26PJ7ACmaC+sOlH7C4kdtfDeNAtoMkQQ80Wd94ohNwNKfAvG6I4eTRYlziE+0jticdJlnakPLDpNGqOK29NzSds0x7ET+nHkhveKQsxCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxZnhjmh5qbqwPAA--.19041S3;
-	Tue, 02 Jun 2026 16:54:59 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDxzsJimh5qjB6ZAA--.28139S3;
-	Tue, 02 Jun 2026 16:54:58 +0800 (CST)
-Subject: Re: [PATCH v3 4/4] LoongArch: KVM: Remove KVM_LARCH_LASX and
- KVM_LARCH_LSX
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260602074316.1647373-1-maobibo@loongson.cn>
- <20260602074316.1647373-5-maobibo@loongson.cn>
-Message-ID: <9ea14f0d-eb89-bff0-17b0-023da342cfe4@loongson.cn>
-Date: Tue, 2 Jun 2026 16:51:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1780392852; c=relaxed/simple;
+	bh=Th7aC8Ea06bRC4u5rMBdbBfiE7jS2gJ2dyJAvmcLwOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V34Ooq+DOWbGZ5X92fpcpR+BY+b8whMz7Fc/dpP8+LSGIPcoqxnEyw34cHZGbSHygi4YwY8hy7b0qH1M8dnut5t9QMLzTi/MT+K6T1C4hY0HNX7GXWkua9KKydKLmQtV+StDp4z8ddpW6WOxoir67uy++RgM43UgTueXt4I8Aik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH5cT3/d; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH5cT3/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDA81F00893;
+	Tue,  2 Jun 2026 09:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780392851;
+	bh=0PgKu/MhXV92fdaOPawC1vOXdcv4sVC0hsvmah/4e8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=KH5cT3/d1fW7mKTPUXP2hJf3hqjzw8svhzdezKnm8uDo4NbITku1tcc4lgSDjgCnQ
+	 LzoUKYJhDN2BgKJZVqXrTz9wXYbOVdWAntoJqPrxf4WCHj/PeYLX9uMDR7+GZolZr5
+	 68FAvxXuuSkAlZZ5ixjIEQEXa/aiyQmCfunPFE2j+qmVfSBZl0YJC8GFWOwYBNsFHg
+	 FIsTovKWHP0jaHKp91YmXvpwbu27upGLBcRgjel2izDC/4xZY4FGhFLHlDig1d8Ibf
+	 ipIx7HBOjEWNbarMhA7Z8LcEl9VRxhvrmOho3XVlzdpNJGdgt2fiEYoNBjjc9/8g4j
+	 BjoxvWi8ygLNQ==
+Date: Tue, 2 Jun 2026 12:34:01 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: Will Deacon <will@kernel.org>, Wandun Chen <chenwandun1@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	iommu@lists.linux.dev, zhaomeijing@lixiang.com,
+	catalin.marinas@arm.com, chenhuacai@kernel.org, kernel@xen0n.name,
+	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, robh@kernel.org, saravanak@kernel.org,
+	akpm@linux-foundation.org, bhe@redhat.com,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, m.szyprowski@samsung.com,
+	robin.murphy@arm.com, quic_obabatun@quicinc.com
+Subject: Re: [PATCH v3 09/11] arm64: kdump: exclude non-dumpable reserved
+ memory regions from vmcore
+Message-ID: <ah6jiWwwC6DDSJXd@kernel.org>
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+ <20260527032917.3385849-10-chenwandun1@gmail.com>
+ <ahmr-UjoApj2j5JS@willie-the-truck>
+ <ahsPcv8G1BR9rLah@kernel.org>
+ <ah0R8pEIyuk4N2Is@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260602074316.1647373-5-maobibo@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxzsJimh5qjB6ZAA--.28139S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGryfCw45Ar17Zr48AF4fJFc_yoW5KFWxpF
-	srur1Duw4rCFyS9wn7Gr1qqr1jvrZagry2gFyjga45Jrn0qry5ZF4vkrZ09FyDW3Z5Aa92
-	qFyF9w1Yka48JwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jO
-	F4_UUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ah0R8pEIyuk4N2Is@MiWiFi-R3L-srv>
 
+Hi Baoquan,
 
-
-On 2026/6/2 下午3:43, Bibo Mao wrote:
-> In kvm_lose_fpu() FPU state will save in vcpu::arch::fpu, its FPU
-> state comes from vcpu->arch.aux_inuse. Instead existing API
-> vm_guest_has_xxx() can be used also, and bit KVM_LARCH_LASX and
-> KVM_LARCH_LSX in arch.aux_inuse are removed. It makes the logic
-> simpler than ever.
+On Mon, Jun 01, 2026 at 01:00:34PM +0800, Baoquan He wrote:
+> On 05/30/26 at 07:25pm, Mike Rapoport wrote:
+> > On Fri, May 29, 2026 at 04:08:41PM +0100, Will Deacon wrote:
+> > > On Wed, May 27, 2026 at 11:29:15AM +0800, Wandun Chen wrote:
+> ...snip...
+> > There are patches that move common code to kernel/crash_core.c:
+> > 
+> > https://lore.kernel.org/all/20260525084932.934910-1-ruanjinjie@huawei.com
+> >  
+> > Review from arch maintainers would be helpful there ;-)
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/include/asm/kvm_host.h |  2 --
->   arch/loongarch/kvm/vcpu.c             | 17 +++++++++--------
->   2 files changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index bad16c5f963c..aa2000cfb58a 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -158,8 +158,6 @@ enum emulation_result {
->   };
->   
->   #define KVM_LARCH_FPU		(0x1 << 0)
-> -#define KVM_LARCH_LSX		(0x1 << 1)
-> -#define KVM_LARCH_LASX		(0x1 << 2)
->   #define KVM_LARCH_LBT		(0x1 << 3)
->   #define KVM_LARCH_PMU		(0x1 << 4)
->   #define KVM_LARCH_SWCSR_LATEST	(0x1 << 5)
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index 53abf7aa61f8..523d4cf88343 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -1392,7 +1392,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
->   	kvm_restore_lsx(&vcpu->arch.fpu);
->   
->   	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
-> -	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
-> +	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
->   
->   	return 0;
->   }
-> @@ -1408,7 +1408,7 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
->   	kvm_restore_lasx(&vcpu->arch.fpu);
->   
->   	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
-> -	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
-> +	vcpu->arch.aux_inuse |= KVM_LARCH_FPU;
->   
->   	return 0;
->   }
-> @@ -1417,31 +1417,32 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
->   /* Save context and disable FPU */
->   void kvm_lose_fpu(struct kvm_vcpu *vcpu)
->   {
-> +	if (!(vcpu->arch.aux_inuse & KVM_LARCH_FPU))
-> +		return;
-here is problem with AI review
+> Before, Andrew would put patch candidates into his mm tree and trigger
+> testing. If any adjustment, he would take them off. Can we do the
+> similar thing for kexec/kdump patches, unless the patches are objected
+> explicitly?
+
+Yes, we can add patches that look reasonable and expose them in -next.
+Now is too late in the release cycle, let's start with it after -rc1.
  
-https://sashiko.dev/#/patchset/20260602074316.1647373-1-maobibo@loongson.cn?part=4
+> Thanks
+> Baoquan
 
-kvm_lose_fpu() implies that kvm_lose_lbt(), there is problem returning 
-directly without calling kvm_lose_lbt().
-
-Regards
-Bibo Mao
-> +
->   	preempt_disable();
->   
->   	kvm_check_fcsr_alive(vcpu);
-> -	if (vcpu->arch.aux_inuse & KVM_LARCH_LASX) {
-> +	if (kvm_guest_has_lasx(&vcpu->arch)) {
->   		kvm_save_lasx(&vcpu->arch.fpu);
-> -		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU | KVM_LARCH_LASX);
->   		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LASX);
->   
->   		/* Disable LASX & LSX & FPU */
->   		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
-> -	} else if (vcpu->arch.aux_inuse & KVM_LARCH_LSX) {
-> +	} else if (kvm_guest_has_lsx(&vcpu->arch)) {
->   		kvm_save_lsx(&vcpu->arch.fpu);
-> -		vcpu->arch.aux_inuse &= ~(KVM_LARCH_LSX | KVM_LARCH_FPU);
->   		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_LSX);
->   
->   		/* Disable LSX & FPU */
->   		clear_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN);
-> -	} else if (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
-> +	} else {
->   		kvm_save_fpu(&vcpu->arch.fpu);
-> -		vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
->   		trace_kvm_aux(vcpu, KVM_TRACE_AUX_SAVE, KVM_TRACE_AUX_FPU);
->   
->   		/* Disable FPU */
->   		clear_csr_euen(CSR_EUEN_FPEN);
->   	}
-> +	vcpu->arch.aux_inuse &= ~KVM_LARCH_FPU;
->   	kvm_lose_lbt(vcpu);
->   
->   	preempt_enable();
-> 
-
+-- 
+Sincerely yours,
+Mike.
