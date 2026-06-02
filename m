@@ -1,151 +1,229 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E37D35677A
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 03:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A232DA775
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780369596; cv=none; b=YfHKZKcOiNT5rKW9VlcwDbYSwM1MpoWNoLRtrxnC2ftqEJBBiLGDzTM0ktgbkxtO+g6KOKvMLMfx3sAXcaIjHLDSiYN+fpRfe7nrOyh0wjI//t9+PFCDvdwm04VN2k0VKYEjskrT9By7NSQ8YNdWlGxbAwUjkcqOw/GnvrZ7pcI=
+	t=1780375112; cv=none; b=HpTTDGt3xI3Vwrdd+eo3oOApo6JsoD9SwTkX5WY1AE0C2B92HL2AeYzOoh/sizFHUYOg9vvsq0q8y47+5a3usopp8AbtW3SIRYjrb4vBKDbSf4bFaUegjakVYS3wBI3lkyUPOkkCFIDdBDRrLsYBTqDH5nwGWehcyRaDLbOfamQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780369596; c=relaxed/simple;
-	bh=quBqK+pAfJg8IQ6QPWniQxuzvmKmI37+PJNOoXvhQms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bxsnLWIb89RRn9VXNNMz+EY/qQFLhE1nRa6cRcB4mBvRuf8XKqp6ndOdlonfT0loc/Gz8kuEo+1sVkFY8APhj736+X8WumrGsTt5KALkfzkHMA+GQKA2HFWNfuVq0OagAtzrPvJhxK0YpJTRbfjbYyjqvC7BQ2CxZtUmcfgP8Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FfbPNmSq; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780375112; c=relaxed/simple;
+	bh=JuhFkdCGHUTa1Toq2fl6YGpvDgg8h25DT7dj2dhCEh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kTmnYThPwMQq15Vn3SkkoKCeuMAWxMRm+07Uu2+0+ysw0TxaTAarTw8YFok3Y375u7pGmjmuHeW6CWPVApGwRcYrP8fd0Uw8BstTzCIWG9aq7Neqa0Gj5yJaICe80V+cvuzQ4peXoGmUuhSHl3rUvIWWUefyETJG501gRF6FhbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMGpFS0w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FfbPNmSq"
-Date: Tue, 2 Jun 2026 11:06:11 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780369591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P70qjRmAyMymwJPTMfOq+4DYcvFmuGavpK8tS3QAMZ8=;
-	b=FfbPNmSqGFBVUXMW60W8WZklD/5OswTsE3vOOKJWBoPQkE+ieiKrsI/w+0/boUf1oyoQTr
-	a6KYsX23L/elGm5bXPqfLcPYLugymhGemNGpdBX9bswHkYCZ207Y83Ojwb0HZ4Gy7cbZDl
-	Ei0P5PYrgBGvOUgIoJMhYqqLwwkMndo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Baoquan He <baoquan.he@linux.dev>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, robh@kernel.org, saravanak@kernel.org,
-	akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, rdunlap@infradead.org,
-	feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com,
-	kees@kernel.org, elver@google.com, kuba@kernel.org,
-	lirongqing@baidu.com, ebiggers@kernel.org, paulmck@kernel.org,
-	sourabhjain@linux.ibm.com, thuth@redhat.com, ardb@kernel.org,
-	masahiroy@kernel.org, gshan@redhat.com, james.morse@arm.com,
-	maz@kernel.org, leitao@debian.org, yeoreum.yun@arm.com,
-	coxu@redhat.com, suzuki.poulose@arm.com, cfsworks@gmail.com,
-	osandov@fb.com, jbohac@suse.cz, ryan.roberts@arm.com,
-	tangyouling@kylinos.cn, ritesh.list@gmail.com,
-	adityag@linux.ibm.com, hbathini@linux.ibm.com, bjorn@rivosinc.com,
-	songshuaishuai@tinylab.org, vishal.moola@gmail.com,
-	junhui.liu@pigmoral.tech, djordje.todorovic@htecgroup.com,
-	austin.kim@lge.com, namcao@linutronix.de, djbw@kernel.org,
-	chao.gao@intel.com, seanjc@google.com, fuqiang.wang@easystack.cn,
-	liaoyuanhong@vivo.com, makb@juniper.net, graf@amazon.com,
-	piliu@redhat.com, rafael.j.wysocki@intel.com,
-	mario.limonciello@amd.com, jbouron@amazon.com,
-	chenjiahao16@huawei.com, guoren@kernel.org, bauerman@linux.ibm.com,
-	bgwin@google.com, takahiro.akashi@linaro.org, x86@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH v15 00/23] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-ID: <ah5Ioxs9aLxKIKWg@MiWiFi-R3L-srv>
-References: <20260601094805.2928614-1-ruanjinjie@huawei.com>
- <ah2Lx7KHI60tzd0v@MiWiFi-R3L-srv>
- <1a459706-80db-43d8-b163-76fc09da338d@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMGpFS0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42EFF1F00898
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 04:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780375110;
+	bh=gOWcSTxZdBm2fK8HY+nHIvk9NOaM4hUS3N1iZTG+OeA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=bMGpFS0w9MrQGe8YZaVhkeJ1yZDTQbaruewkQrglnDDH5B0oKJzJcUJtLxM2BMAqs
+	 BSRhNBKQuVilD9VhspLgUVr42e5uiHK38hJRF4kjUzh+fuNUky9nEwEntijVM2PIgR
+	 yVe8WxG9A2BEs+jyy+YtETUhIUjnXjTaEJv8ejKIfINBQ9S3sxBklsT9W+3dp5m4wR
+	 wYlset3xeNoMoNiN3OBpoxoBChKMAkAnd4p+QA9lZQDO7AUuno9mO1vY8CaqKMvUTI
+	 t3oCaOvx6e0WbI6NzteLT7Xo8rT3b/ffMZ7BuGsPKU6KX9/fZ3IqKk9Yl5AKCBkrnv
+	 LFulJJC8HYxEA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68bfcf11050so6635043a12.0
+        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 21:38:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+OTCHh9PRNYlYbCHg13gr7N4lVb7+g24ijAPkkPhaUrk/a/D0ljpDrpwlbP48h1vNZOYdZQLuQyXQ=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwDE4kP2HtuK76G/mv2Ir50HjzpWX1/yB8mxXvKgeHaC1Xjq7+B
+	8Sb3jPlGZKc11gDKwaQySqguSop3kGaOixbEasqQBvYl1e+OkdbBDTgjTGGrC6lA2xlUQHycS4d
+	5p6okxU9DO1RwP66LeGP+aGUJVMUmnuQ=
+X-Received: by 2002:a17:907:d9e:b0:bce:80db:77ef with SMTP id
+ a640c23a62f3a-beab3852a00mr805054066b.43.1780375108969; Mon, 01 Jun 2026
+ 21:38:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a459706-80db-43d8-b163-76fc09da338d@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20260330035832.2204720-1-maobibo@loongson.cn> <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
+ <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
+ <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn> <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
+ <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn> <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+ <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
+In-Reply-To: <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 2 Jun 2026 12:38:14 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
+X-Gm-Features: AVHnY4LrAAW6MCGH2E-nR1_cx1nVZNn4lUsBJYDaAjRKpC9OXk_AgNi0TAUTz_o
+Message-ID: <CAAhV-H7+Jk_MoDyVVe5mG8LQMoeJXnK9j4B4Si9NmA--GF1tdg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
+ FPU exception
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02/26 at 09:43am, Jinjie Ruan wrote:
-> 
-> 
-> On 6/1/2026 9:40 PM, Baoquan He wrote:
-> > Hi Jinjie,
-> > 
-> > On 06/01/26 at 05:47pm, Jinjie Ruan wrote:
-> > ...snip... 
-> >> Changes in v15:
-> >> - Unify the subject prefix formats as Huacai suggested.
-> >> - Fix powerpc pre-existing NULL pointer dereference [Sashiko [1]]
-> >> - Fix powerpc pre-existing __merge_memory_ranges() memory range
-> >>   truncation [Sashiko [1]].
-> >> - Fix pre-existing arm64 CMA page leaks [Sashiko[2]].
-> >> - Fix pre-existing crash_load_dm_crypt_keys() Use-After-Free and
-> >>   Double Free issue [Sashiko[3]].
-> >> - Fix vfree(headers) and uninitialized variables issue
-> >>   and simplify the fix [Sashiko[2]].
-> >> - As walk_system_ram_res() and for_each_mem_range() use different
-> >>   lock, unify and simplify the fix of TOCTOU buffer overflow via memory
-> >>   region padding [Sashiko[4]].
-> >> - Fix the arm64 crash dump issues in Sashiko[5].
-> >> - Link to v14: https://lore.kernel.org/all/20260525084932.934910-1-ruanjinjie@huawei.com/
-> > 
-> > Do these Fixes have anything with the main target of this patch series
-> > you mentioned in cover-letter:"arm64/riscv: Add support for crashkernel CMA"?
-> > The patches become more and more in each new version, I am wondering if
-> > it relies on these Fixes patches to implement your adding support for
-> > crashkernel CMA on arm64/risc-v.
-> > 
-> > If not relying on them, could you split them into different patchset
-> > on different purpose? 
-> 
-> Hi Baoquan,
-> 
-> Thank you for your valuable guidance.
-> 
-> You are absolutely right. Most of these fix patches are indeed not
-> strictly related to the core implementation of the crashkernel CMA
-> support. They are pre-existing bugs in the surrounding kexec/crash code
-> that were flagged during our review.
-> 
-> Previously, Andrew suggested taking a look at the code review comments
-> from the Sashiko AI system, which is why these fixes kept expanding. I
-> completely agree with your advice that there is no need to keep them
-> together. I will split them into two completely different patchsets
-> based on their purpose:
-> 
-> 1. A cleaner version of this series, strictly focused on adding the core
-> crashkernel CMA support for arm64/riscv.
-> 
-> 2. One standalone bugfix patchset dedicated entirely to fixing these
-> pre-existing issues.
-> 
-> By the way, I would also appreciate some advice on how to handle further
-> AI reviews. It seems that the more code we touch or refactor to fix
-> these pre-existing issues, the more tangential bugs the AI flags in the
-> newly exposed areas, making the series extremely difficult to converge.
-> 
-> Should I continue to address all AI-reported bugs associated with the
-> surrounding code in this series, or should we draw a strict line
-> and only focus on the core CMA logic moving forward?
+On Tue, Jun 2, 2026 at 9:23=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
+:
+>
+>
+>
+> On 2026/6/1 =E4=B8=8B=E5=8D=889:52, Huacai Chen wrote:
+> > On Thu, Apr 9, 2026 at 8:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> w=
+rote:
+> >>
+> >>
+> >>
+> >> On 2026/4/8 =E4=B8=8B=E5=8D=883:47, Huacai Chen wrote:
+> >>> On Wed, Apr 8, 2026 at 9:04=E2=80=AFAM Bibo Mao <maobibo@loongson.cn>=
+ wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2026/4/7 =E4=B8=8B=E5=8D=888:41, Huacai Chen wrote:
+> >>>>> On Mon, Mar 30, 2026 at 6:00=E2=80=AFPM Huacai Chen <chenhuacai@ker=
+nel.org> wrote:
+> >>>>>>
+> >>>>>> Hi, Bibo,
+> >>>>>>
+> >>>>>>
+> >>>>>> On Mon, Mar 30, 2026 at 11:58=E2=80=AFAM Bibo Mao <maobibo@loongso=
+n.cn> wrote:
+> >>>>>>>
+> >>>>>>> With FPU save and restore flow, the cost is the same with differe=
+nt
+> >>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line i=
+mpaction.
+> >>>>>>>
+> >>>>>>> Here is to enable FPU with max VM supported type, for example if
+> >>>>>>> VM supports LASX instrction, enable FPU with LASX type even with =
+FPU
+> >>>>>>> exeception. So it can avoid possible LSX/LASX exception in future=
+.
+> >>>>>>>
+> >>>>>>> With context switch microbench which may touch FPU and LASX, ther=
+e is 9%
+> >>>>>>> improvement when halt_poll_ns is disabled. The command is
+> >>>>>>> "./context --test=3Dpipe" and source code located at:
+> >>>>>>>      https://github.com/bibo-mao/context_switch/blob/main/context=
+.c
+> >>>>>>>
+> >>>>>>> Original     Wih patch      improvement
+> >>>>>>> 75232        82440          9%
+> >>>>>>>
+> >>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> >>>>>>> ---
+> >>>>>>> v1 ... v2:
+> >>>>>>>      1. Enable FPU with max VM supported FPU type, rather than ma=
+x used type.
+> >>>>>>>      2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
+> >>>>>>>      3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+> >>>>>>>      3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
+> >>>>>>>      4. Remove middle FPU state handling in kvm_own_lsx() and kvm=
+_own_lasx(),
+> >>>>>>>         directly enable LSX or LASX from FPU none state.
+> >>>>>>> ---
+> >>>>>>> Bibo Mao (6):
+> >>>>>>>      LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
+> >>>>>>>      LoongArch: KVM: Enable FPU with max VM supported FPU type
+> >>>>>>>      LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOA=
+D
+> >>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FP=
+U,
+> >>>>>> so I think Patch-3 should be squashed into Patch-1.
+> >>>>>>
+> >>>>>>>      LoongArch: KVM: Remove some middle FPU states
+> >>>>>>>      LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
+> >>>>>>>      LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
+> >>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX=
+ and
+> >>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX=
+, so
+> >>>>>> I think Patch-6 should be squashed into Patch-5, too.
+> >>>>> And could you please test the power consumption where there are man=
+y
+> >>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
+> >>>> Hi Huacai,
+> >>>>
+> >>>> Thanks for reviewing this patch
+> >>>> Could you help me to test the power consumption with this patch?
+> >>>>> power consumption of LASX is significantly more than FPU, which is =
+a
+> >>>> Could the describe the detail scenery wheree LASX instruction is
+> >>>> frequently used by application or LASX  EUEN enabled?
+> >>> The purpose is to evaluate power consumption before and after this se=
+ries.
+> >>>
+> >>> So we can run 10 VMs (suppose there are 4 cores), and there is a
+> >>> workload run in every VM, the workload only uses FPU, no LSX and LASX=
+.
+> >>> Before this series, KVM only save/restore FPU context; after this
+> >>> series, KVM will save/restore LASX context.
+> >> In theory there should be such test, only that it requires special Pow=
+er
+> >> Management team and testbed. Even if there is such team, maybe they ca=
+re
+> >> power consumption about DDR and screen, do not want do such experiment=
+s
+> >> for this patch.
+> >>
+> >> If someone is volunteer to do this, I do not object, also I want to ge=
+t
+> >> the result. Just from my guess, there should be no much difference sin=
+ce
+> >> FPU context switch is much smaller than the whole workload, else the
+> >> workload is just FPU context switch.
+> > Any updates?
+> It deeps on Power Management exports.
+>
+> By cyclictest/fpubench test on 3C6000, the context switch cost is 3us,
+> the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost
+> is about 0.25% of the whole context switch. I do not why power
+> consumption is important factor here.
+I'm talking about this:
+https://lore.kernel.org/loongarch/b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loon=
+gson.cn/T/#m6da21ae2f4abfba362a2cd189cb4d8d09e33a6d7
 
-Then please post patches to focus on the core implementation of the
-crashkernel CMA support. If any AI reported bugs are raised but not
-relatd to it, you can add note in cover-letter or explain somewhere
-to tell whehter it's caused by the core code and how you want
-to deal with it. Otherwise, you could go round and round of new posting
-and still can't see when it ends up.
+Huacai
 
+>
+> Regards
+> Bibo Mao
+> >
+> >
+> > Huacai
+> >>
+> >> Regards
+> >> Bibo Mao
+> >>
+> >>>
+> >>> If the power consumptions are similar, then this series is perfect.
+> >>>
+> >>> Huacai
+> >>>
+> >>>>
+> >>>> Regards
+> >>>> Bibo Mao
+> >>>>> little similar to AVX512 (Linus said it is a power virus).
+> >>>>>
+> >>>>> Huacai
+> >>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> Huacai
+> >>>>>>
+> >>>>>>>
+> >>>>>>>     arch/loongarch/include/asm/kvm_host.h |  6 +--
+> >>>>>>>     arch/loongarch/kvm/exit.c             | 21 +++-----
+> >>>>>>>     arch/loongarch/kvm/vcpu.c             | 78 ++++++++----------=
+---------
+> >>>>>>>     3 files changed, 30 insertions(+), 75 deletions(-)
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+> >>>>>>> --
+> >>>>>>> 2.39.3
+> >>>>>>>
+> >>>>>>>
+> >>>>
+> >>>>
+> >>
+> >>
+>
