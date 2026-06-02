@@ -1,275 +1,108 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB8F1D63F0
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 02:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE628B7EA;
+	Tue,  2 Jun 2026 02:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780366728; cv=none; b=DnyUrt8qKD1Oenw3in8fY5l6pgH2jUlzJpUzHswMy5fWvzW0dCeWb+90rz57zjHnBxcsPfOWuyd1ftmXYI4iIvroad+LC5nEZ5goD+4WoJTKVcwntLq1FY4BtoK/4Uqj/8lla67sfz/jO3Hz5UGciS+rgMWr2BlcfP3qHIwBeus=
+	t=1780368752; cv=none; b=sbRmnlOAyoIhrOiedSQLwnpyWZFbXY7ylHtdm7Q0DK/dI3BbspXcq4tzdNdfdSC6pDgCP4/2j1g5T4c2eHcoLqG+Vi1z1zNbNPLjROpf9b1gA4NmvQ8ZxzyTh64+LFUKseYL9AjllLlOqJgJEnXjOhkfFLg1EwTBgw9mSX0aAQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780366728; c=relaxed/simple;
-	bh=uBNhK6KtGcFR3eNmNbnW1ZOnE+kOk92RNqqbOlS0qKM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=etUUELwxG0bF01TpNP0Mak58YMDEdaxr7nRydghqGiWQ0RZmkkFozAx6wINiELXQ5aJZkDStLCOsasX3KgD5qVOF0FlOH5rLeo8zufCXq7deACU1peUz3KS9foddC1qtq3pRuCH84pwEIpp6FPAHRyg5EM7YDlC5/xwd51mV0rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JdoTWcpY; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780368752; c=relaxed/simple;
+	bh=K4cn/QpSIf5Va1Lyu2kU9ycfdY+1xxc4PyVXelQCFzY=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=uozZhziowYlrMaHfePgFsatCo0nwMpn5mH11W9NOgfj3h8Pw+l/omvFzE5Wz1FZnwiE67l1Z8F43cxlZSR64QaV09KA4bycpfuMPssCWBCWCIsp+LJ+LmhAYYDI+udHWvdtnk4AvJ88cNGTdcbSRWRUmOIJUFPg85SMYm52JhSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U09tW/t3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JdoTWcpY"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780366725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Eh/EXbfSgli/VtNqRSiq1G8g3cnusFdcmncTrvbgow=;
-	b=JdoTWcpYaSqBa7LIhjCVGz+czFjSdScR3JYuHG/poU7LVh06bO0dDFWQHlryLiIxJTkjWf
-	KFZzTG7fVLDNi99O5fUqT/9zgsbaOOc4W+froZTgjgW0ZWSy6XySXgpFWpaVVTEbZu4HvH
-	Wn/Db/majtUstl4/RiNUrcWKl1LeBkY=
-From: Tao Cui <cui.tao@linux.dev>
-To: maobibo@loongson.cn,
-	zhaotianrui@loongson.cn,
-	chenhuacai@kernel.org,
-	loongarch@lists.linux.dev
-Cc: kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	Tao Cui <cuitao@kylinos.cn>
-Subject: [PATCH v3 4/4] KVM: selftests: loongarch: Add PV TLB flush performance test
-Date: Tue,  2 Jun 2026 10:18:19 +0800
-Message-ID: <20260602021819.2373404-5-cui.tao@linux.dev>
-In-Reply-To: <20260602021819.2373404-1-cui.tao@linux.dev>
-References: <20260602021819.2373404-1-cui.tao@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U09tW/t3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504E71F00893;
+	Tue,  2 Jun 2026 02:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780368750;
+	bh=OCNI3phcRGTQey92eTGrjaMPDFvmHE2qoCnRNUbUDwY=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=U09tW/t3rShHFxQ+z6fFkhqVMpGKyUXfVbuXhedOod/hM9P0TQQaDA20pMtS8xdQm
+	 UfUwBR7C0PuEkXPV/trrblggP53g7UrOi5DqGDQ1U8KAIoYdFrBT31e4CprRvTjlBx
+	 37PrLPEr8dHVUU2rXGxwdRXp9QOp/J9eP9P10RYXoYWgPRjNQtDJT5PLl4HzZg1L1E
+	 XHh3S6fLp/sD50k9Po+pPLftuRqe9XGtg+Ydwl+jmfBoVEYgb1Waly9Ku0l3Tffi5E
+	 VHa/d34LVb/G8smOvoUWXiFkgSZ5jiBr6zOTVFfdxln6NjEnOBYe5Soxz/QqenEs0J
+	 t1/VybYfPrOgQ==
+Content-Type: multipart/mixed; boundary="===============7943209665563870969=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <d1d0000c239dc4e9c8f6a875d7df469b6f7bb1a528e1a97a757ff939ec482ec6@mail.kernel.org>
+In-Reply-To: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
+References: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
+Subject: Re: [PATCH] LoongArch: bpf: Support kptr xchg inline
+From: bot+bpf-ci@kernel.org
+To: zhaochenguang@kylinos.cn,chenhuacai@kernel.org,kernel@xen0n.name,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,memxor@gmail.com,yangtiezhu@loongson.cn
+Cc: zhaochenguang@kylinos.cn,hengqi.chen@gmail.com,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,shuah@kernel.org,loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kselftest@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Tue,  2 Jun 2026 02:52:30 +0000 (UTC)
 
-From: Tao Cui <cuitao@kylinos.cn>
+--===============7943209665563870969==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Add a multi-threaded benchmark to measure PV TLB flush performance
-inside LoongArch KVM guests.
+> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
+> index 76b723590023..636cfc524b02 100644
+> --- a/arch/loongarch/include/asm/inst.h
+> +++ b/arch/loongarch/include/asm/inst.h
+> @@ -783,6 +783,8 @@ DEF_EMIT_REG3_FORMAT(amswapb, amswapb_op)
+>  DEF_EMIT_REG3_FORMAT(amswaph, amswaph_op)
+>  DEF_EMIT_REG3_FORMAT(amswapw, amswapw_op)
+>  DEF_EMIT_REG3_FORMAT(amswapd, amswapd_op)
+> +DEF_EMIT_REG3_FORMAT(amswapdbw, amswapdbw_op)
+> +DEF_EMIT_REG3_FORMAT(amswapdbd, amswapdbd_op)
+>
+>  #define DEF_EMIT_REG3SA2_FORMAT(NAME, OP)				\
+>  static inline void emit_##NAME(union loongarch_instruction *insn,	\
 
-The test spawns flusher threads that repeatedly mmap/munmap to trigger
-TLB shootdown IPIs, alongside idle threads that either sleep or
-busy-spin. With PV TLB flush enabled, IPIs to preempted vCPUs are
-replaced by deferred flags in the steal-time shared page.
+[ ... ]
 
-Usage (inside guest):
-  ./pv_tlb_flush_test <flushers> <idle> <iterations> <busy_idle>
-  busy_idle=0: idle threads sleep (PV can skip IPIs to preempted vCPUs)
-  busy_idle=1: idle threads spin (all vCPUs active, PV cannot optimize)
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 24913dc7f4e8..b2bc54b4ca87 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -486,7 +486,7 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
+>  			emit_zext_32(ctx, src, true);
+>  			break;
+>  		case BPF_DW:
+> -			emit_insn(ctx, amswapd, src, t1, t3);
+> +			emit_insn(ctx, amswapdbd, src, t1, t3);
+>  			break;
+>  		}
+>  		break;
 
-Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+The patch defines amswapdbw in asm/inst.h to provide the ordered 32-bit
+exchange instruction, but does the BPF_W case of BPF_XCHG in
+emit_atomic_rmw() also need to be updated?
+
+Currently, the 32-bit exchange uses the weakly ordered amswapw instruction
+at the BPF_W case:
+
+arch/loongarch/net/bpf_jit.c:emit_atomic_rmw() {
+    ...
+    case BPF_W:
+        emit_insn(ctx, amswapw, src, t1, t3);
+        emit_zext_32(ctx, src, true);
+    ...
+}
+
+Should this be updated to use the new amswapdbw instruction to ensure the
+BPF memory ordering guarantees are met for 32-bit exchanges?
+
+Reference: https://lore.kernel.org/bpf/20260602022526.C2C371F00898@smtp.kernel.org/
+
+[ ... ]
+
+
 ---
- .../kvm/loongarch/pv_tlb_flush_test.c         | 194 ++++++++++++++++++
- 1 file changed, 194 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c b/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
-new file mode 100644
-index 000000000000..63efaf9ef1cd
---- /dev/null
-+++ b/tools/testing/selftests/kvm/loongarch/pv_tlb_flush_test.c
-@@ -0,0 +1,194 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * LoongArch PV TLB Flush Performance Test
-+ *
-+ * Measure the overhead of remote TLB flushes in a KVM guest by spawning
-+ * flusher threads that repeatedly mmap/munmap (triggering TLB shootdown
-+ * IPIs) alongside idle threads that either sleep or busy-spin.
-+ *
-+ * With PV TLB flush enabled, IPIs to preempted vCPUs are replaced by
-+ * deferred flags in the steal-time shared page, reducing flush latency.
-+ *
-+ * Usage:
-+ *   Compile on LoongArch guest:
-+ *     gcc -O2 -static -pthread -o pv_tlb_flush_test pv_tlb_flush_test.c
-+ *   Run (inside KVM guest):
-+ *     ./pv_tlb_flush_test <flushers> <idle> <iterations> <busy_idle>
-+ *   Examples:
-+ *     ./pv_tlb_flush_test 1 31 50000 0   # 1 flusher, 31 sleep, PV helps
-+ *     ./pv_tlb_flush_test 1 31 50000 1   # 1 flusher, 31 busy-spin, no PV
-+ *
-+ *   busy_idle=0: idle threads sleep, vCPUs get preempted, PV TLB flush
-+ *                can skip IPIs to them
-+ *   busy_idle=1: idle threads spin, all vCPUs stay active, PV TLB flush
-+ *                cannot optimize (baseline for comparison)
-+ */
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/mman.h>
-+#include <string.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <sched.h>
-+#include <pthread.h>
-+
-+#define MEM_SIZE (2*1024*1024)
-+#define DEFAULT_ITERS 50000
-+#define MAX_THREADS 64
-+
-+static int nr_iters = DEFAULT_ITERS;
-+static volatile int start_barrier;
-+static volatile int stop_flag;
-+static int busy_idle = 0;
-+
-+struct thread_args {
-+	int cpu;
-+	unsigned long *result;
-+	int *completed;
-+};
-+
-+static inline unsigned long clock_ns(void) {
-+    struct timespec ts;
-+    clock_gettime(CLOCK_MONOTONIC, &ts);
-+    return (unsigned long)ts.tv_sec * 1000000000UL + ts.tv_nsec;
-+}
-+
-+static void pin_cpu(int cpu) {
-+    cpu_set_t set;
-+    if (cpu < 0)
-+        return;
-+    CPU_ZERO(&set);
-+    CPU_SET(cpu, &set);
-+    sched_setaffinity(0, sizeof(set), &set);
-+}
-+
-+static void *idle_thread(void *arg) {
-+    struct thread_args *ta = arg;
-+    pin_cpu(ta->cpu);
-+    while (!__atomic_load_n(&start_barrier, __ATOMIC_ACQUIRE));
-+    if (busy_idle) {
-+        volatile long sink = 0;
-+        while (!__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE))
-+            sink++;
-+    } else {
-+        while (!__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE))
-+            usleep(1000);
-+    }
-+    return NULL;
-+}
-+
-+static void *flush_thread(void *arg) {
-+    struct thread_args *ta = arg;
-+    unsigned long start, end;
-+    int i;
-+    size_t mem_size = MEM_SIZE;
-+    pin_cpu(ta->cpu);
-+    while (!__atomic_load_n(&start_barrier, __ATOMIC_ACQUIRE));
-+    start = clock_ns();
-+    for (i = 0; i < nr_iters && !__atomic_load_n(&stop_flag, __ATOMIC_ACQUIRE); i++) {
-+        void *p = mmap(NULL, mem_size, PROT_READ|PROT_WRITE,
-+                       MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-+        if (p == MAP_FAILED) break;
-+        for (size_t off = 0; off < mem_size; off += 65536)
-+            ((volatile char*)p)[off] = 0;
-+        munmap(p, mem_size);
-+    }
-+    end = clock_ns();
-+    *ta->result = end - start;
-+    *ta->completed = i;
-+    return NULL;
-+}
-+
-+int main(int argc, char **argv) {
-+    int nr_flush = 1, nr_idle = 3, i, run;
-+    int ncpus = sysconf(_SC_NPROCESSORS_ONLN);
-+    if (argc > 1) nr_flush = atoi(argv[1]);
-+    if (argc > 2) nr_idle = atoi(argv[2]);
-+    if (argc > 3) nr_iters = atoi(argv[3]);
-+    if (argc > 4) busy_idle = atoi(argv[4]);
-+
-+    if (nr_flush < 1 || nr_idle < 0 || nr_flush + nr_idle > MAX_THREADS) {
-+        fprintf(stderr, "Usage: %s [flushers(1-%d)] [idle(0-%d)] [iters] [busy_idle]\n",
-+                argv[0], MAX_THREADS, MAX_THREADS);
-+        return 1;
-+    }
-+    if (nr_iters <= 0) {
-+        fprintf(stderr, "Error: iterations must be positive\n");
-+        return 1;
-+    }
-+
-+    printf("=== TLB Flush Benchmark ===\n");
-+    printf("CPUs: %d  Flushers: %d  Idle: %d  Iters: %d  Mode: %s\n",
-+           ncpus, nr_flush, nr_idle, nr_iters,
-+           busy_idle ? "busy-spin" : "sleep");
-+
-+    for (run = 0; run < 3; run++) {
-+        int total = nr_flush + nr_idle;
-+        int do_pin = (total <= ncpus);
-+        int created = 0;
-+        pthread_t threads[MAX_THREADS];
-+        unsigned long results[MAX_THREADS];
-+        int completed[MAX_THREADS];
-+        struct thread_args args[MAX_THREADS];
-+        start_barrier = 0; stop_flag = 0;
-+
-+        for (i = 0; i < nr_idle; i++) {
-+            args[i].cpu = do_pin ? nr_flush + i : -1;
-+            args[i].result = NULL;
-+            args[i].completed = NULL;
-+            if (pthread_create(&threads[i], NULL, idle_thread, &args[i])) {
-+                perror("pthread_create idle");
-+                goto cleanup;
-+            }
-+            created++;
-+        }
-+        for (i = 0; i < nr_flush; i++) {
-+            int idx = nr_idle + i;
-+            results[idx] = 0;
-+            completed[idx] = 0;
-+            args[idx].cpu = do_pin ? i : -1;
-+            args[idx].result = &results[idx];
-+            args[idx].completed = &completed[idx];
-+            if (pthread_create(&threads[idx], NULL, flush_thread, &args[idx])) {
-+                perror("pthread_create flush");
-+                goto cleanup;
-+            }
-+            created++;
-+        }
-+
-+        usleep(10000);
-+        __atomic_store_n(&start_barrier, 1, __ATOMIC_RELEASE);
-+        for (i = 0; i < nr_flush; i++)
-+            pthread_join(threads[nr_idle + i], NULL);
-+        __atomic_store_n(&stop_flag, 1, __ATOMIC_RELEASE);
-+        for (i = 0; i < nr_idle; i++)
-+            pthread_join(threads[i], NULL);
-+
-+        unsigned long total_ns = 0;
-+        unsigned long total_done = 0;
-+        for (i = 0; i < nr_flush; i++) {
-+            int idx = nr_idle + i;
-+            unsigned long done = completed[idx];
-+            if (done == 0) {
-+                printf("  Run %d flusher %d: no iterations completed\n", run, i);
-+                continue;
-+            }
-+            printf("  Run %d flusher %d: %lu ns/flush (%lu iters)\n",
-+                   run, i, results[idx] / done, done);
-+            total_ns += results[idx];
-+            total_done += done;
-+        }
-+        if (total_done > 0)
-+            printf("  Run %d Avg: %lu ns/flush\n", run, total_ns / total_done);
-+        continue;
-+
-+cleanup:
-+        __atomic_store_n(&start_barrier, 1, __ATOMIC_RELEASE);
-+        __atomic_store_n(&stop_flag, 1, __ATOMIC_RELEASE);
-+        for (i = 0; i < created; i++)
-+            pthread_join(threads[i], NULL);
-+        return 1;
-+    }
-+    return 0;
-+}
--- 
-2.43.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26794506560
+--===============7943209665563870969==--
