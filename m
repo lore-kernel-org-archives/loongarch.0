@@ -1,184 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169FB253359
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 05:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 896EB3AD501
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 07:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780376482; cv=none; b=uSKu3ivUQxNxVJtOeV93zqG5eJKu7z2ji4K6PzGanNo6fh6muRfJOkTONr5uMvVQKD0lspxzIbe9etL43WSY2bIMwzVNQEfAKbywMuYWpC21Nhy8If8VoXCbomhX8JVHNzeBXCmCPraStTSD2gtSG7fJnjh4lg3Zz47SwdzMURI=
+	t=1780385385; cv=none; b=auXZg7i43Ph64S+tekOcFso2H/YbnuysjaT6+81hTclOrMvaXnua8/J+2NLXXkh1hltdgJVe7AP9Ksk5ceIg6DzcnpgmJWY8F3ltbv6eKBBI1MrszsN9NOnEK1uTku7ZceMHzuuBoPLBLILzgVnrosfaewB0qZXlX62RrNSHkkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780376482; c=relaxed/simple;
-	bh=i/C4xjZJV7MM7p2F3K5MW/w34S6eVG7fOLjtI39UAog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZW1jGfr/9R02U4IOkiup4bNKiOl8LOGpZ/D3sBWwLU+7DKINXk9FZ8galAKNv5B3loSoHa571pB31/4lxvoFm85spHbgfRe8+w2ZADZkhoP+WEMB767ue4HzypkZnrsG7NMCEoR/CG7bLgakMB6FmH8b2szKOMeNUVkO/y7iluQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M71cJW4s; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M71cJW4s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A6E1F0089A
-	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 05:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780376480;
-	bh=M2DPT80aiI3rpTttNGpRNzV1CyPvL3+pwbi7wf8hZLk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=M71cJW4sEljE0uUvBDFjLZVbYxyXYFkF782s1THQ5Ucyn6gNj34g82DZCvB8V/I8V
-	 PQFEPceau/s1Lnqs60/wNcuO/M3vAR5G2ai+a3uuZq2Z8xT9w6hC2gxF6wMAmuo72b
-	 l30+C6jwmptx159pAGHGSLUZILes6Z0b0R3tsO/e6BqtiOJjYDcxiS/eV8khbskL/D
-	 NpXgEJuznmwckBKDUdpwQKcivVxz7Kz2oEq63tJpuPOMrZKJzig6dCmazopDEFtoaH
-	 LUg12QazGkVi3cZzorScUU4F5bgona9jztix/D5h8OeLCR5X/Ae1ufAakl/QuuP/ne
-	 HNAoVmd9A0Gvw==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-bed19623d6eso264125966b.1
-        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 22:01:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+MKpIu0ksX7ZXVdUM5gmfG9BljabNkzzBURrQ8otnv7YyGbb1KXAchtJJFGuD8Uayz11vPdhGKzy4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwGSNVr8LpO4AVRQ7oLyWge21nKOu02vdRDWm0CvsclqtiHNZk4
-	xAPICmt/Sr+Y0JJhugdT+nXvut+FZ4SxmNnNYiyqIsQMx0fivHAWNXo5N+WnwiowuyLk0pFsfQ/
-	b4mvfz4Dfcq11eOJgVnDGugLqlw9prjs=
-X-Received: by 2002:a17:907:501f:b0:bee:215e:5484 with SMTP id
- a640c23a62f3a-bee215eacfcmr209110966b.15.1780376479376; Mon, 01 Jun 2026
- 22:01:19 -0700 (PDT)
+	s=arc-20240116; t=1780385385; c=relaxed/simple;
+	bh=tpE9iyO18dyU5LG49u/BjwWvRz1UhB72bCoYzFUlDjQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uqj7UL4NwAfMHoKe9HRjnDQY4+GCI9b2heD0vCp6o5xd+P4m7mF5ztkx7zRmCH5E1JHGXD760NTd+u+AW5sM0xfwgZZJsckeui8IhQ1yWDET3F66Zl3VGkfBpy9D2CHC5n3ph4sdJiLBF6NO21EpNbwvZMR1N2SE9X44ejBNXl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxNehghh5qsqUPAA--.37694S3;
+	Tue, 02 Jun 2026 15:29:36 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJDx6+BVhh5qOg2ZAA--.29239S3;
+	Tue, 02 Jun 2026 15:29:27 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: bpf: Support kptr xchg inline
+To: Chenguang Zhao <zhaochenguang@kylinos.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <80088e78-293c-268c-3539-4e9ce66c4fd3@loongson.cn>
+Date: Tue, 2 Jun 2026 15:29:25 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260526125256.2511876-1-maobibo@loongson.cn> <20260526125256.2511876-4-maobibo@loongson.cn>
- <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com> <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
-In-Reply-To: <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 2 Jun 2026 13:01:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
-X-Gm-Features: AVHnY4LXl2G9F-N3mKyoPfzwYbgrp4dS5_ZM4uUCvVLK-Vp6RJmru1q9LsbujVA
-Message-ID: <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
- bit mask
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260602021515.214560-1-zhaochenguang@kylinos.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDx6+BVhh5qOg2ZAA--.29239S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KrWUKF4DAw47JF1Utw17XFc_yoW8AF45pr
+	Zavr9xGr4DXFy0kw18Jw4fX3W3Aw45ArWYqryUC34qy3s8Zrn29F93K3409Fs8GFZIva42
+	va1Dt3y3ua1DCFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU866wJUUUU
+	U==
 
-On Tue, Jun 2, 2026 at 9:39=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2026/6/1 =E4=B8=8B=E5=8D=889:50, Huacai Chen wrote:
-> > Hi, Bibo,
-> >
-> > On Tue, May 26, 2026 at 8:53=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> =
-wrote:
-> >>
-> >> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
-> >> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
-> >> external hardware interrupt injection.
-> >>
-> >> Here use existing macro about interrupt bit of register CSR_GINTC and
-> >> CSR_ESTAT, rather than hard coded constant value.
-> >>
-> >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >> ---
-> >>   arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++-------=
---
-> >>   1 file changed, 29 insertions(+), 14 deletions(-)
-> >>
-> >> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/in=
-clude/asm/kvm_vcpu.h
-> >> index 3784ab4ccdb5..efe26b04b35f 100644
-> >> --- a/arch/loongarch/include/asm/kvm_vcpu.h
-> >> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
-> >> @@ -10,22 +10,37 @@
-> >>   #include <asm/loongarch.h>
-> >>
-> >>   /* Controlled by 0x5 guest estat */
-> >> -#define CPU_SIP0                       (_ULCAST_(1))
-> >> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
-> >> -#define CPU_PMU                                (_ULCAST_(1) << 10)
-> >> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
-> >> -#define CPU_IPI                                (_ULCAST_(1) << 12)
-> >> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
-> >> +#define CPU_SIP0                       BIT(INT_SWI0)
-> >> +#define CPU_SIP1                       BIT(INT_SWI1)
-> >> +#define CPU_HWI0                       BIT(INT_HWI0)
-> >> +#define CPU_HWI1                       BIT(INT_HWI1)
-> >> +#define CPU_HWI2                       BIT(INT_HWI2)
-> >> +#define CPU_HWI3                       BIT(INT_HWI3)
-> >> +#define CPU_HWI4                       BIT(INT_HWI4)
-> >> +#define CPU_HWI5                       BIT(INT_HWI5)
-> >> +#define CPU_HWI6                       BIT(INT_HWI6)
-> >> +#define CPU_HWI7                       BIT(INT_HWI7)
-> >> +#define CPU_PMU                                BIT(INT_PCOV)
-> >> +#define CPU_TIMER                      BIT(INT_TI)
-> >> +#define CPU_IPI                                BIT(INT_IPI)
-> >> +#define CPU_AVEC                       BIT(INT_AVEC)
-> >> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU=
- | CPU_TIMER \
-> >> +                                               | CPU_IPI | CPU_AVEC)
-> >> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI=
-2 | CPU_HWI3 \
-> >> +                                               | CPU_HWI4 | CPU_HWI5 =
-| CPU_HWI6 | CPU_HWI7)
-> >>
-> >>   /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 =
-*/
-> >> -#define CPU_IP0                                (_ULCAST_(1))
-> >> -#define CPU_IP1                                (_ULCAST_(1) << 1)
-> >> -#define CPU_IP2                                (_ULCAST_(1) << 2)
-> >> -#define CPU_IP3                                (_ULCAST_(1) << 3)
-> >> -#define CPU_IP4                                (_ULCAST_(1) << 4)
-> >> -#define CPU_IP5                                (_ULCAST_(1) << 5)
-> >> -#define CPU_IP6                                (_ULCAST_(1) << 6)
-> >> -#define CPU_IP7                                (_ULCAST_(1) << 7)
-> >> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_=
-VIP_SHIFT)
-> > Don't use too many wrappers, just use INT_HWI0 instead of
-> > GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
-> > also used for shifts.
->
-> The above macro definition is a little complicated, I do not know how to
-> optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
-> #define CPU_IP0                       BIT(INT_HWI0 - 2)
-CSR_GINTC_VIP_SHIFT is 0 and GINTC_VIP_DELTA is equal to INT_HWI0. I
-mean remove the GINTC_VIP_DELTA definition and use INT_HWI0 instead.
+On 2026/6/2 上午10:15, Chenguang Zhao wrote:
+> The BPF verifier can lower a bpf_kptr_xchg() call into a single BPF_XCHG
+> atomic instruction when the JIT advertises support through
+> bpf_jit_supports_ptr_xchg(). This drops the helper call overhead from the
+> kptr exchange fast path.
+> 
+> Such inlining is only safe when the JITed atomic exchange provides the
+> same full memory ordering as the bpf_kptr_xchg() helper. On LoongArch the
+> plain amswap.d instruction carries no barrier semantics, so emit the
+> ordered amswap_db.d variant for 64-bit BPF_XCHG instead. Add the
+> amswapdbw/amswapdbd instruction emit helpers it relies on, and implement
+> bpf_jit_supports_ptr_xchg() to turn the inlining on.
+> 
+> Extend the kptr_xchg_inline selftest to cover LoongArch64, and add a
+> kptr-xchg benchmark to compare the helper and inline paths.
 
+If I understand correctly, please split into two parts, one for JIT
+and one for selftest.
 
-Huacai
+1. For the JIT part, there are two logical changes, it is better to
+split into two patches:
+(1) fix the current code.
+(2) add new feature.
 
->
-> or something like this:
-> #define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
->
-> Regards
-> Bibo Mao
-> >
-> >
-> > Huacai
-> >
-> >> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_V=
-IP_DELTA)
-> >> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_V=
-IP_DELTA)
-> >> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 |=
- CPU_IP3 \
-> >> +                                               | CPU_IP4 | CPU_IP5 | =
-CPU_IP6 | CPU_IP7)
-> >>
-> >>   #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
-> >>
-> >> --
-> >> 2.39.3
-> >>
-> >>
->
->
+Regardless of whether bpf_jit_supports_ptr_xchg returns true or false,
+amswap_db.b/h/w/d must be used. The LKMM (Linux Kernel Memory Model)
+mandates that all value-returning atomic RMW instructions imply a full
+barrier. Consequently, decoupling the JIT instruction selection from
+the pointer-support state ensures that regular scalar atomic updates
+remain sequentially consistent across multi-core systems.
+
+2. For the selftest part, there are two logical changes, it is better
+to split into two patches:
+(1) enable the functional test "./test_progs -t kptr_xchg_inline".
+(2) add benchmark for kptr-xchg performance.
+
+Thanks,
+Tiezhu
+
