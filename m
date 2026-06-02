@@ -1,193 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B123AD52E
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 13:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC6A32E6B8
+	for <loongarch@lists.linux.dev>; Tue,  2 Jun 2026 01:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780322009; cv=none; b=TLZEBJmqNkIHXprSSdzbBqCMRvNUHjN5fj5eg7JRMHLdkMM3+xMcW9BJkjITVG6QdbrKpm332zBTCQ8I5ZHFL5h0X+CsZv94aHD+kLSY+mPOZ/jb2tzg+MRjgs1btP6Bbs0UaWRlyBigCk4X8ddDzocoW8HULy7QbW0zZJQYPgQ=
+	t=1780363424; cv=none; b=FtuT9m+QhqybDP1Z12/mZ6wewuJX4BNc4Ya0qZXlQq25/0oBUPYwh++bxh/gvEdgwDhcD+Go4pleYpasFcEbw+wGdsvV+T/ZUx+PxMaOGAerUr64o9wUz9leh9+x92146JgI/FF+adKBd/p3E3dRum/P3E8L2iCmrmhbVN7fMPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780322009; c=relaxed/simple;
-	bh=qP8lKzZrsylXy05K6FjCDs2G6l+OQ1PcKYCx6rKU3Yc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J4qQRaTI8/MAuib2KJeYKMHSnMBeg61I2RGOTrK9//fYKHe1VLHl4kSfzrif9BHUSj7r+nyGmLVREbJpXgbgqbO2Mq6t3DG0qoUgQU218POIiqolBAU6XwUcUxLPhQrLOQmncvj7VmeYfa5hD61QDJPvSOv1RePxbJ2BiquDPdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OH3QE8AL; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OH3QE8AL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290851F0089A
-	for <loongarch@lists.linux.dev>; Mon,  1 Jun 2026 13:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780322008;
-	bh=Xyq8NTa698xN/xj2FFcrxgT6n2ZyDlpM2h15b5ZLE4s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=OH3QE8ALoU6zCH4VNyNzyZwWl58aYBHkn8t5BjpHvETQtWSDGYNt81eNCf0mADHRQ
-	 Z+JrgXpaChtnq2LEVOKgrMwozJvlhz+HvhiWZCPDSeozQjcxCHPBpQouetad9UDVL8
-	 DMq40hYRrZdpc4V9Fp2i8A1pmzOqqrNIEY4bxSQ7jUKbL6pOFq0zeDVDI+d+ZzZpX/
-	 JElaoGkBxpc59SOUeh+lUYNTXhRrXR4Hzg4iOQeyVQnxkEW8kmQw7YayaM71yWerbt
-	 6CoPf4We0KEEg4xdervH8R5UO3c9K6BLHNAuKcRFKwQb6mlNDU0Abi2BydtFrTAGyj
-	 wGN/j6Vqs+Vyw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6896c54a7easo9566468a12.3
-        for <loongarch@lists.linux.dev>; Mon, 01 Jun 2026 06:53:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/7PbnqdtUllWEt3v/UOBAPrauycseSqPbUmTnrkVI5aiXNPk4BJxJxIAXPSuosMRNR8GRoqLB6nYc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwjsVvS+3uLPlbog3O+GNN7RTB9rnJs9Zhd7GV4hc/FpzxlC3th
-	l3J1vxWTvK9Z1IbUdlDZbq0RUsv//A67+q08cBLNv0liDY88S2DhpVhYMzuOGOUuyCwWzF1RBeh
-	hxheHGtyxPD3XdhKrKVoMx1RThmAfxcc=
-X-Received: by 2002:a17:907:b05:b0:bee:aed6:9d50 with SMTP id
- a640c23a62f3a-beeaed6a140mr33022366b.48.1780322006736; Mon, 01 Jun 2026
- 06:53:26 -0700 (PDT)
+	s=arc-20240116; t=1780363424; c=relaxed/simple;
+	bh=D7Xxzh1Sg/hA0giaRO4uE7qhCVv5P3kNgQzjWZEk3c4=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=cfifk5lnudN3jty/nn7oB5PJ9Lut2kilXQMef1l2arG3B3ksgYbnIUznqw2PRV+hm2jzt82qIUwNl4zQe9p222YUk2YbrwBBxkg3C/hr88gVS5fs5bC9uEQMelG8ovvYfpw1k6C+V2nPfPdtzMcW1Wo47GY6At44EyqJC9YPhUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Axp3iZMB5qH5APAA--.18821S3;
+	Tue, 02 Jun 2026 09:23:38 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxvsKXMB5qgcGYAA--.27031S3;
+	Tue, 02 Jun 2026 09:23:37 +0800 (CST)
+Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
+ FPU exception
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260330035832.2204720-1-maobibo@loongson.cn>
+ <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
+ <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
+ <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn>
+ <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
+ <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
+ <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <b1b07f90-3db3-c3ff-2297-f8eaaa3f6faa@loongson.cn>
+Date: Tue, 2 Jun 2026 09:20:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260330035832.2204720-1-maobibo@loongson.cn> <CAAhV-H4Ws3Y89XfSXdGpm3BL5Pr5kTzC0NPdkDm17uy3ZEZJmA@mail.gmail.com>
- <CAAhV-H7UP5TZh5zaqtkAboUt226-vGUBddksYXxafdKOioVngQ@mail.gmail.com>
- <61d0efa7-a15a-be48-3bca-5be5efd99acf@loongson.cn> <CAAhV-H4+A0bs07v4B8BTCqbNsG5SLSjjx8sh5Lz23i+R37RAKw@mail.gmail.com>
- <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
-In-Reply-To: <74e8fa9e-90f6-175e-fb98-2e4504d5f15d@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 1 Jun 2026 21:52:54 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
-X-Gm-Features: AVHnY4KoQON_TBQI0hp_0s1fZ6GYByMH8-GyvNX2pquyO_ikcj-9QX50vC5iiT0
-Message-ID: <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] LoongArch: KVM: Set max VM supported FPU type with
- FPU exception
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 9, 2026 at 8:14=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2026/4/8 =E4=B8=8B=E5=8D=883:47, Huacai Chen wrote:
-> > On Wed, Apr 8, 2026 at 9:04=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2026/4/7 =E4=B8=8B=E5=8D=888:41, Huacai Chen wrote:
-> >>> On Mon, Mar 30, 2026 at 6:00=E2=80=AFPM Huacai Chen <chenhuacai@kerne=
-l.org> wrote:
-> >>>>
-> >>>> Hi, Bibo,
-> >>>>
-> >>>>
-> >>>> On Mon, Mar 30, 2026 at 11:58=E2=80=AFAM Bibo Mao <maobibo@loongson.=
-cn> wrote:
-> >>>>>
-> >>>>> With FPU save and restore flow, the cost is the same with different
-> >>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line imp=
-action.
-> >>>>>
-> >>>>> Here is to enable FPU with max VM supported type, for example if
-> >>>>> VM supports LASX instrction, enable FPU with LASX type even with FP=
-U
-> >>>>> exeception. So it can avoid possible LSX/LASX exception in future.
-> >>>>>
-> >>>>> With context switch microbench which may touch FPU and LASX, there =
-is 9%
-> >>>>> improvement when halt_poll_ns is disabled. The command is
-> >>>>> "./context --test=3Dpipe" and source code located at:
-> >>>>>     https://github.com/bibo-mao/context_switch/blob/main/context.c
-> >>>>>
-> >>>>> Original     Wih patch      improvement
-> >>>>> 75232        82440          9%
-> >>>>>
-> >>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>>>> ---
-> >>>>> v1 ... v2:
-> >>>>>     1. Enable FPU with max VM supported FPU type, rather than max u=
-sed type.
-> >>>>>     2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
-> >>>>>     3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
-> >>>>>     3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
-> >>>>>     4. Remove middle FPU state handling in kvm_own_lsx() and kvm_ow=
-n_lasx(),
-> >>>>>        directly enable LSX or LASX from FPU none state.
-> >>>>> ---
-> >>>>> Bibo Mao (6):
-> >>>>>     LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
-> >>>>>     LoongArch: KVM: Enable FPU with max VM supported FPU type
-> >>>>>     LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
-> >>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
-> >>>> so I think Patch-3 should be squashed into Patch-1.
-> >>>>
-> >>>>>     LoongArch: KVM: Remove some middle FPU states
-> >>>>>     LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
-> >>>>>     LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
-> >>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX a=
-nd
-> >>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, =
-so
-> >>>> I think Patch-6 should be squashed into Patch-5, too.
-> >>> And could you please test the power consumption where there are many
-> >>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
-> >> Hi Huacai,
-> >>
-> >> Thanks for reviewing this patch
-> >> Could you help me to test the power consumption with this patch?
-> >>> power consumption of LASX is significantly more than FPU, which is a
-> >> Could the describe the detail scenery wheree LASX instruction is
-> >> frequently used by application or LASX  EUEN enabled?
-> > The purpose is to evaluate power consumption before and after this seri=
-es.
-> >
-> > So we can run 10 VMs (suppose there are 4 cores), and there is a
-> > workload run in every VM, the workload only uses FPU, no LSX and LASX.
-> > Before this series, KVM only save/restore FPU context; after this
-> > series, KVM will save/restore LASX context.
-> In theory there should be such test, only that it requires special Power
-> Management team and testbed. Even if there is such team, maybe they care
-> power consumption about DDR and screen, do not want do such experiments
-> for this patch.
->
-> If someone is volunteer to do this, I do not object, also I want to get
-> the result. Just from my guess, there should be no much difference since
-> FPU context switch is much smaller than the whole workload, else the
-> workload is just FPU context switch.
-Any updates?
+In-Reply-To: <CAAhV-H7WnvO80sQoQLpgnomobkB7Zu5F4rgXxsj5ErymukQ+9A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJCxvsKXMB5qgcGYAA--.27031S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxur4Dtw1rJr1UXryfurWUKFX_yoW7Gr18pr
+	ZrJF1jkF4DJr1xArnrtw1UWF1Yqr1UJr10q3s8XryUJr90vryrJr1xtr4Y9FyUG34rJr1j
+	vrWUtr9rXFy5ArgCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+	AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
 
 
-Huacai
->
-> Regards
-> Bibo Mao
->
-> >
-> > If the power consumptions are similar, then this series is perfect.
-> >
-> > Huacai
-> >
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>> little similar to AVX512 (Linus said it is a power virus).
-> >>>
-> >>> Huacai
-> >>>
-> >>>>
-> >>>>
-> >>>> Huacai
-> >>>>
-> >>>>>
-> >>>>>    arch/loongarch/include/asm/kvm_host.h |  6 +--
-> >>>>>    arch/loongarch/kvm/exit.c             | 21 +++-----
-> >>>>>    arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------=
-------
-> >>>>>    3 files changed, 30 insertions(+), 75 deletions(-)
-> >>>>>
-> >>>>>
-> >>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
-> >>>>> --
-> >>>>> 2.39.3
-> >>>>>
-> >>>>>
-> >>
-> >>
->
->
+
+On 2026/6/1 下午9:52, Huacai Chen wrote:
+> On Thu, Apr 9, 2026 at 8:14 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>>
+>>
+>> On 2026/4/8 下午3:47, Huacai Chen wrote:
+>>> On Wed, Apr 8, 2026 at 9:04 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2026/4/7 下午8:41, Huacai Chen wrote:
+>>>>> On Mon, Mar 30, 2026 at 6:00 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+>>>>>>
+>>>>>> Hi, Bibo,
+>>>>>>
+>>>>>>
+>>>>>> On Mon, Mar 30, 2026 at 11:58 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>>
+>>>>>>> With FPU save and restore flow, the cost is the same with different
+>>>>>>> FPU width 8/16/32 bytes, whatever from CPU cycle and cache line impaction.
+>>>>>>>
+>>>>>>> Here is to enable FPU with max VM supported type, for example if
+>>>>>>> VM supports LASX instrction, enable FPU with LASX type even with FPU
+>>>>>>> exeception. So it can avoid possible LSX/LASX exception in future.
+>>>>>>>
+>>>>>>> With context switch microbench which may touch FPU and LASX, there is 9%
+>>>>>>> improvement when halt_poll_ns is disabled. The command is
+>>>>>>> "./context --test=pipe" and source code located at:
+>>>>>>>      https://github.com/bibo-mao/context_switch/blob/main/context.c
+>>>>>>>
+>>>>>>> Original     Wih patch      improvement
+>>>>>>> 75232        82440          9%
+>>>>>>>
+>>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>>> ---
+>>>>>>> v1 ... v2:
+>>>>>>>      1. Enable FPU with max VM supported FPU type, rather than max used type.
+>>>>>>>      2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
+>>>>>>>      3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+>>>>>>>      3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
+>>>>>>>      4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
+>>>>>>>         directly enable LSX or LASX from FPU none state.
+>>>>>>> ---
+>>>>>>> Bibo Mao (6):
+>>>>>>>      LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
+>>>>>>>      LoongArch: KVM: Enable FPU with max VM supported FPU type
+>>>>>>>      LoongArch: KVM: Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
+>>>>>> Patch-1 add KVM_REQ_LBT_LOAD, then KVM_REQ_AUX_LOAD is only for FPU,
+>>>>>> so I think Patch-3 should be squashed into Patch-1.
+>>>>>>
+>>>>>>>      LoongArch: KVM: Remove some middle FPU states
+>>>>>>>      LoongArch: KVM: Use vm_guest_has_fpu API in kvm_lose_fpu()
+>>>>>>>      LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
+>>>>>> Patch-5 remove the consumer side of KVM_LARCH_LASX / KVM_LARCH_LSX and
+>>>>>> Patch-6 remove the provider side of KVM_LARCH_LASX / KVM_LARCH_LSX, so
+>>>>>> I think Patch-6 should be squashed into Patch-5, too.
+>>>>> And could you please test the power consumption where there are many
+>>>>> VMs that only use FPU rather than LSX/LASX? As far as I know, the
+>>>> Hi Huacai,
+>>>>
+>>>> Thanks for reviewing this patch
+>>>> Could you help me to test the power consumption with this patch?
+>>>>> power consumption of LASX is significantly more than FPU, which is a
+>>>> Could the describe the detail scenery wheree LASX instruction is
+>>>> frequently used by application or LASX  EUEN enabled?
+>>> The purpose is to evaluate power consumption before and after this series.
+>>>
+>>> So we can run 10 VMs (suppose there are 4 cores), and there is a
+>>> workload run in every VM, the workload only uses FPU, no LSX and LASX.
+>>> Before this series, KVM only save/restore FPU context; after this
+>>> series, KVM will save/restore LASX context.
+>> In theory there should be such test, only that it requires special Power
+>> Management team and testbed. Even if there is such team, maybe they care
+>> power consumption about DDR and screen, do not want do such experiments
+>> for this patch.
+>>
+>> If someone is volunteer to do this, I do not object, also I want to get
+>> the result. Just from my guess, there should be no much difference since
+>> FPU context switch is much smaller than the whole workload, else the
+>> workload is just FPU context switch.
+> Any updates?
+It deeps on Power Management exports.
+
+By cyclictest/fpubench test on 3C6000, the context switch cost is 3us, 
+the fpu save cost is 7.6ns and 7.8ns with fpu restore. FPU switch cost 
+is about 0.25% of the whole context switch. I do not why power 
+consumption is important factor here.
+
+Regards
+Bibo Mao
+> 
+> 
+> Huacai
+>>
+>> Regards
+>> Bibo Mao
+>>
+>>>
+>>> If the power consumptions are similar, then this series is perfect.
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>> little similar to AVX512 (Linus said it is a power virus).
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Huacai
+>>>>>>
+>>>>>>>
+>>>>>>>     arch/loongarch/include/asm/kvm_host.h |  6 +--
+>>>>>>>     arch/loongarch/kvm/exit.c             | 21 +++-----
+>>>>>>>     arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
+>>>>>>>     3 files changed, 30 insertions(+), 75 deletions(-)
+>>>>>>>
+>>>>>>>
+>>>>>>> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+>>>>>>> --
+>>>>>>> 2.39.3
+>>>>>>>
+>>>>>>>
+>>>>
+>>>>
+>>
+>>
+
