@@ -1,60 +1,43 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629FE3EDAA7
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 09:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABF42E54D3
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 09:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780563730; cv=none; b=uqax24xM2zT0WqJjKbJQhGiX6DECAHvBFknmh7sQeWxr1VIJKhZIvQvs/WnkaHwyPqWE0ly1B7nLDDKk2fvA2d6d+1gC+S+C9bq0Gui+ECKpU1s2XYseAmRNIuAOzV8a8vGYjwLiCjyl7J0H6BNM5vHwMq3NFpRuSPZ8eyUsuEM=
+	t=1780564918; cv=none; b=MyLfgudQ8MsALZMQmiszPxXf/OaCQkp2GrAluNUQlR18J0lCye/eUiPfSwi6IONYn6arnSxKzTYbtt4luP4NmFqG1ENuV0R/AdTJBjXjnwCScUnpJgr3G1x+3ukm8imRGfPFaA4NXYb7fgDql8/PcMKkIz5aq1e6fvVAz/TyyyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780563730; c=relaxed/simple;
-	bh=KEhZ7gkyBq3RI6nhIAd6JrBnBoxlOuHlFcgxULW8Y/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tM/N5+qrgAxGBVaCwnCy7YuGmNSTs38XF1JioKnlGxYGeNUU/c0+wxqLGMNSnm8XOvjuAUpSc+AR9Yjz6ZJ1yU2EUsyjWqtvwaZjDmC4Mn4NUz9cqHeV5o8EksbL3F9eN/GOICWpd61Kyd0LwXrtaLEJF62p2I2v+nKtYFKczTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0a61a7c85ff411f1aa26b74ffac11d73-20260604
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED
-	SA_LOWREP, SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:19dcea7f-e87f-4602-b1fa-7f86889604d8,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:35
-X-CID-INFO: VERSION:1.3.12,REQID:19dcea7f-e87f-4602-b1fa-7f86889604d8,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:35
-X-CID-META: VersionHash:e7bac3a,CLOUDID:9935500979ff3715132f2c501ade53ba,BulkI
-	D:260604170200MDBRFLOQ,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
-	850|865|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:
-	nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,B
-	RE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 0a61a7c85ff411f1aa26b74ffac11d73-20260604
-X-User: wangxuewen@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <wangxuewen@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1397872507; Thu, 04 Jun 2026 17:01:57 +0800
-From: Xuewen Wang <wangxuewen@kylinos.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name
-Cc: loongarch@lists.linux.dev,
+	s=arc-20240116; t=1780564918; c=relaxed/simple;
+	bh=rcSokezPtOhcmxFsI5Wjm+Dyp0dcdRxlmM64NQ3fje0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C/uxwhtHdEW4ozWS741Ia1x/Db576VMpjpzA4KpQ/gPGEMvK5FpBaKX+ADJFGo0etBnodval9Nv41kN+caPqwGARJ2WLJP1hHCOhZ2pp6GqNEdHy/ZI7FO75vkNaISSr8pEsA1d4O4lMxiqLugnwCN2APOBs6f3qeZ0PY44l114=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fY9klKKl; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fY9klKKl"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780564913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MpDsKqtekJF/ott3Wm9QFal8yf1kb3vz/4aJWlmRjiw=;
+	b=fY9klKKlP4cXfhABmPRlqYQP+b6Iu9wu75MwA7pQElSgeZMor7qdyydSudzS3Kjz5MZkDy
+	iPnHz85+14rrN+cZvmJi2kNolTohKYjYGyKWSM+sCV6IOktlJOTj6H+bZOVbNIGyJgE+JC
+	0+7Mi11pATjgp3/WiglhFnDG+hcyIQw=
+From: George Guo <dongtai.guo@linux.dev>
+To: pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	pratyush@kernel.org
+Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Xuewen Wang <wangxuewen@kylinos.cn>
-Subject: [PATCH v1] LoongArch/mm: Fix nr passing in set_direct_map_valid_noflush()
-Date: Thu,  4 Jun 2026 17:01:51 +0800
-Message-Id: <20260604090151.3254805-1-wangxuewen@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev,
+	George Guo <guodongtai@kylinos.cn>,
+	Kexin Liu <liukexin@kylinos.cn>
+Subject: [PATCH v2] liveupdate: luo_session: include linux/mm.h for virt/phys translation
+Date: Thu,  4 Jun 2026 17:19:13 +0800
+Message-Id: <20260604091913.306603-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -62,29 +45,49 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-set_direct_map_valid_noflush() incorrectly passed 1 to __set_memory()
-instead of nr. This caused only the first page to be updated when nr > 1.
+From: George Guo <guodongtai@kylinos.cn>
 
-Other architectures all pass nr correctly.
+luo_session.c calls virt_to_phys() and phys_to_virt(). On LoongArch with
+CONFIG_KFENCE=y, these macros (in arch/loongarch/include/asm/io.h) expand
+to offset_in_page() and page_address(), both declared in <linux/mm.h>.
 
-Fixes: 0c6378a71574 ("arch: introduce set_direct_map_valid_noflush()")
-Signed-off-by: Xuewen Wang <wangxuewen@kylinos.cn>
+Since luo_session.c only includes <linux/io.h>, the translation unit fails
+to build with CONFIG_KFENCE=y:
+
+  asm/io.h: error: implicit declaration of function 'offset_in_page'
+  asm/io.h: error: implicit declaration of function 'page_address'
+
+Add the missing include to fix these build errors.
+
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/mm/pageattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2: Move the include from arch/loongarch/include/asm/io.h to the consumer
+    luo_session.c, instead of pulling the heavy <linux/mm.h> into the
+    low-level asm/io.h header (per review feedback). The 0-day report
+    confirmed the v1 approach introduces a circular include
+    (slab.h -> kasan.h -> asm/kasan.h -> asm/io.h -> mm.h, where mm.h
+    needs kfree() before slab.h declares it).
+Link: https://lore.kernel.org/r/20260521063310.52926-1-dongtai.guo@linux.dev/ # v1
 
-diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
-index f5e910b68229..614ccc7afccb 100644
---- a/arch/loongarch/mm/pageattr.c
-+++ b/arch/loongarch/mm/pageattr.c
-@@ -234,5 +234,5 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
- 		clear = __pgprot(_PAGE_PRESENT | _PAGE_VALID);
- 	}
- 
--	return __set_memory(addr, 1, set, clear);
-+	return __set_memory(addr, nr, set, clear);
- }
+ kernel/liveupdate/luo_session.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 7a42385dabe2..4ce7128a4ae9 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -62,6 +62,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/list.h>
+ #include <linux/liveupdate.h>
++#include <linux/mm.h>
+ #include <linux/mutex.h>
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
 -- 
 2.25.1
 
