@@ -1,35 +1,60 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6B23F4DD2
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 08:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629FE3EDAA7
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 09:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780563483; cv=none; b=bigP5SeYkhva+TtOWSrLmgzBDu7gFTlRx5VtGHVHEI8tUWc8X0YWxzN0bM7YfFJvfsr/PtozXt7YDdjiNyilF3sjWj5QHPin4LWfNpNBLAvXKoFlsaWErI+PA+oTO9HzCiCwkbFSp6Um8Z8k57cx1yxkG9HxIPOb55Tjj+KJOu0=
+	t=1780563730; cv=none; b=uqax24xM2zT0WqJjKbJQhGiX6DECAHvBFknmh7sQeWxr1VIJKhZIvQvs/WnkaHwyPqWE0ly1B7nLDDKk2fvA2d6d+1gC+S+C9bq0Gui+ECKpU1s2XYseAmRNIuAOzV8a8vGYjwLiCjyl7J0H6BNM5vHwMq3NFpRuSPZ8eyUsuEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780563483; c=relaxed/simple;
-	bh=4VNbeuAEBxmJSqCtxGL09pPzAi93oBcZmmlW/auoegw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fob+9E4sBZzmaJfdmrPRXaN+skqrOi03ilJ2a4QyiTaCTuvkewz0cDu7VWDvFGPIn+5MRkIGSBuoVAxMlyWOVb+UStA+6EYb28/2HCj/kUMTVN4KmVDgEhqWedUSPkjBXX8U5xqujwVck3wFcywlANpuzmJ5qsY3BPzCqzFRWwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxJekUPiFq8XkQAA--.39490S3;
-	Thu, 04 Jun 2026 16:57:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAx28ERPiFqlIObAA--.31690S3;
-	Thu, 04 Jun 2026 16:57:55 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
+	s=arc-20240116; t=1780563730; c=relaxed/simple;
+	bh=KEhZ7gkyBq3RI6nhIAd6JrBnBoxlOuHlFcgxULW8Y/8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tM/N5+qrgAxGBVaCwnCy7YuGmNSTs38XF1JioKnlGxYGeNUU/c0+wxqLGMNSnm8XOvjuAUpSc+AR9Yjz6ZJ1yU2EUsyjWqtvwaZjDmC4Mn4NUz9cqHeV5o8EksbL3F9eN/GOICWpd61Kyd0LwXrtaLEJF62p2I2v+nKtYFKczTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0a61a7c85ff411f1aa26b74ffac11d73-20260604
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED
+	SA_LOWREP, SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:19dcea7f-e87f-4602-b1fa-7f86889604d8,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:35
+X-CID-INFO: VERSION:1.3.12,REQID:19dcea7f-e87f-4602-b1fa-7f86889604d8,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:35
+X-CID-META: VersionHash:e7bac3a,CLOUDID:9935500979ff3715132f2c501ade53ba,BulkI
+	D:260604170200MDBRFLOQ,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|865|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:
+	nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,B
+	RE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 0a61a7c85ff411f1aa26b74ffac11d73-20260604
+X-User: wangxuewen@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <wangxuewen@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1397872507; Thu, 04 Jun 2026 17:01:57 +0800
+From: Xuewen Wang <wangxuewen@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 1/2] KVM: LoongArch: selftests: Enable LASX feature by auto detect method
-Date: Thu,  4 Jun 2026 16:57:51 +0800
-Message-Id: <20260604085752.2820331-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260604085752.2820331-1-maobibo@loongson.cn>
-References: <20260604085752.2820331-1-maobibo@loongson.cn>
+	Xuewen Wang <wangxuewen@kylinos.cn>
+Subject: [PATCH v1] LoongArch/mm: Fix nr passing in set_direct_map_valid_noflush()
+Date: Thu,  4 Jun 2026 17:01:51 +0800
+Message-Id: <20260604090151.3254805-1-wangxuewen@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -37,72 +62,29 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx28ERPiFqlIObAA--.31690S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add LSX and LASX features when VM is created. These features are detected
-firstly, enable it if it is available on host machine.
+set_direct_map_valid_noflush() incorrectly passed 1 to __set_memory()
+instead of nr. This caused only the first page to be updated when nr > 1.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Other architectures all pass nr correctly.
+
+Fixes: 0c6378a71574 ("arch: introduce set_direct_map_valid_noflush()")
+Signed-off-by: Xuewen Wang <wangxuewen@kylinos.cn>
 ---
- .../selftests/kvm/include/loongarch/processor.h      | 10 ++++++++++
- .../testing/selftests/kvm/lib/loongarch/processor.c  | 12 +++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ arch/loongarch/mm/pageattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kvm/include/loongarch/processor.h b/tools/testing/selftests/kvm/include/loongarch/processor.h
-index 93dc1fbd2e79..2324e311180f 100644
---- a/tools/testing/selftests/kvm/include/loongarch/processor.h
-+++ b/tools/testing/selftests/kvm/include/loongarch/processor.h
-@@ -131,6 +131,16 @@
- #define  CSR_TLBREHI_PS_SHIFT		0
- #define  CSR_TLBREHI_PS			(0x3fUL << CSR_TLBREHI_PS_SHIFT)
- 
-+#define LOONGARCH_CPUCFG2		0x2
-+#define  CPUCFG2_FP			BIT(0)
-+#define  CPUCFG2_FPSP			BIT(1)
-+#define  CPUCFG2_FPDP			BIT(2)
-+#define  CPUCFG2_FPVERS			GENMASK(5, 3)
-+#define  CPUCFG2_LSX			BIT(6)
-+#define  CPUCFG2_LASX			BIT(7)
-+#define  CPUCFG2_LLFTP			BIT(14)
-+#define  CPUCFG2_LLFTPREV		GENMASK(17, 15)
-+
- #define read_cpucfg(reg)			\
- ({						\
- 	register unsigned long __v;		\
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
-index 64d91fb76522..e7fb54d746f4 100644
---- a/tools/testing/selftests/kvm/lib/loongarch/processor.c
-+++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
-@@ -278,7 +278,7 @@ static void loongarch_set_csr(struct kvm_vcpu *vcpu, u64 id, u64 val)
- 
- void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
- {
--	int width;
-+	int width, ret;
- 	unsigned int cfg;
- 	unsigned long val;
- 	struct kvm_vm *vm = vcpu->vm;
-@@ -292,6 +292,16 @@ void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
- 		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+diff --git a/arch/loongarch/mm/pageattr.c b/arch/loongarch/mm/pageattr.c
+index f5e910b68229..614ccc7afccb 100644
+--- a/arch/loongarch/mm/pageattr.c
++++ b/arch/loongarch/mm/pageattr.c
+@@ -234,5 +234,5 @@ int set_direct_map_valid_noflush(struct page *page, unsigned nr, bool valid)
+ 		clear = __pgprot(_PAGE_PRESENT | _PAGE_VALID);
  	}
  
-+	/* Enable LSX/LASX feature by detecting host capability */
-+	cfg = CPUCFG2_FP | CPUCFG2_FPSP | CPUCFG2_FPDP | CPUCFG2_LLFTP;
-+	ret = __kvm_has_device_attr(vm->fd, KVM_LOONGARCH_VM_FEAT_CTRL, KVM_LOONGARCH_VM_FEAT_LSX);
-+	if (!ret)
-+		cfg |= CPUCFG2_LSX;
-+
-+	ret = __kvm_has_device_attr(vm->fd, KVM_LOONGARCH_VM_FEAT_CTRL, KVM_LOONGARCH_VM_FEAT_LASX);
-+	if (!ret)
-+		cfg |= CPUCFG2_LASX;
-+	loongarch_set_cpucfg(vcpu, LOONGARCH_CPUCFG2, cfg);
- 	cfg = read_cpucfg(LOONGARCH_CPUCFG6);
- 	loongarch_set_cpucfg(vcpu, LOONGARCH_CPUCFG6, cfg);
- 
+-	return __set_memory(addr, 1, set, clear);
++	return __set_memory(addr, nr, set, clear);
+ }
 -- 
-2.39.3
+2.25.1
 
