@@ -1,59 +1,35 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6753DCDAC
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 938FC3F39C7
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 08:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780556227; cv=none; b=l/XuYXauHCiuAxJsKrjBRA/dXPAIGCEmJ2SkUkuEwGzIwQ4tLg+/JvvwKJHlnIJqELZ1srXSQVUS/oKr/TjaUFUBvMAYxtE4aSdAg0AQ+Xsck6fuX0vss7AsWhaAknP7zl46mP/2+28s/JMbxscNsQqkFd0z/obUW0egShwXQWI=
+	t=1780563482; cv=none; b=TDYQbwldNAmArhHXFtGBAaOuU1TxyB0vOcm5olFIAvPAipSABCmwL74dTnMrWnKxyveh87bivKKxkkJQHTh/2mnvc3gIY1NKu0VH9XpHTuc2f+8Uw1PXeaiow+vIzRwALDoN0JV1/o2WwNFALS0q83veUn5Iy8I6pUQFLVsijJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780556227; c=relaxed/simple;
-	bh=dydZVhth1y6JE7+fyLmn2w7NHqI4W6Xits7j2exGHig=;
+	s=arc-20240116; t=1780563482; c=relaxed/simple;
+	bh=aFjfiS6Ccq8MRExNzQOvB6UC/aSBLiumOfINILAX5Ik=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WJkMJ4n56etPWPdTkuudgDXe+cY7tOonoV/b4uZ4cFLd92Nwrs6CfSYc4g76OLzvpll6Y5N+p91/DfOm1/3UndXkZkPyyknijOXAgvFW0Aw9xY+GZ0PbM6MrUvpZIfDHXGUSpHyScRXXrz0aiH/ju8HlbARRc/yzqeLuxpQ3psI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FcbXErjt; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FcbXErjt"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780556224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2K4imcceEzYpUOx6xUchhbO3GzKewULjWdUSxLezYq8=;
-	b=FcbXErjtlTY6PwY7b3DmaGm946iCHHqA4xODP3txeKerfajc18mAzBEd9Nd86++L5m+r/y
-	RvxO+5n1yjYTpd/M4hPs7P5GSklG+evgZW74n4dl7PktQBKl5+Wti4zqEVchk6dDjMWjFQ
-	HSzjQISY/riGUyA58zySejFTRHTMHQA=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org,
-	jpoimboe@kernel.org,
-	peterz@infradead.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com
-Cc: kernel@xen0n.name,
-	joe.lawrence@redhat.com,
-	rostedt@goodmis.org,
-	ardb@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	yangtiezhu@loongson.cn,
-	jiaxun.yang@flygoat.com,
-	xry111@xry111.site,
-	liukexin@kylinos.cn,
+	 MIME-Version; b=JJ0IirAAzOSUQFXWw1g64ABBMxVrZj/SstPihDSYTX9BObOnu+CiMo8s7Ey8mdpCbzOTCqOlP/KYFuSwF+sBBWcQR6NToYYYT/Mac2KpBhp0PGTRMmtTGTVy4ZQ8O8C50WR+TfDCm4UfzM9NQ4H6t4URn//C3cL0v1ltxds5Lvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8DxhukUPiFq8nkQAA--.45702S3;
+	Thu, 04 Jun 2026 16:57:56 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAx28ERPiFqlIObAA--.31690S4;
+	Thu, 04 Jun 2026 16:57:56 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	live-patching@vger.kernel.org,
-	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH 8/8] klp-build: Add LoongArch syscall patching macro
-Date: Thu,  4 Jun 2026 14:53:17 +0800
-Message-Id: <20260604065317.219777-9-dongtai.guo@linux.dev>
-In-Reply-To: <20260604065317.219777-1-dongtai.guo@linux.dev>
-References: <20260604065317.219777-1-dongtai.guo@linux.dev>
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 2/2] KVM: LoongArch: selftests: Add FPU test case
+Date: Thu,  4 Jun 2026 16:57:52 +0800
+Message-Id: <20260604085752.2820331-3-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260604085752.2820331-1-maobibo@loongson.cn>
+References: <20260604085752.2820331-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -61,53 +37,184 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJAx28ERPiFqlIObAA--.31690S4
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-From: George Guo <guodongtai@kylinos.cn>
+Add FPU test case and verify FPU register get and set APIs, the
+FPU width supports 64/128/256 bits.
 
-Add LoongArch support for KLP_SYSCALL_DEFINEx(), mirroring the generic
-__SYSCALL_DEFINEx() pattern from include/linux/syscalls.h.
-
-Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- include/linux/livepatch_helpers.h | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../selftests/kvm/loongarch/fpu_test.c        | 144 ++++++++++++++++++
+ 2 files changed, 145 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/loongarch/fpu_test.c
 
-diff --git a/include/linux/livepatch_helpers.h b/include/linux/livepatch_helpers.h
-index 4b647b83865f..a8aad067177b 100644
---- a/include/linux/livepatch_helpers.h
-+++ b/include/linux/livepatch_helpers.h
-@@ -91,6 +91,28 @@
- 	}								\
- 	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index 9118a5a51b89..7d11592b3759 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -224,6 +224,7 @@ TEST_GEN_PROGS_riscv += rseq_test
+ TEST_GEN_PROGS_riscv += steal_time
  
-+#elif defined(CONFIG_LOONGARCH)
+ TEST_GEN_PROGS_loongarch = loongarch/pmu_test
++TEST_GEN_PROGS_loongarch += loongarch/fpu_test
+ TEST_GEN_PROGS_loongarch += arch_timer
+ TEST_GEN_PROGS_loongarch += coalesced_io_test
+ TEST_GEN_PROGS_loongarch += demand_paging_test
+diff --git a/tools/testing/selftests/kvm/loongarch/fpu_test.c b/tools/testing/selftests/kvm/loongarch/fpu_test.c
+new file mode 100644
+index 000000000000..459996286c83
+--- /dev/null
++++ b/tools/testing/selftests/kvm/loongarch/fpu_test.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+#define __KLP_SYSCALL_DEFINEx(x, name, ...)                             \
-+	__diag_push();                                                  \
-+	__diag_ignore(GCC, 8, "-Wattribute-alias",                      \
-+		      "Type aliasing is used to sanitize syscall arguments");\
-+	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))       \
-+		__attribute__((alias(__stringify(__se_sys##name))));    \
-+	ALLOW_ERROR_INJECTION(sys##name, ERRNO);                        \
-+	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));\
-+	asmlinkage long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__)); \
-+	asmlinkage long __attribute__((optimize("-fno-optimize-sibling-calls")))\
-+			__se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))  \
-+	{                                                               \
-+		long ret = __klp_do_sys##name(__MAP(x,__SC_CAST,__VA_ARGS__));\
-+		__MAP(x,__SC_TEST,__VA_ARGS__);                         \
-+		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));       \
-+		return ret;                                             \
-+	}                                                               \
-+	__diag_pop();                                                   \
-+	static inline long __klp_do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
++#include <stdio.h>
++#include <string.h>
++#include "kvm_util.h"
++#include "processor.h"
++#include "loongarch/processor.h"
 +
- #endif
- 
- #endif /* _LINUX_LIVEPATCH_HELPERS_H */
++struct kvm_fpureg vector = {{1, 2, 3, 4 }};
++
++static void guest_code(void)
++{
++	unsigned long val;
++	struct kvm_fpureg *fp = &vector;
++
++	val = csr_read(LOONGARCH_CSR_EUEN);
++	csr_write(val | 7, LOONGARCH_CSR_EUEN);
++
++	__asm__ __volatile__("fld.d $f0, %0, 0\n" : : "r"(fp) :);
++	GUEST_SYNC(0);
++
++	__asm__ __volatile__("vld $vr0, %0, 0\n" : : "r"(fp) : );
++	GUEST_SYNC(1);
++
++	__asm__ __volatile__("xvld $xr0, %0, 0\n" : : "r"(fp) :);
++	GUEST_SYNC(2);
++
++	__asm__ __volatile__("fst.d $f0, %0, 0\n" : : "r"(fp) : "memory");
++	GUEST_SYNC(3);
++
++	__asm__ __volatile__("vst $vr0, %0, 0\n" : : "r"(fp) : "memory");
++	GUEST_SYNC(4);
++
++	__asm__ __volatile__("xvst $xr0, %0, 0\n" : : "r"(fp) : "memory");
++	GUEST_SYNC(5);
++
++	GUEST_DONE();
++}
++
++static void run_vcpu(struct kvm_vcpu *vcpu)
++{
++	struct ucall uc;
++	int cont;
++
++	cont = 1;
++	while (cont) {
++		vcpu_run(vcpu);
++
++		switch (get_ucall(vcpu, &uc)) {
++		case UCALL_PRINTF:
++			printf("%s", (const char *)uc.buffer);
++			break;
++		case UCALL_DONE:
++			printf("FPU test PASSED\n");
++		case UCALL_SYNC:
++			cont = 0;
++			break;
++		case UCALL_ABORT:
++			REPORT_GUEST_ASSERT(uc);
++		default:
++			TEST_ASSERT(false, "Unexpected exit: %s",
++				exit_reason_str(vcpu->run->exit_reason));
++		}
++	}
++}
++
++static bool __vm_has_feature(struct kvm_vm *vm, int feature)
++{
++	int ret;
++
++	ret = __kvm_has_device_attr(vm->fd, KVM_LOONGARCH_VM_FEAT_CTRL, feature);
++	return !ret;
++}
++
++
++int main(void)
++{
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	struct kvm_fpu fpu;
++	struct kvm_fpureg *fp = &vector;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
++	__TEST_REQUIRE(__vm_has_feature(vm, KVM_LOONGARCH_VM_FEAT_LSX),
++			"LSX not available, skipping test\n");
++	__TEST_REQUIRE(__vm_has_feature(vm, KVM_LOONGARCH_VM_FEAT_LASX),
++			"LASX not available, skipping test\n");
++
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	sync_global_from_guest(vm, *fp);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 8), "Wanted 0x%llx from f0, got 0x%llx",
++			fp->val64[0], fpu.fpr[0].val64[0]);
++
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 16), "Wanted 0x%llx %llx from vr0, got 0x%llx %llx",
++			fp->val64[0], fp->val64[1],
++			fpu.fpr[0].val64[0], fpu.fpr[0].val64[1]);
++
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 32),
++			"Wanted 0x%llx %llx %llx %llx from xr0, got 0x%llx %llx %llx %llx",
++			fp->val64[0], fp->val64[1], fp->val64[2], fp->val64[3],
++			fpu.fpr[0].val64[0], fpu.fpr[0].val64[1],
++			fpu.fpr[0].val64[2], fpu.fpr[0].val64[3]);
++
++	fpu.fpr[0].val64[0] += 0x10;
++	vcpu_fpu_set(vcpu, &fpu);
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	sync_global_from_guest(vm, *fp);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 8), "Wanted 0x%llx from f0, got 0x%llx",
++			fp->val64[0], fpu.fpr[0].val64[0]);
++
++	fpu.fpr[0].val64[0] += 0x10;
++	fpu.fpr[0].val64[1] += 0x10;
++	vcpu_fpu_set(vcpu, &fpu);
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	sync_global_from_guest(vm, *fp);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 16), "Wanted 0x%llx %llx from vr0, got 0x%llx %llx",
++			fp->val64[0], fp->val64[1],
++			fpu.fpr[0].val64[0], fpu.fpr[0].val64[1]);
++
++	fpu.fpr[0].val64[0] += 0x10;
++	fpu.fpr[0].val64[1] += 0x10;
++	fpu.fpr[0].val64[2] += 0x10;
++	fpu.fpr[0].val64[3] += 0x10;
++	vcpu_fpu_set(vcpu, &fpu);
++	run_vcpu(vcpu);
++	vcpu_fpu_get(vcpu, &fpu);
++	sync_global_from_guest(vm, *fp);
++	TEST_ASSERT(!memcmp(fpu.fpr, fp, 32),
++			"Wanted 0x%llx %llx %llx %llx from xr0, got 0x%llx %llx %llx %llx",
++			fp->val64[0], fp->val64[1], fp->val64[2], fp->val64[3],
++			fpu.fpr[0].val64[0], fpu.fpr[0].val64[1],
++			fpu.fpr[0].val64[2], fpu.fpr[0].val64[3]);
++
++	run_vcpu(vcpu);
++	kvm_vm_free(vm);
++	return 0;
++}
 -- 
-2.25.1
+2.39.3
 
