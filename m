@@ -1,176 +1,151 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4553D16ED
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 05:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780552391; cv=pass; b=OowmAmpByi9Zv2dUnzM/wrF0b8jmzaY1j83OcMqKpptsbqjqmQKlcoNhBhu0Q9a7ORtFKWx8Z6e+7IVdP+EQnNR5XLdH7YMJjYLfur/2SlQQ9XvvyqNI+28pvhBSbh1Z++/1iSt3tlJd8Ku/nHtwHFWNt0uKhHqKhTL8nCK4+a4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780552391; c=relaxed/simple;
-	bh=TLSpcxtgDeJBIXPHc/zgfPpJqeFc/XjZXKIQU+6j4Wg=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3F83C0A00
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780554418; cv=none; b=FGzj4Z9jPTdOdOmBh4OgT7mcXAu8WcZOvSe1y8gmtf+bWj243fcRkQXLId2cDABLg7tWP5ud7JGSrOu2JkvEpY2EDdOIWRN6D3ANgcYm4tV5gzRyq4diw1JQb1M88AFyji6TuSKza9EJtBmyj+vCklKI4L8OvHwMKBZh+H4Q7YE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780554418; c=relaxed/simple;
+	bh=TlvkZXdGbj7XL+TvZrTGldEikuGASraGH9+3eY7n/qI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LyFg+VylTfiLy/cPNwUGhW0kfgLuDTmzJ4sXoEv6PhSMMKQeePScDwus/WKGwsUDPQw+uMIPVDtW/DgMdC6j4UV3x4hcqtpa9wRygKEjRpHCtGMJswrwiEGaI0yc8C9KsepHlRHLFScw+xBcslL1+XYjXKXoRmtIzC4iAWM9kzk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRnDHlyj; arc=pass smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=OtpBmgAcgbjNIL/nRkGRb4ImfXqTBJqsw8cm91GxA2yJMjDW1Znf64JgXvhPnSEVHogqwgVbbfBrRmx1DNfmmD2BbTaKKwTATnxuAZrjSsTvJSHmdWCW79KvT7ACKnVP3n25udJugw1VqK+5jMGgPEoNYGF5D1oJMuWjpc3ulJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH5OM0M0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRnDHlyj"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68d2342c5e6so388165a12.3
-        for <loongarch@lists.linux.dev>; Wed, 03 Jun 2026 22:53:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780552388; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OJ9kf5huugGzJuJbCRBnP2zsF3LQIihgZW3E3LVLMAC3skjPldpdir8M7mV++aq8He
-         Uyl2UDLwuONDP4j3Un+6gEguH3WtG/Gp9fXtDcTK0898yJIBuQBeELV2tyX/Ia/d4GQx
-         RNI2c16NnfDigYJyqL2OVlbBONc6botFYt9c3jc+g5SilFCKHSmGGSoEOkgYtdjzZaRR
-         TDW6JbqHeOcowzZ2kopXdeb/lWJLxgJE5j82XViV6fbVRPBkDiic98QNpacoPBgeBpMX
-         hT4qwB/5IwyykVeLApeh3fdg5w1kSCQw7MptqdfyEJ9TFyw4UTdedCTn08oDQXAWfs3I
-         4pLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ghFlsP350/NvZ7Hzmhk2+1q0DGzMho+/JxGVwW5E1Gg=;
-        fh=7wVgRb1Ot130lvJuw59OiMoUhr+vOSktMPDITkO2Ewo=;
-        b=SIn271/Z1zkF36wZ43BJMxJ+UoF0Q7yiix9485lIm59z1imONAhIt30Ja7JfKoMIzm
-         4QIILS4WPQlrlWQw02CUbXYTm1Tnozcfzw0Hxj9rEqkf6oIO9emRWBnz+vN+oDaaSgYF
-         oMzSpp4CWkVP1myDUtQ3ZzIjYkq7bUD2sJofyfoHJRPOaVwBFt5ntnDwH2QFB2b6CILF
-         dD61PRfpofl16m8z8+vq/ybW4J8fHdBxp/HSybfsAwR/ozn2N5D4rG6vuV6MAcD/cyjM
-         TnTfnRlhY6JE9JZyjt/SQaCBHv1DyKmCyyE9X6eNrCjekasYZZiiSjMQlLdrB8cJGJOh
-         aZDQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780552388; x=1781157188; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ghFlsP350/NvZ7Hzmhk2+1q0DGzMho+/JxGVwW5E1Gg=;
-        b=GRnDHlyjM3A5qxaYIDW9LlA2De/Sbsd+Xb/et5scaOitUyaW6HDzy9S2Q3Z1PtzN+i
-         7eTlZ+xkW0cCfwKXJ5+9CJhu7J3eHpHQ0h62hEzcrvXrpdHZz0W8ph6G/yAADAW9NHAE
-         O/VQYyDFWa8HfWhnM97FrYR9u6Mr9BsgjtSYvxJAqKpb6dcTYn2uZq4MTkS/qybcjNe5
-         7FJnpiYHJwX8QGseclmOyx3WGxokFYAUD0xkD5T2+NoZHA9cIaLa4+pWxUGEfHO3E/pf
-         uW6XNKNUbqH2VHYO4MW3BhnQFg9iAEIWRkQZzYSFvoVGye9m2Pm2/AwhXKCSiJVApH2f
-         dZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780552388; x=1781157188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ghFlsP350/NvZ7Hzmhk2+1q0DGzMho+/JxGVwW5E1Gg=;
-        b=aEbY3Fas2hpmNPaVhwixFjSYs9381S9WR0AdhFFUzUakAiQEGm01JEJWHvbOIrU9KO
-         6O9vtzJDOOiPkH5E7n9ES4pXHIh9D7C8lmsVyo9uxQaJmwxqUhP0pJFpbVlTci3gXhLp
-         tm5pMgQXdoq+N25joI4Q7hIVlDyDxzbbJD9jU5X41D5ovLywqPsFH7LPPfbaguMUTy2M
-         ZL98O1+3dKIBI2VTfJV3YyCt5hgSn5DeEL0uUFqnZCJWANa4mfl1lhawL66RAERsGg/V
-         5uj6ucl9VcwYhNYmsd69zI8+UPyytiPbdjGZb6TGtkRhOfj1salZl2IBReqiH3NL0M12
-         w4ew==
-X-Forwarded-Encrypted: i=1; AFNElJ8Je3YvDjeVPKS9uJQ34VNPRXgGDahMJqhwgKl2wQHYCZTtah6TDVBCH45NjAwYBQ+Rsx8STqJUPRo=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwhG9JPbWwuW1CX9gDIFJuB/MsdsEgfy5lpL9+0K/02TCIITfNh
-	IAhgQ4ZqeSLmctRgh6gymyWRire2kqHJr3vBKynFCenRpAvRmNia0RdyrW/nLIXpdUIo9XN11RC
-	2+kmOr4Ard/95Z7LaxNktMwM47KYZ54Y=
-X-Gm-Gg: Acq92OEPJ3qA+upz+veY4QVgQ0k1GXXKujsoxj10IX/pLBokF65wnQDp2gUHv7qGGlt
-	HkZnA701vOUHV32xFuDv6NpI21GVySy8O2SLmxvVVLgP7pu4n1YSJipnQgs9TM1DJi0o85HWuwG
-	gzdma744FF1DybFvkZ6zwAmh/oS4vDN8D1XFObdPgCxnKFCpMadMDU8jwzrzFrITJqGcbteE6tO
-	o13Bd2E0yXxKjRHf+OQuLR6zlox93om386bZyjv6+jN2k+0hpIY1+rhBGMLAztG0k6Pn0i4VdDz
-	NQblmouoFrCA5A5pBSJ5
-X-Received: by 2002:a17:907:6e89:b0:beb:f71c:63a with SMTP id
- a640c23a62f3a-bf0ac304ccfmr362950766b.2.1780552387749; Wed, 03 Jun 2026
- 22:53:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH5OM0M0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11D51F00893
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780554415;
+	bh=IVIfCPYFLkPnJSSr4b1JAXayttg+yDdWuao24uaOeic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=AH5OM0M0+BjDmmU3rGE0aCH8BDZing8zkjlwovG5kevTth448ql0LBiY94nv5Tx/6
+	 vH2pAAZK6tzEgn59bgLJZoZprOVbXvEaBjMBE1sRfHNF2ZM9GWFjgXqG5TXPvm0JB7
+	 h5xklW3wn30YYk4/FRJ3Sf+FRZDMz1CSbGL3L+Br7fF7s38jiB/b/Bcd/CI9gMmSfH
+	 mQwZXHPCB4vqBC34TlhjPlKCWvuAXG+oHWoICF7SQ+1vAkc9LzIQX2c0cxwfNRnIoA
+	 C5DwhMVJkl0t5PeF1n1UgBM9z1zB4xGyiJlHFFIKB70gcRf9VChCBRirx+ce35YAYp
+	 76RZO6rGd02fQ==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68bfcf11050so445131a12.0
+        for <loongarch@lists.linux.dev>; Wed, 03 Jun 2026 23:26:55 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yy8D5dnDHWaO/AlB3Bjd1T+PmpJ/2h/AXcaOtTFDmn9ecYoL4br
+	uJLTidRPd9ixsGm/n67VbWSF5WK+S7GgbYXJvhN+DpfzLOwbh8REVr0BjxRLP+k0Lv/kIqYC0Ii
+	7PHGZrSawiCpJLUNJt3Ma7ffL9FrN9N0=
+X-Received: by 2002:a17:907:2716:b0:bcb:8b03:9fc2 with SMTP id
+ a640c23a62f3a-bf0b16d642bmr255594566b.15.1780554414604; Wed, 03 Jun 2026
+ 23:26:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1777273055.git.zhoubinbin@loongson.cn> <d7b19f6c1e634ffe4454809e73fb03058e7a1a9d.1777273055.git.zhoubinbin@loongson.cn>
- <709ef711-4af1-413e-9662-08892b18fca5@kernel.org> <CAMpQs4K5Q_vC=wnGp3gf=F5RU8t61PLh4dLEmcLMMbM4mR+Wnw@mail.gmail.com>
- <6ea756bf-d776-4eff-b0ca-eeaa6737e035@kernel.org>
-In-Reply-To: <6ea756bf-d776-4eff-b0ca-eeaa6737e035@kernel.org>
-From: Binbin Zhou <zhoubb.aaron@gmail.com>
-Date: Thu, 4 Jun 2026 13:52:53 +0800
-X-Gm-Features: AVHnY4KGRyyIWLI06LGNy87w7s_XYI73IEIXy_xKoOqPwgPelZOiqr8t8gAYaxU
-Message-ID: <CAMpQs4KfLP9z6TVx+xGzuW7KEXMRAC0Y59hMBUmq57x6U33t7Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] can: Add Loongson CAN-FD controller support
-To: Vincent Mailhol <mailhol@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Bingxiong Li <libingxiong@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, 
-	linux-can@vger.kernel.org, jeffbai@aosc.io, gongyifu@loongson.cn
+References: <20260428072021.7289-1-yangtiezhu@loongson.cn> <20260428072021.7289-2-yangtiezhu@loongson.cn>
+ <CAAhV-H5tLpXtnMJOx=b5MCDY71jMNkQ5pv1YhgCf72FV=ewcxg@mail.gmail.com>
+ <0def4127-3850-1114-d576-42748456f400@loongson.cn> <CAAhV-H51mJpbYjQJYo_a_8mWuG9CSbvbvQNHrpV1G3jmp0Vkaw@mail.gmail.com>
+ <9fe9a1f4-bdd0-d6b4-6b76-269e4ffdbc7e@loongson.cn>
+In-Reply-To: <9fe9a1f4-bdd0-d6b4-6b76-269e4ffdbc7e@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 4 Jun 2026 14:26:40 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H76bD-bsw_btJuxw7sciQn8o5AwXEuQ7+rT-jBX6dHZjA@mail.gmail.com>
+X-Gm-Features: AVHnY4Kz8XPnCkuAy8bb6qeD8yFUrGs9RADllEaDvBRnS_sBUnnSAXn54Mx2Tzc
+Message-ID: <CAAhV-H76bD-bsw_btJuxw7sciQn8o5AwXEuQ7+rT-jBX6dHZjA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Vincent:
-
-Sorry for the late reply.
-
-On Tue, May 26, 2026 at 11:58=E2=80=AFPM Vincent Mailhol <mailhol@kernel.or=
-g> wrote:
+On Thu, Jun 4, 2026 at 10:26=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
-> On 21/05/2026 at 05:24, Binbin Zhou wrote:
-> > Hi Vincent:
+> On 2026/6/3 =E4=B8=8B=E5=8D=8810:24, Huacai Chen wrote:
+> > On Wed, Jun 3, 2026 at 10:30=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+>
+> ...
+>
+> >> For static structures like init_task, any uninitialized fields are
+> >> automatically zeroed out by the compiler according to the C standard.
+> >> Stripping away dozens of lines of ".field =3D 0" complies with modern
+> >> Linux kernel code-cleaning standards. It makes the macro much shorter
+> >> and highlights the only field that actually requires a special
+> >> runtime value (the kernel stack top in .reg03).
+> > I know it is the same for compilers, I mean the current way gives more
+> > information for humans.
 > >
-> > On Thu, May 7, 2026 at 1:50=E2=80=AFAM Vincent Mailhol <mailhol@kernel.=
-org> wrote:
+> > In addition, without reg02, this piece completely has no relationship
+> > with CONFIG_THREAD_INFO_IN_TASK, so please drop it.
 >
-> (...)
+> Do you mean keep the original INIT_THREAD as is? No any changes for it?
+> ".reg03 =3D (unsigned long)&init_stack + sizeof(init_stack)," is not
+> necessary?
 >
-> >> Use the CAN TDC framework to get the SSP value (c.f. struct can_tdc,
-> >> struct can_tdc_const and can_fd_tdc_is_enabled())
+> That is to say, do not modify arch/loongarch/include/asm/processor.h?
+Yes.
+
+>
+> >> For reference, please see how INIT_THREAD is defined in other major
+> >> architectures, where they only initialize what is strictly necessary:
+>
+> ...
+>
+> > None of these commits remove current_pt_regs. Some of them has no
+> > current_pt_regs before THREAD_INFO_IN_TASK, and ARM32 still has its
+> > own implementations in arch/arm/include/asm/ptrace.h now which is
+> > nearly the same as LoongArch.
+>
+> If you think it should keep current_pt_regs() as is, I am OK, will do
+> it in the next version.
+>
+> That is to say, do not modify arch/loongarch/include/asm/ptrace.h?
+Yes.
+
+>
+> >>>>    /* Helpers for working with the user stack pointer */
+>
+> ...
+>
+> > set_current() is a very good friend of get_current(). Though "$tp" is
+> > enough for get_current(), from the x86 implementation we know that it
+> > can also get from the per-cpu array (but suboptimal).
 > >
-> > Last question:
+> > Move set_current() to current.h also don't need to include
+> > <linux/percpu.h> and <linux/sched.h>, it only need to forwarding
+> > declare "task_struct" and include <asm/percpu.h>, which is exactly
+> > done in the x86 implementation.
 > >
-> > In the general framework, the calculation condition for tdco is
-> > (dbt->brp =3D=3D 1 || dbt->brp =3D=3D 2), which does not seem to corres=
-pond to
-> > the current condition (dbt->bitrate > 1000000).
+> > And you needn't worry about the compiling, I have tested before I comme=
+nt.
 >
-> Where does the current condition comes from? Is it some empirical test?
+> If you think this is proper, I am OK.
 >
-> FYI, the
->
->   (dbt->brp =3D=3D 1 || dbt->brp =3D=3D 2)
->
-> check comes from ISO 11898.
->
-> > Although for CANFD, rates below 1 Mbit/s would negate the primary
-> > advantages of FD, from a controller hardware design perspective, I
-> > would still prefer to retain the condition (dbt->bitrate > 1000000).
-> >
-> > Do you have any other suggestions?
->
-> Using TDC on low bitrates is indeed unstable and can lead to bus errors.
-> But the condition which you suggest
->
->   (dbt->bitrate > 1000000)
->
-> is indirectly linked with the brp values. That's why the brp check is
-> sufficient (and more precise than the empirical 1 Mbit/s threshold value)=
-.
->
-> Are you able to trigger any bus errors when using TDC with a brp value
-> of 1 or 2 and a bitrate below 1 Mbit/sec? If no, there is no reason to
-> add this extra check and we can continue to rely on the framework test.
+> Replace __entry_task with current_task (x86) or cpu_tasks (uml)?
+> Replace entry_task_switch() with set_current()? or something else?
+It seems you want to avoid "current", then please use "cpu_tasks"
+rather than "current_task", but "set_current" is a friend of
+"get_current", just use it.
 
-After offline discussions with our hardware engineers, we have decided
-to retain the existing decision criteria.
 
-The threshold is set to `1 Mbit/s` primarily based on the CAN 2.0
-physical layer protocol, which supports a maximum rate of 1 Mbit/s;
-this decision also takes into account that at low baud rates, the bit
-duration is sufficiently long, so there is generally no need to enable
-the second sampling point. Conversely, if the CAN controller=E2=80=99s time
-quanta clock frequency is very high, causing the BRP to consistently
-exceed 2 while traversing parameters, TDC may not be enabled.
 
-Additionally, there is a low probability of bus errors occurring during tes=
-ting.
+Huacai
 
-So, in your opinion, should we keep it as is?
+> It seems a little strange for the following code in smp.c:
 >
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 4b74409a98a3..3afdeca7bc2a 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -665,7 +665,7 @@ asmlinkage void start_secondary(void)
+>          set_my_cpu_offset(per_cpu_offset(cpu));
 >
-> Yours sincerely,
-> Vincent Mailhol
+>          cpu_probe();
+> -       entry_task_switch(current);
+> +       set_current(current);
+>          constant_clockevent_init();
+>          loongson_init_secondary();
 >
-
---
-Thanks.
-Binbin
+> Thanks,
+> Tiezhu
+>
