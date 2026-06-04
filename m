@@ -1,41 +1,42 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB2A2C11FD
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 01:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F1729D264
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 02:11:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780538399; cv=none; b=JmWD6AhK/QjSQi9wbXualuWSrEBhHZ7vlGikuxLDTEFtksG+M52UaCX4DaXOaZj/PiWEMS+lg9cidshmgVINbG70uLVTQhMCVjTXXlHl44eWaqzaeKIb5NIfXsJ9nD/3p0I4dQjydLtGadiqaHX+e2BZgdFl0zBUCyqyQUmIZGM=
+	t=1780539104; cv=none; b=NL5A+XMkGSHvaxmPOWlSHwAOMMDMyxQBHomFylrYuRn+U9baGm6e09m4HikAt9TlezrTVlVFhBERaQ23k+OR08dCmPfcW4Lk8PvMkKtSpw6mMqza6I9TUOgegnIX6F/AeR/uO9tjz9eSfaYk3y0UHMr5Mg+2ZimGr7+JgcnaMoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780538399; c=relaxed/simple;
-	bh=9LpJ178pAQvNzrfh3/t7+78v3aMt4vS7RyuBMKK1H58=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SzAIDwGvhfZ4NdOpJ+1CBMwn4Iq//VYzQnRTZh7/N+stJi0v7lCstGhnU2sDddkNb1fkPSrw2euexSV0yocoih0tW+R1hjrf8LBKiVCySvPFTEH4/0OtT7Yx6vXqSsARMeNgPYcgppzRBCXiqKY1lb8u6tJmZpFAKmsaWzSu36g=
+	s=arc-20240116; t=1780539104; c=relaxed/simple;
+	bh=dbmoStt4SvONriNOZw2cjRdz2s212WCzOx1qdC+kzfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F5bsvvozdkv2CpyY0DhmtkDcYuC2CDT+bWcaJSuFyyEsr7LTGh+V9B9wuXYzxlJWjo2ykUMYyzmAjMHtHIIy1Gh19z+cMxzuWS8mrBW9Yk0z79IkVWZYZFqcKICDesb7ByBAKvBb/fFHQrInCO3Bg2ns0ILTuNMGy9bHmmnSDqk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8CxRXgb3CBq418QAA--.21181S3;
-	Thu, 04 Jun 2026 09:59:55 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJDxSMEV3CBqvESbAA--.17953S4;
-	Thu, 04 Jun 2026 09:59:54 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Hongliang Wang <wanghongliang@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Andi Shyti <andi.shyti@kernel.org>,
+Received: from loongson.cn (unknown [223.64.68.59])
+	by gateway (Coremail) with SMTP id _____8Axp3ja3iBqHWEQAA--.20836S3;
+	Thu, 04 Jun 2026 10:11:39 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.59])
+	by front1 (Coremail) with SMTP id qMiowJBx78LZ3iBq1UabAA--.33017S2;
+	Thu, 04 Jun 2026 10:11:38 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH v5 2/2] i2c: ls2x: Add clocks property parsing and adjust bus speed
-Date: Thu,  4 Jun 2026 09:58:48 +0800
-Message-Id: <20260604015848.18643-3-wanghongliang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260604015848.18643-1-wanghongliang@loongson.cn>
-References: <20260604015848.18643-1-wanghongliang@loongson.cn>
+	devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/7] ASoC: Add Loongson-2K0300 I2S controller and sound card support
+Date: Thu,  4 Jun 2026 10:11:20 +0800
+Message-ID: <cover.1780538113.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -43,138 +44,95 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxSMEV3CBqvESbAA--.17953S4
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCr15KF15uw15Xw1DAw4fZwc_yoWrXF1rpF
-	W5CFZ5Gr4qqF42grnaq3W7ZFyYyws5JayUCFy7tw1xW3Z3Xr1DZa4ftFn09F4vgF97uayU
-	XayDGr43CFyUZrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+X-CM-TRANSID:qMiowJBx78LZ3iBq1UabAA--.33017S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAgEICGofwi0ZZwAAsn
+X-Coremail-Antispam: 1Uk129KBj93XoWxXr43uw15XF4rurWruw4kAFc_yoW5GFy5pa
+	n3ua9xGr15JFy2yFZxZry8Cr4fZ3yxJasrJF4UG34kGan8Aw1jv34Dt3WYvF47ZrZ3XrWU
+	XFnYgF4rWF98CrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+	xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2_HUDUUUU
 
-The i2c-ls2x driver supports dts and acpi parameter passing.
+Hi all:
 
-In dts, uses clock framework, by parsing clocks property to
-get i2c bus reference clock, and define the div of reference
-clock by device data.
+This series adds ASoC support for the Loongson-2K0300 SoC and its
+associated development boards, including the CTCISZ Forever Pi and the
+ATK-DL2K0300B.
 
-In acpi, by passing clocks property to describe i2c bus reference
-clock and clock-div property to describe the div of reference clock.
+Key changes:
+- Extend DT bindings to support ls2k0300-i2s and new audio card
+  compatibles.
+- Refactor the platform I2S driver to handle SoC differences via per-device
+  configuration (rev_id, optional APB DMA config, reset sequence).
+- Refactor the audio machine driver to support board-specific DAI formats,
+  GPIO-based headphone detection/mute, speaker enable, and DAPM routing.
+- Add jack detection and automatic switching between headphones and
+  speakers for the DL2K0300B board.
 
-Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
-and div, calculate the prcescale of i2c divider register. The
-calculation formula is
+The patchset also cleans up the existing audio card binding by
+referencing the common sound-card properties, and adds new compatibles
+for the Loongson-2K0300 variants with proper DAI format handling.
 
-prcescale = (clock_a*10)/(div*clock_s)-1
+All changes have been tested on Loongson-2K2000 (PCI), Loongson-2K0300
+Forever Pi and Loongson-2K0300 DL2K0300B boards.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
----
- drivers/i2c/busses/i2c-ls2x.c | 36 ++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+Thanks.
+Binbin
 
-diff --git a/drivers/i2c/busses/i2c-ls2x.c b/drivers/i2c/busses/i2c-ls2x.c
-index b475dd27b7af..46dafa11b301 100644
---- a/drivers/i2c/busses/i2c-ls2x.c
-+++ b/drivers/i2c/busses/i2c-ls2x.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/iopoll.h>
-@@ -63,11 +64,18 @@
- /* The default bus frequency, which is an empirical value */
- #define LS2X_I2C_FREQ_STD	(33 * HZ_PER_KHZ)
- 
-+/* The div of i2c reference clock on LS2K0500/2K1000/2K2000 */
-+#define LS2X_I2C_2K_CLOCK_DIV	40
-+
-+/* The div of i2c reference clock on LS7A1000/7A2000 */
-+#define LS2X_I2C_7A_CLOCK_DIV	50
-+
- struct ls2x_i2c_priv {
- 	struct i2c_adapter	adapter;
- 	void __iomem		*base;
- 	struct i2c_timings	i2c_t;
- 	struct completion	cmd_complete;
-+	unsigned int		div;
- };
- 
- /*
-@@ -96,6 +104,8 @@ static irqreturn_t ls2x_i2c_isr(int this_irq, void *dev_id)
- static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
- {
- 	u16 val;
-+	u32 pclk, div;
-+	struct clk *clk;
- 	struct i2c_timings *t = &priv->i2c_t;
- 	struct device *dev = priv->adapter.dev.parent;
- 	u32 acpi_speed = i2c_acpi_find_bus_speed(dev);
-@@ -107,12 +117,30 @@ static void ls2x_i2c_adjust_bus_speed(struct ls2x_i2c_priv *priv)
- 	else
- 		t->bus_freq_hz = LS2X_I2C_FREQ_STD;
- 
-+	if (dev_of_node(dev)) {
-+		clk = devm_clk_get_optional_enabled(dev, NULL);
-+		if (!IS_ERR_OR_NULL(clk))
-+			pclk = clk_get_rate(clk);
-+		else
-+			pclk = LS2X_I2C_PCLK_FREQ;
-+
-+		div = priv->div;
-+
-+		val = (pclk * 10) / (div * t->bus_freq_hz) - 1;
-+	} else {
-+		/* clocks and clock-div are only ACPI properties. */
-+		if (!device_property_read_u32(dev, "clocks", &pclk) &&
-+		    !device_property_read_u32(dev, "clock-div", &div))
-+			val = (pclk * 10) / (div * t->bus_freq_hz) - 1;
-+		else
-+			val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
-+	}
-+
- 	/*
- 	 * According to the chip manual, we can only access the registers as bytes,
- 	 * otherwise the high bits will be truncated.
- 	 * So set the I2C frequency with a sequential writeb() instead of writew().
- 	 */
--	val = LS2X_I2C_PCLK_FREQ / (5 * t->bus_freq_hz) - 1;
- 	writeb(FIELD_GET(GENMASK(7, 0), val), priv->base + I2C_LS2X_PRER_LO);
- 	writeb(FIELD_GET(GENMASK(15, 8), val), priv->base + I2C_LS2X_PRER_HI);
- }
-@@ -295,6 +323,8 @@ static int ls2x_i2c_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->div = (unsigned long)device_get_match_data(dev);
-+
- 	/* Map hardware registers */
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
-@@ -349,8 +379,8 @@ static DEFINE_RUNTIME_DEV_PM_OPS(ls2x_i2c_pm_ops,
- 				 ls2x_i2c_suspend, ls2x_i2c_resume, NULL);
- 
- static const struct of_device_id ls2x_i2c_id_table[] = {
--	{ .compatible = "loongson,ls2k-i2c" },
--	{ .compatible = "loongson,ls7a-i2c" },
-+	{ .compatible = "loongson,ls2k-i2c", .data = (void *)LS2X_I2C_2K_CLOCK_DIV, },
-+	{ .compatible = "loongson,ls7a-i2c", .data = (void *)LS2X_I2C_7A_CLOCK_DIV, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ls2x_i2c_id_table);
+========
+v2:
+- The first four patches for V1 (related to code cleanup) have been
+  accepted as a separate series. The link is as follows:
+https://lore.kernel.org/all/178041371415.93058.4794135670349989571.b4-ty@b4/
+
+Patch (1/7):
+  - Add Reviewed-by tag from Krzysztof Kozlowski;
+Patch (3/7):
+  - New patch;
+  - Reference sound-card-common.yaml, drop custom model property;
+Patch (4/7)(5/7):
+  - New patches;
+  - Support Forever Pi board with different DAI format;
+Patch (6/7)(7/7):
+  - New patches;
+  - Implement headphone jack detection and DAPM routing for ATK-DL2K0300B
+    board.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1773107475.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (7):
+  ASoC: dt-bindings: loongson,ls2k1000-i2s: Document Loongson-2K0300
+    compatible
+  ASoC: loongson: Add Loongson-2K0300 I2S controller support
+  ASoC: dt-bindings: loongson,ls-audio-card: Use common sound card
+  ASoC: dt-bindings: loongson,ls-audio-card: Add ctcisz forever pi
+    compatible
+  ASoC: loongson: Add Loongson-2K0300 CTCISZ Forever Pi sound card
+    support
+  ASoC: dt-bindings: loongson,ls-audio-card: Add ATK-DL2K0300B
+    compatible
+  ASoC: loongson: Add headphone jack detection and DAPM routing
+
+ .../sound/loongson,ls-audio-card.yaml         |  52 +++++-
+ .../bindings/sound/loongson,ls2k1000-i2s.yaml |  22 ++-
+ sound/soc/loongson/loongson_card.c            | 163 +++++++++++++++++-
+ sound/soc/loongson/loongson_i2s_plat.c        |  42 ++++-
+ 4 files changed, 256 insertions(+), 23 deletions(-)
+
+
+base-commit: b2a71527074f5e4d273a25f6c89fb159172b2877
 -- 
-2.47.2
+2.52.0
 
