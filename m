@@ -1,182 +1,220 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141182773EC
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 01:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23000263C8C
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 01:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780537743; cv=none; b=hTe5mBXc0miw68e+MRtFkqM8NH7hlO0DpBO3UbRUj9DW7+TneBbLZmzNIhHUbJA0KMNLZNKM1OIMBrXmrBR9R9YnQWL3cs+DJJO0zgCsmfFtR+wdCceRhndqUurjgx4dt2qj4Pr0mKzYpNH1C80ppTopZpNg3R8ZxkKjQbgtI4M=
+	t=1780537913; cv=none; b=G5oVS0ZY6vQ0E4Ifg+3Sz9svuy+/yjKUYf8ZWfQLnxnv1o+IJuXK/VMG0sfowbG7+ZM1N6oikKUNwxVZB9vpoGhrE90PKwQ94EB/+Epyxanfj/uzF6cb+PNyUTWsLs34fbflGL4tQgSL84gUPeTQYyJ9OA6IHOHLieOa2rXO0yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780537743; c=relaxed/simple;
-	bh=gamBR4h2rf1Imsoj8RobEGb1Bt2afo71z/VsoMkVocw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Je5QVlD9ibRonAfuoF019qc21YtbqYDdohv+B9QUUM/fWn0lZkCOerHhKpSgysw5rw0fkMwaiWL5wHz/dlnzaWth+s9qcmOTMEJrwlWGyIFPrlX0wQleL7hbHP1NuPZ3XzFBINCzpHliShCaDCvCdUNLkKDMbQpAgnFHnHkf0yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCEWfmnx; arc=none smtp.client-ip=209.85.210.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCEWfmnx"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-842307473b5so113576b3a.2
-        for <loongarch@lists.linux.dev>; Wed, 03 Jun 2026 18:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780537741; x=1781142541; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R9vTs/JHnHpc6BmzGsq91wlnVhg5cqc1lx/XeBVEZpQ=;
-        b=YCEWfmnxtoldt9WwZZWFU1mk86ArLHOugPaqXDiVYMY2tjt0FPHlqVjc4ZO81mOikw
-         TzqCNT5mpbx/0SVunQcY/luC58X8pQAXh84pVMnyvVd58nc8JpSMNKWZAbyRdQWj+4ho
-         f792gSgBXt9sIz0RH4w1mFUPpCJ/xmNLoklLassuJiLGzJc5i9uuYb8JtotSfDQob1VT
-         OVpJOMPw8FqD8aJDuS0vNSdLdp2aNx/hdqUGXSeczY5iEpiUAzk9pI/wXGfucSXFutHY
-         Ke7PulJUnIrnHhY9LV/sEaRN044xrKDEs+JdOB76jOZjR2htROQFKuC+WxThfhhMHtR5
-         sfHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780537741; x=1781142541;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R9vTs/JHnHpc6BmzGsq91wlnVhg5cqc1lx/XeBVEZpQ=;
-        b=iIGvMVK1lN34DiH2oDjHp/KKjKcoJeKjzNlh1Uhg6yZTbjvlP0mvMA1sjsbNdg9WFu
-         1n41op4To5g+rDhntBiswvJxuxgvQyLZJbNTdStbwBwFqWvUZIJxeLPIYQPseKsf1B/J
-         HAP3MBJ1nQmSMFPAjjIXYgfT0LhPsZF1xmqhpJ0pZ3nTjDS/v6rTa2O4TpUklrjU074I
-         h9jIMBxWzkZDsxBIdcFYmNwrVx41NlEF/p6itSMw9OCYEONHWtLuEHpS1eYoFu5jBmcE
-         BgB37vMhEandGEuKRnIxTlD6XSEQvTdbIqeNu+PAj4T01uNfhzhHXzIZhtCTAQY5mHeO
-         by9Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+PxT2YYt+Az4yeIhOE5g33U6gkzpYwhCeZ3OGa7AKxwHFzACU20Pd7eCsYNjjx6QDV6WuqCefx2XQ=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwUamKR6KQiN954DIwqP7Vs67KPBNYCxU/Avu3OJtEG6gM/f/ij
-	asGj/wzYb8zOUKtYdx0EmmG4V+RnQZ+itP394hSlusPFHxi20oUUHK5Q
-X-Gm-Gg: Acq92OGZmbJMKy1GiQDFrprBKZ01dgD38SB+sC8Pk7Pb+f0+Xbpi+Y1ZKRA4d1CIRXu
-	OwQV/2lDWKGgmtAZZz6DPA1KZDyihvkN143QLSIf+R4LZc6YwCT0aYxudZN2NeyFwkbSBC0H51w
-	/KDzrYfaLHHIbgH1MsVmq4TCPiDFRtvs2Evsa4regr376t+5PTh1NUMDCjA0CtILWBljL+U3nK8
-	Z+RWW+nejqP2c02wGF+234YVke4jlA11gVPXSPVJ/kKI0x8aYBo4miHSFoF6Jqu2pajTjEXCDMp
-	rRlTQ9U7+D4x3ARPf81AyV2OuinwY4wHGwTvIjeGASpiMriAvQb3ha+3CrS+ZIuXnWbxut+qtPK
-	OlV6Hqt8M3WZOvBeNkvZNof7xg5bG0tVlC2b1bSjFYKpKclVr+1+nnHdgAMiGASq0f1yfYsvaB+
-	degLK2kZlMrt44XI5aj4uPPwsZiYMAyjwqzW4CY4no/g==
-X-Received: by 2002:aa7:8882:0:b0:842:38d2:a35f with SMTP id d2e1a72fcca58-84284e8dc75mr6032800b3a.31.1780537741272;
-        Wed, 03 Jun 2026 18:49:01 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84282350f8csm4439444b3a.14.2026.06.03.18.48.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 18:49:00 -0700 (PDT)
-Message-ID: <8e088395-c22d-4bc8-9e58-84235af1e56b@gmail.com>
-Date: Thu, 4 Jun 2026 09:48:44 +0800
+	s=arc-20240116; t=1780537913; c=relaxed/simple;
+	bh=A2Xt648rTsp63VyoHLNfB7OukAnjoRNHnZxx8We/AGg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Js8MZJS8RE9GzEBMxpaKB1q9rkttH53z+XtiPc8IVzRNPboDamZHqq/kXQ883NBRKFhGDDqBSQCOFIkwJsyEnsySnjgyxu5tzAKPx5nAkvR5xmlp84aOPOcZwLuz2nu4ez4UXoJvu6fpc9c59boh1XGdg8QnlSm+saUGGng4eBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8BxzsAy2iBqCl8QAA--.21996S3;
+	Thu, 04 Jun 2026 09:51:46 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJAx28Ev2iBqMUObAA--.31201S3;
+	Thu, 04 Jun 2026 09:51:46 +0800 (CST)
+Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Use existing macro about interrupt
+ bit mask
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260526125256.2511876-1-maobibo@loongson.cn>
+ <20260526125256.2511876-4-maobibo@loongson.cn>
+ <CAAhV-H5Bkg1MrWr_8YcvCdHWAfX_-WLzdFGukJQVu330LoL5KA@mail.gmail.com>
+ <d5722640-538c-4a97-7dff-bcec91a4c955@loongson.cn>
+ <CAAhV-H6TfJ8c8SmLZ=9PtGPWWOjSTQD=utHVp5aoEa5ZoO71Cw@mail.gmail.com>
+ <e228286e-7008-e66b-18b3-1140b2916f0e@loongson.cn>
+ <CAAhV-H5gLxujRbS01zXjeof-F5RYw2MhMm-in8p83chfTt=0=w@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <ec8614d5-ed40-d2b9-37c7-6f04b6bd010f@loongson.cn>
+Date: Thu, 4 Jun 2026 09:48:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/11] of: reserved_mem: avoid post-init UAF when
- alloc_reserved_mem_array() fails
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- iommu@lists.linux.dev, zhaomeijing@lixiang.com, catalin.marinas@arm.com,
- will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
- rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
- ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com,
- quic_obabatun@quicinc.com
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
- <20260527032917.3385849-4-chenwandun1@gmail.com>
- <20260602162450.GA442759-robh@kernel.org>
- <79932afc-2e91-4a54-aff9-f550be784c36@gmail.com>
- <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
+In-Reply-To: <CAAhV-H5gLxujRbS01zXjeof-F5RYw2MhMm-in8p83chfTt=0=w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-From: Wandun <chenwandun1@gmail.com>
-In-Reply-To: <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAx28Ev2iBqMUObAA--.31201S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKrW7tr47KFW5Ww1rGry5KFX_yoW7tr4Dpr
+	W8J3WDWF43Xr429w13K3Z8KFnrtrnrJr4Igr9Fgr45JF9Fgw1fA3W8Krn8Cr1vq395G348
+	Wr98Xw13WF9xtrbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8czVUUU
+	UUU==
 
 
 
-On 6/4/26 01:44, Rob Herring wrote:
-> On Wed, Jun 3, 2026 at 1:44 AM Wandun <chenwandun1@gmail.com> wrote:
+On 2026/6/3 下午10:23, Huacai Chen wrote:
+> On Tue, Jun 2, 2026 at 4:13 PM Bibo Mao <maobibo@loongson.cn> wrote:
 >>
 >>
->> On 6/3/26 00:24, Rob Herring wrote:
->>> On Wed, May 27, 2026 at 11:29:09AM +0800, Wandun Chen wrote:
->>>> From: Wandun Chen <chenwandun@lixiang.com>
->>>>
->>>> The global pointer 'reserved_mem' continues to reference the
->>>> reserved_mem_array which lives in __initdata if
->>>> alloc_reserved_mem_array() fails. of_reserved_mem_lookup() is
->>>> exported for post-init use, that would dereference freed memory
->>>> and trigger a use-after-free.
->>>>
->>>> So reset reserved_mem_count to 0 when alloc_reserved_mem_array()
->>>> fails.
->>>>
->>>> Fixes: 00c9a452a235 ("of: reserved_mem: Add code to dynamically allocate reserved_mem array")
->>> Fixes should come first in a series.
->> Understood, will do in future submissions.
->>>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
->>>> ---
->>>>    drivers/of/of_reserved_mem.c | 20 ++++++++++++++------
->>>>    1 file changed, 14 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
->>>> index 313cbc57aa45..6d479381ff1f 100644
->>>> --- a/drivers/of/of_reserved_mem.c
->>>> +++ b/drivers/of/of_reserved_mem.c
->>>> @@ -69,29 +69,31 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
->>>>     * the initial static array is copied over to this new array and
->>>>     * the new array is used from this point on.
->>>>     */
->>>> -static void __init alloc_reserved_mem_array(void)
->>>> +static bool __init alloc_reserved_mem_array(void)
->>>>    {
->>>>       struct reserved_mem *new_array;
->>>>       size_t alloc_size, copy_size, memset_size;
->>>>
->>>> +    if (!total_reserved_mem_cnt)
->>>> +            return true;
->>>> +
->>>>       alloc_size = array_size(total_reserved_mem_cnt, sizeof(*new_array));
->>>>       if (alloc_size == SIZE_MAX) {
->>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
->>>> -            return;
->>>> +            goto fail;
->>>>       }
->>>>
->>>>       new_array = memblock_alloc(alloc_size, SMP_CACHE_BYTES);
->>>>       if (!new_array) {
->>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -ENOMEM);
->>>> -            return;
->>>> +            goto fail;
->>>>       }
->>>>
->>>>       copy_size = array_size(reserved_mem_count, sizeof(*new_array));
->>>>       if (copy_size == SIZE_MAX) {
->>>>               memblock_free(new_array, alloc_size);
->>>> -            total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
->>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
->>> These prints could be moved to 'fail'. Perhaps instead of just printing
->>> an error value, you can return the error value instead of boolean.
->> Will do, consolidating pr_err() under 'fail' and changing the return type
->> to int.
->>> If you respin just this patch, I can pick it up for 7.2.
->> Before I respin, I'd like to flag a dependency:
->> patch 05/07 in this series build on the signature change introduced by this
->> patch ("the void -> bool return type change of alloc_reserved_mem_array()")
 >>
->> Could you let me know which of the following you'd prefer:
->> a) Take patch 03 alone via your tree as you suggested, after it lands, I'll
->>      respin the remaining patches of this series.
-> I would go with this option. AIUI, this series isn't going to land in
-> 7.2, so ultimately you will rebase on v7.2-rc1 which will have the
-> fix.
-OK, will send v4.
+>> On 2026/6/2 下午1:01, Huacai Chen wrote:
+>>> On Tue, Jun 2, 2026 at 9:39 AM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2026/6/1 下午9:50, Huacai Chen wrote:
+>>>>> Hi, Bibo,
+>>>>>
+>>>>> On Tue, May 26, 2026 at 8:53 PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>>>>>
+>>>>>> With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
+>>>>>> CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
+>>>>>> external hardware interrupt injection.
+>>>>>>
+>>>>>> Here use existing macro about interrupt bit of register CSR_GINTC and
+>>>>>> CSR_ESTAT, rather than hard coded constant value.
+>>>>>>
+>>>>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>>>>>> ---
+>>>>>>     arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
+>>>>>>     1 file changed, 29 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> index 3784ab4ccdb5..efe26b04b35f 100644
+>>>>>> --- a/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> +++ b/arch/loongarch/include/asm/kvm_vcpu.h
+>>>>>> @@ -10,22 +10,37 @@
+>>>>>>     #include <asm/loongarch.h>
+>>>>>>
+>>>>>>     /* Controlled by 0x5 guest estat */
+>>>>>> -#define CPU_SIP0                       (_ULCAST_(1))
+>>>>>> -#define CPU_SIP1                       (_ULCAST_(1) << 1)
+>>>>>> -#define CPU_PMU                                (_ULCAST_(1) << 10)
+>>>>>> -#define CPU_TIMER                      (_ULCAST_(1) << 11)
+>>>>>> -#define CPU_IPI                                (_ULCAST_(1) << 12)
+>>>>>> -#define CPU_AVEC                        (_ULCAST_(1) << 14)
+>>>>>> +#define CPU_SIP0                       BIT(INT_SWI0)
+>>>>>> +#define CPU_SIP1                       BIT(INT_SWI1)
+>>>>>> +#define CPU_HWI0                       BIT(INT_HWI0)
+>>>>>> +#define CPU_HWI1                       BIT(INT_HWI1)
+>>>>>> +#define CPU_HWI2                       BIT(INT_HWI2)
+>>>>>> +#define CPU_HWI3                       BIT(INT_HWI3)
+>>>>>> +#define CPU_HWI4                       BIT(INT_HWI4)
+>>>>>> +#define CPU_HWI5                       BIT(INT_HWI5)
+>>>>>> +#define CPU_HWI6                       BIT(INT_HWI6)
+>>>>>> +#define CPU_HWI7                       BIT(INT_HWI7)
+>>>>>> +#define CPU_PMU                                BIT(INT_PCOV)
+>>>>>> +#define CPU_TIMER                      BIT(INT_TI)
+>>>>>> +#define CPU_IPI                                BIT(INT_IPI)
+>>>>>> +#define CPU_AVEC                       BIT(INT_AVEC)
+>>>>>> +#define KVM_ESTAT_IRQ_MASK             (CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
+>>>>>> +                                               | CPU_IPI | CPU_AVEC)
+>>>>>> +#define KVM_ESTAT_HWI_MASK             (CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
+>>>>>> +                                               | CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
+>>>>>>
+>>>>>>     /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+>>>>>> -#define CPU_IP0                                (_ULCAST_(1))
+>>>>>> -#define CPU_IP1                                (_ULCAST_(1) << 1)
+>>>>>> -#define CPU_IP2                                (_ULCAST_(1) << 2)
+>>>>>> -#define CPU_IP3                                (_ULCAST_(1) << 3)
+>>>>>> -#define CPU_IP4                                (_ULCAST_(1) << 4)
+>>>>>> -#define CPU_IP5                                (_ULCAST_(1) << 5)
+>>>>>> -#define CPU_IP6                                (_ULCAST_(1) << 6)
+>>>>>> -#define CPU_IP7                                (_ULCAST_(1) << 7)
+>>>>>> +#define GINTC_VIP_DELTA                        (INT_HWI0 - CSR_GINTC_VIP_SHIFT)
+>>>>> Don't use too many wrappers, just use INT_HWI0 instead of
+>>>>> GINTC_VIP_DELTA in this series is perfect. In other places INT_SWI0 is
+>>>>> also used for shifts.
+>>>>
+>>>> The above macro definition is a little complicated, I do not know how to
+>>>> optimize it. do you mean remove GINTC_VIP_DELTA just use 2 such as:
+>>>> #define CPU_IP0                       BIT(INT_HWI0 - 2)
+>>> CSR_GINTC_VIP_SHIFT is 0 and GINTC_VIP_DELTA is equal to INT_HWI0. I
+>>> mean remove the GINTC_VIP_DELTA definition and use INT_HWI0 instead.
+>> For macro definition such CPU_IP0, GINTC_VIP_DELTA can be removed. And
+>> define it as follows directly.
+>> #define CPU_IP0                       BIT(0)
+>>
+>> However GINTC_VIP_DELTA is still useful, because bitmap with HWI0-HWI7
+>> in estat register starts from INT_HWI0, however with register gintc it
+>> starts from CSR_GINTC_VIP_SHIFT.
+>>
+>> For example with _kvm_getcsr() API, it is to get interrupt status. Here
+>> is the example code.
+>> gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)& KVM_GINTC_IRQ_MASK;
+>> estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) &~KVM_ESTAT_HWI_MASK;
+>> *val = estat | (gintc << GINTC_VIP_DELTA);
+>>
+>> Remove GINTC_VIP_DELTA and use INT_HWI0 directly, it will be
+>> *val = estat | (gintc << INT_HWI0);
+>>
+>> I do not know what is the meaning about "gintc << INT_HWI0", especially
+>> if the value of CSR_GINTC_VIP_SHIFT is no zero.
+> In your Patch-2 there is "clear_csr_estat(1 << INT_SWI0)", INT_SW0 and
+> INT_HW0 are good friends. Why "1 << INT_SWI0" is acceptable but
+> "gintc << INT_HWI0" is not?
 
-Best regards,
-Wandun
->
->> b) Keep patch 03 in the v4 respin of the full series, reordered to the front
->>      per your earlier comment.
->
-> Rob
+The bit definition INT_SWI0 is for ESTAT register, is that right?
+
+The bitmap mask KVM_GINTC_IRQ_MASK is for GINTC register, to convert to 
+bitmap mask of ESTAT,  should not be (gintc >> CSR_GINTC_VIP_SHIFT) << 
+INT_HWI0? why CSR_GINTC_VIP_SHIFT is discarded here, just because it is 
+zero?
+
+> 
+> Huacai
+> 
+>>
+>> Regards
+>> Bibo Mao
+>>>
+>>>
+>>> Huacai
+>>>
+>>>>
+>>>> or something like this:
+>>>> #define CPU_IP0                       (CPU_HWI0 >> GINTC_VIP_DELTA)
+>>>>
+>>>> Regards
+>>>> Bibo Mao
+>>>>>
+>>>>>
+>>>>> Huacai
+>>>>>
+>>>>>> +#define CPU_IP0                                BIT(INT_HWI0 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP1                                BIT(INT_HWI1 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP2                                BIT(INT_HWI2 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP3                                BIT(INT_HWI3 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP4                                BIT(INT_HWI4 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP5                                BIT(INT_HWI5 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP6                                BIT(INT_HWI6 - GINTC_VIP_DELTA)
+>>>>>> +#define CPU_IP7                                BIT(INT_HWI7 - GINTC_VIP_DELTA)
+>>>>>> +#define KVM_GINTC_IRQ_MASK             (CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
+>>>>>> +                                               | CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
+>>>>>>
+>>>>>>     #define MNSEC_PER_SEC                  (NSEC_PER_SEC >> 20)
+>>>>>>
+>>>>>> --
+>>>>>> 2.39.3
+>>>>>>
+>>>>>>
+>>>>
+>>>>
+>>
+>>
 
