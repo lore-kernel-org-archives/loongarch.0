@@ -1,151 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3F83C0A00
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EE11F4611
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780554418; cv=none; b=FGzj4Z9jPTdOdOmBh4OgT7mcXAu8WcZOvSe1y8gmtf+bWj243fcRkQXLId2cDABLg7tWP5ud7JGSrOu2JkvEpY2EDdOIWRN6D3ANgcYm4tV5gzRyq4diw1JQb1M88AFyji6TuSKza9EJtBmyj+vCklKI4L8OvHwMKBZh+H4Q7YE=
+	t=1780556060; cv=none; b=elwYn0Q/7jJl/uCYN66FYPhyj5n/eIsw8l+g5g80TYwUcRt+Kqsy4dvoA0X/+zTZ8lcGzPZmdoMtgvOzcwNK0nIHBG9jz8RpEzGhtT8o9oT/j0aI9NR4xPh2YYRTtY3a3CUf187kecw4bf+w6bhmcbY8X4Y6CFJ4c4pEL0gwJ98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780554418; c=relaxed/simple;
-	bh=TlvkZXdGbj7XL+TvZrTGldEikuGASraGH9+3eY7n/qI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OtpBmgAcgbjNIL/nRkGRb4ImfXqTBJqsw8cm91GxA2yJMjDW1Znf64JgXvhPnSEVHogqwgVbbfBrRmx1DNfmmD2BbTaKKwTATnxuAZrjSsTvJSHmdWCW79KvT7ACKnVP3n25udJugw1VqK+5jMGgPEoNYGF5D1oJMuWjpc3ulJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH5OM0M0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780556060; c=relaxed/simple;
+	bh=6AHqcwYCF5L2+qu7IvYKRr2qbg2IgwWOMHT7y9nRCGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eJunlABYoCXtNolp46KwykhM9XUUOcPkN7ySLp8zcBPTqNdY5Tk42+vBlHQyo/V4e+iDXhVRxcqnz0T+tcP/Mk+nGxU8YYmmxXn1MTktiOuhcZg032PvUM9yTgw9e6EjwXn6RQ77wt1lGfDrydudRf2EVvQoBrf7Pt7tjHSn+rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q72bA5K8; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH5OM0M0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11D51F00893
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 06:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780554415;
-	bh=IVIfCPYFLkPnJSSr4b1JAXayttg+yDdWuao24uaOeic=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=AH5OM0M0+BjDmmU3rGE0aCH8BDZing8zkjlwovG5kevTth448ql0LBiY94nv5Tx/6
-	 vH2pAAZK6tzEgn59bgLJZoZprOVbXvEaBjMBE1sRfHNF2ZM9GWFjgXqG5TXPvm0JB7
-	 h5xklW3wn30YYk4/FRJ3Sf+FRZDMz1CSbGL3L+Br7fF7s38jiB/b/Bcd/CI9gMmSfH
-	 mQwZXHPCB4vqBC34TlhjPlKCWvuAXG+oHWoICF7SQ+1vAkc9LzIQX2c0cxwfNRnIoA
-	 C5DwhMVJkl0t5PeF1n1UgBM9z1zB4xGyiJlHFFIKB70gcRf9VChCBRirx+ce35YAYp
-	 76RZO6rGd02fQ==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68bfcf11050so445131a12.0
-        for <loongarch@lists.linux.dev>; Wed, 03 Jun 2026 23:26:55 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yy8D5dnDHWaO/AlB3Bjd1T+PmpJ/2h/AXcaOtTFDmn9ecYoL4br
-	uJLTidRPd9ixsGm/n67VbWSF5WK+S7GgbYXJvhN+DpfzLOwbh8REVr0BjxRLP+k0Lv/kIqYC0Ii
-	7PHGZrSawiCpJLUNJt3Ma7ffL9FrN9N0=
-X-Received: by 2002:a17:907:2716:b0:bcb:8b03:9fc2 with SMTP id
- a640c23a62f3a-bf0b16d642bmr255594566b.15.1780554414604; Wed, 03 Jun 2026
- 23:26:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q72bA5K8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780556056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6BfvzU/D7GwIcA44ky0gQkL98xJWZVJ60mGNX9dH9YI=;
+	b=q72bA5K8mnAcCXCUujYvH8Xpj4EmBHGxq1/memK/JbJw9irPO4Undui+DGIwYsbCRbO8DI
+	/C8dCT9sx3sNGbLqcwB/E5bQ2LbBzhdMSXUr6SeZVPswO4NTENJgCePqcUCkW+bcpDs6cU
+	Nn2qhjuQSVOwjRVy07bSSz8UIIv06o4=
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	jpoimboe@kernel.org,
+	peterz@infradead.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com
+Cc: kernel@xen0n.name,
+	joe.lawrence@redhat.com,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	xry111@xry111.site,
+	liukexin@kylinos.cn,
+	loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>
+Subject: [PATCH 0/8] LoongArch: Add livepatch build (KLP) support
+Date: Thu,  4 Jun 2026 14:53:09 +0800
+Message-Id: <20260604065317.219777-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260428072021.7289-1-yangtiezhu@loongson.cn> <20260428072021.7289-2-yangtiezhu@loongson.cn>
- <CAAhV-H5tLpXtnMJOx=b5MCDY71jMNkQ5pv1YhgCf72FV=ewcxg@mail.gmail.com>
- <0def4127-3850-1114-d576-42748456f400@loongson.cn> <CAAhV-H51mJpbYjQJYo_a_8mWuG9CSbvbvQNHrpV1G3jmp0Vkaw@mail.gmail.com>
- <9fe9a1f4-bdd0-d6b4-6b76-269e4ffdbc7e@loongson.cn>
-In-Reply-To: <9fe9a1f4-bdd0-d6b4-6b76-269e4ffdbc7e@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 4 Jun 2026 14:26:40 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76bD-bsw_btJuxw7sciQn8o5AwXEuQ7+rT-jBX6dHZjA@mail.gmail.com>
-X-Gm-Features: AVHnY4Kz8XPnCkuAy8bb6qeD8yFUrGs9RADllEaDvBRnS_sBUnnSAXn54Mx2Tzc
-Message-ID: <CAAhV-H76bD-bsw_btJuxw7sciQn8o5AwXEuQ7+rT-jBX6dHZjA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jun 4, 2026 at 10:26=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> On 2026/6/3 =E4=B8=8B=E5=8D=8810:24, Huacai Chen wrote:
-> > On Wed, Jun 3, 2026 at 10:30=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
->
-> ...
->
-> >> For static structures like init_task, any uninitialized fields are
-> >> automatically zeroed out by the compiler according to the C standard.
-> >> Stripping away dozens of lines of ".field =3D 0" complies with modern
-> >> Linux kernel code-cleaning standards. It makes the macro much shorter
-> >> and highlights the only field that actually requires a special
-> >> runtime value (the kernel stack top in .reg03).
-> > I know it is the same for compilers, I mean the current way gives more
-> > information for humans.
-> >
-> > In addition, without reg02, this piece completely has no relationship
-> > with CONFIG_THREAD_INFO_IN_TASK, so please drop it.
->
-> Do you mean keep the original INIT_THREAD as is? No any changes for it?
-> ".reg03 =3D (unsigned long)&init_stack + sizeof(init_stack)," is not
-> necessary?
->
-> That is to say, do not modify arch/loongarch/include/asm/processor.h?
-Yes.
+From: George Guo <guodongtai@kylinos.cn>
 
->
-> >> For reference, please see how INIT_THREAD is defined in other major
-> >> architectures, where they only initialize what is strictly necessary:
->
-> ...
->
-> > None of these commits remove current_pt_regs. Some of them has no
-> > current_pt_regs before THREAD_INFO_IN_TASK, and ARM32 still has its
-> > own implementations in arch/arm/include/asm/ptrace.h now which is
-> > nearly the same as LoongArch.
->
-> If you think it should keep current_pt_regs() as is, I am OK, will do
-> it in the next version.
->
-> That is to say, do not modify arch/loongarch/include/asm/ptrace.h?
-Yes.
+This series adds LoongArch support for the klp-build livepatch tooling,
+enabling automated livepatch module generation using objtool on
+LoongArch.
 
->
-> >>>>    /* Helpers for working with the user stack pointer */
->
-> ...
->
-> > set_current() is a very good friend of get_current(). Though "$tp" is
-> > enough for get_current(), from the x86 implementation we know that it
-> > can also get from the per-cpu array (but suboptimal).
-> >
-> > Move set_current() to current.h also don't need to include
-> > <linux/percpu.h> and <linux/sched.h>, it only need to forwarding
-> > declare "task_struct" and include <asm/percpu.h>, which is exactly
-> > done in the x86 implementation.
-> >
-> > And you needn't worry about the compiling, I have tested before I comme=
-nt.
->
-> If you think this is proper, I am OK.
->
-> Replace __entry_task with current_task (x86) or cpu_tasks (uml)?
-> Replace entry_task_switch() with set_current()? or something else?
-It seems you want to avoid "current", then please use "cpu_tasks"
-rather than "current_task", but "set_current" is a friend of
-"get_current", just use it.
+It is based on Josh Poimboeuf's klp-build series [1] (see base-commit
+below) and extends it with the LoongArch-specific objtool and build
+pieces, plus a few LoongArch toolchain/relocation fixes required to make
+livepatch modules load and run correctly.
+
+Overview:
+
+ - Patch 1 wires up LoongArch klp-build (objtool-based livepatch module
+   generation).
+ - Patches 2-3 add the objtool bits LoongArch needs: arch_adjusted_addend()
+   and the special section entry sizes (.altinstructions, __ex_table,
+   __bug_table, __jump_table) so objtool can process livepatch modules.
+ - Patches 4-5 fix kernel panics seen when loading livepatch modules,
+   caused by LoongArch code-generation/relocation assumptions:
+     * disable -mdirect-extern-access for klp builds (the module loader
+       relies on GOT entries for external symbol references),
+     * force -fPIC so same-compilation-unit symbol references relocate
+       correctly.
+ - Patch 6 fix EFI linking when building with -fdata-sections.
+ - Patch 7 implements arch_jump_opcode_bytes() so klp checksums for
+   jump/call instructions are position-independent, mirroring x86/arm64.
+ - Patch 8 adds KLP_SYSCALL_DEFINEx() support for LoongArch.
+
+Testing:
+ - objtool builds cleanly for LoongArch.
+ - Livepatch modules were generated and loaded on a LoongArch machine;
+   the panics addressed by patches 4-5 no longer reproduce.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=klp-build-arm64
+
+George Guo (8):
+  LoongArch: Add livepatch build (KLP) support
+  objtool/LoongArch: Add arch_adjusted_addend() for KLP support
+  LoongArch: Add special section entry sizes for KLP support
+  livepatch/klp-build: disable direct-extern-access for LoongArch to fix
+    kernel panic
+  LoongArch: fix kernel panic with -fPIC for same-compilation-unit
+    symbol references
+  LoongArch: Fix EFI linking with -fdata-sections
+  objtool/klp: Add LoongArch jump opcode bytes support
+  klp-build: Add LoongArch syscall patching macro
+
+ arch/loongarch/Kconfig                       |  1 +
+ arch/loongarch/include/asm/alternative-asm.h |  5 ++-
+ arch/loongarch/include/asm/alternative.h     |  6 ++-
+ arch/loongarch/include/asm/asm-extable.h     | 10 ++++-
+ arch/loongarch/include/asm/bug.h             | 15 ++++++-
+ arch/loongarch/include/asm/jump_label.h      |  9 +++-
+ arch/loongarch/kernel/asm-offsets.c          | 36 +++++++++++++++
+ arch/loongarch/kernel/head.S                 |  1 +
+ arch/loongarch/kernel/vmlinux.lds.S          |  2 +-
+ include/linux/livepatch_helpers.h            | 22 ++++++++++
+ scripts/livepatch/klp-build                  | 16 ++++++-
+ tools/objtool/Makefile                       |  3 +-
+ tools/objtool/arch/loongarch/decode.c        | 46 ++++++++++++++++++++
+ 13 files changed, 161 insertions(+), 11 deletions(-)
 
 
+base-commit: 85afaba140a4b9f20fe8c8a64b24fc85f022d981
+-- 
+2.25.1
 
-Huacai
-
-> It seems a little strange for the following code in smp.c:
->
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 4b74409a98a3..3afdeca7bc2a 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -665,7 +665,7 @@ asmlinkage void start_secondary(void)
->          set_my_cpu_offset(per_cpu_offset(cpu));
->
->          cpu_probe();
-> -       entry_task_switch(current);
-> +       set_current(current);
->          constant_clockevent_init();
->          loongson_init_secondary();
->
-> Thanks,
-> Tiezhu
->
