@@ -1,40 +1,50 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4C9423A7B
-	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 11:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A752F8E80
+	for <loongarch@lists.linux.dev>; Thu,  4 Jun 2026 12:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780573288; cv=none; b=EnfO7TDZYAEaD/Drom1Gdn7T2PaAr1xQAdrbN2i53cA80FJAbsnZYWrzSILKWx51H9yjrF+1HzOXBp2I2LB+K+/u4gV/CSIvRbg6RSSgwZo3apnuinRB6Yi+DQjerIBauDC85TBSc3doAZu8P/lf4SQoRHeoy2bgDFrk/bR5YRM=
+	t=1780577239; cv=none; b=ozvXQ/LoJwt7xCFlDR9lvKycZqdhaRoy4gxzt4Cm/wCeo0ztdCSg+VmnJfJP8Qw+QXQ4YSW7f0tnGOnMOt66NOFEXEuygqdjRhvg6CLcAVm2PDzpG9XVlJmQCCW6wrTX35LMfDve9nhY+zMm8pSLxvl+ZHvqRT5VTwCJjbqgz7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780573288; c=relaxed/simple;
-	bh=P79+1AHPSN96zaPwwD0aaV7LffXCJL1rEfuAD/KSQoE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ubb03Vtb5QDCTyK3jPuBoKGx0AMekYcqvlkMYKyNPIVQEhZGNQ9Sz62sMU71M9CKznfRDb2OH+tsiuOJBGQJYtQbJZIKRCBYd0QCaXNxJmnqND4sChyFDlCHDEs+DTCboGgIQgXxQ2vV5r5HhUQX0eNI4Rll7UzIHZt2MXPs9IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jekSMxMN; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780577239; c=relaxed/simple;
+	bh=mGLL4gYZsxyjh0SOhyKACvq5R/hIckK43rjCgIeuSE4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d1crcxxp30CfUta8fKuP4yDtfBZNwSF+NRvt7ADNUPlze1u2+ZnPkovtVabUCZgWPH6CLdWikMi06sb1HkBH3UUiTYJrRgpbMw3ml6U0bofPNNHVMnXLFE4l6rDf1+DjZFCH7mC3z9XTJkojz8M6zdzdVut/V0r6/jbzPTJ90BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JQKqYv8Q; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jekSMxMN"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780573271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qk2XO2YZX9Ln1pAdVPnMLvfveYauig7cdWN65Sl46ws=;
-	b=jekSMxMNlV3iCVVB/1ug/bBO3WGo78aS1KipNbzed843YMtOz9JLpaG8RA7QBx/6p1mvW+
-	Hiw/YxGZQt8IlRhdE+G7JrIhBUSRPz4/VSu0JgUQa2v2onfp/dyCM658KfDnqLxLPwuJ5C
-	lf5SJjSbC7Xy0vF71N+Xh3i+ZZ8+pWw=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: maobibo@loongson.cn,
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JQKqYv8Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1780577224;
+	bh=jHi0ltUOL5zvC2Rty/sIW4nOr19+20xTrMETwUpRcxQ=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=JQKqYv8QeJVxZOTpyJZzr2JVAxM6Z7q+KQKYGez4BxvlIG4yACbTqmtgNFOEE4McP
+	 P+kwZ0nD16skzLjYimKfxFMWR34PRo9UMq56OObG9eTDmRDSLwNTe6nZc0K4CEhcGC
+	 zKLLTqey0XWAyHzbnJgat5htbyuzDFPphT/qOvLs=
+X-QQ-mid: zesmtpsz4t1780577204tbaec641b
+X-QQ-Originating-IP: HG91FUHEZ3GUlzVBNP359O1cQnfIv89a2YRKjs/3uUw=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 04 Jun 2026 20:46:41 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 1488707378607944439
+EX-QQ-RecipientCnt: 9
+From: Qiang Ma <maqianga@uniontech.com>
+To: zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v3] LoongArch: kexec: use core control page for relocation trampoline to avoid QEMU FDT conflict
-Date: Thu,  4 Jun 2026 19:41:06 +0800
-Message-Id: <20260604114106.391502-1-dongtai.guo@linux.dev>
+	Qiang Ma <maqianga@uniontech.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] LoongArch: KVM: return full old CSR value from kvm_emu_xchg_csr()
+Date: Thu,  4 Jun 2026 20:34:33 +0800
+Message-Id: <20260604123433.3182173-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -42,84 +52,55 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: OJG2NVWVA7qwl8m2S2QOxwfG8OG4MmwljwqrQycMk0Ur0LfhVY/CRUYM
+	OhFoQJzkW+fIirJCeYCg8s8m9I8b7wveBcc1CQYnAWniCQKufZokbGg1dyPcxGrjFku9IY6
+	0VhPMdDWq3Ww7XnX1s4W9YbVBeQ6sbU3jn5/um2GXmL6LDNjTYDHXt1LnkaAGdxUNHbfogI
+	8PcPsdkI5ONXgcLuaOSFaP2ZMiQMGJxIX1A+0iPgFsD5p3QNUHndFLWDs7L1AxARgRXGrx0
+	KlXhWxVd2oXb2Sxnn5DtGwvBoHU7p85ZhjyAyUTF5PRFpN3miHGH43C1kkdDa6ynXA4KxGm
+	beyJE3QWx9NkCog3iym0ToiHV1ZWz+cu6RXunvm/n+yCvvmkC0PQYE/Vr8rL3CpzgvWaOTI
+	Pd6hHEFbAGPGXh1piPP7kqEggjjOiOiTxVkyaJl/Zg4Tcgu5kyUR+oRFuRVlOK+71bYoHQY
+	6+THeCnEV6/XY3qzyKz+iAsuV2eAlNGmmmxJrx72TCky+cgmTnng7GbyB6ZVI4NLepIGlT/
+	ytjSGjjmneDS3jNcYv7ZWrtM8q+3NDrbpSA7/UlljUZz+GVZceOHqr09arBlX5p6DxWt1A3
+	6i4KPunIdPk8q1hOBP801iXJIcA4KgS0OTO4E54eB+lI7cAeRKTrqzvwkh51ErrZ3iTNgCQ
+	2MJpW9zY1l78nF7I8OHI950x5DV0CmS9bQZqU5SzJGn47Ec278iFKiT8LBarj6EHe9XcPox
+	rVwDrs2myFHylPMNCQsxHY2IkG7Fy1c8AzT8DvPxofxAq2VwN+Jhp6cguh3Gv56vBhtRFOH
+	GyagdEE2UtZF+eL2WSnztGjir3n8YLQzZzk1iibpeuasT3o4zIdIOF57HSkT+yL6zzT+d/3
+	tXE1nJwxugRhAVepiA9il+zC/nZQClXlHVKZA4KPXx3ef44FyGdHzFDBxDtcJvZ4K85benj
+	4Q5LbVvv94j+Yx023REt8pbKQCPXq+ff6t7r9DVEAnt0mold329Ao2SbEh87tDZW6ZvtYOC
+	D16TF9YlKGO+m1FxuZzcpCodbI8wsa8iRfg0fWIg==
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
 
-From: George Guo <guodongtai@kylinos.cn>
+The LoongArch CSRXCHG instruction returns the full old CSR value in rd
+after applying the masked update. kvm_emu_xchg_csr() currently masks
+the saved value before returning it to the guest, so rd receives only
+the bits selected by the write mask.
 
-KEXEC_CONTROL_CODE was hardcoded to TO_CACHE(0x100000).  QEMU places its
-machine FDT at physical 0x100000 when booting with '-kernel', so
-machine_kexec_prepare() overwrote the FDT with the relocation trampoline.
-The kexec'd kernel's fdt_setup() then read trampoline code instead of a
-valid FDT, earlycon auto-detection failed, and the second kernel booted
-silently with no console output.
+That breaks the architectural behavior and makes a zero mask return 0
+instead of the previous CSR value. Keep the masked CSR update, but
+return the unmodified old CSR value.
 
-The trampoline does not need a fixed address.  It is executed by the
-current kernel to relocate and enter the new kernel, and is dead once the
-new kernel starts.  Drop KEXEC_CONTROL_CODE and reuse the
-control_code_page that the kexec core already allocates (as arm64 and
-riscv do).  That page is excluded from the relocation copy and lives
-nowhere near 0x100000, so the QEMU FDT is left intact.
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
+Fixes: da50f5a693ff ("LoongArch: KVM: Implement handle csr exception")
+Cc: stable@vger.kernel.org
+Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 ---
-Changes in v3:
-- Only the relocation trampoline is moved off the hardcoded address onto
-  the core-allocated control_code_page.  v2 also moved the kernel command
-  line to a kexec control page, but as Huacai pointed out a control page
-  only avoids being clobbered by the relocation copy in the current
-  kernel; it is not reserved in the new kernel, which reads the command
-  line early in boot.  The command line therefore stays at the existing
-  fixed KEXEC_CMDLINE_ADDR in the reserved first 2MB (unchanged).
+ arch/loongarch/kvm/exit.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Changes in v2:
-- Instead of moving KEXEC_CONTROL_CODE to a different fixed address, reuse
-  the kexec core's control_code_page for the trampoline.
-
-v2: https://lore.kernel.org/all/20260601033820.38805-1-dongtai.guo@linux.dev/
-v1: https://lore.kernel.org/all/20260528135828.196953-1-dongtai.guo@linux.dev/
-
- arch/loongarch/kernel/machine_kexec.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index d7fafda1d541..3527da57234d 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -21,8 +21,14 @@
- #include <asm/cacheflush.h>
- #include <asm/page.h>
- 
--/* 0x100000 ~ 0x200000 is safe */
--#define KEXEC_CONTROL_CODE	TO_CACHE(0x100000UL)
-+/*
-+ * The kexec'd kernel reads its command line from this pointer early in
-+ * boot, so the command line must live in memory the new kernel will not
-+ * reuse.  Keep it at a fixed address in the first 2MB, which both the
-+ * current and the kexec'd kernel always keep reserved (see
-+ * memblock_reserve(PHYS_OFFSET, 0x200000) in arch/loongarch/kernel/mem.c).
-+ * 0x108000 does not overlap QEMU's machine FDT at 0x100000.
-+ */
- #define KEXEC_CMDLINE_ADDR	TO_CACHE(0x108000UL)
- 
- static unsigned long reboot_code_buffer;
-@@ -72,9 +78,14 @@ int machine_kexec_prepare(struct kimage *kimage)
- 		}
- 	}
- 
--	/* kexec/kdump need a safe page to save reboot_code_buffer */
--	kimage->control_code_page = virt_to_page((void *)KEXEC_CONTROL_CODE);
--
-+	/*
-+	 * kexec/kdump need a safe page to save reboot_code_buffer.  Reuse the
-+	 * control_code_page allocated by the kexec core (as arm64 and riscv
-+	 * do) instead of a fixed address: the trampoline is only executed by
-+	 * the current kernel before entering the new kernel, so it needs no
-+	 * fixed or reserved location.  This also stops machine_kexec_prepare()
-+	 * from overwriting QEMU's machine FDT at 0x100000.
-+	 */
- 	reboot_code_buffer = (unsigned long)page_address(kimage->control_code_page);
- 	memcpy((void *)reboot_code_buffer, relocate_new_kernel, relocate_new_kernel_size);
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index 3b95cd0f989b..264813d45cbe 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -103,7 +103,6 @@ static unsigned long kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
+ 		old = kvm_read_sw_gcsr(csr, csrid);
+ 		val = (old & ~csr_mask) | (val & csr_mask);
+ 		kvm_write_sw_gcsr(csr, csrid, val);
+-		old = old & csr_mask;
+ 	} else
+ 		pr_warn_once("Unsupported csrxchg 0x%x with pc %lx\n", csrid, vcpu->arch.pc);
  
 -- 
-2.25.1
+2.20.1
 
