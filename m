@@ -1,169 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B095D3F0ABF;
-	Fri,  5 Jun 2026 10:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307FD2F0C62
+	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 14:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780654306; cv=none; b=ftH+PBZH+oCkfoqpL11a4X7/NsuNZaz5+fvWm+r4jeoNSqPe4AhoVo3lmGc96hSfzheCsUf21G9Lv4XoLIBPEoKqx8TY4AoTsxAon7fJWEx6OVhSuP0X+6AfvqnnX8VcwfmtT3x+Afscvieq2U8g6hmELWzymRl8iR6RLs0bMAU=
+	t=1780668162; cv=none; b=ZUC28k2I24cNTyP84bitwC/MXO/ltCdHIhP4D4DU8tRO0bMtVRX7RzX5H8iwwu2XVi6YVPIMIxq1dY9TEwCmmiJCZvpMNnUjsSSB1WKuon8wqG2iZyl8cswhnQcs+rLLeu48jpO/9S04+uHGE+3BWolgw7FytAstEkxuL88q7Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780654306; c=relaxed/simple;
-	bh=+oSOPs6reVleJdmau1UD0l1OFs/hLRZSYZdSyznmc6k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uaiOkuJb4l/bBue38yupSKL8stIkyA6tDJeCCko5OqiNapIAX7JU7irdc0ZMpV1swmIoJnV7wACYyooZC4mmSztqyS+FS5gAQPN4ZOMyEIlBSIEBiWyqIqd8EKVxATJjKfb6IQVgtE/Qa7IaWa5K8cQ9gPxxy0xwCtg4uDsPOVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuYKJMtt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780668162; c=relaxed/simple;
+	bh=gWBPtU2cqcbx/0cq5/3l1vBn3W8oqMiehaz14Dn6dAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dp2qpj6iGmxl39MJBr3LK9YTh3olK4ESPmkKvfDKujJA5GmZDs2LeMwY6hN4w4fIu9nCZtHMIhVPrxIis6RhCIW8eH61QKgjt4WCiZPmhqt0DQONDLYAatvOhBWVT4tc9p9mlVZYvpKBZVMf9g7c17NPfI2sJLXF7JxfNm2XVTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+CyRjE2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuYKJMtt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 426A51F00893;
-	Fri,  5 Jun 2026 10:11:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+CyRjE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2731F00898
+	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 14:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780654305;
-	bh=aqkBQe41bV9bTC2QJ3RlElkystE3ub8D5XKqw3M77sk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WuYKJMttjplblCLncClf1gu5wappddlpic3N33kpJlzlKaJD0BWqHv4LaPNAbJ8Ax
-	 LnQ0etd4FoLgpvQtaGElW5MiDG911N5/nkDtfGf6IvWjIQUhhYYhn0nuRmsENOZmgA
-	 v2Am40yyBj/skYr8EkKUdvH7pXOsWdFMU2/VkwOzQ8Dx+3Hb24sgqYkTVIUPI3CWcH
-	 kfkmmkjL42nFi7FBbmgjCHYSoF8R6Kg0Qt+aVUP3GlRv4kkb9x6G2QrMW+DeEtVeo5
-	 JoRKmzE2m4QXwfZSFCjVVs/6s1LBcR9dSJmgVLM+qtJRA+bELS8T/9GlZJgknuSOdY
-	 vfQF1ZO4iS75A==
-Message-ID: <2e9662a3-1047-41b2-a269-8fcd3e30f8f9@kernel.org>
-Date: Fri, 5 Jun 2026 12:11:41 +0200
+	s=k20260515; t=1780668160;
+	bh=nfiObLvmOcsNy4699AN1tPJ0/P9ewISVmQ3n+5gyZe4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=W+CyRjE2zwmLCNLzZyzHm/c1Q8OCzjSSvbrMoO5ThJ1Oa7AWzbvxpB30JYU664qhc
+	 bn3NIF45HRVTRy+9gYlTpi1ZIua/Ysq9Qlx76cMz1lnue+lJoK9yk4PemgcRSgcT5C
+	 ZGZ27dGqbsVkEdGBDsDqEFkO4/JtNNXgT3XpZ2l8PzHQPaISyWaxX5dvy/jWUnVzhv
+	 JZURp9dEaOynmcMPH/Bl3hrTN1yV8v7gAJ2WImF9WdSwtrD+cvr0mpcVsradA3FFRT
+	 mNy6jKVu7FuTgBmY8Cf4jJp8W5xvCXJcqEYY5aHZUCEEt5nxIghBBvFUPYUcdxB+T4
+	 EHQ/DkYAkYuBw==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6913160c9ddso192983a12.2
+        for <loongarch@lists.linux.dev>; Fri, 05 Jun 2026 07:02:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/qoTBAnRTaT0q7KFK2JMWcWJK9u/BD14bkQJY7iqnK2Xfctu9jNRHevT7H0WUU2JiVy2zovu3FCJU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw6y84G+vc0GWDAkDdsarkX0qEBm4liVYGYnnj8+KkwHqA9k9u2
+	/Z27r0xfZo6U+yxHNY/koEcINxPlceIl0xnsfoY3GBYJlGAjRdevvpV36Pq3mVSxbS45Oz5f0uY
+	DMznxowLM3TazRDE20lIHJf6o+1MIHQI=
+X-Received: by 2002:a17:907:94cc:b0:be5:2bc0:5370 with SMTP id
+ a640c23a62f3a-bf373eec55emr180650066b.36.1780668159364; Fri, 05 Jun 2026
+ 07:02:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] can: Add Loongson CAN-FD controller support
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
- Bingxiong Li <libingxiong@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-can@vger.kernel.org, jeffbai@aosc.io, gongyifu@loongson.cn
-References: <cover.1777273055.git.zhoubinbin@loongson.cn>
- <d7b19f6c1e634ffe4454809e73fb03058e7a1a9d.1777273055.git.zhoubinbin@loongson.cn>
- <709ef711-4af1-413e-9662-08892b18fca5@kernel.org>
- <CAMpQs4K5Q_vC=wnGp3gf=F5RU8t61PLh4dLEmcLMMbM4mR+Wnw@mail.gmail.com>
- <6ea756bf-d776-4eff-b0ca-eeaa6737e035@kernel.org>
- <CAMpQs4KfLP9z6TVx+xGzuW7KEXMRAC0Y59hMBUmq57x6U33t7Q@mail.gmail.com>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAMpQs4KfLP9z6TVx+xGzuW7KEXMRAC0Y59hMBUmq57x6U33t7Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260525092633.1706633-1-zeng_chi911@163.com> <20260605083108.2534481-1-zeng_chi911@163.com>
+In-Reply-To: <20260605083108.2534481-1-zeng_chi911@163.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 5 Jun 2026 22:02:29 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7yd7x_8Dj2=FckRO+cjF7+H+3MXbfscqtz+5zSJwqL8w@mail.gmail.com>
+X-Gm-Features: AVVi8CfekefRdJ7Toyv8yVIDcC0Vphkua88IymWRs6Z4Ya24fhUvCwRyNPVjSwk
+Message-ID: <CAAhV-H7yd7x_8Dj2=FckRO+cjF7+H+3MXbfscqtz+5zSJwqL8w@mail.gmail.com>
+Subject: Re: [PTACH v3] LoongArch: KVM: Add missing slots_lock for IO bus
+ device register/unregister
+To: Zeng Chi <zeng_chi911@163.com>
+Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, kernel@xen0n.name, 
+	kees@kernel.org, maqianga@uniontech.com, gaosong@loongson.cn, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	zengchi@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/06/2026 at 07:52, Binbin Zhou wrote:
-> Hi Vincent:
-> 
-> Sorry for the late reply.
-> 
-> On Tue, May 26, 2026 at 11:58 PM Vincent Mailhol <mailhol@kernel.org> wrote:
->>
->> On 21/05/2026 at 05:24, Binbin Zhou wrote:
->>> Hi Vincent:
->>>
->>> On Thu, May 7, 2026 at 1:50 AM Vincent Mailhol <mailhol@kernel.org> wrote:
->>
->> (...)
->>
->>>> Use the CAN TDC framework to get the SSP value (c.f. struct can_tdc,
->>>> struct can_tdc_const and can_fd_tdc_is_enabled())
->>>
->>> Last question:
->>>
->>> In the general framework, the calculation condition for tdco is
->>> (dbt->brp == 1 || dbt->brp == 2), which does not seem to correspond to
->>> the current condition (dbt->bitrate > 1000000).
->>
->> Where does the current condition comes from? Is it some empirical test?
+Applied, thanks.
 
-You did not answer this question. Where does this idea come from? Is it
-an individual initiative from one of your hardware engineers or does it
-come from any literature or research paper?
+Huacai
 
->> FYI, the
->>
->>   (dbt->brp == 1 || dbt->brp == 2)
->>
->> check comes from ISO 11898.
-
-My feeling is that you were not aware of the BRP <= 2 criteria. That
-criteria comes from ISO 11898-1. Was your hardware team aware of this
-BRP <= 2 ISO criteria? If yes, what made them decide to not use it?
-
->>> Although for CANFD, rates below 1 Mbit/s would negate the primary
->>> advantages of FD, from a controller hardware design perspective, I
->>> would still prefer to retain the condition (dbt->bitrate > 1000000).
->>>
->>> Do you have any other suggestions?
->>
->> Using TDC on low bitrates is indeed unstable and can lead to bus errors.
->> But the condition which you suggest
->>
->>   (dbt->bitrate > 1000000)
->>
->> is indirectly linked with the brp values. That's why the brp check is
->> sufficient (and more precise than the empirical 1 Mbit/s threshold value).
->>
->> Are you able to trigger any bus errors when using TDC with a brp value
->> of 1 or 2 and a bitrate below 1 Mbit/sec? If no, there is no reason to
->> add this extra check and we can continue to rely on the framework test.
-
-You also didn't answer this second question:
-
-  Are you able to trigger any bus errors when using TDC with a brp value
-  of 1 or 2 and a bitrate below 1 Mbit/sec?
-
-> After offline discussions with our hardware engineers, we have decided
-> to retain the existing decision criteria.
-> 
-> The threshold is set to `1 Mbit/s` primarily based on the CAN 2.0
-> physical layer protocol, which supports a maximum rate of 1 Mbit/s;
-> this decision also takes into account that at low baud rates, the bit
-> duration is sufficiently long, so there is generally no need to enable
-> the second sampling point. Conversely, if the CAN controller’s time
-> quanta clock frequency is very high, causing the BRP to consistently
-> exceed 2 while traversing parameters, TDC may not be enabled.
->> Additionally, there is a low probability of bus errors occurring
-during testing.
-
-Can you prove that the 1Mbit/sec threshold gives a *lower* probability
-of bus errors occurring compared to the BRP <= 2 rule?
-
-The point is that to be accepted, it is insufficient for your new
-criteria to just match the current criteria. It has to *improve* the
-current situation. Otherwise, more code for same performance means that
-we just bloated the kernel with a useless check.
-
-> So, in your opinion, should we keep it as is?
-
-An important aspect for the kernel maintainability is to centralize code
-as much as possible. If you can prove that your 1Mbit/sec threshold is
-*better* than the current rule, then this check must go in the framework
-(e.g. modify can_fd_tdc_is_enabled()) so that all the drivers can
-benefit from it. If not, it has no reason to exist.
-
-As much as possible, we should avoid driver individual initiatives, so
-keeping this condition in your driver is a hard no for me (one exception
-for local workaround would only be if your device has a defect which
-need some unique logic for fixing).
-
-So, either convince me through some tangible proof that your criteria
-improves the ISO criteria (e.g. empirical test showing bus error
-reduction when adding your rule) or drop the idea.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+On Fri, Jun 5, 2026 at 4:31=E2=80=AFPM Zeng Chi <zeng_chi911@163.com> wrote=
+:
+>
+> From: Zeng Chi <zengchi@kylinos.cn>
+>
+> kvm_io_bus_register_dev() and kvm_io_bus_unregister_dev() should be
+> called under kvm->slots_lock. The unregister calls in ipi.c, pch_pic.c
+> and eiointc.c were missing this protection. Add it to match the
+> register side.
+>
+> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v3: fix subject prefix (drop "net", LoongArch KVM does not go through the
+>     net tree); add Reviewed-by from Bibo Mao. No code change.
+> v2: extend the fix from the EIOINTC virtual extension device registration
+>     (v1) to the ipi.c / pch_pic.c / eiointc.c destroy paths as well.
+> ---
+>  arch/loongarch/kvm/intc/eiointc.c | 6 ++++++
+>  arch/loongarch/kvm/intc/ipi.c     | 2 ++
+>  arch/loongarch/kvm/intc/pch_pic.c | 2 ++
+>  3 files changed, 10 insertions(+)
+>
+> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
+eiointc.c
+> index 2ab7fafa86d5..2b14485d14a7 100644
+> --- a/arch/loongarch/kvm/intc/eiointc.c
+> +++ b/arch/loongarch/kvm/intc/eiointc.c
+> @@ -645,10 +645,14 @@ static int kvm_eiointc_create(struct kvm_device *de=
+v, u32 type)
+>
+>         device =3D &s->device_vext;
+>         kvm_iodevice_init(device, &kvm_eiointc_virt_ops);
+> +       mutex_lock(&kvm->slots_lock);
+>         ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS,
+>                         EIOINTC_VIRT_BASE, EIOINTC_VIRT_SIZE, device);
+> +       mutex_unlock(&kvm->slots_lock);
+>         if (ret < 0) {
+> +               mutex_lock(&kvm->slots_lock);
+>                 kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device)=
+;
+> +               mutex_unlock(&kvm->slots_lock);
+>                 kfree(s);
+>                 return ret;
+>         }
+> @@ -667,8 +671,10 @@ static void kvm_eiointc_destroy(struct kvm_device *d=
+ev)
+>
+>         kvm =3D dev->kvm;
+>         eiointc =3D kvm->arch.eiointc;
+> +       mutex_lock(&kvm->slots_lock);
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_ve=
+xt);
+> +       mutex_unlock(&kvm->slots_lock);
+>         kfree(eiointc);
+>         kfree(dev);
+>  }
+> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
+c
+> index 1f6ebbd0af5c..4fa0897d7bdb 100644
+> --- a/arch/loongarch/kvm/intc/ipi.c
+> +++ b/arch/loongarch/kvm/intc/ipi.c
+> @@ -447,7 +447,9 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
+>
+>         kvm =3D dev->kvm;
+>         ipi =3D kvm->arch.ipi;
+> +       mutex_lock(&kvm->slots_lock);
+>         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
+> +       mutex_unlock(&kvm->slots_lock);
+>         kfree(ipi);
+>         kfree(dev);
+>  }
+> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
+pch_pic.c
+> index aa0ed59ae8cf..175a630aceb4 100644
+> --- a/arch/loongarch/kvm/intc/pch_pic.c
+> +++ b/arch/loongarch/kvm/intc/pch_pic.c
+> @@ -481,7 +481,9 @@ static void kvm_pch_pic_destroy(struct kvm_device *de=
+v)
+>         kvm =3D dev->kvm;
+>         s =3D kvm->arch.pch_pic;
+>         /* unregister pch pic device and free it's memory */
+> +       mutex_lock(&kvm->slots_lock);
+>         kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS, &s->device);
+> +       mutex_unlock(&kvm->slots_lock);
+>         kfree(s);
+>         kfree(dev);
+>  }
+> --
+> 2.25.1
+>
