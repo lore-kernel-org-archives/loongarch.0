@@ -1,103 +1,85 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FAC399359
-	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 01:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E6B3E714D
+	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 02:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780623893; cv=none; b=jPwG2qr6c+PFhtfV/K2/iq9ZxFtTr6pltdH7hm3MuuwVpH6E/ypxmNBiPE//jmn6KaBryoQy8AexsY8ESFXcOyj5D9hqvJXRybPz6YTUSDX96tsQBiJYU3cnN67Xy2Oe8WrgYrJtKPj0DmsSUdHE1+lTh6B2OdrNsMiCmo6hNy4=
+	t=1780628370; cv=none; b=h4ou9GElTO2PyhOx/ygZXaP/+SuQxrWfBz0mHZAcIGOY2LOR5G1TbQfaOtg0nphWBPgsPsKnQ0kG2Hc0W8kQH+dyehryy+KPqmtGaul0L3HuMsQNnXVy6hbIVoM7sZnSBuAEyJ8anRXpE7+eNIRLgfyJjo3p/bzN6y8ON2ylPDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780623893; c=relaxed/simple;
-	bh=R6w7HRslqNWOn2idpFVjzHryPc8448YIPtHxHthf7R4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=qx82vsz7csLTCWqQ2LjfSuZfgC5mpP7blXi0UQfW/+x45pPskAVDg+sHYK91Quo0zSc1WCW5q3iA9klTJG3/zFCVZyenq1PX65ljbUMPS4dN07IktFi7PI0yo57mpk+0BpQ8ie1ONz7BUK4mb/FxDuqGJzGVRLBQK0yEECsnK84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxFekKKiJqdMgQAA--.40171S3;
-	Fri, 05 Jun 2026 09:44:43 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJCx2+AGKiJq+2ycAA--.34930S3;
-	Fri, 05 Jun 2026 09:44:39 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: KVM: return full old CSR value from
- kvm_emu_xchg_csr()
-To: Qiang Ma <maqianga@uniontech.com>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20260604123433.3182173-1-maqianga@uniontech.com>
-From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <08d3b817-9de6-746d-2b2c-acc4a578f95a@loongson.cn>
-Date: Fri, 5 Jun 2026 09:41:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1780628370; c=relaxed/simple;
+	bh=nktvDi+xKyZUj7RdPCtd0VHwAzm5FVUJAEzFFALvsO4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NTkDuWqhk+OYpS3iJHNm5cygQ8XCgQ/nN3RWhqNWM1avb/8MxooYhuxxk+ddKJNsQgIScEriX4zRQTQqMj3eRaht1xiByeeG4U/bk5cpK1nbx0jWSTxL4wv/dRJxc2+wgpoB/Nctqu08m8Sv8mWsV/iT1OAm3AjpY6xeWqkzTcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mv0FWlR+; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mv0FWlR+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 479521F00899
+	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 02:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780628365;
+	bh=2BnhDWEdcgX7kHMY2/Qtsi0IbV+ry1r6Jf76CFL9m/Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Mv0FWlR+dBWKuVb4Y9dVK3UDsi6Kbfy/4WlrzbUhl4MVyC50NqG6lqiq2Mre3PisU
+	 8aS6f3Bd+atNg9r94lu8gArlIe4QVTlKVTEY+Us7L/QqHiTeqaJ/NnhjuqoUgJgM3p
+	 Z/zlS5iONYLkRwGRA7O7A3ZY6AfBOmN4fDqO6qkNl57ijYQjKSUjtytymkfy9ViegO
+	 zIxxLwxdpmSJ6i8p1SAV3noZ86iRH8+s06DMLxeq1GipiDKCABt9a7RiYRTZtjh4Og
+	 brdfFE1nXgyDiEqj8Nr49HIti8m1k/2j+hKt29PlYORG91G+KRLO9NbRmTu4UBJr+8
+	 PWDSI6fy7xWGw==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-beeba001887so188725266b.3
+        for <loongarch@lists.linux.dev>; Thu, 04 Jun 2026 19:59:25 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzpGFOkd8buiaBMrzAtzVr6wFCv+0ZW0UNk2X+FLPz/9fgixq14
+	07fR7+wC4PpuZLYj/FSZtjwZEatHdtCyHp8G+u6nrtRYuq8xCFPrO2gE20lsKm9/wJHce8x3UZJ
+	LN9Tpsfb7Jcf0FLjuPQALpVwywtN7DwU=
+X-Received: by 2002:a17:907:6e9f:b0:beb:7979:47dd with SMTP id
+ a640c23a62f3a-bf3738f1f81mr69734766b.27.1780628364047; Thu, 04 Jun 2026
+ 19:59:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260604123433.3182173-1-maqianga@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx2+AGKiJq+2ycAA--.34930S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF4kKrW7ZF13Wr1rCF4xZrc_yoW8GFWrp3
-	y3A3WUCw40gr48ta47Wws8Xrs8ArWDGryIgF9FyFyUXrWayFyrXFnYgr98WF1q9w4Sgr1I
-	qrWSg3s2van8t3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOxhLUUUUU=
+References: <c36cab4c-0a91-4802-8693-a6ae3cee65b1@web.de>
+In-Reply-To: <c36cab4c-0a91-4802-8693-a6ae3cee65b1@web.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 5 Jun 2026 10:59:44 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7cEN+zw6M8ZyJUNGNv=Q-M=vyG3ocwDqn41ZHQvBJVCg@mail.gmail.com>
+X-Gm-Features: AVVi8Cdslvam3EeatbYu5wGh9V7ZzQ4_XDnT4ntjrZfZ1GNSK5Yng0l-ez8zUPA
+Message-ID: <CAAhV-H7cEN+zw6M8ZyJUNGNv=Q-M=vyG3ocwDqn41ZHQvBJVCg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] LoongArch: More efficient data output in show_cpuinfo()
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: loongarch@lists.linux.dev, George Guo <dongtai.guo@linux.dev>, 
+	Hengqi Chen <hengqi.chen@gmail.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Wang Xuerui <kernel@xen0n.name>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Markus,
 
+I suggest squash these pieces to a single patch.
 
-On 2026/6/4 下午8:34, Qiang Ma wrote:
-> The LoongArch CSRXCHG instruction returns the full old CSR value in rd
-> after applying the masked update. kvm_emu_xchg_csr() currently masks
-> the saved value before returning it to the guest, so rd receives only
-> the bits selected by the write mask.
-> 
-> That breaks the architectural behavior and makes a zero mask return 0
-> instead of the previous CSR value. Keep the masked CSR update, but
-> return the unmodified old CSR value.
-> 
-> Fixes: da50f5a693ff ("LoongArch: KVM: Implement handle csr exception")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
-> ---
->   arch/loongarch/kvm/exit.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-> index 3b95cd0f989b..264813d45cbe 100644
-> --- a/arch/loongarch/kvm/exit.c
-> +++ b/arch/loongarch/kvm/exit.c
-> @@ -103,7 +103,6 @@ static unsigned long kvm_emu_xchg_csr(struct kvm_vcpu *vcpu, int csrid,
->   		old = kvm_read_sw_gcsr(csr, csrid);
->   		val = (old & ~csr_mask) | (val & csr_mask);
->   		kvm_write_sw_gcsr(csr, csrid, val);
-> -		old = old & csr_mask;
+Huacai
 
-Hi Qiang Ma
-
-This is correct from the manual. Is there any test case or problem in 
-practice?  I want to evaluate severity about this problem.
-
-Regards
-Bibo Mao
->   	} else
->   		pr_warn_once("Unsupported csrxchg 0x%x with pc %lx\n", csrid, vcpu->arch.pc);
->   
-> 
-
+On Thu, Jun 4, 2026 at 10:48=E2=80=AFPM Markus Elfring <Markus.Elfring@web.=
+de> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 4 Jun 2026 16:40:05 +0200
+>
+> A few update suggestions were taken into account
+> from static source code analysis.
+>
+> Markus Elfring (3):
+>   Simplify data output
+>   Delete unnecessary braces
+>   Combine two seq_puts() calls
+>
+>  arch/loongarch/kernel/proc.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> --
+> 2.54.0
+>
+>
