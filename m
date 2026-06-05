@@ -1,99 +1,141 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918B249251F;
-	Fri,  5 Jun 2026 08:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3F438C41B
+	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 08:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780647075; cv=none; b=n2mpJkiHwhIZnpdPd6+Dvsxqusn+XuxdunNTCkA4UuMYhVH8vLAkXRxf9yftFP1d4JH1oXGjYbmoSKd/l3ly6/yFtAJ2+v29DlVyj7jLa9zwPBIb+LWSbMdGKvF+aoY9xkMkmElqZg8KFF/Vm3E+pulPzowYyLAEvuZEzziuybs=
+	t=1780648303; cv=none; b=m7aFlv5O+HkHLzY7TKwD7pp76jPgSWpCUWH3EfLv6uuQEW05gl27+gd6xil73SK1gNWtc8BHasmmY4Q00JYddQ8+Gnofe1t7S4GQhuRqg+Qez8VKd41T+miCUWmo385kMFZn6PdLTqV/1+lvvZ6qKJuU/Jtl7HpooizCrflrfQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780647075; c=relaxed/simple;
-	bh=1P75YSe2hDvmC1O+S+75qpdiJlWGlVpjjab3TK9N9+E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e89TIBEpYTR5ICJ60dIG9mfe+jIcIvmZMkQ+CaQ8Qj+Z3wPoUk53uxtf4wBQqRDH1fXpO01LuDKSntGrGXEV8OAmcjkOLeN5XHpsPwpEereOAPfv+g9VJ7kWEBxPyYPf+ncqBoAJfYrztbMz6Mfp2IkgW7SLCBljQdbc5mI9rd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=alo3Vano; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1780648303; c=relaxed/simple;
+	bh=fMZtIWme5b7xJuiONLfTlChtrx+lMbt1bP2+xkY0Rlc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=o6hxMi/z8CzbEjq+qkvPhj/CPYG8r5oHaymclaExrCkwRTEvsxwSiO44IUjhiGYhcNHNWQVnwdbukWX63eDOnOPTgt7EoZ3bUwRjS/iSVuWvFYtbUy3fmcJJGl5/pOk/PPBLpfrcWMctbS79H1B9ClXjZUReB7xmpwPZfyEnluY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=QZd1YsuZ; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="alo3Vano"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1780647064;
-	bh=q77HunASJP9ggqwJr7W+b5k7TC1K39oK1QiKtyFMGzs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=alo3VanokqDGJ5qOPkRx2f7xt8vyzPi7DaKgWDmHCliAyIbuqnaffUl75Cx7/VwsL
-	 IWoeAGYFUdyzQZZQEpN1oTHU1G/Zvt+K6Jf9ynHrBMXTMvaiIFOEdezf7vNujZ+rra
-	 OTulVux8/FM8YuEEKOHhSwWdGgN/4zi1pMzk9v3w=
-Received: from [127.0.0.1] (2607-8700-5500-e873-0000-0000-0000-1001.16clouds.com [IPv6:2607:8700:5500:e873::1001])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id DC1A065982;
-	Fri,  5 Jun 2026 04:10:59 -0400 (EDT)
-Message-ID: <046da9c8886dcb35d6427b7467ce551ef1426480.camel@xry111.site>
-Subject: Re: [PATCH 5/8] LoongArch: fix kernel panic with -fPIC for
- same-compilation-unit symbol references
-From: Xi Ruoyao <xry111@xry111.site>
-To: George Guo <dongtai.guo@linux.dev>, chenhuacai@kernel.org, 
-	jpoimboe@kernel.org, peterz@infradead.org, jikos@kernel.org,
- mbenes@suse.cz, 	pmladek@suse.com
-Cc: kernel@xen0n.name, joe.lawrence@redhat.com, rostedt@goodmis.org, 
-	ardb@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	yangtiezhu@loongson.cn, jiaxun.yang@flygoat.com, liukexin@kylinos.cn, 
-	loongarch@lists.linux.dev, live-patching@vger.kernel.org,
- llvm@lists.linux.dev, 	linux-kernel@vger.kernel.org, George Guo
- <guodongtai@kylinos.cn>
-Date: Fri, 05 Jun 2026 16:10:58 +0800
-In-Reply-To: <20260604065317.219777-6-dongtai.guo@linux.dev>
-References: <20260604065317.219777-1-dongtai.guo@linux.dev>
-	 <20260604065317.219777-6-dongtai.guo@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.2 
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="QZd1YsuZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Eg
+	mdkVQuPff3keShyxNiPT4E0wXBaHgzYCJbQUlyoWc=; b=QZd1YsuZgKM37TmqGA
+	F/hMCfY7X38ya/KukpdlmQumz8CE0bXlcwLg42fFZLZ0/BO6Pv87Qe8nopnIHxGN
+	0icpd73mFDHnqGMe4w6GkBZwnlNUxigtKazFI5KNiguzB9rvpYUZhLf+070hw3cd
+	4Rqkvl24DAMO+aIbEgfAWFIhI=
+Received: from zengchi (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgBXrvVRiSJqTU1+Ag--.49169S2;
+	Fri, 05 Jun 2026 16:31:14 +0800 (CST)
+From: Zeng Chi <zeng_chi911@163.com>
+To: zeng_chi911@163.com,
+	zhaotianrui@loongson.cn,
+	maobibo@loongson.cn,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	kees@kernel.org,
+	maqianga@uniontech.com,
+	gaosong@loongson.cn
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zengchi@kylinos.cn
+Subject: [PTACH v3] LoongArch: KVM: Add missing slots_lock for IO bus device register/unregister
+Date: Fri,  5 Jun 2026 16:31:08 +0800
+Message-Id: <20260605083108.2534481-1-zeng_chi911@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260525092633.1706633-1-zeng_chi911@163.com>
+References: <20260525092633.1706633-1-zeng_chi911@163.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgBXrvVRiSJqTU1+Ag--.49169S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGFWfuF13Zr1fCr43Kry5twb_yoW5CrW5pF
+	45ua4qkr4rWrnrXrZ2vF1DWF4UCan2gw1furyUuFW7GF4DtryrtF1kAFyUWF1qkayruFW0
+	qF15Jw1Yv3WUAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUUhL8UUUUU=
+X-CM-SenderInfo: 52hqws5fklmiqr6rljoofrz/xtbCwBKZVWoiiVKlegAA3S
 
-On Thu, 2026-06-04 at 14:53 +0800, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
->=20
-> Add architecture-specific -fPIC compiler flag for LoongArch64 to prevent
-> kernel panics when applying livepatches containing references to symbols
-> defined in the same compilation unit.
->=20
-> Root cause:
-> In the KLP workflow, when a function is livepatched, it's extracted
-> from the original object file and compiled into a separate kernel
-> module. When the patched function references symbols defined in the
-> same compilation unit (like 'uts_sem' in kernel/sys.c), these
-> references break if not compiled as position-independent code.
->=20
-> On LoongArch64, without -fPIC, references to same-compilation-unit symbol=
-s
-> use absolute addressing that assumes fixed memory locations. When the
-> function is relocated into the livepatch module, these absolute addresses
-> become invalid, causing kernel panics.
+From: Zeng Chi <zengchi@kylinos.cn>
 
-This is incorrect.
+kvm_io_bus_register_dev() and kvm_io_bus_unregister_dev() should be
+called under kvm->slots_lock. The unregister calls in ipi.c, pch_pic.c
+and eiointc.c were missing this protection. Add it to match the
+register side.
 
-With GCC and Clang, -fPIC does not mean generating position independent
-code.  It means generating position independent code *suitable for SVR4-
-style shared objects*.
+Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
+Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+---
+v3: fix subject prefix (drop "net", LoongArch KVM does not go through the
+    net tree); add Reviewed-by from Bibo Mao. No code change.
+v2: extend the fix from the EIOINTC virtual extension device registration
+    (v1) to the ipi.c / pch_pic.c / eiointc.c destroy paths as well.
+---
+ arch/loongarch/kvm/intc/eiointc.c | 6 ++++++
+ arch/loongarch/kvm/intc/ipi.c     | 2 ++
+ arch/loongarch/kvm/intc/pch_pic.c | 2 ++
+ 3 files changed, 10 insertions(+)
 
-The kernel has nothing to do with SVR4-style shared objects.  The kernel
-modules are not SVR4 shared objects but relocatable ELF object files.
+diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
+index 2ab7fafa86d5..2b14485d14a7 100644
+--- a/arch/loongarch/kvm/intc/eiointc.c
++++ b/arch/loongarch/kvm/intc/eiointc.c
+@@ -645,10 +645,14 @@ static int kvm_eiointc_create(struct kvm_device *dev, u32 type)
+ 
+ 	device = &s->device_vext;
+ 	kvm_iodevice_init(device, &kvm_eiointc_virt_ops);
++	mutex_lock(&kvm->slots_lock);
+ 	ret = kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS,
+ 			EIOINTC_VIRT_BASE, EIOINTC_VIRT_SIZE, device);
++	mutex_unlock(&kvm->slots_lock);
+ 	if (ret < 0) {
++		mutex_lock(&kvm->slots_lock);
+ 		kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device);
++		mutex_unlock(&kvm->slots_lock);
+ 		kfree(s);
+ 		return ret;
+ 	}
+@@ -667,8 +671,10 @@ static void kvm_eiointc_destroy(struct kvm_device *dev)
+ 
+ 	kvm = dev->kvm;
+ 	eiointc = kvm->arch.eiointc;
++	mutex_lock(&kvm->slots_lock);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_vext);
++	mutex_unlock(&kvm->slots_lock);
+ 	kfree(eiointc);
+ 	kfree(dev);
+ }
+diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
+index 1f6ebbd0af5c..4fa0897d7bdb 100644
+--- a/arch/loongarch/kvm/intc/ipi.c
++++ b/arch/loongarch/kvm/intc/ipi.c
+@@ -447,7 +447,9 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
+ 
+ 	kvm = dev->kvm;
+ 	ipi = kvm->arch.ipi;
++	mutex_lock(&kvm->slots_lock);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
++	mutex_unlock(&kvm->slots_lock);
+ 	kfree(ipi);
+ 	kfree(dev);
+ }
+diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
+index aa0ed59ae8cf..175a630aceb4 100644
+--- a/arch/loongarch/kvm/intc/pch_pic.c
++++ b/arch/loongarch/kvm/intc/pch_pic.c
+@@ -481,7 +481,9 @@ static void kvm_pch_pic_destroy(struct kvm_device *dev)
+ 	kvm = dev->kvm;
+ 	s = kvm->arch.pch_pic;
+ 	/* unregister pch pic device and free it's memory */
++	mutex_lock(&kvm->slots_lock);
+ 	kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS, &s->device);
++	mutex_unlock(&kvm->slots_lock);
+ 	kfree(s);
+ 	kfree(dev);
+ }
+-- 
+2.25.1
 
-If you only need position independent code (without the shared object
-stuff) you should use -fPIE instead.  The kernel is already built with -
-fPIE if CONFIG_RELOCATABLE=3Dy.
-
-Thus if you only need position independent code you should make live
-patching depend on CONFIG_RELOCATABLE.  On the contrary if you really
-need to use/abuse something mechanism designed for SVR4 shared object
-you 'd at least need to fix the description above.
-
---=20
-Xi Ruoyao <xry111@xry111.site>
