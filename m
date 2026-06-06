@@ -1,156 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307FD2F0C62
-	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 14:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01ED279DB1
+	for <loongarch@lists.linux.dev>; Sat,  6 Jun 2026 04:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780668162; cv=none; b=ZUC28k2I24cNTyP84bitwC/MXO/ltCdHIhP4D4DU8tRO0bMtVRX7RzX5H8iwwu2XVi6YVPIMIxq1dY9TEwCmmiJCZvpMNnUjsSSB1WKuon8wqG2iZyl8cswhnQcs+rLLeu48jpO/9S04+uHGE+3BWolgw7FytAstEkxuL88q7Nk=
+	t=1780721465; cv=none; b=UTzWbUWi3EqFZ9bVoa9W06uxtkKRcGPRTNs06iC09xz9O3d320ygsOTvs4YpiK2UgIZ1VpTKAZrEFsaAmLQRwTYdri6ZZ6i6TqpR1T2DtMq+x+ydWPRHrz2lfB5SLQ3oaRiLRc8OMz+1jey1/4rhYtCfTRjnAzpDX4sU510sAEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780668162; c=relaxed/simple;
-	bh=gWBPtU2cqcbx/0cq5/3l1vBn3W8oqMiehaz14Dn6dAo=;
+	s=arc-20240116; t=1780721465; c=relaxed/simple;
+	bh=/u4C1kWYVbZiPw/N/UA7MQei+1M1gBnUoiL6TjXpJMs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dp2qpj6iGmxl39MJBr3LK9YTh3olK4ESPmkKvfDKujJA5GmZDs2LeMwY6hN4w4fIu9nCZtHMIhVPrxIis6RhCIW8eH61QKgjt4WCiZPmhqt0DQONDLYAatvOhBWVT4tc9p9mlVZYvpKBZVMf9g7c17NPfI2sJLXF7JxfNm2XVTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+CyRjE2; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=ooWRbBlQwj043gyBVL34elBvapKZ4JFb9SkJjKCx9GJBT77vRgfNCGXrpatfMeDFPZFCuQiwMY91hjUawQ5lM5tHslcZQSS9KtyDf2kE0hVU4myYwtQsdMBtygY9Z45iziGqnYJTWlEHbMu3I+EALl6iRhdLzNJUANnCF+e+wdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmkq+X4D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+CyRjE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2731F00898
-	for <loongarch@lists.linux.dev>; Fri,  5 Jun 2026 14:02:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmkq+X4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2EE1F008A1
+	for <loongarch@lists.linux.dev>; Sat,  6 Jun 2026 04:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780668160;
-	bh=nfiObLvmOcsNy4699AN1tPJ0/P9ewISVmQ3n+5gyZe4=;
+	s=k20260515; t=1780721462;
+	bh=sKz22jwoXiX77X9+l1832laRA/oVlQe98Ct+8CuxsJ4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=W+CyRjE2zwmLCNLzZyzHm/c1Q8OCzjSSvbrMoO5ThJ1Oa7AWzbvxpB30JYU664qhc
-	 bn3NIF45HRVTRy+9gYlTpi1ZIua/Ysq9Qlx76cMz1lnue+lJoK9yk4PemgcRSgcT5C
-	 ZGZ27dGqbsVkEdGBDsDqEFkO4/JtNNXgT3XpZ2l8PzHQPaISyWaxX5dvy/jWUnVzhv
-	 JZURp9dEaOynmcMPH/Bl3hrTN1yV8v7gAJ2WImF9WdSwtrD+cvr0mpcVsradA3FFRT
-	 mNy6jKVu7FuTgBmY8Cf4jJp8W5xvCXJcqEYY5aHZUCEEt5nxIghBBvFUPYUcdxB+T4
-	 EHQ/DkYAkYuBw==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6913160c9ddso192983a12.2
-        for <loongarch@lists.linux.dev>; Fri, 05 Jun 2026 07:02:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/qoTBAnRTaT0q7KFK2JMWcWJK9u/BD14bkQJY7iqnK2Xfctu9jNRHevT7H0WUU2JiVy2zovu3FCJU=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6y84G+vc0GWDAkDdsarkX0qEBm4liVYGYnnj8+KkwHqA9k9u2
-	/Z27r0xfZo6U+yxHNY/koEcINxPlceIl0xnsfoY3GBYJlGAjRdevvpV36Pq3mVSxbS45Oz5f0uY
-	DMznxowLM3TazRDE20lIHJf6o+1MIHQI=
-X-Received: by 2002:a17:907:94cc:b0:be5:2bc0:5370 with SMTP id
- a640c23a62f3a-bf373eec55emr180650066b.36.1780668159364; Fri, 05 Jun 2026
- 07:02:39 -0700 (PDT)
+	b=cmkq+X4D7gn5Wy/QtPOGGldw5QYXyKrpGRBzG/OaLIEXmGAiVmTD//4RCGWFZtImp
+	 Tc8PhbvtGDd2EFFczm3JJjxuZKUoec3t5WS0CzV/WH3hEkH22rA36BE7Ed7m+HfdYv
+	 /ivPseYVrpb2rEjTqE07SXwZEVNmYOJZP+reT7oOIVzuI2gkP699oMSngUfsSzoW4b
+	 8ha3jY+Gx02T+kWeR2Z1o3fSIhb+/bPKyU2lXfkP3wcNO0n+Bxu66zBtZ4bY9Uh6eV
+	 dW0Z/rFhgri0YR5rXMnSk+EDCNUFRKykPtecZa+2IlivwtpjI8VAv68W7N9EaUfVlO
+	 4XEKA97P0TFKg==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6913fb25322so786955a12.1
+        for <loongarch@lists.linux.dev>; Fri, 05 Jun 2026 21:51:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/tUszeROhQgq09P7RMtxFRY92FU15KdWO4GkKhdWZsBbCCkzCZV9UH3WRx8IoTHzMcIDctK0AKaY0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzwlNY89syhss0QosrYY3hH0XDVRtoesP3ckRSmz0ZunO6PSBrj
+	kNH5AfIgoFZYxvYvj7fDRDh0DYLAjwRXUu6eqz5FGvO99McwynBAU7hyWLO0rZn9E3IkrZTTOrJ
+	NOsz5dkrOX39nXnxsSEL/W+EmbtUSOW4=
+X-Received: by 2002:a05:6402:27ce:b0:687:5157:1d4f with SMTP id
+ 4fb4d7f45d1cf-68fa524d249mr3187355a12.26.1780721461112; Fri, 05 Jun 2026
+ 21:51:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260525092633.1706633-1-zeng_chi911@163.com> <20260605083108.2534481-1-zeng_chi911@163.com>
-In-Reply-To: <20260605083108.2534481-1-zeng_chi911@163.com>
+References: <20260604015848.18643-1-wanghongliang@loongson.cn>
+ <20260604015848.18643-2-wanghongliang@loongson.cn> <20260604183813.GA982803-robh@kernel.org>
+In-Reply-To: <20260604183813.GA982803-robh@kernel.org>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 5 Jun 2026 22:02:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7yd7x_8Dj2=FckRO+cjF7+H+3MXbfscqtz+5zSJwqL8w@mail.gmail.com>
-X-Gm-Features: AVVi8CfekefRdJ7Toyv8yVIDcC0Vphkua88IymWRs6Z4Ya24fhUvCwRyNPVjSwk
-Message-ID: <CAAhV-H7yd7x_8Dj2=FckRO+cjF7+H+3MXbfscqtz+5zSJwqL8w@mail.gmail.com>
-Subject: Re: [PTACH v3] LoongArch: KVM: Add missing slots_lock for IO bus
- device register/unregister
-To: Zeng Chi <zeng_chi911@163.com>
-Cc: zhaotianrui@loongson.cn, maobibo@loongson.cn, kernel@xen0n.name, 
-	kees@kernel.org, maqianga@uniontech.com, gaosong@loongson.cn, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	zengchi@kylinos.cn
+Date: Sat, 6 Jun 2026 12:50:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H648_nNzR67ZCJ9myUG2PQy5q1EHWo1yRjKTUB+4Q+5+Q@mail.gmail.com>
+X-Gm-Features: AVVi8Cd1pBWQh2AK-e5GGLwTOpjGHeDAqe2xsmKUiF49BygdYoawTYdPqMMbYQk
+Message-ID: <CAAhV-H648_nNzR67ZCJ9myUG2PQy5q1EHWo1yRjKTUB+4Q+5+Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: i2c: ls2x-i2c: Add clocks and
+ clock-frequency properties
+To: Rob Herring <robh@kernel.org>
+Cc: Hongliang Wang <wanghongliang@loongson.cn>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Andi Shyti <andi.shyti@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, stable@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi, Rob,
 
-Huacai
+On Fri, Jun 5, 2026 at 2:38=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jun 04, 2026 at 09:58:47AM +0800, Hongliang Wang wrote:
+> > Add clocks and clock-frequency properties to examples.
+> >
+> > Cc: stable@vger.kernel.org
+>
+> Not stable material unless there's a warning in the example (and there
+> is not).
+It is me who told Hongliang to CC stable because the 2nd patch is
+needed. If the 1st one is unnecessary, then please send a new version.
+And for the whole series:
 
-On Fri, Jun 5, 2026 at 4:31=E2=80=AFPM Zeng Chi <zeng_chi911@163.com> wrote=
-:
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+
 >
-> From: Zeng Chi <zengchi@kylinos.cn>
->
-> kvm_io_bus_register_dev() and kvm_io_bus_unregister_dev() should be
-> called under kvm->slots_lock. The unregister calls in ipi.c, pch_pic.c
-> and eiointc.c were missing this protection. Add it to match the
-> register side.
->
-> Signed-off-by: Zeng Chi <zengchi@kylinos.cn>
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> ---
-> v3: fix subject prefix (drop "net", LoongArch KVM does not go through the
->     net tree); add Reviewed-by from Bibo Mao. No code change.
-> v2: extend the fix from the EIOINTC virtual extension device registration
->     (v1) to the ipi.c / pch_pic.c / eiointc.c destroy paths as well.
-> ---
->  arch/loongarch/kvm/intc/eiointc.c | 6 ++++++
->  arch/loongarch/kvm/intc/ipi.c     | 2 ++
->  arch/loongarch/kvm/intc/pch_pic.c | 2 ++
->  3 files changed, 10 insertions(+)
->
-> diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/=
-eiointc.c
-> index 2ab7fafa86d5..2b14485d14a7 100644
-> --- a/arch/loongarch/kvm/intc/eiointc.c
-> +++ b/arch/loongarch/kvm/intc/eiointc.c
-> @@ -645,10 +645,14 @@ static int kvm_eiointc_create(struct kvm_device *de=
-v, u32 type)
->
->         device =3D &s->device_vext;
->         kvm_iodevice_init(device, &kvm_eiointc_virt_ops);
-> +       mutex_lock(&kvm->slots_lock);
->         ret =3D kvm_io_bus_register_dev(kvm, KVM_IOCSR_BUS,
->                         EIOINTC_VIRT_BASE, EIOINTC_VIRT_SIZE, device);
-> +       mutex_unlock(&kvm->slots_lock);
->         if (ret < 0) {
-> +               mutex_lock(&kvm->slots_lock);
->                 kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &s->device)=
-;
-> +               mutex_unlock(&kvm->slots_lock);
->                 kfree(s);
->                 return ret;
->         }
-> @@ -667,8 +671,10 @@ static void kvm_eiointc_destroy(struct kvm_device *d=
-ev)
->
->         kvm =3D dev->kvm;
->         eiointc =3D kvm->arch.eiointc;
-> +       mutex_lock(&kvm->slots_lock);
->         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device);
->         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &eiointc->device_ve=
-xt);
-> +       mutex_unlock(&kvm->slots_lock);
->         kfree(eiointc);
->         kfree(dev);
->  }
-> diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.=
-c
-> index 1f6ebbd0af5c..4fa0897d7bdb 100644
-> --- a/arch/loongarch/kvm/intc/ipi.c
-> +++ b/arch/loongarch/kvm/intc/ipi.c
-> @@ -447,7 +447,9 @@ static void kvm_ipi_destroy(struct kvm_device *dev)
->
->         kvm =3D dev->kvm;
->         ipi =3D kvm->arch.ipi;
-> +       mutex_lock(&kvm->slots_lock);
->         kvm_io_bus_unregister_dev(kvm, KVM_IOCSR_BUS, &ipi->device);
-> +       mutex_unlock(&kvm->slots_lock);
->         kfree(ipi);
->         kfree(dev);
->  }
-> diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/=
-pch_pic.c
-> index aa0ed59ae8cf..175a630aceb4 100644
-> --- a/arch/loongarch/kvm/intc/pch_pic.c
-> +++ b/arch/loongarch/kvm/intc/pch_pic.c
-> @@ -481,7 +481,9 @@ static void kvm_pch_pic_destroy(struct kvm_device *de=
-v)
->         kvm =3D dev->kvm;
->         s =3D kvm->arch.pch_pic;
->         /* unregister pch pic device and free it's memory */
-> +       mutex_lock(&kvm->slots_lock);
->         kvm_io_bus_unregister_dev(kvm, KVM_MMIO_BUS, &s->device);
-> +       mutex_unlock(&kvm->slots_lock);
->         kfree(s);
->         kfree(dev);
->  }
-> --
-> 2.25.1
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.ya=
+ml b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> > index ee09c6d9c5f0..0beb7f2515c8 100644
+> > --- a/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> > +++ b/Documentation/devicetree/bindings/i2c/loongson,ls2x-i2c.yaml
+> > @@ -37,11 +37,14 @@ unevaluatedProperties: false
+> >
+> >  examples:
+> >    - |
+> > +    #include <dt-bindings/clock/loongson,ls2k-clk.h>
+> >      #include <dt-bindings/interrupt-controller/irq.h>
+> >
+> >      i2c0: i2c@1fe21000 {
+> >          compatible =3D "loongson,ls2k-i2c";
+> >          reg =3D <0x1fe21000 0x8>;
+> > +        clock-frequency =3D <100000>;
+> > +        clocks =3D <&clk LOONGSON2_APB_CLK>;
+> >          interrupt-parent =3D <&extioiic>;
+> >          interrupts =3D <22 IRQ_TYPE_LEVEL_LOW>;
+> >          #address-cells =3D <1>;
+> > --
+> > 2.47.2
+> >
 >
