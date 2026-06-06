@@ -1,32 +1,32 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F18214A9B
-	for <loongarch@lists.linux.dev>; Sat,  6 Jun 2026 13:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F8E3AB48C
+	for <loongarch@lists.linux.dev>; Sat,  6 Jun 2026 13:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780752136; cv=none; b=A67rXyPv1bz05SNJ5TvyZ5s6UudwzVHS+0A1h5NUyt0qxsxY+bR9t0v1UDsyzHK6Iy7PL0Diu6asT49hK6X71mScdW0rv59Hrb4rkTXsTJZqD4+KwlffRueGkMOjYyOaLgt0OQKoAYrN0KK8wwfehIwxioAaxC8dWxQ+/ndv2sY=
+	t=1780752141; cv=none; b=K1IJSePzvmvmFYkTjbPhblNGbzGNmll3mcnNZ994Ulm0b5Zp++cQfd9a8UcerKxrdzCp7tnc3m1JUqtWEGurJLrxlw8h0AjuvEM4lNSK4sRfkfMiiBcE8rgTEATbqxPE+e1CwrDr5JtTta55x3DqE12UWlnIS8weJ65PPrYxftw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780752136; c=relaxed/simple;
-	bh=YIgr/dfUitpAIGyrCeaAZGqybSo3r1gid59+ebeXEUY=;
+	s=arc-20240116; t=1780752141; c=relaxed/simple;
+	bh=cGYAXNTu1qL+6NlNoQgQZsLFZ9jLAeaaG17bz5cBxEY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SRGIYi0AKTd9gj8RCPGZVDqXPkS+8aZK+m1PsvvSv9XajRBuAsV3mbZAt2gV9HfL4/IrfWDmMwqv50xAFZ35B70qi5zeZpilVZi6LAnVWSbBatElktwlZd4ZZKvlyABFcjY4mMZ5kyV3g3zLRdR0MfnlFjDUvwI6e8SVotCk9RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g+6HDHxG; arc=none smtp.client-ip=91.218.175.180
+	 MIME-Version; b=SyMxQoL73C8BOTMrtQtcGfLD9vpdVOVI1kplX43hsVFkMQ4aHfOUwEpNB4ldxAHB3RjiDuyb5GcdGairChXVLn0Z3VRx6SamWtVXNJ7i6gs598Tf5f5DqXIhL11RmK8j010Vxpaext2C61EmBneJYYgDiGQKRDBPSkHultwQzrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MrPx1NyW; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g+6HDHxG"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MrPx1NyW"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780752133;
+	t=1780752138;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UFxVxYHIFN149JVmey/A/yRZIp9tC2WDA/G0gT2sg40=;
-	b=g+6HDHxGrvGzzxOUMk1Cl+/leL9T5DZKWqByOIV3DQ7zjTp++tuMlrC0ZSz6pSNdHVUgS4
-	DJf+Ye4QM8yk9bXPmdLoPZFCi4ALfM39h+/8F5waPW+u/1GkY6/211SLvolvlaE2nHEfnJ
-	9wCplMQP4W6NbfjMeYCwNcLW1yLY6iA=
+	bh=QYRv0TFk5ixGCSvlT9n2D6Lg3SOtx0nM5GvZWeV4Xxc=;
+	b=MrPx1NyWk3lsbvnBk7H+LV+6XYbw35POy3tNI79lVIAGwVPzowNRal+3gtR+8FuXuJoLl/
+	jo4kfTINQN3zmu4/jFlsMxuxs4yJFHXOJ4u38wBLB+mpjiPmtT4P2sLG0ZIaFx/cs5TW0R
+	4MAapgjGRk6IRx5qwVkaZSHmh6g3iTk=
 From: haoran.jiang@linux.dev
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org,
@@ -37,9 +37,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kees@kernel.org,
 	yangtiezhu@loongson.cn,
 	Haoran Jiang <jianghaoran@kylinos.cn>
-Subject: [PATCH 1/2] LoongArch: Move fixmap page tables to BSS segment
-Date: Sat,  6 Jun 2026 21:21:25 +0800
-Message-Id: <20260606132126.562034-2-haoran.jiang@linux.dev>
+Subject: [PATCH 2/2] LoongArch: Enable STRICT_MODULE_RWX for stricter modules memory permissions
+Date: Sat,  6 Jun 2026 21:21:26 +0800
+Message-Id: <20260606132126.562034-3-haoran.jiang@linux.dev>
 In-Reply-To: <20260606132126.562034-1-haoran.jiang@linux.dev>
 References: <20260606132126.562034-1-haoran.jiang@linux.dev>
 Precedence: bulk
@@ -53,140 +53,107 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Haoran Jiang <jianghaoran@kylinos.cn>
 
-__set_fixmap() is not only used during initialization
-but may also be invoked after the kernel is up.
-Before this change, fixmap page tables resided in memblock.
-After the change, they are placed in the BSS segment.
-Thus, the fixmap becomes usable both during early boot and
-after kernel startup.
+Enable STRICT_MODULE_RWX to enforce strict memory permissions
+on modules,making the code region non-writable, the data region
+non-executable, and the read-only data region both non-writable
+and non-executable.Add patch_map interface to temporarily map
+read-only code sections via fixmap, enabling runtime code patching
+while preserving memory protection after modifications
 
 Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 ---
+ arch/loongarch/Kconfig              |  2 ++
  arch/loongarch/include/asm/fixmap.h |  1 +
- arch/loongarch/kernel/setup.c       |  1 +
- arch/loongarch/mm/init.c            | 71 ++++++++++++++++++++++++++---
- 3 files changed, 67 insertions(+), 6 deletions(-)
+ arch/loongarch/kernel/inst.c        | 29 ++++++++++++++++++++++++++++-
+ 3 files changed, 31 insertions(+), 1 deletion(-)
 
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 606597da46b8..40d748a13c50 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -27,6 +27,7 @@ config LOONGARCH
+ 	select ARCH_HAS_PTE_SPECIAL if 64BIT
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_SET_DIRECT_MAP
++	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_VDSO_ARCH_DATA
+@@ -197,6 +198,7 @@ config LOONGARCH
+ 	select NUMA_MEMBLKS if NUMA
+ 	select OF
+ 	select OF_EARLY_FLATTREE
++	select ARCH_OPTIONAL_KERNEL_RWX
+ 	select PCI
+ 	select PCI_DOMAINS_GENERIC
+ 	select PCI_ECAM if ACPI
 diff --git a/arch/loongarch/include/asm/fixmap.h b/arch/loongarch/include/asm/fixmap.h
-index dce2da6ba787..5a9b04c720bf 100644
+index 5a9b04c720bf..7d174eafdc21 100644
 --- a/arch/loongarch/include/asm/fixmap.h
 +++ b/arch/loongarch/include/asm/fixmap.h
-@@ -31,6 +31,7 @@ enum fixed_addresses {
+@@ -22,6 +22,7 @@ enum fixed_addresses {
+ 	FIX_KMAP_END = FIX_KMAP_BEGIN + (KM_MAX_IDX * NR_CPUS) - 1,
+ #endif
+ 	FIX_EARLYCON_MEM_BASE,
++	FIX_TEXT_POKE0,
+ 	__end_of_fixed_addresses
+ };
  
- extern void __set_fixmap(enum fixed_addresses idx,
- 			 phys_addr_t phys, pgprot_t flags);
-+void __init early_fixmap_init(void);
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index 0b9228b7c13a..7c4f60a7e892 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -9,9 +9,33 @@
  
- #include <asm-generic/fixmap.h>
+ #include <asm/cacheflush.h>
+ #include <asm/inst.h>
++#include <linux/kprobes.h>
  
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 839b23edee87..2724d67a96cc 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -599,6 +599,7 @@ void __init setup_arch(char **cmdline_p)
- 	fdt_setup();
- 	memblock_init();
- 	pagetable_init();
-+	early_fixmap_init();
- 	bootcmdline_init(cmdline_p);
- 	parse_early_param();
- 	reserve_initrd_mem();
-diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
-index 031b39eb081c..4046d31f0266 100644
---- a/arch/loongarch/mm/init.c
-+++ b/arch/loongarch/mm/init.c
-@@ -36,6 +36,69 @@
- #include <asm/pgalloc.h>
- #include <asm/tlb.h>
+ static DEFINE_RAW_SPINLOCK(patch_lock);
  
-+#define SPAN_NR_ENTRIES(vstart, vend, shift) \
-+	((((vend) - 1) >> (shift)) - ((vstart) >> (shift)) + 1)
-+
-+#define NR_BM_PTE_TABLES \
-+	SPAN_NR_ENTRIES(FIXADDR_START, FIXADDR_TOP, PMD_SHIFT)
-+
-+#define __BM_TABLE_IDX(addr, shift) \
-+	(((addr) >> (shift)) - (FIXADDR_START >> (shift)))
-+
-+#define BM_PTE_TABLE_IDX(addr)  __BM_TABLE_IDX(addr, PMD_SHIFT)
-+
-+static pte_t bm_pte[NR_BM_PTE_TABLES][PTRS_PER_PTE] __page_aligned_bss;
-+static pmd_t bm_pmd[PTRS_PER_PMD] __page_aligned_bss __maybe_unused;
-+static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
-+
-+static inline pte_t *fixmap_pte(unsigned long addr)
++static void __kprobes *patch_map(void *addr, const unsigned int fixmap)
 +{
-+	return &bm_pte[BM_PTE_TABLE_IDX(addr)][pte_index(addr)];
++	phys_addr_t phys;
++
++	if ((unsigned long)addr < vm_map_base) {
++		return addr;
++	} else if (IS_ENABLED(CONFIG_STRICT_MODULE_RWX)) {
++		struct page *page = vmalloc_to_page(addr);
++
++		BUG_ON(!page);
++		phys = page_to_phys(page) + offset_in_page(addr);
++	} else {
++		return addr;
++	}
++
++	return (void *)set_fixmap_offset(fixmap, phys);
 +}
 +
-+void __init early_fixmap_init(void)
++static void __kprobes patch_unmap(int fixmap)
 +{
-+	unsigned long addr = FIXADDR_START;
-+	unsigned long end = FIXADDR_TOP;
-+
-+	pgd_t *pgd = pgd_offset_k(addr);
-+	p4d_t *p4d = p4d_offset(pgd, addr);
-+	pud_t *pud;
-+	pmd_t *pmd;
-+
-+	unsigned long next;
-+
-+	if (p4d_none(p4dp_get(p4d))) {
-+		pud = bm_pud;
-+		p4d_populate(&init_mm, p4d, pud);
-+#ifndef __PAGETABLE_PUD_FOLDED
-+		pud_init(pud);
-+#endif
++	clear_fixmap(fixmap);
 +}
 +
-+	pud = pud_offset(p4d, addr);
-+	if (pud_none(pudp_get(pud))) {
-+		pmd = bm_pmd;
-+		pud_populate(&init_mm, pud, pmd);
-+#ifndef __PAGETABLE_PMD_FOLDED
-+		pmd_init(pmd);
-+#endif
-+}
-+
-+	pmd = pmd_offset(pud, addr);
-+	do {
-+		next = pmd_addr_end(addr, end);
-+		if (!pmd_present(pmdp_get(pmd))) {
-+			pte_t *pte;
-+
-+			pte = bm_pte[BM_PTE_TABLE_IDX(addr)];
-+			pmd_populate_kernel(&init_mm, pmd, pte);
-+			kernel_pte_init(pte);
-+		}
-+	} while (pmd++, addr = next, addr != end);
-+
-+}
-+
- int __ref page_is_ram(unsigned long pfn)
+ void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
  {
- 	unsigned long addr = PFN_PHYS(pfn);
-@@ -203,7 +266,7 @@ pte_t * __init populate_kernel_pte(unsigned long addr)
- 	return pte_offset_kernel(pmd, addr);
- }
- 
--void __init __set_fixmap(enum fixed_addresses idx,
-+void  __set_fixmap(enum fixed_addresses idx,
- 			       phys_addr_t phys, pgprot_t flags)
+ 	unsigned long pc = regs->csr_era;
+@@ -208,12 +232,15 @@ int larch_insn_write(void *addr, u32 insn)
  {
- 	unsigned long addr = __fix_to_virt(idx);
-@@ -211,11 +274,7 @@ void __init __set_fixmap(enum fixed_addresses idx,
+ 	int ret;
+ 	unsigned long flags = 0;
++	void *waddr = addr;
  
- 	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
+ 	if ((unsigned long)addr & 3)
+ 		return -EINVAL;
  
--	ptep = populate_kernel_pte(addr);
--	if (!pte_none(ptep_get(ptep))) {
--		pte_ERROR(*ptep);
--		return;
--	}
-+	ptep = fixmap_pte(addr);
+ 	raw_spin_lock_irqsave(&patch_lock, flags);
+-	ret = copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
++	waddr = patch_map(addr, FIX_TEXT_POKE0);
++	ret = copy_to_kernel_nofault(waddr, &insn, LOONGARCH_INSN_SIZE);
++	patch_unmap(FIX_TEXT_POKE0);
+ 	raw_spin_unlock_irqrestore(&patch_lock, flags);
  
- 	if (pgprot_val(flags))
- 		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, flags));
+ 	return ret;
 -- 
 2.25.1
 
