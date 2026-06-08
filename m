@@ -1,30 +1,30 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA62728CF4A
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 06:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5157032B13E
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 06:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780900263; cv=none; b=VihyseUEKu4ERH/XFCWhs7ac3Vrk8OlSf/VGVpBEDGDIa5124kXPvBFIxF71eAXUk/ltLWA+RMMB36Pxp0UnxqkdIzxZq3rpTPI6u4EG2d6iRxBYGIiXoUX2gT0NQ4BOVQ7BIN5blFtRe7PpgWFNGIS4ol5aVHfkJUiyYdT6fOE=
+	t=1780900798; cv=none; b=b4N+5TS13U4inH5uDNaHSku+jPCtHoqKHaHm7Sgu8L11SQOxczpcgfM/5SZvBdTNV+bSmpxuKJQqeiX5/yVbns2ngUexLC7TnE3l8SHnEA1ho8eMLYiZi8MAUXIFJUnlgY8AQqLZ12eCWLl8qksdAsIIj/9NXOEUcgy/gphjNvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780900263; c=relaxed/simple;
-	bh=dlPwCvZcTpHxF2Gl44ASbMMVi2c4erj7HxtVLbJsk+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qz8zWx88hv3SE6n/wKRCCDfDZG2f+5Wx9TggyPpVCxLlAESWMfDl234r8qR2ELL9B2Yvyrk1uirzKAF6UVX9vke+WKyX/L7CuaMrdgqG1PWtSAtXjQxufI2/djf9RC7Yxr5lsTegnn6kGMYLk31YY1HgcFK+9FXQgd4cYhb2pQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xiw7toej; arc=none smtp.client-ip=95.215.58.177
+	s=arc-20240116; t=1780900798; c=relaxed/simple;
+	bh=On2WdAuhTIstv+Yk3QgTiBdjYpqJrdg3lMLteu+PLwg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i0P75qfMGczEx8tFj91NDYEE4pKjlHPvCRQabv+MB5F25JZ5k3W+Dw2czwW2hdsjVSnbWL17Uz4yhR0y13kA7Nbk927te4Aku5BY5othw4Y4nOUAbL+ovMmw9Pqe4FQwPrkjrvg2WEtIGOBjtfI7bh1sqObJ+GCO/z7Bm6UyjpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GNWVTgqC; arc=none smtp.client-ip=95.215.58.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xiw7toej"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GNWVTgqC"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780900260;
+	t=1780900794;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=OEXekJtAwJS0eqEuRTbzTTz6WYbsxD3ZLu+3uG3jgtM=;
-	b=Xiw7toejQ4UvNrtG9OhYQaY2bZ/Tl7dnmFmmxb+JEVaEkNM0LnJDJMHDH0UTceBjLngCHQ
-	r4xQZnMxwhQV0wU1mKnui+4DmeeiwtNQ3njdlK+zt/U/FKH6o3PwMufO+ALQfAFX75ll/D
-	jh9Kb5A5V+ouSvz8WXVd6VbblKC9Q9Y=
+	bh=fsqxOWDKgJjg6/Y6Tavqpv5Nm25Y5UV10OwP9EEaX/4=;
+	b=GNWVTgqCdF1BFBqSPvf772ntfnqYj1ChUh24BzjOr3helmkQSNc2Gkx6FlJkALKaJ5LF+t
+	CP36iSsAfFym9i3LezSmGj8zf4CV5O/jt2jmstJ/4P5N8i+tfkYkuSTAT29xvG5XtBU5Ho
+	s6ZBfjZBXDUrRVaC2ygiG+kObNWMVr4=
 From: haoran.jiang@linux.dev
 To: loongarch@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc: linux-kernel@vger.kernel.org,
 	kees@kernel.org,
 	yangtiezhu@loongson.cn,
 	Haoran Jiang <jianghaoran@kylinos.cn>
-Subject: [PATCH v2] LoongArch: Enable STRICT_MODULE_RWX for stricter modules memory permissions
-Date: Mon,  8 Jun 2026 14:30:25 +0800
-Message-Id: <20260608063025.281047-1-haoran.jiang@linux.dev>
+Subject: [PATCH v3] LoongArch: Enable STRICT_MODULE_RWX for stricter modules memory permissions
+Date: Mon,  8 Jun 2026 14:38:57 +0800
+Message-Id: <20260608063857.291340-1-haoran.jiang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -52,14 +52,16 @@ From: Haoran Jiang <jianghaoran@kylinos.cn>
 Enable STRICT_MODULE_RWX to enforce strict memory permissions
 on modules,making the code region non-writable, the data region
 non-executable, and the read-only data region both non-writable
-and non-executable.Add patch_map interface to temporarily map
-read-only code sections via fixmap, enabling runtime code patching
-while preserving memory protection after modifications
+and non-executable.Temporarily modify code section read/write
+permissions via set_memory() API.
 
 Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
 ---
 v2:
-Change the method of modifying page table permissions from patch_map to set_memory_xx
+Change the method of modifying page table permissions from patch_map to set_memory() API.
+
+v3:
+Modify commit description.
 
 ---
  arch/loongarch/Kconfig       |  2 ++
