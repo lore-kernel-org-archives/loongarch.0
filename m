@@ -1,94 +1,154 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D0E3B27E1;
-	Mon,  8 Jun 2026 08:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4D53B7756
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 10:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780908649; cv=none; b=Mf4vQ0u2ftIAzxc5YrFIF3/5LbT75u1dgBkxbJVu4PtjXcJKylTlPs7VuqlU5x5jk25O2dVp+r3SrSt3RJVB1jVJTvVLEIygUSU1iUHEiU327Xh3FSdUrlml+cKs5ltnQ6uC+lSTLGWKHx83pEwB51CsB1CaYJax+uI4xTxJMhA=
+	t=1780913354; cv=none; b=L/2bWKcOhqTouk9JiKVb5uQECW74ddmeeI+k5MSX2c7FrGATCNxHq/zcBBMj5RWICx9PpfEPGg9e3cnClsjsdS6TdhQ3lGROAVu7bu8p2iTQXL1/h+p9MODHLK1WYIqc/lc60IyWaONHSnIYfvSmNYkzvwMaVo/5wI4jNpOx5aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780908649; c=relaxed/simple;
-	bh=B/lsomBiRVL9mQdaJ38PILug80vLR9tO1ueasoxijW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tbxQjXb1iDELoAWSj2kcYLgbRqEPbMXv+JlEROj7zpE/Qlveyn0YvzUV+zvDxGy7sQSsYMnRqBmIGURhl+8nLyhfEEVyOgo2yL7SBNamdklUX5nfXZWgDldkyhwNjwtxsQndXjYN3U1Qnq5LN0jGxDcIYTT5bkC3yuoQX7hbuRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=vejwWx6V; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1780913354; c=relaxed/simple;
+	bh=jh3gqHk1HNBvLAhELs2EctotIEZwksYr5TrkobDCakM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lr4vSMXXiRNe8ooxqJgADvDciovJEJB+jMsPdh3ei8LJwXhdX7P5N0eNhZtvTWukewOzxfrwvkcalAKSyEco4Hbz5nP96Uusc7ObTR6ZZXIwGOJ/NrZdudB3MvSg9FoLF3Zy/x64+qqlTRpvGIB02yAFT8dxcL+i8an3dJ59JOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ek9qG2w6; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="vejwWx6V"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dluz+I3N22ywYzoz/gAwyyxGhCLB7ATDVpgZxGTd1Hg=; b=vejwWx6VMa39pTZib49M1u2r0C
-	Mrn0/A5J9513XAgHtk8Kc1CYh3TI47gau+fhR5slOP8jFMeLmvBEkCNn+19iNKIFPdFa6WE8c/gMz
-	t99Ie63OWcvhMhtDDCnkve8QzJTAG4GOsX2xkBYXCKc6Q5v0qsFAbaF2hKBz8hrhVx12IhVGRRlWw
-	/fSo+694x+90ee0pNT1hAtVxcLtMYrqb6l8/0GAl9mOeoYjSxWYQgsLPdtK3SnuYybkJanG8qaQaT
-	ylzuIsGC80K9maerJAYZM7CdzO20xRUnZQqGLQPiWDxuQ1wpIcGbXE0U4+rbWltECyITWI9vcAHM2
-	p5vwQpHQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wWVfH-007VKw-26;
-	Mon, 08 Jun 2026 08:48:59 +0000
-Date: Mon, 8 Jun 2026 01:48:47 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
-	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ruirui.yang@linux.dev, rdunlap@infradead.org, peterz@infradead.org, 
-	feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com, 
-	kuba@kernel.org, lirongqing@baidu.com, ebiggers@kernel.org, paulmck@kernel.org, 
-	coxu@redhat.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, osandov@fb.com, 
-	jbohac@suse.cz, cfsworks@gmail.com, tangyouling@kylinos.cn, 
-	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, adityag@linux.ibm.com, 
-	liaoyuanhong@vivo.com, seanjc@google.com, fuqiang.wang@easystack.cn, ardb@kernel.org, 
-	chenjiahao16@huawei.com, guoren@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v16 08/10] powerpc/kexec_file: Use
- crash_exclude_core_ranges() helper
-Message-ID: <aiaB45VXyCv4pUBW@gmail.com>
-References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
- <20260608073459.3119290-9-ruanjinjie@huawei.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ek9qG2w6"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780913340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AM0qgBKFGYsFBxyy5qkcaWxD4QqYzP5wt4OhR2froyA=;
+	b=ek9qG2w6ER/i4WtvoscCoszUq1Ims10QtriibwdVPyGmsMU8uLBlw5lPjom/Dru8V1CSOA
+	zhRjga9tO6uPfngAco0gR2iA7pXrW7MUGIRerAE9lJLT530aTPTInZyBEoiYrD6ephKMTE
+	P0av98l+QKoYfFqgLiFbXbwGYOMFSuM=
+From: George Guo <dongtai.guo@linux.dev>
+To: chenhuacai@kernel.org,
+	jpoimboe@kernel.org,
+	peterz@infradead.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com
+Cc: kernel@xen0n.name,
+	joe.lawrence@redhat.com,
+	rostedt@goodmis.org,
+	ardb@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	yangtiezhu@loongson.cn,
+	jiaxun.yang@flygoat.com,
+	liukexin@kylinos.cn,
+	guodongtai@kylinos.cn,
+	xry111@xry111.site,
+	wangyuli@aosc.io,
+	loongarch@lists.linux.dev,
+	live-patching@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] LoongArch: Add livepatch build (KLP) support
+Date: Mon,  8 Jun 2026 18:08:44 +0800
+Message-Id: <20260608100852.325413-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260608073459.3119290-9-ruanjinjie@huawei.com>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 08, 2026 at 03:34:57PM +0800, Jinjie Ruan wrote:
-> The crash memory exclude of crashk_res and crashk_cma memory on powerpc
-> are almost identical to the generic crash_exclude_core_ranges().
-> 
-> By introducing the architecture-specific arch_crash_exclude_mem_range()
-> function with a default implementation of crash_exclude_mem_range(),
-> and using crash_exclude_mem_range_guarded as powerpc's separate
-> implementation, the generic crash_exclude_core_ranges() helper function
-> can be reused.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+This series adds LoongArch support for the klp-build livepatch tooling,
+enabling automated livepatch module generation using objtool on
+LoongArch.
 
-Acked-by: Breno leitao <leitao@debian.org>
+It is based on Josh Poimboeuf's klp-build series [1] (see base-commit
+below) and extends it with the LoongArch-specific objtool and build
+pieces, plus a few LoongArch toolchain/relocation fixes required to make
+livepatch modules load and run correctly.
+
+Overview (the feature is wired up last so the series stays bisectable:
+objtool's KLP arch hooks are all in place before ARCH_HAS_KLP is turned
+on):
+
+ - Patches 1 and 6 add the objtool hooks LoongArch needs:
+   arch_adjusted_addend() and arch_jump_opcode_bytes() (the latter makes
+   klp checksums for jump/call instructions position-independent,
+   mirroring x86/arm64).
+ - Patch 2 marks the special sections so objtool can split them into
+   per-entry symbols: SHF_MERGE entry sizes for the read-only
+   .altinstructions/__ex_table, and ANNOTATE_DATA_SPECIAL for the
+   writable __bug_table/__jump_table.
+ - Patches 3-4 fix kernel panics seen when loading livepatch modules,
+   caused by LoongArch code-generation/relocation assumptions:
+     * disable -mdirect-extern-access for klp builds (the module loader
+       relies on GOT entries for external symbol references),
+     * build with -fPIC so same-compilation-unit symbol references stay
+       GOT-indirect and can be relocated into the livepatch module
+       (-fPIE is not enough: it emits direct, non-GOT references).
+ - Patch 5 fixes EFI linking when building with -fdata-sections.
+ - Patch 7 adds KLP_SYSCALL_DEFINEx() support for LoongArch.
+ - Patch 8 wires up LoongArch klp-build (selects HAVE_KLP_BUILD and
+   enables objtool's KLP support).
+
+Testing:
+ - objtool builds cleanly for LoongArch.
+ - Livepatch modules were generated and loaded on a LoongArch machine;
+   the panics addressed by patches 3-4 no longer reproduce.
+
+Changes since v1 [2]:
+ - Mark the writable special sections (__bug_table, __jump_table) with
+   ANNOTATE_DATA_SPECIAL instead of SHF_MERGE+entsize, which is invalid
+   for writable sections and rejected by Clang; SHF_MERGE is kept only
+   for the read-only .altinstructions/__ex_table.  Also dropped a
+   redundant asm-offsets.h include in head.S.  (WangYuli)
+ - Rewrote the -fPIC commit message: the root cause is GOT indirection,
+   not "absolute addressing".  With CONFIG_RELOCATABLE=y the kernel is
+   already built -fPIE, yet -fPIE still emits direct, non-GOT references
+   for same-compilation-unit symbols, so -fPIC is required.  (Xi Ruoyao)
+ - Set the LoongArch CFLAGS in build_kernel(), where the variables are
+   actually used; in v1 they were in clean_kernel() and had no effect.
+   (WangYuli)
+ - Gated the klp-build changes on CONFIG_RELOCATABLE=y and
+   CONFIG_AS_HAS_EXPLICIT_RELOCS=y, and only override KBUILD_CFLAGS_KERNEL
+   when needed, so other arches/configs are unaffected.
+ - Reordered the series so the enabling patch ("Add livepatch build (KLP)
+   support") comes last, keeping every commit buildable/bisectable.
+   Patch numbers therefore differ from v1.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=klp-build-arm64
+[2] https://lore.kernel.org/all/20260604065317.219777-1-dongtai.guo@linux.dev/
+
+George Guo (8):
+  objtool/LoongArch: Add arch_adjusted_addend() for KLP support
+  LoongArch: Mark special sections for KLP support
+  livepatch/klp-build: disable direct-extern-access for LoongArch to fix
+    kernel panic
+  livepatch/klp-build: build LoongArch with -fPIC to keep GOT-indirect
+    symbol references
+  LoongArch: Fix EFI linking with -fdata-sections
+  objtool/klp: Add LoongArch jump opcode bytes support
+  klp-build: Add LoongArch syscall patching macro
+  LoongArch: Add livepatch build (KLP) support
+
+ arch/loongarch/Kconfig                       |  1 +
+ arch/loongarch/include/asm/alternative-asm.h |  5 ++-
+ arch/loongarch/include/asm/alternative.h     |  6 ++-
+ arch/loongarch/include/asm/asm-extable.h     | 10 ++++-
+ arch/loongarch/include/asm/bug.h             |  1 +
+ arch/loongarch/include/asm/jump_label.h      |  2 +
+ arch/loongarch/kernel/asm-offsets.c          | 20 +++++++++
+ arch/loongarch/kernel/vmlinux.lds.S          |  2 +-
+ include/linux/livepatch_helpers.h            | 22 ++++++++++
+ scripts/livepatch/klp-build                  | 36 ++++++++++++++-
+ tools/objtool/Makefile                       |  3 +-
+ tools/objtool/arch/loongarch/decode.c        | 46 ++++++++++++++++++++
+ 12 files changed, 145 insertions(+), 9 deletions(-)
+
+
+base-commit: 85afaba140a4b9f20fe8c8a64b24fc85f022d981
+-- 
+2.25.1
+
