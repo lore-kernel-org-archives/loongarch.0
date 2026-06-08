@@ -1,14 +1,14 @@
 Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E073F888A;
-	Mon,  8 Jun 2026 14:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255FF3F7885;
+	Mon,  8 Jun 2026 14:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780929814; cv=none; b=AKHCkSZ5RzRmL96xGCVfMh4HhVke22n66CipY+7v1uC+2XFd1eo1lgLY0q9iY9h+TjrdL6poV2hJeGEKkbFj+xTGFtCNOMPxNBSLiQVvdwhkz+5YB6154UrbAjKwV827zJdeXotkkpHs7A2kfO9jDsQSaJm2MKaOfYl1vg+CaXs=
+	t=1780929815; cv=none; b=jgno7VrASA5uzT9MfbuoMV46i4ptl/Ffss6OacqcOeiX+kqE/PtipxQwWdy5VXtXmeHBmAyG5AzoPEOwEtuPOJ9WEMEbTIyzeqHDujdefe6IUj2lz4Ws0qL+mHlYyFEcSYoCahMe3+NMSWNG8ZHu/90Vv5WpLYRemIQMN1lfckI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780929814; c=relaxed/simple;
-	bh=BvjNCxnN228MSt40dnG4giObj3PBnoIC1IoQ5WyhYzg=;
+	s=arc-20240116; t=1780929815; c=relaxed/simple;
+	bh=ndcuyAPx2C4MKTidMkaU1qTNUAY37NxMM2+ire8vk/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dLTZ9jB9vQYvkqydyMudyZ6T0+9o/CR02LS1USg0eRhG2ibpyJME01xIkyZ3wfOJEQ9MKuOkGl1/+pUTz9Epjyrp05e5MChdOMpz9yjfuVr8tGbDjWyX9JciS2GMqkZ+MrDYKy/DUcwXPXaYKQKY2X3U4egoBLaEYu1ITxcmsnI=
+	 MIME-Version; b=fQJgeeFt9g5OP2sZZH4mNVoZwoIujtIaAAw2x5YWV2J/Psf6BF9zYPrXuf84mFuBskVONO5esdgBKZUic1dkwf1UxQKGp0JyIiiTRQse8wYetks7y8Om6jphZMm/+APiOcSFlo7KZSBwKopXnMbuTdJGZO+ECNQOPTKz52nI4lA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
@@ -16,8 +16,8 @@ Received: from io.home.8bytes.org (p4ffe1d30.dip0.t-ipconnect.de [79.254.29.48])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 94CCC2028D4;
-	Mon,  8 Jun 2026 16:43:15 +0200 (CEST)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 84F122028CF;
+	Mon,  8 Jun 2026 16:43:14 +0200 (CEST)
 From: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Sean Christopherson <seanjc@google.com>
@@ -38,9 +38,9 @@ Cc: Tom Lendacky <thomas.lendacky@amd.com>,
 	x86@kernel.org,
 	coconut-svsm@lists.linux.dev,
 	joerg.roedel@amd.com
-Subject: [PATCH 49/60] kvm: x86: Allow hardware backend to overwrite struct kvm_plane allocation
-Date: Mon,  8 Jun 2026 16:42:41 +0200
-Message-ID: <20260608144252.351443-50-joro@8bytes.org>
+Subject: [PATCH 44/60] kvm: x86: Move cpu_caps to struct kvm_vcpu_arch_common
+Date: Mon,  8 Jun 2026 16:42:36 +0200
+Message-ID: <20260608144252.351443-45-joro@8bytes.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260608144252.351443-1-joro@8bytes.org>
 References: <20260608144252.351443-1-joro@8bytes.org>
@@ -54,127 +54,226 @@ Content-Transfer-Encoding: 8bit
 
 From: Joerg Roedel <joerg.roedel@amd.com>
 
-Allow the hardware backend implementations to allocate the struct
-kvm_plane instances so that they can carry hardware specific
-information along them.
+Now that CPUID state is shared across all planes, cpu_caps can be
+shared as well.
 
 Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  2 ++
- arch/x86/include/asm/kvm_host.h    |  3 +++
- arch/x86/kvm/svm/svm.c             |  3 +++
- arch/x86/kvm/vmx/main.c            |  5 ++++-
- arch/x86/kvm/x86.c                 | 16 ++++++++++++++--
- arch/x86/kvm/x86.h                 |  4 ++++
- 6 files changed, 30 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 33 +++++++++++++++++----------------
+ arch/x86/kvm/cpuid.c            | 18 +++++++++---------
+ arch/x86/kvm/cpuid.h            | 17 +++++++++--------
+ arch/x86/kvm/svm/svm.c          |  4 ++--
+ arch/x86/kvm/vmx/vmx.c          |  2 +-
+ 5 files changed, 38 insertions(+), 36 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index c8bff1e9325e..207d56d12459 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -150,6 +150,8 @@ KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
- KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
- KVM_X86_OP_OPTIONAL_RET0(gmem_max_mapping_level)
- KVM_X86_OP_OPTIONAL(gmem_invalidate)
-+KVM_X86_OP(alloc_plane)
-+KVM_X86_OP(free_plane)
- #endif
- 
- #undef KVM_X86_OP
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index c2651774d785..0955097aca9c 100644
+index 3a64bdae6e23..b0d040528f9d 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -2011,6 +2011,9 @@ struct kvm_x86_ops {
- 	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
- 	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
- 	int (*gmem_max_mapping_level)(struct kvm *kvm, kvm_pfn_t pfn, bool is_private);
+@@ -800,6 +800,23 @@ struct kvm_vcpu_arch_common {
+ 	struct kvm_cpuid_entry2 *cpuid_entries;
+ 	bool cpuid_dynamic_bits_dirty;
+ 	bool is_amd_compatible;
 +
-+	struct kvm_plane *(*alloc_plane)(void);
-+	void (*free_plane)(struct kvm_plane *);
++	/*
++	 * cpu_caps holds the effective guest capabilities, i.e. the features
++	 * the vCPU is allowed to use.  Typically, but not always, features can
++	 * be used by the guest if and only if both KVM and userspace want to
++	 * expose the feature to the guest.
++	 *
++	 * A common exception is for virtualization holes, i.e. when KVM can't
++	 * prevent the guest from using a feature, in which case the vCPU "has"
++	 * the feature regardless of what KVM or userspace desires.
++	 *
++	 * Note, features that don't require KVM involvement in any way are
++	 * NOT enforced/sanitized by KVM, i.e. are taken verbatim from the
++	 * guest CPUID provided by userspace.
++	 */
++	u32 cpu_caps[NR_KVM_CPU_CAPS];
++
  };
  
- struct kvm_x86_nested_ops {
+ int kvm_arch_vcpu_common_init(struct kvm_vcpu_common *common);
+@@ -925,22 +942,6 @@ struct kvm_vcpu_arch {
+ 
+ 	int halt_request; /* real mode on Intel only */
+ 
+-	/*
+-	 * cpu_caps holds the effective guest capabilities, i.e. the features
+-	 * the vCPU is allowed to use.  Typically, but not always, features can
+-	 * be used by the guest if and only if both KVM and userspace want to
+-	 * expose the feature to the guest.
+-	 *
+-	 * A common exception is for virtualization holes, i.e. when KVM can't
+-	 * prevent the guest from using a feature, in which case the vCPU "has"
+-	 * the feature regardless of what KVM or userspace desires.
+-	 *
+-	 * Note, features that don't require KVM involvement in any way are
+-	 * NOT enforced/sanitized by KVM, i.e. are taken verbatim from the
+-	 * guest CPUID provided by userspace.
+-	 */
+-	u32 cpu_caps[NR_KVM_CPU_CAPS];
+-
+ 	u64 reserved_gpa_bits;
+ 	int maxphyaddr;
+ 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 6d948d63306c..27e2f7e25038 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -284,7 +284,7 @@ static __always_inline void kvm_update_feature_runtime(struct kvm_vcpu *vcpu,
+ 						       bool has_feature)
+ {
+ 	cpuid_entry_change(entry, x86_feature, has_feature);
+-	guest_cpu_cap_change(vcpu, x86_feature, has_feature);
++	guest_cpu_cap_change(vcpu->common, x86_feature, has_feature);
+ }
+ 
+ static void kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu)
+@@ -382,7 +382,7 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	bool allow_gbpages;
+ 	int i;
+ 
+-	memset(vcpu->arch.cpu_caps, 0, sizeof(vcpu->arch.cpu_caps));
++	memset(common->arch.cpu_caps, 0, sizeof(common->arch.cpu_caps));
+ 	BUILD_BUG_ON(ARRAY_SIZE(reverse_cpuid) != NR_KVM_CPU_CAPS);
+ 
+ 	/*
+@@ -408,9 +408,9 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 		 * in guest CPUID.  Note, this includes features that are
+ 		 * supported by KVM but aren't advertised to userspace!
+ 		 */
+-		vcpu->arch.cpu_caps[i] = kvm_cpu_caps[i] |
+-					 cpuid_get_reg_unsafe(&emulated, cpuid.reg);
+-		vcpu->arch.cpu_caps[i] &= cpuid_get_reg_unsafe(entry, cpuid.reg);
++		common->arch.cpu_caps[i] = kvm_cpu_caps[i] |
++					   cpuid_get_reg_unsafe(&emulated, cpuid.reg);
++		common->arch.cpu_caps[i] &= cpuid_get_reg_unsafe(entry, cpuid.reg);
+ 	}
+ 
+ 	kvm_update_cpuid_runtime(vcpu);
+@@ -428,7 +428,7 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 */
+ 	allow_gbpages = tdp_enabled ? boot_cpu_has(X86_FEATURE_GBPAGES) :
+ 				      guest_cpu_cap_has(vcpu, X86_FEATURE_GBPAGES);
+-	guest_cpu_cap_change(vcpu, X86_FEATURE_GBPAGES, allow_gbpages);
++	guest_cpu_cap_change(common, X86_FEATURE_GBPAGES, allow_gbpages);
+ 
+ 	best = kvm_find_cpuid_entry(vcpu, 1);
+ 	if (best && apic) {
+@@ -536,8 +536,8 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
+ 	swap(common->arch.cpuid_entries, e2);
+ 	swap(common->arch.cpuid_nent, nent);
+ 
+-	memcpy(vcpu_caps, vcpu->arch.cpu_caps, sizeof(vcpu_caps));
+-	BUILD_BUG_ON(sizeof(vcpu_caps) != sizeof(vcpu->arch.cpu_caps));
++	memcpy(vcpu_caps, common->arch.cpu_caps, sizeof(vcpu_caps));
++	BUILD_BUG_ON(sizeof(vcpu_caps) != sizeof(common->arch.cpu_caps));
+ 
+ 	/*
+ 	 * KVM does not correctly handle changing guest CPUID after KVM_RUN or
+@@ -582,7 +582,7 @@ static int kvm_set_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2 *e2,
+ 	return 0;
+ 
+ err:
+-	memcpy(vcpu->arch.cpu_caps, vcpu_caps, sizeof(vcpu_caps));
++	memcpy(common->arch.cpu_caps, vcpu_caps, sizeof(vcpu_caps));
+ 	swap(common->arch.cpuid_entries, e2);
+ 	swap(common->arch.cpuid_nent, nent);
+ 	return r;
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 143ea8531611..75abf447eabf 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -239,36 +239,37 @@ static __always_inline bool guest_pv_has(struct kvm_vcpu *vcpu,
+ 	return vcpu->arch.pv_cpuid.features & (1u << kvm_feature);
+ }
+ 
+-static __always_inline void guest_cpu_cap_set(struct kvm_vcpu *vcpu,
++static __always_inline void guest_cpu_cap_set(struct kvm_vcpu_common *common,
+ 					      unsigned int x86_feature)
+ {
+ 	unsigned int x86_leaf = __feature_leaf(x86_feature);
+ 
+-	vcpu->arch.cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
++	common->arch.cpu_caps[x86_leaf] |= __feature_bit(x86_feature);
+ }
+ 
+-static __always_inline void guest_cpu_cap_clear(struct kvm_vcpu *vcpu,
++static __always_inline void guest_cpu_cap_clear(struct kvm_vcpu_common *common,
+ 						unsigned int x86_feature)
+ {
+ 	unsigned int x86_leaf = __feature_leaf(x86_feature);
+ 
+-	vcpu->arch.cpu_caps[x86_leaf] &= ~__feature_bit(x86_feature);
++	common->arch.cpu_caps[x86_leaf] &= ~__feature_bit(x86_feature);
+ }
+ 
+-static __always_inline void guest_cpu_cap_change(struct kvm_vcpu *vcpu,
++static __always_inline void guest_cpu_cap_change(struct kvm_vcpu_common *common,
+ 						 unsigned int x86_feature,
+ 						 bool guest_has_cap)
+ {
+ 	if (guest_has_cap)
+-		guest_cpu_cap_set(vcpu, x86_feature);
++		guest_cpu_cap_set(common, x86_feature);
+ 	else
+-		guest_cpu_cap_clear(vcpu, x86_feature);
++		guest_cpu_cap_clear(common, x86_feature);
+ }
+ 
+ static __always_inline bool guest_cpu_cap_has(struct kvm_vcpu *vcpu,
+ 					      unsigned int x86_feature)
+ {
+ 	unsigned int x86_leaf = __feature_leaf(x86_feature);
++	struct kvm_vcpu_common *common = vcpu->common;
+ 
+ 	/*
+ 	 * Except for MWAIT, querying dynamic feature bits is disallowed, so
+@@ -278,7 +279,7 @@ static __always_inline bool guest_cpu_cap_has(struct kvm_vcpu *vcpu,
+ 		     x86_feature == X86_FEATURE_OSXSAVE ||
+ 		     x86_feature == X86_FEATURE_OSPKE);
+ 
+-	return vcpu->arch.cpu_caps[x86_leaf] & __feature_bit(x86_feature);
++	return common->arch.cpu_caps[x86_leaf] & __feature_bit(x86_feature);
+ }
+ 
+ static inline bool kvm_vcpu_is_legal_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0b57dde29e40..2a92d8d18d7c 100644
+index 612db7ad8b2a..0b57dde29e40 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -5445,6 +5445,9 @@ struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.gmem_prepare = sev_gmem_prepare,
- 	.gmem_invalidate = sev_gmem_invalidate,
- 	.gmem_max_mapping_level = sev_gmem_max_mapping_level,
-+
-+	.alloc_plane = x86_alloc_plane,
-+	.free_plane = x86_free_plane,
- };
+@@ -4706,7 +4706,7 @@ static void svm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 * XSS on VM-Enter/VM-Exit.  Failure to do so would effectively give
+ 	 * the guest read/write access to the host's XSS.
+ 	 */
+-	guest_cpu_cap_change(vcpu, X86_FEATURE_XSAVES,
++	guest_cpu_cap_change(vcpu->common, X86_FEATURE_XSAVES,
+ 			     boot_cpu_has(X86_FEATURE_XSAVES) &&
+ 			     guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVE));
  
- /*
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index f9c4703dda54..a2fc4eeeca1d 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -1030,7 +1030,10 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.vcpu_mem_enc_ioctl = vt_op_tdx_only(vcpu_mem_enc_ioctl),
- 	.vcpu_mem_enc_unlocked_ioctl = vt_op_tdx_only(vcpu_mem_enc_unlocked_ioctl),
+@@ -4716,7 +4716,7 @@ static void svm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 * SVM on Intel is bonkers and extremely unlikely to work).
+ 	 */
+ 	if (guest_cpuid_is_intel_compatible(vcpu))
+-		guest_cpu_cap_clear(vcpu, X86_FEATURE_V_VMSAVE_VMLOAD);
++		guest_cpu_cap_clear(vcpu->common, X86_FEATURE_V_VMSAVE_VMLOAD);
  
--	.gmem_max_mapping_level = vt_op_tdx_only(gmem_max_mapping_level)
-+	.gmem_max_mapping_level = vt_op_tdx_only(gmem_max_mapping_level),
-+
-+	.alloc_plane = x86_alloc_plane,
-+	.free_plane = x86_free_plane,
- };
+ 	if (is_sev_guest(vcpu))
+ 		sev_vcpu_after_set_cpuid(svm);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 62e180651143..d10aa5f60cad 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7994,7 +7994,7 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	 * set if and only if XSAVE is supported.
+ 	 */
+ 	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVE))
+-		guest_cpu_cap_clear(vcpu, X86_FEATURE_XSAVES);
++		guest_cpu_cap_clear(vcpu->common, X86_FEATURE_XSAVES);
  
- struct kvm_x86_init_ops vt_init_ops __initdata = {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b9828cd31136..5f48392d4738 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -487,18 +487,30 @@ unsigned kvm_arch_max_planes(struct kvm *kvm)
- 	return 1;
- }
+ 	vmx_setup_uret_msrs(vmx);
  
--struct kvm_plane *kvm_alloc_plane(void)
-+struct kvm_plane *x86_alloc_plane(void)
- {
- 	/* For better type checking, do not return kzalloc() value directly */
- 	struct kvm_plane *plane = kzalloc(sizeof(*plane), GFP_KERNEL_ACCOUNT);
- 
- 	return plane;
- }
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(x86_alloc_plane);
- 
--void kvm_free_plane(struct kvm_plane *plane)
-+void x86_free_plane(struct kvm_plane *plane)
- {
- 	kfree(plane);
- }
-+EXPORT_SYMBOL_FOR_KVM_INTERNAL(x86_free_plane);
-+
-+struct kvm_plane *kvm_alloc_plane(void)
-+{
-+	return kvm_x86_call(alloc_plane)();
-+}
-+
-+void kvm_free_plane(struct kvm_plane *plane)
-+{
-+	kvm_x86_call(free_plane)(plane);
-+}
- 
- /*
-  * All feature MSRs except uCode revID, which tracks the currently loaded uCode
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 38a905fa86de..812bd6004a4c 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -797,4 +797,8 @@ static inline bool kvm_is_valid_u_s_cet(struct kvm_vcpu *vcpu, u64 data)
- 
- 	return true;
- }
-+
-+struct kvm_plane *x86_alloc_plane(void);
-+void x86_free_plane(struct kvm_plane *plane);
-+
- #endif
 -- 
 2.53.0
 
