@@ -1,148 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C213BBFAC
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 10:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE97330B01;
+	Mon,  8 Jun 2026 11:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780914930; cv=none; b=Jo84IFqk2m+zae5HQkXi1VNnM9K+QOld8gnab+biR4QbKFQ25VdxZURLHE4k0AIrZzzEokYlYr3S40ji6cN1qDglQYQKK1YdnNQis9TfGygE1kqO/lnJtYUHrFWWkCSLOQJSa/mMNUMyUaWHKPwnTW3FpeCMEgNi/YQD8KbkaB8=
+	t=1780916846; cv=none; b=UNxP/iqE8B5Sqjh3dZcdm58z5C1vBqQsClDANZMpJtMTWRdXDN2KHuqXwqh5BDuICk3xh5U8wbGvMl9sfcRCpGJ/7YKNZ3xY62xkYBIgxUSbBmSxzUOuLFgEV/HXM2WxtBIRLM2qTydNjQUBYqdcZWHJFU3f9YJznm8in5CUPUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780914930; c=relaxed/simple;
-	bh=3nTdHJdjlXmAp/wNFCBcxKPU++qEyD5ygE8fXLT4UjY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MyFmEKY/6iT2cS/QTmg9EUfJVylMQBWPIdI37NvoMuSkAkiihl6HK3jffdHrzpEhoTXr1RvqFj8Kx6mooniOlzPDbdRMueLjS6RqdmEBNO/Hc8h4nZUc608JXy8NsS198uFkyND6uwV9+PV9Swv7aV0vum9yKEluhqlT6+zVDe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxzsDumiZq+ckRAA--.24160S3;
-	Mon, 08 Jun 2026 18:35:26 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxSeDlmiZqLqafAA--.40549S5;
-	Mon, 08 Jun 2026 18:35:26 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] LoongArch: BPF: Inline bpf_get_smp_processor_id() helper
-Date: Mon,  8 Jun 2026 18:35:16 +0800
-Message-ID: <20260608103516.20643-4-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260608103516.20643-1-yangtiezhu@loongson.cn>
-References: <20260608103516.20643-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1780916846; c=relaxed/simple;
+	bh=2JzKXlLht8WwgD9yj++BEeDa/5KquAwShMwatn079Sk=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=Dt/t6A/jTmu2yJ7TdihEVaL8XlMvMbdtAnn2BOUlD/JOProxOnczwH49/VVhQDjHHZ+5AKVGRG+o0wu5Fy9iaQWJyfY2IyXz5tLkqUWnS2vQ6WNJZWIQtgFKiJyH0sX177Y/OwMKNdbFNP+Auamfw1lQOTBHfRmTEUJcCxQ/Xwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBGw3Is5; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBGw3Is5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DDF1F00893;
+	Mon,  8 Jun 2026 11:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780916845;
+	bh=2DGoeXcKtLbg8rt5fjSfRzNCiiWHdVOnkxCtyWVtAWE=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=dBGw3Is5BX7BXtGU/7LE9uNpg3swoL/O2uGE+JKd/+asUTVp/Jhow+7hcFbENNdX/
+	 jon2fTS5YE84HBSpw/zxlusbMkafOLcIVIBH/kqwaoaqw7PTA4IYdW9iXDVhvptGZ5
+	 WWx61pWy7ltOyf5/pc/5eXOlBEmMF/o9varkQqKBEMhSKfPXPInb3sIcLdMgTNTYEa
+	 nWpC3ihgX6RUPxQTVHBKOJg4lDXgnit7O0jpngcDg9sYgWhydkBmufHf34JykOBtn6
+	 E42On7goVmXTzQ2Xf5aQGIZAXh6hYOtNXLV5/946K20VdCaanqHyhcSNWDMXBlR0z1
+	 CjYhzSzrCkCmA==
+Content-Type: multipart/mixed; boundary="===============0807563568734763837=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxSeDlmiZqLqafAA--.40549S5
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CrykWw4UurW7JFW8ZF1xXrc_yoW5Jr1UpF
-	4UCrsIkr4DWa4FqFWxJr4kZryYqws5Wry3GFyYgayak3Z7Zry5tr1fKw13tFn5Ar409a4x
-	Z390krsYkF4UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcCD7UUUUU
+Message-Id: <9f3df2278bfa3db163dc38d388bb060c9459f1c5eab5f42ffd67969d23e5b99f@mail.kernel.org>
+In-Reply-To: <20260608103516.20643-3-yangtiezhu@loongson.cn>
+References: <20260608103516.20643-3-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v1 2/3] LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon,  8 Jun 2026 11:07:24 +0000 (UTC)
 
-The pointer to thread_info is always available in the $tp register,
-the call to bpf_get_smp_processor_id() can be inlined into a single
-load instruction.
+--===============0807563568734763837==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-(1) Here is the sample test.c:
+> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+> index 058ffbbaad85..7967de9395ec 100644
+> --- a/arch/loongarch/net/bpf_jit.c
+> +++ b/arch/loongarch/net/bpf_jit.c
+> @@ -1147,6 +1147,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+>
+>  	/* function call */
+>  	case BPF_JMP | BPF_CALL:
+> +		/* Implement helper call to bpf_get_current_task/_btf() inline */
+> +		if (insn->src_reg == 0 && (insn->imm == BPF_FUNC_get_current_task ||
+> +					   insn->imm == BPF_FUNC_get_current_task_btf)) {
+> +			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_TP);
+> +			break;
+> +		}
+> +
 
-  #include <linux/bpf.h>
-  #include <bpf/bpf_helpers.h>
+sashiko-bot raised a concern in v1 about the dependency on patch 1/3:
+On 32-bit LoongArch builds, does __switch_to() add TASK_STRUCT_OFFSET
+to the task pointer and store the biased pointer directly into $tp
+without unbiasing it?
 
-  SEC("raw_tp/sys_enter")
-  int test_cpuid(void *ctx)
-  {
-	  return bpf_get_smp_processor_id();
-  }
-  char _license[] SEC("license") = "GPL";
+This patch directly reads $tp to get the task_struct pointer. If the
+preceding patch (1/3) leaves a biased pointer in $tp on 32-bit builds,
+wouldn't this inlined bpf_get_current_task() return an incorrect pointer
+offset by TASK_STRUCT_OFFSET (2000 bytes)?
 
-(2) Here are the test steps:
+The concern originated from this review:
+https://lore.kernel.org/all/20260608105329.610981F00893@smtp.kernel.org/
 
-  sudo yum install libbpf-devel kernel-devel bpftool
-  clang -target bpf -O2 -c test.c -o test.o
-  sudo sysctl -w net.core.bpf_jit_enable=1
-  sudo bpftool prog show name test_cpuid
-  sudo rm -f /sys/fs/bpf/test_cpuid
-  sudo bpftool prog load test.o /sys/fs/bpf/test_cpuid
-  ID=$(sudo bpftool prog show pinned /sys/fs/bpf/test_cpuid | grep -oE '^[0-9]+')
-  sudo bpftool prog dump jited id $ID
+The original comment asked:
 
-(3) Here are the test results:
+> Does this leave a biased task_struct pointer in the $tp register on
+> 32-bit builds?
+>
+> Since the current macro is now directly mapped to $tp in
+> arch/loongarch/include/asm/current.h:
+>
+> register struct task_struct *current_thread_pointer __asm__("$tp");
+> #define current get_current()
+>
+> If a1 (next) has TASK_STRUCT_OFFSET added to it to bypass assembly
+> immediate offset limitations on 32-bit builds, this move instruction
+> places that biased pointer into $tp without unbiasing it before
+> returning.
+>
+> When __switch_to() returns to C code, wouldn't evaluating the current
+> macro dereference a pointer shifted by TASK_STRUCT_OFFSET (2000 bytes
+> on 32-bit) and cause immediate memory corruption or kernel panics
+> during context switch?
 
-Before: 6 instructions
+This comment does not appear to have been addressed.
 
-  ...
-  64:	lu12i.w	$t1, 1213
-  68:	ori	$t1, $t1, 1680
-  6c:	lu32i.d	$t1, 0
-  70:	lu52i.d	$t1, $t1, -1792
-  74:	jirl	$ra, $t1, 0
-  78:	move	$a5, $a0
-  ...
+[ ... ]
 
-After: 1 instruction
 
-  ...
-  64:	ld.wu	$a5, $tp, 16
-  ...
-
-This is similar with commit 2ddec2c80b44 ("riscv, bpf: inline
-bpf_get_smp_processor_id()").
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index b93b67d22c26..4f2493c549f1 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2022 Loongson Technology Corporation Limited
-  */
- #include <linux/memory.h>
-+#include <asm/asm-offsets.h>
- #include "bpf_jit.h"
- 
- #define LOONGARCH_MAX_REG_ARGS 8
-@@ -1154,6 +1155,12 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
- 			break;
- 		}
- 
-+		/* Implement helper call to bpf_get_smp_processor_id() inline */
-+		if (insn->src_reg == 0 && insn->imm == BPF_FUNC_get_smp_processor_id) {
-+			emit_insn(ctx, ldwu, regmap[BPF_REG_0], LOONGARCH_GPR_TP, TI_CPU);
-+			break;
-+		}
-+
- 		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
- 					    &func_addr, &func_addr_fixed);
- 		if (ret < 0)
-@@ -2380,6 +2387,7 @@ bool bpf_jit_inlines_helper_call(s32 imm)
- 	switch (imm) {
- 	case BPF_FUNC_get_current_task:
- 	case BPF_FUNC_get_current_task_btf:
-+	case BPF_FUNC_get_smp_processor_id:
- 		return true;
- 	default:
- 		return false;
--- 
-2.42.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/27132522999
+--===============0807563568734763837==--
