@@ -1,100 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5492773F0
-	for <loongarch@lists.linux.dev>; Sun,  7 Jun 2026 04:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 339ED3002A0
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 01:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780807311; cv=none; b=AOv5t8ZlMa9jaqIkPRfHBBhxFiIUD8h1cil56Um5HgI/1Gvhlp2Uy3U2B9EKdtzGJg9zyXR8UNx6xkPW5Egv9Q/3oWIsFYXvQPK8tizSDlMBEv4xBW0JyCT84DCjycJQXNAB8zFG8UG5y9855Pr4luNS16Kk2TQ1Vq2z/TtN4B0=
+	t=1780882357; cv=none; b=nImhhfqSTNplZxYl+xN5p9+//8IT/gGzKVbOpCjhDXqr2xnYp2kDLygwyo+XnKJ1T7+Nk8a7BB3dcijxEDKfKvk1bT7pNOwjxzHjM62tAvuK9aJleCH3wuc2AYQgD2fe5C7c5oleG4eJ5J7qJ3RP4ro8ygvbJ/LpHZwIFlbyQJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780807311; c=relaxed/simple;
-	bh=zw10WzH9Tr28aLBQzDK44CuhW3w/WSkEZ9mSyKQk4+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LdKOjrjdeRw5k7NTuBm+k2iORgcmmkRwJGwYqHxvNKHhBIrr6MIPD3dGe34LOL0kxgYYtg5fIZWvwmd2PyTx/tEGCONRkB8qtX3ts4fsKbcNt9wBfTHQ69o0Yx3gOYcb/u78U775g0PV4mYXQraDS7pSmiAldk88nRaGLJdSLis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fteKFm9Y; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fteKFm9Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98701F008A0
-	for <loongarch@lists.linux.dev>; Sun,  7 Jun 2026 04:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780807309;
-	bh=wjgnXGDtibQBEb4kF61nGsrg+xeD+keGIY9o1YJM9qM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=fteKFm9YA4ySHooSBYi+3hZuo4tevzziErV6uJjyIEXwH0UO7GjxEBcE5HXqujuNK
-	 QQUZ5UX206OAPY+ZO1oa+PoP2iHewnyZzlDuLVJiDPFq7baenTaDRGrHkD0b+zy6pn
-	 V32Agy9vX6LQr7w+1r0u1gGPKR+Dh6g59R1iMaK4vOK5Lgn0BwhYiiQJnpnH8OvdwS
-	 EST0L/tU/bQVA15oV6ejhUfMK0GyLIji6ltwn5dzZla/AtVanOWeVdBs5jW3TXlZw6
-	 JzXT/GRQNb+HpmTTBXNPSnKU64DVmzisSr4kDiU8G3FGq99ouaUrtd+PxiYQ25iByF
-	 I9rGL4hl3wofQ==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6914a658115so1460692a12.0
-        for <loongarch@lists.linux.dev>; Sat, 06 Jun 2026 21:41:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+/Hd14DGukVnl7txEBRJyhc/7YsIZe/ggPxJSZovnzO0TbyYZTqtus4bxmSJynisaCq0Lbvcz3xI4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YweUKqw08yNyAwrx6r+tGSCymCAGRwfqi/MA3vA/2OapXhjwy3m
-	7by8w0spfFk5ioIvYHbE0g0kih4ESgz6qqv67WyCGk7oD6SHjeGk8kjQGCUBih12PMu3G4tKp4N
-	kLUkVJM2nEyjGivclhGcogotD3ejXluA=
-X-Received: by 2002:a05:6402:51c7:b0:67c:a6d1:c48b with SMTP id
- 4fb4d7f45d1cf-68fa4e2c7dbmr5058461a12.11.1780807308444; Sat, 06 Jun 2026
- 21:41:48 -0700 (PDT)
+	s=arc-20240116; t=1780882357; c=relaxed/simple;
+	bh=8xk4jwJ3RGc19PQEwYu3FIfdG1523kR6HC2z/MVXCTE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QGM3ZTH2l7erQa0Z9sHuSNKfvPZGTu/K7WeJbtNW7V9Rr/AqcncKWgdNFqsG25cPKChHGGM3eSLLr5SuoRanRx14FzOaq43547BOEKhVUQwoZEJCxZfDqhnFkzXUQOZtX01iJKhblVShS6t4AjDal5VYvsg60Jrfwdwr7AVLbxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8Cxf+urGyZqMpkRAA--.46836S3;
+	Mon, 08 Jun 2026 09:32:27 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxHMKoGyZqNTafAA--.39164S5;
+	Mon, 08 Jun 2026 09:32:27 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/4] LoongArch: KVM: Remove some middle FPU states
+Date: Mon,  8 Jun 2026 09:32:21 +0800
+Message-Id: <20260608013222.375257-4-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260608013222.375257-1-maobibo@loongson.cn>
+References: <20260608013222.375257-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260531135326.2238555-1-yanfei.xu@bytedance.com> <20260531135326.2238555-2-yanfei.xu@bytedance.com>
-In-Reply-To: <20260531135326.2238555-2-yanfei.xu@bytedance.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 7 Jun 2026 12:41:35 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6Gk4dDek5HnKx5f_oSZ00ZWnk5Nf5ygiGKE22z8vDCqw@mail.gmail.com>
-X-Gm-Features: AVVi8CfdV3X5ExYzOTFbLqmfRbAXzH21R98_Jvaw8v351jsO4seqkdKvp64fjAM
-Message-ID: <CAAhV-H6Gk4dDek5HnKx5f_oSZ00ZWnk5Nf5ygiGKE22z8vDCqw@mail.gmail.com>
-Subject: Re: [v2 1/2] KVM: LoongArch: Validate irqchip index in irqfd routing
-To: Yanfei Xu <yanfei.xu@bytedance.com>
-Cc: harshpb@linux.ibm.com, zhaotianrui@loongson.cn, maobibo@loongson.cn, 
-	maddy@linux.ibm.com, npiggin@gmail.com, sashiko-reviews@lists.linux.dev, 
-	seanjc@google.com, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	stable@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, caixiangfeng@bytedance.com, 
-	fangying.tommy@bytedance.com, isyanfei.xu@gmail.com, 
-	Sashiko <sashiko-bot@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJAxHMKoGyZqNTafAA--.39164S5
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Applied, thanks.
+With max VM supported FPU type enabled, if VM supports LASX, there is
+FPU none --> LASX, no middle FPU state such as FPU --> LASX or
+LSX --> LASX. Here remove the middle FPU states in function
+kvm_own_lsx() and kvm_own_lasx(). And it becomes simpler than before.
 
-Huacai
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/loongarch/kvm/vcpu.c | 34 +++-------------------------------
+ 1 file changed, 3 insertions(+), 31 deletions(-)
 
-On Sun, May 31, 2026 at 9:54=E2=80=AFPM Yanfei Xu <yanfei.xu@bytedance.com>=
- wrote:
->
-> Sashiko reported that the irqchip index is not validated for LoongArch.
-> Add validation and reject out-of-range irqchip indexes to avoid indexing
-> past the routing table's chip array.
->
-> Fixes: 1928254c5ccb ("LoongArch: KVM: Add irqfd support")
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/kvm/20260525051714.485D51F000E9@smtp.kern=
-el.org/
-> Reviewed-by: Bibo Mao <maobibo@loongson.cn>
-> Signed-off-by: Yanfei Xu <yanfei.xu@bytedance.com>
-> ---
->  arch/loongarch/kvm/irqfd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/loongarch/kvm/irqfd.c b/arch/loongarch/kvm/irqfd.c
-> index f4f953b22419..40ed1081c4b6 100644
-> --- a/arch/loongarch/kvm/irqfd.c
-> +++ b/arch/loongarch/kvm/irqfd.c
-> @@ -51,7 +51,8 @@ int kvm_set_routing_entry(struct kvm *kvm,
->                 e->irqchip.irqchip =3D ue->u.irqchip.irqchip;
->                 e->irqchip.pin =3D ue->u.irqchip.pin;
->
-> -               if (e->irqchip.pin >=3D KVM_IRQCHIP_NUM_PINS)
-> +               if (e->irqchip.pin >=3D KVM_IRQCHIP_NUM_PINS ||
-> +                   e->irqchip.irqchip >=3D KVM_NR_IRQCHIPS)
->                         return -EINVAL;
->
->                 return 0;
-> --
-> 2.20.1
->
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 7f55875d8b3b..53abf7aa61f8 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -1389,21 +1389,7 @@ int kvm_own_lsx(struct kvm_vcpu *vcpu)
+ 	/* Enable LSX for guest */
+ 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
+ 	set_csr_euen(CSR_EUEN_LSXEN | CSR_EUEN_FPEN);
+-	switch (vcpu->arch.aux_inuse & KVM_LARCH_FPU) {
+-	case KVM_LARCH_FPU:
+-		/*
+-		 * Guest FPU state already loaded,
+-		 * only restore upper LSX state
+-		 */
+-		_restore_lsx_upper(&vcpu->arch.fpu);
+-		break;
+-	default:
+-		/* Neither FP or LSX already active,
+-		 * restore full LSX state
+-		 */
+-		kvm_restore_lsx(&vcpu->arch.fpu);
+-		break;
+-	}
++	kvm_restore_lsx(&vcpu->arch.fpu);
+ 
+ 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LSX);
+ 	vcpu->arch.aux_inuse |= KVM_LARCH_LSX | KVM_LARCH_FPU;
+@@ -1418,22 +1404,8 @@ int kvm_own_lasx(struct kvm_vcpu *vcpu)
+ {
+ 	kvm_check_fcsr(vcpu, vcpu->arch.fpu.fcsr);
+ 	set_csr_euen(CSR_EUEN_FPEN | CSR_EUEN_LSXEN | CSR_EUEN_LASXEN);
+-	switch (vcpu->arch.aux_inuse & (KVM_LARCH_FPU | KVM_LARCH_LSX)) {
+-	case KVM_LARCH_LSX:
+-	case KVM_LARCH_LSX | KVM_LARCH_FPU:
+-		/* Guest LSX state already loaded, only restore upper LASX state */
+-		_restore_lasx_upper(&vcpu->arch.fpu);
+-		break;
+-	case KVM_LARCH_FPU:
+-		/* Guest FP state already loaded, only restore upper LSX & LASX state */
+-		_restore_lsx_upper(&vcpu->arch.fpu);
+-		_restore_lasx_upper(&vcpu->arch.fpu);
+-		break;
+-	default:
+-		/* Neither FP or LSX already active, restore full LASX state */
+-		kvm_restore_lasx(&vcpu->arch.fpu);
+-		break;
+-	}
++	/* Neither FP or LSX already active, restore full LASX state */
++	kvm_restore_lasx(&vcpu->arch.fpu);
+ 
+ 	trace_kvm_aux(vcpu, KVM_TRACE_AUX_RESTORE, KVM_TRACE_AUX_LASX);
+ 	vcpu->arch.aux_inuse |= KVM_LARCH_LASX | KVM_LARCH_LSX | KVM_LARCH_FPU;
+-- 
+2.39.3
+
