@@ -1,137 +1,80 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B21563F1AAC;
-	Mon,  8 Jun 2026 14:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780929820; cv=none; b=fDflVLG+cD2LdpvPSG5ac9Y0BELjrTz8RkDgoehU5Q7gDrBwukFSXEG8phXBLsipor6+5V8+LApNWZRHkCHjzMdRB5kRqAXzrLBsiHR/yq6GEVJSanVd905Hi6uT9EHYCzK6Bn572WFLZnM8K9Oh4bLMPsz/hJLivloCBOfabnY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780929820; c=relaxed/simple;
-	bh=mbWm+HGdaEQiUN4G1XXeJLYotq+qlL1X3dQave7Qpdc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aF7emFkr0pACKLhlND0iJONCNO8ATCOoSFyQVcpCCRCpIGCEaYWKBv99DC/PWdoJ7DZsNKvK/0q9C+29FldTVox576uTRck03GCDMQe4G36oLqixAgROUNo7ZDf/90K93wj0NTrrR93AEp/pJH0+DYTlvRvTpiIg/aIYGQPkOFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Received: from io.home.8bytes.org (p4ffe1d30.dip0.t-ipconnect.de [79.254.29.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id A4CBA2028D9;
-	Mon,  8 Jun 2026 16:43:16 +0200 (CEST)
-From: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>,
-	ashish.kalra@amd.com,
-	michael.roth@amd.com,
-	nsaenz@amazon.com,
-	anelkz@amazon.de,
-	James.Bottomley@HansenPartnership.com,
-	Melody Wang <huibo.wang@amd.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	kvm-riscv@lists.infradead.org,
-	x86@kernel.org,
-	coconut-svsm@lists.linux.dev,
-	joerg.roedel@amd.com
-Subject: [PATCH 54/60] kvm: x86: Restrict KVM planes support to KVM_IRQCHIP_SPLIT
-Date: Mon,  8 Jun 2026 16:42:46 +0200
-Message-ID: <20260608144252.351443-55-joro@8bytes.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260608144252.351443-1-joro@8bytes.org>
-References: <20260608144252.351443-1-joro@8bytes.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9713403E7;
+	Mon,  8 Jun 2026 16:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780935005; cv=none; b=VbeZudakrgybBiXusF/VBejJSeySE0Bi2n3LdUZlynLkA1vIM2BqeRQu5MHOFYuTcMag9QkFsRhFLIAlW36tsTl8utEw5uT3ALwA6Fs621nho7s6YCcsfzb50nMlyciZbUrRSBFV4D1B5fFMLNE93mmjNqoYjn93732oGeA8Zik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780935005; c=relaxed/simple;
+	bh=/UvC0TaBuP9SSTVoHQLr2V9yCM7W+OV4uNuVBQqrkVU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pCr+CypoZCyumEXt50ysgizf6yNMwrvjkLK1aJU75jCh+EJuAKxHCfhx/y5qsHTlEL1JSw7QDCm1C7FzW+s496ZAeUo1632gkvERiTP/GkVy+phguHe6QGh1AceNs0kJ7NGJisOwyOWtMIKyvnlpLVpbvtRwIQCOPGoWtDVZ2zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NGHfBNMS; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NGHfBNMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F0E1F00893;
+	Mon,  8 Jun 2026 16:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1780935003;
+	bh=HeNvzEtTTeAyiynvrWR03BeK5a7m/jtKDrW58LkAIDk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=NGHfBNMS1rlirWFtfC0pDdz7EzZeHjyxYg9Ca3Sjn1pulZaZLIDmOYvJmcZBYsc93
+	 VQpg5Ivsba3rTH79/1M55QufUmF/lQ9H/jskqKdHB8HrOkPOEhSgnQUMV9M34B2Iz8
+	 Fh7VryrdGwslXF2Cr1sq+hzZtoOSb/V4p5rwEeS0=
+Date: Mon, 8 Jun 2026 09:10:00 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
+ <kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+ <npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+ <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+ <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+ <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
+ <saravanak@kernel.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+ <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+ <ruirui.yang@linux.dev>, <rdunlap@infradead.org>, <peterz@infradead.org>,
+ <feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+ <kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+ <lirongqing@baidu.com>, <ebiggers@kernel.org>, <paulmck@kernel.org>,
+ <leitao@debian.org>, <coxu@redhat.com>, <Liam.Howlett@oracle.com>,
+ <ryan.roberts@arm.com>, <osandov@fb.com>, <jbohac@suse.cz>,
+ <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
+ <sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
+ <adityag@linux.ibm.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
+ <fuqiang.wang@easystack.cn>, <ardb@kernel.org>, <chenjiahao16@huawei.com>,
+ <guoren@kernel.org>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+ <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <kexec@lists.infradead.org>
+Subject: Re: [PATCH v16 00/10] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Message-Id: <20260608091000.d88d7f5cc1bc4fa17f5774fe@linux-foundation.org>
+In-Reply-To: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Joerg Roedel <joerg.roedel@amd.com>
+On Mon, 8 Jun 2026 15:34:49 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 
-The code right now only supports plane-aware IOAPIC IRQ routing for
-IRQ-chip in split mode. Enforce that restriction in the KVM x86 code.
+> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+> and crashk_cma memory are almost identical across different architectures,
+> This patch set handle them in crash core in a general way, which eliminate
+> a lot of duplication code.
+> 
+> And add support for crashkernel CMA reservation for arm64 and riscv.
 
-Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
----
- arch/x86/kvm/x86.c       | 8 ++++++--
- include/linux/kvm_host.h | 1 +
- virt/kvm/kvm_main.c      | 5 +++++
- 3 files changed, 12 insertions(+), 2 deletions(-)
+fyi, AI review might have found a bunch of issues in arch-specific
+code, all of them pre-existing.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c6910356b061..0b9fa1059481 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -490,6 +490,10 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_x86_default_max_planes);
- 
- unsigned kvm_arch_max_planes(struct kvm *kvm)
- {
-+	/* For now, planes are only supported with irqchip=split */
-+	if (!irqchip_split(kvm))
-+		return 1;
-+
- 	return kvm_x86_call(max_planes)(kvm);
- }
- 
-@@ -6833,7 +6837,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		if (cap->args[0] > KVM_MAX_IRQ_ROUTES)
- 			goto split_irqchip_unlock;
- 		r = -EEXIST;
--		if (irqchip_in_kernel(kvm))
-+		if (irqchip_in_kernel(kvm) || kvm->has_planes)
- 			goto split_irqchip_unlock;
- 		if (kvm->created_vcpus)
- 			goto split_irqchip_unlock;
-@@ -7398,7 +7402,7 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
- 			goto create_irqchip_unlock;
- 
- 		r = -EINVAL;
--		if (kvm->created_vcpus)
-+		if (kvm->created_vcpus || kvm->has_planes)
- 			goto create_irqchip_unlock;
- 
- 		r = kvm_pic_init(kvm);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 3b62fb354267..dbf81e2520f2 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -918,6 +918,7 @@ struct kvm {
- 	struct list_head gpc_list;
- 
- 	struct kvm_plane *planes[KVM_MAX_PLANES];
-+	bool has_planes;
- 
- 	/*
- 	 * created_vcpus is protected by kvm->lock, and is incremented
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 8f1a16af519a..ff27cdbe8d92 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -5477,6 +5477,10 @@ static int kvm_vm_ioctl_create_plane(struct kvm *kvm, unsigned id)
- 	    WARN_ON_ONCE(id >= KVM_MAX_PLANES))
- 		return -EINVAL;
- 
-+	/* Planes are only supported with in-kernel IRQ-chip */
-+	if (!kvm_arch_irqchip_in_kernel(kvm))
-+		return -EINVAL;
-+
- 	guard(mutex)(&kvm->lock);
- 	if (kvm->planes[id])
- 		return -EEXIST;
-@@ -5498,6 +5502,7 @@ static int kvm_vm_ioctl_create_plane(struct kvm *kvm, unsigned id)
- 		goto put_kvm;
- 	}
- 
-+	kvm->has_planes = true;
- 	fd_install(fd, file);
- 	return fd;
- 
--- 
-2.53.0
-
+	https://sashiko.dev/#/patchset/20260608073459.3119290-1-ruanjinjie@huawei.com
