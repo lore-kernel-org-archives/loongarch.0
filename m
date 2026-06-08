@@ -1,32 +1,35 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B033016E7
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33E8F30567C
 	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 01:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780882358; cv=none; b=tcvBNSR+L4HOe48sLtnjQWMY3P8qLYX0XvMNIapo7ZPGSn2FcA/MgqX7GYIMMFD6hWAoY4pOfFAQJZDGagqvggeLo5UdDYYU11mtbNwW5kvbDAlNcNPoSyNaeVYn2bIzqF1TkGqw6VwAt8jYVYLe7cNr4WXO+hzKpjhyLYIz7r4=
+	t=1780882358; cv=none; b=d/mHOqFApq3UthCY9xqjITkvBnE9i/T9IEMwJiu6CUJwQJSo2Cwb+dgoENof/KLSZzoM7xofw5+dcslBLszCIJDkq94LjJVYj8uhDS0FmKMy+FAuJl9Ykgul2/E6NEss2cGEAPjM4ROvjaUBSTKEJNogKKCazlm5PBb+YVWdwXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780882358; c=relaxed/simple;
-	bh=bqxgKNTa5EAAcgNhUkAHlSDoJo3rS58cZ9vy9ZyYrUI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pckdxZkDYsCX2FytNynpLn5L9Jylu39Adbmuoht79e7Y6DkVEzktpr4X4frTq58WC4REMO7wJDf9GsP/ID+XKHRFlHF1FaWn2wn48I+RjsH1a6GE0oBW83oLO2yUE+6z1sbUuSy0hvQV670pssPubY9FLEhHYCmv7u82ajScSt8=
+	bh=7X/o4G1fvfmnKd7iOOFpxC41mGun6DPSfaNnPfSQgbM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=t6cCkCC3bq5l8bVyrlUNoD1E200WQU/F4TdjLf9WeFZxukctOxNNrKeCnVqcOwdrsb/QBCgBTBYrDHvvOKydM/lEjxEXR3WwuUbaOmITtNPZyg5grmIumRzPP82rqZ+eEebaMxVu4XUx5CJ1ko5B/tl/eXmnETiBvQBQrl73kiQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxDuqqGyZqJpkRAA--.46455S3;
-	Mon, 08 Jun 2026 09:32:26 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Dx8eqqGyZqLJkRAA--.47441S3;
+	Mon, 08 Jun 2026 09:32:27 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxHMKoGyZqNTafAA--.39164S2;
-	Mon, 08 Jun 2026 09:32:25 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJAxHMKoGyZqNTafAA--.39164S4;
+	Mon, 08 Jun 2026 09:32:26 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 0/4] LoongArch: KVM: Set max VM supported FPU type with FPU exception
-Date: Mon,  8 Jun 2026 09:32:18 +0800
-Message-Id: <20260608013222.375257-1-maobibo@loongson.cn>
+Subject: [PATCH v4 2/4] LoongArch: KVM: Enable FPU with max VM supported FPU type
+Date: Mon,  8 Jun 2026 09:32:20 +0800
+Message-Id: <20260608013222.375257-3-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20260608013222.375257-1-maobibo@loongson.cn>
+References: <20260608013222.375257-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,61 +37,109 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHMKoGyZqNTafAA--.39164S2
+X-CM-TRANSID:qMiowJAxHMKoGyZqNTafAA--.39164S4
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-With FPU save and restore, the cost is the same with different FPU width
-8/16/32 bytes, whatever from CPU cycle and cache line impaction.
+There are three FPU types FPU/LSX/LASX, which represents FPU64, FPU128
+and FPU256, and now lazy FPU method is used with FPU enabling. There
+are three different HW FPU exception code with different FPU type.
 
-Here is to enable FPU with max VM supported type, for example if
-VM supports LASX instrction, enable FPU with LASX type with all FPU
-exceptions including FPU/LSX/LASX exception. So if LASX is enabled with
-FPU exception, it can avoid potential LSX/LASX exception in future.
+The exising method is to enable specified FPU type with responding
+FPU exeception. Supposing application uses FPU64 and FPU256, there
+will be FPU256 exception when FPU256 type is used.
 
-With context switch microbench which touches FPU and LASX, there is 9%
-improvement when halt_poll_ns is disabled. The command is
-"./context --test=pipe" and source code located at:
-  https://github.com/bibo-mao/context_switch/blob/main/context.c
+Here enable FPU with VM supported type directly, it can avoid unnecessary
+FPU exception in future if further FPU type is used.
 
-Original     Wih patch      improvement
-75232        82440          9%
-
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
-v3 ... v4:
-  1. Fix one issue on patch 4 with function kvm_lose_fpu(), where flag
-     KVM_LARCH_FPU is checked too early so that LBT disabling is
-     skipped, since API kvm_lose_fpu() implies kvm_lose_lbt().
+ arch/loongarch/include/asm/kvm_host.h |  1 -
+ arch/loongarch/kvm/exit.c             |  9 ++-------
+ arch/loongarch/kvm/vcpu.c             | 19 +++++--------------
+ 3 files changed, 7 insertions(+), 22 deletions(-)
 
-v2 ... v3:
-  1. Merge patch 1 and patch 3 together, patch 1 adds KVM_REQ_LBT_LOAD
-     type, patch 3 renames KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD.
-  2. Merge patch 5 and patch 6 together, which remove aux flags
-     KVM_LARCH_LSX and KVM_LARCH_LASX
-
-v1 ... v2:
-  1. Enable FPU with max VM supported FPU type, rather than max used type.
-  2. Add new request bit KVM_REQ_LBT_LOAD for LBT restore
-  3. Rename KVM_REQ_AUX_LOAD with KVM_REQ_FPU_LOAD
-  3. Remove aux_ldtype and KVM_LARCH_LSX/KVM_LARCH_LSX
-  4. Remove middle FPU state handling in kvm_own_lsx() and kvm_own_lasx(),
-     directly enable LSX or LASX from FPU none state.
----
-Bibo Mao (4):
-  LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD request bit
-  LoongArch: KVM: Enable FPU with max VM supported FPU type
-  LoongArch: KVM: Remove some middle FPU states
-  LoongArch: KVM: Remove KVM_LARCH_LASX and KVM_LARCH_LSX
-
- arch/loongarch/include/asm/kvm_host.h |  6 +--
- arch/loongarch/kvm/exit.c             | 21 +++-----
- arch/loongarch/kvm/vcpu.c             | 78 ++++++++-------------------
- 3 files changed, 31 insertions(+), 74 deletions(-)
-
-
-base-commit: c10130c234c81f4a7a143edbf413080235f8d8ce
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index e76a49d4233b..bad16c5f963c 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -204,7 +204,6 @@ struct kvm_vcpu_arch {
+ 
+ 	/* Which auxiliary state is loaded (KVM_LARCH_*) */
+ 	unsigned int aux_inuse;
+-	unsigned int aux_ldtype;
+ 
+ 	/* FPU state */
+ 	struct loongarch_fpu fpu FPU_ALIGN;
+diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
+index b839c989d3dc..c8492670f169 100644
+--- a/arch/loongarch/kvm/exit.c
++++ b/arch/loongarch/kvm/exit.c
+@@ -755,7 +755,6 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu, int ecode)
+ 		return RESUME_HOST;
+ 	}
+ 
+-	vcpu->arch.aux_ldtype = KVM_LARCH_FPU;
+ 	kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+ 
+ 	return RESUME_GUEST;
+@@ -796,10 +795,8 @@ static int kvm_handle_lsx_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	if (!kvm_guest_has_lsx(&vcpu->arch))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+-	else {
+-		vcpu->arch.aux_ldtype = KVM_LARCH_LSX;
++	else
+ 		kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+-	}
+ 
+ 	return RESUME_GUEST;
+ }
+@@ -816,10 +813,8 @@ static int kvm_handle_lasx_disabled(struct kvm_vcpu *vcpu, int ecode)
+ {
+ 	if (!kvm_guest_has_lasx(&vcpu->arch))
+ 		kvm_queue_exception(vcpu, EXCCODE_INE, 0);
+-	else {
+-		vcpu->arch.aux_ldtype = KVM_LARCH_LASX;
++	else
+ 		kvm_make_request(KVM_REQ_FPU_LOAD, vcpu);
+-	}
+ 
+ 	return RESUME_GUEST;
+ }
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index c28aa37f37a9..7f55875d8b3b 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -240,21 +240,12 @@ static void kvm_late_check_requests(struct kvm_vcpu *vcpu)
+ 		}
+ 
+ 	if (kvm_check_request(KVM_REQ_FPU_LOAD, vcpu)) {
+-		switch (vcpu->arch.aux_ldtype) {
+-		case KVM_LARCH_FPU:
+-			kvm_own_fpu(vcpu);
+-			break;
+-		case KVM_LARCH_LSX:
+-			kvm_own_lsx(vcpu);
+-			break;
+-		case KVM_LARCH_LASX:
++		if (kvm_guest_has_lasx(&vcpu->arch))
+ 			kvm_own_lasx(vcpu);
+-			break;
+-		default:
+-			break;
+-		}
+-
+-		vcpu->arch.aux_ldtype = 0;
++		else if (kvm_guest_has_lsx(&vcpu->arch))
++			kvm_own_lsx(vcpu);
++		else
++			kvm_own_fpu(vcpu);
+ 	}
+ 
+ 	if (kvm_check_request(KVM_REQ_LBT_LOAD, vcpu))
 -- 
 2.39.3
 
