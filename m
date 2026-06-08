@@ -1,179 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA5F282F3C
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 12:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F198A3CEBA6;
+	Mon,  8 Jun 2026 14:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780923054; cv=none; b=MDUj26HlV2E7q13kx7t85syLS8uz75smBMiJG659L5uZqVJWM7sLJYMGGwGyD/a0yOs4EUNdHhs8Maq5n4H7oHXJsYbjXDJxSTKWkbZYY7Y7VVTTRUdWdlqjlKEN2d9ELVwOwWofsKUwX8Mc0Pelr8KlegnNIZ/fysiHRdPyad0=
+	t=1780929793; cv=none; b=vAEJ9OTviFHGGW07KIXJGiFfdceNPbzrxiWKYBFv62b7KirhiwCNzksafngGpzQq9MdNZsc6FaN+otidzhGIHuKzLtVlnJareziTkAOqGMndJmd6zy37LArwk3ogeeqD92Q/v9fBP67a/UOrKY9zkiIdarHqTwQJVuy44SKE31A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780923054; c=relaxed/simple;
-	bh=PuUl6LK+mHvN8fhGsmDL19YMxzwoi8BE6lM9NSPZuO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FS9o/OAaI2VeGCaqv0qLz1jTXqxrAEhDfONV1+vhl3S9BA2+RjwzxTKh7+ouXbA29tsEE5fxkCC7V1TFQojlFBc7mp/FEPG+A6V1FFU4LIHskiUhtQbqs29NfDuaaKwwGY1jnEmVavTYqV0zLJ1Tu7YMXiu1q6YW2/WVaqFctqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lshdfBTP; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lshdfBTP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E931F0089B
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 12:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780923052;
-	bh=g4Thl8BELdVNhJiRU1vcOCa2kz5Q3sBldxjcDoBGFQA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=lshdfBTP1uMAXI1y1cg+Gga4NAIuXg+VDm3PVkcQaozqo9hehWHPRiAOE1xhD+pNM
-	 4xXh4VHy7efOlfzfVAXBqWvYWF2CmdM19sKwxWlafoDFL2ftUFxdPJmfL8jgL8kKCe
-	 kCafBotIzr9ahms4YJC12insIxYQqrMljG08Qk18ndNCXU425IPx7ncLLKnIXxRMIV
-	 a7ztoXmwNFBTULWAij86WNV+K34kmrYARZ0BakntheLFAIO2HEOSLCyXHzZgft9jXn
-	 lcWfItZGmZVZst9Xnyu0WEQuavuOnCT+BppwPR3eQQLzYn4vw1B5oqgHMz1gM5xhMD
-	 ivTV1dr+orUkw==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5aa5edf347eso2777560e87.3
-        for <loongarch@lists.linux.dev>; Mon, 08 Jun 2026 05:50:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8tVkXgNSCDpV8tFw+u+xEoPRRnemmXqe7ycWnmGE6dkeFzbuPK95Zrp/JJ+0++34YBjlLtxExL/M4=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxlSuuNkMp+CpZ94cR3/Mc1TaVwKxkShH3MmTlJxSwOwxdGW2GS
-	d7hGh3dNu4zJpTQUajzqhdwZ1kLScEMUwgoWjT3qBdHpBbQlN4cWgLbeihK3s1DMFsh/nsrC4/E
-	0WJXX3H6PzxAT9huKVqmSm7BJKQ8ef5c=
-X-Received: by 2002:a05:6512:2903:b0:5aa:6938:d873 with SMTP id
- 2adb3069b0e04-5aa87bc2343mr2965397e87.26.1780923051088; Mon, 08 Jun 2026
- 05:50:51 -0700 (PDT)
+	s=arc-20240116; t=1780929793; c=relaxed/simple;
+	bh=Fv/hsVAPfO6+kiVjf/X8vCRkI0ugqiRVJJSnzUbozQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J/v4EaMDc8IVJn6Ew/p3Js8oBmw49i4nfVrqZe1Gobfc7lmaUmP4jJcwFiww/tc9ajC1dX0b6UskxKvjDHYFNypAAWvvhgGJNXRDbsPW3eny0xZQqbAnVz15nE622O6Eof6x7nC1szTvUfJy2Tuv4q2GR5npuoDL8hzXQ2ZIaWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Received: from io.home.8bytes.org (p4ffe1d30.dip0.t-ipconnect.de [79.254.29.48])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 0EB79202536;
+	Mon,  8 Jun 2026 16:43:05 +0200 (CEST)
+From: =?UTF-8?q?J=C3=B6rg=20R=C3=B6del?= <joro@8bytes.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>,
+	ashish.kalra@amd.com,
+	michael.roth@amd.com,
+	nsaenz@amazon.com,
+	anelkz@amazon.de,
+	James.Bottomley@HansenPartnership.com,
+	Melody Wang <huibo.wang@amd.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm-riscv@lists.infradead.org,
+	x86@kernel.org,
+	coconut-svsm@lists.linux.dev,
+	joerg.roedel@amd.com
+Subject: [PATCH 00/60] KVM Planes + SEV-SNP Support
+Date: Mon,  8 Jun 2026 16:41:52 +0200
+Message-ID: <20260608144252.351443-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
- <20260603-gic-v5-acpi-iwb-probe-deferral-v2-5-23ffa16b6ebb@kernel.org>
-In-Reply-To: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-5-23ffa16b6ebb@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Jun 2026 14:50:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g86XVdkFE0W9xii1XdUMPX0tOd83_SvYDao+YjvYo4kg@mail.gmail.com>
-X-Gm-Features: AVVi8CeypFZ6kot-UUapVy4urjC3Q0NEKKlzcfTvjHLJKqyoe8uhxJKP5O_AM1M
-Message-ID: <CAJZ5v0g86XVdkFE0W9xii1XdUMPX0tOd83_SvYDao+YjvYo4kg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] ACPI/IORT: Implement ACPI infrastructure to enable
- GICv5 IWB probe deferral
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
-	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 3, 2026 at 10:21=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
-l.org> wrote:
->
-> Implement an IORT ACPI hook to retrieve the acpi_handle of the interrupt
-> controller handling a specific GSI (if any, on GICv5 systems only the IWB
-> is represented in firmware with an ACPI device object) and add the IWB to
-> the list of devices whose dependencies can be detected (and cleared) in
-> ACPI core to guarantee that probe dependencies for the IWB can be
-> satisfied.
->
-> Enable autodep detection for arm64 by adding the arch_acpi_add_auto_dep()
-> callback in the ACPI IORT driver.
->
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
-> Cc: Sudeep Holla <sudeep.holla@kernel.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+From: Joerg Roedel <joerg.roedel@amd.com>
 
-Acked-by: "Rafael J. Wysocki" (Intel) <rafael@kernel.org> # ACPI: scan.c
+Hi,
 
-The rest of the series is kind of outside my scope and all of the
-previous patches would at least require an ACK from the RISC-V people.
+Here is the updated patch-set implementing support for planes in KVM.
+Planes is KVMs name for supporting various privilege separation
+features of hardware (AMD SEV-SNP VMPLs, Intel TDX, ARM CCA Planes) or
+software (Hyper-V VSM) in KVM.
 
-> ---
->  drivers/acpi/arm64/iort.c | 22 +++++++++++++++++++---
->  drivers/acpi/scan.c       |  1 +
->  include/linux/acpi_iort.h |  3 ++-
->  3 files changed, 22 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index af7a9b2fd5bc..34412cd697d8 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -789,11 +789,9 @@ struct irq_domain *iort_get_device_domain(struct dev=
-ice *dev, u32 id,
->         return irq_find_matching_fwnode(handle, bus_token);
->  }
->
-> -struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
-> +acpi_handle iort_iwb_handle(u32 iwb_id)
->  {
-> -       struct fwnode_handle *fwnode;
->         struct acpi_iort_node *node;
-> -       struct acpi_device *device;
->         struct acpi_iort_iwb *iwb;
->         acpi_status status;
->         acpi_handle handle;
-> @@ -808,6 +806,19 @@ struct fwnode_handle *iort_iwb_handle(u32 iwb_id)
->         if (ACPI_FAILURE(status))
->                 return NULL;
->
-> +       return handle;
-> +}
-> +
-> +struct fwnode_handle *iort_iwb_handle_fwnode(u32 iwb_id)
-> +{
-> +       struct fwnode_handle *fwnode;
-> +       struct acpi_device *device;
-> +       acpi_handle handle;
-> +
-> +       handle =3D iort_iwb_handle(iwb_id);
-> +       if (!handle)
-> +               return NULL;
-> +
->         device =3D acpi_get_acpi_dev(handle);
->         if (!device)
->                 return NULL;
-> @@ -2090,6 +2101,11 @@ static void __init iort_init_platform_devices(void=
-)
->         }
->  }
->
-> +u32 arch_acpi_add_auto_dep(acpi_handle handle)
-> +{
-> +       return acpi_irq_add_auto_dep(handle);
-> +}
-> +
->  void __init acpi_iort_init(void)
->  {
->         acpi_status status;
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 530547cda8b2..ba15da9058dc 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -856,6 +856,7 @@ static const char * const acpi_ignore_dep_ids[] =3D {
->
->  /* List of HIDs for which we honor deps of matching ACPI devs, when chec=
-king _DEP lists. */
->  static const char * const acpi_honor_dep_ids[] =3D {
-> +       "ARMH0003", /* ARM GICv5 IWB */
->         "INT3472", /* Camera sensor PMIC / clk and regulator info */
->         "INTC1059", /* IVSC (TGL) driver must be loaded to allow i2c acce=
-ss to camera sensors */
->         "INTC1095", /* IVSC (ADL) driver must be loaded to allow i2c acce=
-ss to camera sensors */
-> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
-> index 17bb3374f4ca..931eaa7bbf6a 100644
-> --- a/include/linux/acpi_iort.h
-> +++ b/include/linux/acpi_iort.h
-> @@ -27,7 +27,8 @@ int iort_register_domain_token(int trans_id, phys_addr_=
-t base,
->                                struct fwnode_handle *fw_node);
->  void iort_deregister_domain_token(int trans_id);
->  struct fwnode_handle *iort_find_domain_token(int trans_id);
-> -struct fwnode_handle *iort_iwb_handle(u32 iwb_id);
-> +acpi_handle iort_iwb_handle(u32 iwb_id);
-> +struct fwnode_handle *iort_iwb_handle_fwnode(u32 iwb_id);
->
->  #ifdef CONFIG_ACPI_IORT
->  u32 iort_msi_map_id(struct device *dev, u32 id);
->
-> --
-> 2.54.0
->
+The code posted here is based on prior work by Tom Lendacky, Roy
+Hopkins[1] and Paolo Bonzini[2] as well as the numerous participants
+of the KVM Planes BoF at KVM Forum 2024.
+
+The user-space interface has slightly changed compared to the previous
+patches posted by Paolo. The Documentation patch has the details.
+
+The changes implement the base-support in KVM and X86 as well as the
+parts required for AMD SEV-SNP VMPLs. The patches are based on
+v7.1-rc7 and can be used to run an SEV-SNP VM with COCONUT-SVSM[3] in
+VMPL0 with a Linux guest in VMPL2. An updated QEMU is needed as well,
+the changes for that will be posted separately.
+
+This changes depend on Melodys patches for supporting restricted
+injection. As they are required to run COCONUT-SVSM, they are included
+here for completeness.
+
+KVM planes support as posted here has a number of known limitations:
+
+	- Using planes requires IRQ-Chip in split mode
+	- IRQFD not yet supported
+	- Memory attributes are not per-plane yet - this is required
+	  for VSM
+
+The patches are also in this git branch:
+
+	https://github.com/joergroedel/linux/tree/kvm-planes-v7.1
+
+And can be used together with this QEMU tree:
+
+	https://github.com/joergroedel/qemu/tree/qemu-planes-linux-v7.1
+
+Please review.
+
+-Joerg
+
+[1] https://lore.kernel.org/all/cover.1726506534.git.roy.hopkins@suse.com/
+[2] https://lore.kernel.org/all/20250401161106.790710-1-pbonzini@redhat.com/
+[3] https://github.com/coconut-svsm/svsm/
+
+Joerg Roedel (37):
+  kvm: Introduce struct kvm_vcpu_common
+  kvm: Move vcpu accounting to struct kvm_vcpu_common
+  kvm: Add read accessors for kvm_vcpu scheduling state
+  kvm: Make kvm_running_vcpus point to struct kvm_vcpu_common
+  kvm: Move VCPU scheduling state to struct kvm_vcpu_common
+  kvm: Add accessors for kvm_vcpu->mutex
+  kvm: Move VCPU locking to struct kvm_vcpu_common
+  kvm: Move kvm_vcpu->rcuwait to struct kvm_vcpu_common
+  kvm: Introduce accessors for kvm_vcpu->mode
+  kvm: Move kvm_vcpu mode and requests field to struct kvm_vcpu_common
+  kvm: Introduce per-plane VCPU requests
+  kvm: Move kvm_vcpu pid members to struct kvm_vcpu_common
+  kvm: Move kvm_vcpu sigset members to struct kvm_vcpu_common
+  kvm: Move kvm_vcpu spinloop members to struct kvm_vcpu_common
+  kvm: Move kvm_vcpu->dirty_ring to struct kvm_vcpu_common
+  kvm: Introduce arch-specific plane state
+  kvm: Introduce arch-specific part of struct kvm_vcpu_common
+  kvm: Allocate struct kvm_plane in architecture code
+  KVM: Implement KVM_CREATE_VCPU ioctl for planes
+  kvm: Keep track of plane VCPUs in struct kvm_vcpu_common
+  kvm: Add VCPU plane-scheduling state and helpers
+  kvm: Add plane_level to kvm_kernel_irq_routing_entry
+  kvm: Pass plane_level to kvm_set_routing_entry()
+  kvm: Make KVM_SET_GSI_ROUTING per plane
+  kvm: x86: Handle IOAPIC EOIs per plane
+  kvm: x86: Move CPUID state to struct kvm_vcpu_arch_common
+  kvm: x86: Move cpu_caps to struct kvm_vcpu_arch_common
+  kvm: x86: Update state for all plane VCPUs after CPUID update
+  kvm: x86: Share MTRR state across planes
+  kvm: x86: Select a plane to run
+  kvm: x86: Make event injection VCPU requests per-plane
+  kvm: x86: Allow hardware backend to overwrite struct kvm_plane
+    allocation
+  kvm: x86: Make KVM_REQ_UPDATE_PROTECTED_GUEST_STATE per plane
+  kvm: x86: Share pio_data across planes
+  kvm: x86: Switch to plane0 if it has events
+  kvm: x86: Restrict KVM planes support to KVM_IRQCHIP_SPLIT
+  kvm: svm: Track vmsa_features per plane
+
+Melody Wang (7):
+  x86/sev: Define the #HV doorbell page structure
+  KVM: SVM: Add support for the SEV-SNP #HV doorbell page NAE event
+  KVM: SVM: Inject #HV when Restricted Injection is active
+  KVM: SVM: Inject NMIs when Restricted Injection is active
+  KVM: SVM: Inject MCEs when Restricted Injection is active
+  KVM: SVM: Enable Restricted Injection for an SEV-SNP guest
+  KVM: SVM: Add support for the SEV-SNP #HV IPI NAE event
+
+Paolo Bonzini (11):
+  Documentation: kvm: introduce "VM plane" concept
+  kvm: Introduce struct kvm_plane
+  kvm: Move vcpu_array to struct kvm_plane
+  kvm: Implement KVM_CAP_PLANES
+  kvm: Implement KVM_CREATE_PLANE ioctl
+  kvm: Add KVM_EXIT_PLANE_EVENT
+  kvm: Allocate struct kvm_run only for struct kvm_vcpu_common
+  kvm: Make KVM_SIGNAL_MSI per plane
+  kvm: x86: Make apic_map per plane
+  kvm: x86: Make local APIC code aware of planes
+  kvm: x86: Introduce max_planes x86-op
+
+Tom Lendacky (5):
+  kvm: svm: Implement GET_AP_APIC_IDS NAE event
+  kvm: sev: Allow for VMPL level specification in AP create
+  kvm: svm: Invoke a specified VMPL level VMSA for the vCPU
+  kvm: svm: Implement max_planes x86 operation
+  kvm: svm: Advertise full multi-VMPL support to the SNP guest
+
+ Documentation/virt/kvm/api.rst        | 102 +++-
+ arch/arm64/include/asm/kvm_host.h     |  19 +-
+ arch/arm64/kvm/arch_timer.c           |   3 +-
+ arch/arm64/kvm/arm.c                  |  37 +-
+ arch/arm64/kvm/inject_fault.c         |   4 +-
+ arch/arm64/kvm/nested.c               |   2 +-
+ arch/arm64/kvm/vgic/vgic-init.c       |   3 +-
+ arch/arm64/kvm/vgic/vgic-irqfd.c      |   7 +-
+ arch/loongarch/include/asm/kvm_host.h |  17 +
+ arch/loongarch/kvm/intc/pch_pic.c     |   2 +-
+ arch/loongarch/kvm/irqfd.c            |   5 +-
+ arch/loongarch/kvm/timer.c            |   2 +-
+ arch/loongarch/kvm/vcpu.c             |  16 +-
+ arch/loongarch/kvm/vm.c               |  18 +
+ arch/mips/include/asm/kvm_host.h      |  17 +
+ arch/mips/kvm/mips.c                  |  35 +-
+ arch/powerpc/include/asm/kvm_host.h   |  17 +
+ arch/powerpc/kvm/book3s_pr.c          |   2 +-
+ arch/powerpc/kvm/book3s_xics.c        |   4 +-
+ arch/powerpc/kvm/book3s_xive.c        |   4 +-
+ arch/powerpc/kvm/book3s_xive_native.c |   4 +-
+ arch/powerpc/kvm/booke.c              |   2 +-
+ arch/powerpc/kvm/mpic.c               |   6 +-
+ arch/powerpc/kvm/powerpc.c            |  27 +-
+ arch/powerpc/kvm/trace.h              |   2 +-
+ arch/riscv/include/asm/kvm_host.h     |  17 +
+ arch/riscv/kvm/aia_device.c           |   4 +-
+ arch/riscv/kvm/main.c                 |  18 +
+ arch/riscv/kvm/vcpu.c                 |  13 +-
+ arch/riscv/kvm/vm.c                   |   6 +-
+ arch/s390/include/asm/kvm_host.h      |  17 +
+ arch/s390/kvm/interrupt.c             |  11 +-
+ arch/s390/kvm/kvm-s390.c              |  33 +-
+ arch/s390/kvm/pv.c                    |   2 +-
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/kvm-x86-ops.h    |   4 +
+ arch/x86/include/asm/kvm_host.h       |  96 ++--
+ arch/x86/include/asm/sev-common.h     |   8 +
+ arch/x86/include/asm/svm.h            |  42 ++
+ arch/x86/include/uapi/asm/svm.h       |   9 +
+ arch/x86/kvm/cpuid.c                  |  70 ++-
+ arch/x86/kvm/cpuid.h                  |  31 +-
+ arch/x86/kvm/hyperv.c                 |   2 +-
+ arch/x86/kvm/i8254.c                  |   2 +-
+ arch/x86/kvm/ioapic.c                 |   8 +-
+ arch/x86/kvm/irq.c                    |  19 +-
+ arch/x86/kvm/lapic.c                  | 144 +++--
+ arch/x86/kvm/lapic.h                  |  14 +-
+ arch/x86/kvm/mmu/mmu.c                |   4 +-
+ arch/x86/kvm/mtrr.c                   |  12 +-
+ arch/x86/kvm/smm.c                    |   2 +-
+ arch/x86/kvm/svm/sev.c                | 644 ++++++++++++++++++++--
+ arch/x86/kvm/svm/svm.c                |  85 ++-
+ arch/x86/kvm/svm/svm.h                |  52 +-
+ arch/x86/kvm/trace.h                  |   2 +-
+ arch/x86/kvm/vmx/common.h             |   2 +-
+ arch/x86/kvm/vmx/main.c               |  16 +-
+ arch/x86/kvm/vmx/nested.h             |   4 +-
+ arch/x86/kvm/vmx/posted_intr.c        |   2 +-
+ arch/x86/kvm/vmx/vmx.c                |  11 +-
+ arch/x86/kvm/vmx/x86_ops.h            |   1 +
+ arch/x86/kvm/x86.c                    | 237 ++++++--
+ arch/x86/kvm/x86.h                    |   5 +
+ arch/x86/kvm/xen.c                    |   2 +-
+ arch/x86/kvm/xen.h                    |   2 +-
+ include/linux/kvm_host.h              | 278 ++++++++--
+ include/linux/kvm_types.h             |   2 +
+ include/uapi/linux/kvm.h              |  18 +
+ virt/kvm/dirty_ring.c                 |   4 +-
+ virt/kvm/irqchip.c                    |  13 +-
+ virt/kvm/kvm_main.c                   | 764 +++++++++++++++++++-------
+ 71 files changed, 2460 insertions(+), 630 deletions(-)
+
+-- 
+2.53.0
+
