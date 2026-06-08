@@ -1,43 +1,69 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5157032B13E
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 06:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD282F28FF
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 07:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780900798; cv=none; b=b4N+5TS13U4inH5uDNaHSku+jPCtHoqKHaHm7Sgu8L11SQOxczpcgfM/5SZvBdTNV+bSmpxuKJQqeiX5/yVbns2ngUexLC7TnE3l8SHnEA1ho8eMLYiZi8MAUXIFJUnlgY8AQqLZ12eCWLl8qksdAsIIj/9NXOEUcgy/gphjNvM=
+	t=1780904185; cv=none; b=C9rwy/9OqoiC6WYHIJKir9WQARpMBVNQGqttCfAXUdIzJCcxSx+U4b/eFqtZg0LXkV54Wyjs3rvG+BNDMX1plmID/phAnoVlQaAczEABu9i0Am8udnsFHNK1sCa5MHtKp58Mx98q5SCyC8jD0+gcUtEqdxK868dE/4EG1LjS8yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780900798; c=relaxed/simple;
-	bh=On2WdAuhTIstv+Yk3QgTiBdjYpqJrdg3lMLteu+PLwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i0P75qfMGczEx8tFj91NDYEE4pKjlHPvCRQabv+MB5F25JZ5k3W+Dw2czwW2hdsjVSnbWL17Uz4yhR0y13kA7Nbk927te4Aku5BY5othw4Y4nOUAbL+ovMmw9Pqe4FQwPrkjrvg2WEtIGOBjtfI7bh1sqObJ+GCO/z7Bm6UyjpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GNWVTgqC; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780904185; c=relaxed/simple;
+	bh=mTUcFKsbwiD0LIrg49RZV6ZL6jdqAvgndaKIqOJxJTc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X87AKhvoQFgZSYKzhTKIbzrkreJpTyxS+OHK1bJWXHIHHoV0JfMPROYqXF5UO2QWBj8euAAMs3pw7op1kN5VnhnmttLuNp0rKeuxRdDeu2jq+TlJMoWXY5F/L95/ZYkrRupdP7Xk8N4Vr6RRhAcMPqqV10nrKLPd2TMhzlJM52g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=xXm5VJ0g; arc=none smtp.client-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GNWVTgqC"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780900794;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fsqxOWDKgJjg6/Y6Tavqpv5Nm25Y5UV10OwP9EEaX/4=;
-	b=GNWVTgqCdF1BFBqSPvf772ntfnqYj1ChUh24BzjOr3helmkQSNc2Gkx6FlJkALKaJ5LF+t
-	CP36iSsAfFym9i3LezSmGj8zf4CV5O/jt2jmstJ/4P5N8i+tfkYkuSTAT29xvG5XtBU5Ho
-	s6ZBfjZBXDUrRVaC2ygiG+kObNWMVr4=
-From: haoran.jiang@linux.dev
-To: loongarch@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	akpm@linux-foundation.org,
-	jbohac@suse.cz,
-	kees@kernel.org,
-	yangtiezhu@loongson.cn,
-	Haoran Jiang <jianghaoran@kylinos.cn>
-Subject: [PATCH v3] LoongArch: Enable STRICT_MODULE_RWX for stricter modules memory permissions
-Date: Mon,  8 Jun 2026 14:38:57 +0800
-Message-Id: <20260608063857.291340-1-haoran.jiang@linux.dev>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="xXm5VJ0g"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=MS+svJjwX+WERXmMYEnQYyI5Mc94faKy2CdWQtmAb8o=;
+	b=xXm5VJ0gzjFo5FI6ifJNt2lYYB9fpiEFwKvKrblrK5cZ5X5QR0VEIsC4iprJlRC3urHXpb75e
+	XRqctvGI7uS/yew73xY6QXp4G2a2n8T+yKdd4nuZDj5kccyoaXIEo3Ic4MOgmKWA5NZ5J2KJg3p
+	VaGi5GtRXJK44kah7P/dE2Q=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gYkCh3y7Bz1T4Hh;
+	Mon,  8 Jun 2026 15:28:00 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8DBCE40576;
+	Mon,  8 Jun 2026 15:36:18 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 8 Jun
+ 2026 15:36:15 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <peterz@infradead.org>,
+	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<lirongqing@baidu.com>, <ebiggers@kernel.org>, <paulmck@kernel.org>,
+	<ruanjinjie@huawei.com>, <leitao@debian.org>, <coxu@redhat.com>,
+	<Liam.Howlett@oracle.com>, <ryan.roberts@arm.com>, <osandov@fb.com>,
+	<jbohac@suse.cz>, <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
+	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
+	<adityag@linux.ibm.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
+	<fuqiang.wang@easystack.cn>, <ardb@kernel.org>, <chenjiahao16@huawei.com>,
+	<guoren@kernel.org>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+Subject: [PATCH v16 01/10] riscv: kexec_file: Fix crashk_low_res not exclude bug
+Date: Mon, 8 Jun 2026 15:34:50 +0800
+Message-ID: <20260608073459.3119290-2-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -45,85 +71,67 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-From: Haoran Jiang <jianghaoran@kylinos.cn>
+As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
+and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+crashkres_low.") for arm64, while implementing crashkernel=X,[high,low],
+riscv should have excluded the "crashk_low_res" reserved ranges from
+the crash kernel memory to prevent them from being exported through
+/proc/vmcore, and the exclusion would need an extra crash_mem range.
 
-Enable STRICT_MODULE_RWX to enforce strict memory permissions
-on modules,making the code region non-writable, the data region
-non-executable, and the read-only data region both non-writable
-and non-executable.Temporarily modify code section read/write
-permissions via set_memory() API.
+Just simply tested on qemu with crashkernel=4G with kexec in [1] mentioned
+in [2]. And the second kernel can be started normally.
 
-Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+	# dmesg | grep crash
+	[    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000 (128 MB)
+	[    0.000000] crashkernel reserved: 0x000000017fe00000 - 0x000000027fe00000 (4096 MB)
+
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+[1]: https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
+[2]: https://lore.kernel.org/all/20230726175000.2536220-1-chenjiahao16@huawei.com/
+Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=X,[high,low]")
+Reviewed-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
-v2:
-Change the method of modifying page table permissions from patch_map to set_memory() API.
+ arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-v3:
-Modify commit description.
-
----
- arch/loongarch/Kconfig       |  2 ++
- arch/loongarch/kernel/inst.c | 18 ++++++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 606597da46b8..40d748a13c50 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -27,6 +27,7 @@ config LOONGARCH
- 	select ARCH_HAS_PTE_SPECIAL if 64BIT
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_HAS_SET_DIRECT_MAP
-+	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_ARCH_DATA
-@@ -197,6 +198,7 @@ config LOONGARCH
- 	select NUMA_MEMBLKS if NUMA
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select ARCH_OPTIONAL_KERNEL_RWX
- 	select PCI
- 	select PCI_DOMAINS_GENERIC
- 	select PCI_ECAM if ACPI
-diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
-index 0b9228b7c13a..877890c77d0c 100644
---- a/arch/loongarch/kernel/inst.c
-+++ b/arch/loongarch/kernel/inst.c
-@@ -207,13 +207,31 @@ int larch_insn_read(void *addr, u32 *insnp)
- int larch_insn_write(void *addr, u32 insn)
- {
+diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+index 54e2d9552e93..3f7766057cac 100644
+--- a/arch/riscv/kernel/machine_kexec_file.c
++++ b/arch/riscv/kernel/machine_kexec_file.c
+@@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	unsigned int nr_ranges;
  	int ret;
-+	int err = 0;
-+	size_t start;
- 	unsigned long flags = 0;
  
- 	if ((unsigned long)addr & 3)
- 		return -EINVAL;
+-	nr_ranges = 1; /* For exclusion of crashkernel region */
++	nr_ranges = 2; /* For exclusion of crashkernel region */
+ 	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
  
-+	start = round_down((size_t)addr, PAGE_SIZE);
+ 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+@@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 
+ 	/* Exclude crashkernel region */
+ 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+-	if (!ret)
+-		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++	if (ret)
++		goto out;
 +
- 	raw_spin_lock_irqsave(&patch_lock, flags);
-+
-+	err = set_memory_rw(start, 1);
-+	if (err) {
-+		pr_info("%s: set_memory_rw() failed\n", __func__);
-+		return err;
++	if (crashk_low_res.end) {
++		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
++		if (ret)
++			goto out;
 +	}
 +
- 	ret = copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
-+
-+	err = set_memory_rox(start, 1);
-+	if (err) {
-+		pr_info("%s: set_memory_rox() failed\n", __func__);
-+		return err;
-+	}
-+
- 	raw_spin_unlock_irqrestore(&patch_lock, flags);
++	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
  
- 	return ret;
+ out:
+ 	kfree(cmem);
 -- 
-2.25.1
+2.34.1
 
