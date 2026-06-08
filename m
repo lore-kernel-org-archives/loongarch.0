@@ -1,258 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBA3CFF6B
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 16:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0A83D6CAA
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 17:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780937293; cv=none; b=EmlHACIgm0jTD0+s74+zSpTMQtDty9vHU/dYZXr7RUAHO5CiWbg154TySIUQbONC5r/ZELJNPgKHEKxFo3x7ZExCJMyiZ7bgPwyBU87zS6VxnoJyLSj4x1ZPK+dk0sObBLl5cSCw17lIxK/Q9XWjSAXpPn3ildd/EIxCRW7V7a0=
+	t=1780939111; cv=none; b=O8AyYApL4JwBotDwYj6hNjPRpmQ/B2ibmT/pE/oneaIVcn547Pnxgux7+TndOJF63ZyIqVV+jkmH5EYBuwWUFh6xDOSdM0/VCvttLG8JfJq4nXH6UTcNtQ85I2mCa3aT9nnMgvrNZVLniHvP7bIH+6eh5ZRlCb9jf6i7eg5Pzrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780937293; c=relaxed/simple;
-	bh=JI5C7ugHpC0Id6mKn0j06lGdSpthSyUJLbA8pjzWS6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pVPQGhgpWCTOdZ096QiE6UGAcNTxuq28yd4/mnaMrN53rvWcOf1BkJLsHR9m1P1g+8ESxHxZkUxdIEMgpXPGFJkTts9B9yOEQzAQtHJFVbXFdi0yqRO7HIrtDbHC8iqrrKwl8b6dxo5/i5ul1hQG4dHMCMjHP8/XZTvLwCoWg8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pkvn9Av8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780939111; c=relaxed/simple;
+	bh=XswRMnJy2WcPmkojhTaDjWE6sZSauClfbcBvgsDRxTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dTP1LcbMsY+Us4Qj7o3Z+UyL2DfKRjwls9q3OEnrkTEcxGCsplT0JUDhsoyLWuUV8DtSTYTw+o8FBQ540vGsQwutoYufy1b+HDZR0VHWadWeWmc0yrS9OxdwjJEWqIDPJ/OzbjG2soL76pATV4txtiZrL45MZcJfLBqO5veq0zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLTgCh3y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pkvn9Av8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780937291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HO1z1hECglS3oHNycHe52C8L+SIuRFyFX5+d24s3Qxo=;
-	b=Pkvn9Av8ODbUpDp4UhKrhlhaVOKqGbF8/0TgF7oatjAFx8JCILE53Q0iZPq5V/fRCfda2C
-	ILnfvfP6cGPP8bKxDj2MiNPlUzfZbTo1YFl9g6Zp2JLugHeV8qJq30YhEmDbPAIQzaWTEn
-	H+0xrnL+99YRJTISntY7jz7sMqGiOy8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-jTkQIDEiMJ6cjZxqb-ZLkw-1; Mon,
- 08 Jun 2026 12:48:07 -0400
-X-MC-Unique: jTkQIDEiMJ6cjZxqb-ZLkw-1
-X-Mimecast-MFC-AGG-ID: jTkQIDEiMJ6cjZxqb-ZLkw_1780937285
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DA901800605;
-	Mon,  8 Jun 2026 16:48:04 +0000 (UTC)
-Received: from [10.44.48.99] (unknown [10.44.48.99])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A13881800664;
-	Mon,  8 Jun 2026 16:47:56 +0000 (UTC)
-Message-ID: <e7eb0dba-790a-4644-9895-5c9a7420d7fe@redhat.com>
-Date: Mon, 8 Jun 2026 18:47:54 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLTgCh3y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB051F008A3
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 17:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780939109;
+	bh=XrNOOi+PlaQWmV4dMJih5PA704/YUREYdhWD77leDwk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=HLTgCh3yhadZl289IczKuXkCE36Qy7xWQugFEKxferkvMdoUi39a5EfSBSYYG/5L0
+	 rqmvn5BwRvfJ9gcRUO5dOU1cZ4cFHPByO4XdvDaRbU/lNu8DMN8sN8+G0x/eZncMxx
+	 qcE4hqpnHAr8kL5B0t3GqUjTCcFPi9NvxxvU7uCAef3rxLRq1UEJd0RNxehBZTsnHS
+	 Wiw3c+X2tgQqIAGFGeVL5c1gdbjX6ajj+NEO8jI0cR1DrhbE0zK6zvviO7SPBG2X8j
+	 gZO2GWNBfvSSrQ9K9S1l8DYU0BvHH+jT+igpACkxJd5M83AhLapkQEBY+e7F3Wq21T
+	 EcjeVVSjGa/Pw==
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-39666aac20cso33625251fa.1
+        for <loongarch@lists.linux.dev>; Mon, 08 Jun 2026 10:18:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+qLfVr6yVu97MPO09leV/tLW7DbZ9N4iKWif38orGPhuWLze1sjZK8TmXsmzXRjkIHCC2f4K6KzSg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzeDAmZjwutUcic3cYrn+y4bX9sqadZw5wKEykIsRBsCwyzGQ3v
+	TtFCrkXLgDq0p9cShOPep1z/g5/BId4xdIf9t5velAn3FVu+v44FOdPnm2+RMpDp8lUXEzdyu1t
+	S3QH3/N6E0HlfwlMiT0I0fVHPv8t19gA=
+X-Received: by 2002:a05:6512:33c3:b0:5aa:6e5d:adf5 with SMTP id
+ 2adb3069b0e04-5aa87beb34fmr4601211e87.19.1780939107273; Mon, 08 Jun 2026
+ 10:18:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 35/60] kvm: Add VCPU plane-scheduling state and helpers
-To: =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
- Sean Christopherson <seanjc@google.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com,
- michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de,
- James.Bottomley@HansenPartnership.com, Melody Wang <huibo.wang@amd.com>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
- x86@kernel.org, coconut-svsm@lists.linux.dev, joerg.roedel@amd.com
-References: <20260608144252.351443-1-joro@8bytes.org>
- <20260608144252.351443-36-joro@8bytes.org>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <20260608144252.351443-36-joro@8bytes.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: Ejl_i3mmkFax89Y_0ejxzUVxs43aal8FjuN0L-e0Rn4_1780937285
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
+ <20260603-gic-v5-acpi-iwb-probe-deferral-v2-6-23ffa16b6ebb@kernel.org>
+In-Reply-To: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-6-23ffa16b6ebb@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 8 Jun 2026 19:18:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+X-Gm-Features: AVVi8CcTa11c5Xl8V7_VF2hxe7iSgWJNbGaXh3nHX-6VT5F-TvPgOxONicEOC_k
+Message-ID: <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] irqchip/gic-v5: Enable GICv5 IWB ACPI probe
+ ordering detection
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>, 
+	Sudeep Holla <sudeep.holla@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/8/26 16:42, Jörg Rödel wrote:
-> From: Joerg Roedel <joerg.roedel@amd.com>
-> 
-> The algorithm is to always run the lowest runnable plane. Plane
-> switches are done by stopping the current plane and setting another
-> runnable.
-> 
-> Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
-
-This was left arbitrary in my version because for example Hyper-V VTLs 
-use highest-runnable instead.  It also made pure userspace scheduling 
-possible, though that may not be very important in the grand scheme of 
-things.
-
-Did you drop it because it didn't work, or just for simplicity?
-
-Paolo
-
+On Wed, Jun 3, 2026 at 10:21=E2=80=AFAM Lorenzo Pieralisi <lpieralisi@kerne=
+l.org> wrote:
+>
+> Register an ACPI hook in the ACPI interrupt management code for GICv5 to
+> retrieve the ACPI interrupt controller handle (if any) of the controller
+> handling a specific GSI, by updating the acpi_set_irq_model() call with
+> the gic_v5_get_gsi_handle() function pointer parameter.
+>
+> gicv5_get_gsi_handle() allows ACPI core to detect the ACPI handle
+> of the controller that manages a specific GSI interrupt.
+>
+> Update the IWB driver to clear device dependencies in ACPI core once the
+> IWB driver has probed.
+>
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
 > ---
->   include/linux/kvm_host.h | 16 ++++++++++++++
->   virt/kvm/kvm_main.c      | 45 ++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 61 insertions(+)
-> 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 5c3f9dfa15ea..e3611e6cc3e4 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -168,6 +168,7 @@ static inline bool kvm_is_error_gpa(gpa_t gpa)
->   #define KVM_REQ_VM_DEAD			(1 | KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->   #define KVM_REQ_UNBLOCK			2
->   #define KVM_REQ_DIRTY_RING_SOFT_FULL	3
-> +#define KVM_REQ_PLANE_RESCHED		4
->   #define KVM_REQUEST_ARCH_BASE		8
->   
->   /*
-> @@ -324,6 +325,8 @@ struct kvm_mmio_fragment {
->   	unsigned int len;
->   };
->   
-> +
-> +
->   struct kvm_vcpu_common {
->   	struct kvm *kvm;
->   
-> @@ -381,6 +384,8 @@ struct kvm_vcpu_common {
->   
->   	struct kvm_dirty_ring dirty_ring;
->   
-> +	bool plane_switch;
-> +
->   	struct kvm_vcpu_arch_common arch;
->   };
->   
-> @@ -388,6 +393,12 @@ struct kvm_vcpu_common {
->   	for ((i) = 0; (i) < KVM_MAX_PLANES; ++(i))		\
->   		if (((v) = common->vcpus[(i)]) != NULL)
->   
-> +/* Tracked per plane-VCPU - used for deciding which plane-vcpu to run */
-> +enum kvm_vcpu_state {
-> +	STOPPED,
-> +	RUNNABLE,
-> +};
-> +
->   struct kvm_vcpu {
->   	struct kvm *kvm;
->   	struct kvm_plane *plane;
-> @@ -401,6 +412,7 @@ struct kvm_vcpu {
->   	struct kvm_run *run;
->   
->   	u64 plane_requests;
-> +	enum kvm_vcpu_state plane_state;
->   
->   	/* S390 only */
->   	bool valid_wakeup;
-> @@ -440,6 +452,10 @@ struct kvm_vcpu {
->   	unsigned plane_level;
->   };
->   
-> +void kvm_vcpu_set_plane_runnable(struct kvm_vcpu *vcpu);
-> +void kvm_vcpu_set_plane_stopped(struct kvm_vcpu *vcpu);
-> +struct kvm_vcpu *kvm_vcpu_select_plane(struct kvm_vcpu *vcpu);
-> +
->   static inline bool kvm_vcpu_wants_to_run(struct kvm_vcpu *vcpu)
->   {
->   	return vcpu->common->wants_to_run;
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 9d30fd85ce5f..a30123b77112 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4397,6 +4397,7 @@ static int kvm_plane_ioctl_create_vcpu(struct kvm_plane *plane, unsigned long id
->   	vcpu->vcpu_idx = vcpu->common->vcpu_idx;
->   	vcpu->plane = plane;
->   	vcpu->plane_level = plane->level;
-> +	vcpu->plane_state = STOPPED;
->   	vcpu->run = vcpu->common->run;
->   
->   	kvm_vcpu_init(vcpu, kvm, id);
-> @@ -4938,6 +4939,50 @@ static struct file_operations kvm_plane_fops = {
->   	KVM_COMPAT(kvm_plane_ioctl),
->   };
->   
-> +void kvm_vcpu_set_plane_runnable(struct kvm_vcpu *vcpu)
-> +{
-> +	vcpu->plane_state = RUNNABLE;
-> +	vcpu->common->plane_switch = true;
-> +	kvm_make_request(KVM_REQ_PLANE_RESCHED, vcpu);
-> +}
-> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_set_plane_runnable);
-> +
-> +void kvm_vcpu_set_plane_stopped(struct kvm_vcpu *vcpu)
-> +{
-> +	vcpu->plane_state = STOPPED;
-> +	kvm_make_request(KVM_REQ_PLANE_RESCHED, vcpu);
-> +}
-> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_set_plane_stopped);
-> +
-> +struct kvm_vcpu *kvm_vcpu_select_plane(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_vcpu_common *common = vcpu->common;
-> +	struct kvm_vcpu *ret = NULL;
-> +	unsigned i;
-> +
-> +	for (i = 0; i < KVM_MAX_PLANES; i++) {
-> +		if (common->vcpus[i] == NULL)
-> +			continue;
-> +
-> +		if (common->vcpus[i]->plane_state == RUNNABLE) {
-> +			ret = common->vcpus[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (ret == NULL) {
-> +		ret = common->vcpus[0];
-> +		ret->plane_state = RUNNABLE;
-> +	}
-> +
-> +	common->current_vcpu = ret;
-> +
-> +	common->plane_switch = false;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_select_plane);
-> +
->   static int kvm_device_mmap(struct file *filp, struct vm_area_struct *vma)
->   {
->   	struct kvm_device *dev = filp->private_data;
+>  drivers/irqchip/irq-gic-v5-iwb.c |  5 +++++
+>  drivers/irqchip/irq-gic-v5.c     | 13 +++++++++++--
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v=
+5-iwb.c
+> index 9103feb70ce8..a02cb9537b15 100644
+> --- a/drivers/irqchip/irq-gic-v5-iwb.c
+> +++ b/drivers/irqchip/irq-gic-v5-iwb.c
+> @@ -269,6 +269,11 @@ static int gicv5_iwb_device_probe(struct platform_de=
+vice *pdev)
+>         if (IS_ERR(iwb_node))
+>                 return PTR_ERR(iwb_node);
+>
+> +#ifdef CONFIG_ACPI
+> +       if (has_acpi_companion(&pdev->dev))
+> +               acpi_dev_clear_dependencies(ACPI_COMPANION(&pdev->dev));
+> +#endif
 
+I would rather add a wrapper for this, along with an empty stub for
+the !CONFIG_ACPI case.
+
+> +
+>         return 0;
+>  }
+>
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> index 03cc2830b260..26cfaea1af41 100644
+> --- a/drivers/irqchip/irq-gic-v5.c
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -1217,11 +1217,19 @@ static struct fwnode_handle *gsi_domain_handle;
+>  static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
+>  {
+>         if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) =3D=3D GICV5_GSI_IWB_TYPE)
+> -               return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, =
+gsi));
+> +               return iort_iwb_handle_fwnode(FIELD_GET(GICV5_GSI_IWB_FRA=
+ME_ID, gsi));
+
+Why is this change needed?
+
+>
+>         return gsi_domain_handle;
+>  }
+>
+> +static acpi_handle gic_v5_get_gsi_handle(u32 gsi)
+> +{
+> +       if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) =3D=3D GICV5_GSI_IWB_TYPE)
+> +               return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, =
+gsi));
+> +
+> +       return NULL;
+> +}
+> +
+>  static int __init gic_acpi_init(union acpi_subtable_headers *header, con=
+st unsigned long end)
+>  {
+>         struct acpi_madt_gicv5_irs *irs =3D (struct acpi_madt_gicv5_irs *=
+)header;
+> @@ -1242,7 +1250,8 @@ static int __init gic_acpi_init(union acpi_subtable=
+_headers *header, const unsig
+>         if (ret)
+>                 goto out_irs;
+>
+> -       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_i=
+d, NULL);
+> +       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_i=
+d,
+> +                          gic_v5_get_gsi_handle);
+>
+>         return 0;
+>
+>
+> --
