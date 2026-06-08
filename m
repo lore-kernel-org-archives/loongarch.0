@@ -1,105 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE97330B01;
-	Mon,  8 Jun 2026 11:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075713655CC;
+	Mon,  8 Jun 2026 11:18:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780916846; cv=none; b=UNxP/iqE8B5Sqjh3dZcdm58z5C1vBqQsClDANZMpJtMTWRdXDN2KHuqXwqh5BDuICk3xh5U8wbGvMl9sfcRCpGJ/7YKNZ3xY62xkYBIgxUSbBmSxzUOuLFgEV/HXM2WxtBIRLM2qTydNjQUBYqdcZWHJFU3f9YJznm8in5CUPUI=
+	t=1780917528; cv=none; b=Osd7o+nwAI3W/bWjmD3bi+awW2AGC4GbhCLTuG5dL0XiX5iGWfD+bXB7T9mSvzgolKdRpNuIGOUWMFuexQ7HEElnjDUQsgG5JGlAHZixhTGkN6h3s6U4B/RTfOqEF6sLurK3aerzzKSEP1if8ncgOa9xxZxa+/JzBJpxS2wte1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780916846; c=relaxed/simple;
-	bh=2JzKXlLht8WwgD9yj++BEeDa/5KquAwShMwatn079Sk=;
+	s=arc-20240116; t=1780917528; c=relaxed/simple;
+	bh=fgPSFmZU70J4lAyv37jgZbsIHtlby8TPTKMnoy4eeN0=;
 	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=Dt/t6A/jTmu2yJ7TdihEVaL8XlMvMbdtAnn2BOUlD/JOProxOnczwH49/VVhQDjHHZ+5AKVGRG+o0wu5Fy9iaQWJyfY2IyXz5tLkqUWnS2vQ6WNJZWIQtgFKiJyH0sX177Y/OwMKNdbFNP+Auamfw1lQOTBHfRmTEUJcCxQ/Xwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBGw3Is5; arc=none smtp.client-ip=100.103.45.18
+	 Subject:From:To:Cc:Date; b=RhwXX1vQF8lWQGn8u6vGxEfdhZvru+agnTr/gSZKnTdRBoNncZiQyzWhgj6731BwnqG2tucs6pfXoTBnUF6bili8B1R1H4q47HCt9LfiS6UI4fWJmh47BCFJceuNv5axBB4B9xEGnsEucvHfItF0maBmqyWEKBVkKHtbcm2SGZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EY5UWmeT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBGw3Is5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DDF1F00893;
-	Mon,  8 Jun 2026 11:07:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EY5UWmeT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D931F00898;
+	Mon,  8 Jun 2026 11:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780916845;
-	bh=2DGoeXcKtLbg8rt5fjSfRzNCiiWHdVOnkxCtyWVtAWE=;
+	s=k20260515; t=1780917526;
+	bh=kRm/fex1UGV/WyUyxxwCB+Cy/BgaxwrrURO+3519IV8=;
 	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=dBGw3Is5BX7BXtGU/7LE9uNpg3swoL/O2uGE+JKd/+asUTVp/Jhow+7hcFbENNdX/
-	 jon2fTS5YE84HBSpw/zxlusbMkafOLcIVIBH/kqwaoaqw7PTA4IYdW9iXDVhvptGZ5
-	 WWx61pWy7ltOyf5/pc/5eXOlBEmMF/o9varkQqKBEMhSKfPXPInb3sIcLdMgTNTYEa
-	 nWpC3ihgX6RUPxQTVHBKOJg4lDXgnit7O0jpngcDg9sYgWhydkBmufHf34JykOBtn6
-	 E42On7goVmXTzQ2Xf5aQGIZAXh6hYOtNXLV5/946K20VdCaanqHyhcSNWDMXBlR0z1
-	 CjYhzSzrCkCmA==
-Content-Type: multipart/mixed; boundary="===============0807563568734763837=="
+	b=EY5UWmeT+kxsNwvu0kVV82r14S/KTDbKB/Pe740T0L850hQASc8WzYRX9Q0Do3TK0
+	 AggAhq4BNdD19OICHFUDMRrYHvNQPtIcZd2r9EtIhfHwiWudCu8CgPpSmqwLDefot6
+	 OPFHW1ELs8wWHTUfE4VR/z3aqFHS5BvQTFZef0rCQH588yYME0HXsAeLLGbBLM/IHq
+	 vukeJsXmQbU/go5lSes7pWA+hbdeCTaw6vTTVfPDgd0GRaHlC9jE6rFvWwtO9auKnx
+	 7rXIocLlZy3Ta0hH/LZYGfadryTbzBzWxVGKVe44eKaR9vy2IJd5ETbKUSfTMaNShE
+	 l11oHj1JdwWUw==
+Content-Type: multipart/mixed; boundary="===============2203711265836068332=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-Id: <9f3df2278bfa3db163dc38d388bb060c9459f1c5eab5f42ffd67969d23e5b99f@mail.kernel.org>
-In-Reply-To: <20260608103516.20643-3-yangtiezhu@loongson.cn>
-References: <20260608103516.20643-3-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v1 2/3] LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
+Message-Id: <25a3cb18ab3ece4604c3de687f5ac721c299a8e44fba0c84098e6e9ab3c68741@mail.kernel.org>
+In-Reply-To: <20260608103516.20643-2-yangtiezhu@loongson.cn>
+References: <20260608103516.20643-2-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v1 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
 From: bot+bpf-ci@kernel.org
 To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
 Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon,  8 Jun 2026 11:07:24 +0000 (UTC)
+Date: Mon,  8 Jun 2026 11:18:46 +0000 (UTC)
 
---===============0807563568734763837==
+--===============2203711265836068332==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index 058ffbbaad85..7967de9395ec 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1147,6 +1147,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+> index f377d8f5c51a..33a10221d73a 100644
+> --- a/arch/loongarch/kernel/switch.S
+> +++ b/arch/loongarch/kernel/switch.S
+> @@ -12,7 +12,7 @@
 >
->  	/* function call */
->  	case BPF_JMP | BPF_CALL:
-> +		/* Implement helper call to bpf_get_current_task/_btf() inline */
-> +		if (insn->src_reg == 0 && (insn->imm == BPF_FUNC_get_current_task ||
-> +					   insn->imm == BPF_FUNC_get_current_task_btf)) {
-> +			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_TP);
-> +			break;
-> +		}
-> +
+>  /*
+>   * task_struct *__switch_to(task_struct *prev, task_struct *next,
+> - *			    struct thread_info *next_ti, void *sched_ra, void *sched_cfa)
+> + *			    void *sched_ra, void *sched_cfa)
+>   */
+>  	.align	5
+>  SYM_FUNC_START(__switch_to)
 
-sashiko-bot raised a concern in v1 about the dependency on patch 1/3:
-On 32-bit LoongArch builds, does __switch_to() add TASK_STRUCT_OFFSET
-to the task pointer and store the biased pointer directly into $tp
-without unbiasing it?
+For context, the 32-bit path biases a1 at function entry:
 
-This patch directly reads $tp to get the task_struct pointer. If the
-preceding patch (1/3) leaves a biased pointer in $tp on 32-bit builds,
-wouldn't this inlined bpf_get_current_task() return an incorrect pointer
-offset by TASK_STRUCT_OFFSET (2000 bytes)?
+arch/loongarch/kernel/switch.S:__switch_to() {
+	#ifdef CONFIG_32BIT
+		PTR_ADDI	a0, a0, TASK_STRUCT_OFFSET
+		PTR_ADDI	a1, a1, TASK_STRUCT_OFFSET
+	#endif
+	...
+}
 
-The concern originated from this review:
-https://lore.kernel.org/all/20260608105329.610981F00893@smtp.kernel.org/
+so on 32-bit a1 holds (task_struct + TASK_STRUCT_OFFSET).  This bias lets the
+THREAD_* field accesses encoded as (FIELD - TASK_STRUCT_OFFSET) fit the 12-bit
+signed load/store immediate range.
 
-The original comment asked:
-
-> Does this leave a biased task_struct pointer in the $tp register on
-> 32-bit builds?
+> @@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
+>  	LONG_SPTR	t8, t7, 0
+>  #endif
 >
-> Since the current macro is now directly mapped to $tp in
-> arch/loongarch/include/asm/current.h:
->
-> register struct task_struct *current_thread_pointer __asm__("$tp");
-> #define current get_current()
->
-> If a1 (next) has TASK_STRUCT_OFFSET added to it to bypass assembly
-> immediate offset limitations on 32-bit builds, this move instruction
-> places that biased pointer into $tp without unbiasing it before
-> returning.
->
-> When __switch_to() returns to C code, wouldn't evaluating the current
-> macro dereference a pointer shifted by TASK_STRUCT_OFFSET (2000 bytes
-> on 32-bit) and cause immediate memory corruption or kernel panics
-> during context switch?
+> -	move	tp, a2
+> +	move	tp, a1
+>  	cpu_restore_nonscratch a1
 
-This comment does not appear to have been addressed.
+On 32-bit, does this leave $tp biased by TASK_STRUCT_OFFSET?
 
-[ ... ]
+The old code set $tp from a2 (next_ti), which was an unbiased thread_info
+pointer.  The new code sets $tp from a1, and on 32-bit a1 was biased by
++TASK_STRUCT_OFFSET at entry.  a0 is un-biased before return:
+
+arch/loongarch/kernel/switch.S:__switch_to() {
+	...
+	#ifdef CONFIG_32BIT
+		PTR_ADDI	a0, a0, -TASK_STRUCT_OFFSET
+	#endif
+	jr	ra
+}
+
+but a1 is never un-biased, so $tp would hold (task_struct + TASK_STRUCT_OFFSET).
+
+Under THREAD_INFO_IN_TASK, get_current() reads $tp directly as the raw
+task_struct pointer with no offset compensation:
+
+arch/loongarch/include/asm/current.h {
+	register struct task_struct *current_thread_pointer __asm__("$tp");
+	static __always_inline struct task_struct *get_current(void)
+	{
+		return current_thread_pointer;
+	}
+}
+
+The exception-entry paths (SAVE_SOME and handle_syscall) restore $tp from
+cpu_tasks, which set_current() populates with the raw, unbiased task pointer:
+
+arch/loongarch/include/asm/switch_to.h:set_current() {
+	__this_cpu_write(cpu_tasks, task);
+	...
+}
+
+so everywhere except the scheduler path $tp holds the raw task_struct.
+
+After __switch_to() returns into __schedule(), would every current->field
+access on 32-bit then dereference (task_struct + TASK_STRUCT_OFFSET) until the
+next exception entry reloads $tp from cpu_tasks?
+
+The commit message says the patch "correctly neutralizes the structural
+pointer bias on 32-bit platforms while cleanly falling back to 0 on 64-bit
+systems."  That appears to apply to the new
+
+	LONG_LPTR	t0, tp, (TASK_STACK - TASK_STRUCT_OFFSET)
+
+load, but the move tp, a1 itself still stores the biased pointer into the live
+current-task register.
+
+THREAD_INFO_IN_TASK is selected unconditionally for LoongArch (no if 64BIT in
+arch/loongarch/Kconfig), and CONFIG_32BIT (LA32R/LA32S) is a selectable kernel
+type, so the 32-bit path is real, supported code.
+
+Would something like
+
+	move	tp, a1
+	#ifdef CONFIG_32BIT
+		PTR_ADDI	tp, tp, -TASK_STRUCT_OFFSET
+	#endif
+
+be needed here, or some other un-biasing of $tp on 32-bit?
 
 
 ---
@@ -107,4 +152,4 @@ AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
 See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
 CI run summary: https://github.com/kernel-patches/bpf/actions/runs/27132522999
---===============0807563568734763837==--
+--===============2203711265836068332==--
