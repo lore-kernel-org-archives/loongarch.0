@@ -1,195 +1,258 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F31634FF5D
-	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 16:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780936709; cv=pass; b=WoGjya+InIWo3g0J6SxpUYenUBAxGpWhHc9+4vZ4wHkzljSSt6WgkSLOqXIeoiFDtPxfJA3DPtB2LlqYsfTixgewHmVeoFtUB3PtbPLwmWo+TtZvSqwPYZrwdNPjhZ29rt0++FU4qR4wdagc8BIkcMwEZ4aWxvdwmimkVCFLULg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780936709; c=relaxed/simple;
-	bh=Vm3wQtaCS6UNXPo6wK2kH7vneATSo7Rhq6i2ABg2hBk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nMBpk6dDLsOIb1Jq0CSygb5mPHxDxFqD2incrEoLogaKWmC72gdIaac676QSWh9XHeO2zm3q9tKeOflNQn69+cyYzefdhgr5MACSH39pYZm71gVNdnOAHUnH9jLFWP+yRYSD2xLTk04/X1bWr8xFQRK4YWX9VK5ulY37leL8O8M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=aLVN1rGk; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VTDMveCS; arc=pass smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBA3CFF6B
+	for <loongarch@lists.linux.dev>; Mon,  8 Jun 2026 16:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780937293; cv=none; b=EmlHACIgm0jTD0+s74+zSpTMQtDty9vHU/dYZXr7RUAHO5CiWbg154TySIUQbONC5r/ZELJNPgKHEKxFo3x7ZExCJMyiZ7bgPwyBU87zS6VxnoJyLSj4x1ZPK+dk0sObBLl5cSCw17lIxK/Q9XWjSAXpPn3ildd/EIxCRW7V7a0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780937293; c=relaxed/simple;
+	bh=JI5C7ugHpC0Id6mKn0j06lGdSpthSyUJLbA8pjzWS6I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pVPQGhgpWCTOdZ096QiE6UGAcNTxuq28yd4/mnaMrN53rvWcOf1BkJLsHR9m1P1g+8ESxHxZkUxdIEMgpXPGFJkTts9B9yOEQzAQtHJFVbXFdi0yqRO7HIrtDbHC8iqrrKwl8b6dxo5/i5ul1hQG4dHMCMjHP8/XZTvLwCoWg8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pkvn9Av8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="aLVN1rGk";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VTDMveCS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 658FFWDV3524804
-	for <loongarch@lists.linux.dev>; Mon, 8 Jun 2026 16:38:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=
-	qcppdkim1; bh=c+auThQZxPAjxDc0fMSepBAYMkGW6rfzA+iCSa7438U=; b=aL
-	VN1rGk2GnCSWpr/C5mhI7V/5mo7au+DRCD5bCtE/56VkmF3zZDD5S4QGK7eSdi5N
-	UDkPQvz/UwKEQ20ogLUtz1AcvotEMA2huV18YXdRP65okCDNEJ6s1EDD3/5TwpDE
-	4uwuNiz1cEICsvSq5yq0VanLSarRqXHJ5Z/nihGen/hbOw+rv0BrlL6ic+AjCYVB
-	sC3pDYPM5qOzS5R4T2Oa4Mft44f38yL7Ok/A+AK4478fvwXX47e5FexQBHRoHG9G
-	JUvnodwGcFbbiUaiSjH374OIWgz7p5hfDSJLtjjr8OF4szDFHS7ga8B9VfPqNUN+
-	Cbh3tK++gPAtQHfjYzqg==
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4entrkt4ak-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <loongarch@lists.linux.dev>; Mon, 08 Jun 2026 16:38:27 +0000 (GMT)
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-7e90f879daaso81448977b3.3
-        for <loongarch@lists.linux.dev>; Mon, 08 Jun 2026 09:38:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780936707; cv=none;
-        d=google.com; s=arc-20240605;
-        b=F0YPZYTqgNOyzMuMDQ4EBTHgs1aHF8x7nR9+USot8j0HGi5QgLhq96dfmV2dn2idFP
-         itltjcDoGws1Cs91Kp9RILMLZ8UrxfKIq5l28uWU9PAbcyCIz2tmxJq/fvsd/vj+L7SL
-         gjNjXIGKEfWhWAGLgn9M/n0+W1nP5RzPK3DI82Jzyi6VXL6o5qHlE/SF1O06YhYyHErH
-         eERT7VMkbdC9RWzOYmu+EiX8CzmYe+EB0ju2eSPX3dT/PLGYOcY7KuvWQklRjc5dmMoV
-         IN4P2VnO7WvJOSBBTxD9nWXcrmmDXR3q2HndbXIMfY+pWVhhY1uAy1cDlrBv9WNUuQ8a
-         c/ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:dkim-signature;
-        bh=c+auThQZxPAjxDc0fMSepBAYMkGW6rfzA+iCSa7438U=;
-        fh=ixJYL2y3XSQAb4NPm6Squl/mujHSjPqimbyX8uIoosA=;
-        b=WGSyMf5q6Iv7ZWoEMmjMSTCFxt9X8XnNYP+XCmQIMwDz2fX5m5F3YrOMnh2qCsDf6p
-         Tz0XtxzPYloPywix6Pnas+ka4Ka75ZZ7NlORlCVUI3q0ak4b+2VyhlPAlW2qScDfuY2a
-         HQel4Y7uyPCb2Hupi7JTac3lVSgDWx58+ylr0Zdt8Qg6WetFrVXRcpH5IOSzSfTvgtkl
-         8xfP2H7Mn/Zt33pgnouxX01hr7/kYOdPFwQ4Zd+sMrvv1W7vc5sJGdi2aitE5x2DEri7
-         P2Yu7+/21h+D0PA/F77CzcaHl8pl1a8JOIte7DlFTSfD0qihM84eTqIb/d9RAon2owB6
-         x/HQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780936707; x=1781541507; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=c+auThQZxPAjxDc0fMSepBAYMkGW6rfzA+iCSa7438U=;
-        b=VTDMveCS6xrg5jwVJB4WOjtetkx/me9TlmRCuwQV2a6GyhPHMMcxAMVqEsXQoUKjjF
-         XdRgo5msHnM3DcM5HHwkCw+URXtlzBn2W69B5JXy3zkLCos2ofIKA7bBQUKJqzM+gC7j
-         tikufXehWfF8E/6j3QvmOel4yNYFJc1V/ScB4ac+ZhrCW8UdknETQNTzcjWWOi3aFFKy
-         JE6SIuN6JeLTWNZwboWxziQdB9+1Esc2mSdThObk3y9/7VyG7KvJ2zo3cN5VG8nwiO/n
-         /8+HhpHYOoluug2/HiBNqWk3ahNLiCMN1UoiQGMr7Jy1mfy20WARshExGMBkphFfEJut
-         zR/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780936707; x=1781541507;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c+auThQZxPAjxDc0fMSepBAYMkGW6rfzA+iCSa7438U=;
-        b=HX6Z4BjMhygbKf8yL8+vuHzLRnV24iUt4GJE3v+Gg3XyHmZMjyfC5WwJ15NBI2jLEu
-         YbJMwJd5q6QrCKJOFfJfayb8oTtlpVQlQdfSA+RBoU0ilb0+H3ks48XVMTvrxWBDekAA
-         Tx32iPXY+lPir0wok7r3HE5fHexvffXv8a6XvkQgWvkKUNrBm6AqlPmgFsHkHxodnNvR
-         qCwS4y+CogXxye//NfS5M0WXQN0gi+KhUdYWjnRbpNDvH7nUXd2Vp0zMc1AJYhvwx+z9
-         LYar/wn/QaziUjGc3gaR11QcWNQaLGmAWIOv4d3XLrqNoKoKEuy8UVN41L5/q8+HJMSv
-         YMIQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+ARGnpaDDkDOL8feJ4ulKX5vQXb35BZEK6mpGSpdcxhA1oVk1td/hwtVOQtDE9jJgCmrLB4yNef6A=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwR0eQQp2w31ns1Xk+gOpx8H395va2mpIA5k35dZGhPaZyzWhhV
-	dcpjCoPHfLtLPEJhEkVZ0cmI2ojdCCz4g8Q6aODbMxlGk4tUgeWzlDKc78lhzPUX2Vy5O6oRCOi
-	e/kHSXZJm1V6aZnIVd70YVMEMvUrC1SoaYC5k3UFlCo7iAnwxXwDWSztBZ6umdk6qYyoHAgSTA0
-	11Z8kKHTsT6103qeiFH/IyZ184gDWDCo5RBXNnFQ==
-X-Gm-Gg: Acq92OGRTjPr+tLZe8a7s9wVqlIs9IAygRptlwk7xWm71CNRW6h5+l1x8sQ9fMgpZDV
-	AdurKXhE9WTh0x6YeWBv59dI4bguWFOZcG+UK0ks0II55nj3i9bvmeQoAwmxwY0RghGMlpkVqEZ
-	QtO5P7MNGiq68y9rDR2YO6/fCjxU80ZZbZ7sUJCNE2NGD6YjVkdego65NLhJNjjU22/iFLOR2Kq
-	CBvbbqYzk7rW8QIag==
-X-Received: by 2002:a05:690c:e3d1:b0:79a:60f6:c5ed with SMTP id 00721157ae682-7ed0d3cbcc4mr155717427b3.6.1780936706572;
-        Mon, 08 Jun 2026 09:38:26 -0700 (PDT)
-X-Received: by 2002:a05:690c:e3d1:b0:79a:60f6:c5ed with SMTP id
- 00721157ae682-7ed0d3cbcc4mr155716897b3.6.1780936706088; Mon, 08 Jun 2026
- 09:38:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pkvn9Av8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780937291;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HO1z1hECglS3oHNycHe52C8L+SIuRFyFX5+d24s3Qxo=;
+	b=Pkvn9Av8ODbUpDp4UhKrhlhaVOKqGbF8/0TgF7oatjAFx8JCILE53Q0iZPq5V/fRCfda2C
+	ILnfvfP6cGPP8bKxDj2MiNPlUzfZbTo1YFl9g6Zp2JLugHeV8qJq30YhEmDbPAIQzaWTEn
+	H+0xrnL+99YRJTISntY7jz7sMqGiOy8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-jTkQIDEiMJ6cjZxqb-ZLkw-1; Mon,
+ 08 Jun 2026 12:48:07 -0400
+X-MC-Unique: jTkQIDEiMJ6cjZxqb-ZLkw-1
+X-Mimecast-MFC-AGG-ID: jTkQIDEiMJ6cjZxqb-ZLkw_1780937285
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DA901800605;
+	Mon,  8 Jun 2026 16:48:04 +0000 (UTC)
+Received: from [10.44.48.99] (unknown [10.44.48.99])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A13881800664;
+	Mon,  8 Jun 2026 16:47:56 +0000 (UTC)
+Message-ID: <e7eb0dba-790a-4644-9895-5c9a7420d7fe@redhat.com>
+Date: Mon, 8 Jun 2026 18:47:54 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
- <20260603-gic-v5-acpi-iwb-probe-deferral-v2-4-23ffa16b6ebb@kernel.org>
-In-Reply-To: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-4-23ffa16b6ebb@kernel.org>
-Reply-To: sunilvl@oss.qualcomm.com
-From: Sunil V L <sunilvl@oss.qualcomm.com>
-Date: Mon, 8 Jun 2026 22:08:15 +0530
-X-Gm-Features: AVVi8CdP_PRc1DJjUVOc0gMS_HHZf1oDGc6wp_gUILbiw5JbF5QWPmOsllQtoVM
-Message-ID: <CAB19ukH5hx_kfpfcRiuPFrUmvFxMk3B08RNjcaxx3C6fDBS0dw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] ACPI: irq: Move RISC-V interrupt controllers
- autodep to ACPI IRQ code
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-        Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-ORIG-GUID: USElx4482-OLgbOqG4de8bWnClf4zGb3
-X-Authority-Analysis: v=2.4 cv=Z+3c2nRA c=1 sm=1 tr=0 ts=6a26f003 cx=c_pps
- a=g1v0Z557R90hA0UpD/5Yag==:117 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_K5XuSEh1TEqbUxoQ0s3:22 a=VwQbUJbxAAAA:8 a=W-_n0kkjAAAA:8 a=bDdBU3oEAAAA:8
- a=EUspDBNiAAAA:8 a=bDd8DhsF2Ke-o0a1jUUA:9 a=QEXdDO2ut3YA:10
- a=MFSWADHSvvjO3QEy5MdX:22 a=qeNa2pbTr82C0GpJEZFS:22 a=DN7SgORnOiO7RqxRx1GC:22
-X-Proofpoint-GUID: USElx4482-OLgbOqG4de8bWnClf4zGb3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDE1OSBTYWx0ZWRfX8OE51WxwANvL
- IP5//k7nLAGjtWmeWdfT8hvAqXhtgnwb1vwn91PIS/WJbPdAiM5iD+fDXdhMI6v6TuTi6RCCq74
- Hv8z8rdO3iw1XhycYSkBjr1XO5V5q7j1oRbDO+o/5ecKkyNmRy4IoPuD2I0J8LQzEvpgcMSH52k
- yYjNUhviba7dQuDk3U0FsR2LZwDnBs+kqkITOjUOnQyl2u61vvEC1yc/rAVqIbvu22OrT60l7UW
- Rm2F58IAXYLBbZXvFFztgkYBwu+Vye/tZyswn7uG8Opl8Dtk+72B/QCin/WBG2J15gbj2633UmC
- gsi32IbY7GfF6005oB8SxQxKaSlaNbYjpRwlqTBaauOtRvbgEtdictoliRSvKiGSP3HoSUb398v
- 4vOi8ymPWKGIO6PmTqWlM7p+k4On6HaYz7e0lrlg/xXaiB1ETtmIHkNQCHYvNi8bQNBS+5D/ick
- HKsJxRNi5lN15rrqVxg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-08_04,2026-06-05_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 clxscore=1015
- adultscore=0 priorityscore=1501 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
- definitions=main-2606080159
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 35/60] kvm: Add VCPU plane-scheduling state and helpers
+To: =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>,
+ Sean Christopherson <seanjc@google.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com,
+ michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de,
+ James.Bottomley@HansenPartnership.com, Melody Wang <huibo.wang@amd.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+ loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
+ x86@kernel.org, coconut-svsm@lists.linux.dev, joerg.roedel@amd.com
+References: <20260608144252.351443-1-joro@8bytes.org>
+ <20260608144252.351443-36-joro@8bytes.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20260608144252.351443-36-joro@8bytes.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: Ejl_i3mmkFax89Y_0ejxzUVxs43aal8FjuN0L-e0Rn4_1780937285
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 3, 2026 at 1:54=E2=80=AFPM Lorenzo Pieralisi <lpieralisi@kernel=
-.org> wrote:
->
-> RISC-V implements arch code to detect probe dependencies for devices and
-> the interrupt controller the devices GSIs are routed to.
->
-> The code itself is arch agnostic apart from an arch specific helper
-> function required to retrieve the acpi_handle of the interrupt controller
-> that manages the device GSI interrupt.
->
-> In order to enable IRQ probe dependencies detection on other architecture=
-s,
-> move RISC-V IRQ probe dependency detection code to generic ACPI IRQ code.
->
-> Allow interrupt controller drivers to register an arch specific function =
-to
-> determine the acpi_handle for a specific GSI number to use the mechanism =
-if
-> needed by the respective interrupt controller drivers.
->
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Huacai Chen <chenhuacai@kernel.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Anup Patel <anup@brainfault.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Sunil V L <sunilvl@ventanamicro.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+On 6/8/26 16:42, Jörg Rödel wrote:
+> From: Joerg Roedel <joerg.roedel@amd.com>
+> 
+> The algorithm is to always run the lowest runnable plane. Plane
+> switches are done by stopping the current plane and setting another
+> runnable.
+> 
+> Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+
+This was left arbitrary in my version because for example Hyper-V VTLs 
+use highest-runnable instead.  It also made pure userspace scheduling 
+possible, though that may not be very important in the grand scheme of 
+things.
+
+Did you drop it because it didn't work, or just for simplicity?
+
+Paolo
+
 > ---
->  arch/riscv/include/asm/acpi.h       |   1 +
->  drivers/acpi/irq.c                  | 172 ++++++++++++++++++++++++++++++=
-+++++-
->  drivers/acpi/riscv/irq.c            | 156 +-----------------------------=
---
->  drivers/irqchip/irq-gic-v3.c        |   2 +-
->  drivers/irqchip/irq-gic-v5.c        |   2 +-
->  drivers/irqchip/irq-gic.c           |   2 +-
->  drivers/irqchip/irq-loongarch-cpu.c |   2 +-
->  drivers/irqchip/irq-riscv-intc.c    |   3 +-
->  include/linux/acpi.h                |   5 +-
->  9 files changed, 181 insertions(+), 164 deletions(-)
->
-LGTM.
+>   include/linux/kvm_host.h | 16 ++++++++++++++
+>   virt/kvm/kvm_main.c      | 45 ++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 61 insertions(+)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 5c3f9dfa15ea..e3611e6cc3e4 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -168,6 +168,7 @@ static inline bool kvm_is_error_gpa(gpa_t gpa)
+>   #define KVM_REQ_VM_DEAD			(1 | KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>   #define KVM_REQ_UNBLOCK			2
+>   #define KVM_REQ_DIRTY_RING_SOFT_FULL	3
+> +#define KVM_REQ_PLANE_RESCHED		4
+>   #define KVM_REQUEST_ARCH_BASE		8
+>   
+>   /*
+> @@ -324,6 +325,8 @@ struct kvm_mmio_fragment {
+>   	unsigned int len;
+>   };
+>   
+> +
+> +
+>   struct kvm_vcpu_common {
+>   	struct kvm *kvm;
+>   
+> @@ -381,6 +384,8 @@ struct kvm_vcpu_common {
+>   
+>   	struct kvm_dirty_ring dirty_ring;
+>   
+> +	bool plane_switch;
+> +
+>   	struct kvm_vcpu_arch_common arch;
+>   };
+>   
+> @@ -388,6 +393,12 @@ struct kvm_vcpu_common {
+>   	for ((i) = 0; (i) < KVM_MAX_PLANES; ++(i))		\
+>   		if (((v) = common->vcpus[(i)]) != NULL)
+>   
+> +/* Tracked per plane-VCPU - used for deciding which plane-vcpu to run */
+> +enum kvm_vcpu_state {
+> +	STOPPED,
+> +	RUNNABLE,
+> +};
+> +
+>   struct kvm_vcpu {
+>   	struct kvm *kvm;
+>   	struct kvm_plane *plane;
+> @@ -401,6 +412,7 @@ struct kvm_vcpu {
+>   	struct kvm_run *run;
+>   
+>   	u64 plane_requests;
+> +	enum kvm_vcpu_state plane_state;
+>   
+>   	/* S390 only */
+>   	bool valid_wakeup;
+> @@ -440,6 +452,10 @@ struct kvm_vcpu {
+>   	unsigned plane_level;
+>   };
+>   
+> +void kvm_vcpu_set_plane_runnable(struct kvm_vcpu *vcpu);
+> +void kvm_vcpu_set_plane_stopped(struct kvm_vcpu *vcpu);
+> +struct kvm_vcpu *kvm_vcpu_select_plane(struct kvm_vcpu *vcpu);
+> +
+>   static inline bool kvm_vcpu_wants_to_run(struct kvm_vcpu *vcpu)
+>   {
+>   	return vcpu->common->wants_to_run;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 9d30fd85ce5f..a30123b77112 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -4397,6 +4397,7 @@ static int kvm_plane_ioctl_create_vcpu(struct kvm_plane *plane, unsigned long id
+>   	vcpu->vcpu_idx = vcpu->common->vcpu_idx;
+>   	vcpu->plane = plane;
+>   	vcpu->plane_level = plane->level;
+> +	vcpu->plane_state = STOPPED;
+>   	vcpu->run = vcpu->common->run;
+>   
+>   	kvm_vcpu_init(vcpu, kvm, id);
+> @@ -4938,6 +4939,50 @@ static struct file_operations kvm_plane_fops = {
+>   	KVM_COMPAT(kvm_plane_ioctl),
+>   };
+>   
+> +void kvm_vcpu_set_plane_runnable(struct kvm_vcpu *vcpu)
+> +{
+> +	vcpu->plane_state = RUNNABLE;
+> +	vcpu->common->plane_switch = true;
+> +	kvm_make_request(KVM_REQ_PLANE_RESCHED, vcpu);
+> +}
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_set_plane_runnable);
+> +
+> +void kvm_vcpu_set_plane_stopped(struct kvm_vcpu *vcpu)
+> +{
+> +	vcpu->plane_state = STOPPED;
+> +	kvm_make_request(KVM_REQ_PLANE_RESCHED, vcpu);
+> +}
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_set_plane_stopped);
+> +
+> +struct kvm_vcpu *kvm_vcpu_select_plane(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_vcpu_common *common = vcpu->common;
+> +	struct kvm_vcpu *ret = NULL;
+> +	unsigned i;
+> +
+> +	for (i = 0; i < KVM_MAX_PLANES; i++) {
+> +		if (common->vcpus[i] == NULL)
+> +			continue;
+> +
+> +		if (common->vcpus[i]->plane_state == RUNNABLE) {
+> +			ret = common->vcpus[i];
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (ret == NULL) {
+> +		ret = common->vcpus[0];
+> +		ret->plane_state = RUNNABLE;
+> +	}
+> +
+> +	common->current_vcpu = ret;
+> +
+> +	common->plane_switch = false;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_vcpu_select_plane);
+> +
+>   static int kvm_device_mmap(struct file *filp, struct vm_area_struct *vma)
+>   {
+>   	struct kvm_device *dev = filp->private_data;
 
-Reviewed-by: Sunil V L <sunilvl@oss.qualcomm.com>
