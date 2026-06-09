@@ -1,94 +1,128 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF633EDE40
-	for <loongarch@lists.linux.dev>; Tue,  9 Jun 2026 09:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AEE3EF0BD;
+	Tue,  9 Jun 2026 09:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780996012; cv=none; b=l6EOQ7/wh1GIU2tKSPiaTQ8OJ8Lt0TP2N2cldZzqTFtPou0cAaXzQl8DgSesTOCzc/UwUgd8Dbt6g/i6CtrllLkqWI8VjQCJvmXMmH4e615W1ZFO8L0Qz+8+/sfzYMnsmwJ2cTp0PVCKKQPqra09lY8v6l+Lij9AnhdYOZTcLSE=
+	t=1780996748; cv=none; b=CrfhoMR902ZuW0OIcAjFZKHmkTxbDWeAZXaOLoJ7QGjq//oNTaCFZMksOy7h44b/xHjdtEav7xf8Z3PGWLGXS9k/AoAPS14TPblR2Eh5MvF4ambzDlL9c8C0HbdKKS64seTd/AilE3ewKhdbf80//PDSvUhS8U7EqBtEv7zEwFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780996012; c=relaxed/simple;
-	bh=/vPodh8on6A4OnRb2aoAHZJLbt4JZwztrUkDiPLW6kk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Db9q00lsQJSMyiZ59BXox8vjTHAYmN4ripw0lFPd4IsJzjghCM4Erz+/wG2nRyEiYew0bjCWeFmsIKY/i7Kj66ns6cO8mQCkgqpYUUm4ZaRXR8u0vJB6OK/pMr8yhRk+D9og1uhpvAHK3pFgRmaugkbxf2xz/EYnbokAbCYUZIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8AxVumo1ydqfTESAA--.42576S3;
-	Tue, 09 Jun 2026 17:06:48 +0800 (CST)
-Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJCxOMGk1ydqKKOgAA--.28652S5;
-	Tue, 09 Jun 2026 17:06:47 +0800 (CST)
-From: Hongliang Wang <wanghongliang@loongson.cn>
-To: Hongliang Wang <wanghongliang@loongson.cn>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] LoongArch: dts: i2c: Add clocks and clock-frequency properties to 2K2000
-Date: Tue,  9 Jun 2026 17:05:43 +0800
-Message-Id: <20260609090543.1462-4-wanghongliang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260609090543.1462-1-wanghongliang@loongson.cn>
-References: <20260609090543.1462-1-wanghongliang@loongson.cn>
+	s=arc-20240116; t=1780996748; c=relaxed/simple;
+	bh=SOGEsiob5KgP55lb6jJSATvDTnAhJIKXVupn0hBMpkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGp0KnysgQhQ/KI1qrkeWrFPXKV+QpF1eMyndNdRWf44I9umu/2ythuKbiu7AECIphkAWDRXNeE4pjAuqcJGfps80HvDjLMRnsgtzztLXaGXpb9k6RmE1s9wdFbrt4cZqe8hjul9jtACKvzRiHbJItUYxo5vZsvXEJQUYfM5MYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rf6WZ+J3; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rf6WZ+J3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95D71F00893;
+	Tue,  9 Jun 2026 09:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780996746;
+	bh=UnLSIOIPLrsgN1aJrq7sJm6YQFhZ+kBm+237OZTgZtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Rf6WZ+J3P0F0wrd3ax1kk+wZcQgOIGh2lEH9DewE60K5vxhRKqNjVP5Fpb99QNYXB
+	 iUWsONWJl7offoG7ybI8rLcdvEs4vqsw9d1ZxqF0LWd+dFvt9oaD99wwlVAEfHwbDe
+	 +16ZDuTt2wUPOM1Bkg4Rq4EOdC+k69aJF/8QkKCwy5M1fsdyYEvZ6Kq+lE+x+bG3N1
+	 9Wanm4yCdexYV9h7qjUzYjbQfIlh5gECJlpwbeIvMoggylNYxHdX/xRqBgftfbO3+a
+	 zIOh6QowHakk3+HzJgIcX0IeA0Z0HjDtz/26TTyaZSVKUECFhkCGOg4KuvtfzikztN
+	 0xv3dSD9sOu3w==
+Date: Tue, 9 Jun 2026 11:19:00 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Sunil V L <sunilvl@oss.qualcomm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH v2 1/6] ACPI: RISC-V: Fix riscv_acpi_irq_get_dep() loop
+ termination
+Message-ID: <aifahCtdj8GpHN/v@lpieralisi>
+References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
+ <20260603-gic-v5-acpi-iwb-probe-deferral-v2-1-23ffa16b6ebb@kernel.org>
+ <CAB19ukFFwm3ehzkBFr+oXRjA7VK_4_=XHFSuqdEpbVqUz8Do4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxOMGk1ydqKKOgAA--.28652S5
-X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZryxtrW5Zw47XFy5Ary7Jwc_yoWkGFgEq3
-	WfKw1kGrs5JFZ5Zryq9r18X3y7Z347Z3WFyF9rur48tas8trnxGr48Zas8ArW0krW2grs8
-	J3y8X3s3CryakosvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07josjUUUUUU=
+In-Reply-To: <CAB19ukFFwm3ehzkBFr+oXRjA7VK_4_=XHFSuqdEpbVqUz8Do4Q@mail.gmail.com>
 
-Add clocks and clock-frequency properties to i2c nodes.
+On Mon, Jun 08, 2026 at 09:54:28PM +0530, Sunil V L wrote:
+> Hi Lorenzo,
+> 
+> On Wed, Jun 3, 2026 at 1:51 PM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> >
+> > In riscv_acpi_add_irq_dep() the main loop condition would currently stop
+> > the loop if an interrupt descriptor contains an interrupt for which the
+> > respective GSI handle is NULL, which is not correct because subsequent
+> > interrupts in the interrupt descriptor might still have a GSI dependency
+> > that must not be skipped.
+> >
+> > Rework riscv_acpi_add_irq_dep() and the riscv_acpi_irq_get_dep() call chain
+> > to fix it - by not forcing the loop to stop in order to guarantee
+> > dependency detection for all the interrupt entries in the CRS descriptor.
+> >
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Sunil V L <sunilvl@ventanamicro.com>
+> > ---
+> >  drivers/acpi/riscv/irq.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
+> > index 9b88d0993e88..cd83c3035cf6 100644
+> > --- a/drivers/acpi/riscv/irq.c
+> > +++ b/drivers/acpi/riscv/irq.c
+> > @@ -299,6 +299,7 @@ static acpi_status riscv_acpi_irq_get_parent(struct acpi_resource *ares, void *c
+> >                         return AE_OK;
+> >
+> >                 ctx->handle = riscv_acpi_get_gsi_handle(eirq->interrupts[ctx->index]);
+> > +               ctx->rc = 0;
+> >                 return AE_CTRL_TERMINATE;
+> >         }
+> >
+> > @@ -314,10 +315,8 @@ static int riscv_acpi_irq_get_dep(acpi_handle handle, unsigned int index, acpi_h
+> >
+> >         acpi_walk_resources(handle, METHOD_NAME__CRS, riscv_acpi_irq_get_parent, &ctx);
+> >         *gsi_handle = ctx.handle;
+> > -       if (*gsi_handle)
+> > -               return 1;
+> >
+> > -       return 0;
+> > +       return ctx.rc;
+> >  }
+> >
+> >  static u32 riscv_acpi_add_prt_dep(acpi_handle handle)
+> > @@ -381,8 +380,11 @@ static u32 riscv_acpi_add_irq_dep(acpi_handle handle)
+> >         int i;
+> >
+> >         for (i = 0;
+> > -            riscv_acpi_irq_get_dep(handle, i, &gsi_handle);
+> > +            !riscv_acpi_irq_get_dep(handle, i, &gsi_handle);
+> >              i++) {
+> > +               if (!gsi_handle)
+> > +                       continue;
+> > +
+> >                 dep_devices.count = 1;
+> >                 dep_devices.handles = kzalloc_objs(*dep_devices.handles, 1);
+> >                 if (!dep_devices.handles) {
+> >
+> Do these fixes need the Fixes tag?
 
-Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
----
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+I can add a Fixes: tag but I wanted first some help testing them, it
+is code perusal that got me there.
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index 3678c084adf7..7fdc4192d2f2 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -239,6 +239,8 @@ rtc0: rtc@100d0100 {
- 		i2c@1fe00120 {
- 			compatible = "loongson,ls2k-i2c";
- 			reg = <0x0 0x1fe00120 0x0 0x8>;
-+			clock-frequency = <100000>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
- 			interrupt-parent = <&liointc>;
- 			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
-@@ -247,6 +249,8 @@ i2c@1fe00120 {
- 		i2c@1fe00130 {
- 			compatible = "loongson,ls2k-i2c";
- 			reg = <0x0 0x1fe00130 0x0 0x8>;
-+			clock-frequency = <100000>;
-+			clocks = <&clk LOONGSON2_MISC_CLK>;
- 			interrupt-parent = <&liointc>;
- 			interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
--- 
-2.47.2
+> Otherwise, LGTM.
+> Reviewed-by: Sunil V L <sunilvl@oss.qualcomm.com>
 
+Thanks,
+Lorenzo
