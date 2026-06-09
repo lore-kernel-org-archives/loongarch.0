@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F81B3DDDC4
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA5134A3D6
 	for <loongarch@lists.linux.dev>; Tue,  9 Jun 2026 09:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780996010; cv=none; b=RaKDRqc3/ROO9s9T/P2MvoQ5FZ4kRNZmG8dANEy8BJjA6+hAWn/0QXeeB+DPnR1WLSFVRZvd7VvcaFwmA6cNzKC077iQkejoqzVeos7rdpTCU/7rlYv4tvxLkWnPy8TEf1G8rcC1P7InB9d+gc4uuo71iZGxzWhnKVE36YVy3no=
+	t=1780996010; cv=none; b=PVQHniuK31aNbNeIYkfIoyDY9lX7OOItqyEkmF8w6aYcY9IFahYwObHi1kP/SNqo7kk1Y1KaaB45fIvNW1TNhaEtosQElSWHgk2kwrzboAdvonbkQVOZ/r1y50zSFx5JqDXAuQ/sikHBuXIZ48YlIYwrL1YRELCoufUBvKHy7y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780996010; c=relaxed/simple;
-	bh=V3qDZUx3yOnSJqO2amTow6eQ51hs49Q0hdct+TJ+Fss=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l4LJ/DYD9iFcbeZYqYBFscjR3w2NeUH3mTD257jFGLGg7BvCPye86AsJkp4Y5cWjy6FUutBIS195z/6+dYtM8My5oKaJrALHOCT6+FhJrXvOgsRPSti7B2rFkV2uHe2D1qURdPcuv2wc27PMBe4MBdXaIeohmbl6dAEQR0b8zdI=
+	bh=Hj1S5z20HOrHY4kGGrbU+sk4JvQTCTMsrr3XqOGMH+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=d+fSyLRDi/dNT5Zi5Jib+X+Dlk6u2qdeLZ/YD6XAy1EXN45LVDiU4PB3JD4ek6TlLUbpoLHGrNDWHLh6xdmx5DsmgRL3asCDy349IWcoN5bAiPmWfnBOJvOYvAZBLnGg+jQpo7vqZcpLe+XxS+UwzwKhuOBAEgTSIonOlDvCVGA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.101])
-	by gateway (Coremail) with SMTP id _____8AxAuun1ydqdDESAA--.48770S3;
-	Tue, 09 Jun 2026 17:06:48 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8CxHuqn1ydqeTESAA--.47626S3;
+	Tue, 09 Jun 2026 17:06:47 +0800 (CST)
 Received: from loongson-pc.loongson.cn (unknown [10.20.42.101])
-	by front1 (Coremail) with SMTP id qMiowJCxOMGk1ydqKKOgAA--.28652S2;
-	Tue, 09 Jun 2026 17:06:46 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxOMGk1ydqKKOgAA--.28652S4;
+	Tue, 09 Jun 2026 17:06:47 +0800 (CST)
 From: Hongliang Wang <wanghongliang@loongson.cn>
 To: Hongliang Wang <wanghongliang@loongson.cn>,
 	Binbin Zhou <zhoubinbin@loongson.cn>,
@@ -27,10 +28,12 @@ To: Hongliang Wang <wanghongliang@loongson.cn>,
 Cc: devicetree@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/3] LoongArch: dts: i2c: Add clocks and clock-frequency properties
-Date: Tue,  9 Jun 2026 17:05:40 +0800
-Message-Id: <20260609090543.1462-1-wanghongliang@loongson.cn>
+Subject: [PATCH v1 2/3] LoongArch: dts: i2c: Add clocks and clock-frequency properties to 2K1000
+Date: Tue,  9 Jun 2026 17:05:42 +0800
+Message-Id: <20260609090543.1462-3-wanghongliang@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20260609090543.1462-1-wanghongliang@loongson.cn>
+References: <20260609090543.1462-1-wanghongliang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,42 +41,54 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxOMGk1ydqKKOgAA--.28652S2
+X-CM-TRANSID:qMiowJCxOMGk1ydqKKOgAA--.28652S4
 X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUvGb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-	87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
-	IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
-	CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0
-	I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
-	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
-	UjIFyTuYvjxUzvtCDUUUU
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZry3GF48CF45Zr4UXw45XFc_yoWkWFX_t3
+	ZxKw1UGrs5CFs5tryqvr4UJw43ZayUA3ZYkF97ury8ta4Dtr43GrWUZa98Ar1FkrW2grsY
+	y3y8Xr95CryakosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb28YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j83kZUUUUU=
 
-Hi all:
+Add clocks and clock-frequency properties to i2c nodes.
 
-This patch set adds clocks and clock-frequency properties to i2c nodes of
-LS2K0500/2K1000/2K2000 dts.
+Signed-off-by: Hongliang Wang <wanghongliang@loongson.cn>
+---
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Hongliang Wang (3):
-  LoongArch: dts: i2c: Add clocks and clock-frequency properties to
-    2K0500
-  LoongArch: dts: i2c: Add clocks and clock-frequency properties to
-    2K1000
-  LoongArch: dts: i2c: Add clocks and clock-frequency properties to
-    2K2000
-
- arch/loongarch/boot/dts/loongson-2k0500.dtsi | 12 ++++++++++++
- arch/loongarch/boot/dts/loongson-2k1000.dtsi |  4 ++++
- arch/loongarch/boot/dts/loongson-2k2000.dtsi |  4 ++++
- 3 files changed, 20 insertions(+)
-
+diff --git a/arch/loongarch/boot/dts/loongson-2k1000.dtsi b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+index ab6a55937e9e..e6f0fe093ab3 100644
+--- a/arch/loongarch/boot/dts/loongson-2k1000.dtsi
++++ b/arch/loongarch/boot/dts/loongson-2k1000.dtsi
+@@ -311,6 +311,8 @@ uart0: serial@1fe20000 {
+ 		i2c2: i2c@1fe21000 {
+ 			compatible = "loongson,ls2k-i2c";
+ 			reg = <0x0 0x1fe21000 0x0 0x8>;
++			clock-frequency = <100000>;
++			clocks = <&clk LOONGSON2_APB_CLK>;
+ 			interrupt-parent = <&liointc0>;
+ 			interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
+@@ -319,6 +321,8 @@ i2c2: i2c@1fe21000 {
+ 		i2c3: i2c@1fe21800 {
+ 			compatible = "loongson,ls2k-i2c";
+ 			reg = <0x0 0x1fe21800 0x0 0x8>;
++			clock-frequency = <100000>;
++			clocks = <&clk LOONGSON2_APB_CLK>;
+ 			interrupt-parent = <&liointc0>;
+ 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
+ 			status = "disabled";
 -- 
 2.47.2
 
