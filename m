@@ -1,61 +1,71 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24A603438A1;
-	Tue,  9 Jun 2026 14:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781015264; cv=none; b=QCe1pgdadQIXExkCtH5IAzpiH9Dc35IjyCaxbgAN19DpDplKu9dUKf2vaYrPtfP/p6PmBA+iticAuvZMomqVxN7IK9ynjDGQO5iGy0CofCY4ytvPPir4Mv2NDzbEzOboiZpXMLT1eGC5krZSuwzKWyo5Esjh3p7jddZq39eJ3C8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781015264; c=relaxed/simple;
-	bh=fTsYvLeJ0N/YqVfkN9T0KlSw7FGqkfT38Irf9mhEx14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yt4a61+wh9aZw1dtUPLRdM3DGuW9D8MgqMAHZ/88scP3AVRLD/uJ9O5hBH3paBiJespR2CUDt43bapBqYDWPZk5avyFmsLmho8T//seoNCY6LR4HQ9AQH6nSkjBkfnvD/ggB9puQ1mPWnsQDhqwwNreO1lkKecCNaEphjcXZt6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Received: from 8bytes.org (p4ffe1d30.dip0.t-ipconnect.de [79.254.29.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 86023222F08;
-	Tue,  9 Jun 2026 16:27:41 +0200 (CEST)
-Date: Tue, 9 Jun 2026 16:27:40 +0200
-From: =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Tom Lendacky <thomas.lendacky@amd.com>, ashish.kalra@amd.com, 
-	michael.roth@amd.com, nsaenz@amazon.com, anelkz@amazon.de, 
-	Melody Wang <huibo.wang@amd.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvmarm@lists.linux.dev, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, x86@kernel.org, 
-	coconut-svsm@lists.linux.dev, joerg.roedel@amd.com
-Subject: Re: [PATCH 35/60] kvm: Add VCPU plane-scheduling state and helpers
-Message-ID: <aigifVmRZA0TXIrK@8bytes.org>
-References: <20260608144252.351443-1-joro@8bytes.org>
- <20260608144252.351443-36-joro@8bytes.org>
- <e7eb0dba-790a-4644-9895-5c9a7420d7fe@redhat.com>
- <aib8n5lO6HKbLC4Y@8bytes.org>
- <CABgObfbUsDeStnZF-7oyR-W-Bvd4qTMoeUwGizgn10UTdKtZ2A@mail.gmail.com>
- <aigE2EvJyZlYDz0V@8bytes.org>
- <51421426e0d4b154281e80d9f1c6c9a628d21c94.camel@HansenPartnership.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EF0343D7B
+	for <loongarch@lists.linux.dev>; Tue,  9 Jun 2026 14:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781016014; cv=none; b=muafxQIJYC8jMbHaeGJb8LAxDzvPoHZsMA6E+UDsPupLM4gK9mwvCsF82hbItkh6FQLwL+spBKGOjIZlbnNjEUMoNIRAruFe5xpFpMV1/6rGnuum3ta+swpB83RLZE8/fAMe49/DgY19O6VhEHUnc3Ux8gdNlUF2GGdKKv6/tZQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781016014; c=relaxed/simple;
+	bh=Fmac61i2dwLocCOx7qcTqnbQ43RtfTqLMELLfckgZ38=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FILknd1paJxXMiKnKsi8cWMT7wyhptKX7ThzBeANUoJ9vVof9Wo3kIm2+4RnWXwVhKIGeg9+uQQv14xlOx6oaw1XacCsHGqCFyLnnz0iF8/uXL58QqLjvvKXzkk69DGlwYmpX7Y6UIH8DdKBh91KQhatD4GIo3RSNaZOYcufq5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NWYFODOC; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NWYFODOC"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781016011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fmac61i2dwLocCOx7qcTqnbQ43RtfTqLMELLfckgZ38=;
+	b=NWYFODOC/z8fN1av0PD2atwJekgdJSlGgtsB7NkKlRnF+0qjL4q6Mu8Wxh0l/VpAyWI8Zt
+	Wy6iYczj3eNFCiaIiYg086C5pcDhiihOM+vqBWNagn7Xutgpmko9Ki/FPS+q/j6qsFd4B0
+	5nvk5YbJG7OOEMyRaZiGQYmTY2xkTNs=
+From: George Guo <dongtai.guo@linux.dev>
+To: Mike Rapoport <rppt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Alexander Graf <graf@amazon.com>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	George Guo <guodongtai@kylinos.cn>
+Subject: Re: [PATCH v3 0/3] LoongArch: add KHO support and selftests
+Date: Tue,  9 Jun 2026 22:39:45 +0800
+Message-Id: <20260609143945.512688-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260601092823.110362-1-dongtai.guo@linux.dev>
+References: <20260601092823.110362-1-dongtai.guo@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51421426e0d4b154281e80d9f1c6c9a628d21c94.camel@HansenPartnership.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi James,
+Hi Mike, Huacai,
 
-On Tue, Jun 09, 2026 at 08:59:02AM -0400, James Bottomley wrote:
-> Are the details of this anywhere?  The last PUCK information I saw on
-> the kvm list was the cancellation of the March and April calls.
+Gentle ping on this v3. In the v2 review you mentioned you'd wait for
+v3 for a more detailed look -- v3 addresses both points (folded the two
+selftest patches into one, and replaced the LoongArch-specific kill
+loop with timeout(1), with the timeout value set per-arch in the conf).
 
-Here is the calendar link I use, which has the appointments GMeet links:
+No rush, just making sure it didn't slip through the cracks. Happy to
+spin a rebase if it's gone stale.
 
-https://calendar.google.com/calendar/embed?src=c_61a5b1f644739bf5bed7e5ea5fc3669ce32a2544c5db1c7c891702ca5090c7d5%40group.calendar.google.com
+Thanks!
 
-
--Joerg
+--
+George
