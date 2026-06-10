@@ -1,105 +1,150 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB2D330C62E
-	for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 07:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AB9372EF5
+	for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 07:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781075940; cv=none; b=EuUU+mvTnRs8xaj3cvOZpGSizSxARdG0aRfct+W9JIJEkABkD6xy9v5+89t/FlX3/pJb8rHt7/KNnpFJ8ZI01VbqN8nWnJo14c4ZrfxYMQgrWgLt9J/xhDLKju+fJyPhthTCqdTf5ssCSWPh8kyLj0/ioIUyZJO7cZiIEv6nIiw=
+	t=1781077057; cv=none; b=K0X3AtiRaZGwzwC1297xatLc7aWp88KhuLw2EqfEoGq10PIPho/mVnJpJgEBpPniT8DF1/3e0N/gz37Z7SA2ALMQi48Htz11Zutc/PL2//zPRx4src6rUaavab/o7L5FsuTBl1wdm9ljzQ3RZhlgyFXWdQyRaKMbwY+oDL5x8ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781075940; c=relaxed/simple;
-	bh=KabWLugESkcH2GuNNe6giO1ysnlLsWK4c6X3vJq4dUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JDl4eEE46UBhor+jIh1W63iru8+GcXRDX4Kb5c3JNyshL2wmopgseyaqMpc7JNZF+5YK0jueXmsA38SxFGW3q6nt23/FxiBS4mGnMnycacqJRY0c+V5ntDAfnGofLFHD2TS2x3RLyWbSGzakAv6X8C+ZbTD9JPCO2N9/5DvsNtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.15])
-	by gateway (Coremail) with SMTP id _____8CxHurZDylqkZQSAA--.48570S3;
-	Wed, 10 Jun 2026 15:18:50 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.15])
-	by front1 (Coremail) with SMTP id qMiowJDxaeDWDylqL62hAA--.45694S2;
-	Wed, 10 Jun 2026 15:18:47 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org
-Cc: chenhuacai@kernel.org,
-	xry111@xry111.site,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v3] mfd: loongson-se: Add multi-node support
-Date: Wed, 10 Jun 2026 23:13:54 +0800
-Message-Id: <20260610151354.32617-1-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1781077057; c=relaxed/simple;
+	bh=g8HJk/WF/WPN15g77t6Df0f0ynHp49fDIYS2UyArhq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jVd7UIqokhk3zfwEhGpXNh7r5NiHPk8OzHuUWx9gGaxcnGrvVVxlfMwrvqRcSH8/pWrct71RNZkqfya8E+nDNI4whL1w6eIEjPFsXi+cdeGP3fde2hrIaEI+RXwSx9BXcwp4RyZMn4RY58seokwI28AafJf4cSWUOz3cg2oi80g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4bF4HQH; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4bF4HQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27B41F0089A
+	for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 07:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781077056;
+	bh=QQ5tyIv8XSnLuljQqhXwRLjZ9cXqTPCZ3Z0kQgB9KsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=E4bF4HQHWUQ0H2fTqr4Dwqut6EZzn3WJatwkoPnHBemh7W+kSIaFknBL+EQMxAK+L
+	 WDUwQ4mbhypw3xCT88EwfNeALksqcMOXcc2EngkcE2Ak/0ScvewAQiKTSN2hYaYzBW
+	 4isxSdeGuwTKQ70dIOw0ijeyanQW5JfMv1Ewa5xWfy7SMTNrXJODB7J79+yIH/TeMH
+	 yscRxmlTzSkqPDnFmflrN7EOuVd8BAxz2lROK2tKbxArVPFgYVBl0YKrpG4vTgnDjb
+	 C7KNdgm8tZ7/hqhYaN8ZXMt2dXEKwOXcCTIB3oA09oVXbm+ip+ztrGec4OSiMN5Z1F
+	 Ziz0ePypPSb4A==
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-68bfcf11050so11903819a12.0
+        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 00:37:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9k1ln8tTaxf6dlyoLHA13x3RpmA8JOQldBcu6dZcGgsq9jRVGMi6OPoMTMOtxvj3Gk1j8ZnXuMQhc=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzYXd1Q/WU2GwnnMuP4WZV2uJWpsSX+yGKGGkijXsMS4FM8gNrI
+	YatKGFrV6k7SJvf7SrZzlYliCWR2Uwn4vbkEaSksfwGGVw0W+j/KCHDOmckVvyKm75kcrEcQjxR
+	VAwYX3NfhhdIWKX/lyyyjchDaWPNJIWg=
+X-Received: by 2002:a05:6402:3507:b0:691:b5aa:5a5e with SMTP id
+ 4fb4d7f45d1cf-69238753416mr3408874a12.20.1781077055301; Wed, 10 Jun 2026
+ 00:37:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxaeDWDylqL62hAA--.45694S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urW8tFW7Zw48Jr4fGF1fKrX_yoW8Ar1DpF
-	4UWa4qkr4UG3W0kw1DZa1DuF1YyayYq3y3GanFqw47Aas8tw1kZFy3tFW7WF43AFW8XayU
-	ZrZYgF48uFW8uFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28lY4IE
-	w2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84
-	ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l
-	84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcV
-	Aq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j6Hq
-	cUUUUU=
+References: <20260526125256.2511876-1-maobibo@loongson.cn> <20260526125256.2511876-3-maobibo@loongson.cn>
+ <CAAhV-H7RUdVJXOdjktn6vox3crhcXV0cEB1kUgu_zUVV5qpihA@mail.gmail.com>
+In-Reply-To: <CAAhV-H7RUdVJXOdjktn6vox3crhcXV0cEB1kUgu_zUVV5qpihA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 10 Jun 2026 15:37:57 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5X1a96mwTBtpuyTZKWbnV+T9xAnX1CcHQ6EikHJpKJLw@mail.gmail.com>
+X-Gm-Features: AVVi8CfXkKQ6SeWTboItptzJXu2Ap8aOimrt-BpLyZihuyHKwOTEgKXdBNLpPEU
+Message-ID: <CAAhV-H5X1a96mwTBtpuyTZKWbnV+T9xAnX1CcHQ6EikHJpKJLw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] LoongArch: KVM: Check msgint feature in interrupt post
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On the Loongson platform, each node is equipped with a security engine
-device. However, due to a hardware flaw, only the device on node 0 can
-trigger interrupts. Therefore, interrupts from other nodes are forwarded
-by node 0. We need to check in the interrupt handler of node 0 whether
-this interrupt is intended for other nodes, this can be accomplished via
-shared interrupt handling.
+On Sat, Jun 6, 2026 at 5:54=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
+>
+> Hi, Bibo,
+>
+> On Tue, May 26, 2026 at 8:53=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wr=
+ote:
+> >
+> > Interrupt AVEC is valid only if VM has msgint feature, and this feature
+> > is checked in interrupt handling. Since interrupt handling is executing
+> > in VM context switch, and it is hot path, here move the feature checkin=
+g
+> > in interrupt post rather than interrupt handling.
+> >
+> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> > ---
+> >  arch/loongarch/kvm/interrupt.c |  5 -----
+> >  arch/loongarch/kvm/vcpu.c      | 14 +++++++++-----
+> >  2 files changed, 9 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interr=
+upt.c
+> > index a18c60dffbba..48dd56aa4dc5 100644
+> > --- a/arch/loongarch/kvm/interrupt.c
+> > +++ b/arch/loongarch/kvm/interrupt.c
+> > @@ -36,8 +36,6 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, uns=
+igned int priority)
+> >
+> >         switch (priority) {
+> >         case INT_AVEC:
+> > -               if (!kvm_guest_has_msgint(&vcpu->arch))
+> > -                       break;
+> >                 dmsintc_inject_irq(vcpu);
+> >                 fallthrough;
+> >         case INT_TI:
+> > @@ -75,9 +73,6 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsig=
+ned int priority)
+> >
+> >         switch (priority) {
+> >         case INT_AVEC:
+> > -               if (!kvm_guest_has_msgint(&vcpu->arch))
+> > -                       break;
+> > -               fallthrough;
+> >         case INT_TI:
+> >         case INT_IPI:
+> >         case INT_SWI0:
+> > diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> > index df5be9b265e8..ebd432da3ca4 100644
+> > --- a/arch/loongarch/kvm/vcpu.c
+> > +++ b/arch/loongarch/kvm/vcpu.c
+> > @@ -1493,14 +1493,18 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *v=
+cpu, struct kvm_interrupt *irq)
+> >         if (vector >=3D EXCCODE_INT_NUM)
+> >                 return -EINVAL;
+> >
+> > -       if (intr > 0)
+> > +       if (!kvm_guest_has_msgint(&vcpu->arch) && (vector =3D=3D INT_AV=
+EC))
+> > +               return -EINVAL;
+> > +
+> > +       /*
+> > +        * Clear irq with INT_SWI0 (which is 0) is missing from SW side
+> > +        * INT_SWI0 is cleared by guest kernel with the similar instruc=
+tion
+> > +        * clear_csr_estat(1 << INT_SWI0)
+> > +        */
+> > +       if (intr >=3D 0)
+> >                 kvm_queue_irq(vcpu, intr);
+> >         else if (intr < 0)
+> I think "else if (intr < 0)" can be simplified as "else".
+Any updates for this series?
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
-V3: 
-Using shared interrupts (IRQF_SHARED) instead of manually
-iterating through all devices to check for interrupts.
 
-Link to v2:
-https://lore.kernel.org/all/20260427165133.23350-1-zhaoqunqin@loongson.cn/
+Huacai
 
- drivers/mfd/loongson-se.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mfd/loongson-se.c b/drivers/mfd/loongson-se.c
-index 3902ba377d6..e63ea40d5db 100644
---- a/drivers/mfd/loongson-se.c
-+++ b/drivers/mfd/loongson-se.c
-@@ -219,7 +219,7 @@ static int loongson_se_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < nr_irq; i++) {
- 		irq = platform_get_irq(pdev, i);
--		err = devm_request_irq(dev, irq, se_irq_handler, 0, "loongson-se", se);
-+		err = devm_request_irq(dev, irq, se_irq_handler, IRQF_SHARED, "loongson-se", se);
- 		if (err)
- 			dev_err(dev, "failed to request IRQ: %d\n", irq);
- 	}
-@@ -228,7 +228,7 @@ static int loongson_se_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
--	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, engines,
-+	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, engines,
- 				    ARRAY_SIZE(engines), NULL, 0, NULL);
- }
- 
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
--- 
-2.47.2
-
+>
+>
+> Huacai
+>
+> >                 kvm_dequeue_irq(vcpu, -intr);
+> > -       else {
+> > -               kvm_err("%s: invalid interrupt ioctl %d\n", __func__, i=
+rq->irq);
+> > -               return -EINVAL;
+> > -       }
+> >
+> >         kvm_vcpu_kick(vcpu);
+> >
+> > --
+> > 2.39.3
+> >
+> >
