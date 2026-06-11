@@ -1,203 +1,211 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C43237180
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 03:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9AD240D586;
+	Thu, 11 Jun 2026 03:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781147375; cv=none; b=f72gdHaBOU5mEi7CDoky4SWACkBnVQ1oMysQFCLu8jaXdu7S2xBxRJFCJ3hX5oPFG60VYUfnwuwmZEs+hg8GXthuT5a+Mh2DsN/5NebALnUCBbCQLwsd41C7ffMbOxq+U9uWqx5kt0NE9ze5+utxLnx/El2Z2Gf3pNXV2DSbw4I=
+	t=1781148199; cv=none; b=RYxrSnxb9yaZ04jgPpLJgzaHNylFWxC7pym3vPNdX470EB7Xon8m/28pOynKUgqnxWBSY3Dm7r+HRj4sjBlpxEUy4gzuFuNH/0VynZUHxbBzFujrq1rMV39APUJnd/UiSxu3XppyR5euktv4w8Xk/yy+uCFuJzgoxaRK4XLG+XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781147375; c=relaxed/simple;
-	bh=oKZuciULY9JBG2l4enUy3YkyVqstZ1dofPhvmB1PDVk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=E3+i7GZGOlmZErdB8Td7N3Z1p5+mrlU2gijYXSBtciEXthOhigeF2SBCv8YJ0L2PT6d09tiIs6kK2VmvEkxnS0+M/3gmOm/mN0QoYCv7xWrglNBmzbmOW1LUrRAtEpP6Kn6PTPjxrZK6R7EwsfSaL7r70tQhJAoTnBz5TawZlR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hsronQRh; arc=none smtp.client-ip=209.85.216.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsronQRh"
-Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-36d8b644473so6920411a91.3
-        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 20:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781147373; x=1781752173; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZYAsuub7tjh5DE2NtRU43cs+1enZX+YMETetqa3OJBs=;
-        b=hsronQRhavmpXWFjgTJ2pMPNjEapZBgMrOPSEERZn5u10Vf38St3ARU4Rcog9G3Knz
-         Nx7i2RtVrTScpx2UH3Vzi31HwjVcUFs4vIpKHjNhyOPlSLA6lRNIH7bPshQCcjBfVlUE
-         R8clFKudQcXD+QhvHcpRPky+AFACHPl6Oo1c8322YoVFr1wFit3+7TF1qDhIfzngMauS
-         3R7RWU2K1ncJIjmSMPA3ebA7TY1bI6Ai3kqVH1rq4vfLZouKOisBXpLbXnepTUG9Nl5U
-         uss7upViAADLdQJWsCl7zOoJN9o8cx5gOovQfQXWIzoZilQhN3N/brO4rPmwUg51YEUn
-         HdVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781147373; x=1781752173;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZYAsuub7tjh5DE2NtRU43cs+1enZX+YMETetqa3OJBs=;
-        b=bpPIzxpD8jG4Q22Z10i/0RLbyVc3Tko4kAoOyPH1s9iUCoeGT/Av89eqppd36/rdfS
-         L11s0+TexgbzZHYyGkpV8FKfdLhUxs55QuYUVqvgSvOxiZsFzHrkFTcbfYEDoVkEc4uO
-         ExaGgWBpZ+byqC8/0hGS2kuRFMi1dvpufwVYCfGYh5IGSxTR4B3qVa4dK3MIFnWS52xf
-         7Yix0W9WkabAsCW2ZI6+c68+/pjdMbkNyFek0kyCJHacGQoLe7BwsGuTlSlMcWWPKngP
-         o9WpPG2EK3041OqvzhJ1M8WzLtxuaVOwODLywBzohTEXka8GZtvkbS82ylPhLo5teUYh
-         1pAw==
-X-Forwarded-Encrypted: i=1; AFNElJ99qGLxBD4ECYYWgb7MuzxNKJ7cUoxY1hbQYHVyUDRnLPjEk+is1xN27qfghljamxu9HjcF2uc0Pg0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YyheEl8nO+9O9B2mnS0xaQvwDECrhtsp17QAyWHrpUdG+o+8i6F
-	iSU2kaJiyR3g+AMQT5+DDKephXey+fausVQEyUF//KRTBf5XhHwhwmE3
-X-Gm-Gg: Acq92OFzLnsn/emznz+NgUBE7xT5HaHVY9Mu7zKLzATGaILuZvQbTX89VK7PCJ+lgJ5
-	URYxpVsxPc0mGFKPGZEH0iQRUmuRyBoAjiXMSv5mgOShJyGSyaOefIfvG8sP2Ob0RNBLKDBnplH
-	yhLarGJ3lBi8Ih3vIRREN+Jl1M7Il7R4/LTqIsQ97aj7TLk+knYRFKt5bc2te+RXkh+MRYfX+cK
-	VjGsqorPQmqMTOYN3OKhGkOQmd6XmQmIkcOZYwp6xUha3/ldnPebpaf+vX9HmGvUUuaztqp3lBW
-	5SSwrWgKhvXKeiTCvBHlH0mmh21pYABWILETPFh6IZr/Gp20OpcCKO2CDU3T34L7bMncT7mhDxu
-	sjInMSHnP5n8fa1h1dMWKHyUzbEtCMV68asEUnT+/l/Q6V7rXeCxSo5MBzMz5D1TsmqqGuUs8jB
-	BE+wHIxVtDlmja1B1ndErzhwn1YCm134r1SZnulTy9Xg==
-X-Received: by 2002:a17:90b:570e:b0:36d:df4f:ab2 with SMTP id 98e67ed59e1d1-377a75cc2b7mr1151650a91.13.1781147373379;
-        Wed, 10 Jun 2026 20:09:33 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c86585b5356sm107409a12.14.2026.06.10.20.09.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2026 20:09:32 -0700 (PDT)
-Message-ID: <a3993db0-6975-455d-9674-4fd7cfcf80fc@gmail.com>
-Date: Thu, 11 Jun 2026 11:09:22 +0800
+	s=arc-20240116; t=1781148199; c=relaxed/simple;
+	bh=Ire34GyNL1aIr6ZC2zlXI0S2/dMeLu/+8HjtAfXHD/w=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=BMpsZ6IOIrlkqR6i3dtNPZKqMEqNzLZroh1MDwtQuM4ha3SSyHs2JSEZfxo2ArUsh52sBlCOQpcFLbHveQPg8/MLE2ITKC6xY6iFByNEg47XDYZGzW3lSINeTnqLSRiELDDVbsufexvNCpsH7dC5plNOJZJSzlzqWhLE4oJPeJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxhngfKipqo+wSAA--.25589S3;
+	Thu, 11 Jun 2026 11:23:11 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxLMIVKipq5YSiAA--.45500S3;
+	Thu, 11 Jun 2026 11:23:02 +0800 (CST)
+Subject: Re: [PATCH v2 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
+To: sashiko-reviews@lists.linux.dev
+Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev,
+ Huacai Chen <chenhuacai@kernel.org>
+References: <20260611015327.12108-2-yangtiezhu@loongson.cn>
+ <20260611020820.1F18B1F00893@smtp.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <b22f3a7f-4d23-a3be-73de-a30be745b444@loongson.cn>
+Date: Thu, 11 Jun 2026 11:23:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
-From: Wandun <chenwandun1@gmail.com>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- iommu@lists.linux.dev, zhaomeijing@lixiang.com, Rob Herring
- <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com, rppt@kernel.org,
- pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
- akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
- ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
- <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
+In-Reply-To: <20260611020820.1F18B1F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-In-Reply-To: <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxLMIVKipq5YSiAA--.45500S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3AFy5tFy8JF4fKFy8JryxJFc_yoW7Xr17pw
+	sxA3ZFqF4UJr1jga4UJ34DZr9xJws7C3y3KFZFka40kF15JF1Fvr12qas8ZF15A348ta4I
+	vrZYqrs29anrAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
+	14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1c
+	AE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8C
+	rVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtw
+	CIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x02
+	67AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
+	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8I3
+	8UUUUUU==
 
-
-
-On 6/11/26 10:09, Wandun wrote:
+On 2026/6/11 上午10:08, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] In 32-bit kernels, the `$tp` (current task pointer) holds a biased pointer during `__switch_to()`, exposing the kernel to memory corruption or crashes if a synchronous exception occurs.
+> - [High] Missing `try_get_task_stack()` in `show_stacktrace()` allows a use-after-free read of kernel stack memory, causing an information leak.
+> --
 > 
+> commit a68f9b2fc34ae06149cefb44ef7146643d52f85f
+> Author: Tiezhu Yang <yangtiezhu@loongson.cn>
 > 
-> On 5/27/26 11:29, Wandun Chen wrote:
->> From: Wandun Chen <chenwandun@lixiang.com>
->>
->> On SoCs that carve out large firmware-owned reserved memory (GPU
->> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
->> those carveouts as part of system RAM even though their contents are
->> firmware state that is not useful for kernel crash analysis.
->>
->> This series introduces an opt-in 'dumpable' flag [1] on struct
->> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
->> DT-based architectures (arm64, riscv, loongarch). By default reserved
->> regions are treated as non-dumpable; CMA regions are explicitly opted
->> in because their pages are returned to the buddy allocator and may
->> carry key crash-analysis data.
->>
->> The series is organized as follows:
->> Patches 1-3: Pre-existing fixes and a small prep change.
->> Patches 4-5: Restructure to allow appending /memreserve/ entries.
->> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
->> Patch 8: Add generic kdump helpers.
->> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
->>                elfcorehdr preparation.
-> Hi,
+> LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
 > 
-> Gentle ping on this series.
+> Select THREAD_INFO_IN_TASK for LoongArch to move thread_info off the
+> stack into task_struct. Initialize a per-CPU cpu_tasks variable, update
+> assembly paths to restore the $tp register from it, and adjust stack
+> accesses and unwinding to account for the new configuration.
 > 
-> Status summary:
-> -patch 03: respun separately per Rob's suggestion, picked up for 7.2
-> -patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon
-> The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
-> awaiting review. your feedback would be greately appreciated. I know we
-> are at the end of 7.1 -rc cycle, I don't want to rush this series, just
-> collecting more feedback, and will send next version based on 7.2-rc1.
-> If spliting the series into smaller logical group would make review
-> easier, please let me know. Best regards, Wandun
-
-Apologies for the formatting issue in my previous email.
-Here is the properly formatted version.
-
-Gentle ping on this series.
-
-Status summary:
-- patch 03: respun separately per Rob's suggestion, picked up for 7.2
-- patch 06: Acked-by: Marek Szyprowski
-- patch 09: Acked-by: Will Deacon
-
-The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
-awaiting review. Your feedback would be greatly appreciated.
-
-I know we are at the end of 7.1-rc cycle, I don't want to rush this
-series, just collecting more feedback, and will send next version based
-on 7.2-rc1.
-
-If splitting the series into smaller logical groups would make review
-easier, please let me know.
-
-Best regards,
-Wandun
-
-
->>
->> v2 --> v3:
->> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
->> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
->> 3. Add some prepare patches.
->>
->> v1 --> v2:
->> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->>     feedback [1], v2 drop that property and exclude reserve memory
->>     by default.
->> 2. Split some prepared patches from the original patches.
->> 3. Address coding-style comments on patch 5 from Rob.
->>
->> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-
->> robh@kernel.org/
->> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-
->> chenwandun%40lixiang.com?part=4
->>
->> Wandun Chen (11):
->>    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
->>    kexec/crash: provide crash_exclude_mem_range() stub when
->>      CONFIG_CRASH_DUMP=n
->>    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
->>      fails
->>    of: reserved_mem: zero total_reserved_mem_cnt if no valid
->>      /reserved-memory entry
->>    of: reserved_mem: split alloc_reserved_mem_array() from
->>      fdt_scan_reserved_mem_late()
->>    of: reserved_mem: add dumpable flag to opt-in vmcore
->>    of: reserved_mem: save /memreserve/ entries into the reserved_mem
->>      array
->>    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
->>    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
->>    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
->>    loongarch: kdump: exclude non-dumpable reserved memory regions from
->>      vmcore
->>
->>   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
->>   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
->>   arch/riscv/kernel/machine_kexec_file.c     |   4 +
->>   drivers/of/fdt.c                           |  11 +-
->>   drivers/of/of_private.h                    |   3 +
->>   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
->>   include/linux/crash_core.h                 |   6 ++
->>   include/linux/of_reserved_mem.h            |  15 +++
->>   kernel/dma/contiguous.c                    |   1 +
->>   9 files changed, 157 insertions(+), 12 deletions(-)
->>
+>> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+>> index f377d8f5c51a6..d6e0d05d6fd39 100644
+>> --- a/arch/loongarch/kernel/switch.S
+>> +++ b/arch/loongarch/kernel/switch.S
 > 
+> [ ... ]
+> 
+>> @@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
+>>   	LONG_SPTR	t8, t7, 0
+>>   #endif
+>>   
+>> -	move	tp, a2
+>> +	move		tp, a1
+>>   	cpu_restore_nonscratch a1
+>>   
+>> -	li.w		t0, _THREAD_SIZE
+>> -	PTR_ADD		t0, t0, tp
+>> +	LONG_LPTR	t0, a1, (TASK_STACK - TASK_STRUCT_OFFSET)
+>> +	PTR_LI		t1, _THREAD_SIZE
+>> +	PTR_ADD		t0, t0, t1
+>>   	set_saved_sp	t0, t1, t2
+>>   
+>>   	LONG_LPTR	t1, a1, (THREAD_CSRPRMD - TASK_STRUCT_OFFSET)
+>> @@ -45,6 +46,7 @@ SYM_FUNC_START(__switch_to)
+>>   
+>>   #ifdef CONFIG_32BIT
+>>   	PTR_ADDI	a0, a0, -TASK_STRUCT_OFFSET
+>> +	PTR_ADDI	tp, tp, -TASK_STRUCT_OFFSET
+> 
+> [Severity: High]
+> Could the delayed removal of the bias from the thread pointer cause
+> issues if a synchronous exception occurs?
+> 
+> For 32-bit kernels, a1 is biased by TASK_STRUCT_OFFSET at the start
+> of __switch_to(). The code copies this biased pointer directly into tp
+> and only removes the bias at the end of the function.
+> 
+> While local interrupts are disabled during this window, synchronous
+> exceptions such as hardware data watchpoints might still trigger. If
+> do_watch() executes during this window, it would use the biased tp
+> (pointing to next_task + 2000), potentially causing out-of-bounds
+> memory accesses or kernel panics.
+
+I used "PTR_ADDI        tp, a1, -TASK_STRUCT_OFFSET" rather than
+"move		tp, a1" before sending v2, but Huacai suggested
+the current code.
+
+@Huacai, what is your opinion?
+
+
+>>   #endif
+>>   	jr	ra
+>>   SYM_FUNC_END(__switch_to)
+> 
+>> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+>> index 5d49b742e3bf6..7e4206da4876b 100644
+>> --- a/arch/loongarch/kernel/traps.c
+>> +++ b/arch/loongarch/kernel/traps.c
+>> @@ -90,6 +90,9 @@ static void show_backtrace(struct task_struct *task, const struct pt_regs *regs,
+>>   	if (!task)
+>>   		task = current;
+>>   
+>> +	if (!try_get_task_stack(task))
+>> +		return;
+>> +
+> 
+> [Severity: High]
+> Is there a similar use-after-free risk in show_stacktrace() when
+> reading from the stack pointer?
+> 
+> While try_get_task_stack() correctly protects show_backtrace(),
+> show_stacktrace() appears to read directly from the task's stack
+> pointer via __get_addr() without acquiring a reference.
+> 
+> With THREAD_INFO_IN_TASK enabled, the stack can be freed before the
+> task_struct. If show_stacktrace() is called on an exiting task
+> (for example, via SysRq-T iterating over all tasks), could it read
+> from a freed and reallocated stack, leaking memory contents?
+> 
+
+I will do the following changes:
+
+diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+index 7e4206da4876..776523747ea3 100644
+--- a/arch/loongarch/kernel/traps.c
++++ b/arch/loongarch/kernel/traps.c
+@@ -90,9 +90,6 @@ static void show_backtrace(struct task_struct *task, 
+const struct pt_regs *regs,
+         if (!task)
+                 task = current;
+
+-       if (!try_get_task_stack(task))
+-               return;
+-
+         printk("%sCall Trace:", loglvl);
+         for (unwind_start(&state, task, pregs);
+               !unwind_done(&state); unwind_next_frame(&state)) {
+@@ -100,8 +97,6 @@ static void show_backtrace(struct task_struct *task, 
+const struct pt_regs *regs,
+                 print_ip_sym(loglvl, addr);
+         }
+         printk("%s\n", loglvl);
+-
+-       put_task_stack(task);
+  }
+
+  static void show_stacktrace(struct task_struct *task,
+@@ -112,6 +107,12 @@ static void show_stacktrace(struct task_struct *task,
+         unsigned long stackdata;
+         unsigned long *sp = (unsigned long *)regs->regs[3];
+
++       if (!task)
++               task = current;
++
++       if (!try_get_task_stack(task))
++               return;
++
+         printk("%sStack :", loglvl);
+         i = 0;
+         while ((unsigned long) sp & (PAGE_SIZE - 1)) {
+@@ -134,6 +135,8 @@ static void show_stacktrace(struct task_struct *task,
+         }
+         pr_cont("\n");
+         show_backtrace(task, regs, loglvl, user);
++
++       put_task_stack(task);
+  }
+
+  void show_stack(struct task_struct *task, unsigned long *sp, const 
+char *loglvl)
+
+Thanks,
+Tiezhu
 
