@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 246EB38D3FF
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2307F378D7B
 	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 06:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781161107; cv=none; b=Wn5t/7J2WtGm9M/KDYvfQArARQiXLt5PaJ6F/qT15ALkznqE316uBwrU64j3trvo9puYEbOkcsg8OBIQxK15yzpK7mwAhrzN627Es/7kZu7LvNE9gyaGE8oWlglHDsKNJwG3F5PA3HUHoUQjyPFDgecOUvzkBc0l3aqD2mkYlCs=
+	t=1781161108; cv=none; b=GHA50Y/MhgKzbgztiw9B8r3uU3EfCc6Y9ypt0bpWMMsUT4QiRhzX2oVlrqo9jIrKNnyLbUhcnF6HrXjK+EpYpr3Wl+gGsGoSwHoUKqGme4WiNUfmYqTDXPKdwJqWbHX9iEKgUj1ZhfNxi7lw1I+V7pdVCqfHDluOZ+mmWsH7rGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781161107; c=relaxed/simple;
-	bh=wtjGVCPseCZlU8bhQMc+Vuq1ybQn2XdgN4mNJBONrU4=;
+	s=arc-20240116; t=1781161108; c=relaxed/simple;
+	bh=7GZwbmPRHR2StKpN1pDsh8p/4OSw1XrjQZbQJQP5jIc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qZvFLot65FrvVAZFkCbJhECuqzQEymTs/X+AF5xnqVSiTDc9GMR39mzc1KmkXqDFz6XOGGFRJ3CviK4meA7udT1fT41nMI1n/JbYlJYemfjXiB89Je3uzt5p57KY3R4rRaRP+PBhuHIL0w/63teAj6gMQasu3kKBoP+1y22DLR0=
+	 MIME-Version; b=p3n3afkDps9Ztgj0tiiPflJXOLvWlHQw/CeXFhD0/dTU0n56kE5vrIbN5h2Caps9eLKLMyVco2HyI7wQQirKYKi4GbaWlRJsX+beennTQsG+S8pJmyA0SZKXDNtVE5DWSTU2qdzBxY5DzVhA2yOrSJSYgvKfEMdwPgG9+xjNkkE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxVumNXCpq6fsSAA--.44541S3;
+	by gateway (Coremail) with SMTP id _____8CxQ_CNXCpq7fsSAA--.50190S3;
 	Thu, 11 Jun 2026 14:58:21 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJCxPMKIXCpq0KeiAA--.44793S4;
-	Thu, 11 Jun 2026 14:58:19 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxPMKIXCpq0KeiAA--.44793S5;
+	Thu, 11 Jun 2026 14:58:21 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>
 Cc: kernel@xen0n.name,
 	kvm@vger.kernel.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/6] LoongArch: KVM: Check msgint feature in interrupt post
-Date: Thu, 11 Jun 2026 14:58:11 +0800
-Message-Id: <20260611065815.1439154-3-maobibo@loongson.cn>
+Subject: [PATCH v6 3/6] LoongArch: KVM: Use existing macro about interrupt bit mask
+Date: Thu, 11 Jun 2026 14:58:12 +0800
+Message-Id: <20260611065815.1439154-4-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20260611065815.1439154-1-maobibo@loongson.cn>
 References: <20260611065815.1439154-1-maobibo@loongson.cn>
@@ -37,60 +37,80 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxPMKIXCpq0KeiAA--.44793S4
+X-CM-TRANSID:qMiowJCxPMKIXCpq0KeiAA--.44793S5
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Interrupt AVEC is valid only if VM has msgint feature, and this feature
-is checked in interrupt handling. Since interrupt handling is executing
-in VM context switch, and it is hot path, here move the feature checking
-in interrupt post rather than interrupt handling.
+With interrupt post, register CSR_GINTC and CSR_ESTAT is used, and
+CSR_ESTAT is used for percpu interrupt injection and CSR_GINTC is for
+external hardware interrupt injection.
+
+Here use existing macro about interrupt bit of register CSR_GINTC and
+CSR_ESTAT, rather than hard coded constant value.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/kvm/interrupt.c | 5 -----
- arch/loongarch/kvm/vcpu.c      | 3 +++
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ arch/loongarch/include/asm/kvm_vcpu.h | 43 ++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
 
-diff --git a/arch/loongarch/kvm/interrupt.c b/arch/loongarch/kvm/interrupt.c
-index a18c60dffbba..48dd56aa4dc5 100644
---- a/arch/loongarch/kvm/interrupt.c
-+++ b/arch/loongarch/kvm/interrupt.c
-@@ -36,8 +36,6 @@ static int kvm_irq_deliver(struct kvm_vcpu *vcpu, unsigned int priority)
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index 3784ab4ccdb5..a70a32103523 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -10,22 +10,37 @@
+ #include <asm/loongarch.h>
  
- 	switch (priority) {
- 	case INT_AVEC:
--		if (!kvm_guest_has_msgint(&vcpu->arch))
--			break;
- 		dmsintc_inject_irq(vcpu);
- 		fallthrough;
- 	case INT_TI:
-@@ -75,9 +73,6 @@ static int kvm_irq_clear(struct kvm_vcpu *vcpu, unsigned int priority)
+ /* Controlled by 0x5 guest estat */
+-#define CPU_SIP0			(_ULCAST_(1))
+-#define CPU_SIP1			(_ULCAST_(1) << 1)
+-#define CPU_PMU				(_ULCAST_(1) << 10)
+-#define CPU_TIMER			(_ULCAST_(1) << 11)
+-#define CPU_IPI				(_ULCAST_(1) << 12)
+-#define CPU_AVEC                        (_ULCAST_(1) << 14)
++#define CPU_SIP0			BIT(INT_SWI0)
++#define CPU_SIP1			BIT(INT_SWI1)
++#define CPU_HWI0			BIT(INT_HWI0)
++#define CPU_HWI1			BIT(INT_HWI1)
++#define CPU_HWI2			BIT(INT_HWI2)
++#define CPU_HWI3			BIT(INT_HWI3)
++#define CPU_HWI4			BIT(INT_HWI4)
++#define CPU_HWI5			BIT(INT_HWI5)
++#define CPU_HWI6			BIT(INT_HWI6)
++#define CPU_HWI7			BIT(INT_HWI7)
++#define CPU_PMU				BIT(INT_PCOV)
++#define CPU_TIMER			BIT(INT_TI)
++#define CPU_IPI				BIT(INT_IPI)
++#define CPU_AVEC			BIT(INT_AVEC)
++#define KVM_ESTAT_INTI_MASK		(CPU_SIP0 | CPU_SIP1 | CPU_PMU | CPU_TIMER \
++						| CPU_IPI | CPU_AVEC)
++#define KVM_ESTAT_EXTI_MASK		(CPU_HWI0 | CPU_HWI1 | CPU_HWI2 | CPU_HWI3 \
++						| CPU_HWI4 | CPU_HWI5 | CPU_HWI6 | CPU_HWI7)
  
- 	switch (priority) {
- 	case INT_AVEC:
--		if (!kvm_guest_has_msgint(&vcpu->arch))
--			break;
--		fallthrough;
- 	case INT_TI:
- 	case INT_IPI:
- 	case INT_SWI0:
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index df5be9b265e8..e986146d2272 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1493,6 +1493,9 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
- 	if (vector >= EXCCODE_INT_NUM)
- 		return -EINVAL;
+ /* Controlled by 0x52 guest exception VIP aligned to estat bit 5~12 */
+-#define CPU_IP0				(_ULCAST_(1))
+-#define CPU_IP1				(_ULCAST_(1) << 1)
+-#define CPU_IP2				(_ULCAST_(1) << 2)
+-#define CPU_IP3				(_ULCAST_(1) << 3)
+-#define CPU_IP4				(_ULCAST_(1) << 4)
+-#define CPU_IP5				(_ULCAST_(1) << 5)
+-#define CPU_IP6				(_ULCAST_(1) << 6)
+-#define CPU_IP7				(_ULCAST_(1) << 7)
++#define VIP_DELTA			(INT_HWI0 - CSR_GINTC_VIP_SHIFT)
++#define CPU_IP0				BIT(INT_HWI0 - VIP_DELTA)
++#define CPU_IP1				BIT(INT_HWI1 - VIP_DELTA)
++#define CPU_IP2				BIT(INT_HWI2 - VIP_DELTA)
++#define CPU_IP3				BIT(INT_HWI3 - VIP_DELTA)
++#define CPU_IP4				BIT(INT_HWI4 - VIP_DELTA)
++#define CPU_IP5				BIT(INT_HWI5 - VIP_DELTA)
++#define CPU_IP6				BIT(INT_HWI6 - VIP_DELTA)
++#define CPU_IP7				BIT(INT_HWI7 - VIP_DELTA)
++#define KVM_GINTC_IRQ_MASK		(CPU_IP0 | CPU_IP1 | CPU_IP2 | CPU_IP3 \
++						| CPU_IP4 | CPU_IP5 | CPU_IP6 | CPU_IP7)
  
-+	if (!kvm_guest_has_msgint(&vcpu->arch) && (vector == INT_AVEC))
-+		return -EINVAL;
-+
- 	if (intr > 0)
- 		kvm_queue_irq(vcpu, intr);
- 	else if (intr < 0)
+ #define MNSEC_PER_SEC			(NSEC_PER_SEC >> 20)
+ 
 -- 
 2.39.3
 
