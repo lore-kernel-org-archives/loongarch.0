@@ -1,96 +1,155 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D64A1DDC07;
-	Thu, 11 Jun 2026 08:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8B937B400
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 10:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781167702; cv=none; b=K1BqX4FVqWRiyx3mpoCdB1GsTDrDuswNbMRZ95QG64wlGmUsXiuypzmOTOIYL+uMcH00hyED84Utq5uugkbpIi1l84Rqt/6hjXxcQpPrDEKCa1AThA0NpGB6Ti0g0tuHsftA42f5ZuU6SEDoUMkrjR/E4NkKa0l4/ZF2iPw3xWM=
+	t=1781172587; cv=none; b=ZIckwFgc4kHsflAjq0Z4GWE3xkXLK4npC8eWVg4D9KK+4mShXv0FZ/zk/4zphWUGjUQwN+oz0FNDqkKBtmQ+KpqC0MAElPrHYTckRPB08EimisAfdVO2W0Fjzhs5tTV7pGSA1Q/N8VrimZc6VKC03fyJ40akbPWsCJ6GP2o84As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781167702; c=relaxed/simple;
-	bh=cfQvIbp0jM4STUEjGfy90m0zb61Kkokx5L71mI65VxY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/joIYeD1DPVt5wzglM1jgPyZSewMZciqsDdag8On9aIvT9MF/f2jkXWsErXDe4PqjkxMIfExMsSrtI7kUy7PXcOr4w2b23gcKtct8G3PCRoGzmXrj9FJGwXni5Zj7N8bMZbL5S6eyJdmCH4H87Kiq7E0y0h/An3oSEkKF7gEZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=oXJi7PBi; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1781172587; c=relaxed/simple;
+	bh=hSL7AgWvVAVo8DbBzRKoIZjUcwgxeNHguFbQGBfc5fQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wl8PPnE3kKCAOlCkGySBFbKzDchaa6NuApy3xT0/KVgT6oeDvulZwMitNdESiPngCVSNn7pfQJflLleQ/iU117WfXGUJchsKoyPqlHZ+68FSbE3Obmkz7a50dvcU/G7n122HbVUe7J3Yg9UI8UNpvP9fRSg9vzXbVeql8DEkwMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fiz8ARK2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="oXJi7PBi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=8LIqtcZKNkc2uKbRR6MR2liMH+f4E+aYDAhp5GtwOQQ=; 
-	b=oXJi7PBiInOeAV+gHQ6An5Hww69oa5wyEJPX2qscey0SP1ymdHHu+s2CR6wA+8E8EfQSb5kRgQA
-	qWs0zhsEE5RcPnAHjoo0M1sUW/BEGfQAQ0zvZk4/l5CKkG8qXqJdX1Q079sCS0QR75jPJ+Vqtp172
-	qpLlKhcTSJ+Dsf8DtO7+pkB4Hu6RV9fSzsADrLQrv74Ln9llAjSp8KUhyt6uOnFwaGp4hvjxKqJeb
-	C7/o4JeZyj/0Io1Z+wEnJvsBd3g/RkZ4Fsy0F4D1ve/n4b6Dxjqqf2JAThWPZxwtg7eYeDMSUT4L/
-	Qi1ZsWrZ2Uwu0qVSOdeZSYhxJemAWE0rABig==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.98.2 #2 (Debian))
-	id 1wXb5E-00000004XS2-3IHN;
-	Thu, 11 Jun 2026 16:48:17 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 11 Jun 2026 16:48:16 +0800
-Date: Thu, 11 Jun 2026 16:48:16 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yinggang Gu <guyinggang@loongson.cn>, Lee Jones <lee@kernel.org>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] crypto: loongson - Remove broken and unused loongson-rng
-Message-ID: <aip2ULHUVT8YiMuh@gondor.apana.org.au>
-References: <20260529233208.8703-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fiz8ARK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0261F00893
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 10:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781172584;
+	bh=AzR8jjvvsTbu4EalP5UYzjETmzHFZnn5h+Mp2gBvyQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=fiz8ARK28O8q6A/B6borEx38TESuRzJEu7pTceXN8GTkuKCt+ZrrlVpnVLRJgR0Dw
+	 mW4Xwu07Z8W3Zav/dBxDW/HE0VFS06EvDGHOcrCui31POSRD/+NXUeREuVLp+XPtKi
+	 UfdF1CfPGUNBzpY2i/FkbFz4BsXYfTuLfwYfzlx5vJa11jfeTQuvDwI4K54meHI5R5
+	 5zFirww27H6KvIpdU23j+unZWywbeaLX7E+3SUWs5/4lKoCcnkHsAeChrSQOZ74zMx
+	 kz7h0W86YnVdunMLdv6Sz/zaQG3GU9vzsgyidfJodYMp893EfpnT/0TH+NhdsfIwT8
+	 OgUOKRNE+o4lA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-69165354c87so6410061a12.3
+        for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 03:09:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+qW7Qw9uIzGexF4pIPEukWBHQwsiRKivrOA4n6V3k2+gKF0kQNBjctjwlrzDX5LJ5TGBQI5y9Nmg8=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxch+5Pbhir7RSOzXNjGy55BAqabAoQDjDdQCqmzCKXPsEXn4lD
+	EU+gWwm9CftAn6eb6EO6NhoXmkfZeB1ZYDXVTUZ74d82zerKsAT4+JXyfkhYNAwvLzlRLb6n29Q
+	z2KBYc06niQKBT4jIku8h+F/V/RZWnDw=
+X-Received: by 2002:a05:6402:194a:b0:676:988e:8eb6 with SMTP id
+ 4fb4d7f45d1cf-6930e31053cmr951330a12.26.1781172583581; Thu, 11 Jun 2026
+ 03:09:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260529233208.8703-1-ebiggers@kernel.org>
+References: <20260611065815.1439154-1-maobibo@loongson.cn> <20260611065815.1439154-6-maobibo@loongson.cn>
+In-Reply-To: <20260611065815.1439154-6-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 11 Jun 2026 18:10:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
+X-Gm-Features: AVVi8CdwzFFYmFEPd-8FS8BfDaTAzx1vUsx6LelRHZFj3zaADFJBXNkhX14Q07U
+Message-ID: <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] LoongArch: KVM: Add valid bit check when set ESTAT
+ CSR register
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 29, 2026 at 04:32:08PM -0700, Eric Biggers wrote:
-> The loongson-rng rng_alg has several vulnerabilities, including not
-> providing forward security, and a use-after-free bug due to the use of
-> wait_for_completion_interruptible().
-> 
-> Meanwhile, the rng_alg framework doesn't really have any purpose in the
-> first place other than to access the software algorithms crypto/drbg.c
-> and crypto/jitterentropy.c.  Hardware-specific rng_algs have no
-> in-kernel user, and unlike hwrng there's no feed into the actual Linux
-> RNG.  As such, there's really no point to this code.  There are of
-> course other rng_alg drivers that are similarly unused, but they're
-> similarly in the process of being phased out, e.g.
-> https://lore.kernel.org/r/20260529193648.18172-1-ebiggers@kernel.org and
-> https://lore.kernel.org/r/20260529220430.34135-1-ebiggers@kernel.org
-> 
-> Given that, there's no point in fixing forward these vulnerabilities,
-> and it makes much more sense to simply roll back the addition of this
-> driver.  If this platform provides TRNG (not PRNG) functionality, it
-> could make sense to add a hwrng driver, but it would be quite different.
-> 
-> Link: https://lore.kernel.org/linux-crypto/20260525145939.GC2018@quark/
-> Fixes: 766b2d724c8d ("crypto: loongson - add Loongson RNG driver support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+Hi, Bibo,
+
+On Thu, Jun 11, 2026 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> When set ESTAT CSR register in function _kvm_setcsr(), valid bit check
+> is added here. Also interrupt CPU_AVEC is checked by msgint feature.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->  MAINTAINERS                                 |   1 -
->  arch/loongarch/configs/loongson32_defconfig |   1 -
->  arch/loongarch/configs/loongson64_defconfig |   1 -
->  drivers/crypto/Kconfig                      |   1 -
->  drivers/crypto/Makefile                     |   1 -
->  drivers/crypto/loongson/Kconfig             |   6 -
->  drivers/crypto/loongson/Makefile            |   1 -
->  drivers/crypto/loongson/loongson-rng.c      | 209 --------------------
->  8 files changed, 221 deletions(-)
->  delete mode 100644 drivers/crypto/loongson/Kconfig
->  delete mode 100644 drivers/crypto/loongson/Makefile
->  delete mode 100644 drivers/crypto/loongson/loongson-rng.c
+>  arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index e986146d2272..4f67eefbd4f1 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kv=
+m, int cpuid)
+>
+>  static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+>  {
+> -       unsigned long gintc;
+> +       unsigned long gintc, estat;
+>         struct loongarch_csrs *csr =3D vcpu->arch.csr;
+>
+>         if (get_gcsr_flag(id) & INVALID_GCSR)
+> @@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigne=
+d int id, u64 *val)
+>                 preempt_enable();
+>
+>                 /* ESTAT IP0~IP7 get from GINTC */
+> -               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0x=
+ff;
+> -               *val =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) | (gi=
+ntc << 2);
+> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KV=
+M_GINTC_IRQ_MASK;
+> +               estat =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~K=
+VM_ESTAT_EXTI_MASK;
+> +               *val =3D estat | (gintc << VIP_DELTA);
+>                 return 0;
+>         }
+>
+> @@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigne=
+d int id, u64 *val)
+>
+>  static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+>  {
+> -       int ret =3D 0, gintc;
+> +       int ret =3D 0;
+> +       unsigned long gintc, estat;
+>         struct loongarch_csrs *csr =3D vcpu->arch.csr;
+>
+>         if (get_gcsr_flag(id) & INVALID_GCSR)
+> @@ -648,11 +650,16 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsig=
+ned int id, u64 val)
+>
+>         if (id =3D=3D LOONGARCH_CSR_ESTAT) {
+>                 /* ESTAT IP0~IP7 inject through GINTC */
+> -               gintc =3D (val >> 2) & 0xff;
+> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> -
+> -               gintc =3D val & ~(0xffUL << 2);
+> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
+> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & ~K=
+VM_GINTC_IRQ_MASK;
+> +               gintc |=3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+I think read & write can be combined, which means it can be simplified as:
+                gintc =3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+                kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> +
+> +               /* only set valid ESTAT bits */
+> +               estat =3D val & ~KVM_ESTAT_EXTI_MASK;
+> +               estat &=3D CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_ESUBC=
+ODE;
+> +               if (!kvm_guest_has_msgint(&vcpu->arch))
+> +                       estat &=3D ~CPU_AVEC;
+> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
+I think write csr may lose bits from the original value, so
+                kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+should be
+                kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+
+If you agree, I will change it when I apply because all others look good to=
+ me.
+
+Huacai
+
+>
+>                 return ret;
+>         }
+> --
+> 2.39.3
+>
