@@ -1,90 +1,171 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 180B31E7660
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 01:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5AF23FC5A
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 02:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781142815; cv=none; b=eKaNTge8G5fOvi4KDU1PhSp3gljqG5FXZsBOh+uVypnv/xyGaC2r7XnLPH5EmMPQ4lzvPU+PMwMcDY5XgE0OL0UZArgtFgrlr8S1ET4Id5UjX4CpX/cRUU+b/0yhPxpAJLl9KJi2VOhjDuzLwpANtB+NtfabP3i6GPJCOAn1pJk=
+	t=1781143792; cv=none; b=mx1jkG12OpL8n/BzuC9zskgpFQWFD3FcxIHWSu0Ii8SdNW6ocPDmDvseaxtvdV7c4WD71QfKThTj6jHeO10eeE/Z1qdkT4eE5EX/L6+iyPo0BRKFfXM9ODsdSagz3GBU02UY8iCpAiMWGX7KxNTex6rcU8RhRRnCd0ok28Fl6fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781142815; c=relaxed/simple;
-	bh=RDVFVRReQjfk9qU39UCYeD0z3cOE4puQLG6+tKjJJOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uYWSzlktWWBg96RCa+fPc/rkMdsEuTjtGvWrFr8Y9F4eGcZQBP8WbtjVEFvY4q9JQLXvIwcejn5GCI+qwe/b69Nsv/nKVbudKWjcPWLB+2A0dUWz/yfCJ/wKr29/dZskn6g8auQyp5i0KZGGtoJFcJu9DldcI79oykUYmvQEsn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxVXgZFSpqCOcSAA--.25540S3;
-	Thu, 11 Jun 2026 09:53:29 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBx68EXFSpqrXaiAA--.43928S2;
-	Thu, 11 Jun 2026 09:53:28 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Move thread_info into task_struct for LoongArch
-Date: Thu, 11 Jun 2026 09:53:24 +0800
-Message-ID: <20260611015327.12108-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1781143792; c=relaxed/simple;
+	bh=7IoqrrsIUXvxJNgaFncXuFymv5csPW4jbxzDZ4eJZ3I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GFVW0ldmNvx1Cz9B9GrJrU6ymiL7YMUPpuMEktM8GcCjo00vMy049ZxrjA+opdh+xCZ/pk2xR3tMJ1c/bzaye2kRwRvIwsA/wLNY+pVU5H35a9VEVCNPHWqYUKnDmOmBP1LABRk/UEQNvvnGurHLk0F6Fw0YGhJ3/9Uj6aQrlgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RE9QEp/b; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RE9QEp/b"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2c0c3546924so49663075ad.3
+        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 19:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781143789; x=1781748589; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rrKKxjQkCCq7BO+0b9GvAXj1oVgaGXMfePrho45byEA=;
+        b=RE9QEp/bEfSx5pyk4MDOv9X2oa1F/dxxyp0K70MrXOM3KCK1Fb6vWrYlf4qrcGvPxS
+         EpNMycjtDiZmpyDjXn9Vxx1WYGnpERRWQ+YxkIXDZiJOUPqG69X9w2OPHP+3H6C9JSmJ
+         cHIiUPBp4zTsUK1NxSJiYfgg4DSVNStYUp5vVnB4GRzrXWl9+JXNg5TutU7BugR5+hc1
+         Zqu5tVFj+UN0KpAe6/gYV2oWF7pq/WsMaNWKchohD9Gp+p1wXDfbbN2fP/PZBnrHyKH+
+         eemlH42jOvA1a9qJPhA63k7trBBHr6M0Z3yMQxZQCi0TrrNVEAAxI/xKa6LzyyIHUdb8
+         PNhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781143789; x=1781748589;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rrKKxjQkCCq7BO+0b9GvAXj1oVgaGXMfePrho45byEA=;
+        b=oCRpQPkgHGIcfFAo4VRIopPEc9cqh7PwVaL8eKLcJP0NrnfURK3rcvvQUGR5BiKEyJ
+         OabBv7RE2VFYyF4UCmPiqKgPdgUorgsAq2+JOnrWt3vcUdn7QTP2GTYDxW/xFWxGvlIi
+         zFMVMlu2iOgAdPgHdHWTG2qU0gzW7I5FU9zvgVlk2nFC6OXhlA8V/zonttUb5788hDMu
+         1wi55Wy/rtQwMvVlnrciwE/ZDnTRhlSX4IrhdTGDxlgyF5X8rUwvbK9AyOEds/35trm7
+         Y/gfgw6OkfN+fkDxlSWzGUUG8DGA9JGiYMRDXA+Iiu68cywUFnygLXfHhyPT91EIHy4m
+         64QA==
+X-Forwarded-Encrypted: i=1; AFNElJ85u0el95R6ihrS2dY7tYQ6gssS+/mc3yBfa7/fxtOjffZ0wWu+5f5uWOZnjJ3HOEv6Se+R4cn1YGg=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwlqAHf8QrteY6I8jy80SqlK1fnZZ+uyvFOhWwIOjjlhoM21Fay
+	5u96Nj40s2qPtMHohXyf9pj+kX8wa4ibgKNt2deQUzu4PevOrxg6gRnD
+X-Gm-Gg: Acq92OHDzekT0XxCNUMJkXPgtR/Oxwjju6/nKgyvf3QF7MbzcAi1x2hwZGMTKWWMwqj
+	sB998/FE+hhmHDbtY/KYf5StvX5hn/lMz5codxlRa5qWUdNgXK0aT47fI94wYISIN36xTszmyMN
+	haAKQUaYNqdAjsAX5JEGunJEyFEUUm0sAYyUdRLYZqIKaE7NFXhSXQ48RWNM7jafVSI4fRsPj+9
+	GiaTil/MuK7iXmxz2mSJsbIje4qmAV0EP8yeeKMFSXAklLjFkFIFuUggukkd+wSkK5ii2UGWQLR
+	vbC2QjUYhCeTTWuzHq3gIpIYB0OZvBZ6hna+RLRDaHKTOZMzlQ+qW2NewPrQ2aEkFZyBNR3FVNE
+	XUxndSTv47lkhKc6WDy8e61GlTJlTaTVcoLCar6j6WGcLA4qzQKXF/tKhAULJ12ynhWTlu7BoY/
+	mdYdadR4eIXsw9UVyTOwjT4L3qGbTXXJ0YxC8ngJOz0w==
+X-Received: by 2002:a17:903:acd:b0:2c1:f29a:b554 with SMTP id d9443c01a7336-2c2f21a11f5mr7037195ad.21.1781143789049;
+        Wed, 10 Jun 2026 19:09:49 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164fa404fsm256644005ad.37.2026.06.10.19.09.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2026 19:09:48 -0700 (PDT)
+Message-ID: <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
+Date: Thu, 11 Jun 2026 10:09:37 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx68EXFSpqrXaiAA--.43928S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZrWkur48KF48GFyfAFW8GrX_yoW8Xr1DpF
-	9rCrn8Gr4rGr93A3Zxt34q9rn8Jw1vgw1aqanIy348CF4aqF1UXw18Gr1DXF90qw4rtrW0
-	qFyrKw1agFyUJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
+From: Wandun <chenwandun1@gmail.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ iommu@lists.linux.dev, zhaomeijing@lixiang.com, Rob Herring
+ <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com, rppt@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ chenhuacai@kernel.org, kernel@xen0n.name
+Cc: catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
+ akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Based on 7.1-rc7, tested with stress-ng, successfully passed
-the 3-hours stress testing suite, UnixBench benchmarking shows
-a steady performance lift across all core counts.
 
-Thanks Huacai, Wang Rui, sashiko-bot and bot+bpf-ci for your
-review comments and valuable suggestions.
 
-Tiezhu Yang (3):
-  LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-  LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
-  LoongArch: BPF: Inline bpf_get_smp_processor_id() helper
+On 5/27/26 11:29, Wandun Chen wrote:
+> From: Wandun Chen <chenwandun@lixiang.com>
+>
+> On SoCs that carve out large firmware-owned reserved memory (GPU
+> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+> those carveouts as part of system RAM even though their contents are
+> firmware state that is not useful for kernel crash analysis.
+>
+> This series introduces an opt-in 'dumpable' flag [1] on struct
+> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
+> DT-based architectures (arm64, riscv, loongarch). By default reserved
+> regions are treated as non-dumpable; CMA regions are explicitly opted
+> in because their pages are returned to the buddy allocator and may
+> carry key crash-analysis data.
+>
+> The series is organized as follows:
+> Patches 1-3: Pre-existing fixes and a small prep change.
+> Patches 4-5: Restructure to allow appending /memreserve/ entries.
+> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
+> Patch 8: Add generic kdump helpers.
+> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
+>                elfcorehdr preparation.
+Hi,
 
- .../core/thread-info-in-task/arch-support.txt |  2 +-
- arch/loongarch/Kconfig                        |  1 +
- arch/loongarch/include/asm/current.h          | 31 +++++++++++++++++++
- arch/loongarch/include/asm/smp.h              |  3 +-
- arch/loongarch/include/asm/stackframe.h       |  9 ++++--
- arch/loongarch/include/asm/switch_to.h        |  6 ++--
- arch/loongarch/include/asm/thread_info.h      | 10 ------
- arch/loongarch/kernel/asm-offsets.c           |  6 ++--
- arch/loongarch/kernel/entry.S                 |  7 +++--
- arch/loongarch/kernel/head.S                  | 18 ++++++-----
- arch/loongarch/kernel/process.c               |  2 ++
- arch/loongarch/kernel/relocate.c              |  2 +-
- arch/loongarch/kernel/setup.c                 |  1 +
- arch/loongarch/kernel/smp.c                   |  6 ++--
- arch/loongarch/kernel/switch.S                | 14 +++++----
- arch/loongarch/kernel/traps.c                 |  5 +++
- arch/loongarch/net/bpf_jit.c                  | 30 ++++++++++++++++++
- 17 files changed, 115 insertions(+), 38 deletions(-)
- create mode 100644 arch/loongarch/include/asm/current.h
+Gentle ping on this series.
 
--- 
-2.42.0
+Status summary:
+-patch 03: respun separately per Rob's suggestion, picked up for 7.2
+-patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon 
+The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still 
+awaiting review. your feedback would be greately appreciated. I know we 
+are at the end of 7.1 -rc cycle, I don't want to rush this series, just 
+collecting more feedback, and will send next version based on 7.2-rc1. 
+If spliting the series into smaller logical group would make review 
+easier, please let me know. Best regards, Wandun
+>
+> v2 --> v3:
+> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
+> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
+> 3. Add some prepare patches.
+>
+> v1 --> v2:
+> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+>     feedback [1], v2 drop that property and exclude reserve memory
+>     by default.
+> 2. Split some prepared patches from the original patches.
+> 3. Address coding-style comments on patch 5 from Rob.
+>
+> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
+> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-chenwandun%40lixiang.com?part=4
+>
+> Wandun Chen (11):
+>    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+>    kexec/crash: provide crash_exclude_mem_range() stub when
+>      CONFIG_CRASH_DUMP=n
+>    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
+>      fails
+>    of: reserved_mem: zero total_reserved_mem_cnt if no valid
+>      /reserved-memory entry
+>    of: reserved_mem: split alloc_reserved_mem_array() from
+>      fdt_scan_reserved_mem_late()
+>    of: reserved_mem: add dumpable flag to opt-in vmcore
+>    of: reserved_mem: save /memreserve/ entries into the reserved_mem
+>      array
+>    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+>    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+>    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+>    loongarch: kdump: exclude non-dumpable reserved memory regions from
+>      vmcore
+>
+>   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
+>   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
+>   arch/riscv/kernel/machine_kexec_file.c     |   4 +
+>   drivers/of/fdt.c                           |  11 +-
+>   drivers/of/of_private.h                    |   3 +
+>   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
+>   include/linux/crash_core.h                 |   6 ++
+>   include/linux/of_reserved_mem.h            |  15 +++
+>   kernel/dma/contiguous.c                    |   1 +
+>   9 files changed, 157 insertions(+), 12 deletions(-)
+>
 
