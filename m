@@ -1,229 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D476213E9C
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 03:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B573D1F5825
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 06:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781148792; cv=none; b=pt1bXh+3Sm7ebN4rG/fIg3FSGA0d/G6pxuwK8MxL5aF0RXpcsdIgX7jPOJhrqpF3ld0tNIz8MnawJ9PCtpWNNBsfiLBO7kj3CwpDKdad+uG0u4BvlfJtLlavacy5w/AYo+DegslkvbZpRpRADN9GxVTku12RyDJjXaKNov+KRQI=
+	t=1781159276; cv=none; b=tkZncURAr9btvEPpi4qYglVQGu1LqolBmOY1ekTi+2O/oDu0HcVPLromIIHQfJv/1AvsPXCgsKtUkANYxBUc74tWYTYIzyhMg7h9a/NeqXhi06yck4PyZWxrO/h3Fx4t7H6oSRX5t/+RD3CBNMR7WL1rBUDDUs73Y8LyK2PeXBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781148792; c=relaxed/simple;
-	bh=toeZvYdfErHe376NZ3GtBH9qfIBD7CllINz2dXO7tag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d1Y8hN9ePnxtT/A+w6Yj40qdr4xFUlNj8Knk3gAPzH2crjP8eK/BSGYFiIQVx2aw339eufMJ7Crl0i9JhrOPSPuWvNPaWyTmpdI7RhXrCUn86BikK2SWbrPu/8PrBCk8W1TqsdYsboBigNOba81vALyy5D+F2gy06KUZuJ9C1Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fm7H0nRU; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fm7H0nRU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02FDF1F00893
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 03:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781148791;
-	bh=A5QT4L3kGSrTYOelY5QfhP36GHrZByoeuqy37PkoBAI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Fm7H0nRUpUjW968kvoft6NmPFytubnMTvf3u+EQK/ZzQz3w3R64uwvw72eFBT+VGc
-	 5cOkz1bZtKMJnWal2oXRBrXu0E7HV7IQM3dEuKnsO4LI2OqJfvA2jmLKIgi+2OQmVY
-	 f7acH6JIH7UuooQcvQT2Ytsp84kLPlGWLtAdj6FWDF7w6F6fM0tscC5+ZBXFZPpOQG
-	 xXjHEWLWHTXHqPBHM9tbEQnWg7RyLjXLjArJkjqX+BCYXzx/LU6GxphCWS9hG5NXc1
-	 ulCi6IC/8gyawN/MIHRdPN54Y2QgA4TVzLk5VBo98yiN2xcyPhTtALglhbb4cAZSm4
-	 xF9fEWwj2HfGg==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-68bac6e24fdso10035318a12.1
-        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 20:33:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+hiriwzwLByj98tBCY+x1C0Q67JLYxayzN7VodEGbJxx11vVv1rY0chdQnQljgWgbEX/s1dzycLxc=@lists.linux.dev
-X-Gm-Message-State: AOJu0YxNz7IV9EAPeTod99MMZDANn2lDTQi1000n33bswtL6E4W9nmE4
-	KHlyaGFZ6KrX9/qX55/p+eSG3tkuWwX9DCJSfDAsNTLx/qC5hkbaqA1nZqGJVdCX0yQRmZQCZ2A
-	B5Ivf3RtlRNJgEoMeNp3BGgJ9ubli65I=
-X-Received: by 2002:a05:6402:2b89:b0:68c:33e9:bf71 with SMTP id
- 4fb4d7f45d1cf-6930e29274fmr314249a12.11.1781148789721; Wed, 10 Jun 2026
- 20:33:09 -0700 (PDT)
+	s=arc-20240116; t=1781159276; c=relaxed/simple;
+	bh=UYi8BwyYloZReA6nUvi9c7vHBAf7l/NYvXumqcxt0SQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=a3wt5SvvrmXcCvsNHjLFiODwDwFYb2cmrsb1/vaXbn7QPaQwachwOEYYsOc8ciOTXoaYC4nqvKuSG3znKp6/udBoIpEsll0RBvsMlS7W8xxQAXqzDut1GibsVNovtlS2YyYmLGLown1ERj/pPjALL51dU+Yi6dawSfo5wCGN+bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxJelmVSpqcPkSAA--.44109S3;
+	Thu, 11 Jun 2026 14:27:50 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJBxLMJkVSpqzKGiAA--.45733S3;
+	Thu, 11 Jun 2026 14:27:49 +0800 (CST)
+Subject: Re: [PATCH v3] LoongArch: Enable STRICT_MODULE_RWX for stricter
+ modules memory permissions
+To: Huacai Chen <chenhuacai@kernel.org>, haoran.jiang@linux.dev
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kernel@xen0n.name, akpm@linux-foundation.org, jbohac@suse.cz,
+ kees@kernel.org, Haoran Jiang <jianghaoran@kylinos.cn>
+References: <20260608063857.291340-1-haoran.jiang@linux.dev>
+ <CAAhV-H762twrT91Bxq64hLcbG9s78EO+cOdLhWQ3FbW+he36pg@mail.gmail.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <9a8de97c-0c61-3e0a-d4c7-598770a4ca70@loongson.cn>
+Date: Thu, 11 Jun 2026 14:27:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260611015327.12108-2-yangtiezhu@loongson.cn>
- <20260611020820.1F18B1F00893@smtp.kernel.org> <b22f3a7f-4d23-a3be-73de-a30be745b444@loongson.cn>
-In-Reply-To: <b22f3a7f-4d23-a3be-73de-a30be745b444@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Thu, 11 Jun 2026 11:33:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6tJWPrHoCf9XX+8Qz7mtqP6pQkb-i_zRV7NDP3VSRcOw@mail.gmail.com>
-X-Gm-Features: AVVi8CcvDFw4yc37I4_xewvSabhvl81xBQ3Cv86VtZ3tMyFKIU1s7e2HiNfRbEk
-Message-ID: <CAAhV-H6tJWPrHoCf9XX+8Qz7mtqP6pQkb-i_zRV7NDP3VSRcOw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: sashiko-reviews@lists.linux.dev, bpf@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAhV-H762twrT91Bxq64hLcbG9s78EO+cOdLhWQ3FbW+he36pg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxLMJkVSpqzKGiAA--.45733S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZr48AFyDZw48WrWUZr1kZwc_yoW3Arc_Ww
+	48uF9293y8C3ZxuanFkrn8uw1ktF1kCr40q3yUAw12vw17Jr9xCF47uFWvvwsrta93W343
+	uFsaqanYvryUZosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+	6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFa0PUUUUU=
 
-On Thu, Jun 11, 2026 at 11:23=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> On 2026/6/11 =E4=B8=8A=E5=8D=8810:08, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 2 potential is=
-sue(s) to consider:
-> > - [High] In 32-bit kernels, the `$tp` (current task pointer) holds a bi=
-ased pointer during `__switch_to()`, exposing the kernel to memory corrupti=
-on or crashes if a synchronous exception occurs.
-> > - [High] Missing `try_get_task_stack()` in `show_stacktrace()` allows a=
- use-after-free read of kernel stack memory, causing an information leak.
-> > --
-> >
-> > commit a68f9b2fc34ae06149cefb44ef7146643d52f85f
-> > Author: Tiezhu Yang <yangtiezhu@loongson.cn>
-> >
-> > LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-> >
-> > Select THREAD_INFO_IN_TASK for LoongArch to move thread_info off the
-> > stack into task_struct. Initialize a per-CPU cpu_tasks variable, update
-> > assembly paths to restore the $tp register from it, and adjust stack
-> > accesses and unwinding to account for the new configuration.
-> >
-> >> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/sw=
-itch.S
-> >> index f377d8f5c51a6..d6e0d05d6fd39 100644
-> >> --- a/arch/loongarch/kernel/switch.S
-> >> +++ b/arch/loongarch/kernel/switch.S
-> >
-> > [ ... ]
-> >
-> >> @@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
-> >>      LONG_SPTR       t8, t7, 0
-> >>   #endif
-> >>
-> >> -    move    tp, a2
-> >> +    move            tp, a1
-> >>      cpu_restore_nonscratch a1
-> >>
-> >> -    li.w            t0, _THREAD_SIZE
-> >> -    PTR_ADD         t0, t0, tp
-> >> +    LONG_LPTR       t0, a1, (TASK_STACK - TASK_STRUCT_OFFSET)
-> >> +    PTR_LI          t1, _THREAD_SIZE
-> >> +    PTR_ADD         t0, t0, t1
-> >>      set_saved_sp    t0, t1, t2
-> >>
-> >>      LONG_LPTR       t1, a1, (THREAD_CSRPRMD - TASK_STRUCT_OFFSET)
-> >> @@ -45,6 +46,7 @@ SYM_FUNC_START(__switch_to)
-> >>
-> >>   #ifdef CONFIG_32BIT
-> >>      PTR_ADDI        a0, a0, -TASK_STRUCT_OFFSET
-> >> +    PTR_ADDI        tp, tp, -TASK_STRUCT_OFFSET
-> >
-> > [Severity: High]
-> > Could the delayed removal of the bias from the thread pointer cause
-> > issues if a synchronous exception occurs?
-> >
-> > For 32-bit kernels, a1 is biased by TASK_STRUCT_OFFSET at the start
-> > of __switch_to(). The code copies this biased pointer directly into tp
-> > and only removes the bias at the end of the function.
-> >
-> > While local interrupts are disabled during this window, synchronous
-> > exceptions such as hardware data watchpoints might still trigger. If
-> > do_watch() executes during this window, it would use the biased tp
-> > (pointing to next_task + 2000), potentially causing out-of-bounds
-> > memory accesses or kernel panics.
->
-> I used "PTR_ADDI        tp, a1, -TASK_STRUCT_OFFSET" rather than
-> "move           tp, a1" before sending v2, but Huacai suggested
-> the current code.
->
-> @Huacai, what is your opinion?
-As I said before, even if you use "PTR_ADDI        tp, a1,
--TASK_STRUCT_OFFSET", it is impossible to handle exceptions in
-__switch_to().
+On 2026/6/9 下午4:33, Huacai Chen wrote:
+> Hi, Haoran,
+> 
+> On Mon, Jun 8, 2026 at 2:39 PM <haoran.jiang@linux.dev> wrote:
+>>
+>> From: Haoran Jiang <jianghaoran@kylinos.cn>
+>>
+>> Enable STRICT_MODULE_RWX to enforce strict memory permissions
+>> on modules,making the code region non-writable, the data region
+>> non-executable, and the read-only data region both non-writable
+>> and non-executable.Temporarily modify code section read/write
+>> permissions via set_memory() API.
 
-It is a type of "double fault" if exceptions really happen, "double
-fault" means to die. So just keep it.
+...
 
-Huacai
+> In addition, it seems that text_mutex and patch_lock are for the same
+> purpose, so patch_lock can be removed here.
+> 
+> @Tiezhu, what's your opinion?
 
->
->
-> >>   #endif
-> >>      jr      ra
-> >>   SYM_FUNC_END(__switch_to)
-> >
-> >> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/tra=
-ps.c
-> >> index 5d49b742e3bf6..7e4206da4876b 100644
-> >> --- a/arch/loongarch/kernel/traps.c
-> >> +++ b/arch/loongarch/kernel/traps.c
-> >> @@ -90,6 +90,9 @@ static void show_backtrace(struct task_struct *task,=
- const struct pt_regs *regs,
-> >>      if (!task)
-> >>              task =3D current;
-> >>
-> >> +    if (!try_get_task_stack(task))
-> >> +            return;
-> >> +
-> >
-> > [Severity: High]
-> > Is there a similar use-after-free risk in show_stacktrace() when
-> > reading from the stack pointer?
-> >
-> > While try_get_task_stack() correctly protects show_backtrace(),
-> > show_stacktrace() appears to read directly from the task's stack
-> > pointer via __get_addr() without acquiring a reference.
-> >
-> > With THREAD_INFO_IN_TASK enabled, the stack can be freed before the
-> > task_struct. If show_stacktrace() is called on an exiting task
-> > (for example, via SysRq-T iterating over all tasks), could it read
-> > from a freed and reallocated stack, leaking memory contents?
-> >
->
-> I will do the following changes:
->
-> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.=
-c
-> index 7e4206da4876..776523747ea3 100644
-> --- a/arch/loongarch/kernel/traps.c
-> +++ b/arch/loongarch/kernel/traps.c
-> @@ -90,9 +90,6 @@ static void show_backtrace(struct task_struct *task,
-> const struct pt_regs *regs,
->          if (!task)
->                  task =3D current;
->
-> -       if (!try_get_task_stack(task))
-> -               return;
-> -
->          printk("%sCall Trace:", loglvl);
->          for (unwind_start(&state, task, pregs);
->                !unwind_done(&state); unwind_next_frame(&state)) {
-> @@ -100,8 +97,6 @@ static void show_backtrace(struct task_struct *task,
-> const struct pt_regs *regs,
->                  print_ip_sym(loglvl, addr);
->          }
->          printk("%s\n", loglvl);
-> -
-> -       put_task_stack(task);
->   }
->
->   static void show_stacktrace(struct task_struct *task,
-> @@ -112,6 +107,12 @@ static void show_stacktrace(struct task_struct *task=
-,
->          unsigned long stackdata;
->          unsigned long *sp =3D (unsigned long *)regs->regs[3];
->
-> +       if (!task)
-> +               task =3D current;
-> +
-> +       if (!try_get_task_stack(task))
-> +               return;
-> +
->          printk("%sStack :", loglvl);
->          i =3D 0;
->          while ((unsigned long) sp & (PAGE_SIZE - 1)) {
-> @@ -134,6 +135,8 @@ static void show_stacktrace(struct task_struct *task,
->          }
->          pr_cont("\n");
->          show_backtrace(task, regs, loglvl, user);
-> +
-> +       put_task_stack(task);
->   }
->
->   void show_stack(struct task_struct *task, unsigned long *sp, const
-> char *loglvl)
->
-> Thanks,
-> Tiezhu
->
+Agreed. If all callers properly switch to text_mutex, patch_lock can be
+removed entirely.
+
+Thanks,
+Tiezhu
+
