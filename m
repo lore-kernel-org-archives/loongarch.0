@@ -1,218 +1,203 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E11040D56B;
-	Thu, 11 Jun 2026 03:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C43237180
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 03:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781147113; cv=none; b=m6a048hqHMhysYuI1ExE2xSF3aOzRqEDnA6KdqfoAYftrvH2wrt7ojcCxnENlbt4kRQaL1vI8yaJ9z3fBptEZlflGKLzsY1bQ+Vd96Fymhog8dYc/ToLJoKtBn4myJCCLCoALVYJL5iuY5KH7Mf79ZfV88dH5sPNKyTgF11Bz1M=
+	t=1781147375; cv=none; b=f72gdHaBOU5mEi7CDoky4SWACkBnVQ1oMysQFCLu8jaXdu7S2xBxRJFCJ3hX5oPFG60VYUfnwuwmZEs+hg8GXthuT5a+Mh2DsN/5NebALnUCBbCQLwsd41C7ffMbOxq+U9uWqx5kt0NE9ze5+utxLnx/El2Z2Gf3pNXV2DSbw4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781147113; c=relaxed/simple;
-	bh=dpIOQqxdPS/vmNkvAmlx/sBmIHWDlHQH8nSWgaECwao=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=DteXHJgKobkex7DCOgfLw06o1Cx0eDG1BftsBZgK8j6gz/lB2qXEooPBaB+ZJT0bKqV3wpHfnt/FTgP/QCflU2ixMP1eB9rwL/vfN+Q+lIkj/s87797ndGvDK8EkgMEYnrxMRdxcPEaa7O4xs4e+UoZWddqsRAIxHO2iWWeiWfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cxf+vdJSpqfusSAA--.49800S3;
-	Thu, 11 Jun 2026 11:05:01 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxC8LbJSpqJYKiAA--.45384S3;
-	Thu, 11 Jun 2026 11:05:00 +0800 (CST)
-Subject: Re: [PATCH v2 2/3] LoongArch: BPF: Inline
- bpf_get_current_task{_btf}() helpers
-To: sashiko-reviews@lists.linux.dev
-Cc: bpf@vger.kernel.org, loongarch@lists.linux.dev
-References: <20260611015327.12108-3-yangtiezhu@loongson.cn>
- <20260611020748.1F0A11F00893@smtp.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <f78c3761-1c43-18fa-4158-bbd686c2cd76@loongson.cn>
-Date: Thu, 11 Jun 2026 11:04:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1781147375; c=relaxed/simple;
+	bh=oKZuciULY9JBG2l4enUy3YkyVqstZ1dofPhvmB1PDVk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=E3+i7GZGOlmZErdB8Td7N3Z1p5+mrlU2gijYXSBtciEXthOhigeF2SBCv8YJ0L2PT6d09tiIs6kK2VmvEkxnS0+M/3gmOm/mN0QoYCv7xWrglNBmzbmOW1LUrRAtEpP6Kn6PTPjxrZK6R7EwsfSaL7r70tQhJAoTnBz5TawZlR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hsronQRh; arc=none smtp.client-ip=209.85.216.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsronQRh"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-36d8b644473so6920411a91.3
+        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 20:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781147373; x=1781752173; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZYAsuub7tjh5DE2NtRU43cs+1enZX+YMETetqa3OJBs=;
+        b=hsronQRhavmpXWFjgTJ2pMPNjEapZBgMrOPSEERZn5u10Vf38St3ARU4Rcog9G3Knz
+         Nx7i2RtVrTScpx2UH3Vzi31HwjVcUFs4vIpKHjNhyOPlSLA6lRNIH7bPshQCcjBfVlUE
+         R8clFKudQcXD+QhvHcpRPky+AFACHPl6Oo1c8322YoVFr1wFit3+7TF1qDhIfzngMauS
+         3R7RWU2K1ncJIjmSMPA3ebA7TY1bI6Ai3kqVH1rq4vfLZouKOisBXpLbXnepTUG9Nl5U
+         uss7upViAADLdQJWsCl7zOoJN9o8cx5gOovQfQXWIzoZilQhN3N/brO4rPmwUg51YEUn
+         HdVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781147373; x=1781752173;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZYAsuub7tjh5DE2NtRU43cs+1enZX+YMETetqa3OJBs=;
+        b=bpPIzxpD8jG4Q22Z10i/0RLbyVc3Tko4kAoOyPH1s9iUCoeGT/Av89eqppd36/rdfS
+         L11s0+TexgbzZHYyGkpV8FKfdLhUxs55QuYUVqvgSvOxiZsFzHrkFTcbfYEDoVkEc4uO
+         ExaGgWBpZ+byqC8/0hGS2kuRFMi1dvpufwVYCfGYh5IGSxTR4B3qVa4dK3MIFnWS52xf
+         7Yix0W9WkabAsCW2ZI6+c68+/pjdMbkNyFek0kyCJHacGQoLe7BwsGuTlSlMcWWPKngP
+         o9WpPG2EK3041OqvzhJ1M8WzLtxuaVOwODLywBzohTEXka8GZtvkbS82ylPhLo5teUYh
+         1pAw==
+X-Forwarded-Encrypted: i=1; AFNElJ99qGLxBD4ECYYWgb7MuzxNKJ7cUoxY1hbQYHVyUDRnLPjEk+is1xN27qfghljamxu9HjcF2uc0Pg0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyheEl8nO+9O9B2mnS0xaQvwDECrhtsp17QAyWHrpUdG+o+8i6F
+	iSU2kaJiyR3g+AMQT5+DDKephXey+fausVQEyUF//KRTBf5XhHwhwmE3
+X-Gm-Gg: Acq92OFzLnsn/emznz+NgUBE7xT5HaHVY9Mu7zKLzATGaILuZvQbTX89VK7PCJ+lgJ5
+	URYxpVsxPc0mGFKPGZEH0iQRUmuRyBoAjiXMSv5mgOShJyGSyaOefIfvG8sP2Ob0RNBLKDBnplH
+	yhLarGJ3lBi8Ih3vIRREN+Jl1M7Il7R4/LTqIsQ97aj7TLk+knYRFKt5bc2te+RXkh+MRYfX+cK
+	VjGsqorPQmqMTOYN3OKhGkOQmd6XmQmIkcOZYwp6xUha3/ldnPebpaf+vX9HmGvUUuaztqp3lBW
+	5SSwrWgKhvXKeiTCvBHlH0mmh21pYABWILETPFh6IZr/Gp20OpcCKO2CDU3T34L7bMncT7mhDxu
+	sjInMSHnP5n8fa1h1dMWKHyUzbEtCMV68asEUnT+/l/Q6V7rXeCxSo5MBzMz5D1TsmqqGuUs8jB
+	BE+wHIxVtDlmja1B1ndErzhwn1YCm134r1SZnulTy9Xg==
+X-Received: by 2002:a17:90b:570e:b0:36d:df4f:ab2 with SMTP id 98e67ed59e1d1-377a75cc2b7mr1151650a91.13.1781147373379;
+        Wed, 10 Jun 2026 20:09:33 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c86585b5356sm107409a12.14.2026.06.10.20.09.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jun 2026 20:09:32 -0700 (PDT)
+Message-ID: <a3993db0-6975-455d-9674-4fd7cfcf80fc@gmail.com>
+Date: Thu, 11 Jun 2026 11:09:22 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260611020748.1F0A11F00893@smtp.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
+From: Wandun <chenwandun1@gmail.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ iommu@lists.linux.dev, zhaomeijing@lixiang.com, Rob Herring
+ <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com, rppt@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ chenhuacai@kernel.org, kernel@xen0n.name
+Cc: catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
+ akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+ <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
 Content-Language: en-US
+In-Reply-To: <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxC8LbJSpqJYKiAA--.45384S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ar15KF4xJFyDKF18Kr4fXrc_yoW7Xry5pr
-	Z8G3sFkr4vga92ga9rJ3WUZw15t3y8KF1UGF1rGrWFka1qqrn7WF13K3sYgFZ5GrsYv3Wa
-	vrs2kr9FkF1kJFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAF
-	wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-	CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAF
-	wI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-	WIevJa73UjIFyTuYvjxU20PSUUUUU
 
-On 2026/6/11 上午10:07, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] The `!bpf_jit_enable` check is an incomplete, architecture-specific workaround for a core BPF verifier bug. It fails to handle JIT compilation failures and leaves ARM64, PowerPC, and RISC-V completely vulnerable to the exact same interpreter kernel panic.
-> --
-> 
-> commit a76f924522a402d8fb15714c189dca631202c35b
-> Author: Tiezhu Yang <yangtiezhu@loongson.cn>
-> 
-> LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
-> 
-> This commit inlines bpf_get_current_task() and bpf_get_current_task_btf()
-> helpers into a single move instruction for LoongArch. It also adds a check
-> for bpf_jit_enable in bpf_jit_inlines_helper_call() to safely fallback to
-> the BPF interpreter when JIT is disabled.
-> 
->> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
->> index 24913dc7f4e83..cb379b236d7dd 100644
->> --- a/arch/loongarch/net/bpf_jit.c
->> +++ b/arch/loongarch/net/bpf_jit.c
-> 
-> [ ... ]
-> 
->> @@ -2367,3 +2374,18 @@ bool bpf_jit_supports_subprog_tailcalls(void)
->>   {
->>   	return true;
->>   }
->> +
->> +bool bpf_jit_inlines_helper_call(s32 imm)
->> +{
->> +	/* Prevent interpreter panic when JIT is disabled at runtime */
->> +	if (!bpf_jit_enable)
->> +		return false;
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does this !bpf_jit_enable check fully
-> prevent the interpreter panic?
-> 
-> In the BPF verifier, do_misc_fixups() calls bpf_jit_inlines_helper_call(). If
-> the architecture promises to inline the helper, it skips rewriting insn->imm
-> from its raw enum ID to the required interpreter offset:
-> 
-> kernel/bpf/fixups.c:do_misc_fixups() {
->      ...
->      /* Skip inlining the helper call if the JIT does it. */
->      if (bpf_jit_inlines_helper_call(insn->imm))
->          goto next_insn;
->      ...
-> }
-> 
-> If bpf_jit_enable is 1 but JIT compilation later dynamically fails (e.g., via
-> bpf_jit_alloc_exec() returning NULL), bpf_prog_select_runtime() falls back to
-> the interpreter:
-> 
-> kernel/bpf/core.c:bpf_prog_select_runtime() {
->      ...
->      fp = bpf_prog_jit_compile(env, fp);
->      bpf_prog_jit_attempt_done(fp);
->      if (!fp->jited && jit_needed) {
->          *err = -ENOTSUPP;
->      ...
-> }
-> 
-> The interpreter then blindly executes (__bpf_call_base + insn->imm) using the
-> unpatched enum ID, which triggers the same fatal Instruction Alignment Fault
-> (ADEF) kernel panic.
-> 
-> Furthermore, ARM64, PowerPC, and RISC-V unconditionally return true from their
-> implementations of bpf_jit_inlines_helper_call(). Are they left completely
-> vulnerable to the exact same interpreter kernel panic when JIT is disabled or
-> fails?
-> 
-> Could this root cause be addressed in the BPF core instead of being handled as
-> an architecture-specific workaround?
 
-I will do the following changes:
 
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 448162584c9a..4f2493c549f1 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -2384,10 +2384,6 @@ bool bpf_jit_supports_subprog_tailcalls(void)
+On 6/11/26 10:09, Wandun wrote:
+> 
+> 
+> On 5/27/26 11:29, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+>> On SoCs that carve out large firmware-owned reserved memory (GPU
+>> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+>> those carveouts as part of system RAM even though their contents are
+>> firmware state that is not useful for kernel crash analysis.
+>>
+>> This series introduces an opt-in 'dumpable' flag [1] on struct
+>> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
+>> DT-based architectures (arm64, riscv, loongarch). By default reserved
+>> regions are treated as non-dumpable; CMA regions are explicitly opted
+>> in because their pages are returned to the buddy allocator and may
+>> carry key crash-analysis data.
+>>
+>> The series is organized as follows:
+>> Patches 1-3: Pre-existing fixes and a small prep change.
+>> Patches 4-5: Restructure to allow appending /memreserve/ entries.
+>> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
+>> Patch 8: Add generic kdump helpers.
+>> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
+>>                elfcorehdr preparation.
+> Hi,
+> 
+> Gentle ping on this series.
+> 
+> Status summary:
+> -patch 03: respun separately per Rob's suggestion, picked up for 7.2
+> -patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon
+> The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
+> awaiting review. your feedback would be greately appreciated. I know we
+> are at the end of 7.1 -rc cycle, I don't want to rush this series, just
+> collecting more feedback, and will send next version based on 7.2-rc1.
+> If spliting the series into smaller logical group would make review
+> easier, please let me know. Best regards, Wandun
 
-  bool bpf_jit_inlines_helper_call(s32 imm)
-  {
--       /* Prevent interpreter panic when JIT is disabled at runtime */
--       if (!bpf_jit_enable)
--               return false;
--
-         switch (imm) {
-         case BPF_FUNC_get_current_task:
-         case BPF_FUNC_get_current_task_btf:
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 6aa2a8b24030..8e08887e6534 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2598,6 +2598,30 @@ static struct bpf_prog 
-*bpf_prog_jit_compile(struct bpf_verifier_env *env, struc
-         return prog;
-  }
+Apologies for the formatting issue in my previous email.
+Here is the properly formatted version.
 
-+/*
-+ * Rewrite the helper call offset for inlined helpers when fallback to
-+ * the interpreter happens due to JIT compilation failure or JIT disabled.
-+ */
-+static void bpf_fixup_fallback_inline_helpers(struct bpf_verifier_env 
-*env, struct bpf_prog *fp)
-+{
-+       struct bpf_insn *insn = fp->insnsi;
-+       const struct bpf_func_proto *fn;
-+       int i;
-+
-+       if (!env || !env->ops->get_func_proto)
-+               return;
-+
-+       for (i = 0; i < fp->len; i++, insn++) {
-+               if (insn->code == (BPF_JMP | BPF_CALL) && insn->src_reg 
-== 0) {
-+                       if (bpf_jit_inlines_helper_call(insn->imm)) {
-+                               fn = env->ops->get_func_proto(insn->imm, 
-fp);
-+                               if (fn && fn->func)
-+                                       insn->imm = fn->func - 
-__bpf_call_base;
-+                       }
-+               }
-+       }
-+}
-+
-  struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env 
-*env, struct bpf_prog *fp,
-                                            int *err)
-  {
-@@ -2629,6 +2653,15 @@ struct bpf_prog *__bpf_prog_select_runtime(struct 
-bpf_verifier_env *env, struct
+Gentle ping on this series.
 
-                 fp = bpf_prog_jit_compile(env, fp);
-                 bpf_prog_jit_attempt_done(fp);
-+
-+               /*
-+                * If JIT compilation failed or is disabled 
-(!fp->jited), we are
-+                * about to fall back to the interpreter path. Fix up 
-the call
-+                * offsets to prevent unaligned memory access panic.
-+                */
-+               if (!fp->jited)
-+                       bpf_fixup_fallback_inline_helpers(env, fp);
-+
-                 if (!fp->jited && jit_needed) {
-                         *err = -ENOTSUPP;
-                         return fp;
+Status summary:
+- patch 03: respun separately per Rob's suggestion, picked up for 7.2
+- patch 06: Acked-by: Marek Szyprowski
+- patch 09: Acked-by: Will Deacon
 
-Thanks,
-Tiezhu
+The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
+awaiting review. Your feedback would be greatly appreciated.
+
+I know we are at the end of 7.1-rc cycle, I don't want to rush this
+series, just collecting more feedback, and will send next version based
+on 7.2-rc1.
+
+If splitting the series into smaller logical groups would make review
+easier, please let me know.
+
+Best regards,
+Wandun
+
+
+>>
+>> v2 --> v3:
+>> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
+>> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
+>> 3. Add some prepare patches.
+>>
+>> v1 --> v2:
+>> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+>>     feedback [1], v2 drop that property and exclude reserve memory
+>>     by default.
+>> 2. Split some prepared patches from the original patches.
+>> 3. Address coding-style comments on patch 5 from Rob.
+>>
+>> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-
+>> robh@kernel.org/
+>> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-
+>> chenwandun%40lixiang.com?part=4
+>>
+>> Wandun Chen (11):
+>>    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+>>    kexec/crash: provide crash_exclude_mem_range() stub when
+>>      CONFIG_CRASH_DUMP=n
+>>    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
+>>      fails
+>>    of: reserved_mem: zero total_reserved_mem_cnt if no valid
+>>      /reserved-memory entry
+>>    of: reserved_mem: split alloc_reserved_mem_array() from
+>>      fdt_scan_reserved_mem_late()
+>>    of: reserved_mem: add dumpable flag to opt-in vmcore
+>>    of: reserved_mem: save /memreserve/ entries into the reserved_mem
+>>      array
+>>    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+>>    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+>>    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+>>    loongarch: kdump: exclude non-dumpable reserved memory regions from
+>>      vmcore
+>>
+>>   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
+>>   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
+>>   arch/riscv/kernel/machine_kexec_file.c     |   4 +
+>>   drivers/of/fdt.c                           |  11 +-
+>>   drivers/of/of_private.h                    |   3 +
+>>   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
+>>   include/linux/crash_core.h                 |   6 ++
+>>   include/linux/of_reserved_mem.h            |  15 +++
+>>   kernel/dma/contiguous.c                    |   1 +
+>>   9 files changed, 157 insertions(+), 12 deletions(-)
+>>
+> 
 
