@@ -1,171 +1,98 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5AF23FC5A
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 02:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCB11D6BB;
+	Thu, 11 Jun 2026 02:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781143792; cv=none; b=mx1jkG12OpL8n/BzuC9zskgpFQWFD3FcxIHWSu0Ii8SdNW6ocPDmDvseaxtvdV7c4WD71QfKThTj6jHeO10eeE/Z1qdkT4eE5EX/L6+iyPo0BRKFfXM9ODsdSagz3GBU02UY8iCpAiMWGX7KxNTex6rcU8RhRRnCd0ok28Fl6fQ=
+	t=1781145416; cv=none; b=V57u+5PYkxo/cSkZtBLysYy6HRXKaedOs2BEs6TnEzvHjrshtIgE96ptajWaNb/RcmmpwgWV+I7XuBNlCoQzmt4xGCraiyp4r78Y0uqo37QZhIzymUFkUneUYGBxuRYAlSwjXUu6NZhov77FDUgok5xyEOozzMie7sQzWgg3VjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781143792; c=relaxed/simple;
-	bh=7IoqrrsIUXvxJNgaFncXuFymv5csPW4jbxzDZ4eJZ3I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GFVW0ldmNvx1Cz9B9GrJrU6ymiL7YMUPpuMEktM8GcCjo00vMy049ZxrjA+opdh+xCZ/pk2xR3tMJ1c/bzaye2kRwRvIwsA/wLNY+pVU5H35a9VEVCNPHWqYUKnDmOmBP1LABRk/UEQNvvnGurHLk0F6Fw0YGhJ3/9Uj6aQrlgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RE9QEp/b; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781145416; c=relaxed/simple;
+	bh=jzn8yOwuS8f2Lr55eqFMTLaPXrFGP0xswUSN6RStLCw=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=edzL8MMTAuvuXgXM1hdfVeRrXjLuDJ5Q8ZBfm2+Pm2m+wEO5/bufwq6wFg89TEIycA1ymf2I4ErK8mBg+Aag8gw6qDGvyG1UvhogVPkaBm+ZjdR6oJi5gRAWMcsjKqnm5Q1HBAzCE0BTC3CcW8XywlNkVG1kGZwNI+97U0R53Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dawE6b+W; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RE9QEp/b"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2c0c3546924so49663075ad.3
-        for <loongarch@lists.linux.dev>; Wed, 10 Jun 2026 19:09:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781143789; x=1781748589; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rrKKxjQkCCq7BO+0b9GvAXj1oVgaGXMfePrho45byEA=;
-        b=RE9QEp/bEfSx5pyk4MDOv9X2oa1F/dxxyp0K70MrXOM3KCK1Fb6vWrYlf4qrcGvPxS
-         EpNMycjtDiZmpyDjXn9Vxx1WYGnpERRWQ+YxkIXDZiJOUPqG69X9w2OPHP+3H6C9JSmJ
-         cHIiUPBp4zTsUK1NxSJiYfgg4DSVNStYUp5vVnB4GRzrXWl9+JXNg5TutU7BugR5+hc1
-         Zqu5tVFj+UN0KpAe6/gYV2oWF7pq/WsMaNWKchohD9Gp+p1wXDfbbN2fP/PZBnrHyKH+
-         eemlH42jOvA1a9qJPhA63k7trBBHr6M0Z3yMQxZQCi0TrrNVEAAxI/xKa6LzyyIHUdb8
-         PNhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781143789; x=1781748589;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rrKKxjQkCCq7BO+0b9GvAXj1oVgaGXMfePrho45byEA=;
-        b=oCRpQPkgHGIcfFAo4VRIopPEc9cqh7PwVaL8eKLcJP0NrnfURK3rcvvQUGR5BiKEyJ
-         OabBv7RE2VFYyF4UCmPiqKgPdgUorgsAq2+JOnrWt3vcUdn7QTP2GTYDxW/xFWxGvlIi
-         zFMVMlu2iOgAdPgHdHWTG2qU0gzW7I5FU9zvgVlk2nFC6OXhlA8V/zonttUb5788hDMu
-         1wi55Wy/rtQwMvVlnrciwE/ZDnTRhlSX4IrhdTGDxlgyF5X8rUwvbK9AyOEds/35trm7
-         Y/gfgw6OkfN+fkDxlSWzGUUG8DGA9JGiYMRDXA+Iiu68cywUFnygLXfHhyPT91EIHy4m
-         64QA==
-X-Forwarded-Encrypted: i=1; AFNElJ85u0el95R6ihrS2dY7tYQ6gssS+/mc3yBfa7/fxtOjffZ0wWu+5f5uWOZnjJ3HOEv6Se+R4cn1YGg=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwlqAHf8QrteY6I8jy80SqlK1fnZZ+uyvFOhWwIOjjlhoM21Fay
-	5u96Nj40s2qPtMHohXyf9pj+kX8wa4ibgKNt2deQUzu4PevOrxg6gRnD
-X-Gm-Gg: Acq92OHDzekT0XxCNUMJkXPgtR/Oxwjju6/nKgyvf3QF7MbzcAi1x2hwZGMTKWWMwqj
-	sB998/FE+hhmHDbtY/KYf5StvX5hn/lMz5codxlRa5qWUdNgXK0aT47fI94wYISIN36xTszmyMN
-	haAKQUaYNqdAjsAX5JEGunJEyFEUUm0sAYyUdRLYZqIKaE7NFXhSXQ48RWNM7jafVSI4fRsPj+9
-	GiaTil/MuK7iXmxz2mSJsbIje4qmAV0EP8yeeKMFSXAklLjFkFIFuUggukkd+wSkK5ii2UGWQLR
-	vbC2QjUYhCeTTWuzHq3gIpIYB0OZvBZ6hna+RLRDaHKTOZMzlQ+qW2NewPrQ2aEkFZyBNR3FVNE
-	XUxndSTv47lkhKc6WDy8e61GlTJlTaTVcoLCar6j6WGcLA4qzQKXF/tKhAULJ12ynhWTlu7BoY/
-	mdYdadR4eIXsw9UVyTOwjT4L3qGbTXXJ0YxC8ngJOz0w==
-X-Received: by 2002:a17:903:acd:b0:2c1:f29a:b554 with SMTP id d9443c01a7336-2c2f21a11f5mr7037195ad.21.1781143789049;
-        Wed, 10 Jun 2026 19:09:49 -0700 (PDT)
-Received: from [10.125.112.20] ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164fa404fsm256644005ad.37.2026.06.10.19.09.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jun 2026 19:09:48 -0700 (PDT)
-Message-ID: <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
-Date: Thu, 11 Jun 2026 10:09:37 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dawE6b+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2921F00893;
+	Thu, 11 Jun 2026 02:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781145415;
+	bh=X9OYz5t8xJLcL+vYKujbjghdAWjsD0DVmEpwDLtPADw=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=dawE6b+WEDVkro/csMWQ/e7sIgRtbUPa0L6r5yBoRkFYa7TTnkDz5bimP9j7K8/9o
+	 mVywXqnoWHUdsLz3rnHXJd7sC9SRmgFX8XMvkI2u4IpLrj+U8YAlBLzjiGdAc//DaJ
+	 PZsB/BjIRq3DMDCu1TG1RrYqLSJS4+zzOFaPcNyXSbH1KeSLVSHls5T+kuuQ8Ixqxf
+	 LaJUQI3I6zOkCgFDwLDzapgjS+L/FT+xC+J6az35tsGz+Tbk2wNbgaqx/Cp24jYACN
+	 OepYOoaS1elElJnp2yCa8GNsG5q2BZHZSEWhfy3fCfngRKnTFvdnR/rt3UyJEmbfXK
+	 7Uv+wSxyldQJQ==
+Content-Type: multipart/mixed; boundary="===============7064045760643706982=="
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
-From: Wandun <chenwandun1@gmail.com>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- devicetree@vger.kernel.org, kexec@lists.infradead.org,
- iommu@lists.linux.dev, zhaomeijing@lixiang.com, Rob Herring
- <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com, rppt@kernel.org,
- pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- chenhuacai@kernel.org, kernel@xen0n.name
-Cc: catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
- akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
- ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-Id: <b88f6055e63f7f4084159c428dc427047d4074517c929f0ce4d6e7bb2b0d57f9@mail.kernel.org>
+In-Reply-To: <20260611015327.12108-3-yangtiezhu@loongson.cn>
+References: <20260611015327.12108-3-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v2 2/3] LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
+From: bot+bpf-ci@kernel.org
+To: yangtiezhu@loongson.cn,chenhuacai@kernel.org,hengqi.chen@gmail.com
+Cc: loongarch@lists.linux.dev,bpf@vger.kernel.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Thu, 11 Jun 2026 02:36:55 +0000 (UTC)
+
+--===============7064045760643706982==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
+> The pointer to task_struct is always available in the $tp register,
+> the calls to bpf_get_current_task() and bpf_get_current_task_btf()
+> can be inlined into a single move instruction.
+>
+> [ ... ]
+>
+> This is similar with commit 2bb138cb20a6 ("bpf, arm64: Inline
+> bpf_get_current_task/_btf() helpers").
+>
+> Additionally, a safety check for bpf_jit_enable is introduced in
+> bpf_jit_inlines_helper_call(). If CONFIG_BPF_JIT_ALWAYS_ON is not
+> set and JIT is disabled at runtime, the function returns false to
+> safely accommodate the fallback path to the BPF interpreter.
+>
+> Without this check, bpf_jit_inlines_helper_call() unconditionally
+> returns true. As a result, the verifier would skip fixing up the
+> call offset, leaving insn->imm as the raw helper ID rather than
+> the expected "insn->imm = fn->func - __bpf_call_base".
+>
+> When the fallback interpreter executes (__bpf_call_base + insn->imm)
+> with this raw ID, it jumps into an unaligned invalid address space,
+> triggering a fatal instruction alignment fault (ADEF) kernel panic.
+>
+> [ ... ]
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+The commit message describes a kernel panic on the interpreter fallback
+path, where bpf_jit_inlines_helper_call() returning true caused the
+verifier to skip rewriting insn->imm to (fn->func - __bpf_call_base),
+so the interpreter ran (__bpf_call_base + raw_helper_id) and jumped to
+an invalid address.
+
+The bpf_jit_inlines_helper_call() contract, and the verifier logic that
+skips the call-offset fixup when it returns true, were introduced
+together with the unconditional return-true pattern that is now being
+guarded with the !bpf_jit_enable check.
+
+Should this carry a Fixes: tag pointing at that commit, for example:
+
+  Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
 
 
-On 5/27/26 11:29, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
->
-> On SoCs that carve out large firmware-owned reserved memory (GPU
-> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
-> those carveouts as part of system RAM even though their contents are
-> firmware state that is not useful for kernel crash analysis.
->
-> This series introduces an opt-in 'dumpable' flag [1] on struct
-> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
-> DT-based architectures (arm64, riscv, loongarch). By default reserved
-> regions are treated as non-dumpable; CMA regions are explicitly opted
-> in because their pages are returned to the buddy allocator and may
-> carry key crash-analysis data.
->
-> The series is organized as follows:
-> Patches 1-3: Pre-existing fixes and a small prep change.
-> Patches 4-5: Restructure to allow appending /memreserve/ entries.
-> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
-> Patch 8: Add generic kdump helpers.
-> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
->                elfcorehdr preparation.
-Hi,
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-Gentle ping on this series.
-
-Status summary:
--patch 03: respun separately per Rob's suggestion, picked up for 7.2
--patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon 
-The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still 
-awaiting review. your feedback would be greately appreciated. I know we 
-are at the end of 7.1 -rc cycle, I don't want to rush this series, just 
-collecting more feedback, and will send next version based on 7.2-rc1. 
-If spliting the series into smaller logical group would make review 
-easier, please let me know. Best regards, Wandun
->
-> v2 --> v3:
-> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
-> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> 3. Add some prepare patches.
->
-> v1 --> v2:
-> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->     feedback [1], v2 drop that property and exclude reserve memory
->     by default.
-> 2. Split some prepared patches from the original patches.
-> 3. Address coding-style comments on patch 5 from Rob.
->
-> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-chenwandun%40lixiang.com?part=4
->
-> Wandun Chen (11):
->    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
->    kexec/crash: provide crash_exclude_mem_range() stub when
->      CONFIG_CRASH_DUMP=n
->    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
->      fails
->    of: reserved_mem: zero total_reserved_mem_cnt if no valid
->      /reserved-memory entry
->    of: reserved_mem: split alloc_reserved_mem_array() from
->      fdt_scan_reserved_mem_late()
->    of: reserved_mem: add dumpable flag to opt-in vmcore
->    of: reserved_mem: save /memreserve/ entries into the reserved_mem
->      array
->    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
->    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
->    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
->    loongarch: kdump: exclude non-dumpable reserved memory regions from
->      vmcore
->
->   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
->   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
->   arch/riscv/kernel/machine_kexec_file.c     |   4 +
->   drivers/of/fdt.c                           |  11 +-
->   drivers/of/of_private.h                    |   3 +
->   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
->   include/linux/crash_core.h                 |   6 ++
->   include/linux/of_reserved_mem.h            |  15 +++
->   kernel/dma/contiguous.c                    |   1 +
->   9 files changed, 157 insertions(+), 12 deletions(-)
->
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/27319300857
+--===============7064045760643706982==--
