@@ -1,182 +1,163 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068FF3EE1C1
-	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 12:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B8A3FB069
+	for <loongarch@lists.linux.dev>; Thu, 11 Jun 2026 12:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781179457; cv=none; b=bXSmmIRW4m6pEYhmA/j2HMhPd4JQDDA2SvnzwHURdS/g/2vCFTnzNj9ilNcxNQCixink5weQnhDKPDATJr+yLQQYNSpehO1n527bY4E0w03YgHS+ZkxNwJ8KCQ7DOo3OXdzX+yvwJmXkEHdtDC+JsM5nM0dPHNCkn3wXXpKCsc4=
+	t=1781182513; cv=none; b=e7lIY8r2Pu4AWgZsfCTht0oxovX6GJNXgQ0HG2yL9mK3t9vmbiy59JvdCNDR5n8Bs4ssPvtw5wfGwc6qARaZY5GsJP4mX3OQoBjIJFpOVbtCq4yTSn0rVIAwjQX7qBIb5s+aokbylgo9b5z151/thG8ZOdawqP2T+By7uO7nz60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781179457; c=relaxed/simple;
-	bh=sEAiz1VLA18B6EqKeEzrbhdLCmp9xlqT08l2BvnWjsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T4dqSjI0oTmO1DgUIKFX6mCR7ZusUY8SCvgNl3VxERRYxxXqicVAQLz6k9TiwAUMmw53IZAAd98iqiBiHznuA8b1OSr75crmP/u+NsRP9IOv+b4el/QC0/0hWUGWvsE+ECAK1/hIK46L5BwXf20UclqX4bcE3GkZLEcy1lgYNDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C7VD/ntP; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C7VD/ntP"
-Date: Thu, 11 Jun 2026 20:03:53 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781179452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f/j69pXYfj34ZmqA6bJCKc0nePFg+h49mJ8/N7zh1iA=;
-	b=C7VD/ntPHBl4YIG9Watr5T2GZLCvEmAzup5tfdjNbozip65PyigVCCrPseQbQKMgC2+M7G
-	fYJkNSWFsX/dRktAsP7CNtY62sQ3fk1oEHQwJa+H4KpymFRmYbGmZ4jTCJo6jBN0nw2upe
-	Z54mPkCYOx99N+izHFLdL+L2Fx6cijE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Baoquan He <baoquan.he@linux.dev>
-To: Wandun <chenwandun1@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	iommu@lists.linux.dev, zhaomeijing@lixiang.com,
-	Rob Herring <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com,
-	rppt@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, chenhuacai@kernel.org, kernel@xen0n.name,
-	catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
-	akpm@linux-foundation.org, pasha.tatashin@soleen.com,
-	pratyush@kernel.org, ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com, robin.murphy@arm.com
-Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
-Message-ID: <aiqkKe1gXPZ5LZ7t@MiWiFi-R3L-srv>
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
- <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
- <a3993db0-6975-455d-9674-4fd7cfcf80fc@gmail.com>
+	s=arc-20240116; t=1781182513; c=relaxed/simple;
+	bh=ZKi6ha5TuwUYlr7Pm+HTi0FHmtxK+pCSSMucOZXLmyA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VzHzCVUKCb6oPOEZJqJcJUls/OCM2qnY3eejd/KYPKFkfPUYi2q3IlJuJpvdMu35GfHA0EN3c8Tg5An+at0c9mIu/ApYV3vDknssilU2dBf4W57Z6271cCGXYTlv/o3fvrCpnTDtEAUvCqp559+ABMhNBptFFe9z3d0d/hmJqkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx3sAssCpqThMTAA--.26867S3;
+	Thu, 11 Jun 2026 20:55:08 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJCxvsIrsCpqQ+6iAA--.46630S3;
+	Thu, 11 Jun 2026 20:55:08 +0800 (CST)
+Subject: Re: [PATCH v6 5/6] LoongArch: KVM: Add valid bit check when set ESTAT
+ CSR register
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260611065815.1439154-1-maobibo@loongson.cn>
+ <20260611065815.1439154-6-maobibo@loongson.cn>
+ <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <00f28be5-3805-90d1-d2a5-69734b3d0a03@loongson.cn>
+Date: Thu, 11 Jun 2026 20:52:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a3993db0-6975-455d-9674-4fd7cfcf80fc@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qMiowJCxvsIrsCpqQ+6iAA--.46630S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAF17GF4kJFyDGry8tr4rCrX_yoWrJF4rpr
+	yUKa4UurW8KFyqk3Wrtrs0vr4YvrWfKw4xZrZrKFWayryqvry3GFWxXr98Ary5u34fXF1I
+	vas5JrZ3uF4DJacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CP
+	fJUUUUU==
 
-On 06/11/26 at 11:09am, Wandun wrote:
-> 
-> 
-> On 6/11/26 10:09, Wandun wrote:
-> > 
-> > 
-> > On 5/27/26 11:29, Wandun Chen wrote:
-> >> From: Wandun Chen <chenwandun@lixiang.com>
-> >>
-> >> On SoCs that carve out large firmware-owned reserved memory (GPU
-> >> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
-> >> those carveouts as part of system RAM even though their contents are
-> >> firmware state that is not useful for kernel crash analysis.
-> >>
-> >> This series introduces an opt-in 'dumpable' flag [1] on struct
-> >> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
-> >> DT-based architectures (arm64, riscv, loongarch). By default reserved
-> >> regions are treated as non-dumpable; CMA regions are explicitly opted
-> >> in because their pages are returned to the buddy allocator and may
-> >> carry key crash-analysis data.
-> >>
-> >> The series is organized as follows:
-> >> Patches 1-3: Pre-existing fixes and a small prep change.
-> >> Patches 4-5: Restructure to allow appending /memreserve/ entries.
-> >> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
-> >> Patch 8: Add generic kdump helpers.
-> >> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
-> >>                elfcorehdr preparation.
-> > Hi,
-> > 
-> > Gentle ping on this series.
-> > 
-> > Status summary:
-> > -patch 03: respun separately per Rob's suggestion, picked up for 7.2
-> > -patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon
-> > The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
-> > awaiting review. your feedback would be greately appreciated. I know we
-> > are at the end of 7.1 -rc cycle, I don't want to rush this series, just
-> > collecting more feedback, and will send next version based on 7.2-rc1.
-> > If spliting the series into smaller logical group would make review
-> > easier, please let me know. Best regards, Wandun
-> 
-> Apologies for the formatting issue in my previous email.
-> Here is the properly formatted version.
-> 
-> Gentle ping on this series.
 
-Thanks for the effort, the overral looks good to me at 1st glance. I will
-check if there's concern on generic part. And meanwhile, I am wondering
-if there's any chance x86 or other ARCH-es w/o OF/FDT can also choose to
-not dump some areas, e.g GPU stolen memory. Surely, that's another story.
+
+On 2026/6/11 ä¸‹åˆ6:10, Huacai Chen wrote:
+> Hi, Bibo,
+> 
+> On Thu, Jun 11, 2026 at 2:58â€¯PM Bibo Mao <maobibo@loongson.cn> wrote:
+>>
+>> When set ESTAT CSR register in function _kvm_setcsr(), valid bit check
+>> is added here. Also interrupt CPU_AVEC is checked by msgint feature.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> ---
+>>   arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++---------
+>>   1 file changed, 16 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+>> index e986146d2272..4f67eefbd4f1 100644
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
+>>
+>>   static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+>>   {
+>> -       unsigned long gintc;
+>> +       unsigned long gintc, estat;
+>>          struct loongarch_csrs *csr = vcpu->arch.csr;
+>>
+>>          if (get_gcsr_flag(id) & INVALID_GCSR)
+>> @@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+>>                  preempt_enable();
+>>
+>>                  /* ESTAT IP0~IP7 get from GINTC */
+>> -               gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & 0xff;
+>> -               *val = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) | (gintc << 2);
+>> +               gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & KVM_GINTC_IRQ_MASK;
+>> +               estat = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) & ~KVM_ESTAT_EXTI_MASK;
+>> +               *val = estat | (gintc << VIP_DELTA);
+>>                  return 0;
+>>          }
+>>
+>> @@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+>>
+>>   static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+>>   {
+>> -       int ret = 0, gintc;
+>> +       int ret = 0;
+>> +       unsigned long gintc, estat;
+>>          struct loongarch_csrs *csr = vcpu->arch.csr;
+>>
+>>          if (get_gcsr_flag(id) & INVALID_GCSR)
+>> @@ -648,11 +650,16 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+>>
+>>          if (id == LOONGARCH_CSR_ESTAT) {
+>>                  /* ESTAT IP0~IP7 inject through GINTC */
+>> -               gintc = (val >> 2) & 0xff;
+>> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+>> -
+>> -               gintc = val & ~(0xffUL << 2);
+>> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
+>> +               gintc = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC) & ~KVM_GINTC_IRQ_MASK;
+>> +               gintc |= (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+>> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> I think read & write can be combined, which means it can be simplified as:
+>                  gintc = (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+>                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> 
+>> +
+>> +               /* only set valid ESTAT bits */
+>> +               estat = val & ~KVM_ESTAT_EXTI_MASK;
+>> +               estat &= CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE;
+>> +               if (!kvm_guest_has_msgint(&vcpu->arch))
+>> +                       estat &= ~CPU_AVEC;
+>> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
+> I think write csr may lose bits from the original value, so
+>                  kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+> should be
+>                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+> 
+> If you agree, I will change it when I apply because all others look good to me.
+At the beginning, it is kvm_set_sw_gcsr() with CSR_GINTC/CSR_ESTAT, 
+later I change it with kvm_write_sw_gcsr(). With kvm_set_sw_gcsr() API, 
+it is only set new interrupt, however does not clear the interrupt. So I 
+change it with kvm_write_sw_gcsr() which will overwrite the interrupt bits.
+
+At the same time, bit field CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE is not 
+suitable for bit set, overwrite its value is more suitable.
+
+Regards
+Bibo Mao
 
 > 
-> Status summary:
-> - patch 03: respun separately per Rob's suggestion, picked up for 7.2
-> - patch 06: Acked-by: Marek Szyprowski
-> - patch 09: Acked-by: Will Deacon
+> Huacai
 > 
-> The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
-> awaiting review. Your feedback would be greatly appreciated.
-> 
-> I know we are at the end of 7.1-rc cycle, I don't want to rush this
-> series, just collecting more feedback, and will send next version based
-> on 7.2-rc1.
-> 
-> If splitting the series into smaller logical groups would make review
-> easier, please let me know.
-> 
-> Best regards,
-> Wandun
-> 
-> 
-> >>
-> >> v2 --> v3:
-> >> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
-> >> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> >> 3. Add some prepare patches.
-> >>
-> >> v1 --> v2:
-> >> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
-> >>     feedback [1], v2 drop that property and exclude reserve memory
-> >>     by default.
-> >> 2. Split some prepared patches from the original patches.
-> >> 3. Address coding-style comments on patch 5 from Rob.
-> >>
-> >> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-
-> >> robh@kernel.org/
-> >> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-
-> >> chenwandun%40lixiang.com?part=4
-> >>
-> >> Wandun Chen (11):
-> >>    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
-> >>    kexec/crash: provide crash_exclude_mem_range() stub when
-> >>      CONFIG_CRASH_DUMP=n
-> >>    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
-> >>      fails
-> >>    of: reserved_mem: zero total_reserved_mem_cnt if no valid
-> >>      /reserved-memory entry
-> >>    of: reserved_mem: split alloc_reserved_mem_array() from
-> >>      fdt_scan_reserved_mem_late()
-> >>    of: reserved_mem: add dumpable flag to opt-in vmcore
-> >>    of: reserved_mem: save /memreserve/ entries into the reserved_mem
-> >>      array
-> >>    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
-> >>    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
-> >>    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
-> >>    loongarch: kdump: exclude non-dumpable reserved memory regions from
-> >>      vmcore
-> >>
-> >>   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
-> >>   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
-> >>   arch/riscv/kernel/machine_kexec_file.c     |   4 +
-> >>   drivers/of/fdt.c                           |  11 +-
-> >>   drivers/of/of_private.h                    |   3 +
-> >>   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
-> >>   include/linux/crash_core.h                 |   6 ++
-> >>   include/linux/of_reserved_mem.h            |  15 +++
-> >>   kernel/dma/contiguous.c                    |   1 +
-> >>   9 files changed, 157 insertions(+), 12 deletions(-)
-> >>
-> > 
-> 
+>>
+>>                  return ret;
+>>          }
+>> --
+>> 2.39.3
+>>
+
