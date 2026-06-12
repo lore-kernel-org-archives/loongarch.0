@@ -1,153 +1,195 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA614368968;
-	Fri, 12 Jun 2026 07:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6F535E1DB
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 08:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781250409; cv=none; b=pSy2nvwMMvbfpHGEWkms25TMEIDDzTE2PxXPOO3/odyqM1K0faFE9MoxNTaU9MYDuHb4pjh1OePJc1bO9Ma/zYVVhQUwjTa6+aiAxvHnB0+v9pTsQYpS8P3gX5L9oHmAUae8pPcf1o6531SiOy3bp3DGUnbHTeyPbzSpaxKpl/w=
+	t=1781253570; cv=none; b=cqWCbH5L+MbwmUDyrudC+0R7eNTcZd0ZkKD75RRkJf0uvsCy0/7puC3A47rdBdmr7dTc4+F59S838rM1G65GY+Np1bP4mscrGVh8LPESGm5XTs6CcOuogHgG2pwKaSWWNVFIaA/M+58K1wCG9HtYH2LP4ADIYioaslVqU4Pn05c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781250409; c=relaxed/simple;
-	bh=UmeoYy1ZTv2diNGfEqQ7eaK3gvhVqdqJTY1VsVd4Nqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKffgoW+pcUjn0fgotp/QQyFHJRdmT1n4u+hwsl+dPwDpwIK6W2UD8PazV1JmeKwQ1AZtr10Z+9OxKYAc/HjlF5XR7OgEttoWToiDdc5hznuyxO3y8zndY6jEhLg6UZIRbRjtsYtg3obT9miC/JD1mbzphO/mHOz6bgreLjQbCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+1QaXUC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781253570; c=relaxed/simple;
+	bh=r+yOxBIHFz8TEnksmcfjlPJLwwVtXaJgcGosVo4cP1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HzxMsPBY4hYHuW9NeT5mw880YocQMioWg058lUQt6ysdnNmIr1ySLpo4bfDwCOrvZ/JegiYq4Sfp8lSxr5sHadDH8u5TKGgIAbtnyHO8wxuy7AEytkYCZkUf7f3T1L4dHaKrup3YGhUTuWfPU2n5GhRw0sX0WknBiMZ1dp7D2Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YihYbq79; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+1QaXUC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68651F000E9;
-	Fri, 12 Jun 2026 07:46:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YihYbq79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6061F00A3A
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 08:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781250407;
-	bh=wsHqcKwo5977UKsycGEh8MAYVcFHAquPzMtiUyoer6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=G+1QaXUCq74YYvlVOgn/Ru3J12byjHh3oF1trnV981cS8ZSh9VtCGlEcXiRceS0W6
-	 IhRSby5DNEkviGLbN1SJZptVd+Wb/RffOlOwE1U+cFRwqF18XDv85vCbSHbM7+5/sm
-	 ZJVjKw3nQftPFdVwiHE5wpG8sVvghI4L+wmFDV4YkBs95Lw8BE64SN38qzA3aYMtOl
-	 8gOo8rbJsRMkdZE+zW4NFVpPJKluCb+Mi3j8kkfeNi9kReI4EBo06U7Qnmvvo9n5rK
-	 J0h1wU6VurMB/ZF/CcGpHyeIPLFwdZxhS1OatXGHm3KmYVsRvP2CkmHWxP3azrFqlR
-	 HzDiFLG4oNUMA==
-Date: Fri, 12 Jun 2026 09:46:41 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
-	Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>, Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev
-Subject: Re: [PATCH v2 6/6] irqchip/gic-v5: Enable GICv5 IWB ACPI probe
- ordering detection
-Message-ID: <aiu5YU+Yn1DekE+E@lpieralisi>
-References: <20260603-gic-v5-acpi-iwb-probe-deferral-v2-0-23ffa16b6ebb@kernel.org>
- <20260603-gic-v5-acpi-iwb-probe-deferral-v2-6-23ffa16b6ebb@kernel.org>
- <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+	s=k20260515; t=1781253569;
+	bh=ifx+zSnu/M34z0R+o3TEU5+5UvEwcD6nbk1E60RbwCY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=YihYbq797SsMayFJJ73fv1AAY180wYqANIN6ziA7issUhS2aMWWHBRopq/GRM8SkF
+	 Z+KXCLlJMfcVVlNbGR49EB5HVcZps4UcoEh0oUTlJnIXfn3mREigzQJE5gwTBSCVlg
+	 pTdQGf2BsmQ/KNiMdH7hHx6FV0x5RjmXq8VW1B13TKEzttMFmUuAFLBpV68VGajk4T
+	 +/HTXOkJvvFoHc/d2oJfmQ93dL/w65Qyg32uV3wWqQoSFrORGpLCMxWFToZjliLbeB
+	 nvinvaz9ex2ZRPlo8CPzd2I1U6Avf2AdPSQ91aF/DtKUpJ37VzJf5jtERVZQanV6/l
+	 3Ge8oQAj1F/TQ==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68d234218bcso1256766a12.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 01:39:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8x9Q4crFJq5y63ZlPuxMi+hIRi6gokLGz4XYbeRGCAmfBKDay19k8OY4Agxq0QKf9yo0Wn+kRceQI=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx3JqA0wsTiMUVwStDGrSMN+Nf9JC3K9+8ZvVhksQpi/4qiQFFm
+	RlfKNql2aUNeI/fS2Y95R11N0yHloGls3TQT2b+fAzk122ANvg4bsRZNC6/D1/eAAxNx1ed4QWE
+	v2eRCYV7GjSNlKP2emzUY8JY2HnGaWdU=
+X-Received: by 2002:a05:6402:1d54:b0:68e:2605:9417 with SMTP id
+ 4fb4d7f45d1cf-69378a4bcc6mr872140a12.16.1781253567761; Fri, 12 Jun 2026
+ 01:39:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0ibZKfzJwGyUb92-K1N9C_ab0QujpAKCrvMdyygquS1Vw@mail.gmail.com>
+References: <20260611065815.1439154-1-maobibo@loongson.cn> <20260611065815.1439154-6-maobibo@loongson.cn>
+ <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
+ <00f28be5-3805-90d1-d2a5-69734b3d0a03@loongson.cn> <CAAhV-H460mXx5ojv-=Bah5HoMHqy2bDB38uWaXXGkLeDNt8zRg@mail.gmail.com>
+In-Reply-To: <CAAhV-H460mXx5ojv-=Bah5HoMHqy2bDB38uWaXXGkLeDNt8zRg@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 12 Jun 2026 16:39:49 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7_F2aQ-d-pJLOWR30j9tJkRQ74DuBB-6Dq44Do5X1H3A@mail.gmail.com>
+X-Gm-Features: AVVi8CdcopdsJa4jajkAXnhlaqYXs9kHDdy3PzGzoD8eP16RG-U6TTx8QXK5WNE
+Message-ID: <CAAhV-H7_F2aQ-d-pJLOWR30j9tJkRQ74DuBB-6Dq44Do5X1H3A@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] LoongArch: KVM: Add valid bit check when set ESTAT
+ CSR register
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 08, 2026 at 07:18:15PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Jun 3, 2026 at 10:21 AM Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Thu, Jun 11, 2026 at 9:01=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
+ wrote:
+>
+> On Thu, Jun 11, 2026 at 8:55=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wr=
+ote:
 > >
-> > Register an ACPI hook in the ACPI interrupt management code for GICv5 to
-> > retrieve the ACPI interrupt controller handle (if any) of the controller
-> > handling a specific GSI, by updating the acpi_set_irq_model() call with
-> > the gic_v5_get_gsi_handle() function pointer parameter.
 > >
-> > gicv5_get_gsi_handle() allows ACPI core to detect the ACPI handle
-> > of the controller that manages a specific GSI interrupt.
 > >
-> > Update the IWB driver to clear device dependencies in ACPI core once the
-> > IWB driver has probed.
+> > On 2026/6/11 =E4=B8=8B=E5=8D=886:10, Huacai Chen wrote:
+> > > Hi, Bibo,
+> > >
+> > > On Thu, Jun 11, 2026 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loongson.cn=
+> wrote:
+> > >>
+> > >> When set ESTAT CSR register in function _kvm_setcsr(), valid bit che=
+ck
+> > >> is added here. Also interrupt CPU_AVEC is checked by msgint feature.
+> > >>
+> > >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> > >> ---
+> > >>   arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++---------
+> > >>   1 file changed, 16 insertions(+), 9 deletions(-)
+> > >>
+> > >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> > >> index e986146d2272..4f67eefbd4f1 100644
+> > >> --- a/arch/loongarch/kvm/vcpu.c
+> > >> +++ b/arch/loongarch/kvm/vcpu.c
+> > >> @@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kv=
+m *kvm, int cpuid)
+> > >>
+> > >>   static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64=
+ *val)
+> > >>   {
+> > >> -       unsigned long gintc;
+> > >> +       unsigned long gintc, estat;
+> > >>          struct loongarch_csrs *csr =3D vcpu->arch.csr;
+> > >>
+> > >>          if (get_gcsr_flag(id) & INVALID_GCSR)
+> > >> @@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, un=
+signed int id, u64 *val)
+> > >>                  preempt_enable();
+> > >>
+> > >>                  /* ESTAT IP0~IP7 get from GINTC */
+> > >> -               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
+ & 0xff;
+> > >> -               *val =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) =
+| (gintc << 2);
+> > >> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
+ & KVM_GINTC_IRQ_MASK;
+> > >> +               estat =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT)=
+ & ~KVM_ESTAT_EXTI_MASK;
+> > >> +               *val =3D estat | (gintc << VIP_DELTA);
+> > >>                  return 0;
+> > >>          }
+> > >>
+> > >> @@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, un=
+signed int id, u64 *val)
+> > >>
+> > >>   static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64=
+ val)
+> > >>   {
+> > >> -       int ret =3D 0, gintc;
+> > >> +       int ret =3D 0;
+> > >> +       unsigned long gintc, estat;
+> > >>          struct loongarch_csrs *csr =3D vcpu->arch.csr;
+> > >>
+> > >>          if (get_gcsr_flag(id) & INVALID_GCSR)
+> > >> @@ -648,11 +650,16 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, =
+unsigned int id, u64 val)
+> > >>
+> > >>          if (id =3D=3D LOONGARCH_CSR_ESTAT) {
+> > >>                  /* ESTAT IP0~IP7 inject through GINTC */
+> > >> -               gintc =3D (val >> 2) & 0xff;
+> > >> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> > >> -
+> > >> -               gintc =3D val & ~(0xffUL << 2);
+> > >> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
+> > >> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
+ & ~KVM_GINTC_IRQ_MASK;
+> > >> +               gintc |=3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+> > >> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> > > I think read & write can be combined, which means it can be simplifie=
+d as:
+> > >                  gintc =3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
+> > >                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
+> > >
+> > >> +
+> > >> +               /* only set valid ESTAT bits */
+> > >> +               estat =3D val & ~KVM_ESTAT_EXTI_MASK;
+> > >> +               estat &=3D CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_=
+ESUBCODE;
+> > >> +               if (!kvm_guest_has_msgint(&vcpu->arch))
+> > >> +                       estat &=3D ~CPU_AVEC;
+> > >> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
+> > > I think write csr may lose bits from the original value, so
+> > >                  kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+> > > should be
+> > >                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
+> > >
+> > > If you agree, I will change it when I apply because all others look g=
+ood to me.
+> > At the beginning, it is kvm_set_sw_gcsr() with CSR_GINTC/CSR_ESTAT,
+> > later I change it with kvm_write_sw_gcsr(). With kvm_set_sw_gcsr() API,
+> > it is only set new interrupt, however does not clear the interrupt. So =
+I
+> > change it with kvm_write_sw_gcsr() which will overwrite the interrupt b=
+its.
 > >
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Thomas Gleixner <tglx@kernel.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/irqchip/irq-gic-v5-iwb.c |  5 +++++
-> >  drivers/irqchip/irq-gic-v5.c     | 13 +++++++++++--
-> >  2 files changed, 16 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/irqchip/irq-gic-v5-iwb.c b/drivers/irqchip/irq-gic-v5-iwb.c
-> > index 9103feb70ce8..a02cb9537b15 100644
-> > --- a/drivers/irqchip/irq-gic-v5-iwb.c
-> > +++ b/drivers/irqchip/irq-gic-v5-iwb.c
-> > @@ -269,6 +269,11 @@ static int gicv5_iwb_device_probe(struct platform_device *pdev)
-> >         if (IS_ERR(iwb_node))
-> >                 return PTR_ERR(iwb_node);
-> >
-> > +#ifdef CONFIG_ACPI
-> > +       if (has_acpi_companion(&pdev->dev))
-> > +               acpi_dev_clear_dependencies(ACPI_COMPANION(&pdev->dev));
-> > +#endif
-> 
-> I would rather add a wrapper for this, along with an empty stub for
-> the !CONFIG_ACPI case.
+> > At the same time, bit field CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE is not
+> > suitable for bit set, overwrite its value is more suitable.
+> OK, then I will keep using kvm_write_sw_gcsr(), and please update the
+> selftest series if needed.
+Now all KVM patches are applied, you can double check it here.
+https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
+it/log/?h=3Dloongarch-kvm
 
-Given that this has no OF counterpart, I'd rather add an empty stub
-for acpi_dev_clear_dependencies() and remove the ifdef - I am not
-sure that adding a FW agnostic:
+Huacai
 
-dev_clear_dependencies()
-
-would help much but that's just my opinion. Then the question is whether I
-should convert all other acpi_dev_clear_dependencies() users (with ifdeffery
-included) in tree.
-
-Thanks,
-Lorenzo
-
-> 
-> > +
-> >         return 0;
-> >  }
+>
+> Huacai
+>
 > >
-> > diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
-> > index 03cc2830b260..26cfaea1af41 100644
-> > --- a/drivers/irqchip/irq-gic-v5.c
-> > +++ b/drivers/irqchip/irq-gic-v5.c
-> > @@ -1217,11 +1217,19 @@ static struct fwnode_handle *gsi_domain_handle;
-> >  static struct fwnode_handle *gic_v5_get_gsi_domain_id(u32 gsi)
-> >  {
-> >         if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-> > -               return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-> > +               return iort_iwb_handle_fwnode(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-> 
-> Why is this change needed?
-> 
+> > Regards
+> > Bibo Mao
 > >
-> >         return gsi_domain_handle;
-> >  }
+> > >
+> > > Huacai
+> > >
+> > >>
+> > >>                  return ret;
+> > >>          }
+> > >> --
+> > >> 2.39.3
+> > >>
 > >
-> > +static acpi_handle gic_v5_get_gsi_handle(u32 gsi)
-> > +{
-> > +       if (FIELD_GET(GICV5_GSI_IC_TYPE, gsi) == GICV5_GSI_IWB_TYPE)
-> > +               return iort_iwb_handle(FIELD_GET(GICV5_GSI_IWB_FRAME_ID, gsi));
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> >  static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
-> >  {
-> >         struct acpi_madt_gicv5_irs *irs = (struct acpi_madt_gicv5_irs *)header;
-> > @@ -1242,7 +1250,8 @@ static int __init gic_acpi_init(union acpi_subtable_headers *header, const unsig
-> >         if (ret)
-> >                 goto out_irs;
-> >
-> > -       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id, NULL);
-> > +       acpi_set_irq_model(ACPI_IRQ_MODEL_GIC_V5, gic_v5_get_gsi_domain_id,
-> > +                          gic_v5_get_gsi_handle);
-> >
-> >         return 0;
-> >
-> >
-> > --
