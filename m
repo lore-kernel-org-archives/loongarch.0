@@ -1,195 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6F535E1DB
-	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 08:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3AE384CE2
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 12:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781253570; cv=none; b=cqWCbH5L+MbwmUDyrudC+0R7eNTcZd0ZkKD75RRkJf0uvsCy0/7puC3A47rdBdmr7dTc4+F59S838rM1G65GY+Np1bP4mscrGVh8LPESGm5XTs6CcOuogHgG2pwKaSWWNVFIaA/M+58K1wCG9HtYH2LP4ADIYioaslVqU4Pn05c=
+	t=1781267883; cv=none; b=KCKrAPceFSIDRYvbJS06se9W4w01uwdBGFvxGBCU33lIpUCEGk2J+Z/74xt+HToomGCF+7caUk8IXyhrUC2BkQFDjYV2bzTnihmtQ2fP9SJBK4rY+bCthnld5hkOPZkEquFhSblbc1nZR8p/vq9WYOVG1s6JqALUVXBI0HV0vUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781253570; c=relaxed/simple;
-	bh=r+yOxBIHFz8TEnksmcfjlPJLwwVtXaJgcGosVo4cP1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HzxMsPBY4hYHuW9NeT5mw880YocQMioWg058lUQt6ysdnNmIr1ySLpo4bfDwCOrvZ/JegiYq4Sfp8lSxr5sHadDH8u5TKGgIAbtnyHO8wxuy7AEytkYCZkUf7f3T1L4dHaKrup3YGhUTuWfPU2n5GhRw0sX0WknBiMZ1dp7D2Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YihYbq79; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YihYbq79"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C6061F00A3A
-	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 08:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781253569;
-	bh=ifx+zSnu/M34z0R+o3TEU5+5UvEwcD6nbk1E60RbwCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YihYbq797SsMayFJJ73fv1AAY180wYqANIN6ziA7issUhS2aMWWHBRopq/GRM8SkF
-	 Z+KXCLlJMfcVVlNbGR49EB5HVcZps4UcoEh0oUTlJnIXfn3mREigzQJE5gwTBSCVlg
-	 pTdQGf2BsmQ/KNiMdH7hHx6FV0x5RjmXq8VW1B13TKEzttMFmUuAFLBpV68VGajk4T
-	 +/HTXOkJvvFoHc/d2oJfmQ93dL/w65Qyg32uV3wWqQoSFrORGpLCMxWFToZjliLbeB
-	 nvinvaz9ex2ZRPlo8CPzd2I1U6Avf2AdPSQ91aF/DtKUpJ37VzJf5jtERVZQanV6/l
-	 3Ge8oQAj1F/TQ==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68d234218bcso1256766a12.2
-        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 01:39:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8x9Q4crFJq5y63ZlPuxMi+hIRi6gokLGz4XYbeRGCAmfBKDay19k8OY4Agxq0QKf9yo0Wn+kRceQI=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx3JqA0wsTiMUVwStDGrSMN+Nf9JC3K9+8ZvVhksQpi/4qiQFFm
-	RlfKNql2aUNeI/fS2Y95R11N0yHloGls3TQT2b+fAzk122ANvg4bsRZNC6/D1/eAAxNx1ed4QWE
-	v2eRCYV7GjSNlKP2emzUY8JY2HnGaWdU=
-X-Received: by 2002:a05:6402:1d54:b0:68e:2605:9417 with SMTP id
- 4fb4d7f45d1cf-69378a4bcc6mr872140a12.16.1781253567761; Fri, 12 Jun 2026
- 01:39:27 -0700 (PDT)
+	s=arc-20240116; t=1781267883; c=relaxed/simple;
+	bh=mRjsxTK/0C9WX6/C/aL+iF6znFLgdk/KXtkySFn1/vU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G/7ScQK8ra/kJny7VymgJNlZn2yNxK2gJyfIYEoub2671pM3k/G7AE5ml0kOWpG+v6ldLoFkHMUTFaBhhIlCBoH0JcCg3emFGugmFlZ0Vm90ZVe2UYS7HeHwfglYIPUsssM9leXU2Lsbe8WVekqe+nzKVpelzh8QhmF8qSMKz+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gcJtW0ZnPzKHMKd
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 20:37:07 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 673934058C
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 20:37:47 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP3 (Coremail) with SMTP id _Ch0CgC3Xwua_StqjRMZBg--.59258S2;
+	Fri, 12 Jun 2026 20:37:47 +0800 (CST)
+Message-ID: <093f957d-3d3a-4ce7-b59b-06203c556629@huaweicloud.com>
+Date: Fri, 12 Jun 2026 20:37:46 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260611065815.1439154-1-maobibo@loongson.cn> <20260611065815.1439154-6-maobibo@loongson.cn>
- <CAAhV-H7vMq+-nm8f8aL2CvmNYivaHgWj1cTuyv0BTfPQRKpSJA@mail.gmail.com>
- <00f28be5-3805-90d1-d2a5-69734b3d0a03@loongson.cn> <CAAhV-H460mXx5ojv-=Bah5HoMHqy2bDB38uWaXXGkLeDNt8zRg@mail.gmail.com>
-In-Reply-To: <CAAhV-H460mXx5ojv-=Bah5HoMHqy2bDB38uWaXXGkLeDNt8zRg@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 12 Jun 2026 16:39:49 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7_F2aQ-d-pJLOWR30j9tJkRQ74DuBB-6Dq44Do5X1H3A@mail.gmail.com>
-X-Gm-Features: AVVi8CdcopdsJa4jajkAXnhlaqYXs9kHDdy3PzGzoD8eP16RG-U6TTx8QXK5WNE
-Message-ID: <CAAhV-H7_F2aQ-d-pJLOWR30j9tJkRQ74DuBB-6Dq44Do5X1H3A@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] LoongArch: KVM: Add valid bit check when set ESTAT
- CSR register
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v2] bpf: Fix unaligned interpreter panic on JIT
+ fallback path
+Content-Language: en-US
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, loongarch@lists.linux.dev,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260611101216.30153-1-yangtiezhu@loongson.cn>
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <20260611101216.30153-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgC3Xwua_StqjRMZBg--.59258S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryfGw4DtrWrCw1kCw1xKrg_yoWrCFy8pF
+	ykGw1akr4DXFW29a4xJa12vw1Ygw48Ga45Ga4fK3WFkFs0qrn7WF1UKw10gFsxGr48CF1I
+	vw42yF129w1kJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-On Thu, Jun 11, 2026 at 9:01=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> On Thu, Jun 11, 2026 at 8:55=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wr=
-ote:
-> >
-> >
-> >
-> > On 2026/6/11 =E4=B8=8B=E5=8D=886:10, Huacai Chen wrote:
-> > > Hi, Bibo,
-> > >
-> > > On Thu, Jun 11, 2026 at 2:58=E2=80=AFPM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> > >>
-> > >> When set ESTAT CSR register in function _kvm_setcsr(), valid bit che=
-ck
-> > >> is added here. Also interrupt CPU_AVEC is checked by msgint feature.
-> > >>
-> > >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > >> ---
-> > >>   arch/loongarch/kvm/vcpu.c | 25 ++++++++++++++++---------
-> > >>   1 file changed, 16 insertions(+), 9 deletions(-)
-> > >>
-> > >> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> > >> index e986146d2272..4f67eefbd4f1 100644
-> > >> --- a/arch/loongarch/kvm/vcpu.c
-> > >> +++ b/arch/loongarch/kvm/vcpu.c
-> > >> @@ -602,7 +602,7 @@ struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kv=
-m *kvm, int cpuid)
-> > >>
-> > >>   static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64=
- *val)
-> > >>   {
-> > >> -       unsigned long gintc;
-> > >> +       unsigned long gintc, estat;
-> > >>          struct loongarch_csrs *csr =3D vcpu->arch.csr;
-> > >>
-> > >>          if (get_gcsr_flag(id) & INVALID_GCSR)
-> > >> @@ -621,8 +621,9 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, un=
-signed int id, u64 *val)
-> > >>                  preempt_enable();
-> > >>
-> > >>                  /* ESTAT IP0~IP7 get from GINTC */
-> > >> -               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
- & 0xff;
-> > >> -               *val =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT) =
-| (gintc << 2);
-> > >> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
- & KVM_GINTC_IRQ_MASK;
-> > >> +               estat =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT)=
- & ~KVM_ESTAT_EXTI_MASK;
-> > >> +               *val =3D estat | (gintc << VIP_DELTA);
-> > >>                  return 0;
-> > >>          }
-> > >>
-> > >> @@ -637,7 +638,8 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, un=
-signed int id, u64 *val)
-> > >>
-> > >>   static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64=
- val)
-> > >>   {
-> > >> -       int ret =3D 0, gintc;
-> > >> +       int ret =3D 0;
-> > >> +       unsigned long gintc, estat;
-> > >>          struct loongarch_csrs *csr =3D vcpu->arch.csr;
-> > >>
-> > >>          if (get_gcsr_flag(id) & INVALID_GCSR)
-> > >> @@ -648,11 +650,16 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, =
-unsigned int id, u64 val)
-> > >>
-> > >>          if (id =3D=3D LOONGARCH_CSR_ESTAT) {
-> > >>                  /* ESTAT IP0~IP7 inject through GINTC */
-> > >> -               gintc =3D (val >> 2) & 0xff;
-> > >> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
-> > >> -
-> > >> -               gintc =3D val & ~(0xffUL << 2);
-> > >> -               kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
-> > >> +               gintc =3D kvm_read_sw_gcsr(csr, LOONGARCH_CSR_GINTC)=
- & ~KVM_GINTC_IRQ_MASK;
-> > >> +               gintc |=3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
-> > >> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
-> > > I think read & write can be combined, which means it can be simplifie=
-d as:
-> > >                  gintc =3D (val >> VIP_DELTA) & KVM_GINTC_IRQ_MASK;
-> > >                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_GINTC, gintc);
-> > >
-> > >> +
-> > >> +               /* only set valid ESTAT bits */
-> > >> +               estat =3D val & ~KVM_ESTAT_EXTI_MASK;
-> > >> +               estat &=3D CSR_ESTAT_IS | CSR_ESTAT_EXC | CSR_ESTAT_=
-ESUBCODE;
-> > >> +               if (!kvm_guest_has_msgint(&vcpu->arch))
-> > >> +                       estat &=3D ~CPU_AVEC;
-> > >> +               kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat);
-> > > I think write csr may lose bits from the original value, so
-> > >                  kvm_write_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
-> > > should be
-> > >                  kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, estat)
-> > >
-> > > If you agree, I will change it when I apply because all others look g=
-ood to me.
-> > At the beginning, it is kvm_set_sw_gcsr() with CSR_GINTC/CSR_ESTAT,
-> > later I change it with kvm_write_sw_gcsr(). With kvm_set_sw_gcsr() API,
-> > it is only set new interrupt, however does not clear the interrupt. So =
-I
-> > change it with kvm_write_sw_gcsr() which will overwrite the interrupt b=
-its.
-> >
-> > At the same time, bit field CSR_ESTAT_EXC | CSR_ESTAT_ESUBCODE is not
-> > suitable for bit set, overwrite its value is more suitable.
-> OK, then I will keep using kvm_write_sw_gcsr(), and please update the
-> selftest series if needed.
-Now all KVM patches are applied, you can double check it here.
-https://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.g=
-it/log/?h=3Dloongarch-kvm
+On 6/11/2026 6:12 PM, Tiezhu Yang wrote:
+> When an architecture implements bpf_jit_inlines_helper_call(), such
+> as LoongArch, ARM64, and RISC-V, the BPF verifier skips rewriting
+> the helper call offset (insn->imm) during the bpf_do_misc_fixups()
+> phase if the helper is expected to be inlined by the JIT compiler.
+> As a result, insn->imm remains as the raw helper enum ID.
+> 
+> However, if JIT is disabled at runtime (net.core.bpf_jit_enable=0)
+> or if the JIT compilation later dynamically fails (e.g., due to OOM
+> during bpf_jit_alloc_exec()), the core BPF subsystem falls back to
+> the BPF interpreter.
+> 
+> When the fallback interpreter executes (__bpf_call_base + insn->imm)
+> with the unpatched raw helper ID, it jumps into an unaligned invalid
+> address space, triggering a fatal instruction alignment fault (ADEF)
+> or illegal memory access kernel panic.
+> 
+> This issue impacts all architectures that support helper inlining.
+> Introduce a late fixup pass via bpf_fixup_fallback_inline_helpers()
+> in __bpf_prog_select_runtime() to fix it.
+> 
+> When JIT compilation fails or is disabled, the helper call offsets
+> originally skipped for inlining are rewritten to relative memory
+> offsets right before transferring control to the interpreter.
+> 
+> A bounds check on insn->imm against __BPF_FUNC_MAX_ID is added to
+> ensure already-patched address offsets of regular non-inlined helpers
+> are safely filtered out during traversal.
+> 
+> 1. Test case (test_panic.c):
+> 
+>    #include <linux/bpf.h>
+>    #include <bpf/bpf_helpers.h>
+> 
+>    SEC("kprobe/sys_getpid")
+>    int test_panic(void *ctx)
+>    {
+>    	struct task_struct *task;
+> 
+>    	task = (struct task_struct *)bpf_get_current_task();
+>    	if (task)
+>    		bpf_printk("Task address: %p\n", task);
+> 
+>    	return 0;
+>    }
+> 
+>    char LICENSE[] SEC("license") = "GPL";
+> 
+> 2. Reproduction steps:
+> 
+>    $ clang -target bpf -O2 -g -c test_panic.c -o test_panic.o
+>    $ sudo sysctl -w net.core.bpf_jit_enable=0
+>    $ sudo bpftool prog load test_panic.o /sys/fs/bpf/test_panic autoattach
+>    $ sudo cat /sys/kernel/debug/tracing/trace_pipe
+> 
+> 3. Panic information on LoongArch:
+> 
+>    Kernel ade access[#1]:
+>    ...
+>        ra: 9000000000486e50 ___bpf_prog_run+0x1370/0x36b0
+>       ERA: 9000000000485383 __bpf_prog_ret0_warn+0x13/0x20
+>    ...
+>     ESTAT: 00080000 [ADEF] (IS= ECode=8 EsubCode=0)
+> 
+> Fixes: 2ddec2c80b44 ("riscv, bpf: inline bpf_get_smp_processor_id()")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   kernel/bpf/core.c | 28 ++++++++++++++++++++++++++++
+>   1 file changed, 28 insertions(+)
+> 
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 649cce41e13f..5785c8cb4dbe 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -2608,6 +2608,31 @@ static struct bpf_prog *bpf_prog_jit_compile(struct bpf_verifier_env *env, struc
+>   	return prog;
+>   }
+>   
+> +/* Fix up helper call offsets for inlined helpers on JIT fallback path. */
+> +static void bpf_fixup_fallback_inline_helpers(struct bpf_verifier_env *env, struct bpf_prog *fp)
 
-Huacai
+The function name is a bit long for a static function
 
->
-> Huacai
->
-> >
-> > Regards
-> > Bibo Mao
-> >
-> > >
-> > > Huacai
-> > >
-> > >>
-> > >>                  return ret;
-> > >>          }
-> > >> --
-> > >> 2.39.3
-> > >>
-> >
+> +{
+> +	struct bpf_insn *insn = fp->insnsi;
+> +	const struct bpf_func_proto *fn;
+> +	int i;
+> +
+> +	if (!env || !env->ops->get_func_proto)
+> +		return;
+> +
+> +	for (i = 0; i < fp->len; i++, insn++) {
+> +		if (insn->code == (BPF_JMP | BPF_CALL) && insn->src_reg == 0) {
+> +			/* Filter out already-patched address offsets. */
+> +			if (insn->imm >= __BPF_FUNC_MAX_ID)
+
+The check is redundant, since bpf_jit_inlines_helper_call() already
+filters out insn->imm numbers that is not a valid helper id.
+
+> +				continue;
+> +
+> +			if (bpf_jit_inlines_helper_call(insn->imm)) {
+> +				fn = env->ops->get_func_proto(insn->imm, env->prog);
+> +				if (fn && fn->func)
+> +					insn->imm = fn->func - __bpf_call_base;
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>   struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct bpf_prog *fp,
+>   					   int *err)
+>   {
+> @@ -2643,6 +2668,9 @@ struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct
+>   			*err = -ENOTSUPP;
+>   			return fp;
+>   		}
+> +
+> +		if (!fp->jited)
+> +			bpf_fixup_fallback_inline_helpers(env, fp);
+>   	} else {
+>   		*err = bpf_prog_offload_compile(fp);
+>   		if (*err)
+
+I tested it on arm64 and the patch works.
+
+Tested-by: Xu Kuohai <xukuohai@huawei.com>
+
