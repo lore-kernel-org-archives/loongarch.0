@@ -1,100 +1,149 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77EC730FC34
-	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 01:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF51372056;
+	Fri, 12 Jun 2026 02:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781226992; cv=none; b=pWPrkZ6d3MgMw/RSPG8RtkU3fZQpvajYjF9vlgZcYh4zdVc6fTV/3ZgxF5ldUrqMz/lJrADCnqd4go0E7xb3tqYwNj4tUJZSmpDNO0wjrIs8OLpAq9M35U14dDIvwUyAiuKDSTV4QKmxeWCBm/XICD0guMVJggfD037kO3krIT8=
+	t=1781229777; cv=none; b=JE6oPCn0XGmn652qhkzYOc7RuI6JWcKaKsvn11Tl2LCkHLW29Ydhxnq1jHFTjmBY3oiyyjHBLn9iFrsI+mZF0TMkYbTLLOmdSZ1DRdISto4VtBa3XYSehsS2YCStpdiGQHhPqvg/m1LGU7b7svIP9O7x9K+0dOSs/lETvzZmiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781226992; c=relaxed/simple;
-	bh=sJkufXQGE0sZOoLABtQrGctwRbHzGSr281jZzn4mS6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dUM3VmI5GHIXyGFl/R0pNyaxJ19h7GzGcknV28gKSYSo91/j61mlq9U1OHLGTevDrLB8LYP6CTamnMiELpK9v5wWChFqcJqQGof4vqTOC+43cI+TJYM28wxoJcWKCqj6Jngmq1XpdonLjbIlBgH7t79gluAsTlZe0QCPQ8q5nDw=
+	s=arc-20240116; t=1781229777; c=relaxed/simple;
+	bh=EYg/L3M5bcDmxoGhkwP6K60O0aaKPTs2U6yI2h7Q6Hw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RkJZvRaxXz1/AZErshPwr0i/OvZCzcP4/HQu+7hgUZjMhdfz+CMGhCmEYn5mrSJNMQrD1yupU+qGbKvUUOQ732nhzJktx2umfvzc+8LOtHdlhjio5ii2TlvAvreM1v8H3AUGD5azvWTKEod0l9O/+Sbi1+tSEywZp47K5Jn2Qcg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxJenlXStqtE0TAA--.44914S3;
-	Fri, 12 Jun 2026 09:16:21 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxvsLgXStqTHCjAA--.47687S3;
-	Fri, 12 Jun 2026 09:16:20 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxVunEaCtqKVATAA--.45328S3;
+	Fri, 12 Jun 2026 10:02:45 +0800 (CST)
+Received: from [10.130.40.83] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowJAx28G_aCtq7HijAA--.47351S3;
+	Fri, 12 Jun 2026 10:02:41 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
+To: sashiko-reviews@lists.linux.dev
+Cc: bpf@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+ loongarch@lists.linux.dev, WANG Rui <wangrui@loongson.cn>
+References: <20260612011616.27771-2-yangtiezhu@loongson.cn>
+ <20260612012945.1CB951F000E9@smtp.kernel.org>
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Hengqi Chen <hengqi.chen@gmail.com>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-Date: Fri, 12 Jun 2026 09:16:14 +0800
-Message-ID: <20260612011616.27771-2-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260612011616.27771-1-yangtiezhu@loongson.cn>
-References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
+Message-ID: <05dce31c-91e1-117f-07b5-5c480d25d55d@loongson.cn>
+Date: Fri, 12 Jun 2026 10:02:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260612012945.1CB951F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxvsLgXStqTHCjAA--.47687S3
+X-CM-TRANSID:qMiowJAx28G_aCtq7HijAA--.47351S3
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfJw47KFyxXry7Zw4rWr1UXFc_yoW8Aw4fKo
-	WavF4qyr18Jw4UWa98trnxtFW5Xr1qkrWDZ3y2vanxGa1xJ347WryUGw13tFy3Xa4kWa9r
-	C34agw4vvas7trn3l-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYj7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8xOz3UUUUU==
+X-Coremail-Antispam: 1Uk129KBj93XoWxurykGFWxKFWxAw47ZFy5GFX_yoWrWF48p3
+	4akr17tr48Jr1Iv3W8Cw48ZFyrC397Ar13Gr4kCFyrt3Z0yrnYqr4Iqas5Zw15uw1fK34S
+	vrWqyr929a1DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jb_-PUUUUU=
 
-Like other architectures such as x86, arm64, riscv, powerpc and s390,
-select THREAD_INFO_IN_TASK for LoongArch to move thread_info off the
-stack into task_struct. This follows modern kernel standards and also
-makes the system more secure.
+On 2026/6/12 上午9:29, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] Temporary biased `$tp` on 32-bit LoongArch causes infinite recursive faults during panic/exceptions, breaking stack traces and debuggability.
+> --
+> 
+> commit 031d5abd58aa95ea089ae24763bb03c5e684dbc3
+> Author: Tiezhu Yang <yangtiezhu@loongson.cn>
+> 
+> LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
+> 
+> Select THREAD_INFO_IN_TASK for LoongArch to move thread_info off the
+> stack into task_struct. This updates the thread pointer recovery path
+> and context switch logic to adapt to the new layout.
+> 
+>> In the context of __switch_to(), local interrupts are disabled, and the
+>> kernel is in a critical switching phase where handling any synchronous
+>> exception is practically impossible and prohibited.
+>>
+>> If any synchronous exception or watchpoint does trigger in this narrow
+>> window, it constitutes a fatal double fault and the kernel is expected
+>> to die/panic immediately anyway. Therefore, the temporary biased value
+>> in $tp is safe and acceptable here.
+> 
+> [Severity: High]
+> Could this temporary biased value in $tp on 32-bit kernels prevent the
+> system from printing the expected panic trace and instead cause an
+> infinite recursive fault?
+> 
+> If an exception like a hardware watchpoint, NMI watchdog, or machine
+> check triggers in this window, the unwinder calls show_stacktrace(),
+> which defaults to current:
+> 
+> arch/loongarch/kernel/traps.c:show_stacktrace() {
+>          if (!task)
+>                  task = current;
+> 
+>          if (!try_get_task_stack(task))
+>                  return;
+> ...
+> 
+> Because current is derived from $tp, and $tp is offset by 2000 bytes
+> (TASK_STRUCT_OFFSET), accessing the task stack refcount inside
+> try_get_task_stack() will trigger a page fault.
+> 
+> The page fault handler then calls die(), which calls show_stacktrace()
+> again. This creates an infinite recursive fault and stack overflow
+> without printing the intended panic trace.
+> 
+>> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
+>> index f377d8f5c51a6..d6e0d05d6fd39 100644
+>> --- a/arch/loongarch/kernel/switch.S
+>> +++ b/arch/loongarch/kernel/switch.S
+> [ ... ]
+>> @@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
+>>   	LONG_SPTR	t8, t7, 0
+>>   #endif
+>>   
+>> -	move	tp, a2
+>> +	move		tp, a1
+>>   	cpu_restore_nonscratch a1
+> 
+> [Severity: High]
+> Is there an alternative way to handle the structural pointer bias for
+> 32-bit kernels without temporarily storing an invalid pointer in $tp,
+> so that panic handling and debuggability remain intact?
 
-With this patch, thread_info is included in task_struct at an offset
-of 0 instead of being placed at the bottom of the kernel stack. Thus,
-the $tp register points to both thread_info and task_struct.
+Thanks for your review comments, I prefer to use
+"PTR_ADDI        tp, a1, -TASK_STRUCT_OFFSET"
+for both 64-bit and 32-bit here rather than use
+"move		tp, a1"
+for only 64-bit here.
 
-To support this, introduce a per-CPU variable cpu_tasks to store the
-pointer to the current task_struct. This decouples the recovery	of
-the $tp register from the stack pointer during exception entry.
+But I discussed with the LoongArch maintainer Huacai, here is his
+opinion in the previous v2:
 
-Then initialize cpu_tasks for the primary and secondary CPUs during
-arch-specific setup and SMP boot paths. To eliminate the dangerous
-windows during the early initialization where the cpu_tasks remains
-uninitialized, set_current() is invoked as early as possible in both
-setup_arch() (right after unwind_init) and start_secondary() (right
-after cpu_probe). This ensures the $tp recovery barrier is armed in
-case any early boot exceptions or kernel panics occur.
+"As I said before, even if you use "PTR_ADDI        tp, a1,
+-TASK_STRUCT_OFFSET", it is impossible to handle exceptions in
+__switch_to().
 
-Modify SAVE_SOME and handle_syscall to restore the $tp register from
-cpu_tasks, and also use the la_abs absolute addressing for cpu_tasks
-access in assembly to bypass the relocation limits within exception
-handling sections. By advancing the preservation of u0 in SAVE_SOME,
-reuse the PERCPU_BASE_KS value in u0 for the cpu_tasks calculation,
-effectively eliminating a duplicate csrrd instruction execution on
-SMP platforms.
+It is a type of "double fault" if exceptions really happen, "double
+fault" means to die. So just keep it."
 
-Update <asm/switch_to.h> and <kernel/switch.S> to fully support the
-CONFIG_THREAD_INFO_IN_TASK feature.
+In the commit message, there is a corresponding description:
 
-Remove the obsolete next_ti argument from __switch_to(), which shifts
-the remaining arguments ahead in the calling convention (sched_ra from
-a3 to a2, and sched_cfa from a4 to a3). Under the new configuration,
-__switch_to() now directly derives the thread pointer ($tp) from the
-next task_struct pointer in a1.
-
-To preserve the optimal and clean "move tp, a1" path for 64-bit kernels,
+"To preserve the optimal and clean "move tp, a1" path for 64-bit kernels,
 the thread pointer ($tp) is assigned directly from a1 in the core path.
 For 32-bit kernels, where a1 carries a 2000-byte structural pointer bias
 at entry, an explicit adjustment "PTR_ADDI tp, tp, -TASK_STRUCT_OFFSET"
@@ -107,446 +156,8 @@ exception is practically impossible and prohibited.
 If any synchronous exception or watchpoint does trigger in this narrow
 window, it constitutes a fatal double fault and the kernel is expected
 to die/panic immediately anyway. Therefore, the temporary biased value
-in $tp is safe and acceptable here.
+in $tp is safe and acceptable here."
 
-Additionally, evaluate the stack lookup as a single load instruction
-"LONG_LPTR t0, a1, (TASK_STACK - TASK_STRUCT_OFFSET)", this perfectly
-satisfies both 32-bit and 64-bit kernels. Using the "next" pointer in
-a1 as the base register, rather than $tp, effectively unchains the data
-dependency (RAW hazard) from the preceding move instruction, maximizing
-the instruction-level parallelism and superscalar execution efficiency
-while naturally adapting the structural shift.
-
-With CONFIG_THREAD_INFO_IN_TASK enabled, the kernel stack life cycle is
-decoupled from task_struct and can be freed concurrently.
-
-Currently, show_stacktrace() reads raw stack data via __get_addr() and
-subsequently calls show_backtrace() to unwind the frame, without holding
-any reference to the target task's stack. If show_stacktrace() is called
-on a concurrently exiting task, it could attempt to read from a freed or
-reallocated kernel stack. This introduces a severe use-after-free (UAF)
-read risk or kernel panics.
-
-Wrap the entire stack inspection process inside show_stacktrace() with
-a try_get_task_stack() and put_task_stack() pair. This ensures the task
-stack remains pinned safely during both the raw stack data dump loop and
-the subsequent stack unwinding phase.
-
-Also, ensure that the task pointer is initialized to "current" early if
-it is NULL, so that try_get_task_stack() always operates on a valid task
-reference.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- .../core/thread-info-in-task/arch-support.txt |  2 +-
- arch/loongarch/Kconfig                        |  1 +
- arch/loongarch/include/asm/current.h          | 31 +++++++++++++++++++
- arch/loongarch/include/asm/smp.h              |  3 +-
- arch/loongarch/include/asm/stackframe.h       |  9 ++++--
- arch/loongarch/include/asm/switch_to.h        |  6 ++--
- arch/loongarch/include/asm/thread_info.h      | 10 ------
- arch/loongarch/kernel/asm-offsets.c           |  6 ++--
- arch/loongarch/kernel/entry.S                 |  7 +++--
- arch/loongarch/kernel/head.S                  | 18 ++++++-----
- arch/loongarch/kernel/process.c               |  2 ++
- arch/loongarch/kernel/relocate.c              |  2 +-
- arch/loongarch/kernel/setup.c                 |  1 +
- arch/loongarch/kernel/smp.c                   |  6 ++--
- arch/loongarch/kernel/switch.S                | 14 +++++----
- arch/loongarch/kernel/traps.c                 |  8 +++++
- 16 files changed, 88 insertions(+), 38 deletions(-)
- create mode 100644 arch/loongarch/include/asm/current.h
-
-diff --git a/Documentation/features/core/thread-info-in-task/arch-support.txt b/Documentation/features/core/thread-info-in-task/arch-support.txt
-index f3d744c76061..e26efdfbb6b4 100644
---- a/Documentation/features/core/thread-info-in-task/arch-support.txt
-+++ b/Documentation/features/core/thread-info-in-task/arch-support.txt
-@@ -12,7 +12,7 @@
-     |       arm64: |  ok  |
-     |        csky: | TODO |
-     |     hexagon: | TODO |
--    |   loongarch: | TODO |
-+    |   loongarch: |  ok  |
-     |        m68k: | TODO |
-     |  microblaze: | TODO |
-     |        mips: | TODO |
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 606597da46b8..cf8d3cf91814 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -210,6 +210,7 @@ config LOONGARCH
- 	select SYSCTL_ARCH_UNALIGN_NO_WARN
- 	select SYSCTL_EXCEPTION_TRACE
- 	select SWIOTLB if 64BIT
-+	select THREAD_INFO_IN_TASK
- 	select TRACE_IRQFLAGS_SUPPORT
- 	select USE_PERCPU_NUMA_NODE_ID
- 	select USER_STACKTRACE_SUPPORT
-diff --git a/arch/loongarch/include/asm/current.h b/arch/loongarch/include/asm/current.h
-new file mode 100644
-index 000000000000..fa4fb7987075
---- /dev/null
-+++ b/arch/loongarch/include/asm/current.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_LOONGARCH_CURRENT_H
-+#define __ASM_LOONGARCH_CURRENT_H
-+
-+#include <linux/compiler.h>
-+
-+#ifndef __ASSEMBLER__
-+
-+#include <asm/percpu.h>
-+
-+struct task_struct;
-+
-+DECLARE_PER_CPU(struct task_struct *, cpu_tasks);
-+
-+register struct task_struct *current_thread_pointer __asm__("$tp");
-+
-+static __always_inline struct task_struct *get_current(void)
-+{
-+	return current_thread_pointer;
-+}
-+
-+#define current get_current()
-+
-+static __always_inline void set_current(struct task_struct *task)
-+{
-+	__this_cpu_write(cpu_tasks, task);
-+}
-+
-+#endif /* __ASSEMBLER__ */
-+
-+#endif /* __ASM_LOONGARCH_CURRENT_H */
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 3a47f52959a8..761cc0016df8 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -82,7 +82,8 @@ struct seq_file;
- 
- struct secondary_data {
- 	unsigned long stack;
--	unsigned long thread_info;
-+	unsigned long task;
-+	unsigned long offset;
- };
- extern struct secondary_data cpuboot_data;
- 
-diff --git a/arch/loongarch/include/asm/stackframe.h b/arch/loongarch/include/asm/stackframe.h
-index ecc8e50fffa8..b031152e0fc8 100644
---- a/arch/loongarch/include/asm/stackframe.h
-+++ b/arch/loongarch/include/asm/stackframe.h
-@@ -191,10 +191,15 @@
- 	andi	t0, t0, 0x3	/* extract pplv bit */
- 	beqz	t0, 9f
- 
--	LONG_LI	tp, ~_THREAD_MASK
--	and	tp, tp, sp
- 	cfi_st  u0, PT_R21, \docfi
- 	csrrd	u0, PERCPU_BASE_KS
-+
-+	la_abs      t1, cpu_tasks
-+#ifdef CONFIG_SMP
-+	LONG_ADD    t1, t1, u0
-+#endif
-+	LONG_L      tp, t1, 0
-+
- 9:
- #ifdef CONFIG_KGDB
- 	li.w	t0, CSR_CRMD_WE
-diff --git a/arch/loongarch/include/asm/switch_to.h b/arch/loongarch/include/asm/switch_to.h
-index 5b225aff3ba2..07a4c5909779 100644
---- a/arch/loongarch/include/asm/switch_to.h
-+++ b/arch/loongarch/include/asm/switch_to.h
-@@ -15,7 +15,6 @@ struct task_struct;
-  * __switch_to - switch execution of a task
-  * @prev:	The task previously executed.
-  * @next:	The task to begin executing.
-- * @next_ti:	task_thread_info(next).
-  * @sched_ra:	__schedule return address.
-  * @sched_cfa:	__schedule call frame address.
-  *
-@@ -23,7 +22,7 @@ struct task_struct;
-  * the context of next. Returns prev.
-  */
- extern asmlinkage struct task_struct *__switch_to(struct task_struct *prev,
--			struct task_struct *next, struct thread_info *next_ti,
-+			struct task_struct *next,
- 			void *sched_ra, void *sched_cfa);
- 
- /*
-@@ -37,7 +36,8 @@ do {										\
- 	lose_fpu_inatomic(1, prev);						\
- 	lose_lbt_inatomic(1, prev);						\
- 	hw_breakpoint_thread_switch(next);					\
--	(last) = __switch_to(prev, next, task_thread_info(next),		\
-+	set_current(next);							\
-+	(last) = __switch_to(prev, next,					\
- 		 __builtin_return_address(0), __builtin_frame_address(0));	\
- } while (0)
- 
-diff --git a/arch/loongarch/include/asm/thread_info.h b/arch/loongarch/include/asm/thread_info.h
-index 4d7117fcdc78..41eabe4fb647 100644
---- a/arch/loongarch/include/asm/thread_info.h
-+++ b/arch/loongarch/include/asm/thread_info.h
-@@ -22,7 +22,6 @@
-  *   must also be changed
-  */
- struct thread_info {
--	struct task_struct	*task;		/* main task structure */
- 	unsigned long		flags;		/* low level flags */
- 	unsigned long		tp_value;	/* thread pointer */
- 	__u32			cpu;		/* current CPU */
-@@ -37,20 +36,11 @@ struct thread_info {
-  */
- #define INIT_THREAD_INFO(tsk)			\
- {						\
--	.task		= &tsk,			\
- 	.flags		= _TIF_FIXADE,		\
- 	.cpu		= 0,			\
- 	.preempt_count	= INIT_PREEMPT_COUNT,	\
- }
- 
--/* How to get the thread information struct from C. */
--register struct thread_info *__current_thread_info __asm__("$tp");
--
--static inline struct thread_info *current_thread_info(void)
--{
--	return __current_thread_info;
--}
--
- register unsigned long current_stack_pointer __asm__("$sp");
- 
- #endif /* !__ASSEMBLER__ */
-diff --git a/arch/loongarch/kernel/asm-offsets.c b/arch/loongarch/kernel/asm-offsets.c
-index 2cc953f113ac..453b176fa2d1 100644
---- a/arch/loongarch/kernel/asm-offsets.c
-+++ b/arch/loongarch/kernel/asm-offsets.c
-@@ -70,7 +70,7 @@ static void __used output_task_defines(void)
- {
- 	COMMENT("LoongArch task_struct offsets.");
- 	OFFSET(TASK_STATE, task_struct, __state);
--	OFFSET(TASK_THREAD_INFO, task_struct, stack);
-+	OFFSET(TASK_STACK, task_struct, stack);
- 	OFFSET(TASK_FLAGS, task_struct, flags);
- 	OFFSET(TASK_MM, task_struct, mm);
- 	OFFSET(TASK_PID, task_struct, pid);
-@@ -84,7 +84,6 @@ static void __used output_task_defines(void)
- static void __used output_thread_info_defines(void)
- {
- 	COMMENT("LoongArch thread_info offsets.");
--	OFFSET(TI_TASK, thread_info, task);
- 	OFFSET(TI_FLAGS, thread_info, flags);
- 	OFFSET(TI_TP_VALUE, thread_info, tp_value);
- 	OFFSET(TI_CPU, thread_info, cpu);
-@@ -267,7 +266,8 @@ static void __used output_smpboot_defines(void)
- {
- 	COMMENT("Linux smp cpu boot offsets.");
- 	OFFSET(CPU_BOOT_STACK, secondary_data, stack);
--	OFFSET(CPU_BOOT_TINFO, secondary_data, thread_info);
-+	OFFSET(CPU_BOOT_TASK, secondary_data, task);
-+	OFFSET(CPU_BOOT_OFFSET, secondary_data, offset);
- 	BLANK();
- }
- #endif
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index b53d333a7c42..53bce27f516b 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -67,8 +67,11 @@ SYM_CODE_START(handle_syscall)
- #endif
- 
- 	move		u0, t0
--	LONG_LI		tp, ~_THREAD_MASK
--	and		tp, tp, sp
-+	la_abs		t1, cpu_tasks
-+#ifdef CONFIG_SMP
-+	LONG_ADD	t1, t1, u0
-+#endif
-+	LONG_L		tp, t1, 0
- 
- 	move		a0, sp
- 	bl		do_syscall
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 4eed7bc312a8..ec67faab907b 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -74,10 +74,11 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	/* GPR21 used for percpu base (runtime), initialized as 0 */
- 	move		u0, zero
- 
--	la.pcrel	tp, init_thread_union
--	/* Set the SP after an empty pt_regs.  */
--	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
--	PTR_ADD		sp, sp, tp
-+	la.pcrel	tp, init_task
-+	la.pcrel	t0, init_stack
-+	PTR_LI		t1, _THREAD_SIZE
-+	PTR_ADD		t0, t0, t1
-+	PTR_ADDI	sp, t0, -PT_SIZE
- 	set_saved_sp	sp, t0, t1
- 
- #ifdef CONFIG_RELOCATABLE
-@@ -86,8 +87,10 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 
- #ifdef CONFIG_RANDOMIZE_BASE
- 	/* Repoint the sp into the new kernel */
--	PTR_LI		sp, (_THREAD_SIZE - PT_SIZE)
--	PTR_ADD		sp, sp, tp
-+	LONG_LPTR	t0, tp, TASK_STACK
-+	PTR_LI		t1, _THREAD_SIZE
-+	PTR_ADD		t0, t0, t1
-+	PTR_ADDI	sp, t0, -PT_SIZE
- 	set_saved_sp	sp, t0, t1
- 
- 	/* Jump to the new kernel: new_pc = current_pc + random_offset */
-@@ -128,7 +131,8 @@ SYM_CODE_START(smpboot_entry)
- #endif
- 	la.pcrel	t0, cpuboot_data
- 	ld.d		sp, t0, CPU_BOOT_STACK
--	ld.d		tp, t0, CPU_BOOT_TINFO
-+	ld.d		tp, t0, CPU_BOOT_TASK
-+	ld.d		u0, t0, CPU_BOOT_OFFSET
- 
- 	bl		start_secondary
- 	ASM_BUG()
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 5505fc355e1b..0116a7befab0 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -54,6 +54,8 @@
- #include <asm/vdso.h>
- #include <asm/vdso/vdso.h>
- 
-+DEFINE_PER_CPU(struct task_struct *, cpu_tasks);
-+
- #ifdef CONFIG_STACKPROTECTOR
- #include <linux/stackprotector.h>
- unsigned long __stack_chk_guard __read_mostly;
-diff --git a/arch/loongarch/kernel/relocate.c b/arch/loongarch/kernel/relocate.c
-index 4b61a9632a98..2a42874e5eb7 100644
---- a/arch/loongarch/kernel/relocate.c
-+++ b/arch/loongarch/kernel/relocate.c
-@@ -313,7 +313,7 @@ unsigned long __init relocate_kernel(void)
- 		reloc_offset += random_offset;
- 
- 		/* The current thread is now within the relocated kernel */
--		__current_thread_info = RELOCATED_KASLR(__current_thread_info);
-+		current_thread_pointer = RELOCATED_KASLR(current_thread_pointer);
- 
- 		update_reloc_offset(&reloc_offset, random_offset);
- 	}
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 839b23edee87..369262117c63 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -593,6 +593,7 @@ void __init setup_arch(char **cmdline_p)
- {
- 	cpu_probe();
- 	unwind_init();
-+	set_current(current);
- 
- 	init_environ();
- 	efi_init();
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 64a048f1b880..fd7b4abf0f3e 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -400,8 +400,9 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
- 	pr_info("Booting CPU#%d...\n", cpu);
- 
- 	entry = __pa_symbol((unsigned long)&smpboot_entry);
--	cpuboot_data.stack = (unsigned long)__KSTK_TOS(idle);
--	cpuboot_data.thread_info = (unsigned long)task_thread_info(idle);
-+	cpuboot_data.stack = (unsigned long)task_pt_regs(idle);
-+	cpuboot_data.task = (unsigned long)idle;
-+	cpuboot_data.offset = per_cpu_offset(cpu);
- 
- 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
- 
-@@ -663,6 +664,7 @@ asmlinkage void start_secondary(void)
- 	set_my_cpu_offset(per_cpu_offset(cpu));
- 
- 	cpu_probe();
-+	set_current(current);
- 	constant_clockevent_init();
- 	loongson_init_secondary();
- 
-diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
-index f377d8f5c51a..d6e0d05d6fd3 100644
---- a/arch/loongarch/kernel/switch.S
-+++ b/arch/loongarch/kernel/switch.S
-@@ -12,7 +12,7 @@
- 
- /*
-  * task_struct *__switch_to(task_struct *prev, task_struct *next,
-- *			    struct thread_info *next_ti, void *sched_ra, void *sched_cfa)
-+ *			    void *sched_ra, void *sched_cfa)
-  */
- 	.align	5
- SYM_FUNC_START(__switch_to)
-@@ -24,8 +24,8 @@ SYM_FUNC_START(__switch_to)
- 	LONG_SPTR	t1, a0, (THREAD_CSRPRMD - TASK_STRUCT_OFFSET)
- 
- 	cpu_save_nonscratch a0
--	LONG_SPTR	a3, a0, (THREAD_SCHED_RA - TASK_STRUCT_OFFSET)
--	LONG_SPTR	a4, a0, (THREAD_SCHED_CFA - TASK_STRUCT_OFFSET)
-+	LONG_SPTR	a2, a0, (THREAD_SCHED_RA - TASK_STRUCT_OFFSET)
-+	LONG_SPTR	a3, a0, (THREAD_SCHED_CFA - TASK_STRUCT_OFFSET)
- 
- #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP)
- 	la		t7, __stack_chk_guard
-@@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
- 	LONG_SPTR	t8, t7, 0
- #endif
- 
--	move	tp, a2
-+	move		tp, a1
- 	cpu_restore_nonscratch a1
- 
--	li.w		t0, _THREAD_SIZE
--	PTR_ADD		t0, t0, tp
-+	LONG_LPTR	t0, a1, (TASK_STACK - TASK_STRUCT_OFFSET)
-+	PTR_LI		t1, _THREAD_SIZE
-+	PTR_ADD		t0, t0, t1
- 	set_saved_sp	t0, t1, t2
- 
- 	LONG_LPTR	t1, a1, (THREAD_CSRPRMD - TASK_STRUCT_OFFSET)
-@@ -45,6 +46,7 @@ SYM_FUNC_START(__switch_to)
- 
- #ifdef CONFIG_32BIT
- 	PTR_ADDI	a0, a0, -TASK_STRUCT_OFFSET
-+	PTR_ADDI	tp, tp, -TASK_STRUCT_OFFSET
- #endif
- 	jr	ra
- SYM_FUNC_END(__switch_to)
-diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
-index 5d49b742e3bf..776523747ea3 100644
---- a/arch/loongarch/kernel/traps.c
-+++ b/arch/loongarch/kernel/traps.c
-@@ -107,6 +107,12 @@ static void show_stacktrace(struct task_struct *task,
- 	unsigned long stackdata;
- 	unsigned long *sp = (unsigned long *)regs->regs[3];
- 
-+	if (!task)
-+		task = current;
-+
-+	if (!try_get_task_stack(task))
-+		return;
-+
- 	printk("%sStack :", loglvl);
- 	i = 0;
- 	while ((unsigned long) sp & (PAGE_SIZE - 1)) {
-@@ -129,6 +135,8 @@ static void show_stacktrace(struct task_struct *task,
- 	}
- 	pr_cont("\n");
- 	show_backtrace(task, regs, loglvl, user);
-+
-+	put_task_stack(task);
- }
- 
- void show_stack(struct task_struct *task, unsigned long *sp, const char *loglvl)
--- 
-2.42.0
+Thanks,
+Tiezhu
 
