@@ -1,32 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8EF30BF4F
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A78DE305664
 	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 01:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781226985; cv=none; b=PKhVOWbc2CFkjT5wWPVB7o9pr0KP7X3dAJsMdB5BdNJNkuFRA9uqqBxV1v3UN6TKf5xNSzNPeX4GImcQC0PjR7Z5lunwKsMwO6ITE1/AfIvHPtb8Kmubm2rmqryTEsaH3jwUOTIUK0i9FY4m/NI0UvBSRRwElvKlIiTMZ2X3Qbo=
+	t=1781226985; cv=none; b=E7F1bZDPz6rWSLYGAxUDCyoXGCh6f8cR71M32amprIRkkZ10S8nqvnxbZmAY7LZ2LGl7DU0x7wir8tzPqeJN7jphVv9p8h0eapjAunO2Z+8UtwaCSVTh4DGy8OH0eZCxlh2QT3A1VhlUMZ1obWFXbt6c5gNMvLyQLFGYJL8JBF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781226985; c=relaxed/simple;
-	bh=Bo0BHYJ0tHSmpC59lQMtEt4KfHXhD8Eh07x0FPHBtV8=;
+	bh=3nTdHJdjlXmAp/wNFCBcxKPU++qEyD5ygE8fXLT4UjY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VX2IW5se4vyi366AhNdpkaf6iPeMJNQYUMmQGJ2IUGZM3f3zo6eLu+Ne+c7Qy7SRiGM6dxsjX4ynkVN83zirOBf3TqlNiCjJLkSXAZBt3q7tjl9q7O7dbFWH77TTl2X8Afbe/mAflGK2myKBpL6ZBWzKKfG69c8DGBoeA9BHVX8=
+	 MIME-Version; b=MwtpeWlryMQjQ09L0mBRsY/s36LRXT65+Alv66FzdMQI6yDGq4nQPfbG4TQwcuVq+lxH+F5nFOOnt/M2rx5fK+GaE/XLK52rTsliKQQA0xZiUDepF1cPXtjsyLyM95amyA71sFAfy243pfUXZ+qNorAFrm/C5HJNg6LQxn1wf7s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxzsDmXStquU0TAA--.27748S3;
+	by gateway (Coremail) with SMTP id _____8Cx3enmXStqvU0TAA--.51082S3;
 	Fri, 12 Jun 2026 09:16:22 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCxvsLgXStqTHCjAA--.47687S4;
-	Fri, 12 Jun 2026 09:16:21 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJCxvsLgXStqTHCjAA--.47687S5;
+	Fri, 12 Jun 2026 09:16:22 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Hengqi Chen <hengqi.chen@gmail.com>
 Cc: loongarch@lists.linux.dev,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/3] LoongArch: BPF: Inline bpf_get_current_task{_btf}() helpers
-Date: Fri, 12 Jun 2026 09:16:15 +0800
-Message-ID: <20260612011616.27771-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 3/3] LoongArch: BPF: Inline bpf_get_smp_processor_id() helper
+Date: Fri, 12 Jun 2026 09:16:16 +0800
+Message-ID: <20260612011616.27771-4-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20260612011616.27771-1-yangtiezhu@loongson.cn>
 References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxvsLgXStqTHCjAA--.47687S4
+X-CM-TRANSID:qMiowJCxvsLgXStqTHCjAA--.47687S5
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7tr43KFy8tF4DXw4DXryDXFc_yoW8KFyDpF
-	4UAr1Ykr4DX34ftrWxJw4DZr1ayaykGry7WFy5K3ySka1fXrnYqr1fK3W3JF95ArW8ZF1f
-	Z39FyrsY9F1DAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW7CrykWw4UurW7JFW8ZF1xXrc_yoW5Jr1UpF
+	4UCrsIkr4DWa4FqFWxJr4kZryYqws5Wry3GFyYgayak3Z7Zry5tr1fKw13tFn5Ar409a4x
+	Z390krsYkF4UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
@@ -54,11 +54,11 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7tr43KFy8tF4DXw4DXryDXFc_yoW8KFyDpF
 	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
 	x0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
 	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUco7KUUUUU
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUoxR6UUUUU
 
-The pointer to task_struct is always available in the $tp register,
-the calls to bpf_get_current_task() and bpf_get_current_task_btf()
-can be inlined into a single move instruction.
+The pointer to thread_info is always available in the $tp register,
+the call to bpf_get_smp_processor_id() can be inlined into a single
+load instruction.
 
 (1) Here is the sample test.c:
 
@@ -66,9 +66,9 @@ can be inlined into a single move instruction.
   #include <bpf/bpf_helpers.h>
 
   SEC("raw_tp/sys_enter")
-  long test_task(void *ctx)
+  int test_cpuid(void *ctx)
   {
-	  return (long)bpf_get_current_task();
+	  return bpf_get_smp_processor_id();
   }
   char _license[] SEC("license") = "GPL";
 
@@ -77,10 +77,10 @@ can be inlined into a single move instruction.
   sudo yum install libbpf-devel kernel-devel bpftool
   clang -target bpf -O2 -c test.c -o test.o
   sudo sysctl -w net.core.bpf_jit_enable=1
-  sudo bpftool prog show name test_task
-  sudo rm -f /sys/fs/bpf/test_task
-  sudo bpftool prog load test.o /sys/fs/bpf/test_task
-  ID=$(sudo bpftool prog show pinned /sys/fs/bpf/test_task | grep -oE '^[0-9]+')
+  sudo bpftool prog show name test_cpuid
+  sudo rm -f /sys/fs/bpf/test_cpuid
+  sudo bpftool prog load test.o /sys/fs/bpf/test_cpuid
+  ID=$(sudo bpftool prog show pinned /sys/fs/bpf/test_cpuid | grep -oE '^[0-9]+')
   sudo bpftool prog dump jited id $ID
 
 (3) Here are the test results:
@@ -88,8 +88,8 @@ can be inlined into a single move instruction.
 Before: 6 instructions
 
   ...
-  64:	lu12i.w	$t1, 1093
-  68:	ori	$t1, $t1, 3320
+  64:	lu12i.w	$t1, 1213
+  68:	ori	$t1, $t1, 1680
   6c:	lu32i.d	$t1, 0
   70:	lu52i.d	$t1, $t1, -1792
   74:	jirl	$ra, $t1, 0
@@ -99,50 +99,50 @@ Before: 6 instructions
 After: 1 instruction
 
   ...
-  64:	move	$a5, $tp
+  64:	ld.wu	$a5, $tp, 16
   ...
 
-This is similar with commit 2bb138cb20a6 ("bpf, arm64: Inline
-bpf_get_current_task/_btf() helpers").
+This is similar with commit 2ddec2c80b44 ("riscv, bpf: inline
+bpf_get_smp_processor_id()").
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/loongarch/net/bpf_jit.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/loongarch/net/bpf_jit.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 24913dc7f4e8..b93b67d22c26 100644
+index b93b67d22c26..4f2493c549f1 100644
 --- a/arch/loongarch/net/bpf_jit.c
 +++ b/arch/loongarch/net/bpf_jit.c
-@@ -1147,6 +1147,13 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2022 Loongson Technology Corporation Limited
+  */
+ #include <linux/memory.h>
++#include <asm/asm-offsets.h>
+ #include "bpf_jit.h"
  
- 	/* function call */
- 	case BPF_JMP | BPF_CALL:
-+		/* Implement helper call to bpf_get_current_task/_btf() inline */
-+		if (insn->src_reg == 0 && (insn->imm == BPF_FUNC_get_current_task ||
-+					   insn->imm == BPF_FUNC_get_current_task_btf)) {
-+			move_reg(ctx, regmap[BPF_REG_0], LOONGARCH_GPR_TP);
+ #define LOONGARCH_MAX_REG_ARGS 8
+@@ -1154,6 +1155,12 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 			break;
+ 		}
+ 
++		/* Implement helper call to bpf_get_smp_processor_id() inline */
++		if (insn->src_reg == 0 && insn->imm == BPF_FUNC_get_smp_processor_id) {
++			emit_insn(ctx, ldwu, regmap[BPF_REG_0], LOONGARCH_GPR_TP, TI_CPU);
 +			break;
 +		}
 +
  		ret = bpf_jit_get_func_addr(ctx->prog, insn, extra_pass,
  					    &func_addr, &func_addr_fixed);
  		if (ret < 0)
-@@ -2367,3 +2374,14 @@ bool bpf_jit_supports_subprog_tailcalls(void)
- {
- 	return true;
- }
-+
-+bool bpf_jit_inlines_helper_call(s32 imm)
-+{
-+	switch (imm) {
-+	case BPF_FUNC_get_current_task:
-+	case BPF_FUNC_get_current_task_btf:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
+@@ -2380,6 +2387,7 @@ bool bpf_jit_inlines_helper_call(s32 imm)
+ 	switch (imm) {
+ 	case BPF_FUNC_get_current_task:
+ 	case BPF_FUNC_get_current_task_btf:
++	case BPF_FUNC_get_smp_processor_id:
+ 		return true;
+ 	default:
+ 		return false;
 -- 
 2.42.0
 
