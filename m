@@ -1,163 +1,232 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF51372056;
-	Fri, 12 Jun 2026 02:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EFE395D9F
+	for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 07:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781229777; cv=none; b=JE6oPCn0XGmn652qhkzYOc7RuI6JWcKaKsvn11Tl2LCkHLW29Ydhxnq1jHFTjmBY3oiyyjHBLn9iFrsI+mZF0TMkYbTLLOmdSZ1DRdISto4VtBa3XYSehsS2YCStpdiGQHhPqvg/m1LGU7b7svIP9O7x9K+0dOSs/lETvzZmiAA=
+	t=1781249320; cv=none; b=MmxZKSd3BYsAv67z45GDwXtiyRDTeJ4fJYxQ0bgICDSXu9bOnonJse1OxN7Vpr8/lpy+HHCM5H3u1BcTKLcQX5aPixM812P3FHdohjiCwhy6wNdr6z6IzAYkTcIzhreqdJsXe4HmayVCXrUpq5yjgklJHet/a+oWTDnVzjoXhdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781229777; c=relaxed/simple;
-	bh=EYg/L3M5bcDmxoGhkwP6K60O0aaKPTs2U6yI2h7Q6Hw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RkJZvRaxXz1/AZErshPwr0i/OvZCzcP4/HQu+7hgUZjMhdfz+CMGhCmEYn5mrSJNMQrD1yupU+qGbKvUUOQ732nhzJktx2umfvzc+8LOtHdlhjio5ii2TlvAvreM1v8H3AUGD5azvWTKEod0l9O/+Sbi1+tSEywZp47K5Jn2Qcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxVunEaCtqKVATAA--.45328S3;
-	Fri, 12 Jun 2026 10:02:45 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJAx28G_aCtq7HijAA--.47351S3;
-	Fri, 12 Jun 2026 10:02:41 +0800 (CST)
-Subject: Re: [PATCH v3 1/3] LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-To: sashiko-reviews@lists.linux.dev
-Cc: bpf@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
- loongarch@lists.linux.dev, WANG Rui <wangrui@loongson.cn>
-References: <20260612011616.27771-2-yangtiezhu@loongson.cn>
- <20260612012945.1CB951F000E9@smtp.kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <05dce31c-91e1-117f-07b5-5c480d25d55d@loongson.cn>
-Date: Fri, 12 Jun 2026 10:02:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1781249320; c=relaxed/simple;
+	bh=kAPiUCLyMJWjlb7fejuBmEvQIEXoZ8B6yNmVTGMkDN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XQVp7Ycd6pP9HCIH7/MNkC/Mc3LDn1rIL4+JEtGQXOEeEOIem61lce8IBRbScWdPVzhqtfwi2M6eJibFhJcPH8j8+u1BZoIns+BiwQRmuzdp2foxt8/lJMebyczgKsQ4qWoadxZRGF6OnRSnYoSLIEfYpZIu1FCiEr3xo2+jO+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOuAS5wh; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOuAS5wh"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-8423f869421so579100b3a.3
+        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 00:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781249317; x=1781854117; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=66pdCW0yOW5Nk6MUhQzAUTYI58FQ4Ifcfuf+SyuK5QE=;
+        b=LOuAS5whNAZtJaqflUhV6OA3K8m5SqW6UF4KCcQCUxvudfEbJTcskJWKjZiqZDCv1a
+         LR5L8xueBA8gy/8T1CaF8+/g16Gz1rhFwUGhnpVg4zS96fp9dbh+ZhlQbFty01uE+Sgn
+         XtUtLHF7bJED2v3p+I59+zcyUMUAcWMWKrnsW9B3WgA/gMb3GCPN0wd9nAMsekBsvcoX
+         4f1f2Yt0mgQd7Og1hl5YXH7KTZk4cpcZJcgEVzyPYVICDbO4QWbMOb33BFetg27WiG+v
+         tyeLhN47e6SM/ZnyMrsK4Jz2cWcNUoPwkbh8cbrEkZ+oAwWMx1HedKPah5mbmFIJx1Nb
+         yJdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781249317; x=1781854117;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=66pdCW0yOW5Nk6MUhQzAUTYI58FQ4Ifcfuf+SyuK5QE=;
+        b=CB5u/kNi5EVJptxHvB2eOMwr+ptlAzkQtJIlJszD6D7TIrzNm6p4/eHUCXPG1RPg9d
+         Bwl/n3oMc1HQ4rZwVGhFjweyAlyqlNSw+eKM8/eB0aSkdCfUBSa8d41CKt2WquVaVkFy
+         pVxmiHN7KQwWT5HO5jSishQeHiWeWcS3q/3RHIbezv+q3bMG4DRlomcBQgyQ2CCS4iXI
+         qGqnCmsTE4DtCYjkMwrfRdRHusStf61a+zAH/1VlTkRtUS1d0R/5j1MjmkPTKVOYaUnD
+         v8qpGapTA3W1JNWPaPHdWtIlk3Xlky+/Im7Soi9PEy3jrhtTp6fzZ20GBaU0pXCMQKE7
+         rcFw==
+X-Forwarded-Encrypted: i=1; AFNElJ+wM0jxv1ELAZ3XN36cYh0c9cpeuLUWXEjAQSiUNZkc6XJWe10Mu3zeBjHCnH5SkzAj56NSdM2gXtk=@lists.linux.dev
+X-Gm-Message-State: AOJu0YwHK04/HHmlEhM9fZnVirgblzqP37VWwQq+qgdwkBZchwHPQgKa
+	SYX9ed7EsOq9D3Z04PQIl2YMw82bPMFDKtLde27qalU/9VMTaHFtWM23
+X-Gm-Gg: Acq92OG3sGSRN8fyfn3xjOL+RycT/ZmG9Ppwv7I8r6Grxi2Wr0Tb0inY6UQaL9VXzKK
+	JOaPvxHHjEVJvjYYZGiD+wMlWx/DL2kXg8ZlC1Odhe2KAAVGn9ckvnnnUVJQiHbJtJsGe2bXNYw
+	9Yhc4Oc/W78G+gXPa5s0JM9BIgmLQ1VgjwJPH12ywpR5MMt4iieJxbA8O9nXOpxRcDFNirUdumO
+	oGuRdLhwoA4qp/v9tmMXck2PqfWVSc3LqVzYHhUx6AswsMvbYPLOJpX3bb0FVaYVfYyWRnBeCgr
+	dcyjaXHrVxhdhNguZ+FMlMQmjojkbfiktNhN9otp4iFBkbEN4kE/N0YZ98vCmbLPP5ivwP2ZaMZ
+	2DAuq9CILgFcvQJqC3BjXJizV1VnRIqU27YO11WIlE55RCvXgRHzyo23RtT5bVGsdN0XDs02u6W
+	8EqCdfqtDef3wtQGrbcQ5FYrm6E8N41mJ0aiM0/I4RMQ==
+X-Received: by 2002:a05:6a00:218c:b0:842:708f:39a6 with SMTP id d2e1a72fcca58-8434cc08379mr1646577b3a.10.1781249316540;
+        Fri, 12 Jun 2026 00:28:36 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434afc8a9bsm1278464b3a.31.2026.06.12.00.28.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2026 00:28:35 -0700 (PDT)
+Message-ID: <27a06e00-ac47-4e5f-8033-4e89f15d0411@gmail.com>
+Date: Fri, 12 Jun 2026 15:28:24 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260612012945.1CB951F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ iommu@lists.linux.dev, zhaomeijing@lixiang.com, Rob Herring
+ <robh@kernel.org>, saravanak@kernel.org, bhe@redhat.com, rppt@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ chenhuacai@kernel.org, kernel@xen0n.name, catalin.marinas@arm.com,
+ will@kernel.org, alex@ghiti.fr, akpm@linux-foundation.org,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev,
+ m.szyprowski@samsung.com, robin.murphy@arm.com
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+ <7ed207fa-4c86-426a-8570-495902ce04c3@gmail.com>
+ <a3993db0-6975-455d-9674-4fd7cfcf80fc@gmail.com>
+ <aiqkKe1gXPZ5LZ7t@MiWiFi-R3L-srv>
 Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <aiqkKe1gXPZ5LZ7t@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAx28G_aCtq7HijAA--.47351S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxurykGFWxKFWxAw47ZFy5GFX_yoWrWF48p3
-	4akr17tr48Jr1Iv3W8Cw48ZFyrC397Ar13Gr4kCFyrt3Z0yrnYqr4Iqas5Zw15uw1fK34S
-	vrWqyr929a1DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07jb_-PUUUUU=
 
-On 2026/6/12 上午9:29, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Temporary biased `$tp` on 32-bit LoongArch causes infinite recursive faults during panic/exceptions, breaking stack traces and debuggability.
-> --
-> 
-> commit 031d5abd58aa95ea089ae24763bb03c5e684dbc3
-> Author: Tiezhu Yang <yangtiezhu@loongson.cn>
-> 
-> LoongArch: Implement CONFIG_THREAD_INFO_IN_TASK
-> 
-> Select THREAD_INFO_IN_TASK for LoongArch to move thread_info off the
-> stack into task_struct. This updates the thread pointer recovery path
-> and context switch logic to adapt to the new layout.
-> 
->> In the context of __switch_to(), local interrupts are disabled, and the
->> kernel is in a critical switching phase where handling any synchronous
->> exception is practically impossible and prohibited.
+
+
+On 6/11/26 20:03, Baoquan He wrote:
+> On 06/11/26 at 11:09am, Wandun wrote:
 >>
->> If any synchronous exception or watchpoint does trigger in this narrow
->> window, it constitutes a fatal double fault and the kernel is expected
->> to die/panic immediately anyway. Therefore, the temporary biased value
->> in $tp is safe and acceptable here.
+>>
+>> On 6/11/26 10:09, Wandun wrote:
+>>>
+>>>
+>>> On 5/27/26 11:29, Wandun Chen wrote:
+>>>> From: Wandun Chen <chenwandun@lixiang.com>
+>>>>
+>>>> On SoCs that carve out large firmware-owned reserved memory (GPU
+>>>> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+>>>> those carveouts as part of system RAM even though their contents are
+>>>> firmware state that is not useful for kernel crash analysis.
+>>>>
+>>>> This series introduces an opt-in 'dumpable' flag [1] on struct
+>>>> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
+>>>> DT-based architectures (arm64, riscv, loongarch). By default reserved
+>>>> regions are treated as non-dumpable; CMA regions are explicitly opted
+>>>> in because their pages are returned to the buddy allocator and may
+>>>> carry key crash-analysis data.
+>>>>
+>>>> The series is organized as follows:
+>>>> Patches 1-3: Pre-existing fixes and a small prep change.
+>>>> Patches 4-5: Restructure to allow appending /memreserve/ entries.
+>>>> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
+>>>> Patch 8: Add generic kdump helpers.
+>>>> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
+>>>>                elfcorehdr preparation.
+>>> Hi,
+>>>
+>>> Gentle ping on this series.
+>>>
+>>> Status summary:
+>>> -patch 03: respun separately per Rob's suggestion, picked up for 7.2
+>>> -patch 06: Acked-by: Marek Szyprowski -patch 09: Acked-by: Will Deacon
+>>> The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
+>>> awaiting review. your feedback would be greately appreciated. I know we
+>>> are at the end of 7.1 -rc cycle, I don't want to rush this series, just
+>>> collecting more feedback, and will send next version based on 7.2-rc1.
+>>> If spliting the series into smaller logical group would make review
+>>> easier, please let me know. Best regards, Wandun
+>>
+>> Apologies for the formatting issue in my previous email.
+>> Here is the properly formatted version.
+>>
+>> Gentle ping on this series.
 > 
-> [Severity: High]
-> Could this temporary biased value in $tp on 32-bit kernels prevent the
-> system from printing the expected panic trace and instead cause an
-> infinite recursive fault?
+> Thanks for the effort, the overral looks good to me at 1st glance. I will
+> check if there's concern on generic part. And meanwhile, I am wondering
+> if there's any chance x86 or other ARCH-es w/o OF/FDT can also choose to
+> not dump some areas, e.g GPU stolen memory. Surely, that's another story.
+
+Thanks for the review, Baoquan.
+
+IIUC, reserved memory is already excluded from vmcore on x86.
+
+Reserved memory is typed as E820_TYPE_RESERVED in the e820 table, and
+insert into iomem resource tree with IORESOURCE_MEM flag. The x86 kdump
+patch uses walk_system_ram_res() which scan iomem resource tree, and
+only collects ranges with IORESOURCE_SYSTEM_RAM flag, so reserved
+regions are excluded.
+
+
+Best regards,
+Wandun
 > 
-> If an exception like a hardware watchpoint, NMI watchdog, or machine
-> check triggers in this window, the unwinder calls show_stacktrace(),
-> which defaults to current:
-> 
-> arch/loongarch/kernel/traps.c:show_stacktrace() {
->          if (!task)
->                  task = current;
-> 
->          if (!try_get_task_stack(task))
->                  return;
-> ...
-> 
-> Because current is derived from $tp, and $tp is offset by 2000 bytes
-> (TASK_STRUCT_OFFSET), accessing the task stack refcount inside
-> try_get_task_stack() will trigger a page fault.
-> 
-> The page fault handler then calls die(), which calls show_stacktrace()
-> again. This creates an infinite recursive fault and stack overflow
-> without printing the intended panic trace.
-> 
->> diff --git a/arch/loongarch/kernel/switch.S b/arch/loongarch/kernel/switch.S
->> index f377d8f5c51a6..d6e0d05d6fd39 100644
->> --- a/arch/loongarch/kernel/switch.S
->> +++ b/arch/loongarch/kernel/switch.S
-> [ ... ]
->> @@ -33,11 +33,12 @@ SYM_FUNC_START(__switch_to)
->>   	LONG_SPTR	t8, t7, 0
->>   #endif
->>   
->> -	move	tp, a2
->> +	move		tp, a1
->>   	cpu_restore_nonscratch a1
-> 
-> [Severity: High]
-> Is there an alternative way to handle the structural pointer bias for
-> 32-bit kernels without temporarily storing an invalid pointer in $tp,
-> so that panic handling and debuggability remain intact?
-
-Thanks for your review comments, I prefer to use
-"PTR_ADDI        tp, a1, -TASK_STRUCT_OFFSET"
-for both 64-bit and 32-bit here rather than use
-"move		tp, a1"
-for only 64-bit here.
-
-But I discussed with the LoongArch maintainer Huacai, here is his
-opinion in the previous v2:
-
-"As I said before, even if you use "PTR_ADDI        tp, a1,
--TASK_STRUCT_OFFSET", it is impossible to handle exceptions in
-__switch_to().
-
-It is a type of "double fault" if exceptions really happen, "double
-fault" means to die. So just keep it."
-
-In the commit message, there is a corresponding description:
-
-"To preserve the optimal and clean "move tp, a1" path for 64-bit kernels,
-the thread pointer ($tp) is assigned directly from a1 in the core path.
-For 32-bit kernels, where a1 carries a 2000-byte structural pointer bias
-at entry, an explicit adjustment "PTR_ADDI tp, tp, -TASK_STRUCT_OFFSET"
-is introduced at the function exit.
-
-In the context of __switch_to(), local interrupts are disabled, and the
-kernel is in a critical switching phase where handling any synchronous
-exception is practically impossible and prohibited.
-
-If any synchronous exception or watchpoint does trigger in this narrow
-window, it constitutes a fatal double fault and the kernel is expected
-to die/panic immediately anyway. Therefore, the temporary biased value
-in $tp is safe and acceptable here."
-
-Thanks,
-Tiezhu
+>>
+>> Status summary:
+>> - patch 03: respun separately per Rob's suggestion, picked up for 7.2
+>> - patch 06: Acked-by: Marek Szyprowski
+>> - patch 09: Acked-by: Will Deacon
+>>
+>> The remaining patches (01, 02, 04, 05, 07, 08, 10, 11) are still
+>> awaiting review. Your feedback would be greatly appreciated.
+>>
+>> I know we are at the end of 7.1-rc cycle, I don't want to rush this
+>> series, just collecting more feedback, and will send next version based
+>> on 7.2-rc1.
+>>
+>> If splitting the series into smaller logical groups would make review
+>> easier, please let me know.
+>>
+>> Best regards,
+>> Wandun
+>>
+>>
+>>>>
+>>>> v2 --> v3:
+>>>> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
+>>>> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
+>>>> 3. Add some prepare patches.
+>>>>
+>>>> v1 --> v2:
+>>>> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+>>>>     feedback [1], v2 drop that property and exclude reserve memory
+>>>>     by default.
+>>>> 2. Split some prepared patches from the original patches.
+>>>> 3. Address coding-style comments on patch 5 from Rob.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-
+>>>> robh@kernel.org/
+>>>> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-
+>>>> chenwandun%40lixiang.com?part=4
+>>>>
+>>>> Wandun Chen (11):
+>>>>    of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+>>>>    kexec/crash: provide crash_exclude_mem_range() stub when
+>>>>      CONFIG_CRASH_DUMP=n
+>>>>    of: reserved_mem: avoid post-init UAF when alloc_reserved_mem_array()
+>>>>      fails
+>>>>    of: reserved_mem: zero total_reserved_mem_cnt if no valid
+>>>>      /reserved-memory entry
+>>>>    of: reserved_mem: split alloc_reserved_mem_array() from
+>>>>      fdt_scan_reserved_mem_late()
+>>>>    of: reserved_mem: add dumpable flag to opt-in vmcore
+>>>>    of: reserved_mem: save /memreserve/ entries into the reserved_mem
+>>>>      array
+>>>>    of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+>>>>    arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+>>>>    riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+>>>>    loongarch: kdump: exclude non-dumpable reserved memory regions from
+>>>>      vmcore
+>>>>
+>>>>   arch/arm64/kernel/machine_kexec_file.c     |   6 ++
+>>>>   arch/loongarch/kernel/machine_kexec_file.c |   6 ++
+>>>>   arch/riscv/kernel/machine_kexec_file.c     |   4 +
+>>>>   drivers/of/fdt.c                           |  11 +-
+>>>>   drivers/of/of_private.h                    |   3 +
+>>>>   drivers/of/of_reserved_mem.c               | 117 +++++++++++++++++++--
+>>>>   include/linux/crash_core.h                 |   6 ++
+>>>>   include/linux/of_reserved_mem.h            |  15 +++
+>>>>   kernel/dma/contiguous.c                    |   1 +
+>>>>   9 files changed, 157 insertions(+), 12 deletions(-)
+>>>>
+>>>
+>>
 
