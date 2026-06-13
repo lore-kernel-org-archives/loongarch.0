@@ -1,201 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963D14AD20
-	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2410A257845
+	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 08:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781320733; cv=none; b=OJxSSR1XFluGbGhDV3r/UWdcya/PvFczMee+CzGSP46tbk2isJtoJvCbpZx4wPfUK0/XQjtQGc+jYBJLcIQ8fReQEh0hixoYyP7IROINzfUl5jml9QTpdxSvzRFmMEgNbLkruHwMB2ENqmDecAIRdI5tYpscD7XZXiX71wGiWHM=
+	t=1781340169; cv=none; b=cOs4R8V/mSvcicJWE1dgAxaYhnl4UBNvSzA3bN9nrrFb+yb9tSjr4ZFAPNH/5B2OJ04VWBuqYkZK/SqVt6tSlZsjrvrW/PMeLyVjNg+4gFDw41Z2DzvzYZTt1TZPkqHIbKuUJS7t+o7RbqhCyNcSy/Wu0pZ6go8c9nte4qsA5UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781320733; c=relaxed/simple;
-	bh=r7l7aVxzs7O7Xak4jlTzUDCoTDD1I+eiZfAJ2L6+r4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R0ejV0lXdHT9PRWFeoiaGNAB8mdVDRyRyP7Wr+RY5P5b2nKiKqGHdLXhJZY/+VhjwQKy48A3npEYVofCUzfTvMOePayC+yJDJJ9meieWWY3vg3EWKU0EqzP8e64kXdnjIMlq7JWINZo4EeAxBDfVhU0zv7GTk+uyCf/jd9MklMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inm/cKV8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781340169; c=relaxed/simple;
+	bh=0qgCxfkk6gj7b7I80S50V7bHiZJVXKqQEizrsyZ+pYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K4Y/xJ7vSMZ9I6/pk8UJOHsdNxpQzq9Bk4IU1mK9aNaJIf1kIM17RJJIBvldoRCtejOQR2Dedrk9e8+EE6t2DqT7gyGUFsaJaS1G/ymZdUbEYHo8MWAc2/zJ/HJQNE3iipJoQENnkTSJRoIduzszvyuAn6SxbtvYoTIMk2H6s14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J9osBxaf; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inm/cKV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C459E1F00ADF
-	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781320730;
-	bh=6hjksSQeC+ZsIoDOrxEQzgZgTjPJ+cv9dignez6UBwA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=inm/cKV8um/B4u8UFL6Y3YMdTyrWhrN868DReIZ40B4hAX/Cfi5eWy6hRps1BQT5N
-	 ZmXSrX/LGzxwOavX0Z0wWMRJJtAgObh7gAQxEPr+pdvV7rX/5S05uLVuNBtrdWZJQW
-	 C1twVIjxgfPWZL0w5RzwIy49/U51uC/4zhBgtO4pFVBfTLam6rXOUkJlNchLVy9z2d
-	 vas4IAi4304PiTBux7H+69KSLwqif2JDeMMRGl6NoDJxxaqQE8HlPZcuZlcqeffZ1D
-	 MGBFqX8xhfeV0/YQYDL3LO+gqD96f6eF2L1LqLzMQSfGPkFwEBLcU4/yCXbxL3gYko
-	 Mzz6tU5lg1K/A==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-68c19f1f3ceso2505129a12.2
-        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 20:18:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+tHteF0B/aZx6yX6fLi9lru1xuS6qiav7bpz14M0QFVzXrvbiYRaIAm1NULhhTc1kpzna5OZMuVso=@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywe5B/7xt8n6zBX6/wnmZK8BHjNfRHlrhTmxqvWguHsNqlk1kN0
-	SSqI0J9Thq0h+GLk1acKSrYsuJRhuZwtrUFLoovd+Vtazm0ZGRVh7zW0TZ+aFxpjAou9wE0rLi0
-	mfXHamAzTF6x4ULdYi9KInc/SLmiAuH8=
-X-Received: by 2002:a05:6402:3607:b0:691:956a:cf6a with SMTP id
- 4fb4d7f45d1cf-693785fed15mr2365486a12.12.1781320729386; Fri, 12 Jun 2026
- 20:18:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J9osBxaf"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781340164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8MiWWHxWAQct0YXsQmCVgWd9NFcVxCmVsrVK2oCGBOI=;
+	b=J9osBxafl4o8GXrXMmOZHxU0yY4sz9Rcqhget3ziPZIb5PnmzvW0qOjTc9EbrVTwvtRVMZ
+	ZNsOGgyuXluA8GqCxAOgdw6XhzQXBpp/4ERUhA/4/IpGyZ+5SxNVbX7b0lgluUOO/lHjQ2
+	eCE6N0EUwODB4xI0zhP8/aJzojHn31M=
+From: haoran.jiang@linux.dev
+To: loongarch@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	akpm@linux-foundation.org,
+	jbohac@suse.cz,
+	kees@kernel.org,
+	yangtiezhu@loongson.cn,
+	Haoran Jiang <jianghaoran@kylinos.cn>
+Subject: [PATCH v4] LoongArch: Enable STRICT_MODULE_RWX for stricter modules memory permissions
+Date: Sat, 13 Jun 2026 16:41:47 +0800
+Message-Id: <20260613084147.449502-1-haoran.jiang@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1780538113.git.zhoubinbin@loongson.cn> <4b003425d16a18049c5b90dbdaf91024e265cd8e.1780538113.git.zhoubinbin@loongson.cn>
-In-Reply-To: <4b003425d16a18049c5b90dbdaf91024e265cd8e.1780538113.git.zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 13 Jun 2026 11:18:42 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6G5vTH_58_pKvBnvjdr2eVTWTctUqmPAX3aMjsFDjsQg@mail.gmail.com>
-X-Gm-Features: AVVi8CfzQWj-D-TJJvfg08UU4k6shbbVHcLWFkeYPG8y4sewERe1-KnaBYwPigg
-Message-ID: <CAAhV-H6G5vTH_58_pKvBnvjdr2eVTWTctUqmPAX3aMjsFDjsQg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] ASoC: loongson: Add Loongson-2K0300 I2S controller support
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Xuerui Wang <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi, Binbin,
+From: Haoran Jiang <jianghaoran@kylinos.cn>
 
-On Thu, Jun 4, 2026 at 10:11=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> The Loongson-2K0300 I2S interface differs significantly from the
-> Loongson-2K1000. Although both utilize external DMA controllers, the
-> Loongson-2K0300 does not require additional registers for routing
-> configuration.
->
-> Due to hardware design flaw, an extra controller reset sequence is
-> required during probe.
->
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  sound/soc/loongson/loongson_i2s_plat.c | 42 +++++++++++++++++++++-----
->  1 file changed, 35 insertions(+), 7 deletions(-)
->
-> diff --git a/sound/soc/loongson/loongson_i2s_plat.c b/sound/soc/loongson/=
-loongson_i2s_plat.c
-> index ac054b6ce632..b4d807ee7f8f 100644
-> --- a/sound/soc/loongson/loongson_i2s_plat.c
-> +++ b/sound/soc/loongson/loongson_i2s_plat.c
-> @@ -2,7 +2,7 @@
->  //
->  // Loongson I2S controller master mode dirver(platform device)
->  //
-> -// Copyright (C) 2023-2024 Loongson Technology Corporation Limited
-> +// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
->  //
->  // Author: Yingkun Meng <mengyingkun@loongson.cn>
->  //         Binbin Zhou <zhoubinbin@loongson.cn>
-> @@ -21,6 +21,7 @@
->  #include "loongson_i2s.h"
->  #include "loongson_dma.h"
->
-> +/* Loongson-2K1000 APBDMA routing */
->  #define LOONGSON_I2S_RX_DMA_OFFSET     21
->  #define LOONGSON_I2S_TX_DMA_OFFSET     18
->
-> @@ -30,6 +31,11 @@
->  #define LOONGSON_DMA3_CONF     0x3
->  #define LOONGSON_DMA4_CONF     0x4
->
-> +struct loongson_i2s_plat_config {
-> +       int rev_id;
-> +       int (*i2s_dma_config)(struct platform_device *pdev);
-> +};
-> +
->  static int loongson_i2s_apbdma_config(struct platform_device *pdev)
->  {
->         int val;
-> @@ -47,8 +53,18 @@ static int loongson_i2s_apbdma_config(struct platform_=
-device *pdev)
->         return 0;
->  }
->
-> +static struct loongson_i2s_plat_config ls2k1000_i2s_plat_config =3D {
-> +       .rev_id =3D 0,
-> +       .i2s_dma_config =3D loongson_i2s_apbdma_config,
-> +};
-> +
-> +static struct loongson_i2s_plat_config ls2k0300_i2s_plat_config =3D {
-> +       .rev_id =3D 1,
-> +};
-Put  ls2k0300_i2s_plat_config before ls2k1000_i2s_plat_config?
+Enable STRICT_MODULE_RWX to enforce strict memory permissions
+on modules,making the code region non-writable, the data region
+non-executable, and the read-only data region both non-writable
+and non-executable.Temporarily modify code section read/write
+permissions via set_memory() API.
 
-Huacai
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+---
+v2:
+Change the method of modifying page table permissions from patch_map to set_memory() API.
 
-> +
->  static int loongson_i2s_plat_probe(struct platform_device *pdev)
->  {
-> +       const struct loongson_i2s_plat_config *plat_config;
->         struct device *dev =3D &pdev->dev;
->         struct loongson_i2s *i2s;
->         struct resource *res;
-> @@ -59,12 +75,17 @@ static int loongson_i2s_plat_probe(struct platform_de=
-vice *pdev)
->         if (!i2s)
->                 return -ENOMEM;
->
-> -       ret =3D loongson_i2s_apbdma_config(pdev);
-> -       if (ret)
-> -               return ret;
-> +       plat_config =3D device_get_match_data(dev);
-> +       if (!plat_config)
-> +               return -EINVAL;
->
-> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       i2s->reg_base =3D devm_ioremap_resource(&pdev->dev, res);
-> +       if (plat_config->i2s_dma_config) {
-> +               ret =3D plat_config->i2s_dma_config(pdev);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       i2s->reg_base =3D devm_platform_get_and_ioremap_resource(pdev, 0,=
- &res);
->         if (IS_ERR(i2s->reg_base))
->                 return dev_err_probe(dev, PTR_ERR(i2s->reg_base),
->                                      "devm_ioremap_resource failed\n");
-> @@ -87,11 +108,17 @@ static int loongson_i2s_plat_probe(struct platform_d=
-evice *pdev)
->         if (IS_ERR(i2s_clk))
->                 return dev_err_probe(dev, PTR_ERR(i2s_clk), "clock proper=
-ty invalid\n");
->         i2s->clk_rate =3D clk_get_rate(i2s_clk);
-> +       i2s->rev_id =3D plat_config->rev_id;
->
->         dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
->         dev_set_name(dev, LS_I2S_DRVNAME);
->         dev_set_drvdata(dev, i2s);
->
-> +       if (i2s->rev_id =3D=3D 1) {
-> +               regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_RES=
-ET, I2S_CTRL_RESET);
-> +               fsleep(200);
-> +       }
-> +
->         ret =3D devm_snd_soc_register_component(dev, &loongson_i2s_edma_c=
-omponent,
->                                               &loongson_i2s_dai, 1);
->         if (ret)
-> @@ -102,7 +129,8 @@ static int loongson_i2s_plat_probe(struct platform_de=
-vice *pdev)
->  }
->
->  static const struct of_device_id loongson_i2s_ids[] =3D {
-> -       { .compatible =3D "loongson,ls2k1000-i2s" },
-> +       { .compatible =3D "loongson,ls2k0300-i2s", .data =3D &ls2k0300_i2=
-s_plat_config },
-> +       { .compatible =3D "loongson,ls2k1000-i2s", .data =3D &ls2k1000_i2=
-s_plat_config },
->         { /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, loongson_i2s_ids);
-> --
-> 2.52.0
->
->
+v3:
+Modify commit description.
+
+v4:
+Add text_mutex lock in the larch_insn_write call path and
+CONFIG_STRICT_MODULE_RWX is enabled by default.
+
+UB test on the 3C6000 server shows no significant performance impact.
+
+Before patch:
+
+========================================================================
+   BYTE UNIX Benchmarks (Version 5.1.6)
+
+   System: localhost.localdomain: GNU/Linux
+   OS: GNU/Linux -- 7.1.0-rc6 -- #1 SMP PREEMPT Wed Jun 10 21:07:41 CST 2026
+   Machine: loongarch64 (loongarch64)
+   Language: en_US.utf8 (charmap="UTF-8", collate="UTF-8")
+   21:19:51 up 1 min,  2 users,  load average: 0.71, 0.38, 0.14; runlevel 2026-06-10
+
+------------------------------------------------------------------------
+128 CPUs in system; running 1 parallel copy of tests
+
+Dhrystone 2 using register variables       35205725.4 lps   (10.0 s, 7 samples)
+Double-Precision Whetstone                     4244.9 MWIPS (10.0 s, 7 samples)
+Execl Throughput                               6717.7 lps   (30.0 s, 2 samples)
+File Copy 1024 bufsize 2000 maxblocks       1213873.8 KBps  (30.0 s, 2 samples)
+File Copy 256 bufsize 500 maxblocks          350740.5 KBps  (30.0 s, 2 samples)
+File Copy 4096 bufsize 8000 maxblocks       3275103.0 KBps  (30.0 s, 2 samples)
+Pipe Throughput                             1981993.9 lps   (10.0 s, 7 samples)
+Pipe-based Context Switching                  55287.7 lps   (10.0 s, 7 samples)
+Process Creation                               9056.8 lps   (30.0 s, 2 samples)
+Shell Scripts (1 concurrent)                   6736.5 lpm   (60.0 s, 2 samples)
+Shell Scripts (8 concurrent)                   2109.8 lpm   (60.0 s, 2 samples)
+System Call Overhead                        1549110.9 lps   (10.0 s, 7 samples)
+
+System Benchmarks Index Values               BASELINE       RESULT    INDEX
+Dhrystone 2 using register variables         116700.0   35205725.4   3016.8
+Double-Precision Whetstone                       55.0       4244.9    771.8
+Execl Throughput                                 43.0       6717.7   1562.3
+File Copy 1024 bufsize 2000 maxblocks          3960.0    1213873.8   3065.3
+File Copy 256 bufsize 500 maxblocks            1655.0     350740.5   2119.3
+File Copy 4096 bufsize 8000 maxblocks          5800.0    3275103.0   5646.7
+Pipe Throughput                               12440.0    1981993.9   1593.2
+Pipe-based Context Switching                   4000.0      55287.7    138.2
+Process Creation                                126.0       9056.8    718.8
+Shell Scripts (1 concurrent)                     42.4       6736.5   1588.8
+Shell Scripts (8 concurrent)                      6.0       2109.8   3516.4
+System Call Overhead                          15000.0    1549110.9   1032.7
+                                                                   ========
+System Benchmarks Index Score                                        1492.2
+
+------------------------------------------------------------------------
+128 CPUs in system; running 128 parallel copies of tests
+
+Dhrystone 2 using register variables     2901925470.7 lps   (10.0 s, 7 samples)
+Double-Precision Whetstone                   503614.9 MWIPS (10.1 s, 7 samples)
+Execl Throughput                              34080.1 lps   (29.9 s, 2 samples)
+File Copy 1024 bufsize 2000 maxblocks        309291.4 KBps  (30.0 s, 2 samples)
+File Copy 256 bufsize 500 maxblocks           75115.3 KBps  (30.0 s, 2 samples)
+File Copy 4096 bufsize 8000 maxblocks       1018101.3 KBps  (30.0 s, 2 samples)
+Pipe Throughput                           180702003.1 lps   (10.0 s, 7 samples)
+Pipe-based Context Switching                2426596.4 lps   (10.0 s, 7 samples)
+Process Creation                              37282.5 lps   (30.0 s, 2 samples)
+Shell Scripts (1 concurrent)                  50813.7 lpm   (60.1 s, 2 samples)
+Shell Scripts (8 concurrent)                   5835.8 lpm   (60.4 s, 2 samples)
+System Call Overhead                        9039181.1 lps   (10.0 s, 7 samples)
+
+System Benchmarks Index Values               BASELINE       RESULT    INDEX
+Dhrystone 2 using register variables         116700.0 2901925470.7 248665.4
+Double-Precision Whetstone                       55.0     503614.9  91566.3
+Execl Throughput                                 43.0      34080.1   7925.6
+File Copy 1024 bufsize 2000 maxblocks          3960.0     309291.4    781.0
+File Copy 256 bufsize 500 maxblocks            1655.0      75115.3    453.9
+File Copy 4096 bufsize 8000 maxblocks          5800.0    1018101.3   1755.3
+Pipe Throughput                               12440.0  180702003.1 145258.8
+Pipe-based Context Switching                   4000.0    2426596.4   6066.5
+Process Creation                                126.0      37282.5   2958.9
+Shell Scripts (1 concurrent)                     42.4      50813.7  11984.4
+Shell Scripts (8 concurrent)                      6.0       5835.8   9726.4
+System Call Overhead                          15000.0    9039181.1   6026.1
+                                                                   ========
+System Benchmarks Index Score                                        8765.2
+
+
+After patch:
+
+128 CPUs in system; running 1 parallel copy of tests
+
+Dhrystone 2 using register variables       35438193.7 lps   (10.0 s, 7 samples)
+Double-Precision Whetstone                     4245.7 MWIPS (10.0 s, 7 samples)
+Execl Throughput                               5293.7 lps   (30.0 s, 2 samples)
+File Copy 1024 bufsize 2000 maxblocks       1233323.4 KBps  (30.0 s, 2 samples)
+File Copy 256 bufsize 500 maxblocks          355264.5 KBps  (30.0 s, 2 samples)
+File Copy 4096 bufsize 8000 maxblocks       3333631.6 KBps  (30.0 s, 2 samples)
+Pipe Throughput                             1979613.2 lps   (10.0 s, 7 samples)
+Pipe-based Context Switching                  55675.2 lps   (10.0 s, 7 samples)
+Process Creation                               8528.1 lps   (30.0 s, 2 samples)
+Shell Scripts (1 concurrent)                   6870.0 lpm   (60.0 s, 2 samples)
+Shell Scripts (8 concurrent)                   2115.5 lpm   (60.0 s, 2 samples)
+System Call Overhead                        1546959.4 lps   (10.0 s, 7 samples)
+
+System Benchmarks Index Values               BASELINE       RESULT    INDEX
+Dhrystone 2 using register variables         116700.0   35438193.7   3036.7
+Double-Precision Whetstone                       55.0       4245.7    772.0
+Execl Throughput                                 43.0       5293.7   1231.1
+File Copy 1024 bufsize 2000 maxblocks          3960.0    1233323.4   3114.5
+File Copy 256 bufsize 500 maxblocks            1655.0     355264.5   2146.6
+File Copy 4096 bufsize 8000 maxblocks          5800.0    3333631.6   5747.6
+Pipe Throughput                               12440.0    1979613.2   1591.3
+Pipe-based Context Switching                   4000.0      55675.2    139.2
+Process Creation                                126.0       8528.1    676.8
+Shell Scripts (1 concurrent)                     42.4       6870.0   1620.3
+Shell Scripts (8 concurrent)                      6.0       2115.5   3525.8
+System Call Overhead                          15000.0    1546959.4   1031.3
+                                                                   ========
+System Benchmarks Index Score                                        1465.3
+
+------------------------------------------------------------------------
+128 CPUs in system; running 128 parallel copies of tests
+
+Dhrystone 2 using register variables     2903340286.5 lps   (10.0 s, 7 samples)
+Double-Precision Whetstone                   504137.7 MWIPS (10.1 s, 7 samples)
+Execl Throughput                              34332.8 lps   (29.9 s, 2 samples)
+File Copy 1024 bufsize 2000 maxblocks        311391.2 KBps  (30.0 s, 2 samples)
+File Copy 256 bufsize 500 maxblocks           72503.3 KBps  (30.0 s, 2 samples)
+File Copy 4096 bufsize 8000 maxblocks       1000861.7 KBps  (30.0 s, 2 samples)
+Pipe Throughput                           179382076.6 lps   (10.0 s, 7 samples)
+Pipe-based Context Switching                2415716.6 lps   (10.0 s, 7 samples)
+Process Creation                              36873.1 lps   (30.0 s, 2 samples)
+Shell Scripts (1 concurrent)                  51464.1 lpm   (60.1 s, 2 samples)
+Shell Scripts (8 concurrent)                   5976.3 lpm   (60.4 s, 2 samples)
+System Call Overhead                        9182389.5 lps   (10.0 s, 7 samples)
+
+System Benchmarks Index Values               BASELINE       RESULT    INDEX
+Dhrystone 2 using register variables         116700.0 2903340286.5 248786.7
+Double-Precision Whetstone                       55.0     504137.7  91661.4
+Execl Throughput                                 43.0      34332.8   7984.4
+File Copy 1024 bufsize 2000 maxblocks          3960.0     311391.2    786.3
+File Copy 256 bufsize 500 maxblocks            1655.0      72503.3    438.1
+File Copy 4096 bufsize 8000 maxblocks          5800.0    1000861.7   1725.6
+Pipe Throughput                               12440.0  179382076.6 144197.8
+Pipe-based Context Switching                   4000.0    2415716.6   6039.3
+Process Creation                                126.0      36873.1   2926.4
+Shell Scripts (1 concurrent)                     42.4      51464.1  12137.8
+Shell Scripts (8 concurrent)                      6.0       5976.3   9960.6
+System Call Overhead                          15000.0    9182389.5   6121.6
+                                                                   ========
+System Benchmarks Index Score                                        8759.8
+
+---
+ arch/loongarch/Kconfig             |  1 +
+ arch/loongarch/kernel/ftrace_dyn.c |  7 ++++++-
+ arch/loongarch/kernel/inst.c       | 25 +++++++++++++++++++++----
+ arch/loongarch/kernel/jump_label.c |  3 +++
+ 4 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 606597da46b8..c751d714c287 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -27,6 +27,7 @@ config LOONGARCH
+ 	select ARCH_HAS_PTE_SPECIAL if 64BIT
+ 	select ARCH_HAS_SET_MEMORY
+ 	select ARCH_HAS_SET_DIRECT_MAP
++	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN
+ 	select ARCH_HAS_VDSO_ARCH_DATA
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+index d5d81d74034c..598dc6434cc4 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -8,6 +8,7 @@
+ #include <linux/ftrace.h>
+ #include <linux/kprobes.h>
+ #include <linux/uaccess.h>
++#include <linux/memory.h>
+ 
+ #include <asm/inst.h>
+ #include <asm/module.h>
+@@ -24,8 +25,12 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
+ 			return -EINVAL;
+ 	}
+ 
+-	if (larch_insn_patch_text((void *)pc, new))
++	mutex_lock(&text_mutex);
++	if (larch_insn_patch_text((void *)pc, new)) {
++		mutex_unlock(&text_mutex);
+ 		return -EPERM;
++	}
++	mutex_unlock(&text_mutex);
+ 
+ 	return 0;
+ }
+diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/inst.c
+index 0b9228b7c13a..3de94d465c3c 100644
+--- a/arch/loongarch/kernel/inst.c
++++ b/arch/loongarch/kernel/inst.c
+@@ -6,12 +6,11 @@
+ #include <linux/uaccess.h>
+ #include <linux/set_memory.h>
+ #include <linux/stop_machine.h>
++#include <linux/memory.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/inst.h>
+ 
+-static DEFINE_RAW_SPINLOCK(patch_lock);
+-
+ void simu_pc(struct pt_regs *regs, union loongarch_instruction insn)
+ {
+ 	unsigned long pc = regs->csr_era;
+@@ -207,14 +206,32 @@ int larch_insn_read(void *addr, u32 *insnp)
+ int larch_insn_write(void *addr, u32 insn)
+ {
+ 	int ret;
++	int err = 0;
++	size_t start;
+ 	unsigned long flags = 0;
+ 
+ 	if ((unsigned long)addr & 3)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&patch_lock, flags);
++	start = round_down((size_t)addr, PAGE_SIZE);
++
++	lockdep_assert_held(&text_mutex);
++
++	err = set_memory_rw(start, 1);
++	if (err) {
++		pr_info("%s: set_memory_rw() failed\n", __func__);
++		return err;
++	}
++
++	local_irq_save(flags);
+ 	ret = copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
+-	raw_spin_unlock_irqrestore(&patch_lock, flags);
++	local_irq_restore(flags);
++
++	err = set_memory_rox(start, 1);
++	if (err) {
++		pr_info("%s: set_memory_rox() failed\n", __func__);
++		return err;
++	}
+ 
+ 	return ret;
+ }
+diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/kernel/jump_label.c
+index 24a3f4d8540c..e6bb040fe4c5 100644
+--- a/arch/loongarch/kernel/jump_label.c
++++ b/arch/loongarch/kernel/jump_label.c
+@@ -6,6 +6,7 @@
+  */
+ #include <linux/kernel.h>
+ #include <linux/jump_label.h>
++#include <linux/memory.h>
+ #include <asm/cacheflush.h>
+ #include <asm/inst.h>
+ 
+@@ -19,7 +20,9 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry, enum jump_label_t
+ 	else
+ 		insn = larch_insn_gen_nop();
+ 
++	mutex_lock(&text_mutex);
+ 	larch_insn_write(addr, insn);
++	mutex_unlock(&text_mutex);
+ 
+ 	return true;
+ }
+-- 
+2.43.0
+
