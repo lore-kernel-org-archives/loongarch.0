@@ -1,111 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0250437E2F9
-	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1963D14AD20
+	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781320173; cv=none; b=TIzyJwXo1l0z8fyVlSxdNkKTZPi+DoRW6evaG5i1mpfvJg8jhu9NayBNXFvmCbADDEqBpz9hIiEbzIzM2LtzI/kPf6t1DrVCiflwMK0CT9fpdpeZoSUUkRhpE3REzrUiCqCBfOibm3hngIYqd+I4ok+uIbzu2biXialaPtC0+Qo=
+	t=1781320733; cv=none; b=OJxSSR1XFluGbGhDV3r/UWdcya/PvFczMee+CzGSP46tbk2isJtoJvCbpZx4wPfUK0/XQjtQGc+jYBJLcIQ8fReQEh0hixoYyP7IROINzfUl5jml9QTpdxSvzRFmMEgNbLkruHwMB2ENqmDecAIRdI5tYpscD7XZXiX71wGiWHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781320173; c=relaxed/simple;
-	bh=HBb4UYXrfgCeUyPPzgEusyH309x00Z5wFgyiBQQs8/E=;
+	s=arc-20240116; t=1781320733; c=relaxed/simple;
+	bh=r7l7aVxzs7O7Xak4jlTzUDCoTDD1I+eiZfAJ2L6+r4Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k8jlGXNhRIMhvofv9gwS2mENr1QIQOXMD6Gz5TvZEwi4StZnPFTmJlF3lLliHMUi7WI3x8JFFItdOreF56vGc5aOfqOuyW/B9h3G9JAvpaAVqzVB7pmKBQJ7fj26R5pZZYfkMV4Jrqiqu7GzCYDOYMxhLMYuLhm7hdRnH2332zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o29cMITa; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=R0ejV0lXdHT9PRWFeoiaGNAB8mdVDRyRyP7Wr+RY5P5b2nKiKqGHdLXhJZY/+VhjwQKy48A3npEYVofCUzfTvMOePayC+yJDJJ9meieWWY3vg3EWKU0EqzP8e64kXdnjIMlq7JWINZo4EeAxBDfVhU0zv7GTk+uyCf/jd9MklMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inm/cKV8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o29cMITa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DAB51F00ADF
-	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inm/cKV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C459E1F00ADF
+	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 03:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781320166;
-	bh=gxoKB2uWK+QQ3B6N3Q9fcz80qSN1v1nZkDnDdt5gB54=;
+	s=k20260515; t=1781320730;
+	bh=6hjksSQeC+ZsIoDOrxEQzgZgTjPJ+cv9dignez6UBwA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=o29cMITaWHPTagfYA7LubU6ArEICi78QHdiU5JqXuqebbqT7CXcW9mdTJu0FErqap
-	 c/w1/Q8y/gxLjIGdGFU4yXiIC90nFf7oUYOdUlnnQS2nF1Uz4L343ClwfXhkw3L6Tj
-	 E7M2NgItR/j73wY9mKbPNNZK4lXRSAsKxeTBNYeYh+sma73Hq4QtjftgmkqoyQywEj
-	 2XURNulgMD0eqn2YETgQvTChEmVKsND1Q3EFmZ5dHf8NHohbqG3FUNbtYIIkboRFFv
-	 6e3uVyQLkrhIesmlnQIKYZiZ0ZTAhpeFiHANSNLGhZFKvTl632NgzcrzrbaQpheqxH
-	 ZJqj5hstRAZmw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-691c5776f35so2618587a12.3
-        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 20:09:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+zRg4qwkC6uJvvw5eOz0dljz4+od7+RpfUNfr+OIJxV/LBX/HOuAXx3ttcQSIpMQ4uSsrEDvkW+UU=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwmxDG0MfFAQgSeAZNcTh2RA/Rolzqc8pB2ZYNM+dpSPxRTnhs+
-	K2oKRtmD6dVgnW19HwkQgpdnQPhPed3/YGRbCxgXvvdGloQvCmvPMSCINe7liOMU/G820oMa8AH
-	hRe/uYq5IplWiyR/N+Cc80QQD/yW5Chk=
-X-Received: by 2002:a05:6402:5384:b0:691:9832:5055 with SMTP id
- 4fb4d7f45d1cf-693c6bbe399mr604578a12.28.1781320165026; Fri, 12 Jun 2026
- 20:09:25 -0700 (PDT)
+	b=inm/cKV8um/B4u8UFL6Y3YMdTyrWhrN868DReIZ40B4hAX/Cfi5eWy6hRps1BQT5N
+	 ZmXSrX/LGzxwOavX0Z0wWMRJJtAgObh7gAQxEPr+pdvV7rX/5S05uLVuNBtrdWZJQW
+	 C1twVIjxgfPWZL0w5RzwIy49/U51uC/4zhBgtO4pFVBfTLam6rXOUkJlNchLVy9z2d
+	 vas4IAi4304PiTBux7H+69KSLwqif2JDeMMRGl6NoDJxxaqQE8HlPZcuZlcqeffZ1D
+	 MGBFqX8xhfeV0/YQYDL3LO+gqD96f6eF2L1LqLzMQSfGPkFwEBLcU4/yCXbxL3gYko
+	 Mzz6tU5lg1K/A==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-68c19f1f3ceso2505129a12.2
+        for <loongarch@lists.linux.dev>; Fri, 12 Jun 2026 20:18:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+tHteF0B/aZx6yX6fLi9lru1xuS6qiav7bpz14M0QFVzXrvbiYRaIAm1NULhhTc1kpzna5OZMuVso=@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywe5B/7xt8n6zBX6/wnmZK8BHjNfRHlrhTmxqvWguHsNqlk1kN0
+	SSqI0J9Thq0h+GLk1acKSrYsuJRhuZwtrUFLoovd+Vtazm0ZGRVh7zW0TZ+aFxpjAou9wE0rLi0
+	mfXHamAzTF6x4ULdYi9KInc/SLmiAuH8=
+X-Received: by 2002:a05:6402:3607:b0:691:956a:cf6a with SMTP id
+ 4fb4d7f45d1cf-693785fed15mr2365486a12.12.1781320729386; Fri, 12 Jun 2026
+ 20:18:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260609041407.122384-1-dongtai.guo@linux.dev>
-In-Reply-To: <20260609041407.122384-1-dongtai.guo@linux.dev>
+References: <cover.1780538113.git.zhoubinbin@loongson.cn> <4b003425d16a18049c5b90dbdaf91024e265cd8e.1780538113.git.zhoubinbin@loongson.cn>
+In-Reply-To: <4b003425d16a18049c5b90dbdaf91024e265cd8e.1780538113.git.zhoubinbin@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 13 Jun 2026 11:09:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H76pzANGo3kx7FNNRJu+9F8XFzZ7+Qu-WE3oXO=jM1=oA@mail.gmail.com>
-X-Gm-Features: AVVi8CfUS1A9itaMh0NPx1l-dx88pXs6Dti2wPZ_FTDIwF2_p8hnrwVFiMDJ4Tw
-Message-ID: <CAAhV-H76pzANGo3kx7FNNRJu+9F8XFzZ7+Qu-WE3oXO=jM1=oA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] LoongArch: BPF: per-CPU addr MOV and timed may_goto
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, loongarch@lists.linux.dev, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	George Guo <guodongtai@kylinos.cn>
+Date: Sat, 13 Jun 2026 11:18:42 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6G5vTH_58_pKvBnvjdr2eVTWTctUqmPAX3aMjsFDjsQg@mail.gmail.com>
+X-Gm-Features: AVVi8CfzQWj-D-TJJvfg08UU4k6shbbVHcLWFkeYPG8y4sewERe1-KnaBYwPigg
+Message-ID: <CAAhV-H6G5vTH_58_pKvBnvjdr2eVTWTctUqmPAX3aMjsFDjsQg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] ASoC: loongson: Add Loongson-2K0300 I2S controller support
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, devicetree@vger.kernel.org, 
+	linux-sound@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Tiezhu and Hengqi,
+Hi, Binbin,
 
-Any comments about this series?
+On Thu, Jun 4, 2026 at 10:11=E2=80=AFAM Binbin Zhou <zhoubinbin@loongson.cn=
+> wrote:
+>
+> The Loongson-2K0300 I2S interface differs significantly from the
+> Loongson-2K1000. Although both utilize external DMA controllers, the
+> Loongson-2K0300 does not require additional registers for routing
+> configuration.
+>
+> Due to hardware design flaw, an extra controller reset sequence is
+> required during probe.
+>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  sound/soc/loongson/loongson_i2s_plat.c | 42 +++++++++++++++++++++-----
+>  1 file changed, 35 insertions(+), 7 deletions(-)
+>
+> diff --git a/sound/soc/loongson/loongson_i2s_plat.c b/sound/soc/loongson/=
+loongson_i2s_plat.c
+> index ac054b6ce632..b4d807ee7f8f 100644
+> --- a/sound/soc/loongson/loongson_i2s_plat.c
+> +++ b/sound/soc/loongson/loongson_i2s_plat.c
+> @@ -2,7 +2,7 @@
+>  //
+>  // Loongson I2S controller master mode dirver(platform device)
+>  //
+> -// Copyright (C) 2023-2024 Loongson Technology Corporation Limited
+> +// Copyright (C) 2023-2026 Loongson Technology Corporation Limited
+>  //
+>  // Author: Yingkun Meng <mengyingkun@loongson.cn>
+>  //         Binbin Zhou <zhoubinbin@loongson.cn>
+> @@ -21,6 +21,7 @@
+>  #include "loongson_i2s.h"
+>  #include "loongson_dma.h"
+>
+> +/* Loongson-2K1000 APBDMA routing */
+>  #define LOONGSON_I2S_RX_DMA_OFFSET     21
+>  #define LOONGSON_I2S_TX_DMA_OFFSET     18
+>
+> @@ -30,6 +31,11 @@
+>  #define LOONGSON_DMA3_CONF     0x3
+>  #define LOONGSON_DMA4_CONF     0x4
+>
+> +struct loongson_i2s_plat_config {
+> +       int rev_id;
+> +       int (*i2s_dma_config)(struct platform_device *pdev);
+> +};
+> +
+>  static int loongson_i2s_apbdma_config(struct platform_device *pdev)
+>  {
+>         int val;
+> @@ -47,8 +53,18 @@ static int loongson_i2s_apbdma_config(struct platform_=
+device *pdev)
+>         return 0;
+>  }
+>
+> +static struct loongson_i2s_plat_config ls2k1000_i2s_plat_config =3D {
+> +       .rev_id =3D 0,
+> +       .i2s_dma_config =3D loongson_i2s_apbdma_config,
+> +};
+> +
+> +static struct loongson_i2s_plat_config ls2k0300_i2s_plat_config =3D {
+> +       .rev_id =3D 1,
+> +};
+Put  ls2k0300_i2s_plat_config before ls2k1000_i2s_plat_config?
 
 Huacai
 
-On Tue, Jun 9, 2026 at 12:14=E2=80=AFPM George Guo <dongtai.guo@linux.dev> =
-wrote:
+> +
+>  static int loongson_i2s_plat_probe(struct platform_device *pdev)
+>  {
+> +       const struct loongson_i2s_plat_config *plat_config;
+>         struct device *dev =3D &pdev->dev;
+>         struct loongson_i2s *i2s;
+>         struct resource *res;
+> @@ -59,12 +75,17 @@ static int loongson_i2s_plat_probe(struct platform_de=
+vice *pdev)
+>         if (!i2s)
+>                 return -ENOMEM;
 >
-> From: George Guo <guodongtai@kylinos.cn>
+> -       ret =3D loongson_i2s_apbdma_config(pdev);
+> -       if (ret)
+> -               return ret;
+> +       plat_config =3D device_get_match_data(dev);
+> +       if (!plat_config)
+> +               return -EINVAL;
 >
-> This series enables two independent BPF JIT features on LoongArch, each
-> advertised to the verifier via the corresponding bpf_jit_supports_*()
-> hook:
+> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       i2s->reg_base =3D devm_ioremap_resource(&pdev->dev, res);
+> +       if (plat_config->i2s_dma_config) {
+> +               ret =3D plat_config->i2s_dma_config(pdev);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       i2s->reg_base =3D devm_platform_get_and_ioremap_resource(pdev, 0,=
+ &res);
+>         if (IS_ERR(i2s->reg_base))
+>                 return dev_err_probe(dev, PTR_ERR(i2s->reg_base),
+>                                      "devm_ioremap_resource failed\n");
+> @@ -87,11 +108,17 @@ static int loongson_i2s_plat_probe(struct platform_d=
+evice *pdev)
+>         if (IS_ERR(i2s_clk))
+>                 return dev_err_probe(dev, PTR_ERR(i2s_clk), "clock proper=
+ty invalid\n");
+>         i2s->clk_rate =3D clk_get_rate(i2s_clk);
+> +       i2s->rev_id =3D plat_config->rev_id;
 >
-> Patch 1 implements the internal-only BPF_MOV that resolves a per-CPU
-> address from its per-CPU offset. LoongArch keeps the current CPU's
-> per-CPU offset in $r21 (__my_cpu_offset), so the resolution is a single
-> add of $r21 to the source register. This is used by verifier/JIT
-> inlining (e.g. bpf_get_smp_processor_id() and per-CPU map lookups) and
-> is not exposed to BPF users.
+>         dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+>         dev_set_name(dev, LS_I2S_DRVNAME);
+>         dev_set_drvdata(dev, i2s);
 >
-> Patch 2 implements arch_bpf_timed_may_goto() (in a small assembly stub
-> with a custom calling convention passing the count/timestamp slot offset
-> in BPF_REG_AX) and advertises it, so the verifier lowers may_goto into
-> the timed, wall-clock-bounded variant instead of a fixed iteration
-> counter.
+> +       if (i2s->rev_id =3D=3D 1) {
+> +               regmap_update_bits(i2s->regmap, LS_I2S_CTRL, I2S_CTRL_RES=
+ET, I2S_CTRL_RESET);
+> +               fsleep(200);
+> +       }
+> +
+>         ret =3D devm_snd_soc_register_component(dev, &loongson_i2s_edma_c=
+omponent,
+>                                               &loongson_i2s_dai, 1);
+>         if (ret)
+> @@ -102,7 +129,8 @@ static int loongson_i2s_plat_probe(struct platform_de=
+vice *pdev)
+>  }
 >
-> Tested on a LoongArch (Loongson-3A5000) QEMU/KVM guest with
-> CONFIG_PAGE_SIZE_16KB and CONFIG_UNWINDER_ORC:
->  - patch 1: test_progs cpumask and percpu map cases pass;
->  - patch 2: test_progs iters (incl. the cond_break / may_goto loop
->    cases) all pass.
->
-> George Guo (2):
->   LoongArch: BPF: Support internal-only MOV to resolve per-CPU addrs
->   LoongArch: BPF: Add timed may_goto support
->
->  arch/loongarch/include/asm/inst.h       |  1 +
->  arch/loongarch/net/Makefile             |  2 +-
->  arch/loongarch/net/bpf_jit.c            | 27 ++++++++++++++-
->  arch/loongarch/net/bpf_timed_may_goto.S | 44 +++++++++++++++++++++++++
->  4 files changed, 72 insertions(+), 2 deletions(-)
->  create mode 100644 arch/loongarch/net/bpf_timed_may_goto.S
->
+>  static const struct of_device_id loongson_i2s_ids[] =3D {
+> -       { .compatible =3D "loongson,ls2k1000-i2s" },
+> +       { .compatible =3D "loongson,ls2k0300-i2s", .data =3D &ls2k0300_i2=
+s_plat_config },
+> +       { .compatible =3D "loongson,ls2k1000-i2s", .data =3D &ls2k1000_i2=
+s_plat_config },
+>         { /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, loongson_i2s_ids);
 > --
-> 2.25.1
+> 2.52.0
+>
 >
