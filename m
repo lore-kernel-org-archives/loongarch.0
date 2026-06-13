@@ -1,100 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7451E33F36D;
-	Fri, 12 Jun 2026 16:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7BDC27A476
+	for <loongarch@lists.linux.dev>; Sat, 13 Jun 2026 02:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781280099; cv=none; b=g7kJohP8mKVy5B6Xdey+gsC0caLeEX+oAEpUc01ypS/wQPMwC7kvIE+AMf84qq3fxkVN1FxwTwc6XpOeVWbTA/pdgCnNDsisuwpXrracF0FMHw4MSOE16ZCvYpEPWIlvCeoLpUJVurboiPccvMzvxsbGHDQnCys7jL/oIxanXlk=
+	t=1781318569; cv=none; b=g+tXJGKyFT51XAp1/zDNC1qZbhig26UBJ0oQ9LchxWn2K7S4NbWWV+jO4tQVCJ2mZEQpXAxwfdYmXhe91GnMj6vZCTvPV7U47S4vCT3vguMfj6L1gbombTibvnyTP01U+BxdQdBh4aZUuiI+ptCJlCZMOiPCoEbvjAm0DvixJrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781280099; c=relaxed/simple;
-	bh=wLhpsbDGe+7UZ439gh2ADhzTgD0l3cEk+bKY/MPu4xI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AbCsJFl7pwDfk8jLWoRctU0P6ii1QyzBkvhyW2hUbvSNjX4oCWuYUZIKw9k70Jw2tZRoRFVKwlW5LKNFfEWBZQFLJFvQG2mMp/hz+IC8zm4irYZhXrQ5NuHsFjzXXUpB7kqOpp1sSUbVehd/Y0jsh/VkTTxuw5NsbFN2J3nTWvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeGOvCn0; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeGOvCn0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9AD1F000E9;
-	Fri, 12 Jun 2026 16:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781280095;
-	bh=76xOZCss/+5Y44At0ONW/HJ57BghjF1azkGN0neK2Go=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZeGOvCn0EWyp5kpiyzdrhcnHVte26Rzx1tkyatiuD738lG2fJMWhTLoC206yvr6RU
-	 vQTWeS7ZU5xCVmvuAa59u9E1tYwhgimXZOHhmePDD9Rck2qJW3SReAZU50vX3Ea2E+
-	 6peGbqwKbcFSh8v8ENSDeZqIm+694/4s13OC8zYue13RSx49ZBh5WVL8BLeh0CJUaD
-	 1I+yO26NCkLqXD39Uq7Aoy40dOumEnDwfNH81l3xNhAJuCtau6Ug1PlEkgXtgLkoUL
-	 tzxHhLvSa/EemsH/aPZHRl+U2BDcWFFL/1LGeq3dn24W8OX4t6ypwGv3xf85c+EI0y
-	 MxLuPVpjhxraA==
-Date: Fri, 12 Jun 2026 11:01:34 -0500
-From: Rob Herring <robh@kernel.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] ASoC: dt-bindings: loongson,ls-audio-card: Add
- ATK-DL2K0300B compatible
-Message-ID: <20260612160134.GA1116138-robh@kernel.org>
-References: <cover.1780538113.git.zhoubinbin@loongson.cn>
- <c03b86a9318cffe69ecf8d5c14543fc5948ab2c7.1780538113.git.zhoubinbin@loongson.cn>
+	s=arc-20240116; t=1781318569; c=relaxed/simple;
+	bh=uV5TVWiUgmDlWQsVmw4g2rymQGflfgPjSXOmrudOfg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lHbb6Dfmp8x8F0UUM2U93vk9nyUM0SVy37LvXwWYtyANwx/Dnv8dWCJhkzb5bJvSTYM/G6bablcKP+kFYuAlAGn/ySvUZKlFLNAjaid82wo9yn8nVPWhJ9nhcin+LqHbVQYlCqxI1+X4Rm6Rb4+T6ACniVymIbyvbn2HdVXmr8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.41])
+	by gateway (Coremail) with SMTP id _____8CxnOmdwyxq+bITAA--.49947S3;
+	Sat, 13 Jun 2026 10:42:37 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.41])
+	by front1 (Coremail) with SMTP id qMiowJDxhcCYwyxqKJKkAA--.56537S2;
+	Sat, 13 Jun 2026 10:42:36 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch KVM changes for v7.2
+Date: Sat, 13 Jun 2026 10:42:11 +0800
+Message-ID: <20260613024211.2247147-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c03b86a9318cffe69ecf8d5c14543fc5948ab2c7.1780538113.git.zhoubinbin@loongson.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJDxhcCYwyxqKJKkAA--.56537S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WFW7AFWxCr4xuF1DtF17CFX_yoW8Kw4rpF
+	y3uFnxJr4DGr4xX342q347uF1DXr1xGryfXr1akFW0kr1UZr1UXry8XrZ5XFy5Ga95Jr10
+	qr1rJw4jgF1UJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j8yCJUUUUU=
 
-On Thu, Jun 04, 2026 at 10:11:46AM +0800, Binbin Zhou wrote:
-> Add new compatible for the ATK-DL2K0300B development board based on
-> Loongson-2K0300.
-> 
-> Unlike others, this board features GPIO-controlled headphone detection,
-> headphone mute, and speaker enable.
-> 
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  .../sound/loongson,ls-audio-card.yaml         | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> index 8c214e5d04b1..e9b248e8246c 100644
-> --- a/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> +++ b/Documentation/devicetree/bindings/sound/loongson,ls-audio-card.yaml
-> @@ -23,6 +23,7 @@ properties:
->      enum:
->        - loongson,ls-audio-card  # Loongson-2K1000/Loongson-2K2000/LS7A
->        - loongson,ls2k0300-forever-pi-audio-card # CTCISZ Forever Pi
-> +      - loongson,ls2k0300-dl2k0300b-audio-card # ATK-DL2K0300B
->  
->    mclk-fs:
->      $ref: simple-card.yaml#/definitions/mclk-fs
-> @@ -47,6 +48,18 @@ properties:
->      required:
->        - sound-dai
->  
-> +  loongson,spkr-en-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that enables the speakers
-> +
-> +  loongson,hp-mute-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that mutes the headphones
-> +
-> +  loongson,hp-det-gpios:
-> +    maxItems: 1
-> +    description: The GPIO that detect headphones are plugged in
+The following changes since commit 4549871118cf616eecdd2d939f78e3b9e1dddc48:
 
-We have standard properties for at least this one. If you see multiple 
-$vendor,foo-bar properties, don't add yet another vendor foo-bar 
-property.
+  Linux 7.1-rc7 (2026-06-07 15:37:58 -0700)
 
-Rob
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-kvm-7.2
+
+for you to fetch changes up to aeded601d6aceb57cdda4b2701d2ee00c43a8b69:
+
+  LoongArch: KVM: Add missing slots_lock for device register/unregister (2026-06-11 20:46:44 +0800)
+
+----------------------------------------------------------------
+LoongArch KVM changes for v7.2
+
+1. Enable FPU with max VM supported FPU type.
+2. Some enhancements about interrupt injection.
+3. Some bug fixes and other small changes.
+
+----------------------------------------------------------------
+Bibo Mao (12):
+      LoongArch: KVM: Add separate KVM_REQ_LBT_LOAD bit
+      LoongArch: KVM: Enable FPU with max supported FPU type
+      LoongArch: KVM: Remove some middle FPU states
+      LoongArch: KVM: Remove KVM_LARCH_LSX and KVM_LARCH_LASX
+      LoongArch: KVM: Fix FPU register width with user access API
+      LoongArch: KVM: Use existing macro about interrupt bit mask
+      LoongArch: KVM: Check irq validity in kvm_vcpu_ioctl_interrupt()
+      LoongArch: KVM: Check msgint feature in interrupt post
+      LoongArch: KVM: Inject interrupts with batch method
+      LoongArch: KVM: Add valid bit check when set CSR.ESTAT register
+      LoongArch: KVM: Deliver interrupt after IN_GUEST_MODE is set
+      LoongArch: KVM: Remove timer interrupt injection when SW timer expired
+
+Qiang Ma (2):
+      LoongArch: KVM: Check the return values for put_user()
+      LoongArch: KVM: Return full old CSR value from kvm_emu_xchg_csr()
+
+Yanfei Xu (1):
+      LoongArch: KVM: Validate irqchip index in irqfd routing
+
+Zeng Chi (1):
+      LoongArch: KVM: Add missing slots_lock for device register/unregister
+
+ arch/loongarch/include/asm/kvm_host.h |  14 ++--
+ arch/loongarch/include/asm/kvm_vcpu.h |  43 +++++++++----
+ arch/loongarch/kvm/exit.c             |  22 ++-----
+ arch/loongarch/kvm/intc/eiointc.c     |   6 ++
+ arch/loongarch/kvm/intc/ipi.c         |   2 +
+ arch/loongarch/kvm/intc/pch_pic.c     |   2 +
+ arch/loongarch/kvm/interrupt.c        |  98 ++++++++--------------------
+ arch/loongarch/kvm/irqfd.c            |   3 +-
+ arch/loongarch/kvm/timer.c            |   3 +-
+ arch/loongarch/kvm/vcpu.c             | 118 ++++++++++++++--------------------
+ 10 files changed, 131 insertions(+), 180 deletions(-)
+
