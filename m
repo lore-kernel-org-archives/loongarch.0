@@ -1,103 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A831987D;
-	Sun, 14 Jun 2026 08:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8941CD2C;
+	Sun, 14 Jun 2026 10:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781426026; cv=none; b=X7HDwYb8/OaNzubS+IUeQf2Pwg6cxJeiUpPxjPVrMLl3ez5qPNbJFHD1ml6l4NBdVj+ae+GqRWzTiDI2VCbBPQyJR2ZklqkVt36/VkW2Posxla/Kk8XdvqO+9x93jeJ94WtPdVQaeEhXjaY/1xBKFSYygGjDAVprR80tUUCtdhA=
+	t=1781432593; cv=none; b=ZkZ/WPjgGQoThBcLX+aI0FlKOQ0VRWkpIlvA4+aju7gqUGrGTUd5ESagK3qb1G1ekWN1+npGap+fHYlh1HRZFxkbwdr6JL65rjT/8oYCooDeNaW90l3ydfma2A3mheQGJ4ytIWjO0GgEDbHtzn9kbWY478iH8hnmxwfuTyJHkZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781426026; c=relaxed/simple;
-	bh=X36vCQWITlp3ui2CA5+ohM2l1OunhMyN82vnG8m+67I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nq8J6i8/DhNNjaihdISvAz390y4FgYXMUQuI6Q4Wc7EXotufn82eOlOFFu5jELeyPUipXLuYbTAFRK9GqiQQ5EP4kn2j3E2rhra3sC3WrkQOB5jcX2YEFTRJ6H4IY7Vmaq5YeXlFej1YrKKZ/lYS9Wf1yjbBkTFi9F9t3LA+alA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nREEMt4I; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781432593; c=relaxed/simple;
+	bh=RuwEj2ihxdijHpW/9xxHXNSYgqpQTqjL9QJE6KcwM0k=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=J+umJEnEs1AEa8xfgnMZNXRwFZaT/cu7bksOqmZb3SPGqHSqVOLZ8JdMl2+DADtNHVGe1ggZk38m8X4gwFzUyIoc+/djeRxznCB6m5qanV89N4l5ABfcCE66qCJPT6EmBEkn84E2iqbJ2A9zEx08FNe5QRsyF/b/URkehqRgBXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ealqgkai; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nREEMt4I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D2E1F000E9;
-	Sun, 14 Jun 2026 08:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ealqgkai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315241F000E9;
+	Sun, 14 Jun 2026 10:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781426025;
-	bh=que3sP/ffeF4LlJToSGURdqIREPWzcMga9glwfB2Yns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nREEMt4Ib5eW4hGLFtr1gAraUJGIK0UZ0C9Qr9FzmNuLq1kPIAE3Ac+3n3quuV0he
-	 wBLzSaEUbRSNCiqYzNae661Q+lju6jVJmDJROXI8kGPhYLwXq2SP8k+SQA8N67s0sn
-	 BOIeaputX6CfJr9ANR3wK6VUQFnL65+OHrgZ1nHn4qy8t04rkbA4+yYHpjTiT9jxHi
-	 +FCnu4JFhKzoULBbmb/aJhuwK5v02AbQIcqKq2rH5CugOmi3rRyPnzpowzmBVn3KeW
-	 gBwuBDM17mxpcDvID1dcUPy4JD91lZeeW5bRw5c7+Z0RLsPtFQmwEkKxehK+PnVeBv
-	 5Q+qmTnF0x3gg==
-Date: Sun, 14 Jun 2026 11:33:38 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: pasha.tatashin@soleen.com, pratyush@kernel.org,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org, loongarch@lists.linux.dev,
-	George Guo <guodongtai@kylinos.cn>, Kexin Liu <liukexin@kylinos.cn>
-Subject: Re: [PATCH v2] liveupdate: luo_session: include linux/mm.h for
- virt/phys translation
-Message-ID: <ai5nYlbERQBXRHSp@kernel.org>
-References: <20260604091913.306603-1-dongtai.guo@linux.dev>
+	s=k20260515; t=1781432591;
+	bh=3kqt2PsjkTRNbqmgv01YobweDN9fkjlj+b394Tb6Uu0=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=Ealqgkai4qqTif1CDYIGqpuXKEUkZpWX1rrlTJZYqn4Gk8Nh8DDN3ub6KB02kVvZN
+	 x4CAJMfzUv7VEeOzFAB3PtoQc3yYUD3HTwf4SHDYxCOPZiw39hIFVIG2P3LduzPW1O
+	 pYj58K3ewGrckUmR6B+zCng2vz4C8k9AXgGN1kirbidHcnCW6EYXEC2qG151+cN8Q9
+	 Eo4X70VM1fItupStDRQjHyA44R5N/eHuCNoMhHyDUFO5cGpMx5FaT15HKm76d04nK2
+	 ab5dFLosIzV4tt0xcUzjbzAcIhNkjI2iCb2nblLkldnpZhYU+ABp9SfjlyB5tjMQwm
+	 NbmQbN8BkBe5Q==
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260604091913.306603-1-dongtai.guo@linux.dev>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 3/3] selftests/kho: add LoongArch vmtest support
+From: Mike Rapoport <rppt@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+ George Guo <guodongtai@kylinos.cn>, WANG Xuerui <kernel@xen0n.name>, 
+ Alexander Graf <graf@amazon.com>, loongarch@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, Kexin Liu <liukexin@kylinos.cn>
+In-Reply-To: <20260601093930.112758-3-dongtai.guo@linux.dev>
+References: <20260601092823.110362-1-dongtai.guo@linux.dev>
+ <20260601093930.112758-1-dongtai.guo@linux.dev>
+ <20260601093930.112758-3-dongtai.guo@linux.dev>
+Date: Sun, 14 Jun 2026 13:23:03 +0300
+Message-Id: <178143258399.2123877.4049283498071192411.b4-review@b4>
+X-Mailer: b4 0.15.2
 
-On Thu, Jun 04, 2026 at 05:19:13PM +0800, George Guo wrote:
-> From: George Guo <guodongtai@kylinos.cn>
-> 
-> luo_session.c calls virt_to_phys() and phys_to_virt(). On LoongArch with
-> CONFIG_KFENCE=y, these macros (in arch/loongarch/include/asm/io.h) expand
-> to offset_in_page() and page_address(), both declared in <linux/mm.h>.
-> 
-> Since luo_session.c only includes <linux/io.h>, the translation unit fails
-> to build with CONFIG_KFENCE=y:
-> 
->   asm/io.h: error: implicit declaration of function 'offset_in_page'
->   asm/io.h: error: implicit declaration of function 'page_address'
-> 
-> Add the missing include to fix these build errors.
-> 
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+On Mon, 01 Jun 2026 17:39:30 +0800, George Guo <dongtai.guo@linux.dev> wrote:
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Hi,
 
-Please send this patch along with the series that enable KHO on LoongArch.
+> Add loongarch.conf to configure QEMU's LoongArch virt machine with a
 
-> ---
-> v2: Move the include from arch/loongarch/include/asm/io.h to the consumer
->     luo_session.c, instead of pulling the heavy <linux/mm.h> into the
->     low-level asm/io.h header (per review feedback). The 0-day report
->     confirmed the v1 approach introduces a circular include
->     (slab.h -> kasan.h -> asm/kasan.h -> asm/io.h -> mm.h, where mm.h
->     needs kfree() before slab.h declares it).
-> Link: https://lore.kernel.org/r/20260521063310.52926-1-dongtai.guo@linux.dev/ # v1
-> 
->  kernel/liveupdate/luo_session.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-> index 7a42385dabe2..4ce7128a4ae9 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -62,6 +62,7 @@
->  #include <linux/libfdt.h>
->  #include <linux/list.h>
->  #include <linux/liveupdate.h>
-> +#include <linux/mm.h>
->  #include <linux/mutex.h>
->  #include <linux/rwsem.h>
->  #include <linux/slab.h>
-> -- 
-> 2.25.1
-> 
+Please spell out "virtual machine" here and below or use VM abbrevation.
+
+>
+>
+> diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
+> index 49fdac8e8b15..918698b6dd2a 100755
+> --- a/tools/testing/selftests/kho/vmtest.sh
+> +++ b/tools/testing/selftests/kho/vmtest.sh
+> @@ -107,12 +107,20 @@ function run_qemu() {
+> [ ... skip 14 lines ... ]
+> +		-kernel "$kernel"
+> +		-initrd "$initrd"
+> +	)
+> +
+> +	if [[ -n "${QEMU_TIMEOUT:-}" ]]; then
+> +		timeout "$QEMU_TIMEOUT" $qemu_cmd "${qemu_args[@]}" || true
+
+Runnig with timeout can be actually useful for other architecures. Let's
+make a local variable for timeout of 120 seconds and always run qemu with timeout.
 
 -- 
 Sincerely yours,
 Mike.
+
