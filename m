@@ -1,119 +1,74 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC27221DAE
-	for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 16:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EF6292B54;
+	Sun, 14 Jun 2026 22:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781453759; cv=none; b=rsOcicOe4EaQBUSaDy6a13N6c/071aNV6ZrtfVvEnEQaFY50RuY1iR8btZ2KHoAs3wwtj4QUprLBMEqm/6J0W7QtnoK4QzQuPEsnTH7QFm1O1XzDH9/6XGCOe3W3ZvrecW4YmDEHVC+v0DCElJVGrGYq7a2aTd/5Y9CeAUVWfQ0=
+	t=1781475627; cv=none; b=n2hzQDf0w5FH23aq+rqYtbTzOKZIPLCY0F85T8xlGAedBGxflsVCB1wz4GodMtSHDI+Ru1FeMREIqV3ASFRrd+ldG3G4zsUSQxRzvtm3EI5XA/6udCAsO41ixKnJ/ekffSLF0T67b3Vx32pogX65O5PIKgWu2qsksSb4n54Nd/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781453759; c=relaxed/simple;
-	bh=ofwx4zf3yY/vPpZiXyWfjiOYKTW2xVZryZrU3kAs4eQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SPIXGh69p9+R2d8oNp9QgsDK41RSKKyO6GdpHlOXS3Sv+1LfYXlSxZ8+mA3JbRuujx/AB+euXEWJUKf2ERxZeSU8DQlJSku8SCBkMn1K6NWwU59D3KvCfj/nmRsP9OEADbh1K4B9RduxhzlwKnDRC6BbIWEyAk5cG4/RE0tlir0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdLsOWK6; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781475627; c=relaxed/simple;
+	bh=AolzJ5fBKCYhdZoy8bTLrjEDJd4XB/zbqN6ZB63xKyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NpPtA0nlyGckXCDD+JVm0f1BjqQzr1W7H4xWzYKxuJkVpEnGBr/xZyJMzh9TA+CXTMiOK4DQGWfskl3GEKKzvPM5o6ph/ZpKhEhJeIDKwOGVWZF7AR8twUyPc9VfrHllyIxpoePaesiF4AG1ucuEQjCj0pNoscmvWEZq+jY124Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pk+PbvAQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdLsOWK6"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-36d5b11201aso1777709a91.2
-        for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 09:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781453758; x=1782058558; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ch+S3rbykedr2z6bsw5Hh8zutORUt4eMMB5mYUulTJs=;
-        b=VdLsOWK6PEKWAVtP9rfnauUo4dSSXn17ZmIBFStTmyD1+DaihDeylPXM/Mu1E7RYV8
-         tzbvKfq2IX5CV1hpJV8sNwzRE/NUcOFLw8hGy8VPYYpkcrjYTv32hZaRtxuu7bzqZU+I
-         BogzKdExpXbyEiRztp82O5biVcSJxV9X3lwXeMoYIJd6edp9ZZw68ZYIQN+BWLz+VSFy
-         bqmSi5ncmJGtEJhnTOShPuYfI6QYrG4Z3aP65RxEfT1Rk4voIwxnKYS+8ZD2MewCS+sE
-         qI9cseAX36pV/+KQUQXSCHJrUl9UbGM6pqoMN/xJ+1SKeA5+IKFjJg5Pta/TjB9JFYnl
-         Q21Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781453758; x=1782058558;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ch+S3rbykedr2z6bsw5Hh8zutORUt4eMMB5mYUulTJs=;
-        b=MofilpI4obKV0k2zrgWSS7/B0Se8NtDh1TCLdf40oEumgfnzkuPipRYxQrXHY9JoxF
-         wFkhlFhYwlpGw5yQIshuoV92VHnn2ODppk9XjZefvWiL5keMswUn20Jx95q6PxXCHf9r
-         zNT8ApZ2EvrcDrYFG+Eqsb/g86SjwA5U6l8N5Ccr3fT5t4kb2J40p9im/dAt/bvM8Ara
-         FQXKk/iylYYU88Q9S5lPTaM6Z/0Y33YQoP1E+lp9x5j92KT2xp77sNp7LANxQ+DrsPqg
-         BooaC2fpQucp9++APdSxA/SqipFgddAcg1QXyX/byEw6MAqHBenBxQKQrlUCF0cuYrqu
-         XB3g==
-X-Forwarded-Encrypted: i=1; AFNElJ89BPyl8ctdAPnAbojMs0zQG9oLc9p9abWSDyBeUy1rSCmNBx4uYYs/g73zvCXIxbGbF/dsOEVQrH0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YzEDq2mCktkt5KFfQYyuDAXN1mKmzOsZ3eXkDY8NA/6OVgyo6h3
-	M887izYbychZHTesNo0b9Yrg5XNjWIg4o49RxtHWY8Mij4zxfjLqHnpz
-X-Gm-Gg: Acq92OHJ5ja5+HfZIp9cLb4QgLmHgA/SPNx+sruEzJ+mskHx6wc7yEbY0QvKgqdtImZ
-	gnmmsuUYvNqqjFzdvNekYIv1BnPc819JWTQjAPHO+3gX8LVCMaBa6hcp9L3dHQnxiPbWILEDYZa
-	YRxyNfxuYdXa/BfyUxzr4myR65/6qKV3EnkhpUA1j83+cRRBBVi6/Ooa+CGyvG1AY0wshO4UKsv
-	aPXvqVXLNgpwDDZsGWiVvFuTfPuAf1yJjvfAkYA3WRk02F8cEmNvlRRy417vK0SKdF5iKOabSEu
-	BWvNVZihazwY0qgO61UG7dai9WfZSrEy/nCHWTYMR4rVNKhspeZPjIbJgBF9+qz9frPoPAvoHGO
-	5eDhc2oFY87s0OzeyOUUZh9THV9m9ssfw4HIPQ4RFtMp54yKoxU+Ni7kv++sfUAJAsGqw7p04uk
-	RKBfrviZRBli5ptkUItA==
-X-Received: by 2002:a17:90b:57ee:b0:36a:d51d:42ef with SMTP id 98e67ed59e1d1-37c2bd033b4mr7411267a91.13.1781453758174;
-        Sun, 14 Jun 2026 09:15:58 -0700 (PDT)
-Received: from ubuntu.. ([110.9.142.4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c866325d1d3sm6505293a12.11.2026.06.14.09.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2026 09:15:57 -0700 (PDT)
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: devicetree@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org,
-	Sang-Heon Jeon <ekffu200098@gmail.com>
-Subject: [PATCH 3/3] MIPS: fix misleading elfcorehdr reservation success message
-Date: Mon, 15 Jun 2026 01:15:03 +0900
-Message-ID: <20260614161503.2219681-4-ekffu200098@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260614161503.2219681-1-ekffu200098@gmail.com>
-References: <20260614161503.2219681-1-ekffu200098@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pk+PbvAQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2474C1F000E9;
+	Sun, 14 Jun 2026 22:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781475626;
+	bh=7RDOpRHXsto/ZnZ2BpjuO3i0UoV7uNmp1csBtkTg2I0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Pk+PbvAQog32lrbAeLhyfFZRdotgRwJRA1rtRd9LNXuh1UGqwuW6tP6p5vMmdWJ05
+	 nAAKVx2vh77PZThJWidRzxlpmog9S3x/hpE3pRiZWSg5IYrdmMnqVuEud1HKr1xzei
+	 186KjRZjhSXxiSm05dgb1CLShHW1x/u47FAOkISaFjRjzKqGQbWND3jBADRVPwFobl
+	 my+NJDRgFV/r01dr6QLOXteOs/yDysxqNkFAqK830UUymDlUoQQVK2vtgxnefmQlBG
+	 NRrj6/Kddf4Ace8BhzhxyqeOZBooxM23swbnVklJPRA6qbpmcO9QtYTcq8g0q1icz9
+	 NJb9eKmlGjWnQ==
+Date: Mon, 15 Jun 2026 00:20:21 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>, stable@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] i2c: ls2x: Add clocks property parsing and adjust
+ bus speed
+Message-ID: <ai8o9vxUX6rbZNV4@zenone.zhora.eu>
+References: <20260608024533.32419-1-wanghongliang@loongson.cn>
+ <20260608024533.32419-3-wanghongliang@loongson.cn>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260608024533.32419-3-wanghongliang@loongson.cn>
 
-mips_reserve_vmcore() does not check the return value of
-memblock_reserve(), so a success message is falsely printed when the
-reservation fails.
+Hi Hongliang,
 
-Reserve before printing the success message. Check the return value and
-warn on failure instead.
+On Mon, Jun 08, 2026 at 10:45:33AM +0800, Hongliang Wang wrote:
+> The i2c-ls2x driver supports dts and acpi parameter passing.
+> 
+> In dts, uses clock framework, by parsing clocks property to
+> get i2c bus reference clock, and define the div of reference
+> clock by device data.
+> 
+> In acpi, by passing clocks property to describe i2c bus reference
+> clock and clock-div property to describe the div of reference clock.
+> 
+> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
+> and div, calculate the prcescale of i2c divider register. The
+> calculation formula is
+> 
+> prcescale = (clock_a*10)/(div*clock_s)-1
+> 
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
----
- arch/mips/kernel/setup.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+I think Huacai has not reviewed this patch, his review was only
+for patch 1. Am I right?
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 1ae6d0c0e1d6..c7769ed882e8 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -437,10 +437,13 @@ static void __init mips_reserve_vmcore(void)
- 		}
- 	}
- 
-+	if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
-+		pr_warn("Failed to reserve memory for kdump\n");
-+		return;
-+	}
-+
- 	pr_info("Reserving %ldKB of memory at %ldKB for kdump\n",
- 		(unsigned long)elfcorehdr_size >> 10, (unsigned long)elfcorehdr_addr >> 10);
--
--	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
- #endif
- }
- 
--- 
-2.43.0
-
+Andi
