@@ -1,137 +1,163 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 179A83C13FC
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 07:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE223C277F
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 08:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781509915; cv=none; b=HxdEpqR6JWMmhXY7/umQ8GZU3tHGqkh3n3ZHKEQyA1JhPaKulU9zYJbgJruQHpt8gW7Ro594x7QdmjfS1T027uo3grYelgmUT53BS84z1gJTCENm6TPQESUEK4J7dgJ7G3o6joktUKmDTrgVieQXN1FJbpSNRMi6AsWSK/tHzOk=
+	t=1781511738; cv=none; b=JD+HhgaVS069IcoP2yfmyLyeqamh7OeU3HeMF7ytfOj07bcYumE21R5yih1Z/3vxUgn739nIrt1Zo4tCo8FJPp9umqBWXk9eSyxJo+Ggd6GKMqEIC4DyZ1WREjKWXMmNjK74RBFOoM8BPANo+mCuDpKi7DssNRhCS/tt+oZJ5wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781509915; c=relaxed/simple;
-	bh=+O/aknDOAU54SHW0tAJSTtpg9g1Vzt6FSt3KcuF3lm4=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aAuqmZ/A1N8ksdbXx8pgQuVmdR2lyzx9RrM13jK7qBjcbSMpo8YFnkDwfzKyXlmoDWmKCtWrmIEseP4Y0/p4pxB3MN96oDolr4v7A/YetpsVjpj+CkeyvxRaaGCcNdjtmYAB/a/n/2R/V1RDxQN2UHI1pgbfOcb2wRwCJTecuzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx9OgVry9q2EAUAA--.47125S3;
-	Mon, 15 Jun 2026 15:51:49 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJBxpsASry9qVummAA--.20475S3;
-	Mon, 15 Jun 2026 15:51:47 +0800 (CST)
-Subject: Re: [PATCH v3 0/3] Move thread_info into task_struct for LoongArch
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
- <CAAhV-H4daHGFoAiXrwcNXj=T1kZm5jRRwd_sCiv7ksjR2ynHgw@mail.gmail.com>
- <e23e6781-d39d-d7fa-10ec-8d09349103ed@loongson.cn>
- <CAAhV-H6jJpEnNTUF0CF60fDB5ShNT+C59NEH=YodJtepFQgrKQ@mail.gmail.com>
- <833e2fca-6a41-786c-356d-6480ca168e44@loongson.cn>
- <CAAhV-H5LORpNeTycjmHFobOZEA5w=spSkxJuOajuizz-941zQg@mail.gmail.com>
- <CAADnVQLAgYFQ=BRi+hKwt5pp7fffqsvD0rXzn6Nk9jJQ=6uUZA@mail.gmail.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <c3b8242e-c436-bfa4-5081-0484457dcd6b@loongson.cn>
-Date: Mon, 15 Jun 2026 15:51:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1781511738; c=relaxed/simple;
+	bh=9XdB7Vt7iU48+97QDPKzMJqprmiDjOA8tRhWC+7zIJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=czb2QBEV2ho6HD0GE5FCRjsKEiJ7Z4Sk5AjVeQ3MtKYXvxiFWc7Gjtb2VkoDrAlhjkj59WlUbXJLqp33mcFrvoYz5cUI72uAfakh1Zoyfb10vA+2CvDKnjvX1pDP/u+cbl/btk9s4wc72ewrUqzKDB5n1JaQFpGOcVnlsdFCi7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IuzlOJ3x; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IuzlOJ3x"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781511732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HdUtS9qqN2S+OtqhVuPxakdjuoUCbzjXmoOqBk4rXk4=;
+	b=IuzlOJ3xjFghfr8UUjf/Ze+e2EmdTLq10+qvgVPBFQiBa9356KiLygDaeBRNPOzr1lQ4vU
+	mCK6eGQ8+xYmoiuNzQnhY8myQm/yyGCp3z/Qc8Cbd03iBQd8jQihoRlBSTQBGWL+NN6889
+	mgG4LOSBzHmVsAbLgK+3iHrhLPOKb6Y=
+From: Tao Cui <cui.tao@linux.dev>
+To: maobibo@loongson.cn,
+	zhaotianrui@loongson.cn,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev
+Cc: kernel@xen0n.name,
+	kvm@vger.kernel.org,
+	Tao Cui <cuitao@kylinos.cn>
+Subject: [PATCH v4 0/3] LoongArch: KVM: Add PV TLB flush support
+Date: Mon, 15 Jun 2026 16:21:51 +0800
+Message-ID: <20260615082154.42144-1-cui.tao@linux.dev>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQLAgYFQ=BRi+hKwt5pp7fffqsvD0rXzn6Nk9jJQ=6uUZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxpsASry9qVummAA--.20475S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxur47XryrJF13KryUZF13GFX_yoW5CF1kp3
-	ySka1YkF4DKr17AFZrt3s8uFyftr13GrW8Xwn8JryUCrn0vw1rGry3Kr4UuFyDurWFkr1j
-	9r4jq3srCa4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-	xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	W8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	7pnQUUUUU
+X-Migadu-Flow: FLOW_OUT
 
-On 2026/6/15 上午11:45, Alexei Starovoitov wrote:
-> On Sun, Jun 14, 2026 at 8:31 PM Huacai Chen <chenhuacai@kernel.org> wrote:
->>
->> On Mon, Jun 15, 2026 at 11:16 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>
->>> On 2026/6/15 上午10:23, Huacai Chen wrote:
->>>> On Mon, Jun 15, 2026 at 9:41 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>>>
->>>>> On 2026/6/14 上午10:51, Huacai Chen wrote:
->>>>>> Hi, Tiezhu,
->>>>>>
->>>>>> I have queued this series for 7.2, does the below series depend on this one?
->>>>>>
->>>>>> https://lore.kernel.org/loongarch/20260521125636.26744-1-yangtiezhu@loongson.cn/T/#t
->>>>>
->>>>> This is independent on CONFIG_THREAD_INFO_IN_TASK.
->>>>>
->>>>>> https://lore.kernel.org/loongarch/20260428080051.20938-1-yangtiezhu@loongson.cn/T/#t
->>>>>
->>>>> This is dependent on CONFIG_THREAD_INFO_IN_TASK.
->>>>>
->>>>> But anyway, I plan to send new version for the above two series of
->>>>> selftests once this "Move thread_info into task_struct for LoongArch"
->>>>> series is merged into the mainline, maybe after 7.2-rc1.
->>>>>
->>>>> Because the code under selftests need to be updated, for example,
->>>>> it can use bpf_get_current_task_btf()->thread_info.preempt_count
->>>>> for get_preempt_count(), and it should use ld.wu rather than ld.w
->>>>> for bpf_get_smp_processor_id().
->>>> You can update new versions now, then they can be merged together.
->>>
->>> Thanks for your suggestion.
->>>
->>> However, considering that these selftest patches need to be
->>> routed through the BPF tree (rather than the LoongArch tree),
->>> updating them right now during the active merge window might
->>> be inappropriate and risky.
->>>
->>> Given that these selftests strictly depend on the "move
->>> thread_info into task_struct" core changes, sending them to
->>> the BPF list now could cause cross-tree dependency issues and
->>> potential build breakages if the core series undergoes any late
->>> adjustments before hitting mainline.
->>>
->>> Moreover, because these are selftest adaptations rather than
->>> urgent bug fixes, they aren't high-priority for this immediate
->>> window. I will rebase and submit the new version to the BPF tree
->>> right after 7.2-rc1, once the LoongArch base infrastructure is
->>> securely merged into the mainline.
->> In history most arch-specific selftests are merged via arch trees,
->> including perf, bpf, ftrace, kvm and so on.
-> 
-> This is not true at all.
-> All bpf selftests are going through bpf-next tree.
-> For example, x86 and arm64 bpf JIT changes always go
-> through bpf-next.
-> loongarch is causing problems this way by taking bpf JIT changes
-> into the loongarch tree.
+From: Tao Cui <cuitao@kylinos.cn>
 
-I will prepare and send the new version of bpf selftests patches
-based on the bpf-next repo shortly. In the cover letter, I will
-explicitly state the dependency on the "Move thread_info into
-task_struct for LoongArch" series.
+This series implements paravirtualized TLB flush for LoongArch KVM
+guests.
 
-I will leave it to you and the LoongArch maintainer to decide on
-the best way and timing for the actual merge.
+In multi-vCPU KVM guests, remote TLB flushes broadcast IPIs to all
+target vCPUs, including those preempted by the host. Sending IPIs to
+preempted vCPUs causes unnecessary VM exits and grows with vCPU count,
+becoming severe in overcommitted deployments.
 
-Thanks,
-Tiezhu
+Reuse the existing steal-time shared memory page by adding a new
+KVM_VCPU_FLUSH_TLB flag to the preempted byte. On the guest side,
+skip IPIs to preempted vCPUs and set the flag via cmpxchg instead.
+On the host side, when re-entering a vCPU in kvm_update_stolen_time(),
+check and clear the flag; if set, drop the VPID to trigger a full TLB
+flush on the next VM entry. No new shared memory page, hypercall, or
+Kconfig option is needed.
+
+The feature is advertised through the existing KVM PV feature
+negotiation: the kernel exposes KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH as
+a VM-level capability, and userspace (QEMU) sets
+KVM_FEATURE_PV_TLB_FLUSH in the guest's CPUCFG_KVM_FEATURE mask after
+probing it. A corresponding QEMU patch ("target/loongarch: Enable PV
+TLB flush advertisement to the guest") is posted alongside this
+series.
+
+- Host side: only trace a PV TLB flush request when one is observed.
+- (Carried over) Host uses amand_db.w to atomically read and clear the
+  preempted byte; selftest gained input validation and failure cleanup.
+
+Testing: the PV TLB flush path itself is unchanged from v3, so the
+benchmark numbers below still hold.  Note that, unlike v3, the feature
+must now be enabled by userspace: run a QEMU built with the companion
+patch (or with -cpu kvm-pv-tlb-flush=on) so the guest actually observes
+KVM_FEATURE_PV_TLB_FLUSH.  Boot a 32-vCPU guest and run the selftest
+inside it with sleep-idle (PV helps) and busy-spin (PV cannot optimize)
+modes respectively:
+
+  qemu-system-loongarch64 \
+    -m 4G -smp 32 --cpu la464 --machine virt \
+    -bios .../QEMU_EFI.fd \
+    -kernel .../vmlinuz-...-pvtlb-v4+ \
+    -initrd /tmp/ramdisk_test.gz \
+    -serial mon:stdio \
+    -netdev tap,id=net0,ifname=tap0,script=no,downscript=no \
+    -device virtio-net-pci,netdev=net0 \
+    -append "root=/dev/ram rdinit=/sbin/init console=ttyS0,115200" -nographic
+
+  # PV TLB flush enabled (idle threads sleep, vCPUs get preempted)
+  guest# ./pv_tlb_flush_test 1 31 50000 0
+
+  # Baseline (idle threads busy-spin, all vCPUs stay active)
+  guest# ./pv_tlb_flush_test 1 31 50000 1
+
+  With PV TLB flush (sleep idle):    ~152,285 ns/flush
+  Without PV TLB flush (busy-spin):  ~481,045 ns/flush
+
+  Improvement: ~68% latency reduction (~3.2x throughput increase)
+
+Tao Cui (3):
+  LoongArch: KVM: Add PV TLB flush support via steal-time shared memory
+  LoongArch: KVM: Implement guest-side PV TLB flush
+  KVM: selftests: loongarch: Add PV TLB flush performance test
+
+ arch/loongarch/include/asm/kvm_host.h              |   1 +
+ arch/loongarch/include/asm/kvm_para.h              |   9 +
+ arch/loongarch/include/asm/paravirt.h              |  21 +++
+ arch/loongarch/include/uapi/asm/kvm.h              |   1 +
+ arch/loongarch/include/uapi/asm/kvm_para.h         |   1 +
+ arch/loongarch/kernel/paravirt.c                   |  60 ++++++
+ arch/loongarch/kernel/smp.c                        |  30 +++-
+ arch/loongarch/kvm/trace.h                         |  15 ++
+ arch/loongarch/kvm/vcpu.c                          |  34 +++-
+ arch/loongarch/kvm/vm.c                            |   3 +
+ .../selftests/kvm/loongarch/pv_tlb_flush_test.c    | 194 +++++++++++++++++++++
+ 11 files changed, 362 insertions(+), 7 deletions(-)
+
+---
+Changes in v4:
+- Drop the "Preserve auto-enabled PV features on userspace override"
+  patch: forcing auto-enabled features back on is migration-unsafe, and
+  for PV TLB flush (which cannot degrade gracefully) a missed flush
+  would corrupt the guest.  Enablement now follows the usual KVM model
+  -- the kernel advertises KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH and
+  userspace (QEMU) explicitly sets KVM_FEATURE_PV_TLB_FLUSH after
+  probing it; a companion QEMU patch is posted alongside, and the
+  feature can be kept off for an older destination
+  (-cpu kvm-pv-tlb-flush=off).
+
+Changes in v3:
+- Host side: replace amswap_db.w with amand_db.w to atomically read
+  and clear only the preempted byte, preserving the pad bytes for
+  future UAPI use.  Issue a normal load (unsafe_get_user) before the
+  atomic amand_db.w to avoid operating on stale cache data.
+- Host side: move the pv_auto_features OR operation before the
+  compatibility check in kvm_loongarch_cpucfg_set_attr() so that
+  userspace does not need updating for pure kernel-internal PV
+  feature additions.
+- Selftest: add input validation, error checking on pthread_create,
+  and cleanup handling on failure.
+
+Changes in v2:
+- Host side: replace non-atomic unsafe_get_user + unsafe_put_user with
+  atomic amswap_db.w inline assembly. This fixes two issues:
+  1) unsafe_put_user failure could skip the TLB flush entirely
+  2) non-atomic read+write race with guest-side try_cmpxchg could
+     cause FLUSH_TLB requests to be lost
+- Guest side: consolidate two separate READ_ONCE calls into a single
+  READ_ONCE to eliminate a TOCTOU race where the host could clear
+  preempted between the two reads. Also switch from byte-sized
+  try_cmpxchg to 32-bit try_cmpxchg on the aligned word containing
+  preempted.
+
+-- 
+2.43.0
 
