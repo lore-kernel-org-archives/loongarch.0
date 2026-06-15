@@ -1,35 +1,38 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F07C3C06
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 01:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59FC61EDA0F
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 01:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781486650; cv=none; b=jIZ/N+ixn3ncyLlvr4eD8c/+KEAofdYUN8d70pZxFrqwc3gGH20wJaAkKzqtsboCj+wWrc5I1l0IXKsrn9zsLMY43QrFwLC01stR8K9iZOXDW/ea0zC4VB8GWLTvkQvSALGWWt3Cjs7OtB6nO7eNchNdFiNR4GVglmgd/iPZack=
+	t=1781486976; cv=none; b=h1AQ7dNm70Ibp5A9SOgGkm2QDPg5YbQbOXwA+RBzz/i6RaElkJFuNlX1XjcrVs3bNZcKhejbhLvp68/Hz+kAaR2TRXIWFYUTKMNU+b/7UaVP3gmAdjYejjWAEIABMZ+jx/Sr1AuIf5M4TLiC/hpJUretOd9KFbOy4O25x12L5uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781486650; c=relaxed/simple;
-	bh=l5IZV0u1np2bYmJeRpGYCRX+6r++EXUep8GaWJEAvuQ=;
+	s=arc-20240116; t=1781486976; c=relaxed/simple;
+	bh=tiuiSeIm9AiWzjJNxtY1e8JovVLBdhymd0dx4YMDESY=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Ff/sFuUoHUrbQn5lESA7tupLna+Dp4+YTc7T8f5U3+hQ77PL3MxHNTn6+I5kfd/pOZl2Mbpd/QFl+ncfsEKzTMLFMZll6l5JpT5KHl1Lat47YkWdfOYIOdMUU8P8nSq7FhMCgq7aYEqdLiN/Utrv1MpfH+1H4KcnPGNMCvEKbJ0=
+	 In-Reply-To:Content-Type; b=iTWP0CAC5cVOCjaUoz8qrt3yDPItTQ0R784nhqmblh0ynwdioU0bR2T61tjWf4Mkm+XtmSOj+U5CfeFghzr6ve0GDGPfadjCvICitDGSqzZ5rKpeeMcVa3wn9J6de2c9rZdKbBPMmlmtxEGk3IQQahmTAg+dCyNDtOXcDflrXAU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Ax_ukvVC9qFycUAA--.52397S3;
-	Mon, 15 Jun 2026 09:23:59 +0800 (CST)
-Received: from [10.130.40.83] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJCx+8ElVC9qAZemAA--.55405S3;
-	Mon, 15 Jun 2026 09:23:50 +0800 (CST)
-Subject: Re: [PATCH bpf-next v2] bpf: Fix unaligned interpreter panic on JIT
- fallback path
-To: Xu Kuohai <xukuohai@huaweicloud.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>
-Cc: Puranjay Mohan <puranjay@kernel.org>, loongarch@lists.linux.dev,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260611101216.30153-1-yangtiezhu@loongson.cn>
- <093f957d-3d3a-4ce7-b59b-06203c556629@huaweicloud.com>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <9c84609b-3b82-9a43-0f25-4ac632109819@loongson.cn>
-Date: Mon, 15 Jun 2026 09:23:49 +0800
+Received: from loongson.cn (unknown [10.20.42.101])
+	by gateway (Coremail) with SMTP id _____8Bxt3h9VS9qZicUAA--.28223S3;
+	Mon, 15 Jun 2026 09:29:33 +0800 (CST)
+Received: from [10.20.42.101] (unknown [10.20.42.101])
+	by front1 (Coremail) with SMTP id qMiowJCx98B8VS9qR5imAA--.40429S3;
+	Mon, 15 Jun 2026 09:29:33 +0800 (CST)
+Subject: Re: [PATCH v6 2/2] i2c: ls2x: Add clocks property parsing and adjust
+ bus speed
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ loongarch@lists.linux.dev, Huacai Chen <chenhuacai@loongson.cn>,
+ stable@vger.kernel.org
+References: <20260608024533.32419-1-wanghongliang@loongson.cn>
+ <20260608024533.32419-3-wanghongliang@loongson.cn>
+ <ai8o9vxUX6rbZNV4@zenone.zhora.eu>
+From: Hongliang Wang <wanghongliang@loongson.cn>
+Message-ID: <338facef-6893-c8d9-0efc-b4fc3aea756b@loongson.cn>
+Date: Mon, 15 Jun 2026 09:27:46 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -38,102 +41,58 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <093f957d-3d3a-4ce7-b59b-06203c556629@huaweicloud.com>
+In-Reply-To: <ai8o9vxUX6rbZNV4@zenone.zhora.eu>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCx+8ElVC9qAZemAA--.55405S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCry7XFy7WrW8Ar18KFWkKrX_yoW5WF1UpF
-	1kJrWUCryUJFs3Xry7Jr1UXFy5Jr4UJ3WUJr1rXFyUJF47Xr1jgF1UWr1vgr15Jr48Jr1U
-	Ar4jvrnrZr15JFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
-	UUU==
+Content-Language: en-US
+X-CM-TRANSID:qMiowJCx98B8VS9qR5imAA--.40429S3
+X-CM-SenderInfo: pzdqwxxrqjzxhdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7JF45ZF4xGFy5Xr15XF4rtFc_yoWDJrg_WF
+	Wvyr1UCw1UZFn8Ga93tF43A3s0qayUKr4DWrnrAF15JrW3tFZakF18W39a9wnxWay29as0
+	vry8Aw47AF1a9osvyTuYvTs0mTUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUrNtxDUUU
+	U
 
-On 2026/6/12 下午8:37, Xu Kuohai wrote:
-> On 6/11/2026 6:12 PM, Tiezhu Yang wrote:
->> When an architecture implements bpf_jit_inlines_helper_call(), such
->> as LoongArch, ARM64, and RISC-V, the BPF verifier skips rewriting
->> the helper call offset (insn->imm) during the bpf_do_misc_fixups()
->> phase if the helper is expected to be inlined by the JIT compiler.
->> As a result, insn->imm remains as the raw helper enum ID.
+Hi, Andi
 
-...
+On 2026/6/15 上午6:20, Andi Shyti wrote:
+> Hi Hongliang,
+>
+> On Mon, Jun 08, 2026 at 10:45:33AM +0800, Hongliang Wang wrote:
+>> The i2c-ls2x driver supports dts and acpi parameter passing.
+>>
+>> In dts, uses clock framework, by parsing clocks property to
+>> get i2c bus reference clock, and define the div of reference
+>> clock by device data.
+>>
+>> In acpi, by passing clocks property to describe i2c bus reference
+>> clock and clock-div property to describe the div of reference clock.
+>>
+>> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
+>> and div, calculate the prcescale of i2c divider register. The
+>> calculation formula is
+>>
+>> prcescale = (clock_a*10)/(div*clock_s)-1
+>>
+>> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> I think Huacai has not reviewed this patch, his review was only
+> for patch 1. Am I right?
+>
+> Andi
+Sorry, it was my mistake,  I will send a new version later.
 
->> +static void bpf_fixup_fallback_inline_helpers(struct bpf_verifier_env 
->> *env, struct bpf_prog *fp)
-> 
-> The function name is a bit long for a static function
-
-If there are no objections, I will shorten the static function
-name to bpf_fixup_inline_helpers() in v4.
-
->> +{
->> +    struct bpf_insn *insn = fp->insnsi;
->> +    const struct bpf_func_proto *fn;
->> +    int i;
->> +
->> +    if (!env || !env->ops->get_func_proto)
->> +        return;
->> +
->> +    for (i = 0; i < fp->len; i++, insn++) {
->> +        if (insn->code == (BPF_JMP | BPF_CALL) && insn->src_reg == 0) {
->> +            /* Filter out already-patched address offsets. */
->> +            if (insn->imm >= __BPF_FUNC_MAX_ID)
-> 
-> The check is redundant, since bpf_jit_inlines_helper_call() already
-> filters out insn->imm numbers that is not a valid helper id.
-
-Yes, I see your point. If insn->imm is an invalid helper ID,
-bpf_jit_inlines_helper_call() will hit the default branch and
-return false, making the prior check redundant. I will clean
-this up.
-
->> +                continue;
->> +
->> +            if (bpf_jit_inlines_helper_call(insn->imm)) {
->> +                fn = env->ops->get_func_proto(insn->imm, env->prog);
->> +                if (fn && fn->func)
->> +                    insn->imm = fn->func - __bpf_call_base;
->> +            }
->> +        }
->> +    }
->> +}
->> +
->>   struct bpf_prog *__bpf_prog_select_runtime(struct bpf_verifier_env 
->> *env, struct bpf_prog *fp,
->>                          int *err)
->>   {
->> @@ -2643,6 +2668,9 @@ struct bpf_prog 
->> *__bpf_prog_select_runtime(struct bpf_verifier_env *env, struct
->>               *err = -ENOTSUPP;
->>               return fp;
->>           }
->> +
->> +        if (!fp->jited)
->> +            bpf_fixup_fallback_inline_helpers(env, fp);
->>       } else {
->>           *err = bpf_prog_offload_compile(fp);
->>           if (*err)
-> 
-> I tested it on arm64 and the patch works.
-> 
-> Tested-by: Xu Kuohai <xukuohai@huawei.com>
-
-Thanks for your review and the Tested-by tag.
-
-Thanks,
-Tiezhu
+Best regards,
+Hongliang Wang
 
