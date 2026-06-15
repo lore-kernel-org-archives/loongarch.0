@@ -1,96 +1,216 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EB0404BE5
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 15:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C1A408603;
+	Mon, 15 Jun 2026 16:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781538333; cv=none; b=IWxoBVNDShYw7zYPuq42asqqI23E04a8JflDaMZsia0kzJcs6aRPO4ViosI+b/Shvdf8zGqrd1CSE9dlTiB3WpvgrBY9ZE2P2s8iyRkIxlFajMKnMEuUYKdmynjmbhYFs81NXNgzwuAZomYmu1OKsLCcwOeTYHQ/GIP4AVhDOL8=
+	t=1781539811; cv=none; b=MZQqMCQtX3jiIn/HPzoIj6MHS5ShzEXqO8/nNYhhMCl5XeojQXurP1TJ/AXOX33g0MAjtSTmYy75nB8G53YhQe0WVLvuqKQKZmV4HwFAdllAzOElM47+xJnIqsh3Z21m3FOYm2CHHoBtYpSS5JYCfasdFMJi8oB21HEHXd4C84o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781538333; c=relaxed/simple;
-	bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=ns7x4MEEZTUVoaXUB+kL/OZYT5QOfeZQryMXInQdenWR8mzo54OK7IyPC2MUTQxF+UOFlNntJ/Es4LPNnJBYTa8Rg+t8+Y4iWePpsjMQd2cz/6254scK7J/3S0CuZxmeOVssKb/eqbNDVyedOo35wwWaDBzNpsIdWe0wo/aziBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gO9MaIQW; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781539811; c=relaxed/simple;
+	bh=RjmwbjJUekMN4XQbpwM2sAMQ8Q4VGqazX1lTIqnbeDs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IMl7CLdJOsS2s6bxCbiYu6LtSl35ibyDER8y61j9QAvdZR2VLKpRCnUJWFZJWGIMWcxlRNxAwAxt/x+J773LjG3QMktPr8+uR0bVZ/Q4X8HGr0n8SON811H+ce7WUmcdhZbFGrfUdWhmwCIXkGsjzpyfS0N5bGZhIc4USuEj9no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2bt7UtU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gO9MaIQW"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43d08bc82deso3448265fac.3
-        for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 08:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781538330; x=1782143130; darn=lists.linux.dev;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
-        b=gO9MaIQWyi8wW0GmlskQsSVodIQqZhYR3S+JowI+1G/Gbkps6qcwBBlgiqzfRcP1At
-         axCj6A5Wse9QjyzErJVYS8Rs0Yey9a0+pqDfBQsnpcd5beQMcrzuqhFr5CX/SXRQGBq2
-         /WtreYFesD2Q9NDYMHH6YqMoUlyfY/Jpe5F8wx+0MFqpJ9vWp12uiDJmVogHckvyumqj
-         jaeaZMUTKwr3A8R/a0LEoF5nrpigBMk9mdE1Af2W8f84vVCZRKALQWWCcKOa5mnoBM2G
-         33ZzqV2lGGQZ641V53o8BtfzylWXkWQfnIKdFIk6ih6IF2+clyXzJXF31g0kN4h2ErdS
-         x3pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781538330; x=1782143130;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
-        b=d1GYAv7ICXGgr+x4tzf6+NBSwYZJU8HN/J5KzCH1AobBUltKHZqXpLSQF16yZjX+Ts
-         eENoXjeT3JMtQ2akqtfoa1J84zTjqGY9X9g0stLOD9y7yzsjE7fj/Vs/PQ4z7+oQ38nR
-         XZevOGsJ4HrCfvsbUdmfy+kIyRAWZtE8jd5IPktUsXJ+21F+DcpdE39VmORd0MbaWr+9
-         eGaY9uEFb4itV9eR5FPIu5vaRJKPJrghhJnLU6mAOBU8aoXOaIljxrBfJtFYH0A9mzK0
-         ul5sgryidl8LXv10bukxYdjR7go/Sb6pUKKj6mxdkZBOHlf+zuFIb9xbuLj64S73deR0
-         +j+w==
-X-Gm-Message-State: AOJu0YxqLotPNHyZe+b0RsnL5g82huJe4eNu+1yK0QihdB59iQSNIpVG
-	MxtyBX4im20HT/BRE+iPA8Jih3c/DCs3CCDOfZRmkzhDoDBfih9YWonksAAZLw==
-X-Gm-Gg: Acq92OFvMbcoFV0nVKkugFfBTXFvD/tlQ0qzhvHUG2GjDQooW0H31qDKP0NkhhDTlHX
-	NLFNSVNQgOz7eYabwFpOqNLvf3K/BoLN+JNxDc+/Bd6Tl0m5dwOQwBVosQBslmob0ZwmELtwpr2
-	mNisEZ6rSnlyvxVaW+wi75UoNykpHQcvXnpHqal//nIq7WuhzPALYtBJYF62pCzlfj0e/YoLHbq
-	Agj9ZqAvHe3YKDKELmbzmCDqqR0DDX4tMMs607+LIH4Rbp2DXhx0W7xgcALAjax1h3UmO4Oz87j
-	26qKkqO1U3dyRzKDmuplEv6oev66WPWabJ8MT+99cVc9mmWvO1UamkFwYCqhT7GFu0gWgcxOujE
-	nHiPW18dR3U2iiUhvseiJgwGTl23OOeCBlW11bn8gNp7BA9z0d5BZwHdDW5OX9ds34I+wF22vkn
-	4pE9PqnwjY38o+K26/jV04EmXJx3itzBnl+5K4zoJXidqEXocONwBU/ywDrZ1dRgANil513jliD
-	E+4Ptgu4c5HdPLWv+hD8VG8dovc
-X-Received: by 2002:a05:6820:f00e:b0:69e:5175:de1 with SMTP id 006d021491bc7-69edc76c580mr9255765eaf.41.1781538329976;
-        Mon, 15 Jun 2026 08:45:29 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:54::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-44308afc5a5sm137996fac.5.2026.06.15.08.45.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2026 08:45:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2bt7UtU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659B51F000E9;
+	Mon, 15 Jun 2026 16:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781539810;
+	bh=WrhOiAXY4BpdFNkpuEH5kqbHucFA9LBquobYeTzjtI4=;
+	h=From:Subject:Date:To:Cc;
+	b=J2bt7UtU/OYY8PxVyIm3d95v5G+IcTrjBW3L2jU7dt2De3kFnXcxRBS+wcjkcf6fN
+	 XltNpsJON5Ei+eQjAfRadOoGZ6Zr5MKKrnWqjtat85KDYFuJIzaAhhV9joTPZvvnm/
+	 Upf4GSVXporZ+/9u524Qsag7+a/uWIBE8WrhynM4IvaF/bx9BOfhayePviKAuHtMdm
+	 yF/mMlzcia/W4uNmZrGta+pMv2x8g5cbMGvX0YqVwoVCDJpU+Ht9xei0zv8nicGVwV
+	 SRcRt86DYJ9ycUYURQM1lx9ByNJFh+o5TVH1JyohwC9u2Q2ptXr+Wwo4pEiWgn9BWI
+	 W8aRU0vDmzPwg==
+From: Vincent Mailhol <mailhol@kernel.org>
+Subject: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+Date: Mon, 15 Jun 2026 18:08:56 +0200
+Message-Id: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 15 Jun 2026 08:45:28 -0700
-Message-Id: <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
-Subject: Re: [PATCH bpf-next v2 0/4] selftests/bpf: Add some tests for
- LoongArch
-From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Alexei Starovoitov"
- <ast@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>
-Cc: <loongarch@lists.linux.dev>, <bpf@vger.kernel.org>
-X-Mailer: aerc
-References: <20260615100506.19558-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20260615100506.19558-1-yangtiezhu@loongson.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqEMAxA0atI1hZaQQWvMgySNlEDYiUpMiDef
+ YrLt/j/BmMVNpiaG5QvMclHRWgbSBseKzuhauh8N/ghBEdiKV+sGHd2mnOZT9QipXbmImGKSNi
+ PnqAuTuVFfu/+832eP+2uWG1uAAAA
+X-Change-ID: 20260611-discoverable-root_partitions-bdacbada570d
+To: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Vincent Mailhol <mailhol@kernel.org>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>, 
+ linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>, 
+ linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ linux-mips@vger.kernel.org, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, 
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+ Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, 
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6653; i=mailhol@kernel.org;
+ h=from:subject:message-id; bh=RjmwbjJUekMN4XQbpwM2sAMQ8Q4VGqazX1lTIqnbeDs=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDFkGyhcU3klMvHNzftiCl6lmH3kWl02+abz8VKXHlaTy/
+ w4vP39V7pjIwiDGxWAppsiyrJyTW6Gj0Dvs0F9LmDmsTCBDpEUaGICAhYEvNzGv1EjHSM9U21DP
+ EMjQMWLg4hSAqfbXZfgr2rolQuyW6w6JgNKDJ4tvO69i+ZPHkj6Tv9JAckFms/tLRoYma5u3R6a
+ 1csurnulLb7M78HnNmlIVnlf38k/kSby8dJsZAA==
+X-Developer-Key: i=mailhol@kernel.org; a=openpgp;
+ fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
 
-On Mon Jun 15, 2026 at 3:05 AM PDT, Tiezhu Yang wrote:
-> This series is based on the latest master branch of bpf-next tree.
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
->
-> Dependency Note:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> This series strictly depends on the following LoongArch core series,
-> which moves thread_info into task_struct:
->
-> "Move thread_info into task_struct for LoongArch"
-> https://lore.kernel.org/loongarch/20260612011616.27771-1-yangtiezhu@loong=
-son.cn/
+DPS [1] defines GPT partition type UUIDs for OS partitions and
+attributes that control whether such partitions should be
+automatically discovered. The specification states that:
 
-Pls repost when this patch appears in bpf-next.
+  The OS can discover and mount the necessary file systems with a
+  non-existent or incomplete /etc/fstab file and without the root=
+  kernel command line option.
 
-pw-bot: cr
+DPS is already implemented in systemd-gpt-auto-generator [2], which,
+when embedded in an initrd, indeed allows automatic detection of the
+root filesystem through its partition type UUID.
+
+This series adds this discovery feature directly into the kernel so
+that people who are not using systemd or not using an initrd can still
+benefit from it. The implementation follows the same model as
+systemd-gpt-auto-generator:
+
+  - GPT partition type UUIDs are used for automatic discovery policy
+    only. No root=PARTTYPEUUID=xxx cmdline option or similar syntax is
+    added.
+
+  - The root= cmdline option takes precedence. This prevents unexpected
+    behaviour.
+
+  - Only the disk with the active EFI System Partition is scanned, as
+    required by DPS. The disk is identified through the Boot Loader
+    Interface LoaderDevicePartUUID EFI variable.
+
+The DPS no-auto attribute is also implemented, giving another option for
+the user to disable this auto discovery. However, the DPS read-only
+attribute is intentionally not enforced. The kernel already mounts the
+root filesystem read-only by default unless the command line requests
+rw, and user space remains responsible for deciding whether a discovered
+root should later be remounted read-write based on DPS metadata and
+local policy. The other partition type UUIDs (home, swap, var...) are
+also out of scope for the same reason: user space remains responsible
+for mounting anything other than the root partition.
+
+Patch 1 adds the ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID capability and
+the hidden CONFIG_DPS_ROOT_AUTO_DISCOVERY Kconfig symbol used to signal
+whether the feature is available. Patches 2 to 12 declare the
+ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID capability for the supported
+architectures and define their architecture-specific root partition type
+UUID values in asm/dps_root.h.
+
+Patches 13 to 16 make the GPT partition type UUID and the no-auto
+attribute available during early block lookup.
+
+Patch 17 is a small code refactor that prepares for patch 18, which
+updates the root mount path so that, when root= is omitted, the kernel
+reads LoaderDevicePartUUID and uses the early block lookup
+infrastructure to discover the DPS root partition on that disk.
+
+Finally, patch 19 documents this automatic root discovery feature.
+
+Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
+in its bli module [3]. With this, I was able to boot a kernel with a
+completely empty cmdline and no initrd.
+
+[1] The Discoverable Partitions Specification (DPS)
+Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
+
+[2] systemd-gpt-auto-generator
+Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
+
+[3] GRUB -- §16.2 bli
+Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
+
+Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
+---
+Vincent Mailhol (19):
+      init: add DPS root partition type UUID capability
+      alpha: define DPS root partition type UUID
+      arc: define DPS root partition type UUID
+      arm: define DPS root partition type UUID
+      arm64: define DPS root partition type UUID
+      loongarch: define DPS root partition type UUID
+      mips: define DPS root partition type UUIDs
+      parisc: define DPS root partition type UUID
+      powerpc: define DPS root partition type UUIDs
+      riscv: define DPS root partition type UUIDs
+      s390: define DPS root partition type UUIDs
+      x86: define DPS root partition type UUIDs
+      block: store GPT partition type UUID
+      block: add early_lookup_bdev_by_type_uuid()
+      block: store GPT attributes as a raw value
+      block: don't discover partition with DPS no-auto GPT attribute
+      init: factor out root device lookup into lookup_root_device()
+      init: discover root by DPS partition type UUID
+      docs: document discoverable root partitions
+
+ Documentation/admin-guide/discoverable-root.rst | 33 +++++++++
+ Documentation/admin-guide/index.rst             |  1 +
+ Documentation/admin-guide/kernel-parameters.txt |  5 ++
+ arch/alpha/Kconfig                              |  1 +
+ arch/alpha/include/asm/dps_root.h               |  8 +++
+ arch/arc/Kconfig                                |  1 +
+ arch/arc/include/asm/dps_root.h                 |  8 +++
+ arch/arm/Kconfig                                |  1 +
+ arch/arm/include/asm/dps_root.h                 |  8 +++
+ arch/arm64/Kconfig                              |  1 +
+ arch/arm64/include/asm/dps_root.h               |  8 +++
+ arch/loongarch/Kconfig                          |  1 +
+ arch/loongarch/include/asm/dps_root.h           |  8 +++
+ arch/mips/Kconfig                               |  1 +
+ arch/mips/include/asm/dps_root.h                | 20 ++++++
+ arch/parisc/Kconfig                             |  1 +
+ arch/parisc/include/asm/dps_root.h              |  8 +++
+ arch/powerpc/Kconfig                            |  1 +
+ arch/powerpc/include/asm/dps_root.h             | 16 +++++
+ arch/riscv/Kconfig                              |  1 +
+ arch/riscv/include/asm/dps_root.h               | 12 ++++
+ arch/s390/Kconfig                               |  1 +
+ arch/s390/include/asm/dps_root.h                | 12 ++++
+ arch/x86/Kconfig                                |  1 +
+ arch/x86/include/asm/dps_root.h                 | 12 ++++
+ block/blk.h                                     |  1 +
+ block/early-lookup.c                            | 68 +++++++++++++++++-
+ block/partitions/core.c                         |  2 +
+ block/partitions/efi.c                          |  3 +
+ block/partitions/efi.h                          | 11 ++-
+ include/linux/blk_types.h                       |  1 +
+ include/linux/blkdev.h                          |  5 ++
+ include/linux/root_dev.h                        |  6 ++
+ init/Kconfig                                    |  6 ++
+ init/do_mounts.c                                | 94 ++++++++++++++++++++++++-
+ 35 files changed, 355 insertions(+), 12 deletions(-)
+---
+base-commit: 36808d5e983985bbda87e01059cccc071fe3ec8d
+change-id: 20260611-discoverable-root_partitions-bdacbada570d
+
+Best regards,
+-- 
+Vincent Mailhol <mailhol@kernel.org>
+
