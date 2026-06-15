@@ -1,202 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235983D0C1C;
-	Mon, 15 Jun 2026 08:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DC93BFAEF
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 08:53:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781512528; cv=none; b=bP0VUhuXw9IuGdGJILJlPn+xD11C3XBRVD2WRq6abKDyhruV/4LiO4rvLD4Qy8hGJFcwKvpRcPXD/biMIeXw2SqqTH+yUAqQolkYulU8wU/+n5lzsG8oMytlj/x6dxP72ECtBT4F64Q1hvlUurbdSbls6wwYxCFjwRgE4GXca30=
+	t=1781513613; cv=none; b=JdgLXscxnxXWp12AG2gICTZUO0+GWvJHqCsZ6mIfGjAJvvL1jKt3fFo0ROUy5/CYEDwwhUN2Dq5R23AshnK+2SKiEUEj0/vJbFKU5wnMyXKHtOZfB3wroU/BYLas7LzbbJrvi2JoFrIsGeFrJUQbvBzdRuYXQHoO8fgCtxJJT7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781512528; c=relaxed/simple;
-	bh=zXrYO5vMbWIQaRpm6C4Na4L2gLkO1PmEeCbpHHul3IA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CDw+XKU92T70x/hc+HFF3Nlpfj+ok2kbuWdTp16qUXtsaVRqaA/8/CmDEatyiRChBf42FbmK/6c9ONnuOc6Fhli0DnpaC6RZzVhyjJK7EoQ42vRqm41c/vVoxC93JnCNrWxwKkzp2J9VHWrK38M4QwUnkoGw3z8/k8OsxjqBKw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHx4Egmk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781513613; c=relaxed/simple;
+	bh=TMSj3OPDL/CzaPE9syUv/EMnnI3dbe+S2Sn07fiNIQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y1c0ipRTLPRchXvUZ0WLmb8c8G8mrc3qmwUJEhZrdW84Lym8nG4GdNLrPfpT5DqwXYlVElLFHKBOtMXolaKqnB+i3ocA5okzbGNWQy1H38OcnOfOPyxGt0BEOV8k+XejEioXtLp5TyFrk/8IoDUWqDg8AvKPbNA9Z0nSHkdgqOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mp+7YlDa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHx4Egmk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A6E61F000E9;
-	Mon, 15 Jun 2026 08:35:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mp+7YlDa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9041F000E9
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 08:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781512524;
-	bh=YVOrQAv74TqwYH6NvuxkRgGldcsF+veBZEKO4rbxm7E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DHx4EgmksXmmSYl/TmCMpS6Vl3hV+J/xCu6746Xi8CaLWr1PVlOfCwBhCAs4ApNSF
-	 8SSWOkm0lJFvfIe0J00bAnbn+4ysKbR8bPRYwQTko46j8F3b+QU5pQspr/fSIozjR1
-	 q3Tt2eP8kJvLUjsVRNoiObpk1fSg7Hws2Kf/Nx4gNm+ByP5lLPvywULVcSpTKLMQMe
-	 5ORfo4bMQfCD7ASNoX/hBz0I6plocbMrlFOtiN8zhoMIRbrJbjcUOrcKKg4yyHRJnm
-	 UYR3ZYCNe8UiYbXcKHV4fvmSPxLRaAvkJ9AorN6yG+hrwiAzzInCxF/vYo6VswRUxk
-	 CSCZEi8cWqOyw==
-Message-ID: <e69f520d-3b19-40fd-9be9-5df6d2b71763@kernel.org>
-Date: Mon, 15 Jun 2026 10:35:20 +0200
+	s=k20260515; t=1781513610;
+	bh=TMSj3OPDL/CzaPE9syUv/EMnnI3dbe+S2Sn07fiNIQk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Mp+7YlDaNzHYjhxIn1ES/JhGgzK0evQNRWGeP/23sce13PQER8HFAa8m3MvAhCBWo
+	 hQY9kk9AgyaXBCSXXb5249p7kHfdySZQjT03OSmqx0CgRpeaOfqqpu860evHkevFzR
+	 NTawt8/Oj9lclgqB225ZJi2+ux7684ZMQxKrOUaWw2+H9NANGfudw8M8Ey7jgnDJhC
+	 m69K3eskgvhWUYs8pOQvnyAdW+Yk5qzcAZrDI6pKmgoQ+ZWXh24px5ahfha+iGqF9Y
+	 p/gt1eJrzO1obnpXWX2C8QCmdfbYchS2VPE2qt3tNsX41+BHtfduykIeyqI1rhJpGR
+	 hBVDlhtKvJ+8g==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-69165354c87so3826700a12.3
+        for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 01:53:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+bsJY6lv/1WeVDhihWcqWxc2A7nIr43WGDwe4lBcj5vLg/aPjoeJFJg/dSvg9BAGxMmktqdXOSv7M=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxtTt7YaTrGZNNG/w4uOK4GcqofC4XLmcMZrtsi5DqXudwW+Nnx
+	okwkPwBF/8kP6ziawZ3ezlycvfpN4HtLh3BNhos0Gyx1XCWDK2WNnF3XGoR5lK66r5FbC4sWkiL
+	gxaJXR8h3yHsZ7gYrh4fqiRVE5FartlY=
+X-Received: by 2002:a05:6402:40ce:b0:676:988e:8eb6 with SMTP id
+ 4fb4d7f45d1cf-69378a510femr5017682a12.26.1781513609340; Mon, 15 Jun 2026
+ 01:53:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] can: loongson_canfd: Add RXDMA support
-To: Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
- <chenhuacai@loongson.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
- Bingxiong Li <libingxiong@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
- linux-can@vger.kernel.org, jeffbai@aosc.io
-References: <cover.1780908445.git.zhoubinbin@loongson.cn>
- <9af2c912e0afd439ea9562ea8aa72ee0af3f2ed3.1780908445.git.zhoubinbin@loongson.cn>
- <11d8ceff-d05a-4446-96cc-f9f97538d12e@kernel.org>
- <CAMpQs4Kpas0qB=_h3KEJW3WL5i=mZjX53szAhhPrOCo8YKLAYA@mail.gmail.com>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <CAMpQs4Kpas0qB=_h3KEJW3WL5i=mZjX53szAhhPrOCo8YKLAYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
+ <CAAhV-H4daHGFoAiXrwcNXj=T1kZm5jRRwd_sCiv7ksjR2ynHgw@mail.gmail.com>
+ <e23e6781-d39d-d7fa-10ec-8d09349103ed@loongson.cn> <CAAhV-H6jJpEnNTUF0CF60fDB5ShNT+C59NEH=YodJtepFQgrKQ@mail.gmail.com>
+ <833e2fca-6a41-786c-356d-6480ca168e44@loongson.cn> <CAAhV-H5LORpNeTycjmHFobOZEA5w=spSkxJuOajuizz-941zQg@mail.gmail.com>
+ <CAADnVQLAgYFQ=BRi+hKwt5pp7fffqsvD0rXzn6Nk9jJQ=6uUZA@mail.gmail.com>
+In-Reply-To: <CAADnVQLAgYFQ=BRi+hKwt5pp7fffqsvD0rXzn6Nk9jJQ=6uUZA@mail.gmail.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 15 Jun 2026 16:53:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4DTJqUCS30ntDkQBRtSJ=rbZ=usaghUgtdXR-DMt3=wA@mail.gmail.com>
+X-Gm-Features: AVVi8Cfto3qdRJHqxKM8eDmbW8zBIlRNKmbb7RRc45xJV-iX6C-b-acCWoVe5aw
+Message-ID: <CAAhV-H4DTJqUCS30ntDkQBRtSJ=rbZ=usaghUgtdXR-DMt3=wA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Move thread_info into task_struct for LoongArch
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Hengqi Chen <hengqi.chen@gmail.com>, 
+	loongarch@lists.linux.dev, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15/06/2026 at 03:35, Binbin Zhou wrote:
-> Hi Vincent:
-> 
-> Thanks for your detailed review and sorry for my late reply.
-> 
-> On Mon, Jun 8, 2026 at 8:13 PM Vincent Mailhol <mailhol@kernel.org> wrote:
->>
->> On 08/06/2026 at 10:49, Binbin Zhou wrote:
->>> Add optional DMA support for RX path using the Loongson APB CMC DMA
->>> engine. When a DMA channel is successfully requested, the driver:
->>>
->>> - Uses DMA cyclic transfers to write incoming CAN frames directly to
->>>   a coherent DMA buffer
->>> - Replaces RXBNEI (RX buffer not empty interrupt) with DMADI (DMA
->>>   done interrupt)
->>> - Dynamically switches between DMA and PIO modes based on channel
->>>   availability
->>>
->>> This significantly reduces CPU intervention under high RX load,
->>> especially beneficial for CAN FD at higher data rates.
->>>
->>> Co-developed-by: Bingxiong Li <libingxiong@loongson.cn>
->>> Signed-off-by: Bingxiong Li <libingxiong@loongson.cn>
->>> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
->>> ---
->>
->> Please check the W=2 warnings:
-> 
-> OK. I usually compile with `W=1` and didn't notice these issues.
+Hi, Alexei,
 
-The W=2 used to be too spammy and people simply ignored it. I went
-through a quest to reduce that noise. See
+On Mon, Jun 15, 2026 at 11:45=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Sun, Jun 14, 2026 at 8:31=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
+g> wrote:
+> >
+> > On Mon, Jun 15, 2026 at 11:16=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongs=
+on.cn> wrote:
+> > >
+> > > On 2026/6/15 =E4=B8=8A=E5=8D=8810:23, Huacai Chen wrote:
+> > > > On Mon, Jun 15, 2026 at 9:41=E2=80=AFAM Tiezhu Yang <yangtiezhu@loo=
+ngson.cn> wrote:
+> > > >>
+> > > >> On 2026/6/14 =E4=B8=8A=E5=8D=8810:51, Huacai Chen wrote:
+> > > >>> Hi, Tiezhu,
+> > > >>>
+> > > >>> I have queued this series for 7.2, does the below series depend o=
+n this one?
+> > > >>>
+> > > >>> https://lore.kernel.org/loongarch/20260521125636.26744-1-yangtiez=
+hu@loongson.cn/T/#t
+> > > >>
+> > > >> This is independent on CONFIG_THREAD_INFO_IN_TASK.
+> > > >>
+> > > >>> https://lore.kernel.org/loongarch/20260428080051.20938-1-yangtiez=
+hu@loongson.cn/T/#t
+> > > >>
+> > > >> This is dependent on CONFIG_THREAD_INFO_IN_TASK.
+> > > >>
+> > > >> But anyway, I plan to send new version for the above two series of
+> > > >> selftests once this "Move thread_info into task_struct for LoongAr=
+ch"
+> > > >> series is merged into the mainline, maybe after 7.2-rc1.
+> > > >>
+> > > >> Because the code under selftests need to be updated, for example,
+> > > >> it can use bpf_get_current_task_btf()->thread_info.preempt_count
+> > > >> for get_preempt_count(), and it should use ld.wu rather than ld.w
+> > > >> for bpf_get_smp_processor_id().
+> > > > You can update new versions now, then they can be merged together.
+> > >
+> > > Thanks for your suggestion.
+> > >
+> > > However, considering that these selftest patches need to be
+> > > routed through the BPF tree (rather than the LoongArch tree),
+> > > updating them right now during the active merge window might
+> > > be inappropriate and risky.
+> > >
+> > > Given that these selftests strictly depend on the "move
+> > > thread_info into task_struct" core changes, sending them to
+> > > the BPF list now could cause cross-tree dependency issues and
+> > > potential build breakages if the core series undergoes any late
+> > > adjustments before hitting mainline.
+> > >
+> > > Moreover, because these are selftest adaptations rather than
+> > > urgent bug fixes, they aren't high-priority for this immediate
+> > > window. I will rebase and submit the new version to the BPF tree
+> > > right after 7.2-rc1, once the LoongArch base infrastructure is
+> > > securely merged into the mainline.
+> > In history most arch-specific selftests are merged via arch trees,
+> > including perf, bpf, ftrace, kvm and so on.
+>
+> This is not true at all.
+> All bpf selftests are going through bpf-next tree.
+> For example, x86 and arm64 bpf JIT changes always go
+> through bpf-next.
+> loongarch is causing problems this way by taking bpf JIT changes
+> into the loongarch tree.
+I'm sorry for my mistake. Yes, you are right, most BPF changes go
+through bpf-next, but LoongArch is not the first and not the only
+exception. See commit 806381e1a24c6eec2b431cbba2ba1b81e518fea8 and
+3203a08c1266689c204fb8f10d6bb5186921fce2.
 
-  660e899103e2 ("kbuild: remove gcc's -Wtype-limits")
-
-with this, the output is less bloated and I think a bit more useful. Not
-that you need to systematically address all warnings, but at least,
-review the list.
-
->>   $ make W=12 drivers/net/can/loongson_canfd.o
->>     DESCEND objtool
->>     INSTALL libsubcmd_headers
->>     CC      drivers/net/can/loongson_canfd.o
->>   drivers/net/can/loongson_canfd.c:1917:9: warning: missing initializer for field 'driver_data' of 'const struct acpi_device_id' [-Wmissing-field-initializers]
->>    1917 |         { "LOON0015" },
->>         |         ^
->>   In file included from ./include/linux/acpi.h:16,
->>                    from drivers/net/can/loongson_canfd.c:8:
->>   ./include/linux/mod_devicetable.h:219:24: note: 'driver_data' declared here
->>     219 |         kernel_ulong_t driver_data;
->>         |                        ^~~~~~~~~~~
->>   drivers/net/can/loongson_canfd.c: In function 'loongson_canfd_start_xmit':
->>   drivers/net/can/loongson_canfd.c:1116:13: warning: 'buf_id' may be used uninitialized [-Wmaybe-uninitialized]
->>    1116 |         u32 buf_id, tx_stat, i = 0;
->>         |             ^~~~~~
->>   drivers/net/can/loongson_canfd.c:1116:13: note: 'buf_id' was declared here
->>    1116 |         u32 buf_id, tx_stat, i = 0;
->>         |             ^~~~~~
->>   In function 'loongson_canfd_insert_frame',
->>       inlined from 'loongson_canfd_start_xmit' at drivers/net/can/loongson_canfd.c:1144:7:
->>   drivers/net/can/loongson_canfd.c:1079:15: warning: 'meta1' may be used uninitialized [-Wmaybe-uninitialized]
->>    1079 |         meta1 |= FIELD_PREP(REG_FRAME_META1_DLC, can_fd_len2dlc(cf->len));
->>         |               ^~
->>   drivers/net/can/loongson_canfd.c: In function 'loongson_canfd_start_xmit':
->>   drivers/net/can/loongson_canfd.c:1052:20: note: 'meta1' was declared here
->>    1052 |         u32 meta0, meta1;
->>         |                    ^~~~~
->>   drivers/net/can/loongson_canfd.c: In function 'loongson_canfd_probe':
->>   drivers/net/can/loongson_canfd.c:1807:13: warning: 'ret' may be used uninitialized [-Wmaybe-uninitialized]
->>    1807 |         int ret, irq;
->>         |             ^~~
->>   drivers/net/can/loongson_canfd.c:1807:13: note: 'ret' was declared here
->>    1807 |         int ret, irq;
->>         |             ^~~
->>   drivers/net/can/loongson_canfd.c: At top level:
->>   drivers/net/can/loongson_canfd.c:47:9: warning: macro 'LOONGSON_CANFD_RX_FR_CNT' is not used [-Wunused-macros]
->>      47 | #define LOONGSON_CANFD_RX_FR_CNT        0x50    /* Receive Message Count Register */
->>         |         ^~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Regarding the definitions of these controller registers, even though
-> they aren’t currently referenced, can they be retained to make the
-> code seem more complete?
-
-Only keep the registers for features which are not yet implemented. For
-the register which are already handled in a different way without
-relying on the macro, please remove.
-
-I can think, for example, of:
-
-  LOONGSON_CANFD_TX_DATA_10
-
-You handled the tx data in a for loop and this macro is purely dead and
-do not serve anymore documentation purpose. The only thing it does now
-is to add confusion.
-
-(...)
-
->>>  config CAN_LOONGSON_CANFD
->>>       tristate "Loongson CAN-FD controller"
->>> -     depends on HAS_IOMEM || COMPILE_TEST
->>> +     depends on HAS_IOMEM && (LOONGSON2_APB_CMC_DMA || COMPILE_TEST)
->>
->> The logic is odd here. If your driver can be COMPILE_TESTed without
->> HAS_IOMEM, then patch 1 should be:
->>
->>         depends on HAS_IOMEM || COMPILE_TEST
->>
->> and patch 2 should be:
->>
->>         depends on (HAS_IOMEM && LOONGSON2_APB_CMC_DMA) || COMPILE_TEST
->>
->> If your driver need HAS_IOMEM even for a compile test, then patch 1
->> should be:
->>
->>         depends on HAS_IOMEM
->>
->> and patch 2 should be:
->>
->>         depends on HAS_IOMEM && (LOONGSON2_APB_CMC_DMA || COMPILE_TEST)
-> 
-> For me, the 2nd way is correct.
-
-Ack.
-
-Just for confirmation, do you think that your device will ever be used
-in production on a board which would not have LOONGSON2_APB_CMC_DMA? If
-yes, it could make sense to add the RXDMA as a separate module.
-Otherwise, it is good as-is.
-
->>
->> Here, you are doing a weird mix.
->>
->>>       select REGMAP_MMIO
->>>       help
->>>         This is a canfd driver switch for the Loongson platform,
+Frankly, cross subsystem patches usually have some extra difficulty to
+get merged because of dependencies & confliction, and my mentor gave
+me a solution: Merge a single tag from another subsystem (e.g. from
+the bpf tree) to create a clean base, and then apply arch patches on
+top of that base.
 
 
-Yours sincerely,
-Vincent Mailhol
+Huacai
