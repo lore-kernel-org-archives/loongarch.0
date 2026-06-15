@@ -1,120 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69753233940
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 03:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AADB17A31C
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 03:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781494287; cv=none; b=ijwiXl9fiKd7cuKDwMqHqafS9OB9Ou7L+qQFSSasDjWvo0rRDtjjEyoFwsGEQu1BKpk81DDL8d3ZQmWvY7n/VoR+BIKanyGa8zDH760JKGKP58lxkekyi/fdiekP2DsSUY4j1J83HsddKCsaAlbWDx9ErhHrcm79QWmvw0qdlJ8=
+	t=1781494439; cv=none; b=rPcT4kAO56Jm2LsDua7+2q2NG7cppEnlTzG/HTkO/2AxHHMLwXzYflMzw5Tejz3TgCyDhjr7t/sdBsD3nBz5MBV8wyCTB4vEAcXMGKHzHjRQRqwzqgHf+U0F6nRpFADIp4KgcryM/Dfqtf+qsexnS+472+p94fAfDonhTXDfJBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781494287; c=relaxed/simple;
-	bh=ii1M5oBYcF7t4DeMDXqe4RmINRlIzzF/iUnfV29EDn4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T1Zqmm+IIkjU+1CWxcO7VNf0ZkJn8dsgu+jkT0YqZF8SZuKYZ4ATkCNgKvJyM9+sGnFEpU4t2IlPTsPJqxLQ0PlwC6gAu/N16i2kPLCiRiVnvxm54TupijbZxTh2GFVMPdZKscrOo5K0W7jhJiIWSmlKbrlXn7uhBQFGNEP38dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XodurliZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781494439; c=relaxed/simple;
+	bh=7CYnTAuVR8rZg2/zzNHVJX1whHtFmlFtEUUksdZQ1Ds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q/yJprkSQWJQbFhPi/L+ghri3sRrLHqNUJaQWbJfT8wcq0vAgRy8tsoek54LT0tI2+phs5cv/AW+bNBXtvzQK1Qdw3z0E2jWm5AQR45qvq06thrCysM02aszlwC0NpzfYvsq08wZYn/0oXLFzVbWM+8HL6mSIjpFvQUComTm/4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EUxMefHb; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XodurliZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252001F00A3E
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 03:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781494286;
-	bh=ii1M5oBYcF7t4DeMDXqe4RmINRlIzzF/iUnfV29EDn4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=XodurliZhLEglb4E4KQktG9pqo+OkL7ARAmbV8fN0X40SwTEkJTzLTIftX2Zs26Iv
-	 Pu788f11Q+3pOfze7Uog+NDJm05nS12m8PZirZW+G95SbjE4G8OyZDXKZV+f5H+81L
-	 /tr/9+Z8Ci/iIaypWJCid6p4xrUvEtMS5zWvVdBgi/Q/I/2f8nfilQ3OecmLnFYzVl
-	 KLHNP7pjz4gaG3uvIUIqchtRF4ZurgcPvmYOv5MamHbCtd9LnqFmWF7P6H5SruYQqA
-	 95oC5BiaEdpcojwBWgk7do5pmad/JhKG2SM8lQFjSGWYsoGt3aJAf+s8v+f/t66y0X
-	 33pQEfH2VkGig==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-68b90fc6a1dso5496911a12.1
-        for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 20:31:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/FUYGBEMUm8lAXm8iKIz0rvcy9dkXT0dcJJ9hoTOH4Uuvy8wMj7quVVNsl0iYvXiqH6aE7y4p0XKA=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwMPaSjSRS0BJqdaif3mdJdLfMxRiqdy3JWTe7WBKfam5tdMX9i
-	A28F4ogSyiM79SIgsuA81gPauXE/SrzPFszTZz7ma7XARzC4socPCnZGFwLaca1WBjDBldLq55Y
-	EQ5frgGAZ7Joj1kDEipvoZnb9TZylnuM=
-X-Received: by 2002:a05:6402:2682:b0:68f:cd4c:7297 with SMTP id
- 4fb4d7f45d1cf-69379013ab9mr4938630a12.14.1781494284705; Sun, 14 Jun 2026
- 20:31:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EUxMefHb"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-c86307c4e6bso881322a12.0
+        for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 20:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781494437; x=1782099237; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4N4VN4U8dWKYBPdGLpmGB0dN8xMC6v/gON67oih3Zak=;
+        b=EUxMefHb88YeHHJLQbFK/XWA2Zlr9+OZ80tCZ9VBX6bn/kymlBDVhbYNnoHd+pWtUD
+         vBCa96GX3H0yH/LTRxJVPmLMtk5XhMtdQJGUzzr75x8V93qUBOalSlGyqVxcDwt2Q0Io
+         blXJY6QVdV0hT1RaTyOBTiQSyMw9x6bATQeFH6YRW/hm6aXEFiZ8tQ5dToyun7uO3V9Z
+         Gpg1pE2hjZ++HD65e8FoHlC0Z8PzUf45wyDP6qlU3Uoc33swrvEAVCe/DuuUWI8Upk23
+         u07ETmhE+2a0pdL4XuB99c/8YZnyFGYyoRMIhIbEgM8GBnBRYSmxONojA8bvBa0QKOrh
+         hbVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781494437; x=1782099237;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4N4VN4U8dWKYBPdGLpmGB0dN8xMC6v/gON67oih3Zak=;
+        b=oQ3IX59b2ZJi73/4MgWZoa24Uv+5uxlRKsrTkuUwJgaFVnVpkbEpdWeMBNI8Fz3nRW
+         iUKUiBFoF8+uwwX5WxttHqd5kDJw7cPWDnjrhwQvJLCExOGJkQ/EgJ7lME/L6l0fyuVH
+         Fx2yBmeEefO0HTur7pg8ZqRy/cpftRGhC6Ab//xgk2fnHBaOWWMWmux+TTD9qZeT35lL
+         /2SEXjI6+u+3KNsVTBQr+o2RFPF7yd4cH3hcOQ8dcZzegaK+X2oWFj9WQWbaouRzrkC3
+         bVSEcrKDn2lxzFBV8vYDtkhDgJu1+KjkJi0yFH5Po73fjHhVrgEc5SPLf4+inLoXTyKV
+         p8PA==
+X-Forwarded-Encrypted: i=1; AFNElJ908mfd7aGEOI6M+vxBBVwQJMvbitxqqb5pdQ8vrvRSVW1hhMA6LQ21N7yrtJgHDZyn+EgPejRPIKk=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy13RPzJMk+oExfUufqIaaSs2Uh+kW1OUitCasL61jxsGkABXJL
+	QXhf5XMjbmjvm4Kxd2QcvSGwnDk2lViPvBXnGvYj0pFob/NZ+/Z1Ny5V
+X-Gm-Gg: Acq92OFIi+wBEb9xa1HQN518MtKJ59A4cCK3HzOXdF811cBTbI04e4iGYLg+YCb+CC6
+	0X9EFdjfcMOBbDdA4BvvOdW4jo4aSVh+qUYkQLepMa2iJimQOCErd1ekVCO+g6s1Mv7ZO3RhBw4
+	pfG65NmriuLqy1oQ17195K0uN999QhUGe4gg1AQ/mQxn2HPh8JoPmZc1Evgmn1VB9VRPDYX06Il
+	3E42o/zgNE87QqHCJ+Dda33RiHCWopgEzpEBDURkb6E3SCKnh81NN5Tx7OMI8AI/u7JnGd6CbUU
+	Fx8k9kmI9YTrAc2246/KsozzKcY2cct3O22It4fytAoGR0qrbvsJpbBbYGmh1L+4BHxzvZk0og8
+	7M0jM9RkAWbu8ZHy0+UEoJCP412sLl9J0Q5+o8mI4oBb394nllrBI5T2e88jPYqWMrR9OiXq+kR
+	OOcRRsohCnsGzJO8ZfDD6qUDYBcr9aMgKb73lVlHxxjA==
+X-Received: by 2002:a05:6a21:6813:b0:3a2:d629:16a2 with SMTP id adf61e73a8af0-3b783b757e9mr14493609637.10.1781494436758;
+        Sun, 14 Jun 2026 20:33:56 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434b035ce6sm8650381b3a.49.2026.06.14.20.33.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Jun 2026 20:33:56 -0700 (PDT)
+Message-ID: <894d7c33-8e14-4ba5-b774-14062ece39f2@gmail.com>
+Date: Mon, 15 Jun 2026 11:33:34 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
- <CAAhV-H4daHGFoAiXrwcNXj=T1kZm5jRRwd_sCiv7ksjR2ynHgw@mail.gmail.com>
- <e23e6781-d39d-d7fa-10ec-8d09349103ed@loongson.cn> <CAAhV-H6jJpEnNTUF0CF60fDB5ShNT+C59NEH=YodJtepFQgrKQ@mail.gmail.com>
- <833e2fca-6a41-786c-356d-6480ca168e44@loongson.cn>
-In-Reply-To: <833e2fca-6a41-786c-356d-6480ca168e44@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 15 Jun 2026 11:31:47 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5LORpNeTycjmHFobOZEA5w=spSkxJuOajuizz-941zQg@mail.gmail.com>
-X-Gm-Features: AVVi8CdaChDFwjPAsQFOYuCBd47UBORkjjLTwKuLNkZrr1QI91d_qIYsGF_RQnw
-Message-ID: <CAAhV-H5LORpNeTycjmHFobOZEA5w=spSkxJuOajuizz-941zQg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Move thread_info into task_struct for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/11] of: reserved_mem: split
+ alloc_reserved_mem_array() from fdt_scan_reserved_mem_late()
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ iommu@lists.linux.dev, zhaomeijing@lixiang.com, catalin.marinas@arm.com,
+ will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com,
+ quic_obabatun@quicinc.com
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+ <20260527032917.3385849-6-chenwandun1@gmail.com>
+ <20260612144122.GA974326-robh@kernel.org>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <20260612144122.GA974326-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 15, 2026 at 11:16=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.c=
-n> wrote:
->
-> On 2026/6/15 =E4=B8=8A=E5=8D=8810:23, Huacai Chen wrote:
-> > On Mon, Jun 15, 2026 at 9:41=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongso=
-n.cn> wrote:
-> >>
-> >> On 2026/6/14 =E4=B8=8A=E5=8D=8810:51, Huacai Chen wrote:
-> >>> Hi, Tiezhu,
-> >>>
-> >>> I have queued this series for 7.2, does the below series depend on th=
-is one?
-> >>>
-> >>> https://lore.kernel.org/loongarch/20260521125636.26744-1-yangtiezhu@l=
-oongson.cn/T/#t
-> >>
-> >> This is independent on CONFIG_THREAD_INFO_IN_TASK.
-> >>
-> >>> https://lore.kernel.org/loongarch/20260428080051.20938-1-yangtiezhu@l=
-oongson.cn/T/#t
-> >>
-> >> This is dependent on CONFIG_THREAD_INFO_IN_TASK.
-> >>
-> >> But anyway, I plan to send new version for the above two series of
-> >> selftests once this "Move thread_info into task_struct for LoongArch"
-> >> series is merged into the mainline, maybe after 7.2-rc1.
-> >>
-> >> Because the code under selftests need to be updated, for example,
-> >> it can use bpf_get_current_task_btf()->thread_info.preempt_count
-> >> for get_preempt_count(), and it should use ld.wu rather than ld.w
-> >> for bpf_get_smp_processor_id().
-> > You can update new versions now, then they can be merged together.
->
-> Thanks for your suggestion.
->
-> However, considering that these selftest patches need to be
-> routed through the BPF tree (rather than the LoongArch tree),
-> updating them right now during the active merge window might
-> be inappropriate and risky.
->
-> Given that these selftests strictly depend on the "move
-> thread_info into task_struct" core changes, sending them to
-> the BPF list now could cause cross-tree dependency issues and
-> potential build breakages if the core series undergoes any late
-> adjustments before hitting mainline.
->
-> Moreover, because these are selftest adaptations rather than
-> urgent bug fixes, they aren't high-priority for this immediate
-> window. I will rebase and submit the new version to the BPF tree
-> right after 7.2-rc1, once the LoongArch base infrastructure is
-> securely merged into the mainline.
-In history most arch-specific selftests are merged via arch trees,
-including perf, bpf, ftrace, kvm and so on.
 
-Huacai
 
->
-> Thanks,
-> Tiezhu
->
+On 6/12/26 22:41, Rob Herring wrote:
+> On Wed, May 27, 2026 at 11:29:11AM +0800, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+>> Prepare for storing /memreserve/ entries in the reserved_mem array.
+>> alloc_reserved_mem_array is skipped if the device tree lacks a
+>> /reserved-memory node, pointer 'reserved_mem' continues to reference
+>> the reserved_mem_array which lives in __initdata, storing
+>> /memreserve/ entries into reserved_mem_array would result in metadata
+>> loss, and an out-of-bounds memory access will occur if the device
+>> tree contains more than MAX_RESERVED_REGIONS /memreserve/ entries.
+>>
+>> So split alloc_reserved_mem_array() from fdt_scan_reserved_mem_late(),
+>> and call alloc_reserved_mem_array() whether or not there is a
+>> /reserved-memory node.
+>>
+>> No functional change.
+>> The actual /memreserve/ population is added in a follow-up patch.
+>>
+>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+>> ---
+>>  drivers/of/fdt.c             | 7 +++++--
+>>  drivers/of/of_private.h      | 1 +
+>>  drivers/of/of_reserved_mem.c | 6 +-----
+>>  3 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 82f7327c59ea..83a2a474831e 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -1284,8 +1284,11 @@ void __init unflatten_device_tree(void)
+>>  {
+>>  	void *fdt = initial_boot_params;
+>>  
+>> -	/* Save the statically-placed regions in the reserved_mem array */
+>> -	fdt_scan_reserved_mem_late();
+>> +	/* Attempt dynamic allocation of a new reserved_mem array */
+>> +	if (fdt && alloc_reserved_mem_array()) {
+>> +		/* Save the statically-placed regions in the reserved_mem array */
+>> +		fdt_scan_reserved_mem_late();
+> 
+> Can we make this just:
+> 
+> alloc_reserved_mem_array();
+> fdt_scan_reserved_mem_late();
+> 
+> We already check !fdt in fdt_scan_reserved_mem_late().
+
+Thanks for you review, Rob.
+
+The reason I kept the fdt check is that total_reserved_mem_cnt is wrong
+when fdt is NULL, early_init_fdt_scan_reserved_mem() returns early in
+that case, so fdt_scan_reserved_mem() never runs, and
+total_reserved_mem_cnt stays at MAX_RESERVED_REGIONS. Calling
+alloc_reserved_mem_array() unconditionally would allocate unnecessarily
+memory.
+
+A better fix might be to make total_reserved_mem_cnt always correct, add
+a !fdt check at the top of fdt_scan_reserved_mem() that sets
+total_reserved_mem_cnt to 0, and let early_init_fdt_scan_reserved_mem()
+call it even when initial_boot_params is NULL. Then
+alloc_reserved_mem_array() could naturally skip allcation when that
+count is 0, and we can drop the outer fdt guard.
+
+
+There is still separate UAF issue (fixed in patch3) if we don't check
+the return value of alloc_reserved_mem_array().
+
+
+With the fdt_scan_reserved_mem() fix for total_reserved_mem_cnt, the
+call site in unflatten_device_tree() becomes:
+
+if (alloc_reserved_mem_array()) {
+        fdt_scan_reserved_mem_late();
+}
+
+How does that sound?
+
+
+Best regards,
+Wandun
+
+> 
+> Rob
+
