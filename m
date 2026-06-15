@@ -1,96 +1,96 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3E663DC4D9
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 10:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EB0404BE5
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 15:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781517920; cv=none; b=DLtxsexeyCl8RvIHgXDMmsI4vAZyjfq9KuT0NWrLVe9e9RN+6MwgrdwxpYAL8P5v2ZR2PCCf/qcrDBmvIkwe1fUYolJ66Hxtj2Gkz+L+OQSKNzENeEMB/jLUYDSQ34GFGYzi0kYGuHHG3c1sJQdveiJ3i5Hq8WAzGn8PL366j3k=
+	t=1781538333; cv=none; b=IWxoBVNDShYw7zYPuq42asqqI23E04a8JflDaMZsia0kzJcs6aRPO4ViosI+b/Shvdf8zGqrd1CSE9dlTiB3WpvgrBY9ZE2P2s8iyRkIxlFajMKnMEuUYKdmynjmbhYFs81NXNgzwuAZomYmu1OKsLCcwOeTYHQ/GIP4AVhDOL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781517920; c=relaxed/simple;
-	bh=OapWD31uSsDKIvHXHB85c6FEXRB2lgQVk8YWNChvW+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i2zRxYm9Uk+zUXKLQPDd5gXPDjv6C8k92aR7N+Cqs86CHb7Wk+AFbinnjUnrLUjzQuL9rXCvB0BKrX7691PPy21syi5G7j8dtBUhWbfikFlLM0tYKIsKzMpGz8iBUx1uVRc5Vcn/e3hWBBvx9YYgvj6N58J04+TDZnB7J1sFJcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxVulczi9qO00UAA--.47364S3;
-	Mon, 15 Jun 2026 18:05:16 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowJDxzsJTzi9qlgOnAA--.55069S6;
-	Mon, 15 Jun 2026 18:05:15 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	bpf@vger.kernel.org
-Subject: [PATCH bpf-next v2 4/4] selftests/bpf: Test jited inline of bpf_get_smp_processor_id() for LoongArch
-Date: Mon, 15 Jun 2026 18:05:06 +0800
-Message-ID: <20260615100506.19558-5-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20260615100506.19558-1-yangtiezhu@loongson.cn>
-References: <20260615100506.19558-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1781538333; c=relaxed/simple;
+	bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ns7x4MEEZTUVoaXUB+kL/OZYT5QOfeZQryMXInQdenWR8mzo54OK7IyPC2MUTQxF+UOFlNntJ/Es4LPNnJBYTa8Rg+t8+Y4iWePpsjMQd2cz/6254scK7J/3S0CuZxmeOVssKb/eqbNDVyedOo35wwWaDBzNpsIdWe0wo/aziBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gO9MaIQW; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gO9MaIQW"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43d08bc82deso3448265fac.3
+        for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 08:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781538330; x=1782143130; darn=lists.linux.dev;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
+        b=gO9MaIQWyi8wW0GmlskQsSVodIQqZhYR3S+JowI+1G/Gbkps6qcwBBlgiqzfRcP1At
+         axCj6A5Wse9QjyzErJVYS8Rs0Yey9a0+pqDfBQsnpcd5beQMcrzuqhFr5CX/SXRQGBq2
+         /WtreYFesD2Q9NDYMHH6YqMoUlyfY/Jpe5F8wx+0MFqpJ9vWp12uiDJmVogHckvyumqj
+         jaeaZMUTKwr3A8R/a0LEoF5nrpigBMk9mdE1Af2W8f84vVCZRKALQWWCcKOa5mnoBM2G
+         33ZzqV2lGGQZ641V53o8BtfzylWXkWQfnIKdFIk6ih6IF2+clyXzJXF31g0kN4h2ErdS
+         x3pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781538330; x=1782143130;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QqoAvbiyQQgUhV16qDYAHCAa0swk4FHa96i9AC8gypc=;
+        b=d1GYAv7ICXGgr+x4tzf6+NBSwYZJU8HN/J5KzCH1AobBUltKHZqXpLSQF16yZjX+Ts
+         eENoXjeT3JMtQ2akqtfoa1J84zTjqGY9X9g0stLOD9y7yzsjE7fj/Vs/PQ4z7+oQ38nR
+         XZevOGsJ4HrCfvsbUdmfy+kIyRAWZtE8jd5IPktUsXJ+21F+DcpdE39VmORd0MbaWr+9
+         eGaY9uEFb4itV9eR5FPIu5vaRJKPJrghhJnLU6mAOBU8aoXOaIljxrBfJtFYH0A9mzK0
+         ul5sgryidl8LXv10bukxYdjR7go/Sb6pUKKj6mxdkZBOHlf+zuFIb9xbuLj64S73deR0
+         +j+w==
+X-Gm-Message-State: AOJu0YxqLotPNHyZe+b0RsnL5g82huJe4eNu+1yK0QihdB59iQSNIpVG
+	MxtyBX4im20HT/BRE+iPA8Jih3c/DCs3CCDOfZRmkzhDoDBfih9YWonksAAZLw==
+X-Gm-Gg: Acq92OFvMbcoFV0nVKkugFfBTXFvD/tlQ0qzhvHUG2GjDQooW0H31qDKP0NkhhDTlHX
+	NLFNSVNQgOz7eYabwFpOqNLvf3K/BoLN+JNxDc+/Bd6Tl0m5dwOQwBVosQBslmob0ZwmELtwpr2
+	mNisEZ6rSnlyvxVaW+wi75UoNykpHQcvXnpHqal//nIq7WuhzPALYtBJYF62pCzlfj0e/YoLHbq
+	Agj9ZqAvHe3YKDKELmbzmCDqqR0DDX4tMMs607+LIH4Rbp2DXhx0W7xgcALAjax1h3UmO4Oz87j
+	26qKkqO1U3dyRzKDmuplEv6oev66WPWabJ8MT+99cVc9mmWvO1UamkFwYCqhT7GFu0gWgcxOujE
+	nHiPW18dR3U2iiUhvseiJgwGTl23OOeCBlW11bn8gNp7BA9z0d5BZwHdDW5OX9ds34I+wF22vkn
+	4pE9PqnwjY38o+K26/jV04EmXJx3itzBnl+5K4zoJXidqEXocONwBU/ywDrZ1dRgANil513jliD
+	E+4Ptgu4c5HdPLWv+hD8VG8dovc
+X-Received: by 2002:a05:6820:f00e:b0:69e:5175:de1 with SMTP id 006d021491bc7-69edc76c580mr9255765eaf.41.1781538329976;
+        Mon, 15 Jun 2026 08:45:29 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:54::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-44308afc5a5sm137996fac.5.2026.06.15.08.45.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jun 2026 08:45:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxzsJTzi9qlgOnAA--.55069S6
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7GFWkGr1xtryDCrW8uF13WrX_yoW8JF1kpF
-	yku3sFyw18GFy2gayxCF4UJFy5XFn5Z3yrZr1093yDGF18Jr1DJr93Kr1ayr98uFZY93sY
-	va12qF4Sga4UZabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE
-	14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzKZXUUUUU
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 15 Jun 2026 08:45:28 -0700
+Message-Id: <DJ9QMPLAXOGG.2PDC3A2MUENPC@gmail.com>
+Subject: Re: [PATCH bpf-next v2 0/4] selftests/bpf: Add some tests for
+ LoongArch
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Tiezhu Yang" <yangtiezhu@loongson.cn>, "Alexei Starovoitov"
+ <ast@kernel.org>, "Huacai Chen" <chenhuacai@kernel.org>
+Cc: <loongarch@lists.linux.dev>, <bpf@vger.kernel.org>
+X-Mailer: aerc
+References: <20260615100506.19558-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20260615100506.19558-1-yangtiezhu@loongson.cn>
 
-Add the testcase for the jited inline of bpf_get_smp_processor_id(),
-only for LoongArch currently.
+On Mon Jun 15, 2026 at 3:05 AM PDT, Tiezhu Yang wrote:
+> This series is based on the latest master branch of bpf-next tree.
+> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/
+>
+> Dependency Note:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> This series strictly depends on the following LoongArch core series,
+> which moves thread_info into task_struct:
+>
+> "Move thread_info into task_struct for LoongArch"
+> https://lore.kernel.org/loongarch/20260612011616.27771-1-yangtiezhu@loong=
+son.cn/
 
-Here is the test result on LoongArch:
+Pls repost when this patch appears in bpf-next.
 
-  $ sudo ./test_progs -t verifier_jit_inline
-  #604/1   verifier_jit_inline/inline_bpf_get_current_task:OK
-  #604/2   verifier_jit_inline/inline_bpf_get_smp_processor_id:OK
-  #604     verifier_jit_inline:OK
-  Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- .../testing/selftests/bpf/progs/verifier_jit_inline.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-index 8560577f2557..02e562f56f9d 100644
---- a/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_jit_inline.c
-@@ -21,4 +21,15 @@ int inline_bpf_get_current_task(void)
- 	return 0;
- }
- 
-+SEC("fentry/bpf_fentry_test2")
-+__success __retval(0)
-+__arch_loongarch
-+__jited("	ld.wu	$a5, $tp, 16")
-+int inline_bpf_get_smp_processor_id(void)
-+{
-+	bpf_get_smp_processor_id();
-+
-+	return 0;
-+}
-+
- char _license[] SEC("license") = "GPL";
--- 
-2.42.0
-
+pw-bot: cr
