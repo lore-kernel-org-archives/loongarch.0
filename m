@@ -1,93 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97047238C0A
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 02:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F104258EC1
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 02:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781490177; cv=none; b=WU6g8yTkV9vzZh6V/JsizWsTGfXtV9Gz0ExSqTsUqMC0vZQeX0spzBZwPyR+U9f8wb6GO/ugB3UnumM754S/dDABsDuGx6JtHbFBAtYmZ+M3U97TkwpEEibl3JwNg8mvJbccEbt9Y4xfc4MqWZ3dnMgwFJKE7+wOGZWPH/2xRLQ=
+	t=1781490512; cv=none; b=IpAmA7S+x7NvSAby5UfnuQRt90M5MgIOGJ2EAWIuxLJi+LonaEiGhum3tU6KIZwLf3RgcnivlxFfFTI4L0/DaR8miJCNPsw0vK5q84i436NscO6ZZ13JM02Ew5P3pbSMBHqBNCinpk2S7B1eSht6kP19z0pa38cq0EB6jF+vTlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781490177; c=relaxed/simple;
-	bh=xCsUMh1nS0mbpecrkieLhDPcw/OPT3goLS49yYxNSRU=;
+	s=arc-20240116; t=1781490512; c=relaxed/simple;
+	bh=2s3H7XMutfBTGQhHYiDPlkcpWbJdlnwO8KNFVSLUFcw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBva/6cKq5v9smwk8T+SEMxCha7HTW85ij19dIXIfoCIWrMogHTuDoPHjMR//wEeKVCoicdzSvrD1TYHNj+Wz+47z2i/TufLRVk9PAc4SOhB4he2GvfoMd1/BNzoJB+U0+LyRRZIWW337NzRQIkGsKlDHjC/eyrcK+rGJcr7khM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dul78nW2; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=sgP0pLsz3GuA86nz2gDOsWT4OXC77/wLWtUOZ2PjprGpmb76Oo617Jib0s6iC+HQbRKGGpGXd90vrtZKf2nTErnWNsqiyE7pBWST88b17i8mogOzcBt0YAfg1HOLPju/YaOLzI/JTtQvBroweA9eXW+IJe/UWRdGeaT870mXOj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSCjqjZC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dul78nW2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0321F00A3E
-	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 02:22:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSCjqjZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FB21F00ACA
+	for <loongarch@lists.linux.dev>; Mon, 15 Jun 2026 02:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781490176;
-	bh=xCsUMh1nS0mbpecrkieLhDPcw/OPT3goLS49yYxNSRU=;
+	s=k20260515; t=1781490510;
+	bh=asoYaaxL0SkrmU7UienB4b34Q7eA2ms+abq39OGgQGk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dul78nW2dqUIKlU/reSDfwr6HPyemYksu2t0et3SRTXnr2JD5WO0Z/Tcw0I9RLuQT
-	 xiypR5l0gB67CA9nrd5d55k+RRtIuMJbLSzVMOETWWGqSimIlZEzHqrZpnONI4Hcdc
-	 hngPMiN1RBG0maMvNqvnoAY0TvSnSPpvT6+CRM9I0jlLVe0qQT/3Ndpu3B1AXWPovA
-	 S0OqHuoCU60cIKfYn568mUV8ys5sM0KbaHCmoS83Q7sTaV5rUVSNmSTPoyWlFwsXnH
-	 8LWmEAwCjQ/UuHSeAZANN+TU+r6jP8b6KGKtX9VLPW19vXdtziAawxrxOsLrKPD9Z4
-	 vQXxYQNtDirMg==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68bd9fce347so5045775a12.2
-        for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 19:22:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+n67/0FcZCdzti6tCn4XU4PHTjW4UiAyiWRuqBUQx2DbiUyguOfd1QD5Uq2wTEmviEazCKg+uCV6I=@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzx4TGjK2PEG86MfeuYvFV2AQ581YX5jviJ+ZQl6JiHtFP9ht+X
-	A1L2e7CbxnZICG760fHCgIyj/4MaQZArniI16zLGNTbBuSNsejuvRYUhl1KDLvNoilhMQVwDXov
-	/Z4c0ms/zVj3cdMZ852NyXj9Bok7QyBw=
-X-Received: by 2002:a05:6402:380b:b0:681:eb80:df17 with SMTP id
- 4fb4d7f45d1cf-693778c3ae1mr5156233a12.3.1781490174933; Sun, 14 Jun 2026
- 19:22:54 -0700 (PDT)
+	b=nSCjqjZC7oeTvkq17frGoKxZmr6Ynq1prUKQJBELA8o1xriQalloxfYH2q6hUHWiV
+	 IXe1/nwtkciwghHADLN1yQfQ/ujIM1eTocqBzRbgUK81GY8w6DH94cUe/36nalSUpu
+	 VhLJF/bgnd2W9KkmV0tFiDNE1MAFqnwj1J1U40O0fGzXxqkQ0ORbwiQaMqUHVIq1Oa
+	 21sQBF+UCqWPaFJoRt73lT8bsh8E4PteBNl/xDMD96gN25ikHdS98OtHuvn5GdPUL5
+	 PuPEhQs/leE+fgw6OyGFw4wqjlCemqlegJapyIzCStfOemzUbb8N42STqJMr5lxrXw
+	 GoLf+mcnUZ1qQ==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c01b787836dso102641366b.0
+        for <loongarch@lists.linux.dev>; Sun, 14 Jun 2026 19:28:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9MYKIceqAmAnFIr8h+6O51+ePlcTVa10gWhMWfTM0BGQ8jz1Fd7KLi8Ji9gq/0XDsUw5zz6xxg+I8=@lists.linux.dev
+X-Gm-Message-State: AOJu0YzkepQhbCp3Eb/G0UJbitYBpnGE3xzbwYSrfPOLUkhkaT9XupSo
+	SpqxylSvO03BtZyAToV4q9cUE6k+bOMFU8cqEx9DHwrhSRCdDhk4s76atH/aGZUuQ6FyL382TRb
+	5hBL2JHMZoCYpLD/869L6SBWqfRpL/1M=
+X-Received: by 2002:a17:906:7306:b0:bf8:a88c:9ea7 with SMTP id
+ a640c23a62f3a-bfe2aff74admr617228466b.40.1781490509548; Sun, 14 Jun 2026
+ 19:28:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260612011616.27771-1-yangtiezhu@loongson.cn>
- <CAAhV-H4daHGFoAiXrwcNXj=T1kZm5jRRwd_sCiv7ksjR2ynHgw@mail.gmail.com> <e23e6781-d39d-d7fa-10ec-8d09349103ed@loongson.cn>
-In-Reply-To: <e23e6781-d39d-d7fa-10ec-8d09349103ed@loongson.cn>
+References: <20260608024533.32419-1-wanghongliang@loongson.cn>
+ <20260608024533.32419-3-wanghongliang@loongson.cn> <ai8o9vxUX6rbZNV4@zenone.zhora.eu>
+ <338facef-6893-c8d9-0efc-b4fc3aea756b@loongson.cn>
+In-Reply-To: <338facef-6893-c8d9-0efc-b4fc3aea756b@loongson.cn>
 From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 15 Jun 2026 10:23:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6jJpEnNTUF0CF60fDB5ShNT+C59NEH=YodJtepFQgrKQ@mail.gmail.com>
-X-Gm-Features: AVVi8CdShvgPGBApSdXR2DwBr9UP7oVXAZR20TrhilIR-50IQzpsobXGkoxYJ5Y
-Message-ID: <CAAhV-H6jJpEnNTUF0CF60fDB5ShNT+C59NEH=YodJtepFQgrKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Move thread_info into task_struct for LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 15 Jun 2026 10:28:52 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5R9fPvUs7dvNrZAbXrGiWvE4YPkaca2nxnhgS3A+TVYw@mail.gmail.com>
+X-Gm-Features: AVVi8Ce0MMcSlyyGqCOsSUds5-FItelvI2wk6xcrczWAv8W2if2QPOcRo0nZnkY
+Message-ID: <CAAhV-H5R9fPvUs7dvNrZAbXrGiWvE4YPkaca2nxnhgS3A+TVYw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] i2c: ls2x: Add clocks property parsing and adjust
+ bus speed
+To: Hongliang Wang <wanghongliang@loongson.cn>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev, 
+	Huacai Chen <chenhuacai@loongson.cn>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 15, 2026 at 9:41=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
+On Mon, Jun 15, 2026 at 9:29=E2=80=AFAM Hongliang Wang
+<wanghongliang@loongson.cn> wrote:
 >
-> On 2026/6/14 =E4=B8=8A=E5=8D=8810:51, Huacai Chen wrote:
-> > Hi, Tiezhu,
+> Hi, Andi
+>
+> On 2026/6/15 =E4=B8=8A=E5=8D=886:20, Andi Shyti wrote:
+> > Hi Hongliang,
 > >
-> > I have queued this series for 7.2, does the below series depend on this=
- one?
+> > On Mon, Jun 08, 2026 at 10:45:33AM +0800, Hongliang Wang wrote:
+> >> The i2c-ls2x driver supports dts and acpi parameter passing.
+> >>
+> >> In dts, uses clock framework, by parsing clocks property to
+> >> get i2c bus reference clock, and define the div of reference
+> >> clock by device data.
+> >>
+> >> In acpi, by passing clocks property to describe i2c bus reference
+> >> clock and clock-div property to describe the div of reference clock.
+> >>
+> >> Based on i2c bus reference clock(clock_a), i2c bus speed(clock_s)
+> >> and div, calculate the prcescale of i2c divider register. The
+> >> calculation formula is
+> >>
+> >> prcescale =3D (clock_a*10)/(div*clock_s)-1
+> >>
+> >> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > I think Huacai has not reviewed this patch, his review was only
+> > for patch 1. Am I right?
 > >
-> > https://lore.kernel.org/loongarch/20260521125636.26744-1-yangtiezhu@loo=
-ngson.cn/T/#t
->
-> This is independent on CONFIG_THREAD_INFO_IN_TASK.
->
-> > https://lore.kernel.org/loongarch/20260428080051.20938-1-yangtiezhu@loo=
-ngson.cn/T/#t
->
-> This is dependent on CONFIG_THREAD_INFO_IN_TASK.
->
-> But anyway, I plan to send new version for the above two series of
-> selftests once this "Move thread_info into task_struct for LoongArch"
-> series is merged into the mainline, maybe after 7.2-rc1.
->
-> Because the code under selftests need to be updated, for example,
-> it can use bpf_get_current_task_btf()->thread_info.preempt_count
-> for get_preempt_count(), and it should use ld.wu rather than ld.w
-> for bpf_get_smp_processor_id().
-You can update new versions now, then they can be merged together.
+> > Andi
+> Sorry, it was my mistake,  I will send a new version later.
+Why? I really gave some suggestions in previous versions and you accepted.
+If an explicitly R-b is needed for each one, then
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
 Huacai
 
 >
-> Thanks,
-> Tiezhu
+> Best regards,
+> Hongliang Wang
+>
 >
