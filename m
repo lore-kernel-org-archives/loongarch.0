@@ -1,109 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89D440BCD8;
-	Mon, 15 Jun 2026 16:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAF334DB56;
+	Mon, 15 Jun 2026 17:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781539832; cv=none; b=XA7ginGnl2KyRtDp2PkIKTpxM8F4BUuZ4Aab/hT7OsxS/UKhenKhMzH/7HeCkzMcrjSDAUueXcv1E4JS4KI4j44gRuNQ6hHXL3H4M7nsvdF6BXdnNb0IvmbqjC4cQOXmxvztKaDLXtTIBqIEKaheovPy00hlxCtUGOs7i3mgVYw=
+	t=1781543087; cv=none; b=Ymi+PTGKMzWF8JcTVF73EXAhbBWkyV676XQLbOinj95wiD3KXcnzHBSYzJQ9YI1CNsQmf+IMQeTd44SNvPWBs/kRlkKUZdVvrG3ze1Da5CgAsp0d+wiRbF5cqUK8nE3NBk1gPtc5MCRhjSXVgiBRFMn7efV9r/hxOt6iDe3Icpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781539832; c=relaxed/simple;
-	bh=JVLwSwdOKVH8LGAxgA+g/fdECBLcaM60dc030mBvrLo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mtEpOemWUDoA2reP+zZjcUuqoamxH03J49LE324bA8aPvkwoB7CW68PXGsrEEos4fLtDOOm23pC/zoN04TMQE+wW90PPAWV/09TnDBJdTI0lciy/kFkWRCu3eJ1J+GlyEQ8yUOgKq5caszD4JqAVVYf+TvYB740V9Zz7CMe5e88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTG7AUNv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781543087; c=relaxed/simple;
+	bh=k9wzEDrn8OWY0tjJOa6e5RtLbGoq+IyJnXkfwU07P80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QF6uQEQEHg9futom0hrFQOs9iAFBd2WEcfKDttCLlCD6R0Y/uNsPWnjE6MHD5X8PasxdiQqHa54gITg+3IHa1VtAZ+aNpnwCBPcZv1C4K5OpK+yDoWu2/F++GoHEZ6jDbfrui1TsI8VJq+htd6F1Ds5re9OTUVUXD4hh3rbekcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=SLabnQnx; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTG7AUNv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF73C1F00A3A;
-	Mon, 15 Jun 2026 16:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781539830;
-	bh=cWyLORJu1duRc+pDSDE2yctLaF4n1YyEH8jjavDYSRo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=bTG7AUNv+QOjtKzRr8tGZfCmK7X7/d1+zMYHWGov+7jfQ3ohhOVIuPHcJKhbVYeMd
-	 8xor5LSWdZDbye7sU3NUsKY2D7c5k6KW7VzuECmhNXjzB+STHLracoyoBLfycJOds1
-	 bRCPQFF5niVqDMw4ul5YDEFduhZUKgLvmKAfjFyAjG6oXQtN02dsCkCvFrzLzjhnuS
-	 jSVgQMlrCJ3DlZQLtjRobTwFbjaWHQtTK/NR95pcSSjdYTSGIqpuaEA8vdCpBsJlUy
-	 6+sLfXdKcoIRk0cv9xl9q+QRiKjriZwy7eYC4rRzuXqa+DeVkEcul1n87LjfG52xHg
-	 OZ9D5NneOlpUw==
-From: Vincent Mailhol <mailhol@kernel.org>
-Date: Mon, 15 Jun 2026 18:09:02 +0200
-Subject: [PATCH 06/19] loongarch: define DPS root partition type UUID
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="SLabnQnx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=be/KypQX5Q9fujajARM6Q7r9w26ilWIZmzbrtGfAKys=; b=SLabnQnxi8RKG6kB4YLIrRrIte
+	+jYEaBgX5DOoDOdPOU6k6ypOK6lDxxOMXQzKEUszFj5yTLPDASBaagrmnsOk8tUGdmzHw2XGk68HM
+	2J1tv7+pE0CjbBOIjeYCz0TsyHOIrqFb8Mb1LadfEs+3t0bUVsavfv//KIZ2S3hmTXIBIqEbnE3qn
+	zsd3Hxu29/Ylu8C3lRKI+WwMxWxUWcLIz0u0fTGyYSKAR/XPPXo0Rkv03xUIJElu5cOtap9hCSZj1
+	74eb7LaTsGudBKuTsb4/IH254uFPRDECMTh8XzLqKRh9ykQzpGUZV9OECxDmxcCHO22vobRU+rK1T
+	RNRNGWLQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wZAjg-00000000Vxn-0xg6;
+	Mon, 15 Jun 2026 17:04:32 +0000
+Date: Mon, 15 Jun 2026 18:04:32 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org,
+	Vineet Gupta <vgupta@kernel.org>,
+	linux-snps-arc@lists.infradead.org,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-mips@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	linux-s390@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+Message-ID: <20260615170432.GW2636677@ZenIV>
+References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260615-discoverable-root_partitions-v1-6-39c78fac42e2@kernel.org>
-References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- Vincent Mailhol <mailhol@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1739; i=mailhol@kernel.org;
- h=from:subject:message-id; bh=JVLwSwdOKVH8LGAxgA+g/fdECBLcaM60dc030mBvrLo=;
- b=owGbwMvMwCV2McXO4Xp97WbG02pJDFkGyleXOs88onWwPrP4/qFHgQ8vKWfyZNef/RH0ULpa+
- YW51pHEjoksDGJcDJZiiizLyjm5FToKvcMO/bWEmcPKBDJEWqSBAQhYGPhyE/NKjXSM9Ey1DfUM
- gQwdIwYuTgGY6pZJDH8FEl1f3XvxUHxb6yFekVmzJs1vy/jeGH8/5sP3h3NXS1c/Z/grX9pis2b
- h/BUp1ksS9lpZzqq5yf7n7stDG/1kC9XCjh7iAQA=
-X-Developer-Key: i=mailhol@kernel.org; a=openpgp;
- fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-DPS [1] assigns GPT partition type UUIDs to operating system partitions.
-Root partitions use architecture-specific type UUIDs so the OS can
-discover the intended root filesystem without relying on a root= cmdline
-option.
+On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
 
-Define DPS_ROOT_PARTITION_TYPE_UUID in asm/dps_root.h for LoongArch64
-and select ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID.
+> Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
+> in its bli module [3]. With this, I was able to boot a kernel with a
+> completely empty cmdline and no initrd.
+> 
+> [1] The Discoverable Partitions Specification (DPS)
+> Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
+> 
+> [2] systemd-gpt-auto-generator
+> Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
+> 
+> [3] GRUB -- §16.2 bli
+> Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
 
-[1] The Discoverable Partitions Specification (DPS)
-Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
+So what does that thing, tied to EFI as it is, have to do with architectures where
+	* firmware is rather unlike EFI
+	* firmware wouldn't know what to do with GPT
+	* GRUB is *not* ported to, let alone used
+such as, say it, the very first one mentioned at your [1]?
 
-Cc: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev
-Signed-off-by: Vincent Mailhol <mailhol@kernel.org>
----
- arch/loongarch/Kconfig                | 1 +
- arch/loongarch/include/asm/dps_root.h | 8 ++++++++
- 2 files changed, 9 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 606597da46b8..64c27740b8a1 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -17,6 +17,7 @@ config LOONGARCH
- 	select ARCH_HAS_CPU_FINALIZE_INIT
- 	select ARCH_HAS_CURRENT_STACK_POINTER
- 	select ARCH_HAS_DEBUG_VM_PGTABLE
-+	select ARCH_HAS_DPS_ROOT_PARTITION_TYPE_UUID
- 	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KCOV
-diff --git a/arch/loongarch/include/asm/dps_root.h b/arch/loongarch/include/asm/dps_root.h
-new file mode 100644
-index 000000000000..6022b60428ad
---- /dev/null
-+++ b/arch/loongarch/include/asm/dps_root.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _ASM_LOONGARCH_DPS_ROOT_H
-+#define _ASM_LOONGARCH_DPS_ROOT_H
-+
-+#define DPS_ROOT_PARTITION_TYPE_UUID "77055800-792c-4f94-b39a-98c91b762bb6"
-+
-+#endif /* _ASM_LOONGARCH_DPS_ROOT_H */
-
--- 
-2.53.0
-
+Or is that conditional upon "if anyone wants to design replacement firmware
+for those, and if they agree to follow our wishlist"?
