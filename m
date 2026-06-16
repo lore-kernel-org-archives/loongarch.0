@@ -1,33 +1,32 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D2F305E1F
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 01:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490872C029F
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 01:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781572036; cv=none; b=ljctKBtE0/eBOdybNTB4DA9F1MO+qYvh4VExS/PSeKw+XY8hBw5H1fIkBGB+snnbm31YoiB7IPMbpK+8w+ZRt3gnP0r4W2XQQIToRAowJeQbo/sqfHuyXBMNUz3htxHbBh5wadMJ5GMMnG43qL0nrbAwIh7yWVsjn/xEILdsM48=
+	t=1781572696; cv=none; b=S9xMQqC+miK4yqg2UWvgGzYR8SuzsKckvP3lMaE46SbdErzCCId2OAmIEVjlUGkc3nzsAsh2oTZgBovFDy2fUbdJGqXSbq/mmYfhz8TWwRKBaI148nJgjFzflRi8EOlX9gNXM6HLdsCOnu9JfQKeN6xSeqJs9qz9/wIJB/sG2zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781572036; c=relaxed/simple;
-	bh=xsiqlFSg3vngrUio9CDIwn+AXV8aV/3EyoF2hfDyVCg=;
+	s=arc-20240116; t=1781572696; c=relaxed/simple;
+	bh=wVkc9rfRoAyXKQgtVQBc8jEXX/D2KqwMgxU0sWGxHjg=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=cnu87AymZzMEzosrSWVYW9lkNzfzj2lwu7iFCd86kPxUBReYtXZ3Owidy0216y8ExyZw8A9DVgjhLQ/YEhCCDC+eqC4axItsf30aq0+a+OJi4AlfUiHE85sa9Ob69xV8+bmmMDIVU8iF0COzUpX9eZe3o1Gm37ILmpXaE5P5kL0=
+	 In-Reply-To:Content-Type; b=d6k5WJ1DjZV586Sy2NNRlDll6Lcs8xSp5PZdaMPwf3emct31tjhW91CfR2m7QMJoXKtlwEV5v8cL3duktcY15dQiw1IIab10EBA80ptXYqCQS5ZbTNRrkWsx7tGPdQuo2Jtwho1IU8tF9ThZz2YgRbZ/B9IjTnGWzZuGLukTFa0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8Cx3sC9oTBqFJUUAA--.30203S3;
-	Tue, 16 Jun 2026 09:07:09 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxlnhSpDBqKJcUAA--.29251S3;
+	Tue, 16 Jun 2026 09:18:10 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBxacG7oTBqsaWnAA--.42441S3;
-	Tue, 16 Jun 2026 09:07:07 +0800 (CST)
-Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Add PV TLB flush support via
- steal-time shared memory
+	by front1 (Coremail) with SMTP id qMiowJBx68FPpDBq+qenAA--.53869S3;
+	Tue, 16 Jun 2026 09:18:09 +0800 (CST)
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
 To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn,
  chenhuacai@kernel.org, loongarch@lists.linux.dev
 Cc: kernel@xen0n.name, kvm@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
 References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-2-cui.tao@linux.dev>
+ <20260615082154.42144-3-cui.tao@linux.dev>
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
-Date: Tue, 16 Jun 2026 09:03:57 +0800
+Message-ID: <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
+Date: Tue, 16 Jun 2026 09:14:57 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -36,28 +35,28 @@ List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260615082154.42144-2-cui.tao@linux.dev>
+In-Reply-To: <20260615082154.42144-3-cui.tao@linux.dev>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBxacG7oTBqsaWnAA--.42441S3
+X-CM-TRANSID:qMiowJBx68FPpDBq+qenAA--.53869S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrJw4ruF4rZF47Ar48Xwc_yoW3Cr1fpF
-	yvyFnYgF4xGr1fAwn3t39F9r45WF4xCr1Sga429ry5AF4agryDur1vkrWDAFyDXw1rXayI
-	gFyFy34DZFWDX3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFy7Gw1UGry5ur1ktr17CFX_yoWfXw1kpr
+	yUCwsYga1rWr97A343Z3yjkr15Zw4DK3WIva13uFWFyFnrXFyUKr93GrykZa4kWa95GF4F
+	gFyrArsFgFyUt3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
 	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
 	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
 	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8sXo7UU
 	UUU==
 
 
@@ -65,194 +64,267 @@ X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrJw4ruF4rZF47Ar48Xwc_yoW3Cr1fpF
 On 2026/6/15 下午4:21, Tao Cui wrote:
 > From: Tao Cui <cuitao@kylinos.cn>
 > 
-> Implement paravirtualized TLB flush for LoongArch KVM guests using the
-> existing steal-time shared memory page.
+> Add the guest-side implementation of PV TLB flush for LoongArch KVM
+> guests, complementing the host-side support added in the previous commit.
 > 
-> The mechanism uses the preempted byte in struct kvm_steal_time with an
-> additional KVM_VCPU_FLUSH_TLB flag bit:
+> When running as a KVM guest, remote TLB flushes are optimized by
+> avoiding IPIs to preempted vCPUs:
 > 
-> - When a guest vCPU needs remote TLB flush but the target vCPU is
->    preempted (not running), it atomically sets KVM_VCPU_FLUSH_TLB in
->    the target's steal-time preempted byte instead of sending an IPI.
-> - When the host re-enters the target vCPU (kvm_update_stolen_time()),
->    it atomically reads and clears only the preempted byte via amand_db.w
->    with mask ~0xff on the 32-bit aligned word.  amand_db.w provides
->    full barrier semantics and avoids the race with guest-side
->    try_cmpxchg().  LoongArch is little-endian, so the preempted byte
->    occupies bits [7:0]; this preserves pad[0..2] for future UAPI
->    extension.  If KVM_VCPU_FLUSH_TLB was set, the host drops the vCPU's
->    VPID, which triggers a full TLB flush on the next VM entry via
->    kvm_check_vpid().
-> - For non-preempted vCPUs, the guest falls back to normal IPI-based
->    flush, avoiding unnecessary VM exits.
+> - kvm_flush_tlb_mask() checks each target vCPU's steal-time
+>    preempted flag. If a vCPU is preempted, it atomically sets
+>    KVM_VCPU_FLUSH_TLB in the shared preempted byte via cmpxchg
+>    and removes that CPU from the IPI mask.
+> - Only non-preempted vCPUs receive IPIs via on_each_cpu_mask().
+> - When the host schedules a deferred-flush vCPU back in, it
+>    invalidates the VPID and flushes the TLB automatically.
 > 
-> Issue a normal load (unsafe_get_user) before the atomic amand_db.w to
-> avoid operating on stale cache data when the cache line was last
-> modified by a different core.
+> All six SMP TLB flush functions (flush_tlb_all, flush_tlb_mm,
+> flush_tlb_range, flush_tlb_kernel_range, flush_tlb_page,
+> flush_tlb_one) are updated to use the PV path when the static
+> key pv_tlb_flush_key is enabled.
 > 
-> This significantly reduces TLB flush overhead in multi-vCPU workloads
-> where target vCPUs are often idle/preempted.
+> The feature is gated by KVM_FEATURE_PV_TLB_FLUSH and requires
+> KVM_FEATURE_STEAL_TIME (for the shared memory page). Per-CPU
+> cpumask buffers are allocated via arch_initcall.
 > 
 > Signed-off-by: Tao Cui <cuitao@kylinos.cn>
 > ---
->   arch/loongarch/include/asm/kvm_host.h      |  1 +
->   arch/loongarch/include/asm/kvm_para.h      |  1 +
->   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
->   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
->   arch/loongarch/kvm/trace.h                 | 15 ++++++++++
->   arch/loongarch/kvm/vcpu.c                  | 34 +++++++++++++++++++++-
->   arch/loongarch/kvm/vm.c                    |  3 ++
->   7 files changed, 55 insertions(+), 1 deletion(-)
+>   arch/loongarch/include/asm/kvm_para.h |  8 ++++
+>   arch/loongarch/include/asm/paravirt.h | 21 ++++++++++
+>   arch/loongarch/kernel/paravirt.c      | 60 +++++++++++++++++++++++++++
+>   arch/loongarch/kernel/smp.c           | 30 +++++++++++---
+>   4 files changed, 113 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 776bc487a705..1750632699e0 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -168,6 +168,7 @@ enum emulation_result {
->   #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
->   					 BIT(KVM_FEATURE_PREEMPT) |	\
->   					 BIT(KVM_FEATURE_STEAL_TIME) |	\
-> +					 BIT(KVM_FEATURE_PV_TLB_FLUSH) |\
->   					 BIT(KVM_FEATURE_USER_HCALL) |	\
->   					 BIT(KVM_FEATURE_VIRT_EXTIOI))
->   
 > diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-> index fb17ba0fa101..28e3fa3b4c0e 100644
+> index 28e3fa3b4c0e..7956aeff2436 100644
 > --- a/arch/loongarch/include/asm/kvm_para.h
 > +++ b/arch/loongarch/include/asm/kvm_para.h
-> @@ -41,6 +41,7 @@ struct kvm_steal_time {
->   	__u8  pad[47];
->   };
->   #define KVM_VCPU_PREEMPTED		(1 << 0)
-> +#define KVM_VCPU_FLUSH_TLB		(1 << 1)
+> @@ -187,4 +187,12 @@ static inline bool kvm_check_and_clear_guest_paused(void)
+>   	return false;
+>   }
 >   
->   /*
->    * Hypercall interface for KVM hypervisor
-> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
-> index cd0b5c11ca9c..e4cd4bbf8914 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm.h
-> @@ -106,6 +106,7 @@ struct kvm_fpu {
->   #define  KVM_LOONGARCH_VM_FEAT_PTW		8
->   #define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
->   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT	10
-> +#define  KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH	11
->   
->   /* Device Control API on vcpu fd */
->   #define KVM_LOONGARCH_VCPU_CPUCFG	0
-> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
-> index d28cbcadd276..8872839251cc 100644
-> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
-> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
-> @@ -16,6 +16,7 @@
->   #define  KVM_FEATURE_IPI		1
->   #define  KVM_FEATURE_STEAL_TIME		2
->   #define  KVM_FEATURE_PREEMPT		3
-> +#define  KVM_FEATURE_PV_TLB_FLUSH	4
->   /* BIT 24 - 31 are features configurable by user space vmm */
->   #define  KVM_FEATURE_VIRT_EXTIOI	24
->   #define  KVM_FEATURE_USER_HCALL		25
-> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
-> index 3467ee22b704..8556954fa196 100644
-> --- a/arch/loongarch/kvm/trace.h
-> +++ b/arch/loongarch/kvm/trace.h
-> @@ -210,6 +210,21 @@ TRACE_EVENT(kvm_vpid_change,
->   	    TP_printk("VPID: 0x%08lx", __entry->vpid)
->   );
->   
-> +TRACE_EVENT(kvm_pv_tlb_flush,
-> +	TP_PROTO(struct kvm_vcpu *vcpu, bool need_flush),
-> +	TP_ARGS(vcpu, need_flush),
-> +	TP_STRUCT__entry(
-> +		__field(unsigned int, vcpu_id)
-> +		__field(bool, need_flush)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->vcpu_id = vcpu->vcpu_id;
-> +		__entry->need_flush = need_flush;
-> +	),
-> +	TP_printk("vcpu %u need_flush %u", __entry->vcpu_id,
-> +		  __entry->need_flush)
-> +);
+> +static inline bool kvm_pv_tlb_flush_supported(void)
+> +{
+> +	unsigned int feat = kvm_arch_para_features();
 > +
->   #endif /* _TRACE_KVM_H */
+> +	return (feat & (1U << KVM_FEATURE_PV_TLB_FLUSH)) &&
+> +	       (feat & (1U << KVM_FEATURE_STEAL_TIME));
+> +}
+> +
+>   #endif /* _ASM_LOONGARCH_KVM_PARA_H */
+> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
+> index acae1c5e5f88..6ce62b555a5d 100644
+> --- a/arch/loongarch/include/asm/paravirt.h
+> +++ b/arch/loongarch/include/asm/paravirt.h
+> @@ -5,15 +5,26 @@
+>   #ifdef CONFIG_PARAVIRT
 >   
->   #undef TRACE_INCLUDE_PATH
-> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-> index e28084c49e68..5230e95a7816 100644
-> --- a/arch/loongarch/kvm/vcpu.c
-> +++ b/arch/loongarch/kvm/vcpu.c
-> @@ -173,7 +173,39 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
->   	}
+>   #include <linux/jump_label.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/smp.h>
 >   
->   	st = (struct kvm_steal_time __user *)ghc->hva;
-> -	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
-> +	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PV_TLB_FLUSH)) {
-> +		u32 old = 0;
-> +		int err = 0;
+>   DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
+>   DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> +DECLARE_STATIC_KEY_FALSE(pv_tlb_flush_key);
+>   DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
+>   
+>   int __init pv_ipi_init(void);
+>   int __init pv_time_init(void);
+>   int __init pv_spinlock_init(void);
+>   
+> +void kvm_flush_tlb_mask(const struct cpumask *cpumask,
+> +			smp_call_func_t func, void *info);
 > +
-> +		/*
-> +		 * Prime the cache line with a normal load before the coherent
-> +		 * atomic below; it was observed (when the line was last dirtied
-> +		 * by another core) to be needed for amand_db.w to see a current
-> +		 * value.  amand_db.w overwrites `old` with the real pre-AND value,
-> +		 * so this load contributes only its cache side-effect.
-> +		 */
-> +		unsafe_get_user(old, (u32 __user *)&st->preempted, out);
-If there is a failure, it does nothing and go to out directly, however 
-guest TLB remains stale without flush operation.
+> +static inline bool pv_tlb_flush_enabled(void)
+> +{
+> +	return static_branch_unlikely(&pv_tlb_flush_key);
+> +}
 > +
-> +		/* Atomically read and clear the preempted byte via amand_db.w. */
-> +		asm volatile(
-> +		"1: amand_db.w %1, %3, %2	\n"
-> +		"2:				\n"
-> +		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)
-> +		: "+r" (err), "+&r" (old),
-> +		  "+ZB" (*(u32 *)&st->preempted)
-> +		: "r" ((u32)~0xffu)
-> +		: "memory");
+>   #else
+>   
+>   static inline int pv_ipi_init(void)
+> @@ -31,5 +42,15 @@ static inline int pv_spinlock_init(void)
+>   	return 0;
+>   }
+>   
+> +static inline bool pv_tlb_flush_enabled(void)
+> +{
+> +	return false;
+> +}
 > +
-> +		if (err)
-> +			goto out;
-Ditto, if there is error, guest TLB is not flushed and vCPU continues to 
-run with preempted bit set. The next TLB flush will be skipped with this 
-vCPU since its preempted bit is not clear.
+> +static inline void kvm_flush_tlb_mask(const struct cpumask *cpumask,
+> +				       smp_call_func_t func, void *info)
+> +{
+> +}
+> +
+>   #endif // CONFIG_PARAVIRT
+>   #endif
+> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
+> index 10821cce554c..eab84c9b94f6 100644
+> --- a/arch/loongarch/kernel/paravirt.c
+> +++ b/arch/loongarch/kernel/paravirt.c
+> @@ -12,7 +12,9 @@
+>   static int has_steal_clock;
+>   DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
+>   DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
+> +DEFINE_STATIC_KEY_FALSE(pv_tlb_flush_key);
+>   DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
+> +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
+>   
+>   static bool steal_acc = true;
+>   
+> @@ -208,6 +210,64 @@ int __init pv_ipi_init(void)
+>   	return 0;
+>   }
+>   
+> +#ifdef CONFIG_SMP
+> +void kvm_flush_tlb_mask(const struct cpumask *cpumask,
+> +			       smp_call_func_t func, void *info)
+> +{
+> +	int cpu;
+> +	struct kvm_steal_time *src;
+> +	struct cpumask *flushmask;
+> +
+> +	preempt_disable();
+> +	flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
+> +	cpumask_copy(flushmask, cpumask);
+> +
+> +	/*
+> +	 * We have to call flush only on online vCPUs. And
+> +	 * queue flush_on_enter for pre-empted vCPUs
+> +	 */
+> +	for_each_cpu(cpu, flushmask) {
+> +		u32 *ptr, old, new;
+> +
+> +		src = &per_cpu(steal_time, cpu);
+> +		ptr = (u32 *)&src->preempted;
+> +		old = READ_ONCE(*ptr);
+> +		if (!((u8)old & KVM_VCPU_PREEMPTED))
+> +			continue;
+> +
+> +		new = old | KVM_VCPU_FLUSH_TLB;
+> +		if (try_cmpxchg(ptr, &old, new))
+> +			__cpumask_clear_cpu(cpu, flushmask);
+is it possible that vCPU is running however with KVM_VCPU_PREEMPTED set?
+> +	}
+> +
+> +	on_each_cpu_mask(flushmask, func, info, 1);
+LoongArch VM does not support post interrupt now, IPI with vCPU will 
+trap to hypervisor.
+
+There is another PV TLB flush method using hypercall like PV IPI, which 
+will make a request with wait flag such as KVM_REQ_TLB_FLUSH and kick vCPU.
+
+With this PV TLB flush method, there is not IPI interrupt in VM, and 
+wait is handled in hypervisor, the negative effect is that it flushes 
+all TLBs.
 
 Regards
 Bibo Mao
+> +	preempt_enable();
+> +}
 > +
-> +		vcpu->arch.st.preempted = 0;
+> +static int __init pv_tlb_flush_init(void)
+> +{
+> +	int cpu;
 > +
-> +		if ((u8)old & KVM_VCPU_FLUSH_TLB) {
-> +			vcpu->arch.vpid = 0;	/* Drop vpid to flush TLB */
-> +			trace_kvm_pv_tlb_flush(vcpu, true);
+> +	if (!kvm_pv_tlb_flush_supported())
+> +		return 0;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		if (!zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+> +					    GFP_KERNEL, cpu_to_node(cpu))) {
+> +			while (--cpu >= 0)
+> +				free_cpumask_var(*per_cpu_ptr(&__pv_cpu_mask, cpu));
+> +			return -ENOMEM;
 > +		}
-> +	} else if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
->   		unsafe_put_user(0, &st->preempted, out);
->   		vcpu->arch.st.preempted = 0;
->   	}
-> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-> index 1317c718f896..cfba45a7343c 100644
-> --- a/arch/loongarch/kvm/vm.c
-> +++ b/arch/loongarch/kvm/vm.c
-> @@ -54,8 +54,10 @@ static void kvm_vm_init_features(struct kvm *kvm)
->   	if (kvm_pvtime_supported()) {
->   		kvm->arch.pv_features |= BIT(KVM_FEATURE_PREEMPT);
->   		kvm->arch.pv_features |= BIT(KVM_FEATURE_STEAL_TIME);
-> +		kvm->arch.pv_features |= BIT(KVM_FEATURE_PV_TLB_FLUSH);
->   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_PREEMPT);
->   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
-> +		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH);
->   	}
+> +	}
+> +
+> +	static_branch_enable(&pv_tlb_flush_key);
+> +	pr_info("KVM setup pv remote TLB flush\n");
+> +
+> +	return 0;
+> +}
+> +arch_initcall(pv_tlb_flush_init);
+> +#endif
+> +
+>   static int pv_enable_steal_time(void)
+>   {
+>   	int cpu = smp_processor_id();
+> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+> index 50922610758b..bb3451b057ed 100644
+> --- a/arch/loongarch/kernel/smp.c
+> +++ b/arch/loongarch/kernel/smp.c
+> @@ -727,7 +727,10 @@ static void flush_tlb_all_ipi(void *info)
+>   
+>   void flush_tlb_all(void)
+>   {
+> -	on_each_cpu(flush_tlb_all_ipi, NULL, 1);
+> +	if (pv_tlb_flush_enabled())
+> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_all_ipi, NULL);
+> +	else
+> +		on_each_cpu(flush_tlb_all_ipi, NULL, 1);
 >   }
 >   
-> @@ -158,6 +160,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
->   	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
->   	case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT:
->   	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
-> +	case KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH:
->   		if (kvm_vm_support(&kvm->arch, attr->attr))
->   			return 0;
->   		return -ENXIO;
+>   static void flush_tlb_mm_ipi(void *mm)
+> @@ -743,7 +746,10 @@ void flush_tlb_mm(struct mm_struct *mm)
+>   	preempt_disable();
+>   
+>   	if ((atomic_read(&mm->mm_users) != 1) || (current->mm != mm)) {
+> -		on_each_cpu_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm, 1);
+> +		if (pv_tlb_flush_enabled())
+> +			kvm_flush_tlb_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm);
+> +		else
+> +			on_each_cpu_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm, 1);
+>   	} else {
+>   		unsigned int cpu;
+>   
+> @@ -782,7 +788,10 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start, unsigned l
+>   			.addr2 = end,
+>   		};
+>   
+> -		on_each_cpu_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd, 1);
+> +		if (pv_tlb_flush_enabled())
+> +			kvm_flush_tlb_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd);
+> +		else
+> +			on_each_cpu_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd, 1);
+>   	} else {
+>   		unsigned int cpu;
+>   
+> @@ -809,7 +818,10 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>   		.addr2 = end,
+>   	};
+>   
+> -	on_each_cpu(flush_tlb_kernel_range_ipi, &fd, 1);
+> +	if (pv_tlb_flush_enabled())
+> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_kernel_range_ipi, &fd);
+> +	else
+> +		on_each_cpu(flush_tlb_kernel_range_ipi, &fd, 1);
+>   }
+>   
+>   static void flush_tlb_page_ipi(void *info)
+> @@ -828,7 +840,10 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long page)
+>   			.addr1 = page,
+>   		};
+>   
+> -		on_each_cpu_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd, 1);
+> +		if (pv_tlb_flush_enabled())
+> +			kvm_flush_tlb_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd);
+> +		else
+> +			on_each_cpu_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd, 1);
+>   	} else {
+>   		unsigned int cpu;
+>   
+> @@ -851,6 +866,9 @@ static void flush_tlb_one_ipi(void *info)
+>   
+>   void flush_tlb_one(unsigned long vaddr)
+>   {
+> -	on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
+> +	if (pv_tlb_flush_enabled())
+> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_one_ipi, (void *)vaddr);
+> +	else
+> +		on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
+>   }
+>   EXPORT_SYMBOL(flush_tlb_one);
 > 
 
