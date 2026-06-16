@@ -1,33 +1,33 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C914369211
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 14:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2695D3BED69
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 15:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781619304; cv=none; b=BZI3ODKs0xMVslXeCuy+GvCJPlL400X1o4yCBcfb9qg/4Kw+qXNr81Zp7wQfUmiy1gFR9RQTl1ZW45xUvyXyXDjNqzl1twxSaLLe8xw4HhZt1Vpsu3pM2mD+PO1AO5B/sJDyUKWcElO8pspLsFm9XXJ/yFRl8ylbUnXK85FT5ug=
+	t=1781622513; cv=none; b=SqdCg7FhuNKYHj99l361P+Y4ZSltoYBjIcvBLX6nY8NCmx8USSJeBE7Icv4/QfEllE0TqHBZ+cpdJU7A++gN7r0/E7VcdVuOFFpnyRM2QnRNLgdbeG9fj+NRTeWRHy4yFscFfliCgX4h7ciOIPKpXBgwktIekHTUkhHh8+5tgFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781619304; c=relaxed/simple;
-	bh=uiQDbcf0aT5w+Afx/p+EuRgxXAqzqXWGjMT6GSV9b2U=;
+	s=arc-20240116; t=1781622513; c=relaxed/simple;
+	bh=mir7lQ9ByqN2nifHSt6sAIYbYjvEKeEYA5Do7POwxZI=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jT+QqveI6s6fJRebTE3U3eaBNrg0TJnBugTHQC7KBkeAyj3vYyMQAegCR9tCnbWxCbjkpXkqW5dJhdTg66Gc2K5tsESnSEecSrBoQHk5hxt+dDOx0BFLfsVpjF+RbCzLVGrpj9sXlPvsnSKw009e4JMMXIFlRK29HY7kv7hEKoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J6yIluMe; arc=none smtp.client-ip=91.218.175.172
+	 In-Reply-To:Content-Type; b=J1dPcpDTNqaEh2zS091T8gmLkusVjkzFg3Y487ij1MYJzmOu7FBCEV2tQAh+n263n2RhuYhSbVkyEmwFEyqlUrBnSpGiGh1EXXULL/Vvjlws08ewxrldfUD5iQxe1Y+c2E+eUKSU5gzepNHcOoikb5InKXpNpoTSTZ/G2rmO0z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g5fXVlyh; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J6yIluMe"
-Message-ID: <b359f414-efb6-4204-96fe-0690e0d92d6f@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g5fXVlyh"
+Message-ID: <1bfa4941-b94b-410a-9b64-c13f2712edf9@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781619299;
+	t=1781622509;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LoFnPCp9ysZH1cuDgoFgBBe67UyEoQFP/n6AHwL/O0w=;
-	b=J6yIluMe8KKnS2sh5gRClySxSVtH+CdIz3Q6rpUysjzdOvQKwtT1NT2GdPAmSEIqlpFOBc
-	KveZMBvfMU05rbeKTdXGbqJWh082vLOyEwEvYDj3q6Ng4AUulj2nLmLDQ97CiU+a/A7Cis
-	zeSVyzIG4+OguobxzCXph+fUYg1DOzc=
-Date: Tue, 16 Jun 2026 22:14:30 +0800
+	bh=/qi5Ric3fS1uSNx65BlDQd+25gkfQEYc/OF/he0FlxQ=;
+	b=g5fXVlyhOXpYm9mHwBPDPubqtRsxZZehF4xFU8OM/g3EvLNujya/KCIDxRqdYnaMp0ZGXP
+	xnSY3iIL/ggkIaOzQWhxPHhMVixhyF2iPpNaQcej9IcDQnFTYlntzpyXFtm1wJK4GeOYmH
+	ngV9bflxpofTiQkrvTDdN492Tk3kReE=
+Date: Tue, 16 Jun 2026 23:08:14 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -36,88 +36,70 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
  Tao Cui <cuitao@kylinos.cn>
-Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Add PV TLB flush support via
- steal-time shared memory
+Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
 To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
  chenhuacai@kernel.org, loongarch@lists.linux.dev
 References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-2-cui.tao@linux.dev>
- <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
+ <20260615082154.42144-3-cui.tao@linux.dev>
+ <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Tao Cui <cui.tao@linux.dev>
-In-Reply-To: <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
+In-Reply-To: <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
+
 Hi Bibo,
 
-Thank you for the review.
+That's really kind of you. I'd really value the chance to work with you.
 
-You're right, and honestly I didn't think the
-error path through carefully enough here.
+在 2026/6/16 09:14, Bibo Mao 写道:
+> 
+>> +            __cpumask_clear_cpu(cpu, flushmask);
+> is it possible that vCPU is running however with KVM_VCPU_PREEMPTED set?
 
-The current handling leaves the preempted byte uncleared and skips the
-flush, which is exactly the cascade you described: a vCPU re-entered on
-the error path keeps running with the bit set, so later flushes keep
-deferring it and its TLB stays stale until some later entry happens to
-succeed. A stale TLB is a correctness issue, so this path needs
-conservative handling even though the fault itself is rare.
+It shouldn't happen with a correct host: the bit is set on vcpu_put
+(preempt) and cleared on entry through kvm_update_stolen_time(), so a
+running vCPU always has preempted == 0. The guest-side race is closed by
+try_cmpxchg(). If the host clears the byte between the guest's READ_ONCE
+and the cmpxchg, the cmpxchg fails and the CPU stays in the IPI mask, so
+no flush is missed. The only thing that can break the invariant is the
+error path from patch 1, which the conservative handling there closes.
+Point taken though: the design's correctness rests entirely on the host
+honoring this, so I agree the patch-1 fix is necessary rather than
+optional.
 
-I'll drop the VPID on error so the TLB is flushed conservatively and the
-logic self-heals:
+>> +    }
+>> +
+>> +    on_each_cpu_mask(flushmask, func, info, 1);
+> LoongArch VM does not support post interrupt now, IPI with vCPU will trap to hypervisor.
+> 
+> There is another PV TLB flush method using hypercall like PV IPI, which will make a request with wait flag such as KVM_REQ_TLB_FLUSH and kick vCPU.
+> 
+> With this PV TLB flush method, there is not IPI interrupt in VM, and wait is handled in hypervisor, the negative effect is that it flushes all TLBs.
+> 
+This is the point I most want to get right, and you're correct. Since
+LoongArch has no posted interrupts, an IPI to a *running* vCPU still
+traps, so the steal-time path only genuinely helps for preempted/idle
+vCPUs; for running ones it's no better (a little heavier) than a plain
+IPI. The hypercall approach (analogous to our PV IPI) would avoid
+in-guest IPIs entirely, at the cost of a full TLB flush and
+hypervisor-side wait handling.
 
-    if (err) {
-        vcpu->arch.vpid = 0;    /* be conservative: flush anyway */
-        goto out;
-    }
+Rather than argue from intuition, I'd like to try the hypercall approach
+you suggested and measure the performance improvement against the current
+path. I'll share the results with you once the testing is done, so we
+can decide the direction based on the numbers.
 
-The byte isn't cleared on the fault, but the TLB is clean this round;
-the next successful amand_db.w reads the still-set FLUSH_TLB bit and
-flushes again (redundantly but harmlessly), then clears the byte. The
-same covers the unsafe_get_user() priming-load failure.
+> FYI, another PV TLB flush method in arch/x86/hyperv/mmu.c ...
 
-I'll fix this in the next version.
+Thanks for the pointer. The Hyper-V path is a pure hypercall: the guest
+hands the hypervisor the address space, an address-range list, and the
+target VP set, so the flush stays fine-grained instead of nuking the
+whole TLB. That's a good template if the numbers point us toward a
+hypercall-based design.
 
 Thanks,
 Tao
-
-在 2026/6/16 09:03, Bibo Mao 写道:
->> --- a/arch/loongarch/kvm/vcpu.c
->> +++ b/arch/loongarch/kvm/vcpu.c
->> @@ -173,7 +173,39 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
->>       }
->>         st = (struct kvm_steal_time __user *)ghc->hva;
->> -    if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
->> +    if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PV_TLB_FLUSH)) {
->> +        u32 old = 0;
->> +        int err = 0;
->> +
->> +        /*
->> +         * Prime the cache line with a normal load before the coherent
->> +         * atomic below; it was observed (when the line was last dirtied
->> +         * by another core) to be needed for amand_db.w to see a current
->> +         * value.  amand_db.w overwrites `old` with the real pre-AND value,
->> +         * so this load contributes only its cache side-effect.
->> +         */
->> +        unsafe_get_user(old, (u32 __user *)&st->preempted, out);
-> If there is a failure, it does nothing and go to out directly, however guest TLB remains stale without flush operation.
->> +
->> +        /* Atomically read and clear the preempted byte via amand_db.w. */
->> +        asm volatile(
->> +        "1: amand_db.w %1, %3, %2    \n"
->> +        "2:                \n"
->> +        _ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)
->> +        : "+r" (err), "+&r" (old),
->> +          "+ZB" (*(u32 *)&st->preempted)
->> +        : "r" ((u32)~0xffu)
->> +        : "memory");
->> +
->> +        if (err)
->> +            goto out;
-> Ditto, if there is error, guest TLB is not flushed and vCPU continues to run with preempted bit set. The next TLB flush will be skipped with this vCPU since its preempted bit is not clear.
-> 
-> Regards
-> Bibo Mao
-> 
 
