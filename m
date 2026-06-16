@@ -1,128 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A8A1C84D0;
-	Mon, 15 Jun 2026 20:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D2F305E1F
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 01:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781555602; cv=none; b=n443sX1xPIpoZVt6SPAh37PyCCuFL/0F12zCj/eit4wkE2YvpjsSxPpFCuB/cNGxcL/QEuAlChpaTgHfwSHfK40HlIfz5QQAZ0+PUjW7FdNhiIoJ7vlQTnicnFYNCDmQrENJjIHdAVi/olelZtjS4FhKPoKtSM/F88Oy4jleP9s=
+	t=1781572036; cv=none; b=ljctKBtE0/eBOdybNTB4DA9F1MO+qYvh4VExS/PSeKw+XY8hBw5H1fIkBGB+snnbm31YoiB7IPMbpK+8w+ZRt3gnP0r4W2XQQIToRAowJeQbo/sqfHuyXBMNUz3htxHbBh5wadMJ5GMMnG43qL0nrbAwIh7yWVsjn/xEILdsM48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781555602; c=relaxed/simple;
-	bh=9Z4Q+BvDBzDR3RYOg8ewj62G0BIToP4WyuMbIhRXeBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CjWc7Y5Kb9piihbqZB8q2IAmM9lNEbMw3NW/0uLTMKmRjYLda/Vd701CRA7QkcJ4qNJsnMhI+0QKtgN7WM1c60T0wVsN+KkGWqEd1yrGM97wyCdc+ay5SncCL7EYlTWhcX5ICatTza1SCg/pdSTrZ+2wdj1QTIEXDiBzxhdCoNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E86R2Mc0; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E86R2Mc0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D89131F000E9;
-	Mon, 15 Jun 2026 20:33:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781555601;
-	bh=as7Ogfoc/AyskAy2+J9eXyhxUhgDui71XAx+CHT5Mew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=E86R2Mc0QLlmn6hDEj5MnafzRYyOh8VthGPhggOCVEqZ9xx+sywlJb7QXeIaMbEFA
-	 rvREbsI3Zv0iMBuDfYoDef4TgGcmk0gnzth2mBKPpYT5zfQfxZKaETEbxVznMvRfoH
-	 piXE10ylpTWfk/t+pECRYcy/iMGYN/iwRMhVbs6e5bPwfcEmSrgpliHOIWdD3C35KZ
-	 3dd4XZnD7RANNMAcrkEHv2ZJgOVbQ7VfGmUoC1gB6jeJzKn1pSM0YTSpCEnNMVRUEO
-	 3IE0flzeBTi4viwUUEYjyjwYKI+KhiEhnh6PLe1a+NU0sfU6WVODjevHGI2ZZiYcfX
-	 AyBnvEPDADOhQ==
-Message-ID: <131a450f-f9c6-464c-8e4e-a4c7a29fb5de@kernel.org>
-Date: Mon, 15 Jun 2026 22:33:11 +0200
+	s=arc-20240116; t=1781572036; c=relaxed/simple;
+	bh=xsiqlFSg3vngrUio9CDIwn+AXV8aV/3EyoF2hfDyVCg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=cnu87AymZzMEzosrSWVYW9lkNzfzj2lwu7iFCd86kPxUBReYtXZ3Owidy0216y8ExyZw8A9DVgjhLQ/YEhCCDC+eqC4axItsf30aq0+a+OJi4AlfUiHE85sa9Ob69xV8+bmmMDIVU8iF0COzUpX9eZe3o1Gm37ILmpXaE5P5kL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8Cx3sC9oTBqFJUUAA--.30203S3;
+	Tue, 16 Jun 2026 09:07:09 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowJBxacG7oTBqsaWnAA--.42441S3;
+	Tue, 16 Jun 2026 09:07:07 +0800 (CST)
+Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Add PV TLB flush support via
+ steal-time shared memory
+To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, loongarch@lists.linux.dev
+Cc: kernel@xen0n.name, kvm@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
+References: <20260615082154.42144-1-cui.tao@linux.dev>
+ <20260615082154.42144-2-cui.tao@linux.dev>
+From: Bibo Mao <maobibo@loongson.cn>
+Message-ID: <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
+Date: Tue, 16 Jun 2026 09:03:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
- omittable "root=" cmdline option
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>,
- linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
-References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
- <20260615170432.GW2636677@ZenIV>
-From: Vincent Mailhol <mailhol@kernel.org>
+In-Reply-To: <20260615082154.42144-2-cui.tao@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20260615170432.GW2636677@ZenIV>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowJBxacG7oTBqsaWnAA--.42441S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFyrJw4ruF4rZF47Ar48Xwc_yoW3Cr1fpF
+	yvyFnYgF4xGr1fAwn3t39F9r45WF4xCr1Sga429ry5AF4agryDur1vkrWDAFyDXw1rXayI
+	gFyFy34DZFWDX3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UU
+	UUU==
 
-On 15/06/2026 at 19:04, Al Viro wrote:
-> On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
+
+
+On 2026/6/15 下午4:21, Tao Cui wrote:
+> From: Tao Cui <cuitao@kylinos.cn>
 > 
->> Tested with GRUB, which implements the LoaderDevicePartUUID EFI variable
->> in its bli module [3]. With this, I was able to boot a kernel with a
->> completely empty cmdline and no initrd.
->>
->> [1] The Discoverable Partitions Specification (DPS)
->> Link: https://uapi-group.org/specifications/specs/discoverable_partitions_specification/
->>
->> [2] systemd-gpt-auto-generator
->> Link: https://www.freedesktop.org/software/systemd/man/latest/systemd-gpt-auto-generator.html
->>
->> [3] GRUB -- §16.2 bli
->> Link: https://www.gnu.org/software/grub/manual/grub/html_node/bli_005fmodule.html
+> Implement paravirtualized TLB flush for LoongArch KVM guests using the
+> existing steal-time shared memory page.
 > 
-> So what does that thing, tied to EFI as it is, have to do with architectures where
-> 	* firmware is rather unlike EFI
+> The mechanism uses the preempted byte in struct kvm_steal_time with an
+> additional KVM_VCPU_FLUSH_TLB flag bit:
+> 
+> - When a guest vCPU needs remote TLB flush but the target vCPU is
+>    preempted (not running), it atomically sets KVM_VCPU_FLUSH_TLB in
+>    the target's steal-time preempted byte instead of sending an IPI.
+> - When the host re-enters the target vCPU (kvm_update_stolen_time()),
+>    it atomically reads and clears only the preempted byte via amand_db.w
+>    with mask ~0xff on the 32-bit aligned word.  amand_db.w provides
+>    full barrier semantics and avoids the race with guest-side
+>    try_cmpxchg().  LoongArch is little-endian, so the preempted byte
+>    occupies bits [7:0]; this preserves pad[0..2] for future UAPI
+>    extension.  If KVM_VCPU_FLUSH_TLB was set, the host drops the vCPU's
+>    VPID, which triggers a full TLB flush on the next VM entry via
+>    kvm_check_vpid().
+> - For non-preempted vCPUs, the guest falls back to normal IPI-based
+>    flush, avoiding unnecessary VM exits.
+> 
+> Issue a normal load (unsafe_get_user) before the atomic amand_db.w to
+> avoid operating on stale cache data when the cache line was last
+> modified by a different core.
+> 
+> This significantly reduces TLB flush overhead in multi-vCPU workloads
+> where target vCPUs are often idle/preempted.
+> 
+> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
+> ---
+>   arch/loongarch/include/asm/kvm_host.h      |  1 +
+>   arch/loongarch/include/asm/kvm_para.h      |  1 +
+>   arch/loongarch/include/uapi/asm/kvm.h      |  1 +
+>   arch/loongarch/include/uapi/asm/kvm_para.h |  1 +
+>   arch/loongarch/kvm/trace.h                 | 15 ++++++++++
+>   arch/loongarch/kvm/vcpu.c                  | 34 +++++++++++++++++++++-
+>   arch/loongarch/kvm/vm.c                    |  3 ++
+>   7 files changed, 55 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+> index 776bc487a705..1750632699e0 100644
+> --- a/arch/loongarch/include/asm/kvm_host.h
+> +++ b/arch/loongarch/include/asm/kvm_host.h
+> @@ -168,6 +168,7 @@ enum emulation_result {
+>   #define LOONGARCH_PV_FEAT_MASK		(BIT(KVM_FEATURE_IPI) |		\
+>   					 BIT(KVM_FEATURE_PREEMPT) |	\
+>   					 BIT(KVM_FEATURE_STEAL_TIME) |	\
+> +					 BIT(KVM_FEATURE_PV_TLB_FLUSH) |\
+>   					 BIT(KVM_FEATURE_USER_HCALL) |	\
+>   					 BIT(KVM_FEATURE_VIRT_EXTIOI))
+>   
+> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
+> index fb17ba0fa101..28e3fa3b4c0e 100644
+> --- a/arch/loongarch/include/asm/kvm_para.h
+> +++ b/arch/loongarch/include/asm/kvm_para.h
+> @@ -41,6 +41,7 @@ struct kvm_steal_time {
+>   	__u8  pad[47];
+>   };
+>   #define KVM_VCPU_PREEMPTED		(1 << 0)
+> +#define KVM_VCPU_FLUSH_TLB		(1 << 1)
+>   
+>   /*
+>    * Hypercall interface for KVM hypervisor
+> diff --git a/arch/loongarch/include/uapi/asm/kvm.h b/arch/loongarch/include/uapi/asm/kvm.h
+> index cd0b5c11ca9c..e4cd4bbf8914 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm.h
+> @@ -106,6 +106,7 @@ struct kvm_fpu {
+>   #define  KVM_LOONGARCH_VM_FEAT_PTW		8
+>   #define  KVM_LOONGARCH_VM_FEAT_MSGINT		9
+>   #define  KVM_LOONGARCH_VM_FEAT_PV_PREEMPT	10
+> +#define  KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH	11
+>   
+>   /* Device Control API on vcpu fd */
+>   #define KVM_LOONGARCH_VCPU_CPUCFG	0
+> diff --git a/arch/loongarch/include/uapi/asm/kvm_para.h b/arch/loongarch/include/uapi/asm/kvm_para.h
+> index d28cbcadd276..8872839251cc 100644
+> --- a/arch/loongarch/include/uapi/asm/kvm_para.h
+> +++ b/arch/loongarch/include/uapi/asm/kvm_para.h
+> @@ -16,6 +16,7 @@
+>   #define  KVM_FEATURE_IPI		1
+>   #define  KVM_FEATURE_STEAL_TIME		2
+>   #define  KVM_FEATURE_PREEMPT		3
+> +#define  KVM_FEATURE_PV_TLB_FLUSH	4
+>   /* BIT 24 - 31 are features configurable by user space vmm */
+>   #define  KVM_FEATURE_VIRT_EXTIOI	24
+>   #define  KVM_FEATURE_USER_HCALL		25
+> diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
+> index 3467ee22b704..8556954fa196 100644
+> --- a/arch/loongarch/kvm/trace.h
+> +++ b/arch/loongarch/kvm/trace.h
+> @@ -210,6 +210,21 @@ TRACE_EVENT(kvm_vpid_change,
+>   	    TP_printk("VPID: 0x%08lx", __entry->vpid)
+>   );
+>   
+> +TRACE_EVENT(kvm_pv_tlb_flush,
+> +	TP_PROTO(struct kvm_vcpu *vcpu, bool need_flush),
+> +	TP_ARGS(vcpu, need_flush),
+> +	TP_STRUCT__entry(
+> +		__field(unsigned int, vcpu_id)
+> +		__field(bool, need_flush)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->vcpu_id = vcpu->vcpu_id;
+> +		__entry->need_flush = need_flush;
+> +	),
+> +	TP_printk("vcpu %u need_flush %u", __entry->vcpu_id,
+> +		  __entry->need_flush)
+> +);
+> +
+>   #endif /* _TRACE_KVM_H */
+>   
+>   #undef TRACE_INCLUDE_PATH
+> diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+> index e28084c49e68..5230e95a7816 100644
+> --- a/arch/loongarch/kvm/vcpu.c
+> +++ b/arch/loongarch/kvm/vcpu.c
+> @@ -173,7 +173,39 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>   	}
+>   
+>   	st = (struct kvm_steal_time __user *)ghc->hva;
+> -	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
+> +	if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PV_TLB_FLUSH)) {
+> +		u32 old = 0;
+> +		int err = 0;
+> +
+> +		/*
+> +		 * Prime the cache line with a normal load before the coherent
+> +		 * atomic below; it was observed (when the line was last dirtied
+> +		 * by another core) to be needed for amand_db.w to see a current
+> +		 * value.  amand_db.w overwrites `old` with the real pre-AND value,
+> +		 * so this load contributes only its cache side-effect.
+> +		 */
+> +		unsafe_get_user(old, (u32 __user *)&st->preempted, out);
+If there is a failure, it does nothing and go to out directly, however 
+guest TLB remains stale without flush operation.
+> +
+> +		/* Atomically read and clear the preempted byte via amand_db.w. */
+> +		asm volatile(
+> +		"1: amand_db.w %1, %3, %2	\n"
+> +		"2:				\n"
+> +		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)
+> +		: "+r" (err), "+&r" (old),
+> +		  "+ZB" (*(u32 *)&st->preempted)
+> +		: "r" ((u32)~0xffu)
+> +		: "memory");
+> +
+> +		if (err)
+> +			goto out;
+Ditto, if there is error, guest TLB is not flushed and vCPU continues to 
+run with preempted bit set. The next TLB flush will be skipped with this 
+vCPU since its preempted bit is not clear.
 
-I made CONFIG_DPS_ROOT_AUTO_DISCOVERY depend on CONFIG_EFI for this reason.
-
-> 	* firmware wouldn't know what to do with GPT
-> 	* GRUB is *not* ported to, let alone used
-> such as, say it, the very first one mentioned at your [1]?
-
-Fair point. I just did:
-
-  $ git grep "^config EFI$"
-  arch/arm/Kconfig:config EFI
-  arch/arm64/Kconfig:config EFI
-  arch/loongarch/Kconfig:config EFI
-  arch/riscv/Kconfig:config EFI
-  arch/x86/Kconfig:config EFI
-
-Anything not in this list is dead code at the moment.
-
-> Or is that conditional upon "if anyone wants to design replacement firmware
-> for those, and if they agree to follow our wishlist"?
-
-No, it was just an oversight from my side. I will just keep arm, arm64,
-loongarch, riscv and x86 in my v2.
-
-
-Yours sincerely,
-Vincent Mailhol
+Regards
+Bibo Mao
+> +
+> +		vcpu->arch.st.preempted = 0;
+> +
+> +		if ((u8)old & KVM_VCPU_FLUSH_TLB) {
+> +			vcpu->arch.vpid = 0;	/* Drop vpid to flush TLB */
+> +			trace_kvm_pv_tlb_flush(vcpu, true);
+> +		}
+> +	} else if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
+>   		unsafe_put_user(0, &st->preempted, out);
+>   		vcpu->arch.st.preempted = 0;
+>   	}
+> diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+> index 1317c718f896..cfba45a7343c 100644
+> --- a/arch/loongarch/kvm/vm.c
+> +++ b/arch/loongarch/kvm/vm.c
+> @@ -54,8 +54,10 @@ static void kvm_vm_init_features(struct kvm *kvm)
+>   	if (kvm_pvtime_supported()) {
+>   		kvm->arch.pv_features |= BIT(KVM_FEATURE_PREEMPT);
+>   		kvm->arch.pv_features |= BIT(KVM_FEATURE_STEAL_TIME);
+> +		kvm->arch.pv_features |= BIT(KVM_FEATURE_PV_TLB_FLUSH);
+>   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_PREEMPT);
+>   		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_STEALTIME);
+> +		kvm->arch.kvm_features |= BIT(KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH);
+>   	}
+>   }
+>   
+> @@ -158,6 +160,7 @@ static int kvm_vm_feature_has_attr(struct kvm *kvm, struct kvm_device_attr *attr
+>   	case KVM_LOONGARCH_VM_FEAT_PV_IPI:
+>   	case KVM_LOONGARCH_VM_FEAT_PV_PREEMPT:
+>   	case KVM_LOONGARCH_VM_FEAT_PV_STEALTIME:
+> +	case KVM_LOONGARCH_VM_FEAT_PV_TLB_FLUSH:
+>   		if (kvm_vm_support(&kvm->arch, attr->attr))
+>   			return 0;
+>   		return -ENXIO;
+> 
 
