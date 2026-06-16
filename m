@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490872C029F
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 01:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEE2E3C09EE
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 02:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781572696; cv=none; b=S9xMQqC+miK4yqg2UWvgGzYR8SuzsKckvP3lMaE46SbdErzCCId2OAmIEVjlUGkc3nzsAsh2oTZgBovFDy2fUbdJGqXSbq/mmYfhz8TWwRKBaI148nJgjFzflRi8EOlX9gNXM6HLdsCOnu9JfQKeN6xSeqJs9qz9/wIJB/sG2zw=
+	t=1781576604; cv=none; b=gPSdQMJuxCMC1Naeexdj/tueuZd8VM34zvgDBrJZmLNWFvumQGCz/ei8DtGdbQyWv0MTMiXFAFs2F17dycaD2OE+HIdXrugexc9WD32nuGf0zhjbVMSXTK3WcqdwPvcqhqEoq1XHKlqrpxYvOj/HiWIcNQoN0+LFpfvGCgijZMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781572696; c=relaxed/simple;
-	bh=wVkc9rfRoAyXKQgtVQBc8jEXX/D2KqwMgxU0sWGxHjg=;
+	s=arc-20240116; t=1781576604; c=relaxed/simple;
+	bh=Cufc38O2gY3uUndaqHM+UY4qrOSvrFM+5T7G7RTTpFk=;
 	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=d6k5WJ1DjZV586Sy2NNRlDll6Lcs8xSp5PZdaMPwf3emct31tjhW91CfR2m7QMJoXKtlwEV5v8cL3duktcY15dQiw1IIab10EBA80ptXYqCQS5ZbTNRrkWsx7tGPdQuo2Jtwho1IU8tF9ThZz2YgRbZ/B9IjTnGWzZuGLukTFa0=
+	 In-Reply-To:Content-Type; b=ja1BXJkVTVSsAxCo3X6mDgDhB0be3xCrm84xO9tyAe9yt/dtkG1XZ0wxHB7sT+oTAWiW9tAMgeW9KXvEI32wcexYUVGd0QGyeMpokJY8rdSHbRdGtkeptn7PFY95sKiJZ/3Fy2NEiQs+kjlQN4i4JYN4u21KL67pc/RYDKe9894=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8DxlnhSpDBqKJcUAA--.29251S3;
-	Tue, 16 Jun 2026 09:18:10 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxFemKszBqTZsUAA--.48012S3;
+	Tue, 16 Jun 2026 10:23:06 +0800 (CST)
 Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJBx68FPpDBq+qenAA--.53869S3;
-	Tue, 16 Jun 2026 09:18:09 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowJDx6+CGszBqX7WnAA--.57395S3;
+	Tue, 16 Jun 2026 10:23:05 +0800 (CST)
 Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
 To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn,
  chenhuacai@kernel.org, loongarch@lists.linux.dev
@@ -25,8 +25,8 @@ Cc: kernel@xen0n.name, kvm@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
 References: <20260615082154.42144-1-cui.tao@linux.dev>
  <20260615082154.42144-3-cui.tao@linux.dev>
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <0c47ce21-9a4d-4cdc-9bec-ce749e31512e@loongson.cn>
-Date: Tue, 16 Jun 2026 09:14:57 +0800
+Message-ID: <9cb5d67b-2892-c9a2-f69e-72ae669ec124@loongson.cn>
+Date: Tue, 16 Jun 2026 10:19:53 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 Precedence: bulk
@@ -39,25 +39,25 @@ In-Reply-To: <20260615082154.42144-3-cui.tao@linux.dev>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJBx68FPpDBq+qenAA--.53869S3
+X-CM-TRANSID:qMiowJDx6+CGszBqX7WnAA--.57395S3
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XFy7Gw1UGry5ur1ktr17CFX_yoWfXw1kpr
-	yUCwsYga1rWr97A343Z3yjkr15Zw4DK3WIva13uFWFyFnrXFyUKr93GrykZa4kWa95GF4F
-	gFyrArsFgFyUt3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoW3XFy7Gw1UGry5ur1ktr17CFX_yoWfJr18pr
+	yUAwsYga95Wr97A343Z3yDCr15Zw4kK3WIva13uFWFyFnrXFyUKr93GrykZ3W8Wa95GF4F
+	gFyrArsF9FyUt3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
 	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
 	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
 	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8sXo7UU
-	UUU==
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYSoJU
+	UUUU=
 
 
 
@@ -205,24 +205,16 @@ On 2026/6/15 下午4:21, Tao Cui wrote:
 > +		new = old | KVM_VCPU_FLUSH_TLB;
 > +		if (try_cmpxchg(ptr, &old, new))
 > +			__cpumask_clear_cpu(cpu, flushmask);
-is it possible that vCPU is running however with KVM_VCPU_PREEMPTED set?
 > +	}
 > +
 > +	on_each_cpu_mask(flushmask, func, info, 1);
-LoongArch VM does not support post interrupt now, IPI with vCPU will 
-trap to hypervisor.
-
-There is another PV TLB flush method using hypercall like PV IPI, which 
-will make a request with wait flag such as KVM_REQ_TLB_FLUSH and kick vCPU.
-
-With this PV TLB flush method, there is not IPI interrupt in VM, and 
-wait is handled in hypervisor, the negative effect is that it flushes 
-all TLBs.
+> +	preempt_enable();
+> +}
+FYI, another PV TLB flush method in arch/x86/hyperv/mmu.c on hyperV 
+which is complicated and fine-gained.
 
 Regards
 Bibo Mao
-> +	preempt_enable();
-> +}
 > +
 > +static int __init pv_tlb_flush_init(void)
 > +{
