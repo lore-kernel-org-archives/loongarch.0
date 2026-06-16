@@ -1,73 +1,142 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED10E449ECA
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 15:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781624583; cv=none; b=Qhvdq3tF9Z9PppT5r5FLaiyhvuo7WvIFgK5S4tkQX2Pe4wtYioF80/Fm+MU2qi93tWegsOvUOaLZJxJ9zjpMhERYRJTRCa56JhEVaxl0UV4zgqAbOZCqgM6GxRMOXYVT2xF/Nq1/1RBKw3HPqCyG+iVCNKEw4MuHqUi9VNGwIIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781624583; c=relaxed/simple;
-	bh=z0Yi+ccp1237LA8Mtk3EaNcrP3jhyczTa9ge8x2+pi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=asNWM6xkfDuZ6PN3/nGKZQJWm4K3rObnZtCI30d2GVo5j6lZCllI7VoUG6gDZFkBbDiVYqbsX7p392sxzgRQoiXUFLU0o0pISxY2ihcaKr385tjQv05o2l8YL2POzM6AiTh0K0BvQTylbrrIrTotGggGyWtCkENDmX48AfyZ9uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p/3+HO9C; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457213D7D9F
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 18:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781633633; cv=pass; b=pPHZ8DoJSNwO18uU4cO0c0mCdc1AYwuqvXvv8e6NGOfCGP01v4lnoGxHj/rtuvN/kr1VZlOWyJWuDtv5rqlvHjyy6/+K45hpBd1H+PGvgemdoMotqk0Fmna2ex/x5DSwI/7pxdnzRUpQpbuj0FthTof8Cumv0QR84gcyL65HrqM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781633633; c=relaxed/simple;
+	bh=XVDXOs5PD1K5upzQNmkXI9UANSCojiYwT2l1mSGO/eE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P5m+3upnZp67CKIy+yDCeuXw2WO8DkbzsFF3zZmPG4rOqkZPA232WCjqJueOilzchlOhKbCaWq2djmghhNOOIjplbJUwg4IdwxE3UTpUV8/Iq0OVM30gel4Xxw2xmy2fCvSqpCnJJEiXwkiCjWM7gOJZFJ7CwFGUMYSOUnyeb/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcg2AGUX; arc=pass smtp.client-ip=74.125.224.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p/3+HO9C"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781624578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z0Yi+ccp1237LA8Mtk3EaNcrP3jhyczTa9ge8x2+pi4=;
-	b=p/3+HO9CuS+TZrK8V5uNvwBhzi8hcizba1dcyw9SgkkGiHG57B7LJ0YnhLDLYJKX9PfEhH
-	1VMxkstwQk++3e8ERVIU/BL80NHY82HB2T0ivY9FroTtSFyiYr5NXyx/5MOYwvM5/Kgx4e
-	AzNtuM4JeimJ7YTy9Lnfo7P1ylYnxHA=
-From: Tao Cui <cui.tao@linux.dev>
-To: maobibo@loongson.cn
-Cc: chenhuacai@kernel.org,
-	cui.tao@linux.dev,
-	cuitao@kylinos.cn,
-	kernel@xen0n.name,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	zhaotianrui@loongson.cn
-Subject: Re: [PATCH v4 3/3] KVM: selftests: loongarch: Add PV TLB flush performance test
-Date: Tue, 16 Jun 2026 23:42:31 +0800
-Message-ID: <20260616154231.10982-1-cui.tao@linux.dev>
-In-Reply-To: <4efcc81b-bf7e-4d78-ba82-9f4590673486@loongson.cn>
-References: <4efcc81b-bf7e-4d78-ba82-9f4590673486@loongson.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcg2AGUX"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-660323f7b27so4782273d50.3
+        for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 11:13:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781633631; cv=none;
+        d=google.com; s=arc-20240605;
+        b=AoBolDJi0hiL8ZzlrjEAcQn4DNhaObZr+27SSbBWhDBEIZLNf/VjyMSC7mDoZPItkZ
+         RHVRwPYkR+Zad0p7BvJqEf+msraO+s2YZdSyoYSLYUCPdK+6zcypIof9wgwkxtX3gPC6
+         j17VCh3C++yEnWFFFkX0MQRFEeEYgd19uvEp+ZgeMsdfJg+8fHyz6/Xtuxp5pxNW9UhP
+         grQ8BBL6iWiPZBXlXd5H9VNg2pjP/imFfdbBqLkRmHavwXglxPpzR5Fjfvt5r7UWBEXn
+         QU0OvAK3rtZje44HsjA5v27ugc7Xblo0mE3IQ1sO58TKK3FNus5SyQ+W4Bb4yO7GZagU
+         4ZBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tAuGRKuOlDbkCJf/rcFDQnFKbzVCieXn0KWbIFna+U4=;
+        fh=hG4l8VZymEn/uwFjToGclXq/N9Jq7Vm54Am/cSs3QK4=;
+        b=Pjm3hZbwLNbK7IWa5doSpIe5a6VZhu7AprUPT1ZYet0/ydxrAP8G/nnzlQMwOwKhPu
+         Ca0zrYk1U1VWXWjE1DshLgdeGRfj33rpkJP/L7DTHJ71mfnJ6+YhdFRjjXlblpuBPB5f
+         NxlB4otHIDbPva/hCOdwBvk+ieztEyz9soPilON/JXqJD1r0wD4EHJxPkAw/jR0sRhg3
+         e41KfR8I1MFLRLbBg5wYlBThJnCWTjdacgYUcnPCTfnLY2zx4C7/dr/Xm37VCoKa5kn0
+         TeEH1JtwE5zQUWExAnhEhsvwBAD73jIF3ObRaE15PGVn39RBYpDjdZRWzPPyJ09lvciD
+         u/3w==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781633631; x=1782238431; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tAuGRKuOlDbkCJf/rcFDQnFKbzVCieXn0KWbIFna+U4=;
+        b=jcg2AGUX9pLvhA1la0w5lKTpd29ykXdV6xtNFCcPJTJlvXLtKj641aYVQooLdWQZSt
+         0pzBJzIrxdcFBKft8Ehzkjab4VCf/qDzn50cdZJOZwRkkGCys3iUMkkfAh7/afkt1tl2
+         BNnxmdEVzZe6GiWZJqrBjGZfVpUiPrK4axLi5nIxJ40u4P7dUi0DUc4JNU7DhS+210c5
+         SdD05e48ryDgqlisxB+q0rGQz6NQ248q7jEr1gRI8QErB0RpCwPMuSpKNHGqWXz/YsNb
+         8AOoHd6SBGiv+YtxjVxP/I2aXCnM9W6piItnicHUYPQPTvueruXF4XzL/aI97Z4GNEJ6
+         DDaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781633631; x=1782238431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tAuGRKuOlDbkCJf/rcFDQnFKbzVCieXn0KWbIFna+U4=;
+        b=Lr1sLt4Oh3tSrqxemvWOLyTOQPXmGxZ8yuN44Wvpt/kjRJPlhOmkVk5cdlr0ycqmxR
+         QPR6soZ+Ae5DulrryOFDO6ghGS9okJTBUd9Q11u7maaP1YdH+jPL2+6psejhjxWAm/yF
+         bap9thJjtVQqkyeygfq/r7Sy9iR7R13Ky2GtduJyAc1ixQlk56igkbydJQnC75af5wFe
+         +GmyOY9gSIGar8MqKY/ibnjmR+yL3x2gVSJNW5CEOhsfAnkfh87T5A8QRaF53Ol3dZ64
+         UBypPb3Jb1+i+aIepfM7MXAsQTRR9xReVuZEzOpSoKYR7ioC+U9CzqkltoUQ0i5uwlNB
+         BJIQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9R2OqC9nHzEOGkogIt9roaXRkZBJVK+CthxtOx6mEVo90DSpYN+ElA+cMpk7VBqDWKdvWQPBbsIAo=@lists.linux.dev
+X-Gm-Message-State: AOJu0YywGpQSVSp0gsrtmXVX3jqvv/KEXydpjflytRpIqBgKt4EdWbvu
+	L51H+huxN/RQ0pE1+JeJdVq/6QOHeYQOpyEZ+t8M1kxM/VHUMJ86qAUYLE3T9R7ORqXkq8Ydkbk
+	UhTMJBf5+hAT6tAuOFs/OKa/QrDz1JWQ=
+X-Gm-Gg: AfdE7ck7o2RIY9lnoi7kwle62uXbgrMHxUSC9Wkl9cwcu9ZkQW21VtvExy7kbr5D+Ra
+	0+DVyg2CtIMlbRaYnut7YBxGy/fJ2MbTfVeg7G6PZpr5+QqUfhzCyyvr7Ldl2k3YTzhToMwGRua
+	NKbjHBiP+YlxsCNbdASaABGe8QKJYmsKvpfQwBXr1eapmwdsIpdB/YPnmXKbIOqQN8Z30zdo/Ju
+	uPlRINmW/gFp1rbVckH06M3eHMbsMr2r+6xAPh5zZEhY/m61qHSCicMx8XUgwTMVGMrbLXqjFry
+	+leb
+X-Received: by 2002:a05:690e:1446:b0:662:b875:b149 with SMTP id
+ 956f58d0204a3-662cb9a5521mr488948d50.28.1781633631026; Tue, 16 Jun 2026
+ 11:13:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20260614161503.2219681-1-ekffu200098@gmail.com>
+ <20260614161503.2219681-2-ekffu200098@gmail.com> <20260616131945.GA2236977-robh@kernel.org>
+In-Reply-To: <20260616131945.GA2236977-robh@kernel.org>
+From: Sang-Heon Jeon <ekffu200098@gmail.com>
+Date: Wed, 17 Jun 2026 03:13:38 +0900
+X-Gm-Features: AVVi8CfDQJdb4Q9jLQYUPY3KXB7WpMZ-iKjsv1-5FCLStEz_WwunrIBu4QHvpOQ
+Message-ID: <CABFDxMGYTP4uLaH-ew+zf4++CtPY54+pDsRVO6TbC9W5nVVtBA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] of/fdt: fix misleading elfcorehdr reservation success message
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tao Cui <cuitao@kylinos.cn>
+On Tue, Jun 16, 2026 at 10:19=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
+e:
+>
+> On Mon, Jun 15, 2026 at 01:15:01AM +0900, Sang-Heon Jeon wrote:
+> > fdt_reserve_elfcorehdr() does not check the return value of
+> > memblock_reserve(), so a success message is falsely printed when the
+> > reservation fails.
+> >
+> > Check the return value and warn on failure instead.
+> >
+> > Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+> > ---
+> >  drivers/of/fdt.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index 26f66046cc32..d985c07d7c5c 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -479,7 +479,10 @@ static void __init fdt_reserve_elfcorehdr(void)
+> >               return;
+> >       }
+> >
+> > -     memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> > +     if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
+> > +             pr_warn("Failed to reserve memory for elfcorehdr\n");
+>
+> I would think memblock_reserve() should always succeed and if not it
+> should print a message rather than having every caller print a message.
 
-Thanks, and I share the stability concern. I don't want to land something
-that adds risk for a feature that isn't clearly earning its place yet.
+Thanks for reviewing, Rob.
 
-> Do you have real workload to show the benefits of the PV TLB flush,
-> and which TLB APIs should be hooked.
+You're right. After taking a closer look, memblock_reserve() either
+succeeds or panics before memblock_allow_resize() called.
+So the check that I added in this patchset is totally unreachable.
 
-Completely fair, and to be upfront I don't have a large-scale real-world
-workload to point to yet. So my plan is to build a set of local test
-scripts that simulate as many usage scenarios as possible: mmap/fork-heavy
-paths, kernel-range flushes, and an overcommitted setup where vCPU
-preemption is frequent. I'll report the IPI and TLB-flush overhead with
-and without the feature, broken down per flush API. The coverage is
-synthetic rather than a single flagship workload, but hopefully it can at
-least give us a rough, preliminary sense of whether the feature is worth
-pursuing.
+Please drop this patchset. I'll be more careful when sending patches next t=
+ime.
 
-Thanks,
-Tao
+> Rob
+
+Best Regards,
+Sang-Heon Jeon
