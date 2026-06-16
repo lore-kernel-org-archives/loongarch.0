@@ -1,32 +1,40 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDB3A3DB31C
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 08:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CBB43CEC7
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 11:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781599549; cv=none; b=RimyFDdt1s51vvO3eULgvALYWXV/oUMFLA/nOpPSo1uNbwMHsQIDIzOTAyi8Xsm/M/K/Nry0oNB9z6V8w7u23OIYLMqCvkINfmygreSu7w11kvk89TmJtgbyLdFU0SHMPi654YfYuFcvy9xAFBJTYHSbjkkp0Ot3Bz69yBLSm3A=
+	t=1781610961; cv=none; b=RMCzRTM5DnqNr6xct2EA0CmDO5dJeN8mSVYcRiE1LJOdMSH8W0uCCQumFKMe8o+n5ERSnwqgReIG3mIsvGQ7WLa5m/sB+zrLIXiH1mTbI4RKguL5niqYCCGk9/yGpseJC/L8BPEI33vBvhZAP9QAgpDD/F49xUoI8N4tHg/gpvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781599549; c=relaxed/simple;
-	bh=kN7K3MlEQhvRvlV/bLifGWm2hCPjoLAO+4k5Xnlex7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yq1ysx1toVTgoiPsB2Rnm2unfp34/Q+WDHdZ/nyNVerOp1sYBHvujMlGjETYUuP4FtT0M4c9pIAvM+kL8dCq+U15ouNO8po58DDJ6BiDyJ+8X0WH6EsHbpl+8VUcJzXXIWGC8Ab54+vWDuIc+P9U/RL32cY2WUeJgOSvIxaKR6s=
+	s=arc-20240116; t=1781610961; c=relaxed/simple;
+	bh=BpRbJ5znnoU0fhvdLYYwC2yPIVWOkM9HRRK1iMMfG6Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J8B3ZhXTiH5bLMSTaC1h67rfOzih9+6gA6n4xXOO1ZQJlKbO6IGyF/XIbbs49HNWNGmL6TS2dsi/EVWncE7Y5nY6WHqPovM7a6Nzztyhpdp10JA7lj1bpmoFRM2Mzc0wOUhW16XOuOAbzaTUZHSmOqCrIE7ZdwC0Hs5e6VE8ju0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxBOk4DTFqr68UAA--.48099S3;
-	Tue, 16 Jun 2026 16:45:44 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxXcI0DTFquQaoAA--.54652S2;
-	Tue, 16 Jun 2026 16:45:40 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org,
+Received: from loongson.cn (unknown [223.64.68.155])
+	by gateway (Coremail) with SMTP id _____8DxrcDLOTFqDr4UAA--.30447S3;
+	Tue, 16 Jun 2026 19:55:55 +0800 (CST)
+Received: from kernelserver (unknown [223.64.68.155])
+	by front1 (Coremail) with SMTP id qMiowJDxzsLFOTFqCC2oAA--.57378S2;
+	Tue, 16 Jun 2026 19:55:51 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Chong Qiao <qiaochong@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: User internal API to deliver interrupt in kernel mode
-Date: Tue, 16 Jun 2026 16:45:38 +0800
-Message-Id: <20260616084538.2274484-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	jeffbai@aosc.io,
+	kexybiscuit@aosc.io,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] mfd: ls2kbmc: Fix iomem pointer handling in video mode parsing
+Date: Tue, 16 Jun 2026 19:55:30 +0800
+Message-ID: <20260616115530.4012675-1-zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -34,137 +42,71 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxXcI0DTFquQaoAA--.54652S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-TRANSID:qMiowJDxzsLFOTFqCC2oAA--.57378S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGow5eMGfgADsv
+X-Coremail-Antispam: 1Uk129KBj93XoW7trWfurWxJFykJr4UCw47WrX_yoW8AFW5pa
+	9agayayr4YyrZ2qas7Jr4UuFyFg3W8tayjgrWxZwnxZrn0k3yUC34FvFZIqF9xGFyvkFy5
+	trn8JFyxua45ZFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
+	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
+	Ja73UjIFyTuYvjxU2MKZDUUUU
 
-API kvm_vcpu_ioctl_interrupt() is mainly to used to deliver interrupt
-from user mode, and internal APIs kvm_queue_irq() and kvm_dequeue_irq()
-are used in kernel mode.
+Use pointers annotated with the __iomem marker for all iomem map calls,
+and creates a local copy of the mapped IO memory for future access in
+the code. memcpy_fromio() and memcpy_toio() are used to read/write data
+from/to mapped IO memory
 
-Also this patch removes unnecessary printk information with inject
-unsupported interrupt with number 0.
-
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@intel.com/
+Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
 ---
- arch/loongarch/kvm/intc/dmsintc.c |  7 ++++---
- arch/loongarch/kvm/intc/eiointc.c |  8 +++++---
- arch/loongarch/kvm/intc/ipi.c     | 10 ++++------
- arch/loongarch/kvm/vcpu.c         |  4 +---
- 4 files changed, 14 insertions(+), 15 deletions(-)
+ drivers/mfd/ls2k-bmc-core.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/loongarch/kvm/intc/dmsintc.c b/arch/loongarch/kvm/intc/dmsintc.c
-index de25735ce039..a726c6cafec3 100644
---- a/arch/loongarch/kvm/intc/dmsintc.c
-+++ b/arch/loongarch/kvm/intc/dmsintc.c
-@@ -47,7 +47,6 @@ void dmsintc_inject_irq(struct kvm_vcpu *vcpu)
- int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 				struct kvm_vcpu *vcpu, u32 vector, int level)
+diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
+index 408056bfb2fe..c40b1a7c4ea4 100644
+--- a/drivers/mfd/ls2k-bmc-core.c
++++ b/drivers/mfd/ls2k-bmc-core.c
+@@ -427,14 +427,21 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
+  */
+ static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
  {
--	struct kvm_interrupt vcpu_irq;
- 	struct dmsintc_state *ds = &vcpu->arch.dmsintc_state;
+-	char *mode;
++	void *buf __free(kfree) = NULL;
++	void __iomem *base;
+ 	int depth, ret;
++	char *mode;
  
- 	if (!level)
-@@ -57,9 +56,11 @@ int dmsintc_deliver_msi_to_vcpu(struct kvm *kvm,
- 	if (!ds)
- 		return -ENODEV;
- 
--	vcpu_irq.irq = INT_AVEC;
-+	if (!kvm_guest_has_msgint(&vcpu->arch))
-+		return -EINVAL;
+ 	/* The last 16M of PCI BAR0 is used to store the resolution string. */
+-	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
+-	if (!mode)
++	base = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
++	if (!base)
++		return -ENOMEM;
 +
- 	set_bit(vector, (unsigned long *)&ds->vector_map);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	kvm_queue_irq(vcpu, INT_AVEC);
- 	kvm_vcpu_kick(vcpu);
++	buf = kmalloc(SZ_16M, GFP_KERNEL);
++	if (!buf)
+ 		return -ENOMEM;
  
- 	return 0;
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 2ab7fafa86d5..63f917de7903 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -36,7 +36,6 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- {
- 	int ipnum, cpu, found;
- 	struct kvm_vcpu *vcpu;
--	struct kvm_interrupt vcpu_irq;
- 
- 	ipnum = (s->ipmap >> (irq / 32 * 8)) & 0xff;
- 	if (!(s->status & BIT(EIOINTC_ENABLE_INT_ENCODE))) {
-@@ -67,8 +66,11 @@ static void eiointc_update_irq(struct loongarch_eiointc *s, int irq, int level)
- 	if (found < EIOINTC_IRQS)
- 		return; /* other irq is handling, needn't update parent irq */
- 
--	vcpu_irq.irq = level ? (INT_HWI0 + ipnum) : -(INT_HWI0 + ipnum);
--	kvm_vcpu_ioctl_interrupt(vcpu, &vcpu_irq);
-+	if (level)
-+		kvm_queue_irq(vcpu, INT_HWI0 + ipnum);
-+	else
-+		kvm_dequeue_irq(vcpu, INT_HWI0 + ipnum);
-+	kvm_vcpu_kick(vcpu);
- }
- 
- static inline void eiointc_update_sw_coremap(struct loongarch_eiointc *s,
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index 1f6ebbd0af5c..ab3d894eb146 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -10,15 +10,14 @@
- static void ipi_set(struct kvm_vcpu *vcpu, uint32_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	status = vcpu->arch.ipi_state.status;
- 	vcpu->arch.ipi_state.status |= data;
- 	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if ((status == 0) && data) {
--		irq.irq = LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_queue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
- }
- 
-@@ -40,15 +39,14 @@ static void ipi_send(struct kvm *kvm, uint64_t data)
- static void ipi_clear(struct kvm_vcpu *vcpu, uint64_t data)
- {
- 	uint32_t status;
--	struct kvm_interrupt irq;
- 
- 	spin_lock(&vcpu->arch.ipi_state.lock);
- 	vcpu->arch.ipi_state.status &= ~data;
- 	status = vcpu->arch.ipi_state.status;
- 	spin_unlock(&vcpu->arch.ipi_state.lock);
- 	if (status == 0) {
--		irq.irq = -LARCH_INT_IPI;
--		kvm_vcpu_ioctl_interrupt(vcpu, &irq);
-+		kvm_dequeue_irq(vcpu, LARCH_INT_IPI);
-+		kvm_vcpu_kick(vcpu);
- 	}
- }
- 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index e28084c49e68..bd90be3f498b 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -1492,10 +1492,8 @@ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq)
- 		kvm_queue_irq(vcpu, intr);
- 	else if (intr < 0)
- 		kvm_dequeue_irq(vcpu, -intr);
--	else {
--		kvm_err("%s: invalid interrupt ioctl %d\n", __func__, irq->irq);
-+	else
- 		return -EINVAL;
--	}
- 
- 	kvm_vcpu_kick(vcpu);
- 
++	mode = (char *)buf;
+ 	/* The resolution field starts with the flag "video=". */
+ 	if (!strncmp(mode, "video=", 6))
+ 		mode = mode + 6;
 
-base-commit: 0e0611827f3349d0a2ac121c023a6d3260dcecdb
+base-commit: b07f7904e0523170856876e4412be852377d492a
 -- 
-2.39.3
+2.52.0
 
