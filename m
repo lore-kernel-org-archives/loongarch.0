@@ -1,80 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6FE286405;
-	Tue, 16 Jun 2026 13:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C914369211
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 14:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781615989; cv=none; b=SRG6fxdWJ+yUjUq0BtJHf5rHWWUayuxjWrC7enEElNYQ96ckHVkwUpNH63cYGBQHdb6nIdrBluOWuoADNw3oF5xx4QpFROSnm1eCu+mHy0foFU/AhlBH+1DFhRDE3ptvAQcEapl6tsHJDy3N9+8wsJEGssMzx5ATTulX4R79OP8=
+	t=1781619304; cv=none; b=BZI3ODKs0xMVslXeCuy+GvCJPlL400X1o4yCBcfb9qg/4Kw+qXNr81Zp7wQfUmiy1gFR9RQTl1ZW45xUvyXyXDjNqzl1twxSaLLe8xw4HhZt1Vpsu3pM2mD+PO1AO5B/sJDyUKWcElO8pspLsFm9XXJ/yFRl8ylbUnXK85FT5ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781615989; c=relaxed/simple;
-	bh=7BHLCNepqc86m9p9uN+bQNkI4gdWOhDsVrKycNmA9QU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YHy5PD5rUtRgPVLhrWW67sS2Rndqiib5/DoOoJ4ZuYdX9DWrJS3EUDpUA6RDQq6ZaYTOEk0QHc6myewN9Ds2xFHSvN7izsIhfEWuKo9nQHKstJkTQg1zpxJACqpr8lKoQYIEtNY/arp2WuffMe9d7qMnAfFDY41vCp0LtcVzlE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrAOnaBp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781619304; c=relaxed/simple;
+	bh=uiQDbcf0aT5w+Afx/p+EuRgxXAqzqXWGjMT6GSV9b2U=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jT+QqveI6s6fJRebTE3U3eaBNrg0TJnBugTHQC7KBkeAyj3vYyMQAegCR9tCnbWxCbjkpXkqW5dJhdTg66Gc2K5tsESnSEecSrBoQHk5hxt+dDOx0BFLfsVpjF+RbCzLVGrpj9sXlPvsnSKw009e4JMMXIFlRK29HY7kv7hEKoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J6yIluMe; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrAOnaBp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6153A1F000E9;
-	Tue, 16 Jun 2026 13:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781615988;
-	bh=UMpsaENAnANEo2om+T4ZM6gO+4JEBCjIegzEiINmZ4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YrAOnaBpoR6jYRjXZTX7H39Gh/AawHXatxd4H8F3x/SULCMUpdYoA+3mg1MApkAEp
-	 3eCVfRaDjy8iPAXdlHPYG/6TylYvKuw4BxXjG/c6GbcDELnvzpWDCXD8d2GJdHBVla
-	 x3xYRN6wDXYotkoA5IEOolpzfw1s0Iwr52axO3iWqR6FPNo+WWNuUsCrkGMMDgL0BJ
-	 srEGJ1EoJkhOD2q4ajoUuhE1d4QYXCYD+HGwj0L5p4t/jyZOSFI2RhnGnGzaVzzRRz
-	 lUeuUsajp83OCBL6/yjzaWt3QQxg7bh+ym2LrVTvdDghVoU37WA91X7s71n9t6VGMZ
-	 GZS+q/6Wavk7g==
-Date: Tue, 16 Jun 2026 08:19:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sang-Heon Jeon <ekffu200098@gmail.com>
-Cc: Saravana Kannan <saravanak@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	devicetree@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH 1/3] of/fdt: fix misleading elfcorehdr reservation
- success message
-Message-ID: <20260616131945.GA2236977-robh@kernel.org>
-References: <20260614161503.2219681-1-ekffu200098@gmail.com>
- <20260614161503.2219681-2-ekffu200098@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J6yIluMe"
+Message-ID: <b359f414-efb6-4204-96fe-0690e0d92d6f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781619299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LoFnPCp9ysZH1cuDgoFgBBe67UyEoQFP/n6AHwL/O0w=;
+	b=J6yIluMe8KKnS2sh5gRClySxSVtH+CdIz3Q6rpUysjzdOvQKwtT1NT2GdPAmSEIqlpFOBc
+	KveZMBvfMU05rbeKTdXGbqJWh082vLOyEwEvYDj3q6Ng4AUulj2nLmLDQ97CiU+a/A7Cis
+	zeSVyzIG4+OguobxzCXph+fUYg1DOzc=
+Date: Tue, 16 Jun 2026 22:14:30 +0800
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260614161503.2219681-2-ekffu200098@gmail.com>
+Cc: cui.tao@linux.dev, kernel@xen0n.name, kvm@vger.kernel.org,
+ Tao Cui <cuitao@kylinos.cn>
+Subject: Re: [PATCH v4 1/3] LoongArch: KVM: Add PV TLB flush support via
+ steal-time shared memory
+To: Bibo Mao <maobibo@loongson.cn>, zhaotianrui@loongson.cn,
+ chenhuacai@kernel.org, loongarch@lists.linux.dev
+References: <20260615082154.42144-1-cui.tao@linux.dev>
+ <20260615082154.42144-2-cui.tao@linux.dev>
+ <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Cui <cui.tao@linux.dev>
+In-Reply-To: <7bb86447-c5d3-7a81-5578-b1ac2419fa32@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jun 15, 2026 at 01:15:01AM +0900, Sang-Heon Jeon wrote:
-> fdt_reserve_elfcorehdr() does not check the return value of
-> memblock_reserve(), so a success message is falsely printed when the
-> reservation fails.
-> 
-> Check the return value and warn on failure instead.
-> 
-> Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
-> ---
->  drivers/of/fdt.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 26f66046cc32..d985c07d7c5c 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -479,7 +479,10 @@ static void __init fdt_reserve_elfcorehdr(void)
->  		return;
->  	}
->  
-> -	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-> +	if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
-> +		pr_warn("Failed to reserve memory for elfcorehdr\n");
+Hi Bibo,
 
-I would think memblock_reserve() should always succeed and if not it 
-should print a message rather than having every caller print a message.
+Thank you for the review.
 
-Rob
+You're right, and honestly I didn't think the
+error path through carefully enough here.
+
+The current handling leaves the preempted byte uncleared and skips the
+flush, which is exactly the cascade you described: a vCPU re-entered on
+the error path keeps running with the bit set, so later flushes keep
+deferring it and its TLB stays stale until some later entry happens to
+succeed. A stale TLB is a correctness issue, so this path needs
+conservative handling even though the fault itself is rare.
+
+I'll drop the VPID on error so the TLB is flushed conservatively and the
+logic self-heals:
+
+    if (err) {
+        vcpu->arch.vpid = 0;    /* be conservative: flush anyway */
+        goto out;
+    }
+
+The byte isn't cleared on the fault, but the TLB is clean this round;
+the next successful amand_db.w reads the still-set FLUSH_TLB bit and
+flushes again (redundantly but harmlessly), then clears the byte. The
+same covers the unsafe_get_user() priming-load failure.
+
+I'll fix this in the next version.
+
+Thanks,
+Tao
+
+在 2026/6/16 09:03, Bibo Mao 写道:
+>> --- a/arch/loongarch/kvm/vcpu.c
+>> +++ b/arch/loongarch/kvm/vcpu.c
+>> @@ -173,7 +173,39 @@ static void kvm_update_stolen_time(struct kvm_vcpu *vcpu)
+>>       }
+>>         st = (struct kvm_steal_time __user *)ghc->hva;
+>> -    if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PREEMPT)) {
+>> +    if (kvm_guest_has_pv_feature(vcpu, KVM_FEATURE_PV_TLB_FLUSH)) {
+>> +        u32 old = 0;
+>> +        int err = 0;
+>> +
+>> +        /*
+>> +         * Prime the cache line with a normal load before the coherent
+>> +         * atomic below; it was observed (when the line was last dirtied
+>> +         * by another core) to be needed for amand_db.w to see a current
+>> +         * value.  amand_db.w overwrites `old` with the real pre-AND value,
+>> +         * so this load contributes only its cache side-effect.
+>> +         */
+>> +        unsafe_get_user(old, (u32 __user *)&st->preempted, out);
+> If there is a failure, it does nothing and go to out directly, however guest TLB remains stale without flush operation.
+>> +
+>> +        /* Atomically read and clear the preempted byte via amand_db.w. */
+>> +        asm volatile(
+>> +        "1: amand_db.w %1, %3, %2    \n"
+>> +        "2:                \n"
+>> +        _ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)
+>> +        : "+r" (err), "+&r" (old),
+>> +          "+ZB" (*(u32 *)&st->preempted)
+>> +        : "r" ((u32)~0xffu)
+>> +        : "memory");
+>> +
+>> +        if (err)
+>> +            goto out;
+> Ditto, if there is error, guest TLB is not flushed and vCPU continues to run with preempted bit set. The next TLB flush will be skipped with this vCPU since its preempted bit is not clear.
+> 
+> Regards
+> Bibo Mao
+> 
+
