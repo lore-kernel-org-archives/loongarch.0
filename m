@@ -1,322 +1,79 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEE2E3C09EE
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 02:23:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2D13C13E9
+	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 02:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781576604; cv=none; b=gPSdQMJuxCMC1Naeexdj/tueuZd8VM34zvgDBrJZmLNWFvumQGCz/ei8DtGdbQyWv0MTMiXFAFs2F17dycaD2OE+HIdXrugexc9WD32nuGf0zhjbVMSXTK3WcqdwPvcqhqEoq1XHKlqrpxYvOj/HiWIcNQoN0+LFpfvGCgijZMQ=
+	t=1781576787; cv=none; b=TUEwPCMoL6TgB2fEm/QCM00TNwbyYmETLj/KvudKruAArC014llOBBfV0gfcZTB8FRbttZF11TKW9AsR3jDTKgNyuoYmsh3U5AsjqSJ+3NYTGm6Ae8mqGWXfqe4rzykVdaX44CEJuETzs/eDHkk1PSB02Se+uqydi0S410C0VMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781576604; c=relaxed/simple;
-	bh=Cufc38O2gY3uUndaqHM+UY4qrOSvrFM+5T7G7RTTpFk=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ja1BXJkVTVSsAxCo3X6mDgDhB0be3xCrm84xO9tyAe9yt/dtkG1XZ0wxHB7sT+oTAWiW9tAMgeW9KXvEI32wcexYUVGd0QGyeMpokJY8rdSHbRdGtkeptn7PFY95sKiJZ/3Fy2NEiQs+kjlQN4i4JYN4u21KL67pc/RYDKe9894=
+	s=arc-20240116; t=1781576787; c=relaxed/simple;
+	bh=V77/xJFXF1BGBgjwljiqLmVdvU3je0PQI8qT/DGU2Ls=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uaKQecAGPx0OebtSRvv+dIyxs8wBGkNQ5z2zGgE0mlkfOEcpwe2GYRDdz5GnqUcr5aGU94+rH5n0wVOCzNHsALifKyEq+FYpYsFSooCITIdi2GWxyDmi7JpzXqxCd5Lit8KYpC9V5iwteMK4h4AuFsYVqZqnrzb57gD7scYyzfw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8AxFemKszBqTZsUAA--.48012S3;
-	Tue, 16 Jun 2026 10:23:06 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowJDx6+CGszBqX7WnAA--.57395S3;
-	Tue, 16 Jun 2026 10:23:05 +0800 (CST)
-Subject: Re: [PATCH v4 2/3] LoongArch: KVM: Implement guest-side PV TLB flush
-To: Tao Cui <cui.tao@linux.dev>, zhaotianrui@loongson.cn,
- chenhuacai@kernel.org, loongarch@lists.linux.dev
-Cc: kernel@xen0n.name, kvm@vger.kernel.org, Tao Cui <cuitao@kylinos.cn>
-References: <20260615082154.42144-1-cui.tao@linux.dev>
- <20260615082154.42144-3-cui.tao@linux.dev>
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxhnhNtDBqcJsUAA--.29288S3;
+	Tue, 16 Jun 2026 10:26:21 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowJAxXcJItDBqz7WnAA--.54020S2;
+	Tue, 16 Jun 2026 10:26:16 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
-Message-ID: <9cb5d67b-2892-c9a2-f69e-72ae669ec124@loongson.cn>
-Date: Tue, 16 Jun 2026 10:19:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/2] KVM: LoongArch: selftests: Add FPU test case
+Date: Tue, 16 Jun 2026 10:26:13 +0800
+Message-Id: <20260616022615.2141072-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260615082154.42144-3-cui.tao@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDx6+CGszBqX7WnAA--.57395S3
+X-CM-TRANSID:qMiowJAxXcJItDBqz7WnAA--.54020S2
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3XFy7Gw1UGry5ur1ktr17CFX_yoWfJr18pr
-	yUAwsYga95Wr97A343Z3yDCr15Zw4kK3WIva13uFWFyFnrXFyUKr93GrykZ3W8Wa95GF4F
-	gFyrArsF9FyUt3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-	xVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYSoJU
-	UUUU=
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
+
+Here add FPU test case and verify FPU register get and set APIs, the
+FPU width supports 64/128/256 bits. It is important for VM migration.
+---
+v2 ... v3:
+  1. Remove __vm_has_feature() and use __kvm_has_device_attr() directly
+     when checking LSX/LASX feature in patch 2.
+
+v1 ... v2:
+  1. Replace hardcode value with CSR_EUEN_XXX when enable FPU access.
+  2. Add attribute __aligned(64) with kvm_fpureg variable with better FPU
+     save and restore.
+  3. Add clobber $f0 register with inline assemble language with
+     fld.d/vld/xvld instruction.
+  4. Add fallthrough between UCALL_DONE and UCALL_SYNC switch case
+     sentences.
+  5. Remove sync_global_from_guest() between vcpu_fpu_get() ioctl test
+     case, since the buffer is not modified with such instructions
+     fld.d/vld/xvld.
+  6. Modify FPU register with random value rather than plus 0x10, and
+     random() is replaced with value 0x10.
+---
+Bibo Mao (2):
+  KVM: LoongArch: selftests: Enable LASX feature by auto detect method
+  KVM: LoongArch: selftests: Add FPU test case
+
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../kvm/include/loongarch/processor.h         |  18 +++
+ .../selftests/kvm/lib/loongarch/processor.c   |  12 +-
+ .../selftests/kvm/loongarch/fpu_test.c        | 138 ++++++++++++++++++
+ 4 files changed, 168 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kvm/loongarch/fpu_test.c
 
 
-
-On 2026/6/15 下午4:21, Tao Cui wrote:
-> From: Tao Cui <cuitao@kylinos.cn>
-> 
-> Add the guest-side implementation of PV TLB flush for LoongArch KVM
-> guests, complementing the host-side support added in the previous commit.
-> 
-> When running as a KVM guest, remote TLB flushes are optimized by
-> avoiding IPIs to preempted vCPUs:
-> 
-> - kvm_flush_tlb_mask() checks each target vCPU's steal-time
->    preempted flag. If a vCPU is preempted, it atomically sets
->    KVM_VCPU_FLUSH_TLB in the shared preempted byte via cmpxchg
->    and removes that CPU from the IPI mask.
-> - Only non-preempted vCPUs receive IPIs via on_each_cpu_mask().
-> - When the host schedules a deferred-flush vCPU back in, it
->    invalidates the VPID and flushes the TLB automatically.
-> 
-> All six SMP TLB flush functions (flush_tlb_all, flush_tlb_mm,
-> flush_tlb_range, flush_tlb_kernel_range, flush_tlb_page,
-> flush_tlb_one) are updated to use the PV path when the static
-> key pv_tlb_flush_key is enabled.
-> 
-> The feature is gated by KVM_FEATURE_PV_TLB_FLUSH and requires
-> KVM_FEATURE_STEAL_TIME (for the shared memory page). Per-CPU
-> cpumask buffers are allocated via arch_initcall.
-> 
-> Signed-off-by: Tao Cui <cuitao@kylinos.cn>
-> ---
->   arch/loongarch/include/asm/kvm_para.h |  8 ++++
->   arch/loongarch/include/asm/paravirt.h | 21 ++++++++++
->   arch/loongarch/kernel/paravirt.c      | 60 +++++++++++++++++++++++++++
->   arch/loongarch/kernel/smp.c           | 30 +++++++++++---
->   4 files changed, 113 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-> index 28e3fa3b4c0e..7956aeff2436 100644
-> --- a/arch/loongarch/include/asm/kvm_para.h
-> +++ b/arch/loongarch/include/asm/kvm_para.h
-> @@ -187,4 +187,12 @@ static inline bool kvm_check_and_clear_guest_paused(void)
->   	return false;
->   }
->   
-> +static inline bool kvm_pv_tlb_flush_supported(void)
-> +{
-> +	unsigned int feat = kvm_arch_para_features();
-> +
-> +	return (feat & (1U << KVM_FEATURE_PV_TLB_FLUSH)) &&
-> +	       (feat & (1U << KVM_FEATURE_STEAL_TIME));
-> +}
-> +
->   #endif /* _ASM_LOONGARCH_KVM_PARA_H */
-> diff --git a/arch/loongarch/include/asm/paravirt.h b/arch/loongarch/include/asm/paravirt.h
-> index acae1c5e5f88..6ce62b555a5d 100644
-> --- a/arch/loongarch/include/asm/paravirt.h
-> +++ b/arch/loongarch/include/asm/paravirt.h
-> @@ -5,15 +5,26 @@
->   #ifdef CONFIG_PARAVIRT
->   
->   #include <linux/jump_label.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/smp.h>
->   
->   DECLARE_STATIC_KEY_FALSE(virt_preempt_key);
->   DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> +DECLARE_STATIC_KEY_FALSE(pv_tlb_flush_key);
->   DECLARE_PER_CPU(struct kvm_steal_time, steal_time);
->   
->   int __init pv_ipi_init(void);
->   int __init pv_time_init(void);
->   int __init pv_spinlock_init(void);
->   
-> +void kvm_flush_tlb_mask(const struct cpumask *cpumask,
-> +			smp_call_func_t func, void *info);
-> +
-> +static inline bool pv_tlb_flush_enabled(void)
-> +{
-> +	return static_branch_unlikely(&pv_tlb_flush_key);
-> +}
-> +
->   #else
->   
->   static inline int pv_ipi_init(void)
-> @@ -31,5 +42,15 @@ static inline int pv_spinlock_init(void)
->   	return 0;
->   }
->   
-> +static inline bool pv_tlb_flush_enabled(void)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline void kvm_flush_tlb_mask(const struct cpumask *cpumask,
-> +				       smp_call_func_t func, void *info)
-> +{
-> +}
-> +
->   #endif // CONFIG_PARAVIRT
->   #endif
-> diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-> index 10821cce554c..eab84c9b94f6 100644
-> --- a/arch/loongarch/kernel/paravirt.c
-> +++ b/arch/loongarch/kernel/paravirt.c
-> @@ -12,7 +12,9 @@
->   static int has_steal_clock;
->   DEFINE_STATIC_KEY_FALSE(virt_preempt_key);
->   DEFINE_STATIC_KEY_FALSE(virt_spin_lock_key);
-> +DEFINE_STATIC_KEY_FALSE(pv_tlb_flush_key);
->   DEFINE_PER_CPU(struct kvm_steal_time, steal_time) __aligned(64);
-> +static DEFINE_PER_CPU(cpumask_var_t, __pv_cpu_mask);
->   
->   static bool steal_acc = true;
->   
-> @@ -208,6 +210,64 @@ int __init pv_ipi_init(void)
->   	return 0;
->   }
->   
-> +#ifdef CONFIG_SMP
-> +void kvm_flush_tlb_mask(const struct cpumask *cpumask,
-> +			       smp_call_func_t func, void *info)
-> +{
-> +	int cpu;
-> +	struct kvm_steal_time *src;
-> +	struct cpumask *flushmask;
-> +
-> +	preempt_disable();
-> +	flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
-> +	cpumask_copy(flushmask, cpumask);
-> +
-> +	/*
-> +	 * We have to call flush only on online vCPUs. And
-> +	 * queue flush_on_enter for pre-empted vCPUs
-> +	 */
-> +	for_each_cpu(cpu, flushmask) {
-> +		u32 *ptr, old, new;
-> +
-> +		src = &per_cpu(steal_time, cpu);
-> +		ptr = (u32 *)&src->preempted;
-> +		old = READ_ONCE(*ptr);
-> +		if (!((u8)old & KVM_VCPU_PREEMPTED))
-> +			continue;
-> +
-> +		new = old | KVM_VCPU_FLUSH_TLB;
-> +		if (try_cmpxchg(ptr, &old, new))
-> +			__cpumask_clear_cpu(cpu, flushmask);
-> +	}
-> +
-> +	on_each_cpu_mask(flushmask, func, info, 1);
-> +	preempt_enable();
-> +}
-FYI, another PV TLB flush method in arch/x86/hyperv/mmu.c on hyperV 
-which is complicated and fine-gained.
-
-Regards
-Bibo Mao
-> +
-> +static int __init pv_tlb_flush_init(void)
-> +{
-> +	int cpu;
-> +
-> +	if (!kvm_pv_tlb_flush_supported())
-> +		return 0;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		if (!zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
-> +					    GFP_KERNEL, cpu_to_node(cpu))) {
-> +			while (--cpu >= 0)
-> +				free_cpumask_var(*per_cpu_ptr(&__pv_cpu_mask, cpu));
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	static_branch_enable(&pv_tlb_flush_key);
-> +	pr_info("KVM setup pv remote TLB flush\n");
-> +
-> +	return 0;
-> +}
-> +arch_initcall(pv_tlb_flush_init);
-> +#endif
-> +
->   static int pv_enable_steal_time(void)
->   {
->   	int cpu = smp_processor_id();
-> diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-> index 50922610758b..bb3451b057ed 100644
-> --- a/arch/loongarch/kernel/smp.c
-> +++ b/arch/loongarch/kernel/smp.c
-> @@ -727,7 +727,10 @@ static void flush_tlb_all_ipi(void *info)
->   
->   void flush_tlb_all(void)
->   {
-> -	on_each_cpu(flush_tlb_all_ipi, NULL, 1);
-> +	if (pv_tlb_flush_enabled())
-> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_all_ipi, NULL);
-> +	else
-> +		on_each_cpu(flush_tlb_all_ipi, NULL, 1);
->   }
->   
->   static void flush_tlb_mm_ipi(void *mm)
-> @@ -743,7 +746,10 @@ void flush_tlb_mm(struct mm_struct *mm)
->   	preempt_disable();
->   
->   	if ((atomic_read(&mm->mm_users) != 1) || (current->mm != mm)) {
-> -		on_each_cpu_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm, 1);
-> +		if (pv_tlb_flush_enabled())
-> +			kvm_flush_tlb_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm);
-> +		else
-> +			on_each_cpu_mask(mm_cpumask(mm), flush_tlb_mm_ipi, mm, 1);
->   	} else {
->   		unsigned int cpu;
->   
-> @@ -782,7 +788,10 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start, unsigned l
->   			.addr2 = end,
->   		};
->   
-> -		on_each_cpu_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd, 1);
-> +		if (pv_tlb_flush_enabled())
-> +			kvm_flush_tlb_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd);
-> +		else
-> +			on_each_cpu_mask(mm_cpumask(mm), flush_tlb_range_ipi, &fd, 1);
->   	} else {
->   		unsigned int cpu;
->   
-> @@ -809,7 +818,10 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
->   		.addr2 = end,
->   	};
->   
-> -	on_each_cpu(flush_tlb_kernel_range_ipi, &fd, 1);
-> +	if (pv_tlb_flush_enabled())
-> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_kernel_range_ipi, &fd);
-> +	else
-> +		on_each_cpu(flush_tlb_kernel_range_ipi, &fd, 1);
->   }
->   
->   static void flush_tlb_page_ipi(void *info)
-> @@ -828,7 +840,10 @@ void flush_tlb_page(struct vm_area_struct *vma, unsigned long page)
->   			.addr1 = page,
->   		};
->   
-> -		on_each_cpu_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd, 1);
-> +		if (pv_tlb_flush_enabled())
-> +			kvm_flush_tlb_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd);
-> +		else
-> +			on_each_cpu_mask(mm_cpumask(vma->vm_mm), flush_tlb_page_ipi, &fd, 1);
->   	} else {
->   		unsigned int cpu;
->   
-> @@ -851,6 +866,9 @@ static void flush_tlb_one_ipi(void *info)
->   
->   void flush_tlb_one(unsigned long vaddr)
->   {
-> -	on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
-> +	if (pv_tlb_flush_enabled())
-> +		kvm_flush_tlb_mask(cpu_online_mask, flush_tlb_one_ipi, (void *)vaddr);
-> +	else
-> +		on_each_cpu(flush_tlb_one_ipi, (void *)vaddr, 1);
->   }
->   EXPORT_SYMBOL(flush_tlb_one);
-> 
+base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
+-- 
+2.39.3
 
