@@ -1,112 +1,80 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CBB43CEC7
-	for <loongarch@lists.linux.dev>; Tue, 16 Jun 2026 11:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6FE286405;
+	Tue, 16 Jun 2026 13:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781610961; cv=none; b=RMCzRTM5DnqNr6xct2EA0CmDO5dJeN8mSVYcRiE1LJOdMSH8W0uCCQumFKMe8o+n5ERSnwqgReIG3mIsvGQ7WLa5m/sB+zrLIXiH1mTbI4RKguL5niqYCCGk9/yGpseJC/L8BPEI33vBvhZAP9QAgpDD/F49xUoI8N4tHg/gpvM=
+	t=1781615989; cv=none; b=SRG6fxdWJ+yUjUq0BtJHf5rHWWUayuxjWrC7enEElNYQ96ckHVkwUpNH63cYGBQHdb6nIdrBluOWuoADNw3oF5xx4QpFROSnm1eCu+mHy0foFU/AhlBH+1DFhRDE3ptvAQcEapl6tsHJDy3N9+8wsJEGssMzx5ATTulX4R79OP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781610961; c=relaxed/simple;
-	bh=BpRbJ5znnoU0fhvdLYYwC2yPIVWOkM9HRRK1iMMfG6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J8B3ZhXTiH5bLMSTaC1h67rfOzih9+6gA6n4xXOO1ZQJlKbO6IGyF/XIbbs49HNWNGmL6TS2dsi/EVWncE7Y5nY6WHqPovM7a6Nzztyhpdp10JA7lj1bpmoFRM2Mzc0wOUhW16XOuOAbzaTUZHSmOqCrIE7ZdwC0Hs5e6VE8ju0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.155])
-	by gateway (Coremail) with SMTP id _____8DxrcDLOTFqDr4UAA--.30447S3;
-	Tue, 16 Jun 2026 19:55:55 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.155])
-	by front1 (Coremail) with SMTP id qMiowJDxzsLFOTFqCC2oAA--.57378S2;
-	Tue, 16 Jun 2026 19:55:51 +0800 (CST)
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-To: Binbin Zhou <zhoubb.aaron@gmail.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Lee Jones <lee@kernel.org>,
-	Corey Minyard <minyard@acm.org>,
-	Chong Qiao <qiaochong@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	jeffbai@aosc.io,
-	kexybiscuit@aosc.io,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] mfd: ls2kbmc: Fix iomem pointer handling in video mode parsing
-Date: Tue, 16 Jun 2026 19:55:30 +0800
-Message-ID: <20260616115530.4012675-1-zhoubinbin@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1781615989; c=relaxed/simple;
+	bh=7BHLCNepqc86m9p9uN+bQNkI4gdWOhDsVrKycNmA9QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YHy5PD5rUtRgPVLhrWW67sS2Rndqiib5/DoOoJ4ZuYdX9DWrJS3EUDpUA6RDQq6ZaYTOEk0QHc6myewN9Ds2xFHSvN7izsIhfEWuKo9nQHKstJkTQg1zpxJACqpr8lKoQYIEtNY/arp2WuffMe9d7qMnAfFDY41vCp0LtcVzlE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrAOnaBp; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrAOnaBp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6153A1F000E9;
+	Tue, 16 Jun 2026 13:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781615988;
+	bh=UMpsaENAnANEo2om+T4ZM6gO+4JEBCjIegzEiINmZ4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YrAOnaBpoR6jYRjXZTX7H39Gh/AawHXatxd4H8F3x/SULCMUpdYoA+3mg1MApkAEp
+	 3eCVfRaDjy8iPAXdlHPYG/6TylYvKuw4BxXjG/c6GbcDELnvzpWDCXD8d2GJdHBVla
+	 x3xYRN6wDXYotkoA5IEOolpzfw1s0Iwr52axO3iWqR6FPNo+WWNuUsCrkGMMDgL0BJ
+	 srEGJ1EoJkhOD2q4ajoUuhE1d4QYXCYD+HGwj0L5p4t/jyZOSFI2RhnGnGzaVzzRRz
+	 lUeuUsajp83OCBL6/yjzaWt3QQxg7bh+ym2LrVTvdDghVoU37WA91X7s71n9t6VGMZ
+	 GZS+q/6Wavk7g==
+Date: Tue, 16 Jun 2026 08:19:45 -0500
+From: Rob Herring <robh@kernel.org>
+To: Sang-Heon Jeon <ekffu200098@gmail.com>
+Cc: Saravana Kannan <saravanak@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	devicetree@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH 1/3] of/fdt: fix misleading elfcorehdr reservation
+ success message
+Message-ID: <20260616131945.GA2236977-robh@kernel.org>
+References: <20260614161503.2219681-1-ekffu200098@gmail.com>
+ <20260614161503.2219681-2-ekffu200098@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJDxzsLFOTFqCC2oAA--.57378S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/1tbiAQEACGow5eMGfgADsv
-X-Coremail-Antispam: 1Uk129KBj93XoW7trWfurWxJFykJr4UCw47WrX_yoW8AFW5pa
-	9agayayr4YyrZ2qas7Jr4UuFyFg3W8tayjgrWxZwnxZrn0k3yUC34FvFZIqF9xGFyvkFy5
-	trn8JFyxua45ZFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxU2MKZDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260614161503.2219681-2-ekffu200098@gmail.com>
 
-Use pointers annotated with the __iomem marker for all iomem map calls,
-and creates a local copy of the mapped IO memory for future access in
-the code. memcpy_fromio() and memcpy_toio() are used to read/write data
-from/to mapped IO memory
+On Mon, Jun 15, 2026 at 01:15:01AM +0900, Sang-Heon Jeon wrote:
+> fdt_reserve_elfcorehdr() does not check the return value of
+> memblock_reserve(), so a success message is falsely printed when the
+> reservation fails.
+> 
+> Check the return value and warn on failure instead.
+> 
+> Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+> ---
+>  drivers/of/fdt.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 26f66046cc32..d985c07d7c5c 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -479,7 +479,10 @@ static void __init fdt_reserve_elfcorehdr(void)
+>  		return;
+>  	}
+>  
+> -	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> +	if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
+> +		pr_warn("Failed to reserve memory for elfcorehdr\n");
 
-Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@intel.com/
-Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
----
- drivers/mfd/ls2k-bmc-core.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+I would think memblock_reserve() should always succeed and if not it 
+should print a message rather than having every caller print a message.
 
-diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-index 408056bfb2fe..c40b1a7c4ea4 100644
---- a/drivers/mfd/ls2k-bmc-core.c
-+++ b/drivers/mfd/ls2k-bmc-core.c
-@@ -427,14 +427,21 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *ddata)
-  */
- static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_platform_data *pd)
- {
--	char *mode;
-+	void *buf __free(kfree) = NULL;
-+	void __iomem *base;
- 	int depth, ret;
-+	char *mode;
- 
- 	/* The last 16M of PCI BAR0 is used to store the resolution string. */
--	mode = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
--	if (!mode)
-+	base = devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + SZ_16M, SZ_16M);
-+	if (!base)
-+		return -ENOMEM;
-+
-+	buf = kmalloc(SZ_16M, GFP_KERNEL);
-+	if (!buf)
- 		return -ENOMEM;
- 
-+	mode = (char *)buf;
- 	/* The resolution field starts with the flag "video=". */
- 	if (!strncmp(mode, "video=", 6))
- 		mode = mode + 6;
-
-base-commit: b07f7904e0523170856876e4412be852377d492a
--- 
-2.52.0
-
+Rob
