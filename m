@@ -1,149 +1,96 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640943542F6;
-	Wed, 17 Jun 2026 07:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63BA1CAA68;
+	Wed, 17 Jun 2026 12:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781682597; cv=none; b=kuGrj9LUfRxLO3PXVXW7Hbmalomo/u4o3iURLxZycQsF3b8qGnJD94Uku3oj6dGgaHV2bwHkvLEUYVnPOWmv2tyIrNNbyVCkuI1CZ5ltMlhJdlItn906IPQMaCJuAaOx9hHvDy3H5vCjWBOglSqGgy/k+/TkERIiJtfJycNv//w=
+	t=1781700129; cv=none; b=KD5Iye3XJNVDDHr5xdDpjhpT+RY16oaSlBr8GTHMZeDYOCX31ySDxF1niCe2kFcxxokG4N3Ky6UUvwtj5OefrpvRdzNurE3WHGcOKNRsrLJqZKgtkWA+oFCorgve90/CowcgnQF8JTq4dHdQHVbeW+0ffPFWzN+XidsUdxwgwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781682597; c=relaxed/simple;
-	bh=DRHuHHOgXubk8Y/CUORpqlqZzU1jLk88krXJ/gZe+d4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p4rV0uNQposNxXSpR8xhhq617oA5sznxSTiQGcHqiWuhPSm0EpROcbFZM5t+w8nzANGGDgBx9ED/XjiuibQrcAvxCTvZqCmSF1RcdhAtHUe1ueiD9FXHZIDCq0u94KF3p08DKDLHjqq27ixq9zaJbksDhBrM8sxXBmdQRzx64K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8DxRelXUTJq3A4VAA--.48840S3;
-	Wed, 17 Jun 2026 15:48:39 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowJAxHMJVUTJqoAupAA--.58693S4;
-	Wed, 17 Jun 2026 15:48:38 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
-	Saket Dumbre <saket.dumbre@intel.com>,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	lixianglai@loongson.cn,
-	bibo.mao@gmail.com
-Subject: [PATCH 6/8] ACPI: LoongArch: Add iovt device entry table scanning
-Date: Wed, 17 Jun 2026 15:48:27 +0800
-Message-Id: <20260617074829.2396638-7-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20260617074829.2396638-1-maobibo@loongson.cn>
-References: <20260617074829.2396638-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1781700129; c=relaxed/simple;
+	bh=sv9bDDMyUOTluObut285uOPrMWsldCYsk9y2aD3AE+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HkBMVBwxtn4HuUBUOqcweDvrDlMK0dSq/UjGb3tZF16rGwiCG9l/JzxqwvOoIdFu4Y44Qtb7LU+kWlckLmAM8bMqSnhILHMzy2Lmj7Btr+wB6bXZpnp97GhK+v4PvS4iH+xxF9aS6Xa3l9RxveaoJ6C7dyw1lbxzKE0G3Pjhjxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Im0bG8Am; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Im0bG8Am"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643E41F000E9;
+	Wed, 17 Jun 2026 12:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781700128;
+	bh=shMcTxpz7Iae4CMErv9/x2nY1BGPOVWbdpSfFAc09vY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Im0bG8AmD3bgsJUqZdYGdopEe5rvENwOqhRGA6LfcbikFOn2YUPQXBJWxsK3aAa3F
+	 IKOG49MBRGBJ1Mar6LZ2Kju1FxOKtyMrE//+MnE4N9/Z71fGW3gauigkbzrv2V1kZP
+	 1FNp162R2Z9QvBsI+njynVaaI0fNfgYS5ai3uG8OmNg5itH6o2+k7segaCwH+SbOb5
+	 zOcIdHYuAFv7ORTp8+4nDfybUyv7DTPv3xm7a9kUQ+vj1V5p2XZfw7CYh7IqwWcWUs
+	 ypezZIGEaKxUJ1MkpzhGlNdEe4jZuo9Q/Bc1arqIHR5rd7H/I68vBRL6fPgiqclkJT
+	 0u72NIrlwde9g==
+Date: Wed, 17 Jun 2026 14:41:54 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Vincent Mailhol <mailhol@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>, 
+	linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>, 
+	linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	linuxppc-dev@lists.ozlabs.org, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	linux-riscv@lists.infradead.org, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	linux-s390@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
+ omittable "root=" cmdline option
+Message-ID: <20260617-irritation-rollen-wirst-7d636cbfec92@brauner>
+References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJAxHMJVUTJqoAupAA--.58693S4
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
 
-Iovt device entry table are device entry lists which are managed by
-IOMMU device, each IOMMU device has its ownd device entry table.
+On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
+> DPS [1] defines GPT partition type UUIDs for OS partitions and
+> attributes that control whether such partitions should be
+> automatically discovered. The specification states that:
+> 
+>   The OS can discover and mount the necessary file systems with a
+>   non-existent or incomplete /etc/fstab file and without the root=
+>   kernel command line option.
+> 
+> DPS is already implemented in systemd-gpt-auto-generator [2], which,
+> when embedded in an initrd, indeed allows automatic detection of the
+> root filesystem through its partition type UUID.
+> 
+> This series adds this discovery feature directly into the kernel so
+> that people who are not using systemd or not using an initrd can still
+> benefit from it. The implementation follows the same model as
+> systemd-gpt-auto-generator:
 
-Here add iovt device entry table scanning function in function
-iovt_add_iommu().
+I happen to co-maintain the DPS. It is userspace policy and complex
+userspace policy at that and does not belong into the kernel.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- drivers/acpi/loongarch/iovt.c | 53 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
+This also implements a really tiny portion of the spec. It deals with a
+lot more complex concepts such as automatic partitioning during
+installation, verity, LUKS, containers. This is really not intended for
+the kernel at all. I mean, it's great that this spec is being used but I
+do not want this in the kernel just for the sake of auto-discovery.
 
-diff --git a/drivers/acpi/loongarch/iovt.c b/drivers/acpi/loongarch/iovt.c
-index 47d2ce20e3f5..7deedb8219b2 100644
---- a/drivers/acpi/loongarch/iovt.c
-+++ b/drivers/acpi/loongarch/iovt.c
-@@ -4,6 +4,12 @@
- #include <linux/pci.h>
- #include "init.h"
- 
-+struct iovt_device_entry {
-+	struct list_head list;
-+	int start_devid;
-+	int end_devid;
-+};
-+
- struct iovt_fwnode {
- 	struct list_head list;
- 	struct fwnode_handle *fwnode;
-@@ -11,6 +17,7 @@ struct iovt_fwnode {
- 	int segment;
- 	int devid;
- 	int nid;
-+	struct list_head ep_list;
- };
- 
- /* Root pointer to the mapped IOVT table */
-@@ -72,7 +79,10 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
- {
- 	struct iovt_fwnode *np;
- 	struct fwnode_handle *fwnode;
--	int ret;
-+	struct acpi_iovt_device_entry *ep;
-+	struct iovt_device_entry *entry;
-+	int i, ret, start_devid;
-+	bool is_start = false;
- 
- 	np = kzalloc_obj(struct iovt_fwnode, GFP_ATOMIC);
- 	if (WARN_ON(!np))
-@@ -102,6 +112,47 @@ static int __init iovt_add_iommu(struct acpi_iovt_iommu *iommu)
- 		np->fwnode = fwnode;
- 	}
- 
-+	if (np->flag & ACPI_IOVT_MAGAGE_BY_SEGMENT)
-+		goto skip;
-+
-+	INIT_LIST_HEAD(&np->ep_list);
-+	ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, iommu, iommu->device_entry_offset);
-+	for (i = 0; i < iommu->device_entry_num; i++) {
-+		switch (ep->type) {
-+		case ACPI_IOVT_DEVICE_ENTRY_START:
-+			is_start = true;
-+			start_devid = ep->device_id;
-+			break;
-+		case ACPI_IOVT_DEVICE_ENTRY_END:
-+			if (!is_start)
-+				break;
-+
-+			entry = kzalloc_obj(struct iovt_device_entry, GFP_ATOMIC);
-+			if (!entry)
-+				return -ENOMEM;
-+
-+			entry->start_devid = start_devid;
-+			entry->end_devid = ep->device_id;
-+			list_add_tail(&entry->list, &np->ep_list);
-+			is_start = false;
-+			break;
-+		case ACPI_IOVT_DEVICE_ENTRY_SINGLE:
-+			entry = kzalloc_obj(struct iovt_device_entry, GFP_ATOMIC);
-+			if (!entry)
-+				return -ENOMEM;
-+
-+			entry->start_devid = ep->device_id;
-+			entry->end_devid = ep->device_id;
-+			list_add_tail(&entry->list, &np->ep_list);
-+			is_start = false;
-+			break;
-+		default:
-+			break;
-+		}
-+		ep = ACPI_ADD_PTR(struct acpi_iovt_device_entry, ep, ep->length);
-+	}
-+
-+skip:
- 	spin_lock(&iovt_fwnode_lock);
- 	list_add_tail(&np->list, &iovt_fwnode_list);
- 	spin_unlock(&iovt_fwnode_lock);
--- 
-2.39.3
-
+The DPS is completely generic and can be implemented by tooling other
+than systemd (util-linux implements it and so does refind iirc). I think
+not wanting to use or build alternative userspace tooling for this is a
+really weak argument for pushing this into the kernel.
