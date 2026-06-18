@@ -1,166 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17243B71D1;
-	Wed, 17 Jun 2026 20:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3641DF980
+	for <loongarch@lists.linux.dev>; Thu, 18 Jun 2026 00:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781729776; cv=none; b=TKEycs9WspM1qFGxQ8Dww2ckoKTtC9xcIME80Zw3UYefeMNqHdi0a3yyUul8vdVoF8zEx0kwLt4Ouejlj1MfslwLsJ7Ae5viB0ESkK+o/AoQMx71qUfBkHhCC725tpOYcEZ9Gt3+24g9hh7O+p3lThUYZxEVvjpPUGUjdWg+UsY=
+	t=1781743348; cv=none; b=GOtDPTXA2E5vZ3K0qwmltEqBKic+596fr5E88e2qnAdG6UB3EkZwW0cG1H4u7Kml6dVrOsJMvjNZnBgGMya+rZ1jgXEdotslF6fxt76kCuCanMB316xUsLTpPtZVpxDybPrROL0fUlzg2DsnsRj1Ex8JnzIDPSsEq1uT/1BZyV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781729776; c=relaxed/simple;
-	bh=GUdIrNEWqIai7CCIg0CZjwnmvqMUo8fANAFyMnvTmo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z7LXtRr6leDLz5XmsJ16ng7HWs9/lsxWNNfEmrSne0JF31TatkOT2qb+A+Fvyw0kvJHI47lmoMqIn2WMCy+uPVwbahhGs9zkdbkF+Smy7HMKwN7vp9f9ICQcSslViLYbFzjGzuU+TQoifr+a5UX7R1aOyIjJQ/1TAaBvN9QieuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+JgIxG8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781743348; c=relaxed/simple;
+	bh=LrpFbr4vBbChDMmR0Imvu3H50KZqhmElh6040CgIB2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e6oLxzlkyiIh1LQUWyRc9GVQBK4HktJbaMqLn/anyzKqaf1ipwI5at4Jmh1jJUP19J/puVGjEsYRO3RGF4fcYc/1M2e92FLrH8llOuu5CphWtFPTCZ1xR0P43czbD9avVZfxg3E5J2YF5tbCHq7PPnKvl6DRL1MDFneuNAnQb3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V9/MYriX; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+JgIxG8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093671F000E9;
-	Wed, 17 Jun 2026 20:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781729774;
-	bh=A1dicipAfT1NcihzDB7nuXRVGuGocmFyEPV9zA3acUw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=C+JgIxG8rwASDaFmpA6Zh29sHsXjVxomoiRH3OhPa889meEEW3u5FNT+dBtjSW/hw
-	 D6sNaxoXruVEdJRs2TCBxuP28EcnIXSc5VAkaakRwBoxec3mO22QwXPEm1o8g68Ynd
-	 8T8I2IgLVzXJB6nmke5oXdYS2A9totgcEQtmZtRlGO3HONE15zQQ/88bLpmm74eGQi
-	 DWjnBfcuUlDaTgEjHaexYiGs3ETfD/34gnzgEP8hZqrBB2wyy4XzJUiGfxVPSxD1H2
-	 c194yBAZig9SafF4ckJpaak40F8YXNFSE9LJCbVAb2fsNOLIPxGH8mSNw03gXnsF9u
-	 w4PgjTaHOYmEg==
-Message-ID: <01cc3ac9-c89e-491c-86ed-4c4c90809075@kernel.org>
-Date: Wed, 17 Jun 2026 22:56:00 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V9/MYriX"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3F62640E01D8;
+	Thu, 18 Jun 2026 00:42:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mnKae5aeMqOk; Thu, 18 Jun 2026 00:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1781743333; bh=IBHrtVXmPuRWQ7uBhktFTKcch7hAhRcfTxyn7mn7O4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V9/MYriXywS0hZanHFwwPwHTRJ7pTlal7SUCalcLgv7ntOufAz/28XqFVfI6uKyYI
+	 QOLvxM7ASQ95LAHtjtKQQSW5hRFWqG+Fvm3quBJrqpCYacEpBCfDudcD5TpKxYnvZo
+	 jNW2AguPUE125tOpIJbJKnbPZfOdFjNmXWtJtg63elp1Q41omZP/GgbbwBjA8nAloc
+	 PfGz8IIVcrme12XEvNdKQ2rv/GJag/unT3FlgXHVllVf0VJmtzm0IKtqLKpvRH2wud
+	 N8ImwjHLKfpq4lXe+fjyh782pmKmP87f26PxEGVjPzocmND+8U8oZGxvs6gpq3HXsZ
+	 RRdY/zh3823W1VfUzlz9XQHpfyKj3SugSAPLBNINUSipf0eUCFnf/ASD0chGphO2wd
+	 33XUogK9sPdnD3sSmcICjzmOBuNMU2bfQmSk8K3+YNoAcCC5j9/trjk57f1Z1l85fX
+	 sbPK3s36Q4+q3Rp8+7TUHJs/vXdR8gu2di4PbQr9EcAMuKEYesCn08iPjUwCw7VNCD
+	 XvHeVcsZsQz0RLmL5/C1IdWqyRSi8anYr36UHtEYZc5Ih+oxGgNdo8Nwmeh6BJ3ht2
+	 tqkphneIWVsqRJSVfAq1ynFwyWUfOHhtgqB+aDCAQiIvDR9Ri+cXHuftygbTEx6Z0P
+	 o2dtfp1sQOOLVA3iM8/qRkMM=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::3a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E63DE40E015B;
+	Thu, 18 Jun 2026 00:41:08 +0000 (UTC)
+Date: Wed, 17 Jun 2026 17:41:06 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+	bhe@redhat.com, rppt@kernel.org, pasha.tatashin@soleen.com,
+	pratyush@kernel.org, ruirui.yang@linux.dev, rdunlap@infradead.org,
+	peterz@infradead.org, feng.tang@linux.alibaba.com,
+	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
+	kuba@kernel.org, lirongqing@baidu.com, ebiggers@kernel.org,
+	paulmck@kernel.org, leitao@debian.org, coxu@redhat.com,
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, osandov@fb.com,
+	jbohac@suse.cz, cfsworks@gmail.com, tangyouling@kylinos.cn,
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com,
+	adityag@linux.ibm.com, liaoyuanhong@vivo.com, seanjc@google.com,
+	fuqiang.wang@easystack.cn, ardb@kernel.org, chenjiahao16@huawei.com,
+	guoren@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v16 05/10] x86: kexec_file: Use crash_prepare_headers()
+ helper to simplify code
+Message-ID: <20260618004106.GCajM-oofpxU2jDsy0@fat_crate.local>
+References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+ <20260608073459.3119290-6-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/19] init: discoverable root partitions, a.k.a. an
- omittable "root=" cmdline option
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Richard Henderson <richard.henderson@linaro.org>,
- Matt Turner <mattst88@gmail.com>, Magnus Lindholm <linmag7@gmail.com>,
- linux-alpha@vger.kernel.org, Vineet Gupta <vgupta@kernel.org>,
- linux-snps-arc@lists.infradead.org, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- loongarch@lists.linux.dev, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org
-References: <20260615-discoverable-root_partitions-v1-0-39c78fac42e2@kernel.org>
- <20260617-irritation-rollen-wirst-7d636cbfec92@brauner>
-From: Vincent Mailhol <mailhol@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=mailhol@kernel.org; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
- fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
- F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
- 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
- YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
- dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
- zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20260617-irritation-rollen-wirst-7d636cbfec92@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260608073459.3119290-6-ruanjinjie@huawei.com>
 
-On 17/06/2026 at 14:41, Christian Brauner wrote:
-> On Mon, Jun 15, 2026 at 06:08:56PM +0200, Vincent Mailhol wrote:
->> DPS [1] defines GPT partition type UUIDs for OS partitions and
->> attributes that control whether such partitions should be
->> automatically discovered. The specification states that:
->>
->>   The OS can discover and mount the necessary file systems with a
->>   non-existent or incomplete /etc/fstab file and without the root=
->>   kernel command line option.
->>
->> DPS is already implemented in systemd-gpt-auto-generator [2], which,
->> when embedded in an initrd, indeed allows automatic detection of the
->> root filesystem through its partition type UUID.
->>
->> This series adds this discovery feature directly into the kernel so
->> that people who are not using systemd or not using an initrd can still
->> benefit from it. The implementation follows the same model as
->> systemd-gpt-auto-generator:
+On Mon, Jun 08, 2026 at 03:34:54PM +0800, Jinjie Ruan wrote:
+
+> Subject: Re: [PATCH v16 05/10] x86: kexec_file: Use crash_prepare_headers() helper to simplify code
+
+Use proper subject prefix: "x86/crash: ..."
+
+> Use the newly introduced crash_prepare_headers() function to replace
+> the existing prepare_elf_headers(), allocate cmem and exclude crash kernel
+> memory in the crash core, which reduce code duplication.
 > 
-> I happen to co-maintain the DPS. It is userspace policy and complex
-> userspace policy at that and does not belong into the kernel.
+> Only the following three architecture functions need to be implemented:
+> - arch_get_system_nr_ranges(). Call get_nr_ram_ranges_callback()
+>   to pre-count the max number of memory ranges.
 > 
-> This also implements a really tiny portion of the spec. It deals with a
-> lot more complex concepts such as automatic partitioning during
-> installation, verity, LUKS, containers. This is really not intended for
-> the kernel at all. I mean, it's great that this spec is being used but I
-> do not want this in the kernel just for the sake of auto-discovery.
+> - arch_crash_populate_cmem(). Use prepare_elf64_ram_headers_callback()
+>   to collect the memory ranges and fills them into cmem.
+> 
+> - arch_crash_exclude_ranges(). Exclude the low 1M for x86.
+> 
+> By the way, remove the unused "nr_mem_ranges" in
 
-The implementation of a tiny portion is voluntary. If I can draw a
-parallel, it would be the same as saying that the root= cmdline option
-is a tiny portion of what an fstab can do.
+s/By the way/While at it/
 
-Yes it does not manage the LUKS, containers and so on, the same way it
-is not possible to directly boot those things directly from the kernel.
+> arch_crash_handle_hotplug_event().
+> 
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/x86/kernel/crash.c | 89 +++++------------------------------------
+>  1 file changed, 11 insertions(+), 78 deletions(-)
 
-So, I don't think this conflicts with the actual userland
-implementations, the same way you can add root= to your command line and
-still have an initrd next to it.
+With those nitpicks above addressed:
 
-I did not intend to write this as a replacement but just as a complement
-to fill the gap of kernel with no initrd.
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-> The DPS is completely generic and can be implemented by tooling other
-> than systemd (util-linux implements it and so does refind iirc). I think
-> not wanting to use or build alternative userspace tooling for this is a
-> really weak argument for pushing this into the kernel.
+-- 
+Regards/Gruss,
+    Boris.
 
-Well, I might explain to you where I come from. Time to time, I mess up
-my configuration. When this issue is in a userland config file (e.g. bad
-fstab), the recovery is always easy.
-
-But when I mess up the bootloader firmware configuration (e.g. grub,
-u-boot, edk2), the fix is always painful. I have to fight with a shell
-with which I am not familiar with to figure out what the correct
-configuration is.
-
-And an initrd would help but:
-
- - it is still one more file to look for pass as a parameter
- - on some machine I do not have one anyway
-
-I think it would have been very neet to have a method to boot a kernel
-with zero config (understand here: no cmdline, no initrd) and I find out
-that DPS could achieve that if just a tiny part of it were implemented
-in the kernel.
-
-For example, in edk2, I would be able to just browse the disk from the
-"Boot from file" menu and select a kernel. Currently it panics because
-no configuration is attached. With DPS, we could have it boot linux from
-that menu. All in a graphical interface, with just up/down arrows and
-one enter keypress.
-
-And this is my motivation. This non LUKS root read-only part of the DPS
-is the only piece which makes sense for me in the kernel. Not that I
-don't *want* to implement it in userland, but just that it doesn't
-achieve what would be helpful to me (and I guess others).
-
-I thought I wouldn't be the only one in the world to see value in that
-this is why I posted it.
-
-
-Yours sincerely,
-Vincent Mailhol
-
+https://people.kernel.org/tglx/notes-about-netiquette
