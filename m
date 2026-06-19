@@ -1,124 +1,229 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402FEC15C
-	for <loongarch@lists.linux.dev>; Fri, 19 Jun 2026 07:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28FB3B38B4;
+	Fri, 19 Jun 2026 16:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781853136; cv=none; b=rrVVU3mr2L5rvbqYhUsrnC+bWAY2ZreXygv0IrjEyypYuwcEE/G+i15Unb3koHfh/TGCVFNL0gfLamj2rusDAJBKaL0X36xyKjTlMG/EMEdUu0DbdCQw+J3X7AFultxXkz7Fs2M3Og+Zk+dJhOb8Kn+kNnUInsf/urjqXHZpcko=
+	t=1781886284; cv=none; b=n6rp9pkN1/JyXL4WtuWTA39+vQT2CYti7BSU6ocUmKhPGUIEpn/R2M9D5gIHY3tiuGGY4ChQZZIP3IvHCHnZJYfHaEgaS8Zlfa8er0QJtjHvJ7ymX4uv7s6hE+xjZyKqTPSn/jYpNw92RzT0rMb9iOM7De1eRX6hMcXVyp+4jxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781853136; c=relaxed/simple;
-	bh=DiekofQVYvCukyRjCvyVe6tIF6nIGIFhK5rCaEa3vmA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nj0OFL+L26+cPuinUK9rHV5OfpsEjo7Z0I7XC49Kv9Yj3J5XzpC8FHin+rC3H9cBynmx0Sd/Zwqn7mLwfVTMTydMKYSdLz1XgD/EEeHfcnZUiw8v7noTeN5diHt66FDDkaWB60YfkrDmsvgR5TFq4n7Wk8LcSaRa1hKqPb4KH6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXrEm8QR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781886284; c=relaxed/simple;
+	bh=k6vYDnp3cAk9toU5lORwP/UtW3DK+KmT5s016A+17+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+CXbrpyEqE0x7Y6QuFfhLp8zpVBOlm981Wc0nwcQFgB0m9zs8kyrK7N1hxl02qlVK+SGSEXN9UkKIM9vGrDstQEoRLLnmvq8DDvs5zfDzkF8STia/xqXnAM/ifvJnF+mHxxBtbAdEri25zlanLnV1GV0jKWSxd5LYhIZ+lGzM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fR+gLC+b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXrEm8QR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81951F01558
-	for <loongarch@lists.linux.dev>; Fri, 19 Jun 2026 07:12:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fR+gLC+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF2A1F000E9;
+	Fri, 19 Jun 2026 16:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781853134;
-	bh=UtU9BCkDjxUDqCG46JeB6s5YGK8j023LidHGsEj6sJM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=iXrEm8QRCs6Qkh7dU6VCtwlm6/9mLNENNpDVexb6zmKTJ8YBes/z2hUfkW/seGmYJ
-	 mXQJ3xEXFyXy396COefD1IpqkKg5cnRzufDFxCL6n9RxaljGVLFWz/DA01ElKLMyJc
-	 mp57Wpgn3tMjNfHWbI8IXUJRrAjqsvma9UsEDiUBBbTCxof9dKG+nprBucL+0tVg46
-	 oaHwx77njp7KqsiXgcCTp60xAQkzkn6ynKVqcArVRwG/Y9Xk4uLasAEOpjvwaOP9JT
-	 olnw9055JOjFi88oYx+TyPAmV+bjlC4BzLYc9Pp//dtmJRJORYXggCiftspHXtCyWr
-	 /on1f8VQfPYkA==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-69765eae45dso37863a12.3
-        for <loongarch@lists.linux.dev>; Fri, 19 Jun 2026 00:12:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/qRJrBCn8DEDIvs3DK5IUvzjwg3VDKwdpYIABY1BIWHYI6Ye5UGE7p9iwgsBg85lqK0JMG2GaFlN0=@lists.linux.dev
-X-Gm-Message-State: AOJu0YypkINeoIcTPU+UlM+3AtwbbLNF/tG6hNbvGrZHirCVnjp8MJW2
-	8Rtxh3x3xxFX2q+pAOjImgi/05MJyOcx+hglTjxaMsr/ANsODoxwXINd8e5TGMuiHVOUGz2h4y+
-	BOjvpF+1Wn0HIwuDSLg/sMLrE8hnEe9A=
-X-Received: by 2002:a05:6402:50d4:b0:687:2181:90ab with SMTP id
- 4fb4d7f45d1cf-6970f5d21d3mr1259859a12.14.1781853133555; Fri, 19 Jun 2026
- 00:12:13 -0700 (PDT)
+	s=k20260515; t=1781886283;
+	bh=uuMShKa/k8xBx2/gbNaT3GpbM0w/ZyqrWY+OL/X3LGc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=fR+gLC+b1oYYX+8dFc0eL7AKIlzC9/UFeKcLuQU5BQPT89qvDZaZK+hjmXJHyTtU5
+	 7E5LCnz8rDLAH25vLsVnSgMXIuiuacXNT5Pw4I99XHjXo/yBIw75b6zVmbLeQEW3OH
+	 H4y34raaQZTQmQFGuuE4hqwXHmpfUwTcLyd2vOcnU9UfvH0kIk/QyuhnttMhTmJ6X4
+	 Bii6i4+Z8YGsgT6i1GYRKPK9CrOPvHgmZeWpxmSjg7gER6zoTHwvpo+ionWY8loor0
+	 Ii1u2I7AfGD+de4r/WtvPzedV85hIljzI1JPSKNtXdfvPnYFjB316+rfqsrgunHj+T
+	 AuEUBXcq0kJLQ==
+Message-ID: <38387630-513e-470c-9c19-b5f7391f1fc3@kernel.org>
+Date: Fri, 19 Jun 2026 18:24:36 +0200
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260616115530.4012675-1-zhoubinbin@loongson.cn>
-In-Reply-To: <20260616115530.4012675-1-zhoubinbin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 19 Jun 2026 15:12:05 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6yHuEkhrozoN23T8fTDPpS9gkHwsk1sW8g2=UpnbQE-w@mail.gmail.com>
-X-Gm-Features: AVVi8CfDGBomIlR_8aUDwCWUm2KnTjvI8c7UIE3hs15GA5GVX74CtY7A21Rv0hw
-Message-ID: <CAAhV-H6yHuEkhrozoN23T8fTDPpS9gkHwsk1sW8g2=UpnbQE-w@mail.gmail.com>
-Subject: Re: [PATCH] mfd: ls2kbmc: Fix iomem pointer handling in video mode parsing
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Binbin Zhou <zhoubb.aaron@gmail.com>, Huacai Chen <chenhuacai@loongson.cn>, 
-	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, Chong Qiao <qiaochong@loongson.cn>, 
-	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	jeffbai@aosc.io, kexybiscuit@aosc.io, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] can: Add Loongson CAN-FD controller driver
+To: Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen
+ <chenhuacai@loongson.cn>, Marc Kleine-Budde <mkl@pengutronix.de>,
+ Bingxiong Li <libingxiong@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+ Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+ linux-can@vger.kernel.org, jeffbai@aosc.io
+References: <cover.1780908445.git.zhoubinbin@loongson.cn>
+ <ed069249061d105d72d2115b8a05216a60cebffb.1780908445.git.zhoubinbin@loongson.cn>
+ <c9598f85-5b17-4d38-855e-c3840a01452f@kernel.org>
+ <CAMpQs4J5vq8U-_1BanyFcn6PYhnws=vuE3Yq1hvSBbLZJC8aEQ@mail.gmail.com>
+From: Vincent Mailhol <mailhol@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=mailhol@kernel.org; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ JFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbEBrZXJuZWwub3JnPsKZBBMWCgBBFiEE7Y9wBXTm
+ fyDldOjiq1/riG27mcIFAmdfB/kCGwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcC
+ F4AACgkQq1/riG27mcKBHgEAygbvORJOfMHGlq5lQhZkDnaUXbpZhxirxkAHwTypHr4A/joI
+ 2wLjgTCm5I2Z3zB8hqJu+OeFPXZFWGTuk0e2wT4JzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrb
+ YZzu0JG5w8gxE6EtQe6LmxKMqP6EyR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDl
+ dOjiq1/riG27mcIFAmceMvMCGwwFCQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8V
+ zsZwr/S44HCzcz5+jkxnVVQ5LZ4BANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <CAMpQs4J5vq8U-_1BanyFcn6PYhnws=vuE3Yq1hvSBbLZJC8aEQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi, Binbin,
+On 18/06/2026 at 11:49, Binbin Zhou wrote:
+> Hi Vincent:
+> 
+> Thanks for your detailed review and sorry for the late reply.
+> 
+> On Tue, Jun 9, 2026 at 1:43 AM Vincent Mailhol <mailhol@kernel.org> wrote:
+>>
+>> On 08/06/2026 at 10:49, Binbin Zhou wrote:
 
-On Tue, Jun 16, 2026 at 7:56=E2=80=AFPM Binbin Zhou <zhoubinbin@loongson.cn=
-> wrote:
->
-> Use pointers annotated with the __iomem marker for all iomem map calls,
-> and creates a local copy of the mapped IO memory for future access in
-> the code. memcpy_fromio() and memcpy_toio() are used to read/write data
-> from/to mapped IO memory
->
-> Fixes: 0d64f6d1ffe9 ("mfd: ls2kbmc: Introduce Loongson-2K BMC core driver=
-")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202603021730.Yy3QXYTw-lkp@i=
-ntel.com/
-> Closes: https://lore.kernel.org/oe-kbuild-all/202606120639.WG6eb8VU-lkp@i=
-ntel.com/
-> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->  drivers/mfd/ls2k-bmc-core.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mfd/ls2k-bmc-core.c b/drivers/mfd/ls2k-bmc-core.c
-> index 408056bfb2fe..c40b1a7c4ea4 100644
-> --- a/drivers/mfd/ls2k-bmc-core.c
-> +++ b/drivers/mfd/ls2k-bmc-core.c
-> @@ -427,14 +427,21 @@ static int ls2k_bmc_init(struct ls2k_bmc_ddata *dda=
-ta)
->   */
->  static int ls2k_bmc_parse_mode(struct pci_dev *pdev, struct simplefb_pla=
-tform_data *pd)
->  {
-> -       char *mode;
-> +       void *buf __free(kfree) =3D NULL;
-> +       void __iomem *base;
->         int depth, ret;
-> +       char *mode;
->
->         /* The last 16M of PCI BAR0 is used to store the resolution strin=
-g. */
-> -       mode =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M, SZ_16M);
-> -       if (!mode)
-> +       base =3D devm_ioremap(&pdev->dev, pci_resource_start(pdev, 0) + S=
-Z_16M, SZ_16M);
-> +       if (!base)
-> +               return -ENOMEM;
-> +
-> +       buf =3D kmalloc(SZ_16M, GFP_KERNEL);
-> +       if (!buf)
->                 return -ENOMEM;
->
-> +       mode =3D (char *)buf;
-I think you miss "memcpy_fromio(buf, base, SZ_16M)" here.
+(...)
 
-Huacai
+>>> +static void loongson_canfd_set_mode(struct loongson_canfd_priv *priv,
+>>> +                                 const struct can_ctrlmode *ctrlmode)
+>>
+>> Rename this to loongson_canfd_set_ctrlmode(). Otherwhise there is a
+>> risk of confusion with loongson_canfd_do_set_mode()
+> 
+> Actually, this function sets the `LOONGSON_CANFD_MODE` and
+> `LOONGSON_CANFD_CONF` registers based on `priv->can.ctrlmode`.
+> 
+> How about rewriting it as follows:
+> 
+> static void loongson_canfd_set_confmode(struct loongson_canfd_priv *priv)
+> {
+>         u32 ctrlmode = priv->can.ctrlmode;
+> .....
+> }
 
->         /* The resolution field starts with the flag "video=3D". */
->         if (!strncmp(mode, "video=3D", 6))
->                 mode =3D mode + 6;
->
-> base-commit: b07f7904e0523170856876e4412be852377d492a
-> --
-> 2.52.0
->
+That also works. My point was to avoid the confusion with
+loongson_canfd_do_set_mode(). As long as there is enough disambiguation,
+it is OK for me.
+
+(...)
+
+>>> +     /* Write Data payload */
+>>> +     if (!(cf->can_id & CAN_RTR_FLAG)) {
+>>> +             for (unsigned int i = 0; i < cf->len; i += LOONGSON_CANFD_DW_BYTE) {
+>>> +                     regmap_write(priv->regmap,
+>>> +                                  LOONGSON_CANFD_TX_DATA_1 + LOONGSON_CANFD_FRAME_DB_1 + i,
+>>> +                                  le32_to_cpu(*(__le32 *)(cf->data + i)));
+>>                                                   ^^^^^^^^^^
+>> This cast is just wrong. What if the code is run on a big endian
+>> machine?
+>>
+>> To begin with, here, you are writing to your registers. So it should
+>> be the other way around: cpu_to_le32(). And to add to it, if you need
+>> endian conversion, populate regmap_config.val_format_endian.
+>>
+>> Also, why do you need some endian conversion only here and not on the
+>> other registers?
+> 
+> Sorry, this is the old test code—I forgot to update it. Just use `u32`:
+> 
+>  for (i = 0; i < len; i += LOONGSON_CANFD_DW_BYTE)
+>                 regmap_read(priv->regmap, LOONGSON_CANFD_RX_DATA, (u32
+> *)(cf->data + i));
+
+OK. Note that I don't mind if you want to keep the declaration of i in
+the for loop:
+
+  for (unsigned int i = 0; i < len; i += LOONGSON_CANFD_DW_BYTE)
+  	/* ... */
+
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return true;
+>>> +}
+
+(...)
+
+>>> +static irqreturn_t loongson_canfd_interrupt(int irq, void *dev_id)
+>>> +{
+>>> +     struct net_device *ndev = (struct net_device *)dev_id;
+>>> +     struct loongson_canfd_priv *priv = netdev_priv(ndev);
+>>> +     u32 isr, imask;
+>>> +
+>>> +     for (unsigned int irq_loops = 0; irq_loops < 10000; irq_loops++) {
+>>> +             /* Get the interrupt status */
+>>> +             regmap_read(priv->regmap, LOONGSON_CANFD_INT_STAT, &isr);
+>>> +             if (!isr)
+>>> +                     return irq_loops ? IRQ_HANDLED : IRQ_NONE;
+>>
+>>                         if (irq_loops)
+>>                                 return IRQ_HANDLED;
+>>                         else
+>>                                 return IRQ_NONE;
+>>
+> Emm...
+> Is the ternary operator here more concise than `if-else`?
+> 
+>                 if (!isr) {
+>                         if (irq_loops)
+>                                 return IRQ_HANDLED;
+>                         else
+>                                 return IRQ_NONE;
+>                 }
+
+Unless you are getting an actual checkpatch.pl warning here, if I record
+correctly, the curly brackets can be ommitted here:
+
+		if (!isr)
+			if (irq_loops)
+				return IRQ_HANDLED;
+			else
+				return IRQ_NONE;
+
+> vs
+> 
+>                if (!isr)
+>                        return irq_loops ? IRQ_HANDLED : IRQ_NONE;
+
+Yes, it is more consise, but is it more readable?
+
+Actually, you might say that which one is the most readable is a
+subjective topic and you would be right.
+
+But it is the prefered style here. The indentation of the if/else makes
+it more visual. And when you review thousands of line of code, it starts
+to make a difference.
+
+And I this is not my personnal opinion. For example, see this message
+from Greg:
+
+  https://lore.kernel.org/all/20250311150130.7a875e63@bahia/
+
+So, even if this is an arguable case, let this be an if/else.
+
+(...)
+
+>>> +static const struct net_device_ops loongson_canfd_netdev_ops = {
+>>> +     .ndo_open       = loongson_canfd_open,
+>>> +     .ndo_stop       = loongson_canfd_close,
+>>> +     .ndo_start_xmit = loongson_canfd_start_xmit,
+>>> +};
+>>
+>> Also add a struct ethtool_ops and populate
+>> ethtool_ops.get_ts_info. Something like:
+>>
+>>         static const struct ethtool_ops es58x_ethtool_ops = {
+>>                 .get_ts_info = can_ethtool_op_get_ts_info_hwts,
+>>         };
+>>
+>> Refer to what the other CAN drivers with hardware timestamps are
+>> doing.
+> 
+> Regarding the hardware timestamp, could this be submitted as a
+> separate feature patch? I need some time to resolve the related
+> issues.
+> Could we proceed as follows for now:
+> 
+> static const struct ethtool_ops loongson_canfd_ethtool_ops = {
+>         .get_ts_info = ethtool_op_get_ts_info,
+> };
+
+OK, but make sure to remove all your local hacks. We will not accept the
+use of the reserved fields in sturct canfd_frame for that.
+
+Note that once you undertsand the timestamp framework, I would expect
+the patch to be rather tiny.
+
+
+
+Yours sincerely,
+Vincent Mailhol
+
