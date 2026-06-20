@@ -1,220 +1,186 @@
-Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7313359A66
-	for <loongarch@lists.linux.dev>; Fri, 19 Jun 2026 22:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781908001; cv=none; b=IEeOgghs+pyqMYfJhNY39aBk2eJ4PUYXxjC9czCQFN9h7w17sjj0NG8KDdedmCyVjq5Fi8RWzs31Sc2rbnNRgeBa7ZDeORbwwZvceWHDnQqjBUM4MaypL8dsSwAyvh09Wi+jaCN/hXqKx87RYiqGvF2H4/6bL2wcU19Y/x3IPok=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781908001; c=relaxed/simple;
-	bh=XyvanEnYWRj6xigSJ0RoRW7KPRp6fOwGjITq7jHTgd8=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XE1rrzxftMOtWM9A0nbVSD5h0UTX6JOMaCM9bDSCOQKsOAC0yjcTopkafSHXmis1iMtOj5lE7W6yJnlJ+vVLfGjEy2HjvTI/Ijw7EuUw0y1PP8CKY8J+Q5o8Cgkh5z+HbU49jzzR11ta4kNjUUUIgBfFoOEekjgJCQn+kmwSDwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.ch; spf=pass smtp.mailfrom=protonmail.ch; dkim=pass (2048-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b=OakLRu02; arc=none smtp.client-ip=79.135.106.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D02128373
+	for <loongarch@lists.linux.dev>; Sat, 20 Jun 2026 23:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781999351; cv=pass; b=Rp5OjuPyHynNRoN6AhZ6AuroLHLvDRgt8eD2IGbmg5l1wMPqejfwosjR/atW3QfQyZYGD6UTvwlL/wovA3opdZ+KiTb6UT2/QfQoJAaNXx+VlLepGTj40EFfbX+tbI2kWQaaxvs8pWI1bUtP9plVFy9ATBzrrQ4GjPdshaNyNrY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781999351; c=relaxed/simple;
+	bh=LVrIryE2VF1sDSS46HMWn0Px6aDg+06V1VeyZcyjwRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tRBt0IqFkAoAebQoCm8bj8cPAhnf6nRSOx8PH4h8l0A3TRYvCY18LDovWD03MsRhL44t4P/go5FQy1JvUzf0DP6Cw/B6vd5wDsTGU3+JEjtHreMh1WCyNY0sxLskXfN+pepEc+w49pe1fjcaBtIKpIQpM2usmfZZJxtwtizHf8M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=suJNqeH+; arc=pass smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="OakLRu02"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
-	s=protonmail3; t=1781907991; x=1782167191;
-	bh=XyvanEnYWRj6xigSJ0RoRW7KPRp6fOwGjITq7jHTgd8=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=OakLRu02evvry4+8yfaQ5cAO6ds7XheNbghFx7A3jNUqGndXtMunpLRz74gBfSBOy
-	 OXYeZ6ZVJVMRt/q48GaCrVGSeKDTmIEryt6vHJMvcDRNbQiRdaqCvBbqkbv+Eq+rH9
-	 rrZmXTywoAWZ/Q70bAlF2oW+CUPnQUXYOVxD45qDjd0bBsJodansvIm378s9wBeJNn
-	 Z2y+ub+uCt0IzrVoktFBF26ipyXG0xc1O/KsPZl2N69TDVszIQb7DefyyqxWny7Tw/
-	 GcoqBKD5MxEv6pUan108FwM+IClFgqn3+sV8oVbxqdYUjvCsOmCH2OfgOPhK1pch+v
-	 H5v+0ZIJB54ug==
-Date: Fri, 19 Jun 2026 22:26:24 +0000
-To: "899f2dec-e8b9-44f4-ab8d-001e160a2aed@roeck-us.net" <899f2dec-e8b9-44f4-ab8d-001e160a2aed@roeck-us.net>
-From: ANDREW <andreasx0@protonmail.ch>
-Cc: Nathan Chancellor <nathan@kernel.org>, Huacai Chen <chenhuacai@loongson.cn>, "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang <jiaxun.yang@flygoat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH V2] LoongArch: Align ACPI structures if ARCH_STRICT_ALIGN enabled
-Message-ID: <mQ5O_oFTbB5bqRCi_D2zBN0vB4GSzMMsY24HqedJ4MFanfuARw-KUK2EhcKLWO6MiVIjk29WWmG-OHE2QpSXO1h4BJ-VDcheRl8j8GViLRI=@protonmail.ch>
-Feedback-ID: 51583129:user:proton
-X-Pm-Message-ID: da933af4109c600de9a1cb261a2e02bdd1b8afd9
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="suJNqeH+"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51765331535so371321cf.1
+        for <loongarch@lists.linux.dev>; Sat, 20 Jun 2026 16:49:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781999349; cv=none;
+        d=google.com; s=arc-20260327;
+        b=oBGPxIuSlEihdLV91r0lanlcs6gTFsXtHU/eo33FO7+UVr4cLy1kxepN4B3QErGPUP
+         CmqSjOjxoYPwCxEIVZlmMv/2T/koUFS3O7ZXdDOpb+uHlvmkPXjI9YeJ1H8Vfhl7inbt
+         j1GtOLKcBiFrCuEDJR+qY4+ITnVZhMOt+isxCx1bDWpDkifQ1Gd8wSrdT3CgPurr1UtE
+         tJM8zV5Fs2cH+Px7Pt8K8LnW9FIVS+nJK+XdFj+WfMznsr8VQ2GcK7LNTyswKnzeF9iO
+         pPV1+IXJygjYF/HDdSfafKfWP1J3oydxVQ9syIW0cgz19xriSXpmDDSmz8YG7fO8Y0+d
+         imcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LVrIryE2VF1sDSS46HMWn0Px6aDg+06V1VeyZcyjwRw=;
+        fh=xA4BMwXIbpOAcyqppGyXZwSVC8zcl2/othMJ6e/pYHo=;
+        b=IGCP+vzeJxBDT5P1vjuUTcdhMFWdfYy9F5s23cxHMPDMBPr9eYUpaM4vkxvzn4sZU4
+         vV0lt6IbliuLvYtHQxsLIg6yPmnD06e3dy7c02FtpKI76bpOoowjkWKPR31fBjsF+qqM
+         Ve6/0655KpAT4YxbZ/x7AeNxRpyILLmBeNHJUT8OVq2dQO+h1f6ZVBasijJ0rHjFNlRX
+         s7ubEJCuSOxDmH47V4TTkXEfXMw/UQYIfWeTLeGsccr2+MG8tzTm96YNuM0Ng/8h457K
+         YAcE8TAStADCoYQq1VXLWsMKWPhv5YA8DkkpWIpysrs/alhzzg8JFoDC9tGT9iP1kcIU
+         RpEA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781999349; x=1782604149; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=LVrIryE2VF1sDSS46HMWn0Px6aDg+06V1VeyZcyjwRw=;
+        b=suJNqeH+srsuMQvprLjDKtiVP0S4rwqS/4HRhz8L7GJGQOEHQJeMMHY1sA+Oj7Vdp4
+         xZts77nW8ZQZq4lD1PNEp1L9vAYNqpEwsYFfzAKVJZjbWxmh5OSeE7M0io/hnuICatu4
+         mbMZ9EbwEaJiOMAlURpdaX4NlD0x7R9Z41quqEdtjp4ym8mTdvvbl6cUBenjay7Lp4c4
+         uPVZ3n9zDC1hAZNE4I9P+w3SWEfLOB0IvW6hNOcvuJ+axZn3NMKcQd97wzcHGvj3Q4bU
+         2F7qDGbSCCQEtK6HkDoF30tNU9PVBXpD3/mI/8f7jJpGccav7tO5SsciuKbk8Pvl1xZr
+         qBxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781999349; x=1782604149;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=LVrIryE2VF1sDSS46HMWn0Px6aDg+06V1VeyZcyjwRw=;
+        b=CMqQEpyj9NXZIa+sOnRzsmzBtlr+f16PukG1BcGFZcPVjYoEtwFSud7O/bkPpmw5J7
+         AKGYQMxHp57fvW1SoWnd19mDezudk2Hir0CfbtE+DuZmZNsvp6drxgjUG7e9Qk2/0Ml/
+         tI53gzbYaxngQVKk7m3l+YU1NloFLCyzI38gdyB8tcRXeKK/rbnYD9JktGo68RN6+glS
+         g+FrxVdBIh1c1xeIqzXiNZxDeBU5NDiZeY6l5LekA4AatYQv7d0XxA2tIYoyuINlGfac
+         sR7hmWGAEU9XtiGe7rloaYAIkbyIDN4xQ611yczsT0VV/hcfhndAaO23chF0+DZczPHS
+         Og5Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/uI54rHeimW+QZOLVbITF8yyLnAV6i6ZfdpDB+6lMikk3BXgTf+a90o+J+iXyDaoBBBvnqRmc/VMI=@lists.linux.dev
+X-Gm-Message-State: AOJu0YyR0u6tVjytfiPhGL74txxWg8Cx7wsmVx3xKkNFBUWqrmyEuxRn
+	RCzkGe/bQ0nKqPYvTO85k8a6SwiU5WJaBwT/4oeQy12yfBYP3XcveaAxY94FET+Smwpiy6GQ1OH
+	Bx4LhhVw2hnalBFrLLs9KJJg1aVOBZBUM4w/7XYjP
+X-Gm-Gg: AfdE7ckoVzGvEc8owT6QQo7KQhv3m37+r5bQhyoLQihyG6TInt2oriftiTUJnIciwRa
+	3pAwN3gxNP1pNp8TjImhJwMjKB+ROzFQvujnCRsmMcYonPxA+irjKbUN/QwrrIjqsptMZYw4Twf
+	NbRSrlbAG+clyRziqIkjHYw0N5Gh2Zt5syOuUDGgSA9l87Q/gyQ79gDMX3s17DY4lBuPe8s2Cbb
+	EeLqnYKkEwWqsdmSNHnJu4WxV0sGxGHCymIkZtQET/j1LIq5StltFfadAUJngQ9XFgReZu0Yp5H
+	EUom3w==
+X-Received: by 2002:a05:622a:580a:b0:516:4f62:85f1 with SMTP id
+ d75a77b69052e-519e4a744d4mr15890001cf.22.1781999348457; Sat, 20 Jun 2026
+ 16:49:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------9db49a0c11458cb18e870bd467cae4956a4f22ebfdf45785de2fc34d406fd605"; charset=utf-8
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------9db49a0c11458cb18e870bd467cae4956a4f22ebfdf45785de2fc34d406fd605
-Content-Type: multipart/mixed;boundary=---------------------23a964c72e85efeed05e27c46de823e9
-
------------------------23a964c72e85efeed05e27c46de823e9
-Content-Type: multipart/alternative;boundary=---------------------afabc21203141bdb62d749441a001f7f
-
------------------------afabc21203141bdb62d749441a001f7f
+References: <CAGsJ_4zqLfdWoTH9s7FFaqWWj0mESfikYgr7=GcV64qcuXrPxA@mail.gmail.com>
+ <CAJuCfpE0WQrB3zJp9qn3jvn5DthS=ttpX7gJJvyEhA_BJGrp5g@mail.gmail.com>
+ <CAGsJ_4zgeE3ebEJ+j7GJFzWVoVYHeiOn4dOoOsmWCLA6s=oECQ@mail.gmail.com>
+ <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
+ <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
+ <ag4h87CBd-gph9zX@casper.infradead.org> <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
+ <ag4kj84EcKqamdB-@casper.infradead.org> <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
+ <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
+ <ahB6QyHgYq8ksj65@lucifer> <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
+In-Reply-To: <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sat, 20 Jun 2026 16:48:57 -0700
+X-Gm-Features: AVVi8CdrqLszoGfh6nxxBjM6ZU4jlgAaXlfN0swetCJNc_4l9-uU6mX0T8CUJHo
+Message-ID: <CAJuCfpHTxaU4KdNmefU7C7cWZSLCFDLPdUrnqV6yzxzN+8RQ0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+To: Barry Song <baohua@kernel.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>, "David Hildenbrand (Arm)" <david@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, "Liam R. Howlett" <liam@infradead.org>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, vbabka@kernel.org, rppt@kernel.org, mhocko@suse.com, 
+	jack@suse.cz, pfalcato@suse.de, wanglian@kylinos.cn, chentao@kylinos.cn, 
+	lianux.mm@gmail.com, kunwu.chan@gmail.com, liyangouwen1@oppo.com, 
+	chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
+	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	Nanzhe Zhao <nzzhao@126.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;charset=utf-8
 
-voidacpi_tb_print_table_header(acpi_physical_address address,
-=C2=A0 struct acpi_table_header *header)
-{
-struct acpi_table_header local_header;
+On Fri, May 22, 2026 at 2:31=E2=80=AFPM Barry Song <baohua@kernel.org> wrot=
+e:
+>
+> >
+> > Again this is making me want to sit outside and sip on some lemonade an=
+d
+> > ice :)
+> >
+> > Yes - android processes are aggressively multi-threaded, sure of course=
+.
+> >
+> > The missing bit here is the forking - what, where, why, when?
+> >
+>
+> I really want to know the what, where, why, and when
+> as well. But since most applications are not
+> open-source, it is basically a black hole for anyone
+> other than the owners of those apps.
+>
+> Let me try to do more investigation to understand what
+> is going on, although it is really hard.
+> To be honest, I would rather the Android framework
+> completely prohibit apps from calling fork(), if
+> possible.
+>
+> > And then you say zygote is sometimes multi-threaded but sometimes
+> > single-threaded, which is adding a whole bunch of confusion on top of a=
+ll
+> > that.
+> >
+> > I don't find these stack trace dumps all that useful (though thanks of
+> > course for taking the time to gather them), I think we'd be better off =
+with
+> > specific data on forking, in some _concise_ _summarised_ form, ideally =
+with
+> > numbers.
+> >
+> > There's such a thing as too much information :))
+>
+> This trace shows PF I/O in one thread overlapping
+> with a fork() call in another thread.
+> But as I explained, I really do not know what kind of
+> user behavior is behind it.
+>
+> >
+> > Anyway, again, please let's see a new _RFC_ with the approach proposed =
+by
+> > Suren, with some _succinct_ data demonstrating _exactly_ what the probl=
+em
+> > is, so we can make some headway here.
+>
+> Okay, sure. Thanks for your patience.
 
-ssize_t ssrc_len =3D sizeof(ACPI_CAST_PTR(struct acpi_table_rsdp, header)-=
->signature);
-size_t src_len =3D (ssrc_len < 0) ? 0 : (size_t)ssrc_len;
-size_t src_length =3D (src_len < 8) ? src_len : 8;
-char rsdp_sig[src_length + 1];
-memcpy(rsdp_sig,
-=C2=A0 =C2=A0 =C2=A0 ACPI_CAST_PTR(struct acpi_table_rsdp, header)->signat=
-ure,
-=C2=A0 =C2=A0 =C2=A0 src_length);
-rsdp_sig[src_length] =3D '\0';
+Just checking in on the followup plans. IIUC the RFC mentioned will
+try to implement the solution we discussed at LSFMM: splitting
+VM_FAULT_RETRY into two flags - one for retrying under per-VMA locks
+and another one to fallback to mmap_lock.
 
-if (ACPI_COMPARE_NAMESEG(header->signature, ACPI_SIG_FACS)) {
+Barry, if you need any help or clarification, please do not hesitate
+to contact me.
+Thanks,
+Suren.
 
-/* FACS only has signature and length fields */
-
-ACPI_INFO(("%-4.4s 0x%8.8X%8.8X %06X",
-=C2=A0 header->signature, ACPI_FORMAT_UINT64(address),
-=C2=A0 header->length));
-} else if (ACPI_VALIDATE_RSDP_SIG(rsdp_sig)) {
-
-/* RSDP has no common fields */
-
-memcpy(local_header.oem_id,
-=C2=A0 =C2=A0 =C2=A0 ACPI_CAST_PTR(struct acpi_table_rsdp, header)->oem_id=
-,
-=C2=A0 =C2=A0 =C2=A0 ACPI_OEM_ID_SIZE);
-acpi_tb_fix_string(local_header.oem_id, ACPI_OEM_ID_SIZE);
-
-ACPI_INFO(("RSDP 0x%8.8X%8.8X %06X (v%.2d %-6.6s)",
-=C2=A0 ACPI_FORMAT_UINT64(address),
-=C2=A0 (ACPI_CAST_PTR(struct acpi_table_rsdp, header)->
-=C2=A0 =C2=A0revision >
-=C2=A0 =C2=A00) ? ACPI_CAST_PTR(struct acpi_table_rsdp,
-=C2=A0 =C2=A0 =C2=A0 header)->length : 20,
-=C2=A0 ACPI_CAST_PTR(struct acpi_table_rsdp,
-header)->revision,
-=C2=A0 local_header.oem_id));
-} else {
-/* Standard ACPI table with full common header */
-
-acpi_tb_cleanup_table_header(&local_header, header);
-
-ACPI_INFO(("%-4.4s 0x%8.8X%8.8X"
-=C2=A0 " %06X (v%.2d %-6.6s %-8.8s %08X %-4.4s %08X)",
-=C2=A0 local_header.signature, ACPI_FORMAT_UINT64(address),
-=C2=A0 local_header.length, local_header.revision,
-=C2=A0 local_header.oem_id, local_header.oem_table_id,
-=C2=A0 local_header.oem_revision,
-=C2=A0 local_header.asl_compiler_id,
-=C2=A0 local_header.asl_compiler_revision));
-}
-}
------------------------afabc21203141bdb62d749441a001f7f
-Content-Type: multipart/related;boundary=---------------------74c048a0ac71579043ac46ca88f4c8d9
-
------------------------74c048a0ac71579043ac46ca88f4c8d9
-Content-Type: text/html;charset=utf-8
-Content-Transfer-Encoding: base64
-
-PHNwYW4+PC9zcGFuPjxzcGFuPnZvaWQ8L3NwYW4+PGRpdj48c3Bhbj5hY3BpX3RiX3ByaW50X3Rh
-YmxlX2hlYWRlcihhY3BpX3BoeXNpY2FsX2FkZHJlc3MgYWRkcmVzcyw8L3NwYW4+PC9kaXY+PGRp
-dj48c3Bhbj4JCQkgJm5ic3A7IHN0cnVjdCBhY3BpX3RhYmxlX2hlYWRlciAqaGVhZGVyKTwvc3Bh
-bj48L2Rpdj48ZGl2PjxzcGFuPns8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4Jc3RydWN0IGFjcGlf
-dGFibGVfaGVhZGVyIGxvY2FsX2hlYWRlcjs8L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp
-dj48c3Bhbj4Jc3NpemVfdCBzc3JjX2xlbiA9IHNpemVvZihBQ1BJX0NBU1RfUFRSKHN0cnVjdCBh
-Y3BpX3RhYmxlX3JzZHAsIGhlYWRlciktJmd0O3NpZ25hdHVyZSk7PC9zcGFuPjwvZGl2PjxkaXY+
-PHNwYW4+CXNpemVfdCBzcmNfbGVuID0gKHNzcmNfbGVuICZsdDsgMCkgPyAwIDogKHNpemVfdClz
-c3JjX2xlbjs8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4Jc2l6ZV90IHNyY19sZW5ndGggPSAoc3Jj
-X2xlbiAmbHQ7IDgpID8gc3JjX2xlbiA6IDg7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CWNoYXIg
-cnNkcF9zaWdbc3JjX2xlbmd0aCArIDFdOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgltZW1jcHko
-cnNkcF9zaWcsPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CSAmbmJzcDsgJm5ic3A7ICZuYnNwOyBB
-Q1BJX0NBU1RfUFRSKHN0cnVjdCBhY3BpX3RhYmxlX3JzZHAsIGhlYWRlciktJmd0O3NpZ25hdHVy
-ZSw8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4JICZuYnNwOyAmbmJzcDsgJm5ic3A7IHNyY19sZW5n
-dGgpOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPglyc2RwX3NpZ1tzcmNfbGVuZ3RoXSA9ICdcMCc7
-PC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNwYW4+CWlmIChBQ1BJX0NPTVBBUkVf
-TkFNRVNFRyhoZWFkZXItJmd0O3NpZ25hdHVyZSwgQUNQSV9TSUdfRkFDUykpIHs8L3NwYW4+PC9k
-aXY+PGRpdj48YnI+PC9kaXY+PGRpdj48c3Bhbj4JCS8qIEZBQ1Mgb25seSBoYXMgc2lnbmF0dXJl
-IGFuZCBsZW5ndGggZmllbGRzICovPC9zcGFuPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHNw
-YW4+CQlBQ1BJX0lORk8oKCIlLTQuNHMgMHglOC44WCU4LjhYICUwNlgiLDwvc3Bhbj48L2Rpdj48
-ZGl2PjxzcGFuPgkJCSAmbmJzcDsgaGVhZGVyLSZndDtzaWduYXR1cmUsIEFDUElfRk9STUFUX1VJ
-TlQ2NChhZGRyZXNzKSw8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4JCQkgJm5ic3A7IGhlYWRlci0m
-Z3Q7bGVuZ3RoKSk7PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CX0gZWxzZSBpZiAoQUNQSV9WQUxJ
-REFURV9SU0RQX1NJRyhyc2RwX3NpZykpIHs8L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRp
-dj48c3Bhbj4JCS8qIFJTRFAgaGFzIG5vIGNvbW1vbiBmaWVsZHMgKi88L3NwYW4+PC9kaXY+PGRp
-dj48YnI+PC9kaXY+PGRpdj48c3Bhbj4JCW1lbWNweShsb2NhbF9oZWFkZXIub2VtX2lkLDwvc3Bh
-bj48L2Rpdj48ZGl2PjxzcGFuPgkJICZuYnNwOyAmbmJzcDsgJm5ic3A7IEFDUElfQ0FTVF9QVFIo
-c3RydWN0IGFjcGlfdGFibGVfcnNkcCwgaGVhZGVyKS0mZ3Q7b2VtX2lkLDwvc3Bhbj48L2Rpdj48
-ZGl2PjxzcGFuPgkJICZuYnNwOyAmbmJzcDsgJm5ic3A7IEFDUElfT0VNX0lEX1NJWkUpOzwvc3Bh
-bj48L2Rpdj48ZGl2PjxzcGFuPgkJYWNwaV90Yl9maXhfc3RyaW5nKGxvY2FsX2hlYWRlci5vZW1f
-aWQsIEFDUElfT0VNX0lEX1NJWkUpOzwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxz
-cGFuPgkJQUNQSV9JTkZPKCgiUlNEUCAweCU4LjhYJTguOFggJTA2WCAodiUuMmQgJS02LjZzKSIs
-PC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CQkJICZuYnNwOyBBQ1BJX0ZPUk1BVF9VSU5UNjQoYWRk
-cmVzcyksPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CQkJICZuYnNwOyAoQUNQSV9DQVNUX1BUUihz
-dHJ1Y3QgYWNwaV90YWJsZV9yc2RwLCBoZWFkZXIpLSZndDs8L3NwYW4+PC9kaXY+PGRpdj48c3Bh
-bj4JCQkgJm5ic3A7ICZuYnNwO3JldmlzaW9uICZndDs8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4J
-CQkgJm5ic3A7ICZuYnNwOzApID8gQUNQSV9DQVNUX1BUUihzdHJ1Y3QgYWNwaV90YWJsZV9yc2Rw
-LDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJCQkJICZuYnNwOyAmbmJzcDsgJm5ic3A7IGhlYWRl
-ciktJmd0O2xlbmd0aCA6IDIwLDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJCSAmbmJzcDsgQUNQ
-SV9DQVNUX1BUUihzdHJ1Y3QgYWNwaV90YWJsZV9yc2RwLDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFu
-PgkJCQkJIGhlYWRlciktJmd0O3JldmlzaW9uLDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJCSAm
-bmJzcDsgbG9jYWxfaGVhZGVyLm9lbV9pZCkpOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgl9IGVs
-c2Ugezwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJLyogU3RhbmRhcmQgQUNQSSB0YWJsZSB3aXRo
-IGZ1bGwgY29tbW9uIGhlYWRlciAqLzwvc3Bhbj48L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2Pjxz
-cGFuPgkJYWNwaV90Yl9jbGVhbnVwX3RhYmxlX2hlYWRlcigmYW1wO2xvY2FsX2hlYWRlciwgaGVh
-ZGVyKTs8L3NwYW4+PC9kaXY+PGRpdj48YnI+PC9kaXY+PGRpdj48c3Bhbj4JCUFDUElfSU5GTygo
-IiUtNC40cyAweCU4LjhYJTguOFgiPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CQkJICZuYnNwOyAi
-ICUwNlggKHYlLjJkICUtNi42cyAlLTguOHMgJTA4WCAlLTQuNHMgJTA4WCkiLDwvc3Bhbj48L2Rp
-dj48ZGl2PjxzcGFuPgkJCSAmbmJzcDsgbG9jYWxfaGVhZGVyLnNpZ25hdHVyZSwgQUNQSV9GT1JN
-QVRfVUlOVDY0KGFkZHJlc3MpLDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJCSAmbmJzcDsgbG9j
-YWxfaGVhZGVyLmxlbmd0aCwgbG9jYWxfaGVhZGVyLnJldmlzaW9uLDwvc3Bhbj48L2Rpdj48ZGl2
-PjxzcGFuPgkJCSAmbmJzcDsgbG9jYWxfaGVhZGVyLm9lbV9pZCwgbG9jYWxfaGVhZGVyLm9lbV90
-YWJsZV9pZCw8L3NwYW4+PC9kaXY+PGRpdj48c3Bhbj4JCQkgJm5ic3A7IGxvY2FsX2hlYWRlci5v
-ZW1fcmV2aXNpb24sPC9zcGFuPjwvZGl2PjxkaXY+PHNwYW4+CQkJICZuYnNwOyBsb2NhbF9oZWFk
-ZXIuYXNsX2NvbXBpbGVyX2lkLDwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFuPgkJCSAmbmJzcDsgbG9j
-YWxfaGVhZGVyLmFzbF9jb21waWxlcl9yZXZpc2lvbikpOzwvc3Bhbj48L2Rpdj48ZGl2PjxzcGFu
-Pgl9PC9zcGFuPjwvZGl2PjxzcGFuPn08L3NwYW4+PGRpdj48c3Bhbj48YnI+PC9zcGFuPjwvZGl2
-Pg==
------------------------74c048a0ac71579043ac46ca88f4c8d9--
------------------------afabc21203141bdb62d749441a001f7f--
------------------------23a964c72e85efeed05e27c46de823e9
-Content-Type: application/pgp-keys; filename="publickey - andreasx0@protonmail.ch - 0xBB6B52B1.asc"; name="publickey - andreasx0@protonmail.ch - 0xBB6B52B1.asc"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - andreasx0@protonmail.ch - 0xBB6B52B1.asc"; name="publickey - andreasx0@protonmail.ch - 0xBB6B52B1.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FYWlZVTRCWUpLd1lCQkFI
-YVJ3OEJBUWRBZkJlTUtsUDR6VHV4ZXRSU293Q2NlU0VBWGNSL0tkSlIKa1ppVEhDeFIwaVBOTVdG
-dVpISmxZWE40TUVCd2NtOTBiMjV0WVdsc0xtTm9JRHhoYm1SeVpXRnplREJBCmNISnZkRzl1YldG
-cGJDNWphRDdDd0JFRUV4WUtBSU1GZ21vbUZPQURDd2tIQ1JCYjJzSnRBV0xVWmtVVQpBQUFBQUFB
-Y0FDQnpZV3gwUUc1dmRHRjBhVzl1Y3k1dmNHVnVjR2R3YW5NdWIzSm5ZcTVEbDMwYTZocmQKUXZi
-OVA5S08rTzc5aExFZGFacUk2cXMyaStuSGVrY0RGUW9JQkJZQUFnRUNHUUVDbXdNQ0hnRVdJUVM3
-CmExS3hQNjhyMVNNUlRSVmIyc0p0QVdMVVpnQUEyaE1CQUlUbE1XeHFOQURxbGV5QXJTVnhVQUNk
-NXlTMwowdVUvMmppM3pQUjBQblpnQVFDNzVVSlVWMUpzVTFMZ3VIZHlWRzhjem5JaThveUY2NkUy
-ZW85WTJCWUIKQ2M0NEJHb21GT0FTQ2lzR0FRUUJsMVVCQlFFQkIwRHZtdzloOVJTaWwzaTZqQWdr
-eGVpbVNJNWc2YytrCjZaSG1RWWwrdEYzWGV3TUJDQWZDdmdRWUZnb0FjQVdDYWlZVTRBa1FXOXJD
-YlFGaTFHWkZGQUFBQUFBQQpIQUFnYzJGc2RFQnViM1JoZEdsdmJuTXViM0JsYm5CbmNHcHpMbTl5
-WnlFYytsQUN0UDVTbEhVaGxDSDgKelF6blh1N1NpQU5rSGZZTmxJdTQwNmxOQXBzTUZpRUV1MnRT
-c1Qrdks5VWpFVTBWVzlyQ2JRRmkxR1lBCkFNVUVBUURGWHk4aTB3bmNPQ3BObkJtUi9xcHBDdTFE
-RGdySmdmOCs0S3Zlem03dXBRRUEwRkpJanBYNQpiNEFuVzdrLzEvbHZBdWs2NldmaTdqSE9yTkJB
-SFNNN2J3az0KPUNQRGoKLS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQo=
------------------------23a964c72e85efeed05e27c46de823e9--
-
---------9db49a0c11458cb18e870bd467cae4956a4f22ebfdf45785de2fc34d406fd605
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-
-wroEARYKAG0Fgmo1wgYJEFvawm0BYtRmRRQAAAAAABwAIHNhbHRAbm90YXRp
-b25zLm9wZW5wZ3Bqcy5vcmf/P8XhGA/35FnZzXck7pRQEtJxoXki+jALBHtK
-1kgOLhYhBLtrUrE/ryvVIxFNFVvawm0BYtRmAACeUgD4nsOvQ8SUg4zPhYRA
-e+6q0duQRufWoMqE9fetHAO+dwD+NvpbHPra7dBI4bzrZMoD8F8o7EXDsZOU
-ClxV1iERSgY=
-=2QII
------END PGP SIGNATURE-----
-
-
---------9db49a0c11458cb18e870bd467cae4956a4f22ebfdf45785de2fc34d406fd605--
-
+>
+> >
+> > And now I'm off for a cornetto! :)
+>
+> Sounds good :) Enjoy your cornetto!
+>
+> Best Regards
+> Barry
