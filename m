@@ -1,546 +1,141 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AFF40D588
-	for <loongarch@lists.linux.dev>; Sun, 21 Jun 2026 00:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA77C40D565
+	for <loongarch@lists.linux.dev>; Sun, 21 Jun 2026 14:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782000772; cv=none; b=sLGbjcMcnW+e5uYXleZajf2E+aHRJ/c/Zjfp1X/ZcNVpOe9BFRv6jwF9J5Oy9JhpkpiHKSZcbLKgtVhtUUDHqRN7GvaWCaW3l2/REVb9aXpuMgH2wIzCNvXb4L3KUSfKGa8xHtMKROZaZ6EVa15feLrisliy0k/6EPxzOWkn5Rg=
+	t=1782053970; cv=none; b=pG0n9ik9lS2UBGtWTBUAZOjXFoXQdQs/u+0zRj0zRYCuNtAPDPZpG6UqrzGY0yotkX5k1ZQ/9NPeWN1g+Lx3TMAMlVYfZ+10ucLMaVkGN8j3rxp0BFqeREHkxhzVDyAwZLJjgAX6XzZcmWhWj11Aqx/oNRXgdj1rhLk/3mL/E04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782000772; c=relaxed/simple;
-	bh=5IwzZWaf23FzLvVE8Nanil1+aZX3RneHU70VQO1JGE8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=JXtp3f6D6GroEcu7I8mBPHi7Dmn6Ir13aH9q4+fluPytJwpEhifEMHY07hirvCccKEkrHJMnNUr5XpzURGy5tnTiP9p5J2c1nJFXjovsqDZvoCVhVFdmMsiY9IDIHDogcabJe9Gy0yFlq5BjrNtP7IGwgiKQ7eIpCNdAvbRPxfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rXDRbM/9; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782053970; c=relaxed/simple;
+	bh=RuNKA40OL/+LTTo4zbbxm45iDGgzdlqgcQEJsnWg4XQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=enwncoMxwNO23Yus9F0WyV7q2uL2Rwjj2G9Wy4LsQz63VqJg/1odPL4h2joytuk13xwOKZO2eo+nTpM+EX3jE9rYr1A50V50FWpwnFFazm3gC+0jDG8/fznDREtjFIVTVQTnDejCQvVezFOZZZR16vPU1Mka4/501uSgo/CtAJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWCmxjwn; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rXDRbM/9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWCmxjwn"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-37d46e0d246so587334a91.2
+        for <loongarch@lists.linux.dev>; Sun, 21 Jun 2026 07:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782053969; x=1782658769; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q9Iy1NRZrQdiv+3iSOUUb7XMLeE6HcnU1eSibV26qpo=;
+        b=jWCmxjwnZqfG4CDa03ULG+hm08PnlwJdNxRRhq4N2/IK7b4o1PZGyjeNCRicZ78JHz
+         jhBdch2NlwtMAnv5ABG9HAr/sk7/3w2PENRuj9NqHWKz8uEQcPvGK7MOX+y2jLv6kfqg
+         i4YpsprJ95wOkI5G4OaEKYnb4AdUP31YIgFGSxSiebRP0wNFhF6IYKIdSSQ8GrUYyjW6
+         SRX0Fd9VsrH7HnztO6RUI1jx5LokYP1Vn8b3Q/yXKJ01beESwoMMkiYfI8yFEaTHDNAk
+         9hEfIJnpfgCz8OpPHG9TpJhuJUNrauJk6/Z9yBY47KqJpGsnJOHe8ogdVyQs2cQ5jBvz
+         oW+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782053969; x=1782658769;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q9Iy1NRZrQdiv+3iSOUUb7XMLeE6HcnU1eSibV26qpo=;
+        b=MMAJW2l7+rt/OdKaRj2vcN3ms2abwSSZfNfN0tLSA5ZxB0a9HKH213vs7l5hLfcR9U
+         mGxDoVdezcQHmrjGvF2kMx6VqVPMnW1+Po1Zjtu0PA84zeFRbyp+EN2/Bu5/l36rwUmA
+         9+uMzd2KNf/dM6uOSKrJV6qq2PKNTtAryCrfsZ1o9rtiGwxgttna3POHjsViTlIRXG6M
+         HPd39rT0oCVY006b7J1IhGDe3wIc4VLUl12sT9QMq+tkfHYQckLXKUyJamGA5G8BhabW
+         LzbshG4ahOnDuB4yrD1JsizrcWA/4dcwxFDO//j66ZnaCdGZk1sxJGc48nzJH7ytrfCp
+         IGjA==
+X-Forwarded-Encrypted: i=1; AHgh+Rq9IWzpfhYyTYNjlPmRhxbPNdds6QXFEIxmUkSsqWWTfqMK99JAMh6vieqFWJ6m6mmcRHf6TjEwrz0=@lists.linux.dev
+X-Gm-Message-State: AOJu0YxM3QLfduUI7zfvsMHB7kKSad9De5IHCOncxXBJrX3ip0vn6RrJ
+	xyPXg+3r+SmAJjW+rsw71h1oyAtCsj11mCr9yDyNx4Q/nzbthcrIonzs
+X-Gm-Gg: AfdE7cnFlJbQooK/uREqDQCXo7SRMxetN2lGZSECsqZKPOm5c+qTJgdvMH7T/NYjWcd
+	dLjFqs6w0TfXbhmbTwIM4p4l5VDJl5hyVn0CLEYp99R6qg4R+VnmmGfvOsLlKzTIdjaiiIDll87
+	VqGL5HWm9jAL+fs4ThzfodIbq19VeMoGdKwADHfPuOj6ddZ6AHc8XnS2iCKcOD6gMqqqUK+rYW+
+	sj9Id33MHOLgyC75vMuixI0sl/F/YtK0Ad510O5Ky28ddlc5Qcq1SoHMEG+MKUxbCEPtxYg0+8j
+	d8w5FIwHHXCYeOk3zES60awBMFQ1F5DeIKnEbj/qq/neQ56509OBJ5hPj5Ky56MIGLxVcXles3j
+	POfYvvGvG4C+fZ0E+n5FYPsde0cB/jm5imR0tLhHfhjQuG5neqbl6HtRionnKy0cFnBmeOllBpY
+	QbhVAfhVYPCWINN6DybQ==
+X-Received: by 2002:a17:90b:1807:b0:368:9da3:c496 with SMTP id 98e67ed59e1d1-37d1ea12264mr9696809a91.24.1782053968739;
+        Sun, 21 Jun 2026 07:59:28 -0700 (PDT)
+Received: from ubuntu.. ([110.9.142.4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37d4f225870sm4544896a91.8.2026.06.21.07.59.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2026 07:59:28 -0700 (PDT)
+From: Sang-Heon Jeon <ekffu200098@gmail.com>
+To: Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Will Deacon <will@kernel.org>
+Cc: Sang-Heon Jeon <ekffu200098@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	David Hildenbrand <david@kernel.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: [PATCH 0/6] treewide: remove unnecessary invalid range checks in memblock iteration loops
+Date: Sun, 21 Jun 2026 23:59:10 +0900
+Message-ID: <20260621145919.1453-1-ekffu200098@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782000767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JussUpN23YbHVlKHnatejnpxSwjgyfs5DQKE6hV/Nd4=;
-	b=rXDRbM/9XYHHz6UrtThHbP6EVT1Uh9IMaSs7H8ZjqITbf6GafefsXndoKdwlGVREjzw+c+
-	53iwNCeX8duhGg+tUZncGP3KBej1nGt/duDchPRGyAL/jgSp0y15H0IuGvuJ399Na7CMEg
-	rX61zPfv4yKY+ldTAvwX2//tZnKMxdg=
-Date: Sun, 21 Jun 2026 00:12:44 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: haoran.jiang@linux.dev
-Message-ID: <2a177d2542d7d1f749691cc9c661a16652d1e4f1@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v4] LoongArch: Enable STRICT_MODULE_RWX for stricter
- modules memory permissions
-To: "Huacai Chen" <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel@xen0n.name, akpm@linux-foundation.org, jbohac@suse.cz,
- kees@kernel.org, yangtiezhu@loongson.cn, "Haoran Jiang"
- <jianghaoran@kylinos.cn>, zhangqing@loongson.cn, zhoubinbin@loongson.cn
-In-Reply-To: <CAAhV-H6LY=MrFgji=4NMwDVifM7+dEf+icHhSAh1wOXvqn9L3g@mail.gmail.com>
-References: <20260613084147.449502-1-haoran.jiang@linux.dev>
- <CAAhV-H5tzMMopjvgLU0wzB8B6hO9QrbkxavD=0e6Sn4Oi4q3vQ@mail.gmail.com>
- <771c9cbf977e0f724055b2880739afdfb3e7d8a4@linux.dev>
- <CAAhV-H6LY=MrFgji=4NMwDVifM7+dEf+icHhSAh1wOXvqn9L3g@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-2026=E5=B9=B46=E6=9C=8814=E6=97=A5 20:10, "Huacai Chen" <chenhuacai@kerne=
-l.org mailto:chenhuacai@kernel.org?to=3D%22Huacai%20Chen%22%20%3Cchenhuac=
-ai%40kernel.org%3E > =E5=86=99=E5=88=B0:
+The memblock API guarantees that for_each_mem_range() and
+for_each_mem_pfn_range() never return an invalid range, meaning start is
+always less than end.
 
+Several memblock callers still have unnecessary invalid range checks in
+their loop bodies, so remove them.
 
->=20
->=20On Sun, Jun 14, 2026 at 6:24 PM <haoran.jiang@linux.dev> wrote:
->=20
->=20>=20
->=20> 2026=E5=B9=B46=E6=9C=8813=E6=97=A5 18:43, "Huacai Chen" <chenhuacai=
-@kernel.org mailto:chenhuacai@kernel.org?to=3D%22Huacai%20Chen%22%20%3Cch=
-enhuacai%40kernel.org%3E > =E5=86=99=E5=88=B0:
-> >=20
->=20>  Hi, Haoran,
-> >=20
->=20>  On Sat, Jun 13, 2026 at 4:42 PM <haoran.jiang@linux.dev> wrote:
-> >=20
->=20>  >
-> >  > From: Haoran Jiang <jianghaoran@kylinos.cn>
-> >  >
-> >  > Enable STRICT_MODULE_RWX to enforce strict memory permissions
-> >  > on modules,making the code region non-writable, the data region
-> >  > non-executable, and the read-only data region both non-writable
-> >  > and non-executable.Temporarily modify code section read/write
-> >  > permissions via set_memory() API.
-> >  >
-> >  > Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
-> >  > ---
-> >  > v2:
-> >  > Change the method of modifying page table permissions from patch_m=
-ap to set_memory() API.
-> >  >
-> >  > v3:
-> >  > Modify commit description.
-> >  >
-> >  > v4:
-> >  > Add text_mutex lock in the larch_insn_write call path and
-> >  > CONFIG_STRICT_MODULE_RWX is enabled by default.
-> >  >
-> >  > UB test on the 3C6000 server shows no significant performance impa=
-ct.
-> >  >
-> >  > Before patch:
-> >  >
-> >  > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> >  > BYTE UNIX Benchmarks (Version 5.1.6)
-> >  >
-> >  > System: localhost.localdomain: GNU/Linux
-> >  > OS: GNU/Linux -- 7.1.0-rc6 -- #1 SMP PREEMPT Wed Jun 10 21:07:41 C=
-ST 2026
-> >  > Machine: loongarch64 (loongarch64)
-> >  > Language: en_US.utf8 (charmap=3D"UTF-8", collate=3D"UTF-8")
-> >  > 21:19:51 up 1 min, 2 users, load average: 0.71, 0.38, 0.14; runlev=
-el 2026-06-10
-> >  >
-> >  > ------------------------------------------------------------------=
-------
-> >  > 128 CPUs in system; running 1 parallel copy of tests
-> >  >
-> >  > Dhrystone 2 using register variables 35205725.4 lps (10.0 s, 7 sam=
-ples)
-> >  > Double-Precision Whetstone 4244.9 MWIPS (10.0 s, 7 samples)
-> >  > Execl Throughput 6717.7 lps (30.0 s, 2 samples)
-> >  > File Copy 1024 bufsize 2000 maxblocks 1213873.8 KBps (30.0 s, 2 sa=
-mples)
-> >  > File Copy 256 bufsize 500 maxblocks 350740.5 KBps (30.0 s, 2 sampl=
-es)
-> >  > File Copy 4096 bufsize 8000 maxblocks 3275103.0 KBps (30.0 s, 2 sa=
-mples)
-> >  > Pipe Throughput 1981993.9 lps (10.0 s, 7 samples)
-> >  > Pipe-based Context Switching 55287.7 lps (10.0 s, 7 samples)
-> >  > Process Creation 9056.8 lps (30.0 s, 2 samples)
-> >  > Shell Scripts (1 concurrent) 6736.5 lpm (60.0 s, 2 samples)
-> >  > Shell Scripts (8 concurrent) 2109.8 lpm (60.0 s, 2 samples)
-> >  > System Call Overhead 1549110.9 lps (10.0 s, 7 samples)
-> >  >
-> >  > System Benchmarks Index Values BASELINE RESULT INDEX
-> >  > Dhrystone 2 using register variables 116700.0 35205725.4 3016.8
-> >  > Double-Precision Whetstone 55.0 4244.9 771.8
-> >  > Execl Throughput 43.0 6717.7 1562.3
-> >  > File Copy 1024 bufsize 2000 maxblocks 3960.0 1213873.8 3065.3
-> >  > File Copy 256 bufsize 500 maxblocks 1655.0 350740.5 2119.3
-> >  > File Copy 4096 bufsize 8000 maxblocks 5800.0 3275103.0 5646.7
-> >  > Pipe Throughput 12440.0 1981993.9 1593.2
-> >  > Pipe-based Context Switching 4000.0 55287.7 138.2
-> >  > Process Creation 126.0 9056.8 718.8
-> >  > Shell Scripts (1 concurrent) 42.4 6736.5 1588.8
-> >  > Shell Scripts (8 concurrent) 6.0 2109.8 3516.4
-> >  > System Call Overhead 15000.0 1549110.9 1032.7
-> >  > =3D=3D=3D=3D=3D=3D=3D=3D
-> >  > System Benchmarks Index Score 1492.2
-> >  >
-> >  > ------------------------------------------------------------------=
-------
-> >  > 128 CPUs in system; running 128 parallel copies of tests
-> >  >
-> >  > Dhrystone 2 using register variables 2901925470.7 lps (10.0 s, 7 s=
-amples)
-> >  > Double-Precision Whetstone 503614.9 MWIPS (10.1 s, 7 samples)
-> >  > Execl Throughput 34080.1 lps (29.9 s, 2 samples)
-> >  > File Copy 1024 bufsize 2000 maxblocks 309291.4 KBps (30.0 s, 2 sam=
-ples)
-> >  > File Copy 256 bufsize 500 maxblocks 75115.3 KBps (30.0 s, 2 sample=
-s)
-> >  > File Copy 4096 bufsize 8000 maxblocks 1018101.3 KBps (30.0 s, 2 sa=
-mples)
-> >  > Pipe Throughput 180702003.1 lps (10.0 s, 7 samples)
-> >  > Pipe-based Context Switching 2426596.4 lps (10.0 s, 7 samples)
-> >  > Process Creation 37282.5 lps (30.0 s, 2 samples)
-> >  > Shell Scripts (1 concurrent) 50813.7 lpm (60.1 s, 2 samples)
-> >  > Shell Scripts (8 concurrent) 5835.8 lpm (60.4 s, 2 samples)
-> >  > System Call Overhead 9039181.1 lps (10.0 s, 7 samples)
-> >  >
-> >  > System Benchmarks Index Values BASELINE RESULT INDEX
-> >  > Dhrystone 2 using register variables 116700.0 2901925470.7 248665.=
-4
-> >  > Double-Precision Whetstone 55.0 503614.9 91566.3
-> >  > Execl Throughput 43.0 34080.1 7925.6
-> >  > File Copy 1024 bufsize 2000 maxblocks 3960.0 309291.4 781.0
-> >  > File Copy 256 bufsize 500 maxblocks 1655.0 75115.3 453.9
-> >  > File Copy 4096 bufsize 8000 maxblocks 5800.0 1018101.3 1755.3
-> >  > Pipe Throughput 12440.0 180702003.1 145258.8
-> >  > Pipe-based Context Switching 4000.0 2426596.4 6066.5
-> >  > Process Creation 126.0 37282.5 2958.9
-> >  > Shell Scripts (1 concurrent) 42.4 50813.7 11984.4
-> >  > Shell Scripts (8 concurrent) 6.0 5835.8 9726.4
-> >  > System Call Overhead 15000.0 9039181.1 6026.1
-> >  > =3D=3D=3D=3D=3D=3D=3D=3D
-> >  > System Benchmarks Index Score 8765.2
-> >  >
-> >  > After patch:
-> >  >
-> >  > 128 CPUs in system; running 1 parallel copy of tests
-> >  >
-> >  > Dhrystone 2 using register variables 35438193.7 lps (10.0 s, 7 sam=
-ples)
-> >  > Double-Precision Whetstone 4245.7 MWIPS (10.0 s, 7 samples)
-> >  > Execl Throughput 5293.7 lps (30.0 s, 2 samples)
-> >  > File Copy 1024 bufsize 2000 maxblocks 1233323.4 KBps (30.0 s, 2 sa=
-mples)
-> >  > File Copy 256 bufsize 500 maxblocks 355264.5 KBps (30.0 s, 2 sampl=
-es)
-> >  > File Copy 4096 bufsize 8000 maxblocks 3333631.6 KBps (30.0 s, 2 sa=
-mples)
-> >  > Pipe Throughput 1979613.2 lps (10.0 s, 7 samples)
-> >  > Pipe-based Context Switching 55675.2 lps (10.0 s, 7 samples)
-> >  > Process Creation 8528.1 lps (30.0 s, 2 samples)
-> >  > Shell Scripts (1 concurrent) 6870.0 lpm (60.0 s, 2 samples)
-> >  > Shell Scripts (8 concurrent) 2115.5 lpm (60.0 s, 2 samples)
-> >  > System Call Overhead 1546959.4 lps (10.0 s, 7 samples)
-> >  >
-> >  > System Benchmarks Index Values BASELINE RESULT INDEX
-> >  > Dhrystone 2 using register variables 116700.0 35438193.7 3036.7
-> >  > Double-Precision Whetstone 55.0 4245.7 772.0
-> >  > Execl Throughput 43.0 5293.7 1231.1
-> >  > File Copy 1024 bufsize 2000 maxblocks 3960.0 1233323.4 3114.5
-> >  > File Copy 256 bufsize 500 maxblocks 1655.0 355264.5 2146.6
-> >  > File Copy 4096 bufsize 8000 maxblocks 5800.0 3333631.6 5747.6
-> >  > Pipe Throughput 12440.0 1979613.2 1591.3
-> >  > Pipe-based Context Switching 4000.0 55675.2 139.2
-> >  > Process Creation 126.0 8528.1 676.8
-> >  > Shell Scripts (1 concurrent) 42.4 6870.0 1620.3
-> >  > Shell Scripts (8 concurrent) 6.0 2115.5 3525.8
-> >  > System Call Overhead 15000.0 1546959.4 1031.3
-> >  > =3D=3D=3D=3D=3D=3D=3D=3D
-> >  > System Benchmarks Index Score 1465.3
-> >  >
-> >  > ------------------------------------------------------------------=
-------
-> >  > 128 CPUs in system; running 128 parallel copies of tests
-> >  >
-> >  > Dhrystone 2 using register variables 2903340286.5 lps (10.0 s, 7 s=
-amples)
-> >  > Double-Precision Whetstone 504137.7 MWIPS (10.1 s, 7 samples)
-> >  > Execl Throughput 34332.8 lps (29.9 s, 2 samples)
-> >  > File Copy 1024 bufsize 2000 maxblocks 311391.2 KBps (30.0 s, 2 sam=
-ples)
-> >  > File Copy 256 bufsize 500 maxblocks 72503.3 KBps (30.0 s, 2 sample=
-s)
-> >  > File Copy 4096 bufsize 8000 maxblocks 1000861.7 KBps (30.0 s, 2 sa=
-mples)
-> >  > Pipe Throughput 179382076.6 lps (10.0 s, 7 samples)
-> >  > Pipe-based Context Switching 2415716.6 lps (10.0 s, 7 samples)
-> >  > Process Creation 36873.1 lps (30.0 s, 2 samples)
-> >  > Shell Scripts (1 concurrent) 51464.1 lpm (60.1 s, 2 samples)
-> >  > Shell Scripts (8 concurrent) 5976.3 lpm (60.4 s, 2 samples)
-> >  > System Call Overhead 9182389.5 lps (10.0 s, 7 samples)
-> >  >
-> >  > System Benchmarks Index Values BASELINE RESULT INDEX
-> >  > Dhrystone 2 using register variables 116700.0 2903340286.5 248786.=
-7
-> >  > Double-Precision Whetstone 55.0 504137.7 91661.4
-> >  > Execl Throughput 43.0 34332.8 7984.4
-> >  > File Copy 1024 bufsize 2000 maxblocks 3960.0 311391.2 786.3
-> >  > File Copy 256 bufsize 500 maxblocks 1655.0 72503.3 438.1
-> >  > File Copy 4096 bufsize 8000 maxblocks 5800.0 1000861.7 1725.6
-> >  > Pipe Throughput 12440.0 179382076.6 144197.8
-> >  > Pipe-based Context Switching 4000.0 2415716.6 6039.3
-> >  > Process Creation 126.0 36873.1 2926.4
-> >  > Shell Scripts (1 concurrent) 42.4 51464.1 12137.8
-> >  > Shell Scripts (8 concurrent) 6.0 5976.3 9960.6
-> >  > System Call Overhead 15000.0 9182389.5 6121.6
-> >  > =3D=3D=3D=3D=3D=3D=3D=3D
-> >  > System Benchmarks Index Score 8759.8
-> >  >
-> >  I think your tests are incomplete. Performance test is just a very
-> >  basic test, you should make sure all dynamic code modification
-> >  mechanisms are correct.
-> >=20
->=20>  At least these should be verified one by one: jump label, kgdb, bp=
-f,
-> >  ftrace, kprobes, uprobes....
-> >=20
->=20>  You have modified ftrace, but not the best method that Ihae sugges=
-ted in V3.
-> >=20
->=20>  You completely ignore my suggestion about kprobes in V3.
-> >=20
->=20>  For KGDB, you should use text_mutex to protect copy_to_kernel_nofa=
-ult().
-> >=20
->=20>  For uprobes, I have no idea, maybe @Tiezhu can give some suggestio=
-ns.
-> >=20
->=20>  Huacai
-> >=20
->=20>  For fentry:
-> >=20
->=20>  ftrace_arch_code_modify_prepare() and ftrace_arch_code_modify_post=
-_process() are not in the call path of ftrace_init_nop(),
-> >=20
->=20>  so the text_mutex lock was added in ftrace_modify_code(). However,=
- I overlooked that ftrace_init_nop() also holds the text_mutex lock (e.g.=
-, on RISC-V).
-> >  I am fixing this.
-> >=20
->=20No, RISC-V is right, use ftrace_arch_code_modify_prepare() and
-> ftrace_arch_code_modify_post_process() to protect all common cases,
-> and use text_mutex to protect the only exception, ftrace_init_nop().
->=20
->=20>=20
->=20> For kprobes:
-> >=20
->=20>  text_mutex is already held in the caller arm_kprobe(), which then =
-calls arch_arm_kprobe->larch_insn_text_copy. So the kprobes path is prope=
-rly protected.
-> >=20
->=20No, I doubt you didn't see my link, we are talking about
-> arch_prepare_ss_slot(). Though it seems the framework has hold
-> text_mutex, but you don't use the larch_insn_patch_text() API, who
-> handle the RWX?
->=20
->=20>=20
->=20> For kgdb:
-> >=20
->=20>  When KGDB enters do_single_step(), it has already stopped executio=
-n on all other CPUs. Only the current CPU is running KGDB logic. Do we ne=
-ed to worry about concurrency issues in this case? Also, Sleepable lock i=
-s also disallowed in exception context.
-> >=20
->=20The same as above, if you use copy_to_kernel_nofault() directly, who
-> handle the RWX?
->=20
->=20Huacai
->=20
+Patches 1-4 cover for_each_mem_range() callers. memblock never stores a
+zero-size region, so the range it returns always has start < end. Some
+callers apply __va() or __phys_to_virt() before comparing, but these keep
+start < end too, so the check is unreachable.
 
-I=20plan to make the following modifications. Is this approach feasible?
+Patches 5-6 cover for_each_mem_pfn_range() callers. __next_mem_pfn_range()
+skips any region that contains no whole page, so it only ever returns
+start_pfn < end_pfn and the check is unnecessary.
 
+For reference, commit 36ca7f4be809 ("arm64: mm: Remove bogus stop
+condition from map_mem() loop") did a similar cleanup in arm64 map_mem().
 
-1=EF=BC=8C For kprobes:
+All these checks are in different trees, so I split the change into one
+patch per arch/subsystem. The patches are independent and can be applied
+separately.
 
-Add modifications for `arch_prepare_ss_slot(struct kprobe *p)`, referenci=
-ng the patch at:
-https://lore.kernel.org/loongarch/CAHirt9gSXZvw0wTv9zupsVRG0_ekza08efW0hw=
-q_yvnU1WbUng@mail.gmail.com/T/#m6a75415f468e671748d6ec8c6b502ca36788c546
+Sang-Heon Jeon (6):
+  arm64: mm: remove unreachable invalid range check in
+    kasan_init_shadow()
+  LoongArch: remove unreachable invalid range check in kasan_init()
+  riscv: remove unreachable invalid range check in
+    create_linear_mapping_page_table()
+  riscv: remove unreachable invalid range check in kasan_init()
+  mm: remove unnecessary empty range check in
+    early_calculate_totalpages()
+  mm/hugetlb: remove unnecessary empty range check in
+    hugetlb_bootmem_set_nodes()
 
- static void arch_prepare_ss_slot(struct kprobe *p)
- {
-    larch_insn_patch_text(p->ainsn.insn, *p->addr);
-    larch_insn_patch_text(p->ainsn.insn + 1, KPROBE_SSTEPBP_INSN);
-    p->ainsn.restore =3D (unsigned long)p->addr + LOONGARCH_INSN_SIZE;
- }
+ arch/arm64/mm/kasan_init.c     | 3 ---
+ arch/loongarch/mm/kasan_init.c | 3 ---
+ arch/riscv/mm/init.c           | 2 --
+ arch/riscv/mm/kasan_init.c     | 3 ---
+ mm/hugetlb.c                   | 3 +--
+ mm/mm_init.c                   | 3 +--
+ 6 files changed, 2 insertions(+), 15 deletions(-)
 
+-- 
+2.43.0
 
-
-2,For kgdb:
-
-Modify page table permissions for the kernel code section by adding the f=
-ollowing lockless method. Use `apply_to_existing_page_range()` to iterate=
- over=20
-the=20virtual address range and perform permission modification operation=
-s on existing page table entries (PTEs).
-
-This approach references the RISC-V commit:
-fb1cf0878328 ("riscv: rewrite __kernel_map_pages() to fix sleeping in inv=
-alid context")
-
-static int change_page_attr(pte_t *ptep, unsigned long addr, void *data)
-{
-    handle the RWX
-}
-static int kgdb_set_page_rw(unsigned long addr, int numpages, long action=
-)
-{
-        ...
-       apply_to_existing_page_range(&init_mm, start, size,
-                                            change_page_attr, (void *)act=
-ion);
-
-      flush_tlb_kernel_range(addr, addr + size);
-      ...
-
-}
-
-int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
-{
-        ...
-       kgdb_set_page_rw(bpt->bpt_addr,1,0);
-       err =3D copy_to_kernel_nofault((char *)bpt->bpt_addr,
-                                arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_=
-SIZE);
-       kgdb_set_page_rw_(bpt->bpt_addr,1,1);
-       ...
-}
-
-static int do_single_step(struct pt_regs *regs)
-{
-        ...
-        kgdb_set_page_rw(bpt->bpt_addr,1,0)=EF=BC=9B
-        error =3D copy_to_kernel_nofault((void *)stepped_address,
-                                       arch_kgdb_ops.gdb_bpt_instr, BREAK=
-_INSTR_SIZE);
-        kgdb_set_page_rw_(bpt->bpt_addr,1,1);
-        ...
-}
-
-3=EF=BC=8Cuprobes write to userspace process code segments, which does no=
-t conflict with kernel code segment modifications. Therefore, changes for=
- `STRICT_MODULE_RWX` do not affect uprobes.
-
-Thanks=EF=BC=81
-
-
-
-
-> >=20
->=20> For uprobes:
-> >=20
->=20>  I will check the call path again.
-> >=20
->=20>  For test:
-> >=20
->=20>  I have already done some tests using BPF tools that utilize kprobe=
-s and fentry. I will run more tests using the selftests suite.
-> >=20
->=20>  Thanks !
-> >  >
-> >  > ---
-> >  > arch/loongarch/Kconfig | 1 +
-> >  > arch/loongarch/kernel/ftrace_dyn.c | 7 ++++++-
-> >  > arch/loongarch/kernel/inst.c | 25 +++++++++++++++++++++----
-> >  > arch/loongarch/kernel/jump_label.c | 3 +++
-> >  > 4 files changed, 31 insertions(+), 5 deletions(-)
-> >  >
-> >  > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> >  > index 606597da46b8..c751d714c287 100644
-> >  > --- a/arch/loongarch/Kconfig
-> >  > +++ b/arch/loongarch/Kconfig
-> >  > @@ -27,6 +27,7 @@ config LOONGARCH
-> >  > select ARCH_HAS_PTE_SPECIAL if 64BIT
-> >  > select ARCH_HAS_SET_MEMORY
-> >  > select ARCH_HAS_SET_DIRECT_MAP
-> >  > + select ARCH_HAS_STRICT_MODULE_RWX
-> >  > select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-> >  > select ARCH_HAS_UBSAN
-> >  > select ARCH_HAS_VDSO_ARCH_DATA
-> >  > diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/k=
-ernel/ftrace_dyn.c
-> >  > index d5d81d74034c..598dc6434cc4 100644
-> >  > --- a/arch/loongarch/kernel/ftrace_dyn.c
-> >  > +++ b/arch/loongarch/kernel/ftrace_dyn.c
-> >  > @@ -8,6 +8,7 @@
-> >  > #include <linux/ftrace.h>
-> >  > #include <linux/kprobes.h>
-> >  > #include <linux/uaccess.h>
-> >  > +#include <linux/memory.h>
-> >  >
-> >  > #include <asm/inst.h>
-> >  > #include <asm/module.h>
-> >  > @@ -24,8 +25,12 @@ static int ftrace_modify_code(unsigned long pc,=
- u32 old, u32 new, bool validate)
-> >  > return -EINVAL;
-> >  > }
-> >  >
-> >  > - if (larch_insn_patch_text((void *)pc, new))
-> >  > + mutex_lock(&text_mutex);
-> >  > + if (larch_insn_patch_text((void *)pc, new)) {
-> >  > + mutex_unlock(&text_mutex);
-> >  > return -EPERM;
-> >  > + }
-> >  > + mutex_unlock(&text_mutex);
-> >  >
-> >  > return 0;
-> >  > }
-> >  > diff --git a/arch/loongarch/kernel/inst.c b/arch/loongarch/kernel/=
-inst.c
-> >  > index 0b9228b7c13a..3de94d465c3c 100644
-> >  > --- a/arch/loongarch/kernel/inst.c
-> >  > +++ b/arch/loongarch/kernel/inst.c
-> >  > @@ -6,12 +6,11 @@
-> >  > #include <linux/uaccess.h>
-> >  > #include <linux/set_memory.h>
-> >  > #include <linux/stop_machine.h>
-> >  > +#include <linux/memory.h>
-> >  >
-> >  > #include <asm/cacheflush.h>
-> >  > #include <asm/inst.h>
-> >  >
-> >  > -static DEFINE_RAW_SPINLOCK(patch_lock);
-> >  > -
-> >  > void simu_pc(struct pt_regs *regs, union loongarch_instruction ins=
-n)
-> >  > {
-> >  > unsigned long pc =3D regs->csr_era;
-> >  > @@ -207,14 +206,32 @@ int larch_insn_read(void *addr, u32 *insnp)
-> >  > int larch_insn_write(void *addr, u32 insn)
-> >  > {
-> >  > int ret;
-> >  > + int err =3D 0;
-> >  > + size_t start;
-> >  > unsigned long flags =3D 0;
-> >  >
-> >  > if ((unsigned long)addr & 3)
-> >  > return -EINVAL;
-> >  >
-> >  > - raw_spin_lock_irqsave(&patch_lock, flags);
-> >  > + start =3D round_down((size_t)addr, PAGE_SIZE);
-> >  > +
-> >  > + lockdep_assert_held(&text_mutex);
-> >  > +
-> >  > + err =3D set_memory_rw(start, 1);
-> >  > + if (err) {
-> >  > + pr_info("%s: set_memory_rw() failed\n", __func__);
-> >  > + return err;
-> >  > + }
-> >  > +
-> >  > + local_irq_save(flags);
-> >  > ret =3D copy_to_kernel_nofault(addr, &insn, LOONGARCH_INSN_SIZE);
-> >  > - raw_spin_unlock_irqrestore(&patch_lock, flags);
-> >  > + local_irq_restore(flags);
-> >  > +
-> >  > + err =3D set_memory_rox(start, 1);
-> >  > + if (err) {
-> >  > + pr_info("%s: set_memory_rox() failed\n", __func__);
-> >  > + return err;
-> >  > + }
-> >  >
-> >  > return ret;
-> >  > }
-> >  > diff --git a/arch/loongarch/kernel/jump_label.c b/arch/loongarch/k=
-ernel/jump_label.c
-> >  > index 24a3f4d8540c..e6bb040fe4c5 100644
-> >  > --- a/arch/loongarch/kernel/jump_label.c
-> >  > +++ b/arch/loongarch/kernel/jump_label.c
-> >  > @@ -6,6 +6,7 @@
-> >  > */
-> >  > #include <linux/kernel.h>
-> >  > #include <linux/jump_label.h>
-> >  > +#include <linux/memory.h>
-> >  > #include <asm/cacheflush.h>
-> >  > #include <asm/inst.h>
-> >  >
-> >  > @@ -19,7 +20,9 @@ bool arch_jump_label_transform_queue(struct jump=
-_entry *entry, enum jump_label_t
-> >  > else
-> >  > insn =3D larch_insn_gen_nop();
-> >  >
-> >  > + mutex_lock(&text_mutex);
-> >  > larch_insn_write(addr, insn);
-> >  > + mutex_unlock(&text_mutex);
-> >  >
-> >  > return true;
-> >  > }
-> >  > --
-> >  > 2.43.0
-> >  >
-> >
->
