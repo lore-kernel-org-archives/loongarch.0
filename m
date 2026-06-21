@@ -1,115 +1,108 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D8C40D565
-	for <loongarch@lists.linux.dev>; Sun, 21 Jun 2026 14:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC381643B;
+	Sun, 21 Jun 2026 20:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782053981; cv=none; b=O/ss/fH37ByvD87rF7Us1Qkz9uEj+FpBbfKtnOct4LMkr5nanrbxjsgxI033bjJ3Drl4m/16fDs9zJ4yzFlJuGXCgCvY0xS3WvDBH67Qjr3YGY20NXObWyxyidDcTu5r5F40xu+qXZUylnMArrIGeU4BRXyODHBlbpzbC2Jtskc=
+	t=1782074998; cv=none; b=r+LFd2t7km5cueYI9qf+RrhohR2RydnJwQeb8EjnpHeA37e+278yHRcKR9uuouua58zMkT4eUIeabpdFLyu69+hNL1z9T59Z2i0WPkb0bWn0nYDsrLe/0/M/j5Wa6SrOL9a7qdSKOKbSjTKd9BPXBLpNxbHROWF/N1u1et2zvlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782053981; c=relaxed/simple;
-	bh=aQqhRl6DC318PkNPVd+rJLq/+T8kDSpLzI57MbCyrwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZA8JtAwFj4JhRUryW/KQyB3OqofM7H02gBjMRg7BvOuaJAYY2GXa3kw2l5xg4JX9LSI+0iPFGkTIcnci5iO1ecg3lox3nZbjMpBkC1f+eX+wLBDwmbvHVT5b6KXFw7XSxYr1Jb6ttX4Qqri7liMTOJVfTaVzERGrRPL8KB64S7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1HefO58; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782074998; c=relaxed/simple;
+	bh=7lkfirBnw1Xta7UexC6RyUUzuxWU5/cPK+BGvQuqhIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=daCKqZhHSd75U6xAS0BUXEI+XVGZDROaCVkf7MBVGidleTL12URZCY/O4ecrPSOTkhgolZwKNZJyvwhVselwbKQgonQFmW/r0DOtrK6is0VS7abSJMYWSli0Q5K6X9gTH5sGhRGsIFtovh+2RZs8w8uCSNILZ4Evd6VWU7bCikc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=g6iAM/3x; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1HefO58"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-37d82f3a244so206610a91.2
-        for <loongarch@lists.linux.dev>; Sun, 21 Jun 2026 07:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782053979; x=1782658779; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R7OKQThqi7Hj89gF3H1L/Hs7RTlLsRV5YLw83Frz+Dw=;
-        b=A1HefO58rKKCBkan/4gHtBGb2B402EUoHCkOcCRhjBBwo78zbM7Ftkcxo3wP+exFNL
-         IDsJwgpESffDzXgw0x5Wi5y4QDWfTH2lJryU9SvsedM4tQ5XKavtuEKyVlCHja6XZKsf
-         fqG64+oi+6333S9iUmLq04O6fwOlrF1Iuq/fbC5A9cIKSVogR6ph+GXpPx12sIZvLATD
-         zhCjISRFy6c9ERRrYRNjZNo5wzhbJZ4oFPJoJPhmBzcVFiUe4yrdYNkbwGmuCG82QB7U
-         YeAu9dyNE5oBeUIr5N7Kt+TShJgB4cUv0XUr9hf80yQRzK4EntP8lZHbDFI4uwccGe92
-         rCrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782053979; x=1782658779;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=R7OKQThqi7Hj89gF3H1L/Hs7RTlLsRV5YLw83Frz+Dw=;
-        b=XoueArIvO04u0bfy3ppfquShBeX8USZHFm4ZmQUwooxNiXb8UDRPHQus8Q65OanLj9
-         N4yIKNUZOBILA2pS/KgAh7MgnQjuG9pp7Jl4RagOTvfKkQVNmeZtHi6cAJGIfOWISror
-         SppC6JWnATIV4RjITKE1B3L9c1MaD+HtyQ1bDsERb5ux5blt0KNCCQji7ypQqL2pTUkl
-         QMmVu3rfPBeGLLWAyWySF0tyeiRd0Ijeha9SNwPjA4bBoLRhsrkgNUI183mF3Yhv4H3t
-         s7T+lhU04surUYrJnNIL08udpa9qM1NA9ia+fPY1+cGa5R/67v8CiL8VKPgK/tBS2FSr
-         s8BA==
-X-Forwarded-Encrypted: i=1; AHgh+Rro0JhxxtMzvgiCVkXh8enHcQsir4NPZdXos65EXoQ82GTVJ8EnCf09KzdHdXiNWohK1GjlS95GkOw=@lists.linux.dev
-X-Gm-Message-State: AOJu0YwAG+7Yxy3qxzSzA48KjyTVmd+wyZN7abbtvGmkt7xsX5C7uqVT
-	+fphUvj8dYyJhKJNtLDqReYJXdmYR60xMERrlCjQ3wgfsfo01fwLV0zm
-X-Gm-Gg: AfdE7clb4egVVyv6ZgXPvoQaAhKaiXggSfkhmQvZM5aydwbH79hWomZgwQ3nWz+sMcf
-	dD7XFq6c1aydo5shnL/0cymNoSMkrDU6kFoPJFtCN78aVBcJoHB8K4GZOzGbz+++gG5apCcIzmo
-	uzOcJJPlTonijwh8bvdFiTIKJnq9/j2ulUGcg5GwxpNYJwLMFs1QoCHFPuD8J4Qa9SHZtq0TJzv
-	x2tE7L/VeX5s/zFsFLmDdUny7tlaxrWZKqwzaXMy6d/7mv4COZRfAwdGYYBKIczGsl8DCBoxkAn
-	/xBiJrw4FOnZ5/oo4RlhWs9kGy3o343RcP1xRotWC2O+hxar/iSoRYf3fdPOU5dcqfsmmNZ0Bxl
-	Lg5a0nvGOSOVm6TIHHCmcOBrkYnpvfiwwexb0oLtbX5wp3rfngtqrA0UTJsJRr7ehTRUKmzw4L5
-	MK1U5TILA=
-X-Received: by 2002:a17:90b:1f91:b0:37c:83ec:1641 with SMTP id 98e67ed59e1d1-37d4d71d7d0mr7028714a91.5.1782053978967;
-        Sun, 21 Jun 2026 07:59:38 -0700 (PDT)
-Received: from ubuntu.. ([110.9.142.4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37d4f225870sm4544896a91.8.2026.06.21.07.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2026 07:59:38 -0700 (PDT)
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Sang-Heon Jeon <ekffu200098@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	kasan-dev@googlegroups.com,
-	loongarch@lists.linux.dev,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	WANG Xuerui <kernel@xen0n.name>
-Subject: [PATCH 2/6] LoongArch: remove unreachable invalid range check in kasan_init()
-Date: Sun, 21 Jun 2026 23:59:12 +0900
-Message-ID: <20260621145919.1453-3-ekffu200098@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260621145919.1453-1-ekffu200098@gmail.com>
-References: <20260621145919.1453-1-ekffu200098@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g6iAM/3x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M8eA5erpVUaElEed48rJS2wGTR5+Yv1nLd38ESSS2Rw=; b=g6iAM/3xDdWgV5X+yh4FkmLv62
+	OiHp0rJWKrS0azBEgV4lUi6tf73QIx3b1EfxkJWLE9+0vYHZwchHgBudDH0pHDxxXgTjwrWdu/mct
+	Pv33b+2kvV7VjO9v7r9ZJhg42qZrzl0nH7+5lsv84CGZePPxYtNzgtc+jHFw/OqqVr5gfB6dJeyht
+	Ta+Y3SqdvDLqXkzUCijftXQvtQR1xKMpDX3P8Pi4bp33DePJ+q2Ae6ol72ij7EXyHBJ2UsHVBJ0x9
+	+qUBkAxK1+zVPdKdmOAH0oG08P8SIzHjxBxu4r6NIyihQBFDoDV5qvDZCRzyYtm8IkqtseF10HUAj
+	vqUbW0Ug==;
+Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wbP6X-00000002ysn-1JeK;
+	Sun, 21 Jun 2026 20:49:21 +0000
+Date: Sun, 21 Jun 2026 21:49:21 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Barry Song <baohua@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, vbabka@kernel.org, rppt@kernel.org,
+	mhocko@suse.com, jack@suse.cz, pfalcato@suse.de,
+	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com,
+	kunwu.chan@gmail.com, liyangouwen1@oppo.com, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, youngjun.park@lge.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	Nanzhe Zhao <nzzhao@126.com>
+Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
+ fault performance
+Message-ID: <ajhOUdbWsswgQyl2@casper.infradead.org>
+References: <5zdaa5uv5oj27q3taopl3amops57ouxgyfsdveudz4ovmbdw7z@6lwrlyvmhcp2>
+ <CAGsJ_4yKxg1QugcsJi3WD0KVGJKe-zXycgm5D6cRi9vWtNcpDQ@mail.gmail.com>
+ <ag4h87CBd-gph9zX@casper.infradead.org>
+ <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
+ <ag4kj84EcKqamdB-@casper.infradead.org>
+ <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
+ <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
+ <ahB6QyHgYq8ksj65@lucifer>
+ <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
+ <CAJuCfpHTxaU4KdNmefU7C7cWZSLCFDLPdUrnqV6yzxzN+8RQ0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpHTxaU4KdNmefU7C7cWZSLCFDLPdUrnqV6yzxzN+8RQ0Q@mail.gmail.com>
 
-kasan_init() populates the linear mapping shadow with for_each_mem_range()
-and breaks the loop when start >= end. for_each_mem_range() never returns
-an invalid range, so start < end always.
+On Sat, Jun 20, 2026 at 04:48:57PM -0700, Suren Baghdasaryan wrote:
+> Just checking in on the followup plans. IIUC the RFC mentioned will
+> try to implement the solution we discussed at LSFMM: splitting
+> VM_FAULT_RETRY into two flags - one for retrying under per-VMA locks
+> and another one to fallback to mmap_lock.
 
-Therefore the start >= end check is unreachable, so remove it.
+I continue to hate this idea.  I don't believe that those who were
+pushing for it have ever tried to understand the whole fault path.
+It's utterly byzantine.
 
-No functional change.
+I defy anyone to make sense of this:
 
-Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
----
- arch/loongarch/mm/kasan_init.c | 3 ---
- 1 file changed, 3 deletions(-)
+        /*
+         * NOTE! This will make us return with VM_FAULT_RETRY, but with
+         * the fault lock still held. That's how FAULT_FLAG_RETRY_NOWAIT
+         * is supposed to work. We have way too many special cases..
+         */
+        if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
+                return 0;
 
-diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
-index 0fc02ca06457..92ca0ba86406 100644
---- a/arch/loongarch/mm/kasan_init.c
-+++ b/arch/loongarch/mm/kasan_init.c
-@@ -305,9 +305,6 @@ void __init kasan_init(void)
- 		void *start = (void *)phys_to_virt(pa_start);
- 		void *end   = (void *)phys_to_virt(pa_end);
- 
--		if (start >= end)
--			break;
--
- 		kasan_map_populate((unsigned long)mem_to_shadow(start),
- 			(unsigned long)mem_to_shadow(end), NUMA_NO_NODE);
- 	}
--- 
-2.43.0
+        *fpin = maybe_unlock_mmap_for_io(vmf, *fpin);
+        if (vmf->flags & FAULT_FLAG_KILLABLE) {
+                if (__folio_lock_killable(folio)) {
+                        /*
+                         * We didn't have the right flags to drop the
+                         * fault lock, but all fault_handlers only check
+                         * for fatal signals if we return VM_FAULT_RETRY,
+                         * so we need to drop the fault lock here and
+                         * return 0 if we don't have a fpin.
+                         */
+                        if (*fpin == NULL)
+                                release_fault_lock(vmf);
+                        return 0;
+                }
 
+Wed need to simplify the fault path, not add additional complexity.
+Josef has said he wouldn't've done the lock dropping had we had per-VMA
+locks.  We should rip it out.
