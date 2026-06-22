@@ -1,36 +1,73 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587B2360EF4
-	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 06:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAA936167F
+	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 07:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782111567; cv=none; b=OQ3Mioeer5yoTtFbHK99lhXtPMotcTWnxUOi0eN8HfrKRQpCGHuIHmyjz5DSa6bnMpWgIaHIZY2JBw9oLje85IcRDCGsM3LzHUWkYU0uwlq50oD6yQ+xD3Bmfg7UC0Cxj9BE8WJgGb84Vz/INhzPaBiUu8Be8BNDGTfCgK5oDw8=
+	t=1782112372; cv=none; b=A/iHkbpRWTzxIQRMAynmlAmKQNVr8VjjZXNb1dEe+gC5o2sNEAXW7ha+YU45oi8rUd9So/k2Uw7uxpWw1Sz/Km5umPSt7Ib19JVZUbKZcofVP+xw1hlz08nUiFCytbx+/6ZLstiMwQRFKLn7bcO7Q8vJLuAJ4lmMVl5sbQthXr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782111567; c=relaxed/simple;
-	bh=SunVqTbbcHe4j9+DNc8+TpOP6zhpxhhrWrMF6LO8tvI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vm9+V5wgPtRw5ZXlNG9/XJ8P3PdM7cQlkaQ/CVVSYhkWr71OObIQH326wX/XgTN2ULcLslZjbGuYHCxH8se48CQAv2hEmJMIW4H83g/efjr03JFfSqh0XnijHKL8YxwHdEasjlDqW8W2mfpayLCx/YJ3N7sT8R7lmnSkSLDtaoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.155])
-	by gateway (Coremail) with SMTP id _____8DxrcBL3ThqvoAWAA--.34399S3;
-	Mon, 22 Jun 2026 14:59:23 +0800 (CST)
-Received: from kernelserver (unknown [223.64.68.155])
-	by front1 (Coremail) with SMTP id qMiowJCxdcBG3ThqUrOuAA--.59367S2;
-	Mon, 22 Jun 2026 14:59:23 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Report dying CPU to RCU in stop_this_cpu()
-Date: Mon, 22 Jun 2026 14:59:10 +0800
-Message-ID: <20260622065910.3961592-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1782112372; c=relaxed/simple;
+	bh=m6fU1Drq27f9CFNMwhYFuiyH6xgyjeaTE3SFZR+/Uds=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lu6SIpM8cajo+lP5MjrkZnVRuU1t45XBARreU391BHlQQIIFrl8ZFGemrLTZkEMJHKSQKnudAUe9u2nDeP3YEVhIzSnJIlrSt6sv/YHe0p1rdQneoY7PHWT2R9zqVOy/o6PWmFZArGilUdfCXdRoZDD5WEgZUXfHuiaX1/s9zZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c4d1573e6e0911f1aa26b74ffac11d73-20260622
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:db92eb86-eeed-431b-ad1d-935b37b62a62,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:10
+X-CID-INFO: VERSION:1.3.12,REQID:db92eb86-eeed-431b-ad1d-935b37b62a62,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:10
+X-CID-META: VersionHash:e7bac3a,CLOUDID:175a219c4fbe7abce093c47dc40f8b27,BulkI
+	D:260622151247A2N4OL2U,BulkQuantity:0,Recheck:0,SF:10|38|66|78|102|127|136
+	|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:99|1,File:nil,RT:nil,
+	Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BR
+	R:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: c4d1573e6e0911f1aa26b74ffac11d73-20260622
+X-User: zhaochenguang@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <zhaochenguang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1855846249; Mon, 22 Jun 2026 15:12:46 +0800
+From: Chenguang Zhao <zhaochenguang@kylinos.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	yangtiezhu@loongson.cn
+Cc: hengqi.chen@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	loongarch@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Chenguang Zhao <zhaochenguang@kylinos.cn>
+Subject: [PATCH v3 0/4] LoongArch bpf kptr xchg inline support
+Date: Mon, 22 Jun 2026 15:12:30 +0800
+Message-Id: <20260622071234.1410830-1-zhaochenguang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
@@ -38,76 +75,62 @@ List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowJCxdcBG3ThqUrOuAA--.59367S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ZFW3Xw47JrW7WFy3Jr17XFc_yoW8KF48pr
-	WFkrn5Zr4kWF1vv398J34xWr9Fy393Gw13X3Z3GrZ3Aay5tr1DZw1IqFyqqFyF9393u34I
-	vFn0v3yvv3WUAagCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1LiSJUUUUU==
 
-This is a port of MIPS commit 9f3f3bdc6d9dac1 ("MIPS: smp: report dying
-CPU to RCU in stop_this_cpu()"). smp_send_stop() parks all secondary
-CPUs in stop_this_cpu(). And the function marks the CPU offline for the
-scheduler via set_cpu_online(false) but never informs RCU, so RCU keeps
-expecting a quiescent state from CPUs that are now spinning forever with
-interrupts disabled.
+This series enables the BPF verifier to inline bpf_kptr_xchg() into BPF_XCHG
+on LoongArch64, and fixes the underlying JIT atomic ordering that makes such
+inlining safe.
+The BPF verifier can lower bpf_kptr_xchg() to a single BPF_XCHG atomic when
+the JIT advertises ptr xchg support via bpf_jit_supports_ptr_xchg(). This
+removes helper-call overhead from the kptr exchange fast path. Inlining is
+only correct when the JITed exchange provides the same sequentially consistent
+ordering as the bpf_kptr_xchg() helper.
+Patch 1 fixes memory ordering for all value-returning BPF atomic RMW operations
+emitted by the LoongArch bpf JIT. Per LKMM, value-returning atomic RMW must
+provide sequentially consistent ordering. Plain AMO instructions and bare
+ll/sc loops on LoongArch do not satisfy this by themselves:
+ - BPF_FETCH (ADD/AND/OR/XOR): switch to am*_db.{b,h,w,d}
+ - BPF_XCHG: switch to amswap_db.{b,h,w,d}
+ - BPF_CMPXCHG: emit dbar 0x700 after the ll/sc loop, matching
+   __WEAK_LLSC_MB in cmpxchg.h
+Non-value-returning RMW ops (plain BPF_ADD, BPF_AND, etc.) remain weakly
+ordered, consistent with LKMM. This fix is independent of kptr inlining and
+benefits all BPF programs using value-returning atomics on LoongArch.
+Patch 2 implements bpf_jit_supports_ptr_xchg() so the verifier may inline
+bpf_kptr_xchg() on LoongArch64.
+Patches 3 and 4 extend bpf selftests: functional coverage via kptr_xchg_inline,
+and an optional kptr-xchg benchmark to compare helper vs inlined paths.
 
-As long as nothing waits for an RCU grace period after smp_send_stop()
-this is harmless, which is why it went unnoticed. However, since commit
-91840be8f710370 ("irq_work: Fix use-after-free in irq_work_single() on
-PREEMPT_RT"), irq_work_sync() calls synchronize_rcu() on architectures
-without an irq_work self-IPI, i.e. where arch_irq_work_has_interrupt()
-returns false. Any irq_work_sync() issued in the reboot/shutdown/halt
-path after smp_send_stop() then blocks on a grace period that can never
-complete, hanging the reboot:
+Chenguang Zhao (4):
+  LoongArch: bpf: Fix memory ordering for value-returning atomics
+  LoongArch: bpf: Advertise JIT support for kptr xchg inline
+  selftests/bpf: Enable kptr_xchg_inline test on LoongArch
+  selftests/bpf: Add kptr-xchg benchmark
 
-  WARNING: CPU: 0 PID: 15 at kernel/irq_work.c:144 irq_work_queue_on
-  ...
-  rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-  rcu: Offline CPU 1 blocking current GP.
-  rcu: Offline CPU 2 blocking current GP.
-  rcu: Offline CPU 3 blocking current GP.
+ arch/loongarch/include/asm/inst.h             | 18 ++++
+ arch/loongarch/net/bpf_jit.c                  | 37 ++++---
+ tools/testing/selftests/bpf/Makefile          |  2 +
+ tools/testing/selftests/bpf/bench.c           |  2 +
+ .../selftests/bpf/benchs/bench_kptr_xchg.c    | 96 +++++++++++++++++++
+ .../bpf/prog_tests/kptr_xchg_inline.c         |  3 +-
+ .../selftests/bpf/progs/kptr_xchg_bench.c     | 49 ++++++++++
+ 7 files changed, 192 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/benchs/bench_kptr_xchg.c
+ create mode 100644 tools/testing/selftests/bpf/progs/kptr_xchg_bench.c
 
-This issue needs some hacks to reproduce, and it was not noticed on
-LoongArch because arch_irq_work_has_interrupt() usually returns true.
-
-Call rcutree_report_cpu_dead() once interrupts are disabled, mirroring
-the generic CPU-hotplug offline path, so RCU stops waiting on the parked
-CPUs and grace periods can still complete. LoongArch shuts down all CPUs
-here without going through the CPU-hotplug mechanism, so this report is
-not otherwise issued.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 91840be8f710 ("irq_work: Fix use-after-free in irq_work_single() on PREEMPT_RT")
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- arch/loongarch/kernel/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+v3:
+ - Expand the JIT ordering fix beyond BPF_XCHG w/d to all value-returning
+   atomic RMW ops (BPF_FETCH, BPF_XCHG, BPF_CMPXCHG), using barrier-carrying
+   AMO variants and dbar after ll/sc as required by LKMM.
+ - Add __btf_root() in the benchmark BPF program so bpf_obj_drop() remains
+   visible to libbpf's kfunc linker when bpf_kptr_xchg() is inlined.
 
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index c191c680de66..5d792256bbb9 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -707,6 +707,7 @@ static void stop_this_cpu(void *dummy)
- 	set_cpu_online(smp_processor_id(), false);
- 	calculate_cpu_foreign_map();
- 	local_irq_disable();
-+	rcutree_report_cpu_dead();
- 	while (true);
- }
- 
+v2:
+ - https://lore.kernel.org/all/20260603100438.2177817-1-zhaochenguang@kylinos.cn/
+
+v1:
+ - https://lore.kernel.org/all/20260602021515.214560-1-zhaochenguang@kylinos.cn/
+
 -- 
-2.52.0
+2.25.1
 
