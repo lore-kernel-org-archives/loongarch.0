@@ -1,178 +1,115 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD7129D27D;
-	Mon, 22 Jun 2026 14:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782139824; cv=none; b=YCd828ArFFg9DuSTT40X31NmCxHoenVSNmdF9f91hOfgnsTFwJeNkGL8Akx58Q3WrgSrJoXps8ajXOJwmfQFRYH8jS1G/4BIBGfu+uX2QdMw2ECgnWFEYX8B4XS930NheDcpxKnx1RdpRbesidDvIvS+BWgWl6CLcJUNRtF7Yvk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782139824; c=relaxed/simple;
-	bh=/SrCoAsoB14wPKY7tOCIz77shFno0oDfEISaZZ78C5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbBnKAhJCpmVhOarVto6UvnevReV1UYejzpcy/wvXXYUhrMvOkklC3p2ElXi/7Hix8oFHULXJ0SLMcO+T6egZkCDI+aJEFM4v2SL2LeBU1hCFvjVD3FReuZJyN6MbdcSlWfERRtvwJi7aE53fidRBq+gBd07TEpYkHaR0u0zPUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JK+kFtzl; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738E733D6CA
+	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 16:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782147181; cv=pass; b=POwGLgCWtfgZRd/ZLEkpal+E2qh/7PV8Fe2mspnztsp9pInVDeKta408E2MscWe0q+rHWggydivPnSDaYZQgVkZIt3S6YPk1apA3Km7/eoHIgMHSjwqp1x6aOkprMSU7RUscAQeK+WClG1C33Dxf5v+7EP01ySatBImeIsyQkx0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782147181; c=relaxed/simple;
+	bh=uwN0mMvsWLSwuujQUXoTLWIsZIov1sZyFaZmbLSwSdE=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GOIgCO9vqt749Q9xGnI9b3mrim3rV0eOHJUr8mCN8+AdJLCqTXs5mizTq1Fyn10mdBlTTzxiaRByPfsA78C60vDJoAWl8wTInVmFz/TARW7ORdlnbi2mcmRy84WszhdADJ/U+yjIOMcg6aIYZb4sh2J7B9ReBOYpUtcg+aLAoDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeW8BJXK; arc=pass smtp.client-ip=74.125.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JK+kFtzl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=5FxiXI2Cp5YdtBkdSD+qNScBXccHcZeYoAW8t2qi+Yc=; b=JK+kFtzlUAONUzDRoTzYX+brhD
-	GKFH0RfbSzUM95BSOrozCSCjOw8vzTHXTIm39G4MXXyBXkGQxtrTmVgQzvzmmmeBEBPZ5Y830BVuk
-	fl7AcG6/bn+wbK2Lu1KCjHNA0aPKVEZY6qTmdbEyqF8o+9MMHqTDUmuXwOB5rkZLoDq8h5WSGs3eG
-	EZGd4nIcvKQn1H7UodiJAGUOAIvYYdKLQi5gwAqTUvXspEktsI80PoQ3S8uztj6P35PIEY+OtzAci
-	pFgaZPJGW47T+bbX3mwQZ0H9RhR2jZxYGZuhZyHbY8K0S/+O2urv10M2x7CACas7uQMjPhjDb5t0L
-	Sbnx7uoA==;
-Received: from [38.23.173.23] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbfyR-00000005693-3OS3;
-	Mon, 22 Jun 2026 14:50:07 +0000
-Date: Mon, 22 Jun 2026 10:50:02 -0400
-From: "Liam R. Howlett" <liam@infradead.org>
-To: Barry Song <baohua@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"David Hildenbrand (Arm)" <david@kernel.org>, akpm@linux-foundation.org, linux-mm@kvack.org, vbabka@kernel.org, 
-	rppt@kernel.org, mhocko@suse.com, jack@suse.cz, pfalcato@suse.de, 
-	wanglian@kylinos.cn, chentao@kylinos.cn, lianux.mm@gmail.com, kunwu.chan@gmail.com, 
-	liyangouwen1@oppo.com, chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, youngjun.park@lge.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	Nanzhe Zhao <nzzhao@126.com>
-Subject: Re: [PATCH v2 0/5] mm: reduce mmap_lock contention and improve page
- fault performance
-Message-ID: <c5soxcu245cerfljr2ddto4h7xqksfxzxti47mq6sqn6pnmnxh@th5kxapvnaj3>
-References: <ag4h87CBd-gph9zX@casper.infradead.org>
- <CAGsJ_4zA8afu0xXy0WS+tMe-eesDX1W6UBmfAsuouUpcAgK8JQ@mail.gmail.com>
- <ag4kj84EcKqamdB-@casper.infradead.org>
- <3be9475b-0e8a-4df8-a130-4262f993973d@kernel.org>
- <CAGsJ_4xC5LdhuoWV1=tK-RZ5rkjc8aOKOkmb1L_8BG_3gtJhDg@mail.gmail.com>
- <ahB6QyHgYq8ksj65@lucifer>
- <CAGsJ_4zxLvZ01i19vdo0xA47T1hxa1VRYvxLmiDhy5q1GDKPRg@mail.gmail.com>
- <CAJuCfpHTxaU4KdNmefU7C7cWZSLCFDLPdUrnqV6yzxzN+8RQ0Q@mail.gmail.com>
- <ajhOUdbWsswgQyl2@casper.infradead.org>
- <CAGsJ_4ybg5LGYopTUJTh5R2rN6X3uR9xoJSL+RdTYVtm1-xqLg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeW8BJXK"
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-662d456f949so359065d50.3
+        for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 09:53:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782147179; cv=none;
+        d=google.com; s=arc-20240605;
+        b=avSE7eoVRyEtckcRe+ssa7NBUUiAa8U1Hpab6YY4/LycwU1yvxT98sVP6GV6Vc9jr0
+         A/u0vOG9ljpfUC8BywmYURz2T+bsv6yl6CADmQoXof29SPxsaW7GgBUHzAHgkBCjErZx
+         P+EAt1bkydsAFfg8didKC2LuzGldu28JyywBnLBRKvwJGLmswylqYo/Sh3SHndrwYKMg
+         k9V6qCZ/8To6kfvWse6mNeWLEsquJLZGpFWiVwtHQZ5bQJwz5RaurP6XJh9EYOZtK3Jz
+         2jtevG284A880S07NfbivqSO9cxHXcGklqaI+iwe5hSpNWkLwl0aR+vO2X7xrAwY46VB
+         JXiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:dkim-signature;
+        bh=EqVj4y7U9bij1RsdvBIbNWc0CJQnmS24fZgfnSLvNag=;
+        fh=Ctyi1vyalCYhURrn+MTz+8NqTOfLTszEaUGkCnljvoA=;
+        b=ehE/C7WcHsFfK1w9ti0XTtYn587/L93ulpQ32ZhvcCBPSf4XRtvWype0ImWwDWDt5p
+         le3z4JF5F0jggXwgxcMO3THzOy/6AyBj9lrE2qo7dK9Owgig8Xl8NzMrw8tswg3Y8bI7
+         Bk89QeDRr/DBE/lt/e6mlMzED8xdz0prz+X+BM1s5F7b5voYA+MmlyNCLl+5wOibyQcu
+         f9LPnKLC84RXmBWe3Yr6IRNtUtP/zJqdPTmLVUfk0JBrLn7yOHxH8PSEj6A0Oc1u8pbC
+         uOxWjSA80AYY5D1bahm7SxPT8JKeNSPvdJT/SGxdFaGb5BphC72Zia/1OnSKYcSFy34e
+         mD2Q==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782147179; x=1782751979; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EqVj4y7U9bij1RsdvBIbNWc0CJQnmS24fZgfnSLvNag=;
+        b=jeW8BJXKnzWQpzD1pwlo7cj8MomcFbJ/UPEJobw/cFmONdftDH8E/DZL9a7yyg4ZBR
+         P9Pj3t4YMWqiLLM6J1LOgi5TARIaBC7SEWRIQrk7u19OOJwtqnXC9Tmz5ysI2rWcIBU3
+         J0TirqCfErRYatFifRdSvc640hu/95yGhIUf40Yg96Kylr+YRC3HHSiz3etDif8URSS0
+         uPOyR22qvkEpvQE8b4lot8ZNVCdVf9x++/+6eCwHDVQLOxUOg3FeUoQzohFUWLg0qEiV
+         EKVbrm6JkHZu8wSvIngmcPnVQWxTIU/EVpvSZz/Z1EnKagEoeG4exF7civtZzeKULpMN
+         Y26w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782147179; x=1782751979;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EqVj4y7U9bij1RsdvBIbNWc0CJQnmS24fZgfnSLvNag=;
+        b=p2e1vHajabkZCsM+4VHYOR3T11yAoe6Jde6zw6Bx0cBgFZyMNYDLdefO0zjQuEzJd6
+         SrLdazsWpm3Okv3JvU7IuQNskZbzRIJ1RtUzRb+a9H4K3X+K1pQNHMuHUv2CGn6II1pf
+         r+0cqrpBDS2pIv1Lj5PWGLvHsnqIGXBaR5iAFQ/9geIHYIDatHjz2QDu47vQ74Wg97Hu
+         MTie1eWWYd+O7LzxA/qjv4/UiEfec3A6yeWLsdI4KZfbyIncXQlcV65pB+ZY0dymqEiO
+         WIsIQprW5VzrLdMnZwd9VbydzgUUQm4/RgBItf44TI3vmDZ9QtzRqagoP/CFCGobXm8D
+         PNTQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rqd64bAKepClxi1SxBQtH0rjON1nYt7Fwnw7BeJI43FoqlYfudgFd0SuPZ/yZMoaMPO45FPqxDr9YU=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyb2NZPX72mNA+xIqcDQiegcU9R+k5PImrVEzIY9iWkVd6sc6fg
+	YoEb9ExX18QXff6hgCVWGQyaf+i67KNUzAkg7HGCcgmWhmBr05O1+hilWn398fEh6mLc7WqVUDn
+	Hb0aMawx/BI89LF/8QvpiLtOeTQVZM8M=
+X-Gm-Gg: AfdE7cn0AWLKcUYzMTYfZ82ECGiP+9EXtxV+Pv//KDan7n77nFDDvgoXC35oCZK2/1H
+	PMW3xhZLd2/SEBjzH5qlIa25tgw+/LDIfuovOaLr6i8NV5TFFqqwD4W3ctyZuYSJk57lbonk/4E
+	4TGoZKESC6cDyGmwyzaThAo5Xwf250Y7NqDttBdCIUol2MrD1UNNzDxUafiWU8REonLmLbkFGkP
+	xHZ/vtcXdZNX1v/la6aJ5JBTqBF7K9UlT+IhhaER0iopwAAvA83KXRWl6xnaLYy9kznX+o=
+X-Received: by 2002:a05:690e:4144:b0:64e:c1fb:c2de with SMTP id
+ 956f58d0204a3-66350b9d89cmr1094687d50.6.1782147179468; Mon, 22 Jun 2026
+ 09:52:59 -0700 (PDT)
+Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 22 Jun 2026 16:52:58 +0000
+Received: from 95991385052 named unknown by gmailapi.google.com with HTTPREST;
+ Mon, 22 Jun 2026 16:52:58 +0000
+From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+In-Reply-To: <20260621145919.1453-3-ekffu200098@gmail.com>
+References: <20260621145919.1453-1-ekffu200098@gmail.com> <20260621145919.1453-3-ekffu200098@gmail.com>
 Precedence: bulk
 X-Mailing-List: loongarch@lists.linux.dev
 List-Id: <loongarch.lists.linux.dev>
 List-Subscribe: <mailto:loongarch+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGsJ_4ybg5LGYopTUJTh5R2rN6X3uR9xoJSL+RdTYVtm1-xqLg@mail.gmail.com>
+Date: Mon, 22 Jun 2026 16:52:58 +0000
+X-Gm-Features: AVVi8CfwHLdshiR8acjH6LOxHazjhgf1c7hU7c9vCtOUDzgm8cWNUmrgKxEagCQ
+Message-ID: <CAPAsAGz3hqtqVwtSquau+qgXWJzjrg8qaRFhcqaHk1En01Jh9g@mail.gmail.com>
+Subject: Re: [PATCH 2/6] LoongArch: remove unreachable invalid range check in kasan_init()
+To: Sang-Heon Jeon <ekffu200098@gmail.com>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, loongarch@lists.linux.dev, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, WANG Xuerui <kernel@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
 
-On 26/06/22 08:15AM, Barry Song wrote:
-> On Mon, Jun 22, 2026 at 4:49 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Sat, Jun 20, 2026 at 04:48:57PM -0700, Suren Baghdasaryan wrote:
-> > > Just checking in on the followup plans. IIUC the RFC mentioned will
-> > > try to implement the solution we discussed at LSFMM: splitting
-> > > VM_FAULT_RETRY into two flags - one for retrying under per-VMA locks
-> > > and another one to fallback to mmap_lock.
-> >
-> > I continue to hate this idea.  I don't believe that those who were
-> > pushing for it have ever tried to understand the whole fault path.
-> > It's utterly byzantine.
-> >
-> > I defy anyone to make sense of this:
-> >
-> >         /*
-> >          * NOTE! This will make us return with VM_FAULT_RETRY, but with
-> >          * the fault lock still held. That's how FAULT_FLAG_RETRY_NOWAIT
-> >          * is supposed to work. We have way too many special cases..
-> >          */
-> >         if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
-> >                 return 0;
-> >
-> >         *fpin = maybe_unlock_mmap_for_io(vmf, *fpin);
-> >         if (vmf->flags & FAULT_FLAG_KILLABLE) {
-> >                 if (__folio_lock_killable(folio)) {
-> >                         /*
-> >                          * We didn't have the right flags to drop the
-> >                          * fault lock, but all fault_handlers only check
-> >                          * for fatal signals if we return VM_FAULT_RETRY,
-> >                          * so we need to drop the fault lock here and
-> >                          * return 0 if we don't have a fpin.
-> >                          */
-> >                         if (*fpin == NULL)
-> >                                 release_fault_lock(vmf);
-> >                         return 0;
-> >                 }
-> >
-> > Wed need to simplify the fault path, not add additional complexity.
-> > Josef has said he wouldn't've done the lock dropping had we had per-VMA
-> > locks.  We should rip it out.
-> 
-> I think you have agreed that, at least for anon vma, we can
-> keep the current policy, since anon vma is much more volatile
-> than file vma.
+Sang-Heon Jeon <ekffu200098@gmail.com> writes:
 
-I don't think any of the above has to do with anon vmas.  Does any anon
-vma handling have anything to do with your problem?
+> kasan_init() populates the linear mapping shadow with for_each_mem_range()
+> and breaks the loop when start >= end. for_each_mem_range() never returns
+> an invalid range, so start < end always.
+>
+> Therefore the start >= end check is unreachable, so remove it.
+>
+> No functional change.
+>
+> Signed-off-by: Sang-Heon Jeon <ekffu200098@gmail.com>
+> ---
+>  arch/loongarch/mm/kasan_init.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
 
-This would be needed if anon vmas were being faulted while being
-unmapped or merged?  Do we really need a fast path for that?  Note that
-anon vmas cannot be merged if the vma chain... you know what, I wonder
-how many people know what I'm talking about here... Let's just say that
-they can't be merged if they were around for a fork.
-
-So, then, we're looking at anon vmas taking the mmap lock on:
-1. single task anon vmas being expanded and faulted at the same time
-2. single task anon vmas being unmapped and faulted at the same time
-
-I think that's it?
-
-But maybe I missed something critical about your use case here?
-
-I don't understand why you are involving anon vmas in this discussion,
-so I must have missed something with your IO completion issue.  Is there
-an anon vma causing your priority inversion?
-
-> Concurrent page faults and VMA modifications can happen more
-> often than with file VMAs.
-
-But it's only a problem for anon vmas with per-vma locking if it's the
-same vma (or the vma lock sequence counter overflows, but let's say
-that's a statistically insignificant non-zero value).
-
-> 
-> For file vmas, how much code can we actually remove, given that
-> the first page fault might already be holding mmap_lock?
-
-How much complexity can we remove and maintain the performance, might be
-a better question.
-
-> It could be the case that lock_vma_under_rcu() fails, and then
-> on the first page fault we end up holding mmap_lock before
-> retrying. So are we also going to rip out the lock release,
-> even if it risks holding mmap_lock for a long time?
-> 
->         vma = lock_vma_under_rcu(mm, addr);
->         if (!vma)
->                 goto lock_mmap;
->        ...
-> lock_mmap:
-> 
->         vma = lock_mm_and_find_vma(mm, addr, regs);
->         if (unlikely(!vma)) {
->                 fault = 0;
->                 si_code = SEGV_MAPERR;
->                 goto bad_area;
->         }
-> 
-> If we still need to keep the page fault retry code there, it
-> doesn't seem like "ripping out" really reduces complexity in
-> the page fault code?
-
-This seems unrelated to be above complexity that might be the target of
-removal?
-
-Thanks,
-Liam
-
+Reviewed-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
