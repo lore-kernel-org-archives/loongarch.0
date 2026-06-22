@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCF4362157
-	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 07:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E672DC791
+	for <loongarch@lists.linux.dev>; Mon, 22 Jun 2026 07:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782112379; cv=none; b=O8EsFjYDItK7+Ma60HszsTKF+JTk+OjIgkRoceXI/0euAKdUBPgOWSWX8zUdAuZ9/uYQvJtxAdbXOWV+O7lTKSce96qsy7pUmotGpOQwoDO46jzeDneTwvvYn2fCKxolwUVF9Dqj5WhjWRprA72VQga7ZR/8qLr92LgZ6gvBUHs=
+	t=1782112384; cv=none; b=S4u5mPHlgq+63cIh2KPht4ukU23YOX/br6jId0vbnHx1zJjb/OzGeSCvzSOe4/Eq0gadIDoaCgQ4qkkxa0wHt/eBV3V4q54X63zRTteO84i78TyQFTVpiwWmc1wJwG54I1y7/AAj7kjUidJDRBAndaoilAcEc649tG3ZtvBwsPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782112379; c=relaxed/simple;
-	bh=gCMNCsuX7LLIx6UZ1vNjcVV1/11+/zg6GicFiw/cq4Y=;
+	s=arc-20240116; t=1782112384; c=relaxed/simple;
+	bh=tL41712LfAtPfnNeOd2ROB5gyiHIP0CHY+UK3uxzBQ4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fqKIqK93+Z3mxLE74E5EqYYw7wKaysfbzSOc/kvMLju4PhEpjCGLnokVVUfeSWAkEugg9bEnaOSMcMyQgfhR9kjStSjc9AocWaJOhJfi/phubdvt+i4qSCJKKVs5aof4CsH61VYCQfX9ZMYRmFSZVfJNA0jBGTDJkRrvlYMKW9A=
+	 MIME-Version; b=kLNJ8xGYYJdSBoGFGatR37Ht9CJ3B2HKO89ezdMho2WaB1wu2enlgnLmpA8l4TN9r4UvKwQptow7SAVBV8enDoxbfmvW9ISicoOzdxAeFt6rsYVJ4xOQDNiJbZVVUagENeyGssDWeqAJ80EyB8Hk3FQilalK0Q0FNW5OvB3Tsv0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c778c42c6e0911f1aa26b74ffac11d73-20260622
+X-UUID: c9830ade6e0911f1aa26b74ffac11d73-20260622
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
 	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
@@ -25,27 +25,27 @@ X-CTIC-Tags:
 	DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
 	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:72f27921-7277-4eeb-b9b9-de9a21ae43ac,IP:10,
-	URL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-15
-X-CID-INFO: VERSION:1.3.12,REQID:72f27921-7277-4eeb-b9b9-de9a21ae43ac,IP:10,UR
-	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:NOTI_GNA5D1EA,ACTI
-	ON:release,TS:-15
-X-CID-META: VersionHash:e7bac3a,CLOUDID:068d26126d057da9de5f13aa83da78eb,BulkI
-	D:260622151253V3UKHCTX,BulkQuantity:0,Recheck:0,SF:10|38|66|78|81|82|102|1
-	27|136|850|865|898,TC:nil,Content:0|15|50,EDM:2,IP:-2,URL:0,File:nil,RT:ni
-	l,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,
-	BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.3.12,REQID:bcbdda8e-1d67-4936-9879-da8c74dad94a,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:10
+X-CID-INFO: VERSION:1.3.12,REQID:bcbdda8e-1d67-4936-9879-da8c74dad94a,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:10
+X-CID-META: VersionHash:e7bac3a,CLOUDID:d09ad6ce005592b90eef446c4c4c8719,BulkI
+	D:260603180456RSCRRQPR,BulkQuantity:1,Recheck:0,SF:10|38|66|78|81|82|102|1
+	27|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,B
+	ulk:41,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:
+	0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c778c42c6e0911f1aa26b74ffac11d73-20260622
+X-UUID: c9830ade6e0911f1aa26b74ffac11d73-20260622
 X-User: zhaochenguang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <zhaochenguang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 551382056; Mon, 22 Jun 2026 15:12:50 +0800
+	with ESMTP id 439748463; Mon, 22 Jun 2026 15:12:53 +0800
 From: Chenguang Zhao <zhaochenguang@kylinos.cn>
 To: chenhuacai@kernel.org,
 	kernel@xen0n.name,
@@ -65,9 +65,9 @@ Cc: hengqi.chen@gmail.com,
 	bpf@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	Chenguang Zhao <zhaochenguang@kylinos.cn>
-Subject: [PATCH v3 1/4] LoongArch: bpf: Fix memory ordering for value-returning atomics
-Date: Mon, 22 Jun 2026 15:12:31 +0800
-Message-Id: <20260622071234.1410830-2-zhaochenguang@kylinos.cn>
+Subject: [PATCH v3 3/4] selftests/bpf: Enable kptr_xchg_inline test on LoongArch
+Date: Mon, 22 Jun 2026 15:12:33 +0800
+Message-Id: <20260622071234.1410830-4-zhaochenguang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260622071234.1410830-1-zhaochenguang@kylinos.cn>
 References: <20260622071234.1410830-1-zhaochenguang@kylinos.cn>
@@ -79,173 +79,28 @@ List-Unsubscribe: <mailto:loongarch+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Per the Linux Kernel Memory Model, value-returning atomic RMW operations
-must provide sequentially consistent ordering (a full memory barrier). On
-LoongArch, plain AMO instructions and bare ll/sc loops do not satisfy this
-requirement by themselves.
-
-Update emit_atomic_rmw() to emit barrier-carrying instructions for all
-value-returning BPF atomics:
-
- - BPF_FETCH (ADD/AND/OR/XOR): use am*_db.{b,h,w,d}
- - BPF_XCHG: use amswap_db.{b,h,w,d}
- - BPF_CMPXCHG: emit dbar 0x700 after the ll/sc loop, matching
-   __WEAK_LLSC_MB in cmpxchg.h
-
-Add the corresponding instruction encodings and emit helpers to inst.h.
-Non-value-returning RMW ops (plain BPF_ADD, BPF_AND, etc.) are left as
-weakly ordered, consistent with LKMM.
+Run the kptr_xchg_inline functional test on LoongArch64 now that the bpf
+JIT can inline bpf_kptr_xchg() with correct memory ordering.
 
 Signed-off-by: Chenguang Zhao <zhaochenguang@kylinos.cn>
 ---
- arch/loongarch/include/asm/inst.h | 18 +++++++++++++++++
- arch/loongarch/net/bpf_jit.c      | 32 +++++++++++++++++--------------
- 2 files changed, 36 insertions(+), 14 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
-index 76b723590023..bdbc17d07110 100644
---- a/arch/loongarch/include/asm/inst.h
-+++ b/arch/loongarch/include/asm/inst.h
-@@ -199,6 +199,10 @@ enum reg3_op {
- 	amswaph_op	= 0x70b9,
- 	amaddb_op	= 0x70ba,
- 	amaddh_op	= 0x70bb,
-+	amswapdbb_op	= 0x70bc,
-+	amswapdbh_op	= 0x70bd,
-+	amadddbb_op	= 0x70be,
-+	amadddbh_op	= 0x70bf,
- 	amswapw_op	= 0x70c0,
- 	amswapd_op	= 0x70c1,
- 	amaddw_op	= 0x70c2,
-@@ -783,6 +787,20 @@ DEF_EMIT_REG3_FORMAT(amswapb, amswapb_op)
- DEF_EMIT_REG3_FORMAT(amswaph, amswaph_op)
- DEF_EMIT_REG3_FORMAT(amswapw, amswapw_op)
- DEF_EMIT_REG3_FORMAT(amswapd, amswapd_op)
-+DEF_EMIT_REG3_FORMAT(amswapdbb, amswapdbb_op)
-+DEF_EMIT_REG3_FORMAT(amswapdbh, amswapdbh_op)
-+DEF_EMIT_REG3_FORMAT(amadddbb, amadddbb_op)
-+DEF_EMIT_REG3_FORMAT(amadddbh, amadddbh_op)
-+DEF_EMIT_REG3_FORMAT(amadddbw, amadddbw_op)
-+DEF_EMIT_REG3_FORMAT(amadddbd, amadddbd_op)
-+DEF_EMIT_REG3_FORMAT(amanddbw, amanddbw_op)
-+DEF_EMIT_REG3_FORMAT(amanddbd, amanddbd_op)
-+DEF_EMIT_REG3_FORMAT(amordbw, amordbw_op)
-+DEF_EMIT_REG3_FORMAT(amordbd, amordbd_op)
-+DEF_EMIT_REG3_FORMAT(amxordbw, amxordbw_op)
-+DEF_EMIT_REG3_FORMAT(amxordbd, amxordbd_op)
-+DEF_EMIT_REG3_FORMAT(amswapdbw, amswapdbw_op)
-+DEF_EMIT_REG3_FORMAT(amswapdbd, amswapdbd_op)
+diff --git a/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c b/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
+index 7def158da9eb..8f7b58727416 100644
+--- a/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
++++ b/tools/testing/selftests/bpf/prog_tests/kptr_xchg_inline.c
+@@ -14,7 +14,8 @@ void test_kptr_xchg_inline(void)
+ 	int err;
  
- #define DEF_EMIT_REG3SA2_FORMAT(NAME, OP)				\
- static inline void emit_##NAME(union loongarch_instruction *insn,	\
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index 24913dc7f4e8..47707579e61c 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -7,6 +7,9 @@
- #include <linux/memory.h>
- #include "bpf_jit.h"
- 
-+/* dbar hint for ll/sc completion ordering, see __WEAK_LLSC_MB */
-+#define DBAR_LLSC_MB	0x700
-+
- #define LOONGARCH_MAX_REG_ARGS 8
- 
- #define LOONGARCH_LONG_JUMP_NINSNS 5
-@@ -418,7 +421,7 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 				pr_err_once("bpf-jit: amadd.b instruction is not supported\n");
- 				return -EINVAL;
- 			}
--			emit_insn(ctx, amaddb, src, t1, t3);
-+			emit_insn(ctx, amadddbb, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_H:
-@@ -426,39 +429,39 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 				pr_err_once("bpf-jit: amadd.h instruction is not supported\n");
- 				return -EINVAL;
- 			}
--			emit_insn(ctx, amaddh, src, t1, t3);
-+			emit_insn(ctx, amadddbh, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_W:
--			emit_insn(ctx, amaddw, src, t1, t3);
-+			emit_insn(ctx, amadddbw, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_DW:
--			emit_insn(ctx, amaddd, src, t1, t3);
-+			emit_insn(ctx, amadddbd, src, t1, t3);
- 			break;
- 		}
- 		break;
- 	case BPF_AND | BPF_FETCH:
- 		if (isdw) {
--			emit_insn(ctx, amandd, src, t1, t3);
-+			emit_insn(ctx, amanddbd, src, t1, t3);
- 		} else {
--			emit_insn(ctx, amandw, src, t1, t3);
-+			emit_insn(ctx, amanddbw, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 		}
- 		break;
- 	case BPF_OR | BPF_FETCH:
- 		if (isdw) {
--			emit_insn(ctx, amord, src, t1, t3);
-+			emit_insn(ctx, amordbd, src, t1, t3);
- 		} else {
--			emit_insn(ctx, amorw, src, t1, t3);
-+			emit_insn(ctx, amordbw, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 		}
- 		break;
- 	case BPF_XOR | BPF_FETCH:
- 		if (isdw) {
--			emit_insn(ctx, amxord, src, t1, t3);
-+			emit_insn(ctx, amxordbd, src, t1, t3);
- 		} else {
--			emit_insn(ctx, amxorw, src, t1, t3);
-+			emit_insn(ctx, amxordbw, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 		}
- 		break;
-@@ -470,7 +473,7 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 				pr_err_once("bpf-jit: amswap.b instruction is not supported\n");
- 				return -EINVAL;
- 			}
--			emit_insn(ctx, amswapb, src, t1, t3);
-+			emit_insn(ctx, amswapdbb, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_H:
-@@ -478,15 +481,15 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 				pr_err_once("bpf-jit: amswap.h instruction is not supported\n");
- 				return -EINVAL;
- 			}
--			emit_insn(ctx, amswaph, src, t1, t3);
-+			emit_insn(ctx, amswapdbh, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_W:
--			emit_insn(ctx, amswapw, src, t1, t3);
-+			emit_insn(ctx, amswapdbw, src, t1, t3);
- 			emit_zext_32(ctx, src, true);
- 			break;
- 		case BPF_DW:
--			emit_insn(ctx, amswapd, src, t1, t3);
-+			emit_insn(ctx, amswapdbd, src, t1, t3);
- 			break;
- 		}
- 		break;
-@@ -509,6 +512,7 @@ static int emit_atomic_rmw(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 			emit_insn(ctx, beq, t3, LOONGARCH_GPR_ZERO, -6);
- 			emit_zext_32(ctx, r0, true);
- 		}
-+		emit_insn(ctx, dbar, DBAR_LLSC_MB);
- 		break;
- 	default:
- 		pr_err_once("bpf-jit: invalid atomic read-modify-write opcode %02x\n", imm);
+ #if !(defined(__x86_64__) || defined(__aarch64__) || \
+-      (defined(__riscv) && __riscv_xlen == 64))
++      (defined(__riscv) && __riscv_xlen == 64) || \
++      (defined(__loongarch__) && __loongarch_grlen == 64))
+ 	test__skip();
+ 	return;
+ #endif
 -- 
 2.25.1
 
